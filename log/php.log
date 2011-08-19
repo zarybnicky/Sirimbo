@@ -1,0 +1,40 @@
+[14-Aug-2011 19:13:08] PHP Warning:  preg_match(): Unknown modifier '.' in /home/jakub/Downloads/tkolympphp/files/Core/Form.php on line 8
+[14-Aug-2011 19:13:08] PHP Stack trace:
+[14-Aug-2011 19:13:08] PHP   1. {main}() /home/jakub/Downloads/tkolympphp/index.php:0
+[14-Aug-2011 19:13:08] PHP   2. View::viewDynamic() /home/jakub/Downloads/tkolympphp/index.php:39
+[14-Aug-2011 19:13:08] PHP   3. include() /home/jakub/Downloads/tkolympphp/files/Core/View.php:41
+[14-Aug-2011 19:13:08] PHP   4. include() /home/jakub/Downloads/tkolympphp/files/Admin/Nabidka.inc:65
+[14-Aug-2011 19:13:08] PHP   5. checkPostField() /home/jakub/Downloads/tkolympphp/files/Admin/NabidkaForm.inc:39
+[14-Aug-2011 19:13:08] PHP   6. preg_match() /home/jakub/Downloads/tkolympphp/files/Core/Form.php:8
+[14-Aug-2011 19:13:19] PHP Warning:  preg_match(): Unknown modifier '.' in /home/jakub/Downloads/tkolympphp/files/Core/Form.php on line 8
+[14-Aug-2011 19:13:19] PHP Stack trace:
+[14-Aug-2011 19:13:19] PHP   1. {main}() /home/jakub/Downloads/tkolympphp/index.php:0
+[14-Aug-2011 19:13:19] PHP   2. View::viewDynamic() /home/jakub/Downloads/tkolympphp/index.php:39
+[14-Aug-2011 19:13:19] PHP   3. include() /home/jakub/Downloads/tkolympphp/files/Core/View.php:41
+[14-Aug-2011 19:13:19] PHP   4. include() /home/jakub/Downloads/tkolympphp/files/Admin/Nabidka.inc:65
+[14-Aug-2011 19:13:19] PHP   5. checkPostField() /home/jakub/Downloads/tkolympphp/files/Admin/NabidkaForm.inc:39
+[14-Aug-2011 19:13:19] PHP   6. preg_match() /home/jakub/Downloads/tkolympphp/files/Core/Form.php:8
+[14-Aug-2011 19:17:38] PHP Warning:  preg_match(): Unknown modifier '[' in /home/jakub/Downloads/tkolympphp/files/Core/Form.php on line 8
+[14-Aug-2011 19:17:38] PHP Stack trace:
+[14-Aug-2011 19:17:38] PHP   1. {main}() /home/jakub/Downloads/tkolympphp/index.php:0
+[14-Aug-2011 19:17:38] PHP   2. View::viewDynamic() /home/jakub/Downloads/tkolympphp/index.php:39
+[14-Aug-2011 19:17:38] PHP   3. include() /home/jakub/Downloads/tkolympphp/files/Core/View.php:41
+[14-Aug-2011 19:17:38] PHP   4. include() /home/jakub/Downloads/tkolympphp/files/Admin/Nabidka.inc:65
+[14-Aug-2011 19:17:38] PHP   5. checkPostField() /home/jakub/Downloads/tkolympphp/files/Admin/NabidkaForm.inc:39
+[14-Aug-2011 19:17:38] PHP   6. preg_match() /home/jakub/Downloads/tkolympphp/files/Core/Form.php:8
+[14-Aug-2011 19:18:02] PHP Warning:  preg_match(): Unknown modifier '[' in /home/jakub/Downloads/tkolympphp/files/Core/Form.php on line 8
+[14-Aug-2011 19:18:02] PHP Stack trace:
+[14-Aug-2011 19:18:02] PHP   1. {main}() /home/jakub/Downloads/tkolympphp/index.php:0
+[14-Aug-2011 19:18:02] PHP   2. View::viewDynamic() /home/jakub/Downloads/tkolympphp/index.php:39
+[14-Aug-2011 19:18:02] PHP   3. include() /home/jakub/Downloads/tkolympphp/files/Core/View.php:41
+[14-Aug-2011 19:18:02] PHP   4. include() /home/jakub/Downloads/tkolympphp/files/Admin/Nabidka.inc:65
+[14-Aug-2011 19:18:02] PHP   5. checkPostField() /home/jakub/Downloads/tkolympphp/files/Admin/NabidkaForm.inc:39
+[14-Aug-2011 19:18:02] PHP   6. preg_match() /home/jakub/Downloads/tkolympphp/files/Core/Form.php:8
+[14-Aug-2011 19:18:57] PHP Warning:  preg_match(): Unknown modifier '[' in /home/jakub/Downloads/tkolympphp/files/Core/Form.php on line 8
+[14-Aug-2011 19:18:57] PHP Stack trace:
+[14-Aug-2011 19:18:57] PHP   1. {main}() /home/jakub/Downloads/tkolympphp/index.php:0
+[14-Aug-2011 19:18:57] PHP   2. View::viewDynamic() /home/jakub/Downloads/tkolympphp/index.php:39
+[14-Aug-2011 19:18:57] PHP   3. include() /home/jakub/Downloads/tkolympphp/files/Core/View.php:41
+[14-Aug-2011 19:18:57] PHP   4. include() /home/jakub/Downloads/tkolympphp/files/Admin/Nabidka.inc:65
+[14-Aug-2011 19:18:57] PHP   5. checkPostField() /home/jakub/Downloads/tkolympphp/files/Admin/NabidkaForm.inc:39
+[14-Aug-2011 19:18:57] PHP   6. preg_match() /home/jakub/Downloads/tkolympphp/files/Core/Form.php:8

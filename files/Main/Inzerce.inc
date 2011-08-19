@@ -1,0 +1,1 @@
+Zde bude inzerce: seznamka, bazárek
