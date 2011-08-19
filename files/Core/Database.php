@@ -1,0 +1,381 @@
+<?php
+class Database {
+	private static $connection = null;
+	
+	/* Sekce */
+	/* USER */
+	
+	public static function checkUser($login, $pass) {
+		list($login, $pass) = Database::escapeArray(array($login, $pass));
+		
+		$res = Database::query("SELECT COUNT(*) FROM users WHERE " .
+			"u_login='$login' AND u_pass='$pass'");
+		if(!$res) {
+			return false;
+		} else {
+			$row = Database::getSingleRow($res);
+			return $row["COUNT(*)"];
+		}
+	}
+	
+	public static function getUserlevel($login) {
+		list($login) = Database::escapeArray(array($login));
+		
+		$res = Database::query("SELECT u_level FROM users WHERE " .
+			"u_login='$login'");
+		if(!$res) {
+			return false;
+		} else {
+			$row = Database::getSingleRow($res);
+			return $row["u_level"];
+		}
+	}
+	
+	public static function getUserID($login) {
+		list($login) = Database::escapeArray(array($login));
+		
+		$res = Database::query("SELECT u_id FROM users WHERE " .
+			"u_login='$login'");
+		if(!$res) {
+			return false;
+		} else {
+			$row = Database::getSingleRow($res);
+			return $row["u_id"];
+		}
+	}
+	
+	public static function getUserData($login) {
+		list($login) = Database::escapeArray(array($login));
+		
+		$res = Database::query("SELECT u_login,u_jmeno,u_pass,u_jmeno,u_prijmeni," .
+			"u_email,u_telefon,u_poznamky,u_level,u_ban,u_lock FROM users WHERE u_login='$login'");
+		if(!$res) {
+			return false;
+		} else {
+			return Database::getSingleRow($res);
+		}
+	}
+	
+	public static function isUserBanned($login) {
+		list($login) = Database::escapeArray(array($login));
+		
+		$res = Database::query("SELECT u_ban FROM users WHERE u_login='$login'");
+		if(!$res) {
+			return false;
+		} else {
+			$row = Database::getSingleRow($res);
+			return $row["u_ban"];
+		}
+	}
+	
+	public static function isUserLocked($login) {
+		list($login) = Database::escapeArray(array($login));
+		
+		$res = Database::query("SELECT u_lock FROM users WHERE u_login='$login'");
+		if(!$res) {
+			return false;
+		} else {
+			$row = Database::getSingleRow($res);
+			return $row["u_lock"];
+		}
+	}
+	
+	public static function setUserData($login,$jmeno,$prijmeni,
+		$email,$telefon,$poznamky,$level,$lock,$ban) {
+		
+		list($login, $jmeno, $prijmeni, $email, $telefon, $poznamky, $level, $lock, $ban) =
+			Database::escapeArray(array($login, $jmeno, $prijmeni, $email, $telefon,
+			$poznamky, $level, $lock, $ban));
+		
+			
+		Database::query("UPDATE users SET " .
+			"u_jmeno='$jmeno',u_prijmeni='$prijmeni',u_email='$email',u_telefon='$telefon'," .
+			"u_poznamky='$poznamky',u_level='$level', u_lock='$lock', u_ban='$ban' WHERE u_login='$login'");
+		return true;	
+	}
+	
+	public static function addUser($login, $pass, $name, $surname, $email,
+		$telefon, $poznamky, $level, $lock, $ban) {
+		list($login, $pass, $name, $surname, $email, $telefon, $poznamky, $level, $lock, $ban) =
+			Database::escapeArray(array($login, $pass, $name, $surname, $email, $telefon,
+			$poznamky, $level, $lock, $ban));
+		
+		Database::query("INSERT INTO users " .
+			"(u_login,u_pass,u_jmeno,u_prijmeni,u_email,u_telefon," .
+			"u_poznamky,u_level,u_lock,u_ban) VALUES " .
+			"('$login','$pass','$name','$surname','$email','$telefon'," .
+			"'$poznamky','$level','$lock','$ban')");
+		return true;
+	}
+	
+	public static function removeUser($login) {
+		list($login) = Database::escapeArray(array($login));
+		
+		$res = Database::query("SELECT u_id FROM users WHERE u_login='$login'");
+		$row = Database::getSingleRow($res);
+		$id = $row["u_id"];
+		Database::query("DELETE FROM users WHERE u_id='$id'");
+		Database::query("DELETE FROM rozpis WHERE r_trener='$id'");
+		Database::query("DELETE FROM rozpis_item WHERE ri_partner='$id'");
+		Database::query("DELETE FROM nabidka WHERE n_trener='$id'");
+		Database::query("DELETE FROM nabidka_item WHERE ni_partner='$id'");
+		Database::query("DELETE FROM upozorneni WHERE up_kdo='$id'");
+		return true;
+	}
+	
+	public static function getUsers() {
+		$res = Database::query("SELECT * FROM users");
+		return Database::getArray($res);
+	}
+	
+	public static function getTrener() {
+		$res = Database::query("SELECT u_id,u_jmeno,u_prijmeni FROM users WHERE u_level>=" . L_TRENER);
+		return Database::getArray($res);
+	}
+	/* Sekce */
+	/* NASTENKA */
+	
+	public static function getNastenka() {
+		$res = Database::query("SELECT up_id,u_login,u_jmeno,u_prijmeni,up_kdy,up_nadpis,up_text,up_lock" .
+			" FROM upozorneni LEFT JOIN users ON up_kdo=u_id");
+		return Database::getArray($res);
+	}
+	
+	public static function getNastenkaUserName($id) {
+		list($id) = Database::escapeArray(array($id));
+		
+		$res = Database::query("SELECT u_login FROM upozorneni LEFT JOIN users ON up_kdo=u_id WHERE " .
+			"up_id='$id'");
+		if(!$res) {
+			return false;
+		} else {
+			$row = Database::getSingleRow($res);
+			return $row["u_login"];
+		}
+	}
+	
+	public static function getSingleNastenka($id) {
+		list($id) = Database::escapeArray(array($id));
+		
+		$res = Database::query("SELECT u_login,u_jmeno,u_prijmeni,up_kdy,up_nadpis,up_text,up_lock" .
+			" FROM upozorneni LEFT JOIN users ON up_kdo=u_id WHERE up_id='$id'");
+		if(!$res) {
+			return false;
+		} else {
+			return Database::getSingleRow($res);
+		}
+	}
+	
+	public static function isNastenkaLocked($id) {
+		list($id) = Database::escapeArray(array($id));
+		
+		$res = Database::query("SELECT up_lock FROM upozorneni WHERE up_id='$id'");
+		if(!$res) {
+			return false;
+		} else {
+			$row = Database::getSingleRow($res);
+			return $row["up_lock"];
+		}
+	}
+	
+	public static function addNastenka($user, $nadpis, $text, $lock) {
+		list($user, $nadpis, $text, $lock) = Database::escapeArray(array($user, $nadpis, $text, $lock));
+		
+		Database::query("INSERT INTO upozorneni (up_kdo,up_nadpis,up_text,up_lock) VALUES " .
+			"((SELECT u_id FROM users WHERE u_login='$user'),'$nadpis','$text','$lock')");
+		
+		return true;
+	}
+	
+	public static function editNastenka($id, $nadpis, $text, $lock) {
+		list($id, $nadpis, $text, $lock) = Database::escapeArray(array($id, $nadpis, $text, $lock));
+		
+		Database::query("UPDATE upozorneni SET " .
+			"up_nadpis='$nadpis',up_text='$text',up_lock='$lock' WHERE up_id='$id'");
+		
+		return true;
+	}
+
+	public static function removeNastenka($id) {
+		list($id) = Database::escapeArray(array($id));
+		
+		Database::query("DELETE FROM upozorneni WHERE up_id='$id'");
+		
+		return true;
+	}
+	
+	/* Sekce */
+	/* NABIDKA */
+	
+	public static function getNabidka() {
+		$res = Database::query("SELECT u_jmeno,u_prijmeni,n_id,n_trener,n_pocet_hod,n_od,n_do,n_lock" .
+			" FROM nabidka LEFT JOIN users ON n_trener=u_id");
+		return Database::getArray($res);
+	}
+	
+	public static function getNabidkaMaxLessons($id) {
+		list($id) = Database::escapeArray(array($id));
+		
+		$res = Database::query("SELECT n_pocet_hod FROM nabidka WHERE n_id='$id'");
+		if(!$res) {
+			return false;
+		} else {
+			$row = Database::getSingleRow($res);
+			return $row["n_pocet_hod"];
+		}
+	}
+	
+	public static function getSingleNabidka($id) {
+		list($id) = Database::escapeArray(array($id));
+		
+		$res = Database::query("SELECT n_id,n_trener,u_jmeno,u_prijmeni,n_pocet_hod,n_od,n_do,n_lock" .
+			" FROM nabidka LEFT JOIN users ON n_trener=u_id WHERE n_id='$id'");
+		if(!$res) {
+			return false;
+		} else {
+			return Database::getSingleRow($res);
+		}
+	}
+	/* Sekce */
+	public static function getNabidkaTrenerID($id) {
+		list($id) = Database::escapeArray(array($id));
+		
+		$res = Database::query("SELECT n_trener FROM nabidka WHERE n_id='$id'");
+		if(!$res) {
+			return false;
+		} else {
+			$row = Database::getSingleRow($res);
+			return $row["n_trener"];
+		}
+	}
+	
+	public static function addNabidka($trener, $pocet_hod, $od, $do, $lock) {
+		list($trener, $pocet_hod, $od, $do, $lock) =
+			Database::escapeArray(array($trener, $pocet_hod, $od, $do, $lock));
+		
+		Database::query("INSERT INTO nabidka (n_trener,n_pocet_hod,n_od,n_do,n_lock) VALUES " .
+			"('$trener','$pocet_hod','$od','$do','$lock')");
+		
+		return true;
+	}
+	
+	public static function editNabidka($trener, $pocet_hod, $od, $do, $lock) {
+		list($trener, $pocet_hod, $od, $do, $lock) =
+			Database::escapeArray(array($trener, $pocet_hod, $od, $do, $lock));
+		
+		Database::query("UPDATE nabidka SET n_trener='$trener',n_pocet_hod='$pocet_hod',n_od='$od'," .
+			"n_do='$do',n_lock='$lock'");
+		
+		return true;
+	}
+	
+	public static function removeNabidka($id) {
+		list($id) = Database::escapeArray(array($id));
+		
+		Database::query("DELETE FROM nabidka WHERE n_id='$id'");
+		Database::query("DELETE FROM nabidka_item WHERE ni_id_rodic='$id'");
+		
+		return true;
+		
+	}
+	
+	/* Sekce */
+	/* NABIDKA_ITEM */
+	
+	public static function getNabidkaItem($parent_id) {
+		list($parent_id) = Database::escapeArray(array($parent_id));
+		
+		$res = Database::query("SELECT u_id,u_login,u_jmeno,u_prijmeni,ni_id,ni_id_rodic,ni_partner,ni_pocet_hod,ni_lock" .
+			" FROM nabidka_item LEFT JOIN users ON ni_partner=u_id WHERE ni_id_rodic='$parent_id'");
+		return Database::getArray($res);
+	}
+	
+	public static function getNabidkaItemLessons($parent_id) {
+		list($parent_id) = Database::escapeArray(array($parent_id));
+		
+		$res = Database::query("SELECT SUM(ni_pocet_hod) FROM nabidka_item WHERE ni_id_rodic='$parent_id'");
+		if(!$res) {
+			return false;
+		} else {
+			$row = Database::getSingleRow($res);
+			return $row["SUM(ni_pocet_hod)"];
+		}
+	}
+	
+	public static function hasNabidkaLessons($parent_id, $u_id) {
+		list($parent_id, $u_id) = Database::escapeArray(array($parent_id, $u_id));
+		
+		$res = Database::query("SELECT ni_pocet_hod FROM nabidka_item WHERE ni_id_rodic='$parent_id' AND " .
+			"ni_partner='$u_id'");
+		if(!$res) {
+			return false;
+		} else {
+			$row = Database::getSingleRow($res);
+			return (bool)$row["ni_pocet_hod"];
+		}
+	}
+	
+	public static function addNabidkaItemLessons($login, $parent_id, $pocet_hod) {
+		list($login, $parent_id, $pocet_hod) = Database::escapeArray(array($login, $parent_id, $pocet_hod));
+		
+		Database::query("INSERT INTO nabidka_item (ni_partner,ni_id_rodic,ni_pocet_hod)" .
+			" VALUES ((SELECT u_id FROM users WHERE u_login='$login'),'$parent_id','$pocet_hod')" .
+			" ON DUPLICATE KEY UPDATE ni_pocet_hod=ni_pocet_hod+'$pocet_hod'");
+		
+		return true;
+	}
+	
+	public static function removeNabidkaItem($parent_id, $u_id) {
+		list($parent_id, $u_id) = Database::escapeArray(array($parent_id, $u_id));
+		
+		Database::query("DELETE FROM nabidka_item WHERE ni_id_rodic='$parent_id' AND " .
+			"ni_partner='$u_id'");
+		
+		return true;
+	}
+	
+	/* Sekce */
+	/* INTERNAL */
+	
+	private static function escapeArray($array) {
+		Database::getConnection();
+		$escape = implode("%%%%%", $array);
+		$escape = mysql_real_escape_string($escape);
+		return explode("%%%%%", $escape);
+	}
+	
+	private static function getConnection() {
+		if(Database::$connection != null)
+			return;
+		Database::$connection = @mysql_connect(DB_SERVER, DB_USER, DB_PASS)
+			or View::viewError(ER_DATABASE_CONNECTION);
+		@mysql_select_db(DB_DATABASE, Database::$connection)
+			or View::viewError(ER_DATABASE_CONNECTION);
+		@mysql_set_charset("utf8", Database::$connection)
+			or View::viewError(ER_DATABASE_CONNECTION);
+	}
+	
+	private static function query($query) {
+		Database::getConnection();
+		$res = mysql_query($query, Database::$connection);
+		if(!$res)
+			View::viewError(ER_DATABASE);
+		return $res;
+	}
+	
+	private static function getSingleRow($resource) {
+		return mysql_fetch_assoc($resource);
+	}
+	
+	private static function getArray($resource) {
+		$result = array();
+		$rows = mysql_num_rows($resource);
+		
+		for($i = 0; $i < $rows; $i++) {
+			$result[] = @mysql_fetch_assoc($resource);
+		}
+		
+		return $result;
+	}
+}
+?>

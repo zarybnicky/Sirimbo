@@ -1,0 +1,1 @@
+Zde budou informace pro zájemce o ukázky

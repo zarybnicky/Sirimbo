@@ -1,0 +1,1 @@
+Zde bude to, co se nehodí jinam.
