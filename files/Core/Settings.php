@@ -50,7 +50,7 @@ $sitemap_dynamic = array(
 //FIXME: Other pages
 	"member/home"		=> "files/Member/Home.inc",
 	"member/nastenka"	=> "files/Member/Nastenka.inc",
-	"member/rozpis"		=> "files/Member/Home.inc",
+	"member/rozpis"		=> "files/Member/Rozpis.inc",
 	"member/nabidka"	=> "files/Member/Nabidka.inc",
 	"member/tabory"		=> "files/Member/Home.inc",
 	"member/dokumenty"	=> "files/Member/Home.inc",
@@ -59,6 +59,7 @@ $sitemap_dynamic = array(
 	"member/logout"		=> "files/Member/Logout.inc",
 	"admin/nastenka"	=> "files/Admin/Nastenka.inc",
 	"admin/users"		=> "files/Admin/Users.inc",
+	"admin/rozpis"		=> "files/Admin/Rozpis.inc",
 	"admin/nabidka"		=> "files/Admin/Nabidka.inc"
 );
 

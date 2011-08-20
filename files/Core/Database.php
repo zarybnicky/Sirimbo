@@ -128,6 +128,11 @@ class Database {
 		return Database::getArray($res);
 	}
 	
+	public static function getUserNames() {
+		$res = Database::query("SELECT u_id,u_login,u_jmeno,u_prijmeni FROM users");
+		return Database::getArray($res);
+	}
+	
 	public static function getTrener() {
 		$res = Database::query("SELECT u_id,u_jmeno,u_prijmeni FROM users WHERE u_level>=" . L_TRENER);
 		return Database::getArray($res);
@@ -236,7 +241,7 @@ class Database {
 			return Database::getSingleRow($res);
 		}
 	}
-	/* Sekce */
+	
 	public static function getNabidkaTrenerID($id) {
 		list($id) = Database::escapeArray(array($id));
 		
@@ -259,12 +264,12 @@ class Database {
 		return true;
 	}
 	
-	public static function editNabidka($trener, $pocet_hod, $od, $do, $lock) {
-		list($trener, $pocet_hod, $od, $do, $lock) =
-			Database::escapeArray(array($trener, $pocet_hod, $od, $do, $lock));
+	public static function editNabidka($id, $trener, $pocet_hod, $od, $do, $lock) {
+		list($id, $trener, $pocet_hod, $od, $do, $lock) =
+			Database::escapeArray(array($id, $trener, $pocet_hod, $od, $do, $lock));
 		
 		Database::query("UPDATE nabidka SET n_trener='$trener',n_pocet_hod='$pocet_hod',n_od='$od'," .
-			"n_do='$do',n_lock='$lock'");
+			"n_do='$do',n_lock='$lock' WHERE n_id='$id'");
 		
 		return true;
 	}
@@ -279,14 +284,12 @@ class Database {
 		
 	}
 	
-	/* Sekce */
-	/* NABIDKA_ITEM */
-	
 	public static function getNabidkaItem($parent_id) {
 		list($parent_id) = Database::escapeArray(array($parent_id));
 		
-		$res = Database::query("SELECT u_id,u_login,u_jmeno,u_prijmeni,ni_id,ni_id_rodic,ni_partner,ni_pocet_hod,ni_lock" .
-			" FROM nabidka_item LEFT JOIN users ON ni_partner=u_id WHERE ni_id_rodic='$parent_id'");
+		$res = Database::query("SELECT u_id,u_login,u_jmeno,u_prijmeni,ni_id,ni_id_rodic,ni_partner," .
+			"ni_pocet_hod,ni_lock FROM nabidka_item LEFT JOIN users ON ni_partner=u_id WHERE " .
+			"ni_id_rodic='$parent_id'");
 		return Database::getArray($res);
 	}
 	
@@ -330,6 +333,116 @@ class Database {
 		
 		Database::query("DELETE FROM nabidka_item WHERE ni_id_rodic='$parent_id' AND " .
 			"ni_partner='$u_id'");
+		
+		return true;
+	}
+	
+	/* Sekce */
+	/* ROZPIS */
+	
+	public static function getRozpis() {
+		$res = Database::query("SELECT u_jmeno,u_prijmeni,r_id,r_trener,r_kde,r_datum,r_od,r_do,r_lock" .
+			" FROM rozpis LEFT JOIN users ON r_trener=u_id");
+		return Database::getArray($res);
+	}
+	
+	public static function rozpisSignUp($rid, $uid) {
+		list($rid, $uid) = Database::escapeArray(array($rid, $uid));
+		if(Database::isRozpisFree($rid)) {
+			$res = Database::query("UPDATE rozpis_item SET ri_partner='$uid' WHERE ri_id='$rid'");
+			return true;
+		} else
+			return false;
+	}
+	
+	public static function rozpisSignOut($rid, $uid) {
+		list($rid, $uid) = Database::escapeArray(array($rid, $uid));
+		if(!Database::isRozpisFree($rid)) {
+			$res = Database::query("UPDATE rozpis_item SET ri_partner='' WHERE ri_id='$rid'");
+			return true;
+		} else
+			return false;
+	}
+	
+	public static function getRozpisItem($rid) {
+		list($rid) = Database::escapeArray(array($rid));
+		
+		$res = Database::query("SELECT u_id,u_login,u_jmeno,u_prijmeni,ri_id,ri_id_rodic,ri_partner," .
+			"ri_od,ri_do,ri_lock FROM rozpis_item LEFT JOIN users ON ri_partner=u_id WHERE " .
+			"ri_id_rodic='$rid'");
+		return Database::getArray($res);
+	}
+	
+	public static function getRozpisItemLesson($ri_id) {
+		list($ri_id) = Database::escapeArray(array($ri_id));
+		
+		$res = Database::query("SELECT u_id,u_login,u_jmeno,u_prijmeni,r_trener,ri_id,ri_id_rodic,ri_partner," .
+			"ri_od,ri_do,ri_lock FROM rozpis_item LEFT JOIN users ON ri_partner=u_id LEFT JOIN rozpis ON ri_id_rodic=r_id WHERE " .
+			"ri_id='$ri_id'");
+		return Database::getArray($res);
+	}
+
+	public static function isRozpisFree($rid) {
+	list($rid) = Database::escapeArray(array($rid));
+		
+		$res = Database::query("SELECT ri_partner FROM rozpis_item WHERE ri_id='$rid'");
+		if(!$res) {
+			return false;
+		} else {
+			$row = Database::getSingleRow($res);
+			return !(bool)$row["ri_partner"];
+		}
+	}
+	
+	public static function getSingleRozpis($id) {
+		list($id) = Database::escapeArray(array($id));
+		
+		$res = Database::query("SELECT r_id,r_trener,u_jmeno,u_prijmeni,r_kde,r_datum,r_od,r_do,r_lock" .
+			" FROM rozpis LEFT JOIN users ON r_trener=u_id WHERE r_id='$id'");
+		if(!$res) {
+			return false;
+		} else {
+			return Database::getSingleRow($res);
+		}
+	}
+	
+	public static function getRozpisTrenerID($id) {
+		list($id) = Database::escapeArray(array($id));
+		
+		$res = Database::query("SELECT r_trener FROM rozpis WHERE r_id='$id'");
+		if(!$res) {
+			return false;
+		} else {
+			$row = Database::getSingleRow($res);
+			return $row["r_trener"];
+		}
+	}
+	
+	public static function addRozpis($trener, $kde, $datum, $od, $do, $lock) {
+		list($trener, $kde, $datum, $od, $do, $lock) =
+			Database::escapeArray(array($trener, $kde, $datum, $od, $do, $lock));
+		
+		Database::query("INSERT INTO rozpis (r_trener,r_kde,r_datum,r_od,r_do,r_lock) VALUES " .
+			"('$trener','$kde','$datum','$od','$do','$lock')");
+		
+		return true;
+	}
+	
+	public static function editRozpis($id, $trener, $kde, $datum, $od, $do, $lock) {
+		list($id, $trener, $kde, $datum, $od, $do, $lock) =
+			Database::escapeArray(array($id, $trener, $kde, $datum, $od, $do, $lock));
+		
+		Database::query("UPDATE rozpis SET r_trener='$trener',r_kde='$kde',r_datum='$datum'," .
+			"r_od='$od',r_do='$do',r_lock='$lock' WHERE r_id='$id'");
+		
+		return true;
+	}
+	
+	public static function removeRozpis($id) {
+		list($id) = Database::escapeArray(array($id));
+		
+		Database::query("DELETE FROM rozpis WHERE r_id='$id'");
+		Database::query("DELETE FROM rozpis_item WHERE ri_id_rodic='$id'");
 		
 		return true;
 	}

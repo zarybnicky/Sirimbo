@@ -34,4 +34,7 @@ function getPostField($field) {
 	else
 		return null;
 }
+function notice($msg) {
+	echo "<div class=\"notice\">", $msg, "</div>";
+}
 ?>
