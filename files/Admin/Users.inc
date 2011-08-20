@@ -1,6 +1,8 @@
 <?php
 User::checkPermissionsError(L_ADMIN);
-echo "<h4>Správa uživatelů</h4>";
+echo "<div class=\"h_section\">Správa uživatelů</div>";
+
+var_dump($_POST);
 
 if(empty($_POST)) {
 	include("files/Admin/UsersDisplay.inc");
