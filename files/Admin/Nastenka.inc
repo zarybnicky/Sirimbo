@@ -1,7 +1,7 @@
 <?php
 User::checkPermissionsError(L_EDITOR);
 
-echo "<h4>Správa nástěnky</h4>";
+echo "<div class=\"h_section\">Správa nástěnky</div>";
 
 if(empty($_POST)) {
 	include("files/Admin/NastenkaDisplay.inc");

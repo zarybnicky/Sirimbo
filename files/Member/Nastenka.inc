@@ -1,4 +1,4 @@
-<h3><span>Upozornění</span></h3>
+<div class="h_section">Upozornění</div>
 <?php
 User::checkPermissionsError(L_USER);
 //TODO: Paging, get(OD,DO)

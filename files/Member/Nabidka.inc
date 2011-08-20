@@ -1,4 +1,4 @@
-<h3><span>Nabídka tréninků</span></h3>
+<div class="h_section">Nabídka tréninků</div>
 <?php
 User::checkPermissionsError(L_USER);
 
@@ -9,6 +9,11 @@ $isConfirmation = (getPostField("hodiny") && getPostField("id")) || getPostField
 //TODO: Paging, get(OD,DO)
 $nabidka = Database::getNabidka();
 
+if(empty($nabidka)) {
+	Form::notice("Žádná nabídka k dispozici");
+	return;
+}
+
 if($isConfirmation) {
 	$hodiny = getPostField("hodiny");
 	$id = getPostField("id");
@@ -17,16 +22,16 @@ if($isConfirmation) {
 	if($hodiny) {
 		if((Database::getNabidkaMaxLessons($id) - Database::getNabidkaItemLessons($id)) >= $hodiny) {
 			Database::addNabidkaItemLessons(User::getUserName(), $id, $hodiny);
-			echo "Hodiny přidány";
+			notice("Hodiny přidány");
 		} else {
-			echo "Tolik volných hodin tu není";
+			notice("Tolik volných hodin tu není");
 		}
 	} elseif($un_id) {
 		list($u_id, $n_id) = explode("-", $un_id);
 		if(Database::hasNabidkaLessons($n_id, $u_id) &&
 				($u_id == User::getUserID() || User::checkPermissionsBool(L_ADMIN))) {
 			Database::removeNabidkaItem($n_id, $u_id);
-			echo "Hodiny odebrány";
+			notice("Hodiny odebrány");
 		}
 	}
 }
