@@ -10,22 +10,24 @@
 <td></td>
 <td>Trenér</td>
 <td>Datum</td>
+<td>Místo</td>
 </tr>
 <?php
-$nabidka = Database::getNabidka();
+$nabidka = Database::getRozpis();
 
 foreach($nabidka as $item) {
 	echo "<tr>";
 	
-	if(User::checkPermissionsBool(L_ADMIN) || ($item["n_trener"] == User::getUserName() &&
-			!$item["n_lock"]))
-		echo "<td><input type=\"checkbox\" name=\"nabidka[]\" value=\"" . $item["n_id"] .
+	if(User::checkPermissionsBool(L_ADMIN) || ($item["r_trener"] == User::getUserName() &&
+			!$item["r_lock"]))
+		echo "<td><input type=\"checkbox\" name=\"rozpis[]\" value=\"" . $item["r_id"] .
 			"\" /></td>";
 	else
-		echo "<td><input type=\"checkbox\" name=\"nabidka[]\" value=\"" .
+		echo "<td><input type=\"checkbox\" name=\"rozpis[]\" value=\"" .
 			"\" disabled=\"d\" /></td>";
 	echo "<td>" . $item["u_jmeno"] . " " . $item["u_prijmeni"] . "</td>";
-	echo "<td>" . $item["n_od"] . " - " . $item["n_do"] .  "</td>";
+	echo "<td>" . $item["r_datum"] .  "</td>";
+	echo "<td>" . $item["r_kde"] .  "</td>";
 	echo "</tr>";
 }
 ?>

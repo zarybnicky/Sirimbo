@@ -61,6 +61,7 @@
 <ul>
 <li><a href="/admin/users">Uživatelé</a></li>
 <li><a href="/admin/nastenka">Nástěnka</a></li>
+<li><a href="/admin/rozpis">Rozpis</a></li>
 <li><a href="/admin/nabidka">Nabídka</a></li>
 </ul>
 </div>

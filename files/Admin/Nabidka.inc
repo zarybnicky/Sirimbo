@@ -1,7 +1,7 @@
 <?php
 User::checkPermissionsError(L_TRENER);
 
-echo "<h4>Správa nabídek</h4>";
+echo "<div class=\"h_section\">Správa nabídek</div>";
 
 if(empty($_POST)) {
 	include("files/Admin/NabidkaDisplay.inc");
@@ -70,7 +70,7 @@ switch(getPostField("action")) {
 		
 		if(!$error) {
 			if(getPostField("action") == "edit_confirm") {
-				Database::editNabidka(getPostField("trener"), getPostField("pocet_hod"), getPostField("od"),
+				Database::editNabidka($n_id, getPostField("trener"), getPostField("pocet_hod"), getPostField("od"),
 					getPostField("do"), getPostField("lock"));
 				echo "Nabídka úspěšně upravena.<br/>";
 			} else if(getPostField("action") == "add_confirm") {
@@ -91,3 +91,4 @@ switch(getPostField("action")) {
 
 include("files/Admin/NabidkaDisplay.inc");
 return;
+?>
