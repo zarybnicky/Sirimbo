@@ -13,7 +13,9 @@ include("files/Core/Form.php");
 include("files/Core/Database.php");
 include("files/Core/User.php");
 include("files/Core/View.php");
+include("files/Core/Debug.php");		//DEBUG ONLY!!!
 
+//Are all CORE vars present?
 if(!$sitemap_static || !$sitemap_dynamic || !class_exists("Database") ||
 		!class_exists("User") || !class_exists("View") || !class_exists("Log"))
 	corrupt();
@@ -23,7 +25,6 @@ if(!isset($_GET["file"]) || $_GET["file"] == null) {
 } else {
 	$file = $_GET["file"];
 }
-
 if(array_key_exists($file, $sitemap_static)) {
 	$file = $sitemap_static[$file];
 	if(file_exists($file)) {

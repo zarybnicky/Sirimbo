@@ -1,4 +1,10 @@
 <?php
+define("DEBUG", "1");
+if(DEBUG) {
+	ini_set('display_errors','On'); 
+	error_reporting(-1);
+}
+
 define("HEADER", "files/Static/Header.inc");
 define("FOOTER", "files/Static/Footer.inc");
 define("LOG", "log/error.log");
@@ -53,14 +59,15 @@ $sitemap_dynamic = array(
 	"member/rozpis"		=> "files/Member/Rozpis.inc",
 	"member/nabidka"	=> "files/Member/Nabidka.inc",
 	"member/tabory"		=> "files/Member/Home.inc",
-	"member/dokumenty"	=> "files/Member/Home.inc",
+	"member/dokumenty"	=> "files/Member/Dokumenty.inc",
 	"member/zebricek"	=> "files/Member/Home.inc",
 	"member/profil"		=> "files/Member/Home.inc",
 	"member/logout"		=> "files/Member/Logout.inc",
 	"admin/nastenka"	=> "files/Admin/Nastenka.inc",
 	"admin/users"		=> "files/Admin/Users.inc",
 	"admin/rozpis"		=> "files/Admin/Rozpis.inc",
-	"admin/nabidka"		=> "files/Admin/Nabidka.inc"
+	"admin/nabidka"		=> "files/Admin/Nabidka.inc",
+	"admin/dokumenty"	=> "files/Admin/Dokumenty.inc"
 );
 
 class Settings {
@@ -76,5 +83,11 @@ public static $errors = array(
 	"not_posible"			=> "files/Error/NotPossible.inc",
 	"script_fatal"			=> "files/Error/ScriptFatal.inc"
 );
+
+public static $document_types = array(
+	"1"		=> "Schůze, rady",
+	"2"		=> "Soutěže",
+	"3"		=> "Tábory, ...",
+	"0"		=> "Ostatní");
 }
 ?>

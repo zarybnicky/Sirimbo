@@ -53,20 +53,42 @@
 </div>
 <?php
 	if(User::checkPermissionsBool(L_ADMIN)) {
-		//TODO: Admin menu
 		//TODO: Editor, trener menu
 ?>
 <div>
-<div>Administrátor</div>
+<div>Administrace</div>
 <ul>
 <li><a href="/admin/users">Uživatelé</a></li>
 <li><a href="/admin/nastenka">Nástěnka</a></li>
 <li><a href="/admin/rozpis">Rozpis</a></li>
 <li><a href="/admin/nabidka">Nabídka</a></li>
+<li><a href="/admin/dokumenty">Dokumenty</a></li>
 </ul>
 </div>
 <?php
-	} 
+	} elseif(User::checkPermissionsBool(L_EDITOR)) {
+?>
+<div>
+<div>Administrace</div>
+<ul>
+<li><a href="/admin/nastenka">Nástěnka</a></li>
+<li><a href="/admin/dokumenty">Dokumenty</a></li>
+</ul>
+</div>
+<?php
+	} elseif(User::checkPermissionsBool(L_TRENER)) {
+?>
+<div>
+<div>Administrace</div>
+<ul>
+<li><a href="/admin/nastenka">Nástěnka</a></li>
+<li><a href="/admin/rozpis">Rozpis</a></li>
+<li><a href="/admin/nabidka">Nabídka</a></li>
+<li><a href="/admin/dokumenty">Dokumenty</a></li>
+</ul>
+</div>
+<?php
+	}
 } else {
 	//TODO: AJAX
 	if(isset($_POST["login"])) {
