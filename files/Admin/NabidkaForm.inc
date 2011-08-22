@@ -63,7 +63,6 @@ echo "</h4>";
 		<td>Do: </td>
 		<td><input type="text" name="do" value="<?php echo getPostField("do"); ?>" /></td>
 		<td>(pokud je prázdný, počítá se jako "Od")<?php
-		//TODO: Date chooser
 			$localError = strlen(getPostField("do")) < 1 ? 0 :
 				checkPostField("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", "do");
 			$error = $error || $localError;

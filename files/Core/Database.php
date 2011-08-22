@@ -137,11 +137,12 @@ class Database {
 		$res = Database::query("SELECT u_id,u_jmeno,u_prijmeni FROM users WHERE u_level>=" . L_TRENER);
 		return Database::getArray($res);
 	}
+	
 	/* Sekce */
 	/* NASTENKA */
 	
 	public static function getNastenka() {
-		$res = Database::query("SELECT up_id,u_login,u_jmeno,u_prijmeni,up_kdy,up_nadpis,up_text,up_lock" .
+		$res = Database::query("SELECT up_id,u_login,u_jmeno,u_prijmeni,up_aktu,up_nadpis,up_text,up_lock" .
 			" FROM upozorneni LEFT JOIN users ON up_kdo=u_id");
 		return Database::getArray($res);
 	}
@@ -162,7 +163,7 @@ class Database {
 	public static function getSingleNastenka($id) {
 		list($id) = Database::escapeArray(array($id));
 		
-		$res = Database::query("SELECT u_login,u_jmeno,u_prijmeni,up_kdy,up_nadpis,up_text,up_lock" .
+		$res = Database::query("SELECT u_login,u_jmeno,u_prijmeni,up_aktu,up_nadpis,up_text,up_lock" .
 			" FROM upozorneni LEFT JOIN users ON up_kdo=u_id WHERE up_id='$id'");
 		if(!$res) {
 			return false;
@@ -443,6 +444,75 @@ class Database {
 		
 		Database::query("DELETE FROM rozpis WHERE r_id='$id'");
 		Database::query("DELETE FROM rozpis_item WHERE ri_id_rodic='$id'");
+		
+		return true;
+	}
+	
+	/* Sekce */
+	/* DOKUMENTY */
+	
+	public static function getDokumenty() {
+		$res = Database::query("SELECT u_jmeno,u_prijmeni,d_id,d_path,d_name,d_filename,d_kategorie,d_kdo" .
+			" FROM dokumenty LEFT JOIN users ON d_kdo=u_id");
+		return Database::getArray($res);
+	}
+	
+	public static function getSingleDocument($id) {
+		list($id) = Database::escapeArray(array($id));
+		//TODO: Handle database returning FALSE
+		$res = Database::query("SELECT u_jmeno,u_prijmeni,d_id,d_path,d_name,d_filename,d_kategorie,d_kdo" .
+			" FROM dokumenty LEFT JOIN users ON d_kdo=u_id WHERE d_id='$id'");
+		if(!$res) {
+			return false;
+		} else {
+			return Database::getSingleRow($res);
+		}
+	}
+	
+	public static function getDocumentPath($id) {
+		list($id) = Database::escapeArray(array($id));
+		
+		$res = Database::query("SELECT d_path FROM dokumenty WHERE d_id='$id'");
+		if(!$res) {
+			return false;
+		} else {
+			$row = Database::getSingleRow($res);
+			return $row["d_path"];
+		}
+	}
+	
+	public static function getDokumentUserID($id) {
+		list($id) = Database::escapeArray(array($id));
+		
+		$res = Database::query("SELECT d_kdo FROM dokumenty WHERE d_id='$id'");
+		if(!$res) {
+			return false;
+		} else {
+			$row = Database::getSingleRow($res);
+			return $row["d_kdo"];
+		}
+	}
+	
+	public static function addDokument($path, $name, $filename, $kategorie, $kdo) {
+		list($path, $kategorie, $kdo) = Database::escapeArray(array($path, $kategorie, $kdo));
+		
+		Database::query("INSERT INTO dokumenty (d_path,d_name,d_filename,d_kategorie,d_kdo) VALUES " .
+			"('$path','$name','$filename','$kategorie','$kdo')");
+		return true;
+	}
+	
+	public static function editDokument($id, $newname) {
+		list($id, $newname) = Database::escapeArray(array($id, $newname));
+		
+		Database::query("UPDATE dokumenty SET d_name='$newname' WHERE d_id='$id'");
+		
+		return true;
+	}
+	
+	public static function removeDokument($id) {
+		list($id) = Database::escapeArray(array($id));
+		
+		Database::query("DELETE FROM dokumenty WHERE d_id='$id'");
 		
 		return true;
 	}
