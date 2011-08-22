@@ -84,6 +84,10 @@ switch(getPostField("action")) {
 		}
 		break;
 
+	case "edit_items":
+		
+		break;
+		
 	default:
 		include("files/Admin/NabidkaDisplay.inc");
 		return;

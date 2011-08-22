@@ -1,0 +1,5 @@
+[22-Aug-2011 14:05:50] PHP Notice:  session_start(): ps_files_cleanup_dir: opendir(/var/lib/php5) failed: Permission denied (13) in /home/jakub/Public/tkolympphp/files/Core/User.php on line 73
+[22-Aug-2011 14:05:50] PHP Stack trace:
+[22-Aug-2011 14:05:50] PHP   1. {main}() /home/jakub/Public/tkolympphp/index.php:0
+[22-Aug-2011 14:05:50] PHP   2. include() /home/jakub/Public/tkolympphp/index.php:14
+[22-Aug-2011 14:05:50] PHP   3. session_start() /home/jakub/Public/tkolympphp/files/Core/User.php:73
