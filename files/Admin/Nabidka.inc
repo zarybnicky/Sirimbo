@@ -1,7 +1,7 @@
 <?php
 User::checkPermissionsError(L_TRENER);
 
-echo "<div class=\"h_section\">Správa nabídek</div>";
+header_main("Správa nabídek");
 
 if(empty($_POST)) {
 	include("files/Admin/NabidkaDisplay.inc");
@@ -12,7 +12,7 @@ switch(getPostField("action")) {
 	case "edit":
 		if(is_array(getPostField("nabidka"))) {
 			foreach(getPostField("nabidka") as $item) {
-				$itemData = Database::getSingleNabidka($item);
+				$itemData = DBNabidka::getSingleNabidka($item);
 				
 				$_POST["id"] = $item;
 				$_POST["trener"] = $itemData["n_trener"];
@@ -38,12 +38,12 @@ switch(getPostField("action")) {
 		if(is_array(getPostField("nabidka"))) {
 			foreach(getPostField("nabidka") as $item) {
 				if(User::checkPermissionsBool(L_ADMIN) ||
-						(User::getUserID() == Database::getNabidkaTrenerID($item)))
-					Database::removeNabidka($item);
+						(User::getUserID() == DBNabidka::getNabidkaTrenerID($item)))
+					DBNabidka::removeNabidka($item);
 				else
 					View::viewError(ER_AUTHORIZATION);
 			}
-			echo "Nabídky odebrány.<br/>";
+			notice("Nabídky odebrány");
 		}
 		break;
 	
@@ -52,7 +52,7 @@ switch(getPostField("action")) {
 		$n_id = getPostField("id");
 		var_dump($_POST);
 		if((getPostField("action") == "edit_confirm" &&
-				(User::getUserID() != Database::getNabidkaTrenerID($n_id) &&
+				(User::getUserID() != DBNabidka::getNabidkaTrenerID($n_id) &&
 					!User::checkPermissionsBool(L_ADMIN))) ||
 				(getPostField("action") == "add_confirm" &&
 				(User::getUserID() != getPostField("trener")) &&
@@ -70,27 +70,35 @@ switch(getPostField("action")) {
 		
 		if(!$error) {
 			if(getPostField("action") == "edit_confirm") {
-				Database::editNabidka($n_id, getPostField("trener"), getPostField("pocet_hod"), getPostField("od"),
+				DBNabidka::editNabidka($n_id, getPostField("trener"), getPostField("pocet_hod"), getPostField("od"),
 					getPostField("do"), getPostField("lock"));
-				echo "Nabídka úspěšně upravena.<br/>";
+				notice("Nabídka úspěšně upravena");
 			} else if(getPostField("action") == "add_confirm") {
-				Database::addNabidka(getPostField("trener"), getPostField("pocet_hod"), getPostField("od"),
+				DBNabidka::addNabidka(getPostField("trener"), getPostField("pocet_hod"), getPostField("od"),
 					getPostField("do"), getPostField("lock"));
-				echo "Nabídka úspěšně přidána.<br/>";
+				notice("Nabídka úspěšně přidána");
 			}
 		} else {
 			echo $html;
 			return;
 		}
 		break;
-
-	case "edit_items":
 		
-		break;
+	case "edit_detail":
+		$redirect_str = "";
+		$nabidka = getPostArray("nabidka");
 		
-	default:
-		include("files/Admin/NabidkaDisplay.inc");
+		if(is_array($nabidka)) {
+			if(count($nabidka) > 1) {
+				$redirect_str = implode("&id[]=", $nabidka);
+				$redirect_str = "id[]=" . $redirect_str;
+			} else
+				$redirect_str = $nabidka[0];
+		}
+		
+		header("/admin/nabidka-detail?" . $redirect_str);
 		return;
+		break;
 }
 
 include("files/Admin/NabidkaDisplay.inc");

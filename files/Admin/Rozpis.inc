@@ -1,7 +1,7 @@
 <?php
 User::checkPermissionsError(L_TRENER);
 
-echo "<div class=\"h_section\">Správa rozpisů</div>";
+header_main("Správa rozpisů");
 
 if(empty($_POST)) {
 	include("files/Admin/RozpisDisplay.inc");
@@ -12,7 +12,7 @@ switch(getPostField("action")) {
 	case "edit":
 		if(is_array(getPostField("rozpis"))) {
 			foreach(getPostField("rozpis") as $item) {
-				$itemData = Database::getSingleRozpis($item);
+				$itemData = DBRozpis::getSingleRozpis($item);
 				
 				$_POST["id"] = $item;
 				$_POST["trener"] = $itemData["r_trener"];
@@ -39,12 +39,12 @@ switch(getPostField("action")) {
 		if(is_array(getPostField("rozpis"))) {
 			foreach(getPostField("rozpis") as $item) {
 				if(User::checkPermissionsBool(L_ADMIN) ||
-						(User::getUserID() == Database::getRozpisTrenerID($item)))
-					Database::removeRozpis($item);
+						(User::getUserID() == DBRozpis::getRozpisTrenerID($item)))
+					DBRozpis::removeRozpis($item);
 				else
 					View::viewError(ER_AUTHORIZATION);
 			}
-			echo "Rozpisy odebrány.<br/>";
+			notice("Rozpisy odebrány");
 		}
 		break;
 	
@@ -53,7 +53,7 @@ switch(getPostField("action")) {
 		$r_id = getPostField("id");
 		
 		if((getPostField("action") == "edit_confirm" &&
-				(User::getUserID() != Database::getRozpisTrenerID($r_id) &&
+				(User::getUserID() != DBRozpis::getRozpisTrenerID($r_id) &&
 					!User::checkPermissionsBool(L_ADMIN))) ||
 			(getPostField("action") == "add_confirm" &&
 				(User::getUserID() != getPostField("trener")) &&
@@ -68,23 +68,19 @@ switch(getPostField("action")) {
 		
 		if(!$error) {
 			if(getPostField("action") == "edit_confirm") {
-				Database::editRozpis($r_id, getPostField("trener"), getPostField("kde"), getPostField("datum"),
+				DBRozpis::editRozpis($r_id, getPostField("trener"), getPostField("kde"), getPostField("datum"),
 					getPostField("od"), getPostField("do"), getPostField("lock"));
-				echo "Rozpis úspěšně upraven.<br/>";
+				notice("Rozpis úspěšně upraven");
 			} else if(getPostField("action") == "add_confirm") {
-				Database::addRozpis(getPostField("trener"), getPostField("kde"), getPostField("datum"),
+				DBRozpis::addRozpis(getPostField("trener"), getPostField("kde"), getPostField("datum"),
 					getPostField("od"), getPostField("do"), getPostField("lock"));
-				echo "Rozpis úspěšně přidán.<br/>";
+				notice("Rozpis úspěšně přidán");
 			}
 		} else {
 			echo $html;
 			return;
 		}
 		break;
-
-	default:
-		include("files/Admin/RozpisDisplay.inc");
-		return;
 }
 
 include("files/Admin/RozpisDisplay.inc");

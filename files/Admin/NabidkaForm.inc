@@ -4,14 +4,14 @@ $error = false;
 global $isConfirmation;
 $isConfirmation = (getPostField("trener") || getPostField("pocet_hod"));
 
-echo "<h4>";
 if(getPostField("action") == "edit" || getPostField("action") == "edit_confirm")
-	echo "Upravit nabídku";
+	$header = "Upravit nabídku";
 else if(getPostField("action") == "add" || getPostField("action") == "add_confirm")
-	echo "Přidat nabídku";
+	$header = "Přidat nabídku";
 else
-	echo "Neznámá akce";
-echo "</h4>";
+	$header = "Neznámá akce";
+
+header_minor($header);
 ?>
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
 <table>
@@ -27,7 +27,7 @@ echo "</h4>";
 			<option value="none" <?php if(!getPostField("trener")) echo "selected=\"selected\"";?>>
 				Vyber si :o)</option>
 			<?php
-			$treneri = Database::getTrener();
+			$treneri = DBUser::getTrener();
 			foreach($treneri as $item) {
 				echo "\t\t\t<option value=\"" . $item["u_id"] . "\"";
 				if(getPostField("trener") == $item["u_id"])
@@ -48,24 +48,21 @@ echo "</h4>";
 		<td>Počet hodin (*): </td>
 		<td><input type="text" name="pocet_hod" value="<?php echo getPostField("pocet_hod"); ?>" /></td>
 		<td>Pouze číslice<?php
-			$localError = checkPostField("/^[0-9]*$/i", "pocet_hod");
-			$error = $error || $localError;
+			$error = checkPostField("/^[0-9]*$/i", "pocet_hod") || $error;
 		?></td>
 	</tr><tr>
 		<td>Od: (*)</td>
 		<td><input type="text" name="od" value="<?php echo getPostField("od"); ?>" /></td>
 		<td>Ve formátu např.: 2011-08-14<?php
 		//TODO: Date chooser
-			$localError = checkPostField("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", "od");
-			$error = $error || $localError;
+			$error = checkPostField("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", "od") || $error;
 		?></td>
 	</tr><tr>
 		<td>Do: </td>
 		<td><input type="text" name="do" value="<?php echo getPostField("do"); ?>" /></td>
 		<td>(pokud je prázdný, počítá se jako "Od")<?php
-			$localError = strlen(getPostField("do")) < 1 ? 0 :
-				checkPostField("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", "do");
-			$error = $error || $localError;
+			$error = strlen(getPostField("do")) < 1 ? 0 :
+				checkPostField("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", "do") || $error;
 		?></td>
 	</tr><tr>
 		<td>Uzamknout: </td>

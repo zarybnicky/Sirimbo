@@ -4,14 +4,14 @@ $error = false;
 global $isConfirmation;
 $isConfirmation = (getPostField("nadpis") || getPostField("text"));
 
-echo "<h4>";
 if(getPostField("action") == "edit" || getPostField("action") == "edit_confirm")
-	echo "Upravit příspěvek";
+	$header = "Upravit příspěvek";
 else if(getPostField("action") == "add" || getPostField("action") == "add_confirm")
-	echo "Přidat příspěvek";
+	$header = "Přidat příspěvek";
 else
-	echo "Neznámá akce";
-echo "</h4>";
+	$header = "Neznámá akce";
+
+header_minor($header);
 ?>
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
 <table>

@@ -4,14 +4,12 @@ $error = false;
 global $isConfirmation;
 $isConfirmation = (getPostField("login") || getPostField("pass"));
 
-echo "<h4>";
 if(getPostField("action") == "edit" || getPostField("action") == "edit_confirm")
-	echo "Upravit užitatele";
+	$header = "Upravit užitatele";
 else if(getPostField("action") == "add" || getPostField("action") == "add_confirm")
-	echo "Přidat uživatele";
+	$header = "Přidat uživatele";
 else
-	echo "Neznámá akce";
-echo "</h4>";
+	$header = "Neznámá akce";
 ?>
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
 <table>
@@ -32,39 +30,34 @@ echo "</h4>";
 		?>/></td>
 		<td>Pouze písmena bez diakritiky, číslice a podtržítka, 6 - 32 znaků<?php
 			if(getPostField("action") != "edit" && getPostField("action") != "edit_confirm") {
-				$localError = checkPostField("/^[A-Z0-9_]{6,32}$/i", "pass");
-				$error = $error || $localError;
+				$error = checkPostField("/^[A-Z0-9_]{6,32}$/i", "pass") || $error;
 			}
 		?></td>
 	</tr><tr>
 		<td>Jméno: </td>
 		<td><input type="text" name="jmeno" value="<?php echo getPostField("jmeno"); ?>" /></td>
 		<td>Max. 40 znaků<?php
-			$localError = checkPostFieldLength(0, 40, "jmeno");
-			$error = $error || $localError;
+			$error = checkPostFieldLength(0, 40, "jmeno") || $error;
 		?></td>
 	</tr><tr>
 		<td>Příjmení: </td>
 		<td><input type="text" name="prijmeni" value="<?php echo getPostField("prijmeni"); ?>" /></td>
 		<td>Max. 40 znaků<?php
-			$localError = checkPostFieldLength(0, 40, "prijmeni");
-			$error = $error || $localError;
+			$error = checkPostFieldLength(0, 40, "prijmeni") || $error;
 		?></td>
 	</tr><tr>
 		<td>E-mail: </td>
 		<td><input type="text" name="email" value="<?php echo getPostField("email"); ?>" /></td>
 		<td>Max. 50 znaků, ve formátu e-mail adresy<?php
-			$localError = strlen(getPostField("email")) < 1 ? 0 : 
-				checkPostField("/^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i", "email");
-			$error = $error || $localError;
+			$error = (strlen(getPostField("email")) < 1 ? 0 : 
+				checkPostField("/^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i", "email")) || $error;
 		?></td>
 	</tr><tr>
 		<td>Telefon: </td>
 		<td><input type="text" name="telefon" value="<?php echo getPostField("telefon"); ?>" /></td>
 		<td>Pouze číslice a +, max. 13 znaků<?php
-			$localError = strlen(getPostField("telefon")) < 1 ? 0 : 
-				checkPostField("/^[0-9+]{9,13}$/", "telefon");
-			$error = $error || $localError;
+			$error = strlen(getPostField("telefon")) < 1 ? 0 : 
+				checkPostField("/^[0-9+]{9,13}$/", "telefon") || $error;
 		?></td>
 	</tr><tr>
 		<td>Poznámky: </td>

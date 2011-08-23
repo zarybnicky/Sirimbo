@@ -4,14 +4,14 @@ $error = false;
 global $isConfirmation;
 $isConfirmation = (getPostField("trener") || getPostField("kde"));
 
-echo "<h4>";
 if(getPostField("action") == "edit" || getPostField("action") == "edit_confirm")
-	echo "Upravit rozpis";
+	$header = "Upravit rozpis";
 else if(getPostField("action") == "add" || getPostField("action") == "add_confirm")
-	echo "Přidat rozpis";
+	$header = "Přidat rozpis";
 else
-	echo "Neznámá akce";
-echo "</h4>";
+	$header = "Neznámá akce";
+	
+header_minor($header);
 ?>
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
 <table>
@@ -27,7 +27,7 @@ echo "</h4>";
 			<option value="none" <?php if(!getPostField("trener")) echo "selected=\"selected\"";?>>
 				Vyber si :o)</option>
 			<?php
-			$treneri = Database::getTrener();
+			$treneri = DBUser::getTrener();
 			foreach($treneri as $item) {
 				echo "\t\t\t<option value=\"" . $item["u_id"] . "\"";
 				if(getPostField("trener") == $item["u_id"])
@@ -53,23 +53,20 @@ echo "</h4>";
 		<td><input type="text" name="datum" value="<?php echo getPostField("datum"); ?>" /></td>
 		<td>Ve formátu např.: 2011-08-14<?php
 		//TODO: Date chooser
-			$localError = checkPostField("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", "datum");
-			$error = $error || $localError;
+			$error = checkPostField("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", "datum") || $error;
 		?></td>
 	</tr><tr>
 		<td>Od (*): </td>
 		<td><input type="text" name="od" value="<?php echo getPostField("od"); ?>" /></td>
 		<td>Zatím ve formátu např.: 15:30:00<?php
 		//TODO: Normal TIME format
-				$localError = checkPostField("/^[0-9]{2}:[0-9]{2}:[0-9]{2}$/", "od");
-			$error = $error || $localError;
+			$error = checkPostField("/^[0-9]{2}:[0-9]{2}:[0-9]{2}$/", "od") || $error;
 		?></td>
 	</tr><tr>
 		<td>Do (*): </td>
 		<td><input type="text" name="do" value="<?php echo getPostField("do"); ?>" /></td>
 		<td>Totéž :o)<?php
-				$localError = checkPostField("/^[0-9]{2}:[0-9]{2}:[0-9]{2}$/", "do");
-			$error = $error || $localError;
+			$error = checkPostField("/^[0-9]{2}:[0-9]{2}:[0-9]{2}$/", "do") || $error;
 		?></td>
 	</tr><tr>
 		<td>Uzamknout: </td>
