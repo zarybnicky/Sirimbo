@@ -13,7 +13,7 @@
 <td>Místo</td>
 </tr>
 <?php
-$nabidka = Database::getRozpis();
+$nabidka = DBRozpis::getRozpis();
 
 foreach($nabidka as $item) {
 	echo "<tr>";

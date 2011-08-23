@@ -11,22 +11,26 @@ vnitřek stránek - po zalogování:
  - správa profilu: chci aby si mohli spravovat svoje profily: třída, počet bodù, účasti na soutěžích, omezené množství fotografií
  - stránka členové: jednotlivé profily všech členù seřazené podle úspěšnosti na tanečních soutěžích (kritéria řazení vymyslíme), možnost prohlížení profilù ostatních párù
 
+-----DONE-----
 pro editory: 
  - možnost psát informace na nástěnku (hanka jendrulková - placení příspěvkù, paní benýšková informace z klubové rady)
  - možnost vkládání dokumentù do sekce "dokumenty"
  - možnost vidět obsah ostatních sekcí
-
+-----DONE-----
 trenéři: 
  - možnost psát informace na nástěnku
  - možnost vkládání dokumentù do sekce "dokumenty"
  - možnost vytvořit rozpis tréninkù pod vlastním jménem (ale bez možnosti uveřejnění - to bude dělat až sám administrátor)
  - možnost vidět obsah ostatních sekcí
+-----DONE-----
 
 host:
  - bez možnosti cokoliv editovat - pouze možost vidět vše
 
+-----DONE-----
 ban:
  - možnost administrátora zamezit přístupu člena/editora/trenéra/hosta na stránky, aniž by musel profil smazat, zkrátka mu zamezí přístup, ale profil bude nadále fungovat
 
 administrátor: 
  - možnost editovat vše, nebudu dále rozepisovat, na tohle se potřebujeme sejít osobně a vyladit to společně
+-----DONE-----
