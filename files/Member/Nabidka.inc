@@ -1,13 +1,13 @@
-<div class="h_section">Nabídka tréninků</div>
 <?php
+header_main("Nabídka tréninků");
+
 User::checkPermissionsError(L_USER);
 
 $error = false;
 global $isConfirmation;
 $isConfirmation = (getPostField("hodiny") && getPostField("id")) || getPostField("un_id");
 
-//TODO: Paging, get(OD,DO)
-$nabidka = Database::getNabidka();
+$nabidka = DBNabidka::getNabidka();
 
 if(empty($nabidka)) {
 	Form::notice("Žádná nabídka k dispozici");
@@ -20,25 +20,25 @@ if($isConfirmation) {
 	$un_id = getPostField("un_id");
 	
 	if($hodiny) {
-		if((Database::getNabidkaMaxLessons($id) - Database::getNabidkaItemLessons($id)) >= $hodiny) {
-			Database::addNabidkaItemLessons(User::getUserName(), $id, $hodiny);
+		if((DBNabidka::getNabidkaMaxLessons($id) - DBNabidka::getNabidkaItemLessons($id)) >= $hodiny) {
+			DBNabidka::addNabidkaItemLessons(User::getUserName(), $id, $hodiny);
 			notice("Hodiny přidány");
 		} else {
 			notice("Tolik volných hodin tu není");
 		}
 	} elseif($un_id) {
 		list($u_id, $n_id) = explode("-", $un_id);
-		if(Database::hasNabidkaLessons($n_id, $u_id) &&
+		if(DBNabidka::hasNabidkaLessons($n_id, $u_id) &&
 				($u_id == User::getUserID() || User::checkPermissionsBool(L_ADMIN))) {
-			Database::removeNabidkaItem($n_id, $u_id);
+			DBNabidka::removeNabidkaItem($n_id, $u_id);
 			notice("Hodiny odebrány");
 		}
 	}
 }
 
 foreach($nabidka as $item) {
-	$n_items = Database::getNabidkaItem($item["n_id"]);
-	$obsazeno = Database::getNabidkaItemLessons($item["n_id"]);
+	$n_items = DBNabidka::getNabidkaItem($item["n_id"]);
+	$obsazeno = DBNabidka::getNabidkaItemLessons($item["n_id"]);
 	echo "<div class=\"n_wrapper\">";
 	echo "<div class=\"n_info\" style=\"border:1px solid black;\">";
 	echo "<div class=\"n_trener\">", $item["u_jmeno"], " ", $item["u_prijmeni"], "</div>";

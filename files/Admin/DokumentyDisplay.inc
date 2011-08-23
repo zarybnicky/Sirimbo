@@ -10,7 +10,7 @@
 <td>Uploadoval</td>
 </tr>
 <?php
-$dokumenty = Database::getDokumenty();
+$dokumenty = DBDokumenty::getDokumenty();
 
 foreach($dokumenty as $item) {
 	echo "<tr>";
@@ -38,7 +38,7 @@ foreach($dokumenty as $item) {
 <tr><td>Kategorie</td><td><select name="kategorie">
 	<option value="1">Schůze, rady</option>
 	<option value="2">Soutěže</option>
-	<option value="3">Tábory, ...</option>
+	<option value="3">Tábory</option>
 	<option value="0">Ostatní</option>
 </select></td></tr>
 <tr><td></td><td><button type="submit" name="action" value="upload">Upload</button></td></tr>

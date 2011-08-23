@@ -13,7 +13,7 @@
 <td>Datum</td>
 </tr>
 <?php
-$nabidka = Database::getNabidka();
+$nabidka = DBNabidka::getNabidka();
 
 foreach($nabidka as $item) {
 	echo "<tr>";

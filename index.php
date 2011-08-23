@@ -1,5 +1,16 @@
 <?php
-function corrupt() {
+include("files/Core/settings.php");
+include("files/Core/log.php");
+include("files/Core/form.php");
+include("files/Core/database.php");
+include("files/Core/database/dbuser.php");
+include("files/Core/user.php");
+include("files/Core/view.php");
+include("files/Core/debug.php");		//DEBUG ONLY!!!
+
+//Are all CORE vars present?
+if(!$sitemap_static || !$sitemap_dynamic || !class_exists("Database") ||
+		!class_exists("User") || !class_exists("View") || !class_exists("Log")) {
 	if(class_exists("View")) {
 		View::viewDynamic("files/Error/KeyFileCorrupt.inc");
 		die();
@@ -7,24 +18,13 @@ function corrupt() {
 		die("Poškozené knihovní soubory");
 	}
 }
-include("files/Core/Settings.php");
-include("files/Core/Log.php");
-include("files/Core/Form.php");
-include("files/Core/Database.php");
-include("files/Core/User.php");
-include("files/Core/View.php");
-include("files/Core/Debug.php");		//DEBUG ONLY!!!
-
-//Are all CORE vars present?
-if(!$sitemap_static || !$sitemap_dynamic || !class_exists("Database") ||
-		!class_exists("User") || !class_exists("View") || !class_exists("Log"))
-	corrupt();
 
 if(!isset($_GET["file"]) || $_GET["file"] == null) {
 	$file = "home";
 } else {
 	$file = $_GET["file"];
 }
+
 if(array_key_exists($file, $sitemap_static)) {
 	$file = $sitemap_static[$file];
 	if(file_exists($file)) {

@@ -1,6 +1,6 @@
 <?php
 User::checkPermissionsError(L_ADMIN);
-echo "<div class=\"h_section\">Správa uživatelů</div>";
+header_main("Správa uživatelů");
 
 var_dump($_POST);
 
@@ -14,7 +14,7 @@ switch(getPostField("action")) {
 	case "edit":
 		if(is_array(getPostField("users"))) {
 			foreach(getPostField("users") as $user) {
-				$userData = Database::getUserData($user);
+				$userData = DBUser::getUserData($user);
 				$_POST["login"] = $user;
 				$_POST["level"] = $userData["u_level"];
 				switch($userData["u_level"]) {
@@ -71,8 +71,8 @@ switch(getPostField("action")) {
 		if(getPostField("action") == "edit_confirm") {
 			if(!User::checkPermissionsBool(L_SADMIN) && ((
 					User::getUserName() != $user &&
-					Database::getUserlevel($user) >= User::getUserLevel()) ||
-					Database::isUserLocked($user))) {
+					DBUser::getUserlevel($user) >= User::getUserLevel()) ||
+					DBUser::isUserLocked($user))) {
 				View::viewError(ER_AUTHORIZATION);
 				break;
 			}
@@ -97,19 +97,19 @@ switch(getPostField("action")) {
 					$level = L_USER;	break;
 			}
 			if(getPostField("action") == "edit_confirm") {
-				User::editUser($user, $level, (getPostField("lock")) ? 1 : 0,
+				DBUser::editUser($user, $level, (getPostField("lock")) ? 1 : 0,
 					(getPostField("ban")) ? 1 : 0, getPostField("jmeno"), getPostField("prijmeni"),
 					getPostField("email"), getPostField("telefon"), getPostField("poznamky"));
-				echo "Uživatel úspěšně upraven.<br/>";
+				notice("Uživatel úspěšně upraven");
 			} else if(getPostField("action") == "add_confirm") {
 				$pass = md5($_POST["pass"]);
 				//TODO: Add custom algorithm
 				//TODO: Changing passwords
-				User::addUser($user, $pass, $level, (getPostField("lock")) ? 1 : 0,
+				DBUser::addUser($user, $pass, $level, (getPostField("lock")) ? 1 : 0,
 					(getPostField("ban")) ? 1 : 0, getPostField("jmeno"),
 					getPostField("prijmeni"), getPostField("email"), getPostField("telefon"),
 					getPostField("poznamky"));
-				echo "Uživatel úspěšně přidán.<br/>";
+				notice("Uživatel úspěšně přidán");
 			}
 		} else {
 			echo $html;
@@ -121,17 +121,13 @@ switch(getPostField("action")) {
 		if(is_array(getPostField("users"))) {
 			foreach(getPostField("users") as $user) {
 				if(User::checkPermissionsBool(L_SADMIN) || (User::getUserName() != $user &&
-						Database::getUserlevel($user) < User::getUserLevel() &&	!Database::isUserLocked($user)))
-					Database::removeUser($user);
+						DBUser::getUserlevel($user) < User::getUserLevel() && !DBUser::isUserLocked($user)))
+					DBUser::removeUser($user);
 				else
 					View::viewError(ER_AUTHORIZATION);
 			}			
-			echo "Uživatel(é) odebrán(i).<br/>";
+			notice("Uživatelé odebráni");
 		}
-		break;
-
-	default:
-		include("files/Admin/UsersDisplay.inc");
 		break;
 }
 

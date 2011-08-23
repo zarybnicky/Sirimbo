@@ -1,8 +1,9 @@
-<div class="h_section">Upozornění</div>
 <?php
+header_main("Upozornění");
+
 User::checkPermissionsError(L_USER);
-//TODO: Paging, get(OD,DO)
-$zpravy = Database::getNastenka();
+
+$zpravy = DBNastenka::getNastenka();
 foreach($zpravy as $item) {
 	echo "<hr/><div class=\"up_item\">";
 	echo "<div class=\"up_nadpis\" style=\"float:left;width:50%;\"><b>", $item["up_nadpis"], "</b></div>";
