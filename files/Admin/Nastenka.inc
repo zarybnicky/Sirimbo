@@ -1,7 +1,7 @@
 <?php
 User::checkPermissionsError(L_EDITOR);
 
-echo "<div class=\"h_section\">Správa nástěnky</div>";
+header_main("Správa nástěnky");
 
 if(empty($_POST)) {
 	include("files/Admin/NastenkaDisplay.inc");
@@ -13,7 +13,7 @@ switch(getPostField("action")) {
 	case "edit":
 		if(is_array(getPostField("nastenka"))) {
 			foreach(getPostField("nastenka") as $item) {
-				$itemData = Database::getSingleNastenka($item);
+				$itemData = DBNastenka::getSingleNastenka($item);
 				
 				$_POST["id"] = $item;
 				$_POST["nadpis"] = $itemData["up_nadpis"];
@@ -24,7 +24,7 @@ switch(getPostField("action")) {
 			return;
 		}
 		break;
-	
+		
 	case "add":
 		include("files/Admin/NastenkaForm.inc");
 		return;
@@ -33,13 +33,13 @@ switch(getPostField("action")) {
 		if(is_array(getPostField("nastenka"))) {
 			foreach(getPostField("nastenka") as $item) {
 				if(User::checkPermissionsBool(L_ADMIN) ||
-						(User::getUserName() == Database::getNastenkaUserName($item) &&
-						!Database::isNastenkaLocked($item)))
-					Database::removeNastenka($item);
+						(User::getUserName() == DBNastenka::getNastenkaUserName($item) &&
+						!DBNastenka::isNastenkaLocked($item)))
+					DBNastenka::removeNastenka($item);
 				else
 					View::viewError(ER_AUTHORIZATION);
 			}
-			echo "Příspěvky odebrány.<br/>";
+			notice("Příspěvky odebrány");
 		}
 		break;
 	
@@ -48,8 +48,8 @@ switch(getPostField("action")) {
 		$id = getPostField("id");
 		if(getPostField("action") == "edit_confirm") {
 			if(!User::checkPermissionsBool(L_ADMIN) && (
-					User::getUserName() != Database::getNastenkaUserName($id) ||
-					Database::isNastenkaLocked($id)))
+					User::getUserName() != DBNastenka::getNastenkaUserName($id) ||
+					DBNastenka::isNastenkaLocked($id)))
 				break;
 		}
 		$error = false;
@@ -60,23 +60,19 @@ switch(getPostField("action")) {
 		
 		if(!$error) {
 			if($_POST["action"] == "edit_confirm") {
-				Database::editNastenka($id, getPostField("nadpis"),
+				DBNastenka::editNastenka($id, getPostField("nadpis"),
 					getPostField("text"), (getPostField("lock") == "lock") ? 1 : 0);
-				echo "Příspěvek úspěšně upraven.<br/>";
+				notice("Příspěvek úspěšně upraven");
 			} else if(getPostField("action") == "add_confirm") {
-				Database::addNastenka(User::getUserName(), getPostField("nadpis"), getPostField("text"),
+				DBNastenka::addNastenka(User::getUserName(), getPostField("nadpis"), getPostField("text"),
 					(getPostField("lock") == "lock") ? 1 : 0);
-				echo "Příspěvek úspěšně přidán.<br/>";
+				notice("Příspěvek úspěšně přidán");
 			}
 		} else {
 			echo $html;
 			return;
 		}
 		break;
-		
-	default:
-		include("files/Admin/NastenkaDisplay.inc");
-		return;
 }
 
 include("files/Admin/NastenkaDisplay.inc");

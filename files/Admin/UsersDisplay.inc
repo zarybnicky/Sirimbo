@@ -10,12 +10,11 @@
 <td></td>
 <td>Login</td>
 <td>Jméno</td>
-<td>Příjmení</td>
 <td>Oprávnění</td>
 </tr>
 <?php
 //TODO: Paging, getUsers(OD,DO)
-$users = Database::getUsers();
+$users = DBUser::getUsers();
 foreach($users as $user) {
 	echo "<tr>";
 	if(($user["u_level"] < User::getUserLevel() && !$user["u_lock"] &&
@@ -26,8 +25,7 @@ foreach($users as $user) {
 		echo "<td><input type=\"checkbox\" name=\"users[]\" value=\"" .
 			"\" disabled=\"d\" /></td>";
 	echo "<td>" . $user["u_login"] . "</td>";
-	echo "<td>" . $user["u_jmeno"] . "</td>";
-	echo "<td>" . $user["u_prijmeni"] . "</td>";
+	echo "<td>" . $user["u_jmeno"] . " " . $user["u_prijmeni"] . "</td>";
 	$ul = $user["u_level"];
 	echo "<td>";
 	switch($ul) {

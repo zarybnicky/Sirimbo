@@ -28,7 +28,7 @@ switch(getPostField("action")) {
 			
 			if(move_uploaded_file($fileUpload, $path)) {
 				chmod ($path, 0666);
-				Database::addDokument($path, getPostField("name"), $fileName,
+				DBDokumenty::addDokument($path, getPostField("name"), $fileName,
 					getPostField("kategorie"), User::getUserID());
 				notice("Zmákli jsme to :o)");
 			} else {
@@ -36,15 +36,19 @@ switch(getPostField("action")) {
 			}
 		}
 		break;
+		
 	case "edit":
+		//TODO: When editing - handle multiple edits - two columns, each element eg. 0123-d_id
 		if(is_array(getPostField("dokumenty"))) {
 			foreach(getPostField("dokumenty") as $d_id) {
-				$file = Database::getSingleDocument($d_id);
-				//TODO: When editing - handle multiple edits - two columns, each element eg. 0123-d_id
-				//FIXME: Finished here - implement edit, remaining remove
-	?>
+				$file = DBDokumenty::getSingleDocument($d_id);
+				
+				if(!User::checkPermissionsBool(L_ADMIN) && 
+						User::getUserID() != $file["d_kdo"])
+					View::viewError(ER_AUTHORIZATION);
+?>
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
-Staré jméno:&nbsp;<?php echo $file["d_name"];?> <br />
+Staré jméno:&nbsp;<?php echo $file["d_name"];?><br />
 Nové jméno:&nbsp;
 <input type="text" name="newname" value="<?php echo $file["d_name"]; ?>" />
 <input type="hidden" name="id" value="<?php echo $d_id; ?>" />
@@ -63,11 +67,11 @@ Nové jméno:&nbsp;
 			$newname = "---EMPTY---";
 		
 		if(!User::checkPermissionsBool(L_ADMIN) && 
-				User::getUserID() != Database::getNastenkaUserID($id))
-			break;
+				User::getUserID() != DBDokumenty::getDokumentUserID($id))
+			View::viewError(ER_AUTHORIZATION);
 		
-		Database::editDokument($id, $newname);
-		notice("Příspěvek úspěšně upraven.");
+		DBDokumenty::editDokument($id, $newname);
+		notice("Příspěvek úspěšně upraven");
 		
 		break;
 
@@ -75,20 +79,16 @@ Nové jméno:&nbsp;
 		if(is_array(getPostField("dokumenty"))) {
 			foreach(getPostField("dokumenty") as $item) {
 				if(User::checkPermissionsBool(L_ADMIN) ||
-						(User::getUserID() == Database::getDokumentUserID($item))) {
-					unlink(Database::getDocumentPath($item));
-					Database::removeDokument($item);
+						(User::getUserID() == DBDokumenty::getDokumentUserID($item))) {
+					unlink(DBDokumenty::getDocumentPath($item));
+					DBDokumenty::removeDokument($item);
 				} else {
 					View::viewError(ER_AUTHORIZATION);
 				}
 			}
-			echo "Dokumenty odebrány.<br/>";
+			notice("Dokumenty odebrány");
 		}
 		break;
-	
-	default:
-		include("files/Admin/DokumentyDisplay.inc");
-		return;
 }
 
 include("files/Admin/DokumentyDisplay.inc");

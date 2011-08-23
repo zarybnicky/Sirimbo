@@ -1,13 +1,14 @@
 <div class="h_section">Rozpis tréninků</div>
 <?php
+header_main("Rozpis tréninků");
+
 User::checkPermissionsError(L_USER);
 
 $error = false;
 global $isConfirmation;
 $isConfirmation = getPostField("ri_id") && getPostField("action");
 
-//TODO: Paging, get(OD,DO)
-$rozpis = Database::getRozpis();
+$rozpis = DBRozpis::getRozpis();
 
 if(empty($rozpis)) {
 	notice("Žádná nabídka k dispozici");
@@ -19,11 +20,11 @@ if($isConfirmation) {
 	$action = getPostField("action");
 	$id = getPostField("ri_id");
 	
-	$lesson = Database::getRozpisItemLesson($id);
+	$lesson = DBRozpis::getRozpisItemLesson($id);
 	$lesson = $lesson[0];
 	
 	if($action == "signup") {
-		if($lesson["ri_partner"] == 0 && Database::rozpisSignUp($id, User::getUserID()) == true) {
+		if($lesson["ri_partner"] == 0 && DBRozpis::rozpisSignUp($id, User::getUserID()) == true) {
 			notice("Hodina přidána");
 		} else {
 			notice("Už je obsazeno");
@@ -33,7 +34,7 @@ if($isConfirmation) {
 			if((User::checkPermissionsBool(L_ADMIN) ||
 					User::getUserID() == $lesson["ri_partner"] ||
 					(User::checkPermissionsBool(L_TRENER) && $lesson["r_trener"] == User::getUserID())) &&
-					Database::rozpisSignOut($id, User::getUserID()) == true) {
+					DBRozpis::rozpisSignOut($id, User::getUserID()) == true) {
 				notice("Hodina odebrána");
 			} else {
 				View::viewError(ER_AUTHORIZATION);
@@ -45,7 +46,7 @@ if($isConfirmation) {
 }
 
 foreach($rozpis as $item) {
-	$r_items = Database::getRozpisItem($item["r_id"]);
+	$r_items = DBRozpis::getRozpisItem($item["r_id"]);
 	echo "<div class=\"r_wrapper\">";
 	echo "<div class=\"r_info\" style=\"float:left;border:1px solid black;\">";
 	echo "<div class=\"r_datum\">", $item["r_datum"], "</div>";
