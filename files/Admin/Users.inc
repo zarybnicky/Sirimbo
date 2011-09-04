@@ -5,7 +5,7 @@ header_main("Správa uživatelů");
 var_dump($_POST);
 
 if(empty($_POST)) {
-	include("files/Admin/UsersDisplay.inc");
+	include("files/Admin/Users/Display.inc");
 	return;
 }
 
@@ -36,14 +36,14 @@ switch(getPostField("action")) {
 				$_POST["email"] = $userData["u_email"];
 				$_POST["telefon"] = $userData["u_telefon"];
 				$_POST["poznamky"] = $userData["u_poznamky"];
-				include("files/Admin/UsersForm.inc");
+				include("files/Admin/Users/Form.inc");
 			}
 			return;
 		}
 		break;
 		
 	case "add":
-		include("files/Admin/UsersForm.inc");
+		include("files/Admin/Users/Form.inc");
 		return;
 
 	case "remove":
@@ -80,7 +80,7 @@ switch(getPostField("action")) {
 		$error = false;
 		
 		ob_start();
-		include("files/Admin/UsersForm.inc");	
+		include("files/Admin/Users/Form.inc");	
 		$html = ob_get_clean();
 		
 		if(!$error) {
@@ -131,5 +131,5 @@ switch(getPostField("action")) {
 		break;
 }
 
-include("files/Admin/UsersDisplay.inc");
+include("files/Admin/Users/Display.inc");
 ?>

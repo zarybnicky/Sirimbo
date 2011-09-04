@@ -4,6 +4,16 @@ set_include_path($_SERVER['DOCUMENT_ROOT'] . '/files/Core/database' . PATH_SEPAR
 spl_autoload_extensions(".php");
 spl_autoload_register();
 
+function shutdown() {
+	if (($error = error_get_last())) {
+		if($error["type"] == E_ERROR || $error["type"] == E_RECOVERABLE_ERROR) {
+			ob_clean();
+			header("Location: /error?id=script_fatal");
+		}
+	}
+}
+register_shutdown_function('shutdown');
+
 define("DEBUG", "1");
 if(DEBUG) {
 	ini_set('display_errors','On'); 
@@ -57,22 +67,24 @@ $sitemap_static = array(
 	"inzerce"			=> "files/Main/Inzerce.inc"
 );
 $sitemap_dynamic = array(
-	"error"				=> "files/Main/Error.inc",
+	"error"					=> "files/Main/Error.inc",
 //FIXME: Other pages
-	"member/home"		=> "files/Member/Home.inc",
-	"member/nastenka"	=> "files/Member/Nastenka.inc",
-	"member/rozpis"		=> "files/Member/Rozpis.inc",
-	"member/nabidka"	=> "files/Member/Nabidka.inc",
-	"member/tabory"		=> "files/Member/Home.inc",
-	"member/dokumenty"	=> "files/Member/Dokumenty.inc",
-	"member/zebricek"	=> "files/Member/Home.inc",
-	"member/profil"		=> "files/Member/Home.inc",
-	"member/logout"		=> "files/Member/Logout.inc",
-	"admin/nastenka"	=> "files/Admin/Nastenka.inc",
-	"admin/users"		=> "files/Admin/Users.inc",
-	"admin/rozpis"		=> "files/Admin/Rozpis.inc",
-	"admin/nabidka"		=> "files/Admin/Nabidka.inc",
-	"admin/dokumenty"	=> "files/Admin/Dokumenty.inc"
+	"member/home"			=> "files/Member/Home.inc",
+	"member/nastenka"		=> "files/Member/Nastenka.inc",
+	"member/rozpis"			=> "files/Member/Rozpis.inc",
+	"member/nabidka"		=> "files/Member/Nabidka.inc",
+	"member/tabory"			=> "files/Member/Home.inc",
+	"member/dokumenty"		=> "files/Member/Dokumenty.inc",
+	"member/zebricek"		=> "files/Member/Home.inc",
+	"member/profil"			=> "files/Member/Home.inc",
+	"member/logout"			=> "files/Member/Logout.inc",
+	"admin/nastenka"		=> "files/Admin/Nastenka.inc",
+	"admin/users"			=> "files/Admin/Users.inc",
+	"admin/rozpis"			=> "files/Admin/Rozpis.inc",
+	"admin/rozpis-detail"	=> "files/Admin/RozpisDetail.inc",
+	"admin/nabidka"			=> "files/Admin/Nabidka.inc",
+	"admin/nabidka-detail"	=> "files/Admin/NabidkaDetail.inc",
+	"admin/dokumenty"		=> "files/Admin/Dokumenty.inc"
 );
 
 class Settings {
