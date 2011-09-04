@@ -2,15 +2,14 @@
 $error = false;
 
 global $isConfirmation;
-$isConfirmation = (getPostField("trener") || getPostField("pocet_hod"));
+$isConfirmation = (getPostField("trener") || getPostField("kde"));
 
 if(getPostField("action") == "edit" || getPostField("action") == "edit_confirm")
-	$header = "Upravit nabídku";
+	$header = "Upravit rozpis";
 else if(getPostField("action") == "add" || getPostField("action") == "add_confirm")
-	$header = "Přidat nabídku";
+	$header = "Přidat rozpis";
 else
 	$header = "Neznámá akce";
-
 header_minor($header);
 ?>
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
@@ -45,24 +44,16 @@ header_minor($header);
 			else if($id)
 				View::viewError(ER_CORRUPT_DATA); ?>"/></td>
 	</tr><tr>
-		<td>Počet hodin (*): </td>
-		<td><input type="text" name="pocet_hod" value="<?php echo getPostField("pocet_hod"); ?>" /></td>
-		<td>Pouze číslice<?php
-			$error = checkPostField("/^[0-9]*$/i", "pocet_hod") || $error;
-		?></td>
+		<td>Místo (*): </td>
+		<td><input type="text" name="kde" value="<?php echo getPostField("kde"); ?>" /></td>
+		<td></td>
 	</tr><tr>
-		<td>Od: (*)</td>
-		<td><input type="text" name="od" value="<?php echo getPostField("od"); ?>" /></td>
-		<td>Ve formátu např.: 2011-08-14<?php
-		//TODO: Date chooser
-			$error = checkPostField("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", "od") || $error;
-		?></td>
-	</tr><tr>
-		<td>Do: </td>
-		<td><input type="text" name="do" value="<?php echo getPostField("do"); ?>" /></td>
-		<td>(pokud je prázdný, počítá se jako "Od")<?php
-			$error = strlen(getPostField("do")) < 1 ? 0 :
-				checkPostField("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", "do") || $error;
+		<td>Datum: (*)</td>
+		<td><?php echoDate("day", "month", "year");?></td>
+		<td><?php
+			$od_str = getPostField("year") . "-" . getPostField("month") . "-" .
+				getPostField("day");
+			$error = checkDateString($od_str) || $error;
 		?></td>
 	</tr><tr>
 		<td>Uzamknout: </td>

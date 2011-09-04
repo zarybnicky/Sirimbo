@@ -4,7 +4,7 @@ User::checkPermissionsError(L_TRENER);
 header_main("Správa nabídek");
 
 if(empty($_POST)) {
-	include("files/Admin/NabidkaDisplay.inc");
+	include("files/Admin/Nabidka/Display.inc");
 	return;
 }
 
@@ -17,12 +17,18 @@ switch(getPostField("action")) {
 				$_POST["id"] = $item;
 				$_POST["trener"] = $itemData["n_trener"];
 				$_POST["pocet_hod"] = $itemData["n_pocet_hod"];
-				$_POST["od"] = $itemData["n_od"];
-				$_POST["do"] = $itemData["n_do"];
+				list($od_year, $od_month, $od_day) = explode("-", $itemData["n_od"]);
+				$_POST["od_year"] = $od_year;
+				$_POST["od_month"] = $od_month;
+				$_POST["od_day"] = $od_day;
+				list($do_year, $do_month, $do_day) = explode("-", $itemData["n_do"]);
+				$_POST["do_year"] = $do_year;
+				$_POST["do_month"] = $do_month;
+				$_POST["do_day"] = $do_day;
 				$_POST["lock"] = $itemData["n_lock"];
 				
 				if(User::checkPermissionsBool(L_ADMIN) || $_POST["trener"] == User::getUserName())
-					include("files/Admin/NabidkaForm.inc");
+					include("files/Admin/Nabidka/Form.inc");
 				else
 					View::viewError(ER_AUTHORIZATION);	
 			}
@@ -31,7 +37,7 @@ switch(getPostField("action")) {
 		break;
 	
 	case "add":
-		include("files/Admin/NabidkaForm.inc");
+		include("files/Admin/Nabidka/Form.inc");
 		return;
 	
 	case "remove":
@@ -50,7 +56,12 @@ switch(getPostField("action")) {
 	case "edit_confirm":
 	case "add_confirm":
 		$n_id = getPostField("id");
-		var_dump($_POST);
+		$od = getPostField("od_year") . "-" . getPostField("od_month") . "-" . getPostField("od_day");
+		$do = getPostField("do_year") . "-" . getPostField("do_month") . "-" . getPostField("do_day");
+		
+		if($do == "0000-00-00" || strcmp($od, $do) > 0)
+			$do = $od;
+		
 		if((getPostField("action") == "edit_confirm" &&
 				(User::getUserID() != DBNabidka::getNabidkaTrenerID($n_id) &&
 					!User::checkPermissionsBool(L_ADMIN))) ||
@@ -59,23 +70,20 @@ switch(getPostField("action")) {
 					!User::checkPermissionsBool(L_ADMIN)))
 			View::viewError(ER_AUTHORIZATION);
 		
-		if(!getPostField("do"))
-			$_POST["do"] = getPostField("od");
-		
 		$error = false;
 		
 		ob_start();
-		include("files/Admin/NabidkaForm.inc");	
+		include("files/Admin/Nabidka/Form.inc");	
 		$html = ob_get_clean();
 		
 		if(!$error) {
 			if(getPostField("action") == "edit_confirm") {
-				DBNabidka::editNabidka($n_id, getPostField("trener"), getPostField("pocet_hod"), getPostField("od"),
-					getPostField("do"), getPostField("lock"));
+				DBNabidka::editNabidka($n_id, getPostField("trener"), getPostField("pocet_hod"), $od, $do,
+					getPostField("lock"));
 				notice("Nabídka úspěšně upravena");
 			} else if(getPostField("action") == "add_confirm") {
-				DBNabidka::addNabidka(getPostField("trener"), getPostField("pocet_hod"), getPostField("od"),
-					getPostField("do"), getPostField("lock"));
+				DBNabidka::addNabidka(getPostField("trener"), getPostField("pocet_hod"), $od, $do,
+					getPostField("lock"));
 				notice("Nabídka úspěšně přidána");
 			}
 		} else {
@@ -85,22 +93,14 @@ switch(getPostField("action")) {
 		break;
 		
 	case "edit_detail":
-		$redirect_str = "";
-		$nabidka = getPostArray("nabidka");
-		
-		if(is_array($nabidka)) {
-			if(count($nabidka) > 1) {
-				$redirect_str = implode("&id[]=", $nabidka);
-				$redirect_str = "id[]=" . $redirect_str;
-			} else
-				$redirect_str = $nabidka[0];
+		$nabidka = getPostField("nabidka");
+		if($nabidka[0]) {
+			header("Location: /admin/nabidka-detail?id=" . $nabidka[0]);
+			return;
 		}
-		
-		header("/admin/nabidka-detail?" . $redirect_str);
-		return;
 		break;
 }
 
-include("files/Admin/NabidkaDisplay.inc");
+include("files/Admin/Nabidka/Display.inc");
 return;
 ?>

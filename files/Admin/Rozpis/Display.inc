@@ -4,6 +4,7 @@
 
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
 <button type="submit" name="action" value="edit">Upravit</button>
+<button type="submit" name="action" value="edit_detail">Upravit tréninky</button>
 <button type="submit" name="action" value="remove">Odstranit</button>
 <table>
 <tr>
@@ -26,7 +27,7 @@ foreach($nabidka as $item) {
 		echo "<td><input type=\"checkbox\" name=\"rozpis[]\" value=\"" .
 			"\" disabled=\"d\" /></td>";
 	echo "<td>" . $item["u_jmeno"] . " " . $item["u_prijmeni"] . "</td>";
-	echo "<td>" . $item["r_datum"] .  "</td>";
+	echo "<td>" . formatDate($item["r_datum"]) .  "</td>";
 	echo "<td>" . $item["r_kde"] .  "</td>";
 	echo "</tr>";
 }
