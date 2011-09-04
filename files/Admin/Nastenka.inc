@@ -4,7 +4,7 @@ User::checkPermissionsError(L_EDITOR);
 header_main("Správa nástěnky");
 
 if(empty($_POST)) {
-	include("files/Admin/NastenkaDisplay.inc");
+	include("files/Admin/Nastenka/Display.inc");
 	return;
 }
 
@@ -19,14 +19,14 @@ switch(getPostField("action")) {
 				$_POST["nadpis"] = $itemData["up_nadpis"];
 				$_POST["text"] = $itemData["up_text"];
 				$_POST["lock"] = $itemData["up_lock"];
-				include("files/Admin/NastenkaForm.inc");
+				include("files/Admin/Nastenka/Form.inc");
 			}
 			return;
 		}
 		break;
 		
 	case "add":
-		include("files/Admin/NastenkaForm.inc");
+		include("files/Admin/Nastenka/Form.inc");
 		return;
 	
 	case "remove":
@@ -55,7 +55,7 @@ switch(getPostField("action")) {
 		$error = false;
 		
 		ob_start();
-		include("files/Admin/NastenkaForm.inc");	
+		include("files/Admin/Nastenka/Form.inc");	
 		$html = ob_get_clean();
 		
 		if(!$error) {
@@ -75,5 +75,5 @@ switch(getPostField("action")) {
 		break;
 }
 
-include("files/Admin/NastenkaDisplay.inc");
+include("files/Admin/Nastenka/Display.inc");
 ?>

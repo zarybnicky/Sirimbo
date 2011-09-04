@@ -133,5 +133,10 @@ public static function checkUser($login, $pass) {
 		$res = DBUser::query("SELECT u_id,u_jmeno,u_prijmeni FROM users WHERE u_level>=" . L_TRENER);
 		return DBUser::getArray($res);
 	}
+	
+	public static function getMembers() {
+		$res = DBUser::query("SELECT u_id,u_jmeno,u_prijmeni FROM users WHERE u_level>=" . L_USER);
+		return DBUser::getArray($res);
+	}
 }
 ?>
