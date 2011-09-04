@@ -26,7 +26,7 @@ foreach($nabidka as $item) {
 		echo "<td><input type=\"checkbox\" name=\"nabidka[]\" value=\"" .
 			"\" disabled=\"d\" /></td>";
 	echo "<td>" . $item["u_jmeno"] . " " . $item["u_prijmeni"] . "</td>";
-	echo "<td>" . $item["n_od"] . " - " . $item["n_do"] .  "</td>";
+	echo "<td>" . formatDate($item["n_od"]) . " - " . formatDate($item["n_do"]) .  "</td>";
 	echo "</tr>";
 }
 ?>

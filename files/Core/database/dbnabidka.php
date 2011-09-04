@@ -106,12 +106,35 @@ public static function getNabidka() {
 		}
 	}
 	
-	public static function addNabidkaItemLessons($login, $parent_id, $pocet_hod) {
-		list($login, $parent_id, $pocet_hod) = DBNabidka::escapeArray(array($login, $parent_id, $pocet_hod));
+	public static function addNabidkaItemLessons($user_id, $parent_id, $pocet_hod) {
+		list($user_id, $parent_id, $pocet_hod) = DBNabidka::escapeArray(array($user_id, $parent_id, $pocet_hod));
 		
 		DBNabidka::query("INSERT INTO nabidka_item (ni_partner,ni_id_rodic,ni_pocet_hod)" .
-			" VALUES ((SELECT u_id FROM users WHERE u_login='$login'),'$parent_id','$pocet_hod')" .
+			" VALUES ('$user_id','$parent_id','$pocet_hod')" .
 			" ON DUPLICATE KEY UPDATE ni_pocet_hod=ni_pocet_hod+'$pocet_hod'");
+		
+		return true;
+	}
+	
+	public static function editNabidkaItem($id, $partner, $pocet_hod) {
+		list($id, $partner, $pocet_hod) = DBNabidka::escapeArray(array($id, $partner, $pocet_hod));
+		
+		$res = DBNabidka::query("SELECT ni_id_rodic,ni_id FROM nabidka_item WHERE ni_partner='$partner' AND " .
+			"ni_id_rodic=(SELECT ni_id_rodic FROM nabidka_item WHERE ni_id='$id')");
+		//TODO: Find better solution (if possible)
+		if(!$res) {
+			return false;
+		} else {
+			$row = DBNabidka::getSingleRow($res);
+			$rodic = $row["ni_id_rodic"];
+		}
+		if($rodic && $row["ni_id"] != $id) {
+			DBNabidka::addNabidkaItemLessons($partner, $rodic, $pocet_hod);
+			DBNabidka::removeNabidkaItemByID($id);
+		} else {
+			DBNabidka::query("UPDATE nabidka_item SET ni_partner='$partner',ni_pocet_hod='$pocet_hod' WHERE" .
+				" ni_id='$id'");
+		}
 		
 		return true;
 	}
@@ -121,6 +144,14 @@ public static function getNabidka() {
 		
 		DBNabidka::query("DELETE FROM nabidka_item WHERE ni_id_rodic='$parent_id' AND " .
 			"ni_partner='$u_id'");
+		
+		return true;
+	}
+	
+	public static function removeNabidkaItemByID($id) {
+		list($id) = DBNabidka::escapeArray(array($id));
+		
+		DBNabidka::query("DELETE FROM nabidka_item WHERE ni_id='$id'");
 		
 		return true;
 	}

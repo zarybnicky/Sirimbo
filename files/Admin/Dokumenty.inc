@@ -4,7 +4,7 @@ User::checkPermissionsError(L_EDITOR);
 echo "<div class=\"h_section\">Správa souborů</div>";
 
 if(empty($_POST)) {
-	include("files/Admin/DokumentyDisplay.inc");
+	include("files/Admin/Dokumenty/Display.inc");
 	return;
 }
 
@@ -91,6 +91,6 @@ Nové jméno:&nbsp;
 		break;
 }
 
-include("files/Admin/DokumentyDisplay.inc");
+include("files/Admin/Dokumenty/Display.inc");
 return;
 ?>

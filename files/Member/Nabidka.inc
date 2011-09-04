@@ -21,7 +21,7 @@ if($isConfirmation) {
 	
 	if($hodiny) {
 		if((DBNabidka::getNabidkaMaxLessons($id) - DBNabidka::getNabidkaItemLessons($id)) >= $hodiny) {
-			DBNabidka::addNabidkaItemLessons(User::getUserName(), $id, $hodiny);
+			DBNabidka::addNabidkaItemLessons(User::getUserID(), $id, $hodiny);
 			notice("Hodiny přidány");
 		} else {
 			notice("Tolik volných hodin tu není");

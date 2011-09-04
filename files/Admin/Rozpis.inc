@@ -4,7 +4,7 @@ User::checkPermissionsError(L_TRENER);
 header_main("Správa rozpisů");
 
 if(empty($_POST)) {
-	include("files/Admin/RozpisDisplay.inc");
+	include("files/Admin/Rozpis/Display.inc");
 	return;
 }
 
@@ -17,13 +17,14 @@ switch(getPostField("action")) {
 				$_POST["id"] = $item;
 				$_POST["trener"] = $itemData["r_trener"];
 				$_POST["kde"] = $itemData["r_kde"];
-				$_POST["datum"] = $itemData["r_datum"];
-				$_POST["od"] = $itemData["r_od"];
-				$_POST["do"] = $itemData["r_do"];
+				list($year, $month, $day) = explode("-", $itemData["r_datum"]);
+				$_POST["year"] = $year;
+				$_POST["month"] = $month;
+				$_POST["day"] = $day;
 				$_POST["lock"] = $itemData["r_lock"];
 				
 				if(User::checkPermissionsBool(L_ADMIN) || $_POST["trener"] == User::getUserName())
-					include("files/Admin/RozpisForm.inc");
+					include("files/Admin/Rozpis/Form.inc");
 				else
 					View::viewError(ER_AUTHORIZATION);	
 			}
@@ -32,7 +33,7 @@ switch(getPostField("action")) {
 		break;
 	
 	case "add":
-		include("files/Admin/RozpisForm.inc");
+		include("files/Admin/Rozpis/Form.inc");
 		return;
 	
 	case "remove":
@@ -51,6 +52,7 @@ switch(getPostField("action")) {
 	case "edit_confirm":
 	case "add_confirm":
 		$r_id = getPostField("id");
+		$datum = getPostField("year") . "-" . getPostField("month") . "-" . getPostField("day");
 		
 		if((getPostField("action") == "edit_confirm" &&
 				(User::getUserID() != DBRozpis::getRozpisTrenerID($r_id) &&
@@ -63,17 +65,17 @@ switch(getPostField("action")) {
 		$error = false;
 		
 		ob_start();
-		include("files/Admin/RozpisForm.inc");	
+		include("files/Admin/Rozpis/Form.inc");	
 		$html = ob_get_clean();
 		
 		if(!$error) {
 			if(getPostField("action") == "edit_confirm") {
-				DBRozpis::editRozpis($r_id, getPostField("trener"), getPostField("kde"), getPostField("datum"),
-					getPostField("od"), getPostField("do"), getPostField("lock"));
+				DBRozpis::editRozpis($r_id, getPostField("trener"), getPostField("kde"), $datum,
+					getPostField("lock"));
 				notice("Rozpis úspěšně upraven");
 			} else if(getPostField("action") == "add_confirm") {
-				DBRozpis::addRozpis(getPostField("trener"), getPostField("kde"), getPostField("datum"),
-					getPostField("od"), getPostField("do"), getPostField("lock"));
+				DBRozpis::addRozpis(getPostField("trener"), getPostField("kde"), $datum,
+					getPostField("lock"));
 				notice("Rozpis úspěšně přidán");
 			}
 		} else {
@@ -81,8 +83,16 @@ switch(getPostField("action")) {
 			return;
 		}
 		break;
+		
+	case "edit_detail":
+		$rozpis = getPostField("rozpis");
+		if($rozpis[0]) {
+			header("Location: /admin/rozpis-detail?id=" . $rozpis[0]);
+			return;
+		}
+		break;
 }
 
-include("files/Admin/RozpisDisplay.inc");
+include("files/Admin/Rozpis/Display.inc");
 return;
 ?>

@@ -53,7 +53,6 @@
 </div>
 <?php
 	if(User::checkPermissionsBool(L_ADMIN)) {
-		//TODO: Editor, trener menu
 ?>
 <div>
 <div>Administrace</div>

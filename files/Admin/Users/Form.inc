@@ -10,6 +10,7 @@ else if(getPostField("action") == "add" || getPostField("action") == "add_confir
 	$header = "Přidat uživatele";
 else
 	$header = "Neznámá akce";
+header_minor($header);
 ?>
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
 <table>
@@ -56,8 +57,8 @@ else
 		<td>Telefon: </td>
 		<td><input type="text" name="telefon" value="<?php echo getPostField("telefon"); ?>" /></td>
 		<td>Pouze číslice a +, max. 13 znaků<?php
-			$error = strlen(getPostField("telefon")) < 1 ? 0 : 
-				checkPostField("/^[0-9+]{9,13}$/", "telefon") || $error;
+			$error = (strlen(getPostField("telefon")) < 1 ? 0 : 
+				checkPostField("/^[0-9+]{9,13}$/", "telefon")) || $error;
 		?></td>
 	</tr><tr>
 		<td>Poznámky: </td>

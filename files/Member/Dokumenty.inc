@@ -20,7 +20,7 @@
 <?php
 User::checkPermissionsError(L_USER);
 
-if(getGetField("kategorie") !== "") {
+if(getGetField("kategorie") !==	 "") {
 	$dokumenty = DBDokumenty::getDokumentyByKategorie(getGetField("kategorie"));
 } else {
 	$dokumenty = DBDokumenty::getDokumenty();
