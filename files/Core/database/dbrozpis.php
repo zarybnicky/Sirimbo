@@ -43,7 +43,7 @@ public static function getRozpis() {
 	}
 
 	public static function isRozpisFree($rid) {
-	list($rid) = DBRozpis::escapeArray(array($rid));
+		list($rid) = DBRozpis::escapeArray(array($rid));
 		
 		$res = DBRozpis::query("SELECT ri_partner FROM rozpis_item WHERE ri_id='$rid'");
 		if(!$res) {
