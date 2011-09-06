@@ -42,7 +42,7 @@
 <li><a href="/member/nastenka">Nástěnka</a></li>
 <li><a href="/member/rozpis">Rozpis tréninků</a></li>
 <li><a href="/member/nabidka">Tréninková nabídka</a></li>
-<li><a href="/member/tabory">Tábory a soustředění</a></li>
+<li><a href="/member/tas">Tábory a soustředění</a></li>
 <li><a href="/member/dokumenty">Dokumenty</a></li>
 <li><a href="/member/zebricek">Žebříček párů</a></li>
 </ul>
@@ -61,6 +61,7 @@
 <li><a href="/admin/nastenka">Nástěnka</a></li>
 <li><a href="/admin/rozpis">Rozpis</a></li>
 <li><a href="/admin/nabidka">Nabídka</a></li>
+<li><a href="/admin/tas">Tábory a soustředění</a></li>
 <li><a href="/admin/dokumenty">Dokumenty</a></li>
 </ul>
 </div>
