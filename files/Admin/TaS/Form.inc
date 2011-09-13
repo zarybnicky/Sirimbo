@@ -54,9 +54,13 @@ header_minor($header);
 		?></td>
 	</tr><tr>
 		<td>Dokumenty: </td>
-		<td><input type="text" name="dokumenty" value="<?php echo getPostField("dokumenty"); ?>" /></td>
-		<td><?php //TODO: Dokumenty array
-			$error = checkPostField("/^{(\"[a-z0-9.-_]{0,255}\")*}/i", "dokumenty") || $error;
+		<td><?php
+			if(!getPostField("dokumenty")) echo "Prázdné";
+			else {
+				foreach(getPostField("dokumenty") as $doku) {
+					echo DBDokumenty::getDokumentName($doku), " ";
+				}
+			}
 		?></td>
 	</tr><tr>
 		<td>Uzamknout: </td>
