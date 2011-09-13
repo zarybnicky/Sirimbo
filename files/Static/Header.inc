@@ -66,16 +66,6 @@
 </ul>
 </div>
 <?php
-	} elseif(User::checkPermissionsBool(L_EDITOR)) {
-?>
-<div>
-<div>Administrace</div>
-<ul>
-<li><a href="/admin/nastenka">Nástěnka</a></li>
-<li><a href="/admin/dokumenty">Dokumenty</a></li>
-</ul>
-</div>
-<?php
 	} elseif(User::checkPermissionsBool(L_TRENER)) {
 ?>
 <div>
@@ -84,6 +74,16 @@
 <li><a href="/admin/nastenka">Nástěnka</a></li>
 <li><a href="/admin/rozpis">Rozpis</a></li>
 <li><a href="/admin/nabidka">Nabídka</a></li>
+<li><a href="/admin/dokumenty">Dokumenty</a></li>
+</ul>
+</div>
+<?php
+	} elseif(User::checkPermissionsBool(L_EDITOR)) {
+?>
+<div>
+<div>Administrace</div>
+<ul>
+<li><a href="/admin/nastenka">Nástěnka</a></li>
 <li><a href="/admin/dokumenty">Dokumenty</a></li>
 </ul>
 </div>

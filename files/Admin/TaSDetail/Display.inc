@@ -10,7 +10,11 @@ if($tas["t_od"] != $tas["t_do"])
 ?>
 </div>
 <div class="t_moreinfo"><?php echo $tas["t_info"];?></div>
-<div class="t_dokumenty"><?php echo $tas["t_dokumenty"]?></div>
+<div class="t_dokumenty"><?php
+	foreach(unserialize($tas["t_dokumenty"]) as $doku) {
+		echo DBDokumenty::getDokumentName($doku), " ";
+	}
+?></div>
 </div>
 <table>
 <tr>

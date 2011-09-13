@@ -51,6 +51,10 @@ define("ER_NOT_FOUND_RIGHT", "not_found_right");
 define("ER_NOT_POSSIBLE", "not_possible");
 define("ER_SCRIPT_FATAL", "script_fatal");
 
+define("C_ZLUTA", "1");
+define("C_MODRA", "2");
+define("C_CERVENA", "4");
+
 define("CORE", "files/Core");
 
 $sitemap_static = array(
@@ -82,7 +86,8 @@ $sitemap_dynamic = array(
 	"admin/nastenka"		=> "files/Admin/Nastenka.inc",
 	"admin/users"			=> "files/Admin/Users.inc",
 	"admin/tas"				=> "files/Admin/TaS.inc",
-	"admin/tas-detail"	=> "files/Admin/TaSDetail.inc",
+	"admin/tas-detail"		=> "files/Admin/TaSDetail.inc",
+	"admin/tas-dokumenty"	=> "files/Admin/TasDokumenty.inc",
 	"admin/rozpis"			=> "files/Admin/Rozpis.inc",
 	"admin/rozpis-detail"	=> "files/Admin/RozpisDetail.inc",
 	"admin/nabidka"			=> "files/Admin/Nabidka.inc",

@@ -19,8 +19,8 @@ header_minor($header);
 		<td>Trenér (*): </td>
 		<td><?php
 		if(!User::checkPermissionsBool(L_ADMIN)) { ?>
-		<select name="trener" disabled="disabled">
-			<option value="<?php User::getUserID()?>">Já</option>
+		<select name="trener">
+			<option value="<?php echo User::getUserID();?>">Já</option>
 		</select><?php
 		} else { ?>
 		<select name="trener">
@@ -68,6 +68,13 @@ header_minor($header);
 				getPostField("do_day");
 			$error = (($do_str == "0000-00-00") ? 0 : checkDateString($do_str)) || $error;
 		?></td>
+	</tr><tr>
+		<td>Viditelný: </td>
+		<td><input type="checkbox" name="visible" value="visible" <?php
+			if(getPostField("visible")) echo "checked=\"checked\"";
+			if(!User::checkPermissionsBool(L_ADMIN)) echo "readonly=\"readonly\""
+		?>/></td>
+		<td></td>
 	</tr><tr>
 		<td>Uzamknout: </td>
 		<td><input type="checkbox" name="lock" value="lock" <?php

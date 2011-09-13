@@ -12,6 +12,7 @@
 <td>Trenér</td>
 <td>Datum</td>
 <td>Místo</td>
+<td>Viditelný</td>
 </tr>
 <?php
 $nabidka = DBRozpis::getRozpis();
@@ -19,7 +20,7 @@ $nabidka = DBRozpis::getRozpis();
 foreach($nabidka as $item) {
 	echo "<tr>";
 	
-	if(User::checkPermissionsBool(L_ADMIN) || ($item["r_trener"] == User::getUserName() &&
+	if(User::checkPermissionsBool(L_ADMIN) || ($item["r_trener"] == User::getUserID() &&
 			!$item["r_lock"]))
 		echo "<td><input type=\"checkbox\" name=\"rozpis[]\" value=\"" . $item["r_id"] .
 			"\" /></td>";
@@ -29,6 +30,7 @@ foreach($nabidka as $item) {
 	echo "<td>" . $item["u_jmeno"] . " " . $item["u_prijmeni"] . "</td>";
 	echo "<td>" . formatDate($item["r_datum"]) .  "</td>";
 	echo "<td>" . $item["r_kde"] .  "</td>";
+	echo "<td>" . ($item["r_visible"] ? "x" : "_") .  "</td>";
 	echo "</tr>";
 }
 ?>

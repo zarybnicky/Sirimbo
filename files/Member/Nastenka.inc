@@ -10,6 +10,7 @@ foreach($zpravy as $item) {
 	echo "<div class=\"up_detaily\" style=\"float:right;width:50%;\">";
 	echo "<div class=\"up_kdo\">", $item["u_jmeno"], " ", $item["u_prijmeni"], "</div>";
 	echo "<div class=\"up_aktu\">", $item["up_aktu"], "</div>";
+	echo "<div class=\"up_barvy\">Barvy: ", echoBarvaDisplay($item["up_barvy"]), "</div>";
 	echo "</div>";
 	echo "<div class=\"up_text\" style=\"clear:right;\">", $item["up_text"], "</div>";
 	echo "</div><hr/>";

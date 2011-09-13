@@ -1,7 +1,7 @@
 <?php
 class DBRozpis extends Database {
 public static function getRozpis() {
-		$res = DBRozpis::query("SELECT u_jmeno,u_prijmeni,r_id,r_trener,r_kde,r_datum,r_lock" .
+		$res = DBRozpis::query("SELECT u_jmeno,u_prijmeni,r_id,r_trener,r_kde,r_datum,r_visible,r_lock" .
 			" FROM rozpis LEFT JOIN users ON r_trener=u_id");
 		return DBRozpis::getArray($res);
 	}
@@ -57,7 +57,7 @@ public static function getRozpis() {
 	public static function getSingleRozpis($id) {
 		list($id) = DBRozpis::escapeArray(array($id));
 		
-		$res = DBRozpis::query("SELECT r_id,r_trener,u_jmeno,u_prijmeni,r_kde,r_datum,r_lock" .
+		$res = DBRozpis::query("SELECT r_id,r_trener,u_jmeno,u_prijmeni,r_kde,r_datum,r_visible,r_lock" .
 			" FROM rozpis LEFT JOIN users ON r_trener=u_id WHERE r_id='$id'");
 		if(!$res) {
 			return false;
@@ -78,22 +78,22 @@ public static function getRozpis() {
 		}
 	}
 	
-	public static function addRozpis($trener, $kde, $datum, $od, $do, $lock) {
-		list($trener, $kde, $datum, $od, $do, $lock) =
-			DBRozpis::escapeArray(array($trener, $kde, $datum, $od, $do, $lock));
+	public static function addRozpis($trener, $kde, $datum, $visible, $lock) {
+		list($trener, $kde, $datum, $visible, $lock) =
+			DBRozpis::escapeArray(array($trener, $kde, $datum, $visible, $lock));
 		
-		DBRozpis::query("INSERT INTO rozpis (r_trener,r_kde,r_datum,r_od,r_do,r_lock) VALUES " .
-			"('$trener','$kde','$datum','$od','$do','$lock')");
+		DBRozpis::query("INSERT INTO rozpis (r_trener,r_kde,r_datum,r_visible,r_lock) VALUES " .
+			"('$trener','$kde','$datum','$visible','$lock')");
 		
 		return true;
 	}
 	
-	public static function editRozpis($id, $trener, $kde, $datum, $od, $do, $lock) {
-		list($id, $trener, $kde, $datum, $od, $do, $lock) =
-			DBRozpis::escapeArray(array($id, $trener, $kde, $datum, $od, $do, $lock));
+	public static function editRozpis($id, $trener, $kde, $datum, $visible, $lock) {
+		list($id, $trener, $kde, $datum, $visible, $lock) =
+			DBRozpis::escapeArray(array($id, $trener, $kde, $datum, $visible, $lock));
 		
 		DBRozpis::query("UPDATE rozpis SET r_trener='$trener',r_kde='$kde',r_datum='$datum'," .
-			"r_od='$od',r_do='$do',r_lock='$lock' WHERE r_id='$id'");
+			"r_visible='$visible',r_lock='$lock' WHERE r_id='$id'");
 		
 		return true;
 	}
@@ -105,6 +105,30 @@ public static function getRozpis() {
 		DBRozpis::query("DELETE FROM rozpis_item WHERE ri_id_rodic='$id'");
 		
 		return true;
+	}
+	
+	public static function isRozpisLocked($id) {
+		list($id) = DBRozpis::escapeArray(array($id));
+		
+		$res = DBRozpis::query("SELECT r_lock FROM rozpis WHERE r_id='$id'");
+		if(!$res) {
+			return false;
+		} else {
+			$row = DBRozpis::getSingleRow($res);
+			return (bool)$row["r_lock"];
+		}
+	}
+	
+	public static function isRozpisVisible($id) {
+		list($id) = DBRozpis::escapeArray(array($id));
+		
+		$res = DBRozpis::query("SELECT r_visible FROM rozpis WHERE r_id='$id'");
+		if(!$res) {
+			return false;
+		} else {
+			$row = DBRozpis::getSingleRow($res);
+			return (bool)$row["r_visible"];
+		}
 	}
 	
 	public static function addRozpisItem($parent_id, $user_id, $od, $do) {
@@ -119,7 +143,7 @@ public static function getRozpis() {
 	
 	public static function editRozpisItem($id, $partner, $od, $do) {
 		list($id, $partner, $od, $do) = DBRozpis::escapeArray(array($id, $partner, $od, $do));
-	
+		
 		$res = DBNabidka::query("SELECT ri_id_rodic,ri_id FROM rozpis_item WHERE ri_od='$od' AND " .
 			"ri_id_rodic=(SELECT ri_id_rodic FROM rozpis_item WHERE ri_id='$id')");
 		//TODO: Find better solution (if possible)

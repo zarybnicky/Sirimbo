@@ -12,7 +12,7 @@ class DBDokumenty extends Database {
 		return DBDokumenty::getArray($res);
 	}
 	
-	public static function getSingleDocument($id) {
+	public static function getSingleDokument($id) {
 		list($id) = DBDokumenty::escapeArray(array($id));
 		//TODO: Handle database returning FALSE
 		$res = DBDokumenty::query("SELECT u_jmeno,u_prijmeni,d_id,d_path,d_name,d_filename,d_kategorie,d_kdo" .
@@ -24,7 +24,7 @@ class DBDokumenty extends Database {
 		}
 	}
 	
-	public static function getDocumentPath($id) {
+	public static function getDokumentPath($id) {
 		list($id) = DBDokumenty::escapeArray(array($id));
 		
 		$res = DBDokumenty::query("SELECT d_path FROM dokumenty WHERE d_id='$id'");
@@ -45,6 +45,18 @@ class DBDokumenty extends Database {
 		} else {
 			$row = DBDokumenty::getSingleRow($res);
 			return $row["d_kdo"];
+		}
+	}
+	
+	public static function getDokumentName($id) {
+		list($id) = DBDokumenty::escapeArray(array($id));
+		
+		$res = DBDokumenty::query("SELECT d_name FROM dokumenty WHERE d_id='$id'");
+		if(!$res) {
+			return false;
+		} else {
+			$row = DBDokumenty::getSingleRow($res);
+			return $row["d_name"];
 		}
 	}
 	

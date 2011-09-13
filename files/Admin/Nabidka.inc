@@ -25,9 +25,10 @@ switch(getPostField("action")) {
 				$_POST["do_year"] = $do_year;
 				$_POST["do_month"] = $do_month;
 				$_POST["do_day"] = $do_day;
+				$_POST["visible"] = $itemData["n_visible"];
 				$_POST["lock"] = $itemData["n_lock"];
 				
-				if(User::checkPermissionsBool(L_ADMIN) || $_POST["trener"] == User::getUserName())
+				if(User::checkPermissionsBool(L_ADMIN) || $_POST["trener"] == User::getUserID())
 					include("files/Admin/Nabidka/Form.inc");
 				else
 					View::viewError(ER_AUTHORIZATION);	
@@ -70,19 +71,28 @@ switch(getPostField("action")) {
 					!User::checkPermissionsBool(L_ADMIN)))
 			View::viewError(ER_AUTHORIZATION);
 		
-		$error = false;
+		$visible = (bool)getPostField("visible");
+		$visible_prev = DBNabidka::isNabidkaVisible($n_id);
+		if(getPostField("action") == "edit_confirm" && User::checkPermissionsBool(L_TRENER) &&
+				!User::checkPermissionsBool(L_ADMIN) && $visible_prev != $visible)
+			$visible = $visible_prev;
 		
+		if(getPostField("action") == "add_confirm" && User::checkPermissionsBool(L_TRENER) &&
+				!User::checkPermissionsBool(L_ADMIN))
+			$visible = false;
+		
+		$error = false;
 		ob_start();
 		include("files/Admin/Nabidka/Form.inc");	
 		$html = ob_get_clean();
 		
 		if(!$error) {
 			if(getPostField("action") == "edit_confirm") {
-				DBNabidka::editNabidka($n_id, getPostField("trener"), getPostField("pocet_hod"), $od, $do,
+				DBNabidka::editNabidka($n_id, getPostField("trener"), getPostField("pocet_hod"), $od, $do, $visible,
 					getPostField("lock"));
 				notice("Nabídka úspěšně upravena");
 			} else if(getPostField("action") == "add_confirm") {
-				DBNabidka::addNabidka(getPostField("trener"), getPostField("pocet_hod"), $od, $do,
+				DBNabidka::addNabidka(getPostField("trener"), getPostField("pocet_hod"), $od, $do, $visible,
 					getPostField("lock"));
 				notice("Nabídka úspěšně přidána");
 			}
