@@ -9,7 +9,7 @@ $items = DBTaS::getTaSItems(getGetField("id"));
 $users = DBUser::getUsers();
 
 header_main("Správa TaS");
-echoPost();
+
 if(empty($_POST)) {
 	include("files/Admin/TaSDetail/Display.inc");
 	return;

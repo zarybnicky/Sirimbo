@@ -1,7 +1,7 @@
 <?php
 class DBNastenka extends Database {
 	public static function getNastenka() {
-		$res = DBNastenka::query("SELECT up_id,u_login,u_jmeno,u_prijmeni,up_aktu,up_nadpis,up_text,up_lock" .
+		$res = DBNastenka::query("SELECT up_id,u_login,u_jmeno,u_prijmeni,up_aktu,up_nadpis,up_text,up_barvy,up_lock" .
 			" FROM upozorneni LEFT JOIN users ON up_kdo=u_id");
 		return DBNastenka::getArray($res);
 	}
@@ -22,7 +22,7 @@ class DBNastenka extends Database {
 	public static function getSingleNastenka($id) {
 		list($id) = DBNastenka::escapeArray(array($id));
 		
-		$res = DBNastenka::query("SELECT u_login,u_jmeno,u_prijmeni,up_aktu,up_nadpis,up_text,up_lock" .
+		$res = DBNastenka::query("SELECT u_login,u_jmeno,u_prijmeni,up_aktu,up_nadpis,up_text,up_barvy,up_lock" .
 			" FROM upozorneni LEFT JOIN users ON up_kdo=u_id WHERE up_id='$id'");
 		if(!$res) {
 			return false;
@@ -43,20 +43,22 @@ class DBNastenka extends Database {
 		}
 	}
 	
-	public static function addNastenka($user, $nadpis, $text, $lock) {
-		list($user, $nadpis, $text, $lock) = DBNastenka::escapeArray(array($user, $nadpis, $text, $lock));
+	public static function addNastenka($userid, $nadpis, $text, $barvy, $lock) {
+		list($userid, $nadpis, $text, $barvy, $lock) =
+			DBNastenka::escapeArray(array($userid, $nadpis, $text, $barvy, $lock));
 		
-		DBNastenka::query("INSERT INTO upozorneni (up_kdo,up_nadpis,up_text,up_lock) VALUES " .
-			"((SELECT u_id FROM users WHERE u_login='$user'),'$nadpis','$text','$lock')");
+		DBNastenka::query("INSERT INTO upozorneni (up_kdo,up_nadpis,up_text,up_barvy,up_lock) VALUES " .
+			"('$userid','$nadpis','$text','$barvy','$lock')");
 		
 		return true;
 	}
 	
-	public static function editNastenka($id, $nadpis, $text, $lock) {
-		list($id, $nadpis, $text, $lock) = DBNastenka::escapeArray(array($id, $nadpis, $text, $lock));
+	public static function editNastenka($id, $nadpis, $text, $barvy, $lock) {
+		list($id, $nadpis, $text, $barvy, $lock) =
+			DBNastenka::escapeArray(array($id, $nadpis, $text, $barvy, $lock));
 		
 		DBNastenka::query("UPDATE upozorneni SET " .
-			"up_nadpis='$nadpis',up_text='$text',up_lock='$lock' WHERE up_id='$id'");
+			"up_nadpis='$nadpis',up_text='$text',up_barvy='$barvy',up_lock='$lock' WHERE up_id='$id'");
 		
 		return true;
 	}

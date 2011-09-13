@@ -32,6 +32,16 @@ header_minor($header);
 		?>/></td>
 		<td></td>
 	</tr><tr>
+		<td>Barvy: </td>
+		<td><input type="checkbox" name="zluta" value="zluta" <?php
+			if(getPostField("zluta")) echo "checked=\"checked\"";
+		?>/>Žlutá, <input type="checkbox" name="cervena" value="cervena" <?php
+			if(getPostField("cervena")) echo "checked=\"checked\"";
+		?>/>Červená, <input type="checkbox" name="modra" value="modra" <?php
+			if(getPostField("modra")) echo "checked=\"checked\"";
+		?>/>Modrá</td>
+		<td></td>
+	</tr><tr>
 		<?php if(getPostField("action") == "edit" || getPostField("action") == "edit_confirm") {?>
 		<td><button type="submit" name="action" value="edit_confirm">Upravit</button></td>
 		<?php } else if(getPostField("action") == "add" || getPostField("action") == "add_confirm") {?>

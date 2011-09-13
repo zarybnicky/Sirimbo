@@ -1,7 +1,7 @@
 <?php
 class DBNabidka extends Database {
 public static function getNabidka() {
-		$res = DBNabidka::query("SELECT u_jmeno,u_prijmeni,n_id,n_trener,n_pocet_hod,n_od,n_do,n_lock" .
+		$res = DBNabidka::query("SELECT u_jmeno,u_prijmeni,n_id,n_trener,n_pocet_hod,n_od,n_do,n_visible,n_lock" .
 			" FROM nabidka LEFT JOIN users ON n_trener=u_id");
 		return DBNabidka::getArray($res);
 	}
@@ -21,7 +21,7 @@ public static function getNabidka() {
 	public static function getSingleNabidka($id) {
 		list($id) = DBNabidka::escapeArray(array($id));
 		
-		$res = DBNabidka::query("SELECT n_id,n_trener,u_jmeno,u_prijmeni,n_pocet_hod,n_od,n_do,n_lock" .
+		$res = DBNabidka::query("SELECT n_id,n_trener,u_jmeno,u_prijmeni,n_pocet_hod,n_od,n_do,n_visible,n_lock" .
 			" FROM nabidka LEFT JOIN users ON n_trener=u_id WHERE n_id='$id'");
 		if(!$res) {
 			return false;
@@ -42,22 +42,22 @@ public static function getNabidka() {
 		}
 	}
 	
-	public static function addNabidka($trener, $pocet_hod, $od, $do, $lock) {
-		list($trener, $pocet_hod, $od, $do, $lock) =
-			DBNabidka::escapeArray(array($trener, $pocet_hod, $od, $do, $lock));
+	public static function addNabidka($trener, $pocet_hod, $od, $do, $visible, $lock) {
+		list($trener, $pocet_hod, $od, $do,$visible, $lock) =
+			DBNabidka::escapeArray(array($trener, $pocet_hod, $od, $do, $visible, $lock));
 		
-		DBNabidka::query("INSERT INTO nabidka (n_trener,n_pocet_hod,n_od,n_do,n_lock) VALUES " .
-			"('$trener','$pocet_hod','$od','$do','$lock')");
+		DBNabidka::query("INSERT INTO nabidka (n_trener,n_pocet_hod,n_od,n_do,n_visible,n_lock) VALUES " .
+			"('$trener','$pocet_hod','$od','$do','$visible','$lock')");
 		
 		return true;
 	}
 	
-	public static function editNabidka($id, $trener, $pocet_hod, $od, $do, $lock) {
-		list($id, $trener, $pocet_hod, $od, $do, $lock) =
-			DBNabidka::escapeArray(array($id, $trener, $pocet_hod, $od, $do, $lock));
+	public static function editNabidka($id, $trener, $pocet_hod, $od, $do, $visible, $lock) {
+		list($id, $trener, $pocet_hod, $od, $do, $visible, $lock) =
+			DBNabidka::escapeArray(array($id, $trener, $pocet_hod, $od, $do, $visible, $lock));
 		
 		DBNabidka::query("UPDATE nabidka SET n_trener='$trener',n_pocet_hod='$pocet_hod',n_od='$od'," .
-			"n_do='$do',n_lock='$lock' WHERE n_id='$id'");
+			"n_do='$do',n_visible='$visible',n_lock='$lock' WHERE n_id='$id'");
 		
 		return true;
 	}
@@ -103,6 +103,30 @@ public static function getNabidka() {
 		} else {
 			$row = DBNabidka::getSingleRow($res);
 			return (bool)$row["ni_pocet_hod"];
+		}
+	}
+	
+	public static function isNabidkaLocked($id) {
+		list($id) = DBNabidka::escapeArray(array($id));
+		
+		$res = DBNabidka::query("SELECT n_lock FROM nabidka WHERE n_id='$id'");
+		if(!$res) {
+			return false;
+		} else {
+			$row = DBNabidka::getSingleRow($res);
+			return (bool)$row["n_lock"];
+		}
+	}
+	
+	public static function isNabidkaVisible($id) {
+		list($id) = DBNabidka::escapeArray(array($id));
+		
+		$res = DBNabidka::query("SELECT n_visible FROM nabidka WHERE n_id='$id'");
+		if(!$res) {
+			return false;
+		} else {
+			$row = DBNabidka::getSingleRow($res);
+			return (bool)$row["n_visible"];
 		}
 	}
 	

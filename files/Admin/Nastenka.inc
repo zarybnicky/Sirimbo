@@ -18,6 +18,9 @@ switch(getPostField("action")) {
 				$_POST["id"] = $item;
 				$_POST["nadpis"] = $itemData["up_nadpis"];
 				$_POST["text"] = $itemData["up_text"];
+				$_POST["zluta"] = ($itemData["up_barvy"] & C_ZLUTA);
+				$_POST["cervena"] = ($itemData["up_barvy"] & C_CERVENA);
+				$_POST["modra"] = ($itemData["up_barvy"] & C_MODRA);
 				$_POST["lock"] = $itemData["up_lock"];
 				include("files/Admin/Nastenka/Form.inc");
 			}
@@ -52,6 +55,12 @@ switch(getPostField("action")) {
 					DBNastenka::isNastenkaLocked($id)))
 				break;
 		}
+		
+		$zluta = ((bool) getPostField("zluta")) ? C_ZLUTA : 0;
+		$cervena = ((bool) getPostField("cervena")) ? C_CERVENA : 0;
+		$modra = ((bool) getPostField("modra")) ? C_MODRA : 0;
+		$barvy = $zluta | $cervena | $modra;
+		
 		$error = false;
 		
 		ob_start();
@@ -61,11 +70,11 @@ switch(getPostField("action")) {
 		if(!$error) {
 			if($_POST["action"] == "edit_confirm") {
 				DBNastenka::editNastenka($id, getPostField("nadpis"),
-					getPostField("text"), (getPostField("lock") == "lock") ? 1 : 0);
+					getPostField("text"), $barvy, (getPostField("lock") == "lock") ? 1 : 0);
 				notice("Příspěvek úspěšně upraven");
 			} else if(getPostField("action") == "add_confirm") {
-				DBNastenka::addNastenka(User::getUserName(), getPostField("nadpis"), getPostField("text"),
-					(getPostField("lock") == "lock") ? 1 : 0);
+				DBNastenka::addNastenka(User::getUserID(), getPostField("nadpis"),
+					getPostField("text"), $barvy, (getPostField("lock") == "lock") ? 1 : 0);
 				notice("Příspěvek úspěšně přidán");
 			}
 		} else {
