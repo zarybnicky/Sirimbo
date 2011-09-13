@@ -5,6 +5,7 @@
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
 <button type="submit" name="action" value="edit">Upravit</button>
 <button type="submit" name="action" value="edit_detail">Upravit tréninky</button>
+<button type="submit" name="action" value="edit_doku">Upravit dokumenty</button>
 <button type="submit" name="action" value="remove">Odstranit</button>
 <table>
 <tr>

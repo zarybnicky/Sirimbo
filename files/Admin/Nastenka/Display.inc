@@ -10,6 +10,7 @@
 <td></td>
 <td>Přidal</td>
 <td>Datum</td>
+<td>Barvy</td>
 <td>Nadpis</td>
 </tr>
 <?php
@@ -29,6 +30,7 @@ foreach($upozorneni as $item) {
 			"\" disabled=\"d\" /></td>";
 	echo "<td>" . $item["u_jmeno"] . " " . $item["u_prijmeni"] . "</td>";
 	echo "<td>" . $item["up_aktu"] . "</td>";
+	echo "<td>", echoBarvaDisplay($item["up_barvy"]), "</td>";
 	echo "<td>" . $item["up_nadpis"] . "</td>";
 	echo "</tr>";
 }

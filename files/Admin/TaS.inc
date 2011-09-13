@@ -11,27 +11,27 @@ if(empty($_POST)) {
 switch(getPostField("action")) {
 	
 	case "edit":
-		if(is_array(getPostField("tas"))) {
-			foreach(getPostField("tas") as $item) {
-				$itemData = DBTaS::getSingleTaS($item);
-				
-				$_POST["id"] = $item;
-				$_POST["jmeno"] = $itemData["t_jmeno"];
-				$_POST["kde"] = $itemData["t_kde"];
-				$_POST["info"] = $itemData["t_info"];
-				list($od_year, $od_month, $od_day) = explode("-", $itemData["t_od"]);
-				$_POST["od_year"] = $od_year;
-				$_POST["od_month"] = $od_month;
-				$_POST["od_day"] = $od_day;
-				list($do_year, $do_month, $do_day) = explode("-", $itemData["t_do"]);
-				$_POST["do_year"] = $do_year;
-				$_POST["do_month"] = $do_month;
-				$_POST["do_day"] = $do_day;
-				$_POST["kapacita"] = $itemData["t_kapacita"];
-				$_POST["dokumenty"] = $itemData["t_dokumenty"];
-				$_POST["lock"] = $itemData["t_lock"];
-				include("files/Admin/TaS/Form.inc");
-			}
+		$tas = getPostField("tas");
+		if($tas[0]) {
+			$itemData = DBTaS::getSingleTaS($tas[0]);
+			
+			$_POST["id"] = $tas[0];
+			$_POST["jmeno"] = $itemData["t_jmeno"];
+			$_POST["kde"] = $itemData["t_kde"];
+			$_POST["info"] = $itemData["t_info"];
+			list($od_year, $od_month, $od_day) = explode("-", $itemData["t_od"]);
+			$_POST["od_year"] = $od_year;
+			$_POST["od_month"] = $od_month;
+			$_POST["od_day"] = $od_day;
+			list($do_year, $do_month, $do_day) = explode("-", $itemData["t_do"]);
+			$_POST["do_year"] = $do_year;
+			$_POST["do_month"] = $do_month;
+			$_POST["do_day"] = $do_day;
+			$_POST["kapacita"] = $itemData["t_kapacita"];
+			$_POST["dokumenty"] = unserialize($itemData["t_dokumenty"]);
+			$_POST["lock"] = $itemData["t_lock"];
+			
+			include("files/Admin/TaS/Form.inc");
 			return;
 		}
 		break;
@@ -106,6 +106,14 @@ switch(getPostField("action")) {
 		$tas = getPostField("tas");
 		if($tas[0]) {
 			header("Location: /admin/tas-detail?id=" . $tas[0]);
+			return;
+		}
+		break;
+		
+	case "edit_doku":
+		$tas = getPostField("tas");
+		if($tas[0]) {
+			header("Location: /admin/tas-dokumenty?id=" . $tas[0]);
 			return;
 		}
 		break;

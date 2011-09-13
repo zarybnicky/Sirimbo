@@ -21,9 +21,10 @@ switch(getPostField("action")) {
 				$_POST["year"] = $year;
 				$_POST["month"] = $month;
 				$_POST["day"] = $day;
+				$_POST["visible"] = $itemData["r_visible"];
 				$_POST["lock"] = $itemData["r_lock"];
 				
-				if(User::checkPermissionsBool(L_ADMIN) || $_POST["trener"] == User::getUserName())
+				if(User::checkPermissionsBool(L_ADMIN) || $_POST["trener"] == User::getUserID())
 					include("files/Admin/Rozpis/Form.inc");
 				else
 					View::viewError(ER_AUTHORIZATION);	
@@ -62,19 +63,28 @@ switch(getPostField("action")) {
 					!User::checkPermissionsBool(L_ADMIN)))
 			View::viewError(ER_AUTHORIZATION);
 		
-		$error = false;
+		$visible = (bool)getPostField("visible");
+		$visible_prev = DBRozpis::isRozpisVisible($r_id);
+		if(getPostField("action") == "edit_confirm" && !User::checkPermissionsBool(L_ADMIN) &&
+				User::checkPermissionsBool(L_TRENER) && $visible_prev != $visible)
+			$visible = $visible_prev;
 		
+		if(getPostField("action") == "add_confirm" && !User::checkPermissionsBool(L_ADMIN) &&
+				User::checkPermissionsBool(L_TRENER))
+			$visible = false;
+		
+		$error = false;
 		ob_start();
 		include("files/Admin/Rozpis/Form.inc");	
 		$html = ob_get_clean();
 		
 		if(!$error) {
 			if(getPostField("action") == "edit_confirm") {
-				DBRozpis::editRozpis($r_id, getPostField("trener"), getPostField("kde"), $datum,
+				DBRozpis::editRozpis($r_id, getPostField("trener"), getPostField("kde"), $datum, $visible,
 					getPostField("lock"));
 				notice("Rozpis úspěšně upraven");
 			} else if(getPostField("action") == "add_confirm") {
-				DBRozpis::addRozpis(getPostField("trener"), getPostField("kde"), $datum,
+				DBRozpis::addRozpis(getPostField("trener"), getPostField("kde"), $datum, $visible,
 					getPostField("lock"));
 				notice("Rozpis úspěšně přidán");
 			}

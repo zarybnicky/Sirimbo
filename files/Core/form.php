@@ -167,4 +167,46 @@ function echoDate($day_fieldname, $month_fieldname, $year_fieldname) {
 	}
 	echo "</select>\n";
 }
+function echoBarvaDisplay($barva) {
+	if($barva & C_ZLUTA) {
+		echo "žlutá ";
+	}
+	if($barva & C_CERVENA) {
+		echo "červená ";
+	}
+	if($barva & C_MODRA) {
+		echo "modrá";
+	}
+}
+function echoTaborDokumenty($list_name, $kats) {
+	echo "<select name=\"", $list_name, "\">\n";
+	echo "<option value=\"none\"";
+	if(!getPostField($list_name))
+		echo " selected=\"selected\"";
+	echo ">Vyber si :o)</option>\n";
+	if(is_array($kats)) { 
+		foreach($kats as $kat) {
+			$doku = DBDokumenty::getDokumentyByKategorie($kat);
+			
+			foreach($doku as $item) {
+				echo "<option value=\"", $item["d_id"], "\"";
+				if(getPostField($list_name) == $item["d_id"])
+					echo " selected=\"selected\"";
+				echo ">", $item["d_name"], " (", $item["d_kategorie"], ")";
+				echo "</option>\n";
+			}
+		}
+	} else {
+		$doku = DBDokumenty::getDokumentyByKategorie($kats);
+		
+		foreach($doku as $item) {
+			echo "<option value=\"", $item["d_id"], "\"";
+			if(getPostField($list_name) == $item["d_id"])
+				echo " selected=\"selected\"";
+			echo ">", $item["d_name"], " (", Settings::$document_types[$item["d_kategorie"]], ")";
+			echo "</option>\n";
+		}
+	}
+	echo "</select>\n";
+}
 ?>
