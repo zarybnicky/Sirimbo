@@ -16,7 +16,6 @@ if($nab["n_od"] != $nab["n_do"])
 <table>
 <tr><td>Tanečník</td><td>Počet hodin</td></tr>
 <?php
-//FIXME: LOCK-ing nabidka_item
 if(!empty($items)) {
 	foreach($items as $item) {
 			echo "<tr>";
