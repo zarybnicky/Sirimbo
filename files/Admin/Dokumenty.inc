@@ -1,7 +1,7 @@
 <?php
 User::checkPermissionsError(L_EDITOR);
 
-header_main();
+header_main("Správa souborů");
 
 if(empty($_POST)) {
 	include("files/Admin/Dokumenty/Display.inc");

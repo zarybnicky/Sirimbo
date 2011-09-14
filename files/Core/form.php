@@ -115,7 +115,7 @@ function echoUsers($list_name, $list) {
 	if(!getPostField($list_name))
 		echo " selected=\"selected\"";
 	echo ">Vyber si :o)</option>\n";
-	$treneri = DBUser::getTrener();
+	
 	foreach($list as $item) {
 		echo "<option value=\"" . $item["u_id"] . "\"";
 		if(getPostField($list_name) == $item["u_id"])
@@ -206,6 +206,26 @@ function echoTaborDokumenty($list_name, $kats) {
 			echo ">", $item["d_name"], " (", Settings::$document_types[$item["d_kategorie"]], ")";
 			echo "</option>\n";
 		}
+	}
+	echo "</select>\n";
+}
+function echoNabidky($list_name, $list) {
+	echo "<select name=\"", $list_name, "\">\n";
+	echo "<option value=\"none\"";
+	if(!getPostField($list_name))
+		echo " selected=\"selected\"";
+	echo ">Vyber si :o)</option>\n";
+	
+	foreach($list as $item) {
+		echo "<option value=\"", $item["n_id"], "\"";
+		if(getPostField($list_name) == $item["n_id"])
+			echo " selected=\"selected\"";
+		echo ">";
+		echo formatDate($item["n_od"]);
+		if($item["n_od"] != $item["n_do"])
+			echo " - ", formatDate($item["n_do"]);
+		echo ": ", $item["u_jmeno"], " ", $item["u_prijmeni"];
+		echo "</option>\n";
 	}
 	echo "</select>\n";
 }

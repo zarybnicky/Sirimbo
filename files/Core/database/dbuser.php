@@ -39,6 +39,18 @@ public static function checkUser($login, $pass) {
 		}
 	}
 	
+	public static function getUserWholeName($id) {
+		list($id) = DBUser::escapeArray(array($id));
+		
+		$res = DBUser::query("SELECT u_jmeno,u_prijmeni FROM users WHERE u_id='$id'");
+		if(!$res) {
+			return false;
+		} else {
+			$row = DBUser::getSingleRow($res);
+			return ($row["u_jmeno"] . " " . $row["u_prijmeni"]);
+		}
+	}
+	
 	public static function getUserData($login) {
 		list($login) = DBUser::escapeArray(array($login));
 		
