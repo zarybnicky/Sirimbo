@@ -2,7 +2,7 @@
 User::checkPermissionsError(L_ADMIN);
 
 header_main("Správa TaS");
-echoPost();
+
 if(empty($_POST)) {
 	include("files/Admin/TaS/Display.inc");
 	return;

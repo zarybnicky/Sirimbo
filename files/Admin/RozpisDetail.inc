@@ -60,22 +60,22 @@ if(getPostField("generate") == "overlap") {
 		DBRozpis::removeRozpisItem(getPostField("remove"));
 		$items = DBRozpis::getRozpisItem(getGetField("id"));
 	}
-	
 	foreach($items as $item) {
 		if(!(getPostField($item["ri_id"] . "-partner") == $item["ri_partner"] ||
 				(getPostField($item["ri_id"] . "-partner") == "none" && $item["ri_partner"] =="0")) ||
 				getPostField($item["ri_id"] . "-od") != formatTime($item["ri_od"], 1) ||
 				getPostField($item["ri_id"] . "-do") != formatTime($item["ri_do"], 1) ||
-				getPostField($item["ri_id"] . "-lock") != $item["ri_lock"]) {
+				(bool) getPostField($item["ri_id"] . "-lock") != (bool) $item["ri_lock"]) {
 			
 			$partner = (getPostField($item["ri_id"] . "-partner") == "none") ? "0" :
 				getPostField($item["ri_id"] . "-partner");
 			$od = getPostField($item["ri_id"] . "-od");
 			$do = getPostField($item["ri_id"] . "-do");
+			$lock = getPostField($item["ri_id"] . "-lock") ? 1 : 0;
 			
 			if(preg_match("/^[0-9]{2}:[0-9]{2}$/", $od) &&
 					preg_match("/^[0-9]{2}:[0-9]{2}$/", $do)) {
-				DBRozpis::editRozpisItem($item["ri_id"], $partner, formatTime($od, 0), formatTime($do, 0));
+				DBRozpis::editRozpisItem($item["ri_id"], $partner, formatTime($od, 0), formatTime($do, 0), $lock);
 			}
 		}
 	}
