@@ -14,7 +14,6 @@ if(empty($_POST)) {
 	include("files/Admin/TaSDokumenty/Display.inc");
 	return;
 }
-echoPost();
 
 if(getPostField("remove") > 0) {
 	$to_remove = array_search(getPostField("remove"), $doku);

@@ -15,7 +15,6 @@ if(empty($tas)) {
 }
 
 if($isConfirmation) {
-	echoPost();
 	$action = getPostField("action");
 	$id = getPostField("id");
 	

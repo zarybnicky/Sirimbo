@@ -2,8 +2,6 @@
 User::checkPermissionsError(L_ADMIN);
 header_main("Správa uživatelů");
 
-var_dump($_POST);
-
 if(empty($_POST)) {
 	include("files/Admin/Users/Display.inc");
 	return;

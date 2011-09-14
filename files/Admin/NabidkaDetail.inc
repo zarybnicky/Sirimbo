@@ -58,7 +58,7 @@ if(getPostField("pocet_hod") != $nab["n_pocet_hod"]) {
 		$_POST["pocet_hod"] = $obsazeno;
 	}
 	DBNabidka::editNabidka(getGetField("id"), $nab["n_trener"], getPostField("pocet_hod"),
-		$nab["n_od"], $nab["n_do"], $nab["n_lock"]);
+		$nab["n_od"], $nab["n_do"], ($nab["n_lock"]) ? 1 : 0);
 	$nab = DBNabidka::getSingleNabidka(getGetField("id"));
 }
 
