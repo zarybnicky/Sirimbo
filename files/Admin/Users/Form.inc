@@ -83,10 +83,12 @@ header_minor($header);
 					echo "selected=\"selected\"";?>>Uživatel</option>
 				<option value="editor" <?php if(getPostField("level") == "editor")
 					echo "selected=\"selected\"";?>>Editor</option>
-				<option value="trener" <?php if(getPostField("level") == "trener") 
+				<option value="trener" <?php if(getPostField("level") == "trener")
 					echo "selected=\"selected\"";?>>Trenér</option>
 				<option value="admin" <?php if(getPostField("level") == "admin")
 					echo "selected=\"selected\"";?>>Administrátor</option>
+				<option value="admin" <?php if(getPostField("level") == "sadmin")
+					echo "selected=\"selected\"";?>>Superuživatel</option>
 		</select></td>
 		<td></td>
 	</tr><tr>

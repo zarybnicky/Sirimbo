@@ -30,7 +30,6 @@ if(!empty($items)) {
 			echo "</tr>";
 	}
 }
-//FIXME: ošetřit - "simple" edit nabídky - max hodin vs počet hodin
 ?>
 <tr>
 <td><?php echoUsers("add_partner", $users);?></td>
@@ -38,4 +37,8 @@ if(!empty($items)) {
 <td><button type="submit" name="action" value="add">Přidat</button></td>
 </tr></table>
 </div>
+</form>
+
+<form action="/admin/nabidka" method="GET">
+<button type="submit">Zpět</button>
 </form>

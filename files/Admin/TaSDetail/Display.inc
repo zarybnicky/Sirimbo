@@ -57,3 +57,7 @@ if(!empty($items)) {
 </table>
 </div>
 </form>
+
+<form action="/admin/tas" method="GET">
+<button type="submit">Zpět</button>
+</form>

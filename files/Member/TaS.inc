@@ -35,13 +35,19 @@ if($isConfirmation) {
 foreach($tas as $item) {
 	echo "<div class=\"t_wrapper\">";
 	echo "<div class=\"t_info\" style=\"border:1px solid black;\">";
-	echo "<div class=\"t_jmeno\">", $item["t_jmeno"], "</div>";
-	echo "<div class=\"t_datum\">", $item["t_od"];
+	echo "<div class=\"t_jmeno\">Název: ", $item["t_jmeno"], "</div>";
+	echo "<div class=\"t_datum\">Datum: ", $item["t_od"];
 	if($item["t_od"] != $item["t_do"])
 		echo " - ", $item["t_do"];
 	echo "</div>";
-	echo "<div class=\"t_moreinfo\">", $item["t_info"], "</div>";
-	echo "<div class=\"t_dokumenty\">", $item["t_dokumenty"], "</div>";//TODO: Show Dokumenty array
+	echo "<div class=\"t_moreinfo\">Další informace: ", $item["t_info"], "</div>";
+	echo "<div class=\"t_dokumenty\">Dokumenty:<br/>";
+	$doku = unserialize($item["t_dokumenty"]);
+	foreach($doku as $id ) {
+		$data = DBDokumenty::getSingleDokument($id);
+		echo "<a href=\"/member/download?id=", $id, "\">", $data["d_name"], "</a>";
+	}
+	echo "</div>";
 	echo "</div>";
 	echo "<form action=\"{$_SERVER["REQUEST_URI"]}\" method=\"post\">";
 	if(DBTas::isUserSignedUp(User::getUserID())) {

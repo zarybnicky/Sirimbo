@@ -11,19 +11,18 @@ if(empty($_POST)) {
 switch(getPostField("action")) {
 	
 	case "edit":
-		if(is_array(getPostField("nastenka"))) {
-			foreach(getPostField("nastenka") as $item) {
-				$itemData = DBNastenka::getSingleNastenka($item);
-				
-				$_POST["id"] = $item;
-				$_POST["nadpis"] = $itemData["up_nadpis"];
-				$_POST["text"] = $itemData["up_text"];
-				$_POST["zluta"] = ($itemData["up_barvy"] & C_ZLUTA);
-				$_POST["cervena"] = ($itemData["up_barvy"] & C_CERVENA);
-				$_POST["modra"] = ($itemData["up_barvy"] & C_MODRA);
-				$_POST["lock"] = $itemData["up_lock"];
-				include("files/Admin/Nastenka/Form.inc");
-			}
+		$nastenka = getPostField("nastenka");
+		if($nastenka[0]) {
+			$itemData = DBNastenka::getSingleNastenka($nastenka[0]);
+			
+			$_POST["id"] = $nastenka[0];
+			$_POST["nadpis"] = $itemData["up_nadpis"];
+			$_POST["text"] = $itemData["up_text"];
+			$_POST["zluta"] = ($itemData["up_barvy"] & C_ZLUTA);
+			$_POST["cervena"] = ($itemData["up_barvy"] & C_CERVENA);
+			$_POST["modra"] = ($itemData["up_barvy"] & C_MODRA);
+			$_POST["lock"] = $itemData["up_lock"];
+			include("files/Admin/Nastenka/Form.inc");
 			return;
 		}
 		break;
@@ -61,8 +60,9 @@ switch(getPostField("action")) {
 		$modra = ((bool) getPostField("modra")) ? C_MODRA : 0;
 		$barvy = $zluta | $cervena | $modra;
 		
-		$error = false;
+		$lock = (getPostField("lock") == "lock") ? 1 : 0;
 		
+		$error = false;
 		ob_start();
 		include("files/Admin/Nastenka/Form.inc");	
 		$html = ob_get_clean();
@@ -74,7 +74,7 @@ switch(getPostField("action")) {
 				notice("Příspěvek úspěšně upraven");
 			} else if(getPostField("action") == "add_confirm") {
 				DBNastenka::addNastenka(User::getUserID(), getPostField("nadpis"),
-					getPostField("text"), $barvy, (getPostField("lock") == "lock") ? 1 : 0);
+					getPostField("text"), $barvy, $lock);
 				notice("Příspěvek úspěšně přidán");
 			}
 		} else {
