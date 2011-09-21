@@ -87,3 +87,7 @@ Pomocník ((?))<br/>
 <input type="text" name="gen_add_len" value="" /> minutách od
 <input type="text" name="gen_add_od" value="" />
 </form>
+
+<form action="/admin/rozpis" method="GET">
+<button type="submit">Zpět</button>
+</form>

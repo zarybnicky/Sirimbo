@@ -1,4 +1,4 @@
-<form action="<?php echo $_SERVER["REQUEST_URI"] //TODO: Paging, getUpozorneni(OD,DO)?>" method="POST">
+<form action="<?php echo $_SERVER["REQUEST_URI"]?>" method="POST">
 <button type="submit" name="action" value="add">Přidat</button>
 </form>
 
