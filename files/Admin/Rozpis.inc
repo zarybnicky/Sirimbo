@@ -10,25 +10,24 @@ if(empty($_POST)) {
 
 switch(getPostField("action")) {
 	case "edit":
-		if(is_array(getPostField("rozpis"))) {
-			foreach(getPostField("rozpis") as $item) {
-				$itemData = DBRozpis::getSingleRozpis($item);
-				
-				$_POST["id"] = $item;
-				$_POST["trener"] = $itemData["r_trener"];
-				$_POST["kde"] = $itemData["r_kde"];
-				list($year, $month, $day) = explode("-", $itemData["r_datum"]);
-				$_POST["year"] = $year;
-				$_POST["month"] = $month;
-				$_POST["day"] = $day;
-				$_POST["visible"] = $itemData["r_visible"];
-				$_POST["lock"] = $itemData["r_lock"];
-				
-				if(User::checkPermissionsBool(L_ADMIN) || $_POST["trener"] == User::getUserID())
-					include("files/Admin/Rozpis/Form.inc");
-				else
-					View::viewError(ER_AUTHORIZATION);	
-			}
+		$rozpis = getPostField("rozpis");
+		if($rozpis[0]) {
+			$itemData = DBRozpis::getSingleRozpis($rozpis[0]);
+			
+			$_POST["id"] = $rozpis[0];
+			$_POST["trener"] = $itemData["r_trener"];
+			$_POST["kde"] = $itemData["r_kde"];
+			list($year, $month, $day) = explode("-", $itemData["r_datum"]);
+			$_POST["year"] = $year;
+			$_POST["month"] = $month;
+			$_POST["day"] = $day;
+			$_POST["visible"] = $itemData["r_visible"];
+			$_POST["lock"] = $itemData["r_lock"];
+			
+			if(User::checkPermissionsBool(L_ADMIN) || $_POST["trener"] == User::getUserID())
+				include("files/Admin/Rozpis/Form.inc");
+			else
+				View::viewError(ER_AUTHORIZATION);	
 			return;
 		}
 		break;

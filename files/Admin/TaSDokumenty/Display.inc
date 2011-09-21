@@ -29,9 +29,13 @@ if(!empty($doku)) {
 }
 ?>
 <tr>
-<td><?php echoTaborDokumenty("add-id", array(2, 3, 0));//Soutěže, rady, ostatní ?></td>
+<td><?php echoTaborDokumenty("add-id", array(2, 3, 0));// = Soutěže, rady, ostatní ?></td>
 <td><button type="submit" name="add" value="add">Přidat</button></td>
 </tr>
 </table>
 </div>
+</form>
+
+<form action="/admin/tas" method="GET">
+<button type="submit">Zpět</button>
 </form>

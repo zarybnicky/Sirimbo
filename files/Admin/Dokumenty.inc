@@ -13,14 +13,9 @@ switch(getPostField("action")) {
 		if(!empty($_FILES)) {
 			$fileUpload = $_FILES["file"]["tmp_name"];
 			$fileName = $_FILES["file"]["name"];
-			$fileName = str_replace("#", "No.", $fileName);
-			$fileName = str_replace("$", "Dollar", $fileName);
-			$fileName = str_replace("%", "Percent", $fileName);
-			$fileName = str_replace("^", "", $fileName);
-			$fileName = str_replace("&", "and", $fileName);
-			$fileName = str_replace("*", "", $fileName);
-			$fileName = str_replace("?", "", $fileName);
-	
+			$fileName = str_replace(array("#", "$", "%", "&", "^", "*", "?"),
+				array("No.", "Dolar", "Procento", "And", ""), $fileName);
+			
 			$path = "upload/" . time() . "." . pathinfo($fileName, PATHINFO_EXTENSION);
 			
 			if(!getPostField("name"))
@@ -38,26 +33,24 @@ switch(getPostField("action")) {
 		break;
 		
 	case "edit":
-		//TODO: When editing - handle multiple edits - two columns, each element eg. 0123-d_id
-		if(is_array(getPostField("dokumenty"))) {
-			foreach(getPostField("dokumenty") as $d_id) {
-				$file = DBDokumenty::getSingleDocument($d_id);
-				
-				if(!User::checkPermissionsBool(L_ADMIN) && 
-						User::getUserID() != $file["d_kdo"])
-					View::viewError(ER_AUTHORIZATION);
+		$doku = getPostField("rozpis");
+		if($doku[0]) {
+			$file = DBDokumenty::getSingleDocument($doku[0]);
+			
+			if(!User::checkPermissionsBool(L_ADMIN) && 
+					User::getUserID() != $file["d_kdo"])
+				View::viewError(ER_AUTHORIZATION);
 ?>
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
 Staré jméno:&nbsp;<?php echo $file["d_name"];?><br />
 Nové jméno:&nbsp;
 <input type="text" name="newname" value="<?php echo $file["d_name"]; ?>" />
-<input type="hidden" name="id" value="<?php echo $d_id; ?>" />
+<input type="hidden" name="id" value="<?php echo $doku[0]; ?>" />
 <button type="submit" name="action" value="edit_confirm">Upravit</button>
 </form>
 <?php
-			}
 		}
-	break;
+		break;
 	
 	case "edit_confirm":
 		$id = getPostField("id");
@@ -88,6 +81,7 @@ Nové jméno:&nbsp;
 			}
 			notice("Dokumenty odebrány");
 		}
+		//TODO: dokumenry - remove_confirm
 		break;
 }
 
