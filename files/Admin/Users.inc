@@ -10,32 +10,33 @@ if(empty($_POST)) {
 switch(getPostField("action")) {
 	
 	case "edit":
-		if(is_array(getPostField("users"))) {
-			foreach(getPostField("users") as $user) {
-				$userData = DBUser::getUserData($user);
-				$_POST["login"] = $user;
-				$_POST["level"] = $userData["u_level"];
-				switch($userData["u_level"]) {
-					case L_USER:
-						$_POST["level"] = "user";	break;
-					case L_EDITOR:
-						$_POST["level"] = "editor";	break;
-					case L_TRENER:
-						$_POST["level"] = "trener";	break;
-					case L_ADMIN:
-						$_POST["level"] = "admin";	break;
-					default:
-						$_POST["level"] = "user";	break;
-				}
-				$_POST["ban"] = $userData["u_ban"];
-				$_POST["lock"] = $userData["u_lock"];
-				$_POST["jmeno"] = $userData["u_jmeno"];
-				$_POST["prijmeni"] = $userData["u_prijmeni"];
-				$_POST["email"] = $userData["u_email"];
-				$_POST["telefon"] = $userData["u_telefon"];
-				$_POST["poznamky"] = $userData["u_poznamky"];
-				include("files/Admin/Users/Form.inc");
+		$users = getPostField("users");
+		if($users[0]) {
+			$userData = DBUser::getUserData($users[0]);
+			$_POST["login"] = $users[0];
+			$_POST["level"] = $userData["u_level"];
+			switch($userData["u_level"]) {
+				case L_USER:
+					$_POST["level"] = "user";	break;
+				case L_EDITOR:
+					$_POST["level"] = "editor";	break;
+				case L_TRENER:
+					$_POST["level"] = "trener";	break;
+				case L_ADMIN:
+					$_POST["level"] = "admin";	break;
+				case L_SADMIN:
+					$_POST["level"] = "sadmin";	break;
+				default:
+					$_POST["level"] = "user";	break;
 			}
+			$_POST["ban"] = $userData["u_ban"];
+			$_POST["lock"] = $userData["u_lock"];
+			$_POST["jmeno"] = $userData["u_jmeno"];
+			$_POST["prijmeni"] = $userData["u_prijmeni"];
+			$_POST["email"] = $userData["u_email"];
+			$_POST["telefon"] = $userData["u_telefon"];
+			$_POST["poznamky"] = $userData["u_poznamky"];
+			include("files/Admin/Users/Form.inc");
 			return;
 		}
 		break;
@@ -100,8 +101,7 @@ switch(getPostField("action")) {
 					getPostField("email"), getPostField("telefon"), getPostField("poznamky"));
 				notice("Uživatel úspěšně upraven");
 			} else if(getPostField("action") == "add_confirm") {
-				$pass = md5($_POST["pass"]);
-				//TODO: Add custom algorithm
+				$pass = User::Crypt($_POST["pass"]);
 				//TODO: Changing passwords
 				DBUser::addUser($user, $pass, $level, (getPostField("lock")) ? 1 : 0,
 					(getPostField("ban")) ? 1 : 0, getPostField("jmeno"),

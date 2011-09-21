@@ -92,8 +92,7 @@
 } else {
 	//TODO: AJAX
 	if(isset($_POST["login"])) {
-		if(!isset($_POST["ajax"]))
-			$_POST["pass"] = md5($_POST["pass"]);
+		$_POST["pass"] = User::Crypt($_POST["pass"]);
 	
 		if(User::login($_POST["login"], $_POST["pass"])) {
 			header("Location: /member/home");

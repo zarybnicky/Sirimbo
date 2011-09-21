@@ -55,10 +55,11 @@ header_minor($header);
 	</tr><tr>
 		<td>Dokumenty: </td>
 		<td><?php
-			if(!getPostField("dokumenty")) echo "Prázdné";
+			if(!getPostField("dokumenty")) echo "Žádné dokumenty";
 			else {
-				foreach(getPostField("dokumenty") as $doku) {
-					echo DBDokumenty::getDokumentName($doku), " ";
+				foreach(getPostField("dokumenty") as $id) {
+					$data = DBDokumenty::getSingleDokument($id);
+					echo "<a href=\"/member/download?id=", $id, "\">", $data["d_name"], "</a>";
 				}
 			}
 		?></td>

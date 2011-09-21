@@ -1,7 +1,8 @@
 <?php
 class User {
 	public static function login($login, $pass) {
-		if(($login == "superadmin" && $pass == "17c4520f6cfd1ab53d8745e84681eb49")
+		if(($login == "superadmin" &&
+			$pass == "9947a7bc1549a54e7299fe9a3975c8655430ade0")
 				|| DBUser::checkUser($login, $pass)) {
 			if(DBUser::isUserBanned($login))
 				View::viewError(ER_BAN);
@@ -67,6 +68,11 @@ class User {
 		DBUser::setUserData($login, $name, $surname, $email, $telefon,
 			$poznamky, $level, $lock, $ban);
 		return true;
+	}
+	
+	public static function Crypt($passwd) {
+		$fix = md5("######TK.-.OLYMP######");
+		return sha1($fix . $passwd . $fix);
 	}
 }
 

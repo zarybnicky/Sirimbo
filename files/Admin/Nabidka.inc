@@ -10,29 +10,28 @@ if(empty($_POST)) {
 
 switch(getPostField("action")) {
 	case "edit":
-		if(is_array(getPostField("nabidka"))) {
-			foreach(getPostField("nabidka") as $item) {
-				$itemData = DBNabidka::getSingleNabidka($item);
-				
-				$_POST["id"] = $item;
-				$_POST["trener"] = $itemData["n_trener"];
-				$_POST["pocet_hod"] = $itemData["n_pocet_hod"];
-				list($od_year, $od_month, $od_day) = explode("-", $itemData["n_od"]);
-				$_POST["od_year"] = $od_year;
-				$_POST["od_month"] = $od_month;
-				$_POST["od_day"] = $od_day;
-				list($do_year, $do_month, $do_day) = explode("-", $itemData["n_do"]);
-				$_POST["do_year"] = $do_year;
-				$_POST["do_month"] = $do_month;
-				$_POST["do_day"] = $do_day;
-				$_POST["visible"] = $itemData["n_visible"];
-				$_POST["lock"] = $itemData["n_lock"];
-				
-				if(User::checkPermissionsBool(L_ADMIN) || $_POST["trener"] == User::getUserID())
-					include("files/Admin/Nabidka/Form.inc");
-				else
-					View::viewError(ER_AUTHORIZATION);	
-			}
+		$nabidka = getPostField("nabidka");
+		if($nabidka[0]) {
+			$itemData = DBNabidka::getSingleNabidka($nabidka[0]);
+			
+			$_POST["id"] = $nabidka[0];
+			$_POST["trener"] = $itemData["n_trener"];
+			$_POST["pocet_hod"] = $itemData["n_pocet_hod"];
+			list($od_year, $od_month, $od_day) = explode("-", $itemData["n_od"]);
+			$_POST["od_year"] = $od_year;
+			$_POST["od_month"] = $od_month;
+			$_POST["od_day"] = $od_day;
+			list($do_year, $do_month, $do_day) = explode("-", $itemData["n_do"]);
+			$_POST["do_year"] = $do_year;
+			$_POST["do_month"] = $do_month;
+			$_POST["do_day"] = $do_day;
+			$_POST["visible"] = $itemData["n_visible"];
+			$_POST["lock"] = $itemData["n_lock"];
+			
+			if(User::checkPermissionsBool(L_ADMIN) || $_POST["trener"] == User::getUserID())
+				include("files/Admin/Nabidka/Form.inc");
+			else
+				View::viewError(ER_AUTHORIZATION);	
 			return;
 		}
 		break;
@@ -57,11 +56,6 @@ switch(getPostField("action")) {
 	case "edit_confirm":
 	case "add_confirm":
 		$n_id = getPostField("id");
-		$od = getPostField("od_year") . "-" . getPostField("od_month") . "-" . getPostField("od_day");
-		$do = getPostField("do_year") . "-" . getPostField("do_month") . "-" . getPostField("do_day");
-		
-		if($do == "0000-00-00" || strcmp($od, $do) > 0)
-			$do = $od;
 		
 		if((getPostField("action") == "edit_confirm" &&
 				(User::getUserID() != DBNabidka::getNabidkaTrenerID($n_id) &&
@@ -71,7 +65,19 @@ switch(getPostField("action")) {
 					!User::checkPermissionsBool(L_ADMIN)))
 			View::viewError(ER_AUTHORIZATION);
 		
-		$visible = (bool)getPostField("visible");
+		$pocet_hod = getPostField("pocet_hod");
+		if($n_id) {
+			$items = DBNabidka::getSingleNabidka($n_id);
+			if($pocet_hod < count($items))
+				$pocet_hod = count($items);
+		}
+		
+		$od = getPostField("od_year") . "-" . getPostField("od_month") . "-" . getPostField("od_day");
+		$do = getPostField("do_year") . "-" . getPostField("do_month") . "-" . getPostField("do_day");
+		if($do == "0000-00-00" || strcmp($od, $do) > 0)
+			$do = $od;
+		
+		$visible = (bool) getPostField("visible");
 		$visible_prev = DBNabidka::isNabidkaVisible($n_id);
 		if(getPostField("action") == "edit_confirm" && User::checkPermissionsBool(L_TRENER) &&
 				!User::checkPermissionsBool(L_ADMIN) && $visible_prev != $visible)
@@ -88,11 +94,11 @@ switch(getPostField("action")) {
 		
 		if(!$error) {
 			if(getPostField("action") == "edit_confirm") {
-				DBNabidka::editNabidka($n_id, getPostField("trener"), getPostField("pocet_hod"), $od, $do, $visible,
+				DBNabidka::editNabidka($n_id, getPostField("trener"), $pocet_hod, $od, $do, $visible,
 					getPostField("lock"));
 				notice("Nabídka úspěšně upravena");
 			} else if(getPostField("action") == "add_confirm") {
-				DBNabidka::addNabidka(getPostField("trener"), getPostField("pocet_hod"), $od, $do, $visible,
+				DBNabidka::addNabidka(getPostField("trener"), $pocet_hod, $od, $do, $visible,
 					getPostField("lock"));
 				notice("Nabídka úspěšně přidána");
 			}

@@ -72,6 +72,7 @@ $sitemap_static = array(
 );
 $sitemap_dynamic = array(
 	"error"					=> "files/Main/Error.inc",
+	"member/download"		=> "files/Member/Download.inc",
 //FIXME: Other pages
 	"member/home"			=> "files/Member/Home.inc",
 	"member/nastenka"		=> "files/Member/Nastenka.inc",
@@ -80,8 +81,8 @@ $sitemap_dynamic = array(
 	"member/tas"			=> "files/Member/TaS.inc",
 	"member/tas-vypis"		=> "files/Member/TaSVypis.inc",
 	"member/dokumenty"		=> "files/Member/Dokumenty.inc",
-	"member/zebricek"		=> "files/Member/Home.inc",
-	"member/profil"			=> "files/Member/Home.inc",
+	"member/zebricek"		=> "files/Member/Zebricek.inc",
+	"member/profil"			=> "files/Member/Profil.inc",
 	"member/logout"			=> "files/Member/Logout.inc",
 	"admin/nastenka"		=> "files/Admin/Nastenka.inc",
 	"admin/users"			=> "files/Admin/Users.inc",
