@@ -1,0 +1,194 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	vertical-align: baseline;
+}
+/* remember to define focus styles! */
+:focus {
+	outline: 0;
+}
+body {
+	line-height: 1.2;
+	color: black;
+	background: white;
+}
+ol, ul {
+	list-style: none;
+}
+table {
+	border-collapse: separate;
+	border-spacing: 0;
+}
+caption, th, td {
+	text-align: left;
+	font-weight: normal;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: "";
+}
+blockquote, q {
+	quotes: "" "";
+}
+
+.clearfix:after {
+	content:".";
+	display:block;
+	height:0;
+	clear:both;
+	visibility:hidden;
+}
+.clearfix {display:inline-block;}
+* html .clearfix {height: 1%;}
+.clearfix {display: block;}
+
+p,h1,h2,h3,h4,h5,h6,ul,ol {margin-bottom:.5em;}
+h1,h2,h3,h4,h5,h6 {font-weight:bold;}
+h1 {font-size:197%;}
+h2 {font-size:182%;}
+h3 {font-size:167%;}
+h4 {font-size:152%;}
+h5 {font-size:136%;}
+h6 {font-size:122%;}
+
+/*DEVEL/
+div {border: 2px ridge orange;}
+/*END DEVEL*/
+
+/*Colors:
+orange light - #ffb82f
+orange dark  - #ff9501
+
+*/
+body {
+	background-image: url('logo-bg.png');
+	background-repeat: repeat-x;
+}
+a {
+	text-decoration: underline;
+	color: #ff9501;
+}
+hr {
+	height: 0px;
+	border-top: 1px dotted #999;
+	margin-right: 10px;
+}
+#all {
+	width: 970px;
+	margin: 0 auto 0 auto;
+	overflow: auto;
+}
+/*BEGIN HEADER*/
+#header {
+	position: relative;
+	background-image: url('logo.png');
+	background-repeat: no-repeat;
+	width: 970px;
+	height: 337px;
+}
+#userbox {
+	position: absolute;
+	top: 15px;
+	right: 15px;
+	text-align: right;
+	width: 200px;
+}
+#logo {
+	display: none;
+}
+#topmenu {
+	position: absolute;
+	bottom: -2px;
+	left: 0;
+}
+#topmenu ul li {
+	float: left;
+	background: url('tab-nosel-right.png') no-repeat right;
+	padding: 8px 19px 7px 0px;
+}
+#topmenu ul li a {
+	background: url('tab-nosel-left.png') no-repeat left;
+	padding: 9px 10px;
+	font-size: 20px;
+	color: #ffb82f;
+	text-decoration: none;
+}
+#topmenu ul li.first a {
+	background:  url('tab-nosel-first-left.png') no-repeat left;
+	padding-left: 29px;
+}
+#topmenu ul li.last {
+	background: url('tab-nosel-last-right.png') no-repeat right;
+}
+/*END HEADER*/
+
+/*BEGIN CONTENT*/
+#content {
+	margin-left: 220px;
+}
+#sidebar {
+	width: 220px;
+	float: left;
+}
+#sidemenu ul li, .light-out {
+	background: url('box-light-top.png') no-repeat top left;
+}
+#sidemenu ul li a, .light-in {
+	display: block;
+	position: relative;
+	padding: 10px 0px 13px 15px;
+	background: url('box-light-bottom.png') no-repeat bottom left;
+	text-decoration: none;
+	color: #555;
+}
+#sidemenu ul li a {
+	padding: 10px 0px 13px 30px;
+}
+#sidemenu ul li a span.arrow {
+	background: url('link-arrow.png') no-repeat top left;
+	height: 19px;
+	width: 12px;
+	margin-left: -20px;
+	position: absolute;
+}
+.dark-out {
+	background: url('box-dark-top.png') no-repeat top left;
+}
+.dark-in {
+	display: block;
+	position: relative;
+	padding: 10px 0px 13px 40px;
+	background: url('box-dark-bottom.png') no-repeat bottom left;
+	color: #fff;
+	font-weight: bolder;
+}
+.dark-in span.logo {
+	background: url('logo-mini.png') no-repeat top left;
+	height: 31px;
+	width: 33px;
+	margin-top: -3px;
+	margin-left: -33px;
+	position: absolute;
+}
+/*END CONTENT*/
+#footer {
+	clear: both;
+	margin-top: 10px;
+	padding: 10px 0 10px 25px;
+	border-top: 1px solid black;
+	background-color: #888888;
+	color: white;
+}
