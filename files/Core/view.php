@@ -13,7 +13,7 @@ class View {
 		
 		ob_start();
 		if(file_exists($l)) {
-			$fd = fopen($l, "r");
+			$fd = fopen($l, 'r');
 			echo fread($fd, filesize($l));
 		}
 		else {
@@ -54,7 +54,9 @@ class View {
 		header("Location: /error?id=$er_id");
 		
 		if($er_id == ER_DATABASE || $er_id == ER_DATABASE_CONNECTION)
-			Log::write("MySQL Error: " . mysql_errno() . ": " . mysql_error());
+			Log::write('MySQL Error: ' . mysql_errno() . ': ' . mysql_error());
+		elseif($er_id == ER_AUTHORIZATION)
+			exit;
 		else
 			Log::write("Error: $er_id");
 		exit;

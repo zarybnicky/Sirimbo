@@ -54,7 +54,7 @@ header_minor($header);
 		<td>Od: (*)</td>
 		<!--<td><input type="text" name="od" value="<?php //echo getPostField("od"); ?>" /></td>-->
 		<!--$error = checkPostField("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", "od") || $error;-->
-		<td><?php echoDate("od_day", "od_month", "od_year");?></td>
+		<td><?php echoDateSelect("od_day", "od_month", "od_year");?></td>
 		<td><?php
 			$od_str = getPostField("od_year") . "-" . getPostField("od_month") . "-" .
 				getPostField("od_day");
@@ -62,7 +62,7 @@ header_minor($header);
 		?></td>
 	</tr><tr>
 		<td>Do: </td>
-		<td><?php echoDate("do_day", "do_month", "do_year");?></td>
+		<td><?php echoDateSelect("do_day", "do_month", "do_year");?></td>
 		<td>(pokud je prázdný, počítá se jako "Od")<?php
 			$do_str = getPostField("do_year") . "-" . getPostField("do_month") . "-" .
 				getPostField("do_day");

@@ -6,7 +6,7 @@ if(!is_numeric(getGetField("id")) && getGetField("id") > 0 && getGetField("id") 
 if(!($tas = DBTaS::getSingleTaS(getGetField("id"))))
 	View::viewError(ER_CORRUPT_DATA);
 $items = DBTaS::getTaSItems(getGetField("id"));
-$users = DBUser::getUsers();
+$users = DBUser::getActiveUsers();
 
 header_main("Správa TaS");
 

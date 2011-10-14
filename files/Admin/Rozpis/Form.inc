@@ -49,7 +49,7 @@ header_minor($header);
 		<td></td>
 	</tr><tr>
 		<td>Datum: (*)</td>
-		<td><?php echoDate("day", "month", "year");?></td>
+		<td><?php echoDateSelect("day", "month", "year");?></td>
 		<td><?php
 			$od_str = getPostField("year") . "-" . getPostField("month") . "-" .
 				getPostField("day");

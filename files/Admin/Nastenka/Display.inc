@@ -16,7 +16,6 @@
 <?php
 $upozorneni= DBNastenka::getNastenka();
 
-//TODO: locks, bans - get from one db request
 //TODO: Format *_aktu Timestamp
 foreach($upozorneni as $item) {
 	echo "<tr>";
@@ -28,10 +27,10 @@ foreach($upozorneni as $item) {
 	else
 		echo "<td><input type=\"checkbox\" name=\"nastenka[]\" value=\"" .
 			"\" disabled=\"d\" /></td>";
-	echo "<td>" . $item["u_jmeno"] . " " . $item["u_prijmeni"] . "</td>";
-	echo "<td>" . $item["up_aktu"] . "</td>";
+	echo "<td>", $item["u_jmeno"], " ", $item["u_prijmeni"], "</td>";
+	echo "<td>", formatTimestamp($item["up_aktu"]), "</td>";
 	echo "<td>", echoBarvaDisplay($item["up_barvy"]), "</td>";
-	echo "<td>" . $item["up_nadpis"] . "</td>";
+	echo "<td>", $item["up_nadpis"] . "</td>";
 	echo "</tr>";
 }
 ?>

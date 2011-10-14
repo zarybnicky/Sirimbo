@@ -4,7 +4,7 @@
 
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
 <button type="submit" name="action" value="edit">Upravit</button>
-<button type="submit" name="action" value="edit_detail">Upravit tréninky</button>
+<button type="submit" name="action" value="edit_detail">Upravit přihášené</button>
 <button type="submit" name="action" value="edit_doku">Upravit dokumenty</button>
 <button type="submit" name="action" value="remove">Odstranit</button>
 <table>
@@ -23,9 +23,9 @@ foreach($tas as $item) {
 	echo "<td><input type=\"checkbox\" name=\"tas[]\" value=\"", $item["t_id"], "\" /></td>";
 	echo "<td>", $item["t_jmeno"], "</td>";
 	echo "<td>", $item["t_kde"], "</td>";
-	echo "<td>", $item["t_od"];
+	echo "<td>", formatDate($item["t_od"]);
 	if($item["t_od"] != $item["t_do"])
-		echo " - ", $item["t_do"];
+		echo " - ", formatDate($item["t_do"]);
 	echo "</td>";
 	echo "</tr>";
 }

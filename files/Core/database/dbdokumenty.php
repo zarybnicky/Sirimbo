@@ -14,7 +14,6 @@ class DBDokumenty extends Database {
 	
 	public static function getSingleDokument($id) {
 		list($id) = DBDokumenty::escapeArray(array($id));
-		//TODO: Handle database returning FALSE
 		$res = DBDokumenty::query("SELECT u_jmeno,u_prijmeni,d_id,d_path,d_name,d_filename,d_kategorie,d_kdo" .
 			" FROM dokumenty LEFT JOIN users ON d_kdo=u_id WHERE d_id='$id'");
 		if(!$res) {

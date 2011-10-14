@@ -1,7 +1,8 @@
 <?php
 class DBTaS extends Database {
 	public static function getTaS() {
-		$res = DBTaS::query("SELECT t_id,t_jmeno,t_kde,t_info,t_od,t_do,t_kapacita,t_dokumenty,t_lock FROM tas");
+		$res = DBTaS::query("SELECT t_id,t_jmeno,t_kde,t_info,t_od,t_do,t_kapacita,t_dokumenty,t_lock FROM tas" .
+			" ORDER BY t_od");
 		return DBTaS::getArray($res);
 	}
 	
@@ -9,7 +10,7 @@ class DBTaS extends Database {
 		list($id) = DBTaS::escapeArray(array($id));
 		
 		$res = DBTaS::query("SELECT t_id,t_jmeno,t_kde,t_info,t_od,t_do,t_kapacita,t_dokumenty,t_lock FROM tas" .
-			" WHERE t_id='$id'");
+			" WHERE t_id='$id' ORDER BY t_od");
 		if(!$res) {
 			return false;
 		} else {
@@ -21,7 +22,7 @@ class DBTaS extends Database {
 		list($id) = DBTaS::escapeArray(array($id));
 		
 		$res = DBTaS::query("SELECT ti_id,ti_id_rodic,ti_user,ti_jmeno,ti_prijmeni,ti_rok_narozeni" .
-			" FROM tas_item WHERE ti_id_rodic='$id'");
+			" FROM tas_item WHERE ti_id_rodic='$id' ORDER BY ti_prijmeni");
 		return DBTaS::getArray($res);
 	}
 	
