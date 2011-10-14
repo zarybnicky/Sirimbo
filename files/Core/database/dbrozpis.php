@@ -2,7 +2,7 @@
 class DBRozpis extends Database {
 public static function getRozpis() {
 		$res = DBRozpis::query("SELECT u_jmeno,u_prijmeni,r_id,r_trener,r_kde,r_datum,r_visible,r_lock" .
-			" FROM rozpis LEFT JOIN users ON r_trener=u_id");
+			" FROM rozpis LEFT JOIN users ON r_trener=u_id ORDER BY r_datum");
 		return DBRozpis::getArray($res);
 	}
 	
@@ -29,7 +29,7 @@ public static function getRozpis() {
 		
 		$res = DBRozpis::query("SELECT u_id,u_login,u_jmeno,u_prijmeni,ri_id,ri_id_rodic,ri_partner," .
 			"ri_od,ri_do,ri_lock FROM rozpis_item LEFT JOIN users ON ri_partner=u_id WHERE " .
-			"ri_id_rodic='$rid'");
+			"ri_id_rodic='$rid' ORDER BY ri_od");
 		return DBRozpis::getArray($res);
 	}
 	
@@ -131,12 +131,13 @@ public static function getRozpis() {
 		}
 	}
 	
-	public static function addRozpisItem($parent_id, $user_id, $od, $do) {
-		list($parent_id, $user_id, $od, $do) = DBRozpis::escapeArray(array($parent_id, $user_id, $od, $do));
+	public static function addRozpisItem($parent_id, $user_id, $od, $do, $lock) {
+		list($parent_id, $user_id, $od, $do, $lock) =
+			DBRozpis::escapeArray(array($parent_id, $user_id, $od, $do, $lock));
 		
-		DBRozpis::query("INSERT INTO rozpis_item (ri_id_rodic,ri_partner,ri_od,ri_do)" .
-			" VALUES ('$parent_id','$user_id','$od','$do')" .
-			" ON DUPLICATE KEY UPDATE ri_partner='$user_id',ri_do='$do'");
+		DBRozpis::query("INSERT INTO rozpis_item (ri_id_rodic,ri_partner,ri_od,ri_do,ri_lock)" .
+			" VALUES ('$parent_id','$user_id','$od','$do','$lock')" .
+			" ON DUPLICATE KEY UPDATE ri_partner='$user_id',ri_do='$do',ri_lock='$lock'");
 		
 		return true;
 	}
@@ -144,18 +145,18 @@ public static function getRozpis() {
 	public static function editRozpisItem($id, $partner, $od, $do, $lock) {
 		list($id, $partner, $od, $do, $lock) = DBRozpis::escapeArray(array($id, $partner, $od, $do, $lock));
 		
-		$res = DBNabidka::query("SELECT ri_id_rodic,ri_id FROM rozpis_item WHERE ri_od='$od' AND " .
+		$res = DBNabidka::query("SELECT ri_id FROM rozpis_item WHERE ri_od='$od' AND " .
 			"ri_id_rodic=(SELECT ri_id_rodic FROM rozpis_item WHERE ri_id='$id')");
-		//TODO: Find better solution (if possible)
+			//Finds conflicting rozpis
+		
 		if(!$res) {
 			return false;
 		} else {
 			$row = DBNabidka::getSingleRow($res);
-			$rodic = $row["ri_id_rodic"];
 		}
-		if($rodic && $row["ri_id"] != $id) {
-			DBRozpis::addRozpisItem($rodic, $partner, $od, $do);
+		if($row['ri_id'] && $row['ri_id'] != $id) {//if there is a conflicting rozpis:
 			DBRozpis::removeRozpisItem($id);
+			DBRozpis::addRozpisItem($rodic, $partner, $od, $do, $lock);
 		} else {
 			DBRozpis::query("UPDATE rozpis_item SET ri_partner='$partner',ri_od='$od',ri_do='$do'," .
 				"ri_lock='$lock' WHERE ri_id='$id'");

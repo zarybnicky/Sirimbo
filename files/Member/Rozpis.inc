@@ -1,11 +1,11 @@
 <?php
 header_main("Rozpis tréninků");
 
-User::checkPermissionsError(L_USER);
+User::checkPermissionsError(L_HOST);
 
 $error = false;
 global $isConfirmation;
-$isConfirmation = getPostField("ri_id") && getPostField("action");
+$isConfirmation = (getPostField("ri_id") && getPostField("action")) && User::checkPermissionsBool(L_USER);
 
 $rozpis = DBRozpis::getRozpis();
 
@@ -52,7 +52,7 @@ foreach($rozpis as $item) {
 		$r_items = DBRozpis::getRozpisItem($item["r_id"]);
 		echo "<div class=\"r_wrapper\">";
 		echo "<div class=\"r_info\" style=\"float:left;border:1px solid black;\">";
-		echo "<div class=\"r_datum\">", $item["r_datum"], "</div>";
+		echo "<div class=\"r_datum\">", formatDate($item["r_datum"]), "</div>";
 		echo "<div class=\"r_kde\">", $item["r_kde"], "</div>";
 		echo "<div class=\"r_trener\">", $item["u_jmeno"], " ", $item["u_prijmeni"], "</div>";
 		echo "</div>";
@@ -60,11 +60,11 @@ foreach($rozpis as $item) {
 		echo "<tr><td>Od</td><td>Do</td><td>Tanečník</td><td></td><td></td></tr>";
 		foreach($r_items as $par) {
 			echo "<form action=\"{$_SERVER["REQUEST_URI"]}\" method=\"post\">";
-			echo "<tr><td>", $par["ri_od"], "</td><td>", $par["ri_do"], "</td><td>",
+			echo "<tr><td>", formatTime($par["ri_od"], 1), "</td><td>", formatTime($par["ri_do"], 1), "</td><td>",
 				$par["u_jmeno"], " ", $par["u_prijmeni"], "</td>";
 			echo "<td>";
 			echo "<input type=\"hidden\" name=\"ri_id\" value=\"", $par["ri_id"], "\" />";
-			if($par["ri_partner"] == 0 && !$item["r_lock"] && !$item["ri_lock"])
+			if($par["ri_partner"] == 0 && !$item["r_lock"] && !$par["ri_lock"] && User::checkPermissionsBool(L_USER))
 				echo "<button type=\"submit\" name=\"action\" value=\"signup\">Rezervovat</button>";
 			else
 				echo "<button type=\"submit\" name=\"action\" value=\"signup\" disabled=\"disabled\">Rezervovat</button>";
@@ -73,7 +73,7 @@ foreach($rozpis as $item) {
 			if(($par["ri_partner"] != 0 && (User::checkPermissionsBool(L_ADMIN) ||
 					User::getUserID() == $par["ri_partner"] ||
 					(User::checkPermissionsBool(L_TRENER) && $item["r_trener"] == User::getUserID()))) &&
-					!$item["r_lock"] && ! $par["ri_lock"])
+					!$item["r_lock"] && ! $par["ri_lock"] && User::checkPermissionsBool(L_USER))
 					echo "<button type=\"submit\" name=\"action\" value=\"signout\">Zrušit</button>";
 			else
 				echo "<button type=\"submit\" name=\"action\" value=\"signout\" disabled=\"disabled\">Zrušit</button>";

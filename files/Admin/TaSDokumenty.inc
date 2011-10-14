@@ -5,7 +5,6 @@ if(!is_numeric(getGetField("id")) && getGetField("id") > 0 && getGetField("id") 
 	View::viewError(ER_CORRUPT_DATA);
 if(!($tas = DBTaS::getSingleTaS(getGetField("id"))))
 	View::viewError(ER_CORRUPT_DATA);
-$users = DBUser::getUsers();
 $doku = unserialize($tas["t_dokumenty"]);
 
 header_main("Správa TaS");

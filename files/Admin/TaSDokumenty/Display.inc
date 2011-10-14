@@ -14,7 +14,7 @@ if($tas["t_od"] != $tas["t_do"])
 <table>
 <tr><td>Jméno<br/>Souboru</td><td>Kategorie</td><td></td>
 </tr>
-<?php
+<?php //TODO: Dokumenty do hlavmí TaS 
 if(!empty($doku)) {
 	$count = count($doku);
 	for($i = 0; $i < $count; $i++) {

@@ -4,6 +4,7 @@ DirectoryIndex index.php index.html index.htm
 RewriteEngine On
 
 RewriteCond %{REQUEST_URI} !^/?images/.+ [NC]
+RewriteCond %{REQUEST_URI} !^/?style/.+ [NC]
 RewriteCond %{REQUEST_URI} !^/?galerie/.+ [NC]
 RewriteCond %{REQUEST_URI} !^/?upload/.+ [NC]
 RewriteCond %{REQUEST_URI} !^/?devel/.+ [NC]

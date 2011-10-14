@@ -10,29 +10,36 @@ if(empty($_POST)) {
 switch(getPostField("action")) {
 	
 	case "edit":
-		$users = getPostField("users");
+		$users = getPostField("users");	
 		if($users[0]) {
+			if(!DBUser::isUserConfirmed($users[0])) {
+				notice("Uživatel ještě není potvrzený - ", $users[0]);
+				break;
+			}
 			$userData = DBUser::getUserData($users[0]);
 			$_POST["login"] = $users[0];
 			$_POST["level"] = $userData["u_level"];
 			switch($userData["u_level"]) {
+				case L_HOST:
+					$_POST["level"] = "host";		break;
 				case L_USER:
-					$_POST["level"] = "user";	break;
+					$_POST["level"] = "user";		break;
 				case L_EDITOR:
-					$_POST["level"] = "editor";	break;
+					$_POST["level"] = "editor";		break;
 				case L_TRENER:
-					$_POST["level"] = "trener";	break;
+					$_POST["level"] = "trener";		break;
 				case L_ADMIN:
-					$_POST["level"] = "admin";	break;
+					$_POST["level"] = "admin";		break;
 				case L_SADMIN:
-					$_POST["level"] = "sadmin";	break;
+					$_POST["level"] = "sadmin";		break;
 				default:
-					$_POST["level"] = "user";	break;
+					$_POST["level"] = "user";		break;
 			}
 			$_POST["ban"] = $userData["u_ban"];
 			$_POST["lock"] = $userData["u_lock"];
 			$_POST["jmeno"] = $userData["u_jmeno"];
 			$_POST["prijmeni"] = $userData["u_prijmeni"];
+			$_POST["pohlavi"] = $userData["u_pohlavi"];
 			$_POST["email"] = $userData["u_email"];
 			$_POST["telefon"] = $userData["u_telefon"];
 			$_POST["poznamky"] = $userData["u_poznamky"];
@@ -76,6 +83,8 @@ switch(getPostField("action")) {
 				break;
 			}
 		}
+		$user_exists = DBUser::getUserID($user);
+		
 		$error = false;
 		
 		ob_start();
@@ -83,30 +92,49 @@ switch(getPostField("action")) {
 		$html = ob_get_clean();
 		
 		if(!$error) {
+			if(getPostField("action") == "add_confirm" && $user_exists) {
+				notice("Uživatel s takovým jménem už tu je");
+				echo $html;
+				return;
+			}
+			if(getPostField("action") == "edit_confirm" && !DBUser::isUserConfirmed($user)) {
+				notice("Uživatel ještě není potvrzený");
+				break;
+			}
+			
 			switch(getPostField("level")) {
+				case "host":
+					$level = L_HOST;		break;
 				case "user":
-					$level = L_USER;	break;
+					$level = L_USER;		break;
 				case "editor":
-					$level = L_EDITOR;	break;
+					$level = L_EDITOR;		break;
 				case "trener":
-					$level = L_TRENER;	break;
+					$level = L_TRENER;		break;
 				case "admin":
-					$level = L_ADMIN;	break;
+					$level = L_ADMIN;		break;
+				case "sadmin":
+					if(getPostField("action") == "edit_confirm")
+						$level = L_SADMIN;
+					else
+						$level = L_ADMIN;
+					break;
 				default:
-					$level = L_USER;	break;
+					$level = L_HOST;	break;
 			}
 			if(getPostField("action") == "edit_confirm") {
-				DBUser::editUser($user, $level, (getPostField("lock")) ? 1 : 0,
-					(getPostField("ban")) ? 1 : 0, getPostField("jmeno"), getPostField("prijmeni"),
-					getPostField("email"), getPostField("telefon"), getPostField("poznamky"));
+				DBUser::setUserData($user, getPostField("jmeno"), getPostField("prijmeni"),
+					getPostField("pohlavi"), getPostField("email"), getPostField("telefon"),
+					getPostField("poznamky"), $level, getPostField("lock") ? 1 : 0,
+					getPostField("ban") ? 1 : 0);
 				notice("Uživatel úspěšně upraven");
 			} else if(getPostField("action") == "add_confirm") {
 				$pass = User::Crypt($_POST["pass"]);
-				//TODO: Changing passwords
-				DBUser::addUser($user, $pass, $level, (getPostField("lock")) ? 1 : 0,
-					(getPostField("ban")) ? 1 : 0, getPostField("jmeno"),
-					getPostField("prijmeni"), getPostField("email"), getPostField("telefon"),
-					getPostField("poznamky"));
+				
+				DBUser::addUser($user, $pass, getPostField("jmeno"), getPostField("prijmeni"),
+					getPostField("pohlavi"), getPostField("email"), getPostField("telefon"),
+					getPostField("poznamky"), $level, getPostField("lock") ? 1 : 0,
+					getPostField("ban") ? 1 : 0, "1");
 				notice("Uživatel úspěšně přidán");
 			}
 		} else {
@@ -126,6 +154,26 @@ switch(getPostField("action")) {
 			}			
 			notice("Uživatelé odebráni");
 		}
+		break;
+	
+	case "confirm":	
+		include("files/Admin/Users/DisplayNew.inc");
+		return;
+		break;
+	
+	case "confirm_confirm":
+		if(is_array(getPostField("users"))) {
+			foreach(getPostField("users") as $login) {
+				$old_level = getPostField($login . '-level');
+				$level = ($old_level == 'host' || $old_level == 'user' ||
+						$old_level == 'editor' || $old_level == 'trener' || $old_level == 'admin') ?
+					$old_level : 'host';
+				DBUser::confirmUser($login, $level);
+			}
+		}
+		notice("Uživatelé potvrzeni");
+		include("files/Admin/Users/DisplayNew.inc");
+		return;
 		break;
 }
 

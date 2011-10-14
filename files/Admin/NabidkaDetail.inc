@@ -7,7 +7,7 @@ if(!($nab = DBNabidka::getSingleNabidka(getGetField("id"))))
 	View::viewError(ER_CORRUPT_DATA);
 $items = DBNabidka::getNabidkaItem(getGetField("id"));
 $obsazeno = DBNabidka::getNabidkaItemLessons(getGetField("id"));
-$users = DBUser::getUsers();
+$users = DBUser::getActiveUsers();
 
 header_main("Správa nabídek");
 
