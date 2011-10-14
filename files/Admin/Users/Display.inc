@@ -1,5 +1,6 @@
 <form action="<?php echo $_SERVER["REQUEST_URI"]?>" method="POST">
 <button type="submit" name="action" value="add">Přidat uživatele</button>
+<button type="submit" name="action" value="confirm">Noví uživatelé</button>
 </form>
 
 <form action="<?php echo $_SERVER["REQUEST_URI"]?>" method="POST">
@@ -29,6 +30,12 @@ foreach($users as $user) {
 	$ul = $user["u_level"];
 	echo "<td>";
 	switch($ul) {
+		case L_UNCONFIRMED:
+			echo "Nepotvrzený uživatel";
+			break;
+		case L_HOST:
+			echo "Host";
+			break;
 		case L_USER:
 			echo "Uživatel";
 			break;

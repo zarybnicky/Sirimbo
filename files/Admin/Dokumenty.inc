@@ -33,9 +33,9 @@ switch(getPostField("action")) {
 		break;
 		
 	case "edit":
-		$doku = getPostField("rozpis");
+		$doku = getPostField("dokumenty");
 		if($doku[0]) {
-			$file = DBDokumenty::getSingleDocument($doku[0]);
+			$file = DBDokumenty::getSingleDokument($doku[0]);
 			
 			if(!User::checkPermissionsBool(L_ADMIN) && 
 					User::getUserID() != $file["d_kdo"])
@@ -70,10 +70,30 @@ Nové jméno:&nbsp;
 
 	case "remove":
 		if(is_array(getPostField("dokumenty"))) {
+			echo "<form action=\"{$_SERVER["REQUEST_URI"]}\" method=\"POST\">";
+			echo "Opravdu chcete odstranit dokumenty:<br/><br/>";
+			foreach(getPostField("dokumenty") as $id) {
+				$name = DBDokumenty::getDokumentName($id);
+				echo "\t$name<br />";
+				echo "<input type=\"hidden\" name=\"dokumenty[]\" value=\"$id\" />";
+			}
+			echo "<br/>";
+			echo "<button type=\"submit\" name=\"action\" value=\"remove_confirm\">",
+				"Odstranit</button>";
+			echo "</form>";
+			echo "<form action=\"{$_SERVER["REQUEST_URI"]}\" method=\"GET\">";
+			echo "<button type=\"submit\">Zpět</button>";
+			echo "</form>";
+			return;
+		}
+		break;
+	
+	case "remove_confirm":
+		if(is_array(getPostField("dokumenty"))) {
 			foreach(getPostField("dokumenty") as $item) {
 				if(User::checkPermissionsBool(L_ADMIN) ||
 						(User::getUserID() == DBDokumenty::getDokumentUserID($item))) {
-					unlink(DBDokumenty::getDocumentPath($item));
+					unlink(DBDokumenty::getDokumentPath($item));
 					DBDokumenty::removeDokument($item);
 				} else {
 					View::viewError(ER_AUTHORIZATION);
@@ -81,7 +101,6 @@ Nové jméno:&nbsp;
 			}
 			notice("Dokumenty odebrány");
 		}
-		//TODO: dokumenry - remove_confirm
 		break;
 }
 

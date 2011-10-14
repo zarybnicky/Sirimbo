@@ -9,7 +9,7 @@ include("files/Core/view.php");
 include("files/Core/debug.php");		//DEBUG ONLY!!!
 
 //Are all CORE vars present?
-if(!$sitemap_static || !$sitemap_dynamic || !class_exists("Database") ||
+if(!$sitemap_static || !$sitemap_dynamic || !class_exists("Database") || !class_exists("DBUser") ||
 		!class_exists("User") || !class_exists("View") || !class_exists("Log")) {
 	if(class_exists("View")) {
 		View::viewDynamic("files/Error/KeyFileCorrupt.inc");

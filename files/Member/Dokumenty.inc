@@ -18,9 +18,9 @@
 <td>Uploadoval</td>
 </tr>
 <?php
-User::checkPermissionsError(L_USER);
+User::checkPermissionsError(L_HOST);
 
-if(getGetField("kategorie") !==	 "") {
+if(getGetField("kategorie") && getGetField("kategorie") !== "") {
 	$dokumenty = DBDokumenty::getDokumentyByKategorie(getGetField("kategorie"));
 } else {
 	$dokumenty = DBDokumenty::getDokumenty();

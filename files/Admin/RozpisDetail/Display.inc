@@ -35,6 +35,7 @@ if(!empty($items)) {
 <td><input type="text" name="add_od" value="" /></td>
 <td><input type="text" name="add_do" value="" /></td>
 <td><button type="submit" name="action" value="add">Přidat</button></td>
+<td><input type="checkbox" name="add_lock" value="lock" /></td>
 </tr>
 </table>
 </div>
@@ -42,7 +43,7 @@ if(!empty($items)) {
 <?php echoNabidky("n_id", DBNabidka::getNabidka()); ?>
 <button type="submit" name="action" value="select">Vybrat nabídku</button>
 <?php
-if(getPostField("n_id")) {				//BEGIN IF
+if(is_numeric(getPostField("n_id"))) {				//BEGIN IF
 	if(!is_numeric(getPostField("n_id")) && getPostField("n_id") > 0 && getPostField("n_id") < 2147483647)
 		View::viewError(ER_CORRUPT_DATA);
 	if(!($nab = DBNabidka::getSingleNabidka(getPostField("n_id"))))

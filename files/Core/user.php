@@ -6,6 +6,8 @@ class User {
 				|| DBUser::checkUser($login, $pass)) {
 			if(DBUser::isUserBanned($login))
 				View::viewError(ER_BAN);
+			if(!DBUser::isUserConfirmed($login))
+				View::viewError(ER_NOT_APPROVED);
 			$_SESSION["login"] = 1;
 			$_SESSION["user"] = $login;
 			User::loadUser($login);
@@ -19,11 +21,15 @@ class User {
 	}
 	
 	public static function loadUser($username) {
+		$userData = DBUser::getUserData($username);
+		
 		if($username == "superadmin" && $_SESSION["user"] == "superadmin")
 			$_SESSION["level"] = L_SADMIN;
 		else
-			$_SESSION["level"] = DBUser::getUserlevel($username);
-		$_SESSION["id"] = DBUser::getUserID($username);
+			$_SESSION["level"] = $userData['u_level'];
+		$_SESSION["id"] = $userData['u_id'];
+		$_SESSION["pohlavi"] = $userData['u_pohlavi'];
+		
 		return true;
 	}
 	
@@ -46,8 +52,16 @@ class User {
 		return $_SESSION["user"];
 	}
 	
+	public static function getUserWholeName() {
+		return DBUser::getUserWholeName($_SESSION["id"]);
+	}
+	
 	public static function getUserLevel() {
 		return $_SESSION["level"];
+	}
+	
+	public static function getUserPohlavi() {
+		return $_SESSION['pohlavi'];
 	}
 	
 	public static function isLogged() {
@@ -56,18 +70,9 @@ class User {
 		return false;
 	}
 	
-	public static function addUser($login, $pass, $level, $lock, $ban, $name = "",
-		$surname = "", $email = "", $telefon = "", $poznamky = "") {
-		DBUser::addUser($login, $pass, $name, $surname, $email, $telefon,
-			$poznamky, $level, $lock, $ban);
-		return true;
-	}
-	
-	public static function editUser($login, $level, $lock, $ban, $name = "",
-		$surname = "", $email = "", $telefon = "", $poznamky = "") {
-		DBUser::setUserData($login, $name, $surname, $email, $telefon,
-			$poznamky, $level, $lock, $ban);
-		return true;
+	public static function register($login, $pass, $name, $surname, $pohlavi, $email, $telefon, $poznamky) {
+		DBUser::addUser($login, $pass, $name, $surname, $pohlavi, $email, $telefon,
+			$poznamky, L_UNCONFIRMED, "0", "0", "0");
 	}
 	
 	public static function Crypt($passwd) {

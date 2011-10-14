@@ -2,7 +2,7 @@
 class DBNabidka extends Database {
 public static function getNabidka() {
 		$res = DBNabidka::query("SELECT u_jmeno,u_prijmeni,n_id,n_trener,n_pocet_hod,n_od,n_do,n_visible,n_lock" .
-			" FROM nabidka LEFT JOIN users ON n_trener=u_id");
+			" FROM nabidka LEFT JOIN users ON n_trener=u_id ORDER BY n_od");
 		return DBNabidka::getArray($res);
 	}
 	
@@ -143,18 +143,18 @@ public static function getNabidka() {
 	public static function editNabidkaItem($id, $partner, $pocet_hod) {
 		list($id, $partner, $pocet_hod) = DBNabidka::escapeArray(array($id, $partner, $pocet_hod));
 		
-		$res = DBNabidka::query("SELECT ni_id_rodic,ni_id FROM nabidka_item WHERE ni_partner='$partner' AND " .
+		$res = DBNabidka::query("SELECT ni_id FROM nabidka_item WHERE ni_partner='$partner' AND " .
 			"ni_id_rodic=(SELECT ni_id_rodic FROM nabidka_item WHERE ni_id='$id')");
-		//TODO: Find better solution (if possible)
+			//Finds conflicting nabidku
+		
 		if(!$res) {
 			return false;
 		} else {
 			$row = DBNabidka::getSingleRow($res);
-			$rodic = $row["ni_id_rodic"];
 		}
-		if($rodic && $row["ni_id"] != $id) {
-			DBNabidka::addNabidkaItemLessons($partner, $rodic, $pocet_hod);
+		if($row['ni_id'] && $row['ni_id'] != $id) { //If there is a conflicting nabidka
 			DBNabidka::removeNabidkaItemByID($id);
+			DBNabidka::addNabidkaItemLessons($partner, $rodic, $pocet_hod);
 		} else {
 			DBNabidka::query("UPDATE nabidka_item SET ni_partner='$partner',ni_pocet_hod='$pocet_hod' WHERE" .
 				" ni_id='$id'");
