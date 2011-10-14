@@ -11,13 +11,30 @@
 <body>
 <div id="all">
 	<div id="header">
-		<div id="userbox">
+		<?php
+		if(!isset($_POST["login"])) echo "<div id=\"userbox\">";
+		else echo "<div id=\"userbox\" class=\"bad\">";
+		
+		if(true || !User::isLogged()) {
+			//TODO: AJAX
+			if(isset($_POST["login"])) {
+				$_POST["pass"] = User::crypt($_POST["pass"]);
+			
+				if(User::login($_POST["login"], $_POST["pass"])) {
+					header("Location: /member/home");
+					return;
+				}
+			}
+		?>
 			<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="post">
-				<input style="width:100px;" type="text" name="login" /><br />
-				<input style="width:100px;" type="password" name="pass" /><br />
-				<input type="submit" value="Login" />
+				<input style="width:55px;" type="text" name="login"
+				/><input style="width:55px;" type="password" name="pass"
+				/><button type="submit" name="action" value="login">Login</button>
 			</form>
-			<a href="#">Přihlásit se</a>
+		<?php
+		} else {
+			echo User::getUserName(); //TODO: Whole username
+		}?>
 		</div>
 		<div id="logo">
 			Taneční klub Olymp
@@ -40,12 +57,12 @@
 				<div class="dark-out"><div class="dark-in"><span class="logo"></span>Menu</div></div>
 				<div id="sidemenu">
 					<ul>
-						<li><a href="#"><span class="arrow"></span>Noví zájemci</a></li>
-						<li><a href="#"><span class="arrow"></span>Rada klubu</a></li>
-						<li><a href="#"><span class="arrow"></span>Historie</a></li>
-						<li><a href="#"><span class="arrow"></span>Mistroství ČR</a></li>
-						<li><a href="#"><span class="arrow"></span>Taneční liga</a></li>
-						<li><a href="#"><span class="arrow"></span>Odkazy</a></li>
+						<li><a href="#"><span class="arrow">.</span>Noví zájemci</a></li>
+						<li><a href="#"><span class="arrow">.</span>Rada klubu</a></li>
+						<li><a href="#"><span class="arrow">.</span>Historie</a></li>
+						<li><a href="#"><span class="arrow">.</span>Mistroství ČR</a></li>
+						<li><a href="#"><span class="arrow">.</span>Taneční liga</a></li>
+						<li><a href="#"><span class="arrow">.</span>Odkazy</a></li>
 					</ul>
 				</div>
 				<div class="dark-out"><div class="dark-in"><span class="logo"></span>Kontakt</div></div>
@@ -70,7 +87,7 @@
 </div>
 <div id="footer">
 	<div class="container">
-		LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOooooooOOOOOOOOOOoooooooooOOOOOOOOng footer
+		Copyright &copy; 2011, TK Olymp Olomouc | realizace: Jakub Zárybnický, design: Linnet Design
 	</div>
 </div>
 </body>

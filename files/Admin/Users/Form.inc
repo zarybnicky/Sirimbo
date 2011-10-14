@@ -47,6 +47,16 @@ header_minor($header);
 			$error = checkPostFieldLength(0, 40, "prijmeni") || $error;
 		?></td>
 	</tr><tr>
+		<td>Pohlaví (*): </td>
+		<td><input type="radio" name="pohlavi" value="m" <?php
+			if(getPostField("pohlavi") == "m") echo "checked=\"checked\"";
+		?>/>Muž&nbsp;&nbsp;<input type="radio" name="pohlavi" value="f" <?php
+			if(getPostField("pohlavi") == "f") echo "checked=\"checked\"";
+		?>/>Žena</td>
+		<td><?php
+			$error = checkPostField("/m|f/i", "pohlavi") || $error;
+		?></td>
+	</tr><tr>
 		<td>E-mail: </td>
 		<td><input type="text" name="email" value="<?php echo getPostField("email"); ?>" /></td>
 		<td>Max. 50 znaků, ve formátu e-mail adresy<?php
@@ -79,6 +89,8 @@ header_minor($header);
 	</tr><tr>
 		<td>Oprávnění: </td>
 		<td><select name="level">
+				<option value="host" <?php if(getPostField("level") == "host")
+					echo "selected=\"selected\"";?>>Host</option>
 				<option value="user" <?php if(getPostField("level") == "user")
 					echo "selected=\"selected\"";?>>Uživatel</option>
 				<option value="editor" <?php if(getPostField("level") == "editor")

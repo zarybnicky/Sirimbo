@@ -1,5 +1,5 @@
 <?php
-User::checkPermissionsError(L_USER);
+User::checkPermissionsError(L_HOST);
 
 if(!empty($_GET["id"])) {
 	$data = DBDokumenty::getSingleDokument($_GET["id"]);

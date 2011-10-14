@@ -6,7 +6,7 @@ if(!is_numeric(getGetField("id")) && getGetField("id") > 0 && getGetField("id") 
 if(!($roz = DBRozpis::getSingleRozpis(getGetField("id"))))
 	View::viewError(ER_CORRUPT_DATA);
 $items = DBRozpis::getRozpisItem(getGetField("id"));
-$users = DBUser::getUsers();
+$users = DBUser::getActiveUsers();
 
 header_main("Správa rozpisů");
 
@@ -49,7 +49,7 @@ if(getPostField("generate") == "overlap") {
 	
 	for($i = 0; $i < getPostField("gen_add_hod"); $i++) {
 		DBRozpis::addRozpisItem(getGetField("id"), "0", formatTime($od, 0),
-			formatTime($do, 0));
+			formatTime($do, 0), "0");
 		$od = $do;
 		$do = timeAdd($od, $len);
 	}
@@ -85,10 +85,11 @@ if(getPostField("generate") == "overlap") {
 		$partner = (getPostField("add_partner") == "none") ? "0" : getPostField("add_partner");
 		$od = getPostField("add_od");
 		$do = getPostField("add_do");
+		$lock = getPostField("add_lock");
 		
-		if(preg_match("/^[0-9]{2}:[0-9]{2}$/", $od) &&
-				preg_match("/^[0-9]{2}:[0-9]{2}$/", $do)) {
-			DBRozpis::addRozpisItem(getGetField("id"), $partner, formatTime($od, 0), formatTime($do, 0));
+		if(preg_match("/^[012]*[0-9]{1}:[0-9]{2}$/", $od) &&
+				preg_match("/^[012]*[0-9]{1}:[0-9]{2}$/", $do)) {
+			DBRozpis::addRozpisItem(getGetField("id"), $partner, formatTime($od, 0), formatTime($do, 0), $lock);
 			unset($_POST["add_partner"]);
 			$items = DBRozpis::getRozpisItem(getGetField("id"));
 		}

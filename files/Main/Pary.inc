@@ -1,1 +1,0 @@
-Zde bude přehled našich aktivních páry

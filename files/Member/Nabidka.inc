@@ -1,11 +1,12 @@
 <?php
 header_main("Nabídka tréninků");
 
-User::checkPermissionsError(L_USER);
+User::checkPermissionsError(L_HOST);
 
 $error = false;
 global $isConfirmation;
-$isConfirmation = (getPostField("hodiny") && getPostField("id")) || getPostField("un_id");
+$isConfirmation = ((getPostField("hodiny") && getPostField("id")) || getPostField("un_id")) &&
+	User::checkPermissionsBool(L_USER);
 
 $nabidka = DBNabidka::getNabidka();
 
@@ -46,9 +47,9 @@ foreach($nabidka as $item) {
 		echo "<div class=\"n_wrapper\">";
 		echo "<div class=\"n_info\" style=\"border:1px solid black;\">";
 		echo "<div class=\"n_trener\">", $item["u_jmeno"], " ", $item["u_prijmeni"], "</div>";
-		echo "<div class=\"n_datum\">", $item["n_od"];
+		echo "<div class=\"n_datum\">", formatDate($item["n_od"]);
 		if($item["n_od"] != $item["n_do"])
-			echo " - ", $item["n_do"];
+			echo " - ", formatDate($item["n_do"]);
 		echo "</div>";
 		echo "<div class=\"n_hodiny_all\">Celkem hodin: ", $item["n_pocet_hod"], "</div>";
 		echo "<div class=\"n_hodiny_obs\">Obsazených hodin: ", $obsazeno, "</div>";
@@ -60,11 +61,11 @@ foreach($nabidka as $item) {
 			echo "<tr><td>", $par["u_jmeno"], " ", $par["u_prijmeni"], "</td><td>", $par["ni_pocet_hod"], "</td>";
 			if ($par["u_login"] == User::getUserName() || User::checkPermissionsBool(L_ADMIN)) {
 				echo "<td><input type=\"hidden\" name=\"un_id\" value=\"", $par["u_id"], "-", $item["n_id"], "\"";
-				if($item["n_lock"])
+				if($item["n_lock"] || !User::checkPermissionsBool(L_USER))
 					echo " disabled=\"disabled\"";
 				echo " />";
 				echo "<input type=\"submit\" value=\"Odstranit\"";
-				if($item["n_lock"])
+				if($item["n_lock"] || !User::checkPermissionsBool(L_USER))
 					echo " disabled=\"disabled\"";
 				echo " /></td>";
 			}
@@ -73,15 +74,15 @@ foreach($nabidka as $item) {
 		echo "</form></table>";
 		echo "<div class=\"n_add\"><form action=\"{$_SERVER["REQUEST_URI"]}\" method=\"post\">";
 		echo "Počet hodin: <input type=\"text\" name=\"hodiny\" value=\"", getPostField("hodiny"), "\"";
-		if($item["n_lock"])
+		if($item["n_lock"] || !User::checkPermissionsBool(L_USER))
 			echo " disabled=\"disabled\"";
 		echo " />";
 		echo "<input type=\"hidden\" name=\"id\" value=\"", $item["n_id"], "\"";
-		if($item["n_lock"])
+		if($item["n_lock"] || !User::checkPermissionsBool(L_USER))
 			echo " disabled=\"disabled\"";
 		echo " />";
 		echo "<input type=\"submit\" value=\"Přidat\"";
-		if($item["n_lock"])
+		if($item["n_lock"] || !User::checkPermissionsBool(L_USER))
 			echo " disabled=\"disabled\"";
 		echo " />";
 		echo "</form></div>";

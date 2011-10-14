@@ -25,6 +25,13 @@ header_minor("Osobní údaje");
 			$error = checkPostFieldLength(0, 40, "prijmeni") || $error;
 		?></td>
 	</tr><tr>
+		<td>Pohlaví: </td>
+		<td><input type="radio" name="pohlavi" value="m" <?php
+			if(getPostField("pohlavi") == "m") echo "checked=\"checked\"";
+		?>/>Muž&nbsp;&nbsp;<input type="radio" name="pohlavi" value="f" <?php
+			if(getPostField("pohlavi") == "f") echo "checked=\"checked\"";
+		?>/>Žena</td>
+	</tr><tr>
 		<td>E-mail: </td>
 		<td><input type="text" name="email" value="<?php echo getPostField("email"); ?>" /></td>
 		<td>Max. 50 znaků, ve formátu e-mail adresy<?php

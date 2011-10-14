@@ -1,5 +1,5 @@
 <?php
-User::checkPermissionsError(L_USER);
+User::checkPermissionsError(L_HOST);
 
 if(!is_numeric(getGetField("id")))
 	View::viewError(ER_CORRUPT_DATA);
@@ -15,13 +15,23 @@ $tas_items = DBTas::getTaSItems($id);
 
 echo "<div class=\"t_wrapper\">";
 echo "<div class=\"t_info\" style=\"border:1px solid black;\">";
-echo "<div class=\"t_jmeno\">", $tas["t_jmeno"], "</div>";
-echo "<div class=\"t_datum\">", $tas["t_od"];
+echo "<div class=\"t_jmeno\">Název: ", $tas["t_jmeno"], "</div>";
+echo "<div class=\"t_datum\">Datum: ", formatDate($tas["t_od"]);
 if($tas["t_od"] != $tas["t_do"])
-	echo " - ", $tas["t_do"];
+	echo " - ", formatDate($tas["t_do"]);
 echo "</div>";
-echo "<div class=\"t_moreinfo\">", $tas["t_info"], "</div>";
-echo "<div class=\"t_dokumenty\">", $tas["t_dokumenty"], "</div>";//TODO: Show Dokumenty array
+echo "<div class=\"t_moreinfo\">Další informace: ", $tas["t_info"], "</div>";
+echo "<div class=\"t_dokumenty\">Dokumenty:<br/>";
+$doku = unserialize($tas["t_dokumenty"]);
+if($doku) {
+	foreach($doku as $id) {
+		$data = DBDokumenty::getSingleDokument($id);
+		echo "<a href=\"/member/download?id=", $id, "\">", $data["d_name"], "</a>";
+	}
+} else {
+	echo "Žádné dokumenty";
+}
+echo "</div>";
 echo "</div>";
 if(empty($tas_items)) {
 	echo "Nikdo není přihlášený";
