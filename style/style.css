@@ -133,20 +133,22 @@ hr {
 }
 #topmenu {
 	position: absolute;
-	bottom: -3px;
+	bottom: -5px;
 	left: 0;
 }
 #topmenu ul li {
 	float: left;
 	background: url('tab-nosel-right.png') no-repeat right;
-	padding: 8px 19px 8px 0px;
+	padding: 12px 19px 10px 0px;
+	height: 22px;
 }
 #topmenu ul li a {
 	background: url('tab-nosel-left.png') no-repeat left;
-	padding: 10px 10px 10px 10px;
+	padding: 12px 10px 10px 4px;
 	font-size: 20px;
-	font-weight: bolder;
-	color: #ffb82f;
+	line-height: 22px;
+	font-weight: bold;
+	color: #fff;
 	text-decoration: none;
 }
 #topmenu ul li.first a {
@@ -155,6 +157,22 @@ hr {
 }
 #topmenu ul li.last {
 	background: url('tab-nosel-last-right.png') no-repeat right;
+}
+#topmenu ul li:hover {
+	background: url('tab-sel-right.png') no-repeat right;
+}
+#topmenu ul li:hover a {
+	background: url('tab-sel-left.png') no-repeat left;
+	margin-left: -25px;
+	padding-left: 29px;
+}
+#topmenu ul li.last:hover {
+	background: url('tab-sel-last-right.png') no-repeat right;
+}
+#topmenu ul li.first:hover a {
+	background: url('tab-sel-first-left.png') no-repeat left;
+	margin-left: 0;
+	padding-left: 29px;
 }
 /*END HEADER*/
 
