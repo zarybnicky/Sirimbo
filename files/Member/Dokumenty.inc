@@ -31,7 +31,9 @@ foreach($dokumenty as $item) {
 	echo "<td>" . $item["d_name"] .  "</td>";
 	echo "<td><a href=\"" . "/" . $item["d_path"] . "\">" . $item["d_filename"] .  "</a></td>";
 	echo "<td>", Settings::$document_types[$item["d_kategorie"]], "</td>";
-	echo "<td>" . $item["u_jmeno"] . " " . $item["u_prijmeni"] . "</td>";
+	echo "<td>";
+	echoFullJmeno($item);
+	echo "</td>";
 	echo "</tr>";
 }
 ?>

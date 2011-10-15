@@ -46,7 +46,9 @@ foreach($nabidka as $item) {
 		$obsazeno = DBNabidka::getNabidkaItemLessons($item["n_id"]);
 		echo "<div class=\"n_wrapper\">";
 		echo "<div class=\"n_info\" style=\"border:1px solid black;\">";
-		echo "<div class=\"n_trener\">", $item["u_jmeno"], " ", $item["u_prijmeni"], "</div>";
+		echo "<div class=\"n_trener\">";
+		echoFullJmeno($item);
+		echo "</div>";
 		echo "<div class=\"n_datum\">", formatDate($item["n_od"]);
 		if($item["n_od"] != $item["n_do"])
 			echo " - ", formatDate($item["n_do"]);

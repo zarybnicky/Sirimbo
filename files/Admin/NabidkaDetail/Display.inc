@@ -2,7 +2,7 @@
 <input type="submit" name="action" value="enter" style="display:none;" />
 <div class="n_wrapper">
 <div class="n_info" style="border:1px solid black;">
-<div class="n_trener"><?php echo $nab["u_jmeno"], " ", $nab["u_prijmeni"]; ?></div>
+<div class="n_trener"><?php echoFullJmeno($nab); ?></div>
 <div class="n_datum"><?php
 echo formatDate($nab["n_od"]);
 if($nab["n_od"] != $nab["n_do"])

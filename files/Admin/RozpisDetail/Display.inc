@@ -4,7 +4,7 @@
 <div class="r_info" style="border:1px solid black;">
 <div class="r_datum"><?php echo formatDate($roz["r_datum"]);?></div>
 <div class="r_kde"><?php echo $roz["r_kde"];?></div>
-<div class="r_trener"><?php echo $roz["u_jmeno"], " ", $roz["u_prijmeni"];?></div>
+<div class="r_trener"><?php echoFullJmeno($roz);?></div>
 </div>
 <table>
 <tr><td>Tanečník</td><td>Od</td><td>Do</td><td></td><td>Zámek</td></tr>
@@ -53,7 +53,7 @@ if(is_numeric(getPostField("n_id"))) {				//BEGIN IF
 ?>
 <div class="n_wrapper">
 <div class="n_info" style="border:1px solid black;">
-<div class="n_trener"><?php echo $nab["u_jmeno"], " ", $nab["u_prijmeni"]; ?></div>
+<div class="n_trener"><?php echoFullJmeno($nab); ?></div>
 <div class="n_datum"><?php
 echo formatDate($nab["n_od"]);
 if($nab["n_od"] != $nab["n_do"])

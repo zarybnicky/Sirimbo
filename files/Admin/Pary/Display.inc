@@ -11,9 +11,9 @@ $pary = DBPary::getActivePary();
 
 foreach($pary as $par) {
 	echo '<tr>';
-	echo '<td><input type="checkbox" name="pary[]" value="' . $par["p_id"] .'" /></td>';
-	echo '<td>' . $par['guy_name'] . $par['guy_surname'] . '</td>';
-	echo '<td>' . $par['gal_name'] . $par['gal_surname'] . '</td>';
+	echo '<td><input type="checkbox" name="pary[]" value="', $par["p_id"], '" /></td>';
+	echo '<td>', $par['guy_name'], " ", $par['guy_surname'], '</td>';
+	echo '<td>', $par['gal_name'], " ", $par['gal_surname'], '</td>';
 	echo '</tr>';
 }
 ?>
