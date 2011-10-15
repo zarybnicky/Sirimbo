@@ -133,20 +133,21 @@ hr {
 }
 #topmenu {
 	position: absolute;
-	bottom: -5px;
+	bottom: 0;
 	left: 0;
 }
 #topmenu ul li {
 	float: left;
 	background: url('tab-nosel-right.png') no-repeat right;
-	padding: 12px 19px 10px 0px;
-	height: 22px;
+	padding: 0 19px 0 0px;
 }
 #topmenu ul li a {
+	display: block;
 	background: url('tab-nosel-left.png') no-repeat left;
-	padding: 12px 10px 10px 4px;
+	padding: 8px 10px 4px 4px;
 	font-size: 20px;
 	line-height: 22px;
+	height: 22px;
 	font-weight: bold;
 	color: #fff;
 	text-decoration: none;
@@ -154,22 +155,22 @@ hr {
 #topmenu ul li.first a {
 	background:  url('tab-nosel-first-left.png') no-repeat left;
 	padding-left: 29px;
-}
+}#topmenu .second {color: purple;}
 #topmenu ul li.last {
 	background: url('tab-nosel-last-right.png') no-repeat right;
 }
-#topmenu ul li:hover {
+#topmenu ul li.current {
 	background: url('tab-sel-right.png') no-repeat right;
 }
-#topmenu ul li:hover a {
+#topmenu ul li.current a {
 	background: url('tab-sel-left.png') no-repeat left;
 	margin-left: -25px;
 	padding-left: 29px;
 }
-#topmenu ul li.last:hover {
+#topmenu ul li.last.current {
 	background: url('tab-sel-last-right.png') no-repeat right;
 }
-#topmenu ul li.first:hover a {
+#topmenu ul li.first.current a {
 	background: url('tab-sel-first-left.png') no-repeat left;
 	margin-left: 0;
 	padding-left: 29px;
@@ -184,10 +185,10 @@ hr {
 	width: 220px;
 	float: left;
 }
-#sidemenu ul li, .light-out {
+.light-out, #sidemenu ul li {
 	background: url('box-light-top.png') no-repeat top left;
 }
-#sidemenu ul li a, .light-in {
+.light-in, #sidemenu ul li a {
 	display: block;
 	position: relative;
 	padding: 10px 0px 13px 15px;
@@ -195,21 +196,10 @@ hr {
 	text-decoration: none;
 	color: #555;
 }
-#sidemenu ul li a {
-	padding: 10px 0px 13px 30px;
-}
-#sidemenu ul li a span.arrow {
-	background: url('link-arrow.png') no-repeat top left;
-	height: 19px;
-	width: 12px;
-	color: transparent;
-	margin-left: -20px;
-	position: absolute;
-}
-.dark-out {
+.dark-out, #sidemenu ul li.current {
 	background: url('box-dark-top.png') no-repeat top left;
 }
-.dark-in {
+.dark-in, #sidemenu ul li.current a {
 	display: block;
 	position: relative;
 	padding: 10px 0px 13px 40px;
@@ -223,6 +213,29 @@ hr {
 	width: 33px;
 	margin-top: -3px;
 	margin-left: -33px;
+	position: absolute;
+}
+#sidemenu ul li a {
+	padding: 10px 0px 13px 30px;
+}
+#sidemenu ul li a span.arrow {
+	background: url('link-arrow.png') no-repeat top left;
+	height: 19px;
+	width: 12px;
+	color: transparent;
+	margin-left: -20px;
+	position: absolute;
+}
+#sidemenu ul li.current a {
+	padding-left: 30px;
+}
+#sidemenu ul li.current a span.point {
+	background: url('link-point.png') no-repeat top right;
+	width: 14px;
+	height: 32px;
+	right: 0;
+	margin-top: -5px;
+	color: transparent;
 	position: absolute;
 }
 /*END CONTENT*/
