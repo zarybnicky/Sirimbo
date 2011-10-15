@@ -35,21 +35,33 @@
 		} else {
 			echo User::getUserWholeName(), "<br />";
 			echo '<a href="/member/profil">Profil</a> <a href="/logout">Odhlásit se</a>';
-		}?>
+		}
+		
+		$name = explode('/', $_SERVER['REQUEST_URI']);
+		$section = $name[1];
+		?>
 		</div>
 		<div id="logo">
 			Taneční klub Olymp
 		</div>
 		<div id="topmenu">
 			<ul>
-				<li class="first"><a href="/home">Domů</a></li>
-				<li><a href="/oklubu">O klubu</a></li>
-				<li><a href="/aktualne">Aktuálně</a></li>
-				<li><a href="/inzerce">Inzerce</a></li>
-				<li><a href="/foto">Fotogalerie</a></li>
-				<li><a href="/nabizime">Nabízíme</a></li>
-				<li><a href="/member/home">Členové</a></li>
-				<li class="last"><a href="/kontakt">Kontakt</a></li>
+				<li class="first<?php echo ($section == 'home' || $section == '') ? ' current' : '';
+				?>"><a href="/home">Domů</a></li>
+				<li<?php echo ($section == 'oklubu') ? ' class="current"' : '';
+				?>><a href="/oklubu">O klubu</a></li>
+				<li<?php echo ($section == 'aktualne') ? ' class="current"' : '';
+				?>><a href="/aktualne">Aktuálně</a></li>
+				<li<?php echo ($section == 'inzerce') ? ' class="current"' : '';
+				?>><a href="/inzerce">Inzerce</a></li>
+				<li<?php echo ($section == 'foto') ? ' class="current"' : '';
+				?>><a href="/foto">Fotogalerie</a></li>
+				<li<?php echo ($section == 'nabizime') ? ' class="current"' : '';
+				?>><a href="/nabizime">Nabízíme</a></li>
+				<li<?php echo ($section == 'member') ? ' class="current"' : '';
+				?>><a href="/member/home">Členové</a></li>
+				<li class="last<?php echo ($section == 'kontakt') ? ' current' : '';
+				?>"><a href="/kontakt">Kontakt</a></li>
 			</ul>
 		</div>
 	</div>
@@ -60,16 +72,32 @@
 				<div id="sidemenu">
 					<ul>
 				<?php
+					$uri = $_SERVER['REQUEST_URI'];
 					$name = explode('/', $_SERVER['REQUEST_URI']);
+					$section = $name[1];
+					$s_part = $name[2];
+					
 					if(array_key_exists($name[1], Settings::$sekce)) {
-						foreach(Settings::$sekce[$name[1]] as $url => $word) {
-							echo '<li><a href="/' . $name[1] . '/' . $url . '"><span class="arrow">.</span>' .
-								$word . '</a></li>';
+						foreach(Settings::$sekce[$section] as $url => $word) {
+							if($s_part != $url)
+								echo '<li><a href="/', $section, '/', $url,
+									'"><span class="arrow">.</span>', $word,
+									'</a></li>';
+							else
+								echo '<li class="current"><a href="/', $section, '/', $url,
+									'"><span class="arrow">.</span>', $word,
+									'<span class="point">.</span></a></li>';
 						}
 					} else {
 						foreach(Settings::$sekce['home'] as $url => $word) {
-							echo '<li><a href="/home/' . $url . '"><span class="arrow">.</span>' .
-								$word . '</a></li>';
+							if($s_part != $url)
+								echo '<li><a href="/home/', $url,
+									'"><span class="arrow">.</span>', $word,
+									'</a></li>';
+							else
+								echo '<li class="current"><a href="/home/', $url,
+									'"><span class="arrow">.</span>', $word,
+									'<span class="point">.</span></a></li>';
 						}
 					}
 				?>
