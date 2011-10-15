@@ -26,7 +26,9 @@ foreach($nabidka as $item) {
 	else
 		echo "<td><input type=\"checkbox\" name=\"nabidka[]\" value=\"" .
 			"\" disabled=\"d\" /></td>";
-	echo "<td>" . $item["u_jmeno"] . " " . $item["u_prijmeni"] . "</td>";
+	echo "<td>";
+	echoFullJmeno($item);
+	echo "</td>";
 	echo "<td>" . formatDate($item["n_od"]) . " - " . formatDate($item["n_do"]) .  "</td>";
 	echo "<td>" . ($item["n_visible"] ? "x" : "_") . "</td>";
 	echo "</tr>";

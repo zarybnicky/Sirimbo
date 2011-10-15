@@ -23,7 +23,9 @@ foreach($users as $user) {
 				<option value="admin">Administrátor</option>
 		</select></td>';
 	echo "<td>" . $user["u_login"] . "</td>";
-	echo "<td>" . $user["u_jmeno"] . " " . $user["u_prijmeni"] . "</td>";
+	echo "<td>";
+	echoFullJmeno($user);
+	echo "</td>";
 	echo "<td>" . $user["u_email"] . "</td>";
 	echo "</tr>";
 }
