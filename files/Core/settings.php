@@ -18,12 +18,6 @@ function shutdown() {
 }
 register_shutdown_function('shutdown');
 
-define("DEBUG", "1");
-if(DEBUG) {
-	ini_set('display_errors','On'); 
-	error_reporting(-1);
-}
-
 define("HEADER", "files/Static/Header.inc");
 define("FOOTER", "files/Static/Footer.inc");
 define("LOG", "log/error.log");
@@ -32,6 +26,12 @@ define("PHP_LOG", "log/php.log");
 ini_set("log_errors" , "1");
 ini_set("error_log" , PHP_LOG);
 ini_set("display_errors" , "0");
+
+define("DEBUG", "0");
+if(DEBUG) {
+	ini_set('display_errors','On'); 
+	error_reporting(-1);
+}
 
 define("L_UNCONFIRMED", "-1");
 define("L_HOST", "0");
