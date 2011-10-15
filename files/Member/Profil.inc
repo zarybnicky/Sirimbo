@@ -103,7 +103,8 @@ switch(getPostField("action")) {
 	case 'mate':
 		$latest = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
 		if(!empty($latest)) {
-			echo "Právě tančím s: ", $latest["u_jmeno"], " ", $latest["u_prijmeni"];
+			echo "Právě tančím s: ";
+			echoFullJmeno($latest);
 		} else {
 			echo 'Právě s nikým netančím';
 		}
@@ -118,7 +119,8 @@ switch(getPostField("action")) {
 		$latest = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
 		
 		if(!empty($latest)) {
-			echo "Právě tančím s: ", $latest["u_jmeno"], " ", $latest["u_prijmeni"];
+			echo "Právě tančím s: ";
+			echoFullJmeno($latest);
 			$id = $latest['u_id'];
 		} else {
 			echo 'Právě s nikým netančím';

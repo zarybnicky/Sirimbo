@@ -26,7 +26,9 @@ foreach($users as $user) {
 		echo "<td><input type=\"checkbox\" name=\"users[]\" value=\"" .
 			"\" disabled=\"d\" /></td>";
 	echo "<td>" . $user["u_login"] . "</td>";
-	echo "<td>" . $user["u_jmeno"] . " " . $user["u_prijmeni"] . "</td>";
+	echo "<td>";
+	echoFullJmeno($user);
+	echo "</td>";
 	$ul = $user["u_level"];
 	echo "<td>";
 	switch($ul) {

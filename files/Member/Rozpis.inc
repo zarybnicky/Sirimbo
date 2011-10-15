@@ -54,7 +54,9 @@ foreach($rozpis as $item) {
 		echo "<div class=\"r_info\" style=\"float:left;border:1px solid black;\">";
 		echo "<div class=\"r_datum\">", formatDate($item["r_datum"]), "</div>";
 		echo "<div class=\"r_kde\">", $item["r_kde"], "</div>";
-		echo "<div class=\"r_trener\">", $item["u_jmeno"], " ", $item["u_prijmeni"], "</div>";
+		echo "<div class=\"r_trener\">";
+		echoFullJmeno($item);
+		echo "</div>";
 		echo "</div>";
 		echo "<table>";
 		echo "<tr><td>Od</td><td>Do</td><td>Tanečník</td><td></td><td></td></tr>";

@@ -8,7 +8,9 @@ foreach($zpravy as $item) {
 	echo "<hr/><div class=\"up_item\">";
 	echo "<div class=\"up_nadpis\" style=\"float:left;width:50%;\"><b>", $item["up_nadpis"], "</b></div>";
 	echo "<div class=\"up_detaily\" style=\"float:right;width:50%;\">";
-	echo "<div class=\"up_kdo\">", $item["u_jmeno"], " ", $item["u_prijmeni"], "</div>";
+	echo "<div class=\"up_kdo\">";
+	echoFullJmeno($item);
+	echo "</div>";
 	echo "<div class=\"up_aktu\">", formatTimestamp($item["up_aktu"]), "</div>";
 	echo "<div class=\"up_barvy\">Barvy: ", echoBarvaDisplay($item["up_barvy"]), "</div>";
 	echo "</div>";

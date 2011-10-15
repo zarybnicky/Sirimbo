@@ -126,7 +126,8 @@ function echoUsers($list_name, $list) {
 		echo "<option value=\"" . $item["u_id"] . "\"";
 		if(getPostField($list_name) == $item["u_id"])
 			echo " selected=\"selected\"";
-		echo ">" . $item["u_jmeno"] . " " . $item["u_prijmeni"];
+		echo ">";
+		echoFullJmeno($item);
 		echo "</option>\n";
 	}
 	echo "</select>\n";
@@ -216,17 +217,17 @@ function echoTaborDokumenty($list_name, $kats) {
 	echo "</select>\n";
 }
 function echoNabidky($list_name, $list) {
-	echo "<select name=\"", $list_name, "\">\n";
-	echo "<option value=\"none\"";
+	echo '<select name="', $list_name, "\">\n";
+	echo '<option value="none"';
 	if(!getPostField($list_name))
-		echo " selected=\"selected\"";
+		echo ' selected="selected"';
 	echo ">Vyber si :o)</option>\n";
 	
 	foreach($list as $item) {
-		echo "<option value=\"", $item["n_id"], "\"";
+		echo '<option value=', $item['n_id'], '"';
 		if(getPostField($list_name) == $item["n_id"])
-			echo " selected=\"selected\"";
-		echo ">";
+			echo ' selected="selected"';
+		echo '>';
 		echo formatDate($item["n_od"]);
 		if($item["n_od"] != $item["n_do"])
 			echo " - ", formatDate($item["n_do"]);
@@ -234,5 +235,10 @@ function echoNabidky($list_name, $list) {
 		echo "</option>\n";
 	}
 	echo "</select>\n";
+}
+function echoFullJmeno($userData) {
+	if(is_array($userData)) {
+		echo $userData['u_jmeno'], ' ',  $userData['u_prijmeni'];
+	}
 }
 ?>
