@@ -15,15 +15,17 @@ $dokumenty = DBDokumenty::getDokumenty();
 foreach($dokumenty as $item) {
 	echo "<tr>";
 	if(User::checkPermissionsBool(L_ADMIN) || $item["d_kdo"] == User::getUserID())
-		echo "<td><input type=\"checkbox\" name=\"dokumenty[]\" value=\"" . $item["d_id"] .
+		echo "<td><input type=\"checkbox\" name=\"dokumenty[]\" value=\"", $item["d_id"],
 			"\" /></td>";
 	else
-		echo "<td><input type=\"checkbox\" name=\"dokumenty[]\" value=\"" .
+		echo "<td><input type=\"checkbox\" name=\"dokumenty[]\" value=\"",
 			"\" disabled=\"disabled\" /></td>";
-	echo "<td>" . $item["d_name"] .  "</td>";
-	echo "<td>" . $item["d_filename"] .  "</td>";
+	echo "<td>", $item["d_name"], "</td>";
+	echo "<td>", $item["d_filename"], "</td>";
 	echo "<td>", Settings::$document_types[$item["d_kategorie"]], "</td>";
-	echo "<td>" . $item["u_jmeno"] . " " . $item["u_prijmeni"] . "</td>";
+	echo "<td>";
+	echoFullJmeno($item);
+	echo "</td>";
 	echo "</tr>";
 }
 ?>

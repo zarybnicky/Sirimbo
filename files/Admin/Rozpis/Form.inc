@@ -21,21 +21,11 @@ header_minor($header);
 		<select name="trener">
 			<option value="<?php echo User::getUserID();?>">Já</option>
 		</select><?php
-		} else { ?>
-		<select name="trener">
-			<option value="none" <?php if(!getPostField("trener")) echo "selected=\"selected\"";?>>
-				Vyber si :o)</option>
-			<?php
+		} else {
 			$treneri = DBUser::getTrener();
-			foreach($treneri as $item) {
-				echo "\t\t\t<option value=\"" . $item["u_id"] . "\"";
-				if(getPostField("trener") == $item["u_id"])
-					echo " selected=\"selected\"";
-				echo ">" . $item["u_jmeno"] . " " . $item["u_prijmeni"];
-				echo "</option>\n";
-			} ?>
-		</select><?php
-		} $error = checkPostField("/[0-9]+/i", "trener");
+			echoUsers("trener", $treneri);
+		}
+		$error = checkPostField("/[0-9]+/i", "trener");
 		?>
 		<input type="hidden" name="id" value="<?php
 			$id = getPostField("id");

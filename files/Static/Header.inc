@@ -26,11 +26,11 @@
 		?>
 			<form action="<?php echo $_SERVER['REQUEST_URI'] ?>" method="post"><div
 		<?php if(isset($_POST["login"])) echo "class=\"badlogin\"";?>>
-				<input style="width:55px;" type="text" name="login"
-				/><input style="width:55px;" type="password" name="pass" />
+				<input style="width:70px;" type="text" name="login"
+				/><input style="width:70px;" type="password" name="pass" /><br />
+				<a href="/registrace" id="register">Registrace</a>
 				<button type="submit" name="action" value="login">Login</button>
 			</div></form>
-			<a href="/registrace">Registrace</a>
 		<?php
 		} else {
 			echo User::getUserWholeName(), "<br />";
