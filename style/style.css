@@ -28,10 +28,6 @@ body {
 ol, ul {
 	list-style: none;
 }
-table {
-	border-collapse: separate;
-	border-spacing: 0;
-}
 caption, th, td {
 	text-align: left;
 	font-weight: normal;
@@ -86,6 +82,17 @@ hr {
 	border-top: 1px dotted #999;
 	margin-right: 10px;
 }
+table {
+	border-collapse: separate;
+	border-spacing: 1px;
+	border: 1px dotted #fff2d5;
+}
+table th, table td{
+	padding: 2px;
+	border: 1px solid #ffe3b7;
+	background-color: #fff0e2;
+}
+
 #all {
 	width: 970px;
 	margin: 0 auto 0 auto;
@@ -238,10 +245,28 @@ hr {
 	color: transparent;
 	position: absolute;
 }
-/*END CONTENT*/
 #content {
 	padding: 15px 20px;
 }
+.notice {
+	padding: 10px 0 10px 20px;
+	position: relative;
+	overflow: auto;
+	margin: 5px 0 10px 0;
+	border: 1px solid black;
+	background-color: #FFE6BD;
+}
+.h_section {
+	font-size: 150%;
+	color: #572E00;
+	margin-bottom: 15px;
+}
+.h_minor {
+	font-size: 115%;
+	color: #572E00;
+	margin: 5px 0 5px 0;
+}
+/*END CONTENT*/
 #footer {
 	clear: both;
 	margin-top: 10px;

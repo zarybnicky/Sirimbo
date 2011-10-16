@@ -37,10 +37,14 @@ if(!empty($items)) {
 <td><button type="submit" name="action" value="add">Přidat</button></td>
 <td><input type="checkbox" name="add_lock" value="lock" /></td>
 </tr>
+<tr><td><button type="submit" name="action" value="submit">Uložit</button></td></tr>
 </table>
 </div>
 <br/>
-<?php echoNabidky("n_id", DBNabidka::getNabidka()); ?>
+<?php
+header_minor("Nabídky:");
+echoNabidky("n_id", DBNabidka::getNabidka());
+?>
 <button type="submit" name="action" value="select">Vybrat nabídku</button>
 <?php
 if(is_numeric(getPostField("n_id"))) {				//BEGIN IF
@@ -78,17 +82,17 @@ if(!empty($items)) {
 </table>
 </div>
 <?php
-}										//END IF
+}													//END IF
 ?>
 <br/><br/>
-Pomocník ((?))<br/>
+<?php header_minor("Pomocník: ");?>
 <button type="submit" name="generate" value="overlap">Opravit přesahy</button><br/>
 <button type="submit" name="generate" value="gen_add">Přidat</button>
-<input type="text" name="gen_add_hod" value="" /> hodin po
-<input type="text" name="gen_add_len" value="" /> minutách od
-<input type="text" name="gen_add_od" value="" />
+<input type="text" name="gen_add_hod" value="" /> hodin<br/>
+po <input type="text" name="gen_add_len" value="" /> minutách<br/>
+od <input type="text" name="gen_add_od" value="" /> hodin
 </form>
-
+<br/>
 <form action="/admin/rozpis" method="GET">
 <button type="submit">Zpět</button>
 </form>

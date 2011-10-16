@@ -35,7 +35,9 @@ if(!empty($items)) {
 <td><?php echoUsers("add_partner", $users);?></td>
 <td><input type="text" name="add_hodiny" value="" /></td>
 <td><button type="submit" name="action" value="add">Přidat</button></td>
-</tr></table>
+</tr>
+<tr><td><button type="submit" name="action" value="submit">Uložit</button></td></tr>
+</table>
 </div>
 </form>
 
