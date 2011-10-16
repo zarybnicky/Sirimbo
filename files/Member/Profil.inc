@@ -3,6 +3,8 @@ User::checkPermissionsError(L_HOST);
 header_main("Profil");
 
 if(empty($_POST)) {
+	DisplayPary::viewPartnerRequests(DBPary::getPartnerRequestsForMe(User::getUserID()),
+		DBPary::getPartnerRequestsByMe(User::getUserID()));
 	include("files/Member/Profil/DisplayMain.inc");
 	return;
 }
@@ -101,8 +103,12 @@ switch(getPostField("action")) {
 		break;
 		
 	case 'mate':
+		DisplayPary::viewPartnerRequests(DBPary::getPartnerRequestsForMe(User::getUserID()),
+			DBPary::getPartnerRequestsByMe(User::getUserID()));
+		
 		$latest = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
-		if(!empty($latest)) {
+		$gotPartner = !empty($latest) && $latest['u_id'] > 0;
+		if($gotPartner) {
 			echo "Právě tančím s: ";
 			echoFullJmeno($latest);
 		} else {
@@ -110,15 +116,20 @@ switch(getPostField("action")) {
 		}
 		echo '<form method="POST" action="' . $_SERVER['REQUEST_URI'] . '">';
 		echo '<button type="submit" name="action" value="edit-mate">Změnit partnera/ku</button>';
+		if($gotPartner)
+			echo '<button type="submit" name="action" value="edit-mate-dumpthem">Rozejít se</button>';
 		echo '<button type="submit" name="action" value="">Zpět</button>';
 		echo '</form>';
 		return;
 		break;
 	
 	case 'edit-mate':
+		DisplayPary::viewPartnerRequests(DBPary::getPartnerRequestsForMe(User::getUserID()),
+			DBPary::getPartnerRequestsByMe(User::getUserID()));
+			
 		$latest = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
-		
-		if(!empty($latest)) {
+		$gotPartner = !empty($latest) && $latest['u_id'] > 0;
+		if($gotPartner) {
 			echo "Právě tančím s: ";
 			echoFullJmeno($latest);
 			$id = $latest['u_id'];
@@ -136,25 +147,81 @@ switch(getPostField("action")) {
 		
 		echo '<form method="POST" action="' . $_SERVER['REQUEST_URI'] . '">';
 		echoUsers("partner", $partners);
-		echo '<button type="submit" name="action" value="edit-mate_confirm">Změnit partnera/ku</button>';
+		echo '<button type="submit" name="action" value="edit-mate_confirm">Požádat o partnerství</button>';
+		if($gotPartner)
+			echo '<button type="submit" name="action" value="edit-mate-dumpthem">Rozejít se</button>';
 		echo '<button type="submit" name="action" value="mate">Zpět</button>';
 		echo '</form>';
 		return;
 		break;
 		
 	case 'edit-mate_confirm':
+		$partner = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
+		
+		if(getPostField('partner') == $partner['u_id'] ||
+				(getPostField('partner') == "none" && $partner['u_id'] == '0')) {
+			notice('Nic se nezměnilo.');
+			break;
+		}
+
 		if(getPostField("partner") == "none") {
-			DBPary::noPartner(User::getUserID(), User::getUserPohlavi());
+			DBPary::noPartner(User::getUserID());
+			DBPary::noPartner($partner['u_id']);
+			notice('A zase sám a sám...');
 		} else {
 			if(User::getUserPohlavi() == "m") {
-				DBPary::newPartner(User::getUserID(), getPostField("partner"));
+				DBPary::newPartnerRequest(User::getUserID(), User::getUserID(), getPostField("partner"));
 			} else {
-				DBPary::newPartner(getPostField("partner"), User::getUserID());
+				DBPary::newPartnerRequest(User::getUserID(), getPostField("partner"), User::getUserID());
+			}
+			notice("Žádost o partnerství odeslána");
+		}
+		break;
+		
+	case 'edit-mate-dumpthem':
+		$partner = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
+		if(!empty($partner) && $partner['u_id'] > 0) {
+			DBPary::noPartner(User::getUserID());
+			DBPary::noPartner($partner['u_id']);
+		}
+		notice('A zase sám a sám...');
+		break;
+	
+	case 'mate-accept':
+		$requests = DBPary::getPartnerRequestsForMe(User::getUserID());
+		foreach($requests as $req) {
+			if($req['pn_id'] == getPostField('id')) {
+				DBPary::acceptPartnerRequest(getPostField('id'));
+				notice('Žádost přijata');
+				break 2;
 			}
 		}
-		notice("Partner/ka změněn/a");
+		notice('Žádná taková žádost tu není');
+		break;
+	case 'mate-refuse':
+		$requests = DBPary::getPartnerRequestsForMe(User::getUserID());
+		foreach($requests as $req) {
+			if($req['pn_id'] == getPostField('id')) {
+				DBPary::deletePartnerRequest(getPostField('id'));
+				notice('Žádost zamítnuta');
+				break 2;
+			}
+		}
+		notice('Žádná taková žádost tu není');
+		break;
+	case 'mate-cancel':
+		$requests = DBPary::getPartnerRequestsByMe(User::getUserID());
+		foreach($requests as $req) {
+			if($req['pn_id'] == getPostField('id')) {
+				DBPary::deletePartnerRequest(getPostField('id'));
+				notice('Žádost zrušena');
+				break 2;
+			}
+		}
+		notice('Žádná taková žádost tu není');
 		break;
 }
-
+DisplayPary::viewPartnerRequests(DBPary::getPartnerRequestsForMe(User::getUserID()),
+	DBPary::getPartnerRequestsByMe(User::getUserID()));
 include('files/Member/Profil/DisplayMain.inc');
 ?>

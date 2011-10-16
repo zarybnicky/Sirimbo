@@ -1,7 +1,7 @@
 <?php
 class DBPary extends Database {
 	public static function getPary() {
-		$res = DBPary::query("SELECT * FROM pary ORDER BY p.p_aktu_vytvoreno ASC");
+		$res = DBPary::query("SELECT * FROM pary ORDER BY p_aktu_vytvoreno ASC");
 		return DBPary::getArray($res);
 	}
 	
@@ -37,6 +37,23 @@ class DBPary extends Database {
 			return false;
 	}
 	
+	public static function getLatestPartner($partner, $pohlavi) {
+		if($pohlavi == "m") {
+			$res = DBPary::query("SELECT p_id,p_id_partner,p_id_partnerka,u_id,u_jmeno,u_prijmeni,u_pohlavi " .
+				"FROM pary LEFT JOIN users ON p_id_partnerka=u_id WHERE p_id_partner='$partner'" .
+				" AND p_archiv='0'");
+		} elseif($pohlavi == "f") {
+			$res = DBPary::query("SELECT p_id,p_id_partner,p_id_partnerka,u_id,u_jmeno,u_prijmeni " .
+				"FROM pary LEFT JOIN users ON p_id_partner=u_id WHERE p_id_partnerka='$partner'" .
+				" AND p_archiv='0'");
+		}
+		$array = DBPary::getArray($res);
+		if($array)
+			return $array[0];
+		else
+			return false;
+	}
+	
 	public static function newPartner($partner, $partnerka) {
 		list($partner, $partnerka) = DBPary::escapeArray(array($partner, $partnerka));
 		
@@ -57,20 +74,58 @@ class DBPary extends Database {
 		DBPary::query("INSERT INTO pary (p_id_partner, p_id_partnerka) VALUES ('$partner','0')");
 	}
 	
-	public static function getLatestPartner($partner, $pohlavi) {
-		if($pohlavi == "m") {
-			$res = DBPary::query("SELECT p_id,p_id_partner,p_id_partnerka,u_id,u_jmeno,u_prijmeni " .
-				"FROM pary LEFT JOIN users ON p_id_partnerka=u_id WHERE p_id_partner='$partner'" .
-				" AND p_archiv='0'");
-		} elseif($pohlavi == "f") {
-			$res = DBPary::query("SELECT p_id,p_id_partner,p_id_partnerka,u_id,u_jmeno,u_prijmeni " .
-				"FROM pary LEFT JOIN users ON p_id_partner=u_id WHERE p_id_partnerka='$partner'" .
-				" AND p_archiv='0'");
-		}
-		$array = DBPary::getArray($res);
-		if($array)
-			return $array[0];
+	public static function getPartnerRequestsForMe($id) {
+		list($id) = DBPary::escapeArray(array($id));
+		
+		$res = DBPary::query(
+		"SELECT pn_id, pn_navrhl, u_jmeno, u_prijmeni, u_pohlavi
+		FROM pary_navrh LEFT JOIN users ON pn_navrhl=u_id
+		WHERE (pn_partner='$id' OR pn_partnerka='$id') AND pn_navrhl!='$id'");
+		
+		return DBPary::getArray($res);
+	}
+	
+	public static function getPartnerRequestsByMe($id) {
+		list($id) = DBPary::escapeArray(array($id));
+
+		if(User::getUserPohlavi() == "m")
+			$res = DBPary::query(
+			"SELECT pn_id, u_id, u_jmeno, u_prijmeni, u_pohlavi
+			FROM pary_navrh LEFT JOIN users ON pn_partnerka=u_id
+			WHERE pn_partner='$id' AND pn_navrhl='$id'");
 		else
-			return false;
+			$res = DBPary::query(
+			"SELECT pn_id, u_id, u_jmeno, u_prijmeni, u_pohlavi
+			FROM pary_navrh LEFT JOIN users ON pn_partner=u_id
+			WHERE pn_partnerka='$id' AND pn_navrhl='$id'");
+		
+		return DBPary::getArray($res);
+	}
+	
+	public static function newPartnerRequest($navrhl, $partner, $partnerka) {
+		list($navrhl, $partner, $partnerka) = DBPary::escapeArray(array($navrhl, $partner, $partnerka));
+		
+		DBPary::query("
+		INSERT INTO pary_navrh
+		(pn_navrhl, pn_partner, pn_partnerka)
+		VALUES ($navrhl, $partner, $partnerka)");
+	}
+	
+	public static function acceptPartnerRequest($id) {
+		list($id) = DBPary::escapeArray(array($id));
+		
+		$res = DBPary::query("SELECT pn_partner,pn_partnerka FROM pary_navrh WHERE pn_id='$id'");
+		
+		if($res) {
+			$row = DBPary::getSingleRow($res);
+			DBPary::newPartner($row['pn_partner'], $row['pn_partnerka']);
+			DBPary::query("DELETE FROM pary_navrh WHERE pn_id='$id'");
+		}
+	}
+	
+	public static function deletePartnerRequest($id) {
+		list($id) = DBPary::escapeArray(array($id));
+		
+		DBPary::query("DELETE FROM pary_navrh WHERE pn_id='$id'");
 	}
 }

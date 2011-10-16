@@ -30,7 +30,7 @@ if(getPostField("generate") == "overlap") {
 			$l_end = timeAdd($l_start, $length);
 		
 		DBRozpis::editRozpisItem($item["ri_id"], $item["ri_partner"],
-			formatTime($l_start, 0), formatTime($l_end, 0));
+			formatTime($l_start, 0), formatTime($l_end, 0), $item["ri_lock"]);
 		
 		$end = $l_end;
 	}
