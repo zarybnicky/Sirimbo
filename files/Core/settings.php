@@ -4,7 +4,9 @@ $real_name = realpath(basename($_SERVER['SCRIPT_NAME']));
 $_SERVER['DOCUMENT_ROOT'] = substr($real_name, 0, strpos($real_name, $_SERVER['SCRIPT_NAME']));
 unset($real_name);
 
-set_include_path($_SERVER['DOCUMENT_ROOT'] . '/files/Core/database' . PATH_SEPARATOR . get_include_path());
+set_include_path(
+	$_SERVER['DOCUMENT_ROOT'] . '/files/Core/database' . PATH_SEPARATOR .
+	$_SERVER['DOCUMENT_ROOT'] . '/files/Core/display' . PATH_SEPARATOR . get_include_path());
 spl_autoload_extensions(".php");
 spl_autoload_register();
 
@@ -27,7 +29,7 @@ ini_set("log_errors" , "1");
 ini_set("error_log" , PHP_LOG);
 ini_set("display_errors" , "0");
 
-define("DEBUG", "0");
+define("DEBUG", "1");
 if(DEBUG) {
 	ini_set('display_errors','On'); 
 	error_reporting(-1);

@@ -1,8 +1,5 @@
-<form action="<?php echo $_SERVER["REQUEST_URI"] //TODO: Paging, getUpozorneni(OD,DO)?>" method="POST">
-<button type="submit" name="action" value="add">Přidat</button>
-</form>
-
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
+<button type="submit" name="action" value="add">Přidat</button>
 <button type="submit" name="action" value="edit">Upravit</button>
 <button type="submit" name="action" value="remove">Odstranit</button>
 <table>
@@ -15,8 +12,7 @@
 </tr>
 <?php
 $upozorneni= DBNastenka::getNastenka();
-
-//TODO: Format *_aktu Timestamp
+//TODO: Paging, getUpozorneni(OD,DO)
 foreach($upozorneni as $item) {
 	echo "<tr>";
 	

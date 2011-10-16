@@ -14,7 +14,6 @@ if(empty($rozpis)) {
 	return;
 }
 
-echo "<br/>";
 if($isConfirmation) {
 	$action = getPostField("action");
 	$id = getPostField("ri_id");

@@ -74,8 +74,8 @@
 				<?php
 					$uri = $_SERVER['REQUEST_URI'];
 					$name = explode('/', $_SERVER['REQUEST_URI']);
-					$section = $name[1];
-					$s_part = $name[2];
+					$section = (isset($name[1])) ? $name[1] : '';
+					$s_part = (isset($name[2])) ? $name[2] : '';
 					
 					if(array_key_exists($name[1], Settings::$sekce)) {
 						foreach(Settings::$sekce[$section] as $url => $word) {

@@ -19,7 +19,7 @@ foreach($pary as $par) {
 ?>
 </table>
 <br />
-Nový pár:<br />
+<?php header_minor("Nový pár:");?>
 Partner: <?php echoUsers("add_partner", DBUser::getUsersByPohlavi("m"));?><br />
 Partnerka: <?php echoUsers("add_partnerka", DBUser::getUsersByPohlavi("f"));?><br />
 <button type="submit" name="action" value="add">Nový pár</button>

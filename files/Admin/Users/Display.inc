@@ -1,11 +1,8 @@
 <form action="<?php echo $_SERVER["REQUEST_URI"]?>" method="POST">
-<button type="submit" name="action" value="add">Přidat uživatele</button>
-<button type="submit" name="action" value="confirm">Noví uživatelé</button>
-</form>
-
-<form action="<?php echo $_SERVER["REQUEST_URI"]?>" method="POST">
+<button type="submit" name="action" value="add">Přidat</button>
 <button type="submit" name="action" value="edit">Upravit</button>
 <button type="submit" name="action" value="remove">Odstranit</button>
+<button type="submit" name="action" value="confirm">Nepotvrzení uživatelé</button>
 <table>
 <tr>
 <td></td>
