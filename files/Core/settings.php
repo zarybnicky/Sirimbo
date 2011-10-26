@@ -25,13 +25,13 @@ define("FOOTER", "files/Static/Footer.inc");
 define("LOG", "log/error.log");
 define("PHP_LOG", "log/php.log");
 
-ini_set("log_errors" , "1");
-ini_set("error_log" , PHP_LOG);
-ini_set("display_errors" , "0");
+//ini_set("log_errors" , "1");
+//ini_set("error_log" , PHP_LOG);
+//ini_set("display_errors" , "0");
 
 define("DEBUG", "1");
 if(DEBUG) {
-	ini_set('display_errors','On'); 
+	//ini_set('display_errors','On'); 
 	error_reporting(-1);
 }
 
@@ -42,6 +42,20 @@ define("L_EDITOR", "5");
 define("L_TRENER", "6");
 define("L_ADMIN", "50");
 define("L_SADMIN", "99");
+
+define("AMEND_H", "0.5");
+define("AMEND_D", "1.0");
+define("AMEND_C", "1.4");
+define("AMEND_B", "1.8");
+define("AMEND_A", "2.2");
+define("AMEND_M", "2.6");
+
+define("BONUS_H", "0");
+define("BONUS_D", "200");
+define("BONUS_C", "600");
+define("BONUS_B", "1140");
+define("BONUS_A", "1860");
+define("BONUS_M", "2740");
 
 define("DB_SERVER", "localhost");
 define("DB_USER", "root");
@@ -86,7 +100,7 @@ $sitemap_dynamic = array(
 	"registrace"			=> "files/Main/Registrace.inc",
 	"member/download"		=> "files/Member/Download.inc",
 //FIXME: Other pages
-//FIXME: Přidat třídu, body, žebříček 
+//FIXME: Přidat žebříček, admin párů
 	"member/home"			=> "files/Member/Home.inc",
 	"member/nastenka"		=> "files/Member/Nastenka.inc",
 	"member/rozpis"			=> "files/Member/Rozpis.inc",
