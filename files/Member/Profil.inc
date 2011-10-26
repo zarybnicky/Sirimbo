@@ -109,12 +109,28 @@ switch(getPostField("action")) {
 		$latest = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
 		$gotPartner = !empty($latest) && $latest['u_id'] > 0;
 		if($gotPartner) {
+			$vysledky = DBPary::getVysledky($latest['p_id']);
+			
 			echo "Právě tančím s: ";
 			echoFullJmeno($latest);
+			echo '<br /><br />';
+			header_minor('Třídy a body:');
+			echo 
+				'Standardní tance:<br />',
+				'Třída: <span style="font-weight:bolder;">', $vysledky['p_stt_trida'],
+				'</span>, body: ', $vysledky['p_stt_body'],
+				', finále: ', $vysledky['p_stt_finale'], '<br />',
+				'Latinsko-americké tance:<br />',
+				'Třída: <span style="font-weight:bolder;">', $vysledky['p_lat_trida'],
+				'</span>, body: ', $vysledky['p_lat_body'],
+				', finále: ', $vysledky['p_lat_finale'], '<br /><br/>',
+				'V "Olympáckém žebříčku" máme ', $vysledky['p_hodnoceni'], ' bodů.<br /><br />';
 		} else {
 			echo 'Právě s nikým netančím';
 		}
 		echo '<form method="POST" action="' . $_SERVER['REQUEST_URI'] . '">';
+		if($gotPartner)
+			echo '<button type="submit" name="action" value="edit-class">Změnit třídu a body</button>';
 		echo '<button type="submit" name="action" value="edit-mate">Změnit partnera/ku</button>';
 		if($gotPartner)
 			echo '<button type="submit" name="action" value="edit-mate-dumpthem">Rozejít se</button>';
@@ -123,6 +139,61 @@ switch(getPostField("action")) {
 		return;
 		break;
 	
+	case 'edit-class':
+		$partner = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
+		$vysledky = DBPary::getVysledky($partner['p_id']);
+		$_POST['stt-trida'] = $vysledky['p_stt_trida'];
+		$_POST['stt-body'] = $vysledky['p_stt_body'];
+		$_POST['stt-finale'] = $vysledky['p_stt_finale'];
+		$_POST['lat-trida'] = $vysledky['p_lat_trida'];
+		$_POST['lat-body'] = $vysledky['p_lat_body'];
+		$_POST['lat-finale'] = $vysledky['p_lat_finale'];
+		
+		include('files/Member/Profil/FormClass.inc');
+		return;
+		break;
+	
+	case 'edit-class_confirm':
+		$partner = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
+		
+		if(!getPostField('stt-body') || getPostField('stt-body') > 1000 ||
+				getPostField('stt-body') < 0) {
+			$stt_body = 0;
+		} else
+			$stt_body = getPostField('stt-body');
+		if(!getPostField('stt-finale') || getPostField('stt-finale') > 5 ||
+				getPostField('stt-finale') < 0) {
+			$stt_finale = 0;
+		} else
+			$stt_finale = getPostField('stt-finale');
+		if(!getPostField('lat-body') || getPostField('lat-body') > 1000 ||
+				getPostField('lat-body') < 0) {
+			$lat_body = 0;
+		} else
+			$lat_body = getPostField('lat-body');
+		if(!getPostField('lat-finale') || getPostField('lat-finale') > 5 ||
+				getPostField('lat-finale') < 0) {
+			$lat_finale = 0;
+		} else
+			$lat_finale = getPostField('lat-finale');
+			
+		$stt_amend = constant("AMEND_" . getPostField('stt-trida'));
+		$lat_amend = constant("AMEND_" . getPostField('lat-trida'));
+		$stt_base = ($stt_body + 40 * $stt_finale) * $stt_amend;
+		$lat_base = ($lat_body + 40 * $lat_finale) * $lat_amend;
+		
+		$stt_bonus = constant("BONUS_" . getPostField('stt-trida'));
+		$lat_bonus = constant("BONUS_" . getPostField('lat-trida'));
+		
+		$hodnoceni = $stt_base + $lat_base + $stt_bonus + $lat_bonus;
+		
+		DBPary::editTridaBody($partner['p_id'], getPostField('stt-trida'), $stt_body,
+			$stt_finale, getPostField('lat-trida'), $lat_body, $lat_finale, $hodnoceni);
+			
+		notice("Třída a body změněny");
+		
+		break;
+		
 	case 'edit-mate':
 		DisplayPary::viewPartnerRequests(DBPary::getPartnerRequestsForMe(User::getUserID()),
 			DBPary::getPartnerRequestsByMe(User::getUserID()));
