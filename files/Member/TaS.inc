@@ -10,7 +10,7 @@ $isConfirmation = getPostField("action") && getPostField("id");
 $tas = DBTaS::getTaS();
 
 if(empty($tas)) {
-	Form::notice("Žádné tábory/soustředění");
+	notice("Žádné tábory/soustředění");
 	return;
 }
 

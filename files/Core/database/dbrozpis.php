@@ -15,8 +15,8 @@ public static function getRozpis() {
 			return false;
 	}
 	
-	public static function rozpisSignOut($rid, $uid) {
-		list($rid, $uid) = DBRozpis::escapeArray(array($rid, $uid));
+	public static function rozpisSignOut($rid) {
+		list($rid) = DBRozpis::escapeArray(array($rid));
 		if(!DBRozpis::isRozpisFree($rid)) {
 			$res = DBRozpis::query("UPDATE rozpis_item SET ri_partner='' WHERE ri_id='$rid'");
 			return true;
@@ -27,9 +27,14 @@ public static function getRozpis() {
 	public static function getRozpisItem($rid) {
 		list($rid) = DBRozpis::escapeArray(array($rid));
 		
-		$res = DBRozpis::query("SELECT u_id,u_login,u_jmeno,u_prijmeni,ri_id,ri_id_rodic,ri_partner," .
-			"ri_od,ri_do,ri_lock FROM rozpis_item LEFT JOIN users ON ri_partner=u_id WHERE " .
-			"ri_id_rodic='$rid' ORDER BY ri_od");
+		$res = DBRozpis::query(
+		"SELECT p_id,u_id,u_login,u_jmeno,u_prijmeni,ri_id,ri_id_rodic,ri_partner,
+			ri_od,ri_do,ri_lock
+		FROM rozpis_item
+			LEFT JOIN pary ON ri_partner=p_id
+			LEFT JOIN users ON p_id_partner=u_id
+		WHERE ri_id_rodic='$rid'
+		ORDER BY ri_od");
 		return DBRozpis::getArray($res);
 	}
 	

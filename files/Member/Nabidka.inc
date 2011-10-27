@@ -19,10 +19,13 @@ if($isConfirmation) {
 	$hodiny = getPostField("hodiny");
 	$id = getPostField("id");
 	$un_id = getPostField("un_id");
-	if(!DBNabidka::isNabidkaLocked($id)) {
+	$current_nabidka = DBNabidka::getSingleNabidka($id);
+	
+	if(!$current_nabidka['n_lock']) {
 		if($hodiny) {
-			if((DBNabidka::getNabidkaMaxLessons($id) - DBNabidka::getNabidkaItemLessons($id)) >= $hodiny) {
-				DBNabidka::addNabidkaItemLessons(User::getUserID(), $id, $hodiny);
+			if(($current_nabidka['n_pocet_hod'] - DBNabidka::getNabidkaItemLessons($id)) >= $hodiny) {
+				
+				DBNabidka::addNabidkaItemLessons(User::getParID(), $id, $hodiny);
 				notice("Hodiny přidány");
 			} else {
 				notice("Tolik volných hodin tu není");
@@ -30,7 +33,7 @@ if($isConfirmation) {
 		} elseif($un_id) {
 			list($u_id, $n_id) = explode("-", $un_id);
 			if(DBNabidka::hasNabidkaLessons($n_id, $u_id) &&
-					($u_id == User::getUserID() || User::checkPermissionsBool(L_ADMIN))) {
+					($u_id == User::getParID() || User::checkPermissionsBool(L_ADMIN))) {
 				DBNabidka::removeNabidkaItem($n_id, $u_id);
 				notice("Hodiny odebrány");
 			}
@@ -60,9 +63,12 @@ foreach($nabidka as $item) {
 		echo "<table><form action=\"{$_SERVER["REQUEST_URI"]}\" method=\"post\">";
 		echo "<tr><td>Tanečník</td><td>Počet hodin</td></tr>";
 		foreach($n_items as $par) {
-			echo "<tr><td>", $par["u_jmeno"], " ", $par["u_prijmeni"], "</td><td>", $par["ni_pocet_hod"], "</td>";
-			if ($par["u_login"] == User::getUserName() || User::checkPermissionsBool(L_ADMIN)) {
-				echo "<td><input type=\"hidden\" name=\"un_id\" value=\"", $par["u_id"], "-", $item["n_id"], "\"";
+			echo "<tr><td>", $par["u_jmeno"], " ", $par["u_prijmeni"], '</td>',
+				'<td>', $par["ni_pocet_hod"], "</td>";
+			if ($par["u_id"] == User::getUserID() || $par['u_id'] == User::getPartnerID() ||
+					User::checkPermissionsBool(L_ADMIN)) {
+				echo "<td><input type=\"hidden\" name=\"un_id\" value=\"",
+					$par["p_id"], "-", $item["n_id"], "\"";
 				if($item["n_lock"] || !User::checkPermissionsBool(L_USER))
 					echo " disabled=\"disabled\"";
 				echo " />";

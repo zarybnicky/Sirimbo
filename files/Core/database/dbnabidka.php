@@ -75,9 +75,13 @@ public static function getNabidka() {
 	public static function getNabidkaItem($parent_id) {
 		list($parent_id) = DBNabidka::escapeArray(array($parent_id));
 		
-		$res = DBNabidka::query("SELECT u_id,u_login,u_jmeno,u_prijmeni,ni_id,ni_id_rodic,ni_partner," .
-			"ni_pocet_hod,ni_lock FROM nabidka_item LEFT JOIN users ON ni_partner=u_id WHERE " .
-			"ni_id_rodic='$parent_id'");
+		$res = DBNabidka::query(
+		"SELECT p_id,u_id,u_jmeno,u_prijmeni,ni_id,ni_id_rodic,ni_partner,
+			ni_pocet_hod,ni_lock
+		FROM nabidka_item
+			LEFT JOIN pary ON ni_partner=p_id
+			LEFT JOIN users ON p_id_partner=u_id
+		WHERE ni_id_rodic='$parent_id'");
 		return DBNabidka::getArray($res);
 	}
 	
