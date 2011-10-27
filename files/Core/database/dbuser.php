@@ -39,23 +39,14 @@ public static function checkUser($login, $pass) {
 		}
 	}
 	
-	public static function getUserWholeName($id) {
-		list($id) = DBUser::escapeArray(array($id));
-		
-		$res = DBUser::query("SELECT u_jmeno,u_prijmeni FROM users WHERE u_id='$id'");
-		if(!$res) {
-			return false;
-		} else {
-			$row = DBUser::getSingleRow($res);
-			return ($row["u_jmeno"] . " " . $row["u_prijmeni"]);
-		}
-	}
-	
 	public static function getUserData($login) {
 		list($login) = DBUser::escapeArray(array($login));
 		
-		$res = DBUser::query("SELECT u_id,u_login,u_jmeno,u_pass,u_jmeno,u_prijmeni,u_pohlavi," .
-			"u_email,u_telefon,u_poznamky,u_level,u_ban,u_lock FROM users WHERE u_login='$login'");
+		$res = DBUser::query(
+		"SELECT u_id,u_login,u_jmeno,u_pass,u_jmeno,u_prijmeni,u_pohlavi,
+			u_email,u_telefon,u_poznamky,u_level,u_ban,u_lock,u_confirmed
+		FROM users
+		WHERE u_login='$login'");
 		if(!$res) {
 			return false;
 		} else {

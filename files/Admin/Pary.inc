@@ -14,7 +14,8 @@ switch(getPostField("action")) {
 			list($par) = getPostField("pary");
 			$data = DBPary::getSinglePar($par);
 			
-			DBPary::noPartner($data['guy_id']);
+			if($data['guy_id'])
+				DBPary::noPartner($data['guy_id']);
 			if($data['gal_id'])
 				DBPary::noPartner($data['gal_id']);
 			
