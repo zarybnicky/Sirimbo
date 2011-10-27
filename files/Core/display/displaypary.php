@@ -1,6 +1,6 @@
 <?php
 class DisplayPary {
-	public static function viewPartnerRequests($forMe, $byMe = array()) {
+	public static function viewPartnerRequests($forMe, $byMe) {
 		if(!empty($forMe)) {
 			foreach($forMe as $request) {
 				notice(

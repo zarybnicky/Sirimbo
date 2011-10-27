@@ -10,7 +10,7 @@ class DBPary extends Database {
 		"SELECT p_id,
 			m.u_id AS guy,m.u_id AS guy_id,m.u_jmeno AS guy_name,m.u_prijmeni AS guy_surname,
 			f.u_id AS gal,f.u_id AS gal_id,f.u_jmeno AS gal_name,f.u_prijmeni AS gal_surname,
-			p_stt_trida,p_stt_body,p_stt_finale,p_id,
+			p_stt_trida,p_stt_body,p_stt_finale,
 			p_lat_trida,p_lat_body,p_lat_finale,p_hodnoceni
 		FROM pary AS p
 			LEFT JOIN users AS m ON p.p_id_partner=m.u_id
@@ -25,13 +25,13 @@ class DBPary extends Database {
 		"SELECT p_id,
 			m.u_id AS guy,m.u_id AS guy_id,m.u_jmeno AS guy_name,m.u_prijmeni AS guy_surname,
 			f.u_id AS gal,f.u_id AS gal_id,f.u_jmeno AS gal_name,f.u_prijmeni AS gal_surname,
-			p_stt_trida,p_stt_body,p_stt_finale,p_id,
+			p_stt_trida,p_stt_body,p_stt_finale,
 			p_lat_trida,p_lat_body,p_lat_finale,p_hodnoceni
 		FROM pary AS p
 			LEFT JOIN users AS m ON p.p_id_partner=m.u_id
 			LEFT JOIN users AS f ON p.p_id_partnerka=f.u_id
 		WHERE p.p_archiv='0'
-		ORDER BY p.p_hodnoceni ASC");
+		ORDER BY p.p_hodnoceni DESC");
 		return DBPary::getArray($res);
 	}
 	
@@ -42,7 +42,7 @@ class DBPary extends Database {
 		"SELECT p_id,
 			m.u_id AS guy_id,m.u_jmeno AS guy_name,m.u_prijmeni AS guy_surname,
 			f.u_id AS gal_id,f.u_jmeno AS gal_name,f.u_prijmeni AS gal_surname,
-			p_stt_trida,p_stt_body,p_stt_finale,p_id,
+			p_stt_trida,p_stt_body,p_stt_finale,
 			p_lat_trida,p_lat_body,p_lat_finale,p_hodnoceni
 		FROM pary AS p
 			LEFT JOIN users AS m ON p.p_id_partner=m.u_id
@@ -106,6 +106,16 @@ class DBPary extends Database {
 	public static function noPartner($partner) {
 		list($partner) = DBPary::escapeArray(array($partner));
 		
+		DBPary::query(
+		"DELETE n,r FROM nabidka_item AS n,rozpis_item AS r
+		WHERE
+			n.ni_partner=
+				(SELECT p_id FROM pary
+				WHERE (p_id_partner='$partner' OR p_id_partnerka='$partner') AND p_archiv='0')
+			OR
+			r.ri_partner=
+				(SELECT p_id FROM pary
+				WHERE (p_id_partner='$partner' OR p_id_partnerka='$partner') AND p_archiv='0')");
 		DBPary::query("UPDATE pary SET p_archiv='1',p_aktu_archivovano=NOW()" .
 			" WHERE (p_id_partner='$partner' OR p_id_partnerka='$partner') AND p_archiv='0'");
 		

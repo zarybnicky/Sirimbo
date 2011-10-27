@@ -22,17 +22,16 @@ if($isConfirmation) {
 	$lesson = $lesson[0];
 	if(!DBRozpis::isRozpisLocked($id)) {
 		if($action == "signup") {
-			if($lesson["ri_partner"] == 0 && DBRozpis::rozpisSignUp($id, User::getUserID()) == true) {
+			if($lesson["ri_partner"] == 0 && DBRozpis::rozpisSignUp($id, User::getParID()) == true) {
 				notice("Hodina přidána");
 			} else {
 				notice("Už je obsazeno");
 			}
 		} elseif($action == "signout") {
 			if($lesson["ri_partner"] != 0) {
-				if((User::checkPermissionsBool(L_ADMIN) ||
-						User::getUserID() == $lesson["ri_partner"] ||
+				if((User::checkPermissionsBool(L_ADMIN) || User::getParID() == $lesson["ri_partner"] ||
 						(User::checkPermissionsBool(L_TRENER) && $lesson["r_trener"] == User::getUserID())) &&
-						DBRozpis::rozpisSignOut($id, User::getUserID()) == true) {
+						DBRozpis::rozpisSignOut($id) == true) {
 					notice("Hodina odebrána");
 				} else {
 					View::viewError(ER_AUTHORIZATION);
@@ -72,7 +71,7 @@ foreach($rozpis as $item) {
 			echo "</td>";
 			echo "<td>";
 			if(($par["ri_partner"] != 0 && (User::checkPermissionsBool(L_ADMIN) ||
-					User::getUserID() == $par["ri_partner"] ||
+					User::getParID() == $par["ri_partner"] ||
 					(User::checkPermissionsBool(L_TRENER) && $item["r_trener"] == User::getUserID()))) &&
 					!$item["r_lock"] && ! $par["ri_lock"] && User::checkPermissionsBool(L_USER))
 					echo "<button type=\"submit\" name=\"action\" value=\"signout\">Zrušit</button>";

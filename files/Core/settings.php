@@ -99,8 +99,7 @@ $sitemap_dynamic = array(
 	"logout"				=> "files/Main/Logout.inc",
 	"registrace"			=> "files/Main/Registrace.inc",
 	"member/download"		=> "files/Member/Download.inc",
-//FIXME: Other pages
-//FIXME: Přidat žebříček, admin párů
+
 	"member/home"			=> "files/Member/Home.inc",
 	"member/nastenka"		=> "files/Member/Nastenka.inc",
 	"member/rozpis"			=> "files/Member/Rozpis.inc",
