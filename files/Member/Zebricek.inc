@@ -1,6 +1,10 @@
 <?php
 header_main('Žebříček párů');
 $pary = DBPary::getActiveParyByHodnoceni();
+if(empty($pary)) {
+	notice("Žádné páry");
+	return;
+}
 ?>
 <table>
 <tr><td>Partner</td><td>Partnerka</td><td>Standart</td><td>Latina</td><td>Body</td></tr>

@@ -21,6 +21,4 @@ Pouze písmena bez diakritiky, číslice a podtržítka, 6 - 32 znaků<br />
 <button type="submit" name="action" value="edit-pass_confirm">Změnit heslo</button>
 </form>
 
-<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="GET">
-<button type="submit">Zpět</button>
-</form>
+<a href="/member/profil">Zpět</a>

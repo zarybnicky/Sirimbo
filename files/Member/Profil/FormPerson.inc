@@ -70,13 +70,11 @@ header_minor("Osobní údaje");
 			?></td>
 		<td></td>
 	</tr><tr>
-		<td><button type="submit" name="action" value="edit-per_confirm">Upravit</button></td>
+		<td><button type="submit" name="action" value="confirm">Upravit</button></td>
 		<td></td>
 		<td>Pole označená (*) jsou povinná</td>
 	</tr>
 </table>
 </form>
 
-<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="GET">
-<button type="submit">Zpět</button>
-</form>
+<a href="/member/profil">Zpět</a>

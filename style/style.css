@@ -60,22 +60,31 @@ h4 {font-size:152%;}
 h5 {font-size:136%;}
 h6 {font-size:122%;}
 
-/*DEVEL/
-div {border: 2px ridge orange;}
-/END DEVEL*/
-
 /*Colors:
 orange light - #ffb82f
 orange dark  - #ff9501
-
 */
 body {
 	background-image: url('logo-bg.png');
 	background-repeat: repeat-x;
 }
-a {
+button, a {
+	border: 0;
+	margin: 0;
+	padding: 0 2px 0 2px;
+	display: inline;
+	position: relative;
+	color: #ff6500;
+	background: none;
 	text-decoration: underline;
-	color: #ff9501;
+	cursor: pointer;
+	cursor: hand;
+	font-size: inherit;
+	font-family: inherit;
+	line-height: inherit;
+}
+button:disabled, a:disabled {
+	color: #400;
 }
 hr {
 	height: 0px;
@@ -87,7 +96,7 @@ table {
 	border-spacing: 1px;
 	border: 1px dotted #fff2d5;
 }
-table th, table td{
+table th, table td {
 	padding: 2px;
 	border: 1px solid #ffe3b7;
 	background-color: #fff0e2;
@@ -187,6 +196,7 @@ table th, table td{
 /*BEGIN CONTENT*/
 #content {
 	margin-left: 220px;
+	overflow: auto;
 }
 #sidebar {
 	width: 220px;

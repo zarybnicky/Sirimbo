@@ -1,12 +1,17 @@
 <?php
 User::checkPermissionsError(L_TRENER);
 
-if(!is_numeric(getGetField("id")) && getGetField("id") > 0 && getGetField("id") < 2147483647)
+$request = explode('/', $_SERVER['REQUEST_URI']);
+$action = array_slice($request, 3);
+$id = $action[1];
+
+if(!is_numeric($id) || ($id < 0 || $id > 2147483647))
 	View::viewError(ER_CORRUPT_DATA);
-if(!($roz = DBRozpis::getSingleRozpis(getGetField("id"))))
+if(!($roz = DBRozpis::getSingleRozpis($id)))
 	View::viewError(ER_CORRUPT_DATA);
-$items = DBRozpis::getRozpisItem(getGetField("id"));
-$users = DBUser::getActiveUsers();
+
+$items = DBRozpis::getRozpisItem($id);
+$users = DBPary::getPartners();
 
 header_main("Správa rozpisů");
 
@@ -35,7 +40,7 @@ if(getPostField("generate") == "overlap") {
 		$end = $l_end;
 	}
 	
-	$items = DBRozpis::getRozpisItem(getGetField("id"));
+	$items = DBRozpis::getRozpisItem($id);
 } elseif(getPostField("generate") == "gen_add" &&
 		is_numeric(getPostField("gen_add_hod")) &&
 		is_numeric(getPostField("gen_add_len")) &&
@@ -48,17 +53,17 @@ if(getPostField("generate") == "overlap") {
 	$do = timeAdd($od, $len);
 	
 	for($i = 0; $i < getPostField("gen_add_hod"); $i++) {
-		DBRozpis::addRozpisItem(getGetField("id"), "0", formatTime($od, 0),
+		DBRozpis::addRozpisItem($id, "0", formatTime($od, 0),
 			formatTime($do, 0), "0");
 		$od = $do;
 		$do = timeAdd($od, $len);
 	}
 	
-	$items = DBRozpis::getRozpisItem(getGetField("id"));
+	$items = DBRozpis::getRozpisItem($id);
 } else {
 	if(getPostField("remove") > 0) {
 		DBRozpis::removeRozpisItem(getPostField("remove"));
-		$items = DBRozpis::getRozpisItem(getGetField("id"));
+		$items = DBRozpis::getRozpisItem($id);
 	}
 	foreach($items as $item) {
 		if(!(getPostField($item["ri_id"] . "-partner") == $item["ri_partner"] ||
@@ -75,11 +80,12 @@ if(getPostField("generate") == "overlap") {
 			
 			if(preg_match("/^[0-9]{2}:[0-9]{2}$/", $od) &&
 					preg_match("/^[0-9]{2}:[0-9]{2}$/", $do)) {
-				DBRozpis::editRozpisItem($item["ri_id"], $partner, formatTime($od, 0), formatTime($do, 0), $lock);
+				DBRozpis::editRozpisItem($item["ri_id"], $partner,
+					formatTime($od, 0), formatTime($do, 0), $lock);
 			}
 		}
 	}
-	$items = DBRozpis::getRozpisItem(getGetField("id"));
+	$items = DBRozpis::getRozpisItem($id);
 	
 	if(is_numeric(getPostField("add_partner")) || getPostField("add_partner") == "none") {
 		$partner = (getPostField("add_partner") == "none") ? "0" : getPostField("add_partner");
@@ -89,9 +95,9 @@ if(getPostField("generate") == "overlap") {
 		
 		if(preg_match("/^[012]*[0-9]{1}:[0-9]{2}$/", $od) &&
 				preg_match("/^[012]*[0-9]{1}:[0-9]{2}$/", $do)) {
-			DBRozpis::addRozpisItem(getGetField("id"), $partner, formatTime($od, 0), formatTime($do, 0), $lock);
+			DBRozpis::addRozpisItem($id, $partner, formatTime($od, 0), formatTime($do, 0), $lock);
 			unset($_POST["add_partner"]);
-			$items = DBRozpis::getRozpisItem(getGetField("id"));
+			$items = DBRozpis::getRozpisItem($id);
 		}
 	}
 }

@@ -1,5 +1,5 @@
 <?php header_main("Dokumenty"); ?>
-<form action="<?php echo $_SERVER["REQUEST_URI"]; ?>" method="GET">
+<form action="<?php echo $_SERVER["REQUEST_URI"];//TODO: Dokument type to URI ?>" method="GET">
 <select name="kategorie">
 	<option value="">---VŠE---</option>
 	<option value="1">Schůze, rady</option>

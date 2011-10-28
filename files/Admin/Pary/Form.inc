@@ -6,7 +6,7 @@ $isConfirmation = (getPostField("") || getPostField("newpass"));
 
 header_minor("Změna třídy a bodů");
 ?>
-<form action="<?php echo $_SERVER["REQUEST_URI"];?>" method="post">
+<form action="/admin/pary" method="POST">
 Pár: <?php echo $data['guy_name'], ' ', $data['guy_surname'], ' - ',
 	$data['gal_name'], ' ', $data['gal_surname'];?>
 <input type="hidden" name="id" value="<?php echo $data['p_id'];?>" />
@@ -79,6 +79,4 @@ Pár: <?php echo $data['guy_name'], ' ', $data['guy_surname'], ' - ',
 	<button type="submit" name="action" value="edit_confirm">Změnit třídu a body</button>
 </form>
 
-<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="GET">
-<button type="submit">Zpět</button>
-</form>
+<a href="/admin/pary">Zpět</a>

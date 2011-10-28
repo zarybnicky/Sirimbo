@@ -13,11 +13,11 @@ public static function checkUser($login, $pass) {
 		}
 	}
 	
-	public static function getUserlevel($login) {
-		list($login) = DBUser::escapeArray(array($login));
+	public static function getUserlevel($id) {
+		list($id) = DBUser::escapeArray(array($id));
 		
 		$res = DBUser::query("SELECT u_level FROM users WHERE " .
-			"u_login='$login'");
+			"u_id='$id'");
 		if(!$res) {
 			return false;
 		} else {
@@ -39,7 +39,7 @@ public static function checkUser($login, $pass) {
 		}
 	}
 	
-	public static function getUserData($login) {
+	public static function getUserDataByName($login) {
 		list($login) = DBUser::escapeArray(array($login));
 		
 		$res = DBUser::query(
@@ -54,22 +54,25 @@ public static function checkUser($login, $pass) {
 		}
 	}
 	
-	public static function isUserBanned($login) {
-		list($login) = DBUser::escapeArray(array($login));
+	public static function getUserData($id) {
+		list($id) = DBUser::escapeArray(array($id));
 		
-		$res = DBUser::query("SELECT u_ban FROM users WHERE u_login='$login'");
+		$res = DBUser::query(
+		"SELECT u_id,u_login,u_jmeno,u_pass,u_jmeno,u_prijmeni,u_pohlavi,
+			u_email,u_telefon,u_poznamky,u_level,u_ban,u_lock,u_confirmed
+		FROM users
+		WHERE u_id='$id'");
 		if(!$res) {
 			return false;
 		} else {
-			$row = DBUser::getSingleRow($res);
-			return (bool) $row["u_ban"];
+			return DBUser::getSingleRow($res);
 		}
 	}
 	
-	public static function isUserLocked($login) {
-		list($login) = DBUser::escapeArray(array($login));
+	public static function isUserLocked($id) {
+		list($id) = DBUser::escapeArray(array($id));
 		
-		$res = DBUser::query("SELECT u_lock FROM users WHERE u_login='$login'");
+		$res = DBUser::query("SELECT u_lock FROM users WHERE u_id='$id'");
 		if(!$res) {
 			return false;
 		} else {
@@ -78,10 +81,10 @@ public static function checkUser($login, $pass) {
 		}
 	}
 	
-	public static function isUserConfirmed($login) {
-		list($login) = DBUser::escapeArray(array($login));
+	public static function isUserConfirmed($id) {
+		list($id) = DBUser::escapeArray(array($id));
 		
-		$res = DBUser::query("SELECT u_confirmed FROM users WHERE u_login='$login'");
+		$res = DBUser::query("SELECT u_confirmed FROM users WHERE u_id='$id'");
 		if(!$res) {
 			return false;
 		} else {
@@ -90,8 +93,8 @@ public static function checkUser($login, $pass) {
 		}
 	}
 	
-	public static function confirmUser($login, $level = "host") {
-		list($login, $level) = DBUser::escapeArray(array($login, $level));
+	public static function confirmUser($id, $level = "host") {
+		list($id, $level) = DBUser::escapeArray(array($id, $level));
 		
 		switch($level) {
 			case 'host': $level = L_HOST; break;
@@ -102,7 +105,7 @@ public static function checkUser($login, $pass) {
 			default: $level = L_HOST; break;
 		}
 		
-		DBUser::query("UPDATE users SET u_confirmed='1',u_level='" . $level . "' WHERE u_login='$login'");
+		DBUser::query("UPDATE users SET u_confirmed='1',u_level='$level' WHERE u_id='$id'");
 	}
 	
 	public static function setPassword($id, $passwd) {
@@ -112,17 +115,16 @@ public static function checkUser($login, $pass) {
 		return true;
 	}
 	
-	public static function setUserData($login, $jmeno, $prijmeni, $pohlavi, $email, $telefon,
+	public static function setUserData($id, $jmeno, $prijmeni, $pohlavi, $email, $telefon,
 			$poznamky, $level, $lock, $ban) {
-		
-		list($login, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $poznamky, $level, $lock, $ban) =
-			DBUser::escapeArray(array($login, $jmeno, $prijmeni, $pohlavi, $email, $telefon,
+		list($id, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $poznamky, $level, $lock, $ban) =
+			DBUser::escapeArray(array($id, $jmeno, $prijmeni, $pohlavi, $email, $telefon,
 			$poznamky, $level, $lock, $ban));
 			
 		DBUser::query("UPDATE users SET " .
 			"u_jmeno='$jmeno',u_prijmeni='$prijmeni',u_pohlavi='$pohlavi',u_email='$email'," .
 			"u_telefon='$telefon',u_poznamky='$poznamky',u_level='$level',u_lock='$lock'," .
-			"u_ban='$ban' WHERE u_login='$login'");
+			"u_ban='$ban' WHERE u_id='$id'");
 		return true;	
 	}
 	
@@ -143,12 +145,8 @@ public static function checkUser($login, $pass) {
 		return true;
 	}
 	
-	public static function removeUser($login) {
-		list($login) = DBUser::escapeArray(array($login));
-		
-		$res = DBUser::query("SELECT u_id FROM users WHERE u_login='$login'");
-		$row = DBUser::getSingleRow($res);
-		$id = $row["u_id"];
+	public static function removeUser($id) {
+		list($id) = DBUser::escapeArray(array($id));
 		
 		DBUser::query("DELETE FROM users WHERE u_id='$id'");
 		DBUser::query("DELETE FROM rozpis WHERE r_trener='$id'");
@@ -158,7 +156,8 @@ public static function checkUser($login, $pass) {
 		DBUser::query("DELETE FROM tas_item WHERE ti_user='$id'");
 		
 		DBPary::noPartner($id);
-		DBUser::query("DELETE FROM pary WHERE p_partner='$id'");
+		DBUser::query(
+		"DELETE FROM pary WHERE p_id_partner='$id' AND p_archiv='0'");
 		
 		return true;
 	}

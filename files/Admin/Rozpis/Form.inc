@@ -4,15 +4,22 @@ $error = false;
 global $isConfirmation;
 $isConfirmation = (getPostField("trener") || getPostField("kde"));
 
-if(getPostField("action") == "edit" || getPostField("action") == "edit_confirm")
+$request = explode('/', $_SERVER['REQUEST_URI']);
+$action = array_slice($request, 3);
+if(empty($action)) $action[] = '';
+
+if($action[0] == 'edit')
 	$header = "Upravit rozpis";
-else if(getPostField("action") == "add" || getPostField("action") == "add_confirm")
+elseif($action[0] == 'add')
 	$header = "Přidat rozpis";
 else
 	$header = "Neznámá akce";
+	
 header_minor($header);
 ?>
-<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
+<form action="<?php
+if($action[0] == 'edit') echo '/admin/rozpis';
+else echo '/admin/rozpis/add'; ?>" method="POST">
 <table>
 	<tr>
 		<td>Trenér (*): </td>
@@ -27,12 +34,8 @@ header_minor($header);
 		}
 		$error = checkPostField("/[0-9]+/i", "trener");
 		?>
-		<input type="hidden" name="id" value="<?php
-			$id = getPostField("id");
-			if(is_numeric($id))
-				echo $id;
-			else if($id)
-				View::viewError(ER_CORRUPT_DATA); ?>"/></td>
+		<input type="hidden" name="id" value="<?php $id = getPostField("id");
+			if(is_numeric($id)) echo $id; else if($id) View::viewError(ER_CORRUPT_DATA); ?>"/></td>
 	</tr><tr>
 		<td>Místo (*): </td>
 		<td><input type="text" name="kde" value="<?php echo getPostField("kde"); ?>" /></td>
@@ -59,17 +62,14 @@ header_minor($header);
 		?>/></td>
 		<td></td>
 	</tr><tr>
-		<?php if(getPostField("action") == "edit" || getPostField("action") == "edit_confirm") {?>
-		<td><button type="submit" name="action" value="edit_confirm">Upravit</button></td>
-		<?php } else if(getPostField("action") == "add" || getPostField("action") == "add_confirm") {?>
+		<?php if($action[0] == 'add') {?>
 		<td><button type="submit" name="action" value="add_confirm">Přidat</button></td>
-		<?php }	?>
+		<?php }	else {?>
+		<td><button type="submit" name="action" value="edit_confirm">Upravit</button></td>
+		<?php } ?>
 		<td></td>
 		<td>Pole označená (*) jsou povinná</td>
 	</tr>
 </table>
 </form>
-
-<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="GET">
-<button type="submit">Zpět</button>
-</form>
+<a href="/admin/rozpis">Zpět</a>

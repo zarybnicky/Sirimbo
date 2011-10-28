@@ -4,34 +4,40 @@ $error = false;
 global $isConfirmation;
 $isConfirmation = (getPostField("login") || getPostField("pass"));
 
-if(getPostField("action") == "edit" || getPostField("action") == "edit_confirm")
-	$header = "Upravit užitatele";
-else if(getPostField("action") == "add" || getPostField("action") == "add_confirm")
+$request = explode('/', $_SERVER['REQUEST_URI']);
+$action = array_slice($request, 3);
+if(empty($action)) $action[] = '';
+
+if($action[0] == 'edit')
+	$header = "Upravit uživatele";
+elseif($action[0] == 'add')
 	$header = "Přidat uživatele";
 else
 	$header = "Neznámá akce";
 header_minor($header);
 ?>
-<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
+<form action="<?php
+if($action[0] == 'edit') echo '/admin/users';
+else echo '/admin/users/add'; ?>" method="POST">
 <table>
 	<tr>
 		<td>Uživatel (*): </td>
-		<td><input type="text" name="login" value="<?php echo getPostField("login"); ?>" <?php
-			if(getPostField("action") == "edit" || getPostField("action") == "edit_confirm")
-				echo "readonly=\"readonly\"";
-		?>/></td>
+		<td><input type="text" name="login" value="<?php echo getPostField('login'); ?>" <?php
+			if($action[0] == 'edit') echo 'readonly="readonly"';
+		?>/>
+		<input type="hidden" name="id" value="<?php $id = getPostField("id");
+			if(is_numeric($id)) echo $id; else if($id) View::viewError(ER_CORRUPT_DATA); ?>"/></td>
 		<td>Pouze písmena bez diakritiky, číslice a podtržítka, 3 - 20 znaků<?php
-			$error = checkPostField("/^[A-Z0-9_]{3,20}$/i", "login");
+			$error = checkPostField('/^[A-Z0-9_]{3,20}$/i', 'login');
 		?></td>
 	</tr><tr>
 		<td>Heslo (*): </td>
-		<td><input type="text" name="pass" value="<?php echo getPostField("pass"); ?>" <?php
-			if(getPostField("action") == "edit" || getPostField("action") == "edit_confirm")
-				echo "disabled=\"disabled\"";
+		<td><input type="text" name="pass" value="<?php echo getPostField('pass'); ?>" <?php
+			if($action[0] == 'edit') echo 'disabled="disabled"';
 		?>/></td>
 		<td>Pouze písmena bez diakritiky, číslice a podtržítka, 6 - 32 znaků<?php
-			if(getPostField("action") != "edit" && getPostField("action") != "edit_confirm") {
-				$error = checkPostField("/^[A-Z0-9_]{6,32}$/i", "pass") || $error;
+			if($action[0] != 'edit' && !getPostField('id')) {
+				$error = checkPostField('/^[A-Z0-9_]{6,32}$/i', 'pass') || $error;
 			}
 		?></td>
 	</tr><tr>
@@ -90,31 +96,28 @@ header_minor($header);
 		<td>Oprávnění: </td>
 		<td><select name="level">
 				<option value="host" <?php if(getPostField("level") == "host")
-					echo "selected=\"selected\"";?>>Host</option>
+					echo 'selected="selected"';?>>Host</option>
 				<option value="user" <?php if(getPostField("level") == "user")
-					echo "selected=\"selected\"";?>>Uživatel</option>
+					echo 'selected="selected"';?>>Uživatel</option>
 				<option value="editor" <?php if(getPostField("level") == "editor")
-					echo "selected=\"selected\"";?>>Editor</option>
+					echo 'selected="selected"';?>>Editor</option>
 				<option value="trener" <?php if(getPostField("level") == "trener")
-					echo "selected=\"selected\"";?>>Trenér</option>
+					echo 'selected="selected"';?>>Trenér</option>
 				<option value="admin" <?php if(getPostField("level") == "admin")
-					echo "selected=\"selected\"";?>>Administrátor</option>
+					echo 'selected="selected"';?>>Administrátor</option>
 				<option value="admin" <?php if(getPostField("level") == "sadmin")
-					echo "selected=\"selected\"";?>>Superuživatel</option>
+					echo 'selected="selected"';?>>Superuživatel</option>
 		</select></td>
 		<td></td>
 	</tr><tr>
-		<?php if(getPostField("action") == "edit" || getPostField("action") == "edit_confirm") {?>
-		<td><button type="submit" name="action" value="edit_confirm">Upravit</button></td>
-		<?php } else if(getPostField("action") == "add" || getPostField("action") == "add_confirm") {?>
+		<?php if($action[0] == 'add') { ?>
 		<td><button type="submit" name="action" value="add_confirm">Přidat</button></td>
-		<?php }	?>
+		<?php }	else {?>
+		<td><button type="submit" name="action" value="edit_confirm">Upravit</button></td>
+		<?php } ?>
 		<td></td>
 		<td>Pole označená (*) jsou povinná</td>
 	</tr>
 </table>
 </form>
-
-<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="GET">
-<button type="submit">Zpět</button>
-</form>
+<a href="/admin/users">Zpět</a>
