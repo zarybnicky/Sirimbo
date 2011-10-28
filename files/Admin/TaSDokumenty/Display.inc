@@ -1,5 +1,4 @@
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
-<input type="submit" name="action" value="enter" style="display:none;" />
 <div class="t_wrapper">
 <div class="t_info" style="border:1px solid black;">
 <div class="t_jmeno"><?php echo $tas["t_jmeno"];?></div>
@@ -14,7 +13,7 @@ if($tas["t_od"] != $tas["t_do"])
 <table>
 <tr><td>Jméno<br/>Souboru</td><td>Kategorie</td><td></td>
 </tr>
-<?php //TODO: Dokumenty do hlavmí TaS 
+<?php //TODO: Dokumenty do hlavní TaS 
 if(!empty($doku)) {
 	$count = count($doku);
 	for($i = 0; $i < $count; $i++) {
@@ -35,7 +34,4 @@ if(!empty($doku)) {
 </table>
 </div>
 </form>
-
-<form action="/admin/tas" method="GET">
-<button type="submit">Zpět</button>
-</form>
+<a href="/admin/tas">Zpět</a>

@@ -1,7 +1,28 @@
 <?php
 User::checkPermissionsError(L_ADMIN);
-
 header_main("Správa párů");
+
+$request = explode('/', $_SERVER['REQUEST_URI']);
+$action = array_slice($request, 3);
+if(empty($action)) $action[] = '';
+
+if($action[0] == 'edit' && is_numeric($action[1])) {
+	$id = $action[1];
+	
+	if($id) {
+		$data = DBPary::getSinglePar($id);
+		
+		$_POST['stt-trida'] = $data['p_stt_trida'];
+		$_POST['stt-body'] = $data['p_stt_body'];
+		$_POST['stt-finale'] = $data['p_stt_finale'];
+		$_POST['lat-trida'] = $data['p_lat_trida'];
+		$_POST['lat-body'] = $data['p_lat_body'];
+		$_POST['lat-finale'] = $data['p_lat_finale'];
+		
+		include('files/Admin/Pary/Form.inc');
+		return;
+	}
+}
 
 if(empty($_POST)) {
 	include("files/Admin/Pary/Display.inc");
@@ -38,21 +59,12 @@ switch(getPostField("action")) {
 	
 	case 'edit':
 		$pary = getPostField('pary');
-		if(is_array($pary)) {
-			$par = $pary[0];
-			$data = DBPary::getSinglePar($par);
-			
-			$_POST['stt-trida'] = $data['p_stt_trida'];
-			$_POST['stt-body'] = $data['p_stt_body'];
-			$_POST['stt-finale'] = $data['p_stt_finale'];
-			$_POST['lat-trida'] = $data['p_lat_trida'];
-			$_POST['lat-body'] = $data['p_lat_body'];
-			$_POST['lat-finale'] = $data['p_lat_finale'];
-			
-			include('files/Admin/Pary/Form.inc');
+		if($pary[0]) {
+			header('Location: /admin/pary/edit/' . $pary[0]);
 			return;
 		}
 		break;
+		
 	case 'edit_confirm':
 		$partner = DBPary::getSinglePar(getPostField('id'));
 		

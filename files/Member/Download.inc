@@ -6,7 +6,6 @@ if(!empty($_GET["id"])) {
 	$path = $data["d_path"];
 	$fileName = $data["d_filename"];
 	$file = fopen($path, "rb");
-	var_dump(array($data, $file));
 
 	header('Pragma: no-cache');
 	header('Content-Type: application/octet-stream');
@@ -15,4 +14,4 @@ if(!empty($_GET["id"])) {
 	return;
 }
 ?>
-Co tu děláš?? Bež pryč, tady nic není :o)
+Co tu děláš? Bež pryč, tady nic není :o)

@@ -22,7 +22,10 @@ if(!$sitemap_static || !$sitemap_dynamic || !class_exists("Database") || !class_
 if(!isset($_GET["file"]) || $_GET["file"] == null) {
 	$file = "home";
 } else {
-	$file = $_GET["file"];
+	$parts = explode('/', $_GET['file']);
+	if(is_numeric($parts[count($parts) - 1]))
+		array_pop($parts);
+	$file = implode('/', $parts);
 }
 
 if(array_key_exists($file, $sitemap_static)) {

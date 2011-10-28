@@ -26,7 +26,7 @@ foreach($pary as $par) {
 ?>
 </table>
 <br />
-<?php header_minor("Nový pár:");?>
+<?php header_minor("Nový pár:");//Přidat "Nový pár" do tabulky?>
 Partner: <?php echoUsers("add_partner", DBUser::getUsersByPohlavi("m"));?><br />
 Partnerka: <?php echoUsers("add_partnerka", DBUser::getUsersByPohlavi("f"));?><br />
 <button type="submit" name="action" value="add">Nový pár</button>

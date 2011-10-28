@@ -4,16 +4,22 @@ $error = false;
 global $isConfirmation;
 $isConfirmation = (getPostField("trener") || getPostField("pocet_hod"));
 
-if(getPostField("action") == "edit" || getPostField("action") == "edit_confirm")
+$request = explode('/', $_SERVER['REQUEST_URI']);
+$action = array_slice($request, 3);
+if(empty($action)) $action[] = '';
+
+if($action[0] == 'edit')
 	$header = "Upravit nabídku";
-else if(getPostField("action") == "add" || getPostField("action") == "add_confirm")
+elseif($action[0] == 'add')
 	$header = "Přidat nabídku";
 else
 	$header = "Neznámá akce";
 
 header_minor($header);
 ?>
-<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
+<form action="<?php
+if($action[0] == 'edit') echo '/admin/nabidka';
+else echo '/admin/nabidka/add'; ?>" method="POST">
 <table>
 	<tr>
 		<td>Trenér (*): </td>
@@ -26,13 +32,8 @@ header_minor($header);
 			$treneri = DBUser::getTrener();
 			echoUsers("trener", $treneri);
 		} $error = checkPostField("/[0-9]+/i", "trener");
-		?>
-		<input type="hidden" name="id" value="<?php
-			$id = getPostField("id");
-			if(is_numeric($id))
-				echo $id;
-			else if($id)
-				View::viewError(ER_CORRUPT_DATA); ?>"/></td>
+		?><input type="hidden" name="id" value="<?php $id = getPostField("id");
+			if(is_numeric($id)) echo $id; else if($id) View::viewError(ER_CORRUPT_DATA); ?>"/></td>
 	</tr><tr>
 		<td>Počet hodin (*): </td>
 		<td><input type="text" name="pocet_hod" value="<?php echo getPostField("pocet_hod"); ?>" /></td>
@@ -41,8 +42,6 @@ header_minor($header);
 		?></td>
 	</tr><tr>
 		<td>Od: (*)</td>
-		<!--<td><input type="text" name="od" value="<?php //echo getPostField("od"); ?>" /></td>-->
-		<!--$error = checkPostField("/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/", "od") || $error;-->
 		<td><?php echoDateSelect("od_day", "od_month", "od_year");?></td>
 		<td><?php
 			$od_str = getPostField("od_year") . "-" . getPostField("od_month") . "-" .
@@ -60,28 +59,25 @@ header_minor($header);
 	</tr><tr>
 		<td>Viditelný: </td>
 		<td><input type="checkbox" name="visible" value="visible" <?php
-			if(getPostField("visible")) echo "checked=\"checked\"";
-			if(!User::checkPermissionsBool(L_ADMIN)) echo "readonly=\"readonly\""
+			if(getPostField('visible')) echo 'checked="checked"';
+			if(!User::checkPermissionsBool(L_ADMIN)) echo 'readonly="readonly"'
 		?>/></td>
 		<td></td>
 	</tr><tr>
 		<td>Uzamknout: </td>
 		<td><input type="checkbox" name="lock" value="lock" <?php
-			if(getPostField("lock")) echo "checked=\"checked\"";
+			if(getPostField('lock')) echo 'checked="checked"';
 		?>/></td>
 		<td></td>
 	</tr><tr>
-		<?php if(getPostField("action") == "edit" || getPostField("action") == "edit_confirm") {?>
-		<td><button type="submit" name="action" value="edit_confirm">Upravit</button></td>
-		<?php } else if(getPostField("action") == "add" || getPostField("action") == "add_confirm") {?>
+		<?php if($action[0] == 'add') {?>
 		<td><button type="submit" name="action" value="add_confirm">Přidat</button></td>
-		<?php }	?>
+		<?php }	else {?>
+		<td><button type="submit" name="action" value="edit_confirm">Upravit</button></td>
+		<?php } ?>
 		<td></td>
 		<td>Pole označená (*) jsou povinná</td>
 	</tr>
 </table>
 </form>
-
-<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="GET">
-<button type="submit">Zpět</button>
-</form>
+<a href="/admin/nabidka">Zpět</a>
