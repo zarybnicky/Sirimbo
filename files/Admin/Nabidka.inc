@@ -1,7 +1,71 @@
 <?php
 User::checkPermissionsError(L_TRENER);
-
 header_main("Správa nabídek");
+
+$request = explode('/', $_SERVER['REQUEST_URI']);
+$action = array_slice($request, 3);
+if(empty($action)) $action[] = '';
+
+if($action[0] == 'add') {
+	if(empty($_POST)) {
+		include('files/Admin/Nabidka/Form.inc');
+		return;
+	} else {
+		if(!User::checkPermissionsBool(L_ADMIN) && User::getUserID() != getPostField("trener"))
+			View::viewError(ER_AUTHORIZATION);
+		
+		$pocet_hod = getPostField("pocet_hod");
+		
+		$od = getPostField("od_year") . "-" . getPostField("od_month") . "-" . getPostField("od_day");
+		$do = getPostField("do_year") . "-" . getPostField("do_month") . "-" . getPostField("do_day");
+		if($do == "0000-00-00" || strcmp($od, $do) > 0)
+			$do = $od;
+		
+		$visible = (bool) getPostField("visible");
+		if(User::checkPermissionsBool(L_TRENER) && !User::checkPermissionsBool(L_ADMIN))
+			$visible = false;
+		
+		$error = false;
+		ob_start();
+		include("files/Admin/Nabidka/Form.inc");	
+		$html = ob_get_clean();
+		
+		if(!$error) {
+			DBNabidka::addNabidka(getPostField("trener"), $pocet_hod, $od, $do, $visible,
+				getPostField("lock"));
+			header('Location: /admin/nabidka');
+		} else {
+			echo $html;
+			return;
+		}
+	}
+} elseif($action[0] == 'edit' && is_numeric($action[1])) {
+	$id = $action[1];
+	
+	if($id) {
+		$data = DBNabidka::getSingleNabidka($id);
+		
+		if(!User::checkPermissionsBool(L_ADMIN) && $data["n_trener"] != User::getUserID())
+			View::viewError(ER_AUTHORIZATION);
+		
+		$_POST["id"] = $id;
+		$_POST["trener"] = $data["n_trener"];
+		$_POST["pocet_hod"] = $data["n_pocet_hod"];
+		list($od_year, $od_month, $od_day) = explode("-", $data["n_od"]);
+		$_POST["od_year"] = $od_year;
+		$_POST["od_month"] = $od_month;
+		$_POST["od_day"] = $od_day;
+		list($do_year, $do_month, $do_day) = explode("-", $data["n_do"]);
+		$_POST["do_year"] = $do_year;
+		$_POST["do_month"] = $do_month;
+		$_POST["do_day"] = $do_day;
+		$_POST["visible"] = $data["n_visible"];
+		$_POST["lock"] = $data["n_lock"];
+		
+		include("files/Admin/Nabidka/Form.inc");
+		return;
+	}
+}
 
 if(empty($_POST)) {
 	include("files/Admin/Nabidka/Display.inc");
@@ -9,36 +73,6 @@ if(empty($_POST)) {
 }
 
 switch(getPostField("action")) {
-	case "edit":
-		$nabidka = getPostField("nabidka");
-		if($nabidka[0]) {
-			$itemData = DBNabidka::getSingleNabidka($nabidka[0]);
-			
-			$_POST["id"] = $nabidka[0];
-			$_POST["trener"] = $itemData["n_trener"];
-			$_POST["pocet_hod"] = $itemData["n_pocet_hod"];
-			list($od_year, $od_month, $od_day) = explode("-", $itemData["n_od"]);
-			$_POST["od_year"] = $od_year;
-			$_POST["od_month"] = $od_month;
-			$_POST["od_day"] = $od_day;
-			list($do_year, $do_month, $do_day) = explode("-", $itemData["n_do"]);
-			$_POST["do_year"] = $do_year;
-			$_POST["do_month"] = $do_month;
-			$_POST["do_day"] = $do_day;
-			$_POST["visible"] = $itemData["n_visible"];
-			$_POST["lock"] = $itemData["n_lock"];
-			
-			if(User::checkPermissionsBool(L_ADMIN) || $_POST["trener"] == User::getUserID())
-				include("files/Admin/Nabidka/Form.inc");
-			else
-				View::viewError(ER_AUTHORIZATION);	
-			return;
-		}
-		break;
-	
-	case "add":
-		include("files/Admin/Nabidka/Form.inc");
-		return;
 	
 	case "remove":
 		if(is_array(getPostField("nabidka"))) {
@@ -53,24 +87,25 @@ switch(getPostField("action")) {
 		}
 		break;
 	
-	case "edit_confirm":
-	case "add_confirm":
-		$n_id = getPostField("id");
+	case 'edit':
+		$nabidka = getPostField('nabidka');
+		if($nabidka[0]) {
+			header('Location: /admin/nabidka/edit/' . $nabidka[0]);
+			return;
+		}
+		break;
 		
-		if((getPostField("action") == "edit_confirm" &&
-				(User::getUserID() != DBNabidka::getNabidkaTrenerID($n_id) &&
-					!User::checkPermissionsBool(L_ADMIN))) ||
-				(getPostField("action") == "add_confirm" &&
-				(User::getUserID() != getPostField("trener")) &&
-					!User::checkPermissionsBool(L_ADMIN)))
+	case "edit_confirm":
+		$id = getPostField('id');
+		$data = DBNabidka::getSingleNabidka($id);
+		
+		if(!User::checkPermissionsBool(L_ADMIN) && User::getUserID() != $data['n_trener'])
 			View::viewError(ER_AUTHORIZATION);
 		
+		$items = DBNabidka::getNabidkaItemLessons($id);
 		$pocet_hod = getPostField("pocet_hod");
-		if($n_id) {
-			$items = DBNabidka::getSingleNabidka($n_id);
-			if($pocet_hod < count($items))
-				$pocet_hod = count($items);
-		}
+		if($pocet_hod < $items)
+			$pocet_hod = $items;
 		
 		$od = getPostField("od_year") . "-" . getPostField("od_month") . "-" . getPostField("od_day");
 		$do = getPostField("do_year") . "-" . getPostField("do_month") . "-" . getPostField("do_day");
@@ -78,14 +113,10 @@ switch(getPostField("action")) {
 			$do = $od;
 		
 		$visible = (bool) getPostField("visible");
-		$visible_prev = DBNabidka::isNabidkaVisible($n_id);
-		if(getPostField("action") == "edit_confirm" && User::checkPermissionsBool(L_TRENER) &&
-				!User::checkPermissionsBool(L_ADMIN) && $visible_prev != $visible)
+		$visible_prev = $data['n_visible'];
+		if(User::checkPermissionsBool(L_TRENER) && !User::checkPermissionsBool(L_ADMIN) &&
+				$visible != $visible_prev)
 			$visible = $visible_prev;
-		
-		if(getPostField("action") == "add_confirm" && User::checkPermissionsBool(L_TRENER) &&
-				!User::checkPermissionsBool(L_ADMIN))
-			$visible = false;
 		
 		$error = false;
 		ob_start();
@@ -93,17 +124,11 @@ switch(getPostField("action")) {
 		$html = ob_get_clean();
 		
 		if(!$error) {
-			if(getPostField("action") == "edit_confirm") {
-				DBNabidka::editNabidka($n_id, getPostField("trener"), $pocet_hod, $od, $do, $visible,
-					getPostField("lock"));
-				notice("Nabídka úspěšně upravena");
-			} else if(getPostField("action") == "add_confirm") {
-				DBNabidka::addNabidka(getPostField("trener"), $pocet_hod, $od, $do, $visible,
-					getPostField("lock"));
-				notice("Nabídka úspěšně přidána");
-			}
+			DBNabidka::editNabidka($id, getPostField("trener"), $pocet_hod, $od, $do, $visible,
+				getPostField("lock"));
+			notice("Nabídka úspěšně upravena");
 		} else {
-			echo $html;
+			header('Location: /admin/nabidka/edit/' . $id);
 			return;
 		}
 		break;
@@ -111,7 +136,7 @@ switch(getPostField("action")) {
 	case "edit_detail":
 		$nabidka = getPostField("nabidka");
 		if($nabidka[0]) {
-			header("Location: /admin/nabidka-detail?id=" . $nabidka[0]);
+			header("Location: /admin/nabidka/detail/" . $nabidka[0]);
 			return;
 		}
 		break;

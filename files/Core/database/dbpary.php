@@ -17,6 +17,7 @@ class DBPary extends Database {
 			LEFT JOIN users AS f ON p.p_id_partnerka=f.u_id
 		WHERE p.p_archiv='0'
 		ORDER BY p.p_aktu_vytvoreno ASC");
+		
 		return DBPary::getArray($res);
 	}
 	
@@ -68,9 +69,8 @@ class DBPary extends Database {
 				"FROM pary LEFT JOIN users ON p_id_partner=u_id WHERE p_id_partnerka='$partner'" .
 				" AND p_archiv='0'");
 		}
-		$array = DBPary::getArray($res);
-		if($array)
-			return $array[0];
+		if($res)
+			return DBPary::getSingleRow($res);
 		else
 			return false;
 	}
@@ -89,7 +89,17 @@ class DBPary extends Database {
 			return $array[0];
 		else
 			return false;
+	}
+	
+	public static function getPartners() {
+		$res = DBPary::query(
+		"SELECT p_id,u_id,u_jmeno,u_prijmeni,p_stt_trida,p_stt_body,p_stt_finale,
+			p_lat_trida,p_lat_body,p_lat_finale,p_hodnoceni
+		FROM pary
+			LEFT JOIN users ON p_id_partner=u_id
+		WHERE p_archiv='0'");
 		
+		return DBPary::getArray($res);
 	}
 	
 	public static function newPartner($partner, $partnerka) {

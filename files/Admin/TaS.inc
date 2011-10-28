@@ -1,7 +1,63 @@
 <?php
 User::checkPermissionsError(L_ADMIN);
-
 header_main("Správa TaS");
+
+$request = explode('/', $_SERVER['REQUEST_URI']);
+$action = array_slice($request, 3);
+if(empty($action)) $action[] = '';
+
+if($action[0] == 'add') {
+	if(empty($_POST)) {
+		include("files/Admin/TaS/Form.inc");
+		return;
+	} else {
+		$od = getPostField("od_year") . "-" . getPostField("od_month") . "-" . getPostField("od_day");
+		$do = getPostField("do_year") . "-" . getPostField("do_month") . "-" . getPostField("do_day");
+		
+		if($do == "0000-00-00" || strcmp($od, $do) > 0)
+			$do = $od;
+		
+		$error = false;
+		
+		ob_start();
+		include("files/Admin/TaS/Form.inc");	
+		$html = ob_get_clean();
+		
+		if(!$error) {
+			DBTaS::addTaS(getPostField("jmeno"), getPostField("kde"), getPostField("info"), $od, $do,
+				getPostField("kapacita"), getPostField("dokumenty"), (getPostField("lock") == "lock") ? 1 : 0);
+			header('Location: /admin/tas');
+		} else {
+			echo $html;
+			return;
+		}
+	}
+} elseif($action[0] == 'edit' && is_numeric($action[1])) {
+	$id = $action[1];
+	
+	if($id) {
+		$data = DBTaS::getSingleTaS($id);
+		
+		$_POST["id"] = $id;
+		$_POST["jmeno"] = $data["t_jmeno"];
+		$_POST["kde"] = $data["t_kde"];
+		$_POST["info"] = $data["t_info"];
+		list($od_year, $od_month, $od_day) = explode("-", $data["t_od"]);
+		$_POST["od_year"] = $od_year;
+		$_POST["od_month"] = $od_month;
+		$_POST["od_day"] = $od_day;
+		list($do_year, $do_month, $do_day) = explode("-", $data["t_do"]);
+		$_POST["do_year"] = $do_year;
+		$_POST["do_month"] = $do_month;
+		$_POST["do_day"] = $do_day;
+		$_POST["kapacita"] = $data["t_kapacita"];
+		$_POST["dokumenty"] = unserialize($data["t_dokumenty"]);
+		$_POST["lock"] = $data["t_lock"];
+		
+		include("files/Admin/TaS/Form.inc");
+		return;
+	}
+}
 
 if(empty($_POST)) {
 	include("files/Admin/TaS/Display.inc");
@@ -9,36 +65,6 @@ if(empty($_POST)) {
 }
 
 switch(getPostField("action")) {
-	
-	case "edit":
-		$tas = getPostField("tas");
-		if($tas[0]) {
-			$itemData = DBTaS::getSingleTaS($tas[0]);
-			
-			$_POST["id"] = $tas[0];
-			$_POST["jmeno"] = $itemData["t_jmeno"];
-			$_POST["kde"] = $itemData["t_kde"];
-			$_POST["info"] = $itemData["t_info"];
-			list($od_year, $od_month, $od_day) = explode("-", $itemData["t_od"]);
-			$_POST["od_year"] = $od_year;
-			$_POST["od_month"] = $od_month;
-			$_POST["od_day"] = $od_day;
-			list($do_year, $do_month, $do_day) = explode("-", $itemData["t_do"]);
-			$_POST["do_year"] = $do_year;
-			$_POST["do_month"] = $do_month;
-			$_POST["do_day"] = $do_day;
-			$_POST["kapacita"] = $itemData["t_kapacita"];
-			$_POST["dokumenty"] = unserialize($itemData["t_dokumenty"]);
-			$_POST["lock"] = $itemData["t_lock"];
-			
-			include("files/Admin/TaS/Form.inc");
-			return;
-		}
-		break;
-		
-	case "add":
-		include("files/Admin/TaS/Form.inc");
-		return;
 	
 	case "remove":
 		if(is_array(getPostField("tas"))) {
@@ -71,8 +97,15 @@ switch(getPostField("action")) {
 		}
 		break;
 	
+	case "edit":
+		$tas = getPostField('tas');
+		if($tas[0]) {
+			header('Location: /admin/tas/edit/' . $tas[0]);
+			return;
+		}
+		break;
+	
 	case "edit_confirm":
-	case "add_confirm":
 		$id = getPostField("id");
 		$od = getPostField("od_year") . "-" . getPostField("od_month") . "-" . getPostField("od_day");
 		$do = getPostField("do_year") . "-" . getPostField("do_month") . "-" . getPostField("do_day");
@@ -81,23 +114,16 @@ switch(getPostField("action")) {
 			$do = $od;
 		
 		$error = false;
-		
 		ob_start();
 		include("files/Admin/TaS/Form.inc");	
 		$html = ob_get_clean();
 		
 		if(!$error) {
-			if($_POST["action"] == "edit_confirm") {
-				DBTaS::editTaS($id, getPostField("jmeno"), getPostField("kde"), getPostField("info"), $od, $do,
-					getPostField("kapacita"), getPostField("dokumenty"), (getPostField("lock") == "lock") ? 1 : 0);
-				notice("Příspěvek úspěšně upraven");
-			} else if(getPostField("action") == "add_confirm") {
-				DBTaS::addTaS(getPostField("jmeno"), getPostField("kde"), getPostField("info"), $od, $do,
-					getPostField("kapacita"), getPostField("dokumenty"), (getPostField("lock") == "lock") ? 1 : 0);
-				notice("Příspěvek úspěšně přidán");
-			}
+			DBTaS::editTaS($id, getPostField("jmeno"), getPostField("kde"), getPostField("info"), $od, $do,
+				getPostField("kapacita"), getPostField("dokumenty"), (getPostField("lock") == "lock") ? 1 : 0);
+			notice("Příspěvek úspěšně upraven");
 		} else {
-			echo $html;
+			header('Location: /admin/tas/edit/' . $id);
 			return;
 		}
 		break;
@@ -105,7 +131,7 @@ switch(getPostField("action")) {
 	case "edit_detail":
 		$tas = getPostField("tas");
 		if($tas[0]) {
-			header("Location: /admin/tas-detail?id=" . $tas[0]);
+			header("Location: /admin/tas/detail/" . $tas[0]);
 			return;
 		}
 		break;
@@ -113,7 +139,7 @@ switch(getPostField("action")) {
 	case "edit_doku":
 		$tas = getPostField("tas");
 		if($tas[0]) {
-			header("Location: /admin/tas-dokumenty?id=" . $tas[0]);
+			header("Location: /admin/tas/dokumenty/" . $tas[0]);
 			return;
 		}
 		break;
