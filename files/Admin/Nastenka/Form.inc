@@ -4,16 +4,19 @@ $error = false;
 global $isConfirmation;
 $isConfirmation = (getPostField("nadpis") || getPostField("text"));
 
-if(getPostField("action") == "edit" || getPostField("action") == "edit_confirm")
-	$header = "Upravit příspěvek";
-else if(getPostField("action") == "add" || getPostField("action") == "add_confirm")
+$request = explode('/', $_SERVER['REQUEST_URI']);
+$action = array_slice($request, 3);
+
+if($action[0] == 'add')
 	$header = "Přidat příspěvek";
+elseif($action[0] == 'edit')
+	$header = "Upravit příspěvek";
 else
 	$header = "Neznámá akce";
 
 header_minor($header);
 ?>
-<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
+<form action="/admin/nastenka" method="POST">
 <table>
 	<tr>
 		<td>Nadpis (*): </td>
@@ -42,10 +45,10 @@ header_minor($header);
 		?>/>Modrá</td>
 		<td></td>
 	</tr><tr>
-		<?php if(getPostField("action") == "edit" || getPostField("action") == "edit_confirm") {?>
-		<td><button type="submit" name="action" value="edit_confirm">Upravit</button></td>
-		<?php } else if(getPostField("action") == "add" || getPostField("action") == "add_confirm") {?>
+		<?php if($action[0] == 'add') {?>
 		<td><button type="submit" name="action" value="add_confirm">Přidat</button></td>
+		<?php } else {?>
+		<td><button type="submit" name="action" value="edit_confirm">Upravit</button></td>
 		<?php }	?>
 		<td></td>
 		<td>Pole označená (*) jsou povinná</td>
@@ -53,6 +56,4 @@ header_minor($header);
 </table>
 </form>
 
-<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="GET">
-<button type="submit">Zpět</button>
-</form>
+<a href="/admin/nastenka">Zpět</a>

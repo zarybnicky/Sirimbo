@@ -38,11 +38,11 @@
 		}
 		
 		$name = explode('/', $_SERVER['REQUEST_URI']);
-		$section = $name[1];
+		$section = (isset($name[1])) ? $name[1] : '';
 		?>
 		</div>
 		<div id="logo">
-			Taneční klub Olymp
+			Taneční klub Olymp Olomouc
 		</div>
 		<div id="topmenu">
 			<ul>

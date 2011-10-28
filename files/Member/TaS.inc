@@ -1,7 +1,12 @@
 <?php
 header_main("Tábory a soustředění");
-
 User::checkPermissionsError(L_HOST);
+
+$id = array_pop(explode('/', $_SERVER['REQUEST_URI']));
+if(is_numeric($id)) {
+	DisplayTaS::viewFullTaS($id);
+	return;
+}
 
 $error = false;
 global $isConfirmation;
@@ -28,35 +33,16 @@ if($isConfirmation) {
 		} elseif($action == "signout") {
 			DBTaS::signOut(User::getUserID(), $id);
 		}
-	}	
-	if($action == "showsigned") {
-		header("Location: /member/tas-vypis?id=" . $id);
-		return;
 	}
 }
 
 foreach($tas as $item) {
 	echo "<div class=\"t_wrapper\">";
-	echo "<div class=\"t_info\" style=\"border:1px solid black;\">";
-	echo "<div class=\"t_jmeno\">Název: ", $item["t_jmeno"], "</div>";
-	echo "<div class=\"t_datum\">Datum: ", formatDate($item["t_od"]);
-	if($item["t_od"] != $item["t_do"])
-		echo " - ", formatDate($item["t_do"]);
-	echo "</div>";
-	echo "<div class=\"t_moreinfo\">Další informace: ", $item["t_info"], "</div>";
-	echo "<div class=\"t_dokumenty\">Dokumenty:<br/>";
-	$doku = unserialize($item["t_dokumenty"]);
-	if($doku) {
-		foreach($doku as $id) {
-			$data = DBDokumenty::getSingleDokument($id);
-			echo "<a href=\"/member/download?id=", $id, "\">", $data["d_name"], "</a>";
-		}
-	} else {
-		echo "Žádné dokumenty";
-	}
-	echo "</div>";
-	echo "</div>";
+	
+	DisplayTaS::viewTaSHeader($item);
+	
 	echo "<form action=\"{$_SERVER["REQUEST_URI"]}\" method=\"post\">";
+	echo "<input type=\"hidden\" name=\"id\" value=\"", $item["t_id"], "\" />";
 	if(User::checkPermissionsBool(L_USER)) {
 		if(DBTas::isUserSignedUp(User::getUserID())) {
 			echo "Rok narození: <input type=\"text\" name=\"narozeni\" />";
@@ -65,8 +51,7 @@ foreach($tas as $item) {
 			echo "<button type=\"submit\" name=\"action\" value=\"signout\">Odhlásit se</button>";
 		}
 	}
-	echo "<button type=\"submit\" name=\"action\" value=\"showsigned\">Zobrazit přihlášené</button>";
-	echo "<input type=\"hidden\" name=\"id\" value=\"", $item["t_id"], "\" />";
+	echo '<a href="/member/tas/', $item['t_id'], '">Zobrazit přihlášené</a>';
 	echo "</form>";
 	echo "</div>";
 }

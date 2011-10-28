@@ -150,7 +150,7 @@ public static function getRozpis() {
 	public static function editRozpisItem($id, $partner, $od, $do, $lock) {
 		list($id, $partner, $od, $do, $lock) = DBRozpis::escapeArray(array($id, $partner, $od, $do, $lock));
 		
-		$res = DBNabidka::query("SELECT ri_id FROM rozpis_item WHERE ri_od='$od' AND " .
+		$res = DBNabidka::query("SELECT ri_id,ri_id_rodic FROM rozpis_item WHERE ri_od='$od' AND " .
 			"ri_id_rodic=(SELECT ri_id_rodic FROM rozpis_item WHERE ri_id='$id')");
 			//Finds conflicting rozpis
 		
@@ -161,7 +161,7 @@ public static function getRozpis() {
 		}
 		if($row['ri_id'] && $row['ri_id'] != $id) {//if there is a conflicting rozpis:
 			DBRozpis::removeRozpisItem($id);
-			DBRozpis::addRozpisItem($rodic, $partner, $od, $do, $lock);
+			DBRozpis::addRozpisItem($row['ri_id_rodic'], $partner, $od, $do, $lock);
 		} else {
 			DBRozpis::query("UPDATE rozpis_item SET ri_partner='$partner',ri_od='$od',ri_do='$do'," .
 				"ri_lock='$lock' WHERE ri_id='$id'");

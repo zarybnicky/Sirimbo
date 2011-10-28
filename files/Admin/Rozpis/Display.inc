@@ -1,5 +1,5 @@
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
-<button type="submit" name="action" value="add">Přidat</button>
+<a href="/admin/rozpis/add">Přidat</a>
 <button type="submit" name="action" value="edit">Upravit</button>
 <button type="submit" name="action" value="edit_detail">Upravit tréninky</button>
 <button type="submit" name="action" value="remove">Odstranit</button>

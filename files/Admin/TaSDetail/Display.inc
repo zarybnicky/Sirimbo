@@ -1,5 +1,5 @@
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
-<input type="submit" name="action" value="enter" style="display:none;" />
+<button type="submit" name="action" value="enter" style="display:none;">Enter</button>
 <div class="t_wrapper">
 <div class="t_info" style="border:1px solid black;">
 <div class="t_jmeno"><?php echo $tas["t_jmeno"];?></div>
@@ -11,6 +11,8 @@ if($tas["t_od"] != $tas["t_do"])
 </div>
 <div class="t_moreinfo"><?php echo $tas["t_info"];?></div>
 <div class="t_dokumenty"><?php
+$dokumekty = $tas["t_dokumenty"];
+if(!empty($dokumenty))
 	foreach(unserialize($tas["t_dokumenty"]) as $doku) {
 		echo DBDokumenty::getDokumentName($doku), " ";
 	}
@@ -58,7 +60,4 @@ if(!empty($items)) {
 </table>
 </div>
 </form>
-
-<form action="/admin/tas" method="GET">
-<button type="submit">Zpět</button>
-</form>
+<a href="/admin/tas">Zpět</a>

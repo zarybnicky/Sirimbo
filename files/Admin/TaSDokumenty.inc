@@ -1,9 +1,13 @@
 <?php
 User::checkPermissionsError(L_ADMIN);
 
-if(!is_numeric(getGetField("id")) && getGetField("id") > 0 && getGetField("id") < 2147483647)
+$request = explode('/', $_SERVER['REQUEST_URI']);
+$action = array_slice($request, 3);
+$id = $action[1];
+
+if(!is_numeric($id) || ($id < 0 || $id > 2147483647))
 	View::viewError(ER_CORRUPT_DATA);
-if(!($tas = DBTaS::getSingleTaS(getGetField("id"))))
+if(!($tas = DBTaS::getSingleTaS($id)))
 	View::viewError(ER_CORRUPT_DATA);
 $doku = unserialize($tas["t_dokumenty"]);
 
@@ -25,7 +29,7 @@ if(getPostField("remove") > 0) {
 	DBTaS::editTaS($tas["t_id"], $tas["t_jmeno"], $tas["t_kde"], $tas["t_info"], $tas["t_od"], $tas["t_do"],
 		$tas["t_kapacita"], serialize($doku), $tas["t_kapacita"]);
 	
-	$tas = DBTaS::getSingleTaS(getGetField("id"));
+	$tas = DBTaS::getSingleTaS($id);
 	$doku = unserialize($tas["t_dokumenty"]);
 }
 
@@ -37,7 +41,7 @@ if(getPostField("add-id")) {
 			$tas["t_kapacita"], serialize($doku), $tas["t_kapacita"]);
 		
 		unset($_POST["add-id"]);
-		$tas = DBTaS::getSingleTaS(getGetField("id"));
+		$tas = DBTaS::getSingleTaS($id);
 		$doku = unserialize($tas["t_dokumenty"]);
 	}
 }
