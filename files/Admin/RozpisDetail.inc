@@ -1,19 +1,18 @@
 <?php
 User::checkPermissionsError(L_TRENER);
+header_main("Správa rozpisů");
+
+notice(View::getRedirectMessage());
 
 $request = explode('/', $_SERVER['REQUEST_URI']);
 $action = array_slice($request, 3);
-$id = $action[1];
+$id = isset($action[1]) ? $action[1] : '';
 
-if(!is_numeric($id) || ($id < 0 || $id > 2147483647))
-	View::viewError(ER_CORRUPT_DATA);
-if(!($roz = DBRozpis::getSingleRozpis($id)))
-	View::viewError(ER_CORRUPT_DATA);
+if(!id || !is_numeric($id) || !($nab = DBNabidka::getSingleNabidka($id)))
+	View::redirectWithMessage('/admin/nabidka', 'Nabídka s takovým ID neexistuje');
 
 $items = DBRozpis::getRozpisItem($id);
 $users = DBPary::getPartners();
-
-header_main("Správa rozpisů");
 
 if(empty($_POST)) {
 	include("files/Admin/RozpisDetail/Display.inc");
@@ -45,7 +44,6 @@ if(getPostField("generate") == "overlap") {
 		is_numeric(getPostField("gen_add_hod")) &&
 		is_numeric(getPostField("gen_add_len")) &&
 		preg_match("/^[0-9]{2}:[0-9]{2}$/", getPostField("gen_add_od"))) {
-	echo "Adding...";
 	
 	$od = getPostField("gen_add_od");
 	$len = floor(getPostField("gen_add_len") / 60) . ":" .
