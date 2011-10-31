@@ -19,13 +19,13 @@ header_minor($header);
 <form action="/admin/nastenka" method="POST">
 <table>
 	<tr>
-		<td>Nadpis (*): </td>
+		<td>Nadpis: </td>
 		<td><input type="text" name="nadpis" value="<?php echo getPostField("nadpis"); ?>" />
 			<input type="hidden" name="id" value="<?php $id = getPostField("id");
 			if(is_numeric($id)) echo $id; else if($id) View::viewError(ER_CORRUPT_DATA); ?>"/></td>
 		<td></td>
 	</tr><tr>
-		<td>Text (*): </td>
+		<td>Text: </td>
 		<td><textarea cols="50" rows="15" name="text"><?php echo getPostField("text"); ?></textarea></td>
 		<td></td>
 	</tr><tr>

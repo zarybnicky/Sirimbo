@@ -17,9 +17,7 @@ else
 
 header_minor($header);
 ?>
-<form action="<?php
-if($action[0] == 'edit') echo '/admin/nabidka';
-else echo '/admin/nabidka/add'; ?>" method="POST">
+<form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="POST">
 <table>
 	<tr>
 		<td>Trenér (*): </td>

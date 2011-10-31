@@ -17,9 +17,7 @@ else
 	
 header_minor($header);
 ?>
-<form action="<?php
-if($action[0] == 'edit') echo '/admin/rozpis';
-else echo '/admin/rozpis/add'; ?>" method="POST">
+<form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="POST">
 <table>
 	<tr>
 		<td>Trenér (*): </td>

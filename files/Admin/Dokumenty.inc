@@ -6,22 +6,27 @@ $request = explode('/', $_SERVER['REQUEST_URI']);
 $action = array_slice($request, 3);
 if(empty($action)) $action[] = '';
 
-if($action[0] == 'edit' && is_numeric($action[1])) {
-	$id = $action[1];
-	$file = DBDokumenty::getSingleDokument($id);
+if($action[0] == 'edit') {
+	$id = isset($action[1]) ? $action[1] : '';
 	
-	if(!getPostField('newname')) {
-		if(!User::checkPermissionsBool(L_ADMIN) && 
-				User::getUserID() != $file['d_kdo'])
-			View::viewError(ER_AUTHORIZATION);
-		
-		echo '<form action="/admin/dokumenty" method="POST">';
-		echo 'Staré jméno:&nbsp;', $file['d_name'], '<br />';
+	if(!$id || !is_numeric($id) || !($data = DBDokumenty::getSingleDokument($id)))
+		View::redirectWithMessage('/admin/dokumenty', 'Dokument s takovým ID neexistuje');
+	
+	if(!User::checkPermissionsBool(L_ADMIN) && User::getUserID() != $data['d_kdo'])
+		View::viewError(ER_AUTHORIZATION);
+	
+	if(empty($_POST)) {
+		echo '<form action="', $_SERVER['REQUEST_URI'], '" method="POST">';
+		echo 'Staré jméno:&nbsp;', $data['d_name'], '<br />';
 		echo 'Nové jméno:&nbsp;';
-		echo '<input type="text" name="newname" value="', $file['d_name'], '" />';
-		echo '<input type="hidden" name="id" value="', $id, '" />';
+		echo '<input type="text" name="newname" value="', $data['d_name'], '" />';
 		echo '<button type="submit" name="action" value="edit_confirm">Upravit</button>';
 		echo '</form><br />';
+	} else {
+		$newname = (getPostField('newname')) ? getPostField('newname') : '---EMPTY---';
+		
+		DBDokumenty::editDokument($id, $newname);
+		View::redirectWithMessage('/admin/dokumenty', 'Příspěvek úspěšně upraven');
 	}
 }
 
@@ -37,18 +42,6 @@ switch(getPostField('action')) {
 			header('Location: /admin/dokumenty/edit/' . $dokumenty[0]);
 			return;
 		}
-		break;
-	
-	case 'edit_confirm':
-		$id = getPostField('id');
-		$newname = (getPostField('newname')) ? getPostField('newname') : '---EMPTY---';
-		
-		if(!User::checkPermissionsBool(L_ADMIN) && 
-				User::getUserID() != DBDokumenty::getDokumentUserID($id))
-			View::viewError(ER_AUTHORIZATION);
-		
-		DBDokumenty::editDokument($id, $newname);
-		notice('Příspěvek úspěšně upraven');
 		break;
 	
 	case 'upload':
@@ -95,22 +88,23 @@ switch(getPostField('action')) {
 	
 	case 'remove_confirm':
 		if(is_array(getPostField('dokumenty'))) {
-			foreach(getPostField('dokumenty') as $item) {
+			foreach(getPostField('dokumenty') as $id) {
+				$data = DBDokumenty::getSingleDokument($id);
 				if(User::checkPermissionsBool(L_ADMIN) ||
-						(User::getUserID() == DBDokumenty::getDokumentUserID($item))) {
-					unlink(DBDokumenty::getDokumentPath($item));
-					DBDokumenty::removeDokument($item);
+						(User::getUserID() == $data['d_kdo'])) {
+					unlink($data['d_path']);
+					DBDokumenty::removeDokument($id);
 				} else {
 					$error = true;
 				}
 			}
-			if($error)
+			if(isset($error) && $error)
 				View::viewError(ER_AUTHORIZATION);
+			
 			notice('Dokumenty odebrány');
+			include('files/Admin/Dokumenty/Display.inc');
+			return;
 		}
 		break;
 }
-
-include('files/Admin/Dokumenty/Display.inc');
-return;
 ?>
