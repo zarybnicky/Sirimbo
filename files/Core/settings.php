@@ -20,6 +20,7 @@ function shutdown() {
 }
 register_shutdown_function('shutdown');
 
+define("CORE", "files/Core");
 define("HEADER", "files/Static/Header.inc");
 define("FOOTER", "files/Static/Footer.inc");
 define("LOG", "log/error.log");
@@ -35,6 +36,13 @@ if(DEBUG) {
 	error_reporting(-1);
 }
 
+//-----Databazove pripojeni-----//
+define("DB_SERVER", "localhost");
+define("DB_USER", "root");
+define("DB_PASS", "konik1");
+define("DB_DATABASE", "olymp");
+
+//-----Ciselne hodnoty urovni uzivatelu-----//
 define("L_UNCONFIRMED", "-1");
 define("L_HOST", "0");
 define("L_USER", "1");
@@ -43,6 +51,7 @@ define("L_TRENER", "6");
 define("L_ADMIN", "50");
 define("L_SADMIN", "99");
 
+//-----Hodnoceni paru-----//
 define("AMEND_H", "0.5");
 define("AMEND_D", "1.0");
 define("AMEND_C", "1.4");
@@ -57,11 +66,7 @@ define("BONUS_B", "1140");
 define("BONUS_A", "1860");
 define("BONUS_M", "2740");
 
-define("DB_SERVER", "localhost");
-define("DB_USER", "root");
-define("DB_PASS", "konik1");
-define("DB_DATABASE", "olymp");
-
+//-----Aliasy chyb-----//
 define("ER_AUTHORIZATION", "authorization");
 define("ER_CORRUPT_DATA", "corrupt_data");
 define("ER_BAN", "ban");
@@ -74,11 +79,10 @@ define("ER_NOT_FOUND_RIGHT", "not_found_right");
 define("ER_NOT_POSSIBLE", "not_possible");
 define("ER_SCRIPT_FATAL", "script_fatal");
 
+//-----Barvy pro nastenku-----//
 define("C_ZLUTA", "1");
 define("C_MODRA", "2");
 define("C_CERVENA", "4");
-
-define("CORE", "files/Core");
 
 $sitemap_static = array(
 	"home"				=> "files/Main/Home/Main.inc",
@@ -104,7 +108,7 @@ $sitemap_dynamic = array(
 	"member/nastenka"			=> "files/Member/Nastenka.inc",
 	"member/rozpis"				=> "files/Member/Rozpis.inc",
 	"member/nabidka"			=> "files/Member/Nabidka.inc",
-	"member/tas"				=> "files/Member/TaS.inc",
+	"member/akce"				=> "files/Member/Akce.inc",
 	"member/dokumenty"			=> "files/Member/Dokumenty.inc",
 	"member/zebricek"			=> "files/Member/Zebricek.inc",
 	"member/profil"				=> "files/Member/Profil.inc",
@@ -131,11 +135,11 @@ $sitemap_dynamic = array(
 	"admin/rozpis/add"			=> "files/Admin/Rozpis.inc",
 	"admin/rozpis/edit"			=> "files/Admin/Rozpis.inc",
 	"admin/rozpis/detail"		=> "files/Admin/RozpisDetail.inc",
-	"admin/tas"					=> "files/Admin/TaS.inc",
-	"admin/tas/add"				=> "files/Admin/TaS.inc",
-	"admin/tas/edit"			=> "files/Admin/TaS.inc",
-	"admin/tas/detail"			=> "files/Admin/TaSDetail.inc",
-	"admin/tas/dokumenty"		=> "files/Admin/TaSDokumenty.inc",
+	"admin/akce"				=> "files/Admin/Akce.inc",
+	"admin/akce/add"			=> "files/Admin/Akce.inc",
+	"admin/akce/edit"			=> "files/Admin/Akce.inc",
+	"admin/akce/detail"			=> "files/Admin/AkceDetail.inc",
+	"admin/akce/dokumenty"		=> "files/Admin/AkceDokumenty.inc",
 	"admin/users"				=> "files/Admin/Users.inc",
 	"admin/users/add"			=> "files/Admin/Users.inc",
 	"admin/users/edit"			=> "files/Admin/Users.inc",
@@ -161,13 +165,14 @@ public static $document_types = array(
 	"1"		=> "Schůze, rady",
 	"2"		=> "Soutěže",
 	"3"		=> "Tábory",
-	"0"		=> "Ostatní");
+	"0"		=> "Ostatní"
+);
 
 public static $sekce = array(
 	"admin"			=> array(
 			"nastenka"	=> "Správa nástěnky",
 			"users"		=> "Správa uživatelů",
-			"tas"		=> "Správa TaS",
+			"akce"		=> "Správa akcí",
 			"rozpis"	=> "Správa rozpisů",
 			"nabidka"	=> "Správa nabídky",
 			"dokumenty"	=> "Správa dokumentů",
@@ -180,13 +185,14 @@ public static $sekce = array(
 			"nastenka"	=> "Nástěnka",
 			"rozpis"	=> "Rozpis tréninků",
 			"nabidka"	=> "Nabídka tréninků",
-			"tas"		=> "Tábory a soustředění",
+			"akce"		=> "Klubové akce",
 			"dokumenty"	=> "Dokumenty",
-			"zebricek"	=> "Žebříček"
+			"zebricek"	=> "Žebříček",
+			"profil"	=> "Profil"
 		),
 	"forum"			=> array(
 		),
-	"foto"		=> array(
+	"foto"			=> array(
 		),
 	"home"			=> array(
 			"zajemci"	=> "Noví zájemci",

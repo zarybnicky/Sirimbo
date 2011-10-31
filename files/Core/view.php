@@ -61,5 +61,32 @@ class View {
 			Log::write("Error: $er_id");
 		exit;
 	}
+	
+	public static function redirectWithMessage($link, $message, $replaceMessage = false) {
+		header('Location: ' . $link);
+		if(isset($_SESSION['REDIRECT_MESSAGE']) && $replaceMessage == false)
+			$_SESSION['REDIRECT_MESSAGE'] .= '<br />' . $message;
+		else
+			$_SESSION['REDIRECT_MESSAGE'] = $message;
+		exit;
+	}
+	
+	public static function setRedirectMessage($message, $replace = false) {
+		if(isset($_SESSION['REDIRECT_MESSAGE']) && $replace == false) {
+			$message = $_SESSION['REDIRECT_MESSAGE'];
+		} else {
+			$message = '';
+		}
+	}
+	
+	public static function getRedirectMessage() {
+		if(isset($_SESSION['REDIRECT_MESSAGE'])) {
+			$message = $_SESSION['REDIRECT_MESSAGE'];
+		} else {
+			$message = '';
+		}
+		unset($_SESSION['REDIRECT_MESSAGE']);
+		return $message;
+	}
 }
 ?>
