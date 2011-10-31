@@ -1,32 +1,33 @@
 <?php
 User::checkPermissionsError(L_TRENER);
+header_main("Správa nabídek");
+
+notice(View::getRedirectMessage());
 
 $request = explode('/', $_SERVER['REQUEST_URI']);
 $action = array_slice($request, 3);
-$id = $action[1];
+$id = isset($action[1]) ? $action[1] : '';
 
-if(!is_numeric($id) || ($id < 0 || $id > 2147483647))
-	View::viewError(ER_CORRUPT_DATA);
-if(!($nab = DBNabidka::getSingleNabidka($id)))
-	View::viewError(ER_CORRUPT_DATA);
+if(!id || !is_numeric($id) || !($nab = DBNabidka::getSingleNabidka($id)))
+	View::redirectWithMessage('/admin/nabidka', 'Nabídka s takovým ID neexistuje');
 
 $items = DBNabidka::getNabidkaItem($id);
 $obsazeno = DBNabidka::getNabidkaItemLessons($id);
 $users = DBPary::getPartners();
-
-header_main("Správa nabídek");
 
 if(empty($_POST)) {
 	include("files/Admin/NabidkaDetail/Display.inc");
 	return;
 }
 
+//-----Odebrání položky-----//
 if(getPostField("remove") > 0) {
 	DBNabidka::removeNabidkaItem($id, getPostField(getPostField("remove") . "-partner"));
 	$items = DBNabidka::getNabidkaItem($id);
 	$obsazeno = DBNabidka::getNabidkaItemLessons($id);
 }
 
+//-----Jednotlivé položky nabídky-----//
 foreach($items as $item) {
 	if(getPostField($item["ni_id"] . "-partner") != $item["ni_partner"] ||
 			getPostField($item["ni_id"] . "-hodiny") != $item["ni_pocet_hod"]) {
@@ -41,6 +42,7 @@ foreach($items as $item) {
 $items = DBNabidka::getNabidkaItem($id);
 $obsazeno = DBNabidka::getNabidkaItemLessons($id);
 
+//-----Přidávání položek-----//
 if(is_numeric(getPostField("add_hodiny")) && is_numeric(getPostField("add_partner"))) {
 	$hodiny = getPostField("add_hodiny");
 	$partner = getPostField("add_partner");
@@ -58,8 +60,8 @@ if(is_numeric(getPostField("add_hodiny")) && is_numeric(getPostField("add_partne
 	}
 }
 //TODO: Spojit R,N-detail a R,N-edit
-//FIXME: redirects with messages ($_SESSION['notice']) - echo in View::viewDynamic()???
 
+//-----Dorovnávání skutečného a nastaveného počtu hodin-----//
 if(getPostField("pocet_hod") > $nab["n_pocet_hod"]) {
 	if(getPostField("pocet_hod") < $obsazeno) {
 		$_POST["pocet_hod"] = $obsazeno;

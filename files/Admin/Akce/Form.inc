@@ -9,16 +9,14 @@ $action = array_slice($request, 3);
 if(empty($action)) $action[] = '';
 
 if($action[0] == 'edit')
-	$header = "Upravit tábor/soustředění";
+	$header = "Upravit akci";
 elseif($action[0] == 'add')
-	$header = "Přidat tábor/soustředění";
+	$header = "Přidat akci";
 else
 	$header = "Neznámá akce";
 header_minor($header);
 ?>
-<form action="<?php
-if($action[0] == 'edit') echo '/admin/tas';
-else echo '/admin/tas/add'; ?>" method="POST">
+<form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="POST">
 <table>
 	<tr>
 		<td>Jméno akce (*): </td>
@@ -87,4 +85,4 @@ else echo '/admin/tas/add'; ?>" method="POST">
 </table>
 </form>
 
-<a href="/admin/tas">Zpět</a>
+<a href="/admin/akce">Zpět</a>

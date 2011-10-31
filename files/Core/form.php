@@ -3,7 +3,8 @@ function formError() {
 	echo '<span style="color:red;"> !!!</span>', "\n";
 }
 function notice($msg) {
-	echo '<div class="notice">', $msg, '</div>', "\n";
+	if($msg)
+		echo '<div class="notice">', $msg, '</div>', "\n";
 }
 function header_main($msg) {
 	echo '<div class="h_section">', $msg, '</div>', "\n";
