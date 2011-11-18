@@ -16,7 +16,6 @@
 		else echo "<div id=\"userbox\" class=\"bad\">";
 		
 		if(true || !User::isLogged()) {
-			//TODO: AJAX
 			if(isset($_POST["login"])) {
 				$_POST["pass"] = User::crypt($_POST["pass"]);
 			
@@ -33,7 +32,7 @@
 			</form>
 		<?php
 		} else {
-			echo User::getUserName(); //TODO: Whole username
+			echo User::getUserName();
 		}?>
 		</div>
 		<div id="logo">

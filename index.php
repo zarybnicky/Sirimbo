@@ -6,11 +6,13 @@ include("files/Core/database.php");
 include("files/Core/database/dbuser.php");
 include("files/Core/user.php");
 include("files/Core/view.php");
+include("files/Core/permissions.php");
 include("files/Core/debug.php");		//DEBUG ONLY!!!
 
 //Are all CORE vars present?
 if(!$sitemap_static || !$sitemap_dynamic || !class_exists("Database") || !class_exists("DBUser") ||
-		!class_exists("User") || !class_exists("View") || !class_exists("Log")) {
+		!class_exists("User") || !class_exists("View") || !class_exists("Log") ||
+		!class_exists("Permissions")) {
 	if(class_exists("View")) {
 		View::viewDynamic("files/Error/KeyFileCorrupt.inc");
 		die();

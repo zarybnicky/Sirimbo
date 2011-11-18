@@ -94,7 +94,7 @@ class User {
 	public static function Crypt($passwd) {
 		$fix = md5("######TK.-.OLYMP######");
 		return sha1($fix . $passwd . $fix);
-	}
+	} 
 }
 
 session_start();

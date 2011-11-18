@@ -2,15 +2,12 @@
 User::checkPermissionsError(L_HOST);
 header_main('Klubové akce');
 
-$id = array_pop(explode('/', $_SERVER['REQUEST_URI']));
+$request = explode('/', $_SERVER['REQUEST_URI']);
+$id = array_pop($request);
 if(is_numeric($id)) {
 	DisplayAkce::viewFullAkce($id);
 	return;
 }
-
-$error = false;
-global $isConfirmation;
-$isConfirmation = getPostField('action') && getPostField('id');
 
 $akce = DBAkce::getAkce();
 
@@ -18,6 +15,10 @@ if(empty($akce)) {
 	notice('Žádné akce k dispozici');
 	return;
 }
+
+$error = false;
+global $isConfirmation;
+$isConfirmation = getPostField('action') && getPostField('id');
 
 if($isConfirmation) {
 	$action = getPostField('action');
@@ -44,14 +45,14 @@ foreach($akce as $item) {
 	echo '<form action="', $_SERVER['REQUEST_URI'], '" method="post">';
 	echo '<input type="hidden" name="id" value="', $item['a_id'], '" />';
 	if(User::checkPermissionsBool(L_USER)) {
-		if(DBTas::isUserSignedUp(User::getUserID())) {
+		if(DBAkce::isUserSignedUp(User::getUserID())) {
 			echo 'Rok narození: <input type="text" name="narozeni" />';
 			echo '<button type="submit" name="action" value="signup">Přihlásit se</button>';
 		} else {
 			echo '<button type="submit" name="action" value="signout">Odhlásit se</button>';
 		}
 	}
-	echo '<a href="/member/akce/"', $item['a_id'], '">Zobrazit přihlášené</a>';
+	echo '<a href="/member/akce/', $item['a_id'], '">Zobrazit přihlášené</a>';
 	echo '</form>';
 	echo '</div>';
 }

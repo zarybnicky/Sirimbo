@@ -14,7 +14,7 @@ switch($action[0]) {
 			include('files/Admin/Rozpis/Form.inc');
 			return;
 		} else {
-			if(!User::checkPermissionsBool(L_ADMIN) && User::getUserID() != getPostField("trener"))
+			if(!Permissions::canEditRozpis(getPostField("trener")))
 				View::viewError(ER_AUTHORIZATION);
 			
 			$datum = getPostField("year") . "-" . getPostField("month") . "-" . getPostField("day");
@@ -33,7 +33,15 @@ switch($action[0]) {
 			if(!$error) {
 				DBRozpis::addRozpis(getPostField("trener"), getPostField("kde"), $datum, $visible,
 					getPostField("lock"));
-				View::redirectWithMessage('/admin/rozpis', 'Rozpis přidán');
+				
+				if($visible) {
+					$trener_data = DBUser::getUserData(getPostField("trener"));
+					$trener_name = $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni'];
+					
+					DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal rozpis ' .
+						formatDate($datum) . ' s trenérem ' . $trener_name);
+				}
+				View::redirect('/admin/rozpis', 'Rozpis přidán');
 			} else {
 				echo $html;
 				return;
@@ -45,9 +53,9 @@ switch($action[0]) {
 		$id = isset($action[1]) ? $action[1] : '';
 		
 		if(!$id || !is_numeric($id) || !($data = DBRozpis::getSingleRozpis($id)))
-			View::redirectWithMessage('/admin/rozpis', 'Rozpis s takovým ID neexistuje');
+			View::redirect('/admin/rozpis', 'Rozpis s takovým ID neexistuje');
 		
-		if(!User::checkPermissionsBool(L_ADMIN) && $data["r_trener"] != User::getUserID())
+		if(!Permissions::canEditRozpis($data["r_trener"]))
 			View::viewError(ER_AUTHORIZATION);
 		
 		if(empty($_POST)) {
@@ -82,7 +90,21 @@ switch($action[0]) {
 			if(!$error) {
 				DBRozpis::editRozpis($id, getPostField("trener"), getPostField("kde"), $datum, $visible,
 					getPostField("lock"));
-				View::redirectWithMessage('/admin/rozpis', 'Rozpis úspěšně upraven');
+					
+				$trener_data = DBUser::getUserData(getPostField("trener"));
+				$trener_name = $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni'];
+				if($visible) {
+					if(!$visible_prev)
+						DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal rozpis ' .
+							formatDate($datum) . ' s trenérem ' . $trener_name);
+					else
+						DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' upravil rozpis ' .
+							formatDate($datum) . ' s trenérem ' . $trener_name);
+				} elseif(!$visible && $visible_prev && strcmp($datum, date('Y-m-d')) > 0) {
+						DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' zrušil rozpis ' .
+							formatDate($datum) . ' s trenérem ' . $trener_name);
+				}
+				View::redirect('/admin/rozpis', 'Rozpis úspěšně upraven');
 			} else {
 				echo $html;
 				return;
@@ -115,9 +137,15 @@ switch(getPostField("action")) {
 	case "remove":
 		if(is_array(getPostField("rozpis"))) {
 			foreach(getPostField("rozpis") as $item) {
-				if(User::checkPermissionsBool(L_ADMIN) ||
-						(User::getUserID() == DBRozpis::getRozpisTrenerID($item))) {
+				$trener = DBRozpis::getRozpisTrener($item);
+				$data = DBRozpis::getSingleRozpis($item);
+				
+				if(Permissions::canEditRozpis($trener['u_id'])) {
 					DBRozpis::removeRozpis($item);
+					if(strcmp($data['r_datum'], date('Y-m-d')) > 0 && $data['n_visible'])
+						DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' zrušil rozpis ' .
+							formatDate($data['r_datum']) . ' s trenérem ' .
+							$trener['u_jmeno'] . ' ' . $trener['u_prijmeni']);
 				} else {
 					$error = true;
 				}

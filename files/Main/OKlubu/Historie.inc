@@ -1,1 +1,0 @@
-Historie - nejspíš bude v sekci "O nás"

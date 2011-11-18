@@ -7,32 +7,34 @@ class DBPary extends Database {
 	
 	public static function getActivePary() {
 		$res = DBPary::query(
-		"SELECT p_id,
-			m.u_id AS guy,m.u_id AS guy_id,m.u_jmeno AS guy_name,m.u_prijmeni AS guy_surname,
-			f.u_id AS gal,f.u_id AS gal_id,f.u_jmeno AS gal_name,f.u_prijmeni AS gal_surname,
-			p_stt_trida,p_stt_body,p_stt_finale,
-			p_lat_trida,p_lat_body,p_lat_finale,p_hodnoceni
-		FROM pary AS p
-			LEFT JOIN users AS m ON p.p_id_partner=m.u_id
-			LEFT JOIN users AS f ON p.p_id_partnerka=f.u_id
-		WHERE p.p_archiv='0'
-		ORDER BY p.p_aktu_vytvoreno ASC");
+			"SELECT p_id,
+				m.u_id AS guy,m.u_id AS guy_id,m.u_jmeno AS guy_name,m.u_prijmeni AS guy_surname,
+				f.u_id AS gal,f.u_id AS gal_id,f.u_jmeno AS gal_name,f.u_prijmeni AS gal_surname,
+				p_stt_trida,p_stt_body,p_stt_finale,
+				p_lat_trida,p_lat_body,p_lat_finale,p_hodnoceni
+			FROM pary AS p
+				LEFT JOIN users AS m ON p.p_id_partner=m.u_id
+				LEFT JOIN users AS f ON p.p_id_partnerka=f.u_id
+			WHERE p.p_archiv='0'
+			ORDER BY p.p_aktu_vytvoreno ASC"
+		);
 		
 		return DBPary::getArray($res);
 	}
 	
 	public static function getActiveParyByHodnoceni() {
 		$res = DBPary::query(
-		"SELECT p_id,
-			m.u_id AS guy,m.u_id AS guy_id,m.u_jmeno AS guy_name,m.u_prijmeni AS guy_surname,
-			f.u_id AS gal,f.u_id AS gal_id,f.u_jmeno AS gal_name,f.u_prijmeni AS gal_surname,
-			p_stt_trida,p_stt_body,p_stt_finale,
-			p_lat_trida,p_lat_body,p_lat_finale,p_hodnoceni
-		FROM pary AS p
-			LEFT JOIN users AS m ON p.p_id_partner=m.u_id
-			LEFT JOIN users AS f ON p.p_id_partnerka=f.u_id
-		WHERE p.p_archiv='0'
-		ORDER BY p.p_hodnoceni DESC");
+			"SELECT p_id,
+				m.u_id AS guy,m.u_id AS guy_id,m.u_jmeno AS guy_name,m.u_prijmeni AS guy_surname,
+				f.u_id AS gal,f.u_id AS gal_id,f.u_jmeno AS gal_name,f.u_prijmeni AS gal_surname,
+				p_stt_trida,p_stt_body,p_stt_finale,
+				p_lat_trida,p_lat_body,p_lat_finale,p_hodnoceni
+			FROM pary AS p
+				LEFT JOIN users AS m ON p.p_id_partner=m.u_id
+				LEFT JOIN users AS f ON p.p_id_partnerka=f.u_id
+			WHERE p.p_archiv='0'
+			ORDER BY p.p_hodnoceni DESC"
+		);
 		return DBPary::getArray($res);
 	}
 	
@@ -40,19 +42,19 @@ class DBPary extends Database {
 		list($id) = DBPary::escapeArray(array($id));
 		
 		$res = DBPary::query(
-		"SELECT p_id,
-			m.u_id AS guy_id,m.u_jmeno AS guy_name,m.u_prijmeni AS guy_surname,
-			f.u_id AS gal_id,f.u_jmeno AS gal_name,f.u_prijmeni AS gal_surname,
-			p_stt_trida,p_stt_body,p_stt_finale,
-			p_lat_trida,p_lat_body,p_lat_finale,p_hodnoceni
-		FROM pary AS p
-			LEFT JOIN users AS m ON p.p_id_partner=m.u_id
-			LEFT JOIN users AS f ON p.p_id_partnerka=f.u_id
-		WHERE p.p_id='$id'");
+			"SELECT p_id,
+				m.u_id AS guy_id,m.u_jmeno AS guy_name,m.u_prijmeni AS guy_surname,
+				f.u_id AS gal_id,f.u_jmeno AS gal_name,f.u_prijmeni AS gal_surname,
+				p_stt_trida,p_stt_body,p_stt_finale,
+				p_lat_trida,p_lat_body,p_lat_finale,p_hodnoceni
+			FROM pary AS p
+				LEFT JOIN users AS m ON p.p_id_partner=m.u_id
+				LEFT JOIN users AS f ON p.p_id_partnerka=f.u_id
+			WHERE p.p_id='$id'"
+		);
 		
-		$array = DBPary::getArray($res);
-		if($array)
-			return $array[0];
+		if($res)
+			return DBPary::getSingleRow($res);
 		else
 			return false;
 	}
@@ -75,20 +77,38 @@ class DBPary extends Database {
 			return false;
 	}
 	
-	public static function getVysledky($p_id) {
-		list($p_id) = DBPary::escapeArray(array($p_id));
+	public static function getVysledky($id) {
+		list($id) = DBPary::escapeArray(array($id));
 		
-		$res = DBPary::query("
-			SELECT p_id,p_id_partner,p_id_partnerka,p_stt_trida,p_stt_body,p_stt_finale,
+		$res = DBPary::query(
+			"SELECT p_id,p_id_partner,p_id_partnerka,p_stt_trida,p_stt_body,p_stt_finale,
 				p_lat_trida,p_lat_body,p_lat_finale,p_hodnoceni
 			FROM pary
-			WHERE p_id='$p_id' AND p_archiv='0'");
+			WHERE p_id='$id' AND p_archiv='0'"
+		);
 		
-		$array = DBPary::getArray($res);
-		if($array)
-			return $array[0];
+		if($res)
+			return DBPary::getSingleRow($res);
 		else
 			return false;
+	}
+	
+	public static function getPreviousPartners($id) {
+		list($id) = DBPary::escapeArray(array($id));
+		
+		$res = DBPary::query(
+			"SELECT p_id,
+				m.u_id AS guy_id,m.u_jmeno AS guy_name,m.u_prijmeni AS guy_surname,
+				f.u_id AS gal_id,f.u_jmeno AS gal_name,f.u_prijmeni AS gal_surname,
+				p_stt_trida,p_stt_body,p_stt_finale,
+				p_lat_trida,p_lat_body,p_lat_finale,p_hodnoceni
+			FROM pary AS p
+				LEFT JOIN users AS m ON p.p_id_partner=m.u_id
+				LEFT JOIN users AS f ON p.p_id_partnerka=f.u_id
+			WHERE (p.p_id_partner='$id' OR p.p_id_partnerka='$id') AND p.p_archiv='1'"
+		);
+		
+		return DBPary::getArray($res);
 	}
 	
 	public static function getPartners() {
@@ -105,11 +125,12 @@ class DBPary extends Database {
 	public static function newPartner($partner, $partnerka) {
 		list($partner, $partnerka) = DBPary::escapeArray(array($partner, $partnerka));
 		
-		DBPary::query("
-		UPDATE pary
-		SET p_archiv='1',p_aktu_archivovano=NOW()
-		WHERE (p_id_partner='$partner' OR p_id_partner='$partnerka' OR p_id_partnerka='$partnerka')
-			AND p_archiv='0'");
+		DBPary::query(
+			"UPDATE pary
+			SET p_archiv='1',p_aktu_archivovano=NOW()
+			WHERE (p_id_partner='$partner' OR p_id_partner='$partnerka' OR p_id_partnerka='$partnerka')
+				AND p_archiv='0'"
+		);
 		DBPary::query("INSERT INTO pary (p_id_partner, p_id_partnerka) VALUES ('$partner','$partnerka')");
 	}
 	
@@ -117,15 +138,16 @@ class DBPary extends Database {
 		list($partner) = DBPary::escapeArray(array($partner));
 		
 		DBPary::query(
-		"DELETE n,r FROM nabidka_item AS n,rozpis_item AS r
-		WHERE
-			n.ni_partner=
-				(SELECT p_id FROM pary
-				WHERE (p_id_partner='$partner' OR p_id_partnerka='$partner') AND p_archiv='0')
-			OR
-			r.ri_partner=
-				(SELECT p_id FROM pary
-				WHERE (p_id_partner='$partner' OR p_id_partnerka='$partner') AND p_archiv='0')");
+			"DELETE n,r FROM nabidka_item AS n,rozpis_item AS r
+			WHERE
+				n.ni_partner=
+					(SELECT p_id FROM pary
+					WHERE (p_id_partner='$partner' OR p_id_partnerka='$partner') AND p_archiv='0')
+				OR
+				r.ri_partner=
+					(SELECT p_id FROM pary
+					WHERE (p_id_partner='$partner' OR p_id_partnerka='$partner') AND p_archiv='0')"
+		);
 		DBPary::query("UPDATE pary SET p_archiv='1',p_aktu_archivovano=NOW()" .
 			" WHERE (p_id_partner='$partner' OR p_id_partnerka='$partner') AND p_archiv='0'");
 		
@@ -193,10 +215,12 @@ class DBPary extends Database {
 			$lat_finale, $hodnoceni) = DBPary::escapeArray(array($p_id, $stt_trida,
 			$stt_body, $stt_finale, $lat_trida, $lat_body, $lat_finale, $hodnoceni));
 		
-		DBPary::query("UPDATE pary
-		SET p_stt_trida='$stt_trida', p_stt_body='$stt_body', p_stt_finale='$stt_finale',
-			p_lat_trida='$lat_trida', p_lat_body='$lat_body', p_lat_finale='$lat_finale',
-			p_hodnoceni='$hodnoceni'
-		WHERE p_id='$p_id'");
+		DBPary::query(
+			"UPDATE pary
+			SET p_stt_trida='$stt_trida', p_stt_body='$stt_body', p_stt_finale='$stt_finale',
+				p_lat_trida='$lat_trida', p_lat_body='$lat_body', p_lat_finale='$lat_finale',
+				p_hodnoceni='$hodnoceni'
+			WHERE p_id='$p_id'"
+		);
 	}
 }

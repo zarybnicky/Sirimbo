@@ -15,6 +15,8 @@ Pár: <?php echo $data['guy_name'], ' ', $data['guy_surname'], ' - ',
 <tr>
 	<td>Třída:</td>
 	<td><select name="stt-trida">
+			<option value="Z" <?php if(getPostField("stt-trida") == "Z")
+				echo "selected=\"selected\"";?>>Z</option>
 			<option value="H" <?php if(getPostField("stt-trida") == "H")
 				echo "selected=\"selected\"";?>>H</option>
 			<option value="D" <?php if(getPostField("stt-trida") == "D")
@@ -40,6 +42,8 @@ Pár: <?php echo $data['guy_name'], ' ', $data['guy_surname'], ' - ',
 <tr>
 	<td>Třída:</td>
 	<td><select name="lat-trida">
+			<option value="Z" <?php if(getPostField("lat-trida") == "Z")
+				echo "selected=\"selected\"";?>>Z</option>
 			<option value="H" <?php if(getPostField("lat-trida") == "H")
 				echo "selected=\"selected\"";?>>H</option>
 			<option value="D" <?php if(getPostField("lat-trida") == "D")

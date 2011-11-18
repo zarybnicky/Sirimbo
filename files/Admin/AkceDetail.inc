@@ -9,7 +9,7 @@ $action = array_slice($request, 3);
 $a_id = $action[1];
 
 if(!a_id || !is_numeric($a_id) || !($akce = DBAkce::getSingleAkce($a_id)))
-	View::redirectWithMessage('/admin/akce', 'Akce s takovým ID neexistuje');
+	View::redirect('/admin/akce', 'Akce s takovým ID neexistuje');
 
 $items = DBAkce::getAkceItems($a_id);
 $users = DBUser::getActiveUsers();

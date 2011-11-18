@@ -103,6 +103,18 @@
 				?>
 					</ul>
 				</div>
+				<?php
+				ob_start();
+				$result = DisplayAnkety::viewAnkety(true, true, getIP());
+				$ankety = ob_get_clean();
+				
+				if($result) {
+					echo '<div class="dark-out"><div class="dark-in"><span class="logo"></span>',
+						'Ankety</div></div><div class="light-out"><div class="light-in">';
+					echo $ankety;
+					echo '</div></div>';
+				}
+				?>
 				<div class="dark-out"><div class="dark-in"><span class="logo"></span>Kontakt</div></div>
 				<div class="light-out"><div class="light-in">
 					<b>TK OLYMP OLOMOUC</b><br />
