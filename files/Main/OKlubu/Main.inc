@@ -1,1 +1,1 @@
-Zde bude domovská stránka sekce "O nás"
+Ješte se na tom pracuje

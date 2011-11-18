@@ -10,9 +10,9 @@ if($action[0] == 'edit') {
 	$id = isset($action[1]) ? $action[1] : '';
 	
 	if(!$id || !is_numeric($id) || !($data = DBDokumenty::getSingleDokument($id)))
-		View::redirectWithMessage('/admin/dokumenty', 'Dokument s takovým ID neexistuje');
+		View::redirect('/admin/dokumenty', 'Dokument s takovým ID neexistuje');
 	
-	if(!User::checkPermissionsBool(L_ADMIN) && User::getUserID() != $data['d_kdo'])
+	if(!Permissions::canEditDokument($data['d_kdo']))
 		View::viewError(ER_AUTHORIZATION);
 	
 	if(empty($_POST)) {
@@ -26,7 +26,7 @@ if($action[0] == 'edit') {
 		$newname = (getPostField('newname')) ? getPostField('newname') : '---EMPTY---';
 		
 		DBDokumenty::editDokument($id, $newname);
-		View::redirectWithMessage('/admin/dokumenty', 'Příspěvek úspěšně upraven');
+		View::redirect('/admin/dokumenty', 'Příspěvek úspěšně upraven');
 	}
 }
 
@@ -62,9 +62,14 @@ switch(getPostField('action')) {
 				DBDokumenty::addDokument($path, getPostField('name'), $fileName,
 					getPostField('kategorie'), User::getUserID());
 				notice('Zmákli jsme to :o)');
+				
+				DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal dokument "' .
+					getPostField('name') . '"');
 			} else {
 				notice('Bohužel, zkus to znova :o(');
 			}
+			include('files/Admin/Dokumenty/Display.inc');
+			return;
 		}
 		break;
 

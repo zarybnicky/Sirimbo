@@ -15,16 +15,16 @@
 $akce = DBAkce::getAkce();
 
 foreach($akce as $item) {
-	echo "<tr>";
+	echo '<tr>';
 	
-	echo "<td><input type=\"checkbox\" name=\"akce[]\" value=\"", $item["a_id"], "\" /></td>";
-	echo "<td>", $item["a_jmeno"], "</td>";
-	echo "<td>", $item["a_kde"], "</td>";
-	echo "<td>", formatDate($item["a_od"]);
-	if($item["a_od"] != $item["a_do"])
-		echo " - ", formatDate($item["a_do"]);
-	echo "</td>";
-	echo "</tr>";
+	echo '<td><input type="checkbox" name="akce[]" value="', $item['a_id'], '" /></td>';
+	echo '<td>', $item['a_jmeno'], '</td>';
+	echo '<td>', $item['a_kde'], '</td>';
+	echo '<td>', formatDate($item['a_od']);
+	if($item['a_od'] != $item['a_do'])
+		echo ' - ', formatDate($item['a_do']);
+	echo '</td>';
+	echo '</tr>';
 }
 ?>
 </table>

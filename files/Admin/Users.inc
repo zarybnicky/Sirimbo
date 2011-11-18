@@ -41,7 +41,7 @@ switch($action[0]) {
 					getPostField('pohlavi'), getPostField('email'), getPostField('telefon'),
 					getPostField('poznamky'), $level, getPostField('lock') ? 1 : 0,
 					getPostField('ban') ? 1 : 0, '1');
-				View::redirectWithMessage('/admin/users', 'Uživatel úspěšně přidán');
+				View::redirect('/admin/users', 'Uživatel úspěšně přidán');
 			} else {
 				echo $html;
 				return;
@@ -53,14 +53,13 @@ switch($action[0]) {
 		$id = isset($action[1]) ? $action[1] : '';
 		
 		if(!$id || !is_numeric($id) || !($data = DBUser::getUserData($id)))
-			View::redirectWithMessage('/admin/users', 'Uživatel s takovým ID neexistuje');
+			View::redirect('/admin/users', 'Uživatel s takovým ID neexistuje');
 		
-		if(!User::checkPermissionsBool(L_SADMIN) &&
-			($data['u_lock'] || (User::getUserID() != $id && $data['u_level'] >= User::getUserLevel())))
+		if(!Permissions::canEditUser($id, $data['u_level'], $data['u_lock']))
 			View::viewError(ER_AUTHORIZATION);
 	
 		if(!$data['u_confirmed']) {
-			View::redirectWithMessage('/admin/users',
+			View::redirect('/admin/users',
 				'Uživatel "' . $data['login'] . '" ještě není potvrzený');
 		}
 			
@@ -111,7 +110,7 @@ switch($action[0]) {
 					getPostField('pohlavi'), getPostField('email'), getPostField('telefon'),
 					getPostField('poznamky'), $level, getPostField('lock') ? 1 : 0,
 					getPostField('ban') ? 1 : 0);
-				View::redirectWithMessage('/admin/users', 'Uživatel úspěšně upraven');
+				View::redirect('/admin/users', 'Uživatel úspěšně upraven');
 			} else {
 				echo $html;
 				return;
@@ -193,8 +192,9 @@ switch(getPostField('action')) {
 	case 'remove_confirm':
 		if(is_array(getPostField('users'))) {
 			foreach(getPostField('users') as $id) {
-				if(User::checkPermissionsBool(L_SADMIN) || (User::getUserID() != $id &&
-						DBUser::getUserlevel($id) < User::getUserLevel() && !DBUser::isUserLocked($id)))
+				$data = DBUser::getUserData($id);
+				
+				if(Permissions::canEditUser($id, $data['u_level'], $data['u_lock']))
 					DBUser::removeUser($id);
 				else
 					$error = true;

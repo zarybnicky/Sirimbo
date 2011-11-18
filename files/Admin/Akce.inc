@@ -27,9 +27,13 @@ switch($action[0]) {
 			$html = ob_get_clean();
 			
 			if(!$error) {
-				DBAkce::addAkce(getPostField('jmeno'), getPostField('kde'), getPostField('info'), $od, $do,
-					getPostField('kapacita'), getPostField('dokumenty'), (getPostField('lock') == 'lock') ? 1 : 0);
-				View::redirectWithMessage('/admin/akce', 'Akce přidána');
+				DBAkce::addAkce(getPostField('jmeno'), getPostField('kde'), getPostField('info'),
+					$od, $do, getPostField('kapacita'), getPostField('dokumenty'),
+					(getPostField('lock') == 'lock') ? 1 : 0);
+				DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal klubovou akci "' .
+					getPostField('jmeno') . '"');
+				
+				View::redirect('/admin/akce', 'Akce přidána');
 			} else {
 				echo $html;
 				return;
@@ -41,7 +45,7 @@ switch($action[0]) {
 		$id = isset($action[1]) ? $action[1] : '';
 		
 		if(!$id || !is_numeric($id) || !($data = DBAkce::getSingleAkce($id)))
-			View::redirectWithMessage('/admin/akce', 'Akce s takovým ID neexistuje');
+			View::redirect('/admin/akce', 'Akce s takovým ID neexistuje');
 		
 		if(empty($_POST)) {
 			$_POST['id'] = $id;
@@ -77,7 +81,9 @@ switch($action[0]) {
 				DBAkce::editAkce($id, getPostField('jmeno'), getPostField('kde'), getPostField('info'),
 					$od, $do, getPostField('kapacita'), getPostField('dokumenty'),
 					(getPostField('lock') == 'lock') ? 1 : 0);
-				View::redirectWithMessage('/admin/akce', 'Akce upravena');
+				DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' změnil detaily akce "' .
+					getPostField('jmeno') . '"');
+				View::redirect('/admin/akce', 'Akce upravena');
 			} else {
 				echo $html;
 				return;
@@ -99,22 +105,27 @@ switch(getPostField('action')) {
 			echo 'Opravdu chcete odstranit tábor/soustředění:<br/><br/>';
 			foreach(getPostField('akce') as $item) {
 				echo DBAkce::getAkceName($item) . '<br />';
-				echo '<input type="hidden" name="akce[]" value="$item" />';
+				echo '<input type="hidden" name="akce[]" value="', $item, '" />';
 			}
 			echo '<br/>';
 			echo '<button type="submit" name="action" value="remove_confirm">',
 				'Odstranit</button>';
 			echo '</form>';
-			echo '<a href="/admin/tas">Zpět</a>';
+			echo '<a href="/admin/akce">Zpět</a>';
 			return;
 		}
 		break;
 	
 	case "remove_confirm":
 		if(is_array(getPostField("akce"))) {
-			foreach(getPostField("akce") as $item) {
+			foreach(getPostField("akce") as $id) {
 				if(User::checkPermissionsBool(L_ADMIN)) {
-					DBAkce::removeAkce($item);
+					$data = DBAkce::getSingleAkce($id);
+					DBAkce::removeAkce($id);
+					
+					if(strcmp($data['a_od'], date('Y-m-d')) > 0)
+						DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() .
+							' zrušil klubovou akci "' . $data['a_jmeno'] . '"');
 				} else {
 					$error = true;
 				}
@@ -153,4 +164,4 @@ switch(getPostField('action')) {
 
 include("files/Admin/Akce/Display.inc");
 return;
-?>
+?>f

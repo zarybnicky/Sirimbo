@@ -62,8 +62,12 @@ class View {
 		exit;
 	}
 	
-	public static function redirectWithMessage($link, $message, $replaceMessage = false) {
+	public static function redirect($link, $message = '', $replaceMessage = false) {
 		header('Location: ' . $link);
+		
+		if(!$message)
+			exit;
+		
 		if(isset($_SESSION['REDIRECT_MESSAGE']) && $replaceMessage == false)
 			$_SESSION['REDIRECT_MESSAGE'] .= '<br />' . $message;
 		else

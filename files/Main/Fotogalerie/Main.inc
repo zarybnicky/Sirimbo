@@ -1,1 +1,1 @@
-Zde bude fotogalerie
+Ješte se na tom pracuje

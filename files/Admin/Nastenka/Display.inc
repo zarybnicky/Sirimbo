@@ -16,20 +16,19 @@ $upozorneni= DBNastenka::getNastenka();
 foreach($upozorneni as $item) {
 	echo "<tr>";
 	
-	if(User::checkPermissionsBool(L_ADMIN) || ($item["u_login"] == User::getUserName() &&
-			!$item["up_lock"]))
-		echo "<td><input type=\"checkbox\" name=\"nastenka[]\" value=\"" . $item["up_id"] .
-			"\" /></td>";
+	if(Permissions::canEditNastenka($item['up_kdo'], $item['up_lock']))
+		echo '<td><input type="checkbox" name="nastenka[]" value="' . $item['up_id'] .
+			'" /></td>';
 	else
-		echo "<td><input type=\"checkbox\" name=\"nastenka[]\" value=\"" .
-			"\" disabled=\"d\" /></td>";
-	echo "<td>";
+		echo '<td><input type="checkbox" name="nastenka[]" value="' .
+			'" disabled="d" /></td>';
+	echo '<td>';
 	echoFullJmeno($item);
-	echo "</td>";
-	echo "<td>", formatTimestamp($item["up_aktu"]), "</td>";
-	echo "<td>", echoBarvaDisplay($item["up_barvy"]), "</td>";
-	echo "<td>", $item["up_nadpis"], "</td>";
-	echo "</tr>";
+	echo '</td>';
+	echo '<td>', formatTimestamp($item['up_aktu']), '</td>';
+	echo '<td>', echoBarvaDisplay($item['up_barvy']), '</td>';
+	echo '<td>', $item['up_nadpis'], '</td>';
+	echo '</tr>';
 }
 ?>
 </table>
