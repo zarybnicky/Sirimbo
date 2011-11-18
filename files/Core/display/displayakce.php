@@ -2,8 +2,12 @@
 class DisplayAkce {
 	public static function viewAkceHeader($data) {
 		echo '<div class="a_info" style="border:1px solid black;">';
-		echo '<div class="a_jmeno">Název: ', $data['a_jmeno'], '</div>';
-		echo '<div class="a_datum">Datum: ', formatDate($data['a_od']);
+		echo '<div class="a_jmeno">', $data['a_jmeno'], '</div>';
+		
+		if(Permissions::canEditAkce())
+			echo '<div class="a_edit"><a href="/admin/akce/edit/', $data['a_id'], '">Editovat</a></div>';	
+	
+		echo '<div class="a_datum">', formatDate($data['a_od']);
 		if($data['a_od'] != $data['a_do'])
 			echo ' - ', formatDate($data['a_do']);
 		echo '</div>';
@@ -28,7 +32,7 @@ class DisplayAkce {
 			notice('Neexistuje žádná taková akce');
 			return;
 		}
-		$akce_items = DBTas::getAkceItems($id);
+		$akce_items = DBAkce::getAkceItems($id);
 		
 		echo '<div class="a_wrapper">';
 		

@@ -13,7 +13,7 @@ switch($action[0]) {
 		$id = isset($action[1]) ? $action[1] : '';
 		
 		if(!$id || !is_numeric($id) || !($data = DBPary::getSinglePar($id)))
-			View::redirectWithMessage('/admin/pary', 'Pár s takovým ID neexistuje');
+			View::redirect('/admin/pary', 'Pár s takovým ID neexistuje');
 
 		if(empty($_POST)) {
 			$_POST['stt-trida'] = $data['p_stt_trida'];
@@ -48,7 +48,7 @@ switch($action[0]) {
 			DBPary::editTridaBody($data['p_id'], getPostField('stt-trida'), $stt_body,
 				$stt_finale, getPostField('lat-trida'), $lat_body, $lat_finale, $hodnoceni);
 			
-			View::redirectWithMessage('/admin/pary', 'Třída a body změněny');
+			View::redirect('/admin/pary', 'Třída a body změněny');
 		}
 		break;
 }

@@ -1,5 +1,4 @@
 <?php
-
 $real_name = realpath(basename($_SERVER['SCRIPT_NAME']));
 $_SERVER['DOCUMENT_ROOT'] = substr($real_name, 0, strpos($real_name, $_SERVER['SCRIPT_NAME']));
 unset($real_name);
@@ -37,10 +36,18 @@ if(DEBUG) {
 }
 
 //-----Databazove pripojeni-----//
+/*TESTING*/
 define("DB_SERVER", "localhost");
 define("DB_USER", "root");
 define("DB_PASS", "konik1");
 define("DB_DATABASE", "olymp");
+/**/
+/*PRODUCTION
+define("DB_SERVER", "mysql.webzdarma.cz");
+define("DB_USER", "zarzar");
+define("DB_PASS", "695810");
+define("DB_DATABASE", "zarzar");
+*/
 
 //-----Ciselne hodnoty urovni uzivatelu-----//
 define("L_UNCONFIRMED", "-1");
@@ -52,19 +59,21 @@ define("L_ADMIN", "50");
 define("L_SADMIN", "99");
 
 //-----Hodnoceni paru-----//
+define("AMEND_Z", "0.2");
 define("AMEND_H", "0.5");
 define("AMEND_D", "1.0");
-define("AMEND_C", "1.4");
-define("AMEND_B", "1.8");
-define("AMEND_A", "2.2");
-define("AMEND_M", "2.6");
+define("AMEND_C", "1.6");
+define("AMEND_B", "2.1");
+define("AMEND_A", "2.7");
+define("AMEND_M", "3.4");
 
-define("BONUS_H", "0");
-define("BONUS_D", "200");
-define("BONUS_C", "600");
-define("BONUS_B", "1140");
-define("BONUS_A", "1860");
-define("BONUS_M", "2740");
+define("BONUS_Z", "0");
+define("BONUS_H", "80");	//400*AMEND_Z + BONUS_Z
+define("BONUS_D", "280");	//400*AMEND_H + BONUS_H
+define("BONUS_C", "680");	//400*AMEND_D + BONUS_D
+define("BONUS_B", "1320");	//400*AMEND_C + BONUS_C
+define("BONUS_A", "2160");	//400*AMEND_B + BONUS_B
+define("BONUS_M", "3240");	//400*AMEND_A + BONUS_A
 
 //-----Aliasy chyb-----//
 define("ER_AUTHORIZATION", "authorization");
@@ -84,12 +93,12 @@ define("C_ZLUTA", "1");
 define("C_MODRA", "2");
 define("C_CERVENA", "4");
 
+define("NOVINKY_COUNT", 10);
+
 $sitemap_static = array(
 	"home"				=> "files/Main/Home/Main.inc",
 	"oklubu"			=> "files/Main/OKlubu/Main.inc",
-	"oklubu/historie"	=> "files/Main/OKlubu/Historie.inc",
-	"oklubu/treninky"	=> "files/Main/OKlubu/Treninky.inc",
-	"oklubu/jine"		=> "files/Main/OKlubu/Jine.inc",
+	"oklubu/treneri"	=> "files/Main/OKlubu/Treneri.inc",
 	"aktualne"			=> "files/Main/Aktualne/Main.inc",
 	"inzerce"			=> "files/Main/Inzerce/Main.inc",
 	"foto"				=> "files/Main/Fotogalerie/Main.inc",
@@ -99,6 +108,9 @@ $sitemap_static = array(
 	"done"				=> "files/Main/RegistraceDone.inc"
 );
 $sitemap_dynamic = array(
+	"ankety"					=> "files/Main/Ankety.inc",
+	"inzerce"					=> "files/Main/Inzerce.inc",
+
 	"error"						=> "files/Main/Error.inc",
 	"logout"					=> "files/Main/Logout.inc",
 	"registrace"				=> "files/Main/Registrace.inc",
@@ -111,6 +123,7 @@ $sitemap_dynamic = array(
 	"member/akce"				=> "files/Member/Akce.inc",
 	"member/dokumenty"			=> "files/Member/Dokumenty.inc",
 	"member/zebricek"			=> "files/Member/Zebricek.inc",
+	"member/pary"				=> "files/Member/Pary.inc",
 	"member/profil"				=> "files/Member/Profil.inc",
 	"member/profil/edit"		=> "files/Member/Profil.inc",
 	"member/profil/heslo"		=> "files/Member/Profil.inc",
@@ -143,7 +156,10 @@ $sitemap_dynamic = array(
 	"admin/users"				=> "files/Admin/Users.inc",
 	"admin/users/add"			=> "files/Admin/Users.inc",
 	"admin/users/edit"			=> "files/Admin/Users.inc",
-	"admin/users/new"			=> "files/Admin/Users.inc"
+	"admin/users/new"			=> "files/Admin/Users.inc",
+	"admin/ankety"				=> "files/Admin/Ankety.inc",
+	"admin/ankety/add"			=> "files/Admin/Ankety.inc",
+	"admin/ankety/edit"			=> "files/Admin/Ankety.inc"
 );
 
 class Settings {
@@ -176,12 +192,13 @@ public static $sekce = array(
 			"rozpis"	=> "Správa rozpisů",
 			"nabidka"	=> "Správa nabídky",
 			"dokumenty"	=> "Správa dokumentů",
-			"pary"		=> "Správa párů"
+			"pary"		=> "Správa párů",
+			"ankety"	=> "Správa anket"
 		),
 	"aktualne"		=> array(
 		),
 	"member"		=> array(
-			"home"	=> "Přehled",
+			"home"		=> "Novinky",
 			"nastenka"	=> "Nástěnka",
 			"rozpis"	=> "Rozpis tréninků",
 			"nabidka"	=> "Nabídka tréninků",

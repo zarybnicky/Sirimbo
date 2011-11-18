@@ -33,15 +33,17 @@ public static function getNabidka() {
 		}
 	}
 	
-	public static function getNabidkaTrenerID($id) {
+	public static function getNabidkaTrener($id) {
 		list($id) = DBNabidka::escapeArray(array($id));
 		
-		$res = DBNabidka::query("SELECT n_trener FROM nabidka WHERE n_id='$id'");
+		$res = DBNabidka::query(
+			"SELECT * FROM users
+			WHERE u_id=(SELECT n_trener FROM nabidka WHERE n_id='$id')"
+		);
 		if(!$res) {
 			return false;
 		} else {
-			$row = DBNabidka::getSingleRow($res);
-			return $row["n_trener"];
+			return DBNabidka::getSingleRow($res);
 		}
 	}
 	

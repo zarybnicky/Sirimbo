@@ -9,7 +9,7 @@ $action = array_slice($request, 3);
 $id = isset($action[1]) ? $action[1] : '';
 
 if(!$id || !is_numeric($id) || !($akce = DBAkce::getSingleAkce($id)))
-	View::redirectWithMessage('/admin/akce', 'Akce s takovým ID neexistuje');
+	View::redirect('/admin/akce', 'Akce s takovým ID neexistuje');
 
 $doku = unserialize($akce["a_dokumenty"]);
 
@@ -28,9 +28,6 @@ if(getPostField("remove") > 0) {
 	
 	DBAkce::editAkce($akce["id"], $akce["a_jmeno"], $akce["a_kde"], $akce["a_info"], $akce["a_od"], $akce["a_do"],
 		$akce["a_kapacita"], serialize($doku), $akce["a_kapacita"]);
-	
-	$akce = DBAkce::getSingleAkce($id);
-	$doku = unserialize($akce["a_dokumenty"]);
 }
 
 if(getPostField("add-id")) {

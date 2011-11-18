@@ -5,6 +5,10 @@ class DisplayNabidka {
 		echo '<div class="n_trener">';
 		echoFullJmeno($data);
 		echo '</div>';
+		
+		if(Permissions::canEditNabidka($data['n_trener']))
+			echo '<div class="n_edit"><a href="/admin/nabidka/edit/', $data['n_id'], '">Editovat</a></div>';
+		
 		echo '<div class="n_datum">', formatDate($data['n_od']);
 		if($data['n_od'] != $data['n_do'])
 			echo ' - ', formatDate($data['n_do']);
