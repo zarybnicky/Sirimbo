@@ -1,8 +1,11 @@
 <?php
 class DBNastenka extends Database {
 	public static function getNastenka() {
-		$res = DBNastenka::query("SELECT up_id,u_login,u_jmeno,u_prijmeni,up_aktu,up_nadpis,up_text,up_barvy,up_lock" .
-			" FROM upozorneni LEFT JOIN users ON up_kdo=u_id ORDER BY up_aktu");
+		$res = DBNastenka::query(
+		"SELECT up_id,up_kdo,u_jmeno,u_prijmeni,up_aktu,up_nadpis,up_text,up_barvy,up_lock
+		FROM upozorneni
+			LEFT JOIN users ON up_kdo=u_id
+		ORDER BY up_aktu");
 		return DBNastenka::getArray($res);
 	}
 	

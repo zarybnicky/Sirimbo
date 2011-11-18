@@ -1,7 +1,7 @@
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
 <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
 <div class="r_wrapper">
-<?php DisplayRozpis::viewRozpisHeader($roz); ?>
+<?php DisplayRozpis::viewRozpisHeader($data); ?>
 <table>
 <tr><td>Tanečník</td><td>Od</td><td>Do</td><td></td><td>Zámek</td></tr>
 <?php

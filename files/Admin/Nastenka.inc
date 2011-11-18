@@ -17,8 +17,7 @@ switch($action[0]) {
 		$id = isset($action[1]) ? $action[1] : '';
 		
 		if($id && is_numeric($id) && ($data = DBNastenka::getSingleNastenka($id))) {
-			if(!User::checkPermissionsBool(L_ADMIN) &&
-					(User::getUserID() != $data['up_kdo'] || $data['up_lock']))
+			if(Permissions::canEditNastenka($data['up_kdo'], $data['up_lock']))
 				View::viewError(ER_AUTHORIZATION);
 			
 			$_POST['id'] = $id;
@@ -31,7 +30,7 @@ switch($action[0]) {
 			include('files/Admin/Nastenka/Form.inc');
 			return;
 		} else {
-			View::redirectWithMessage('/admin/nastenka', 'Nástěnka s takovým ID neexistuje');
+			View::redirect('/admin/nastenka', 'Nástěnka s takovým ID neexistuje');
 		}
 		break;
 }
@@ -46,11 +45,12 @@ switch(getPostField('action')) {
 		if(is_array(getPostField('nastenka'))) {
 			foreach(getPostField('nastenka') as $item) {
 				$data = DBNastenka::getSingleNastenka($item);
-				if(!User::checkPermissionsBool(L_ADMIN) &&
-						(User::getUserID() != $data['up_kdo'] || !$data['up_lock']))
+				if(Permissions::canEditNastenka($data['up_kdo'], $data['up_lock']))
 					View::viewError(ER_AUTHORIZATION);
 					
 				DBNastenka::removeNastenka($item);
+				DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() .
+					' smazal příspěvek z nástěnky');
 			}
 			notice('Příspěvky odebrány');
 		}
@@ -68,8 +68,7 @@ switch(getPostField('action')) {
 		$id = getPostField('id');
 		$data = DBNastenka::getSingleNastenka($id);
 		
-		if(!User::checkPermissionsBool(L_ADMIN) && 
-				(User::getUserID() != $data['up_kdo'] || $data['up_lock']))
+		if(Permissions::canEditNastenka($data['up_kdo'], $data['up_lock']))
 			View::viewError(ER_AUTHORIZATION);
 		
 		$zluta = ((bool) getPostField('zluta')) ? C_ZLUTA : 0;
@@ -81,6 +80,8 @@ switch(getPostField('action')) {
 		
 		DBNastenka::editNastenka($id, getPostField('nadpis'),
 			getPostField('text'), $barvy, (getPostField('lock') == 'lock') ? 1 : 0);
+		DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' upravil příspěvek na nástěnce');
+		
 		notice('Příspěvek úspěšně upraven');
 		break;
 		
@@ -96,6 +97,8 @@ switch(getPostField('action')) {
 		
 		DBNastenka::addNastenka(User::getUserID(), getPostField('nadpis'),
 			getPostField('text'), $barvy, $lock);
+		DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal příspěvek na nástěnku');
+		
 		notice('Příspěvek úspěšně přidán');
 		break;
 }

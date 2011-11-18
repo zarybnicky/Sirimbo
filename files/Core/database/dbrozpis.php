@@ -71,15 +71,17 @@ public static function getRozpis() {
 		}
 	}
 	
-	public static function getRozpisTrenerID($id) {
+	public static function getRozpisTrener($id) {
 		list($id) = DBRozpis::escapeArray(array($id));
 		
-		$res = DBRozpis::query("SELECT r_trener FROM rozpis WHERE r_id='$id'");
+		$res = DBRozpis::query(
+			"SELECT * FROM users
+			WHERE u_id=(SELECT r_trener FROM rozpis WHERE r_id='$id')"
+		);
 		if(!$res) {
 			return false;
 		} else {
-			$row = DBRozpis::getSingleRow($res);
-			return $row["r_trener"];
+			return DBRozpis::getSingleRow($res);
 		}
 	}
 	

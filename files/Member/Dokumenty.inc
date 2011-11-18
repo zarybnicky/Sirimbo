@@ -1,4 +1,7 @@
-<?php header_main("Dokumenty"); ?>
+<?php
+User::checkPermissionsError(L_HOST);
+header_main("Dokumenty");
+?>
 <form action="<?php echo $_SERVER["REQUEST_URI"];//TODO: Dokument type to URI ?>" method="GET">
 <select name="kategorie">
 	<option value="">---VŠE---</option>
@@ -18,23 +21,21 @@
 <td>Uploadoval</td>
 </tr>
 <?php
-User::checkPermissionsError(L_HOST);
-
-if(getGetField("kategorie") && getGetField("kategorie") !== "") {
-	$dokumenty = DBDokumenty::getDokumentyByKategorie(getGetField("kategorie"));
+if(getGetField('kategorie') && getGetField('kategorie') !== '') {
+	$dokumenty = DBDokumenty::getDokumentyByKategorie(getGetField('kategorie'));
 } else {
 	$dokumenty = DBDokumenty::getDokumenty();
 }
 
 foreach($dokumenty as $item) {
-	echo "<tr>";
-	echo "<td>" . $item["d_name"] .  "</td>";
-	echo "<td><a href=\"" . "/" . $item["d_path"] . "\">" . $item["d_filename"] .  "</a></td>";
-	echo "<td>", Settings::$document_types[$item["d_kategorie"]], "</td>";
-	echo "<td>";
+	echo '<tr>';
+	echo '<td>' . $item['d_name'] .  '</td>';
+	echo '<td><a href="' . '/' . $item['d_path'] . '">' . $item['d_filename'] .  '</a></td>';
+	echo '<td>', Settings::$document_types[$item['d_kategorie']], '</td>';
+	echo '<td>';
 	echoFullJmeno($item);
-	echo "</td>";
-	echo "</tr>";
+	echo '</td>';
+	echo '</tr>';
 }
 ?>
 </table>

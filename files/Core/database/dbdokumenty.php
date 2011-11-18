@@ -7,6 +7,7 @@ class DBDokumenty extends Database {
 	}
 	
 	public static function getDokumentyByKategorie($kat) {
+		list($kat) = DBDokumenty::escapeArray(array($kat));
 		$res = DBDokumenty::query("SELECT u_jmeno,u_prijmeni,d_id,d_path,d_name,d_filename,d_kategorie,d_kdo" .
 			" FROM dokumenty LEFT JOIN users ON d_kdo=u_id WHERE d_kategorie='$kat'");
 		return DBDokumenty::getArray($res);

@@ -1,1 +1,0 @@
-Zde bude tréninková sekce

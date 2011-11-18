@@ -2,7 +2,7 @@
 $error = false;
 
 global $isConfirmation;
-$isConfirmation = (getPostField("") || getPostField("newpass"));
+$isConfirmation = (getPostField("stt-trida") || getPostField("lat-trida"));
 
 header_minor("Změna třídy a bodů");
 ?>
@@ -12,18 +12,20 @@ header_minor("Změna třídy a bodů");
 <tr>
 	<td>Třída:</td>
 	<td><select name="stt-trida">
+			<option value="Z" <?php if(getPostField("stt-trida") == "Z")
+				echo 'selected="selected"';?>>Z</option>
 			<option value="H" <?php if(getPostField("stt-trida") == "H")
-				echo "selected=\"selected\"";?>>H</option>
+				echo 'selected="selected"';?>>H</option>
 			<option value="D" <?php if(getPostField("stt-trida") == "D")
-				echo "selected=\"selected\"";?>>D</option>
+				echo 'selected="selected"';?>>D</option>
 			<option value="C" <?php if(getPostField("stt-trida") == "C")
-				echo "selected=\"selected\"";?>>C</option>
+				echo 'selected="selected"';?>>C</option>
 			<option value="B" <?php if(getPostField("stt-trida") == "B")
-				echo "selected=\"selected\"";?>>B</option>
+				echo 'selected="selected"';?>>B</option>
 			<option value="A" <?php if(getPostField("stt-trida") == "A")
-				echo "selected=\"selected\"";?>>A</option>
+				echo 'selected="selected"';?>>A</option>
 			<option value="M" <?php if(getPostField("stt-trida") == "M")
-				echo "selected=\"selected\"";?>>M</option>
+				echo 'selected="selected"';?>>M</option>
 		</select></td>
 </tr>
 <tr>
@@ -44,18 +46,20 @@ header_minor("Změna třídy a bodů");
 <tr>
 	<td>Třída:</td>
 	<td><select name="lat-trida">
+			<option value="Z" <?php if(getPostField("stt-trida") == "Z")
+				echo 'selected="selected"';?>>Z</option>
 			<option value="H" <?php if(getPostField("lat-trida") == "H")
-				echo "selected=\"selected\"";?>>H</option>
+				echo 'selected="selected"';?>>H</option>
 			<option value="D" <?php if(getPostField("lat-trida") == "D")
-				echo "selected=\"selected\"";?>>D</option>
+				echo 'selected="selected"';?>>D</option>
 			<option value="C" <?php if(getPostField("lat-trida") == "C")
-				echo "selected=\"selected\"";?>>C</option>
+				echo 'selected="selected"';?>>C</option>
 			<option value="B" <?php if(getPostField("lat-trida") == "B")
-				echo "selected=\"selected\"";?>>B</option>
+				echo 'selected="selected"';?>>B</option>
 			<option value="A" <?php if(getPostField("lat-trida") == "A")
-				echo "selected=\"selected\"";?>>A</option>
+				echo 'selected="selected"';?>>A</option>
 			<option value="M" <?php if(getPostField("lat-trida") == "M")
-				echo "selected=\"selected\"";?>>M</option>
+				echo 'selected="selected"';?>>M</option>
 		</select></td>
 </tr>
 <tr>
@@ -73,9 +77,7 @@ header_minor("Změna třídy a bodů");
 	?></td>
 </tr>
 </table>
-	<button type="submit" name="action" value="edit-class_confirm">Změnit třídu a body</button>
+<button type="submit" name="action" value="edit-class_confirm">Změnit třídu a body</button>
 </form>
 
-<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="GET">
-<button type="submit">Zpět</button>
-</form>
+<a href="/member/profil/par">Zpět</a>

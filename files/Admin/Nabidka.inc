@@ -14,7 +14,7 @@ switch($action[0]) {
 			include('files/Admin/Nabidka/Form.inc');
 			return;
 		} else {
-			if(!User::checkPermissionsBool(L_ADMIN) && User::getUserID() != getPostField("trener"))
+			if(!Permissions::canEditNabidka(getPostField('trener')))
 				View::viewError(ER_AUTHORIZATION);
 			
 			$pocet_hod = getPostField("pocet_hod");
@@ -38,7 +38,17 @@ switch($action[0]) {
 			if(!$error) {
 				DBNabidka::addNabidka(getPostField("trener"), $pocet_hod, $od, $do, $visible,
 					getPostField("lock"));
-				View::redirectWithMessage('/admin/nabidka', 'Nabídka přidána');
+				
+				if($visible) {
+					$trener_data = DBUser::getUserData(getPostField("trener"));
+					$trener_name = $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni'];
+					
+					DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal nabídku ' .
+						formatDate($od) . (($od != $do) ?
+						(' - ' . formatDate($do)) : '') . ' s trenérem ' . $trener_name);
+				}
+				
+				View::redirect('/admin/nabidka', 'Nabídka přidána');
 			} else {
 				echo $html;
 				return;
@@ -50,9 +60,9 @@ switch($action[0]) {
 		$id = isset($action[1]) ? $action[1] : '';
 		
 		if(!$id || !is_numeric($id) || !($data = DBNabidka::getSingleNabidka($id)))
-			View::redirectWithMessage('/admin/nabidka', 'Nabídka s takovým ID neexistuje');
+			View::redirect('/admin/nabidka', 'Nabídka s takovým ID neexistuje');
 		
-		if(!User::checkPermissionsBool(L_ADMIN) && $data["n_trener"] != User::getUserID())
+		if(!Permissions::canEditNabidka($data['n_trener']))
 			View::viewError(ER_AUTHORIZATION);
 			
 		if(empty($_POST)) {
@@ -77,7 +87,8 @@ switch($action[0]) {
 			$pocet_hod = getPostField("pocet_hod");
 			if($pocet_hod < $items) {
 				$pocet_hod = $items;
-				View::setRedirectMessage('Zadaný počet hodin byl zvýšen, už obsazených hodin je víc');
+				View::setRedirectMessage('Obsazených hodin už je víc než jste zadali, ' .
+					'nemůžu dál snížit počet hodin');
 			}
 			
 			$od = getPostField("od_year") . "-" . getPostField("od_month") . "-" . getPostField("od_day");
@@ -101,7 +112,24 @@ switch($action[0]) {
 			if(!$error) {
 				DBNabidka::editNabidka($id, getPostField("trener"), $pocet_hod, $od, $do, $visible,
 					getPostField("lock"));
-				View::redirectWithMessage('/admin/nabidka', 'Nabídka úspěšně upravena');
+				
+				$trener_data = DBUser::getUserData(getPostField("trener"));
+				$trener_name = $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni'];
+				if($visible) {
+					if(!$visible_prev)
+						DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal nabídku ' .
+							formatDate($od) . (($data['n_od'] != $data['n_do']) ?
+							(' - ' . formatDate($data['n_do'])) : '') . ' s trenérem ' . $trener_name);
+					else
+						DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' upravil nabídku ' .
+							formatDate($od) . (($data['n_od'] != $data['n_do']) ?
+							(' - ' . formatDate($data['n_do'])) : '') . ' s trenérem ' . $trener_name);
+				} elseif(!$visible && $visible_prev && strcmp($data['n_od'], date('Y-m-d')) > 0) {
+						DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' zrušil nabídku ' .
+							formatDate($od) . (($data['n_od'] != $data['n_do']) ?
+							(' - ' . formatDate($data['n_do'])) : '') . ' s trenérem ' . $trener_name);
+				}
+				View::redirect('/admin/nabidka', 'Nabídka úspěšně upravena');
 			} else {
 				echo $html;
 				return;
@@ -135,9 +163,16 @@ switch(getPostField("action")) {
 	case "remove":
 		if(is_array(getPostField("nabidka"))) {
 			foreach(getPostField("nabidka") as $item) {
-				if(User::checkPermissionsBool(L_ADMIN) ||
-						(User::getUserID() == DBNabidka::getNabidkaTrenerID($item))) {
+				$trener = DBNabidka::getNabidkaTrener($item);
+				$data = DBNabidka::getSingleNabidka($item);
+				
+				if(Permissions::canEditNabidka($trener['u_id'])) {
 					DBNabidka::removeNabidka($item);
+					if(strcmp($data['n_od'], date('Y-m-d')) > 0 && $data['n_visible'])
+						DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' zrušil nabídku ' .
+							formatDate($data['n_od']) . (($data['n_od'] != $data['n_do']) ?
+							(' - ' . formatDate($data['n_do'])) : '') . ' s trenérem ' .
+							$trener['u_jmeno'] . ' ' . $trener['u_prijmeni']);
 				} else {
 					$error = true;
 				}

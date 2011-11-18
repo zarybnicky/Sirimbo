@@ -1,1 +1,1 @@
-Zde budou informace pro zájemce o ukázky
+Ješte se na tom pracuje

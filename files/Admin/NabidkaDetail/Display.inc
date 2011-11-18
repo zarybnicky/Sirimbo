@@ -1,7 +1,7 @@
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
 <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
 <div class="n_wrapper">
-<?php DisplayNabidka::viewNabidkaHeader($nab, $obsazeno); ?>
+<?php DisplayNabidka::viewNabidkaHeader($data, $obsazeno); ?>
 <table>
 <tr><td>Tanečník</td><td>Počet hodin</td></tr>
 <?php
