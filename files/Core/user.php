@@ -53,7 +53,10 @@ class User {
 	}
 	
 	public static function getUserID() {
-		return $_SESSION["id"];
+		if(User::isLogged())
+			return $_SESSION["id"];
+		else
+			return 0;
 	}
 	
 	public static function getPartnerID() {
@@ -62,6 +65,14 @@ class User {
 	
 	public static function getUserName() {
 		return $_SESSION["user"];
+	}
+	
+	public static function getUserJmeno() {
+		return $_SESSION['jmeno'];
+	}
+	
+	public static function getUserPrijmeni() {
+		return $_SESSION['prijmeni'];
 	}
 	
 	public static function getUserWholeName() {

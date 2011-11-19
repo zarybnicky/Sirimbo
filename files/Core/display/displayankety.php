@@ -5,7 +5,10 @@ class DisplayAnkety {
 			echo '<form action="/ankety" method="POST">';
 		else
 			echo $data['ak_jmeno'], ': ';
-		echo '<b>', $data['ak_text'], '</b><br/>';
+		echo '<b>', $data['ak_text'], '</b>';
+		if(Permissions::canEditAnketa($data['ak_kdo']))
+			echo ' - <a href="/admin/ankety/edit/', $data['ak_id'], '">Editovat</a>';
+		echo '<br/>';
 		foreach($items as $item) {
 			if($active)
 				echo '<input type="radio" name="choice" value="', $item['aki_id'], '" />';
@@ -13,10 +16,10 @@ class DisplayAnkety {
 			if(!$active)
 				echo ' - ', $item['aki_pocet'];
 			echo '<br/>';
-		}
+		}//TODO: /ankety/[0-9]*
 		if($active) {
 			echo '<button type="submit" name="id" value="', $data['ak_id'], '">Hlasovat</button>';
-			echo '<a href="/ankety/', $data['ak_id'], '">Zobrazit</a>';
+			echo '<a href="/ankety">Zobrazit</a>';
 			echo '</form>';
 		} else {
 			echo '<br />';

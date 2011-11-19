@@ -53,7 +53,7 @@
 				<li<?php echo ($section == 'aktualne') ? ' class="current"' : '';
 				?>><a href="/aktualne">Aktuálně</a></li>
 				<li<?php echo ($section == 'inzerce') ? ' class="current"' : '';
-				?>><a href="/inzerce">Inzerce</a></li>
+				?>><a href="/inzerce/posledni">Inzerce</a></li>
 				<li<?php echo ($section == 'foto') ? ' class="current"' : '';
 				?>><a href="/foto">Fotogalerie</a></li>
 				<li<?php echo ($section == 'nabizime') ? ' class="current"' : '';
