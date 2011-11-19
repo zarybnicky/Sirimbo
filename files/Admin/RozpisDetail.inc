@@ -9,9 +9,9 @@ $action = array_slice($request, 3);
 $id = isset($action[1]) ? $action[1] : '';
 
 if(!id || !is_numeric($id) || !($data = DBRozpis::getSingleRozpis($id)))
-	View::redirect('/admin/nabidka', 'Nabídka s takovým ID neexistuje');
+	View::redirect('/admin/rozpis', 'Rozpis s takovým ID neexistuje');
 	
-if(!Permissions::canEditNabidka($data['n_trener']))
+if(!Permissions::canEditRozpis($data['r_trener']))
 	View::viewError(ER_AUTHORIZATION);
 
 $items = DBRozpis::getRozpisItem($id);

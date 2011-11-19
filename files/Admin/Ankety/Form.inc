@@ -37,7 +37,7 @@ header_minor($header);
 				echo '<tr>';
 				echo '<td><input type="text" name="', $item['aki_id'], '-text" value="', $item['aki_text'],
 					'"/></td>';
-				echo '<td>', isset($data['aki_pocet']) ? (int) $data['aki_pocet'] : 0, '</td>';
+				echo '<td>', isset($item['aki_pocet']) ? (int) $item['aki_pocet'] : 0, '</td>';
 				echo '<td><button type="submit" name="remove" value="', $item['aki_id'], '">',
 					'Odstranit a uložit</button></td>';
 				echo '</tr>';
