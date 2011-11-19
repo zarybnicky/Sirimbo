@@ -100,6 +100,7 @@ table th, table td {
 	padding: 2px;
 	border: 1px solid #ffe3b7;
 	background-color: #fff0e2;
+	vertical-align: middle;
 }
 
 #all {

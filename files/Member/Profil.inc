@@ -2,6 +2,8 @@
 User::checkPermissionsError(L_HOST);
 header_main("Profil");
 
+notice(View::getRedirectMessage());
+
 $request = explode('/', $_SERVER['REQUEST_URI']);
 $action = array_slice($request, 3);
 if(empty($action)) $action[] = '';
@@ -52,9 +54,8 @@ switch($action[0]) {
 				DBUser::setUserData(User::getUserID(), getPostField('jmeno'), getPostField('prijmeni'),
 					getPostField('pohlavi'), getPostField('email'), getPostField('telefon'),
 					getPostField('poznamky'), $data['u_level'], $data['u_lock'], $data['u_ban']);
-				notice('Upraveno');
 				
-				include("files/Member/Profil/DisplayMain.inc");
+				View::redirect('/member/profil', 'Upraveno');
 				return;
 			} else {
 				echo $html;
@@ -77,8 +78,7 @@ switch($action[0]) {
 			
 			if(!$error && $oldpass_check && $newpass_check) {
 				DBUser::setPassword(User::getUserID(), User::Crypt(getPostField('newpass')));
-				notice('Heslo změněno');
-				include("files/Member/Profil/DisplayMain.inc");
+				View::redirect('/member/profil', 'Heslo změněno');
 				return;
 			} elseif(!$oldpass_check) {
 				notice('Staré heslo je špatně, zkus to znova :o(');
@@ -171,8 +171,7 @@ switch($action[0]) {
 					DBPary::editTridaBody(User::getParID(), $stt_trida, $stt_body,
 						$stt_finale, $lat_trida, $lat_body, $lat_finale, $hodnoceni);
 					
-					notice("Třída a body změněny");
-					include("files/Member/Profil/DisplayMain.inc");
+					View::redirect("/member/profil/par", "Třída a body změněny");
 					return;
 				}
 				break;
@@ -302,6 +301,130 @@ switch($action[0]) {
 							include("files/Member/Profil/DisplayMain.inc");
 							return;
 					}
+				}
+				break;
+		}
+		break;
+	case 'inzerce':
+		header_minor('Moje inzerce');
+		
+		if(!isset($action[1])) {
+			echo '<a href="/member/profil/inzerce/add">Přidat</a><br/>';
+			$result = DisplayInzerce::viewInzerce(false, true, INZERCE_ALL, 0, User::getUserID());
+			if(!$result) {
+				notice('Žádné inzeráty');
+			}
+			echo '<a href="/member/profil">Zpět</a>';
+			return;
+		}
+		
+		switch($action[1]) {
+			case 'add':
+				if(empty($_POST)) {
+					include('files/Main/Inzerce/Form.inc');
+					return;
+				} else {
+					$od = getPostField('od_year') . '-' . getPostField('od_month') . '-' . getPostField('od_day');
+					$do = getPostField('do_year') . '-' . getPostField('do_month') . '-' . getPostField('do_day');
+					
+					if($do == '0000-00-00' || strcmp($od, $do) > 0)
+						$do = $od;
+					
+					$error = false;
+					
+					ob_start();
+					include('files/Main/Inzerce/Form.inc');	
+					$html = ob_get_clean();
+					
+					if(!$error) {
+						DBInzerce::addInzerat(getPostField('kat'), User::getUserID(), User::getUserJmeno(),
+							User::getUserPrijmeni(), getPostField('nadpis'), getPostField('text'), serialize(array()), $od, $do,
+							(bool) getPostField('visible'), '1');
+						View::redirect("/member/profil/inzerce", "Váš inzerát byl přidán");
+					} else {
+						echo $html;
+						return;
+					}
+				}
+				break;
+			case 'edit':
+				$id = isset($action[2]) ? $action[2] : '';
+				
+				if(!$id || !is_numeric($id) || !($data = DBInzerce::getSingleInzerat($id)))
+					View::redirect('/member/profil/inzerce', 'Inzerát s takovým ID neexistuje');
+				
+				if(!Permissions::canEditInzerat($data['i_reg']))
+					View::viewError(ER_AUTHORIZATION);
+				
+				if(empty($_POST)) {
+					$_POST['kat'] = $data['i_kat'];
+					$_POST['reg'] = $data['i_reg'];
+					$_POST['jmeno'] = $data['i_jmeno'];
+					$_POST['prijmeni'] = $data['i_prijmeni'];
+					$_POST['nadpis'] = $data['i_nadpis'];
+					$_POST['text'] = $data['i_text'];
+					list($od_year, $od_month, $od_day) = explode('-', $data['i_od']);
+					$_POST['od_year'] = $od_year;
+					$_POST['od_month'] = $od_month;
+					$_POST['od_day'] = $od_day;
+					list($do_year, $do_month, $do_day) = explode('-', $data['i_do']);
+					$_POST['do_year'] = $do_year;
+					$_POST['do_month'] = $do_month;
+					$_POST['do_day'] = $do_day;
+					$_POST['visible'] = $data['i_visible'];
+					$_POST['confirmed'] = $data['i_confirmed'];
+					
+					include('files/Main/Inzerce/Form.inc');
+					return;
+				} else {
+					$od = getPostField('od_year') . '-' . getPostField('od_month') . '-' . getPostField('od_day');
+					$do = getPostField('do_year') . '-' . getPostField('do_month') . '-' . getPostField('do_day');
+					
+					if($do == '0000-00-00' || strcmp($od, $do) > 0)
+						$do = $od;
+					
+					$error = false;
+					
+					ob_start();
+					include('files/Main/Inzerce/Form.inc');	
+					$html = ob_get_clean();
+					
+					if(!$error) {
+						DBInzerce::editInzerat($id, getPostField('kat'), User::getUserID(), User::getUserJmeno(),
+							User::getUserPrijmeni(), getPostField('nadpis'), getPostField('text'), serialize(array()),
+							$od, $do, (bool) getPostField('visible'), '1');
+						View::redirect("/member/profil/inzerce", "Inzerát upraven");
+					} else {
+						echo $html;
+						return;
+					}
+				}
+				break;
+			case 'remove':
+				$id = isset($action[2]) ? $action[2] : '';
+				
+				if(!$id || !is_numeric($id) || !($data = DBInzerce::getSingleInzerat($id)))
+					View::redirect('/member/profil/inzerce', 'Inzerát s takovým ID neexistuje');
+				
+				if(!Permissions::canEditInzerat($data['i_reg']))
+					View::viewError(ER_AUTHORIZATION);
+				
+				if(empty($_POST)) {
+					echo '<form action="', $_SERVER['REQUEST_URI'], '" method="post">';
+					echo 'Opravdu chcete odstranit inzerát "';
+					$data = DBInzerce::getSingleInzerat($id);
+					echo $data['i_nadpis'];
+					echo '"?<br/>';
+					echo '<input type="hidden" name="id" value="', $id, '" />';
+					echo '<button type="submit" name="action" value="remove_confirm">Odstranit</button>';
+					echo '<a href="/member/profil/inzerce">Zpět</a>';
+					echo '</form>';
+					return;
+				} else {
+					DBInzerce::removeInzerat($id);
+					
+					View::redirect("/member/profil/inzerce", "Inzerát odebrán");
+					return;
 				}
 				break;
 		}

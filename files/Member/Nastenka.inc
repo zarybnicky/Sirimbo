@@ -11,7 +11,10 @@ if(empty($zpravy)) {
 
 foreach($zpravy as $item) {
 	echo '<div class="up_item">';
-	echo '<div class="up_nadpis" style="float:left;width:50%;"><b>', $item['up_nadpis'], '</b></div>';
+	echo '<div class="up_nadpis" style="float:left;width:50%;"><b>', $item['up_nadpis'], '</b>';
+	if(Permissions::canEditNastenka($data['up_kdo'], $data['up_lock']))
+		echo ' - <a href="/admin/nastenka/edit/', $data['a_id'], '">Editovat</a>';;
+	echo '</div>';
 	echo '<div class="up_detaily" style="float:right;width:50%;">';
 	echo '<div class="up_kdo">';
 	echoFullJmeno($item);

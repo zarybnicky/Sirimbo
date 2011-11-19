@@ -17,9 +17,9 @@ switch($action[0]) {
 		$id = isset($action[1]) ? $action[1] : '';
 		
 		if($id && is_numeric($id) && ($data = DBNastenka::getSingleNastenka($id))) {
-			if(Permissions::canEditNastenka($data['up_kdo'], $data['up_lock']))
+			if(!Permissions::canEditNastenka($data['up_kdo'], $data['up_lock']))
 				View::viewError(ER_AUTHORIZATION);
-			
+						
 			$_POST['id'] = $id;
 			$_POST['nadpis'] = $data['up_nadpis'];
 			$_POST['text'] = $data['up_text'];
@@ -45,7 +45,7 @@ switch(getPostField('action')) {
 		if(is_array(getPostField('nastenka'))) {
 			foreach(getPostField('nastenka') as $item) {
 				$data = DBNastenka::getSingleNastenka($item);
-				if(Permissions::canEditNastenka($data['up_kdo'], $data['up_lock']))
+				if(!Permissions::canEditNastenka($data['up_kdo'], $data['up_lock']))
 					View::viewError(ER_AUTHORIZATION);
 					
 				DBNastenka::removeNastenka($item);
@@ -68,7 +68,7 @@ switch(getPostField('action')) {
 		$id = getPostField('id');
 		$data = DBNastenka::getSingleNastenka($id);
 		
-		if(Permissions::canEditNastenka($data['up_kdo'], $data['up_lock']))
+		if(!Permissions::canEditNastenka($data['up_kdo'], $data['up_lock']))
 			View::viewError(ER_AUTHORIZATION);
 		
 		$zluta = ((bool) getPostField('zluta')) ? C_ZLUTA : 0;

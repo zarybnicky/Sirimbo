@@ -5,7 +5,8 @@ unset($real_name);
 
 set_include_path(
 	$_SERVER['DOCUMENT_ROOT'] . '/files/Core/database' . PATH_SEPARATOR .
-	$_SERVER['DOCUMENT_ROOT'] . '/files/Core/display' . PATH_SEPARATOR . get_include_path());
+	$_SERVER['DOCUMENT_ROOT'] . '/files/Core/display' . PATH_SEPARATOR .
+	get_include_path());
 spl_autoload_extensions(".php");
 spl_autoload_register();
 
@@ -94,13 +95,18 @@ define("C_MODRA", "2");
 define("C_CERVENA", "4");
 
 define("NOVINKY_COUNT", 10);
+define("INZERCE_COUNT", 10);
+define("INZERCE_ALL", 0);
+define("INZERCE_PRODAM", 1);
+define("INZERCE_KOUPIM", 2);
+define("INZERCE_PARTNER", 3);
+define("INZERCE_PARTNERKA", 4);
 
 $sitemap_static = array(
 	"home"				=> "files/Main/Home/Main.inc",
 	"oklubu"			=> "files/Main/OKlubu/Main.inc",
 	"oklubu/treneri"	=> "files/Main/OKlubu/Treneri.inc",
 	"aktualne"			=> "files/Main/Aktualne/Main.inc",
-	"inzerce"			=> "files/Main/Inzerce/Main.inc",
 	"foto"				=> "files/Main/Fotogalerie/Main.inc",
 	"nabizime"			=> "files/Main/Nabizime/Main.inc",
 	"forum"				=> "files/Main/Forum/Main.inc",
@@ -108,29 +114,41 @@ $sitemap_static = array(
 	"done"				=> "files/Main/RegistraceDone.inc"
 );
 $sitemap_dynamic = array(
-	"ankety"					=> "files/Main/Ankety.inc",
-	"inzerce"					=> "files/Main/Inzerce.inc",
+	"ankety"				=> "files/Main/Ankety.inc",
+	"inzerce"				=> "files/Main/Inzerce/Main.inc",
+	"inzerce/posledni"		=> "files/Main/Inzerce/Main.inc",
+	"inzerce/prodam"		=> "files/Main/Inzerce/Main.inc",
+	"inzerce/koupim"		=> "files/Main/Inzerce/Main.inc",
+	"inzerce/partner"		=> "files/Main/Inzerce/Main.inc",
+	"inzerce/partnerka"		=> "files/Main/Inzerce/Main.inc",
+	"inzerce/add"			=> "files/Main/Inzerce/Main.inc",
+	"inzerce/edit"			=> "files/Main/Inzerce/Main.inc",
+	"inzerce/remove"		=> "files/Main/Inzerce/Main.inc",
 
-	"error"						=> "files/Main/Error.inc",
-	"logout"					=> "files/Main/Logout.inc",
-	"registrace"				=> "files/Main/Registrace.inc",
-	"member/download"			=> "files/Member/Download.inc",
+	"error"					=> "files/Main/Error.inc",
+	"logout"				=> "files/Main/Logout.inc",
+	"registrace"			=> "files/Main/Registrace.inc",
+	"member/download"		=> "files/Member/Download.inc",
 	
-	"member/home"				=> "files/Member/Home.inc",
-	"member/nastenka"			=> "files/Member/Nastenka.inc",
-	"member/rozpis"				=> "files/Member/Rozpis.inc",
-	"member/nabidka"			=> "files/Member/Nabidka.inc",
-	"member/akce"				=> "files/Member/Akce.inc",
-	"member/dokumenty"			=> "files/Member/Dokumenty.inc",
-	"member/zebricek"			=> "files/Member/Zebricek.inc",
-	"member/pary"				=> "files/Member/Pary.inc",
-	"member/profil"				=> "files/Member/Profil.inc",
-	"member/profil/edit"		=> "files/Member/Profil.inc",
-	"member/profil/heslo"		=> "files/Member/Profil.inc",
-	"member/profil/par"			=> "files/Member/Profil.inc",
+	"member/home"			=> "files/Member/Home.inc",
+	"member/nastenka"		=> "files/Member/Nastenka.inc",
+	"member/rozpis"			=> "files/Member/Rozpis.inc",
+	"member/nabidka"		=> "files/Member/Nabidka.inc",
+	"member/akce"			=> "files/Member/Akce.inc",
+	"member/dokumenty"		=> "files/Member/Dokumenty.inc",
+	"member/zebricek"		=> "files/Member/Zebricek.inc",
+	"member/pary"			=> "files/Member/Pary.inc",
+	"member/profil"			=> "files/Member/Profil.inc",
+	"member/profil/edit"	=> "files/Member/Profil.inc",
+	"member/profil/heslo"	=> "files/Member/Profil.inc",
+	"member/profil/par"		=> "files/Member/Profil.inc",
 	"member/profil/par/partner"	=> "files/Member/Profil.inc",
 	"member/profil/par/body"	=> "files/Member/Profil.inc",
 	"member/profil/par/zadost"	=> "files/Member/Profil.inc",
+	"member/profil/inzerce"		=> "files/Member/Profil.inc",
+	"member/profil/inzerce/add"	=> "files/Member/Profil.inc",
+	"member/profil/inzerce/edit"	=> "files/Member/Profil.inc",
+	"member/profil/inzerce/remove"	=> "files/Member/Profil.inc",
 
 	"admin/home"				=> "files/Admin/Main.inc",
 	"admin/dokumenty"			=> "files/Admin/Dokumenty.inc",
@@ -159,7 +177,11 @@ $sitemap_dynamic = array(
 	"admin/users/new"			=> "files/Admin/Users.inc",
 	"admin/ankety"				=> "files/Admin/Ankety.inc",
 	"admin/ankety/add"			=> "files/Admin/Ankety.inc",
-	"admin/ankety/edit"			=> "files/Admin/Ankety.inc"
+	"admin/ankety/edit"			=> "files/Admin/Ankety.inc",
+	"admin/inzerce"				=> "files/Admin/Inzerce.inc",
+	"admin/inzerce/add"			=> "files/Admin/Inzerce.inc",
+	"admin/inzerce/edit"		=> "files/Admin/Inzerce.inc",
+	"admin/inzerce/new"			=> "files/Admin/Inzerce.inc"
 );
 
 class Settings {
@@ -181,11 +203,12 @@ public static $document_types = array(
 	"1"		=> "Schůze, rady",
 	"2"		=> "Soutěže",
 	"3"		=> "Tábory",
+	"4"		=> "Inzerce",
 	"0"		=> "Ostatní"
 );
 
 public static $sekce = array(
-	"admin"			=> array(
+	"admin"		=> array(
 			"nastenka"	=> "Správa nástěnky",
 			"users"		=> "Správa uživatelů",
 			"akce"		=> "Správa akcí",
@@ -193,11 +216,12 @@ public static $sekce = array(
 			"nabidka"	=> "Správa nabídky",
 			"dokumenty"	=> "Správa dokumentů",
 			"pary"		=> "Správa párů",
-			"ankety"	=> "Správa anket"
+			"ankety"	=> "Správa anket",
+			"inzerce"	=> "Správa inzerce"
 		),
-	"aktualne"		=> array(
+	"aktualne"	=> array(
 		),
-	"member"		=> array(
+	"member"	=> array(
 			"home"		=> "Novinky",
 			"nastenka"	=> "Nástěnka",
 			"rozpis"	=> "Rozpis tréninků",
@@ -207,11 +231,11 @@ public static $sekce = array(
 			"zebricek"	=> "Žebříček",
 			"profil"	=> "Profil"
 		),
-	"forum"			=> array(
+	"forum"		=> array(
 		),
-	"foto"			=> array(
+	"foto"		=> array(
 		),
-	"home"			=> array(
+	"home"		=> array(
 			"zajemci"	=> "Noví zájemci",
 			"rada"		=> "Rada klubu",
 			"historie"	=> "Historie",
@@ -219,14 +243,20 @@ public static $sekce = array(
 			"liga"		=> "Taneční liga",
 			"odkazy"	=> "Odkazy"
 		),
-	"inzerce"		=> array(
+	"inzerce"	=> array(
+			"posledni"	=> "Poslední inzeráty",
+			"prodam"	=> "Prodám",
+			"koupim"	=> "Koupím",
+			"partner"	=> "Hledám partnera",
+			"partnerka"	=> "Hledím partnerku",
+			"add"		=> "Nový inzerát"
 		),
-	"kontakt"		=> array(
+	"kontakt"	=> array(
 		),
-	"oklubu"		=> array(
+	"oklubu"	=> array(
 			"treneri"	=> "Trenéři"
 		),
-	"nabizime"		=> array(
+	"nabizime"	=> array(
 		)
 );
 }

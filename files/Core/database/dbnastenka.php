@@ -25,7 +25,7 @@ class DBNastenka extends Database {
 	public static function getSingleNastenka($id) {
 		list($id) = DBNastenka::escapeArray(array($id));
 		
-		$res = DBNastenka::query("SELECT u_login,u_jmeno,u_prijmeni,up_aktu,up_nadpis,up_text,up_barvy,up_lock" .
+		$res = DBNastenka::query("SELECT up_kdo,u_jmeno,u_prijmeni,up_aktu,up_nadpis,up_text,up_barvy,up_lock" .
 			" FROM upozorneni LEFT JOIN users ON up_kdo=u_id WHERE up_id='$id'");
 		if(!$res) {
 			return false;

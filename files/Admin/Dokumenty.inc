@@ -14,7 +14,7 @@ if($action[0] == 'edit') {
 	
 	if(!Permissions::canEditDokument($data['d_kdo']))
 		View::viewError(ER_AUTHORIZATION);
-	
+	//TODO: Dokument - Admin - edit kategorie
 	if(empty($_POST)) {
 		echo '<form action="', $_SERVER['REQUEST_URI'], '" method="POST">';
 		echo 'Staré jméno:&nbsp;', $data['d_name'], '<br />';
@@ -95,8 +95,7 @@ switch(getPostField('action')) {
 		if(is_array(getPostField('dokumenty'))) {
 			foreach(getPostField('dokumenty') as $id) {
 				$data = DBDokumenty::getSingleDokument($id);
-				if(User::checkPermissionsBool(L_ADMIN) ||
-						(User::getUserID() == $data['d_kdo'])) {
+				if(Permissions::canEditDokument($data['d_kdo'])) {
 					unlink($data['d_path']);
 					DBDokumenty::removeDokument($id);
 				} else {

@@ -89,6 +89,7 @@ class DBAnkety extends Database {
 		
 		$res = DBAnkety::query("DELETE FROM ankety WHERE ak_id='$id'");
 		$res = DBAnkety::query("DELETE FROM ankety_item WHERE aki_id_rodic='$id'");
+		$res = DBAnkety::query("DELETE FROM ankety_ip WHERE akp_id_rodic='$id'");
 		return true;
 	}
 	

@@ -8,6 +8,7 @@ header_main("Dokumenty");
 	<option value="1">Schůze, rady</option>
 	<option value="2">Soutěže</option>
 	<option value="3">Tábory</option>
+	<option value="4">Inzerce</option>
 	<option value="0">Ostatní</option>
 </select>
 <button type="submit">Zobrazit</button>
