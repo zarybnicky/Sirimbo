@@ -2,10 +2,10 @@
 class DisplayAkce {
 	public static function viewAkceHeader($data) {
 		echo '<div class="a_info" style="border:1px solid black;">';
-		echo '<div class="a_jmeno">', $data['a_jmeno'], '</div>';
-		
+		echo '<div class="a_jmeno">', $data['a_jmeno'];
 		if(Permissions::canEditAkce())
-			echo '<div class="a_edit"><a href="/admin/akce/edit/', $data['a_id'], '">Editovat</a></div>';	
+			echo ' - <a href="/admin/akce/edit/', $data['a_id'], '">Editovat</a>';
+		echo '</div>';
 	
 		echo '<div class="a_datum">', formatDate($data['a_od']);
 		if($data['a_od'] != $data['a_do'])

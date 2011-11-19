@@ -8,7 +8,7 @@ class Permissions {
 	}
 	public static function canEditAnketa($vlastnik) {
 		if(User::checkPermissionsBool(L_ADMIN) ||
-				(User::checkPermissionsBool(L_EDITOR) && User::getUserID() == $trener))
+				(User::checkPermissionsBool(L_EDITOR) && User::getUserID() == $vlastnik))
 			return true;
 		else
 			return false;
@@ -16,6 +16,13 @@ class Permissions {
 	public static function canEditDokument($vlastnik) {
 		if(User::checkPermissionsBool(L_ADMIN) ||
 				(User::checkPermissionsBool(L_EDITOR) && User::getUserID() == $vlastnik))
+			return true;
+		else
+			return false;
+	}
+	public static function canEditInzerat($vlastnik) {
+		if(User::checkPermissionsBool(L_EDITOR) ||
+				(User::checkPermissionsBool(L_USER) && User::getUserID() == $vlastnik))
 			return true;
 		else
 			return false;
