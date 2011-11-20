@@ -50,8 +50,8 @@
 				?>"><a href="/home">Domů</a></li>
 				<li<?php echo ($section == 'oklubu') ? ' class="current"' : '';
 				?>><a href="/oklubu">O klubu</a></li>
-				<li<?php echo ($section == 'aktualne') ? ' class="current"' : '';
-				?>><a href="/aktualne">Aktuálně</a></li>
+				<li<?php echo ($section == 'aktuality') ? ' class="current"' : '';
+				?>><a href="/aktuality/posledni">Aktuálně</a></li>
 				<li<?php echo ($section == 'inzerce') ? ' class="current"' : '';
 				?>><a href="/inzerce/posledni">Inzerce</a></li>
 				<li<?php echo ($section == 'foto') ? ' class="current"' : '';
@@ -79,6 +79,12 @@
 					
 					if(array_key_exists($name[1], Settings::$sekce)) {
 						foreach(Settings::$sekce[$section] as $url => $word) {
+							if(is_array($word)) {
+								if(User::checkPermissionsBool($word[1]))
+									$word = $word[0];
+								else
+									continue;
+							}
 							if($s_part != $url)
 								echo '<li><a href="/', $section, '/', $url,
 									'"><span class="arrow">.</span>', $word,

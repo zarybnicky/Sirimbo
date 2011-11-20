@@ -8,7 +8,7 @@ $request = explode('/', $_SERVER['REQUEST_URI']);
 $action = array_slice($request, 3);
 $id = isset($action[1]) ? $action[1] : '';
 
-if(!id || !is_numeric($id) || !($data = DBNabidka::getSingleNabidka($id)))
+if(!$id || !is_numeric($id) || !($data = DBNabidka::getSingleNabidka($id)))
 	View::redirect('/admin/nabidka', 'Nabídka s takovým ID neexistuje');
 	
 if(!Permissions::canEditNabidka($data['n_trener']))

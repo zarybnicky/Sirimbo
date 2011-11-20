@@ -51,11 +51,11 @@ header_minor($header);
 			$users = DBUser::getUsers();
 			echoUsers("reg", $users);
 		?></td><td>Buď vyberte uživatele nebo zadejte jméno i příjmení neregistrovaného<?php
-			if((getPostField('reg') && is_numeric(getPostField('reg'))) ^
-					(getPostField('jmeno') && is_string(getPostField('jmeno') &&
-						strlen(getPostField('jmeno')) <= 40) &&
-					getpostField('prijmeni') && is_string(getPostField('prijmeni') &&
-						strlen(getPostField('prijmeni')) <= 40))) {
+			if((getPostField('reg') && is_numeric(getPostField('reg'))) ||
+					(getPostField('jmeno') && is_string(getPostField('jmeno')) &&
+						strlen(getPostField('jmeno')) <= 40 &&
+					getpostField('prijmeni') && is_string(getPostField('prijmeni')) &&
+						strlen(getPostField('prijmeni')) <= 40)) {
 				 $error = $error;
 			} else {
 				checkPostField('/qwertz/', 'dummy');
