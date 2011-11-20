@@ -101,43 +101,49 @@ define("INZERCE_PRODAM", 1);
 define("INZERCE_KOUPIM", 2);
 define("INZERCE_PARTNER", 3);
 define("INZERCE_PARTNERKA", 4);
+define("AKTUALITY_ZPRAVY", 1);
+define("AKTUALITY_VIDEA", 2);
+define("AKTUALITY_PREVIEW", 200);
 
 $sitemap_static = array(
 	"home"				=> "files/Main/Home/Main.inc",
 	"oklubu"			=> "files/Main/OKlubu/Main.inc",
 	"oklubu/treneri"	=> "files/Main/OKlubu/Treneri.inc",
-	"aktualne"			=> "files/Main/Aktualne/Main.inc",
 	"foto"				=> "files/Main/Fotogalerie/Main.inc",
 	"nabizime"			=> "files/Main/Nabizime/Main.inc",
 	"forum"				=> "files/Main/Forum/Main.inc",
-	"kontakt"			=> "files/Main/Kontakt/Main.inc",
 	"done"				=> "files/Main/RegistraceDone.inc"
 );
 $sitemap_dynamic = array(
-	"ankety"				=> "files/Main/Ankety.inc",
-	"inzerce"				=> "files/Main/Inzerce/Main.inc",
-	"inzerce/posledni"		=> "files/Main/Inzerce/Main.inc",
-	"inzerce/prodam"		=> "files/Main/Inzerce/Main.inc",
-	"inzerce/koupim"		=> "files/Main/Inzerce/Main.inc",
-	"inzerce/partner"		=> "files/Main/Inzerce/Main.inc",
-	"inzerce/partnerka"		=> "files/Main/Inzerce/Main.inc",
-	"inzerce/add"			=> "files/Main/Inzerce/Main.inc",
-	"inzerce/edit"			=> "files/Main/Inzerce/Main.inc",
-	"inzerce/remove"		=> "files/Main/Inzerce/Main.inc",
+	"ankety"			=> "files/Main/Ankety.inc",
+	"aktuality"			=> "files/Main/Aktualne/Main.inc",
+	"aktuality/posledni"=> "files/Main/Aktualne/Main.inc",
+	"aktuality/videa"	=> "files/Main/Aktualne/Main.inc",
+	"aktuality/zpravy"	=> "files/Main/Aktualne/Main.inc",
+	"kontakt"			=> "files/Main/Kontakt/Main.inc",
+	"inzerce"			=> "files/Main/Inzerce/Main.inc",
+	"inzerce/posledni"	=> "files/Main/Inzerce/Main.inc",
+	"inzerce/prodam"	=> "files/Main/Inzerce/Main.inc",
+	"inzerce/koupim"	=> "files/Main/Inzerce/Main.inc",
+	"inzerce/partner"	=> "files/Main/Inzerce/Main.inc",
+	"inzerce/partnerka"	=> "files/Main/Inzerce/Main.inc",
+	"inzerce/add"		=> "files/Main/Inzerce/Main.inc",
+	"inzerce/edit"		=> "files/Main/Inzerce/Main.inc",
+	"inzerce/remove"	=> "files/Main/Inzerce/Main.inc",
 
-	"error"					=> "files/Main/Error.inc",
-	"logout"				=> "files/Main/Logout.inc",
-	"registrace"			=> "files/Main/Registrace.inc",
-	"member/download"		=> "files/Member/Download.inc",
+	"error"				=> "files/Main/Error.inc",
+	"logout"			=> "files/Main/Logout.inc",
+	"registrace"		=> "files/Main/Registrace.inc",
+	"member/download"	=> "files/Member/Download.inc",
 	
-	"member/home"			=> "files/Member/Home.inc",
-	"member/nastenka"		=> "files/Member/Nastenka.inc",
-	"member/rozpis"			=> "files/Member/Rozpis.inc",
-	"member/nabidka"		=> "files/Member/Nabidka.inc",
-	"member/akce"			=> "files/Member/Akce.inc",
-	"member/dokumenty"		=> "files/Member/Dokumenty.inc",
-	"member/zebricek"		=> "files/Member/Zebricek.inc",
-	"member/pary"			=> "files/Member/Pary.inc",
+	"member/home"		=> "files/Member/Home.inc",
+	"member/nastenka"	=> "files/Member/Nastenka.inc",
+	"member/rozpis"		=> "files/Member/Rozpis.inc",
+	"member/nabidka"	=> "files/Member/Nabidka.inc",
+	"member/akce"		=> "files/Member/Akce.inc",
+	"member/dokumenty"	=> "files/Member/Dokumenty.inc",
+	"member/zebricek"	=> "files/Member/Zebricek.inc",
+	"member/pary"		=> "files/Member/Pary.inc",
 	"member/profil"			=> "files/Member/Profil.inc",
 	"member/profil/edit"	=> "files/Member/Profil.inc",
 	"member/profil/heslo"	=> "files/Member/Profil.inc",
@@ -181,7 +187,9 @@ $sitemap_dynamic = array(
 	"admin/inzerce"				=> "files/Admin/Inzerce.inc",
 	"admin/inzerce/add"			=> "files/Admin/Inzerce.inc",
 	"admin/inzerce/edit"		=> "files/Admin/Inzerce.inc",
-	"admin/inzerce/new"			=> "files/Admin/Inzerce.inc"
+	"admin/aktuality"			=> "files/Admin/Aktuality/Main.inc",
+	"admin/aktuality/add"		=> "files/Admin/Aktuality/Main.inc",
+	"admin/aktuality/edit"		=> "files/Admin/Aktuality/Main.inc"
 );
 
 class Settings {
@@ -209,17 +217,21 @@ public static $document_types = array(
 
 public static $sekce = array(
 	"admin"		=> array(
-			"nastenka"	=> "Správa nástěnky",
-			"users"		=> "Správa uživatelů",
-			"akce"		=> "Správa akcí",
-			"rozpis"	=> "Správa rozpisů",
-			"nabidka"	=> "Správa nabídky",
-			"dokumenty"	=> "Správa dokumentů",
-			"pary"		=> "Správa párů",
-			"ankety"	=> "Správa anket",
-			"inzerce"	=> "Správa inzerce"
+			"aktuality"	=> array("Správa článků", L_EDITOR),
+			"nastenka"	=> array("Správa nástěnky", L_EDITOR),
+			"users"		=> array("Správa uživatelů", L_ADMIN),
+			"akce"		=> array("Správa akcí", L_ADMIN),
+			"rozpis"	=> array("Správa rozpisů", L_TRENER),
+			"nabidka"	=> array("Správa nabídky", L_TRENER),
+			"dokumenty"	=> array("Správa dokumentů", L_EDITOR),
+			"pary"		=> array("Správa párů", L_ADMIN),
+			"ankety"	=> array("Správa anket", L_EDITOR),
+			"inzerce"	=> array("Správa inzerce", L_ADMIN)
 		),
-	"aktualne"	=> array(
+	"aktuality"	=> array(
+			"posledni"	=> "Nejnovější články",
+			"videa"		=> "Videa",
+			"zpravy"	=> "Krátké zprávy"
 		),
 	"member"	=> array(
 			"home"		=> "Novinky",
@@ -244,7 +256,7 @@ public static $sekce = array(
 			"odkazy"	=> "Odkazy"
 		),
 	"inzerce"	=> array(
-			"posledni"	=> "Poslední inzeráty",
+			"posledni"	=> "Nejnovější inzeráty",
 			"prodam"	=> "Prodám",
 			"koupim"	=> "Koupím",
 			"partner"	=> "Hledám partnera",

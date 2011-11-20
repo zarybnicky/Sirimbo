@@ -13,6 +13,13 @@ class Permissions {
 		else
 			return false;
 	}
+	public static function canEditAktualita($vlastnik) {
+		if(User::checkPermissionsBool(L_ADMIN) ||
+				(User::checkPermissionsBool(L_EDITOR) && User::getUserID() == $vlastnik))
+			return true;
+		else
+			return false;
+	}
 	public static function canEditDokument($vlastnik) {
 		if(User::checkPermissionsBool(L_ADMIN) ||
 				(User::checkPermissionsBool(L_EDITOR) && User::getUserID() == $vlastnik))

@@ -7,7 +7,7 @@ class DisplayInzerce {
 		if(Permissions::canEditInzerat($data['i_reg']))
 			echo ' - <a href="', ($member ? "/member/profil" : ''), '/inzerce/edit/', $data['i_id'], '">Editovat</a>', 
 				'<a href="', ($member ? "/member/profil" : ''), '/inzerce/remove/', $data['i_id'], '">Odstranit</a>';
-		echo '<br/><br/>';
+		echo '<br/>';
 	}
 	
 	public static function viewInzerce($visible = true, $confirmed = true, $kategorie, $pocet = 0, $vlastnik = 0) {
