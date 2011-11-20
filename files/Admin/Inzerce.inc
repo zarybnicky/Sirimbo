@@ -124,10 +124,10 @@ switch($action[0]) {
 				if(is_array(getPostField('inzerce'))) {
 					foreach(getPostField('inzerce') as $id) {
 						$visible = getPostField($id . '-visible');
-						DBInzerce::confirmInzerat($id, $visible);
+						DBInzerce::confirmInzerat($id, (bool) $visible);
 					}
 				}
-				View::redirect('/admin/inzerce', 'Inzeráry potvrzeny');
+				View::redirect('/admin/inzerce', 'Inzeráty potvrzeny');
 				return;
 			} elseif(getPostField('action') == 'remove') {
 				echo '<form action="/admin/inzerce" method="POST">';

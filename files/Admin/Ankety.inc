@@ -56,8 +56,6 @@ switch($action[0]) {
 			include("files/Admin/Ankety/Form.inc");
 			return;
 		} else {
-			$changed = false;
-			
 			//-----Odebrání položky-----//
 			if(getPostField("remove") > 0) {
 				DBAnkety::removeAnketaItem(getPostField("remove"));
@@ -97,7 +95,8 @@ switch($action[0]) {
 				$data = DBAnkety::getSingleAnketa($id);
 				$changed = true;
 			}
-			if($changed) {
+			
+			if(isset($changed) && $changed) {
 				if($visible) {
 					if(!$visible_prev)
 						DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal anketu ' .

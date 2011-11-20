@@ -57,7 +57,6 @@ if(empty($_POST)) {
 	include("files/Admin/Pary/Display.inc");
 	return;
 }
-//TODO: "Historie" partnerů
 switch(getPostField("action")) {
 	case "remove":
 		if(is_array(getPostField("pary"))) {
