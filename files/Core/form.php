@@ -151,7 +151,7 @@ function echoPartners($list_name, $list) {
 	echo '</select>', "\n";
 }
 function echoDateSelect($day_fieldname, $month_fieldname, $year_fieldname) {
-	$selected = (int) getPostField($day_fieldname);
+	$selected = getPostField($day_fieldname) ? (int) getPostField($day_fieldname) : date('d');
 	echo '<select name="', $day_fieldname, '">', "\n";
 	echo '<option value="00">Den</option>', "\n";
 	for($i = 1; $i < 32; $i++) {
@@ -165,7 +165,7 @@ function echoDateSelect($day_fieldname, $month_fieldname, $year_fieldname) {
 	}
 	echo '</select>', "\n";
 	
-	$selected = (int) getPostField($month_fieldname);
+	$selected = getPostField($month_fieldname) ? (int) getPostField($month_fieldname) : date('m');
 	$months = array (1 => 'Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen', 'Červenec',
 		'Srpen', 'Září', 'Říjen', 'Listopad', 'Prosinec');
 	echo '<select name="', $month_fieldname, '">', "\n";
@@ -181,26 +181,26 @@ function echoDateSelect($day_fieldname, $month_fieldname, $year_fieldname) {
 	}
 	echo '</select>', "\n";
 	
-	$selected = (int) substr(getPostField($year_fieldname), 2);
+	$selected = getPostField($year_fieldname) ? (int) getPostField($year_fieldname) : date('Y');
 	echo '<select name="', $year_fieldname, '">', "\n";
 	echo '<option value="0000">Rok</option>', "\n";
-	for($i = 10; $i < 21; $i++) {
-		echo '<option value="20', $i, '"';
+	for($i = 2010; $i < 2021; $i++) {
+		echo '<option value="', $i, '"';
 		if ($selected == $i)
 			echo ' selected="selected"';
-		echo '>20', $i, '</option>', "\n";
+		echo '>', $i, '</option>', "\n";
 	}
 	echo '</select>', "\n";
 }
 function echoBarvaDisplay($barva) {
 	if($barva & C_ZLUTA) {
-		echo 'žlutá ';
+		echo '<div class="color yellow">.</div>';
 	}
 	if($barva & C_CERVENA) {
-		echo 'červená ';
+		echo '<div class="color red">.</div>';
 	}
 	if($barva & C_MODRA) {
-		echo 'modrá';
+		echo '<div class="color blue">.</div>';
 	}
 }
 function echoTaborDokumenty($list_name, $kats) {

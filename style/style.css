@@ -12,11 +12,12 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 	outline: 0;
 	font-weight: inherit;
 	font-style: inherit;
-	font-size: 100%;
-	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: medium;
+	font-family: Arial,Helvetica,sans-serif;
+	/*font-family: "lucida grande",tahoma,verdana,arial,sans-serif;FACEBOOK*/
+	/*font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;ORIGINAL*/
 	vertical-align: baseline;
 }
-/* remember to define focus styles! */
 :focus {
 	outline: 0;
 }
@@ -162,10 +163,10 @@ table th, table td {
 	display: block;
 	background: url('tab-nosel-left.png') no-repeat left;
 	padding: 8px 10px 4px 4px;
-	font-size: 20px;
+	font-size: 19px;
+	font-weight: bold;
 	line-height: 22px;
 	height: 22px;
-	font-weight: bold;
 	color: #fff;
 	text-decoration: none;
 }
@@ -277,6 +278,17 @@ table th, table td {
 	color: #572E00;
 	margin: 5px 0 5px 0;
 }
+.color {
+	background-color:white;
+	color:white;
+	display:inline;
+	padding: 0 5px;
+	content: '';
+	line-height:10px;
+}
+.blue {background-color:blue; color:blue;}
+.red {background-color:red; color:red;}
+.yellow {background-color:yellow; color:yellow;}
 /*END CONTENT*/
 #footer {
 	clear: both;
