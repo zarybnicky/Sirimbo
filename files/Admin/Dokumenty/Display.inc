@@ -20,7 +20,7 @@ foreach($dokumenty as $item) {
 	else
 		echo '<td><input type="checkbox" name="dokumenty[]" value="',
 			'" disabled="disabled" /></td>';
-	echo '<td>', $item['d_name'], '</td>';
+	echo '<td><a href="/member/download?id=', $item['d_id'], '">', $item['d_name'], '</a></td>';
 	echo '<td>', $item['d_filename'], '</td>';
 	echo '<td>', Settings::$document_types[$item['d_kategorie']], '</td>';
 	echo '<td>';
