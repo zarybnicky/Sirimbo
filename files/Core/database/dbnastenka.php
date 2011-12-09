@@ -5,7 +5,7 @@ class DBNastenka extends Database {
 		"SELECT up_id,up_kdo,u_jmeno,u_prijmeni,up_aktu,up_nadpis,up_text,up_barvy,up_lock
 		FROM upozorneni
 			LEFT JOIN users ON up_kdo=u_id
-		ORDER BY up_aktu");
+		ORDER BY up_aktu DESC");
 		return DBNastenka::getArray($res);
 	}
 	

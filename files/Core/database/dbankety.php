@@ -38,6 +38,9 @@ class DBAnkety extends Database {
 		$array = DBAnkety::getArray($res);
 		$result = array();
 		
+		if(!$array)
+			return $result;
+		
 		$latest = -1;
 		foreach($array as $row) {
 			if($latest == $row['ak_id'])  {

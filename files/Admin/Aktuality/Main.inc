@@ -15,12 +15,11 @@ switch($action[0]) {
 			return;
 		} else {
 			$matches = array();
-			$text = substr(getPostField('text'), 0, AKTUALITY_PREVIEW);
-			preg_match("/(.+)\s.*/i", $text, $matches);
-			$html = nl2br(htmlspecialchars($text));
+			$preview = substr(getPostField('text'), 0, AKTUALITY_PREVIEW);
+			preg_match("/(.+)\s.*/i", $preview, $matches);
 			
 			DBAktuality::addAktualita(User::getUserID(), getPostField('kat'), getPostField('jmeno'),
-				getPostFIeld('text'), $matches[1], serialize(array()));
+				getPostField('text'), $matches[1], serialize(array()));
 			DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal článek ' .
 				getPostField('jmeno'));
 			
@@ -49,8 +48,8 @@ switch($action[0]) {
 					getPostField('jmeno') != $data['at_jmeno'] ||
 					getPostField('text') != $data['at_text']) {
 				$matches = array();
-				$text = substr(getPostField('text'), 0, AKTUALITY_PREVIEW);
-				preg_match("/(.+)\s.*/i", $text, $matches);
+				$preview = substr(getPostField('text'), 0, AKTUALITY_PREVIEW);
+				preg_match("/(.+)\s.*/i", $preview, $matches);
 				
 				DBAktuality::editAktualita($id,getPostField('kat'), getPostField('jmeno'), getPostField('text'),
 					$matches[1], serialize(array()));

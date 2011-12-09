@@ -21,6 +21,7 @@ function shutdown() {
 register_shutdown_function('shutdown');
 
 define("CORE", "files/Core");
+define("GALERIE", "galerie");
 define("HEADER", "files/Static/Header.inc");
 define("FOOTER", "files/Static/Footer.inc");
 define("LOG", "log/error.log");
@@ -106,16 +107,28 @@ define("AKTUALITY_VIDEA", 2);
 define("AKTUALITY_PREVIEW", 200);
 
 $sitemap_static = array(
-	"home"				=> "files/Main/Home/Main.inc",
-	"oklubu"			=> "files/Main/OKlubu/Main.inc",
-	"oklubu/treneri"	=> "files/Main/OKlubu/Treneri.inc",
-	"foto"				=> "files/Main/Fotogalerie/Main.inc",
-	"nabizime"			=> "files/Main/Nabizime/Main.inc",
-	"forum"				=> "files/Main/Forum/Main.inc",
-	"done"				=> "files/Main/RegistraceDone.inc"
+	"home"					=> "files/Main/Home/Main.inc",
+	"home/zajemci"			=> "files/Main/Home/Main.inc",
+	"oklubu"				=> "files/Main/OKlubu/Main.inc",
+	"oklubu/historie"		=> "files/Main/OKlubu/Treneri.inc",
+	"oklubu/rada"			=> "files/Main/OKlubu/Main.inc",
+	"oklubu/uspechy"		=> "files/Main/OKlubu/Main.inc",
+	"oklubu/mistrovstvi"	=> "files/Main/OKlubu/Main.inc",
+	"oklubu/druzstva"		=> "files/Main/OKlubu/Main.inc",
+	"oklubu/liga"			=> "files/Main/OKlubu/Main.inc",
+	"oklubu/treneri"		=> "files/Main/OKlubu/Treneri.inc",
+	"oklubu/saly"			=> "files/Main/OKlubu/Main.inc",
+	"foto"					=> "files/Main/Fotogalerie/Main.inc",
+	"forum"					=> "files/Main/Forum/Main.inc",
+	"nabizime"				=> "files/Main/Nabizime/Main.inc",
+	"nabizime/vystoupeni"	=> "files/Main/Nabizime/Main.inc",
+	"nabizime/individualky"	=> "files/Main/Nabizime/Main.inc",
+	"nabizime/seminare"		=> "files/Main/Nabizime/Main.inc",
+	"nabizime/soustredeni"	=> "files/Main/Nabizime/Main.inc",
+	"done"					=> "files/Main/RegistraceDone.inc"
 );
 $sitemap_dynamic = array(
-	"ankety"			=> "files/Main/Ankety.inc",
+	"home/ankety"		=> "files/Main/Ankety.inc",
 	"aktuality"			=> "files/Main/Aktualne/Main.inc",
 	"aktuality/posledni"=> "files/Main/Aktualne/Main.inc",
 	"aktuality/videa"	=> "files/Main/Aktualne/Main.inc",
@@ -157,39 +170,42 @@ $sitemap_dynamic = array(
 	"member/profil/inzerce/remove"	=> "files/Member/Profil.inc",
 
 	"admin/home"				=> "files/Admin/Main.inc",
-	"admin/dokumenty"			=> "files/Admin/Dokumenty.inc",
-	"admin/dokumenty/edit"		=> "files/Admin/Dokumenty.inc",
-	"admin/nastenka"			=> "files/Admin/Nastenka.inc",
-	"admin/nastenka/add"		=> "files/Admin/Nastenka.inc",
-	"admin/nastenka/edit"		=> "files/Admin/Nastenka.inc",
-	"admin/nabidka"				=> "files/Admin/Nabidka.inc",
-	"admin/nabidka/add"			=> "files/Admin/Nabidka.inc",
-	"admin/nabidka/edit"		=> "files/Admin/Nabidka.inc",
-	"admin/nabidka/detail"		=> "files/Admin/NabidkaDetail.inc",
-	"admin/pary"				=> "files/Admin/Pary.inc",
-	"admin/pary/edit"			=> "files/Admin/Pary.inc",
-	"admin/rozpis"				=> "files/Admin/Rozpis.inc",
-	"admin/rozpis/add"			=> "files/Admin/Rozpis.inc",
-	"admin/rozpis/edit"			=> "files/Admin/Rozpis.inc",
-	"admin/rozpis/detail"		=> "files/Admin/RozpisDetail.inc",
-	"admin/akce"				=> "files/Admin/Akce.inc",
-	"admin/akce/add"			=> "files/Admin/Akce.inc",
-	"admin/akce/edit"			=> "files/Admin/Akce.inc",
-	"admin/akce/detail"			=> "files/Admin/AkceDetail.inc",
-	"admin/akce/dokumenty"		=> "files/Admin/AkceDokumenty.inc",
-	"admin/users"				=> "files/Admin/Users.inc",
-	"admin/users/add"			=> "files/Admin/Users.inc",
-	"admin/users/edit"			=> "files/Admin/Users.inc",
-	"admin/users/new"			=> "files/Admin/Users.inc",
-	"admin/ankety"				=> "files/Admin/Ankety.inc",
-	"admin/ankety/add"			=> "files/Admin/Ankety.inc",
-	"admin/ankety/edit"			=> "files/Admin/Ankety.inc",
-	"admin/inzerce"				=> "files/Admin/Inzerce.inc",
-	"admin/inzerce/add"			=> "files/Admin/Inzerce.inc",
-	"admin/inzerce/edit"		=> "files/Admin/Inzerce.inc",
+	"admin/dokumenty"			=> "files/Admin/Dokumenty/Main.inc",
+	"admin/dokumenty/edit"		=> "files/Admin/Dokumenty/Main.inc",
+	"admin/nastenka"			=> "files/Admin/Nastenka/Main.inc",
+	"admin/nastenka/add"		=> "files/Admin/Nastenka/Main.inc",
+	"admin/nastenka/edit"		=> "files/Admin/Nastenka/Main.inc",
+	"admin/nabidka"				=> "files/Admin/Nabidka/Main.inc",
+	"admin/nabidka/add"			=> "files/Admin/Nabidka/Main.inc",
+	"admin/nabidka/edit"		=> "files/Admin/Nabidka/Main.inc",
+	"admin/nabidka/detail"		=> "files/Admin/NabidkaDetail/Main.inc",
+	"admin/pary"				=> "files/Admin/Pary/Main.inc",
+	"admin/pary/edit"			=> "files/Admin/Pary/Main.inc",
+	"admin/rozpis"				=> "files/Admin/Rozpis/Main.inc",
+	"admin/rozpis/add"			=> "files/Admin/Rozpis/Main.inc",
+	"admin/rozpis/edit"			=> "files/Admin/Rozpis/Main.inc",
+	"admin/rozpis/detail"		=> "files/Admin/RozpisDetail/Main.inc",
+	"admin/akce"				=> "files/Admin/Akce/Main.inc",
+	"admin/akce/add"			=> "files/Admin/Akce/Main.inc",
+	"admin/akce/edit"			=> "files/Admin/Akce/Main.inc",
+	"admin/akce/detail"			=> "files/Admin/AkceDetail/Main.inc",
+	"admin/akce/dokumenty"		=> "files/Admin/AkceDokumenty/Main.inc",
+	"admin/users"				=> "files/Admin/Users/Main.inc",
+	"admin/users/add"			=> "files/Admin/Users/Main.inc",
+	"admin/users/edit"			=> "files/Admin/Users/Main.inc",
+	"admin/users/new"			=> "files/Admin/Users/Main.inc",
+	"admin/ankety"				=> "files/Admin/Ankety/Main.inc",
+	"admin/ankety/add"			=> "files/Admin/Ankety/Main.inc",
+	"admin/ankety/edit"			=> "files/Admin/Ankety/Main.inc",
+	"admin/inzerce"				=> "files/Admin/Inzerce/Main.inc",
+	"admin/inzerce/add"			=> "files/Admin/Inzerce/Main.inc",
+	"admin/inzerce/edit"		=> "files/Admin/Inzerce/Main.inc",
 	"admin/aktuality"			=> "files/Admin/Aktuality/Main.inc",
 	"admin/aktuality/add"		=> "files/Admin/Aktuality/Main.inc",
-	"admin/aktuality/edit"		=> "files/Admin/Aktuality/Main.inc"
+	"admin/aktuality/edit"		=> "files/Admin/Aktuality/Main.inc",
+	"admin/galerie"				=> "files/Admin/Galerie/Main.inc",
+	"admin/galerie/add"			=> "files/Admin/Galerie/Main.inc",
+	"admin/galerie/editdirs"	=> "files/Admin/Galerie/Main.inc"
 );
 
 class Settings {
@@ -226,7 +242,8 @@ public static $sekce = array(
 			"dokumenty"	=> array("Správa dokumentů", L_EDITOR),
 			"pary"		=> array("Správa párů", L_ADMIN),
 			"ankety"	=> array("Správa anket", L_EDITOR),
-			"inzerce"	=> array("Správa inzerce", L_ADMIN)
+			"inzerce"	=> array("Správa inzerce", L_ADMIN),
+			"galerie"	=> array("Správa galerie", L_ADMIN)
 		),
 	"aktuality"	=> array(
 			"posledni"	=> "Nejnovější články",
@@ -249,11 +266,7 @@ public static $sekce = array(
 		),
 	"home"		=> array(
 			"zajemci"	=> "Noví zájemci",
-			"rada"		=> "Rada klubu",
-			"historie"	=> "Historie",
-			"mcr"		=> "Mistrovství ČR",
-			"liga"		=> "Taneční liga",
-			"odkazy"	=> "Odkazy"
+			"ankety"	=> "Ankety"
 		),
 	"inzerce"	=> array(
 			"posledni"	=> "Nejnovější inzeráty",
@@ -266,10 +279,28 @@ public static $sekce = array(
 	"kontakt"	=> array(
 		),
 	"oklubu"	=> array(
-			"treneri"	=> "Trenéři"
+			"historie"		=> "Historie",
+			"rada"			=> "Rada klubu",
+			"uspechy"		=> "Úspěchy v číslech",
+			"mistrovstvi"	=> "Mistrovství ČR",
+			"druzstva"		=> "Družstva",
+			"liga"			=> "Taneční liga",
+			"treneri"		=> "Trenéři",
+			"saly"			=> "Kde trénujeme"
 		),
 	"nabizime"	=> array(
+			"vystoupeni"	=> "Taneční vystoupení",
+			"individualky"	=> "Individuální lekce",
+			"seminare"		=> "Skupinové semináře",
+			"soustredeni"	=> "Taneční soustředění"
 		)
+);
+public static $foto_types = array(
+	'image/pjpeg' => 'jpg',
+	'image/jpeg' => 'jpg',
+	'image/gif' => 'gif',
+	'image/bmp' => 'bmp',
+	'image/x-png' => 'png'
 );
 }
 ?>
