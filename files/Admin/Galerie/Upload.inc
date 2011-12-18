@@ -1,6 +1,6 @@
+<?php header_minor('Upload'); ?>
 <form enctype="multipart/form-data" action="<?php $_SERVER['REQUEST_URI'];?>" method="post">
 <table>
-
 <tr><td>Popis:</td><td>Soubor</td></tr>
 <?php
 $number = (getPostField('n') || getPostField('n_prev')) ?

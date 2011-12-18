@@ -1,20 +1,24 @@
 <?php
 class DisplayNabidka {
 	public static function viewNabidkaHeader($data, $obsazeno) {
-		echo '<div class="n_info" style="border:1px solid black;">';
-		echo '<div class="n_trener">';
+		echo '<div class="trenink_header">';
+		echo '<div class="nadpis">';
 		echoFullJmeno($data);
-		if(Permissions::canEditNabidka($data['n_trener']))
-			echo ' - <a href="/admin/nabidka/edit/', $data['n_id'], '">Editovat</a>';
 		echo '</div>';
 		
-		echo '<div class="n_datum">', formatDate($data['n_od']);
+		if(Permissions::canEditNabidka($data['n_trener']))
+			echo '<a href="/admin/nabidka/edit/', $data['n_id'], '">Editovat</a>';
+		
+		echo '<div style="letter-spacing:1px;font-weight:bold;">', formatDate($data['n_od']);
 		if($data['n_od'] != $data['n_do'])
 			echo ' - ', formatDate($data['n_do']);
-		echo '</div>';
-		echo '<div class="n_hodiny_all">Celkem hodin: ', $data['n_pocet_hod'], '</div>';
-		echo '<div class="n_hodiny_obs">Obsazených hodin: ', (int) $obsazeno, '</div>';
-		echo '<div class="n_hodiny_vol">Volných hodin: ', $data['n_pocet_hod'] - (int) $obsazeno, '</div>';
+		echo '</b></div>';
+		echo '<div><span class="little">Celkem hodin: </span>',
+			'<span class="nadpis">', $data['n_pocet_hod'], '</span></div>';
+		echo '<div><span class="little">Obsazených hodin: </span>',
+			'<span class="nadpis">', (int) $obsazeno, '</span></div>';
+		echo '<div><span class="little">Volných hodin: </span>',
+			'<span class="nadpis">', $data['n_pocet_hod'] - (int) $obsazeno, '</span></div>';
 		echo '</div>';
 	}
 }

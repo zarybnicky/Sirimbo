@@ -179,8 +179,9 @@ public static function checkUser($login, $pass) {
 		return DBUser::getArray($res);
 	}
 	
-	public static function getActiveUsers() {
-		$res = DBUser::query("SELECT * FROM users WHERE u_confirmed='1' AND u_ban='0' ORDER BY u_login");
+	public static function getActiveUsers($orderByPrijmeni = false) {
+		$res = DBUser::query("SELECT * FROM users WHERE u_confirmed='1' AND u_ban='0' ORDER BY" .
+			($orderByPrijmeni ? " u_prijmeni" : " u_id"));
 		return DBUser::getArray($res);
 	}
 	

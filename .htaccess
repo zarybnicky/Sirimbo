@@ -1,7 +1,7 @@
 php_value log_errors 1
 php_value error_log log/php.log
 
-Options All -Indexes +FollowSymlinks
+Options -Indexes +FollowSymLinks
 DirectoryIndex index.php index.html index.htm
 
 RewriteEngine On

@@ -193,14 +193,18 @@ function echoDateSelect($day_fieldname, $month_fieldname, $year_fieldname) {
 	echo '</select>', "\n";
 }
 function echoBarvaDisplay($barva) {
-	if($barva & C_ZLUTA) {
-		echo '<div class="color yellow">.</div>';
-	}
-	if($barva & C_CERVENA) {
-		echo '<div class="color red">.</div>';
-	}
-	if($barva & C_MODRA) {
-		echo '<div class="color blue">.</div>';
+	if($barva) {
+		echo '<span style="border:1px black solid;">';
+		if($barva & C_ZLUTA) {
+			echo '<div class="color yellow">.</div>';
+		}
+		if($barva & C_CERVENA) {
+			echo '<div class="color red">.</div>';
+		}
+		if($barva & C_MODRA) {
+			echo '<div class="color blue">.</div>';
+		}
+		echo '</span>';
 	}
 }
 function echoTaborDokumenty($list_name, $kats) {

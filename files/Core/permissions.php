@@ -58,7 +58,7 @@ class Permissions {
 	public static function canEditUser($id, $level, $lock) {
 		if(User::checkPermissionsBool(L_SADMIN) ||
 			(User::checkPermissionsBool(L_ADMIN) &&
-				(User::getUserID() == $id || (User::getUserLevel() < $level && !$lock))))
+				(User::getUserID() == $id || (User::getUserLevel() > $level && !$lock))))
 			return true;
 		else
 			return false;

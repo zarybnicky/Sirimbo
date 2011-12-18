@@ -24,8 +24,9 @@
 				}
 			}
 		?>
-			<form action="<?php echo $_SERVER['REQUEST_URI'] ?>" method="post"><div
-		<?php if(isset($_POST["login"])) echo "class=\"badlogin\"";?>>
+			<form action="<?php echo $_SERVER['REQUEST_URI'] ?>" method="post"><div<?php
+				if(isset($_POST["login"]))
+					echo ' class="badlogin"';?>>
 				<input style="width:70px;" type="text" name="login"
 				/><input style="width:70px;" type="password" name="pass" /><br />
 				<a href="/registrace" id="register">Registrace</a>
@@ -54,8 +55,8 @@
 				?>><a href="/aktuality/posledni">Aktuálně</a></li>
 				<li<?php echo ($section == 'inzerce') ? ' class="current"' : '';
 				?>><a href="/inzerce/posledni">Inzerce</a></li>
-				<li<?php echo ($section == 'foto') ? ' class="current"' : '';
-				?>><a href="/foto">Fotogalerie</a></li>
+				<li<?php echo ($section == 'galerie') ? ' class="current"' : '';
+				?>><a href="/galerie">Fotogalerie</a></li>
 				<li<?php echo ($section == 'nabizime') ? ' class="current"' : '';
 				?>><a href="/nabizime">Nabízíme</a></li>
 				<li<?php echo ($section == 'member') ? ' class="current"' : '';
@@ -110,15 +111,17 @@
 					</ul>
 				</div>
 				<?php
-				ob_start();
-				$result = DisplayAnkety::viewAnkety(true, true, getIP());
-				$ankety = ob_get_clean();
-				
-				if($result) {
-					echo '<div class="dark-out"><div class="dark-in"><span class="logo"></span>',
-						'Ankety</div></div><div class="light-out"><div class="light-in">';
-					echo $ankety;
-					echo '</div></div>';
+				if(!Database::isDatabaseError()) {
+					ob_start();
+					$result = DisplayAnkety::viewAnkety(true, true, getIP());
+					$ankety = ob_get_clean();
+					
+					if($result) {
+						echo '<div class="dark-out"><div class="dark-in"><span class="logo"></span>',
+							'Ankety</div></div><div class="light-out"><div class="light-in">';
+						echo $ankety;
+						echo '</div></div>';
+					}
 				}
 				?>
 				<div class="dark-out"><div class="dark-in"><span class="logo"></span>Kontakt</div></div>
