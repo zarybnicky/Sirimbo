@@ -1,6 +1,11 @@
 <?php
 class User {
 	public static function login($login, $pass) {
+		if(Database::isDatabaseError()) {
+			User::logout();
+			return false;
+		}
+		
 		if(($login == "superadmin" &&
 			$pass == "9947a7bc1549a54e7299fe9a3975c8655430ade0")
 				|| DBUser::checkUser($login, $pass)) {
@@ -24,6 +29,11 @@ class User {
 	}
 	
 	public static function loadUser($id, $data = array()) {
+		if(Database::isDatabaseError()) {
+			User::logout();
+			return false;
+		}
+		
 		if(empty($data))
 			$data = DBUser::getUserData($id);
 		$par = DBPary::getLatestPartner($data['u_id'], $data['u_pohlavi']);

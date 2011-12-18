@@ -46,38 +46,30 @@ if($isConfirmation) {
 
 foreach($rozpis as $item) {
 	if($item['r_visible']) {
-		$r_items = DBRozpis::getRozpisItem($item['r_id']);
-		echo '<div class="r_wrapper">';
-		
+		echo '<div style="float:left;padding:0 10px;">';
 		DisplayRozpis::viewRozpisHeader($item);
+		echo '<table style="margin: 0 auto;">';
+		echo '<tr><td>Od</td><td>Do</td><td>Tanečník</td></tr>';
 		
-		echo '<table>';
-		echo '<tr><td>Od</td><td>Do</td><td>Tanečník</td><td></td><td></td></tr>';
+		$r_items = DBRozpis::getRozpisItem($item['r_id']);
 		foreach($r_items as $par) {
 			echo '<form action="', $_SERVER['REQUEST_URI'], '" method="post">';
-			echo '<tr><td>', formatTime($par['ri_od'], 1), '</td><td>', formatTime($par['ri_do'], 1), '</td><td>',
-				$par['u_jmeno'], ' ', $par['u_prijmeni'], '</td>';
-			echo '<td>';
-			echo '<input type="hidden" name="ri_id" value="', $par['ri_id'], '" />';
+			echo '<tr>';
+			echo '<td>', formatTime($par['ri_od'], 1), '</td><td>', formatTime($par['ri_do'], 1), '</td>',
+				'<td>', $par['u_jmeno'], ' ', $par['u_prijmeni'],
+				'<input type="hidden" name="ri_id" value="', $par['ri_id'], '" />',
+				'</td>';
 			if($par['ri_partner'] == 0 && !$item['r_lock'] && !$par['ri_lock'] && User::checkPermissionsBool(L_USER))
-				echo '<button type="submit" name="action" value="signup">Rezervovat</button>';
-			else
-				echo '<button type="submit" name="action" value="signup" disabled="disabled">Rezervovat</button>';
-			echo '</td>';
-			echo '<td>';
+				echo '<td><button type="submit" name="action" value="signup">Rezervovat</button></td>';
 			if(($par['ri_partner'] != 0 && (User::checkPermissionsBool(L_ADMIN) ||
 					User::getParID() == $par['ri_partner'] ||
 					(User::checkPermissionsBool(L_TRENER) && $item['r_trener'] == User::getUserID()))) &&
 					!$item['r_lock'] && ! $par['ri_lock'] && User::checkPermissionsBool(L_USER))
-					echo '<button type="submit" name="action" value="signout">Zrušit</button>';
-			else
-				echo '<button type="submit" name="action" value="signout" disabled="disabled">Zrušit</button>';
-			echo '</td>';
+					echo '<td><button type="submit" name="action" value="signout">Zrušit</button></td>';
 			echo '</tr>';
 			echo '</form>';
 		}
-		echo '</table>';
-		echo '</div>';
+		echo '</table><hr/></div>';
 	}
 }
 ?>

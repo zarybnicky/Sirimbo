@@ -201,7 +201,7 @@ switch($action[0]) {
 					if($gotPartner)
 						echo '<button type="submit" name="action" value="dumpthem">Rozejít se</button>';
 					echo '</form>';
-					echo '<a href=""/member/profil/par>Zpět</a>';
+					echo '<a href="/member/profil/par">Zpět</a>';
 					return;
 				} else {
 					if(getPostField('action') == 'dumpthem' && !empty($latest) && $latest['u_id'] > 0) {
