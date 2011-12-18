@@ -43,7 +43,7 @@ table.k b {color:#572E00;}
 </tr>
 <tr>
 	<td class="r">email:</td>
-	<td>h.jendrulkova(zavináč)centrum.cz</td>
+	<td>h.jendrulkova(zavináč)tkolymp.cz</td>
 </tr>
 <tr><td>&nbsp;</td><td></td></tr>
 <tr>

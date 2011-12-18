@@ -187,16 +187,7 @@ CREATE TABLE IF NOT EXISTS `galerie_foto` (
   `gf_aktu` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`gf_id`),
   KEY `gf_id_rodic` (`gf_id_rodic`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1250 COLLATE=cp1250_czech_cs AUTO_INCREMENT=4 ;
-
---
--- Dumping data for table `galerie_foto`
---
-
-INSERT INTO `galerie_foto` (`gf_id`, `gf_id_rodic`, `gf_name`, `gf_path`, `gf_kdo`, `gf_aktu`) VALUES
-(1, 0, 'logo.gif', 'galerie/0/logo.gif', 0, '2011-11-28 19:42:40'),
-(2, 0, 'logo.gif', 'galerie/0/logo.gif', 1, '2011-11-28 19:44:11'),
-(3, 0, 'logo.gif', 'galerie/0/logo.gif', 1, '2011-11-28 20:09:12');
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1250 COLLATE=cp1250_czech_cs AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -220,16 +211,7 @@ CREATE TABLE IF NOT EXISTS `inzerce` (
   `i_visible` enum('0','1') COLLATE cp1250_czech_cs NOT NULL,
   `i_aktu` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`i_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1250 COLLATE=cp1250_czech_cs AUTO_INCREMENT=5 ;
-
---
--- Dumping data for table `inzerce`
---
-
-INSERT INTO `inzerce` (`i_id`, `i_kat`, `i_reg`, `i_jmeno`, `i_prijmeni`, `i_nadpis`, `i_text`, `i_foto`, `i_od`, `i_do`, `i_confirmed`, `i_visible`, `i_aktu`) VALUES
-(3, '1', 1, 'James', 'Ash', 'Frak', 'Prodám frak na výšku 172 cm...', 0x613a303a7b7d, '2011-11-19', '2011-12-19', '1', '1', '2011-11-20 15:00:59'),
-(2, '4', 1, 'James', 'Ash', 'Olomouc', 'Hledám taneční partnerku...', 0x613a303a7b7d, '2011-11-18', '2011-11-18', '1', '1', '2011-11-20 13:34:27'),
-(4, '1', 0, 'Xxxxxx', 'Yyyyyy', 'Šary na STT', 'Prodám červené šaty na standardní tance\r\nZn.: krásně zdobené', 0x613a303a7b7d, '2011-11-20', '2011-11-20', '1', '1', '2011-11-20 15:09:30');
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1250 COLLATE=cp1250_czech_cs AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 

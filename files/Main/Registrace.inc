@@ -2,7 +2,7 @@
 header_main("Registrace");
 
 global $isConfirmation;
-$isConfirmation = getPostField("username") && getPostField("pass");
+$isConfirmation = getPostField("username") && getPostField("pass") && getPostField("email") && getPostField("telefon");
 
 ob_start();
 ?>
@@ -40,18 +40,16 @@ ob_start();
 			if(getPostField("pohlavi") == "f") echo "checked=\"checked\"";
 		?>/>Žena</td>
 	</tr><tr>
-		<td>E-mail: </td>
+		<td>E-mail (*): </td>
 		<td><input type="text" name="email" value="<?php echo getPostField("email"); ?>" /></td>
 		<td>Max. 50 znaků, ve formátu e-mail adresy<?php
-			$error = (strlen(getPostField("email")) < 1 ? 0 : 
-				checkPostField("/^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i", "email")) || $error;
+			$error = checkPostField("/^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i", "email") || $error;
 		?></td>
 	</tr><tr>
-		<td>Telefon: </td>
+		<td>Telefon (*): </td>
 		<td><input type="text" name="telefon" value="<?php echo getPostField("telefon"); ?>" /></td>
 		<td>Pouze číslice a +, max. 13 znaků<?php
-			$error = (strlen(getPostField("telefon")) < 1 ? 0 : 
-				checkPostField("/^[0-9+]{9,13}$/", "telefon")) || $error;
+			$error = checkPostField("/^[0-9+]{9,13}$/", "telefon") || $error;
 		?></td>
 	</tr><tr>
 		<td>Poznámky: </td>

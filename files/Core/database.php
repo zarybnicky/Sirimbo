@@ -42,5 +42,9 @@ class Database {
 		
 		return $result;
 	}
+	public static function isDatabaseError() {
+		return (isset($_GET['file']) &&$_GET['file'] == "error" && isset($_GET['id']) &&
+			($_GET['id'] == ER_DATABASE_CONNECTION || $_GET['id'] == ER_DATABASE));
+	}
 }
 ?>

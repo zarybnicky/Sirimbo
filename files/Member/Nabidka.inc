@@ -45,15 +45,16 @@ if($isConfirmation) {
 
 foreach($nabidka as $item) {
 	if($item['n_visible']) {
-		$n_items = DBNabidka::getNabidkaItem($item['n_id']);
-		$obsazeno = DBNabidka::getNabidkaItemLessons($item['n_id']);
 		echo '<div class="n_wrapper">';
 		echo '<form action="', $_SERVER['REQUEST_URI'], '" method="post">';
 		
+		$obsazeno = DBNabidka::getNabidkaItemLessons($item['n_id']);
 		DisplayNabidka::viewNabidkaHeader($item, $obsazeno);
 		
 		echo '<table>';
 		echo '<tr><td>Tanečník</td><td>Počet hodin</td></tr>';
+		
+		$n_items = DBNabidka::getNabidkaItem($item['n_id']);
 		foreach($n_items as $par) {
 			echo '<tr><td>', $par['u_jmeno'], ' ', $par['u_prijmeni'], '</td>',
 				'<td>', $par['ni_pocet_hod'], '</td>';
@@ -85,7 +86,7 @@ foreach($nabidka as $item) {
 			echo '<button type="submit">Přidat</button>';
 		}
 		echo '</div>';
-		echo '</form></div>';
+		echo '</form></div><hr/>';
 	}
 }
 ?>

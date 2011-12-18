@@ -32,7 +32,7 @@ class DBPary extends Database {
 			FROM pary AS p
 				LEFT JOIN users AS m ON p.p_id_partner=m.u_id
 				LEFT JOIN users AS f ON p.p_id_partnerka=f.u_id
-			WHERE p.p_archiv='0'
+			WHERE p.p_archiv='0' AND (f.u_jmeno IS NOT NULL OR f.u_prijmeni IS NOT NULL)
 			ORDER BY p.p_hodnoceni DESC"
 		);
 		return DBPary::getArray($res);

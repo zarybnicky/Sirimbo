@@ -9,9 +9,9 @@ class View {
 	}
 
 	public static function viewStatic($l) {
-		include(HEADER);
-		
 		ob_start();
+		
+		include(HEADER);
 		if(file_exists($l)) {
 			$fd = fopen($l, 'r');
 			echo fread($fd, filesize($l));
@@ -19,11 +19,9 @@ class View {
 		else {
 			echo "Stránka \"$l\" nenalezena.";
 		}
-		$main = ob_get_clean();
-		
-		echo $main;
 		include(FOOTER);
 		
+		ob_end_flush();
 		exit;
 	}
 
@@ -35,6 +33,7 @@ class View {
 		//	$fh = fopen($myFile, 'r');
 		//	$theData = fread($fh, filesize($myFile));
 		//	fclose($fh);
+		ob_start();
 		
 		ob_start();
 		if(file_exists($l)) {
@@ -48,6 +47,9 @@ class View {
 		include(HEADER);
 		echo $main;
 		include(FOOTER);
+		
+		ob_end_flush();
+		exit;
 	}
 	
 	public static function viewError($er_id) {
