@@ -1,4 +1,6 @@
 <?php
+User::checkPermissionsError(L_HOST);
+
 header_main('Žebříček párů');
 notice(View::getRedirectMessage());
 $pary = DBPary::getActiveParyByHodnoceni();
@@ -8,16 +10,20 @@ if(empty($pary)) {
 }
 ?>
 <table>
-<tr><td></td><td>Partner</td><td>Partnerka</td><td>Standart</td><td>Latina</td><td>Body</td></tr>
+<tr><td>Pořadí</td><td>Partner</td><td>Partnerka</td><td>Standard</td><td>Latina</td><td>Body</td><td></td></tr>
 <?php
-foreach($pary as $par) {
-	echo '<tr><td>',
-		'<a href="/member/pary/', $par['p_id'], '">Profil</a></td><td>',
-		$par['guy_name'], ' ', $par['guy_surname'], '</td><td>',
-		$par['gal_name'], ' ', $par['gal_surname'], '</td><td>',
-		$par['p_stt_trida'], ' ', $par['p_stt_body'], 'F', $par['p_stt_finale'], '</td><td>',
-		$par['p_lat_trida'], ' ', $par['p_lat_body'], 'F', $par['p_lat_finale'], '</td><td>',
-		$par['p_hodnoceni'], '</td></tr>';
+$count = count($pary);
+for($i = 1; $i <= $count; $i++) {
+	$par = $pary[$i - 1];
+	echo '<tr>',
+		'<td style="text-align:right;">', $i, '. </td>',
+		'<td>', $par['guy_name'], ' ', $par['guy_surname'], '</td>',
+		'<td>', $par['gal_name'], ' ', $par['gal_surname'], '</td>',
+		'<td>', $par['p_stt_trida'], ' ', $par['p_stt_body'], 'F', $par['p_stt_finale'], '</td>',
+		'<td>', $par['p_lat_trida'], ' ', $par['p_lat_body'], 'F', $par['p_lat_finale'], '</td>',
+		'<td>', $par['p_hodnoceni'], '</td>',
+		'<td><a href="/member/pary/', $par['p_id'], '">Profil</a></td>',
+		'</tr>';
 }
 ?>
 </table>

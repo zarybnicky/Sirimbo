@@ -60,7 +60,7 @@ switch($action[0]) {
 	
 		if(!$data['u_confirmed']) {
 			View::redirect('/admin/users',
-				'Uživatel "' . $data['login'] . '" ještě není potvrzený');
+				'Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
 		}
 			
 		if(empty($_POST)) {
@@ -167,45 +167,50 @@ switch(getPostField('action')) {
 		if($users[0]) {
 			header('Location: /admin/users/edit/' . $users[0]);
 			return;
-		}
-		break;
-
-	case 'remove':
-		if(is_array(getPostField('users'))) {
-			echo '<form action="/admin/users" method="POST">';
-			echo 'Opravdu chcete odstranit uživatele:<br/><br/>';
-			foreach(getPostField('users') as $id) {
-				$data = DBUser::getUserData($id);
-				echo "\t", $data['u_login'], ' - ';
-				echoFullJmeno($data);
-				echo '<br />';
-				echo '<input type="hidden" name="users[]" value="', $id, '" />';
-			}
-			echo '<br/>';
-			echo '<button type="submit" name="action" value="remove_confirm">Odstranit</button>';
-			echo '</form>';
-			echo '<a href="/admin/users">Zpět</a>';
-			return;
-		}
-		break;
-
-	case 'remove_confirm':
-		if(is_array(getPostField('users'))) {
-			foreach(getPostField('users') as $id) {
-				$data = DBUser::getUserData($id);
-				
-				if(Permissions::canEditUser($id, $data['u_level'], $data['u_lock']))
-					DBUser::removeUser($id);
-				else
-					$error = true;
-			}
-			if(isset($error) && $error)
-				View::viewError(ER_AUTHORIZATION);
-			
-			notice('Uživatelé odebráni');
+		} else {
 			include('files/Admin/Users/Display.inc');
 			return;
 		}
 		break;
+
+	case 'remove':
+		if(!is_array(getPostField('users'))) {
+			include('files/Admin/Users/Display.inc');
+			return;
+		}
+		echo '<form action="/admin/users" method="POST">';
+		echo 'Opravdu chcete odstranit uživatele:<br/><br/>';
+		foreach(getPostField('users') as $id) {
+			$data = DBUser::getUserData($id);
+			echo "\t", $data['u_login'], ' - ';
+			echoFullJmeno($data);
+			echo '<br />';
+			echo '<input type="hidden" name="users[]" value="', $id, '" />';
+		}
+		echo '<br/>';
+		echo '<button type="submit" name="action" value="remove_confirm">Odstranit</button>';
+		echo '</form>';
+		echo '<a href="/admin/users">Zpět</a>';
+		return;
+
+	case 'remove_confirm':
+		if(!is_array(getPostField('users'))) {
+			include('files/Admin/Users/Display.inc');
+			return;
+		}
+		foreach(getPostField('users') as $id) {
+			$data = DBUser::getUserData($id);
+			
+			if(Permissions::canEditUser($id, $data['u_level'], $data['u_lock']))
+				DBUser::removeUser($id);
+			else
+				$error = true;
+		}
+		if(isset($error) && $error)
+			View::viewError(ER_AUTHORIZATION);
+		
+		notice('Uživatelé odebráni');
+		include('files/Admin/Users/Display.inc');
+		return;
 }
 ?>

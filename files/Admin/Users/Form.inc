@@ -16,9 +16,7 @@ else
 	$header = "Neznámá akce";
 header_minor($header);
 ?>
-<form action="<?php
-if($action[0] == 'edit') echo '/admin/users';
-else echo '/admin/users/add'; ?>" method="POST">
+<form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="POST">
 <table>
 	<tr>
 		<td>Uživatel (*): </td>

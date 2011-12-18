@@ -18,4 +18,9 @@ class DBNovinky extends Database {
 		list($text) = DBNovinky::escapeArray(array($text));
 		DBNovinky::query("INSERT INTO novinky (no_text) VALUES ('$text')");
 	}
+	
+	public static function removeNovinka($id) {
+		list($id) = DBNovinky::escapeArray(array($id));
+		DBNovinky::query("DELETE FROM novinky WHERE no_id=$id");
+	}
 }

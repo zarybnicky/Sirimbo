@@ -20,7 +20,10 @@ function shutdown() {
 }
 register_shutdown_function('shutdown');
 
+date_default_timezone_set('Europe/Paris');
+
 define("CORE", "files/Core");
+define("SETTINGS", CORE . "/settings");
 define("GALERIE", "galerie");
 define("HEADER", "files/Static/Header.inc");
 define("FOOTER", "files/Static/Footer.inc");
@@ -37,19 +40,8 @@ if(DEBUG) {
 	error_reporting(-1);
 }
 
-//-----Databazove pripojeni-----//
-/*TESTING*/
-define("DB_SERVER", "localhost");
-define("DB_USER", "root");
-define("DB_PASS", "konik1");
-define("DB_DATABASE", "olymp");
-/**/
-/*PRODUCTION
-define("DB_SERVER", "mysql.webzdarma.cz");
-define("DB_USER", "zarzar");
-define("DB_PASS", "695810");
-define("DB_DATABASE", "zarzar");
-*/
+include (SETTINGS . "/db.php");
+include (SETTINGS . "/sitemap.php");
 
 //-----Ciselne hodnoty urovni uzivatelu-----//
 define("L_UNCONFIRMED", "-1");
@@ -105,108 +97,7 @@ define("INZERCE_PARTNERKA", 4);
 define("AKTUALITY_ZPRAVY", 1);
 define("AKTUALITY_VIDEA", 2);
 define("AKTUALITY_PREVIEW", 200);
-
-$sitemap_static = array(
-	"home"					=> "files/Main/Home/Main.inc",
-	"home/zajemci"			=> "files/Main/Home/Main.inc",
-	"oklubu"				=> "files/Main/OKlubu/Main.inc",
-	"oklubu/historie"		=> "files/Main/OKlubu/Treneri.inc",
-	"oklubu/rada"			=> "files/Main/OKlubu/Main.inc",
-	"oklubu/uspechy"		=> "files/Main/OKlubu/Main.inc",
-	"oklubu/mistrovstvi"	=> "files/Main/OKlubu/Main.inc",
-	"oklubu/druzstva"		=> "files/Main/OKlubu/Main.inc",
-	"oklubu/liga"			=> "files/Main/OKlubu/Main.inc",
-	"oklubu/treneri"		=> "files/Main/OKlubu/Treneri.inc",
-	"oklubu/saly"			=> "files/Main/OKlubu/Main.inc",
-	"foto"					=> "files/Main/Fotogalerie/Main.inc",
-	"forum"					=> "files/Main/Forum/Main.inc",
-	"nabizime"				=> "files/Main/Nabizime/Main.inc",
-	"nabizime/vystoupeni"	=> "files/Main/Nabizime/Main.inc",
-	"nabizime/individualky"	=> "files/Main/Nabizime/Main.inc",
-	"nabizime/seminare"		=> "files/Main/Nabizime/Main.inc",
-	"nabizime/soustredeni"	=> "files/Main/Nabizime/Main.inc",
-	"done"					=> "files/Main/RegistraceDone.inc"
-);
-$sitemap_dynamic = array(
-	"home/ankety"		=> "files/Main/Ankety.inc",
-	"aktuality"			=> "files/Main/Aktualne/Main.inc",
-	"aktuality/posledni"=> "files/Main/Aktualne/Main.inc",
-	"aktuality/videa"	=> "files/Main/Aktualne/Main.inc",
-	"aktuality/zpravy"	=> "files/Main/Aktualne/Main.inc",
-	"kontakt"			=> "files/Main/Kontakt/Main.inc",
-	"inzerce"			=> "files/Main/Inzerce/Main.inc",
-	"inzerce/posledni"	=> "files/Main/Inzerce/Main.inc",
-	"inzerce/prodam"	=> "files/Main/Inzerce/Main.inc",
-	"inzerce/koupim"	=> "files/Main/Inzerce/Main.inc",
-	"inzerce/partner"	=> "files/Main/Inzerce/Main.inc",
-	"inzerce/partnerka"	=> "files/Main/Inzerce/Main.inc",
-	"inzerce/add"		=> "files/Main/Inzerce/Main.inc",
-	"inzerce/edit"		=> "files/Main/Inzerce/Main.inc",
-	"inzerce/remove"	=> "files/Main/Inzerce/Main.inc",
-
-	"error"				=> "files/Main/Error.inc",
-	"logout"			=> "files/Main/Logout.inc",
-	"registrace"		=> "files/Main/Registrace.inc",
-	"member/download"	=> "files/Member/Download.inc",
-	
-	"member/home"		=> "files/Member/Home.inc",
-	"member/nastenka"	=> "files/Member/Nastenka.inc",
-	"member/rozpis"		=> "files/Member/Rozpis.inc",
-	"member/nabidka"	=> "files/Member/Nabidka.inc",
-	"member/akce"		=> "files/Member/Akce.inc",
-	"member/dokumenty"	=> "files/Member/Dokumenty.inc",
-	"member/zebricek"	=> "files/Member/Zebricek.inc",
-	"member/pary"		=> "files/Member/Pary.inc",
-	"member/profil"			=> "files/Member/Profil.inc",
-	"member/profil/edit"	=> "files/Member/Profil.inc",
-	"member/profil/heslo"	=> "files/Member/Profil.inc",
-	"member/profil/par"		=> "files/Member/Profil.inc",
-	"member/profil/par/partner"	=> "files/Member/Profil.inc",
-	"member/profil/par/body"	=> "files/Member/Profil.inc",
-	"member/profil/par/zadost"	=> "files/Member/Profil.inc",
-	"member/profil/inzerce"		=> "files/Member/Profil.inc",
-	"member/profil/inzerce/add"	=> "files/Member/Profil.inc",
-	"member/profil/inzerce/edit"	=> "files/Member/Profil.inc",
-	"member/profil/inzerce/remove"	=> "files/Member/Profil.inc",
-
-	"admin/home"				=> "files/Admin/Main.inc",
-	"admin/dokumenty"			=> "files/Admin/Dokumenty/Main.inc",
-	"admin/dokumenty/edit"		=> "files/Admin/Dokumenty/Main.inc",
-	"admin/nastenka"			=> "files/Admin/Nastenka/Main.inc",
-	"admin/nastenka/add"		=> "files/Admin/Nastenka/Main.inc",
-	"admin/nastenka/edit"		=> "files/Admin/Nastenka/Main.inc",
-	"admin/nabidka"				=> "files/Admin/Nabidka/Main.inc",
-	"admin/nabidka/add"			=> "files/Admin/Nabidka/Main.inc",
-	"admin/nabidka/edit"		=> "files/Admin/Nabidka/Main.inc",
-	"admin/nabidka/detail"		=> "files/Admin/NabidkaDetail/Main.inc",
-	"admin/pary"				=> "files/Admin/Pary/Main.inc",
-	"admin/pary/edit"			=> "files/Admin/Pary/Main.inc",
-	"admin/rozpis"				=> "files/Admin/Rozpis/Main.inc",
-	"admin/rozpis/add"			=> "files/Admin/Rozpis/Main.inc",
-	"admin/rozpis/edit"			=> "files/Admin/Rozpis/Main.inc",
-	"admin/rozpis/detail"		=> "files/Admin/RozpisDetail/Main.inc",
-	"admin/akce"				=> "files/Admin/Akce/Main.inc",
-	"admin/akce/add"			=> "files/Admin/Akce/Main.inc",
-	"admin/akce/edit"			=> "files/Admin/Akce/Main.inc",
-	"admin/akce/detail"			=> "files/Admin/AkceDetail/Main.inc",
-	"admin/akce/dokumenty"		=> "files/Admin/AkceDokumenty/Main.inc",
-	"admin/users"				=> "files/Admin/Users/Main.inc",
-	"admin/users/add"			=> "files/Admin/Users/Main.inc",
-	"admin/users/edit"			=> "files/Admin/Users/Main.inc",
-	"admin/users/new"			=> "files/Admin/Users/Main.inc",
-	"admin/ankety"				=> "files/Admin/Ankety/Main.inc",
-	"admin/ankety/add"			=> "files/Admin/Ankety/Main.inc",
-	"admin/ankety/edit"			=> "files/Admin/Ankety/Main.inc",
-	"admin/inzerce"				=> "files/Admin/Inzerce/Main.inc",
-	"admin/inzerce/add"			=> "files/Admin/Inzerce/Main.inc",
-	"admin/inzerce/edit"		=> "files/Admin/Inzerce/Main.inc",
-	"admin/aktuality"			=> "files/Admin/Aktuality/Main.inc",
-	"admin/aktuality/add"		=> "files/Admin/Aktuality/Main.inc",
-	"admin/aktuality/edit"		=> "files/Admin/Aktuality/Main.inc",
-	"admin/galerie"				=> "files/Admin/Galerie/Main.inc",
-	"admin/galerie/add"			=> "files/Admin/Galerie/Main.inc",
-	"admin/galerie/editdirs"	=> "files/Admin/Galerie/Main.inc"
-);
+define("THUMBNAIL_MAX", 150);
 
 class Settings {
 public static $errors = array(
@@ -258,11 +149,12 @@ public static $sekce = array(
 			"akce"		=> "Klubové akce",
 			"dokumenty"	=> "Dokumenty",
 			"zebricek"	=> "Žebříček",
+			"clenove"	=> "Členové",
 			"profil"	=> "Profil"
 		),
 	"forum"		=> array(
 		),
-	"foto"		=> array(
+	"galerie"	=> array(
 		),
 	"home"		=> array(
 			"zajemci"	=> "Noví zájemci",
@@ -273,7 +165,7 @@ public static $sekce = array(
 			"prodam"	=> "Prodám",
 			"koupim"	=> "Koupím",
 			"partner"	=> "Hledám partnera",
-			"partnerka"	=> "Hledím partnerku",
+			"partnerka"	=> "Hledám partnerku",
 			"add"		=> "Nový inzerát"
 		),
 	"kontakt"	=> array(
@@ -302,5 +194,12 @@ public static $foto_types = array(
 	'image/bmp' => 'bmp',
 	'image/x-png' => 'png'
 );
+public static $gd_function_suffix = array(        
+      'image/pjpeg' => 'JPEG',      
+      'image/jpeg' => 'JPEG',      
+      'image/gif' => 'GIF',      
+      'image/bmp' => 'WBMP',      
+      'image/x-png' => 'PNG'      
+    );  
 }
 ?>
