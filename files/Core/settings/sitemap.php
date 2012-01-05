@@ -1,31 +1,36 @@
 <?php
 
 $sitemap_static = array(
-	"oklubu"				=> "files/Main/OKlubu/Main.inc",
-	"oklubu/rada"			=> "files/Main/OKlubu/Main.inc",
-	"forum"					=> "files/Main/Forum/Main.inc",
-	"done"					=> "files/Main/RegistraceDone.inc"
+	"forum"				=> "files/Main/Forum/Main.inc",
+	"done"				=> "files/Main/RegistraceDone.inc"
 );
 $sitemap_dynamic = array(
 	"home"				=> "files/Main/Home/Main.inc",
 	"home/ankety"		=> "files/Main/Ankety.inc",
 	"home/zajemci"		=> "files/Main/Home/Zajemci.inc",
 	"home/odkazy"		=> "files/Main/Home/Odkazy.inc",
-	"oklubu/historie"	=> "files/Main/OKlubu/Historie.inc",
-	"oklubu/mistrovstvi"=> "files/Main/OKlubu/Mistrovstvi.inc",
-	"oklubu/liga"		=> "files/Main/OKlubu/Liga.inc",
-	"oklubu/druzstva"	=> "files/Main/OKlubu/Druzstva.inc",
-	"oklubu/uspechy"	=> "files/Main/OKlubu/VCislech.inc",
-	"oklubu/treneri/klubovi"	=> "files/Main/OKlubu/TreneriInt.inc",
-	"oklubu/treneri/externi"	=> "files/Main/OKlubu/TreneriExt.inc",
-	"oklubu/saly"		=> "files/Main/OKlubu/Saly.inc",
+
+	"oklubu"				=> "files/Main/OKlubu/Main.inc",
+	"oklubu/historie"		=> "files/Main/OKlubu/Historie.inc",
+	"oklubu/mistrovstvi"	=> "files/Main/OKlubu/Mistrovstvi.inc",
+	"oklubu/liga"			=> "files/Main/OKlubu/Liga.inc",
+	"oklubu/druzstva"		=> "files/Main/OKlubu/Druzstva.inc",
+	"oklubu/uspechy"		=> "files/Main/OKlubu/VCislech.inc",
+	"oklubu/treneri/klubovi"=> "files/Main/OKlubu/TreneriInt.inc",
+	"oklubu/treneri/externi"=> "files/Main/OKlubu/TreneriExt.inc",
+	"oklubu/saly"			=> "files/Main/OKlubu/Saly.inc",
+	"oklubu/rada"			=> "files/Main/OKlubu/Main.inc",
+
 	"aktuality"			=> "files/Main/Aktualne/Main.inc",
 	"aktuality/posledni"=> "files/Main/Aktualne/Main.inc",
 	"aktuality/videa"	=> "files/Main/Aktualne/Main.inc",
 	"aktuality/zpravy"	=> "files/Main/Aktualne/Main.inc",
+
 	"fotogalerie"		=> "files/Main/Fotogalerie/Main.inc",
 	"fotogalerie/foto"	=> "files/Main/Fotogalerie/Main.inc",
+
 	"kontakt"			=> "files/Main/Kontakt/Main.inc",
+
 	"inzerce"			=> "files/Main/Inzerce/Main.inc",
 	"inzerce/posledni"	=> "files/Main/Inzerce/Main.inc",
 	"inzerce/prodam"	=> "files/Main/Inzerce/Main.inc",
@@ -35,7 +40,8 @@ $sitemap_dynamic = array(
 	"inzerce/add"		=> "files/Main/Inzerce/Main.inc",
 	"inzerce/edit"		=> "files/Main/Inzerce/Main.inc",
 	"inzerce/remove"	=> "files/Main/Inzerce/Main.inc",
-	"nabizime"			=> "files/Main/Nabizime/Main.inc",
+
+	"nabizime"				=> "files/Main/Nabizime/Main.inc",
 	"nabizime/vystoupeni"	=> "files/Main/Nabizime/Vystoupeni.inc",
 	"nabizime/individualky"	=> "files/Main/Nabizime/Individualky.inc",
 	"nabizime/seminare"		=> "files/Main/Nabizime/Seminare.inc",

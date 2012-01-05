@@ -42,51 +42,72 @@ if($isConfirmation) {
 		notice('Zamčeno :o)');
 	}
 }
-
+echo '<style type="text/css">';
+echo '.unit {background:inherit;border:none;
+	vertical-align:top;border-bottom:1px dotted #999;padding:10px 5px;}';
+echo '</style>';
+echo '<table style="width:100%;">';
+$left = true;
 foreach($nabidka as $item) {
-	if($item['n_visible']) {
-		echo '<div class="n_wrapper">';
-		echo '<form action="', $_SERVER['REQUEST_URI'], '" method="post">';
+	if(!$item['n_visible'])
+		continue;
 		
-		$obsazeno = DBNabidka::getNabidkaItemLessons($item['n_id']);
-		DisplayNabidka::viewNabidkaHeader($item, $obsazeno);
-		
-		echo '<table>';
-		echo '<tr><td>Tanečník</td><td>Počet hodin</td></tr>';
-		
-		$n_items = DBNabidka::getNabidkaItem($item['n_id']);
-		foreach($n_items as $par) {
-			echo '<tr><td>', $par['u_jmeno'], ' ', $par['u_prijmeni'], '</td>',
-				'<td>', $par['ni_pocet_hod'], '</td>';
-			if($par['u_id'] == User::getUserID() || $par['u_id'] == User::getPartnerID() ||
-					User::checkPermissionsBool(L_ADMIN)) {
-				echo '<td>';
-				if($item['n_lock'] || !User::checkPermissionsBool(L_USER)) {
-					echo '<input type="hidden" name="un_id" value="',
-						$par['p_id'], '-', $item['n_id'], '" disabled="disabled" />';
-					echo '<button type="submit" disabled="disabled">Odstranit</button>';
-				} else {
-					echo '<input type="hidden" name="un_id" value="',$par['p_id'],'-',$item['n_id'],'"/>';
-					echo '<button type="submit">Odstranit</button>';
-				}
-				echo '</td>';
+	if($left === true) {
+		echo '<tr><td class="unit">';
+	} else {
+		echo '<td class="unit">';
+	}
+	echo '<form action="', $_SERVER['REQUEST_URI'], '" method="post">';
+	
+	$obsazeno = DBNabidka::getNabidkaItemLessons($item['n_id']);
+	DisplayNabidka::viewNabidkaHeader($item, $obsazeno);
+	
+	echo '<table style="margin:0 auto;">';
+	echo '<tr><td>Tanečník</td><td>Počet hodin</td></tr>';
+	
+	$n_items = DBNabidka::getNabidkaItem($item['n_id']);
+	foreach($n_items as $par) {
+		echo '<tr><td>', $par['u_jmeno'], ' ', $par['u_prijmeni'], '</td>',
+			'<td>', $par['ni_pocet_hod'], '</td>';
+		if($par['u_id'] == User::getUserID() || $par['u_id'] == User::getPartnerID() ||
+				User::checkPermissionsBool(L_ADMIN)) {
+			echo '<td>';
+			if($item['n_lock'] || !User::checkPermissionsBool(L_USER)) {
+				echo '<input type="hidden" name="un_id" value="',
+					$par['p_id'], '-', $item['n_id'], '" disabled="disabled" />';
+				echo '<button type="submit" disabled="disabled">Odstranit</button>';
+			} else {
+				echo '<input type="hidden" name="un_id" value="',$par['p_id'],'-',$item['n_id'],'"/>';
+				echo '<button type="submit">Odstranit</button>';
 			}
-			echo '</tr>';
+			echo '</td>';
 		}
-		echo '</table>';
-		echo '<div class="n_add">';
-		if($item['n_lock'] || !User::checkPermissionsBool(L_USER)) {
-			echo 'Počet hodin: <input type="text" name="hodiny" value="', getPostField('hodiny'),
-				'" disabled="disabled" />';
-			echo '<input type="hidden" name="id" value="', $item['n_id'], '" disabled="disabled" />';
-			echo '<button type="submit" disabled="disabled">Přidat</button>';
-		} else {
-			echo 'Počet hodin: <input type="text" name="hodiny" value="', getPostField('hodiny'), '" />';
-			echo '<input type="hidden" name="id" value="', $item['n_id'], '" />';
-			echo '<button type="submit">Přidat</button>';
-		}
-		echo '</div>';
-		echo '</form></div><hr/>';
+		echo '</tr>';
+	}
+	echo '</table>';
+	echo '<div style="text-align:center;">';
+	if($item['n_lock'] || !User::checkPermissionsBool(L_USER)) {
+		echo 'Počet hodin: <input type="text" name="hodiny" size="2" value="', getPostField('hodiny'),
+			'" disabled="disabled" />';
+		echo '<input type="hidden" name="id" value="', $item['n_id'], '" disabled="disabled" />';
+		echo '<button type="submit" disabled="disabled">Přidat</button>';
+	} else {
+		echo 'Počet hodin: <input type="text" name="hodiny" size="2" value="', getPostField('hodiny'), '" />';
+		echo '<input type="hidden" name="id" value="', $item['n_id'], '" />';
+		echo '<button type="submit">Přidat</button>';
+	}
+	echo '</div>';
+	echo '</form>';
+
+	if($left === true) {
+		$left = false;
+		echo '</td>';
+	} else {
+		$left = true;
+		echo '</td></tr>';
 	}
 }
+if($left === false)
+	echo '</tr>';
+echo '</table>';
 ?>
