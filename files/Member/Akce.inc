@@ -37,23 +37,44 @@ if($isConfirmation) {
 	}
 }
 
+echo '<style type="text/css">';
+echo '.unit {background:inherit;border:none;
+	vertical-align:top;border-bottom:1px dotted #999;padding:10px 5px;}';
+echo '</style>';
+echo '<table style="width:100%;">';
+$left = true;
 foreach($akce as $item) {
-	echo '<div class="a_wrapper">';
+	if($left === true) {
+		echo '<tr><td class="unit">';
+	} else {
+		echo '<td class="unit">';
+	}
 	
 	DisplayAkce::viewAkceHeader($item);
 	
-	echo '<form action="', $_SERVER['REQUEST_URI'], '" method="post">';
+	echo '<form action="', $_SERVER['REQUEST_URI'], '" method="post" style="text-align:center;">';
 	echo '<input type="hidden" name="id" value="', $item['a_id'], '" />';
 	if(User::checkPermissionsBool(L_USER)) {
-		if(DBAkce::isUserSignedUp(User::getUserID())) {
-			echo 'Rok narození: <input type="text" name="narozeni" />';
+		if(DBAkce::isUserSignedUp($item['a_id'], User::getUserID())) {
+			echo 'Rok narození: <input type="text" size="4" name="narozeni" />';
 			echo '<button type="submit" name="action" value="signup">Přihlásit se</button>';
 		} else {
 			echo '<button type="submit" name="action" value="signout">Odhlásit se</button>';
 		}
 	}
+	echo '<br/>';
 	echo '<a href="/member/akce/', $item['a_id'], '">Zobrazit přihlášené</a>';
 	echo '</form>';
-	echo '</div>';
+	
+	if($left === true) {
+		$left = false;
+		echo '</td>';
+	} else {
+		$left = true;
+		echo '</td></tr>';
+	}
 }
+if($left === false)
+	echo '</tr>';
+echo '</table>';
 ?>

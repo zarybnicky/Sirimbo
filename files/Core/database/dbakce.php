@@ -115,10 +115,10 @@ class DBAkce extends Database {
 		return true;
 	}
 	
-	public static function isUserSignedUp($u_id) {
-		list($u_id) = DBRozpis::escapeArray(array($u_id));
+	public static function isUserSignedUp($a_id, $u_id) {
+		list($a_id, $u_id) = DBRozpis::escapeArray(array($a_id, $u_id));
 		
-		$res = DBRozpis::query("SELECT ai_id FROM akce_item WHERE ai_user='$u_id'");
+		$res = DBRozpis::query("SELECT ai_id FROM akce_item WHERE ai_id_rodic='$a_id' AND ai_user='$u_id'");
 		if(!$res) {
 			return false;
 		} else {

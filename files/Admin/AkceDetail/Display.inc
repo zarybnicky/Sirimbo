@@ -1,23 +1,6 @@
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
 <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
-<div class="a_wrapper">
-<div class="a_info" style="border:1px solid black;">
-<div class="a_jmeno"><?php echo $akce["a_jmeno"];?></div>
-<div class="a_datum"><?php
-echo formatDate($akce["a_od"]);
-if($akce["a_od"] != $akce["a_do"])
-	echo " - ", formatDate($akce["a_do"]);
-?>
-</div>
-<div class="a_moreinfo"><?php echo $akce["a_info"];?></div>
-<div class="a_dokumenty"><?php
-$dokumekty = $akce["a_dokumenty"];
-if(!empty($dokumenty))
-	foreach(unserialize($akce["a_dokumenty"]) as $doku) {
-		echo DBDokumenty::getDokumentName($doku), " ";
-	}
-?></div>
-</div>
+<?php DisplayAkce::viewAkceHeader($akce);?>
 <table>
 <tr>
 <td>Registrovaný<br/>uživatel</td><td>Uživatel</td>
@@ -58,6 +41,5 @@ if(!empty($items)) {
 </tr>
 <tr><td><button type="submit" name="action" value="submit">Uložit</button></td></tr>
 </table>
-</div>
 </form>
 <a href="/admin/akce">Zpět</a>
