@@ -43,10 +43,21 @@ if($isConfirmation) {
 		notice('Zamčeno :o)');
 	}
 }
-
+echo '<table>';
+$left = true;
 foreach($rozpis as $item) {
+	if($left = true) {
+		$left = false;
+		echo '<tr><td>';
+		echo '</td>';
+	} else {
+		$left = true;
+		echo '<td>';
+		echo '</td></tr>';
+	}
+	
 	if($item['r_visible']) {
-		echo '<div style="float:left;padding:0 10px;">';
+		echo '<div style="float:left;padding:0 5px;">';
 		DisplayRozpis::viewRozpisHeader($item);
 		echo '<table style="margin: 0 auto;">';
 		echo '<tr><td>Od</td><td>Do</td><td>Tanečník</td></tr>';

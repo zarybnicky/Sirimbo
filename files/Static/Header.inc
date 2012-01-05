@@ -55,8 +55,8 @@
 				?>><a href="/aktuality/posledni">Aktuálně</a></li>
 				<li<?php echo ($section == 'inzerce') ? ' class="current"' : '';
 				?>><a href="/inzerce/posledni">Inzerce</a></li>
-				<li<?php echo ($section == 'galerie') ? ' class="current"' : '';
-				?>><a href="/galerie">Fotogalerie</a></li>
+				<li<?php echo ($section == 'fotogalerie') ? ' class="current"' : '';
+				?>><a href="/fotogalerie">Fotogalerie</a></li>
 				<li<?php echo ($section == 'nabizime') ? ' class="current"' : '';
 				?>><a href="/nabizime">Nabízíme</a></li>
 				<li<?php echo ($section == 'member') ? ' class="current"' : '';
@@ -76,36 +76,33 @@
 					$uri = $_SERVER['REQUEST_URI'];
 					$name = explode('/', $_SERVER['REQUEST_URI']);
 					$section = (isset($name[1])) ? $name[1] : '';
-					$s_part = (isset($name[2])) ? $name[2] : '';
+					$s_part = (isset($name[2])) ? implode('/', array_slice($name, 2)) : '';
 					
-					if(array_key_exists($name[1], Settings::$sekce)) {
-						foreach(Settings::$sekce[$section] as $url => $word) {
-							if(is_array($word)) {
-								if(User::checkPermissionsBool($word[1]))
-									$word = $word[0];
-								else
-									continue;
-							}
-							if($s_part != $url)
-								echo '<li><a href="/', $section, '/', $url,
-									'"><span class="arrow">.</span>', $word,
-									'</a></li>';
-							else
-								echo '<li class="current"><a href="/', $section, '/', $url,
-									'"><span class="arrow">.</span>', $word,
-									'<span class="point">.</span></a></li>';
-						}
+					$menu = array();
+					if($name[1] == 'fotogalerie') {
+						include('files/Main/Fotogalerie/Menu.inc');
+						$menu = getSideMenu();
+					} else if(array_key_exists($name[1], Settings::$sekce)) {
+						$menu = Settings::$sekce[$section];
 					} else {
-						foreach(Settings::$sekce['home'] as $url => $word) {
-							if($s_part != $url)
-								echo '<li><a href="/home/', $url,
-									'"><span class="arrow">.</span>', $word,
-									'</a></li>';
+						$section = 'home';
+						$menu = Settings::$sekce['home'];
+					}
+					foreach($menu as $url => $word) {
+						if(is_array($word)) {
+							if(User::checkPermissionsBool($word[1]))
+								$word = $word[0];
 							else
-								echo '<li class="current"><a href="/home/', $url,
-									'"><span class="arrow">.</span>', $word,
-									'<span class="point">.</span></a></li>';
+								continue;
 						}
+						if($s_part != $url)
+							echo '<li><a href="/', $section, '/', $url,
+								'"><span class="arrow">.</span>', $word,
+								'</a></li>';
+						else
+							echo '<li class="current"><a href="/', $section, '/', $url,
+								'"><span class="arrow">.</span>', $word,
+								'<span class="point">.</span></a></li>';
 					}
 				?>
 					</ul>

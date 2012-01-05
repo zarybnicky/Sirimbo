@@ -4,12 +4,10 @@
 <button type="submit" name="action" value="remove">Odstranit složku + podsložky + fotky</button>
 <?php
 $dirs = DBGalerie::getDirs(true, true);
-$count = count($dirs);
 
-if($count > 1) {
+if(!empty($dirs)) {
 	echo '<table><tr><td></td><td>Název</td></tr>';
-	for($i = 0; $i < $count; $i++) {
-		$item =  $dirs[$i];
+	foreach($dirs as $item) {
 		echo '<tr>';
 		echo '<td><input type="checkbox" name="galerie[]" value="' . $item['gd_id'] . '" /></td>';
 		echo '<td>', str_repeat("&nbsp;-&nbsp;", $item['gd_level'] - 1), $item['gd_name'], '</td>';
