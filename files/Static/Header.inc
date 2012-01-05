@@ -125,10 +125,16 @@
 				<div class="light-out"><div class="light-in">
 					<b>TK OLYMP OLOMOUC</b><br />
 					<hr />
-					Mgr. Marie Hýžová<br />
-					telefon: +420 585 312 504<br />
-					mobil: +420 604 756 085<br />
-					e-mail: tkolymp@tkolymp.cz<br /><br />
+					Mgr. Marie Hýžová<br/>
+					- vedoucí klubu<br/>
+					tel.: 604 756 085<br/>
+					tkolymp(zavináč)tkolymp.cz<br/>
+					<br/>
+					Miroslav Hýža<br/>
+					- informace<br/>
+					tel.: 737 545 525<br/>
+					hyzam(zavináč)tkolymp.cz<br/>
+					<br/>
 					<b>KDE NÁS NAJDETE</b><br />
 					<hr />
 					Jiráskova 25<br />
