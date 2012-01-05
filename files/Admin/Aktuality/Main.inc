@@ -15,7 +15,7 @@ switch($action[0]) {
 			return;
 		} else {
 			$matches = array();
-			$preview = substr(getPostField('text'), 0, AKTUALITY_PREVIEW);
+			$preview = substr(strip_tags(getPostField('text')), 0, AKTUALITY_PREVIEW);
 			preg_match("/(.+)\s.*/i", $preview, $matches);
 			
 			DBAktuality::addAktualita(User::getUserID(), getPostField('kat'), getPostField('jmeno'),
@@ -48,7 +48,7 @@ switch($action[0]) {
 					getPostField('jmeno') != $data['at_jmeno'] ||
 					getPostField('text') != $data['at_text']) {
 				$matches = array();
-				$preview = substr(getPostField('text'), 0, AKTUALITY_PREVIEW);
+				$preview = substr(strip_tags(getPostField('text')), 0, AKTUALITY_PREVIEW);
 				preg_match("/(.+)\s.*/i", $preview, $matches);
 				
 				DBAktuality::editAktualita($id,getPostField('kat'), getPostField('jmeno'), getPostField('text'),

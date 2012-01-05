@@ -153,7 +153,7 @@ public static function checkUser($login, $pass) {
 		DBUser::query("DELETE FROM rozpis_item WHERE ri_partner='$id'");
 		DBUser::query("DELETE FROM nabidka WHERE n_trener='$id'");
 		DBUser::query("DELETE FROM nabidka_item WHERE ni_partner='$id'");
-		DBUser::query("DELETE FROM akce_item WHERE ti_user='$id'");
+		DBUser::query("DELETE FROM akce_item WHERE ai_user='$id'");
 		
 		DBPary::noPartner($id);
 		DBUser::query(

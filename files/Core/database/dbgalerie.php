@@ -1,8 +1,9 @@
 <?php
 class DBGalerie extends Database {
 	public static function getFotky($dir = false) {
-		list($dir) = DBGalerie::escapeArray(array($dir));
-		$res = DBGalerie::query('SELECT * FROM galerie_foto' . ($dir != false ? " WHERE gf_id_rodic='$dir'" : ''));
+		if($dir !== false)
+			list($dir) = DBGalerie::escapeArray(array($dir));
+		$res = DBGalerie::query('SELECT * FROM galerie_foto' . ($dir !== false ? " WHERE gf_id_rodic='$dir'" : ''));
 		
 		return DBGalerie::getArray($res);
 	}

@@ -75,7 +75,9 @@ switch($action[0]) {
 					$fn_suffix = Settings::$gd_function_suffix[$files['type'][$i]];
 					$fn_read = 'imageCreateFrom' . $fn_suffix;
 					$fn_write = 'image' . $fn_suffix;
-
+					if(!function_exists('imagebmp') || !function_exists('imagecreatefrombmp'))
+						include('files/Core/bmp.php');
+										
 					if($source = $fn_read($path)) {
 						$thumbnail = imageCreateTruecolor($nWidth, $nHeight);
 
@@ -138,8 +140,6 @@ switch($action[0]) {
 						unlink($tn);
 					}
 					notice('Fotky odebrány');
-					DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' upravil galerii "' .
-						$dir['gd_name'] . '"');
 					
 					include('files/Admin/Galerie/DisplayEdit.inc');
 					return;
