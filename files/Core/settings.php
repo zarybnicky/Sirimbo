@@ -154,11 +154,12 @@ public static $sekce = array(
 		),
 	"forum"		=> array(
 		),
-	"galerie"	=> array(
+	"fotogalerie"	=> array(
 		),
 	"home"		=> array(
 			"zajemci"	=> "Noví zájemci",
-			"ankety"	=> "Ankety"
+			"ankety"	=> "Ankety",
+			"odkazy"	=> "Odkazy"
 		),
 	"inzerce"	=> array(
 			"posledni"	=> "Nejnovější inzeráty",
@@ -172,15 +173,16 @@ public static $sekce = array(
 		),
 	"oklubu"	=> array(
 			"historie"		=> "Historie",
-			"rada"			=> "Rada klubu",
 			"uspechy"		=> "Úspěchy v číslech",
 			"mistrovstvi"	=> "Mistrovství ČR",
 			"druzstva"		=> "Družstva",
 			"liga"			=> "Taneční liga",
-			"treneri"		=> "Trenéři",
+			"treneri/klubovi"	=> "Kluboví trenéři",
+			"treneri/externi"	=> "Externí trenéři",
 			"saly"			=> "Kde trénujeme"
 		),
 	"nabizime"	=> array(
+			""				=> "Nabízíme",
 			"vystoupeni"	=> "Taneční vystoupení",
 			"individualky"	=> "Individuální lekce",
 			"seminare"		=> "Skupinové semináře",
@@ -198,7 +200,7 @@ public static $gd_function_suffix = array(
       'image/pjpeg' => 'JPEG',      
       'image/jpeg' => 'JPEG',      
       'image/gif' => 'GIF',      
-      'image/bmp' => 'WBMP',      
+      'image/bmp' => 'BMP',      
       'image/x-png' => 'PNG'      
     );  
 }

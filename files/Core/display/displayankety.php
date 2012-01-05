@@ -6,7 +6,7 @@ class DisplayAnkety {
 		if($sum == 0) $sum = 1;
 		
 		if($active)
-			echo '<form action="/ankety" method="POST">';
+			echo '<form action="/home/ankety" method="POST">';
 		echo '<b>', $data['ak_text'], '</b>';
 		if(Permissions::canEditAnketa($data['ak_kdo']))
 			echo ' - <a href="/admin/ankety/edit/', $data['ak_id'], '">Editovat</a>';
@@ -28,7 +28,7 @@ class DisplayAnkety {
 		}//TODO: /ankety/[0-9]*
 		if($active) {
 			echo '<button type="submit" name="id" value="', $data['ak_id'], '">Hlasovat</button>';
-			echo '<a href="/ankety">Zobrazit</a>';
+			echo '<a href="/home/ankety">Zobrazit</a>';
 			echo '</form>';
 		} else {
 			echo '<br />';

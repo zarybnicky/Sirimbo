@@ -3,7 +3,7 @@
 <button type="submit" name="action" value="edit">Upravit fotku</button>
 <button type="submit" name="action" value="remove">Odstranit fotky</button>
 <?php
-if(!$data = DBGalerie::getSingleDir($id)) {
+if(!($data = DBGalerie::getSingleDir($id))) {
 	View::redirect('/admin/galerie', 'Složka s takovým ID neexistuje');
 }
 $fotos = DBGalerie::getFotky($id);

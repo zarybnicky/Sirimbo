@@ -13,9 +13,9 @@ class DisplayAktuality {
 		echo '<br/>';
 		
 		if($preview) {
-			echo nl2br(htmlspecialchars($data['at_preview'])), '<a href="/aktuality/', $data['at_id'], '">...</a>';
+			echo nl2br($data['at_preview']), '<a href="/aktuality/', $data['at_id'], '">...</a>';
 		} else {
-			echo nl2br(htmlspecialchars($data['at_text']));
+			echo nl2br($data['at_text']);
 		}
 		
 		echo '<br/>';
