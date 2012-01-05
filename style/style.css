@@ -52,7 +52,8 @@ blockquote, q {
 * html .clearfix {height: 1%;}
 .clearfix {display: block;}
 
-p,h1,h2,h3,h4,h5,h6,ul,ol {margin-bottom:.5em;}
+p {margin-bottom:1em;text-align:justify;}
+h1,h2,h3,h4,h5,h6,ul,ol {margin-bottom:.5em;}
 h1,h2,h3,h4,h5,h6 {font-weight:bold;}
 h1 {font-size:197%;}
 h2 {font-size:182%;}
@@ -72,7 +73,7 @@ body {
 button, a {
 	border: 0;
 	margin: 0;
-	padding: 0 2px 0 2px;
+	padding: 0 2px;
 	display: inline;
 	position: relative;
 	color: #ff6500;
@@ -102,6 +103,9 @@ table th, table td {
 	border: 1px solid #ffe3b7;
 	background-color: #fff0e2;
 	vertical-align: middle;
+}
+p {
+	margin-bottom: 1em;
 }
 
 #all {
@@ -173,7 +177,7 @@ table th, table td {
 #topmenu ul li.first a {
 	background:  url('tab-nosel-first-left.png') no-repeat left;
 	padding-left: 29px;
-}#topmenu .second {color: purple;}
+}
 #topmenu ul li.last {
 	background: url('tab-nosel-last-right.png') no-repeat right;
 }
@@ -200,6 +204,8 @@ table th, table td {
 	margin-left: 220px;
 	overflow: auto;
 	font-size: 14px;
+	padding: 15px 20px;
+	width: 710px;
 }
 #sidebar {
 	width: 220px;
@@ -258,9 +264,6 @@ table th, table td {
 	color: transparent;
 	position: absolute;
 }
-#content {
-	padding: 15px 20px;
-}
 .notice {
 	padding: 10px 0 10px 20px;
 	position: relative;
@@ -297,10 +300,13 @@ table th, table td {
 }.up_header .nadpis, .trenink_header .nadpis {
 	font-weight:bold;
 	font-size:115%;
-}.little {
-	font-size: 90%;
-	color: #555;
-}.f {
+}
+.little {font-size: 90%;color: #555;}
+.big {font-size: 124%;color: #500;}
+.list {list-style:disc outside none;padding-left:15px;}
+.f_doc_left {margin-right:15px;border:1px solid black;float:left;}
+.f_doc_right {margin-left:15px;border:1px solid black;float:right;}
+.f {
 	float:left;
 	padding:3px;
 	margin:3px;
@@ -308,10 +314,14 @@ table th, table td {
 	border-color: #ffe3b7 #ffa252 #ffa252 #ffe3b7;
 }.f_img {
 	margin:3px;
-}.f_img div {
+}.f_img .f_preview {
 	display:table-cell;
 	vertical-align:middle;
 	width:150px;height:150px;
+}.f_img .f_full {
+	display:table-cell;
+	vertical-align:middle;
+	max-width:710px;max-height:710px;
 }.f_img img {
 	text-align:center;
 	margin:auto;

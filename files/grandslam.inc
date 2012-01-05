@@ -1,0 +1,28 @@
+﻿<?php
+header_main('Olympáci na Czech Dance Open 2011');
+?>
+
+<p>Ve dnech 1.-2. října se v Ostravské ČEZ Aréně konala jedna z největších českých soutěží Czech Dance 
+Open 2011. V rámci této soutěže se letos konalo Mistrovství světa v latinskoamerických tancích mládeže 
+a tzv. IDSF Grand Slam v latinskoamerických tancích.</p>
+
+<p>V soutěži Grand Slam startovaly i dva páry Olympu, oba shodně skončily ve druhém kole, stejně jako 
+většina českých párů. Radim Stupka s Terezou Jendrulkovou se umístili na 65. místě, Miroslav a Marie 
+Hýžovi skončili 72. z celkového počtu 100 tanečních párů. Soutěže se zúčastila i další bývalá členka 
+našeho klubu Barbora Spurná tančící za Rakousko, která se svým partnerem Marco Steindlem obsadila 
+82. pozici.</p>
+
+<p>Velmi dobře si v konfrontaci s téměř kompletní světovou špičkou vedli naši trenéři Filip Karásek 
+a Sabina Pišková, kteří se umístili na 30. místě těsně za dvojicí nejlepších českých párů.</p>
+
+<p>Soutěž byla především velkou podívanou pro širokou taneční veřejnost. Po oba dny vysílal soutěž 
+v přímém přenosu sportovní kanál ČT4, pozornosti kamer neunikly ani oba naše páry. </p>
+
+<p>Velkým zážitkem, byla soutěž i pro diváky přímo v hale, kde sedělo a nejlepší tanečníky světa 
+hltalo na dvě desítky olympáků. Mnozí si ze soutěže odvezli kromě tanečních zážitků také fotky, 
+podpisy nebo startovní člíslo tanečních hvězd.</p>
+
+<img src="/images/souteze/mirek_maruska.jpg" class="f_doc" style="height:300px;">
+<img src="/images/souteze/radim_terka.jpg" class="f_doc" style="height:300px;">
+<img src="/images/souteze/filip_sabina_open.jpg" class="f_doc" style="height:300px;">
+

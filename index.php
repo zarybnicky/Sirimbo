@@ -2,6 +2,7 @@
 include("files/Core/settings.php");
 include("files/Core/log.php");
 include("files/Core/form.php");
+include("files/Core/cache.php");
 include("files/Core/database.php");
 include("files/Core/database/dbuser.php");
 include("files/Core/user.php");
@@ -25,8 +26,12 @@ if(!isset($_GET["file"]) || $_GET["file"] == null) {
 	$file = "home";
 } else {
 	$parts = explode('/', $_GET['file']);
-	if(is_numeric($parts[count($parts) - 1]))
-		array_pop($parts);
+	
+	foreach($parts as $key => $item)
+		if(is_numeric($item))
+			unset($parts[$key]);
+	$parts = array_values($parts);
+	
 	$file = implode('/', $parts);
 }
 
