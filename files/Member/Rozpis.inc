@@ -43,44 +43,56 @@ if($isConfirmation) {
 		notice('Zamčeno :o)');
 	}
 }
-echo '<table>';
+echo '<style type="text/css">';
+echo '.unit {background:inherit;border:none;
+	vertical-align:top;border-bottom:1px dotted #999;padding:10px 5px;}';
+echo '</style>';
+echo '<table style="width:100%;">';
 $left = true;
 foreach($rozpis as $item) {
-	if($left = true) {
+	if(!$item['r_visible'])
+		continue;
+
+	if($left === true) {
+		echo '<tr><td class="unit">';
+	} else {
+		echo '<td class="unit">';
+	}
+	
+	DisplayRozpis::viewRozpisHeader($item);
+	echo '<table style="margin:0 auto;">';
+	echo '<tr><td>Od</td><td>Do</td><td>Tanečník</td></tr>';
+	
+	$r_items = DBRozpis::getRozpisItem($item['r_id']);
+	foreach($r_items as $par) {
+		echo '<form action="', $_SERVER['REQUEST_URI'], '" method="post">';
+		echo '<tr>',
+			'<td>', formatTime($par['ri_od'], 1), '</td>',
+			'<td>', formatTime($par['ri_do'], 1), '</td>',
+			'<td>', echoFullJmeno($par),
+			'<input type="hidden" name="ri_id" value="', $par['ri_id'], '" />',
+			'</td>';
+		if($par['ri_partner'] == 0 && !$item['r_lock'] && !$par['ri_lock'] && User::checkPermissionsBool(L_USER))
+			echo '<td><button type="submit" name="action" value="signup">Rezervovat</button></td>';
+		if(($par['ri_partner'] != 0 && (User::checkPermissionsBool(L_ADMIN) ||
+				User::getParID() == $par['ri_partner'] ||
+				(User::checkPermissionsBool(L_TRENER) && $item['r_trener'] == User::getUserID()))) &&
+				!$item['r_lock'] && ! $par['ri_lock'] && User::checkPermissionsBool(L_USER))
+				echo '<td><button type="submit" name="action" value="signout">Zrušit</button></td>';
+		echo '</tr>';
+		echo '</form>';
+	}
+	echo '</table>';
+
+	if($left === true) {
 		$left = false;
-		echo '<tr><td>';
 		echo '</td>';
 	} else {
 		$left = true;
-		echo '<td>';
 		echo '</td></tr>';
 	}
-	
-	if($item['r_visible']) {
-		echo '<div style="float:left;padding:0 5px;">';
-		DisplayRozpis::viewRozpisHeader($item);
-		echo '<table style="margin: 0 auto;">';
-		echo '<tr><td>Od</td><td>Do</td><td>Tanečník</td></tr>';
-		
-		$r_items = DBRozpis::getRozpisItem($item['r_id']);
-		foreach($r_items as $par) {
-			echo '<form action="', $_SERVER['REQUEST_URI'], '" method="post">';
-			echo '<tr>';
-			echo '<td>', formatTime($par['ri_od'], 1), '</td><td>', formatTime($par['ri_do'], 1), '</td>',
-				'<td>', $par['u_jmeno'], ' ', $par['u_prijmeni'],
-				'<input type="hidden" name="ri_id" value="', $par['ri_id'], '" />',
-				'</td>';
-			if($par['ri_partner'] == 0 && !$item['r_lock'] && !$par['ri_lock'] && User::checkPermissionsBool(L_USER))
-				echo '<td><button type="submit" name="action" value="signup">Rezervovat</button></td>';
-			if(($par['ri_partner'] != 0 && (User::checkPermissionsBool(L_ADMIN) ||
-					User::getParID() == $par['ri_partner'] ||
-					(User::checkPermissionsBool(L_TRENER) && $item['r_trener'] == User::getUserID()))) &&
-					!$item['r_lock'] && ! $par['ri_lock'] && User::checkPermissionsBool(L_USER))
-					echo '<td><button type="submit" name="action" value="signout">Zrušit</button></td>';
-			echo '</tr>';
-			echo '</form>';
-		}
-		echo '</table><hr/></div>';
-	}
 }
+if($left === false)
+	echo '</tr>';
+echo '</table>';
 ?>

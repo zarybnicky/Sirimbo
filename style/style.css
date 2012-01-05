@@ -18,29 +18,22 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 	/*font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;ORIGINAL*/
 	vertical-align: baseline;
 }
-:focus {
-	outline: 0;
-}
+:focus { outline: 0; }
 body {
 	line-height: 1.2;
 	color: black;
 	background: white;
+	background-image: url('logo-bg.png');
+	background-repeat: repeat-x;
 }
-ol, ul {
-	list-style: none;
-}
+ol, ul { list-style: none; }
 caption, th, td {
 	text-align: left;
 	font-weight: normal;
 }
 blockquote:before, blockquote:after,
-q:before, q:after {
-	content: "";
-}
-blockquote, q {
-	quotes: "" "";
-}
-
+q:before, q:after { content: ""; }
+blockquote, q { quotes: "" ""; }
 .clearfix:after {
 	content:".";
 	display:block;
@@ -51,7 +44,6 @@ blockquote, q {
 .clearfix {display:inline-block;}
 * html .clearfix {height: 1%;}
 .clearfix {display: block;}
-
 p {margin-bottom:1em;text-align:justify;}
 h1,h2,h3,h4,h5,h6,ul,ol {margin-bottom:.5em;}
 h1,h2,h3,h4,h5,h6 {font-weight:bold;}
@@ -66,10 +58,6 @@ h6 {font-size:122%;}
 orange light - #ffb82f
 orange dark  - #ff9501
 */
-body {
-	background-image: url('logo-bg.png');
-	background-repeat: repeat-x;
-}
 button, a {
 	border: 0;
 	margin: 0;
@@ -98,15 +86,13 @@ table {
 	border-spacing: 1px;
 	border: 1px dotted #fff2d5;
 }
-table th, table td {
+th, td {
 	padding: 2px;
 	border: 1px solid #ffe3b7;
 	background-color: #fff0e2;
 	vertical-align: middle;
 }
-p {
-	margin-bottom: 1em;
-}
+p { margin-bottom: 1em; }
 
 #all {
 	width: 970px;
@@ -128,9 +114,7 @@ p {
 	text-align: right;
 	width: 160px;
 }
-.badlogin {
-	border-bottom: 2px dotted red;
-}
+.badlogin { border-bottom: 2px dotted red; }
 #userbox input {
 	margin: 0;
 	padding: 0;
@@ -150,9 +134,7 @@ p {
 	font-size: 11px;
 	font-family: Arial, sans-serif;
 }
-#logo {
-	display: none;
-}
+#logo { display: none; }
 #topmenu {
 	position: absolute;
 	bottom: 0;
@@ -198,7 +180,15 @@ p {
 	padding-left: 29px;
 }
 /*END HEADER*/
-
+#footer {
+	clear: both;
+	margin-top: 10px;
+	padding: 20px 25px;
+	border-top: 1px solid black;
+	background-color: #777;
+	color: #CCC;
+	text-align: right;
+}
 /*BEGIN CONTENT*/
 #content {
 	margin-left: 220px;
@@ -264,6 +254,7 @@ p {
 	color: transparent;
 	position: absolute;
 }
+/* BEGIN MISC */
 .notice {
 	padding: 10px 0 10px 20px;
 	position: relative;
@@ -293,8 +284,8 @@ p {
 }.trenink_header {
 	border:1px solid #ffe3b7;
 	background-color:#fff0e2;
-	padding:3px;
-	margin: 0 0 5px 5%;
+	padding:5px;
+	margin:0 auto 5px;
 	width:200px;
 	text-align:center;
 }.up_header .nadpis, .trenink_header .nadpis {
@@ -327,16 +318,6 @@ p {
 	margin:auto;
 	display:block;
 }.f_popis {
-	width: 146px;
-	padding-left: 10px;
-}
-/*END CONTENT*/
-#footer {
-	clear: both;
-	margin-top: 10px;
-	padding: 20px 25px;
-	border-top: 1px solid black;
-	background-color: #777;
-	color: #CCC;
-	text-align: right;
+	width:146px;
+	padding-left:10px;
 }
