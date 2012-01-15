@@ -8,4 +8,4 @@ mezinárodním poli.</p>
 aktivitu dětem, kvalitní zázemí sportovním tanečníkům a příjemné
 prostředí pro všechny, co mají rádi tanec.</p>
 
-<img alt="" src="/images/logo.gif" style="display: block; margin: 20px auto;" />
+<img alt="" src="/images/akce/druzstva2010_4.jpg" style="display:block;margin:20px auto;width:450px;" />

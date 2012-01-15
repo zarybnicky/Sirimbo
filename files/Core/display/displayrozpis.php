@@ -8,7 +8,7 @@ class DisplayRozpis {
 		echo '<div style="letter-spacing:1px;font-weight:bold;">', formatDate($data['r_datum']), '</div>';
 		
 		if(Permissions::canEditRozpis($data['r_id'])) {
-			echo '<span class="big">Admin:</span> ';
+			echo '<span style="color:#572E00;font-size:115%;">Admin: </span>';
 			echo '<a href="/admin/rozpis/edit/', $data['r_id'], '">obecné</a>, ';
 			echo '<a href="/admin/rozpis/detail/', $data['r_id'], '">tréninky</a>';
 		}

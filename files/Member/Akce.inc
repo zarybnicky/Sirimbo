@@ -23,8 +23,9 @@ $isConfirmation = getPostField('action') && getPostField('id');
 if($isConfirmation) {
 	$action = getPostField('action');
 	$id = getPostField('id');
+	$data = DBAkce::getSingleAkce($id);
 	
-	if(User::checkPermissionsBool(L_USER)) {
+	if(User::checkPermissionsBool(L_USER) && !$data['a_lock']) {
 		if($action == 'signup') {
 			if(preg_match('/^19[0-9]{2}|20[0,1,2,3][0-9]$/', getPostField('narozeni'))) {
 				DBAkce::signUp(User::getUserID(), $id, getPostField('narozeni'));
@@ -53,16 +54,17 @@ foreach($akce as $item) {
 	DisplayAkce::viewAkceHeader($item);
 	
 	echo '<form action="', $_SERVER['REQUEST_URI'], '" method="post" style="text-align:center;">';
-	echo '<input type="hidden" name="id" value="', $item['a_id'], '" />';
-	if(User::checkPermissionsBool(L_USER)) {
-		if(DBAkce::isUserSignedUp($item['a_id'], User::getUserID())) {
+	if(User::checkPermissionsBool(L_USER) && !$item['a_lock']) {
+		echo '<input type="hidden" name="id" value="', $item['a_id'], '" />';
+		
+		if(!DBAkce::isUserSignedUp($item['a_id'], User::getUserID())) {
 			echo 'Rok narození: <input type="text" size="4" name="narozeni" />';
 			echo '<button type="submit" name="action" value="signup">Přihlásit se</button>';
 		} else {
 			echo '<button type="submit" name="action" value="signout">Odhlásit se</button>';
 		}
+		echo '<br/>';
 	}
-	echo '<br/>';
 	echo '<a href="/member/akce/', $item['a_id'], '">Zobrazit přihlášené</a>';
 	echo '</form>';
 	

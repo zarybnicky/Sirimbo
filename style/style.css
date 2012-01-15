@@ -295,6 +295,12 @@ p { margin-bottom: 1em; }
 .little {font-size: 90%;color: #555;}
 .big {font-size: 124%;color: #500;}
 .list {list-style:disc outside none;padding-left:15px;}
+
+.centerWTable {text-align:center;}
+.centerWTable table {margin:0 auto;}
+
+.f_doc {border:1px solid black;}
+.f_doc_center {margin: 5px auto;display:block;border:1px solid black;}
 .f_doc_left {margin-right:15px;border:1px solid black;float:left;}
 .f_doc_right {margin-left:15px;border:1px solid black;float:right;}
 .f {
