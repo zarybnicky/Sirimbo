@@ -9,4 +9,4 @@ Přejeme Vám<br/>
 pohodové tancování<br/>
 v roce 2012
 </div>
-<img alt="" src="/images/pernik2.jpg" style="margin:25px auto;display:block;width:350px;" />
+<img alt="" src="/images/pernik.jpg" style="margin:25px auto;display:block;width:350px;" />

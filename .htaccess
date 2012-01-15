@@ -1,9 +1,3 @@
-php_value log_errors 1
-php_value error_log log/php.log
-
-Options -Indexes +FollowSymLinks
-DirectoryIndex index.php index.html index.htm
-
 RewriteEngine On
 
 RewriteCond %{REQUEST_URI} !^/?images/.+ [NC]
@@ -11,5 +5,7 @@ RewriteCond %{REQUEST_URI} !^/?style/.+ [NC]
 RewriteCond %{REQUEST_URI} !^/?galerie/.+ [NC]
 RewriteCond %{REQUEST_URI} !^/?upload/.+ [NC]
 RewriteCond %{REQUEST_URI} !^/?devel/.+ [NC]
+RewriteCond %{REQUEST_URI} !^/?favicon\.ico [NC]
+RewriteCond %{REQUEST_URI} !^/?robots\.txt [NC]
 RewriteCond $1 !^index\.php.* [NC]
 RewriteRule ^(.+)$ /index.php?file=$1 [NC,L,QSA]

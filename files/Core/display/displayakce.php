@@ -9,14 +9,19 @@ class DisplayAkce {
 		echo '</div>';
 		
 		if(Permissions::canEditAkce()) {
-			echo '<span class="big">Admin:</span><br/>';
+			echo '<span style="color:#572E00;font-size:115%;">Admin: </span>';
 			echo '<a href="/admin/akce/edit/', $data['a_id'], '">obecné</a>, ';
 			echo '<a href="/admin/akce/detail/', $data['a_id'], '">účastníci</a>, ';
 			echo '<a href="/admin/akce/dokumenty/', $data['a_id'], '">dokumenty</a>';
 		}
 	
-		echo '<div style="text-align:left;"><span class="big">Další informace:</span><br/>', nl2br($data['a_info']), '</div>';
-		echo '<div style="text-align:left;"><span class="big">Dokumenty:</span><br/>';
+		echo '<div style="text-align:left;">';
+		echo '<span style="color:#572E00;font-size:115%;">Další informace: </span>';
+		echo '<br/>', nl2br($data['a_info']);
+		echo '</div><br/>';
+		echo '<div style="text-align:left;">';
+		echo '<span style="color:#572E00;font-size:115%;">Dokumenty: </span>';
+		echo '</span><br/>';
 		$doku = unserialize($data['a_dokumenty']);
 		if($doku) {
 			foreach($doku as $id) {
