@@ -105,6 +105,7 @@ $sitemap_dynamic = array(
 	"admin/inzerce"				=> "files/Admin/Inzerce/Main.inc",
 	"admin/inzerce/add"			=> "files/Admin/Inzerce/Main.inc",
 	"admin/inzerce/edit"		=> "files/Admin/Inzerce/Main.inc",
+	"admin/inzerce/new"			=> "files/Admin/Inzerce/Main.inc",
 	"admin/aktuality"			=> "files/Admin/Aktuality/Main.inc",
 	"admin/aktuality/add"		=> "files/Admin/Aktuality/Main.inc",
 	"admin/aktuality/edit"		=> "files/Admin/Aktuality/Main.inc",

@@ -8,7 +8,7 @@ $request = explode('/', $_SERVER['REQUEST_URI']);
 $action = array_slice($request, 3);
 $a_id = $action[1];
 
-if(!a_id || !is_numeric($a_id) || !($akce = DBAkce::getSingleAkce($a_id)))
+if(!$a_id || !is_numeric($a_id) || !($akce = DBAkce::getSingleAkce($a_id)))
 	View::redirect('/admin/akce', 'Akce s takovým ID neexistuje');
 
 $items = DBAkce::getAkceItems($a_id);

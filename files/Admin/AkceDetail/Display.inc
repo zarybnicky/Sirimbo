@@ -1,4 +1,4 @@
-<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
+<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST" class="centerWTable">
 <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
 <?php DisplayAkce::viewAkceHeader($akce);?>
 <table>
@@ -19,12 +19,12 @@ if(!empty($items)) {
 			$_POST[$item['ai_id'] . '-user'] = $item['ai_user'];
 		echoUsers($item['ai_id'] . '-user', $users);
 		echo '</td>';
-		echo '<td><input type="text" name="', $item['ai_id'], '-jmeno" value="',
-			$item['ai_jmeno'], '" /></td>';
-		echo '<td><input type="text" name="', $item['ai_id'], '-prijmeni" value="',
-			$item['ai_prijmeni'], '" /></td>';
-		echo '<td><input type="text" name="', $item['ai_id'], '-rok" value="',
-			$item['ai_rok_narozeni'], '" /></td>';
+		echo '<td><input type="text" size="10" name="', $item['ai_id'], '-jmeno" ',
+			'value="', $item['ai_jmeno'], '" /></td>';
+		echo '<td><input type="text" size="10" name="', $item['ai_id'], '-prijmeni" ',
+			'value="', $item['ai_prijmeni'], '" /></td>';
+		echo '<td><input type="text" size="4" name="', $item['ai_id'], '-rok" ',
+			'value="', $item['ai_rok_narozeni'], '" /></td>';
 		echo '<td><button type="submit" name="remove" value="', $item['ai_id'],
 			'">Odstranit</button></td>';
 		echo '</tr>';
@@ -34,12 +34,12 @@ if(!empty($items)) {
 <tr>
 <td><input type="checkbox" name="add-reg" /></td>
 <td><?php echoUsers("add-user", $users);?></td>
-<td><input type="text" name="add-jmeno" /></td>
-<td><input type="text" name="add-prijmeni" /></td>
-<td><input type="text" name="add-rok" /></td>
+<td><input type="text" size="10" name="add-jmeno" /></td>
+<td><input type="text" size="10" name="add-prijmeni" /></td>
+<td><input type="text" size="4" name="add-rok" /></td>
 <td><button type="submit" name="add" value="add">Přidat</button></td>
 </tr>
 <tr><td><button type="submit" name="action" value="submit">Uložit</button></td></tr>
 </table>
-</form>
 <a href="/admin/akce">Zpět</a>
+</form>

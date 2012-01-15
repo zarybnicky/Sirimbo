@@ -1,4 +1,4 @@
-<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
+<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST" class="centerWTable">
 <?php DisplayAkce::viewAkceHeader($akce);?>
 <table>
 <tr><td>Jméno<br/>Souboru</td><td>Kategorie</td>
@@ -22,5 +22,5 @@ if(!empty($doku)) {
 <td><button type="submit" name="add" value="add">Přidat</button></td>
 </tr>
 </table>
-</form>
 <a href="/admin/akce">Zpět</a>
+</form>

@@ -11,7 +11,7 @@ class DisplayNabidka {
 		echo '</div>';
 		
 		if(Permissions::canEditNabidka($data['n_trener'])) {
-			echo '<span class="big">Admin:</span> ';
+			echo '<span style="color:#572E00;font-size:115%;">Admin: </span>';
 			echo '<a href="/admin/nabidka/edit/', $data['n_id'], '">obecné</a>, ';
 			echo '<a href="/admin/nabidka/detail/', $data['n_id'], '">tréninky</a>';
 		}
