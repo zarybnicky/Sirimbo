@@ -123,7 +123,7 @@ class DBAkce extends Database {
 			return false;
 		} else {
 			$row = DBRozpis::getSingleRow($res);
-			return !(bool)$row["ai_id"];
+			return (bool)$row["ai_id"];
 		}
 	}
 }

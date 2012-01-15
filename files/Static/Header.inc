@@ -5,6 +5,7 @@
 <head>
 	<meta name="keywords" lang="cs" content="taneční klub, tk, olymp, olomouc" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
 	<title>TK Olymp Olomouc</title>
 	<link href="/style/style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -134,11 +135,6 @@
 					- informace<br/>
 					tel.: 737 545 525<br/>
 					hyzam(zavináč)tkolymp.cz<br/>
-					<br/>
-					<b>KDE NÁS NAJDETE</b><br />
-					<hr />
-					Jiráskova 25<br />
-					772 00 Olomouc<br />
 				</div></div>
 			</div>
 			<div id="content">

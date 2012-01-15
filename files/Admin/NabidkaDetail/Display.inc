@@ -1,4 +1,4 @@
-<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
+<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST" class="centerWTable">
 <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
 <div class="n_wrapper">
 <?php DisplayNabidka::viewNabidkaHeader($data, $obsazeno); ?>
@@ -28,5 +28,5 @@ if(!empty($items)) {
 <tr><td><button type="submit" name="action" value="submit">Uložit</button></td></tr>
 </table>
 </div>
-</form>
 <a href="/admin/nabidka">Zpět</a>
+</form>
