@@ -28,12 +28,19 @@ switch($action[0]) {
 			notice('Žádné články');
 		}
 		return;
-	case 'zpravy':
-		header_minor('Zprávy');
-		$result = DisplayAktuality::viewAktuality(AKTUALITY_ZPRAVY);
+	case 'clanky':
+		header_minor('Články');
+		$result = DisplayAktuality::viewAktuality(AKTUALITY_CLANKY);
+		if(!$result)  {
+			notice('Žádné články');
+		}
+		return;
+	case 'kratke-zpravy':
+		header_minor('Krátké zprávy');
+		$result = DisplayAktuality::viewAktuality(AKTUALITY_KRATKE);
 		if(!$result)  {
 			notice('Žádné články');
 		}
 		return;
 }
-?>
+?> 

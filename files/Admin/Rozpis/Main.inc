@@ -142,7 +142,7 @@ switch(getPostField("action")) {
 				
 				if(Permissions::canEditRozpis($trener['u_id'])) {
 					DBRozpis::removeRozpis($item);
-					if(strcmp($data['r_datum'], date('Y-m-d')) > 0 && $data['n_visible'])
+					if(strcmp($data['r_datum'], date('Y-m-d')) > 0 && $data['r_visible'])
 						DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' zrušil rozpis ' .
 							formatDate($data['r_datum']) . ' s trenérem ' .
 							$trener['u_jmeno'] . ' ' . $trener['u_prijmeni']);

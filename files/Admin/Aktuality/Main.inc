@@ -18,8 +18,14 @@ switch($action[0]) {
 			$preview = substr(strip_tags(getPostField('text')), 0, AKTUALITY_PREVIEW);
 			preg_match("/(.+)\s.*/i", $preview, $matches);
 			
+			if(($foto_data = DBGalerie::getFotky(getPostField('foto'))) &&
+					$foto_data[0]['gf_id'])
+				$f_id = $foto_data[0]['gf_id'];
+			else
+				$f_id = 0;
+			
 			DBAktuality::addAktualita(User::getUserID(), getPostField('kat'), getPostField('jmeno'),
-				getPostField('text'), $matches[1], serialize(array()));
+				getPostField('text'), $matches[1], getPostField('foto'), $f_id);
 			DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal článek ' .
 				getPostField('jmeno'));
 			
@@ -40,19 +46,27 @@ switch($action[0]) {
 			$_POST['kat'] = $data['at_kat'];
 			$_POST["jmeno"] = $data["at_jmeno"];
 			$_POST["text"] = $data["at_text"];
+			$_POST['foto'] = $data['at_foto'];
 			
 			include("files/Admin/Aktuality/Form.inc");
 			return;
 		} else {
 			if(getPostField('kat') != $data['at_kat'] ||
 					getPostField('jmeno') != $data['at_jmeno'] ||
-					getPostField('text') != $data['at_text']) {
+					getPostField('text') != $data['at_text'] ||
+					getPostField('foto') != $data['at_foto']) {
 				$matches = array();
 				$preview = substr(strip_tags(getPostField('text')), 0, AKTUALITY_PREVIEW);
 				preg_match("/(.+)\s.*/i", $preview, $matches);
+				View::setRedirectMessage(var_export(DBGalerie::getFotky(getPostField('foto')), true));
+				if(($foto_data = DBGalerie::getFotky(getPostField('foto'))) &&
+						$foto_data[0]['gf_id'])
+					$f_id = $foto_data[0]['gf_id'];
+				else
+					$f_id = 0;
 				
 				DBAktuality::editAktualita($id,getPostField('kat'), getPostField('jmeno'), getPostField('text'),
-					$matches[1], serialize(array()));
+					$matches[1], getPostField('foto'), $f_id);
 				$changed = true;
 			}
 			if(isset($changed) && $changed) {

@@ -33,12 +33,30 @@ header_minor($header);
 		<td>
 			<input type="radio" name="kat" value="1" <?php
 				if(getPostField("kat") == "1") echo 'checked="checked"';
-			?>/>Zprávy&nbsp;&nbsp;<input type="radio" name="kat" value="2" <?php
+			?>/>Články&nbsp;&nbsp;<input type="radio" name="kat" value="2" <?php
 				if(getPostField("kat") == "2") echo 'checked="checked"';
-			?>/>Videa
+			?>/>Videa&nbsp;&nbsp;<input type="radio" name="kat" value="3" <?php
+				if(getPostField("kat") == "3") echo 'checked="checked"';
+			?>/>Krátké zprávy
 		</td>
 		<td><?php
-			$error = checkPostField("/1|2/i", "kat") || $error;
+			$error = checkPostField("/1|2\3/i", "kat") || $error;
+		?></td>
+	</tr><tr>
+		<td>Fotogalerie: </td>
+		<td><?php
+			$dirs = DBGalerie::getDirs(true, true);
+
+			if(!empty($dirs)) {
+				echo '<select name="foto">';
+				echo '<option value="none" selected="selected">Vyber si :o)</option>';
+				foreach($dirs as $dir) {
+					echo '<option value="', $dir['gd_id'], '"',
+						(getPostField('foto') == $dir['gd_id'] ? ' selected="selected"' : ''), '>',
+						str_repeat("-", $dir['gd_level'] - 1), $dir['gd_name'], '</option>';
+				}
+				echo '</select>';
+			}
 		?></td>
 	</tr><tr>
 		<?php if($action[0] == 'add') { ?>

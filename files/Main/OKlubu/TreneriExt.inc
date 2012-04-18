@@ -19,7 +19,7 @@
 <ul class="list">
 <li>aktivní tanečníci, držitelé mezinárodní třídy v latinskoamerických tancích</li>
 <li>členové národního reprezentačního týmu České republiky</li>
-<li>semifinalisté mistrovství ČR v latinskoamerických tancích</li>
+<li>vicemistři České republiky v latinskoamerických tancích (2012)</li>
 <li>nejlepší současný latinskoamerický pár v ČR (2011)</li>
 <li>2. místo v Taneční lize (žebříček párů mezinárodní třídy)</li>
 <li>čtvrtfinalisté mistrovství Evropy</li>

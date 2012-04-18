@@ -43,8 +43,7 @@ public static function checkUser($login, $pass) {
 		list($login) = DBUser::escapeArray(array($login));
 		
 		$res = DBUser::query(
-		"SELECT u_id,u_login,u_jmeno,u_pass,u_jmeno,u_prijmeni,u_pohlavi,
-			u_email,u_telefon,u_poznamky,u_level,u_ban,u_lock,u_confirmed
+		"SELECT *
 		FROM users
 		WHERE u_login='$login'");
 		if(!$res) {
@@ -53,13 +52,12 @@ public static function checkUser($login, $pass) {
 			return DBUser::getSingleRow($res);
 		}
 	}
-	
+
 	public static function getUserData($id) {
 		list($id) = DBUser::escapeArray(array($id));
 		
 		$res = DBUser::query(
-		"SELECT u_id,u_login,u_jmeno,u_pass,u_jmeno,u_prijmeni,u_pohlavi,
-			u_email,u_telefon,u_poznamky,u_level,u_ban,u_lock,u_confirmed
+		"SELECT *
 		FROM users
 		WHERE u_id='$id'");
 		if(!$res) {
@@ -67,6 +65,35 @@ public static function checkUser($login, $pass) {
 		} else {
 			return DBUser::getSingleRow($res);
 		}
+	}
+	
+	public static function getUserByFullName($jmeno, $prijmeni) {
+		list($jmeno, $prijmeni) = DBUser::escapeArray(array($jmeno, $prijmeni));
+		
+		$res = DBUser::query(
+		"SELECT *
+		FROM users
+		WHERE u_jmeno='$jmeno' AND u_prijmeni='$prijmeni'");
+		if(!$res) {
+			return false;
+		} else {
+			return DBUser::getSingleRow($res);
+		}
+	}
+	public static function addTemporaryUser($login, $jmeno, $prijmeni, $permissions) {
+		list($login, $jmeno, $prijmeni, $permissions) =
+			DBUser::escapeArray(array($login, $jmeno, $prijmeni, $permissions));
+		
+		DBUser::query(
+		"INSERT INTO users
+			(u_login,u_pass,u_jmeno,u_prijmeni,u_confirmed,u_temporary,u_level)
+		VALUES ('$login','','$jmeno','$prijmeni','1','1','$permissions')");
+		$user_id = mysql_insert_id();
+		
+		DBUser::query("INSERT INTO pary (p_id_partner) VALUES ('" . $user_id . "')");
+		$par_id = mysql_insert_id();
+		
+		return array($user_id, $par_id);
 	}
 	
 	public static function isUserLocked($id) {
@@ -191,13 +218,13 @@ public static function checkUser($login, $pass) {
 	}
 	
 	public static function getTrener() {
-		$res = DBUser::query("SELECT u_id,u_jmeno,u_prijmeni FROM users WHERE u_level>=" . L_TRENER .
+		$res = DBUser::query("SELECT * FROM users WHERE u_level>=" . L_TRENER .
 			" ORDER BY u_login");
 		return DBUser::getArray($res);
 	}
 	
 	public static function getMembers() {
-		$res = DBUser::query("SELECT u_id,u_jmeno,u_prijmeni FROM users WHERE u_level>=" . L_USER .
+		$res = DBUser::query("SELECT * FROM users WHERE u_level>=" . L_USER .
 			" ORDER BY u_login");
 		return DBUser::getArray($res);
 	}

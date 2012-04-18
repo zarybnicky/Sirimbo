@@ -1,6 +1,9 @@
 <?php
-
-$sitemap_static = array(
+$sitemap_static = array();
+$sitemap_dynamic = array(
+	"home"				=> "files/Main/Home/Main.inc"
+);
+/*$sitemap_static = array(
 	"forum"				=> "files/Main/Forum/Main.inc",
 	"done"				=> "files/Main/RegistraceDone.inc"
 );
@@ -24,8 +27,7 @@ $sitemap_dynamic = array(
 	"aktuality"			=> "files/Main/Aktualne/Main.inc",
 	"aktuality/posledni"=> "files/Main/Aktualne/Main.inc",
 	"aktuality/videa"	=> "files/Main/Aktualne/Main.inc",
-	"aktuality/clanky"	=> "files/Main/Aktualne/Main.inc",
-	"aktuality/kratke-zpravy"=> "files/Main/Aktualne/Main.inc",
+	"aktuality/zpravy"	=> "files/Main/Aktualne/Main.inc",
 
 	"fotogalerie"		=> "files/Main/Fotogalerie/Main.inc",
 	"fotogalerie/foto"	=> "files/Main/Fotogalerie/Main.inc",
@@ -130,5 +132,5 @@ $sitemap_dynamic = array(
 	"admin/galerie/upload"		=> "files/Admin/Galerie/Main.inc",
 	"admin/galerie/scan"		=> "files/Admin/Galerie/Main.inc",
 	"admin/galerie/process"		=> "files/Admin/Galerie/Main.inc"
-);
+);*/
 ?>
