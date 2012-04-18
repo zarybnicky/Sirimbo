@@ -9,12 +9,11 @@ class DBInzerce extends Database {
 			"SELECT i_id,i_kat,i_reg,i_jmeno,i_prijmeni,i_nadpis,i_text,i_foto,i_od,i_do,i_visible,
 				i_confirmed,i_aktu
 			FROM inzerce
-			WHERE 1=1" . ($visible ? " AND i_visible='1'" : "") .
+			WHERE 1=1" . ($visible ? " AND i_visible='1' AND i_do>=" . date('Y-m-d') : "") .
 				($confirmed > 0 ? " AND i_confirmed='1'" : " AND i_confirmed='0'") .
 				($kategorie != INZERCE_ALL ? " AND i_kat='$kategorie'" : "") .
 				($vlastnik > 0 ? " AND i_reg='$vlastnik'" : "") .
-				" ORDER BY i_do ASC" .
-				($pocet > 0 ? " LIMIT $pocet" : "")
+			" ORDER BY i_od DESC" . ($pocet > 0 ? " LIMIT $pocet" : "")
 		);
 		return DBInzerce::getArray($res);
 	}

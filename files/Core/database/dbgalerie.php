@@ -32,6 +32,12 @@ class DBGalerie extends Database {
 		
 		return $array;
 	}
+	public static function getSubdirs($id) {
+		list($id) = DBGalerie::escapeArray(array($id));
+		
+		$res = DBGalerie::query("SELECT * FROM galerie_dir WHERE gd_id_rodic='$id'");
+		return DBGalerie::getArray($res);
+	}
 	public static function getSingleDir($id) {
 		list($id) = DBGalerie::escapeArray(array($id));
 		
@@ -90,6 +96,34 @@ class DBGalerie extends Database {
 		DBGalerie::query("DELETE FROM galerie_dir WHERE gd_id_rodic='$id'");
 		DBGalerie::query("DELETE FROM galerie_foto WHERE gf_id_rodic='$id'");
 		
+		return true;
+	}
+	public static function addFotoByPath($dir, $path, $name, $kdo) {
+		list($dir, $path, $name, $kdo) = DBGalerie::escapeArray(array($dir, $path, $name, $kdo));
+		
+		DBGalerie::query("INSERT INTO galerie_foto (gf_id_rodic,gf_path,gf_name,gf_kdo) VALUES " .
+			"((SELECT gd_id FROM (SELECT gd_id FROM galerie_dir WHERE gd_path='$dir') AS x)," .
+			"'$path','$name','$kdo') ON DUPLICATE KEY UPDATE gf_name='$name'");
+		return true;
+	}
+	public static function addDirByPath($name, $parent, $level, $path) {
+		list($name, $parent, $level, $path) = DBGalerie::escapeArray(array($name, $parent, $level, $path));
+		
+		DBGalerie::query("INSERT INTO galerie_dir (gd_name,gd_id_rodic,gd_level,gd_path) VALUES " .
+			"('$name',(SELECT gd_id FROM (SELECT gd_id FROM galerie_dir WHERE gd_path='$parent') AS x)," .
+			"'$level','$path') ON DUPLICATE KEY UPDATE gd_name='$name'");
+	}
+	public static function removeDirByPath($path) {
+		list($path) = DBGalerie::escapeArray(array($path));
+		
+		DBGalerie::query("DELETE FROM galerie_dir WHERE gd_id_rodic=(SELECT gd_id FROM (SELECT gd_id FROM galerie_dir WHERE gd_path='$path') AS x)");
+		DBGalerie::query("DELETE FROM galerie_foto WHERE gf_id_rodic=(SELECT gd_id FROM (SELECT gd_id FROM galerie_dir WHERE gd_path='$path') AS x)");
+		DBGalerie::query("DELETE FROM galerie_dir WHERE gd_path='$path'");
+	}
+	public static function removeFotoByPath($path) {
+		list($path) = DBGalerie::escapeArray(array($path));
+		
+		DBGalerie::query("DELETE FROM galerie_foto WHERE gf_path='$path'");
 		return true;
 	}
 }

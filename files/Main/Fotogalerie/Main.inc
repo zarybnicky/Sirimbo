@@ -11,24 +11,34 @@ if($url[1] != 'foto') {
 	$id = is_numeric($url[0]) ? $url[0] : 0;
 	if(!($data = DBGalerie::getSingleDir($id)))
 		View::redirect('/fotogalerie', 'Taková složka neexistuje');
+	if($data['gd_level'] > 1)
+		$subdirs = DBGalerie::getSubdirs($id);
+	else
+		$subdirs = array();
 	$fotos = DBGalerie::getFotky($id);
 	
 	header_minor($data['gd_name']);
-	if(empty($fotos)) {
+	if(empty($fotos) && empty($subdirs)) {
 		notice('Žádné fotky');
 		return;
 	}
+	foreach($subdirs as $item) {
+		echo '<div class="f"><a href="', $_SERVER['REQUEST_URI'], '/', $item['gd_id'], '">';
+		echo '<div class="f_img"><div class="f_preview">';
+		echo '<img alt="', $item['gd_id'], '" src="/images/folder.png" />';
+		echo '</div></div>';
+		echo '<div class="f_popis">', $item['gd_name'], '</div>';
+		echo '</a></div>';
+	}
 	foreach($fotos as $item) {
-		$pieces = explode('/', $item['gf_path']);
-		$pieces[2] = 'tn_' . $pieces[2];
-		$tn = '/' . implode('/', $pieces);
+		$tn = str_replace('./galerie', '/galerie/thumbnails', $item['gf_path']);
 		
 		echo '<div class="f"><a href="', $_SERVER['REQUEST_URI'], '/foto/', $item['gf_id'], '">';
 		echo '<div class="f_img"><div class="f_preview">';
 		echo '<img alt="', $item['gf_id'], '" src="', $tn, '" />';
 		echo '</div></div>';
 		echo '<div class="f_popis">', $item['gf_name'], '</div>';
-		echo '</div></a>';
+		echo '</a></div>';
 	}
 } else {
 	//Foto
@@ -40,7 +50,8 @@ if($url[1] != 'foto') {
 	
 	echo '<a href="', $return_url, '">';
 	echo '<div class="f_img"><div class="f_full">';
-	echo '<img alt="', $data['gf_id'], '" src="/', $data['gf_path'], '" /><br/>';
+	echo '<img alt="', $data['gf_id'], '" src="',
+		str_replace('./galerie/', '/galerie/', $data['gf_path']), '" /><br/>';
 	echo '</div></div>';
 	echo '</a>';
 	

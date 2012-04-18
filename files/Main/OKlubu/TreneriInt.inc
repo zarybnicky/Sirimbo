@@ -1,9 +1,26 @@
 <?php header_main('Kluboví trenéři');?>
+<div style="margin-bottom:1.5em;">
+<?php header_minor('Miroslav Hýža'); ?>
+<img src="/images/treneri/mirek.jpg" class="f_doc_right" style="height:150px;"/>
+<ul class="list">
+<li>šéftrenér TK Olymp</li>
+<li>aktivní tanečník, držitel mezinárodní třídy ve standardních tancích</li>
+<li>semifinalista mistrovství ČR v deseti tancích</li>
+<li>semifinalista mistrovství ČR ve standardních tancích</li>
+<li>člen národního reprezentačního týmu České republiky</li>
+<li>3x titul Mistr České republiky v kategorii junior</li>
+<li>15x finalista mistrovství ČR juniorů a mládeže (9x medaile)</li>
+<li>4x titul Mistr České republiky družstev </li>
+<li>2. místo v Taneční lize (žebříček párů mezinárodní třídy)</li>
+<li>finalista významných evropských soutěží (Linz, Ostrava, Bratislava, Brno)</li>
+<li>akreditovaný trenér ČSTS 3. třídy</li>
+<li>trenér finalistů mistrovství ČR juniorů</li>
+</ul>
+</div>
 <div style="margin-bottom:3em;">
 <img src="/images/treneri/marie.jpg" class="f_doc_right" style="height:150px;" />
 <?php header_minor('Mgr. Marie Hýžová');?>
 <ul class="list">
-<li>šéftrenérka TK Olymp</li>
 <li>dlouholetá tanečnice mezinárodní třídy</li>
 <li>dlouholetá trenérka mládežnických přípravek na ZŠ Holečkova</li>
 <li>absolventka kvalifikačního studia trenér a porotce 1. třídy
@@ -34,23 +51,6 @@
 <li>členka národního reprezentačního týmu České republiky</li>
 <li>finalistka významných evropských soutěží (Maribor, Varazdn, Zagreb, Isola)</li>
 <li>absolventka kvalifikačního studia pro porotce a trenéry 3. třídy tanečního sportu</li>
-</ul>
-</div>
-<div style="margin-bottom:1.5em;">
-<?php header_minor('Miroslav Hýža'); ?>
-<img src="/images/treneri/mirek.jpg" class="f_doc_right" style="height:150px;"/>
-<ul class="list">
-<li>aktivní tanečník, držitel mezinárodní třídy ve standardních tancích</li>
-<li>semifinalista mistrovství ČR v deseti tancích</li>
-<li>semifinalista mistrovství ČR ve standardních tancích</li>
-<li>člen národního reprezentačního týmu České republiky</li>
-<li>3x titul Mistr České republiky v kategorii junior</li>
-<li>15x finalista mistrovství ČR juniorů a mládeže (9x medaile)</li>
-<li>4x titul Mistr České republiky družstev </li>
-<li>2. místo v Taneční lize (žebříček párů mezinárodní třídy)</li>
-<li>finalista významných evropských soutěží (Linz, Ostrava, Bratislava, Brno)</li>
-<li>absolvent kvalifikačního studia pro porotce a trenéry 3. třídy tanečního sportu</li>
-<li>trenér finalistů mistrovství ČR juniorů</li>
 </ul>
 </div>
 <div style="margin-bottom:1.5em;">

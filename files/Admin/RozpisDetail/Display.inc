@@ -5,16 +5,18 @@
 <table>
 <tr><td>Tanečník</td><td>Od</td><td>Do</td><td></td><td>Zámek</td></tr>
 <?php
+$userselect = new UserSelectHelper();
 if(!empty($items)) {
 	foreach($items as $item) {
 		echo '<tr>';
 		echo '<td>';
 		$_POST[$item['ri_id'] . '-partner'] = $item['ri_partner'];
-		echoPartners($item['ri_id'] . '-partner', $users);
+		echo $userselect->userSelect()->name($item['ri_id'] . '-partner')
+			->idVar('p_id')->type('par')->users($users);
 		echo '</td>';
-		echo '<td><input type="text" name="', $item['ri_id'], '-od" value="',
+		echo '<td><input type="text" name="', $item['ri_id'], '-od" size="5" value="',
 			formatTime($item['ri_od'], 1), '"/></td>';
-		echo '<td><input type="text" name="', $item['ri_id'], '-do" value="',
+		echo '<td><input type="text" name="', $item['ri_id'], '-do" size="5" value="',
 			formatTime($item['ri_do'], 1), '"/></td>';
 		echo '<td><button type="submit" name="remove" value="', $item['ri_id'],
 			'">Odstranit</button></td>';
@@ -27,9 +29,13 @@ if(!empty($items)) {
 }
 ?>
 <tr>
-<td><?php echoPartners('add_partner', $users);?></td>
-<td><input type="text" name="add_od" value="" /></td>
-<td><input type="text" name="add_do" value="" /></td>
+<td><?php
+$userselect = new UserSelectHelper();
+echo $userselect->userSelect()->name('add_partner')->idVar('p_id')
+	->type('par')->users($users);
+?></td>
+<td><input type="text" name="add_od" size="5" value="" /></td>
+<td><input type="text" name="add_do" size="5" value="" /></td>
 <td><button type="submit" name="action" value="add">Přidat</button></td>
 <td><input type="checkbox" name="add_lock" value="lock" /></td>
 </tr>

@@ -113,7 +113,7 @@ class DBPary extends Database {
 	
 	public static function getPartners() {
 		$res = DBPary::query(
-		"SELECT p_id,u_id,u_jmeno,u_prijmeni,p_stt_trida,p_stt_body,p_stt_finale,
+		"SELECT p_id,u_id,u_jmeno,u_prijmeni,u_temporary,p_stt_trida,p_stt_body,p_stt_finale,
 			p_lat_trida,p_lat_body,p_lat_finale,p_hodnoceni
 		FROM pary
 			LEFT JOIN users ON p_id_partner=u_id
@@ -128,7 +128,10 @@ class DBPary extends Database {
 		DBPary::query(
 			"UPDATE pary
 			SET p_archiv='1',p_aktu_archivovano=NOW()
-			WHERE (p_id_partner='$partner' OR p_id_partner='$partnerka' OR p_id_partnerka='$partnerka')
+			WHERE (p_id_partner='$partner'" .
+				(($partnerka != "none") ?
+					" OR p_id_partner='$partnerka' OR p_id_partnerka='$partnerka'" : '') .
+				")
 				AND p_archiv='0'"
 		);
 		DBPary::query("INSERT INTO pary (p_id_partner, p_id_partnerka) VALUES ('$partner','$partnerka')");
@@ -137,7 +140,7 @@ class DBPary extends Database {
 	public static function noPartner($partner) {
 		list($partner) = DBPary::escapeArray(array($partner));
 		
-		DBPary::query(
+		/*DBPary::query(		//REMOVES ALL FROM NABIDKA 
 			"DELETE n,r FROM nabidka_item AS n,rozpis_item AS r
 			WHERE
 				n.ni_partner=
@@ -147,11 +150,12 @@ class DBPary extends Database {
 				r.ri_partner=
 					(SELECT p_id FROM pary
 					WHERE (p_id_partner='$partner' OR p_id_partnerka='$partner') AND p_archiv='0')"
-		);
+		);*/
 		DBPary::query("UPDATE pary SET p_archiv='1',p_aktu_archivovano=NOW()" .
 			" WHERE (p_id_partner='$partner' OR p_id_partnerka='$partner') AND p_archiv='0'");
 		
 		DBPary::query("INSERT INTO pary (p_id_partner, p_id_partnerka) VALUES ('$partner','0')");
+		return mysql_insert_id();
 	}
 	
 	public static function getPartnerRequestsForMe($id) {

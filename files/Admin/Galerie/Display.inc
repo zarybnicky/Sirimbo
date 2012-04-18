@@ -2,6 +2,9 @@
 <a href="/admin/galerie/upload">Přidat fotky</a>
 <button type="submit" name="action" value="edit">Upravit složku</button>
 <button type="submit" name="action" value="remove">Odstranit složku + podsložky + fotky</button>
+<br/>
+<a href="/admin/galerie/scan">Aktualizovat databázi</a>
+<a href="/admin/galerie/process">Zpracovat obrázky</a>				ZBÝVÁ!!!!!!!!!!
 <?php
 $dirs = DBGalerie::getDirs(true, true);
 
