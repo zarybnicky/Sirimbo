@@ -76,7 +76,8 @@ switch(getPostField("action")) {
 		$old_gal = DBPary::getLatestPartner(getPostField("add_partner"), 'm');
 		$old_guy = DBPary::getLatestPartner(getPostField("add_partnerka"), 'f');
 		
-		DBPary::newPartner(getPostField("add_partner"), getPostField("add_partnerka"));
+		if(getPostField("add_partner"))
+			DBPary::newPartner(getPostField("add_partner"), getPostField("add_partnerka"));
 		if($old_guy['u_id'])
 			DBPary::noPartner($old_guy['u_id']);
 		if($old_gal['u_id'])
