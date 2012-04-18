@@ -22,8 +22,9 @@ foreach($ankety as $item) {
 			'" disabled="disabled" /></td>';
 	echo '<td>', $item['at_jmeno'], '</td>';
 	echo '<td>';
-	if($item['at_kat'] == AKTUALITY_ZPRAVY) echo "Zprávy";
+	if($item['at_kat'] == AKTUALITY_CLANKY) echo "Články";
 	elseif($item['at_kat'] == AKTUALITY_VIDEA) echo "Videa";
+	elseif($item['at_kat'] == AKTUALITY_KRATKE) echo "Krátké zprávy";
 	echo '</td>';
 	echo '</tr>';
 }

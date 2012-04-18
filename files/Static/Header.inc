@@ -8,6 +8,7 @@
 	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
 	<title>TK Olymp Olomouc</title>
 	<link href="/style/style.css" rel="stylesheet" type="text/css" />
+	<script src="/scripts/jquery-1.7.1.min.js"></script>
 </head>
 <body>
 <div id="all">

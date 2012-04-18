@@ -57,7 +57,7 @@ class View {
 		
 		if($er_id == ER_DATABASE || $er_id == ER_DATABASE_CONNECTION)
 			Log::write('MySQL Error: ' . mysql_errno() . ': ' . mysql_error());
-		elseif($er_id == ER_AUTHORIZATION)
+		elseif($er_id == ER_AUTHORIZATION || $er_id == ER_SCRIPT_FATAL)
 			exit;
 		else
 			Log::write("Error: $er_id");

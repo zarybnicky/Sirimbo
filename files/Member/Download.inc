@@ -2,6 +2,7 @@
 User::checkPermissionsError(L_HOST);
 
 if(!empty($_GET["id"])) {
+	ob_clean();
 	$data = DBDokumenty::getSingleDokument($_GET["id"]);
 	$path = $data["d_path"];
 	$fileName = $data["d_filename"];
@@ -9,9 +10,10 @@ if(!empty($_GET["id"])) {
 
 	header('Pragma: no-cache');
 	header('Content-Type: application/octet-stream');
-	header('Content-Disposition: inline; filename='. $fileName);
+	header('Content-Disposition: inline; filename="' . ($fileName) . '"');
 	fpassthru($file);
-	return;
+	fclose($file);
+	exit;
 }
 ?>
-Co tu děláš? Bež pryč, tady nic není :o)
+Co tu děláš? Běž pryč, tady nic není :o)

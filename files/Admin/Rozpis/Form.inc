@@ -27,8 +27,8 @@ header_minor($header);
 			<option value="<?php echo User::getUserID();?>">Já</option>
 		</select><?php
 		} else {
-			$treneri = DBUser::getTrener();
-			echoUsers("trener", $treneri);
+			$userselect = new UserSelectHelper();
+			echo $userselect->userSelect()->name('trener')->permissions(L_TRENER)->users(DBUser::getTrener());
 		}
 		$error = checkPostField("/[0-9]+/i", "trener");
 		?>

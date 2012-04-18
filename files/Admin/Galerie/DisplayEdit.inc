@@ -14,13 +14,12 @@ if($count < 1) {
 } else {
 	echo '<div>';
 	foreach($fotos as $item) {
+		$tn = str_replace('./galerie', '/galerie/thumbnails', $item['gf_path']);
+		
 		echo '<div class="f">';
-		
-		$pieces = explode('/', $item['gf_path']);
-		$pieces[2] = 'tn_' . $pieces[2];
-		$tn = '/' . implode('/', $pieces);
-		
-		echo '<div class="f_img"><div><img alt="', $item['gf_id'], '" src="', $tn, '" /></div></div>';
+		echo '<div class="f_img"><div class="f_preview">';
+		echo '<img alt="', $item['gf_id'], '" src="', $tn, '" />';
+		echo '</div></div>';
 		echo '<div class="f_popis"><input type="checkbox" name="galerie[]" value="' . $item['gf_id'] . '" />',
 			$item['gf_name'], '</div>';
 		echo '</div>';
