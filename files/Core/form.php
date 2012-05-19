@@ -2,15 +2,29 @@
 function formError() {
 	echo '<span style="color:red;"> !!!</span>', "\n";
 }
-function notice($msg) {
-	if($msg)
-		echo '<div class="notice">', $msg, '</div>', "\n";
+function notice($text, $return = false) {
+	if(!$text) return;
+	
+	if($return)
+		return '<div class="notice">' . $text . '</div>' . "\n";
+	else
+		echo '<div class="notice">', $text, '</div>', "\n";
 }
-function header_main($msg) {
-	echo '<div class="h_section">', $msg, '</div>', "\n";
+function header_main($text, $return = false) {
+	if(!$text) return;
+	
+	if($return)
+		return '<div class="h_section">' . $text . '</div>' . "\n";
+	else
+		echo '<div class="h_section">', $text, '</div>', "\n";
 }
-function header_minor($msg) {
-	echo '<div class="h_minor">', $msg, '</div>', "\n";
+function header_minor($text, $return = false) {
+	if(!$text) return;
+	
+	if($return)
+		return '<div class="h_minor">' . $text . '</div>' . "\n";
+	else
+		echo '<div class="h_minor">', $text, '</div>', "\n";
 }
 function checkPostField($regex, $text) {
 	global $isConfirmation;
