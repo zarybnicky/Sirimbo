@@ -11,3 +11,9 @@ RewriteCond %{REQUEST_URI} !^/?favicon\.ico [NC]
 RewriteCond %{REQUEST_URI} !^/?robots\.txt [NC]
 RewriteCond $1 !^index\.php.* [NC]
 RewriteRule ^(.+)$ /index.php?file=$1 [NC,L,QSA]
+
+
+php_flag display_startup_errors ofn
+php_flag display_errors on
+php_flag log_errors on
+php_value error_log  /home/jakub/Public/tkolympphp/log/php.log

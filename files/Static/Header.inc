@@ -17,18 +17,19 @@
 		<?php
 		if(!User::isLogged()) {
 			//TODO: AJAX
-			if(isset($_POST['login'])) {
+			if(getPostField('action') == 'login' ||
+					getPostField('action') == 'enter') {
 				$_POST['pass'] = User::crypt($_POST['pass']);
 			
 				if(User::login($_POST['login'], $_POST['pass'])) {
-					header('Location: /member/home');
-					return;
+					View::redirect('/member/home');
+				} else {
+					View::redirect('/login', 'Špatné jméno nebo heslo!', true);
 				}
 			}
 		?>
-			<form action="<?php echo $_SERVER['REQUEST_URI'] ?>" method="post"><div<?php
-				if(isset($_POST["login"]))
-					echo ' class="badlogin"';?>>
+			<form action="<?php echo $_SERVER['REQUEST_URI'] ?>" method="post"><div>
+				<button type="submit" name="action" value="enter" style="display:none;"></button>
 				<input style="width:70px;" type="text" name="login"
 				/><input style="width:70px;" type="password" name="pass" /><br />
 				<a href="/registrace" id="register">Registrace</a>

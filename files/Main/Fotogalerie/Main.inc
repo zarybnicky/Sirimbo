@@ -11,10 +11,8 @@ if($url[1] != 'foto') {
 	$id = is_numeric($url[0]) ? $url[0] : 0;
 	if(!($data = DBGalerie::getSingleDir($id)))
 		View::redirect('/fotogalerie', 'Taková složka neexistuje');
-	if($data['gd_level'] > 1)
-		$subdirs = DBGalerie::getSubdirs($id);
-	else
-		$subdirs = array();
+	
+	$subdirs = DBGalerie::getSubdirs($id);
 	$fotos = DBGalerie::getFotky($id);
 	
 	header_minor($data['gd_name']);

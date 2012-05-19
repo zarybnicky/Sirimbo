@@ -73,12 +73,11 @@ foreach($nabidka as $item) {
 				User::checkPermissionsBool(L_ADMIN)) {
 			echo '<td>';
 			if($item['n_lock'] || !User::checkPermissionsBool(L_USER)) {
-				echo '<input type="hidden" name="un_id" value="',
-					$par['p_id'], '-', $item['n_id'], '" disabled="disabled" />';
-				echo '<button type="submit" disabled="disabled">Odstranit</button>';
+				echo '<button type="submit" name="un_id" value="',
+					$par['p_id'],'-',$item['n_id'],'" disabled="disabled">Odstranit</button>';
 			} else {
-				echo '<input type="hidden" name="un_id" value="',$par['p_id'],'-',$item['n_id'],'"/>';
-				echo '<button type="submit">Odstranit</button>';
+				echo '<button type="submit" name="un_id" value="',
+					$par['p_id'],'-',$item['n_id'],'">Odstranit</button>';
 			}
 			echo '</td>';
 		}
