@@ -59,7 +59,6 @@ class ClankyHelper {
 				$out .= '</div>';
 				if(isset($this->clanky[$i + 1]))
 					$out .= '<hr/>';
-				$out .= '</div>';
 			}
 			$out .= '</div>';
 		} elseif($this->isSlideBox && $this->number > 0) {
