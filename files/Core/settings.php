@@ -16,7 +16,7 @@ function _shutdown_handler() {
 		if($error['type'] == E_ERROR || $error['type'] == E_RECOVERABLE_ERROR) {
 			ob_clean();
 			Log::write('');
-			header('Location: /error?id=script_fatal');
+			header('Location: /error?id=script_fatal&' . urlencode($error['message']));
 		}
 	}
 }
@@ -40,6 +40,8 @@ define('HEADER', 'files/Static/Header.inc');
 define('FOOTER', 'files/Static/Footer.inc');
 define('LOG', 'log/error.log');
 define('PHP_LOG', 'log/php.log');
+
+define('DEFAULT_FROM_MAIL', 'TK Olymp.cz <noreply@tkolymp.cz>');
 
 //ini_set('log_errors' , '1');
 //ini_set('error_log' , PHP_LOG);

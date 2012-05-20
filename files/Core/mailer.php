@@ -1,14 +1,14 @@
 <?php
 class Mailer {
-	const DEFAULT_FROM_MAIL = "TK Olymp.cz <noreply@tkolymp.cz>";
-	
 	private static function _mail($to, $subject, $message, $from, $headers) {
 		if(empty($from) || !$from)
-			$from = $this::DEFAULT_FROM_MAIL;
-		$headers = "From: $from\r\n" . ($headers ? $headers . "\r\n" : '');
-		$headers .= "MIME-Version: 1.0\r\n";
-		$headers .= "Content-type: text/plain; charset=utf-8\r\n";
-		$headers .=	"Content-Transfer-Encoding: 8bit";
+			$from = DEFAULT_FROM_MAIL;
+		$headers = (strlen($headers) > 0 ? $headers . "\n" : '');
+		$headers .= "From: $from\n";
+		$headers .= "MIME-Version: 1.0\n";
+		$headers .= "Content-type: text/plain; charset=\"UTF-8\";\n";
+		$headers .=	"Content-Transfer-Encoding: 8bit\n";
+		$headers .= "\n";
 		
 		mail($to, "=?utf-8?B?" . base64_encode($subject) . "?=", $message, $headers);
 	}
@@ -29,7 +29,7 @@ $newpass
 S pozdravem
 TKOlymp.cz
 EOS;
-		Mailer::_mail($to, $subject, $message, $this::DEFAULT_FROM_MAIL, "");
+		Mailer::_mail($to, $subject, $message, DEFAULT_FROM_MAIL, "");
 	}
 	
 	public static function new_user_notice($to, $username, $total_users) {
@@ -37,7 +37,7 @@ EOS;
 		$message = "Na TKOlymp.cz se registroval uživatel $username a čeká na potvrzení registrace.\n";
 		if($total_users > 0)
 			$message .= "Celkem nepotvrzených uživatelů: $total_users";
-		Mailer::_mail($to, $subject, $message, $this::DEFAULT_FROM_MAIL, "");
+		Mailer::_mail($to, $subject, $message, DEFAULT_FROM_MAIL, "");
 	}
 }
 ?>
