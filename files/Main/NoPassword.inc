@@ -7,9 +7,9 @@ if(getPostField('action') == 'gen_pass') {
 		
 		DBUser::setPassword($data['u_id'], $password_crypt);
 		
-		if(User::login($data['u_login'], $password)) {
+		if(DBUser::checkUser($data['u_login'], $password_crypt)) {
 			Mailer::new_password($data['u_email'], $password);
-			View:redirect('/home', 'Povedlo se, za chvíli byste měli dostat e-mail s novým heslem.');
+			View::redirect('/home', 'Povedlo se, za chvíli byste měli dostat e-mail s novým heslem.');
 		} else {
 			notice('Něco se nepovedlo.');
 		}
