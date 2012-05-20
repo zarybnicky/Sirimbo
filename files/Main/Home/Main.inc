@@ -1,3 +1,5 @@
+<?php notice(View::getRedirectMessage()); ?>
+
 <div>
 <?php $c = new ClankyHelper(); echo $c->clanky()->number(5)->slideBox(true);?>
 <br/>
