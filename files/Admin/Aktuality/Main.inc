@@ -15,19 +15,19 @@ switch($action[0]) {
 			return;
 		} else {
 			$matches = array();
-			$preview = substr(strip_tags(getPostField('text')), 0, AKTUALITY_PREVIEW);
+			$preview = substr(strip_tags(post('text')), 0, AKTUALITY_PREVIEW);
 			preg_match("/(.+)\s.*/i", $preview, $matches);
 			
-			if(($foto_data = DBGalerie::getFotky(getPostField('foto'))) &&
+			if(($foto_data = DBGalerie::getFotky(post('foto'))) &&
 					$foto_data[0]['gf_id'])
 				$f_id = $foto_data[0]['gf_id'];
 			else
 				$f_id = 0;
 			
-			DBAktuality::addAktualita(User::getUserID(), getPostField('kat'), getPostField('jmeno'),
-				getPostField('text'), $matches[1], getPostField('foto'), $f_id);
+			DBAktuality::addAktualita(User::getUserID(), post('kat'), post('jmeno'),
+				post('text'), $matches[1], post('foto'), $f_id);
 			DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal článek ' .
-				getPostField('jmeno'));
+				post('jmeno'));
 			
 			View::redirect('/admin/aktuality', 'Článek přidán');
 		}
@@ -43,35 +43,35 @@ switch($action[0]) {
 			View::viewError(ER_AUTHORIZATION);
 		
 		if(empty($_POST)) {
-			$_POST['kat'] = $data['at_kat'];
-			$_POST["jmeno"] = $data["at_jmeno"];
-			$_POST["text"] = $data["at_text"];
-			$_POST['foto'] = $data['at_foto'];
+			post('kat', $data['at_kat']);
+			post("jmeno", $data["at_jmeno"]);
+			post("text", $data["at_text"]);
+			post('foto', $data['at_foto']);
 			
 			include("files/Admin/Aktuality/Form.inc");
 			return;
 		} else {
-			if(getPostField('kat') != $data['at_kat'] ||
-					getPostField('jmeno') != $data['at_jmeno'] ||
-					getPostField('text') != $data['at_text'] ||
-					getPostField('foto') != $data['at_foto']) {
+			if(post('kat') != $data['at_kat'] ||
+					post('jmeno') != $data['at_jmeno'] ||
+					post('text') != $data['at_text'] ||
+					post('foto') != $data['at_foto']) {
 				$matches = array();
-				$preview = substr(strip_tags(getPostField('text')), 0, AKTUALITY_PREVIEW);
+				$preview = substr(strip_tags(post('text')), 0, AKTUALITY_PREVIEW);
 				preg_match("/(.+)\s.*/i", $preview, $matches);
-				View::setRedirectMessage(var_export(DBGalerie::getFotky(getPostField('foto')), true));
-				if(($foto_data = DBGalerie::getFotky(getPostField('foto'))) &&
+				View::setRedirectMessage(var_export(DBGalerie::getFotky(post('foto')), true));
+				if(($foto_data = DBGalerie::getFotky(post('foto'))) &&
 						$foto_data[0]['gf_id'])
 					$f_id = $foto_data[0]['gf_id'];
 				else
 					$f_id = 0;
 				
-				DBAktuality::editAktualita($id,getPostField('kat'), getPostField('jmeno'), getPostField('text'),
-					$matches[1], getPostField('foto'), $f_id);
+				DBAktuality::editAktualita($id,post('kat'), post('jmeno'), post('text'),
+					$matches[1], post('foto'), $f_id);
 				$changed = true;
 			}
 			if(isset($changed) && $changed) {
 				DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' upravil článek ' .
-					getPostField('jmeno'));
+					post('jmeno'));
 			}
 			
 			View::redirect('/admin/aktuality', 'Článek změněn');
@@ -85,9 +85,9 @@ if(empty($_POST)) {
 	return;
 }
 
-switch(getPostField("action")) {
+switch(post("action")) {
 	case 'edit':
-		$aktuality = getPostField('aktuality');
+		$aktuality = post('aktuality');
 		if($aktuality[0]) {
 			header('Location: /admin/aktuality/edit/' . $aktuality[0]);
 			return;
@@ -95,10 +95,10 @@ switch(getPostField("action")) {
 		break;
 
 	case 'remove':
-		if(is_array(getPostField('aktuality'))) {
+		if(is_array(post('aktuality'))) {
 			echo '<form action="/admin/aktuality" method="post">';
 			echo 'Opravdu chcete odstranit články:<br/><br/>';
-			foreach(getPostField('aktuality') as $id) {
+			foreach(post('aktuality') as $id) {
 				$data = DBAktuality::getSingleAktualita($id);
 				echo "\t", $data['at_jmeno'];
 				echo '<br />';
@@ -113,8 +113,8 @@ switch(getPostField("action")) {
 		break;
 
 	case 'remove_confirm':
-		if(is_array(getPostField("aktuality"))) {
-			foreach(getPostField("aktuality") as $item) {
+		if(is_array(post("aktuality"))) {
+			foreach(post("aktuality") as $item) {
 				$data = DBAktuality::getSingleAktualita($item);
 				
 				if(Permissions::canEditAktualita($data['at_kdo'])) {

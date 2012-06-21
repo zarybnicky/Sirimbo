@@ -16,37 +16,37 @@ switch($action[0]) {
 			View::redirect('/admin/pary', 'Pár s takovým ID neexistuje');
 
 		if(empty($_POST)) {
-			$_POST['stt-trida'] = $data['p_stt_trida'];
-			$_POST['stt-body'] = $data['p_stt_body'];
-			$_POST['stt-finale'] = $data['p_stt_finale'];
-			$_POST['lat-trida'] = $data['p_lat_trida'];
-			$_POST['lat-body'] = $data['p_lat_body'];
-			$_POST['lat-finale'] = $data['p_lat_finale'];
+			post('stt-trida', $data['p_stt_trida']);
+			post('stt-body', $data['p_stt_body']);
+			post('stt-finale', $data['p_stt_finale']);
+			post('lat-trida', $data['p_lat_trida']);
+			post('lat-body', $data['p_lat_body']);
+			post('lat-finale', $data['p_lat_finale']);
 			
 			include('files/Admin/Pary/Form.inc');
 			return;
 		} else {
-			$stt_body = (getPostField('stt-body') && is_numeric(getPostField('stt-body'))) ?
-				getPostField('stt-body') : 0;
-			$stt_finale = (getPostField('stt-finale') && is_numeric(getPostField('stt-finale'))) ?
-				getPostField('stt-finale') : 0;
-			$lat_body = (getPostField('lat-body') && is_numeric(getPostField('lat-body'))) ?
-				getPostField('lat-body') : 0;
-			$lat_finale = (getPostField('lat-finale') && is_numeric(getPostField('lat-finale'))) ?
-				getPostField('lat-finale') : 0;
+			$stt_body = (post('stt-body') && is_numeric(post('stt-body'))) ?
+				post('stt-body') : 0;
+			$stt_finale = (post('stt-finale') && is_numeric(post('stt-finale'))) ?
+				post('stt-finale') : 0;
+			$lat_body = (post('lat-body') && is_numeric(post('lat-body'))) ?
+				post('lat-body') : 0;
+			$lat_finale = (post('lat-finale') && is_numeric(post('lat-finale'))) ?
+				post('lat-finale') : 0;
 				
-			$stt_amend = constant("AMEND_" . getPostField('stt-trida'));
-			$lat_amend = constant("AMEND_" . getPostField('lat-trida'));
+			$stt_amend = constant("AMEND_" . post('stt-trida'));
+			$lat_amend = constant("AMEND_" . post('lat-trida'));
 			$stt_base = ($stt_body + 40 * $stt_finale) * $stt_amend;
 			$lat_base = ($lat_body + 40 * $lat_finale) * $lat_amend;
 			
-			$stt_bonus = constant("BONUS_" . getPostField('stt-trida'));
-			$lat_bonus = constant("BONUS_" . getPostField('lat-trida'));
+			$stt_bonus = constant("BONUS_" . post('stt-trida'));
+			$lat_bonus = constant("BONUS_" . post('lat-trida'));
 			
 			$hodnoceni = $stt_base + $lat_base + $stt_bonus + $lat_bonus;
 			
-			DBPary::editTridaBody($data['p_id'], getPostField('stt-trida'), $stt_body,
-				$stt_finale, getPostField('lat-trida'), $lat_body, $lat_finale, $hodnoceni);
+			DBPary::editTridaBody($data['p_id'], post('stt-trida'), $stt_body,
+				$stt_finale, post('lat-trida'), $lat_body, $lat_finale, $hodnoceni);
 			
 			View::redirect('/admin/pary', 'Třída a body změněny');
 		}
@@ -57,10 +57,10 @@ if(empty($_POST)) {
 	include("files/Admin/Pary/Display.inc");
 	return;
 }
-switch(getPostField("action")) {
+switch(post("action")) {
 	case "remove":
-		if(is_array(getPostField("pary"))) {
-			list($par) = getPostField("pary");
+		if(is_array(post("pary"))) {
+			list($par) = post("pary");
 			$data = DBPary::getSinglePar($par);
 			
 			if($data['guy_id'])
@@ -73,11 +73,11 @@ switch(getPostField("action")) {
 		break;
 		
 	case 'add':
-		$old_gal = DBPary::getLatestPartner(getPostField("add_partner"), 'm');
-		$old_guy = DBPary::getLatestPartner(getPostField("add_partnerka"), 'f');
+		$old_gal = DBPary::getLatestPartner(post("add_partner"), 'm');
+		$old_guy = DBPary::getLatestPartner(post("add_partnerka"), 'f');
 		
-		if(getPostField("add_partner"))
-			DBPary::newPartner(getPostField("add_partner"), getPostField("add_partnerka"));
+		if(post("add_partner"))
+			DBPary::newPartner(post("add_partner"), post("add_partnerka"));
 		if($old_guy['u_id'])
 			DBPary::noPartner($old_guy['u_id']);
 		if($old_gal['u_id'])
@@ -87,7 +87,7 @@ switch(getPostField("action")) {
 		break;
 	
 	case 'edit':
-		$pary = getPostField('pary');
+		$pary = post('pary');
 		if($pary[0]) {
 			header('Location: /admin/pary/edit/' . $pary[0]);
 			return;

@@ -22,7 +22,7 @@ if(empty($_POST)) {
 	return;
 }
 
-if(getPostField("generate") == "overlap") {
+if(post("generate") == "overlap") {
 	$end = "00:00";
 	foreach($items as $item) {
 		$l_start = formatTime($item["ri_od"], 1);
@@ -43,17 +43,17 @@ if(getPostField("generate") == "overlap") {
 	}
 	
 	$items = DBRozpis::getRozpisItem($id);
-} elseif(getPostField("generate") == "gen_add" &&
-		is_numeric(getPostField("gen_add_hod")) &&
-		is_numeric(getPostField("gen_add_len")) &&
-		preg_match("/^[0-9]{2}:[0-9]{2}$/", getPostField("gen_add_od"))) {
+} elseif(post("generate") == "gen_add" &&
+		is_numeric(post("gen_add_hod")) &&
+		is_numeric(post("gen_add_len")) &&
+		preg_match("/^[0-9]{2}:[0-9]{2}$/", post("gen_add_od"))) {
 	
-	$od = getPostField("gen_add_od");
-	$len = floor(getPostField("gen_add_len") / 60) . ":" .
-		(int)(getPostField("gen_add_len") % 60);
+	$od = post("gen_add_od");
+	$len = floor(post("gen_add_len") / 60) . ":" .
+		(int)(post("gen_add_len") % 60);
 	$do = timeAdd($od, $len);
 	
-	for($i = 0; $i < getPostField("gen_add_hod"); $i++) {
+	for($i = 0; $i < post("gen_add_hod"); $i++) {
 		DBRozpis::addRozpisItem($id, "0", formatTime($od, 0),
 			formatTime($do, 0), "0");
 		$od = $do;
@@ -62,22 +62,22 @@ if(getPostField("generate") == "overlap") {
 	
 	$items = DBRozpis::getRozpisItem($id);
 } else {
-	if(getPostField("remove") > 0) {
-		DBRozpis::removeRozpisItem(getPostField("remove"));
+	if(post("remove") > 0) {
+		DBRozpis::removeRozpisItem(post("remove"));
 		$items = DBRozpis::getRozpisItem($id);
 	}
 	foreach($items as $item) {
-		if(!(getPostField($item["ri_id"] . "-partner") == $item["ri_partner"] ||
-				(getPostField($item["ri_id"] . "-partner") == "none" && $item["ri_partner"] =="0")) ||
-				getPostField($item["ri_id"] . "-od") != formatTime($item["ri_od"], 1) ||
-				getPostField($item["ri_id"] . "-do") != formatTime($item["ri_do"], 1) ||
-				(bool) getPostField($item["ri_id"] . "-lock") != (bool) $item["ri_lock"]) {
+		if(!(post($item["ri_id"] . "-partner") == $item["ri_partner"] ||
+				(post($item["ri_id"] . "-partner") == "none" && $item["ri_partner"] =="0")) ||
+				post($item["ri_id"] . "-od") != formatTime($item["ri_od"], 1) ||
+				post($item["ri_id"] . "-do") != formatTime($item["ri_do"], 1) ||
+				(bool) post($item["ri_id"] . "-lock") != (bool) $item["ri_lock"]) {
 			
-			$partner = (getPostField($item["ri_id"] . "-partner") == "none") ? "0" :
-				getPostField($item["ri_id"] . "-partner");
-			$od = getPostField($item["ri_id"] . "-od");
-			$do = getPostField($item["ri_id"] . "-do");
-			$lock = getPostField($item["ri_id"] . "-lock") ? 1 : 0;
+			$partner = (post($item["ri_id"] . "-partner") == "none") ? "0" :
+				post($item["ri_id"] . "-partner");
+			$od = post($item["ri_id"] . "-od");
+			$do = post($item["ri_id"] . "-do");
+			$lock = post($item["ri_id"] . "-lock") ? 1 : 0;
 			
 			if(preg_match("/^[0-9]{2}:[0-9]{2}$/", $od) &&
 					preg_match("/^[0-9]{2}:[0-9]{2}$/", $do)) {
@@ -88,16 +88,16 @@ if(getPostField("generate") == "overlap") {
 	}
 	$items = DBRozpis::getRozpisItem($id);
 	
-	if(is_numeric(getPostField("add_partner")) || getPostField("add_partner") == "none") {
-		$partner = (getPostField("add_partner") == "none") ? "0" : getPostField("add_partner");
-		$od = getPostField("add_od");
-		$do = getPostField("add_do");
-		$lock = getPostField("add_lock");
+	if(is_numeric(post("add_partner")) || post("add_partner") == "none") {
+		$partner = (post("add_partner") == "none") ? "0" : post("add_partner");
+		$od = post("add_od");
+		$do = post("add_do");
+		$lock = post("add_lock");
 		
 		if(preg_match("/^[012]*[0-9]{1}:[0-9]{2}$/", $od) &&
 				preg_match("/^[012]*[0-9]{1}:[0-9]{2}$/", $do)) {
 			DBRozpis::addRozpisItem($id, $partner, formatTime($od, 0), formatTime($do, 0), $lock);
-			unset($_POST["add_partner"]);
+			post('add_partner', null);
 			$items = DBRozpis::getRozpisItem($id);
 		}
 	}

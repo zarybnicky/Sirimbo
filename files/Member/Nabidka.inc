@@ -4,7 +4,7 @@ User::checkPermissionsError(L_HOST);
 
 $error = false;
 global $isConfirmation;
-$isConfirmation = ((getPostField('hodiny') && getPostField('id')) || getPostField('un_id')) &&
+$isConfirmation = ((post('hodiny') && post('id')) || post('un_id')) &&
 	User::checkPermissionsBool(L_USER);
 
 $nabidka = DBNabidka::getNabidka();
@@ -15,9 +15,9 @@ if(empty($nabidka)) {
 }
 
 if($isConfirmation) {
-	$hodiny = getPostField('hodiny');
-	$id = getPostField('id');
-	$un_id = getPostField('un_id');
+	$hodiny = post('hodiny');
+	$id = post('id');
+	$un_id = post('un_id');
 	$current_nabidka = DBNabidka::getSingleNabidka($id);
 	
 	if(!$current_nabidka['n_lock']) {
@@ -86,12 +86,12 @@ foreach($nabidka as $item) {
 	echo '</table>';
 	echo '<div style="text-align:center;">';
 	if($item['n_lock'] || !User::checkPermissionsBool(L_USER)) {
-		echo 'Počet hodin: <input type="text" name="hodiny" size="2" value="', getPostField('hodiny'),
+		echo 'Počet hodin: <input type="text" name="hodiny" size="2" value="', post('hodiny'),
 			'" disabled="disabled" />';
 		echo '<input type="hidden" name="id" value="', $item['n_id'], '" disabled="disabled" />';
 		echo '<button type="submit" disabled="disabled">Přidat</button>';
 	} else {
-		echo 'Počet hodin: <input type="text" name="hodiny" size="2" value="', getPostField('hodiny'), '" />';
+		echo 'Počet hodin: <input type="text" name="hodiny" size="2" value="', post('hodiny'), '" />';
 		echo '<input type="hidden" name="id" value="', $item['n_id'], '" />';
 		echo '<button type="submit">Přidat</button>';
 	}

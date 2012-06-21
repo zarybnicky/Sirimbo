@@ -2,7 +2,7 @@
 $error = false;
 
 global $isConfirmation;
-$isConfirmation = (getPostField("trener") || getPostField("kde"));
+$isConfirmation = (post("trener") || post("kde"));
 
 $request = explode('/', $_SERVER['REQUEST_URI']);
 $action = array_slice($request, 3);
@@ -32,31 +32,31 @@ header_minor($header);
 		}
 		$error = checkPostField("/[0-9]+/i", "trener");
 		?>
-		<input type="hidden" name="id" value="<?php $id = getPostField("id");
+		<input type="hidden" name="id" value="<?php $id = post("id");
 			if(is_numeric($id)) echo $id; else if($id) View::viewError(ER_CORRUPT_DATA); ?>"/></td>
 	</tr><tr>
 		<td>Místo (*): </td>
-		<td><input type="text" name="kde" value="<?php echo getPostField("kde"); ?>" /></td>
+		<td><input type="text" name="kde" value="<?php echo post("kde"); ?>" /></td>
 		<td></td>
 	</tr><tr>
 		<td>Datum: (*)</td>
 		<td><?php echoDateSelect("day", "month", "year");?></td>
 		<td><?php
-			$od_str = getPostField("year") . "-" . getPostField("month") . "-" .
-				getPostField("day");
+			$od_str = post("year") . "-" . post("month") . "-" .
+				post("day");
 			$error = checkDateString($od_str) || $error;
 		?></td>
 	</tr><tr>
 		<td>Viditelný: </td>
 		<td><input type="checkbox" name="visible" value="visible" <?php
-			if(getPostField("visible")) echo "checked=\"checked\"";
+			if(post("visible")) echo "checked=\"checked\"";
 			if(!User::checkPermissionsBool(L_ADMIN)) echo "readonly=\"readonly\""
 		?>/></td>
 		<td></td>
 	</tr><tr>
 		<td>Uzamknout: </td>
 		<td><input type="checkbox" name="lock" value="lock" <?php
-			if(getPostField("lock")) echo "checked=\"checked\"";
+			if(post("lock")) echo "checked=\"checked\"";
 		?>/></td>
 		<td></td>
 	</tr><tr>

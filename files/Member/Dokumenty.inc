@@ -2,7 +2,7 @@
 User::checkPermissionsError(L_HOST);
 header_main("Dokumenty");
 
-$kategorie = getGetField('kat');
+$kategorie = get('kat');
 ?>
 <form action="<?php echo $_SERVER["REQUEST_URI"];?>" method="GET">
 <select name="kat">

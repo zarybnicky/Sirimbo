@@ -52,13 +52,31 @@ function checkPostFieldLength($minIncl, $maxIncl, $text) {
 		return true;
 	}
 }
-function getPostField($field) {
+function post($field = NULL, $value = NULL) {
+	if($field === NULL) {
+		return $_POST;
+	}
+	
+	if($value !== NULL) {
+		$_POST[$field] = $value;
+		return;
+	}
+	
 	if(isset($_POST[$field]))
 		return $_POST[$field];
 	else
 		return null;
 }
-function getGetField($field) {
+function get($field = NULL, $value = NULL) {
+	if($field === NULL) {
+		return $_POST;
+	}
+	
+	if($value !== NULL) {
+		$_GET[$field] = $value;
+		return;
+	}
+	
 	if(isset($_GET[$field]))
 		return $_GET[$field];
 	else
@@ -133,13 +151,13 @@ function checkDateString($date) {
 function echoUsers($list_name, $list) {
 	echo '<select name="', $list_name, '">', "\n";
 	echo '<option value="none"';
-	if(!getPostField($list_name))
+	if(!post($list_name))
 		echo ' selected="selected"';
 	echo '>Vyber si :o)</option>', "\n";
 	
 	foreach($list as $item) {
 		echo '<option value="' . $item['u_id'] . '"';
-		if(getPostField($list_name) == $item['u_id'])
+		if(post($list_name) == $item['u_id'])
 			echo ' selected="selected"';
 		echo '>';
 		echoFullJmeno($item);
@@ -150,13 +168,13 @@ function echoUsers($list_name, $list) {
 function echoPartners($list_name, $list) {
 	echo '<select name="', $list_name, '">', "\n";
 	echo '<option value="none"';
-	if(!getPostField($list_name))
+	if(!post($list_name))
 		echo ' selected="selected"';
 	echo '>Vyber si :o)</option>', "\n";
 	
 	foreach($list as $item) {
 		echo '<option value="' . $item['p_id'] . '"';
-		if(getPostField($list_name) == $item['p_id'])
+		if(post($list_name) == $item['p_id'])
 			echo ' selected="selected"';
 		echo '>';
 		echoFullJmeno($item);
@@ -165,7 +183,7 @@ function echoPartners($list_name, $list) {
 	echo '</select>', "\n";
 }
 function echoDateSelect($day_fieldname, $month_fieldname, $year_fieldname) {
-	$selected = getPostField($day_fieldname) ? (int) getPostField($day_fieldname) : date('d');
+	$selected = post($day_fieldname) ? (int) post($day_fieldname) : date('d');
 	echo '<select name="', $day_fieldname, '">', "\n";
 	echo '<option value="00">Den</option>', "\n";
 	for($i = 1; $i < 32; $i++) {
@@ -179,7 +197,7 @@ function echoDateSelect($day_fieldname, $month_fieldname, $year_fieldname) {
 	}
 	echo '</select>', "\n";
 	
-	$selected = getPostField($month_fieldname) ? (int) getPostField($month_fieldname) : date('m');
+	$selected = post($month_fieldname) ? (int) post($month_fieldname) : date('m');
 	$months = array (1 => 'Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen', 'Červenec',
 		'Srpen', 'Září', 'Říjen', 'Listopad', 'Prosinec');
 	echo '<select name="', $month_fieldname, '">', "\n";
@@ -195,7 +213,7 @@ function echoDateSelect($day_fieldname, $month_fieldname, $year_fieldname) {
 	}
 	echo '</select>', "\n";
 	
-	$selected = getPostField($year_fieldname) ? (int) getPostField($year_fieldname) : date('Y');
+	$selected = post($year_fieldname) ? (int) post($year_fieldname) : date('Y');
 	echo '<select name="', $year_fieldname, '">', "\n";
 	echo '<option value="0000">Rok</option>', "\n";
 	for($i = 2010; $i < 2021; $i++) {
@@ -224,7 +242,7 @@ function echoBarvaDisplay($barva) {
 function echoTaborDokumenty($list_name, $kats) {
 	echo '<select name="', $list_name, '">', "\n";
 	echo '<option value="none"';
-	if(!getPostField($list_name))
+	if(!post($list_name))
 		echo ' selected="selected"';
 	echo '>Vyber si :o)</option>', "\n";
 	if(is_array($kats)) { 
@@ -233,7 +251,7 @@ function echoTaborDokumenty($list_name, $kats) {
 			
 			foreach($doku as $item) {
 				echo '<option value="', $item['d_id'], '"';
-				if(getPostField($list_name) == $item['d_id'])
+				if(post($list_name) == $item['d_id'])
 					echo ' selected="selected"';
 				echo '>', $item['d_name'], ' (', $item['d_kategorie'], ')';
 				echo '</option>', "\n";
@@ -244,7 +262,7 @@ function echoTaborDokumenty($list_name, $kats) {
 		
 		foreach($doku as $item) {
 			echo '<option value="', $item['d_id'], '"';
-			if(getPostField($list_name) == $item['d_id'])
+			if(post($list_name) == $item['d_id'])
 				echo ' selected="selected"';
 			echo '>', $item['d_name'], ' (', Settings::$document_types[$item['d_kategorie']], ')';
 			echo '</option>', "\n";
@@ -255,13 +273,13 @@ function echoTaborDokumenty($list_name, $kats) {
 function echoNabidky($list_name, $list) {
 	echo '<select name="', $list_name, '">', "\n";
 	echo '<option value="none"';
-	if(!getPostField($list_name))
+	if(!post($list_name))
 		echo ' selected="selected"';
 	echo '>Vyber si :o)</option>', "\n";
 	
 	foreach($list as $item) {
 		echo '<option value="', $item['n_id'], '"';
-		if(getPostField($list_name) == $item['n_id'])
+		if(post($list_name) == $item['n_id'])
 			echo ' selected="selected"';
 		echo '>';
 		echo formatDate($item['n_od']);

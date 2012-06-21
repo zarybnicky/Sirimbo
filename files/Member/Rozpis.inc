@@ -4,7 +4,7 @@ User::checkPermissionsError(L_HOST);
 
 $error = false;
 global $isConfirmation;
-$isConfirmation = (getPostField('ri_id') && getPostField('action')) && User::checkPermissionsBool(L_USER);
+$isConfirmation = (post('ri_id') && post('action')) && User::checkPermissionsBool(L_USER);
 
 $rozpis = DBRozpis::getRozpis();
 
@@ -14,8 +14,8 @@ if(empty($rozpis)) {
 }
 
 if($isConfirmation) {
-	$action = getPostField('action');
-	$id = getPostField('ri_id');
+	$action = post('action');
+	$id = post('ri_id');
 	
 	$lesson = DBRozpis::getRozpisItemLesson($id);
 	$lesson = $lesson[0];

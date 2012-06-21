@@ -19,50 +19,30 @@ if(empty($_POST)) {
 	return;
 }
 
-if(getPostField("remove") > 0) {
-	DBAkce::removeAkceItem(getPostField("remove"));
+if(post("remove") > 0) {
+	DBAkce::removeAkceItem(post("remove"));
 	$items = DBAkce::getAkceItems($a_id);
 }
 
 foreach($items as $item) {
 	$id = $item["ai_id"];
 	
-	if(getPostField($id . "-user") != $item["ai_user"] ||
-			(getPostField($id . "-user") == "none" ^ $item["ai_user"] == 0) ||
-			getPostField($id . "-jmeno") != $item["ai_jmeno"] ||
-			getPostField($id . "-prijmeni") != $item["ai_prijmeni"] ||
-			getPostField($id . "-rok") != $item["ai_rok_narozeni"]) {
-		if(!getPostField($id . "-reg")) {
-			$_POST[$id . "-user"] = 0;
-		} elseif(is_numeric(getPostField($id . "-user"))) {
-			$u_data = DBUser::getUserData(getPostField($id . '-user'));
-			
-			$_POST[$id . '-jmeno'] = $u_data['u_jmeno'];
-			$_POST[$id . '-prijmeni'] = $u_data['u_prijmeni'];
-		}
+	if(post($id . "-user") != $item["ai_user"] ||
+			(post($id . "-user") == "none" ^ $item["ai_user"] == 0) ||
+			post($id . "-rok") != $item["ai_rok_narozeni"]) {
 		
-		DBAkce::editAkceItem($id, getPostField($id . "-user"), getPostField($id . "-jmeno"),
-			getPostField($id . "-prijmeni"), getPostField($id . "-rok"));
+		DBAkce::editAkceItem($id, post($id . "-user"), post($id . "-rok"));
 	}
 }
 $items = DBAkce::getAkceItems($a_id);
 
-if((getPostField("add-reg") && getPostField("add-user")) ||
-		(getPostField("add-jmeno") && getPostField("add-prijmeni")) && getPostField("add-rok")) {
-	$user = (getPostField("add-reg")) ? getPostField("add-user") : 0;
-	$jmeno = getPostField("add-jmeno");
-	$prijmeni = getPostField("add-prijmeni");
-	$rok = getPostField("add-rok");
-	
-	if(!$jmeno && !$prijmeni) {
-		$u_data = DBUser::getUserData($user);
-		$jmeno = $u_data['u_jmeno'];
-		$prijmeni = $u_data['u_prijmeni'];
-	}
+if(post("add-user") && post("add-rok")) {
+	$user = post("add-user");
+	$rok = post("add-rok");
 	
 	if(preg_match("/^19[0-9]{2}|20[0,1,2,3][0-9]$/", $rok)) {
-		DBAkce::addAkceItem($a_id, $user, $jmeno, $prijmeni, $rok);
-		unset($_POST["add-user"]);
+		DBAkce::addAkceItem($a_id, $user, $rok);
+		post('add-user', null);
 		$items = DBAkce::getAkceItems($a_id);
 	}
 }

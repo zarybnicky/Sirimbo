@@ -190,42 +190,42 @@ public static function checkUser($login, $pass) {
 	}
 	
 	public static function getUsers() {
-		$res = DBUser::query("SELECT * FROM users ORDER BY u_login");
+		$res = DBUser::query("SELECT * FROM users ORDER BY u_prijmeni");
 		return DBUser::getArray($res);
 	}
 	
 	public static function getUsersByPohlavi($pohlavi) {
 		list($pohlavi) = DBUser::escapeArray(array($pohlavi));
 		
-		$res = DBUser::query("SELECT * FROM users WHERE u_pohlavi='$pohlavi' ORDER BY u_login");
+		$res = DBUser::query("SELECT * FROM users WHERE u_pohlavi='$pohlavi' ORDER BY u_prijmeni");
 		return DBUser::getArray($res);
 	}
 	
 	public static function getNewUsers() {
-		$res = DBUser::query("SELECT * FROM users WHERE u_confirmed='0' ORDER BY u_login");
+		$res = DBUser::query("SELECT * FROM users WHERE u_confirmed='0' ORDER BY u_prijmeni");
 		return DBUser::getArray($res);
 	}
 	
 	public static function getActiveUsers($orderByPrijmeni = false) {
 		$res = DBUser::query("SELECT * FROM users WHERE u_confirmed='1' AND u_ban='0' ORDER BY" .
-			($orderByPrijmeni ? " u_prijmeni" : " u_id"));
+			($orderByPrijmeni ? " u_prijmeni" : " u_prijmeni"));
 		return DBUser::getArray($res);
 	}
 	
 	public static function getUserNames() {
-		$res = DBUser::query("SELECT u_id,u_login,u_jmeno,u_prijmeni FROM users ORDER BY u_login");
+		$res = DBUser::query("SELECT u_id,u_login,u_jmeno,u_prijmeni FROM users ORDER BY u_prijmeni");
 		return DBUser::getArray($res);
 	}
 	
 	public static function getTrener() {
 		$res = DBUser::query("SELECT * FROM users WHERE u_level>=" . L_TRENER .
-			" ORDER BY u_login");
+			" ORDER BY u_prijmeni");
 		return DBUser::getArray($res);
 	}
 	
 	public static function getMembers() {
 		$res = DBUser::query("SELECT * FROM users WHERE u_level>=" . L_USER .
-			" ORDER BY u_login");
+			" ORDER BY u_prijmeni");
 		return DBUser::getArray($res);
 	}
 }

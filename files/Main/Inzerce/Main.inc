@@ -48,17 +48,17 @@ switch($action[0]) {
 			include('files/Main/Inzerce/Form.inc');
 			return;
 		} else {
-			$od = getPostField('od_year') . '-' . getPostField('od_month') . '-' . getPostField('od_day');
-			$do = getPostField('do_year') . '-' . getPostField('do_month') . '-' . getPostField('do_day');
+			$od = post('od_year') . '-' . post('od_month') . '-' . post('od_day');
+			$do = post('do_year') . '-' . post('do_month') . '-' . post('do_day');
 			
 			if($do == '0000-00-00' || strcmp($od, $do) > 0)
 				$do = $od;
 			
-			$jmeno = User::isLogged() ? User::getUserJmeno() : getPostField('jmeno');
-			$prijmeni = User::isLogged() ? User::getUserPrijmeni() : getPostField('prijmeni');
+			$jmeno = User::isLogged() ? User::getUserJmeno() : post('jmeno');
+			$prijmeni = User::isLogged() ? User::getUserPrijmeni() : post('prijmeni');
 			
 			$confirmed = User::isLogged() ? '1' : '0';
-			$visible = User::isLogged() ? (bool) getPostField('visible') : '0';
+			$visible = User::isLogged() ? (bool) post('visible') : '0';
 			
 			$error = false;
 			
@@ -67,8 +67,8 @@ switch($action[0]) {
 			$html = ob_get_clean();
 			
 			if(!$error) {
-				DBInzerce::addInzerat(getPostField('kat'), User::getUserID(), $jmeno, $prijmeni,
-					getPostField('nadpis'), getPostField('text'), serialize(array()), $od, $do, $visible,
+				DBInzerce::addInzerat(post('kat'), User::getUserID(), $jmeno, $prijmeni,
+					post('nadpis'), post('text'), serialize(array()), $od, $do, $visible,
 					$confirmed);
 				if(User::isLogged())
 					View::redirect("/inzerce/posledni", "Váš inzerát byl přidán");
@@ -89,34 +89,34 @@ switch($action[0]) {
 			View::viewError(ER_AUTHORIZATION);
 		
 		if(empty($_POST)) {
-			$_POST['kat'] = $data['i_kat'];
-			$_POST['reg'] = $data['i_reg'];
-			$_POST['jmeno'] = $data['i_jmeno'];
-			$_POST['prijmeni'] = $data['i_prijmeni'];
-			$_POST['nadpis'] = $data['i_nadpis'];
-			$_POST['text'] = $data['i_text'];
+			post('kat', $data['i_kat']);
+			post('reg', $data['i_reg']);
+			post('jmeno', $data['i_jmeno']);
+			post('prijmeni', $data['i_prijmeni']);
+			post('nadpis', $data['i_nadpis']);
+			post('text', $data['i_text']);
 			list($od_year, $od_month, $od_day) = explode('-', $data['i_od']);
-			$_POST['od_year'] = $od_year;
-			$_POST['od_month'] = $od_month;
-			$_POST['od_day'] = $od_day;
+			post('od_year', $od_year);
+			post('od_month', $od_month);
+			post('od_day', $od_day);
 			list($do_year, $do_month, $do_day) = explode('-', $data['i_do']);
-			$_POST['do_year'] = $do_year;
-			$_POST['do_month'] = $do_month;
-			$_POST['do_day'] = $do_day;
-			$_POST['visible'] = $data['i_visible'];
-			$_POST['confirmed'] = $data['i_confirmed'];
+			post('do_year', $do_year);
+			post('do_month', $do_month);
+			post('do_day', $do_day);
+			post('visible', $data['i_visible']);
+			post('confirmed', $data['i_confirmed']);
 			
 			include('files/Main/Inzerce/Form.inc');
 			return;
 		} else {
-			$od = getPostField('od_year') . '-' . getPostField('od_month') . '-' . getPostField('od_day');
-			$do = getPostField('do_year') . '-' . getPostField('do_month') . '-' . getPostField('do_day');
+			$od = post('od_year') . '-' . post('od_month') . '-' . post('od_day');
+			$do = post('do_year') . '-' . post('do_month') . '-' . post('do_day');
 			
 			if($do == '0000-00-00' || strcmp($od, $do) > 0)
 				$do = $od;
 			
 			$confirmed = '1';
-			$visible = (bool) getPostField('visible');
+			$visible = (bool) post('visible');
 			
 			$error = false;
 			
@@ -125,8 +125,8 @@ switch($action[0]) {
 			$html = ob_get_clean();
 			
 			if(!$error) {
-				DBInzerce::editInzerat($id, getPostField('kat'), User::getUserID(), User::getUserJmeno(),
-					User::getUserPrijmeni(), getPostField('nadpis'), getPostField('text'), serialize(array()),
+				DBInzerce::editInzerat($id, post('kat'), User::getUserID(), User::getUserJmeno(),
+					User::getUserPrijmeni(), post('nadpis'), post('text'), serialize(array()),
 					$od, $do, $visible, $confirmed);
 				View::redirect("/inzerce/posledni", "Inzerát upraven");
 			} else {

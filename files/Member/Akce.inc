@@ -18,17 +18,17 @@ if(empty($akce)) {
 
 $error = false;
 global $isConfirmation;
-$isConfirmation = getPostField('action') && getPostField('id');
+$isConfirmation = post('action') && post('id');
 
 if($isConfirmation) {
-	$action = getPostField('action');
-	$id = getPostField('id');
+	$action = post('action');
+	$id = post('id');
 	$data = DBAkce::getSingleAkce($id);
 	
 	if(User::checkPermissionsBool(L_USER) && !$data['a_lock']) {
 		if($action == 'signup') {
-			if(preg_match('/^19[0-9]{2}|20[0,1,2,3][0-9]$/', getPostField('narozeni'))) {
-				DBAkce::signUp(User::getUserID(), $id, getPostField('narozeni'));
+			if(preg_match('/^19[0-9]{2}|20[0,1,2,3][0-9]$/', post('narozeni'))) {
+				DBAkce::signUp(User::getUserID(), $id, post('narozeni'));
 			} else {
 				notice('Zadejte platný rok narození');
 			}
