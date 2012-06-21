@@ -55,13 +55,12 @@ class DBAkce extends Database {
 		return true;
 	}
 	
-	public static function signUp($user_id, $parena_id, $rok_narozeni) {
-		list($user_id, $parena_id, $rok_narozeni) =
-			DBAkce::escapeArray(array($user_id, $parena_id, $rok_narozeni));
+	public static function signUp($user_id, $parent_id, $rok_narozeni) {
+		list($user_id, $parent_id, $rok_narozeni) =
+			DBAkce::escapeArray(array($user_id, $parent_id, $rok_narozeni));
 		
-		DBAkce::query("INSERT INTO akce_item (ai_id_rodic,ai_user,ai_jmeno,ai_prijmeni,ai_rok_narozeni)" .
-			" VALUES ('$parena_id','$user_id',(SELECT u_jmeno FROM users WHERE u_id='$user_id')," .
-			"(SELECT u_prijmeni FROM users WHERE u_id='$user_id'),'$rok_narozeni')");
+		DBAkce::query("INSERT INTO akce_item (ai_id_rodic,ai_user,ai_rok_narozeni)" .
+			" VALUES ('$parent_id','$user_id','$rok_narozeni')");
 		
 		return true;
 	}
@@ -87,21 +86,21 @@ class DBAkce extends Database {
 		}
 	}
 	
-	public static function addAkceItem($p_id, $u_id, $jmeno, $prijmeni, $rok) {
-		list($p_id, $u_id, $jmeno, $prijmeni, $rok) =
-			DBRozpis::escapeArray(array($p_id, $u_id, $jmeno, $prijmeni, $rok));
+	public static function addAkceItem($p_id, $u_id, $rok) {
+		list($p_id, $u_id, $rok) =
+			DBRozpis::escapeArray(array($p_id, $u_id, $rok));
 		
-		DBRozpis::query("INSERT INTO akce_item (ai_id_rodic,ai_user,ai_jmeno,ai_prijmeni,ai_rok_narozeni)" .
-			" VALUES ('$p_id','$u_id','$jmeno','$prijmeni','$rok')");
+		DBRozpis::query("INSERT INTO akce_item (ai_id_rodic,ai_user,ai_rok_narozeni)" .
+			" VALUES ('$p_id','$u_id','$rok')");
 		
 		return true;
 	}
 	
-	public static function editAkceItem($id, $u_id, $jmeno, $prijmeni, $rok) {
-		list($id, $u_id, $jmeno, $prijmeni, $rok) =
-			DBRozpis::escapeArray(array($id, $u_id, $jmeno, $prijmeni, $rok));
+	public static function editAkceItem($id, $u_id, $rok) {
+		list($id, $u_id, $rok) =
+			DBRozpis::escapeArray(array($id, $u_id, $rok));
 	
-		DBRozpis::query("UPDATE akce_item SET ai_user='$u_id',ai_jmeno='$jmeno',ai_prijmeni='$prijmeni' WHERE" .
+		DBRozpis::query("UPDATE akce_item SET ai_user='$u_id',ai_rok_narozeni='$rok' WHERE" .
 			" ai_id='$id'");
 				
 		return true;

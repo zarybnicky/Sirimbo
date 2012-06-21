@@ -9,7 +9,7 @@ $userselect = new UserSelectHelper();
 if(!empty($items)) {
 	foreach($items as $item) {
 			echo '<tr>';
-			$_POST[$item['ni_id'] . '-partner'] = $item['ni_partner'];
+			post($item['ni_id'] . '-partner', $item['ni_partner']);
 			echo '<td>';
 			echo $userselect->userSelect()->name($item['ni_id'] . '-partner')
 				->idVar('p_id')->type('par')->users($users);

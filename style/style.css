@@ -303,6 +303,22 @@ p { margin-bottom: 1em; }
 .big {font-size: 124%;color: #500;}
 .list {list-style:disc outside none;padding-left:15px;}
 
+.fotolist li {
+	border: none;
+	badkground: none;
+	list-style: none;
+	padding: 0 0 0 15px;
+	margin: 3px 0;
+} .fotolist ul li {
+	border: none;
+	background: inherit;
+} .fotolist ul li a {
+	background: inherit;
+} .fotolist img {
+	display: inline;
+	margin: 3px 5px -3px 0;
+}
+
 .centerWTable {text-align:center;}
 .centerWTable table {margin:0 auto;}
 

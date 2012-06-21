@@ -11,6 +11,10 @@ class UserSelectHelper {
 	private $tmpString;
 	private $tmpSwitch;
 	
+	public function __construct() {
+		return $this->userSelect();
+	}
+	
 	public function userSelect() {
 		$this->_defaultValues();
 		return $this;
@@ -74,8 +78,10 @@ class UserSelectHelper {
 		$tmpString = ($this->tmpSwitch === true) ? $this->tmpString : '';
 		
 		$out = '<div class="' . $name . '">' . "\n";
-		$out .= '<script type="text/javascript">';
-		$out .=
+		
+		if($this->tmpSwitch) {
+			$out .= '<script type="text/javascript">';
+			$out .=
 "$(function(){
 var name = '.' + '$name';
 var type = '{$this->type}';
@@ -127,18 +133,21 @@ $(name + ' .new button').click(function(){
 	return false;
 });
 });";
-		$out .= '</script>';
+			$out .= '</script>';
+		}
+		
 		$out .= '<select name="' . $this->name . '">' . "\n";
-		if(!getPostField($this->name))
+		if(!post($this->name))
 			$out .= '<option value="none" selected="selected">--- žádny ---</option>' . "\n";
 		else
 			$out .= '<option value="none">--- žádny ---</option>' . "\n";
-			
-		$out .= '<option value="temporary">--- dočasný ---</option>' . "\n";
+		
+		if($this->tmpSwitch)
+			$out .= '<option value="temporary">--- dočasný ---</option>' . "\n";
 		
 		foreach($this->users as $user) {
 			$id = $user[$this->idVar];
-			if(getPostField($this->name) == $id)
+			if(post($this->name) == $id)
 				$out .= '<option value="' . $id . '" selected="selected">';
 			else
 				$out .= '<option value="' . $id . '">';
@@ -149,15 +158,18 @@ $(name + ' .new button').click(function(){
 		}
 		$out .= '</select>' . "\n";
 		
-		$out .= '<noscript><br/><a href="/admin/users/temporary">Nový dočasný uživatel</a></noscript>';
-		$out .= '<div class="new" style="display:none;">';
-		$out .= '<input type="text" class="jmeno" size="8" />';
-		$out .= '<input type="text" class="prijmeni" size="8" />';
-		$out .= '<button type="submit" name="jmeno">Uložit</button>';
+		if($this->tmpSwitch) {
+			$out .= '<noscript><br/><a href="/admin/users/temporary">Nový dočasný uživatel</a></noscript>';
+			$out .= '<div class="new" style="display:none;">';
+			$out .= '<input type="text" class="jmeno" size="8" />';
+			$out .= '<input type="text" class="prijmeni" size="8" />';
+			$out .= '<button type="submit" name="jmeno">Uložit</button>';
+			$out .= '</div>';
+			$out .= '<div class="loading" style="display:none;"><img src="/images/loading_bar.gif"/></div>';
+		}
 		$out .= '</div>';
-		$out .= '<div class="loading" style="display:none;"><img src="/images/loading_bar.gif"/></div>';
 		
-		$out .= '</div>';
+		$this->userSelect();
 		
 		return $out;
 	}

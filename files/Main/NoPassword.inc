@@ -1,6 +1,6 @@
 <?php
-if(getPostField('action') == 'gen_pass') {
-	if($data = DBUser::getUserDataByName(getPostField('name'))) {
+if(post('action') == 'gen_pass') {
+	if($data = DBUser::getUserDataByName(post('name'))) {
 		$base = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 		$password = substr(str_shuffle(str_repeat($base, 5)), 0, 8);
 		$password_crypt = User::Crypt($password);

@@ -14,24 +14,15 @@ switch($action[0]) {
 			include('files/Admin/Inzerce/Form.inc');
 			return;
 		} else {
-			$od = getPostField('od_year') . '-' . getPostField('od_month') . '-' . getPostField('od_day');
-			$do = getPostField('do_year') . '-' . getPostField('do_month') . '-' . getPostField('do_day');
+			$od = post('od_year') . '-' . post('od_month') . '-' . post('od_day');
+			$do = post('do_year') . '-' . post('do_month') . '-' . post('do_day');
 			
 			if($do == '0000-00-00' || strcmp($od, $do) > 0)
 				$do = $od;
 			
-			if(getPostField('reg') > 0 && is_numeric(getPostField('reg')) &&
-					($userdata = DBUser::getUserData(getPostField('reg')))) {
-				$userid = getPostField('reg');
-				$jmeno = $userdata['u_jmeno'];
-				$prijmeni = $userdata['u_prijmeni'];
-			} else {
-				$userid = 0;
-				$jmeno = getPostField('jmeno');
-				$prijmeni = getPostField('prijmeni');
-			}
+			$userid = post('reg');
 			$confirmed = '1';
-			$visible = (bool) getPostField('visible');
+			$visible = (bool) post('visible');
 			
 			$error = false;
 			
@@ -40,8 +31,8 @@ switch($action[0]) {
 			$html = ob_get_clean();
 			
 			if(!$error) {
-				DBInzerce::addInzerat(getPostField('kat'), $userid, $jmeno, $prijmeni,
-					getPostField('nadpis'), getPostField('text'), serialize(array()), $od, $do,
+				DBInzerce::addInzerat(post('kat'), $userid, post('nadpis'),
+					post('text'), serialize(array()), $od, $do,
 					$visible, $confirmed);
 				View::redirect('/admin/inzerce', 'Inzerát přidán');
 			} else {
@@ -58,45 +49,33 @@ switch($action[0]) {
 			View::redirect('/admin/inzerce', 'Inzerát s takovým ID neexistuje');
 		
 		if(empty($_POST)) {
-			$_POST['kat'] = $data['i_kat'];
-			$_POST['reg'] = $data['i_reg'];
-			$_POST['jmeno'] = $data['i_jmeno'];
-			$_POST['prijmeni'] = $data['i_prijmeni'];
-			$_POST['nadpis'] = $data['i_nadpis'];
-			$_POST['text'] = $data['i_text'];
+			post('kat', $data['i_kat']);
+			post('reg', $data['i_reg']);
+			post('nadpis', $data['i_nadpis']);
+			post('text', $data['i_text']);
 			list($od_year, $od_month, $od_day) = explode('-', $data['i_od']);
-			$_POST['od_year'] = $od_year;
-			$_POST['od_month'] = $od_month;
-			$_POST['od_day'] = $od_day;
+			post('od_year', $od_year);
+			post('od_month', $od_month);
+			post('od_day', $od_day);
 			list($do_year, $do_month, $do_day) = explode('-', $data['i_do']);
-			$_POST['do_year'] = $do_year;
-			$_POST['do_month'] = $do_month;
-			$_POST['do_day'] = $do_day;
-			$_POST['visible'] = $data['i_visible'];
-			$_POST['confirmed'] = $data['i_confirmed'];
+			post('do_year', $do_year);
+			post('do_month', $do_month);
+			post('do_day', $do_day);
+			post('visible', $data['i_visible']);
+			post('confirmed', $data['i_confirmed']);
 			
 			include('files/Admin/Inzerce/Form.inc');
 			return;
 		} else {
-			$od = getPostField('od_year') . '-' . getPostField('od_month') . '-' . getPostField('od_day');
-			$do = getPostField('do_year') . '-' . getPostField('do_month') . '-' . getPostField('do_day');
+			$od = post('od_year') . '-' . post('od_month') . '-' . post('od_day');
+			$do = post('do_year') . '-' . post('do_month') . '-' . post('do_day');
 			
 			if($do == '0000-00-00' || strcmp($od, $do) > 0)
 				$do = $od;
 			
-			if(getPostField('reg') > 0 && is_numeric(getPostField('reg'))) {
-				$userdata = DBUser::getUserData(getPostField('reg'));
-				
-				$userid = getPostField('reg');
-				$jmeno = $userdata['u_jmeno'];
-				$prijmeni = $userdata['u_prijmeni'];
-			} else {
-				$userid = 0;
-				$jmeno = getPostField('jmeno');
-				$prijmeni = getPostField('prijmeni');
-			}
+			$userid = post('reg');
 			$confirmed = '1';
-			$visible = (bool) getPostField('visible');
+			$visible = (bool) post('visible');
 			
 			$error = false;
 			
@@ -105,8 +84,8 @@ switch($action[0]) {
 			$html = ob_get_clean();
 			
 			if(!$error) {
-				DBInzerce::editInzerat($id, getPostField('kat'), $userid, $jmeno, $prijmeni,
-					getPostField('nadpis'), getPostField('text'), serialize(array()), $od, $do, $visible,
+				DBInzerce::editInzerat($id, post('kat'), $userid, post('nadpis'),
+					post('text'), serialize(array()), $od, $do, $visible,
 					$confirmed);
 				View::redirect("/admin/inzerce", "Inzerát upraven");
 			} else {
@@ -120,19 +99,19 @@ switch($action[0]) {
 			include('files/Admin/Inzerce/DisplayNew.inc');
 			return;
 		} else {
-			if(getPostField('action') == 'confirm') {
-				if(is_array(getPostField('inzerce'))) {
-					foreach(getPostField('inzerce') as $id) {
-						$visible = getPostField($id . '-visible');
+			if(post('action') == 'confirm') {
+				if(is_array(post('inzerce'))) {
+					foreach(post('inzerce') as $id) {
+						$visible = post($id . '-visible');
 						DBInzerce::confirmInzerat($id, (bool) $visible);
 					}
 				}
 				View::redirect('/admin/inzerce', 'Inzeráty potvrzeny');
 				return;
-			} elseif(getPostField('action') == 'remove') {
+			} elseif(post('action') == 'remove') {
 				echo '<form action="/admin/inzerce" method="POST">';
 				echo 'Opravdu chcete odstranit inzeráty:<br/><br/>';
-				foreach(getPostField('inzerce') as $id) {
+				foreach(post('inzerce') as $id) {
 					$data = DBInzerce::getSingleInzerat($id);
 					echo "\t", $data['i_nadpis'];
 					echo '<br />';
@@ -153,9 +132,9 @@ if(empty($_POST)) {
 	return;
 }
 
-switch(getPostField("action")) {
+switch(post("action")) {
 	case 'edit':
-		$inzerce = getPostField('inzerce');
+		$inzerce = post('inzerce');
 		if($inzerce[0]) {
 			header('Location: /admin/inzerce/edit/' . $inzerce[0]);
 			return;
@@ -163,10 +142,10 @@ switch(getPostField("action")) {
 		break;
 
 	case 'remove':
-		if(is_array(getPostField('inzerce'))) {
+		if(is_array(post('inzerce'))) {
 			echo '<form action="/admin/inzerce" method="post">';
 			echo 'Opravdu chcete odstranit inzeráty:<br/><br/>';
-			foreach(getPostField('inzerce') as $id) {
+			foreach(post('inzerce') as $id) {
 				$data = DBInzerce::getSingleInzerat($id);
 				echo "\t", $data['i_nadpis'];
 				echo '<br />';
@@ -181,8 +160,8 @@ switch(getPostField("action")) {
 		break;
 
 	case 'remove_confirm':
-		if(is_array(getPostField("inzerce"))) {
-			foreach(getPostField("inzerce") as $item) {
+		if(is_array(post("inzerce"))) {
+			foreach(post("inzerce") as $item) {
 				$data = DBInzerce::getSingleInzerat($item);
 				DBInzerce::removeInzerat($item);
 			}

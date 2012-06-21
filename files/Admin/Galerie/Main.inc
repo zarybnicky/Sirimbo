@@ -145,9 +145,9 @@ switch($action[0]) {
 			include('files/Admin/Galerie/Upload.inc');
 			return;
 		} else {
-			$dir = DBGalerie::getSingleDir(getPostField('dir') ? getPostField('dir') : 0);
+			$dir = DBGalerie::getSingleDir(post('dir') ? post('dir') : 0);
 			$files = $_FILES['file'];
-			$names = getPostField('name');
+			$names = post('name');
 			
 			$count = count($files['name']);
 			for($i = 0; $i < $count; $i++) {
@@ -244,13 +244,13 @@ switch($action[0]) {
 			include('files/Admin/Galerie/DisplayEdit.inc');
 			return;
 		} else {
-			switch(getPostField('action')) {
+			switch(post('action')) {
 				case 'edit':
 					notice('Not Implemented');
 					include('files/Admin/Galerie/DisplayEdit.inc');
 					return;
 				case 'remove':
-					$galerie = getPostField('galerie');
+					$galerie = post('galerie');
 					if(empty($galerie)) {
 						include('files/Admin/Galerie/DisplayEdit.inc');
 						return;
@@ -275,9 +275,9 @@ if(empty($_POST)) {
 	return;
 }
 
-switch(getPostField('action')) {
+switch(post('action')) {
 	case 'edit':
-		$galerie = getPostField('galerie');
+		$galerie = post('galerie');
 		if(is_numeric($galerie[0])) {
 			header('Location: /admin/galerie/edit/' . $galerie[0]);
 			return;
@@ -287,13 +287,13 @@ switch(getPostField('action')) {
 		}
 		break;
 	case 'remove':
-		if(!is_array(getPostField('galerie'))) {
+		if(!is_array(post('galerie'))) {
 			include('files/Admin/Galerie/Display.inc');
 			return;
 		}
 		echo '<form action="/admin/galerie" method="POST">';
 		echo 'Opravdu chcete odstranit tyto složky a jejich podsložky?<br/><br/>';
-		foreach(getPostField('galerie') as $id) {
+		foreach(post('galerie') as $id) {
 			$data = DBGalerie::getSingleDir($id);
 			echo "\t", $data['gd_name'];
 			echo '<br />';
@@ -306,11 +306,11 @@ switch(getPostField('action')) {
 		return;
 	
 	case 'remove_confirm':
-		if(!is_array(getPostField('galerie'))) {
+		if(!is_array(post('galerie'))) {
 			include('files/Admin/Galerie/Display.inc');
 			return;
 		}
-		foreach(getPostField('galerie') as $id) {
+		foreach(post('galerie') as $id) {
 			$data = DBGalerie::getSingleDir($id);
 			DBGalerie::removeDir($id);
 			$scan = glob($data['gd_path'] . '/*');
@@ -327,18 +327,18 @@ switch(getPostField('action')) {
 	
 	case 'addir':
 	default:
-		if(!getPostField('name') && !getPostField('parent')) {
+		if(!post('name') && !post('parent')) {
 			include('files/Admin/Galerie/Display.inc');
 			return;
 		}
-		if(getPostField('parent') == 'none') {
+		if(post('parent') == 'none') {
 			$parent = 0;
 			$level = 2;
 		} else {
-			list($parent,$level) = explode('-', getPostField('parent'));
+			list($parent,$level) = explode('-', post('parent'));
 			$level = ++$level;
 		}
-		$name = getPostField('name');
+		$name = post('name');
 		
 		DBGalerie::addDir($name, $parent, $level);
 		mkdir('galerie/' . mysql_insert_id());

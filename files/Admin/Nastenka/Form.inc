@@ -2,7 +2,7 @@
 $error = false;
 
 global $isConfirmation;
-$isConfirmation = (getPostField("nadpis") || getPostField("text"));
+$isConfirmation = (post("nadpis") || post("text"));
 
 $request = explode('/', $_SERVER['REQUEST_URI']);
 $action = array_slice($request, 3);
@@ -20,28 +20,28 @@ header_minor($header);
 <table>
 	<tr>
 		<td>Nadpis: </td>
-		<td><input type="text" name="nadpis" value="<?php echo getPostField("nadpis"); ?>" />
-			<input type="hidden" name="id" value="<?php $id = getPostField("id");
+		<td><input type="text" name="nadpis" value="<?php echo post("nadpis"); ?>" />
+			<input type="hidden" name="id" value="<?php $id = post("id");
 			if(is_numeric($id)) echo $id; else if($id) View::viewError(ER_CORRUPT_DATA); ?>"/></td>
 		<td></td>
 	</tr><tr>
 		<td>Text: </td>
-		<td><textarea cols="50" rows="15" name="text"><?php echo getPostField("text"); ?></textarea></td>
+		<td><textarea cols="50" rows="15" name="text"><?php echo post("text"); ?></textarea></td>
 		<td></td>
 	</tr><tr>
 		<td>Uzamknout: </td>
 		<td><input type="checkbox" name="lock" value="lock" <?php
-			if(getPostField("lock")) echo "checked=\"checked\"";
+			if(post("lock")) echo "checked=\"checked\"";
 		?>/></td>
 		<td></td>
 	</tr><tr>
 		<td>Barvy: </td>
 		<td><input type="checkbox" name="zluta" value="zluta" <?php
-			if(getPostField("zluta")) echo "checked=\"checked\"";
+			if(post("zluta")) echo "checked=\"checked\"";
 		?>/>Žlutá, <input type="checkbox" name="cervena" value="cervena" <?php
-			if(getPostField("cervena")) echo "checked=\"checked\"";
+			if(post("cervena")) echo "checked=\"checked\"";
 		?>/>Červená, <input type="checkbox" name="modra" value="modra" <?php
-			if(getPostField("modra")) echo "checked=\"checked\"";
+			if(post("modra")) echo "checked=\"checked\"";
 		?>/>Modrá</td>
 		<td></td>
 	</tr><tr>

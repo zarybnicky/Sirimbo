@@ -20,13 +20,13 @@ switch($action[0]) {
 			if(!Permissions::canEditNastenka($data['up_kdo'], $data['up_lock']))
 				View::viewError(ER_AUTHORIZATION);
 						
-			$_POST['id'] = $id;
-			$_POST['nadpis'] = $data['up_nadpis'];
-			$_POST['text'] = $data['up_text'];
-			$_POST['zluta'] = ($data['up_barvy'] & C_ZLUTA);
-			$_POST['cervena'] = ($data['up_barvy'] & C_CERVENA);
-			$_POST['modra'] = ($data['up_barvy'] & C_MODRA);
-			$_POST['lock'] = $data['up_lock'];
+			post('id', $id);
+			post('nadpis', $data['up_nadpis']);
+			post('text', $data['up_text']);
+			post('zluta', ($data['up_barvy'] & C_ZLUTA));
+			post('cervena', ($data['up_barvy'] & C_CERVENA));
+			post('modra', ($data['up_barvy'] & C_MODRA));
+			post('lock', $data['up_lock']);
 			include('files/Admin/Nastenka/Form.inc');
 			return;
 		} else {
@@ -40,10 +40,10 @@ if(empty($_POST)) {
 	return;
 }
 
-switch(getPostField('action')) {
+switch(post('action')) {
 	case 'remove':
-		if(is_array(getPostField('nastenka'))) {
-			foreach(getPostField('nastenka') as $item) {
+		if(is_array(post('nastenka'))) {
+			foreach(post('nastenka') as $item) {
 				$data = DBNastenka::getSingleNastenka($item);
 				if(!Permissions::canEditNastenka($data['up_kdo'], $data['up_lock']))
 					View::viewError(ER_AUTHORIZATION);
@@ -57,7 +57,7 @@ switch(getPostField('action')) {
 		break;
 	
 	case 'edit':
-		$nastenka = getPostField('nastenka');
+		$nastenka = post('nastenka');
 		if($nastenka[0]) {
 			header('Location: /admin/nastenka/edit/' . $nastenka[0]);
 			return;
@@ -65,38 +65,38 @@ switch(getPostField('action')) {
 		break;
 	
 	case 'edit_confirm':
-		$id = getPostField('id');
+		$id = post('id');
 		$data = DBNastenka::getSingleNastenka($id);
 		
 		if(!Permissions::canEditNastenka($data['up_kdo'], $data['up_lock']))
 			View::viewError(ER_AUTHORIZATION);
 		
-		$zluta = ((bool) getPostField('zluta')) ? C_ZLUTA : 0;
-		$cervena = ((bool) getPostField('cervena')) ? C_CERVENA : 0;
-		$modra = ((bool) getPostField('modra')) ? C_MODRA : 0;
+		$zluta = ((bool) post('zluta')) ? C_ZLUTA : 0;
+		$cervena = ((bool) post('cervena')) ? C_CERVENA : 0;
+		$modra = ((bool) post('modra')) ? C_MODRA : 0;
 		$barvy = $zluta | $cervena | $modra;
 		
-		$lock = (getPostField('lock') == 'lock') ? 1 : 0;
+		$lock = (post('lock') == 'lock') ? 1 : 0;
 		
-		DBNastenka::editNastenka($id, getPostField('nadpis'),
-			getPostField('text'), $barvy, (getPostField('lock') == 'lock') ? 1 : 0);
+		DBNastenka::editNastenka($id, post('nadpis'),
+			post('text'), $barvy, (post('lock') == 'lock') ? 1 : 0);
 		DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' upravil příspěvek na nástěnce');
 		
 		notice('Příspěvek úspěšně upraven');
 		break;
 		
 	case 'add_confirm':
-		$id = getPostField('id');
+		$id = post('id');
 		
-		$zluta = ((bool) getPostField('zluta')) ? C_ZLUTA : 0;
-		$cervena = ((bool) getPostField('cervena')) ? C_CERVENA : 0;
-		$modra = ((bool) getPostField('modra')) ? C_MODRA : 0;
+		$zluta = ((bool) post('zluta')) ? C_ZLUTA : 0;
+		$cervena = ((bool) post('cervena')) ? C_CERVENA : 0;
+		$modra = ((bool) post('modra')) ? C_MODRA : 0;
 		$barvy = $zluta | $cervena | $modra;
 		
-		$lock = (getPostField('lock') == 'lock') ? 1 : 0;
+		$lock = (post('lock') == 'lock') ? 1 : 0;
 		
-		DBNastenka::addNastenka(User::getUserID(), getPostField('nadpis'),
-			getPostField('text'), $barvy, $lock);
+		DBNastenka::addNastenka(User::getUserID(), post('nadpis'),
+			post('text'), $barvy, $lock);
 		DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal příspěvek na nástěnku');
 		
 		notice('Příspěvek úspěšně přidán');
