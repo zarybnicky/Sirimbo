@@ -2,9 +2,9 @@
 User::checkPermissionsError(L_ADMIN);
 ob_clean();
 
-$permissions = getPostField('permissions');
-$jmeno = getPostField('jmeno');
-$prijmeni = getPostField('prijmeni');
+$permissions = post('permissions');
+$jmeno = post('jmeno');
+$prijmeni = post('prijmeni');
 
 if(!($user = DBUser::getUserByFullName($jmeno,$prijmeni))) {
 	$login = preg_replace('/[^\x20-\x7F]*/','', strtolower($prijmeni)) . '_' .

@@ -24,40 +24,40 @@ if(empty($_POST)) {
 }
 
 //-----Odebrání položky-----//
-if(getPostField("remove") > 0) {
-	DBNabidka::removeNabidkaItem($id, getPostField(getPostField("remove") . "-partner"));
+if(post("remove") > 0) {
+	DBNabidka::removeNabidkaItem($id, post(post("remove") . "-partner"));
 	$items = DBNabidka::getNabidkaItem($id);
 	$obsazeno = DBNabidka::getNabidkaItemLessons($id);
 }
 
 //-----Jednotlivé položky nabídky-----//
 foreach($items as $item) {
-	if(getPostField($item["ni_id"] . "-partner") != $item["ni_partner"] ||
-			getPostField($item["ni_id"] . "-hodiny") != $item["ni_pocet_hod"]) {
-		$rozdil_hod = getPostField($item["ni_id"] . "-hodiny") - $item["ni_pocet_hod"];
+	if(post($item["ni_id"] . "-partner") != $item["ni_partner"] ||
+			post($item["ni_id"] . "-hodiny") != $item["ni_pocet_hod"]) {
+		$rozdil_hod = post($item["ni_id"] . "-hodiny") - $item["ni_pocet_hod"];
 		if(($obsazeno + $rozdil_hod) > $data["n_pocet_hod"]) {
-			$_POST["pocet_hod"] = $obsazeno + $rozdil_hod;
+			post("pocet_hod", $obsazeno + $rozdil_hod);
 		}
-		DBNabidka::editNabidkaItem($item["ni_id"], getPostField($item["ni_id"] . "-partner"),
-			getPostField($item["ni_id"] . "-hodiny"));
+		DBNabidka::editNabidkaItem($item["ni_id"], post($item["ni_id"] . "-partner"),
+			post($item["ni_id"] . "-hodiny"));
 	}
 }
 $items = DBNabidka::getNabidkaItem($id);
 $obsazeno = DBNabidka::getNabidkaItemLessons($id);
 
 //-----Přidávání položek-----//
-if(is_numeric(getPostField("add_hodiny")) && is_numeric(getPostField("add_partner"))) {
-	$hodiny = getPostField("add_hodiny");
-	$partner = getPostField("add_partner");
+if(is_numeric(post("add_hodiny")) && is_numeric(post("add_partner"))) {
+	$hodiny = post("add_hodiny");
+	$partner = post("add_partner");
 	
 	if(is_numeric($hodiny) && is_numeric($partner)) {
-		if(($obsazeno + $hodiny) > getPostField("pocet_hod")) {
-			$_POST["pocet_hod"] = $obsazeno + $hodiny;
+		if(($obsazeno + $hodiny) > post("pocet_hod")) {
+			post("pocet_hod", $obsazeno + $hodiny);
 		}
 		
-		DBNabidka::addNabidkaItemLessons(getPostField("add_partner"),$id,
-			getPostField("add_hodiny"));
-		unset($_POST["add_partner"]);
+		DBNabidka::addNabidkaItemLessons(post("add_partner"),$id,
+			post("add_hodiny"));
+		post('add_partner', null);
 		$items = DBNabidka::getNabidkaItem($id);
 		$obsazeno = DBNabidka::getNabidkaItemLessons($id);
 	}
@@ -65,11 +65,11 @@ if(is_numeric(getPostField("add_hodiny")) && is_numeric(getPostField("add_partne
 //TODO: Spojit R,N-detail a R,N-edit
 
 //-----Dorovnávání skutečného a nastaveného počtu hodin-----//
-if(getPostField("pocet_hod") > $data["n_pocet_hod"]) {
-	if(getPostField("pocet_hod") < $obsazeno) {
-		$_POST["pocet_hod"] = $obsazeno;
+if(post("pocet_hod") > $data["n_pocet_hod"]) {
+	if(post("pocet_hod") < $obsazeno) {
+		post("pocet_hod", $obsazeno);
 	}
-	DBNabidka::editNabidka($id, $data["n_trener"], getPostField("pocet_hod"),
+	DBNabidka::editNabidka($id, $data["n_trener"], post("pocet_hod"),
 		$data["n_od"], $data["n_do"], $data['n_visible'], ($data["n_lock"]) ? 1 : 0);
 	$data = DBNabidka::getSingleNabidka($id);
 }

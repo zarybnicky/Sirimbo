@@ -3,26 +3,19 @@
 <?php DisplayAkce::viewAkceHeader($akce);?>
 <table>
 <tr>
-<td>Registrovaný<br/>uživatel</td><td>Uživatel</td>
-<td>Jméno</td><td>Příjmení</td><td>Rok narození</td><td></td>
+<td>Uživatel</td><td>Rok narození</td><td></td>
 </tr>
 <?php
 if(!empty($items)) {
+	$userselect = new UserSelectHelper();
+	
 	foreach($items as $item) {
 		echo '<tr>';
-		echo '<td><input type="checkbox" name="', $item['ai_id'], '-reg"';
-		if($item['ai_user'] > 0)
-			echo 'checked="checked"';
-		echo ' /></td>';
 		echo '<td>';
 		if($item['ai_user'] > 0)
 			$_POST[$item['ai_id'] . '-user'] = $item['ai_user'];
-		echoUsers($item['ai_id'] . '-user', $users);
+		echo $userselect->users($users)->name($item['ai_id'] . '-user');
 		echo '</td>';
-		echo '<td><input type="text" size="10" name="', $item['ai_id'], '-jmeno" ',
-			'value="', $item['ai_jmeno'], '" /></td>';
-		echo '<td><input type="text" size="10" name="', $item['ai_id'], '-prijmeni" ',
-			'value="', $item['ai_prijmeni'], '" /></td>';
 		echo '<td><input type="text" size="4" name="', $item['ai_id'], '-rok" ',
 			'value="', $item['ai_rok_narozeni'], '" /></td>';
 		echo '<td><button type="submit" name="remove" value="', $item['ai_id'],
@@ -32,10 +25,7 @@ if(!empty($items)) {
 }
 ?>
 <tr>
-<td><input type="checkbox" name="add-reg" /></td>
-<td><?php echoUsers("add-user", $users);?></td>
-<td><input type="text" size="10" name="add-jmeno" /></td>
-<td><input type="text" size="10" name="add-prijmeni" /></td>
+<td><?php echo $userselect->users($users)->name('add-user'); ?></td>
 <td><input type="text" size="4" name="add-rok" /></td>
 <td><button type="submit" name="add" value="add">Přidat</button></td>
 </tr>

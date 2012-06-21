@@ -17,15 +17,15 @@ header_minor($header);
 <table>
 	<tr>
 		<td>Jméno: </td>
-		<td><input type="text" name="jmeno" value="<?php echo getPostField('jmeno');?>" /></td>
+		<td><input type="text" name="jmeno" value="<?php echo post('jmeno');?>" /></td>
 	</tr>
 	<tr>
 		<td>Text: </td>
-		<td><input type="text" name="text" value="<?php echo getPostField('text');?>" /></td>
+		<td><input type="text" name="text" value="<?php echo post('text');?>" /></td>
 	</tr><tr>
 		<td>Viditelný: </td>
 		<td><input type="checkbox" name="visible" value="visible" <?php
-			if(getPostField('visible')) echo 'checked="checked"';
+			if(post('visible')) echo 'checked="checked"';
 			if(!User::checkPermissionsBool(L_ADMIN)) echo 'readonly="readonly"'
 		?>/></td>
 	</tr><tr>

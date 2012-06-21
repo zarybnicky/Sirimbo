@@ -10,7 +10,7 @@ if(!empty($items)) {
 	foreach($items as $item) {
 		echo '<tr>';
 		echo '<td>';
-		$_POST[$item['ri_id'] . '-partner'] = $item['ri_partner'];
+		post($item['ri_id'] . '-partner', $item['ri_partner']);
 		echo $userselect->userSelect()->name($item['ri_id'] . '-partner')
 			->idVar('p_id')->type('par')->users($users);
 		echo '</td>';
@@ -49,13 +49,13 @@ echoNabidky('n_id', DBNabidka::getNabidka());
 ?>
 <button type="submit" name="action" value="select">Vybrat nabídku</button>
 <?php
-if(is_numeric(getPostField('n_id'))) {
-	if(getPostField('n_id') < 0 && getPostField('n_id') > 2147483647)
+if(is_numeric(post('n_id'))) {
+	if(post('n_id') < 0 && post('n_id') > 2147483647)
 		View::viewError(ER_CORRUPT_DATA);
-	if(!($nab = DBNabidka::getSingleNabidka(getPostField('n_id'))))
+	if(!($nab = DBNabidka::getSingleNabidka(post('n_id'))))
 		View::viewError(ER_CORRUPT_DATA);
-	$items = DBNabidka::getNabidkaItem(getPostField('n_id'));
-	$obsazeno = (int)DBNabidka::getNabidkaItemLessons(getPostField('n_id'));
+	$items = DBNabidka::getNabidkaItem(post('n_id'));
+	$obsazeno = (int)DBNabidka::getNabidkaItemLessons(post('n_id'));
 	echo '<div class="n_wrapper">';
 	DisplayNabidka::viewNabidkaHeader($nab, $obsazeno);
 	echo '<table>';

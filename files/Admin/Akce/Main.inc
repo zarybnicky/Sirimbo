@@ -14,8 +14,8 @@ switch($action[0]) {
 			include('files/Admin/Akce/Form.inc');
 			return;
 		} else {
-			$od = getPostField('od_year') . '-' . getPostField('od_month') . '-' . getPostField('od_day');
-			$do = getPostField('do_year') . '-' . getPostField('do_month') . '-' . getPostField('do_day');
+			$od = post('od_year') . '-' . post('od_month') . '-' . post('od_day');
+			$do = post('do_year') . '-' . post('do_month') . '-' . post('do_day');
 			
 			if($do == '0000-00-00' || strcmp($od, $do) > 0)
 				$do = $od;
@@ -27,11 +27,11 @@ switch($action[0]) {
 			$html = ob_get_clean();
 			
 			if(!$error) {
-				DBAkce::addAkce(getPostField('jmeno'), getPostField('kde'), getPostField('info'),
-					$od, $do, getPostField('kapacita'), getPostField('dokumenty'),
-					(getPostField('lock') == 'lock') ? 1 : 0);
+				DBAkce::addAkce(post('jmeno'), post('kde'), post('info'),
+					$od, $do, post('kapacita'), post('dokumenty'),
+					(post('lock') == 'lock') ? 1 : 0);
 				DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal klubovou akci "' .
-					getPostField('jmeno') . '"');
+					post('jmeno') . '"');
 				
 				View::redirect('/admin/akce', 'Akce přidána');
 			} else {
@@ -48,27 +48,27 @@ switch($action[0]) {
 			View::redirect('/admin/akce', 'Akce s takovým ID neexistuje');
 		
 		if(empty($_POST)) {
-			$_POST['id'] = $id;
-			$_POST['jmeno'] = $data['a_jmeno'];
-			$_POST['kde'] = $data['a_kde'];
-			$_POST['info'] = $data['a_info'];
+			post('id', $id);
+			post('jmeno', $data['a_jmeno']);
+			post('kde', $data['a_kde']);
+			post('info', $data['a_info']);
 			list($od_year, $od_month, $od_day) = explode('-', $data['a_od']);
-			$_POST['od_year'] = $od_year;
-			$_POST['od_month'] = $od_month;
-			$_POST['od_day'] = $od_day;
+			post('od_year', $od_year);
+			post('od_month', $od_month);
+			post('od_day', $od_day);
 			list($do_year, $do_month, $do_day) = explode('-', $data['a_do']);
-			$_POST['do_year'] = $do_year;
-			$_POST['do_month'] = $do_month;
-			$_POST['do_day'] = $do_day;
-			$_POST['kapacita'] = $data['a_kapacita'];
-			$_POST['dokumenty'] = unserialize($data['a_dokumenty']);
-			$_POST['lock'] = $data['a_lock'];
+			post('do_year', $do_year);
+			post('do_month', $do_month);
+			post('do_day', $do_day);
+			post('kapacita', $data['a_kapacita']);
+			post('dokumenty', unserialize($data['a_dokumenty']));
+			post('lock', $data['a_lock']);
 			
 			include('files/Admin/Akce/Form.inc');
 			return;
 		} else {
-			$od = getPostField('od_year') . '-' . getPostField('od_month') . '-' . getPostField('od_day');
-			$do = getPostField('do_year') . '-' . getPostField('do_month') . '-' . getPostField('do_day');
+			$od = post('od_year') . '-' . post('od_month') . '-' . post('od_day');
+			$do = post('do_year') . '-' . post('do_month') . '-' . post('do_day');
 			if($do == '0000-00-00' || strcmp($od, $do) > 0)
 				$do = $od;
 			
@@ -78,11 +78,11 @@ switch($action[0]) {
 			$html = ob_get_clean();
 			
 			if(!$error) {
-				DBAkce::editAkce($id, getPostField('jmeno'), getPostField('kde'), getPostField('info'),
-					$od, $do, getPostField('kapacita'), getPostField('dokumenty'),
-					(getPostField('lock') == 'lock') ? 1 : 0);
+				DBAkce::editAkce($id, post('jmeno'), post('kde'), post('info'),
+					$od, $do, post('kapacita'), post('dokumenty'),
+					(post('lock') == 'lock') ? 1 : 0);
 				DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' změnil detaily akce "' .
-					getPostField('jmeno') . '"');
+					post('jmeno') . '"');
 				View::redirect('/admin/akce', 'Akce upravena');
 			} else {
 				echo $html;
@@ -97,13 +97,13 @@ if(empty($_POST)) {
 	return;
 }
 
-switch(getPostField('action')) {
+switch(post('action')) {
 	
 	case 'remove':
-		if(is_array(getPostField('akce'))) {
+		if(is_array(post('akce'))) {
 			echo '<form action="', $_SERVER['REQUEST_URI'], '" method="POST">';
 			echo 'Opravdu chcete odstranit tábor/soustředění:<br/><br/>';
-			foreach(getPostField('akce') as $item) {
+			foreach(post('akce') as $item) {
 				echo DBAkce::getAkceName($item) . '<br />';
 				echo '<input type="hidden" name="akce[]" value="', $item, '" />';
 			}
@@ -117,8 +117,8 @@ switch(getPostField('action')) {
 		break;
 	
 	case "remove_confirm":
-		if(is_array(getPostField("akce"))) {
-			foreach(getPostField("akce") as $id) {
+		if(is_array(post("akce"))) {
+			foreach(post("akce") as $id) {
 				if(User::checkPermissionsBool(L_ADMIN)) {
 					$data = DBAkce::getSingleAkce($id);
 					DBAkce::removeAkce($id);
@@ -138,7 +138,7 @@ switch(getPostField('action')) {
 		break;
 	
 	case "edit":
-		$akce = getPostField('akce');
+		$akce = post('akce');
 		if($akce[0]) {
 			header('Location: /admin/akce/edit/' . $akce[0]);
 			return;
@@ -146,7 +146,7 @@ switch(getPostField('action')) {
 		break;
 		
 	case "edit_detail":
-		$akce = getPostField("akce");
+		$akce = post("akce");
 		if($akce[0]) {
 			header("Location: /admin/akce/detail/" . $akce[0]);
 			return;
@@ -154,7 +154,7 @@ switch(getPostField('action')) {
 		break;
 		
 	case "edit_doku":
-		$akce = getPostField("akce");
+		$akce = post("akce");
 		if($akce[0]) {
 			header("Location: /admin/akce/dokumenty/" . $akce[0]);
 			return;

@@ -18,29 +18,29 @@ switch($action[0]) {
 		
 		if(empty($_POST)) {
 			
-			$_POST["login"] = User::getUserName();
-			$_POST["level"] = $data["u_level"];
+			post("login", User::getUserName());
+			post("level", $data["u_level"]);
 			switch($data["u_level"]) {
 				case L_USER:
-					$_POST["level"] = "user";	break;
+					post("level", "user");	break;
 				case L_EDITOR:
-					$_POST["level"] = "editor";	break;
+					post("level", "editor");	break;
 				case L_TRENER:
-					$_POST["level"] = "trener";	break;
+					post("level", "trener");	break;
 				case L_ADMIN:
-					$_POST["level"] = "admin";	break;
+					post("level", "admin");	break;
 				case L_SADMIN:
-					$_POST["level"] = "sadmin";	break;
+					post("level", "sadmin");	break;
 				default:
-					$_POST["level"] = "user";	break;
+					post("level", "user");	break;
 			}
-			$_POST["lock"] = $data["u_lock"];
-			$_POST["jmeno"] = $data["u_jmeno"];
-			$_POST["prijmeni"] = $data["u_prijmeni"];
-			$_POST["pohlavi"] = $data["u_pohlavi"];
-			$_POST["email"] = $data["u_email"];
-			$_POST["telefon"] = $data["u_telefon"];
-			$_POST["poznamky"] = $data["u_poznamky"];
+			post("lock", $data["u_lock"]);
+			post("jmeno", $data["u_jmeno"]);
+			post("prijmeni", $data["u_prijmeni"]);
+			post("pohlavi", $data["u_pohlavi"]);
+			post("email", $data["u_email"]);
+			post("telefon", $data["u_telefon"]);
+			post("poznamky", $data["u_poznamky"]);
 			
 			include("files/Member/Profil/FormPerson.inc");
 			return;
@@ -51,9 +51,9 @@ switch($action[0]) {
 			$html = ob_get_clean();
 			
 			if(!$error) {
-				DBUser::setUserData(User::getUserID(), getPostField('jmeno'), getPostField('prijmeni'),
-					getPostField('pohlavi'), getPostField('email'), getPostField('telefon'),
-					getPostField('poznamky'), $data['u_level'], $data['u_lock'], $data['u_ban']);
+				DBUser::setUserData(User::getUserID(), post('jmeno'), post('prijmeni'),
+					post('pohlavi'), post('email'), post('telefon'),
+					post('poznamky'), $data['u_level'], $data['u_lock'], $data['u_ban']);
 				
 				View::redirect('/member/profil', 'Upraveno');
 				return;
@@ -69,15 +69,15 @@ switch($action[0]) {
 			include('files/Member/Profil/FormPass.inc');
 			return;
 		} else {
-			$oldpass_check = DBUser::checkUser(User::getUserName(), User::Crypt(getPostField('oldpass')));
-			$newpass_check = getPostField('newpass') == getPostField('newpass_confirm');
+			$oldpass_check = DBUser::checkUser(User::getUserName(), User::Crypt(post('oldpass')));
+			$newpass_check = post('newpass') == post('newpass_confirm');
 			
 			ob_start();
 			include('files/Member/Profil/FormPass.inc');	
 			$html = ob_get_clean();
 			
 			if(!$error && $oldpass_check && $newpass_check) {
-				DBUser::setPassword(User::getUserID(), User::Crypt(getPostField('newpass')));
+				DBUser::setPassword(User::getUserID(), User::Crypt(post('newpass')));
 				View::redirect('/member/profil', 'Heslo změněno');
 				return;
 			} elseif(!$oldpass_check) {
@@ -133,32 +133,32 @@ switch($action[0]) {
 					DBPary::getPartnerRequestsByMe(User::getUserID()));
 				
 				if(empty($_POST)) {
-					$_POST['stt-trida'] = $vysledky['p_stt_trida'];
-					$_POST['stt-body'] = $vysledky['p_stt_body'];
-					$_POST['stt-finale'] = $vysledky['p_stt_finale'];
-					$_POST['lat-trida'] = $vysledky['p_lat_trida'];
-					$_POST['lat-body'] = $vysledky['p_lat_body'];
-					$_POST['lat-finale'] = $vysledky['p_lat_finale'];
+					post('stt-trida', $vysledky['p_stt_trida']);
+					post('stt-body', $vysledky['p_stt_body']);
+					post('stt-finale', $vysledky['p_stt_finale']);
+					post('lat-trida', $vysledky['p_lat_trida']);
+					post('lat-body', $vysledky['p_lat_body']);
+					post('lat-finale', $vysledky['p_lat_finale']);
 					
 					include('files/Member/Profil/FormClass.inc');
 					return;	
 				} else {
-					$stt_trida = getPostField('stt-trida');
-					$lat_trida = getPostField('lat-trida');
+					$stt_trida = post('stt-trida');
+					$lat_trida = post('lat-trida');
 					
-					$post_stt_body = getPostField('stt-body');
+					$post_stt_body = post('stt-body');
 					$stt_body = ($post_stt_body && $post_stt_body < 1000 && $post_stt_body > 0) ?
 						$post_stt_body : 0;
 						
-					$post_stt_finale = getPostField('stt-finale');
+					$post_stt_finale = post('stt-finale');
 					$stt_finale = ($post_stt_finale && $post_stt_finale < 1000 && $post_stt_finale > 0) ?
 						$post_stt_finale : 0;
 					
-					$post_lat_body = getPostField('lat-body');
+					$post_lat_body = post('lat-body');
 					$lat_body = ($post_lat_body && $post_lat_body < 1000 && $post_lat_body > 0) ?
 						$post_lat_body : 0;
 						
-					$post_lat_finale = getPostField('lat-finale');
+					$post_lat_finale = post('lat-finale');
 					$lat_finale = ($post_lat_finale && $post_lat_finale < 1000 && $post_lat_finale > 0) ?
 						$post_lat_finale : 0;
 					
@@ -184,19 +184,20 @@ switch($action[0]) {
 					if($gotPartner) {
 						echo "Právě tančím s: ";
 						echoFullJmeno($latest);
-						$_POST["partner"] = $latest['u_id'];
+						post("partner", $latest['u_id']);
 					} else {
 						echo 'Právě s nikým netančím';
-						$_POST["partner"] = "none";
+						post("partner", "none");
 					}
 					if(User::getUserPohlavi() == "m") {
 						$partners = DBUser::getUsersByPohlavi("f");
 					} else {
 						$partners = DBUser::getUsersByPohlavi("m");
 					}
+					$userselect = new UserSelectHelper();
 					
 					echo '<form method="POST" action="' . $_SERVER['REQUEST_URI'] . '">';
-					echoUsers("partner", $partners);
+					echo $userselect->name('partner')->users($partners)->tmpSwitch(FALSE);
 					echo '<button type="submit" name="action" value="confirm">Požádat o partnerství</button>';
 					if($gotPartner)
 						echo '<button type="submit" name="action" value="dumpthem">Rozejít se</button>';
@@ -204,20 +205,20 @@ switch($action[0]) {
 					echo '<a href="/member/profil/par">Zpět</a>';
 					return;
 				} else {
-					if(getPostField('action') == 'dumpthem' && !empty($latest) && $latest['u_id'] > 0) {
+					if(post('action') == 'dumpthem' && !empty($latest) && $latest['u_id'] > 0) {
 							DBPary::noPartner(User::getUserID());
 							DBPary::noPartner($latest['u_id']);
 							notice('A zase sám a sám...');
 							include("files/Member/Profil/DisplayMain.inc");
 							return;
 					}
-					if(getPostField('partner') == $latest['u_id'] ||
-							(getPostField('partner') == "none" && $latest['u_id'] == '0')) {
+					if(post('partner') == $latest['u_id'] ||
+							(post('partner') == "none" && $latest['u_id'] == '0')) {
 						notice('Nic se nezměnilo.');
 						include("files/Member/Profil/DisplayMain.inc");
 						return;
 					}
-					if(getPostField("partner") == "none") {
+					if(post("partner") == "none") {
 						DBPary::noPartner(User::getUserID());
 						DBPary::noPartner($latest['u_id']);
 						notice('A zase sám a sám...');
@@ -226,10 +227,10 @@ switch($action[0]) {
 					} else {
 						if(User::getUserPohlavi() == "m") {
 							DBPary::newPartnerRequest(User::getUserID(),
-								User::getUserID(), getPostField("partner"));
+								User::getUserID(), post("partner"));
 						} else {
 							DBPary::newPartnerRequest(User::getUserID(),
-								getPostField("partner"), User::getUserID());
+								post("partner"), User::getUserID());
 						}
 						notice("Žádost o partnerství odeslána");
 						include("files/Member/Profil/DisplayMain.inc");
@@ -247,8 +248,8 @@ switch($action[0]) {
 						case 'accept':
 							$requests = DBPary::getPartnerRequestsForMe(User::getUserID());
 							foreach($requests as $req) {
-								if($req['pn_id'] == getPostField('id')) {
-									DBPary::acceptPartnerRequest(getPostField('id'));
+								if($req['pn_id'] == post('id')) {
+									DBPary::acceptPartnerRequest(post('id'));
 									
 									DisplayPary::viewPartnerRequests(
 										DBPary::getPartnerRequestsForMe(User::getUserID()),
@@ -266,8 +267,8 @@ switch($action[0]) {
 						case 'refuse':
 							$requests = DBPary::getPartnerRequestsForMe(User::getUserID());
 							foreach($requests as $req) {
-								if($req['pn_id'] == getPostField('id')) {
-									DBPary::deletePartnerRequest(getPostField('id'));
+								if($req['pn_id'] == post('id')) {
+									DBPary::deletePartnerRequest(post('id'));
 									
 									DisplayPary::viewPartnerRequests(
 										DBPary::getPartnerRequestsForMe(User::getUserID()),
@@ -285,8 +286,8 @@ switch($action[0]) {
 						case 'cancel':
 							$requests = DBPary::getPartnerRequestsByMe(User::getUserID());
 							foreach($requests as $req) {
-								if($req['pn_id'] == getPostField('id')) {
-									DBPary::deletePartnerRequest(getPostField('id'));
+								if($req['pn_id'] == post('id')) {
+									DBPary::deletePartnerRequest(post('id'));
 									
 									DisplayPary::viewPartnerRequests(
 										DBPary::getPartnerRequestsForMe(User::getUserID()),
@@ -324,8 +325,8 @@ switch($action[0]) {
 					include('files/Main/Inzerce/Form.inc');
 					return;
 				} else {
-					$od = getPostField('od_year') . '-' . getPostField('od_month') . '-' . getPostField('od_day');
-					$do = getPostField('do_year') . '-' . getPostField('do_month') . '-' . getPostField('do_day');
+					$od = post('od_year') . '-' . post('od_month') . '-' . post('od_day');
+					$do = post('do_year') . '-' . post('do_month') . '-' . post('do_day');
 					
 					if($do == '0000-00-00' || strcmp($od, $do) > 0)
 						$do = $od;
@@ -337,9 +338,9 @@ switch($action[0]) {
 					$html = ob_get_clean();
 					
 					if(!$error) {
-						DBInzerce::addInzerat(getPostField('kat'), User::getUserID(), User::getUserJmeno(),
-							User::getUserPrijmeni(), getPostField('nadpis'), getPostField('text'), serialize(array()), $od, $do,
-							(bool) getPostField('visible'), '1');
+						DBInzerce::addInzerat(post('kat'), User::getUserID(), User::getUserJmeno(),
+							User::getUserPrijmeni(), post('nadpis'), post('text'), serialize(array()), $od, $do,
+							(bool) post('visible'), '1');
 						View::redirect("/member/profil/inzerce", "Váš inzerát byl přidán");
 					} else {
 						echo $html;
@@ -357,28 +358,28 @@ switch($action[0]) {
 					View::viewError(ER_AUTHORIZATION);
 				
 				if(empty($_POST)) {
-					$_POST['kat'] = $data['i_kat'];
-					$_POST['reg'] = $data['i_reg'];
-					$_POST['jmeno'] = $data['i_jmeno'];
-					$_POST['prijmeni'] = $data['i_prijmeni'];
-					$_POST['nadpis'] = $data['i_nadpis'];
-					$_POST['text'] = $data['i_text'];
+					post('kat', $data['i_kat']);
+					post('reg', $data['i_reg']);
+					post('jmeno', $data['i_jmeno']);
+					post('prijmeni', $data['i_prijmeni']);
+					post('nadpis', $data['i_nadpis']);
+					post('text', $data['i_text']);
 					list($od_year, $od_month, $od_day) = explode('-', $data['i_od']);
-					$_POST['od_year'] = $od_year;
-					$_POST['od_month'] = $od_month;
-					$_POST['od_day'] = $od_day;
+					post('od_year', $od_year);
+					post('od_month', $od_month);
+					post('od_day', $od_day);
 					list($do_year, $do_month, $do_day) = explode('-', $data['i_do']);
-					$_POST['do_year'] = $do_year;
-					$_POST['do_month'] = $do_month;
-					$_POST['do_day'] = $do_day;
-					$_POST['visible'] = $data['i_visible'];
-					$_POST['confirmed'] = $data['i_confirmed'];
+					post('do_year', $do_year);
+					post('do_month', $do_month);
+					post('do_day', $do_day);
+					post('visible', $data['i_visible']);
+					post('confirmed', $data['i_confirmed']);
 					
 					include('files/Main/Inzerce/Form.inc');
 					return;
 				} else {
-					$od = getPostField('od_year') . '-' . getPostField('od_month') . '-' . getPostField('od_day');
-					$do = getPostField('do_year') . '-' . getPostField('do_month') . '-' . getPostField('do_day');
+					$od = post('od_year') . '-' . post('od_month') . '-' . post('od_day');
+					$do = post('do_year') . '-' . post('do_month') . '-' . post('do_day');
 					
 					if($do == '0000-00-00' || strcmp($od, $do) > 0)
 						$do = $od;
@@ -390,9 +391,9 @@ switch($action[0]) {
 					$html = ob_get_clean();
 					
 					if(!$error) {
-						DBInzerce::editInzerat($id, getPostField('kat'), User::getUserID(), User::getUserJmeno(),
-							User::getUserPrijmeni(), getPostField('nadpis'), getPostField('text'), serialize(array()),
-							$od, $do, (bool) getPostField('visible'), '1');
+						DBInzerce::editInzerat($id, post('kat'), User::getUserID(), User::getUserJmeno(),
+							User::getUserPrijmeni(), post('nadpis'), post('text'), serialize(array()),
+							$od, $do, (bool) post('visible'), '1');
 						View::redirect("/member/profil/inzerce", "Inzerát upraven");
 					} else {
 						echo $html;

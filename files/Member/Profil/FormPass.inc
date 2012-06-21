@@ -2,7 +2,7 @@
 $error = false;
 
 global $isConfirmation;
-$isConfirmation = (getPostField("oldpass") || getPostField("newpass"));
+$isConfirmation = (post("oldpass") || post("newpass"));
 
 header_minor("Změna hesla");
 ?>

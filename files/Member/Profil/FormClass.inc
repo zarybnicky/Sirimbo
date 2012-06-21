@@ -2,7 +2,7 @@
 $error = false;
 
 global $isConfirmation;
-$isConfirmation = (getPostField("stt-trida") || getPostField("lat-trida"));
+$isConfirmation = (post("stt-trida") || post("lat-trida"));
 
 header_minor("Změna třídy a bodů");
 ?>
@@ -12,32 +12,32 @@ header_minor("Změna třídy a bodů");
 <tr>
 	<td>Třída:</td>
 	<td><select name="stt-trida">
-			<option value="Z" <?php if(getPostField("stt-trida") == "Z")
+			<option value="Z" <?php if(post("stt-trida") == "Z")
 				echo 'selected="selected"';?>>Z</option>
-			<option value="H" <?php if(getPostField("stt-trida") == "H")
+			<option value="H" <?php if(post("stt-trida") == "H")
 				echo 'selected="selected"';?>>H</option>
-			<option value="D" <?php if(getPostField("stt-trida") == "D")
+			<option value="D" <?php if(post("stt-trida") == "D")
 				echo 'selected="selected"';?>>D</option>
-			<option value="C" <?php if(getPostField("stt-trida") == "C")
+			<option value="C" <?php if(post("stt-trida") == "C")
 				echo 'selected="selected"';?>>C</option>
-			<option value="B" <?php if(getPostField("stt-trida") == "B")
+			<option value="B" <?php if(post("stt-trida") == "B")
 				echo 'selected="selected"';?>>B</option>
-			<option value="A" <?php if(getPostField("stt-trida") == "A")
+			<option value="A" <?php if(post("stt-trida") == "A")
 				echo 'selected="selected"';?>>A</option>
-			<option value="M" <?php if(getPostField("stt-trida") == "M")
+			<option value="M" <?php if(post("stt-trida") == "M")
 				echo 'selected="selected"';?>>M</option>
 		</select></td>
 </tr>
 <tr>
 	<td>Body:</td>
-	<td><input type="text" name="stt-body" value="<?php echo getPostField('stt-body');?>" /></td>
+	<td><input type="text" name="stt-body" value="<?php echo post('stt-body');?>" /></td>
 	<td>0 až 200<?php
 		$error = checkPostField("/[012]{0,1}[0-9]{0,2}/", "stt-body") || $error;
 	?></td>
 </tr>
 <tr>
 	<td>Finále:</td>
-	<td><input type="text" name="stt-finale" value="<?php echo getPostField('stt-finale');?>" /></td>
+	<td><input type="text" name="stt-finale" value="<?php echo post('stt-finale');?>" /></td>
 	<td>0 až 5<?php
 		$error = checkPostField("/[012345]{0,1}/", "lat-finale") || $error;
 	?></td>
@@ -46,32 +46,32 @@ header_minor("Změna třídy a bodů");
 <tr>
 	<td>Třída:</td>
 	<td><select name="lat-trida">
-			<option value="Z" <?php if(getPostField("stt-trida") == "Z")
+			<option value="Z" <?php if(post("stt-trida") == "Z")
 				echo 'selected="selected"';?>>Z</option>
-			<option value="H" <?php if(getPostField("lat-trida") == "H")
+			<option value="H" <?php if(post("lat-trida") == "H")
 				echo 'selected="selected"';?>>H</option>
-			<option value="D" <?php if(getPostField("lat-trida") == "D")
+			<option value="D" <?php if(post("lat-trida") == "D")
 				echo 'selected="selected"';?>>D</option>
-			<option value="C" <?php if(getPostField("lat-trida") == "C")
+			<option value="C" <?php if(post("lat-trida") == "C")
 				echo 'selected="selected"';?>>C</option>
-			<option value="B" <?php if(getPostField("lat-trida") == "B")
+			<option value="B" <?php if(post("lat-trida") == "B")
 				echo 'selected="selected"';?>>B</option>
-			<option value="A" <?php if(getPostField("lat-trida") == "A")
+			<option value="A" <?php if(post("lat-trida") == "A")
 				echo 'selected="selected"';?>>A</option>
-			<option value="M" <?php if(getPostField("lat-trida") == "M")
+			<option value="M" <?php if(post("lat-trida") == "M")
 				echo 'selected="selected"';?>>M</option>
 		</select></td>
 </tr>
 <tr>
 	<td>Body:</td>
-	<td><input type="text" name="lat-body" value="<?php echo getPostField('lat-body');?>" /></td>
+	<td><input type="text" name="lat-body" value="<?php echo post('lat-body');?>" /></td>
 	<td>0 až 200<?php
 		$error = checkPostField("/[0-9]{0,3}/", "lat-body") || $error;
 	?></td>
 </tr>
 <tr>
 	<td>Finále:</td>
-	<td><input type="text" name="lat-finale" value="<?php echo getPostField('lat-finale');?>" /></td>
+	<td><input type="text" name="lat-finale" value="<?php echo post('lat-finale');?>" /></td>
 	<td>0 až 5<?php
 		$error = checkPostField("/[012345]{0,1}/", "lat-finale") || $error;
 	?></td>
