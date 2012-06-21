@@ -14,23 +14,23 @@ switch($action[0]) {
 			include('files/Admin/Ankety/Form.inc');
 			return;
 		} else {
-			$visible = (bool) getPostField("visible");
+			$visible = (bool) post("visible");
 			if(User::checkPermissionsBool(L_EDITOR) && !User::checkPermissionsBool(L_ADMIN)) {
 				$visible = false;
 				View::setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění ankety');
 			}
 			
-			DBAnkety::addAnketa(User::getUserID(), getPostField('jmeno'), getPostField('text'), '0',
+			DBAnkety::addAnketa(User::getUserID(), post('jmeno'), post('text'), '0',
 				(bool) $visible);
 			$data = DBAnkety::getLatestAnketa();
 			
 			if($visible) {
 				DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal anketu ' .
-					getPostField('jmeno'));
+					post('jmeno'));
 			}
 		
-			if(getPostField("add_text")) {
-				DBAnkety::addAnketaItem($data['ak_id'], getPostField("add_text"));
+			if(post("add_text")) {
+				DBAnkety::addAnketaItem($data['ak_id'], post("add_text"));
 				unset($_POST["add_text"]);
 			}
 			View::redirect('/admin/ankety/edit/' . $data['ak_id'], 'Anketa přidána');
@@ -49,38 +49,38 @@ switch($action[0]) {
 		$items = DBAnkety::getAnketaItems($id);
 			
 		if(empty($_POST)) {
-			$_POST["jmeno"] = $data["ak_jmeno"];
-			$_POST["text"] = $data["ak_text"];
-			$_POST["visible"] = $data["ak_visible"];
+			post("jmeno", $data["ak_jmeno"]);
+			post("text", $data["ak_text"]);
+			post("visible", $data["ak_visible"]);
 			
 			include("files/Admin/Ankety/Form.inc");
 			return;
 		} else {
 			//-----Odebrání položky-----//
-			if(getPostField("remove") > 0) {
-				DBAnkety::removeAnketaItem(getPostField("remove"));
+			if(post("remove") > 0) {
+				DBAnkety::removeAnketaItem(post("remove"));
 				$items = DBAnkety::getAnketaItems($id);
 				$changed = true;
 			}
 			
 			//-----Jednotlivé položky-----//
 			foreach($items as $item) {
-				if(getPostField($item["aki_id"] . "-text") != $item["aki_text"]) {
-					DBAnkety::editAnketaItem($item["aki_id"], getPostField($item["aki_id"] . "-text"));
+				if(post($item["aki_id"] . "-text") != $item["aki_text"]) {
+					DBAnkety::editAnketaItem($item["aki_id"], post($item["aki_id"] . "-text"));
 					$changed = true;
 				}
 			}
 			$items = DBAnkety::getAnketaItems($id);
 			
 			//-----Přidávání položek-----//
-			if(getPostField("add_text")) {
-				DBAnkety::addAnketaItem($id, getPostField("add_text"));
-				unset($_POST["add_text"]);
+			if(post("add_text")) {
+				DBAnkety::addAnketaItem($id, post("add_text"));
+				post('add_text', null);
 				$items = DBAnkety::getAnketaItems($id);
 				$changed = true;
 			}
 			
-			$visible = (bool) getPostField('visible');
+			$visible = (bool) post('visible');
 			$visible_prev = $data['ak_visible'];
 			if(User::checkPermissionsBool(L_EDITOR) && !User::checkPermissionsBool(L_ADMIN) &&
 					$visible != $visible_prev) {
@@ -89,9 +89,9 @@ switch($action[0]) {
 			}
 			
 			if($visible != $visible_prev ||
-					getPostField('jmeno') != $data['ak_jmeno'] ||
-					getPostField('text') != $data['ak_text']) {
-				DBAnkety::editAnketa($id, getPostField('jmeno'), getPostField('text'), '0', $visible);
+					post('jmeno') != $data['ak_jmeno'] ||
+					post('text') != $data['ak_text']) {
+				DBAnkety::editAnketa($id, post('jmeno'), post('text'), '0', $visible);
 				$data = DBAnkety::getSingleAnketa($id);
 				$changed = true;
 			}
@@ -100,7 +100,7 @@ switch($action[0]) {
 				if($visible) {
 					if(!$visible_prev)
 						DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal anketu ' .
-							getPostField('jmeno'));
+							post('jmeno'));
 					else
 						DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' upravil anketu ' .
 							$data['ak_jmeno']);
@@ -110,9 +110,9 @@ switch($action[0]) {
 				}
 			}
 			
-			$_POST["jmeno"] = $data["ak_jmeno"];
-			$_POST["text"] = $data["ak_text"];
-			$_POST["visible"] = $data["ak_visible"];
+			post("jmeno", $data["ak_jmeno"]);
+			post("text", $data["ak_text"]);
+			post("visible", $data["ak_visible"]);
 			
 			include("files/Admin/Ankety/Form.inc");
 			return;
@@ -127,9 +127,9 @@ if(empty($_POST)) {
 	return;
 }
 
-switch(getPostField("action")) {
+switch(post("action")) {
 	case 'edit':
-		$ankety = getPostField('ankety');
+		$ankety = post('ankety');
 		if($ankety[0]) {
 			header('Location: /admin/ankety/edit/' . $ankety[0]);
 			return;
@@ -137,10 +137,10 @@ switch(getPostField("action")) {
 		break;
 
 	case 'remove':
-		if(is_array(getPostField('ankety'))) {
+		if(is_array(post('ankety'))) {
 			echo '<form action="/admin/ankety" method="POST">';
 			echo 'Opravdu chcete odstranit ankety:<br/><br/>';
-			foreach(getPostField('ankety') as $id) {
+			foreach(post('ankety') as $id) {
 				$data = DBAnkety::getSingleAnketa($id);
 				echo "\t", $data['ak_jmeno'];
 				echo '<br />';
@@ -155,8 +155,8 @@ switch(getPostField("action")) {
 		break;
 
 	case 'remove_confirm':
-		if(is_array(getPostField("ankety"))) {
-			foreach(getPostField("ankety") as $item) {
+		if(is_array(post("ankety"))) {
+			foreach(post("ankety") as $item) {
 				$data = DBAnkety::getSingleAnketa($item);
 				
 				if(Permissions::canEditAnketa($data['ak_kdo'])) {

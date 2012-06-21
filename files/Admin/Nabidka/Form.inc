@@ -2,7 +2,7 @@
 $error = false;
 
 global $isConfirmation;
-$isConfirmation = (getPostField("trener") || getPostField("pocet_hod"));
+$isConfirmation = (post("trener") || post("pocet_hod"));
 
 $request = explode('/', $_SERVER['REQUEST_URI']);
 $action = array_slice($request, 3);
@@ -31,11 +31,11 @@ header_minor($header);
 			echo $userselect->userSelect()->name('trener')->permissions(L_TRENER)->users(DBUser::getTrener());
 		}
 		$error = checkPostField("/[0-9]+/i", "trener");
-		?><input type="hidden" name="id" value="<?php $id = getPostField("id");
+		?><input type="hidden" name="id" value="<?php $id = post("id");
 			if(is_numeric($id)) echo $id; else if($id) View::viewError(ER_CORRUPT_DATA); ?>"/></td>
 	</tr><tr>
 		<td>Počet hodin (*): </td>
-		<td><input type="text" name="pocet_hod" value="<?php echo getPostField("pocet_hod"); ?>" /></td>
+		<td><input type="text" name="pocet_hod" value="<?php echo post("pocet_hod"); ?>" /></td>
 		<td>Pouze číslice<?php
 			$error = checkPostField("/^[0-9]+$/i", "pocet_hod") || $error;
 		?></td>
@@ -43,29 +43,29 @@ header_minor($header);
 		<td>Od: (*)</td>
 		<td><?php echoDateSelect("od_day", "od_month", "od_year");?></td>
 		<td><?php
-			$od_str = getPostField("od_year") . "-" . getPostField("od_month") . "-" .
-				getPostField("od_day");
+			$od_str = post("od_year") . "-" . post("od_month") . "-" .
+				post("od_day");
 			$error = checkDateString($od_str) || $error;
 		?></td>
 	</tr><tr>
 		<td>Do: </td>
 		<td><?php echoDateSelect("do_day", "do_month", "do_year");?></td>
 		<td>(pokud je prázdný, počítá se jako "Od")<?php
-			$do_str = getPostField("do_year") . "-" . getPostField("do_month") . "-" .
-				getPostField("do_day");
+			$do_str = post("do_year") . "-" . post("do_month") . "-" .
+				post("do_day");
 			$error = (($do_str == "0000-00-00") ? 0 : checkDateString($do_str)) || $error;
 		?></td>
 	</tr><tr>
 		<td>Viditelný: </td>
 		<td><input type="checkbox" name="visible" value="visible" <?php
-			if(getPostField('visible')) echo 'checked="checked"';
+			if(post('visible')) echo 'checked="checked"';
 			if(!User::checkPermissionsBool(L_ADMIN)) echo 'readonly="readonly"'
 		?>/></td>
 		<td></td>
 	</tr><tr>
 		<td>Uzamknout: </td>
 		<td><input type="checkbox" name="lock" value="lock" <?php
-			if(getPostField('lock')) echo 'checked="checked"';
+			if(post('lock')) echo 'checked="checked"';
 		?>/></td>
 		<td></td>
 	</tr><tr>

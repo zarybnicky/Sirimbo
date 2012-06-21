@@ -6,8 +6,7 @@ class DBInzerce extends Database {
 			DBInzerce::escapeArray(array($visible, $confirmed, $kategorie, $pocet, $vlastnik));
 		
 		$res = DBInzerce::query(
-			"SELECT i_id,i_kat,i_reg,i_jmeno,i_prijmeni,i_nadpis,i_text,i_foto,i_od,i_do,i_visible,
-				i_confirmed,i_aktu
+			"SELECT *
 			FROM inzerce
 			WHERE 1=1" . ($visible ? " AND i_visible='1' AND i_do>=" . date('Y-m-d') : "") .
 				($confirmed > 0 ? " AND i_confirmed='1'" : " AND i_confirmed='0'") .
@@ -22,8 +21,7 @@ class DBInzerce extends Database {
 		list($id) = DBInzerce::escapeArray(array($id));
 		
 		$res = DBInzerce::query(
-			"SELECT i_id,i_kat,i_reg,i_jmeno,i_prijmeni,i_nadpis,i_text,i_foto,i_od,i_do,i_visible,
-				i_confirmed,i_aktu
+			"SELECT *
 			FROM inzerce
 			WHERE i_id='$id'"
 		);
@@ -31,30 +29,30 @@ class DBInzerce extends Database {
 		
 	}
 	
-	public static function addInzerat($kat, $userid, $jmeno, $prijmeni, $nadpis, $text, $foto,
+	public static function addInzerat($kat, $userid, $nadpis, $text, $foto,
 			$od, $do, $visible, $confirmed) {
-		list($kat, $userid, $jmeno, $prijmeni, $nadpis, $text, $foto, $od, $do, $visible, $confirmed) =
-			DBInzerce::escapeArray(array($kat, $userid, $jmeno, $prijmeni, $nadpis, $text, $foto,
+		list($kat, $userid, $nadpis, $text, $foto, $od, $do, $visible, $confirmed) =
+			DBInzerce::escapeArray(array($kat, $userid, $nadpis, $text, $foto,
 			$od, $do, $visible, $confirmed));
 		
 		$res = DBInzerce::query(
-			"INSERT INTO inzerce (i_kat,i_reg,i_jmeno,i_prijmeni,i_nadpis,i_text,i_foto,i_od,i_do,
+			"INSERT INTO inzerce (i_kat,i_reg,i_nadpis,i_text,i_foto,i_od,i_do,
 				i_visible,i_confirmed)
-			VALUES ('$kat','$userid','$jmeno','$prijmeni','$nadpis','$text','$foto','$od','$do',
+			VALUES ('$kat','$userid','$nadpis','$text','$foto','$od','$do',
 				'$visible','$confirmed')"
 		);
 		return true;
 	}
 	
-	public static function editInzerat($id, $kat, $userid, $jmeno, $prijmeni, $nadpis, $text, $foto,
+	public static function editInzerat($id, $kat, $userid, $nadpis, $text, $foto,
 			$od, $do, $visible, $confirmed) {
-		list($id, $kat, $userid, $jmeno, $prijmeni, $nadpis, $text, $foto, $od, $do, $visible, $confirmed) =
-			DBInzerce::escapeArray(array($id, $kat, $userid, $jmeno, $prijmeni, $nadpis, $text, $foto,
+		list($id, $kat, $userid, $nadpis, $text, $foto, $od, $do, $visible, $confirmed) =
+			DBInzerce::escapeArray(array($id, $kat, $userid, $nadpis, $text, $foto,
 			$od, $do, $visible, $confirmed));
 		
 		$res = DBInzerce::query(
-			"UPDATE inzerce SET i_kat='$kat',i_reg='$userid',i_jmeno='$jmeno',i_prijmeni='$prijmeni',
-				i_nadpis='$nadpis',i_text='$text',i_foto='$foto',i_od='$od',i_do='$do',
+			"UPDATE inzerce SET i_kat='$kat',i_reg='$userid',i_nadpis='$nadpis',
+				i_text='$text',i_foto='$foto',i_od='$od',i_do='$do',
 				i_visible='$visible',i_confirmed='$confirmed'
 			WHERE i_id='$id'"
 		);

@@ -23,7 +23,7 @@ if($action[0] == 'edit') {
 		echo '<button type="submit" name="action" value="edit_confirm">Upravit</button>';
 		echo '</form><br />';
 	} else {
-		$newname = (getPostField('newname')) ? getPostField('newname') : '---EMPTY---';
+		$newname = (post('newname')) ? post('newname') : '---EMPTY---';
 		
 		DBDokumenty::editDokument($id, $newname);
 		View::redirect('/admin/dokumenty', 'Příspěvek úspěšně upraven');
@@ -35,9 +35,9 @@ if(empty($_POST)) {
 	return;
 }
 
-switch(getPostField('action')) {
+switch(post('action')) {
 	case 'edit':
-		$dokumenty = getPostField('dokumenty');
+		$dokumenty = post('dokumenty');
 		if($dokumenty[0]) {
 			header('Location: /admin/dokumenty/edit/' . $dokumenty[0]);
 			return;
@@ -54,17 +54,17 @@ switch(getPostField('action')) {
 			
 			$path = 'upload/' . time() . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
 			
-			if(!getPostField('name'))
-				$_POST['name'] = $fileName;
+			if(!post('name'))
+				post('name', $fileName);
 			
 			if(move_uploaded_file($fileUpload, $path)) {
 				chmod($path, 0666);
-				DBDokumenty::addDokument($path, getPostField('name'), $fileName,
-					getPostField('kategorie'), User::getUserID());
+				DBDokumenty::addDokument($path, post('name'), $fileName,
+					post('kategorie'), User::getUserID());
 				notice('Zmákli jsme to :o)');
 				
 				DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal dokument "' .
-					getPostField('name') . '"');
+					post('name') . '"');
 			} else {
 				notice('Bohužel, zkus to znova :o(');
 			}
@@ -74,10 +74,10 @@ switch(getPostField('action')) {
 		break;
 
 	case 'remove':
-		if(is_array(getPostField('dokumenty'))) {
+		if(is_array(post('dokumenty'))) {
 			echo '<form action="', $_SERVER['REQUEST_URI'], '" method="POST">';
 			echo 'Opravdu chcete odstranit dokumenty:<br/><br/>';
-			foreach(getPostField('dokumenty') as $id) {
+			foreach(post('dokumenty') as $id) {
 				$name = DBDokumenty::getDokumentName($id);
 				echo $name, '<br />';
 				echo '<input type="hidden" name="dokumenty[]" value="', $id, '" />';
@@ -92,8 +92,8 @@ switch(getPostField('action')) {
 		break;
 	
 	case 'remove_confirm':
-		if(is_array(getPostField('dokumenty'))) {
-			foreach(getPostField('dokumenty') as $id) {
+		if(is_array(post('dokumenty'))) {
+			foreach(post('dokumenty') as $id) {
 				$data = DBDokumenty::getSingleDokument($id);
 				if(Permissions::canEditDokument($data['d_kdo'])) {
 					unlink($data['d_path']);

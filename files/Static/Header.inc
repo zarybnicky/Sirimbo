@@ -17,8 +17,8 @@
 		<?php
 		if(!User::isLogged()) {
 			//TODO: AJAX
-			if(getPostField('action') == 'login' ||
-					getPostField('action') == 'enter') {
+			if(post('action') == 'login' ||
+					post('action') == 'enter') {
 				$_POST['pass'] = User::crypt($_POST['pass']);
 			
 				if(User::login($_POST['login'], $_POST['pass'])) {
@@ -84,28 +84,30 @@
 					$menu = array();
 					if($name[1] == 'fotogalerie') {
 						include('files/Main/Fotogalerie/Menu.inc');
-						$menu = getSideMenu();
-					} else if(array_key_exists($name[1], Settings::$sekce)) {
-						$menu = Settings::$sekce[$section];
+						echo getSideMenu();
 					} else {
-						$section = 'home';
-						$menu = Settings::$sekce['home'];
-					}
-					foreach($menu as $url => $word) {
-						if(is_array($word)) {
-							if(User::checkPermissionsBool($word[1]))
-								$word = $word[0];
-							else
-								continue;
+						if(array_key_exists($name[1], Settings::$sekce)) {
+							$menu = Settings::$sekce[$section];
+						} else {
+							$section = 'home';
+							$menu = Settings::$sekce['home'];
 						}
-						if($s_part != $url)
-							echo '<li><a href="/', $section, '/', $url,
-								'"><span class="arrow">.</span>', $word,
-								'</a></li>';
-						else
-							echo '<li class="current"><a href="/', $section, '/', $url,
-								'"><span class="arrow">.</span>', $word,
-								'<span class="point">.</span></a></li>';
+						foreach($menu as $url => $word) {
+							if(is_array($word)) {
+								if(User::checkPermissionsBool($word[1]))
+									$word = $word[0];
+								else
+									continue;
+							}
+							if($s_part != $url)
+								echo '<li><a href="/', $section, '/', $url,
+									'"><span class="arrow">.</span>', $word,
+									'</a></li>';
+							else
+								echo '<li class="current"><a href="/', $section, '/', $url,
+									'"><span class="arrow">.</span>', $word,
+									'<span class="point">.</span></a></li>';
+						}
 					}
 				?>
 					</ul>

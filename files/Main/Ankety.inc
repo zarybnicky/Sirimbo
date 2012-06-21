@@ -4,8 +4,8 @@ header_main('Ankety');
 if(!empty($_POST)) {
 	$ip = getIP();
 	
-	if(DBAnkety::isUniqueIP($_POST['id'], $ip)) {
-		DBAnkety::vote($_POST['id'], $_POST['choice'], $ip);
+	if(DBAnkety::isUniqueIP(post('id'), $ip)) {
+		DBAnkety::vote(post('id'), post('choice'), $ip);
 		notice('Váš hlas byl uložen');
 	} else {
 		notice('Z vaší IP adresy už někdo hlasoval.');
