@@ -37,10 +37,10 @@ switch($action[0]) {
 				}
 				$pass = User::Crypt(post('pass'));
 				
-				DBUser::addUser(post('login'), $pass, post('jmeno'), post('prijmeni'),
+				DBUser::addUser(strtolower(post('login')), $pass, post('jmeno'), post('prijmeni'),
 					post('pohlavi'), post('email'), post('telefon'),
-					post('poznamky'), $level, post('lock') ? 1 : 0,
-					post('ban') ? 1 : 0, '1');
+					post('poznamky'), $level, post('dancer') ? 1 : 0, post('lock') ? 1 : 0,
+					post('ban') ? 1 : 0, '1', post('system') ? 1 : 0);
 				View::redirect('/admin/users', 'Uživatel úspěšně přidán');
 			} else {
 				echo $html;
@@ -77,6 +77,8 @@ switch($action[0]) {
 			}
 			post('ban', $data['u_ban']);
 			post('lock', $data['u_lock']);
+			post('dancer', $data['u_dancer']);
+			post('system', $data['u_system']);
 			post('jmeno', $data['u_jmeno']);
 			post('prijmeni', $data['u_prijmeni']);
 			post('pohlavi', $data['u_pohlavi']);
@@ -108,8 +110,8 @@ switch($action[0]) {
 	
 				DBUser::setUserData($id, post('jmeno'), post('prijmeni'),
 					post('pohlavi'), post('email'), post('telefon'),
-					post('poznamky'), $level, post('lock') ? 1 : 0,
-					post('ban') ? 1 : 0);
+					post('poznamky'), $level, post('dancer') ? 1 : 0, post('lock') ? 1 : 0,
+					post('ban') ? 1 : 0, post('system') ? 1 : 0);
 				View::redirect('/admin/users', 'Uživatel úspěšně upraven');
 			} else {
 				echo $html;
@@ -126,11 +128,15 @@ switch($action[0]) {
 			if(post('action') == 'confirm') {
 				if(is_array(post('users'))) {
 					foreach(post('users') as $id) {
+						$data = DBUser::getUserData($id);
+						
 						$old_level = post($id . '-level');
 						$level = ($old_level == 'host' || $old_level == 'user' ||
 								$old_level == 'editor' || $old_level == 'trener' || $old_level == 'admin') ?
 							$old_level : 'host';
-						DBUser::confirmUser($id, $level);
+						
+						DBUser::confirmUser($id, $level, post($id . '-dancer') ? 1 : 0);
+						Mailer::reg_confirmed_notice($data['u_email'], $data['u_login']);
 					}
 				}
 				notice('Uživatelé potvrzeni');

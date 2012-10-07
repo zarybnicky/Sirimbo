@@ -1,31 +1,38 @@
 <?php
 function getSideMenu() {
 	$dirs = DBGalerie::getDirs(true, true);
-	$dirs[] = array('gd_level' => 2, 'gd_id' => '#', 'gd_name' => 'Další');
 	
 	if(empty($dirs))
 		return;
 	
+	echo '<ul class="fotoroot"><li>';
+	
 	$level_prev = 0;
 	foreach($dirs as $dir) {
+		if($dir['gd_hidden'] == '1')
+			continue;
+		
 		if($dir['gd_level'] > $level_prev) {
-			if($level_prev != 0)
-				echo '</a>';
 			echo '<ul class="fotolist">';
-			echo '<li><a href="', $dir['gd_id'], '"><img src="/style/directory.png" alt="" />', $dir['gd_name'];
 		} elseif($dir['gd_level'] == $level_prev) {
-			echo '</a></li>';
-			echo '<li><a href="', $dir['gd_id'], '"><img src="/style/directory.png" alt="" />', $dir['gd_name'];
+			echo '</li>';
 		} else {
 			for($i = 0; $i < ($level_prev - $dir['gd_level']); $i++)
-				echo '</a></li></ul>';
-			echo '</a></li>';
-			echo '<li><a href="', $dir['gd_id'], '"><img src="/style/directory.png" alt="" />', $dir['gd_name'];
+				echo '</li></ul>';
+			echo '</li>';
 		}
+		if($dir['gd_id'] == 0)
+			$link = "/fotogalerie";
+		else
+			$link = "/fotogalerie/" . $dir['gd_id'];
+		
+		echo '<li><a href="', $link, '"><img src="/style/directory.png" alt="" />', $dir['gd_name'], '</a>';
 		$level_prev = $dir['gd_level'];
 	}
 	for($i = 0; $i < $level_prev; $i++)
-		echo '</a></li></ul>';
+		echo '</li></ul>';
+	
+	echo '</li></ul>';
 /*
 	foreach($dirs as $item) {
 		if($item['gd_level'] == 2) {

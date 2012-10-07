@@ -52,6 +52,12 @@ function checkPostFieldLength($minIncl, $maxIncl, $text) {
 		return true;
 	}
 }
+function getPostField($field = NULL, $value = NULL) {
+	return post($field, $value);
+}
+function getGetField($field = NULL, $value = NULL) {
+	return get($field, $value);
+}
 function post($field = NULL, $value = NULL) {
 	if($field === NULL) {
 		return $_POST;

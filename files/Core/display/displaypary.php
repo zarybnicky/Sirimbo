@@ -46,7 +46,7 @@ class DisplayPary {
 		echo 'Hodnocení: ', $data['p_hodnoceni'], '<br /><br />';
 		
 		echo 'Předchozí partneři - ', $data['guy_name'], ' ', $data['guy_surname'], ':<br/>';
-		if(!$gal_partners)
+		if(!$guy_partners)
 			echo 'Žádní evidovaní';
 		else
 			foreach($guy_partners as $par) {

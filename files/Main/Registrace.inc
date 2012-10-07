@@ -67,10 +67,10 @@ $html = ob_get_clean();
 
 if($isConfirmation && !$error) {
 	if(!DBUser::getUserID(post("username"))) {
-		header("Location: /done");
-		User::register(post("username"), User::Crypt(post("pass")),
+		User::register(post("username"), post("pass"),
 			post("jmeno"), post("prijmeni"), post('pohlavi'),
 			post("email"), post("telefon"), post("poznamky"));
+		header("Location: /done");
 	} else {
 		notice("Už tu nekdo s takovým přihlašovacím jménem je :o(");
 		echo $html;

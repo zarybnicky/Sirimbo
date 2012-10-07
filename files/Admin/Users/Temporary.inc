@@ -7,8 +7,8 @@ $jmeno = post('jmeno');
 $prijmeni = post('prijmeni');
 
 if(!($user = DBUser::getUserByFullName($jmeno,$prijmeni))) {
-	$login = preg_replace('/[^\x20-\x7F]*/','', strtolower($prijmeni)) . '_' .
-		preg_replace('/[^\x20-\x7F]*/','', strtolower($jmeno));
+	$login = preg_replace('/[^a-zA-Z0-9.-_]*/','', strtolower($prijmeni)) . '_' .
+		preg_replace('/[^a-zA-Z0-9.-_]*/','', strtolower($jmeno));
 	list($user_id, $par_id) = DBUser::addTemporaryUser($login, $jmeno, $prijmeni, $permissions);
 	
 	echo json_encode(array('user_id' => $user_id, 'par_id' => $par_id, 'jmeno' => $jmeno,

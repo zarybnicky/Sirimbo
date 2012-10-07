@@ -1,9 +1,9 @@
 <?php
 class View {
 	public static function viewString($l) {
-		include(HEADER);
+		include(TISK ? HEADER_TISK : HEADER);
 		echo $l;
-		include(FOOTER);
+		include(TISK ? FOOTER_TISK : FOOTER);
 		
 		exit;
 	}
@@ -11,7 +11,7 @@ class View {
 	public static function viewStatic($l) {
 		ob_start();
 		
-		include(HEADER);
+		include(TISK ? HEADER_TISK : HEADER);
 		if(file_exists($l)) {
 			$fd = fopen($l, 'r');
 			echo fread($fd, filesize($l));
@@ -19,9 +19,10 @@ class View {
 		else {
 			echo "Stránka \"$l\" nenalezena.";
 		}
-		include(FOOTER);
+		include(TISK ? FOOTER_TISK : FOOTER);
 		
 		ob_end_flush();
+		
 		exit;
 	}
 
@@ -44,9 +45,9 @@ class View {
 		$main = ob_get_clean();
 		//TODO: Caching
 		
-		include(HEADER);
+		include(TISK ? HEADER_TISK : HEADER);
 		echo $main;
-		include(FOOTER);
+		include(TISK ? FOOTER_TISK : FOOTER);
 		
 		ob_end_flush();
 		exit;

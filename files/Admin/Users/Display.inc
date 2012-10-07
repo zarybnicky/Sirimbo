@@ -1,13 +1,20 @@
 <form action="/admin/users" method="POST">
-<a href="/admin/users/add">Přidat</a>
-<button type="submit" name="action" value="edit">Upravit</button>
-<button type="submit" name="action" value="remove">Odstranit</button>
-<a href="/admin/users/new">Nepotvrzení uživatelé</a>
+<?php
+$f = new MenuHelper();
+echo $f->menu()
+	->float(MenuHelper::FLOAT_RIGHT)
+	->content('Přidat', 'users/add')
+	->content('Upravit', 'edit', true)
+	->content('Odebrat', 'remove', true)
+	->content('Nepotvrzení uživatelé', 'users/new');
+?>
 <table>
 <tr>
 <td></td>
 <td>Login</td>
 <td>Jméno</td>
+<td>Aktivní<br/>tanečník</td>
+<td>Systémový<br/>uživatel</td>
 <td>Oprávnění</td>
 </tr>
 <?php
@@ -21,9 +28,11 @@ foreach($users as $user) {
 	else
 		echo '<td><input type="checkbox" name="users[]" value="" disabled="disabled" /></td>';
 	echo '<td>', $user['u_login'], '</td>';
-	echo '<td>';
+	echo '<td style="max-width:140px;">';
 	echoFullJmeno($user);
 	echo '</td>';
+	echo '<td>', $user['u_dancer'] ? '&#10003;' : '', '</td>';
+	echo '<td>', $user['u_system'] ? '&#10003;' : '', '</td>';
 	$ul = $user['u_level'];
 	echo '<td>';
 	switch($ul) {

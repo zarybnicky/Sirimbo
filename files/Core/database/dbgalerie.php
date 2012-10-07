@@ -1,9 +1,21 @@
 <?php
 class DBGalerie extends Database {
-	public static function getFotky($dir = false) {
+	public static function getFotky($dir = false, $limit = -1, $offset = 0) {
 		if($dir !== false)
 			list($dir) = DBGalerie::escapeArray(array($dir));
-		$res = DBGalerie::query('SELECT * FROM galerie_foto' . ($dir !== false ? " WHERE gf_id_rodic='$dir'" : ''));
+		$res = DBGalerie::query('SELECT * FROM galerie_foto ' .
+			($dir !== false ? 'WHERE gf_id_rodic="' . $dir . '"' : '') .
+			(($limit > -1) ? (' LIMIT ' . $offset . ',' . $limit) : ''));
+		
+		return DBGalerie::getArray($res);
+	}
+	public static function getFotkyWithParentPath($dir = false, $limit = -1, $offset = 0) {
+		if($dir !== false)
+			list($dir) = DBGalerie::escapeArray(array($dir));
+		$res = DBGalerie::query(
+			'SELECT *,(SELECT gd_path FROM galerie_dir WHERE gd_id=gf_id_rodic) AS gf_path_rodic
+			FROM galerie_foto ' . ($dir !== false ? 'WHERE gf_id_rodic="' . $dir . '"' : '') .
+			(($limit > -1) ? (' LIMIT ' . $offset . ',' . $limit) : ''));
 		
 		return DBGalerie::getArray($res);
 	}
@@ -29,6 +41,14 @@ class DBGalerie extends Database {
 			DBGalerie::recursiveChildren($array, $out, 0, count($array));
 			$array = $out;
 		}
+		
+		return $array;
+	}
+	public static function getDirsWithParentPath() {
+		$res = DBGalerie::query(
+			'SELECT *,(SELECT gd_path FROM galerie_dir WHERE gd_id=child.gd_id_rodic) AS gd_path_rodic
+			FROM galerie_dir AS child');
+		$array = DBGalerie::getArray($res);
 		
 		return $array;
 	}
@@ -60,7 +80,7 @@ class DBGalerie extends Database {
 	public static function editFoto($id, $path, $dir = false, $name = false) {
 		list($id, $path, $dir, $name) = DBNabidka::escapeArray(array($id, $path, $dir, $name));
 		
-		DBNabidka::query("UPDATE galerie_foto SET gf_path='$path'" .
+		DBGalerie::query("UPDATE galerie_foto SET gf_path='$path'" .
 			($dir != false ? ",gf_id_rodic='$dir'" : '') . ($name != false ? ",gf_name='$name'" : '') .
 			" WHERE gf_id='$id'");
 		
@@ -72,22 +92,21 @@ class DBGalerie extends Database {
 		DBGalerie::query("DELETE FROM galerie_foto WHERE gf_id='$id'");
 		return true;
 	}
-	public static function addDir($name, $parent, $level) {
-		list($name, $parent, $level) = DBGalerie::escapeArray(array($name, $parent, $level));
+	public static function addDir($name, $parent, $level, $hidden) {
+		list($name, $parent, $level, $hidden) =
+			DBGalerie::escapeArray(array($name, $parent, $level, $hidden));
 		
-		DBGalerie::query("INSERT INTO galerie_dir (gd_name,gd_id_rodic,gd_level) VALUES " .
-			"('$name','$parent','$level')");
+		DBGalerie::query("INSERT INTO galerie_dir (gd_name,gd_id_rodic,gd_level,gd_hidden) VALUES " .
+			"('$name','$parent','$level','$hidden')");
 		
 		return true;
 	}
-	public static function editNabidka($id, $trener, $pocet_hod, $od, $do, $visible, $lock) {
-		list($id, $trener, $pocet_hod, $od, $do, $visible, $lock) =
-			DBNabidka::escapeArray(array($id, $trener, $pocet_hod, $od, $do, $visible, $lock));
+	public static function editDir($id, $name, $parent, $level, $hidden) {
+		list($id, $name, $parent, $level, $hidden) = 
+			DBGalerie::escapeArray(array($id, $name, $parent, $level, $hidden));
 		
-		DBNabidka::query("UPDATE nabidka SET n_trener='$trener',n_pocet_hod='$pocet_hod',n_od='$od'," .
-			"n_do='$do',n_visible='$visible',n_lock='$lock' WHERE n_id='$id'");
-		
-		return true;
+		DBGalerie::query("UPDATE galerie_dir SET gd_name='$name',gd_id_rodic='$parent',
+			gd_level='$level',gd_hidden='$hidden' WHERE gd_id='$id'");
 	}
 	public static function removeDir($id) {
 		list($id) = DBGalerie::escapeArray(array($id));

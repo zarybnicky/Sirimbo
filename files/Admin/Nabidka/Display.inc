@@ -26,7 +26,7 @@ foreach($nabidka as $item) {
 	echoFullJmeno($item);
 	echo '</td>';
 	echo '<td>' . formatDate($item['n_od']) . ' - ' . formatDate($item['n_do']) .  '</td>';
-	echo '<td>' . ($item['n_visible'] ? 'x' : '_') . '</td>';
+	echo '<td>' . ($item['n_visible'] ? '&#10003;' : '') . '</td>';
 	echo '</tr>';
 }
 ?>
