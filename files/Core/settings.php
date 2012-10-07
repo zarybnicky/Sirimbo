@@ -38,10 +38,13 @@ define('SETTINGS', CORE . '/settings');
 define('GALERIE', 'galerie');
 define('HEADER', 'files/Static/Header.inc');
 define('FOOTER', 'files/Static/Footer.inc');
+define('HEADER_TISK', 'files/Static/HeaderTisk.inc');
+define('FOOTER_TISK', 'files/Static/FooterTisk.inc');
 define('LOG', 'log/error.log');
 define('PHP_LOG', 'log/php.log');
 
 define('DEFAULT_FROM_MAIL', 'TK Olymp.cz <noreply@tkolymp.cz>');
+define('DEFAULT_ADMIN_MAIL', 'tkolymp@tkolymp.cz');
 
 //ini_set('log_errors' , '1');
 //ini_set('error_log' , PHP_LOG);
@@ -57,6 +60,7 @@ include (SETTINGS . '/db.php');
 include (SETTINGS . '/sitemap.php');
 
 //-----Ciselne hodnoty urovni uzivatelu-----//
+define('L_ALL', '-1');
 define('L_UNCONFIRMED', '-1');
 define('L_HOST', '0');
 define('L_USER', '1');
@@ -148,7 +152,8 @@ public static $sekce = array(
 			'pary'		=> array('Správa párů', L_ADMIN),
 			'ankety'	=> array('Správa anket', L_EDITOR),
 			'inzerce'	=> array('Správa inzerce', L_ADMIN),
-			'galerie'	=> array('Správa galerie', L_ADMIN)
+			'galerie'	=> array('Správa galerie', L_ADMIN),
+			'konzole'	=> array('Konzole', L_ADMIN)
 		),
 	'aktuality'	=> array(
 			'posledni'		=> 'Nejnovější články',

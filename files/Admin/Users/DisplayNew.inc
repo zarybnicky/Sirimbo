@@ -1,10 +1,17 @@
 <form action="<?php echo $_SERVER["REQUEST_URI"]?>" method="POST">
-<button type="submit" name="action" value="confirm">Potvrdit</button>
-<button type="submit" name="action" value="remove">Odstranit</button>
+<?php
+$f = new MenuHelper();
+echo $f->menu()
+	->float(MenuHelper::FLOAT_RIGHT)
+	->content('Potvrdit', 'confirm', true)
+	->content('Odstranit', 'remove', true)
+	->content('Zpět', '../users');
+?>
 <table>
 <tr>
 <td></td>
 <td>Úroveň</td>
+<td>Aktivní<br/>tanečník</td>
 <td>Login</td>
 <td>Jméno</td>
 <td>Email</td>
@@ -21,8 +28,9 @@ foreach($users as $user) {
 				<option value="trener">Trenér</option>
 				<option value="admin">Administrátor</option>
 		</select></td>';
+	echo '<td><input type="checkbox" name="' . $user['u_id'] . '-dancer" value="dancer" /></td>';
 	echo '<td>' . $user['u_login'] . '</td>';
-	echo '<td>';
+	echo '<td style="max-width:140px;">';
 	echoFullJmeno($user);
 	echo '</td>';
 	echo '<td>' . $user['u_email'] . '</td>';
@@ -31,5 +39,3 @@ foreach($users as $user) {
 ?>
 </table>
 </form>
-
-<a href="/admin/users">Zpět</a>

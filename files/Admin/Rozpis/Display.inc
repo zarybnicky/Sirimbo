@@ -28,7 +28,7 @@ foreach($nabidka as $item) {
 	echo '</td>';
 	echo '<td>', formatDate($item['r_datum']),  '</td>';
 	echo '<td>', $item['r_kde'], '</td>';
-	echo '<td>', ($item['r_visible'] ? 'x' : '_'), '</td>';
+	echo '<td>', ($item['r_visible'] ? '&#10003;' : ''), '</td>';
 	echo '</tr>';
 }
 ?>

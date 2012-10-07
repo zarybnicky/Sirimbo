@@ -74,10 +74,10 @@ foreach($nabidka as $item) {
 			echo '<td>';
 			if($item['n_lock'] || !User::checkPermissionsBool(L_USER)) {
 				echo '<button type="submit" name="un_id" value="',
-					$par['p_id'],'-',$item['n_id'],'" disabled="disabled">Odstranit</button>';
+					$par['p_id'],'-',$item['n_id'],'" disabled="disabled">&times;</button>';
 			} else {
 				echo '<button type="submit" name="un_id" value="',
-					$par['p_id'],'-',$item['n_id'],'">Odstranit</button>';
+					$par['p_id'],'-',$item['n_id'],'">&times;</button>';
 			}
 			echo '</td>';
 		}

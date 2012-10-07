@@ -40,6 +40,7 @@ $sitemap_dynamic = array(
 	'inzerce/partnerka'	=> 'files/Main/Inzerce/Main.inc',
 	'inzerce/add'		=> 'files/Main/Inzerce/Main.inc',
 	'inzerce/edit'		=> 'files/Main/Inzerce/Main.inc',
+	'inzerce/edit-unreg'=> 'files/Main/Inzerce/Main.inc',
 	'inzerce/remove'	=> 'files/Main/Inzerce/Main.inc',
 
 	'nabizime'				=> 'files/Main/Nabizime/Main.inc',
@@ -64,6 +65,10 @@ $sitemap_dynamic = array(
 	'member/dokumenty'	=> 'files/Member/Dokumenty.inc',
 	'member/zebricek'	=> 'files/Member/Zebricek.inc',
 	'member/clenove'	=> 'files/Member/Clenove.inc',
+	'member/clenove/filter'	=> 'files/Member/Clenove.inc',
+	'member/clenove/filter/dancer' => 'files/Member/Clenove.inc',
+	'member/clenove/filter/trener' => 'files/Member/Clenove.inc',
+	'member/clenove/filter/editor' => 'files/Member/Clenove.inc',
 	'member/pary'		=> 'files/Member/Pary.inc',
 
 	'member/profil'			=> 'files/Member/Profil.inc',
@@ -79,6 +84,7 @@ $sitemap_dynamic = array(
 	'member/profil/inzerce/remove'	=> 'files/Member/Profil.inc',
 
 	'admin/home'				=> 'files/Admin/Main.inc',
+	'admin/konzole'				=> 'files/Admin/Konzole/Main.inc',
 
 	'admin/dokumenty'			=> 'files/Admin/Dokumenty/Main.inc',
 	'admin/dokumenty/edit'		=> 'files/Admin/Dokumenty/Main.inc',
@@ -130,6 +136,7 @@ $sitemap_dynamic = array(
 	'admin/galerie'				=> 'files/Admin/Galerie/Main.inc',
 	'admin/galerie/adddir'		=> 'files/Admin/Galerie/Main.inc',
 	'admin/galerie/edit'		=> 'files/Admin/Galerie/Main.inc',
+	'admin/galerie/editdir'		=> 'files/Admin/Galerie/Main.inc',
 	'admin/galerie/upload'		=> 'files/Admin/Galerie/Main.inc',
 	'admin/galerie/scan'		=> 'files/Admin/Galerie/Main.inc',
 	'admin/galerie/process'		=> 'files/Admin/Galerie/Main.inc'
