@@ -125,11 +125,14 @@ class DBPary extends Database {
 	public static function newPartner($partner, $partnerka) {
 		list($partner, $partnerka) = DBPary::escapeArray(array($partner, $partnerka));
 		
+		if($partner == '0' || $partner == 'none')
+			return;
+		
 		DBPary::query(
 			"UPDATE pary
 			SET p_archiv='1',p_aktu_archivovano=NOW()
 			WHERE (p_id_partner='$partner'" .
-				(($partnerka != "none") ?
+				(($partnerka != "none" || $partnerka != '0') ?
 					" OR p_id_partner='$partnerka' OR p_id_partnerka='$partnerka'" : '') .
 				")
 				AND p_archiv='0'"
@@ -139,6 +142,9 @@ class DBPary extends Database {
 	
 	public static function noPartner($partner) {
 		list($partner) = DBPary::escapeArray(array($partner));
+		
+		if($partner == '0' || $partner == 'none')
+			return;
 		
 		/*DBPary::query(		//REMOVES ALL FROM NABIDKA 
 			"DELETE n,r FROM nabidka_item AS n,rozpis_item AS r

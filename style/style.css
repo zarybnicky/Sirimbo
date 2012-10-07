@@ -303,22 +303,6 @@ p { margin-bottom: 1em; }
 .big {font-size: 124%;color: #500;}
 .list {list-style:disc outside none;padding-left:15px;}
 
-.fotolist li {
-	border: none;
-	badkground: none;
-	list-style: none;
-	padding: 0 0 0 15px;
-	margin: 3px 0;
-} .fotolist ul li {
-	border: none;
-	background: inherit;
-} .fotolist ul li a {
-	background: inherit;
-} .fotolist img {
-	display: inline;
-	margin: 3px 5px -3px 0;
-}
-
 .centerWTable {text-align:center;}
 .centerWTable table {margin:0 auto;}
 
@@ -328,7 +312,6 @@ p { margin-bottom: 1em; }
 .f_doc_right {margin-left:15px;border:1px solid black;float:right;}
 .f {
 	float:left;
-	padding:3px;
 	margin:3px;
 	border: 1px solid;
 	border-color: #ffe3b7 #ffa252 #ffa252 #ffe3b7;
@@ -346,22 +329,46 @@ p { margin-bottom: 1em; }
 	display:block;
 	max-width:710px;max-height:710px;
 }.f_popis {
-	width:146px;
-	padding-left:10px;
+	text-align:center;
+	padding:3px;
 }
 div#TopFeaturesBlock {background:url(/images/topfeatures_bg.gif) #013366 top left repeat-x;height:330px;position:relative;}
-div#TopFeaturesBlock div.Feature {width:700px;height:330px;position:absolute;top:0;left:10px;background:url(/images/topfeatures_shadow.png) scroll no-repeat 256px 8px;}
+div#TopFeaturesBlock div.Feature {width:700px;height:330px;position:absolute;top:0;left:15px;}
 div#TopFeaturesBlock div.Feature p.FeatureBlurb {color:#fff;width:240px;float:left;padding:0 0 1em;font-size:1.1em;text-align:left;}
 div#TopFeaturesBlock ul.FeatureLinks {float:left;width:240px;padding:0 0;list-style:none;}
 div#TopFeaturesBlock ul.FeatureLinks li {float:left;width:78px;background:url(/images/topfeaturesbutton_bg.gif) #1c3f65 center left repeat-x;margin-right:3px;border: solid 1px #b2c5d4;}
 div#TopFeaturesBlock ul.FeatureLinks li a {display:block;color:#fff;width:78px;text-decoration:none;font-weight:bold;font-size:.9em;text-align:center;padding:.4em 0;}
 div#TopFeaturesBlock ul.FeatureLinks li a:hover {color:#5a5a5a;background-color:#fff;}
 div#TopFeaturesBlock h2.FeatureTitle {color:#fff;float:left;font-size:1.6em;margin:15px 0 12px;padding:0 0;width:240px;}
-div#TopFeaturesBlock div.FeaturePhoto {float:right;margin:12px 12px 0 0;width:427px;height:285px;}
-div#TopFeaturesBlock div.FeaturePhoto img {max-width:427px;max-height:285px;}
+div#TopFeaturesBlock div.FeaturePhoto {float:right;margin:15px 15px 15px 0;width:427px;height:300px;line-height:300px;text-align:center;}
+div#TopFeaturesBlock div.FeaturePhoto img {max-width:427px;max-height:300px;vertical-align:middle;}
 div#TopFeaturesBlock div.FeaturePhoto p {text-align:right;color:#fff;margin-top:.2em;font-size:.9em;color:#BFCEE1;}
 div#TopFeaturesBlock ul.FeatureIndex {list-style:none;display:block;position:absolute;bottom:22px;}
 div#TopFeaturesBlock ul.FeatureIndex > li{float:left;border:solid 1px #fff;background-color:#366998;margin:0 3px;}
 div#TopFeaturesBlock ul.FeatureIndex > li:hover{background-color:#7d9cb9;}
 div#TopFeaturesBlock ul.FeatureIndex > li.selected{background-color:#7d9cb9;}
 div#TopFeaturesBlock ul.FeatureIndex > li > a{height:14px;width:14px;display:block;}
+
+.fotoroot {
+	background: #b2b2b2 url('box-light-top.png') no-repeat top left !important;
+} .fotoroot li {
+	padding-bottom: 2px;
+	background: url('box-light-bottom.png') no-repeat bottom left !important;
+}
+.fotolist {
+	border: none;
+	background: none !important;
+	list-style: none;
+	padding-left: 17px;
+	margin: 0 !important;
+} .fotolist li {
+	border: none;
+	background: none !important;
+} .fotolist li a {
+	border: none;
+	background: none !important;
+	padding: 7px 0 !important;
+} .fotolist img {
+	display: inline;
+	margin: 3px 5px -3px 0;
+}

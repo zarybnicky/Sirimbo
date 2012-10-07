@@ -64,7 +64,13 @@ header_minor($header);
 		<td>Max. 40 znaků<?php
 			$error = checkPostFieldLength(1, 40, "prijmeni") || $error;
 		?></td>
-	</tr><?php } ?><tr>
+	</tr><?php if(empty($_SESSION['inzerce_' . $id])) { ?><tr>
+		<td>Heslo (*): </td>
+		<td><input type="text" name="pass" value="<?php echo post("pass"); ?>" /></td>
+		<td>Max. 20 znaků - dá se použít pro opětovný přístup k inzerátu<?php
+			$error = checkPostFieldLength(1, 20, "pass") || $error;
+		?></td>
+	</tr><?php }} ?><tr>
 		<td>Od: (*)</td>
 		<td><?php echoDateSelect("od_day", "od_month", "od_year");?></td>
 		<td><?php
@@ -91,5 +97,8 @@ header_minor($header);
 </table>
 </form>
 <a href="<?php
-echo (strpos($_SERVER['REQUEST_URI'], 'member') ? '/member/profil' : '');
-?>/inzerce">Zpět</a>
+if(strpos($_SERVER['REQUEST_URI'], 'member'))
+	echo '/member/profil/inzerce';
+else
+	echo '/inzerce/posledni';
+?>">Zpět</a>

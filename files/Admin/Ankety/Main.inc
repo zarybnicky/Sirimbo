@@ -120,7 +120,6 @@ switch($action[0]) {
 		break;
 }
 //TODO: klonování N,R
-//TODO: disable buttons where I can't edit
 
 if(empty($_POST)) {
 	include("files/Admin/Ankety/Display.inc");

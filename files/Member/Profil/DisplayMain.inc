@@ -1,3 +1,4 @@
+Variabilní symbol: <?php echo User::var_symbol(User::getUserID()); ?><br/>
 <a href="/member/profil/edit">Upravit osobní údaje</a><br/>
 <a href="/member/profil/heslo">Změnit heslo</a><br/>
 <a href="/member/profil/par">Detaily páru</a><br/>

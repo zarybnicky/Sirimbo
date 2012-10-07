@@ -19,8 +19,12 @@ switch($action[0]) {
 			
 			if($do == '0000-00-00' || strcmp($od, $do) > 0)
 				$do = $od;
-			
+		
 			$userid = post('reg');
+			$user_data = DBUser::getUserData(post('reg'));
+			$jmeno = $user_data['u_jmeno'];
+			$prijmeni = $user_data['u_prijmeni'];
+			
 			$confirmed = '1';
 			$visible = (bool) post('visible');
 			
@@ -31,9 +35,9 @@ switch($action[0]) {
 			$html = ob_get_clean();
 			
 			if(!$error) {
-				DBInzerce::addInzerat(post('kat'), $userid, post('nadpis'),
-					post('text'), serialize(array()), $od, $do,
-					$visible, $confirmed);
+				DBInzerce::addInzerat(post('kat'), $userid, $jmeno, $prijmeni,
+					post('nadpis'), post('text'), serialize(array()), $od, $do,
+					'', $visible, $confirmed);
 				View::redirect('/admin/inzerce', 'Inzerát přidán');
 			} else {
 				echo $html;
@@ -51,6 +55,8 @@ switch($action[0]) {
 		if(empty($_POST)) {
 			post('kat', $data['i_kat']);
 			post('reg', $data['i_reg']);
+			post('jmeno', $data['i_jmeno']);
+			post('prijmeni', $data['i_prijmeni']);
 			post('nadpis', $data['i_nadpis']);
 			post('text', $data['i_text']);
 			list($od_year, $od_month, $od_day) = explode('-', $data['i_od']);
@@ -61,6 +67,7 @@ switch($action[0]) {
 			post('do_year', $do_year);
 			post('do_month', $do_month);
 			post('do_day', $do_day);
+			post('pass', $data['i_pass']);
 			post('visible', $data['i_visible']);
 			post('confirmed', $data['i_confirmed']);
 			
@@ -74,6 +81,14 @@ switch($action[0]) {
 				$do = $od;
 			
 			$userid = post('reg');
+			if($userid > 0) {
+				$user_data = DBUser::getUserData(post('reg'));
+				$jmeno = $user_data['u_jmeno'];
+				$prijmeni = $user_data['u_prijmeni'];
+			} else {
+				$jmeno = post('jmeno');
+				$prijmeni = post('prijmeni');
+			}
 			$confirmed = '1';
 			$visible = (bool) post('visible');
 			
@@ -84,9 +99,9 @@ switch($action[0]) {
 			$html = ob_get_clean();
 			
 			if(!$error) {
-				DBInzerce::editInzerat($id, post('kat'), $userid, post('nadpis'),
-					post('text'), serialize(array()), $od, $do, $visible,
-					$confirmed);
+				DBInzerce::editInzerat($id, post('kat'), $userid, $jmeno, $prijmeni,
+					post('nadpis'), post('text'), serialize(array()), $od, $do,
+					$data['i_pass'], $visible, $confirmed);
 				View::redirect("/admin/inzerce", "Inzerát upraven");
 			} else {
 				echo $html;

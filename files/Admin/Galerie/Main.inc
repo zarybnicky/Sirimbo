@@ -8,129 +8,155 @@ $request = explode('/', $_SERVER['REQUEST_URI']);
 $action = array_slice($request, 3);
 if(empty($action)) $action[] = '';
 
+function recursiveDirs($dir_name, &$out_dirs, &$out_files) {
+	$file_list = scandir($dir_name);
+	
+	foreach($file_list as $key => $file) {
+		if(in_array($file, array('.','..','thumbnails'))) {
+			unset($file_list[$key]);
+			continue;
+		}
+		$file_list[$key] = $dir_name . '/' . $file;
+						
+		if(is_dir($file_list[$key])) {
+			$out_dirs[$file_list[$key]] = ($dir_name == './galerie' ? './galerie/0' : $dir_name);
+			recursiveDirs($file_list[$key], $out_dirs, $out_files);
+		} else if(!strstr($file_list[$key], '/tn_')) {
+			$out_files[$file_list[$key]] = ($dir_name == './galerie' ? './galerie/0' : $dir_name);
+		}
+	}
+}
+function rrmdir($dir) {
+	if(!is_dir($dir))
+		return false;
+	
+	$objects = scandir($dir);
+	foreach($objects as $object) {
+		if(!in_array($object, array('.', '..'))) {
+			if(is_dir($dir . '/' . $object))
+				rrmdir($dir . '/' . $object);
+			else
+				unlink($dir . '/' . $object);
+		}
+	}
+	unset($objects);
+	rmdir($dir);
+}
+function createThumbnail($file, $parent) {
+	$filetype = image_type_to_mime_type(exif_imagetype($file));
+	if(!$filetype || !array_key_exists($filetype, Settings::$foto_types)) {
+		unset($fs_files[$file]);
+		unlink($file);
+		return false;
+	}
+	
+	list($width, $height) = getimagesize($file);
+	if(!(($width > THUMBNAIL_MAX) || ($height > THUMBNAIL_MAX))) {
+		$nWidth = $width;
+		$nHeight = $height;
+	} else {
+		$scale = ($width > $height) ? (THUMBNAIL_MAX / $width) : (THUMBNAIL_MAX / $height);
+		$nWidth = round($width * $scale);
+		$nHeight = round($height * $scale);	
+	}
+	
+	$fn_suffix = Settings::$gd_function_suffix[$filetype];
+	$fn_read = 'imageCreateFrom' . $fn_suffix;
+	$fn_write = 'image' . $fn_suffix;
+	if(!function_exists('imagebmp') || !function_exists('imagecreatefrombmp'))
+		include('files/Core/bmp.php');
+						
+	if($source = $fn_read($file)) {
+		$thumbnail = imageCreateTruecolor($nWidth, $nHeight);
+
+		imageCopyResized($thumbnail, $source,
+		0, 0, 0, 0, $nWidth, $nHeight, $width, $height);
+	}
+	$tn_dir = str_replace('./galerie', './galerie/thumbnails', $parent);
+	$tn_path = str_replace('./galerie', './galerie/thumbnails', $file);
+	if(!is_dir($tn_dir))
+		mkdir($tn_dir, 0777, true);
+	
+	$fn_write($thumbnail, $tn_path);
+	imageDestroy($thumbnail);
+	return true;
+}
+
 switch($action[0]) {
 	case 'scan':
-		$db_dirs = DBGalerie::getDirs(1, 1);
-		$db_files = DBGalerie::getFotky();
-		$db_tmp_dirs = array();
+		$db_dirs = DBGalerie::getDirsWithParentPath();
+		$db_files = DBGalerie::getFotkyWithParentPath();
 		$db_out_dirs = array();
 		$db_out_files = array();
 		
 		foreach($db_dirs as $dir) {
-			$db_out_dirs[] = $dir['gd_path'];
+			$db_out_dirs[$dir['gd_path']] = $dir['gd_path_rodic'];
 		}
 		foreach($db_files as $file) {
-			$db_out_files[] = $file['gf_path'];
+			$db_out_files[$file['gf_path']] = $file['gf_path_rodic'];
 		}
+		unset($db_dirs);
+		unset($db_files);
 		
-		function recursiveDirs($dir_name, &$out_dirs, &$out_files) {
-			$dirs = array();
-			$files = array();
-			$file_list = scandir($dir_name);
-			
-			foreach($file_list as $key => $file) {
-				if(in_array($file, array('.','..','thumbnails'))) {
-					unset($file_list[$key]);
-					continue;
-				}
-				$file_list[$key] = $dir_name . '/' . $file;
-								
-				if(is_dir($file_list[$key])) {
-					$out_dirs[] = $file_list[$key];
-					recursiveDirs($file_list[$key], $out_dirs, $out_files);
-				} else if(!strstr($file_list[$key], '/tn_')) {
-					$out_files[] = $file_list[$key];
-				}
-			}
-			array_merge($out_dirs, $dirs);
-		}
-		
-		$file_map = array();
 		$fs_dirs = array();
 		$fs_files = array();
+		$fs_thumbnails = array();
+		$fs_thumbnail_dirs = array();
 		recursiveDirs("./galerie", $fs_dirs, $fs_files);
-
-		foreach($fs_dirs as $key1 => $needle) {
-			$key2 = array_search($needle, $db_out_dirs);
-			if($key2 === false)
-				continue;
-			unset($fs_dirs[$key1]);
-			unset($db_out_dirs[$key2]);
+		recursiveDirs("./galerie/thumbnails", $fs_thumbnail_dirs, $fs_thumbnails);
+		
+		foreach($fs_thumbnail_dirs as $dir => $parent) {
+			if(!isset($fs_dirs[str_replace('./galerie/thumbnails', './galerie/', $dir)]))
+				rrmdir($dir);
 		}
-		foreach($fs_files as $key1 => $needle) {
-			$key2 = array_search($needle, $db_out_files);
-			if($key2 === false)
+		unset($fs_thumbnails);
+		unset($fs_thumbnail_dirs);
+		
+		foreach($fs_dirs as $key => $parent) {
+			if(!isset($db_out_dirs[$key]) || ($db_out_dirs[$key] != $fs_dirs[$key]))
 				continue;
-			unset($fs_files[$key1]);
-			unset($db_out_files[$key2]);
+			unset($fs_dirs[$key]);
+			unset($db_out_dirs[$key]);
+		}
+		foreach($fs_files as $key => $parent) {
+			if(!is_file(str_replace('./galerie', './galerie/thumbnails', $key)))
+				createThumbnail($key, $parent);
+			
+			if(!isset($db_out_files[$key]) || ($db_out_files[$key] != $fs_files[$key]))
+				continue;
+			unset($fs_files[$key]);
+			unset($db_out_files[$key]);
 		}
 		
-		foreach($fs_dirs as $dir) {
+		foreach($db_out_dirs as $dir => $parent) {
+			DBGalerie::removeDirByPath($dir);
+		}
+		foreach($db_out_files as $file => $parent) {
+			DBGalerie::removeFotoByPath($file);
+		}
+		
+		asort($fs_dirs);
+		foreach($fs_dirs as $dir => $parent) {
 			$parts = explode('/', $dir);
 			$name = array_pop($parts);
-			$parent = implode('/', $parts);
-			
 			$level = count($parts);
+			unset($parts);
 			
 			$tn_dir = str_replace("./galerie/", './galerie/thumbnails/', $dir);
 			if(!is_dir($tn_dir))
-				mkdir($tn_dir);
-			
-			if($parent == "./galerie")
-				$parent = './galerie/0';
+				mkdir($tn_dir, 0777, true);
 			
 			DBGalerie::addDirByPath($name, $parent, $level, $dir);
 		}
 		
-		foreach($fs_files as $key => $file) {
-			$filetype = image_type_to_mime_type(exif_imagetype($file));
-			if(!$filetype || !array_key_exists($filetype, Settings::$foto_types)) {
-				unset($fs_files[$key]);
-				unlink($file);
+		foreach($fs_files as $file => $parent) {
+			if(!createThumbnail($file, $parent))
 				continue;
-			}
-			
-			list($width, $height) = getimagesize($file);
-			if(!(($width > THUMBNAIL_MAX) || ($height > THUMBNAIL_MAX))) {
-				$nWidth = $width;
-				$nHeight = $height;
-			} else {
-				$scale = ($width > $height) ? (THUMBNAIL_MAX / $width) : (THUMBNAIL_MAX / $height);
-				$nWidth = round($width * $scale);
-				$nHeight = round($height * $scale);	
-			}
-			
-			$fn_suffix = Settings::$gd_function_suffix[$filetype];
-			$fn_read = 'imageCreateFrom' . $fn_suffix;
-			$fn_write = 'image' . $fn_suffix;
-			if(!function_exists('imagebmp') || !function_exists('imagecreatefrombmp'))
-				include('files/Core/bmp.php');
-								
-			if($source = $fn_read($file)) {
-				$thumbnail = imageCreateTruecolor($nWidth, $nHeight);
-
-				imageCopyResized($thumbnail, $source,
-				0, 0, 0, 0, $nWidth, $nHeight, $width, $height);
-			}
-			$tn_path = str_replace('./galerie', './galerie/thumbnails', $file);
-			$fn_write($thumbnail, $tn_path);
-			imageDestroy($thumbnail);
 			
 			$parts = explode('/', $file);
 			$name = array_pop($parts);
-			$dir = implode('/', $parts);
 			
-			if($dir == "./galerie")
-				$dir = './galerie/0';
-			
-			DBGalerie::addFotoByPath($dir, $file, $name, User::getUserID());
-		}
-		
-		foreach($db_out_dirs as $dir) {
-			DBGalerie::removeDirByPath($dir);
-		}
-		foreach($db_out_files as $files) {
-			DBGalerie::removeFotoByPath($file);
+			DBGalerie::addFotoByPath($parent, $file, $name, User::getUserID());
 		}
 		
 		echo 'Složek přidáno: ', count($fs_dirs), '<br/>',
@@ -233,7 +259,7 @@ switch($action[0]) {
 			}
 		}
 		break;
-		
+
 	case 'edit':
 		$id = isset($action[1]) ? $action[1] : '';
 		
@@ -246,7 +272,7 @@ switch($action[0]) {
 		} else {
 			switch(post('action')) {
 				case 'edit':
-					notice('Not Implemented');
+					notice('Not Implemented');//FIXME: Not Implemented - Foto edit (rename,...)
 					include('files/Admin/Galerie/DisplayEdit.inc');
 					return;
 				case 'remove':
@@ -268,6 +294,36 @@ switch($action[0]) {
 					return;
 			}
 		}
+		break;
+			
+	case 'editdir':
+		$id = isset($action[1]) ? $action[1] : '';
+		
+		if(!is_numeric($id))
+			View::redirect('/admin/galerie', 'Složka s takovým ID neexistuje');
+		
+		if(empty($_POST)) {
+			include('files/Admin/Galerie/DisplayDir.inc');
+			return;
+		} else {
+			dumpVar($_POST);
+			if(!post('name')) {
+				notice('Složka musí mít jméno');
+				include('files/Admin/Galerie/DisplayDir.inc');
+				return;
+			}
+			if(post('parent') == 'none') {
+				notice('Složka musí mít nadsložku');
+				include('files/Admin/Galerie/DisplayDir.inc');
+				return;
+			}
+			list($parent, $level) = explode('-', post('parent'));
+			$level++;
+			
+			DBGalerie::editDir($id, post('name'), $parent, $level, post('hidden') ? '1' : '0');
+			View::redirect('/admin/galerie', 'Složka úspěšně upravena');
+		}
+		break;
 }
 
 if(empty($_POST)) {
@@ -283,6 +339,16 @@ switch(post('action')) {
 			return;
 		} else {
 			include('files/Admin/Galerie/Display.inc');
+			return;
+		}
+		break;
+	case 'editdir':
+		$galerie = post('galerie');
+		if(is_numeric($galerie[0])) {
+			header('Location: /admin/galerie/editdir/' . $galerie[0]);
+			return;
+		} else {
+			include('files/Admin/Galerie/DisplayDir.inc');
 			return;
 		}
 		break;
@@ -314,10 +380,11 @@ switch(post('action')) {
 			$data = DBGalerie::getSingleDir($id);
 			DBGalerie::removeDir($id);
 			$scan = glob($data['gd_path'] . '/*');
-            foreach($scan as $index => $path){
-                @unlink($path);
-                @unlink(str_replace('./galerie/', './galerie/thumbnails', $path));
-            }
+			if(is_array($scan))
+	            foreach($scan as $index => $path){
+	                @unlink($path);
+	                @unlink(str_replace('./galerie/', './galerie/thumbnails', $path));
+	            }
             @rmdir($data['gd_path']);
 		}
 		
