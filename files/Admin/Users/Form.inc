@@ -91,6 +91,18 @@ header_minor($header);
 		?>/></td>
 		<td></td>
 	</tr><tr>
+		<td>Aktivní tanečník: </td>
+		<td><input type="checkbox" name="dancer" value="dancer" <?php
+			if(post("dancer")) echo "checked=\"checked\"";
+		?>/></td>
+		<td></td>
+	</tr><tr>
+		<td>Systémový uživatel: </td>
+		<td><input type="checkbox" name="system" value="system" <?php
+			if(post("system")) echo "checked=\"checked\"";
+		?>/></td>
+		<td></td>
+	</tr><tr>
 		<td>Oprávnění: </td>
 		<td><select name="level">
 				<option value="host" <?php if(post("level") == "host")

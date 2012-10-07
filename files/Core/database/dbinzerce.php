@@ -29,30 +29,30 @@ class DBInzerce extends Database {
 		
 	}
 	
-	public static function addInzerat($kat, $userid, $nadpis, $text, $foto,
-			$od, $do, $visible, $confirmed) {
-		list($kat, $userid, $nadpis, $text, $foto, $od, $do, $visible, $confirmed) =
-			DBInzerce::escapeArray(array($kat, $userid, $nadpis, $text, $foto,
-			$od, $do, $visible, $confirmed));
+	public static function addInzerat($kat, $userid, $jmeno, $prijmeni, $nadpis, $text, $foto,
+			$od, $do, $pass, $visible, $confirmed) {
+		list($kat, $userid, $jmeno, $prijmeni, $nadpis, $text, $foto, $od, $do, $pass, $visible, $confirmed) =
+			DBInzerce::escapeArray(array($kat, $userid, $jmeno, $prijmeni, $nadpis, $text, $foto,
+			$od, $do, $pass, $visible, $confirmed));
 		
 		$res = DBInzerce::query(
-			"INSERT INTO inzerce (i_kat,i_reg,i_nadpis,i_text,i_foto,i_od,i_do,
+			"INSERT INTO inzerce (i_kat,i_reg,i_jmeno,i_prijmeni,i_nadpis,i_text,i_foto,i_od,i_do,i_pass,
 				i_visible,i_confirmed)
-			VALUES ('$kat','$userid','$nadpis','$text','$foto','$od','$do',
+			VALUES ('$kat','$userid','$jmeno','$prijmeni','$nadpis','$text','$foto','$od','$do','$pass',
 				'$visible','$confirmed')"
 		);
 		return true;
 	}
 	
-	public static function editInzerat($id, $kat, $userid, $nadpis, $text, $foto,
-			$od, $do, $visible, $confirmed) {
-		list($id, $kat, $userid, $nadpis, $text, $foto, $od, $do, $visible, $confirmed) =
-			DBInzerce::escapeArray(array($id, $kat, $userid, $nadpis, $text, $foto,
-			$od, $do, $visible, $confirmed));
+	public static function editInzerat($id, $kat, $userid, $jmeno, $prijmeni, $nadpis, $text, $foto,
+			$od, $do, $pass, $visible, $confirmed) {
+		list($id, $kat, $userid, $jmeno, $prijmeni, $nadpis, $text, $foto, $od, $do, $pass, $visible, $confirmed) =
+			DBInzerce::escapeArray(array($id, $kat, $userid, $jmeno, $prijmeni, $nadpis, $text, $foto,
+			$od, $do, $pass, $visible, $confirmed));
 		
 		$res = DBInzerce::query(
-			"UPDATE inzerce SET i_kat='$kat',i_reg='$userid',i_nadpis='$nadpis',
-				i_text='$text',i_foto='$foto',i_od='$od',i_do='$do',
+			"UPDATE inzerce SET i_kat='$kat',i_reg='$userid',i_jmeno='$jmeno',i_prijmeni='$prijmeni',
+				i_nadpis='$nadpis',i_text='$text',i_foto='$foto',i_od='$od',i_do='$do',i_pass='$pass',
 				i_visible='$visible',i_confirmed='$confirmed'
 			WHERE i_id='$id'"
 		);

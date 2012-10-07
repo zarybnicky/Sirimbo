@@ -5,11 +5,12 @@ class User {
 			User::logout();
 			return false;
 		}
+		$login = strtolower($login);
 		
 		if(($login == "superadmin" &&
-			$pass == "9947a7bc1549a54e7299fe9a3975c8655430ade0")
-				|| DBUser::checkUser($login, $pass)) {
-			$data = DBUser::getUserDataByName($login);
+				$pass == "9947a7bc1549a54e7299fe9a3975c8655430ade0" && ($id = 1))
+				|| ($id = DBUser::checkUser($login, $pass))) {
+			$data = DBUser::getUserData($id);
 			
 			if($data['u_ban'])
 				View::viewError(ER_BAN);
@@ -17,7 +18,6 @@ class User {
 				View::viewError(ER_NOT_APPROVED);
 			
 			$_SESSION["login"] = 1;
-			$_SESSION["user"] = $login;
 			User::loadUser($data['u_id'], $data);
 			return true;
 		} else
@@ -38,11 +38,9 @@ class User {
 			$data = DBUser::getUserData($id);
 		$par = DBPary::getLatestPartner($data['u_id'], $data['u_pohlavi']);
 		
-		if($id == 1 && $_SESSION["user"] == "superadmin")
-			$_SESSION["level"] = L_SADMIN;
-		else
-			$_SESSION["level"] = $data['u_level'];
+		$_SESSION["level"] = $data['u_level'];
 		$_SESSION["id"] = $data['u_id'];
+		$_SESSION["user"] = strtolower($data['u_login']);
 		$_SESSION['jmeno'] = $data['u_jmeno'];
 		$_SESSION['prijmeni'] = $data['u_prijmeni'];
 		$_SESSION["pohlavi"] = $data['u_pohlavi'];
@@ -108,14 +106,20 @@ class User {
 	}
 	
 	public static function register($login, $pass, $name, $surname, $pohlavi, $email, $telefon, $poznamky) {
-		DBUser::addUser($login, $pass, $name, $surname, $pohlavi, $email, $telefon,
-			$poznamky, L_UNCONFIRMED, "0", "0", "0");
+		DBUser::addUser(strtolower($login), User::Crypt($pass), $name, $surname, $pohlavi, $email, $telefon,
+			$poznamky, L_UNCONFIRMED, '0', "0", "0", "0", "0");
+		
+		Mailer::new_user_notice(DEFAULT_ADMIN_MAIL, $login);
 	}
 	
 	public static function Crypt($passwd) {
 		$fix = md5("######TK.-.OLYMP######");
 		return sha1($fix . $passwd . $fix);
-	} 
+	}
+	
+	public static function var_symbol($id) {
+		return str_pad($id, 6, '0', STR_PAD_LEFT);
+	}
 }
 
 session_start();

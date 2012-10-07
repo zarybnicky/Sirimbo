@@ -47,7 +47,11 @@ header_minor($header);
 		?></td>
 	</tr><tr>
 		<td>Uživatel: </td>
-		<td><?php
+		<td><?php if(post('reg') <= 0) {
+				echo '<input type="hidden" name="jmeno" value="', post('jmeno'), '" />';
+				echo '<input type="hidden" name="prijmeni" value="', post('prijmeni'), '" />';
+				echo post('jmeno'), ' ', post('prijmeni'), '<br/>';
+			}
 			$userselect = new UserSelectHelper();
 			echo $userselect->name('reg')->users(DBUser::getUsers());
 		?></td><td></td>

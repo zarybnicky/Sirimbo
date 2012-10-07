@@ -3,13 +3,13 @@ class DBUser extends Database {
 public static function checkUser($login, $pass) {
 		list($login, $pass) = DBUser::escapeArray(array($login, $pass));
 		
-		$res = DBUser::query("SELECT COUNT(*) FROM users WHERE " .
-			"u_login='$login' AND u_pass='$pass'");
+		$res = DBUser::query("SELECT * FROM users WHERE 
+			LOWER(u_login)=LOWER('$login') AND u_pass='$pass'");
 		if(!$res) {
 			return false;
 		} else {
 			$row = DBUser::getSingleRow($res);
-			return $row["COUNT(*)"];
+			return $row["u_id"];
 		}
 	}
 	
@@ -39,13 +39,13 @@ public static function checkUser($login, $pass) {
 		}
 	}
 	
-	public static function getUserDataByName($login) {
-		list($login) = DBUser::escapeArray(array($login));
+	public static function getUserDataByNameEmail($login, $email) {
+		list($login, $email) = DBUser::escapeArray(array($login, $email));
 		
 		$res = DBUser::query(
 		"SELECT *
 		FROM users
-		WHERE u_login='$login'");
+		WHERE LOWER(u_login)=LOWER('$login') AND u_email='$email'");
 		if(!$res) {
 			return false;
 		} else {
@@ -120,8 +120,8 @@ public static function checkUser($login, $pass) {
 		}
 	}
 	
-	public static function confirmUser($id, $level = "host") {
-		list($id, $level) = DBUser::escapeArray(array($id, $level));
+	public static function confirmUser($id, $level = "host", $dancer = 0) {
+		list($id, $level, $dancer) = DBUser::escapeArray(array($id, $level, $dancer));
 		
 		switch($level) {
 			case 'host': $level = L_HOST; break;
@@ -132,7 +132,7 @@ public static function checkUser($login, $pass) {
 			default: $level = L_HOST; break;
 		}
 		
-		DBUser::query("UPDATE users SET u_confirmed='1',u_level='$level' WHERE u_id='$id'");
+		DBUser::query("UPDATE users SET u_confirmed='1',u_level='$level',u_dancer='$dancer' WHERE u_id='$id'");
 	}
 	
 	public static function setPassword($id, $passwd) {
@@ -143,30 +143,31 @@ public static function checkUser($login, $pass) {
 	}
 	
 	public static function setUserData($id, $jmeno, $prijmeni, $pohlavi, $email, $telefon,
-			$poznamky, $level, $lock, $ban) {
-		list($id, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $poznamky, $level, $lock, $ban) =
-			DBUser::escapeArray(array($id, $jmeno, $prijmeni, $pohlavi, $email, $telefon,
-			$poznamky, $level, $lock, $ban));
+			$poznamky, $level, $dancer, $lock, $ban, $system) {
+		list($id, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $poznamky, $level, $dancer,
+			$lock, $ban, $system) = DBUser::escapeArray(array($id, $jmeno, $prijmeni, $pohlavi,
+			$email, $telefon, $poznamky, $level, $dancer, $lock, $ban, $system));
 			
 		DBUser::query("UPDATE users SET " .
 			"u_jmeno='$jmeno',u_prijmeni='$prijmeni',u_pohlavi='$pohlavi',u_email='$email'," .
-			"u_telefon='$telefon',u_poznamky='$poznamky',u_level='$level',u_lock='$lock'," .
-			"u_ban='$ban' WHERE u_id='$id'");
+			"u_telefon='$telefon',u_poznamky='$poznamky',u_level='$level',u_dancer='$dancer',u_lock='$lock'," .
+			"u_ban='$ban',u_system='$system' WHERE u_id='$id'");
 		return true;	
 	}
 	
 	public static function addUser($login, $pass, $jmeno, $prijmeni, $pohlavi, $email, $telefon,
-			$poznamky, $level, $lock, $ban, $confirmed) {
+			$poznamky, $level, $dancer, $lock, $ban, $confirmed, $system) {
 		
 		list($login, $pass, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $poznamky, $level,
-			$lock, $ban, $confirmed) = DBUser::escapeArray(array($login, $pass, $jmeno,
-			$prijmeni, $pohlavi, $email, $telefon, $poznamky, $level, $lock, $ban, $confirmed));
+			$dancer, $lock, $ban, $confirmed, $system) = DBUser::escapeArray(array($login, $pass,
+			$jmeno, $prijmeni, $pohlavi, $email, $telefon, $poznamky, $level, $dancer, $lock,
+			$ban, $confirmed, $system));
 		
 		DBUser::query("INSERT INTO users " .
 			"(u_login,u_pass,u_jmeno,u_prijmeni,u_pohlavi,u_email,u_telefon," .
-			"u_poznamky,u_level,u_lock,u_ban,u_confirmed) VALUES " .
+			"u_poznamky,u_level,u_dancer,u_lock,u_ban,u_confirmed,u_system) VALUES " .
 			"('$login','$pass','$jmeno','$prijmeni','$pohlavi','$email','$telefon'," .
-			"'$poznamky','$level','$lock','$ban','$confirmed')");
+			"'$poznamky','$level','$dancer','$lock','$ban','$confirmed','$system')");
 		DBUser::query("INSERT INTO pary (p_id_partner) VALUES " .
 			"((SELECT u_id FROM users WHERE u_login='$login'))");
 		return true;
@@ -189,8 +190,11 @@ public static function checkUser($login, $pass) {
 		return true;
 	}
 	
-	public static function getUsers() {
-		$res = DBUser::query("SELECT * FROM users ORDER BY u_prijmeni");
+	public static function getUsers($level = NULL) {
+		if($level == NULL)
+			$res = DBUser::query("SELECT * FROM users ORDER BY u_prijmeni");
+		else
+			$res = DBUser::query("SELECT * FROM users WHERE u_level='$level' ORDER BY u_prijmeni");
 		return DBUser::getArray($res);
 	}
 	
@@ -206,14 +210,18 @@ public static function checkUser($login, $pass) {
 		return DBUser::getArray($res);
 	}
 	
-	public static function getActiveUsers($orderByPrijmeni = false) {
-		$res = DBUser::query("SELECT * FROM users WHERE u_confirmed='1' AND u_ban='0' ORDER BY" .
-			($orderByPrijmeni ? " u_prijmeni" : " u_prijmeni"));
+	public static function getActiveUsers($level = -1) {
+		$res = DBUser::query("SELECT * FROM users WHERE u_system='0' AND u_confirmed='1' AND u_ban='0' " .
+			($level > -1 ? "AND u_level='$level' " : '') .
+			"ORDER BY u_prijmeni ");
 		return DBUser::getArray($res);
 	}
 	
-	public static function getUserNames() {
-		$res = DBUser::query("SELECT u_id,u_login,u_jmeno,u_prijmeni FROM users ORDER BY u_prijmeni");
+	public static function getActiveDancers($level = -1) {
+		$res = DBUser::query("SELECT * FROM users WHERE u_system='0' AND u_dancer='1' AND " .
+			"u_confirmed='1' AND u_ban='0' " .
+			($level > -1 ? "AND u_level='$level' " : '') .
+			"ORDER BY u_prijmeni");
 		return DBUser::getArray($res);
 	}
 	

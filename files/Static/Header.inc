@@ -142,3 +142,14 @@
 				</div></div>
 			</div>
 			<div id="content">
+			<form action="<?php echo $_SERVER['REQUEST_URI'];?>" method="get">
+				<?php
+					foreach($_GET as $key => $value) {
+						if($key != 'file' && $key != 'tisk')
+							echo '<input type="hidden" name="', $key, '" value="', $value, '"/>';
+					}
+				?>
+				<div style="float:right">
+				<button type="submit" name="view" value="tisk">Tisknout</button>
+				</div>
+			</form>

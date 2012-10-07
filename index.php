@@ -36,6 +36,8 @@ if(!isset($_GET["file"]) || $_GET["file"] == null) {
 	$file = implode('/', $parts);
 }
 
+define('TISK', (get('view') == 'tisk') ? TRUE : FALSE);
+
 if(array_key_exists($file, $sitemap_static)) {
 	$file = $sitemap_static[$file];
 	if(file_exists($file)) {
