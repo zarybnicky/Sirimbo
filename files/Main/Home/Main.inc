@@ -1,4 +1,9 @@
-<?php notice(View::getRedirectMessage()); ?>
+<?php
+if(NABOR && $_SERVER['REQUEST_URI'] == '/')
+	View::redirect('/nabor');
+
+notice(View::getRedirectMessage());
+?>
 
 <div>
 <?php $c = new ClankyHelper(); echo $c->clanky()->number(5)->slideBox(true);?>

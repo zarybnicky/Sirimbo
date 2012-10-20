@@ -59,6 +59,8 @@ if(DEBUG) {
 include (SETTINGS . '/db.php');
 include (SETTINGS . '/sitemap.php');
 
+define('NABOR', '0');
+
 //-----Ciselne hodnoty urovni uzivatelu-----//
 define('L_ALL', '-1');
 define('L_UNCONFIRMED', '-1');
@@ -218,11 +220,14 @@ public static $foto_types = array(
 	'image/x-png' => 'png'
 );
 public static $gd_function_suffix = array(        
-      'image/pjpeg' => 'JPEG',      
-      'image/jpeg' => 'JPEG',      
-      'image/gif' => 'GIF',      
-      'image/bmp' => 'BMP',      
-      'image/x-png' => 'PNG'      
-    );  
-}
-?>
+	'image/pjpeg' => 'JPEG',
+	'image/jpeg' => 'JPEG', 
+	'image/gif' => 'GIF', 
+	'image/bmp' => 'BMP',
+	'image/x-png' => 'PNG'
+);  
+
+public static $no_headers = array(
+	'files/Main/Nabor/Main.inc' => ''
+);
+}?>

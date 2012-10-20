@@ -44,6 +44,7 @@ class User {
 		$_SESSION['jmeno'] = $data['u_jmeno'];
 		$_SESSION['prijmeni'] = $data['u_prijmeni'];
 		$_SESSION["pohlavi"] = $data['u_pohlavi'];
+		$_SESSION['narozeni'] = $data['u_narozeni'];
 		$_SESSION['par'] = $par['p_id'];
 		$_SESSION['partner'] = $par['u_id'];
 		return true;
@@ -105,9 +106,10 @@ class User {
 		return false;
 	}
 	
-	public static function register($login, $pass, $name, $surname, $pohlavi, $email, $telefon, $poznamky) {
-		DBUser::addUser(strtolower($login), User::Crypt($pass), $name, $surname, $pohlavi, $email, $telefon,
-			$poznamky, L_UNCONFIRMED, '0', "0", "0", "0", "0");
+	public static function register($login, $pass, $name, $surname, $pohlavi, $email, $telefon,
+			$narozeni, $poznamky) {
+		DBUser::addUser(strtolower($login), User::Crypt($pass), $name, $surname, $pohlavi, $email,
+			$narozeni, $telefon, $poznamky, L_UNCONFIRMED, '0', "0", "0", "0", "0");
 		
 		Mailer::new_user_notice(DEFAULT_ADMIN_MAIL, $login);
 	}

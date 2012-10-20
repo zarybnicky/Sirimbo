@@ -52,6 +52,14 @@ ob_start();
 			$error = checkPostField("/^[0-9+]{9,13}$/", "telefon") || $error;
 		?></td>
 	</tr><tr>
+		<td>Datum: (*)</td>
+		<td><?php echoDateSelect("day", "month", "year", 1920);?></td>
+		<td><?php
+			$od_str = post("year") . "-" . post("month") . "-" .
+				post("day");
+			$error = checkDateString($od_str) || $error;
+		?></td>
+	</tr><tr>
 		<td>Poznámky: </td>
 		<td><textarea rows="15" cols="35" name="poznamky"><?php echo post("poznamky"); ?></textarea></td>
 		<td></td>
@@ -67,9 +75,10 @@ $html = ob_get_clean();
 
 if($isConfirmation && !$error) {
 	if(!DBUser::getUserID(post("username"))) {
-		User::register(post("username"), post("pass"),
-			post("jmeno"), post("prijmeni"), post('pohlavi'),
-			post("email"), post("telefon"), post("poznamky"));
+		$narozeni = post('year') . '-' . post('month') . '-' . post('day');
+		
+		User::register(post("username"), post("pass"), post("jmeno"), post("prijmeni"),
+			post('pohlavi'), post("email"), post("telefon"), $narozeni, post("poznamky"));
 		header("Location: /done");
 	} else {
 		notice("Už tu nekdo s takovým přihlašovacím jménem je :o(");
