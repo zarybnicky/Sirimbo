@@ -100,7 +100,9 @@ $(name + ' .new button').click(function(){
 		var celejmeno = $(name + ' .jmeno').val() + ' ' + $(name + ' .prijmeni').val();
 		var exists = '';
 		$(name + ' option').each(function(){
-			if(this.text == celejmeno || this.text == tmpString + celejmeno) {
+			if(this.text == celejmeno || this.text == tmpString + celejmeno ||
+					this.text == celejmeno + ', ' + $(name + ' .year').val() || 
+					this.text == tmpString + celejmeno + ', ' + $(name + ' .year').val()) {
 				exists = this.value;
 				return false;
 			}
@@ -114,7 +116,8 @@ $(name + ' .new button').click(function(){
 			type: 'POST',
 			url: '/admin/users/temporary?ajax=ajax',
 			data: {jmeno: $(name + ' .jmeno').val(),prijmeni: $(name + ' .prijmeni').val(),
-				permissions: permissions},
+				permissions: permissions,narozeni:
+				($(name + ' .year').val() + '-' + $(name + ' .month').val() + '-' + $(name + ' .day').val())},
 			beforeSend: function(){ $(name + ' .new').slideUp();$(name + ' .loading').slideDown();},
 			complete: function(){
 				$(name + ' .loading').slideUp();
@@ -125,7 +128,7 @@ $(name + ' .new button').click(function(){
 				var fullname = ((data.temporary == 1) ? tmpString : '') + data.jmeno + ' ' + data.prijmeni;
 				
 				$(name + ' select').append('<option value=\"' + id + '\" selected=\"selected\">' +
-					fullname + '</option>');
+					fullname + ', ' + data.rok + '</option>');
 				$(name + ' select').val(id);
 			}
 		});
@@ -146,6 +149,9 @@ $(name + ' .new button').click(function(){
 			$out .= '<option value="temporary">--- dočasný ---</option>' . "\n";
 		
 		foreach($this->users as $user) {
+			if(isset($user['u_narozeni']))
+				list($year, $month, $day) = explode('-', $user['u_narozeni']);
+			
 			$id = $user[$this->idVar];
 			if(post($this->name) == $id)
 				$out .= '<option value="' . $id . '" selected="selected">';
@@ -153,16 +159,19 @@ $(name + ' .new button').click(function(){
 				$out .= '<option value="' . $id . '">';
 			$out .= (($this->tmpSwitch === true && isset($user[$this->tmpVar]) && $user[$this->tmpVar]) ?
 				$this->tmpString : '');
-			$out .= $user[$this->jmeno] . ' ' . $user[$this->prijmeni];
+			$out .= $user[$this->jmeno] . ' ' . $user[$this->prijmeni] .
+				(isset($user['u_narozeni']) ? (', ' . $year) : '');
 			$out .= '</option>' . "\n";
 		}
 		$out .= '</select>' . "\n";
 		
 		if($this->tmpSwitch) {
 			$out .= '<noscript><br/><a href="/admin/users/temporary">Nový dočasný uživatel</a></noscript>';
-			$out .= '<div class="new" style="display:none;">';
-			$out .= '<input type="text" class="jmeno" size="8" />';
-			$out .= '<input type="text" class="prijmeni" size="8" />';
+			$out .= '<div class="new" style="display:none;text-align:right;">';
+			$out .= 'Jméno: <input type="text" class="jmeno" size="8" /><br/>';
+			$out .= 'Příjmení: <input type="text" class="prijmeni" size="8" /><br/>';
+			$out .= 'Datum narození:&nbsp;<br/>';
+			$out .= echoDateSelect('" class="year', '" class="day', '" class="year', 1920, 1) . '<br/>';
 			$out .= '<button type="submit" name="jmeno">Uložit</button>';
 			$out .= '</div>';
 			$out .= '<div class="loading" style="display:none;"><img src="/images/loading_bar.gif"/></div>';

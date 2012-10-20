@@ -106,7 +106,7 @@ switch($action[0]) {
 		recursiveDirs("./galerie/thumbnails", $fs_thumbnail_dirs, $fs_thumbnails);
 		
 		foreach($fs_thumbnail_dirs as $dir => $parent) {
-			if(!isset($fs_dirs[str_replace('./galerie/thumbnails', './galerie/', $dir)]))
+			if(!isset($fs_dirs[str_replace('./galerie/thumbnails/', './galerie/', $dir)]))
 				rrmdir($dir);
 		}
 		unset($fs_thumbnails);

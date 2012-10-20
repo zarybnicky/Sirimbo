@@ -9,6 +9,16 @@ class View {
 	}
 
 	public static function viewStatic($l) {
+		if(isset(Settings::$no_headers[$l])) {
+			if(file_exists($l)) {
+				$fd = fopen($l, 'r');
+				echo fread($fd, filesize($l));
+			} else {
+				echo "Stránka \"$l\" nenalezena.";
+			}
+			exit;
+		}
+		
 		ob_start();
 		
 		include(TISK ? HEADER_TISK : HEADER);
@@ -27,6 +37,14 @@ class View {
 	}
 
 	public static function viewDynamic($l) {
+		if(isset(Settings::$no_headers[$l])) {
+			if(file_exists($l)) {
+				include($l);
+			} else {
+				echo "Stránka \"$l\" nenalezena.";
+			}
+			exit;
+		}
 		//if in_array($l, $Cache->getInstance()) && $Cache->isUptoDate($l))
 		//	echo $Cache->get($l);
 		//	exit;

@@ -5,22 +5,27 @@ ob_clean();
 $permissions = post('permissions');
 $jmeno = post('jmeno');
 $prijmeni = post('prijmeni');
+$narozeni = post('narozeni');
 
-if(!($user = DBUser::getUserByFullName($jmeno,$prijmeni))) {
-	$login = preg_replace('/[^a-zA-Z0-9.-_]*/','', strtolower($prijmeni)) . '_' .
-		preg_replace('/[^a-zA-Z0-9.-_]*/','', strtolower($jmeno));
-	list($user_id, $par_id) = DBUser::addTemporaryUser($login, $jmeno, $prijmeni, $permissions);
+$login = preg_replace('/[^a-zA-Z0-9.-_]*/','', strtolower($prijmeni)) . '_' .
+	preg_replace('/[^a-zA-Z0-9.-_]*/','', strtolower($jmeno));
+
+if(!($id = DBUser::getUserID($login))) {
+	list($user_id, $par_id) = DBUser::addTemporaryUser($login, $jmeno, $prijmeni, $narozeni, $permissions);
 	
 	echo json_encode(array('user_id' => $user_id, 'par_id' => $par_id, 'jmeno' => $jmeno,
-		'prijmeni' => $prijmeni, 'temporary' => 1));
+		'prijmeni' => $prijmeni, 'narozeni' => $narozeni, 'rok' => array_shift(explode('_', $narozeni)),
+		'temporary' => 1));
 } else {
-	if(!($partner = DBPary::getLatestPartner($user['u_id'], $user['u_pohlavi']))) {
+	$data = DBUser::getUserData($id);
+	if(!($partner = DBPary::getLatestPartner($data['u_id'], $data['u_pohlavi']))) {
 		$par_id = DBPary::noPartner($user['u_id']);
 	} else {
 		$par_id = $partner['p_id'];
 	}
-	echo json_encode(array('user_id' => $user['u_id'], 'par_id' => $par_id, 'jmeno' => $user['u_jmeno'],
-		'prijmeni' => $user['u_prijmeni'], 'temporary' => 0));
+	echo json_encode(array('user_id' => $data['u_id'], 'par_id' => $par_id, 'jmeno' => $data['u_jmeno'],
+		'prijmeni' => $data['u_prijmeni'], 'narozeni' => $data['u_narozeni'],
+		'rok' => array_shift(explode('_', $narozeni)), 'temporary' => 0));
 }
 exit;
 ?>

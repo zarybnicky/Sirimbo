@@ -40,6 +40,10 @@ switch($action[0]) {
 			post("pohlavi", $data["u_pohlavi"]);
 			post("email", $data["u_email"]);
 			post("telefon", $data["u_telefon"]);
+			list($year, $month, $day) = explode('-', $data['u_narozeni']);
+			post('year', $year);
+			post('month', $month);
+			post('day', $day);
 			post("poznamky", $data["u_poznamky"]);
 			
 			include("files/Member/Profil/FormPerson.inc");
@@ -51,8 +55,10 @@ switch($action[0]) {
 			$html = ob_get_clean();
 			
 			if(!$error) {
+				$narozeni = post('year') . '-' . post('month') . '-' . post('day');
+				
 				DBUser::setUserData(User::getUserID(), post('jmeno'), post('prijmeni'),
-					post('pohlavi'), post('email'), post('telefon'),
+					post('pohlavi'), post('email'), post('telefon'), $narozeni,
 					post('poznamky'), $data['u_level'], $data['u_lock'], $data['u_ban']);
 				
 				View::redirect('/member/profil', 'Upraveno');
