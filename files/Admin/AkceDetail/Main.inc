@@ -26,25 +26,24 @@ if(post("remove") > 0) {
 
 foreach($items as $item) {
 	$id = $item["ai_id"];
+	$user = post($id . '-user');
+	$data = DBUser::getUserData($user);
 	
-	if(post($id . "-user") != $item["ai_user"] ||
-			(post($id . "-user") == "none" ^ $item["ai_user"] == 0) ||
-			post($id . "-rok") != $item["ai_rok_narozeni"]) {
+	if($user != $item["ai_user"] ||
+			($user == "none" ^ $item["ai_user"] == 0)) {
 		
-		DBAkce::editAkceItem($id, post($id . "-user"), post($id . "-rok"));
+		DBAkce::editAkceItem($id, $user, array_shift(explode('-', $data['u_narozeni'])));
 	}
 }
 $items = DBAkce::getAkceItems($a_id);
 
 if(post("add-user") && post("add-rok")) {
 	$user = post("add-user");
-	$rok = post("add-rok");
+	$data = DBUser::getUserData($user);
 	
-	if(preg_match("/^19[0-9]{2}|20[0,1,2,3][0-9]$/", $rok)) {
-		DBAkce::addAkceItem($a_id, $user, $rok);
-		post('add-user', null);
-		$items = DBAkce::getAkceItems($a_id);
-	}
+	DBAkce::addAkceItem($a_id, $user, array_shift(explode('-', $data['u_narozeni'])));
+	post('add-user', null);
+	$items = DBAkce::getAkceItems($a_id);
 }
 
 include("files/Admin/AkceDetail/Display.inc");

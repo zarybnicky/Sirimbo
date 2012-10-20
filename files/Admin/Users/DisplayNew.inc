@@ -15,6 +15,7 @@ echo $f->menu()
 <td>Login</td>
 <td>Jméno</td>
 <td>Email</td>
+<td>Datum<br/>narozeni</td>
 </tr>
 <?php
 $users = DBUser::getNewUsers();
@@ -33,7 +34,8 @@ foreach($users as $user) {
 	echo '<td style="max-width:140px;">';
 	echoFullJmeno($user);
 	echo '</td>';
-	echo '<td>' . $user['u_email'] . '</td>';
+	echo '<td>', $user['u_email'], '</td>';
+	echo '<td>', formatDate($user['u_narozeni']), '</td>';
 	echo '</tr>';
 }
 ?>

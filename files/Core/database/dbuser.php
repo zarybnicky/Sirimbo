@@ -80,14 +80,14 @@ public static function checkUser($login, $pass) {
 			return DBUser::getSingleRow($res);
 		}
 	}
-	public static function addTemporaryUser($login, $jmeno, $prijmeni, $permissions) {
-		list($login, $jmeno, $prijmeni, $permissions) =
-			DBUser::escapeArray(array($login, $jmeno, $prijmeni, $permissions));
+	public static function addTemporaryUser($login, $jmeno, $prijmeni, $narozeni, $permissions) {
+		list($login, $jmeno, $prijmeni, $narozeni, $permissions) =
+			DBUser::escapeArray(array($login, $jmeno, $prijmeni, $narozeni, $permissions));
 		
 		DBUser::query(
 		"INSERT INTO users
-			(u_login,u_pass,u_jmeno,u_prijmeni,u_confirmed,u_temporary,u_level)
-		VALUES ('$login','','$jmeno','$prijmeni','1','1','$permissions')");
+			(u_login,u_pass,u_jmeno,u_prijmeni,u_narozeni,u_confirmed,u_temporary,u_system,u_level)
+		VALUES ('$login','','$jmeno','$prijmeni','$narozeni','1','1','0','$permissions')");
 		$user_id = mysql_insert_id();
 		
 		DBUser::query("INSERT INTO pary (p_id_partner) VALUES ('" . $user_id . "')");
@@ -143,30 +143,30 @@ public static function checkUser($login, $pass) {
 	}
 	
 	public static function setUserData($id, $jmeno, $prijmeni, $pohlavi, $email, $telefon,
-			$poznamky, $level, $dancer, $lock, $ban, $system) {
-		list($id, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $poznamky, $level, $dancer,
-			$lock, $ban, $system) = DBUser::escapeArray(array($id, $jmeno, $prijmeni, $pohlavi,
-			$email, $telefon, $poznamky, $level, $dancer, $lock, $ban, $system));
+			$narozeni, $poznamky, $level, $dancer, $lock, $ban, $system) {
+		list($id, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $narozeni, $poznamky, $level,
+			$dancer, $lock, $ban, $system) = DBUser::escapeArray(array($id, $jmeno, $prijmeni,
+			$pohlavi, $email, $telefon, $narozeni, $poznamky, $level, $dancer, $lock, $ban, $system));
 			
 		DBUser::query("UPDATE users SET " .
 			"u_jmeno='$jmeno',u_prijmeni='$prijmeni',u_pohlavi='$pohlavi',u_email='$email'," .
-			"u_telefon='$telefon',u_poznamky='$poznamky',u_level='$level',u_dancer='$dancer',u_lock='$lock'," .
-			"u_ban='$ban',u_system='$system' WHERE u_id='$id'");
+			"u_telefon='$telefon',u_narozeni='$narozeni',u_poznamky='$poznamky',u_level='$level'," .
+			"u_dancer='$dancer',u_lock='$lock',u_ban='$ban',u_system='$system' WHERE u_id='$id'");
 		return true;	
 	}
 	
 	public static function addUser($login, $pass, $jmeno, $prijmeni, $pohlavi, $email, $telefon,
-			$poznamky, $level, $dancer, $lock, $ban, $confirmed, $system) {
+			$narozeni, $poznamky, $level, $dancer, $lock, $ban, $confirmed, $system) {
 		
-		list($login, $pass, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $poznamky, $level,
-			$dancer, $lock, $ban, $confirmed, $system) = DBUser::escapeArray(array($login, $pass,
-			$jmeno, $prijmeni, $pohlavi, $email, $telefon, $poznamky, $level, $dancer, $lock,
-			$ban, $confirmed, $system));
+		list($login, $pass, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $narozeni, $poznamky,
+			$level, $dancer, $lock, $ban, $confirmed, $system) = DBUser::escapeArray(array($login,
+			$pass, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $narozeni, $poznamky, $level,
+			$dancer, $lock, $ban, $confirmed, $system));
 		
 		DBUser::query("INSERT INTO users " .
-			"(u_login,u_pass,u_jmeno,u_prijmeni,u_pohlavi,u_email,u_telefon," .
+			"(u_login,u_pass,u_jmeno,u_prijmeni,u_pohlavi,u_email,u_telefon,,u_narozeni" .
 			"u_poznamky,u_level,u_dancer,u_lock,u_ban,u_confirmed,u_system) VALUES " .
-			"('$login','$pass','$jmeno','$prijmeni','$pohlavi','$email','$telefon'," .
+			"('$login','$pass','$jmeno','$prijmeni','$pohlavi','$email','$telefon','$narozeni'," .
 			"'$poznamky','$level','$dancer','$lock','$ban','$confirmed','$system')");
 		DBUser::query("INSERT INTO pary (p_id_partner) VALUES " .
 			"((SELECT u_id FROM users WHERE u_login='$login'))");

@@ -188,7 +188,10 @@ function echoPartners($list_name, $list) {
 	}
 	echo '</select>', "\n";
 }
-function echoDateSelect($day_fieldname, $month_fieldname, $year_fieldname) {
+function echoDateSelect($day_fieldname, $month_fieldname, $year_fieldname, $from_year = 2010, $to_string = 0) {
+	if($to_string)
+		ob_start();
+	
 	$selected = post($day_fieldname) ? (int) post($day_fieldname) : date('d');
 	echo '<select name="', $day_fieldname, '">', "\n";
 	echo '<option value="00">Den</option>', "\n";
@@ -222,13 +225,19 @@ function echoDateSelect($day_fieldname, $month_fieldname, $year_fieldname) {
 	$selected = post($year_fieldname) ? (int) post($year_fieldname) : date('Y');
 	echo '<select name="', $year_fieldname, '">', "\n";
 	echo '<option value="0000">Rok</option>', "\n";
-	for($i = 2010; $i < 2021; $i++) {
+	for($i = $from_year; $i < 2021; $i++) {
 		echo '<option value="', $i, '"';
 		if ($selected == $i)
 			echo ' selected="selected"';
 		echo '>', $i, '</option>', "\n";
 	}
 	echo '</select>', "\n";
+	
+	if($to_string) {
+		$out =  ob_get_contents();
+		ob_end_clean();
+		return $out;
+	}
 }
 function echoBarvaDisplay($barva) {
 	if($barva) {
