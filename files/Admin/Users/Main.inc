@@ -36,9 +36,10 @@ switch($action[0]) {
 					default:		$level = L_HOST;	break;
 				}
 				$pass = User::Crypt(post('pass'));
+				$narozeni = post('year') . '-' . post('month') . '-' . post('day');
 				
 				DBUser::addUser(strtolower(post('login')), $pass, post('jmeno'), post('prijmeni'),
-					post('pohlavi'), post('email'), post('telefon'),
+					post('pohlavi'), post('email'), post('telefon'), $narozeni,
 					post('poznamky'), $level, post('dancer') ? 1 : 0, post('lock') ? 1 : 0,
 					post('ban') ? 1 : 0, '1', post('system') ? 1 : 0);
 				View::redirect('/admin/users', 'Uživatel úspěšně přidán');
@@ -84,6 +85,10 @@ switch($action[0]) {
 			post('pohlavi', $data['u_pohlavi']);
 			post('email', $data['u_email']);
 			post('telefon', $data['u_telefon']);
+			list($year, $month, $day) = explode('-', $data['u_narozeni']);
+			post('year', $year);
+			post('month', $month);
+			post('day', $day);
 			post('poznamky', $data['u_poznamky']);
 			include('files/Admin/Users/Form.inc');
 			return;
@@ -107,9 +112,10 @@ switch($action[0]) {
 					case 'sadmin':	$level = L_SADMIN;	break;
 					default:		$level = L_HOST;	break;
 				}
+				$narozeni = post('year') . '-' . post('month') . '-' . post('day');
 	
 				DBUser::setUserData($id, post('jmeno'), post('prijmeni'),
-					post('pohlavi'), post('email'), post('telefon'),
+					post('pohlavi'), post('email'), post('telefon'), $narozeni,
 					post('poznamky'), $level, post('dancer') ? 1 : 0, post('lock') ? 1 : 0,
 					post('ban') ? 1 : 0, post('system') ? 1 : 0);
 				View::redirect('/admin/users', 'Uživatel úspěšně upraven');
@@ -177,6 +183,21 @@ switch(post('action')) {
 			include('files/Admin/Users/Display.inc');
 			return;
 		}
+		break;
+	
+	case 'save':
+		$users = DBUser::getUsers();
+		foreach($users as $user) {
+			$id = $user['u_id'];
+			if(((bool) post($id . '-dancer')) !== ((bool) $user['u_dancer']) ||
+					((bool) post($id . '-system')) !== ((bool) $user['u_system'])) {
+				DBUser::setUserData($id, $user['u_jmeno'], $user['u_prijmeni'], $user['u_pohlavi'],
+					$user['u_email'], $user['u_telefon'], $user['u_narozeni'], $user['u_poznamky'],
+					$user['u_level'], post($id . '-dancer') ? '1' : '	0', $user['u_lock'], $user['u_ban'],
+					post($id . '-system') ? '1' : '0');
+			}
+		}
+		include('files/Admin/Users/Display.inc');
 		break;
 
 	case 'remove':

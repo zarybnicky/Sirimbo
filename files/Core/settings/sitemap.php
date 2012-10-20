@@ -2,7 +2,8 @@
 
 $sitemap_static = array(
 	'forum'				=> 'files/Main/Forum/Main.inc',
-	'done'				=> 'files/Main/RegistraceDone.inc'
+	'done'				=> 'files/Main/RegistraceDone.inc',
+	'nabor'				=> 'files/Main/Nabor/Main.inc'
 );
 $sitemap_dynamic = array(
 	'home'				=> 'files/Main/Home/Main.inc',

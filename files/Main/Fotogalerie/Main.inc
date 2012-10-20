@@ -27,13 +27,6 @@ if($url[1] == 'foto') {
 	
 	$return_url = implode('/', array_reverse(array_slice($url, 2)));
 	
-	echo '<a href="', $return_url, '">';
-	echo '<div class="f_img"><div class="f_full">';
-	echo '<img alt="', $data['gf_id'], '" src="',
-		str_replace('./galerie/', '/galerie/', $data['gf_path']), '" />';
-	echo '</div></div>';
-	echo '</a>';
-	
 	echo '<div style="text-align:center;">', $data['gf_name'], '<br/>';
 	if($id_prev !== false)
 		echo '<a href="', $id_prev, '">&lt;&lt;</a>';
@@ -45,6 +38,13 @@ if($url[1] == 'foto') {
 	else
 		echo '&gt;&gt;';
 	echo '</div>';
+	
+	echo '<a href="', $return_url, '">';
+	echo '<div class="f_full"><div class="f_img">';
+	echo '<img alt="', $data['gf_id'], '" src="',
+		str_replace('./galerie/', '/galerie/', $data['gf_path']), '" />';
+	echo '</div></div>';
+	echo '</a>';
 	return;
 }
 
@@ -62,11 +62,9 @@ if(empty($fotos)) {
 foreach($fotos as $item) {
 	$tn = str_replace('./galerie', '/galerie/thumbnails', $item['gf_path']);
 	
-	echo '<div class="f"><a href="', $_SERVER['REQUEST_URI'], '/foto/', $item['gf_id'], '">';
-	echo '<div class="f_img"><div class="f_preview">';
+	echo '<a href="', $_SERVER['REQUEST_URI'], '/foto/', $item['gf_id'], '" class="f_preview">';
+	echo '<div class="f_img">';
 	echo '<img alt="', $item['gf_id'], '" src="', $tn, '" />';
-	echo '</div></div>';
-	echo '<div class="f_popis">', $item['gf_name'], '</div>';
-	echo '</a></div>';
+	echo '</div></a>';
 }
 ?>

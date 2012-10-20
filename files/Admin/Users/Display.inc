@@ -6,13 +6,15 @@ echo $f->menu()
 	->content('Přidat', 'users/add')
 	->content('Upravit', 'edit', true)
 	->content('Odebrat', 'remove', true)
-	->content('Nepotvrzení uživatelé', 'users/new');
+	->content('Nepotvrzení uživatelé', 'users/new')
+	->content('Uložit změny', 'save', true);
 ?>
 <table>
 <tr>
 <td></td>
 <td>Login</td>
 <td>Jméno</td>
+<td>Datum<br/>narozeni</td>
 <td>Aktivní<br/>tanečník</td>
 <td>Systémový<br/>uživatel</td>
 <td>Oprávnění</td>
@@ -31,8 +33,11 @@ foreach($users as $user) {
 	echo '<td style="max-width:140px;">';
 	echoFullJmeno($user);
 	echo '</td>';
-	echo '<td>', $user['u_dancer'] ? '&#10003;' : '', '</td>';
-	echo '<td>', $user['u_system'] ? '&#10003;' : '', '</td>';
+	echo '<td>', formatDate($user['u_narozeni']), '</td>';
+	echo '<td class="center">', '<input type="checkbox" name="', $user['u_id'], '-dancer" ',
+		($user['u_dancer'] ? 'checked="checked"' : ''), '/>', '</td>';
+	echo '<td class="center">', '<input type="checkbox" name="', $user['u_id'], '-system" ',
+		($user['u_system'] ? 'checked="checked"' : ''), '/>', '</td>';
 	$ul = $user['u_level'];
 	echo '<td>';
 	switch($ul) {
