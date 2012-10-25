@@ -277,6 +277,15 @@ p { margin-bottom: 1em; }
 .red {background-color:red; color:red;}
 .yellow {background-color:yellow; color:yellow;}
 
+.box {
+	display:block;
+	width:10px;
+	height:10px;
+	border:1px solid black;
+	margin:1px;
+	float:left;
+}
+
 .up_header {
 	border:1px solid #ffe3b7;
 	background-color:#fff0e2;

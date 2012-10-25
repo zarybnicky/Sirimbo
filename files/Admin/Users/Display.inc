@@ -1,43 +1,112 @@
-<form action="/admin/users" method="POST">
 <?php
-$f = new MenuHelper();
-echo $f->menu()
-	->float(MenuHelper::FLOAT_RIGHT)
-	->content('Přidat', 'users/add')
-	->content('Upravit', 'edit', true)
-	->content('Odebrat', 'remove', true)
-	->content('Nepotvrzení uživatelé', 'users/new')
-	->content('Uložit změny', 'save', true);
-?>
-<table>
-<tr>
-<td></td>
-<td>Login</td>
-<td>Jméno</td>
-<td>Datum<br/>narozeni</td>
-<td>Aktivní<br/>tanečník</td>
-<td>Systémový<br/>uživatel</td>
-<td>Oprávnění</td>
-</tr>
-<?php
+if(get('v') === null)
+	get('v', 'info');
+
+if(!TISK) {
+	echo '<form action="', $_SERVER['REQUEST_URI'], '" method="get">';
+
+	$s = new SelectHelper();
+	echo 'Uživatelé:&nbsp;';
+	echo $s->select()
+		->name('f')
+		->option('all', 'všichni')
+		->option('dancer', 'tanečníci')
+		->option('trener', 'trenéři')
+		->option('editor', 'editoři');
+	echo '&nbsp;řadit podle:&nbsp;';
+	echo $s->select()
+		->name('s')
+		->option('surname', 'příjmení')
+		->option('var-symbol', 'var. symbolu')
+		->option('narozeni', 'data narození');
+	echo '&nbsp;zobrazení:&nbsp;';
+	echo $s->select()
+		->name('v')
+		->option('info', 'informace')
+		->option('status', 'status uživatele')
+		->option('platby', 'platby');
+	echo '<button type="submit">Odeslat</button>';
+	echo '</form><br/>';
+}
+
+echo '<form action="', $_SERVER['REQUEST_URI'], '" method="POST">';
+
+if(!TISK) {
+	$f = new MenuHelper();
+	$f->menu()
+		->float(MenuHelper::FLOAT_RIGHT)
+		->content('Přidat', 'users/add')
+		->content('Upravit', 'edit', true)
+		->content('Odebrat', 'remove', true)
+		->content('Nepotvrzení uživatelé', 'users/new');
+	if(get('v') == 'status' || get('v') == 'platby')
+		$f->content('Uložit změny', 'save', true);
+	
+	echo $f;
+}
+
 //TODO: Paging, getUsers(OD,DO)
-$users = DBUser::getUsers();
+
+$sort = get('s');
+$filter = get('f');
+switch($filter) {
+	case 'dancer': $users = DBUser::getActiveDancers(); break;
+	case 'trener': $users = DBUser::getActiveUsers(L_TRENER); break;
+	case 'editor': $users = DBUser::getActiveUsers(L_EDITOR); break;
+	case 'all':
+	default: $users = DBUser::getUsers(L_ALL); break;
+}
+switch($sort) {
+	case 'var-symbol':
+		usort($users, create_function('$a, $b',
+			'return User::var_symbol($a["u_id"]) > User::var_symbol($b["u_id"]);'));
+		break;
+	case 'surname':
+		usort($users, create_function('$a, $b', 'return $a["u_prijmeni"] > $b["u_prijmeni"];'));
+		break;
+	case 'narozeni':
+		usort($users, create_function('$a, $b', 'return $a["u_narozeni"] > $b["u_narozeni"];'));
+		break;
+	default:
+		break;
+}
+
+if(get('v') == 'status') {
+	$skupiny = DBSkupiny::getSkupiny();
+	$skupinyselect = new SelectHelper();
+	$skupinyselect->select()
+		->get(false);
+	foreach($skupiny as $skupina)
+		$skupinyselect->option($skupina['us_id'], $skupina['us_popis']);
+}
+
+echo '<table>';
+echo '<tr>';
+echo '<td></td>';
+echo '<td>Jméno</td>';
+echo '<td>Oprávnění</td>';
+echo '<td>Skupina</td>';
+
+if(get('v') == 'info') {
+	echo '<td>Datum<br/>narození</td>';
+	echo '<td>Variabilní<br/>symbol</td>';
+} elseif(get('v') == 'status') {
+	echo '<td>Aktivní<br/>tanečník</td>';
+	echo '<td>Systémový<br/>uživatel</td>';
+} elseif(get('v') == 'platby') {
+	echo '<td>Částka</td>';
+	echo '<td>Zaplaceno<br/>do</td>';
+}
+echo '</tr>';
+
 foreach($users as $user) {
 	echo '<tr>';
-	if(($user['u_level'] < User::getUserLevel() && !$user['u_lock'] &&
-			User::getUserID() != $user['u_id']) || User::checkPermissionsBool(L_SADMIN))
+	if(Permissions::canEditUser($user['u_id'], $user['u_level'], $user['u_lock']))
 		echo '<td><input type="checkbox" name="users[]" value="', $user['u_id'], '" /></td>';
 	else
 		echo '<td><input type="checkbox" name="users[]" value="" disabled="disabled" /></td>';
-	echo '<td>', $user['u_login'], '</td>';
-	echo '<td style="max-width:140px;">';
-	echoFullJmeno($user);
-	echo '</td>';
-	echo '<td>', formatDate($user['u_narozeni']), '</td>';
-	echo '<td class="center">', '<input type="checkbox" name="', $user['u_id'], '-dancer" ',
-		($user['u_dancer'] ? 'checked="checked"' : ''), '/>', '</td>';
-	echo '<td class="center">', '<input type="checkbox" name="', $user['u_id'], '-system" ',
-		($user['u_system'] ? 'checked="checked"' : ''), '/>', '</td>';
+	echo '<td style="max-width:140px;">', $user['u_prijmeni'], ', ', $user['u_jmeno'], '</td>';
+	
 	$ul = $user['u_level'];
 	echo '<td>';
 	switch($ul) {
@@ -51,8 +120,34 @@ foreach($users as $user) {
 		default:			echo 'Neznámý';		break;
 	}
 	echo '</td>';
+	
+	if(get('v') == 'info') {
+		echo '<td>';
+		echo '<div class="box" title="', $user['us_popis'], '" ',
+			'style="background-color:', Settings::$barvy[$user['us_color']][1], ';"></div>';
+		echo '</td>';
+		echo '<td>', formatDate($user['u_narozeni']), '</td>';
+		echo '<td>', User::var_symbol($user['u_id']), '</td>';
+	} elseif(get('v') == 'status') {
+		echo '<td>';
+		echo $skupinyselect
+			->name($user['u_id'] . '-skupina')
+			->value($user['u_skupina']);
+		echo '</td>';
+		echo '<td class="center">', '<input type="checkbox" name="', $user['u_id'], '-dancer" ',
+			($user['u_dancer'] ? 'checked="checked"' : ''), '/>', '</td>';
+		echo '<td class="center">', '<input type="checkbox" name="', $user['u_id'], '-system" ',
+			($user['u_system'] ? 'checked="checked"' : ''), '/>', '</td>';
+	} elseif(get('v') == 'platby') {
+		echo '<td>';
+		echo '<div class="box" title="', $user['us_popis'], '" ',
+			'style="background-color:', Settings::$barvy[$user['us_color']][1], ';"></div>';
+		echo '</td>';
+		echo '<td>', '</td>';
+		echo '<td>', '</td>';
+	}
 	echo '</tr>';
 }
+echo '</table>';
+echo '</form>';
 ?>
-</table>
-</form>

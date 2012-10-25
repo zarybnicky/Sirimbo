@@ -142,11 +142,26 @@ public static $document_types = array(
 	'0'		=> 'Ostatní'
 );
 
+public static $barvy = array(
+	'white'		=> array('bílá',		'#FFF'),
+	'yellow'	=> array('žlutá',		'#FF0'),
+	'orange'	=> array('oranžová',	'#F90'),
+	'red'		=> array('červená',		'#F00'),
+	'violet'	=> array('fialová',		'#606'),
+	'blue'		=> array('modrá',		'#00F'),
+	'green'		=> array('zelená',		'#0F0'),
+	'brown'		=> array('hnědá',		'#630'),
+	'black'		=> array('černá',		'#000'),
+	'pink'		=> array('růžová',		'#F09'),
+	'grey'		=> array('šedá',		'#999'),
+);
+
 public static $sekce = array(
 	'admin'		=> array(
 			'aktuality'	=> array('Správa článků', L_EDITOR),
 			'nastenka'	=> array('Správa nástěnky', L_EDITOR),
 			'users'		=> array('Správa uživatelů', L_ADMIN),
+			'skupiny'	=> array('Správa skupin', L_ADMIN),
 			'akce'		=> array('Správa akcí', L_ADMIN),
 			'rozpis'	=> array('Správa rozpisů', L_TRENER),
 			'nabidka'	=> array('Správa nabídky', L_TRENER),

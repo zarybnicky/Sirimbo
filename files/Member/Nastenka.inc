@@ -15,9 +15,12 @@ foreach($zpravy as $data) {
 	echo '<div style="float:left;"><span class="nadpis">', $data['up_nadpis'], '</span>';
 	if(Permissions::canEditNastenka($data['up_kdo'], $data['up_lock']))
 		echo ' - <a href="/admin/nastenka/edit/', $data['up_id'], '">Editovat</a>';
-	echo '<div style="padding:2px 0;"><span class="little">barvy: </span>',
-		echoBarvaDisplay($data['up_barvy']), '</div>';
-	echo '</div>';
+	echo '<div style="padding:2px 0;"><div style="float:left;" class="little">skupiny:&nbsp;</div>';
+	$skupiny = DBNastenka::getNastenkaSkupiny($data['up_id']);
+	foreach($skupiny as $skupina)
+		echo '<div class="box" title="', $skupina['ups_popis'], '" ',
+			'style="background-color:', Settings::$barvy[$skupina['ups_color']][1], ';"></div>';
+	echo '</div></div>';
 	echo '<div style="float:right;text-align:right;">';
 	echo '<div><span class="little">přidal: </span>';
 	echoFullJmeno($data);
