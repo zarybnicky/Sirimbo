@@ -17,7 +17,6 @@ if($id && is_numeric($id) && ($data = DBUser::getUserData($id))) {
 	return;
 }
 
-$sort = get('s');
 $filter = get('f');
 switch($filter) {
 	case 'dancer': $users = DBUser::getActiveDancers(); break;
@@ -25,17 +24,6 @@ switch($filter) {
 	case 'editor': $users = DBUser::getActiveUsers(L_EDITOR); break;
 	case 'all':
 	default: $users = DBUser::getActiveUsers(L_ALL); break;
-}
-switch($sort) {
-	case 'var-symbol':
-		usort($users, create_function('$a, $b',
-			'return User::var_symbol($a["u_id"]) > User::var_symbol($b["u_id"]);'));
-		break;
-	case 'surname':
-		usort($users, create_function('$a, $b', 'return $a["u_prijmeni"] > $b["u_prijmeni"];'));
-		break;
-	default:
-		break;
 }
 $count = count($users);
 
@@ -45,26 +33,28 @@ echo '<option value="all"', (get('f') == 'all') ? ' selected="selected"' : '', '
 echo '<option value="dancer"', (get('f') == 'dancer') ? ' selected="selected"' : '', '>tanečníci</option>';
 echo '<option value="trener"', (get('f') == 'trener') ? ' selected="selected"' : '', '>trenéři</option>';
 echo '<option value="editor"', (get('f') == 'editor') ? ' selected="selected"' : '', '>editoři</option>';
-echo '</select>&nbsp;';
-echo 'řadit podle:&nbsp;<select name="s">';
-echo '<option value="surname"', (get('s') == 'surname') ? ' selected="selected"' : '', '>příjmení</option>';
-echo '<option value="var-symbol"', (get('s') == 'var-symbol') ? ' selected="selected"' : '', '>var. symbolu</option>';
 echo '</select>';
 echo '<button type="submit">Odeslat</button>';
 echo '</form>';
 
 echo '<br/>';
-echo 'Celkem:&nbsp;<span class="big">', $count, '</span>';
+echo 'Celkem:&nbsp;<span class="big">', $count, '</span><br/><br/>';
 echo '<table>';
-echo '<td></td><td>Jméno</td><td>Var. symbol</td>';
 $i = 1;
 foreach($users as $user) {
 	echo '<tr>';
 	echo '<td>&nbsp;', $i++, '.</td>';
 	echo '<td><a href="/member/clenove/', $user['u_id'], '">';
-	echoFullJmeno($user);
+	echo $user['u_prijmeni'] . ', ' . $user['u_jmeno'];
 	echo '</a></td>';
-	echo '<td>', str_pad($user['u_id'], 6, '0', STR_PAD_LEFT), '</td>';
+	echo '<td>';
+	if($user['u_dancer']) {
+		if($user['u_pohlavi'] == 'm')
+			echo 'tanečník';
+		else
+			echo 'tanečnice';
+	}
+	echo '</td>';
 	echo '</tr>';
 }
 echo '</table>';

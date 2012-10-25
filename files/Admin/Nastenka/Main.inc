@@ -19,13 +19,14 @@ switch($action[0]) {
 		if($id && is_numeric($id) && ($data = DBNastenka::getSingleNastenka($id))) {
 			if(!Permissions::canEditNastenka($data['up_kdo'], $data['up_lock']))
 				View::viewError(ER_AUTHORIZATION);
+			$skupiny = DBNastenka::getNastenkaSkupiny($id);
 						
 			post('id', $id);
 			post('nadpis', $data['up_nadpis']);
 			post('text', $data['up_text']);
-			post('zluta', ($data['up_barvy'] & C_ZLUTA));
-			post('cervena', ($data['up_barvy'] & C_CERVENA));
-			post('modra', ($data['up_barvy'] & C_MODRA));
+			foreach($skupiny as $skupina) {
+				post('sk-' . $skupina['ups_id_skupina'], 1);
+			}
 			post('lock', $data['up_lock']);
 			include('files/Admin/Nastenka/Form.inc');
 			return;
@@ -71,15 +72,28 @@ switch(post('action')) {
 		if(!Permissions::canEditNastenka($data['up_kdo'], $data['up_lock']))
 			View::viewError(ER_AUTHORIZATION);
 		
-		$zluta = ((bool) post('zluta')) ? C_ZLUTA : 0;
-		$cervena = ((bool) post('cervena')) ? C_CERVENA : 0;
-		$modra = ((bool) post('modra')) ? C_MODRA : 0;
-		$barvy = $zluta | $cervena | $modra;
+		$skupiny = array();
+		$skupiny_old = DBNastenka::getNastenkaSkupiny($id);
+		$skupiny_vse = DBSkupiny::getSkupiny();
 		
-		$lock = (post('lock') == 'lock') ? 1 : 0;
+		foreach($skupiny_old as $skupina) {
+			$skupiny[$skupina['ups_id_skupina']] = $skupina['ups_id'];
+		}
+		$skupiny_old = $skupiny;
+		unset($skupiny);
 		
-		DBNastenka::editNastenka($id, post('nadpis'),
-			post('text'), $barvy, (post('lock') == 'lock') ? 1 : 0);
+		foreach($skupiny_vse as $skupina) {
+			if(post('sk-' . $skupina['us_id']) && isset($skupiny_old[$skupina['us_id']])) {
+				continue;
+			} elseif(post('sk-' . $skupina['us_id']) && !isset($skupiny_old[$skupina['us_id']])) {
+				DBNastenka::addNastenkaSkupina($id, $skupina['us_id'],
+					$skupina['us_color'], $skupina['us_popis']);
+			} elseif(!post('sk-' . $skupina['us_id']) && isset($skupiny_old[$skupina['us_id']])) {
+				DBNastenka::removeNastenkaSkupina($skupiny_old[$skupina['us_id']]);
+			}
+		}
+		
+		DBNastenka::editNastenka($id, post('nadpis'), post('text'), (post('lock') == 'lock') ? 1 : 0);
 		DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' upravil příspěvek na nástěnce');
 		
 		notice('Příspěvek úspěšně upraven');
@@ -88,15 +102,11 @@ switch(post('action')) {
 	case 'add_confirm':
 		$id = post('id');
 		
-		$zluta = ((bool) post('zluta')) ? C_ZLUTA : 0;
-		$cervena = ((bool) post('cervena')) ? C_CERVENA : 0;
-		$modra = ((bool) post('modra')) ? C_MODRA : 0;
 		$barvy = $zluta | $cervena | $modra;
 		
 		$lock = (post('lock') == 'lock') ? 1 : 0;
 		
-		DBNastenka::addNastenka(User::getUserID(), post('nadpis'),
-			post('text'), $barvy, $lock);
+		DBNastenka::addNastenka(User::getUserID(), post('nadpis'), post('text'), $lock);
 		DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal příspěvek na nástěnku');
 		
 		notice('Příspěvek úspěšně přidán');

@@ -30,19 +30,22 @@ header_minor($header);
 		<td></td>
 	</tr><tr>
 		<td>Uzamknout: </td>
-		<td><input type="checkbox" name="lock" value="lock" <?php
-			if(post("lock")) echo "checked=\"checked\"";
-		?>/></td>
+		<td><?php echo getCheckbox('lock', 'lock');?></td>
 		<td></td>
 	</tr><tr>
-		<td>Barvy: </td>
-		<td><input type="checkbox" name="zluta" value="zluta" <?php
-			if(post("zluta")) echo "checked=\"checked\"";
-		?>/>Žlutá, <input type="checkbox" name="cervena" value="cervena" <?php
-			if(post("cervena")) echo "checked=\"checked\"";
-		?>/>Červená, <input type="checkbox" name="modra" value="modra" <?php
-			if(post("modra")) echo "checked=\"checked\"";
-		?>/>Modrá</td>
+		<td>Skupiny: </td>
+		<td>
+		<?php
+		$skupiny = DBSkupiny::getSkupiny();
+		foreach($skupiny as $skupina) {
+			echo getCheckbox('sk-' . $skupina['us_id'], '1'), ' ';
+			echo $skupina['us_popis'], ' ';
+			echo '<div class="box" style="background-color:' .
+				Settings::$barvy[$skupina['us_color']][1] . '"></div>';
+			echo '<br/>';
+		}
+		?>
+		</td>
 		<td></td>
 	</tr><tr>
 		<?php if($action[0] == 'add') {?>
