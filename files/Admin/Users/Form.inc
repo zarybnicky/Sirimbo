@@ -107,25 +107,35 @@ header_minor($header);
 	</tr><tr>
 		<td>Systémový uživatel: </td>
 		<td><input type="checkbox" name="system" value="system" <?php
-			if(post("system")) echo "checked=\"checked\"";
+			if(post("system")) echo 'checked="checked"';
 		?>/></td>
 		<td></td>
 	</tr><tr>
 		<td>Oprávnění: </td>
-		<td><select name="level">
-				<option value="host" <?php if(post("level") == "host")
-					echo 'selected="selected"';?>>Host</option>
-				<option value="user" <?php if(post("level") == "user")
-					echo 'selected="selected"';?>>Uživatel</option>
-				<option value="editor" <?php if(post("level") == "editor")
-					echo 'selected="selected"';?>>Editor</option>
-				<option value="trener" <?php if(post("level") == "trener")
-					echo 'selected="selected"';?>>Trenér</option>
-				<option value="admin" <?php if(post("level") == "admin")
-					echo 'selected="selected"';?>>Administrátor</option>
-				<option value="admin" <?php if(post("level") == "sadmin")
-					echo 'selected="selected"';?>>Superuživatel</option>
-		</select></td>
+		<td><?php
+		$s = new SelectHelper();
+		echo $s->select()
+			->name('level')
+			->get(false)
+			->option('host', 'Host')
+			->option('user', 'Uživatel')
+			->option('editor', 'Editor')
+			->option('trener', 'Trenér')
+			->option('admin', 'Administrátor')
+			->option('admin', 'Superuživatel');
+		?></td>
+		<td></td>
+	</tr><tr>
+		<td>Skupina: </td>
+		<td><?php
+		$skupiny = DBSkupiny::getSkupiny();
+		$s->select()
+			->name('skupina')
+			->get(false);
+		foreach($skupiny as $skupina)
+			$s->option($skupina['us_id'], $skupina['us_popis']);
+		echo $s;
+		?></td>
 		<td></td>
 	</tr><tr>
 		<?php if($action[0] == 'add') { ?>

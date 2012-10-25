@@ -11,8 +11,8 @@ echo $f->menu()
 <tr>
 <td></td>
 <td>Úroveň</td>
+<td>Skupina</td>
 <td>Aktivní<br/>tanečník</td>
-<td>Login</td>
 <td>Jméno</td>
 <td>Email</td>
 <td>Datum<br/>narozeni</td>
@@ -29,8 +29,17 @@ foreach($users as $user) {
 				<option value="trener">Trenér</option>
 				<option value="admin">Administrátor</option>
 		</select></td>';
+	echo '<td>';
+	$skupiny = DBSkupiny::getSkupiny();
+	$s = new SelectHelper();
+	$s->select()
+		->name($user['u_id'] . '-skupina')
+		->get(false);
+	foreach($skupiny as $skupina)
+		$s->option($skupina['us_id'], $skupina['us_popis']);
+	echo $s;
+	echo '</td>';
 	echo '<td><input type="checkbox" name="' . $user['u_id'] . '-dancer" value="dancer" /></td>';
-	echo '<td>' . $user['u_login'] . '</td>';
 	echo '<td style="max-width:140px;">';
 	echoFullJmeno($user);
 	echo '</td>';
