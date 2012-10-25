@@ -77,6 +77,20 @@ class DBPary extends Database {
 			return false;
 	}
 	
+	public static function getUnpairedUsers() {
+		$res = DBPary::query(
+		'SELECT u_jmeno,u_prijmeni,u_id,p1.p_id
+			FROM users
+			LEFT JOIN pary p1 ON p_id_partnerka=u_id OR p_id_partner=u_id 
+			LEFT JOIN pary p2 ON p1.p_id_partner=p2.p_id_partner AND
+				p1.p_aktu_archivovano<p2.p_aktu_archivovano
+			WHERE u_id NOT IN
+			(SELECT u_id FROM users
+				LEFT JOIN pary ON p_id_partnerka=u_id OR
+				p_id_partner=u_id WHERE p_archiv="0") AND p2.p_id IS NULL');
+		return DBPary::getArray($res);
+	}
+	
 	public static function getVysledky($id) {
 		list($id) = DBPary::escapeArray(array($id));
 		
@@ -127,15 +141,16 @@ class DBPary extends Database {
 		
 		if($partner == '0' || $partner == 'none')
 			return;
+		if($partnerka == '0' || $partnerka == 'none') {
+			DBPary::noPartner($partner);
+			return;
+		}
 		
 		DBPary::query(
 			"UPDATE pary
 			SET p_archiv='1',p_aktu_archivovano=NOW()
-			WHERE (p_id_partner='$partner'" .
-				(($partnerka != "none" || $partnerka != '0') ?
-					" OR p_id_partner='$partnerka' OR p_id_partnerka='$partnerka'" : '') .
-				")
-				AND p_archiv='0'"
+			WHERE (p_id_partner='$partner' OR p_id_partner='$partnerka' OR
+				p_id_partnerka='$partnerka') AND p_archiv='0'"
 		);
 		DBPary::query("INSERT INTO pary (p_id_partner, p_id_partnerka) VALUES ('$partner','$partnerka')");
 	}

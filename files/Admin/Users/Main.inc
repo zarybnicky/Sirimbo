@@ -40,8 +40,8 @@ switch($action[0]) {
 				
 				DBUser::addUser(strtolower(post('login')), $pass, post('jmeno'), post('prijmeni'),
 					post('pohlavi'), post('email'), post('telefon'), $narozeni,
-					post('poznamky'), $level, post('dancer') ? 1 : 0, post('lock') ? 1 : 0,
-					post('ban') ? 1 : 0, '1', post('system') ? 1 : 0);
+					post('poznamky'), $level, $post('skupina'), post('dancer') ? 1 : 0,
+					post('lock') ? 1 : 0, post('ban') ? 1 : 0, '1', post('system') ? 1 : 0);
 				View::redirect('/admin/users', 'Uživatel úspěšně přidán');
 			} else {
 				echo $html;
@@ -114,9 +114,9 @@ switch($action[0]) {
 				}
 				$narozeni = post('year') . '-' . post('month') . '-' . post('day');
 	
-				DBUser::setUserData($id, post('jmeno'), post('prijmeni'),
-					post('pohlavi'), post('email'), post('telefon'), $narozeni,
-					post('poznamky'), $level, post('dancer') ? 1 : 0, post('lock') ? 1 : 0,
+				DBUser::setUserData($id, post('jmeno'), post('prijmeni'), post('pohlavi'),
+					post('email'), post('telefon'), $narozeni, post('poznamky'), $level,
+					post('skupina'), post('dancer') ? 1 : 0, post('lock') ? 1 : 0,
 					post('ban') ? 1 : 0, post('system') ? 1 : 0);
 				View::redirect('/admin/users', 'Uživatel úspěšně upraven');
 			} else {
@@ -141,7 +141,8 @@ switch($action[0]) {
 								$old_level == 'editor' || $old_level == 'trener' || $old_level == 'admin') ?
 							$old_level : 'host';
 						
-						DBUser::confirmUser($id, $level, post($id . '-dancer') ? 1 : 0);
+						DBUser::confirmUser($id, $level, post($id . '-skupina'),
+							post($id . '-dancer') ? 1 : 0);
 						Mailer::reg_confirmed_notice($data['u_email'], $data['u_login']);
 					}
 				}
@@ -186,15 +187,23 @@ switch(post('action')) {
 		break;
 	
 	case 'save':
-		$users = DBUser::getUsers();
+		$filter = get('f');
+		switch($filter) {
+			case 'dancer': $users = DBUser::getActiveDancers(); break;
+			case 'trener': $users = DBUser::getActiveUsers(L_TRENER); break;
+			case 'editor': $users = DBUser::getActiveUsers(L_EDITOR); break;
+			case 'all':
+			default: $users = DBUser::getUsers(L_ALL); break;
+		}
 		foreach($users as $user) {
 			$id = $user['u_id'];
 			if(((bool) post($id . '-dancer')) !== ((bool) $user['u_dancer']) ||
-					((bool) post($id . '-system')) !== ((bool) $user['u_system'])) {
+					((bool) post($id . '-system')) !== ((bool) $user['u_system']) ||
+					(post($id . '-skupina') != $user['u_skupina'])) {
 				DBUser::setUserData($id, $user['u_jmeno'], $user['u_prijmeni'], $user['u_pohlavi'],
 					$user['u_email'], $user['u_telefon'], $user['u_narozeni'], $user['u_poznamky'],
-					$user['u_level'], post($id . '-dancer') ? '1' : '	0', $user['u_lock'], $user['u_ban'],
-					post($id . '-system') ? '1' : '0');
+					$user['u_level'], post($id . '-skupina'), post($id . '-dancer') ? '1' : '0',
+					$user['u_lock'], $user['u_ban'], post($id . '-system') ? '1' : '0');
 			}
 		}
 		include('files/Admin/Users/Display.inc');

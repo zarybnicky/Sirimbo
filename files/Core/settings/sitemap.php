@@ -121,6 +121,10 @@ $sitemap_dynamic = array(
 	'admin/users/new'			=> 'files/Admin/Users/Main.inc',
 	'admin/users/temporary'		=> 'files/Admin/Users/Temporary.inc',
 
+	'admin/skupiny'				=> 'files/Admin/Skupiny/Main.inc',
+	'admin/skupiny/add'			=> 'files/Admin/Skupiny/Main.inc',
+	'admin/skupiny/edit'		=> 'files/Admin/Skupiny/Main.inc',
+
 	'admin/ankety'				=> 'files/Admin/Ankety/Main.inc',
 	'admin/ankety/add'			=> 'files/Admin/Ankety/Main.inc',
 	'admin/ankety/edit'			=> 'files/Admin/Ankety/Main.inc',

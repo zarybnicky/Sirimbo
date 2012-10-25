@@ -59,7 +59,8 @@ switch($action[0]) {
 				
 				DBUser::setUserData(User::getUserID(), post('jmeno'), post('prijmeni'),
 					post('pohlavi'), post('email'), post('telefon'), $narozeni,
-					post('poznamky'), $data['u_level'], $data['u_lock'], $data['u_ban']);
+					post('poznamky'), $data['u_level'], $data['u_skupina'],
+					$data['u_dancer'], $data['u_lock'], $data['u_ban'], $data['u_system']);
 				
 				View::redirect('/member/profil', 'Upraveno');
 				return;

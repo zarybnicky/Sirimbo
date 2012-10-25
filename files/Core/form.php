@@ -305,6 +305,12 @@ function echoNabidky($list_name, $list) {
 	}
 	echo '</select>', "\n";
 }
+function getCheckbox($name, $value, $get = false) {
+	$checked = (($get == true) ? ((get($name) != false) ? true : false) :
+		((post($name) != false) ? true : false));
+	return '<input type="checkbox" name="' . $name . '" value="' . $value . '"' .
+		($checked ? ' checked="checked"' : '') . '/>';
+}
 function echoFullJmeno($userData) {
 	if(is_array($userData)) {
 		echo $userData['u_jmeno'], ' ',  $userData['u_prijmeni'];
