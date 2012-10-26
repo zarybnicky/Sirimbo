@@ -9,7 +9,7 @@ header_minor("Osobní údaje");
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
 <table>
 	<tr>
-		<td>Uživatel (*): </td>
+		<td>Uživatel: </td>
 		<td><?php echo post("login"); ?></td>
 		<td></td>
 	</tr><tr>
@@ -32,18 +32,16 @@ header_minor("Osobní údaje");
 			if(post("pohlavi") == "f") echo "checked=\"checked\"";
 		?>/>Žena</td>
 	</tr><tr>
-		<td>E-mail: </td>
+		<td>E-mail (*): </td>
 		<td><input type="text" name="email" value="<?php echo post("email"); ?>" /></td>
 		<td>Max. 50 znaků, ve formátu e-mail adresy<?php
-			$error = (strlen(post("email")) < 1 ? 0 : 
-				checkPostField("/^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i", "email")) || $error;
+			$error = checkPostField("/^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i", "email") || $error;
 		?></td>
 	</tr><tr>
-		<td>Telefon: </td>
+		<td>Telefon (*): </td>
 		<td><input type="text" name="telefon" value="<?php echo post("telefon"); ?>" /></td>
-		<td>Pouze číslice a +, max. 13 znaků<?php
-			$error = (strlen(post("telefon")) < 1 ? 0 : 
-				checkPostField("/^[0-9+]{9,13}$/", "telefon")) || $error;
+		<td><?php
+			$error = checkPostField("/^((\+|00)\d{3})?( ?\d{3}){3}$/", "telefon") || $error;
 		?></td>
 	</tr><tr>
 		<td>Datum: (*)</td>
@@ -56,12 +54,6 @@ header_minor("Osobní údaje");
 	</tr><tr>
 		<td>Poznámky: </td>
 		<td><textarea rows="15" cols="50" name="poznamky"><?php echo post("poznamky"); ?></textarea></td>
-		<td></td>
-	</tr><tr>
-		<td>Uzamknout: </td>
-		<td><input type="checkbox" name="lock" value="lock" readonly <?php
-			if(post("lock")) echo "checked=\"checked\"";
-		?>/></td>
 		<td></td>
 	</tr><tr>
 		<td>Oprávnění: </td>

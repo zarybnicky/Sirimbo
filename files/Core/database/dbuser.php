@@ -1,6 +1,6 @@
 <?php
 class DBUser extends Database {
-public static function checkUser($login, $pass) {
+	public static function checkUser($login, $pass) {
 		list($login, $pass) = DBUser::escapeArray(array($login, $pass));
 		
 		$res = DBUser::query("SELECT * FROM users WHERE 
@@ -57,9 +57,12 @@ public static function checkUser($login, $pass) {
 		list($id) = DBUser::escapeArray(array($id));
 		
 		$res = DBUser::query(
-		"SELECT *
-		FROM users
-		WHERE u_id='$id'");
+		"SELECT users.*,p1.*,users_skupiny.* FROM users
+			LEFT JOIN users_platby p1 ON up_id_user=u_id
+			LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
+		WHERE u_id='$id' AND (p1.up_id IS NULL OR
+			p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
+			WHERE p2.up_id_user=u_id))");
 		if(!$res) {
 			return false;
 		} else {
@@ -197,14 +200,22 @@ public static function checkUser($login, $pass) {
 	public static function getUsers($level = NULL) {
 		if($level == NULL || $level == L_ALL)
 			$res = DBUser::query(
-			"SELECT * FROM users
-			LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
+			"SELECT users.*,p1.*,users_skupiny.* FROM users
+				LEFT JOIN users_platby p1 ON up_id_user=u_id
+				LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
+			WHERE (p1.up_id IS NULL OR
+				p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
+				WHERE p2.up_id_user=u_id))
 			ORDER BY u_prijmeni");
 		else
 			$res = DBUser::query(
-			"SELECT * FROM users
-			LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
-			WHERE u_level='$level' ORDER BY u_prijmeni");
+			"SELECT users.*,p1.*,users_skupiny.* FROM users
+				LEFT JOIN users_platby p1 ON up_id_user=u_id
+				LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
+			WHERE u_level='$level' AND (p1.up_id IS NULL OR
+				p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
+				WHERE p2.up_id_user=u_id))
+			ORDER BY u_prijmeni");
 		return DBUser::getArray($res);
 	}
 	
@@ -218,6 +229,20 @@ public static function checkUser($login, $pass) {
 		return DBUser::getArray($res);
 	}
 	
+	public static function getUsersBySkupina($skupina) {
+		list($skupina) = DBUser::escapeArray(array($skupina));
+		
+		$res = DBUser::query(
+		"SELECT users.*,p1.*,users_skupiny.* FROM users
+			LEFT JOIN users_platby p1 ON up_id_user=u_id
+			LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
+		WHERE u_skupina='$skupina' AND (p1.up_id IS NULL OR
+			p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
+			WHERE p2.up_id_user=u_id))
+		ORDER BY u_prijmeni");
+		return DBUser::getArray($res);
+	}
+	
 	public static function getNewUsers() {
 		$res = DBUser::query(
 		"SELECT * FROM users
@@ -228,21 +253,29 @@ public static function checkUser($login, $pass) {
 	
 	public static function getActiveUsers($level = -1) {
 		$res = DBUser::query(
-		"SELECT * FROM users
+		"SELECT users.*,p1.*,users_skupiny.* FROM users
+			LEFT JOIN users_platby p1 ON up_id_user=u_id
 			LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
 		WHERE u_system='0' AND u_confirmed='1' AND u_ban='0' " .
 			($level > -1 ? "AND u_level='$level' " : '') .
-			"ORDER BY u_prijmeni ");
+			"AND (p1.up_id IS NULL OR
+				p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
+				WHERE p2.up_id_user=u_id))
+			ORDER BY u_prijmeni ");
 		return DBUser::getArray($res);
 	}
 	
 	public static function getActiveDancers($level = -1) {
 		$res = DBUser::query(
-		"SELECT * FROM users
+		"SELECT users.*,p1.*,users_skupiny.* FROM users
+			LEFT JOIN users_platby p1 ON up_id_user=u_id
 			LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
 		WHERE u_system='0' AND u_dancer='1' AND u_confirmed='1' AND u_ban='0' " .
 			($level > -1 ? "AND u_level='$level' " : '') .
-			"ORDER BY u_prijmeni");
+			"AND (p1.up_id IS NULL OR
+				p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
+				WHERE p2.up_id_user=u_id))
+			ORDER BY u_prijmeni");
 		return DBUser::getArray($res);
 	}
 	
@@ -251,7 +284,7 @@ public static function checkUser($login, $pass) {
 		"SELECT * FROM users
 			LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
 		WHERE u_level>=" . L_TRENER .
-			" ORDER BY u_prijmeni");
+		" ORDER BY u_prijmeni");
 		return DBUser::getArray($res);
 	}
 	

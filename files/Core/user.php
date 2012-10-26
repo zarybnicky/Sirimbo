@@ -19,6 +19,13 @@ class User {
 			
 			$_SESSION["login"] = 1;
 			User::loadUser($data['u_id'], $data);
+			
+			if(!preg_match("/^[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i", $data['u_email']) ||
+					!preg_match("/^((\+|00)\d{3})?( ?\d{3}){3}$/", $data['u_telefon']) ||
+					!preg_match("/^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/",
+						$data['u_narozeni'])) {
+				View::redirect('/member/profil/edit', 'Prosím vyplňte požadované údaje.', true);
+			}
 			return true;
 		} else
 			return false;
@@ -109,7 +116,7 @@ class User {
 	public static function register($login, $pass, $name, $surname, $pohlavi, $email, $telefon,
 			$narozeni, $poznamky) {
 		DBUser::addUser(strtolower($login), User::Crypt($pass), $name, $surname, $pohlavi, $email,
-			$narozeni, $telefon, $poznamky, L_UNCONFIRMED, '0', "0", "0", "0", "0");
+			$telefon, $narozeni, $poznamky, L_UNCONFIRMED, '0', "0", "0", "0", "0");
 		
 		Mailer::new_user_notice(DEFAULT_ADMIN_MAIL, $login);
 	}

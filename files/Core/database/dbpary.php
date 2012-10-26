@@ -127,8 +127,7 @@ class DBPary extends Database {
 	
 	public static function getPartners() {
 		$res = DBPary::query(
-		"SELECT p_id,u_id,u_jmeno,u_prijmeni,u_temporary,p_stt_trida,p_stt_body,p_stt_finale,
-			p_lat_trida,p_lat_body,p_lat_finale,p_hodnoceni
+		"SELECT *
 		FROM pary
 			LEFT JOIN users ON p_id_partner=u_id
 		WHERE p_archiv='0'");

@@ -158,18 +158,19 @@ public static $barvy = array(
 
 public static $sekce = array(
 	'admin'		=> array(
-			'aktuality'	=> array('Správa článků', L_EDITOR),
-			'nastenka'	=> array('Správa nástěnky', L_EDITOR),
 			'users'		=> array('Správa uživatelů', L_ADMIN),
 			'skupiny'	=> array('Správa skupin', L_ADMIN),
-			'akce'		=> array('Správa akcí', L_ADMIN),
+			'platby'	=> array('Správa plateb', L_ADMIN),
+			'pary'		=> array('Správa párů', L_ADMIN),
+			'aktuality'	=> array('Správa článků', L_EDITOR),
+			'nastenka'	=> array('Správa nástěnky', L_EDITOR),
 			'rozpis'	=> array('Správa rozpisů', L_TRENER),
 			'nabidka'	=> array('Správa nabídky', L_TRENER),
-			'dokumenty'	=> array('Správa dokumentů', L_EDITOR),
-			'pary'		=> array('Správa párů', L_ADMIN),
-			'ankety'	=> array('Správa anket', L_EDITOR),
+			'akce'		=> array('Správa akcí', L_ADMIN),
 			'inzerce'	=> array('Správa inzerce', L_ADMIN),
 			'galerie'	=> array('Správa galerie', L_ADMIN),
+			'dokumenty'	=> array('Správa dokumentů', L_EDITOR),
+			'ankety'	=> array('Správa anket', L_EDITOR),
 			'konzole'	=> array('Konzole', L_ADMIN)
 		),
 	'aktuality'	=> array(

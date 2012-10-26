@@ -48,8 +48,8 @@ ob_start();
 	</tr><tr>
 		<td>Telefon (*): </td>
 		<td><input type="text" name="telefon" value="<?php echo post("telefon"); ?>" /></td>
-		<td>Pouze číslice a +, max. 13 znaků<?php
-			$error = checkPostField("/^[0-9+]{9,13}$/", "telefon") || $error;
+		<td><?php
+			$error = checkPostField("/^((\+|00)\d{3})?( ?\d{3}){3}$/", "telefon") || $error;
 		?></td>
 	</tr><tr>
 		<td>Datum: (*)</td>
@@ -80,6 +80,7 @@ if($isConfirmation && !$error) {
 		User::register(post("username"), post("pass"), post("jmeno"), post("prijmeni"),
 			post('pohlavi'), post("email"), post("telefon"), $narozeni, post("poznamky"));
 		header("Location: /done");
+		echo $html;
 	} else {
 		notice("Už tu nekdo s takovým přihlašovacím jménem je :o(");
 		echo $html;
