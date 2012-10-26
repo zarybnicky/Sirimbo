@@ -39,7 +39,7 @@ if(!TISK) {
 		->content('Upravit', 'edit', true)
 		->content('Odebrat', 'remove', true)
 		->content('Nepotvrzení uživatelé', 'users/new');
-	if(get('v') == 'status' || get('v') == 'platby')
+	if(get('v') == 'status')
 		$f->content('Uložit změny', 'save', true);
 	
 	echo $f;
@@ -87,9 +87,11 @@ echo '<td>Jméno</td>';
 echo '<td>Oprávnění</td>';
 echo '<td>Skupina</td>';
 
+
 if(get('v') == 'info') {
 	echo '<td>Datum<br/>narození</td>';
 	echo '<td>Variabilní<br/>symbol</td>';
+	echo '<td>Zaplaceno</td>';
 } elseif(get('v') == 'status') {
 	echo '<td>Aktivní<br/>tanečník</td>';
 	echo '<td>Systémový<br/>uživatel</td>';
@@ -128,6 +130,8 @@ foreach($users as $user) {
 		echo '</td>';
 		echo '<td>', formatDate($user['u_narozeni']), '</td>';
 		echo '<td>', User::var_symbol($user['u_id']), '</td>';
+		echo '<td>', ((bool) $user['up_id'] ? 'ano' :
+			('<a href="/admin/platby/add?u=' . $user['u_id'] . '">NE</a>')), '</td>';
 	} elseif(get('v') == 'status') {
 		echo '<td>';
 		echo $skupinyselect
@@ -139,12 +143,44 @@ foreach($users as $user) {
 		echo '<td class="center">', '<input type="checkbox" name="', $user['u_id'], '-system" ',
 			($user['u_system'] ? 'checked="checked"' : ''), '/>', '</td>';
 	} elseif(get('v') == 'platby') {
+		$now = new DateTime('now');
+		$kdy = new DateTime($user['up_plati_do']);
+		
+		$placeno = (bool) $user['up_id'];
+		$zaplaceno = $placeno && ($kdy >= $now);
+		
+		if($placeno && !$zaplaceno) {
+			$diff = $now->diff($kdy);
+			if($diff->y == 1)
+				$diffstr = 'více než rok';
+			elseif($diff->y > 1 && $diff->y < 5)
+				$diffstr = 'více než ' . $diff->y . ' roky';
+			elseif($diff->y >= 1)
+				$diffstr = 'více než ' . $diff->y . 'let';
+			elseif($diff->m == 1)
+				$diffstr = 'více než měsíc';
+			elseif($diff->m > 1 && $diff->m < 5)
+				$diffstr = 'více než ' . $diff->m . ' měsíce';
+			elseif($diff->m >= 5)
+				$diffstr = 'více než ' . $diff->m . ' měsíců';
+			else
+				$diffstr = 'méně než měsíc';
+		}
+			
 		echo '<td>';
 		echo '<div class="box" title="', $user['us_popis'], '" ',
 			'style="background-color:', Settings::$barvy[$user['us_color']][1], ';"></div>';
 		echo '</td>';
-		echo '<td>', '</td>';
-		echo '<td>', '</td>';
+		echo '<td style="width:105px;">',
+			($zaplaceno ?
+			('<a href="/admin/platby/edit/' . $user['up_id'] . '">' . $user['up_castka'] . ' Kč</a>') :
+			('<a href="/admin/platby/add?u=' . $user['u_id'] . '">NEZAPLACENO</a>')),
+			'</td>';
+		echo '<td>',
+			($zaplaceno ?
+			formatDate($user['up_plati_do']) :
+			($placeno ? ('neplaceno ' . $diffstr) : 'nikdy neplaceno')),
+			'</td>';
 	}
 	echo '</tr>';
 }

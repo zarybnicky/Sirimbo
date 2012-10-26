@@ -1,13 +1,31 @@
 <?php
 class DBPlatby extends Database {
 	public static function getPlatby() {
-		$res = DBPlatby::query("SELECT * FROM users_platby");
+		$res = DBPlatby::query(
+		"SELECT * FROM users_platby
+			LEFT JOIN users ON up_id_user=u_id
+			LEFT JOIN users_skupiny ON u_skupina=us_id
+		ORDER BY up_placeno DESC");
+		return DBPlatby::getArray($res);
+	}
+	public static function getPlatbyFromUser($id) {
+		list($id) = DBPlatby::escapeArray(array($id));
+		
+		$res = DBPlatby::query(
+		"SELECT * FROM users_platby
+			LEFT JOIN users ON up_id_user=u_id
+			LEFT JOIN users_skupiny ON u_skupina=us_id
+		WHERE up_id_user='$id' ORDER BY up_placeno DESC");
 		return DBPlatby::getArray($res);
 	}
 	public static function getSinglePlatba($id) {
 		list($id) = DBPlatby::escapeArray(array($id));
 		
-		$res = DBPlatby::query("SELECT * FROM users_platby WHERE up_id='$id'");
+		$res = DBPlatby::query(
+		"SELECT * FROM users_platby
+			LEFT JOIN users ON up_id_user=u_id
+			LEFT JOIN users_skupiny ON u_skupina=us_id
+		WHERE up_id='$id'");
 		return DBPlatby::getSingleRow($res);
 	}
 	public static function addPlatba($user, $castka, $placeno, $plati_do) {
