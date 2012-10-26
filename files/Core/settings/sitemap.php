@@ -125,6 +125,10 @@ $sitemap_dynamic = array(
 	'admin/skupiny/add'			=> 'files/Admin/Skupiny/Main.inc',
 	'admin/skupiny/edit'		=> 'files/Admin/Skupiny/Main.inc',
 
+	'admin/platby'				=> 'files/Admin/Platby/Main.inc',
+	'admin/platby/add'			=> 'files/Admin/Platby/Main.inc',
+	'admin/platby/edit'			=> 'files/Admin/Platby/Main.inc',
+
 	'admin/ankety'				=> 'files/Admin/Ankety/Main.inc',
 	'admin/ankety/add'			=> 'files/Admin/Ankety/Main.inc',
 	'admin/ankety/edit'			=> 'files/Admin/Ankety/Main.inc',

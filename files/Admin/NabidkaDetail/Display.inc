@@ -15,7 +15,7 @@ if(!empty($items)) {
 				->idVar('p_id')->type('par')->users($users);
 			echo '</td>';
 			echo '<td><input type="text" name="', $item['ni_id'], '-hodiny" value="', $item['ni_pocet_hod'],
-				'"/></td>';
+				'" size=1/></td>';
 			echo '<td><button type="submit" name="remove" value="', $item['ni_id'], '">',
 				'Odstranit</button></td>';
 			echo '</tr>';
@@ -25,7 +25,7 @@ if(!empty($items)) {
 <tr>
 <td><?php echo $userselect->userSelect()->name('add_partner')
 	->idVar('p_id')->type('par')->users($users);?></td>
-<td><input type="text" name="add_hodiny" value="" /></td>
+<td><input type="text" name="add_hodiny" value=""  size=1/></td>
 <td><button type="submit" name="action" value="add">Přidat</button></td>
 </tr>
 <tr><td><button type="submit" name="action" value="submit">Uložit</button></td></tr>

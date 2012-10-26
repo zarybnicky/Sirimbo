@@ -72,7 +72,7 @@ header_minor($header);
 		<td><input type="text" name="telefon" value="<?php echo post("telefon"); ?>" /></td>
 		<td>Pouze číslice a +, max. 13 znaků<?php
 			$error = (strlen(post("telefon")) < 1 ? 0 : 
-				checkPostField("/^[0-9+]{9,13}$/", "telefon")) || $error;
+				checkPostField("/^((\+|00)\d{3})? ?( ?\d{3}){3}$/", "telefon")) || $error;
 		?></td>
 	</tr><tr>
 		<td>Datum: (*)</td>
