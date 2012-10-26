@@ -171,14 +171,12 @@ $(name + ' .new button').click(function(){
 			$out .= 'Jméno: <input type="text" class="jmeno" size="8" /><br/>';
 			$out .= 'Příjmení: <input type="text" class="prijmeni" size="8" /><br/>';
 			$out .= 'Datum narození:&nbsp;<br/>';
-			$out .= echoDateSelect('" class="year', '" class="day', '" class="year', 1920, 1) . '<br/>';
+			$out .= echoDateSelect('" class="day', '" class="month', '" class="year', 1940, 1) . '<br/>';
 			$out .= '<button type="submit" name="jmeno">Uložit</button>';
 			$out .= '</div>';
 			$out .= '<div class="loading" style="display:none;"><img src="/images/loading_bar.gif"/></div>';
 		}
 		$out .= '</div>';
-		
-		$this->userSelect();
 		
 		return $out;
 	}

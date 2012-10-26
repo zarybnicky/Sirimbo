@@ -60,7 +60,7 @@ class SelectHelper {
 				$selected = $this->value;
 			else
 				$selected = $this->get ? get($this->name) : post($this->name);
-
+				
 			foreach($this->options as $value => $name) {
 				$out .= '<option value="' . $value . '"' .
 					($selected == $value ? ' selected="selected"' : '') .

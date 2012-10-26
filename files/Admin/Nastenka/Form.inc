@@ -40,8 +40,8 @@ header_minor($header);
 		foreach($skupiny as $skupina) {
 			echo getCheckbox('sk-' . $skupina['us_id'], '1'), ' ';
 			echo $skupina['us_popis'], ' ';
-			echo '<div class="box" style="background-color:' .
-				Settings::$barvy[$skupina['us_color']][1] . '"></div>';
+			echo '<div class="box" title="', $skupina['us_popis'], '" ',
+				'style="background-color:', Settings::$barvy[$skupina['us_color']][1] . '"></div>';
 			echo '<br/>';
 		}
 		?>
