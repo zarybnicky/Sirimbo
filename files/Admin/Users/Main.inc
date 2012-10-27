@@ -89,6 +89,7 @@ switch($action[0]) {
 			post('year', $year);
 			post('month', $month);
 			post('day', $day);
+			post('skupina', $data['u_skupina']);
 			post('poznamky', $data['u_poznamky']);
 			include('files/Admin/Users/Form.inc');
 			return;
@@ -125,6 +126,24 @@ switch($action[0]) {
 			}
 		}
 		break;
+		
+	
+	case 'platby':
+		$id = isset($action[1]) ? $action[1] : '';
+		
+		if(!$id || !is_numeric($id) || !($data = DBUser::getUserData($id)))
+			View::redirect('/admin/users', 'Uživatel s takovým ID neexistuje');
+		
+		if(!Permissions::canEditUser($id, $data['u_level'], $data['u_lock']))
+			View::viewError(ER_AUTHORIZATION);
+	
+		if(!$data['u_confirmed']) {
+			View::redirect('/admin/users',
+				'Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
+		}
+		
+		include('files/Admin/Users/DisplayPlatby.inc');
+		return;
 		
 	case 'new':
 		if(empty($_POST)) {
@@ -179,6 +198,17 @@ switch(post('action')) {
 		$users = post('users');
 		if($users[0]) {
 			header('Location: /admin/users/edit/' . $users[0]);
+			return;
+		} else {
+			include('files/Admin/Users/Display.inc');
+			return;
+		}
+		break;
+		
+	case 'platby':
+		$users = post('users');
+		if($users[0]) {
+			header('Location: /admin/users/platby/' . $users[0]);
 			return;
 		} else {
 			include('files/Admin/Users/Display.inc');

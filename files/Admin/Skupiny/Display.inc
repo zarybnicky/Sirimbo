@@ -69,26 +69,24 @@ if(get('v') == 'info') {
 		echo '<td>Zaplaceno do</td>';
 		echo '</tr>';
 		foreach($users as $user) {
-			$now = new DateTime('now');
-			$kdy = new DateTime($user['up_plati_do']);
-			
 			$placeno = (bool) $user['up_id'];
-			$zaplaceno = $placeno && ($kdy >= $now);
+			$zaplaceno = $placeno && strcmp($user['up_plati_do'], date('Y-m-d')) >= 0;
 			
 			if($placeno && !$zaplaceno) {
-				$diff = $now->diff($kdy);
-				if($diff->y == 1)
+				$now = time();
+				$kdy = strtotime($user['up_plati_do']);
+				
+				$diff = $now - $kdy;
+				if($diff > 31536000)
 					$diffstr = 'více než rok';
-				elseif($diff->y > 1 && $diff->y < 5)
-					$diffstr = 'více než ' . $diff->y . ' roky';
-				elseif($diff->y >= 1)
-					$diffstr = 'více než ' . $diff->y . 'let';
-				elseif($diff->m == 1)
+				elseif($diff > 15768000)
+					$diffstr = 'více než půl roku';
+				elseif($diff > 7884000)
+					$diffstr = 'více než 3 měsíce';
+				elseif($diff > 5256000)
+					$diffstr = 'více než 2 měsíce';
+				elseif($diff > 2628000)
 					$diffstr = 'více než měsíc';
-				elseif($diff->m > 1 && $diff->m < 5)
-					$diffstr = 'více než ' . $diff->m . ' měsíce';
-				elseif($diff->m >= 5)
-					$diffstr = 'více než ' . $diff->m . ' měsíců';
 				else
 					$diffstr = 'méně než měsíc';
 			}

@@ -25,14 +25,15 @@ switch($action[0]) {
 				
 				$placeno = post('placeno_year') . '-' . post('placeno_month') .
 					'-' . post('placeno_day');
-				$placeno_date = new DateTime($placeno);
 				
 				$months = $data['us_platba_mesic'] ?
 					floor(post('castka') / $data['us_platba_mesic']) : 0;
-				if($months > 0) {
-					$plati_do_date = new DateInterval('P' . $months . 'M');
-					
-					$plati_do = $placeno_date->add($plati_do_date)->format('Y-m-d');
+				$days = $data['us_platba_mesic'] ? 
+					floor((post('castka') / $data['us_platba_mesic'] - $months) * 30) : 0;
+				
+				if($months > 0 || $days > 0) {
+					$plati_do = date('Y-m-d',
+						strtotime("+$months month +$days day", strtotime($placeno)));
 				} else {
 					$plati_do = $placeno;
 				}
@@ -77,14 +78,14 @@ switch($action[0]) {
 					'-' . post('placeno_day');
 				
 				if(post('prepocitat')) {
-					$placeno_date = new DateTime($placeno);
-					
 					$months = $data['us_platba_mesic'] ?
 						floor(post('castka') / $data['us_platba_mesic']) : 0;
-					if($months > 0) {
-						$plati_do_date = new DateInterval('P' . $months . 'M');
-						
-						$plati_do = $placeno_date->add($plati_do_date)->format('Y-m-d');
+					$days = $data['us_platba_mesic'] ? 
+						floor((post('castka') / $data['us_platba_mesic'] - $months) * 30) : 0;
+					
+					if($months > 0 || $days > 0) {
+						$plati_do = date('Y-m-d',
+							strtotime("+$months month +$days day", strtotime($placeno)));
 					} else {
 						$plati_do = $placeno;
 					}

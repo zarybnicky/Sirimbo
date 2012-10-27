@@ -129,12 +129,12 @@ header_minor($header);
 		<td>Skupina: </td>
 		<td><?php
 		$skupiny = DBSkupiny::getSkupiny();
-		$s->select()
-			->name('skupina')
-			->get(false);
-		foreach($skupiny as $skupina)
-			$s->option($skupina['us_id'], $skupina['us_popis']);
-		echo $s;
+		foreach($skupiny as $skupina) {
+			echo '<div class="box" title="', $skupina['us_popis'], '" ',
+				'style="background-color:', Settings::$barvy[$skupina['us_color']][1], ';"></div>';
+			echo '<label>', getRadio('skupina', $skupina['us_id'], false),
+				$skupina['us_popis'], '</label><br/>';
+		}
 		?></td>
 		<td></td>
 	</tr><tr>
