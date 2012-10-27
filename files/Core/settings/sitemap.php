@@ -119,6 +119,7 @@ $sitemap_dynamic = array(
 	'admin/users/add'			=> 'files/Admin/Users/Main.inc',
 	'admin/users/edit'			=> 'files/Admin/Users/Main.inc',
 	'admin/users/new'			=> 'files/Admin/Users/Main.inc',
+	'admin/users/platby'		=> 'files/Admin/Users/Main.inc',
 	'admin/users/temporary'		=> 'files/Admin/Users/Temporary.inc',
 
 	'admin/skupiny'				=> 'files/Admin/Skupiny/Main.inc',
