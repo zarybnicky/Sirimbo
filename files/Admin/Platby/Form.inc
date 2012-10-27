@@ -49,7 +49,8 @@ header_minor($header);
 		?>
 	</tr><?php if($action[0] == 'edit') {?><tr>
 		<td>Přepočítat<br/>platnost: (*)</td>
-		<td><?php echo getCheckbox('prepocitat', 'prepocitat', false); ?></td>
+		<td><?php post('prepocitat', 'prepocitat');
+		echo getCheckbox('prepocitat', 'prepocitat', false); ?></td>
 	</tr><?php } ?><tr>
 		<?php if($action[0] == 'add') {?>
 		<td><button type="submit" name="action" value="add_confirm">Přidat</button></td>
