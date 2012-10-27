@@ -24,9 +24,45 @@ if(!TISK) {
 		->name('v')
 		->option('info', 'informace')
 		->option('status', 'status uživatele')
-		->option('platby', 'platby');
+		->option('platby', 'platby')
+		->option('statistiky', 'statistiky');
 	echo '<button type="submit">Odeslat</button>';
 	echo '</form><br/>';
+}
+
+if(get('v') == 'statistiky') {
+	$all = DBUser::getUsers(L_ALL);
+	$active = DBUser::getActiveUsers(L_ALL);
+	$dancers = DBUser::getActiveDancers(L_ALL);
+	$hosti = DBUser::getActiveUsers(L_HOST);
+	$members = DBUser::getActiveUsers(L_USER);
+	$editori = DBUser::getActiveUsers(L_EDITOR);
+	$treneri = DBUser::getActiveUsers(L_TRENER);
+	$admini = DBUser::getActiveUsers(L_ADMIN);
+	
+	echo '<table>';
+	echo '<tr><td></td><td>Počet</td></tr>';
+	
+	$in = array(
+		array('Uživatelé v databázi', count($all)),
+		array('Aktivní uživatelé', count($active)),
+		array('Aktivní tanečníci', count($dancers)),
+		array('Hosti', count($hosti)),
+		array('Členové', count($members)),
+		array('Editoři', count($editori)),
+		array('Trenéři', count($treneri)),
+		array('Admini', count($admini)),
+		array('Superadmini', '1')
+	);
+	
+	foreach($in as $item) {
+		echo '<tr>';
+		echo '<td style="text-align:right;">', $item[0], '</td>';
+		echo '<td style="text-align:center;"><span class="big">', $item[1], '</span></td>';
+		echo '</tr>';
+	}
+	echo '</table>';
+	return;
 }
 
 echo '<form action="', $_SERVER['REQUEST_URI'], '" method="POST">';
@@ -38,7 +74,8 @@ if(!TISK) {
 		->content('Přidat', 'users/add')
 		->content('Upravit', 'edit', true)
 		->content('Odebrat', 'remove', true)
-		->content('Nepotvrzení uživatelé', 'users/new');
+		->content('Nepotvrzení uživatelé', 'users/new')
+		->content('Zobrazit platby', 'platby', true);
 	if(get('v') == 'status')
 		$f->content('Uložit změny', 'save', true);
 	
@@ -71,22 +108,12 @@ switch($sort) {
 		break;
 }
 
-if(get('v') == 'status') {
-	$skupiny = DBSkupiny::getSkupiny();
-	$skupinyselect = new SelectHelper();
-	$skupinyselect->select()
-		->get(false);
-	foreach($skupiny as $skupina)
-		$skupinyselect->option($skupina['us_id'], $skupina['us_popis']);
-}
-
 echo '<table>';
 echo '<tr>';
 echo '<td></td>';
 echo '<td>Jméno</td>';
 echo '<td>Oprávnění</td>';
 echo '<td>Skupina</td>';
-
 
 if(get('v') == 'info') {
 	echo '<td>Datum<br/>narození</td>';
@@ -100,6 +127,15 @@ if(get('v') == 'info') {
 	echo '<td>Zaplaceno<br/>do</td>';
 }
 echo '</tr>';
+
+if(get('v') == 'status') {
+	$skupiny = DBSkupiny::getSkupiny();
+	$skupinyselect = new SelectHelper();
+	$skupinyselect->select()
+		->get(false);
+	foreach($skupiny as $skupina)
+		$skupinyselect->option($skupina['us_id'], $skupina['us_popis']);
+}
 
 foreach($users as $user) {
 	echo '<tr>';
@@ -130,7 +166,7 @@ foreach($users as $user) {
 		echo '</td>';
 		echo '<td>', formatDate($user['u_narozeni']), '</td>';
 		echo '<td>', User::var_symbol($user['u_id']), '</td>';
-		echo '<td>', ((bool) $user['up_id'] ? 'ano' :
+		echo '<td>', (((bool) $user['up_id'] && strcmp($user['up_plati_do'], date('Y-m-d')) >= 0) ? 'ano' :
 			('<a href="/admin/platby/add?u=' . $user['u_id'] . '">NE</a>')), '</td>';
 	} elseif(get('v') == 'status') {
 		echo '<td>';
@@ -143,26 +179,24 @@ foreach($users as $user) {
 		echo '<td class="center">', '<input type="checkbox" name="', $user['u_id'], '-system" ',
 			($user['u_system'] ? 'checked="checked"' : ''), '/>', '</td>';
 	} elseif(get('v') == 'platby') {
-		$now = new DateTime('now');
-		$kdy = new DateTime($user['up_plati_do']);
-		
 		$placeno = (bool) $user['up_id'];
-		$zaplaceno = $placeno && ($kdy >= $now);
+		$zaplaceno = $placeno && strcmp($user['up_plati_do'], date('Y-m-d')) >= 0;
 		
 		if($placeno && !$zaplaceno) {
-			$diff = $now->diff($kdy);
-			if($diff->y == 1)
+			$now = time();
+			$kdy = strtotime($user['up_plati_do']);
+			
+			$diff = $now - $kdy;
+			if($diff > 31536000)
 				$diffstr = 'více než rok';
-			elseif($diff->y > 1 && $diff->y < 5)
-				$diffstr = 'více než ' . $diff->y . ' roky';
-			elseif($diff->y >= 1)
-				$diffstr = 'více než ' . $diff->y . 'let';
-			elseif($diff->m == 1)
+			elseif($diff > 15768000)
+				$diffstr = 'více než půl roku';
+			elseif($diff > 7884000)
+				$diffstr = 'více než 3 měsíce';
+			elseif($diff > 5256000)
+				$diffstr = 'více než 2 měsíce';
+			elseif($diff > 2628000)
 				$diffstr = 'více než měsíc';
-			elseif($diff->m > 1 && $diff->m < 5)
-				$diffstr = 'více než ' . $diff->m . ' měsíce';
-			elseif($diff->m >= 5)
-				$diffstr = 'více než ' . $diff->m . ' měsíců';
 			else
 				$diffstr = 'méně než měsíc';
 		}

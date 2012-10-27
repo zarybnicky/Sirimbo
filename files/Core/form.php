@@ -306,9 +306,17 @@ function echoNabidky($list_name, $list) {
 	echo '</select>', "\n";
 }
 function getCheckbox($name, $value, $get = false) {
-	$checked = (($get == true) ? ((get($name) != false) ? true : false) :
+	$checked = (($get == true) ?
+		((get($name) != false) ? true : false) :
 		((post($name) != false) ? true : false));
 	return '<input type="checkbox" name="' . $name . '" value="' . $value . '"' .
+		($checked ? ' checked="checked"' : '') . '/>';
+}
+function getRadio($name, $value, $get = false) {
+	$checked = (($get == true) ?
+		((get($name) == $value) ? true : false) :
+		((post($name) == $value) ? true : false));
+	return '<input type="radio" name="' . $name . '" value="' . $value . '"' .
 		($checked ? ' checked="checked"' : '') . '/>';
 }
 function echoFullJmeno($userData) {
