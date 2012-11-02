@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
@@ -19,9 +20,9 @@
 			//TODO: AJAX
 			if(post('action') == 'login' ||
 					post('action') == 'enter') {
-				$_POST['pass'] = User::crypt($_POST['pass']);
+				post('pass', User::crypt(post('pass')));
 			
-				if(User::login($_POST['login'], $_POST['pass'])) {
+				if(User::login(post('login'), post('pass'))) {
 					View::redirect('/member/home');
 				} else {
 					View::redirect('/login', 'Špatné jméno nebo heslo!', true);
@@ -32,17 +33,18 @@
 				<button type="submit" name="action" value="enter" style="display:none;"></button>
 				<input style="width:70px;" type="text" name="login"
 				/><input style="width:70px;" type="password" name="pass" /><br />
-				<a href="/registrace" id="register">Registrace</a>
+				<a href="/registrace" id="register">Registrace</a>&nbsp;
+				<a href="/nopassword">Nové heslo</a>
 				<button type="submit" name="action" value="login">Login</button>
 			</div></form>
 		<?php
 		} else {
 			echo User::getUserWholeName(), "<br />";
-			echo '<a href="/member/profil">Profil</a> <a href="/logout">Odhlásit se</a>';
+			echo '<a href="/member/profil/platby">Platby</a> ',
+				'<a href="/member/profil">Profil</a> ',
+				'<a href="/logout">Odhlásit se</a>';
 		}
-		
-		$name = explode('/', $_SERVER['REQUEST_URI']);
-		$section = (isset($name[1])) ? $name[1] : '';
+		$section = Request::getSection('home');
 		?>
 		</div>
 		<div id="logo">
@@ -76,17 +78,15 @@
 				<div id="sidemenu">
 					<ul>
 				<?php
-					$uri = $_SERVER['REQUEST_URI'];
-					$name = explode('/', $_SERVER['REQUEST_URI']);
-					$section = (isset($name[1])) ? $name[1] : '';
-					$s_part = (isset($name[2])) ? implode('/', array_slice($name, 2)) : '';
+					$section = Request::getSection('home');
+					$s_part = Request::getAction();
 					
 					$menu = array();
-					if($name[1] == 'fotogalerie') {
+					if($section == 'fotogalerie') {
 						include('files/Main/Fotogalerie/Menu.inc');
 						echo getSideMenu();
 					} else {
-						if(array_key_exists($name[1], Settings::$sekce)) {
+						if(array_key_exists($section, Settings::$sekce)) {
 							$menu = Settings::$sekce[$section];
 						} else {
 							$section = 'home';
@@ -99,14 +99,25 @@
 								else
 									continue;
 							}
-							if($s_part != $url)
+							if($s_part != $url  && !strpos($url, '*')) {
 								echo '<li><a href="/', $section, '/', $url,
 									'"><span class="arrow">.</span>', $word,
-									'</a></li>';
-							else
+									'</a></li>', "\n";
+							} elseif(strpos($url, '*') !== false) {
+								$url_part = substr($url, 0, strlen($url) - 2);
+								if(strpos($s_part, $url_part) !== false || $s_part == $url_part)
+									echo '<li class="current"><a href="/', $section, '/', $url_part,
+										'"><span class="arrow">.</span>', $word,
+										'<span class="point">.</span></a></li>', "\n";
+								else
+									echo '<li><a href="/', $section, '/', $url_part,
+										'"><span class="arrow">.</span>', $word,
+										'</a></li>', "\n";
+							} else {
 								echo '<li class="current"><a href="/', $section, '/', $url,
 									'"><span class="arrow">.</span>', $word,
-									'<span class="point">.</span></a></li>';
+									'<span class="point">.</span></a></li>', "\n";
+							}
 						}
 					}
 				?>

@@ -19,21 +19,19 @@ if($id && is_numeric($id) && ($data = DBUser::getUserData($id))) {
 
 $filter = get('f');
 switch($filter) {
-	case 'dancer': $users = DBUser::getActiveDancers(); break;
-	case 'trener': $users = DBUser::getActiveUsers(L_TRENER); break;
-	case 'editor': $users = DBUser::getActiveUsers(L_EDITOR); break;
-	case 'all':
-	default: $users = DBUser::getActiveUsers(L_ALL); break;
+	case 'all': $users = DBUser::getActiveUsers(L_ALL); break;
+	case 'dancer':
+	default: $users = DBUser::getActiveDancers(); break;
 }
 $count = count($users);
 
 echo '<form action="', $_SERVER['REQUEST_URI'], '" method="get">';
-echo 'Uživatelé:&nbsp;<select name="f">';
-echo '<option value="all"', (get('f') == 'all') ? ' selected="selected"' : '', '>všichni</option>';
-echo '<option value="dancer"', (get('f') == 'dancer') ? ' selected="selected"' : '', '>tanečníci</option>';
-echo '<option value="trener"', (get('f') == 'trener') ? ' selected="selected"' : '', '>trenéři</option>';
-echo '<option value="editor"', (get('f') == 'editor') ? ' selected="selected"' : '', '>editoři</option>';
-echo '</select>';
+echo 'Uživatelé:&nbsp;';
+$s = new SelectHelper();
+echo $s->select()
+	->name('f')
+	->option('dancer', 'tanečníci')
+	->option('all', 'všichni');
 echo '<button type="submit">Odeslat</button>';
 echo '</form>';
 
@@ -48,12 +46,9 @@ foreach($users as $user) {
 	echo $user['u_prijmeni'] . ', ' . $user['u_jmeno'];
 	echo '</a></td>';
 	echo '<td>';
-	if($user['u_dancer']) {
-		if($user['u_pohlavi'] == 'm')
-			echo 'tanečník';
-		else
-			echo 'tanečnice';
-	}
+	echo '<div class="box" title="', $user['us_popis'], '" ',
+	'style="background-color:', Settings::$barvy[$user['us_color']][1] . ';"></div>&nbsp;',
+	$user['us_popis'];
 	echo '</td>';
 	echo '</tr>';
 }

@@ -437,5 +437,9 @@ switch($action[0]) {
 				break;
 		}
 		break;
+		
+	case 'platby':
+		include('files/Member/Profil/DisplayPlatby.inc');
+		return;
 }
 ?>

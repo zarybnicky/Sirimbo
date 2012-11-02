@@ -32,15 +32,26 @@ header_minor($header);
 		?>
 		</td>
 	</tr><tr>
-		<td>Měsíční platba (*): </td>
-		<td><input type="text" name="platba" value="<?php echo post("platba"); ?>" /></td>
-		<td>Pouze číslice<?php
-			$error = checkPostField("/^[0-9]+$/i", "platba") || $error;
-		?></td>
+		<td>Částka za měsíc: </td>
+		<td><input type="text" name="platba" value="<?php echo post("platba"); ?>" />
+			<?php $error = checkPostField("/^$|^[0-9]+$/i", "platba") || $error; ?>
+		</td>
+	</tr><tr>
+		<td>Částka za čtvrt roku: </td>
+		<td><input type="text" name="platba_ctvrtrok" value="<?php echo post('platba_ctvrtrok'); ?>" />
+			<?php $error = checkPostField("/^$|^[0-9]+$/i", "platba_ctvrtrok") || $error; ?>
+		</td>
+	</tr><tr>
+		<td>Částka za půl roku: </td>
+		<td><input type="text" name="platba_pulrok" value="<?php echo post('platba_pulrok'); ?>" />
+			<?php $error = checkPostField("/^$|^[0-9]+$/i", "platba_pulrok") || $error; ?>
+		</td>
+	</tr><tr>
+		<td></td>
+		<td>Stačí zadat jednu z částek</td>
 	</tr><tr>
 		<td>Popis: (*)</td>
 		<td><textarea rows="15" cols="50" name="popis"><?php echo post('popis');?></textarea></td>
-		<td></td>
 	</tr><tr>
 		<?php if($action[0] == 'add') {?>
 		<td><button type="submit" name="action" value="add_confirm">Přidat</button></td>
@@ -48,7 +59,6 @@ header_minor($header);
 		<td><button type="submit" name="action" value="edit_confirm">Upravit</button></td>
 		<?php } ?>
 		<td>Pole označená (*) jsou povinná</td>
-		<td></td>
 	</tr>
 </table>
 </form>

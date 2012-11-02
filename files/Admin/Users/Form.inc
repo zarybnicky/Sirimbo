@@ -75,7 +75,7 @@ header_minor($header);
 				checkPostField("/^((\+|00)\d{3})? ?( ?\d{3}){3}$/", "telefon")) || $error;
 		?></td>
 	</tr><tr>
-		<td>Datum: (*)</td>
+		<td>Datum narození: (*)</td>
 		<td><?php echoDateSelect("day", "month", "year", 1920);?></td>
 		<td><?php
 			$od_str = post("year") . "-" . post("month") . "-" .

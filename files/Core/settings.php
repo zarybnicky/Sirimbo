@@ -7,6 +7,7 @@ set_include_path(
 	$_SERVER['DOCUMENT_ROOT'] . '/files/Core/database' . PATH_SEPARATOR .
 	$_SERVER['DOCUMENT_ROOT'] . '/files/Core/display' . PATH_SEPARATOR .
 	$_SERVER['DOCUMENT_ROOT'] . '/files/Core/helpers' . PATH_SEPARATOR .
+	$_SERVER['DOCUMENT_ROOT'] . '/files/Core/types' . PATH_SEPARATOR .
 	get_include_path());
 spl_autoload_extensions('.php');
 spl_autoload_register();
@@ -15,8 +16,8 @@ function _shutdown_handler() {
 	if (($error = error_get_last())) {
 		if($error['type'] == E_ERROR || $error['type'] == E_RECOVERABLE_ERROR) {
 			ob_clean();
-			Log::write('');
-			header('Location: /error?id=script_fatal&' . urlencode($error['message']));
+			Log::write($error['message']);
+			header('Location: /error?id=script_fatal');
 		}
 	}
 }
@@ -33,15 +34,16 @@ register_shutdown_function('_shutdown_handler');
 
 date_default_timezone_set('Europe/Paris');
 
-define('CORE', 'files/Core');
+define('ROOT', $_SERVER['DOCUMENT_ROOT']);
+define('CORE', ROOT . '/files/Core');
 define('SETTINGS', CORE . '/settings');
-define('GALERIE', 'galerie');
-define('HEADER', 'files/Static/Header.inc');
-define('FOOTER', 'files/Static/Footer.inc');
-define('HEADER_TISK', 'files/Static/HeaderTisk.inc');
-define('FOOTER_TISK', 'files/Static/FooterTisk.inc');
-define('LOG', 'log/error.log');
-define('PHP_LOG', 'log/php.log');
+define('GALERIE', ROOT . '/galerie');
+define('HEADER', ROOT . '/files/Static/Header.inc');
+define('FOOTER', ROOT . '/files/Static/Footer.inc');
+define('HEADER_TISK', ROOT . '/files/Static/HeaderTisk.inc');
+define('FOOTER_TISK', ROOT . '/files/Static/FooterTisk.inc');
+define('LOG', ROOT . '/log/error.log');
+define('PHP_LOG', ROOT . '/log/php.log');
 
 define('DEFAULT_FROM_MAIL', 'TK Olymp.cz <noreply@tkolymp.cz>');
 define('DEFAULT_ADMIN_MAIL', 'tkolymp@tkolymp.cz');
@@ -153,25 +155,34 @@ public static $barvy = array(
 	'brown'		=> array('hnědá',		'#630'),
 	'black'		=> array('černá',		'#000'),
 	'pink'		=> array('růžová',		'#F09'),
-	'grey'		=> array('šedá',		'#999'),
+	'grey'		=> array('šedá',		'#999')
+);
+
+public static $platby_obdobi = array(
+	'1-pololeti'	=> array('-09-01', '-01-31', '1. pololetí - 1.9. - 31.1.', '1. pololetí'),
+	'2-pololeti'	=> array('-02-01', '-06-30', '2. pololetí - 1.2. - 30.6.', '2. pololetí'),
+	'1-ctvrtleti'	=> array('-09-01', '-11-15', '1. čtvrtletí - 1.9. - 15.11.', '1. čtvrtletí'),
+	'2-ctvrtleti'	=> array('-11-16', '-01-31', '2. čtvrtletí - 16.11. - 31.1.', '2. čtvrtletí'),
+	'3-ctvrtleti'	=> array('-02-01', '-04-15', '3. čtvrtletí - 1.2. - 15.4.', '3. čtvrtletí'),
+	'4-ctvrtleti'	=> array('-04-16', '-06-30', '4. čtvrtletí - 1.9. - 30.6.', '4. čtvrtletí')
 );
 
 public static $sekce = array(
 	'admin'		=> array(
-			'users'		=> array('Správa uživatelů', L_ADMIN),
-			'skupiny'	=> array('Správa skupin', L_ADMIN),
-			'platby'	=> array('Správa plateb', L_ADMIN),
-			'pary'		=> array('Správa párů', L_ADMIN),
-			'aktuality'	=> array('Správa článků', L_EDITOR),
-			'nastenka'	=> array('Správa nástěnky', L_EDITOR),
-			'rozpis'	=> array('Správa rozpisů', L_TRENER),
-			'nabidka'	=> array('Správa nabídky', L_TRENER),
-			'akce'		=> array('Správa akcí', L_ADMIN),
-			'inzerce'	=> array('Správa inzerce', L_ADMIN),
-			'galerie'	=> array('Správa galerie', L_ADMIN),
-			'dokumenty'	=> array('Správa dokumentů', L_EDITOR),
-			'ankety'	=> array('Správa anket', L_EDITOR),
-			'konzole'	=> array('Konzole', L_ADMIN)
+			'users/*'	=> array('Správa uživatelů', L_ADMIN),
+			'skupiny/*'	=> array('Správa skupin', L_ADMIN),
+			'platby/*'	=> array('Správa plateb', L_ADMIN),
+			'pary/*'	=> array('Správa párů', L_ADMIN),
+			'aktuality/*'	=> array('Správa článků', L_EDITOR),
+			'nastenka/*'=> array('Správa nástěnky', L_EDITOR),
+			'rozpis/*'	=> array('Správa rozpisů', L_TRENER),
+			'nabidka/*'	=> array('Správa nabídky', L_TRENER),
+			'akce/*'	=> array('Správa akcí', L_ADMIN),
+			'inzerce/*'	=> array('Správa inzerce', L_ADMIN),
+			'galerie/*'	=> array('Správa galerie', L_ADMIN),
+			'dokumenty/*'	=> array('Správa dokumentů', L_EDITOR),
+			'ankety/*'	=> array('Správa anket', L_EDITOR),
+			'konzole/*'	=> array('Konzole', L_ADMIN)
 		),
 	'aktuality'	=> array(
 			'posledni'		=> 'Nejnovější články',
@@ -188,7 +199,7 @@ public static $sekce = array(
 			'dokumenty'	=> 'Dokumenty',
 			'zebricek'	=> 'Žebříček',
 			'clenove'	=> 'Členové',
-			'profil'	=> 'Profil'
+			'profil/*'	=> 'Profil'
 		),
 	'forum'		=> array(
 		),

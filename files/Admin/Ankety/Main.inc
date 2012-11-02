@@ -4,11 +4,7 @@ header_main("Správa anket");
 
 notice(View::getRedirectMessage());
 
-$request = explode('/', $_SERVER['REQUEST_URI']);
-$action = array_slice($request, 3);
-if(empty($action)) $action[] = '';
-
-switch($action[0]) {
+switch(Request::getAction()) {
 	case 'add':
 		if(empty($_POST)) {
 			include('files/Admin/Ankety/Form.inc');
@@ -38,7 +34,7 @@ switch($action[0]) {
 		break;
 	
 	case 'edit':
-		$id = isset($action[1]) ? $action[1] : '';
+		$id = Request::getID();
 		
 		if(!$id || !is_numeric($id) || !($data = DBAnkety::getSingleAnketa($id)))
 			View::redirect('/admin/ankety', 'Anketa s takovým ID neexistuje');
@@ -119,7 +115,6 @@ switch($action[0]) {
 		}
 		break;
 }
-//TODO: klonování N,R
 
 if(empty($_POST)) {
 	include("files/Admin/Ankety/Display.inc");
