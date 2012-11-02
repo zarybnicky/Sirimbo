@@ -7,14 +7,16 @@ include("files/Core/database.php");
 include("files/Core/database/dbuser.php");
 include("files/Core/user.php");
 include("files/Core/view.php");
+include("files/Core/request.php");
 include("files/Core/permissions.php");
+include('files/Core/helper.php');
 include("files/Core/mailer.php");
 include("files/Core/debug.php");		//DEBUG ONLY!!!
 
 //Are all CORE vars present?
 if(!$sitemap_static || !$sitemap_dynamic || !class_exists("Database") || !class_exists("DBUser") ||
 		!class_exists("User") || !class_exists("View") || !class_exists("Log") ||
-		!class_exists("Permissions") || !class_exists("Mailer")) {
+		!class_exists("Permissions") || !class_exists("Mailer") || !class_exists("Request")) {
 	if(class_exists("View")) {
 		View::viewDynamic("files/Error/KeyFileCorrupt.inc");
 		die();
@@ -22,38 +24,28 @@ if(!$sitemap_static || !$sitemap_dynamic || !class_exists("Database") || !class_
 		die("Poškozené knihovní soubory");
 	}
 }
-
-if(!isset($_GET["file"]) || $_GET["file"] == null) {
-	$file = "home";
-} else {
-	$parts = explode('/', $_GET['file']);
-	
-	foreach($parts as $key => $item)
-		if(is_numeric($item))
-			unset($parts[$key]);
-	$parts = array_values($parts);
-	
-	$file = implode('/', $parts);
-}
-
 define('TISK', (get('view') == 'tisk') ? TRUE : FALSE);
+
+Request::setURL(get('file'));
+Request::setURI($_SERVER['REQUEST_URI']);
+$file = Request::getLiteralURL('home');
+
+if(TISK) {
+	;
+} elseif(!session('page_id')) {
+	session('page_id', $_SERVER['REQUEST_URI']);
+} elseif(!session('referer_id') || $_SERVER['REQUEST_URI'] != session('page_id')) {
+	session('referer_id', session('page_id'));
+	session('page_id', $_SERVER['REQUEST_URI']);
+}
+Request::setReferer(session('referer_id'));
 
 if(array_key_exists($file, $sitemap_static)) {
 	$file = $sitemap_static[$file];
-	if(file_exists($file)) {
-	// OR LOCKED (DB)
-		View::viewStatic($file);
-	} else {
-		View::viewStatic("files/Error/NotFoundRight.inc");
-	}
+	View::viewStatic($file);
 } else if(array_key_exists($file, $sitemap_dynamic)) {
 	$file = $sitemap_dynamic[$file];
-	if(file_exists($file)) {
-	// OR LOCKED (DB)
-		View::viewDynamic($file);
-	} else {
-		View::viewStatic("files/Error/NotFoundRight.inc");
-	}
+	View::viewDynamic($file);
 } else {
 	View::viewStatic("files/Error/NotPossible.inc");
 }

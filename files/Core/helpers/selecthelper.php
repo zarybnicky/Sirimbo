@@ -56,11 +56,10 @@ class SelectHelper {
 	function render() {
 		$out = '<select name="' . $this->name . '">' . "\n";
 		if(!empty($this->options)) {
-			if($this->value)
+			$selected = $this->get ? get($this->name) : post($this->name);
+			if(!$selected)
 				$selected = $this->value;
-			else
-				$selected = $this->get ? get($this->name) : post($this->name);
-				
+			
 			foreach($this->options as $value => $name) {
 				$out .= '<option value="' . $value . '"' .
 					($selected == $value ? ' selected="selected"' : '') .

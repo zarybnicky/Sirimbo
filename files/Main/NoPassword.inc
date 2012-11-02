@@ -14,7 +14,7 @@ if(post('action') == 'gen_pass' || post('action') == 'enter') {
 			View::redirect('/home', 'Povedlo se, za chvíli byste měli dostat e-mail s novým heslem.<br/>' .
 				'V případě problémů prosím kontaktujte administrátora.');
 		} else {
-			notice('Něco se nepovedlo.');
+			notice('Něco se nepovedlo, prosím kontaktujte administrátora.');
 		}
 	} else {
 		notice("Špatná kombinace přihlašovacího jména a emailu");
@@ -22,8 +22,8 @@ if(post('action') == 'gen_pass' || post('action') == 'enter') {
 }
 ?>
 
-<p style="text-align:center;">Pokud jste zapomněli heslo, na e-mail, který
-jste zadali při registraci Vám pošleme nové.</p>
+<p style="text-align:center;">Pokud jste zapomněli heslo, pošleme Vám nové na e-mail, který
+jste zadali při registraci</p>
 
 <form action="<?php echo $_SERVER['REQUEST_URI'];?>" method="post">
 <button type="submit" name="action" value="enter" style="display:none;">Enter</button>

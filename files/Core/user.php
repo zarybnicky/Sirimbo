@@ -52,8 +52,16 @@ class User {
 		$_SESSION['prijmeni'] = $data['u_prijmeni'];
 		$_SESSION["pohlavi"] = $data['u_pohlavi'];
 		$_SESSION['narozeni'] = $data['u_narozeni'];
+		$_SESSION['skupina'] = $data['u_skupina'];
+		$_SESSION['skupina_data'] = array(
+			'us_id '=> $data['us_id'],
+			'us_color' => $data['us_color'],
+			'us_popis' => $data['us_popis']
+		);
 		$_SESSION['par'] = $par['p_id'];
 		$_SESSION['partner'] = $par['u_id'];
+		$_SESSION['zaplaceno'] =
+			(bool) (strcmp($data['up_plati_do'], date('Y-m-d')) >= 0);
 		return true;
 	}
 	
@@ -101,6 +109,22 @@ class User {
 	
 	public static function getUserPohlavi() {
 		return $_SESSION['pohlavi'];
+	}
+	
+	public static function getDatumNarozeni() {
+		return $_SESSION['narozeni'];
+	}
+	
+	public static function getSkupina() {
+		return $_SESSION['skupina'];
+	}
+	
+	public static function getSkupinaData() {
+		return $_SESSION['skupina_data'];
+	}
+	
+	public static function getZaplaceno() {
+		return $_SESSION['zaplaceno'];
 	}
 	
 	public static function getParID() {

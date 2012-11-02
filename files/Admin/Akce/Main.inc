@@ -4,11 +4,7 @@ header_main('Správa akcí');
 
 notice(View::getRedirectMessage());
 
-$request = explode('/', $_SERVER['REQUEST_URI']);
-$action = array_slice($request, 3);
-if(empty($action)) $action[] = '';
-
-switch($action[0]) {
+switch(Request::getAction()) {
 	case 'add':
 		if(empty($_POST)) {
 			include('files/Admin/Akce/Form.inc');
@@ -42,10 +38,10 @@ switch($action[0]) {
 		break;
 	
 	case 'edit':
-		$id = isset($action[1]) ? $action[1] : '';
+		$id = Request::getID();
 		
 		if(!$id || !is_numeric($id) || !($data = DBAkce::getSingleAkce($id)))
-			View::redirect('/admin/akce', 'Akce s takovým ID neexistuje');
+			View::redirect('/admin/akce', 'Akce s takovým ID neexistuje' . var_export($id, true));
 		
 		if(empty($_POST)) {
 			post('id', $id);

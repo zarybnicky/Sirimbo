@@ -157,7 +157,7 @@ switch($action[0]) {
 		if(!$id || !is_numeric($id) || !($data = DBInzerce::getSingleInzerat($id)))
 			View::redirect('/inzerce/posledni', 'Inzerát s takovým ID neexistuje');
 		
-		$pass = $_SESSION['inzerce_' . $id];
+		$pass = isset($_SESSION['inzerce_' . $id]) ? $_SESSION['inzerce_' . $id] : null;
 		if($data['i_pass'] != $pass)
 			View::viewError(ER_AUTHORIZATION);
 		

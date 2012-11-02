@@ -4,10 +4,6 @@ header_main('Správa galerie');
 
 notice(View::getRedirectMessage());
 
-$request = explode('/', $_SERVER['REQUEST_URI']);
-$action = array_slice($request, 3);
-if(empty($action)) $action[] = '';
-
 function recursiveDirs($dir_name, &$out_dirs, &$out_files) {
 	$file_list = scandir($dir_name);
 	
@@ -82,7 +78,7 @@ function createThumbnail($file, $parent) {
 	return true;
 }
 
-switch($action[0]) {
+switch(Request::getAction()) {
 	case 'scan':
 		$db_dirs = DBGalerie::getDirsWithParentPath();
 		$db_files = DBGalerie::getFotkyWithParentPath();
@@ -261,8 +257,7 @@ switch($action[0]) {
 		break;
 
 	case 'edit':
-		$id = isset($action[1]) ? $action[1] : '';
-		
+		$id = Request::getID();
 		if(!is_numeric($id))
 			View::redirect('/admin/galerie', 'Složka s takovým ID neexistuje');
 		
@@ -297,7 +292,7 @@ switch($action[0]) {
 		break;
 			
 	case 'editdir':
-		$id = isset($action[1]) ? $action[1] : '';
+		$id = Request::getID();
 		
 		if(!is_numeric($id))
 			View::redirect('/admin/galerie', 'Složka s takovým ID neexistuje');
@@ -306,7 +301,6 @@ switch($action[0]) {
 			include('files/Admin/Galerie/DisplayDir.inc');
 			return;
 		} else {
-			dumpVar($_POST);
 			if(!post('name')) {
 				notice('Složka musí mít jméno');
 				include('files/Admin/Galerie/DisplayDir.inc');
