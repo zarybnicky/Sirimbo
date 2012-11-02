@@ -4,14 +4,9 @@ header_main("Správa párů");
 
 notice(View::getRedirectMessage());
 
-$request = explode('/', $_SERVER['REQUEST_URI']);
-$action = array_slice($request, 3);
-if(empty($action)) $action[] = '';
-
-switch($action[0]) {
+switch(Request::getAction()) {
 	case 'edit':
-		$id = isset($action[1]) ? $action[1] : '';
-		
+		$id = Request::getID();
 		if(!$id || !is_numeric($id) || !($data = DBPary::getSinglePar($id)))
 			View::redirect('/admin/pary', 'Pár s takovým ID neexistuje');
 

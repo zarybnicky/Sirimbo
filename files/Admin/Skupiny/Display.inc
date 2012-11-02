@@ -15,27 +15,27 @@ if(!TISK) {
 	echo '</form><br/>';
 }
 
-echo '<form action="/admin/skupiny" method="POST">';
-
-if(!TISK) {
-	$f = new MenuHelper();
-	echo $f->menu()
-		->float(MenuHelper::FLOAT_RIGHT)
-		->content('Přidat', 'skupiny/add')
-		->content('Upravit', 'edit', true)
-		->content('Odebrat', 'remove', true);
-}
-
 $skupiny = DBSkupiny::getSkupiny();
 if(get('v') == 'info') {
+	echo '<form action="/admin/skupiny" method="POST">';
+	
+	if(!TISK) {
+		$f = new MenuHelper();
+		echo $f->menu()
+			->float(MenuHelper::FLOAT_RIGHT)
+			->content('Přidat', 'skupiny/add')
+			->content('Upravit', 'edit', true)
+			->content('Odebrat', 'remove', true);
+	}
+	
 	echo '<table>';
 	echo '<tr>';
 	echo '<td></td>';
 	echo '<td>Barvy</td>';
 	echo '<td>Popis</td>';
 	echo '<td>Kč/měsíc</td>';
-	echo '<td>Kč/3 měsíce</td>';
-	echo '<td>Kč/6 měsíců</td>';
+	echo '<td>Kč/čtvrtrok</td>';
+	echo '<td>Kč/půlrok</td>';
 	echo '</tr>';
 	
 	foreach($skupiny as $item) {
@@ -45,11 +45,12 @@ if(get('v') == 'info') {
 			'style="background-color:', Settings::$barvy[$item['us_color']][1] . ';"></div></td>';
 		echo '<td style="max-width:300px;">', $item['us_popis'], '</td>';
 		echo '<td class="center">', $item['us_platba_mesic'], ' Kč</td>';
-		echo '<td class="center">', $item['us_platba_mesic'] * 3, ' Kč</td>';
-		echo '<td class="center">', $item['us_platba_mesic'] * 6, ' Kč</td>';
+		echo '<td class="center">', $item['us_platba_ctvrtrok'], ' Kč</td>';
+		echo '<td class="center">', $item['us_platba_pulrok'], ' Kč</td>';
 		echo '</tr>';
 	}
 	echo '</table>';
+	echo '</form>';
 } elseif(get('v') == 'users') {
 	foreach($skupiny as $skupina) {
 		header_minor('<div class="box" title="' . $skupina['us_popis'] .
@@ -65,6 +66,7 @@ if(get('v') == 'info') {
 		echo '<table>';
 		echo '<tr>';
 		echo '<td>Jméno</td>';
+		echo '<td>Var. symbol</td>';
 		echo '<td>Částka</td>';
 		echo '<td>Zaplaceno do</td>';
 		echo '</tr>';
@@ -93,10 +95,27 @@ if(get('v') == 'info') {
 			
 			echo '<tr>';
 			echo '<td style="width:140px;">', $user['u_prijmeni'], ', ', $user['u_jmeno'], '</td>';
-			echo '<td style="width:105px;">',
-				($zaplaceno ? ($user['up_castka'] . ' Kč') :
-				'<a href="/admin/platby/add?u=' . $user['u_id'] . '">NEZAPLACENO</a>'), '</td>';
-			echo '<td>', ($zaplaceno ? formatDate($user['up_plati_do']) :
+			echo '<td>', User::var_symbol($user['u_id']), '</td>';
+
+			echo '<td style="width:50px;">';
+			if($user['up_id']) {
+				if((strpos($user['up_obdobi'], 'pololeti') &&
+						$user['up_castka'] != $user['us_platba_pulrok']) ||
+					(strpos($user['up_obdobi'], 'ctvrtleti') &&
+						$user['up_castka'] != $user['us_platba_ctvrtrok']))
+					echo '<span style="color:black;font-weight:bold;">',
+						$user['up_castka'], ' Kč</span>';
+				else
+					echo '<span style="color:#0B0;">',
+						$user['up_castka'], ' Kč</span>';
+			} else {
+					echo '<span><a href="/admin/platby/add?u=',
+						$user['u_id'], '">NE</s></span>';
+			}
+			echo '</td>';
+			
+			echo '<td style="width:110px;">',
+				($zaplaceno ? formatDate($user['up_plati_do']) :
 				($placeno ? ('neplaceno ' . $diffstr) : 'nikdy neplaceno')), '</td>';
 			echo '</tr>';
 		}
@@ -104,6 +123,4 @@ if(get('v') == 'info') {
 		echo '<br/>';
 	}
 }
-
-echo '</form>';
 ?>

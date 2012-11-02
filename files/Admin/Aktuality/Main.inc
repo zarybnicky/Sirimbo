@@ -4,11 +4,7 @@ header_main("Správa aktualit");
 
 notice(View::getRedirectMessage());
 
-$request = explode('/', $_SERVER['REQUEST_URI']);
-$action = array_slice($request, 3);
-if(empty($action)) $action[] = '';
-
-switch($action[0]) {
+switch(Request::getAction()) {
 	case 'add':
 		if(empty($_POST)) {
 			include('files/Admin/Aktuality/Form.inc');
@@ -34,7 +30,7 @@ switch($action[0]) {
 		break;
 	
 	case 'edit':
-		$id = isset($action[1]) ? $action[1] : '';
+		$id = Request::getID();
 		
 		if(!$id || !is_numeric($id) || !($data = DBAktuality::getSingleAktualita($id)))
 			View::redirect('/admin/aktuality', 'Článek s takovým ID neexistuje');
@@ -65,7 +61,7 @@ switch($action[0]) {
 				else
 					$f_id = 0;
 				
-				DBAktuality::editAktualita($id,post('kat'), post('jmeno'), post('text'),
+				DBAktuality::editAktualita($id, post('kat'), post('jmeno'), post('text'),
 					$matches[1], post('foto'), $f_id);
 				$changed = true;
 			}

@@ -83,6 +83,7 @@ $sitemap_dynamic = array(
 	'member/profil/inzerce/add'	=> 'files/Member/Profil.inc',
 	'member/profil/inzerce/edit'	=> 'files/Member/Profil.inc',
 	'member/profil/inzerce/remove'	=> 'files/Member/Profil.inc',
+	'member/profil/platby'		=> 'files/Member/Profil.inc',
 
 	'admin/home'				=> 'files/Admin/Main.inc',
 	'admin/konzole'				=> 'files/Admin/Konzole/Main.inc',

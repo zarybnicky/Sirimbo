@@ -4,11 +4,7 @@ header_main('Správa nabídek');
 
 notice(View::getRedirectMessage());
 
-$request = explode('/', $_SERVER['REQUEST_URI']);
-$action = array_slice($request, 3);
-if(empty($action)) $action[] = '';
-
-switch($action[0]) {
+switch(Request::getAction()) {
 	case 'add':
 		if(empty($_POST)) {
 			include('files/Admin/Nabidka/Form.inc');
@@ -57,8 +53,7 @@ switch($action[0]) {
 		break;
 	
 	case 'edit':
-		$id = isset($action[1]) ? $action[1] : '';
-		
+		$id = Request::getID();
 		if(!$id || !is_numeric($id) || !($data = DBNabidka::getSingleNabidka($id)))
 			View::redirect('/admin/nabidka', 'Nabídka s takovým ID neexistuje');
 		

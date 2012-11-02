@@ -2,7 +2,7 @@
 $error = false;
 
 global $isConfirmation;
-$isConfirmation = (post("castka") || post("placeno_year"));
+$isConfirmation = (post("castka") || post("placeno"));
 
 $request = explode('?', $_SERVER['REQUEST_URI']);
 $request = explode('/', $request[0]);
@@ -17,8 +17,23 @@ else
 	$header = "Neznámá akce";
 
 header_minor($header);
+
+$skupiny = DBSkupiny::getSkupiny();
+echo '<div style="float:right;width:350px;">';
+echo '<table style="float:right;">';
+echo '<tr><td>Skupina</td><td>Kč/měsíc</td><td>Kč/čtvrtrok</td><td>Kč/půlrok</td></tr>';
+foreach($skupiny as $skupina) {
+	echo '<tr><td><div class="box" title="', $skupina['us_popis'], '" ',
+		'style="background-color:', Settings::$barvy[$skupina['us_color']][1] . ';"></div>&nbsp;',
+		$skupina['us_popis'], '</td>',
+		'<td>', $skupina['us_platba_mesic'], '</td>',
+		'<td>', $skupina['us_platba_ctvrtrok'], '</td>',
+		'<td>', $skupina['us_platba_pulrok'], '</td></tr>';
+}
+echo '</table>';
+echo '</div>';
 ?>
-<form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="POST">
+<form action="<?php echo Request::getURI(); ?>" method="POST">
 <table>
 	<tr>
 		<td>Uživatel (*): </td>
@@ -37,21 +52,31 @@ header_minor($header);
 		</td>
 	</tr><tr>
 		<td>Částka (*): </td>
-		<td><input type="text" name="castka" value="<?php echo post('castka'); ?>" /></td>
-		<?php $error = checkPostField("/^[0-9]+$/i", "castka") || $error; ?>
+		<td><input type="text" name="castka" value="<?php echo post('castka'); ?>" />
+			<?php $error = checkPostField("/^[0-9]+$/i", "castka") || $error; ?>
+		</td>
 	</tr><tr>
 		<td>Placeno: (*)</td>
-		<td><?php echoDateSelect("placeno_day", "placeno_month", "placeno_year");?></td>
-		<?php
-			$od_str = post("placeno_year") . "-" . post("placeno_month") . "-" .
-				post("placeno_day");
-			$error = checkDateString($od_str) || $error;
+		<td><?php echo Helper::get()->date()->name('placeno')->textBox();?>
+			<?php $error = checkDateString(Helper::get()->date(false)->getPost()) || $error; ?>
+		</td> <!-- __TO_STRING !!!! DATE, DATE_HELPER returns null Date()-->
+	</tr><tr>
+		<td></td>
+		<td>Datum ve formátu RRRR-MM-DD</td>
+	</tr><tr>
+		<td>Platební období (*): </td>
+		<td><?php
+		$s = new SelectHelper();
+		$s->select()
+			->name('obdobi')
+			->get(false);
+		foreach(Settings::$platby_obdobi as $key => $value)
+			$s->option($key, $value[2]);
+		echo $s;
 		?>
-	</tr><?php if($action[0] == 'edit') {?><tr>
-		<td>Přepočítat<br/>platnost: (*)</td>
-		<td><?php post('prepocitat', 'prepocitat');
-		echo getCheckbox('prepocitat', 'prepocitat', false); ?></td>
-	</tr><?php } ?><tr>
+		<input type="hidden" name="referer" value="<?php echo Request::getReferer()?>" />
+		</td>
+	</tr><tr>
 		<?php if($action[0] == 'add') {?>
 		<td><button type="submit" name="action" value="add_confirm">Přidat</button></td>
 		<?php }	else {?>
@@ -61,4 +86,4 @@ header_minor($header);
 	</tr>
 </table>
 </form>
-<a href="/admin/platby">Zpět</a>
+<a href="<?php echo Request::getReferer(); ?>">Zpět</a>

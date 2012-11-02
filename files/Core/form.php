@@ -75,7 +75,7 @@ function post($field = NULL, $value = NULL) {
 }
 function get($field = NULL, $value = NULL) {
 	if($field === NULL) {
-		return $_POST;
+		return $_GET;
 	}
 	
 	if($value !== NULL) {
@@ -85,6 +85,21 @@ function get($field = NULL, $value = NULL) {
 	
 	if(isset($_GET[$field]))
 		return $_GET[$field];
+	else
+		return null;
+}
+function session($field = NULL, $value = NULL) {
+	if($field === NULL) {
+		return $_SESSION;
+	}
+	
+	if($value !== NULL) {
+		$_SESSION[$field] = $value;
+		return;
+	}
+	
+	if(isset($_SESSION[$field]))
+		return $_SESSION[$field];
 	else
 		return null;
 }
