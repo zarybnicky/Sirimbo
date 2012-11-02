@@ -6,7 +6,7 @@ class FotoListHelper {
 	private $fotky;
 	private $selector;
 	
-	function foto() {
+	function fotoList() {
 		$this->id = -1;
 		$this->data = array();
 		$this->subdirs = array();

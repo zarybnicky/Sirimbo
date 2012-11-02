@@ -4,10 +4,7 @@ header_main("Správa akcí");
 
 notice(View::getRedirectMessage());
 
-$request = explode('/', $_SERVER['REQUEST_URI']);
-$action = array_slice($request, 3);
-$id = isset($action[1]) ? $action[1] : '';
-
+$id = Request::getID();
 if(!$id || !is_numeric($id) || !($akce = DBAkce::getSingleAkce($id)))
 	View::redirect('/admin/akce', 'Akce s takovým ID neexistuje');
 

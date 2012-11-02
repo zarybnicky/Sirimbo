@@ -2,12 +2,8 @@
 User::checkPermissionsError(L_EDITOR);
 header_main('Správa souborů');
 
-$request = explode('/', $_SERVER['REQUEST_URI']);
-$action = array_slice($request, 3);
-if(empty($action)) $action[] = '';
-
-if($action[0] == 'edit') {
-	$id = isset($action[1]) ? $action[1] : '';
+if(Request::getAction() == 'edit') {
+	$id = Request::getID();
 	
 	if(!$id || !is_numeric($id) || !($data = DBDokumenty::getSingleDokument($id)))
 		View::redirect('/admin/dokumenty', 'Dokument s takovým ID neexistuje');

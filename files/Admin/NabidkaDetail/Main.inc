@@ -4,10 +4,7 @@ header_main("Správa nabídek");
 
 notice(View::getRedirectMessage());
 
-$request = explode('/', $_SERVER['REQUEST_URI']);
-$action = array_slice($request, 3);
-$id = isset($action[1]) ? $action[1] : '';
-
+$id = Request::getID();
 if(!$id || !is_numeric($id) || !($data = DBNabidka::getSingleNabidka($id)))
 	View::redirect('/admin/nabidka', 'Nabídka s takovým ID neexistuje');
 	

@@ -4,10 +4,7 @@ header_main("Správa rozpisů");
 
 notice(View::getRedirectMessage());
 
-$request = explode('/', $_SERVER['REQUEST_URI']);
-$action = array_slice($request, 3);
-$id = isset($action[1]) ? $action[1] : '';
-
+$id = Request::getID();
 if(!$id || !is_numeric($id) || !($data = DBRozpis::getSingleRozpis($id)))
 	View::redirect('/admin/rozpis', 'Rozpis s takovým ID neexistuje');
 	

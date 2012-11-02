@@ -1,6 +1,5 @@
 <?php
 $platby = DBPlatby::getPlatbyFromUser($id);
-$skupiny = DBSkupiny::getSkupiny();
 
 header_minor($data['u_prijmeni'] . ', ' . $data['u_jmeno']);
 

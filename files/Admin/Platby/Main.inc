@@ -1,15 +1,10 @@
 <?php
 User::checkPermissionsError(L_ADMIN);
-header_main('Správa plateb');
 
+header_main('Správa plateb');
 notice(View::getRedirectMessage());
 
-$request = explode('?', $_SERVER['REQUEST_URI']);
-$request = explode('/', $request[0]);
-$action = array_slice($request, 3);
-if(empty($action)) $action[] = '';	
-
-switch($action[0]) {
+switch(Request::getAction()) {
 	case 'add':
 		if(empty($_POST)) {
 			include('files/Admin/Platby/Form.inc');
@@ -22,25 +17,41 @@ switch($action[0]) {
 			
 			if(!$error) {
 				$data = DBUser::getUserData(post('user'));
+				$platby = DBPlatby::getPlatbyFromUser(post('user'));
 				
-				$placeno = post('placeno_year') . '-' . post('placeno_month') .
-					'-' . post('placeno_day');
+				$placeno = Helper::get()
+					->date()->name('placeno')
+					->getPost();
+				$obdobi = post('obdobi');
+				list($year, $month, $day) = explode('-', $placeno);
 				
-				$months = $data['us_platba_mesic'] ?
-					floor(post('castka') / $data['us_platba_mesic']) : 0;
-				$days = $data['us_platba_mesic'] ? 
-					floor((post('castka') / $data['us_platba_mesic'] - $months) * 30) : 0;
+				if(strcmp($placeno, $year . '-06-30') < 0 &&
+						($obdobi == '1-pololeti' || $obdobi == '1-ctvrtleti' ||
+						$obdobi == '2-ctvrtleti')) {
+					$year = (string) (((int) $year) - 1);
+				} elseif(strcmp($placeno, $year . '-07-01') >= 0 &&
+						($obdobi == '2-pololeti' || $obdobi == '13-ctvrtleti' ||
+						$obdobi == '4-ctvrtleti')) {
+					$year = (string) (((int) $year) + 1);
+				}
+				$plati_do = $year . Settings::$platby_obdobi[$obdobi][0];
 				
-				if($months > 0 || $days > 0) {
-					$plati_do = date('Y-m-d',
-						strtotime("+$months month +$days day", strtotime($placeno)));
-				} else {
-					$plati_do = $placeno;
+				foreach($platby as $platba) {
+					if($platba['up_plati_do'] != $plati_do)
+						continue;
+					
+					DBPlatby::editPlatba(post('user'), $obdobi,
+						post('castka') + $platba['up_castka'], $placeno,
+						$plati_do);
+					
+					View::redirect(post('referer') ? post('referer') : '/admin/platby',
+						'Druhá platba za stejné období - sloučeno!');
 				}
 				
-				DBPlatby::addPlatba(post('user'), post('castka'), $placeno, $plati_do);
+				DBPlatby::addPlatba(post('user'), $obdobi, post('castka'), $placeno, $plati_do);
 				
-				View::redirect('/admin/platby', 'Platba úspěšně přidána');
+				View::redirect(post('referer') ? post('referer') : '/admin/platby',
+					'Platba úspěšně přidána');
 			} else {
 				echo $html;
 				return;
@@ -49,19 +60,16 @@ switch($action[0]) {
 		break;
 	
 	case 'edit':
-		$id = isset($action[1]) ? $action[1] : '';
-		
+		$id = Request::getID();
 		if(!$id || !is_numeric($id) || !($data = DBPlatby::getSinglePlatba($id)))
-			View::redirect('/admin/platby', 'Platba s takovým ID neexistuje');
+			View::redirect(post('referer') ? post('referer') : '/admin/platby',
+				'Platba s takovým ID neexistuje');
 		
 		if(empty($_POST)) {
 			post('user', $data['up_id_user']);
 			post('castka', $data['up_castka']);
-			list($placeno_year, $placeno_month, $placeno_day) =
-				explode('-', $data['up_placeno']);
-			post('placeno_year', $placeno_year);
-			post('placeno_month', $placeno_month);
-			post('placeno_day', $placeno_day);
+			post('obdobi', $data['up_obdobi']);
+			post('placeno', $data['up_placeno']);
 			
 			include('files/Admin/Platby/Form.inc');
 			return;
@@ -74,30 +82,28 @@ switch($action[0]) {
 			if(!$error) {
 				$data = DBUser::getUserData(post('user'));
 				
-				$placeno = post('placeno_year') . '-' . post('placeno_month') .
-					'-' . post('placeno_day');
+				$placeno = Helper::get()
+					->date()->name('placeno')
+					->getPost();
+				$obdobi = post('obdobi');
+				list($year, $month, $day) = explode('-', $placeno);
 				
-				if(post('prepocitat')) {
-					$months = $data['us_platba_mesic'] ?
-						floor(post('castka') / $data['us_platba_mesic']) : 0;
-					$days = $data['us_platba_mesic'] ? 
-						floor((post('castka') / $data['us_platba_mesic'] - $months) * 30) : 0;
-					
-					if($months > 0 || $days > 0) {
-						$plati_do = date('Y-m-d',
-							strtotime("+$months month +$days day", strtotime($placeno)));
-					} else {
-						$plati_do = $placeno;
-					}
-				} else {
-					$platba = DBPlatby::getSinglePlatba($id);
-					
-					$plati_do = $platba['up_plati_do'];
+				if(strcmp($placeno, $year . '-06-30') < 0 &&
+						$obdobi == '1-ctvrtleti') {
+					$year = (string) (((int) $year) - 1);
+				} elseif(strcmp($placeno, $year . '-07-01') >= 0 &&
+						($obdobi == '1-pololeti' || $obdobi == '2-pololeti' ||
+						$obdobi == '2-ctvrtleti' || $obdobi == '3-ctvrtleti' ||
+						$obdobi == '4-ctvrtleti')) {
+					$year = (string) (((int) $year) + 1);
 				}
+				$plati_do = $year . Settings::$platby_obdobi[$obdobi][1];
 				
-				DBPlatby::editPlatba($id, post('user'), post('castka'), $placeno, $plati_do);
+				DBPlatby::editPlatba($id, post('user'), $obdobi, post('castka'),
+					$placeno, $plati_do);
 				
-				View::redirect('/admin/platby', 'Platba úspěšně upravena');
+				View::redirect(post('referer') ? post('referer') : '/admin/platby',
+					'Platba úspěšně upravena');
 			} else {
 				echo $html;
 				return;

@@ -14,7 +14,7 @@ class View {
 				$fd = fopen($l, 'r');
 				echo fread($fd, filesize($l));
 			} else {
-				echo "Stránka \"$l\" nenalezena.";
+				View::viewError('not_found_right');
 			}
 			exit;
 		}
@@ -27,7 +27,7 @@ class View {
 			echo fread($fd, filesize($l));
 		}
 		else {
-			echo "Stránka \"$l\" nenalezena.";
+			View::viewError('not_found_right');
 		}
 		include(TISK ? FOOTER_TISK : FOOTER);
 		
@@ -41,7 +41,7 @@ class View {
 			if(file_exists($l)) {
 				include($l);
 			} else {
-				echo "Stránka \"$l\" nenalezena.";
+				View::viewError('not_found_right');
 			}
 			exit;
 		}
@@ -58,7 +58,7 @@ class View {
 		if(file_exists($l)) {
 			include($l);
 		} else {
-			echo "Stránka \"$l\" nenalezena.";
+			View::viewError('not_found_right');
 		}
 		$main = ob_get_clean();
 		//TODO: Caching

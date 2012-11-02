@@ -4,11 +4,7 @@ header_main('Správa skupin');
 
 notice(View::getRedirectMessage());
 
-$request = explode('/', $_SERVER['REQUEST_URI']);
-$action = array_slice($request, 3);
-if(empty($action)) $action[] = '';
-
-switch($action[0]) {
+switch(Request::getAction()) {
 	case 'add':
 		if(empty($_POST)) {
 			include('files/Admin/Skupiny/Form.inc');
@@ -20,7 +16,8 @@ switch($action[0]) {
 			$html = ob_get_clean();
 			
 			if(!$error) {
-				DBSkupiny::addSkupina(post('color'), post('platba'), post('popis'));
+				DBSkupiny::addSkupina(post('color'), post('platba'),
+					post('platba_ctvrtrok'), post('platba_pulrok'), post('popis'));
 				
 				View::redirect('/admin/skupiny', 'Skupina úspěšně přidána');
 			} else {
@@ -31,14 +28,15 @@ switch($action[0]) {
 		break;
 	
 	case 'edit':
-		$id = isset($action[1]) ? $action[1] : '';
-		
+		$id = Request::getID();
 		if(!$id || !is_numeric($id) || !($data = DBSkupiny::getSingleSkupina($id)))
 			View::redirect('/admin/skupiny', 'Skupina s takovým ID neexistuje');
 		
 		if(empty($_POST)) {
 			post('color', $data['us_color']);
 			post('platba', $data['us_platba_mesic']);
+			post('platba_ctvrtrok', $data['us_platba_ctvrtrok']);
+			post('platba_pulrok', $data['us_platba_pulrok']);
 			post('popis', $data['us_popis']);
 			
 			include('files/Admin/Skupiny/Form.inc');
@@ -49,8 +47,25 @@ switch($action[0]) {
 			include('files/Admin/Skupiny/Form.inc');	
 			$html = ob_get_clean();
 			
+			$platba = (post('platba') !== '') ? post('platba') :
+				(post('platba_ctvrtrok') !== '' ? 
+					floor(post('platba_ctvrtrok') / 2.5) :
+				(post('platba_pulrok') !== '' ?
+					floor(post('platba_pulrok') / 5) : 0));
+			$platba_ctvrtrok = (post('platba_ctvrtrok') !== '') ? post('platba_ctvrtrok') :
+				(post('platba') !== '' ? 
+					floor(post('platba') * 2.5) :
+				(post('platba_pulrok') !== '' ?
+					floor(post('platba_pulrok') / 2) : 0));
+			$platba_pulrok = (post('platba_pulrok') !== '') ? post('platba_pulrok') :
+				(post('platba_ctvrtrok') !== '' ? 
+					floor(post('platba_ctvrtrok') * 2) :
+				(post('platba') !== '' ?
+					floor(post('platba') * 5) : 0));
+			
 			if(!$error) {
-				DBSkupiny::editSkupina($id, post('color'), post('platba'), post('popis'));
+				DBSkupiny::editSkupina($id, post('color'), $platba,
+					$platba_ctvrtrok, $platba_pulrok, post('popis'));
 				
 				View::redirect('/admin/skupiny', 'Skupina úspěšně upravena');
 			} else {

@@ -111,18 +111,20 @@ switch($sort) {
 echo '<table>';
 echo '<tr>';
 echo '<td></td>';
+echo '<td></td>';
 echo '<td>Jméno</td>';
-echo '<td>Oprávnění</td>';
 echo '<td>Skupina</td>';
 
 if(get('v') == 'info') {
+	echo '<td>Oprávnění</td>';
 	echo '<td>Datum<br/>narození</td>';
-	echo '<td>Variabilní<br/>symbol</td>';
 	echo '<td>Zaplaceno</td>';
 } elseif(get('v') == 'status') {
+	echo '<td>Oprávnění</td>';
 	echo '<td>Aktivní<br/>tanečník</td>';
 	echo '<td>Systémový<br/>uživatel</td>';
 } elseif(get('v') == 'platby') {
+	echo '<td>Variabilní<br/>symbol</td>';
 	echo '<td>Částka</td>';
 	echo '<td>Zaplaceno<br/>do</td>';
 }
@@ -137,42 +139,54 @@ if(get('v') == 'status') {
 		$skupinyselect->option($skupina['us_id'], $skupina['us_popis']);
 }
 
+$i = 0;
 foreach($users as $user) {
 	echo '<tr>';
 	if(Permissions::canEditUser($user['u_id'], $user['u_level'], $user['u_lock']))
 		echo '<td><input type="checkbox" name="users[]" value="', $user['u_id'], '" /></td>';
 	else
 		echo '<td><input type="checkbox" name="users[]" value="" disabled="disabled" /></td>';
+	echo '<td>', ++$i, '. </td>';
 	echo '<td style="max-width:140px;">', $user['u_prijmeni'], ', ', $user['u_jmeno'], '</td>';
-	
-	$ul = $user['u_level'];
-	echo '<td>';
-	switch($ul) {
-		case L_UNCONFIRMED:	echo 'Nepotvrzený uživatel'; break;
-		case L_HOST:		echo 'Host';		break;
-		case L_USER:		echo 'Uživatel';	break;
-		case L_EDITOR:		echo 'Editor';		break;
-		case L_TRENER:		echo 'Trenér';		break;
-		case L_ADMIN:		echo 'Admin';		break;
-		case L_SADMIN:		echo 'Superadmin';	break;
-		default:			echo 'Neznámý';		break;
-	}
-	echo '</td>';
 	
 	if(get('v') == 'info') {
 		echo '<td>';
 		echo '<div class="box" title="', $user['us_popis'], '" ',
 			'style="background-color:', Settings::$barvy[$user['us_color']][1], ';"></div>';
 		echo '</td>';
+		echo '<td>';
+		switch($user['u_level']) {
+			case L_UNCONFIRMED:	echo 'Nepotvrzený uživatel'; break;
+			case L_HOST:		echo 'Host';		break;
+			case L_USER:		echo 'Uživatel';	break;
+			case L_EDITOR:		echo 'Editor';		break;
+			case L_TRENER:		echo 'Trenér';		break;
+			case L_ADMIN:		echo 'Admin';		break;
+			case L_SADMIN:		echo 'Superadmin';	break;
+			default:			echo 'Neznámý';		break;
+		}
+		echo '</td>';
 		echo '<td>', formatDate($user['u_narozeni']), '</td>';
-		echo '<td>', User::var_symbol($user['u_id']), '</td>';
-		echo '<td>', (((bool) $user['up_id'] && strcmp($user['up_plati_do'], date('Y-m-d')) >= 0) ? 'ano' :
+		echo '<td>', (((bool) $user['up_id'] && strcmp($user['up_plati_do'], date('Y-m-d')) >= 0) ?
+			'<span style="color:#0B0;">ano</span>' :
 			('<a href="/admin/platby/add?u=' . $user['u_id'] . '">NE</a>')), '</td>';
 	} elseif(get('v') == 'status') {
 		echo '<td>';
 		echo $skupinyselect
 			->name($user['u_id'] . '-skupina')
 			->value($user['u_skupina']);
+		echo '</td>';
+		echo '<td>';
+		switch($user['u_level']) {
+			case L_UNCONFIRMED:	echo 'Nepotvrzený uživatel'; break;
+			case L_HOST:		echo 'Host';		break;
+			case L_USER:		echo 'Uživatel';	break;
+			case L_EDITOR:		echo 'Editor';		break;
+			case L_TRENER:		echo 'Trenér';		break;
+			case L_ADMIN:		echo 'Admin';		break;
+			case L_SADMIN:		echo 'Superadmin';	break;
+			default:			echo 'Neznámý';		break;
+		}
 		echo '</td>';
 		echo '<td class="center">', '<input type="checkbox" name="', $user['u_id'], '-dancer" ',
 			($user['u_dancer'] ? 'checked="checked"' : ''), '/>', '</td>';
@@ -200,17 +214,29 @@ foreach($users as $user) {
 			else
 				$diffstr = 'méně než měsíc';
 		}
-			
+		
 		echo '<td>';
 		echo '<div class="box" title="', $user['us_popis'], '" ',
 			'style="background-color:', Settings::$barvy[$user['us_color']][1], ';"></div>';
 		echo '</td>';
-		echo '<td style="width:105px;">',
-			($zaplaceno ?
-			('<a href="/admin/platby/edit/' . $user['up_id'] . '">' . $user['up_castka'] . ' Kč</a>') :
-			('<a href="/admin/platby/add?u=' . $user['u_id'] . '">NEZAPLACENO</a>')),
-			'</td>';
-		echo '<td>',
+		echo '<td>', User::var_symbol($user['u_id']), '</td>';
+		echo '<td style="width:50px;">';
+		if($user['up_id']) {
+			if((strpos($user['up_obdobi'], 'pololeti') &&
+					$user['up_castka'] != $user['us_platba_pulrok']) ||
+				(strpos($user['up_obdobi'], 'ctvrtleti') &&
+					$user['up_castka'] != $user['us_platba_ctvrtrok']))
+				echo '<span style="color:black;font-weight:bold;">',
+					$user['up_castka'], ' Kč</span>';
+			else
+				echo '<span style="color:#0B0;">',
+					$user['up_castka'], ' Kč</span>';
+		} else {
+				echo '<span><a href="/admin/platby/add?u=',
+					$user['u_id'], '">NE</s></span>';
+		}
+		echo '</td>';
+		echo '<td style="width:110px;">',
 			($zaplaceno ?
 			formatDate($user['up_plati_do']) :
 			($placeno ? ('neplaceno ' . $diffstr) : 'nikdy neplaceno')),
