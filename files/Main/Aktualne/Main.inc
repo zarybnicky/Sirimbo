@@ -1,18 +1,13 @@
 <?php
 header_main('Aktuálně');
-
 notice(View::getRedirectMessage());
 
-$request = explode('/', $_SERVER['REQUEST_URI']);
-$action = array_slice($request, 2);
-if(empty($action)) $action[] = '';
-
-if(is_numeric($action[0]) && ($data = DBAktuality::getSingleAktualita($action[0]))) {
+if(Request::getID() && ($data = DBAktuality::getSingleAktualita(Request::getID()))) {
 	DisplayAktuality::viewClanek($data, false);
 	return;
 }
 
-switch($action[0]) {
+switch(Request::getAction()) {
 	case '':
 	case 'posledni':
 		header_minor('Nejnovější články');

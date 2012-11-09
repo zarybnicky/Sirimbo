@@ -34,13 +34,13 @@ switch(Request::getAction()) {
 						$obdobi == '4-ctvrtleti')) {
 					$year = (string) (((int) $year) + 1);
 				}
-				$plati_do = $year . Settings::$platby_obdobi[$obdobi][0];
+				$plati_do = $year . Settings::$platby_obdobi[$obdobi][1];
 				
 				foreach($platby as $platba) {
-					if($platba['up_plati_do'] != $plati_do)
+					if($platba['up_obdobi'] != $obdobi)
 						continue;
 					
-					DBPlatby::editPlatba(post('user'), $obdobi,
+					DBPlatby::editPlatba($platba['up_id'], post('user'), $obdobi,
 						post('castka') + $platba['up_castka'], $placeno,
 						$plati_do);
 					
@@ -81,10 +81,9 @@ switch(Request::getAction()) {
 			
 			if(!$error) {
 				$data = DBUser::getUserData(post('user'));
+				$platby = DBPlatby::getPlatbyFromUser(post('user'));
 				
-				$placeno = Helper::get()
-					->date()->name('placeno')
-					->getPost();
+				$placeno = Helper::get()->date()->name('placeno')->getPost();
 				$obdobi = post('obdobi');
 				list($year, $month, $day) = explode('-', $placeno);
 				
@@ -98,6 +97,19 @@ switch(Request::getAction()) {
 					$year = (string) (((int) $year) + 1);
 				}
 				$plati_do = $year . Settings::$platby_obdobi[$obdobi][1];
+			
+				foreach($platby as $platba) {
+					if($platba['up_obdobi'] != $obdobi)
+						continue;
+					
+					DBPlatby::editPlatba($platba['up_id'], post('user'), $obdobi,
+						post('castka') + $platba['up_castka'], $placeno,
+						$plati_do);
+					DBPlatby::removePlatba($id);
+					
+					View::redirect(post('referer') ? post('referer') : '/admin/platby',
+						'Druhá platba za stejné období - sloučeno!');
+				}
 				
 				DBPlatby::editPlatba($id, post('user'), $obdobi, post('castka'),
 					$placeno, $plati_do);

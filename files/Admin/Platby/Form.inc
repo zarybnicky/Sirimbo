@@ -4,14 +4,9 @@ $error = false;
 global $isConfirmation;
 $isConfirmation = (post("castka") || post("placeno"));
 
-$request = explode('?', $_SERVER['REQUEST_URI']);
-$request = explode('/', $request[0]);
-$action = array_slice($request, 3);
-if(empty($action)) $action[] = '';
-
-if($action[0] == 'edit')
+if(Request::getAction() == 'edit')
 	$header = "Upravit platbu";
-elseif($action[0] == 'add')
+elseif(Request::getAction() == 'add')
 	$header = "Přidat platbu";
 else
 	$header = "Neznámá akce";
@@ -38,13 +33,11 @@ echo '</div>';
 	<tr>
 		<td>Uživatel (*): </td>
 		<td><?php
-		if($action[0] == 'add')
+		if(Request::getAction() == 'add')
 			post('user', get('u'));
 		$users = DBUser::getUsers();
-		$s = new SelectHelper();
-		$s->select()
-			->name('user')
-			->get(false);
+		$s = Helper::get()->select()
+			->post()->name('user');
 		foreach($users as $user)
 			$s->option($user['u_id'], $user['u_prijmeni'] . ', ' . $user['u_jmeno']);
 		echo $s;
@@ -59,17 +52,12 @@ echo '</div>';
 		<td>Placeno: (*)</td>
 		<td><?php echo Helper::get()->date()->name('placeno')->textBox();?>
 			<?php $error = checkDateString(Helper::get()->date(false)->getPost()) || $error; ?>
-		</td> <!-- __TO_STRING !!!! DATE, DATE_HELPER returns null Date()-->
-	</tr><tr>
-		<td></td>
-		<td>Datum ve formátu RRRR-MM-DD</td>
+		</td>
 	</tr><tr>
 		<td>Platební období (*): </td>
 		<td><?php
-		$s = new SelectHelper();
-		$s->select()
-			->name('obdobi')
-			->get(false);
+		$s = Helper::get()->select();
+		$s->post()->name('obdobi');
 		foreach(Settings::$platby_obdobi as $key => $value)
 			$s->option($key, $value[2]);
 		echo $s;
@@ -77,7 +65,7 @@ echo '</div>';
 		<input type="hidden" name="referer" value="<?php echo Request::getReferer()?>" />
 		</td>
 	</tr><tr>
-		<?php if($action[0] == 'add') {?>
+		<?php if(Request::getAction() == 'add') {?>
 		<td><button type="submit" name="action" value="add_confirm">Přidat</button></td>
 		<?php }	else {?>
 		<td><button type="submit" name="action" value="edit_confirm">Upravit</button></td>

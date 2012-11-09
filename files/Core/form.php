@@ -1,30 +1,115 @@
 <?php
+class Form {
+	private $valid;
+	private $messages;
+	private $fields;
+	
+	const REGEXP_DATE = '/^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/i';
+	const REGEXP_EMAIL = '//i';
+	const REGEXP_PHONE = '//i';
+	
+	function __construct() {
+		$this->valid = true;
+		$this->messages = array();
+		$this->fields = array();
+	}
+	function isValid() {
+		return $this->valid;
+	}
+	function getMessages() {
+		return $this->messages;
+	}
+	function getFields() {
+		return $this->fields;
+	}
+	function checkDate($i, $message, $name = '') {
+		if(preg_match(Form::REGEXP_DATE, $i)) {
+			list($year, $month, $day) = explode('-', $i);
+			if(!(
+				$day == 31 && ($month == 4 || $month == 6 || $month == 9 || $month == 11) ||
+				$day >= 30 && $month == 2 ||
+				$month == 2 && $day == 29 && !($year % 4 == 0 && ($year % 100 != 0 || $year % 400 == 0))
+			)) {
+				return true;
+			}
+		}
+		$this->error($message, $name);
+		return false;
+	}
+	function checkEmail($i, $message, $name = '') {
+		return $this->checkRegexp(Form::REGEXP_EMAIL, $i, $message, $name);
+	}
+	function checkPhone($i, $message, $name = '') {
+		return $this->checkRegexp(Form::REGEXP_PHONE, $i, $message, $name);
+	}
+	function checkRegexp($i, $regexp, $message, $name = '') {
+		if(preg_match($regexp, $i))
+			return true;
+		
+		$this->error($message, $name);
+		return false;
+	}
+	function checkLength($i, $min, $max, $message, $name = '') {
+		$len = strlen($i);
+		if($len >= $min && $len <= $max)
+			return true;
+		
+		$this->error($message, $name);
+		return false;
+	}
+	function checkInArray($i, $array, $message, $name = '') {
+		if(in_array($i, $array))
+			return true;
+		
+		$this->error($message, $name);
+		return false;
+	}
+	function checkNotEmpty($i, $message, $name = '') {
+		if($i || $i === 0)
+			return true;
+		
+		$this->error($message, $name);
+		return false;
+	}
+	function checkNumeric($i, $message, $name = '') {
+		if(is_numeric($i))
+			return true;
+		
+		$this->error($message, $name);
+		return false;
+	}
+	private function error($message, $name = '') {
+		$this->valid = false;
+		$this->messages[] = $message;
+		if($name !== '')
+			$this->fields[] = $name;
+	}
+}
+
 function formError() {
 	echo '<span style="color:red;"> !!!</span>', "\n";
 }
 function notice($text, $return = false) {
 	if(!$text) return;
 	
-	if($return)
-		return '<div class="notice">' . $text . '</div>' . "\n";
-	else
-		echo '<div class="notice">', $text, '</div>', "\n";
+	if(!$return)echo '<div class="notice">', $text, '</div>', "\n";
+	else		return '<div class="notice">' . $text . '</div>' . "\n";
 }
 function header_main($text, $return = false) {
 	if(!$text) return;
 	
-	if($return)
-		return '<div class="h_section">' . $text . '</div>' . "\n";
-	else
-		echo '<div class="h_section">', $text, '</div>', "\n";
+	if(!$return)echo '<div class="h_section">', $text, '</div>', "\n";
+	else		return '<div class="h_section">' . $text . '</div>' . "\n";
 }
 function header_minor($text, $return = false) {
 	if(!$text) return;
 	
-	if($return)
-		return '<div class="h_minor">' . $text . '</div>' . "\n";
-	else
-		echo '<div class="h_minor">', $text, '</div>', "\n";
+	if(!$return)echo '<div class="h_minor">', $text, '</div>', "\n";
+	else		return '<div class="h_minor">' . $text . '</div>' . "\n";
+}
+function getColorBox($color, $popis) {
+	return '<div class="box" title="' . $popis . '" ' .
+		'style="background-color:' . Settings::$barvy[$color][1] . '"></div>';
 }
 function checkPostField($regex, $text) {
 	global $isConfirmation;
@@ -105,7 +190,7 @@ function session($field = NULL, $value = NULL) {
 }
 function formatTime($str, $forDisplay) {
 	if($forDisplay) {
-		return substr($str, 0, 5);
+		return substr($str, 0, 5); //15:00:00
 	} else {
 		return $str . ':00';
 	}
@@ -169,105 +254,42 @@ function checkDateString($date) {
 		return true;
 	}
 }
-function echoUsers($list_name, $list) {
-	echo '<select name="', $list_name, '">', "\n";
-	echo '<option value="none"';
-	if(!post($list_name))
-		echo ' selected="selected"';
-	echo '>Vyber si :o)</option>', "\n";
+function echoDateSelect($day_name, $month_name, $year_name, $fromYear = 2010, $toString = 0) {
+	$out = '';
+	$s = Helper::get()->select()->get(false);
 	
-	foreach($list as $item) {
-		echo '<option value="' . $item['u_id'] . '"';
-		if(post($list_name) == $item['u_id'])
-			echo ' selected="selected"';
-		echo '>';
-		echoFullJmeno($item);
-		echo '</option>', "\n";
-	}
-	echo '</select>', "\n";
-}
-function echoPartners($list_name, $list) {
-	echo '<select name="', $list_name, '">', "\n";
-	echo '<option value="none"';
-	if(!post($list_name))
-		echo ' selected="selected"';
-	echo '>Vyber si :o)</option>', "\n";
+	$s->name($day_name)
+		->value(post($day_name) ? post($day_name) : date('d'))
+		->options(array(), true)
+		->option('00', 'Den');
+	for($i = 1; $i < 32; $i++)
+		$s->option((($i < 10) ? ('0' . $i) : $i), $i);
+	$out .= $s;
 	
-	foreach($list as $item) {
-		echo '<option value="' . $item['p_id'] . '"';
-		if(post($list_name) == $item['p_id'])
-			echo ' selected="selected"';
-		echo '>';
-		echoFullJmeno($item);
-		echo '</option>', "\n";
-	}
-	echo '</select>', "\n";
-}
-function echoDateSelect($day_fieldname, $month_fieldname, $year_fieldname, $from_year = 2010, $to_string = 0) {
-	if($to_string)
-		ob_start();
+	$out .= $s->name($month_name)
+		->value(post($month_name) ? post($month_name) : date('m'))
+		->options(array(), true)
+		->option('00', 'Měsíc')
+		->option('01', 'Leden')		->option('02', 'Únor')
+		->option('03', 'Březen')	->option('04', 'Duben')
+		->option('05', 'Květen')	->option('06', 'Červen')
+		->option('07', 'Červenec')	->option('08', 'Srpen')
+		->option('09', 'Září')		->option('10', 'Říjen')
+		->option('11', 'Listopad')	->option('12', 'Prosinec');
 	
-	$selected = post($day_fieldname) ? (int) post($day_fieldname) : date('d');
-	echo '<select name="', $day_fieldname, '">', "\n";
-	echo '<option value="00">Den</option>', "\n";
-	for($i = 1; $i < 32; $i++) {
-		if($i < 10)
-			echo '<option value="0', $i, '"';
-		else
-			echo '<option value="', $i, '"';
-		if($selected == $i)
-			echo ' selected="selected"';
-		echo '>', $i, '</option>', "\n";
-	}
-	echo '</select>', "\n";
+	$s->name($year_name)
+		->value(post($year_name) ? post($year_name) : date('Y'))
+		->options(array(), true)
+		->option('0000', 'Rok');
+	$toYear = ((int) date('Y')) + 5;
+	for($i = $fromYear; $i < $toYear; $i++)
+		$s->option($i, $i);
+	$out .= $s;
 	
-	$selected = post($month_fieldname) ? (int) post($month_fieldname) : date('m');
-	$months = array (1 => 'Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen', 'Červenec',
-		'Srpen', 'Září', 'Říjen', 'Listopad', 'Prosinec');
-	echo '<select name="', $month_fieldname, '">', "\n";
-	echo '<option value="00">Měsíc</option>', "\n";
-	foreach ($months as $num => $str) {
-		if($num < 10)
-			echo '<option value="0' . $num . '"';
-		else
-			echo '<option value="' . $num . '"';
-		if ($selected == $num)
-			echo ' selected="selected"';
-		echo '>' . $str . '</option>', "\n";
-	}
-	echo '</select>', "\n";
-	
-	$selected = post($year_fieldname) ? (int) post($year_fieldname) : date('Y');
-	echo '<select name="', $year_fieldname, '">', "\n";
-	echo '<option value="0000">Rok</option>', "\n";
-	for($i = $from_year; $i < 2021; $i++) {
-		echo '<option value="', $i, '"';
-		if ($selected == $i)
-			echo ' selected="selected"';
-		echo '>', $i, '</option>', "\n";
-	}
-	echo '</select>', "\n";
-	
-	if($to_string) {
-		$out =  ob_get_contents();
-		ob_end_clean();
+	if($toString)
 		return $out;
-	}
-}
-function echoBarvaDisplay($barva) {
-	if($barva) {
-		echo '<span style="border:1px black solid;">';
-		if($barva & C_ZLUTA) {
-			echo '<div class="color yellow">.</div>';
-		}
-		if($barva & C_CERVENA) {
-			echo '<div class="color red">.</div>';
-		}
-		if($barva & C_MODRA) {
-			echo '<div class="color blue">.</div>';
-		}
-		echo '</span>';
-	}
+	else
+		echo $out;
 }
 function echoTaborDokumenty($list_name, $kats) {
 	echo '<select name="', $list_name, '">', "\n";
@@ -300,39 +322,31 @@ function echoTaborDokumenty($list_name, $kats) {
 	}
 	echo '</select>', "\n";
 }
-function echoNabidky($list_name, $list) {
-	echo '<select name="', $list_name, '">', "\n";
-	echo '<option value="none"';
-	if(!post($list_name))
-		echo ' selected="selected"';
-	echo '>Vyber si :o)</option>', "\n";
-	
-	foreach($list as $item) {
-		echo '<option value="', $item['n_id'], '"';
-		if(post($list_name) == $item['n_id'])
-			echo ' selected="selected"';
-		echo '>';
-		echo formatDate($item['n_od']);
-		if($item['n_od'] != $item['n_do'])
-			echo ' - ', formatDate($item['n_do']);
-		echo ': ', $item['u_jmeno'], ' ', $item['u_prijmeni'];
-		echo '</option>', "\n";
-	}
-	echo '</select>', "\n";
-}
-function getCheckbox($name, $value, $get = false) {
+function getCheckbox($name, $value = '', $default = false, $get = false, $readonly = false) {
+	if($value === '')
+		$value = $name;
 	$checked = (($get == true) ?
 		((get($name) != false) ? true : false) :
 		((post($name) != false) ? true : false));
+	if(!$checked)
+		$checked = (bool) $default;
 	return '<input type="checkbox" name="' . $name . '" value="' . $value . '"' .
-		($checked ? ' checked="checked"' : '') . '/>';
+		($checked ? ' checked="checked"' : '') . ($readonly ? ' readonly="readonly"' : '') . '/>';
 }
-function getRadio($name, $value, $get = false) {
+function getRadio($name, $value, $default = false, $get = false, $readonly = false) {
 	$checked = (($get == true) ?
 		((get($name) == $value) ? true : false) :
 		((post($name) == $value) ? true : false));
+	if(!$checked)
+		$checked = (bool) $default;
 	return '<input type="radio" name="' . $name . '" value="' . $value . '"' .
-		($checked ? ' checked="checked"' : '') . '/>';
+		($checked ? ' checked="checked"' : '') . ($readonly ? ' readonly="readonly"' : '') . '/>';
+}
+function getReturnURI($default) {
+	return post('referer') ? post('referer') : $default;
+}
+function getReturnInput() {
+	return '<input type="hidden" name="referer" value="' . Request::getReferer() . '" />' . "\n";
 }
 function echoFullJmeno($userData) {
 	if(is_array($userData)) {

@@ -10,14 +10,12 @@ switch(Request::getAction()) {
 			include('files/Admin/Akce/Form.inc');
 			return;
 		} else {
-			$od = post('od_year') . '-' . post('od_month') . '-' . post('od_day');
-			$do = post('do_year') . '-' . post('do_month') . '-' . post('do_day');
-			
-			if($do == '0000-00-00' || strcmp($od, $do) > 0)
+			$od = Helper::get()->date()->name('od')->getPost();
+			$do = Helper::get()->date()->name('do')->getPost();
+			if(!$do || strcmp($od, $do) > 0)
 				$do = $od;
 			
 			$error = false;
-			
 			ob_start();
 			include('files/Admin/Akce/Form.inc');	
 			$html = ob_get_clean();
@@ -48,14 +46,8 @@ switch(Request::getAction()) {
 			post('jmeno', $data['a_jmeno']);
 			post('kde', $data['a_kde']);
 			post('info', $data['a_info']);
-			list($od_year, $od_month, $od_day) = explode('-', $data['a_od']);
-			post('od_year', $od_year);
-			post('od_month', $od_month);
-			post('od_day', $od_day);
-			list($do_year, $do_month, $do_day) = explode('-', $data['a_do']);
-			post('do_year', $do_year);
-			post('do_month', $do_month);
-			post('do_day', $do_day);
+			post('od', $data['a_od']);
+			post('do', $data['a_do']);
 			post('kapacita', $data['a_kapacita']);
 			post('dokumenty', unserialize($data['a_dokumenty']));
 			post('lock', $data['a_lock']);
@@ -63,9 +55,9 @@ switch(Request::getAction()) {
 			include('files/Admin/Akce/Form.inc');
 			return;
 		} else {
-			$od = post('od_year') . '-' . post('od_month') . '-' . post('od_day');
-			$do = post('do_year') . '-' . post('do_month') . '-' . post('do_day');
-			if($do == '0000-00-00' || strcmp($od, $do) > 0)
+			$od = Helper::get()->date()->name('od')->getPost();
+			$do = Helper::get()->date()->name('do')->getPost();
+			if(!$do || strcmp($od, $do) > 0)
 				$do = $od;
 			
 			$error = false;

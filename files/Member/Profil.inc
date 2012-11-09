@@ -4,20 +4,17 @@ header_main("Profil");
 
 notice(View::getRedirectMessage());
 
-$request = explode('/', $_SERVER['REQUEST_URI']);
-$action = array_slice($request, 3);
-if(empty($action)) $action[] = '';
-
-if(!$action[0]) {
+$action = array_slice(Request::getURLParts(), 2);
+if(empty($action)) {
 	include("files/Member/Profil/DisplayMain.inc");
 	return;
-}
+}	
+
 switch($action[0]) {
 	case 'edit':
 		$data = DBUser::getUserData(User::getUserID());
 		
 		if(empty($_POST)) {
-			
 			post("login", User::getUserName());
 			post("level", $data["u_level"]);
 			switch($data["u_level"]) {
@@ -40,10 +37,7 @@ switch($action[0]) {
 			post("pohlavi", $data["u_pohlavi"]);
 			post("email", $data["u_email"]);
 			post("telefon", $data["u_telefon"]);
-			list($year, $month, $day) = explode('-', $data['u_narozeni']);
-			post('year', $year);
-			post('month', $month);
-			post('day', $day);
+			post('narozeni', $data['u_narozeni']);
 			post("poznamky", $data["u_poznamky"]);
 			
 			include("files/Member/Profil/FormPerson.inc");
@@ -55,7 +49,7 @@ switch($action[0]) {
 			$html = ob_get_clean();
 			
 			if(!$error) {
-				$narozeni = post('year') . '-' . post('month') . '-' . post('day');
+				$narozeni = Helper::get()->date()->name('narozeni')->getPost();
 				
 				DBUser::setUserData(User::getUserID(), post('jmeno'), post('prijmeni'),
 					post('pohlavi'), post('email'), post('telefon'), $narozeni,
@@ -201,10 +195,9 @@ switch($action[0]) {
 					} else {
 						$partners = DBUser::getUsersByPohlavi("m");
 					}
-					$userselect = new UserSelectHelper();
 					
 					echo '<form method="POST" action="' . $_SERVER['REQUEST_URI'] . '">';
-					echo $userselect->name('partner')->users($partners)->tmpSwitch(FALSE);
+					echo Helper::get()->userSelect->name('partner')->users($partners)->tmpSwitch(false);
 					echo '<button type="submit" name="action" value="confirm">Požádat o partnerství</button>';
 					if($gotPartner)
 						echo '<button type="submit" name="action" value="dumpthem">Rozejít se</button>';

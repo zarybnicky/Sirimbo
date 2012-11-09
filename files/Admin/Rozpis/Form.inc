@@ -4,13 +4,9 @@ $error = false;
 global $isConfirmation;
 $isConfirmation = (post("trener") || post("kde"));
 
-$request = explode('/', $_SERVER['REQUEST_URI']);
-$action = array_slice($request, 3);
-if(empty($action)) $action[] = '';
-
-if($action[0] == 'edit')
+if(Request::getAction() == 'edit')
 	$header = "Upravit rozpis";
-elseif($action[0] == 'add')
+elseif(Request::getAction() == 'add')
 	$header = "Přidat rozpis";
 else
 	$header = "Neznámá akce";
@@ -27,8 +23,10 @@ header_minor($header);
 			<option value="<?php echo User::getUserID();?>">Já</option>
 		</select><?php
 		} else {
-			$userselect = new UserSelectHelper();
-			echo $userselect->userSelect()->name('trener')->permissions(L_TRENER)->users(DBUser::getTrener());
+			echo Helper::get()->userSelect()
+				->name('trener')
+				->permissions(L_TRENER)
+				->users(DBUser::getTrener());
 		}
 		$error = checkPostField("/[0-9]+/i", "trener");
 		?>
@@ -40,27 +38,19 @@ header_minor($header);
 		<td></td>
 	</tr><tr>
 		<td>Datum: (*)</td>
-		<td><?php echoDateSelect("day", "month", "year");?></td>
-		<td><?php
-			$od_str = post("year") . "-" . post("month") . "-" .
-				post("day");
-			$error = checkDateString($od_str) || $error;
-		?></td>
+		<td><?php echo Helper::get()->date()->name('datum')->textBox();?></td>
+		<td><?php $error = checkDateString(Helper::get()->date(false)->getPost()) || $error;?></td>
 	</tr><tr>
 		<td>Viditelný: </td>
-		<td><input type="checkbox" name="visible" value="visible" <?php
-			if(post("visible")) echo "checked=\"checked\"";
-			if(!User::checkPermissionsBool(L_ADMIN)) echo "readonly=\"readonly\""
-		?>/></td>
+		<td><label><?php echo getCheckbox('visible', 'visible', false, false,	
+			!User::checkPermissionsBool(L_ADMIN));?></label></td>
 		<td></td>
 	</tr><tr>
 		<td>Uzamknout: </td>
-		<td><input type="checkbox" name="lock" value="lock" <?php
-			if(post("lock")) echo "checked=\"checked\"";
-		?>/></td>
+		<td><label><?php echo getCheckbox('lock', 'lock')?></label></td>
 		<td></td>
 	</tr><tr>
-		<?php if($action[0] == 'add') {?>
+		<?php if(Request::getAction() == 'add') {?>
 		<td><button type="submit" name="action" value="add_confirm">Přidat</button></td>
 		<?php }	else {?>
 		<td><button type="submit" name="action" value="edit_confirm">Upravit</button></td>

@@ -4,24 +4,24 @@ if(get('v') === null)
 
 if(!TISK) {
 	echo '<form action="', $_SERVER['REQUEST_URI'], '" method="get">';
-
-	$s = new SelectHelper();
+	$s = Helper::get()->select();
 	echo 'Uživatelé:&nbsp;';
 	echo $s->select()
-		->name('f')
+		->get()->name('f')
 		->option('all', 'všichni')
 		->option('dancer', 'tanečníci')
 		->option('trener', 'trenéři')
-		->option('editor', 'editoři');
+		->option('editor', 'editoři')
+		->option('system', 'systémoví');
 	echo '&nbsp;řadit podle:&nbsp;';
 	echo $s->select()
-		->name('s')
+		->get()->name('s')
 		->option('surname', 'příjmení')
 		->option('var-symbol', 'var. symbolu')
 		->option('narozeni', 'data narození');
 	echo '&nbsp;zobrazení:&nbsp;';
 	echo $s->select()
-		->name('v')
+		->get()->name('v')
 		->option('info', 'informace')
 		->option('status', 'status uživatele')
 		->option('platby', 'platby')
@@ -65,12 +65,19 @@ if(get('v') == 'statistiky') {
 	return;
 }
 
-echo '<form action="', $_SERVER['REQUEST_URI'], '" method="POST">';
+$options['filter'] = in_array(get('f'), array('dancer', 'trener', 'editor', 'system', 'all')) ?
+	get('f') : 'all';
+$pager = new Paging(new PagingAdapterDBSelect('DBUser', $options));
+$pager->setCurrentPageField('p');
+$pager->setItemsPerPageField('c');
+$pager->setDefaultItemsPerPage(3);
+$pager->setPageRange(5);
+$items = $pager->getItems();
 
+echo '<form action="', Request::getURI(), '" method="POST">';
 if(!TISK) {
-	$f = new MenuHelper();
-	$f->menu()
-		->float(MenuHelper::FLOAT_RIGHT)
+	$f = Helper::get()->menu();
+	$f->float(MenuHelper::FLOAT_RIGHT)
 		->content('Přidat', 'users/add')
 		->content('Upravit', 'edit', true)
 		->content('Odebrat', 'remove', true)
@@ -78,37 +85,28 @@ if(!TISK) {
 		->content('Zobrazit platby', 'platby', true);
 	if(get('v') == 'status')
 		$f->content('Uložit změny', 'save', true);
-	
 	echo $f;
 }
-
-//TODO: Paging, getUsers(OD,DO)
-
-$sort = get('s');
-$filter = get('f');
-switch($filter) {
-	case 'dancer': $users = DBUser::getActiveDancers(); break;
-	case 'trener': $users = DBUser::getActiveUsers(L_TRENER); break;
-	case 'editor': $users = DBUser::getActiveUsers(L_EDITOR); break;
-	case 'all':
-	default: $users = DBUser::getUsers(L_ALL); break;
+if(empty($items)) {
+	notice('Žádní takoví uživatelé');
+	return;
 }
-switch($sort) {
+switch(get('s')) {
 	case 'var-symbol':
-		usort($users, create_function('$a, $b',
+		usort($items, create_function('$a, $b',
 			'return User::var_symbol($a["u_id"]) > User::var_symbol($b["u_id"]);'));
 		break;
 	case 'surname':
-		usort($users, create_function('$a, $b', 'return $a["u_prijmeni"] > $b["u_prijmeni"];'));
+		usort($items, create_function('$a, $b', 'return $a["u_prijmeni"] > $b["u_prijmeni"];'));
 		break;
 	case 'narozeni':
-		usort($users, create_function('$a, $b', 'return $a["u_narozeni"] > $b["u_narozeni"];'));
+		usort($items, create_function('$a, $b', 'return $a["u_narozeni"] > $b["u_narozeni"];'));
 		break;
 	default:
 		break;
 }
-
-echo '<table>';
+echo '<div style="margin-right:150px">';
+echo '<table style="width:100%">';
 echo '<tr>';
 echo '<td></td>';
 echo '<td></td>';
@@ -132,15 +130,13 @@ echo '</tr>';
 
 if(get('v') == 'status') {
 	$skupiny = DBSkupiny::getSkupiny();
-	$skupinyselect = new SelectHelper();
-	$skupinyselect->select()
-		->get(false);
+	$skupinyselect = Helper::get()->select()->post();
 	foreach($skupiny as $skupina)
 		$skupinyselect->option($skupina['us_id'], $skupina['us_popis']);
 }
 
 $i = 0;
-foreach($users as $user) {
+foreach($items as $user) {
 	echo '<tr>';
 	if(Permissions::canEditUser($user['u_id'], $user['u_level'], $user['u_lock']))
 		echo '<td><input type="checkbox" name="users[]" value="', $user['u_id'], '" /></td>';
@@ -188,10 +184,10 @@ foreach($users as $user) {
 			default:			echo 'Neznámý';		break;
 		}
 		echo '</td>';
-		echo '<td class="center">', '<input type="checkbox" name="', $user['u_id'], '-dancer" ',
-			($user['u_dancer'] ? 'checked="checked"' : ''), '/>', '</td>';
-		echo '<td class="center">', '<input type="checkbox" name="', $user['u_id'], '-system" ',
-			($user['u_system'] ? 'checked="checked"' : ''), '/>', '</td>';
+		echo '<td class="center"><label>', 
+			getCheckbox($user['u_id'] . '-dancer', '1', $user['u_dancer']), '</label></td>';
+		echo '<td class="center"><label>',
+			getCheckbox($user['u_id'] . '-system', '1', $user['u_system']), '</label></td>';
 	} elseif(get('v') == 'platby') {
 		$placeno = (bool) $user['up_id'];
 		$zaplaceno = $placeno && strcmp($user['up_plati_do'], date('Y-m-d')) >= 0;
@@ -245,5 +241,8 @@ foreach($users as $user) {
 	echo '</tr>';
 }
 echo '</table>';
+echo '<div style="text-align:center">';
+echo $pager->getNavigation();
+echo '</div></div>';
 echo '</form>';
 ?>

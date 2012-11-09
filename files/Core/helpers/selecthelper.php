@@ -11,9 +11,9 @@ class SelectHelper {
 	}
 	function _defaultValues() {
 		$this->name = '';
-		$this->value = NULL;
+		$this->value = null;
 		$this->options = array();
-		$this->get = true;
+		$this->get = false;
 	}
 	
 	function name($name = '') {
@@ -21,17 +21,22 @@ class SelectHelper {
 			$this->name = $name;
 		return $this;
 	}
-	function value($value = NULL) {
+	function value($value = null) {
 		if($value)
 			$this->value = $value;
 		return $this;
 	}
-	function option($value, $name) {
-		if(isset($value) && isset($name))
+	function option($value, $name = null, $overwrite = false) {
+		if($overwrite)
+			$this->options = array();
+		
+		if($value && $name)
 			$this->options[$value] = $name;
+		elseif($value && $name === null)
+			$this->options[$value] = $value;
 		return $this;
 	}
-	function options($options = array(), $overwrite = false) {
+	function options($options = array(), $overwrite = false, $literal = false) {
 		if($overwrite === true)
 			$this->options = array();
 		
@@ -41,12 +46,19 @@ class SelectHelper {
 		foreach($options as $value => $name) {
 			if(!isset($name))
 				continue;
-			$this->options[$value] = $name;
+			if($literal)
+				$this->options[$name] = $name;
+			else
+				$this->options[$value] = $name;
 		}
 		return $this;
 	}
 	function get($get = true) {
 		$this->get = (bool) $get;
+		return $this;
+	}
+	function post($post = true) {
+		$this->get = !(bool) $post;
 		return $this;
 	}
 	
