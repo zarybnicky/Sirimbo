@@ -2,10 +2,8 @@
 User::checkPermissionsError(L_HOST);
 header_main('Klubové akce');
 
-$request = explode('/', $_SERVER['REQUEST_URI']);
-$id = array_pop($request);
-if(is_numeric($id)) {
-	DisplayAkce::viewFullAkce($id);
+if(Request::getID()) {
+	DisplayAkce::viewFullAkce(Request::getID());
 	return;
 }
 
@@ -27,11 +25,7 @@ if($isConfirmation) {
 	
 	if(User::checkPermissionsBool(L_USER) && !$data['a_lock']) {
 		if($action == 'signup') {
-			if(preg_match('/^19[0-9]{2}|20[0,1,2,3][0-9]$/', post('narozeni'))) {
-				DBAkce::signUp(User::getUserID(), $id, post('narozeni'));
-			} else {
-				notice('Zadejte platný rok narození');
-			}
+			DBAkce::signUp(User::getUserID(), $id, User::getDatumNarozeni());
 		} elseif($action == 'signout') {
 			DBAkce::signOut(User::getUserID(), $id);
 		}
@@ -45,7 +39,7 @@ echo '</style>';
 echo '<table style="width:100%;">';
 $left = true;
 foreach($akce as $item) {
-	if($left === true) {
+	if($left) {
 		echo '<tr><td class="unit">';
 	} else {
 		echo '<td class="unit">';
@@ -58,17 +52,15 @@ foreach($akce as $item) {
 		echo '<input type="hidden" name="id" value="', $item['a_id'], '" />';
 		
 		if(!DBAkce::isUserSignedUp($item['a_id'], User::getUserID())) {
-			echo 'Rok narození: <input type="text" size="4" name="narozeni" />';
-			echo '<button type="submit" name="action" value="signup">Přihlásit se</button>';
+			echo '<button type="submit" name="action" value="signup">Přihlásit se</button> &bull; ';
 		} else {
-			echo '<button type="submit" name="action" value="signout">Odhlásit se</button>';
+			echo '<button type="submit" name="action" value="signout">Odhlásit se</button> &bull; ';
 		}
-		echo '<br/>';
 	}
 	echo '<a href="/member/akce/', $item['a_id'], '">Zobrazit přihlášené</a>';
 	echo '</form>';
 	
-	if($left === true) {
+	if($left) {
 		$left = false;
 		echo '</td>';
 	} else {
@@ -76,7 +68,7 @@ foreach($akce as $item) {
 		echo '</td></tr>';
 	}
 }
-if($left === false)
+if(!$left)
 	echo '</tr>';
 echo '</table>';
 ?>

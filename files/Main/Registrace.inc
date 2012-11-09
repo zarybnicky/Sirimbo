@@ -34,11 +34,10 @@ ob_start();
 		?></td>
 	</tr><tr>
 		<td>Pohlaví: </td>
-		<td><input type="radio" name="pohlavi" value="m" <?php
-			if(post("pohlavi") == "m") echo "checked=\"checked\"";
-		?>/>Muž&nbsp;&nbsp;<input type="radio" name="pohlavi" value="f" <?php
-			if(post("pohlavi") == "f") echo "checked=\"checked\"";
-		?>/>Žena</td>
+		<td>
+			<label><?php echo getRadio('pohlavi', 'm');?>Muž</label>&nbsp;
+			<label><?php echo getRadio('pohlavi', 'f');?>Žena</label>
+		</td>
 	</tr><tr>
 		<td>E-mail (*): </td>
 		<td><input type="text" name="email" value="<?php echo post("email"); ?>" /></td>
@@ -53,12 +52,9 @@ ob_start();
 		?></td>
 	</tr><tr>
 		<td>Datum narození: (*)</td>
-		<td><?php echoDateSelect("day", "month", "year", 1920);?></td>
-		<td><?php
-			$od_str = post("year") . "-" . post("month") . "-" .
-				post("day");
-			$error = checkDateString($od_str) || $error;
-		?></td>
+		<td><?php echo Helper::get()->date()->name('narozeni')->textBox();?>
+			<?php $error = checkDateString(Helper::get()->date(false)->getPost()) || $error; ?>
+		</td>
 	</tr><tr>
 		<td>Poznámky: </td>
 		<td><textarea rows="15" cols="35" name="poznamky"><?php echo post("poznamky"); ?></textarea></td>
@@ -75,7 +71,7 @@ $html = ob_get_clean();
 
 if($isConfirmation && !$error) {
 	if(!DBUser::getUserID(post("username"))) {
-		$narozeni = post('year') . '-' . post('month') . '-' . post('day');
+		$narozeni = Helper::get()->date()->name('narozeni')->getPost();
 		
 		User::register(post("username"), post("pass"), post("jmeno"), post("prijmeni"),
 			post('pohlavi'), post("email"), post("telefon"), $narozeni, post("poznamky"));

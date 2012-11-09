@@ -1,9 +1,27 @@
 <?php
-class DBAkce extends Database {
+class DBAkce extends Database implements Pagable {
 	public static function getAkce() {
 		$res = DBAkce::query("SELECT a_id,a_jmeno,a_kde,a_info,a_od,a_do,a_kapacita,a_dokumenty,a_lock FROM akce" .
 			" ORDER BY a_od");
 		return DBAkce::getArray($res);
+	}
+	
+	public static function getPage($offset, $count, $options = '') {
+		list($offset, $count, $options) =
+			DBAkce::escapeArray(array($offset, $count, $options));
+		
+		$res = DBAkce::query("SELECT * FROM akce " .
+			($options ? $options : '') . " LIMIT $offset,$count");
+		return DBAkce::getArray($res);
+	}
+	public static function getCount($options = null) {
+		$res = DBRozpis::query("SELECT COUNT(*) FROM akce");
+		if(!$res) {
+			return false;
+		} else {
+			$row = DBRozpis::getSingleRow($res);
+			return $row['COUNT(*)'];
+		}
 	}
 	
 	public static function getSingleAkce($id) {
@@ -21,8 +39,11 @@ class DBAkce extends Database {
 	public static function getAkceItems($id) {
 		list($id) = DBAkce::escapeArray(array($id));
 		
-		$res = DBAkce::query("SELECT ai_id,ai_id_rodic,ai_user,ai_jmeno,ai_prijmeni,ai_rok_narozeni" .
-			" FROM akce_item WHERE ai_id_rodic='$id' ORDER BY ai_prijmeni");
+		$res = DBAkce::query(
+		"SELECT *
+		FROM akce_item
+		LEFT JOIN users ON ai_user=u_id
+		WHERE ai_id_rodic='$id' ORDER BY u_prijmeni");
 		return DBAkce::getArray($res);
 	}
 	

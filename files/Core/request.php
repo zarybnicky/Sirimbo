@@ -26,8 +26,10 @@ class Request {
 		for($i = count(Request::$url_parts) - 1; $i >= 0; $i--) {
 			if(is_numeric(Request::$url_parts[$i])) {
 				$id = Request::$url_parts[$i];
-				if(!is_numeric(Request::$url_parts[$i - 1]))
+				if(!is_numeric(Request::$url_parts[$i - 1])) {
 					$action = Request::$url_parts[$i - 1];
+					break;
+				}
 			}
 		}
 		Request::$id = isset($id) ? $id : false;
@@ -40,6 +42,9 @@ class Request {
 	}
 	public static function getURL() {
 		return Request::$url;
+	}
+	public static function getURLParts() {
+		return Request::$url_parts;
 	}
 	public static function getLiteralURL($default = '') {
 		if(empty(Request::$url_parts_literal) || Request::$url_parts_literal[0] == '')

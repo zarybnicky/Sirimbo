@@ -26,11 +26,11 @@ header_minor("Osobní údaje");
 		?></td>
 	</tr><tr>
 		<td>Pohlaví: </td>
-		<td><input type="radio" name="pohlavi" value="m" <?php
-			if(post("pohlavi") == "m") echo "checked=\"checked\"";
-		?>/>Muž&nbsp;&nbsp;<input type="radio" name="pohlavi" value="f" <?php
-			if(post("pohlavi") == "f") echo "checked=\"checked\"";
-		?>/>Žena</td>
+		<td>
+			<label><?php echo getRadio('pohlavi', 'm');?>Muž</label>&nbsp;
+			<label><?php echo getRadio('pohlavi', 'f');?>Žena</label>
+		</td>
+		<td></td>
 	</tr><tr>
 		<td>E-mail (*): </td>
 		<td><input type="text" name="email" value="<?php echo post("email"); ?>" /></td>
@@ -45,11 +45,8 @@ header_minor("Osobní údaje");
 		?></td>
 	</tr><tr>
 		<td>Datum narození: (*)</td>
-		<td><?php echoDateSelect("day", "month", "year", 1920);?></td>
-		<td><?php
-			$od_str = post("year") . "-" . post("month") . "-" .
-				post("day");
-			$error = checkDateString($od_str) || $error;
+		<td><?php echo Helper::get()->date()->name('narozeni')->textBox(); ?></td>
+		<td><?php $error = checkDateString(Helper::get()->date(false)->getPost()) || $error;
 		?></td>
 	</tr><tr>
 		<td>Poznámky: </td>

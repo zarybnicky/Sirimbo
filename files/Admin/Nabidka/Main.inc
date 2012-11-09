@@ -6,56 +6,53 @@ notice(View::getRedirectMessage());
 
 switch(Request::getAction()) {
 	case 'add':
-		if(empty($_POST)) {
+		if(empty($_POST))
 			include('files/Admin/Nabidka/Form.inc');
 			return;
-		} else {
-			if(!Permissions::canEditNabidka(post('trener')))
-				View::viewError(ER_AUTHORIZATION);
-			
-			$pocet_hod = post('pocet_hod');
-			
-			$od = post('od_year') . '-' . post('od_month') . '-' . post('od_day');
-			$do = post('do_year') . '-' . post('do_month') . '-' . post('do_day');
-			if($do == '0000-00-00' || strcmp($od, $do) > 0)
-				$do = $od;
-			
-			$visible = (bool) post('visible');
-			if(User::checkPermissionsBool(L_TRENER) && !User::checkPermissionsBool(L_ADMIN)) {
-				$visible = false;
-				View::setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění příspěvku');
-			}
-			
-			$error = false;
-			ob_start();
-			include('files/Admin/Nabidka/Form.inc');	
-			$html = ob_get_clean();
-			
-			if(!$error) {
-				DBNabidka::addNabidka(post('trener'), $pocet_hod, $od, $do, $visible,
-					post('lock'));
-				
-				if($visible) {
-					$trener_data = DBUser::getUserData(post('trener'));
-					$trener_name = $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni'];
-					
-					DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal nabídku ' .
-						formatDate($od) . (($od != $do) ?
-						(' - ' . formatDate($do)) : '') . ' s trenérem ' . $trener_name);
-				}
-				
-				View::redirect('/admin/nabidka', 'Nabídka přidána');
-			} else {
-				echo $html;
-				return;
-			}
+		if(!Permissions::canEditNabidka(post('trener')))
+			View::viewError(ER_AUTHORIZATION);
+		
+		$od = Helper::get()->date()->name('od')->getPost();
+		$do = Helper::get()->date()->name('do')->getPost();
+		if(!$do || strcmp($od, $do) > 0)
+			$do = $od;
+		
+		$f = new Form();
+		$f->checkNumeric(post('trener'), 'ID trenéra musí být číselné', 'trener');
+		$f->checkNumeric(post('pocet_hod'), 'Počet hodin prosím zadejte čísly', 'pocet_hod');
+		$f->checkDate($od, 'Zadejte prosím platné datum ("Od")', 'od');
+		$f->checkDate($do, 'Zadejte prosím platné datum ("Do")', 'do');
+		
+		if(!$f->isValid()) {
+			include('files/Admin/Nabidka/Form.inc');
+			return;
 		}
+		
+		$visible = (bool) post('visible');
+		if(User::checkPermissionsBool(L_TRENER) && !User::checkPermissionsBool(L_ADMIN)) {
+			$visible = false;
+			View::setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění příspěvku');
+		}
+		
+		DBNabidka::addNabidka(post('trener'), post('pocet_hod'), $od, $do, $visible,
+			post('lock') ? 1 : 0);
+		
+		if($visible) {
+			$trener_data = DBUser::getUserData(post('trener'));
+			$trener_name = $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni'];
+			
+			DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal nabídku ' .
+				formatDate($od) . (($od != $do) ?
+				(' - ' . formatDate($do)) : '') . ' s trenérem ' . $trener_name);
+		}
+		
+		View::redirect(getReturnURI('/admin/nabidka'), 'Nabídka přidána');
 		break;
 	
 	case 'edit':
 		$id = Request::getID();
-		if(!$id || !is_numeric($id) || !($data = DBNabidka::getSingleNabidka($id)))
-			View::redirect('/admin/nabidka', 'Nabídka s takovým ID neexistuje');
+		if(!$id || !($data = DBNabidka::getSingleNabidka($id)))
+			View::redirect(getReturnURI('/admin/nabidka'), 'Nabídka s takovým ID neexistuje');
 		
 		if(!Permissions::canEditNabidka($data['n_trener']))
 			View::viewError(ER_AUTHORIZATION);
@@ -64,72 +61,66 @@ switch(Request::getAction()) {
 			post('id', $id);
 			post('trener', $data['n_trener']);
 			post('pocet_hod', $data['n_pocet_hod']);
-			list($od_year, $od_month, $od_day) = explode('-', $data['n_od']);
-			post('od_year', $od_year);
-			post('od_month', $od_month);
-			post('od_day', $od_day);
-			list($do_year, $do_month, $do_day) = explode('-', $data['n_do']);
-			post('do_year', $do_year);
-			post('do_month', $do_month);
-			post('do_day', $do_day);
+			post('od', $data['n_od']);
+			post('do', $data['n_do']);
 			post('visible', $data['n_visible']);
 			post('lock', $data['n_lock']);
 			
 			include('files/Admin/Nabidka/Form.inc');
 			return;
-		} else {
-			$items = DBNabidka::getNabidkaItemLessons($id);
-			$pocet_hod = post('pocet_hod');
-			if($pocet_hod < $items) {
-				$pocet_hod = $items;
-				View::setRedirectMessage('Obsazených hodin už je víc než jste zadali, ' .
-					'nemůžu dál snížit počet hodin');
-			}
-			
-			$od = post('od_year') . '-' . post('od_month') . '-' . post('od_day');
-			$do = post('do_year') . '-' . post('do_month') . '-' . post('do_day');
-			if($do == '0000-00-00' || strcmp($od, $do) > 0)
-				$do = $od;
-			
-			$visible = (bool) post('visible');
-			$visible_prev = $data['n_visible'];
-			if(User::checkPermissionsBool(L_TRENER) && !User::checkPermissionsBool(L_ADMIN) &&
-					$visible != $visible_prev) {
-				$visible = $visible_prev;
-				View::setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění nabídky');
-			}
-			
-			$error = false;
-			ob_start();
-			include('files/Admin/Nabidka/Form.inc');	
-			$html = ob_get_clean();
-			
-			if(!$error) {
-				DBNabidka::editNabidka($id, post('trener'), $pocet_hod, $od, $do, $visible,
-					post('lock'));
-				
-				$trener_data = DBUser::getUserData(post('trener'));
-				$trener_name = $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni'];
-				if($visible) {
-					if(!$visible_prev)
-						DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal nabídku ' .
-							formatDate($od) . (($data['n_od'] != $data['n_do']) ?
-							(' - ' . formatDate($data['n_do'])) : '') . ' s trenérem ' . $trener_name);
-					else
-						DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' upravil nabídku ' .
-							formatDate($od) . (($data['n_od'] != $data['n_do']) ?
-							(' - ' . formatDate($data['n_do'])) : '') . ' s trenérem ' . $trener_name);
-				} elseif(!$visible && $visible_prev && strcmp($data['n_od'], date('Y-m-d')) > 0) {
-						DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' zrušil nabídku ' .
-							formatDate($od) . (($data['n_od'] != $data['n_do']) ?
-							(' - ' . formatDate($data['n_do'])) : '') . ' s trenérem ' . $trener_name);
-				}
-				View::redirect('/admin/nabidka', 'Nabídka úspěšně upravena');
-			} else {
-				echo $html;
-				return;
-			}
 		}
+		
+		$od = Helper::get()->date()->name('od')->getPost();
+		$do = Helper::get()->date()->name('do')->getPost();
+		if(!$do || strcmp($od, $do) > 0)
+			$do = $od;
+		
+		$f = new Form();
+		$f->checkNumeric(post('trener'), 'ID trenéra musí být číselné', 'trener');
+		$f->checkNumeric(post('pocet_hod'), 'Počet hodin prosím zadejte čísly', 'pocet_hod');
+		$f->checkDate($od, 'Zadejte prosím platné datum ("Od")', 'od');
+		$f->checkDate($do, 'Zadejte prosím platné datum ("Do")', 'do');
+		
+		if(!$f->isValid()) {
+			include('files/Admin/Nabidka/Form.inc');
+			return;
+		}
+		
+		$visible = (bool) post('visible');
+		$visible_prev = $data['n_visible'];
+		if(User::checkPermissionsBool(L_TRENER) && !User::checkPermissionsBool(L_ADMIN) &&
+				$visible != $visible_prev) {
+			$visible = $visible_prev;
+			View::setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění nabídky');
+		}
+		
+		$items = DBNabidka::getNabidkaItemLessons($id);
+		$pocet_hod = post('pocet_hod');
+		if($pocet_hod < $items) {
+			$pocet_hod = $items;
+			View::setRedirectMessage('Obsazených hodin už je víc než jste zadali, ' .
+				'nemůžu dál snížit počet hodin');
+		}
+		
+		DBNabidka::editNabidka($id, post('trener'), $pocet_hod, $od, $do, $visible,
+			post('lock'));
+		
+		if($visible)
+			if(!$visible_prev)
+				$act = 'přidal';
+			else
+				$act = 'upravil';
+		elseif(!$visible && $visible_prev && strcmp($data['n_od'], date('Y-m-d')) > 0)
+			$act = 'zrušil';
+		
+		$trener_data = DBUser::getUserData(post('trener'));
+		if(isset($act))
+			DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' ' . $act . ' nabídku ' .
+				formatDate($od) .
+				(($data['n_od'] != $data['n_do']) ? (' - ' . formatDate($data['n_do'])) : '') .
+				' s trenérem ' . $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni']);
+		
+		View::redirect(getReturnURI('/admin/nabidka'), 'Nabídka úspěšně upravena');
 		break;
 }
 

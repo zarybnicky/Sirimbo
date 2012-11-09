@@ -1,12 +1,21 @@
 <?php
-class DBNastenka extends Database {
-	public static function getNastenka($offset = NULL, $count = NULL) {
+class DBNastenka extends Database implements Pagable {
+	public static function getInstance() { return new self(); }
+	
+	public static function getNastenka($offset = null, $count = null) {
 		$res = DBNastenka::query(
 		"SELECT up_id,up_kdo,u_jmeno,u_prijmeni,up_aktu,up_nadpis,up_text,up_barvy,up_lock
 		FROM upozorneni
 			LEFT JOIN users ON up_kdo=u_id
-		ORDER BY up_aktu DESC" . (($offset !== NULL && $count !== NULL) ? " LIMIT $offset,$count" : ''));
+		ORDER BY up_aktu DESC" . (($offset !== null && $count !== null) ? " LIMIT $offset,$count" : ''));
 		return DBNastenka::getArray($res);
+	}
+	
+	public static function getPage($offset, $count, $options = '') {
+		return DBNastenka::getNastenka($offset, $count);
+	}
+	public static function getCount($options = null) {
+		return DBNastenka::getNastenkaCount();
 	}
 	
 	public static function getNastenkaCount() {
@@ -80,8 +89,7 @@ class DBNastenka extends Database {
 		
 		DBNastenka::query("INSERT INTO upozorneni (up_kdo,up_nadpis,up_text,up_lock) VALUES " .
 			"('$userid','$nadpis','$text','$lock')");
-		
-		return true;
+		return DBNastenka::getInsertId();
 	}
 	
 	public static function editNastenka($id, $nadpis, $text, $lock) {
