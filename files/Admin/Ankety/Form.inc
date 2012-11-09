@@ -1,11 +1,7 @@
 <?php
-$request = explode('/', $_SERVER['REQUEST_URI']);
-$action = array_slice($request, 3);
-if(empty($action)) $action[] = '';
-
-if($action[0] == 'edit')
+if(Request::getAction() == 'edit')
 	$header = "Upravit anketu";
-elseif($action[0] == 'add')
+elseif(Request::getAction() == 'add')
 	$header = "Přidat anketu";
 else
 	$header = "Neznámá akce";
@@ -24,10 +20,9 @@ header_minor($header);
 		<td><input type="text" name="text" value="<?php echo post('text');?>" /></td>
 	</tr><tr>
 		<td>Viditelný: </td>
-		<td><input type="checkbox" name="visible" value="visible" <?php
-			if(post('visible')) echo 'checked="checked"';
-			if(!User::checkPermissionsBool(L_ADMIN)) echo 'readonly="readonly"'
-		?>/></td>
+		<td><label><?php echo getCheckbox('visible', 'visible', false, false,
+			!User::checkPermissionsBool(L_ADMIN));?></label>
+		</td>
 	</tr><tr>
 		<td>Text</td><td>Počet hlasů</td>
 	</tr>

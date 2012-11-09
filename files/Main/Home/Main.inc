@@ -6,13 +6,13 @@ notice(View::getRedirectMessage());
 ?>
 
 <div>
-<?php $c = new ClankyHelper(); echo $c->clanky()->number(5)->slideBox(true);?>
+<?php echo Helper::get()->clanky()->number(5)->slideBox(true);?>
 <br/>
 <div style="float:right;">
-<?php $z = new ZpravyHelper(); echo $z->zpravy()->number(20);?>
+<?php echo Helper::get()->zpravy()->number(20);?>
 </div>
 <div style="margin-right:265px;">
-<?php echo $c->clanky()->number(20)->offset(5)->slideBox(false);?>
+<?php echo Helper::get()->clanky()->number(20)->offset(5)->slideBox(false);?>
 </div>
 </div>
 

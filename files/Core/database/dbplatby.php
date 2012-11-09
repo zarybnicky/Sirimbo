@@ -1,22 +1,62 @@
 <?php
-class DBPlatby extends Database {
-	public static function getPlatby() {
+class DBPlatby extends Database implements Pagable {
+	public static function getInstance() { return new self(); }
+	
+	public static function getPage($offset, $count, $options = null) {
+		if(!isset($options['type']) || $options['type'] == 'platby')
+			$w = '';
+		elseif($options['type'] == 'date' && isset($options['od']) && isset($options['do']))
+			$w = "WHERE up_plati_do >= '{$options['od']}' AND up_plati_do <= '{$options['do']}'";
+		elseif($options['type'] == 'user' && isset($options['id']))
+			$w = "WHERE up_id_user='{$options['id']}'";
+		else
+			$w = '';
+			
+		$res = DBPlatby::query("SELECT * FROM users_platby
+			LEFT JOIN users ON up_id_user=u_id
+			LEFT JOIN users_skupiny ON u_skupina=us_id " . $w .
+			" ORDER BY up_placeno DESC LIMIT $offset,$count");
+		
+		return DBPlatby::getArray($res);
+	}
+	public static function getCount($options = null) {
+		if(!isset($options['type']) || $options['type'] == 'platby')
+			$q = "SELECT COUNT(*) FROM users_platby";
+		elseif($options['type'] == 'date' && !empty($options['od']) && !empty($options['do']))
+			$q = "SELECT COUNT(*) FROM users_platby
+			WHERE up_plati_do >= '{$options['od']}' AND up_plati_do <= '{$options['do']}'";
+		elseif($options['type'] == 'user' && !empty($options['id']))
+			$q = "SELECT COUNT(*) FROM users_platby
+			WHERE up_id_user='{$options['id']}'";
+		else
+			$q = "SELECT COUNT(*) FROM users_platby";
+		
+		$res = DBPlatby::query($q);
+		$res = DBPlatby::getSingleRow($res);
+		return $res['COUNT(*)'];
+	}
+	
+	public static function getPlatby($offset = null, $count = null) {
+		list($offset, $count) = DBPlatby::escapeArray(array($offset, $count));
+		
 		$res = DBPlatby::query(
 		"SELECT * FROM users_platby
 			LEFT JOIN users ON up_id_user=u_id
 			LEFT JOIN users_skupiny ON u_skupina=us_id
-		ORDER BY up_placeno DESC");
+		ORDER BY up_placeno DESC" . 
+		((!empty($offset) && !empty($count)) ? " LIMIT $offset,$count" : ''));
 		return DBPlatby::getArray($res);
 	}
-	public static function getPlatbyByDate($od, $do) {
-		list($od, $do) = DBPlatby::escapeArray(array($od, $do));
+	public static function getPlatbyByDate($od, $do, $offset = null, $count = null) {
+		list($od, $do, $offset, $count) = DBPlatby::escapeArray(array($od, $do, $offset, $count));
 		
 		$res = DBPlatby::query(
 		"SELECT * FROM users_platby
 			LEFT JOIN users ON up_id_user=u_id
 			LEFT JOIN users_skupiny ON u_skupina=us_id
 		WHERE up_plati_do >= '$od' AND up_plati_do <= '$do'
-		ORDER BY up_placeno DESC");
+		ORDER BY up_placeno DESC" .
+		(($offset !== null && $count !== null) ? " LIMIT $offset,$count" : ''));
 		return DBPlatby::getArray($res);
 	}
 	public static function getPlatbyFromUser($id) {

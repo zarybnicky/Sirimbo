@@ -50,9 +50,9 @@ class DisplayAkce {
 			echo 'Nikdo není přihlášený<br/>';
 		} else {
 			echo '<table style="margin:0 auto;">';
-			echo '<tr><td>Jméno</td><td>Příjmení</td><td>Rok narození</td></tr>';
+			echo '<tr><td>Jméno</td><td>Rok narození</td></tr>';
 			foreach($akce_items as $par) {
-				echo '<tr><td>', $par['ai_jmeno'], '</td><td>', $par['ai_prijmeni'], '</td><td>',
+				echo '<tr><td>', $par['u_jmeno'], ' ', $par['u_prijmeni'], '</td><td>',
 				$par['ai_rok_narozeni'], '</td></tr>';
 			}
 			echo '</table>';

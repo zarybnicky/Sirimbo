@@ -5,10 +5,9 @@ if(get('v') === null)
 if(!TISK) {
 	echo '<form action="', $_SERVER['REQUEST_URI'], '" method="get">';
 
-	$s = new SelectHelper();
 	echo 'zobrazení:&nbsp;';
-	echo $s->select()
-		->name('v')
+	echo Helper::get()->select()
+		->get()->name('v')
 		->option('info', 'skupiny')
 		->option('users', 'uživatelé podle skupin');
 	echo '<button type="submit">Odeslat</button>';
@@ -20,8 +19,7 @@ if(get('v') == 'info') {
 	echo '<form action="/admin/skupiny" method="POST">';
 	
 	if(!TISK) {
-		$f = new MenuHelper();
-		echo $f->menu()
+		echo Helper::get()->menu()
 			->float(MenuHelper::FLOAT_RIGHT)
 			->content('Přidat', 'skupiny/add')
 			->content('Upravit', 'edit', true)

@@ -4,13 +4,9 @@ $error = false;
 global $isConfirmation;
 $isConfirmation = (post("login") || post("pass"));
 
-$request = explode('/', $_SERVER['REQUEST_URI']);
-$action = array_slice($request, 3);
-if(empty($action)) $action[] = '';
-
-if($action[0] == 'edit')
+if(Request::getAction() == 'edit')
 	$header = "Upravit uživatele";
-elseif($action[0] == 'add')
+elseif(Request::getAction() == 'add')
 	$header = "Přidat uživatele";
 else
 	$header = "Neznámá akce";
@@ -52,11 +48,10 @@ header_minor($header);
 		?></td>
 	</tr><tr>
 		<td>Pohlaví (*): </td>
-		<td><input type="radio" name="pohlavi" value="m" <?php
-			if(post("pohlavi") == "m") echo "checked=\"checked\"";
-		?>/>Muž&nbsp;&nbsp;<input type="radio" name="pohlavi" value="f" <?php
-			if(post("pohlavi") == "f") echo "checked=\"checked\"";
-		?>/>Žena</td>
+		<td>
+			<label><?php echo getRadio('pohlavi', 'm');?>Muž</label>&nbsp;
+			<label><?php echo getRadio('pohlavi', 'f');?>Žena</label>
+		</td>
 		<td><?php
 			$error = checkPostField("/m|f/i", "pohlavi") || $error;
 		?></td>
@@ -76,47 +71,33 @@ header_minor($header);
 		?></td>
 	</tr><tr>
 		<td>Datum narození: (*)</td>
-		<td><?php echoDateSelect("day", "month", "year", 1920);?></td>
-		<td><?php
-			$od_str = post("year") . "-" . post("month") . "-" .
-				post("day");
-			$error = checkDateString($od_str) || $error;
-		?></td>
+		<td><?php echo Helper::get()->date()->name('narozeni')->textBox(); ?></td>
+		<td><?php $error = checkDateString(Helper::get()->date(false)->getPost()) || $error; ?></td>
 	</tr><tr>
 		<td>Poznámky: </td>
 		<td><textarea rows="15" cols="50" name="poznamky"><?php echo post("poznamky"); ?></textarea></td>
 		<td></td>
 	</tr><tr>
 		<td>Uzamknout: </td>
-		<td><input type="checkbox" name="lock" value="lock" <?php
-			if(post("lock")) echo "checked=\"checked\"";
-		?>/></td>
+		<td><label><?php echo getCheckbox('lock', 'lock');?></label></td>
 		<td></td>
 	</tr><tr>
 		<td>Ban: </td>
-		<td><input type="checkbox" name="ban" value="ban" <?php
-			if(post("ban")) echo "checked=\"checked\"";
-		?>/></td>
+		<td><label><?php echo getCheckbox('ban', 'ban');?></label></td>
 		<td></td>
 	</tr><tr>
 		<td>Aktivní tanečník: </td>
-		<td><input type="checkbox" name="dancer" value="dancer" <?php
-			if(post("dancer")) echo "checked=\"checked\"";
-		?>/></td>
+		<td><label><?php echo getCheckbox('dancer', 'dancer');?></label></td>
 		<td></td>
 	</tr><tr>
 		<td>Systémový uživatel: </td>
-		<td><input type="checkbox" name="system" value="system" <?php
-			if(post("system")) echo 'checked="checked"';
-		?>/></td>
+		<td><label><?php echo getCheckbox('system', 'system');?></label></td>
 		<td></td>
 	</tr><tr>
 		<td>Oprávnění: </td>
 		<td><?php
-		$s = new SelectHelper();
-		echo $s->select()
-			->name('level')
-			->get(false)
+		echo Helper::get()->select()
+			->post()->name('level')
 			->option('host', 'Host')
 			->option('user', 'Uživatel')
 			->option('editor', 'Editor')
@@ -132,13 +113,13 @@ header_minor($header);
 		foreach($skupiny as $skupina) {
 			echo '<div class="box" title="', $skupina['us_popis'], '" ',
 				'style="background-color:', Settings::$barvy[$skupina['us_color']][1], ';"></div>';
-			echo '<label>', getRadio('skupina', $skupina['us_id'], false),
+			echo '<label>', getRadio('skupina', $skupina['us_id']),
 				$skupina['us_popis'], '</label><br/>';
 		}
 		?></td>
 		<td></td>
 	</tr><tr>
-		<?php if($action[0] == 'add') { ?>
+		<?php if(Request::getAction() == 'add') { ?>
 		<td><button type="submit" name="action" value="add_confirm">Přidat</button></td>
 		<?php }	else {?>
 		<td><button type="submit" name="action" value="edit_confirm">Upravit</button></td>

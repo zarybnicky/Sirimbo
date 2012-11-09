@@ -1,7 +1,6 @@
 <form action="<?php echo $_SERVER["REQUEST_URI"]?>" method="POST">
 <?php
-$f = new MenuHelper();
-echo $f->menu()
+echo Helper::get()->menu()
 	->float(MenuHelper::FLOAT_RIGHT)
 	->content('Potvrdit', 'confirm', true)
 	->content('Odstranit', 'remove', true)
@@ -31,10 +30,8 @@ foreach($users as $user) {
 		</select></td>';
 	echo '<td>';
 	$skupiny = DBSkupiny::getSkupiny();
-	$s = new SelectHelper();
-	$s->select()
-		->name($user['u_id'] . '-skupina')
-		->get(false);
+	$s = Helper::get()->select()
+		->post()->name($user['u_id'] . '-skupina');
 	foreach($skupiny as $skupina)
 		$s->option($skupina['us_id'], $skupina['us_popis']);
 	echo $s;

@@ -7,13 +7,14 @@ for($i = 0; $i < 5; $i++) {
 	echo '<tr><td><input name="name[]" type="text" size="10"/></td>';
 	echo '<td><input name="file[]" multiple="multiple" type="file"/></td></tr>';
 }
-echo '<tr><td>Složka: </td><td><select name="dir">';
+echo '<tr><td>Složka: </td><td>';
 $dirs = DBGalerie::getDirs();
-foreach($dirs as $dir) {
-	echo '<option value="', $dir['gd_id'], '">', str_repeat('&nbsp;&nbsp;', $dir['gd_level']),
-		$dir['gd_name'], '</option>';
-}
-echo '</select></td></tr>';
+$s = Helper::get()->select()->post()->name('dir');
+foreach($dirs as $dir)
+	$s->option($dir['gd_id'],
+		str_repeat('&nbsp;&nbsp;', $dir['gd_level'] - 1) . $dir['gd_name']);
+echo $s;
+echo '</td></tr>';
 ?>
 <tr>
 	<td>

@@ -12,8 +12,6 @@ switch(Request::getAction()) {
 		} else {
 			if(!Permissions::canEditRozpis(post('trener')))
 				View::viewError(ER_AUTHORIZATION);
-			
-			$datum = post('year') . '-' . post('month') . '-' . post('day');
 		
 			$visible = (bool) post('visible');
 			if(User::checkPermissionsBool(L_TRENER) && !User::checkPermissionsBool(L_ADMIN)) {
@@ -27,6 +25,8 @@ switch(Request::getAction()) {
 			$html = ob_get_clean();
 			
 			if(!$error) {
+				$datum = Helper::get()->date()->name('datum')->getPost();
+				
 				DBRozpis::addRozpis(post('trener'), post('kde'), $datum, $visible,
 					post('lock'));
 				
@@ -57,18 +57,13 @@ switch(Request::getAction()) {
 			post('id', $id);
 			post('trener', $data['r_trener']);
 			post('kde', $data['r_kde']);
-			list($year, $month, $day) = explode('-', $data['r_datum']);
-			post('year', $year);
-			post('month', $month);
-			post('day', $day);
+			post('datum', $data['r_datum']);
 			post('visible', $data['r_visible']);
 			post('lock', $data['r_lock']);
 			
 			include('files/Admin/Rozpis/Form.inc');
 			return;
 		} else {
-			$datum = post('year') . '-' . post('month') . '-' . post('day');
-		
 			$visible = (bool) post('visible');
 			$visible_prev = $data['r_visible'];
 			if(User::checkPermissionsBool(L_TRENER) && !User::checkPermissionsBool(L_ADMIN) &&
@@ -83,6 +78,8 @@ switch(Request::getAction()) {
 			$html = ob_get_clean();
 			
 			if(!$error) {
+				$datum = Helper::get()->date()->name('datum')->getPost();
+				
 				DBRozpis::editRozpis($id, post('trener'), post('kde'), $datum, $visible,
 					post('lock'));
 					

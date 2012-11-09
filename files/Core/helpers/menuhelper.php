@@ -55,7 +55,7 @@ class MenuHelper {
 		}
 		$out .= '">';
 		$out .= '<div style="position:fixed;z-index:100;width:inherit;' . 
-			'border:1px solid #FFD390;background:#FFE7C7;padding:3px 1px;">';
+			'border:1px solid #FFD390;background:#FFE7C7;margin-top:2px;padding:3px 1px;">';
 		if(!empty($this->content)) {
 			$i = 1;
 			foreach($this->content as $name => $data) {

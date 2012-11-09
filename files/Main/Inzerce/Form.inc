@@ -4,14 +4,9 @@ $error = false;
 global $isConfirmation;
 $isConfirmation = post("nadpis") || post("od") ||post('kat');
 
-$request = explode('/', $_SERVER['REQUEST_URI']);
-$id = is_numeric($request[count($request) - 1]) ? array_pop($request) : '0';
-$action = array_pop($request);
-if(empty($action)) $action[] = '';
-
-if($action == 'edit')
+if(Request::getAction() == 'edit')
 	$header = "Upravit inzerát";
-elseif($action == 'add')
+elseif(Request::getAction() == 'add')
 	$header = "Přidat inzerát";
 else
 	$header = "Neznámá akce";
@@ -32,25 +27,17 @@ header_minor($header);
 	</tr><tr>
 		<td>Kategorie (*): </td>
 		<td>
-			<input type="radio" name="kat" value="1" <?php
-				if(post("kat") == "1") echo 'checked="checked"';
-			?>/>Prodám&nbsp;&nbsp;<input type="radio" name="kat" value="2" <?php
-				if(post("kat") == "2") echo 'checked="checked"';
-			?>/>Koupím<br/>
-			<input type="radio" name="kat" value="3" <?php
-				if(post("kat") == "3") echo 'checked="checked"';
-			?>/>Hledám partnera&nbsp;&nbsp;<input type="radio" name="kat" value="4" <?php
-				if(post("kat") == "4") echo 'checked="checked"';
-			?>/>Hledám partnerku<br/>
+			<label><?php echo getRadio('kat', 1);?>Prodám</label>&nbsp;
+			<label><?php echo getRadio('kat', 2);?>Koupím</label><br/>
+			<label><?php echo getRadio('kat', 3);?>Hledám partnera</label>&nbsp;
+			<label><?php echo getRadio('kat', 4);?>Hledám partnerku</label>
 		</td>
 		<td><?php
 			$error = checkPostField("/1|2|3|4/i", "kat") || $error;
 		?></td>
 	</tr><?php if(User::isLogged()) { ?><tr>
 		<td>Viditelný: </td>
-		<td><input type="checkbox" name="visible" value="visible" <?php
-			if(post("visible")) echo 'checked="checked"';
-		?>/></td>
+		<td><label><?php echo getCheckbox('visible', 'visible');?></label></td>
 		<td></td>
 	</tr><?php } else { //TODO: Inzerce foto ?><tr>
 		<td>Jméno (*): </td>
@@ -64,7 +51,7 @@ header_minor($header);
 		<td>Max. 40 znaků<?php
 			$error = checkPostFieldLength(1, 40, "prijmeni") || $error;
 		?></td>
-	</tr><?php if(empty($_SESSION['inzerce_' . $id])) { ?><tr>
+	</tr><?php if(empty($_SESSION['inzerce_' . Request::getID()])) { ?><tr>
 		<td>Heslo (*): </td>
 		<td><input type="text" name="pass" value="<?php echo post("pass"); ?>" /></td>
 		<td>Max. 20 znaků - dá se použít pro opětovný přístup k inzerátu<?php
@@ -72,21 +59,17 @@ header_minor($header);
 		?></td>
 	</tr><?php }} ?><tr>
 		<td>Od: (*)</td>
-		<td><?php echoDateSelect("od_day", "od_month", "od_year");?></td>
-		<td><?php
-			$od_str = post("od_year") . "-" . post("od_month") . "-" .
-				post("od_day");
-			$error = checkDateString($od_str) || $error;
-		?></td>
+		<td><?php echo Helper::get()->date()->name('od')->textBox();?></td>
+		<td><?php $error = checkDateString(Helper::get()->date(false)->getPost()) || $error;?></td>
 	</tr><tr>
 		<td>Do: </td>
-		<td><?php echoDateSelect("do_day", "do_month", "do_year");?></td>
-		<td>(pokud je prázdný, počítá se jako "Od")<?php
-			$do_str = post("do_year") . "-" . post("do_month") . "-" . post("do_day");
-			$error = (($do_str == "0000-00-00") ? 0 : checkDateString($do_str)) || $error;
+		<td><?php echo Helper::get()->date()->name('do')->textBox();?></td>
+		<td>(pokud je prázdný, počítá se jako "Od")
+		<?php $do = Helper::get()->date(false)->getPost();
+			$error = ($do ? checkDateString($do) : false) || $error;
 		?></td>
 	</tr><tr>
-		<?php if($action == 'add') { ?>
+		<?php if(Request::getAction() == 'add') { ?>
 		<td><button type="submit" name="action" value="add_confirm">Přidat</button></td>
 		<?php }	else {?>
 		<td><button type="submit" name="action" value="edit_confirm">Upravit</button></td>
@@ -96,9 +79,4 @@ header_minor($header);
 	</tr>
 </table>
 </form>
-<a href="<?php
-if(strpos($_SERVER['REQUEST_URI'], 'member'))
-	echo '/member/profil/inzerce';
-else
-	echo '/inzerce/posledni';
-?>">Zpět</a>
+<a href="<?php echo Request::getReferer();?>">Zpět</a>

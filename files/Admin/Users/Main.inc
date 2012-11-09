@@ -32,7 +32,7 @@ switch(Request::getAction()) {
 					default:		$level = L_HOST;	break;
 				}
 				$pass = User::Crypt(post('pass'));
-				$narozeni = post('year') . '-' . post('month') . '-' . post('day');
+				$placeno = Helper::get()->date()->name('placeno')->getPost();
 				
 				DBUser::addUser(strtolower(post('login')), $pass, post('jmeno'), post('prijmeni'),
 					post('pohlavi'), post('email'), post('telefon'), $narozeni,
@@ -80,10 +80,7 @@ switch(Request::getAction()) {
 			post('pohlavi', $data['u_pohlavi']);
 			post('email', $data['u_email']);
 			post('telefon', $data['u_telefon']);
-			list($year, $month, $day) = explode('-', $data['u_narozeni']);
-			post('year', $year);
-			post('month', $month);
-			post('day', $day);
+			post('narozeni', $data['u_narozeni']);
 			post('skupina', $data['u_skupina']);
 			post('poznamky', $data['u_poznamky']);
 			include('files/Admin/Users/Form.inc');
@@ -108,7 +105,7 @@ switch(Request::getAction()) {
 					case 'sadmin':	$level = L_SADMIN;	break;
 					default:		$level = L_HOST;	break;
 				}
-				$narozeni = post('year') . '-' . post('month') . '-' . post('day');
+				$placeno = Helper::get()->date()->name('placeno')->getPost();
 	
 				DBUser::setUserData($id, post('jmeno'), post('prijmeni'), post('pohlavi'),
 					post('email'), post('telefon'), $narozeni, post('poznamky'), $level,
@@ -211,15 +208,16 @@ switch(post('action')) {
 		break;
 	
 	case 'save':
-		$filter = get('f');
-		switch($filter) {
-			case 'dancer': $users = DBUser::getActiveDancers(); break;
-			case 'trener': $users = DBUser::getActiveUsers(L_TRENER); break;
-			case 'editor': $users = DBUser::getActiveUsers(L_EDITOR); break;
-			case 'all':
-			default: $users = DBUser::getUsers(L_ALL); break;
-		}
-		foreach($users as $user) {
+		$options['filter'] = in_array(get('f'), array('dancer', 'trener', 'editor', 'system', 'all')) ?
+			get('f') : 'all';
+		$pager = new Paging(new PagingAdapterDBSelect('DBUser', $options));
+		$pager->setCurrentPageField('p');
+		$pager->setItemsPerPageField('c');
+		$pager->setDefaultItemsPerPage(20);
+		$pager->setPageRange(5);
+		$items = $pager->getItems();
+		
+		foreach($items as $user) {
 			$id = $user['u_id'];
 			if(((bool) post($id . '-dancer')) !== ((bool) $user['u_dancer']) ||
 					((bool) post($id . '-system')) !== ((bool) $user['u_system']) ||

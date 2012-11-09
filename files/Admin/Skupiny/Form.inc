@@ -4,13 +4,9 @@ $error = false;
 global $isConfirmation;
 $isConfirmation = (post("color") || post("platba"));
 
-$request = explode('/', $_SERVER['REQUEST_URI']);
-$action = array_slice($request, 3);
-if(empty($action)) $action[] = '';
-
-if($action[0] == 'edit')
+if(Request::getAction() == 'edit')
 	$header = "Upravit skupinu";
-elseif($action[0] == 'add')
+elseif(Request::getAction() == 'add')
 	$header = "Přidat skupinu";
 else
 	$header = "Neznámá akce";
@@ -22,10 +18,8 @@ header_minor($header);
 	<tr>
 		<td>Barva (*): </td>
 		<td><?php
-		$s = new SelectHelper();
-		$s->select()
-			->name('color')
-			->get(false);
+		$s = Helper::get()->select()
+			->post()->name('color');
 		foreach(Settings::$barvy as $name => $barva)
 			$s->option($name, $barva[0]);
 		echo $s;
@@ -53,7 +47,7 @@ header_minor($header);
 		<td>Popis: (*)</td>
 		<td><textarea rows="15" cols="50" name="popis"><?php echo post('popis');?></textarea></td>
 	</tr><tr>
-		<?php if($action[0] == 'add') {?>
+		<?php if(Request::getAction() == 'add') {?>
 		<td><button type="submit" name="action" value="add_confirm">Přidat</button></td>
 		<?php }	else {?>
 		<td><button type="submit" name="action" value="edit_confirm">Upravit</button></td>

@@ -7,6 +7,7 @@ set_include_path(
 	$_SERVER['DOCUMENT_ROOT'] . '/files/Core/database' . PATH_SEPARATOR .
 	$_SERVER['DOCUMENT_ROOT'] . '/files/Core/display' . PATH_SEPARATOR .
 	$_SERVER['DOCUMENT_ROOT'] . '/files/Core/helpers' . PATH_SEPARATOR .
+	$_SERVER['DOCUMENT_ROOT'] . '/files/Core/paging' . PATH_SEPARATOR .
 	$_SERVER['DOCUMENT_ROOT'] . '/files/Core/types' . PATH_SEPARATOR .
 	get_include_path());
 spl_autoload_extensions('.php');

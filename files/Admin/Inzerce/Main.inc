@@ -10,10 +10,9 @@ switch(Request::getAction()) {
 			include('files/Admin/Inzerce/Form.inc');
 			return;
 		} else {
-			$od = post('od_year') . '-' . post('od_month') . '-' . post('od_day');
-			$do = post('do_year') . '-' . post('do_month') . '-' . post('do_day');
-			
-			if($do == '0000-00-00' || strcmp($od, $do) > 0)
+			$od = Helper::get()->date()->name('od')->getPost();
+			$do = Helper::get()->date()->name('do')->getPost();
+			if(!$do || strcmp($od, $do) > 0)
 				$do = $od;
 		
 			$userid = post('reg');
@@ -54,14 +53,8 @@ switch(Request::getAction()) {
 			post('prijmeni', $data['i_prijmeni']);
 			post('nadpis', $data['i_nadpis']);
 			post('text', $data['i_text']);
-			list($od_year, $od_month, $od_day) = explode('-', $data['i_od']);
-			post('od_year', $od_year);
-			post('od_month', $od_month);
-			post('od_day', $od_day);
-			list($do_year, $do_month, $do_day) = explode('-', $data['i_do']);
-			post('do_year', $do_year);
-			post('do_month', $do_month);
-			post('do_day', $do_day);
+			post('od', $data['i_od']);
+			post('do', $data['i_do']);
 			post('pass', $data['i_pass']);
 			post('visible', $data['i_visible']);
 			post('confirmed', $data['i_confirmed']);
@@ -69,10 +62,9 @@ switch(Request::getAction()) {
 			include('files/Admin/Inzerce/Form.inc');
 			return;
 		} else {
-			$od = post('od_year') . '-' . post('od_month') . '-' . post('od_day');
-			$do = post('do_year') . '-' . post('do_month') . '-' . post('do_day');
-			
-			if($do == '0000-00-00' || strcmp($od, $do) > 0)
+			$od = Helper::get()->date()->name('od')->getPost();
+			$do = Helper::get()->date()->name('do')->getPost();
+			if(!$do || strcmp($od, $do) > 0)
 				$do = $od;
 			
 			$userid = post('reg');

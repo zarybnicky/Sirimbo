@@ -1,6 +1,8 @@
 <?php
 class Database {
 	private static $connection = null;
+
+	public static function getInstance() { return new self(); }
 	
 	protected static function escapeArray($array) {
 		Database::getConnection();
@@ -42,9 +44,12 @@ class Database {
 		
 		return $result;
 	}
+	protected static function getInsertId() {
+		return mysql_insert_id(Database::$connection);
+	}
 	public static function isDatabaseError() {
-		return (isset($_GET['file']) &&$_GET['file'] == "error" && isset($_GET['id']) &&
-			($_GET['id'] == ER_DATABASE_CONNECTION || $_GET['id'] == ER_DATABASE));
+		return (get('file') == 'error' && get('id') &&
+			(get('id') == ER_DATABASE_CONNECTION || get('id') == ER_DATABASE));
 	}
 }
 ?>
