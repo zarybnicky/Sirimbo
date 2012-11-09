@@ -2,15 +2,11 @@
 $error = false;
 
 global $isConfirmation;
-$isConfirmation = post("jmeno") || post("kat") ||post('text');
+$isConfirmation = post("jmeno") || post("kat") || post('text');
 
-$request = explode('/', $_SERVER['REQUEST_URI']);
-$action = array_slice($request, 3);
-if(empty($action)) $action[] = '';
-
-if($action[0] == 'edit')
+if(Request::getAction() == 'edit')
 	$header = "Upravit článek";
-elseif($action[0] == 'add')
+elseif(Request::getAction() == 'add')
 	$header = "Přidat článek";
 else
 	$header = "Neznámá akce";
@@ -31,13 +27,9 @@ header_minor($header);
 	</tr><tr>
 		<td>Kategorie (*): </td>
 		<td>
-			<input type="radio" name="kat" value="1" <?php
-				if(post("kat") == "1") echo 'checked="checked"';
-			?>/>Články&nbsp;&nbsp;<input type="radio" name="kat" value="2" <?php
-				if(post("kat") == "2") echo 'checked="checked"';
-			?>/>Videa&nbsp;&nbsp;<input type="radio" name="kat" value="3" <?php
-				if(post("kat") == "3") echo 'checked="checked"';
-			?>/>Krátké zprávy
+			<label><?php echo getRadio('kat', 1);?>Články</label>&nbsp;
+			<label><?php echo getRadio('kat', 2);?>Videa</label>&nbsp;
+			<label><?php echo getRadio('kat', 3);?>Krátké zprávy</label>
 		</td>
 		<td><?php
 			$error = checkPostField("/1|2\3/i", "kat") || $error;
@@ -46,20 +38,18 @@ header_minor($header);
 		<td>Fotogalerie: </td>
 		<td><?php
 			$dirs = DBGalerie::getDirs(true, true);
-
-			if(!empty($dirs)) {
-				echo '<select name="foto">';
-				echo '<option value="none" selected="selected">Vyber si :o)</option>';
-				foreach($dirs as $dir) {
-					echo '<option value="', $dir['gd_id'], '"',
-						(post('foto') == $dir['gd_id'] ? ' selected="selected"' : ''), '>',
-						str_repeat("-", $dir['gd_level'] - 1), $dir['gd_name'], '</option>';
-				}
-				echo '</select>';
-			}
+			
+			$s = Helper::get()->select()
+				->post()->name('foto')
+				->value($dir['gd_id'])
+				->option('none', '--');
+			foreach($dirs as $dir)
+				$s->option($dir['gd_id'],
+					str_repeat("-", $dir['gd_level'] - 1) . $dir['gd_name']);
+			echo $s;
 		?></td>
 	</tr><tr>
-		<?php if($action[0] == 'add') { ?>
+		<?php if(Request::getAction() == 'add') { ?>
 		<td><button type="submit" name="action" value="add_confirm">Přidat</button></td>
 		<?php }	else {?>
 		<td><button type="submit" name="action" value="edit_confirm">Upravit</button></td>

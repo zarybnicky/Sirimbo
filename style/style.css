@@ -278,12 +278,13 @@ p { margin-bottom: 1em; }
 .yellow {background-color:yellow; color:yellow;}
 
 .box {
-	display:block;
+	display: inline-block;
+	*display:inline;
 	width:10px;
 	height:10px;
 	border:1px solid black;
-	margin:1px;
-	float:left;
+	margin:0 1px;
+	line-height:10px;
 }
 
 .up_header {

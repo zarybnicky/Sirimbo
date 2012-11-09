@@ -2,12 +2,10 @@
 header_main('Fotogalerie');
 notice(View::getRedirectMessage());
 
-$url = array_reverse(explode('/', $_SERVER['REQUEST_URI']));
-
-if($url[1] == 'foto') {
+if(Request::getAction() == 'foto') {
 	//Foto
-	$id = is_numeric($url[0]) ? $url[0] : 0;
-	if(!($data = DBGalerie::getSingleFoto($id)))
+	$id = Request::getID();
+	if(!$id || !is_numeric($id) || !($data = DBGalerie::getSingleFoto($id)))
 		View::redirect('/fotogalerie', 'Taková fotka neexistuje');
 	
 	$parent_dir = DBGalerie::getFotky($data['gf_id_rodic']);
@@ -25,21 +23,19 @@ if($url[1] == 'foto') {
 	else
 		$id_next = false;
 	
-	$return_url = implode('/', array_reverse(array_slice($url, 2)));
-	
 	echo '<div style="text-align:center;">', $data['gf_name'], '<br/>';
 	if($id_prev !== false)
 		echo '<a href="', $id_prev, '">&lt;&lt;</a>';
 	else
 		echo '&lt;&lt;';
-	echo ' &bull; <a href="', $return_url, '">Zpět</a> &bull; ';
+	echo ' &bull; <a href="', Request::getReferer(), '">Zpět</a> &bull; ';
 	if($id_next !== false)
 		echo '<a href="', $id_next, '">&gt;&gt;</a>';
 	else
 		echo '&gt;&gt;';
 	echo '</div>';
 	
-	echo '<a href="', $return_url, '">';
+	echo '<a href="', Request::getReferer(), '">';
 	echo '<div class="f_full"><div class="f_img">';
 	echo '<img alt="', $data['gf_id'], '" src="',
 		str_replace('./galerie/', '/galerie/', $data['gf_path']), '" />';
@@ -48,8 +44,8 @@ if($url[1] == 'foto') {
 	return;
 }
 
-$id = is_numeric($url[0]) ? $url[0] : 0;
-if(!($data = DBGalerie::getSingleDir($id)))
+$id = Request::getID();
+if(!$id || !is_numeric($id) || !($data = DBGalerie::getSingleDir($id)))
 	View::redirect('/fotogalerie', 'Taková složka neexistuje');
 
 $fotos = DBGalerie::getFotky($id);

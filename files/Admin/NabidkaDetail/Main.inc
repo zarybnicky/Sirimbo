@@ -5,7 +5,7 @@ header_main("Správa nabídek");
 notice(View::getRedirectMessage());
 
 $id = Request::getID();
-if(!$id || !is_numeric($id) || !($data = DBNabidka::getSingleNabidka($id)))
+if(!$id || !($data = DBNabidka::getSingleNabidka($id)))
 	View::redirect('/admin/nabidka', 'Nabídka s takovým ID neexistuje');
 	
 if(!Permissions::canEditNabidka($data['n_trener']))

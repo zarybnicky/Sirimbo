@@ -10,6 +10,7 @@ include("files/Core/view.php");
 include("files/Core/request.php");
 include("files/Core/permissions.php");
 include('files/Core/helper.php');
+include("files/Core/paging.php");
 include("files/Core/mailer.php");
 include("files/Core/debug.php");		//DEBUG ONLY!!!
 

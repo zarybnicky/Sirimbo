@@ -2,7 +2,7 @@
 $error = false;
 
 global $isConfirmation;
-$isConfirmation = (post("") || post("newpass"));
+$isConfirmation = (post('stt-trida') || post("lat-trida"));
 
 header_minor("Změna třídy a bodů");
 ?>
@@ -14,22 +14,11 @@ Pár: <?php echo $data['guy_name'], ' ', $data['guy_surname'], ' - ',
 <tr><td>Standart:</td><td></td></tr>
 <tr>
 	<td>Třída:</td>
-	<td><select name="stt-trida">
-			<option value="Z" <?php if(post("stt-trida") == "Z")
-				echo "selected=\"selected\"";?>>Z</option>
-			<option value="H" <?php if(post("stt-trida") == "H")
-				echo "selected=\"selected\"";?>>H</option>
-			<option value="D" <?php if(post("stt-trida") == "D")
-				echo "selected=\"selected\"";?>>D</option>
-			<option value="C" <?php if(post("stt-trida") == "C")
-				echo "selected=\"selected\"";?>>C</option>
-			<option value="B" <?php if(post("stt-trida") == "B")
-				echo "selected=\"selected\"";?>>B</option>
-			<option value="A" <?php if(post("stt-trida") == "A")
-				echo "selected=\"selected\"";?>>A</option>
-			<option value="M" <?php if(post("stt-trida") == "M")
-				echo "selected=\"selected\"";?>>M</option>
-		</select></td>
+	<td><?php
+		echo Helper::get()->select()
+			->post()->name('stt-trida')
+			->options(array('Z', 'H', 'D', 'C', 'B', 'A', 'M'), true, true);
+	?></td>
 </tr>
 <tr>
 	<td>Body:</td>
@@ -41,22 +30,11 @@ Pár: <?php echo $data['guy_name'], ' ', $data['guy_surname'], ' - ',
 <tr><td>Latina:</td><td></td></tr>
 <tr>
 	<td>Třída:</td>
-	<td><select name="lat-trida">
-			<option value="Z" <?php if(post("lat-trida") == "Z")
-				echo "selected=\"selected\"";?>>Z</option>
-			<option value="H" <?php if(post("lat-trida") == "H")
-				echo "selected=\"selected\"";?>>H</option>
-			<option value="D" <?php if(post("lat-trida") == "D")
-				echo "selected=\"selected\"";?>>D</option>
-			<option value="C" <?php if(post("lat-trida") == "C")
-				echo "selected=\"selected\"";?>>C</option>
-			<option value="B" <?php if(post("lat-trida") == "B")
-				echo "selected=\"selected\"";?>>B</option>
-			<option value="A" <?php if(post("lat-trida") == "A")
-				echo "selected=\"selected\"";?>>A</option>
-			<option value="M" <?php if(post("lat-trida") == "M")
-				echo "selected=\"selected\"";?>>M</option>
-		</select></td>
+	<td><?php
+		echo Helper::get()->select()
+			->post()->name('stt-trida')
+			->options(array('Z', 'H', 'D', 'C', 'B', 'A', 'M'), true, true);
+	?></td>
 </tr>
 <tr>
 	<td>Body:</td>

@@ -1,7 +1,6 @@
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
 <?php
-$f = new MenuHelper();
-echo $f->menu()
+echo Helper::get()->menu()
 	->float(MenuHelper::FLOAT_RIGHT)
 	->content('Přidat fotky', 'galerie/add')
 	->content('Upravit fotky', 'edit', true)
@@ -30,12 +29,14 @@ if(!empty($dirs)) {
 <table>
 <tr><td>Název</td><td><input type="text" name="name"/></td></tr>
 <tr><td>Nadsložka</td><td>
-	<select name="parent">
-		<option value="none" selected="selected">Vyber si :o)</option><?php
-foreach($dirs as $dir) {
-	echo '<option value="', $dir['gd_id'], '-', $dir['gd_level'], '">',
-		str_repeat("&nbsp;-&nbsp;", $dir['gd_level'] - 1), $dir['gd_name'], '</option>';
-}?></select></td></tr>
+<?php
+$s = Helper::get()->select()
+	->post()->name('parent')
+	->option('none', '--');
+foreach($dirs as $dir)
+	$s->option($dir['gd_id'] . '-' . $dir['gd_level'],
+		str_repeat("&nbsp;&nbsp;", $dir['gd_level'] - 1) . $dir['gd_name']);
+?></td></tr>
 <tr><td>Skrytá složka</td><td><input type="checkbox" name="hidden"/></td></tr>
 <tr><td><button type="submit" name="action" value="adddir">Přidat složku</button></td></tr>
 </table>

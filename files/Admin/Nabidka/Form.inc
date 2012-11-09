@@ -1,23 +1,10 @@
 <?php
-$error = false;
-
-global $isConfirmation;
-$isConfirmation = (post("trener") || post("pocet_hod"));
-
-$request = explode('/', $_SERVER['REQUEST_URI']);
-$action = array_slice($request, 3);
-if(empty($action)) $action[] = '';
-
-if($action[0] == 'edit')
-	$header = "Upravit nabídku";
-elseif($action[0] == 'add')
-	$header = "Přidat nabídku";
+if(Request::getAction() == 'add')
+	header_minor("Přidat nabídku");
 else
-	$header = "Neznámá akce";
-
-header_minor($header);
+	header_minor("Upravit nabídku");
 ?>
-<form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="POST">
+<form action="<?php echo Request::getURI();?>" method="POST">
 <table>
 	<tr>
 		<td>Trenér (*): </td>
@@ -27,56 +14,41 @@ header_minor($header);
 			<option value="<?php echo User::getUserID();?>">Já</option>
 		</select><?php
 		} else {
-			$userselect = new UserSelectHelper();
-			echo $userselect->userSelect()->name('trener')->permissions(L_TRENER)->users(DBUser::getTrener());
-		}
-		$error = checkPostField("/[0-9]+/i", "trener");
-		?><input type="hidden" name="id" value="<?php $id = post("id");
-			if(is_numeric($id)) echo $id; else if($id) View::viewError(ER_CORRUPT_DATA); ?>"/></td>
+			echo Helper::get()->userSelect()
+				->name('trener')
+				->permissions(L_TRENER)
+				->users(DBUser::getTrener());
+		} ?></td>
 	</tr><tr>
 		<td>Počet hodin (*): </td>
 		<td><input type="text" name="pocet_hod" value="<?php echo post("pocet_hod"); ?>" /></td>
-		<td>Pouze číslice<?php
-			$error = checkPostField("/^[0-9]+$/i", "pocet_hod") || $error;
-		?></td>
 	</tr><tr>
 		<td>Od: (*)</td>
-		<td><?php echoDateSelect("od_day", "od_month", "od_year");?></td>
-		<td><?php
-			$od_str = post("od_year") . "-" . post("od_month") . "-" .
-				post("od_day");
-			$error = checkDateString($od_str) || $error;
-		?></td>
+		<td><?php echo Helper::get()->date()->name('od')->textBox();?></td>
 	</tr><tr>
 		<td>Do: </td>
-		<td><?php echoDateSelect("do_day", "do_month", "do_year");?></td>
-		<td>(pokud je prázdný, počítá se jako "Od")<?php
-			$do_str = post("do_year") . "-" . post("do_month") . "-" .
-				post("do_day");
-			$error = (($do_str == "0000-00-00") ? 0 : checkDateString($do_str)) || $error;
-		?></td>
+		<td><?php echo Helper::get()->date()->name('do')->textBox();?></td>
+	</tr><tr>
+		<td></td>
+		<td>(pokud je "Do" prázdné, počítá se jako "Od")</td>
 	</tr><tr>
 		<td>Viditelný: </td>
-		<td><input type="checkbox" name="visible" value="visible" <?php
-			if(post('visible')) echo 'checked="checked"';
-			if(!User::checkPermissionsBool(L_ADMIN)) echo 'readonly="readonly"'
-		?>/></td>
-		<td></td>
+		<td><label><?php echo getCheckbox('visible', 'visible', false, false,
+			!User::checkPermissionsBool(L_ADMIN));?></label></td>
 	</tr><tr>
 		<td>Uzamknout: </td>
-		<td><input type="checkbox" name="lock" value="lock" <?php
-			if(post('lock')) echo 'checked="checked"';
-		?>/></td>
+		<td><label><?php echo getCheckbox('lock');?></label></td>
 		<td></td>
 	</tr><tr>
-		<?php if($action[0] == 'add') {?>
-		<td><button type="submit" name="action" value="add_confirm">Přidat</button></td>
-		<?php }	else {?>
-		<td><button type="submit" name="action" value="edit_confirm">Upravit</button></td>
-		<?php } ?>
-		<td></td>
+		<td><button type="submit"><?php
+			if(Request::getAction() == 'add') echo 'Přidat';
+			else echo 'Upravit';
+			
+			echo getReturnInput();
+		?></button></td>
 		<td>Pole označená (*) jsou povinná</td>
 	</tr>
 </table>
 </form>
-<a href="/admin/nabidka">Zpět</a>
+
+<a href="<?php echo Request::getReferer();?>">Zpět</a>

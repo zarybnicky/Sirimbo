@@ -1,7 +1,7 @@
 <?php
 /*
  * Example:
-$h = Helper::get();
+$h = Helper::get(); // OR $d = Helper::get()->date();$d->setDate('2001-01-01');
 echo '<form action="', Request::getURI(), '" method="post">';
 echo $h->date('2012-12-21')->name('test1')->selectBox(), '<br/>';
 echo $h->date('2000-01-01')->name('test2')->textBox(), '<br/>';
@@ -94,25 +94,20 @@ class DateHelper {
 		return $this->render();
 	}
 	function render() {
-		$h = Helper::get();
 		$out = '';
 		
 		if($this->view == 'select') {
-			$h->select()
-				->get(false);
+			$s = Helper::get()->select()->get(false);
 			
-			$h->select(false)
-				->name($this->name . '-day')
+			$s->name($this->name . '-day')
 				->value($this->date ? $this->date->getDay() : null)
 				->options(array(), true)
 				->option('00', 'Den');
 			for($i = 1; $i < 32; $i++)
-				$h->select(false)
-					->option((($i < 10) ? ('0' . $i) : $i), $i);
-			$out .= $h->select(false);
+				$s->option((($i < 10) ? ('0' . $i) : $i), $i);
+			$out .= $s;
 			
-			$out .= $h->select(false)
-				->name($this->name . '-month')
+			$out .= $s->name($this->name . '-month')
 				->value($this->date ? $this->date->getMonth() : null)
 				->options(array(), true)
 				->option('00', 'Měsíc')
@@ -123,15 +118,13 @@ class DateHelper {
 				->option('09', 'Září')		->option('10', 'Říjen')
 				->option('11', 'Listopad')	->option('12', 'Prosinec');
 			
-			$h->select(false)
-				->name($this->name . '-year')
+			$s->name($this->name . '-year')
 				->value($this->date ? $this->date->getYear() : null)
 				->options(array(), true)
 				->option('0000', 'Rok');
 			for($i = $this->fromYear; $i < $this->toYear; $i++)
-				$h->select(false)
-					->option($i, $i);
-			$out .= $h->select(false);
+				$s->option($i, $i);
+			$out .= $s;
 		} elseif($this->view == 'text') {
 			$selected = $this->post ? post($this->name) : get($this->name);
 			if($selected) {

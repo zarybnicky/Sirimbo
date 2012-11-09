@@ -4,13 +4,9 @@ $error = false;
 global $isConfirmation;
 $isConfirmation = (post("jmeno") || post("misto"));
 
-$request = explode('/', $_SERVER['REQUEST_URI']);
-$action = array_slice($request, 3);
-if(empty($action)) $action[] = '';
-
-if($action[0] == 'edit')
+if(Request::getAction() == 'edit')
 	$header = "Upravit akci";
-elseif($action[0] == 'add')
+elseif(Request::getAction() == 'add')
 	$header = "Přidat akci";
 else
 	$header = "Neznámá akce";
@@ -36,19 +32,14 @@ header_minor($header);
 		<td></td>
 	</tr><tr>
 		<td>Od: (*)</td>
-		<td><?php echoDateSelect("od_day", "od_month", "od_year");?></td>
-		<td><?php
-			$od_str = post("od_year") . "-" . post("od_month") . "-" .
-				post("od_day");
-			$error = checkDateString($od_str) || $error;
-		?></td>
+		<td><?php echo Helper::get()->date()->name('od')->textBox();?></td>
+		<td><?php $error = checkDateString(Helper::get()->date(false)->getPost()) || $error;?></td>
 	</tr><tr>
 		<td>Do: </td>
-		<td><?php echoDateSelect("do_day", "do_month", "do_year");?></td>
-		<td>(pokud je prázdný, počítá se jako "Od")<?php
-			$do_str = post("do_year") . "-" . post("do_month") . "-" .
-				post("do_day");
-			$error = (($do_str == "0000-00-00") ? 0 : checkDateString($do_str)) || $error;
+		<td><?php echo Helper::get()->date()->name('do')->textBox();?></td>
+		<td>(pokud je prázdný, počítá se jako "Od")
+		<?php $do = Helper::get()->date(false)->getPost();
+			$error = ($do ? checkDateString($do) : false) || $error;
 		?></td>
 	</tr><tr>
 		<td>Kapacita (*): </td>
@@ -69,12 +60,10 @@ header_minor($header);
 		?></td>
 	</tr><tr>
 		<td>Uzamknout: </td>
-		<td><input type="checkbox" name="lock" value="lock" <?php
-			if(post("lock")) echo "checked=\"checked\"";
-		?>/></td>
+		<td><label><?php echo getCheckbox('lock', 'lock')?></label></td>
 		<td></td>
 	</tr><tr>
-		<?php if($action[0] == 'add') {?>
+		<?php if(Request::getAction() == 'add') {?>
 		<td><button type="submit" name="action" value="add_confirm">Přidat</button></td>
 		<?php }	else {?>
 		<td><button type="submit" name="action" value="edit_confirm">Upravit</button></td>

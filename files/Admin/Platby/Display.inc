@@ -1,11 +1,10 @@
 <?php
 if(!TISK) {
-	$s = new SelectHelper();
+	$s = Helper::get()->select();
 	
 	echo '<form action="/admin/platby" method="get">';
 	echo 'za období:&nbsp;';
-	$s->select()
-		->name('f')
+	$s->get()->name('f')
 		->option('all', 'Všechny platby');
 	$year = date('Y');
 	for($i = '2011'; $i <= $year; $i++) {
@@ -15,29 +14,17 @@ if(!TISK) {
 	echo $s->value($year . '-1');
 	
 	echo 'řadit podle:&nbsp;';
-	echo $s->select()
-		->name('s')
-		->option('surname', 'příjmení')
+	echo $s->get()->name('s')
+		->option('surname', 'příjmení', true)
 		->option('var-symbol', 'var. symbolu')
 		->option('datum', 'data platby');
 	echo '<button type="submit">Odeslat</button><br/><br/>';
 	echo '</form>';
 }
 
-echo '<form action="/admin/platby" method="POST">';
-if(!TISK) {
-	$f = new MenuHelper();
-	echo $f->menu()
-		->float(MenuHelper::FLOAT_RIGHT)
-		->content('Přidat', 'platby/add')
-		->content('Upravit', 'edit', true)
-		->content('Odebrat', 'remove', true);
-}
-
 $skupiny = DBSkupiny::getSkupiny();
-
 if(!get('f') || get('f') == 'all') {
-	$platby = DBPlatby::getPlatby();
+	$options['type'] = 'platby';
 } else {
 	list($year, $n) = explode('-', get('f'));
 	
@@ -48,28 +35,45 @@ if(!get('f') || get('f') == 'all') {
 		$od = ((int) $year + 1) . Settings::$platby_obdobi['2-pololeti'][0];
 		$do = ((int) $year + 1) . Settings::$platby_obdobi['2-pololeti'][1];
 	}
-	$platby = DBPlatby::getPlatbyByDate($od, $do);
+	$options = array('type' => 'date', 'od' => $od, 'do' => $do);
 }
-if(empty($platby)) {
+
+$pager = new Paging(new PagingAdapterDBSelect('DBPlatby', $options));
+$pager->setCurrentPageField('p');
+$pager->setItemsPerPageField('c');
+$pager->setDefaultItemsPerPage(20);
+$pager->setPageRange(5);
+$items = $pager->getItems();
+
+echo '<form action="', Request::getURI(), '" method="POST">';
+if(!TISK) {
+	echo Helper::get()->menu()
+		->float(MenuHelper::FLOAT_RIGHT)
+		->content('Přidat', 'platby/add')
+		->content('Upravit', 'edit', true)
+		->content('Odebrat', 'remove', true);
+}
+if(empty($items)) {
 	notice('Žádné platby za toto období');
 	return;
 }
+
 $sort = get('s') ? get('s') : 'surname';
 switch($sort) {
 	case 'var-symbol':
-		usort($platby, create_function('$a, $b', 'return $a["u_id"] > $b["u_id"];'));
-		break;
-	case 'surname':
-		usort($platby, create_function('$a, $b', 'return $a["u_prijmeni"] > $b["u_prijmeni"];'));
+		usort($items, create_function('$a, $b', 'return $a["u_id"] > $b["u_id"];'));
 		break;
 	case 'datum':
-		usort($platby, create_function('$a, $b', 'return $a["up_placeno"] < $b["up_placeno"];'));
+		usort($items, create_function('$a, $b', 'return $a["up_placeno"] < $b["up_placeno"];'));
 		break;
+	case 'surname':
 	default:
+		usort($items, create_function('$a, $b', 'return $a["u_prijmeni"] > $b["u_prijmeni"];'));
 		break;
 }
 
-echo '<table>';
+echo '<div style="margin-right:150px">';
+echo '<table style="width:100%">';
 echo '<tr>';
 echo '<td></td>';
 echo '<td>Jméno</td>';
@@ -81,30 +85,32 @@ echo '<td>Placeno</td>';
 echo '<td>Platí do</td>';
 echo '</tr>';
 
-foreach($platby as $platba) {
+foreach($items as $item) {
 	echo "<tr>";
-	echo '<td><input type="checkbox" name="platby[]" value="' . $platba['up_id'] .	'" /></td>';
-	echo '<td>', $platba['u_prijmeni'], ', ', $platba['u_jmeno'], '</td>';
-	echo '<td><div class="box" title="', $platba['us_popis'], '" ',
-		'style="background-color:', Settings::$barvy[$platba['us_color']][1] . ';"></div></td>';
-	echo '<td>', User::var_symbol($platba['u_id']), '</td>';
-	echo '<td>', $platba['up_obdobi'] == true ?
-		Settings::$platby_obdobi[$platba['up_obdobi']][3] : '', '</td>';
+	echo '<td><input type="checkbox" name="platby[]" value="' . $item['up_id'] .	'" /></td>';
+	echo '<td>', $item['u_prijmeni'], ', ', $item['u_jmeno'], '</td>';
+	echo '<td>', getColorBox($item['us_color'], $item['us_popis']), '</td>';
+	echo '<td>', User::var_symbol($item['u_id']), '</td>';
+	echo '<td>', $item['up_obdobi'] == true ?
+		Settings::$platby_obdobi[$item['up_obdobi']][3] : '', '</td>';
 	echo '<td>';
-	if((strpos($platba['up_obdobi'], 'pololeti') &&
-			$platba['up_castka'] != $platba['us_platba_pulrok']) ||
-		(strpos($platba['up_obdobi'], 'ctvrtleti') &&
-			$platba['up_castka'] != $platba['us_platba_ctvrtrok']))
+	if((strpos($item['up_obdobi'], 'pololeti') &&
+			$item['up_castka'] != $item['us_platba_pulrok']) ||
+		(strpos($item['up_obdobi'], 'ctvrtleti') &&
+			$item['up_castka'] != $item['us_platba_ctvrtrok']))
 		echo '<span style="color:black;font-weight:bold;">',
-			$platba['up_castka'], ' Kč</span>';
+			$item['up_castka'], ' Kč</span>';
 	else
 		echo '<span style="color:#0B0;">',
-			$platba['up_castka'], ' Kč</span>';
+			$item['up_castka'], ' Kč</span>';
 	echo '</td>';
-	echo '<td>', formatDate($platba['up_placeno']), '</td>';
-	echo '<td>', formatDate($platba['up_plati_do']), '</td>';
+	echo '<td>', formatDate($item['up_placeno']), '</td>';
+	echo '<td>', formatDate($item['up_plati_do']), '</td>';
 	echo '</tr>';
 }
 echo '</table>';
+echo '<div style="text-align:center;">';
+echo $pager->getNavigation();
+echo '</div></div>';
 echo '</form>';
 ?>

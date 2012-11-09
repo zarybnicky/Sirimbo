@@ -2,10 +2,7 @@
 User::checkPermissionsError(L_HOST);
 header_main("Členové");
 
-$request = explode('/', $_SERVER['REQUEST_URI']);
-$action = array_slice($request, 2);
-$id = isset($action[1]) ? $action[1] : '';
-
+$id = Request::getID();
 if($id && is_numeric($id) && ($data = DBUser::getUserData($id))) {
 	echo '<b>', $data['u_jmeno'], ' ', $data['u_prijmeni'], '</b><br/>';
 	echo ($data['u_pohlavi'] == 'm' ? 'Pohlaví: muž' : 'Pohlavi: žena'), '<br />';
@@ -27,9 +24,8 @@ $count = count($users);
 
 echo '<form action="', $_SERVER['REQUEST_URI'], '" method="get">';
 echo 'Uživatelé:&nbsp;';
-$s = new SelectHelper();
-echo $s->select()
-	->name('f')
+echo Helper::get()->select()
+	->get()->name('f')
 	->option('dancer', 'tanečníci')
 	->option('all', 'všichni');
 echo '<button type="submit">Odeslat</button>';

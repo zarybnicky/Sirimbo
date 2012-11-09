@@ -1,5 +1,51 @@
 <?php
-class DBUser extends Database {
+class DBUser extends Database implements Pagable {
+	public static function getInstance() { return new self(); }
+
+	public static function getPage($offset, $count, $options = null) {
+		if(!isset($options['filter']))
+			$options['filter'] = 'all';
+		
+		$q = "SELECT users.*,p1.*,users_skupiny.* FROM users
+			LEFT JOIN users_platby p1 ON up_id_user=u_id
+			LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
+		WHERE (p1.up_id IS NULL OR
+			p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
+			WHERE p2.up_id_user=u_id)) AND u_confirmed='1' AND u_ban='0'";
+		switch($options['filter']) {
+			case 'dancer': $q .= " AND u_system='0' AND u_dancer='1'"; break;
+			case 'trener': $q .= " AND u_system='0' AND u_level>='" . L_TRENER . "'"; break;
+			case 'editor': $q .= " AND u_system='0' AND u_level>='" . L_EDITOR . "'"; break;
+			case 'system': $q .= " AND u_system='1'"; break;
+			case 'all':
+			default:
+				$q .= "AND u_system='0'";
+		}
+		$q .= " ORDER BY u_prijmeni LIMIT $offset,$count";
+		$res = DBUser::query($q);
+		return DBUser::getArray($res);
+	}
+	public static function getCount($options = null) {
+		if(!isset($options['filter']))
+			$options['filter'] = 'all';
+		
+		$q = "SELECT COUNT(*) FROM users WHERE u_confirmed='1' AND u_ban='0'";
+		switch($options['filter']) {
+			case 'dancer': $q .= " AND u_system='0' AND u_dancer='1'"; break;
+			case 'trener': $q .= " AND u_system='0' AND u_level>='" . L_TRENER . "'"; break;
+			case 'editor': $q .= " AND u_system='0' AND u_level>='" . L_EDITOR . '"'; break;
+			case 'system': $q .= " AND u_system='1'"; break;
+			case 'all':
+			default:
+				$q .= "AND u_system='0'";
+		}
+		$q .= ' ORDER BY u_prijmeni';
+		
+		$res = DBUser::query($q);
+		$res = DBUser::getSingleRow($res);
+		return $res['COUNT(*)'];
+	}
+	
 	public static function checkUser($login, $pass) {
 		list($login, $pass) = DBUser::escapeArray(array($login, $pass));
 		
@@ -198,24 +244,16 @@ class DBUser extends Database {
 	}
 	
 	public static function getUsers($level = NULL) {
-		if($level == NULL || $level == L_ALL)
-			$res = DBUser::query(
-			"SELECT users.*,p1.*,users_skupiny.* FROM users
-				LEFT JOIN users_platby p1 ON up_id_user=u_id
-				LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
-			WHERE (p1.up_id IS NULL OR
-				p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
-				WHERE p2.up_id_user=u_id))
-			ORDER BY u_prijmeni");
-		else
-			$res = DBUser::query(
-			"SELECT users.*,p1.*,users_skupiny.* FROM users
-				LEFT JOIN users_platby p1 ON up_id_user=u_id
-				LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
-			WHERE u_level='$level' AND (p1.up_id IS NULL OR
-				p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
-				WHERE p2.up_id_user=u_id))
-			ORDER BY u_prijmeni");
+		$res = DBUser::query(
+		"SELECT users.*,p1.*,users_skupiny.* FROM users
+			LEFT JOIN users_platby p1 ON up_id_user=u_id
+			LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
+		WHERE (p1.up_id IS NULL OR
+			p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
+			WHERE p2.up_id_user=u_id))" .
+		(($level == NULL || $level == L_ALL) ? " AND u_level='$level'" : '') .
+		" ORDER BY u_prijmeni");
+		
 		return DBUser::getArray($res);
 	}
 	

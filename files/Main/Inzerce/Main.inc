@@ -3,10 +3,6 @@ header_main('Inzerce');
 
 notice(View::getRedirectMessage());
 
-$request = explode('/', $_SERVER['REQUEST_URI']);
-$action = array_slice($request, 2);
-if(empty($action)) $action[] = '';
-
 if(!empty($_POST) && post('action') == "edit_unreg") {
 	$id = post('id');
 	$pass = post('pass');
@@ -22,7 +18,7 @@ if(!empty($_POST) && post('action') == "edit_unreg") {
 	View::redirect('./edit-unreg/' . $id);
 }
 
-switch($action[0]) {
+switch(Request::getAction()) {
 	case 'posledni':
 		header_minor('Poslední inzeráty');
 		$result = DisplayInzerce::viewInzerce(true, true, INZERCE_ALL, INZERCE_COUNT);
@@ -63,21 +59,26 @@ switch($action[0]) {
 			include('files/Main/Inzerce/Form.inc');
 			return;
 		} else {
-			$od = post('od_year') . '-' . post('od_month') . '-' . post('od_day');
-			$do = post('do_year') . '-' . post('do_month') . '-' . post('do_day');
-			
-			if($do == '0000-00-00' || strcmp($od, $do) > 0)
+			$od = Helper::get()->date()->name('od')->getPost();
+			$do = Helper::get()->date()->name('do')->getPost();
+			if(!$do || strcmp($od, $do) > 0)
 				$do = $od;
 			
-			$jmeno = User::isLogged() ? User::getUserJmeno() : post('jmeno');
-			$prijmeni = User::isLogged() ? User::getUserPrijmeni() : post('prijmeni');
-			$pass = User::isLogged() ? '' : post('pass');
-			
-			$confirmed = User::isLogged() ? '1' : '0';
-			$visible = User::isLogged() ? (bool) post('visible') : '0';
+			if(User::isLogged()) {
+				$jmeno = User::getUserJmeno();
+				$prijmeni = User::getUserPrijmeni();
+				$pass = '';
+				$confirmed = '1';
+				$visible = post('visible') ? '1' : '0';
+			} else {
+				$jmeno = post('jmeno');
+				$prijmeni = post('prijmeni');
+				$pass = post('pass');
+				$confirmed = '0';
+				$visible = '0';
+			}
 			
 			$error = false;
-			
 			ob_start();
 			include('files/Main/Inzerce/Form.inc');	
 			$html = ob_get_clean();
@@ -96,8 +97,7 @@ switch($action[0]) {
 			}
 		}
 	case 'edit':
-		$id = isset($action[1]) ? $action[1] : '';
-		
+		$id = Request::getID();
 		if(!$id || !is_numeric($id) || !($data = DBInzerce::getSingleInzerat($id)))
 			View::redirect('/inzerce/posledni', 'Inzerát s takovým ID neexistuje');
 		
@@ -111,24 +111,17 @@ switch($action[0]) {
 			post('prijmeni', $data['i_prijmeni']);
 			post('nadpis', $data['i_nadpis']);
 			post('text', $data['i_text']);
-			list($od_year, $od_month, $od_day) = explode('-', $data['i_od']);
-			post('od_year', $od_year);
-			post('od_month', $od_month);
-			post('od_day', $od_day);
-			list($do_year, $do_month, $do_day) = explode('-', $data['i_do']);
-			post('do_year', $do_year);
-			post('do_month', $do_month);
-			post('do_day', $do_day);
+			post('od', $data['i_od']);
+			post('do', $data['i_do']);
 			post('visible', $data['i_visible']);
 			post('confirmed', $data['i_confirmed']);
 			
 			include('files/Main/Inzerce/Form.inc');
 			return;
 		} else {
-			$od = post('od_year') . '-' . post('od_month') . '-' . post('od_day');
-			$do = post('do_year') . '-' . post('do_month') . '-' . post('do_day');
-			
-			if($do == '0000-00-00' || strcmp($od, $do) > 0)
+			$od = Helper::get()->date()->name('od')->getPost();
+			$do = Helper::get()->date()->name('do')->getPost();
+			if(!$do || strcmp($od, $do) > 0)
 				$do = $od;
 			
 			$confirmed = '1';
@@ -152,12 +145,11 @@ switch($action[0]) {
 		}
 		break;
 	case 'edit-unreg':
-		$id = isset($action[1]) ? $action[1] : '';
-		
+		$id = Request::getID();
 		if(!$id || !is_numeric($id) || !($data = DBInzerce::getSingleInzerat($id)))
 			View::redirect('/inzerce/posledni', 'Inzerát s takovým ID neexistuje');
 		
-		$pass = isset($_SESSION['inzerce_' . $id]) ? $_SESSION['inzerce_' . $id] : null;
+		$pass = session('inzerce_' . $id);
 		if($data['i_pass'] != $pass)
 			View::viewError(ER_AUTHORIZATION);
 		
@@ -168,28 +160,20 @@ switch($action[0]) {
 			post('prijmeni', $data['i_prijmeni']);
 			post('nadpis', $data['i_nadpis']);
 			post('text', $data['i_text']);
-			list($od_year, $od_month, $od_day) = explode('-', $data['i_od']);
-			post('od_year', $od_year);
-			post('od_month', $od_month);
-			post('od_day', $od_day);
-			list($do_year, $do_month, $do_day) = explode('-', $data['i_do']);
-			post('do_year', $do_year);
-			post('do_month', $do_month);
-			post('do_day', $do_day);
+			post('od', $data['i_od']);
+			post('do', $data['i_do']);
 			post('visible', $data['i_visible']);
 			post('confirmed', $data['i_confirmed']);
 			
 			include('files/Main/Inzerce/Form.inc');
 			return;
 		} else {
-			$od = post('od_year') . '-' . post('od_month') . '-' . post('od_day');
-			$do = post('do_year') . '-' . post('do_month') . '-' . post('do_day');
-			
-			if($do == '0000-00-00' || strcmp($od, $do) > 0)
+			$od = Helper::get()->date()->name('od')->getPost();
+			$do = Helper::get()->date()->name('do')->getPost();
+			if(!$do || strcmp($od, $do) > 0)
 				$do = $od;
 			
 			$error = false;
-			
 			ob_start();
 			include('files/Main/Inzerce/Form.inc');	
 			$html = ob_get_clean();
@@ -207,8 +191,7 @@ switch($action[0]) {
 		}
 		break;
 	case 'remove':
-		$id = isset($action[1]) ? $action[1] : '';
-		
+		$id = Request::getID();
 		if(!$id || !is_numeric($id) || !($data = DBInzerce::getSingleInzerat($id)))
 			View::redirect('/inzerce/posledni', 'Inzerát s takovým ID neexistuje');
 		
@@ -216,11 +199,10 @@ switch($action[0]) {
 			View::viewError(ER_AUTHORIZATION);
 		
 		if(empty($_POST)) {
-			echo '<form action="', $_SERVER['REQUEST_URI'], '" method="post">';
-			echo 'Opravdu chcete odstranit inzerát "';
 			$data = DBInzerce::getSingleInzerat($id);
-			echo $data['i_nadpis'];
-			echo '"?<br/>';
+			
+			echo '<form action="', $_SERVER['REQUEST_URI'], '" method="post">';
+			echo 'Opravdu chcete odstranit inzerát "', $data['i_nadpis'], '"?<br/>';
 			echo '<input type="hidden" name="id" value="', $id, '" />';
 			echo '<button type="submit" name="action" value="remove_confirm">Odstranit</button>';
 			echo '<a href="/inzerce/posledni">Zpět</a>';
