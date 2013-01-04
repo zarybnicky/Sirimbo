@@ -15,12 +15,3 @@ notice(View::getRedirectMessage());
 <?php echo Helper::get()->clanky()->number(20)->offset(5)->slideBox(false);?>
 </div>
 </div>
-
-<!--
-<div style="text-align:center;margin:0 auto;font-size:150%;">
-Přejeme Vám<br/>
-pohodové tancování<br/>
-v roce 2012
-</div>
-<img alt="" src="/images/pernik.jpg" style="margin:25px auto;display:block;wth:350px;" />
--->

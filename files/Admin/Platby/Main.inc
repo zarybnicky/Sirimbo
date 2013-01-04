@@ -9,59 +9,57 @@ switch(Request::getAction()) {
 		if(empty($_POST)) {
 			include('files/Admin/Platby/Form.inc');
 			return;
-		} else {
-			$error = false;
-			ob_start();
-			include('files/Admin/Platby/Form.inc');	
-			$html = ob_get_clean();
-			
-			if(!$error) {
-				$data = DBUser::getUserData(post('user'));
-				$platby = DBPlatby::getPlatbyFromUser(post('user'));
-				
-				$placeno = Helper::get()
-					->date()->name('placeno')
-					->getPost();
-				$obdobi = post('obdobi');
-				list($year, $month, $day) = explode('-', $placeno);
-				
-				if(strcmp($placeno, $year . '-06-30') < 0 &&
-						($obdobi == '1-pololeti' || $obdobi == '1-ctvrtleti' ||
-						$obdobi == '2-ctvrtleti')) {
-					$year = (string) (((int) $year) - 1);
-				} elseif(strcmp($placeno, $year . '-07-01') >= 0 &&
-						($obdobi == '2-pololeti' || $obdobi == '13-ctvrtleti' ||
-						$obdobi == '4-ctvrtleti')) {
-					$year = (string) (((int) $year) + 1);
-				}
-				$plati_do = $year . Settings::$platby_obdobi[$obdobi][1];
-				
-				foreach($platby as $platba) {
-					if($platba['up_obdobi'] != $obdobi)
-						continue;
-					
-					DBPlatby::editPlatba($platba['up_id'], post('user'), $obdobi,
-						post('castka') + $platba['up_castka'], $placeno,
-						$plati_do);
-					
-					View::redirect(post('referer') ? post('referer') : '/admin/platby',
-						'Druhá platba za stejné období - sloučeno!');
-				}
-				
-				DBPlatby::addPlatba(post('user'), $obdobi, post('castka'), $placeno, $plati_do);
-				
-				View::redirect(post('referer') ? post('referer') : '/admin/platby',
-					'Platba úspěšně přidána');
-			} else {
-				echo $html;
-				return;
-			}
 		}
+		$placeno = Helper::get()->date()->name('placeno')->getPost();
+		
+		$f = new Form();
+		$f->checkNumeric(post('user'), 'Neplatný uživatel', 'user');
+		$f->checkNumeric(post('castka'), 'Částka musí být zadaná jen čísly', 'castka');
+		$f->checkDate($placeno, 'Neplatný formát data', 'placeno');
+		if(!$f->isValid()) {
+			include('files/Admin/Platby/Form.inc');
+			return;
+		}
+		
+		$data = DBUser::getUserData(post('user'));
+		$platby = DBPlatby::getPlatbyFromUser(post('user'));
+		
+		$obdobi = post('obdobi');
+		list($year, $month, $day) = explode('-', $placeno);
+		
+		$plati_od = $year . Settings::$platby_obdobi[$obdobi][0];
+		if(strcmp($placeno, $year . '-06-30') < 0 &&
+				$obdobi == '1-ctvrtleti') {
+			$year = (string) (((int) $year) - 1);
+		} elseif(strcmp($placeno, $year . '-07-01') >= 0 &&
+				($obdobi == '1-pololeti' || $obdobi == '2-pololeti' ||
+				$obdobi == '2-ctvrtleti' || $obdobi == '3-ctvrtleti' ||
+				$obdobi == '4-ctvrtleti')) {
+			$year = (string) (((int) $year) + 1);
+		}
+		$plati_do = $year . Settings::$platby_obdobi[$obdobi][1];
+		
+		foreach($platby as $platba) {
+			if($platba['up_obdobi'] != $obdobi)
+				continue;
+			
+			DBPlatby::editPlatba($platba['up_id'], post('user'), $obdobi,
+				post('castka') + $platba['up_castka'], $placeno, $plati_od,
+				$plati_do);
+			
+			View::redirect(post('referer') ? post('referer') : '/admin/platby',
+				'Druhá platba za stejné období - sloučeno!');
+		}
+		
+		DBPlatby::addPlatba(post('user'), $obdobi, post('castka'), $placeno, $plati_od, $plati_do);
+		
+		View::redirect(post('referer') ? post('referer') : '/admin/platby',
+			'Platba úspěšně přidána');
 		break;
 	
 	case 'edit':
 		$id = Request::getID();
-		if(!$id || !is_numeric($id) || !($data = DBPlatby::getSinglePlatba($id)))
+		if(!$id || !($data = DBPlatby::getSinglePlatba($id)))
 			View::redirect(post('referer') ? post('referer') : '/admin/platby',
 				'Platba s takovým ID neexistuje');
 		
@@ -73,54 +71,53 @@ switch(Request::getAction()) {
 			
 			include('files/Admin/Platby/Form.inc');
 			return;
-		} else {
-			$error = false;
-			ob_start();
-			include('files/Admin/Platby/Form.inc');	
-			$html = ob_get_clean();
-			
-			if(!$error) {
-				$data = DBUser::getUserData(post('user'));
-				$platby = DBPlatby::getPlatbyFromUser(post('user'));
-				
-				$placeno = Helper::get()->date()->name('placeno')->getPost();
-				$obdobi = post('obdobi');
-				list($year, $month, $day) = explode('-', $placeno);
-				
-				if(strcmp($placeno, $year . '-06-30') < 0 &&
-						$obdobi == '1-ctvrtleti') {
-					$year = (string) (((int) $year) - 1);
-				} elseif(strcmp($placeno, $year . '-07-01') >= 0 &&
-						($obdobi == '1-pololeti' || $obdobi == '2-pololeti' ||
-						$obdobi == '2-ctvrtleti' || $obdobi == '3-ctvrtleti' ||
-						$obdobi == '4-ctvrtleti')) {
-					$year = (string) (((int) $year) + 1);
-				}
-				$plati_do = $year . Settings::$platby_obdobi[$obdobi][1];
-			
-				foreach($platby as $platba) {
-					if($platba['up_obdobi'] != $obdobi)
-						continue;
-					
-					DBPlatby::editPlatba($platba['up_id'], post('user'), $obdobi,
-						post('castka') + $platba['up_castka'], $placeno,
-						$plati_do);
-					DBPlatby::removePlatba($id);
-					
-					View::redirect(post('referer') ? post('referer') : '/admin/platby',
-						'Druhá platba za stejné období - sloučeno!');
-				}
-				
-				DBPlatby::editPlatba($id, post('user'), $obdobi, post('castka'),
-					$placeno, $plati_do);
-				
-				View::redirect(post('referer') ? post('referer') : '/admin/platby',
-					'Platba úspěšně upravena');
-			} else {
-				echo $html;
-				return;
-			}
 		}
+		$placeno = Helper::get()->date()->name('placeno')->getPost();
+
+		$f = new Form();
+		$f->checkNumeric(post('user'), 'Neplatný uživatel', 'user');
+		$f->checkNumeric(post('castka'), 'Částka musí být zadaná jen čísly', 'castka');
+		$f->checkDate($placeno, 'Neplatný formát data', 'placeno');
+		if(!$f->isValid()) {
+			include('files/Admin/Platby/Form.inc');
+			return;
+		}
+		
+		$data = DBUser::getUserData(post('user'));
+		$platby = DBPlatby::getPlatbyFromUser(post('user'));
+		
+		$obdobi = post('obdobi');
+		list($year, $month, $day) = explode('-', $placeno);
+		
+		$plati_od = $year . Settings::$platby_obdobi[$obdobi][0];
+		if(strcmp($placeno, $year . '-06-30') < 0 &&
+				$obdobi == '1-ctvrtleti') {
+			$year = (string) (((int) $year) - 1);
+		} elseif(strcmp($placeno, $year . '-07-01') >= 0 &&
+				($obdobi == '1-pololeti' || $obdobi == '2-pololeti' ||
+				$obdobi == '2-ctvrtleti' || $obdobi == '3-ctvrtleti' ||
+				$obdobi == '4-ctvrtleti')) {
+			$year = (string) (((int) $year) + 1);
+		}
+		$plati_do = $year . Settings::$platby_obdobi[$obdobi][1];
+	
+		foreach($platby as $platba) {
+			if($platba['up_obdobi'] != $obdobi || $platba['up_id'] == $id)
+				continue;
+			
+			DBPlatby::editPlatba($platba['up_id'], post('user'), $obdobi,
+				post('castka') + $platba['up_castka'], $placeno, $plati_od, $plati_do);
+			DBPlatby::removePlatba($id);
+			
+			View::redirect(post('referer') ? post('referer') : '/admin/platby',
+				'Druhá platba za stejné období - sloučeno!');
+		}
+		
+		DBPlatby::editPlatba($id, post('user'), $obdobi, post('castka'),
+			$placeno, $plati_od, $plati_do);
+		
+		View::redirect(post('referer') ? post('referer') : '/admin/platby',
+			'Platba úspěšně upravena');
 		break;
 }
 

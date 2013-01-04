@@ -15,7 +15,9 @@ class DisplayNabidka {
 			echo '<a href="/admin/nabidka/edit/', $data['n_id'], '">obecné</a>, ';
 			echo '<a href="/admin/nabidka/detail/', $data['n_id'], '">tréninky</a>';
 		}
-		
+		if($data['n_max_pocet_hod'] > 0)
+			echo '<div><span class="little">Maximálne hodin/pár:</span>',
+				'<span class="nadpis">', $data['n_max_pocet_hod'], '</span></div>';
 		echo '<div><span class="little">Celkem hodin: </span>',
 			'<span class="nadpis">', $data['n_pocet_hod'], '</span></div>';
 		echo '<div><span class="little">Obsazených hodin: </span>',

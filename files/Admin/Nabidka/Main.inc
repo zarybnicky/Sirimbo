@@ -6,9 +6,10 @@ notice(View::getRedirectMessage());
 
 switch(Request::getAction()) {
 	case 'add':
-		if(empty($_POST))
+		if(empty($_POST)) {
 			include('files/Admin/Nabidka/Form.inc');
 			return;
+        }
 		if(!Permissions::canEditNabidka(post('trener')))
 			View::viewError(ER_AUTHORIZATION);
 		
@@ -20,6 +21,7 @@ switch(Request::getAction()) {
 		$f = new Form();
 		$f->checkNumeric(post('trener'), 'ID trenéra musí být číselné', 'trener');
 		$f->checkNumeric(post('pocet_hod'), 'Počet hodin prosím zadejte čísly', 'pocet_hod');
+		$f->checkNumeric(post('max_pocet_hod'), 'Max. počet hodin prosím zadejte čísly', 'max_pocet_hod');
 		$f->checkDate($od, 'Zadejte prosím platné datum ("Od")', 'od');
 		$f->checkDate($do, 'Zadejte prosím platné datum ("Do")', 'do');
 		
@@ -34,7 +36,7 @@ switch(Request::getAction()) {
 			View::setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění příspěvku');
 		}
 		
-		DBNabidka::addNabidka(post('trener'), post('pocet_hod'), $od, $do, $visible,
+		DBNabidka::addNabidka(post('trener'), post('pocet_hod'), post('max_pocet_hod'), $od, $do, $visible,
 			post('lock') ? 1 : 0);
 		
 		if($visible) {
@@ -61,6 +63,7 @@ switch(Request::getAction()) {
 			post('id', $id);
 			post('trener', $data['n_trener']);
 			post('pocet_hod', $data['n_pocet_hod']);
+			post('max_pocet_hod', $data['n_max_pocet_hod']);
 			post('od', $data['n_od']);
 			post('do', $data['n_do']);
 			post('visible', $data['n_visible']);
@@ -78,6 +81,7 @@ switch(Request::getAction()) {
 		$f = new Form();
 		$f->checkNumeric(post('trener'), 'ID trenéra musí být číselné', 'trener');
 		$f->checkNumeric(post('pocet_hod'), 'Počet hodin prosím zadejte čísly', 'pocet_hod');
+		$f->checkNumeric(post('max_pocet_hod'), 'Max. počet hodin prosím zadejte čísly', 'max_pocet_hod');
 		$f->checkDate($od, 'Zadejte prosím platné datum ("Od")', 'od');
 		$f->checkDate($do, 'Zadejte prosím platné datum ("Do")', 'do');
 		
@@ -102,14 +106,20 @@ switch(Request::getAction()) {
 				'nemůžu dál snížit počet hodin');
 		}
 		
-		DBNabidka::editNabidka($id, post('trener'), $pocet_hod, $od, $do, $visible,
+		$max_lessons = post('max_pocet_hod');
+		$max_lessons_old = DBNabidka::getNabidkaMaxItems($id);
+		if($max_lessons < $max_lessons_old) {
+			$max_lessons = $max_lessons_old;
+			View::setRedirectMessage('Zadaný maximální počet hodin/pár je méně než už je zarezervováno, ' .
+				'nemůžu dál snížit maximální počet hodin');
+		}
+		
+		DBNabidka::editNabidka($id, post('trener'), $pocet_hod, $max_lessons, $od, $do, $visible,
 			post('lock'));
 		
 		if($visible)
-			if(!$visible_prev)
-				$act = 'přidal';
-			else
-				$act = 'upravil';
+			if(!$visible_prev)	$act = 'přidal';
+			else				$act = 'upravil';
 		elseif(!$visible && $visible_prev && strcmp($data['n_od'], date('Y-m-d')) > 0)
 			$act = 'zrušil';
 		
@@ -147,30 +157,30 @@ switch(post('action')) {
 		break;
 	
 	case 'remove':
-		if(is_array(post('nabidka'))) {
-			foreach(post('nabidka') as $item) {
-				$trener = DBNabidka::getNabidkaTrener($item);
-				$data = DBNabidka::getSingleNabidka($item);
-				
-				if(Permissions::canEditNabidka($trener['u_id'])) {
-					DBNabidka::removeNabidka($item);
-					if(strcmp($data['n_od'], date('Y-m-d')) > 0 && $data['n_visible'])
-						DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' zrušil nabídku ' .
-							formatDate($data['n_od']) . (($data['n_od'] != $data['n_do']) ?
-							(' - ' . formatDate($data['n_do'])) : '') . ' s trenérem ' .
-							$trener['u_jmeno'] . ' ' . $trener['u_prijmeni']);
-				} else {
-					$error = true;
-				}
-			}
-			if(isset($error) && $error)
-				View::viewError(ER_AUTHORIZATION);
-			
-			notice('Nabídky odebrány');
+		if(!is_array(post('nabidka'))) {
 			include('files/Admin/Nabidka/Display.inc');
 			return;
 		}
-		break;
+		foreach(post('nabidka') as $item) {
+			$data = DBNabidka::getSingleNabidka($item);
+			
+			if(Permissions::canEditNabidka($data['n_trener'])) {
+				DBNabidka::removeNabidka($item);
+				if(strcmp($data['n_od'], date('Y-m-d')) > 0 && $data['n_visible'])
+					DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' zrušil nabídku ' .
+						formatDate($data['n_od']) . (($data['n_od'] != $data['n_do']) ?
+						(' - ' . formatDate($data['n_do'])) : '') . ' s trenérem ' .
+						$data['u_jmeno'] . ' ' . $data['u_prijmeni']);
+			} else {
+				$error = true;
+			}
+		}
+		if(isset($error) && $error)
+			View::viewError(ER_AUTHORIZATION);
+		
+		notice('Nabídky odebrány');
+		include('files/Admin/Nabidka/Display.inc');
+		return;
 }
 include('files/Admin/Nabidka/Display.inc');
 return;

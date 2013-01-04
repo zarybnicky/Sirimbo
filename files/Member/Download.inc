@@ -1,9 +1,9 @@
 <?php
 User::checkPermissionsError(L_HOST);
 
-if(!empty($_GET["id"])) {
+if(get('id')) {
 	ob_clean();
-	$data = DBDokumenty::getSingleDokument($_GET["id"]);
+	$data = DBDokumenty::getSingleDokument(get('id'));
 	$path = $data["d_path"];
 	$fileName = $data["d_filename"];
 	$file = fopen($path, "rb");

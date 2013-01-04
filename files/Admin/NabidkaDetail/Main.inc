@@ -31,6 +31,10 @@ if(post("remove") > 0) {
 foreach($items as $item) {
 	if(post($item["ni_id"] . "-partner") != $item["ni_partner"] ||
 			post($item["ni_id"] . "-hodiny") != $item["ni_pocet_hod"]) {
+		if($data['n_max_pocet_hod'] > 0 && post($item['ni_id'] . '-hodiny') > $data['n_max_pocet_hod']) {
+			post($item['ni_id'] . '-hodiny', $data['n_max_pocet_hod']);
+		}
+		
 		$rozdil_hod = post($item["ni_id"] . "-hodiny") - $item["ni_pocet_hod"];
 		if(($obsazeno + $rozdil_hod) > $data["n_pocet_hod"]) {
 			post("pocet_hod", $obsazeno + $rozdil_hod);
@@ -48,13 +52,18 @@ if(is_numeric(post("add_hodiny")) && is_numeric(post("add_partner"))) {
 	$partner = post("add_partner");
 	
 	if(is_numeric($hodiny) && is_numeric($partner)) {
-		if(($obsazeno + $hodiny) > post("pocet_hod")) {
-			post("pocet_hod", $obsazeno + $hodiny);
+		if($data['n_max_pocet_hod'] > 0 && post('add_hodiny') > $data['n_max_pocet_hod']) {
+			post('add_hodiny', $data['n_max_pocet_hod']);
+		}
+		if(($obsazeno + post('add_hodiny')) > post("pocet_hod")) {
+			post("pocet_hod", $obsazeno + post('add_hodiny'));
 		}
 		
 		DBNabidka::addNabidkaItemLessons(post("add_partner"),$id,
 			post("add_hodiny"));
+		
 		post('add_partner', null);
+		post('add_hodiny', null);
 		$items = DBNabidka::getNabidkaItem($id);
 		$obsazeno = DBNabidka::getNabidkaItemLessons($id);
 	}

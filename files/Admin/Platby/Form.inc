@@ -1,25 +1,18 @@
 <?php
-$error = false;
-
-global $isConfirmation;
-$isConfirmation = (post("castka") || post("placeno"));
-
-if(Request::getAction() == 'edit')
-	$header = "Upravit platbu";
-elseif(Request::getAction() == 'add')
-	$header = "Přidat platbu";
+if(Request::getAction() == 'add')
+	header_minor("Přidat platbu");
 else
-	$header = "Neznámá akce";
+	header_minor("Upravit platbu");
 
-header_minor($header);
+if(isset($f))
+	notice(implode('<br/>', $f->getMessages()));
 
 $skupiny = DBSkupiny::getSkupiny();
 echo '<div style="float:right;width:350px;">';
 echo '<table style="float:right;">';
 echo '<tr><td>Skupina</td><td>Kč/měsíc</td><td>Kč/čtvrtrok</td><td>Kč/půlrok</td></tr>';
 foreach($skupiny as $skupina) {
-	echo '<tr><td><div class="box" title="', $skupina['us_popis'], '" ',
-		'style="background-color:', Settings::$barvy[$skupina['us_color']][1] . ';"></div>&nbsp;',
+	echo '<tr><td>', getColorBox($skupina['us_color'], $skupina['us_popis']), '&nbsp;',
 		$skupina['us_popis'], '</td>',
 		'<td>', $skupina['us_platba_mesic'], '</td>',
 		'<td>', $skupina['us_platba_ctvrtrok'], '</td>',
@@ -45,14 +38,10 @@ echo '</div>';
 		</td>
 	</tr><tr>
 		<td>Částka (*): </td>
-		<td><input type="text" name="castka" value="<?php echo post('castka'); ?>" />
-			<?php $error = checkPostField("/^[0-9]+$/i", "castka") || $error; ?>
-		</td>
+		<td><input type="text" name="castka" value="<?php echo post('castka'); ?>" /></td>
 	</tr><tr>
 		<td>Placeno: (*)</td>
-		<td><?php echo Helper::get()->date()->name('placeno')->textBox();?>
-			<?php $error = checkDateString(Helper::get()->date(false)->getPost()) || $error; ?>
-		</td>
+		<td><?php echo Helper::get()->date()->name('placeno')->textBox();?>	</td>
 	</tr><tr>
 		<td>Platební období (*): </td>
 		<td><?php
@@ -65,12 +54,12 @@ echo '</div>';
 		<input type="hidden" name="referer" value="<?php echo Request::getReferer()?>" />
 		</td>
 	</tr><tr>
-		<?php if(Request::getAction() == 'add') {?>
-		<td><button type="submit" name="action" value="add_confirm">Přidat</button></td>
-		<?php }	else {?>
-		<td><button type="submit" name="action" value="edit_confirm">Upravit</button></td>
-		<?php } ?>
+		<td><button type="submit"><?php
+			if(Request::getAction() == 'add') echo 'Přidat';
+			else echo 'Upravit';
+		?></button></td>
 		<td>Pole označená (*) jsou povinná</td>
+		<td></td>
 	</tr>
 </table>
 </form>

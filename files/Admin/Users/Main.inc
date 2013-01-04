@@ -9,46 +9,46 @@ switch(Request::getAction()) {
 		if(empty($_POST)) {
 			include('files/Admin/Users/Form.inc');
 			return;
-		} else {
-			$error = false;
-			ob_start();
-			include('files/Admin/Users/Form.inc');	
-			$html = ob_get_clean();
-			
-			if(!$error) {
-				if(DBUser::getUserID(post('login'))) {
-					notice('Uživatel s takovým jménem už tu je');
-					echo $html;
-					return;
-				}
-				
-				switch(post('level')) {
-					case 'host':	$level = L_HOST;	break;
-					case 'user':	$level = L_USER;	break;
-					case 'editor':	$level = L_EDITOR;	break;
-					case 'trener':	$level = L_TRENER;	break;
-					case 'admin':
-					case 'sadmin':	$level = L_ADMIN;	break;
-					default:		$level = L_HOST;	break;
-				}
-				$pass = User::Crypt(post('pass'));
-				$placeno = Helper::get()->date()->name('placeno')->getPost();
-				
-				DBUser::addUser(strtolower(post('login')), $pass, post('jmeno'), post('prijmeni'),
-					post('pohlavi'), post('email'), post('telefon'), $narozeni,
-					post('poznamky'), $level, $post('skupina'), post('dancer') ? 1 : 0,
-					post('lock') ? 1 : 0, post('ban') ? 1 : 0, '1', post('system') ? 1 : 0);
-				View::redirect('/admin/users', 'Uživatel úspěšně přidán');
-			} else {
-				echo $html;
-				return;
-			}
 		}
+		$narozeni = Helper::get()->date()->name('narozeni')->getPost();
+		
+		$f = new Form();
+		$f->checkLogin(post('login'), 'Špatný formát přihlašovacího jména', 'login');
+		$f->checkPassword(post('pass'), 'Špatný formát hesla', 'pass');
+		$f->checkLength(post('jmeno'), 1, 40, 'Špatná délka jména', 'jmeno');
+		$f->checkLength(post('prijmeni'), 1, 40, 'Špatná délka přijmení', 'prijmeni');
+		$f->checkInArray(post('pohlavi'), array('m', 'f'), 'Neplatné pohlaví', 'pohlavi');
+		$f->checkEmail(post('email'), 'Neplatný formát emailu', 'email');
+		$f->checkPhone(post('telefon'), 'Neplatný formát telefoního čísla', 'telefon');
+		$f->checkDate($narozeni, 'Neplatné datum narození', 'narozeni');
+		$f->checkBool(!DBUser::getUserID(post('login')),
+			'Uživatel s takovým přihlašovacím jménem už tu je', 'login');
+		if(!$f->isValid()) {
+			include('files/Admin/Users/Form.inc');	
+			return;
+		}
+		
+		switch(post('level')) {
+			case 'host':	$level = L_HOST;	break;
+			case 'user':	$level = L_USER;	break;
+			case 'editor':	$level = L_EDITOR;	break;
+			case 'trener':	$level = L_TRENER;	break;
+			case 'admin':
+			case 'sadmin':	$level = L_ADMIN;	break;
+			default:		$level = L_HOST;	break;
+		}
+		$pass = User::Crypt(post('pass'));
+		
+		DBUser::addUser(strtolower(post('login')), $pass, post('jmeno'), post('prijmeni'),
+			post('pohlavi'), post('email'), post('telefon'), $narozeni,
+			post('poznamky'), $level, post('skupina'), post('dancer') ? '1' : '0',
+			post('lock') ? '1' : '0', post('ban') ? '1' : '0', '1', post('system') ? '1' : '0');
+		View::redirect('/admin/users', 'Uživatel úspěšně přidán');
 		break;
 	
 	case 'edit':
 		$id = Request::getID();
-		if(!$id || !is_numeric($id) || !($data = DBUser::getUserData($id)))
+		if(!$id || !($data = DBUser::getUserData($id)))
 			View::redirect('/admin/users', 'Uživatel s takovým ID neexistuje');
 		
 		if(!Permissions::canEditUser($id, $data['u_level'], $data['u_lock']))
@@ -85,44 +85,46 @@ switch(Request::getAction()) {
 			post('poznamky', $data['u_poznamky']);
 			include('files/Admin/Users/Form.inc');
 			return;
-		} else {
-			$error = false;
-			ob_start();
-			include('files/Admin/Users/Form.inc');	
-			$html = ob_get_clean();
-			
-			if(!$error) {
-				//TODO: Test DisplayUsers::transformUserLevel($value, $from, $to);
-				$level = DisplayUsers::transformUserLevel(post('level'),
-					DisplayUsers::$plaintext, DisplayUsers::$constant);
-				
-				switch(post('level')) {
-					case 'host':	$level = L_HOST;	break;
-					case 'user':	$level = L_USER;	break;
-					case 'editor':	$level = L_EDITOR;	break;
-					case 'trener':	$level = L_TRENER;	break;
-					case 'admin':	$level = L_ADMIN;	break;
-					case 'sadmin':	$level = L_SADMIN;	break;
-					default:		$level = L_HOST;	break;
-				}
-				$placeno = Helper::get()->date()->name('placeno')->getPost();
-	
-				DBUser::setUserData($id, post('jmeno'), post('prijmeni'), post('pohlavi'),
-					post('email'), post('telefon'), $narozeni, post('poznamky'), $level,
-					post('skupina'), post('dancer') ? 1 : 0, post('lock') ? 1 : 0,
-					post('ban') ? 1 : 0, post('system') ? 1 : 0);
-				View::redirect('/admin/users', 'Uživatel úspěšně upraven');
-			} else {
-				echo $html;
-				return;
-			}
 		}
+		$narozeni = Helper::get()->date()->name('narozeni')->getPost();
+		
+		$f = new Form();
+		$f->checkLogin(post('login'), 'Špatný formát přihlašovacího jména', 'login');
+		$f->checkLength(post('jmeno'), 1, 40, 'Špatná délka jména', 'jmeno');
+		$f->checkLength(post('prijmeni'), 1, 40, 'Špatná délka přijmení', 'prijmeni');
+		$f->checkInArray(post('pohlavi'), array('m', 'f'), 'Neplatné pohlaví', 'pohlavi');
+		$f->checkEmail(post('email'), 'Neplatný formát emailu', 'email');
+		$f->checkPhone(post('telefon'), 'Neplatný formát telefoního čísla', 'telefon');
+		$f->checkDate($narozeni, 'Neplatné datum narození', 'narozeni');
+		if(!$f->isValid()) {
+			include('files/Admin/Users/Form.inc');	
+			return;
+		}
+		//TODO: Test DisplayUsers::transformUserLevel($value, $from, $to);
+		//$level = DisplayUsers::transformUserLevel(post('level'),
+		//	DisplayUsers::$plaintext, DisplayUsers::$constant);
+		
+		switch(post('level')) {
+			case 'host':	$level = L_HOST;	break;
+			case 'user':	$level = L_USER;	break;
+			case 'editor':	$level = L_EDITOR;	break;
+			case 'trener':	$level = L_TRENER;	break;
+			case 'admin':	$level = L_ADMIN;	break;
+			case 'sadmin':	$level = L_SADMIN;	break;
+			default:		$level = L_HOST;	break;
+		}
+
+		DBUser::setUserData($id, post('jmeno'), post('prijmeni'), post('pohlavi'),
+			post('email'), post('telefon'), $narozeni, post('poznamky'), $level,
+			post('skupina'), post('dancer') ? 1 : 0, post('lock') ? 1 : 0,
+			post('ban') ? 1 : 0, post('system') ? 1 : 0);
+		View::redirect('/admin/users', 'Uživatel úspěšně upraven');
 		break;
 		
 	
 	case 'platby':
 		$id = Request::getID();
-		if(!$id || !is_numeric($id) || !($data = DBUser::getUserData($id)))
+		if(!$id || !($data = DBUser::getUserData($id)))
 			View::redirect('/admin/users', 'Uživatel s takovým ID neexistuje');
 		
 		if(!Permissions::canEditUser($id, $data['u_level'], $data['u_lock']))
@@ -140,41 +142,62 @@ switch(Request::getAction()) {
 		if(empty($_POST)) {
 			include('files/Admin/Users/DisplayNew.inc');
 			return;
-		} else {
-			if(post('action') == 'confirm') {
-				if(is_array(post('users'))) {
-					foreach(post('users') as $id) {
-						$data = DBUser::getUserData($id);
-						
-						$old_level = post($id . '-level');
-						$level = ($old_level == 'host' || $old_level == 'user' ||
-								$old_level == 'editor' || $old_level == 'trener' || $old_level == 'admin') ?
-							$old_level : 'host';
-						
-						DBUser::confirmUser($id, $level, post($id . '-skupina'),
-							post($id . '-dancer') ? 1 : 0);
-						Mailer::reg_confirmed_notice($data['u_email'], $data['u_login']);
-					}
-				}
-				notice('Uživatelé potvrzeni');
-				include('files/Admin/Users/DisplayNew.inc');
-				return;
-			} elseif(post('action') == 'remove') {
-				echo '<form action="/admin/users" method="POST">';
-				echo 'Opravdu chcete odstranit uživatele:<br/><br/>';
+		}
+		if(post('action') == 'confirm') {
+			if(is_array(post('users'))) {
 				foreach(post('users') as $id) {
 					$data = DBUser::getUserData($id);
-					echo "\t", $data['u_login'], ' - ';
-					echoFullJmeno($data);
-					echo '<br />';
-					echo '<input type="hidden" name="users[]" value="', $id, '" />';
+					
+					$old_level = post($id . '-level');
+					$level = ($old_level == 'host' || $old_level == 'user' ||
+							$old_level == 'editor' || $old_level == 'trener' || $old_level == 'admin') ?
+						$old_level : 'host';
+					
+					DBUser::confirmUser($id, $level, post($id . '-skupina'),
+						post($id . '-dancer') ? 1 : 0);
+					Mailer::reg_confirmed_notice($data['u_email'], $data['u_login']);
 				}
-				echo '<br/>';
-				echo '<button type="submit" name="action" value="remove_confirm">Odstranit</button>';
-				echo '</form>';
-				echo '<a href="/admin/users/new">Zpět</a>';
-				return;
 			}
+			notice('Uživatelé potvrzeni');
+			include('files/Admin/Users/DisplayNew.inc');
+			return;
+		} elseif(post('action') == 'remove') {
+			echo '<form action="/admin/users" method="POST">';
+			echo 'Opravdu chcete odstranit uživatele:<br/><br/>';
+			foreach(post('users') as $id) {
+				$data = DBUser::getUserData($id);
+				echo "\t", $data['u_login'], ' - ';
+				echoFullJmeno($data);
+				echo '<br />';
+				echo '<input type="hidden" name="users[]" value="', $id, '" />';
+			}
+			echo '<br/>';
+			echo '<button type="submit" name="action" value="remove_confirm">Odstranit</button>';
+			echo '</form>';
+			echo '<a href="/admin/users/new">Zpět</a>';
+			return;
+		}
+		break;
+	case 'duplicate':
+		if(empty($_POST)) {
+			include('files/Admin/Users/DisplayDuplicate.inc');
+			return;
+		}
+		if(post('action') == 'remove') {
+			echo '<form action="/admin/users" method="POST">';
+			echo 'Opravdu chcete odstranit uživatele:<br/><br/>';
+			foreach(post('users') as $id) {
+				$data = DBUser::getUserData($id);
+				echo "\t", $data['u_login'], ' - ';
+				echoFullJmeno($data);
+				echo '<br />';
+				echo '<input type="hidden" name="users[]" value="', $id, '" />';
+			}
+			echo '<br/>';
+			echo '<button type="submit" name="action" value="remove_confirm">Odstranit</button>';
+			echo '</form>';
+			echo '<a href="/admin/users/duplicate">Zpět</a>';
+			return;
 		}
 		break;
 }

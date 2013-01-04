@@ -19,6 +19,11 @@ class Request {
 		
 		$parts = Request::$url_parts;
 		foreach($parts as $key => $part)
+			if($part === '')
+				unset($parts[$key]);
+		$parts = array_values($parts);
+		
+		foreach($parts as $key => $part)
 			if(is_numeric($part))
 				unset($parts[$key]);
 		Request::$url_parts_literal = array_values($parts);
@@ -32,7 +37,7 @@ class Request {
 				}
 			}
 		}
-		Request::$id = isset($id) ? $id : false;
+		Request::$id = isset($id) ? $id : null;
 		Request::$action = isset($action) ? $action :
 			Request::$url_parts[count(Request::$url_parts) - 1];
 	}

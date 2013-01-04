@@ -41,20 +41,19 @@ foreach($items as $item) {
 	echo '<td>';
 	echoFullJmeno($item);
 	echo '</td>';
-	echo '<td>', formatTimestamp($item['up_aktu']), '</td>';
+	echo '<td style="width:83px;">', formatTimestamp($item['up_aktu'], true), '</td>';
 	echo '<td>';
 	$skupiny = DBNastenka::getNastenkaSkupiny($item['up_id']);
 	foreach($skupiny as $skupina)
-		echo '<div class="box" title="', $skupina['ups_popis'], '" ',
-			'style="background-color:', Settings::$barvy[$skupina['ups_color']][1], ';"></div>';
+		echo getColorBox($skupina['ups_color'], $skupina['ups_popis']);
 	echo '</td>';
 	echo '<td>', $item['up_nadpis'], '</td>';
 	echo '</tr>';
 }
 ?>
 </table>
-<div style="text-align:center;">
-<?php echo $pager->getNavigation(); ?>
-</div>
 </div>
 </form>
+<div style="margin-right:150px;text-align:center;">
+<?php echo $pager->getNavigation(); ?>
+</div>

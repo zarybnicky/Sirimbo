@@ -2,14 +2,19 @@
 header_main('Upozornění');
 User::checkPermissionsError(L_HOST);
 
-$zpravy = DBNastenka::getNastenka();
+$pager = new Paging(new PagingAdapterDBSelect('DBNastenka'));
+$pager->setCurrentPageField('p');
+$pager->setItemsPerPageField('c');
+$pager->setDefaultItemsPerPage(10);
+$pager->setPageRange(5);
+$items = $pager->getItems();
 
-if(empty($zpravy)) {
+if(empty($items)) {
 	notice('Žádná upozornění k dispozici');
 	return;
 }
 
-foreach($zpravy as $data) {
+foreach($items as $data) {
 	echo '<div>';
 	echo '<div class="up_header">';
 	echo '<div style="float:left;"><span class="nadpis">', $data['up_nadpis'], '</span>';
@@ -18,8 +23,7 @@ foreach($zpravy as $data) {
 	echo '<div style="padding:2px 0;"><div style="float:left;" class="little">skupiny:&nbsp;</div>';
 	$skupiny = DBNastenka::getNastenkaSkupiny($data['up_id']);
 	foreach($skupiny as $skupina)
-		echo '<div class="box" title="', $skupina['ups_popis'], '" ',
-			'style="background-color:', Settings::$barvy[$skupina['ups_color']][1], ';"></div>';
+		echo getColorBox($skupina['ups_color'], $skupina['ups_popis']);
 	echo '</div></div>';
 	echo '<div style="float:right;text-align:right;">';
 	echo '<div><span class="little">přidal: </span>';
@@ -28,7 +32,8 @@ foreach($zpravy as $data) {
 	echo '</div>';
 	echo '<div style="clear:both;"></div>';
 	echo '</div>';
-	echo '<div style="padding-top:8px;">', $data['up_text'], '</div>';
+	echo '<div style="padding-top:8px;">', stripslashes($data['up_text']), '</div>';
 	echo '</div><hr/>';
 }
+echo '<div style="text-align:center;">', $pager->getNavigation(), '</div>';
 ?>

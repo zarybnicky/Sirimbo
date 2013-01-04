@@ -1,8 +1,16 @@
-<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
-<a href="/admin/aktuality/add">Přidat</a>
-<button type="submit" name="action" value="edit">Upravit</button>
-<button type="submit" name="action" value="remove">Odstranit</button>
-<table>
+<form action="<?php echo Request::getURI();?>" method="POST">
+<?php
+if(!TISK) {
+	echo Helper::get()->menu()
+		->float(MenuHelper::FLOAT_RIGHT)
+		->content('Přidat', 'aktuality/add')
+		->content('Upravit', 'edit', true)
+		->content('Upravit galerii', 'foto', true)
+		->content('Odebrat', 'remove', true);
+}
+?>
+<div style="margin-right:150px">
+<table style="width:100%">
 <tr>
 <td></td>
 <td>Jméno</td>
@@ -30,4 +38,5 @@ foreach($ankety as $item) {
 }
 ?>
 </table>
+</div>
 </form>

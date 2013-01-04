@@ -166,93 +166,92 @@ switch(Request::getAction()) {
 		if(empty($_POST)) {
 			include('files/Admin/Galerie/Upload.inc');
 			return;
-		} else {
-			$dir = DBGalerie::getSingleDir(post('dir') ? post('dir') : 0);
-			$files = $_FILES['file'];
-			$names = post('name');
+		}
+		$dir = DBGalerie::getSingleDir(post('dir') ? post('dir') : 0);
+		$files = $_FILES['file'];
+		$names = post('name');
+		
+		$count = count($files['name']);
+		for($i = 0; $i < $count; $i++) {
+			if($files['error'][$i] > 0) {
+				View::setRedirectMessage('Nepodařilo se nahrát soubor číslo ' . ($i + 1));
+				continue;
+			}
 			
-			$count = count($files['name']);
-			for($i = 0; $i < $count; $i++) {
-				if($files['error'][$i] > 0) {
-					View::setRedirectMessage('Nepodařilo se nahrát soubor číslo ' . ($i + 1));
-					continue;
-				}
+			if(!array_key_exists($files['type'][$i], Settings::$foto_types)) {
+				View::setRedirectMessage('Soubor číslo ' . ($i + 1) .
+					' není fotka podporovaného typu a byl přeskočen');
+				continue;
+			}
+			
+			$fileUpload = $files['tmp_name'][$i];
+			
+			$fileName = $files['name'][$i];
+			$fileName = str_replace(
+				array('#', '$', '%', '&', '^', '*', '?'),
+				array('No.', 'Dolar', 'Procento', 'And', ''), $fileName
+			);
+			$pieces = explode('.', $fileName);
+			$fileExt = Settings::$foto_types[$files['type'][$i]];
+			$pieces[count($pieces) - 1] = $fileExt;
+			$fileName = implode('.', $pieces);
+			$path = $dir['gd_path'] . '/' . $fileName;
+			
+			if(is_file($path)) {
+				View::setRedirectMessage('Soubor číslo ' . ($i + 1) .
+					' nebo soubor se stejným názvem už existuje.');
+				continue;
+			}
+			
+			if(!isset($names[$i]))
+				$names[$i] = $fileName;
+			
+			DBGalerie::addFoto($dir['gd_id'], $path, $names[$i], User::getUserID());
+			
+			if(move_uploaded_file($fileUpload, $path)) {
+				chmod($path, 0666);
+				$added = true;
 				
-				if(!array_key_exists($files['type'][$i], Settings::$foto_types)) {
-					View::setRedirectMessage('Soubor číslo ' . ($i + 1) .
-						' není fotka podporovaného typu a byl přeskočen');
-					continue;
-				}
-				
-				$fileUpload = $files['tmp_name'][$i];
-				
-				$fileName = $files['name'][$i];
-				$fileName = str_replace(
-					array('#', '$', '%', '&', '^', '*', '?'),
-					array('No.', 'Dolar', 'Procento', 'And', ''), $fileName
-				);
-				$pieces = explode('.', $fileName);
-				$fileExt = Settings::$foto_types[$files['type'][$i]];
-				$pieces[count($pieces) - 1] = $fileExt;
-				$fileName = implode('.', $pieces);
-				$path = $dir['gd_path'] . '/' . $fileName;
-				
-				if(is_file($path)) {
-					View::setRedirectMessage('Soubor číslo ' . ($i + 1) .
-						' nebo soubor se stejným názvem už existuje.');
-					continue;
-				}
-				
-				if(!isset($names[$i]))
-					$names[$i] = $fileName;
-				
-				DBGalerie::addFoto($dir['gd_id'], $path, $names[$i], User::getUserID());
-				
-				if(move_uploaded_file($fileUpload, $path)) {
-					chmod($path, 0666);
-					$added = true;
-					
-					list($width, $height) = getimagesize($path);
-					if(!(($width > THUMBNAIL_MAX) || ($height > THUMBNAIL_MAX))) {
-						$nWidth = $width;
-						$nHeight = $height;
-					} else {
-						$scale = ($width > $height) ? (THUMBNAIL_MAX / $width) : (THUMBNAIL_MAX / $height);
-						$nWidth = round($width * $scale);
-						$nHeight = round($height * $scale);	
-					}
-					
-					$fn_suffix = Settings::$gd_function_suffix[$files['type'][$i]];
-					$fn_read = 'imageCreateFrom' . $fn_suffix;
-					$fn_write = 'image' . $fn_suffix;
-					if(!function_exists('imagebmp') || !function_exists('imagecreatefrombmp'))
-						include('files/Core/bmp.php');
-										
-					if($source = $fn_read($path)) {
-						$thumbnail = imageCreateTruecolor($nWidth, $nHeight);
-
-						imageCopyResized($thumbnail, $source,
-						0, 0, 0, 0, $nWidth, $nHeight, $width, $height);
-					}
-					$fn_write($thumbnail, str_replace('./galerie', './galerie/thumbnails', $path));
-					imageDestroy($thumbnail);
+				list($width, $height) = getimagesize($path);
+				if(!(($width > THUMBNAIL_MAX) || ($height > THUMBNAIL_MAX))) {
+					$nWidth = $width;
+					$nHeight = $height;
 				} else {
-					View::setRedirectMessage('Nepodařilo se nahrát soubor číslo ' . ($i + 1));
-					
-					$error = true;
+					$scale = ($width > $height) ? (THUMBNAIL_MAX / $width) : (THUMBNAIL_MAX / $height);
+					$nWidth = round($width * $scale);
+					$nHeight = round($height * $scale);	
 				}
-			}
-			if(isset($error) && $error == true) {
-				if(isset($added) && $added)
-					DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' upravil galerii "' .
-						$dir['gd_name'] . '"');
-				View::redirect('/admin/galerie', 'Bohužel, některé fotky se nepodařilo nahrát :o(');
+				
+				$fn_suffix = Settings::$gd_function_suffix[$files['type'][$i]];
+				$fn_read = 'imageCreateFrom' . $fn_suffix;
+				$fn_write = 'image' . $fn_suffix;
+				if(!function_exists('imagebmp') || !function_exists('imagecreatefrombmp'))
+					include('files/Core/bmp.php');
+									
+				if($source = $fn_read($path)) {
+					$thumbnail = imageCreateTruecolor($nWidth, $nHeight);
+
+					imageCopyResized($thumbnail, $source,
+					0, 0, 0, 0, $nWidth, $nHeight, $width, $height);
+				}
+				$fn_write($thumbnail, str_replace('./galerie', './galerie/thumbnails', $path));
+				imageDestroy($thumbnail);
 			} else {
-				if(isset($added) && $added)
-					DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' upravil galerii "' .
-						$dir['gd_name'] . '"');
-				View::redirect('/admin/galerie', 'Fotky přidány');
+				View::setRedirectMessage('Nepodařilo se nahrát soubor číslo ' . ($i + 1));
+				
+				$error = true;
 			}
+		}
+		if(isset($error) && $error == true) {
+			if(isset($added) && $added)
+				DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' upravil galerii "' .
+					$dir['gd_name'] . '"');
+			View::redirect('/admin/galerie', 'Bohužel, některé fotky se nepodařilo nahrát :o(');
+		} else {
+			if(isset($added) && $added)
+				DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' upravil galerii "' .
+					$dir['gd_name'] . '"');
+			View::redirect('/admin/galerie', 'Fotky přidány');
 		}
 		break;
 
@@ -264,30 +263,29 @@ switch(Request::getAction()) {
 		if(empty($_POST)) {
 			include('files/Admin/Galerie/DisplayEdit.inc');
 			return;
-		} else {
-			switch(post('action')) {
-				case 'edit':
-					notice('Not Implemented');//FIXME: Not Implemented - Foto edit (rename,...)
+		}
+		switch(post('action')) {
+			case 'edit':
+				notice('Not Implemented');//FIXME: Not Implemented - Foto edit (rename,...)
+				include('files/Admin/Galerie/DisplayEdit.inc');
+				return;
+			case 'remove':
+				$galerie = post('galerie');
+				if(empty($galerie)) {
 					include('files/Admin/Galerie/DisplayEdit.inc');
 					return;
-				case 'remove':
-					$galerie = post('galerie');
-					if(empty($galerie)) {
-						include('files/Admin/Galerie/DisplayEdit.inc');
-						return;
-					}
-					foreach($galerie as $item) {
-						$data = DBGalerie::getSingleFoto($item);
-						DBGalerie::removeFoto($item);
-						
-						unlink($data['gf_path']);
-						unlink(str_replace('./galerie', './galerie/thumbnails', $data['gd_path']));
-					}
-					notice('Fotky odebrány');
+				}
+				foreach($galerie as $item) {
+					$data = DBGalerie::getSingleFoto($item);
+					DBGalerie::removeFoto($item);
 					
-					include('files/Admin/Galerie/DisplayEdit.inc');
-					return;
-			}
+					unlink($data['gf_path']);
+					unlink(str_replace('./galerie', './galerie/thumbnails', $data['gd_path']));
+				}
+				notice('Fotky odebrány');
+				
+				include('files/Admin/Galerie/DisplayEdit.inc');
+				return;
 		}
 		break;
 			
@@ -300,23 +298,22 @@ switch(Request::getAction()) {
 		if(empty($_POST)) {
 			include('files/Admin/Galerie/DisplayDir.inc');
 			return;
-		} else {
-			if(!post('name')) {
-				notice('Složka musí mít jméno');
-				include('files/Admin/Galerie/DisplayDir.inc');
-				return;
-			}
-			if(post('parent') == 'none') {
-				notice('Složka musí mít nadsložku');
-				include('files/Admin/Galerie/DisplayDir.inc');
-				return;
-			}
-			list($parent, $level) = explode('-', post('parent'));
-			$level++;
-			
-			DBGalerie::editDir($id, post('name'), $parent, $level, post('hidden') ? '1' : '0');
-			View::redirect('/admin/galerie', 'Složka úspěšně upravena');
 		}
+		if(!post('name')) {
+			notice('Složka musí mít jméno');
+			include('files/Admin/Galerie/DisplayDir.inc');
+			return;
+		}
+		if(post('parent') == 'none') {
+			notice('Složka musí mít nadsložku');
+			include('files/Admin/Galerie/DisplayDir.inc');
+			return;
+		}
+		list($parent, $level) = explode('-', post('parent'));
+		$level++;
+		
+		DBGalerie::editDir($id, post('name'), $parent, $level, post('hidden') ? '1' : '0');
+		View::redirect('/admin/galerie', 'Složka úspěšně upravena');
 		break;
 }
 

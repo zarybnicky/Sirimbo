@@ -3,17 +3,17 @@
 <?php DisplayAkce::viewAkceHeader($akce);?>
 <table>
 <tr>
-<td>Uživatel</td><td></td>
+	<td>Uživatel</td>
+	<td></td>
 </tr>
 <?php
 $userselect = Helper::get()->userSelect()->users($users);
 if(!empty($items)) {
-	
 	foreach($items as $item) {
 		echo '<tr>';
 		echo '<td>';
 		if($item['ai_user'] > 0)
-			$_POST[$item['ai_id'] . '-user'] = $item['ai_user'];
+			post($item['ai_id'] . '-user', $item['ai_user']);
 		echo $userselect->name($item['ai_id'] . '-user');
 		echo '</td>';
 		echo '<td><button type="submit" name="remove" value="', $item['ai_id'],
@@ -23,8 +23,8 @@ if(!empty($items)) {
 }
 ?>
 <tr>
-<td><?php echo $userselect->name('add-user'); ?></td>
-<td><button type="submit" name="add" value="add">Přidat</button></td>
+	<td><?php echo $userselect->name('add-user'); ?></td>
+	<td><button type="submit" name="add" value="add">Přidat</button></td>
 </tr>
 <tr><td><button type="submit" name="action" value="submit">Uložit</button></td></tr>
 </table>

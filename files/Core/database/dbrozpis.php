@@ -44,7 +44,7 @@ public static function getRozpis() {
 		$res = DBRozpis::query("SELECT u_id,u_login,u_jmeno,u_prijmeni,r_trener,ri_id,ri_id_rodic,ri_partner," .
 			"ri_od,ri_do,ri_lock FROM rozpis_item LEFT JOIN users ON ri_partner=u_id" .
 			" LEFT JOIN rozpis ON ri_id_rodic=r_id WHERE ri_id='$ri_id'");
-		return DBRozpis::getArray($res);
+		return DBRozpis::getSingleRow($res);
 	}
 
 	public static function isRozpisFree($rid) {

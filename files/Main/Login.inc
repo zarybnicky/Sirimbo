@@ -1,4 +1,7 @@
 <?php
+if(User::isLogged())
+	View::redirect('/member/home');
+
 notice(View::getRedirectMessage());
 ?>
 <style>td.r {text-align:right;}</style>
