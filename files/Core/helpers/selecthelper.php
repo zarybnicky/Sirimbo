@@ -30,9 +30,9 @@ class SelectHelper {
 		if($overwrite)
 			$this->options = array();
 		
-		if($value && $name)
+		if($name !== null)
 			$this->options[$value] = $name;
-		elseif($value && $name === null)
+		elseif($name === null)
 			$this->options[$value] = $value;
 		return $this;
 	}
@@ -69,12 +69,12 @@ class SelectHelper {
 		$out = '<select name="' . $this->name . '">' . "\n";
 		if(!empty($this->options)) {
 			$selected = $this->get ? get($this->name) : post($this->name);
-			if(!$selected)
+			if($selected === null)
 				$selected = $this->value;
 			
 			foreach($this->options as $value => $name) {
 				$out .= '<option value="' . $value . '"' .
-					($selected == $value ? ' selected="selected"' : '') .
+					($selected === $value ? ' selected="selected"' : '') .
 					'>' . $name . '</option>' . "\n";
 			}
 		}

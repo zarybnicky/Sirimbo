@@ -44,14 +44,14 @@ echo $userselect->name('add_partner');
 header_minor('Nabídky:');
 $nabidky = DBNabidka::getNabidka();
 
-$s = Header::get()->select()
+$s = Helper::get()->select()
 	->post()->name('n_id')
 	->option('none', '--');
 foreach($nabidky as $item)
 	$s->option($item['n_id'],
 		formatDate($item['n_od']) . ($item['n_od'] != $item['n_do'] ?
 			(' - ' . formatDate($item['n_do'])) : '') .
-		': ', $item['u_jmeno'], ' ', $item['u_prijmeni']);
+		': ' . $item['u_jmeno'] . ' ' . $item['u_prijmeni']);
 echo $s;
 ?>
 <button type="submit" name="action" value="select">Vybrat nabídku</button>

@@ -1,18 +1,13 @@
 <?php
-$error = false;
-
-global $isConfirmation;
-$isConfirmation = post("nadpis") || post("od") ||post('kat');
-
-if(Request::getAction() == 'edit')
-	$header = "Upravit inzerát";
-elseif(Request::getAction() == 'add')
-	$header = "Přidat inzerát";
+if(Request::getAction() == 'add')
+	header_minor("Přidat inzerát");
 else
-	$header = "Neznámá akce";
-header_minor($header);
+	header_minor('Upravit inzerát');
+
+if(isset($f))
+	notice(implode('<br/>', $f->getMessages()));
 ?>
-<form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="POST">
+<form action="<?php echo Request::getURI();?>" method="POST">
 <table>
 	<tr>
 		<td>Nadpis (*): </td>
@@ -60,11 +55,11 @@ header_minor($header);
 		<td><label><?php echo getCheckbox('visible', 'visible')?></label></td>
 		<td></td>
 	</tr><tr>
-		<?php if(Request::getAction() == 'add') { ?>
-		<td><button type="submit" name="action" value="add_confirm">Přidat</button></td>
-		<?php }	else {?>
-		<td><button type="submit" name="action" value="edit_confirm">Upravit</button></td>
-		<?php } ?>
+	<td>
+		<button type="submit" name="action">
+		<?php echo (Request::getAction() == 'add' ? 'Přidat' : 'Upravit'); ?>
+		</button>
+	</td>
 		<td></td>
 		<td>Pole označená (*) jsou povinná</td>
 	</tr>

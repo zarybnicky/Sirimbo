@@ -26,7 +26,7 @@ foreach($pary as $par) {
 ?>
 </table>
 <br />
-<?php header_minor("Nový pár:");//TODO: Přidat "Nový pár" do tabulky?>
+<?php header_minor("Nový pár:");?>
 <?php $userselect = Helper::get()->userSelect(); ?>
 Partner: <?php echo $userselect->name('add_partner')->users(DBUser::getUsersByPohlavi("m"));?><br />
 Partnerka: <?php echo $userselect->name('add_partnerka')->users(DBUser::getUsersByPohlavi("f"));?><br />

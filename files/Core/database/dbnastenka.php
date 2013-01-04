@@ -11,7 +11,7 @@ class DBNastenka extends Database implements Pagable {
 		return DBNastenka::getArray($res);
 	}
 	
-	public static function getPage($offset, $count, $options = '') {
+	public static function getPage($offset, $count, $options = null) {
 		return DBNastenka::getNastenka($offset, $count);
 	}
 	public static function getCount($options = null) {

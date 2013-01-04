@@ -1,0 +1,203 @@
+<?php
+class Controller_Admin_Akce implements Controller_Interface {
+    function view($id = null) {
+        if(empty($_POST)) {
+        	include('files/Admin/Akce/Display.inc');
+        	return;
+        }
+        switch(post('action')) {
+			case 'remove': //FIXME:URI Building
+				if(!is_array(post('akce')))
+					break;
+				$url = Request::getURI() . '/remove';
+				foreach(post('akce') as $id)
+					$url .= '&u[]=' . $id;
+				View::redirect($url);
+				break;
+        	
+        	case "edit":
+        		$akce = post('akce');
+        		if($akce[0])
+        			View::redirect('/admin/akce/edit/' . $akce[0]);
+        		break;
+        		
+        	case "edit_detail":
+        		$akce = post("akce");
+        		if($akce[0])
+        			View::redirect('/admin/akce/detail/' . $akce[0]);
+        		break;
+        		
+        	case "edit_doku":
+        		$akce = post("akce");
+        		if($akce[0])
+        			View::redirect('/admin/akce/dokumenty/' . $akce[0]);
+                break;
+        }
+    }
+    function add($id = null) {
+		if(empty($_POST) || !$this->checkData($_POST, 'add')) {
+			include('files/Admin/Akce/Form.inc');
+			return;
+		}
+        
+		$od = Helper::get()->date()->name('od')->getPost();
+		$do = Helper::get()->date()->name('do')->getPost();
+		if(!$do || strcmp($od, $do) > 0)
+			$do = $od;
+        
+		DBAkce::addAkce(post('jmeno'), post('kde'), post('info'),
+			$od, $do, post('kapacita'), post('dokumenty'),
+			(post('lock') == 'lock') ? 1 : 0);
+		DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal klubovou akci "' .
+			post('jmeno') . '"');
+		View::redirect('/admin/akce', 'Akce přidána');
+    }
+    function edit($id = null) {
+		if(!$id || !($data = DBAkce::getSingleAkce($id)))
+			View::redirect('/admin/akce', 'Akce s takovým ID neexistuje');
+		
+		if(empty($_POST)) {
+			post('id', $id);
+			post('jmeno', $data['a_jmeno']);
+			post('kde', $data['a_kde']);
+			post('info', $data['a_info']);
+			post('od', $data['a_od']);
+			post('do', $data['a_do']);
+			post('kapacita', $data['a_kapacita']);
+			post('dokumenty', unserialize($data['a_dokumenty']));
+			post('lock', $data['a_lock']);
+			
+			include('files/Admin/Akce/Form.inc');
+			return;
+		}
+		if(!$this->checkData($_POST, 'edit')) {
+			include('files/Admin/Akce/Form.inc');
+			return;
+		}
+		$od = Helper::get()->date()->name('od')->getPost();
+		$do = Helper::get()->date()->name('do')->getPost();
+		if(!$do || strcmp($od, $do) > 0)
+			$do = $od;
+        
+		DBAkce::editAkce($id, post('jmeno'), post('kde'), post('info'),
+			$od, $do, post('kapacita'), post('dokumenty'),
+			(post('lock') == 'lock') ? 1 : 0);
+		DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' změnil detaily akce "' .
+			post('jmeno') . '"');
+		View::redirect('/admin/akce', 'Akce upravena');
+    }
+	function remove($id = null) {
+		if(empty($_POST) || post('action') !== 'confirm') {
+			include('files/Admin/Akce/DisplayRemove.inc');
+			return;
+		}
+		if(!is_array(post('akce')))
+			View::redirect('/admin/akce');
+		foreach(post('akce') as $id) {
+			if(User::checkPermissionsBool(L_ADMIN)) {
+				$data = DBAkce::getSingleAkce($id);
+				DBAkce::removeAkce($id);
+				
+				if(strcmp($data['a_od'], date('Y-m-d')) > 0)
+					DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() .
+						' zrušil klubovou akci "' . $data['a_jmeno'] . '"');
+			} else {
+				$error = true;
+			}
+		}
+		if(isset($error) && $error)
+			View::viewError(ER_AUTHORIZATION);
+		
+		View::redirect('/admin/akce', 'Akce odebrány');
+    }
+    
+    private function checkData($data, $action = 'add') {
+		$od = Helper::get()->date()->name('od')->getPost();
+		$do = Helper::get()->date()->name('do')->getPost();
+        
+		$f = new Form();
+		$f->checkLength(post('jmeno'), 1, 255, 'Špatná délka jména akce', 'jmeno');
+		$f->checkLength(post('kde'), 1, 255, 'Špatná délka místa konání', 'kde');
+		$f->checkDate($od, 'Špatný formát data ("Od")', 'od');
+		$f->checkDate($do, 'Špatný formát data ("Do")', 'do');
+		$f->checkNumeric(post('kapacita'), 'Kapacita musí být zadána číselně', 'kapacita');
+    }
+}
+?><?php
+User::checkPermissionsError(L_ADMIN);
+header_main('Správa akcí');
+
+notice(View::getRedirectMessage());
+
+if(empty($_POST)) {
+	include('files/Admin/Akce/Display.inc');
+	return;
+}
+
+switch(post('action')) {
+	case 'remove':
+		if(is_array(post('akce'))) {
+			echo '<form action="', $_SERVER['REQUEST_URI'], '" method="POST">';
+			echo 'Opravdu chcete odstranit tábor/soustředění:<br/><br/>';
+			foreach(post('akce') as $item) {
+				echo DBAkce::getAkceName($item) . '<br />';
+				echo '<input type="hidden" name="akce[]" value="', $item, '" />';
+			}
+			echo '<br/>';
+			echo '<button type="submit" name="action" value="remove_confirm">',
+				'Odstranit</button>';
+			echo '</form>';
+			echo '<a href="/admin/akce">Zpět</a>';
+			return;
+		}
+		break;
+	
+	case "remove_confirm":
+		if(is_array(post("akce"))) {
+			foreach(post("akce") as $id) {
+				if(User::checkPermissionsBool(L_ADMIN)) {
+					$data = DBAkce::getSingleAkce($id);
+					DBAkce::removeAkce($id);
+					
+					if(strcmp($data['a_od'], date('Y-m-d')) > 0)
+						DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() .
+							' zrušil klubovou akci "' . $data['a_jmeno'] . '"');
+				} else {
+					$error = true;
+				}
+			}
+			if(isset($error) && $error)
+				View::viewError(ER_AUTHORIZATION);
+			
+			notice("Akce odebrány");
+		}
+		break;
+	
+	case "edit":
+		$akce = post('akce');
+		if($akce[0]) {
+			header('Location: /admin/akce/edit/' . $akce[0]);
+			return;
+		}
+		break;
+		
+	case "edit_detail":
+		$akce = post("akce");
+		if($akce[0]) {
+			header("Location: /admin/akce/detail/" . $akce[0]);
+			return;
+		}
+		break;
+		
+	case "edit_doku":
+		$akce = post("akce");
+		if($akce[0]) {
+			header("Location: /admin/akce/dokumenty/" . $akce[0]);
+			return;
+		}
+		break;
+}
+
+include("files/Admin/Akce/Display.inc");
+return;
+?>

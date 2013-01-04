@@ -9,11 +9,14 @@
 	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
 	<title>TK Olymp Olomouc</title>
 	<link href="/style/style.css" rel="stylesheet" type="text/css" />
+    <meta name="google-site-verification" content="Hfe7zlgTDOIpJv4rKGQz2Xg8Aezb6sIO0aAxVhrml9w" />
+    <meta name="norton-safeweb-site-verification" content="r44xj2vskhlgkyqcqm1hdgga2jdfj-idvyys0277y96s72k-tq0z-yyjdu7h3el6pi2gek0i4ykq3xgiguufrvuhj8nbj4n4miwjhvumhp35jfrafyynhj4ee8ctzpzh" />
 	<script src="/scripts/jquery-1.7.1.min.js"></script>
 </head>
 <body>
 <div id="all">
 	<div id="header">
+		<a href="/home" id="homelink"></a>
 		<div id="userbox">
 		<?php
 		if(!User::isLogged()) {
@@ -21,15 +24,18 @@
 			if(post('action') == 'login' ||
 					post('action') == 'enter') {
 				post('pass', User::crypt(post('pass')));
-			
-				if(User::login(post('login'), post('pass'))) {
-					View::redirect('/member/home');
-				} else {
+				
+				if(!User::login(post('login'), post('pass'))) {
 					View::redirect('/login', 'Špatné jméno nebo heslo!', true);
+				} elseif(strpos(Request::getURI(), 'error') && get('id') == ER_AUTHORIZATION &&
+						strpos(Request::getReferer(), 'member')) {
+					View::redirect(Request::getReferer());
+				} else {
+					View::redirect('/member/home');
 				}
 			}
 		?>
-			<form action="<?php echo $_SERVER['REQUEST_URI'] ?>" method="post"><div>
+			<form action="<?php Request::getURI();?>" method="post"><div>
 				<button type="submit" name="action" value="enter" style="display:none;"></button>
 				<input style="width:70px;" type="text" name="login"
 				/><input style="width:70px;" type="password" name="pass" /><br />
@@ -79,7 +85,7 @@
 					<ul>
 				<?php
 					$section = Request::getSection('home');
-					$s_part = Request::getAction();
+					$s_part = implode('/', array_slice(Request::getURLParts(), 1));
 					
 					$menu = array();
 					if($section == 'fotogalerie') {
@@ -99,7 +105,7 @@
 								else
 									continue;
 							}
-							if($s_part != $url  && !strpos($url, '*')) {
+							if($s_part != $url  && strpos($url, '*') === false) {
 								echo '<li><a href="/', $section, '/', $url,
 									'"><span class="arrow">.</span>', $word,
 									'</a></li>', "\n";
@@ -137,20 +143,13 @@
 					}
 				}
 				?>
-				<div class="dark-out"><div class="dark-in"><span class="logo"></span>Kontakt</div></div>
+                <div><a href="https://www.facebook.com/groups/44213111683/" target="_blank"><img alt="" src="/style/fb-logo.png" /></a></div>
+                <!--
+				<div class="dark-out"><div class="dark-in"><span class="logo"></span>Sponzoři</div></div>
 				<div class="light-out"><div class="light-in">
-					<b>TK OLYMP OLOMOUC</b><br />
-					<hr />
-					Mgr. Marie Hýžová<br/>
-					- vedoucí klubu<br/>
-					tel.: 604 756 085<br/>
-					tkolymp(zavináč)tkolymp.cz<br/>
-					<br/>
-					Miroslav Hýža<br/>
-					- informace<br/>
-					tel.: 737 545 525<br/>
-					hyzam(zavináč)tkolymp.cz<br/>
+                    
 				</div></div>
+                -->
 			</div>
 			<div id="content">
 			<form action="<?php echo $_SERVER['REQUEST_URI'];?>" method="get">

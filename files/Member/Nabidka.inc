@@ -2,11 +2,6 @@
 header_main('Nabídka tréninků');
 User::checkPermissionsError(L_HOST);
 
-$error = false;
-global $isConfirmation;
-$isConfirmation = ((post('hodiny') && post('id')) || post('un_id')) &&
-	User::checkPermissionsBool(L_USER);
-
 $nabidka = DBNabidka::getNabidka();
 
 if(empty($nabidka)) {
@@ -14,32 +9,37 @@ if(empty($nabidka)) {
 	return;
 }
 
-if($isConfirmation) {
-	$hodiny = post('hodiny');
-	$id = post('id');
-	$un_id = post('un_id');
-	$current_nabidka = DBNabidka::getSingleNabidka($id);
-	
-	if(!$current_nabidka['n_lock']) {
-		if($hodiny) {
-			if(($current_nabidka['n_pocet_hod'] - DBNabidka::getNabidkaItemLessons($id)) >= $hodiny) {
-				DBNabidka::addNabidkaItemLessons(User::getParID(), $id, $hodiny);
-				notice('Hodiny přidány');
-				
-				unset($_POST['hodiny']);
-			} else {
-				notice('Tolik volných hodin tu není');
-			}
-		} elseif($un_id) {
-			list($u_id, $n_id) = explode('-', $un_id);
+if(((post('hodiny') && post('id')) || post('un_id')) && User::checkPermissionsBool(L_USER)) {
+	$data = DBNabidka::getSingleNabidka(post('id'));
+	if($data['n_lock']) {
+		notice('Zamčeno :o)');
+	} else {
+		if(post('hodiny')) {
+            $partnerka = DBUser::getUserData(User::getPartnerID());
+            if(!User::getZaplaceno() || !(strcmp($partnerka['up_plati_do'], date('Y-m-d')) >= 0)) {
+                notice('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
+            } else {
+    			$hodiny = DBNabidka::getNabidkaItemLessons(post('id'));
+    			
+    			if($data['n_max_pocet_hod'] > 0 && post('hodiny') > $data['n_max_pocet_hod']) {
+    				notice('Maximální počet hodin na pár je ' . $data['n_max_pocet_hod'] . '!');
+    			} elseif(($data['n_pocet_hod'] - DBNabidka::getNabidkaItemLessons(post('id'))) >= post('hodiny')) {
+    				DBNabidka::addNabidkaItemLessons(User::getParID(), post('id'), post('hodiny'));
+    				
+    				unset($_POST['hodiny']);
+    				notice('Hodiny přidány');
+    			} else {
+    				notice('Tolik volných hodin tu není');
+    			}
+            }
+		} elseif(post('un_id')) {
+			list($u_id, $n_id) = explode('-', post('un_id'));
 			if(DBNabidka::hasNabidkaLessons($n_id, $u_id) &&
 					($u_id == User::getParID() || User::checkPermissionsBool(L_ADMIN))) {
 				DBNabidka::removeNabidkaItem($n_id, $u_id);
 				notice('Hodiny odebrány');
 			}
 		}
-	} else {
-		notice('Zamčeno :o)');
 	}
 }
 echo '<style type="text/css">';

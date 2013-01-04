@@ -5,19 +5,19 @@ if(!TISK) {
 	echo '<form action="/admin/platby" method="get">';
 	echo 'za období:&nbsp;';
 	$s->get()->name('f')
-		->option('all', 'Všechny platby');
+		->option('all', 'Všechny platby', true);
 	$year = date('Y');
 	for($i = '2011'; $i <= $year; $i++) {
 		$s->option($i . '-1' , '1. pololetí ' . $i . '/' . ($i + 1));
 		$s->option($i . '-2' , '2. pololetí ' . $i . '/' . ($i + 1));
 	}
-	echo $s->value($year . '-1');
+	echo $s;
 	
 	echo 'řadit podle:&nbsp;';
 	echo $s->get()->name('s')
-		->option('surname', 'příjmení', true)
+		->option('prijmeni', 'příjmení', true)
 		->option('var-symbol', 'var. symbolu')
-		->option('datum', 'data platby');
+		->option('placeno', 'data platby');
 	echo '<button type="submit">Odeslat</button><br/><br/>';
 	echo '</form>';
 }
@@ -38,6 +38,8 @@ if(!get('f') || get('f') == 'all') {
 	$options = array('type' => 'date', 'od' => $od, 'do' => $do);
 }
 
+$options['sort'] = in_array(get('s'), array('prijmeni', 'placeno', 'var-symbol')) ?
+	get('s') : 'prijmeni';
 $pager = new Paging(new PagingAdapterDBSelect('DBPlatby', $options));
 $pager->setCurrentPageField('p');
 $pager->setItemsPerPageField('c');
@@ -56,20 +58,6 @@ if(!TISK) {
 if(empty($items)) {
 	notice('Žádné platby za toto období');
 	return;
-}
-
-$sort = get('s') ? get('s') : 'surname';
-switch($sort) {
-	case 'var-symbol':
-		usort($items, create_function('$a, $b', 'return $a["u_id"] > $b["u_id"];'));
-		break;
-	case 'datum':
-		usort($items, create_function('$a, $b', 'return $a["up_placeno"] < $b["up_placeno"];'));
-		break;
-	case 'surname':
-	default:
-		usort($items, create_function('$a, $b', 'return $a["u_prijmeni"] > $b["u_prijmeni"];'));
-		break;
 }
 
 echo '<div style="margin-right:150px">';
@@ -109,8 +97,9 @@ foreach($items as $item) {
 	echo '</tr>';
 }
 echo '</table>';
-echo '<div style="text-align:center;">';
-echo $pager->getNavigation();
-echo '</div></div>';
+echo '</div>';
 echo '</form>';
+echo '<div style="margin-right:15Opx;text-align:center;">';
+echo $pager->getNavigation();
+echo '</div>';
 ?>

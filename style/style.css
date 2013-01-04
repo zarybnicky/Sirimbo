@@ -114,6 +114,14 @@ p { margin-bottom: 1em; }
 	text-align: right;
 	width: 160px;
 }
+#homelink {
+	position: absolute;
+	top:65px;
+	left:0;
+	width:500px;
+	height:230px;
+	background-color:transparent; 
+}
 .badlogin { border-bottom: 2px dotted red; }
 #userbox input {
 	margin: 0;

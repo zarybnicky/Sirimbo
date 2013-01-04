@@ -6,7 +6,7 @@ notice(View::getRedirectMessage());
 
 $a_id = Request::getID();
 
-if(!$a_id || !is_numeric($a_id) || !($akce = DBAkce::getSingleAkce($a_id)))
+if(!$a_id || !($akce = DBAkce::getSingleAkce($a_id)))
 	View::redirect('/admin/akce', 'Akce s takovým ID neexistuje');
 
 $items = DBAkce::getAkceItems($a_id);
@@ -29,17 +29,18 @@ foreach($items as $item) {
 	
 	if($user != $item["ai_user"] ||
 			($user == "none" ^ $item["ai_user"] == 0)) {
-		
-		DBAkce::editAkceItem($id, $user, array_shift(explode('-', $data['u_narozeni'])));
+		list($year) = explode('-', $data['u_narozeni']);
+		DBAkce::editAkceItem($id, $user, $year);
 	}
 }
 $items = DBAkce::getAkceItems($a_id);
 
-if(post("add-user") && post("add-rok")) {
+if(post("add-user")) {
 	$user = post("add-user");
 	$data = DBUser::getUserData($user);
+	list($year) = explode('-', $data['u_narozeni']);
 	
-	DBAkce::addAkceItem($a_id, $user, array_shift(explode('-', $data['u_narozeni'])));
+	DBAkce::addAkceItem($a_id, $user, $year);
 	post('add-user', null);
 	$items = DBAkce::getAkceItems($a_id);
 }

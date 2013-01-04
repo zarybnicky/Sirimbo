@@ -1,31 +1,22 @@
 <?php
-$error = false;
-
-global $isConfirmation;
-$isConfirmation = (post("jmeno") || post("misto"));
-
-if(Request::getAction() == 'edit')
-	$header = "Upravit akci";
-elseif(Request::getAction() == 'add')
-	$header = "Přidat akci";
+if(Request::getAction() == 'add')
+	header_minor("Přidat uživatele");
 else
-	$header = "Neznámá akce";
-header_minor($header);
+	header_minor("Upravit uživatele");
+
+if(isset($f))
+	notice(implode('<br/>', $f->getMessages()));
 ?>
-<form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="POST">
+<form action="<?php echo Request::getURI();?>" method="POST">
 <table>
 	<tr>
 		<td>Jméno akce (*): </td>
 		<td><input type="text" name="jmeno" value="<?php echo post("jmeno"); ?>" /></td>
-		<td>Max. 255 znaků<?php
-			$error = checkPostFieldLength(1, 255, "jmeno");
-		?><input type="hidden" name="id" value="<?php echo post("id");?>" /></td>
+		<td>Max. 255 znaků</td>
 	</tr><tr>
 		<td>Místo akce (*): </td>
 		<td><input type="text" name="kde" value="<?php echo post("kde"); ?>" /></td>
-		<td>Max. 255 znaků<?php
-			$error = checkPostFieldLength(1, 255, "kde") || $error;
-		?></td>
+		<td>Max. 255 znaků</td>
 	</tr><tr>
 		<td>Další info: </td>
 		<td><textarea rows="15" cols="50" name="info"><?php echo post("info"); ?></textarea></td>
@@ -33,20 +24,15 @@ header_minor($header);
 	</tr><tr>
 		<td>Od: (*)</td>
 		<td><?php echo Helper::get()->date()->name('od')->textBox();?></td>
-		<td><?php $error = checkDateString(Helper::get()->date(false)->getPost()) || $error;?></td>
+		<td></td>
 	</tr><tr>
 		<td>Do: </td>
 		<td><?php echo Helper::get()->date()->name('do')->textBox();?></td>
-		<td>(pokud je prázdný, počítá se jako "Od")
-		<?php $do = Helper::get()->date(false)->getPost();
-			$error = ($do ? checkDateString($do) : false) || $error;
-		?></td>
+		<td>(pokud je prázdný, počítá se jako "Od")</td>
 	</tr><tr>
 		<td>Kapacita (*): </td>
 		<td><input type="text" name="kapacita" value="<?php echo post("kapacita"); ?>" /></td>
-		<td>Pouze číslice<?php
-			$error = checkPostField("/^[0-9]{0,11}/", "kapacita") || $error;
-		?></td>
+		<td>Pouze číslice</td>
 	</tr><tr>
 		<td>Dokumenty: </td>
 		<td><?php
@@ -63,13 +49,12 @@ header_minor($header);
 		<td><label><?php echo getCheckbox('lock', 'lock')?></label></td>
 		<td></td>
 	</tr><tr>
-		<?php if(Request::getAction() == 'add') {?>
-		<td><button type="submit" name="action" value="add_confirm">Přidat</button></td>
-		<?php }	else {?>
-		<td><button type="submit" name="action" value="edit_confirm">Upravit</button></td>
-		<?php } ?>
-		<td></td>
+		<td><button type="submit"><?php
+			if(Request::getAction() == 'add') echo 'Přidat';
+			else echo 'Upravit';
+		?></button></td>
 		<td>Pole označená (*) jsou povinná</td>
+		<td></td>
 	</tr>
 </table>
 </form>

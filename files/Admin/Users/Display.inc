@@ -65,12 +65,14 @@ if(get('v') == 'statistiky') {
 	return;
 }
 
+$options['sort'] = in_array(get('s'), array('prijmeni', 'narozeni', 'var-symbol')) ?
+	get('s') : 'prijmeni';
 $options['filter'] = in_array(get('f'), array('dancer', 'trener', 'editor', 'system', 'all')) ?
 	get('f') : 'all';
 $pager = new Paging(new PagingAdapterDBSelect('DBUser', $options));
 $pager->setCurrentPageField('p');
 $pager->setItemsPerPageField('c');
-$pager->setDefaultItemsPerPage(3);
+$pager->setDefaultItemsPerPage(20);
 $pager->setPageRange(5);
 $items = $pager->getItems();
 
@@ -82,6 +84,7 @@ if(!TISK) {
 		->content('Upravit', 'edit', true)
 		->content('Odebrat', 'remove', true)
 		->content('Nepotvrzení uživatelé', 'users/new')
+		->content('Duplicitní uživatelé', 'users/duplicate')
 		->content('Zobrazit platby', 'platby', true);
 	if(get('v') == 'status')
 		$f->content('Uložit změny', 'save', true);
@@ -91,27 +94,13 @@ if(empty($items)) {
 	notice('Žádní takoví uživatelé');
 	return;
 }
-switch(get('s')) {
-	case 'var-symbol':
-		usort($items, create_function('$a, $b',
-			'return User::var_symbol($a["u_id"]) > User::var_symbol($b["u_id"]);'));
-		break;
-	case 'surname':
-		usort($items, create_function('$a, $b', 'return $a["u_prijmeni"] > $b["u_prijmeni"];'));
-		break;
-	case 'narozeni':
-		usort($items, create_function('$a, $b', 'return $a["u_narozeni"] > $b["u_narozeni"];'));
-		break;
-	default:
-		break;
-}
 echo '<div style="margin-right:150px">';
 echo '<table style="width:100%">';
 echo '<tr>';
 echo '<td></td>';
 echo '<td></td>';
 echo '<td>Jméno</td>';
-echo '<td>Skupina</td>';
+echo '<td></td>';
 
 if(get('v') == 'info') {
 	echo '<td>Oprávnění</td>';
@@ -124,7 +113,7 @@ if(get('v') == 'info') {
 } elseif(get('v') == 'platby') {
 	echo '<td>Variabilní<br/>symbol</td>';
 	echo '<td>Částka</td>';
-	echo '<td>Zaplaceno<br/>do</td>';
+	echo '<td>Zaplaceno do</td>';
 }
 echo '</tr>';
 
@@ -135,7 +124,7 @@ if(get('v') == 'status') {
 		$skupinyselect->option($skupina['us_id'], $skupina['us_popis']);
 }
 
-$i = 0;
+$i = $pager->getItemsPerPage() * ($pager->getCurrentPage() - 1);
 foreach($items as $user) {
 	echo '<tr>';
 	if(Permissions::canEditUser($user['u_id'], $user['u_level'], $user['u_lock']))
@@ -146,10 +135,7 @@ foreach($items as $user) {
 	echo '<td style="max-width:140px;">', $user['u_prijmeni'], ', ', $user['u_jmeno'], '</td>';
 	
 	if(get('v') == 'info') {
-		echo '<td>';
-		echo '<div class="box" title="', $user['us_popis'], '" ',
-			'style="background-color:', Settings::$barvy[$user['us_color']][1], ';"></div>';
-		echo '</td>';
+		echo '<td>', getColorBox($user['us_color'], $user['us_popis']), '</td>';
 		echo '<td>';
 		switch($user['u_level']) {
 			case L_UNCONFIRMED:	echo 'Nepotvrzený uživatel'; break;
@@ -216,7 +202,7 @@ foreach($items as $user) {
 			'style="background-color:', Settings::$barvy[$user['us_color']][1], ';"></div>';
 		echo '</td>';
 		echo '<td>', User::var_symbol($user['u_id']), '</td>';
-		echo '<td style="width:50px;">';
+		echo '<td style="width:58px;">';
 		if($user['up_id']) {
 			if((strpos($user['up_obdobi'], 'pololeti') &&
 					$user['up_castka'] != $user['us_platba_pulrok']) ||
@@ -235,14 +221,15 @@ foreach($items as $user) {
 		echo '<td style="width:110px;">',
 			($zaplaceno ?
 			formatDate($user['up_plati_do']) :
-			($placeno ? ('neplaceno ' . $diffstr) : 'nikdy neplaceno')),
+			($placeno ? $diffstr : 'nikdy')),
 			'</td>';
 	}
 	echo '</tr>';
 }
 echo '</table>';
-echo '<div style="text-align:center">';
-echo $pager->getNavigation();
-echo '</div></div>';
+echo '</div>';
 echo '</form>';
+echo '<div style="text-align:center;margin-right:150px;">';
+echo $pager->getNavigation();
+echo '</div>';
 ?>

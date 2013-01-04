@@ -1,10 +1,10 @@
 <?php
 class DBGalerie extends Database {
-	public static function getFotky($dir = false, $limit = -1, $offset = 0) {
-		if($dir !== false)
+	public static function getFotky($dir = null, $limit = -1, $offset = 0) {
+		if($dir !== null)
 			list($dir) = DBGalerie::escapeArray(array($dir));
-		$res = DBGalerie::query('SELECT * FROM galerie_foto ' .
-			($dir !== false ? 'WHERE gf_id_rodic="' . $dir . '"' : '') .
+		$res = DBGalerie::query('SELECT * FROM galerie_foto' .
+			($dir !== null ? ' WHERE gf_id_rodic="' . $dir . '"' : '') .
 			(($limit > -1) ? (' LIMIT ' . $offset . ',' . $limit) : ''));
 		
 		return DBGalerie::getArray($res);

@@ -3,7 +3,8 @@ class DisplayAktuality {
 	public static function viewClanek($data, $preview = false) {
 		if($preview)
 			echo '<a href="/aktuality/', $data['at_id'],
-				'" style="font-size: 115%;color: #572E00;margin: 5px 0 5px 0;">', $data['at_jmeno'], '</a><br/>';
+				'" style="font-size: 115%;color: #572E00;margin: 5px 0 5px 0;">',
+				$data['at_jmeno'], '</a><br/>';
 		else
 			header_minor($data['at_jmeno']);
 		
@@ -13,9 +14,10 @@ class DisplayAktuality {
 		echo '<br/>';
 		
 		if($preview) {
-			echo nl2br($data['at_preview']), '<a href="/aktuality/', $data['at_id'], '">...</a>';
+			echo stripslashes(nl2br($data['at_preview'])),
+				'<a href="/aktuality/', $data['at_id'], '">...</a>';
 		} else {
-			echo nl2br($data['at_text']);
+			echo stripslashes(nl2br($data['at_text']));
 		}
 		
 		echo '<br/>';

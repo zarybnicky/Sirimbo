@@ -5,8 +5,10 @@ class Form {
 	private $fields;
 	
 	const REGEXP_DATE = '/^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/i';
-	const REGEXP_EMAIL = '//i';
-	const REGEXP_PHONE = '//i';
+	const REGEXP_EMAIL = '/^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i';
+	const REGEXP_PHONE = '/^((\+|00)\d{3})?( ?\d{3}){3}$/';
+	const REGEXP_LOGIN = '/^[A-Z0-9_]{3,20}$/i';
+	const REGEXP_PASSWORD = '/^[A-Z0-9_]{6,32}$/i';
 	
 	function __construct() {
 		$this->valid = true;
@@ -37,10 +39,16 @@ class Form {
 		return false;
 	}
 	function checkEmail($i, $message, $name = '') {
-		return $this->checkRegexp(Form::REGEXP_EMAIL, $i, $message, $name);
+		return $this->checkRegexp($i, Form::REGEXP_EMAIL, $message, $name);
 	}
 	function checkPhone($i, $message, $name = '') {
-		return $this->checkRegexp(Form::REGEXP_PHONE, $i, $message, $name);
+		return $this->checkRegexp($i, Form::REGEXP_PHONE, $message, $name);
+	}
+	function checkLogin($i, $message, $name = '') {
+		return $this->checkRegexp($i, Form::REGEXP_LOGIN, $message, $name);
+	}
+	function checkPassword($i, $message, $name = '') {
+		return $this->checkRegexp($i, Form::REGEXP_PASSWORD, $message, $name);
 	}
 	function checkRegexp($i, $regexp, $message, $name = '') {
 		if(preg_match($regexp, $i))
@@ -73,6 +81,20 @@ class Form {
 	}
 	function checkNumeric($i, $message, $name = '') {
 		if(is_numeric($i))
+			return true;
+		
+		$this->error($message, $name);
+		return false;
+	}
+	function checkNumberBetween($i, $min, $max, $message, $name) {
+		if(is_numeric($i) && $i >= $min && $i <= $max)
+			return true;
+		
+		$this->error($message, $name);
+		return false;
+	}
+	function checkBool($i, $message, $name) {
+		if((bool) $i)
 			return true;
 		
 		$this->error($message, $name);
@@ -199,8 +221,10 @@ function formatDate($str) {
 	list($year, $month, $day) = explode('-', $str);
 	return (int)$day . '. ' . (int)$month . '. ' . $year;
 }
-function formatTimestamp($str) {
+function formatTimestamp($str, $date_only = false) {
 	list($date, $time) = explode(' ', $str);
+	if($date_only)
+		return formatDate($date);
 	$date = formatDate($date);
 	$time = formatTime($time, 1);
 	return implode(' ', array($date, $time));
@@ -361,5 +385,15 @@ function getIP() {
 	} else {
 		return $_SERVER['REMOTE_ADDR'];
 	}
+}
+function buildURI($uri, $_) {
+	$args = func_get_args();
+	$num = func_num_args();
+	
+	list($url, $get) = explode('?', $uri);
+	$get = $get ? explode('&', $get) : array();
+	
+	$get = $num > 1 ? array_merge($get, array_slice($args, 1)) : $get;
+	return $url . (!empty($get) ? ('?' . implode('&', $get)) : '');
 }
 ?>
