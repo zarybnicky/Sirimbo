@@ -3,6 +3,9 @@ if(Request::getAction() == 'add')
 	header_minor("Přidat nabídku");
 else
 	header_minor("Upravit nabídku");
+
+if(isset($f))
+	notice(implode('<br/>', $f->getMessages()));
 ?>
 <form action="<?php echo Request::getURI();?>" method="POST">
 <table>
@@ -22,6 +25,12 @@ else
 	</tr><tr>
 		<td>Počet hodin (*): </td>
 		<td><input type="text" name="pocet_hod" value="<?php echo post("pocet_hod"); ?>" /></td>
+	</tr><tr>
+		<td>Max. počet hodin/pár (*): </td>
+		<td><input type="text" name="max_pocet_hod" value="<?php echo post("max_pocet_hod"); ?>" /></td>
+	</tr><tr>
+		<td></td>
+		<td>(0 = neomezeně)</td>
 	</tr><tr>
 		<td>Od: (*)</td>
 		<td><?php echo Helper::get()->date()->name('od')->textBox();?></td>

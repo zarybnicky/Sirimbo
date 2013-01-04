@@ -5,8 +5,10 @@ if(!empty($_POST) && post('code')) {
 	$r = eval(stripslashes(post('code')));
 	if($r === FALSE)
 		notice('Kód obsahuje syntaktickou chybu');
-	else
+	elseif(!empty($r))
 		notice(dumpVar($r));
+	else
+		notice('Success!');
 }
 ?>
 

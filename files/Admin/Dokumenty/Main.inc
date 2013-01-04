@@ -4,8 +4,7 @@ header_main('Správa souborů');
 
 if(Request::getAction() == 'edit') {
 	$id = Request::getID();
-	
-	if(!$id || !is_numeric($id) || !($data = DBDokumenty::getSingleDokument($id)))
+	if(!$id || !($data = DBDokumenty::getSingleDokument($id)))
 		View::redirect('/admin/dokumenty', 'Dokument s takovým ID neexistuje');
 	
 	if(!Permissions::canEditDokument($data['d_kdo']))

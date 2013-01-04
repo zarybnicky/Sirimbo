@@ -1,14 +1,27 @@
 <?php
 $real_name = realpath(basename($_SERVER['SCRIPT_NAME']));
-$_SERVER['DOCUMENT_ROOT'] = substr($real_name, 0, strpos($real_name, $_SERVER['SCRIPT_NAME']));
+$_SERVER['DOCUMENT_ROOT'] = substr($real_name, 0, strpos($real_name, basename($_SERVER['SCRIPT_NAME'])) - 1);
 unset($real_name);
 
+define('ROOT', $_SERVER['DOCUMENT_ROOT']);
+define('FILES', ROOT . DIRECTORY_SEPARATOR . 'files');
+define('CORE', FILES . DIRECTORY_SEPARATOR . 'Core');
+define('ERROR', FILES . DIRECTORY_SEPARATOR . 'Error');
+define('SETTINGS', CORE . DIRECTORY_SEPARATOR . 'settings');
+define('GALERIE', ROOT . DIRECTORY_SEPARATOR . 'galerie');
+define('HEADER', FILES . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'Header.inc');
+define('FOOTER', FILES . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'Footer.inc');
+define('HEADER_TISK', FILES . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'HeaderTisk.inc');
+define('FOOTER_TISK', FILES . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'FooterTisk.inc');
+define('LOG', ROOT . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'error.log');
+define('PHP_LOG', ROOT . 'log' . DIRECTORY_SEPARATOR . 'php.log');
+
 set_include_path(
-	$_SERVER['DOCUMENT_ROOT'] . '/files/Core/database' . PATH_SEPARATOR .
-	$_SERVER['DOCUMENT_ROOT'] . '/files/Core/display' . PATH_SEPARATOR .
-	$_SERVER['DOCUMENT_ROOT'] . '/files/Core/helpers' . PATH_SEPARATOR .
-	$_SERVER['DOCUMENT_ROOT'] . '/files/Core/paging' . PATH_SEPARATOR .
-	$_SERVER['DOCUMENT_ROOT'] . '/files/Core/types' . PATH_SEPARATOR .
+	CORE . DIRECTORY_SEPARATOR . 'database' . PATH_SEPARATOR .
+	CORE . DIRECTORY_SEPARATOR . 'display' . PATH_SEPARATOR .
+	CORE . DIRECTORY_SEPARATOR . 'helpers' . PATH_SEPARATOR .
+	CORE . DIRECTORY_SEPARATOR . 'paging' . PATH_SEPARATOR .
+	CORE . DIRECTORY_SEPARATOR . 'types' . PATH_SEPARATOR .
 	get_include_path());
 spl_autoload_extensions('.php');
 spl_autoload_register();
@@ -35,17 +48,6 @@ register_shutdown_function('_shutdown_handler');
 
 date_default_timezone_set('Europe/Paris');
 
-define('ROOT', $_SERVER['DOCUMENT_ROOT']);
-define('CORE', ROOT . '/files/Core');
-define('SETTINGS', CORE . '/settings');
-define('GALERIE', ROOT . '/galerie');
-define('HEADER', ROOT . '/files/Static/Header.inc');
-define('FOOTER', ROOT . '/files/Static/Footer.inc');
-define('HEADER_TISK', ROOT . '/files/Static/HeaderTisk.inc');
-define('FOOTER_TISK', ROOT . '/files/Static/FooterTisk.inc');
-define('LOG', ROOT . '/log/error.log');
-define('PHP_LOG', ROOT . '/log/php.log');
-
 define('DEFAULT_FROM_MAIL', 'TK Olymp.cz <noreply@tkolymp.cz>');
 define('DEFAULT_ADMIN_MAIL', 'tkolymp@tkolymp.cz');
 
@@ -59,8 +61,8 @@ if(DEBUG) {
 	error_reporting(-1);
 }
 
-include (SETTINGS . '/db.php');
-include (SETTINGS . '/sitemap.php');
+include (SETTINGS . DIRECTORY_SEPARATOR . 'db.php');
+include (SETTINGS . DIRECTORY_SEPARATOR . 'sitemap.php');
 
 define('NABOR', '0');
 

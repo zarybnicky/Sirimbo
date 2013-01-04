@@ -5,18 +5,23 @@ include("files/Core/form.php");
 include("files/Core/cache.php");
 include("files/Core/database.php");
 include("files/Core/database/dbuser.php");
-include("files/Core/user.php");
 include("files/Core/view.php");
 include("files/Core/request.php");
+include("files/Core/user.php");
 include("files/Core/permissions.php");
 include('files/Core/helper.php');
 include("files/Core/paging.php");
 include("files/Core/mailer.php");
 include("files/Core/debug.php");		//DEBUG ONLY!!!
 
+define('TISK', (isset($_GET['view']) && $_GET['view'] == 'tisk') ? TRUE : FALSE);
+
+session_start();
+session_regenerate_id();
+
 //Are all CORE vars present?
-if(!$sitemap_static || !$sitemap_dynamic || !class_exists("Database") || !class_exists("DBUser") ||
-		!class_exists("User") || !class_exists("View") || !class_exists("Log") ||
+if(!isset($sitemap_static) || !isset($sitemap_dynamic) || !class_exists("Database") ||
+		!class_exists("DBUser") || !class_exists("User") || !class_exists("View") || !class_exists("Log") ||
 		!class_exists("Permissions") || !class_exists("Mailer") || !class_exists("Request")) {
 	if(class_exists("View")) {
 		View::viewDynamic("files/Error/KeyFileCorrupt.inc");
@@ -25,11 +30,11 @@ if(!$sitemap_static || !$sitemap_dynamic || !class_exists("Database") || !class_
 		die("Poškozené knihovní soubory");
 	}
 }
-define('TISK', (get('view') == 'tisk') ? TRUE : FALSE);
 
 Request::setURL(get('file'));
 Request::setURI($_SERVER['REQUEST_URI']);
 $file = Request::getLiteralURL('home');
+unset($_GET['file']);
 
 if(TISK) {
 	;
@@ -41,12 +46,24 @@ if(TISK) {
 }
 Request::setReferer(session('referer_id'));
 
+if(session('login')) {
+	User::loadUser(session('id'));
+	if(session('invalid_data') &&
+			Request::getURL() !== 'member/profil/edit' && Request::getURL() !== 'logout')
+		View::redirect('/member/profil/edit', 'Prosím vyplňte požadované údaje.', true);
+}
+
 if(array_key_exists($file, $sitemap_static)) {
 	$file = $sitemap_static[$file];
 	View::viewStatic($file);
-} else if(array_key_exists($file, $sitemap_dynamic)) {
+} elseif(array_key_exists($file, $sitemap_dynamic)) {
 	$file = $sitemap_dynamic[$file];
-	View::viewDynamic($file);
+	if(file_exists($file))
+		View::viewDynamic($file);
+	elseif(isset($sitemap_dynamic[$file]))
+		View::redirect('/' . $file);
+	else
+		View::viewError(ER_NOT_FOUND_RIGHT);
 } else {
 	View::viewStatic("files/Error/NotPossible.inc");
 }

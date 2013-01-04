@@ -63,11 +63,11 @@ class DBPary extends Database {
 		list($partner, $pohlavi) = DBPary::escapeArray(array($partner, $pohlavi));
 		
 		if($pohlavi == "m") {
-			$res = DBPary::query("SELECT p_id,p_id_partner,p_id_partnerka,u_id,u_jmeno,u_prijmeni,u_pohlavi " .
+			$res = DBPary::query("SELECT * " .
 				"FROM pary LEFT JOIN users ON p_id_partnerka=u_id WHERE p_id_partner='$partner'" .
 				" AND p_archiv='0'");
 		} elseif($pohlavi == "f") {
-			$res = DBPary::query("SELECT p_id,p_id_partner,p_id_partnerka,u_id,u_jmeno,u_prijmeni " .
+			$res = DBPary::query("SELECT * " .
 				"FROM pary LEFT JOIN users ON p_id_partner=u_id WHERE p_id_partnerka='$partner'" .
 				" AND p_archiv='0'");
 		}
@@ -95,8 +95,7 @@ class DBPary extends Database {
 		list($id) = DBPary::escapeArray(array($id));
 		
 		$res = DBPary::query(
-			"SELECT p_id,p_id_partner,p_id_partnerka,p_stt_trida,p_stt_body,p_stt_finale,
-				p_lat_trida,p_lat_body,p_lat_finale,p_hodnoceni
+			"SELECT *
 			FROM pary
 			WHERE p_id='$id' AND p_archiv='0'"
 		);
