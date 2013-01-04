@@ -9,45 +9,41 @@ switch(Request::getAction()) {
 		if(empty($_POST)) {
 			include('files/Admin/Rozpis/Form.inc');
 			return;
-		} else {
-			if(!Permissions::canEditRozpis(post('trener')))
-				View::viewError(ER_AUTHORIZATION);
-		
-			$visible = (bool) post('visible');
-			if(User::checkPermissionsBool(L_TRENER) && !User::checkPermissionsBool(L_ADMIN)) {
-				$visible = false;
-				View::setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění příspěvku');
-			}
-			
-			$error = false;
-			ob_start();
-			include('files/Admin/Rozpis/Form.inc');	
-			$html = ob_get_clean();
-			
-			if(!$error) {
-				$datum = Helper::get()->date()->name('datum')->getPost();
-				
-				DBRozpis::addRozpis(post('trener'), post('kde'), $datum, $visible,
-					post('lock'));
-				
-				if($visible) {
-					$trener_data = DBUser::getUserData(post('trener'));
-					$trener_name = $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni'];
-					
-					DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal rozpis ' .
-						formatDate($datum) . ' s trenérem ' . $trener_name);
-				}
-				View::redirect('/admin/rozpis', 'Rozpis přidán');
-			} else {
-				echo $html;
-				return;
-			}
 		}
+		if(!Permissions::canEditRozpis(post('trener')))
+			View::viewError(ER_AUTHORIZATION);
+   
+		$datum = Helper::get()->date()->name('datum')->getPost();
+		
+		$f = new Form();
+		$f->checkNumeric(post('trener'), 'Neplatný trenér', 'trener');
+		$f->checkDate($datum, 'Neplatný formát data', 'datum');
+		if(!$f->isValid()) {
+			include('files/Admin/Rozpis/Form.inc');
+			return;
+		}
+		
+		$visible = (bool) post('visible');
+		if(User::checkPermissionsBool(L_TRENER) && !User::checkPermissionsBool(L_ADMIN)) {
+			$visible = false;
+			View::setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění příspěvku');
+		}
+		DBRozpis::addRozpis(post('trener'), post('kde'), $datum, $visible,
+			post('lock'));
+		
+		if($visible) {
+			$trener_data = DBUser::getUserData(post('trener'));
+			$trener_name = $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni'];
+			
+			DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal rozpis ' .
+				formatDate($datum) . ' s trenérem ' . $trener_name);
+		}
+		View::redirect('/admin/rozpis', 'Rozpis přidán');
 		break;
 	
 	case 'edit':
 		$id = Request::getID();
-		if(!$id || !is_numeric($id) || !($data = DBRozpis::getSingleRozpis($id)))
+		if(!$id || !($data = DBRozpis::getSingleRozpis($id)))
 			View::redirect('/admin/rozpis', 'Rozpis s takovým ID neexistuje');
 		
 		if(!Permissions::canEditRozpis($data['r_trener']))
@@ -63,45 +59,43 @@ switch(Request::getAction()) {
 			
 			include('files/Admin/Rozpis/Form.inc');
 			return;
-		} else {
-			$visible = (bool) post('visible');
-			$visible_prev = $data['r_visible'];
-			if(User::checkPermissionsBool(L_TRENER) && !User::checkPermissionsBool(L_ADMIN) &&
-					$visible != $visible_prev) {
-				$visible = $visible_prev;
-				View::setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění rozpisu');
-			}
-					
-			$error = false;
-			ob_start();
-			include('files/Admin/Rozpis/Form.inc');	
-			$html = ob_get_clean();
-			
-			if(!$error) {
-				$datum = Helper::get()->date()->name('datum')->getPost();
-				
-				DBRozpis::editRozpis($id, post('trener'), post('kde'), $datum, $visible,
-					post('lock'));
-					
-				$trener_data = DBUser::getUserData(post('trener'));
-				$trener_name = $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni'];
-				if($visible) {
-					if(!$visible_prev)
-						DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal rozpis ' .
-							formatDate($datum) . ' s trenérem ' . $trener_name);
-					else
-						DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' upravil rozpis ' .
-							formatDate($datum) . ' s trenérem ' . $trener_name);
-				} elseif(!$visible && $visible_prev && strcmp($datum, date('Y-m-d')) > 0) {
-						DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' zrušil rozpis ' .
-							formatDate($datum) . ' s trenérem ' . $trener_name);
-				}
-				View::redirect('/admin/rozpis', 'Rozpis úspěšně upraven');
-			} else {
-				echo $html;
-				return;
-			}
 		}
+		
+		$datum = Helper::get()->date()->name('datum')->getPost();
+		
+		$f = new Form();
+		$f->checkNumeric(post('trener'), 'Neplatný trenér', 'trener');
+		$f->checkDate($datum, 'Neplatný formát data', 'datum');
+		if(!$f->isValid()) {
+			include('files/Admin/Rozpis/Form.inc');
+			return;
+		}
+
+		$visible = (bool) post('visible');
+		$visible_prev = $data['r_visible'];
+		if(User::checkPermissionsBool(L_TRENER) && !User::checkPermissionsBool(L_ADMIN) &&
+				$visible != $visible_prev) {
+			$visible = $visible_prev;
+			View::setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění rozpisu');
+		}
+		DBRozpis::editRozpis($id, post('trener'), post('kde'), $datum, $visible,
+			post('lock'));
+		
+		$trener_data = DBUser::getUserData(post('trener'));
+		$trener_name = $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni'];
+		if($visible) {
+			if(!$visible_prev)
+				DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal rozpis ' .
+					formatDate($datum) . ' s trenérem ' . $trener_name);
+			else
+				DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' upravil rozpis ' .
+					formatDate($datum) . ' s trenérem ' . $trener_name);
+		} elseif(!$visible && $visible_prev && strcmp($datum, date('Y-m-d')) > 0) {
+				DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' zrušil rozpis ' .
+					formatDate($datum) . ' s trenérem ' . $trener_name);
+		}
+		View::redirect('/admin/rozpis', 'Rozpis úspěšně upraven');
+		break;
 }
 
 if(empty($_POST)) {
@@ -127,29 +121,30 @@ switch(post('action')) {
 		break;
 	
 	case 'remove':
-		if(is_array(post('rozpis'))) {
-			foreach(post('rozpis') as $item) {
-				$trener = DBRozpis::getRozpisTrener($item);
-				$data = DBRozpis::getSingleRozpis($item);
-				
-				if(Permissions::canEditRozpis($trener['u_id'])) {
-					DBRozpis::removeRozpis($item);
-					if(strcmp($data['r_datum'], date('Y-m-d')) > 0 && $data['r_visible'])
-						DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' zrušil rozpis ' .
-							formatDate($data['r_datum']) . ' s trenérem ' .
-							$trener['u_jmeno'] . ' ' . $trener['u_prijmeni']);
-				} else {
-					$error = true;
-				}
-			}
-			if(isset($error) && $error)
-				View::viewError(ER_AUTHORIZATION);
-			
-			notice('Rozpisy odebrány');
+		if(!is_array(post('rozpis'))) {
 			include('files/Admin/Rozpis/Display.inc');
 			return;
 		}
-		break;
+		foreach(post('rozpis') as $item) {
+			$trener = DBRozpis::getRozpisTrener($item);
+			$data = DBRozpis::getSingleRozpis($item);
+			
+			if(Permissions::canEditRozpis($trener['u_id'])) {
+				DBRozpis::removeRozpis($item);
+				if(strcmp($data['r_datum'], date('Y-m-d')) > 0 && $data['r_visible'])
+					DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' zrušil rozpis ' .
+						formatDate($data['r_datum']) . ' s trenérem ' .
+						$trener['u_jmeno'] . ' ' . $trener['u_prijmeni']);
+			} else {
+				$error = true;
+			}
+		}
+		if(isset($error) && $error)
+			View::viewError(ER_AUTHORIZATION);
+		
+		notice('Rozpisy odebrány');
+		include('files/Admin/Rozpis/Display.inc');
+		return;
 }
 
 include('files/Admin/Rozpis/Display.inc');

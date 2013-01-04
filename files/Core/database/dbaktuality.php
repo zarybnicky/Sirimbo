@@ -44,6 +44,16 @@ class DBAktuality extends Database {
 	public static function removeAktualita($id) {
 		list($id) = DBAktuality::escapeArray(array($id));
 		
-		DBAktuality::query("DELETE FROM aktuality WHERE at_id='$id'");
+		DBAktuality::query(
+			"DELETE FROM aktuality WHERE at_id='$id'"
+		);
+	}
+	public static function getAktualityFoto($id) {
+		list($id) = DBAktuality::escapeArray(array($id));
+		
+		$res = DBAktuality::query(
+			"SELECT * FROM aktuality_foto WHERE af_id_rodic='$id'"
+		);
+		return DBAktuality::getArray($res);
 	}
 }

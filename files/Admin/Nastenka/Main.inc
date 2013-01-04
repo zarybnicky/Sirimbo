@@ -47,7 +47,7 @@ switch(Request::getAction()) {
 						
 			post('id', $id);
 			post('nadpis', $data['up_nadpis']);
-			post('text', $data['up_text']);
+			post('text', stripslashes($data['up_text']));
 			foreach($skupiny as $skupina) {
 				post('sk-' . $skupina['ups_id_skupina'], 1);
 			}

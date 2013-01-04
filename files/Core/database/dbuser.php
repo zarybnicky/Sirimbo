@@ -3,15 +3,19 @@ class DBUser extends Database implements Pagable {
 	public static function getInstance() { return new self(); }
 
 	public static function getPage($offset, $count, $options = null) {
-		if(!isset($options['filter']))
+		if(!isset($options['filter'])) 
 			$options['filter'] = 'all';
+		if(!isset($options['sort']))
+			$options['sort'] = 'prijmeni';
 		
 		$q = "SELECT users.*,p1.*,users_skupiny.* FROM users
 			LEFT JOIN users_platby p1 ON up_id_user=u_id
 			LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
 		WHERE (p1.up_id IS NULL OR
-			p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
-			WHERE p2.up_id_user=u_id)) AND u_confirmed='1' AND u_ban='0'";
+            (p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
+			(p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
+                WHERE p2.up_id_user=u_id) AND p1.up_plati_do < CURDATE()))
+            AND u_confirmed='1' AND u_ban='0'";
 		switch($options['filter']) {
 			case 'dancer': $q .= " AND u_system='0' AND u_dancer='1'"; break;
 			case 'trener': $q .= " AND u_system='0' AND u_level>='" . L_TRENER . "'"; break;
@@ -21,7 +25,13 @@ class DBUser extends Database implements Pagable {
 			default:
 				$q .= "AND u_system='0'";
 		}
-		$q .= " ORDER BY u_prijmeni LIMIT $offset,$count";
+		switch($options['sort']) {
+			case 'var-symbol':	$q .= ' ORDER BY u_id'; break;
+			case 'narozeni':	$q .= ' ORDER BY u_narozeni'; break;
+			case 'prijmeni':
+			default:			$q .= ' ORDER BY u_prijmeni'; break;
+		}
+		$q .= " LIMIT $offset,$count";
 		$res = DBUser::query($q);
 		return DBUser::getArray($res);
 	}
@@ -107,8 +117,9 @@ class DBUser extends Database implements Pagable {
 			LEFT JOIN users_platby p1 ON up_id_user=u_id
 			LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
 		WHERE u_id='$id' AND (p1.up_id IS NULL OR
-			p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
-			WHERE p2.up_id_user=u_id))");
+            (p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
+			(p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
+                WHERE p2.up_id_user=u_id) AND p1.up_plati_do < CURDATE()))");
 		if(!$res) {
 			return false;
 		} else {
@@ -183,7 +194,7 @@ class DBUser extends Database implements Pagable {
 		}
 		
 		DBUser::query("UPDATE users SET u_confirmed='1',u_level='$level',
-			u_skupina='$skupina',u_dancer='$dancer' WHERE u_id='$id'");
+			u_skupina='$skupina',u_dancer='$dancer',u_system='0' WHERE u_id='$id'");
 	}
 	
 	public static function setPassword($id, $passwd) {
@@ -249,9 +260,10 @@ class DBUser extends Database implements Pagable {
 			LEFT JOIN users_platby p1 ON up_id_user=u_id
 			LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
 		WHERE (p1.up_id IS NULL OR
-			p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
-			WHERE p2.up_id_user=u_id))" .
-		(($level == NULL || $level == L_ALL) ? " AND u_level='$level'" : '') .
+            (p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
+			(p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
+                WHERE p2.up_id_user=u_id) AND p1.up_plati_do < CURDATE()))" .
+		(($level == NULL || $level == L_ALL) ? '' : " AND u_level='$level'") .
 		" ORDER BY u_prijmeni");
 		
 		return DBUser::getArray($res);
@@ -274,9 +286,10 @@ class DBUser extends Database implements Pagable {
 		"SELECT users.*,p1.*,users_skupiny.* FROM users
 			LEFT JOIN users_platby p1 ON up_id_user=u_id
 			LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
-		WHERE u_skupina='$skupina' AND (p1.up_id IS NULL OR
-			p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
-			WHERE p2.up_id_user=u_id))
+		WHERE u_skupina='$skupina' AND u_system='0' AND (p1.up_id IS NULL OR
+            (p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
+			(p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
+                WHERE p2.up_id_user=u_id) AND p1.up_plati_do < CURDATE()))
 		ORDER BY u_prijmeni");
 		return DBUser::getArray($res);
 	}
@@ -289,6 +302,17 @@ class DBUser extends Database implements Pagable {
 		return DBUser::getArray($res);
 	}
 	
+	public static function getDuplicateUsers() {
+		$res = DBUser::query(
+		"SELECT u1.*,users_skupiny.* FROM users u1
+			LEFT JOIN users_skupiny ON u1.u_skupina=users_skupiny.us_id
+		WHERE EXISTS (SELECT * FROM users u2 WHERE
+			((u1.u_jmeno=u1.u_prijmeni AND u1.u_prijmeni=u2.u_prijmeni) OR
+			u1.u_email=u2.u_email OR u1.u_telefon=u2.u_telefon) AND u1.u_id!=u2.u_id)
+		ORDER BY u_email, u_telefon, u_prijmeni");
+		return DBUser::getArray($res);
+	}
+	
 	public static function getActiveUsers($level = -1) {
 		$res = DBUser::query(
 		"SELECT users.*,p1.*,users_skupiny.* FROM users
@@ -297,8 +321,9 @@ class DBUser extends Database implements Pagable {
 		WHERE u_system='0' AND u_confirmed='1' AND u_ban='0' " .
 			($level > -1 ? "AND u_level='$level' " : '') .
 			"AND (p1.up_id IS NULL OR
-				p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
-				WHERE p2.up_id_user=u_id))
+            (p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
+			(p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
+                WHERE p2.up_id_user=u_id) AND p1.up_plati_do < CURDATE()))
 			ORDER BY u_prijmeni ");
 		return DBUser::getArray($res);
 	}
@@ -310,10 +335,11 @@ class DBUser extends Database implements Pagable {
 			LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
 		WHERE u_system='0' AND u_dancer='1' AND u_confirmed='1' AND u_ban='0' " .
 			($level > -1 ? "AND u_level='$level' " : '') .
-			"AND (p1.up_id IS NULL OR
-				p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
-				WHERE p2.up_id_user=u_id))
-			ORDER BY u_prijmeni");
+		"AND (p1.up_id IS NULL OR
+            (p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
+			(p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
+                WHERE p2.up_id_user=u_id) AND p1.up_plati_do < CURDATE()))
+		ORDER BY u_prijmeni");
 		return DBUser::getArray($res);
 	}
 	

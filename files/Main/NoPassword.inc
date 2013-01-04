@@ -25,7 +25,7 @@ if(post('action') == 'gen_pass' || post('action') == 'enter') {
 <p style="text-align:center;">Pokud jste zapomněli heslo, pošleme Vám nové na e-mail, který
 jste zadali při registraci</p>
 
-<form action="<?php echo $_SERVER['REQUEST_URI'];?>" method="post">
+<form action="<?php echo Request::getURL();?>" method="post">
 <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
 <table style="margin:0 auto;">
 <tr>

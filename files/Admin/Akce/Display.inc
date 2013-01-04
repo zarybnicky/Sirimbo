@@ -1,10 +1,17 @@
-<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
-<a href="/admin/akce/add">Přidat</a>
-<button type="submit" name="action" value="edit">Upravit</button>
-<button type="submit" name="action" value="edit_detail">Upravit přihlášené</button>
-<button type="submit" name="action" value="edit_doku">Upravit dokumenty</button>
-<button type="submit" name="action" value="remove">Odstranit</button>
-<table>
+<form action="<?php echo Request::getURI();?>" method="POST">
+<?php
+if(!TISK) {
+	echo Helper::get()->menu()
+		->float(MenuHelper::FLOAT_RIGHT)
+		->content('Přidat', 'akce/add')
+		->content('Upravit', 'edit', true)
+		->content('Upravit přihlášené', 'edit_detail', true)
+		->content('Upravit dokumenty', 'edit_doku', true)
+		->content('Odstranit', 'remove', true);
+}
+?>
+<div style="margin-right:150px;">
+<table style="width:100%">
 <tr>
 <td></td>
 <td>Jméno</td>
@@ -28,4 +35,5 @@ foreach($akce as $item) {
 }
 ?>
 </table>
+</div>
 </form>

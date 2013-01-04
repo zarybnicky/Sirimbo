@@ -14,7 +14,7 @@ class Paging {
 	private $valid;
 	
 	function __construct(PagingAdapterInterface $d = null) {
-		if(is_a($d, 'PagingAdapterInterface')) {
+		if($d instanceof PagingAdapterInterface) {
 			$this->adapter = $d;
 			$this->totalItems = $this->adapter->count();
 		}
@@ -23,7 +23,7 @@ class Paging {
 	}
 	
 	function setAdapter(PagingAdapterInterface $d) {
-		if(!is_a($d, 'PagingAdapterInterface'))
+		if(!($d instanceof PagingAdapterInterface))
 			return false;
 		$this->adapter = $d;
 		$this->totalItems = $this->adapter->count();
@@ -129,18 +129,23 @@ class Paging {
 			'pagesInRange' => $this->pagesInRange
 		);
 	}
-	function getLink($i, $label) {
+	function getLink($i, $label, $perPage = null) {
 		if(!$this->valid)
 			return false;
+		if($perPage === null)
+			$perPage = $this->itemsPerPage;
 		
 		$p = (isset($this->currentPageField) ? $this->currentPageField : 'p');
 		$c = (isset($this->itemsPerPageField) ? $this->itemsPerPageField : 'c');
-		
-		return "<a href=\"?$c={$this->itemsPerPage}&$p=$i\">$label</a>";
+		$url = http_build_query(array_merge($_GET, array(
+			$c => $perPage,
+			$p => $i)
+		));
+		return "<a href=\"?$url\">$label</a>";
 	}
 	function getNavigation() {
 		if($this->getPageCount() <= 1)
-			return '';
+			return $this->getCountSetting();
 		
 		$out = '';
 		if($this->getCurrentPage() != 1) {
@@ -173,6 +178,31 @@ class Paging {
 			$out .= '<span style="padding:0 2px;">&gt;</span>&nbsp;';
 			$out .= '<span style="padding:0 2px;">&gt;&gt;</span>';
 		}
+		return $out . '<br/>' . $this->getCountSetting();
+	}
+	function getCountSetting() {
+		if($this->totalItems <= 5)
+			return '';
+		$options = array(5, 10, 20, 50);
+		
+		$out = 'zobrazit ';
+		if($this->itemsPerPage === $this->totalItems)
+			$out .= '<span style="padding:0 2px;">vše</span>';
+		else
+			$out .= $this->getLink(1, 'vše', $this->totalItems);
+		
+		foreach($options as $option) {
+			if($option > $this->totalItems)
+				continue;
+			
+			if($this->itemsPerPage == $option) {
+				$out .= '&nbsp;|&nbsp;<span style="padding:0 2px;">' . $option . '</span>';
+			} else {
+				$i = floor($this->itemsPerPage * ($this->currentPage - 1) / $option) + 1;
+				$out .= '&nbsp;|&nbsp;' . $this->getLink($i, $option, $option);
+			}
+		}
+		$out .= ' položek na stránku';
 		return $out;
 	}
 	function getPreviousPage() {

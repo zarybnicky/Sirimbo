@@ -24,7 +24,10 @@ class User {
 					!preg_match("/^((\+|00)\d{3})?( ?\d{3}){3}$/", $data['u_telefon']) ||
 					!preg_match("/^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/",
 						$data['u_narozeni'])) {
+				$_SESSION['invalid_data'] = 1;
 				View::redirect('/member/profil/edit', 'Prosím vyplňte požadované údaje.', true);
+			} else {
+				$_SESSION['invalid_data'] = 0;
 			}
 			return true;
 		} else
@@ -154,9 +157,4 @@ class User {
 		return str_pad($id, 6, '0', STR_PAD_LEFT);
 	}
 }
-
-session_start();
-session_regenerate_id();
-if(isset($_SESSION["login"]))
-	User::loadUser($_SESSION["id"]);
 ?>

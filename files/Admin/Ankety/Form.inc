@@ -1,14 +1,10 @@
 <?php
-if(Request::getAction() == 'edit')
-	$header = "Upravit anketu";
-elseif(Request::getAction() == 'add')
-	$header = "Přidat anketu";
+if(Request::getAction() == 'add')
+	header_minor("Přidat anketu");
 else
-	$header = "Neznámá akce";
-
-header_minor($header);
+	header_minor("Upravit anketu");
 ?>
-<form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="post">
+<form action="<?php echo Request::getURI()?>" method="post">
 <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
 <table>
 	<tr>

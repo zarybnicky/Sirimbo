@@ -8,14 +8,14 @@ if(!empty($_POST) && post('action') == "edit_unreg") {
 	$pass = post('pass');
 	
 	if(!$id || !is_numeric($id) || !($data = DBInzerce::getSingleInzerat($id)))
-		View::redirect($_SERVER['REQUEST_URI'], 'Inzerát s takovým ID neexistuje');
+		View::redirect(Request::getURI(), 'Inzerát s takovým ID neexistuje');
 	
 	if($data['i_pass'] != $pass)
 		View::viewError(ER_AUTHORIZATION);
 	
-	$_SESSION['inzerce_' . $id] = $pass;
+	session('inzerce_' . $id, $pass);
 	
-	View::redirect('./edit-unreg/' . $id);
+	View::redirect('/inzerce/edit-unreg/' . $id);
 }
 
 switch(Request::getAction()) {
@@ -58,47 +58,49 @@ switch(Request::getAction()) {
 		if(empty($_POST)) {
 			include('files/Main/Inzerce/Form.inc');
 			return;
-		} else {
-			$od = Helper::get()->date()->name('od')->getPost();
-			$do = Helper::get()->date()->name('do')->getPost();
-			if(!$do || strcmp($od, $do) > 0)
-				$do = $od;
-			
-			if(User::isLogged()) {
-				$jmeno = User::getUserJmeno();
-				$prijmeni = User::getUserPrijmeni();
-				$pass = '';
-				$confirmed = '1';
-				$visible = post('visible') ? '1' : '0';
-			} else {
-				$jmeno = post('jmeno');
-				$prijmeni = post('prijmeni');
-				$pass = post('pass');
-				$confirmed = '0';
-				$visible = '0';
-			}
-			
-			$error = false;
-			ob_start();
-			include('files/Main/Inzerce/Form.inc');	
-			$html = ob_get_clean();
-			
-			if(!$error) {
-				DBInzerce::addInzerat(post('kat'), User::getUserID(), $jmeno, $prijmeni,
-					post('nadpis'), post('text'), serialize(array()), $od, $do, $pass, $visible,
-					$confirmed);
-				if(User::isLogged())
-					View::redirect("/inzerce/posledni", "Váš inzerát byl přidán");
-				else
-					View::redirect('/inzerce/posledni', 'Váš inzerát byl uložen a čeká na schválení administrátora');
-			} else {
-				echo $html;
-				return;
-			}
 		}
+		$od = Helper::get()->date()->name('od')->getPost();
+		$do = Helper::get()->date()->name('do')->getPost();
+		if(!$do || strcmp($od, $do) > 0)
+			$do = $od;
+		
+		$f = new Form();
+		$f->checkLength(post('nadpis'), 1, 255, 'Špatná délka nadpisu', 'nadpis');
+		$f->checkInArray(post('kat'), array(1,2,3,4), 'Neplatná kategorie', 'kat');
+		$f->checkDate($od, 'Neplatný formát data ("Od")', 'od');
+		$f->checkDate($do, 'Neplatný formát data ("Do")', 'do');
+		if(!User::isLogged()) {
+			$f->checkLength(post('jmeno'), 1, 40, 'Špatná délka jména', 'jmeno');
+			$f->checkLength(post('prijmeni'), 1, 40, 'Špatná délka přijmení', 'prijmeni');
+			$f->checkLength(post('pass'), 1, 20, 'Špatná délka hesla', 'pass');
+		}
+		if(!$f->isValid()) {
+			include('files/Admin/Inzerce/Form.inc');
+			return;
+		}
+		if(User::isLogged()) {
+			$jmeno = User::getUserJmeno();
+			$prijmeni = User::getUserPrijmeni();
+			$pass = '';
+			$confirmed = '1';
+			$visible = post('visible') ? '1' : '0';
+		} else {
+			$jmeno = post('jmeno');
+			$prijmeni = post('prijmeni');
+			$pass = post('pass');
+			$confirmed = '0';
+			$visible = '0';
+		}
+		DBInzerce::addInzerat(post('kat'), User::getUserID(), $jmeno, $prijmeni,
+			post('nadpis'), post('text'), serialize(array()), $od, $do, $pass, $visible,
+			$confirmed);
+		if(User::isLogged())
+			View::redirect("/inzerce/posledni", "Váš inzerát byl přidán");
+		else
+			View::redirect('/inzerce/posledni', 'Váš inzerát byl uložen a čeká na schválení administrátora');
 	case 'edit':
 		$id = Request::getID();
-		if(!$id || !is_numeric($id) || !($data = DBInzerce::getSingleInzerat($id)))
+		if(!$id || !($data = DBInzerce::getSingleInzerat($id)))
 			View::redirect('/inzerce/posledni', 'Inzerát s takovým ID neexistuje');
 		
 		if(!Permissions::canEditInzerat($data['i_reg']))
@@ -118,35 +120,29 @@ switch(Request::getAction()) {
 			
 			include('files/Main/Inzerce/Form.inc');
 			return;
-		} else {
-			$od = Helper::get()->date()->name('od')->getPost();
-			$do = Helper::get()->date()->name('do')->getPost();
-			if(!$do || strcmp($od, $do) > 0)
-				$do = $od;
-			
-			$confirmed = '1';
-			$visible = (bool) post('visible');
-			
-			$error = false;
-			
-			ob_start();
-			include('files/Main/Inzerce/Form.inc');	
-			$html = ob_get_clean();
-			
-			if(!$error) {
-				DBInzerce::editInzerat($id, post('kat'), User::getUserID(), User::getUserJmeno(),
-					User::getUserPrijmeni(), post('nadpis'), post('text'), serialize(array()),
-					$od, $do, '', $visible, $confirmed);
-				View::redirect("/inzerce/posledni", "Inzerát upraven");
-			} else {
-				echo $html;
-				return;
-			}
 		}
-		break;
+		$od = Helper::get()->date()->name('od')->getPost();
+		$do = Helper::get()->date()->name('do')->getPost();
+		if(!$do || strcmp($od, $do) > 0)
+			$do = $od;
+		
+		$f = new Form();
+		$f->checkLength(post('nadpis'), 1, 255, 'Špatná délka nadpisu', 'nadpis');
+		$f->checkInArray(post('kat'), array(1,2,3,4), 'Neplatná kategorie', 'kat');
+		$f->checkDate($od, 'Neplatný formát data ("Od")', 'od');
+		$f->checkDate($do, 'Neplatný formát data ("Do")', 'do');
+		if(!$f->isValid()) {
+			include('files/Admin/Inzerce/Form.inc');
+			return;
+		}
+		DBInzerce::editInzerat($id, post('kat'), User::getUserID(), User::getUserJmeno(),
+			User::getUserPrijmeni(), post('nadpis'), post('text'), serialize(array()),
+			$od, $do, '', (bool) post('visible'), '1');
+		View::redirect("/inzerce/posledni", "Inzerát upraven");
+		return;
 	case 'edit-unreg':
 		$id = Request::getID();
-		if(!$id || !is_numeric($id) || !($data = DBInzerce::getSingleInzerat($id)))
+		if(!$id || !($data = DBInzerce::getSingleInzerat($id)))
 			View::redirect('/inzerce/posledni', 'Inzerát s takovým ID neexistuje');
 		
 		$pass = session('inzerce_' . $id);
@@ -167,32 +163,39 @@ switch(Request::getAction()) {
 			
 			include('files/Main/Inzerce/Form.inc');
 			return;
-		} else {
-			$od = Helper::get()->date()->name('od')->getPost();
-			$do = Helper::get()->date()->name('do')->getPost();
-			if(!$do || strcmp($od, $do) > 0)
-				$do = $od;
-			
-			$error = false;
-			ob_start();
-			include('files/Main/Inzerce/Form.inc');	
-			$html = ob_get_clean();
-			
-			if(!$error) {
-				DBInzerce::editInzerat($id, post('kat'), User::getUserID(), post('jmeno'),
-					post('prijmeni'), post('nadpis'), post('text'), serialize(array()),
-					$od, $do, $pass, '1', '1');
-				unset($_SESSION['inzerce_' . $id]);
-				View::redirect("/inzerce/posledni", "Inzerát upraven");
-			} else {
-				echo $html;
-				return;
-			}
 		}
-		break;
+		$od = Helper::get()->date()->name('od')->getPost();
+		$do = Helper::get()->date()->name('do')->getPost();
+		if(!$do || strcmp($od, $do) > 0)
+			$do = $od;
+		
+		$f = new Form();
+		$f->checkLength(post('nadpis'), 1, 255, 'Špatná délka nadpisu', 'nadpis');
+		$f->checkInArray(post('kat'), array(1,2,3,4), 'Neplatná kategorie', 'kat');
+		$f->checkDate($od, 'Neplatný formát data ("Od")', 'od');
+		$f->checkDate($do, 'Neplatný formát data ("Do")', 'do');
+		$f->checkLength(post('jmeno'), 1, 40, 'Špatná délka jména', 'jmeno');
+		$f->checkLength(post('prijmeni'), 1, 40, 'Špatná délka přijmení', 'prijmeni');
+		$f->checkLength(post('pass'), 1, 20, 'Špatná délka hesla', 'pass');
+		if(!$f->isValid()) {
+			include('files/Admin/Inzerce/Form.inc');
+			return;
+		}
+		$jmeno = post('jmeno');
+		$prijmeni = post('prijmeni');
+		$pass = post('pass');
+		$confirmed = '0';
+		$visible = '0';
+		
+		DBInzerce::editInzerat($id, post('kat'), User::getUserID(), post('jmeno'),
+			post('prijmeni'), post('nadpis'), post('text'), serialize(array()),
+			$od, $do, $pass, '1', '1');
+		unset($_SESSION['inzerce_' . $id]);
+		View::redirect("/inzerce/posledni", "Inzerát upraven");
+		return;
 	case 'remove':
 		$id = Request::getID();
-		if(!$id || !is_numeric($id) || !($data = DBInzerce::getSingleInzerat($id)))
+		if(!$id || !($data = DBInzerce::getSingleInzerat($id)))
 			View::redirect('/inzerce/posledni', 'Inzerát s takovým ID neexistuje');
 		
 		if(!Permissions::canEditInzerat($data['i_reg']))
@@ -208,12 +211,10 @@ switch(Request::getAction()) {
 			echo '<a href="/inzerce/posledni">Zpět</a>';
 			echo '</form>';
 			return;
-		} else {
-			DBInzerce::removeInzerat($id);
-			
-			View::redirect("/inzerce/posledni", "Inzerát odebrán");
-			return;
 		}
-		break;
+		DBInzerce::removeInzerat($id);
+		
+		View::redirect("/inzerce/posledni", "Inzerát odebrán");
+		return;
 }
 ?>

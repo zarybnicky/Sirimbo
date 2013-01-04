@@ -22,7 +22,7 @@ echo Helper::get()->menu()
 				->post()->name('parent')
 				->value($data['gd_id_rodic'])
 				->option('none', '--');
-			foreach($dors as $dir) {
+			foreach($dirs as $dir) {
 				if($dir['gd_id'] == $data['gd_id'])
 					continue;
 				$s->option($dir['gd_id'] . '-' . $dir['gd_level'],

@@ -18,14 +18,19 @@ if($isConfirmation) {
 	$id = post('ri_id');
 	
 	$lesson = DBRozpis::getRozpisItemLesson($id);
-	$lesson = $lesson[0];
+    
 	if(!DBRozpis::isRozpisLocked($id)) {
 		if($action == 'signup') {
-			if($lesson['ri_partner'] == 0 && DBRozpis::rozpisSignUp($id, User::getParID()) == true) {
-				notice('Hodina přidána');
-			} else {
-				notice('Už je obsazeno');
-			}
+            $partnerka = DBUser::getUserData(User::getPartnerID());
+            if(!User::getZaplaceno() || !(strcmp($partnerka['up_plati_do'], date('Y-m-d')) >= 0)) {
+                notice('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
+            } else {
+                if($lesson['ri_partner'] == 0 && DBRozpis::rozpisSignUp($id, User::getParID()) == true) {
+    				notice('Hodina přidána');
+    			} else {
+    				notice('Už je obsazeno');
+    			}
+            }
 		} elseif($action == 'signout') {
 			if($lesson['ri_partner'] != 0) {
 				if((User::checkPermissionsBool(L_ADMIN) || User::getParID() == $lesson['ri_partner'] ||

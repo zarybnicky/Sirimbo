@@ -1,9 +1,16 @@
-<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
-<a href="/admin/inzerce/add">Přidat</a>
-<button type="submit" name="action" value="edit">Upravit</button>
-<button type="submit" name="action" value="remove">Odstranit</button>
-<a href="/admin/inzerce/new">Nepotvrzené inzeráty</a>
-<table>
+<form action="<?php echo Request::getURI();?>" method="POST">
+<?php
+if(!TISK) {
+	echo Helper::get()->menu()
+		->float(MenuHelper::FLOAT_RIGHT)
+		->content('Přidat', 'inzerce/add')
+		->content('Upravit', 'edit', true)
+		->content('Odstranit', 'remove', true)
+		->content('Nepotvrzené inzeráty', 'inzerce/new');
+}
+?>
+<div style="margin-right:150px;">
+<table style="width:100%">
 <tr>
 <td></td>
 <td>Nadpis</td>
@@ -33,4 +40,5 @@ foreach($inzerce as $item) {
 }
 ?>
 </table>
+</div>
 </form>
