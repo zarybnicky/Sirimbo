@@ -124,6 +124,12 @@ define('AKTUALITY_KRATKE', 3);
 define('AKTUALITY_PREVIEW', 200);
 define('THUMBNAIL_MAX', 150);
 
+define('P_NONE', 1);
+define('P_VIEW', 2);
+define('P_MEMBER', 4);
+define('P_OWNED', 8);
+define('P_ADMIN', 16);
+
 class Settings {
 public static $errors = array(
 	'authorization'			=> 'files/Error/Authorization.inc',
@@ -154,7 +160,11 @@ public static $barvy = array(
 	'red'		=> array('červená',		'#F00'),
 	'violet'	=> array('fialová',		'#606'),
 	'blue'		=> array('modrá',		'#00F'),
+	'lightblue'	=> array('světle modrá','#0BD'),
+	'aqua'		=> array('modrozelená',	'#2A9'),
+	'bahia'		=> array('zelenomodrá',	'#AD1'),
 	'green'		=> array('zelená',		'#0F0'),
+	'darkgreen'	=> array('tmavě zelená','#5A4'),
 	'brown'		=> array('hnědá',		'#630'),
 	'black'		=> array('černá',		'#000'),
 	'pink'		=> array('růžová',		'#F09'),
@@ -170,22 +180,102 @@ public static $platby_obdobi = array(
 	'4-ctvrtleti'	=> array('-04-16', '-06-30', '4. čtvrtletí - 1.9. - 30.6.', '4. čtvrtletí')
 );
 
+public static $permission_levels = array(
+	P_NONE => 'Bez přístupu',
+	P_VIEW => 'Zobrazit',
+	P_MEMBER => 'Upravit',
+	P_OWNED => 'Admin (svoje)',
+	P_ADMIN => 'Admin'
+);
+
+public static $permissions = array(
+	'akce' => array(
+		'name' => "Akce",
+		'default' => P_MEMBER,
+		P_NONE => 1, P_VIEW => 1, P_MEMBER => 1, P_OWNED => 1, P_ADMIN => 1),
+	'aktuality' => array(
+		'name' => "Aktuality",
+		'default' => P_VIEW,
+		P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1),
+	'ankety' => array(
+		'name' => "Ankety",
+		'default' => P_VIEW,
+		P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1),
+	'dokumenty' => array(
+		'name' => "Dokumenty",
+		'default' => P_MEMBER,
+		P_NONE => 1, P_MEMBER => 1, P_OWNED => 1, P_ADMIN => 1),
+	'galerie' => array(
+		'name' => "Fotogalerie",
+		'default' => P_VIEW,
+		P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1),
+	'inzerce' => array(
+		'name' => "Inzerce",
+		'default' => P_MEMBER,
+		P_VIEW => 1, P_MEMBER => 1, P_ADMIN => 1),
+	'konzole' => array(
+		'name' => "Konzole",
+		'default' => P_NONE,
+		P_NONE => 1, P_ADMIN => 1),
+	'nabidka' => array(
+		'name' => "Nabídka",
+		'default' => P_MEMBER,
+		P_NONE => 1, P_VIEW => 1, P_MEMBER => 1, P_OWNED => 1, P_ADMIN => 1),
+	'nastenka' => array(
+		'name' => "Nástěnka",
+		'default' => P_VIEW,
+		P_NONE => 1, P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1),
+	'novinky' => array(
+		'name' => "Novinky",
+		'default' => P_VIEW,
+		P_NONE => 1, P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1),
+	'pary' => array(
+		'name' => "Páry",
+		'default' => P_VIEW,
+		P_NONE => 1, P_VIEW => 1, P_ADMIN => 1),
+	'platby' => array(
+		'name' => "Platby",
+		'default' => P_NONE,
+		P_NONE => 1, P_ADMIN => 1),
+	'permissions' => array(
+		'name' => "Oprávnění",
+		'default' => P_NONE,
+		P_NONE => 1, P_ADMIN => 1),
+	'rozpis' => array(
+		'name' => "Rozpis",
+		'default' => P_MEMBER,
+		P_NONE => 1, P_VIEW => 1, P_MEMBER => 1, P_OWNED => 1, P_ADMIN => 1),
+	'skupiny' => array(
+		'name' => "Skupiny",
+		'default' => P_VIEW,
+		P_NONE => 1, P_VIEW => 1, P_ADMIN => 1),
+	'users' => array(
+		'name' => "Uživatelé",
+		'default' => P_VIEW,
+		P_NONE => 1, P_VIEW => 1, P_ADMIN => 1	),
+	'main' => array(
+		'name' => "Veřejná část",
+		'default' => P_VIEW,
+		P_VIEW => 1)
+);
+
 public static $sekce = array(
 	'admin'		=> array(
-			'users/*'	=> array('Správa uživatelů', L_ADMIN),
-			'skupiny/*'	=> array('Správa skupin', L_ADMIN),
-			'platby/*'	=> array('Správa plateb', L_ADMIN),
-			'pary/*'	=> array('Správa párů', L_ADMIN),
+			'users/*'		=> array('Správa uživatelů', L_ADMIN),
+			'skupiny/*'		=> array('Správa skupin', L_ADMIN),
+			'platby/*'		=> array('Správa plateb', L_ADMIN),
+			'pary/*'		=> array('Správa párů', L_ADMIN),
 			'aktuality/*'	=> array('Správa článků', L_EDITOR),
-			'nastenka/*'=> array('Správa nástěnky', L_EDITOR),
-			'rozpis/*'	=> array('Správa rozpisů', L_TRENER),
-			'nabidka/*'	=> array('Správa nabídky', L_TRENER),
-			'akce/*'	=> array('Správa akcí', L_ADMIN),
-			'inzerce/*'	=> array('Správa inzerce', L_ADMIN),
-			'galerie/*'	=> array('Správa galerie', L_ADMIN),
+			'nastenka/*'	=> array('Správa nástěnky', L_EDITOR),
+			'rozpis/*'		=> array('Správa rozpisů', L_TRENER),
+			'nabidka/*'		=> array('Správa nabídky', L_TRENER),
+			'akce/*'		=> array('Správa akcí', L_ADMIN),
+			'inzerce/*'		=> array('Správa inzerce', L_ADMIN),
+			'galerie/*'		=> array('Správa galerie', L_ADMIN),
 			'dokumenty/*'	=> array('Správa dokumentů', L_EDITOR),
-			'ankety/*'	=> array('Správa anket', L_EDITOR),
-			'konzole/*'	=> array('Konzole', L_ADMIN)
+			'ankety/*'		=> array('Správa anket', L_EDITOR),
+			'permissions/*'	=> array('Správa oprávnění', L_ADMIN),
+			'konzole/*'		=> array('Konzole', L_ADMIN)
 		),
 	'aktuality'	=> array(
 			'posledni'		=> 'Nejnovější články',

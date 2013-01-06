@@ -11,10 +11,8 @@
 <body>
 <div id="all">
 	<div id="header">
-		<?php
-		if(!isset($_POST["login"])) echo "<div id=\"userbox\">";
-		else echo "<div id=\"userbox\" class=\"bad\">";
-		
+		<div id="userbox">
+		<?php		
 		if(true || !User::isLogged()) {
 			if(isset($_POST["login"])) {
 				$_POST["pass"] = User::crypt($_POST["pass"]);
@@ -25,10 +23,13 @@
 				}
 			}
 		?>
+		
 			<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="post">
+				<div>
 				<input style="width:55px;" type="text" name="login"
 				/><input style="width:55px;" type="password" name="pass"
 				/><button type="submit" name="action" value="login">Login</button>
+				</div>
 			</form>
 		<?php
 		} else {

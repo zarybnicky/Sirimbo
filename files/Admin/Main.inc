@@ -33,7 +33,7 @@ class Dispatcher {
 		$controller = $this->getController($url);
 		
 		if(!($controller instanceof Controller_Interface))
-			throw new Exception('Controller class "' . $controlle . '" not instance of ControllerInterface');
+			throw new Exception('Controller class "' . $controller . '" not instance of ControllerInterface');
             
         $action  = str_replace('-', '_', $action);
 		

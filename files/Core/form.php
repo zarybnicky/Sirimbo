@@ -72,6 +72,13 @@ class Form {
 		$this->error($message, $name);
 		return false;
 	}
+	function checkArrayKey($i, $array, $message, $name = '') {
+		if(array_key_exists($i, $array))
+			return true;
+		
+		$this->error($message, $name);
+		return false;
+	}
 	function checkNotEmpty($i, $message, $name = '') {
 		if($i || $i === 0)
 			return true;
@@ -361,7 +368,7 @@ function getRadio($name, $value, $default = false, $get = false, $readonly = fal
 	$checked = (($get == true) ?
 		((get($name) == $value) ? true : false) :
 		((post($name) == $value) ? true : false));
-	if(!$checked)
+	if(($get == true) ? !get($name) : !post($name))
 		$checked = (bool) $default;
 	return '<input type="radio" name="' . $name . '" value="' . $value . '"' .
 		($checked ? ' checked="checked"' : '') . ($readonly ? ' readonly="readonly"' : '') . '/>';

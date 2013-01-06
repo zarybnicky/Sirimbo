@@ -150,6 +150,10 @@ $sitemap_dynamic = array(
 	'admin/galerie/editdir'		=> 'files/Admin/Galerie/Main.inc',
 	'admin/galerie/upload'		=> 'files/Admin/Galerie/Main.inc',
 	'admin/galerie/scan'		=> 'files/Admin/Galerie/Main.inc',
-	'admin/galerie/process'		=> 'files/Admin/Galerie/Main.inc'
+	'admin/galerie/process'		=> 'files/Admin/Galerie/Main.inc',
+
+	'admin/permissions'			=> 'files/Admin/Permissions/Main.inc',
+	'admin/permissions/add'		=> 'files/Admin/Permissions/Main.inc',
+	'admin/permissions/edit'	=> 'files/Admin/Permissions/Main.inc'
 );
 ?>
