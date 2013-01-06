@@ -35,16 +35,14 @@ switch(Request::getAction()) {
 			return;
 		}
 		DBInzerce::addInzerat(post('kat'), User::getUserID(), User::getUserJmeno(),
-			User::getUserPrijmeni(), post('nadpis'), post('text'), serialize(array()), $od, $do,
+			User::getUserPrijmeni(), post('nadpis'), post('text'), serialize(array()), $od, $do, '',
 			(bool) post('visible'), '1');
 		View::redirect("/member/profil/inzerce", "Váš inzerát byl přidán");
 		break;
 	case 'edit':
-		$id = isset($action[2]) ? $action[2] : '';
-		
-		if(!$id || !is_numeric($id) || !($data = DBInzerce::getSingleInzerat($id)))
+		$id = Request::getID();
+		if(!$id || !($data = DBInzerce::getSingleInzerat($id)))
 			View::redirect('/member/profil/inzerce', 'Inzerát s takovým ID neexistuje');
-		
 		if(!Permissions::canEditInzerat($data['i_reg']))
 			View::viewError(ER_AUTHORIZATION);
 		
@@ -80,7 +78,7 @@ switch(Request::getAction()) {
 		}
 		DBInzerce::editInzerat($id, post('kat'), User::getUserID(), User::getUserJmeno(),
 			User::getUserPrijmeni(), post('nadpis'), post('text'), serialize(array()),
-			$od, $do, (bool) post('visible'), '1');
+			$od, $do, '', (bool) post('visible'), '1');
 		View::redirect("/member/profil/inzerce", "Inzerát upraven");
 		break;
 	case 'remove':

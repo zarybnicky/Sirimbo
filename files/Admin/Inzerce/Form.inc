@@ -37,7 +37,7 @@ if(isset($f))
 				echo '<input type="hidden" name="prijmeni" value="', post('prijmeni'), '" />';
 				echo post('jmeno'), ' ', post('prijmeni'), '<br/>';
 			}
-			echo Helper::get()->userSelect->name('reg')->users(DBUser::getUsers());
+			echo Helper::get()->userSelect()->name('reg')->users(DBUser::getUsers());
 		?></td><td></td>
 	</tr><tr>
 		<td>Od: (*)</td>
