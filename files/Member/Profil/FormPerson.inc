@@ -43,11 +43,14 @@ if(isset($f))
 		<td></td>
 	</tr><tr>
 		<td>Oprávnění: </td>
-		<td><?php if(post("level") == "user")	echo "Uživatel";
-			else if(post("level") == "editor")	echo "Editor";
-			else if(post("level") == "trener")	echo "Trenér";
-			else if(post("level") == "admin")	echo "Administrátor";
-			else if(post("level") == "sadmin")	echo "Superuživatel";
+		<td><?php
+			$groups = DBPermissions::getGroups();
+			foreach($groups as $group) {
+				if($group['pe_id'] == post('group')) {
+					echo $group['pe_name'];
+					break;
+				}
+			}
 			?></td>
 		<td></td>
 	</tr><tr>

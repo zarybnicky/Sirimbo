@@ -1,10 +1,13 @@
 <?php
 class Controller_Admin_Nabidka_Detail implements Controller_Interface {
+	function __construct() {
+		Permissions::checkError('nabidka', P_OWNED);
+	}
 	function view($id = null) {
 		if(!$id || !($data = DBNabidka::getSingleNabidka($id)))
 			View::redirect('/admin/nabidka', 'Nabídka s takovým ID neexistuje');
-		if(!Permissions::canEditNabidka($data['n_trener']))
-			View::viewError(ER_AUTHORIZATION);
+		
+		Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
 		
 		$items = DBNabidka::getNabidkaItem($id);
 		$obsazeno = DBNabidka::getNabidkaItemLessons($id);

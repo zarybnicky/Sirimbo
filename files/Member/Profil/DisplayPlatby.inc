@@ -40,7 +40,6 @@ header_minor('Přehled skupin');
 $skupiny = DBSkupiny::getSkupiny();
 echo '<table>';
 echo '<tr><td>Skupina</td>',
-	'<td>Kč/měsíc</td>',
 	'<td>Kč/čtvrtrok</td>',
 	'<td>Kč/půlrok</td></tr>';
 foreach($skupiny as $skupina) {
@@ -51,7 +50,6 @@ foreach($skupiny as $skupina) {
 	echo '<tr><td><div class="box" title="', $skupina['us_popis'], '" ',
 		'style="background-color:', Settings::$barvy[$skupina['us_color']][1] . ';"></div>&nbsp;',
 		$skupina['us_popis'], '</td>',
-		'<td>', $skupina['us_platba_mesic'], '</td>',
 		'<td>', $skupina['us_platba_ctvrtrok'], '</td>',
 		'<td>', $skupina['us_platba_pulrok'], '</td></tr>';
 }

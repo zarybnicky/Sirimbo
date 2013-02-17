@@ -11,7 +11,6 @@ class User {
 				$pass == "9947a7bc1549a54e7299fe9a3975c8655430ade0" && ($id = 1))
 				|| ($id = DBUser::checkUser($login, $pass))) {
 			$data = DBUser::getUserData($id);
-			
 			if($data['u_ban'])
 				View::viewError(ER_BAN);
 			if(!$data['u_confirmed'])
@@ -43,21 +42,21 @@ class User {
 			User::logout();
 			return false;
 		}
-		
 		if(empty($data))
 			$data = DBUser::getUserData($id);
 		$par = DBPary::getLatestPartner($data['u_id'], $data['u_pohlavi']);
 		
 		foreach(Settings::$permissions as $key => $item)
 			$_SESSION['permissions'][$key] = $data['pe_' . $key];
+		$_SESSION['permission_group'] = $data['pe_id'];
 		
-		$_SESSION["level"] = $data['u_level'];
 		$_SESSION["id"] = $data['u_id'];
 		$_SESSION["user"] = strtolower($data['u_login']);
 		$_SESSION['jmeno'] = $data['u_jmeno'];
 		$_SESSION['prijmeni'] = $data['u_prijmeni'];
 		$_SESSION["pohlavi"] = $data['u_pohlavi'];
 		$_SESSION['narozeni'] = $data['u_narozeni'];
+		$_SESSION['group'] = $data['u_group'];
 		$_SESSION['skupina'] = $data['u_skupina'];
 		$_SESSION['skupina_data'] = array(
 			'us_id '=> $data['us_id'],
@@ -80,6 +79,26 @@ class User {
 		if(!isset($_SESSION["level"]) || $_SESSION["level"] < $level)
 			return false;
 		return true;
+	}
+	
+	public static function getPermissions($module = '') {
+		if(!User::isLogged()) {
+			if($module)
+				return P_NONE;
+			return array();
+		} elseif(User::getUserID() == 1) {
+			if($module)
+				return P_ADMIN;
+			return $_SESSION['permissions'];
+		} else {
+			if($module && isset($_SESSION['permissions'][$module]))
+				return $_SESSION['permissions'][$module];
+			return $_SESSION['permissions'];
+		}
+	}
+	
+	public static function getPermissionGroup() {
+		return $_SESSION['permission_group'];
 	}
 	
 	public static function getUserID() {
@@ -109,8 +128,8 @@ class User {
 		return $_SESSION['jmeno'] . ' ' . $_SESSION['prijmeni'];
 	}
 	
-	public static function getUserLevel() {
-		return $_SESSION["level"];
+	public static function getUserGroup() {
+		return $_SESSION["group"];
 	}
 	
 	public static function getUserPohlavi() {

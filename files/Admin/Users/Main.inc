@@ -116,8 +116,8 @@ switch(Request::getAction()) {
 
 		DBUser::setUserData($id, post('jmeno'), post('prijmeni'), post('pohlavi'),
 			post('email'), post('telefon'), $narozeni, post('poznamky'), $level,
-			post('skupina'), post('dancer') ? 1 : 0, post('lock') ? 1 : 0,
-			post('ban') ? 1 : 0, post('system') ? 1 : 0);
+			post('skupina'), post('dancer') ? '1' : '0', post('lock') ? '1' : '0',
+			post('ban') ? '1' : '0', post('system') ? '1' : '0');
 		View::redirect('/admin/users', 'Uživatel úspěšně upraven');
 		break;
 		
@@ -182,6 +182,38 @@ switch(Request::getAction()) {
 		if(empty($_POST)) {
 			include('files/Admin/Users/DisplayDuplicate.inc');
 			return;
+		}
+		if(post('action') == 'remove') {
+			echo '<form action="/admin/users" method="POST">';
+			echo 'Opravdu chcete odstranit uživatele:<br/><br/>';
+			foreach(post('users') as $id) {
+				$data = DBUser::getUserData($id);
+				echo "\t", $data['u_login'], ' - ';
+				echoFullJmeno($data);
+				echo '<br />';
+				echo '<input type="hidden" name="users[]" value="', $id, '" />';
+			}
+			echo '<br/>';
+			echo '<button type="submit" name="action" value="remove_confirm">Odstranit</button>';
+			echo '</form>';
+			echo '<a href="/admin/users/duplicate">Zpět</a>';
+			return;
+		}
+		break;
+	case 'ban':
+		if(empty($_POST)) {
+			include('files/Admin/Users/DisplayBan.inc');
+			return;
+		}
+		if(post('action') == 'edit') {
+			$users = post('users');
+			if($users[0]) {
+				header('Location: /admin/users/edit/' . $users[0]);
+				return;
+			} else {
+				include('files/Admin/Users/DisplayBan.inc');
+				return;
+			}
 		}
 		if(post('action') == 'remove') {
 			echo '<form action="/admin/users" method="POST">';

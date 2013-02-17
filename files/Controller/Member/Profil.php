@@ -1,5 +1,8 @@
 <?php
 class Controller_Member_Profil implements Controller_Interface {
+	function __construct() {
+		Permissions::checkError('nastenka', P_VIEW);
+	}
 	function view($id = null) {
 		notice(View::getRedirectMessage());
         
@@ -10,15 +13,7 @@ class Controller_Member_Profil implements Controller_Interface {
 		
 		if(empty($_POST)) {
 			post("login", User::getUserName());
-			post("level", $data["u_level"]);
-			switch($data["u_level"]) {
-				case L_USER:	post("level", "user"); break;
-				case L_EDITOR:	post("level", "editor"); break;
-				case L_TRENER:	post("level", "trener"); break;
-				case L_ADMIN:	post("level", "admin"); break;
-				case L_SADMIN:	post("level", "sadmin"); break;
-				default:		post("level", "user"); break;
-			}
+			post("group", $data["u_group"]);
 			post("lock", $data["u_lock"]);
 			post("jmeno", $data["u_jmeno"]);
 			post("prijmeni", $data["u_prijmeni"]);
@@ -47,7 +42,7 @@ class Controller_Member_Profil implements Controller_Interface {
 		}
 		DBUser::setUserData(User::getUserID(), post('jmeno'), post('prijmeni'),
 			post('pohlavi'), post('email'), post('telefon'), $narozeni,
-			post('poznamky'), $data['u_level'], $data['u_skupina'],
+			post('poznamky'), $data['u_group'], $data['u_skupina'],
 			$data['u_dancer'], $data['u_lock'], $data['u_ban'], $data['u_system']);
 		
 		View::redirect('/member/profil', 'Upraveno');

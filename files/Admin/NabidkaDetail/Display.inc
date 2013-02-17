@@ -1,5 +1,5 @@
 <form action="<?php echo Request::getURI(); ?>" method="POST" class="centerWTable">
-<button type="submit" name="action" value="enter" style="display:none;">Enter</button>
+<button type="submit" name="action" value="add" style="display:none;">Enter</button>
 <div class="n_wrapper">
 <?php DisplayNabidka::viewNabidkaHeader($data, $obsazeno); ?>
 <table>

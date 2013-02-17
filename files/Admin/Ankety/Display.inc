@@ -14,7 +14,7 @@ $ankety = DBAnkety::getAnkety();
 foreach($ankety as $item) {
 	echo '<tr>';
 	
-	if(Permissions::canEditAnketa($item['ak_kdo']))
+	if(Permissions::check('ankety', P_OWNED, $item['ak_kdo']))
 		echo '<td><input type="checkbox" name="ankety[]" value="' . $item['ak_id'] .
 			'" /></td>';
 	else

@@ -1,11 +1,13 @@
 <?php
 class Controller_Admin_Aktuality implements Controller_Interface {
+	function __construct() {
+		Permissions::checkError('aktuality', P_OWNED);
+	}
 	function view($id = null) {
 		if(empty($_POST)) {
 			include("files/Admin/Aktuality/Display.inc");
 			return;
 		}
-		
 		switch(post("action")) {
 			case 'edit':
 				$aktuality = post('aktuality');
@@ -17,11 +19,11 @@ class Controller_Admin_Aktuality implements Controller_Interface {
 				if($aktuality[0])
 					View::redirect('/admin/aktuality/foto/' . $aktuality[0]);
 				break;
-			case 'remove': //FIXME:URI Building
-				if(!is_array(post('akce')))
+			case 'remove':
+				if(!is_array(post('aktuality')))
 					break;
-				$url = Request::getURI() . '/remove';
-				foreach(post('akce') as $id)
+				$url = '/admin/aktuality/remove?';
+				foreach(post('aktuality') as $id)
 					$url .= '&u[]=' . $id;
 				View::redirect($url);
 				break;
@@ -51,8 +53,7 @@ class Controller_Admin_Aktuality implements Controller_Interface {
 		if(!$id || !($data = DBAktuality::getSingleAktualita($id)))
 			View::redirect('/admin/aktuality', 'Článek s takovým ID neexistuje');
 		
-		if(!Permissions::canEditAktualita($data['at_kdo']))
-			View::viewError(ER_AUTHORIZATION);
+		Permissions::checkError('aktuality', P_OWNED, $data['at_kdo']);
 		
 		if(empty($_POST)) {
 			post('kat', $data['at_kat']);
@@ -86,7 +87,7 @@ class Controller_Admin_Aktuality implements Controller_Interface {
 	}
 	function remove($id = null) {
 		if(empty($_POST) || post('action') !== 'confirm') {
-			include('files/Admin/Akce/DisplayRemove.inc');
+			include('files/Admin/Aktuality/DisplayRemove.inc');
 			return;
 		}
 		if(!is_array(post('aktuality')))
@@ -94,7 +95,7 @@ class Controller_Admin_Aktuality implements Controller_Interface {
 		foreach(post('aktuality') as $id) {
 			$data = DBAktuality::getSingleAktualita($id);
 			
-			if(Permissions::canEditAktualita($data['at_kdo'])) {
+			if(Permissions::check('aktuality', P_OWNED, $data['at_kdo'])) {
 				DBAktuality::removeAktualita($id);
 				DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' vymazal článek ' .
 					$data['at_jmeno']);

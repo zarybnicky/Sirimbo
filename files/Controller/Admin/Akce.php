@@ -1,15 +1,18 @@
 <?php
 class Controller_Admin_Akce implements Controller_Interface {
+	function __construct() {
+		Permissions::checkError('akce', P_OWNED);
+	}
     function view($id = null) {
         if(empty($_POST)) {
         	include('files/Admin/Akce/Display.inc');
         	return;
         }
         switch(post('action')) {
-			case 'remove': //FIXME:URI Building
+			case 'remove':
 				if(!is_array(post('akce')))
 					break;
-				$url = Request::getURI() . '/remove';
+				$url = '/admin/akce/remove?';
 				foreach(post('akce') as $id)
 					$url .= '&u[]=' . $id;
 				View::redirect($url);
@@ -35,7 +38,7 @@ class Controller_Admin_Akce implements Controller_Interface {
         }
     }
     function add($id = null) {
-		if(empty($_POST) || !$this->checkData($_POST, 'add')) {
+		if(empty($_POST) || is_object($f = $this->checkData($_POST, 'add'))) {
 			include('files/Admin/Akce/Form.inc');
 			return;
 		}
@@ -70,7 +73,7 @@ class Controller_Admin_Akce implements Controller_Interface {
 			include('files/Admin/Akce/Form.inc');
 			return;
 		}
-		if(!$this->checkData($_POST, 'edit')) {
+		if(is_object($f = $this->checkData($_POST, 'edit'))) {
 			include('files/Admin/Akce/Form.inc');
 			return;
 		}
@@ -94,7 +97,7 @@ class Controller_Admin_Akce implements Controller_Interface {
 		if(!is_array(post('akce')))
 			View::redirect('/admin/akce');
 		foreach(post('akce') as $id) {
-			if(User::checkPermissionsBool(L_ADMIN)) {
+			if(Permissions::check('akce', P_OWNED)) {
 				$data = DBAkce::getSingleAkce($id);
 				DBAkce::removeAkce($id);
 				
@@ -119,85 +122,10 @@ class Controller_Admin_Akce implements Controller_Interface {
 		$f->checkLength(post('jmeno'), 1, 255, 'Špatná délka jména akce', 'jmeno');
 		$f->checkLength(post('kde'), 1, 255, 'Špatná délka místa konání', 'kde');
 		$f->checkDate($od, 'Špatný formát data ("Od")', 'od');
-		$f->checkDate($do, 'Špatný formát data ("Do")', 'do');
+		if($do) $f->checkDate($do, 'Špatný formát data ("Do")', 'do');
 		$f->checkNumeric(post('kapacita'), 'Kapacita musí být zadána číselně', 'kapacita');
+		
+		return $f->isValid() ? true : $f;
     }
 }
-?><?php
-User::checkPermissionsError(L_ADMIN);
-header_main('Správa akcí');
-
-notice(View::getRedirectMessage());
-
-if(empty($_POST)) {
-	include('files/Admin/Akce/Display.inc');
-	return;
-}
-
-switch(post('action')) {
-	case 'remove':
-		if(is_array(post('akce'))) {
-			echo '<form action="', $_SERVER['REQUEST_URI'], '" method="POST">';
-			echo 'Opravdu chcete odstranit tábor/soustředění:<br/><br/>';
-			foreach(post('akce') as $item) {
-				echo DBAkce::getAkceName($item) . '<br />';
-				echo '<input type="hidden" name="akce[]" value="', $item, '" />';
-			}
-			echo '<br/>';
-			echo '<button type="submit" name="action" value="remove_confirm">',
-				'Odstranit</button>';
-			echo '</form>';
-			echo '<a href="/admin/akce">Zpět</a>';
-			return;
-		}
-		break;
-	
-	case "remove_confirm":
-		if(is_array(post("akce"))) {
-			foreach(post("akce") as $id) {
-				if(User::checkPermissionsBool(L_ADMIN)) {
-					$data = DBAkce::getSingleAkce($id);
-					DBAkce::removeAkce($id);
-					
-					if(strcmp($data['a_od'], date('Y-m-d')) > 0)
-						DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() .
-							' zrušil klubovou akci "' . $data['a_jmeno'] . '"');
-				} else {
-					$error = true;
-				}
-			}
-			if(isset($error) && $error)
-				View::viewError(ER_AUTHORIZATION);
-			
-			notice("Akce odebrány");
-		}
-		break;
-	
-	case "edit":
-		$akce = post('akce');
-		if($akce[0]) {
-			header('Location: /admin/akce/edit/' . $akce[0]);
-			return;
-		}
-		break;
-		
-	case "edit_detail":
-		$akce = post("akce");
-		if($akce[0]) {
-			header("Location: /admin/akce/detail/" . $akce[0]);
-			return;
-		}
-		break;
-		
-	case "edit_doku":
-		$akce = post("akce");
-		if($akce[0]) {
-			header("Location: /admin/akce/dokumenty/" . $akce[0]);
-			return;
-		}
-		break;
-}
-
-include("files/Admin/Akce/Display.inc");
-return;
 ?>

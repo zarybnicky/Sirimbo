@@ -12,6 +12,8 @@ include("files/Core/permissions.php");
 include('files/Core/helper.php');
 include("files/Core/paging.php");
 include("files/Core/mailer.php");
+include("files/Core/dispatcher.php");
+include("files/Controller/Interface.php");
 include("files/Core/debug.php");		//DEBUG ONLY!!!
 
 define('TISK', (isset($_GET['view']) && $_GET['view'] == 'tisk') ? TRUE : FALSE);
@@ -53,7 +55,22 @@ if(session('login')) {
 		View::redirect('/member/profil/edit', 'Prosím vyplňte požadované údaje.', true);
 }
 
-if(array_key_exists($file, $sitemap_static)) {
+ob_start();
+ob_start();
+
+$d = new Dispatcher();
+$d->dispatch(Request::getLiteralURL(), Request::getAction(), Request::getID());
+
+$main = ob_get_clean();
+
+include(TISK ? HEADER_TISK : HEADER);
+echo $main;
+include(TISK ? FOOTER_TISK : FOOTER);
+
+ob_end_flush();
+exit;
+
+/*if(array_key_exists($file, $sitemap_static)) {
 	$file = $sitemap_static[$file];
 	View::viewStatic($file);
 } elseif(array_key_exists($file, $sitemap_dynamic)) {
@@ -66,5 +83,5 @@ if(array_key_exists($file, $sitemap_static)) {
 		View::viewError(ER_NOT_FOUND_RIGHT);
 } else {
 	View::viewStatic("files/Error/NotPossible.inc");
-}
+}*/
 ?>

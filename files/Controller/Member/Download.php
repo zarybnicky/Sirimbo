@@ -1,5 +1,8 @@
 <?php
 class Controller_Member_Download implements Controller_Interface {
+	function __construct() {
+		Permissions::checkError('dokumenty', P_VIEW);
+	}
     function view($id = null) {
         if(!get('id')) {
             echo 'Co tu děláš? Běž pryč, tady nic není :o)';

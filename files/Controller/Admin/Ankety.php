@@ -1,5 +1,8 @@
 <?php
 class Controller_Admin_Ankety implements Controller_Interface {
+	function __construct() {
+		Permissions::checkError('ankety', P_OWNED);
+	}
     function view($id = null) {
     	if(empty($_POST)) {
 			include("files/Admin/Ankety/Display.inc");
@@ -13,10 +16,10 @@ class Controller_Admin_Ankety implements Controller_Interface {
 					View::redirect('/admin/ankety/edit/' . $ankety[0]);
 				break;
 		
-			case 'remove': //FIXME:URI Building
+			case 'remove':
 				if(!is_array(post('ankety')))
 					break;
-				$url = Request::getURI() . '/remove';
+				$url = '/admin/ankety/remove?';
 				foreach(post('ankety') as $id)
 					$url .= '&u[]=' . $id;
 				View::redirect($url);
@@ -30,7 +33,7 @@ class Controller_Admin_Ankety implements Controller_Interface {
 			return;
 		}
 		$visible = (bool) post("visible");
-		if(User::checkPermissionsBool(L_EDITOR) && !User::checkPermissionsBool(L_ADMIN)) {
+		if(!Permissions::check('ankety', P_ADMIN)) {
 			$visible = false;
 			View::setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění ankety');
 		}
@@ -52,8 +55,8 @@ class Controller_Admin_Ankety implements Controller_Interface {
     function edit($id = null) {
 		if(!$id || !($data = DBAnkety::getSingleAnketa($id)))
 			View::redirect('/admin/ankety', 'Anketa s takovým ID neexistuje');
-		if(!Permissions::canEditAnketa($data['ak_kdo']))
-			View::viewError(ER_AUTHORIZATION);
+		
+		Permissions::checkError('ankety', P_OWNED, $data['ak_kdo']);
 		
 		$items = DBAnkety::getAnketaItems($id);
 			
@@ -89,8 +92,7 @@ class Controller_Admin_Ankety implements Controller_Interface {
 		
 		$visible = (bool) post('visible');
 		$visible_prev = $data['ak_visible'];
-		if(User::checkPermissionsBool(L_EDITOR) && !User::checkPermissionsBool(L_ADMIN) &&
-				$visible != $visible_prev) {
+		if(!Permissions::check('ankety', P_ADMIN) && $visible != $visible_prev) {
 			$visible = $visible_prev;
 			View::setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění ankety');
 		}
@@ -132,7 +134,7 @@ class Controller_Admin_Ankety implements Controller_Interface {
 		foreach(post('ankety') as $id) {
 			$data = DBAnkety::getSingleAnketa($id);
 			
-			if(Permissions::canEditAnketa($data['ak_kdo'])) {
+			if(Permissions::check('ankety', P_OWNED, $data['ak_kdo'])) {
 				DBAnkety::removeAnketa($item);
 				if($data['ak_visible'])
 					DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' zrušil anketu ' .

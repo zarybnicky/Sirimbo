@@ -1,11 +1,13 @@
 <?php
 class Controller_Admin_Galerie implements Controller_Interface {
+	function __construct() {
+		Permissions::checkError('galerie', P_OWNED);
+	}
 	function view($id = null) {
 		if(empty($_POST)) {
 			include('files/Admin/Galerie/Display.inc');
 			return;
 		}
-		
 		switch(post('action')) {
 			case 'edit':
 				$galerie = post('galerie');
@@ -17,10 +19,10 @@ class Controller_Admin_Galerie implements Controller_Interface {
 				if($galerie[0])
 					View::redirect('/admin/galerie/editdir/' . $galerie[0]);
 				break;
-			case 'remove': //FIXME:URI Building
+			case 'remove':
 				if(!is_array(post('galerie')))
 					break;
-				$url = Request::getURI() . '/remove';
+				$url = '/admin/galerie/remove?';
 				foreach(post('galerie') as $id)
 					$url .= '&u[]=' . $id;
 				View::redirect($url);
@@ -147,11 +149,11 @@ class Controller_Admin_Galerie implements Controller_Interface {
 			DBGalerie::addFotoByPath($parent, $file, $name, User::getUserID());
 		}
 		
-		echo 'Složek přidáno: ', count($fs_dirs), '<br/>',
-			'Souborů přidáno: ', count($fs_files), '<br/>',
-			'<br/>',
-			'Složek odebráno: ', count($db_out_dirs), '<br/>',
-			'Souborů odebráno: ', count($db_out_files), '<br/>';
+		View::redirect('/admin/galerie', 'Složek přidáno: ' . count($fs_dirs) . '<br/>' .
+			'Souborů přidáno: ' . count($fs_files) . '<br/>' .
+			'<br/>' .
+			'Složek odebráno: ' . count($db_out_dirs) . '<br/>' .
+			'Souborů odebráno: ' . count($db_out_files) . '<br/>');
 	}
 	function upload($id = null) {
 		if(empty($_POST)) {

@@ -1,5 +1,8 @@
 <?php
 class Controller_Admin_Skupiny implements Controller_Interface {
+	function __construct() {
+		Permissions::checkError('skupiny', P_OWNED);
+	}
 	function view($id = null) {
 		if(empty($_POST)) {
 			include('files/Admin/Skupiny/Display.inc');
@@ -37,14 +40,14 @@ class Controller_Admin_Skupiny implements Controller_Interface {
 		View::redirect('/admin/skupiny', 'Skupiny odebrány');
 	}
 	function add($id = null) {
-		if(empty($_POST) || !$this->checkData($_POST, 'add')) {
+		if(empty($_POST) || is_object($f = $this->checkData($_POST, 'add'))) {
 			include('files/Admin/Skupiny/Form.inc');
 			return;
 		}
 		$mesic = post('platba');
 		$ctvrtleti = post('platba_ctvrtrok');
 		$pololeti = post('platba_pulrok');
-		$this->countPlatby(&$mesic, &$ctvrtleti, &$pololeti);
+		$this->countPlatby($mesic, $ctvrtleti, $pololeti);
 		
 		DBSkupiny::addSkupina(post('color'), $mesic, $ctvrtleti, $pololeti,
 			post('popis'));
@@ -66,7 +69,7 @@ class Controller_Admin_Skupiny implements Controller_Interface {
 			include('files/Admin/Skupiny/Form.inc');
 			return;
 		}
-		if(!$this->checkData($_POST, 'edit')) {
+		if(is_object($f = $this->checkData($_POST, 'edit'))) {
 			include('files/Admin/Skupiny/Form.inc');
 			return;
 		}
@@ -74,7 +77,7 @@ class Controller_Admin_Skupiny implements Controller_Interface {
 		$mesic = post('platba');
 		$ctvrtleti = post('platba_ctvrtrok');
 		$pololeti = post('platba_pulrok');
-		$this->countPlatby(&$mesic, &$ctvrtleti, &$pololeti);
+		$this->countPlatby($mesic, $ctvrtleti, $pololeti);
 		
 		DBSkupiny::editSkupina($id, post('color'), $mesic, $ctvrtleti,
 			$pololeti, post('popis'));
@@ -91,9 +94,10 @@ class Controller_Admin_Skupiny implements Controller_Interface {
 			'Platba musí být zadaná jen čísly', 'platba_ctvrtrok');
 		$f->checkBool(post('platba_pulrok') === '' || is_numeric(post('platba_pulrok')),
 			'Platba musí být zadaná jen čísly', 'platba_pulrok');
-		return $f->isValid();
+
+		return $f->isValid() ? true : $f;
 	}
-	function countPlatby($mesic, $ctvrtleti, $pololeti) {
+	function countPlatby(&$mesic, &$ctvrtleti, &$pololeti) {
 		$platba_mesic =
 			$mesic !== '' ?			$mesic :
 			($ctvrtleti !== '' ?	floor($ctvrtleti / 2.5) :

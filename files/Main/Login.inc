@@ -1,6 +1,10 @@
 <?php
-if(User::isLogged())
-	View::redirect('/member/home');
+if(User::isLogged()) {
+	if(isset(get('redirect')))
+		View::redirect(get('redirect'));
+	else
+		View::redirect('/member/home');
+}
 
 notice(View::getRedirectMessage());
 ?>

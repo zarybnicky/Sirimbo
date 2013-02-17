@@ -22,7 +22,7 @@ $ankety = DBAktuality::getAktuality();
 foreach($ankety as $item) {
 	echo '<tr>';
 	
-	if(Permissions::canEditAktualita($item['at_kdo']))
+	if(Permissions::check('aktuality', P_OWNED, $item['at_kdo']))
 		echo '<td><input type="checkbox" name="aktuality[]" value="' . $item['at_id'] .
 			'" /></td>';
 	else

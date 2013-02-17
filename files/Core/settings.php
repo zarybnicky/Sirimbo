@@ -66,16 +66,6 @@ include (SETTINGS . DIRECTORY_SEPARATOR . 'sitemap.php');
 
 define('NABOR', '0');
 
-//-----Ciselne hodnoty urovni uzivatelu-----//
-define('L_ALL', '-1');
-define('L_UNCONFIRMED', '-1');
-define('L_HOST', '0');
-define('L_USER', '1');
-define('L_EDITOR', '5');
-define('L_TRENER', '6');
-define('L_ADMIN', '50');
-define('L_SADMIN', '99');
-
 //-----Hodnoceni paru-----//
 define('AMEND_Z', '0.2');
 define('AMEND_H', '0.5');
@@ -123,6 +113,10 @@ define('AKTUALITY_VIDEA', 2);
 define('AKTUALITY_KRATKE', 3);
 define('AKTUALITY_PREVIEW', 200);
 define('THUMBNAIL_MAX', 150);
+
+//-----Ciselne hodnoty urovni uzivatelu-----//
+define('L_ALL', '-1');
+define('L_UNCONFIRMED', '0');
 
 define('P_NONE', 1);
 define('P_VIEW', 2);
@@ -183,7 +177,7 @@ public static $platby_obdobi = array(
 public static $permission_levels = array(
 	P_NONE => 'Bez přístupu',
 	P_VIEW => 'Zobrazit',
-	P_MEMBER => 'Upravit',
+	P_MEMBER => 'Editovat',
 	P_OWNED => 'Admin (svoje)',
 	P_ADMIN => 'Admin'
 );
@@ -261,21 +255,21 @@ public static $permissions = array(
 
 public static $sekce = array(
 	'admin'		=> array(
-			'users/*'		=> array('Správa uživatelů', L_ADMIN),
-			'skupiny/*'		=> array('Správa skupin', L_ADMIN),
-			'platby/*'		=> array('Správa plateb', L_ADMIN),
-			'pary/*'		=> array('Správa párů', L_ADMIN),
-			'aktuality/*'	=> array('Správa článků', L_EDITOR),
-			'nastenka/*'	=> array('Správa nástěnky', L_EDITOR),
-			'rozpis/*'		=> array('Správa rozpisů', L_TRENER),
-			'nabidka/*'		=> array('Správa nabídky', L_TRENER),
-			'akce/*'		=> array('Správa akcí', L_ADMIN),
-			'inzerce/*'		=> array('Správa inzerce', L_ADMIN),
-			'galerie/*'		=> array('Správa galerie', L_ADMIN),
-			'dokumenty/*'	=> array('Správa dokumentů', L_EDITOR),
-			'ankety/*'		=> array('Správa anket', L_EDITOR),
-			'permissions/*'	=> array('Správa oprávnění', L_ADMIN),
-			'konzole/*'		=> array('Konzole', L_ADMIN)
+			'users/*'		=> array('Správa uživatelů', 'users'),
+			'skupiny/*'		=> array('Správa skupin', 'skupiny'),
+			'platby/*'		=> array('Správa plateb', 'platby'),
+			'pary/*'		=> array('Správa párů', 'pary'),
+			'aktuality/*'	=> array('Správa článků', 'aktuality'),
+			'nastenka/*'	=> array('Správa nástěnky', 'nastenka'),
+			'rozpis/*'		=> array('Správa rozpisů', 'rozpis'),
+			'nabidka/*'		=> array('Správa nabídky', 'rozpis'),
+			'akce/*'		=> array('Správa akcí', 'akce'),
+			'inzerce/*'		=> array('Správa inzerce', 'inzerce'),
+			'galerie/*'		=> array('Správa galerie', 'galerie'),
+			'dokumenty/*'	=> array('Správa dokumentů', 'dokumenty'),
+			'ankety/*'		=> array('Správa anket', 'ankety'),
+			'permissions/*'	=> array('Správa oprávnění', 'permissions'),
+			'konzole/*'		=> array('Konzole', 'konzole')
 		),
 	'aktuality'	=> array(
 			'posledni'		=> 'Nejnovější články',
@@ -290,7 +284,7 @@ public static $sekce = array(
 			'nabidka'	=> 'Nabídka tréninků',
 			'akce'		=> 'Klubové akce',
 			'dokumenty'	=> 'Dokumenty',
-			'zebricek'	=> 'Žebříček',
+			'pary/*'	=> 'Žebříček',
 			'clenove'	=> 'Členové',
 			'profil/*'	=> 'Profil'
 		),
@@ -314,14 +308,14 @@ public static $sekce = array(
 	'kontakt'	=> array(
 		),
 	'oklubu'	=> array(
-			'historie'		=> 'Historie',
-			'uspechy'		=> 'Úspěchy v číslech',
-			'mistrovstvi'	=> 'Mistrovství ČR',
-			'druzstva'		=> 'Družstva',
-			'liga'			=> 'Taneční liga',
+			'historie'			=> 'Historie',
+			'uspechy'			=> 'Úspěchy v číslech',
+			'mistrovstvi'		=> 'Mistrovství ČR',
+			'druzstva'			=> 'Družstva',
+			'liga'				=> 'Taneční liga',
 			'treneri/klubovi'	=> 'Kluboví trenéři',
 			'treneri/externi'	=> 'Externí trenéři',
-			'saly'			=> 'Kde trénujeme',
+			'saly'				=> 'Kde trénujeme',
 			'stanovy.pdf'		=> 'Stanovy klubu'
 		),
 	'nabizime'	=> array(

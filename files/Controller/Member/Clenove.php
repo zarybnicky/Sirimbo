@@ -1,5 +1,8 @@
 <?php
 class Controller_Member_Clenove implements Controller_Interface {
+	function __construct() {
+		Permissions::checkError('users', P_VIEW);
+	}
     function view($id = null) {
         header_main("Členové");
 
@@ -94,7 +97,7 @@ class Controller_Member_Clenove implements Controller_Interface {
         }
         
         switch(get('f')) {
-        	case 'all': $users = DBUser::getActiveUsers(L_ALL); break;
+        	case 'all': $users = DBUser::getActiveUsers(); break;
         	case 'dancer':
         	default: $users = DBUser::getActiveDancers(); break;
         }

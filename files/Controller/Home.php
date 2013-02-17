@@ -7,7 +7,6 @@ class Controller_Home implements Controller_Interface {
 		notice(View::getRedirectMessage());
 		
 		echo '<div>';
-		
 		echo Helper::get()->clanky()->number(5)->slideBox(true);
 		echo '<br/>';
 		echo '<div style="float:right;">';
