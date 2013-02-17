@@ -32,7 +32,7 @@ if(empty($items)) {
 <?php
 foreach($items as $item) {
 	echo "<tr>";
-	if(Permissions::canEditNastenka($item['up_kdo'], $item['up_lock']))
+	if(Permissions::check('nastenka', P_OWNED, $item['up_kdo']))
 		echo '<td><input type="checkbox" name="nastenka[]" value="' . $item['up_id'] .
 			'" /></td>';
 	else

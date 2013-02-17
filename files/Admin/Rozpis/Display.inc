@@ -23,7 +23,7 @@ $nabidka = DBRozpis::getRozpis();
 
 foreach($nabidka as $item) {
 	echo '<tr>';
-	if(Permissions::canEditRozpis($item['r_trener']))
+	if(Permissions::check('rozpis', P_OWNED, $item['r_trener']))
 		echo '<td><input type="checkbox" name="rozpis[]" value="', $item['r_id'] .
 			'" /></td>';
 	else

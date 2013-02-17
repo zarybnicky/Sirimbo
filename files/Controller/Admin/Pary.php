@@ -1,5 +1,8 @@
 <?php
 class Controller_Admin_Pary implements Controller_Interface {
+	function __construct() {
+		Permissions::checkError('pary', P_OWNED);
+	}
 	function view($id = null) {
 		if(empty($_POST)) {
 			include("files/Admin/Pary/Display.inc");

@@ -14,7 +14,7 @@ $dokumenty = DBDokumenty::getDokumenty();
 
 foreach($dokumenty as $item) {
 	echo "<tr>";
-	if(Permissions::canEditDokument($item['d_kdo']))
+	if(Permissions::check('dokumenty', P_OWNED, $item['d_kdo']))
 		echo '<td><input type="checkbox" name="dokumenty[]" value="', $item['d_id'],
 			'" /></td>';
 	else

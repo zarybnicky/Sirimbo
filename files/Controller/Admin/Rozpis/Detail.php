@@ -1,10 +1,13 @@
 <?php
 class Controller_Admin_Rozpis_Detail implements Controller_Interface {
-	function view($id) {
+	function __construct() {
+		Permissions::checkError('rozpis', P_OWNED);
+	}
+	function view($id = null) {
 		if(!$id || !($data = DBRozpis::getSingleRozpis($id)))
 			View::redirect('/admin/rozpis', 'Rozpis s takovým ID neexistuje');
-		if(!Permissions::canEditRozpis($data['r_trener']))
-			View::viewError(ER_AUTHORIZATION);
+		
+		Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
 		
 		$items = DBRozpis::getRozpisItem($id);
 		$users = DBPary::getPartners();

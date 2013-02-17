@@ -1,5 +1,8 @@
 <?php
 class Controller_Admin_Platby implements Controller_Interface {
+	function __construct() {
+		Permissions::checkError('platby', P_OWNED);
+	}
 	function view($id = null) {
 		if(empty($_POST)) {
 			include('files/Admin/Platby/Display.inc');
@@ -11,10 +14,10 @@ class Controller_Admin_Platby implements Controller_Interface {
 				if($platby[0])
 					View::redirect('/admin/platby/edit/' . $platby[0]);
 				break;
-			case 'remove': //FIXME:URI Building
+			case 'remove':
 				if(!is_array(post('platby')))
 					break;
-				$url = Request::getURI() . '/remove';
+				$url = '/admin/platby/remove?';
 				foreach(post('platby') as $id)
 					$url .= '&u[]=' . $id;
 				View::redirect($url);
@@ -24,7 +27,7 @@ class Controller_Admin_Platby implements Controller_Interface {
 		include('files/Admin/Platby/Display.inc');
 	}
 	function add($id = null) {
-		if(empty($_POST) || !$this->checkData($_POST, 'add')) {
+		if(empty($_POST) || is_object($f = $this->checkData($_POST, 'add'))) {
 			include('files/Admin/Platby/Form.inc');
 			return;
 		}
@@ -76,7 +79,7 @@ class Controller_Admin_Platby implements Controller_Interface {
 			include('files/Admin/Platby/Form.inc');
 			return;
 		}
-		if(!$this->checkData($_POST, 'edit')) {
+		if(is_object($f = $this->checkData($_POST, 'edit'))) {
 			include('files/Admin/Platby/Form.inc');
 			return;
 		}
@@ -137,7 +140,8 @@ class Controller_Admin_Platby implements Controller_Interface {
 		$f->checkNumeric(post('user'), 'Neplatný uživatel', 'user');
 		$f->checkNumeric(post('castka'), 'Částka musí být zadaná jen čísly', 'castka');
 		$f->checkDate($placeno, 'Neplatný formát data', 'placeno');
-		return $f->isValid();
+
+		return $f->isValid() ? true : $f;
 	}
 }
 ?>

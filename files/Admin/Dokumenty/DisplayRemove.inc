@@ -5,7 +5,7 @@ if(!is_array(get('u')))
 <form action="<?php echo Request::getURI();?>" method="POST">
 Opravdu chcete odstranit dokumenty:<br/><br/>
 <?php
-foreach(post('u') as $id) {
+foreach(get('u') as $id) {
 	$name = DBDokumenty::getDokumentName($id);
 	echo $name, '<br />';
 	echo '<input type="hidden" name="dokumenty[]" value="', $id, '" />';
@@ -13,6 +13,6 @@ foreach(post('u') as $id) {
 ?>
 <br/>
 <?php echo getReturnInput()?>
-<button type="submit" name="action" value="remove_confirm">Odstranit</button>
+<button type="submit" name="action" value="confirm">Odstranit</button>
 <a href="<?php echo Request::getReferer()?>">Zpět</a>
 </form>

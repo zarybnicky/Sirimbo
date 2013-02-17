@@ -1,5 +1,8 @@
 <?php
 class Controller_Member_Rozpis implements Controller_Interface {
+	function __construct() {
+		Permissions::checkError('rozpis', P_VIEW);
+	}
     function view($id = null) {
         $rozpis = DBRozpis::getRozpis();
         if(empty($rozpis)) {
@@ -19,9 +22,9 @@ class Controller_Member_Rozpis implements Controller_Interface {
                 
         		if(post('action') == 'signup') {
                     $partnerka = DBUser::getUserData(User::getPartnerID());
-                    if(!User::getZaplaceno() || !(strcmp($partnerka['up_plati_do'], date('Y-m-d')) >= 0)) {
+                    /*if(!User::getZaplaceno() || !(strcmp($partnerka['up_plati_do'], date('Y-m-d')) >= 0)) {
                         notice('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
-                    } elseif($lesson['ri_partner'] == 0 && DBRozpis::rozpisSignUp(post('ri_id'), User::getParID()) == true) {
+                    } else*/ if($lesson['ri_partner'] == 0 && DBRozpis::rozpisSignUp(post('ri_id'), User::getParID()) == true) {
         				notice('Hodina přidána');
         			} else {
         				notice('Už je obsazeno');
@@ -29,8 +32,7 @@ class Controller_Member_Rozpis implements Controller_Interface {
         		} elseif(post('action') == 'signout') {
         			if($lesson['ri_partner'] == 0) {
                         notice('Už je prázdno');
-    				} elseif(User::checkPermissionsBool(L_ADMIN) || User::getParID() == $lesson['ri_partner'] ||
-    						(User::checkPermissionsBool(L_TRENER) && $lesson['r_trener'] == User::getUserID())) {
+    				} elseif(User::getParID() == $lesson['ri_partner'] || Permissions::check('rozpis', P_OWNED, $data['n_trener'])) {
     					DBRozpis::rozpisSignOut(post('ri_id'));
     					notice('Hodina odebrána');
     				} else {
@@ -73,12 +75,11 @@ class Controller_Member_Rozpis implements Controller_Interface {
         			'<td>', echoFullJmeno($par),
         			'<input type="hidden" name="ri_id" value="', $par['ri_id'], '" />',
         			'</td>';
-        		if($par['ri_partner'] == 0 && !$item['r_lock'] && !$par['ri_lock'] && User::checkPermissionsBool(L_USER))
+        		if($par['ri_partner'] == 0 && !$item['r_lock'] && !$par['ri_lock'] && Permissions::check('rozpis', P_MEMBER))
         			echo '<td><button type="submit" name="action" value="signup">Rezervovat</button></td>';
-        		if(($par['ri_partner'] != 0 && (User::checkPermissionsBool(L_ADMIN) ||
-        				User::getParID() == $par['ri_partner'] ||
-        				(User::checkPermissionsBool(L_TRENER) && $item['r_trener'] == User::getUserID()))) &&
-        				!$item['r_lock'] && ! $par['ri_lock'] && User::checkPermissionsBool(L_USER))
+        		if($par['ri_partner'] != 0 && !$item['r_lock'] && !$par['ri_lock'] &&
+        				((Permissions::check('rozpis', P_MEMBER) && User::getParID() == $par['ri_partner']) ||
+        				Permissions::check('rozpis', P_OWNED, $item['r_trener'])))
         				echo '<td><button type="submit" name="action" value="signout">Zrušit</button></td>';
         		echo '</tr>';
         		echo '</form>';

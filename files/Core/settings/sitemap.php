@@ -10,6 +10,8 @@ $sitemap_dynamic = array(
 	'home/ankety'		=> 'files/Main/Ankety.inc',
 	'home/zajemci'		=> 'files/Main/Home/Zajemci.inc',
 	'home/odkazy'		=> 'files/Main/Home/Odkazy.inc',
+	
+	'soutez'			=> 'files/Main/Soutez.inc',
 
 	'oklubu'				=> 'files/Main/OKlubu/Main.inc',
 	'oklubu/historie'		=> 'files/Main/OKlubu/Historie.inc',
@@ -121,6 +123,7 @@ $sitemap_dynamic = array(
 	'admin/users/duplicate'		=> 'files/Admin/Users/Main.inc',
 	'admin/users/platby'		=> 'files/Admin/Users/Main.inc',
 	'admin/users/temporary'		=> 'files/Admin/Users/Temporary.inc',
+	'admin/users/ban'			=> 'files/Admin/Users/Main.inc',
 
 	'admin/skupiny'				=> 'files/Admin/Skupiny/Main.inc',
 	'admin/skupiny/add'			=> 'files/Admin/Skupiny/Main.inc',

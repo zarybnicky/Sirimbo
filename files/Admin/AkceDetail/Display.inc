@@ -26,7 +26,7 @@ if(!empty($items)) {
 	<td><?php echo $userselect->name('add-user'); ?></td>
 	<td><button type="submit" name="add" value="add">Přidat</button></td>
 </tr>
-<tr><td><button type="submit" name="action" value="submit">Uložit</button></td></tr>
 </table>
+<button type="submit" name="action" value="submit">Uložit</button>
 <a href="/admin/akce">Zpět</a>
 </form>

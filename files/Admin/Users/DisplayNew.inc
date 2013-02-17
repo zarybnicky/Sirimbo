@@ -18,23 +18,25 @@ echo Helper::get()->menu()
 </tr>
 <?php
 $users = DBUser::getNewUsers();
+
+$groups = DBPermissions::getGroups();
+$s_group = new SelectHelper();
+foreach($groups as $group)
+	$s_group->option($group['pe_id'], $group['pe_name']);
+
+$skupiny = DBSkupiny::getSkupiny();
+$s_skupina = new SelectHelper();
+foreach($skupiny as $skupina)
+	$s_skupina->option($skupina['us_id'], $skupina['us_popis']);
+
 foreach($users as $user) {
 	echo '<tr>';
 	echo '<td><input type="checkbox" name="users[]" value="' . $user['u_id'] . '" /></td>';
-	echo '<td><select name="' . $user['u_id'] . '-level">
-				<option value="host" selected="selected">Host</option>
-				<option value="user">Uživatel</option>
-				<option value="editor">Editor</option>
-				<option value="trener">Trenér</option>
-				<option value="admin">Administrátor</option>
-		</select></td>';
 	echo '<td>';
-	$skupiny = DBSkupiny::getSkupiny();
-	$s = Helper::get()->select()
-		->post()->name($user['u_id'] . '-skupina');
-	foreach($skupiny as $skupina)
-		$s->option($skupina['us_id'], $skupina['us_popis']);
-	echo $s;
+	echo $s_group->post()->name($user['u_id'] . '-group');
+	echo '</td>';
+	echo '<td>';
+	echo $s_skupina->post()->name($user['u_id'] . '-skupina');
 	echo '</td>';
 	echo '<td><input type="checkbox" name="' . $user['u_id'] . '-dancer" value="dancer" /></td>';
 	echo '<td style="max-width:140px;">';
