@@ -1,5 +1,8 @@
 <?php
 class Controller_Admin_Dokumenty implements Controller_Interface {
+	function __construct() {
+		Permissions::checkError('dokumenty', P_OWNED);
+	}
 	function view($id = null) {
 		if(empty($_POST)) {
 			include('files/Admin/Dokumenty/Display.inc');
@@ -40,10 +43,10 @@ class Controller_Admin_Dokumenty implements Controller_Interface {
 				include('files/Admin/Dokumenty/Display.inc');
 				return;
 			
-			case 'remove': //FIXME:URI Building
+			case 'remove':
 				if(!is_array(post('dokumenty')))
 					break;
-				$url = Request::getURI() . '/remove';
+				$url = '/admin/dokumenty/remove?';
 				foreach(post('dokumenty') as $id)
 					$url .= '&u[]=' . $id;
 				View::redirect($url);
@@ -78,7 +81,7 @@ class Controller_Admin_Dokumenty implements Controller_Interface {
 			View::redirect('/admin/dokumenty');
 		foreach(post('dokumenty') as $id) {
 			$data = DBDokumenty::getSingleDokument($id);
-			if(Permissions::canEditDokument($data['d_kdo'])) {
+			if(Permissions::check('dokumenty', P_OWNED, $data['d_kdo'])) {
 				unlink($data['d_path']);
 				DBDokumenty::removeDokument($id);
 			} else {

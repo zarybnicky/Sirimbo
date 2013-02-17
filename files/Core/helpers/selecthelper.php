@@ -71,10 +71,9 @@ class SelectHelper {
 			$selected = $this->get ? get($this->name) : post($this->name);
 			if($selected === null)
 				$selected = $this->value;
-			
 			foreach($this->options as $value => $name) {
 				$out .= '<option value="' . $value . '"' .
-					($selected === $value ? ' selected="selected"' : '') .
+					($selected == $value ? ' selected="selected"' : '') .
 					'>' . $name . '</option>' . "\n";
 			}
 		}

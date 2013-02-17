@@ -37,7 +37,7 @@ class Controller_Member_Profil_Inzerce implements Controller_Interface {
 		if(!$id || !($data = DBInzerce::getSingleInzerat($id)))
 			View::redirect('/member/profil/inzerce', 'Inzerát s takovým ID neexistuje');
 		
-		if(!Permissions::canEditInzerat($data['i_reg']))
+		if(Permissions::check('inzerce', P_MEMBER) && $data['i_reg'] != User::getUserID())
 			View::viewError(ER_AUTHORIZATION);
 		
 		if(empty($_POST)) {
@@ -79,7 +79,7 @@ class Controller_Member_Profil_Inzerce implements Controller_Interface {
 		if(!$id || !($data = DBInzerce::getSingleInzerat($id)))
 			View::redirect('/member/profil/inzerce', 'Inzerát s takovým ID neexistuje');
 		
-		if(!Permissions::canEditInzerat($data['i_reg']))
+		if(Permissions::check('inzerce', P_MEMBER) && $data['i_reg'] != User::getUserID())
 			View::viewError(ER_AUTHORIZATION);
 		
 		if(empty($_POST)) {

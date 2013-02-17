@@ -8,7 +8,7 @@ class DisplayAkce {
 			echo ' - ', formatDate($data['a_do']);
 		echo '</div>';
 		
-		if(Permissions::canEditAkce()) {
+		if(Permissions::check('akce', P_OWNED)) {
 			echo '<span style="color:#572E00;font-size:115%;">Admin: </span>';
 			echo '<a href="/admin/akce/edit/', $data['a_id'], '">obecné</a>, ';
 			echo '<a href="/admin/akce/detail/', $data['a_id'], '">účastníci</a>, ';

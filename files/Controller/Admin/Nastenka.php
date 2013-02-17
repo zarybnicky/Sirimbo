@@ -1,11 +1,13 @@
 <?php
 class Controller_Admin_Nastenka implements Controller_Interface {
+	function __construct() {
+		Permissions::checkError('nastenka', P_OWNED);
+	}
 	function view($id = null) {		
 		if(empty($_POST)) {
 			include('files/Admin/Nastenka/Display.inc');
 			return;
 		}
-		
 		switch(post('action')) {
 			case 'remove':
 				if(!is_array(post('nastenka')))
@@ -13,13 +15,15 @@ class Controller_Admin_Nastenka implements Controller_Interface {
 				
 				foreach(post('nastenka') as $item) {
 					$data = DBNastenka::getSingleNastenka($item);
-					if(!Permissions::canEditNastenka($data['up_kdo'], $data['up_lock']))
-						View::viewError(ER_AUTHORIZATION);
+					if(!Permissions::check('nastenka', P_OWNED, $data['up_kdo']))
+						$error = true;
 						
 					DBNastenka::removeNastenka($item);
 					DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() .
 						' smazal příspěvek z nástěnky');
 				}
+				if(isset($error) && $error)
+					View::viewError(ER_AUTHORIZATION);
 				notice('Příspěvky odebrány');
 				break;
 			
@@ -33,7 +37,7 @@ class Controller_Admin_Nastenka implements Controller_Interface {
 		include('files/Admin/Nastenka/Display.inc');
 	}
 	function add($id = null) {
-		if(empty($_POST) || !$this->checkData($_POST, 'add')) {
+		if(empty($_POST) || is_object($f = $this->checkData($_POST, 'add'))) {
 			include('files/Admin/Nastenka/Form.inc');
 			return;
 		}
@@ -58,8 +62,8 @@ class Controller_Admin_Nastenka implements Controller_Interface {
 	function edit($id = null) {
 		if(!$id || !($data = DBNastenka::getSingleNastenka($id)))
 			View::redirect(getReturnURI('/admin/nastenka'), 'Nástěnka s takovým ID neexistuje');
-		if(!Permissions::canEditNastenka($data['up_kdo'], $data['up_lock']))
-			View::viewError(ER_AUTHORIZATION);
+		
+		Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
 		
 		if(empty($_POST)) {
 			$skupiny = DBNastenka::getNastenkaSkupiny($id);
@@ -74,7 +78,7 @@ class Controller_Admin_Nastenka implements Controller_Interface {
 			include('files/Admin/Nastenka/Form.inc');
 			return;
 		}
-		if(!$this->checkData($_POST, 'edit')) {
+		if(is_object($f = $this->checkData($_POST, 'edit'))) {
 			include('files/Admin/Nastenka/Form.inc');
 			return;
 		}
@@ -109,7 +113,7 @@ class Controller_Admin_Nastenka implements Controller_Interface {
 		$f = new Form();
 		$f->checkNotEmpty(post('nadpis'), 'Zadejte nadpis', 'nadpis');
 		$f->checkNotEmpty(post('text'), 'Zadejte nějaký text', 'text');
-		return $f->isValid();
+		return $f->isValid() ? true : $f;
 	}
 }
 ?>

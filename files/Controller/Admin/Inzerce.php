@@ -1,5 +1,8 @@
 <?php
 class Controller_Admin_Inzerce implements Controller_Interface {
+	function __construct() {
+		Permissions::checkError('inzerce', P_OWNED);
+	}
 	function view($id = null) {
 		if(empty($_POST)) {
 			include("files/Admin/Inzerce/Display.inc");
@@ -12,10 +15,10 @@ class Controller_Admin_Inzerce implements Controller_Interface {
 				if($inzerce[0])
 					View::redirect('/admin/inzerce/edit/' . $inzerce[0]);
 				break;
-			case 'remove': //FIXME:URI Building
+			case 'remove':
 				if(!is_array(post('inzerce')))
 					break;
-				$url = Request::getURI() . '/remove';
+				$url = '/admin/inzerce/remove?';
 				foreach(post('inzerce') as $id)
 					$url .= '&u[]=' . $id;
 				View::redirect($url);
@@ -24,7 +27,7 @@ class Controller_Admin_Inzerce implements Controller_Interface {
 		include("files/Admin/Inzerce/Display.inc");
 	}
 	function add($id = null) {
-		if(empty($_POST) || $this->checkData($_POST, 'add')) {
+		if(empty($_POST) || is_object($f = $this->checkData($_POST, 'add'))) {
 			include('files/Admin/Inzerce/Form.inc');
 			return;
 		}
@@ -63,7 +66,7 @@ class Controller_Admin_Inzerce implements Controller_Interface {
 			include('files/Admin/Inzerce/Form.inc');
 			return;
 		}
-		if(!$this->checkData($_POST, 'edit')) {
+		if(is_object($f = $this->checkData($_POST, 'edit'))) {
 			include('files/Admin/Inzerce/Form.inc');
 			return;
 		}
@@ -83,13 +86,13 @@ class Controller_Admin_Inzerce implements Controller_Interface {
 	}
 	function remove($id = null) {
 		if(empty($_POST) || post('action') !== 'confirm') {
-			include('files/Admin/Akce/DisplayRemove.inc');
+			include('files/Admin/Inzerce/DisplayRemove.inc');
 			return;
 		}
 		if(!is_array(post('inzerce')))
 			View::redirect('/admin/inzerce');
 		foreach(post('inzerce') as $id)
-			DBInzerce::removeInzerat($item);
+			DBInzerce::removeInzerat($id);
 		View::redirect('/admin/inzerce', 'Inzeráty odebrány');
 	}
 	function unconfirmed($id = null) {
@@ -97,18 +100,17 @@ class Controller_Admin_Inzerce implements Controller_Interface {
 			include('files/Admin/Inzerce/DisplayNew.inc');
 			return;
 		}
+		if(!is_array(post('inzerce')))
+			View::redirect('/admin/inzerce/unconfirmed', 'Nevybrali jste žádné inzeráty');
+		
 		if(post('action') == 'confirm') {
-			if(!is_array(post('inzerce')))
-				View::redirect('/admin/inzerce/unconfirmed', 'Nevybrali jste žádné inzeráty');
 			foreach(post('inzerce') as $id) {
 				$visible = post($id . '-visible');
 				DBInzerce::confirmInzerat($id, (bool) $visible);
 			}
 			View::redirect('/admin/inzerce', 'Inzeráty potvrzeny');
 		} elseif(post('action') == 'remove') {
-			if(!is_array(post('inzerce')))
-				View::redirect('/admin/inzerce/unconfirmed', 'Nevybrali jste žádné inzeráty');
-			$url = Request::getURI() . '/remove';
+			$url = '/admin/inzerce/remove?';
 			foreach(post('inzerce') as $id)
 				$url .= '&u[]=' . $id;
 			View::redirect($url);
@@ -124,9 +126,9 @@ class Controller_Admin_Inzerce implements Controller_Interface {
 		$f->checkInArray(post('kat'), array(1,2,3,4), 'Neplatná kategorie', 'kat');
 		$f->checkNumeric(post('reg'), 'Neplatný uživatel', 'reg');
 		$f->checkDate($od, 'Neplatný formát data ("Od")', 'od');
-		$f->checkDate($do, 'Neplatný formát data ("Do")', 'do');
+		if($do) $f->checkDate($do, 'Neplatný formát data ("Do")', 'do');
 		
-		return $f->isValid();
+		return $f->isValid() ? true : $f;
 	}
 }
 ?>

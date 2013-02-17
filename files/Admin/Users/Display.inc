@@ -31,14 +31,10 @@ if(!TISK) {
 }
 
 if(get('v') == 'statistiky') {
+	$groupcount = DBUser::getGroupCounts(); //TODO: Group counts
 	$all = DBUser::getUsers(L_ALL);
 	$active = DBUser::getActiveUsers(L_ALL);
 	$dancers = DBUser::getActiveDancers(L_ALL);
-	$hosti = DBUser::getActiveUsers(L_HOST);
-	$members = DBUser::getActiveUsers(L_USER);
-	$editori = DBUser::getActiveUsers(L_EDITOR);
-	$treneri = DBUser::getActiveUsers(L_TRENER);
-	$admini = DBUser::getActiveUsers(L_ADMIN);
 	
 	echo '<table>';
 	echo '<tr><td></td><td>Počet</td></tr>';
@@ -46,14 +42,10 @@ if(get('v') == 'statistiky') {
 	$in = array(
 		array('Uživatelé v databázi', count($all)),
 		array('Aktivní uživatelé', count($active)),
-		array('Aktivní tanečníci', count($dancers)),
-		array('Hosti', count($hosti)),
-		array('Členové', count($members)),
-		array('Editoři', count($editori)),
-		array('Trenéři', count($treneri)),
-		array('Admini', count($admini)),
-		array('Superadmini', '1')
+		array('Aktivní tanečníci', count($dancers))
 	);
+	foreach($groupcount as $group)
+		$in[] = array($group['pe_name'], $group['count']);
 	
 	foreach($in as $item) {
 		echo '<tr>';
@@ -83,8 +75,9 @@ if(!TISK) {
 		->content('Přidat', 'users/add')
 		->content('Upravit', 'edit', true)
 		->content('Odebrat', 'remove', true)
-		->content('Nepotvrzení uživatelé', 'users/new')
-		->content('Duplicitní uživatelé', 'users/duplicate')
+		->content('Nepotvrzení uživatelé', '/admin/users/unconfirmed')
+		->content('Duplicitní uživatelé', '/admin/users/duplicate')
+		->content('Zabanovaní uživatelé', '/admin/users/ban')
 		->content('Zobrazit platby', 'platby', true);
 	if(get('v') == 'status')
 		$f->content('Uložit změny', 'save', true);
@@ -124,30 +117,22 @@ if(get('v') == 'status') {
 		$skupinyselect->option($skupina['us_id'], $skupina['us_popis']);
 }
 
+$groups = DBPermissions::getGroups();
+foreach($groups as $group) {
+	$groups_new[$group['pe_id']] = $group['pe_name'];
+}
+$groups = $groups_new;unset($groups_new);
+
 $i = $pager->getItemsPerPage() * ($pager->getCurrentPage() - 1);
 foreach($items as $user) {
 	echo '<tr>';
-	if(Permissions::canEditUser($user['u_id'], $user['u_level'], $user['u_lock']))
-		echo '<td><input type="checkbox" name="users[]" value="', $user['u_id'], '" /></td>';
-	else
-		echo '<td><input type="checkbox" name="users[]" value="" disabled="disabled" /></td>';
+	echo '<td><input type="checkbox" name="users[]" value="', $user['u_id'], '" /></td>';
 	echo '<td>', ++$i, '. </td>';
 	echo '<td style="max-width:140px;">', $user['u_prijmeni'], ', ', $user['u_jmeno'], '</td>';
 	
 	if(get('v') == 'info') {
 		echo '<td>', getColorBox($user['us_color'], $user['us_popis']), '</td>';
-		echo '<td>';
-		switch($user['u_level']) {
-			case L_UNCONFIRMED:	echo 'Nepotvrzený uživatel'; break;
-			case L_HOST:		echo 'Host';		break;
-			case L_USER:		echo 'Uživatel';	break;
-			case L_EDITOR:		echo 'Editor';		break;
-			case L_TRENER:		echo 'Trenér';		break;
-			case L_ADMIN:		echo 'Admin';		break;
-			case L_SADMIN:		echo 'Superadmin';	break;
-			default:			echo 'Neznámý';		break;
-		}
-		echo '</td>';
+		echo '<td>', $groups[$user['u_group']], '</td>';
 		echo '<td>', formatDate($user['u_narozeni']), '</td>';
 		echo '<td>', (((bool) $user['up_id'] && strcmp($user['up_plati_do'], date('Y-m-d')) >= 0) ?
 			'<span style="color:#0B0;">ano</span>' :
@@ -158,18 +143,7 @@ foreach($items as $user) {
 			->name($user['u_id'] . '-skupina')
 			->value($user['u_skupina']);
 		echo '</td>';
-		echo '<td>';
-		switch($user['u_level']) {
-			case L_UNCONFIRMED:	echo 'Nepotvrzený uživatel'; break;
-			case L_HOST:		echo 'Host';		break;
-			case L_USER:		echo 'Uživatel';	break;
-			case L_EDITOR:		echo 'Editor';		break;
-			case L_TRENER:		echo 'Trenér';		break;
-			case L_ADMIN:		echo 'Admin';		break;
-			case L_SADMIN:		echo 'Superadmin';	break;
-			default:			echo 'Neznámý';		break;
-		}
-		echo '</td>';
+		echo '<td>', $groups[$user['u_group']], '</td>';
 		echo '<td class="center"><label>', 
 			getCheckbox($user['u_id'] . '-dancer', '1', $user['u_dancer']), '</label></td>';
 		echo '<td class="center"><label>',

@@ -1,8 +1,12 @@
 <?php
 class Controller_Login implements Controller_Interface {
     function view($id = null) {
-        if(User::isLogged())
-        	View::redirect('/member/home');
+		if(User::isLogged()) {
+			if(get('redirect'))
+				View::redirect(get('redirect'));
+			else
+				View::redirect('/member/home');
+		}
         
         notice(View::getRedirectMessage());
         ?>

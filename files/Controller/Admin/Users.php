@@ -1,8 +1,8 @@
 <?php
 class Controller_Admin_Users implements Controller_Interface {
-	
-	//FIXME: Permissions!!
-	
+	function __construct() {
+		Permissions::checkError('users', P_OWNED);
+	}
 	function view($id = null) {
 		if(empty($_POST)) {
 			include('files/Admin/Users/Display.inc');
@@ -38,15 +38,15 @@ class Controller_Admin_Users implements Controller_Interface {
 							(post($id . '-skupina') != $user['u_skupina'])) {
 						DBUser::setUserData($id, $user['u_jmeno'], $user['u_prijmeni'], $user['u_pohlavi'],
 							$user['u_email'], $user['u_telefon'], $user['u_narozeni'], $user['u_poznamky'],
-							$user['u_level'], post($id . '-skupina'), post($id . '-dancer') ? '1' : '0',
+							$user['u_group'], post($id . '-skupina'), post($id . '-dancer') ? '1' : '0',
 							$user['u_lock'], $user['u_ban'], post($id . '-system') ? '1' : '0');
 					}
 				}
 				break;
-			case 'remove': //FIXME:URI Building
+			case 'remove':
 				if(!is_array(post('users')))
 					break;
-				$url = Request::getURI() . '/remove';
+				$url = '/admin/users/remove?';
 				foreach(post('users') as $id)
 					$url .= '&u[]=' . $id;
 				View::redirect($url);
@@ -62,36 +62,19 @@ class Controller_Admin_Users implements Controller_Interface {
 		}
 		if(!is_array(post('users')))
 			View::redirect('/admin/users');
-		foreach(post('users') as $id) {
-			$data = DBUser::getUserData($id);
-			
-			if(Permissions::canEditUser($id, $data['u_level'], $data['u_lock']))
-				DBUser::removeUser($id);
-			else
-				$error = true;
-		}
-		if(isset($error) && $error)
-			View::viewError(ER_AUTHORIZATION);
+		foreach(post('users') as $id)
+			DBUser::removeUser($id);
 		
 		View::redirect('/admin/users', 'Uživatelé odebráni');
 	}
 	function add($id = null) {
-		if(empty($_POST) || !$this->checkData($_POST, 'add')) {
+		if(empty($_POST) || is_object($f = $this->checkData($_POST, 'add'))) {
 			include('files/Admin/Users/Form.inc');
 			return;
 		}
-		switch(post('level')) {
-			case 'host':	$level = L_HOST;	break;
-			case 'user':	$level = L_USER;	break;
-			case 'editor':	$level = L_EDITOR;	break;
-			case 'trener':	$level = L_TRENER;	break;
-			case 'admin':
-			case 'sadmin':	$level = L_ADMIN;	break;
-			default:		$level = L_HOST;	break;
-		}
 		DBUser::addUser(strtolower(post('login')), User::Crypt(post('pass')), post('jmeno'), post('prijmeni'),
 			post('pohlavi'), post('email'), post('telefon'), $narozeni,
-			post('poznamky'), $level, post('skupina'), post('dancer') ? '1' : '0',
+			post('poznamky'), post('group'), post('skupina'), post('dancer') ? '1' : '0',
 			post('lock') ? '1' : '0', post('ban') ? '1' : '0', '1', post('system') ? '1' : '0');
 		View::redirect('/admin/users', 'Uživatel úspěšně přidán');
 	}
@@ -104,15 +87,7 @@ class Controller_Admin_Users implements Controller_Interface {
 			
 		if(empty($_POST)) {
 			post('login', $data['u_login']);
-			switch($data['u_level']) {
-				case L_HOST:	post('level', 'host');	break;
-				case L_USER:	post('level', 'user');	break;
-				case L_EDITOR:	post('level', 'editor');break;
-				case L_TRENER:	post('level', 'trener');break;
-				case L_ADMIN:	post('level', 'admin');	break;
-				case L_SADMIN:	post('level', 'sadmin');break;
-				default:		post('level', 'user');	break;
-			}
+			post('group', $data['u_group']);
 			post('ban', $data['u_ban']);
 			post('lock', $data['u_lock']);
 			post('dancer', $data['u_dancer']);
@@ -128,27 +103,15 @@ class Controller_Admin_Users implements Controller_Interface {
 			include('files/Admin/Users/Form.inc');
 			return;
 		}
-		if(!$this->checkData($_POST, 'edit')) {
+		if(is_object($f = $this->checkData($_POST, 'edit'))) {
 			include('files/Admin/Users/Form.inc');	
 			return;
 		}
-		//TODO: Test DisplayUsers::transformUserLevel($value, $from, $to);
-		//$level = DisplayUsers::transformUserLevel(post('level'),
-		//	DisplayUsers::$plaintext, DisplayUsers::$constant);
         
 		$narozeni = Helper::get()->date()->name('narozeni')->getPost();
         
-		switch(post('level')) {
-			case 'host':	$level = L_HOST;	break;
-			case 'user':	$level = L_USER;	break;
-			case 'editor':	$level = L_EDITOR;	break;
-			case 'trener':	$level = L_TRENER;	break;
-			case 'admin':	$level = L_ADMIN;	break;
-			case 'sadmin':	$level = L_SADMIN;	break;
-			default:		$level = L_HOST;	break;
-		}
 		DBUser::setUserData($id, post('jmeno'), post('prijmeni'), post('pohlavi'),
-			post('email'), post('telefon'), $narozeni, post('poznamky'), $level,
+			post('email'), post('telefon'), $narozeni, post('poznamky'), post('group'),
 			post('skupina'), post('dancer') ? 1 : 0, post('lock') ? 1 : 0,
 			post('ban') ? 1 : 0, post('system') ? 1 : 0);
 		View::redirect('/admin/users', 'Uživatel úspěšně upraven');
@@ -156,8 +119,6 @@ class Controller_Admin_Users implements Controller_Interface {
 	function platby($id = null) {
 		if(!$id || !($data = DBUser::getUserData($id)))
 			View::redirect('/admin/users', 'Uživatel s takovým ID neexistuje');
-		if(!Permissions::canEditUser($id, $data['u_level'], $data['u_lock']))
-			View::viewError(ER_AUTHORIZATION);
 		if(!$data['u_confirmed'])
 			View::redirect('/admin/users',
 				'Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
@@ -178,10 +139,7 @@ class Controller_Admin_Users implements Controller_Interface {
 			foreach(post('users') as $id) {
 				$data = DBUser::getUserData($id);
 				
-				$level = (in_array(post($id . '-level'), array('host', 'user', 'editor', 'trener', 'admin')) ?
-					post($id . '-level') : 'host');
-				
-				DBUser::confirmUser($id, $level, post($id . '-skupina'),
+				DBUser::confirmUser($id, post($id . '-group'), post($id . '-skupina'),
 					post($id . '-dancer') ? 1 : 0);
 				Mailer::reg_confirmed_notice($data['u_email'], $data['u_login']);
 			}
@@ -241,6 +199,6 @@ class Controller_Admin_Users implements Controller_Interface {
 			$f->checkBool(DBUser::getUserID(post('login')),
 				'Uživatel s takovým přihlašovacím jménem už tu je', 'login');
 		}
-		return $f->isValid();
+		return $f->isValid() ? true : $f;
 	}
 }

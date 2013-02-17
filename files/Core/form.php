@@ -166,18 +166,18 @@ function checkPostFieldLength($minIncl, $maxIncl, $text) {
 		return true;
 	}
 }
-function getPostField($field = NULL, $value = NULL) {
+function getPostField($field = null, $value = null) {
 	return post($field, $value);
 }
-function getGetField($field = NULL, $value = NULL) {
+function getGetField($field = null, $value = null) {
 	return get($field, $value);
 }
-function post($field = NULL, $value = NULL) {
-	if($field === NULL) {
+function post($field = null, $value = null) {
+	if($field === null) {
 		return $_POST;
 	}
 	
-	if($value !== NULL) {
+	if($value !== null) {
 		$_POST[$field] = $value;
 		return;
 	}
@@ -187,12 +187,12 @@ function post($field = NULL, $value = NULL) {
 	else
 		return null;
 }
-function get($field = NULL, $value = NULL) {
-	if($field === NULL) {
+function get($field = null, $value = null) {
+	if($field === null) {
 		return $_GET;
 	}
 	
-	if($value !== NULL) {
+	if($value !== null) {
 		$_GET[$field] = $value;
 		return;
 	}
@@ -202,12 +202,12 @@ function get($field = NULL, $value = NULL) {
 	else
 		return null;
 }
-function session($field = NULL, $value = NULL) {
-	if($field === NULL) {
+function session($field = null, $value = null) {
+	if($field === null) {
 		return $_SESSION;
 	}
 	
-	if($value !== NULL) {
+	if($value !== null) {
 		$_SESSION[$field] = $value;
 		return;
 	}

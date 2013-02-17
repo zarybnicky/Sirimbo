@@ -24,7 +24,7 @@ class DisplayInzerce {
 			echo '<span class="nadpis">', $data['i_jmeno'], ' ', $data['i_prijmeni'], '&nbsp;</span>';
 		}
 		
-		if(Permissions::canEditInzerat($data['i_reg']))
+		if(Permissions::check('inzerce', P_MEMBER) && User::getUserID() == $data['i_reg'])
 			echo '<span style="color:#572E00;font-size:115%;">Admin: </span>',
 				'<a href="', ($member ? "/member/profil" : ''), '/inzerce/edit/', $data['i_id'],
 					'">Editovat</a>', 

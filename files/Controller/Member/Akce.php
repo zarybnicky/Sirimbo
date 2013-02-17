@@ -1,5 +1,8 @@
 <?php
 class Controller_Member_Akce implements Controller_Interface {
+	function __construct() {
+		Permissions::checkError('akce', P_VIEW);
+	}
     function view($id = null) {
         if($id) {
         	DisplayAkce::viewFullAkce(Request::getID());
@@ -47,7 +50,7 @@ class Controller_Member_Akce implements Controller_Interface {
         	DisplayAkce::viewAkceHeader($item);
         	
         	echo '<form action="', $_SERVER['REQUEST_URI'], '" method="post" style="text-align:center;">';
-        	if(User::checkPermissionsBool(L_USER) && !$item['a_lock']) {
+        	if(Permissions::check('akce', P_MEMBER) && !$item['a_lock']) {
         		echo '<input type="hidden" name="id" value="', $item['a_id'], '" />';
         		
         		if(!DBAkce::isUserSignedUp($item['a_id'], User::getUserID())) {

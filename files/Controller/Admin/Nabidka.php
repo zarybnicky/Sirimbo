@@ -1,5 +1,8 @@
 <?php
 class Controller_Admin_Nabidke implements Controller_Interface {
+	function __construct() {
+		Permissions::checkError('nabidka', P_OWNED);
+	}
 	function view($id = null) {
 		if(empty($_POST)) {
 			include('files/Admin/Nabidka/Display.inc');
@@ -25,7 +28,7 @@ class Controller_Admin_Nabidke implements Controller_Interface {
 				foreach(post('nabidka') as $item) {
 					$data = DBNabidka::getSingleNabidka($item);
 					
-					if(Permissions::canEditNabidka($data['n_trener'])) {
+					if(Permissions::check('nabidka', P_OWNED, $data['n_trener'])) {
 						DBNabidka::removeNabidka($item);
 						if(strcmp($data['n_od'], date('Y-m-d')) > 0 && $data['n_visible'])
 							DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' zrušil nabídku ' .
@@ -46,12 +49,11 @@ class Controller_Admin_Nabidke implements Controller_Interface {
 		include('files/Admin/Nabidka/Display.inc');
 	}
 	function add($id = null) {
-		if(empty($_POST) || !$this->checkData($_POST, 'add')) {
+		if(empty($_POST) || is_object($f = $this->checkData($_POST, 'add'))) {
 			include('files/Admin/Nabidka/Form.inc');
 			return;
         }
-		if(!Permissions::canEditNabidka(post('trener')))
-			View::viewError(ER_AUTHORIZATION);
+		Permissions::checkError('nabidka', P_OWNED, post('trener'));
 		
 		$od = Helper::get()->date()->name('od')->getPost();
 		$do = Helper::get()->date()->name('do')->getPost();
@@ -59,7 +61,7 @@ class Controller_Admin_Nabidke implements Controller_Interface {
 			$do = $od;
 		
 		$visible = (bool) post('visible');
-		if(User::checkPermissionsBool(L_TRENER) && !User::checkPermissionsBool(L_ADMIN) && $visible) {
+		if(!Permissions::check('nabidka', P_ADMIN) && $visible) {
 			$visible = false;
 			View::setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění příspěvku');
 		}
@@ -82,8 +84,7 @@ class Controller_Admin_Nabidke implements Controller_Interface {
 		if(!$id || !($data = DBNabidka::getSingleNabidka($id)))
 			View::redirect(getReturnURI('/admin/nabidka'), 'Nabídka s takovým ID neexistuje');
 		
-		if(!Permissions::canEditNabidka($data['n_trener']))
-			View::viewError(ER_AUTHORIZATION);
+		Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
 			
 		if(empty($_POST)) {
 			post('id', $id);
@@ -98,7 +99,7 @@ class Controller_Admin_Nabidke implements Controller_Interface {
 			include('files/Admin/Nabidka/Form.inc');
 			return;
 		}
-		if(!$this->checkData($_POST, 'edit')) {
+		if(is_object($f = $this->checkData($_POST, 'edit'))) {
 			include('files/Admin/Nabidka/Form.inc');
 			return;
 		}
@@ -110,7 +111,7 @@ class Controller_Admin_Nabidke implements Controller_Interface {
 		
 		$visible = (bool) post('visible');
 		$visible_prev = $data['n_visible'];
-		if(User::checkPermissionsBool(L_TRENER) && !User::checkPermissionsBool(L_ADMIN) &&
+		if(!Permissions::check('nabidka', P_ADMIN) &&
 				$visible && !$visible_prev) {
 			$visible = false;
 			View::setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění nabídky');
@@ -163,9 +164,9 @@ class Controller_Admin_Nabidke implements Controller_Interface {
 		$f->checkNumeric(post('pocet_hod'), 'Počet hodin prosím zadejte čísly', 'pocet_hod');
 		$f->checkNumeric(post('max_pocet_hod'), 'Max. počet hodin prosím zadejte čísly', 'max_pocet_hod');
 		$f->checkDate($od, 'Zadejte prosím platné datum ("Od")', 'od');
-		$f->checkDate($do, 'Zadejte prosím platné datum ("Do")', 'do');
-		
-		return $f->isValid();
+		if($do) $f->checkDate($do, 'Zadejte prosím platné datum ("Do")', 'do');
+
+		return $f->isValid() ? true : $f;
 	}
 }
 ?>

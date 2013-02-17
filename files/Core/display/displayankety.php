@@ -8,7 +8,7 @@ class DisplayAnkety {
 		if($active)
 			echo '<form action="/home/ankety" method="POST">';
 		echo '<b>', $data['ak_text'], '</b>';
-		if(Permissions::canEditAnketa($data['ak_kdo']))
+		if(Permissions::check('ankety', P_OWNED, $data['ak_kdo']))
 			echo ' - <a href="/admin/ankety/edit/', $data['ak_id'], '">Editovat</a>';
 		echo '<br/>';
 		foreach($items as $item) {

@@ -1,5 +1,8 @@
 <?php
 class Controller_Member implements Controller_Interface {
+	function __construct() {
+		Permissions::checkError('nastenka', P_VIEW);
+	}
     function view($id = null)  {
         notice(View::getRedirectMessage());
         
@@ -17,7 +20,7 @@ class Controller_Member implements Controller_Interface {
         	echo '<div class="no_item">';
         	echo '<div class="no_text">', $item['no_text'], '</div>';
         	echo '<div class="no_date" style="text-align:right;">';
-        	if(User::checkPermissionsBool(L_ADMIN))
+        	if(Permissions::check('nastenka', P_OWNED))
         		echo '<a href="/admin/novinky/remove?id=', $item['no_id'], '">Odstranit</a> - ';
         	echo formatTimestamp($item['no_aktu']), '</div>';
         	echo '</div><hr/>';

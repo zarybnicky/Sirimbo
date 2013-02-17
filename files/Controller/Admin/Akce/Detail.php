@@ -1,5 +1,8 @@
 <?php
 class Controller_Admin_Akce_Detail implements Controller_Interface {
+	function __construct() {
+		Permissions::checkError('akce', P_OWNED);
+	}
     function view($id = null) {
         if(!$id || !($akce = DBAkce::getSingleAkce($id)))
         	View::redirect('/admin/akce', 'Akce s takovým ID neexistuje');
@@ -23,23 +26,22 @@ class Controller_Admin_Akce_Detail implements Controller_Interface {
         foreach($items as $item) {
         	$item_id = $item["ai_id"];
         	$user = post($item_id . '-user');
-        	$data = DBUser::getUserData($user);
         	
-        	if($user != $item["ai_user"] ||
-        			($user == "none" ^ $item["ai_user"] == 0)) {
+        	if($user != $item["ai_user"]) {
+        		$data = DBUser::getUserData($user);
         		list($year) = explode('-', $data['u_narozeni']);
         		DBAkce::editAkceItem($item_id, $user, $year);
         	}
         }
         $items = DBAkce::getAkceItems($id);
         
-        if(post("add-user")) {
+        if(is_numeric(post("add-user"))) {
         	$user = post("add-user");
         	$data = DBUser::getUserData($user);
         	list($year) = explode('-', $data['u_narozeni']);
         	
         	DBAkce::addAkceItem($id, $user, $year);
-        	post('add-user', null);
+        	post('add-user', -1	);
         	$items = DBAkce::getAkceItems($id);
         }
         
