@@ -1,5 +1,8 @@
 <?php
 class Controller_Member_Nastenka implements Controller_Interface {
+	function __construct() {
+		Permissions::checkError('dokumenty', P_VIEW);
+	}
     function view($id = null) {
         header_main('Upozornění');
         
@@ -19,7 +22,7 @@ class Controller_Member_Nastenka implements Controller_Interface {
         	echo '<div>';
         	echo '<div class="up_header">';
         	echo '<div style="float:left;"><span class="nadpis">', $data['up_nadpis'], '</span>';
-        	if(Permissions::canEditNastenka($data['up_kdo'], $data['up_lock']))
+        	if(Permissions::check('nastenka', P_OWNED, $data['up_kdo']))
         		echo ' - <a href="/admin/nastenka/edit/', $data['up_id'], '">Editovat</a>';
         	echo '<div style="padding:2px 0;"><div style="float:left;" class="little">skupiny:&nbsp;</div>';
         	$skupiny = DBNastenka::getNastenkaSkupiny($data['up_id']);

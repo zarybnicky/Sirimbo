@@ -1,5 +1,8 @@
 <?php
 class Controller_Admin_Rozpis implements Controller_Interface {
+	function __construct() {
+		Permissions::checkError('rozpis', P_OWNED);
+	}
 	function view($id = null) {
 		if(empty($_POST)) {
 			include('files/Admin/Rozpis/Display.inc');
@@ -23,7 +26,7 @@ class Controller_Admin_Rozpis implements Controller_Interface {
 					$trener = DBRozpis::getRozpisTrener($item);
 					$data = DBRozpis::getSingleRozpis($item);
 					
-					if(Permissions::canEditRozpis($trener['u_id'])) {
+					if(Permissions::check('rozpis', P_OWNED, $trener['u_id'])) {
 						DBRozpis::removeRozpis($item);
 						if(strcmp($data['r_datum'], date('Y-m-d')) > 0 && $data['r_visible'])
 							DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' zrušil rozpis ' .
@@ -42,17 +45,16 @@ class Controller_Admin_Rozpis implements Controller_Interface {
 		include('files/Admin/Rozpis/Display.inc');
 	}
 	function add($id = null) {
-		if(empty($_POST) || !$this->checkData($_POST, 'add')) {
+		if(empty($_POST) || is_object($f = $this->checkData($_POST, 'add'))) {
 			include('files/Admin/Rozpis/Form.inc');
 			return;
 		}
-		if(!Permissions::canEditRozpis(post('trener')))
-			View::viewError(ER_AUTHORIZATION);
+		Permissions::checkError('rozpis', P_OWNED, post('trener'));
    
 		$datum = Helper::get()->date()->name('datum')->getPost();
 		
 		$visible = (bool) post('visible');
-		if(User::checkPermissionsBool(L_TRENER) && !User::checkPermissionsBool(L_ADMIN) && $visible) {
+		if(!Permissions::check('rozpis', P_ADMIN) && $visible) {
 			$visible = false;
 			View::setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění příspěvku');
 		}
@@ -71,8 +73,7 @@ class Controller_Admin_Rozpis implements Controller_Interface {
 		if(!$id || !($data = DBRozpis::getSingleRozpis($id)))
 			View::redirect('/admin/rozpis', 'Rozpis s takovým ID neexistuje');
 		
-		if(!Permissions::canEditRozpis($data['r_trener']))
-			View::viewError(ER_AUTHORIZATION);
+		Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
 		
 		if(empty($_POST)) {
 			post('id', $id);
@@ -85,7 +86,7 @@ class Controller_Admin_Rozpis implements Controller_Interface {
 			include('files/Admin/Rozpis/Form.inc');
 			return;
 		}
-		if(!$this->checkData($_POST, 'edit')) {
+		if(is_object($this->checkData($_POST, 'edit'))) {
 			include('files/Admin/Rozpis/Form.inc');
 			return;
 		}
@@ -93,8 +94,7 @@ class Controller_Admin_Rozpis implements Controller_Interface {
 		
 		$visible = (bool) post('visible');
 		$visible_prev = $data['r_visible'];
-		if(User::checkPermissionsBool(L_TRENER) && !User::checkPermissionsBool(L_ADMIN) &&
-				$visible && !$visible_prev) {
+		if(!Permissions::check('rozpis', P_ADMIN) && $visible && !$visible_prev) {
 			$visible = $visible_prev;
 			View::setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění rozpisu');
 		}
@@ -123,7 +123,8 @@ class Controller_Admin_Rozpis implements Controller_Interface {
 		$f = new Form();
 		$f->checkNumeric(post('trener'), 'Neplatný trenér', 'trener');
 		$f->checkDate($datum, 'Neplatný formát data', 'datum');
-		return $f->isValid();
+
+		return $f->isValid() ? true : $f;
 	}
 }
 ?>

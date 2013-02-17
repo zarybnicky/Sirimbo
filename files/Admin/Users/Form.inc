@@ -71,14 +71,11 @@ if(isset($f))
 	</tr><tr>
 		<td>Oprávnění: </td>
 		<td><?php
-		echo Helper::get()->select()
-			->post()->name('level')
-			->option('host', 'Host')
-			->option('user', 'Uživatel')
-			->option('editor', 'Editor')
-			->option('trener', 'Trenér')
-			->option('admin', 'Administrátor')
-			->option('admin', 'Superuživatel');
+		$s = Helper::get()->select()->post()->name('group');
+		$groups = DBPermissions::getGroups();
+		foreach($groups as $group)
+			$s->option($group['pe_id'], $group['pe_name']);
+		echo $s;
 		?></td>
 		<td></td>
 	</tr><tr>

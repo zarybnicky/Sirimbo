@@ -17,7 +17,7 @@ else
 	</tr><tr>
 		<td>Viditelný: </td>
 		<td><label><?php echo getCheckbox('visible', 'visible', false, false,
-			!User::checkPermissionsBool(L_ADMIN));?></label>
+			!Permissions::check('ankety', P_OWNED));?></label>
 		</td>
 	</tr><tr>
 		<td>Text</td><td>Počet hlasů</td>

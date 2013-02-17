@@ -106,15 +106,7 @@ switch(Request::getAction()) {
 				'nemůžu dál snížit počet hodin');
 		}
 		
-		$max_lessons = post('max_pocet_hod');
-		$max_lessons_old = DBNabidka::getNabidkaMaxItems($id);
-		if($max_lessons < $max_lessons_old) {
-			$max_lessons = $max_lessons_old;
-			View::setRedirectMessage('Zadaný maximální počet hodin/pár je méně než už je zarezervováno, ' .
-				'nemůžu dál snížit maximální počet hodin');
-		}
-		
-		DBNabidka::editNabidka($id, post('trener'), $pocet_hod, $max_lessons, $od, $do, $visible,
+		DBNabidka::editNabidka($id, post('trener'), $pocet_hod, post('max_pocet_hod'), $od, $do, $visible,
 			post('lock'));
 		
 		if($visible)

@@ -13,6 +13,6 @@ foreach(get('u') as $id) {
 ?>
 <br/>
 <?php echo getReturnInput()?>
-<button type="submit" name="action" value="remove_confirm">Odstranit</button>
+<button type="submit" name="action" value="confirm">Odstranit</button>
 <a href="<?php echo Request::getReferer()?>">Zpět</a>
 </form>

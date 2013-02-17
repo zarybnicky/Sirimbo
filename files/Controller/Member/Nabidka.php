@@ -1,5 +1,8 @@
 <?php
 class Controller_Member_Nabidka implements Controller_Interface  {
+	function __construct() {
+		Permissions::checkError('dokumenty', P_VIEW);
+	}
     function view($id = null) {
         if(!empty($_POST)) {
         	$data = DBNabidka::getSingleNabidka(post('id'));
@@ -13,9 +16,9 @@ class Controller_Member_Nabidka implements Controller_Interface  {
         		if(post('hodiny')) {
                     $partnerka = DBUser::getUserData(User::getPartnerID());
                     
-                    if(!User::getZaplaceno() || !(strcmp($partnerka['up_plati_do'], date('Y-m-d')) >= 0)) {
+                    /*if(!User::getZaplaceno() || !(strcmp($partnerka['up_plati_do'], date('Y-m-d')) >= 0)) {
             			notice('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
-        			} elseif($data['n_max_pocet_hod'] > 0 && post('hodiny') > $data['n_max_pocet_hod']) {
+        			} else*/ if($data['n_max_pocet_hod'] > 0 && post('hodiny') > $data['n_max_pocet_hod']) {
         				notice('Maximální počet hodin na pár je ' . $data['n_max_pocet_hod'] . '!');
         			} elseif(($data['n_pocet_hod'] - DBNabidka::getNabidkaItemLessons(post('id'))) >= post('hodiny')) {
         				DBNabidka::addNabidkaItemLessons(User::getParID(), post('id'), post('hodiny'));
@@ -25,10 +28,10 @@ class Controller_Member_Nabidka implements Controller_Interface  {
         			} else {
         				notice('Tolik volných hodin tu není');
         			}
-        		} elseif(post('un_id')) {
+        		} elseif(post('un_id') !== null) {
         			list($u_id, $n_id) = explode('-', post('un_id'));
         			if(DBNabidka::hasNabidkaLessons($n_id, $u_id) &&
-        					($u_id == User::getParID() || User::checkPermissionsBool(L_ADMIN))) {
+        					($u_id == User::getParID() || Permissions::check('nabidka', P_OWNED, $data['n_trener']))) {
         				DBNabidka::removeNabidkaItem($n_id, $u_id);
         				notice('Hodiny odebrány');
         			}
@@ -72,10 +75,10 @@ class Controller_Member_Nabidka implements Controller_Interface  {
         	foreach($n_items as $par) {
         		echo '<tr><td>', $par['u_jmeno'], ' ', $par['u_prijmeni'], '</td>',
         			'<td>', $par['ni_pocet_hod'], '</td>';
-        		if($par['u_id'] == User::getUserID() || $par['u_id'] == User::getPartnerID() ||
-        				User::checkPermissionsBool(L_ADMIN)) {
+        		if($par['u_id'] === User::getUserID() || $par['u_id'] === User::getPartnerID() ||
+        				Permissions::check('nabidka', P_OWNED, $item['n_trener'])) {
         			echo '<td>';
-        			if($item['n_lock'] || !User::checkPermissionsBool(L_USER)) {
+        			if($item['n_lock'] || !Permissions::check('nabidka', P_MEMBER)) {
         				echo '<button type="submit" name="un_id" value="',
         					$par['p_id'],'-',$item['n_id'],'" disabled="disabled">&times;</button>';
         			} else {
@@ -88,7 +91,7 @@ class Controller_Member_Nabidka implements Controller_Interface  {
         	}
         	echo '</table>';
         	echo '<div style="text-align:center;">';
-        	if($item['n_lock'] || !User::checkPermissionsBool(L_USER)) {
+        	if($item['n_lock'] || !Permissions::check('nabidka', P_MEMBER)) {
         		echo 'Počet hodin: <input type="text" name="hodiny" size="2" value="', post('hodiny'),
         			'" disabled="disabled" />';
         		echo '<input type="hidden" name="id" value="', $item['n_id'], '" disabled="disabled" />';

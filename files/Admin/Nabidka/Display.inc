@@ -23,7 +23,7 @@ $nabidka = DBNabidka::getNabidka();
 foreach($nabidka as $item) {
 	echo '<tr>';
 	
-	if(Permissions::canEditNabidka($item['n_trener']))
+	if(Permissions::check('nabidka', P_OWNED, $item['n_trener']))
 		echo '<td><input type="checkbox" name="nabidka[]" value="' . $item['n_id'] .
 			'" /></td>';
 	else

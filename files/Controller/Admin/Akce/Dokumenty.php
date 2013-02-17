@@ -1,5 +1,8 @@
 <?php
 class Controller_Admin_Akce_Dokumenty implements Controller_Interface {
+	function __construct() {
+		Permissions::checkError('akce', P_OWNED);
+	}
     function view($id = null) {
         if(!$id || !($akce = DBAkce::getSingleAkce($id)))
         	View::redirect('/admin/akce', 'Akce s takovým ID neexistuje');
@@ -13,30 +16,21 @@ class Controller_Admin_Akce_Dokumenty implements Controller_Interface {
         	include("files/Admin/AkceDokumenty/Display.inc");
         	return;
         }
-        
-        if(post("remove") > 0) {
-        	$to_remove = array_keys($doku, post("remove"));
-        	
-        	if(is_array($to_remove)) {
-        		foreach($to_remove as $key) {
-        			unset($doku[$key]);
-        		}
-        		$doku = array_values($doku);
-        	}
-        	
-        	DBAkce::editAkce($akce["a_id"], $akce["a_jmeno"], $akce["a_kde"], $akce["a_info"], $akce["a_od"], $akce["a_do"],
-        		$akce["a_kapacita"], serialize($doku), $akce["a_lock"]);
+        if(post("remove") !== null) {
+        	unset($doku[post('remove')]);
+        	$doku = array_values($doku);
+        	$changed = true;
         }
         
         if(post("add-id") && DBDokumenty::getSingleDokument(post("add-id"))) {
     		$doku[] = post("add-id");
-    	
+    		post('add-id', 0);
+        	$changed = true;
+        }
+        if(isset($changed) && $changed) {
     		DBAkce::editAkce($akce["a_id"], $akce["a_jmeno"], $akce["a_kde"], $akce["a_info"], $akce["a_od"], $akce["a_do"],
     			$akce["a_kapacita"], serialize($doku), $akce["a_kapacita"]);
-    		
-    		post('add-id', null);
     		$akce = DBAkce::getSingleAkce($id);
-    		$doku = unserialize($akce["a_dokumenty"]);
         }
         
         include("files/Admin/AkceDokumenty/Display.inc");

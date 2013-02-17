@@ -11,7 +11,7 @@ if(!empty($doku)) {
 		echo '<tr>';
 		echo '<td>', $data['d_name'], '</td>';
 		echo '<td>', Settings::$document_types[$data['d_kategorie']], '</td>';
-		echo '<td><button type="submit" name="remove" value="', $doku[$i],
+		echo '<td><button type="submit" name="remove" value="', $i,
 			'">Odstranit</button></td>';
 		echo '</tr>';
 	}

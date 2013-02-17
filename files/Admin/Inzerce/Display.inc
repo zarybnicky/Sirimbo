@@ -6,7 +6,7 @@ if(!TISK) {
 		->content('Přidat', 'inzerce/add')
 		->content('Upravit', 'edit', true)
 		->content('Odstranit', 'remove', true)
-		->content('Nepotvrzené inzeráty', 'inzerce/new');
+		->content('Nepotvrzené inzeráty', 'inzerce/unconfirmed');
 }
 ?>
 <div style="margin-right:150px;">

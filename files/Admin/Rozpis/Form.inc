@@ -12,7 +12,7 @@ if(isset($f))
 	<tr>
 		<td>Trenér (*): </td>
 		<td><?php
-			if(!User::checkPermissionsBool(L_ADMIN)) { ?>
+			if(!Permissions::check('rozpis', P_ADMIN)) { ?>
 			<select name="trener">
 				<option value="<?php echo User::getUserID();?>">Já</option>
 			</select><?php
@@ -34,7 +34,7 @@ if(isset($f))
 	</tr><tr>
 		<td>Viditelný: </td>
 		<td><label><?php echo getCheckbox('visible', 'visible', false, false,	
-			!User::checkPermissionsBool(L_ADMIN));?></label></td>
+			!Permissions::check('rozpis', P_ADMIN));?></label></td>
 	</tr><tr>
 		<td>Uzamknout: </td>
 		<td><label><?php echo getCheckbox('lock', 'lock')?></label></td>

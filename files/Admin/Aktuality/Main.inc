@@ -30,7 +30,7 @@ switch(Request::getAction()) {
 		if(!$id || !($data = DBAktuality::getSingleAktualita($id)))
 			View::redirect('/admin/aktuality', 'Článek s takovým ID neexistuje');
 		
-		if(!Permissions::canEditAktualita($data['at_kdo']))
+		if(!Permissions::check('aktuality', P_OWNED, $data['at_kdo']))
 			View::viewError(ER_AUTHORIZATION);
 		
 		if(empty($_POST)) {
@@ -109,7 +109,7 @@ switch(post("action")) {
 		foreach(post("aktuality") as $item) {
 			$data = DBAktuality::getSingleAktualita($item);
 			
-			if(Permissions::canEditAktualita($data['at_kdo'])) {
+			if(Permissions::check('aktuality', P_OWNED, $data['at_kdo'])) {
 				DBAktuality::removeAktualita($item);
 				DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' vymazal článek ' .
 					$data['at_jmeno']);

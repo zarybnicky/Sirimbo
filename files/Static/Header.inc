@@ -100,7 +100,7 @@
 						}
 						foreach($menu as $url => $word) {
 							if(is_array($word)) {
-								if(User::checkPermissionsBool($word[1]))
+								if(Permissions::check($word[1], P_OWNED))
 									$word = $word[0];
 								else
 									continue;
@@ -159,7 +159,8 @@
 							echo '<input type="hidden" name="', $key, '" value="', $value, '"/>';
 					}
 				?>
-				<div style="float:right">
+				<div style="float:right;clear:both;">
 				<button type="submit" name="view" value="tisk">Tisknout</button>
 				</div>
+				<div style="clear:both;"></div>
 			</form>
