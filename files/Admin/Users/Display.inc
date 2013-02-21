@@ -1,18 +1,28 @@
 <?php
+header_main('Správa uživatelů');
+notice(View::getRedirectMessage());
+
 if(get('v') === null)
 	get('v', 'info');
+
+$groups = DBPermissions::getGroups();
 
 if(!TISK) {
 	echo '<form action="', $_SERVER['REQUEST_URI'], '" method="get">';
 	$s = Helper::get()->select();
 	echo 'Uživatelé:&nbsp;';
-	echo $s->select()
+	$s->select()
 		->get()->name('f')
+		->value('all')
 		->option('all', 'všichni')
 		->option('dancer', 'tanečníci')
-		->option('trener', 'trenéři')
-		->option('editor', 'editoři')
-		->option('system', 'systémoví');
+		->option('system', 'systémoví')
+		->option('unconfirmed', 'nepotvrzení')
+		->option('ban', 'zabanovaní');
+	foreach($groups as $group)
+		if($group['pe_id'])
+			$s->option($group['pe_id'], $group['pe_name']);
+	echo $s;
 	echo '&nbsp;řadit podle:&nbsp;';
 	echo $s->select()
 		->get()->name('s')
@@ -31,7 +41,7 @@ if(!TISK) {
 }
 
 if(get('v') == 'statistiky') {
-	$groupcount = DBUser::getGroupCounts(); //TODO: Group counts
+	$groupcount = DBUser::getGroupCounts();
 	$all = DBUser::getUsers(L_ALL);
 	$active = DBUser::getActiveUsers(L_ALL);
 	$dancers = DBUser::getActiveDancers(L_ALL);
@@ -57,9 +67,13 @@ if(get('v') == 'statistiky') {
 	return;
 }
 
+foreach($groups as $group)
+	if($group['pe_id'])
+		$filter[] = $group['pe_id'];
+
 $options['sort'] = in_array(get('s'), array('prijmeni', 'narozeni', 'var-symbol')) ?
 	get('s') : 'prijmeni';
-$options['filter'] = in_array(get('f'), array('dancer', 'trener', 'editor', 'system', 'all')) ?
+$options['filter'] = in_array(get('f'), array_merge(array('dancer', 'system', 'all', 'unconfirmed', 'ban')), $filter) ?
 	get('f') : 'all';
 $pager = new Paging(new PagingAdapterDBSelect('DBUser', $options));
 $pager->setCurrentPageField('p');
@@ -72,13 +86,11 @@ echo '<form action="', Request::getURI(), '" method="POST">';
 if(!TISK) {
 	$f = Helper::get()->menu();
 	$f->float(MenuHelper::FLOAT_RIGHT)
-		->content('Přidat', 'users/add')
+		->content('Přidat', '/admin/users/add')
 		->content('Upravit', 'edit', true)
 		->content('Odebrat', 'remove', true)
-		->content('Nepotvrzení uživatelé', '/admin/users/unconfirmed')
-		->content('Duplicitní uživatelé', '/admin/users/duplicate')
-		->content('Zabanovaní uživatelé', '/admin/users/ban')
-		->content('Zobrazit platby', 'platby', true);
+		->content('Zobrazit platby', 'platby', true)
+		->content('Duplicitní uživatelé', '/admin/users/duplicate');
 	if(get('v') == 'status')
 		$f->content('Uložit změny', 'save', true);
 	echo $f;
@@ -105,7 +117,7 @@ if(get('v') == 'info') {
 	echo '<td>Systémový<br/>uživatel</td>';
 } elseif(get('v') == 'platby') {
 	echo '<td>Variabilní<br/>symbol</td>';
-	echo '<td>Částka</td>';
+	echo '<td>Zaplaceno</td>';
 	echo '<td>Zaplaceno do</td>';
 }
 echo '</tr>';
@@ -177,20 +189,10 @@ foreach($items as $user) {
 		echo '</td>';
 		echo '<td>', User::var_symbol($user['u_id']), '</td>';
 		echo '<td style="width:58px;">';
-		if($user['up_id']) {
-			if((strpos($user['up_obdobi'], 'pololeti') &&
-					$user['up_castka'] != $user['us_platba_pulrok']) ||
-				(strpos($user['up_obdobi'], 'ctvrtleti') &&
-					$user['up_castka'] != $user['us_platba_ctvrtrok']))
-				echo '<span style="color:black;font-weight:bold;">',
-					$user['up_castka'], ' Kč</span>';
-			else
-				echo '<span style="color:#0B0;">',
-					$user['up_castka'], ' Kč</span>';
-		} else {
-				echo '<span><a href="/admin/platby/add?u=',
-					$user['u_id'], '">NE</s></span>';
-		}
+		if($user['up_id'] && $zaplaceno)
+			echo '<span style="color:#0B0;">', $user['up_castka'], ' Kč</span>';
+		else
+			echo '<span><a href="/admin/platby/add?u=', $user['u_id'], '">NE</a></span>';
 		echo '</td>';
 		echo '<td style="width:110px;">',
 			($zaplaceno ?

@@ -1,4 +1,8 @@
-<?php header_minor('Upload'); ?>
+<?php
+header_main('Správa fotogalerie');
+notice(View::getRedirectMessage());
+header_minor('Upload');
+?>
 <form enctype="multipart/form-data" action="<?php $_SERVER['REQUEST_URI'];?>" method="post">
 <table>
 <tr><td>Popis:</td><td>Soubor</td></tr>

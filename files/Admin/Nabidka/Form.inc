@@ -1,9 +1,11 @@
 <?php
+header_main('Správa nabídka');
 if(Request::getAction() == 'add')
 	header_minor("Přidat nabídku");
 else
 	header_minor("Upravit nabídku");
 
+notice(View::getRedirectMessage());
 if(isset($f))
 	notice(implode('<br/>', $f->getMessages()));
 ?>
@@ -19,8 +21,7 @@ if(isset($f))
 		} else {
 			echo Helper::get()->userSelect()
 				->name('trener')
-				->permissions(L_TRENER)
-				->users(DBUser::getTrener());
+					->users(DBUser::getUsersByPermission('nabidka', P_OWNED));
 		} ?></td>
 	</tr><tr>
 		<td>Počet hodin (*): </td>

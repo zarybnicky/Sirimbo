@@ -1,4 +1,7 @@
 <?php
+header_main('Správa plateb');
+notice(View::getRedirectMessage());
+
 if(!TISK) {
 	$s = Helper::get()->select();
 	

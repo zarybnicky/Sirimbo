@@ -1,9 +1,11 @@
 <?php
+header_main('Správa plateb');
 if(Request::getAction() == 'add')
 	header_minor("Přidat platbu");
 else
 	header_minor("Upravit platbu");
 
+notice(View::getRedirectMessage());
 if(isset($f))
 	notice(implode('<br/>', $f->getMessages()));
 

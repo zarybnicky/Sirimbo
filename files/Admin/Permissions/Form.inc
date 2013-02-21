@@ -1,9 +1,11 @@
 <?php
+header_main('Správa oprávnění');
 if(Request::getAction() == 'add')
 	header_minor("Přidat uživatelskou skupinu");
 else
 	header_minor('Upravit uživatelskou skupinu');
 
+notice(View::getRedirectMessage());
 if(isset($f))
 	notice(implode('<br/>', $f->getMessages()));
 ?>

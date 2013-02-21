@@ -1,3 +1,7 @@
+<?php
+header_main('Správa akcí');
+notice(View::getRedirectMessage());
+?>
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST" class="centerWTable">
 <?php DisplayAkce::viewAkceHeader($akce);?>
 <table>

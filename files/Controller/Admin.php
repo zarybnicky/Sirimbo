@@ -4,7 +4,7 @@ class Controller_Admin implements Controller_Interface {
 		Permissions::checkError('nastenka', P_OWNED);
 	}
 	function view($id = null) {
-		include('files/Admin/Main.inc');
+		include('files/Admin/Display.inc');
 	}
 }
 ?>

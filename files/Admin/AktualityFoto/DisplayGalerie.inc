@@ -1,4 +1,7 @@
 <?php
+header_main('Správa fotogalerie článků');
+notice(View::getRedirectMessage());
+
 $dirs = DBGalerie::getDirs(true, true);
 
 echo '<form action="', Request::getURI(), '" method="get">';

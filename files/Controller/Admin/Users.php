@@ -183,6 +183,34 @@ class Controller_Admin_Users implements Controller_Interface {
 		echo '<a href="/admin/users/duplicate">Zpět</a>';
 		return;
 	}
+	function temporary($id = null) {
+		$jmeno = post('jmeno');
+		$prijmeni = post('prijmeni');
+		$narozeni = post('narozeni');
+		$rok = explode('-', $narozeni);
+		$rok = array_shift($rok);
+		
+		$login = preg_replace('/[^a-zA-Z0-9.-_]*/','', strtolower($prijmeni)) . '_' .
+				preg_replace('/[^a-zA-Z0-9.-_]*/','', strtolower($jmeno));
+		
+		if(!($id = DBUser::getUserID($login))) {
+			list($user_id, $par_id) = DBUser::addTemporaryUser($login, $jmeno, $prijmeni, $narozeni);
+		
+			echo json_encode(array('user_id' => $user_id, 'par_id' => $par_id, 'jmeno' => $jmeno,
+				'prijmeni' => $prijmeni, 'narozeni' => $narozeni, 'rok' => $rok, 'temporary' => 1));
+		} else {
+			$data = DBUser::getUserData($id);
+			if(!($partner = DBPary::getLatestPartner($data['u_id'], $data['u_pohlavi']))) {
+				$par_id = DBPary::noPartner($user['u_id']);
+			} else {
+				$par_id = $partner['p_id'];
+			}
+			echo json_encode(array('user_id' => $data['u_id'], 'par_id' => $par_id, 'jmeno' => $data['u_jmeno'],
+				'prijmeni' => $data['u_prijmeni'], 'narozeni' => $data['u_narozeni'],
+				'rok' => array_shift(explode('-', $data['u_narozeni'])), 'temporary' => 0));
+		}
+		exit;
+	}
 	private function checkData($data, $action = 'add') {
 		$narozeni = Helper::get()->date()->name('narozeni')->getPost();
 		
@@ -196,7 +224,7 @@ class Controller_Admin_Users implements Controller_Interface {
 		if($action == 'add') {
 			$f->checkLogin(post('login'), 'Špatný formát přihlašovacího jména', 'login');
 			$f->checkPassword(post('pass'), 'Špatný formát hesla', 'pass');
-			$f->checkBool(DBUser::getUserID(post('login')),
+			$f->checkBool(!DBUser::getUserID(post('login')),
 				'Uživatel s takovým přihlašovacím jménem už tu je', 'login');
 		}
 		return $f->isValid() ? true : $f;

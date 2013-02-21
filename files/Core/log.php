@@ -9,7 +9,7 @@ class Log {
 			($message ? "\tMessage: $message\n" : '') .
 			"\tGET: " . json_encode($_GET) . "\n" .
 			"\tPOST: " . json_encode($_POST) . "\n" .
-			"\tSESSION: " . json_encode($_SESSION) . "\n");
+			"\tSESSION: " . json_encode($_SESSION) . "\n\n");
 		fclose(Log::$logfile);
 	}
 }

@@ -41,7 +41,6 @@ class Controller_Admin_Rozpis implements Controller_Interface {
 				
 				View::redirect('/admin/rozpis', 'Rozpisy odebrány');
 		}
-		
 		include('files/Admin/Rozpis/Display.inc');
 	}
 	function add($id = null) {

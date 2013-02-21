@@ -3,118 +3,49 @@ class Controller_Member_Nabidka implements Controller_Interface  {
 	function __construct() {
 		Permissions::checkError('dokumenty', P_VIEW);
 	}
-    function view($id = null) {
-        if(!empty($_POST)) {
-        	$data = DBNabidka::getSingleNabidka(post('id'));
-            
-            $f = new Form();
-            $f->checkBool(!$data['n_lock'], 'Tato nabídka je uzamčená', '');
-            if(post('hodiny'))
-                $f->checkNumeric(post('hodiny'), 'Špatný počet hodin', 'hodiny');
-        	
-            if($f->isValid()) {
-        		if(post('hodiny')) {
-                    $partnerka = DBUser::getUserData(User::getPartnerID());
-                    
-                    /*if(!User::getZaplaceno() || !(strcmp($partnerka['up_plati_do'], date('Y-m-d')) >= 0)) {
-            			notice('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
-        			} else*/ if($data['n_max_pocet_hod'] > 0 && post('hodiny') > $data['n_max_pocet_hod']) {
-        				notice('Maximální počet hodin na pár je ' . $data['n_max_pocet_hod'] . '!');
-        			} elseif(($data['n_pocet_hod'] - DBNabidka::getNabidkaItemLessons(post('id'))) >= post('hodiny')) {
-        				DBNabidka::addNabidkaItemLessons(User::getParID(), post('id'), post('hodiny'));
-        				
-        				unset($_POST['hodiny']);
-        				notice('Hodiny přidány');
-        			} else {
-        				notice('Tolik volných hodin tu není');
-        			}
-        		} elseif(post('un_id') !== null) {
-        			list($u_id, $n_id) = explode('-', post('un_id'));
-        			if(DBNabidka::hasNabidkaLessons($n_id, $u_id) &&
-        					($u_id == User::getParID() || Permissions::check('nabidka', P_OWNED, $data['n_trener']))) {
-        				DBNabidka::removeNabidkaItem($n_id, $u_id);
-        				notice('Hodiny odebrány');
-        			}
-        		}
-        	}
-        }
-        header_main('Nabídka tréninků');
-        if(isset($f))
-            notice($f->getMessages());
-        
-        $nabidka = DBNabidka::getNabidka();
-        if(empty($nabidka)) {
-        	notice('Žádná nabídka k dispozici');
-        	return;
-        }
-        
-        echo '<style type="text/css">';
-        echo '.unit {background:inherit;border:none;
-        	vertical-align:top;border-bottom:1px dotted #999;padding:10px 5px;}';
-        echo '</style>';
-        echo '<table style="width:100%;">';
-        $left = true;
-        foreach($nabidka as $item) {
-        	if(!$item['n_visible'])
-        		continue;
-        		
-        	if($left === true) {
-        		echo '<tr><td class="unit">';
-        	} else {
-        		echo '<td class="unit">';
-        	}
-        	echo '<form action="', $_SERVER['REQUEST_URI'], '" method="post">';
-        	
-        	$obsazeno = DBNabidka::getNabidkaItemLessons($item['n_id']);
-        	DisplayNabidka::viewNabidkaHeader($item, $obsazeno);
-        	
-        	echo '<table style="margin:0 auto;">';
-        	echo '<tr><td>Tanečník</td><td>Počet hodin</td></tr>';
-        	
-        	$n_items = DBNabidka::getNabidkaItem($item['n_id']);
-        	foreach($n_items as $par) {
-        		echo '<tr><td>', $par['u_jmeno'], ' ', $par['u_prijmeni'], '</td>',
-        			'<td>', $par['ni_pocet_hod'], '</td>';
-        		if($par['u_id'] === User::getUserID() || $par['u_id'] === User::getPartnerID() ||
-        				Permissions::check('nabidka', P_OWNED, $item['n_trener'])) {
-        			echo '<td>';
-        			if($item['n_lock'] || !Permissions::check('nabidka', P_MEMBER)) {
-        				echo '<button type="submit" name="un_id" value="',
-        					$par['p_id'],'-',$item['n_id'],'" disabled="disabled">&times;</button>';
-        			} else {
-        				echo '<button type="submit" name="un_id" value="',
-        					$par['p_id'],'-',$item['n_id'],'">&times;</button>';
-        			}
-        			echo '</td>';
-        		}
-        		echo '</tr>';
-        	}
-        	echo '</table>';
-        	echo '<div style="text-align:center;">';
-        	if($item['n_lock'] || !Permissions::check('nabidka', P_MEMBER)) {
-        		echo 'Počet hodin: <input type="text" name="hodiny" size="2" value="', post('hodiny'),
-        			'" disabled="disabled" />';
-        		echo '<input type="hidden" name="id" value="', $item['n_id'], '" disabled="disabled" />';
-        		echo '<button type="submit" disabled="disabled">Přidat</button>';
-        	} else {
-        		echo 'Počet hodin: <input type="text" name="hodiny" size="2" value="', post('hodiny'), '" />';
-        		echo '<input type="hidden" name="id" value="', $item['n_id'], '" />';
-        		echo '<button type="submit">Přidat</button>';
-        	}
-        	echo '</div>';
-        	echo '</form>';
-        
-        	if($left === true) {
-        		$left = false;
-        		echo '</td>';
-        	} else {
-        		$left = true;
-        		echo '</td></tr>';
-        	}
-        }
-        if($left === false)
-        	echo '</tr>';
-        echo '</table>';
-    }
+	function view($id = null) {
+		if(empty($_POST)) {
+			include('files/Member/Nabidka.inc');
+			return;
+		}
+		$data = DBNabidka::getSingleNabidka(post('id'));
+		
+		if(post('hodiny') > 0 && !is_object($this->checkData($data, 'signup'))) {
+			$partnerka = DBUser::getUserData(User::getPartnerID());
+			
+			if(!User::getZaplaceno() || (User::getPartnerID() > 0 &&
+					!(strcmp($partnerka['up_plati_do'], date('Y-m-d', strtotime('+ 14 days'))) >= 0))) {
+				notice('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
+			} elseif($data['n_max_pocet_hod'] > 0 &&
+					(DBNabidka::getNabidkaLessons(post('id'), User::getID()) + post('hodiny')) > $data['n_max_pocet_hod']) {
+				notice('Maximální počet hodin na pár je ' . $data['n_max_pocet_hod'] . '!');
+			} elseif(($data['n_pocet_hod'] - DBNabidka::getNabidkaItemLessons(post('id'))) < post('hodiny')) {
+				notice('Tolik volných hodin tu není');
+			} else {
+				DBNabidka::addNabidkaItemLessons(User::getParID(), post('id'), post('hodiny'));
+				notice('Hodiny přidány');
+				
+				unset($_POST['hodiny']);
+			}
+		} elseif(post('un_id') !== null && !is_object($this->checkData($data, 'signoff'))) {
+			list($u_id, $n_id) = explode('-', post('un_id'));
+			
+			if(!DBNabidka::getNabidkaLessons($n_id, $u_id)) {
+				notice('Neplatný požadavek!');
+			} elseif($u_id != User::getParID() && !Permissions::check('nabidka', P_OWNED, $data['n_trener'])) {
+				notice('Nedostatečná oprávnění!');
+			} else {
+				DBNabidka::removeNabidkaItem($n_id, $u_id);
+				notice('Hodiny odebrány');
+			}
+		}
+		include('files/Member/Nabidka.inc');
+	}
+	private function checkData($data, $action = 'signup') {
+		$f = new Form();
+		$f->checkBool(!$data['n_lock'], 'Tato nabídka je uzamčená', '');
+		if(post('hodiny'))
+			$f->checkNumeric(post('hodiny'), 'Špatný počet hodin', 'hodiny');
+	}
 }
 ?>

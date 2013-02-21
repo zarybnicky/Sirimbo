@@ -1,7 +1,12 @@
 <?php
-$platby = DBPlatby::getPlatbyFromUser($id);
+header_main('Správa uživatelů');
+header_minor('Platby uživatele ' . $data['u_jmeno'] . ' ' . $data['u_prijmeni']);
+notice(View::getRedirectMessage());
 
-header_minor($data['u_prijmeni'] . ', ' . $data['u_jmeno']);
+echo Helper::get()->menu()
+	->float(MenuHelper::FLOAT_RIGHT)
+	->content('Přidat', '/admin/platby/add?u=' . $data['u_id'])
+	->content('Zpět', '/admin/users');
 
 echo '<table>';
 echo '<tr>';
@@ -13,6 +18,7 @@ echo '<td>Platí do</td>';
 echo '<td></td>';
 echo '</tr>';
 
+$platby = DBPlatby::getPlatbyFromUser($id);
 foreach($platby as $platba) {
 	echo "<tr>";
 	echo '<td><div class="box" title="', $platba['us_popis'], '" ',
@@ -25,6 +31,4 @@ foreach($platby as $platba) {
 	echo '</tr>';
 }
 echo '</table>';
-
-echo '<a href="/admin/users">Zpět</a>';
 ?>
