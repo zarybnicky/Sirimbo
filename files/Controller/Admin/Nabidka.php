@@ -1,5 +1,5 @@
 <?php
-class Controller_Admin_Nabidke implements Controller_Interface {
+class Controller_Admin_Nabidka implements Controller_Interface {
 	function __construct() {
 		Permissions::checkError('nabidka', P_OWNED);
 	}

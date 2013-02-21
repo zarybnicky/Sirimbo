@@ -4,12 +4,11 @@ class Controller_Member implements Controller_Interface {
 		Permissions::checkError('nastenka', P_VIEW);
 	}
     function view($id = null)  {
-        notice(View::getRedirectMessage());
-        
         DisplayPary::viewPartnerRequests(DBPary::getPartnerRequestsForMe(User::getUserID()),
         	DBPary::getPartnerRequestsByMe(User::getUserID()));
         
         header_main('Novinky');
+        notice(View::getRedirectMessage());
         
         $data = DBNovinky::getLastNovinky(NOVINKY_COUNT);
         if(!$data) {

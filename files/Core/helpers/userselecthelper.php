@@ -24,7 +24,6 @@ class UserSelectHelper {
 		$this->idVar = "u_id";
 		$this->jmeno = "u_jmeno";
 		$this->prijmeni = "u_prijmeni";
-		$this->permissions = L_USER;
 		$this->users = array();
 		$this->type = 'user';
 		$this->tmpVar = 'u_temporary';
@@ -45,10 +44,6 @@ class UserSelectHelper {
 	}
 	public function prijmeni($prijmeni) {
 		$this->prijmeni = $prijmeni;
-		return $this;
-	}
-	public function permissions($permissions) {
-		$this->permissions = $permissions;
 		return $this;
 	}
 	public function users(array $users) {
@@ -86,7 +81,6 @@ class UserSelectHelper {
 var name = '.' + '$name';
 var type = '{$this->type}';
 var tmpString = '$tmpString';
-var permissions = '{$this->permissions}';
 
 $(name + ' select').change(function() {
 	if($(name + ' select').val() === 'temporary') {
@@ -116,7 +110,7 @@ $(name + ' .new button').click(function(){
 			type: 'POST',
 			url: '/admin/users/temporary?ajax=ajax',
 			data: {jmeno: $(name + ' .jmeno').val(),prijmeni: $(name + ' .prijmeni').val(),
-				permissions: permissions,narozeni:
+				,narozeni:
 				($(name + ' .year').val() + '-' + $(name + ' .month').val() + '-' + $(name + ' .day').val())},
 			beforeSend: function(){ $(name + ' .new').slideUp();$(name + ' .loading').slideDown();},
 			complete: function(){

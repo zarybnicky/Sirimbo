@@ -1,9 +1,11 @@
 <?php
+header_main('Správa uživatelů');
 if(Request::getAction() == 'add')
 	header_minor("Přidat uživatele");
 else
 	header_minor("Upravit uživatele");
 
+notice(View::getRedirectMessage());
 if(isset($f))
 	notice(implode('<br/>', $f->getMessages()));
 ?>

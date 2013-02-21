@@ -1,9 +1,11 @@
 <?php
+header_main('Správa skupin');
 if(Request::getAction() == 'add')
 	header_minor("Přidat skupinu");
 else
 	header_minor("Upravit skupinu");
 
+notice(View::getRedirectMessage());
 if(isset($f))
 	notice(implode('<br/>', $f->getMessages()));
 ?>

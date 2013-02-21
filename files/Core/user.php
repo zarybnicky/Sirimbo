@@ -45,10 +45,13 @@ class User {
 		if(empty($data))
 			$data = DBUser::getUserData($id);
 		$par = DBPary::getLatestPartner($data['u_id'], $data['u_pohlavi']);
-		
-		foreach(Settings::$permissions as $key => $item)
-			$_SESSION['permissions'][$key] = $data['pe_' . $key];
-		$_SESSION['permission_group'] = $data['pe_id'];
+
+		foreach(Settings::$permissions as $key => $item) {
+			if($data['u_group'] == 0)
+				$_SESSION['permissions'][$key] = P_NONE;
+			else
+				$_SESSION['permissions'][$key] = $data['pe_' . $key];
+		}
 		
 		$_SESSION["id"] = $data['u_id'];
 		$_SESSION["user"] = strtolower($data['u_login']);
@@ -66,18 +69,7 @@ class User {
 		$_SESSION['par'] = $par['p_id'];
 		$_SESSION['partner'] = $par['u_id'];
 		$_SESSION['zaplaceno'] =
-			(bool) (strcmp($data['up_plati_do'], date('Y-m-d')) >= 0);
-		return true;
-	}
-	
-	public static function checkPermissionsError($level) {
-		if(!isset($_SESSION["level"]) || $_SESSION["level"] < $level)
-			View::viewError(ER_AUTHORIZATION);
-	}
-	
-	public static function checkPermissionsBool($level) {
-		if(!isset($_SESSION["level"]) || $_SESSION["level"] < $level)
-			return false;
+			(bool) (strcmp($data['up_plati_do'], date('Y-m-d', strtotime('+ 14 days'))) >= 0);
 		return true;
 	}
 	
@@ -90,15 +82,15 @@ class User {
 			if($module)
 				return P_ADMIN;
 			return $_SESSION['permissions'];
+		} elseif(User::getUserGroup() == 1) {
+			if($module)
+				return P_NONE;
+			return $_SESSION['permissions'];
 		} else {
 			if($module && isset($_SESSION['permissions'][$module]))
 				return $_SESSION['permissions'][$module];
 			return $_SESSION['permissions'];
 		}
-	}
-	
-	public static function getPermissionGroup() {
-		return $_SESSION['permission_group'];
 	}
 	
 	public static function getUserID() {

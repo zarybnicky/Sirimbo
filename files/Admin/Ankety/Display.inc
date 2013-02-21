@@ -1,3 +1,7 @@
+<?php
+header_main('Správa anket');
+notice(View::getRedirectMessage());
+?>
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
 <a href="/admin/ankety/add">Přidat</a>
 <button type="submit" name="action" value="edit">Upravit</button>

@@ -1,3 +1,7 @@
+<?php
+header_main('Správa akcí');
+notice(View::getRedirectMessage());
+?>
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST" class="centerWTable">
 <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
 <?php DisplayAkce::viewAkceHeader($akce);?>

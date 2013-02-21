@@ -26,7 +26,7 @@ if(!($id = DBUser::getUserID($login))) {
 	}
 	echo json_encode(array('user_id' => $data['u_id'], 'par_id' => $par_id, 'jmeno' => $data['u_jmeno'],
 		'prijmeni' => $data['u_prijmeni'], 'narozeni' => $data['u_narozeni'],
-		'rok' => $rok, 'temporary' => 0));
+		'rok' => array_shift(explode('-', $data['u_narozeni'])), 'temporary' => 0));
 }
 exit;
 ?>

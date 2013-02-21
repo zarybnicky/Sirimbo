@@ -1,4 +1,7 @@
 <?php
+header_main('Správa aktualit');
+notice(View::getRedirectMessage());
+
 if(!is_array(get('u')))
 	notice('Žádné aktuality');
 ?>

@@ -1,8 +1,11 @@
 <?php
+header_main('Správa anket');
 if(Request::getAction() == 'add')
 	header_minor("Přidat anketu");
 else
 	header_minor("Upravit anketu");
+
+notice(View::getRedirectMessage());
 ?>
 <form action="<?php echo Request::getURI()?>" method="post">
 <button type="submit" name="action" value="enter" style="display:none;">Enter</button>

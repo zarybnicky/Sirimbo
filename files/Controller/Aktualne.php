@@ -5,7 +5,6 @@ class Controller_Aktualne implements Controller_Interface  {
         	DisplayAktuality::viewClanek($data, false);
         	return;
         }
-        
         $this->posledni(null);
     }
     function posledni($id = null) {
