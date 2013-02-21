@@ -1,9 +1,11 @@
 <?php
+header_main('Správa rozpisů');
 if(Request::getAction() == 'add')
 	header_minor("Přidat rozpis");
 else
 	header_minor("Upravit rozpis");
 
+notice(View::getRedirectMessage());
 if(isset($f))
 	notice(implode('<br/>', $f->getMessages()));
 ?>
@@ -19,8 +21,7 @@ if(isset($f))
 			} else {
 				echo Helper::get()->userSelect()
 					->name('trener')
-					->permissions(L_TRENER)
-					->users(DBUser::getTrener());
+					->users(DBUser::getUsersByPermission('rozpis', P_OWNED));
 			}
 			?>
 		</td>

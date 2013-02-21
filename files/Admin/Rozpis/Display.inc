@@ -1,3 +1,7 @@
+<?php
+header_main('Správa rozpisů');
+notice(View::getRedirectMessage());
+?>
 <form action="<?php echo Request::getURI();?>" method="POST">
 <?php
 if(!TISK) {
@@ -19,9 +23,9 @@ if(!TISK) {
 <td>Viditelný</td>
 </tr>
 <?php
-$nabidka = DBRozpis::getRozpis();
+$rozpis = DBRozpis::getRozpis();
 
-foreach($nabidka as $item) {
+foreach($rozpis as $item) {
 	echo '<tr>';
 	if(Permissions::check('rozpis', P_OWNED, $item['r_trener']))
 		echo '<td><input type="checkbox" name="rozpis[]" value="', $item['r_id'] .

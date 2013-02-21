@@ -1,3 +1,7 @@
+<?php
+header_main('Správa nabídka');
+notice(View::getRedirectMessage());
+?>
 <form action="<?php echo Request::getURI(); ?>" method="POST" class="centerWTable">
 <button type="submit" name="action" value="add" style="display:none;">Enter</button>
 <div class="n_wrapper">

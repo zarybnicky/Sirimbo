@@ -1,4 +1,7 @@
 <?php
+header_main('Správa skupin');
+notice(View::getRedirectMessage());
+
 if(get('v') === null)
 	get('v', 'info');
 

@@ -86,7 +86,7 @@ class DBNabidka extends Database {
 		}
 	}
 	
-	public static function hasNabidkaLessons($parent_id, $u_id) {
+	public static function getNabidkaLessons($parent_id, $u_id) {
 		list($parent_id, $u_id) = DBNabidka::escapeArray(array($parent_id, $u_id));
 		
 		$res = DBNabidka::query("SELECT ni_pocet_hod FROM nabidka_item WHERE ni_id_rodic='$parent_id' AND " .
@@ -95,7 +95,7 @@ class DBNabidka extends Database {
 			return false;
 		} else {
 			$row = DBNabidka::getSingleRow($res);
-			return (bool)$row["ni_pocet_hod"];
+			return $row["ni_pocet_hod"];
 		}
 	}
 	

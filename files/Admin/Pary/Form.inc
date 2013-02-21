@@ -1,5 +1,7 @@
 <?php
+header_main('Správa párů');
 header_minor("Změna třídy a bodů");
+notice(View::getRedirectMessage());
 ?>
 <form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="POST">
 Pár: <?php echo $data['guy_name'], ' ', $data['guy_surname'], ' - ',

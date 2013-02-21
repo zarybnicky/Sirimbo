@@ -1,4 +1,8 @@
-<?php header_minor('Zabanovaní uživatelé')?>
+<?php
+header_main('Správa uživatelů');
+header_minor('Zabanovaní uživatelé');
+notice(View::getRedirectMessage());
+?>
 <form action="<?php echo Request::getURI()?>" method="POST">
 <?php
 echo Helper::get()->menu()

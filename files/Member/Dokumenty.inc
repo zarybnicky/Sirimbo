@@ -1,17 +1,16 @@
 <?php
-User::checkPermissionsError(L_HOST);
 header_main("Dokumenty");
 
-$kategorie = get('kat');
+$kat = get('kat');
 ?>
 <form action="<?php echo $_SERVER["REQUEST_URI"];?>" method="GET">
 <select name="kat">
 	<option value="">---VŠE---</option>
-	<option value="1"<?php if($kategorie == '1') echo ' selected'?>>Schůze, rady</option>
-	<option value="2"<?php if($kategorie == '2') echo ' selected'?>>Soutěže</option>
-	<option value="3"<?php if($kategorie == '3') echo ' selected'?>>Tábory</option>
-	<option value="4"<?php if($kategorie == '4') echo ' selected'?>>Inzerce</option>
-	<option value="0"<?php if($kategorie == '0') echo ' selected'?>>Ostatní</option>
+	<option value="1"<?php if($kat == '1') echo ' selected'?>>Schůze, rady</option>
+	<option value="2"<?php if($kat == '2') echo ' selected'?>>Soutěže</option>
+	<option value="3"<?php if($kat == '3') echo ' selected'?>>Tábory</option>
+	<option value="4"<?php if($kat == '4') echo ' selected'?>>Inzerce</option>
+	<option value="0"<?php if($kat == '0') echo ' selected'?>>Ostatní</option>
 </select>
 <button type="submit">Zobrazit</button>
 </form>
@@ -24,8 +23,8 @@ $kategorie = get('kat');
 <td>Uploadoval</td>
 </tr>
 <?php
-if(ctype_digit($kategorie) || $kategorie == '0') {
-	$dokumenty = DBDokumenty::getDokumentyByKategorie($kategorie);
+if(ctype_digit($kat) || $kat == '0') {
+	$dokumenty = DBDokumenty::getDokumentyByKategorie($kat);
 } else {
 	$dokumenty = DBDokumenty::getDokumenty();
 }
