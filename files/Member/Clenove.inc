@@ -1,17 +1,5 @@
 <?php
-User::checkPermissionsError(L_HOST);
 header_main("Členové");
-
-$id = Request::getID();
-if($id && ($data = DBUser::getUserData($id))) {
-	echo '<b>', $data['u_jmeno'], ' ', $data['u_prijmeni'], '</b><br/>';
-	echo 'E-mail: ', $data['u_email'], '<br/>';
-	echo 'Telefon: ', $data['u_telefon'], '<br/>';
-	echo 'Poznámky: ', $data['u_poznamky'], '<br/>';
-	echo 'Variabilní symbol: ', User::var_symbol($id), '<br/>';
-	echo '<a href="', Request::getReferer(), '">Zpět</a>';
-	return;
-}
 
 if(!TISK) {
 	echo '<form action="', Request::getURI(), '" method="get">';
@@ -94,7 +82,7 @@ if(get('f') == 'skupiny') {
 }
 
 switch(get('f')) {
-	case 'all': $users = DBUser::getActiveUsers(L_ALL); break;
+	case 'all': $users = DBUser::getActiveUsers(); break;
 	case 'dancer':
 	default: $users = DBUser::getActiveDancers(); break;
 }

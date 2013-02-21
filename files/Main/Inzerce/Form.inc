@@ -1,9 +1,11 @@
 <?php
+header_main('Inzerce');
 if(Request::getAction() == 'add')
 	header_minor("Přidat inzerát");
 else
 	header_minor('Upravit inzerát');
 
+notice(View::getRedirectMessage());
 if(isset($f))
 	notice(implode('<br/>', $f->getMessages()));
 ?>

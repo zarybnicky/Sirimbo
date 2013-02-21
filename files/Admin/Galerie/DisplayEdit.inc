@@ -1,3 +1,7 @@
+<?php
+header_main('Správa fotogalerie');
+notice(View::getRedirectMessage());
+?>
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
 <a href="/admin/galerie/upload">Přidat fotky</a>
 <button type="submit" name="action" value="edit">Upravit fotku</button>

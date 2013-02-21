@@ -1,9 +1,11 @@
 <?php
+header_main('Správa nástěnky');
 if(Request::getAction() == 'add')
 	header_minor("Přidat příspěvek");
 else
 	header_minor("Upravit příspěvek");
 
+notice(View::getRedirectMessage());
 if(isset($f))
 	notice(implode('<br/>', $f->getMessages()));
 ?>

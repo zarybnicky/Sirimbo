@@ -1,3 +1,8 @@
+<?php
+header_main('Správa uživatelů');
+header_minor('Nepotvrzení uživatelé');
+notice(View::getRedirectMessage());
+?>
 <form action="<?php echo $_SERVER["REQUEST_URI"]?>" method="POST">
 <?php
 echo Helper::get()->menu()

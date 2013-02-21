@@ -9,7 +9,7 @@ class Controller_Member_Profil_Inzerce implements Controller_Interface {
 		echo '<a href="/member/profil">Zpět</a>';
 	}
     function add($id = null) {
-		if(empty($_POST)) {
+		if(empty($_POST) || is_object($this->checkData($_POST, 'edit'))) {
 			include('files/Main/Inzerce/Form.inc');
 			return;
 		}
@@ -18,16 +18,6 @@ class Controller_Member_Profil_Inzerce implements Controller_Interface {
 		if(!$do || strcmp($od, $do) > 0)
 			$do = $od;
 
-		$f = new Form();
-		$f->checkLength(post('nadpis'), 1, 40, 'Zadejte prosím nadpis správně', 'nadpis');
-		$f->checkInArray(post('kat'), array(1,2,3,4), 'Špatná kategorie', 'kat');
-		$f->checkDate($od, 'Zadejte prosím platné datum ("Od")', 'od');
-		$f->checkDate($do, 'Zadejte prosím platné datum ("Do")', 'do');
-		
-		if(!$f->isValid()) {
-			include('files/Main/Inzerce/Form.inc');
-			return;
-		}
 		DBInzerce::addInzerat(post('kat'), User::getUserID(), User::getUserJmeno(),
 			User::getUserPrijmeni(), post('nadpis'), post('text'), serialize(array()), $od, $do,
 			(bool) post('visible'), '1');
@@ -55,21 +45,16 @@ class Controller_Member_Profil_Inzerce implements Controller_Interface {
 			include('files/Main/Inzerce/Form.inc');
 			return;
 		}
+		if(is_object($this->checkData($_POST, 'edit'))) {
+			include('files/Main/Inzerce/Form.inc');
+			return;
+		}
+		
 		$od = Helper::get()->date()->name('od')->getPost();
 		$do = Helper::get()->date()->name('do')->getPost();
 		if(!$do || strcmp($od, $do) > 0)
 			$do = $od;
 		
-		$f = new Form();
-		$f->checkLength(post('nadpis'), 1, 40, 'Zadejte prosím nadpis správně', 'nadpis');
-		$f->checkInArray(post('kat'), array(1,2,3,4), 'Špatná kategorie', 'kat');
-		$f->checkDate($od, 'Zadejte prosím platné datum ("Od")', 'od');
-		$f->checkDate($do, 'Zadejte prosím platné datum ("Do")', 'do');
-		
-		if(!$f->isValid()) {
-			include('files/Main/Inzerce/Form.inc');
-			return;
-		}
 		DBInzerce::editInzerat($id, post('kat'), User::getUserID(), User::getUserJmeno(),
 			User::getUserPrijmeni(), post('nadpis'), post('text'), serialize(array()),
 			$od, $do, (bool) post('visible'), '1');
@@ -88,7 +73,7 @@ class Controller_Member_Profil_Inzerce implements Controller_Interface {
 			$data = DBInzerce::getSingleInzerat($id);
 			echo $data['i_nadpis'], '"?<br/>';
 			echo '<input type="hidden" name="id" value="', $id, '" />';
-			echo '<button type="submit" name="action" value="remove_confirm">Odstranit</button>';
+			echo '<button type="submit" name="action" value="confirm">Odstranit</button>';
 			echo '<a href="/member/profil/inzerce">Zpět</a>';
 			echo '</form>';
 			return;
@@ -98,6 +83,20 @@ class Controller_Member_Profil_Inzerce implements Controller_Interface {
 			View::redirect("/member/profil/inzerce", "Inzerát odebrán");
 			return;
 		}
+    }
+    private function checkData($data, $action = 'add') {
+    	$od = Helper::get()->date()->name('od')->getPost();
+    	$do = Helper::get()->date()->name('do')->getPost();
+    	if(!$do || strcmp($od, $do) > 0)
+    		$do = $od;
+    	
+    	$f = new Form();
+    	$f->checkLength(post('nadpis'), 1, 40, 'Zadejte prosím nadpis správně', 'nadpis');
+    	$f->checkInArray(post('kat'), array(1,2,3,4), 'Špatná kategorie', 'kat');
+    	$f->checkDate($od, 'Zadejte prosím platné datum ("Od")', 'od');
+    	$f->checkDate($do, 'Zadejte prosím platné datum ("Do")', 'do');
+    	
+    	return $f->isValid() ? true : $f;
     }
 }
 ?>

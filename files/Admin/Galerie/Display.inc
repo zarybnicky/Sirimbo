@@ -1,3 +1,7 @@
+<?php
+header_main('Správa fotogalerie');
+notice(View::getRedirectMessage());
+?>
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
 <?php
 echo Helper::get()->menu()

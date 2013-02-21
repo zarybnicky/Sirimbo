@@ -1,3 +1,7 @@
+<?php
+header_main('Správa aktualit');
+notice(View::getRedirectMessage());
+?>
 <form action="<?php echo Request::getURI();?>" method="POST">
 <?php
 if(!TISK) {

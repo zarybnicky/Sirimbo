@@ -14,16 +14,18 @@ class DBUser extends Database implements Pagable {
 		WHERE (p1.up_id IS NULL OR
             (p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
 			(p1.up_plati_do = (SELECT MAX(p2.up_plati_do) FROM users_platby p2
-                WHERE p2.up_id_user=u_id)))
-            AND u_confirmed='1' AND u_ban='0'";
+                WHERE p2.up_id_user=u_id)))";
 		switch($options['filter']) {
-			case 'dancer': $q .= " AND u_system='0' AND u_dancer='1'"; break;
-//			case 'trener': $q .= " AND u_system='0' AND u_level>='" . L_TRENER . "'"; break;
-//			case 'editor': $q .= " AND u_system='0' AND u_level>='" . L_EDITOR . "'"; break;
-			case 'system': $q .= " AND u_system='1'"; break;
+			case 'unconfirmed': $q .= " AND u_confirmed='0' AND u_ban='0'"; break;
+			case 'ban': $q .= " AND u_ban='1'"; break;
+			case 'dancer': $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0' AND u_dancer='1'"; break;
+			case 'system': $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='1'"; break;
 			case 'all':
 			default:
-				$q .= "AND u_system='0'";
+				if(is_numeric($options['filter']))
+					$q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0' AND u_group='{$options['filter']}'";
+				else
+					$q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0'";
 		}
 		switch($options['sort']) {
 			case 'var-symbol':	$q .= ' ORDER BY u_id'; break;
@@ -39,15 +41,18 @@ class DBUser extends Database implements Pagable {
 		if(!isset($options['filter']))
 			$options['filter'] = 'all';
 		
-		$q = "SELECT COUNT(*) FROM users WHERE u_confirmed='1' AND u_ban='0'";
+		$q = "SELECT COUNT(*) FROM users WHERE 1=1";
 		switch($options['filter']) {
-			case 'dancer': $q .= " AND u_system='0' AND u_dancer='1'"; break;
-//			case 'trener': $q .= " AND u_system='0' AND u_level>='" . L_TRENER . "'"; break;
-//			case 'editor': $q .= " AND u_system='0' AND u_level>='" . L_EDITOR . '"'; break;
-			case 'system': $q .= " AND u_system='1'"; break;
+			case 'unconfirmed': $q .= " AND u_confirmed='0' AND u_ban='0'"; break;
+			case 'ban': $q .= " AND u_ban='1'"; break;
+			case 'dancer': $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0' AND u_dancer='1'"; break;
+			case 'system': $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='1'"; break;
 			case 'all':
 			default:
-				$q .= "AND u_system='0'";
+				if(is_numeric($options['filter']))
+					$q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0' AND u_group='{$options['filter']}'";
+				else
+					$q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0'";
 		}
 		$q .= ' ORDER BY u_prijmeni';
 		
@@ -141,14 +146,14 @@ class DBUser extends Database implements Pagable {
 			return DBUser::getSingleRow($res);
 		}
 	}
-	public static function addTemporaryUser($login, $jmeno, $prijmeni, $narozeni, $permissions) {
-		list($login, $jmeno, $prijmeni, $narozeni, $permissions) =
-			DBUser::escapeArray(array($login, $jmeno, $prijmeni, $narozeni, $permissions));
+	public static function addTemporaryUser($login, $jmeno, $prijmeni, $narozeni) {
+		list($login, $jmeno, $prijmeni, $narozeni) =
+			DBUser::escapeArray(array($login, $jmeno, $prijmeni, $narozeni));
 		
 		DBUser::query(
 		"INSERT INTO users
 			(u_login,u_pass,u_jmeno,u_prijmeni,u_narozeni,u_confirmed,u_temporary,u_system,u_group)
-		VALUES ('$login','','$jmeno','$prijmeni','$narozeni','1','1','0','$permissions')");
+		VALUES ('$login','','$jmeno','$prijmeni','$narozeni','1','1','0','0')");
 		$user_id = mysql_insert_id();
 		
 		DBUser::query("INSERT INTO pary (p_id_partner, p_archiv) VALUES ('" . $user_id . "','0')");
@@ -286,6 +291,17 @@ class DBUser extends Database implements Pagable {
 		return DBUser::getArray($res);
 	}
 	
+	public static function getUsersByPermission($module, $permission) {
+		list($module, $permission) = DBUser::escapeArray(array($module, $permission));
+		$res = DBUser::query(
+		"SELECT users.*,users_skupiny.* FROM users
+			LEFT JOIN permissions ON u_group=pe_id
+			LEFT JOIN users_skupiny ON u_skupina=us_id
+		WHERE pe_$module >= '$permission'
+		");
+		return DBUser::getArray($res);
+	}
+	
 	public static function getNewUsers() {
 		$res = DBUser::query(
 		"SELECT * FROM users
@@ -351,7 +367,9 @@ class DBUser extends Database implements Pagable {
 		return DBUser::getArray($res);
 	}
 	public static function getGroupCounts() {
-		$res = DBUser::query("SELECT u_group,count(*) as count,permissions.* FROM `users` LEFT JOIN permissions ON u_group=pe_id group by u_group");
+		$res = DBUser::query(
+		"SELECT u_group,count(*) as count,permissions.*
+		FROM users LEFT JOIN permissions ON u_group=pe_id group by u_group");
 		return DBUser::getArray($res);
 	}
 }

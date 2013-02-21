@@ -1,8 +1,11 @@
-<?php
+	<?php
+header_main('Správa aktualit');
 if(Request::getAction() == 'add')
 	header_minor("Přidat článek");
 else
 	header_minor("Upravit článek");
+
+notice(View::getRedirectMessage());
 ?>
 <form action="<?php echo Request::getURI()?>" method="POST">
 <table>
