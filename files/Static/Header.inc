@@ -62,8 +62,8 @@
 				?>"><a href="/home">Domů</a></li>
 				<li<?php echo ($section == 'oklubu') ? ' class="current"' : '';
 				?>><a href="/oklubu">O klubu</a></li>
-				<li<?php echo ($section == 'aktuality') ? ' class="current"' : '';
-				?>><a href="/aktuality/posledni">Aktuálně</a></li>
+				<li<?php echo ($section == 'aktualne') ? ' class="current"' : '';
+				?>><a href="/aktualne">Aktuálně</a></li>
 				<li<?php echo ($section == 'inzerce') ? ' class="current"' : '';
 				?>><a href="/inzerce/posledni">Inzerce</a></li>
 				<li<?php echo ($section == 'fotogalerie') ? ' class="current"' : '';

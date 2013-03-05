@@ -10,7 +10,8 @@ if(!TISK) {
 		->content('Přidat', 'nabidka/add')
 		->content('Upravit', 'edit', true)
 		->content('Upravit tréninky', 'edit_detail', true)
-		->content('Odstranit', 'remove', true);
+		->content('Odstranit', 'remove', true)
+		->content('Uložit změny', 'save', true);
 }
 ?>
 <div style="margin-right:150px;">
@@ -37,7 +38,7 @@ foreach($nabidka as $item) {
 	echoFullJmeno($item);
 	echo '</td>';
 	echo '<td>' . formatDate($item['n_od']) . ' - ' . formatDate($item['n_do']) .  '</td>';
-	echo '<td>' . ($item['n_visible'] ? '&#10003;' : '') . '</td>';
+	echo '<td>', getCheckbox($item['n_id'], '1', $item['n_visible']), '</td>';
 	echo '</tr>';
 }
 ?>
