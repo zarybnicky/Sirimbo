@@ -22,7 +22,12 @@ class Controller_Admin_Users implements Controller_Interface {
 				break;
 			
 			case 'save':
-				$options['filter'] = in_array(get('f'), array('dancer', 'trener', 'editor', 'system', 'all')) ?
+				$groups = DBPermissions::getGroups();
+				foreach($groups as $group)
+					if($group['pe_id'])
+						$filter[] = $group['pe_id'];
+				
+				$options['filter'] = in_array(get('f'), array_merge(array('dancer', 'system', 'all', 'unconfirmed', 'ban')), $filter) ?
 					get('f') : 'all';
 				$pager = new Paging(new PagingAdapterDBSelect('DBUser', $options));
 				$pager->setCurrentPageField('p');
@@ -197,7 +202,7 @@ class Controller_Admin_Users implements Controller_Interface {
 			list($user_id, $par_id) = DBUser::addTemporaryUser($login, $jmeno, $prijmeni, $narozeni);
 		
 			echo json_encode(array('user_id' => $user_id, 'par_id' => $par_id, 'jmeno' => $jmeno,
-				'prijmeni' => $prijmeni, 'narozeni' => $narozeni, 'rok' => $rok, 'temporary' => 1));
+				'prijmeni' => $prijmeni, 'narozeni' => $narozeni, 'rok' => $rok));
 		} else {
 			$data = DBUser::getUserData($id);
 			if(!($partner = DBPary::getLatestPartner($data['u_id'], $data['u_pohlavi']))) {
@@ -205,9 +210,10 @@ class Controller_Admin_Users implements Controller_Interface {
 			} else {
 				$par_id = $partner['p_id'];
 			}
+			$narozeni = explode('-', $data['u_narozeni']);
 			echo json_encode(array('user_id' => $data['u_id'], 'par_id' => $par_id, 'jmeno' => $data['u_jmeno'],
 				'prijmeni' => $data['u_prijmeni'], 'narozeni' => $data['u_narozeni'],
-				'rok' => array_shift(explode('-', $data['u_narozeni'])), 'temporary' => 0));
+				'rok' => array_shift($narozeni)));
 		}
 		exit;
 	}
@@ -217,10 +223,11 @@ class Controller_Admin_Users implements Controller_Interface {
 		$f = new Form();
 		$f->checkLength(post('jmeno'), 1, 40, 'Špatná délka jména', 'jmeno');
 		$f->checkLength(post('prijmeni'), 1, 40, 'Špatná délka přijmení', 'prijmeni');
+		$f->checkDate($narozeni, 'Neplatné datum narození', 'narozeni');
 		$f->checkInArray(post('pohlavi'), array('m', 'f'), 'Neplatné pohlaví', 'pohlavi');
 		$f->checkEmail(post('email'), 'Neplatný formát emailu', 'email');
 		$f->checkPhone(post('telefon'), 'Neplatný formát telefoního čísla', 'telefon');
-		$f->checkDate($narozeni, 'Neplatné datum narození', 'narozeni');
+		
 		if($action == 'add') {
 			$f->checkLogin(post('login'), 'Špatný formát přihlašovacího jména', 'login');
 			$f->checkPassword(post('pass'), 'Špatný formát hesla', 'pass');

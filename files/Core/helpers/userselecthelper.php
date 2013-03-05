@@ -27,7 +27,6 @@ class UserSelectHelper {
 		$this->users = array();
 		$this->type = 'user';
 		$this->tmpVar = 'u_temporary';
-		$this->tmpString = 'D - ';
 		$this->tmpSwitch = true;
 	}
 	public function name($name) {
@@ -56,31 +55,20 @@ class UserSelectHelper {
 			$this->type = $type;
 		return $this;
 	}
-	public function tmpVar($var) {
-		$this->tmpVar = $var;
-		return $this;
-	}
-	public function tmpString($string) {
-		$this->tmpString = $string;
-		return $this;
-	}
-	public function tmpSwitch($flag) {
-		$this->tmpSwitch = (boolean) $flag;
+	public static function tmpSwitch($value) {
+		$this->tmpSwitch = (bool) $value;
 		return $this;
 	}
 	public function render() {
 		$name = 'userselect' . rand(0,1024);
-		$tmpString = ($this->tmpSwitch === true) ? $this->tmpString : '';
 		
 		$out = '<div class="' . $name . '">' . "\n";
-		
 		if($this->tmpSwitch) {
-			$out .= '<script type="text/javascript">';
 			$out .=
-"$(function(){
+"<script type=\"text/javascript\">
+$(function(){
 var name = '.' + '$name';
 var type = '{$this->type}';
-var tmpString = '$tmpString';
 
 $(name + ' select').change(function() {
 	if($(name + ' select').val() === 'temporary') {
@@ -90,47 +78,41 @@ $(name + ' select').change(function() {
 	}
 });
 $(name + ' .new button').click(function(){
-	if($(name + ' .jmeno').val() && $(name + ' .prijmeni').val()) {
-		var celejmeno = $(name + ' .jmeno').val() + ' ' + $(name + ' .prijmeni').val();
-		var exists = '';
-		$(name + ' option').each(function(){
-			if(this.text == celejmeno || this.text == tmpString + celejmeno ||
-					this.text == celejmeno + ', ' + $(name + ' .year').val() || 
-					this.text == tmpString + celejmeno + ', ' + $(name + ' .year').val()) {
-				exists = this.value;
-				return false;
-			}
-		});
-		if(exists !== '') {
+	var celejmeno = $(name + ' .jmeno').val() + ' ' + $(name + ' .prijmeni').val();
+	if(celejmeno == ' ') {
+		return false;
+	}
+	$(name + ' option').each(function(){
+		if(this.text == celejmeno || this.text == (celejmeno + ', ' + $(name + ' .year').val())) {
 			$(name + ' .new').slideUp();
-			$(name + ' select').val(exists);
+			$(name + ' select').val(this.value);
 			return false;
 		}
-		$.ajax({
-			type: 'POST',
-			url: '/admin/users/temporary?ajax=ajax',
-			data: {jmeno: $(name + ' .jmeno').val(),prijmeni: $(name + ' .prijmeni').val(),
-				,narozeni:
-				($(name + ' .year').val() + '-' + $(name + ' .month').val() + '-' + $(name + ' .day').val())},
-			beforeSend: function(){ $(name + ' .new').slideUp();$(name + ' .loading').slideDown();},
-			complete: function(){
-				$(name + ' .loading').slideUp();
-			},
-			success: function(data){
-				data = JSON.parse(data);
-				var id = (type == 'par') ? data.par_id : data.user_id;
-				var fullname = ((data.temporary == 1) ? tmpString : '') + data.jmeno + ' ' + data.prijmeni;
-				
-				$(name + ' select').append('<option value=\"' + id + '\" selected=\"selected\">' +
-					fullname + ', ' + data.rok + '</option>');
-				$(name + ' select').val(id);
-			}
-		});
-	}
+	});
+	$.ajax({
+		type: 'POST',
+		url: '/admin/users/temporary?ajax=ajax',
+		data: {
+			jmeno: $(name + ' .jmeno').val(),
+			prijmeni: $(name + ' .prijmeni').val(),
+			narozeni: ($(name + ' .year').val() + '-' + $(name + ' .month').val() + '-' + $(name + ' .day').val())
+		},
+		beforeSend: function(){ $(name + ' .new').slideUp();$(name + ' .loading').slideDown();},
+		success: function(data){
+			data = JSON.parse(data);
+			var id = (type == 'par') ? data.par_id : data.user_id;
+			var fullname = data.jmeno + ' ' + data.prijmeni;
+			
+			$(name + ' select').append('<option value=\"' + id + '\" selected=\"selected\">' +
+				fullname + ', ' + data.rok + '</option>');
+			$(name + ' select').val(id);
+			$(name + ' .loading').slideUp();
+		}
+	});
 	return false;
 });
-});";
-			$out .= '</script>';
+});
+</script>";
 		}
 		
 		$out .= '<select name="' . $this->name . '">' . "\n";
@@ -151,8 +133,6 @@ $(name + ' .new button').click(function(){
 				$out .= '<option value="' . $id . '" selected="selected">';
 			else
 				$out .= '<option value="' . $id . '">';
-			$out .= (($this->tmpSwitch === true && isset($user[$this->tmpVar]) && $user[$this->tmpVar]) ?
-				$this->tmpString : '');
 			$out .= $user[$this->jmeno] . ' ' . $user[$this->prijmeni] .
 				(isset($user['u_narozeni']) ? (', ' . $year) : '');
 			$out .= '</option>' . "\n";

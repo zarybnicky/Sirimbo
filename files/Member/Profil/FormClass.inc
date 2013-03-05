@@ -1,7 +1,7 @@
 <?php
 header_minor("Změna třídy a bodů");
 
-if(isset($f))
+if(is_object($f))
 	notice(implode('<br/>', $f->getMessages()));
 ?>
 <form action="<?php echo $_SERVER["REQUEST_URI"];?>" method="post">

@@ -10,6 +10,19 @@ class Controller_Admin_Inzerce implements Controller_Interface {
 		}
 		
 		switch(post("action")) {
+			case 'save':
+				$items = DBInzerce::getInzerce(false, true);
+				
+				foreach($items as $item) {
+					$id = $item['i_id'];
+					if((bool) post($id) == $item['i_visible'])
+						continue;
+					
+					DBInzerce::editInzerat($item['i_id'], $item['i_kat'], $item['i_reg'], $item['i_jmeno'],
+						$item['i_prijmeni'], $item['i_nadpis'], $item['i_text'], serialize(array()), $item['i_od'],
+						$item['i_do'], $item['i_pass'], post($id) ? '1' : '0', $item['i_confirmed']);
+				}
+				break;
 			case 'edit':
 				$inzerce = post('inzerce');
 				if($inzerce[0])

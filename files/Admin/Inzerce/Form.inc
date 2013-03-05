@@ -6,7 +6,7 @@ else
 	header_minor('Upravit inzerát');
 
 notice(View::getRedirectMessage());
-if(isset($f))
+if(is_object($f))
 	notice(implode('<br/>', $f->getMessages()));
 ?>
 <form action="<?php echo Request::getURI();?>" method="POST">

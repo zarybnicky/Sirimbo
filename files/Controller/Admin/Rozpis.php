@@ -9,6 +9,16 @@ class Controller_Admin_Rozpis implements Controller_Interface {
 			return;
 		}
 		switch(post('action')) {
+			case 'save':
+				$items = DBRozpis::getRozpis();
+				
+				foreach($items as $item) {
+					$id = $item['r_id'];
+					if((bool) post($id) !== (bool) $item['r_visible'])
+						DBRozpis::editRozpis($id, $item['r_trener'], $item['r_kde'],
+							$item['r_datum'], post($id) ? '1' : '0', $item['r_lock']);
+				}
+				break;
 			case 'edit':
 				$rozpis = post('rozpis');
 				if($rozpis[0])

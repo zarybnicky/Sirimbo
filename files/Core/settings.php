@@ -288,14 +288,9 @@ public static $sekce = array(
 			'clenove'	=> 'Členové',
 			'profil/*'	=> 'Profil'
 		),
-	'forum'		=> array(
-		),
 	'fotogalerie'	=> array(
 		),
 	'home'		=> array(
-			'zajemci'	=> 'Noví zájemci',
-			'ankety'	=> 'Ankety',
-			'odkazy'	=> 'Odkazy'
 		),
 	'inzerce'	=> array(
 			'posledni'	=> 'Nejnovější inzeráty',
