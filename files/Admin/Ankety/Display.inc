@@ -25,7 +25,7 @@ foreach($ankety as $item) {
 		echo '<td><input type="checkbox" name="ankety[]" value="' .
 			'" disabled="disabled" /></td>';
 	echo '<td>', $item['ak_jmeno'], '</td>';
-	echo '<td>' . ($item['ak_visible'] ? '&#10003;' : '') . '</td>';
+	echo '<td>' . getCheckbox($item['ak_id'], '1', $item['ak_visible']) . '</td>';
 	echo '</tr>';
 }
 ?>

@@ -2,7 +2,7 @@
 header_main('Klubové akce');
 
 notice(View::getRedirectMessage());
-if(isset($f))
+if(is_object($f))
 	notice($f->getMessages());
 
 echo '<style type="text/css">';

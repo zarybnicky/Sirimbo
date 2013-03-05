@@ -21,13 +21,15 @@ if(!TISK) {
 <td>Jméno</td>
 <td>Místo</td>
 <td>Datum</td>
+<td>Účastníci</td>
 </tr>
 <?php
 $akce = DBAkce::getAkce();
 
 foreach($akce as $item) {
+	$items = DBAkce::getAkceItems($item['a_id']);
+
 	echo '<tr>';
-	
 	echo '<td><input type="checkbox" name="akce[]" value="', $item['a_id'], '" /></td>';
 	echo '<td>', $item['a_jmeno'], '</td>';
 	echo '<td>', $item['a_kde'], '</td>';
@@ -35,6 +37,7 @@ foreach($akce as $item) {
 	if($item['a_od'] != $item['a_do'])
 		echo ' - ', formatDate($item['a_do']);
 	echo '</td>';
+	echo '<td>', count($items), '/', $item['a_kapacita'], '</td>';
 	echo '</tr>';
 }
 ?>

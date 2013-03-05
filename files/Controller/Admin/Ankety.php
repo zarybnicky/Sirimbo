@@ -10,6 +10,15 @@ class Controller_Admin_Ankety implements Controller_Interface {
 		}
 		
 		switch(post("action")) {
+			case 'save':
+				$items = DBAnkety::getAnkety();
+				
+				foreach($items as $item) {
+					$id = $item['ak_id'];
+					if((bool) post($id) != $item['ak_visible'])
+						DBAnkety::editAnketa($id, $item['ak_jmeno'], $item['ak_text'], $item['ak_kdo'], post($id) ? '1' : '0');
+				}
+				break;
 			case 'edit':
 				$ankety = post('ankety');
 				if($ankety[0])
