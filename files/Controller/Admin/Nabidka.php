@@ -9,6 +9,17 @@ class Controller_Admin_Nabidka implements Controller_Interface {
 			return;
 		}
 		switch(post('action')) {
+			case 'save':
+				$items = DBNabidka::getNabidka();
+				
+				foreach($items as $item) {
+					$id = $item['n_id'];
+					if((bool) post($id) !== (bool) $item['n_visible'])
+						DBNabidka::editNabidka($id, $item['n_trener'], $item['n_pocet_hod'],
+							$item['n_max_pocet_hod'], $item['n_od'], $item['n_do'], post($id) ? '1' : '0', $item['n_lock']);
+				}
+				break;
+				
 			case 'edit':
 				$nabidka = post('nabidka');
 				if($nabidka[0])

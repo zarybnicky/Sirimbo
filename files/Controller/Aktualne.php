@@ -8,20 +8,20 @@ class Controller_Aktualne implements Controller_Interface  {
         $this->posledni(null);
     }
     function posledni($id = null) {
-        $this->_aktuality("Nejnovější články");
+        $this->_aktualne("Nejnovější články");
     }
     function videa($id = null) {
-        $this->_aktuality('Videa', AKTUALITY_VIDEA);
+        $this->_aktualne('Videa', AKTUALITY_VIDEA);
     }
     function clanky($id = null) {
-        $this->_aktuality('Články', AKTUALITY_CLANKY);
+        $this->_aktualne('Články', AKTUALITY_CLANKY);
     }
     function kratke_zpravy($id = null) {
-        $this->_aktuality('Krátké zprávy', AKTUALITY_KRATKE);
+        $this->_aktualne('Krátké zprávy', AKTUALITY_KRATKE);
     }
     
-    private function aktualne($nadpis = "", $type = null) {
-        header_main('Aktuality');
+    private function _aktualne($nadpis = "", $type = null) {
+        header_main('Aktuálně');
         header_minor($nadpis);
         
         if($type !== null)

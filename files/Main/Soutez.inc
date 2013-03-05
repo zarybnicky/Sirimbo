@@ -39,7 +39,7 @@ table.k {margin:0 auto;}
 table.k td.r {padding-right:10px;text-align:right;}
 </style>
 <?php
-if(isset($f) && !$f->isValid()) {
+if(is_object($f) && !$f->isValid()) {
 	notice(implode('<br/>', $f->getMessages()));
 }
 ?>

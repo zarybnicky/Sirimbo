@@ -6,7 +6,7 @@ else
 	header_minor("Upravit platbu");
 
 notice(View::getRedirectMessage());
-if(isset($f))
+if(is_object($f))
 	notice(implode('<br/>', $f->getMessages()));
 
 $skupiny = DBSkupiny::getSkupiny();
@@ -20,8 +20,16 @@ foreach($skupiny as $skupina) {
 		'<td>', $skupina['us_platba_ctvrtrok'], '</td>',
 		'<td>', $skupina['us_platba_pulrok'], '</td></tr>';
 }
-echo '</table>';
-echo '</div>';
+if(get('u') && is_numeric(get('u')) && ($user = DBUser::getUserData(get('u')))) { 
+	echo '</table>';
+	echo '</div>';
+	echo '<div style="float:right;width:350px;">';
+	echo '<table style="float:right;">';
+	echo '<td>Jméno</td><td>', $user['u_prijmeni'], ', ', $user['u_jmeno'], '</td>';
+	echo '<td>Skupina</td><td>', getColorBox($skupina['us_color'], $skupina['us_popis']), '</td>';
+	echo '</table>';
+	echo '</div>';
+}
 ?>
 <form action="<?php echo Request::getURI(); ?>" method="POST">
 <table>

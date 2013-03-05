@@ -39,7 +39,7 @@ foreach($inzerce as $item) {
 		case INZERCE_PARTNERKA: echo 'Hledám partnerku'; break;
 	}
 	echo '</td>';
-	echo '<td>' . ($item['i_visible'] ? '&#10003;' : '') . '</td>';
+	echo '<td>' . getCheckbox($item['i_id'], '1', $item['i_visible']) . '</td>';
 	echo '</tr>';
 }
 ?>

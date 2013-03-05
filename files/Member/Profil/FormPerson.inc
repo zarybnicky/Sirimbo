@@ -1,7 +1,7 @@
 <?php
 header_minor("Osobní údaje");
 
-if(isset($f))
+if(is_object($f))
 	notice(implode('<br/>', $f->getMessages()));
 ?>
 <form action="<?php echo Request::getURI() ?>" method="POST">

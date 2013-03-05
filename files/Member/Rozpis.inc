@@ -1,6 +1,6 @@
 <?php
 header_main('Rozpis tréninků');
-if(isset($f))
+if(is_object($f))
 	notice($f->getMessages());
 
 $rozpis = DBRozpis::getRozpis();

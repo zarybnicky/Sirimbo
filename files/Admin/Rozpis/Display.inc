@@ -10,7 +10,8 @@ if(!TISK) {
 		->content('Přidat', 'rozpis/add')
 		->content('Upravit', 'edit', true)
 		->content('Upravit tréninky', 'edit_detail', true)
-		->content('Odstranit', 'remove', true);
+		->content('Odstranit', 'remove', true)
+		->content('Uložit změny', 'save', true);
 }
 ?>
 <div style="margin-right:150px;">
@@ -38,7 +39,7 @@ foreach($rozpis as $item) {
 	echo '</td>';
 	echo '<td>', formatDate($item['r_datum']),  '</td>';
 	echo '<td>', $item['r_kde'], '</td>';
-	echo '<td>', ($item['r_visible'] ? '&#10003;' : ''), '</td>';
+	echo '<td>', getCheckbox($item['r_id'], '1', $item['r_visible']), '</td>';
 	echo '</tr>';
 }
 ?>
