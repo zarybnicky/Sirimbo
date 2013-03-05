@@ -116,7 +116,7 @@ class DBUser extends Database implements Pagable {
 		"SELECT users.*,p1.*,users_skupiny.* FROM users
 			LEFT JOIN users_platby p1 ON up_id_user=u_id
 			LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
-			LEFT JOUN permissions ON u_level=pe_id
+			LEFT JOIN permissions ON u_level=pe_id
 		WHERE u_id='$id' AND (p1.up_id IS NULL OR
             (p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
 			(p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2

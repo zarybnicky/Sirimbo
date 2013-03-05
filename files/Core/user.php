@@ -48,9 +48,6 @@ class User {
 			$data = DBUser::getUserData($id);
 		$par = DBPary::getLatestPartner($data['u_id'], $data['u_pohlavi']);
 		
-		foreach(Settings::$permissions as $key => $item)
-			$_SESSION['permissions'][$key] = $data['pe_' . $key];
-		
 		$_SESSION["level"] = $data['u_level'];
 		$_SESSION["id"] = $data['u_id'];
 		$_SESSION["user"] = strtolower($data['u_login']);
