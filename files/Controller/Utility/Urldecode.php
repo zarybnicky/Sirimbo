@@ -1,5 +1,5 @@
 <?php
-class Controller_Utility_Urldecode implements Controller_Interface {
+class Controller_Utility_Urldecode extends Controller_Abstract {
 	function view($id = null) {
 		echo '<form action="', Request::getURI(), '" method="GET">';
 		header_main('URL Decode');

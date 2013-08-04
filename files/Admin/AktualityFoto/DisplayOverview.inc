@@ -18,6 +18,8 @@ echo '</form>';
 echo '<form action="', Request::getURI(), '" method="post">';
 echo '<button type="submit" name="action" value="enter" style="display:none;">Enter</button>';
 
+//XXX:W.I.P.
+
 dumpVar($_POST);
 
 $items[] = array('af_id' => 1, 'af_path' => './galerie/xichty treneru/jerry.jpg');

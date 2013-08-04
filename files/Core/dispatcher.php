@@ -29,6 +29,8 @@ class Dispatcher {
 		if(!($controller instanceof Controller_Interface))
 			throw new Exception('Controller class "' . $controller . '" not instance of Controller_Interface');
 
+		View::$controller = $controller;
+		
 		$action  = str_replace('-', '_', $action);
 
 		if(method_exists($controller, $action)) {

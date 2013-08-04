@@ -1,5 +1,5 @@
 <?php
-class Controller_Ankety implements Controller_Interface {
+class Controller_Ankety extends Controller_Abstract {
     function view($id = null) {
         if(!empty($_POST)) {
         	$ip = getIP();
@@ -18,6 +18,9 @@ class Controller_Ankety implements Controller_Interface {
         	notice('Žádné ankety');
         	return;
         }
+    }
+    function sidebar() {
+    	
     }
 }
 ?>

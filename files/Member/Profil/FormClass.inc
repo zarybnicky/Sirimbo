@@ -1,7 +1,7 @@
 <?php
 header_minor("Změna třídy a bodů");
 
-if(is_object($f))
+if(isset($f) && is_object($f))
 	notice(implode('<br/>', $f->getMessages()));
 ?>
 <form action="<?php echo $_SERVER["REQUEST_URI"];?>" method="post">
@@ -39,12 +39,12 @@ if(is_object($f))
 <tr>
 	<td>Body:</td>
 	<td><input type="text" name="lat-body" value="<?php echo post('lat-body');?>" /></td>
-	<td>0 až 200</td>
+	<td>0 až 1000</td>
 </tr>
 <tr>
 	<td>Finále:</td>
 	<td><input type="text" name="lat-finale" value="<?php echo post('lat-finale');?>" /></td>
-	<td>0 až 5</td>
+	<td>0 až 10</td>
 </tr>
 </table>
 <button type="submit" name="action">Změnit třídu a body</button>

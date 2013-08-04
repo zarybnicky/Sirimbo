@@ -1,5 +1,6 @@
 <?php
-class Controller_Admin_Novinky implements Controller_Interface {
+include_once('files/Controller/Admin.php');
+class Controller_Admin_Novinky extends Controller_Admin {
 	function __construct() {
 		Permissions::checkError('nastenka', P_OWNED);
 	}

@@ -27,9 +27,8 @@
 				
 				if(!User::login(post('login'), post('pass'))) {
 					View::redirect('/login', 'Špatné jméno nebo heslo!', true);
-				} elseif(strpos(Request::getURI(), 'error') && get('id') == ER_AUTHORIZATION &&
-						strpos(Request::getReferer(), 'member')) {
-					View::redirect(Request::getReferer());
+				} elseif(get('return')) {
+					View::redirect(get('return'));
 				} else {
 					View::redirect('/member/home');
 				}
@@ -79,7 +78,9 @@
 	</div>
 	<div id="main">
 		<div class="container">
-			<div id="sidebar">
+			<div id="sidebar"><?php
+					View::$controller->sidebar();
+					/*?>
 				<div class="dark-out"><div class="dark-in"><span class="logo"></span>Menu</div></div>
 				<div id="sidemenu">
 					<ul>
@@ -129,7 +130,7 @@
 				?>
 					</ul>
 				</div>
-				<?php
+				<?php */
 				if(!Database::isDatabaseError()) {
 					ob_start();
 					$result = DisplayAnkety::viewAnkety(true, true, getIP());
@@ -143,7 +144,11 @@
 					}
 				}
 				?>
-                <div><a href="https://www.facebook.com/groups/44213111683/" target="_blank"><img alt="" src="/style/fb-logo.png" /></a></div>
+                <div>
+                	<a href="https://www.facebook.com/groups/44213111683/" target="_blank">
+                		<img alt="" src="/style/fb-logo.png" />
+                	</a>
+                </div>
                 <!--
 				<div class="dark-out"><div class="dark-in"><span class="logo"></span>Sponzoři</div></div>
 				<div class="light-out"><div class="light-in">

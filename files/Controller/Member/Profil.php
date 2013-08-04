@@ -1,5 +1,6 @@
 <?php
-class Controller_Member_Profil implements Controller_Interface {
+include_once('files/Controller/Member.php');
+class Controller_Member_Profil extends Controller_Member {
 	function __construct() {
 		Permissions::checkError('nastenka', P_VIEW);
 	}

@@ -1,5 +1,8 @@
 <?php
-class Controller_Nopassword implements Controller_Interface {
+class Controller_Nopassword extends Controller_Abstract {
+	function sidebar() {
+		
+	}
     function view($id = null) {
         if(post('action') == 'gen_pass' || post('action') == 'enter') {
         	post('name', strtolower(post('name')));
