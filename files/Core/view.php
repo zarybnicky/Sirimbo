@@ -1,5 +1,7 @@
 <?php
 class View {
+	public static $controller;
+	
 	public static function viewString($l) {
 		include(TISK ? HEADER_TISK : HEADER);
 		echo $l;

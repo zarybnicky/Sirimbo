@@ -1,5 +1,8 @@
 <?php
-class Controller_Registrace implements Controller_Interface {
+class Controller_Registrace extends Controller_Abstract {
+	function sidebar() {
+		
+	}
     function view($id = null) {
         if(!empty($_POST)) {
         	$narozeni = Helper::get()->date()->name('narozeni')->getPost();

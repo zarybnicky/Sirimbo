@@ -1,5 +1,6 @@
 <?php
-class Controller_Member_Profil_Inzerce implements Controller_Interface {
+include_once('files/Controller/Member/Profil.php');
+class Controller_Member_Profil_Inzerce extends Controller_Member_Profil {
 	function view($id = null) {
 		echo '<a href="/member/profil/inzerce/add">Přidat</a><br/>';
 		$result = DisplayInzerce::viewInzerce(false, true, INZERCE_ALL, 0, User::getUserID());

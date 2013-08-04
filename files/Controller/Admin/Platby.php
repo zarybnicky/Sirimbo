@@ -1,5 +1,6 @@
 <?php
-class Controller_Admin_Platby implements Controller_Interface {
+include_once('files/Controller/Admin.php');
+class Controller_Admin_Platby extends Controller_Admin {
 	function __construct() {
 		Permissions::checkError('platby', P_OWNED);
 	}
@@ -37,8 +38,12 @@ class Controller_Admin_Platby implements Controller_Interface {
 		$obdobi = post('obdobi');
 		list($year, $month, $day) = explode('-', $placeno);
 		
-		$plati_od = $year . Settings::$platby_obdobi[$obdobi][0];
-		if(strcmp($placeno, $year . '-06-30') < 0 &&
+		if(strcmp($placeno, $year . '-06-30') <= 0)
+			$plati_od = ($year - 1) . Settings::$platby_obdobi[$obdobi][0];
+		else
+			$plati_od = $year . Settings::$platby_obdobi[$obdobi][0];
+		
+		if(strcmp($placeno, $year . '-06-30') <= 0 &&
 				$obdobi == '1-ctvrtleti') {
 			$year = (string) (((int) $year) - 1);
 		} elseif(strcmp($placeno, $year . '-07-01') >= 0 &&
@@ -88,8 +93,12 @@ class Controller_Admin_Platby implements Controller_Interface {
 		
 		$obdobi = post('obdobi');
 		list($year, $month, $day) = explode('-', $placeno);
+
+		if(strcmp($placeno, $year . '-06-30') <= 0)
+			$plati_od = ($year - 1) . Settings::$platby_obdobi[$obdobi][0];
+		else
+			$plati_od = $year . Settings::$platby_obdobi[$obdobi][0];
 		
-		$plati_od = $year . Settings::$platby_obdobi[$obdobi][0];
 		if(strcmp($placeno, $year . '-06-30') < 0 &&
 				$obdobi == '1-ctvrtleti') {
 			$year = (string) (((int) $year) - 1);

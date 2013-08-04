@@ -1,8 +1,24 @@
 <?php
+session_start();
+session_regenerate_id();
+
+/*/debug
+if(stripos($_GET['file'], 'cookie_set') !== false) {
+	setcookie('debug', '1', 0, '/');
+	header('Location: /');
+	return;
+}
+if(!isset($_COOKIE['debug'])) {
+	include('index2.php');
+	return;
+}
+//end_debug*/
+
 include("files/Core/settings.php");
 include("files/Core/log.php");
 include("files/Core/form.php");
 include("files/Core/cache.php");
+include("files/Core/sidebar.php");
 include("files/Core/database.php");
 include("files/Core/database/dbuser.php");
 include("files/Core/view.php");
@@ -14,17 +30,15 @@ include("files/Core/paging.php");
 include("files/Core/mailer.php");
 include("files/Core/dispatcher.php");
 include("files/Controller/Interface.php");
+include("files/Controller/Abstract.php");
 include("files/Core/debug.php");		//DEBUG ONLY!!!
 
 define('TISK', (isset($_GET['view']) && $_GET['view'] == 'tisk') ? TRUE : FALSE);
 
-session_start();
-session_regenerate_id();
-
 //Are all CORE vars present?
-if(!isset($sitemap_static) || !isset($sitemap_dynamic) || !class_exists("Database") ||
-		!class_exists("DBUser") || !class_exists("User") || !class_exists("View") || !class_exists("Log") ||
-		!class_exists("Permissions") || !class_exists("Mailer") || !class_exists("Request")) {
+if(!class_exists("Database") || !class_exists("DBUser") || !class_exists("User") ||
+		!class_exists("View") || !class_exists("Log") || !class_exists("Permissions") ||
+		!class_exists("Mailer") || !class_exists("Request")) {
 	if(class_exists("View")) {
 		View::viewDynamic("files/Error/KeyFileCorrupt.inc");
 		die();
@@ -33,9 +47,10 @@ if(!isset($sitemap_static) || !isset($sitemap_dynamic) || !class_exists("Databas
 	}
 }
 
+Request::setDefault('home');
 Request::setURL(get('file'));
 Request::setURI($_SERVER['REQUEST_URI']);
-$file = Request::getLiteralURL('home');
+$file = Request::getLiteralURL();
 unset($_GET['file']);
 
 if(TISK) {
@@ -54,6 +69,9 @@ if(session('login')) {
 			Request::getURL() !== 'member/profil/edit' && Request::getURL() !== 'logout')
 		View::redirect('/member/profil/edit', 'Prosím vyplňte požadované údaje.', true);
 }
+
+if(Request::getURI() === '' || Request::getURI() === '/')
+	View::redirect('/home');
 
 ob_start();
 ob_start();

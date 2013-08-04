@@ -1,5 +1,6 @@
 <?php
-class Controller_Admin_Ankety implements Controller_Interface {
+include_once('files/Controller/Admin.php');
+class Controller_Admin_Ankety extends Controller_Admin {
 	function __construct() {
 		Permissions::checkError('ankety', P_OWNED);
 	}

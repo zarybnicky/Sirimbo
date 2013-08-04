@@ -1,5 +1,6 @@
 <?php
-class Controller_Member_Akce implements Controller_Interface {
+include_once('files/Controller/Member.php');
+class Controller_Member_Akce extends Controller_Member {
 	function __construct() {
 		Permissions::checkError('akce', P_VIEW);
 	}
@@ -15,7 +16,7 @@ class Controller_Member_Akce implements Controller_Interface {
         }
         if(!empty($_POST) && post('id') &&
         		($data = DBAkce::getSingleAkce(post('id'))) &&
-        		!is_object($f = $this->checkData($_POST))) {
+        		!is_object($f = $this->checkData($data, post('action')))) {
         	if(post('action') == 'signup') {
         		DBAkce::signUp(User::getUserID(), post('id'), User::getDatumNarozeni());
         	} elseif(post('action') == 'signout') {
@@ -27,7 +28,7 @@ class Controller_Member_Akce implements Controller_Interface {
 	private function checkData($data, $action) {
 		$f = new Form();
 		$f->checkBool(!$data['a_lock'], 'Tato akce je zamčená', '');
-		$f->checkInArray(post('action'), array('signup', 'signout'), 'Špatná akce', '');
+		$f->checkInArray($action, array('signup', 'signout'), 'Špatná akce', '');
 		$f->checkNumeric(post('id'), 'Špatné ID', '');
 		
 		return $f->isValid() ? true : $f;

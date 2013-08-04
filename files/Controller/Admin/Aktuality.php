@@ -1,5 +1,6 @@
 <?php
-class Controller_Admin_Aktuality implements Controller_Interface {
+include_once('files/Controller/Admin.php');
+class Controller_Admin_Aktuality extends Controller_Admin {
 	function __construct() {
 		Permissions::checkError('aktuality', P_OWNED);
 	}

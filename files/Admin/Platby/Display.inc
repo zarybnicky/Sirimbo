@@ -50,12 +50,14 @@ $pager->setDefaultItemsPerPage(20);
 $pager->setPageRange(5);
 $items = $pager->getItems();
 
-$users = DBUser::getUsers();
-$pages = $pager->getPages();
-$total = count($users);
-$zaplatili = $pages['total'];
-echo 'Z celkového počtu <span class="big">' . $total .
-	'</span> zaplatilo <span class="big">' . $zaplatili .  '</span> uživatelů.<br/><br/>';
+if(get('f') && get('f') !== 'all') {
+	$users = DBUser::getUsers();
+	$pages = $pager->getPages();
+	$total = count($users);
+	$zaplatili = $pages['total'];
+	echo 'Z celkového počtu <span class="big">' . $total .
+		'</span> zaplatilo <span class="big">' . $zaplatili .  '</span> uživatelů.<br/><br/>';
+}
 
 echo '<form action="', Request::getURI(), '" method="POST">';
 if(!TISK) {

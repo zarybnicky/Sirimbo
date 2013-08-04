@@ -1,5 +1,5 @@
 <?php
-class Controller_Home implements Controller_Interface {
+class Controller_Home extends Controller_Abstract {
 	function view($id = null) {
 		if(NABOR && $_SERVER['REQUEST_URI'] == '/')
 			View::redirect('/nabor');

@@ -59,7 +59,7 @@ if(get('v') == 'info') {
 			unset($skupiny[$key]);
 			continue;
 		}
-		$skupina['users'] = DBUser::getUsersBySkupina($skupina['us_id']);
+		$skupina['users'] = DBUser::getUsersBySkupina($skupina['us_id'], true);
 	}
 	unset($skupina);
 	function sortByLength($arr1, $arr2) {
@@ -85,7 +85,7 @@ if(get('v') == 'info') {
 			header_minor(getColorBox($skupina['us_color'], $skupina['us_popis']) .
 				'&nbsp;&nbsp;' . $skupina['us_popis']);
 			
-			$users = DBUser::getUsersBySkupina($skupina['us_id']);
+			$users = DBUser::getUsersBySkupina($skupina['us_id'], true);
 			if(empty($users)) {
 				echo '<br/>';
 				continue;

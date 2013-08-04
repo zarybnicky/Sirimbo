@@ -1,5 +1,8 @@
 <?php
-class Controller_Kontakt implements Controller_Interface {
+class Controller_Kontakt extends Controller_Abstract {
+	function sidebar() {
+		
+	}
     function view($id = null) {
         header_main('Kontakty');
         ?>

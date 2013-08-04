@@ -1,5 +1,6 @@
 <?php
-class Controller_Admin_Users implements Controller_Interface {
+include_once('files/Controller/Admin.php');
+class Controller_Admin_Users extends Controller_Admin {
 	function __construct() {
 		Permissions::checkError('users', P_OWNED);
 	}
@@ -27,7 +28,7 @@ class Controller_Admin_Users implements Controller_Interface {
 					if($group['pe_id'])
 						$filter[] = $group['pe_id'];
 				
-				$options['filter'] = in_array(get('f'), array_merge(array('dancer', 'system', 'all', 'unconfirmed', 'ban')), $filter) ?
+				$options['filter'] = in_array(get('f'), array_merge(array('dancer', 'system', 'all', 'unconfirmed', 'ban'), $filter)) ?
 					get('f') : 'all';
 				$pager = new Paging(new PagingAdapterDBSelect('DBUser', $options));
 				$pager->setCurrentPageField('p');
@@ -77,6 +78,8 @@ class Controller_Admin_Users implements Controller_Interface {
 			include('files/Admin/Users/Form.inc');
 			return;
 		}
+		$narozeni = Helper::get()->date()->name('narozeni')->getPost();
+		
 		DBUser::addUser(strtolower(post('login')), User::Crypt(post('pass')), post('jmeno'), post('prijmeni'),
 			post('pohlavi'), post('email'), post('telefon'), $narozeni,
 			post('poznamky'), post('group'), post('skupina'), post('dancer') ? '1' : '0',
@@ -200,7 +203,8 @@ class Controller_Admin_Users implements Controller_Interface {
 		
 		if(!($id = DBUser::getUserID($login))) {
 			list($user_id, $par_id) = DBUser::addTemporaryUser($login, $jmeno, $prijmeni, $narozeni);
-		
+			
+			header('Content-Type: application/json');
 			echo json_encode(array('user_id' => $user_id, 'par_id' => $par_id, 'jmeno' => $jmeno,
 				'prijmeni' => $prijmeni, 'narozeni' => $narozeni, 'rok' => $rok));
 		} else {
@@ -211,6 +215,8 @@ class Controller_Admin_Users implements Controller_Interface {
 				$par_id = $partner['p_id'];
 			}
 			$narozeni = explode('-', $data['u_narozeni']);
+			
+			header('Content-Type: application/json');
 			echo json_encode(array('user_id' => $data['u_id'], 'par_id' => $par_id, 'jmeno' => $data['u_jmeno'],
 				'prijmeni' => $data['u_prijmeni'], 'narozeni' => $data['u_narozeni'],
 				'rok' => array_shift($narozeni)));

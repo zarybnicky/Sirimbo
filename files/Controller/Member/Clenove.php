@@ -1,5 +1,6 @@
 <?php
-class Controller_Member_Clenove implements Controller_Interface {
+include_once('files/Controller/Member.php');
+class Controller_Member_Clenove extends Controller_Member {
 	function __construct() {
 		Permissions::checkError('users', P_VIEW);
 	}

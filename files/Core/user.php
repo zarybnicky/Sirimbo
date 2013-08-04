@@ -19,10 +19,12 @@ class User {
 			$_SESSION["login"] = 1;
 			User::loadUser($data['u_id'], $data);
 			
-			if(!preg_match("/^[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i", $data['u_email']) ||
+			if((!preg_match("/^[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i", $data['u_email']) ||
 					!preg_match("/^((\+|00)\d{3})?( ?\d{3}){3}$/", $data['u_telefon']) ||
 					!preg_match("/^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/",
-						$data['u_narozeni'])) {
+						$data['u_narozeni'])) &&
+					!stripos(Request::getURI(), '/member/profil/edit') &&
+					!stripos(Request::getURI(), '/error')) {
 				$_SESSION['invalid_data'] = 1;
 				View::redirect('/member/profil/edit', 'Prosím vyplňte požadované údaje.', true);
 			} else {
@@ -69,7 +71,7 @@ class User {
 		$_SESSION['par'] = $par['p_id'];
 		$_SESSION['partner'] = $par['u_id'];
 		$_SESSION['zaplaceno'] =
-			(bool) (strcmp($data['up_plati_do'], date('Y-m-d', strtotime('+ 14 days'))) >= 0);
+			(bool) (strcmp($data['up_plati_do'], date('Y-m-d', strtotime('- 14 days'))) >= 0);
 		return true;
 	}
 	
@@ -82,7 +84,7 @@ class User {
 			if($module)
 				return P_ADMIN;
 			return $_SESSION['permissions'];
-		} elseif(User::getUserGroup() == 1) {
+		} elseif(User::getUserGroup() == 0) {
 			if($module)
 				return P_NONE;
 			return $_SESSION['permissions'];

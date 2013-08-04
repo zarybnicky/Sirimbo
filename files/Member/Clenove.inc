@@ -22,7 +22,7 @@ if(get('f') == 'skupiny') {
 			unset($skupiny[$key]);
 			continue;
 		}
-		$skupina['users'] = DBUser::getUsersBySkupina($skupina['us_id']);
+		$skupina['users'] = DBUser::getUsersBySkupina($skupina['us_id'], true);
 	}
 	unset($skupina);
 	function sortByLength($arr1, $arr2) {

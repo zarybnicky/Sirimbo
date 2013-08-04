@@ -6,12 +6,24 @@ else
 	header_minor("Upravit platbu");
 
 notice(View::getRedirectMessage());
-if(is_object($f))
+if(isset($f) && is_object($f))
 	notice(implode('<br/>', $f->getMessages()));
 
 $skupiny = DBSkupiny::getSkupiny();
-echo '<div style="float:right;width:350px;">';
-echo '<table style="float:right;">';
+
+$aktualni = Request::getAction() == 'edit' ? post('user') : get('u');
+if($aktualni && is_numeric($aktualni) && ($user = DBUser::getUserData($aktualni))) { 
+	echo '<div style="float:right;width:350px;">';
+	echo '<div class="h_minor" style="float:right;">Aktuální uživatel</div>';
+	echo '<table style="float:right;clear:right;">';
+	echo '<tr><td>Jméno</td><td>', $user['u_prijmeni'], ', ', $user['u_jmeno'], '</td></tr>';
+	echo '<tr><td>Skupina</td><td>', getColorBox($user['us_color'], $user['us_popis']), '</td></tr>';
+	echo '</table>';
+	echo '</div>';
+}
+echo '<div style="float:right;width:350px;clear:right;">';
+echo '<table style="float:right;clear:right;">';
+	echo '<div class="h_minor" style="float:right;">Přehled skupin</div>';
 echo '<tr><td>Skupina</td><td>Kč/měsíc</td><td>Kč/čtvrtrok</td><td>Kč/půlrok</td></tr>';
 foreach($skupiny as $skupina) {
 	echo '<tr><td>', getColorBox($skupina['us_color'], $skupina['us_popis']), '&nbsp;',
@@ -20,16 +32,8 @@ foreach($skupiny as $skupina) {
 		'<td>', $skupina['us_platba_ctvrtrok'], '</td>',
 		'<td>', $skupina['us_platba_pulrok'], '</td></tr>';
 }
-if(get('u') && is_numeric(get('u')) && ($user = DBUser::getUserData(get('u')))) { 
-	echo '</table>';
-	echo '</div>';
-	echo '<div style="float:right;width:350px;">';
-	echo '<table style="float:right;">';
-	echo '<td>Jméno</td><td>', $user['u_prijmeni'], ', ', $user['u_jmeno'], '</td>';
-	echo '<td>Skupina</td><td>', getColorBox($skupina['us_color'], $skupina['us_popis']), '</td>';
-	echo '</table>';
-	echo '</div>';
-}
+echo '</table>';
+echo '</div>';
 ?>
 <form action="<?php echo Request::getURI(); ?>" method="POST">
 <table>
@@ -69,7 +73,6 @@ if(get('u') && is_numeric(get('u')) && ($user = DBUser::getUserData(get('u')))) 
 			else echo 'Upravit';
 		?></button></td>
 		<td>Pole označená (*) jsou povinná</td>
-		<td></td>
 	</tr>
 </table>
 </form>
