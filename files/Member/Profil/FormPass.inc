@@ -1,7 +1,7 @@
 <?php
 header_minor("Změna hesla");
 
-if(is_object($f))
+if(isset($f) && is_object($f))
 	notice(implode('<br/>', $f->getMessages()));
 ?>
 <form action="<?php echo Request::getURI();?>" method="post">

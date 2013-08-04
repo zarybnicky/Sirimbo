@@ -1,7 +1,21 @@
 <?php
-class Controller_Member implements Controller_Interface {
+class Controller_Member extends Controller_Abstract {
 	function __construct() {
 		Permissions::checkError('nastenka', P_VIEW);
+	}
+	function sidebar() {
+		$s = new Sidebar();
+		
+		echo $s->menuHeader();
+		echo $s->menuItem('Novinky',			'/member/home');
+		echo $s->menuItem('Nástěnka',		'/member/nastenka');
+		echo $s->menuItem('Rozpis tréninků',	'/member/rozpis');
+		echo $s->menuItem('Nabidka tréninků','/member/nabidka');
+		echo $s->menuItem('Klubové akce',	'/member/akce');
+		echo $s->menuItem('Dokumenty',		'/member/dokumenty');
+		echo $s->menuItem('Žebříček',		'/member/pary');
+		echo $s->menuItem('Členové',			'/member/clenove');
+		echo $s->menuItem('Profil',			'/member/profil');
 	}
     function view($id = null)  {
         DisplayPary::viewPartnerRequests(DBPary::getPartnerRequestsForMe(User::getUserID()),

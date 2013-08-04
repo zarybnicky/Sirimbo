@@ -1,6 +1,6 @@
 <?php
 header_main('Nabídka tréninků');
-if(is_object($f))
+if(isset($f) && is_object($f))
 	notice($f->getMessages());
 
 $nabidka = DBNabidka::getNabidka();

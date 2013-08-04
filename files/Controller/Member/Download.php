@@ -1,5 +1,5 @@
 <?php
-class Controller_Member_Download implements Controller_Interface {
+class Controller_Member_Download extends Controller_Abstract {
 	function __construct() {
 		Permissions::checkError('dokumenty', P_VIEW);
 	}

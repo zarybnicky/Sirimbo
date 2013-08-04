@@ -1,5 +1,6 @@
 <?php
-class Controller_Member_Profil_Par implements Controller_Interface {
+include_once('files/Controller/Member/Profil.php');
+class Controller_Member_Profil_Par extends Controller_Member_Profil {
 	function view($id = null) {
 		notice(View::getRedirectMessage());
         
@@ -117,8 +118,7 @@ class Controller_Member_Profil_Par implements Controller_Interface {
 		echo '<form method="POST" action="' . Request::getURI() . '">';
 		echo Helper::get()->userSelect()
             ->name('partner')
-            ->users((User::getUserPohlavi() == "m") ? DBUser::getUsersByPohlavi("f") : DBUser::getUsersByPohlavi("m"))
-            ->tmpSwitch(false);
+            ->users((User::getUserPohlavi() == "m") ? DBUser::getUsersByPohlavi("f") : DBUser::getUsersByPohlavi("m"));
 		echo '<button type="submit" name="action" value="confirm">Požádat o partnerství</button>';
 		if($gotPartner)
 			echo '<button type="submit" name="action" value="dumpthem">Rozejít se</button>';

@@ -17,7 +17,6 @@ if(!TISK) {
 		->option('all', 'všichni')
 		->option('dancer', 'tanečníci')
 		->option('system', 'systémoví')
-		->option('unconfirmed', 'nepotvrzení')
 		->option('ban', 'zabanovaní');
 	foreach($groups as $group)
 		if($group['pe_id'])
@@ -73,7 +72,7 @@ foreach($groups as $group)
 
 $options['sort'] = in_array(get('s'), array('prijmeni', 'narozeni', 'var-symbol')) ?
 	get('s') : 'prijmeni';
-$options['filter'] = in_array(get('f'), array_merge(array('dancer', 'system', 'all', 'unconfirmed', 'ban')), $filter) ?
+$options['filter'] = in_array(get('f'), array_merge(array('dancer', 'system', 'all', 'unconfirmed', 'ban'), $filter)) ?
 	get('f') : 'all';
 $pager = new Paging(new PagingAdapterDBSelect('DBUser', $options));
 $pager->setCurrentPageField('p');
@@ -90,7 +89,8 @@ if(!TISK) {
 		->content('Upravit', 'edit', true)
 		->content('Odebrat', 'remove', true)
 		->content('Zobrazit platby', 'platby', true)
-		->content('Duplicitní uživatelé', '/admin/users/duplicate');
+		->content('Duplicitní uživatelé', '/admin/users/duplicate')
+		->content('Nepotvrzení uživatelé', '/admin/users/unconfirmed');
 	if(get('v') == 'status')
 		$f->content('Uložit změny', 'save', true);
 	echo $f;

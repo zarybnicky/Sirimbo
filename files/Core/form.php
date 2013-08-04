@@ -137,6 +137,8 @@ function header_minor($text, $return = false) {
 	else		return '<div class="h_minor">' . $text . '</div>' . "\n";
 }
 function getColorBox($color, $popis) {
+	if(!isset(Settings::$barvy[$color]))
+		return;
 	return '<div class="box" title="' . $popis . '" ' .
 		'style="background-color:' . Settings::$barvy[$color][1] . '"></div>';
 }

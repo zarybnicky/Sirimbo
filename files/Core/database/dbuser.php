@@ -153,7 +153,7 @@ class DBUser extends Database implements Pagable {
 		DBUser::query(
 		"INSERT INTO users
 			(u_login,u_pass,u_jmeno,u_prijmeni,u_narozeni,u_confirmed,u_temporary,u_system,u_group)
-		VALUES ('$login','','$jmeno','$prijmeni','$narozeni','1','1','0','0')");
+		VALUES ('$login','','$jmeno','$prijmeni','$narozeni','1','1','1','0')");
 		$user_id = mysql_insert_id();
 		
 		DBUser::query("INSERT INTO pary (p_id_partner, p_archiv) VALUES ('" . $user_id . "','0')");
@@ -276,18 +276,27 @@ class DBUser extends Database implements Pagable {
 		return DBUser::getArray($res);
 	}
 	
-	public static function getUsersBySkupina($skupina) {
-		list($skupina) = DBUser::escapeArray(array($skupina));
+	public static function getUsersBySkupina($skupina, $noBanned = true) {
+		list($skupina, $noBanned) = DBUser::escapeArray(array($skupina, $noBanned));
 		
 		$res = DBUser::query(
-		"SELECT users.*,p1.*,users_skupiny.* FROM users
-			LEFT JOIN users_platby p1 ON up_id_user=u_id
-			LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
-		WHERE u_skupina='$skupina' AND u_system='0' AND (p1.up_id IS NULL OR
-            (p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
-			(p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
-                WHERE p2.up_id_user=u_id) AND p1.up_plati_do < CURDATE()))
-		ORDER BY u_prijmeni");
+			"SELECT users.*,p1.*,users_skupiny.* FROM users
+				LEFT JOIN users_platby p1 ON up_id_user=u_id
+				LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
+			WHERE u_skupina='$skupina' AND u_system='0'" .
+					($noBanned ? " AND u_ban='0'" : '') . " AND (
+				(p1.up_plati_od <= CURDATE() AND p1.up_plati_do >= CURDATE()) OR
+				(
+					((p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
+						WHERE p2.up_id_user=u_id) AND p1.up_plati_do < CURDATE()) OR
+					p1.up_id IS NULL)
+					AND NOT EXISTS (
+						SELECT * FROM users_platby p2
+						WHERE p2.up_id_user=u_id AND
+							p2.up_plati_od <= CURDATE() AND p2.up_plati_do >= CURDATE())
+				)
+			)
+			ORDER BY u_prijmeni");
 		return DBUser::getArray($res);
 	}
 	

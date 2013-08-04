@@ -1,5 +1,5 @@
 <?php
-class Controller_Error implements Controller_Interface {
+class Controller_Error extends Controller_Abstract {
 	function view($id = null) {
 		header_main('Chyba');
         if(!get('id'))
@@ -8,6 +8,9 @@ class Controller_Error implements Controller_Interface {
         	notice("Chybová stránka s daným ID nebyla nalezena");
         else
         	include(Settings::$errors[get('id')]);
+	}
+	function sidebar() {
+		
 	}
 }
 ?>

@@ -5,15 +5,17 @@ unset($real_name);
 
 define('ROOT', $_SERVER['DOCUMENT_ROOT']);
 define('FILES', ROOT . DIRECTORY_SEPARATOR . 'files');
-define('CORE', FILES . DIRECTORY_SEPARATOR . 'Core');
-define('ERROR', FILES . DIRECTORY_SEPARATOR . 'Error');
-define('SETTINGS', CORE . DIRECTORY_SEPARATOR . 'settings');
 define('GALERIE', ROOT . DIRECTORY_SEPARATOR . 'galerie');
+define('CORE', FILES . DIRECTORY_SEPARATOR . 'Core');
+define('SETTINGS', CORE . DIRECTORY_SEPARATOR . 'settings');
+define('ERROR', FILES . DIRECTORY_SEPARATOR . 'Error');
 define('HEADER', FILES . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'Header.inc');
 define('FOOTER', FILES . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'Footer.inc');
 define('HEADER_TISK', FILES . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'HeaderTisk.inc');
 define('FOOTER_TISK', FILES . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'FooterTisk.inc');
+
 define('LOG', ROOT . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'error.log');
+define('DEBUG_LOG', ROOT . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'debug.log');
 define('PHP_LOG', ROOT . 'log' . DIRECTORY_SEPARATOR . 'php.log');
 
 set_include_path(
@@ -30,21 +32,21 @@ function _shutdown_handler() {
 	if (($error = error_get_last())) {
 		if($error['type'] == E_ERROR || $error['type'] == E_RECOVERABLE_ERROR) {
 			ob_clean();
-			Log::write($error['message']);
+			Log::write($error['type'] . ': ' . $error['message'] . ' in ' . $error['file'] . ': ' . $error['line']);
 			header('Location: /error?id=script_fatal');
 		}
 	}
 }
 function _exception_handler($severity, $message, $filepath, $line) {
 	if ($severity == E_STRICT) {
-		return;
+		return false;
 	}
-	log_exception($severity, $message, $filepath, $line);
+	Log::write("$severity: $message in $filepath: $line");
 	return true;
 }
 
 register_shutdown_function('_shutdown_handler');
-//set_error_handler('_exception_handler');
+set_error_handler('_exception_handler');
 
 date_default_timezone_set('Europe/Paris');
 
@@ -95,11 +97,6 @@ define('ER_NOT_APPROVED', 'not_approved');
 define('ER_NOT_FOUND_RIGHT', 'not_found_right');
 define('ER_NOT_POSSIBLE', 'not_possible');
 define('ER_SCRIPT_FATAL', 'script_fatal');
-
-//-----Barvy pro nastenku-----//
-define('C_ZLUTA', '1');
-define('C_MODRA', '2');
-define('C_CERVENA', '4');
 
 define('NOVINKY_COUNT', 10);
 define('INZERCE_COUNT', 10);
@@ -252,7 +249,6 @@ public static $permissions = array(
 		'default' => P_VIEW,
 		P_VIEW => 1)
 );
-
 public static $sekce = array(
 	'admin'		=> array(
 			'users/*'		=> array('Správa uživatelů', 'users'),
@@ -275,7 +271,7 @@ public static $sekce = array(
 			'posledni'		=> 'Nejnovější články',
 			'videa'			=> 'Videa',
 			'clanky'		=> 'Články',
-			'kratke-zpravy'	=> 'Krátké zprávy'
+			'kratkezpravy'	=> 'Krátké zprávy'
 		),
 	'member'	=> array(
 			'home'		=> 'Novinky',

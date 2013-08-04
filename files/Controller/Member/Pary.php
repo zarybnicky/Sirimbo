@@ -1,5 +1,6 @@
 <?php
-class Controller_Member_Pary implements Controller_Interface {
+include_once('files/Controller/Member.php');
+class Controller_Member_Pary extends Controller_Member {
 	function __construct() {
 		Permissions::checkError('pary', P_VIEW);
 	}

@@ -1,5 +1,6 @@
 <?php
-class Controller_Admin_Skupiny implements Controller_Interface {
+include_once('files/Controller/Admin.php');
+class Controller_Admin_Skupiny extends Controller_Admin {
 	function __construct() {
 		Permissions::checkError('skupiny', P_OWNED);
 	}
@@ -17,7 +18,7 @@ class Controller_Admin_Skupiny implements Controller_Interface {
 			case 'remove':
 				if(!is_array(post('skupiny')))
 					break;
-				$url = Request::getURI() . '/remove';
+				$url = '/admin/skupiny/remove';
 				foreach(post('skupiny') as $id)
 					$url .= '&u[]=' . $id;
 				View::redirect($url);

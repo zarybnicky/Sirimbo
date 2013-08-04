@@ -3,9 +3,17 @@ header_main('Správa anket');
 notice(View::getRedirectMessage());
 ?>
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
-<a href="/admin/ankety/add">Přidat</a>
-<button type="submit" name="action" value="edit">Upravit</button>
-<button type="submit" name="action" value="remove">Odstranit</button>
+<?php
+if(!TISK) {
+	echo Helper::get()->menu()
+		->float(MenuHelper::FLOAT_RIGHT)
+		->content('Přidat', 'ankety/add')
+		->content('Upravit', 'edit', true)
+		->content('Odstranit', 'remove', true)
+		->content('Uložit', 'save', true);
+}
+?>
+
 <table>
 <tr>
 <td></td>

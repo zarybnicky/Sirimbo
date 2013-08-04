@@ -1,5 +1,6 @@
 <?php
-class Controller_Admin_Konzole implements Controller_Interface {
+include_once('files/Controller/Admin.php');
+class Controller_Admin_Konzole extends Controller_Admin {
 	function __construct() {
 		Permissions::checkError('konzole', P_OWNED);
 	}
@@ -9,7 +10,7 @@ class Controller_Admin_Konzole implements Controller_Interface {
 			if($r === FALSE)
 				notice('Kód obsahuje syntaktickou chybu');
 			elseif(!empty($r))
-				notice(dumpVar($r));
+				notice(dump($r));
 			else
 				notice('Success!');
 		}

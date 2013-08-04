@@ -1,5 +1,6 @@
 <?php
-class Controller_Admin_Dokumenty implements Controller_Interface {
+include_once('files/Controller/Admin.php');
+class Controller_Admin_Dokumenty extends Controller_Admin {
 	function __construct() {
 		Permissions::checkError('dokumenty', P_OWNED);
 	}

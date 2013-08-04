@@ -1,9 +1,9 @@
 <?php
-class Controller_Login implements Controller_Interface {
+class Controller_Login extends Controller_Abstract {
     function view($id = null) {
 		if(User::isLogged()) {
-			if(get('redirect'))
-				View::redirect(get('redirect'));
+			if(get('return'))
+				View::redirect(get('return'));
 			else
 				View::redirect('/member/home');
 		}
@@ -26,5 +26,8 @@ class Controller_Login implements Controller_Interface {
         </form>
         <?php
     }
+    function sidebar() {
+
+	}
 }
 ?>
