@@ -51,7 +51,7 @@ class ClankyHelper {
 				$out .= '<div>';
 				list($date, $time) = explode(' ', $this->clanky[$i]['at_aktu']);
 				$out .= '<span class="big">' .
-					'<a href="/aktuality/' . $this->clanky[$i]['at_id'] . '">' .
+					'<a href="/aktualne/' . $this->clanky[$i]['at_id'] . '">' .
 					$this->clanky[$i]['at_jmeno'] .
 					'</a></span>' .
 					'<span class="little">&nbsp;(' . formatDate($date) . ')</span>';
@@ -73,7 +73,7 @@ class ClankyHelper {
 				$out .= '</div>';
 				$out .= '<p class="FeatureBlurb">' . $this->clanky[$i]['at_preview'] . '...</p>';
 				$out .= '<ul class="FeatureLinks">';
-				$out .= '<li><a href="/aktuality/' . $this->clanky[$i]['at_id'] . '">Více</a></li>';
+				$out .= '<li><a href="/aktualne/' . $this->clanky[$i]['at_id'] . '">Více</a></li>';
 				$out .= '</ul>';
 				$out .= '<div style="clear:both;"></div>';
 				$out .= '</div>';

@@ -1,5 +1,6 @@
 <?php
-class Controller_Admin_Nabidka implements Controller_Interface {
+include_once('files/Controller/Admin.php');
+class Controller_Admin_Nabidka extends Controller_Admin {
 	function __construct() {
 		Permissions::checkError('nabidka', P_OWNED);
 	}

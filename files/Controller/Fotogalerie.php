@@ -1,5 +1,5 @@
 <?php
-class Controller_Fotogalerie implements Controller_Interface {
+class Controller_Fotogalerie extends Controller_Abstract {
 	function view($id = null) {
 		if($id === null) {
 			$id = 0;
@@ -59,5 +59,8 @@ class Controller_Fotogalerie implements Controller_Interface {
 		echo '</div></div>';
 		echo '</a>';
 		return;
+	}
+	function sidebar() {
+		
 	}
 }

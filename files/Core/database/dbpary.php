@@ -16,7 +16,7 @@ class DBPary extends Database {
 				LEFT JOIN users AS m ON p.p_id_partner=m.u_id
 				LEFT JOIN users AS f ON p.p_id_partnerka=f.u_id
 			WHERE p.p_archiv='0'
-			ORDER BY p.p_aktu_vytvoreno ASC"
+			ORDER BY guy_surname ASC"
 		);
 		
 		return DBPary::getArray($res);

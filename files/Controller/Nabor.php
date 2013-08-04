@@ -1,7 +1,10 @@
 <?php
-class Controller_Nabor implements Controller_Interface {
+class Controller_Nabor extends Controller_Abstract {
     function view($id = null) {
         include('files/Main/Nabor/Main.inc');
+    }
+    function sidebar() {
+    	
     }
 }
 ?>

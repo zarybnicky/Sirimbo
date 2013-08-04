@@ -1,5 +1,6 @@
 <?php
-class Controller_Admin_Rozpis implements Controller_Interface {
+include_once('files/Controller/Admin.php');
+class Controller_Admin_Rozpis extends Controller_Admin {
 	function __construct() {
 		Permissions::checkError('rozpis', P_OWNED);
 	}

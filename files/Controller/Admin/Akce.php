@@ -1,5 +1,6 @@
 <?php
-class Controller_Admin_Akce implements Controller_Interface {
+include_once('files/Controller/Admin.php');
+class Controller_Admin_Akce extends Controller_Admin {
 	function __construct() {
 		Permissions::checkError('akce', P_OWNED);
 	}

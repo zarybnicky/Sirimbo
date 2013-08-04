@@ -1,7 +1,18 @@
 <?php
-class Controller_Inzerce implements Controller_Interface {
+class Controller_Inzerce extends Controller_Abstract {
     function view($id = null) {
         View::redirect('/inzerce/posledni');
+    }
+    function sidebar() {
+    	$s = new Sidebar();
+    	
+    	echo $s->menuHeader();
+    	echo $s->menuItem('Nejnovější inzeráty',	'/inzerce/posledni');
+    	echo $s->menuItem('Prodám',				'/inzerce/prodam');
+    	echo $s->menuItem('Koupím'	,			'/inzerce/koupim');
+    	echo $s->menuItem('Hledám partnera',		'/inzerce/partner');
+    	echo $s->menuItem('Hledám partnerku',	'/inzerce/partnerka');
+    	echo $s->menuItem('Nový inzerát',		'/inzerce/add');
     }
     function posledni($id = null) {
         $this->inzerce('Poslední inzeráty', INZERCE_ALL);

@@ -1,5 +1,6 @@
 <?php
-class Controller_Admin_Galerie implements Controller_Interface {
+include_once('files/Controller/Admin.php');
+class Controller_Admin_Galerie extends Controller_Admin {
 	function __construct() {
 		Permissions::checkError('galerie', P_OWNED);
 	}

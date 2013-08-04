@@ -7,6 +7,12 @@ class DisplayAkce {
 		if($data['a_od'] != $data['a_do'])
 			echo ' - ', formatDate($data['a_do']);
 		echo '</div>';
+		echo '<div style="text-align:left;">';
+		echo '<span style="color:#572E00;font-size:115%;">Kapacita: </span>',
+			$data['a_kapacita'], '<br/>';
+		echo '<span style="color:#572E00;font-size:115%;">Volných míst: </span>',
+			$data['a_kapacita'] - count(DBAkce::getAkceItems($data['a_id'])), '<br/>';
+		echo '</div><br/>';
 		
 		if(Permissions::check('akce', P_OWNED)) {
 			echo '<span style="color:#572E00;font-size:115%;">Admin: </span>';
@@ -43,7 +49,24 @@ class DisplayAkce {
 		}
 		$akce_items = DBAkce::getAkceItems($id);
 		
-		DisplayAkce::viewAkceHeader($akce);
+		echo '<div class="trenink_header" style="width:330px;">';
+		echo '<div class="nadpis">', $akce['a_jmeno'], '</div>';
+		echo '<div style="letter-spacing:1px;font-weight:bold;">', formatDate($akce['a_od']);
+		if($akce['a_od'] != $akce['a_do'])
+			echo ' - ', formatDate($akce['a_do']), '<br/><br/>';
+		echo '<span style="color:#572E00;font-weight:normal;font-size:115%;">Kapacita: </span>',
+			$akce['a_kapacita'], '<br/>';
+		echo '<span style="color:#572E00;font-weight:normal;font-size:115%;">Volných míst: </span>',
+			$data['a_kapacita'] - count($akce_items), '<br/>';
+		echo '</div>';
+		
+		if(Permissions::check('akce', P_OWNED)) {
+			echo '<span style="color:#572E00;font-size:115%;">Admin: </span>';
+			echo '<a href="/admin/akce/edit/', $akce['a_id'], '">obecné</a>, ';
+			echo '<a href="/admin/akce/detail/', $akce['a_id'], '">účastníci</a>, ';
+			echo '<a href="/admin/akce/dokumenty/', $akce['a_id'], '">dokumenty</a>';
+		}
+		echo '</div>';
 		
 		echo '<div style="text-align:center;">';
 		if(empty($akce_items)) {

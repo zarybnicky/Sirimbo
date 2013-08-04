@@ -1,5 +1,6 @@
 <?php
-class Controller_Member_Nabidka implements Controller_Interface  {
+include_once('files/Controller/Member.php');
+class Controller_Member_Nabidka extends Controller_Member {
 	function __construct() {
 		Permissions::checkError('dokumenty', P_VIEW);
 	}
@@ -14,10 +15,10 @@ class Controller_Member_Nabidka implements Controller_Interface  {
 			$partnerka = DBUser::getUserData(User::getPartnerID());
 			
 			if(!User::getZaplaceno() || (User::getPartnerID() > 0 &&
-					!(strcmp($partnerka['up_plati_do'], date('Y-m-d', strtotime('+ 14 days'))) >= 0))) {
+					!(strcmp($partnerka['up_plati_do'], date('Y-m-d', strtotime('- 14 days'))) >= 0))) {
 				notice('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
 			} elseif($data['n_max_pocet_hod'] > 0 &&
-					(DBNabidka::getNabidkaLessons(post('id'), User::getID()) + post('hodiny')) > $data['n_max_pocet_hod']) {
+					(DBNabidka::getNabidkaLessons(post('id'), User::getParID()) + post('hodiny')) > $data['n_max_pocet_hod']) {
 				notice('Maximální počet hodin na pár je ' . $data['n_max_pocet_hod'] . '!');
 			} elseif(($data['n_pocet_hod'] - DBNabidka::getNabidkaItemLessons(post('id'))) < post('hodiny')) {
 				notice('Tolik volných hodin tu není');

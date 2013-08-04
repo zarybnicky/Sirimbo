@@ -1,7 +1,9 @@
 <?php
 class Request {
+	private static $default = 'home';
 	private static $uri;
 	private static $url;
+	private static $url_canonical;
 	private static $url_parts;
 	private static $url_parts_literal;
 	
@@ -9,37 +11,49 @@ class Request {
 	private static $action;
 	private static $id;
 	private static $referer;
+	
+	private static $corruptURL = false;
 
+	public static function setDefault($default) {
+		Request::$default = $default;
+	}
 	public static function setURI($uri) {
 		Request::$uri = $uri;
 	}
 	public static function setURL($url) {
 		Request::$url = $url;
-		Request::$url_parts = explode('/', $url);
+		$parts = explode('/', $url);
 		
-		$parts = Request::$url_parts;
-		foreach($parts as $key => $part)
-			if($part === '')
+		foreach($parts as $key => $part) {		//remove double slashes
+			if($part === '') {
 				unset($parts[$key]);
+				Request::$corruptURL = true;
+			}
+		}
 		$parts = array_values($parts);
+		Request::$url_parts = $parts;			//raw url parts
+		
+		if(empty($parts)) {
+			Request::$corruptURL = true;
+		}
 		
 		foreach($parts as $key => $part)
 			if(is_numeric($part))
-				unset($parts[$key]);
+				unset($parts[$key]);			//make canonical name, usable for finding controllers
 		Request::$url_parts_literal = array_values($parts);
 		
 		for($i = count(Request::$url_parts) - 1; $i >= 0; $i--) {
 			if(is_numeric(Request::$url_parts[$i])) {
-				$id = Request::$url_parts[$i];
+				$id = Request::$url_parts[$i];	//find last number, set it as the ID for most regular actions
 				if(!is_numeric(Request::$url_parts[$i - 1])) {
-					$action = Request::$url_parts[$i - 1];
+					$action = Request::$url_parts[$i - 1];		//dilemma: action before or after id???
 					break;
 				}
 			}
 		}
 		Request::$id = isset($id) ? $id : null;
-		Request::$action = isset($action) ? $action :
-			Request::$url_parts[count(Request::$url_parts) - 1];
+		Request::$action = isset($action) ? $action :			//if previous code didn't find a viable action, use the last string in array
+			(!empty($parts) ? $parts[count($parts) - 1] : null);
 	}
 
 	public static function getURI() {
@@ -51,17 +65,16 @@ class Request {
 	public static function getURLParts() {
 		return Request::$url_parts;
 	}
-	public static function getLiteralURL($default = '') {
+	public static function getLiteralURL() {
 		if(empty(Request::$url_parts_literal) || Request::$url_parts_literal[0] == '')
-			return $default;
+			return Request::$default;
 		return implode('/', Request::$url_parts_literal);
 	}
-	public static function getSection($default = '') {
-		return isset(Request::$url_parts[0]) ? Request::$url_parts[0] : $default;
+	public static function getSection() {
+		return isset(Request::$url_parts[0]) ? Request::$url_parts[0] : Request::$default;
 	}
-	public static function getPage() {
-		return isset(Request::$url_parts_literal[1]) ?
-			implode('/', array_slice(Request::$url_parts_literal, 1)) : '';
+	public static function getCanonical() {
+		return Request::getLiteralURL();
 	}
 	public static function getAction() {
 		return Request::$action;

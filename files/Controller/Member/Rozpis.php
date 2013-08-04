@@ -1,5 +1,6 @@
 <?php
-class Controller_Member_Rozpis implements Controller_Interface {
+include_once('files/Controller/Member.php');
+class Controller_Member_Rozpis  extends Controller_Member {
 	function __construct() {
 		Permissions::checkError('rozpis', P_VIEW);
 	}
@@ -15,7 +16,7 @@ class Controller_Member_Rozpis implements Controller_Interface {
 			$partnerka = DBUser::getUserData(User::getPartnerID());
 			
 			if(!User::getZaplaceno() || (User::getPartnerID() > 0 &&
-					!(strcmp($partnerka['up_plati_do'], date('Y-m-d', strtotime('+ 14 days'))) >= 0))) {
+					!(strcmp($partnerka['up_plati_do'], date('Y-m-d', strtotime('- 14 days'))) >= 0))) {
 				notice('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
 			} elseif($lesson['ri_partner']) {
 				notice('Už je obsazeno');

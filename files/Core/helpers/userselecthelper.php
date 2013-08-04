@@ -99,7 +99,9 @@ $(name + ' .new button').click(function(){
 		},
 		beforeSend: function(){ $(name + ' .new').slideUp();$(name + ' .loading').slideDown();},
 		success: function(data){
-			data = JSON.parse(data);
+			if(typeof(data) != 'object') {
+				data = JSON.parse(data);
+			}
 			var id = (type == 'par') ? data.par_id : data.user_id;
 			var fullname = data.jmeno + ' ' + data.prijmeni;
 			

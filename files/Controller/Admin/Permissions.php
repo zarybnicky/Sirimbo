@@ -1,5 +1,6 @@
 <?php
-class Controller_Admin_Permissions implements Controller_Interface {
+include_once('files/Controller/Admin.php');
+class Controller_Admin_Permissions extends Controller_Admin {
 	function _construct() {
 		Permissions::checkError('permissions', P_ADMIN);
 	}
