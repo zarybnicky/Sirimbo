@@ -1,12 +1,20 @@
 <?php
-function dumpPost() {
+function dumpPost($echo = false) {
+	if($echo) {
+		var_export($_POST);
+		return;
+	}
 	$out = fopen(DEBUG_LOG, 'a+');
 	fwrite($out,  date(DATE_RFC822) . " - " .
 		Request::getLiteralURL('home') . ":\n" .
 		var_export($_POST, true) . "\n\n");
 	fclose($out);
 }
-function dump($var) {
+function dump($var, $echo = false) {
+	if($echo) {
+		var_export($var);
+		return;
+	}
 	$out = fopen(DEBUG_LOG, 'a+');
 	fwrite($out,  date(DATE_RFC822) . " - " .
 		Request::getLiteralURL('home') . ":\n" .
