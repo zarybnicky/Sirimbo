@@ -22,9 +22,6 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 body {
 	line-height: 1.2;
 	color: black;
-	background: white;
-	background-image: url('logo-bg.png');
-	background-repeat: repeat-x;
 }
 ol, ul { list-style: none; }
 caption, th, td {
@@ -54,10 +51,6 @@ h4 {font-size:152%;}
 h5 {font-size:136%;}
 h6 {font-size:122%;}
 
-/*Colors:
-orange light - #ffb82f
-orange dark  - #ff9501
-*/
 button, a {
 	border: 0;
 	margin: 0;
@@ -102,8 +95,6 @@ p { margin-bottom: 1em; }
 /*BEGIN HEADER*/
 #header {
 	position: relative;
-	background-image: url('logo.png');
-	background-repeat: no-repeat;
 	width: 970px;
 	height: 338px;
 }

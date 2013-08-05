@@ -8,6 +8,25 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
 	<title>TK Olymp Olomouc</title>
+	<style type="text/css">
+<?php
+	$date = (int) date("md");
+	if($date < 320) $dir = 'zima';
+	else if($date < 621) $dir = 'jaro';
+	else if($date < 922) $dir = 'leto';
+	else $dir = 'podzim';
+	echo <<<EOS
+body{
+	background-color:white;
+	background-image:url('/style/$dir/logo-bg.png');
+	background-repeat:repeat-x;
+}#header{
+	background-image:url('/style/$dir/logo.png');
+	background-repeat:no-repeat;
+}
+EOS;
+?>		
+	</style>
 	<link href="/style/style.css" rel="stylesheet" type="text/css" />
     <meta name="google-site-verification" content="Hfe7zlgTDOIpJv4rKGQz2Xg8Aezb6sIO0aAxVhrml9w" />
     <meta name="norton-safeweb-site-verification" content="r44xj2vskhlgkyqcqm1hdgga2jdfj-idvyys0277y96s72k-tq0z-yyjdu7h3el6pi2gek0i4ykq3xgiguufrvuhj8nbj4n4miwjhvumhp35jfrafyynhj4ee8ctzpzh" />
