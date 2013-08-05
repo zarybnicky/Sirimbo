@@ -206,7 +206,7 @@ p { margin-bottom: 1em; }
 .light-in {
 	display: block;
 	position: relative;
-	padding: 10px 0px 13px 15px;
+	padding: 11px 0px 13px 35px;
 	background: url('box-light-bottom.png') no-repeat bottom left;
 }
 .dark-out {
@@ -215,10 +215,9 @@ p { margin-bottom: 1em; }
 .dark-in {
 	display: block;
 	position: relative;
-	padding: 10px 0px 13px 40px;
+	padding: 11px 0px 13px 35px;
 	background: url('box-dark-bottom.png') no-repeat bottom left;
 	color: #fff;
-	font-weight: bolder;
 }
 .dark-in span.logo {
 	background: url('logo-mini.png') no-repeat top left;
@@ -229,8 +228,8 @@ p { margin-bottom: 1em; }
 	position: absolute;
 }
 .sidebar a {
+	padding: 0;
 	display: block;
-	padding-left:  15px;
 	text-decoration: none;
 	color: #555;
 }
@@ -252,7 +251,7 @@ p { margin-bottom: 1em; }
 	width: 14px;
 	height: 32px;
 	right: 0;
-	margin-top: -25px;
+	margin-top: -5px;
 	color: transparent;
 	position: absolute;
 }
