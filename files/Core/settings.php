@@ -271,7 +271,7 @@ public static $sekce = array(
 			'posledni'		=> 'Nejnovější články',
 			'videa'			=> 'Videa',
 			'clanky'		=> 'Články',
-			'kratkezpravy'	=> 'Krátké zprávy'
+			'kratke-zpravy'	=> 'Krátké zprávy'
 		),
 	'member'	=> array(
 			'home'		=> 'Novinky',
