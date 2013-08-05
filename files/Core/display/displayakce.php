@@ -57,7 +57,7 @@ class DisplayAkce {
 		echo '<span style="color:#572E00;font-weight:normal;font-size:115%;">Kapacita: </span>',
 			$akce['a_kapacita'], '<br/>';
 		echo '<span style="color:#572E00;font-weight:normal;font-size:115%;">Volných míst: </span>',
-			$data['a_kapacita'] - count($akce_items), '<br/>';
+			$akce['a_kapacita'] - count($akce_items), '<br/>';
 		echo '</div>';
 		
 		if(Permissions::check('akce', P_OWNED)) {
