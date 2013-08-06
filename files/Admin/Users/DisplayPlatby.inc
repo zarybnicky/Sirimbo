@@ -21,8 +21,7 @@ echo '</tr>';
 $platby = DBPlatby::getPlatbyFromUser($id);
 foreach($platby as $platba) {
 	echo "<tr>";
-	echo '<td><div class="box" title="', $platba['us_popis'], '" ',
-		'style="background-color:', Settings::$barvy[$platba['us_color']][1] . ';"></div></td>';
+	echo '<td>', getColorBox($platba['us_color'], $platba['us_popis']), '</td>';
 	echo '<td>', $platba['us_platba_mesic'], ' Kč</td>';
 	echo '<td>', $platba['up_castka'], ' Kč</td>';
 	echo '<td>', formatDate($platba['up_placeno']), '</td>';

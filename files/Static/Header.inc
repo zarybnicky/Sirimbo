@@ -97,59 +97,10 @@ EOS;
 	</div>
 	<div id="main">
 		<div class="container">
-			<div id="sidebar"><?php
-					View::$controller->sidebar();
-					/*?>
-				<div class="dark-out"><div class="dark-in"><span class="logo"></span>Menu</div></div>
-				<div id="sidemenu">
-					<ul>
-				<?php
-					$section = Request::getSection('home');
-					$s_part = implode('/', array_slice(Request::getURLParts(), 1));
-					
-					$menu = array();
-					if($section == 'fotogalerie') {
-						include('files/Main/Fotogalerie/Menu.inc');
-						echo getSideMenu();
-					} else {
-						if(array_key_exists($section, Settings::$sekce)) {
-							$menu = Settings::$sekce[$section];
-						} else {
-							$section = 'home';
-							$menu = Settings::$sekce['home'];
-						}
-						foreach($menu as $url => $word) {
-							if(is_array($word)) {
-								if(Permissions::check($word[1], P_OWNED))
-									$word = $word[0];
-								else
-									continue;
-							}
-							if($s_part != $url  && strpos($url, '*') === false) {
-								echo '<li><a href="/', $section, '/', $url,
-									'"><span class="arrow">.</span>', $word,
-									'</a></li>', "\n";
-							} elseif(strpos($url, '*') !== false) {
-								$url_part = substr($url, 0, strlen($url) - 2);
-								if(strpos($s_part, $url_part) !== false || $s_part == $url_part)
-									echo '<li class="current"><a href="/', $section, '/', $url_part,
-										'"><span class="arrow">.</span>', $word,
-										'<span class="point">.</span></a></li>', "\n";
-								else
-									echo '<li><a href="/', $section, '/', $url_part,
-										'"><span class="arrow">.</span>', $word,
-										'</a></li>', "\n";
-							} else {
-								echo '<li class="current"><a href="/', $section, '/', $url,
-									'"><span class="arrow">.</span>', $word,
-									'<span class="point">.</span></a></li>', "\n";
-							}
-						}
-					}
-				?>
-					</ul>
-				</div>
-				<?php */
+			<div id="sidebar">
+			<?php
+				View::$controller->sidebar();
+				
 				if(!Database::isDatabaseError()) {
 					ob_start();
 					$result = DisplayAnkety::viewAnkety(true, true, getIP());

@@ -47,23 +47,16 @@ class View {
 			}
 			exit;
 		}
-		//if in_array($l, $Cache->getInstance()) && $Cache->isUptoDate($l))
-		//	echo $Cache->get($l);
-		//	exit;
-		//else
-		//	$fh = fopen($myFile, 'r');
-		//	$theData = fread($fh, filesize($myFile));
-		//	fclose($fh);
-		ob_start();
 		
 		ob_start();
+		ob_start();
+		
 		if(file_exists($l)) {
 			include($l);
 		} else {
 			View::viewError('not_found_right');
 		}
 		$main = ob_get_clean();
-		//TODO: Caching
 		
 		include(TISK ? HEADER_TISK : HEADER);
 		echo $main;

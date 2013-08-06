@@ -2,9 +2,8 @@
 header_minor('Moje platby');
 
 $skupina = User::getSkupinaData();
-echo '<div class="box" title="', $skupina['us_popis'], '" ',
-	'style="background-color:', Settings::$barvy[$skupina['us_color']][1] . ';"></div>&nbsp;',
-	$skupina['us_popis'], '<br/>';
+echo getColorBox($skupina['us_color'], $skupina['us_popis']),
+	'&nbsp;', $skupina['us_popis'], '<br/>';
 echo 'Variabilní symbol: ', User::var_symbol(User::getUserID()), '<br/><br/>';
 
 echo 'Aktuálně: ', User::getZaplaceno() ? 'zaplaceno' : 'NEZAPLACENO!',
@@ -25,8 +24,7 @@ if(!empty($platby)) {
 	
 	foreach($platby as $platba) {
 		echo "<tr>";
-		echo '<td><div class="box" title="', $platba['us_popis'], '" ',
-			'style="background-color:', Settings::$barvy[$platba['us_color']][1] . ';"></div></td>';
+		echo '<td>', getColorBox($platba['us_color'], $platba['us_popis']), '</td>';
 		echo '<td>', Settings::$platby_obdobi[$platba['up_obdobi']][3], ' Kč</td>';
 		echo '<td>', $platba['up_castka'], ' Kč</td>';
 		echo '<td>', formatDate($platba['up_placeno']), '</td>';
@@ -46,12 +44,13 @@ foreach($skupiny as $skupina) {
 	if($skupina['us_platba_mesic'] == 0 && $skupina['us_platba_mesic'] == 0 &&
 			$skupina['us_platba_mesic'] == 0)
 		continue;
-	
-	echo '<tr><td><div class="box" title="', $skupina['us_popis'], '" ',
-		'style="background-color:', Settings::$barvy[$skupina['us_color']][1] . ';"></div>&nbsp;',
-		$skupina['us_popis'], '</td>',
+
+	echo '<tr>';
+	echo '<td>', getColorBox($skupina['us_color'], $skupina['us_popis']), '</td>',
+		'&nbsp;', $skupina['us_popis'], '</td>',
 		'<td>', $skupina['us_platba_ctvrtrok'], '</td>',
-		'<td>', $skupina['us_platba_pulrok'], '</td></tr>';
+		'<td>', $skupina['us_platba_pulrok'], '</td>';
+	echo '</tr>';
 }
 echo '</table>';
 
