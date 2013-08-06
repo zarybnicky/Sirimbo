@@ -183,10 +183,7 @@ foreach($items as $user) {
 				$diffstr = 'méně než měsíc';
 		}
 		
-		echo '<td>';
-		echo '<div class="box" title="', $user['us_popis'], '" ',
-			'style="background-color:', Settings::$barvy[$user['us_color']][1], ';"></div>';
-		echo '</td>';
+		echo '<td>', getColorBox($user['us_color'], $user['us_popis']), '</td>';
 		echo '<td>', User::var_symbol($user['u_id']), '</td>';
 		echo '<td style="width:58px;">';
 		if($user['up_id'] && $zaplaceno)
