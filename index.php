@@ -87,19 +87,4 @@ include(TISK ? FOOTER_TISK : FOOTER);
 
 ob_end_flush();
 exit;
-
-/*if(array_key_exists($file, $sitemap_static)) {
-	$file = $sitemap_static[$file];
-	View::viewStatic($file);
-} elseif(array_key_exists($file, $sitemap_dynamic)) {
-	$file = $sitemap_dynamic[$file];
-	if(file_exists($file))
-		View::viewDynamic($file);
-	elseif(isset($sitemap_dynamic[$file]))
-		View::redirect('/' . $file);
-	else
-		View::viewError(ER_NOT_FOUND_RIGHT);
-} else {
-	View::viewStatic("files/Error/NotPossible.inc");
-}*/
 ?>

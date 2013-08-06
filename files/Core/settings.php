@@ -64,7 +64,6 @@ if(DEBUG) {
 }
 
 include (SETTINGS . DIRECTORY_SEPARATOR . 'db.php');
-include (SETTINGS . DIRECTORY_SEPARATOR . 'sitemap.php');
 
 define('NABOR', '0');
 
@@ -249,74 +248,6 @@ public static $permissions = array(
 		'default' => P_VIEW,
 		P_VIEW => 1)
 );
-public static $sekce = array(
-	'admin'		=> array(
-			'users/*'		=> array('Správa uživatelů', 'users'),
-			'skupiny/*'		=> array('Správa skupin', 'skupiny'),
-			'platby/*'		=> array('Správa plateb', 'platby'),
-			'pary/*'		=> array('Správa párů', 'pary'),
-			'aktuality/*'	=> array('Správa článků', 'aktuality'),
-			'nastenka/*'	=> array('Správa nástěnky', 'nastenka'),
-			'rozpis/*'		=> array('Správa rozpisů', 'rozpis'),
-			'nabidka/*'		=> array('Správa nabídky', 'rozpis'),
-			'akce/*'		=> array('Správa akcí', 'akce'),
-			'inzerce/*'		=> array('Správa inzerce', 'inzerce'),
-			'galerie/*'		=> array('Správa galerie', 'galerie'),
-			'dokumenty/*'	=> array('Správa dokumentů', 'dokumenty'),
-			'ankety/*'		=> array('Správa anket', 'ankety'),
-			'permissions/*'	=> array('Správa oprávnění', 'permissions'),
-			'konzole/*'		=> array('Konzole', 'konzole')
-		),
-	'aktuality'	=> array(
-			'posledni'		=> 'Nejnovější články',
-			'videa'			=> 'Videa',
-			'clanky'		=> 'Články',
-			'kratke-zpravy'	=> 'Krátké zprávy'
-		),
-	'member'	=> array(
-			'home'		=> 'Novinky',
-			'nastenka'	=> 'Nástěnka',
-			'rozpis'	=> 'Rozpis tréninků',
-			'nabidka'	=> 'Nabídka tréninků',
-			'akce'		=> 'Klubové akce',
-			'dokumenty'	=> 'Dokumenty',
-			'pary/*'	=> 'Žebříček',
-			'clenove'	=> 'Členové',
-			'profil/*'	=> 'Profil'
-		),
-	'fotogalerie'	=> array(
-		),
-	'home'		=> array(
-		),
-	'inzerce'	=> array(
-			'posledni'	=> 'Nejnovější inzeráty',
-			'prodam'	=> 'Prodám',
-			'koupim'	=> 'Koupím',
-			'partner'	=> 'Hledám partnera',
-			'partnerka'	=> 'Hledám partnerku',
-			'add'		=> 'Nový inzerát'
-		),
-	'kontakt'	=> array(
-		),
-	'oklubu'	=> array(
-			'historie'			=> 'Historie',
-			'uspechy'			=> 'Úspěchy v číslech',
-			'mistrovstvi'		=> 'Mistrovství ČR',
-			'druzstva'			=> 'Družstva',
-			'liga'				=> 'Taneční liga',
-			'treneri/klubovi'	=> 'Kluboví trenéři',
-			'treneri/externi'	=> 'Externí trenéři',
-			'saly'				=> 'Kde trénujeme',
-			'stanovy.pdf'		=> 'Stanovy klubu'
-		),
-	'nabizime'	=> array(
-			''				=> 'Nabízíme',
-			'vystoupeni'	=> 'Taneční vystoupení',
-			'individualky'	=> 'Individuální lekce',
-			'seminare'		=> 'Skupinové semináře',
-			'soustredeni'	=> 'Taneční soustředění'
-		)
-);
 public static $foto_types = array(
 	'image/pjpeg' => 'jpg',
 	'image/jpeg' => 'jpg',
@@ -330,9 +261,9 @@ public static $gd_function_suffix = array(
 	'image/gif' => 'GIF', 
 	'image/bmp' => 'BMP',
 	'image/x-png' => 'PNG'
-);  
-
+);
 public static $no_headers = array(
 	'files/Main/Nabor/Main.inc' => ''
 );
-}?>
+}
+?>
