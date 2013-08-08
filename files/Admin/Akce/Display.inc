@@ -11,7 +11,8 @@ if(!TISK) {
 		->content('Upravit', 'edit', true)
 		->content('Upravit přihlášené', 'edit_detail', true)
 		->content('Upravit dokumenty', 'edit_doku', true)
-		->content('Odstranit', 'remove', true);
+		->content('Odstranit', 'remove', true)
+		->content('Uložit změny', 'save', true);
 }
 ?>
 <div style="margin-right:150px;">
@@ -22,6 +23,7 @@ if(!TISK) {
 <td>Místo</td>
 <td>Datum</td>
 <td>Účastníci</td>
+<td>Viditelný</td>
 </tr>
 <?php
 $akce = DBAkce::getAkce();
@@ -38,6 +40,7 @@ foreach($akce as $item) {
 		echo ' - ', formatDate($item['a_do']);
 	echo '</td>';
 	echo '<td>', count($items), '/', $item['a_kapacita'], '</td>';
+	echo '<td>', getCheckbox($item['a_id'], '1', $item['a_visible']), '</td>';
 	echo '</tr>';
 }
 ?>

@@ -24,25 +24,24 @@ class DisplayAkce {
 		echo '<div style="text-align:left;">';
 		echo '<span style="color:#572E00;font-size:115%;">Další informace: </span>';
 		echo '<br/>', nl2br($data['a_info']);
-		echo '</div><br/>';
-		echo '<div style="text-align:left;">';
-		echo '<span style="color:#572E00;font-size:115%;">Dokumenty: </span>';
-		echo '</span><br/>';
+		echo '</div>';
 		$doku = unserialize($data['a_dokumenty']);
 		if($doku) {
+			echo '<br/>';
+			echo '<div style="text-align:left;">';
+			echo '<span style="color:#572E00;font-size:115%;">Dokumenty: </span>';
+			echo '</span><br/>';
 			foreach($doku as $id) {
 				$doku_data = DBDokumenty::getSingleDokument($id);
 				echo '<a href="/member/download?id=', $id, '">', $doku_data['d_name'], '</a>';
 			}
-		} else {
-			echo 'Žádné dokumenty';
+			echo '</div>';
 		}
-		echo '</div>';
 		echo '</div>';
 	}
 	
 	public static function viewFullAkce($id) {
-		$akce = DBAkce::getSingleAkce($id);
+		$akce = DBAkce::getSingleAkce($id, true);
 		if(empty($akce)) {
 			notice('Neexistuje žádná taková akce');
 			return;

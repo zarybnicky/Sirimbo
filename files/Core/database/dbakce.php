@@ -1,8 +1,8 @@
 <?php
 class DBAkce extends Database implements Pagable {
-	public static function getAkce() {
-		$res = DBAkce::query("SELECT a_id,a_jmeno,a_kde,a_info,a_od,a_do,a_kapacita,a_dokumenty,a_lock FROM akce" .
-			" ORDER BY a_od");
+	public static function getAkce($onlyVisible = false) {
+		$res = DBAkce::query('SELECT * FROM akce' . 
+				($onlyVisible ? " WHERE a_visible='1'" : '') . ' ORDER BY a_od');
 		return DBAkce::getArray($res);
 	}
 	
@@ -24,11 +24,11 @@ class DBAkce extends Database implements Pagable {
 		}
 	}
 	
-	public static function getSingleAkce($id) {
+	public static function getSingleAkce($id, $onlyVisible = false) {
 		list($id) = DBAkce::escapeArray(array($id));
 		
-		$res = DBAkce::query("SELECT a_id,a_jmeno,a_kde,a_info,a_od,a_do,a_kapacita,a_dokumenty,a_lock FROM akce" .
-			" WHERE a_id='$id' ORDER BY a_od");
+		$res = DBAkce::query("SELECT * FROM akce WHERE a_id='$id'" . 
+				($onlyVisible ? " AND a_visible='1'" : '') . ' ORDER BY a_od');
 		if(!$res) {
 			return false;
 		} else {
@@ -47,22 +47,22 @@ class DBAkce extends Database implements Pagable {
 		return DBAkce::getArray($res);
 	}
 	
-	public static function addAkce($jmeno, $kde, $info, $od, $do, $kapacita, $dokumenty, $lock) {
-		list($jmeno, $kde, $info, $od, $do, $kapacita, $dokumenty, $lock) =
-			DBRozpis::escapeArray(array($jmeno, $kde, $info, $od, $do, $kapacita, $dokumenty, $lock));
+	public static function addAkce($jmeno, $kde, $info, $od, $do, $kapacita, $dokumenty, $lock, $visible) {
+		list($jmeno, $kde, $info, $od, $do, $kapacita, $dokumenty, $lock, $visible) =
+			DBRozpis::escapeArray(array($jmeno, $kde, $info, $od, $do, $kapacita, $dokumenty, $lock, $visible));
 		
-		DBRozpis::query("INSERT INTO akce (a_jmeno,a_kde,a_info,a_od,a_do,a_kapacita,a_dokumenty,a_lock)" .
-			" VALUES ('$jmeno','$kde','$info','$od','$do','$kapacita','$dokumenty','$lock')");
+		DBRozpis::query("INSERT INTO akce (a_jmeno,a_kde,a_info,a_od,a_do,a_kapacita,a_dokumenty,a_lock,a_visible)" .
+			" VALUES ('$jmeno','$kde','$info','$od','$do','$kapacita','$dokumenty','$lock','$visible')");
 		
 		return true;
 	}
 	
-	public static function editAkce($id, $jmeno, $kde, $info, $od, $do, $kapacita, $dokumenty, $lock) {
-		list($id, $jmeno, $kde, $info, $od, $do, $kapacita, $dokumenty, $lock) =
-			DBRozpis::escapeArray(array($id, $jmeno, $kde, $info, $od, $do, $kapacita, $dokumenty, $lock));
+	public static function editAkce($id, $jmeno, $kde, $info, $od, $do, $kapacita, $dokumenty, $lock, $visible) {
+		list($id, $jmeno, $kde, $info, $od, $do, $kapacita, $dokumenty, $lock, $visible) =
+			DBRozpis::escapeArray(array($id, $jmeno, $kde, $info, $od, $do, $kapacita, $dokumenty, $lock, $visible));
 		
 		DBRozpis::query("UPDATE akce SET a_jmeno='$jmeno',a_kde='$kde',a_info='$info',a_od='$od',a_do='$do'," .
-			"a_kapacita='$kapacita',a_dokumenty='$dokumenty',a_lock='$lock' WHERE a_id='$id'");
+			"a_kapacita='$kapacita',a_dokumenty='$dokumenty',a_lock='$lock',a_visible='$visible' WHERE a_id='$id'");
 		
 		return true;
 	}

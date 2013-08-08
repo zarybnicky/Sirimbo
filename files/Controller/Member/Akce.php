@@ -9,7 +9,7 @@ class Controller_Member_Akce extends Controller_Member {
         	DisplayAkce::viewFullAkce($id);
         	return;
         }
-        $akce = DBAkce::getAkce();
+        $akce = DBAkce::getAkce(true);
         if(empty($akce)) {
         	notice('Žádné akce k dispozici');
         	return;

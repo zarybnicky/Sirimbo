@@ -10,6 +10,17 @@ class Controller_Admin_Galerie extends Controller_Admin {
 			return;
 		}
 		switch(post('action')) {
+			case 'save':
+				$items = DBGalerie::getDirs();
+				
+				foreach($items as $item) {
+					$id = $item['gd_id'];
+					if((bool) post($id) !== (bool) $item['gd_hidden'])
+						DBGalerie::editDir($id, $item['gd_name'], $item['gd_id_rodic'],
+							$item['gd_level'], post($id) ? '1' : '0');
+				}
+				break;
+				
 			case 'edit':
 				$galerie = post('galerie');
 				if($galerie[0])
@@ -53,6 +64,7 @@ class Controller_Admin_Galerie extends Controller_Admin {
 				return;
 					
 		}
+		include('files/Admin/Galerie/Display.inc');
 	}
 	function remove($id = null) {
 		if(empty($_POST) || post('action') !== 'confirm') {

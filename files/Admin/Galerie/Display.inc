@@ -10,7 +10,8 @@ echo Helper::get()->menu()
 	->content('Upravit fotky', 'edit', true)
 	->content('Upravit složku', 'editdir', true)
 	->content('Odebrat složku', 'remove', true)
-	->content('Aktualizovat databázi', 'galerie/scan');
+	->content('Aktualizovat databázi', 'galerie/scan')
+	->content('Uložit změny', 'save', true);
 
 $dirs = DBGalerie::getDirs(true, true);
 
@@ -20,7 +21,7 @@ if(!empty($dirs)) {
 		echo '<tr>';
 		echo '<td><input type="checkbox" name="galerie[]" value="' . $item['gd_id'] . '" /></td>';
 		echo '<td>', str_repeat("&nbsp;-&nbsp;", $item['gd_level'] - 1), $item['gd_name'], '</td>';
-		echo '<td>', ($item['gd_hidden'] ? '&#10003;' : ''), '</td>';
+		echo '<td>', getCheckbox($item['gd_id'], '1', $item['gd_hidden']), '</td>';
 		echo '</tr>';
 	}
 	echo '</table>';
