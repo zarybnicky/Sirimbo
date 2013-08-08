@@ -101,7 +101,7 @@ EOS;
 			<?php
 				View::$controller->sidebar();
 				
-				if(!Database::isDatabaseError()) {
+				if(!Database::isDatabaseError() && stripos(Request::getURI(), '/home') === false) {
 					ob_start();
 					$result = DisplayAnkety::viewAnkety(true, true, getIP());
 					$ankety = ob_get_clean();
@@ -112,13 +112,11 @@ EOS;
 						echo $ankety;
 						echo '</div></div>';
 					}
-				}
-				?>
-                <div>
-                	<a href="https://www.facebook.com/groups/44213111683/" target="_blank">
-                		<img alt="" src="/style/fb-logo.png" />
-                	</a>
-                </div>
+	                echo '<div><a href="https://www.facebook.com/groups/44213111683/" target="_blank">';
+	                echo '<img alt="" src="/style/fb-logo.png" />';
+	                echo '</a></div>';
+	            }
+			?>
                 <!--
 				<div class="dark-out"><div class="dark-in"><span class="logo"></span>Sponzoři</div></div>
 				<div class="light-out"><div class="light-in">

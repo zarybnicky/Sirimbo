@@ -10,6 +10,16 @@ class Controller_Admin_Akce extends Controller_Admin {
         	return;
         }
         switch(post('action')) {
+			case 'save':
+				$items = DBAkce::getAkce();
+				
+				foreach($items as $item) {
+					$id = $item['a_id'];
+					if((bool) post($id) !== (bool) $item['a_visible'])
+						DBAkce::editAkce($id, $item['a_jmeno'], $item['a_kde'], $item['a_info'], $item['a_od'],
+							$item['a_do'], $item['a_kapacita'], $item['a_dokumenty'], $item['a_lock'], post($id) ? '1' : '0');
+				}
+				break;
 			case 'remove':
 				if(!is_array(post('akce')))
 					break;
@@ -37,6 +47,7 @@ class Controller_Admin_Akce extends Controller_Admin {
         			View::redirect('/admin/akce/dokumenty/' . $akce[0]);
                 break;
         }
+		include('files/Admin/Akce/Display.inc');
     }
     function add($id = null) {
 		if(empty($_POST) || is_object($f = $this->checkData($_POST, 'add'))) {
@@ -51,7 +62,7 @@ class Controller_Admin_Akce extends Controller_Admin {
         
 		DBAkce::addAkce(post('jmeno'), post('kde'), post('info'),
 			$od, $do, post('kapacita'), post('dokumenty'),
-			(post('lock') == 'lock') ? 1 : 0);
+			(post('lock') == 'lock') ? 1 : 0, post('visible') ? '1' : '0');
 		DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal klubovou akci "' .
 			post('jmeno') . '"');
 		View::redirect('/admin/akce', 'Akce přidána');
@@ -70,6 +81,7 @@ class Controller_Admin_Akce extends Controller_Admin {
 			post('kapacita', $data['a_kapacita']);
 			post('dokumenty', unserialize($data['a_dokumenty']));
 			post('lock', $data['a_lock']);
+			post('visible', $data['a_visible']);
 			
 			include('files/Admin/Akce/Form.inc');
 			return;
@@ -85,7 +97,7 @@ class Controller_Admin_Akce extends Controller_Admin {
         
 		DBAkce::editAkce($id, post('jmeno'), post('kde'), post('info'),
 			$od, $do, post('kapacita'), post('dokumenty'),
-			(post('lock') == 'lock') ? 1 : 0);
+			(post('lock') == 'lock') ? 1 : 0, post('visible') ? '1' : '0');
 		DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' změnil detaily akce "' .
 			post('jmeno') . '"');
 		View::redirect('/admin/akce', 'Akce upravena');
