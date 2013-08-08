@@ -3,6 +3,7 @@ class DisplayAkce {
 	public static function viewAkceHeader($data) {
 		echo '<div class="trenink_header" style="width:330px;">';
 		echo '<div class="nadpis">', $data['a_jmeno'], '</div>';
+		echo '<div class="nadpis">', $data['a_kde'], '</div>';
 		echo '<div style="letter-spacing:1px;font-weight:bold;">', formatDate($data['a_od']);
 		if($data['a_od'] != $data['a_do'])
 			echo ' - ', formatDate($data['a_do']);
