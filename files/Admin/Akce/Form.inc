@@ -52,6 +52,10 @@ if(isset($f) && is_object($f))
 		<td><label><?php echo getCheckbox('lock', 'lock')?></label></td>
 		<td></td>
 	</tr><tr>
+		<td>Viditelný: </td>
+		<td><label><?php echo getCheckbox('visible', 'visible')?></label></td>
+		<td></td>
+	</tr><tr>
 		<td>
 			<button type="submit">
 				<?php echo (Request::getAction() == 'add') ? 'Přidat' : 'Upravit';?>
