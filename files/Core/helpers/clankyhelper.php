@@ -79,11 +79,21 @@ class ClankyHelper {
 				$out .= '</div>';
 			}
 			$out .= '</div>';
-			$out .= '<script>';
-			$out .= '$.getScript("/scripts/topFeatures.min.js", function(script, textStatus, jqXHR) {';
-			$out .= '$(\'#TopFeaturesBlock\').topFeatures()';
-			$out .= '});';
-			$out .= '</script>';
+			?>
+			<script type="text/javascript">
+			(function($) {
+				$(function() {
+					if(typeof $.fn.topFeatures == "undefined") {
+						$.getScript("/scripts/topFeatures.min.js", function() {
+							$("#TopFeaturesBlock").topFeatures()
+						});
+					} else {
+						$("#TopFeaturesBlock").topFeatures();
+					}
+				})
+			})(jQuery);
+			</script>
+			<?php
 		}
 		return $out;
 	}
