@@ -15,12 +15,11 @@ class DisplayAktuality {
 		
 		if($preview) {
 			echo stripslashes(nl2br($data['at_preview'])),
-				'<a href="/aktualne/', $data['at_id'], '">...</a>';
+				'<a href="/aktualne/', $data['at_id'], '">...</a><br/>';
 		} else {
-			echo stripslashes(nl2br($data['at_text']));
+			echo stripslashes(nl2br($data['at_text'])), '<br/><br/>';
+			echo '<div class="fb-comments" data-href="http://tkolymp.cz/aktuality/' . $data['at_id'] . '" data-width="710"></div>';
 		}
-		
-		echo '<br/>';
 	}
 	public static function viewAktuality($kat = 0, $kdo = 0) {
 		$whole = DBAktuality::getAktuality($kat, $kdo);
