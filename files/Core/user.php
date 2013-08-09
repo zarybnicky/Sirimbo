@@ -159,7 +159,7 @@ class User {
 	public static function register($login, $pass, $name, $surname, $pohlavi, $email, $telefon,
 			$narozeni, $poznamky) {
 		DBUser::addUser(strtolower($login), User::Crypt($pass), $name, $surname, $pohlavi, $email,
-			$telefon, $narozeni, $poznamky, L_UNCONFIRMED, '0', "0", "0", "0", "0");
+			$telefon, $narozeni, $poznamky, '0', '0', '0', "0", "0", "0", "0");
 		
 		Mailer::new_user_notice(DEFAULT_ADMIN_MAIL, $login);
 	}

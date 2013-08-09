@@ -288,7 +288,9 @@ class DBUser extends Database implements Pagable {
 				(p1.up_plati_od <= CURDATE() AND p1.up_plati_do >= CURDATE()) OR
 				(
 					((p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
-						WHERE p2.up_id_user=u_id) AND p1.up_plati_do < CURDATE()) OR
+							WHERE p2.up_id_user=u_id) AND
+						p1.up_plati_do = (SELECT MAX(p2.up_plati_do) FROM users_platby p2
+							WHERE p2.up_id_user=u_id AND p2.up_plati_do < CURDATE())) OR
 					p1.up_id IS NULL)
 					AND NOT EXISTS (
 						SELECT * FROM users_platby p2
