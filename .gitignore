@@ -2,3 +2,4 @@ eclipse/.metadata/*
 !eclipse/.metadata/.gitignore
 eclipse/TKOlomouc/.settings/*
 !eclipse/TKOlomouc/.settings/.gitignore
+files/Core/settings/db.php
