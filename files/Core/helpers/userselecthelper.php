@@ -63,59 +63,6 @@ class UserSelectHelper {
 		$name = 'userselect' . rand(0,1024);
 		
 		$out = '<div class="' . $name . '">' . "\n";
-		if($this->tmpSwitch) {
-			$out .=
-"<script type=\"text/javascript\">
-$(function(){
-var name = '.' + '$name';
-var type = '{$this->type}';
-
-$(name + ' select').change(function() {
-	if($(name + ' select').val() === 'temporary') {
-		$(name + ' .new').slideDown();
-	} else {
-		$(name + ' .new').slideUp();
-	}
-});
-$(name + ' .new button').click(function(){
-	var celejmeno = $(name + ' .jmeno').val() + ' ' + $(name + ' .prijmeni').val();
-	if(celejmeno == ' ') {
-		return false;
-	}
-	$(name + ' option').each(function(){
-		if(this.text == celejmeno || this.text == (celejmeno + ', ' + $(name + ' .year').val())) {
-			$(name + ' .new').slideUp();
-			$(name + ' select').val(this.value);
-			return false;
-		}
-	});
-	$.ajax({
-		type: 'POST',
-		url: '/admin/users/temporary?ajax=ajax',
-		data: {
-			jmeno: $(name + ' .jmeno').val(),
-			prijmeni: $(name + ' .prijmeni').val(),
-			narozeni: ($(name + ' .year').val() + '-' + $(name + ' .month').val() + '-' + $(name + ' .day').val())
-		},
-		beforeSend: function(){ $(name + ' .new').slideUp();$(name + ' .loading').slideDown();},
-		success: function(data){
-			if(typeof(data) != 'object') {
-				data = JSON.parse(data);
-			}
-			var id = (type == 'par') ? data.par_id : data.user_id;
-			var fullname = data.jmeno + ' ' + data.prijmeni;
-			
-			$(name + ' select').append('<option value=\"' + id + '\" selected=\"selected\">' +
-				fullname + ', ' + data.rok + '</option>');
-			$(name + ' select').val(id);
-			$(name + ' .loading').slideUp();
-		}
-	});
-	return false;
-});
-});
-</script>";
-		}
 		
 		$out .= '<select name="' . $this->name . '">' . "\n";
 		if(!post($this->name))
@@ -151,6 +98,19 @@ $(name + ' .new button').click(function(){
 			$out .= '<button type="submit" name="jmeno">Uložit</button>';
 			$out .= '</div>';
 			$out .= '<div class="loading" style="display:none;"><img src="/images/loading_bar.gif"/></div>';
+			$out .= '<script type="text/javascript">';
+			$out .= '(function($) {';
+			$out .= '	$(function() {';
+			$out .= '		if(typeof $.fn.tempUserSelect == "undefined") {';
+			$out .= '			$.getScript("/scripts/tempUserSelect.js", function() {';
+			$out .= '				$(".' . $name . '").tempUserSelect("' . $this->type . '")';
+			$out .= '			});';
+			$out .= '		} else {';
+			$out .= '			$(".' . $name . '").tempUserSelect("' . $this->type . '")';
+			$out .= '		}';
+			$out .= '	})';
+			$out .= '})(jQuery);';
+			$out .= '</script>';
 		}
 		$out .= '</div>';
 		
