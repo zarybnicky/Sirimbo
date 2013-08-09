@@ -34,6 +34,14 @@ EOS;
 	<script src="/scripts/jquery-1.10.2.min.js"></script>	
 </head>
 <body>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/cs_CZ/all.js#xfbml=1&appId=132983570203245";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 <div id="all">
 	<div id="header">
 		<a href="/home" id="homelink"></a>
