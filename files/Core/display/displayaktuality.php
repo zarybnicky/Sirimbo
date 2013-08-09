@@ -19,6 +19,7 @@ class DisplayAktuality {
 		} else {
 			echo stripslashes(nl2br($data['at_text'])), '<br/><br/>';
 			echo '<div class="fb-comments" data-href="http://tkolymp.cz/aktualne/' . $data['at_id'] . '" data-width="710"></div>';
+>>>>>>> 46442ac786badec0db97d46364b23c0e280d0b9e
 		}
 	}
 	public static function viewAktuality($kat = 0, $kdo = 0) {
