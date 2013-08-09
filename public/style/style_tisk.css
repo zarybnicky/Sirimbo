@@ -1,0 +1,13 @@
+@IMPORT url("/style/style.css");
+
+body {
+	background:white none;
+	padding:10px;
+}
+#all {
+	width:auto;
+	margin:inherit;
+}
+#header, #userbox, .badlogin {
+	display:none;
+}
