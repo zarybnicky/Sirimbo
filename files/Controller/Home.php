@@ -6,7 +6,6 @@ class Controller_Home extends Controller_Abstract {
 		
 		notice(View::getRedirectMessage());
 
-		echo '<style>#content {margin-left:110px !important;</style>';
 		echo '<div style="width:710px;">';
 		
 		echo Helper::get()->clanky()->number(5)->slideBox(true);

@@ -16,6 +16,8 @@ class COntroller_Oklubu extends Controller_Abstract {
 		echo $s->menuItem('Externí trenéři',	'/oklubu/treneri/externi');
 		echo $s->menuItem('Kde trénujeme',		'/oklubu/saly');
 		echo $s->menuItem('Stanovy klubu',		'/oklubu/stanovy.pdf');
+		
+		echo $s->commonItems();
     }
     function obecne($id = null) {
         include('files/Main/OKlubu/Main.inc');

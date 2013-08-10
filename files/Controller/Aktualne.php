@@ -27,6 +27,8 @@ class Controller_Aktualne extends Controller_Abstract {
     	echo $s->menuItem('Videa',				'/aktualne/videa');
     	echo $s->menuItem('Články',				'/aktualne/clanky');
     	echo $s->menuItem('Krátké zprávy',		'/aktualne/kratke-zpravy');
+		
+		echo $s->commonItems();
     }
     private function _aktualne($nadpis = "", $type = null) {
         header_main('Aktuálně');

@@ -16,6 +16,8 @@ class Controller_Member extends Controller_Abstract {
 		echo $s->menuItem('Žebříček',		'/member/pary');
 		echo $s->menuItem('Členové',			'/member/clenove');
 		echo $s->menuItem('Profil',			'/member/profil');
+		
+		echo $s->commonItems();
 	}
     function view($id = null)  {
         DisplayPary::viewPartnerRequests(DBPary::getPartnerRequestsForMe(User::getUserID()),
