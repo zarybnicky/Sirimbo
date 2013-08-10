@@ -27,7 +27,7 @@ foreach($items as $data) {
 	echo '<div style="float:right;text-align:right;">';
 	echo '<div><span class="little">přidal: </span>';
 	echoFullJmeno($data);
-	echo '<br/><span class="little">aktualizováno: </span>', formatTimestamp($data['up_timestamp']), '</div>';
+	echo '<br/><span class="little">přidáno: </span>', formatTimestamp($data['up_timestamp']), '</div>';
 	echo '</div>';
 	echo '<div style="clear:both;"></div>';
 	echo '</div>';
