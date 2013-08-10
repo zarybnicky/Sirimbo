@@ -372,15 +372,20 @@ div#TopFeaturesBlock ul.FeatureIndex > li > a{height:14px;width:14px;display:blo
 	border: none;
 	background: none !important;
 	list-style: none;
-	padding-left: 17px;
+	padding-left: 8px;
 	margin: 0 !important;
 } .fotolist li {
 	border: none;
 	background: none !important;
 } .fotolist li a {
 	border: none;
+	text-decoration: none;
+	color: #555;
 	background: none !important;
 	padding: 7px 0 !important;
+} .fotolist li a.current {
+	color: #000;
+	font-weight: bolder;
 } .fotolist img {
 	display: inline;
 	margin: 3px 5px -3px 0;
