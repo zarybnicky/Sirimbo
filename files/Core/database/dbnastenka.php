@@ -4,10 +4,10 @@ class DBNastenka extends Database implements Pagable {
 	
 	public static function getNastenka($offset = null, $count = null) {
 		$res = DBNastenka::query(
-		"SELECT up_id,up_kdo,u_jmeno,u_prijmeni,up_aktu,up_nadpis,up_text,up_barvy,up_lock
+		"SELECT *
 		FROM upozorneni
 			LEFT JOIN users ON up_kdo=u_id
-		ORDER BY up_aktu DESC" . (($offset !== null && $count !== null) ? " LIMIT $offset,$count" : ''));
+		ORDER BY up_timestamp_add DESC" . (($offset !== null && $count !== null) ? " LIMIT $offset,$count" : ''));
 		return DBNastenka::getArray($res);
 	}
 	
@@ -62,7 +62,7 @@ class DBNastenka extends Database implements Pagable {
 	public static function getSingleNastenka($id) {
 		list($id) = DBNastenka::escapeArray(array($id));
 		
-		$res = DBNastenka::query("SELECT up_kdo,u_jmeno,u_prijmeni,up_aktu,up_nadpis,up_text,up_barvy,up_lock" .
+		$res = DBNastenka::query("SELECT *" .
 			" FROM upozorneni LEFT JOIN users ON up_kdo=u_id WHERE up_id='$id'");
 		if(!$res) {
 			return false;
@@ -87,8 +87,8 @@ class DBNastenka extends Database implements Pagable {
 		list($userid, $nadpis, $text, $lock) =
 			DBNastenka::escapeArray(array($userid, $nadpis, $text, $lock));
 		
-		DBNastenka::query("INSERT INTO upozorneni (up_kdo,up_nadpis,up_text,up_lock) VALUES " .
-			"('$userid','$nadpis','$text','$lock')");
+		DBNastenka::query("INSERT INTO upozorneni (up_kdo,up_nadpis,up_text,up_lock,up_timestamp_add) VALUES " .
+			"('$userid','$nadpis','$text','$lock',NOW())");
 		return DBNastenka::getInsertId();
 	}
 	
