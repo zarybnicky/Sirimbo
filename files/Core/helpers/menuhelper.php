@@ -45,7 +45,7 @@ class MenuHelper {
 		return $this;
 	}
 	function render() {
-		$out = '<div style="position:block;width:150px;';
+		$out = '<div class="sticky" style="width:150px;';
 		if($this->right > -1) $out .= 'margin-left:' . $this->right . 'px;';
 		if($this->left > -1) $out .= 'margin-right:' . $this->left . 'px;';
 		switch($this->float) {
@@ -54,7 +54,22 @@ class MenuHelper {
 			case MenuHelper::FLOAT_NONE: $out .= 'float:none;'; break;
 		}
 		$out .= '">';
-		$out .= '<div style="position:fixed;z-index:100;width:inherit;' . 
+		?>
+		<script type="text/javascript">
+		(function($) {
+			$(function() {
+				if(typeof $.fn.topFeatures == "undefined") {
+					$.getScript("/scripts/jquery.sticky.js", function() {
+						$(".sticky").sticky({topSpacing:15});
+					});
+				} else {
+					$(".sticky").sticky({topSpacing:15});
+				}
+			})
+		})(jQuery);
+		</script>
+		<?php
+		$out .= '<div style="z-index:100;width:inherit;' . 
 			'border:1px solid #FFD390;background:#FFE7C7;margin-top:2px;padding:3px 1px;">';
 		if(!empty($this->content)) {
 			$i = 1;
