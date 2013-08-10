@@ -141,7 +141,7 @@ class DBAnkety extends Database {
 		
 		$res = DBAnkety::query("UPDATE ankety_item SET aki_pocet=aki_pocet+1 WHERE aki_id='$choice'");
 		$res = DBAnkety::query("INSERT INTO ankety_ip (akp_id_rodic,akp_ip) VALUES" .
-			" ('$id', INET_ATON('$ip')) ON DUPLICATE KEY UPDATE akp_aktu=CURRENT_TIMESTAMP");
+			" ('$id', INET_ATON('$ip')) ON DUPLICATE KEY UPDATE akp_timestamp=CURRENT_TIMESTAMP");
 		return true;
 	}
 }

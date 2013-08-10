@@ -31,7 +31,7 @@ foreach($users as $user) {
 	echo '<td>', $user['u_email'], '</td>';
 	echo '<td>', $user['u_telefon'], '</td>';
 	echo '<td>', formatDate($user['u_narozeni']), '</td>';
-	echo '<td>', formatTimestamp($user['u_aktu']), '</td>';
+	echo '<td>', formatTimestamp($user['u_timestamp']), '</td>';
 	echo '</tr>';
 }
 ?>

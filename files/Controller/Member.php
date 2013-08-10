@@ -41,7 +41,7 @@ class Controller_Member extends Controller_Abstract {
         	echo '<div class="no_date" style="text-align:right;">';
         	if(Permissions::check('nastenka', P_OWNED))
         		echo '<a href="/admin/novinky/remove?id=', $item['no_id'], '">Odstranit</a> - ';
-        	echo formatTimestamp($item['no_aktu']), '</div>';
+        	echo formatTimestamp($item['no_timestamp']), '</div>';
         	echo '</div><hr/>';
         }
     }

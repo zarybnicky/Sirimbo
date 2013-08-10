@@ -8,7 +8,7 @@ class DisplayAktuality {
 		else
 			header_minor($data['at_jmeno']);
 		
-		echo formatTimestamp($data['at_aktu']);
+		echo formatTimestamp($data['at_timestamp']);
 		if(Permissions::check('aktuality', P_OWNED, $data['at_kdo']))
 			echo '&nbsp;&nbsp;- <a href="/admin/aktuality/edit/', $data['at_id'], '">Upravit</a>';
 		echo '<br/>';

@@ -49,7 +49,7 @@ class ClankyHelper {
 				$out .= '<div class="notice">Žádné další články</div>';
 			for($i = $this->offset; $i < ($this->offset + $this->number); $i++) {
 				$out .= '<div>';
-				list($date, $time) = explode(' ', $this->clanky[$i]['at_aktu']);
+				list($date, $time) = explode(' ', $this->clanky[$i]['at_timestamp']);
 				$out .= '<span class="big">' .
 					'<a href="/aktualne/' . $this->clanky[$i]['at_id'] . '">' .
 					$this->clanky[$i]['at_jmeno'] .
