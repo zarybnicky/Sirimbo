@@ -13,10 +13,7 @@ class Controller_Member_Rozpis  extends Controller_Member {
 		$lesson = DBRozpis::getRozpisItemLesson(post('ri_id'));
 		
 		if(post('action') == 'signup' && !is_object($this->checkData($data, post('action')))) {
-			$partnerka = DBUser::getUserData(User::getPartnerID());
-			
-			if(!User::getZaplaceno() || (User::getPartnerID() > 0 &&
-					!(strcmp($partnerka['up_plati_do'], date('Y-m-d', strtotime('- 14 days'))) >= 0))) {
+			if(!User::getZaplaceno() || (User::getPartnerID() > 0 && !User::getZaplaceno(true))) {
 				notice('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
 			} elseif($lesson['ri_partner']) {
 				notice('Už je obsazeno');
