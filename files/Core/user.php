@@ -74,6 +74,10 @@ class User {
 		$date = (int) date('md');
 		if($date >= '701' && $date <= 831) {
 			$_SESSION['zaplaceno'] = $_SESSION['zaplaceno_par'] = true;
+			if($date > 824) {
+				$remainingDays = 831 - $date;
+				$subject = 'prázdnin';
+			}
 		} else {
 			$now = time();
 			$expire_user = strtotime($data['up_plati_do']) - $now;
@@ -81,41 +85,46 @@ class User {
 			
 			$_SESSION['zaplaceno'] = ($expire_user >= 0);
 			$_SESSION['zaplaceno_par'] = $_SESSION['zaplaceno'] && ($expire_par >= 0);
-			
-			if($expire_user < 604800) {
+
+			if($expire_user < 604800 && ($date < 623 || $date > 901)) {
 				$remainingDays = round($expire_user / 86400);
-				switch($remainingDays) {
-					case 7:
-					case 6:
-					case 5:
-						$_SESSION['zaplaceno_text'] =
-							'Do konce platnosti členských příspěvků vám zbývá ' . $remainingDays . ' dní, ' .
-							'bez zaplacených příspěvků si nebudete moci rezervovat lekce.';
-						break;
-					case 4:
-					case 3:
-					case 2:
-						$_SESSION['zaplaceno_text'] =
-							'Do konce platnosti členských příspěvků vám zbývají ' . $remainingDays . ' dny, ' .
-							'bez zaplacených příspěvků si nebudete moci rezervovat lekce.';
-						break;
-					case 1:
-						$_SESSION['zaplaceno_text'] =
-							'Do konce platnosti členských příspěvků vám zbývá jeden den, ' .
-							'bez zaplacených příspěvků si nebudete moci rezervovat lekce.';
-						break;
-					case 0:
-						$_SESSION['zaplaceno_text'] =
-							'Dnes Vám vypší platnost členských příspěvků, ' .
-							'bez zaplacených příspěvků si nebudete moci rezervovat lekce.';
-						break;
-					default:
-						$_SESSION['zaplaceno_text'] =
-							'Nemáte zaplacené členské příspěvky, ' .
-							'bez zaplacených příspěvků si nemůžete rezervovat lekce.';
-						break;
-				}
+				$subject = 'platnosti členských příspěvků';
 			}
+		}
+		if(!isset($remainingDays) || !isset($subject))
+			return true;
+		
+		switch($remainingDays) {
+			case 8:
+			case 7:
+			case 6:
+			case 5:
+				$_SESSION['zaplaceno_text'] =
+					'Do konce ' . $subject . ' vám zbývá ' . $remainingDays . ' dní, ' .
+					'bez zaplacených příspěvků si nebudete moci rezervovat lekce.';
+				break;
+			case 4:
+			case 3:
+			case 2:
+				$_SESSION['zaplaceno_text'] =
+					'Do konce ' . $subject . ' vám zbývají ' . $remainingDays . ' dny, ' .
+					'bez zaplacených příspěvků si nebudete moci rezervovat lekce.';
+				break;
+			case 1:
+				$_SESSION['zaplaceno_text'] =
+					'Do konce ' . $subject . ' vám zbývá jeden den, ' .
+					'bez zaplacených příspěvků si nebudete moci rezervovat lekce.';
+				break;
+			case 0:
+				$_SESSION['zaplaceno_text'] =
+					'Zítra začíná nové pololetí/čtvrtletí, ' .
+					'bez zaplacených příspěvků si nebudete moci rezervovat lekce.';
+				break;
+			default:
+				$_SESSION['zaplaceno_text'] =
+					'Nemáte zaplacené členské příspěvky, ' .
+					'bez zaplacených příspěvků si nemůžete rezervovat lekce.';
+				break;
 		}
 		return true;
 	}
