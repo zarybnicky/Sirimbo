@@ -12,6 +12,8 @@ class Controller_Nabizime extends Controller_Abstract {
 		echo $s->menuItem('Individuální lekce',	'/nabizime/indivualky');
 		echo $s->menuItem('Skupinové semináře',	'/nabizime/seminare');
 		echo $s->menuItem('Taneční soustředění','/nabizime/soustredeni');
+		
+		echo $s->commonItems();
     }
     function obecne($id = null) {
         include('files/Main/Nabizime/Main.inc');
