@@ -25,6 +25,8 @@ class Controller_Admin extends Controller_Abstract {
 		echo $s->menuItem('Správa anket',		'/admin/ankety',	'ankety', P_OWNED);
 		echo $s->menuItem('Správa oprávnění',	'/admin/permissions','permissions', P_OWNED);
 		echo $s->menuItem('Konzole',			'/admin/konzole',	'konzole', P_OWNED);
+		
+		echo $s->commonItems();
 	}
 }
 ?>

@@ -13,6 +13,8 @@ class Controller_Inzerce extends Controller_Abstract {
     	echo $s->menuItem('Hledám partnera',		'/inzerce/partner');
     	echo $s->menuItem('Hledám partnerku',	'/inzerce/partnerka');
     	echo $s->menuItem('Nový inzerát',		'/inzerce/add');
+		
+		echo $s->commonItems();
     }
     function posledni($id = null) {
         $this->inzerce('Poslední inzeráty', INZERCE_ALL);
