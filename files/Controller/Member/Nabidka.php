@@ -12,10 +12,7 @@ class Controller_Member_Nabidka extends Controller_Member {
 		$data = DBNabidka::getSingleNabidka(post('id'));
 		
 		if(post('hodiny') > 0 && !is_object($this->checkData($data, 'signup'))) {
-			$partnerka = DBUser::getUserData(User::getPartnerID());
-			
-			if(!User::getZaplaceno() || (User::getPartnerID() > 0 &&
-					!(strcmp($partnerka['up_plati_do'], date('Y-m-d', strtotime('- 14 days'))) >= 0))) {
+			if(!User::getZaplaceno() || (User::getPartnerID() > 0 && !User::getZaplaceno(true))) {
 				notice('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
 			} elseif($data['n_max_pocet_hod'] > 0 &&
 					(DBNabidka::getNabidkaLessons(post('id'), User::getParID()) + post('hodiny')) > $data['n_max_pocet_hod']) {

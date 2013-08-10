@@ -61,16 +61,18 @@ class DBPary extends Database {
 	
 	public static function getLatestPartner($partner, $pohlavi) {
 		list($partner, $pohlavi) = DBPary::escapeArray(array($partner, $pohlavi));
-		
-		if($pohlavi == "m") {
-			$res = DBPary::query("SELECT * " .
-				"FROM pary LEFT JOIN users ON p_id_partnerka=u_id WHERE p_id_partner='$partner'" .
-				" AND p_archiv='0'");
-		} elseif($pohlavi == "f") {
-			$res = DBPary::query("SELECT * " .
-				"FROM pary LEFT JOIN users ON p_id_partner=u_id WHERE p_id_partnerka='$partner'" .
-				" AND p_archiv='0'");
-		}
+	
+		$res = DBPary::query('
+			SELECT *
+			FROM pary ' .
+				($pohlavi == "m" ?
+					'LEFT JOIN users ON p_id_partnerka=u_id' :
+					'LEFT JOIN users ON p_id_partner=u_id') .
+				' LEFT JOIN users_platby ON up_id_user=u_id ' .
+				($pohlavi == 'm' ?
+					'WHERE p_id_partner="' . $partner . '"' :
+					'WHERE p_id_partnerka="' . $partner . '"') .
+				' AND p_archiv="0"');
 		if($res)
 			return DBPary::getSingleRow($res);
 		else

@@ -24,6 +24,10 @@ class Controller_Member extends Controller_Abstract {
         	DBPary::getPartnerRequestsByMe(User::getUserID()));
         
         header_main('Novinky');
+
+		if(isset($_SESSION['zaplaceno_text']))
+			notice($_SESSION['zaplaceno_text']);
+		
         notice(View::getRedirectMessage());
         
         $data = DBNovinky::getLastNovinky(NOVINKY_COUNT);
