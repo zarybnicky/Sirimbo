@@ -91,7 +91,12 @@ class Controller_Fotogalerie extends Controller_Abstract {
 			else
 				$link = "/fotogalerie/" . $dir['gd_id'];
 			
-			echo '<li><a href="', $link, '"><img src="/style/directory.png" alt="" />', $dir['gd_name'], '</a>';
+			if($dir['gd_id'] == Request::getID())
+				echo '<li><a class="current" href="', $link, '">';
+			else
+				echo '<li><a href="', $link, '">';
+			
+			echo '<img src="/style/directory.png" alt="" />', $dir['gd_name'], '</a>';
 			$level_prev = $dir['gd_level'];
 		}
 		for($i = 0; $i < $level_prev; $i++)
