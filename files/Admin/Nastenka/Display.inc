@@ -44,7 +44,7 @@ foreach($items as $item) {
 	echo '<td>';
 	echoFullJmeno($item);
 	echo '</td>';
-	echo '<td style="width:83px;">', formatTimestamp($item['up_aktu'], true), '</td>';
+	echo '<td style="width:83px;">', formatTimestamp($item['up_timestamp'], true), '</td>';
 	echo '<td>';
 	$skupiny = DBNastenka::getNastenkaSkupiny($item['up_id']);
 	foreach($skupiny as $skupina)

@@ -37,7 +37,7 @@ class ZpravyHelper {
 					continue;
 				
 				$out .= '<div>';
-				list($date, $time) = explode(' ', $this->zpravy[$i]['at_aktu']);
+				list($date, $time) = explode(' ', $this->zpravy[$i]['at_timestamp']);
 				$out .= '<span class="big">' . $this->zpravy[$i]['at_jmeno'] . '</span>' .
 					'<span class="little">&nbsp;(' . formatDate($date) . ')</span>';
 				$out .= '<p style="text-align:left;">' . $this->zpravy[$i]['at_text'] . '</p>';	

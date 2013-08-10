@@ -1,7 +1,7 @@
 <?php
 class DBPary extends Database {
 	public static function getPary() {
-		$res = DBPary::query("SELECT * FROM pary ORDER BY p_aktu_vytvoreno ASC");
+		$res = DBPary::query("SELECT * FROM pary ORDER BY p_timestamp_add ASC");
 		return DBPary::getArray($res);
 	}
 	
@@ -85,7 +85,7 @@ class DBPary extends Database {
 			FROM users
 			LEFT JOIN pary p1 ON p_id_partnerka=u_id OR p_id_partner=u_id 
 			LEFT JOIN pary p2 ON p1.p_id_partner=p2.p_id_partner AND
-				p1.p_aktu_archivovano<p2.p_aktu_archivovano
+				p1.p_timestamp_archive<p2.p_timestamp_archive
 			WHERE u_id NOT IN
 			(SELECT u_id FROM users
 				LEFT JOIN pary ON p_id_partnerka=u_id OR
@@ -148,7 +148,7 @@ class DBPary extends Database {
 		
 		DBPary::query(
 			"UPDATE pary
-			SET p_archiv='1',p_aktu_archivovano=NOW()
+			SET p_archiv='1',p_timestamp_archive=NOW()
 			WHERE (p_id_partner='$partner' OR p_id_partner='$partnerka' OR
 				p_id_partnerka='$partnerka') AND p_archiv='0'"
 		);
@@ -172,7 +172,7 @@ class DBPary extends Database {
 					(SELECT p_id FROM pary
 					WHERE (p_id_partner='$partner' OR p_id_partnerka='$partner') AND p_archiv='0')"
 		);*/
-		DBPary::query("UPDATE pary SET p_archiv='1',p_aktu_archivovano=NOW()" .
+		DBPary::query("UPDATE pary SET p_archiv='1',p_timestamp_archive=NOW()" .
 			" WHERE (p_id_partner='$partner' OR p_id_partnerka='$partner') AND p_archiv='0'");
 		
 		DBPary::query("INSERT INTO pary (p_id_partner, p_id_partnerka) VALUES ('$partner','0')");

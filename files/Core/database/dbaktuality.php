@@ -8,7 +8,7 @@ class DBAktuality extends Database {
 			FROM aktuality
 			WHERE 1=1" . ($kat != 0 ? " AND at_kat='$kat'" : '') .
 			($kdo > 0 ? " AND at_kdo='$kdo'" : '') .
-			" ORDER BY at_aktu DESC"
+			" ORDER BY at_timestamp_add DESC"
 		);
 		return DBAktuality::getArray($res);
 	}
@@ -27,8 +27,8 @@ class DBAktuality extends Database {
 			DBAktuality::escapeArray(array($kdo, $kat, $jmeno, $text, $preview, $foto, $foto_main));
 		
 		DBAktuality::query(
-			"INSERT INTO aktuality (at_kdo,at_kat,at_jmeno,at_text,at_preview,at_foto,at_foto_main)
-			VALUES ('$kdo','$kat','$jmeno','$text','$preview','$foto','$foto_main')"
+			"INSERT INTO aktuality (at_kdo,at_kat,at_jmeno,at_text,at_preview,at_foto,at_foto_main,at_timestamp_add)
+			VALUES ('$kdo','$kat','$jmeno','$text','$preview','$foto','$foto_main',NOW())"
 		);
 	}
 	public static function editAktualita($id, $kat, $jmeno, $text, $preview, $foto, $foto_main) {
