@@ -70,8 +70,53 @@ class User {
 		);
 		$_SESSION['par'] = $par['p_id'];
 		$_SESSION['partner'] = $par['u_id'];
-		$_SESSION['zaplaceno'] =
-			(bool) (strcmp($data['up_plati_do'], date('Y-m-d', strtotime('- 14 days'))) >= 0);
+		
+		$date = (int) date('md');
+		if($date >= '701' && $date <= 831) {
+			$_SESSION['zaplaceno'] = $_SESSION['zaplaceno_par'] = true;
+		} else {
+			$now = time();
+			$expire_user = strtotime($data['up_plati_do']) - $now;
+			$expire_par = strtotime($par['up_plati_do']) - $now;
+			
+			$_SESSION['zaplaceno'] = ($expire_user >= 0);
+			$_SESSION['zaplaceno_par'] = $_SESSION['zaplaceno'] && ($expire_par >= 0);
+			
+			if($expire_user < 604800) {
+				$remainingDays = round($expire_user / 86400);
+				switch($remainingDays) {
+					case 7:
+					case 6:
+					case 5:
+						$_SESSION['zaplaceno_text'] =
+							'Do konce platnosti členských příspěvků vám zbývá ' . $remainingDays . ' dní, ' .
+							'bez zaplacených příspěvků si nebudete moci rezervovat lekce.';
+						break;
+					case 4:
+					case 3:
+					case 2:
+						$_SESSION['zaplaceno_text'] =
+							'Do konce platnosti členských příspěvků vám zbývají ' . $remainingDays . ' dny, ' .
+							'bez zaplacených příspěvků si nebudete moci rezervovat lekce.';
+						break;
+					case 1:
+						$_SESSION['zaplaceno_text'] =
+							'Do konce platnosti členských příspěvků vám zbývá jeden den, ' .
+							'bez zaplacených příspěvků si nebudete moci rezervovat lekce.';
+						break;
+					case 0:
+						$_SESSION['zaplaceno_text'] =
+							'Dnes Vám vypší platnost členských příspěvků, ' .
+							'bez zaplacených příspěvků si nebudete moci rezervovat lekce.';
+						break;
+					default:
+						$_SESSION['zaplaceno_text'] =
+							'Nemáte zaplacené členské příspěvky, ' .
+							'bez zaplacených příspěvků si nemůžete rezervovat lekce.';
+						break;
+				}
+			}
+		}
 		return true;
 	}
 	
@@ -142,8 +187,11 @@ class User {
 		return $_SESSION['skupina_data'];
 	}
 	
-	public static function getZaplaceno() {
-		return $_SESSION['zaplaceno'];
+	public static function getZaplaceno($par = false) {
+		if($par)
+			return $_SESSION['zaplaceno_par'];
+		else
+			return $_SESSION['zaplaceno'];
 	}
 	
 	public static function getParID() {
