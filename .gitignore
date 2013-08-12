@@ -3,3 +3,8 @@ eclipse/.metadata/*
 eclipse/TKOlomouc/.settings/*
 !eclipse/TKOlomouc/.settings/.gitignore
 files/Core/settings/db.php
+galerie/*
+!galerie/.gitignore
+upload/*
+!upload/.gitignore
+stats/
