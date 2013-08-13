@@ -43,7 +43,7 @@ class Renderer {
 		
 		if(!file_exists($this->file)) {
 			Log::write('Could not find file "' . $this->file . '"');
-			View::viewError(ER_NOT_FOUND_RIGHT);
+			throw new Exception("Soubor nebyl nalezen!");
 		}
 		ob_start();
 		include $this->__file;

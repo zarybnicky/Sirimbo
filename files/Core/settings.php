@@ -19,6 +19,7 @@ define('DEBUG_LOG', ROOT . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . '
 define('PHP_LOG', ROOT . 'log' . DIRECTORY_SEPARATOR . 'php.log');
 
 set_include_path(
+	CORE . PATH_SEPARATOR .
 	CORE . DIRECTORY_SEPARATOR . 'database' . PATH_SEPARATOR .
 	CORE . DIRECTORY_SEPARATOR . 'display' . PATH_SEPARATOR .
 	CORE . DIRECTORY_SEPARATOR . 'helpers' . PATH_SEPARATOR .
@@ -37,16 +38,18 @@ function _shutdown_handler() {
 		}
 	}
 }
-function _exception_handler($severity, $message, $filepath, $line) {
+function _error_handler($severity, $message, $filepath, $line) {
 	if ($severity == E_STRICT) {
 		return false;
 	}
+	ob_clean();
 	Log::write("$severity: $message in $filepath: $line");
+	header('Location: /error?id=script_fatal');
 	return true;
 }
 
 register_shutdown_function('_shutdown_handler');
-set_error_handler('_exception_handler');
+set_error_handler('_error_handler');
 
 date_default_timezone_set('Europe/Paris');
 

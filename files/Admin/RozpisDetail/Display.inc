@@ -63,7 +63,7 @@ echo $s;
 if(is_numeric(post('n_id'))) {
 	$n_id = post('n_id');
 	if(!($nabidka = DBNabidka::getSingleNabidka($n_id)))
-		View::viewError(ER_CORRUPT_DATA);
+		throw new UnexpectedValueException("Nabídka se zadaným ID neexistuje!");
 	
 	echo '<div class="n_wrapper">';
 	DisplayNabidka::viewNabidkaHeader($nabidka,
