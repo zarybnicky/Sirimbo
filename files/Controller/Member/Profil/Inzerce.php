@@ -29,7 +29,7 @@ class Controller_Member_Profil_Inzerce extends Controller_Member_Profil {
 			View::redirect('/member/profil/inzerce', 'Inzerát s takovým ID neexistuje');
 		
 		if(Permissions::check('inzerce', P_MEMBER) && $data['i_reg'] != User::getUserID())
-			View::viewError(ER_AUTHORIZATION);
+			throw new Exception("Máte nedostatečnou autorizaci pro tuto akci!");
 		
 		if(empty($_POST)) {
 			post('kat', $data['i_kat']);
@@ -66,7 +66,7 @@ class Controller_Member_Profil_Inzerce extends Controller_Member_Profil {
 			View::redirect('/member/profil/inzerce', 'Inzerát s takovým ID neexistuje');
 		
 		if(Permissions::check('inzerce', P_MEMBER) && $data['i_reg'] != User::getUserID())
-			View::viewError(ER_AUTHORIZATION);
+			throw new Exception("Máte nedostatečnou autorizaci pro tuto akci!");
 		
 		if(empty($_POST)) {
 			echo '<form action="', $_SERVER['REQUEST_URI'], '" method="post">';

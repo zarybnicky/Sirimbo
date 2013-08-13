@@ -168,7 +168,7 @@ class Controller_Inzerce extends Controller_Abstract {
         		View::redirect(Request::getURI(), 'Inzerát s takovým ID neexistuje');
         	
         	if($data['i_pass'] != $pass)
-        		View::viewError(ER_AUTHORIZATION);
+        		throw new Exception("Máte nedostatečnou autorizaci pro tuto akci!");
         	
         	session('inzerce_' . $id, $pass);
         	

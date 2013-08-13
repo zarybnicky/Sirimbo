@@ -15,7 +15,7 @@ class Permissions {
 			if($redirect !== null) {
 				View::redirect($redirect);
 			} elseif(User::isLogged()) {
-				View::viewError(ER_AUTHORIZATION);
+				throw new Exception("Máte nedostatečnou autorizaci pro tuto akci!");
 			} else {
 				View::redirect('/login?return=' . Request::getURI(), 'Nemáte dostatečná oprávnění k zobrazení požadovaného obsahu');
 			}

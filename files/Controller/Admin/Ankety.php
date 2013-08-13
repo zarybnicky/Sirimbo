@@ -154,7 +154,7 @@ class Controller_Admin_Ankety extends Controller_Admin {
 			}
 		}
 		if(isset($error) && $error)
-			View::viewError(ER_AUTHORIZATION);
+			throw new Exception("Máte nedostatečnou autorizaci pro tuto akci!");
 		
 		View::redirect('/admin/ankety', 'Ankety odebrány');
 	}
