@@ -24,7 +24,7 @@ class Controller_Admin_Nastenka extends Controller_Admin {
 						' smazal příspěvek z nástěnky');
 				}
 				if(isset($error) && $error)
-					View::viewError(ER_AUTHORIZATION);
+					throw new Exception("Máte nedostatečnou autorizaci pro tuto akci!");
 				notice('Příspěvky odebrány');
 				break;
 			

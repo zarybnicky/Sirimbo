@@ -52,7 +52,7 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 					}
 				}
 				if(isset($error) && $error)
-					View::viewError(ER_AUTHORIZATION);
+					throw new Exception("Máte nedostatečnou autorizaci pro tuto akci!");
 				
 				notice('Nabídky odebrány');
 				include('files/Admin/Nabidka/Display.inc');

@@ -12,9 +12,9 @@ class User {
 				|| ($id = DBUser::checkUser($login, $pass))) {
 			$data = DBUser::getUserData($id);
 			if($data['u_ban'])
-				View::viewError(ER_BAN);
+				throw new Exception("Váš účet byl pozastaven!");
 			if(!$data['u_confirmed'])
-				View::viewError(ER_NOT_APPROVED);
+				throw new Exception("Váš účet ještě nebyl potvrzen!");
 			
 			$_SESSION["login"] = 1;
 			User::loadUser($data['u_id'], $data);

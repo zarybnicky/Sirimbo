@@ -47,22 +47,7 @@ EOS;
 	<div id="header">
 		<a href="/home" id="homelink"></a>
 		<div id="userbox">
-		<?php
-		if(!User::isLogged()) {
-			//TODO: AJAX
-			if(post('action') == 'login' ||
-					post('action') == 'enter') {
-				post('pass', User::crypt(post('pass')));
-				
-				if(!User::login(post('login'), post('pass'))) {
-					View::redirect('/login', 'Špatné jméno nebo heslo!', true);
-				} elseif(get('return')) {
-					View::redirect(get('return'));
-				} else {
-					View::redirect('/member/home');
-				}
-			}
-		?>
+		<?php if(!User::isLogged()) { ?>
 			<form action="<?php Request::getURI();?>" method="post"><div>
 				<button type="submit" name="action" value="enter" style="display:none;"></button>
 				<input style="width:70px;" type="text" name="login"
