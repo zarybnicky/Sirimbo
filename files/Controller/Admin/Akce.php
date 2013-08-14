@@ -4,12 +4,12 @@ class Controller_Admin_Akce extends Controller_Admin {
 	function __construct() {
 		Permissions::checkError('akce', P_OWNED);
 	}
-    function view($id = null) {
-        if(empty($_POST)) {
-        	include('files/Admin/Akce/Display.inc');
-        	return;
-        }
-        switch(post('action')) {
+	function view($id = null) {
+		if(empty($_POST)) {
+			include('files/Admin/Akce/Display.inc');
+			return;
+		}
+		switch(post('action')) {
 			case 'save':
 				$items = DBAkce::getAkce();
 				
@@ -28,46 +28,46 @@ class Controller_Admin_Akce extends Controller_Admin {
 					$url .= '&u[]=' . $id;
 				View::redirect($url);
 				break;
-        	
-        	case "edit":
-        		$akce = post('akce');
-        		if($akce[0])
-        			View::redirect('/admin/akce/edit/' . $akce[0]);
-        		break;
-        		
-        	case "edit_detail":
-        		$akce = post("akce");
-        		if($akce[0])
-        			View::redirect('/admin/akce/detail/' . $akce[0]);
-        		break;
-        		
-        	case "edit_doku":
-        		$akce = post("akce");
-        		if($akce[0])
-        			View::redirect('/admin/akce/dokumenty/' . $akce[0]);
-                break;
-        }
+			
+			case "edit":
+				$akce = post('akce');
+				if($akce[0])
+					View::redirect('/admin/akce/edit/' . $akce[0]);
+				break;
+				
+			case "edit_detail":
+				$akce = post("akce");
+				if($akce[0])
+					View::redirect('/admin/akce/detail/' . $akce[0]);
+				break;
+				
+			case "edit_doku":
+				$akce = post("akce");
+				if($akce[0])
+					View::redirect('/admin/akce/dokumenty/' . $akce[0]);
+				break;
+		}
 		include('files/Admin/Akce/Display.inc');
-    }
-    function add($id = null) {
+	}
+	function add($id = null) {
 		if(empty($_POST) || is_object($f = $this->checkData($_POST, 'add'))) {
 			include('files/Admin/Akce/Form.inc');
 			return;
 		}
-        
+		
 		$od = Helper::get()->date()->name('od')->getPost();
 		$do = Helper::get()->date()->name('do')->getPost();
 		if(!$do || strcmp($od, $do) > 0)
 			$do = $od;
-        
+		
 		DBAkce::addAkce(post('jmeno'), post('kde'), post('info'),
 			$od, $do, post('kapacita'), post('dokumenty'),
 			(post('lock') == 'lock') ? 1 : 0, post('visible') ? '1' : '0');
 		DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal klubovou akci "' .
 			post('jmeno') . '"');
 		View::redirect('/admin/akce', 'Akce přidána');
-    }
-    function edit($id = null) {
+	}
+	function edit($id = null) {
 		if(!$id || !($data = DBAkce::getSingleAkce($id)))
 			View::redirect('/admin/akce', 'Akce s takovým ID neexistuje');
 		
@@ -94,14 +94,14 @@ class Controller_Admin_Akce extends Controller_Admin {
 		$do = Helper::get()->date()->name('do')->getPost();
 		if(!$do || strcmp($od, $do) > 0)
 			$do = $od;
-        
+		
 		DBAkce::editAkce($id, post('jmeno'), post('kde'), post('info'),
 			$od, $do, post('kapacita'), post('dokumenty'),
 			(post('lock') == 'lock') ? 1 : 0, post('visible') ? '1' : '0');
 		DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' změnil detaily akce "' .
 			post('jmeno') . '"');
 		View::redirect('/admin/akce', 'Akce upravena');
-    }
+	}
 	function remove($id = null) {
 		if(empty($_POST) || post('action') !== 'confirm') {
 			include('files/Admin/Akce/DisplayRemove.inc');
@@ -125,12 +125,12 @@ class Controller_Admin_Akce extends Controller_Admin {
 			throw new Exception("Máte nedostatečnou autorizaci pro tuto akci!");
 		
 		View::redirect('/admin/akce', 'Akce odebrány');
-    }
-    
-    private function checkData($data, $action = 'add') {
+	}
+	
+	private function checkData($data, $action = 'add') {
 		$od = Helper::get()->date()->name('od')->getPost();
 		$do = Helper::get()->date()->name('do')->getPost();
-        
+		
 		$f = new Form();
 		$f->checkLength(post('jmeno'), 1, 255, 'Špatná délka jména akce', 'jmeno');
 		$f->checkLength(post('kde'), 1, 255, 'Špatná délka místa konání', 'kde');
@@ -139,6 +139,6 @@ class Controller_Admin_Akce extends Controller_Admin {
 		$f->checkNumeric(post('kapacita'), 'Kapacita musí být zadána číselně', 'kapacita');
 		
 		return $f->isValid() ? true : $f;
-    }
+	}
 }
 ?>

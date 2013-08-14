@@ -3,11 +3,11 @@ include_once('files/Controller/Member/Profil.php');
 class Controller_Member_Profil_Par extends Controller_Member_Profil {
 	function view($id = null) {
 		notice(View::getRedirectMessage());
-        
+		
 		DisplayPary::viewPartnerRequests(DBPary::getPartnerRequestsForMe(User::getUserID()),
 		DBPary::getPartnerRequestsByMe(User::getUserID()));
-        
-        $latest = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
+		
+		$latest = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
 		
 		if(!empty($latest) && $latest['u_id']) {
 			echo "Právě tančím s: ";
@@ -31,12 +31,12 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil {
 		echo '<a href="/member/profil">Zpět</a>';
 		return;
 	}
-    function body($id = null) {
+	function body($id = null) {
 		DisplayPary::viewPartnerRequests(DBPary::getPartnerRequestsForMe(User::getUserID()),
 			DBPary::getPartnerRequestsByMe(User::getUserID()));
 		
 		if(empty($_POST)) {
-            $par = DBPary::getSinglePar(User::getParID());
+			$par = DBPary::getSinglePar(User::getParID());
 			post('stt-trida', $par['p_stt_trida']);
 			post('stt-body', $par['p_stt_body']);
 			post('stt-finale', $par['p_stt_finale']);
@@ -74,15 +74,15 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil {
 		
 		View::redirect("/member/profil/par", "Třída a body změněny");
 		return;
-    }
-    function partner($id = null) {
+	}
+	function partner($id = null) {
 		DisplayPary::viewPartnerRequests(DBPary::getPartnerRequestsForMe(User::getUserID()),
 			DBPary::getPartnerRequestsByMe(User::getUserID()));
-        
-        $latest = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
-        $gotPartner = !empty($latest) && $latest['u_id'];
 		
-        if(!empty($_POST)) {
+		$latest = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
+		$gotPartner = !empty($latest) && $latest['u_id'];
+		
+		if(!empty($_POST)) {
 			if(post('action') == 'dumpthem' && $gotPartner) {
 				DBPary::noPartner(User::getUserID());
 				DBPary::noPartner($latest['u_id']);
@@ -107,7 +107,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil {
 				View::redirect('/member/profil/par', 'Žádost o partnerství odeslána');
 			}
 		}
-        if($gotPartner) {
+		if($gotPartner) {
 			echo "Právě tančím s: ";
 			echoFullJmeno($latest);
 			post("partner", $latest['u_id']);
@@ -117,17 +117,17 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil {
 		}
 		echo '<form method="POST" action="' . Request::getURI() . '">';
 		echo Helper::get()->userSelect()
-            ->name('partner')
-            ->users((User::getUserPohlavi() == "m") ? DBUser::getUsersByPohlavi("f") : DBUser::getUsersByPohlavi("m"));
+			->name('partner')
+			->users((User::getUserPohlavi() == "m") ? DBUser::getUsersByPohlavi("f") : DBUser::getUsersByPohlavi("m"));
 		echo '<button type="submit" name="action" value="confirm">Požádat o partnerství</button>';
 		if($gotPartner)
 			echo '<button type="submit" name="action" value="dumpthem">Rozejít se</button>';
 		echo '<a href="/member/profil/par">Zpět</a>';
 		echo '</form>';
 		return;
-        return;
-    }
-    function zadost($id = null) {
+		return;
+	}
+	function zadost($id = null) {
 		if(!post('action'))
 			View::redirect('/member/profil');
 		switch(post('action')) {
@@ -139,7 +139,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil {
 						View::redirect('/member/profil/par', 'Žádost přijata');
 					}
 				}
-                break;
+				break;
 			case 'refuse':
 				$requests = DBPary::getPartnerRequestsForMe(User::getUserID());
 				foreach($requests as $req) {
@@ -148,7 +148,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil {
 						View::redirect('/member/profil/par', 'Žádost zamítnuta');
 					}
 				}
-                break;
+				break;
 			case 'cancel':
 				$requests = DBPary::getPartnerRequestsByMe(User::getUserID());
 				foreach($requests as $req) {
@@ -157,12 +157,12 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil {
 						View::redirect('/member/profil/par', 'Žádost zrušena');
 					}
 				}
-                break;
-            default:
-                View::redirect('/member/profil');
-                break;
+				break;
+			default:
+				View::redirect('/member/profil');
+				break;
 		}
-        View::redirect('/member/profil', 'Žádná taková žádost tu není');
-    }
+		View::redirect('/member/profil', 'Žádná taková žádost tu není');
+	}
 }
 ?>

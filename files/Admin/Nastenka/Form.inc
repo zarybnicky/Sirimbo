@@ -25,10 +25,10 @@ if(isset($f) && is_object($f))
 		<td><?php
 		$skupiny = DBSkupiny::getSkupiny();
 		foreach($skupiny as $skupina) {
-            if($skupina['us_platba_mesic'] > 0 || $skupina['us_platba_ctvrtrok'] > 0 || $skupina['us_platba_pulrok'] > 0)
-        		echo getCheckbox('sk-' . $skupina['us_id'], '1'), ' ',
-        			getColorBox($skupina['us_color'], $skupina['us_popis']), ' ',
-        			$skupina['us_popis'], '<br/>';
+			if($skupina['us_platba_mesic'] > 0 || $skupina['us_platba_ctvrtrok'] > 0 || $skupina['us_platba_pulrok'] > 0)
+				echo getCheckbox('sk-' . $skupina['us_id'], '1'), ' ',
+					getColorBox($skupina['us_color'], $skupina['us_popis']), ' ',
+					$skupina['us_popis'], '<br/>';
 		}
 		echo getReturnInput();
 		?></td>

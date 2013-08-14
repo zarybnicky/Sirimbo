@@ -85,6 +85,7 @@ th, td {
 	background-color: #fff0e2;
 	vertical-align: middle;
 }
+td.r {text-align:right;}
 p { margin-bottom: 1em; }
 
 #all {

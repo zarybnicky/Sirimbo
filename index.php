@@ -17,6 +17,8 @@ session_regenerate_id();
 include("files/Core/settings.php");
 include("files/Core/form.php");
 include("files/Core/debug.php");
+include("files/Core/log.php");
+include("files/Core/request.php");
 include("files/Controller/Interface.php");
 include("files/Controller/Abstract.php");
 
@@ -40,34 +42,22 @@ unset($_GET['file']);
 if(session('login') === null) {
 	if(post('action') == 'login' || post('action') == 'enter') {
 		post('pass', User::crypt(post('pass')));
-	
+		
 		if(!User::login(post('login'), post('pass'))) {
-			View::redirect('/login', 'Špatné jméno nebo heslo!', true);
+			Helper::get()->redirect()->sendRedirect('/login', 'Špatné jméno nebo heslo!', true);
 		} elseif(get('return')) {
-			View::redirect(get('return'));
+			Helper::get()->redirect()->sendRedirect(get('return'));
 		} else {
-			View::redirect('/member/home');
+			Helper::get()->redirect()->sendRedirect('/member/home');
 		}
 	}
 } else {
 	User::loadUser(session('id'));
 	if(session('invalid_data') &&
 			Request::getURL() !== 'member/profil/edit' && Request::getURL() !== 'logout')
-		View::redirect('/member/profil/edit', 'Prosím vyplňte požadované údaje.', true);
+		Helper::get()->redirect()->sendRedirect('/member/profil/edit', 'Prosím vyplňte požadované údaje.', true);
 }
-
-ob_start();
-ob_start();
 
 $d = new Dispatcher();
 $d->dispatch(Request::getLiteralURL(), Request::getAction(), Request::getID());
-
-$main = ob_get_clean();
-
-include(TISK ? HEADER_TISK : HEADER);
-echo $main;
-include(TISK ? FOOTER_TISK : FOOTER);
-
-ob_end_flush();
-exit;
 ?>

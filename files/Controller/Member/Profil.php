@@ -6,10 +6,10 @@ class Controller_Member_Profil extends Controller_Member {
 	}
 	function view($id = null) {
 		notice(View::getRedirectMessage());
-        
+		
 		include("files/Member/Profil/DisplayMain.inc");
 	}
-    function edit($id = null) {
+	function edit($id = null) {
 		$data = DBUser::getUserData(User::getUserID());
 		
 		if(empty($_POST)) {
@@ -47,8 +47,8 @@ class Controller_Member_Profil extends Controller_Member {
 			$data['u_dancer'], $data['u_lock'], $data['u_ban'], $data['u_system']);
 		
 		View::redirect('/member/profil', 'Upraveno');
-    }
-    function heslo($id = null) {
+	}
+	function heslo($id = null) {
 		if(empty($_POST)) {
 			include('files/Member/Profil/FormPass.inc');
 			return;
@@ -66,9 +66,9 @@ class Controller_Member_Profil extends Controller_Member {
 		}
 		DBUser::setPassword(User::getUserID(), User::Crypt(post('newpass')));
 		View::redirect('/member/profil', 'Heslo změněno');
-    }
-    function platby($id = null) {
+	}
+	function platby($id = null) {
 		include('files/Member/Profil/DisplayPlatby.inc');
-    }
+	}
 }
 ?>

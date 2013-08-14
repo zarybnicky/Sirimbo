@@ -6,11 +6,11 @@ if(!is_array(get('u')))
 Opravdu chcete odstranit akce:<br/><br/>
 <?php
 foreach(get('u') as $id) {
-    $data = DBAkce::getSingleAkce($id);
+	$data = DBAkce::getSingleAkce($id);
 	if(empty($data))
 		continue;
 	echo $data['a_jmeno'], '<br />',
-        '<input type="hidden" name="akce[]" value="', $id, '" />';
+		'<input type="hidden" name="akce[]" value="', $id, '" />';
 }
 ?>
 <br/>

@@ -1,7 +1,9 @@
+<?php notice($this->redirect()->getRedirectMessage());?>
+
 <p style="text-align:center;">Pokud jste zapomněli heslo, pošleme Vám nové na e-mail, který
 jste zadali při registraci</p>
 
-<form action="<?php echo Request::getURL();?>" method="post">
+<form action="" method="post">
 <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
 <table style="margin:0 auto;">
 <tr>
