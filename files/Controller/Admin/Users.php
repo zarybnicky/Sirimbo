@@ -115,9 +115,9 @@ class Controller_Admin_Users extends Controller_Admin {
 			include('files/Admin/Users/Form.inc');	
 			return;
 		}
-        
+		
 		$narozeni = Helper::get()->date()->name('narozeni')->getPost();
-        
+		
 		DBUser::setUserData($id, post('jmeno'), post('prijmeni'), post('pohlavi'),
 			post('email'), post('telefon'), $narozeni, post('poznamky'), post('group'),
 			post('skupina'), post('dancer') ? 1 : 0, post('lock') ? 1 : 0,

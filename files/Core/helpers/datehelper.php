@@ -1,12 +1,11 @@
 <?php
 /*
  * Example:
-$h = Helper::get(); // OR $d = Helper::get()->date();$d->setDate('2001-01-01');
-echo '<form action="', Request::getURI(), '" method="post">';
-echo $h->date('2012-12-21')->name('test1')->selectBox(), '<br/>';
-echo $h->date('2000-01-01')->name('test2')->textBox(), '<br/>';
-echo $h->date(false)->name('test1')->getPost(), '<br/>';
-echo $h->date(false)->name('test2')->getPost(), '<br/>';
+echo '<form action="" method="post">';
+echo $this->date('2012-12-21')->name('test1')->selectBox(), '<br/>';
+echo $this->date('2000-01-01')->name('test2')->textBox(), '<br/>';
+echo $this->date()->name('test1')->getPost(), '<br/>';
+echo $this->date()->name('test2')->getPost(), '<br/>';
 echo '<input type="submit" value="Send" />';
 echo '</form>';
 */
@@ -21,7 +20,8 @@ class DateHelper {
 	function date($d = null) {
 		$this->_defaultValues();
 		
-		if($d) $this->setDate($d);
+		if($d && ($this->__setDate($d) === false))
+			$this->name($d);
 		
 		return $this;
 	}
@@ -33,18 +33,27 @@ class DateHelper {
 		$this->fromYear = ((int) date('Y')) - 75;
 		$this->toYear = ((int) date('Y')) + 5;
 	}
-	function setDate($d) {
-		if(is_a($d, 'Date'))
+	private function __setDate($d) {
+		if(is_a($d, 'Date')) {
 			$this->date = $d;
+			return true;
+		}
 		if(is_string($d)) {
 			$this->date = new Date($d);
 		}
-		if(!is_a($this->date, 'Date') || !$this->date->isValid())
+		if(!is_a($this->date, 'Date') || !$this->date->isValid()) {
 			$this->date = null;
-		return $this;
+			return false;
+		} else {
+			return true;
+		}
 	}
-	function getDate() {
-		return $this->date;
+	function setDate($d = null) {
+		if($d === null)
+			return $this->date;
+		
+		$this->__setDate($d);
+		return $this;
 	}
 	
 	function selectBox() {

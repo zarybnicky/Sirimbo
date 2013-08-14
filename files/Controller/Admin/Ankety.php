@@ -4,8 +4,8 @@ class Controller_Admin_Ankety extends Controller_Admin {
 	function __construct() {
 		Permissions::checkError('ankety', P_OWNED);
 	}
-    function view($id = null) {
-    	if(empty($_POST)) {
+	function view($id = null) {
+		if(empty($_POST)) {
 			include("files/Admin/Ankety/Display.inc");
 			return;
 		}
@@ -36,8 +36,8 @@ class Controller_Admin_Ankety extends Controller_Admin {
 				break;
 		}
 		include("files/Admin/Ankety/Display.inc");
-    }
-    function add($id = null) {
+	}
+	function add($id = null) {
 		if(empty($_POST)) {
 			include('files/Admin/Ankety/Form.inc');
 			return;
@@ -61,8 +61,8 @@ class Controller_Admin_Ankety extends Controller_Admin {
 			unset($_POST["add_text"]);
 		}
 		View::redirect('/admin/ankety/edit/' . $data['ak_id'], 'Anketa přidána');
-    }
-    function edit($id = null) {
+	}
+	function edit($id = null) {
 		if(!$id || !($data = DBAnkety::getSingleAnketa($id)))
 			View::redirect('/admin/ankety', 'Anketa s takovým ID neexistuje');
 		
@@ -133,7 +133,7 @@ class Controller_Admin_Ankety extends Controller_Admin {
 		post("visible", $data["ak_visible"]);
 		
 		include("files/Admin/Ankety/Form.inc");
-    }
+	}
 	function remove($id = null) {
 		if(empty($_POST) || post('action') !== 'confirm') {
 			include('files/Admin/Ankety/DisplayRemove.inc');

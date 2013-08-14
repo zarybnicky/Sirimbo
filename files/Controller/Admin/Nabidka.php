@@ -64,7 +64,7 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 		if(empty($_POST) || is_object($f = $this->checkData($_POST, 'add'))) {
 			include('files/Admin/Nabidka/Form.inc');
 			return;
-        }
+		}
 		Permissions::checkError('nabidka', P_OWNED, post('trener'));
 		
 		$od = Helper::get()->date()->name('od')->getPost();

@@ -30,19 +30,27 @@ spl_autoload_extensions('.php');
 spl_autoload_register();
 
 function _shutdown_handler() {
-	if (($error = error_get_last())) {
-		if($error['type'] == E_ERROR || $error['type'] == E_RECOVERABLE_ERROR) {
-			ob_clean();
-			Log::write($error['type'] . ': ' . $error['message'] . ' in ' . $error['file'] . ': ' . $error['line']);
-			header('Location: /error?id=script_fatal');
+	if (($error = error_get_last()) === null)
+		return;
+	if($error['type'] == E_ERROR || $error['type'] == E_RECOVERABLE_ERROR) {
+		ob_end_clean();
+		if(Request::getURL() == 'error') {
+			Log::write("Recursive error message!");
+			die('Fatal error: Rekurzivní smyčka přesměrování!');
 		}
+		Log::write($error['type'] . ': ' . $error['message'] . ' in ' . $error['file'] . ': ' . $error['line']);
+		header('Location: /error?id=script_fatal');
 	}
 }
 function _error_handler($severity, $message, $filepath, $line) {
 	if ($severity == E_STRICT) {
 		return false;
 	}
-	ob_clean();
+	ob_end_clean();
+	if(Request::getURL() == 'error') {
+		Log::write("Recursive error message!");
+		die('Fatal error: Rekurzivní smyčka přesměrování!');
+	}
 	Log::write("$severity: $message in $filepath: $line");
 	header('Location: /error?id=script_fatal');
 	return true;
@@ -258,7 +266,7 @@ public static $foto_types = array(
 	'image/bmp' => 'bmp',
 	'image/x-png' => 'png'
 );
-public static $gd_function_suffix = array(        
+public static $gd_function_suffix = array(		
 	'image/pjpeg' => 'JPEG',
 	'image/jpeg' => 'JPEG', 
 	'image/gif' => 'GIF', 

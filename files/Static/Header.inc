@@ -28,9 +28,9 @@ EOS;
 ?>		
 	</style>
 	<link href="/style/style.css" rel="stylesheet" type="text/css" />
-    <meta name="google-site-verification" content="Hfe7zlgTDOIpJv4rKGQz2Xg8Aezb6sIO0aAxVhrml9w" />
-    <meta name="norton-safeweb-site-verification"
-    	content="r44xj2vskhlgkyqcqm1hdgga2jdfj-idvyys0277y96s72k-tq0z-yyjdu7h3el6pi2gek0i4ykq3xgiguufrvuhj8nbj4n4miwjhvumhp35jfrafyynhj4ee8ctzpzh" />
+	<meta name="google-site-verification" content="Hfe7zlgTDOIpJv4rKGQz2Xg8Aezb6sIO0aAxVhrml9w" />
+	<meta name="norton-safeweb-site-verification"
+		content="r44xj2vskhlgkyqcqm1hdgga2jdfj-idvyys0277y96s72k-tq0z-yyjdu7h3el6pi2gek0i4ykq3xgiguufrvuhj8nbj4n4miwjhvumhp35jfrafyynhj4ee8ctzpzh" />
 	<meta property="fb:app_id" content="132983570203245"/>
 	<script src="/scripts/jquery-1.10.2.min.js"></script>	
 </head>

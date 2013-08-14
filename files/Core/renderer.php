@@ -3,8 +3,11 @@ class Renderer {
 	private $__cache;
 	private $__vars;
 	private $__file;
-	private $__content;
 	
+	public function __construct() {
+		$this->setVars(array());
+		$this->__cache = array();
+	}
 	public function __get($key) {
 		if(!isset($this->__vars[$key])) {
 			Log::write('Variable "' . $key . '" is not set!');
@@ -16,13 +19,12 @@ class Renderer {
 		$this->__vars[$key] = $val;
 	}
 	public function __call($name, $args) {
-		return Helper::get()->$name($args);
+		if(empty($args))
+			return Helper::get()->$name();
+		else
+			return call_user_func_array(array(Helper::get(), $name), $args);
 	}
-	public function setVars($vars) {
-		if(!is_array($vars)) {
-			Log::write('Attempted to set a variable (' . gettype($vars) . ') as an array!');
-			return;
-		}
+	public function setVars(array $vars) {
 		$this->__vars = $vars;
 	}
 	public function vars($key = null) {
@@ -31,8 +33,8 @@ class Renderer {
 		return $this->__vars;
 	}
 	
-	public function render($name, $variables = array()) {
-		$this->__cache[] = $this->__vars;
+	public function render($name, array $variables = array()) {
+		$this->__cache[] = $this->vars();
 		$this->setVars($variables);
 		unset($variables);
 		
@@ -40,13 +42,15 @@ class Renderer {
 		unset($name);
 		
 		extract($this->vars(), EXTR_SKIP);
-		
-		if(!file_exists($this->file)) {
-			Log::write('Could not find file "' . $this->file . '"');
+		if(!file_exists($this->__file)) {
+			Log::write('Could not find file "' . $this->__file . '"');
 			throw new Exception("Soubor nebyl nalezen!");
 		}
 		ob_start();
 		include $this->__file;
+		
+		$this->setVars(array_pop($this->__cache));
+		
 		return ob_get_clean();
 	}
 }

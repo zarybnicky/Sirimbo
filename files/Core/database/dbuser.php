@@ -12,9 +12,9 @@ class DBUser extends Database implements Pagable {
 			LEFT JOIN users_platby p1 ON up_id_user=u_id
 			LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
 		WHERE (p1.up_id IS NULL OR
-            (p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
+			(p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
 			(p1.up_plati_do = (SELECT MAX(p2.up_plati_do) FROM users_platby p2
-                WHERE p2.up_id_user=u_id)))";
+				WHERE p2.up_id_user=u_id)))";
 		switch($options['filter']) {
 			case 'unconfirmed': $q .= " AND u_confirmed='0' AND u_ban='0'"; break;
 			case 'ban': $q .= " AND u_ban='1'"; break;
@@ -123,9 +123,9 @@ class DBUser extends Database implements Pagable {
 			LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
 			LEFT JOIN permissions ON u_group=pe_id
 		WHERE u_id='$id' AND (p1.up_id IS NULL OR
-            (p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
+			(p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
 			(p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
-                WHERE p2.up_id_user=u_id) AND p1.up_plati_do < CURDATE()))");
+				WHERE p2.up_id_user=u_id) AND p1.up_plati_do < CURDATE()))");
 		if(!$res) {
 			return false;
 		} else {
@@ -257,9 +257,9 @@ class DBUser extends Database implements Pagable {
 			LEFT JOIN users_platby p1 ON up_id_user=u_id
 			LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
 		WHERE (p1.up_id IS NULL OR
-            (p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
+			(p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
 			(p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
-                WHERE p2.up_id_user=u_id) AND p1.up_plati_do < CURDATE()))" .
+				WHERE p2.up_id_user=u_id) AND p1.up_plati_do < CURDATE()))" .
 		(($group == NULL || $group == L_ALL) ? '' : " AND u_group='$group'") .
 		" ORDER BY u_prijmeni");
 		
@@ -356,9 +356,9 @@ class DBUser extends Database implements Pagable {
 		WHERE u_system='0' AND u_confirmed='1' AND u_ban='0' " .
 			($group > L_ALL ? "AND u_group='$group' " : '') .
 			"AND (p1.up_id IS NULL OR
-            (p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
+			(p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
 			(p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
-                WHERE p2.up_id_user=u_id) AND p1.up_plati_do < CURDATE()))
+				WHERE p2.up_id_user=u_id) AND p1.up_plati_do < CURDATE()))
 			ORDER BY u_prijmeni ");
 		return DBUser::getArray($res);
 	}
@@ -371,9 +371,9 @@ class DBUser extends Database implements Pagable {
 		WHERE u_system='0' AND u_dancer='1' AND u_confirmed='1' AND u_ban='0' " .
 			($group > -1 ? "AND u_group='$group' " : '') .
 		"AND (p1.up_id IS NULL OR
-            (p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
+			(p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
 			(p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
-                WHERE p2.up_id_user=u_id) AND p1.up_plati_do < CURDATE()))
+				WHERE p2.up_id_user=u_id) AND p1.up_plati_do < CURDATE()))
 		ORDER BY u_prijmeni");
 		return DBUser::getArray($res);
 	}

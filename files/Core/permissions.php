@@ -11,15 +11,16 @@ class Permissions {
 		return $l >= $level;
 	}
 	public static function checkError($module, $level, $redirect = null, $vlastnik = null) {
-		if(!Permissions::check($module, $level, $vlastnik)) {
-			if($redirect !== null) {
-				View::redirect($redirect);
-			} elseif(User::isLogged()) {
-				throw new Exception("Máte nedostatečnou autorizaci pro tuto akci!");
-			} else {
-				View::redirect('/login?return=' . Request::getURI(), 'Nemáte dostatečná oprávnění k zobrazení požadovaného obsahu');
-			}
+		if(Permissions::check($module, $level, $vlastnik))
+			return true;
+		
+		if($redirect !== null) {
+			Helper::get()->redirect()->sendRedirect($redirect);
+		} elseif(User::isLogged()) {
+			throw new Exception("Máte nedostatečnou autorizaci pro tuto akci!");
+		} else {
+			Helper::get()->redirect()->sendRedirect('/login?return=' . Request::getURI(),
+				'Nemáte dostatečná oprávnění k zobrazení požadovaného obsahu');
 		}
-		return true;
 	}
 }

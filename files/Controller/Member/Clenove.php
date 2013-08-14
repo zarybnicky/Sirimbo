@@ -4,7 +4,7 @@ class Controller_Member_Clenove extends Controller_Member {
 	function __construct() {
 		Permissions::checkError('users', P_VIEW);
 	}
-    function view($id = null) {
+	function view($id = null) {
 		if($id && ($data = DBUser::getUserData($id))) {
 			header_main("Členové");
 			echo '<b>', $data['u_jmeno'], ' ', $data['u_prijmeni'], '</b><br/>';
@@ -16,7 +16,7 @@ class Controller_Member_Clenove extends Controller_Member {
 			return;
 		}
 		
-    	include('files/Member/Clenove.inc');
-    }
+		include('files/Member/Clenove.inc');
+	}
 }
 ?>
