@@ -78,11 +78,11 @@ class Controller_Admin_Galerie extends Controller_Admin {
 			DBGalerie::removeDir($id);
 			$scan = glob($data['gd_path'] . '/*');
 			if(is_array($scan))
-	            foreach($scan as $index => $path){
-	                @unlink($path);
-	                @unlink(str_replace('./galerie/', './galerie/thumbnails', $path));
-	            }
-            @rmdir($data['gd_path']);
+				foreach($scan as $index => $path){
+					@unlink($path);
+					@unlink(str_replace('./galerie/', './galerie/thumbnails', $path));
+				}
+			@rmdir($data['gd_path']);
 		}
 		View::redirect('/admin/galerie', 'Složky odebrány');
 	}

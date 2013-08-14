@@ -108,6 +108,6 @@ class Controller_Admin_Aktuality extends Controller_Admin {
 			throw new Exception("Máte nedostatečnou autorizaci pro tuto akci!");
 		
 		View::redirect('/admin/aktuality', 'Články odebrány');
-    }
+	}
 }
 ?>

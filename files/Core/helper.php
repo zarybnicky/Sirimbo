@@ -14,32 +14,32 @@ class Helper {
 					throw new Exception("Helper '$class' not found.");
 		}
 		
-		if(!isset(Helper::$registry[$class])) {
-			if(!isset(Helper::$registry))
-				Helper::$registry = array();
-			Helper::$registry[$class] = new $class();
+		if(!isset(self::$registry[$class])) {
+			if(!isset(self::$registry))
+				self::$registry = array();
+			self::$registry[$class] = new $class();
 		}
 		
-		Helper::$c = &Helper::$registry[$class];
+		self::$c = &self::$registry[$class];
 
 		if(isset($a[0]) && $a[0] === false && count($a) == 1)
-			return Helper::$c;
+			return self::$c;
 		
 		switch(count($a)) {
-			case 0: return Helper::$c->{$name}(); break;
-			case 1: return Helper::$c->{$name}($a[0]); break;
-			case 2: return Helper::$c->{$name}($a[0], $a[1]); break;
-			case 3: return Helper::$c->{$name}($a[0], $a[1], $a[2]); break;
-			case 4: return Helper::$c->{$name}($a[0], $a[1], $a[2], $a[3]); break;
-			case 5: return Helper::$c->{$name}($a[0], $a[1], $a[2], $a[3], $a[4]); break;
-			default: call_user_func_array(array(Helper::$c, $name), $a);  break;
+			case 0: return self::$c->{$name}(); break;
+			case 1: return self::$c->{$name}($a[0]); break;
+			case 2: return self::$c->{$name}($a[0], $a[1]); break;
+			case 3: return self::$c->{$name}($a[0], $a[1], $a[2]); break;
+			case 4: return self::$c->{$name}($a[0], $a[1], $a[2], $a[3]); break;
+			case 5: return self::$c->{$name}($a[0], $a[1], $a[2], $a[3], $a[4]); break;
+			default: call_user_func_array(array(self::$c, $name), $a);  break;
 		}
 	}
 	public function __construct() {}
 	public static function get() {
-		if(!isset(Helper::$instance))
-			Helper::$instance = new Helper();
-		return Helper::$instance;
+		if(!isset(self::$instance))
+			self::$instance = new Helper();
+		return self::$instance;
 	}
 }
 ?>

@@ -1,5 +1,7 @@
 <?php header_main('Registrace'); ?>
-<form action="<?php echo Request::getURL(); ?>" method="POST">
+<?php notice($this->redirect()->getRedirectMessage());?>
+
+<form action="" method="POST">
 <table>
 	<tr>
 		<td>Uživatel (*): </td>
@@ -33,7 +35,7 @@
 		<td></td>
 	</tr><tr>
 		<td>Datum narození: (*)</td>
-		<td><?php echo Helper::get()->date()->name('narozeni')->textBox();?></td>
+		<td><?php echo $this->date('narozeni')->textBox();?></td>
 		<td></td>
 	</tr><tr>
 		<td>Poznámky: </td>

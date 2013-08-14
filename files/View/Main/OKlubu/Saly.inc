@@ -24,8 +24,8 @@ Holečkova 10, Olomouc <br/>
 <script type="text/javascript" src="http://api4.mapy.cz/loader.js"></script>
 <script type="text/javascript">Loader.load(null, {api:"simple"});</script>
 <script type="text/javascript">
-    var center = SMap.Coords.fromWGS84(17.24953485424073, 49.579712952945734);
-    var m = new SMap(JAK.gel("holeckova"),center, 15, 1);
+	var center = SMap.Coords.fromWGS84(17.24953485424073, 49.579712952945734);
+	var m = new SMap(JAK.gel("holeckova"),center, 15, 1);
    m.addMarker(center);
 </script>
 <br/>
@@ -46,8 +46,8 @@ Jiřího z Poděbrad 13, Olomouc<br/>
 <script type="text/javascript" src="http://api4.mapy.cz/loader.js"></script>
 <script type="text/javascript">Loader.load(null, {api:"simple"});</script>
 <script type="text/javascript">
-    var center = SMap.Coords.fromWGS84(17.26312917241163, 49.59533890442716);
-    var m = new SMap(JAK.gel("slovan"),center, 15, 1);
+	var center = SMap.Coords.fromWGS84(17.26312917241163, 49.59533890442716);
+	var m = new SMap(JAK.gel("slovan"),center, 15, 1);
    m.addMarker(center);
 </script>
 
