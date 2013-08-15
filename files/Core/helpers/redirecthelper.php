@@ -15,7 +15,16 @@ class RedirectHelper {
 		exit;
 	}
 	public static function setRedirectMessage($message, $replace = false) {
-		if(isset($_SESSION['REDIRECT_MESSAGE']) && $replace == false)
+		if($replace)
+			unset($_SESSION['REDIRECT_MESSAGE']);
+		
+		if(is_array($message)) {
+			foreach($message as $row)
+				$this->setRedirectMessage($row);
+			return;
+		}
+		
+		if(isset($_SESSION['REDIRECT_MESSAGE']))
 			$_SESSION['REDIRECT_MESSAGE'] .= '<br />' . $message;
 		else
 			$_SESSION['REDIRECT_MESSAGE'] = $message;

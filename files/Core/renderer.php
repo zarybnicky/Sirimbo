@@ -18,6 +18,9 @@ class Renderer {
 	public function __set($key, $val) {
 		$this->__vars[$key] = $val;
 	}
+	public function __isset($key) {
+		return isset($this->__vars[$key]);
+	}
 	public function __call($name, $args) {
 		if(empty($args))
 			return Helper::get()->$name();
