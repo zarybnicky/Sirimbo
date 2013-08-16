@@ -1,16 +1,15 @@
 <?php
 header_minor("Změna třídy a bodů");
-
-if(isset($f) && is_object($f))
-	notice(implode('<br/>', $f->getMessages()));
+echo $this->partnerRequest()->getAll();
+notice($this->redirect()->getRedirectMessage());
 ?>
-<form action="<?php echo $_SERVER["REQUEST_URI"];?>" method="post">
+<form action="" method="post">
 <table>
 <tr><td>Standart:</td><td></td><td></td></tr>
 <tr>
 	<td>Třída:</td>
 	<td><?php
-		echo Helper::get()->select()
+		echo $this->select()
 			->post()->name('stt-trida')
 			->options(array('Z', 'H', 'D', 'C', 'B', 'A', 'M'), true, true);
 	?></td>
@@ -30,7 +29,7 @@ if(isset($f) && is_object($f))
 <tr>
 	<td>Třída:</td>
 	<td><?php
-		echo Helper::get()->select()
+		echo $this->select()
 			->post()->name('lat-trida')
 			->options(array('Z', 'H', 'D', 'C', 'B', 'A', 'M'), true, true);
 	?></td>

@@ -1,10 +1,8 @@
 <?php
 header_minor("Osobní údaje");
-
-if(isset($f) && is_object($f))
-	notice(implode('<br/>', $f->getMessages()));
+notice($this->redirect()->getRedirectMessage());
 ?>
-<form action="<?php echo Request::getURI() ?>" method="POST">
+<form action="" method="POST">
 <table>
 	<tr>
 		<td>Uživatel: </td>
@@ -35,7 +33,7 @@ if(isset($f) && is_object($f))
 		<td></td>
 	</tr><tr>
 		<td>Datum narození: (*)</td>
-		<td><?php echo Helper::get()->date()->name('narozeni')->textBox(); ?></td>
+		<td><?php echo $this->date('narozeni')->textBox(); ?></td>
 		<td></td>
 	</tr><tr>
 		<td>Poznámky: </td>
@@ -43,15 +41,7 @@ if(isset($f) && is_object($f))
 		<td></td>
 	</tr><tr>
 		<td>Oprávnění: </td>
-		<td><?php
-			$groups = DBPermissions::getGroups();
-			foreach($groups as $group) {
-				if($group['pe_id'] == post('group')) {
-					echo $group['pe_name'];
-					break;
-				}
-			}
-			?></td>
+		<td><?php echo User::getGroupName();?></td>
 		<td></td>
 	</tr><tr>
 		<td><button type="submit" name="action" value="confirm">Upravit</button></td>
