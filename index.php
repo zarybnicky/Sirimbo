@@ -1,15 +1,21 @@
 <?php
-/*/debug
+/*/sitewide OFF switch
 if(stripos($_GET['file'], 'cookie_set') !== false) {
-	setcookie('debug', '1', 0, '/');
+	setcookie('off_mode', '1', 0, '/');
 	header('Location: /');
 	return;
 }
-if(!isset($_COOKIE['debug'])) {
+if(stripos($_GET['file'], 'cookie_reset') !== false) {
+	setcookie('off_mode', false, 0, '/');
+	header('Location: /');
+	return;
+}
+if(!isset($_COOKIE['off_mode'])) {
 	include('index2.php');
 	return;
 }
-//end_debug*/
+//end OFF switch*/
+
 
 session_start();
 session_regenerate_id();
@@ -53,7 +59,7 @@ if(session('login') === null) {
 	}
 } else {
 	User::loadUser(session('id'));
-	if(session('invalid_data') &&
+	if(session('invalid_data') === '1' &&
 			Request::getURL() !== 'member/profil/edit' && Request::getURL() !== 'logout')
 		Helper::get()->redirect()->sendRedirect('/member/profil/edit', 'Prosím vyplňte požadované údaje.', true);
 }

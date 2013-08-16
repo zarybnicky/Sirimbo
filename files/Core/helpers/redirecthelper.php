@@ -20,7 +20,7 @@ class RedirectHelper {
 		
 		if(is_array($message)) {
 			foreach($message as $row)
-				$this->setRedirectMessage($row);
+				self::setRedirectMessage($row);
 			return;
 		}
 		
