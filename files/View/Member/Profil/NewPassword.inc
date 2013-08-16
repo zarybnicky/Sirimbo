@@ -1,10 +1,8 @@
 <?php
 header_minor("Změna hesla");
-
-if(isset($f) && is_object($f))
-	notice(implode('<br/>', $f->getMessages()));
+notice($this->redirect()->getRedirectMessage());
 ?>
-<form action="<?php echo Request::getURI();?>" method="post">
+<form action="" method="post">
 <table>
 <tr><td>Staré heslo:</td><td><input type="password" name="oldpass" /></td></tr>
 <tr><td>Nové heslo:</td><td><input type="password" name="newpass" /></td></tr>

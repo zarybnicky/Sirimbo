@@ -4,11 +4,9 @@ class Controller_Member_Download extends Controller_Abstract {
 		Permissions::checkError('dokumenty', P_VIEW);
 	}
 	function view($id = null) {
-		if(!get('id')) {
-			echo 'Co tu děláš? Běž pryč, tady nic není :o)';
-			return;
-		}
-		ob_clean();
+		if(!get('id'))
+			$this->redirect()->sendRedirect('/member/dokumenty');
+		
 		$data = DBDokumenty::getSingleDokument(get('id'));
 		$path = $data["d_path"];
 		$fileName = $data["d_filename"];
@@ -19,7 +17,6 @@ class Controller_Member_Download extends Controller_Abstract {
 		header('Content-Disposition: inline; filename="' . ($fileName) . '"');
 		fpassthru($file);
 		fclose($file);
-		exit;
 	}
 }
 ?>

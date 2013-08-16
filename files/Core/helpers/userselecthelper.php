@@ -55,7 +55,7 @@ class UserSelectHelper {
 			$this->type = $type;
 		return $this;
 	}
-	public static function tmpSwitch($value) {
+	public function tmpSwitch($value) {
 		$this->tmpSwitch = (bool) $value;
 		return $this;
 	}
@@ -66,9 +66,9 @@ class UserSelectHelper {
 		
 		$out .= '<select name="' . $this->name . '">' . "\n";
 		if(!post($this->name))
-			$out .= '<option value="none" selected="selected">--- žádny ---</option>' . "\n";
+			$out .= '<option value="none" selected="selected">--- žádný ---</option>' . "\n";
 		else
-			$out .= '<option value="none">--- žádny ---</option>' . "\n";
+			$out .= '<option value="none">--- žádný ---</option>' . "\n";
 		
 		if($this->tmpSwitch)
 			$out .= '<option value="temporary">--- dočasný ---</option>' . "\n";
