@@ -11,7 +11,7 @@ class Controller_Aktualne extends Controller_Abstract {
 			));
 			return;
 		}
-		$this->redirect()->sendRedirect('/aktualne/posledni');
+		$this->redirect('/aktualne/posledni');
 	}
 	function posledni($id = null) {
 		$this->_aktualne("Nejnovější články");

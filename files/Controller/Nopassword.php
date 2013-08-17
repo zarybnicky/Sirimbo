@@ -13,7 +13,7 @@ class Controller_Nopassword extends Controller_Abstract {
 				
 				if(DBUser::checkUser($data['u_login'], $password_crypt)) {
 					Mailer::new_password($data['u_email'], $password);
-					$this->redirect()->sendRedirect('/home',
+					$this->redirect('/home',
 						'Povedlo se, za chvíli byste měli dostat e-mail s novým heslem.<br/>' .
 						'V případě problémů prosím kontaktujte administrátora.');
 				} else {

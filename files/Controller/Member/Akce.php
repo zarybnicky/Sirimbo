@@ -8,7 +8,7 @@ class Controller_Member_Akce extends Controller_Member {
 		if($id) {
 			$data = DBAkce::getSingleAkce($id, true);
 			if(!$data)
-				$this->redirect()->sendRedirect('/member/akce', 'Neexistuje žádná taková akce');
+				$this->redirect('/member/akce', 'Neexistuje žádná taková akce');
 			
 			$data = $this->getRenderData($data);
 			$this->render('files/View/Member/Akce/Single.inc', array('data' => $data));

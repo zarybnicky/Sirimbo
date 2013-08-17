@@ -40,7 +40,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil {
 		DBPary::editTridaBody(User::getParID(),
 			post('stt-trida'), post('stt-body'), post('stt-finale'),
 			post('lat-trida'), post('lat-body'), post('lat-finale'), $hodnoceni);
-		$this->redirect()->sendRedirect("/member/profil/par", "Třída a body změněny");
+		$this->redirect("/member/profil/par", "Třída a body změněny");
 	}
 	function partner($id = null) {
 		$latest = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
@@ -50,10 +50,10 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil {
 			if(post("partner") == "none" || (post('action') == 'dumpthem' && $havePartner)) {
 				DBPary::noPartner(User::getUserID());
 				DBPary::noPartner($latest['u_id']);
-				$this->redirect()->sendRedirect('/member/profil/par', 'Partnerství zrušeno');
+				$this->redirect('/member/profil/par', 'Partnerství zrušeno');
 			}
 			if(post('partner') == $latest['u_id'] || (post('partner') == "none" && $latest['u_id'] == '0')) {
-				$this->redirect()->sendRedirect('/member/profil/par');
+				$this->redirect('/member/profil/par');
 			}
 			if(User::getUserPohlavi() == "m") {
 				DBPary::newPartnerRequest(User::getUserID(),
@@ -62,7 +62,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil {
 				DBPary::newPartnerRequest(User::getUserID(),
 					post("partner"), User::getUserID());
 			}
-			$this->redirect()->sendRedirect('/member/profil/par', 'Žádost o partnerství odeslána');
+			$this->redirect('/member/profil/par', 'Žádost o partnerství odeslána');
 		}
 		
 		post('partner', $havePartner ? $latest['u_id'] : 'none');
@@ -75,7 +75,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil {
 	}
 	function zadost($id = null) {
 		if(!post('action'))
-			$this->redirect()->sendRedirect('/member/profil');
+			$this->redirect('/member/profil');
 		switch(post('action')) {
 			case 'accept':
 			case 'refuse':
@@ -91,7 +91,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil {
 						DBPary::deletePartnerRequest(post('id'));
 						$this->redirect()->setRedirectMessage('žádost zamitnuta');
 					}
-					$this->redirect()->sendRedirect('/member/profil/par');
+					$this->redirect('/member/profil/par');
 				}
 				break;
 			case 'cancel':
@@ -101,14 +101,14 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil {
 						continue;
 					
 					DBPary::deletePartnerRequest(post('id'));
-					$this->redirect()->sendRedirect('/member/profil/par', 'Žádost zrušena');
+					$this->redirect('/member/profil/par', 'Žádost zrušena');
 				}
 				break;
 			default:
-				$this->redirect()->sendRedirect('/member/profil');
+				$this->redirect('/member/profil');
 				break;
 		}
-		$this->redirect()->sendRedirect('/member/profil', 'Žádná taková žádost tu není');
+		$this->redirect('/member/profil', 'Žádná taková žádost tu není');
 	}
 	private function __checkData($action, $data = null) {
 		$f = new Form();

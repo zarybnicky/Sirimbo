@@ -1,7 +1,7 @@
 <?php
 class Controller_Inzerce extends Controller_Abstract {
 	function view($id = null) {
-		$this->redirect()->sendRedirect('/inzerce/posledni');
+		$this->redirect('/inzerce/posledni');
 	}
 	function sidebar() {
 		$s = new Sidebar();
@@ -58,9 +58,9 @@ class Controller_Inzerce extends Controller_Abstract {
 			post('nadpis'), post('text'), serialize(array()), $od, $do, $pass, $visible,
 			$confirmed);
 		if(User::isLogged())
-			$this->redirect()->sendRedirect("/inzerce/posledni", "Váš inzerát byl přidán");
+			$this->redirect("/inzerce/posledni", "Váš inzerát byl přidán");
 		else
-			$this->redirect()->sendRedirect('/inzerce/posledni', 'Váš inzerát byl uložen a čeká na schválení administrátora');
+			$this->redirect('/inzerce/posledni', 'Váš inzerát byl uložen a čeká na schválení administrátora');
 	}
 	function edit($id = null) {
 		if(!$id || !($data = DBInzerce::getSingleInzerat($id)))
@@ -93,7 +93,7 @@ class Controller_Inzerce extends Controller_Abstract {
 		DBInzerce::editInzerat($id, post('kat'), User::getUserID(), User::getUserJmeno(),
 			User::getUserPrijmeni(), post('nadpis'), post('text'), serialize(array()),
 			$od, $do, '', (bool) post('visible'), '1');
-		$this->redirect()->sendRedirect("/inzerce/posledni", "Inzerát upraven");
+		$this->redirect("/inzerce/posledni", "Inzerát upraven");
 	}
 	function edit_unreg($id = null) {
 		if(empty($_POST)) {
@@ -130,11 +130,11 @@ class Controller_Inzerce extends Controller_Abstract {
 			post('prijmeni'), post('nadpis'), post('text'), serialize(array()),
 			$od, $do, $pass, '1', '1');
 		unset($_SESSION['inzerce_' . $id]);
-		$this->redirect()->sendRedirect("/inzerce/posledni", "Inzerát upraven");
+		$this->redirect("/inzerce/posledni", "Inzerát upraven");
 	}
 	function remove($id = null) {
 		if(!$id || !($data = DBInzerce::getSingleInzerat($id)))
-			$this->redirect()->sendRedirect('/inzerce/posledni', 'Inzerát s takovým ID neexistuje');
+			$this->redirect('/inzerce/posledni', 'Inzerát s takovým ID neexistuje');
 		
 		if(empty($_POST)) {
 			$data = DBInzerce::getSingleInzerat($id);
@@ -149,7 +149,7 @@ class Controller_Inzerce extends Controller_Abstract {
 		}
 		DBInzerce::removeInzerat($id);
 		
-		$this->redirect()->sendRedirect("/inzerce/posledni", "Inzerát odebrán");
+		$this->redirect("/inzerce/posledni", "Inzerát odebrán");
 	}
 	
 	private function inzerce($nadpis, $type = INZERCE_ALL) {
@@ -172,7 +172,7 @@ class Controller_Inzerce extends Controller_Abstract {
 			
 			session('inzerce_' . $id, $pass);
 			
-			$this->redirect()->sendRedirect('/inzerce/edit-unreg/' . $id);
+			$this->redirect('/inzerce/edit-unreg/' . $id);
 		}
 	}
 	private function checkData($data, $action = 'add') {
