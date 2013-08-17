@@ -1,7 +1,7 @@
 <?php
 class COntroller_Oklubu extends Controller_Abstract {
 	function view($id = null) {
-	   $this->redirect()->sendRedirect('/oklubu/obecne');
+	   $this->redirect('/oklubu/obecne');
 	}
 	function obecne($id = null) {
 		$this->render('files/View/Main/OKlubu/Main.inc');

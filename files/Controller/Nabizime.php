@@ -1,7 +1,7 @@
 <?php
 class Controller_Nabizime extends Controller_Abstract {
 	function view($id = null) {
-		$this->redirect()->sendRedirect('/nabizime/obecne');
+		$this->redirect('/nabizime/obecne');
 	}
 	function obecne($id = null) {
 		$this->render('files/View/Main/Nabizime/Main.inc');

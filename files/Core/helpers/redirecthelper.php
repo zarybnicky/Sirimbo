@@ -1,6 +1,8 @@
 <?php
 class RedirectHelper {
-	public function redirect() {
+	public function redirect($link = null, $message = null, $replaceMessage = false) {
+		if($link !== null)
+			$this->sendRedirect($link, $message, $replaceMessage);		
 		return $this;
 	}
 	public static function sendRedirect($link, $message = '', $replaceMessage = false) {
