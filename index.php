@@ -50,18 +50,18 @@ if(session('login') === null) {
 		post('pass', User::crypt(post('pass')));
 		
 		if(!User::login(post('login'), post('pass'))) {
-			Helper::get()->redirect()->sendRedirect('/login', 'Špatné jméno nebo heslo!', true);
+			Helper::get()->redirect('/login', 'Špatné jméno nebo heslo!', true);
 		} elseif(get('return')) {
-			Helper::get()->redirect()->sendRedirect(get('return'));
+			Helper::get()->redirect(get('return'));
 		} else {
-			Helper::get()->redirect()->sendRedirect('/member/home');
+			Helper::get()->redirect('/member/home');
 		}
 	}
 } else {
 	User::loadUser(session('id'));
 	if(session('invalid_data') === '1' &&
 			Request::getURL() !== 'member/profil/edit' && Request::getURL() !== 'logout')
-		Helper::get()->redirect()->sendRedirect('/member/profil/edit', 'Prosím vyplňte požadované údaje.', true);
+		Helper::get()->redirect('/member/profil/edit', 'Prosím vyplňte požadované údaje.', true);
 }
 
 $d = new Dispatcher();

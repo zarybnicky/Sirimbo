@@ -22,7 +22,7 @@ class Controller_Registrace extends Controller_Abstract {
 				} else {
 					User::register(post('username'), post('pass'), post('jmeno'), post('prijmeni'),
 						post('pohlavi'), post('email'), post('telefon'), $narozeni, post('poznamky'));
-					$this->redirect()->sendRedirect('/home', 'Registrace úspěšně proběhla.<br /><br />' .
+					$this->redirect('/home', 'Registrace úspěšně proběhla.<br /><br />' .
 							'Během několika dnů vám na email příjde potvrzení vašeho účtu, které vyřizuje administrátor ručně.');
 				}
 			}

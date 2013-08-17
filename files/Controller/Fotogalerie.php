@@ -5,7 +5,7 @@ class Controller_Fotogalerie extends Controller_Abstract {
 			$id = 0;
 			$data = DBGalerie::getSingleDir(0);
 		} elseif(!($data = DBGalerie::getSingleDir($id))) {
-			$this->redirect()->sendRedirect('/fotogalerie', 'Taková složka neexistuje');
+			$this->redirect('/fotogalerie', 'Taková složka neexistuje');
 		}
 		
 		$photos = DBGalerie::getFotky($id);
@@ -31,7 +31,7 @@ class Controller_Fotogalerie extends Controller_Abstract {
 	}
 	function foto($id = null) {
 		if(!$id || !($data = DBGalerie::getSingleFoto($id)))
-			$this->redirect()->sendRedirect('/fotogalerie', 'Taková fotka neexistuje');
+			$this->redirect('/fotogalerie', 'Taková fotka neexistuje');
 		
 		$parent_dir = DBGalerie::getFotky($data['gf_id_rodic']);
 		foreach($parent_dir as $key => $foto) {

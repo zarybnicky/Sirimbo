@@ -33,7 +33,7 @@ class Controller_Member_Profil extends Controller_Member {
 			post('pohlavi'), post('email'), post('telefon'), $narozeni,
 			post('poznamky'), $data['u_group'], $data['u_skupina'],
 			$data['u_dancer'], $data['u_lock'], $data['u_ban'], $data['u_system']);
-		$this->redirect()->sendRedirect('/member/profil', 'Upraveno');
+		$this->redirect('/member/profil', 'Upraveno');
 	}
 	function heslo($id = null) {
 		if(empty($_POST) || is_object($f = $this->__checkData('heslo'))) {
@@ -44,7 +44,7 @@ class Controller_Member_Profil extends Controller_Member {
 			return;
 		}
 		DBUser::setPassword(User::getUserID(), User::Crypt(post('newpass')));
-		$this->redirect()->sendRedirect('/member/profil', 'Heslo změněno');
+		$this->redirect('/member/profil', 'Heslo změněno');
 	}
 	function platby($id = null) {
 		$platby = DBPlatby::getPlatbyFromUser(User::getUserID());

@@ -5,7 +5,7 @@ class Controller_Member_Download extends Controller_Abstract {
 	}
 	function view($id = null) {
 		if(!get('id'))
-			$this->redirect()->sendRedirect('/member/dokumenty');
+			$this->redirect('/member/dokumenty');
 		
 		$data = DBDokumenty::getSingleDokument(get('id'));
 		$path = $data["d_path"];

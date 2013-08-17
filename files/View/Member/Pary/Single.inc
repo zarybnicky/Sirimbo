@@ -4,7 +4,7 @@ $guy_partners = DBPary::getPreviousPartners($data['guy_id']);
 $gal_partners = DBPary::getPreviousPartners($data['gal_id']);
 
 if(!$data) {
-	$this->redirect->sendRedirect("/member/zebricek", "Takový pár neexistuje");
+	$this->redirect("/member/zebricek", "Takový pár neexistuje");
 }
 
 echo $data['guy_name'], ' ', $data['guy_surname'], ' - ',
