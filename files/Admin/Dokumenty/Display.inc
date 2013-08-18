@@ -1,8 +1,8 @@
 <?php
 header_main('Správa dokumentů');
-notice(View::getRedirectMessage());
+notice($this->redirect()->getRedirectMessage());
 ?>
-<form action="/admin/dokumenty"<?php //TODO: Paging, getUpozorneni(OD,DO) ?> method="POST">
+<form action="/admin/dokumenty" method="POST">
 <button type="submit" name="action" value="edit">Přejmenovat</button>
 <button type="submit" name="action" value="remove">Odstranit</button>
 <table>

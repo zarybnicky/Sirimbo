@@ -57,8 +57,7 @@ class Controller_Admin_Dokumenty extends Controller_Admin {
 	function edit($id = null) {
 		if(!$id || !($data = DBDokumenty::getSingleDokument($id)))
 			View::redirect('/admin/dokumenty', 'Dokument s takovým ID neexistuje');
-		
-		//TODO: Dokument - Admin - edit kategorie
+	
 		if(!empty($_POST) && post('newname')) {
 			$newname = post('newname');
 			

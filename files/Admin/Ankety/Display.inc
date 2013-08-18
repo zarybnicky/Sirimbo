@@ -1,6 +1,6 @@
 <?php
 header_main('Správa anket');
-notice(View::getRedirectMessage());
+notice($this->redirect()->getRedirectMessage());
 ?>
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
 <?php

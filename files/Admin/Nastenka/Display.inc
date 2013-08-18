@@ -1,6 +1,6 @@
 <?php
 header_main('Správa nástěnky');
-notice(View::getRedirectMessage());
+notice($this->redirect()->getRedirectMessage());
 
 $pager = new Paging(new PagingAdapterDBSelect('DBNastenka'));
 $pager->setCurrentPageField('p');

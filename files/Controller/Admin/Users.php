@@ -40,25 +40,27 @@ class Controller_Admin_Users extends Controller_Admin {
 		$this->displayOverview(get('v'));
 	}
 	function remove($id = null) {
-		if(!is_array(post('users')) && !is_array(get('u')))
+		if(!is_array(post('data')) && !is_array(get('u')))
 			$this->redirect('/admin/users');
 		if(!empty($_POST) && post('action') == 'confirm') {
-			foreach(post('users') as $id)
+			foreach(post('data') as $id)
 				DBUser::removeUser($id);
 			$this->redirect('/admin/users', 'Uživatelé odebráni');
 		}
-		$users = array();
+		$data = array();
 		foreach(get('u') as $id) {
-			$data = DBUser::getUserData($id);
-			$users[] = array(
-					'id' => $data['u_id'],
-					'fullName' => $data['u_jmeno'] . ' ' . $data['u_prijmeni'],
-					'login' => $data['u_login']
+			$item = DBUser::getUserData($id);
+			$data[] = array(
+					'id' => $item['u_id'],
+					'text' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'] . ' - ' .
+						$item['u_login']
 			);
 		}
-		$this->render('files/View/Admin/Users/RemovePrompt.inc', array(
+		$this->render('files/View/Admin/RemovePrompt.inc', array(
+				'header' => 'Správa uživatelů',
+				'prompt' => 'Opravdu chcete odstranit uživatele:',
 				'returnURL' => Request::getReferer(),
-				'data' => $users
+				'data' => $data
 		));
 	}
 	function add($id = null) {

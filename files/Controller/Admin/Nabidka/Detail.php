@@ -61,7 +61,6 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka {
 			$items = DBNabidka::getNabidkaItem($id);
 			$obsazeno = DBNabidka::getNabidkaItemLessons($id);
 		}
-		//TODO: Spojit R,N-detail a R,N-edit
 		
 		//-----Dorovnávání skutečného a nastaveného počtu hodin-----//
 		if(post("pocet_hod") > $data["n_pocet_hod"]) {

@@ -1,6 +1,6 @@
 <?php
 header_main('Správa fotogalerie');
-notice(View::getRedirectMessage());
+notice($this->redirect()->getRedirectMessage());
 header_minor('Upload');
 ?>
 <form enctype="multipart/form-data" action="<?php $_SERVER['REQUEST_URI'];?>" method="post">

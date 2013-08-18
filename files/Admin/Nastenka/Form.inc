@@ -5,7 +5,7 @@ if(Request::getAction() == 'add')
 else
 	header_minor("Upravit příspěvek");
 
-notice(View::getRedirectMessage());
+notice($this->redirect()->getRedirectMessage());
 if(isset($f) && is_object($f))
 	notice(implode('<br/>', $f->getMessages()));
 ?>

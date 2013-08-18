@@ -1,6 +1,6 @@
 <?php
 header_main('Správa rozpisů');
-notice(View::getRedirectMessage());
+notice($this->redirect()->getRedirectMessage());
 ?>
 <form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
 <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
