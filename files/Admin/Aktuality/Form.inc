@@ -5,7 +5,7 @@ if(Request::getAction() == 'add')
 else
 	header_minor("Upravit článek");
 
-notice(View::getRedirectMessage());
+notice($this->redirect()->getRedirectMessage());
 ?>
 <form action="<?php echo Request::getURI()?>" method="POST">
 <table>

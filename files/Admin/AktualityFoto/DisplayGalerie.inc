@@ -1,10 +1,10 @@
 <?php
 header_main('Správa fotogalerie článků');
-notice(View::getRedirectMessage());
+notice($this->redirect()->getRedirectMessage());
 
 $dirs = DBGalerie::getDirs(true, true);
 
-echo '<form action="', Request::getURI(), '" method="get">';
+echo '<form action="" method="get">';
 $s = Helper::get()->select()
 	->get()->name('dir')->value('none')
 	->option('none', 'Vybrané fotky')
@@ -15,7 +15,7 @@ echo $s;
 echo '<button type="submit">Zobrazit</button>';
 echo '</form>';
 
-echo '<form action="', Request::getURI(), '" method="post">';
+echo '<form action="" method="post">';
 echo '<button type="submit" name="action" value="enter" style="display:none;">Enter</button>';
 
 $id = get('dir');

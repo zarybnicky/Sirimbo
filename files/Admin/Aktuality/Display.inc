@@ -1,6 +1,6 @@
 <?php
 header_main('Správa aktualit');
-notice(View::getRedirectMessage());
+notice($this->redirect()->getRedirectMessage());
 ?>
 <form action="<?php echo Request::getURI();?>" method="POST">
 <?php
@@ -21,9 +21,9 @@ if(!TISK) {
 <td>Kategorie</td>
 </tr>
 <?php
-$ankety = DBAktuality::getAktuality();
+$aktuality = DBAktuality::getAktuality();
 
-foreach($ankety as $item) {
+foreach($aktuality as $item) {
 	echo '<tr>';
 	
 	if(Permissions::check('aktuality', P_OWNED, $item['at_kdo']))

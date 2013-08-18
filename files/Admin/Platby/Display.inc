@@ -1,6 +1,6 @@
 <?php
 header_main('Správa plateb');
-notice(View::getRedirectMessage());
+notice($this->redirect()->getRedirectMessage());
 
 if(!TISK) {
 	$s = Helper::get()->select();
@@ -59,7 +59,7 @@ if(get('f') && get('f') !== 'all') {
 		'</span> zaplatilo <span class="big">' . $zaplatili .  '</span> uživatelů.<br/><br/>';
 }
 
-echo '<form action="', Request::getURI(), '" method="POST">';
+echo '<form action="" method="POST">';
 if(!TISK) {
 	echo Helper::get()->menu()
 		->float(MenuHelper::FLOAT_RIGHT)

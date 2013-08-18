@@ -2,7 +2,7 @@
 header_main('Správa uživatelů');
 notice($this->redirect()->getRedirectMessage());
 
-if(!TISK) {
+if($this->showMenu) {
 	echo '<form action="" method="get">';
 	$s = $this->select();
 	echo 'Uživatelé:&nbsp;';

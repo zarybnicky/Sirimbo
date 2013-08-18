@@ -1,6 +1,6 @@
 <?php
 header_main('Správa rozpisů');
-notice(View::getRedirectMessage());
+notice($this->redirect()->getRedirectMessage());
 ?>
 <form action="<?php echo Request::getURI();?>" method="POST">
 <?php
