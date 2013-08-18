@@ -1,10 +1,11 @@
-<?php header_main('Správa uživatelů');?>
+<?php header_main($this->header);?>
 
 <form action="" method="POST">
-Opravdu chcete odstranit uživatele:<br/><br/>
+<?php echo $this->prompt;?><br/><br/>
 <?php foreach($this->data as $row): ?>
-	<?php echo $row['login'], ' - ', $row['fullName'];?><br />
-	<input type="hidden" name="users[]" value="<?php echo $row['id']?>" />
+	<?php echo $row['text']?>
+	<input type="hidden" name="data[]" value="<?php echo $row['id']?>" />
+	<br />
 <?php endforeach;?>
 <br/>
 <button type="submit" name="action" value="confirm">Odstranit</button>

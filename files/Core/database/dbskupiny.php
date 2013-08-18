@@ -9,7 +9,7 @@ class DBSkupiny extends Database {
 				FROM users_skupiny
 					LEFT JOIN users on us_id=u_skupina
 				GROUP BY us_id
-				ORDER BY us_count"
+				ORDER BY us_count DESC"
 			);
 		return DBSkupiny::getArray($res);
 	}

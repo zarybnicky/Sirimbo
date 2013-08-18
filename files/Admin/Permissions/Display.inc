@@ -1,6 +1,6 @@
 <?php
 header_main('Správa oprávnění');
-notice(View::getRedirectMessage());
+notice($this->redirect()->getRedirectMessage());
 
 echo '<form action="/admin/permissions" method="POST">';
 if(!TISK) {

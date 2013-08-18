@@ -9,7 +9,7 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Admin_Akce {
 			View::redirect('/admin/akce', 'Akce s takovým ID neexistuje');
 		
 		header_main("Správa akcí");
-		notice(View::getRedirectMessage());
+		notice($this->redirect()->getRedirectMessage());
 		
 		$doku = unserialize($akce["a_dokumenty"]);
 		

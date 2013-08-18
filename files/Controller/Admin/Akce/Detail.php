@@ -9,7 +9,7 @@ class Controller_Admin_Akce_Detail extends Controller_Admin_Akce {
 			View::redirect('/admin/akce', 'Akce s takovým ID neexistuje');
 			
 		header_main("Správa akcí");
-		notice(View::getRedirectMessage());
+		notice($this->redirect()->getRedirectMessage());
 		
 		$items = DBAkce::getAkceItems($id);
 		$users = DBUser::getActiveUsers();

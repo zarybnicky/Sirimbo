@@ -1,6 +1,6 @@
 <?php
 header_main('Správa anket');
-notice(View::getRedirectMessage());
+notice($this->redirect()->getRedirectMessage());
 
 if(!is_array(get('u')))
 	notice('Žádné akce');

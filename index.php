@@ -1,21 +1,22 @@
 <?php
 /*/sitewide OFF switch
-if(stripos($_GET['file'], 'cookie_set') !== false) {
-	setcookie('off_mode', '1', 0, '/');
-	header('Location: /');
-	return;
-}
-if(stripos($_GET['file'], 'cookie_reset') !== false) {
-	setcookie('off_mode', false, 0, '/');
-	header('Location: /');
-	return;
+if(isset($_GET['file'])) {
+	if(stripos($_GET['file'], 'cookie_set') !== false) {
+		setcookie('off_mode', '1', 0, '/');
+		header('Location: /');
+		return;
+	}
+	if(stripos($_GET['file'], 'cookie_reset') !== false) {
+		setcookie('off_mode', false, 0, '/');
+		header('Location: /');
+		return;
+	}
 }
 if(!isset($_COOKIE['off_mode'])) {
 	include('index2.php');
 	return;
 }
 //end OFF switch*/
-
 
 session_start();
 session_regenerate_id();
