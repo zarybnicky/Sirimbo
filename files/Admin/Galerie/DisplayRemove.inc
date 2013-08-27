@@ -1,11 +1,11 @@
 <?php
 header_main('Správa fotogalerie');
-notice(View::getRedirectMessage());
+notice($this->redirect()->getRedirectMessage());
 
 if(!is_array(get('u')))
 	notice('Žádné složky');
 ?>
-<form action="<?php echo Request::getURI();?>" method="POST">
+<form action="" method="POST">
 Opravdu chcete odstranit složky a jejich podsložky:<br/><br/>
 <?php
 foreach(post('u') as $id) {

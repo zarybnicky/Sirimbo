@@ -28,9 +28,9 @@ EOS;
 ?>		
 	</style>
 	<link href="/style/style.css" rel="stylesheet" type="text/css" />
-    <meta name="google-site-verification" content="Hfe7zlgTDOIpJv4rKGQz2Xg8Aezb6sIO0aAxVhrml9w" />
-    <meta name="norton-safeweb-site-verification"
-    	content="r44xj2vskhlgkyqcqm1hdgga2jdfj-idvyys0277y96s72k-tq0z-yyjdu7h3el6pi2gek0i4ykq3xgiguufrvuhj8nbj4n4miwjhvumhp35jfrafyynhj4ee8ctzpzh" />
+	<meta name="google-site-verification" content="Hfe7zlgTDOIpJv4rKGQz2Xg8Aezb6sIO0aAxVhrml9w" />
+	<meta name="norton-safeweb-site-verification"
+		content="r44xj2vskhlgkyqcqm1hdgga2jdfj-idvyys0277y96s72k-tq0z-yyjdu7h3el6pi2gek0i4ykq3xgiguufrvuhj8nbj4n4miwjhvumhp35jfrafyynhj4ee8ctzpzh" />
 	<meta property="fb:app_id" content="132983570203245"/>
 	<script src="/scripts/jquery-1.10.2.min.js"></script>	
 </head>
@@ -47,22 +47,7 @@ EOS;
 	<div id="header">
 		<a href="/home" id="homelink"></a>
 		<div id="userbox">
-		<?php
-		if(!User::isLogged()) {
-			//TODO: AJAX
-			if(post('action') == 'login' ||
-					post('action') == 'enter') {
-				post('pass', User::crypt(post('pass')));
-				
-				if(!User::login(post('login'), post('pass'))) {
-					View::redirect('/login', 'Špatné jméno nebo heslo!', true);
-				} elseif(get('return')) {
-					View::redirect(get('return'));
-				} else {
-					View::redirect('/member/home');
-				}
-			}
-		?>
+		<?php if(!User::isLogged()) { ?>
 			<form action="<?php Request::getURI();?>" method="post"><div>
 				<button type="submit" name="action" value="enter" style="display:none;"></button>
 				<input style="width:70px;" type="text" name="login"

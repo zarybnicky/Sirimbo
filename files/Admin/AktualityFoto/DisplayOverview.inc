@@ -1,11 +1,11 @@
 <?php
 header_main('Správa fotogalerie článků');
-notice(View::getRedirectMessage());
+notice($this->redirect()->getRedirectMessage());
 
 $dirs = DBGalerie::getDirs(true, true);
 
-echo '<form action="', Request::getURI(), '" method="get">';
-$s = Helper::get()->select()
+echo '<form action="" method="get">';
+$s = $this->select()
 	->get()->name('dir')->value('none')
 	->option('none', 'Vybrané fotky')
 	->option('no', '-------------');
@@ -15,18 +15,18 @@ echo $s;
 echo '<button type="submit">Zobrazit</button>';
 echo '</form>';
 
-echo '<form action="', Request::getURI(), '" method="post">';
+echo '<form action="" method="post">';
 echo '<button type="submit" name="action" value="enter" style="display:none;">Enter</button>';
 
-//XXX:W.I.P.
-
+//FIXME:W.I.P.
+/*
 dumpVar($_POST);
 
 $items[] = array('af_id' => 1, 'af_path' => './galerie/xichty treneru/jerry.jpg');
 $items[] = array('af_id' => 2, 'af_path' => './galerie/xichty treneru/jerry.jpg');
 $items[] = array('af_id' => 3, 'af_path' => './galerie/xichty treneru/jerry.jpg');
 
-DisplayAktuality::viewClanek($data, true);
+//DisplayAktuality::viewClanek($data, true);
 if(empty($items)) {
 	notice('Žádné vybrané fotky');
 	return;
@@ -44,3 +44,4 @@ echo '<div style="clear:both;"></div>'
 <button type="submit" name="action" value="submit">Uložit</button>
 <a href="/admin/akce">Zpět</a>
 </form>
+*/

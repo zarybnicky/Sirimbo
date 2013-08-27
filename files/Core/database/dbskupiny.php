@@ -1,7 +1,16 @@
 <?php
 class DBSkupiny extends Database {
-	public static function getSkupiny() {
-		$res = DBSkupiny::query("SELECT * FROM users_skupiny");
+	public static function getSkupiny($orderByCount = false) {
+		if(!$orderByCount)
+			$res = DBSkupiny::query("SELECT * FROM users_skupiny");
+		else
+			$res = DBSkupiny::query(
+				"SELECT users_skupiny.*,COUNT(*) AS us_count
+				FROM users_skupiny
+					LEFT JOIN users on us_id=u_skupina
+				GROUP BY us_id
+				ORDER BY us_count DESC"
+			);
 		return DBSkupiny::getArray($res);
 	}
 	public static function getSingleSkupina($id) {

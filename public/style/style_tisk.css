@@ -11,3 +11,4 @@ body {
 #header, #userbox, .badlogin {
 	display:none;
 }
+td.r {text-align:right;}

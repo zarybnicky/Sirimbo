@@ -1,6 +1,5 @@
 <?php
 class Log {
-	//TODO: Log IPs, ..
 	private static $logfile;
 	public static function write($message) {
 		Log::$logfile = fopen(LOG, 'a+');

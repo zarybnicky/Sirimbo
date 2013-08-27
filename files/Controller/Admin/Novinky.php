@@ -6,9 +6,9 @@ class Controller_Admin_Novinky extends Controller_Admin {
 	}
 	function view($id = null) {
 		if(!is_numeric(get('id')))
-			View::redirect("/member/home", "Novinka s daným ID neexistuje");
+			$this->redirect("/member/home", "Novinka s daným ID neexistuje");
 		DBNovinky::removeNovinka(get('id'));
-		View::redirect("/member/home", "Novinka odstraněna");
+		$this->redirect("/member/home", "Novinka odstraněna");
 	}
 }
 ?>

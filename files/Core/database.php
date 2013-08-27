@@ -15,18 +15,18 @@ class Database {
 		if(Database::$connection != null)
 			return;
 		Database::$connection = @mysql_connect(DB_SERVER, DB_USER, DB_PASS)
-			or View::viewError(ER_DATABASE_CONNECTION);
+			or static::databaseError(true);
 		@mysql_select_db(DB_DATABASE, Database::$connection)
-			or View::viewError(ER_DATABASE_CONNECTION);
+			or static::databaseError(true);
 		@mysql_set_charset("utf8", Database::$connection)
-			or View::viewError(ER_DATABASE_CONNECTION);
+			or static::databaseError(true);
 	}
 	
 	protected static function query($query) {
 		Database::getConnection();
-		$res = mysql_query($query, Database::$connection);
-		if(!$res)
-			View::viewError(ER_DATABASE);
+		$res = mysql_query($query, Database::$connection)
+			or static::databaseError();
+			
 		return $res;
 	}
 	
@@ -46,6 +46,13 @@ class Database {
 	}
 	protected static function getInsertId() {
 		return mysql_insert_id(Database::$connection);
+	}
+	protected function databaseError($onConnection = false) {
+		Log::write('MySQL Error: ' . mysql_errno() . ': ' . mysql_error());
+		if($onConnection)
+			throw new Exception('Nastala chyba při pokusu o připojení k databázi.');
+		else
+			throw new Exception('Nastala chyba v dotazu na databázi.');
 	}
 	public static function isDatabaseError() {
 		return (get('file') == 'error' && get('id') &&

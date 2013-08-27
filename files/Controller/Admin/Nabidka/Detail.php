@@ -6,7 +6,7 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka {
 	}
 	function view($id = null) {
 		if(!$id || !($data = DBNabidka::getSingleNabidka($id)))
-			View::redirect('/admin/nabidka', 'Nabídka s takovým ID neexistuje');
+			$this->redirect('/admin/nabidka', 'Nabídka s takovým ID neexistuje');
 		
 		Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
 		
@@ -15,7 +15,7 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka {
 		$users = DBPary::getPartners();
 		
 		if(empty($_POST)) {
-			include("files/Admin/NabidkaDetail/Display.inc");
+			$this->render("files/Admin/NabidkaDetail/Display.inc");
 			return;
 		}
 		
@@ -61,7 +61,6 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka {
 			$items = DBNabidka::getNabidkaItem($id);
 			$obsazeno = DBNabidka::getNabidkaItemLessons($id);
 		}
-		//TODO: Spojit R,N-detail a R,N-edit
 		
 		//-----Dorovnávání skutečného a nastaveného počtu hodin-----//
 		if(post("pocet_hod") > $data["n_pocet_hod"]) {
@@ -73,7 +72,7 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka {
 			$data = DBNabidka::getSingleNabidka($id);
 		}
 		
-		include("files/Admin/NabidkaDetail/Display.inc");
+		$this->render("files/Admin/NabidkaDetail/Display.inc");
 	}
 }
 ?>
