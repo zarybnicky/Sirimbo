@@ -2,9 +2,9 @@
 header_main('Správa fotogalerie');
 notice($this->redirect()->getRedirectMessage());
 ?>
-<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
+<form action="" method="POST">
 <?php
-echo Helper::get()->menu()
+echo $this->menu()
 	->float(MenuHelper::FLOAT_RIGHT)
 	->content('Přidat fotky', 'galerie/add')
 	->content('Upravit fotky', 'edit', true)
@@ -35,7 +35,7 @@ if(!empty($dirs)) {
 <tr><td>Název</td><td><input type="text" name="name"/></td></tr>
 <tr><td>Nadsložka</td><td>
 <?php
-$s = Helper::get()->select()
+$s = $this->select()
 	->post()->name('parent')
 	->option('none', '--');
 foreach($dirs as $dir)

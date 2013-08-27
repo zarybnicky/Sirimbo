@@ -33,11 +33,11 @@ class Controller_Inzerce extends Controller_Abstract {
 	}
 	function add($id = null) {
 		if(empty($_POST) || !$this->checkData($_POST, 'add')) {
-			include('files/Admin/Skupiny/Form.inc');
+			$this->render('files/Admin/Skupiny/Form.inc');
 			return;
 		}
-		$od = Helper::get()->date()->name('od')->getPost();
-		$do = Helper::get()->date()->name('do')->getPost();
+		$od = $this->date()->name('od')->getPost();
+		$do = $this->date()->name('do')->getPost();
 		if(!$do || strcmp($od, $do) > 0)
 			$do = $od;
 		
@@ -64,7 +64,7 @@ class Controller_Inzerce extends Controller_Abstract {
 	}
 	function edit($id = null) {
 		if(!$id || !($data = DBInzerce::getSingleInzerat($id)))
-			View::redirect('/inzerce/posledni', 'Inzerát s takovým ID neexistuje');
+			$this->redirect('/inzerce/posledni', 'Inzerát s takovým ID neexistuje');
 		
 		if(empty($_POST)) {
 			post('kat', $data['i_kat']);
@@ -78,15 +78,15 @@ class Controller_Inzerce extends Controller_Abstract {
 			post('visible', $data['i_visible']);
 			post('confirmed', $data['i_confirmed']);
 			
-			include('files/Main/Inzerce/Form.inc');
+			$this->render('files/Main/Inzerce/Form.inc');
 			return;
 		}
 		if(!$this->checkData($_POST, 'edit')) {
-			include('files/Admin/Skupiny/Form.inc');
+			$this->render('files/Admin/Skupiny/Form.inc');
 			return;
 		}
-		$od = Helper::get()->date()->name('od')->getPost();
-		$do = Helper::get()->date()->name('do')->getPost();
+		$od = $this->date()->name('od')->getPost();
+		$do = $this->date()->name('do')->getPost();
 		if(!$do || strcmp($od, $do) > 0)
 			$do = $od;
 		
@@ -108,15 +108,15 @@ class Controller_Inzerce extends Controller_Abstract {
 			post('visible', $data['i_visible']);
 			post('confirmed', $data['i_confirmed']);
 			
-			include('files/Main/Inzerce/Form.inc');
+			$this->render('files/Main/Inzerce/Form.inc');
 			return;
 		}
 		if(!$this->checkData($_POST, 'edit-unreg')) {
-			include('files/Admin/Skupiny/Form.inc');
+			$this->render('files/Admin/Skupiny/Form.inc');
 			return;
 		}
-		$od = Helper::get()->date()->name('od')->getPost();
-		$do = Helper::get()->date()->name('do')->getPost();
+		$od = $this->date()->name('od')->getPost();
+		$do = $this->date()->name('do')->getPost();
 		if(!$do || strcmp($od, $do) > 0)
 			$do = $od;
 		

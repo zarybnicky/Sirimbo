@@ -6,7 +6,7 @@ class Controller_Admin_Ankety extends Controller_Admin {
 	}
 	function view($id = null) {
 		if(empty($_POST)) {
-			include("files/Admin/Ankety/Display.inc");
+			$this->render("files/Admin/Ankety/Display.inc");
 			return;
 		}
 		
@@ -23,7 +23,7 @@ class Controller_Admin_Ankety extends Controller_Admin {
 			case 'edit':
 				$ankety = post('ankety');
 				if($ankety[0])
-					View::redirect('/admin/ankety/edit/' . $ankety[0]);
+					$this->redirect('/admin/ankety/edit/' . $ankety[0]);
 				break;
 		
 			case 'remove':
@@ -32,20 +32,20 @@ class Controller_Admin_Ankety extends Controller_Admin {
 				$url = '/admin/ankety/remove?';
 				foreach(post('ankety') as $id)
 					$url .= '&u[]=' . $id;
-				View::redirect($url);
+				$this->redirect($url);
 				break;
 		}
-		include("files/Admin/Ankety/Display.inc");
+		$this->render("files/Admin/Ankety/Display.inc");
 	}
 	function add($id = null) {
 		if(empty($_POST)) {
-			include('files/Admin/Ankety/Form.inc');
+			$this->render('files/Admin/Ankety/Form.inc');
 			return;
 		}
 		$visible = (bool) post("visible");
 		if(!Permissions::check('ankety', P_ADMIN)) {
 			$visible = false;
-			View::setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění ankety');
+			$this->redirect()->setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění ankety');
 		}
 		
 		DBAnkety::addAnketa(User::getUserID(), post('jmeno'), post('text'), '0',
@@ -60,11 +60,11 @@ class Controller_Admin_Ankety extends Controller_Admin {
 			DBAnkety::addAnketaItem($data['ak_id'], post("add_text"));
 			unset($_POST["add_text"]);
 		}
-		View::redirect('/admin/ankety/edit/' . $data['ak_id'], 'Anketa přidána');
+		$this->redirect('/admin/ankety/edit/' . $data['ak_id'], 'Anketa přidána');
 	}
 	function edit($id = null) {
 		if(!$id || !($data = DBAnkety::getSingleAnketa($id)))
-			View::redirect('/admin/ankety', 'Anketa s takovým ID neexistuje');
+			$this->redirect('/admin/ankety', 'Anketa s takovým ID neexistuje');
 		
 		Permissions::checkError('ankety', P_OWNED, $data['ak_kdo']);
 		
@@ -75,7 +75,7 @@ class Controller_Admin_Ankety extends Controller_Admin {
 			post("text", $data["ak_text"]);
 			post("visible", $data["ak_visible"]);
 			
-			include("files/Admin/Ankety/Form.inc");
+			$this->render("files/Admin/Ankety/Form.inc");
 			return;
 		}
 		
@@ -104,7 +104,7 @@ class Controller_Admin_Ankety extends Controller_Admin {
 		$visible_prev = $data['ak_visible'];
 		if(!Permissions::check('ankety', P_ADMIN) && $visible != $visible_prev) {
 			$visible = $visible_prev;
-			View::setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění ankety');
+			$this->redirect()->setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění ankety');
 		}
 		
 		if($visible != $visible_prev || post('jmeno') != $data['ak_jmeno'] ||
@@ -132,15 +132,15 @@ class Controller_Admin_Ankety extends Controller_Admin {
 		post("text", $data["ak_text"]);
 		post("visible", $data["ak_visible"]);
 		
-		include("files/Admin/Ankety/Form.inc");
+		$this->render("files/Admin/Ankety/Form.inc");
 	}
 	function remove($id = null) {
 		if(empty($_POST) || post('action') !== 'confirm') {
-			include('files/Admin/Ankety/DisplayRemove.inc');
+			$this->render('files/Admin/Ankety/DisplayRemove.inc');
 			return;
 		}
 		if(!is_array(post('ankety')))
-			View::redirect('/admin/ankety');
+			$this->redirect('/admin/ankety');
 		foreach(post('ankety') as $id) {
 			$data = DBAnkety::getSingleAnketa($id);
 			
@@ -156,7 +156,7 @@ class Controller_Admin_Ankety extends Controller_Admin {
 		if(isset($error) && $error)
 			throw new Exception("Máte nedostatečnou autorizaci pro tuto akci!");
 		
-		View::redirect('/admin/ankety', 'Ankety odebrány');
+		$this->redirect('/admin/ankety', 'Ankety odebrány');
 	}
 }
 ?>

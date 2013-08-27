@@ -5,7 +5,7 @@ notice($this->redirect()->getRedirectMessage());
 $dirs = DBGalerie::getDirs(true, true);
 
 echo '<form action="" method="get">';
-$s = Helper::get()->select()
+$s = $this->select()
 	->get()->name('dir')->value('none')
 	->option('none', 'Vybrané fotky')
 	->option('no', '-------------');

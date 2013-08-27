@@ -9,7 +9,7 @@ notice($this->redirect()->getRedirectMessage());
 if(isset($f) && is_object($f))
 	notice(implode('<br/>', $f->getMessages()));
 ?>
-<form action="<?php echo Request::getURI();?>" method="POST">
+<form action="" method="POST">
 <table>
 	<tr>
 		<td>Nadpis (*): </td>
@@ -39,17 +39,17 @@ if(isset($f) && is_object($f))
 				echo '<input type="hidden" name="prijmeni" value="', post('prijmeni'), '" />';
 				echo post('jmeno'), ' ', post('prijmeni'), '<br/>';
 			}
-			echo Helper::get()->userSelect()->name('reg')->users(DBUser::getUsers());
+			echo $this->userSelect()->name('reg')->users(DBUser::getUsers());
 		?></td><td></td>
 	</tr><tr>
 		<td>Od: (*)</td>
-		<td><?php echo Helper::get()->date()->name('od')->textBox();?></td>
-		<td><?php $error = checkDateString(Helper::get()->date(false)->getPost()) || $error;?></td>
+		<td><?php echo $this->date()->name('od')->textBox();?></td>
+		<td><?php $error = checkDateString($this->date(false)->getPost()) || $error;?></td>
 	</tr><tr>
 		<td>Do: </td>
-		<td><?php echo Helper::get()->date()->name('do')->textBox();?></td>
+		<td><?php echo $this->date()->name('do')->textBox();?></td>
 		<td>(pokud je prázdný, počítá se jako "Od")
-		<?php $do = Helper::get()->date(false)->getPost();
+		<?php $do = $this->date(false)->getPost();
 			$error = ($do ? checkDateString($do) : false) || $error;
 		?></td>
 	</tr><tr>

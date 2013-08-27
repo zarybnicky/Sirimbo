@@ -2,13 +2,13 @@
 header_main('Správa fotogalerie');
 notice($this->redirect()->getRedirectMessage());
 ?>
-<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
+<form action="" method="POST">
 <a href="/admin/galerie/upload">Přidat fotky</a>
 <button type="submit" name="action" value="edit">Upravit fotku</button>
 <button type="submit" name="action" value="remove">Odstranit fotky</button>
 <?php
 if(!($data = DBGalerie::getSingleDir($id))) {
-	View::redirect('/admin/galerie', 'Složka s takovým ID neexistuje');
+	$this->redirect('/admin/galerie', 'Složka s takovým ID neexistuje');
 }
 $fotos = DBGalerie::getFotky($id);
 $count = count($fotos);

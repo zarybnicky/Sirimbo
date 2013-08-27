@@ -5,7 +5,7 @@ notice($this->redirect()->getRedirectMessage());
 if(!is_array(get('u')))
 	notice('Žádné inzeráty');
 ?>
-<form action="<?php echo Request::getURI();?>" method="POST">
+<form action="" method="POST">
 Opravdu chcete odstranit inzeráty:<br/><br/>
 <?php
 foreach(get('u') as $id) {
