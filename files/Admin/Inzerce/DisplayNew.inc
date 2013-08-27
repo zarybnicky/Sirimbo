@@ -1,8 +1,8 @@
 <?php
 header_main('Správa inzerce');
-notice(View::getRedirectMessage());
+notice($this->redirect()->getRedirectMessage());
 ?>
-<form action="<?php echo $_SERVER["REQUEST_URI"]?>" method="POST">
+<form action="" method="POST">
 <button type="submit" name="action" value="confirm">Potvrdit</button>
 <button type="submit" name="action" value="remove">Odstranit</button>
 <table>

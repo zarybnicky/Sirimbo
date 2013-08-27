@@ -38,20 +38,31 @@ class Sidebar {
 		return '<div class="light-out' .
 			($class ? ' ' . $class : '') . '">' . $text . '</div>';
 	}
+	
 	function commonItems() {
-		if(!Database::isDatabaseError() && stripos(Request::getURI(), '/home') === false) {
-			ob_start();
-			$result = DisplayAnkety::viewAnkety(true, true, getIP());
-			$ankety = ob_get_clean();
-				
-			if($result) {
-				echo $this->blackbox('<span class="logo"></span>Ankety');
-				echo $this->whiteBox($ankety);
+		if(Database::isDatabaseError())
+			return;
+		
+		if($data = DBAnkety::getAnketyWithItems(true, getIP())) {
+			$data = $data[array_rand($data)];
+			$items = array();
+			foreach($data['items'] as $item) {
+				$items[] = array(
+						'id' => $item['aki_id'],
+						'text' => $item['aki_text']
+				);
 			}
-			echo '<div><a href="https://www.facebook.com/groups/44213111683/" target="_blank">';
-			echo '<img alt="" src="/style/fb-logo.png" />';
-			echo '</a></div>';
+			$r = new Renderer();
+			echo $this->blackbox('<span class="logo"></span>Ankety');
+			echo $this->whiteBox($r->render('files/View/Main/Ankety/Sidebar.inc', array(
+					'id' => $data['ak_id'],
+					'text' => $data['ak_text'],
+					'items' => $items
+			)));
 		}
+		echo '<div><a href="https://www.facebook.com/groups/44213111683/" target="_blank">';
+		echo '<img alt="" src="/style/fb-logo.png" />';
+		echo '</a></div>';
 		/*
 		<div class="dark-out"><div class="dark-in">
 			<span class="logo"></span>Sponzoři

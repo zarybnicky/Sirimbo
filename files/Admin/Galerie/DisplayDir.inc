@@ -1,15 +1,15 @@
 <?php
 header_main('Správa fotogalerie');
-notice(View::getRedirectMessage());
+notice($this->redirect()->getRedirectMessage());
 ?>
-<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
+<form action="" method="POST">
 <?php
 if($id == 0)
-	View::redirect('/admin/galerie', 'Není možné upravit hlavní složku');
+	$this->redirect('/admin/galerie', 'Není možné upravit hlavní složku');
 if(!($data = DBGalerie::getSingleDir($id)))
-	View::redirect('/admin/galerie', 'Složka s takovým ID neexistuje');
+	$this->redirect('/admin/galerie', 'Složka s takovým ID neexistuje');
 
-echo Helper::get()->menu()
+echo $this->menu()
 	->float(MenuHelper::FLOAT_RIGHT)
 	->content('Uložit', 'save', true)
 	->content('Zpět', '/admin/galerie');
@@ -22,7 +22,7 @@ echo Helper::get()->menu()
 		<td>Nadsložka</td>
 		<td><?php
 			$dirs = DBGalerie::getDirs(true, true);
-			$s = Helper::get()->select()
+			$s = $this->select()
 				->post()->name('parent')
 				->value($data['gd_id_rodic'])
 				->option('none', '--');

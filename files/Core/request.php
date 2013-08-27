@@ -11,8 +11,6 @@ class Request {
 	private static $action;
 	private static $id;
 	private static $referer;
-	
-	private static $corruptURL = false;
 
 	public static function setDefault($default) {
 		Request::$default = $default;
@@ -27,20 +25,17 @@ class Request {
 		foreach($parts as $key => $part) {		//remove double slashes
 			if($part === '') {
 				unset($parts[$key]);
-				Request::$corruptURL = true;
 			}
 		}
 		$parts = array_values($parts);
 		Request::$url_parts = $parts;			//raw url parts
 		
-		if(empty($parts)) {
-			Request::$corruptURL = true;
-		}
-		
 		foreach($parts as $key => $part)
 			if(is_numeric($part))
 				unset($parts[$key]);			//make canonical name, usable for finding controllers
-		Request::$url_parts_literal = array_values($parts);
+		
+		$parts = array_values($parts);
+		Request::$url_parts_literal = $parts;
 		
 		for($i = count(Request::$url_parts) - 1; $i >= 0; $i--) {
 			if(is_numeric(Request::$url_parts[$i])) {
@@ -53,7 +48,8 @@ class Request {
 		}
 		Request::$id = isset($id) ? $id : null;
 		Request::$action = isset($action) ? $action :			//if previous code didn't find a viable action, use the last string in array
-			(!empty($parts) ? $parts[count($parts) - 1] : null);
+			(!empty(Request::$url_parts_literal) ?
+				Request::$url_parts_literal[count(Request::$url_parts_literal) - 1] : null);
 	}
 
 	public static function getURI() {

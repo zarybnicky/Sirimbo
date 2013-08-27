@@ -83,7 +83,6 @@ class DBAnkety extends Database {
 		
 		$res = DBAnkety::query("UPDATE ankety SET ak_jmeno='$jmeno',ak_text='$text',ak_pristup='$pristup'," .
 			"ak_visible='$visible' WHERE ak_id='$id'");
-		//TODO: novinky - s novým názvem (NE $data)
 		return true;
 	}
 	

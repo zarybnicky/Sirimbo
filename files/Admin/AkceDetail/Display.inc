@@ -1,8 +1,8 @@
 <?php
 header_main('Správa akcí');
-notice(View::getRedirectMessage());
+notice($this->redirect()->getRedirectMessage());
 ?>
-<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST" class="centerWTable">
+<form action="" method="POST" class="centerWTable">
 <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
 <?php DisplayAkce::viewAkceHeader($akce);?>
 <table>
@@ -11,7 +11,7 @@ notice(View::getRedirectMessage());
 	<td></td>
 </tr>
 <?php
-$userselect = Helper::get()->userSelect()->users($users);
+$userselect = $this->userSelect()->users($users);
 if(!empty($items)) {
 	foreach($items as $item) {
 		echo '<tr>';

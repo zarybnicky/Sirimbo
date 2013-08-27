@@ -5,145 +5,178 @@ class Controller_Admin_Users extends Controller_Admin {
 		Permissions::checkError('users', P_OWNED);
 	}
 	function view($id = null) {
-		if(empty($_POST)) {
-			include('files/Admin/Users/Display.inc');
-			return;
-		}
 		switch(post('action')) {
 			case 'edit':
 				$users = post('users');
 				if($users[0])
-					View::redirect('/admin/users/edit/' . $users[0]);
+					$this->redirect('/admin/users/edit/' . $users[0]);
 				break;
-				
 			case 'platby':
 				$users = post('users');
 				if($users[0])
-					View::redirect('/admin/users/platby/' . $users[0]);
+					$this->redirect('/admin/users/platby/' . $users[0]);
 				break;
-			
+			case 'remove':
+				if(!is_array(post('users'))) break;
+				$this->redirect('/admin/users/remove?' . http_build_query(array('u' => post('users'))));
+				break;
 			case 'save':
-				$groups = DBPermissions::getGroups();
-				foreach($groups as $group)
-					if($group['pe_id'])
-						$filter[] = $group['pe_id'];
-				
-				$options['filter'] = in_array(get('f'), array_merge(array('dancer', 'system', 'all', 'unconfirmed', 'ban'), $filter)) ?
-					get('f') : 'all';
-				$pager = new Paging(new PagingAdapterDBSelect('DBUser', $options));
-				$pager->setCurrentPageField('p');
-				$pager->setItemsPerPageField('c');
-				$pager->setDefaultItemsPerPage(20);
-				$pager->setPageRange(5);
-				$items = $pager->getItems();
-				
-				foreach($items as $user) {
-					$id = $user['u_id'];
-					if(((bool) post($id . '-dancer')) !== ((bool) $user['u_dancer']) ||
-							((bool) post($id . '-system')) !== ((bool) $user['u_system']) ||
-							(post($id . '-skupina') != $user['u_skupina'])) {
-						DBUser::setUserData($id, $user['u_jmeno'], $user['u_prijmeni'], $user['u_pohlavi'],
+				foreach(post('save') as $user_id) {
+					$user = DBUser::getUserData($user_id);
+					if(	((bool) post($user_id . '-dancer')) !== ((bool) $user['u_dancer']) ||
+						((bool) post($user_id . '-system')) !== ((bool) $user['u_system']) ||
+							(post($user_id . '-skupina') != $user['u_skupina'])) {
+						DBUser::setUserData($user_id, $user['u_jmeno'], $user['u_prijmeni'], $user['u_pohlavi'],
 							$user['u_email'], $user['u_telefon'], $user['u_narozeni'], $user['u_poznamky'],
-							$user['u_group'], post($id . '-skupina'), post($id . '-dancer') ? '1' : '0',
-							$user['u_lock'], $user['u_ban'], post($id . '-system') ? '1' : '0');
+							$user['u_group'], post($user_id . '-skupina'), post($user_id . '-dancer') ? '1' : '0',
+							$user['u_lock'] ? '1' : '0', $user['u_ban'] ? '1' : '0', post($user_id . '-system') ? '1' : '0');
 					}
 				}
 				break;
-			case 'remove':
-				if(!is_array(post('users')))
-					break;
-				$url = '/admin/users/remove?';
-				foreach(post('users') as $id)
-					$url .= '&u[]=' . $id;
-				View::redirect($url);
-				break;
+			case null: break;
 		}
-		include('files/Admin/Users/Display.inc');
-		return;
+		if(get('v') === null)
+			get('v', 'info');
+		$this->displayOverview(get('v'));
 	}
 	function remove($id = null) {
-		if(empty($_POST) || post('action') !== 'confirm') {
-			include('files/Admin/Users/DisplayRemove.inc');
-			return;
+		if(!is_array(post('data')) && !is_array(get('u')))
+			$this->redirect('/admin/users');
+		if(!empty($_POST) && post('action') == 'confirm') {
+			foreach(post('data') as $id)
+				DBUser::removeUser($id);
+			$this->redirect('/admin/users', 'Uživatelé odebráni');
 		}
-		if(!is_array(post('users')))
-			View::redirect('/admin/users');
-		foreach(post('users') as $id)
-			DBUser::removeUser($id);
-		
-		View::redirect('/admin/users', 'Uživatelé odebráni');
+		$data = array();
+		foreach(get('u') as $id) {
+			$item = DBUser::getUserData($id);
+			$data[] = array(
+					'id' => $item['u_id'],
+					'text' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'] . ' - ' .
+						$item['u_login']
+			);
+		}
+		$this->render('files/View/Admin/RemovePrompt.inc', array(
+				'header' => 'Správa uživatelů',
+				'prompt' => 'Opravdu chcete odstranit uživatele:',
+				'returnURL' => Request::getReferer(),
+				'data' => $data
+		));
 	}
 	function add($id = null) {
 		if(empty($_POST) || is_object($f = $this->checkData($_POST, 'add'))) {
-			include('files/Admin/Users/Form.inc');
+			if(!empty($_POST))
+				$this->redirect()->setRedirectMessage($f->getMessages());
+			$this->displayForm();
 			return;
 		}
-		$narozeni = Helper::get()->date()->name('narozeni')->getPost();
-		
+		$narozeni = $this->date('narozeni')->getPost();
 		DBUser::addUser(strtolower(post('login')), User::Crypt(post('pass')), post('jmeno'), post('prijmeni'),
 			post('pohlavi'), post('email'), post('telefon'), $narozeni,
 			post('poznamky'), post('group'), post('skupina'), post('dancer') ? '1' : '0',
 			post('lock') ? '1' : '0', post('ban') ? '1' : '0', '1', post('system') ? '1' : '0');
-		View::redirect('/admin/users', 'Uživatel úspěšně přidán');
+		$this->redirect('/admin/users', 'Uživatel úspěšně přidán');
 	}
 	function edit($id = null) {
 		if(!$id || !($data = DBUser::getUserData($id)))
-			View::redirect('/admin/users', 'Uživatel s takovým ID neexistuje');
+			$this->redirect('/admin/users', 'Uživatel s takovým ID neexistuje');
 		if(!$data['u_confirmed'])
-			View::redirect('/admin/users',
-				'Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
-			
-		if(empty($_POST)) {
-			post('login', $data['u_login']);
-			post('group', $data['u_group']);
-			post('ban', $data['u_ban']);
-			post('lock', $data['u_lock']);
-			post('dancer', $data['u_dancer']);
-			post('system', $data['u_system']);
-			post('jmeno', $data['u_jmeno']);
-			post('prijmeni', $data['u_prijmeni']);
-			post('pohlavi', $data['u_pohlavi']);
-			post('email', $data['u_email']);
-			post('telefon', $data['u_telefon']);
-			post('narozeni', $data['u_narozeni']);
-			post('skupina', $data['u_skupina']);
-			post('poznamky', $data['u_poznamky']);
-			include('files/Admin/Users/Form.inc');
+			$this->redirect('/admin/users', 'Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
+		
+		if(empty($_POST) || is_object($f = $this->checkData($_POST, 'edit'))) {
+			if(empty($_POST)) {
+				post('login', $data['u_login']);
+				post('group', $data['u_group']);
+				post('ban', $data['u_ban']);
+				post('lock', $data['u_lock']);
+				post('dancer', $data['u_dancer']);
+				post('system', $data['u_system']);
+				post('jmeno', $data['u_jmeno']);
+				post('prijmeni', $data['u_prijmeni']);
+				post('pohlavi', $data['u_pohlavi']);
+				post('email', $data['u_email']);
+				post('telefon', $data['u_telefon']);
+				post('narozeni', $data['u_narozeni']);
+				post('skupina', $data['u_skupina']);
+				post('poznamky', $data['u_poznamky']);
+			} else {
+				$this->redirect()->setRedirectMessage($f->getMessages());
+			}
+			$this->displayForm();
 			return;
 		}
-		if(is_object($f = $this->checkData($_POST, 'edit'))) {
-			include('files/Admin/Users/Form.inc');	
-			return;
-		}
-        
-		$narozeni = Helper::get()->date()->name('narozeni')->getPost();
-        
+		$narozeni = $this->date('narozeni')->getPost();
 		DBUser::setUserData($id, post('jmeno'), post('prijmeni'), post('pohlavi'),
 			post('email'), post('telefon'), $narozeni, post('poznamky'), post('group'),
 			post('skupina'), post('dancer') ? 1 : 0, post('lock') ? 1 : 0,
 			post('ban') ? 1 : 0, post('system') ? 1 : 0);
-		View::redirect('/admin/users', 'Uživatel úspěšně upraven');
+		$this->redirect('/admin/users', 'Uživatel úspěšně upraven');
 	}
 	function platby($id = null) {
 		if(!$id || !($data = DBUser::getUserData($id)))
-			View::redirect('/admin/users', 'Uživatel s takovým ID neexistuje');
+			$this->redirect('/admin/users', 'Uživatel s takovým ID neexistuje');
 		if(!$data['u_confirmed'])
-			View::redirect('/admin/users',
-				'Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
+			$this->redirect('/admin/users', 'Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
 		
-		include('files/Admin/Users/DisplayPlatby.inc');
-		return;
+		$platby = DBPlatby::getPlatbyFromUser($id);
+		if(empty($platby))
+			$this->redirect('/admin/users', 'Uživatel "' . $data['u_login'] . '" nemá žádné platby v databázi.');
+		
+		foreach($platby as &$item) {
+			$new_data = array(
+					'id' => $item['up_id'],
+					'colorBox' => getColorBox($item['us_color'], $item['us_popis']),
+					'mesicne' => $item['us_platba_mesic'] . ' Kč',
+					'castka' => $item['up_castka'] . ' Kč',
+					'datePlaceno' => formatDate($item['up_placeno']),
+					'datePlatnost' => formatDate($item['up_plati_do']),
+					'upravitLink' => '<a href="/admin/platby/edit/' . $item['up_id'] . '">Upravit</a>'
+			);
+			$item = $new_data;
+		}
+		$this->render('files/View/Admin/Users/Platby.inc', array(
+				'id' => $id,
+				'fullName' => $data['u_jmeno'] . ' ' . $data['u_prijmeni'],
+				'platby' => $platby
+		));
 	}
 	function unconfirmed($id = null) {
-		if(empty($_POST)) {
-			include('files/Admin/Users/DisplayNew.inc');
+		if(empty($_POST) || !is_array(post('users'))) {
+			$users = DBUser::getNewUsers();
+			if(empty($users)) {
+				$this->render('files/View/Empty.inc', array(
+						'nadpis' => 'Správa uživatelů',
+						'notice' => 'Žádní nepotvrzení uživatelé nejsou v databázi.'
+				));
+			}
+			$groups = DBPermissions::getGroups();
+			$s_group = $this->select();
+			foreach($groups as $group)
+				$s_group->option($group['pe_id'], $group['pe_name']);
+			
+			$skupiny = DBSkupiny::getSkupiny();
+			$s_skupina = new SelectHelper();
+			foreach($skupiny as $skupina)
+				$s_skupina->option($skupina['us_id'], $skupina['us_popis']);
+			
+			foreach($users as &$row) {
+				$new_data = array(
+						'id' => $row['u_id'],
+						'checkBox' => '<input type="checkbox" name="users[]" value="' . $row['u_id'] . '" />',
+						'group' => $s_group->post()->name($row['u_id'] . '-group'),
+						'skupina' => $s_skupina->post()->name($row['u_id'] . '-skupina'),
+						'dancer' => '<input type="checkbox" name="' . $row['u_id'] . '-dancer" value="dancer" />',
+						'fullName' => $row['u_jmeno'] . ' ' . $row['u_prijmeni'],
+						'narozeni' => formatDate($row['u_narozeni'])
+				);
+				$row = $new_data;
+			}
+			$this->render('files/View/Admin/Users/Unconfirmed.inc', array(
+					'data' => $users
+			));
 			return;
 		}
 		if(post('action') == 'confirm') {
-			if(!is_array(post('users'))) {
-				include('files/Admin/Users/DisplayNew.inc');
-				return;
-			}
 			foreach(post('users') as $id) {
 				$data = DBUser::getUserData($id);
 				
@@ -151,45 +184,57 @@ class Controller_Admin_Users extends Controller_Admin {
 					post($id . '-dancer') ? 1 : 0);
 				Mailer::reg_confirmed_notice($data['u_email'], $data['u_login']);
 			}
-			notice('Uživatelé potvrzeni');
-			include('files/Admin/Users/DisplayNew.inc');
-			return;
+			$this->redirect('/admin/users', 'Uživatelé potvrzeni');
 		} elseif(post('action') == 'remove') {
-			echo '<form action="/admin/users" method="POST">';
-			echo 'Opravdu chcete odstranit uživatele:<br/><br/>';
-			foreach(post('users') as $id) {
-				$data = DBUser::getUserData($id);
-				echo "\t", $data['u_login'], ' - ';
-				echoFullJmeno($data);
-				echo '<input type="hidden" name="users[]" value="', $id, '" />';
-				echo '<br />';
-			}
-			echo '<br/>';
-			echo '<button type="submit" name="action" value="remove_confirm">Odstranit</button>';
-			echo '</form>';
-			echo '<a href="/admin/users/new">Zpět</a>';
-			return;
+			$this->redirect('/admin/users/remove?' . http_build_query(array('u' => post('users'))));
 		}
 	}
 	function duplicate($id = null) {
-		if(empty($_POST) || post('action') !== 'remove' || !post('users')) {
-			include('files/Admin/Users/DisplayDuplicate.inc');
-			return;
+		if(!empty($_POST) && post('action') == 'remove' && post('users') && !empty($_POST['users']))
+			$this->redirect('/admin/users/remove?' . http_build_query(array('u' => post('users'))));
+		
+		$users = DBUser::getDuplicateUsers();
+		foreach($users as &$row) {
+			$new_data = array(
+					'id' => $row['u_id'],
+					'checkBox' => '<input type="checkbox" name="users[]" value="' . $row['u_id'] . '" />',
+					'colorBox' => getColorBox($row['us_color'], $row['us_popis']),
+					'fullName' => $row['u_prijmeni'] . ', ' . $row['u_jmeno'],
+					'email' => $row['u_email'],
+					'telefon' => $row['u_telefon'],
+					'narozeni' => formatDate($row['u_narozeni']),
+					'timestamp' => formatTimestamp($row['u_timestamp'])
+			);
+			$row = $new_data;
 		}
-		echo '<form action="/admin/users" method="POST">';
-		echo 'Opravdu chcete odstranit uživatele:<br/><br/>';
-		foreach(post('users') as $id) {
-			$data = DBUser::getUserData($id);
-			echo "\t", $data['u_login'], ' - ';
-			echoFullJmeno($data);
-			echo '<br />';
-			echo '<input type="hidden" name="users[]" value="', $id, '" />';
+		$this->render('files/View/Admin/Users/Duplicate.inc', array(
+				'data' => $users
+		));
+	}
+	function statistiky($id = null) {
+		$all = DBUser::getUsers(L_ALL);
+		$active = DBUser::getActiveUsers(L_ALL);
+		$dancers = DBUser::getActiveDancers(L_ALL);
+		$data = array(
+			array('Uživatelé v databázi', count($all)),
+			array('Aktivní uživatelé', count($active)),
+			array('Aktivní tanečníci', count($dancers))
+		);
+		
+		$groupcount = DBUser::getGroupCounts();
+		foreach($groupcount as $group)
+			$data[] = array($group['pe_name'], $group['count']);
+		
+		foreach($data as &$row) {
+			$new_data = array(
+					'group' => $row[0],
+					'count' => $row[1]
+			);
+			$row = $new_data;
 		}
-		echo '<br/>';
-		echo '<button type="submit" name="action" value="remove_confirm">Odstranit</button>';
-		echo '</form>';
-		echo '<a href="/admin/users/duplicate">Zpět</a>';
-		return;
+		$this->render('files/View/Admin/Users/Statistiky.inc', array(
+				'data' => $data
+		));
 	}
 	function temporary($id = null) {
 		$jmeno = post('jmeno');
@@ -223,8 +268,128 @@ class Controller_Admin_Users extends Controller_Admin {
 		}
 		exit;
 	}
+	
+	private function displayOverview($action) {
+		$groups = DBPermissions::getGroups();
+		$group_lookup = array();
+		foreach($groups as &$row) {
+			if($row['pe_id'])
+				$filter[] = $row['pe_id'];
+			$new_data = array(
+					'id' => $row['pe_id'],
+					'name' => $row['pe_name']
+			);
+			$group_lookup[$row['pe_id']] = $row['pe_name'];
+			$row = $new_data;
+		}
+		if($action == 'status') {
+			$skupiny = DBSkupiny::getSkupiny();
+			$skupinyselect = $this->select()->post();
+			foreach($skupiny as $skupina)
+				$skupinyselect->option($skupina['us_id'], $skupina['us_popis']);
+		}
+		$options['filter'] = in_array(get('f'), array_merge(array('dancer', 'system', 'all', 'unconfirmed', 'ban'), $filter)) ?
+		get('f') : 'all';
+		$pager = new Paging(new PagingAdapterDBSelect('DBUser', $options));
+		$pager->setCurrentPageField('p');
+		$pager->setItemsPerPageField('c');
+		$pager->setDefaultItemsPerPage(20);
+		$pager->setPageRange(5);
+		$data = $pager->getItems();
+		$i = $pager->getItemsPerPage() * ($pager->getCurrentPage() - 1);
+		foreach($data as &$item) {
+			$new_data = array(
+					'checkBox' => '<input type="checkbox" name="users[]" value="' . $item['u_id'] . '" />',
+					'index' => ++$i,
+					'fullName' => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
+					'colorBox' => getColorBox($item['us_color'], $item['us_popis']),
+					'groupInfo' => $group_lookup[$item['u_group']]
+			);
+			switch($action) {
+				case 'platby':
+					$new_data['varSymbol'] = User::var_symbol($item['u_id']);
+					if($item['up_id'] && strcmp($item['up_plati_do'], date('Y-m-d')) >= 0) {
+						$new_data['hasPaid'] = '<span style="color:#0B0;">' . $item['up_castka'] . ' Kč</span>';
+						$new_data['dateUntil'] = formatDate($item['up_plati_do']);
+					} else {
+						$new_data['hasPaid'] = '<a href="/admin/platby/add?u=' . $item['u_id'] . '">NE</a>';
+						if(!$item['up_id']) {
+							$new_data['dateUntil'] = 'nikdy';
+						} else {
+							$now = time();
+							$kdy = strtotime($item['up_plati_do']);
+							
+							$diff = $now - $kdy;
+							if($diff > 31536000)
+								$diffstr = 'více než rok';
+							elseif($diff > 15768000)
+							$diffstr = 'více než půl roku';
+							elseif($diff > 7884000)
+							$diffstr = 'více než 3 měsíce';
+							elseif($diff > 5256000)
+							$diffstr = 'více než 2 měsíce';
+							elseif($diff > 2628000)
+							$diffstr = 'více než měsíc';
+							else
+								$diffstr = 'méně než měsíc';
+							$new_data['dateUntil'] = $diffstr;
+						}
+					}
+					break;
+				case 'status':
+					$new_data['skupina'] = '<input type="hidden" name="save[]" value="' . $item['u_id'] . '"/>';
+					$new_data['skupina'] .=  $skupinyselect->name($item['u_id'] . '-skupina')->value($item['u_skupina']);
+					$new_data['dancer'] = '<label>' . getCheckbox($item['u_id'] . '-dancer', '1', $item['u_dancer']) . '</label>';
+					$new_data['system'] = '<label>' . getCheckbox($item['u_id'] . '-system', '1', $item['u_system']) . '</label>';
+					break;
+				case 'info':
+				default:
+					$new_data['birthDate'] = formatDate($item['u_narozeni']);
+					if($item['up_id'] && strcmp($item['up_plati_do'], date('Y-m-d')) >= 0)
+						$new_data['hasPaid'] = '<span style="color:#0B0;">' . $item['up_castka'] . ' Kč</span>';
+					else
+						$new_data['hasPaid'] = '<a href="/admin/platby/add?u=' . $item['u_id'] . '">NE</a>';
+					break;
+			}
+			$item = $new_data;
+		}
+		$this->render('files/View/Admin/Users/Overview.inc', array(
+				'showMenu' => !TISK,
+				'groups' => $groups,
+				'data' => $data,
+				'navigation' => $pager->getNavigation(),
+				'view' => $action
+		));
+		return;
+	}
+	
+	private function displayForm() {
+		$groups = DBPermissions::getGroups();
+		foreach($groups as &$item) {
+			$new_data = array(
+					'id' => $item['pe_id'],
+					'name' => $item['pe_name']
+			);
+			$item = $new_data;
+		}unset($item);
+		$skupiny = DBSkupiny::getSkupiny();
+		foreach($skupiny as &$item) {
+			$new_data = array(
+					'id' => $item['us_id'],
+					'color' => $item['us_color'],
+					'popis' => $item['us_popis']
+			);
+			$item = $new_data;
+		}
+		$this->render('files/View/Admin/Users/Form.inc', array(
+				'action' => Request::getAction(),
+				'groups' => $groups,
+				'skupiny' => $skupiny
+		));
+	}
+	
 	private function checkData($data, $action = 'add') {
-		$narozeni = Helper::get()->date()->name('narozeni')->getPost();
+		$narozeni = $this->date('narozeni')->getPost();
 		
 		$f = new Form();
 		$f->checkLength(post('jmeno'), 1, 40, 'Špatná délka jména', 'jmeno');
