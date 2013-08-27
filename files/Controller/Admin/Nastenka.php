@@ -11,8 +11,10 @@ class Controller_Admin_Nastenka extends Controller_Admin {
 					break;
 				foreach(post('nastenka') as $item) {
 					$data = DBNastenka::getSingleNastenka($item);
-					if(!Permissions::check('nastenka', P_OWNED, $data['up_kdo']))
+					if(!Permissions::check('nastenka', P_OWNED, $data['up_kdo'])) {
 						$error = true;
+						continue;
+					}
 					
 					DBNastenka::removeNastenka($item);
 					DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() .
@@ -20,7 +22,7 @@ class Controller_Admin_Nastenka extends Controller_Admin {
 				}
 				if(isset($error) && $error)
 					throw new Exception("Máte nedostatečnou autorizaci pro tuto akci!");
-				notice('Příspěvky odebrány');
+				$this->redirect()->setRedirectMessage('Příspěvky odebrány');
 				break;
 			case 'edit':
 				$nastenka = post('nastenka');
@@ -64,7 +66,11 @@ class Controller_Admin_Nastenka extends Controller_Admin {
 		if(empty($_POST) || is_object($f = $this->checkData($_POST, 'add'))) {
 			if(!empty($_POST))
 				$this->redirect()->setRedirectMessage($f->getMessages());
-			include('files/Admin/Nastenka/Form.inc');
+			$this->render('files/View/Admin/Nastenka/Form.inc', array(
+					'action' => Request::getAction(),
+					'returnURL' => Request::getReferer(),
+					'skupiny' => DBSkupiny::getSkupiny()				
+			));
 			return;
 		}
 		$id = DBNastenka::addNastenka(User::getUserID(), post('nadpis'),
@@ -81,7 +87,6 @@ class Controller_Admin_Nastenka extends Controller_Admin {
 			' přidal příspěvek na nástěnku');
 		
 		$this->redirect(getReturnURI('/admin/nastenka'), 'Příspěvek úspěšně přidán');
-		
 	}
 	function edit($id = null) {
 		if(!$id || !($data = DBNastenka::getSingleNastenka($id)))
@@ -102,7 +107,11 @@ class Controller_Admin_Nastenka extends Controller_Admin {
 			} else {
 				$this->redirect()->setRedirectMessage($f->getMessages());
 			}
-			include('files/Admin/Nastenka/Form.inc');
+			$this->render('files/View/Admin/Nastenka/Form.inc', array(
+					'action' => Request::getAction(),
+					'returnURL' => Request::getReferer(),
+					'skupiny' => DBSkupiny::getSkupiny()				
+			));
 			return;
 		}
 		$skupiny_old = $skupiny;
