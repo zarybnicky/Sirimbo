@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <buildpath>
+	<buildpathentry excluding=".git/|eclipse/|log/" kind="src" path="root"/>
 	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
-	<buildpathentry excluding="eclipse/*" kind="src" path="root"/>
 </buildpath>

@@ -3,15 +3,14 @@ header_main('Správa párů');
 header_minor("Změna třídy a bodů");
 notice($this->redirect()->getRedirectMessage());
 ?>
-<form action="<?php echo $_SERVER['REQUEST_URI']; ?>" method="POST">
-Pár: <?php echo $data['guy_name'], ' ', $data['guy_surname'], ' - ',
-	$data['gal_name'], ' ', $data['gal_surname'];?>
+<form action="" method="POST">
+Pár: <?php echo $this->fullName;?>
 <table>
 <tr><td>Standart:</td><td></td></tr>
 <tr>
 	<td>Třída:</td>
 	<td><?php
-		echo Helper::get()->select()
+		echo $this->select()
 			->post()->name('stt-trida')
 			->options(array('Z', 'H', 'D', 'C', 'B', 'A', 'M'), true, true);
 	?></td>
@@ -27,7 +26,7 @@ Pár: <?php echo $data['guy_name'], ' ', $data['guy_surname'], ' - ',
 <tr>
 	<td>Třída:</td>
 	<td><?php
-		echo Helper::get()->select()
+		echo $this->select()
 			->post()->name('lat-trida')
 			->options(array('Z', 'H', 'D', 'C', 'B', 'A', 'M'), true, true);
 	?></td>
