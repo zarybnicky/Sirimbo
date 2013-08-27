@@ -66,7 +66,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil {
 		}
 		
 		post('partner', $havePartner ? $latest['u_id'] : 'none');
-		$this->render('files/View/Member/Profil/CoupleOverview.inc', array(
+		$this->render('files/View/Member/Profil/PartnerOverview.inc', array(
 				'havePartner' => $havePartner,
 				'partnerID' => $latest['u_id'],
 				'partnerFullName' => $latest['u_jmeno'] . ' ' . $latest['u_prijmeni'],

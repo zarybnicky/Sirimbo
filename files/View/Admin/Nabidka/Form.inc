@@ -1,27 +1,22 @@
 <?php
 header_main('Správa nabídka');
-if(Request::getAction() == 'add')
+if($this->action == 'add')
 	header_minor("Přidat nabídku");
 else
 	header_minor("Upravit nabídku");
-
-notice($this->redirect()->getRedirectMessage());
-if(isset($f) && is_object($f))
-	notice(implode('<br/>', $f->getMessages()));
 ?>
-<form action="<?php echo Request::getURI();?>" method="POST">
+<form action="" method="POST">
 <table>
 	<tr>
 		<td>Trenér (*): </td>
-		<td><?php
-		if(!Permissions::check('nabidka', P_ADMIN)) { ?>
+		<td><?php if(!Permissions::check('nabidka', P_ADMIN)) { ?>
 		<select name="trener">
 			<option value="<?php echo User::getUserID();?>">Já</option>
 		</select><?php
 		} else {
-			echo Helper::get()->userSelect()
+			echo $this->userSelect()
 				->name('trener')
-					->users(DBUser::getUsersByPermission('nabidka', P_OWNED));
+				->users($this->users);
 		} ?></td>
 	</tr><tr>
 		<td>Počet hodin (*): </td>
@@ -34,26 +29,25 @@ if(isset($f) && is_object($f))
 		<td>(0 = neomezeně)</td>
 	</tr><tr>
 		<td>Od: (*)</td>
-		<td><?php echo Helper::get()->date()->name('od')->textBox();?></td>
+		<td><?php echo $this->date('od')->textBox();?></td>
 	</tr><tr>
 		<td>Do: </td>
-		<td><?php echo Helper::get()->date()->name('do')->textBox();?></td>
+		<td><?php echo $this->date('do')->textBox();?></td>
 	</tr><tr>
 		<td></td>
 		<td>(pokud je "Do" prázdné, počítá se jako "Od")</td>
 	</tr><tr>
 		<td>Viditelný: </td>
-		<td><label><?php echo getCheckbox('visible', 'visible', false, false,
-			!Permissions::check('nabidka', P_ADMIN));?></label></td>
+		<td><label><?php echo (Permissions::check('nabidka', P_ADMIN) ?
+			getCheckbox('visible', 'visible')
+			: ($this->visible ? '&#10003;' : '&#10799;'));?></label></td>
 	</tr><tr>
 		<td>Uzamknout: </td>
 		<td><label><?php echo getCheckbox('lock');?></label></td>
 		<td></td>
 	</tr><tr>
 		<td><button type="submit"><?php
-			if(Request::getAction() == 'add') echo 'Přidat';
-			else echo 'Upravit';
-			
+			echo ($this->action == 'add' ? 'Přidat' : 'Upravit');
 			echo getReturnInput();
 		?></button></td>
 		<td>Pole označená (*) jsou povinná</td>
@@ -61,4 +55,4 @@ if(isset($f) && is_object($f))
 </table>
 </form>
 
-<a href="<?php echo Request::getReferer();?>">Zpět</a>
+<a href="<?php echo $this->returnURL;?>">Zpět</a>

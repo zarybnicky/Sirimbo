@@ -1,15 +1,11 @@
 <?php
 header_main('Správa nástěnky');
-if(Request::getAction() == 'add')
+if($this->action == 'add')
 	header_minor("Přidat příspěvek");
 else
 	header_minor("Upravit příspěvek");
-
-notice($this->redirect()->getRedirectMessage());
-if(isset($f) && is_object($f))
-	notice(implode('<br/>', $f->getMessages()));
 ?>
-<form action="<?php echo Request::getURI();?>" method="POST">
+<form action="" method="POST">
 <table>
 	<tr>
 		<td>Nadpis:</td>
@@ -23,23 +19,21 @@ if(isset($f) && is_object($f))
 	</tr><tr>
 		<td>Skupiny:</td>
 		<td><?php
-		$skupiny = DBSkupiny::getSkupiny();
-		foreach($skupiny as $skupina) {
-			if($skupina['us_platba_mesic'] > 0 || $skupina['us_platba_ctvrtrok'] > 0 || $skupina['us_platba_pulrok'] > 0)
-				echo getCheckbox('sk-' . $skupina['us_id'], '1'), ' ',
-					getColorBox($skupina['us_color'], $skupina['us_popis']), ' ',
-					$skupina['us_popis'], '<br/>';
+		foreach($this->skupiny as $item) {
+			if($item['us_platba_mesic'] > 0 || $item['us_platba_ctvrtrok'] > 0 || $item['us_platba_pulrok'] > 0)
+				echo getCheckbox('sk-' . $item['us_id'], '1'), ' ',
+					getColorBox($item['us_color'], $item['us_popis']), ' ',
+					$item['us_popis'], '<br/>';
 		}
 		echo getReturnInput();
 		?></td>
 	</tr><tr>
 		<td><button type="submit"><?php
-			if(Request::getAction() == 'add') echo 'Přidat';
-			else echo 'Upravit';
+			echo ($this->action == 'add' ? 'Přidat' : 'Upravit');
 		?></button></td>
 		<td>Pole označená (*) jsou povinná</td>
 	</tr>
 </table>
 </form>
 
-<a href="<?php echo Request::getReferer();?>">Zpět</a>
+<a href="<?php echo $this->returnURL?>">Zpět</a>

@@ -5,14 +5,9 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 		Permissions::checkError('nabidka', P_OWNED);
 	}
 	function view($id = null) {
-		if(empty($_POST)) {
-			include('files/Admin/Nabidka/Display.inc');
-			return;
-		}
 		switch(post('action')) {
 			case 'save':
 				$items = DBNabidka::getNabidka();
-				
 				foreach($items as $item) {
 					$id = $item['n_id'];
 					if((bool) post($id) !== (bool) $item['n_visible'])
@@ -20,62 +15,83 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 							$item['n_max_pocet_hod'], $item['n_od'], $item['n_do'], post($id) ? '1' : '0', $item['n_lock']);
 				}
 				break;
-				
 			case 'edit':
 				$nabidka = post('nabidka');
 				if($nabidka[0])
-					View::redirect('/admin/nabidka/edit/' . $nabidka[0]);
+					$this->redirect('/admin/nabidka/edit/' . $nabidka[0]);
 				break;
-				
 			case 'edit_detail':
 				$nabidka = post('nabidka');
 				if($nabidka[0])
-					View::redirect('/admin/nabidka/detail/' . $nabidka[0]);
+					$this->redirect('/admin/nabidka/detail/' . $nabidka[0]);
 				break;
 			case 'remove':
-				if(!is_array(post('nabidka'))) {
-					include('files/Admin/Nabidka/Display.inc');
-					return;
-				}
+				if(!is_array(post('nabidka')))
+					break;
 				foreach(post('nabidka') as $item) {
 					$data = DBNabidka::getSingleNabidka($item);
-					
-					if(Permissions::check('nabidka', P_OWNED, $data['n_trener'])) {
-						DBNabidka::removeNabidka($item);
-						if(strcmp($data['n_od'], date('Y-m-d')) > 0 && $data['n_visible'])
-							DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' zrušil nabídku ' .
-								formatDate($data['n_od']) . (($data['n_od'] != $data['n_do']) ?
-								(' - ' . formatDate($data['n_do'])) : '') . ' s trenérem ' .
-								$data['u_jmeno'] . ' ' . $data['u_prijmeni']);
-					} else {
+					if(!Permissions::check('nabidka', P_OWNED, $data['n_trener'])) {
 						$error = true;
+						continue;
 					}
+					DBNabidka::removeNabidka($item);
+					if(strcmp($data['n_od'], date('Y-m-d')) > 0 && $data['n_visible'])
+						DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' zrušil nabídku ' .
+							formatDate($data['n_od']) . (($data['n_od'] != $data['n_do']) ?
+							(' - ' . formatDate($data['n_do'])) : '') . ' s trenérem ' .
+							$data['u_jmeno'] . ' ' . $data['u_prijmeni']);
 				}
 				if(isset($error) && $error)
 					throw new Exception("Máte nedostatečnou autorizaci pro tuto akci!");
-				
 				notice('Nabídky odebrány');
-				include('files/Admin/Nabidka/Display.inc');
-				return;
+				break;
 		}
-		include('files/Admin/Nabidka/Display.inc');
+		$data = DBNabidka::getNabidka();
+		foreach($data as &$row) {
+			$new_data = array(
+					'canEdit' => Permissions::check('nabidka', P_OWNED, $row['n_trener']),
+					'fullName' => $row['u_jmeno'] . ' ' . $row['u_prijmeni'],
+					'date' => formatDate($row['n_od']) .
+						($row['n_do'] != $row['n_od'] ? ' - ' . formatDate($row['n_do']) : '')
+			);
+			if($new_data['canEdit'])
+				$new_data['checkBox'] = '<input type="checkbox" name="nabidka[]" value="' . $row['n_id'] . '" />';
+			else
+				$new_data['checkBox'] = '&nbsp;&#10799;';
+			if(Permissions::check('nabidka', P_ADMIN))
+				$new_data['visible'] = getCheckbox($row['n_id'], '1', $row['n_visible']);
+			else
+				$new_data['visible'] = '&nbsp;' . ($row['n_visible'] ? '&#10003;' : '&#10799;');
+			$row = $new_data;
+		}
+		$this->render('files/View/Admin/Nabidka/Overview.inc', array(
+				'showMenu' => !TISK,
+				'data' => $data
+		));
 	}
 	function add($id = null) {
 		if(empty($_POST) || is_object($f = $this->checkData($_POST, 'add'))) {
-			include('files/Admin/Nabidka/Form.inc');
+			if(!empty($_POST))
+				$this->redirect()->setRedirectMessage($f->getMessages());
+			$this->render('files/View/Admin/Nabidka/Form.inc', array(
+					'action' => Request::getAction(),
+					'returnURL' => Request::getReferer(),
+					'users' => DBUser::getUsersByPermission('nabidka', P_OWNED),
+					'visible' => false
+			));
 			return;
 		}
 		Permissions::checkError('nabidka', P_OWNED, post('trener'));
 		
-		$od = Helper::get()->date()->name('od')->getPost();
-		$do = Helper::get()->date()->name('do')->getPost();
+		$od = $this->date('od')->getPost();
+		$do = $this->date('do')->getPost();
 		if(!$do || strcmp($od, $do) > 0)
 			$do = $od;
 		
 		$visible = (bool) post('visible');
 		if(!Permissions::check('nabidka', P_ADMIN) && $visible) {
 			$visible = false;
-			View::setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění příspěvku');
+			$this->redirect()->setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění příspěvku');
 		}
 		
 		DBNabidka::addNabidka(post('trener'), post('pocet_hod'), post('max_pocet_hod'), $od, $do, $visible,
@@ -90,34 +106,38 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 				(' - ' . formatDate($do)) : '') . ' s trenérem ' . $trener_name);
 		}
 		
-		View::redirect(getReturnURI('/admin/nabidka'), 'Nabídka přidána');
+		$this->redirect(getReturnURI('/admin/nabidka'), 'Nabídka přidána');
 	}
 	function edit($id = null) {
 		if(!$id || !($data = DBNabidka::getSingleNabidka($id)))
-			View::redirect(getReturnURI('/admin/nabidka'), 'Nabídka s takovým ID neexistuje');
+			$this->redirect(getReturnURI('/admin/nabidka'), 'Nabídka s takovým ID neexistuje');
 		
 		Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
 			
-		if(empty($_POST)) {
-			post('id', $id);
-			post('trener', $data['n_trener']);
-			post('pocet_hod', $data['n_pocet_hod']);
-			post('max_pocet_hod', $data['n_max_pocet_hod']);
-			post('od', $data['n_od']);
-			post('do', $data['n_do']);
-			post('visible', $data['n_visible']);
-			post('lock', $data['n_lock']);
-			
-			include('files/Admin/Nabidka/Form.inc');
+		if(empty($_POST) || is_object($f = $this->checkData($_POST, 'edit'))) {
+			if(empty($_POST)) {
+				post('id', $id);
+				post('trener', $data['n_trener']);
+				post('pocet_hod', $data['n_pocet_hod']);
+				post('max_pocet_hod', $data['n_max_pocet_hod']);
+				post('od', $data['n_od']);
+				post('do', $data['n_do']);
+				post('visible', $data['n_visible']);
+				post('lock', $data['n_lock']);
+			} else {
+				$this->redirect()->setRedirectMessage($f->getMessages());
+			}
+			$data = DBNabidka::getSingleNabidka($id);
+			$this->render('files/View/Admin/Nabidka/Form.inc', array(
+					'action' => Request::getAction(),
+					'returnURL' => Request::getReferer(),
+					'users' => DBUser::getUsersByPermission('nabidka', P_OWNED),
+					'visible' => $data['n_visible']
+			));
 			return;
 		}
-		if(is_object($f = $this->checkData($_POST, 'edit'))) {
-			include('files/Admin/Nabidka/Form.inc');
-			return;
-		}
-		
-		$od = Helper::get()->date()->name('od')->getPost();
-		$do = Helper::get()->date()->name('do')->getPost();
+		$od = $this->date('od')->getPost();
+		$do = $this->date('do')->getPost();
 		if(!$do || strcmp($od, $do) > 0)
 			$do = $od;
 		
@@ -126,22 +146,20 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 		if(!Permissions::check('nabidka', P_ADMIN) &&
 				$visible && !$visible_prev) {
 			$visible = false;
-			View::setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění nabídky');
+			$this->redirect()->setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění nabídky');
 		}
-		
 		$items = DBNabidka::getNabidkaItemLessons($id);
 		$pocet_hod = post('pocet_hod');
 		if($pocet_hod < $items) {
 			$pocet_hod = $items;
-			View::setRedirectMessage('Obsazených hodin už je víc než jste zadali, ' .
+			$this->redirect()->setRedirectMessage('Obsazených hodin už je víc než jste zadali, ' .
 				'nemůžu dál snížit počet hodin');
 		}
-		
 		$max_lessons = post('max_pocet_hod');
 		$max_lessons_old = DBNabidka::getNabidkaMaxItems($id);
 		if($max_lessons < $max_lessons_old) {
 			$max_lessons = $max_lessons_old;
-			View::setRedirectMessage('Zadaný maximální počet hodin/pár je méně než už je zarezervováno, ' .
+			$this->redirect()->setRedirectMessage('Zadaný maximální počet hodin/pár je méně než už je zarezervováno, ' .
 				'nemůžu dál snížit maximální počet hodin');
 		}
 		
@@ -161,15 +179,12 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 				(($data['n_od'] != $data['n_do']) ? (' - ' . formatDate($data['n_do'])) : '') .
 				' s trenérem ' . $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni']);
 		
-		View::redirect(getReturnURI('/admin/nabidka'), 'Nabídka úspěšně upravena');
-	}
-	function remove($id = null) {
-		
+		$this->redirect(getReturnURI('/admin/nabidka'), 'Nabídka úspěšně upravena');
 	}
 	
 	private function checkData($data, $action = 'add') {
-		$od = Helper::get()->date()->name('od')->getPost();
-		$do = Helper::get()->date()->name('do')->getPost();
+		$od = $this->date('od')->getPost();
+		$do = $this->date('do')->getPost();
 		
 		$f = new Form();
 		$f->checkNumeric(post('trener'), 'ID trenéra musí být číselné', 'trener');
