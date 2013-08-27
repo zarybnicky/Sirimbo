@@ -43,7 +43,7 @@ function _shutdown_handler() {
 	}
 }
 function _error_handler($severity, $message, $filepath, $line) {
-	if ($severity == E_STRICT) {
+	if ($severity & (E_STRICT | E_DEPRECATED)) {
 		return false;
 	}
 	ob_end_clean();

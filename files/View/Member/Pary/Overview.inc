@@ -9,7 +9,6 @@
 	<td>Standard</td>
 	<td>Latina</td>
 	<td>Body</td>
-	<td></td>
 </tr>
 
 <?php $i = 1; foreach($this->data as $item): ?>
@@ -20,7 +19,7 @@
 	<td><?php echo $item['latina'];?></td>
 	<td><?php echo $item['standart'];?></td>
 	<td><?php echo $item['hodnoceni'];?></td>
-	<!--<td><a href="/member/pary/<?php echo $item['id'];?>">Profil</a></td>-->
+	<!--<td><a href="/member/pary/<php echo $item['id'];?>">Profil</a></td>-->
 </tr>
 <?php endforeach;?>
 </table>
