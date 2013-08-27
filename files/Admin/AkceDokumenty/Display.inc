@@ -2,7 +2,7 @@
 header_main('Správa akcí');
 notice($this->redirect()->getRedirectMessage());
 ?>
-<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST" class="centerWTable">
+<form action="" method="POST" class="centerWTable">
 <?php DisplayAkce::viewAkceHeader($akce);?>
 <table>
 <tr><td>Jméno<br/>Souboru</td><td>Kategorie</td>

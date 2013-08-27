@@ -11,22 +11,22 @@ class Controller_Member_Profil_Inzerce extends Controller_Member_Profil {
 	}
 	function add($id = null) {
 		if(empty($_POST) || is_object($this->checkData($_POST, 'edit'))) {
-			include('files/Main/Inzerce/Form.inc');
+			$this->render('files/Main/Inzerce/Form.inc');
 			return;
 		}
-		$od = Helper::get()->date()->name('od')->getPost();
-		$do = Helper::get()->date()->name('do')->getPost();
+		$od = $this->date()->name('od')->getPost();
+		$do = $this->date()->name('do')->getPost();
 		if(!$do || strcmp($od, $do) > 0)
 			$do = $od;
 
 		DBInzerce::addInzerat(post('kat'), User::getUserID(), User::getUserJmeno(),
 			User::getUserPrijmeni(), post('nadpis'), post('text'), serialize(array()), $od, $do,
 			(bool) post('visible'), '1');
-		View::redirect("/member/profil/inzerce", "Váš inzerát byl přidán");
+		$this->redirect("/member/profil/inzerce", "Váš inzerát byl přidán");
 	}
 	function edit($id = null) {
 		if(!$id || !($data = DBInzerce::getSingleInzerat($id)))
-			View::redirect('/member/profil/inzerce', 'Inzerát s takovým ID neexistuje');
+			$this->redirect('/member/profil/inzerce', 'Inzerát s takovým ID neexistuje');
 		
 		if(Permissions::check('inzerce', P_MEMBER) && $data['i_reg'] != User::getUserID())
 			throw new Exception("Máte nedostatečnou autorizaci pro tuto akci!");
@@ -43,27 +43,27 @@ class Controller_Member_Profil_Inzerce extends Controller_Member_Profil {
 			post('visible', $data['i_visible']);
 			post('confirmed', $data['i_confirmed']);
 			
-			include('files/Main/Inzerce/Form.inc');
+			$this->render('files/Main/Inzerce/Form.inc');
 			return;
 		}
 		if(is_object($this->checkData($_POST, 'edit'))) {
-			include('files/Main/Inzerce/Form.inc');
+			$this->render('files/Main/Inzerce/Form.inc');
 			return;
 		}
 		
-		$od = Helper::get()->date()->name('od')->getPost();
-		$do = Helper::get()->date()->name('do')->getPost();
+		$od = $this->date()->name('od')->getPost();
+		$do = $this->date()->name('do')->getPost();
 		if(!$do || strcmp($od, $do) > 0)
 			$do = $od;
 		
 		DBInzerce::editInzerat($id, post('kat'), User::getUserID(), User::getUserJmeno(),
 			User::getUserPrijmeni(), post('nadpis'), post('text'), serialize(array()),
 			$od, $do, (bool) post('visible'), '1');
-		View::redirect("/member/profil/inzerce", "Inzerát upraven");
+		$this->redirect("/member/profil/inzerce", "Inzerát upraven");
 	}
 	function remove($id = null) {
 		if(!$id || !($data = DBInzerce::getSingleInzerat($id)))
-			View::redirect('/member/profil/inzerce', 'Inzerát s takovým ID neexistuje');
+			$this->redirect('/member/profil/inzerce', 'Inzerát s takovým ID neexistuje');
 		
 		if(Permissions::check('inzerce', P_MEMBER) && $data['i_reg'] != User::getUserID())
 			throw new Exception("Máte nedostatečnou autorizaci pro tuto akci!");
@@ -81,13 +81,13 @@ class Controller_Member_Profil_Inzerce extends Controller_Member_Profil {
 		} else {
 			DBInzerce::removeInzerat($id);
 			
-			View::redirect("/member/profil/inzerce", "Inzerát odebrán");
+			$this->redirect("/member/profil/inzerce", "Inzerát odebrán");
 			return;
 		}
 	}
 	private function checkData($data, $action = 'add') {
-		$od = Helper::get()->date()->name('od')->getPost();
-		$do = Helper::get()->date()->name('do')->getPost();
+		$od = $this->date()->name('od')->getPost();
+		$do = $this->date()->name('do')->getPost();
 		if(!$do || strcmp($od, $do) > 0)
 			$do = $od;
 		

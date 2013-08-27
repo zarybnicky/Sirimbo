@@ -2,14 +2,14 @@
 header_main('Správa rozpisů');
 notice($this->redirect()->getRedirectMessage());
 ?>
-<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST">
+<form action="" method="POST">
 <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
 <div class="r_wrapper">
 <?php DisplayRozpis::viewRozpisHeader($data); ?>
 <table>
 <tr><td>Tanečník</td><td>Od</td><td>Do</td><td></td><td>Zámek</td></tr>
 <?php
-$userselect = Helper::get()->userSelect()
+$userselect = $this->userSelect()
 	->idVar('p_id')
 	->type('par')
 	->users($users);
@@ -48,7 +48,7 @@ echo $userselect->name('add_partner');
 header_minor('Nabídky:');
 $nabidky = DBNabidka::getNabidka();
 
-$s = Helper::get()->select()
+$s = $this->select()
 	->post()->name('n_id')
 	->option('none', '--');
 foreach($nabidky as $item)

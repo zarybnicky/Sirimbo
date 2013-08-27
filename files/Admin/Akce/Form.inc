@@ -9,7 +9,7 @@ notice($this->redirect()->getRedirectMessage());
 if(isset($f) && is_object($f))
 	notice(implode('<br/>', $f->getMessages()));
 ?>
-<form action="<?php echo Request::getURI();?>" method="POST">
+<form action="" method="POST">
 <table>
 	<tr>
 		<td>Jméno akce (*): </td>
@@ -25,11 +25,11 @@ if(isset($f) && is_object($f))
 		<td></td>
 	</tr><tr>
 		<td>Od: (*)</td>
-		<td><?php echo Helper::get()->date()->name('od')->textBox();?></td>
+		<td><?php echo $this->date()->name('od')->textBox();?></td>
 		<td></td>
 	</tr><tr>
 		<td>Do: </td>
-		<td><?php echo Helper::get()->date()->name('do')->textBox();?></td>
+		<td><?php echo $this->date()->name('do')->textBox();?></td>
 		<td>(pokud je prázdný, počítá se jako "Od")</td>
 	</tr><tr>
 		<td>Kapacita (*): </td>

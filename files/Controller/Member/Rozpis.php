@@ -6,7 +6,7 @@ class Controller_Member_Rozpis  extends Controller_Member {
 	}
 	function view($id = null) {
 		if(empty($_POST)) {
-			include('files/Member/Rozpis.inc');
+			$this->render('files/Member/Rozpis.inc');
 			return;
 		}
 		$data = DBRozpis::getSingleRozpis(post('ri_id'));
@@ -31,7 +31,7 @@ class Controller_Member_Rozpis  extends Controller_Member {
 				notice('Hodina odebrána');
 			}
 		}
-		include('files/Member/Rozpis.inc');
+		$this->render('files/Member/Rozpis.inc');
 	}
 	private function checkData($data, $action = 'signup') {
 		$f = new Form();

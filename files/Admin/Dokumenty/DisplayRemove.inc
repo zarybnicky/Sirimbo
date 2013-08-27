@@ -5,7 +5,7 @@ notice($this->redirect()->getRedirectMessage());
 if(!is_array(get('u')))
 	notice('Žádné dokumenty');
 ?>
-<form action="<?php echo Request::getURI();?>" method="POST">
+<form action="" method="POST">
 Opravdu chcete odstranit dokumenty:<br/><br/>
 <?php
 foreach(get('u') as $id) {

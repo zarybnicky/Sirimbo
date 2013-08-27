@@ -6,7 +6,7 @@ class Controller_Admin_Galerie extends Controller_Admin {
 	}
 	function view($id = null) {
 		if(empty($_POST)) {
-			include('files/Admin/Galerie/Display.inc');
+			$this->render('files/Admin/Galerie/Display.inc');
 			return;
 		}
 		switch(post('action')) {
@@ -24,12 +24,12 @@ class Controller_Admin_Galerie extends Controller_Admin {
 			case 'edit':
 				$galerie = post('galerie');
 				if($galerie[0])
-					View::redirect('/admin/galerie/edit/' . $galerie[0]);
+					$this->redirect('/admin/galerie/edit/' . $galerie[0]);
 				break;
 			case 'editdir':
 				$galerie = post('galerie');
 				if($galerie[0])
-					View::redirect('/admin/galerie/editdir/' . $galerie[0]);
+					$this->redirect('/admin/galerie/editdir/' . $galerie[0]);
 				break;
 			case 'remove':
 				if(!is_array(post('galerie')))
@@ -37,12 +37,12 @@ class Controller_Admin_Galerie extends Controller_Admin {
 				$url = '/admin/galerie/remove?';
 				foreach(post('galerie') as $id)
 					$url .= '&u[]=' . $id;
-				View::redirect($url);
+				$this->redirect($url);
 				break;
 			case 'addir':
 			default:
 				if(!post('name') && !post('parent')) {
-					include('files/Admin/Galerie/Display.inc');
+					$this->render('files/Admin/Galerie/Display.inc');
 					return;
 				}
 				if(post('parent') == 'none') {
@@ -60,19 +60,19 @@ class Controller_Admin_Galerie extends Controller_Admin {
 				DBGalerie::addDir($name, $parent, $level);
 				//FIXME: Galerie - test addDir
 				notice('Složka přidána');
-				include('files/Admin/Galerie/Display.inc');
+				$this->render('files/Admin/Galerie/Display.inc');
 				return;
 					
 		}
-		include('files/Admin/Galerie/Display.inc');
+		$this->render('files/Admin/Galerie/Display.inc');
 	}
 	function remove($id = null) {
 		if(empty($_POST) || post('action') !== 'confirm') {
-			include('files/Admin/Galerie/DisplayRemove.inc');
+			$this->render('files/Admin/Galerie/DisplayRemove.inc');
 			return;
 		}
 		if(!is_array(post('galerie')))
-			View::redirect('/admin/galerie');
+			$this->redirect('/admin/galerie');
 		foreach(post('galerie') as $id) {
 			$data = DBGalerie::getSingleDir($id);
 			DBGalerie::removeDir($id);
@@ -84,7 +84,7 @@ class Controller_Admin_Galerie extends Controller_Admin {
 				}
 			@rmdir($data['gd_path']);
 		}
-		View::redirect('/admin/galerie', 'Složky odebrány');
+		$this->redirect('/admin/galerie', 'Složky odebrány');
 	}
 	function scan($id = null) {
 		$db_dirs = DBGalerie::getDirsWithParentPath();
@@ -162,7 +162,7 @@ class Controller_Admin_Galerie extends Controller_Admin {
 			DBGalerie::addFotoByPath($parent, $file, $name, User::getUserID());
 		}
 		
-		View::redirect('/admin/galerie', 'Složek přidáno: ' . count($fs_dirs) . '<br/>' .
+		$this->redirect('/admin/galerie', 'Složek přidáno: ' . count($fs_dirs) . '<br/>' .
 			'Souborů přidáno: ' . count($fs_files) . '<br/>' .
 			'<br/>' .
 			'Složek odebráno: ' . count($db_out_dirs) . '<br/>' .
@@ -170,7 +170,7 @@ class Controller_Admin_Galerie extends Controller_Admin {
 	}
 	function upload($id = null) {
 		if(empty($_POST)) {
-			include('files/Admin/Galerie/Upload.inc');
+			$this->render('files/Admin/Galerie/Upload.inc');
 			return;
 		}
 		$dir = DBGalerie::getSingleDir(post('dir') ? post('dir') : 0);
@@ -180,11 +180,11 @@ class Controller_Admin_Galerie extends Controller_Admin {
 		$count = count($files['name']);
 		for($i = 0; $i < $count; $i++) {
 			if($files['error'][$i] > 0) {
-				View::setRedirectMessage('Nepodařilo se nahrát soubor číslo ' . ($i + 1));
+				$this->redirect()->setRedirectMessage('Nepodařilo se nahrát soubor číslo ' . ($i + 1));
 				continue;
 			}
 			if(!array_key_exists($files['type'][$i], Settings::$foto_types)) {
-				View::setRedirectMessage('Soubor číslo ' . ($i + 1) .
+				$this->redirect()->setRedirectMessage('Soubor číslo ' . ($i + 1) .
 					' není fotka podporovaného typu a byl přeskočen');
 				continue;
 			}
@@ -202,7 +202,7 @@ class Controller_Admin_Galerie extends Controller_Admin {
 			$path = $dir['gd_path'] . '/' . $fileName;
 			
 			if(is_file($path)) {
-				View::setRedirectMessage('Soubor číslo ' . ($i + 1) .
+				$this->redirect()->setRedirectMessage('Soubor číslo ' . ($i + 1) .
 					' nebo soubor se stejným názvem už existuje.');
 				continue;
 			}
@@ -230,7 +230,7 @@ class Controller_Admin_Galerie extends Controller_Admin {
 				$fn_read = 'imageCreateFrom' . $fn_suffix;
 				$fn_write = 'image' . $fn_suffix;
 				if(!function_exists('imagebmp') || !function_exists('imagecreatefrombmp'))
-					include('files/Core/bmp.php');
+					$this->render('files/Core/bmp.php');
 									
 				if($source = $fn_read($path)) {
 					$thumbnail = imageCreateTruecolor($nWidth, $nHeight);
@@ -241,7 +241,7 @@ class Controller_Admin_Galerie extends Controller_Admin {
 				$fn_write($thumbnail, str_replace('./galerie', './galerie/thumbnails', $path));
 				imageDestroy($thumbnail);
 			} else {
-				View::setRedirectMessage('Nepodařilo se nahrát soubor číslo ' . ($i + 1));
+				$this->redirect()->setRedirectMessage('Nepodařilo se nahrát soubor číslo ' . ($i + 1));
 				
 				$error = true;
 			}
@@ -250,20 +250,20 @@ class Controller_Admin_Galerie extends Controller_Admin {
 			if(isset($added) && $added)
 				DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' upravil galerii "' .
 					$dir['gd_name'] . '"');
-			View::redirect('/admin/galerie', 'Bohužel, některé fotky se nepodařilo nahrát :o(');
+			$this->redirect('/admin/galerie', 'Bohužel, některé fotky se nepodařilo nahrát :o(');
 		} else {
 			if(isset($added) && $added)
 				DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' upravil galerii "' .
 					$dir['gd_name'] . '"');
-			View::redirect('/admin/galerie', 'Fotky přidány');
+			$this->redirect('/admin/galerie', 'Fotky přidány');
 		}
 	}
 	function edit($id = null) {
 		if(!is_numeric($id))
-			View::redirect('/admin/galerie', 'Složka s takovým ID neexistuje');
+			$this->redirect('/admin/galerie', 'Složka s takovým ID neexistuje');
 		
 		if(empty($_POST)) {
-			include('files/Admin/Galerie/DisplayEdit.inc');
+			$this->render('files/Admin/Galerie/DisplayEdit.inc');
 			return;
 		}
 		switch(post('action')) {
@@ -283,13 +283,13 @@ class Controller_Admin_Galerie extends Controller_Admin {
 				}
 				notice('Fotky odebrány');
 		}
-		include('files/Admin/Galerie/DisplayEdit.inc');
+		$this->render('files/Admin/Galerie/DisplayEdit.inc');
 	}
 	function editdir($id = null) {
 		if(!is_numeric($id))
-			View::redirect('/admin/galerie', 'Složka s takovým ID neexistuje');
+			$this->redirect('/admin/galerie', 'Složka s takovým ID neexistuje');
 		if(empty($_POST)) {
-			include('files/Admin/Galerie/DisplayDir.inc');
+			$this->render('files/Admin/Galerie/DisplayDir.inc');
 			return;
 		}
 		$f = new Form();
@@ -297,14 +297,14 @@ class Controller_Admin_Galerie extends Controller_Admin {
 		$f->checkBool(post('parent') != 'none', 'Složka musí mít nadsložku', 'parent');
 		if(!$f->isValid()) {
 			notice($f->getMessages());
-			include('files/Admin/Galerie/DisplayDir.inc');
+			$this->render('files/Admin/Galerie/DisplayDir.inc');
 			return;
 		}
 		list($parent, $level) = explode('-', post('parent'));
 		$level++;
 		
 		DBGalerie::editDir($id, post('name'), $parent, $level, post('hidden') ? '1' : '0');
-		View::redirect('/admin/galerie', 'Složka úspěšně upravena');
+		$this->redirect('/admin/galerie', 'Složka úspěšně upravena');
 	}
 	
 	
@@ -364,7 +364,7 @@ class Controller_Admin_Galerie extends Controller_Admin {
 		$fn_read = 'imageCreateFrom' . $fn_suffix;
 		$fn_write = 'image' . $fn_suffix;
 		if(!function_exists('imagebmp') || !function_exists('imagecreatefrombmp'))
-			include('files/Core/bmp.php');
+			$this->render('files/Core/bmp.php');
 							
 		if($source = $fn_read($file)) {
 			$thumbnail = imageCreateTruecolor($nWidth, $nHeight);
