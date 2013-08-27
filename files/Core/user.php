@@ -12,9 +12,9 @@ class User {
 				|| ($id = DBUser::checkUser($login, $pass))) {
 			$data = DBUser::getUserData($id);
 			if($data['u_ban'])
-				View::viewError(ER_BAN);
+				throw new Exception("Váš účet byl pozastaven!");
 			if(!$data['u_confirmed'])
-				View::viewError(ER_NOT_APPROVED);
+				throw new Exception("Váš účet ještě nebyl potvrzen!");
 			
 			$_SESSION["login"] = 1;
 			User::loadUser($data['u_id'], $data);
@@ -26,7 +26,7 @@ class User {
 					!stripos(Request::getURI(), '/member/profil/edit') &&
 					!stripos(Request::getURI(), '/error')) {
 				$_SESSION['invalid_data'] = 1;
-				View::redirect('/member/profil/edit', 'Prosím vyplňte požadované údaje.', true);
+				Helper::get()->redirect('/member/profil/edit', 'Prosím vyplňte požadované údaje.', true);
 			} else {
 				$_SESSION['invalid_data'] = 0;
 			}
@@ -62,6 +62,7 @@ class User {
 		$_SESSION["pohlavi"] = $data['u_pohlavi'];
 		$_SESSION['narozeni'] = $data['u_narozeni'];
 		$_SESSION['group'] = $data['u_group'];
+		$_SESSION['groupName'] = $data['pe_name'];
 		$_SESSION['skupina'] = $data['u_skupina'];
 		$_SESSION['skupina_data'] = array(
 			'us_id '=> $data['us_id'],
@@ -178,6 +179,10 @@ class User {
 	
 	public static function getUserGroup() {
 		return $_SESSION["group"];
+	}
+	
+	public static function getGroupName() {
+		return $_SESSION["groupName"];
 	}
 	
 	public static function getUserPohlavi() {

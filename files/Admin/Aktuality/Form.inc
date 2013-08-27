@@ -5,9 +5,9 @@ if(Request::getAction() == 'add')
 else
 	header_minor("Upravit článek");
 
-notice(View::getRedirectMessage());
+notice($this->redirect()->getRedirectMessage());
 ?>
-<form action="<?php echo Request::getURI()?>" method="POST">
+<form action="" method="POST">
 <table>
 	<tr>
 		<td>Jméno (*): </td>
@@ -30,7 +30,7 @@ notice(View::getRedirectMessage());
 		<td><?php
 			$dirs = DBGalerie::getDirs(true, true);
 			
-			$s = Helper::get()->select()
+			$s = $this->select()
 				->post()->name('foto')
 				->value(post('foto'))
 				->option('none', '--');

@@ -5,27 +5,33 @@ class Controller_Fotogalerie extends Controller_Abstract {
 			$id = 0;
 			$data = DBGalerie::getSingleDir(0);
 		} elseif(!($data = DBGalerie::getSingleDir($id))) {
-			View::redirect('/fotogalerie', 'Taková složka neexistuje');
+			$this->redirect('/fotogalerie', 'Taková složka neexistuje');
 		}
-		$fotos = DBGalerie::getFotky($id);
 		
-		header_minor($data['gd_name']);
-		if(empty($fotos)) {
-			notice('Žádné fotky');
+		$photos = DBGalerie::getFotky($id);
+		if(empty($photos)) {
+			$this->render('files/View/Empty.inc', array(
+				'nadpis' => $data['gd_name'],
+				'notice' => 'Žádné fotky k dispozici.'
+			));
 			return;
 		}
-		foreach($fotos as $item) {
-			$tn = str_replace('./galerie', '/galerie/thumbnails', $item['gf_path']);
-			
-			echo '<a href="', $_SERVER['REQUEST_URI'], '/foto/', $item['gf_id'], '" class="f_preview">';
-			echo '<div class="f_img">';
-			echo '<img alt="', $item['gf_id'], '" src="', $tn, '" />';
-			echo '</div></a>';
+		foreach($photos as &$row) {
+			$new_row = array(
+					'id' => $row['gf_id'],
+					'src' => str_replace('./galerie', '/galerie/thumbnails', $row['gf_path']),
+					'href' => '/' . Request::getURL() . '/foto/' . $row['gf_id']
+			);
+			$row = $new_row;
 		}
+		$this->render('files/View/Main/Fotogalerie/Overview.inc', array(
+				'nadpis' => $data['gd_name'],
+				'photos' => $photos
+		));
 	}
 	function foto($id = null) {
 		if(!$id || !($data = DBGalerie::getSingleFoto($id)))
-			View::redirect('/fotogalerie', 'Taková fotka neexistuje');
+			$this->redirect('/fotogalerie', 'Taková fotka neexistuje');
 		
 		$parent_dir = DBGalerie::getFotky($data['gf_id_rodic']);
 		foreach($parent_dir as $key => $foto) {
@@ -34,30 +40,17 @@ class Controller_Fotogalerie extends Controller_Abstract {
 				break;
 			}
 		}
-		$return_url = '/fotogalerie' . ($data['gf_id_rodic'] > 0 ? ('/' . $data['gf_id_rodic']) : '');
-		
-		echo '<div style="text-align:center;">', $data['gf_name'], '<br/>';
-		
-		if(isset($parent_dir[$key - 1]))
-			echo '<a href="', $parent_dir[$key - 1]['gf_id'], '">&lt;&lt;</a>';
-		else
-			echo '&lt;&lt;';
-		
-		echo ' &bull; <a href="', $return_url, '">Zpět</a> &bull; ';
-		
-		if(isset($parent_dir[$key + 1]))
-			echo '<a href="', $parent_dir[$key + 1]['gf_id'], '">&gt;&gt;</a>';
-		else
-			echo '&gt;&gt;';
-		
-		echo '</div>';
-		
-		echo '<a href="', $return_url, '">';
-		echo '<div class="f_full"><div class="f_img">';
-		echo '<img alt="', $data['gf_id'], '" src="',
-			str_replace('./galerie/', '/galerie/', $data['gf_path']), '" />';
-		echo '</div></div>';
-		echo '</a>';
+		$hasPrev = isset($parent_dir[$current - 1]);
+		$hasNext = isset($parent_dir[$current + 1]);
+		$this->render('files/View/Main/Fotogalerie/Single.inc', array(
+				'id'		=> $id,
+				'src'		=> $data['gf_path'],
+				'hasPrev'	=> $hasPrev,
+				'prevURL'	=> $hasPrev ? $parent_dir[$current - 1]['gf_id'] : '',
+				'returnURL'	=> '/fotogalerie' . ($data['gf_id_rodic'] > 0 ? ('/' . $data['gf_id_rodic']) : ''),
+				'hasNext'	=> $hasNext,
+				'nextURL'	=> $hasNext ? $parent_dir[$current + 1]['gf_id'] : '',
+		));
 		return;
 	}
 	function sidebar() {

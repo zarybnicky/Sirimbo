@@ -4,6 +4,7 @@ class TableHelper {
 	private $data;
 	private $columns;
 	private $i;
+	private $style;
 	
 	function table() {
 		$this->_defaultValues();
@@ -11,13 +12,18 @@ class TableHelper {
 	}
 	function _defaultValues() {
 		$this->name = '';
-		$this->data = null;
-		$this->columns = null;
+		$this->data = array();
+		$this->columns = array();
 		$this->i = 0;
+		$this->style = '';
 	}
 	
 	function name($n) {
 		$this->name = $n;
+		return $this;
+	}
+	function style($s) {
+		$this->style = ' style="' . $s . '"';
 		return $this;
 	}
 	function data($d) {
@@ -30,25 +36,18 @@ class TableHelper {
 			$this->columns = null;
 		if(!is_array($columns))
 			return $this;
-		
 		foreach($columns as $c) {
 			if(!is_array($c))
 				continue;
-			
-			if(isset($c[0]) && !function_exists($c[1]))
-				$c[1] = create_function('$r, $i', $c[1]);
-			
-			if(isset($c[0]) && isset($c[1]) && function_exists($c[1]))
-				$this->columns[] = array($c[0], $c[1], isset($c[2]) ? $c[2] : null);
+			call_user_func_array(array($this, 'column'), $c);
 		}
 		return $this;
 	}
-	function column($name, $function_name, $style = null) {
-		if(!function_exists($function_name))
-			$function_name = create_function('$r, $i', $function_name);
+	function column($id, $name, $class = null, $style = null) {
+		$html = ($class !== null ? (' class="' . $class . '"') : '') .
+				($style !== null ? (' style="' . $style . '"') : '');
 		
-		if(function_exists($function_name))
-			$this->columns[] = array($name, $function_name, $style);
+		$this->columns[] = array($id, $name, $html);
 		return $this;
 	}
 	
@@ -60,23 +59,30 @@ class TableHelper {
 	function render() {
 		if($this->data === null && $this->columns === null)
 			return '';
-		
-		$out = '<table><thead>';
-		foreach($this->columns as $column) {
-			$out .= '<th>' . $column[0] . '</th>';
-		}
-		$out .= '</thead><tbody>';
-		foreach($this->data as $row) {
-			++$this->i;
-			$out .= '<tr>';
-			foreach($this->columns as $c) {
-				$out .= '<td' . ($c[2] !== null ? (' style="' . $c[2] . '"') : '') . '>';
-				$out .= $c[1]($row, $this->i);
-				$out .= '</td>';
-			}
-			$out .= '</tr>';
-		}
-		$out .= '</tbody></table>';
-		return $out;
+		ob_start();
+		?>
+<table<?php echo $this->style;?>>
+	<thead>
+		<tr>
+			<?php foreach($this->columns as $c): ?>
+			<th><?php echo $c[1];?></th>
+			<?php endforeach;?>
+		</tr>
+	</thead>
+	<tbody>
+		<?php foreach($this->data as $row): ++$this->i; ?>
+		<tr>
+			<?php foreach($this->columns as $c): ?>
+			<td<?php echo $c[2];?>>
+			<?php echo $row[$c[0]] == '{counter}' ? $this->getCounter() : $row[$c[0]];?>
+			</td>
+			<?php endforeach;?>
+		</tr>
+		<?php endforeach;?>
+	</tbody>
+</table>
+		<?php
+		return ob_get_clean();
 	}
 }
+?>

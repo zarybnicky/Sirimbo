@@ -4,7 +4,7 @@ class Controller_Admin extends Controller_Abstract {
 		Permissions::checkError('nastenka', P_OWNED);
 	}
 	function view($id = null) {
-		include('files/Admin/Display.inc');
+		$this->render('files/View/Admin/Home.inc');
 	}
 	function sidebar() {
 		$s = new Sidebar();
