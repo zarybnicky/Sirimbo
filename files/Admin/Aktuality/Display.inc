@@ -1,11 +1,11 @@
 <?php
 header_main('Správa aktualit');
-notice(View::getRedirectMessage());
+notice($this->redirect()->getRedirectMessage());
 ?>
-<form action="<?php echo Request::getURI();?>" method="POST">
+<form action="" method="POST">
 <?php
 if(!TISK) {
-	echo Helper::get()->menu()
+	echo $this->menu()
 		->float(MenuHelper::FLOAT_RIGHT)
 		->content('Přidat', 'aktuality/add')
 		->content('Upravit', 'edit', true)
@@ -21,9 +21,9 @@ if(!TISK) {
 <td>Kategorie</td>
 </tr>
 <?php
-$ankety = DBAktuality::getAktuality();
+$aktuality = DBAktuality::getAktuality();
 
-foreach($ankety as $item) {
+foreach($aktuality as $item) {
 	echo '<tr>';
 	
 	if(Permissions::check('aktuality', P_OWNED, $item['at_kdo']))

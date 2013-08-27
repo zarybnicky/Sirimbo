@@ -1,9 +1,36 @@
 <?php
 class COntroller_Oklubu extends Controller_Abstract {
-    function view($id = null) {
-       View::redirect('/oklubu/obecne');
-    }
-    function sidebar() {
+	function view($id = null) {
+	   $this->redirect('/oklubu/obecne');
+	}
+	function obecne($id = null) {
+		$this->render('files/View/Main/OKlubu/Main.inc');
+	}
+	function historie($id = null) {
+		$this->render('files/View/Main/OKlubu/Historie.inc');
+	}
+	function uspechy($id = null) {
+		$this->render('files/View/Main/OKlubu/VCislech.inc');
+	}
+	function mistrovstvi($id = null) {
+		$this->render('files/View/Main/OKlubu/Mistrovstvi.inc');
+	}
+	function druzstva($id = null) {
+		$this->render('files/View/Main/OKlubu/Druzstva.inc');
+	}
+	function liga($id = null) {
+		$this->render('files/View/Main/OKlubu/Liga.inc');
+	}
+	function klubovi($id = null) {
+		$this->render('files/View/Main/OKlubu/TreneriInt.inc');
+	}
+	function externi($id = null) {
+		$this->render('files/View/Main/OKlubu/TreneriExt.inc');
+	}
+	function saly($id = null) {
+		$this->render('files/View/Main/OKlubu/Saly.inc');
+	}
+	function sidebar() {
 		$s = new Sidebar();
 		
 		echo $s->menuHeader();
@@ -18,33 +45,6 @@ class COntroller_Oklubu extends Controller_Abstract {
 		echo $s->menuItem('Stanovy klubu',		'/oklubu/stanovy.pdf');
 		
 		echo $s->commonItems();
-    }
-    function obecne($id = null) {
-        include('files/Main/OKlubu/Main.inc');
-    }
-    function historie($id = null) {
-        include('files/Main/OKlubu/Historie.inc');
-    }
-    function uspechy($id = null) {
-        include('files/Main/OKlubu/VCislech.inc');
-    }
-    function mistrovstvi($id = null) {
-        include('files/Main/OKlubu/Mistrovstvi.inc');
-    }
-    function druzstva($id = null) {
-        include('files/Main/OKlubu/Druzstva.inc');
-    }
-    function liga($id = null) {
-        include('files/Main/OKlubu/Liga.inc');
-    }
-    function klubovi($id = null) {
-        include('files/Main/OKlubu/TreneriInt.inc');
-    }
-    function externi($id = null) {
-        include('files/Main/OKlubu/TreneriExt.inc');
-    }
-    function saly($id = null) {
-        include('files/Main/OKlubu/Saly.inc');
-    }
+	}
 }
 ?>

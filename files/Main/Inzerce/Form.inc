@@ -5,7 +5,7 @@ if(Request::getAction() == 'add')
 else
 	header_minor('Upravit inzerát');
 
-notice(View::getRedirectMessage());
+notice($this->redirect()->getRedirectMessage());
 if(isset($f) && is_object($f))
 	notice(implode('<br/>', $f->getMessages()));
 ?>
@@ -32,7 +32,7 @@ if(isset($f) && is_object($f))
 		<td>Viditelný: </td>
 		<td><label><?php echo getCheckbox('visible', 'visible');?></label></td>
 		<td></td>
-	</tr><?php } else { //TODO: Inzerce foto ?><tr>
+	</tr><?php } else { ?><tr>
 		<td>Jméno (*): </td>
 		<td><input type="text" name="jmeno" value="<?php echo post("jmeno"); ?>" /></td>
 		<td>Max. 40 znaků</td>

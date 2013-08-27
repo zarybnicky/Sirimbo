@@ -6,7 +6,7 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis {
 	}
 	function view($id = null) {
 		if(!$id || !($data = DBRozpis::getSingleRozpis($id)))
-			View::redirect('/admin/rozpis', 'Rozpis s takovým ID neexistuje');
+			$this->redirect('/admin/rozpis', 'Rozpis s takovým ID neexistuje');
 		
 		Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
 		
@@ -14,7 +14,7 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis {
 		$users = DBPary::getPartners();
 		
 		if(empty($_POST)) {
-			include("files/Admin/RozpisDetail/Display.inc");
+			$this->render("files/Admin/RozpisDetail/Display.inc");
 			return;
 		}
 		if(post("generate") == "overlap") {
@@ -95,7 +95,7 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis {
 				}
 			}
 		}
-		include("files/Admin/RozpisDetail/Display.inc");
+		$this->render("files/Admin/RozpisDetail/Display.inc");
 	}
 }
 ?>

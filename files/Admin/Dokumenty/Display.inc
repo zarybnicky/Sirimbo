@@ -1,8 +1,8 @@
 <?php
 header_main('Správa dokumentů');
-notice(View::getRedirectMessage());
+notice($this->redirect()->getRedirectMessage());
 ?>
-<form action="/admin/dokumenty"<?php //TODO: Paging, getUpozorneni(OD,DO) ?> method="POST">
+<form action="/admin/dokumenty" method="POST">
 <button type="submit" name="action" value="edit">Přejmenovat</button>
 <button type="submit" name="action" value="remove">Odstranit</button>
 <table>
@@ -37,7 +37,7 @@ foreach($dokumenty as $item) {
 </form>
 <hr />
 <?php header_minor('Upload'); ?>
-<form action="<?php echo $_SERVER["REQUEST_URI"]?>" method="post" enctype="multipart/form-data">
+<form action="" method="post" enctype="multipart/form-data">
 <table>
 <tr><td>Jméno:</td><td><input type="text" name="name" /></td></tr>
 <tr><td>Soubor:</td><td><input type="file" name="file" /></td></tr>

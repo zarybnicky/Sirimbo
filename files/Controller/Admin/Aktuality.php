@@ -6,19 +6,19 @@ class Controller_Admin_Aktuality extends Controller_Admin {
 	}
 	function view($id = null) {
 		if(empty($_POST)) {
-			include("files/Admin/Aktuality/Display.inc");
+			$this->render("files/Admin/Aktuality/Display.inc");
 			return;
 		}
 		switch(post("action")) {
 			case 'edit':
 				$aktuality = post('aktuality');
 				if($aktuality[0])
-					View::redirect('/admin/aktuality/edit/' . $aktuality[0]);
+					$this->redirect('/admin/aktuality/edit/' . $aktuality[0]);
 				break;
 			case 'foto':
 				$aktuality = post('aktuality');
 				if($aktuality[0])
-					View::redirect('/admin/aktuality/foto/' . $aktuality[0]);
+					$this->redirect('/admin/aktuality/foto/' . $aktuality[0]);
 				break;
 			case 'remove':
 				if(!is_array(post('aktuality')))
@@ -26,14 +26,14 @@ class Controller_Admin_Aktuality extends Controller_Admin {
 				$url = '/admin/aktuality/remove?';
 				foreach(post('aktuality') as $id)
 					$url .= '&u[]=' . $id;
-				View::redirect($url);
+				$this->redirect($url);
 				break;
 		}
-		include("files/Admin/Aktuality/Display.inc");
+		$this->render("files/Admin/Aktuality/Display.inc");
 	}
 	function add($id = null) {
 		if(empty($_POST)) {
-			include('files/Admin/Aktuality/Form.inc');
+			$this->render('files/Admin/Aktuality/Form.inc');
 			return;
 		}
 		$preview = trim(substr(strip_tags(post('text')), 0, AKTUALITY_PREVIEW));
@@ -48,11 +48,11 @@ class Controller_Admin_Aktuality extends Controller_Admin {
 			post('text'), $preview, post('foto'), $f_id);
 		DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal článek ' .
 			post('jmeno'));
-		View::redirect('/admin/aktuality', 'Článek přidán');
+		$this->redirect('/admin/aktuality', 'Článek přidán');
 	}
 	function edit($id = null) {
 		if(!$id || !($data = DBAktuality::getSingleAktualita($id)))
-			View::redirect('/admin/aktuality', 'Článek s takovým ID neexistuje');
+			$this->redirect('/admin/aktuality', 'Článek s takovým ID neexistuje');
 		
 		Permissions::checkError('aktuality', P_OWNED, $data['at_kdo']);
 		
@@ -62,7 +62,7 @@ class Controller_Admin_Aktuality extends Controller_Admin {
 			post("text", stripslashes($data["at_text"]));
 			post('foto', $data['at_foto']);
 			
-			include("files/Admin/Aktuality/Form.inc");
+			$this->render("files/Admin/Aktuality/Form.inc");
 			return;
 		}
 		if(post('kat') != $data['at_kat'] || post('jmeno') != $data['at_jmeno'] ||
@@ -84,15 +84,15 @@ class Controller_Admin_Aktuality extends Controller_Admin {
 				post('jmeno'));
 		}
 		
-		View::redirect('/admin/aktuality', 'Článek změněn');
+		$this->redirect('/admin/aktuality', 'Článek změněn');
 	}
 	function remove($id = null) {
 		if(empty($_POST) || post('action') !== 'confirm') {
-			include('files/Admin/Aktuality/DisplayRemove.inc');
+			$this->render('files/Admin/Aktuality/DisplayRemove.inc');
 			return;
 		}
 		if(!is_array(post('aktuality')))
-			View::redirect('/admin/aktuality');
+			$this->redirect('/admin/aktuality');
 		foreach(post('aktuality') as $id) {
 			$data = DBAktuality::getSingleAktualita($id);
 			
@@ -105,9 +105,9 @@ class Controller_Admin_Aktuality extends Controller_Admin {
 			}
 		}
 		if(isset($error) && $error)
-			View::viewError(ER_AUTHORIZATION);
+			throw new Exception("Máte nedostatečnou autorizaci pro tuto akci!");
 		
-		View::redirect('/admin/aktuality', 'Články odebrány');
-    }
+		$this->redirect('/admin/aktuality', 'Články odebrány');
+	}
 }
 ?>

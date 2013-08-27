@@ -1,11 +1,11 @@
 <?php
 header_main('Správa akcí');
-notice(View::getRedirectMessage());
+notice($this->redirect()->getRedirectMessage());
 ?>
-<form action="<?php echo Request::getURI();?>" method="POST">
+<form action="" method="POST">
 <?php
 if(!TISK) {
-	echo Helper::get()->menu()
+	echo $this->menu()
 		->float(MenuHelper::FLOAT_RIGHT)
 		->content('Přidat', 'akce/add')
 		->content('Upravit', 'edit', true)

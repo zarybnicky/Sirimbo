@@ -1,13 +1,13 @@
 <?php
 header_main('Správa akcí');
-notice(View::getRedirectMessage());
+notice($this->redirect()->getRedirectMessage());
 ?>
-<form action="<?php echo $_SERVER["REQUEST_URI"] ?>" method="POST" class="centerWTable">
+<form action="" method="POST" class="centerWTable">
 <?php DisplayAkce::viewAkceHeader($akce);?>
 <table>
 <tr><td>Jméno<br/>Souboru</td><td>Kategorie</td>
 </tr>
-<?php //TODO: Dokumenty do hlavní Akce 
+<?php
 if(!empty($doku)) {
 	$count = count($doku);
 	for($i = 0; $i < $count; $i++) {
