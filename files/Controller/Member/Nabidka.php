@@ -15,9 +15,11 @@ class Controller_Member_Nabidka extends Controller_Member {
 			));
 			return;
 		}
-		foreach($nabidky as &$data) {
-			if(!$data['n_visible'])
+		foreach($nabidky as $key => &$data) {
+			if(!$data['n_visible']) {
+				unset($nabidky[$key]);
 				continue;
+			}
 			$items = DBNabidka::getNabidkaItem($data['n_id']);
 			$obsazeno = 0;
 			foreach($items as &$row) {

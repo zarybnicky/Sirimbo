@@ -8,16 +8,16 @@
 <table style="width:100%;">
 <?php foreach(array_chunk($this->data, 2) as $chunk):?>
 	<tr>
-	<?php foreach($chunk as $data):?>
+	<?php foreach($chunk as $item):?>
 		<td class="unit">
 		<form action="" method="post">
-		<?php echo $this->render('files/View/Member/Nabidka/Header.inc', $data);?>
+		<?php echo $this->render('files/View/Member/Nabidka/Header.inc', $item);?>
 		<table style="margin:0 auto;">
 			<tr>
 				<td>Tanečník</td>
 				<td>Počet hodin</td>
 			</tr>
-			<?php foreach($data['items'] as $row): ?>
+			<?php foreach($item['items'] as $row): ?>
 			<tr>
 				<td><?php echo $row['fullName'];?></td>
 				<td><?php echo $row['hourCount'];?></td>
@@ -28,9 +28,9 @@
 			<?php endforeach;?>
 		</table>
 		<div style="text-align:center;">
-		<?php if($data['canAdd']): ?>
+		<?php if($item['canAdd']): ?>
 			Počet hodin: <input type="text" name="hodiny" size="2" value="<?php post('hodiny');?>" />
-			<input type="hidden" name="id" value="<?php echo $data['id'];?>" />
+			<input type="hidden" name="id" value="<?php echo $item['id'];?>" />
 			<button type="submit">Přidat</button>
 		<?php endif;?>
 		</div>
