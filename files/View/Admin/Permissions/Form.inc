@@ -1,15 +1,13 @@
 <?php
 header_main('Správa oprávnění');
-if(Request::getAction() == 'add')
+if($this->action == 'add')
 	header_minor("Přidat uživatelskou skupinu");
 else
 	header_minor('Upravit uživatelskou skupinu');
 
 notice($this->redirect()->getRedirectMessage());
-if(isset($f) && is_object($f))
-	notice(implode('<br/>', $f->getMessages()));
 ?>
-<form action="<?php echo Request::getURI();?>" method="POST">
+<form action="" method="POST">
 <table>
 	<tr>
 		<td>Jméno: </td>
@@ -36,6 +34,6 @@ if(isset($f) && is_object($f))
 	}
 	?>
 </table>
-<button type="submit" name="action"><?php echo (Request::getAction() == 'add' ? 'Přidat' : 'Upravit'); ?></button>
+<button type="submit" name="action"><?php echo ($this->action == 'add' ? 'Přidat' : 'Upravit'); ?></button>
 <a href="/admin/permissions">Zpět</a>
 </form>
