@@ -6,7 +6,7 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Admin_Akce {
 	}
 	function view($id = null) {
 		if(!$id || !($akce = DBAkce::getSingleAkce($id)))
-			View::redirect('/admin/akce', 'Akce s takovým ID neexistuje');
+			$this->redirect('/admin/akce', 'Akce s takovým ID neexistuje');
 		
 		header_main("Správa akcí");
 		notice($this->redirect()->getRedirectMessage());
@@ -14,7 +14,7 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Admin_Akce {
 		$doku = unserialize($akce["a_dokumenty"]);
 		
 		if(empty($_POST)) {
-			include("files/Admin/AkceDokumenty/Display.inc");
+			$this->render("files/Admin/AkceDokumenty/Display.inc");
 			return;
 		}
 		if(post("remove") !== null) {
@@ -34,7 +34,7 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Admin_Akce {
 			$akce = DBAkce::getSingleAkce($id);
 		}
 		
-		include("files/Admin/AkceDokumenty/Display.inc");
+		$this->render("files/Admin/AkceDokumenty/Display.inc");
 	}
 }
 ?>

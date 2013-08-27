@@ -2,14 +2,14 @@
 header_main('Správa nabídka');
 notice($this->redirect()->getRedirectMessage());
 ?>
-<form action="<?php echo Request::getURI(); ?>" method="POST" class="centerWTable">
+<form action="" method="POST" class="centerWTable">
 <button type="submit" name="action" value="add" style="display:none;">Enter</button>
 <div class="n_wrapper">
 <?php DisplayNabidka::viewNabidkaHeader($data, $obsazeno); ?>
 <table>
 <tr><td>Tanečník</td><td>Počet hodin</td></tr>
 <?php
-$userselect = Helper::get()->userSelect()
+$userselect = $this->userSelect()
 	->users($users)
 	->type('par')
 	->idVar('p_id');

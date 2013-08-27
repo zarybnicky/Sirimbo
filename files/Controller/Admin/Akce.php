@@ -6,7 +6,7 @@ class Controller_Admin_Akce extends Controller_Admin {
 	}
 	function view($id = null) {
 		if(empty($_POST)) {
-			include('files/Admin/Akce/Display.inc');
+			$this->render('files/Admin/Akce/Display.inc');
 			return;
 		}
 		switch(post('action')) {
@@ -26,37 +26,37 @@ class Controller_Admin_Akce extends Controller_Admin {
 				$url = '/admin/akce/remove?';
 				foreach(post('akce') as $id)
 					$url .= '&u[]=' . $id;
-				View::redirect($url);
+				$this->redirect($url);
 				break;
 			
 			case "edit":
 				$akce = post('akce');
 				if($akce[0])
-					View::redirect('/admin/akce/edit/' . $akce[0]);
+					$this->redirect('/admin/akce/edit/' . $akce[0]);
 				break;
 				
 			case "edit_detail":
 				$akce = post("akce");
 				if($akce[0])
-					View::redirect('/admin/akce/detail/' . $akce[0]);
+					$this->redirect('/admin/akce/detail/' . $akce[0]);
 				break;
 				
 			case "edit_doku":
 				$akce = post("akce");
 				if($akce[0])
-					View::redirect('/admin/akce/dokumenty/' . $akce[0]);
+					$this->redirect('/admin/akce/dokumenty/' . $akce[0]);
 				break;
 		}
-		include('files/Admin/Akce/Display.inc');
+		$this->render('files/Admin/Akce/Display.inc');
 	}
 	function add($id = null) {
 		if(empty($_POST) || is_object($f = $this->checkData($_POST, 'add'))) {
-			include('files/Admin/Akce/Form.inc');
+			$this->render('files/Admin/Akce/Form.inc');
 			return;
 		}
 		
-		$od = Helper::get()->date()->name('od')->getPost();
-		$do = Helper::get()->date()->name('do')->getPost();
+		$od = $this->date()->name('od')->getPost();
+		$do = $this->date()->name('do')->getPost();
 		if(!$do || strcmp($od, $do) > 0)
 			$do = $od;
 		
@@ -65,11 +65,11 @@ class Controller_Admin_Akce extends Controller_Admin {
 			(post('lock') == 'lock') ? 1 : 0, post('visible') ? '1' : '0');
 		DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal klubovou akci "' .
 			post('jmeno') . '"');
-		View::redirect('/admin/akce', 'Akce přidána');
+		$this->redirect('/admin/akce', 'Akce přidána');
 	}
 	function edit($id = null) {
 		if(!$id || !($data = DBAkce::getSingleAkce($id)))
-			View::redirect('/admin/akce', 'Akce s takovým ID neexistuje');
+			$this->redirect('/admin/akce', 'Akce s takovým ID neexistuje');
 		
 		if(empty($_POST)) {
 			post('id', $id);
@@ -83,15 +83,15 @@ class Controller_Admin_Akce extends Controller_Admin {
 			post('lock', $data['a_lock']);
 			post('visible', $data['a_visible']);
 			
-			include('files/Admin/Akce/Form.inc');
+			$this->render('files/Admin/Akce/Form.inc');
 			return;
 		}
 		if(is_object($f = $this->checkData($_POST, 'edit'))) {
-			include('files/Admin/Akce/Form.inc');
+			$this->render('files/Admin/Akce/Form.inc');
 			return;
 		}
-		$od = Helper::get()->date()->name('od')->getPost();
-		$do = Helper::get()->date()->name('do')->getPost();
+		$od = $this->date()->name('od')->getPost();
+		$do = $this->date()->name('do')->getPost();
 		if(!$do || strcmp($od, $do) > 0)
 			$do = $od;
 		
@@ -100,15 +100,15 @@ class Controller_Admin_Akce extends Controller_Admin {
 			(post('lock') == 'lock') ? 1 : 0, post('visible') ? '1' : '0');
 		DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' změnil detaily akce "' .
 			post('jmeno') . '"');
-		View::redirect('/admin/akce', 'Akce upravena');
+		$this->redirect('/admin/akce', 'Akce upravena');
 	}
 	function remove($id = null) {
 		if(empty($_POST) || post('action') !== 'confirm') {
-			include('files/Admin/Akce/DisplayRemove.inc');
+			$this->render('files/Admin/Akce/DisplayRemove.inc');
 			return;
 		}
 		if(!is_array(post('akce')))
-			View::redirect('/admin/akce');
+			$this->redirect('/admin/akce');
 		foreach(post('akce') as $id) {
 			if(Permissions::check('akce', P_OWNED)) {
 				$data = DBAkce::getSingleAkce($id);
@@ -124,12 +124,12 @@ class Controller_Admin_Akce extends Controller_Admin {
 		if(isset($error) && $error)
 			throw new Exception("Máte nedostatečnou autorizaci pro tuto akci!");
 		
-		View::redirect('/admin/akce', 'Akce odebrány');
+		$this->redirect('/admin/akce', 'Akce odebrány');
 	}
 	
 	private function checkData($data, $action = 'add') {
-		$od = Helper::get()->date()->name('od')->getPost();
-		$do = Helper::get()->date()->name('do')->getPost();
+		$od = $this->date()->name('od')->getPost();
+		$do = $this->date()->name('do')->getPost();
 		
 		$f = new Form();
 		$f->checkLength(post('jmeno'), 1, 255, 'Špatná délka jména akce', 'jmeno');

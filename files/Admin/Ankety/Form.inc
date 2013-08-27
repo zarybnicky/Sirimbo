@@ -7,7 +7,7 @@ else
 
 notice($this->redirect()->getRedirectMessage());
 ?>
-<form action="<?php echo Request::getURI()?>" method="post">
+<form action="" method="post">
 <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
 <table>
 	<tr>

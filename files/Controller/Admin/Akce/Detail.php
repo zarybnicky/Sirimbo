@@ -6,7 +6,7 @@ class Controller_Admin_Akce_Detail extends Controller_Admin_Akce {
 	}
 	function view($id = null) {
 		if(!$id || !($akce = DBAkce::getSingleAkce($id)))
-			View::redirect('/admin/akce', 'Akce s takovým ID neexistuje');
+			$this->redirect('/admin/akce', 'Akce s takovým ID neexistuje');
 			
 		header_main("Správa akcí");
 		notice($this->redirect()->getRedirectMessage());
@@ -15,7 +15,7 @@ class Controller_Admin_Akce_Detail extends Controller_Admin_Akce {
 		$users = DBUser::getActiveUsers();
 		
 		if(empty($_POST)) {
-			include("files/Admin/AkceDetail/Display.inc");
+			$this->render("files/Admin/AkceDetail/Display.inc");
 			return;
 		}
 		
@@ -46,7 +46,7 @@ class Controller_Admin_Akce_Detail extends Controller_Admin_Akce {
 			$items = DBAkce::getAkceItems($id);
 		}
 		
-		include("files/Admin/AkceDetail/Display.inc");
+		$this->render("files/Admin/AkceDetail/Display.inc");
 	}
 }
 ?>

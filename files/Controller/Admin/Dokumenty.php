@@ -6,14 +6,14 @@ class Controller_Admin_Dokumenty extends Controller_Admin {
 	}
 	function view($id = null) {
 		if(empty($_POST)) {
-			include('files/Admin/Dokumenty/Display.inc');
+			$this->render('files/Admin/Dokumenty/Display.inc');
 			return;
 		}
 		switch(post('action')) {
 			case 'edit':
 				$dokumenty = post('dokumenty');
 				if($dokumenty[0])
-					View::redirect('/admin/dokumenty/edit/' . $dokumenty[0]);
+					$this->redirect('/admin/dokumenty/edit/' . $dokumenty[0]);
 				break;
 			
 			case 'upload':
@@ -41,7 +41,7 @@ class Controller_Admin_Dokumenty extends Controller_Admin {
 				} else {
 					notice('Bohužel, zkus to znova :o(');
 				}
-				include('files/Admin/Dokumenty/Display.inc');
+				$this->render('files/Admin/Dokumenty/Display.inc');
 				return;
 			
 			case 'remove':
@@ -50,19 +50,19 @@ class Controller_Admin_Dokumenty extends Controller_Admin {
 				$url = '/admin/dokumenty/remove?';
 				foreach(post('dokumenty') as $id)
 					$url .= '&u[]=' . $id;
-				View::redirect($url);
+				$this->redirect($url);
 				break;
 		}
 	}
 	function edit($id = null) {
 		if(!$id || !($data = DBDokumenty::getSingleDokument($id)))
-			View::redirect('/admin/dokumenty', 'Dokument s takovým ID neexistuje');
+			$this->redirect('/admin/dokumenty', 'Dokument s takovým ID neexistuje');
 	
 		if(!empty($_POST) && post('newname')) {
 			$newname = post('newname');
 			
 			DBDokumenty::editDokument($id, $newname);
-			View::redirect('/admin/dokumenty', 'Příspěvek úspěšně upraven');
+			$this->redirect('/admin/dokumenty', 'Příspěvek úspěšně upraven');
 		}
 		echo '<form action="', $_SERVER['REQUEST_URI'], '" method="POST">';
 		echo 'Staré jméno:&nbsp;', $data['d_name'], '<br />';
@@ -70,15 +70,15 @@ class Controller_Admin_Dokumenty extends Controller_Admin {
 		echo '<input type="text" name="newname" value="', $data['d_name'], '" />';
 		echo '<button type="submit" name="action" value="edit_confirm">Upravit</button>';
 		echo '</form><br />';
-		include('files/Admin/Dokumenty/Display.inc');
+		$this->render('files/Admin/Dokumenty/Display.inc');
 	}
 	function remove($id = null) {
 		if(empty($_POST) || post('action') !== 'confirm') {
-			include('files/Admin/Dokumenty/DisplayRemove.inc');
+			$this->render('files/Admin/Dokumenty/DisplayRemove.inc');
 			return;
 		}
 		if(!is_array(post('dokumenty')))
-			View::redirect('/admin/dokumenty');
+			$this->redirect('/admin/dokumenty');
 		foreach(post('dokumenty') as $id) {
 			$data = DBDokumenty::getSingleDokument($id);
 			if(Permissions::check('dokumenty', P_OWNED, $data['d_kdo'])) {
@@ -91,7 +91,7 @@ class Controller_Admin_Dokumenty extends Controller_Admin {
 		if(isset($error) && $error)
 			throw new Exception("Máte nedostatečnou autorizaci pro tuto akci!");
 		
-		View::redirect('/admin/dokumenty', 'Dokumenty odebrány');
+		$this->redirect('/admin/dokumenty', 'Dokumenty odebrány');
 	}
 }
 ?>

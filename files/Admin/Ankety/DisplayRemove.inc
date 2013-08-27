@@ -5,7 +5,7 @@ notice($this->redirect()->getRedirectMessage());
 if(!is_array(get('u')))
 	notice('Žádné akce');
 ?>
-<form action="<?php echo Request::getURI();?>" method="POST">
+<form action="" method="POST">
 Opravdu chcete odstranit ankety:<br/><br/>
 <?php
 foreach(get('u') as $id) {
