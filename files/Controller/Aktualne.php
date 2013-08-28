@@ -5,7 +5,7 @@ class Controller_Aktualne extends Controller_Abstract {
 			$this->render('files/View/Main/Aktuality/Single.inc', array(
 					'id'		=> $data['at_id'],
 					'jmeno'		=> $data['at_jmeno'],
-					'timestamp'	=> $data['at_timestamp'],
+					'timestamp'	=> $data['at_timestamp_add'],
 					'canEdit'	=> Permissions::check('aktuality', P_OWNED, $data['at_kdo']),
 					'text'		=> stripslashes(nl2br($data['at_text']))
 			));
