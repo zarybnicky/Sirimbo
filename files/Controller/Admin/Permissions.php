@@ -21,7 +21,6 @@ class Controller_Admin_Permissions extends Controller_Admin {
 		$data = DBPermissions::getGroups();
 		foreach($data as &$row) {
 			$new_data = array(
-					'showMenu' => !TISK,
 					'checkBox' => '<input type="checkbox" name="permissions[]" value="' . $row['pe_id'] . '" />',
 					'name' => $row['pe_name'],
 					'description' => $row['pe_description']
@@ -29,6 +28,7 @@ class Controller_Admin_Permissions extends Controller_Admin {
 			$row = $new_data;
 		}
 		$this->render('files/View/Admin/Permissions/Overview.inc', array(
+				'showMenu' => !TISK,
 				'data' => $data
 		));
 	}

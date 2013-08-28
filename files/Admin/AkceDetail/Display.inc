@@ -4,16 +4,16 @@ notice($this->redirect()->getRedirectMessage());
 ?>
 <form action="" method="POST" class="centerWTable">
 <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
-<?php DisplayAkce::viewAkceHeader($akce);?>
+<?php echo $this->render('files/View/Member/Akce/Header.inc', $this->data);?>
 <table>
 <tr>
 	<td>Uživatel</td>
 	<td></td>
 </tr>
 <?php
-$userselect = $this->userSelect()->users($users);
-if(!empty($items)) {
-	foreach($items as $item) {
+$userselect = $this->userSelect()->users($this->users);
+if(!empty($this->items)) {
+	foreach($this->items as $item) {
 		echo '<tr>';
 		echo '<td>';
 		if($item['ai_user'] > 0)

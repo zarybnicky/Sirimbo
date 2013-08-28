@@ -27,7 +27,6 @@ if(!TISK) {
 </tr>
 <?php
 $akce = DBAkce::getAkce();
-
 foreach($akce as $item) {
 	$items = DBAkce::getAkceItems($item['a_id']);
 
