@@ -309,7 +309,7 @@ class DBUser extends Database implements Pagable {
 			LEFT JOIN permissions ON u_group=pe_id
 			LEFT JOIN users_skupiny ON u_skupina=us_id
 		WHERE pe_$module >= '$permission'
-		");
+		ORDER BY u_prijmeni");
 		return DBUser::getArray($res);
 	}
 	

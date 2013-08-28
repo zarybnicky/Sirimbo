@@ -131,7 +131,8 @@ class DBPary extends Database {
 		"SELECT *
 		FROM pary
 			LEFT JOIN users ON p_id_partner=u_id
-		WHERE p_archiv='0'");
+		WHERE p_archiv='0'
+		ORDER BY u_prijmeni");
 		
 		return DBPary::getArray($res);
 	}
