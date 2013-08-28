@@ -8,7 +8,6 @@
 		->option('1', 'Schůze, rady')
 		->option('2', 'Soutěže')
 		->option('3', 'Tábory')
-		->option('4', 'Inzerce')
 		->option('0', 'Ostatní');?>
 	<button type="submit">Zobrazit</button>
 </form>

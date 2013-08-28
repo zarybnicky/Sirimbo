@@ -25,11 +25,11 @@ if(isset($f) && is_object($f))
 		<td></td>
 	</tr><tr>
 		<td>Od: (*)</td>
-		<td><?php echo $this->date()->name('od')->textBox();?></td>
+		<td><?php echo $this->date('od')->textBox();?></td>
 		<td></td>
 	</tr><tr>
 		<td>Do: </td>
-		<td><?php echo $this->date()->name('do')->textBox();?></td>
+		<td><?php echo $this->date('do')->textBox();?></td>
 		<td>(pokud je prázdný, počítá se jako "Od")</td>
 	</tr><tr>
 		<td>Kapacita (*): </td>

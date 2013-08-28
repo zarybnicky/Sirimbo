@@ -3,7 +3,7 @@ header_main('Správa akcí');
 notice($this->redirect()->getRedirectMessage());
 ?>
 <form action="" method="POST" class="centerWTable">
-<?php DisplayAkce::viewAkceHeader($akce);?>
+<?php echo $this->render('files/View/Member/Akce/Header.inc', $this->data);?>
 <table>
 <tr><td>Jméno<br/>Souboru</td><td>Kategorie</td>
 </tr>

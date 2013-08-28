@@ -43,7 +43,7 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 				}
 				if(isset($error) && $error)
 					throw new Exception("Máte nedostatečnou autorizaci pro tuto akci!");
-				notice('Nabídky odebrány');
+				$this->redirect()->setRedirectMessage('Nabídky odebrány');
 				break;
 		}
 		$data = DBNabidka::getNabidka();
@@ -93,6 +93,8 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 			$visible = false;
 			$this->redirect()->setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění příspěvku');
 		}
+		if(!is_numeric($max_lessons))
+			$max_lessons = 0;
 		
 		DBNabidka::addNabidka(post('trener'), post('pocet_hod'), post('max_pocet_hod'), $od, $do, $visible,
 			post('lock') ? 1 : 0);
@@ -157,11 +159,13 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 		}
 		$max_lessons = post('max_pocet_hod');
 		$max_lessons_old = DBNabidka::getNabidkaMaxItems($id);
-		if($max_lessons < $max_lessons_old) {
+		if($max_lessons < $max_lessons_old && $max_lessons != 0) {
 			$max_lessons = $max_lessons_old;
 			$this->redirect()->setRedirectMessage('Zadaný maximální počet hodin/pár je méně než už je zarezervováno, ' .
 				'nemůžu dál snížit maximální počet hodin');
 		}
+		if(!is_numeric($max_lessons))
+			$max_lessons = 0;
 		
 		DBNabidka::editNabidka($id, post('trener'), $pocet_hod, $max_lessons, $od, $do, $visible,
 			post('lock') ? '1' : '0');
@@ -189,7 +193,6 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 		$f = new Form();
 		$f->checkNumeric(post('trener'), 'ID trenéra musí být číselné', 'trener');
 		$f->checkNumeric(post('pocet_hod'), 'Počet hodin prosím zadejte čísly', 'pocet_hod');
-		$f->checkNumeric(post('max_pocet_hod'), 'Max. počet hodin prosím zadejte čísly', 'max_pocet_hod');
 		$f->checkDate($od, 'Zadejte prosím platné datum ("Od")', 'od');
 		if($do) $f->checkDate($do, 'Zadejte prosím platné datum ("Do")', 'do');
 

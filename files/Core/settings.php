@@ -109,12 +109,6 @@ define('ER_NOT_POSSIBLE', 'not_possible');
 define('ER_SCRIPT_FATAL', 'script_fatal');
 
 define('NOVINKY_COUNT', 10);
-define('INZERCE_COUNT', 10);
-define('INZERCE_ALL', 0);
-define('INZERCE_PRODAM', 1);
-define('INZERCE_KOUPIM', 2);
-define('INZERCE_PARTNER', 3);
-define('INZERCE_PARTNERKA', 4);
 define('AKTUALITY_CLANKY', 1);
 define('AKTUALITY_VIDEA', 2);
 define('AKTUALITY_KRATKE', 3);
@@ -150,7 +144,6 @@ public static $document_types = array(
 	'1'		=> 'Schůze, rady',
 	'2'		=> 'Soutěže',
 	'3'		=> 'Tábory',
-	'4'		=> 'Inzerce',
 	'0'		=> 'Ostatní'
 );
 
@@ -210,10 +203,6 @@ public static $permissions = array(
 		'name' => "Fotogalerie",
 		'default' => P_VIEW,
 		P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1),
-	'inzerce' => array(
-		'name' => "Inzerce",
-		'default' => P_MEMBER,
-		P_VIEW => 1, P_MEMBER => 1, P_ADMIN => 1),
 	'konzole' => array(
 		'name' => "Konzole",
 		'default' => P_NONE,

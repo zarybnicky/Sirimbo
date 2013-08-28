@@ -59,7 +59,7 @@ class Controller_Admin_Galerie extends Controller_Admin {
 				
 				DBGalerie::addDir($name, $parent, $level);
 				//FIXME: Galerie - test addDir
-				notice('Složka přidána');
+				$this->redirect()->setRedirectMessage('Složka přidána');
 				$this->render('files/Admin/Galerie/Display.inc');
 				return;
 					
@@ -268,7 +268,7 @@ class Controller_Admin_Galerie extends Controller_Admin {
 		}
 		switch(post('action')) {
 			case 'edit':
-				notice('Not Implemented');//FIXME: Not Implemented - Foto edit (rename,...)
+				$this->redirect()->setRedirectMessage('Not Implemented');//FIXME: Not Implemented - Foto edit (rename,...)
 			case 'remove':
 				$galerie = post('galerie');
 				if(empty($galerie))
@@ -281,7 +281,7 @@ class Controller_Admin_Galerie extends Controller_Admin {
 					unlink($data['gf_path']);
 					unlink(str_replace('./galerie', './galerie/thumbnails', $data['gd_path']));
 				}
-				notice('Fotky odebrány');
+				$this->redirect()->setRedirectMessage('Fotky odebrány');
 		}
 		$this->render('files/Admin/Galerie/DisplayEdit.inc');
 	}
@@ -296,7 +296,7 @@ class Controller_Admin_Galerie extends Controller_Admin {
 		$f->checkNotEmpty(post('name'), 'Složka musí mít jméno', 'name');
 		$f->checkBool(post('parent') != 'none', 'Složka musí mít nadsložku', 'parent');
 		if(!$f->isValid()) {
-			notice($f->getMessages());
+			$this->redirect()->setRedirectMessage($f->getMessages());
 			$this->render('files/Admin/Galerie/DisplayDir.inc');
 			return;
 		}

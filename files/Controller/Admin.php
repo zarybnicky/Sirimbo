@@ -19,7 +19,6 @@ class Controller_Admin extends Controller_Abstract {
 		echo $s->menuItem('Správa rozpisů',		'/admin/rozpis',	'rozpis', P_OWNED);
 		echo $s->menuItem('Správa nabídky',		'/admin/nabidka',	'nabidka', P_OWNED);
 		echo $s->menuItem('Správa akcí',		'/admin/akce',		'akce', P_OWNED);
-		echo $s->menuItem('Správa inzerce',		'/admin/inzerce',	'inzerce', P_OWNED);
 		echo $s->menuItem('Správa galerie',		'/admin/galerie',	'galerie', P_OWNED);
 		echo $s->menuItem('Správa dokumentů',	'/admin/dokumenty',	'dokumenty', P_OWNED);
 		echo $s->menuItem('Správa anket',		'/admin/ankety',	'ankety', P_OWNED);
