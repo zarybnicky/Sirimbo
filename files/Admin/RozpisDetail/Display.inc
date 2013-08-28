@@ -5,16 +5,16 @@ notice($this->redirect()->getRedirectMessage());
 <form action="" method="POST">
 <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
 <div class="r_wrapper">
-<?php DisplayRozpis::viewRozpisHeader($data); ?>
+<?php DisplayRozpis::viewRozpisHeader($this->data); ?>
 <table>
 <tr><td>Tanečník</td><td>Od</td><td>Do</td><td></td><td>Zámek</td></tr>
 <?php
 $userselect = $this->userSelect()
 	->idVar('p_id')
 	->type('par')
-	->users($users);
-if(!empty($items)) {
-	foreach($items as $item) {
+	->users($this->users);
+if(!empty($this->items)) {
+	foreach($this->items as $item) {
 		echo '<tr>';
 		echo '<td>';
 		post($item['ri_id'] . '-partner', $item['ri_partner']);

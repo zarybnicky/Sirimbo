@@ -13,7 +13,6 @@ if(!TISK) {
 		->content('Uložit', 'save', true);
 }
 ?>
-
 <table>
 <tr>
 <td></td>
@@ -22,7 +21,6 @@ if(!TISK) {
 </tr>
 <?php
 $ankety = DBAnkety::getAnkety();
-
 foreach($ankety as $item) {
 	echo '<tr>';
 	

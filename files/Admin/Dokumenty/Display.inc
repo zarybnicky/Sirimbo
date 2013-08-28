@@ -1,6 +1,16 @@
 <?php
 header_main('Správa dokumentů');
 notice($this->redirect()->getRedirectMessage());
+
+if(isset($this->form)) {
+	echo '<form action="" method="POST">';
+	echo 'Staré jméno:&nbsp;', $this->form['d_name'], '<br />';
+	echo 'Nové jméno:&nbsp;';
+	echo '<input type="text" name="newname" value="', $this->form['d_name'], '" />';
+	echo '<button type="submit" name="action" value="edit_confirm">Upravit</button>';
+	echo '</form><br />';
+}
+
 ?>
 <form action="/admin/dokumenty" method="POST">
 <button type="submit" name="action" value="edit">Přejmenovat</button>
@@ -15,7 +25,6 @@ notice($this->redirect()->getRedirectMessage());
 </tr>
 <?php
 $dokumenty = DBDokumenty::getDokumenty();
-
 foreach($dokumenty as $item) {
 	echo "<tr>";
 	if(Permissions::check('dokumenty', P_OWNED, $item['d_kdo']))

@@ -77,8 +77,6 @@ EOS;
 				?>><a href="/oklubu">O klubu</a></li>
 				<li<?php echo ($section == 'aktualne') ? ' class="current"' : '';
 				?>><a href="/aktualne">Aktuálně</a></li>
-				<li<?php echo ($section == 'inzerce') ? ' class="current"' : '';
-				?>><a href="/inzerce/posledni">Inzerce</a></li>
 				<li<?php echo ($section == 'fotogalerie') ? ' class="current"' : '';
 				?>><a href="/fotogalerie">Fotogalerie</a></li>
 				<li<?php echo ($section == 'nabizime') ? ' class="current"' : '';
@@ -98,15 +96,7 @@ EOS;
 			?>
 			</div>
 			<div id="content">
-			<form action="<?php echo $_SERVER['REQUEST_URI'];?>" method="get">
-				<?php
-					foreach($_GET as $key => $value) {
-						if($key != 'file' && $key != 'tisk')
-							echo '<input type="hidden" name="', $key, '" value="', $value, '"/>';
-					}
-				?>
 				<div style="float:right;clear:both;">
-				<button type="submit" name="view" value="tisk">Tisknout</button>
+					<a href="<?php echo Request::getURI() . '?' . http_build_query(array_merge($_GET, array('view' => 'tisk'))); ?>">Tisknout</a>
 				</div>
 				<div style="clear:both;"></div>
-			</form>
