@@ -1,4 +1,4 @@
-	<?php
+<?php
 header_main('Správa aktualit');
 if(Request::getAction() == 'add')
 	header_minor("Přidat článek");

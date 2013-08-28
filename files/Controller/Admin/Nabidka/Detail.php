@@ -15,7 +15,12 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka {
 		$users = DBPary::getPartners();
 		
 		if(empty($_POST)) {
-			$this->render("files/Admin/NabidkaDetail/Display.inc");
+			$this->render("files/Admin/NabidkaDetail/Display.inc", array(
+					'data' => $data,
+					'obsazeno' => $obsazeno,
+					'users' => $users,
+					'items' => $items
+			));
 			return;
 		}
 		
@@ -67,12 +72,17 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka {
 			if(post("pocet_hod") < $obsazeno) {
 				post("pocet_hod", $obsazeno);
 			}
-			DBNabidka::editNabidka($id, $data["n_trener"], post("pocet_hod"),
+			DBNabidka::editNabidka($id, $data["n_trener"], post("pocet_hod"), $data['n_max_pocet_hod'],
 				$data["n_od"], $data["n_do"], $data['n_visible'], ($data["n_lock"]) ? 1 : 0);
 			$data = DBNabidka::getSingleNabidka($id);
 		}
 		
-		$this->render("files/Admin/NabidkaDetail/Display.inc");
+		$this->render("files/Admin/NabidkaDetail/Display.inc", array(
+					'data' => $data,
+					'obsazeno' => $obsazeno,
+					'users' => $users,
+					'items' => $items
+			));
 	}
 }
 ?>

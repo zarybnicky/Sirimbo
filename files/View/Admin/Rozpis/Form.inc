@@ -31,7 +31,7 @@ notice($this->redirect()->getRedirectMessage());
 		<td>Viditelný: </td>
 		<td><label><?php
 			if($this->isAdmin)
-				getCheckbox('visible', 'visible', false);
+				echo getCheckbox('visible', 'visible', false);
 			else
 				echo (post('visible') ? '&#10003;' : '&#10799;');
 		?></label></td>

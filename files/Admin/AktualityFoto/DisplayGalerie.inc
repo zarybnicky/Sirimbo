@@ -2,13 +2,13 @@
 header_main('Správa fotogalerie článků');
 notice($this->redirect()->getRedirectMessage());
 
-$dirs = DBGalerie::getDirs(true, true);
-
 echo '<form action="" method="get">';
 $s = $this->select()
 	->get()->name('dir')->value('none')
 	->option('none', 'Vybrané fotky')
 	->option('no', '-------------');
+
+$dirs = DBGalerie::getDirs(true, true);
 foreach($dirs as $dir)
 	$s->option($dir['gd_id'], str_repeat("&nbsp;&nbsp;", $dir['gd_level'] - 1) . $dir['gd_name']);
 echo $s;
