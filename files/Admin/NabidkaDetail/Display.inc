@@ -5,16 +5,16 @@ notice($this->redirect()->getRedirectMessage());
 <form action="" method="POST" class="centerWTable">
 <button type="submit" name="action" value="add" style="display:none;">Enter</button>
 <div class="n_wrapper">
-<?php DisplayNabidka::viewNabidkaHeader($data, $obsazeno); ?>
+<?php DisplayNabidka::viewNabidkaHeader($this->data, $this->obsazeno); ?>
 <table>
 <tr><td>Tanečník</td><td>Počet hodin</td></tr>
 <?php
 $userselect = $this->userSelect()
-	->users($users)
+	->users($this->users)
 	->type('par')
 	->idVar('p_id');
-if(!empty($items)) {
-	foreach($items as $item) {
+if(!empty($this->items)) {
+	foreach($this->items as $item) {
 			echo '<tr>';
 			post($item['ni_id'] . '-partner', $item['ni_partner']);
 			echo '<td>';
