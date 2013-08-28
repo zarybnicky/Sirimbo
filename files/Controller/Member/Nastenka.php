@@ -31,7 +31,7 @@ class Controller_Member_Nastenka extends Controller_Member {
 				'canEdit' => Permissions::check('nastenka', P_OWNED, $item['up_kdo']),
 				'skupinyBoxes' => $skupiny,
 				'addedBy' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
-				'addedTimestamp' => formatTimestamp($item['up_timestamp']),
+				'addedTimestamp' => formatTimestamp($item['up_timestamp_add']),
 				'text' => stripslashes($item['up_text'])
 			);
 			$item = $new_data;
