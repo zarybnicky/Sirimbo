@@ -42,7 +42,6 @@ EOS;
 				<li class="first"><a href="/home">Domů</a></li>
 				<li><a href="/oklubu">O klubu</a></li>
 				<li><a href="/aktuality/posledni">Aktuálně</a></li>
-				<li><a href="/inzerce/posledni">Inzerce</a></li>
 				<li><a href="/fotogalerie">Fotogalerie</a></li>
 				<li><a href="/nabizime">Nabízíme</a></li>
 				<li><a href="/member/home">Členové</a></li>

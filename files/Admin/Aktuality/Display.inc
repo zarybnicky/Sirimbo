@@ -22,7 +22,6 @@ if(!TISK) {
 </tr>
 <?php
 $aktuality = DBAktuality::getAktuality();
-
 foreach($aktuality as $item) {
 	echo '<tr>';
 	

@@ -10,6 +10,15 @@ class Database {
 		$escape = mysql_real_escape_string($escape);
 		return explode("%%%%%", $escape);
 	}
+	protected static function escape($string, $_) {
+		Database::getConnection();
+		
+		if(func_num_args() > 1)
+			$vars = func_get_args();
+		else
+			$vars = array($string);
+		return self::escapeArray($vars);
+	}
 	
 	protected static function getConnection() {
 		if(Database::$connection != null)

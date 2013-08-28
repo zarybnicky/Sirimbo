@@ -14,7 +14,11 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis {
 		$users = DBPary::getPartners();
 		
 		if(empty($_POST)) {
-			$this->render("files/Admin/RozpisDetail/Display.inc");
+			$this->render("files/Admin/RozpisDetail/Display.inc", array(
+					'data' => $data,
+					'users' => $users,
+					'items' => $items
+			));
 			return;
 		}
 		if(post("generate") == "overlap") {
@@ -95,7 +99,11 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis {
 				}
 			}
 		}
-		$this->render("files/Admin/RozpisDetail/Display.inc");
+		$this->render("files/Admin/RozpisDetail/Display.inc", array(
+				'data' => $data,
+				'users' => $users,
+				'items' => $items
+		));
 	}
 }
 ?>

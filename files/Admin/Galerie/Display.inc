@@ -14,7 +14,6 @@ echo $this->menu()
 	->content('Uložit změny', 'save', true);
 
 $dirs = DBGalerie::getDirs(true, true);
-
 if(!empty($dirs)) {
 	echo '<table><tr><td></td><td>Název</td><td>Skrytá</td></tr>';
 	foreach($dirs as $item) {

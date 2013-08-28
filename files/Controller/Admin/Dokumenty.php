@@ -34,12 +34,12 @@ class Controller_Admin_Dokumenty extends Controller_Admin {
 					chmod($path, 0666);
 					DBDokumenty::addDokument($path, post('name'), $fileName,
 						post('kategorie'), User::getUserID());
-					notice('Soubor byl úspěšně nahrán');
+					$this->redirect()->setRedirectMessage('Soubor byl úspěšně nahrán');
 					
 					DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal dokument "' .
 						post('name') . '"');
 				} else {
-					notice('Bohužel, zkus to znova :o(');
+					$this->redirect()->setRedirectMessage('Bohužel, zkus to znova :o(');
 				}
 				$this->render('files/Admin/Dokumenty/Display.inc');
 				return;
@@ -64,13 +64,9 @@ class Controller_Admin_Dokumenty extends Controller_Admin {
 			DBDokumenty::editDokument($id, $newname);
 			$this->redirect('/admin/dokumenty', 'Příspěvek úspěšně upraven');
 		}
-		echo '<form action="', $_SERVER['REQUEST_URI'], '" method="POST">';
-		echo 'Staré jméno:&nbsp;', $data['d_name'], '<br />';
-		echo 'Nové jméno:&nbsp;';
-		echo '<input type="text" name="newname" value="', $data['d_name'], '" />';
-		echo '<button type="submit" name="action" value="edit_confirm">Upravit</button>';
-		echo '</form><br />';
-		$this->render('files/Admin/Dokumenty/Display.inc');
+		$this->render('files/Admin/Dokumenty/Display.inc', array(
+			'form' => $data
+		));
 	}
 	function remove($id = null) {
 		if(empty($_POST) || post('action') !== 'confirm') {
