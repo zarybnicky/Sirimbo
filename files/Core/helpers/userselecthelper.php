@@ -84,7 +84,7 @@ class UserSelectHelper {
 				$out .= '<option value="' . $id . '" selected="selected">';
 			else
 				$out .= '<option value="' . $id . '">';
-			$out .= $user[$this->jmeno] . ' ' . $user[$this->prijmeni] .
+			$out .= $user[$this->prijmeni] . ', ' . $user[$this->jmeno] .
 				(isset($user['u_narozeni']) ? (', ' . $year) : '');
 			$out .= '</option>' . "\n";
 		}
