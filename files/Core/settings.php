@@ -29,6 +29,8 @@ set_include_path(
 spl_autoload_extensions('.php');
 spl_autoload_register();
 
+mb_internal_encoding('UTF-8');
+
 function _shutdown_handler() {
 	if (($error = error_get_last()) === null)
 		return;

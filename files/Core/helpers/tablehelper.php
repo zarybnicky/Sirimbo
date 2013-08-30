@@ -27,7 +27,7 @@ class TableHelper {
 		return $this;
 	}
 	function data($d) {
-		if(isset($d[0]) && is_array($d[0]))
+		if($d instanceof Traversable || (isset($d[0]) && is_array($d[0])))
 			$this->data = $d;
 		return $this;
 	}
@@ -70,7 +70,7 @@ class TableHelper {
 		</tr>
 	</thead>
 	<tbody>
-		<?php foreach($this->data as $row): ++$this->i; ?>
+		<?php foreach($this->data as $row): ++$this->i;if(!$row) continue;?>
 		<tr>
 			<?php foreach($this->columns as $c): ?>
 			<td<?php echo $c[2];?>>
