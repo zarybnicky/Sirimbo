@@ -8,8 +8,7 @@ class Uploader {
 	
 	public function __construct() { }
 	public function setOutputDir($dir) {
-		if(file_exists($dir))
-			$this->outputDir = $dir;
+		$this->outputDir = $dir;
 	}
 	public function addAllowedType($type) {
 		if(strpos($type, '.') === false)
@@ -63,10 +62,10 @@ class Uploader {
 		return $this->savedFiles;
 	}
 	public function hasFiles() {
-		return count($this->files) > 0;
+		return !empty($this->files);
 	}
 	public function hasRefusedFiles() {
-		return count($this->refusedFiles) > 0;
+		return !empty($this->refusedFiles);
 	}
 	public function save($sanitizeNames = true, $removeDisallowed = true) {
 		if($sanitizeNames)
