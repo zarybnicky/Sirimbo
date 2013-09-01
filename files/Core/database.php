@@ -11,13 +11,7 @@ class Database {
 		return explode("%%%%%", $escape);
 	}
 	protected static function escape($string, $_) {
-		Database::getConnection();
-		
-		if(func_num_args() > 1)
-			$vars = func_get_args();
-		else
-			$vars = array($string);
-		return self::escapeArray($vars);
+		return self::escapeArray(func_get_args());
 	}
 	
 	protected static function getConnection() {
@@ -53,7 +47,7 @@ class Database {
 		
 		return $result;
 	}
-	protected static function getInsertId() {
+	public static function getInsertId() {
 		return mysql_insert_id(Database::$connection);
 	}
 	protected function databaseError($onConnection = false) {

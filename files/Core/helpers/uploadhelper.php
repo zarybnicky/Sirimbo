@@ -49,7 +49,10 @@ class UploadHelper {
 		$error = $data['error'];
 		switch($error) {
 			case UPLOAD_ERR_OK:
-				$this->files[] = $data;
+				if($data['size'] > 0)
+					$this->files[] = $data;
+				else
+					$this->emptyFiles[] = $data;
 				return true;
 			case UPLOAD_ERR_NO_FILE:
 				$this->emptyFiles[] = $data;
@@ -92,13 +95,13 @@ class UploadHelper {
 		return $this->hasFiles;
 	}
 	public function hasValidFiles() {
-		return count($this->files) > 0;
+		return !empty($this->files);
 	}
 	public function hasEmptyFiles() {
-		return count($this->emptyFiles) > 0;
+		return !empty($this->emptyFiles);
 	}
 	public function hasInvalidFiles() {
-		return count($this->invalidFiles) > 0;
+		return !empty($this->invalidFiles);
 	}
 	public function getValidFiles() {
 		return $this->files;
@@ -116,7 +119,7 @@ class UploadHelper {
 		foreach($this->invalidFiles as $data) {
 			$messages[] = $data['error_message'];
 		}
-		return $message;
+		return $messages;
 	}
 	public function __toString() {
 		return $this->render();
