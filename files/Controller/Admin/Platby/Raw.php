@@ -42,19 +42,48 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby {
 			$this->redirect('/admin/platby/raw', 'Soubor ' . get('path') . ' není přístupný.');
 		$parser = new CSVParser($fileinfo->openFile('r'));
 		$parser->associative(true);
+		
+		$this->recognizeHeaders($parser->headers(), $specific, $variable, $date, $amount);
+		
 		$data = array();
 		foreach($parser->headers() as $key => $name) {
 			$data[] = array(
 					'column' => $name,
-					'specific' => getRadio('specific', $name),
-					'variable' => getRadio('variable', $name),
-					'date' => getRadio('date', $name),
-					'amount' => getRadio('amount', $name)
+					'specific' => getRadio('specific', $name, $name == $specific),
+					'variable' => getRadio('variable', $name, $name == $variable),
+					'date' => getRadio('date', $name, $name == $date),
+					'amount' => getRadio('amount', $name, $name == $amount)
 			);
 		}
 		$this->render('files/View/Admin/Platby/RawColumnSelect.inc', array(
 				'data' => $data
 		));
+	}
+	function recognizeHeaders($headers, &$specific, &$variable, &$date, &$amount) {
+		foreach($headers as $key => $value) {
+			if($specific === null && mb_stripos($value, 'specif') !== false)
+				$specific = $value;
+			if($variable === null && mb_stripos($value, 'variab') !== false)
+				$variable = $value;
+			if($date === null && mb_stripos($value, 'datum') !== false)
+				$date = $value;
+			if($amount === null && mb_stripos($value, 'částka') !== false)
+				$amount = $value;
+		}
+	}
+	function checkHeaders($headers, &$specific, &$variable, &$date, &$amount, $columns) {
+		$specific = $columns['specific'];
+		$variable = $columns['variable'];
+		$date = $columns['date'];
+		$amount = $columns['amount'];
+		if(array_search($specific, $headers) === false)
+			$specific = null;
+		if(array_search($variable, $headers) === false)
+			$variable = null;
+		if(array_search($date, $headers) === false)
+			$date = null;
+		if(array_search($amount, $headers) === false)
+			$amount = null;
 	}
 	function processCsv($path, $columns = null) {
 		$fileinfo = new SplFileInfo($path);
@@ -64,30 +93,10 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby {
 		$parser->associative(true);
 		
 		$headers = $parser->headers();
-		$specific = null;
-		$variable = null;
-		$date = null;
-		$amount = null;
 		if($columns === null) {
-			foreach($headers as $key => $value) {
-				if($specific === null && mb_stripos($value, 'specif') !== false)
-					$specific = $value;
-				if($variable === null && mb_stripos($value, 'variab') !== false)
-					$variable = $value;
-				if($date === null && mb_stripos($value, 'datum') !== false)
-					$date = $value;
-				if($amount === null && mb_stripos($value, 'částka') !== false)
-					$amount = $value;
-			}
+			$this->recognizeHeaders($headers, $specific, $variable, $date, $amount);
 		} else {
-			if(array_search($columns['specific'], $headers) !== false)
-				$specific = $columns['specific'];
-			if(array_search($columns['variable'], $headers) !== false)
-				$variable = $columns['variable'];
-			if(array_search($columns['date'], $headers) !== false)
-				$date = $columns['date'];
-			if(array_search($columns['amount'], $headers) !== false)
-				$amount = $columns['amount'];
+			$this->checkHeaders($headers, $specific, $variable, $date, $amount, $columns);
 		}
 		if($specific === null || $variable === null || $date === null || $amount === null) {
 			$this->redirect('/admin/platby/raw/select_columns?path=' . str_replace(self::UPLOAD_DIR, '', $path),
@@ -103,12 +112,12 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby {
 			$serialized = serialize($array);
 			$hash = md5($serialized);
 			
-			if(!isset($userLookup[$array[$variable]]) || !isset($categoryLookup[$array[$specific]])) {
+			if(!isset($userLookup[(int) $array[$variable]]) || !isset($categoryLookup[(int) $array[$specific]])) {
 				DBPlatbyRaw::insert($serialized, $hash, '0', '0', false);
 				continue;
 			}
-			$dataVariable = $array[$variable];
-			$dataSpecific = $array[$specific];
+			$dataVariable = (int) $array[$variable];
+			$dataSpecific = (int) $array[$specific];
 			$dataDate = (string) new Date($array[$date]);
 			$dataAmount = (int) $array[$amount];
 			

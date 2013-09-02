@@ -21,7 +21,7 @@ class Controller_Member_Pary extends Controller_Member {
 			$new_data = array(
 					'id' => $item['p_id'],
 					'partnerName' => $item['guy_name'] . ' ' . $item['guy_surname'],
-					'partnerkaName' => $item['gal_name'], ' ' . $item['gal_surname'],
+					'partnerkaName' => $item['gal_name'] . ' ' . $item['gal_surname'],
 					'latina' => $item['p_stt_trida'] . ' ' . $item['p_stt_body'] . 'F' . $item['p_stt_finale'],
 					'standart' => $item['p_lat_trida'] . ' ' . $item['p_lat_body'] . 'F' . $item['p_lat_finale'],
 					'hodnoceni' => $item['p_hodnoceni']

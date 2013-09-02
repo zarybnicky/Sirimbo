@@ -93,8 +93,8 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 			$visible = false;
 			$this->redirect()->setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění příspěvku');
 		}
-		if(!is_numeric($max_lessons))
-			$max_lessons = 0;
+		if(!is_numeric(post('max_pocet_hod')))
+			post('max_pocet_hod', 0);
 		
 		DBNabidka::addNabidka(post('trener'), post('pocet_hod'), post('max_pocet_hod'), $od, $do, $visible,
 			post('lock') ? 1 : 0);

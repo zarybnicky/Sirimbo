@@ -24,7 +24,7 @@ foreach($this->platby as $item) {
 	echo '<td>', $item['mesicne'], '</td>';
 	echo '<td>', $item['castka'], '</td>';
 	echo '<td>', $item['datePlaceno'], '</td>';
-	echo '<td>', $item['dataPlatnost'], '</td>';
+	echo '<td>', $item['datePlatnost'], '</td>';
 	echo '<td>', $item['upravitLink'], '</td>';
 	echo '</tr>';
 }

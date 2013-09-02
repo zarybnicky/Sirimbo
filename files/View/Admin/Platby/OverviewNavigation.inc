@@ -24,5 +24,6 @@ function _getItem($name, $href) {
 	<li><?php _getItem('Kategorie', 'platby/category');?></li>
 	<li><?php _getItem('Hledání', 'platby/search');?></li>
 	<li><?php _getItem('Import', 'platby/raw');?></li>
-	<li><?php _getItem('Nezařazené platby', 'platby/unsorted');?></li>
+	<li><?php _getItem('Nezařazené platby', 'platby/manual');?></li>
+	<li><?php _getItem('Vyřazené platby', 'platby/discarded');?></li>
 </ul>
