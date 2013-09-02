@@ -5,6 +5,10 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 		Permissions::checkError('platby', P_OWNED);
 	}
 	function view($id = null) {
+		if(!empty($_POST)) {
+			$this->_processPost();
+		}
+		
 		$remaining = DBPlatbyRaw::getUnsorted();
 		$remainingCount = count($remaining);
 		if($remainingCount == 0) {
@@ -19,7 +23,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 		foreach($categories as $array) {
 			if($group_id != $array['pg_id'])
 				$new['group_' . $array['pg_id']] = "{$array['pg_name']}:";
-			$new[(int) $array['pc_id']] = "{$array['pc_symbol']} - {$array['pc_name']}";
+			$new[(int) $array['pc_symbol']] = "{$array['pc_symbol']} - {$array['pc_name']}";
 		}
 		$categories = $new;
 		
@@ -64,6 +68,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 		$raw = $new;
 		
 		$this->render('files/View/Admin/Platby/ManualSingle.inc', array(
+				'id' => $remaining[0]['pr_id'],
 				'remainingTotal' => $remainingCount,
 				'raw' => $raw,
 				'guess' => array(
@@ -77,4 +82,41 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 				'recognized' => $recognized
 		));
 	}
+	private function _processPost() {
+		if(!post('id') || !($current = DBPlatbyRaw::getSingle(post('id')))) {
+			$this->redirect()->setRedirectMessage('Zadaná platba neexistuje.');
+			return;
+		} elseif($current['pr_sorted'] && ($item = DBPlatbyItem::getSingleByRawId(post('id')))) {
+			$this->redirect()->setRedirectMessage('Zadaná platba už byla zařazená.');
+			return;
+		} elseif($current['pr_discarded']) {
+			$this->redirect()->setRedirectMessage('Zadaná platba neexistuje.');
+			return;
+		}
+		if(post('action') == 'confirm') {
+			$userLookup = DBUser::getUsersLookup();
+			$categoryLookup = DBPlatbyCategory::getCategoryLookup();
+			
+			if(!isset($userLookup[(int) post('variable')]) ||
+					!isset($categoryLookup[(int) post('specific')]) ||
+					!($date = (string) new Date(post('date')))) {
+				dump(array(!isset($userLookup[(int) post('variable')]), !isset($categoryLookup[(int) post('specific')]), !($date = (string) new Date(post('date')))));
+				dump($categoryLookup);
+				$this->redirect()->setRedirectMessage('Neexistující ID uživatele/kategorie nebo neplatné datum.');
+				return;
+			}
+			$variable = (int) post('variable');
+			$specific = (int) post('specific');
+			$amount = (int) post('amount');
+			
+			dump(array('confirm', array($variable, $specific, post('id'), $amount, $date)));
+			DBPlatbyRaw::update(post('id'), $current['pr_raw'], $current['pr_hash'], '1', '0');
+			DBPlatbyItem::insert($variable, $specific, post('id'), $amount, $date);
+		} elseif(post('action') == 'discard') {
+			dump(array('discard', array(post('id'), $current['pr_hash'], '0', '1')));
+			DBPlatbyRaw::update(post('id'), $current['pr_raw'], $current['pr_hash'], '0', '1');
+		} else {
+			$this->redirect()->setRedirectMessage('Neplatná POST akce.');
+		}
+	} 
 }
