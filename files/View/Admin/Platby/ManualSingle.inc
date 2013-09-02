@@ -2,7 +2,7 @@
 header_main('Správa plateb');
 echo $this->render('files/View/Admin/Platby/OverviewNavigation.inc');
 notice($this->redirect()->getRedirectMessage());
-echo '<span style="font-size:115%;color:#572E00;">Ruční třídění plateb</span> (zbývá ', $this->remainingTotal, ')<br/><br/>';
+echo '<br/><span style="font-size:115%;color:#572E00;">Ruční třídění plateb</span> (zbývá ', $this->remainingTotal, ')<br/><br/>';
 $form = array(
 		array(
 				'desc' => 'Datum:',
@@ -35,6 +35,7 @@ $formTable = $this->table()
 ?>
 <form action="" method="post">
 	<?php echo $formTable;?>
+	<input type="hidden" name="id" value="<?php echo $this->id;?>" />
 	<button name="action" value="confirm">Uložit</button>&nbsp;<button name="action" value="discard">Odstranit</button>
 </form>
 <br/>

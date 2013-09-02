@@ -10,7 +10,7 @@ class Database {
 		$escape = mysql_real_escape_string($escape);
 		return explode("%%%%%", $escape);
 	}
-	protected static function escape($string, $_) {
+	protected static function escape($string) {
 		return self::escapeArray(func_get_args());
 	}
 	
