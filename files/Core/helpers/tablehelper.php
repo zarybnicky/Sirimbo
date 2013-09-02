@@ -5,6 +5,7 @@ class TableHelper {
 	private $columns;
 	private $i;
 	private $style;
+	private $showHeader;
 	
 	function table() {
 		$this->_defaultValues();
@@ -16,6 +17,7 @@ class TableHelper {
 		$this->columns = array();
 		$this->i = 0;
 		$this->style = '';
+		$this->showHeader = true;
 	}
 	
 	function name($n) {
@@ -50,6 +52,10 @@ class TableHelper {
 		$this->columns[] = array($id, $name, $html);
 		return $this;
 	}
+	function showHeader($b) {
+		$this->showHeader = (bool) $b;
+		return $this;
+	}
 	
 	private function getCounter() { return ' ' . $this->i . '.'; }
 	
@@ -62,6 +68,7 @@ class TableHelper {
 		ob_start();
 		?>
 <table<?php echo $this->style;?>>
+	<?php if($this->showHeader): ?>
 	<thead>
 		<tr>
 			<?php foreach($this->columns as $c): ?>
@@ -69,6 +76,7 @@ class TableHelper {
 			<?php endforeach;?>
 		</tr>
 	</thead>
+	<?php endif;?>
 	<tbody>
 		<?php foreach($this->data as $row): ++$this->i;if(!$row) continue;?>
 		<tr>

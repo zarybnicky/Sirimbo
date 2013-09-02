@@ -5,8 +5,11 @@ class SelectHelper {
 	private $options;
 	private $get;
 	
-	function select() {
+	function select($n = null) {
 		$this->_defaultValues();
+		
+		if($n !== null)
+			return $this->name($n);
 		return $this;
 	}
 	function _defaultValues() {

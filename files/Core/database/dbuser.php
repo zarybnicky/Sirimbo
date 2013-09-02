@@ -255,7 +255,7 @@ class DBUser extends Database implements Pagable {
 		$in = self::getUsers();
 		$out = array();
 		foreach($in as $array) {
-			$out[$array['u_id']] = $array;
+			$out[(int) $array['u_id']] = $array;
 		}
 		return $out;
 	}

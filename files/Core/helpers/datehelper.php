@@ -49,9 +49,8 @@ class DateHelper {
 		}
 	}
 	function setDate($d = null) {
-		if($d === null)
-			return $this->date;
-		
+		if(!$d)
+			return $this;
 		$this->__setDate($d);
 		return $this;
 	}

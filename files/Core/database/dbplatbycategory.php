@@ -8,7 +8,7 @@ class DBPlatbyCategory extends Database {
 		$in = self::getCategories();
 		$out = array();
 		foreach($in as $array) {
-			$out[$array['pc_symbol']] = $array;
+			$out[(int) $array['pc_symbol']] = $array;
 		}
 		return $out;
 	}
