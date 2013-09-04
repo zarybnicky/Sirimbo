@@ -1,5 +1,4 @@
 <?php
-header_main('Správa plateb');
 echo $this->render('files/View/Admin/Platby/OverviewNavigation.inc');
 notice($this->redirect()->getRedirectMessage());
 ?>

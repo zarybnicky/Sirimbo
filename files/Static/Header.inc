@@ -97,6 +97,6 @@ EOS;
 			</div>
 			<div id="content">
 				<div style="float:right;clear:both;">
-					<a href="<?php echo Request::getURI() . '?' . http_build_query(array_merge($_GET, array('view' => 'tisk'))); ?>">Tisknout</a>
+					<a href="<?php echo '/', Request::getURL(), '?', http_build_query(array_merge($_GET, array('view' => 'tisk'))); ?>">Tisknout</a>
 				</div>
 				<div style="clear:both;"></div>
