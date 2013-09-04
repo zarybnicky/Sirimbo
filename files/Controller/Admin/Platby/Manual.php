@@ -8,30 +8,22 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 		if(!empty($_POST)) {
 			$this->_processPost();
 		}
-		
 		$remaining = DBPlatbyRaw::getUnsorted();
 		$remainingCount = count($remaining);
-		if($remainingCount == 0) {
-			$this->redirect('/admin/platby/discarded', 'Nezbývají už žádné nezatříděné platby');
-		}
-		$users = DBUser::getUsersLookup();
-		$categories = DBPlatbyGroup::getGroupsWithCategories();
-		$raw = unserialize($remaining[0]['pr_raw']);
 		
-		$new = array();
-		$group_id = 0;
-		foreach($categories as $array) {
-			if($group_id != $array['pg_id'])
-				$new['group_' . $array['pg_id']] = "{$array['pg_name']}:";
-			$new[(int) $array['pc_symbol']] = "{$array['pc_symbol']} - {$array['pc_name']}";
+		if($id && ($data = DBPlatbyRaw::getSingle($id))) {
+			if($data['pr_sorted'])
+				$this->redirect('/admin/platby/discarded', 'Platba byla zařazena do systému');
+			$raw = unserialize($data['pr_raw']);
+		} else {
+			if($remainingCount == 0) {
+				$this->redirect('/admin/platby/overview', 'Nezbývají už žádné nezatříděné platby');
+			}
+			$id = $remaining[0]['pr_id'];
+			$raw = unserialize($remaining[0]['pr_raw']);
 		}
-		$categories = $new;
-		
-		foreach($users as $key => &$array) {
-			$new_data = User::var_symbol($array['u_id']) . " - {$array['u_prijmeni']}, {$array['u_jmeno']}";
-			$array = $new_data;
-		}
-		ksort($users);
+		$categories = $this->getCategories();
+		$users = $this->getUsers();
 		
 		$specific = $variable = $date = $amount = null;
 		foreach($raw as $key => $value) {
@@ -68,7 +60,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 		$raw = $new;
 		
 		$this->render('files/View/Admin/Platby/ManualSingle.inc', array(
-				'id' => $remaining[0]['pr_id'],
+				'id' => $id,
 				'remainingTotal' => $remainingCount,
 				'raw' => $raw,
 				'guess' => array(
@@ -81,6 +73,30 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 				'categories' => $categories,
 				'recognized' => $recognized
 		));
+	}
+	private function getCategories() {
+		$categories = DBPlatbyGroup::getGroupsWithCategories();
+		$new = array();
+		$group_id = 0;
+		foreach($categories as $array) {
+			if($group_id != $array['pg_id'])
+				$new['group_' . $array['pg_id']] = "{$array['pg_name']}:";
+			$new[(int) $array['pc_symbol']] = "{$array['pc_symbol']} - {$array['pc_name']}";
+		}
+		return $new;
+	}
+	private function getUsers() {
+		$users = DBUser::getUsersLookup();
+		usort($users, function($a, $b) {
+			$c = $a['u_prijmeni'];
+			$d = $b['u_prijmeni'];
+			return ($c > $d ? 1 : ($c < $d ? -1 : 0));
+		});
+		foreach($users as $key => &$array) {
+			$new_data = User::var_symbol($array['u_id']) . " - {$array['u_prijmeni']}, {$array['u_jmeno']}";
+			$array = $new_data;
+		}
+		return $users;
 	}
 	private function _processPost() {
 		if(!post('id') || !($current = DBPlatbyRaw::getSingle(post('id')))) {
@@ -100,8 +116,6 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 			if(!isset($userLookup[(int) post('variable')]) ||
 					!isset($categoryLookup[(int) post('specific')]) ||
 					!($date = (string) new Date(post('date')))) {
-				dump(array(!isset($userLookup[(int) post('variable')]), !isset($categoryLookup[(int) post('specific')]), !($date = (string) new Date(post('date')))));
-				dump($categoryLookup);
 				$this->redirect()->setRedirectMessage('Neexistující ID uživatele/kategorie nebo neplatné datum.');
 				return;
 			}
@@ -109,11 +123,9 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 			$specific = (int) post('specific');
 			$amount = (int) post('amount');
 			
-			dump(array('confirm', array($variable, $specific, post('id'), $amount, $date)));
 			DBPlatbyRaw::update(post('id'), $current['pr_raw'], $current['pr_hash'], '1', '0');
 			DBPlatbyItem::insert($variable, $specific, post('id'), $amount, $date);
 		} elseif(post('action') == 'discard') {
-			dump(array('discard', array(post('id'), $current['pr_hash'], '0', '1')));
 			DBPlatbyRaw::update(post('id'), $current['pr_raw'], $current['pr_hash'], '0', '1');
 		} else {
 			$this->redirect()->setRedirectMessage('Neplatná POST akce.');

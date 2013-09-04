@@ -5,6 +5,7 @@ function _getItem($name, $href) {
 	else
 		echo '<a href="/admin/' . $href . '">' . $name . '</a>';
 }
+header_main('Správa plateb');
 ?>
 <style>
 #adminNavigation {

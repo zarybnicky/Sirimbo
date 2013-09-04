@@ -12,7 +12,7 @@ class DBPlatbyRaw extends Database {
 			ON DUPLICATE KEY UPDATE
 				pr_id=LAST_INSERT_ID(pr_id)" .
 			($updateValues ? ",pr_sorted=VALUES(pr_sorted),
-				pr_discarded=VALUES(pr_discarded))" : '')
+				pr_discarded=VALUES(pr_discarded)" : '')
 		);
 	}
 	public static function update($id, $raw, $hash, $sorted, $discarded) {
@@ -27,6 +27,10 @@ class DBPlatbyRaw extends Database {
 	}
 	public static function getUnsorted() {
 		$res = self::query("SELECT * FROM platby_raw WHERE pr_sorted='0' AND pr_discarded='0'");
+		return self::getArray($res);
+	}
+	public static function getDiscarded() {
+		$res = self::query("SELECT * FROM platby_raw WHERE pr_discarded='1'");
 		return self::getArray($res);
 	}
 	public static function getSingle($id) {
