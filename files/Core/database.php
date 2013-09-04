@@ -6,9 +6,23 @@ class Database {
 	
 	protected static function escapeArray($array) {
 		Database::getConnection();
-		$escape = implode("%%%%%", $array);
-		$escape = mysql_real_escape_string($escape);
-		return explode("%%%%%", $escape);
+		$escaped = array();
+		foreach($array as $key => $value) {
+			if(is_array($value)) {
+				$escaped[$key] = self::escapeArray($value);
+				unset($array[$key]);
+			}
+		}
+		if($array) {
+			$escape = implode("%%%%%", $array);
+			$escape = mysql_real_escape_string($escape);
+			$array = explode("%%%%%", $escape);
+		}
+		if($escaped) {
+			foreach($escaped as $key => $value)
+				array_splice($array, $key, 0, array($value));
+		}
+		return $array;
 	}
 	protected static function escape($string) {
 		return self::escapeArray(func_get_args());

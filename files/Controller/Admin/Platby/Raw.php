@@ -117,7 +117,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby {
 				continue;
 			}
 			$dataVariable = (int) $array[$variable];
-			$dataSpecific = (int) $array[$specific];
+			$dataSpecific = $categoryLookup[(int) $array[$specific]]['pc_id'];
 			$dataDate = (string) new Date($array[$date]);
 			$dataAmount = (int) $array[$amount];
 			

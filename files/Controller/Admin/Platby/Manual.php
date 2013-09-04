@@ -22,6 +22,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 			$id = $remaining[0]['pr_id'];
 			$raw = unserialize($remaining[0]['pr_raw']);
 		}
+		$categoriesMap = $this->getCategoriesMap();
 		$categories = $this->getCategories();
 		$users = $this->getUsers();
 		
@@ -38,7 +39,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 		}
 		if($variable !== null && !isset($users[(int) $variable[1]]))
 			$variable = array($variable[0], "&nbsp;--- (není v DB: {$variable[1]})");
-		if($specific !== null && !isset($categories[(int) $specific[1]]))
+		if($specific !== null && !isset($categoriesMap[(int) $specific[1]]))
 			$specific = array($specific[0], "&nbsp;--- (není v DB: {$specific[1]})");
 		
 		foreach(array('specific', 'variable', 'date', 'amount') as $name) {
@@ -64,7 +65,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 				'remainingTotal' => $remainingCount,
 				'raw' => $raw,
 				'guess' => array(
-						'specific' => $specific,
+						'specific' => isset($categoriesMap[$specific]) ? $categoriesMap[$specific] : $specific,
 						'variable' => $variable,
 						'date' => $date,
 						'amount' => $amount
@@ -81,7 +82,15 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 		foreach($categories as $array) {
 			if($group_id != $array['pg_id'])
 				$new['group_' . $array['pg_id']] = "{$array['pg_name']}:";
-			$new[(int) $array['pc_symbol']] = "{$array['pc_symbol']} - {$array['pc_name']}";
+			$new[(int) $array['pc_id']] = "{$array['pc_symbol']} - {$array['pc_name']}";
+		}
+		return $new;
+	}
+	private function getCategoriesMap() {
+		$categories = DBPlatbyGroup::getGroupsWithCategories();
+		$new = array();
+		foreach($categories as $array) {
+			$new[(int) $array['pc_symbol']] = $array['pc_id'];
 		}
 		return $new;
 	}
@@ -92,11 +101,11 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 			$d = $b['u_prijmeni'];
 			return ($c > $d ? 1 : ($c < $d ? -1 : 0));
 		});
-		foreach($users as $key => &$array) {
-			$new_data = User::var_symbol($array['u_id']) . " - {$array['u_prijmeni']}, {$array['u_jmeno']}";
-			$array = $new_data;
+		$new = array();
+		foreach($users as $key => $array) {
+			$new[$array['u_id']] = User::var_symbol($array['u_id']) . " - {$array['u_prijmeni']}, {$array['u_jmeno']}";
 		}
-		return $users;
+		return $new;
 	}
 	private function _processPost() {
 		if(!post('id') || !($current = DBPlatbyRaw::getSingle(post('id')))) {
@@ -105,16 +114,13 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 		} elseif($current['pr_sorted'] && ($item = DBPlatbyItem::getSingleByRawId(post('id')))) {
 			$this->redirect()->setRedirectMessage('Zadaná platba už byla zařazená.');
 			return;
-		} elseif($current['pr_discarded']) {
-			$this->redirect()->setRedirectMessage('Zadaná platba neexistuje.');
-			return;
 		}
 		if(post('action') == 'confirm') {
 			$userLookup = DBUser::getUsersLookup();
-			$categoryLookup = DBPlatbyCategory::getCategoryLookup();
+			$categories = $this->getCategories();
 			
 			if(!isset($userLookup[(int) post('variable')]) ||
-					!isset($categoryLookup[(int) post('specific')]) ||
+					!isset($categories[(int) post('specific')]) ||
 					!($date = (string) new Date(post('date')))) {
 				$this->redirect()->setRedirectMessage('Neexistující ID uživatele/kategorie nebo neplatné datum.');
 				return;
@@ -125,7 +131,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 			
 			DBPlatbyRaw::update(post('id'), $current['pr_raw'], $current['pr_hash'], '1', '0');
 			DBPlatbyItem::insert($variable, $specific, post('id'), $amount, $date);
-		} elseif(post('action') == 'discard') {
+		} elseif(post('action') == 'discard' && !$current['pr_discarded']) {
 			DBPlatbyRaw::update(post('id'), $current['pr_raw'], $current['pr_hash'], '0', '1');
 		} else {
 			$this->redirect()->setRedirectMessage('Neplatná POST akce.');
