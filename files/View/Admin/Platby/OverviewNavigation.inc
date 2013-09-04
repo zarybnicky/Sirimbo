@@ -6,11 +6,11 @@ function _getItem($name, $href) {
 		echo '<a href="/admin/' . $href . '">' . $name . '</a>';
 }
 header_main('Správa plateb');
+if(TISK)
+	return;
 ?>
 <style>
-#adminNavigation {
-	
-} #adminNavigation li {
+#adminNavigation li {
 	display:inline;
 	font-size: 115%;
 	color: #572E00;
@@ -23,7 +23,7 @@ header_main('Správa plateb');
 <ul id="adminNavigation">
 	<li><?php _getItem('Přehled', 'platby/view');?></li>
 	<li><?php _getItem('Kategorie', 'platby/category');?></li>
-	<li><?php _getItem('Hledání', 'platby/search');?></li>
+	<li><?php _getItem('Hledání', 'platby/items');?></li>
 	<li><?php _getItem('Import', 'platby/raw');?></li>
 	<li><?php _getItem('Nezařazené platby', 'platby/manual');?></li>
 	<li><?php _getItem('Vyřazené platby', 'platby/discarded');?></li>

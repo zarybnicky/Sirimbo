@@ -15,10 +15,42 @@ class DBPlatbyItem extends Database {
 				pi_date=VALUES(pi_date)"
 		);
 	}
-	public static function getSingle($id) {
+	public static function remove($id) {
+		list($id) = DBUser::escape($id);
+		
+		DBUser::query("DELETE FROM platby_item WHERE pi_id='$id'");
+	} 
+	public static function get($joined = false, $filter = array()) {
+		$query =
+			'SELECT * FROM platby_item' .
+			($joined ?
+				' LEFT JOIN users ON pi_id_user=u_id
+				LEFT JOIN platby_category ON pi_id_category=pc_id' : '');
+		if(!empty($filter)) {
+			$filter = array_combine(array_keys($filter), self::escapeArray(array_values($filter)));
+			
+			$query .= ' WHERE';
+			$first = true;
+			foreach($filter as $key => $value) {
+				if(!$first)
+					$query .= ' AND ';
+				else
+					$first = false;
+				if(!is_array($value))
+					$query .= " $key='$value'";
+				else
+					$query .= " $key IN ('" . implode("','", $value) . "')";
+			}
+		}
+		$res = self::query($query);
+		return self::getArray($res);
+	}
+	public static function getSingle($id, $joined = false) {
 		list($id) = self::escape($id);
 		
-		$res = self::query("SELECT * FROM platby_item WHERE pi_id='$id'");
+		$res = self::query("SELECT * FROM platby_item" .
+				($joined ? ' LEFT JOIN users ON pi_id_user=u_id LEFT JOIN platby_category ON pi_id_category=pc_id' : '') .
+				" WHERE pi_id='$id'");
 		return self::getSingleRow($res);
 	}
 	public static function getSingleByRawId($id) {
