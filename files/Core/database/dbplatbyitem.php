@@ -15,6 +15,18 @@ class DBPlatbyItem extends Database {
 				pi_date=VALUES(pi_date)"
 		);
 	}
+	public static function update($id, $uid, $cid, $amount, $date) {
+		list($id, $uid, $cid, $amount, $date) = self::escape($id, $uid, $cid, $amount, $date);
+		
+		self::query(
+			"UPDATE platby_item SET
+				pi_id_user='$uid',
+				pi_id_category='$cid',
+				pi_amount='$amount',
+				pi_date='$date'
+			WHERE pi_id='$id'"
+		);
+	}
 	public static function remove($id) {
 		list($id) = DBUser::escape($id);
 		
