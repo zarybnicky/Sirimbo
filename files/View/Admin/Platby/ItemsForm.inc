@@ -18,6 +18,9 @@ $form = array(
 		), array(
 				'desc' => 'Specifický symbol:',
 				'value' => (new SelectHelper())->select('specific')->options($this->categories)
+		), array(
+				'desc' => 'Prefix (rok):',
+				'value' => '<input type="text" name="prefix" value="' . post('prefix') . '"/>'
 		)
 );
 $formTable = $this->table()

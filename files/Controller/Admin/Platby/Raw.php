@@ -86,18 +86,17 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby {
 			$serialized = serialize($array);
 			$hash = md5($serialized);
 			
-			list($dataSpecific, $dataVariable, $dataDate, $dataAmount) =
+			list($dataSpecific, $dataVariable, $dataDate, $dataAmount, $dataPrefix) =
 				$this->formatData($array[$specific], $array[$variable], $array[$date], $array[$amount]);
-			dump(array('in', $this->formatData($array[$specific], $array[$variable], $array[$date], $array[$amount])));
+			
 			if(!isset($userLookup[$dataVariable]) || !isset($categoryLookup[$dataSpecific])) {
 				DBPlatbyRaw::insert($serialized, $hash, '0', '0', false);
-				dump(array('nonsort', $this->formatData($array[$specific], $array[$variable], $array[$date], $array[$amount])));
 				continue;
 			} else {
 				$dataSpecific = $categoryLookup[$dataSpecific]['pc_id'];
 				
 				DBPlatbyRaw::insert($serialized, $hash, '1', '0', true);
-				DBPlatbyItem::insert($dataVariable, $dataSpecific, DBPlatbyRaw::getInsertId(), $dataAmount, $dataDate);
+				DBPlatbyItem::insert($dataVariable, $dataSpecific, DBPlatbyRaw::getInsertId(), $dataAmount, $dataDate, $dataPrefix);
 			}
 		}
 		unlink($parser->getFileObject()->getRealPath());

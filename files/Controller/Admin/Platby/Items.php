@@ -32,10 +32,10 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby {
 			$this->displayForm(0);
 			return;
 		}
-		list($specific, $variable, $date, $amount) =
+		list($specific, $variable, $date, $amount, $prefix) =
 			$this->formatData(post('specific'), post('variable'), post('date'), post('amount'));
 		
-		DBPlatbyItem::insert($variable, $specific, '0', $amount, $date);
+		DBPlatbyItem::insert($variable, $specific, '0', $amount, $date, $prefix);
 		$this->redirect('/admin/platby/items', 'Platba úspěšně přidána');
 	}
 	function edit($id = null) {
@@ -48,16 +48,17 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby {
 				post('amount', $data['pi_amount']);
 				post('variable', $data['pi_id_user']);
 				post('specific', $data['pi_id_category']);
+				post('prefix', $data['pi_prefix']);
 			} else {
 				$this->redirect()->setRedirectMessage($s);
 			}
 			$this->displayForm($id);
 			return;
 		}
-		list($specific, $variable, $date, $amount) =
-			$this->formatData(post('specific'), post('variable'), post('date'), post('amount'));
+		list($specific, $variable, $date, $amount, $prefix) =
+			$this->formatData(post('specific'), post('variable'), post('date'), post('amount'), post('prefix'));
 		
-		DBPlatbyItem::update($id, $variable, $specific, $amount, $date);
+		DBPlatbyItem::update($id, $variable, $specific, $amount, $date, $prefix);
 		$this->redirect('/admin/platby/items', 'Platba úspěšně upravena');
 	}
 	function remove($id = null) {

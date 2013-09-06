@@ -28,6 +28,16 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 		
 		$this->recognizeHeaders(array_flip($raw), $specific, $variable, $date, $amount);
 		
+		if($specific !== null && $date !== null) {
+			$prefix = $this->getPrefix($raw[$specific], $raw[$date]);
+		} elseif($specific === null && $date !== null) {
+			$prefix = $this->getPrefix('', $raw[$date]);
+		} elseif($specific !== null && $date === null) {
+			$prefix = $this->getPrefix($raw[$specific], '');
+		} else {
+			$prefix = 0;
+		}
+		$recognized['prefix'] = array('column' => '&nbsp;---', 'value' => $prefix);
 		if($variable !== null) {
 			if(isset($users[(int) $raw[$variable]]))
 				$recognized['variable'] = array('column' => $variable,
@@ -79,7 +89,8 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 						'specific' => $specific,
 						'variable' => $variable,
 						'date' => $date,
-						'amount' => $amount
+						'amount' => $amount,
+						'prefix' => $prefix
 				),
 				'users' => $this->getUsers(),
 				'categories' => $this->getCategories(),
@@ -116,15 +127,17 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 				$this->redirect()->setRedirectMessage($s);
 				return;
 			}
-			list($specific, $variable, $date, $amount) =
-				$this->formatData(post('specific'), post('variable'), post('date'), post('amount'));
-			dump(array($specific, $variable, $date, $amount));
+			list($specific, $variable, $date, $amount, $prefix) =
+				$this->formatData(post('specific'), post('variable'), post('date'), post('amount'), post('prefix'));
+			
 			DBPlatbyRaw::update(post('id'), $current['pr_raw'], $current['pr_hash'], '1', '0');
-			DBPlatbyItem::insert($variable, $specific, post('id'), $amount, $date);
+			DBPlatbyItem::insert($variable, $specific, post('id'), $amount, $date, $prefix);
 		} elseif(post('action') == 'discard' && !$current['pr_discarded']) {
 			DBPlatbyRaw::update(post('id'), $current['pr_raw'], $current['pr_hash'], '0', '1');
 		} else {
 			$this->redirect()->setRedirectMessage('Neplatná POST akce.');
 		}
+		post('specific', '');
+		post('variable', '');
 	} 
 }
