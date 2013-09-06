@@ -1,6 +1,6 @@
 <?php
 echo $this->render('files/View/Admin/Platby/OverviewNavigation.inc');
-notice($this->redirect()->getRedirectMessage());
+header_main('Import plateb');
 header_minor('Určení požadovaných sloupců');
 
 echo '<form action="" method="post">';

@@ -1,9 +1,10 @@
 <?php
 function _getItem($name, $href) {
-	if(strripos(Request::getLiteralURL(), "admin/$href") !== false)
-		echo $name;
+	$href = 'admin/' . $href;
+	if(strripos(Request::getLiteralURL(), $href) !== (strlen(Request::getLiteralURL()) - strlen($href)))
+		echo '<a href="/' . $href . '">' . $name . '</a>';
 	else
-		echo '<a href="/admin/' . $href . '">' . $name . '</a>';
+		echo $name;
 }
 header_main('Správa plateb');
 if(TISK)
@@ -21,10 +22,11 @@ if(TISK)
 }
 </style>
 <ul id="adminNavigation">
-	<li><?php _getItem('Přehled', 'platby/view');?></li>
+	<li><?php _getItem('Přehled', 'platby');?></li>
 	<li><?php _getItem('Kategorie', 'platby/category');?></li>
 	<li><?php _getItem('Hledání', 'platby/items');?></li>
 	<li><?php _getItem('Import', 'platby/raw');?></li>
 	<li><?php _getItem('Nezařazené platby', 'platby/manual');?></li>
 	<li><?php _getItem('Vyřazené platby', 'platby/discarded');?></li>
 </ul>
+<?php notice($this->redirect()->getRedirectMessage());?>

@@ -59,6 +59,9 @@ class CSVParser implements Iterator {
 	public function headers() {
 		return $this->headers;
 	}
+	public function getFileObject() {
+		return $this->fileObject;
+	}
 	public function current() {
 		if($this->headers && !$this->key()) {
 			$this->fileObject->current();
