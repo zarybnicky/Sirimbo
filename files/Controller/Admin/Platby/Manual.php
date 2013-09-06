@@ -6,7 +6,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 	}
 	function view($id = null) {
 		if(!empty($_POST)) {
-			$this->_processPost();
+			$this->processPost();
 		}
 		$remaining = DBPlatbyRaw::getUnsorted();
 		$remainingCount = count($remaining);
@@ -22,33 +22,44 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 			$id = $remaining[0]['pr_id'];
 			$raw = unserialize($remaining[0]['pr_raw']);
 		}
-		$categoriesMap = $this->getCategoriesMap();
-		$categories = $this->getCategories();
-		$users = $this->getUsers();
 		
-		$specific = $variable = $date = $amount = null;
-		foreach($raw as $key => $value) {
-			if($specific === null && mb_stripos($key, 'specif') !== false)
-				$specific = array($key, $value);
-			if($variable === null && mb_stripos($key, 'variab') !== false)
-				$variable = array($key, $value);
-			if($date === null && mb_stripos($key, 'datum') !== false)
-				$date = array($key, $value);
-			if($amount === null && mb_stripos($key, 'částka') !== false)
-				$amount = array($key, $value);
+		$categoriesMap = $this->getCategoryLookup(true, true, false);
+		$users = $this->getUserLookup(false);
+		
+		$this->recognizeHeaders(array_flip($raw), $specific, $variable, $date, $amount);
+		
+		if($variable !== null) {
+			if(isset($users[(int) $raw[$variable]]))
+				$recognized['variable'] = array('column' => $variable,
+						'value' => $users[(int) $raw[$variable]]['u_jmeno'] . ' ' . $users[(int) $raw[$variable]]['u_prijmeni']);
+			else
+				$recognized['variable'] = array('column' => $variable,
+						'value' => "&nbsp;--- (není v DB: {$raw[$variable]})");
+			$variable = (int) $raw[$variable];
 		}
-		if($variable !== null && !isset($users[(int) $variable[1]]))
-			$variable = array($variable[0], "&nbsp;--- (není v DB: {$variable[1]})");
-		if($specific !== null && !isset($categoriesMap[(int) $specific[1]]))
-			$specific = array($specific[0], "&nbsp;--- (není v DB: {$specific[1]})");
+		if($specific !== null) {
+			if(isset($categoriesMap[(int) $raw[$specific]])) {
+				$recognized['specific'] = array('column' => $specific,
+						'value' => $categoriesMap[(int) $raw[$specific]]['pc_name']);
+				$specific = $categoriesMap[(int) $raw[$specific]]['pc_id'];
+			} else {
+				$recognized['specific'] = array('column' => $specific,
+						'value' => "&nbsp;--- (není v DB: {$raw[$specific]})");
+				$specific = 0;
+			}
+		}
+		if($date !== null) {
+			$recognized['date'] = array('column' => $date, 'value' => (new Date($raw[$date]))->getDate(Date::FORMAT_SIMPLE_SPACED));
+			$date = (new Date($raw[$date]))->getDate(Date::FORMAT_SIMPLE_SPACED);
+		}
+		if($amount !== null) {
+			$recognized['amount'] = array('column' => $amount, 'value' => $raw[$amount]);
+			$amount = $raw[$amount];
+		}
 		
 		foreach(array('specific', 'variable', 'date', 'amount') as $name) {
-			if($$name === null) {
+			if($$name === null)
 				$recognized[$name] = array('column' => '&nbsp;---', 'value' => '&nbsp;---');
-			} else {
-				$recognized[$name] = array('column' => ${$name}[0], 'value' => ${$name}[1]);
-				$$name = ${$name}[1];
-			}
 		}
 		
 		$new = array();
@@ -65,49 +76,34 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 				'remainingTotal' => $remainingCount,
 				'raw' => $raw,
 				'guess' => array(
-						'specific' => isset($categoriesMap[$specific]) ? $categoriesMap[$specific] : $specific,
+						'specific' => $specific,
 						'variable' => $variable,
 						'date' => $date,
 						'amount' => $amount
 				),
-				'users' => $users,
-				'categories' => $categories,
+				'users' => $this->getUsers(),
+				'categories' => $this->getCategories(),
 				'recognized' => $recognized
 		));
 	}
 	private function getCategories() {
-		$categories = DBPlatbyGroup::getGroupsWithCategories();
-		$new = array();
-		$group_id = 0;
-		foreach($categories as $array) {
-			if($group_id != $array['pg_id'])
-				$new['group_' . $array['pg_id']] = "{$array['pg_name']}:";
-			$new[(int) $array['pc_id']] = "{$array['pc_symbol']} - {$array['pc_name']}";
+		$categories = parent::getCategoryLookup(false, false, true);
+		foreach($categories as $key => &$array) {
+			if(strpos($key, 'group_') !== false)
+				$array = "{$array['pg_name']}:";
+			else
+				$array = "{$array['pc_symbol']} - {$array['pc_name']}";
 		}
-		return $new;
-	}
-	private function getCategoriesMap() {
-		$categories = DBPlatbyGroup::getGroupsWithCategories();
-		$new = array();
-		foreach($categories as $array) {
-			$new[(int) $array['pc_symbol']] = $array['pc_id'];
-		}
-		return $new;
+		return $categories;
 	}
 	private function getUsers() {
-		$users = DBUser::getUsersLookup();
-		usort($users, function($a, $b) {
-			$c = $a['u_prijmeni'];
-			$d = $b['u_prijmeni'];
-			return ($c > $d ? 1 : ($c < $d ? -1 : 0));
-		});
-		$new = array();
-		foreach($users as $key => $array) {
-			$new[$array['u_id']] = User::var_symbol($array['u_id']) . " - {$array['u_prijmeni']}, {$array['u_jmeno']}";
+		$users = parent::getUserLookup(true);
+		foreach($users as &$array) {
+			$array = User::var_symbol($array['u_id']) . " - {$array['u_prijmeni']}, {$array['u_jmeno']}";
 		}
-		return $new;
+		return $users;
 	}
-	private function _processPost() {
+	private function processPost() {
 		if(!post('id') || !($current = DBPlatbyRaw::getSingle(post('id')))) {
 			$this->redirect()->setRedirectMessage('Zadaná platba neexistuje.');
 			return;
@@ -116,19 +112,13 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 			return;
 		}
 		if(post('action') == 'confirm') {
-			$userLookup = DBUser::getUsersLookup();
-			$categories = $this->getCategories();
-			
-			if(!isset($userLookup[(int) post('variable')]) ||
-					!isset($categories[(int) post('specific')]) ||
-					!($date = (string) new Date(post('date')))) {
-				$this->redirect()->setRedirectMessage('Neexistující ID uživatele/kategorie nebo neplatné datum.');
+			if(($s = $this->checkPost()) != array()) {
+				$this->redirect()->setRedirectMessage($s);
 				return;
 			}
-			$variable = (int) post('variable');
-			$specific = (int) post('specific');
-			$amount = (int) post('amount');
-			
+			list($specific, $variable, $date, $amount) =
+				$this->formatData(post('specific'), post('variable'), post('date'), post('amount'));
+			dump(array($specific, $variable, $date, $amount));
 			DBPlatbyRaw::update(post('id'), $current['pr_raw'], $current['pr_hash'], '1', '0');
 			DBPlatbyItem::insert($variable, $specific, post('id'), $amount, $date);
 		} elseif(post('action') == 'discard' && !$current['pr_discarded']) {

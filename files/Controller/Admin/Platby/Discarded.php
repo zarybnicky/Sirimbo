@@ -7,10 +7,10 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby {
 	function view($id = null) {
 		$data = DBPlatbyRaw::getDiscarded();
 		if(count($data) == 0) {
-			$this->redirect('/admin/platby/overview', 'V DB nejsou žádné vyřazené platby.');
+			$this->redirect('/admin/platby/overview', 'V databázi nejsou žádné vyřazené platby.');
 		}
 		if(get('list')) {
-			$this->getFiltered($data, $result, $columns, $header);
+			$this->getTable($data, $result, $columns, $header);
 			$this->render('files/View/Admin/Platby/DiscardedTable.inc', array(
 					'data' => $result,
 					'columns' => $columns,
@@ -24,7 +24,7 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby {
 			));
 		}
 	}
-	function getFiltered($data, &$result, &$columns, &$header) {
+	private function getTable($data, &$result, &$columns, &$header) {
 		if(get('list') == 'date')
 			$header = (get('year') == 'none' ? 'nezařazené podle data' :
 				(get('month') ? (get('year') . '/' . get('month')) : get('year')));
@@ -35,12 +35,11 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby {
 			$header = 'všechny';
 		
 		$result = array();
-		$columns = array();
 		$columnsTemp = array();
-		foreach($data as $raw) {
-			$row = unserialize($raw['pr_raw']);
-			if(!$this->checkHeaders($row, $date, $amount))
-				$this->getHeaders($row, $date, $amount);
+		foreach($data as $rawData) {
+			$row = unserialize($rawData['pr_raw']);
+			if(!$this->checkHeaders(array_flip($row), $specific, $variable, $date, $amount))
+				$this->recognizeHeaders(array_flip($row), $specific, $variable, $date, $amount);
 			
 			if(get('list') == 'date') {
 				if(isset($row[$date]) && $row[$date]) {
@@ -62,26 +61,26 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby {
 				elseif(!isset($columnsTemp[$key]))
 					$columnsTemp[$key] = false;
 			}
-			$row['edit'] = '<a href="/admin/platby/manual/' . $raw['pr_id'] . '">Zařadit</a>';
+			$row['edit'] = '<a href="/admin/platby/manual/' . $rawData['pr_id'] . '">Zařadit</a>';
 			$result[] = $row;
 		}
 		if(empty($columnsTemp))
 			return;
 		
-		$columns[] = array('edit', 'Zařadit');
+		$columns = array(array('edit', 'Zařadit'));
 		foreach($columnsTemp as $key => $value) {
 			if(!$value)
 				continue;
 			$columns[] = array($key, $key);
 		}
 	}
-	function getList($data, &$groupAmount, &$groupDate) {
+	private function getList($data, &$groupAmount, &$groupDate) {
 		$groupDate = array();
 		$groupAmount = array();
 		foreach($data as $row) {
 			$row = unserialize($row['pr_raw']);
-			if(!$this->checkHeaders($row, $date, $amount))
-				$this->getHeaders($row, $date, $amount);
+			if(!$this->checkHeaders(array_flip($row), $specific, $variable, $date, $amount))
+				$this->recognizeHeaders(array_flip($row), $specific, $variable, $date, $amount);
 			
 			if(isset($row[$date]) && $row[$date]) {
 				$currentDate = new Date($row[$date]);
@@ -106,19 +105,5 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby {
 		krsort($groupDate);
 		foreach($groupDate as $year)
 			krsort($year);
-	}
-	function getHeaders($associative, &$date, &$amount) {
-		foreach($associative as $key => $value) {
-			if($date === null && mb_stripos($key, 'datum') !== false)
-				$date = $key;
-			if($amount === null && mb_stripos($key, 'částka') !== false)
-				$amount = $key;
-		}
-	}
-	function checkHeaders($associative, &$date, &$amount) {
-		if(!isset($associative[$date]) || !isset($associative[$amount]))
-			return false;
-		else
-			return true;
 	}
 }

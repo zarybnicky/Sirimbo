@@ -251,15 +251,6 @@ class DBUser extends Database implements Pagable {
 		return true;
 	}
 	
-	public static function getUsersLookup() {
-		$in = self::getUsers();
-		$out = array();
-		foreach($in as $array) {
-			$out[(int) $array['u_id']] = $array;
-		}
-		return $out;
-	}
-	
 	public static function getUsers($group = NULL) {
 		$res = DBUser::query(
 		"SELECT users.*,p1.*,users_skupiny.* FROM users

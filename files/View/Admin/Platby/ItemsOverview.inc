@@ -1,6 +1,5 @@
 <?php
 echo $this->render('files/View/Admin/Platby/OverviewNavigation.inc');
-notice($this->redirect()->getRedirectMessage());
 header_main('Jednotlivé platby');
 
 if(!TISK) {

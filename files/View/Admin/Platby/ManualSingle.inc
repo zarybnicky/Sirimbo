@@ -1,6 +1,5 @@
 <?php
 echo $this->render('files/View/Admin/Platby/OverviewNavigation.inc');
-notice($this->redirect()->getRedirectMessage());
 echo '<br/><span style="font-size:115%;color:#572E00;">Ruční třídění plateb</span> (zbývá ', $this->remainingTotal, ')<br/><br/>';
 $form = array(
 		array(
