@@ -22,6 +22,11 @@ $form = array(
 				'value' => (new SelectHelper())->select('specific')->options($this->categories)->value($this->guess['specific']),
 				'recogColumn' => $this->recognized['specific']['column'],
 				'recogValue' => $this->recognized['specific']['value']
+		), array(
+				'desc' => 'Prefix (rok):',
+				'value' => '<input type="text" name="prefix" value="' . $this->guess['prefix'] . '"/>',
+				'recogColumn' => '',
+				'recogValue' => $this->recognized['prefix']['value']
 		)
 );
 $formTable = $this->table()

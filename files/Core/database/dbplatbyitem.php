@@ -1,29 +1,31 @@
 <?php
 class DBPlatbyItem extends Database {
-	public static function insert($uid, $cid, $rid, $amount, $date) {
-		list($uid, $cid, $rid, $amount, $date) = self::escape($uid, $cid, $rid, $amount, $date);
+	public static function insert($uid, $cid, $rid, $amount, $date, $prefix) {
+		list($uid, $cid, $rid, $amount, $date, $prefix) = self::escape($uid, $cid, $rid, $amount, $date, $prefix);
 		
 		self::query(
 			"INSERT INTO platby_item
-				(pi_id_user,pi_id_category,pi_id_raw,pi_amount,pi_date)
+				(pi_id_user,pi_id_category,pi_id_raw,pi_amount,pi_date,pi_prefix)
 			VALUES
-				('$uid','$cid','$rid','$amount','$date')
+				('$uid','$cid','$rid','$amount','$date','$prefix')
 			ON DUPLICATE KEY UPDATE
 				pi_id_user=VALUES(pi_id_user),
 				pi_id_category=VALUES(pi_id_category),
 				pi_amount=VALUES(pi_amount),
-				pi_date=VALUES(pi_date)"
+				pi_date=VALUES(pi_date),
+				pi_prefix=VALUES(pi_prefix)"
 		);
 	}
-	public static function update($id, $uid, $cid, $amount, $date) {
-		list($id, $uid, $cid, $amount, $date) = self::escape($id, $uid, $cid, $amount, $date);
+	public static function update($id, $uid, $cid, $amount, $date, $prefix) {
+		list($id, $uid, $cid, $amount, $date, $prefix) = self::escape($id, $uid, $cid, $amount, $date, $prefix);
 		
 		self::query(
 			"UPDATE platby_item SET
 				pi_id_user='$uid',
 				pi_id_category='$cid',
 				pi_amount='$amount',
-				pi_date='$date'
+				pi_date='$date',
+				pi_prefix='$prefix'
 			WHERE pi_id='$id'"
 		);
 	}

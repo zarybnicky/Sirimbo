@@ -60,17 +60,40 @@ class Controller_Admin_Platby extends Controller_Admin {
 		}
 		return $out;
 	}
-	protected function formatData($specific, $variable, $date, $amount) {
+	protected function getPrefix(&$specific, $date) {
+		if(strlen($specific) >= 6) {
+			$prefix = (int) substr($specific, 0, 4);
+			$specificNew = (int) substr($specific, 4);
+			if($prefix < 1990 || $prefix > 2050) {
+				unset($prefix);
+				unset($specificNew);
+			} else {
+				$specific = $specificNew;
+			}
+		}
+		if(!isset($prefix)) {
+			$date = new Date($date);
+			$prefix = (int) $date->getYear() ? $date->getYear() : 0;
+		}
+		return $prefix;
+	}
+	protected function formatData($specific, $variable, $date, $amount, $prefix = null) {
+		if($prefix === null) {
+			$prefix = $this->getPrefix($specific, $date);
+		} else {
+			$prefix = (int) $prefix;
+		}
+		
 		$specific = (int) $specific;
 		$variable = (int) $variable;
 		$date = (string) new Date($date);
-		$amount = str_replace(',', '.', $amount);dump(array($amount, floatval($amount)));
+		$amount = str_replace(',', '.', $amount);
 		if(is_float(floatval($amount))) {
 			$amount = number_format(floatval($amount), 2, '.', '');
 		} else
 			$amount = '0.00';
 		
-		return array($specific, $variable, $date, $amount);
+		return array($specific, $variable, $date, $amount, $prefix);
 	}
 	protected function checkPost() {
 		$userLookup = $this->getUserLookup(false);
