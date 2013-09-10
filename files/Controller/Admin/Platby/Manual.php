@@ -17,7 +17,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 			$raw = unserialize($data['pr_raw']);
 		} else {
 			if($remainingCount == 0) {
-				$this->redirect('/admin/platby/overview', 'Nezbývají už žádné nezatříděné platby');
+				$this->redirect('/admin/platby', 'Nezbývají už žádné nezatříděné platby');
 			}
 			$id = $remaining[0]['pr_id'];
 			$raw = unserialize($remaining[0]['pr_raw']);
@@ -31,7 +31,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 		if($specific !== null && $date !== null) {
 			$prefix = $this->getPrefix($raw[$specific], $raw[$date]);
 		} elseif($specific === null && $date !== null) {
-			$prefix = $this->getPrefix('', $raw[$date]);
+			$prefix = $this->getPrefix($null = '', $raw[$date]);
 		} elseif($specific !== null && $date === null) {
 			$prefix = $this->getPrefix($raw[$specific], '');
 		} else {
@@ -81,7 +81,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 		}
 		$raw = $new;
 		
-		$this->render('files/View/Admin/Platby/ManualSingle.inc', array(
+		$this->render('files/View/Admin/Platby/ManualForm.inc', array(
 				'id' => $id,
 				'remainingTotal' => $remainingCount,
 				'raw' => $raw,
@@ -132,12 +132,12 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 			
 			DBPlatbyRaw::update(post('id'), $current['pr_raw'], $current['pr_hash'], '1', '0');
 			DBPlatbyItem::insert($variable, $specific, post('id'), $amount, $date, $prefix);
-		} elseif(post('action') == 'discard' && !$current['pr_discarded']) {
-			DBPlatbyRaw::update(post('id'), $current['pr_raw'], $current['pr_hash'], '0', '1');
+		} elseif(post('action') == 'discard') {
+			if(!$current['pr_discarded'])
+				DBPlatbyRaw::update(post('id'), $current['pr_raw'], $current['pr_hash'], '0', '1');
 		} else {
 			$this->redirect()->setRedirectMessage('Neplatná POST akce.');
 		}
-		post('specific', '');
-		post('variable', '');
+		$this->redirect('/admin/platby/manual');
 	} 
 }

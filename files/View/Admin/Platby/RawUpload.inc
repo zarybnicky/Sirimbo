@@ -1,5 +1,5 @@
 <?php
-echo $this->render('files/View/Admin/Platby/OverviewNavigation.inc');
+echo $this->render('files/View/Admin/Platby/Navigation.inc');
 header_main('Import plateb');
 header_minor('Upload souboru CSV');
 ?>

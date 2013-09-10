@@ -1,5 +1,24 @@
 <?php
 class DBPlatbyGroup extends Database {
+	public static function insert($type, $name, $desc, $base) {
+		list($type, $name, $desc, $base) = self::escape($type, $name, $desc, $base);
+		
+		self::query(
+				"INSERT INTO platby_group
+				(pg_type,pg_name,pg_description, pg_base)
+				VALUES
+				('$type','$name','$desc','$base')"
+		);
+	}
+	public static function update($id, $type, $name, $desc, $base) {
+		list($id, $type, $name, $desc, $base) = self::escape($id, $type, $name, $desc, $base);
+		
+		self::query(
+				"UPDATE platby_group
+				SET pg_type='$type',pg_name='$name',pg_description='$desc',pg_base='$base'
+				WHERE pg_id='$id'"
+		);
+	}
 	public static function getGroupsWithCategories() {
 		$res = self::query(
 				'SELECT *
@@ -9,6 +28,15 @@ class DBPlatbyGroup extends Database {
 				ORDER BY pg_type,pg_id,pc_symbol'
 		);
 		return self::getArray($res);
+	}
+	public static function getSingle($id) {
+		list($id) = self::escape($id);
+		$res = self::query(
+				"SELECT *
+				FROM platby_group
+				WHERE pg_id='$id'"
+		);
+		return self::getSingleRow($res);
 	}
 	public static function getSingleWithCategories($id) {
 		list($id) = self::escape($id);
@@ -20,6 +48,26 @@ class DBPlatbyGroup extends Database {
 				WHERE pg_id='$id'
 				ORDER BY pg_type,pg_id,pc_symbol"
 		);
+		return self::getArray($res);
+	}
+	public static function getSingleWithSkupiny($id) {
+		list($id) = self::escape($id);
+		$res = self::query(
+				"SELECT *
+				FROM platby_group_skupina
+					LEFT JOIN platby_group ON pgs_id_group=pg_id
+					LEFT JOIN skupiny ON pgs_id_skupina=s_id
+				WHERE pg_id='$id'
+				ORDER BY pg_type,pg_id"
+		);
+		return self::getArray($res);
+	}
+	public static function getOrphan() {
+		$res = self::query(
+				'SELECT * FROM platby_group
+				WHERE NOT EXISTS (
+					SELECT pgs_id FROM platby_group_skupina WHERE pgs_id_group=pg_id
+				)');
 		return self::getArray($res);
 	}
 }
