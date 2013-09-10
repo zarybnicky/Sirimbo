@@ -5,7 +5,7 @@ class Controller_Admin_Platby extends Controller_Admin {
 		Permissions::checkError('platby', P_OWNED);
 	}
 	function view($id = null) {
-		$this->render('files/View/Admin/Platby/OverviewNavigation.inc');
+		$this->render('files/View/Admin/Platby/Navigation.inc');
 	}
 	protected function recognizeHeaders($headers, &$specific, &$variable, &$date, &$amount) {
 		foreach($headers as $key => $value) {

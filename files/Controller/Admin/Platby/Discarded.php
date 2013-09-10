@@ -7,7 +7,7 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby {
 	function view($id = null) {
 		$data = DBPlatbyRaw::getDiscarded();
 		if(count($data) == 0) {
-			$this->redirect('/admin/platby/overview', 'V databázi nejsou žádné vyřazené platby.');
+			$this->redirect('/admin/platby', 'V databázi nejsou žádné vyřazené platby.');
 		}
 		if(get('list')) {
 			$this->getTable($data, $result, $columns, $header);

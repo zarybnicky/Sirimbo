@@ -11,6 +11,7 @@ abstract class Controller_Abstract implements Controller_Interface {
 	}
 	
 	public function render($filename, array $vars = array(), $standalone = false) {
+		ob_start();
 		$r = new Renderer();
 		$content = $r->render($filename, $vars);
 		

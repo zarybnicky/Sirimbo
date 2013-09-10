@@ -29,7 +29,7 @@ class TableHelper {
 		return $this;
 	}
 	function data($d) {
-		if($d instanceof Traversable || (isset($d[0]) && is_array($d[0])))
+		if($d instanceof Traversable || (is_array($d) && is_array(reset($d))))
 			$this->data = $d;
 		return $this;
 	}
