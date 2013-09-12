@@ -5,7 +5,7 @@ class DBPlatby extends Database implements Pagable {
 	public static function getPage($offset, $count, $options = null) {
 		$q = "SELECT * FROM users_platby
 			LEFT JOIN users ON up_id_user=u_id
-			LEFT JOIN users_skupiny ON u_skupina=us_id";
+			LEFT JOIN skupiny ON u_skupina=s_id";
 		
 		if(!isset($options['type']) || $options['type'] == 'platby')
 			;
@@ -49,7 +49,7 @@ class DBPlatby extends Database implements Pagable {
 		$res = DBPlatby::query(
 		"SELECT * FROM users_platby
 			LEFT JOIN users ON up_id_user=u_id
-			LEFT JOIN users_skupiny ON u_skupina=us_id
+			LEFT JOIN skupiny ON u_skupina=s_id
 		ORDER BY up_placeno DESC" . 
 		((!empty($offset) && !empty($count)) ? " LIMIT $offset,$count" : ''));
 		return DBPlatby::getArray($res);
@@ -60,7 +60,7 @@ class DBPlatby extends Database implements Pagable {
 		$res = DBPlatby::query(
 		"SELECT * FROM users_platby
 			LEFT JOIN users ON up_id_user=u_id
-			LEFT JOIN users_skupiny ON u_skupina=us_id
+			LEFT JOIN skupiny ON u_skupina=s_id
 		WHERE up_plati_do >= '$od' AND up_plati_do <= '$do'
 		ORDER BY up_placeno DESC" .
 		(($offset !== null && $count !== null) ? " LIMIT $offset,$count" : ''));
@@ -72,7 +72,7 @@ class DBPlatby extends Database implements Pagable {
 		$res = DBPlatby::query(
 		"SELECT * FROM users_platby
 			LEFT JOIN users ON up_id_user=u_id
-			LEFT JOIN users_skupiny ON u_skupina=us_id
+			LEFT JOIN skupiny ON u_skupina=s_id
 		WHERE up_id_user='$id' ORDER BY up_placeno DESC");
 		return DBPlatby::getArray($res);
 	}
@@ -82,7 +82,7 @@ class DBPlatby extends Database implements Pagable {
 		$res = DBPlatby::query(
 		"SELECT * FROM users_platby
 			LEFT JOIN users ON up_id_user=u_id
-			LEFT JOIN users_skupiny ON u_skupina=us_id
+			LEFT JOIN skupiny ON u_skupina=s_id
 		WHERE up_id='$id'");
 		return DBPlatby::getSingleRow($res);
 	}

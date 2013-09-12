@@ -15,10 +15,10 @@ class Controller_Registrace extends Controller_Abstract {
 			$f->checkDate($narozeni, 'Neplatné datum narození', 'narozeni');
 			
 			if(!$f->isValid()) {
-				$this->redirect()->setRedirectMessage(implode('<br/>', $f->getMessages()));
+				$this->redirect()->setMessage(implode('<br/>', $f->getMessages()));
 			} else {
 				if(DBUser::getUserID(post('username'))) {
-					$this->redirect()->setRedirectMessage('Už tu někdo s takovým přihlašovacím jménem je :o(');
+					$this->redirect()->setMessage('Už tu někdo s takovým přihlašovacím jménem je :o(');
 				} else {
 					User::register(post('username'), post('pass'), post('jmeno'), post('prijmeni'),
 						post('pohlavi'), post('email'), post('telefon'), $narozeni, post('poznamky'));

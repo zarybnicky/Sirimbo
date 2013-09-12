@@ -17,11 +17,11 @@ class Controller_Nopassword extends Controller_Abstract {
 						'Povedlo se, za chvíli byste měli dostat e-mail s novým heslem.<br/>' .
 						'V případě problémů prosím kontaktujte administrátora.');
 				} else {
-					$this->redirect()->setRedirectMessage(
+					$this->redirect()->setMessage(
 						'Něco se nepovedlo, prosím kontaktujte administrátory.');
 				}
 			} else {
-				$this->redirect()->setRedirectMessage(
+				$this->redirect()->setMessage(
 					'Špatná kombinace přihlašovacího jména a emailu, zkuste to prosím znovu.');
 			}
 		}

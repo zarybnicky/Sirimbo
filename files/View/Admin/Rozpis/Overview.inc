@@ -1,6 +1,6 @@
 <?php
 header_main('Správa rozpisů');
-notice($this->redirect()->getRedirectMessage());
+notice($this->redirect()->getMessage());
 
 echo '<form action="" method="POST">';
 if($this->showMenu) {

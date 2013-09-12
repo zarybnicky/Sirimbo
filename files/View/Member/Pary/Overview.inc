@@ -1,5 +1,5 @@
 <?php header_main('Žebříček párů');?>
-<?php notice($this->redirect()->getRedirectMessage());?>
+<?php notice($this->redirect()->getMessage());?>
 
 <table>
 <tr>

@@ -16,7 +16,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby {
 			if(!$fileInfo->isFile())
 				continue;
 			$this->processCsv($fileInfo->getPathname());
-			$this->redirect()->setRedirectMessage('Soubor ' . $fileInfo->getFilename() . ' byl zpracován.');
+			$this->redirect()->setMessage('Soubor ' . $fileInfo->getFilename() . ' byl zpracován.');
 		}
 		
 		$this->render('files/View/Admin/Platby/RawUpload.inc');
@@ -106,10 +106,10 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby {
 		$upload->upload('in')->loadFromPost();
 		
 		if($upload->hasInvalidFiles()) {
-			$this->redirect()->setRedirectMessage($upload->getErrorMessages());
+			$this->redirect()->setMessage($upload->getErrorMessages());
 			return;
 		} elseif($upload->hasEmptyFiles() && empty($upload->hasValidFiles())) {
-			$this->redirect()->setRedirectMessage('Vyberte prosím nějaký soubor (prázdné soubory jsou automaticky odmítnuty).');
+			$this->redirect()->setMessage('Vyberte prosím nějaký soubor (prázdné soubory jsou automaticky odmítnuty).');
 			return;
 		}
 		$uploader = $upload->getFilledUploader();
@@ -117,11 +117,11 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby {
 		$uploader->addAllowedType('csv');
 		$uploader->save();
 		if($uploader->hasRefusedFiles()) {
-			$this->redirect()->setRedirectMessage('Nahrávané soubory musí být typu CSV.');
+			$this->redirect()->setMessage('Nahrávané soubory musí být typu CSV.');
 		}
 		foreach($uploader->getSavedFiles() as $path) {
 			$this->processCsv($path);
-			$this->redirect()->setRedirectMessage('Soubor ' . str_replace(self::TEMP_DIR, '', $path) . ' byl zpracován.');
+			$this->redirect()->setMessage('Soubor ' . str_replace(self::TEMP_DIR, '', $path) . ' byl zpracován.');
 		}
 	}
 }

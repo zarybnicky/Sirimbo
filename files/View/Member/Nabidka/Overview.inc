@@ -1,5 +1,5 @@
 <?php header_main('Nabídka tréninků');?>
-<?php notice($this->redirect()->getRedirectMessage());?>
+<?php notice($this->redirect()->getMessage());?>
 
 <style type="text/css">
 .unit {background:inherit;border:none;vertical-align:top;border-bottom:1px dotted #999;padding:10px 5px;}

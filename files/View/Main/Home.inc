@@ -1,4 +1,4 @@
-<?php notice($this->redirect()->getRedirectMessage()); ?>
+<?php notice($this->redirect()->getMessage()); ?>
 
 <div style="width:710px;">
 

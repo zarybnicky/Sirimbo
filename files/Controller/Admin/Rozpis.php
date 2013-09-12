@@ -13,7 +13,7 @@ class Controller_Admin_Rozpis extends Controller_Admin {
 					if((bool) post($id) !== (bool) $item['r_visible'] &&
 							Permissions::check('rozpis', P_OWNED, $item['r_trener'])) {
 						if(!Permissions::check('rozpis', P_ADMIN) && post($id) && !$item['r_visible']) {
-							$this->redirect()->setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění rozpisu');
+							$this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění rozpisu');
 						} else {
 							DBRozpis::editRozpis($id, $item['r_trener'], $item['r_kde'],
 								$item['r_datum'], post($id) ? '1' : '0', $item['r_lock'] ? '1' : '0');
@@ -80,7 +80,7 @@ class Controller_Admin_Rozpis extends Controller_Admin {
 	function add($id = null) {
 		if(empty($_POST) || is_object($f = $this->checkData($_POST, 'add'))) {
 			if(!empty($_POST))
-				$this->redirect()->setRedirectMessage($f->getMessages());
+				$this->redirect()->setMessage($f->getMessages());
 			$this->render('files/View/Admin/Rozpis/Form.inc', array(
 					'action' => Request::getAction(),
 					'isAdmin' => Permissions::check('rozpis', P_ADMIN)
@@ -93,7 +93,7 @@ class Controller_Admin_Rozpis extends Controller_Admin {
 		
 		if(!Permissions::check('rozpis', P_ADMIN) && $visible) {
 			$visible = false;
-			$this->redirect()->setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění příspěvku');
+			$this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění příspěvku');
 		}
 		DBRozpis::addRozpis(post('trener'), post('kde'), $datum, $visible, post('lock'));
 		
@@ -120,7 +120,7 @@ class Controller_Admin_Rozpis extends Controller_Admin {
 				post('visible', $data['r_visible']);
 				post('lock', $data['r_lock']);
 			} else {
-				$this->redirect()->setRedirectMessage($f->getMessages());
+				$this->redirect()->setMessage($f->getMessages());
 			}
 			$this->render('files/View/Admin/Rozpis/Form.inc', array(
 					'action' => Request::getAction(),
@@ -134,7 +134,7 @@ class Controller_Admin_Rozpis extends Controller_Admin {
 		$visible_prev = $data['r_visible'];
 		if(!Permissions::check('rozpis', P_ADMIN) && $visible && !$visible_prev) {
 			$visible = $visible_prev;
-			$this->redirect()->setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění rozpisu');
+			$this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění rozpisu');
 		}
 		DBRozpis::editRozpis($id, post('trener'), post('kde'), $datum, $visible,
 			post('lock'));

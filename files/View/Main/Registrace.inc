@@ -1,5 +1,5 @@
 <?php header_main('Registrace'); ?>
-<?php notice($this->redirect()->getRedirectMessage());?>
+<?php notice($this->redirect()->getMessage());?>
 
 <form action="" method="POST">
 <table>

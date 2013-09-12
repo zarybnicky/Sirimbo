@@ -1,4 +1,4 @@
-<?php notice($this->redirect()->getRedirectMessage()); ?>
+<?php notice($this->redirect()->getMessage()); ?>
 <br/>
 <form action="" method="post">
 <table style="margin: 0 auto;">

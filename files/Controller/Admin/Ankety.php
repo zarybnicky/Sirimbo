@@ -45,7 +45,7 @@ class Controller_Admin_Ankety extends Controller_Admin {
 		$visible = (bool) post("visible");
 		if(!Permissions::check('ankety', P_ADMIN)) {
 			$visible = false;
-			$this->redirect()->setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění ankety');
+			$this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění ankety');
 		}
 		
 		DBAnkety::addAnketa(User::getUserID(), post('jmeno'), post('text'), '0',
@@ -104,7 +104,7 @@ class Controller_Admin_Ankety extends Controller_Admin {
 		$visible_prev = $data['ak_visible'];
 		if(!Permissions::check('ankety', P_ADMIN) && $visible != $visible_prev) {
 			$visible = $visible_prev;
-			$this->redirect()->setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění ankety');
+			$this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění ankety');
 		}
 		
 		if($visible != $visible_prev || post('jmeno') != $data['ak_jmeno'] ||

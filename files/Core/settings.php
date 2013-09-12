@@ -150,21 +150,21 @@ public static $document_types = array(
 );
 
 public static $barvy = array(
-	'white'		=> array('bílá',		'#FFF'),
-	'yellow'	=> array('žlutá',		'#FF0'),
-	'orange'	=> array('oranžová',	'#F90'),
-	'red'		=> array('červená',		'#F00'),
-	'violet'	=> array('fialová',		'#606'),
-	'blue'		=> array('modrá',		'#00F'),
-	'lightblue'	=> array('světle modrá','#0BD'),
-	'aqua'		=> array('modrozelená',	'#2A9'),
-	'bahia'		=> array('zelenomodrá',	'#AD1'),
-	'green'		=> array('zelená',		'#0F0'),
-	'darkgreen'	=> array('tmavě zelená','#5A4'),
-	'brown'		=> array('hnědá',		'#630'),
-	'black'		=> array('černá',		'#000'),
-	'pink'		=> array('růžová',		'#F09'),
-	'grey'		=> array('šedá',		'#999')
+	'white'		=> array('bílá',		'#FFFFFF'),
+	'yellow'	=> array('žlutá',		'#FFFF00'),
+	'orange'	=> array('oranžová',	'#FF9900'),
+	'red'		=> array('červená',		'#FF0000'),
+	'violet'	=> array('fialová',		'#660066'),
+	'blue'		=> array('modrá',		'#0000FF'),
+	'lightblue'	=> array('světle modrá','#00BBDD'),
+	'aqua'		=> array('modrozelená',	'#22AA99'),
+	'bahia'		=> array('zelenomodrá',	'#AADD11'),
+	'green'		=> array('zelená',		'#00FF00'),
+	'darkgreen'	=> array('tmavě zelená','#55AA44'),
+	'brown'		=> array('hnědá',		'#663300'),
+	'black'		=> array('černá',		'#000000'),
+	'pink'		=> array('růžová',		'#FF0099'),
+	'grey'		=> array('šedá',		'#999999')
 );
 
 public static $platby_obdobi = array(

@@ -33,6 +33,15 @@ class DBPlatbyGroup extends Database {
 				WHERE pg_id='$id'"
 		);
 	}
+	public static function getNotInCategory($id) {
+		list($id) = self::escape($id);
+		$res = self::query(
+				"SELECT * FROM platby_group
+				WHERE NOT EXISTS (
+					SELECT pcg_id FROM platby_category_group WHERE pcg_id_group=pg_id AND pcg_id_category='$id'
+				)");
+		return self::getArray($res);
+	}
 	public static function getGroupsWithCategories() {
 		$res = self::query(
 				'SELECT *

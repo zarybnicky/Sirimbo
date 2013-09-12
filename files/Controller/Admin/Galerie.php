@@ -59,7 +59,7 @@ class Controller_Admin_Galerie extends Controller_Admin {
 				
 				DBGalerie::addDir($name, $parent, $level);
 				//FIXME: Galerie - test addDir
-				$this->redirect()->setRedirectMessage('Složka přidána');
+				$this->redirect()->setMessage('Složka přidána');
 				$this->render('files/Admin/Galerie/Display.inc');
 				return;
 					
@@ -180,11 +180,11 @@ class Controller_Admin_Galerie extends Controller_Admin {
 		$count = count($files['name']);
 		for($i = 0; $i < $count; $i++) {
 			if($files['error'][$i] > 0) {
-				$this->redirect()->setRedirectMessage('Nepodařilo se nahrát soubor číslo ' . ($i + 1));
+				$this->redirect()->setMessage('Nepodařilo se nahrát soubor číslo ' . ($i + 1));
 				continue;
 			}
 			if(!array_key_exists($files['type'][$i], Settings::$foto_types)) {
-				$this->redirect()->setRedirectMessage('Soubor číslo ' . ($i + 1) .
+				$this->redirect()->setMessage('Soubor číslo ' . ($i + 1) .
 					' není fotka podporovaného typu a byl přeskočen');
 				continue;
 			}
@@ -202,7 +202,7 @@ class Controller_Admin_Galerie extends Controller_Admin {
 			$path = $dir['gd_path'] . '/' . $fileName;
 			
 			if(is_file($path)) {
-				$this->redirect()->setRedirectMessage('Soubor číslo ' . ($i + 1) .
+				$this->redirect()->setMessage('Soubor číslo ' . ($i + 1) .
 					' nebo soubor se stejným názvem už existuje.');
 				continue;
 			}
@@ -241,7 +241,7 @@ class Controller_Admin_Galerie extends Controller_Admin {
 				$fn_write($thumbnail, str_replace('./galerie', './galerie/thumbnails', $path));
 				imageDestroy($thumbnail);
 			} else {
-				$this->redirect()->setRedirectMessage('Nepodařilo se nahrát soubor číslo ' . ($i + 1));
+				$this->redirect()->setMessage('Nepodařilo se nahrát soubor číslo ' . ($i + 1));
 				
 				$error = true;
 			}
@@ -268,7 +268,7 @@ class Controller_Admin_Galerie extends Controller_Admin {
 		}
 		switch(post('action')) {
 			case 'edit':
-				$this->redirect()->setRedirectMessage('Not Implemented');//FIXME: Not Implemented - Foto edit (rename,...)
+				$this->redirect()->setMessage('Not Implemented');//FIXME: Not Implemented - Foto edit (rename,...)
 			case 'remove':
 				$galerie = post('galerie');
 				if(empty($galerie))
@@ -281,7 +281,7 @@ class Controller_Admin_Galerie extends Controller_Admin {
 					unlink($data['gf_path']);
 					unlink(str_replace('./galerie', './galerie/thumbnails', $data['gd_path']));
 				}
-				$this->redirect()->setRedirectMessage('Fotky odebrány');
+				$this->redirect()->setMessage('Fotky odebrány');
 		}
 		$this->render('files/Admin/Galerie/DisplayEdit.inc');
 	}
@@ -296,7 +296,7 @@ class Controller_Admin_Galerie extends Controller_Admin {
 		$f->checkNotEmpty(post('name'), 'Složka musí mít jméno', 'name');
 		$f->checkBool(post('parent') != 'none', 'Složka musí mít nadsložku', 'parent');
 		if(!$f->isValid()) {
-			$this->redirect()->setRedirectMessage($f->getMessages());
+			$this->redirect()->setMessage($f->getMessages());
 			$this->render('files/Admin/Galerie/DisplayDir.inc');
 			return;
 		}

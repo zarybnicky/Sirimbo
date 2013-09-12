@@ -29,4 +29,4 @@ if(TISK)
 	<li><?php _getItem('Nezařazené platby', 'platby/manual');?></li>
 	<li><?php _getItem('Vyřazené platby', 'platby/discarded');?></li>
 </ul>
-<?php notice($this->redirect()->getRedirectMessage());?>
+<?php notice($this->redirect()->getMessage());?>

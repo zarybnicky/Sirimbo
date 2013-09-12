@@ -35,7 +35,7 @@ class Controller_Admin_Permissions extends Controller_Admin {
 	function add($id = null) {
 		if(empty($_POST) || is_object($f = $this->checkData($_POST, 'add'))) {
 			if(!empty($_POST))
-				$this->redirect()->setRedirectMessage($f->getMessages());
+				$this->redirect()->setMessage($f->getMessages());
 			$this->render('files/View/Admin/Permissions/Form.inc', array(
 					'action' => Request::getAction()
 			));
@@ -61,7 +61,7 @@ class Controller_Admin_Permissions extends Controller_Admin {
 					post($name, $data['pe_' . $name]);
 				}
 			} else {
-				$this->redirect()->setRedirectMessage($f->getMessages());
+				$this->redirect()->setMessage($f->getMessages());
 			}
 			$this->render('files/View/Admin/Permissions/Form.inc', array(
 					'action' => Request::getAction()

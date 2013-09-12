@@ -116,15 +116,15 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 	}
 	private function processPost() {
 		if(!post('id') || !($current = DBPlatbyRaw::getSingle(post('id')))) {
-			$this->redirect()->setRedirectMessage('Zadaná platba neexistuje.');
+			$this->redirect()->setMessage('Zadaná platba neexistuje.');
 			return;
 		} elseif($current['pr_sorted'] && ($item = DBPlatbyItem::getSingleByRawId(post('id')))) {
-			$this->redirect()->setRedirectMessage('Zadaná platba už byla zařazená.');
+			$this->redirect()->setMessage('Zadaná platba už byla zařazená.');
 			return;
 		}
 		if(post('action') == 'confirm') {
 			if(($s = $this->checkPost()) != array()) {
-				$this->redirect()->setRedirectMessage($s);
+				$this->redirect()->setMessage($s);
 				return;
 			}
 			list($specific, $variable, $date, $amount, $prefix) =
@@ -136,7 +136,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 			if(!$current['pr_discarded'])
 				DBPlatbyRaw::update(post('id'), $current['pr_raw'], $current['pr_hash'], '0', '1');
 		} else {
-			$this->redirect()->setRedirectMessage('Neplatná POST akce.');
+			$this->redirect()->setMessage('Neplatná POST akce.');
 		}
 		$this->redirect('/admin/platby/manual');
 	} 

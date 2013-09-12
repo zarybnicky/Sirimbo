@@ -1,6 +1,6 @@
 <?php
 header_main('Správa anket');
-notice($this->redirect()->getRedirectMessage());
+notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST">
 <?php

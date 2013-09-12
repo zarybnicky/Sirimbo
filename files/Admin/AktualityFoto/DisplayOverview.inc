@@ -1,6 +1,6 @@
 <?php
 header_main('Správa fotogalerie článků');
-notice($this->redirect()->getRedirectMessage());
+notice($this->redirect()->getMessage());
 
 echo '<form action="" method="get">';
 $s = $this->select()
