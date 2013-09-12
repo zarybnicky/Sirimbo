@@ -13,7 +13,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 		
 		if($id && ($data = DBPlatbyRaw::getSingle($id))) {
 			if($data['pr_sorted'])
-				$this->redirect('/admin/platby/discarded', 'Platba byla zařazena do systému');
+				$this->redirect('/admin/platby/discarded', 'Platba už byla zařazena do systému');
 			$raw = unserialize($data['pr_raw']);
 		} else {
 			if($remainingCount == 0) {
