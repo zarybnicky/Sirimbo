@@ -5,7 +5,7 @@ if($this->action == 'add')
 else
 	header_minor('Upravit uživatelskou skupinu');
 
-notice($this->redirect()->getRedirectMessage());
+notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST">
 <table>

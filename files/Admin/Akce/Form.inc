@@ -5,7 +5,7 @@ if(Request::getAction() == 'add')
 else
 	header_minor("Upravit uživatele");
 
-notice($this->redirect()->getRedirectMessage());
+notice($this->redirect()->getMessage());
 if(isset($f) && is_object($f))
 	notice(implode('<br/>', $f->getMessages()));
 ?>

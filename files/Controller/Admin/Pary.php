@@ -17,7 +17,7 @@ class Controller_Admin_Pary extends Controller_Admin {
 				if($data['gal_id'])
 					DBPary::noPartner($data['gal_id']);
 				
-				$this->redirect()->setRedirectMessage('Pár odstraněn');
+				$this->redirect()->setMessage('Pár odstraněn');
 				break;
 			case 'add':
 				$old_gal = DBPary::getLatestPartner(post("add_partner"), 'm');
@@ -30,7 +30,7 @@ class Controller_Admin_Pary extends Controller_Admin {
 				if($old_gal['u_id'])
 					DBPary::noPartner($old_gal['u_id']);
 				
-				$this->redirect()->setRedirectMessage('Pár přidán');
+				$this->redirect()->setMessage('Pár přidán');
 				break;
 			case 'edit':
 				$pary = post('pary');

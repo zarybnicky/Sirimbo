@@ -4,7 +4,7 @@ if($this->action == 'add')
 	header_minor("Přidat uživatele");
 else
 	header_minor("Upravit uživatele");
-notice($this->redirect()->getRedirectMessage());
+notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST">
 <table>

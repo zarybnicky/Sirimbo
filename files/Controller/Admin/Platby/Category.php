@@ -17,12 +17,14 @@ class Controller_Admin_Platby_Category extends Controller_Admin_Platby {
 			if(empty($_POST)) {
 				post('base', 1);
 			} else {
-				$this->redirect()->setRedirectMessage($s->getMessages());
+				$this->redirect()->setMessage($s->getMessages());
 			}
 			$this->displayGroupForm('add');
 			return;
 		}
 		DBPlatbyGroup::insert(post('type'), post('name'), post('description'), post('base'));
+		if(get('category'))
+			$this->redirect('/admin/platby/category/edit_category/' . get('category'), 'Kategorie úspěšně přidána');
 		$this->redirect('/admin/platby/category', 'Kategorie úspěšně přidána');
 	}
 	function edit_group($id = null) {
@@ -36,7 +38,7 @@ class Controller_Admin_Platby_Category extends Controller_Admin_Platby {
 				post('description', $data['pg_description']);
 				post('base', $data['pg_base']);
 			} else {
-				$this->redirect()->setRedirectMessage($s->getMessages());
+				$this->redirect()->setMessage($s->getMessages());
 			}
 			$this->displayGroupForm('edit', DBPlatbyGroup::getSingleWithCategories($id));
 			return;
@@ -71,7 +73,7 @@ class Controller_Admin_Platby_Category extends Controller_Admin_Platby {
 		}
 		if(((empty($_POST) || post('action') == 'confirm') && ($f = $this->getLinkedGroupObjects($id))) || empty($_POST)) {
 			if(isset($f) && $f) {
-				$this->redirect()->setRedirectMessage(
+				$this->redirect()->setMessage(
 						'Nemůžu odstranit kategorii s připojenými skupinami nebo specifickými symboly! ' . 
 						'<form action="" method="post"><button type="submit" name="action" value="unlink">Odstranit spojení?</button></form>'
 				);
@@ -88,8 +90,9 @@ class Controller_Admin_Platby_Category extends Controller_Admin_Platby {
 	function add_category($id = null) {
 		if(empty($_POST) || is_object($s = $this->checkCategoryPost())) {
 			if(!empty($_POST)) {
-				$this->redirect()->setRedirectMessage($s->getMessages());
+				$this->redirect()->setMessage($s->getMessages());
 			}
+			//TODO: default specific symbol! (next in line)
 			$this->displayCategoryForm('add');
 			return;
 		}
@@ -122,7 +125,7 @@ class Controller_Admin_Platby_Category extends Controller_Admin_Platby {
 		
 		if(empty($_POST) || is_object($s = $this->checkCategoryPost())) {
 			if(!empty($_POST)) {
-				$this->redirect()->setRedirectMessage($s->getMessages());
+				$this->redirect()->setMessage($s->getMessages());
 			} else {
 				if($data['pc_use_base']) {
 					$data['pc_amount'] = '*' . $data['pc_amount'];
@@ -161,6 +164,8 @@ class Controller_Admin_Platby_Category extends Controller_Admin_Platby {
 
 		DBPlatbyCategory::update($id, post('name'), post('symbol'), post('amount'), (string) $dueDate,
 			(string) $validFrom, (string) $validTo, $use_base, $use_prefix, $archive);
+		if(get('group'))
+			$this->redirect('/admin/platby/category/edit_group/' . get('group'), 'Specifický symbol úspěšně upraven');
 		$this->redirect('/admin/platby/category', 'Specifický symbol úspěšně upraven');
 	}
 	function remove_category($id = null) {
@@ -189,7 +194,7 @@ class Controller_Admin_Platby_Category extends Controller_Admin_Platby {
 		}
 		if(((empty($_POST) || post('action') == 'confirm') && ($f = $this->getLinkedCategoryObjects($id))) || empty($_POST)) {
 			if(isset($f) && $f) {
-				$this->redirect()->setRedirectMessage(
+				$this->redirect()->setMessage(
 						'Nemůžu odstranit specifický symbol s připojenými kategoriemi nebo položkami! ' . 
 						'<form action="" method="post">' .
 							'<button type="submit" name="action" value="unlink">' .
@@ -197,7 +202,7 @@ class Controller_Admin_Platby_Category extends Controller_Admin_Platby {
 						'</form>'
 				);
 			}
-			$this->render('files/View/Admin/Platby/CategoryRemove.inc', array(
+			$this->render('files/View/Admin/Platby/CategorySymbolRemove.inc', array(
 					'id' => $id,
 					'name' => $data['pc_name']
 			));
@@ -224,20 +229,40 @@ class Controller_Admin_Platby_Category extends Controller_Admin_Platby {
 		else
 			return array('groups' => $group, 'items' => $items);
 	}
-	private function displayCategoryForm($action, $data = array()) {
+	private function displayCategoryForm($action) {
 		$id = Request::getID() ? Request::getID() : 0;
-		//...
-		//default specific symbol! (next in line)
+		
+		$groups = DBPlatbyCategory::getSingleWithGroups($id);
+		foreach($groups as &$array) {
+			$new_data = array(
+					'buttons' => $this->getEditLink('/admin/platby/category/edit_group/' . $array['pg_id']) .
+						$this->getRemoveLink('/admin/platby/category/remove_group/' . $array['pg_id']),
+					'type' => ($array['pg_type'] == '1' ? 'Členské příspěvky' : 'Běžné platby'),
+					'name' => $array['pg_name'],
+					'base' => $array['pg_base']
+			);
+			$array = $new_data;
+		}unset($array);
+
+		$groupNotInCategory = DBPlatbyGroup::getNotInCategory($id);
+		$groupSelect = array();
+		foreach($groupNotInCategory as $array) {
+			$groupSelect[$array['pg_id']] = $array['pg_name'];
+		}unset($array);
 		
 		$this->render('files/View/Admin/Platby/CategorySymbolForm.inc', array(
-				'action' => $action
+				'id' => $id,
+				'action' => $action,
+				'groups' => $groups,
+				'groupSelect' => $groupSelect
 		));
 	}
 	private function displayGroupForm($action, $data = array()) {
 		$id = Request::getID() ? Request::getID() : 0;
 		foreach($data as $key => &$array) {
 			$new_data = array(
-					'buttons' => '<a href="/admin/platby/category/edit_category/' . $array['pc_id'] . '">Upravit</a>',
+					'buttons' => $this->getEditLink('/admin/platby/category/edit_category/' . $array['pc_id']) .
+						$this->getRemoveLink('/admin/platby/category/remove_category/' . $array['pc_id']),
 					'name' => $array['pc_name'],
 					'specific' => $array['pc_symbol'],
 					'amount' => $array['pc_amount'],
@@ -249,26 +274,36 @@ class Controller_Admin_Platby_Category extends Controller_Admin_Platby {
 			);
 			$array = $new_data;
 		}unset($array);
-		$skupiny = DBSkupiny::getSkupiny();
-		$skupinySelect = '';
-		foreach($skupiny as &$item) {
-			$skupinySelect .= '<label>' .
-					'<input type="checkbox" name="skupiny[]" value="' . $item['us_id'] . '"' .
-						(post('skupiny') ? (array_search($item['us_id'], post('skupiny')) !== false ? ' checked="checked"' : '') : '') . '/>' .
-					getColorBox($item['us_color'], $item['us_popis']) . '&nbsp;' . $item['us_popis'] .
-					'</label><br/>';
+		
+		$categoryNotInGroup = DBPlatbyCategory::getNotInGroup($id);
+		$categorySelect = array();
+		foreach($categoryNotInGroup as $array) {
+			$categorySelect[$array['pc_id']] = $array['pc_symbol'] . ' - ' . $array['pc_name'];
+		}unset($array);
+		
+		$skupiny = DBPlatbyGroup::getSingleWithSkupiny($id);
+		foreach($skupiny as &$array) {
+			$new_data = array(
+					'buttons' => $this->getEditLink('/admin/skupiny/edit/' . $array['s_id']) .
+						$this->getRemoveLink('/admin/skupiny/remove?u[]=' . $array['s_id']),
+					'name' => getColorBox($item['s_color'], $item['s_description']) . '&nbsp;' . $item['pc_name']
+			);
+			$array = $new_data;
+		}unset($array);
+		
+		$skupinyNotInGroup = DBSkupiny::getNotInGroup($id);
+		$skupinySelect = array();
+		foreach($skupinyNotInGroup as $array) {
+			$skupinySelect[$array['s_id']] = $array['s_name'];
 		}
-		$symbols = DBPlatbyCategory::getNotInGroup($id);
-		$symbolSelect = array();
-		foreach($symbols as $array) {
-			$symbolSelect[$array['pc_id']] = $array['pc_symbol'] . ' - ' . $array['pc_name'];
-		}
+		
 		$this->render('files/View/Admin/Platby/CategoryGroupForm.inc', array(
 				'id' => $id,
 				'action' => $action,
-				'categories' => $data,
-				'skupinySelect' => $skupinySelect,
-				'symbols' => $symbolSelect
+				'category' => $data,
+				'categorySelect' => $categorySelect,
+				'skupiny' => $skupiny,
+				'skupinySelect' => $skupinySelect
 		));
 	}
 	private function getCategories() {

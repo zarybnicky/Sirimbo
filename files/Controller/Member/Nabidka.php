@@ -5,7 +5,7 @@ class Controller_Member_Nabidka extends Controller_Member {
 		Permissions::checkError('dokumenty', P_VIEW);
 	}
 	function view($id = null) {
-		$this->redirect()->setRedirectMessage($this->__processPost());
+		$this->redirect()->setMessage($this->__processPost());
 		
 		$nabidky = DBNabidka::getNabidka();
 		if(empty($nabidky)) {

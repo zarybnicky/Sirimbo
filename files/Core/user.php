@@ -65,9 +65,9 @@ class User {
 		$_SESSION['groupName'] = $data['pe_name'];
 		$_SESSION['skupina'] = $data['u_skupina'];
 		$_SESSION['skupina_data'] = array(
-			'us_id '=> $data['us_id'],
-			'us_color' => $data['us_color'],
-			'us_popis' => $data['us_popis']
+			's_id '=> $data['s_id'],
+			's_color_text' => $data['s_color_text'],
+			's_name' => $data['s_name']
 		);
 		$_SESSION['par'] = $par['p_id'];
 		$_SESSION['partner'] = $par['u_id'];

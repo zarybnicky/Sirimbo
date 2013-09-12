@@ -1,6 +1,6 @@
 <?php
 header_minor("Změna hesla");
-notice($this->redirect()->getRedirectMessage());
+notice($this->redirect()->getMessage());
 ?>
 <form action="" method="post">
 <table>

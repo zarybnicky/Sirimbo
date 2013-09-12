@@ -16,13 +16,13 @@ class RedirectHelper {
 			$_SESSION['REDIRECT_MESSAGE'] = $message;
 		exit;
 	}
-	public static function setRedirectMessage($message, $replace = false) {
+	public static function setMessage($message, $replace = false) {
 		if($replace)
 			unset($_SESSION['REDIRECT_MESSAGE']);
 		
 		if(is_array($message)) {
 			foreach($message as $row)
-				self::setRedirectMessage($row);
+				self::setMessage($row);
 			return;
 		}
 		
@@ -31,7 +31,7 @@ class RedirectHelper {
 		else
 			$_SESSION['REDIRECT_MESSAGE'] = $message;
 	}
-	public static function getRedirectMessage() {
+	public static function getMessage() {
 		if(isset($_SESSION['REDIRECT_MESSAGE'])) {
 			$message = $_SESSION['REDIRECT_MESSAGE'];
 			unset($_SESSION['REDIRECT_MESSAGE']);

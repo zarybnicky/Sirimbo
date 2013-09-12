@@ -24,7 +24,7 @@ class Controller_Member_Profil extends Controller_Member {
 				post('narozeni', $data['u_narozeni']);
 				post("poznamky", $data["u_poznamky"]);
 			} else {
-				$this->redirect()->setRedirectMessage($f->getMessages());
+				$this->redirect()->setMessage($f->getMessages());
 			}
 			$this->render("files/View/Member/Profil/PersonalData.inc");
 			return;
@@ -38,7 +38,7 @@ class Controller_Member_Profil extends Controller_Member {
 	function heslo($id = null) {
 		if(empty($_POST) || is_object($f = $this->__checkData('heslo'))) {
 			if(!empty($_POST)) {
-				$this->redirect()->setRedirectMessage($f->getMessages());
+				$this->redirect()->setMessage($f->getMessages());
 			}
 			$this->render('files/View/Member/Profil/NewPassword.inc');
 			return;
@@ -50,7 +50,7 @@ class Controller_Member_Profil extends Controller_Member {
 		$platby = DBPlatby::getPlatbyFromUser(User::getUserID());
 		foreach($platby as &$row) {
 			$new_data = array(
-					'colorBox' => getColorBox($row['us_color'], $row['us_popis']),
+					'colorBox' => getColorBox($row['s_color_text'], $row['s_description']),
 					'obdobi' => Settings::$platby_obdobi[$row['up_obdobi']][3],
 					'castka' => $row['up_castka'],
 					'datum' => formatDate($row['up_placeno']),
@@ -61,22 +61,24 @@ class Controller_Member_Profil extends Controller_Member {
 		
 		$skupiny = DBSkupiny::getSkupiny();
 		foreach($skupiny as $key => &$row) {
+			/*
 			if($row['us_platba_mesic'] == 0 && $row['us_platba_ctvrtrok'] == 0 && $row['us_platba_pulrok'] == 0) {
 				unset($skupiny[$key]);
 				continue;
 			}
+			*/
 			$new_data = array(
-					'colorBox' => getColorBox($row['us_color'], $row['us_popis']),
-					'popis' => $row['us_popis'],
-					'castkaCtvrtleti' => $row['us_platba_ctvrtrok'],
-					'castkaPololeti' => $row['us_platba_pulrok']
+					'colorBox' => getColorBox($row['s_color_text'], $row['s_description']),
+					'popis' => $row['s_name'],
+					'castkaCtvrtleti' => '',
+					'castkaPololeti' => ''
 			);
 			$row = $new_data;
 		}
 		$skupina = User::getSkupinaData();
 		$this->render('files/View/Member/Profil/Platby.inc', array(
-				'colorBox' => getColorBox($skupina['us_color'], $skupina['us_popis']),
-				'skupinaData' => $skupina['us_popis'],
+				'colorBox' => getColorBox($skupina['s_color_text'], $skupina['s_description']),
+				'skupinaData' => $skupina['s_description'],
 				'varSymbol' => User::var_symbol(User::getUserID()),
 				'zaplaceno' => User::getZaplaceno(),
 				'platby' => $platby,

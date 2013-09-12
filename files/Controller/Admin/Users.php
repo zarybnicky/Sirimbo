@@ -66,7 +66,7 @@ class Controller_Admin_Users extends Controller_Admin {
 	function add($id = null) {
 		if(empty($_POST) || is_object($f = $this->checkData($_POST, 'add'))) {
 			if(!empty($_POST))
-				$this->redirect()->setRedirectMessage($f->getMessages());
+				$this->redirect()->setMessage($f->getMessages());
 			$this->displayForm();
 			return;
 		}
@@ -100,7 +100,7 @@ class Controller_Admin_Users extends Controller_Admin {
 				post('skupina', $data['u_skupina']);
 				post('poznamky', $data['u_poznamky']);
 			} else {
-				$this->redirect()->setRedirectMessage($f->getMessages());
+				$this->redirect()->setMessage($f->getMessages());
 			}
 			$this->displayForm();
 			return;
@@ -125,8 +125,8 @@ class Controller_Admin_Users extends Controller_Admin {
 		foreach($platby as &$item) {
 			$new_data = array(
 					'id' => $item['up_id'],
-					'colorBox' => getColorBox($item['us_color'], $item['us_popis']),
-					'mesicne' => $item['us_platba_mesic'] . ' Kč',
+					'colorBox' => getColorBox($item['s_color_text'], $item['s_description']),
+					'mesicne' => 'TODO!!! Kč',
 					'castka' => $item['up_castka'] . ' Kč',
 					'datePlaceno' => formatDate($item['up_placeno']),
 					'datePlatnost' => formatDate($item['up_plati_do']),
@@ -154,10 +154,10 @@ class Controller_Admin_Users extends Controller_Admin {
 			foreach($groups as $group)
 				$s_group->option($group['pe_id'], $group['pe_name']);
 			
-			$skupiny = DBSkupiny::getSkupiny();
+			$skupiny = DBSkupiny::get();
 			$s_skupina = new SelectHelper();
 			foreach($skupiny as $skupina)
-				$s_skupina->option($skupina['us_id'], $skupina['us_popis']);
+				$s_skupina->option($skupina['s_id'], $skupina['s_name']);
 			
 			foreach($users as &$row) {
 				$new_data = array(
@@ -198,7 +198,7 @@ class Controller_Admin_Users extends Controller_Admin {
 			$new_data = array(
 					'id' => $row['u_id'],
 					'checkBox' => '<input type="checkbox" name="users[]" value="' . $row['u_id'] . '" />',
-					'colorBox' => getColorBox($row['us_color'], $row['us_popis']),
+					'colorBox' => getColorBox($row['s_color_text'], $row['s_description']),
 					'fullName' => $row['u_prijmeni'] . ', ' . $row['u_jmeno'],
 					'email' => $row['u_email'],
 					'telefon' => $row['u_telefon'],
@@ -283,10 +283,10 @@ class Controller_Admin_Users extends Controller_Admin {
 			$row = $new_data;
 		}
 		if($action == 'status') {
-			$skupiny = DBSkupiny::getSkupiny();
+			$skupiny = DBSkupiny::get();
 			$skupinyselect = $this->select()->post();
 			foreach($skupiny as $skupina)
-				$skupinyselect->option($skupina['us_id'], $skupina['us_popis']);
+				$skupinyselect->option($skupina['s_id'], $skupina['s_name']);
 		}
 		$options['filter'] = in_array(get('f'), array_merge(array('dancer', 'system', 'all', 'unconfirmed', 'ban'), $filter)) ?
 		get('f') : 'all';
@@ -302,7 +302,7 @@ class Controller_Admin_Users extends Controller_Admin {
 					'checkBox' => '<input type="checkbox" name="users[]" value="' . $item['u_id'] . '" />',
 					'index' => ++$i,
 					'fullName' => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
-					'colorBox' => getColorBox($item['us_color'], $item['us_popis']),
+					'colorBox' => getColorBox($item['s_color_text'], $item['s_description']),
 					'groupInfo' => $group_lookup[$item['u_group']]
 			);
 			switch($action) {
@@ -372,12 +372,12 @@ class Controller_Admin_Users extends Controller_Admin {
 			);
 			$item = $new_data;
 		}unset($item);
-		$skupiny = DBSkupiny::getSkupiny();
+		$skupiny = DBSkupiny::get();
 		foreach($skupiny as &$item) {
 			$new_data = array(
-					'id' => $item['us_id'],
-					'color' => $item['us_color'],
-					'popis' => $item['us_popis']
+					'id' => $item['s_id'],
+					'color' => $item['s_color_text'],
+					'popis' => $item['s_description']
 			);
 			$item = $new_data;
 		}

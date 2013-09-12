@@ -1,6 +1,6 @@
 <?php
 header_main('Správa fotogalerie');
-notice($this->redirect()->getRedirectMessage());
+notice($this->redirect()->getMessage());
 
 if(!is_array(get('u')))
 	notice('Žádné složky');

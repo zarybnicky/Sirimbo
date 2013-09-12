@@ -1,6 +1,6 @@
 <?php
 header_main('Správa dokumentů');
-notice($this->redirect()->getRedirectMessage());
+notice($this->redirect()->getMessage());
 
 if(isset($this->form)) {
 	echo '<form action="" method="POST">';

@@ -1,7 +1,7 @@
 <?php
 header_main('Profil');
 echo $this->partnerRequest()->getAll();
-notice($this->redirect()->getRedirectMessage());
+notice($this->redirect()->getMessage());
 if($this->havePartner) {
 	echo "Právě tančím s: ", $this->partnerFullName;
 } else {

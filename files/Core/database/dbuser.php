@@ -8,9 +8,9 @@ class DBUser extends Database implements Pagable {
 		if(!isset($options['sort']))
 			$options['sort'] = 'prijmeni';
 		
-		$q = "SELECT users.*,p1.*,users_skupiny.* FROM users
+		$q = "SELECT users.*,p1.*,skupiny.* FROM users
 			LEFT JOIN users_platby p1 ON up_id_user=u_id
-			LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
+			LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
 		WHERE (p1.up_id IS NULL OR
 			(p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
 			(p1.up_plati_do = (SELECT MAX(p2.up_plati_do) FROM users_platby p2
@@ -118,9 +118,9 @@ class DBUser extends Database implements Pagable {
 		list($id) = DBUser::escapeArray(array($id));
 		
 		$res = DBUser::query(
-		"SELECT users.*,p1.*,users_skupiny.*,permissions.* FROM users
+		"SELECT users.*,p1.*,skupiny.*,permissions.* FROM users
 			LEFT JOIN users_platby p1 ON up_id_user=u_id
-			LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
+			LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
 			LEFT JOIN permissions ON u_group=pe_id
 		WHERE u_id='$id' AND (p1.up_id IS NULL OR
 			(p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
@@ -253,9 +253,9 @@ class DBUser extends Database implements Pagable {
 	
 	public static function getUsers($group = NULL) {
 		$res = DBUser::query(
-		"SELECT users.*,p1.*,users_skupiny.* FROM users
+		"SELECT users.*,p1.*,skupiny.* FROM users
 			LEFT JOIN users_platby p1 ON up_id_user=u_id
-			LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
+			LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
 		WHERE (p1.up_id IS NULL OR
 			(p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
 			(p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
@@ -271,7 +271,7 @@ class DBUser extends Database implements Pagable {
 		
 		$res = DBUser::query(
 		"SELECT * FROM users
-			LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
+			LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
 		WHERE u_pohlavi='$pohlavi' ORDER BY u_prijmeni");
 		return DBUser::getArray($res);
 	}
@@ -280,9 +280,9 @@ class DBUser extends Database implements Pagable {
 		list($skupina, $noBanned) = DBUser::escapeArray(array($skupina, $noBanned));
 		
 		$res = DBUser::query(
-			"SELECT users.*,p1.*,users_skupiny.* FROM users
+			"SELECT users.*,p1.*,skupiny.* FROM users
 				LEFT JOIN users_platby p1 ON up_id_user=u_id
-				LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
+				LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
 			WHERE u_skupina='$skupina' AND u_system='0'" .
 					($noBanned ? " AND u_ban='0'" : '') . " AND (
 				(p1.up_plati_od <= CURDATE() AND p1.up_plati_do >= CURDATE()) OR
@@ -305,9 +305,9 @@ class DBUser extends Database implements Pagable {
 	public static function getUsersByPermission($module, $permission) {
 		list($module, $permission) = DBUser::escapeArray(array($module, $permission));
 		$res = DBUser::query(
-		"SELECT users.*,users_skupiny.* FROM users
+		"SELECT users.*,skupiny.* FROM users
 			LEFT JOIN permissions ON u_group=pe_id
-			LEFT JOIN users_skupiny ON u_skupina=us_id
+			LEFT JOIN skupiny ON u_skupina=s_id
 		WHERE pe_$module >= '$permission'
 		ORDER BY u_prijmeni");
 		return DBUser::getArray($res);
@@ -316,15 +316,15 @@ class DBUser extends Database implements Pagable {
 	public static function getNewUsers() {
 		$res = DBUser::query(
 		"SELECT * FROM users
-			LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
+			LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
 		WHERE u_confirmed='0' ORDER BY u_prijmeni");
 		return DBUser::getArray($res);
 	}
 	
 	public static function getDuplicateUsers() {
 		$res = DBUser::query(
-		"SELECT u1.*,users_skupiny.* FROM users u1
-			LEFT JOIN users_skupiny ON u1.u_skupina=users_skupiny.us_id
+		"SELECT u1.*,skupiny.* FROM users u1
+			LEFT JOIN skupiny ON u1.u_skupina=skupiny.s_id
 		WHERE EXISTS (SELECT * FROM users u2 WHERE
 			((u1.u_jmeno=u2.u_jmeno AND u1.u_prijmeni=u2.u_prijmeni) OR
 			u1.u_email=u2.u_email OR u1.u_telefon=u2.u_telefon) AND u1.u_id!=u2.u_id)
@@ -334,25 +334,25 @@ class DBUser extends Database implements Pagable {
 	
 	public static function getBannedUsers() {
 		$res = DBUser::query(
-		"SELECT u1.*,users_skupiny.* FROM users u1
-			LEFT JOIN users_skupiny ON u1.u_skupina=users_skupiny.us_id
+		"SELECT u1.*,skupiny.* FROM users u1
+			LEFT JOIN skupiny ON u1.u_skupina=skupiny.s_id
 		WHERE u_ban='1' ORDER BY u_prijmeni");
 		return DBUser::getArray($res);
 	}
 	
 	public static function getUnconfirmedUsers() {
 		$res = DBUser::query(
-		"SELECT u1.*,users_skupiny.* FROM users u1
-			LEFT JOIN users_skupiny ON u1.u_skupina=users_skupiny.us_id
+		"SELECT u1.*,skupiny.* FROM users u1
+			LEFT JOIN skupiny ON u1.u_skupina=skupiny.s_id
 		WHERE u_banconfirmed='0' ORDER BY u_prijmeni");
 		return DBUser::getArray($res);
 	}
 	
 	public static function getActiveUsers($group = L_ALL) {
 		$res = DBUser::query(
-		"SELECT users.*,p1.*,users_skupiny.* FROM users
+		"SELECT users.*,p1.*,skupiny.* FROM users
 			LEFT JOIN users_platby p1 ON up_id_user=u_id
-			LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
+			LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
 		WHERE u_system='0' AND u_confirmed='1' AND u_ban='0' " .
 			($group > L_ALL ? "AND u_group='$group' " : '') .
 			"AND (p1.up_id IS NULL OR
@@ -365,9 +365,9 @@ class DBUser extends Database implements Pagable {
 	
 	public static function getActiveDancers($group = L_ALL) {
 		$res = DBUser::query(
-		"SELECT users.*,p1.*,users_skupiny.* FROM users
+		"SELECT users.*,p1.*,skupiny.* FROM users
 			LEFT JOIN users_platby p1 ON up_id_user=u_id
-			LEFT JOIN users_skupiny ON users.u_skupina=users_skupiny.us_id
+			LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
 		WHERE u_system='0' AND u_dancer='1' AND u_confirmed='1' AND u_ban='0' " .
 			($group > -1 ? "AND u_group='$group' " : '') .
 		"AND (p1.up_id IS NULL OR

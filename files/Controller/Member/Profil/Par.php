@@ -26,7 +26,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil {
 				post('lat-body', $par['p_lat_body']);
 				post('lat-finale', $par['p_lat_finale']);
 			} else {
-				$this->redirect()->setRedirectMessage($f->getMessages());
+				$this->redirect()->setMessage($f->getMessages());
 			}
 			$this->render('files/View/Member/Profil/CoupleData.inc');
 			return;	
@@ -86,10 +86,10 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil {
 					
 					if(post('action') == 'accept') {
 						DBPary::acceptPartnerRequest(post('id'));
-						$this->redirect()->setRedirectMessage('žádost přijata');
+						$this->redirect()->setMessage('žádost přijata');
 					} else {
 						DBPary::deletePartnerRequest(post('id'));
-						$this->redirect()->setRedirectMessage('žádost zamitnuta');
+						$this->redirect()->setMessage('žádost zamitnuta');
 					}
 					$this->redirect('/member/profil/par');
 				}

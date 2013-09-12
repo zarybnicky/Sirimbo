@@ -28,7 +28,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby {
 	function add($id = null) {
 		if(empty($_POST) || ($s = $this->checkPost()) != array()) {
 			if(!empty($_POST))
-				$this->redirect()->setRedirectMessage($s);
+				$this->redirect()->setMessage($s);
 			$this->displayForm(0);
 			return;
 		}
@@ -50,7 +50,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby {
 				post('specific', $data['pi_id_category']);
 				post('prefix', $data['pi_prefix']);
 			} else {
-				$this->redirect()->setRedirectMessage($s);
+				$this->redirect()->setMessage($s);
 			}
 			$this->displayForm($id);
 			return;

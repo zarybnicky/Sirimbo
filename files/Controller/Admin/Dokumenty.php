@@ -34,12 +34,12 @@ class Controller_Admin_Dokumenty extends Controller_Admin {
 					chmod($path, 0666);
 					DBDokumenty::addDokument($path, post('name'), $fileName,
 						post('kategorie'), User::getUserID());
-					$this->redirect()->setRedirectMessage('Soubor byl úspěšně nahrán');
+					$this->redirect()->setMessage('Soubor byl úspěšně nahrán');
 					
 					DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal dokument "' .
 						post('name') . '"');
 				} else {
-					$this->redirect()->setRedirectMessage('Bohužel, zkus to znova :o(');
+					$this->redirect()->setMessage('Bohužel, zkus to znova :o(');
 				}
 				$this->render('files/Admin/Dokumenty/Display.inc');
 				return;

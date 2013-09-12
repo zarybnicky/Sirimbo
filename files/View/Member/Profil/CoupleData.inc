@@ -1,7 +1,7 @@
 <?php
 header_minor("Změna třídy a bodů");
 echo $this->partnerRequest()->getAll();
-notice($this->redirect()->getRedirectMessage());
+notice($this->redirect()->getMessage());
 ?>
 <form action="" method="post">
 <table>

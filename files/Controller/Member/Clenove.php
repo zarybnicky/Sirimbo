@@ -19,20 +19,21 @@ class Controller_Member_Clenove extends Controller_Member {
 		if(!get('f')) get('f', 'skupiny');
 		
 		if(get('f') == 'skupiny') {
-			$skupiny = DBSkupiny::getSkupiny(true);
+			$skupiny = DBSkupiny::get();
 			foreach($skupiny as $key => &$skupina) {
+				/*
 				if(!$skupina['us_platba_mesic'] && !$skupina['us_platba_ctvrtrok'] && !$skupina['us_platba_pulrok']) {
 					unset($skupiny[$key]);
 					continue;
-				}
-				$users = DBUser::getUsersBySkupina($skupina['us_id'], true);
+				}*/
+				$users = DBUser::getUsersBySkupina($skupina['s_id'], true);
 				$users = $this->__getUserRenderData($users);
 				
 				$new_data = array(
-						'header' => (getColorBox($skupina['us_color'], $skupina['us_popis']) .
-								'&nbsp;&nbsp;' . $skupina['us_popis'] . ' (' . count($users) . ')'),
+						'header' => (getColorBox($skupina['s_color_text'], $skupina['s_description']) .
+								'&nbsp;&nbsp;' . $skupina['n_name'] . ' (' . count($users) . ')'),
 						'users' => $users,
-						'count' => $skupina['us_count']
+						'count' => 'TODO!!!'
 				);
 				$skupina = $new_data;
 			}unset($skupina);
@@ -76,7 +77,7 @@ class Controller_Member_Clenove extends Controller_Member {
 					'id' => $user['u_id'],
 					'fullName' => $user['u_prijmeni'] . ', ' . $user['u_jmeno'],
 					'zaplaceno' => ($user['up_id'] && strcmp($user['up_plati_do'], date('Y-m-d')) >= 0),
-					'groupDescription' => (getColorBox($user['us_color'], $user['us_popis']) . '&nbsp;' . $user['us_popis'])
+					'groupDescription' => (getColorBox($user['s_color_text'], $user['s_description']) . '&nbsp;' . $user['s_name'])
 			);
 			$new_data['platbaDatum'] = ($new_data['zaplaceno'] ? formatDate($user['up_plati_do']) : '---');
 			$user = $new_data;

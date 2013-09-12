@@ -1,6 +1,6 @@
 <?php
 header_main('Správa akcí');
-notice($this->redirect()->getRedirectMessage());
+notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST" class="centerWTable">
 <?php echo $this->render('files/View/Member/Akce/Header.inc', $this->data);?>

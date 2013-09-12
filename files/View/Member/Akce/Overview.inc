@@ -1,5 +1,5 @@
 <?php header_main('Klubové akce');?>
-<?php notice($this->redirect()->getRedirectMessage());?>
+<?php notice($this->redirect()->getMessage());?>
 
 <style type="text/css">
 .unit {background:inherit;border:none;

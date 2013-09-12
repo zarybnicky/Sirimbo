@@ -1,7 +1,7 @@
 <?php
 header_main('Správa uživatelů');
 header_minor('Platby uživatele ' . $this->fullName);
-notice($this->redirect()->getRedirectMessage());
+notice($this->redirect()->getMessage());
 
 echo $this->menu()
 	->float(MenuHelper::FLOAT_RIGHT)

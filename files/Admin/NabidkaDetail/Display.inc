@@ -1,6 +1,6 @@
 <?php
 header_main('Správa nabídka');
-notice($this->redirect()->getRedirectMessage());
+notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST" class="centerWTable">
 <button type="submit" name="action" value="add" style="display:none;">Enter</button>

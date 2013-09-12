@@ -1,6 +1,6 @@
 <?php
 header_main('Správa fotogalerie');
-notice($this->redirect()->getRedirectMessage());
+notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST">
 <a href="/admin/galerie/upload">Přidat fotky</a>

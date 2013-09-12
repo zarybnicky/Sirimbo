@@ -5,7 +5,7 @@ class Controller_Member extends Controller_Abstract {
 	}
 	function view($id = null)  {
 		if(isset($_SESSION['zaplaceno_text']))
-			$this->redirect()->setRedirectMessage($_SESSION['zaplaceno_text']);
+			$this->redirect()->setMessage($_SESSION['zaplaceno_text']);
 
 		$data = DBNovinky::getLastNovinky(NOVINKY_COUNT);
 		foreach($data as &$row) {

@@ -22,7 +22,7 @@ class Controller_Admin_Nastenka extends Controller_Admin {
 				}
 				if(isset($error) && $error)
 					throw new Exception("Máte nedostatečnou autorizaci pro tuto akci!");
-				$this->redirect()->setRedirectMessage('Příspěvky odebrány');
+				$this->redirect()->setMessage('Příspěvky odebrány');
 				break;
 			case 'edit':
 				$nastenka = post('nastenka');
@@ -65,7 +65,7 @@ class Controller_Admin_Nastenka extends Controller_Admin {
 	function add($id = null) {
 		if(empty($_POST) || is_object($f = $this->checkData($_POST, 'add'))) {
 			if(!empty($_POST))
-				$this->redirect()->setRedirectMessage($f->getMessages());
+				$this->redirect()->setMessage($f->getMessages());
 			$this->render('files/View/Admin/Nastenka/Form.inc', array(
 					'action' => Request::getAction(),
 					'returnURL' => Request::getReferer(),
@@ -76,12 +76,12 @@ class Controller_Admin_Nastenka extends Controller_Admin {
 		$id = DBNastenka::addNastenka(User::getUserID(), post('nadpis'),
 			post('text'), post('lock') ? 1 : 0);
 		
-		$skupiny = DBSkupiny::getSkupiny();
+		$skupiny = DBSkupiny::get();
 		foreach($skupiny as $skupina) {
-			if(!post('sk-' . $skupina['us_id']))
+			if(!post('sk-' . $skupina['s_id']))
 				continue;
-			DBNastenka::addNastenkaSkupina($id, $skupina['us_id'],
-				$skupina['us_color'], $skupina['us_popis']);
+			DBNastenka::addNastenkaSkupina($id, $skupina['s_id'],
+				$skupina['s_color_text'], $skupina['s_description']);
 		}
 		DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() .
 			' přidal příspěvek na nástěnku');
@@ -105,7 +105,7 @@ class Controller_Admin_Nastenka extends Controller_Admin {
 				}
 				post('lock', $data['up_lock']);
 			} else {
-				$this->redirect()->setRedirectMessage($f->getMessages());
+				$this->redirect()->setMessage($f->getMessages());
 			}
 			$this->render('files/View/Admin/Nastenka/Form.inc', array(
 					'action' => Request::getAction(),
@@ -116,7 +116,7 @@ class Controller_Admin_Nastenka extends Controller_Admin {
 		}
 		$skupiny_old = $skupiny;
 		$skupiny = array();
-		$skupiny_vse = DBSkupiny::getSkupiny();
+		$skupiny_vse = DBSkupiny::get();
 		
 		foreach($skupiny_old as $skupina) {
 			$skupiny[$skupina['ups_id_skupina']] = $skupina['ups_id'];
@@ -125,13 +125,13 @@ class Controller_Admin_Nastenka extends Controller_Admin {
 		unset($skupiny);
 		
 		foreach($skupiny_vse as $skupina) {
-			if(post('sk-' . $skupina['us_id']) && isset($skupiny_old[$skupina['us_id']])) {
+			if(post('sk-' . $skupina['s_id']) && isset($skupiny_old[$skupina['s_id']])) {
 				continue;
-			} elseif(post('sk-' . $skupina['us_id']) && !isset($skupiny_old[$skupina['us_id']])) {
-				DBNastenka::addNastenkaSkupina($id, $skupina['us_id'],
-					$skupina['us_color'], $skupina['us_popis']);
-			} elseif(!post('sk-' . $skupina['us_id']) && isset($skupiny_old[$skupina['us_id']])) {
-				DBNastenka::removeNastenkaSkupina($skupiny_old[$skupina['us_id']]);
+			} elseif(post('sk-' . $skupina['s_id']) && !isset($skupiny_old[$skupina['s_id']])) {
+				DBNastenka::addNastenkaSkupina($id, $skupina['s_id'],
+					$skupina['s_color_text'], $skupina['s_description']);
+			} elseif(!post('sk-' . $skupina['s_id']) && isset($skupiny_old[$skupina['s_id']])) {
+				DBNastenka::removeNastenkaSkupina($skupiny_old[$skupina['s_id']]);
 			}
 		}
 		DBNastenka::editNastenka($id, post('nadpis'), post('text'), (post('lock') == 'lock') ? 1 : 0);

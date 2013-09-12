@@ -26,18 +26,32 @@ $mainForm = (new TableHelper())->table()
 				'value' => getCheckbox('archive', '1')
 		)
 ));
+if(!empty($this->groups)) {
+	$groupForm = (new TableHelper())->table()
+		->column('buttons', '', '', 'width:50px')
+		->column('type', 'Typ')
+		->column('name', 'Jméno')
+		->column('base', 'Násobitel částky')
+		->data($this->groups);
+}
+$groupSelect = (new SelectHelper())->select('group')
+	->options($this->groupSelect);
 ?>
+
 <?php echo $this->render('files/View/Admin/Platby/Navigation.inc');?>
+<form action="" method="post">
 <?php header_main('Kategorie plateb');?>
 <?php header_minor($this->action == 'add' ? 'Přidat specifický symbol' : 'Upravit specifický symbol');?>
-<form action="" method="post">
 	<?php echo $mainForm;?>
 	<button name="action" value="confirm">Uložit</button>&nbsp;<a href="/admin/platby/category">Zpět</a><br/><br/>
 </form>
-<?php if($this->action == 'TODOd'): ?>
-	<?php header_minor('Specifické symboly');?>
-	<?php if(isset($categoryForm)) echo $categoryForm;?>
+<?php if($this->action != 'add'): ?>
+	<form action="" method="post">
+	<?php header_minor('Kategorie');?>
+	<?php if(isset($groupForm)) echo $groupForm;?>
 	<span class="big">Přidat:</span>
-	<a href="/admin/platby/category/add_category?group=<?php echo $this->id;?>">nový specifický symbol</a>
-	nebo existující: <?php echo $symbolSelect;?> <button type="submit" name="action" value="add_symbol">odeslat</button>
+	<a href="/admin/platby/category/add_group?category=<?php echo $this->id;?>">novou kategorii</a>
+	nebo existující: <?php echo $groupSelect;?>
+		<button type="submit" name="action" value="group">odeslat</button>
+	</form>
 <?php endif;?>

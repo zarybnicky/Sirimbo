@@ -43,7 +43,7 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 				}
 				if(isset($error) && $error)
 					throw new Exception("Máte nedostatečnou autorizaci pro tuto akci!");
-				$this->redirect()->setRedirectMessage('Nabídky odebrány');
+				$this->redirect()->setMessage('Nabídky odebrány');
 				break;
 		}
 		$data = DBNabidka::getNabidka();
@@ -72,7 +72,7 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 	function add($id = null) {
 		if(empty($_POST) || is_object($f = $this->checkData($_POST, 'add'))) {
 			if(!empty($_POST))
-				$this->redirect()->setRedirectMessage($f->getMessages());
+				$this->redirect()->setMessage($f->getMessages());
 			$this->render('files/View/Admin/Nabidka/Form.inc', array(
 					'action' => Request::getAction(),
 					'returnURL' => Request::getReferer(),
@@ -91,7 +91,7 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 		$visible = (bool) post('visible');
 		if(!Permissions::check('nabidka', P_ADMIN) && $visible) {
 			$visible = false;
-			$this->redirect()->setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění příspěvku');
+			$this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění příspěvku');
 		}
 		if(!is_numeric(post('max_pocet_hod')))
 			post('max_pocet_hod', 0);
@@ -127,7 +127,7 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 				post('visible', $data['n_visible']);
 				post('lock', $data['n_lock']);
 			} else {
-				$this->redirect()->setRedirectMessage($f->getMessages());
+				$this->redirect()->setMessage($f->getMessages());
 			}
 			$data = DBNabidka::getSingleNabidka($id);
 			$this->render('files/View/Admin/Nabidka/Form.inc', array(
@@ -148,20 +148,20 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 		if(!Permissions::check('nabidka', P_ADMIN) &&
 				$visible && !$visible_prev) {
 			$visible = false;
-			$this->redirect()->setRedirectMessage('Nemáte dostatečná oprávnění ke zviditelnění nabídky');
+			$this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění nabídky');
 		}
 		$items = DBNabidka::getNabidkaItemLessons($id);
 		$pocet_hod = post('pocet_hod');
 		if($pocet_hod < $items) {
 			$pocet_hod = $items;
-			$this->redirect()->setRedirectMessage('Obsazených hodin už je víc než jste zadali, ' .
+			$this->redirect()->setMessage('Obsazených hodin už je víc než jste zadali, ' .
 				'nemůžu dál snížit počet hodin');
 		}
 		$max_lessons = post('max_pocet_hod');
 		$max_lessons_old = DBNabidka::getNabidkaMaxItems($id);
 		if($max_lessons < $max_lessons_old && $max_lessons != 0) {
 			$max_lessons = $max_lessons_old;
-			$this->redirect()->setRedirectMessage('Zadaný maximální počet hodin/pár je méně než už je zarezervováno, ' .
+			$this->redirect()->setMessage('Zadaný maximální počet hodin/pár je méně než už je zarezervováno, ' .
 				'nemůžu dál snížit maximální počet hodin');
 		}
 		if(!is_numeric($max_lessons))

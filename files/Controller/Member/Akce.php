@@ -17,7 +17,7 @@ class Controller_Member_Akce extends Controller_Member {
 		if(!empty($_POST) && post('id') &&
 				($data = DBAkce::getSingleAkce(post('id')))) {
 			if(is_object($f = $this->checkData($data, post('action')))) {
-				$this->redirect()->setRedirectMessage($f->getMessages());
+				$this->redirect()->setMessage($f->getMessages());
 			} elseif(post('action') == 'signup') {
 				DBAkce::signUp(User::getUserID(), post('id'), User::getDatumNarozeni());
 			} elseif(post('action') == 'signout') {

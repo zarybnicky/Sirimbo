@@ -1,6 +1,6 @@
 <?php
 header_main('Správa uživatelů');
-notice($this->redirect()->getRedirectMessage());
+notice($this->redirect()->getMessage());
 
 if($this->showMenu) {
 	echo '<form action="" method="get">';

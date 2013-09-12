@@ -1,5 +1,5 @@
 <?php header_main('Novinky');?>
-<?php notice($this->redirect()->getRedirectMessage());?>
+<?php notice($this->redirect()->getMessage());?>
 <?php echo $this->partnerRequest()->getAll(); ?>
 
 <?php if($this->data == array()) {

@@ -1,6 +1,6 @@
 <?php
 header_minor("Osobní údaje");
-notice($this->redirect()->getRedirectMessage());
+notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST">
 <table>
