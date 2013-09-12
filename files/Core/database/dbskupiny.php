@@ -1,5 +1,14 @@
 <?php
 class DBSkupiny extends Database {
+	public static function unlinkGroup($sid, $gid) {
+		list($sid, $gid) = self::escape($sid, $gid);
+		self::query(
+				"DELETE FROM platby_group_skupina
+				WHERE pgs_id_group='$gid' AND pgs_id_skupina='$sid'"
+		);
+	}
+	
+	//--------------------------
 	public static function getSkupiny($orderByCount = false) {
 		if(!$orderByCount)
 			$res = DBSkupiny::query("SELECT * FROM users_skupiny");

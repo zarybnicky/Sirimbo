@@ -1,5 +1,12 @@
 <?php
 class DBPlatbyGroup extends Database {
+	public static function unlinkCategory($gid, $cid) {
+		list($gid, $cid) = self::escape($gid, $cid);
+		self::query(
+				"DELETE FROM platby_category_group
+				WHERE pcg_id_group='$gid' AND pcg_id_category='$cid'"
+		);
+	}
 	public static function insert($type, $name, $desc, $base) {
 		list($type, $name, $desc, $base) = self::escape($type, $name, $desc, $base);
 		
@@ -16,6 +23,13 @@ class DBPlatbyGroup extends Database {
 		self::query(
 				"UPDATE platby_group
 				SET pg_type='$type',pg_name='$name',pg_description='$desc',pg_base='$base'
+				WHERE pg_id='$id'"
+		);
+	}
+	public static function delete($id) {
+		list($id) = self::escape($id);
+		self::query(
+				"DELETE FROM platby_group
 				WHERE pg_id='$id'"
 		);
 	}
@@ -62,11 +76,19 @@ class DBPlatbyGroup extends Database {
 		);
 		return self::getArray($res);
 	}
-	public static function getOrphan() {
+	public static function getWithoutSkupina() {
 		$res = self::query(
 				'SELECT * FROM platby_group
 				WHERE NOT EXISTS (
 					SELECT pgs_id FROM platby_group_skupina WHERE pgs_id_group=pg_id
+				)');
+		return self::getArray($res);
+	}
+	public static function getWithoutCategory() {
+		$res = self::query(
+				'SELECT * FROM platby_group
+				WHERE NOT EXISTS (
+					SELECT pcg_id FROM platby_category_group WHERE pcg_id_group=pg_id
 				)');
 		return self::getArray($res);
 	}

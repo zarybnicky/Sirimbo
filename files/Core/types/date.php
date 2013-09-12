@@ -5,6 +5,7 @@ class Date {
 	private $year;
 	private $month;
 	private $day;
+	private $separators;
 	
 	const FORMAT_SQL = 'yyyy-mm-dd';
 	const FORMAT_SIMPLE = 'dd.mm.yyyy';
@@ -13,47 +14,49 @@ class Date {
 	const FORMAT_SLASHED = 'dd/mm/yyyy';
 	
 	function __construct($s = null) {
+		$this->separators = array('-', '.' , '/');
 		if(is_string($s))
 			$this->setDate($s);
 	}
 	function __toString() {
 		return $this->getDate();
 	}
+	function separator($s = null, $reset = false) {
+		if($s === null)
+			return $this->separators;
+		if($reset)
+			$this->separators = array();
+		$this->separators[] = $s;
+	}
 	function setDate($s) {
-		if(strpos($s, '-') !== false) {
-			$pieces = explode('-', $s);
-		} elseif(strpos($s, '.') !== false) {
-			$pieces = explode('.', $s);
-		} elseif(strpos($s, '/') !== false) {
-			$pieces = explode('/', $s);
+		foreach($this->separators as $sep) {
+			if(strpos($s, $sep) === false)
+				continue;
+			$pieces = explode($sep, $s);
+			if(count($pieces) != 3)
+				unset($pieces);
 		}
-		if(!isset($pieces) || count($pieces) != 3) {
+		if(!isset($pieces)) {
 			if(!$this->sql_format)
 				$this->valid = false;
 			return false;
 		}
-		
 		foreach($pieces as &$piece) {
 			$piece = trim($piece, '/-. ');
 			if(strlen($piece) == 1)
 				$piece = '0' . $piece;
 		}
-		
-		if(strlen($pieces[0]) == 4) {
-			$this->year = $pieces[0];
-			$this->month = $pieces[1];
-			$this->day = $pieces[2];
-			$this->sql_format = implode('-', $pieces);
-		} elseif(strlen($pieces[2]) == 4) {
-			$this->year = $pieces[2];
-			$this->month = $pieces[1];
-			$this->day = $pieces[0];
-			$this->sql_format = implode('-', array_reverse($pieces));
-		} else {
+		if(strlen($pieces[2]) == 4) {
+			$pieces = array_reverse($pieces);
+		} elseif(strlen($pieces[0]) != 4) {
 			if(!$this->sql_format)
 				$this->valid = false;
 			return false;
 		}
+		$this->year = $pieces[0];
+		$this->month = $pieces[1];
+		$this->day = $pieces[2];
+		$this->sql_format = implode('-', $pieces);
 		$this->valid = true;
 		return true;
 	}
