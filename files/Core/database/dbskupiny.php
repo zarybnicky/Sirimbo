@@ -1,6 +1,15 @@
 <?php
 class DBSkupiny extends Database {
-	public static function unlinkGroup($sid, $gid) {
+	public static function addChild($sid, $gid) {
+		list($sid, $gid) = self::escape($sid, $gid);
+		self::query(
+				"INSERT IGNORE INTO platby_group_skupina
+				(pgs_id_skupina,pgs_id_group)
+				VALUES
+				('$sid','$gid')"
+		);
+	}
+	public static function removeChild($sid, $gid) {
 		list($sid, $gid) = self::escape($sid, $gid);
 		self::query(
 				"DELETE FROM platby_group_skupina
@@ -14,6 +23,18 @@ class DBSkupiny extends Database {
 				WHERE NOT EXISTS (
 					SELECT pgs_id FROM platby_group_skupina WHERE pgs_id_skupina=s_id AND pgs_id_group='$id'
 				)");
+		return self::getArray($res);
+	}
+	public static function getSingleWithGroups($id) {
+		list($id) = self::escape($id);
+		$res = self::query(
+				"SELECT *
+				FROM platby_group_skupina
+					LEFT JOIN platby_group ON pgs_id_group=pg_id
+					LEFT JOIN skupiny ON pgs_id_skupina=s_id
+				WHERE s_id='$id'
+				ORDER BY pg_type,pg_id"
+		);
 		return self::getArray($res);
 	}
 	public static function get() {

@@ -20,7 +20,7 @@ $mainForm = (new TableHelper())->table()
 	));
 if(!empty($this->category)) {
 	$categoryForm = (new TableHelper())->table()
-		->column('buttons', '', '', 'width:50px')
+		->column('buttons', '', '', 'width:75px')
 		->column('name', 'Jméno')
 		->column('specific', 'Specifický<br/>symbol')
 		->column('amount', 'Očekávaná<br/>částka')
@@ -31,17 +31,20 @@ if(!empty($this->category)) {
 		->column('archive', 'Je neaktivní')
 		->data($this->category);
 }
-$categorySelect = (new SelectHelper())->select('category')
-	->options($this->categorySelect);
-
+if(!empty($this->categorySelect)) {
+	$categorySelectBox = (new SelectHelper())->select('category')
+		->options($this->categorySelect);
+}
 if(!empty($this->skupiny)) {
 	$skupinyForm = (new TableHelper())->table()
-		->column('buttons', '', '', 'width:50px')
+		->column('buttons', '', '', 'width:75px')
 		->column('name', 'Jméno')
 		->data($this->skupiny);
 }
-$skupinySelect = (new SelectHelper())->select('skupiny')
-	->options($this->skupinySelect);
+if(!empty($this->skupinySelect)) {
+	$skupinySelectBox = (new SelectHelper())->select('skupiny')
+		->options($this->skupinySelect);
+}
 ?>
 
 <?php echo $this->render('files/View/Admin/Platby/Navigation.inc');?>
@@ -52,21 +55,25 @@ $skupinySelect = (new SelectHelper())->select('skupiny')
 	<button name="action" value="confirm">Uložit</button>&nbsp;<a href="/admin/platby/category">Zpět</a><br/><br/>
 </form>
 <?php if($this->action != 'add'): ?>
-	<form action="" method="post">
 	<?php header_minor('Specifické symboly');?>
 	<?php if(isset($categoryForm)) echo $categoryForm;?>
-	<span class="big">Přidat:</span>
-	<a href="/admin/platby/category/add_category?group=<?php echo $this->id;?>">nový specifický symbol</a>
-	nebo existující: <?php echo $categorySelect;?>
-		<button type="submit" name="action" value="category">odeslat</button>
-	</form><br/>
-	
 	<form action="" method="post">
+		<span class="big">Přidat:</span>
+		<a href="/admin/platby/category/add_category?group=<?php echo $this->id;?>">nový specifický symbol</a>
+		<?php if(isset($categorySelectBox)):?>
+			nebo existující: <?php echo $categorySelectBox;?>
+			<button type="submit" name="action" value="category">odeslat</button>
+		<?php endif;?>
+	</form>
+	<br/>
 	<?php header_minor('Skupiny');?>
 	<?php if(isset($skupinyForm)) echo $skupinyForm;?>
-	<span class="big">Přidat:</span>
-	<a href="/admin/skupiny/add?group=<?php echo $this->id;?>">novou skupinu</a>
-	nebo existující: <?php echo $skupinySelect;?>
-		<button type="submit" name="action" value="skupiny">odeslat</button>
+	<form action="" method="post">
+		<span class="big">Přidat:</span>
+		<a href="/admin/skupiny/add?group=<?php echo $this->id;?>">novou skupinu</a>
+		<?php if(isset($skupinySelectBox)): ?>
+			nebo existující: <?php echo $skupinySelectBox;?>
+			<button type="submit" name="action" value="skupiny">odeslat</button>
+		<?php endif;?>
 	</form>
 <?php endif;?>

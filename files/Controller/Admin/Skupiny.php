@@ -20,7 +20,8 @@ class Controller_Admin_Skupiny extends Controller_Admin {
 		$data = DBSkupiny::get();
 		foreach($data as $key => &$item) {
 			$new_data = array(
-					'checkBox' => '<input type="checkbox" name="data[]" value="' . $item['s_id'] .	'" />',
+					'buttons' => $this->getEditLink('/admin/skupiny/edit/' . $item['s_id']) .
+						$this->getRemoveLink('/admin/skupiny/remove/' . $item['s_id']),
 					'colorBox' => getColorBox($item['s_color_text'], $item['s_description']),
 					'name' => $item['s_name']
 			);
@@ -36,17 +37,47 @@ class Controller_Admin_Skupiny extends Controller_Admin {
 			if(!empty($_POST)) {
 				$this->redirect()->setMessage($f->getMessages());
 			}
-			$this->render('files/View/Admin/Skupiny/Form.inc', array(
-					'action' => 'add'
-			));
+			$this->displayForm('add');
 			return;
 		}
 		DBSkupiny::insert(post('name'), post('color'), post('desc'));
+		$insertId = DBSkupiny::getInsertId();
+		if(get('group') && ($data = DBPlatbyGroup::getSingle(get('group')))) {
+			DBSkupiny::addChild($insertId, get('group'));
+			$conflicts = DBPlatby::checkConflicts($insertId);
+			if(!empty($conflicts)) {
+				DBSkupiny::removeChild($insertId, get('group'));
+				$this->redirect('/admin/platby/category/edit_group/' . get('group'),
+						'Skupina byla přidána, ale nebyla přiřazena - takové přiřazení není platné.');
+			}
+			$this->redirect('/admin/platby/category/edit_group/' . get('group'), 'Skupina úspěšně přidána a přiřazena');
+		}
 		$this->redirect('/admin/skupiny', 'Skupina úspěšně přidána');
 	}
 	function edit($id = null) {
 		if(!$id || !($data = DBSkupiny::getSingle($id)))
 			$this->redirect('/admin/skupiny', 'Skupina s takovým ID neexistuje');
+		
+		if(post('action') == 'group') {
+			if(!($data = DBPlatbyGroup::getSingle(post('group'))))
+				$this->redirect('/admin/skupiny/edit/' . $id, 'Kategorie s takovým ID neexistuje.');
+			
+			DBSkupiny::addChild($id, post('group'));
+			$conflicts = DBPlatby::checkConflicts($id);
+			
+			if(!empty($conflicts)) {
+				DBSkupiny::removeChild($id, post('group'));
+				$this->redirect('/admin/skupiny/edit/' . $id,
+					'Takové přiřazení není platné - způsobilo by, že jeden specifický symbol by byl v jedné skupině dvakrát.');
+			}
+			$this->redirect('/admin/skupiny/edit/' . $id, 'Kategorie byla úspěšně přiřazena.');
+		} elseif(post('action') == 'group_remove') {
+			if(!($data = DBPlatbyGroup::getSingle(post('group'))))
+				$this->redirect('/admin/skupiny/edit/' . $id, 'Kategorie s takovým ID neexistuje.');
+			
+			DBSkupiny::removeChild($id, post('group'));
+			$this->redirect('/admin/skupiny/edit/' . $id, 'Spojení s kategorií bylo úspěšně odstraněno.');
+		}
 		
 		if(empty($_POST) || is_object($f = $this->checkPost())) {
 			if(empty($_POST)) {
@@ -56,38 +87,88 @@ class Controller_Admin_Skupiny extends Controller_Admin {
 			} else {
 				$this->redirect()->setMessage($f->getMessages());
 			}
-			$this->render('files/View/Admin/Skupiny/Form.inc', array(
-					'action' => 'edit'
-			));
+			$this->displayForm('edit', $data);
 			return;
 		}
 		DBSkupiny::update($id, post('name'), post('color'), post('desc'));
 		$this->redirect('/admin/skupiny', 'Skupina úspěšně upravena');
 	}
 	function remove($id = null) {
-		if(!is_array(post('data')) && !is_array(get('u')))
-			$this->redirect('/admin/skupiny');
-		
-		if(!empty($_POST) && post('action') == 'confirm') {
-			foreach(post('data') as $id)
-				DBSkupiny::delete($id);
-			$this->redirect('/admin/skupiny', 'Skupiny odebrány');
+		if(!$id || !($data = DBSkupiny::getSingle($id)))
+			$this->redirect('/admin/skupiny', 'Skupina s takovým ID neexistuje');
+
+		if(post('action') == 'unlink') {
+			$f = $this->getLinkedSkupinaObjects($id);
+				
+			$groupCount = 0;
+			foreach($f['groups'] as $data) {
+				DBSkupiny::removeChild($id, $data['pg_id']);
+				++$groupCount;
+			}
+			unset($data);
+			$this->redirect('/admin/platby/category/remove_category/' . $id,
+					'Spojení s \'' . $groupCount . '\' kategoriemi byla odstraněna.');
+			return;
 		}
-		
-		$data = array();
-		foreach(get('u') as $id) {
-			$item = DBSkupiny::getSingle($id);
-			$data[] = array(
-					'id' => $item['s_id'],
-					'text' => $item['s_name']
+		if(((empty($_POST) || post('action') == 'confirm') && ($f = $this->getLinkedSkupinaObjects($id))) || empty($_POST)) {
+			if(isset($f) && $f) {
+				$this->redirect()->setMessage(
+						'Nemůžu odstranit skupinu s připojenými kategoriemi! ' .
+						'<form action="" method="post">' .
+						'<button type="submit" name="action" value="unlink">' .
+						'Odstranit spojení?</button>' .
+						'</form>'
+				);
+			}
+			$this->render('files/View/Admin/RemovePrompt.inc', array(
+					'header' => 'Správa skupin',
+					'prompt' => 'Opravdu chcete odstranit skupinu?',
+					'returnURL' => Request::getReferer(),
+					'data' => array(array('id' => $data['s_id'], 'text' => $data['s_name']))
+			));
+			return;
+		}
+		DBSkupiny::delete($id);
+		$this->redirect('/admin/skupiny', 'Skupina byla úspěšně odebrána.');
+	}
+	private function displayForm($action, $data = null) {
+		$id = Request::getID() ? Request::getID() : '0';
+
+		$groups = DBSkupiny::getSingleWithGroups($id);
+		foreach($groups as &$array) {
+			$new_data = array(
+					'buttons' => '<form action="" method="post">' .
+						$this->getUnlinkGroupButton($array['pg_id']) .
+						$this->getEditLink('/admin/platby/category/edit_group/' . $array['pg_id']) .
+						$this->getRemoveLink('/admin/platby/category/remove_group/' . $array['pg_id']) .
+						'</form>',
+					'type' => ($array['pg_type'] == '1' ? 'Členské příspěvky' : 'Běžné platby'),
+					'name' => $array['pg_name'],
+					'base' => $array['pg_base']
 			);
-		}
-		$this->render('files/View/Admin/RemovePrompt.inc', array(
-				'header' => 'Správa skupin',
-				'prompt' => 'Opravdu chcete odstranit skupiny:',
-				'returnURL' => Request::getReferer(),
-				'data' => $data
+			$array = $new_data;
+		}unset($array);
+		
+		$groupNotInSkupina = DBPlatbyGroup::getNotInSkupina($id);
+		$groupSelect = array();
+		foreach($groupNotInSkupina as $array) {
+			$groupSelect[$array['pg_id']] = $array['pg_name'];
+		}unset($array);
+		
+		$this->render('files/View/Admin/Skupiny/Form.inc', array(
+				'id' => $id,
+				'action' => $action,
+				'groups' => $groups,
+				'groupSelect' => $groupSelect
 		));
+	}
+	private function getLinkedSkupinaObjects($id) {
+		$group = DBSkupiny::getSingleWithGroups($id);
+		
+		if(empty($group))
+			return array();
+		else
+			return array('groups' => $group);
 	}
 	private function checkPost() {
 		$f = new Form();
@@ -97,5 +178,18 @@ class Controller_Admin_Skupiny extends Controller_Admin {
 		$f->checkArrayKey(post('color'), Settings::$barvy, 'Zadejte prosím platnou barvu.');
 		
 		return $f->isValid() ? true : $f;
+	}
+	private function getEditLink($link) {
+		return '<a href="' . $link . '"><img alt="Upravit" src="/images/wrench.png" /></a>';
+	}
+	private function getRemoveLink($link) {
+		return '<a href="' . $link . '"><img alt="Odstranit" src="/images/cross.png" /></a>';
+	}
+	private function getUnlinkGroupButton($id) {
+		return
+			'<input type="hidden" name="group" value="' . $id . '">' .
+			'<button name="action" value="group_remove">' .
+				'<img alt="Odstranit spojení" src="/images/unlink.png" />' .
+			'</button>';
 	}
 }
