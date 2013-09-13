@@ -23,13 +23,78 @@ class Controller_Admin_Platby_Category extends Controller_Admin_Platby {
 			return;
 		}
 		DBPlatbyGroup::insert(post('type'), post('name'), post('description'), post('base'));
-		if(get('category'))
-			$this->redirect('/admin/platby/category/edit_category/' . get('category'), 'Kategorie úspěšně přidána');
+		$insertId = DBPlatbyGroup::getInsertId();
+		if(get('category') && ($data = DBPlatbyCategory::getSingle(get('category')))) {
+			DBPlatbyGroup::addChild($insertId, get('category'));
+			$skupiny = DBPlatbyGroup::getSingleWithSkupiny($insertId);
+			$conflicts = array();
+			foreach($skupiny as $array)
+				$conflicts = array_merge($conflicts, DBPlatby::checkConflicts($array['s_id']));
+				
+			if(!empty($conflicts)) {
+				DBPlatbyGroup::removeChild($insertId, get('category'));
+				$this->redirect('/admin/platby/category/edit_category/' . get('category'),
+						'Kategorie byla přidána, ale nebyla přiřazena - takové přiřazení není platné.');
+			}
+			$this->redirect('/admin/platby/category/edit_category/' . get('category'), 'Kategorie úspěšně přidána a přiřazena');
+		} elseif(get('skupina') && ($data = DBSkupiny::getSingle(get('skupina')))) {
+			DBSkupiny::addChild(get('skupina'), $insertId);
+			$conflicts = DBPlatby::checkConflicts(get('skupina'));
+			if(!empty($conflicts)) {
+				DBSkupiny::removeChild(get('skupina'), $insertId);
+				$this->redirect('/admin/skupiny/edit/' . get('skupina'),
+						'Kategorie byla přidána, ale nebyla přiřazena - takové přiřazení není platné.');
+			}
+			$this->redirect('/admin/skupiny/edit/' . get('skupiny'), 'Kategorie úspěšně přidána a přiřazena');
+		}
 		$this->redirect('/admin/platby/category', 'Kategorie úspěšně přidána');
 	}
 	function edit_group($id = null) {
 		if(!$id || !($data = DBPlatbyGroup::getSingle($id)))
 			$this->redirect('/admin/platby/category', 'Kategorie s takovým ID neexistuje');
+		
+		if(post('action') == 'skupiny') {
+			if(!($data = DBSkupiny::getSingle(post('skupiny'))))
+				$this->redirect('/admin/platby/category/edit_group/' . $id, 'Kategorie s takovým ID neexistuje.');
+			
+			DBSkupiny::addChild(post('skupiny'), $id);
+			$conflicts = DBPlatby::checkConflicts(post('skupiny'));
+			
+			if(!empty($conflicts)) {
+				DBSkupiny::removeChild(post('skupiny'), $id);
+				$this->redirect('/admin/platby/category/edit_group/' . $id,
+					'Takové přiřazení není platné - způsobilo by, že jeden specifický symbol by byl v jedné skupině dvakrát.');
+			}
+			$this->redirect('/admin/platby/category/edit_group/' . $id, 'Kategorie byla úspěšně přiřazena.');
+		} elseif(post('action') == 'skupina_remove') {
+			if(!($data = DBSkupiny::getSingle(post('skupina'))))
+				$this->redirect('/admin/platby/category/edit_group/' . $id, 'Skupina s takovým ID neexistuje.');
+			
+			DBSkupiny::removeChild(post('skupina'), $id);
+			$this->redirect('/admin/platby/category/edit_group/' . $id, 'Spojení s kategorií bylo úspěšně odstraněno.');
+		} elseif(post('action') == 'category') {
+			if(!($data = DBPlatbyCategory::getSingle(post('category'))))
+				$this->redirect('/admin/platby/category/edit_group/' . $id, 'Kategorie s takovým ID neexistuje.');
+			
+			DBPlatbyGroup::addChild($id, post('category'));
+			$skupiny = DBPlatbyGroup::getSingleWithSkupiny($id);
+			$conflicts = array();
+			foreach($skupiny as $array)
+				$conflicts = array_merge($conflicts, DBPlatby::checkConflicts($array['s_id']));
+			
+			if(!empty($conflicts)) {
+				DBPlatbyGroup::removeChild($id, post('category'));
+				$this->redirect('/admin/platby/category/edit_group/' . $id,
+					'Takové přiřazení není platné - způsobilo by, že jeden specifický symbol by byl v jedné skupině dvakrát.');
+			}
+			$this->redirect('/admin/platby/category/edit_group/' . $id, 'Kategorie byla úspěšně přiřazena.');
+		} elseif(post('action') == 'category_remove') {
+			if(!($data = DBPlatbyCategory::getSingle(post('category'))))
+				$this->redirect('/admin/platby/category/edit_group/' . $id, 'Specifický symbol s takovým ID neexistuje.');
+			
+			DBPlatbyGroup::removeChild($id, post('category'));
+			$this->redirect('/admin/platby/category/edit_group/' . $id, 'Spojení se specifickým symbolem bylo úspěšně odstraněno.');
+		}
 		
 		if(empty($_POST) || is_object($s = $this->checkGroupPost())) {
 			if(empty($_POST)) {
@@ -43,8 +108,6 @@ class Controller_Admin_Platby_Category extends Controller_Admin_Platby {
 			$this->displayGroupForm('edit', DBPlatbyGroup::getSingleWithCategories($id));
 			return;
 		}
-		//TODO: categories[]
-		//TODO: post(skupiny)[] !!!
 		
 		DBPlatbyGroup::update($id, post('type'), post('name'), post('description'), post('base'));
 		$this->redirect('/admin/platby/category', 'Kategorie úspěšně upravena');
@@ -58,13 +121,13 @@ class Controller_Admin_Platby_Category extends Controller_Admin_Platby {
 			
 			$categoryCount = 0;
 			foreach($f['categories'] as $data) {
-				DBPlatbyGroup::unlinkCategory($id, $data['pc_id']);
+				DBPlatbyGroup::removeChild($id, $data['pc_id']);
 				++$categoryCount;
 			}
 			unset($data);
 			$skupinaCount = 0;
 			foreach($f['skupiny'] as $data) {
-				DBSkupiny::unlinkGroup($data['s_id'], $id);
+				DBSkupiny::removeChild($data['s_id'], $id);
 				++$skupinaCount;
 			}
 			$this->redirect('/admin/platby/category/remove_group/' . $id,
@@ -117,11 +180,50 @@ class Controller_Admin_Platby_Category extends Controller_Admin_Platby {
 		
 		DBPlatbyCategory::insert(post('name'), post('symbol'), post('amount'), (string) $dueDate,
 			(string) $validFrom, (string) $validTo, $use_base, $use_prefix, $archive);
+		$insertId = DBPlatbyCategory::getInsertId();
+		if(get('group') && ($data = DBPlatbyGroup::getSingle(get('group')))) {
+			DBPlatbyGroup::addChild(get('group'), $insertId);
+			$skupiny = DBPlatbyGroup::getSingleWithSkupiny(get('group'));
+			$conflicts = array();
+			foreach($skupiny as $array)
+				$conflicts = array_merge($conflicts, DBPlatby::checkConflicts($array['s_id']));
+				
+			if(!empty($conflicts)) {
+				DBPlatbyGroup::removeChild(get('category'), $insertId);
+				$this->redirect('/admin/platby/category/edit_group/' . get('group'),
+						'Specifický symbol byl přidán, ale nebyl přiřazen - takové přiřazení není platné.');
+			}
+			$this->redirect('/admin/platby/category/edit_group/' . get('group'), 'Specifický symbol úspěšně přidán a přiřazen');
+		}
 		$this->redirect('/admin/platby/category', 'Specifický symbol úspěšně přidán');
 	}
 	function edit_category($id = null) {
 		if(!$id || !($data = DBPlatbyCategory::getSingle($id)))
 			$this->redirect('/admin/platby/category', 'Kategorie s takovým ID neexistuje');
+		
+		if(post('action') == 'group') {
+			if(!($data = DBPlatbyGroup::getSingle(post('group'))))
+				$this->redirect('/admin/platby/category/edit_category/' . $id, 'Kategorie s takovým ID neexistuje.');
+			
+			DBPlatbyGroup::addChild(post('group'), $id);
+			$skupiny = DBPlatbyGroup::getSingleWithSkupiny(post('group'));
+			$conflicts = array();
+			foreach($skupiny as $array)
+				$conflicts = array_merge($conflicts, DBPlatby::checkConflicts($array['s_id']));
+			
+			if(!empty($conflicts)) {
+				DBPlatbyGroup::removeChild(post('group'), $id);
+				$this->redirect('/admin/platby/category/edit_category/' . $id,
+					'Takové přiřazení není platné - způsobilo by, že jeden specifický symbol by byl v jedné skupině dvakrát.');
+			}
+			$this->redirect('/admin/platby/category/edit_category/' . $id, 'Kategorie byla úspěšně přiřazena.');
+		} elseif(post('action') == 'group_remove') {
+			if(!($data = DBPlatbyGroup::getSingle(post('group'))))
+				$this->redirect('/admin/platby/category/edit_category/' . $id, 'Kategorie s takovým ID neexistuje.');
+			
+			DBPlatbyGroup::removeChild(post('group'), $id);
+			$this->redirect('/admin/platby/category/edit_category/' . $id, 'Spojení s kategorií bylo úspěšně odstraněno.');
+		}
 		
 		if(empty($_POST) || is_object($s = $this->checkCategoryPost())) {
 			if(!empty($_POST)) {
@@ -160,8 +262,6 @@ class Controller_Admin_Platby_Category extends Controller_Admin_Platby {
 		$use_prefix = post('usePrefix') ? '1' : '0';
 		$archive = post('archive') ? '1' : '0';
 
-		//TODO: groups[]
-
 		DBPlatbyCategory::update($id, post('name'), post('symbol'), post('amount'), (string) $dueDate,
 			(string) $validFrom, (string) $validTo, $use_base, $use_prefix, $archive);
 		if(get('group'))
@@ -177,7 +277,7 @@ class Controller_Admin_Platby_Category extends Controller_Admin_Platby {
 			
 			$groupCount = 0;
 			foreach($f['groups'] as $data) {
-				DBPlatbyGroup::unlinkCategory($data['pg_id'], $id);
+				DBPlatbyGroup::removeChild($data['pg_id'], $id);
 				++$groupCount;
 			}
 			unset($data);
@@ -235,8 +335,11 @@ class Controller_Admin_Platby_Category extends Controller_Admin_Platby {
 		$groups = DBPlatbyCategory::getSingleWithGroups($id);
 		foreach($groups as &$array) {
 			$new_data = array(
-					'buttons' => $this->getEditLink('/admin/platby/category/edit_group/' . $array['pg_id']) .
-						$this->getRemoveLink('/admin/platby/category/remove_group/' . $array['pg_id']),
+					'buttons' => '<form action="" method="post">' .
+						$this->getUnlinkGroupButton($array['pg_id']) .
+						$this->getEditLink('/admin/platby/category/edit_group/' . $array['pg_id']) .
+						$this->getRemoveLink('/admin/platby/category/remove_group/' . $array['pg_id']) .
+						'</form>',
 					'type' => ($array['pg_type'] == '1' ? 'Členské příspěvky' : 'Běžné platby'),
 					'name' => $array['pg_name'],
 					'base' => $array['pg_base']
@@ -261,8 +364,11 @@ class Controller_Admin_Platby_Category extends Controller_Admin_Platby {
 		$id = Request::getID() ? Request::getID() : 0;
 		foreach($data as $key => &$array) {
 			$new_data = array(
-					'buttons' => $this->getEditLink('/admin/platby/category/edit_category/' . $array['pc_id']) .
-						$this->getRemoveLink('/admin/platby/category/remove_category/' . $array['pc_id']),
+					'buttons' => '<form action="" method="post">' .
+						$this->getUnlinkCategoryButton($array['pc_id']) .
+						$this->getEditLink('/admin/platby/category/edit_category/' . $array['pc_id']) .
+						$this->getRemoveLink('/admin/platby/category/remove_category/' . $array['pc_id']) .
+						'</form>',
 					'name' => $array['pc_name'],
 					'specific' => $array['pc_symbol'],
 					'amount' => $array['pc_amount'],
@@ -284,9 +390,12 @@ class Controller_Admin_Platby_Category extends Controller_Admin_Platby {
 		$skupiny = DBPlatbyGroup::getSingleWithSkupiny($id);
 		foreach($skupiny as &$array) {
 			$new_data = array(
-					'buttons' => $this->getEditLink('/admin/skupiny/edit/' . $array['s_id']) .
-						$this->getRemoveLink('/admin/skupiny/remove?u[]=' . $array['s_id']),
-					'name' => getColorBox($item['s_color'], $item['s_description']) . '&nbsp;' . $item['pc_name']
+					'buttons' => '<form action="" method="post">' .
+						$this->getUnlinkSkupinaButton($array['s_id']) .
+						$this->getEditLink('/admin/skupiny/edit/' . $array['s_id']) .
+						$this->getRemoveLink('/admin/skupiny/remove?u[]=' . $array['s_id']) .
+						'</form>',
+					'name' => getColorBox($array['s_color_text'], $array['s_description']) . '&nbsp;' . $array['s_name']
 			);
 			$array = $new_data;
 		}unset($array);
@@ -368,6 +477,27 @@ class Controller_Admin_Platby_Category extends Controller_Admin_Platby {
 	}
 	private function getRemoveLink($link) {
 		return '<a href="' . $link . '"><img alt="Odstranit" src="/images/cross.png" /></a>';
+	}
+	private function getUnlinkGroupButton($id) {
+		return
+			'<input type="hidden" name="group" value="' . $id . '">' .
+			'<button name="action" value="group_remove">' .
+				'<img alt="Odstranit spojení" src="/images/unlink.png" />' .
+			'</button>';
+	}
+	private function getUnlinkCategoryButton($id) {
+		return
+			'<input type="hidden" name="category" value="' . $id . '">' .
+			'<button name="action" value="category_remove">' .
+				'<img alt="Odstranit spojení" src="/images/unlink.png" />' .
+			'</button>';
+	}
+	private function getUnlinkSkupinaButton($id) {
+		return
+			'<input type="hidden" name="skupina" value="' . $id . '">' .
+			'<button name="action" value="skupina_remove">' .
+				'<img alt="Odstranit spojení" src="/images/unlink.png" />' .
+			'</button>';
 	}
 	private function checkCategoryPost() {
 		$f = new Form();

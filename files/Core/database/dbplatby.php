@@ -2,6 +2,28 @@
 class DBPlatby extends Database implements Pagable {
 	public static function getInstance() { return new self(); }
 	
+	public static function checkConflicts($sid) {
+		list($sid) = self::escape($sid);
+		$res = self::query(
+				"SELECT skupiny.*,platby_group.*,platby_category.*
+				FROM platby_category_group pcg
+					INNER JOIN platby_group_skupina ON pcg.pcg_id_group=pgs_id_group
+					LEFT JOIN skupiny ON pgs_id_skupina=s_id
+					LEFT JOIN platby_group ON pcg.pcg_id_group=pg_id
+					LEFT JOIN platby_category ON pcg.pcg_id_category=pc_id
+					INNER JOIN (
+						SELECT pcg_id FROM platby_category_group
+							INNER JOIN platby_group_skupina ON pcg_id_group=pgs_id_group
+						GROUP BY pcg_id_category
+						HAVING COUNT(pcg_id) > 1
+					) dupl
+				WHERE pgs_id_skupina='$sid' AND pcg.pcg_id=dupl.pcg_id"
+		);
+		return self::getArray($res);
+	}
+	
+	
+	//-------------
 	public static function getPage($offset, $count, $options = null) {
 		$q = "SELECT * FROM users_platby
 			LEFT JOIN users ON up_id_user=u_id

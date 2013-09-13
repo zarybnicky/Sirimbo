@@ -13,7 +13,7 @@ if($this->showMenu) {
 echo '<div style="margin-right:150px">';
 echo $this->table()
 	->style('width:100%')
-	->column('checkBox', '', 'center', 'width:45px')
+	->column('buttons', '', 'center', 'width:50px')
 	->column('colorBox', 'Barvy', 'center', 'width:45px')
 	->column('name', 'Název')
 	->data($this->data);

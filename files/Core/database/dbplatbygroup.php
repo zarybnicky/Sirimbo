@@ -1,6 +1,15 @@
 <?php
 class DBPlatbyGroup extends Database {
-	public static function unlinkCategory($gid, $cid) {
+	public static function addChild($gid, $cid) {
+		list($gid, $cid) = self::escape($gid, $cid);
+		self::query(
+				"INSERT IGNORE INTO platby_category_group
+				(pcg_id_group,pcg_id_category)
+				VALUES
+				('$gid','$cid')"
+		);
+	}
+	public static function removeChild($gid, $cid) {
 		list($gid, $cid) = self::escape($gid, $cid);
 		self::query(
 				"DELETE FROM platby_category_group
@@ -39,6 +48,15 @@ class DBPlatbyGroup extends Database {
 				"SELECT * FROM platby_group
 				WHERE NOT EXISTS (
 					SELECT pcg_id FROM platby_category_group WHERE pcg_id_group=pg_id AND pcg_id_category='$id'
+				)");
+		return self::getArray($res);
+	}
+	public static function getNotInSkupina($id) {
+		list($id) = self::escape($id);
+		$res = self::query(
+				"SELECT * FROM platby_group
+				WHERE NOT EXISTS (
+					SELECT pgs_id FROM platby_group_skupina WHERE pgs_id_group=pg_id AND pgs_id_skupina='$id'
 				)");
 		return self::getArray($res);
 	}

@@ -1,14 +1,9 @@
 <?php
-header_main('Správa skupin');
-header_minor($this->action == 'add' ? 'Přidat skupinu' : 'Upravit skupinu');
-notice($this->redirect()->getMessage());
-
 $colorSelect = array();
 foreach(Settings::$barvy as $name => $barva)
 	$colorSelect[$name] = $barva[0];
 
-echo '<form action="" method="POST">';
-echo $this->table()
+$mainForm = (new TableHelper())->table()
 	->style('width:100%')
 	->showHeader(false)
 	->column('desc', '', 'r')
@@ -25,7 +20,38 @@ echo $this->table()
 					'value' => '<textarea rows="15" cols="50" name="desc">' . post('popis') . '</textarea>'
 			)
 	));
-echo '<button type="submit" name="action" value="confirm">' .
-	($this->action == 'add' ? 'Přidat' : 'Upravit') .
-	'</button>&nbsp;<a href="/admin/skupiny">Zpět</a>';
-echo '</form>';
+	
+if(!empty($this->groups)) {
+	$groupForm = (new TableHelper())->table()
+		->column('buttons', '', '', 'width:75px')
+		->column('type', 'Typ')
+		->column('name', 'Jméno')
+		->column('base', 'Násobitel částky')
+		->data($this->groups);
+}
+if(!empty($this->groupSelect)) {
+	$groupSelectBox = (new SelectHelper())->select('group')
+		->options($this->groupSelect);
+}
+?>
+
+<?php header_main('Správa skupin');?>
+<?php header_minor($this->action == 'add' ? 'Přidat skupinu' : 'Upravit skupinu');?>
+<?php notice($this->redirect()->getMessage());?>
+<form action="" method="POST">
+	<?php echo $mainForm;?>
+	<button type="submit" name="action" value="confirm">Uložit</button>&nbsp;<a href="/admin/skupiny">Zpět</a>
+</form>
+<br/>
+<?php if($this->action != 'add'):?>
+	<?php header_minor('Kategorie plateb');?>
+	<?php if(isset($groupForm)) echo $groupForm;?>
+	<form action="" method="post">
+		<span class="big">Přidat:</span>
+		<a href="/admin/platby/category/add_group?skupina=<?php echo $this->id;?>">novou kategorii</a>
+		<?php if(isset($groupSelectBox)): ?>
+			nebo existující: <?php echo $groupSelectBox;?>
+			<button type="submit" name="action" value="group">odeslat</button>
+		<?php endif;?>
+	</form>
+<?php endif;?>
