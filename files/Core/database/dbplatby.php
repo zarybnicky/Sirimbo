@@ -14,7 +14,8 @@ class DBPlatby extends Database implements Pagable {
 					INNER JOIN (
 						SELECT pcg_id FROM platby_category_group
 							INNER JOIN platby_group_skupina ON pcg_id_group=pgs_id_group
-						GROUP BY pcg_id_category
+							LEFT JOIN platby_category ON pc_id=pcg_id_category
+						GROUP BY pc_symbol
 						HAVING COUNT(pcg_id) > 1
 					) dupl
 				WHERE pgs_id_skupina='$sid' AND pcg.pcg_id=dupl.pcg_id"
