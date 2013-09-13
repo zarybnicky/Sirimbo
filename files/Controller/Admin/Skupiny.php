@@ -47,10 +47,10 @@ class Controller_Admin_Skupiny extends Controller_Admin {
 			$conflicts = DBPlatby::checkConflicts($insertId);
 			if(!empty($conflicts)) {
 				DBSkupiny::removeChild($insertId, get('group'));
-				$this->redirect('/admin/platby/category/edit_group/' . get('group'),
+				$this->redirect('/admin/platby/structure/group/edit/' . get('group'),
 						'Skupina byla přidána, ale nebyla přiřazena - takové přiřazení není platné.');
 			}
-			$this->redirect('/admin/platby/category/edit_group/' . get('group'), 'Skupina úspěšně přidána a přiřazena');
+			$this->redirect('/admin/platby/structure/group/edit/' . get('group'), 'Skupina úspěšně přidána a přiřazena');
 		}
 		$this->redirect('/admin/skupiny', 'Skupina úspěšně přidána');
 	}
@@ -106,7 +106,7 @@ class Controller_Admin_Skupiny extends Controller_Admin {
 				++$groupCount;
 			}
 			unset($data);
-			$this->redirect('/admin/platby/category/remove_category/' . $id,
+			$this->redirect('/admin/platby/structure/category/remove/' . $id,
 					'Spojení s \'' . $groupCount . '\' kategoriemi byla odstraněna.');
 			return;
 		}
@@ -139,8 +139,8 @@ class Controller_Admin_Skupiny extends Controller_Admin {
 			$new_data = array(
 					'buttons' => '<form action="" method="post">' .
 						$this->getUnlinkGroupButton($array['pg_id']) .
-						$this->getEditLink('/admin/platby/category/edit_group/' . $array['pg_id']) .
-						$this->getRemoveLink('/admin/platby/category/remove_group/' . $array['pg_id']) .
+						$this->getEditLink('/admin/platby/structure/group/edit/' . $array['pg_id']) .
+						$this->getRemoveLink('/admin/platby/structure/group/remove/' . $array['pg_id']) .
 						'</form>',
 					'type' => ($array['pg_type'] == '1' ? 'Členské příspěvky' : 'Běžné platby'),
 					'name' => $array['pg_name'],

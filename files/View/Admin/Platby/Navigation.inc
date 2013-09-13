@@ -23,7 +23,7 @@ if(TISK)
 </style>
 <ul id="adminNavigation">
 	<li><?php _getItem('Přehled', 'platby');?></li>
-	<li><?php _getItem('Kategorie', 'platby/category');?></li>
+	<li><?php _getItem('Kategorie', 'platby/structure');?></li>
 	<li><?php _getItem('Hledání', 'platby/items');?></li>
 	<li><?php _getItem('Import', 'platby/raw');?></li>
 	<li><?php _getItem('Nezařazené platby', 'platby/manual');?></li>

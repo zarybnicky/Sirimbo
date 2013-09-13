@@ -52,14 +52,14 @@ if(!empty($this->skupinySelect)) {
 <?php header_minor($this->action == 'add' ? 'Přidat kategorii' : 'Upravit kategorii');?>
 <form action="" method="post">
 	<?php echo $mainForm;?>
-	<button name="action" value="confirm">Uložit</button>&nbsp;<a href="/admin/platby/category">Zpět</a><br/><br/>
+	<button name="action" value="confirm">Uložit</button>&nbsp;<a href="/admin/platby/structure">Zpět</a><br/><br/>
 </form>
 <?php if($this->action != 'add'): ?>
 	<?php header_minor('Specifické symboly');?>
 	<?php if(isset($categoryForm)) echo $categoryForm;?>
 	<form action="" method="post">
 		<span class="big">Přidat:</span>
-		<a href="/admin/platby/category/add_category?group=<?php echo $this->id;?>">nový specifický symbol</a>
+		<a href="/admin/platby/structure/category/add?group=<?php echo $this->id;?>">nový specifický symbol</a>
 		<?php if(isset($categorySelectBox)):?>
 			nebo existující: <?php echo $categorySelectBox;?>
 			<button type="submit" name="action" value="category">odeslat</button>

@@ -45,14 +45,14 @@ if(!empty($this->groupSelect)) {
 <?php header_minor($this->action == 'add' ? 'Přidat specifický symbol' : 'Upravit specifický symbol');?>
 <form action="" method="post">
 	<?php echo $mainForm;?>
-	<button name="action" value="confirm">Uložit</button>&nbsp;<a href="/admin/platby/category">Zpět</a><br/><br/>
+	<button name="action" value="confirm">Uložit</button>&nbsp;<a href="/admin/platby/structure">Zpět</a><br/><br/>
 </form>
 <?php if($this->action != 'add'): ?>
 	<?php header_minor('Kategorie');?>
 	<?php if(isset($groupForm)) echo $groupForm;?>
 	<form action="" method="post">
 		<span class="big">Přidat:</span>
-		<a href="/admin/platby/category/add_group?category=<?php echo $this->id;?>">novou kategorii</a>
+		<a href="/admin/platby/structure/group/add?category=<?php echo $this->id;?>">novou kategorii</a>
 		<?php if(isset($groupSelectBox)): ?>
 			nebo existující: <?php echo $groupSelectBox;?>
 			<button type="submit" name="action" value="group">odeslat</button>

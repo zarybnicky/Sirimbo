@@ -9,6 +9,6 @@ Opravdu chcete odstranit kategorii plateb "<?php echo $this->name;?>"?
 <input type="hidden" name="data[]" value="<?php echo $this->id;?>" />
 <br/>
 <button type="submit" name="action" value="confirm">Odstranit</button>
-<a href="/admin/platby/category">Zpět</a>
+<a href="/admin/platby/structure">Zpět</a>
 
 </form>
