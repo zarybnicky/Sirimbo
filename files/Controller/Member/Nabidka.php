@@ -2,7 +2,7 @@
 include_once('files/Controller/Member.php');
 class Controller_Member_Nabidka extends Controller_Member {
 	function __construct() {
-		Permissions::checkError('dokumenty', P_VIEW);
+		Permissions::checkError('nabidka', P_VIEW);
 	}
 	function view($id = null) {
 		$this->redirect()->setMessage($this->__processPost());
