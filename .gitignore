@@ -7,4 +7,6 @@ galerie/*
 !galerie/.gitignore
 upload/*
 !upload/.gitignore
+log/*
+!log/.gitignore
 stats/
