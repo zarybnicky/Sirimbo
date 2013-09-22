@@ -3,10 +3,12 @@
 <?php echo $this->colorBox, '&nbsp;', $this->skupinaData;?><br/>
 Variabilní symbol: <?php echo $this->varSymbol;?>
 <br/><br/>
-Aktuálně: <?php echo $this->zaplaceno ? 'zaplaceno' : 'NEZAPLACENO';?>
+Aktuálně: <?php echo $this->zaplacenoText;?>
+<br/>
+Více informací přijde brzy!
 <br/><br/>
 
-<?php if(!empty($this->platby)): ?>
+<?php /*if(!empty($this->platby)): ?>
 <?php header_minor('Historie plateb');?>
 <table>
 	<tr>
@@ -26,21 +28,17 @@ Aktuálně: <?php echo $this->zaplaceno ? 'zaplaceno' : 'NEZAPLACENO';?>
 	</tr>
 	<?php endforeach;?>
 </table><br/>
-<?php endif;?>
+<?php endif;*/?>
 
-<?php header_minor('Přehled skupin');?>
-<table>
-	<tr>
-		<td>Skupina</td>
-		<td>Kč/čtvrtrok</td>
-		<td>Kč/půlrok</td>
-	</tr>
-	<?php foreach($this->skupiny as $skupina): ?>
-	<tr>
-		<td><?php echo $skupina['colorBox'];?>&nbsp;<?php echo $skupina['popis'];?></td>
-		<td><?php echo $skupina['castkaCtvrtleti'];?></td>
-		<td><?php echo $skupina['castkaPololeti'];?></td>
-	</tr>
-	<?php endforeach;?>
-</table>
-<a href="/member/profil">Zpět</a>
+<?php
+header_minor('Přehled plateb');
+echo $this->table()
+	->data($this->platbyGroups)
+	->column('name', 'Jméno', '', 'width:125px')
+	->column('type', 'Typ platby')
+	->column('symbol', 'Specifický symbol', '', 'width:75px')
+	->column('amount', 'Částka')
+	->column('dueDate', 'Splatnost')
+	->column('validRange', 'Platnost');
+echo '<a href="/member/profil">Zpět</a>';
+?>

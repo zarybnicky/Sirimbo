@@ -27,11 +27,11 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 		$users = $this->getUserLookup(false);
 		
 		$this->recognizeHeaders(array_flip($raw), $specific, $variable, $date, $amount);
-		
+		$null = '';
 		if($specific !== null && $date !== null) {
 			$prefix = $this->getPrefix($raw[$specific], $raw[$date]);
 		} elseif($specific === null && $date !== null) {
-			$prefix = $this->getPrefix($null = '', $raw[$date]);
+			$prefix = $this->getPrefix($null, $raw[$date]);
 		} elseif($specific !== null && $date === null) {
 			$prefix = $this->getPrefix($raw[$specific], '');
 		} else {

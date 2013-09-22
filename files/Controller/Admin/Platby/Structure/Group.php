@@ -19,7 +19,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
 			$conflicts = array();
 			foreach($skupiny as $array)
 				$conflicts = array_merge($conflicts, DBPlatby::checkConflicts($array['s_id']));
-	
+			
 			if(!empty($conflicts)) {
 				DBPlatbyGroup::removeChild($insertId, get('category'));
 				$this->redirect('/admin/platby/structure/category/edit/' . get('category'),
@@ -159,7 +159,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
 					'</form>',
 					'name' => $array['pc_name'],
 					'specific' => $array['pc_symbol'],
-					'amount' => $array['pc_amount'],
+					'amount' => ((float) $array['pc_amount'] * (float) $array['pg_base']),
 					'dueDate' => (new Date($array['pc_date_due']))->getDate(Date::FORMAT_SIMPLE_SPACED),
 					'validDate' => $this->getDateDisplay($array['pc_valid_from'], $array['pc_valid_to']),
 					'usePrefix' => '&nbsp;' . ($array['pc_use_prefix'] ? '&#10003;' : '&#10799;'),

@@ -47,6 +47,7 @@ class Controller_Member_Profil extends Controller_Member {
 		$this->redirect('/member/profil', 'Heslo změněno');
 	}
 	function platby($id = null) {
+		/*
 		$platby = DBPlatby::getPlatbyFromUser(User::getUserID());
 		foreach($platby as &$row) {
 			$new_data = array(
@@ -58,31 +59,41 @@ class Controller_Member_Profil extends Controller_Member {
 			);
 			$row = $new_data;
 		}unset($row);
-		
-		$skupiny = DBSkupiny::getSkupiny();
-		foreach($skupiny as $key => &$row) {
-			/*
-			if($row['us_platba_mesic'] == 0 && $row['us_platba_ctvrtrok'] == 0 && $row['us_platba_pulrok'] == 0) {
-				unset($skupiny[$key]);
-				continue;
+		*/
+		$groupsOut = array();
+		$groups = DBSkupiny::getSingleWithCategories(User::getSkupina());
+		$currentGroup = 0;
+		foreach($groups as $row) {
+			if($currentGroup != $row['pg_id']) {
+				$groupsOut[] = array(
+						'name' => ('<span class="big" style="text-decoration:underline;">' . $row['pg_name'] . '</span>'),
+						'type' => (!$row['pg_type'] ? 'Ostatní platby' : 'Členské příspěvky'),
+						'symbol' => '',
+						'amount' => '',
+						'dueDate' => '',
+						'validRange' => ''
+				);
+				$currentGroup = $row['pg_id'];
 			}
-			*/
-			$new_data = array(
-					'colorBox' => getColorBox($row['s_color_text'], $row['s_description']),
-					'popis' => $row['s_name'],
-					'castkaCtvrtleti' => '',
-					'castkaPololeti' => ''
+			$groupsOut[] = array(
+					'name' => $row['pc_name'],
+					'type' => '',
+					'symbol' => $row['pc_symbol'],
+					'amount' => (($row['pc_use_base'] ? ($row['pc_amount'] * $row['pg_base']) : $row['pc_amount']) . ' Kč'),
+					'dueDate' => (new Date($row['pc_date_due']))->getDate(Date::FORMAT_SIMPLIFIED),
+					'validRange' => ((new Date($row['pc_valid_from']))->getDate(Date::FORMAT_SIMPLIFIED) .
+								((new Date($row['pc_valid_to']))->isValid() ?
+										(' - ' . (new Date($row['pc_valid_to']))->getDate(Date::FORMAT_SIMPLIFIED)) : ''))
 			);
-			$row = $new_data;
 		}
 		$skupina = User::getSkupinaData();
 		$this->render('files/View/Member/Profil/Platby.inc', array(
 				'colorBox' => getColorBox($skupina['s_color_text'], $skupina['s_description']),
-				'skupinaData' => $skupina['s_description'],
+				'skupinaData' => $skupina['s_name'],
 				'varSymbol' => User::var_symbol(User::getUserID()),
-				'zaplaceno' => User::getZaplaceno(),
-				'platby' => $platby,
-				'skupiny' => $skupiny
+				'zaplacenoText' => User::getZaplaceno() ? 'zaplaceno' : 'nezaplaceno!',
+				'platby' => array(),
+				'platbyGroups' => $groupsOut
 		));
 	}
 	private function __checkData($action, $narozeni = null) {

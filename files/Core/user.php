@@ -67,11 +67,21 @@ class User {
 		$_SESSION['skupina_data'] = array(
 			's_id '=> $data['s_id'],
 			's_color_text' => $data['s_color_text'],
-			's_name' => $data['s_name']
+			's_name' => $data['s_name'],
+			's_description' => $data['s_description']
 		);
 		$_SESSION['par'] = $par['p_id'];
 		$_SESSION['partner'] = $par['u_id'];
 		
+		$_SESSION['zaplaceno'] = DBPlatby::hasPaidMemberFees($data['u_id']);
+		$_SESSION['zaplaceno_par'] = $_SESSION['zaplaceno'] | DBPlatby::hasPaidMemberFees($par['u_id']);
+		$_SESSION['zaplaceno_text'] =
+			$_SESSION['zaplaceno'] ?
+				($_SESSION['zaplaceno_par'] ? null : 'Váš/e partner/ka nemá zaplacené členské příspěvky, ' .
+					'bez zaplacených příspěvků si nemůžete rezervovat lekce.') :
+				'Nemáte zaplacené členské příspěvky, ' .
+					'bez zaplacených příspěvků si nemůžete rezervovat lekce.';
+		/*
 		$date = (int) date('md');
 		if($date >= '701' && $date <= 831) {
 			$_SESSION['zaplaceno'] = $_SESSION['zaplaceno_par'] = true;
@@ -127,6 +137,7 @@ class User {
 					'bez zaplacených příspěvků si nemůžete rezervovat lekce.';
 				break;
 		}
+		*/
 		return true;
 	}
 	

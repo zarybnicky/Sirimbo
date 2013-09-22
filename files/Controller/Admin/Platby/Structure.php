@@ -13,25 +13,26 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby {
 		));
 	}
 	protected function getCategories() {
-		$categories = parent::getCategoryLookup(false, false, true);
-		foreach($categories as $key => &$array) {
+		$out = array();
+		$categories = parent::getCategoryList();
+		foreach($categories as $array) {
 			$new_data = array();
-			if(strpos($key, 'group_') !== false) {
-				$new_data['name'] = '<span class="big">' . $array['pg_name'] . '</span>';
+			if(strpos($array[0], 'group_') !== false) {
+				$new_data['name'] = '<span class="big" style="text-decoration:underline;">' . $array[1]['pg_name'] . '</span>';
 				$new_data['colorBox'] = 'TODO: colorBox';
 				$new_data['validDate'] = '';
-				$new_data['buttons'] = $this->getEditLink('/admin/platby/structure/group/edit/' . $array['pg_id']) .
-						$this->getRemoveLink('/admin/platby/structure/group/remove/' . $array['pg_id']);
+				$new_data['buttons'] = $this->getEditLink('/admin/platby/structure/group/edit/' . $array[1]['pg_id']) .
+						$this->getRemoveLink('/admin/platby/structure/group/remove/' . $array[1]['pg_id']);
 			} else {
-				$new_data['name'] = '(' . $array['pc_symbol'] . ') - ' . $array['pc_name'];
+				$new_data['name'] = '&nbsp;- ' . $array[1]['pc_name'] . ' (' . $array[1]['pc_symbol'] . ')';
 				$new_data['colorBox'] = '';
-				$new_data['validDate'] = $this->getDateDisplay($array['pc_valid_from'], $array['pc_valid_to']);
-				$new_data['buttons'] = $this->getEditLink('/admin/platby/structure/category/edit/' . $array['pc_id']) . 
-					$this->getRemoveLink('/admin/platby/structure/category/remove/' . $array['pc_id']);
+				$new_data['validDate'] = $this->getDateDisplay($array[1]['pc_valid_from'], $array[1]['pc_valid_to']);
+				$new_data['buttons'] = $this->getEditLink('/admin/platby/structure/category/edit/' . $array[1]['pc_id']) . 
+					$this->getRemoveLink('/admin/platby/structure/category/remove/' . $array[1]['pc_id']);
 			}
-			$array = $new_data;
+			$out[] = $new_data;
 		}
-		return $categories;
+		return $out;
 	}
 	protected function getOrphanGroupSkupina() {
 		$out = DBPlatbyGroup::getWithoutSkupina();
@@ -96,7 +97,7 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby {
 				'<img alt="Odstranit spojení" src="/images/unlink.png" />' .
 			'</button>';
 	}
-	protected function getDateDisplay($from, $to) {dump(array($from, $to));
+	protected function getDateDisplay($from, $to) {
 		$from = new Date($from);
 		$to = new Date($to);
 		return $from->getDate(Date::FORMAT_SIMPLIFIED) . ' - ' . (string) $to->getDate(Date::FORMAT_SIMPLIFIED);
