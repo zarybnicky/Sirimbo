@@ -69,7 +69,7 @@ class Controller_Admin_Nastenka extends Controller_Admin {
 			$this->render('files/View/Admin/Nastenka/Form.inc', array(
 					'action' => Request::getAction(),
 					'returnURL' => Request::getReferer(),
-					'skupiny' => DBSkupiny::getSkupiny()				
+					'skupiny' => DBSkupiny::get()
 			));
 			return;
 		}
@@ -110,7 +110,7 @@ class Controller_Admin_Nastenka extends Controller_Admin {
 			$this->render('files/View/Admin/Nastenka/Form.inc', array(
 					'action' => Request::getAction(),
 					'returnURL' => Request::getReferer(),
-					'skupiny' => DBSkupiny::getSkupiny()				
+					'skupiny' => DBSkupiny::get()
 			));
 			return;
 		}

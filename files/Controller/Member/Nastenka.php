@@ -2,7 +2,7 @@
 include_once('files/Controller/Member.php');
 class Controller_Member_Nastenka extends Controller_Member {
 	function __construct() {
-		Permissions::checkError('dokumenty', P_VIEW);
+		Permissions::checkError('nastenka', P_VIEW);
 	}
 	function view($id = null) {
 		$pager = new Paging(new PagingAdapterDBSelect('DBNastenka'));

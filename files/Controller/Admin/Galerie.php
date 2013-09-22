@@ -122,8 +122,10 @@ class Controller_Admin_Galerie extends Controller_Admin {
 			unset($db_out_dirs[$key]);
 		}
 		foreach($fs_files as $key => $parent) {
-			if(!is_file(str_replace('./galerie', './galerie/thumbnails', $key)))
-				$this->createThumbnail($key, $parent);
+			if(!is_file(str_replace('./galerie', './galerie/thumbnails', $key)) && !$this->createThumbnail($key, $parent)) {
+				unset($fs_files[$key]);
+				continue;
+			}
 			
 			if(!isset($db_out_files[$key]) || ($db_out_files[$key] != $fs_files[$key]))
 				continue;
@@ -312,7 +314,7 @@ class Controller_Admin_Galerie extends Controller_Admin {
 		$file_list = scandir($dir_name);
 		
 		foreach($file_list as $key => $file) {
-			if(in_array($file, array('.','..','thumbnails'))) {
+			if(in_array($file, array('.','..','thumbnails', '.gitignore'))) {
 				unset($file_list[$key]);
 				continue;
 			}

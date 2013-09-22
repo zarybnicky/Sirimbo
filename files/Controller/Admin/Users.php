@@ -255,7 +255,7 @@ class Controller_Admin_Users extends Controller_Admin {
 		} else {
 			$data = DBUser::getUserData($id);
 			if(!($partner = DBPary::getLatestPartner($data['u_id'], $data['u_pohlavi']))) {
-				$par_id = DBPary::noPartner($user['u_id']);
+				$par_id = DBPary::noPartner($data['u_id']);
 			} else {
 				$par_id = $partner['p_id'];
 			}

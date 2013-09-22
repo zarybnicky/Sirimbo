@@ -40,7 +40,7 @@ class Request {
 		for($i = count(Request::$url_parts) - 1; $i >= 0; $i--) {
 			if(is_numeric(Request::$url_parts[$i])) {
 				$id = Request::$url_parts[$i];	//find last number, set it as the ID for most regular actions
-				if(!is_numeric(Request::$url_parts[$i - 1])) {
+				if(isset(Request::$url_parts[$i - 1]) && !is_numeric(Request::$url_parts[$i - 1])) {
 					$action = Request::$url_parts[$i - 1];		//dilemma: action before or after id???
 					break;
 				}
