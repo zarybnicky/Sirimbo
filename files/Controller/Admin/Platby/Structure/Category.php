@@ -28,14 +28,14 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
 		
 		$amount = post('amount');
 		$use_base = '0';
-		if(strpos($amount, '*')) {
+		if(strpos($amount, '*') !== false) {
 			$use_base = '1';
 			$amount = str_replace('*', '', $amount);
 		}
 		$use_prefix = post('usePrefix') ? '1' : '0';
 		$archive = post('archive') ? '1' : '0';
 		
-		DBPlatbyCategory::insert(post('name'), post('symbol'), post('amount'), (string) $dueDate,
+		DBPlatbyCategory::insert(post('name'), post('symbol'), $amount, (string) $dueDate,
 			(string) $validFrom, (string) $validTo, $use_base, $use_prefix, $archive);
 		$insertId = DBPlatbyCategory::getInsertId();
 		if(get('group') && ($data = DBPlatbyGroup::getSingle(get('group')))) {
@@ -112,14 +112,14 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
 		
 		$amount = post('amount');
 		$use_base = '0';
-		if(strpos($amount, '*')) {
+		if(strpos($amount, '*') !== false) {
 			$use_base = '1';
 			$amount = str_replace('*', '', $amount);
 		}
 		$use_prefix = post('usePrefix') ? '1' : '0';
 		$archive = post('archive') ? '1' : '0';
 
-		DBPlatbyCategory::update($id, post('name'), post('symbol'), post('amount'), (string) $dueDate,
+		DBPlatbyCategory::update($id, post('name'), post('symbol'), $amount, (string) $dueDate,
 			(string) $validFrom, (string) $validTo, $use_base, $use_prefix, $archive);
 		if(get('group'))
 			$this->redirect('/admin/platby/structure/group/edit/' . get('group'), 'Specifický symbol úspěšně upraven');

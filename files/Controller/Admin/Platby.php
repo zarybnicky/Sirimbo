@@ -29,6 +29,19 @@ class Controller_Admin_Platby extends Controller_Admin {
 		else
 			return true;
 	}
+	protected function getCategoryList() {
+		$in = DBPlatbyGroup::getGroupsWithCategories();
+		$out = array();
+		$group_id = 0;
+		foreach($in as $array) {
+			if($group_id != $array['pg_id'] && !isset($out['group_' . $array['pg_id']])) {
+				$out[] = array('group_' . $array['pg_id'], $array);
+				$group_id = $array['pg_id'];
+			}
+			$out[] = array($array['pc_id'], $array);
+		}
+		return $out;
+	}
 	protected function getCategoryLookup($useSymbolKey, $unique, $includeGroups) {
 		$in = DBPlatbyGroup::getGroupsWithCategories();
 		$out = array();
@@ -36,13 +49,12 @@ class Controller_Admin_Platby extends Controller_Admin {
 		foreach($in as $array) {
 			$key = (int) ($useSymbolKey ? $array['pc_symbol'] : $array['pc_id']);
 			
-			if($unique && isset($out[$key]))
-				continue;
-			
 			if($includeGroups && $group_id != $array['pg_id'] && !isset($out['group_' . $array['pg_id']])) {
 				$out['group_' . $array['pg_id']] = $array;
 				$group_id = $array['pg_id'];
 			}
+			if($unique && isset($out[$key]))
+				continue;
 			$out[$key] = $array;
 		}
 		return $out;

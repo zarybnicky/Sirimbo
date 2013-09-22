@@ -105,10 +105,11 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby {
 		$upload = new UploadHelper();
 		$upload->upload('in')->loadFromPost();
 		
+		$validFiles = $upload->hasValidFiles();
 		if($upload->hasInvalidFiles()) {
 			$this->redirect()->setMessage($upload->getErrorMessages());
 			return;
-		} elseif($upload->hasEmptyFiles() && empty($upload->hasValidFiles())) {
+		} elseif($upload->hasEmptyFiles() && empty($validFiles)) {
 			$this->redirect()->setMessage('Vyberte prosím nějaký soubor (prázdné soubory jsou automaticky odmítnuty).');
 			return;
 		}

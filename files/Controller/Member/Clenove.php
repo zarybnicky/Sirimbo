@@ -31,7 +31,7 @@ class Controller_Member_Clenove extends Controller_Member {
 				
 				$new_data = array(
 						'header' => (getColorBox($skupina['s_color_text'], $skupina['s_description']) .
-								'&nbsp;&nbsp;' . $skupina['n_name'] . ' (' . count($users) . ')'),
+								'&nbsp;&nbsp;' . $skupina['s_name'] . ' (' . count($users) . ')'),
 						'users' => $users,
 						'count' => 'TODO!!!'
 				);
