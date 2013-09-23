@@ -57,11 +57,11 @@ class Controller_Admin_Akce extends Controller_Admin {
 		
 		$od = $this->date()->name('od')->getPost();
 		$do = $this->date()->name('do')->getPost();
-		if(!$do || strcmp($od, $do) > 0)
+		if(!$do->isValid() || strcmp((string) $od, (string) $do) > 0)
 			$do = $od;
 		
 		DBAkce::addAkce(post('jmeno'), post('kde'), post('info'),
-			$od, $do, post('kapacita'), post('dokumenty'),
+			(string) $od, (string) $do, post('kapacita'), post('dokumenty'),
 			(post('lock') == 'lock') ? 1 : 0, post('visible') ? '1' : '0');
 		DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal klubovou akci "' .
 			post('jmeno') . '"');
@@ -92,11 +92,11 @@ class Controller_Admin_Akce extends Controller_Admin {
 		}
 		$od = $this->date()->name('od')->getPost();
 		$do = $this->date()->name('do')->getPost();
-		if(!$do || strcmp($od, $do) > 0)
+		if(!$do->isValid() || strcmp((string) $od, (string) $do) > 0)
 			$do = $od;
 		
 		DBAkce::editAkce($id, post('jmeno'), post('kde'), post('info'),
-			$od, $do, post('kapacita'), post('dokumenty'),
+			(string) $od, (string) $do, post('kapacita'), post('dokumenty'),
 			(post('lock') == 'lock') ? 1 : 0, post('visible') ? '1' : '0');
 		DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' změnil detaily akce "' .
 			post('jmeno') . '"');
@@ -130,12 +130,14 @@ class Controller_Admin_Akce extends Controller_Admin {
 	private function checkData($data, $action = 'add') {
 		$od = $this->date()->name('od')->getPost();
 		$do = $this->date()->name('do')->getPost();
+		if(!$do->isValid() || strcmp((string) $od, (string) $do) > 0)
+			$do &= $od;
 		
 		$f = new Form();
 		$f->checkLength(post('jmeno'), 1, 255, 'Špatná délka jména akce', 'jmeno');
 		$f->checkLength(post('kde'), 1, 255, 'Špatná délka místa konání', 'kde');
-		$f->checkDate($od, 'Špatný formát data ("Od")', 'od');
-		if($do) $f->checkDate($do, 'Špatný formát data ("Do")', 'do');
+		$f->checkDate((string) $od, 'Špatný formát data ("Od")', 'od');
+		if($od != $do) $f->checkDate((string) $do, 'Špatný formát data ("Do")', 'do');
 		$f->checkNumeric(post('kapacita'), 'Kapacita musí být zadána číselně', 'kapacita');
 		
 		return $f->isValid() ? true : $f;

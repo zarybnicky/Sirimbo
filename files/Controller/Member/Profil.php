@@ -30,7 +30,7 @@ class Controller_Member_Profil extends Controller_Member {
 			return;
 		}
 		DBUser::setUserData(User::getUserID(), post('jmeno'), post('prijmeni'),
-			post('pohlavi'), post('email'), post('telefon'), $narozeni,
+			post('pohlavi'), post('email'), post('telefon'), (string) $narozeni,
 			post('poznamky'), $data['u_group'], $data['u_skupina'],
 			$data['u_dancer'], $data['u_lock'], $data['u_ban'], $data['u_system']);
 		$this->redirect('/member/profil', 'Upraveno');
@@ -99,7 +99,7 @@ class Controller_Member_Profil extends Controller_Member {
 	private function __checkData($action, $narozeni = null) {
 		$f = new Form();
 		if($action == 'edit') {
-			$f->checkDate($narozeni, 'Neplatné datum narození', 'narozeni');
+			$f->checkDate((string) $narozeni, 'Neplatné datum narození', 'narozeni');
 			$f->checkLength(post('jmeno'), 1, 40, 'Špatná délka jména', 'jmeno');
 			$f->checkLength(post('prijmeni'), 1, 40, 'Špatná délka přijmení', 'prijmeni');
 			$f->checkInArray(post('pohlavi'), array('m', 'f'), 'Neplatné pohlaví', 'pohlavi');

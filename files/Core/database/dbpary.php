@@ -62,8 +62,8 @@ class DBPary extends Database {
 	public static function getLatestPartner($partner, $pohlavi) {
 		list($partner, $pohlavi) = DBPary::escapeArray(array($partner, $pohlavi));
 	
-		$res = DBPary::query('
-			SELECT *
+		$res = DBPary::query(
+			'SELECT *
 			FROM pary ' .
 				($pohlavi == "m" ?
 					'LEFT JOIN users ON p_id_partnerka=u_id' :
@@ -73,8 +73,19 @@ class DBPary extends Database {
 					'WHERE p_id_partner="' . $partner . '"' :
 					'WHERE p_id_partnerka="' . $partner . '"') .
 				' AND p_archiv="0"');
-		if($res)
-			return DBPary::getSingleRow($res);
+		if(($res === false || ($res = self::getSingleRow($res)) == array()) && $pohlavi == 'f') {
+			$res = DBPary::query(
+				"SELECT *
+				FROM pary
+					LEFT JOIN users ON p_id_partnerka=u_id
+					LEFT JOIN users_platby ON up_id_user=u_id
+				WHERE p_id_partner='$partner'
+					AND p_archiv='0'");
+			if($res !== false)
+				$res = self::getSingleRow($res);
+		}
+		if(is_array($res))
+			return $res;
 		else
 			return false;
 	}

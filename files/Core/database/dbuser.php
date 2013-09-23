@@ -139,7 +139,8 @@ class DBUser extends Database implements Pagable {
 		$res = DBUser::query(
 		"SELECT *
 		FROM users
-		WHERE u_jmeno='$jmeno' AND u_prijmeni='$prijmeni'");
+		WHERE u_jmeno LIKE '$jmeno' AND u_prijmeni LIKE '$prijmeni'
+		ORDER BY u_id");
 		if(!$res) {
 			return false;
 		} else {
