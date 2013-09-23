@@ -12,7 +12,7 @@ class Controller_Registrace extends Controller_Abstract {
 			$f->checkInArray(post('pohlavi'), array('m', 'f'), 'Neplatné pohlaví', 'pohlavi');
 			$f->checkEmail(post('email'), 'Neplatný formát emailu', 'email');
 			$f->checkPhone(post('telefon'), 'Neplatný formát telefoního čísla', 'telefon');
-			$f->checkDate($narozeni, 'Neplatné datum narození', 'narozeni');
+			$f->checkDate((string) $narozeni, 'Neplatné datum narození', 'narozeni');
 			
 			if(!$f->isValid()) {
 				$this->redirect()->setMessage(implode('<br/>', $f->getMessages()));
@@ -22,7 +22,7 @@ class Controller_Registrace extends Controller_Abstract {
 					$this->redirect()->setMessage('Už tu někdo s takovým přihlašovacím jménem je :o(');
 				} else {
 					User::register($login, post('pass'), post('jmeno'), post('prijmeni'),
-						post('pohlavi'), post('email'), post('telefon'), $narozeni, post('poznamky'));
+						post('pohlavi'), post('email'), post('telefon'), (string) $narozeni, post('poznamky'));
 					$this->redirect('/home', 'Registrace úspěšně proběhla.<br /><br />' .
 							'Během několika dnů vám na email příjde potvrzení vašeho účtu, které vyřizuje administrátor ručně.');
 				}

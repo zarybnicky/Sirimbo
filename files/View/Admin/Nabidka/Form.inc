@@ -4,6 +4,7 @@ if($this->action == 'add')
 	header_minor("Přidat nabídku");
 else
 	header_minor("Upravit nabídku");
+notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST">
 <table>

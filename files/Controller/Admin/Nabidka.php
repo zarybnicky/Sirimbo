@@ -85,8 +85,8 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 		
 		$od = $this->date('od')->getPost();
 		$do = $this->date('do')->getPost();
-		if(!$do || strcmp($od, $do) > 0)
-			$do = $od;
+		if(!$do->isValid() || strcmp((string) $od, (string) $do) > 0)
+			$do &= $od;
 		
 		$visible = (bool) post('visible');
 		if(!Permissions::check('nabidka', P_ADMIN) && $visible) {
@@ -96,7 +96,7 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 		if(!is_numeric(post('max_pocet_hod')))
 			post('max_pocet_hod', 0);
 		
-		DBNabidka::addNabidka(post('trener'), post('pocet_hod'), post('max_pocet_hod'), $od, $do, $visible,
+		DBNabidka::addNabidka(post('trener'), post('pocet_hod'), post('max_pocet_hod'), (string) $od, (string) $do, $visible,
 			post('lock') ? 1 : 0);
 		
 		if($visible) {
@@ -104,8 +104,8 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 			$trener_name = $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni'];
 			
 			DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal nabídku ' .
-				formatDate($od) . (($od != $do) ?
-				(' - ' . formatDate($do)) : '') . ' s trenérem ' . $trener_name);
+				$od->getDate(Date::FORMAT_SIMPLIFIED) . (($od != $do) ?
+				(' - ' . $do->getDate(Date::FORMAT_SIMPLIFIED)) : '') . ' s trenérem ' . $trener_name);
 		}
 		
 		$this->redirect(getReturnURI('/admin/nabidka'), 'Nabídka přidána');
@@ -140,7 +140,7 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 		}
 		$od = $this->date('od')->getPost();
 		$do = $this->date('do')->getPost();
-		if(!$do || strcmp($od, $do) > 0)
+		if(!$do->isValid() || strcmp((string) $od, (string) $do) > 0)
 			$do = $od;
 		
 		$visible = (bool) post('visible');
@@ -167,7 +167,7 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 		if(!is_numeric($max_lessons))
 			$max_lessons = 0;
 		
-		DBNabidka::editNabidka($id, post('trener'), $pocet_hod, $max_lessons, $od, $do, $visible,
+		DBNabidka::editNabidka($id, post('trener'), $pocet_hod, $max_lessons, (string) $od, (string) $do, $visible,
 			post('lock') ? '1' : '0');
 		
 		if($visible) {
@@ -179,8 +179,8 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 		$trener_data = DBUser::getUserData(post('trener'));
 		if(isset($act))
 			DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' ' . $act . ' nabídku ' .
-				formatDate($od) .
-				(($data['n_od'] != $data['n_do']) ? (' - ' . formatDate($data['n_do'])) : '') .
+				$od->getDate(Date::FORMAT_SIMPLIFIED) . (($od != $do) ?
+				(' - ' . $do->getDate(Date::FORMAT_SIMPLIFIED)) : '') .
 				' s trenérem ' . $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni']);
 		
 		$this->redirect(getReturnURI('/admin/nabidka'), 'Nabídka úspěšně upravena');
@@ -189,12 +189,14 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 	private function checkData($data, $action = 'add') {
 		$od = $this->date('od')->getPost();
 		$do = $this->date('do')->getPost();
+		if(!$do->isValid() || strcmp((string) $od, (string) $do) > 0)
+			$do = $od;
 		
 		$f = new Form();
 		$f->checkNumeric(post('trener'), 'ID trenéra musí být číselné', 'trener');
 		$f->checkNumeric(post('pocet_hod'), 'Počet hodin prosím zadejte čísly', 'pocet_hod');
-		$f->checkDate($od, 'Zadejte prosím platné datum ("Od")', 'od');
-		if($do) $f->checkDate($do, 'Zadejte prosím platné datum ("Do")', 'do');
+		$f->checkDate((string) $od, 'Zadejte prosím platné datum ("Od")', 'od');
+		if($do->isValid()) $f->checkDate((string) $do, 'Zadejte prosím platné datum ("Do")', 'do');
 
 		return $f->isValid() ? true : $f;
 	}

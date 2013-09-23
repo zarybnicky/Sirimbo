@@ -95,7 +95,7 @@ class Controller_Admin_Rozpis extends Controller_Admin {
 			$visible = false;
 			$this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění příspěvku');
 		}
-		DBRozpis::addRozpis(post('trener'), post('kde'), $datum, $visible, post('lock'));
+		DBRozpis::addRozpis(post('trener'), post('kde'), (string) $datum, $visible, post('lock'));
 		
 		if($visible) {
 			$trener_data = DBUser::getUserData(post('trener'));
@@ -136,7 +136,7 @@ class Controller_Admin_Rozpis extends Controller_Admin {
 			$visible = $visible_prev;
 			$this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění rozpisu');
 		}
-		DBRozpis::editRozpis($id, post('trener'), post('kde'), $datum, $visible,
+		DBRozpis::editRozpis($id, post('trener'), post('kde'), (string) $datum, $visible,
 			post('lock'));
 		
 		$trener_data = DBUser::getUserData(post('trener'));
@@ -160,7 +160,7 @@ class Controller_Admin_Rozpis extends Controller_Admin {
 		
 		$f = new Form();
 		$f->checkNumeric(post('trener'), 'Neplatný trenér', 'trener');
-		$f->checkDate($datum, 'Neplatný formát data', 'datum');
+		$f->checkDate((string) $datum, 'Neplatný formát data', 'datum');
 
 		return $f->isValid() ? true : $f;
 	}
