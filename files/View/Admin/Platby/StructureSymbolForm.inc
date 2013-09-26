@@ -44,8 +44,8 @@ if(!empty($this->groupSelect)) {
 <?php header_main('Kategorie plateb');?>
 <?php header_minor($this->action == 'add' ? 'Přidat specifický symbol' : 'Upravit specifický symbol');?>
 <form action="" method="post">
-	<?php echo $mainForm;?>
-	<button name="action" value="confirm">Uložit</button>&nbsp;<a href="/admin/platby/structure">Zpět</a><br/><br/>
+	<?php echo $mainForm, getReturnInput();?>
+	<button name="action" value="confirm">Uložit</button>&nbsp;<a href="<?php echo Request::getReferer();?>">Zpět</a><br/><br/>
 </form>
 <?php if($this->action != 'add'): ?>
 	<?php header_minor('Kategorie');?>

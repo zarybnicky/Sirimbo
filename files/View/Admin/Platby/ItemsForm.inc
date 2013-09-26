@@ -29,8 +29,8 @@ $formTable = $this->table()
 	->data($form);
 ?>
 <form action="" method="post">
-	<?php echo $formTable;?>
-	<button name="action" value="confirm">Uložit</button>&nbsp;<a href="/admin/platby/items">Zpět</a>
+	<?php echo $formTable, getReturnInput();?>
+	<button name="action" value="confirm">Uložit</button>&nbsp;<a href="<?php echo Request::getReferer();?>">Zpět</a>
 </form>
 <br/>
 <?php
