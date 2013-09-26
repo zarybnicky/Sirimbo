@@ -27,6 +27,18 @@ class DBPlatbyCategory extends Database {
 				WHERE pc_id='$id'"
 		);
 	}
+	public static function checkActiveSymbol($symbol) {
+		list($symbol) = self::escape($symbol);
+		
+		$res = self::query(
+				"SELECT * FROM platby_category
+				WHERE pc_archive='0' AND pc_symbol='$symbol'"
+		);
+		if($res)
+			return self::getSingleRow($res);
+		else
+			return false;
+	}
 	public static function get() {
 		$res = self::query('SELECT * FROM platby_category');
 		return self::getArray($res);

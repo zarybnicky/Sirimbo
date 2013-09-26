@@ -60,6 +60,14 @@ class DBPlatbyGroup extends Database {
 				)");
 		return self::getArray($res);
 	}
+	public static function getGroups() {
+		$res = self::query(
+				'SELECT *
+				FROM platby_group
+				ORDER BY pg_type,pg_id'
+		);
+		return self::getArray($res);
+	}
 	public static function getGroupsWithCategories() {
 		$res = self::query(
 				'SELECT *
