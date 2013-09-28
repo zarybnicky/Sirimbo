@@ -18,25 +18,45 @@ class Dispatcher {
 			$class = implode('_', $parts);
 		}
 		require($file);
-		if(class_exists($class))
-			return new $class();
-		else
-			throw new Exception('Controller class "' . $class . '" not found');
+		try {
+			if(class_exists($class))
+				return new $class();
+			else
+				throw new NotFoundRightException('Controller class "' . $class . '" not found');
+		} catch(ViewException $e) {
+			Log::write($e->getMessage() . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n" . $e->getTraceAsString());
+			ob_clean();
+			Helper::get()->render($e->getErrorFile());
+		} catch(Exception $e) {
+			Log::write($e->getMessage() . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n" . $e->getTraceAsString());
+			ob_clean();
+			Helper::get()->render((new ViewException(''))->getErrorFile());
+		}
 	}
 	function dispatch($url, $action, $id = null) {
 		$controller = $this->getController($url);
 
 		if(!($controller instanceof Controller_Interface))
-			throw new Exception('Controller class "' . $controller . '" not instance of Controller_Interface');
+			throw new NotFoundRightException('Controller class "' . $controller . '" not instance of Controller_Interface');
 
 		View::$controller = $controller;
 		
 		$action  = str_replace('-', '_', $action);
-
-		if(method_exists($controller, $action)) {
-			$controller->$action($id);
-		} else {
-			$controller->view($id);
+		
+		try {
+			if(method_exists($controller, $action)) {
+				$controller->$action($id);
+			} else {
+				$controller->view($id);
+			}
+		} catch(ViewException $e) {
+			Log::write($e->getMessage() . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n" . $e->getTraceAsString());
+			ob_clean();
+			Helper::get()->render($e->getErrorFile());
+		} catch(Exception $e) {
+			Log::write($e->getMessage() . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n" . $e->getTraceAsString());
+			ob_clean();
+			Helper::get()->render((new ViewException(''))->getErrorFile());
 		}
 	}
 }

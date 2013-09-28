@@ -21,7 +21,7 @@ class Controller_Admin_Nastenka extends Controller_Admin {
 						' smazal příspěvek z nástěnky');
 				}
 				if(isset($error) && $error)
-					throw new Exception("Máte nedostatečnou autorizaci pro tuto akci!");
+					throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
 				$this->redirect()->setMessage('Příspěvky odebrány');
 				break;
 			case 'edit':

@@ -67,9 +67,9 @@ class Database {
 	protected function databaseError($onConnection = false) {
 		Log::write('MySQL Error: ' . mysql_errno() . ': ' . mysql_error());
 		if($onConnection)
-			throw new Exception('Nastala chyba při pokusu o připojení k databázi.');
+			throw new DatabaseConenctionException('Nastala chyba při pokusu o připojení k databázi.');
 		else
-			throw new Exception('Nastala chyba v dotazu na databázi.');
+			throw new DatabaseException('Nastala chyba v dotazu na databázi.');
 	}
 	public static function isDatabaseError() {
 		return (get('file') == 'error' && get('id') &&

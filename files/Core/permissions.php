@@ -17,7 +17,7 @@ class Permissions {
 		if($redirect !== null) {
 			Helper::get()->redirect($redirect);
 		} elseif(User::isLogged()) {
-			throw new Exception("Máte nedostatečnou autorizaci pro tuto akci!");
+			throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
 		} else {
 			Helper::get()->redirect('/login?return=' . Request::getURI(),
 				'Nemáte dostatečná oprávnění k zobrazení požadovaného obsahu');

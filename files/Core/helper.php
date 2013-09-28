@@ -11,7 +11,7 @@ class Helper {
 			include($_SERVER['DOCUMENT_ROOT'] . '/files/Core/helpers/' .
 				strtolower($class) . '.php');
 				if(!class_exists($name))
-					throw new Exception("Helper '$class' not found.");
+					throw new ViewException("Helper '$class' not found.");
 		}
 		
 		if(!isset(self::$registry[$class])) {

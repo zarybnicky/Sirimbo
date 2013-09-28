@@ -33,7 +33,7 @@ abstract class Controller_Abstract implements Controller_Interface {
 			else
 				return call_user_func_array(array(Helper::get(), $name), $args);
 		} else {
-			throw new BadMethodCallException("Neplatná akce $name pro ${__CLASS__}");
+			throw new ViewException("Neplatná akce $name pro ${__CLASS__}");
 		}
 	}
 }

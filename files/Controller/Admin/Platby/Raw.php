@@ -61,7 +61,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby {
 	private function processCsv($parser, $columns = null) {
 		if(!is_a($parser, 'CSVParser')) {
 			if(!is_string((string) $parser))
-				throw new InvalidArgumentException('$parser (' . gettype($parser) . ') is not a CSVParser or a string');
+				throw new ViewException('$parser (' . gettype($parser) . ') is not a CSVParser or a string');
 			$parser = $this->getParser($parser);
 		}
 		$headers = $parser->headers();

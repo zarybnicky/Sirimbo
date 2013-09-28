@@ -47,7 +47,7 @@ class Renderer {
 		extract($this->vars(), EXTR_SKIP);
 		if(!file_exists($this->__file)) {
 			Log::write('Could not find file "' . $this->__file . '"');
-			throw new Exception("Soubor nebyl nalezen!");
+			throw new NotFoundRightException("Soubor nebyl nalezen!");
 		}
 		ob_start();
 		include $this->__file;

@@ -42,7 +42,7 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 							$data['u_jmeno'] . ' ' . $data['u_prijmeni']);
 				}
 				if(isset($error) && $error)
-					throw new Exception("Máte nedostatečnou autorizaci pro tuto akci!");
+					throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
 				$this->redirect()->setMessage('Nabídky odebrány');
 				break;
 		}
