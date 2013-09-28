@@ -10,7 +10,7 @@ class PagingAdapterDBSelect implements PagingAdapterInterface {
 	}
 	function setDatabase($classname) {
 		if(!(call_user_func(array($classname, 'getInstance')) instanceof Pagable))
-			throw new Exception('Database does not implement interface Pageable');
+			throw new ViewException('Database does not implement interface Pageable');
 		
 		$this->dbadapter = $classname;
 	}

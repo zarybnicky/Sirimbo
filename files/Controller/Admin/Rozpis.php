@@ -49,7 +49,7 @@ class Controller_Admin_Rozpis extends Controller_Admin {
 					}
 				}
 				if(isset($error) && $error)
-					throw new Exception("Máte nedostatečnou autorizaci pro tuto akci!");
+					throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
 				
 				$this->redirect('/admin/rozpis', 'Rozpisy odebrány');
 		}

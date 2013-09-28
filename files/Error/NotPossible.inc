@@ -1,6 +1,5 @@
-<b>Nenalezeno.</b>
+<b>Nenalezeno</b>
 <br />
 <br />
-Tvůj prohlížeč poslal požadavek na něco, co na webu TkOlymp.cz
-prostě NENÍ, ani to tam být nemůže. Klikej na odkazy - to je
-jistější - nebo si ukládej existující stránky do oblíbených.
+Váš prohlížeč poslal požadavek na něco, co na webu TKOlymp.cz prostě není.
+Zkuste se znovu proklikat z hlavní stránky a pokud to, co hledáte opravdu neexistuje, napište administrátorům.

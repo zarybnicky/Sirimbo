@@ -13,7 +13,7 @@ class CSVParser implements Iterator {
 		if($file->isReadable())
 			$this->fileObject = $file;
 		else
-			throw new InvalidArgumentException("Given file $file is not readable");
+			throw new ViewException("Given file $file is not readable");
 		
 		$text = $this->fileObject->current();
 		$this->encoding = mb_detect_encoding($text, 'UTF-8,ISO-8859-2,ISO-8859-1,cp1250');
