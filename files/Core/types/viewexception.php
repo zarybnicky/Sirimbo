@@ -4,6 +4,6 @@ class ViewException extends Exception {
 		parent::__construct($message, $code, $previous);
 	}
 	public function getErrorFile() {
-		return ERROR . DIRECTORY_SEPARATOR . 'ScriptFatal.inc';
+		return 'script_fatal';
 	}
 }
