@@ -24,6 +24,13 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby {
 			));
 		}
 	}
+	function remove($id = null) {
+		if(!$id && !($data = DBPlatbyRaw::getSingle($id)))
+			$this->redirect(Request::getReferer(), 'Platba se zadaným ID neexistuje.');
+		
+		DBPlatbyRaw::delete($id);
+		$this->redirect(Request::getReferer(), 'Platba byla odstraněna.');
+	}
 	private function getTable($data, &$result, &$columns, &$header) {
 		if(get('list') == 'date')
 			$header = (get('year') == 'none' ? 'nezařazené podle data' :
@@ -61,11 +68,20 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby {
 				elseif(!isset($columnsTemp[$key]))
 					$columnsTemp[$key] = false;
 			}
-			$row['edit'] = '<a href="/admin/platby/manual/' . $rawData['pr_id'] . '">Zařadit</a>';
+			$row['edit'] = '<div style="width:51px">' . $this->getEditLink('/admin/platby/manual/' . $rawData['pr_id']) .
+				$this->getRemoveLink('/admin/platby/discarded/remove/' . $rawData['pr_id']) . '</div>';
 			$result[] = $row;
 		}
-		if(empty($columnsTemp))
+		if(empty($columnsTemp)) {
 			return;
+		} else {
+			foreach($result as &$row) {
+				foreach($columnsTemp as $key => $value) {
+					if(!isset($row[$key]))
+						$row[$key] = '';
+				}
+			}
+		}
 		
 		$columns = array(array('edit', 'Zařadit'));
 		foreach($columnsTemp as $key => $value) {
@@ -105,5 +121,11 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby {
 		krsort($groupDate);
 		foreach($groupDate as $year)
 			krsort($year);
+	}
+	protected function getEditLink($link) {
+		return '<a href="' . $link . '"><img alt="Upravit" src="/images/wrench.png" /></a>';
+	}
+	protected function getRemoveLink($link) {
+		return '<a href="' . $link . '"><img alt="Odstranit" src="/images/cross.png" /></a>';
 	}
 }
