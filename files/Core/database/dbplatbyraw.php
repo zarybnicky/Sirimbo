@@ -25,8 +25,22 @@ class DBPlatbyRaw extends Database {
 			WHERE pr_id='$id'"
 		);
 	}
+	public static function skip($id) {
+		list($id) = self::escape($id);
+		self::query(
+			"REPLACE INTO platby_raw
+			(pr_raw,pr_hash,pr_sorted,pr_discarded)
+			SELECT pr_raw,pr_hash,pr_sorted,pr_discarded
+			FROM platby_raw
+			WHERE pr_id='$id'"
+		);
+	}
+	public static function delete($id) {
+		list($id) = self::escape($id);
+		self::query("DELETE FROM platby_raw WHERE pr_id='$id'");
+	}
 	public static function getUnsorted() {
-		$res = self::query("SELECT * FROM platby_raw WHERE pr_sorted='0' AND pr_discarded='0'");
+		$res = self::query("SELECT * FROM platby_raw WHERE pr_sorted='0' AND pr_discarded='0' ORDER BY pr_id");
 		return self::getArray($res);
 	}
 	public static function getDiscarded() {

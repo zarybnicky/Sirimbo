@@ -135,6 +135,8 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 		} elseif(post('action') == 'discard') {
 			if(!$current['pr_discarded'])
 				DBPlatbyRaw::update(post('id'), $current['pr_raw'], $current['pr_hash'], '0', '1');
+		} elseif(post('action') == 'skip') {
+			DBPlatbyRaw::skip(post('id'));
 		} else {
 			$this->redirect()->setMessage('Neplatná POST akce.');
 		}

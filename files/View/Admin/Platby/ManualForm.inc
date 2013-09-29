@@ -39,7 +39,9 @@ $formTable = $this->table()
 <form action="" method="post">
 	<?php echo $formTable;?>
 	<input type="hidden" name="id" value="<?php echo $this->id;?>" />
-	<button name="action" value="confirm">Uložit</button>&nbsp;<button name="action" value="discard">Odstranit</button>
+	<button name="action" value="confirm">Uložit</button>&nbsp;
+	<button name="action" value="discard">Odstranit</button>&nbsp;
+	<button name="action" value="skip">Přeskočit</button>
 </form>
 <br/>
 <?php
