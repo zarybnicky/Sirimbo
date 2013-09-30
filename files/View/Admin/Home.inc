@@ -1,1 +1,1 @@
-<?php header_main('Administrace');?>
+<h1>Administrace</h1>

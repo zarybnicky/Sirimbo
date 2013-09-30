@@ -101,7 +101,7 @@ Datum narození:&nbsp;<br/>
 <?php echo Helper::get()->date('narozeni'), '<br/>';?>
 <button type="submit">Uložit</button>
 </div>
-<div class="loading" style="display:none;"><img src="/images/loading_bar.gif"/></div>
+<div class="loading" style="display:none;"><img alt="Čekám na odezvu serveru..." src="/images/loading_bar.gif"/></div>
 <script type="text/javascript">
 (function($) {
 	$(function() {

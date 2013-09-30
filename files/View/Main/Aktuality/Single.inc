@@ -1,5 +1,5 @@
-<?php header_main($this->jmeno);?>
-<?php echo formatTimestamp($this->timestamp)?>;
+<h1><?php echo $this->jmeno;?></h1>
+<?php echo formatTimestamp($this->timestamp)?>
 
 <?php if($this->canEdit): ?>
 &nbsp;&nbsp;- <a href="/admin/aktuality/edit/<?php echo $this->id;?>">Upravit</a>

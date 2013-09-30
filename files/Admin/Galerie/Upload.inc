@@ -1,8 +1,8 @@
+<h1>Správa fotogalerie</h1>
 <?php
-header_main('Správa fotogalerie');
 notice($this->redirect()->getMessage());
-header_minor('Upload');
 ?>
+<h2>Upload</h2>
 <form enctype="multipart/form-data" action="" method="post">
 <table>
 <tr><td>Popis:</td><td>Soubor</td></tr>

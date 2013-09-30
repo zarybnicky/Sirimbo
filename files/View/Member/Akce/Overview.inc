@@ -1,4 +1,4 @@
-<?php header_main('Klubové akce');?>
+<h1>Klubové akce</h1>
 <?php notice($this->redirect()->getMessage());?>
 
 <style type="text/css">

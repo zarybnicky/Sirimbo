@@ -1,5 +1,5 @@
+<h1>Správa nástěnky</h1>
 <?php
-header_main('Správa nástěnky');
 notice($this->redirect()->getMessage());
 
 echo '<form action="" method="POST">';

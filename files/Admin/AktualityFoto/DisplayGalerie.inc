@@ -1,5 +1,5 @@
+<h1>Správa fotogalerie článků</h1>
 <?php
-header_main('Správa fotogalerie článků');
 notice($this->redirect()->getMessage());
 
 echo '<form action="" method="get">';

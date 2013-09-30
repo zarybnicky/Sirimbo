@@ -1,5 +1,5 @@
+<h1>Profil</h1>
 <?php
-header_main('Profil');
 echo $this->partnerRequest()->getAll();
 notice($this->redirect()->getMessage());
 if($this->havePartner) {

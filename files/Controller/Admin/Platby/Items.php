@@ -26,7 +26,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby {
 		));
 	}
 	function add($id = null) {
-		if(empty($_POST) || ($s = $this->checkPost()) != array()) {
+		if(empty($_POST) || ($s = $this->checkPost('add')) != array()) {
 			if(!empty($_POST))
 				$this->redirect()->setMessage($s);
 			$this->displayForm(0);
@@ -42,7 +42,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby {
 		if(!$id || !($data = DBPlatbyItem::getSingle($id)))
 			$this->redirect('/admin/platby/items', 'Uživatel s takovým ID neexistuje');
 
-		if(empty($_POST) || ($s = $this->checkPost()) != array()) {
+		if(empty($_POST) || ($s = $this->checkPost('edit')) != array()) {
 			if(empty($_POST)) {
 				post('date', $data['pi_date']);
 				post('amount', $data['pi_amount']);

@@ -115,64 +115,17 @@ class Form {
 	}
 }
 
-function formError() {
-	echo '<span style="color:red;"> !!!</span>', "\n";
-}
 function notice($text, $return = false) {
 	if(!$text) return;
 	
 	if(!$return)echo '<div class="notice">', $text, '</div>', "\n";
 	else		return '<div class="notice">' . $text . '</div>' . "\n";
 }
-function header_main($text, $return = false) {
-	if(!$text) return;
-	
-	if(!$return)echo '<div class="h_section">', $text, '</div>', "\n";
-	else		return '<div class="h_section">' . $text . '</div>' . "\n";
-}
-function header_minor($text, $return = false) {
-	if(!$text) return;
-	
-	if(!$return)echo '<div class="h_minor">', $text, '</div>', "\n";
-	else		return '<div class="h_minor">' . $text . '</div>' . "\n";
-}
 function getColorBox($color, $popis) {
 	if(!isset(Settings::$barvy[$color]))
 		return;
 	return '<div class="box" title="' . $popis . '" ' .
 		'style="background-color:' . Settings::$barvy[$color][1] . '"></div>';
-}
-function checkPostField($regex, $text) {
-	global $isConfirmation;
-	if($isConfirmation) {
-		if(isset($_POST[$text]) && preg_match($regex, $_POST[$text])) {	
-			return false;
-		} else {
-			formError();
-			return true;
-		}
-	} else {
-		return true;
-	}
-}
-function checkPostFieldLength($minIncl, $maxIncl, $text) {
-	global $isConfirmation;
-	if($isConfirmation) {
-		if(isset($_POST[$text]) && strlen($_POST[$text]) >= $minIncl && strlen($_POST[$text]) <= $maxIncl) {	
-			return false;
-		} else {
-			formError();
-			return true;
-		}
-	} else {
-		return true;
-	}
-}
-function getPostField($field = null, $value = null) {
-	return post($field, $value);
-}
-function getGetField($field = null, $value = null) {
-	return get($field, $value);
 }
 function post($field = null, $value = null) {
 	if($field === null) {
@@ -264,66 +217,6 @@ function timeAdd($first, $sec) {
 	
 	return ($h . ':' . ($m % 60));
 }
-function checkDateString($date) {
-	global $isConfirmation;
-	if($isConfirmation) {
-		if(preg_match('/^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/', $date)) {
-			list($year, $month, $day) = explode('-', $date);
-			if(
-				$day == 31 && ($month == 4 || $month == 6 || $month == 9 || $month == 11) ||
-				$day >= 30 && $month == 2 ||
-				$month == 2 && $day == 29 && !($year % 4 == 0 && ($year % 100 != 0 || $year % 400 == 0))
-			) {
-				formError();
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			formError();
-			return true;
-		}
-	} else {
-		return true;
-	}
-}
-function echoDateSelect($day_name, $month_name, $year_name, $fromYear = 2010, $toString = 0) {
-	$out = '';
-	$s = Helper::get()->select()->get(false);
-	
-	$s->name($day_name)
-		->value(post($day_name) ? post($day_name) : date('d'))
-		->options(array(), true)
-		->option('00', 'Den');
-	for($i = 1; $i < 32; $i++)
-		$s->option((($i < 10) ? ('0' . $i) : $i), $i);
-	$out .= $s;
-	
-	$out .= $s->name($month_name)
-		->value(post($month_name) ? post($month_name) : date('m'))
-		->options(array(), true)
-		->option('00', 'Měsíc')
-		->option('01', 'Leden')		->option('02', 'Únor')
-		->option('03', 'Březen')	->option('04', 'Duben')
-		->option('05', 'Květen')	->option('06', 'Červen')
-		->option('07', 'Červenec')	->option('08', 'Srpen')
-		->option('09', 'Září')		->option('10', 'Říjen')
-		->option('11', 'Listopad')	->option('12', 'Prosinec');
-	
-	$s->name($year_name)
-		->value(post($year_name) ? post($year_name) : date('Y'))
-		->options(array(), true)
-		->option('0000', 'Rok');
-	$toYear = ((int) date('Y')) + 5;
-	for($i = $fromYear; $i < $toYear; $i++)
-		$s->option($i, $i);
-	$out .= $s;
-	
-	if($toString)
-		return $out;
-	else
-		echo $out;
-}
 function echoTaborDokumenty($list_name, $kats) {
 	echo '<select name="', $list_name, '">', "\n";
 	echo '<option value="none"';
@@ -394,15 +287,5 @@ function getIP() {
 	} else {
 		return $_SERVER['REMOTE_ADDR'];
 	}
-}
-function buildURI($uri, $_) {
-	$args = func_get_args();
-	$num = func_num_args();
-	
-	list($url, $get) = explode('?', $uri);
-	$get = $get ? explode('&', $get) : array();
-	
-	$get = $num > 1 ? array_merge($get, array_slice($args, 1)) : $get;
-	return $url . (!empty($get) ? ('?' . implode('&', $get)) : '');
 }
 ?>

@@ -1,11 +1,9 @@
-﻿<?php header_main('Výsledky našich družstev na Mistrovství České republiky')?>
-<style type="text/css">
-.main {text-size:120%;font-weight:bold;}
-</style>
-<?php header_minor('Most, 1999');?>
+﻿<h1>Výsledky našich družstev na Mistrovství České republiky</h1>
+<style type="text/css">.main{text-size:120%;font-weight:bold;}</style>
+<h2>Most, 1999</h2>
 <table style="width:500px;">
 	<tr>
-		<td><span class="main">Jun STT</span></td>
+		<td><h3>Jun STT</h3></td>
 		<td>4. místo</td>
 		<td>Martin Kordek - Tereza Jendrulková</td>
 	</tr>
@@ -31,10 +29,10 @@
 	</tr>
 </table>
 <br/>
-<?php header_minor('Most, 2000');?>
+<h2>Most, 2000</h2>
 <table style="width:500px;">
 	<tr>
-		<td><span class="main">Jun STT</span></td>
+		<td><h3>Jun STT</h3></td>
 		<td>3.místo</td>
 		<td>Radim Kotrba - Markéta Vlčková</td>
 	</tr>
@@ -94,7 +92,7 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td><span class="main">Jun LAT</span></td>
+		<td><h3>Jun LAT</h3></td>
 		<td>7.místo</td>
 		<td>Radim Kotrba - Markéta Vlčková</td>
 	</tr>
@@ -120,10 +118,10 @@
 	</tr>
 </table>
 <br/>
-<?php header_minor('Třinec, 2001');?>
+<h2>Třinec, 2001</h2>
 <table style="width:500px;">
 	<tr>
-		<td><span class="main">Jun STT</span></td>
+		<td><h3>Jun STT</h3></td>
 		<td>2. místo</td>
 		<td>Radim Kotrba - Markéta Vlčková</td>
 	</tr>
@@ -183,7 +181,7 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td><span class="main">Jun LAT</span></td>
+		<td><h3>Jun LAT</h3></td>
 		<td>3. místo</td>
 		<td>Radim Kotrba - Markéta Vlčková</td>
 	</tr>
@@ -214,10 +212,10 @@
 	</tr>
 </table>
 <br/>
-<?php header_minor('Pardubice, 2002');?>
+<h2>Pardubice, 2002</h2>
 <table style="width:500px;">
 	<tr>
-		<td><span class="main">Jun STT</span></td>
+		<td><h3>Jun STT</h3></td>
 		<td>1. místo</td>
 		<td>Miroslav Hýža - Denisa Walterová</td>
 	</tr>
@@ -247,7 +245,7 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td><span class="main">Jun LAT</span></td>
+		<td><h3>Jun LAT</h3></td>
 		<td>1.místo</td>
 		<td>Tomáš Hroch - Veronika Benýšková</td>
 	</tr>
@@ -273,10 +271,10 @@
 	</tr>
 </table>
 <br/>
-<?php header_minor('Most, 2004');?>
+<h2>Most, 2004</h2>
 <table style="width:500px;">
 	<tr>
-		<td><span class="main">Mládež STT</span></td>
+		<td><h3>Mládež STT</h3></td>
 		<td>1.místo</td>
 		<td>Radim Kotrba - Markéta Vlčková</td>
 	</tr>
@@ -306,7 +304,7 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td><span class="main">Dospělí STT</span></td>
+		<td><h3>Dospělí STT</h3></td>
 		<td>5. místo</td>
 		<td>Radim Kotrba - Markéta Vlčková</td>
 	</tr>
@@ -332,10 +330,10 @@
 	</tr>
 </table>
 <br/>
-<?php header_minor('Třinec, 2005');?>
+<h2>Třinec, 2005</h2>
 <table style="width:500px;">
 	<tr>
-		<td><span class="main">Mládež STT</span></td>
+		<td><h3>Mládež STT</h3></td>
 		<td>1. místo</td>
 		<td>Petr Pohlodek - Petra Gromesová</td>
 	</tr>
@@ -365,7 +363,7 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td><span class="main">Mládež LAT</span></td>
+		<td><h3>Mládež LAT</h3></td>
 		<td>6.místo</td>
 		<td>Pavel John - Tereza Jendrulková</td>
 	</tr>
@@ -395,7 +393,7 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td><span class="main">Dospělí STT</span></td>
+		<td><h3>Dospělí STT</h3></td>
 		<td>2.místo</td>
 		<td>Pavel John - Tereza Jendrulková</td>
 	</tr>
@@ -425,7 +423,7 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td><span class="main">Dospělí LAT</span></td>
+		<td><h3>Dospělí LAT</h3></td>
 		<td>8.místo</td>
 		<td>Martin Kordek - Jitka Szabó</td>
 	</tr>
@@ -451,10 +449,10 @@
 	</tr>
 </table>
 <br/>
-<?php header_minor('Roudnice nad Labem, 2006');?>
+<h2>Roudnice nad Labem, 2006</h2>
 <table style="width:500px;">
 	<tr>
-		<td><span class="main">Dospělí STT</span></td>
+		<td><h3>Dospělí STT</h3></td>
 		<td>5. místo</td>
 		<td>Miroslav Hýža - Lucie Benýšková</td>
 	</tr>
@@ -480,10 +478,10 @@
 	</tr>
 </table>
 <br/>
-<?php header_minor('Praha, 2010');?>
+<h2>Praha, 2010</h2>
 <table style="width:500px;">
 	<tr>
-		<td><span class="main">Junioři STT</span></td>
+		<td><h3>Junioři STT</h3></td>
 		<td>5. místo</td>
 		<td>Marek Švarc - Monika Vymětalová</td>
 	</tr>
@@ -513,7 +511,7 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td><span class="main">Junioři LAT</span></td>
+		<td><h3>Junioři LAT</h3></td>
 		<td>3.místo</td>
 		<td>Jiří Anderle - Veronika Chromcová</td>
 	</tr>
@@ -539,10 +537,10 @@
 	</tr>
 </table>
 <br/>
-<?php header_minor('Otrokovice, 2011');?>
+<h2>Otrokovice, 2011</h2>
 <table style="width:500px;">
 	<tr>
-		<td><span class="main">Dospělí STT</span></td>
+		<td><h3>Dospělí STT</h3></td>
 		<td>8. místo</td>
 		<td>Vít Navrátil - Petra Chytilová</td>
 	</tr>

@@ -1,7 +1,5 @@
-<?php
-header_main('Správa uživatelů');
-header_minor('Statistiky');
-?>
+<h1>Správa uživatelů</h1>
+<h2>Statistiky</h2>
 <br/>
 <div class="center">
 <?php

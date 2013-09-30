@@ -1,6 +1,6 @@
+<h1>Správa uživatelů</h1>
+<h2>Platby uživatele <?php echo $this->fullName;?></h2>
 <?php
-header_main('Správa uživatelů');
-header_minor('Platby uživatele ' . $this->fullName);
 notice($this->redirect()->getMessage());
 
 echo $this->menu()

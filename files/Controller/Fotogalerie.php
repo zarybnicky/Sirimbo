@@ -47,7 +47,7 @@ class Controller_Fotogalerie extends Controller_Abstract {
 				'src'		=> $data['gf_path'],
 				'hasPrev'	=> $hasPrev,
 				'prevURL'	=> $hasPrev ? $parent_dir[$current - 1]['gf_id'] : '',
-				'returnURL'	=> '/fotogalerie' . ($data['gf_id_rodic'] > 0 ? ('/' . $data['gf_id_rodic']) : ''),
+				'returnURL'	=> '/galerie' . ($data['gf_id_rodic'] > 0 ? ('/' . $data['gf_id_rodic']) : ''),
 				'hasNext'	=> $hasNext,
 				'nextURL'	=> $hasNext ? $parent_dir[$current + 1]['gf_id'] : '',
 		));
@@ -89,7 +89,7 @@ class Controller_Fotogalerie extends Controller_Abstract {
 			else
 				echo '<li><a href="', $link, '">';
 			
-			echo '<img src="/style/directory.png" alt="" />', $dir['gd_name'], '</a>';
+			echo '<img src="/style/directory.png" alt="Složka" />', $dir['gd_name'], '</a>';
 			$level_prev = $dir['gd_level'];
 		}
 		for($i = 0; $i < $level_prev; $i++)

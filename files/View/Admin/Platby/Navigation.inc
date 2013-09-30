@@ -9,7 +9,7 @@ function _getItem($name, $href) {
 	else
 		echo $name;
 }
-header_main('Správa plateb');
+echo '<h1>Správa plateb</h1>';
 if(TISK)
 	return;
 ?>

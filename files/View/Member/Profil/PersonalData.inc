@@ -1,7 +1,6 @@
-<?php
-header_minor("Osobní údaje");
-notice($this->redirect()->getMessage());
-?>
+<h1>Profil</h1>
+<h2>Osobní údaje</h2>
+<?php notice($this->redirect()->getMessage());?>
 <form action="" method="POST">
 <table>
 	<tr>

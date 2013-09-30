@@ -1,6 +1,6 @@
 <?php echo $this->render('files/View/Admin/Platby/Navigation.inc');?>
-<?php header_main('Kategorie plateb');?>
-<?php header_minor('Odstranit specifický symbol?');?>
+<h2>Kategorie plateb</h2>
+<h3>Odstranit specifický symbol?</h3>
 <?php notice($this->redirect()->getMessage());?>
 
 <form action="" method="POST">

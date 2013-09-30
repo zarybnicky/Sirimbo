@@ -1,7 +1,5 @@
-<?php header_main('Výsledky našich párů na Mistrovství ČR'); ?>
+<h1>Výsledky našich párů na Mistrovství ČR</h1>
 <style type="text/css">
-.year {font-size:150%;color:#572E00;text-align:center;font-weight:bold;}
-.kat {font-size:115%;color:#572E00;text-align:center;}
 .mcr td {text-align:center;}
 .mcr td:last-child {text-align:left;}
 .st td {color:#EBBC00;font-weight:bold;}
@@ -19,13 +17,13 @@
 	<col style="width:65px;" />
 	<col style="width:300px;" />
 	<tr>
-		<td class="year">2000</td>
+		<td><h2>2000</h2></td>
 		<td></td>
 		<td></td>
 		<td></td>
 	</tr>
 	<tr>
-		<td class="kat">10T</td>
+		<td><h3>10T</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -62,7 +60,7 @@
 		<td>Radim Kotrba – Markéta Vlčková</td>
 	</tr>
 	<tr>
-		<td class="kat">STT</td>
+		<td><h3>STT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -117,7 +115,7 @@
 		<td>Jiří Mišák - Nikol Nezvalová</td>
 	</tr>
 	<tr>
-		<td class="kat">LAT</td>
+		<td><h3>LAT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -153,13 +151,13 @@
 		<td>Martin Kordek – Tereza Jendrulková</td>
 	</tr>
 	<tr>
-		<td class="year">2001</td>
+		<td><h2>2001</h2></td>
 		<td></td>
 		<td></td>
 		<td></td>
 	</tr>
 	<tr>
-		<td class="kat">10T</td>
+		<td><h3>10T</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -190,7 +188,7 @@
 		<td>Tomáš Hroch – Veronika Benýšková</td>
 	</tr>
 	<tr>
-		<td class="kat">STT</td>
+		<td><h3>STT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -233,7 +231,7 @@
 		<!-- http://web.archive.org/web/20091212143513im_/http://tkolymp.cz/AKCE/06_Mistrovstv%C3%AD%20%C4%8CR/P1010006.JPG -->
 	</tr>
 	<tr>
-		<td class="kat">LAT</td>
+		<td><h3>LAT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -275,13 +273,13 @@
 		<td>Pavel John - Tereza Jendrulková</td>
 	</tr>
 	<tr>
-		<td class="year">2002</td>
+		<td><h2>2002</h2></td>
 		<td></td>
 		<td></td>
 		<td></td>
 	</tr>
 	<tr>
-		<td class="kat">10T</td>
+		<td><h3>10T</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -324,7 +322,7 @@
 		<td>Pavel John - Kristýna Coufalová</td>
 	</tr>
 	<tr>
-		<td class="kat">STT</td>
+		<td><h3>STT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -373,7 +371,7 @@
 		<td>Pavel John - Kristýna Coufalová</td>
 	</tr>
 	<tr>
-		<td class="kat">LAT</td>
+		<td><h3>LAT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -415,14 +413,14 @@
 		<td>Radim Kotrba – Markéta Vlčková</td>
 	</tr>
 	<tr>
-		<td class="year">2003</td>
+		<td><h2>2003</h2></td>
 		<td></td>
 		<td></td>
 		<td></td>
 		<!-- http://web.archive.org/web/20091212143513im_/http://tkolymp.cz/AKCE/06_Mistrovstv%C3%AD%20%C4%8CR/P1010005.JPG -->
 	</tr>
 	<tr>
-		<td class="kat">10T</td>
+		<td><h3>10T</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -464,7 +462,7 @@
 		<td>Pavel John - Kristýna Coufalová</td>
 	</tr>
 	<tr>
-		<td class="kat">STT</td>
+		<td><h3>STT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -531,7 +529,7 @@
 		<td>Radim Kotrba – Markéta Vlčková</td>
 	</tr>
 	<tr>
-		<td class="kat">LAT</td>
+		<td><h3>LAT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -580,13 +578,13 @@
 		<td>Martin Kordek - Jitka Szabová</td>
 	</tr>
 	<tr>
-		<td class="year">2004</td>
+		<td><h2>2004</h2></td>
 		<td></td>
 		<td></td>
 		<td></td>
 	</tr>
 	<tr>
-		<td class="kat">10T</td>
+		<td><h3>10T</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -622,7 +620,7 @@
 		<td>Pavel John - Tereza Jendrulková</td>
 	</tr>
 	<tr>
-		<td class="kat">STT</td>
+		<td><h3>STT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -677,7 +675,7 @@
 		<td>Radim Kotrba – Markéta Vlčková</td>
 	</tr>
 	<tr>
-		<td class="kat">LAT</td>
+		<td><h3>LAT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -714,13 +712,13 @@
 		<td>Martin Kordek – Jitka Szabová</td>
 	</tr>
 	<tr>
-		<td class="year">2005</td>
+		<td><h2>2005</h2></td>
 		<td></td>
 		<td></td>
 		<td></td>
 	</tr>
 	<tr>
-		<td class="kat">10T</td>
+		<td><h3>10T</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -756,7 +754,7 @@
 		<td>Pavel John - Tereza Jendrulková</td>
 	</tr>
 	<tr>
-		<td class="kat">STT</td>
+		<td><h3>STT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -799,7 +797,7 @@
 		<td>Pavel John - Tereza Jendrulková</td>
 	</tr>
 	<tr>
-		<td class="kat">LAT</td>
+		<td><h3>LAT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -817,13 +815,13 @@
 		<td>Martin Kordek - Jitka Szabó</td>
 	</tr>
 	<tr>
-		<td class="year">2006</td>
+		<td><h2>2006</h2></td>
 		<td></td>
 		<td></td>
 		<td></td>
 	</tr>
 	<tr>
-		<td class="kat">10T</td>
+		<td><h3>10T</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -854,7 +852,7 @@
 		<td>Miroslav Hýža - Lucie Benýšková</td>
 	</tr>
 	<tr>
-		<td class="kat">STT</td>
+		<td><h3>STT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -890,7 +888,7 @@
 		<td>Miroslav Hýža - Lucie Benýšková</td>
 	</tr>
 	<tr>
-		<td class="kat">LAT</td>
+		<td><h3>LAT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -914,13 +912,13 @@
 		<td>*Martin Kordek - Michaela Gatěková</td>
 	</tr>
 	<tr>
-		<td class="year">2007</td>
+		<td><h2>2007</h2></td>
 		<td></td>
 		<td></td>
 		<td></td>
 	</tr>
 	<tr>
-		<td class="kat">10T</td>
+		<td><h3>10T</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -933,7 +931,7 @@
 		<td>Radim Stupka - Kristýna Hlavicová</td>
 	</tr>
 	<tr>
-		<td class="kat">STT</td>
+		<td><h3>STT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -957,7 +955,7 @@
 		<td>Pavel John - Markéta Vlčková</td>
 	</tr>
 	<tr>
-		<td class="kat">LAT</td>
+		<td><h3>LAT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -975,13 +973,13 @@
 		<td>*Martin Kordek - Michaela Gatěková</td>
 	</tr>
 	<tr>
-		<td class="year">2008</td>
+		<td><h2>2008</h2></td>
 		<td></td>
 		<td></td>
 		<td></td>
 	</tr>
 	<tr>
-		<td class="kat">10T</td>
+		<td><h3>10T</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -999,7 +997,7 @@
 		<td>Miroslav Hýža - Tereza Jendrulková</td>
 	</tr>
 	<tr>
-		<td class="kat">STT</td>
+		<td><h3>STT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -1035,7 +1033,7 @@
 		<td>Adam Jendrulek - Lucie Benýšková</td>
 	</tr>
 	<tr>
-		<td class="kat">LAT</td>
+		<td><h3>LAT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -1053,13 +1051,13 @@
 		<td>Radim Stupka - Kristýna Hlavicová</td>
 	</tr>
 	<tr>
-		<td class="year">2009</td>
+		<td><h2>2009</h2></td>
 		<td></td>
 		<td></td>
 		<td></td>
 	</tr>
 	<tr>
-		<td class="kat">10T</td>
+		<td><h3>10T</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -1089,7 +1087,7 @@
 		<td>Miroslav Hýža - Kristýna Hudeová</td>
 	</tr>
 	<tr>
-		<td class="kat">STT</td>
+		<td><h3>STT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -1125,7 +1123,7 @@
 		<td>*Adam Jendrulek - Alena Starečková</td>
 	</tr>
 	<tr>
-		<td class="kat">LAT</td>
+		<td><h3>LAT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -1143,13 +1141,13 @@
 		<td>Radim Stupka - Kristýna Hlavicová</td>
 	</tr>
 	<tr>
-		<td class="year">2010</td>
+		<td><h2>2010</h2></td>
 		<td></td>
 		<td></td>
 		<td></td>
 	</tr>
 	<tr>
-		<td class="kat">10T</td>
+		<td><h3>10T</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -1179,7 +1177,7 @@
 		<td>*Adam Jendrulek - Anna Starečková</td>
 	</tr>
 	<tr>
-		<td class="kat">STT</td>
+		<td><h3>STT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -1215,7 +1213,7 @@
 		<td>*Adam Jendrulek - Alena Starečková</td>
 	</tr>
 	<tr>
-		<td class="kat">LAT</td>
+		<td><h3>LAT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -1245,13 +1243,13 @@
 		<td>*Jan Kúla - Tereza Jendrulková</td>
 	</tr>
 	<tr>
-		<td class="year">2011</td>
+		<td><h2>2011</h2></td>
 		<td></td>
 		<td></td>
 		<td></td>
 	</tr>
 	<tr>
-		<td class="kat">10T</td>
+		<td><h3>10T</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -1275,7 +1273,7 @@
 		<td>*Adam Jendrulek - Alena Starečková</td>
 	</tr>
 	<tr>
-		<td class="kat">STT</td>
+		<td><h3>STT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -1299,7 +1297,7 @@
 		<td>Rudolf Stupka - Kristýna Hlavicová</td>
 	</tr>
 	<tr>
-		<td class="kat">LAT</td>
+		<td><h3>LAT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>

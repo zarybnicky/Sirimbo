@@ -11,8 +11,12 @@
 	
 	<span class="little">Podporuje nás:</span>
 	
-	<div style="text-align:center;"><a href="http://www.kr-olomoucky.cz/" target="_blank"><img alt="" src="/style/kraj-logo.gif" /></a></div>
-	<div style="text-align:center;"><a href="http://www.olomouc.eu/" target="_blank"><img alt="" src="/style/olomouc-logo.jpg" /></a></div>
+	<div style="text-align:center;"><a href="http://www.kr-olomoucky.cz/" target="_blank">
+		<img alt="Olomoucký kraj" src="/style/kraj-logo.gif" />
+	</a></div>
+	<div style="text-align:center;"><a href="http://www.olomouc.eu/" target="_blank">
+		<img alt="Město Olomouc" src="/style/olomouc-logo.jpg" />
+	</a></div>
 	<br/>
 	<span class="little" style="line-height:200%;">Mediální partner:<br/></span>
 	

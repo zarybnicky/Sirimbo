@@ -1,4 +1,5 @@
-<?php header_minor('Moje platby');?>
+<h1>Profil</h1>
+<h2>Moje platby</h2>
 
 <?php echo $this->colorBox, '&nbsp;', $this->skupinaData;?><br/>
 Variabilní symbol: <?php echo $this->varSymbol;?>
@@ -9,7 +10,7 @@ Více informací přijde brzy!
 <br/><br/>
 
 <?php /*if(!empty($this->platby)): ?>
-<?php header_minor('Historie plateb');?>
+<h2>Historie plateb</h2>
 <table>
 	<tr>
 		<td>Skupina</td>
@@ -30,8 +31,8 @@ Více informací přijde brzy!
 </table><br/>
 <?php endif;*/?>
 
+<h2>Přehled plateb</h2>
 <?php
-header_minor('Přehled plateb');
 echo $this->table()
 	->data($this->platbyGroups)
 	->column('name', 'Jméno', '', 'width:125px')

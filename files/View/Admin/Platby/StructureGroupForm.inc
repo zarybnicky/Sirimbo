@@ -48,14 +48,14 @@ if(!empty($this->skupinySelect)) {
 ?>
 
 <?php echo $this->render('files/View/Admin/Platby/Navigation.inc');?>
-<?php header_main('Kategorie plateb');?>
-<?php header_minor($this->action == 'add' ? 'Přidat kategorii' : 'Upravit kategorii');?>
+<?php echo '<h2>Kategorie plateb</h2>';?>
+<?php echo '<h3>', ($this->action == 'add' ? 'Přidat kategorii' : 'Upravit kategorii'), '</h3>';?>
 <form action="" method="post">
 	<?php echo $mainForm, getReturnInput();?>
 	<button name="action" value="confirm">Uložit</button>&nbsp;<a href="<?php echo Request::getReferer();?>">Zpět</a><br/><br/>
 </form>
 <?php if($this->action != 'add'): ?>
-	<?php header_minor('Specifické symboly');?>
+	<h3>Specifické symboly</h3>
 	<?php if(isset($categoryForm)) echo $categoryForm;?>
 	<form action="" method="post">
 		<span class="big">Přidat:</span>
@@ -66,7 +66,7 @@ if(!empty($this->skupinySelect)) {
 		<?php endif;?>
 	</form>
 	<br/>
-	<?php header_minor('Skupiny');?>
+	<h3>Skupiny</h3>
 	<?php if(isset($skupinyForm)) echo $skupinyForm;?>
 	<form action="" method="post">
 		<span class="big">Přidat:</span>

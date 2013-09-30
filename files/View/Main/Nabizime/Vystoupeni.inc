@@ -1,4 +1,5 @@
-<?php header_main('Taneční vystoupení'); ?>
+<h1>Nabízíme</h1>
+<h2>Taneční vystoupení</h2>
 <ul class="list">
 	<li>vystoupení standardních a latinskoamerických tanců na reprezentační
 		plesy, firemní akce, oslavy</li>

@@ -1,19 +1,18 @@
+<h1>Profil</h1>
 <?php
-header_main('Profil');
 echo $this->partnerRequest()->getAll();
 notice($this->redirect()->getMessage());
 ?>
 <?php if($this->havePartner): ?>
 	Právě tančím s: <?php echo $this->partnerFullName;?>
-	<?php header_minor('Třídy a body:');?>
-	
-	Standardní tance:
+	<h2>Třídy a body:</h2>
+	<h3>Standardní tance:</h3>
 	<br />
 	Třída: <span style="font-weight:bolder;"><?php echo $this->sttTrida;?></span>,
 	body: <?php echo $this->sttBody;?>,
 	finále: <?php echo $this->sttFinale;?>
 	<br />
-	Latinsko-americké tance:
+	<h3>Latinsko-americké tance:</h3>
 	<br />
 	Třída: <span style="font-weight:bolder;"><?php echo $this->latTrida;?></span>,
 	body: <?php echo $this->latBody;?>,

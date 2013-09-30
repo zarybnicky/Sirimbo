@@ -34,9 +34,8 @@ if(!empty($this->groupSelect)) {
 		->options($this->groupSelect);
 }
 ?>
-
-<?php header_main('Správa skupin');?>
-<?php header_minor($this->action == 'add' ? 'Přidat skupinu' : 'Upravit skupinu');?>
+<h1>Správa skupin</h1>
+<?php echo '<h2>', ($this->action == 'add' ? 'Přidat skupinu' : 'Upravit skupinu'), '</h2>';?>
 <?php notice($this->redirect()->getMessage());?>
 <form action="" method="POST">
 	<?php echo $mainForm;?>
@@ -44,7 +43,7 @@ if(!empty($this->groupSelect)) {
 </form>
 <br/>
 <?php if($this->action != 'add'):?>
-	<?php header_minor('Kategorie plateb');?>
+	<?php echo '<h2>Kategorie plateb</h2>';?>
 	<?php if(isset($groupForm)) echo $groupForm;?>
 	<form action="" method="post">
 		<span class="big">Přidat:</span>

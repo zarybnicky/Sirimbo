@@ -42,14 +42,19 @@ blockquote, q { quotes: "" ""; }
 * html .clearfix {height: 1%;}
 .clearfix {display: block;}
 p {margin-bottom:1em;text-align:justify;}
+
 h1,h2,h3,h4,h5,h6,ul,ol {margin-bottom:.5em;}
-h1,h2,h3,h4,h5,h6 {font-weight:bold;}
-h1 {font-size:197%;}
-h2 {font-size:182%;}
-h3 {font-size:167%;}
-h4 {font-size:152%;}
-h5 {font-size:136%;}
-h6 {font-size:122%;}
+h1,h2,h3,h4,h5,h6 {color:#572E00;}
+td h1,td h2,td h3,td h4,td h5,td h6{margin-bottom:0;}
+h1 {font-size:160%;}
+h2 {font-size:145%;}
+h3 {font-size:130%;}
+h4 {font-size:120%;}
+h5 {font-size:115%;}
+h6 {font-size:110%;}
+
+.h_section {font-size: 150%;color: #572E00;margin-bottom: 15px;}
+.h_minor {font-size: 115%;color: #572E00;margin: 5px 0 5px 0;}
 
 button, a {
 	border: 0;
@@ -265,8 +270,6 @@ p { margin-bottom: 1em; }
 	border: 1px solid black;
 	background-color: #FFE6BD;
 }
-.h_section {font-size: 150%;color: #572E00;margin-bottom: 15px;}
-.h_minor {font-size: 115%;color: #572E00;margin: 5px 0 5px 0;}
 .color {
 	background-color:white;
 	color:white;

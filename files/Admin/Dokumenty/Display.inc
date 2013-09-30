@@ -1,5 +1,5 @@
+<h1>Správa dokumentů</h1>
 <?php
-header_main('Správa dokumentů');
 notice($this->redirect()->getMessage());
 
 if(isset($this->form)) {
@@ -45,7 +45,7 @@ foreach($dokumenty as $item) {
 </table>
 </form>
 <hr />
-<?php header_minor('Upload'); ?>
+<h2>Upload</h2>
 <form action="" method="post" enctype="multipart/form-data">
 <table>
 <tr><td>Jméno:</td><td><input type="text" name="name" /></td></tr>

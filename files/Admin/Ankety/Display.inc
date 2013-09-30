@@ -1,5 +1,5 @@
+<h1>Správa anket</h1>
 <?php
-header_main('Správa anket');
 notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST">

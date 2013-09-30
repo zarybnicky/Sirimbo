@@ -1,6 +1,6 @@
 <?php
 echo $this->render('files/View/Admin/Platby/Navigation.inc');
-header_main('Kategorie plateb');
+echo '<h2>Struktura plateb</h2>';
 
 echo '<span class="big">Přidat: </span> ';
 echo '<a href="/admin/platby/structure/group/add">kategorii</a>&nbsp;';
@@ -16,7 +16,7 @@ echo $this->table()
 
 if(!empty($this->orphanGroupSkupina)) {
 	echo '<br/>';
-	header_minor('Kategorie plateb bez přiřazené uživatelské skupiny');
+	echo '<h3>Kategorie plateb bez přiřazené uživatelské skupiny</h3>';
 	echo $this->table()
 		->style('width:50%')
 		->column('buttons', '', '', 'width:50px')
@@ -26,7 +26,7 @@ if(!empty($this->orphanGroupSkupina)) {
 
 if(!empty($this->orphanGroupCategory)) {
 	echo '<br/>';
-	header_minor('Kategorie plateb bez přiřazených specifických symbolů');
+	echo '<h3>Kategorie plateb bez přiřazených specifických symbolů</h3>';
 	echo $this->table()
 	->style('width:50%')
 	->column('buttons', '', '', 'width:50px')
@@ -36,7 +36,7 @@ if(!empty($this->orphanGroupCategory)) {
 
 if(!empty($this->orphanCategory)) {
 	echo '<br/>';
-	header_minor('Specifické symboly bez přiřazené kategorie');
+	echo '<h3>Specifické symboly bez přiřazené kategorie</h3>';
 	echo $this->table()
 		->style('width:50%')
 		->column('buttons', '', '', 'width:50px')

@@ -1,5 +1,5 @@
+<h1>Správa skupin</h1>
 <?php
-header_main('Správa skupin');
 notice($this->redirect()->getMessage());
 
 echo '<form action="/admin/skupiny" method="POST">';

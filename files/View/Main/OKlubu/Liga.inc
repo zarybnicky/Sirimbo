@@ -1,7 +1,5 @@
-<?php header_main('Výsledky našich párů na taneční lize'); ?>
+<h1>Výsledky našich párů na taneční lize</h1>
 <style type="text/css">
-.year {font-size:150%;color:#572E00;text-align:center;font-weight:bold;}
-.kat {font-size:115%;color:#572E00;text-align:center;}
 .mcr td {text-align:center;}
 .mcr td:last-child {text-align:left;}
 .st td {color:#EBBC00;font-weight:bold;}
@@ -22,7 +20,7 @@
 		<col style="width: 71px" />
 	</colgroup>
 	<tr>
-		<td class="year">2002</td>
+		<td><h2>2002</h2></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -30,7 +28,7 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td class="kat">STT</td>
+		<td><h3>STT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -94,7 +92,7 @@
 		<td>2</td>
 	</tr>
 	<tr>
-		<td class="kat">LAT</td>
+		<td><h3>LAT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -150,7 +148,7 @@
 		<td>3</td>
 	</tr>
 	<tr>
-		<td class="year">2003</td>
+		<td><h2>2003</h2></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -158,7 +156,7 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td class="kat">STT</td>
+		<td><h3>STT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -230,7 +228,7 @@
 		<td>4</td>
 	</tr>
 	<tr>
-		<td class="kat">LAT</td>
+		<td><h3>LAT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -278,7 +276,7 @@
 		<td>2</td>
 	</tr>
 	<tr>
-		<td class="year">2004</td>
+		<td><h2>2004</h2></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -286,7 +284,7 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td class="kat">STT</td>
+		<td><h3>STT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -366,7 +364,7 @@
 		<td>2</td>
 	</tr>
 	<tr>
-		<td class="kat">LAT</td>
+		<td><h3>LAT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -430,7 +428,7 @@
 		<td>1</td>
 	</tr>
 	<tr>
-		<td class="year">2005</td>
+		<td><h2>2005</h2></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -438,7 +436,7 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td class="kat">STT</td>
+		<td><h3>STT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -526,7 +524,7 @@
 		<td>1</td>
 	</tr>
 	<tr>
-		<td class="kat">LAT</td>
+		<td><h3>LAT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -566,7 +564,7 @@
 		<td>2</td>
 	</tr>
 	<tr>
-		<td class="year">2006</td>
+		<td><h2>2006</h2></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -574,7 +572,7 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td class="kat">STT</td>
+		<td><h3>STT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -646,7 +644,7 @@
 		<td>1</td>
 	</tr>
 	<tr>
-		<td class="kat">LAT</td>
+		<td><h3>LAT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -694,7 +692,7 @@
 		<td>1</td>
 	</tr>
 	<tr>
-		<td class="year">2007</td>
+		<td><h2>2007</h2></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -702,7 +700,7 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td class="kat">STT</td>
+		<td><h3>STT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -742,7 +740,7 @@
 		<td>1</td>
 	</tr>
 	<tr>
-		<td class="kat">LAT</td>
+		<td><h3>LAT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -766,7 +764,7 @@
 		<td>5</td>
 	</tr>
 	<tr>
-		<td class="year">2008</td>
+		<td><h2>2008</h2></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -774,7 +772,7 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td class="kat">STT</td>
+		<td><h3>STT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -830,7 +828,7 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td class="kat">LAT</td>
+		<td><h3>LAT</h3></td>
 		<td>Jun I</td>
 		<td>8.</td>
 		<td>Jakub Zárybnický - Marie Hýžová</td>
@@ -862,7 +860,7 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td class="year">2009</td>
+		<td><h2>2009</h2></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -870,7 +868,7 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td class="kat">STT</td>
+		<td><h3>STT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -902,7 +900,7 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td class="kat">LAT</td>
+		<td><h3>LAT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -950,7 +948,7 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td class="year">2010</td>
+		<td><h2>2010</h2></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -958,7 +956,7 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td class="kat">STT</td>
+		<td><h3>STT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -990,7 +988,7 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td class="kat">LAT</td>
+		<td><h3>LAT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -1006,7 +1004,7 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td class="year">2011</td>
+		<td><h2>2011</h2></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -1014,7 +1012,7 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td class="kat">STT</td>
+		<td><h3>STT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>
@@ -1054,7 +1052,7 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td class="kat">LAT</td>
+		<td><h3>LAT</h3></td>
 		<td></td>
 		<td></td>
 		<td></td>

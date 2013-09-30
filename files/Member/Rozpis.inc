@@ -1,5 +1,5 @@
+<h1>Rozpis tréninků</h1>
 <?php
-header_main('Rozpis tréninků');
 notice($this->redirect()->getMessage());
 if(isset($f) && is_object($f))
 	notice($f->getMessages());

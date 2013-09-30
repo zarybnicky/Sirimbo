@@ -61,7 +61,7 @@ class Sidebar {
 			)));
 		}
 		echo '<div><a href="https://www.facebook.com/groups/44213111683/" target="_blank">';
-		echo '<img alt="" src="/style/fb-logo.png" />';
+		echo '<img alt="Facebook TK Olymp Olomouc" src="/style/fb-logo.png" />';
 		echo '</a></div>';
 		/*
 		<div class="dark-out"><div class="dark-in">

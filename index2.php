@@ -53,7 +53,7 @@ EOS;
 		<div class="container">
 			<table style="width:100%;text-align:center;">
 				<tr>
-					<td style="background:none;border:none;"><img src="/images/underconstruction.png" alt="" style="margin-left:100px;width:200px;height:auto;" /></td>
+					<td style="background:none;border:none;"><img src="/images/underconstruction.png" alt="V rekonstrukci" style="margin-left:100px;width:200px;height:auto;" /></td>
 					<td valign="middle" style="font-size:large;padding-left:20px;width:700px;background:none;border:none;">Omlouváme se za dočasné nepříjemnosti,<br/>probíhá práce na systému</td>
 				</tr>
 			</table>

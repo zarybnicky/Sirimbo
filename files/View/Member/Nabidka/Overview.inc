@@ -1,4 +1,4 @@
-<?php header_main('Nabídka tréninků');?>
+<h1>Nabídka tréninků</h1>
 <?php notice($this->redirect()->getMessage());?>
 
 <style type="text/css">

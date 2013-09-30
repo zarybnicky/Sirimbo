@@ -1,6 +1,6 @@
 <?php
 echo $this->render('files/View/Admin/Platby/Navigation.inc');
-header_main('Jednotlivé platby');
+echo '<h2>Jednotlivé platby</h2>';
 
 if(!TISK) {
 	echo '<form action="" method="get">';

@@ -1,7 +1,7 @@
-<?php header_main('Kluboví trenéři');?>
+<h1>Kluboví trenéři</h1>
 <div style="margin-bottom:1.5em;">
-<?php header_minor('Miroslav Hýža'); ?>
-<img src="/images/treneri/mirek.jpg" class="f_doc_right" style="height:150px;"/>
+<h2>Miroslav Hýža</h2>
+<img alt="Miroslav Hýža" alt="" src="/images/treneri/mirek.jpg" class="f_doc_right" style="height:150px;"/>
 <ul class="list">
 <li>šéftrenér TK Olymp</li>
 <li>aktivní tanečník, držitel mezinárodní třídy ve standardních tancích</li>
@@ -18,8 +18,8 @@
 </ul>
 </div>
 <div style="margin-bottom:3em;">
-<img src="/images/treneri/marie.jpg" class="f_doc_right" style="height:150px;" />
-<?php header_minor('Mgr. Marie Hýžová');?>
+<img alt="Mgr. Marie Hýžová" src="/images/treneri/marie.jpg" class="f_doc_right" style="height:150px;" />
+<h2>Mgr. Marie Hýžová</h2>
 <ul class="list">
 <li>dlouholetá tanečnice mezinárodní třídy</li>
 <li>dlouholetá trenérka mládežnických přípravek na ZŠ Holečkova</li>
@@ -29,8 +29,8 @@
 </ul>
 </div>
 <div style="margin-bottom:1.5em;">
-<img src="/images/treneri/lucka.jpg" class="f_doc_right" style="height:150px;" />
-<?php header_minor('Lucie Benýšková');?>
+<img alt="Lucie Benýšková" src="/images/treneri/lucka.jpg" class="f_doc_right" style="height:150px;" />
+<h2>Lucie Benýšková</h2>
 <ul class="list">
 <li>semifinalistka mistrovství ČR v deseti tancích</li>
 <li>semifinalistka mistrovství ČR ve standardních tancích</li>
@@ -43,8 +43,8 @@
 </ul>
 </div>
 <div style="margin-bottom:3em;">
-<img src="/images/treneri/kristina.jpg" class="f_doc_right" style="height:150px;"/>
-<?php header_minor('Kristýna Hlavicová'); ?>
+<img alt="Kristýna Hlavicová" src="/images/treneri/kristina.jpg" class="f_doc_right" style="height:150px;"/>
+<h2>Kristýna Hlavicová</h2>
 <ul class="list">
 <li>aktivní tanečnice, držitelka mezinárodní třídy ve standardních tancích</li>
 <li>4x finalistka mistrovství ČR juniorů a mládeže </li>
@@ -54,8 +54,8 @@
 </ul>
 </div>
 <div style="margin-bottom:1.5em;">
-<img src="/images/treneri/terka.jpg" class="f_doc_right" style="height:150px;"/>
-<?php header_minor('Tereza Jendrulková');?>
+<img alt="Tereza Jendrulková" src="/images/treneri/terka.jpg" class="f_doc_right" style="height:150px;"/>
+<h2>Tereza Jendrulková</h2>
 <ul class="list">
 <li>aktivní tanečnice, držitelka mezinárodní třídy ve standardních a latinskoamerických tancích</li>
 <li>finalistka mistrovství ČR v deseti tancích</li>
@@ -68,8 +68,8 @@
 </ul>
 </div>
 <div style="margin-bottom:1.5em;">
-<img src="/images/treneri/adam.jpg" class="f_doc_right" style="height:150px;"/>
-<?php header_minor('Adam Jendrulek');?>
+<img alt="Adam Jendrulek" src="/images/treneri/adam.jpg" class="f_doc_right" style="height:150px;"/>
+<h2>Adam Jendrulek</h2>
 <ul class="list">
 <li>semifinalista mistrovství ČR v deseti tancích</li>
 <li>čtvrtfinalista mistrovství ČR ve standardních tancích</li>
@@ -81,8 +81,8 @@
 </ul>
 </div>
 <div style="margin-bottom:2em;">
-<?php header_minor('Bc. Pavel John');?>
-<img src="/images/treneri/pavel.jpg" class="f_doc_right" style="height:150px;"/>
+<h2>Bc. Pavel John</h2>
+<img alt="Bc. Pavel John" src="/images/treneri/pavel.jpg" class="f_doc_right" style="height:150px;"/>
 <ul class="list">
 <li>finalista mistrovství ČR v deseti tancích</li>
 <li>semifinalista mistrovství ČR ve standardních tancích</li>
@@ -95,8 +95,8 @@
 </ul>
 </div>
 <div style="margin-bottom:2.5em;">
-<img src="/images/treneri/radim.jpg" class="f_doc_right" style="height:150px;"/>
-<?php header_minor('Radim Stupka');?>
+<img alt="Radim Stupka" src="/images/treneri/radim.jpg" class="f_doc_right" style="height:150px;"/>
+<h2>Radim Stupka</h2>
 <ul class="list">
 <li>aktivní tanečník, držitel mezinárodní třídy ve standardních i latinskoamerických tancích</li>
 <li>semifinalista mistrovství ČR v deseti tancích</li>
@@ -107,8 +107,8 @@
 </ul>
 </div>
 <div>
-<img src="/images/treneri/ruda2.jpg" class="f_doc_right" style="height:150px;"/>
-<?php header_minor('Rudolf Stupka');?>
+<img alt="Rudolf Stupka" src="/images/treneri/ruda2.jpg" class="f_doc_right" style="height:150px;"/>
+<h2>Rudolf Stupka</h2>
 <ul class="list">
 <li>aktivní tanečník, držitel mezinárodní třídy ve standardních tancích</li>
 <li>účastník mistrovství ČR ve standardních tancích</li>

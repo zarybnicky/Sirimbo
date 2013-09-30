@@ -2,7 +2,7 @@
 class Controller_Utility_Urldecode extends Controller_Abstract {
 	function view($id = null) {
 		echo '<form action="" method="GET">';
-		header_main('URL Decode');
+		echo '<h1>URL Decode</h1>';
 		echo 'Text pro urldecode(): <input type="text" name="t" /><br/>';
 		echo '<input type="submit" />';
 		echo '</form>';

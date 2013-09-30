@@ -1,10 +1,6 @@
+<h1>Správa oprávnění</h1>
 <?php
-header_main('Správa oprávnění');
-if($this->action == 'add')
-	header_minor("Přidat uživatelskou skupinu");
-else
-	header_minor('Upravit uživatelskou skupinu');
-
+echo '<h2>', ($this->action == 'add' ? 'Přidat uživatelskou skupinu' : 'Upravit uživatelskou skupinu'), '</h2>';
 notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST">

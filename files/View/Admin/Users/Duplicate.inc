@@ -1,8 +1,6 @@
-<?php
-header_main('Správa uživatelů');
-header_minor('Duplicitní uživatelé');
-notice($this->redirect()->getMessage());
-?>
+<h1>Správa uživatelů</h1>
+<h2>Duplicitní uživatelé</h2>
+<?php notice($this->redirect()->getMessage()); ?>
 <form action="" method="POST">
 <?php
 echo $this->menu()

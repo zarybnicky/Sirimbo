@@ -29,7 +29,6 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
 			if(!empty($_POST)) {
 				$this->redirect()->setMessage($s->getMessages());
 			}
-			//TODO: default specific symbol! (next in line)
 			$this->displayForm('add');
 			return;
 		}

@@ -1,5 +1,5 @@
+<h1>Správa fotogalerie</h1>
 <?php
-header_main('Správa fotogalerie');
 notice($this->redirect()->getMessage());
 
 if(!is_array(get('u')))
