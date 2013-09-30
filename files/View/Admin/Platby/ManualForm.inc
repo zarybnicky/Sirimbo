@@ -1,6 +1,6 @@
 <?php
 echo $this->render('files/View/Admin/Platby/Navigation.inc');
-echo '<br/><span style="font-size:115%;color:#572E00;">Ruční třídění plateb</span> (zbývá ', $this->remainingTotal, ')<br/><br/>';
+echo '<h2>Ruční třídění plateb</span> (zbývá ', $this->remainingTotal, ')</h2>';
 $form = array(
 		array(
 				'desc' => 'Datum:',
@@ -45,7 +45,7 @@ $formTable = $this->table()
 </form>
 <br/>
 <?php
-header_minor('Data z banky:');
+echo '<h3>Data z banky</h3>';
 echo $this->table()
 	->style('width:100%')
 	->showHeader(false)

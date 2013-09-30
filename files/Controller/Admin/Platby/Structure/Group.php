@@ -23,7 +23,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
 		return $out;
 	}
 	function add($id = null) {
-		if(empty($_POST) || is_object($s = $this->checkPost())) {
+		if(empty($_POST) || is_object($s = $this->checkPost('add'))) {
 			if(empty($_POST)) {
 				post('base', 1);
 			} else {
@@ -106,7 +106,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
 			$this->redirect('/admin/platby/structure/group/edit/' . $id, 'Spojení se specifickým symbolem bylo úspěšně odstraněno.');
 		}
 	
-		if(empty($_POST) || is_object($s = $this->checkPost())) {
+		if(empty($_POST) || is_object($s = $this->checkPost('edit'))) {
 			if(empty($_POST)) {
 				post('type', $data['pg_type']);
 				post('name', $data['pg_name']);
@@ -224,7 +224,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
 				'skupinySelect' => $skupinySelect
 		));
 	}
-	protected function checkPost() {
+	protected function checkPost($action) {
 		$f = new Form();
 		$f->checkInArray(post('type'), array('0', '1'), 'Neplatný typ kategorie');
 		$f->checkNotEmpty(post('name'), 'Zadejte nějaký název platby');

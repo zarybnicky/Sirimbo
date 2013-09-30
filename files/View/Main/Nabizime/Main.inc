@@ -1,4 +1,5 @@
-<?php header_main('Lekce pro začátečníky'); ?>
+<h1>Nabízíme</h1>
+<h2>Lekce pro začátečníky</h2>
 <ul class="list">
 	<li>vhodné pro všechny, kteří ještě netančili nebo prošli kurzy v tanečních</li>
 	<li>vyučujeme základní figury a techniky standardních a latinskoamerických
@@ -7,7 +8,7 @@
 		tanečníků mezinárodní třídy</li>
 </ul>
 <hr/>
-<?php header_main('Zázemí pro taneční sport'); ?>
+<h2>Zázemí pro taneční sport</h2>
 <ul class="list">
 	<li>vhodné pro pokročilé tanečníky se soutěžními ambicemi od dětí po dospělé</li>
 	<li>tréninkový plán je zaměřený na výuku techniky standardních a
@@ -19,7 +20,7 @@
 		lekcí s extérními trenéry</li>
 </ul>
 <hr/>
-<?php header_main('Tancování pro děti'); ?>
+<h2>Tancování pro děti</h2>
 <ul class="list">
 	<li>vhodné pro děti od 8 do 14 let</li>
 	<li>pohybová a taneční průprava, základní figury a techniky standardních a
@@ -29,7 +30,7 @@
 		republiky a tanečníků mezinárodní třídy</li>
 </ul>
 <hr/>
-<?php header_main('Přípravka pro nejmenší'); ?>
+<h2>Přípravka pro nejmenší</h2>
 <ul class="list">
 	<li>vhodné pro děti od 5 do 7 let</li>
 	<li>taneční a pohybové hry, seznámení s hudbou a základními kroky</li>

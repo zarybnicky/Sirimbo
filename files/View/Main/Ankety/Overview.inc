@@ -1,4 +1,4 @@
-<?php header_main('Ankety');?>
+<h1>Ankety</h1>
 
 <?php foreach($this->data as $row): ?>
 	<b><?php echo $row['text'];?></b>

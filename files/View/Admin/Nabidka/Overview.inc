@@ -1,5 +1,5 @@
+<h1>Správa nabídky</h1>
 <?php
-header_main('Správa nabídka');
 notice($this->redirect()->getMessage());
 
 echo '<form action="" method="POST">';

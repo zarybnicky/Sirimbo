@@ -1,5 +1,5 @@
+<h1>Správa aktualit</h1>
 <?php
-header_main('Správa aktualit');
 notice($this->redirect()->getMessage());
 
 if(!is_array(get('u')))

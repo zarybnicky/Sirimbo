@@ -1,9 +1,7 @@
-<?php
-header_main('Správa akcí');
-notice($this->redirect()->getMessage());
-?>
+<h1>Správa akcí</h1>
 <form action="" method="POST">
 <?php
+notice($this->redirect()->getMessage());
 if(!TISK) {
 	echo $this->menu()
 		->float(MenuHelper::FLOAT_RIGHT)

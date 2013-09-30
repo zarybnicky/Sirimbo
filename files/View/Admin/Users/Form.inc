@@ -1,9 +1,6 @@
+<h1>Správa uživatelů</h1>
 <?php
-header_main('Správa uživatelů');
-if($this->action == 'add')
-	header_minor("Přidat uživatele");
-else
-	header_minor("Upravit uživatele");
+echo '<h2>', ($this->action == 'add' ? 'Přidat uživatele' : 'Upravit uživatele'), '</h2>';
 notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST">

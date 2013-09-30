@@ -1,7 +1,7 @@
 <?php
 echo $this->render('files/View/Admin/Platby/Navigation.inc');
-header_main('Import plateb');
-header_minor('Určení požadovaných sloupců');
+echo '<h2>Import plateb</h2>';
+echo '<h3>Určení požadovaných sloupců</h3>';
 
 echo '<form action="" method="post">';
 echo $this->table()

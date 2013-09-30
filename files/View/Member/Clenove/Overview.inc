@@ -1,5 +1,4 @@
-<?php header_main("Členové");?>
-
+<h1>Členové</h1>
 <?php if($this->showMenu): ?>
 	<form action="" method="get">
 	Zobrazení:&nbsp;
@@ -18,7 +17,7 @@
 	<?php foreach($this->data as $row): ?>
 		<td style="border:none;background:inherit;vertical-align:top;">
 		<?php foreach($row as $skupina): ?>
-			<?php header_minor($skupina['header']);?>
+			<h2><?php echo $skupina['header'];?></h2>
 			
 			<?php if(!empty($skupina['users'])): ?>
 				<table style="width:100%">
@@ -29,7 +28,7 @@
 					<tr>
 					<td>
 						<a href="/member/clenove/<?php echo $user['id'];?>">
-							<img src="/style/person-small.png" alt="" style="margin-bottom:-2px"/>
+							<img src="/style/person-small.png" alt="<?php echo $user['fullName'];?>" style="margin-bottom:-2px"/>
 						</a>&nbsp;
 						<?php echo $user['fullName'];?>
 					</td>
@@ -60,7 +59,7 @@
 		<td>&nbsp;<?php echo ++$i;?>.</td>
 		<td>
 			<a href="/member/clenove/<?php echo $user['id'];?>">
-			<img src="/style/person-small.png" alt="" style="margin-bottom:-2px"/></a>&nbsp;
+			<img src="/style/person-small.png" alt="<?php echo $user['fullName'];?>" style="margin-bottom:-2px"/></a>&nbsp;
 			<?php echo $user['fullName'];?>
 		</td>
 		<?php if($this->showGroup): ?>

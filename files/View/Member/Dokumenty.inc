@@ -1,5 +1,4 @@
-<?php header_main("Dokumenty"); ?>
-
+<h1>Dokumenty</h1>
 <?php if($this->showMenu): ?>
 <form action="" method="GET">
 	<?php echo $this->select()

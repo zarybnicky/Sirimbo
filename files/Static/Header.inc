@@ -1,10 +1,8 @@
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE HTML>
+<html prefix="og: http://ogp.me/ns#" lang="cs">
 <head>
-	<meta name="keywords" lang="cs" content="taneční klub, tk, olymp, olomouc" />
+	<meta name="keywords" content="taneční klub, tk, olymp, olomouc" />
+	<meta name="wot-verification" content="ec0cf41ab42dae52d3d4"/>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
 	<title>TK Olymp Olomouc</title>
@@ -32,17 +30,24 @@ EOS;
 	<meta name="norton-safeweb-site-verification"
 		content="r44xj2vskhlgkyqcqm1hdgga2jdfj-idvyys0277y96s72k-tq0z-yyjdu7h3el6pi2gek0i4ykq3xgiguufrvuhj8nbj4n4miwjhvumhp35jfrafyynhj4ee8ctzpzh" />
 	<meta property="fb:app_id" content="132983570203245"/>
-	<script src="/scripts/jquery-1.10.2.min.js"></script>	
+	<meta name="ICBM" content="49.591700,17.285174"/>
+	<meta name="geo.placename" content="Olomouc, Česká Republika"/>
+	<meta name="geo.position" content="49.591700;17.285174"/>
+	<meta name="geo.region" content="cs"/>
+	<script type="text/javascript" src="/scripts/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="/scripts/statistics.js"></script>
+	<script type="text/javascript" src="//connect.facebook.net/cs_CZ/all.js#xfbml=1&appId=132983570203245" id="facebook-jssdk"></script>
+	<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_require','inpage_linkid','//www.google-analytics.com/plugins/ga/inpage_linkid.js'],
+	['_setAccount','UA-44456908-1'],['_trackPageview']);
+	(function() {var ga = document.createElement('script');ga.type='text/javascript';ga.async=true;
+	ga.src='//www.google-analytics.com/ga.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(ga,s);
+	})();
+	</script>
 </head>
 <body>
 <div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/cs_CZ/all.js#xfbml=1&appId=132983570203245";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
 <div id="all">
 	<div id="header">
 		<a href="/home" id="homelink"></a>

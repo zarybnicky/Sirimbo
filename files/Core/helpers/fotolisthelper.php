@@ -49,7 +49,7 @@ class FotoListHelper {
 		if(empty($this->fotky))
 			$this->fotky = DBGalerie::getFotky($this->id);
 		
-		$out = header_minor($this->data['gd_name'], true);
+		$out = '<h2>' . $this->data['gd_name'] . '</h2>';
 		
 		if(empty($this->fotky) && empty($this->subdirs)) {
 			return $out . notice('Žádné fotky', true);

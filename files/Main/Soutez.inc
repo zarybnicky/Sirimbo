@@ -15,8 +15,9 @@ if(!empty($_POST)) {
 		}
 	}
 }
-header_main("VOLBA POROTY NA LIGU - Přáslavický pohár 2013");
 ?>
+<h1>VOLBA POROTY NA LIGU - Přáslavický pohár 2013</h1>
+
 Vážení tanečníci,<br/><br/>
 
 rádi bychom Vám dali možnost podílet se na složení odborné poroty Taneční ligy,

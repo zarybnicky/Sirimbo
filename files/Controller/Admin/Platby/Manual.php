@@ -123,7 +123,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 			return;
 		}
 		if(post('action') == 'confirm') {
-			if(($s = $this->checkPost()) != array()) {
+			if(($s = $this->checkPost('add')) != array()) {
 				$this->redirect()->setMessage($s);
 				return;
 			}

@@ -1,5 +1,6 @@
+<h1>Profil</h1>
+<h2>Změna třídy a bodů</h2>
 <?php
-header_minor("Změna třídy a bodů");
 echo $this->partnerRequest()->getAll();
 notice($this->redirect()->getMessage());
 ?>

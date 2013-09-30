@@ -1,6 +1,6 @@
 <?php
 echo $this->render('files/View/Admin/Platby/Navigation.inc');
-header_main('Kategorie plateb');
+echo '<h2>Specifické symboly</h2>';
 
 echo '<span class="big">Přidat: </span> ';
 echo '<a href="/admin/platby/structure/category/add">specifický symbol</a>';

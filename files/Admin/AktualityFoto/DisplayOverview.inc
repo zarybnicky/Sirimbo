@@ -1,5 +1,5 @@
+<h1>Správa fotogalerie článků</h1>
 <?php
-header_main('Správa fotogalerie článků');
 notice($this->redirect()->getMessage());
 
 echo '<form action="" method="get">';
@@ -34,7 +34,7 @@ if(empty($items)) {
 foreach($items as $item) {
 	echo '<div class="float" style="float:left;">';
 	echo '<div class="image">';
-	echo '<img src="', str_replace('./galerie', '/galerie/thumbnails', $item['af_path']), '" alt="" />';
+	echo '<img src="', str_replace('./galerie', '/galerie/thumbnails', $item['af_path']), '" alt="', $$item['af_id'], '" />';
 	echo '</div>';
 	echo '<label>', getRadio('hlavni', $item['af_id'], $data['at_foto_main']), ' Hlavní</label>';
 	echo '</div>';

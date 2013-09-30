@@ -1,8 +1,6 @@
-<?php
-header_main('Správa párů');
-header_minor("Změna třídy a bodů");
-notice($this->redirect()->getMessage());
-?>
+<h1>Správa párů</h1>
+<h2>Změna třídy a bodů</h2>
+<?php notice($this->redirect()->getMessage());?>
 <form action="" method="POST">
 Pár: <?php echo $this->fullName;?>
 <table>

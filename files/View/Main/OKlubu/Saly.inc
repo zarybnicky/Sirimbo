@@ -1,21 +1,16 @@
-﻿<?php
-header_main('Kde trénujeme:');
-?>
-
+﻿<h1>Kde trénujeme:</h1>
 <p>
 Náš klub dlouhá léta funguje pod záštitou dvou školských institucí. 
 Jsou jimi Základní škola Holečkova a Slovanské gymnázium Olomouc.
 </p>
 
 <div style="overflow:auto;">
-<?php
-header_minor('Fakultní základní škola Holečkova');
-?>
-Holečkova 10, Olomouc <br/>
+<h2>Fakultní základní škola Holečkova</h2>
+Holečkova 10, Olomouc<br/>
 <a href="http://www.zsholeckova.cz/">http://www.zsholeckova.cz/</a><br/>
 <br/>
-<img src="/images/trenujeme/baletak.jpg" class="f_doc_left" style="height:200px;">
-<img src="/images/trenujeme/holeckova.jpg" class="f_doc_right" style="height:200px;">
+<img alt="baletní sál" src="/images/trenujeme/baletak.jpg" class="f_doc_left" style="height:200px;">
+<img alt="ZŠ Holečkova" src="/images/trenujeme/holeckova.jpg" class="f_doc_right" style="height:200px;">
 </div>
 
 <div id="holeckova" style="width:308px; height:190px;clear:both;margin:20px auto;"
@@ -30,14 +25,12 @@ Holečkova 10, Olomouc <br/>
 </script>
 <br/>
 <div style="overflow:auto;">
-<?php
-header_minor('Slovanské gymnázium Olomouc');
-?>
+<h2>Slovanské gymnázium Olomouc</h2>
 Jiřího z Poděbrad 13, Olomouc<br/>
 <a href="http://www.sgo.cz/">http://www.sgo.cz/</a><br/>
 <br/>
-<img src="/images/trenujeme/sgo.jpg" class="f_doc_left" style="height:200px;">
-<img src="/images/trenujeme/sgo2.jpg" class="f_doc_right" style="height:200px;">
+<img alt="Slovanské gymnázium" src="/images/trenujeme/sgo.jpg" class="f_doc_left" style="height:200px;">
+<img alt="Slovanské gymnázium" src="/images/trenujeme/sgo2.jpg" class="f_doc_right" style="height:200px;">
 </div>
 
 <div id="slovan" style="width:308px; height:190px;clear:both;margin:20px auto;"
@@ -50,4 +43,3 @@ Jiřího z Poděbrad 13, Olomouc<br/>
 	var m = new SMap(JAK.gel("slovan"),center, 15, 1);
    m.addMarker(center);
 </script>
-

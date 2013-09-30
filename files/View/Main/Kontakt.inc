@@ -1,4 +1,4 @@
-<?php header_main('Kontakty');?>
+<h1>Kontakty</h1>
 
 <style type="text/css">
 table.k {border:none;}
@@ -7,7 +7,7 @@ table.k td.r {padding-right:10px;text-align:right;}
 table.k b {color:#572E00;}
 </style>
 <table class="k">
-<tr><td><?php header_minor('Taneční klub Olymp Olomouc');?></td></tr>
+<tr><td><h2>Taneční klub Olymp Olomouc</h2></td></tr>
 <tr>
 	<td class="r">sídlo:</td>
 	<td>Jiráskova 25, 77900, Olomouc</td>
@@ -20,7 +20,7 @@ table.k b {color:#572E00;}
 	<td class="r">bankovní spojení:</td>
 	<td>1806875329/0800</td>
 </tr>
-<tr><td><?php header_minor('Klubová rada');?></td></tr>
+<tr><td><h3>Klubová rada</h3></td></tr>
 <tr>
 	<td class="r"><b>Mgr. Marie Hýžová</b></td>
 	<td><b>předseda</b></td>
@@ -63,7 +63,7 @@ table.k b {color:#572E00;}
 	<td>h.jendrulkova(zavináč)tkolymp.cz</td>
 </tr>
 <tr><td>&nbsp;</td><td></td></tr>
-<tr><td><?php header_minor('Dozorčí rada');?></td></tr>
+<tr><td><h3>Dozorčí rada</h3></td></tr>
 <tr>
 	<td class="r"><b>Bc. Marek Černý</b></td>
 </tr>

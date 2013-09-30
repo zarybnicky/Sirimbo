@@ -1,6 +1,6 @@
 <?php
 echo $this->render('files/View/Admin/Platby/Navigation.inc');
-header_main('Vyřazené platby');
+echo '<h2>Vyřazené platby</h2>';
 
 echo '<a style="display:block;margin-bottom:8px;" href="?list=all">Všechny platby</a>';
 if(count($this->groupByDate) > 0) {

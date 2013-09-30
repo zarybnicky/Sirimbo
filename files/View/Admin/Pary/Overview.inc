@@ -1,5 +1,5 @@
+<h1>Správa párů</h1>
 <?php
-header_main('Správa párů');
 notice($this->redirect()->getMessage());
 
 echo '<form action="" method="POST">';
@@ -21,7 +21,7 @@ echo $this->table()
 	->column('hodnoceni', 'Body');
 
 echo '<br/>';
-header_minor('Nový pár:');
+echo '<h2>Nový pár</h2>';
 echo 'Partner: ', $this->userSelect('add_partner')->users($this->usersMen), '<br/>';
 echo 'Partnerka: ', $this->userSelect('add_partnerka')->users($this->usersWomen), '<br/>';
 echo '<button type="submit" name="action" value="add">Nový pár</button>';

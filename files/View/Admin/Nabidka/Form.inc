@@ -1,9 +1,6 @@
+<h1>Správa nabídky</h1>
 <?php
-header_main('Správa nabídka');
-if($this->action == 'add')
-	header_minor("Přidat nabídku");
-else
-	header_minor("Upravit nabídku");
+echo '<h2>', ($this->action == 'add' ? 'Přidat nabídku' : 'Upravit nabídku'), '</h2>';
 notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST">

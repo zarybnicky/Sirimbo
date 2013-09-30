@@ -1,10 +1,6 @@
+<h1>Správa aktualit</h1>
 <?php
-header_main('Správa aktualit');
-if(Request::getAction() == 'add')
-	header_minor("Přidat článek");
-else
-	header_minor("Upravit článek");
-
+echo '<h2>', (Request::getAction() == 'add' ? 'Přidat článek' : 'Upravit článek'), '</h2>';
 notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST">

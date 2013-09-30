@@ -1,4 +1,4 @@
-<?php header_main('Žebříček párů');?>
+<h1>Žebříček párů</h1>
 <?php notice($this->redirect()->getMessage());?>
 
 <table>

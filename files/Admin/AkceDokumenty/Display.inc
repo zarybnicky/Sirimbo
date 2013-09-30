@@ -1,5 +1,5 @@
+<h1>Správa akcí</h1>
 <?php
-header_main('Správa akcí');
 notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST" class="centerWTable">

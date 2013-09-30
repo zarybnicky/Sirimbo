@@ -1,9 +1,7 @@
 <?php
 echo $this->render('files/View/Admin/Platby/Navigation.inc');
-header_main('Jednotlivé platby');
-
-if($this->action == 'add') header_minor('Přidat platbu');
-else header_minor('Upravit platbu');
+echo '<h2>Jednotlivé platby</h2>';
+echo '<h3>', ($this->action == 'add' ? 'Přidat platbu' : 'Upravit platbu'), '</h3>';
 
 $form = array(
 		array(
@@ -35,7 +33,7 @@ $formTable = $this->table()
 <br/>
 <?php
 if(!empty($this->raw)) {
-	header_minor('Data z banky:');
+	echo '<h3>Data z banky</h3>';
 	echo $this->table()
 		->style('width:100%')
 		->showHeader(false)

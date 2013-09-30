@@ -1,9 +1,6 @@
+<h1>Správa rozpisů</h1>
 <?php
-header_main('Správa rozpisů');
-if($this->action == 'add')
-	header_minor("Přidat rozpis");
-else
-	header_minor("Upravit rozpis");
+echo '<h2>', ($this->action == 'add' ? 'Přidat rozpis' : 'Upravit rozpis'), '</h2>';
 notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST">

@@ -1,10 +1,6 @@
+<h1>Správa akcí</h1>
 <?php
-header_main('Správa akcí');
-if(Request::getAction() == 'add')
-	header_minor("Přidat uživatele");
-else
-	header_minor("Upravit uživatele");
-
+echo '<h2>', (Request::getAction() == 'add' ? 'Přidat uživatele' : 'Upravit uživatele'), '</h2>';
 notice($this->redirect()->getMessage());
 if(isset($f) && is_object($f))
 	notice(implode('<br/>', $f->getMessages()));

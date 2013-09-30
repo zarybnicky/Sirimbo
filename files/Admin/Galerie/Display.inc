@@ -1,5 +1,5 @@
+<h1>Správa fotogalerie</h1>
 <?php
-header_main('Správa fotogalerie');
 notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST">
@@ -29,7 +29,7 @@ if(!empty($dirs)) {
 }
 ?>
 <hr/>
-<?php header_minor('Přidat složku');?>
+<h2>Přidat složku</h2>
 <table>
 <tr><td>Název</td><td><input type="text" name="name"/></td></tr>
 <tr><td>Nadsložka</td><td>

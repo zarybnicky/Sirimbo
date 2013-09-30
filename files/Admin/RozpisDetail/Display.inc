@@ -1,5 +1,5 @@
+<h1>Správa rozpisů</h1>
 <?php
-header_main('Správa rozpisů');
 notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST">
@@ -44,8 +44,8 @@ echo $userselect->name('add_partner');
 </table>
 </div>
 <br/>
+<h2>Nabídky</h2>
 <?php
-header_minor('Nabídky:');
 $nabidky = DBNabidka::getNabidka();
 
 $s = $this->select()
@@ -86,7 +86,7 @@ if(is_numeric(post('n_id'))) {
 }
 ?>
 <br/><br/>
-<?php header_minor("Pomocník: ");?>
+<h2>Pomocník</h2>
 <button type="submit" name="generate" value="overlap">Opravit přesahy</button><br/>
 <button type="submit" name="generate" value="gen_add">Přidat</button>
 <input type="text" name="gen_add_hod" size="2" /> hodin po

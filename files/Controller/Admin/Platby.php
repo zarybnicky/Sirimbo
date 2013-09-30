@@ -5,9 +5,7 @@ class Controller_Admin_Platby extends Controller_Admin {
 		Permissions::checkError('platby', P_OWNED);
 	}
 	function view($id = null) {
-		$this->render('files/View/Admin/Platby/Navigation.inc');
-		
-		//TODO
+		$this->redirect('/admin/platby/overview');
 	}
 	protected function recognizeHeaders($headers, &$specific, &$variable, &$date, &$amount) {
 		foreach($headers as $key => $value) {
@@ -109,7 +107,7 @@ class Controller_Admin_Platby extends Controller_Admin {
 		
 		return array($specific, $variable, $date, $amount, $prefix);
 	}
-	protected function checkPost() {
+	protected function checkPost($action) {
 		$userLookup = $this->getUserLookup(false);
 		$categories = $this->getCategoryLookup(false, true, false);
 		

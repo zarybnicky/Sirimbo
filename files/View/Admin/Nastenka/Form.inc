@@ -1,9 +1,7 @@
+<h1>Správa nástěnky</h1>
 <?php
-header_main('Správa nástěnky');
-if($this->action == 'add')
-	header_minor("Přidat příspěvek");
-else
-	header_minor("Upravit příspěvek");
+echo '<h2>', ($this->action == 'add' ? 'Přidat příspěvek' : 'Upravit příspěvek'), '</h2>';
+notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST">
 <table>

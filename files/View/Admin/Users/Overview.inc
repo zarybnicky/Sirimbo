@@ -1,5 +1,5 @@
+<h1>Správa uživatelů</h1>
 <?php
-header_main('Správa uživatelů');
 notice($this->redirect()->getMessage());
 
 if($this->showMenu) {

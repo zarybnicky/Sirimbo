@@ -1,5 +1,4 @@
-<?php header_main('Upozornění');?>
-
+<h1>Upozornění</h1>
 <?php foreach($this->data as $item): ?>
 <div>
 	<div class="up_header">

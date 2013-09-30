@@ -50,7 +50,7 @@ class Controller_Aktualne extends Controller_Abstract {
 			$new_row = array(
 					'id'		=> $row['at_id'],
 					'jmeno'		=> $row['at_jmeno'],
-					'timestamp'	=> $row['at_timestamp'],
+					'timestamp'	=> $row['at_timestamp_add'],
 					'canEdit'	=> Permissions::check('aktuality', P_OWNED, $row['at_kdo']),
 					'preview'	=> stripslashes(nl2br($row['at_preview']))
 			);

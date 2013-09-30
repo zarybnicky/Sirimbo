@@ -1,10 +1,6 @@
+<h1>Správa anket</h1>
 <?php
-header_main('Správa anket');
-if(Request::getAction() == 'add')
-	header_minor("Přidat anketu");
-else
-	header_minor("Upravit anketu");
-
+echo '<h2>', (Request::getAction() == 'add' ? 'Přidat anketu' : 'Upravit anketu'), '</h2>';
 notice($this->redirect()->getMessage());
 ?>
 <form action="" method="post">
