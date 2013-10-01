@@ -25,7 +25,7 @@ if(TISK)
 }
 </style>
 <ul id="adminNavigation">
-	<li><?php _getItem('Přehled', 'platby');?></li>
+	<li><?php _getItem('Přehled', 'platby/overview');?></li>
 	<li><?php _getItem('Hledání', 'platby/items');?></li>
 	<?php if(!_isActive('platby/structure/category') || !_isActive('platby/structure/group') || !_isActive('platby/structure')): ?>
 		<li><?php _getItem('Struktura', 'platby/structure');?>:</li>

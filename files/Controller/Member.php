@@ -32,7 +32,7 @@ class Controller_Member extends Controller_Abstract {
 		echo $s->menuItem('Klubové akce',	'/member/akce');
 		echo $s->menuItem('Dokumenty',		'/member/dokumenty');
 		echo $s->menuItem('Žebříček',		'/member/pary');
-		//echo $s->menuItem('Členové',		'/member/clenove');
+		echo $s->menuItem('Členové',		'/member/clenove/structure');
 		echo $s->menuItem('Profil',			'/member/profil');
 		
 		echo $s->commonItems();

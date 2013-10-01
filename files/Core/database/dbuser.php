@@ -277,30 +277,19 @@ class DBUser extends Database implements Pagable {
 		return DBUser::getArray($res);
 	}
 	
-	public static function getUsersBySkupina($skupina, $noBanned = true) {
-		list($skupina, $noBanned) = DBUser::escapeArray(array($skupina, $noBanned));
-		
-		$res = DBUser::query(
-			"SELECT users.*,p1.*,skupiny.* FROM users
-				LEFT JOIN users_platby p1 ON up_id_user=u_id
-				LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
-			WHERE u_skupina='$skupina' AND u_system='0'" .
-					($noBanned ? " AND u_ban='0'" : '') . " AND (
-				(p1.up_plati_od <= CURDATE() AND p1.up_plati_do >= CURDATE()) OR
-				(
-					((p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
-							WHERE p2.up_id_user=u_id) AND
-						p1.up_plati_do = (SELECT MAX(p2.up_plati_do) FROM users_platby p2
-							WHERE p2.up_id_user=u_id AND p2.up_plati_do < CURDATE())) OR
-					p1.up_id IS NULL)
-					AND NOT EXISTS (
-						SELECT * FROM users_platby p2
-						WHERE p2.up_id_user=u_id AND
-							p2.up_plati_od <= CURDATE() AND p2.up_plati_do >= CURDATE())
-				)
-			)
-			ORDER BY u_prijmeni");
-		return DBUser::getArray($res);
+	public static function getUsersWithSkupinaPlatby() {
+		$res = self::query(
+				"SELECT * FROM users
+					LEFT JOIN skupiny on s_id=u_skupina
+					LEFT JOIN platby_group_skupina ON pgs_id_skupina=s_id
+					LEFT JOIN platby_group ON pg_id=pgs_id_group
+				WHERE
+					u_confirmed='1' AND u_ban='0' AND u_system='0' AND
+					pg_type='1'
+				GROUP BY u_id
+				ORDER BY s_id,u_prijmeni"
+		);
+		return self::getArray($res);
 	}
 	
 	public static function getUsersByPermission($module, $permission) {
