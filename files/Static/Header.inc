@@ -1,8 +1,12 @@
 <!DOCTYPE HTML>
 <html prefix="og: http://ogp.me/ns#" lang="cs">
 <head>
-	<meta name="keywords" content="taneční klub, tk, olymp, olomouc" />
+	<meta name="keywords" content="taneční klub, tk, olymp, olomouc, tk olymp, sportovní tanec" />
 	<meta name="wot-verification" content="ec0cf41ab42dae52d3d4"/>
+	<meta name="ICBM" content="49.591700,17.285174"/>
+	<meta name="geo.placename" content="Olomouc, Česká Republika"/>
+	<meta name="geo.position" content="49.591700;17.285174"/>
+	<meta name="geo.region" content="cs"/>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
 	<title>TK Olymp Olomouc</title>
@@ -26,16 +30,12 @@ EOS;
 ?>		
 	</style>
 	<link href="/style/style.css" rel="stylesheet" type="text/css" />
+	<meta name="msvalidate.01" content="7BD6C8B5748FC22EF06AB3AE89900885" />
 	<meta name="google-site-verification" content="Hfe7zlgTDOIpJv4rKGQz2Xg8Aezb6sIO0aAxVhrml9w" />
 	<meta name="norton-safeweb-site-verification"
 		content="r44xj2vskhlgkyqcqm1hdgga2jdfj-idvyys0277y96s72k-tq0z-yyjdu7h3el6pi2gek0i4ykq3xgiguufrvuhj8nbj4n4miwjhvumhp35jfrafyynhj4ee8ctzpzh" />
 	<meta property="fb:app_id" content="132983570203245"/>
-	<meta name="ICBM" content="49.591700,17.285174"/>
-	<meta name="geo.placename" content="Olomouc, Česká Republika"/>
-	<meta name="geo.position" content="49.591700;17.285174"/>
-	<meta name="geo.region" content="cs"/>
 	<script type="text/javascript" src="/scripts/jquery-1.10.2.min.js"></script>
-	<script type="text/javascript" src="/scripts/statistics.js"></script>
 	<script type="text/javascript" src="//connect.facebook.net/cs_CZ/all.js#xfbml=1&appId=132983570203245" id="facebook-jssdk"></script>
 	<script type="text/javascript">
 	var _gaq = _gaq || [];

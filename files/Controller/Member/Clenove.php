@@ -5,84 +5,94 @@ class Controller_Member_Clenove extends Controller_Member {
 		Permissions::checkError('users', P_VIEW);
 	}
 	function view($id = null) {
-		if($id && ($data = DBUser::getUserData($id))) {
-			$this->render('files/View/Member/Clenove/Single.inc', array(
-					'fullName' => $data['u_jmeno'] . ' ' . $data['u_prijmeni'],
-					'email' => $data['u_email'],
-					'telefon' => $data['u_telefon'],
-					'poznamky' => $data['u_poznamky'],
-					'varSymbol' => User::var_symbol($id),
-					'referer' => Request::getReferer()
-			));
-			return;
-		}
-		if(!get('f')) get('f', 'skupiny');
+		if(!$id || !($data = DBUser::getUserData($id)))
+			$this->redirect('/member/clenove/structure');
 		
-		if(get('f') == 'skupiny') {
-			$skupiny = DBSkupiny::get();
-			foreach($skupiny as $key => &$skupina) {
-				/*
-				if(!$skupina['us_platba_mesic'] && !$skupina['us_platba_ctvrtrok'] && !$skupina['us_platba_pulrok']) {
-					unset($skupiny[$key]);
-					continue;
-				}*/
-				$users = DBUser::getUsersBySkupina($skupina['s_id'], true);
-				$users = $this->__getUserRenderData($users);
-				
-				$new_data = array(
-						'header' => (getColorBox($skupina['s_color_text'], $skupina['s_description']) .
-								'&nbsp;&nbsp;' . $skupina['s_name'] . ' (' . count($users) . ')'),
-						'users' => $users,
-						'count' => 'TODO!!!'
-				);
-				$skupina = $new_data;
-			}unset($skupina);
-			
-			//Sort into two (or more...) columns
-			$content = array(array(), array());
-			$count = array(0, 0);
-			foreach($skupiny as $skupina) {
-				$min = 0;
-				foreach($count as $k => $i)
-					if($i < $count[$min]) $min = $k;
-				$content[$min][] = $skupina;
-				$count[$min] += $skupina['count'];
-			}
-			$this->render('files/View/Member/Clenove/Overview.inc', array(
-					'showMenu' => !TISK,
-					'viewType' => get('f'),
-					'data' => $content
-			));
-		} else {
-			switch(get('f')) {
-				case 'all':
-					$users = DBUser::getActiveUsers(); break;
-				case 'dancer':
-				default:
-					$users = DBUser::getActiveDancers(); break;
-			}
-			$users = $this->__getUserRenderData($users);
-			$this->render('files/View/Member/Clenove/Overview.inc', array(
-					'showMenu' => !TISK,
-					'viewType' => get('f'),
-					'users' => $users,
-					'count' => count($users),
-					'showGroup' => get('f') == 'dancer'
-			));
-		}
+		$this->render('files/View/Member/Clenove/Single.inc', array(
+				'fullName' => $data['u_prijmeni'] . ', ' . $data['u_jmeno'],
+				'email' => $data['u_email'],
+				'telefon' => $data['u_telefon'],
+				'referer' => Request::getReferer()
+		));
 	}
-	private function __getUserRenderData($data) {
-		foreach($data as &$user) {
+	function skupiny($id = null) {
+		$skupiny = DBSkupiny::get();
+		foreach($skupiny as $key => &$skupina) {
+			if(!$skupina['s_id']) {
+				unset($skupiny[$key]);
+				continue;
+			}
 			$new_data = array(
-					'id' => $user['u_id'],
-					'fullName' => $user['u_prijmeni'] . ', ' . $user['u_jmeno'],
-					'zaplaceno' => ($user['up_id'] && strcmp($user['up_plati_do'], date('Y-m-d')) >= 0),
-					'groupDescription' => (getColorBox($user['s_color_text'], $user['s_description']) . '&nbsp;' . $user['s_name'])
+					'header' => (getColorBox($skupina['s_color_text'], $skupina['s_description']) .
+							'&nbsp;&nbsp;' . $skupina['s_name']),
+					'description' => $skupina['s_description']
 			);
-			$new_data['platbaDatum'] = ($new_data['zaplaceno'] ? formatDate($user['up_plati_do']) : '---');
-			$user = $new_data;
+			$skupina = $new_data;
+		}unset($skupina);
+		$this->render('files/View/Member/Clenove/SkupinyList.inc', array(
+				'data' => $skupiny
+		));
+	}
+	function seznam($id = null) {
+		$index = 0;
+		$data = DBUser::getActiveUsers();
+		foreach($data as &$item) {
+			$new_data = array(
+					'index' => ++$index . '.',
+					'fullName' => '<a href="/member/clenove/' . $item['u_id'] . '">' .
+						'<img src="/style/person-small.png" alt="' . $item['u_jmeno'] . ' ' . $item['u_prijmeni'] .
+						'" style="margin-bottom:-2px"/>' .
+						'</a>' .
+						'&nbsp;' . $item['u_prijmeni'] . ', ' . $item['u_jmeno']
+			);
+			$item = $new_data;
 		}
-		return $data;
+		$this->render('files/View/Member/Clenove/UserList.inc', array(
+				'data' => $data
+		));
+	}
+	function structure($id = null) {
+		$data = DBUser::getUsersWithSkupinaPlatby();
+		$skupiny = array();
+		$index = 0;
+		$currentID = 0;
+		$currentKey = 0;
+		foreach($data as $item) {
+			if($item['s_id'] != $currentID) {
+				$index = 0;
+				$currentID = $item['s_id'];
+				$currentKey = count($skupiny) - 1;
+				$skupiny[$currentKey] = array();
+				$skupiny[$currentKey]['info'] = array(
+						'header' => '<h3>' . getColorBox($item['s_color_text'], $item['s_description']) .
+							'&nbsp;&nbsp;' . $item['s_name'] . '</h2>'
+				);
+				$skupiny[$currentKey]['users'] = array();
+			}
+			$skupiny[$currentKey]['users'][] = array(
+					'index' => ++$index . '.',
+					'fullName' => '<a href="/member/clenove/' . $item['u_id'] . '">' .
+						'<img src="/style/person-small.png" alt="' . $item['u_jmeno'] . ' ' . $item['u_prijmeni'] .
+						'" style="margin-bottom:-2px"/>' .
+						'</a>' .
+						'&nbsp;' . $item['u_prijmeni'] . ', ' . $item['u_jmeno']
+			);
+		}dump($skupiny);
+		$leftCount = 0;
+		$rightCount = 0;
+		foreach($skupiny as &$skupina) {
+			$skupina['info']['count'] = count($skupina['users']);
+			if($rightCount >= $leftCount) {
+				$skupina['info']['align'] = 'left';
+				$leftCount += $skupina['info']['count'];
+			} else {
+				$skupina['info']['align'] = 'right';
+				$rightCount += $skupina['info']['count'];
+			}
+		}
+		$this->render('files/View/Member/Clenove/Structure.inc', array(
+				'data' => $skupiny
+		));
 	}
 }
 ?>
