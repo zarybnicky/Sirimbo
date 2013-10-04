@@ -29,21 +29,14 @@ class Controller_Admin_Platby_Overview extends Controller_Admin_Platby {
 						'" style="margin-bottom:-2px"/>' .
 						'</a>' .
 						'&nbsp;' . $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
-					'hasPaid' => ($item['pi_id'] ? '<span style="color:green">ANO</span>' : '<span style="font-weight:bold;color:red">NE</span>')
+					'hasPaid' => ($item['pi_id'] ? '<span style="color:green">ANO</span>' : '<span style="font-weight:bold;color:red">NE</span>'),
+					'amount' => ($item['pi_amount'] == $item['pc_amount'] ? '<span style="color:green">' . (int) $item['pi_amount'] . ' Kč</span>' :
+						'<span style="font-weight:bold;color:red">' . (int) $item['pi_amount'] . ' Kč</span> (' . (int) $item['pc_amount'] . ' Kč)')
 			);
 		}
-		$leftCount = 0;
-		$rightCount = 0;
-		foreach($skupiny as &$skupina) {
+		foreach($skupiny as &$skupina)
 			$skupina['info']['count'] = count($skupina['users']);
-			if($rightCount >= $leftCount) {
-				$skupina['info']['align'] = 'left';
-				$leftCount += $skupina['info']['count'];
-			} else {
-				$skupina['info']['align'] = 'right';
-				$rightCount += $skupina['info']['count'];
-			}
-		}
+		
 		$this->render('files/View/Admin/Platby/Statistics.inc', array(
 				'data' => $skupiny
 		));
