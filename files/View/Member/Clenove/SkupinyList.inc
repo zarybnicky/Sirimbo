@@ -4,5 +4,6 @@
 echo $this->table()
 	->data($this->data)
 	->column('header', 'Název')
+	->column('userCount', 'Počet členů')
 	->column('description', 'Popis');
 ?>
