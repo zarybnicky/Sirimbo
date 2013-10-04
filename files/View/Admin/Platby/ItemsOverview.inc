@@ -25,14 +25,10 @@ if(!TISK) {
 	echo '</form>';
 }
 
+echo '<span class="big">Přidat: </span> ';
+echo '<a href="/admin/platby/items/add">platbu</a>&nbsp;';
+
 echo '<form action="" method="POST">';
-if(!TISK) {
-	echo $this->menu()
-		->float(MenuHelper::FLOAT_RIGHT)
-		->content('Přidat', '/admin/platby/items/add')
-		->content('Upravit', 'edit', true)
-		->content('Odebrat', 'remove', true);
-}
 if($this->data == array()) {
 	notice('Žádné takové platby');
 	return;

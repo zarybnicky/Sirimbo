@@ -2,14 +2,10 @@
 <?php
 notice($this->redirect()->getMessage());
 
+echo '<span class="big">Přidat: </span> ';
+echo '<a href="/admin/skupiny/add">kategorii</a>&nbsp;';
+
 echo '<form action="/admin/skupiny" method="POST">';
-if($this->showMenu) {
-	echo $this->menu()
-		->float(MenuHelper::FLOAT_RIGHT)
-		->content('Přidat', 'skupiny/add')
-		->content('Upravit', 'edit', true)
-		->content('Odebrat', 'remove', true);
-}
 echo '<div style="margin-right:150px">';
 echo $this->table()
 	->style('width:100%')
