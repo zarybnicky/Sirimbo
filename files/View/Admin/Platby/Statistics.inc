@@ -8,7 +8,7 @@ foreach($this->data as $skupina) {
 		->data($skupina['users'])
 		->column('index', '', 'r', 'width:40px')
 		->column('fullName', $skupina['info']['header'])
-		->column('hasPaid', 'Zaplaceno?');
+		->column('hasPaid', 'Zaplaceno?', '', 'width:100px');
 	echo '</div>';
 }
 ?>
