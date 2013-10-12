@@ -45,6 +45,6 @@ echo $this->table()
 	->column('fullName', 'Uživatel')
 	->column('category', 'Kategorie')
 	->column('date', 'Datum')
-	->column('amount', 'Částka');
+	->column('amount', 'Částka', 'r');
 echo '</div>';
 echo '</form>';

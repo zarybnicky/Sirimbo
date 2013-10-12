@@ -26,39 +26,35 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby {
 		));
 	}
 	function add($id = null) {
-		if(empty($_POST) || ($s = $this->checkPost('add')) != array()) {
-			if(!empty($_POST))
-				$this->redirect()->setMessage($s);
+		if(empty($_POST)) {
 			$this->displayForm(0);
 			return;
+		} elseif(!is_object($item = $this->getFromPost())) {
+			$this->redirect()->setMessage($item);
+			$this->displayForm(0);	
+			return;
 		}
-		list($specific, $variable, $date, $amount, $prefix) =
-			$this->formatData(post('specific'), post('variable'), post('date'), post('amount'));
-		
-		DBPlatbyItem::insert($variable, $specific, '0', $amount, $date, $prefix);
+		DBPlatbyItem::insert($item->variable, $item->category_id, null, $item->amount, $item->date, $item->prefix);
 		$this->redirect('/admin/platby/items', 'Platba úspěšně přidána');
 	}
 	function edit($id = null) {
 		if(!$id || !($data = DBPlatbyItem::getSingle($id)))
-			$this->redirect('/admin/platby/items', 'Uživatel s takovým ID neexistuje');
+			$this->redirect('/admin/platby/items', 'Platba s takovým ID neexistuje');
 
-		if(empty($_POST) || ($s = $this->checkPost('edit')) != array()) {
-			if(empty($_POST)) {
-				post('date', $data['pi_date']);
-				post('amount', $data['pi_amount']);
-				post('variable', $data['pi_id_user']);
-				post('specific', $data['pi_id_category']);
-				post('prefix', $data['pi_prefix']);
-			} else {
-				$this->redirect()->setMessage($s);
-			}
+		if(empty($_POST)) {
+			post('date', $data['pi_date']);
+			post('amount', $data['pi_amount']);
+			post('variable', $data['pi_id_user']);
+			post('specific', $data['pi_id_category']);
+			post('prefix', $data['pi_prefix']);
+			$this->displayForm($id);
+			return;
+		} elseif(!is_object($item = $this->getFromPost($id))) {
+			$this->redirect()->setMessage($item);
 			$this->displayForm($id);
 			return;
 		}
-		list($specific, $variable, $date, $amount, $prefix) =
-			$this->formatData(post('specific'), post('variable'), post('date'), post('amount'), post('prefix'));
-		
-		DBPlatbyItem::update($id, $variable, $specific, $amount, $date, $prefix);
+		DBPlatbyItem::update($id, $item->variable, $item->category_id, $item->amount, $item->date, $item->prefix);
 		$this->redirect('/admin/platby/items', 'Platba úspěšně upravena');
 	}
 	function remove($id = null) {
@@ -159,5 +155,24 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby {
 			$row = $new_data;
 		}
 		return $data;
+	}
+	protected function getFromPost($id = null) {
+		$item = new PlatbyItem();
+		$item->init(null, post('variable'), post('date'), post('amount'), post('prefix'), $id, post('specific'));
+		$item->processWithSymbolLookup($this->getUserLookup(false), $this->getCategoryLookup(true, true, false));
+		
+		$error = array();
+		if(!$item->variable)
+			$error[] = 'Neplatné ID uživatele';
+		if(!$item->category_id)
+			$error[] = 'Neplatné ID kategorie';
+		if(!$item->date)
+			$error[] = 'Neplatné datum';
+		if(!$item->prefix)
+			$error[] = 'Neplatný prefix';
+		if($item->amount < 0)
+			$error[] = 'Neplatná částka';
+		
+		return $item->isValid ? $item : $error;
 	}
 }

@@ -34,7 +34,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby {
 			$this->redirect('/admin/platby/raw', 'Soubor ' . get('path') . ' byl zpracován.');
 		}
 		$parser = $this->getParser($path);
-		$this->recognizeHeaders($parser->headers(), $specific, $variable, $date, $amount);
+		$this->recognizeHeaders(array_flip($parser->headers()), $specific, $variable, $date, $amount);
 		
 		$data = array();
 		foreach($parser->headers() as $key => $name) {
@@ -66,7 +66,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby {
 		}
 		$headers = $parser->headers();
 		if($columns === null) {
-			$this->recognizeHeaders($headers, $specific, $variable, $date, $amount);
+			$this->recognizeHeaders(array_flip($headers), $specific, $variable, $date, $amount);
 		} else {
 			$specific = $columns['specific'];
 			$variable = $columns['variable'];
@@ -86,17 +86,17 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby {
 			$serialized = serialize($array);
 			$hash = md5($serialized);
 			
-			list($dataSpecific, $dataVariable, $dataDate, $dataAmount, $dataPrefix) =
-				$this->formatData($array[$specific], $array[$variable], $array[$date], $array[$amount]);
+			$item = new PlatbyItem();
+			$item->init($array[$specific], $array[$variable], $array[$date], $array[$amount]);
+			$item->processWithSymbolLookup($userLookup, $categoryLookup);
 			
-			if(!isset($userLookup[$dataVariable]) || !isset($categoryLookup[$dataSpecific])) {
+			if(!$item->isValid) {
 				DBPlatbyRaw::insert($serialized, $hash, '0', '0', false);
 				continue;
 			} else {
-				$dataSpecific = $categoryLookup[$dataSpecific]['pc_id'];
-				
 				DBPlatbyRaw::insert($serialized, $hash, '1', '0', true);
-				DBPlatbyItem::insert($dataVariable, $dataSpecific, DBPlatbyRaw::getInsertId(), $dataAmount, $dataDate, $dataPrefix);
+				DBPlatbyItem::insert($item->variable, $item->category_id, DBPlatbyRaw::getInsertId(),
+						$item->amount, $item->date, $item->prefix);
 			}
 		}
 		unlink($parser->getFileObject()->getRealPath());
