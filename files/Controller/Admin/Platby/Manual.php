@@ -23,54 +23,44 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 			$raw = unserialize($remaining[0]['pr_raw']);
 		}
 		
-		$categoriesMap = $this->getCategoryLookup(true, true, false);
-		$users = $this->getUserLookup(false);
+		$categoryLookup = $this->getCategoryLookup(true, true, false);
+		$userLookup = $this->getUserLookup(false);
 		
-		$this->recognizeHeaders(array_flip($raw), $specific, $variable, $date, $amount);
-		$null = '';
-		if($specific !== null && $date !== null) {
-			$prefix = $this->getPrefix($raw[$specific], $raw[$date]);
-		} elseif($specific === null && $date !== null) {
-			$prefix = $this->getPrefix($null, $raw[$date]);
-		} elseif($specific !== null && $date === null) {
-			$prefix = $this->getPrefix($raw[$specific], '');
+		$item = new PlatbyItem();
+		$this->recognizeHeaders($raw, $specific, $variable, $date, $amount);
+		$raw[null] = null;
+		$item->init($raw[$specific], $raw[$variable], $raw[$date], $raw[$amount]);
+		$item->processWithSymbolLookup($userLookup, $categoryLookup);
+		
+		if($variable === null) {
+			$recognized['variable'] = array('column' => '&nbsp;---', 'value' => '&nbsp;---');
+		} elseif($item->variable) {
+			$recognized['variable'] = array('column' => $variable,
+				'value' => $userLookup[$item->variable]['u_jmeno'] . ' ' . $userLookup[$item->variable]['u_prijmeni']);
 		} else {
-			$prefix = 0;
-		}
-		$recognized['prefix'] = array('column' => '&nbsp;---', 'value' => $prefix);
-		if($variable !== null) {
-			if(isset($users[(int) $raw[$variable]]))
-				$recognized['variable'] = array('column' => $variable,
-						'value' => $users[(int) $raw[$variable]]['u_jmeno'] . ' ' . $users[(int) $raw[$variable]]['u_prijmeni']);
-			else
-				$recognized['variable'] = array('column' => $variable,
-						'value' => "&nbsp;--- (není v DB: {$raw[$variable]})");
-			$variable = (int) $raw[$variable];
-		}
-		if($specific !== null) {
-			if(isset($categoriesMap[(int) $raw[$specific]])) {
-				$recognized['specific'] = array('column' => $specific,
-						'value' => $categoriesMap[(int) $raw[$specific]]['pc_name']);
-				$specific = $categoriesMap[(int) $raw[$specific]]['pc_id'];
-			} else {
-				$recognized['specific'] = array('column' => $specific,
-						'value' => "&nbsp;--- (není v DB: {$raw[$specific]})");
-				$specific = 0;
-			}
-		}
-		if($date !== null) {
-			$recognized['date'] = array('column' => $date, 'value' => (new Date($raw[$date]))->getDate(Date::FORMAT_SIMPLE_SPACED));
-			$date = (new Date($raw[$date]))->getDate(Date::FORMAT_SIMPLE_SPACED);
-		}
-		if($amount !== null) {
-			$recognized['amount'] = array('column' => $amount, 'value' => $raw[$amount]);
-			$amount = $raw[$amount];
-		}
+			$recognized['variable'] = array('column' => $variable,
+				'value' => '&nbsp;--- (není v DB: id ' . $raw[$variable] . ')'); }
 		
-		foreach(array('specific', 'variable', 'date', 'amount') as $name) {
-			if($$name === null)
-				$recognized[$name] = array('column' => '&nbsp;---', 'value' => '&nbsp;---');
-		}
+		if($specific === null) {
+			$recognized['specific'] = array('column' => '&nbsp;---', 'value' => '&nbsp;---');
+		} elseif($item->specific && $item->category_id) {
+			$recognized['specific'] = array('column' => $specific, 'value' => $item->specific);
+		} else {
+			$recognized['specific'] = array('column' => $specific,
+				'value' => '&nbsp;--- (není v DB: symbol ' . $raw[$specific] . ')'); }
+		
+		if($date === null) {
+			$recognized['date'] = array('column' => '&nbsp;---', 'value' => '&nbsp;---');
+		} else {
+			$recognized['date'] = array('column' => $date,
+				'value' => (new Date($item->date))->getDate(Date::FORMAT_SIMPLIFIED)); }
+		
+		if($amount === null) {
+			$recognized['amount'] = array('column' => '&nbsp;---', 'value' => '&nbsp;---');
+		} else {
+			$recognized['amount'] = array('column' => $amount, 'value' => $raw[$amount]); }
+		
+		$recognized['prefix'] = array('column' => '&nbsp;---', 'value' => ($item->prefix ? $item->prefix : '&nbsp;---'));
 		
 		$new = array();
 		foreach($raw as $key => &$value) {
@@ -86,11 +76,11 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 				'remainingTotal' => $remainingCount,
 				'raw' => $raw,
 				'guess' => array(
-						'specific' => $specific,
-						'variable' => $variable,
-						'date' => $date,
-						'amount' => $amount,
-						'prefix' => $prefix
+						'specific' => $item->category_id,
+						'variable' => $item->variable,
+						'date' => (new Date($item->date))->getDate(Date::FORMAT_SIMPLIFIED),
+						'amount' => $item->amount,
+						'prefix' => $item->prefix
 				),
 				'users' => $this->getUsers(),
 				'categories' => $this->getCategories(),
@@ -123,15 +113,14 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 			return;
 		}
 		if(post('action') == 'confirm') {
-			if(($s = $this->checkPost('add')) != array()) {
-				$this->redirect()->setMessage($s);
+			if(empty($_POST)) {
+				return;
+			} elseif(!is_object($item = $this->getFromPost())) {
+				$this->redirect()->setMessage($item);
 				return;
 			}
-			list($specific, $variable, $date, $amount, $prefix) =
-				$this->formatData(post('specific'), post('variable'), post('date'), post('amount'), post('prefix'));
-			
 			DBPlatbyRaw::update(post('id'), $current['pr_raw'], $current['pr_hash'], '1', '0');
-			DBPlatbyItem::insert($variable, $specific, post('id'), $amount, $date, $prefix);
+			DBPlatbyItem::insert($item->variable, $item->category_id, post('id'), $item->amount, $item->date, $item->prefix);
 		} elseif(post('action') == 'discard') {
 			if(!$current['pr_discarded'])
 				DBPlatbyRaw::update(post('id'), $current['pr_raw'], $current['pr_hash'], '0', '1');
@@ -141,5 +130,26 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby {
 			$this->redirect()->setMessage('Neplatná POST akce.');
 		}
 		$this->redirect('/admin/platby/manual');
-	} 
+	}
+	protected function getFromPost() {
+		array(post('specific'), post('variable'), post('date'), post('amount'), post('prefix'));
+
+		$item = new PlatbyItem();
+		$item->init(null, post('variable'), post('date'), post('amount'), post('prefix'), null, post('specific'));
+		$item->processWithSymbolLookup($this->getUserLookup(false), $this->getCategoryLookup(true, true, false));
+		
+		$error = array();
+		if(!$item->variable)
+			$error[] = 'Neplatné ID uživatele';
+		if(!$item->category_id)
+			$error[] = 'Neplatné ID kategorie';
+		if(!$item->date)
+			$error[] = 'Neplatné datum';
+		if(!$item->prefix)
+			$error[] = 'Neplatný prefix';
+		if($item->amount < 0)
+			$error[] = 'Neplatná částka';
+		
+		return $item->isValid ? $item : $error;
+	}
 }

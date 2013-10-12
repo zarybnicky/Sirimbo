@@ -46,7 +46,7 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby {
 		foreach($data as $rawData) {
 			$row = unserialize($rawData['pr_raw']);
 			if(!$this->checkHeaders(array_flip($row), $specific, $variable, $date, $amount))
-				$this->recognizeHeaders(array_flip($row), $specific, $variable, $date, $amount);
+				$this->recognizeHeaders($row, $specific, $variable, $date, $amount);
 			
 			if(get('list') == 'date') {
 				if(isset($row[$date]) && $row[$date]) {
@@ -96,7 +96,7 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby {
 		foreach($data as $row) {
 			$row = unserialize($row['pr_raw']);
 			if(!$this->checkHeaders(array_flip($row), $specific, $variable, $date, $amount))
-				$this->recognizeHeaders(array_flip($row), $specific, $variable, $date, $amount);
+				$this->recognizeHeaders($row, $specific, $variable, $date, $amount);
 			
 			if(isset($row[$date]) && $row[$date]) {
 				$currentDate = new Date($row[$date]);
