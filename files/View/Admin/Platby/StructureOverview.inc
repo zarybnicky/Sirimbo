@@ -8,12 +8,18 @@ echo '<a href="/admin/platby/structure/category/add">specifický symbol</a>';
 
 echo $this->table()
 	->style('width:100%')
-		->column('buttons', '', '', 'width:50px')
+	->column('buttons', '', '', 'width:50px')
 	->column('name', 'Název')
-	->column('colorBox', 'Skupiny')
-	->column('validDate', 'Platí pro období')
 	->data($this->data);
+?>
 
+<div style="">
+<?php foreach($this->data as $row): ?>
+	
+<?php endforeach;?>
+</div>
+
+<?php
 if(!empty($this->orphanGroupSkupina)) {
 	echo '<br/>';
 	echo '<h3>Kategorie plateb bez přiřazené uživatelské skupiny</h3>';

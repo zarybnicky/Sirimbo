@@ -66,7 +66,7 @@ class User {
 		$_SESSION['skupina'] = $data['u_skupina'];
 		$_SESSION['skupina_data'] = array(
 			's_id '=> $data['s_id'],
-			's_color_text' => $data['s_color_text'],
+			's_color_rgb' => $data['s_color_rgb'],
 			's_name' => $data['s_name'],
 			's_description' => $data['s_description']
 		);

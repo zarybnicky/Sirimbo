@@ -122,10 +122,8 @@ function notice($text, $return = false) {
 	else		return '<div class="notice">' . $text . '</div>' . "\n";
 }
 function getColorBox($color, $popis) {
-	if(!isset(Settings::$barvy[$color]))
-		return;
 	return '<div class="box" title="' . $popis . '" ' .
-		'style="background-color:' . Settings::$barvy[$color][1] . '"></div>';
+		'style="background-color:' . $color . '"></div>';
 }
 function post($field = null, $value = null) {
 	if($field === null) {

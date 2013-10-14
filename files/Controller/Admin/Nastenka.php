@@ -81,7 +81,7 @@ class Controller_Admin_Nastenka extends Controller_Admin {
 			if(!post('sk-' . $skupina['s_id']))
 				continue;
 			DBNastenka::addNastenkaSkupina($id, $skupina['s_id'],
-				$skupina['s_color_text'], $skupina['s_description']);
+				$skupina['s_color_rgb'], $skupina['s_description']);
 		}
 		DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() .
 			' přidal příspěvek na nástěnku');
@@ -129,7 +129,7 @@ class Controller_Admin_Nastenka extends Controller_Admin {
 				continue;
 			} elseif(post('sk-' . $skupina['s_id']) && !isset($skupiny_old[$skupina['s_id']])) {
 				DBNastenka::addNastenkaSkupina($id, $skupina['s_id'],
-					$skupina['s_color_text'], $skupina['s_description']);
+					$skupina['s_color_rgb'], $skupina['s_description']);
 			} elseif(!post('sk-' . $skupina['s_id']) && isset($skupiny_old[$skupina['s_id']])) {
 				DBNastenka::removeNastenkaSkupina($skupiny_old[$skupina['s_id']]);
 			}

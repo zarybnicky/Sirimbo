@@ -14,7 +14,7 @@ $mainForm = (new TableHelper())->table()
 					'value' => '<input type="text" name="name" value="' . post('name') . '" />'
 			), array(
 					'desc' => 'Barva',
-					'value' => $this->select('color')->options($colorSelect)
+					'value' => $this->colorselect('color')
 			), array(
 					'desc' => 'Popis',
 					'value' => '<textarea rows="15" cols="50" name="desc">' . post('popis') . '</textarea>'

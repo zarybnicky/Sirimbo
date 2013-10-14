@@ -47,19 +47,6 @@ class Controller_Member_Profil extends Controller_Member {
 		$this->redirect('/member/profil', 'Heslo změněno');
 	}
 	function platby($id = null) {
-		/*
-		$platby = DBPlatby::getPlatbyFromUser(User::getUserID());
-		foreach($platby as &$row) {
-			$new_data = array(
-					'colorBox' => getColorBox($row['s_color_text'], $row['s_description']),
-					'obdobi' => Settings::$platby_obdobi[$row['up_obdobi']][3],
-					'castka' => $row['up_castka'],
-					'datum' => formatDate($row['up_placeno']),
-					'platnost' => formatDate($row['up_plati_do'])
-			);
-			$row = $new_data;
-		}unset($row);
-		*/
 		$groupsOut = array();
 		$groups = DBSkupiny::getSingleWithCategories(User::getSkupina());
 		$currentGroup = 0;
@@ -88,7 +75,7 @@ class Controller_Member_Profil extends Controller_Member {
 		}
 		$skupina = User::getSkupinaData();
 		$this->render('files/View/Member/Profil/Platby.inc', array(
-				'colorBox' => getColorBox($skupina['s_color_text'], $skupina['s_description']),
+				'colorBox' => getColorBox($skupina['s_color_rgb'], $skupina['s_description']),
 				'skupinaData' => $skupina['s_name'],
 				'varSymbol' => User::var_symbol(User::getUserID()),
 				'zaplacenoText' => User::getZaplaceno() ? 'zaplaceno' : 'nezaplaceno!',
