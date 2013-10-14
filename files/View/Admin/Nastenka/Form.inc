@@ -20,7 +20,7 @@ notice($this->redirect()->getMessage());
 		foreach($this->skupiny as $item) {
 			if(true) //$item['us_platba_mesic'] > 0 || $item['us_platba_ctvrtrok'] > 0 || $item['us_platba_pulrok'] > 0
 				echo getCheckbox('sk-' . $item['s_id'], '1'), ' ',
-					getColorBox($item['s_color_text'], $item['s_description']), ' ',
+					getColorBox($item['s_color_rgb'], $item['s_description']), ' ',
 					$item['s_name'], '<br/>';
 		}
 		echo getReturnInput();

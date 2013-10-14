@@ -125,7 +125,7 @@ class Controller_Admin_Users extends Controller_Admin {
 		foreach($platby as &$item) {
 			$new_data = array(
 					'id' => $item['up_id'],
-					'colorBox' => getColorBox($item['s_color_text'], $item['s_description']),
+					'colorBox' => getColorBox($item['s_color_rgb'], $item['s_description']),
 					'mesicne' => 'TODO!!! Kč',
 					'castka' => $item['up_castka'] . ' Kč',
 					'datePlaceno' => formatDate($item['up_placeno']),
@@ -198,7 +198,7 @@ class Controller_Admin_Users extends Controller_Admin {
 			$new_data = array(
 					'id' => $row['u_id'],
 					'checkBox' => '<input type="checkbox" name="users[]" value="' . $row['u_id'] . '" />',
-					'colorBox' => getColorBox($row['s_color_text'], $row['s_description']),
+					'colorBox' => getColorBox($row['s_color_rgb'], $row['s_description']),
 					'fullName' => $row['u_prijmeni'] . ', ' . $row['u_jmeno'],
 					'email' => $row['u_email'],
 					'telefon' => $row['u_telefon'],
@@ -304,7 +304,7 @@ class Controller_Admin_Users extends Controller_Admin {
 					'checkBox' => '<input type="checkbox" name="users[]" value="' . $item['u_id'] . '" />',
 					'index' => ++$i,
 					'fullName' => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
-					'colorBox' => getColorBox($item['s_color_text'], $item['s_description']),
+					'colorBox' => getColorBox($item['s_color_rgb'], $item['s_description']),
 					'groupInfo' => $group_lookup[$item['u_group']]
 			);
 			switch($action) {
@@ -378,7 +378,7 @@ class Controller_Admin_Users extends Controller_Admin {
 		foreach($skupiny as &$item) {
 			$new_data = array(
 					'id' => $item['s_id'],
-					'color' => $item['s_color_text'],
+					'color' => $item['s_color_rgb'],
 					'popis' => $item['s_description']
 			);
 			$item = $new_data;

@@ -66,14 +66,14 @@ class DBSkupiny extends Database {
 				"INSERT INTO skupiny
 					(s_name,s_color_text,s_color_rgb,s_description)
 				VALUES
-					('$name','$color','FFFFFF','$desc')"
+					('$name','','$color','$desc')"
 		);
 	}
 	public static function update($id, $name, $color, $desc) {
 		list($id, $name, $color, $desc) = self::escape($id, $name, $color, $desc);
 		self::query(
 				"UPDATE skupiny SET
-					s_name='$name',s_color_text='$color',s_description='$desc'
+					s_name='$name',s_color_rgb='$color',s_description='$desc'
 				WHERE s_id='$id'"
 		);
 	}

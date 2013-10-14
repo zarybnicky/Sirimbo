@@ -204,7 +204,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
 					$this->getEditLink('/admin/skupiny/edit/' . $array['s_id']) .
 					$this->getRemoveLink('/admin/skupiny/remove?u[]=' . $array['s_id']) .
 					'</form>',
-					'name' => getColorBox($array['s_color_text'], $array['s_description']) . '&nbsp;' . $array['s_name']
+					'name' => getColorBox($array['s_color_rgb'], $array['s_description']) . '&nbsp;' . $array['s_name']
 			);
 			$array = $new_data;
 		}unset($array);

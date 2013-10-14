@@ -26,7 +26,7 @@ class Controller_Member_Clenove extends Controller_Member {
 				$currentID = $item['s_id'];
 				$currentKey = count($skupiny) - 1;
 				$skupiny[$currentKey] = array(
-						'header' => '<h3>' . getColorBox($item['s_color_text'], $item['s_description']) .
+						'header' => '<h3>' . getColorBox($item['s_color_rgb'], $item['s_description']) .
 							'&nbsp;&nbsp;' . $item['s_name'] . '</h2>',
 						'description' => $item['s_description'],
 						'userCount' => 0
@@ -69,7 +69,7 @@ class Controller_Member_Clenove extends Controller_Member {
 				$currentKey = count($skupiny) - 1;
 				$skupiny[$currentKey] = array();
 				$skupiny[$currentKey]['info'] = array(
-						'header' => '<h3>' . getColorBox($item['s_color_text'], $item['s_description']) .
+						'header' => '<h3>' . getColorBox($item['s_color_rgb'], $item['s_description']) .
 							'&nbsp;&nbsp;' . $item['s_name'] . '</h2>'
 				);
 				$skupiny[$currentKey]['users'] = array();

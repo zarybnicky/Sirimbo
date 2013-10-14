@@ -15,18 +15,16 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby {
 	protected function getCategories() {
 		$out = array();
 		$categories = parent::getCategoryList();
+		
+		$current_group = 0;
 		foreach($categories as $array) {
 			$new_data = array();
 			if(strpos($array[0], 'group_') !== false) {
 				$new_data['name'] = '<span class="big" style="text-decoration:underline;">' . $array[1]['pg_name'] . '</span>';
-				$new_data['colorBox'] = 'TODO: colorBox';
-				$new_data['validDate'] = '';
 				$new_data['buttons'] = $this->getEditLink('/admin/platby/structure/group/edit/' . $array[1]['pg_id']) .
 						$this->getRemoveLink('/admin/platby/structure/group/remove/' . $array[1]['pg_id']);
 			} else {
 				$new_data['name'] = '&nbsp;- ' . $array[1]['pc_name'] . ' (' . $array[1]['pc_symbol'] . ')';
-				$new_data['colorBox'] = '';
-				$new_data['validDate'] = $this->getDateDisplay($array[1]['pc_valid_from'], $array[1]['pc_valid_to']);
 				$new_data['buttons'] = $this->getEditLink('/admin/platby/structure/category/edit/' . $array[1]['pc_id']) . 
 					$this->getRemoveLink('/admin/platby/structure/category/remove/' . $array[1]['pc_id']);
 			}

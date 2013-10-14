@@ -17,7 +17,7 @@ class Controller_Admin_Platby_Overview extends Controller_Admin_Platby {
 				$currentKey = count($skupiny) - 1;
 				$skupiny[$currentKey] = array();
 				$skupiny[$currentKey]['info'] = array(
-						'header' => '<h3>' . getColorBox($item['s_color_text'], $item['s_description']) .
+						'header' => '<h3>' . getColorBox($item['s_color_rgb'], $item['s_description']) .
 							'&nbsp;&nbsp;' . $item['s_name'] . '</h2>'
 				);
 				$skupiny[$currentKey]['users'] = array();

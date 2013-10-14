@@ -22,7 +22,7 @@ class Controller_Admin_Skupiny extends Controller_Admin {
 			$new_data = array(
 					'buttons' => $this->getEditLink('/admin/skupiny/edit/' . $item['s_id']) .
 						$this->getRemoveLink('/admin/skupiny/remove/' . $item['s_id']),
-					'colorBox' => getColorBox($item['s_color_text'], $item['s_description']),
+					'colorBox' => getColorBox($item['s_color_rgb'], $item['s_description']),
 					'name' => $item['s_name']
 			);
 			$item = $new_data;
@@ -82,7 +82,7 @@ class Controller_Admin_Skupiny extends Controller_Admin {
 		if(empty($_POST) || is_object($f = $this->checkPost())) {
 			if(empty($_POST)) {
 				post('name', $data['s_name']);
-				post('color', $data['s_color_text']);
+				post('color', $data['s_color_rgb']);
 				post('popis', $data['s_description']);
 			} else {
 				$this->redirect()->setMessage($f->getMessages());
@@ -175,7 +175,7 @@ class Controller_Admin_Skupiny extends Controller_Admin {
 		
 		$f->checkNotEmpty(post('name'), 'Zadejte prosím nějaké jméno.');
 		$f->checkNotEmpty(post('desc'), 'Zadejte prosím nějaký popis.');
-		$f->checkArrayKey(post('color'), Settings::$barvy, 'Zadejte prosím platnou barvu.');
+		$f->checkRegexp(post('color'), '/#[0-9a-f]{6}/i', 'Zadejte prosím platnou barvu.');
 		
 		return $f->isValid() ? true : $f;
 	}
