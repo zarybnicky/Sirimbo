@@ -80,7 +80,9 @@ class Controller_Member_Clenove extends Controller_Member {
 						'<img src="/style/person-small.png" alt="' . $item['u_jmeno'] . ' ' . $item['u_prijmeni'] .
 						'" style="margin-bottom:-2px"/>' .
 						'</a>' .
-						'&nbsp;' . $item['u_prijmeni'] . ', ' . $item['u_jmeno']
+						'&nbsp;' . $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
+					'hasPaid' => $item['pi_id'] ? '<span style="font-weight:bold;color:green;">ANO</span>' :
+						'<span style="font-weight:bold;color:red;">NE</span>'
 			);
 		}
 		$leftCount = 0;

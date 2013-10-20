@@ -285,12 +285,12 @@ class DBUser extends Database implements Pagable {
 					LEFT JOIN platby_group ON pg_id=pgs_id_group
 					LEFT JOIN platby_category_group ON pcg_id_group=pg_id
 					LEFT JOIN platby_category ON pcg_id_category=pc_id
-					LEFT OUTER JOIN platby_item ON pc_id=pi_id_category
+					LEFT OUTER JOIN platby_item ON u_id=pi_id_user
 				WHERE
 					u_confirmed='1' AND u_ban='0' AND u_system='0' AND
-					pg_type='1' AND
-					(CURDATE() >= pc_valid_from OR CURDATE() <= pc_valid_to) AND
-					(pi_id_user=u_id OR pi_id IS NULL)
+					(pg_type='1' OR pg_type IS NULL) AND
+					(CURDATE() >= pc_valid_from OR CURDATE() <= pc_valid_to OR pc_id IS NULL) AND
+					(pi_id_category=pc_id OR pi_id IS NULL)
 				GROUP BY u_id
 				ORDER BY s_id,u_prijmeni"
 		);
