@@ -44,10 +44,16 @@ class Controller_Admin_Aktuality extends Controller_Admin {
 		else
 			$f_id = 0;
 		
-		DBAktuality::addAktualita(User::getUserID(), post('kat'), post('jmeno'),
+		$id = DBAktuality::addAktualita(User::getUserID(), post('kat'), post('jmeno'),
 			post('text'), $preview, post('foto'), $f_id);
-		DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal článek ' .
-			post('jmeno'));
+		
+		$n = new Novinky(User::getUserID());
+		switch(post('kat')) {
+			case AKTUALITY_VIDEA:
+				$n->video()->add('/aktuality/' . $id, post('jmeno'));
+			case AKTUALITY_CLANKY:
+				$n->clanek()->add('/aktuality/' . $id, post('jmeno'));
+		}
 		$this->redirect('/admin/aktuality', 'Článek přidán');
 	}
 	function edit($id = null) {
@@ -80,8 +86,13 @@ class Controller_Admin_Aktuality extends Controller_Admin {
 			$changed = true;
 		}
 		if(isset($changed) && $changed) {
-			DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' upravil článek ' .
-				post('jmeno'));
+			$n = new Novinky(User::getUserID());
+			switch(post('kat')) {
+				case AKTUALITY_VIDEA:
+					$n->video()->edit('/aktuality/' . $id, post('jmeno'));
+				case AKTUALITY_CLANKY:
+					$n->clanek()->edit('/aktuality/' . $id, post('jmeno'));
+			}
 		}
 		
 		$this->redirect('/admin/aktuality', 'Článek změněn');
@@ -98,8 +109,13 @@ class Controller_Admin_Aktuality extends Controller_Admin {
 			
 			if(Permissions::check('aktuality', P_OWNED, $data['at_kdo'])) {
 				DBAktuality::removeAktualita($id);
-				DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' vymazal článek ' .
-					$data['at_jmeno']);
+				$n = new Novinky(User::getUserID());
+				switch($data['at_kat']) {
+					case AKTUALITY_VIDEA:
+						$n->video()->remove($data['at_jmeno']);
+					case AKTUALITY_CLANKY:
+						$n->clanek()->remove($data['at_jmeno']);
+				}
 			} else {
 				$error = true;
 			}

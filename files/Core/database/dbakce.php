@@ -54,7 +54,7 @@ class DBAkce extends Database implements Pagable {
 		DBRozpis::query("INSERT INTO akce (a_jmeno,a_kde,a_info,a_od,a_do,a_kapacita,a_dokumenty,a_lock,a_visible)" .
 			" VALUES ('$jmeno','$kde','$info','$od','$do','$kapacita','$dokumenty','$lock','$visible')");
 		
-		return true;
+		return self::getInsertId();
 	}
 	
 	public static function editAkce($id, $jmeno, $kde, $info, $od, $do, $kapacita, $dokumenty, $lock, $visible) {

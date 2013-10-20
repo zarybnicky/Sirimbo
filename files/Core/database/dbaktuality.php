@@ -30,6 +30,7 @@ class DBAktuality extends Database {
 			"INSERT INTO aktuality (at_kdo,at_kat,at_jmeno,at_text,at_preview,at_foto,at_foto_main,at_timestamp_add)
 			VALUES ('$kdo','$kat','$jmeno','$text','$preview','$foto','$foto_main',NOW())"
 		);
+		return self::getInsertId();
 	}
 	public static function editAktualita($id, $kat, $jmeno, $text, $preview, $foto, $foto_main) {
 		list($id, $kat, $jmeno, $text, $preview, $foto, $foto_main) =

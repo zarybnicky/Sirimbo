@@ -1,8 +1,4 @@
 <?php
-$colorSelect = array();
-foreach(Settings::$barvy as $name => $barva)
-	$colorSelect[$name] = $barva[0];
-
 $mainForm = (new TableHelper())->table()
 	->style('width:100%')
 	->showHeader(false)

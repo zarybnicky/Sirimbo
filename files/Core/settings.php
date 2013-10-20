@@ -131,52 +131,11 @@ define('P_OWNED', 8);
 define('P_ADMIN', 16);
 
 class Settings {
-public static $errors = array(
-	'authorization'			=> 'files/Error/Authorization.inc',
-	'corrupt_data'			=> 'files/Error/CorruptData.inc',
-	'ban'					=> 'files/Error/Ban.inc',
-	'database'				=> 'files/Error/Database.inc',
-	'database_connection'	=> 'files/Error/DatabaseConnection.inc',
-	'preparing_file'		=> 'files/Error/InPreparation.inc',
-	'corrupt_key_file'		=> 'files/Error/KeyFileCorrupt.inc',
-	'not_approved'			=> 'files/Error/NotApproved.inc',
-	'not_found_right'		=> 'files/Error/NotFoundRight.inc',
-	'not_posible'			=> 'files/Error/NotPossible.inc',
-	'script_fatal'			=> 'files/Error/ScriptFatal.inc'
-);
-
 public static $document_types = array(
 	'1'		=> 'Schůze, rady',
 	'2'		=> 'Soutěže',
 	'3'		=> 'Tábory',
 	'0'		=> 'Ostatní'
-);
-
-public static $barvy = array(
-	'white'		=> array('bílá',		'#FFFFFF'),
-	'yellow'	=> array('žlutá',		'#FFFF00'),
-	'orange'	=> array('oranžová',	'#FF9900'),
-	'red'		=> array('červená',		'#FF0000'),
-	'violet'	=> array('fialová',		'#660066'),
-	'blue'		=> array('modrá',		'#0000FF'),
-	'lightblue'	=> array('světle modrá','#00BBDD'),
-	'aqua'		=> array('modrozelená',	'#22AA99'),
-	'bahia'		=> array('zelenomodrá',	'#AADD11'),
-	'green'		=> array('zelená',		'#00FF00'),
-	'darkgreen'	=> array('tmavě zelená','#55AA44'),
-	'brown'		=> array('hnědá',		'#663300'),
-	'black'		=> array('černá',		'#000000'),
-	'pink'		=> array('růžová',		'#FF0099'),
-	'grey'		=> array('šedá',		'#999999')
-);
-
-public static $platby_obdobi = array(
-	'1-pololeti'	=> array('-09-01', '-01-31', '1. pololetí - 1.9. - 31.1.', '1. pololetí'),
-	'2-pololeti'	=> array('-02-01', '-06-30', '2. pololetí - 1.2. - 30.6.', '2. pololetí'),
-	'1-ctvrtleti'	=> array('-09-01', '-11-15', '1. čtvrtletí - 1.9. - 15.11.', '1. čtvrtletí'),
-	'2-ctvrtleti'	=> array('-11-16', '-01-31', '2. čtvrtletí - 16.11. - 31.1.', '2. čtvrtletí'),
-	'3-ctvrtleti'	=> array('-02-01', '-04-15', '3. čtvrtletí - 1.2. - 15.4.', '3. čtvrtletí'),
-	'4-ctvrtleti'	=> array('-04-16', '-06-30', '4. čtvrtletí - 1.9. - 30.6.', '4. čtvrtletí')
 );
 
 public static $permission_levels = array(
@@ -266,9 +225,6 @@ public static $gd_function_suffix = array(
 	'image/gif' => 'GIF', 
 	'image/bmp' => 'BMP',
 	'image/x-png' => 'PNG'
-);
-public static $no_headers = array(
-	'files/Main/Nabor/Main.inc' => ''
 );
 }
 ?>

@@ -63,8 +63,10 @@ class Controller_Admin_Akce extends Controller_Admin {
 		DBAkce::addAkce(post('jmeno'), post('kde'), post('info'),
 			(string) $od, (string) $do, post('kapacita'), post('dokumenty'),
 			(post('lock') == 'lock') ? 1 : 0, post('visible') ? '1' : '0');
-		DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal klubovou akci "' .
-			post('jmeno') . '"');
+		
+		$n = new Novinky(User::getUserID());
+		$n->akce()->add('/member/akce', post('jmeno'));
+		
 		$this->redirect('/admin/akce', 'Akce přidána');
 	}
 	function edit($id = null) {
@@ -98,8 +100,10 @@ class Controller_Admin_Akce extends Controller_Admin {
 		DBAkce::editAkce($id, post('jmeno'), post('kde'), post('info'),
 			(string) $od, (string) $do, post('kapacita'), post('dokumenty'),
 			(post('lock') == 'lock') ? 1 : 0, post('visible') ? '1' : '0');
-		DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' změnil detaily akce "' .
-			post('jmeno') . '"');
+		
+		$n = new Novinky(User::getUserID());
+		$n->akce()->edit('/member/akce', post('jmeno'));
+		
 		$this->redirect('/admin/akce', 'Akce upravena');
 	}
 	function remove($id = null) {
@@ -114,9 +118,10 @@ class Controller_Admin_Akce extends Controller_Admin {
 				$data = DBAkce::getSingleAkce($id);
 				DBAkce::removeAkce($id);
 				
-				if(strcmp($data['a_od'], date('Y-m-d')) > 0)
-					DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() .
-						' zrušil klubovou akci "' . $data['a_jmeno'] . '"');
+				if(strcmp($data['a_od'], date('Y-m-d')) > 0) {
+					$n = new Novinky(User::getUserID());
+					$n->akce()->remove($data['a_jmeno']);
+				}
 			} else {
 				$error = true;
 			}

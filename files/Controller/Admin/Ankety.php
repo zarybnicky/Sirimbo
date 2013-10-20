@@ -53,8 +53,8 @@ class Controller_Admin_Ankety extends Controller_Admin {
 		$data = DBAnkety::getLatestAnketa();
 		
 		if($visible) {
-			DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal anketu ' .
-				post('jmeno'));
+			$n = new Novinky(User::getUserID());
+			$n->ankety()->add(post('jmeno'));
 		}
 		if(post("add_text")) {
 			DBAnkety::addAnketaItem($data['ak_id'], post("add_text"));
@@ -113,21 +113,18 @@ class Controller_Admin_Ankety extends Controller_Admin {
 			$data = DBAnkety::getSingleAnketa($id);
 			$changed = true;
 		}
-		
+
+		$n = new Novinky(User::getUserID());
 		if(isset($changed) && $changed) {
 			if($visible) {
 				if(!$visible_prev)
-					DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal anketu ' .
-						post('jmeno'));
+					$n->ankety()->add($data['ak_jmeno']);
 				else
-					DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' upravil anketu ' .
-						$data['ak_jmeno']);
+					$n->ankety()->edit($data['ak_jmeno']);
 			} elseif(!$visible && $visible_prev) {
-					DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' zrušil anketu ' .
-						$data['ak_jmeno']);
+					$n->ankety()->remove($data['ak_jmeno']);
 			}
 		}
-		
 		post("jmeno", $data["ak_jmeno"]);
 		post("text", $data["ak_text"]);
 		post("visible", $data["ak_visible"]);
@@ -146,9 +143,10 @@ class Controller_Admin_Ankety extends Controller_Admin {
 			
 			if(Permissions::check('ankety', P_OWNED, $data['ak_kdo'])) {
 				DBAnkety::removeAnketa($item);
-				if($data['ak_visible'])
-					DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' zrušil anketu ' .
-						$data['ak_jmeno']);
+				if($data['ak_visible']) {
+					$n = new Novinky(User::getUserID());
+					$n->ankety()->remove($data['ak_jmeno']);
+				}
 			} else {
 				$error = true;
 			}

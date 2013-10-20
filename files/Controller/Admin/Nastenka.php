@@ -9,16 +9,16 @@ class Controller_Admin_Nastenka extends Controller_Admin {
 			case 'remove':
 				if(!is_array(post('nastenka')))
 					break;
+				$n = new Novinky(User::getUserID());
+				
 				foreach(post('nastenka') as $item) {
 					$data = DBNastenka::getSingleNastenka($item);
 					if(!Permissions::check('nastenka', P_OWNED, $data['up_kdo'])) {
 						$error = true;
 						continue;
 					}
-					
 					DBNastenka::removeNastenka($item);
-					DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() .
-						' smazal příspěvek z nástěnky');
+					$n->nastenka()->remove();
 				}
 				if(isset($error) && $error)
 					throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
@@ -83,8 +83,8 @@ class Controller_Admin_Nastenka extends Controller_Admin {
 			DBNastenka::addNastenkaSkupina($id, $skupina['s_id'],
 				$skupina['s_color_rgb'], $skupina['s_description']);
 		}
-		DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() .
-			' přidal příspěvek na nástěnku');
+		$n = new Novinky(User::getUserID());
+		$n->nastenka()->add('/member/nastenka');
 		
 		$this->redirect(getReturnURI('/admin/nastenka'), 'Příspěvek úspěšně přidán');
 	}
@@ -135,7 +135,9 @@ class Controller_Admin_Nastenka extends Controller_Admin {
 			}
 		}
 		DBNastenka::editNastenka($id, post('nadpis'), post('text'), (post('lock') == 'lock') ? 1 : 0);
-		DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' upravil příspěvek na nástěnce');
+		
+		$n = new Novinky(User::getUserID());
+		$n->nastenka()->edit('/member/nastenka');
 		
 		$this->redirect(getReturnURI('/admin/nastenka'), 'Příspěvek úspěšně upraven');
 	}

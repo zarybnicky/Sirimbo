@@ -35,11 +35,18 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 						continue;
 					}
 					DBNabidka::removeNabidka($item);
-					if(strcmp($data['n_od'], date('Y-m-d')) > 0 && $data['n_visible'])
-						DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' zrušil nabídku ' .
-							formatDate($data['n_od']) . (($data['n_od'] != $data['n_do']) ?
-							(' - ' . formatDate($data['n_do'])) : '') . ' s trenérem ' .
-							$data['u_jmeno'] . ' ' . $data['u_prijmeni']);
+					if(strcmp($data['n_od'], date('Y-m-d')) > 0 && $data['n_visible']) {
+						$od = new Date($data['n_od']);
+						$do = new Date($data['n_do']);
+						$n = new Novinky(User::getUserID());
+						$n->nabidka()->remove(
+							$od->getYear() == $do->getYear() ?
+								($od->getDay() . '. ' . $od->getMonth() . '.') :
+								$od->getDate(Date::FORMAT_SIMPLIFIED),
+							$do->getDate(Date::FORMAT_SIMPLIFIED),
+							$data['u_jmeno'] . ' ' . $data['u_prijmeni']
+						);
+					}
 				}
 				if(isset($error) && $error)
 					throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
@@ -102,10 +109,14 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 		if($visible) {
 			$trener_data = DBUser::getUserData(post('trener'));
 			$trener_name = $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni'];
-			
-			DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal nabídku ' .
-				$od->getDate(Date::FORMAT_SIMPLIFIED) . (($od != $do) ?
-				(' - ' . $do->getDate(Date::FORMAT_SIMPLIFIED)) : '') . ' s trenérem ' . $trener_name);
+
+			$n = new Novinky(User::getUserID());
+			$n->nabidka()->add(
+					'/member/nabidka',
+					$od->getYear() == $do->getYear() ?
+						($od->getDay() . '. ' . $od->getMonth() . '.') :
+						$od->getDate(Date::FORMAT_SIMPLIFIED),
+					$do->getDate(Date::FORMAT_SIMPLIFIED), $trener_name);
 		}
 		
 		$this->redirect(getReturnURI('/admin/nabidka'), 'Nabídka přidána');
@@ -171,18 +182,29 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 			post('lock') ? '1' : '0');
 		
 		if($visible) {
-			if(!$visible_prev)	$act = 'přidal';
-			else				$act = 'upravil';
+			if(!$visible_prev)	$act = 'add';
+			else				$act = 'edit';
 		} elseif(!$visible && $visible_prev && strcmp($data['n_od'], date('Y-m-d')) > 0)
-			$act = 'zrušil';
+			$act = 'remove';
 		
-		$trener_data = DBUser::getUserData(post('trener'));
-		if(isset($act))
-			DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' ' . $act . ' nabídku ' .
-				$od->getDate(Date::FORMAT_SIMPLIFIED) . (($od != $do) ?
-				(' - ' . $do->getDate(Date::FORMAT_SIMPLIFIED)) : '') .
-				' s trenérem ' . $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni']);
-		
+		if(isset($act)) {
+			$trener_data = DBUser::getUserData(post('trener'));
+			$n = new Novinky(User::getUserID());
+			if($act == 'remove') {
+				$n->nabidka()->$act(
+					$od->getYear() == $do->getYear() ?
+					($od->getDay() . '. ' . $od->getMonth() . '.') :
+					$od->getDate(Date::FORMAT_SIMPLIFIED),
+					$do->getDate(Date::FORMAT_SIMPLIFIED), $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni']);
+			} else {
+				$n->nabidka()->$act(
+						'/member/nabidka',
+						$od->getYear() == $do->getYear() ?
+						($od->getDay() . '. ' . $od->getMonth() . '.') :
+						$od->getDate(Date::FORMAT_SIMPLIFIED),
+						$do->getDate(Date::FORMAT_SIMPLIFIED), $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni']);
+			}
+		}
 		$this->redirect(getReturnURI('/admin/nabidka'), 'Nabídka úspěšně upravena');
 	}
 	
