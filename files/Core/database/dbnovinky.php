@@ -1,26 +1,29 @@
 <?php
 class DBNovinky extends Database {
 	public static function getNovinky() {
-		$res = DBNovinky::query('SELECT * FROM novinky');
+		$res = self::query('SELECT * FROM novinky');
 		
-		return DBNovinky::getArray($res);
+		return self::getArray($res);
 	}
 	
 	public static function getLastNovinky($number) {
-		list($number) = DBNovinky::escapeArray(array($number));
+		list($number) = self::escapeArray(array($number));
 		
-		$res = DBNovinky::query("SELECT * FROM novinky ORDER BY no_id DESC LIMIT $number");
+		$res = self::query(
+				"SELECT * FROM novinky
+					LEFT JOIN users ON no_id_user=u_id
+				ORDER BY no_id DESC LIMIT $number");
 		
-		return DBNovinky::getArray($res);
+		return self::getArray($res);
 	}
 	
-	public static function addNovinka($text) {
-		list($text) = DBNovinky::escapeArray(array($text));
-		DBNovinky::query("INSERT INTO novinky (no_text) VALUES ('$text')");
+	public static function addNovinka($uid, $text) {
+		list($uid, $text) = self::escapeArray(array($uid, $text));
+		self::query("INSERT INTO novinky (no_id_user, no_text) VALUES ('$uid','$text')");
 	}
 	
 	public static function removeNovinka($id) {
-		list($id) = DBNovinky::escapeArray(array($id));
-		DBNovinky::query("DELETE FROM novinky WHERE no_id=$id");
+		list($id) = self::escapeArray(array($id));
+		self::query("DELETE FROM novinky WHERE no_id=$id");
 	}
 }

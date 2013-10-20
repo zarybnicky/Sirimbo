@@ -248,15 +248,14 @@ class Controller_Admin_Galerie extends Controller_Admin {
 				$error = true;
 			}
 		}
+		$n = new Novinky(User::getUserID());
 		if(isset($error) && $error == true) {
 			if(isset($added) && $added)
-				DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' upravil galerii "' .
-					$dir['gd_name'] . '"');
+				$n->galerie()->edit($dir['gd_name']);
 			$this->redirect('/admin/galerie', 'Bohužel, některé fotky se nepodařilo nahrát :o(');
 		} else {
 			if(isset($added) && $added)
-				DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' upravil galerii "' .
-					$dir['gd_name'] . '"');
+				$n->galerie()->edit($dir['gd_name']);
 			$this->redirect('/admin/galerie', 'Fotky přidány');
 		}
 	}

@@ -12,6 +12,7 @@ class Controller_Member extends Controller_Abstract {
 			$new_row = array(
 					'id' => $row['no_id'],
 					'text' => $row['no_text'],
+					'user' => $row['u_jmeno'] . ' ' . $row['u_prijmeni'],
 					'timestamp' => formatTimestamp($row['no_timestamp'])
 			);
 			$row = $new_row;

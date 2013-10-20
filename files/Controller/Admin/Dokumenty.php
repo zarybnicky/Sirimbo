@@ -32,12 +32,12 @@ class Controller_Admin_Dokumenty extends Controller_Admin {
 				
 				if(move_uploaded_file($fileUpload, $path)) {
 					chmod($path, 0666);
-					DBDokumenty::addDokument($path, post('name'), $fileName,
+					$id = DBDokumenty::addDokument($path, post('name'), $fileName,
 						post('kategorie'), User::getUserID());
 					$this->redirect()->setMessage('Soubor byl úspěšně nahrán');
 					
-					DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal dokument "' .
-						post('name') . '"');
+					$n = new Novinky(User::getUserID());
+					$n->dokumenty()->add('/member/download?id=' . $id, post('name'));
 				} else {
 					$this->redirect()->setMessage('Bohužel, zkus to znova :o(');
 				}
@@ -80,6 +80,9 @@ class Controller_Admin_Dokumenty extends Controller_Admin {
 			if(Permissions::check('dokumenty', P_OWNED, $data['d_kdo'])) {
 				unlink($data['d_path']);
 				DBDokumenty::removeDokument($id);
+				
+				$n = new Novinky(User::getUserID());
+				$n->dokumenty()->remove($data['d_name']);
 			} else {
 				$error = true;
 			}

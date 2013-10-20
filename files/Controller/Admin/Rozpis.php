@@ -17,6 +17,20 @@ class Controller_Admin_Rozpis extends Controller_Admin {
 						} else {
 							DBRozpis::editRozpis($id, $item['r_trener'], $item['r_kde'],
 								$item['r_datum'], post($id) ? '1' : '0', $item['r_lock'] ? '1' : '0');
+							
+							$n = new Novinky(User::getUserID());
+							if(!post($id)) {
+								$n->rozpis()->remove(
+										(new Date($item['r_datum']))->getDate(Date::FORMAT_SIMPLIFIED),
+										$item['u_jmeno'] . ' ' . $item['u_prijmeni']
+								);
+							} else {
+								$n->rozpis()->add(
+										'/member/rozpis',
+										(new Date($item['r_datum']))->getDate(Date::FORMAT_SIMPLIFIED),
+										$item['u_jmeno'] . ' ' . $item['u_prijmeni']
+								);
+							}
 						}
 					}
 				}
@@ -40,10 +54,13 @@ class Controller_Admin_Rozpis extends Controller_Admin {
 					
 					if(Permissions::check('rozpis', P_OWNED, $trener['u_id'])) {
 						DBRozpis::removeRozpis($item);
-						if(strcmp($data['r_datum'], date('Y-m-d')) > 0 && $data['r_visible'])
-							DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' zrušil rozpis ' .
-								formatDate($data['r_datum']) . ' s trenérem ' .
-								$trener['u_jmeno'] . ' ' . $trener['u_prijmeni']);
+						if(strcmp($data['r_datum'], date('Y-m-d')) > 0 && $data['r_visible']) {
+							$n = new Novinky(User::getUserID());
+							$n->rozpis()->remove(
+								(new Date($data['r_datum']))->getDate(Date::FORMAT_SIMPLIFIED),
+								$trener['u_jmeno'] . ' ' . $trener['u_prijmeni']
+							);
+						}
 					} else {
 						$error = true;
 					}
@@ -101,8 +118,12 @@ class Controller_Admin_Rozpis extends Controller_Admin {
 			$trener_data = DBUser::getUserData(post('trener'));
 			$trener_name = $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni'];
 			
-			DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal rozpis ' .
-				formatDate($datum) . ' s trenérem ' . $trener_name);
+			$n = new Novinky(User::getUserID());
+			$n->rozpis()->add(
+					'/member/rozpis',
+					$datum->getDate(Date::FORMAT_SIMPLIFIED),
+					$trener_name
+			);
 		}
 		$this->redirect('/admin/rozpis', 'Rozpis přidán');
 	}
@@ -139,18 +160,31 @@ class Controller_Admin_Rozpis extends Controller_Admin {
 		DBRozpis::editRozpis($id, post('trener'), post('kde'), (string) $datum, $visible,
 			post('lock'));
 		
-		$trener_data = DBUser::getUserData(post('trener'));
-		$trener_name = $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni'];
 		if($visible) {
 			if(!$visible_prev)
-				DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' přidal rozpis ' .
-					formatDate($datum) . ' s trenérem ' . $trener_name);
+				$act = 'add';
 			else
-				DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' upravil rozpis ' .
-					formatDate($datum) . ' s trenérem ' . $trener_name);
+				$act = 'edit';
 		} elseif(!$visible && $visible_prev && strcmp($datum, date('Y-m-d')) > 0) {
-				DBNovinky::addNovinka('Uživatel ' . User::getUserWholeName() . ' zrušil rozpis ' .
-					formatDate($datum) . ' s trenérem ' . $trener_name);
+			$act = 'remove';
+		}
+		if(isset($act)) {
+			$trener_data = DBUser::getUserData(post('trener'));
+			$trener_name = $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni'];
+			
+			$n = new Novinky(User::getUserID());
+			if($act == 'remove') {
+				$n->rozpis()->$act(
+						$datum->getDate(Date::FORMAT_SIMPLIFIED),
+						$trener_name
+				);
+			} else {
+				$n->rozpis()->$act(
+						'/member/rozpis',
+						$datum->getDate(Date::FORMAT_SIMPLIFIED),
+						$trener_name
+				);
+			}
 		}
 		$this->redirect('/admin/rozpis', 'Rozpis úspěšně upraven');
 	}

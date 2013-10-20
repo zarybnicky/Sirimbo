@@ -61,11 +61,12 @@ class DBDokumenty extends Database {
 	}
 	
 	public static function addDokument($path, $name, $filename, $kategorie, $kdo) {
-		list($path, $kategorie, $kdo) = DBDokumenty::escapeArray(array($path, $kategorie, $kdo));
+		list($path, $name, $filename, $kategorie, $kdo) =
+			DBDokumenty::escapeArray(array($path, $name, $filename, $kategorie, $kdo));
 		
 		DBDokumenty::query("INSERT INTO dokumenty (d_path,d_name,d_filename,d_kategorie,d_kdo) VALUES " .
 			"('$path','$name','$filename','$kategorie','$kdo')");
-		return true;
+		return self::getInsertId();
 	}
 	
 	public static function editDokument($id, $newname) {
