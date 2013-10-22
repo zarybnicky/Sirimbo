@@ -29,7 +29,7 @@
 	<variableList>
 		<variable>
 			<name>ROOT_LOC</name>
-			<value>$%7BPARENT-1-WORKSPACE_LOC%7D</value>
+			<value>$%7BPARENT-1-PROJECT_LOC%7D</value>
 		</variable>
 	</variableList>
 </projectDescription>
