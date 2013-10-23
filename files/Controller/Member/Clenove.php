@@ -91,10 +91,10 @@ class Controller_Member_Clenove extends Controller_Member {
 			$skupina['info']['count'] = count($skupina['users']);
 			if($rightCount >= $leftCount) {
 				$skupina['info']['align'] = 'left';
-				$leftCount += $skupina['info']['count'];
+				$leftCount += ($skupina['info']['count'] + 1.5);
 			} else {
 				$skupina['info']['align'] = 'right';
-				$rightCount += $skupina['info']['count'];
+				$rightCount += ($skupina['info']['count'] + 1.5);
 			}
 		}
 		$this->render('files/View/Member/Clenove/Structure.inc', array(
