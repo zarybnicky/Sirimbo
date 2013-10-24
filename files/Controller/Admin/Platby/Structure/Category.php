@@ -6,17 +6,19 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
 	}
 	function view($id = null) {
 		$this->render('files/View/Admin/Platby/StructureSymbolOverview.inc', array(
-				'data' => $this->getCategories()
+				'data' => $this->getCategories(false),
+				'archived' => $this->getCategories(true)
 		));
 	}
-	protected function getCategories() {
+	protected function getCategories($archived = false) {
 		$out = array();
-		$categories = parent::getCategoryLookup(false, true, false);
+		
+		$categories = DBPlatbyCategory::get($archived);
 		foreach($categories as $array) {
 			$new_data = array();
 			$new_data['name'] = $array['pc_name'];
 			$new_data['symbol'] = $array['pc_symbol']; 
-			$new_data['amount'] = (($array['pc_use_base'] ? $array['pg_base'] : 1) * $array['pc_amount']) . ' Kč';
+			$new_data['amount'] = ($array['pc_amount'] . ($array['pc_use_base'] ? ' * ?' : '')) . ' Kč';
 			$new_data['validDate'] = $this->getDateDisplay($array['pc_valid_from'], $array['pc_valid_to']);
 			$new_data['buttons'] = $this->getEditLink('/admin/platby/structure/category/edit/' . $array['pc_id']) . 
 				$this->getRemoveLink('/admin/platby/structure/category/remove/' . $array['pc_id']);
@@ -164,14 +166,21 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
 			$this->redirect('/admin/platby/structure/category/remove/' . $id,
 					'Spojení s \'' . $groupCount . '\' kategoriemi a s \'' . $itemCount . '\' platbami bylo odstraněno');
 			return;
+		} elseif(post('action') == 'archive') {
+			DBPlatbyCategory::update($id, $data['pc_name'], $data['pc_symbol'], $data['pc_amount'],
+				$data['pc_date_due'], $data['pc_valid_from'], $data['pc_valid_to'], $data['pc_use_base'], $data['pc_use_prefix'], '1');
+			$this->redirect('/admin/platby/structure/category', 'Specifický symbol "' . $data['pc_symbol'] . '" byl archivován');
+			return;
 		}
 		if(((empty($_POST) || post('action') == 'confirm') && ($f = $this->getLinkedObjects($id))) || empty($_POST)) {
 			if(isset($f) && $f) {
 				$this->redirect()->setMessage(
 						'Nemůžu odstranit specifický symbol s připojenými kategoriemi nebo položkami! ' . 
 						'<form action="" method="post">' .
+							(!$data['pc_archive'] ?
+								'<button type="submit" name="action" value="archive">Archivovat?</button> nebo ' : '') .
 							'<button type="submit" name="action" value="unlink">' .
-							'Odstranit spojení a přesunout ovlivněné platby do nezařazených?</button>' .
+							'Odstranit všechna spojení se skupinami a kategoriemi a přesunout ovlivněné platby do nezařazených?</button>' .
 						'</form>'
 				);
 			}

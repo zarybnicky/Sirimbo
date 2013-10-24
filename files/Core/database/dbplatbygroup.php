@@ -70,11 +70,12 @@ class DBPlatbyGroup extends Database {
 	}
 	public static function getGroupsWithCategories() {
 		$res = self::query(
-				'SELECT *
+				"SELECT *
 				FROM platby_category_group
 					LEFT OUTER JOIN platby_group ON pcg_id_group=pg_id
 					LEFT OUTER JOIN platby_category ON pcg_id_category=pc_id
-				ORDER BY pg_type,pg_id,pc_symbol'
+				WHERE pc_archive='0'
+				ORDER BY pg_type,pg_id,pc_symbol"
 		);
 		return self::getArray($res);
 	}

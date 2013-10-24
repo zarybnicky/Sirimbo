@@ -39,8 +39,9 @@ class DBPlatbyCategory extends Database {
 		else
 			return false;
 	}
-	public static function get() {
-		$res = self::query('SELECT * FROM platby_category');
+	public static function get($archived = null) {
+		$res = self::query('SELECT * FROM platby_category' .
+				($archived !== null ? (" WHERE pc_archive='" . ($archived ? '1' : '0') . "'") : '') . ' ORDER BY pc_symbol');
 		return self::getArray($res);
 	}
 	public static function getSingle($id) {
