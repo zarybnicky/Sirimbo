@@ -17,7 +17,7 @@ class Controller_Registrace extends Controller_Abstract {
 			if(!$f->isValid()) {
 				$this->redirect()->setMessage(implode('<br/>', $f->getMessages()));
 			} else {
-				$login = strtolower($login);
+				$login = strtolower(post('username'));
 				if(DBUser::getUserID($login)) {
 					$this->redirect()->setMessage('Už tu někdo s takovým přihlašovacím jménem je :o(');
 				} else {

@@ -93,7 +93,7 @@ class Controller_Admin_Nabidka extends Controller_Admin {
 		$od = $this->date('od')->getPost();
 		$do = $this->date('do')->getPost();
 		if(!$do->isValid() || strcmp((string) $od, (string) $do) > 0)
-			$do &= $od;
+			$do = $od;
 		
 		$visible = (bool) post('visible');
 		if(!Permissions::check('nabidka', P_ADMIN) && $visible) {
