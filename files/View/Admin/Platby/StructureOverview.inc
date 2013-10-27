@@ -14,13 +14,13 @@ echo $this->table()
 ?>
 
 <div style="">
-<?php foreach($this->data as $row): ?>
+<?php foreach ($this->data as $row): ?>
     
 <?php endforeach;?>
 </div>
 
 <?php
-if(!empty($this->orphanGroupSkupina)) {
+if (!empty($this->orphanGroupSkupina)) {
     echo '<br/>';
     echo '<h3>Kategorie plateb bez přiřazené uživatelské skupiny</h3>';
     echo $this->table()
@@ -30,7 +30,7 @@ if(!empty($this->orphanGroupSkupina)) {
         ->data($this->orphanGroupSkupina);
 }
 
-if(!empty($this->orphanGroupCategory)) {
+if (!empty($this->orphanGroupCategory)) {
     echo '<br/>';
     echo '<h3>Kategorie plateb bez přiřazených specifických symbolů</h3>';
     echo $this->table()
@@ -40,7 +40,7 @@ if(!empty($this->orphanGroupCategory)) {
     ->data($this->orphanGroupCategory);
 }
 
-if(!empty($this->orphanCategory)) {
+if (!empty($this->orphanCategory)) {
     echo '<br/>';
     echo '<h3>Specifické symboly bez přiřazené kategorie</h3>';
     echo $this->table()

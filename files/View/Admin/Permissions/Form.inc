@@ -16,12 +16,12 @@ notice($this->redirect()->getMessage());
             <textarea rows="7" cols="60" name="description"><?php echo post("description"); ?></textarea>
         </td>
     </tr><?php
-    foreach(Settings::$permissions as $name => $item) {
+    foreach (Settings::$permissions as $name => $item) {
         echo '<tr>';
         echo '<td>', $item['name'], '</td>';
-        foreach(Settings::$permission_levels as $key => $level_name) {
+        foreach (Settings::$permissionLevels as $key => $level_name) {
             echo '<td>';
-            if(isset($item[$key])) {
+            if (isset($item[$key])) {
                 echo '<label>', getRadio($name, $key, $item['default'] == $key), $level_name, '</label>';
             }
             echo '</td>';

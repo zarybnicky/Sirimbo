@@ -1,98 +1,99 @@
 <?php
-class Date {
-    private $valid;
-    private $sql_format;
-    private $year;
-    private $month;
-    private $day;
-    private $separators;
-    
+class Date
+{
+    private $_valid;
+    private $_sqlFormat;
+    private $_year;
+    private $_month;
+    private $_day;
+    private $_separators;
+
     const FORMAT_SQL = 'yyyy-mm-dd';
     const FORMAT_SIMPLE = 'dd.mm.yyyy';
     const FORMAT_SIMPLE_SPACED = 'dd. mm. yyyy';
     const FORMAT_SIMPLIFIED = 'd. m. yyyy';
     const FORMAT_SLASHED = 'dd/mm/yyyy';
-    
+
     function __construct($s = null) {
-        $this->separators = array('-', '.' , '/');
-        if(is_string($s))
+        $this->_separators = array('-', '.' , '/');
+        if (is_string($s))
             $this->setDate($s);
     }
     function __toString() {
         return $this->getDate();
     }
     function separator($s = null, $reset = false) {
-        if($s === null)
-            return $this->separators;
-        if($reset)
-            $this->separators = array();
-        $this->separators[] = $s;
+        if ($s === null)
+            return $this->_separators;
+        if ($reset)
+            $this->_separators = array();
+        $this->_separators[] = $s;
     }
     function setDate($s) {
-        foreach($this->separators as $sep) {
-            if(strpos($s, $sep) === false)
+        foreach ($this->_separators as $sep) {
+            if (strpos($s, $sep) === false)
                 continue;
             $pieces = explode($sep, $s);
-            if(count($pieces) != 3)
+            if (count($pieces) != 3)
                 unset($pieces);
         }
-        if(!isset($pieces)) {
-            if(!$this->sql_format)
-                $this->valid = false;
+        if (!isset($pieces)) {
+            if (!$this->_sqlFormat)
+                $this->_valid = false;
             return false;
         }
-        foreach($pieces as &$piece) {
+        foreach ($pieces as &$piece) {
             $piece = trim($piece, '/-. ');
-            if(strlen($piece) == 1)
+            if (strlen($piece) == 1)
                 $piece = '0' . $piece;
         }
-        if(strlen($pieces[2]) == 4) {
+        if (strlen($pieces[2]) == 4) {
             $pieces = array_reverse($pieces);
-        } elseif(strlen($pieces[0]) != 4) {
-            if(!$this->sql_format)
-                $this->valid = false;
+        } elseif (strlen($pieces[0]) != 4) {
+            if (!$this->_sqlFormat)
+                $this->_valid = false;
             return false;
         }
-        $this->year = $pieces[0];
-        $this->month = $pieces[1];
-        $this->day = $pieces[2];
-        $this->sql_format = implode('-', $pieces);
-        $this->valid = true;
+        $this->_year = $pieces[0];
+        $this->_month = $pieces[1];
+        $this->_day = $pieces[2];
+        $this->_sqlFormat = implode('-', $pieces);
+        $this->_valid = true;
         return true;
     }
     function getDate($format = Date::FORMAT_SQL) {
-        if(!$this->valid)
+        if (!$this->_valid)
             return '';
         switch($format) {
             case Date::FORMAT_SQL:
-                return $this->sql_format;
+                return $this->_sqlFormat;
             case Date::FORMAT_SIMPLE:
-                return $this->day . '.' .     $this->month . '.' . $this->year;
+                return $this->_day . '.' .     $this->_month . '.' . $this->_year;
                 break;
             case Date::FORMAT_SIMPLE_SPACED:
-                return $this->day . '. ' .     $this->month . '. ' . $this->year;
+                return $this->_day . '. ' .     $this->_month . '. ' . $this->_year;
                 break;
             case Date::FORMAT_SIMPLIFIED:
-                return ((int) $this->day) . '. ' .
-                    ((int) $this->month) . '. ' . $this->year;
+                return ((int) $this->_day) . '. ' .
+                    ((int) $this->_month) . '. ' . $this->_year;
                 break;
             case Date::FORMAT_SLASHED:
-                return $this->day . '/' .     $this->month . '/' . $this->year;
+                return $this->_day . '/' .     $this->_month . '/' . $this->_year;
                 break;
             default:
                 return '';
         }
     }
     function getDay() {
-        return $this->day;
+        return $this->_day;
     }
     function getMonth() {
-        return $this->month;
+        return $this->_month;
     }
     function getYear() {
-        return $this->year;
+        return $this->_year;
     }
     function isValid() {
-        return $this->valid;
+        return $this->_valid;
     }
 }

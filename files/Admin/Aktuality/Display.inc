@@ -4,7 +4,7 @@ notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST">
 <?php
-if(!TISK) {
+if (!TISK) {
     echo $this->menu()
         ->float(MenuHelper::FLOAT_RIGHT)
         ->content('Přidat', 'aktuality/add')
@@ -22,10 +22,10 @@ if(!TISK) {
 </tr>
 <?php
 $aktuality = DBAktuality::getAktuality();
-foreach($aktuality as $item) {
+foreach ($aktuality as $item) {
     echo '<tr>';
     
-    if(Permissions::check('aktuality', P_OWNED, $item['at_kdo']))
+    if (Permissions::check('aktuality', P_OWNED, $item['at_kdo']))
         echo '<td><input type="checkbox" name="aktuality[]" value="' . $item['at_id'] .
             '" /></td>';
     else
@@ -33,9 +33,9 @@ foreach($aktuality as $item) {
             '" disabled="disabled" /></td>';
     echo '<td>', $item['at_jmeno'], '</td>';
     echo '<td>';
-    if($item['at_kat'] == AKTUALITY_CLANKY) echo "Články";
-    elseif($item['at_kat'] == AKTUALITY_VIDEA) echo "Videa";
-    elseif($item['at_kat'] == AKTUALITY_KRATKE) echo "Krátké zprávy";
+    if ($item['at_kat'] == AKTUALITY_CLANKY) echo "Články";
+    elseif ($item['at_kat'] == AKTUALITY_VIDEA) echo "Videa";
+    elseif ($item['at_kat'] == AKTUALITY_KRATKE) echo "Krátké zprávy";
     echo '</td>';
     echo '</tr>';
 }

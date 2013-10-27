@@ -1,28 +1,29 @@
 <?php
-class PartnerRequestHelper {
-    private $id;
-    
+class PartnerRequestHelper
+{
+    private $_id;
+
     public function partnerRequest($id = null) {
-        if($id !== null)
-            $this->id = $id;
+        if ($id !== null)
+            $this->_id = $id;
         else
-            $this->id = User::getUserID();
+            $this->_id = User::getUserID();
         return $this;
     }
     public function id($id = null) {
-        if($id === null)
-            return $this->id;
+        if ($id === null)
+            return $this->_id;
         else
-            $this->id = $id;
+            $this->_id = $id;
         return $this;
     }
-    
+
     public function getRequestsByMe() {
-        $data = DBPary::getPartnerRequestsByMe($this->id);
-        if(empty($data))
+        $data = DBPary::getPartnerRequestsByMe($this->_id);
+        if (empty($data))
             return '';
         $out = '';
-        foreach($data as $item) {
+        foreach ($data as $item) {
             ob_start();
             ?>
 <form action="/member/profil/par/zadost" method="POST">
@@ -43,11 +44,11 @@ class PartnerRequestHelper {
         return $out;
     }
     public function getRequestsForMe() {
-        $data = DBPary::getPartnerRequestsForMe($this->id);
-        if(empty($data))
+        $data = DBPary::getPartnerRequestsForMe($this->_id);
+        if (empty($data))
             return '';
         $out = '';
-        foreach($data as $item) {
+        foreach ($data as $item) {
             ob_start();
             ?>
 <form action="/member/profil/par/zadost" method="POST">

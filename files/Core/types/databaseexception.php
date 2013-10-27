@@ -1,5 +1,6 @@
 <?php
-class DatabaseException extends ViewException {
+class DatabaseException extends ViewException
+{
     public function getErrorFile() {
         return 'database';
     }

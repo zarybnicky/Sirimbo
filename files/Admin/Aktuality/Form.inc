@@ -30,7 +30,7 @@ notice($this->redirect()->getMessage());
                 ->post()->name('foto')
                 ->value(post('foto'))
                 ->option('none', '--');
-            foreach($dirs as $dir)
+            foreach ($dirs as $dir)
                 $s->option($dir['gd_id'],
                     str_repeat("-", $dir['gd_level'] - 1) . $dir['gd_name']);
             echo $s;
@@ -38,7 +38,7 @@ notice($this->redirect()->getMessage());
         <td></td>
     </tr><tr>
         <td><button type="submit"><?php
-            if(Request::getAction() == 'add') echo 'Přidat';
+            if (Request::getAction() == 'add') echo 'Přidat';
             else echo 'Upravit';
         ?></button></td>
         <td>Pole označená (*) jsou povinná</td>

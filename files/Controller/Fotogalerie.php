@@ -1,22 +1,23 @@
 <?php
-class Controller_Fotogalerie extends Controller_Abstract {
+class Controller_Fotogalerie extends Controller_Abstract
+{
     function view($id = null) {
-        if($id === null) {
+        if ($id === null) {
             $id = 0;
             $data = DBGalerie::getSingleDir(0);
-        } elseif(!($data = DBGalerie::getSingleDir($id))) {
+        } elseif (!($data = DBGalerie::getSingleDir($id))) {
             $this->redirect('/fotogalerie', 'Taková složka neexistuje');
         }
-        
+
         $photos = DBGalerie::getFotky($id);
-        if(empty($photos)) {
+        if (empty($photos)) {
             $this->render('files/View/Empty.inc', array(
                 'nadpis' => $data['gd_name'],
                 'notice' => 'Žádné fotky k dispozici.'
             ));
             return;
         }
-        foreach($photos as &$row) {
+        foreach ($photos as &$row) {
             $new_row = array(
                     'id' => $row['gf_id'],
                     'src' => str_replace('./galerie', '/galerie/thumbnails', $row['gf_path']),
@@ -30,12 +31,12 @@ class Controller_Fotogalerie extends Controller_Abstract {
         ));
     }
     function foto($id = null) {
-        if(!$id || !($data = DBGalerie::getSingleFoto($id)))
+        if (!$id || !($data = DBGalerie::getSingleFoto($id)))
             $this->redirect('/fotogalerie', 'Taková fotka neexistuje');
-        
+
         $parent_dir = DBGalerie::getFotky($data['gf_id_rodic']);
-        foreach($parent_dir as $key => $foto) {
-            if($foto['gf_id'] == $id) {
+        foreach ($parent_dir as $key => $foto) {
+            if ($foto['gf_id'] == $id) {
                 $current = $key;
                 break;
             }
@@ -55,46 +56,46 @@ class Controller_Fotogalerie extends Controller_Abstract {
     }
     function sidebar() {
         $dirs = DBGalerie::getDirs(true, true);
-        
-        if(empty($dirs))
+
+        if (empty($dirs))
             return;
-        
+
         $s = new Sidebar();
         echo $s->menuHeader();
         unset($s);
-        
+
         echo '<ul class="fotoroot" style="padding-top:5px;"><li>';
-        
+
         $level_prev = 0;
-        foreach($dirs as $dir) {
-            if($dir['gd_hidden'] == '1')
+        foreach ($dirs as $dir) {
+            if ($dir['gd_hidden'] == '1')
                 continue;
-            
-            if($dir['gd_level'] > $level_prev) {
+
+            if ($dir['gd_level'] > $level_prev) {
                 echo '<ul class="fotolist">';
-            } elseif($dir['gd_level'] == $level_prev) {
+            } elseif ($dir['gd_level'] == $level_prev) {
                 echo '</li>';
             } else {
                 for($i = 0; $i < ($level_prev - $dir['gd_level']); $i++)
                     echo '</li></ul>';
                 echo '</li>';
             }
-            if($dir['gd_id'] == 0)
+            if ($dir['gd_id'] == 0)
                 $link = "/fotogalerie";
             else
                 $link = "/fotogalerie/" . $dir['gd_id'];
-            
-            if($dir['gd_id'] == Request::getID())
+
+            if ($dir['gd_id'] == Request::getID())
                 echo '<li><a class="current" href="', $link, '">';
             else
                 echo '<li><a href="', $link, '">';
-            
+
             echo '<img src="/style/directory.png" alt="Složka" />', $dir['gd_name'], '</a>';
             $level_prev = $dir['gd_level'];
         }
         for($i = 0; $i < $level_prev; $i++)
             echo '</li></ul>';
-        
+
         echo '</li></ul>';
     }
 }

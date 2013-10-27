@@ -1,6 +1,7 @@
 <?php
-include_once('files/Controller/Admin/Platby.php');
-class Controller_Admin_Platby_Structure extends Controller_Admin_Platby {
+require_once 'files/Controller/Admin/Platby.php';
+class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
+{
     function __construct() {
         Permissions::checkError('platby', P_OWNED);
     }
@@ -15,17 +16,17 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby {
     protected function getCategories() {
         $out = array();
         $categories = parent::getCategoryList();
-        
+
         $current_group = 0;
-        foreach($categories as $array) {
+        foreach ($categories as $array) {
             $new_data = array();
-            if(strpos($array[0], 'group_') !== false) {
+            if (strpos($array[0], 'group_') !== false) {
                 $new_data['name'] = '<span class="big" style="text-decoration:underline;">' . $array[1]['pg_name'] . '</span>';
                 $new_data['buttons'] = $this->getEditLink('/admin/platby/structure/group/edit/' . $array[1]['pg_id']) .
                         $this->getRemoveLink('/admin/platby/structure/group/remove/' . $array[1]['pg_id']);
             } else {
                 $new_data['name'] = '&nbsp;- ' . $array[1]['pc_name'] . ' (' . $array[1]['pc_symbol'] . ')';
-                $new_data['buttons'] = $this->getEditLink('/admin/platby/structure/category/edit/' . $array[1]['pc_id']) . 
+                $new_data['buttons'] = $this->getEditLink('/admin/platby/structure/category/edit/' . $array[1]['pc_id']) .
                     $this->getRemoveLink('/admin/platby/structure/category/remove/' . $array[1]['pc_id']);
             }
             $out[] = $new_data;
@@ -34,7 +35,7 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby {
     }
     protected function getOrphanGroupSkupina() {
         $out = DBPlatbyGroup::getWithoutSkupina();
-        foreach($out as &$array) {
+        foreach ($out as &$array) {
             $new_data = array(
                     'name' => $array['pg_name'],
                     'buttons' => $this->getEditLink('/admin/platby/structure/group/edit/' . $array['pg_id']) .
@@ -46,7 +47,7 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby {
     }
     protected function getOrphanGroupCategory() {
         $out = DBPlatbyGroup::getWithoutCategory();
-        foreach($out as &$array) {
+        foreach ($out as &$array) {
             $new_data = array(
                     'name' => $array['pg_name'],
                     'buttons' => $this->getEditLink('/admin/platby/structure/group/edit/' . $array['pg_id']) .
@@ -58,10 +59,10 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby {
     }
     protected function getOrphanCategory() {
         $out = DBPlatbyCategory::getOrphan();
-        foreach($out as &$array) {
+        foreach ($out as &$array) {
             $new_data = array(
                     'name' => $array['pc_name'],
-                    'buttons' => $this->getEditLink('/admin/platby/structure/category/edit/' . $array['pc_id']) . 
+                    'buttons' => $this->getEditLink('/admin/platby/structure/category/edit/' . $array['pc_id']) .
                         $this->getRemoveLink('/admin/platby/structure/category/remove/' . $array['pc_id'])
             );
             $array = $new_data;

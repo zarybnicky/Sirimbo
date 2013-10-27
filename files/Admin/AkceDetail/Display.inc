@@ -12,11 +12,11 @@ notice($this->redirect()->getMessage());
 </tr>
 <?php
 $userselect = $this->userSelect()->users($this->users);
-if(!empty($this->items)) {
-    foreach($this->items as $item) {
+if (!empty($this->items)) {
+    foreach ($this->items as $item) {
         echo '<tr>';
         echo '<td>';
-        if($item['ai_user'] > 0)
+        if ($item['ai_user'] > 0)
             post($item['ai_id'] . '-user', $item['ai_user']);
         echo $userselect->name($item['ai_id'] . '-user');
         echo '</td>';

@@ -1,6 +1,7 @@
 <?php
-include_once('files/Controller/Admin.php');
-class Controller_Admin_Users extends Controller_Admin {
+require_once 'files/Controller/Admin.php';
+class Controller_Admin_Users extends Controller_Admin
+{
     function __construct() {
         Permissions::checkError('users', P_OWNED);
     }
@@ -8,22 +9,22 @@ class Controller_Admin_Users extends Controller_Admin {
         switch(post('action')) {
             case 'edit':
                 $users = post('users');
-                if($users[0])
+                if ($users[0])
                     $this->redirect('/admin/users/edit/' . $users[0]);
                 break;
             case 'platby':
                 $users = post('users');
-                if($users[0])
+                if ($users[0])
                     $this->redirect('/admin/users/platby/' . $users[0]);
                 break;
             case 'remove':
-                if(!is_array(post('users'))) break;
+                if (!is_array(post('users'))) break;
                 $this->redirect('/admin/users/remove?' . http_build_query(array('u' => post('users'))));
                 break;
             case 'save':
-                foreach(post('save') as $user_id) {
+                foreach (post('save') as $user_id) {
                     $user = DBUser::getUserData($user_id);
-                    if(    ((bool) post($user_id . '-dancer')) !== ((bool) $user['u_dancer']) ||
+                    if (    ((bool) post($user_id . '-dancer')) !== ((bool) $user['u_dancer']) ||
                         ((bool) post($user_id . '-system')) !== ((bool) $user['u_system']) ||
                             (post($user_id . '-skupina') != $user['u_skupina'])) {
                         DBUser::setUserData($user_id, $user['u_jmeno'], $user['u_prijmeni'], $user['u_pohlavi'],
@@ -35,20 +36,20 @@ class Controller_Admin_Users extends Controller_Admin {
                 break;
             case null: break;
         }
-        if(get('v') === null)
+        if (get('v') === null)
             get('v', 'info');
-        $this->displayOverview(get('v'));
+        $this->_displayOverview(get('v'));
     }
     function remove($id = null) {
-        if(!is_array(post('data')) && !is_array(get('u')))
+        if (!is_array(post('data')) && !is_array(get('u')))
             $this->redirect('/admin/users');
-        if(!empty($_POST) && post('action') == 'confirm') {
-            foreach(post('data') as $id)
+        if (!empty($_POST) && post('action') == 'confirm') {
+            foreach (post('data') as $id)
                 DBUser::removeUser($id);
             $this->redirect('/admin/users', 'Uživatelé odebráni');
         }
         $data = array();
-        foreach(get('u') as $id) {
+        foreach (get('u') as $id) {
             $item = DBUser::getUserData($id);
             $data[] = array(
                     'id' => $item['u_id'],
@@ -64,27 +65,27 @@ class Controller_Admin_Users extends Controller_Admin {
         ));
     }
     function add($id = null) {
-        if(empty($_POST) || is_object($f = $this->checkData($_POST, 'add'))) {
-            if(!empty($_POST))
+        if (empty($_POST) || is_object($f = $this->_checkData('add'))) {
+            if (!empty($_POST))
                 $this->redirect()->setMessage($f->getMessages());
-            $this->displayForm();
+            $this->_displayForm();
             return;
         }
         $narozeni = $this->date('narozeni')->getPost();
-        DBUser::addUser(strtolower(post('login')), User::Crypt(post('pass')), post('jmeno'), post('prijmeni'),
+        DBUser::addUser(strtolower(post('login')), User::crypt(post('pass')), post('jmeno'), post('prijmeni'),
             post('pohlavi'), post('email'), post('telefon'), (string) $narozeni,
             post('poznamky'), post('group'), post('skupina'), post('dancer') ? '1' : '0',
             post('lock') ? '1' : '0', post('ban') ? '1' : '0', '1', post('system') ? '1' : '0');
         $this->redirect('/admin/users', 'Uživatel úspěšně přidán');
     }
     function edit($id = null) {
-        if(!$id || !($data = DBUser::getUserData($id)))
+        if (!$id || !($data = DBUser::getUserData($id)))
             $this->redirect('/admin/users', 'Uživatel s takovým ID neexistuje');
-        if(!$data['u_confirmed'])
+        if (!$data['u_confirmed'])
             $this->redirect('/admin/users', 'Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
-        
-        if(empty($_POST) || is_object($f = $this->checkData($_POST, 'edit'))) {
-            if(empty($_POST)) {
+
+        if (empty($_POST) || is_object($f = $this->_checkData('edit'))) {
+            if (empty($_POST)) {
                 post('login', $data['u_login']);
                 post('group', $data['u_group']);
                 post('ban', $data['u_ban']);
@@ -102,7 +103,7 @@ class Controller_Admin_Users extends Controller_Admin {
             } else {
                 $this->redirect()->setMessage($f->getMessages());
             }
-            $this->displayForm();
+            $this->_displayForm();
             return;
         }
         $narozeni = $this->date('narozeni')->getPost();
@@ -113,17 +114,17 @@ class Controller_Admin_Users extends Controller_Admin {
         $this->redirect('/admin/users', 'Uživatel úspěšně upraven');
     }
     function platby($id = null) {
-        if(!$id || !($data = DBUser::getUserData($id)))
+        if (!$id || !($data = DBUser::getUserData($id)))
             $this->redirect('/admin/users', 'Uživatel s takovým ID neexistuje');
-        if(!$data['u_confirmed'])
+        if (!$data['u_confirmed'])
             $this->redirect('/admin/users', 'Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
-        
+
         $this->render('files/View/Admin/Users/Platby.inc');
     }
     function unconfirmed($id = null) {
-        if(empty($_POST) || !is_array(post('users'))) {
+        if (empty($_POST) || !is_array(post('users'))) {
             $users = DBUser::getNewUsers();
-            if(empty($users)) {
+            if (empty($users)) {
                 $this->render('files/View/Empty.inc', array(
                         'nadpis' => 'Správa uživatelů',
                         'notice' => 'Žádní nepotvrzení uživatelé nejsou v databázi.'
@@ -131,15 +132,15 @@ class Controller_Admin_Users extends Controller_Admin {
             }
             $groups = DBPermissions::getGroups();
             $s_group = $this->select();
-            foreach($groups as $group)
+            foreach ($groups as $group)
                 $s_group->option($group['pe_id'], $group['pe_name']);
-            
+
             $skupiny = DBSkupiny::get();
             $s_skupina = new SelectHelper();
-            foreach($skupiny as $skupina)
+            foreach ($skupiny as $skupina)
                 $s_skupina->option($skupina['s_id'], $skupina['s_name']);
-            
-            foreach($users as &$row) {
+
+            foreach ($users as &$row) {
                 $new_data = array(
                         'id' => $row['u_id'],
                         'checkBox' => '<input type="checkbox" name="users[]" value="' . $row['u_id'] . '" />',
@@ -156,25 +157,25 @@ class Controller_Admin_Users extends Controller_Admin {
             ));
             return;
         }
-        if(post('action') == 'confirm') {
-            foreach(post('users') as $id) {
+        if (post('action') == 'confirm') {
+            foreach (post('users') as $id) {
                 $data = DBUser::getUserData($id);
-                
+
                 DBUser::confirmUser($id, post($id . '-group'), post($id . '-skupina'),
                     post($id . '-dancer') ? 1 : 0);
-                Mailer::reg_confirmed_notice($data['u_email'], $data['u_login']);
+                Mailer::registrationConfirmNotice($data['u_email'], $data['u_login']);
             }
             $this->redirect('/admin/users', 'Uživatelé potvrzeni');
-        } elseif(post('action') == 'remove') {
+        } elseif (post('action') == 'remove') {
             $this->redirect('/admin/users/remove?' . http_build_query(array('u' => post('users'))));
         }
     }
     function duplicate($id = null) {
-        if(!empty($_POST) && post('action') == 'remove' && post('users') && !empty($_POST['users']))
+        if (!empty($_POST) && post('action') == 'remove' && post('users') && !empty($_POST['users']))
             $this->redirect('/admin/users/remove?' . http_build_query(array('u' => post('users'))));
-        
+
         $users = DBUser::getDuplicateUsers();
-        foreach($users as &$row) {
+        foreach ($users as &$row) {
             $new_data = array(
                     'id' => $row['u_id'],
                     'checkBox' => '<input type="checkbox" name="users[]" value="' . $row['u_id'] . '" />',
@@ -200,12 +201,12 @@ class Controller_Admin_Users extends Controller_Admin {
             array('Aktivní uživatelé', count($active)),
             array('Aktivní tanečníci', count($dancers))
         );
-        
+
         $groupcount = DBUser::getGroupCounts();
-        foreach($groupcount as $group)
+        foreach ($groupcount as $group)
             $data[] = array($group['pe_name'], $group['count']);
-        
-        foreach($data as &$row) {
+
+        foreach ($data as &$row) {
             $new_data = array(
                     'group' => $row[0],
                     'count' => $row[1]
@@ -221,41 +222,41 @@ class Controller_Admin_Users extends Controller_Admin {
         $jmeno = post('jmeno');
         $prijmeni = post('prijmeni');
         $narozeni = $this->date('narozeni')->getPost();
-        
-        $login = preg_replace('/[^a-zA-Z0-9.-_]*/','', strtolower($prijmeni)) . '_' .
-                preg_replace('/[^a-zA-Z0-9.-_]*/','', strtolower($jmeno));
-        
-        if(!($id = DBUser::getUserByFullName($jmeno, $prijmeni)) && !($id = DBUser::getUserID($login))) {
+
+        $login = preg_replace('/[^a-zA-Z0-9.-_]*/', '', strtolower($prijmeni)) . '_' .
+                preg_replace('/[^a-zA-Z0-9.-_]*/', '', strtolower($jmeno));
+
+        if (!($id = DBUser::getUserByFullName($jmeno, $prijmeni)) && !($id = DBUser::getUserID($login))) {
             list($user_id, $par_id) = DBUser::addTemporaryUser($login, $jmeno, $prijmeni, $narozeni);
-            
+
             header('Content-Type: application/json');
             echo json_encode(array('user_id' => $user_id, 'par_id' => $par_id, 'jmeno' => $jmeno,
                 'prijmeni' => $prijmeni, 'narozeni' => (string) $narozeni, 'rok' => $narozeni->getYear()));
         } else {
-            if(is_array($id))
+            if (is_array($id))
                 $id = $id['u_id'];
-            
+
             $data = DBUser::getUserData($id);
             $partner = DBPary::getLatestPartner($data['u_id'], $data['u_pohlavi']);
-            if($partner && $partner['p_id'])
+            if ($partner && $partner['p_id'])
                 $par_id = $partner['p_id'];
             else
                 $par_id = DBPary::noPartner($data['u_id']);
-            
+
             $narozeni = explode('-', $data['u_narozeni']);
-            
+
             header('Content-Type: application/json');
             echo json_encode(array('user_id' => $data['u_id'], 'par_id' => $par_id, 'jmeno' => $data['u_jmeno'],
                 'prijmeni' => $data['u_prijmeni'], 'narozeni' => $data['u_narozeni'], 'rok' => array_shift($narozeni)));
         }
         exit;
     }
-    
-    private function displayOverview($action) {
+
+    private function _displayOverview($action) {
         $groups = DBPermissions::getGroups();
         $group_lookup = array();
-        foreach($groups as &$row) {
-            if($row['pe_id'])
+        foreach ($groups as &$row) {
+            if ($row['pe_id'])
                 $filter[] = $row['pe_id'];
             $new_data = array(
                     'id' => $row['pe_id'],
@@ -264,10 +265,10 @@ class Controller_Admin_Users extends Controller_Admin {
             $group_lookup[$row['pe_id']] = $row['pe_name'];
             $row = $new_data;
         }
-        if($action == 'status') {
+        if ($action == 'status') {
             $skupiny = DBSkupiny::get();
             $skupinyselect = $this->select()->post();
-            foreach($skupiny as $skupina)
+            foreach ($skupiny as $skupina)
                 $skupinyselect->option($skupina['s_id'], $skupina['s_name']);
         }
         $options['filter'] = in_array(get('f'), array_merge(array('dancer', 'system', 'all', 'unconfirmed', 'ban'), $filter)) ?
@@ -279,7 +280,7 @@ class Controller_Admin_Users extends Controller_Admin {
         $pager->setPageRange(5);
         $data = $pager->getItems();
         $i = $pager->getItemsPerPage() * ($pager->getCurrentPage() - 1);
-        foreach($data as &$item) {
+        foreach ($data as &$item) {
             $new_data = array(
                     'checkBox' => '<input type="checkbox" name="users[]" value="' . $item['u_id'] . '" />',
                     'index' => ++$i,
@@ -310,10 +311,10 @@ class Controller_Admin_Users extends Controller_Admin {
         ));
         return;
     }
-    
-    private function displayForm() {
+
+    private function _displayForm() {
         $groups = DBPermissions::getGroups();
-        foreach($groups as &$item) {
+        foreach ($groups as &$item) {
             $new_data = array(
                     'id' => $item['pe_id'],
                     'name' => $item['pe_name']
@@ -321,7 +322,7 @@ class Controller_Admin_Users extends Controller_Admin {
             $item = $new_data;
         }unset($item);
         $skupiny = DBSkupiny::get();
-        foreach($skupiny as &$item) {
+        foreach ($skupiny as &$item) {
             $new_data = array(
                     'id' => $item['s_id'],
                     'color' => $item['s_color_rgb'],
@@ -335,10 +336,10 @@ class Controller_Admin_Users extends Controller_Admin {
                 'skupiny' => $skupiny
         ));
     }
-    
-    private function checkData($data, $action = 'add') {
+
+    private function _checkData($action = 'add') {
         $narozeni = $this->date('narozeni')->getPost();
-        
+
         $f = new Form();
         $f->checkLength(post('jmeno'), 1, 40, 'Špatná délka jména', 'jmeno');
         $f->checkLength(post('prijmeni'), 1, 40, 'Špatná délka přijmení', 'prijmeni');
@@ -346,8 +347,8 @@ class Controller_Admin_Users extends Controller_Admin {
         $f->checkInArray(post('pohlavi'), array('m', 'f'), 'Neplatné pohlaví', 'pohlavi');
         $f->checkEmail(post('email'), 'Neplatný formát emailu', 'email');
         $f->checkPhone(post('telefon'), 'Neplatný formát telefoního čísla', 'telefon');
-        
-        if($action == 'add') {
+
+        if ($action == 'add') {
             $f->checkLogin(post('login'), 'Špatný formát přihlašovacího jména', 'login');
             $f->checkPassword(post('pass'), 'Špatný formát hesla', 'pass');
             $f->checkBool(!DBUser::getUserID(post('login')),

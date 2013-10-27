@@ -13,9 +13,9 @@
     <style type="text/css">
 <?php
     $date = (int) date("md");
-    if($date < 320) $dir = 'zima';
-    else if($date < 621) $dir = 'jaro';
-    else if($date < 922) $dir = 'leto';
+    if ($date < 320) $dir = 'zima';
+    else if ($date < 621) $dir = 'jaro';
+    else if ($date < 922) $dir = 'leto';
     else $dir = 'podzim';
     echo <<<EOS
 body{
@@ -52,7 +52,7 @@ EOS;
     <div id="header">
         <a href="/home" id="homelink"></a>
         <div id="userbox">
-        <?php if(!User::isLogged()) { ?>
+        <?php if (!User::isLogged()) { ?>
             <form action="<?php Request::getURI();?>" method="post"><div>
                 <button type="submit" name="action" value="enter" style="display:none;"></button>
                 <input style="width:70px;" type="text" name="login"

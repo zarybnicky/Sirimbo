@@ -2,13 +2,13 @@
 <?php
 notice($this->redirect()->getMessage());
 
-if(!is_array(get('u')))
+if (!is_array(get('u')))
     notice('Žádné dokumenty');
 ?>
 <form action="" method="POST">
 Opravdu chcete odstranit dokumenty:<br/><br/>
 <?php
-foreach(get('u') as $id) {
+foreach (get('u') as $id) {
     $name = DBDokumenty::getDokumentName($id);
     echo $name, '<br />';
     echo '<input type="hidden" name="dokumenty[]" value="', $id, '" />';

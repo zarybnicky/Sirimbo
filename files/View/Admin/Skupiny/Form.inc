@@ -17,7 +17,7 @@ $mainForm = (new TableHelper())->table()
             )
     ));
     
-if(!empty($this->groups)) {
+if (!empty($this->groups)) {
     $groupForm = (new TableHelper())->table()
         ->column('buttons', '', '', 'width:75px')
         ->column('type', 'Typ')
@@ -25,7 +25,7 @@ if(!empty($this->groups)) {
         ->column('base', 'Násobitel částky')
         ->data($this->groups);
 }
-if(!empty($this->groupSelect)) {
+if (!empty($this->groupSelect)) {
     $groupSelectBox = (new SelectHelper())->select('group')
         ->options($this->groupSelect);
 }
@@ -38,13 +38,13 @@ if(!empty($this->groupSelect)) {
     <button type="submit" name="action" value="confirm">Uložit</button>&nbsp;<a href="/admin/skupiny">Zpět</a>
 </form>
 <br/>
-<?php if($this->action != 'add'):?>
+<?php if ($this->action != 'add'):?>
     <?php echo '<h2>Kategorie plateb</h2>';?>
-    <?php if(isset($groupForm)) echo $groupForm;?>
+    <?php if (isset($groupForm)) echo $groupForm;?>
     <form action="" method="post">
         <span class="big">Přidat:</span>
         <a href="/admin/platby/structure/group/add?skupina=<?php echo $this->id;?>">novou kategorii</a>
-        <?php if(isset($groupSelectBox)): ?>
+        <?php if (isset($groupSelectBox)): ?>
             nebo existující: <?php echo $groupSelectBox;?>
             <button type="submit" name="action" value="group">odeslat</button>
         <?php endif;?>

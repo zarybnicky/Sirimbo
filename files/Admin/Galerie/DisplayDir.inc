@@ -4,9 +4,9 @@ notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST">
 <?php
-if($id == 0)
+if ($id == 0)
     $this->redirect('/admin/galerie', 'Není možné upravit hlavní složku');
-if(!($data = DBGalerie::getSingleDir($id)))
+if (!($data = DBGalerie::getSingleDir($id)))
     $this->redirect('/admin/galerie', 'Složka s takovým ID neexistuje');
 
 echo $this->menu()
@@ -26,8 +26,8 @@ echo $this->menu()
                 ->post()->name('parent')
                 ->value($data['gd_id_rodic'])
                 ->option('none', '--');
-            foreach($dirs as $dir) {
-                if($dir['gd_id'] == $data['gd_id'])
+            foreach ($dirs as $dir) {
+                if ($dir['gd_id'] == $data['gd_id'])
                     continue;
                 $s->option($dir['gd_id'] . '-' . $dir['gd_level'],
                     str_repeat("&nbsp;&nbsp;", $dir['gd_level'] - 1) . $dir['gd_name']);

@@ -11,7 +11,7 @@
     <td>Body</td>
 </tr>
 
-<?php $i = 1; foreach($this->data as $item): ?>
+<?php $i = 1; foreach ($this->data as $item): ?>
 <tr>
     <td style="text-align:right;"><?php echo $i++;?>. </td>
     <td><?php echo $item['partnerName'];?></td>

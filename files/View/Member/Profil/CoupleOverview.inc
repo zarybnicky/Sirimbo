@@ -3,7 +3,7 @@
 echo $this->partnerRequest()->getAll();
 notice($this->redirect()->getMessage());
 ?>
-<?php if($this->havePartner): ?>
+<?php if ($this->havePartner): ?>
     Právě tančím s: <?php echo $this->partnerFullName;?>
     <h2>Třídy a body:</h2>
     <h3>Standardní tance:</h3>

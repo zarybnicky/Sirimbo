@@ -14,9 +14,9 @@ echo $this->menu()
     ->content('Uložit změny', 'save', true);
 
 $dirs = DBGalerie::getDirs(true, true);
-if(!empty($dirs)) {
+if (!empty($dirs)) {
     echo '<table><tr><td></td><td>Název</td><td>Skrytá</td></tr>';
-    foreach($dirs as $item) {
+    foreach ($dirs as $item) {
         echo '<tr>';
         echo '<td><input type="checkbox" name="galerie[]" value="' . $item['gd_id'] . '" /></td>';
         echo '<td>', str_repeat("&nbsp;-&nbsp;", $item['gd_level'] - 1), $item['gd_name'], '</td>';
@@ -37,7 +37,7 @@ if(!empty($dirs)) {
 $s = $this->select()
     ->post()->name('parent')
     ->option('none', '--');
-foreach($dirs as $dir)
+foreach ($dirs as $dir)
     $s->option($dir['gd_id'] . '-' . $dir['gd_level'],
         str_repeat("&nbsp;&nbsp;", $dir['gd_level'] - 1) . $dir['gd_name']);
 ?></td></tr>

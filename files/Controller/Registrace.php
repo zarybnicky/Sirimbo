@@ -1,9 +1,10 @@
 <?php
-class Controller_Registrace extends Controller_Abstract {
+class Controller_Registrace extends Controller_Abstract
+{
     function view($id = null) {
-        if(!empty($_POST)) {
+        if (!empty($_POST)) {
             $narozeni = $this->date('narozeni')->getPost();
-            
+
             $f = new Form();
             $f->checkLogin(post('username'), 'Špatný formát přihlašovacího jména', 'username');
             $f->checkPassword(post('pass'), 'Špatný formát hesla', 'pass');
@@ -13,12 +14,12 @@ class Controller_Registrace extends Controller_Abstract {
             $f->checkEmail(post('email'), 'Neplatný formát emailu', 'email');
             $f->checkPhone(post('telefon'), 'Neplatný formát telefoního čísla', 'telefon');
             $f->checkDate((string) $narozeni, 'Neplatné datum narození', 'narozeni');
-            
-            if(!$f->isValid()) {
+
+            if (!$f->isValid()) {
                 $this->redirect()->setMessage(implode('<br/>', $f->getMessages()));
             } else {
                 $login = strtolower(post('username'));
-                if(DBUser::getUserID($login)) {
+                if (DBUser::getUserID($login)) {
                     $this->redirect()->setMessage('Už tu někdo s takovým přihlašovacím jménem je :o(');
                 } else {
                     User::register($login, post('pass'), post('jmeno'), post('prijmeni'),

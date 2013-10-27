@@ -9,7 +9,7 @@ $s = $this->select()
     ->option('no', '-------------');
 
 $dirs = DBGalerie::getDirs(true, true);
-foreach($dirs as $dir)
+foreach ($dirs as $dir)
     $s->option($dir['gd_id'], str_repeat("&nbsp;&nbsp;", $dir['gd_level'] - 1) . $dir['gd_name']);
 echo $s;
 echo '<button type="submit">Zobrazit</button>';
@@ -20,11 +20,11 @@ echo '<button type="submit" name="action" value="enter" style="display:none;">En
 
 $id = get('dir');
 $items = DBGalerie::getFotky($id);
-if(empty($items)) {
+if (empty($items)) {
     notice('Žádné fotky');
     return;
 }
-foreach($items as $item) {
+foreach ($items as $item) {
     echo $item['gf_path'], '<br/>';
 }
 echo '</form>';

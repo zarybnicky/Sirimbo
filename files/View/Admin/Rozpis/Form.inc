@@ -8,7 +8,7 @@ notice($this->redirect()->getMessage());
     <tr>
         <td>Trenér (*): </td>
         <td><?php
-            if(!$this->isAdmin) { ?>
+            if (!$this->isAdmin) { ?>
             <select name="trener">
                 <option value="<?php echo User::getUserID();?>">Já</option>
             </select><?php
@@ -27,7 +27,7 @@ notice($this->redirect()->getMessage());
     </tr><tr>
         <td>Viditelný: </td>
         <td><label><?php
-            if($this->isAdmin)
+            if ($this->isAdmin)
                 echo getCheckbox('visible', 'visible', false);
             else
                 echo (post('visible') ? '&#10003;' : '&#10799;');

@@ -1,6 +1,6 @@
 <?php
 function dumpPost($echo = false) {
-    if($echo) {
+    if ($echo) {
         var_export($_POST);
         return;
     }
@@ -11,7 +11,7 @@ function dumpPost($echo = false) {
     fclose($out);
 }
 function dump($var, $echo = false) {
-    if($echo) {
+    if ($echo) {
         var_export($var);
         return;
     }
@@ -22,7 +22,7 @@ function dump($var, $echo = false) {
     fclose($out);
 }
 function dbg($string, $backtrace = true) {
-    if($backtrace) {
+    if ($backtrace) {
         $bt = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
         $bt = $bt[1]['function'];
         $string = $bt[1]['file'] . ': ' . $bt[1]['line'] . ' - ' . $string;

@@ -1,12 +1,12 @@
 <?php
-if(!empty($_POST)) {
+if (!empty($_POST)) {
     $f = new Form();
     $f->checkNumeric(post('idt'), 'Zadané IDT není platné');
     $f->checkNotEmpty(post('jmeno'), 'Zadejte Vaše jméno');
     $f->checkNotEmpty(post('prijmeni'), 'Zadejte Vaše příjmení');
     $f->checkNotEmpty(post('1porotce'), 'Zadejte alespoň 1. navrhovaného porotce');
-    if($f->isValid()) {
-        if(DBSoutez::getByIDT(post('idt')) === false) {
+    if ($f->isValid()) {
+        if (DBSoutez::getByIDT(post('idt')) === false) {
             DBSoutez::addRow(post('idt'), post('jmeno'), post('prijmeni'), post('1porotce'),
                 post('2porotce'), post('3porotce'), post('4porotce'), post('5porotce'));
             View::redirect('/home', 'Děkujeme za Vaše návrhy, těšíme se na Vás na naší soutěži.');
@@ -40,7 +40,7 @@ table.k {margin:0 auto;}
 table.k td.r {padding-right:10px;text-align:right;}
 </style>
 <?php
-if(is_object($f) && !$f->isValid()) {
+if (is_object($f) && !$f->isValid()) {
     notice(implode('<br/>', $f->getMessages()));
 }
 ?>

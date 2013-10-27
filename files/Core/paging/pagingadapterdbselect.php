@@ -1,28 +1,29 @@
 <?php
-class PagingAdapterDBSelect implements PagingAdapterInterface {
-    private $dbadapter;
-    private $options;
-    
+class PagingAdapterDBSelect implements PagingAdapterInterface
+{
+    private $_dbadapter;
+    private $_options;
+
     function __construct($classname, $options = null) {
         $this->setDatabase($classname);
-        if($options !== null)
-            $this->options = $options;
+        if ($options !== null)
+            $this->_options = $options;
     }
     function setDatabase($classname) {
-        if(!(call_user_func(array($classname, 'getInstance')) instanceof Pagable))
+        if (!(call_user_func(array($classname, 'getInstance')) instanceof Pagable))
             throw new ViewException('Database does not implement interface Pageable');
-        
-        $this->dbadapter = $classname;
+
+        $this->_dbadapter = $classname;
     }
     function page($offset, $lenght, $options = null) {
-        return $this->dbadapter ?    
-            call_user_func_array(array($this->dbadapter, 'getPage'),
-                array($offset, $lenght, $this->options))
+        return $this->_dbadapter ?
+            call_user_func_array(array($this->_dbadapter, 'getPage'),
+                array($offset, $lenght, $this->_options))
             : array();
     }
     function count($options = null) {
-        return $this->dbadapter ?    
-            call_user_func(array($this->dbadapter, 'getCount'), $this->options)
+        return $this->_dbadapter ?
+            call_user_func(array($this->_dbadapter, 'getCount'), $this->_options)
             : 0;
     }
 }

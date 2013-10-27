@@ -1,5 +1,6 @@
 <?php
-class DBPlatbyGroup extends Database {
+class DBPlatbyGroup extends Database
+{
     public static function addChild($gid, $cid) {
         list($gid, $cid) = self::escape($gid, $cid);
         self::query(
@@ -18,7 +19,7 @@ class DBPlatbyGroup extends Database {
     }
     public static function insert($type, $name, $desc, $base) {
         list($type, $name, $desc, $base) = self::escape($type, $name, $desc, $base);
-        
+
         self::query(
                 "INSERT INTO platby_group
                 (pg_type,pg_name,pg_description, pg_base)
@@ -28,7 +29,7 @@ class DBPlatbyGroup extends Database {
     }
     public static function update($id, $type, $name, $desc, $base) {
         list($id, $type, $name, $desc, $base) = self::escape($id, $type, $name, $desc, $base);
-        
+
         self::query(
                 "UPDATE platby_group
                 SET pg_type='$type',pg_name='$name',pg_description='$desc',pg_base='$base'

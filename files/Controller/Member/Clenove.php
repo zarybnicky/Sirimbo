@@ -1,13 +1,14 @@
 <?php
-include_once('files/Controller/Member.php');
-class Controller_Member_Clenove extends Controller_Member {
+require_once 'files/Controller/Member.php';
+class Controller_Member_Clenove extends Controller_Member
+{
     function __construct() {
         Permissions::checkError('users', P_VIEW);
     }
     function view($id = null) {
-        if(!$id || !($data = DBUser::getUserData($id)))
+        if (!$id || !($data = DBUser::getUserData($id)))
             $this->redirect('/member/clenove/structure');
-        
+
         $this->render('files/View/Member/Clenove/Single.inc', array(
                 'fullName' => $data['u_prijmeni'] . ', ' . $data['u_jmeno'],
                 'email' => $data['u_email'],
@@ -20,8 +21,8 @@ class Controller_Member_Clenove extends Controller_Member {
         $currentKey = 0;
         $data = DBUser::getUsersWithSkupinaPlatby();
         $skupiny = array();
-        foreach($data as $item) {
-            if($item['s_id'] != $currentID) {
+        foreach ($data as $item) {
+            if ($item['s_id'] != $currentID) {
                 $index = 0;
                 $currentID = $item['s_id'];
                 $currentKey = count($skupiny) - 1;
@@ -41,7 +42,7 @@ class Controller_Member_Clenove extends Controller_Member {
     function seznam($id = null) {
         $index = 0;
         $data = DBUser::getActiveUsers();
-        foreach($data as &$item) {
+        foreach ($data as &$item) {
             $new_data = array(
                     'index' => ++$index . '.',
                     'fullName' => '<a href="/member/clenove/' . $item['u_id'] . '">' .
@@ -62,8 +63,8 @@ class Controller_Member_Clenove extends Controller_Member {
         $index = 0;
         $currentID = 0;
         $currentKey = 0;
-        foreach($data as $item) {
-            if($item['s_id'] != $currentID) {
+        foreach ($data as $item) {
+            if ($item['s_id'] != $currentID) {
                 $index = 0;
                 $currentID = $item['s_id'];
                 $currentKey = count($skupiny) - 1;
@@ -87,9 +88,9 @@ class Controller_Member_Clenove extends Controller_Member {
         }
         $leftCount = 0;
         $rightCount = 0;
-        foreach($skupiny as &$skupina) {
+        foreach ($skupiny as &$skupina) {
             $skupina['info']['count'] = count($skupina['users']);
-            if($rightCount >= $leftCount) {
+            if ($rightCount >= $leftCount) {
                 $skupina['info']['align'] = 'left';
                 $leftCount += ($skupina['info']['count'] + 1.5);
             } else {

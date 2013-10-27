@@ -4,7 +4,7 @@ notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST">
 <?php
-if(!TISK) {
+if (!TISK) {
     echo $this->menu()
         ->float(MenuHelper::FLOAT_RIGHT)
         ->content('Přidat', 'ankety/add')
@@ -21,10 +21,10 @@ if(!TISK) {
 </tr>
 <?php
 $ankety = DBAnkety::getAnkety();
-foreach($ankety as $item) {
+foreach ($ankety as $item) {
     echo '<tr>';
     
-    if(Permissions::check('ankety', P_OWNED, $item['ak_kdo']))
+    if (Permissions::check('ankety', P_OWNED, $item['ak_kdo']))
         echo '<td><input type="checkbox" name="ankety[]" value="' . $item['ak_id'] .
             '" /></td>';
     else

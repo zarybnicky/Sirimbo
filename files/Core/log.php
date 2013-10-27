@@ -1,5 +1,6 @@
 <?php
-class Log {
+class Log
+{
     private static $logfile;
     public static function write($message) {
         Log::$logfile = fopen(LOG, 'a+');

@@ -18,7 +18,7 @@ $mainForm = (new TableHelper())->table()
                 'value' => '<input type="text" name="base" value="' . post('base') . '"/>'
         )
     ));
-if(!empty($this->category)) {
+if (!empty($this->category)) {
     $categoryForm = (new TableHelper())->table()
         ->column('buttons', '', '', 'width:75px')
         ->column('name', 'Jméno')
@@ -31,17 +31,17 @@ if(!empty($this->category)) {
         ->column('archive', 'Je neaktivní')
         ->data($this->category);
 }
-if(!empty($this->categorySelect)) {
+if (!empty($this->categorySelect)) {
     $categorySelectBox = (new SelectHelper())->select('category')
         ->options($this->categorySelect);
 }
-if(!empty($this->skupiny)) {
+if (!empty($this->skupiny)) {
     $skupinyForm = (new TableHelper())->table()
         ->column('buttons', '', '', 'width:75px')
         ->column('name', 'Jméno')
         ->data($this->skupiny);
 }
-if(!empty($this->skupinySelect)) {
+if (!empty($this->skupinySelect)) {
     $skupinySelectBox = (new SelectHelper())->select('skupiny')
         ->options($this->skupinySelect);
 }
@@ -54,24 +54,24 @@ if(!empty($this->skupinySelect)) {
     <?php echo $mainForm, getReturnInput();?>
     <button name="action" value="confirm">Uložit</button>&nbsp;<a href="<?php echo Request::getReferer();?>">Zpět</a><br/><br/>
 </form>
-<?php if($this->action != 'add'): ?>
+<?php if ($this->action != 'add'): ?>
     <h3>Specifické symboly</h3>
-    <?php if(isset($categoryForm)) echo $categoryForm;?>
+    <?php if (isset($categoryForm)) echo $categoryForm;?>
     <form action="" method="post">
         <span class="big">Přidat:</span>
         <a href="/admin/platby/structure/category/add?group=<?php echo $this->id;?>">nový specifický symbol</a>
-        <?php if(isset($categorySelectBox)):?>
+        <?php if (isset($categorySelectBox)):?>
             nebo existující: <?php echo $categorySelectBox;?>
             <button type="submit" name="action" value="category">odeslat</button>
         <?php endif;?>
     </form>
     <br/>
     <h3>Skupiny</h3>
-    <?php if(isset($skupinyForm)) echo $skupinyForm;?>
+    <?php if (isset($skupinyForm)) echo $skupinyForm;?>
     <form action="" method="post">
         <span class="big">Přidat:</span>
         <a href="/admin/skupiny/add?group=<?php echo $this->id;?>">novou skupinu</a>
-        <?php if(isset($skupinySelectBox)): ?>
+        <?php if (isset($skupinySelectBox)): ?>
             nebo existující: <?php echo $skupinySelectBox;?>
             <button type="submit" name="action" value="skupiny">odeslat</button>
         <?php endif;?>

@@ -7,7 +7,7 @@ notice($this->redirect()->getMessage());
 <table>
     <tr>
         <td>Trenér (*): </td>
-        <td><?php if(!Permissions::check('nabidka', P_ADMIN)) { ?>
+        <td><?php if (!Permissions::check('nabidka', P_ADMIN)) { ?>
         <select name="trener">
             <option value="<?php echo User::getUserID();?>">Já</option>
         </select><?php

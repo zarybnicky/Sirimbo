@@ -13,8 +13,8 @@ $userselect = $this->userSelect()
     ->users($this->users)
     ->type('par')
     ->idVar('p_id');
-if(!empty($this->items)) {
-    foreach($this->items as $item) {
+if (!empty($this->items)) {
+    foreach ($this->items as $item) {
             echo '<tr>';
             post($item['ni_id'] . '-partner', $item['ni_partner']);
             echo '<td>';

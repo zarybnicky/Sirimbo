@@ -1,6 +1,7 @@
 <?php
-include_once('files/Controller/Admin/Platby.php');
-class Controller_Admin_Platby_Overview extends Controller_Admin_Platby {
+require_once 'files/Controller/Admin/Platby.php';
+class Controller_Admin_Platby_Overview extends Controller_Admin_Platby
+{
     function __construct() {
         Permissions::checkError('platby', P_OWNED);
     }
@@ -10,8 +11,8 @@ class Controller_Admin_Platby_Overview extends Controller_Admin_Platby {
         $index = 0;
         $currentID = 0;
         $currentKey = 0;
-        foreach($data as $item) {
-            if($item['s_id'] != $currentID) {
+        foreach ($data as $item) {
+            if ($item['s_id'] != $currentID) {
                 $index = 0;
                 $currentID = $item['s_id'];
                 $currentKey = count($skupiny) - 1;
@@ -36,9 +37,9 @@ class Controller_Admin_Platby_Overview extends Controller_Admin_Platby {
                             (int) $item['pi_amount'] . ' Kč</span> (' . (int) ($item['pc_amount'] * $item['pg_base']) . ' Kč)')
             );
         }
-        foreach($skupiny as &$skupina)
+        foreach ($skupiny as &$skupina)
             $skupina['info']['count'] = count($skupina['users']);
-        
+
         $this->render('files/View/Admin/Platby/Statistics.inc', array(
                 'data' => $skupiny
         ));

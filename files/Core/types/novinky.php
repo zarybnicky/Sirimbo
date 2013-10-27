@@ -1,8 +1,9 @@
 <?php
-class Novinky {
-    private $user;
-    private $current;
-    private static $format = array(
+class Novinky
+{
+    private $_user;
+    private $_current;
+    private static $_format = array(
         'akce' => array(
                 'add' => 'Byla přidána nová akce, "<a href="%s">%s</a>".',
                 'edit' => 'Akce "<a href="%s">%s</a>" byla upravena.',
@@ -45,55 +46,55 @@ class Novinky {
                 'remove' => 'Rozpis dne %s s trenérem %s byl odstraněn.'
         ),
     );
-    
+
     function __construct($userID) {
-        $this->user = $userID;
-        $this->current = null;
+        $this->_user = $userID;
+        $this->_current = null;
     }
-    
+
     function akce() {
-        $this->current = 'akce';
+        $this->_current = 'akce';
         return $this;
     } function clanek() {
-        $this->current = 'clanek';
+        $this->_current = 'clanek';
         return $this;
     }function video() {
-        $this->current = 'video';
+        $this->_current = 'video';
         return $this;
     } function ankety() {
-        $this->current = 'ankety';
+        $this->_current = 'ankety';
         return $this;
     } function dokumenty() {
-        $this->current = 'dokumenty';
+        $this->_current = 'dokumenty';
         return $this;
     } function galerie() {
-        $this->current = 'galerie';
+        $this->_current = 'galerie';
         return $this;
     } function nabidka() {
-        $this->current = 'nabidka';
+        $this->_current = 'nabidka';
         return $this;
     } function nastenka() {
-        $this->current = 'nastenka';
+        $this->_current = 'nastenka';
         return $this;
     } function rozpis() {
-        $this->current = 'rozpis';
+        $this->_current = 'rozpis';
         return $this;
     }
-    
+
     function add($_) {
-        $this->insert('add', func_get_args());
+        $this->_insert('add', func_get_args());
     } function edit($_) {
-        $this->insert('edit', func_get_args());
+        $this->_insert('edit', func_get_args());
     } function remove($_) {
-        $this->insert('remove', func_get_args());
+        $this->_insert('remove', func_get_args());
     }
-    
-    private function insert($action, $parameters) {
-        $format = is_array(self::$format[$this->current]) ? self::$format[$this->current][$action] : self::$format[$this->current];
-        if($format === null)
+
+    private function _insert($action, $parameters) {
+        $format = is_array(self::$_format[$this->_current]) ? self::$_format[$this->_current][$action] : self::$_format[$this->_current];
+        if ($format === null)
             return;
-        
+
         $text = call_user_func_array('sprintf', array_merge(array($format), $parameters));
-        DBNovinky::addNovinka($this->user, $text);
+        DBNovinky::addNovinka($this->_user, $text);
     }
 }

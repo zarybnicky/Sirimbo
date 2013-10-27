@@ -2,7 +2,7 @@
 <?php
 notice($this->redirect()->getMessage());
 
-if($this->showMenu) {
+if ($this->showMenu) {
     echo '<form action="" method="get">';
     $s = $this->select();
     echo 'Uživatelé:&nbsp;';
@@ -12,8 +12,8 @@ if($this->showMenu) {
         ->option('dancer', 'tanečníci')
         ->option('system', 'systémoví')
         ->option('ban', 'zabanovaní');
-    foreach($this->groups as $group)
-        if($group['id'])
+    foreach ($this->groups as $group)
+        if ($group['id'])
             $s->option($group['id'], $group['name']);
     echo $s;
     echo '&nbsp;řadit podle:&nbsp;';
@@ -32,7 +32,7 @@ if($this->showMenu) {
 }
 
 echo '<form action="" method="POST">';
-if($this->showMenu) {
+if ($this->showMenu) {
     $f = $this->menu()
         ->float(MenuHelper::FLOAT_RIGHT)
         ->content('Přidat', '/admin/users/add')
@@ -42,11 +42,11 @@ if($this->showMenu) {
         ->content('Duplicitní uživatelé', '/admin/users/duplicate')
         ->content('Nepotvrzení uživatelé', '/admin/users/unconfirmed')
         ->content('Statistiky', '/admin/users/statistiky');
-    if(get('v') == 'status')
+    if (get('v') == 'status')
         $f->content('Uložit změny', 'save', true);
     echo $f;
 }
-if($this->data == array()) {
+if ($this->data == array()) {
     notice('Žádní takoví uživatelé');
     return;
 }
@@ -58,7 +58,7 @@ $table = $this->table()
     ->column('checkBox', '')
     ->column('index', '')
     ->column('fullName', 'Jméno');
-if($this->view == 'status')
+if ($this->view == 'status')
     $table->column('skupina', '')
         ->column('groupInfo', 'Oprávnění')
         ->column('dancer', 'Aktivní<br/>tanečník', 'center')

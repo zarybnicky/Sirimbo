@@ -1,54 +1,55 @@
 <?php
-class MenuHelper {
-    private $left;
-    private $right;
-    private $float;
-    private $content;
-    
+class MenuHelper
+{
+    private $_left;
+    private $_right;
+    private $_float;
+    private $_content;
+
     const FLOAT_NONE = '0';
     const FLOAT_LEFT = 1;
     const FLOAT_RIGHT = 2;
-    
+
     function menu() {
         $this->_defaultValues();
         return $this;
     }
     function _defaultValues() {
-        $this->left = -1;
-        $this->right = 0;
-        $this->float = 0;
-        $this->content = array();
+        $this->_left = -1;
+        $this->_right = 0;
+        $this->_float = 0;
+        $this->_content = array();
     }
     function left($left) {
-        if($left >= -1)
-            $this->left = $left;
+        if ($left >= -1)
+            $this->_left = $left;
         return $this;
     }
     function right($right) {
-        if($right >= -1)
-            $this->right = $right;
+        if ($right >= -1)
+            $this->_right = $right;
         return $this;
     }
     function float($type) {
-        if(is_int($type))
-            $this->float = $type;
+        if (is_int($type))
+            $this->_float = $type;
         return $this;
     }
-    function content($name, $url, $button = FALSE, $replace = FALSE) {
-        if(!$name || !$url)
+    function content($name, $url, $button = false, $replace = false) {
+        if (!$name || !$url)
             return $this;
-        if($replace)
-            $this->content = array($name => array($url, $button));
+        if ($replace)
+            $this->_content = array($name => array($url, $button));
         else
-            $this->content[$name] = array($url, $button);
-        
+            $this->_content[$name] = array($url, $button);
+
         return $this;
     }
     function render() {
         $out = '<div class="sticky" style="width:150px;';
-        if($this->right > -1) $out .= 'margin-left:' . $this->right . 'px;';
-        if($this->left > -1) $out .= 'margin-right:' . $this->left . 'px;';
-        switch($this->float) {
+        if ($this->_right > -1) $out .= 'margin-left:' . $this->_right . 'px;';
+        if ($this->_left > -1) $out .= 'margin-right:' . $this->_left . 'px;';
+        switch($this->_float) {
             case MenuHelper::FLOAT_RIGHT: $out .= 'float:right;'; break;
             case MenuHelper::FLOAT_LEFT: $out .= 'float:left;'; break;
             case MenuHelper::FLOAT_NONE: $out .= 'float:none;'; break;
@@ -58,7 +59,7 @@ class MenuHelper {
         <script type="text/javascript">
         (function($) {
             $(function() {
-                if(typeof $.fn.topFeatures == "undefined") {
+                if (typeof $.fn.topFeatures == "undefined") {
                     $.getScript("/scripts/jquery.sticky.js", function() {
                         $(".sticky").sticky({topSpacing:15});
                     });
@@ -69,17 +70,17 @@ class MenuHelper {
         })(jQuery);
         </script>
         <?php
-        $out .= '<div style="z-index:100;width:inherit;' . 
+        $out .= '<div style="z-index:100;width:inherit;' .
             'border:1px solid #FFD390;background:#FFE7C7;margin-top:2px;padding:3px 1px;">';
-        if(!empty($this->content)) {
+        if (!empty($this->_content)) {
             $i = 1;
-            foreach($this->content as $name => $data) {
-                if($data[1])
+            foreach ($this->_content as $name => $data) {
+                if ($data[1])
                     $out .= '<button style="padding:0" name="action" value="' . $data[0] .
                         '">' . $name . '</button>';
                 else
                     $out .= '<a style="padding:0 3px" href="' . $data[0] . '">' . $name . '</a>';
-                if($i++ < count($this->content))
+                if ($i++ < count($this->_content))
                     $out .= '<br/>';
             }
         }

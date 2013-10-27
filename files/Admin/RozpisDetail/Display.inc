@@ -13,8 +13,8 @@ $userselect = $this->userSelect()
     ->idVar('p_id')
     ->type('par')
     ->users($this->users);
-if(!empty($this->items)) {
-    foreach($this->items as $item) {
+if (!empty($this->items)) {
+    foreach ($this->items as $item) {
         echo '<tr>';
         echo '<td>';
         post($item['ri_id'] . '-partner', $item['ri_partner']);
@@ -51,7 +51,7 @@ $nabidky = DBNabidka::getNabidka();
 $s = $this->select()
     ->post()->name('n_id')
     ->option('none', '--');
-foreach($nabidky as $item)
+foreach ($nabidky as $item)
     $s->option($item['n_id'],
         formatDate($item['n_od']) . ($item['n_od'] != $item['n_do'] ?
             (' - ' . formatDate($item['n_do'])) : '') .
@@ -60,9 +60,9 @@ echo $s;
 ?>
 <button type="submit" name="action" value="select">Vybrat nabídku</button>
 <?php
-if(is_numeric(post('n_id'))) {
+if (is_numeric(post('n_id'))) {
     $n_id = post('n_id');
-    if(!($nabidka = DBNabidka::getSingleNabidka($n_id))) {
+    if (!($nabidka = DBNabidka::getSingleNabidka($n_id))) {
         echo 'Nabídka se zadaným ID neexistuje!';
     } else {
         echo '<div class="n_wrapper">';
@@ -70,10 +70,10 @@ if(is_numeric(post('n_id'))) {
             DBNabidka::getNabidkaItemLessons($n_id));
         
         $items = DBNabidka::getNabidkaItem($n_id);
-        if(!empty($items)) {
+        if (!empty($items)) {
             echo '<table>';
             echo '<tr><td>Tanečník</td><td>Počet hodin</td></tr>';
-            foreach($items as $item) {
+            foreach ($items as $item) {
                 echo '<tr>';
                 echo '<td>', echoFullJmeno($item), '</td>';
                 echo '<td>', $item['ni_pocet_hod'], '</td>';

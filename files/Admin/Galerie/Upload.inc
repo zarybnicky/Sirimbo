@@ -14,7 +14,7 @@ for($i = 0; $i < 5; $i++) {
 echo '<tr><td>Složka: </td><td>';
 $dirs = DBGalerie::getDirs();
 $s = $this->select()->post()->name('dir');
-foreach($dirs as $dir)
+foreach ($dirs as $dir)
     $s->option($dir['gd_id'],
         str_repeat('&nbsp;&nbsp;', $dir['gd_level'] - 1) . $dir['gd_name']);
 echo $s;

@@ -1,7 +1,8 @@
 <?php
-class DBPlatby extends Database implements Pagable {
+class DBPlatby extends Database
+{
     public static function getInstance() { return new self(); }
-    
+
     public static function checkConflicts($sid) {
         list($sid) = self::escape($sid);
         $res = self::query(
@@ -23,7 +24,7 @@ class DBPlatby extends Database implements Pagable {
         );
         return self::getArray($res);
     }
-    
+
     public static function hasPaidMemberFees($uid) {
         list($uid) = self::escape($uid);
         $res = self::query(

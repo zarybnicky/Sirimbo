@@ -9,7 +9,7 @@ Aktuálně: <?php echo $this->zaplacenoText;?>
 Více informací přijde brzy!
 <br/><br/>
 
-<?php /*if(!empty($this->platby)): ?>
+<?php /*if (!empty($this->platby)): ?>
 <h2>Historie plateb</h2>
 <table>
     <tr>
@@ -19,7 +19,7 @@ Více informací přijde brzy!
         <td>Placeno</td>
         <td>Platí do</td>
     </tr>
-    <?php foreach($this->platby as $platba): ?>
+    <?php foreach ($this->platby as $platba): ?>
     <tr>
         <td><?php echo $platba['colorBox'];?></td>
         <td><?php echo $platba['obdobi'];?> Kč</td>

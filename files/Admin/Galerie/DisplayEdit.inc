@@ -7,17 +7,17 @@ notice($this->redirect()->getMessage());
 <button type="submit" name="action" value="edit">Upravit fotku</button>
 <button type="submit" name="action" value="remove">Odstranit fotky</button>
 <?php
-if(!($data = DBGalerie::getSingleDir($id))) {
+if (!($data = DBGalerie::getSingleDir($id))) {
     $this->redirect('/admin/galerie', 'Složka s takovým ID neexistuje');
 }
 $fotos = DBGalerie::getFotky($id);
 $count = count($fotos);
 
-if($count < 1) {
+if ($count < 1) {
     notice('Žádné fotky');
 } else {
     echo '<div>';
-    foreach($fotos as $item) {
+    foreach ($fotos as $item) {
         $tn = str_replace('./galerie', '/galerie/thumbnails', $item['gf_path']);
         
         echo '<div class="f">';

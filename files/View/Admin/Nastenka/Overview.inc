@@ -3,14 +3,14 @@
 notice($this->redirect()->getMessage());
 
 echo '<form action="" method="POST">';
-if($this->showMenu) {
+if ($this->showMenu) {
     echo $this->menu()
         ->float(MenuHelper::FLOAT_RIGHT)
         ->content('Přidat', '/admin/nastenka/add')
         ->content('Upravit', 'edit', true)
         ->content('Odstranit', 'remove', true);
 }
-if(empty($this->data)) {
+if (empty($this->data)) {
     notice('Žádné položky za toto období');
     return;
 }

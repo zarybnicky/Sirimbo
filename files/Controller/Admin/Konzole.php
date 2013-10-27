@@ -1,15 +1,16 @@
 <?php
-include_once('files/Controller/Admin.php');
-class Controller_Admin_Konzole extends Controller_Admin {
+require_once 'files/Controller/Admin.php';
+class Controller_Admin_Konzole extends Controller_Admin
+{
     function __construct() {
         Permissions::checkError('konzole', P_OWNED);
     }
     function view($id = null) {
-        if(!empty($_POST) && post('code')) {
+        if (!empty($_POST) && post('code')) {
             $r = eval(stripslashes(post('code')));
-            if($r === FALSE)
+            if ($r === false)
                 notice('Kód obsahuje syntaktickou chybu');
-            elseif(!empty($r))
+            elseif (!empty($r))
                 notice(dump($r));
             else
                 notice('Success!');

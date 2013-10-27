@@ -1,8 +1,9 @@
 <?php
-class DBPlatbyItem extends Database {
+class DBPlatbyItem extends Database
+{
     public static function insert($uid, $cid, $rid, $amount, $date, $prefix) {
         list($uid, $cid, $rid, $amount, $date, $prefix) = self::escape($uid, $cid, $rid, $amount, $date, $prefix);
-        
+
         self::query(
             "INSERT INTO platby_item
                 (pi_id_user,pi_id_category,pi_id_raw,pi_amount,pi_date,pi_prefix)
@@ -18,7 +19,7 @@ class DBPlatbyItem extends Database {
     }
     public static function update($id, $uid, $cid, $amount, $date, $prefix) {
         list($id, $uid, $cid, $amount, $date, $prefix) = self::escape($id, $uid, $cid, $amount, $date, $prefix);
-        
+
         self::query(
             "UPDATE platby_item SET
                 pi_id_user='$uid',
@@ -31,26 +32,26 @@ class DBPlatbyItem extends Database {
     }
     public static function remove($id) {
         list($id) = DBUser::escape($id);
-        
+
         DBUser::query("DELETE FROM platby_item WHERE pi_id='$id'");
-    } 
+    }
     public static function get($joined = false, $filter = array()) {
         $query =
             'SELECT * FROM platby_item' .
             ($joined ?
                 ' LEFT JOIN users ON pi_id_user=u_id
                 LEFT JOIN platby_category ON pi_id_category=pc_id' : '');
-        if(!empty($filter)) {
+        if (!empty($filter)) {
             $filter = array_combine(array_keys($filter), self::escapeArray(array_values($filter)));
-            
+
             $query .= ' WHERE';
             $first = true;
-            foreach($filter as $key => $value) {
-                if(!$first)
+            foreach ($filter as $key => $value) {
+                if (!$first)
                     $query .= ' AND ';
                 else
                     $first = false;
-                if(!is_array($value))
+                if (!is_array($value))
                     $query .= " $key='$value'";
                 else
                     $query .= " $key IN ('" . implode("','", $value) . "')";
@@ -61,7 +62,7 @@ class DBPlatbyItem extends Database {
     }
     public static function getSingle($id, $joined = false) {
         list($id) = self::escape($id);
-        
+
         $res = self::query("SELECT * FROM platby_item" .
                 ($joined ? ' LEFT JOIN users ON pi_id_user=u_id LEFT JOIN platby_category ON pi_id_category=pc_id' : '') .
                 " WHERE pi_id='$id'");
@@ -69,7 +70,7 @@ class DBPlatbyItem extends Database {
     }
     public static function getSingleByRawId($id) {
         list($id) = self::escape($id);
-        
+
         $res = self::query("SELECT * FROM platby_item WHERE pi_id_raw='$id'");
         return self::getSingleRow($res);
     }

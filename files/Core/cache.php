@@ -1,45 +1,46 @@
 <?php
-class Cache {
-    private $content;
-    private $valid = false;
-    private $name = '';
-    private $time;
-    
+class Cache
+{
+    private $_content;
+    private $_valid = false;
+    private $_name = '';
+    private $_time;
+
     function __construct($name, $content = false) {
         $this->reset($name, $content);
     }
-    
+
     function reset($name, $new = false) {
-        $this->name = $name;
-        $this->content = $new;
-        $this->valid = true;
-        $this->time = time();
+        $this->_name = $name;
+        $this->_content = $new;
+        $this->_valid = true;
+        $this->_time = time();
     }
     function set($new) {
-        $this->content = $new;
-        $this->valid = true;
-        $this->time = time();
+        $this->_content = $new;
+        $this->_valid = true;
+        $this->_time = time();
     }
     function get() {
-        if($this->valid == true)
-            return $this->content;
+        if ($this->_valid == true)
+            return $this->_content;
         else
             return false;
     }
     function setName($name) {
-        $this->name = $name;
+        $this->_name = $name;
     }
     function getName() {
-        return $this->name;
+        return $this->_name;
     }
     function getTime() {
-        return $this->time;
+        return $this->_time;
     }
     function invalidate() {
-        $this->valid = false;
+        $this->_valid = false;
     }
     function isValid() {
-        return $this->valid;
+        return $this->_valid;
     }
 }
 ?>

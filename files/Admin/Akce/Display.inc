@@ -2,7 +2,7 @@
 <form action="" method="POST">
 <?php
 notice($this->redirect()->getMessage());
-if(!TISK) {
+if (!TISK) {
     echo $this->menu()
         ->float(MenuHelper::FLOAT_RIGHT)
         ->content('Přidat', 'akce/add')
@@ -25,7 +25,7 @@ if(!TISK) {
 </tr>
 <?php
 $akce = DBAkce::getAkce();
-foreach($akce as $item) {
+foreach ($akce as $item) {
     $items = DBAkce::getAkceItems($item['a_id']);
 
     echo '<tr>';
@@ -33,7 +33,7 @@ foreach($akce as $item) {
     echo '<td>', $item['a_jmeno'], '</td>';
     echo '<td>', $item['a_kde'], '</td>';
     echo '<td>', formatDate($item['a_od']);
-    if($item['a_od'] != $item['a_do'])
+    if ($item['a_od'] != $item['a_do'])
         echo ' - ', formatDate($item['a_do']);
     echo '</td>';
     echo '<td>', count($items), '/', $item['a_kapacita'], '</td>';

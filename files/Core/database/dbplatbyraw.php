@@ -1,9 +1,10 @@
 <?php
-class DBPlatbyRaw extends Database {
+class DBPlatbyRaw extends Database
+{
     public static function insert($raw, $hash, $sorted, $discarded, $updateValues) {
         list($raw, $hash, $sorted, $discarded) =
             self::escape($raw, $hash, $sorted, $discarded);
-        
+
         self::query(
             "INSERT INTO platby_raw
                 (pr_raw,pr_hash,pr_sorted,pr_discarded)
@@ -18,7 +19,7 @@ class DBPlatbyRaw extends Database {
     public static function update($id, $raw, $hash, $sorted, $discarded) {
         list($id, $raw, $hash, $sorted, $discarded) =
             self::escape($id, $raw, $hash, $sorted, $discarded);
-        
+
         self::query(
             "UPDATE platby_raw
             SET pr_raw='$raw',pr_hash='$hash',pr_sorted='$sorted',pr_discarded='$discarded'
@@ -49,7 +50,7 @@ class DBPlatbyRaw extends Database {
     }
     public static function getSingle($id) {
         list($id) = self::escape($id);
-        
+
         $res = self::query("SELECT * FROM platby_raw WHERE pr_id='$id'");
         return self::getSingleRow($res);
     }

@@ -22,8 +22,8 @@ notice($this->redirect()->getMessage());
         <td>Text</td><td>Počet hlasů</td>
     </tr>
     <?php
-    if(Request::getAction() == 'edit' && ($items = DBAnkety::getAnketaItems(Request::getID()))) {
-        foreach($items as $item) {
+    if (Request::getAction() == 'edit' && ($items = DBAnkety::getAnketaItems(Request::getID()))) {
+        foreach ($items as $item) {
                 echo '<tr>';
                 echo '<td><input type="text" name="', $item['aki_id'], '-text" value="', $item['aki_text'],
                     '"/></td>';

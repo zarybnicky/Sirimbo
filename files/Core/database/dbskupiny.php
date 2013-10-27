@@ -1,5 +1,6 @@
 <?php
-class DBSkupiny extends Database {
+class DBSkupiny extends Database
+{
     public static function addChild($sid, $gid) {
         list($sid, $gid) = self::escape($sid, $gid);
         self::query(
