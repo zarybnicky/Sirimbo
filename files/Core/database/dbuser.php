@@ -8,13 +8,8 @@ class DBUser extends Database implements Pagable {
 		if(!isset($options['sort']))
 			$options['sort'] = 'prijmeni';
 		
-		$q = "SELECT users.*,p1.*,skupiny.* FROM users
-			LEFT JOIN users_platby p1 ON up_id_user=u_id
-			LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
-		WHERE (p1.up_id IS NULL OR
-			(p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
-			(p1.up_plati_do = (SELECT MAX(p2.up_plati_do) FROM users_platby p2
-				WHERE p2.up_id_user=u_id)))";
+		$q = "SELECT users.*,skupiny.* FROM users
+			LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id";
 		switch($options['filter']) {
 			case 'unconfirmed': $q .= " AND u_confirmed='0' AND u_ban='0'"; break;
 			case 'ban': $q .= " AND u_ban='1'"; break;
@@ -103,10 +98,7 @@ class DBUser extends Database implements Pagable {
 	public static function getUserDataByNameEmail($login, $email) {
 		list($login, $email) = DBUser::escapeArray(array($login, $email));
 		
-		$res = DBUser::query(
-		"SELECT *
-		FROM users
-		WHERE LOWER(u_login)=LOWER('$login') AND u_email='$email'");
+		$res = DBUser::query("SELECT * FROM users WHERE LOWER(u_login)=LOWER('$login') AND u_email='$email'");
 		if(!$res) {
 			return false;
 		} else {
@@ -118,14 +110,9 @@ class DBUser extends Database implements Pagable {
 		list($id) = DBUser::escapeArray(array($id));
 		
 		$res = DBUser::query(
-		"SELECT users.*,p1.*,skupiny.*,permissions.* FROM users
-			LEFT JOIN users_platby p1 ON up_id_user=u_id
+		"SELECT users.*,skupiny.*,permissions.* FROM users
 			LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
-			LEFT JOIN permissions ON u_group=pe_id
-		WHERE u_id='$id' AND (p1.up_id IS NULL OR
-			(p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
-			(p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
-				WHERE p2.up_id_user=u_id) AND p1.up_plati_do < CURDATE()))");
+			LEFT JOIN permissions ON u_group=pe_id");
 		if(!$res) {
 			return false;
 		} else {
@@ -137,8 +124,7 @@ class DBUser extends Database implements Pagable {
 		list($jmeno, $prijmeni) = DBUser::escapeArray(array($jmeno, $prijmeni));
 		
 		$res = DBUser::query(
-		"SELECT *
-		FROM users
+		"SELECT * FROM users
 		WHERE u_jmeno LIKE '$jmeno' AND u_prijmeni LIKE '$prijmeni'
 		ORDER BY u_id");
 		if(!$res) {
@@ -255,13 +241,8 @@ class DBUser extends Database implements Pagable {
 	public static function getUsers($group = NULL) {
 		$res = DBUser::query(
 		"SELECT users.*,p1.*,skupiny.* FROM users
-			LEFT JOIN users_platby p1 ON up_id_user=u_id
-			LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
-		WHERE (p1.up_id IS NULL OR
-			(p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
-			(p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
-				WHERE p2.up_id_user=u_id) AND p1.up_plati_do < CURDATE()))" .
-		(($group == NULL || $group == L_ALL) ? '' : " AND u_group='$group'") .
+			LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id" .
+		(($group == NULL || $group == L_ALL) ? '' : " WHERE u_group='$group'") .
 		" ORDER BY u_prijmeni");
 		
 		return DBUser::getArray($res);
@@ -288,9 +269,13 @@ class DBUser extends Database implements Pagable {
 					LEFT OUTER JOIN platby_item ON u_id=pi_id_user
 				WHERE
 					u_confirmed='1' AND u_ban='0' AND u_system='0' AND
-					(pg_type='1' OR pg_type IS NULL) AND
-					(CURDATE() >= pc_valid_from OR CURDATE() <= pc_valid_to OR pc_id IS NULL) AND
-					(pi_id_category=pc_id OR pi_id IS NULL)
+					(pg_type='1' OR pg_type IS NULL) AND (
+						(CURDATE() >= pc_valid_from OR CURDATE() <= pc_valid_to) OR
+						(pc_use_prefix='1' AND pi_prefix = YEAR(CURDATE()) AND
+							DATE_SUB(CURDATE(), INTERVAL (YEAR(CURDATE())) YEAR) <= pc_valid_from AND
+							DATE_SUB(CURDATE(), INTERVAL (YEAR(CURDATE())) YEAR) >= pc_valid_to) OR
+						pc_id IS NULL
+					) AND (pi_id_category=pc_id OR pi_id IS NULL)
 				GROUP BY u_id
 				ORDER BY s_id,u_prijmeni"
 		);
@@ -346,30 +331,20 @@ class DBUser extends Database implements Pagable {
 	public static function getActiveUsers($group = L_ALL) {
 		$res = DBUser::query(
 		"SELECT users.*,p1.*,skupiny.* FROM users
-			LEFT JOIN users_platby p1 ON up_id_user=u_id
 			LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
 		WHERE u_system='0' AND u_confirmed='1' AND u_ban='0' " .
 			($group > L_ALL ? "AND u_group='$group' " : '') .
-			"AND (p1.up_id IS NULL OR
-			(p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
-			(p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
-				WHERE p2.up_id_user=u_id) AND p1.up_plati_do < CURDATE()))
-			ORDER BY u_prijmeni ");
+			"ORDER BY u_prijmeni ");
 		return DBUser::getArray($res);
 	}
 	
 	public static function getActiveDancers($group = L_ALL) {
 		$res = DBUser::query(
 		"SELECT users.*,p1.*,skupiny.* FROM users
-			LEFT JOIN users_platby p1 ON up_id_user=u_id
 			LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
 		WHERE u_system='0' AND u_dancer='1' AND u_confirmed='1' AND u_ban='0' " .
 			($group > -1 ? "AND u_group='$group' " : '') .
-		"AND (p1.up_id IS NULL OR
-			(p1.up_plati_do >= CURDATE() AND p1.up_plati_od <= CURDATE()) OR
-			(p1.up_placeno = (SELECT MAX(p2.up_placeno) FROM users_platby p2
-				WHERE p2.up_id_user=u_id) AND p1.up_plati_do < CURDATE()))
-		ORDER BY u_prijmeni");
+		"ORDER BY u_prijmeni");
 		return DBUser::getArray($res);
 	}
 	public static function getGroupCounts() {

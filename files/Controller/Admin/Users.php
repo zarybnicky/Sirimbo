@@ -118,27 +118,7 @@ class Controller_Admin_Users extends Controller_Admin {
 		if(!$data['u_confirmed'])
 			$this->redirect('/admin/users', 'Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
 		
-		$platby = DBPlatby::getPlatbyFromUser($id);
-		if(empty($platby))
-			$this->redirect('/admin/users', 'Uživatel "' . $data['u_login'] . '" nemá žádné platby v databázi.');
-		
-		foreach($platby as &$item) {
-			$new_data = array(
-					'id' => $item['up_id'],
-					'colorBox' => getColorBox($item['s_color_rgb'], $item['s_description']),
-					'mesicne' => 'TODO!!! Kč',
-					'castka' => $item['up_castka'] . ' Kč',
-					'datePlaceno' => formatDate($item['up_placeno']),
-					'datePlatnost' => formatDate($item['up_plati_do']),
-					'upravitLink' => '<a href="/admin/platby/edit/' . $item['up_id'] . '">Upravit</a>'
-			);
-			$item = $new_data;
-		}
-		$this->render('files/View/Admin/Users/Platby.inc', array(
-				'id' => $id,
-				'fullName' => $data['u_jmeno'] . ' ' . $data['u_prijmeni'],
-				'platby' => $platby
-		));
+		$this->render('files/View/Admin/Users/Platby.inc');
 	}
 	function unconfirmed($id = null) {
 		if(empty($_POST) || !is_array(post('users'))) {
@@ -308,36 +288,6 @@ class Controller_Admin_Users extends Controller_Admin {
 					'groupInfo' => $group_lookup[$item['u_group']]
 			);
 			switch($action) {
-				case 'platby':
-					$new_data['varSymbol'] = User::var_symbol($item['u_id']);
-					if($item['up_id'] && strcmp($item['up_plati_do'], date('Y-m-d')) >= 0) {
-						$new_data['hasPaid'] = '<span style="color:#0B0;">' . $item['up_castka'] . ' Kč</span>';
-						$new_data['dateUntil'] = formatDate($item['up_plati_do']);
-					} else {
-						$new_data['hasPaid'] = '<a href="/admin/platby/add?u=' . $item['u_id'] . '">NE</a>';
-						if(!$item['up_id']) {
-							$new_data['dateUntil'] = 'nikdy';
-						} else {
-							$now = time();
-							$kdy = strtotime($item['up_plati_do']);
-							
-							$diff = $now - $kdy;
-							if($diff > 31536000)
-								$diffstr = 'více než rok';
-							elseif($diff > 15768000)
-							$diffstr = 'více než půl roku';
-							elseif($diff > 7884000)
-							$diffstr = 'více než 3 měsíce';
-							elseif($diff > 5256000)
-							$diffstr = 'více než 2 měsíce';
-							elseif($diff > 2628000)
-							$diffstr = 'více než měsíc';
-							else
-								$diffstr = 'méně než měsíc';
-							$new_data['dateUntil'] = $diffstr;
-						}
-					}
-					break;
 				case 'status':
 					$new_data['skupina'] = '<input type="hidden" name="save[]" value="' . $item['u_id'] . '"/>';
 					$new_data['skupina'] .=  $skupinyselect->name($item['u_id'] . '-skupina')->value($item['u_skupina']);
@@ -347,10 +297,6 @@ class Controller_Admin_Users extends Controller_Admin {
 				case 'info':
 				default:
 					$new_data['birthDate'] = formatDate($item['u_narozeni']);
-					if($item['up_id'] && strcmp($item['up_plati_do'], date('Y-m-d')) >= 0)
-						$new_data['hasPaid'] = '<span style="color:#0B0;">' . $item['up_castka'] . ' Kč</span>';
-					else
-						$new_data['hasPaid'] = '<a href="/admin/platby/add?u=' . $item['u_id'] . '">NE</a>';
 					break;
 			}
 			$item = $new_data;
