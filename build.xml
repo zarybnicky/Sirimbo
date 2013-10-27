@@ -41,10 +41,9 @@
   <apply executable="php" failonerror="true">
    <arg value="-l" />
 
-   <fileset dir="${basedir}/files">
+   <fileset dir="${basedir}">
     <include name="**/*.php" />
     <include name="**/*.inc" />
-    <include name="../index.php" />
     <modified />
    </fileset>
   </apply>
@@ -54,7 +53,7 @@
   <exec executable="phploc">
    <arg value="--log-csv" />
    <arg value="${basedir}/build/logs/phploc.csv" />
-   <arg path="${basedir}/files" />
+   <arg path="${basedir}" />
   </exec>
  </target>
 
@@ -63,24 +62,24 @@
    <arg value="--jdepend-xml=${basedir}/build/logs/jdepend.xml" />
    <arg value="--jdepend-chart=${basedir}/build/pdepend/dependencies.svg" />
    <arg value="--overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg" />
-   <arg path="${basedir}/files" />
+   <arg path="${basedir}" />
   </exec>
  </target>
 
  <target name="phpmd"
          description="Perform project mess detection using PHPMD and print human readable output. Intended for usage on the command line before committing.">
   <exec executable="phpmd">
-   <arg path="${basedir}/files" />
+   <arg path="${basedir}" />
    <arg value="text" />
-   <arg value="${basedir}/build/phpmd.xml" />
+   <arg value="unusedcode,codesize,controversial,naming" />
   </exec>
  </target>
 
  <target name="phpmd-ci" description="Perform project mess detection using PHPMD creating a log file for the continuous integration server">
   <exec executable="phpmd">
-   <arg path="${basedir}/files" />
+   <arg path="${basedir}" />
    <arg value="xml" />
-   <arg value="${basedir}/build/phpmd.xml" />
+   <arg value="unusedcode,codesize,controversial,naming" />
    <arg value="--reportfile" />
    <arg value="${basedir}/build/logs/pmd.xml" />
   </exec>
@@ -89,8 +88,9 @@
  <target name="phpcs"
          description="Find coding standard violations using PHP_CodeSniffer and print human readable output. Intended for usage on the command line before committing.">
   <exec executable="phpcs">
-   <arg value="--standard=${basedir}/build/phpcs.xml" />
-   <arg path="${basedir}/files" />
+   <arg value="--extensions=php,inc" />
+   <arg value="--standard=PEAR" />
+   <arg path="${basedir}" />
   </exec>
  </target>
 
@@ -98,8 +98,9 @@
   <exec executable="phpcs" output="/dev/null">
    <arg value="--report=checkstyle" />
    <arg value="--report-file=${basedir}/build/logs/checkstyle.xml" />
-   <arg value="--standard=${basedir}/build/phpcs.xml" />
-   <arg path="${basedir}/files" />
+   <arg value="--standard=PEAR" />
+    <arg value="--extensions=php,inc" />
+   <arg path="${basedir}" />
   </exec>
  </target>
 
@@ -107,16 +108,21 @@
   <exec executable="phpcpd">
    <arg value="--log-pmd" />
    <arg value="${basedir}/build/logs/pmd-cpd.xml" />
-   <arg path="${basedir}/files" />
+   <arg path="${basedir}" />
   </exec>
  </target>
 
  <target name="phpdox" description="Generate API documentation using phpDox">
-  <exec executable="phpdox"/>
+  <exec executable="phpdox">
+   <arg value="-f" />
+   <arg value="build/phpdox.xml" />
+  </exec>
  </target>
 
  <target name="phpunit" description="Run unit tests with PHPUnit">
+  <!--
   <exec executable="phpunit" failonerror="true"/>
+  -->
  </target>
 
  <target name="phpcb" description="Aggregate tool output with PHP_CodeBrowser">
@@ -124,7 +130,7 @@
    <arg value="--log" />
    <arg path="${basedir}/build/logs" />
    <arg value="--source" />
-   <arg path="${basedir}/files" />
+   <arg path="${basedir}" />
    <arg value="--output" />
    <arg path="${basedir}/build/code-browser" />
   </exec>
