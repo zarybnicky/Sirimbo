@@ -26,8 +26,7 @@ if($this->showMenu) {
 	echo $s->select()
 		->get()->name('v')
 		->option('info', 'informace')
-		->option('status', 'status uživatele')
-		->option('platby', 'platby');
+		->option('status', 'status uživatele');
 	echo '<button type="submit">Odeslat</button>';
 	echo '</form><br/>';
 }
@@ -64,16 +63,10 @@ if($this->view == 'status')
 		->column('groupInfo', 'Oprávnění')
 		->column('dancer', 'Aktivní<br/>tanečník', 'center')
 		->column('system', 'Systémový<br/>uživatel', 'center');
-elseif($this->view == 'platby')
-	$table->column('colorBox', '')
-		->column('varSymbol', 'Variabilní<br/>symbol')
-		->column('hasPaid', 'Zaplaceno', '', 'width:58px;')
-		->column('dateUntil', 'Zaplaceno do', '', 'width:110px;');
 else
 	$table->column('colorBox', '')
 		->column('groupInfo', 'Oprávnění')
-		->column('birthDate', 'Datum<br/>narození')
-		->column('hasPaid', 'Zaplaceno');
+		->column('birthDate', 'Datum<br/>narození');
 echo $table;
 
 echo '</div>';
