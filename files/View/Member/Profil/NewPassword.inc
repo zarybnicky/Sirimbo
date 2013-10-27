@@ -7,8 +7,8 @@
 <tr><td>Nové heslo:</td><td><input type="password" name="newpass" /></td></tr>
 <tr><td>Znovu nové heslo:</td><td><input type="password" name="newpass_confirm" /></td></tr>
 <tr>
-	<td><button type="submit" name="action">Změnit heslo</button></td>
-	<td>Pouze písmena bez diakritiky, číslice a podtržítka, 6 - 32 znaků</td>
+    <td><button type="submit" name="action">Změnit heslo</button></td>
+    <td>Pouze písmena bez diakritiky, číslice a podtržítka, 6 - 32 znaků</td>
 </tr>
 </table>
 </form>

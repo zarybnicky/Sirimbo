@@ -24,7 +24,7 @@
 <li>dlouholetá tanečnice mezinárodní třídy</li>
 <li>dlouholetá trenérka mládežnických přípravek na ZŠ Holečkova</li>
 <li>absolventka kvalifikačního studia trenér a porotce 1. třídy
-	na Fakultě tělesné kultury Univerzity Palackého v Olomouce</li>
+    na Fakultě tělesné kultury Univerzity Palackého v Olomouce</li>
 <li>porotkyně první třídy</li>
 </ul>
 </div>

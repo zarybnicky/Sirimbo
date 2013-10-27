@@ -2,8 +2,8 @@
 <h2>Seznam skupin</h2>
 <?php
 echo $this->table()
-	->data($this->data)
-	->column('header', 'Název')
-	->column('userCount', 'Počet členů')
-	->column('description', 'Popis');
+    ->data($this->data)
+    ->column('header', 'Název')
+    ->column('userCount', 'Počet členů')
+    ->column('description', 'Popis');
 ?>

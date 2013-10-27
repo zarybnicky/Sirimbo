@@ -9,16 +9,16 @@ notice($this->redirect()->getMessage());
 </tr>
 <?php
 if(!empty($doku)) {
-	$count = count($doku);
-	for($i = 0; $i < $count; $i++) {
-		$data = DBDokumenty::getSingleDokument($doku[$i]);
-		echo '<tr>';
-		echo '<td>', $data['d_name'], '</td>';
-		echo '<td>', Settings::$document_types[$data['d_kategorie']], '</td>';
-		echo '<td><button type="submit" name="remove" value="', $i,
-			'">Odstranit</button></td>';
-		echo '</tr>';
-	}
+    $count = count($doku);
+    for($i = 0; $i < $count; $i++) {
+        $data = DBDokumenty::getSingleDokument($doku[$i]);
+        echo '<tr>';
+        echo '<td>', $data['d_name'], '</td>';
+        echo '<td>', Settings::$document_types[$data['d_kategorie']], '</td>';
+        echo '<td><button type="submit" name="remove" value="', $i,
+            '">Odstranit</button></td>';
+        echo '</tr>';
+    }
 }
 ?>
 <tr>

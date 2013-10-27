@@ -1,5 +1,5 @@
 <?php
 class View {
-	public static $controller;
+    public static $controller;
 }
 ?>

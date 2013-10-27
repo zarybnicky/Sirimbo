@@ -3,17 +3,17 @@
 notice($this->redirect()->getMessage());
 
 if(!is_array(get('u')))
-	notice('Žádné akce');
+    notice('Žádné akce');
 ?>
 <form action="" method="POST">
 Opravdu chcete odstranit ankety:<br/><br/>
 <?php
 foreach(get('u') as $id) {
-	$data = DBAnkety::getSingleAnketa($id);
-	if(empty($data))
-		continue;
-	echo $data['ak_jmeno'], '<br />',
-		'<input type="hidden" name=ankety[]" value="', $id, '" />';
+    $data = DBAnkety::getSingleAnketa($id);
+    if(empty($data))
+        continue;
+    echo $data['ak_jmeno'], '<br />',
+        '<input type="hidden" name=ankety[]" value="', $id, '" />';
 }
 ?>
 <br/>
