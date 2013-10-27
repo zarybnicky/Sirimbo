@@ -8,23 +8,23 @@ notice($this->redirect()->getMessage());
 <tr><td>Popis:</td><td>Soubor</td></tr>
 <?php
 for($i = 0; $i < 5; $i++) {
-	echo '<tr><td><input name="name[]" type="text" size="10"/></td>';
-	echo '<td><input name="file[]" multiple="multiple" type="file"/></td></tr>';
+    echo '<tr><td><input name="name[]" type="text" size="10"/></td>';
+    echo '<td><input name="file[]" multiple="multiple" type="file"/></td></tr>';
 }
 echo '<tr><td>Složka: </td><td>';
 $dirs = DBGalerie::getDirs();
 $s = $this->select()->post()->name('dir');
 foreach($dirs as $dir)
-	$s->option($dir['gd_id'],
-		str_repeat('&nbsp;&nbsp;', $dir['gd_level'] - 1) . $dir['gd_name']);
+    $s->option($dir['gd_id'],
+        str_repeat('&nbsp;&nbsp;', $dir['gd_level'] - 1) . $dir['gd_name']);
 echo $s;
 echo '</td></tr>';
 ?>
 <tr>
-	<td>
-		<button type="submit" name="action" value="save">Uložit fotky</button>
-		<a href="/admin/galerie">Zpět</a>
-	</td>
+    <td>
+        <button type="submit" name="action" value="save">Uložit fotky</button>
+        <a href="/admin/galerie">Zpět</a>
+    </td>
 </tr>
 </table>
 </form>

@@ -99,7 +99,7 @@
    <arg value="--report=checkstyle" />
    <arg value="--report-file=${basedir}/build/logs/checkstyle.xml" />
    <arg value="--standard=PEAR" />
-    <arg value="--extensions=php,inc" />
+   <arg value="--extensions=php,inc" />
    <arg path="${basedir}" />
   </exec>
  </target>

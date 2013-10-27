@@ -2,7 +2,7 @@
 <h2>Členové abecedně</h2>
 <?php
 echo $this->table()
-	->data($this->data)
-	->column('index', '', 'r')
-	->column('fullName', 'Jméno');
+    ->data($this->data)
+    ->column('index', '', 'r')
+    ->column('fullName', 'Jméno');
 ?>

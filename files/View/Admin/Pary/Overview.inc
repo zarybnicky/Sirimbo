@@ -4,21 +4,21 @@ notice($this->redirect()->getMessage());
 
 echo '<form action="" method="POST">';
 if($this->showMenu) {
-	echo $this->menu()
-		->float(MenuHelper::FLOAT_RIGHT)
-		->content('Upravit', 'edit', true)
-		->content('Odebrat', 'remove', true);
+    echo $this->menu()
+        ->float(MenuHelper::FLOAT_RIGHT)
+        ->content('Upravit', 'edit', true)
+        ->content('Odebrat', 'remove', true);
 }
 echo '<div style="margin-right:150px">';
 echo $this->table()
-	->style('width:100%')
-	->data($this->data)
-	->column('checkBox', '')
-	->column('fullNameMan', 'Partner')
-	->column('fullNameWoman', 'Partnerka')
-	->column('standart', 'Standart')
-	->column('latina', 'Latina')
-	->column('hodnoceni', 'Body');
+    ->style('width:100%')
+    ->data($this->data)
+    ->column('checkBox', '')
+    ->column('fullNameMan', 'Partner')
+    ->column('fullNameWoman', 'Partnerka')
+    ->column('standart', 'Standart')
+    ->column('latina', 'Latina')
+    ->column('hodnoceni', 'Body');
 
 echo '<br/>';
 echo '<h2>Nový pár</h2>';
