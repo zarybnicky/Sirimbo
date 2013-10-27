@@ -2,7 +2,7 @@
 <?php
 notice($this->redirect()->getMessage());
 
-if(isset($this->form)) {
+if (isset($this->form)) {
     echo '<form action="" method="POST">';
     echo 'Staré jméno:&nbsp;', $this->form['d_name'], '<br />';
     echo 'Nové jméno:&nbsp;';
@@ -25,9 +25,9 @@ if(isset($this->form)) {
 </tr>
 <?php
 $dokumenty = DBDokumenty::getDokumenty();
-foreach($dokumenty as $item) {
+foreach ($dokumenty as $item) {
     echo "<tr>";
-    if(Permissions::check('dokumenty', P_OWNED, $item['d_kdo']))
+    if (Permissions::check('dokumenty', P_OWNED, $item['d_kdo']))
         echo '<td><input type="checkbox" name="dokumenty[]" value="', $item['d_id'],
             '" /></td>';
     else
@@ -35,7 +35,7 @@ foreach($dokumenty as $item) {
             '" disabled="disabled" /></td>';
     echo '<td><a href="/member/download?id=', $item['d_id'], '">', $item['d_name'], '</a></td>';
     echo '<td>', $item['d_filename'], '</td>';
-    echo '<td>', Settings::$document_types[$item['d_kategorie']], '</td>';
+    echo '<td>', Settings::$documentTypes[$item['d_kategorie']], '</td>';
     echo '<td>';
     echoFullJmeno($item);
     echo '</td>';

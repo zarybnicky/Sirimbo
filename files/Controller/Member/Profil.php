@@ -1,6 +1,7 @@
 <?php
-include_once('files/Controller/Member.php');
-class Controller_Member_Profil extends Controller_Member {
+require_once 'files/Controller/Member.php';
+class Controller_Member_Profil extends Controller_Member
+{
     function __construct() {
         Permissions::checkError('nastenka', P_VIEW);
     }
@@ -10,9 +11,9 @@ class Controller_Member_Profil extends Controller_Member {
     function edit($id = null) {
         $data = DBUser::getUserData(User::getUserID());
         $narozeni = $this->date('narozeni')->getPost();
-        
-        if(empty($_POST) || is_object($f = $this->__checkData('edit', $narozeni))) {
-            if(empty($_POST)) {
+
+        if (empty($_POST) || is_object($f = $this->_checkData('edit', $narozeni))) {
+            if (empty($_POST)) {
                 post("login", User::getUserName());
                 post("group", $data["u_group"]);
                 post("lock", $data["u_lock"]);
@@ -36,22 +37,22 @@ class Controller_Member_Profil extends Controller_Member {
         $this->redirect('/member/profil', 'Upraveno');
     }
     function heslo($id = null) {
-        if(empty($_POST) || is_object($f = $this->__checkData('heslo'))) {
-            if(!empty($_POST)) {
+        if (empty($_POST) || is_object($f = $this->_checkData('heslo'))) {
+            if (!empty($_POST)) {
                 $this->redirect()->setMessage($f->getMessages());
             }
             $this->render('files/View/Member/Profil/NewPassword.inc');
             return;
         }
-        DBUser::setPassword(User::getUserID(), User::Crypt(post('newpass')));
+        DBUser::setPassword(User::getUserID(), User::crypt(post('newpass')));
         $this->redirect('/member/profil', 'Heslo změněno');
     }
     function platby($id = null) {
         $groupsOut = array();
         $groups = DBSkupiny::getSingleWithCategories(User::getSkupina());
         $currentGroup = 0;
-        foreach($groups as $row) {
-            if($currentGroup != $row['pg_id']) {
+        foreach ($groups as $row) {
+            if ($currentGroup != $row['pg_id']) {
                 $groupsOut[] = array(
                         'name' => ('<span class="big" style="text-decoration:underline;">' . $row['pg_name'] . '</span>'),
                         'type' => (!$row['pg_type'] ? 'Ostatní platby' : 'Členské příspěvky'),
@@ -83,18 +84,18 @@ class Controller_Member_Profil extends Controller_Member {
                 'platbyGroups' => $groupsOut
         ));
     }
-    private function __checkData($action, $narozeni = null) {
+    private function _checkData($action, $narozeni = null) {
         $f = new Form();
-        if($action == 'edit') {
+        if ($action == 'edit') {
             $f->checkDate((string) $narozeni, 'Neplatné datum narození', 'narozeni');
             $f->checkLength(post('jmeno'), 1, 40, 'Špatná délka jména', 'jmeno');
             $f->checkLength(post('prijmeni'), 1, 40, 'Špatná délka přijmení', 'prijmeni');
             $f->checkInArray(post('pohlavi'), array('m', 'f'), 'Neplatné pohlaví', 'pohlavi');
             $f->checkEmail(post('email'), 'Neplatný formát emailu', 'email');
             $f->checkPhone(post('telefon'), 'Neplatný formát telefoního čísla', 'telefon');
-        } elseif($action == 'heslo') {
+        } elseif ($action == 'heslo') {
             $f->checkPassword(post('newpass'), 'Neplatný formát hesla', 'newpass');
-            $f->checkBool(DBUser::checkUser(User::getUserName(), User::Crypt(post('oldpass'))),
+            $f->checkBool(DBUser::checkUser(User::getUserName(), User::crypt(post('oldpass'))),
                     'Staré heslo je špatně', 'oldpass');
             $f->checkBool(post('newpass') == post('newpass_confirm'),
                     'Nová hesla se neshodují', 'newpass_check');

@@ -1,45 +1,46 @@
 <?php
-include_once('files/Controller/Admin.php');
-class Controller_Admin_Pary extends Controller_Admin {
+require_once 'files/Controller/Admin.php';
+class Controller_Admin_Pary extends Controller_Admin
+{
     function __construct() {
         Permissions::checkError('pary', P_OWNED);
     }
     function view($id = null) {
         switch(post("action")) {
             case "remove":
-                if(!is_array(post("pary")))
+                if (!is_array(post("pary")))
                     break;
                 list($par) = post("pary");
                 $data = DBPary::getSinglePar($par);
-                
-                if($data['guy_id'])
+
+                if ($data['guy_id'])
                     DBPary::noPartner($data['guy_id']);
-                if($data['gal_id'])
+                if ($data['gal_id'])
                     DBPary::noPartner($data['gal_id']);
-                
+
                 $this->redirect()->setMessage('Pár odstraněn');
                 break;
             case 'add':
                 $old_gal = DBPary::getLatestPartner(post("add_partner"), 'm');
                 $old_guy = DBPary::getLatestPartner(post("add_partnerka"), 'f');
-                
-                if(post("add_partner"))
+
+                if (post("add_partner"))
                     DBPary::newPartner(post("add_partner"), post("add_partnerka"));
-                if($old_guy['u_id'])
+                if ($old_guy['u_id'])
                     DBPary::noPartner($old_guy['u_id']);
-                if($old_gal['u_id'])
+                if ($old_gal['u_id'])
                     DBPary::noPartner($old_gal['u_id']);
-                
+
                 $this->redirect()->setMessage('Pár přidán');
                 break;
             case 'edit':
                 $pary = post('pary');
-                if($pary[0])
+                if ($pary[0])
                     $this->redirect('/admin/pary/edit/' . $pary[0]);
                 break;
         }
         $data = DBPary::getActivePary();
-        foreach($data as &$row) {
+        foreach ($data as &$row) {
             $new_data = array(
                     'checkBox' => '<input type="checkbox" name="pary[]" value="' . $row["p_id"] . '" />',
                     'fullNameMan' => $row['guy_surname'] . ', ' . $row['guy_name'],
@@ -58,17 +59,17 @@ class Controller_Admin_Pary extends Controller_Admin {
         ));
     }
     function edit($id = null) {
-        if(!$id || !($data = DBPary::getSinglePar($id)))
+        if (!$id || !($data = DBPary::getSinglePar($id)))
             $this->redirect('/admin/pary', 'Pár s takovým ID neexistuje');
 
-        if(empty($_POST)) {
+        if (empty($_POST)) {
             post('stt-trida', $data['p_stt_trida']);
             post('stt-body', $data['p_stt_body']);
             post('stt-finale', $data['p_stt_finale']);
             post('lat-trida', $data['p_lat_trida']);
             post('lat-body', $data['p_lat_body']);
             post('lat-finale', $data['p_lat_finale']);
-            
+
             $this->render('files/View/Admin/Pary/Form.inc', array(
                     'fullName' => $data['guy_name'] . ' ' . $data['guy_surname'] . ' - ' .
                         $data['gal_name'] . ' ' . $data['gal_surname']
@@ -83,20 +84,20 @@ class Controller_Admin_Pary extends Controller_Admin {
             post('lat-body') : 0;
         $lat_finale = (post('lat-finale') && is_numeric(post('lat-finale'))) ?
             post('lat-finale') : 0;
-            
+
         $stt_amend = constant("AMEND_" . post('stt-trida'));
         $lat_amend = constant("AMEND_" . post('lat-trida'));
         $stt_base = ($stt_body + 40 * $stt_finale) * $stt_amend;
         $lat_base = ($lat_body + 40 * $lat_finale) * $lat_amend;
-        
+
         $stt_bonus = constant("BONUS_" . post('stt-trida'));
         $lat_bonus = constant("BONUS_" . post('lat-trida'));
-        
+
         $hodnoceni = $stt_base + $lat_base + $stt_bonus + $lat_bonus;
-        
+
         DBPary::editTridaBody($data['p_id'], post('stt-trida'), $stt_body,
             $stt_finale, post('lat-trida'), $lat_body, $lat_finale, $hodnoceni);
-        
+
         $this->redirect('/admin/pary', 'Třída a body změněny');
     }
 }

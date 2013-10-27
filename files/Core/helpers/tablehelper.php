@@ -1,45 +1,46 @@
 <?php
-class TableHelper {
-    private $name;
-    private $data;
-    private $columns;
-    private $i;
-    private $style;
-    private $showHeader;
-    
+class TableHelper
+{
+    private $_name;
+    private $_data;
+    private $_columns;
+    private $_index;
+    private $_style;
+    private $_showHeader;
+
     function table() {
         $this->_defaultValues();
         return $this;
     }
     function _defaultValues() {
-        $this->name = '';
-        $this->data = array();
-        $this->columns = array();
-        $this->i = 0;
-        $this->style = '';
-        $this->showHeader = true;
+        $this->_name = '';
+        $this->_data = array();
+        $this->_columns = array();
+        $this->_index = 0;
+        $this->_style = '';
+        $this->_showHeader = true;
     }
-    
+
     function name($n) {
-        $this->name = $n;
+        $this->_name = $n;
         return $this;
     }
     function style($s) {
-        $this->style = ' style="' . $s . '"';
+        $this->_style = ' style="' . $s . '"';
         return $this;
     }
     function data($d) {
-        if($d instanceof Traversable || (is_array($d) && is_array(reset($d))))
-            $this->data = $d;
+        if ($d instanceof Traversable || (is_array($d) && is_array(reset($d))))
+            $this->_data = $d;
         return $this;
     }
     function columns($columns, $overwrite = false) {
-        if($overwrite)
-            $this->columns = null;
-        if(!is_array($columns))
+        if ($overwrite)
+            $this->_columns = null;
+        if (!is_array($columns))
             return $this;
-        foreach($columns as $c) {
-            if(!is_array($c))
+        foreach ($columns as $c) {
+            if (!is_array($c))
                 continue;
             call_user_func_array(array($this, 'column'), $c);
         }
@@ -48,41 +49,41 @@ class TableHelper {
     function column($id, $name, $class = null, $style = null) {
         $html = ($class !== null ? (' class="' . $class . '"') : '') .
                 ($style !== null ? (' style="' . $style . '"') : '');
-        
-        $this->columns[] = array($id, $name, $html);
+
+        $this->_columns[] = array($id, $name, $html);
         return $this;
     }
     function showHeader($b) {
-        $this->showHeader = (bool) $b;
+        $this->_showHeader = (bool) $b;
         return $this;
     }
-    
-    private function getCounter() { return ' ' . $this->i . '.'; }
-    
+
+    private function _getCounter() { return ' ' . $this->_index . '.'; }
+
     function __toString() {
         return $this->render();
     }
     function render() {
-        if($this->data === null && $this->columns === null)
+        if ($this->_data === null && $this->_columns === null)
             return '';
         ob_start();
         ?>
-<table<?php echo $this->style;?>>
-    <?php if($this->showHeader): ?>
+<table<?php echo $this->_style;?>>
+    <?php if ($this->_showHeader): ?>
     <thead>
         <tr>
-            <?php foreach($this->columns as $c): ?>
+            <?php foreach ($this->_columns as $c): ?>
             <th><?php echo $c[1];?></th>
             <?php endforeach;?>
         </tr>
     </thead>
     <?php endif;?>
     <tbody>
-        <?php foreach($this->data as $row): ++$this->i;if(!$row) continue;?>
+        <?php foreach ($this->_data as $row): ++$this->_index;if (!$row) continue;?>
         <tr>
-            <?php foreach($this->columns as $c): ?>
+            <?php foreach ($this->_columns as $c): ?>
             <td<?php echo $c[2];?>>
-            <?php echo $row[$c[0]] == '{counter}' ? $this->getCounter() : $row[$c[0]];?>
+            <?php echo $row[$c[0]] == '{counter}' ? $this->_getCounter() : $row[$c[0]];?>
             </td>
             <?php endforeach;?>
         </tr>

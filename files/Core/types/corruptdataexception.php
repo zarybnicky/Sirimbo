@@ -1,5 +1,6 @@
 <?php
-class CorruptDataException extends ViewException {
+class CorruptDataException extends ViewException
+{
     public function getErrorFile() {
         return 'corrupt_data';
     }

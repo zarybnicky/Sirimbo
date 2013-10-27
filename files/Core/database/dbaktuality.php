@@ -1,8 +1,9 @@
 <?php
-class DBAktuality extends Database {
+class DBAktuality extends Database
+{
     public static function getAktuality($kat = 0, $kdo = 0) {
         list($kat) = DBAktuality::escapeArray(array($kat));
-        
+
         $res = DBAktuality::query(
             "SELECT *
             FROM aktuality
@@ -14,7 +15,7 @@ class DBAktuality extends Database {
     }
     public static function getSingleAktualita($id) {
         list($id) = DBAktuality::escapeArray(array($id));
-        
+
         $res = DBAktuality::query(
             "SELECT *
             FROM aktuality
@@ -25,7 +26,7 @@ class DBAktuality extends Database {
     public static function addAktualita($kdo, $kat, $jmeno, $text, $preview, $foto, $foto_main) {
         list($kdo, $kat, $jmeno, $text, $preview, $foto, $foto_main) =
             DBAktuality::escapeArray(array($kdo, $kat, $jmeno, $text, $preview, $foto, $foto_main));
-        
+
         DBAktuality::query(
             "INSERT INTO aktuality (at_kdo,at_kat,at_jmeno,at_text,at_preview,at_foto,at_foto_main,at_timestamp_add)
             VALUES ('$kdo','$kat','$jmeno','$text','$preview','$foto','$foto_main',NOW())"
@@ -35,7 +36,7 @@ class DBAktuality extends Database {
     public static function editAktualita($id, $kat, $jmeno, $text, $preview, $foto, $foto_main) {
         list($id, $kat, $jmeno, $text, $preview, $foto, $foto_main) =
             DBAktuality::escapeArray(array($id, $kat, $jmeno, $text, $preview, $foto, $foto_main));
-        
+
         DBAktuality::query(
             "UPDATE aktuality SET at_kat='$kat',at_jmeno='$jmeno',at_text='$text',
             at_preview='$preview',at_foto='$foto',at_foto_main='$foto_main'
@@ -44,14 +45,14 @@ class DBAktuality extends Database {
     }
     public static function removeAktualita($id) {
         list($id) = DBAktuality::escapeArray(array($id));
-        
+
         DBAktuality::query(
             "DELETE FROM aktuality WHERE at_id='$id'"
         );
     }
     public static function getAktualityFoto($id) {
         list($id) = DBAktuality::escapeArray(array($id));
-        
+
         $res = DBAktuality::query(
             "SELECT * FROM aktuality_foto WHERE af_id_rodic='$id'"
         );

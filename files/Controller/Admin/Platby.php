@@ -1,6 +1,7 @@
 <?php
-include_once('files/Controller/Admin.php');
-class Controller_Admin_Platby extends Controller_Admin {
+require_once 'files/Controller/Admin.php';
+class Controller_Admin_Platby extends Controller_Admin
+{
     function __construct() {
         Permissions::checkError('platby', P_OWNED);
     }
@@ -8,21 +9,21 @@ class Controller_Admin_Platby extends Controller_Admin {
         $this->redirect('/admin/platby/overview');
     }
     protected function recognizeHeaders($headers, &$specific, &$variable, &$date, &$amount) {
-        foreach($headers as $key => $value) {
-            if(mb_stripos($key, 'specif') !== false)
+        foreach ($headers as $key => $value) {
+            if (mb_stripos($key, 'specif') !== false)
                 $specific = $key;
-            if(mb_stripos($key, 'variab') !== false)
+            if (mb_stripos($key, 'variab') !== false)
                 $variable = $key;
-            if(mb_stripos($key, 'datum') !== false)
+            if (mb_stripos($key, 'datum') !== false)
                 $date = $key;
-            if(mb_stripos($key, 'částka') !== false)
+            if (mb_stripos($key, 'částka') !== false)
                 $amount = $key;
         }
     }
     protected function checkHeaders($headers, &$specific, &$variable, &$date, &$amount) {
         $headers = array_flip($headers);
 
-        if(isset($headers[$specific]) && isset($headers[$variable]) && isset($headers[$date]) && isset($headers[$amount]))
+        if (isset($headers[$specific]) && isset($headers[$variable]) && isset($headers[$date]) && isset($headers[$amount]))
             return true;
         else
             return false;
@@ -31,8 +32,8 @@ class Controller_Admin_Platby extends Controller_Admin {
         $in = DBPlatbyGroup::getGroupsWithCategories();
         $out = array();
         $group_id = 0;
-        foreach($in as $array) {
-            if($group_id != $array['pg_id'] && !isset($out['group_' . $array['pg_id']])) {
+        foreach ($in as $array) {
+            if ($group_id != $array['pg_id'] && !isset($out['group_' . $array['pg_id']])) {
                 $out[] = array('group_' . $array['pg_id'], $array);
                 $group_id = $array['pg_id'];
             }
@@ -44,14 +45,14 @@ class Controller_Admin_Platby extends Controller_Admin {
         $in = DBPlatbyGroup::getGroupsWithCategories();
         $out = array();
         $group_id = 0;
-        foreach($in as $array) {
+        foreach ($in as $array) {
             $key = (int) ($useSymbolKey ? $array['pc_symbol'] : $array['pc_id']);
-            
-            if($includeGroups && $group_id != $array['pg_id'] && !isset($out['group_' . $array['pg_id']])) {
+
+            if ($includeGroups && $group_id != $array['pg_id'] && !isset($out['group_' . $array['pg_id']])) {
                 $out['group_' . $array['pg_id']] = $array;
                 $group_id = $array['pg_id'];
             }
-            if($unique && isset($out[$key]))
+            if ($unique && isset($out[$key]))
                 continue;
             $out[$key] = $array;
         }
@@ -59,7 +60,7 @@ class Controller_Admin_Platby extends Controller_Admin {
     }
     protected function getUserLookup($sort) {
         $in = DBUser::getUsers();
-        if($sort) {
+        if ($sort) {
             usort($in, function($a, $b) {
                 $c = $a['u_prijmeni'];
                 $d = $b['u_prijmeni'];
@@ -67,7 +68,7 @@ class Controller_Admin_Platby extends Controller_Admin {
             });
         }
         $out = array();
-        foreach($in as $array) {
+        foreach ($in as $array) {
             $out[(int) $array['u_id']] = $array;
         }
         return $out;

@@ -1,7 +1,7 @@
 <h1><?php echo $this->jmeno;?></h1>
 <?php echo formatTimestamp($this->timestamp)?>
 
-<?php if($this->canEdit): ?>
+<?php if ($this->canEdit): ?>
 &nbsp;&nbsp;- <a href="/admin/aktuality/edit/<?php echo $this->id;?>">Upravit</a>
 <?php endif;?>
 <br/>

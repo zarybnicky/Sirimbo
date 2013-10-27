@@ -2,7 +2,7 @@
 <?php
 echo '<h2>', (Request::getAction() == 'add' ? 'Přidat uživatele' : 'Upravit uživatele'), '</h2>';
 notice($this->redirect()->getMessage());
-if(isset($f) && is_object($f))
+if (isset($f) && is_object($f))
     notice(implode('<br/>', $f->getMessages()));
 ?>
 <form action="" method="POST">
@@ -34,9 +34,9 @@ if(isset($f) && is_object($f))
     </tr><tr>
         <td>Dokumenty: </td>
         <td><?php
-            if(!post("dokumenty")) echo "Žádné dokumenty";
+            if (!post("dokumenty")) echo "Žádné dokumenty";
             else {
-                foreach(post("dokumenty") as $id) {
+                foreach (post("dokumenty") as $id) {
                     $data = DBDokumenty::getSingleDokument($id);
                     echo "<a href=\"/member/download?id=", $id, "\">", $data["d_name"], "</a>";
                 }

@@ -1,7 +1,8 @@
 <?php
-class DBPlatbyCategory extends Database {
+class DBPlatbyCategory extends Database
+{
     public static function insert($name, $symbol, $amount, $dueDate, $validFrom, $validTo, $useBase, $usePrefix, $archive) {
-        list($name, $symbol, $amount, $dueDate, $validFrom, $validTo, $useBase, $usePrefix, $archive) = 
+        list($name, $symbol, $amount, $dueDate, $validFrom, $validTo, $useBase, $usePrefix, $archive) =
             self::escape($name, $symbol, $amount, $dueDate, $validFrom, $validTo, $useBase, $usePrefix, $archive);
         self::query(
                 "INSERT INTO platby_category
@@ -11,7 +12,7 @@ class DBPlatbyCategory extends Database {
         );
     }
     public static function update($id, $name, $symbol, $amount, $dueDate, $validFrom, $validTo, $useBase, $usePrefix, $archive) {
-        list($id, $name, $symbol, $amount, $dueDate, $validFrom, $validTo, $useBase, $usePrefix, $archive) = 
+        list($id, $name, $symbol, $amount, $dueDate, $validFrom, $validTo, $useBase, $usePrefix, $archive) =
             self::escape($id, $name, $symbol, $amount, $dueDate, $validFrom, $validTo, $useBase, $usePrefix, $archive);
         self::query(
                 "UPDATE platby_category SET
@@ -29,12 +30,12 @@ class DBPlatbyCategory extends Database {
     }
     public static function checkActiveSymbol($symbol) {
         list($symbol) = self::escape($symbol);
-        
+
         $res = self::query(
                 "SELECT * FROM platby_category
                 WHERE pc_archive='0' AND pc_symbol='$symbol'"
         );
-        if($res)
+        if ($res)
             return self::getSingleRow($res);
         else
             return false;

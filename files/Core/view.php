@@ -1,5 +1,6 @@
 <?php
-class View {
+class View
+{
     public static $controller;
 }
 ?>

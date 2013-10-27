@@ -2,13 +2,13 @@
 <?php
 notice($this->redirect()->getMessage());
 
-if(!is_array(get('u')))
+if (!is_array(get('u')))
     notice('Žádné aktuality');
 ?>
 <form action="" method="POST">
 Opravdu chcete odstranit články:<br/><br/>
 <?php
-foreach(get('u') as $id) {
+foreach (get('u') as $id) {
     $data = DBAktuality::getSingleAktualita($id);
     echo $data['at_jmeno'], '<br />';
     echo '<input type="hidden" name=aktuality[]" value="', $id, '" />';

@@ -1,5 +1,6 @@
 <?php
-class BanException extends ViewException {
+class BanException extends ViewException
+{
     public function getErrorFile() {
         return 'ban';
     }

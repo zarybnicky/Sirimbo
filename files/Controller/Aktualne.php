@@ -1,7 +1,8 @@
 <?php
-class Controller_Aktualne extends Controller_Abstract {
+class Controller_Aktualne extends Controller_Abstract
+{
     function view($id = null) {
-        if($id && ($data = DBAktuality::getSingleAktualita($id))) {
+        if ($id && ($data = DBAktuality::getSingleAktualita($id))) {
             $this->render('files/View/Main/Aktuality/Single.inc', array(
                     'id'        => $data['at_id'],
                     'jmeno'        => $data['at_jmeno'],
@@ -27,30 +28,30 @@ class Controller_Aktualne extends Controller_Abstract {
     }
     function sidebar() {
         $s = new Sidebar();
-        
+
         echo $s->menuHeader();
         echo $s->menuItem('Nejnovější články',    '/aktualne/posledni');
         echo $s->menuItem('Videa',                '/aktualne/videa');
-        echo $s->menuItem('Články',                '/aktualne/clanky');
+        echo $s->menuItem('Články',               '/aktualne/clanky');
         echo $s->menuItem('Krátké zprávy',        '/aktualne/kratke-zpravy');
-        
+
         echo $s->commonItems();
     }
     private function _aktualne($nadpis = "", $type = null) {
         $data = DBAktuality::getAktuality($type);
 
-        if(!$data)  {
-            $this->render('files/View/Empty.inc',array(
+        if (!$data)  {
+            $this->render('files/View/Empty.inc', array(
                     'nadpis' => $nadpis,
                     'notice' => 'Žádné články nejsou k dispozici.'
             ));
             return;
         }
-        foreach($data as &$row) {
+        foreach ($data as &$row) {
             $new_row = array(
-                    'id'        => $row['at_id'],
-                    'jmeno'        => $row['at_jmeno'],
-                    'timestamp'    => $row['at_timestamp_add'],
+                    'id'         => $row['at_id'],
+                    'jmeno'      => $row['at_jmeno'],
+                    'timestamp'  => $row['at_timestamp_add'],
                     'canEdit'    => Permissions::check('aktuality', P_OWNED, $row['at_kdo']),
                     'preview'    => stripslashes(nl2br($row['at_preview']))
             );

@@ -4,13 +4,13 @@ function _isActive($href) {
 }
 function _getItem($name, $href) {
     $href = 'admin/' . $href;
-    if(_isActive($href))
+    if (_isActive($href))
         echo '<a href="/' . $href . '">' . $name . '</a>';
     else
         echo $name;
 }
 echo '<h1>Správa plateb</h1>';
-if(TISK)
+if (TISK)
     return;
 ?>
 <style>
@@ -27,14 +27,14 @@ if(TISK)
 <ul id="adminNavigation">
     <li><?php _getItem('Přehled', 'platby/overview');?></li>
     <li><?php _getItem('Hledání', 'platby/items');?></li>
-    <?php if(!_isActive('platby/structure/category') || !_isActive('platby/structure/group') || !_isActive('platby/structure')): ?>
+    <?php if (!_isActive('platby/structure/category') || !_isActive('platby/structure/group') || !_isActive('platby/structure')): ?>
         <li><?php _getItem('Struktura', 'platby/structure');?>:</li>
         <li>(<?php _getItem('Kategorie', 'platby/structure/group');?></li>
         <li><?php _getItem('Specifické symboly', 'platby/structure/category');?>)</li>
     <?php else:?>
         <li><?php _getItem('Struktura', 'platby/structure');?></li>
     <?php endif;?>
-    <?php if(!_isActive('platby/raw') || !_isActive('platby/manual') || !_isActive('platby/discarded')): ?>
+    <?php if (!_isActive('platby/raw') || !_isActive('platby/manual') || !_isActive('platby/discarded')): ?>
         <li><?php _getItem('Import', 'platby/raw');?>:</li>
         <li>(<?php _getItem('Nezařazené platby', 'platby/manual');?></li>
         <li><?php _getItem('Vyřazené platby', 'platby/discarded');?>)</li>

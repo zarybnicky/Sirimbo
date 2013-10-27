@@ -3,7 +3,7 @@ $data = DBPary::getSinglePar($this->id);
 $guy_partners = DBPary::getPreviousPartners($data['guy_id']);
 $gal_partners = DBPary::getPreviousPartners($data['gal_id']);
 
-if(!$data) {
+if (!$data) {
     $this->redirect("/member/zebricek", "Takový pár neexistuje");
 }
 
@@ -16,10 +16,10 @@ echo 'LAT: ', $data['p_lat_trida'], ' - ',
 echo 'Hodnocení: ', $data['p_hodnoceni'], '<br /><br />';
 
 echo 'Předchozí partneři - ', $data['guy_name'], ' ', $data['guy_surname'], ':<br/>';
-if(!$guy_partners)
+if (!$guy_partners)
     echo 'Žádní evidovaní';
 else
-    foreach($guy_partners as $par) {
+    foreach ($guy_partners as $par) {
         echo $par['guy_name'], ' ', $par['guy_surname'], ' - ',
             $par['gal_name'], '&nbsp;', $par['gal_surname'], ': (',
             'STT: ', $par['p_stt_trida'], ' - ',
@@ -31,10 +31,10 @@ else
 echo '<br/>';
 
 echo 'Předchozí partneři - ', $data['gal_name'], ' ', $data['gal_surname'], ':<br/>';
-if(!$gal_partners)
+if (!$gal_partners)
     echo 'Žádní evidovaní';
 else
-    foreach($gal_partners as $par) {
+    foreach ($gal_partners as $par) {
         echo $par['guy_name'], ' ', $par['guy_surname'], ' - ',
             $par['gal_name'], '&nbsp;', $par['gal_surname'], ': (',
             'STT: ', $par['p_stt_trida'], ' - ',

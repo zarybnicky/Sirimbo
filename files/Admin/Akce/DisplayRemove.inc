@@ -1,13 +1,13 @@
 <?php
-if(!is_array(get('u')))
+if (!is_array(get('u')))
     notice('Žádné akce');
 ?>
 <form action="" method="POST">
 Opravdu chcete odstranit akce:<br/><br/>
 <?php
-foreach(get('u') as $id) {
+foreach (get('u') as $id) {
     $data = DBAkce::getSingleAkce($id);
-    if(empty($data))
+    if (empty($data))
         continue;
     echo $data['a_jmeno'], '<br />',
         '<input type="hidden" name="akce[]" value="', $id, '" />';

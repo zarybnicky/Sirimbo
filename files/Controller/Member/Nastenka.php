@@ -1,6 +1,7 @@
 <?php
-include_once('files/Controller/Member.php');
-class Controller_Member_Nastenka extends Controller_Member {
+require_once 'files/Controller/Member.php';
+class Controller_Member_Nastenka extends Controller_Member
+{
     function __construct() {
         Permissions::checkError('nastenka', P_VIEW);
     }
@@ -12,16 +13,16 @@ class Controller_Member_Nastenka extends Controller_Member {
         $pager->setPageRange(5);
         $data = $pager->getItems();
 
-        if(empty($data)) {
+        if (empty($data)) {
             $this->render('files/View/Empty.inc', array(
                     'nadpis' => 'Upozornění',
                     'notice' => 'Žádná upozornění nejsou k dispozici'
             ));
             return;
         }
-        foreach($data as &$item) {
+        foreach ($data as &$item) {
             $skupiny = DBNastenka::getNastenkaSkupiny($item['up_id']);
-            foreach($skupiny as &$skupina) {
+            foreach ($skupiny as &$skupina) {
                 $new_data = getColorBox($skupina['ups_color'], $skupina['ups_popis']);
                 $skupina = $new_data;
             }

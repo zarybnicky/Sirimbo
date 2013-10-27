@@ -8,13 +8,13 @@ notice($this->redirect()->getMessage());
     <tr>
         <td>Uživatel (*): </td>
         <td><input type="text" name="login" value="<?php echo post('login'); ?>" <?php
-            if($this->action == 'edit') echo 'readonly="readonly"';
+            if ($this->action == 'edit') echo 'readonly="readonly"';
         ?>/></td>
         <td>Pouze písmena bez diakritiky, číslice a podtržítka, 3 - 20 znaků</td>
     </tr><tr>
         <td>Heslo (*): </td>
         <td><input type="text" name="pass" value="<?php echo post('pass'); ?>" <?php
-            if($this->action == 'edit') echo 'disabled="disabled"';
+            if ($this->action == 'edit') echo 'disabled="disabled"';
         ?>/></td>
         <td>Pouze písmena bez diakritiky, číslice a podtržítka, 6 - 32 znaků</td>
     </tr><tr>
@@ -68,7 +68,7 @@ notice($this->redirect()->getMessage());
         <td>Oprávnění (*): </td>
         <td><?php
         $s = $this->select()->post()->name('group');
-        foreach($this->groups as $item)
+        foreach ($this->groups as $item)
             $s->option($item['id'], $item['name']);
         echo $s;
         ?></td>
@@ -76,7 +76,7 @@ notice($this->redirect()->getMessage());
     </tr><tr>
         <td>Skupina (*): </td>
         <td><?php
-        foreach($this->skupiny as $item) {
+        foreach ($this->skupiny as $item) {
             echo getColorBox($item['color'], $item['popis']);
             echo '<label>', getRadio('skupina', $item['id']), $item['popis'], '</label><br/>';
         }?></td>

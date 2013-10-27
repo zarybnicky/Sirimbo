@@ -1,5 +1,6 @@
 <?php
-class COntroller_Oklubu extends Controller_Abstract {
+class COntroller_Oklubu extends Controller_Abstract
+{
     function view($id = null) {
        $this->redirect('/oklubu/obecne');
     }
@@ -32,7 +33,7 @@ class COntroller_Oklubu extends Controller_Abstract {
     }
     function sidebar() {
         $s = new Sidebar();
-        
+
         echo $s->menuHeader();
         echo $s->menuItem('Historie',            '/oklubu/historie');
         echo $s->menuItem('Úspěchy v číslech',    '/oklubu/uspechy');
@@ -43,7 +44,7 @@ class COntroller_Oklubu extends Controller_Abstract {
         echo $s->menuItem('Externí trenéři',    '/oklubu/treneri/externi');
         echo $s->menuItem('Kde trénujeme',        '/oklubu/saly');
         echo $s->menuItem('Stanovy klubu',        '/oklubu/stanovy.pdf');
-        
+
         echo $s->commonItems();
     }
 }

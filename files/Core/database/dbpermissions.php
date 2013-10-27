@@ -1,5 +1,6 @@
 <?php
-class DBPermissions extends Database {
+class DBPermissions extends Database
+{
     public static function getGroups() {
         $res = DBPermissions::query("SELECT * FROM permissions");
         return DBPermissions::getArray($res);
@@ -21,10 +22,10 @@ class DBPermissions extends Database {
             $permissions[$result[$i + 2]] = $result[$i + $count + 2];
 
         $q = "INSERT INTO permissions (pe_name,pe_description";
-        foreach($permissions as $key => $item)
+        foreach ($permissions as $key => $item)
             $q .= ',pe_' . $key;
         $q .= ") VALUES ('$name','$description'";
-        foreach($permissions as $key => $value)
+        foreach ($permissions as $key => $value)
             $q .= ",'$value'";
         $q .= ')';
 
@@ -42,7 +43,7 @@ class DBPermissions extends Database {
             $permissions[$result[$i + 3]] = $result[$i + $count + 3];
 
         $q = "UPDATE permissions SET pe_name='$name',pe_description='$description'";
-        foreach($permissions as $key => $value)
+        foreach ($permissions as $key => $value)
             $q .= ",pe_$key='$value'";
         $q .= " WHERE pe_id='$id'";
 

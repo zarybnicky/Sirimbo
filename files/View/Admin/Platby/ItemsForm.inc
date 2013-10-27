@@ -32,7 +32,7 @@ $formTable = $this->table()
 </form>
 <br/>
 <?php
-if(!empty($this->raw)) {
+if (!empty($this->raw)) {
     echo '<h3>Data z banky</h3>';
     echo $this->table()
         ->style('width:100%')

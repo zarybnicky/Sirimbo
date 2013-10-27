@@ -9,7 +9,7 @@ $s = $this->select()
     ->option('no', '-------------');
 
 $dirs = DBGalerie::getDirs(true, true);
-foreach($dirs as $dir)
+foreach ($dirs as $dir)
     $s->option($dir['gd_id'], str_repeat("&nbsp;&nbsp;", $dir['gd_level'] - 1) . $dir['gd_name']);
 echo $s;
 echo '<button type="submit">Zobrazit</button>';
@@ -27,11 +27,11 @@ $items[] = array('af_id' => 2, 'af_path' => './galerie/xichty treneru/jerry.jpg'
 $items[] = array('af_id' => 3, 'af_path' => './galerie/xichty treneru/jerry.jpg');
 
 //DisplayAktuality::viewClanek($data, true);
-if(empty($items)) {
+if (empty($items)) {
     notice('Žádné vybrané fotky');
     return;
 }
-foreach($items as $item) {
+foreach ($items as $item) {
     echo '<div class="float" style="float:left;">';
     echo '<div class="image">';
     echo '<img src="', str_replace('./galerie', '/galerie/thumbnails', $item['af_path']), '" alt="', $$item['af_id'], '" />';

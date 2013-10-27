@@ -1,23 +1,24 @@
 <?php
-include_once('files/Controller/Member.php');
-class Controller_Member_Pary extends Controller_Member {
+require_once 'files/Controller/Member.php';
+class Controller_Member_Pary extends Controller_Member
+{
     function __construct() {
         Permissions::checkError('pary', P_VIEW);
     }
     function view($id = null) {
-        /*if($id) {
+        /*if ($id) {
             $this->render('files/View/Member/Pary/Single.inc, array('id' => $id));
             return;
         }*/
         $pary = DBPary::getActiveParyByHodnoceni();
-        if(empty($pary)) {
+        if (empty($pary)) {
             $this->render('files/View/Empty.inc', array(
                     'nadpis' => 'Žebříček párů',
                     'notice' => 'Žádné páry nejsou v databázi'
             ));
             return;
         }
-        foreach($pary as &$item) {
+        foreach ($pary as &$item) {
             $new_data = array(
                     'id' => $item['p_id'],
                     'partnerName' => $item['guy_name'] . ' ' . $item['guy_surname'],

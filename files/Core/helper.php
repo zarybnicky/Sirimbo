@@ -1,30 +1,31 @@
 <?php
-class Helper {
+class Helper
+{
     private static $registry;
     private static $c;
     private static $instance;
-    
+
     public function __call($name, $a) {
         $class = ucfirst($name) . 'Helper';
-            
-        if(!class_exists($class)) {
-            include($_SERVER['DOCUMENT_ROOT'] . '/files/Core/helpers/' .
-                strtolower($class) . '.php');
-                if(!class_exists($name))
+
+        if (!class_exists($class)) {
+            include $_SERVER['DOCUMENT_ROOT'] . '/files/Core/helpers/' .
+                strtolower($class) . '.php';
+                if (!class_exists($name))
                     throw new ViewException("Helper '$class' not found.");
         }
-        
-        if(!isset(self::$registry[$class])) {
-            if(!isset(self::$registry))
+
+        if (!isset(self::$registry[$class])) {
+            if (!isset(self::$registry))
                 self::$registry = array();
             self::$registry[$class] = new $class();
         }
-        
+
         self::$c = &self::$registry[$class];
 
-        if(isset($a[0]) && $a[0] === false && count($a) == 1)
+        if (isset($a[0]) && $a[0] === false && count($a) == 1)
             return self::$c;
-        
+
         switch(count($a)) {
             case 0: return self::$c->{$name}(); break;
             case 1: return self::$c->{$name}($a[0]); break;
@@ -37,7 +38,7 @@ class Helper {
     }
     public function __construct() {}
     public static function get() {
-        if(!isset(self::$instance))
+        if (!isset(self::$instance))
             self::$instance = new Helper();
         return self::$instance;
     }

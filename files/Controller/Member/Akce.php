@@ -1,47 +1,48 @@
 <?php
-include_once('files/Controller/Member.php');
-class Controller_Member_Akce extends Controller_Member {
+require_once 'files/Controller/Member.php';
+class Controller_Member_Akce extends Controller_Member
+{
     function __construct() {
         Permissions::checkError('akce', P_VIEW);
     }
     function view($id = null) {
-        if($id) {
+        if ($id) {
             $data = DBAkce::getSingleAkce($id, true);
-            if(!$data)
+            if (!$data)
                 $this->redirect('/member/akce', 'Neexistuje žádná taková akce');
-            
-            $data = $this->getRenderData($data);
+
+            $data = $this->_getRenderData($data);
             $this->render('files/View/Member/Akce/Single.inc', array('data' => $data));
             return;
         }
-        if(!empty($_POST) && post('id') &&
+        if (!empty($_POST) && post('id') &&
                 ($data = DBAkce::getSingleAkce(post('id')))) {
-            if(is_object($f = $this->checkData($data, post('action')))) {
+            if (is_object($f = $this->_checkData($data, post('action')))) {
                 $this->redirect()->setMessage($f->getMessages());
-            } elseif(post('action') == 'signup') {
+            } elseif (post('action') == 'signup') {
                 DBAkce::signUp(User::getUserID(), post('id'), User::getDatumNarozeni());
-            } elseif(post('action') == 'signout') {
+            } elseif (post('action') == 'signout') {
                 DBAkce::signOut(User::getUserID(), post('id'));
             }
         }
         $akce = DBAkce::getAkce(true);
-        if(empty($akce)) {
+        if (empty($akce)) {
             $this->render('files/View/Empty.inc', array(
                     'nadpis' => 'Klubové akce',
                     'notice' => 'Žádné akce nejsou k dispozici.')
             );
             return;
         }
-        foreach($akce as &$data) {
-            $data = $this->getRenderData($data);
+        foreach ($akce as &$data) {
+            $data = $this->_getRenderData($data);
         }
         $this->render('files/View/Member/Akce/Overview.inc', array('akce' => $akce));
     }
-    private function getRenderData(&$data) {
+    private function _getRenderData(&$data) {
         $items = DBAkce::getAkceItems($data['a_id']);
         $dokumenty = unserialize($data['a_dokumenty']);
-        if(is_array($dokumenty)) {
-            foreach($dokumenty as &$row) {
+        if (is_array($dokumenty)) {
+            foreach ($dokumenty as &$row) {
                 $dokument = DBDokumenty::getSingleDokument($row);
                 $new_row = array(
                         'id' => $row,
@@ -69,12 +70,12 @@ class Controller_Member_Akce extends Controller_Member {
         $new_data['signIn'] = $new_data['showForm'] ? !DBAkce::isUserSignedUp($new_data['id'], User::getUserID()) : '';
         return $new_data;
     }
-    private function checkData($data, $action) {
+    private function _checkData($data, $action) {
         $f = new Form();
         $f->checkBool(!$data['a_lock'], 'Tato akce je zamčená', '');
         $f->checkInArray($action, array('signup', 'signout'), 'Špatná akce', '');
         $f->checkNumeric(post('id'), 'Špatné ID', '');
-        
+
         return $f->isValid() ? true : $f;
     }
 }

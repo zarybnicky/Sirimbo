@@ -1,5 +1,5 @@
 <h1>Dokumenty</h1>
-<?php if($this->showMenu): ?>
+<?php if ($this->showMenu): ?>
 <form action="" method="GET">
     <?php echo $this->select()
         ->get()->name('kat')
@@ -19,7 +19,7 @@
         <td>Kategorie</td>
         <td>Uploadoval</td>
     </tr>
-    <?php foreach($this->data as $item): ?>
+    <?php foreach ($this->data as $item): ?>
     <tr>
         <td><?php echo $item['name'];?></td>
         <td><a href="/member/download?id=<?php echo $item['id'];?>"><?php echo $item['fileName'];?></a></td>

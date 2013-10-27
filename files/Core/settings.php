@@ -34,12 +34,12 @@ ini_set('session.use_only_cookies', 1);
 
 mb_internal_encoding('UTF-8');
 
-function _shutdown_handler() {
+function shutdown_handler() {
     if (($error = error_get_last()) === null)
         return;
-    if($error['type'] == E_ERROR || $error['type'] == E_RECOVERABLE_ERROR) {
+    if ($error['type'] == E_ERROR || $error['type'] == E_RECOVERABLE_ERROR) {
         ob_end_clean();
-        if(Request::getURL() == 'error') {
+        if (Request::getURL() == 'error') {
             Log::write("Recursive error message!");
             die('Fatal error: Rekurzivní smyčka přesměrování!');
         }
@@ -47,12 +47,12 @@ function _shutdown_handler() {
         header('Location: /error?id=script_fatal');
     }
 }
-function _error_handler($severity, $message, $filepath, $line) {
+function error_handler($severity, $message, $filepath, $line) {
     if ($severity & (E_STRICT | E_DEPRECATED)) {
         return false;
     }
     ob_end_clean();
-    if(Request::getURL() == 'error') {
+    if (Request::getURL() == 'error') {
         Log::write("Recursive error message!");
         die('Fatal error: Rekurzivní smyčka přesměrování!');
     }
@@ -61,8 +61,8 @@ function _error_handler($severity, $message, $filepath, $line) {
     return true;
 }
 
-register_shutdown_function('_shutdown_handler');
-set_error_handler('_error_handler');
+register_shutdown_function('shutdown_handler');
+set_error_handler('error_handler');
 
 date_default_timezone_set('Europe/Paris');
 
@@ -74,12 +74,12 @@ define('DEFAULT_ADMIN_MAIL', 'tkolymp@tkolymp.cz');
 //ini_set('display_errors' , '0');
 
 define('DEBUG', '1');
-if(DEBUG) {
-    //ini_set('display_errors','On'); 
+if (DEBUG) {
+    //ini_set('display_errors','On');
     error_reporting(-1);
 }
 
-include (SETTINGS . DIRECTORY_SEPARATOR . 'db.php');
+include SETTINGS . DIRECTORY_SEPARATOR . 'db.php';
 
 define('NABOR', '0');
 
@@ -130,15 +130,16 @@ define('P_MEMBER', 4);
 define('P_OWNED', 8);
 define('P_ADMIN', 16);
 
-class Settings {
-public static $document_types = array(
+class Settings
+{
+public static $documentTypes = array(
     '1'        => 'Schůze, rady',
     '2'        => 'Soutěže',
     '3'        => 'Tábory',
     '0'        => 'Ostatní'
 );
 
-public static $permission_levels = array(
+public static $permissionLevels = array(
     P_NONE => 'Bez přístupu',
     P_VIEW => 'Zobrazit',
     P_MEMBER => 'Editovat',
@@ -212,17 +213,17 @@ public static $permissions = array(
         'default' => P_VIEW,
         P_VIEW => 1)
 );
-public static $foto_types = array(
+public static $fotoTypes = array(
     'image/pjpeg' => 'jpg',
     'image/jpeg' => 'jpg',
     'image/gif' => 'gif',
     'image/bmp' => 'bmp',
     'image/x-png' => 'png'
 );
-public static $gd_function_suffix = array(        
+public static $gdFunctionSuffix = array(
     'image/pjpeg' => 'JPEG',
-    'image/jpeg' => 'JPEG', 
-    'image/gif' => 'GIF', 
+    'image/jpeg' => 'JPEG',
+    'image/gif' => 'GIF',
     'image/bmp' => 'BMP',
     'image/x-png' => 'PNG'
 );
