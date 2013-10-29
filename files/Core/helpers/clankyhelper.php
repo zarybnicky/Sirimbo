@@ -70,7 +70,7 @@ class ClankyHelper
                 $out .= '<div class="FeaturePhoto">';
                 $foto = DBGalerie::getSingleFoto($this->_clanky[$i]['at_foto_main']);
                 if ($foto['gf_path'])
-                    $out .= '<img src="' . $foto['gf_path'] . '" alt="' . $this->_clanky[$i]['at_jmeno'] . '" />';
+                    $out .= '<img src="/galerie/' . $foto['gf_path'] . '" alt="' . $this->_clanky[$i]['at_jmeno'] . '" />';
                 $out .= '<p></p>';
                 $out .= '</div>';
                 $out .= '<p class="FeatureBlurb">' . $this->_clanky[$i]['at_preview'] . '...</p>';
