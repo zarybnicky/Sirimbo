@@ -15,7 +15,7 @@ echo $this->table()
 
 <div style="">
 <?php foreach ($this->data as $row): ?>
-    
+
 <?php endforeach;?>
 </div>
 
@@ -34,10 +34,10 @@ if (!empty($this->orphanGroupCategory)) {
     echo '<br/>';
     echo '<h3>Kategorie plateb bez přiřazených specifických symbolů</h3>';
     echo $this->table()
-    ->style('width:50%')
-    ->column('buttons', '', '', 'width:50px')
-    ->column('name', 'Název')
-    ->data($this->orphanGroupCategory);
+        ->style('width:50%')
+        ->column('buttons', '', '', 'width:50px')
+        ->column('name', 'Název')
+        ->data($this->orphanGroupCategory);
 }
 
 if (!empty($this->orphanCategory)) {

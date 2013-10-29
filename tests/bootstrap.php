@@ -1,10 +1,12 @@
 <?php
-class AutoLoader {
-    static private $classNames = array();
+class AutoLoader
+{
+    static private $_classNames = array();
     /**
      * Store the filename (sans extension) & full path of all ".php" files found
     */
-    public static function registerDirectory($dirName) {
+    public static function registerDirectory($dirName)
+    {
         $di = new DirectoryIterator($dirName);
         foreach ($di as $file) {
             if ($file->isDir() && !$file->isLink() && !$file->isDot()) {
@@ -15,12 +17,14 @@ class AutoLoader {
             }
         }
     }
-    public static function registerClass($className, $fileName) {
-        AutoLoader::$classNames[$className] = $fileName;
+    public static function registerClass($className, $fileName)
+    {
+        AutoLoader::$_classNames[$className] = $fileName;
     }
-    public static function loadClass($className) {
-        if (isset(AutoLoader::$classNames[$className])) {
-            require_once(AutoLoader::$classNames[$className]);
+    public static function loadClass($className)
+    {
+        if (isset(AutoLoader::$_classNames[$className])) {
+            include_once AutoLoader::$_classNames[$className];
         }
     }
 }

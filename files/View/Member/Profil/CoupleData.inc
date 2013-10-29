@@ -10,9 +10,9 @@ notice($this->redirect()->getMessage());
 <tr>
     <td>Třída:</td>
     <td><?php
-        echo $this->select()
-            ->post()->name('stt-trida')
-            ->options(array('Z', 'H', 'D', 'C', 'B', 'A', 'M'), true, true);
+echo $this->select()
+    ->post()->name('stt-trida')
+    ->options(array('Z', 'H', 'D', 'C', 'B', 'A', 'M'), true, true);
     ?></td>
     <td></td>
 </tr>

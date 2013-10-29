@@ -210,7 +210,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
             return;
         }
         if (((empty($_POST) || post('action') == 'confirm')
-             && ($f = $this->_getLinkedObjects($id))) || empty($_POST)
+            && ($f = $this->_getLinkedObjects($id))) || empty($_POST)
         ) {
             if (isset($f) && $f) {
                 $this->redirect()->setMessage(

@@ -11,7 +11,7 @@ class Controller_Ankety extends Controller_Abstract
                 notice('Z vaší IP adresy už někdo hlasoval.');
             }
         }
-        if (array() === ($data = DBAnkety::getAnketyWithItems(true)))  {
+        if (array() === ($data = DBAnkety::getAnketyWithItems(true))) {
             $this->render('files/View/Empty.inc', array(
                     'nadpis' => $nadpis,
                     'notice' => 'Žádné ankety nejsou k dispozici.'
@@ -23,8 +23,9 @@ class Controller_Ankety extends Controller_Abstract
             foreach ($row['items'] as $item) {
                 $sum += $item['aki_pocet'];
             }
-            if ($sum == 0)
+            if ($sum == 0) {
                 $sum = 1;
+            }
 
             $new_row = array();
             foreach ($row['items'] as $item) {
@@ -32,7 +33,7 @@ class Controller_Ankety extends Controller_Abstract
                     'text' => $item['aki_text'],
                     'pocet' => $item['aki_pocet'],
                     'width' => $item['aki_pocet'] / $sum * 100,
-                    'color' => dechex(rand(40,220)) . dechex(rand(40,220)) . dechex(rand(40,220))
+                    'color' => dechex(rand(40, 220)) . dechex(rand(40, 220)) . dechex(rand(40, 220))
                 );
             }
             $new_row['id'] = $row['ak_id'];

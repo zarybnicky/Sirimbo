@@ -7,10 +7,10 @@ class Controller_Aktualne extends Controller_Abstract
                 'files/View/Main/Aktuality/Single.inc',
                 array(
                     'id'        => $data['at_id'],
-                    'jmeno'        => $data['at_jmeno'],
-                    'timestamp'    => $data['at_timestamp_add'],
-                    'canEdit'    => Permissions::check('aktuality', P_OWNED, $data['at_kdo']),
-                    'text'        => stripslashes(nl2br($data['at_text']))
+                    'jmeno'     => $data['at_jmeno'],
+                    'timestamp' => $data['at_timestamp_add'],
+                    'canEdit'   => Permissions::check('aktuality', P_OWNED, $data['at_kdo']),
+                    'text'      => stripslashes(nl2br($data['at_text']))
                 )
             );
             return;
@@ -43,7 +43,7 @@ class Controller_Aktualne extends Controller_Abstract
     private function _aktualne($nadpis = "", $type = null) {
         $data = DBAktuality::getAktuality($type);
 
-        if (!$data)  {
+        if (!$data) {
             $this->render(
                 'files/View/Empty.inc',
                 array(

@@ -45,15 +45,18 @@ class User
             User::logout();
             return false;
         }
-        if (empty($data))
+        if (empty($data)) {
             $data = DBUser::getUserData($id);
+        }
+
         $par = DBPary::getLatestPartner($data['u_id'], $data['u_pohlavi']);
 
         foreach (Settings::$permissions as $key => $item) {
-            if ($data['u_group'] == 0)
+            if ($data['u_group'] == 0) {
                 $_SESSION['permissions'][$key] = P_NONE;
-            else
+            } else {
                 $_SESSION['permissions'][$key] = $data['pe_' . $key];
+            }
         }
 
         $_SESSION["id"] = $data['u_id'];
@@ -243,7 +246,7 @@ class User
         return sha1($fix . $passwd . $fix);
     }
 
-    public static function var_symbol($id) {
+    public static function varSymbol($id) {
         return str_pad($id, 6, '0', STR_PAD_LEFT);
     }
 }

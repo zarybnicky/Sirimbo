@@ -4,13 +4,15 @@ function _isActive($href) {
 }
 function _getItem($name, $href) {
     $href = 'member/' . $href;
-    if (_isActive($href))
+    if (_isActive($href)) {
         echo '<a href="/' . $href . '">' . $name . '</a>';
-    else
+    } else {
         echo $name;
+    }
 }
-if (TISK)
+if (TISK) {
     echo '<h1>Přehled členů</h1>';
+}
 ?>
 <style>
 #adminNavigation {

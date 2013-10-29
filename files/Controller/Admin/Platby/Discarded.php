@@ -85,7 +85,7 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
             } elseif (
                 get('list') == 'amount'
                 && ((!isset($row[$amount]) ^ get('amount') == 'none')
-                   || get('amount') != (int) $row[$amount])
+                || get('amount') != (int) $row[$amount])
             ) {
                 continue;
             }

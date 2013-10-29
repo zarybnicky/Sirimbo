@@ -6,7 +6,7 @@
         &nbsp;-&nbsp;<a href="/admin/ankety/edit/<?php echo $row['id'];?>">Editovat</a>
     <?php endif;?>
     <br/>
-    <?php foreach ($row['items'] as $item): ?>
+    <?php foreach ($row['items'] as $item) : ?>
         <div style="width:60%;position:relative;">
             <?php echo $item['text'];?>
             <div style="float:right;"><?php echo $item['pocet'];?></div>

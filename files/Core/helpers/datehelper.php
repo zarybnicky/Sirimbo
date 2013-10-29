@@ -107,18 +107,27 @@ class DateHelper
                 return array('from' => $this->getPost(true), 'to' => new Date());
 
             return array('from' => $from, 'to' => $to);
-        } elseif (post($this->_name . '-from-year') && post($this->_name . '-from-month')
-            && post($this->_name . '-from-day') && post($this->_name . '-to-year') && post($this->_name . '-to-month')
-            && post($this->_name . '-to-day')) {
-            $from = new Date(post($this->_name . '-from-year') . '-' .
-                    post($this->_name . '-from-month') . '-' .
-                    post($this->_name . '-from-day'));
-            $to = new Date(post($this->_name . '-to-year') . '-' .
-                    post($this->_name . '-to-month') . '-' .
-                    post($this->_name . '-to-day'));
+        } elseif (
+            post($this->_name . '-from-year')
+            && post($this->_name . '-from-month')
+            && post($this->_name . '-from-day')
+            && post($this->_name . '-to-year') && post($this->_name . '-to-month')
+            && post($this->_name . '-to-day')
+        ) {
+            $from = new Date(
+                post($this->_name . '-from-year') . '-'
+                . post($this->_name . '-from-month') . '-'
+                . post($this->_name . '-from-day')
+            );
+            $to = new Date(
+                post($this->_name . '-to-year') . '-'
+                . post($this->_name . '-to-month') . '-'
+                . post($this->_name . '-to-day')
+            );
 
-            if (!$from->isValid() && !$to->isValid())
+            if (!$from->isValid() && !$to->isValid()) {
                 return array('from' => $this->getPost(true), 'to' => new Date());
+            }
 
             return array('from' => $from, 'to' => $to);
         } else {
@@ -163,12 +172,18 @@ class DateHelper
                 ->value($this->_date ? $this->_date->getMonth() : null)
                 ->options(array(), true)
                 ->option('00', 'Měsíc')
-                ->option('01', 'Leden')        ->option('02', 'Únor')
-                ->option('03', 'Březen')    ->option('04', 'Duben')
-                ->option('05', 'Květen')    ->option('06', 'Červen')
-                ->option('07', 'Červenec')    ->option('08', 'Srpen')
-                ->option('09', 'Září')        ->option('10', 'Říjen')
-                ->option('11', 'Listopad')    ->option('12', 'Prosinec');
+                ->option('01', 'Leden')
+                ->option('02', 'Únor')
+                ->option('03', 'Březen')
+                ->option('04', 'Duben')
+                ->option('05', 'Květen')
+                ->option('06', 'Červen')
+                ->option('07', 'Červenec')
+                ->option('08', 'Srpen')
+                ->option('09', 'Září')
+                ->option('10', 'Říjen')
+                ->option('11', 'Listopad')
+                ->option('12', 'Prosinec');
 
             $s->name($this->_name . '-year')
                 ->value($this->_date ? $this->_date->getYear() : null)

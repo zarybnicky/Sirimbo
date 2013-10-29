@@ -6,22 +6,22 @@
         <span style="color:#572E00;font-size:115%;">Kapacita: </span><?php echo $this->kapacita?><br/>
         <span style="color:#572E00;font-size:115%;">Volných míst: </span><?php echo $this->volno?><br/>
     </div>
-    
-    <?php if ($this->canEdit): ?>
+
+    <?php if ($this->canEdit) : ?>
     <span style="color:#572E00;font-size:115%;">Admin: </span>
     <a href="/admin/akce/edit/<?php echo $this->id;?>">obecné</a>
-    <a href="/admin/akce/detail/<?php echo $this->id;?>">účastníci</a> 
+    <a href="/admin/akce/detail/<?php echo $this->id;?>">účastníci</a>
     <a href="/admin/akce/dokumenty/<?php echo $this->id;?>">dokumenty</a>
     <?php endif;?>
-    
-    <?php if (isset($this->info)): ?>
+
+    <?php if (isset($this->info)) : ?>
     <div style="text-align:left;">
         <span style="color:#572E00;font-size:115%;">Další informace: </span>
         <br/><?php echo $this->info;?>
     </div>
     <?php endif;?>
-    
-    <?php if (isset($this->dokumenty) && $this->dokumenty != array()): ?>
+
+    <?php if (isset($this->dokumenty) && $this->dokumenty != array()) : ?>
     <br/>
     <div style="text-align:left;">
     <span style="color:#572E00;font-size:115%;">Dokumenty: </span><br/>

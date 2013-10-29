@@ -20,7 +20,6 @@ class TableHelper
         $this->_style = '';
         $this->_showHeader = true;
     }
-
     function name($n) {
         $this->_name = $n;
         return $this;
@@ -30,25 +29,29 @@ class TableHelper
         return $this;
     }
     function data($d) {
-        if ($d instanceof Traversable || (is_array($d) && is_array(reset($d))))
+        if ($d instanceof Traversable || (is_array($d) && is_array(reset($d)))) {
             $this->_data = $d;
+        }
         return $this;
     }
     function columns($columns, $overwrite = false) {
-        if ($overwrite)
+        if ($overwrite) {
             $this->_columns = null;
-        if (!is_array($columns))
+        }
+        if (!is_array($columns)) {
             return $this;
+        }
         foreach ($columns as $c) {
-            if (!is_array($c))
+            if (!is_array($c)) {
                 continue;
+            }
             call_user_func_array(array($this, 'column'), $c);
         }
         return $this;
     }
     function column($id, $name, $class = null, $style = null) {
-        $html = ($class !== null ? (' class="' . $class . '"') : '') .
-                ($style !== null ? (' style="' . $style . '"') : '');
+        $html = ($class !== null ? (' class="' . $class . '"') : '')
+                . ($style !== null ? (' style="' . $style . '"') : '');
 
         $this->_columns[] = array($id, $name, $html);
         return $this;
@@ -57,19 +60,20 @@ class TableHelper
         $this->_showHeader = (bool) $b;
         return $this;
     }
-
-    private function _getCounter() { return ' ' . $this->_index . '.'; }
-
+    private function _getCounter() {
+        return ' ' . $this->_index . '.';
+    }
     function __toString() {
         return $this->render();
     }
     function render() {
-        if ($this->_data === null && $this->_columns === null)
+        if ($this->_data === null && $this->_columns === null) {
             return '';
+        }
         ob_start();
         ?>
 <table<?php echo $this->_style;?>>
-    <?php if ($this->_showHeader): ?>
+    <?php if ($this->_showHeader) : ?>
     <thead>
         <tr>
             <?php foreach ($this->_columns as $c): ?>
@@ -79,7 +83,7 @@ class TableHelper
     </thead>
     <?php endif;?>
     <tbody>
-        <?php foreach ($this->_data as $row): ++$this->_index;if (!$row) continue;?>
+        <?php foreach ($this->_data as $row): ++$this->_index; if (!$row) continue;?>
         <tr>
             <?php foreach ($this->_columns as $c): ?>
             <td<?php echo $c[2];?>>

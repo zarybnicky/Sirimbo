@@ -229,7 +229,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             return;
         }
         if (((empty($_POST) || post('action') == 'confirm')
-             && ($f = $this->_getLinkedObjects($id)))
+            && ($f = $this->_getLinkedObjects($id)))
             || empty($_POST)
         ) {
             if (isset($f) && $f) {
