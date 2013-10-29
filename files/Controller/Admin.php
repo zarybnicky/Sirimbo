@@ -1,13 +1,16 @@
 <?php
 class Controller_Admin extends Controller_Abstract
 {
-    function __construct() {
+    function __construct()
+    {
         Permissions::checkError('nastenka', P_OWNED);
     }
-    function view($id = null) {
+    function view($id = null)
+    {
         $this->render('files/View/Admin/Home.inc');
     }
-    function sidebar() {
+    function sidebar()
+    {
         $s = new Sidebar();
 
         echo $s->menuHeader();
