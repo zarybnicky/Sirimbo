@@ -53,10 +53,10 @@ class Controller_Admin_Aktuality extends Controller_Admin
         $n = new Novinky(User::getUserID());
         switch(post('kat')) {
             case AKTUALITY_VIDEA:
-                $n->video()->add('/aktuality/' . $id, post('jmeno'));
+                $n->video()->add('/aktualne/' . $id, post('jmeno'));
                 break;
             case AKTUALITY_CLANKY:
-                $n->clanek()->add('/aktuality/' . $id, post('jmeno'));
+                $n->clanek()->add('/aktualne/' . $id, post('jmeno'));
                 break;
         }
         $this->redirect('/admin/aktuality', 'Článek přidán');
@@ -96,10 +96,10 @@ class Controller_Admin_Aktuality extends Controller_Admin
             $n = new Novinky(User::getUserID());
             switch(post('kat')) {
                 case AKTUALITY_VIDEA:
-                    $n->video()->edit('/aktuality/' . $id, post('jmeno'));
+                    $n->video()->edit('/aktualne/' . $id, post('jmeno'));
                     break;
                 case AKTUALITY_CLANKY:
-                    $n->clanek()->edit('/aktuality/' . $id, post('jmeno'));
+                    $n->clanek()->edit('/aktualne/' . $id, post('jmeno'));
                     break;
             }
         }
