@@ -69,7 +69,8 @@ if ($this->view == 'status') {
 } else {
     $table->column('colorBox', '')
         ->column('groupInfo', 'Oprávnění')
-        ->column('birthDate', 'Datum<br/>narození');
+        ->column('birthDate', 'Datum<br/>narození')
+        ->column('varSymbol', 'Variabilní<br/>symbol');
 }
 echo $table;
 
