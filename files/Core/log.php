@@ -5,7 +5,7 @@ class Log
 
     public static function write($message)
     {
-        Log::$logfile = fopen(LOG, 'a+');
+        Log::$_logfile = fopen(LOG, 'a+');
         fwrite(Log::$_logfile,  date(DATE_RFC822) . " - " .
             Request::getLiteralURL('home') . ":\n" .
             ($message ? "\tMessage: $message\n" : '') .
