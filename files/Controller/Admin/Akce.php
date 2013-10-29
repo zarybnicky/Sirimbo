@@ -1,71 +1,82 @@
 <?php
+/**
+ * Project TKOlomouc
+ *
+ * @category Akce
+ * @package TKOlomouc_Controllers
+ */
+
+/**
+ * @see Controller_Admin
+ */
 require_once 'files/Controller/Admin.php';
+
+/**
+ * @category Akce
+ * @package TKOlomouc_Controllers
+ */
 class Controller_Admin_Akce extends Controller_Admin
 {
-    function __construct() {
+    /**
+     * Checks for authorized access
+     * @return void
+     */
+    function __construct()
+    {
         Permissions::checkError('akce', P_OWNED);
     }
-    function view($id = null) {
-        if (empty($_POST)) {
-            $this->render('files/Admin/Akce/Display.inc');
-            return;
-        }
+
+    /**
+     * Should be called by Dispatcher only
+     * @param int $id
+     * @return void
+     */
+    function view($id = null)
+    {
         switch(post('action')) {
-            case 'save':
-                $items = DBAkce::getAkce();
+        case 'save':
+            $this->_processSave();
+            $this->redirect('/admin/akce');
+            break;
+        case 'remove':
+            if (is_array(post('akce'))) {
+                $this->redirect(
+                    '/admin/akce/remove?' . http_build_query(array('u' => post('akce')))
+                );
+            }
+            break;
 
-                foreach ($items as $item) {
-                    $id = $item['a_id'];
-                    if ((bool) post($id) !== (bool) $item['a_visible']) {
-                        DBAkce::editAkce(
-                            $id, $item['a_jmeno'], $item['a_kde'],
-                            $item['a_info'], $item['a_od'],
-                            $item['a_do'], $item['a_kapacita'],
-                            $item['a_dokumenty'], $item['a_lock'], post($id) ? '1' : '0'
-                        );
-                    }
-                }
-                break;
-            case 'remove':
-                if (!is_array(post('akce')))
-                    break;
-                $url = '/admin/akce/remove?';
-                foreach (post('akce') as $id)
-                    $url .= '&u[]=' . $id;
-                $this->redirect($url);
-                break;
-
-            case "edit":
-                $akce = post('akce');
-                if ($akce[0])
-                    $this->redirect('/admin/akce/edit/' . $akce[0]);
-                break;
-
-            case "edit_detail":
-                $akce = post("akce");
-                if ($akce[0])
-                    $this->redirect('/admin/akce/detail/' . $akce[0]);
-                break;
-
-            case "edit_doku":
-                $akce = post("akce");
-                if ($akce[0])
-                    $this->redirect('/admin/akce/dokumenty/' . $akce[0]);
-                break;
+        case 'edit':
+        case 'detail':
+        case 'dokumenty':
+            $akce = post('akce');
+            if ($akce[0]) {
+                $this->redirect('/admin/akce/' . post('action') . '/' . $akce[0]);
+            }
+            break;
         }
-        $this->render('files/Admin/Akce/Display.inc');
+        $this->_displayOverview();
     }
-    function add($id = null) {
-        if (empty($_POST) || is_object($f = $this->_checkData())) {
-            $this->render('files/Admin/Akce/Form.inc');
+
+    /**
+     * Should be called by Dispatcher only
+     * @param int $id
+     * @return void
+     */
+    function add($id = null)
+    {
+        if (empty($_POST) || is_object($form = $this->_checkData())) {
+            if (empty($_POST)) {
+                $form = array();
+            }
+            $this->_displayForm(null, $form);
             return;
         }
-
-        $od = $this->date()->name('od')->getPost();
-        $do = $this->date()->name('do')->getPost();
-        if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0)
+        $od = $this->date('od')->getPost();
+        $do = $this->date('do')->getPost();
+        if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
-
+        }
         DBAkce::addAkce(
             post('jmeno'), post('kde'), post('info'),
             (string) $od, (string) $do, post('kapacita'), post('dokumenty'),
@@ -77,34 +88,38 @@ class Controller_Admin_Akce extends Controller_Admin
 
         $this->redirect('/admin/akce', 'Akce přidána');
     }
-    function edit($id = null) {
-        if (!$id || !($data = DBAkce::getSingleAkce($id)))
+
+    /**
+     * Should be called by Dispatcher only
+     * @param int $id
+     * @return void
+     */
+    function edit($id = null)
+    {
+        if (!$id || !($data = DBAkce::getSingleAkce($id))) {
             $this->redirect('/admin/akce', 'Akce s takovým ID neexistuje');
-
-        if (empty($_POST)) {
-            post('id', $id);
-            post('jmeno', $data['a_jmeno']);
-            post('kde', $data['a_kde']);
-            post('info', $data['a_info']);
-            post('od', $data['a_od']);
-            post('do', $data['a_do']);
-            post('kapacita', $data['a_kapacita']);
-            post('dokumenty', unserialize($data['a_dokumenty']));
-            post('lock', $data['a_lock']);
-            post('visible', $data['a_visible']);
-
-            $this->render('files/Admin/Akce/Form.inc');
+        }
+        if (empty($_POST) || is_object($form = $this->_checkData())) {
+            if (empty($_POST)) {
+                post('id', $id);
+                post('jmeno', $data['a_jmeno']);
+                post('kde', $data['a_kde']);
+                post('info', $data['a_info']);
+                post('od', $data['a_od']);
+                post('do', $data['a_do']);
+                post('kapacita', $data['a_kapacita']);
+                post('lock', $data['a_lock']);
+                post('visible', $data['a_visible']);
+                $form = array();
+            }
+            $this->_displayForm($data, $form);
             return;
         }
-        if (is_object($f = $this->_checkData())) {
-            $this->render('files/Admin/Akce/Form.inc');
-            return;
-        }
-        $od = $this->date()->name('od')->getPost();
-        $do = $this->date()->name('do')->getPost();
-        if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0)
+        $od = $this->date('od')->getPost();
+        $do = $this->date('do')->getPost();
+        if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
-
+        }
         DBAkce::editAkce(
             $id, post('jmeno'), post('kde'), post('info'),
             (string) $od, (string) $do, post('kapacita'), post('dokumenty'),
@@ -116,46 +131,156 @@ class Controller_Admin_Akce extends Controller_Admin
 
         $this->redirect('/admin/akce', 'Akce upravena');
     }
-    function remove($id = null) {
-        if (empty($_POST) || post('action') !== 'confirm') {
-            $this->render('files/Admin/Akce/DisplayRemove.inc');
-            return;
-        }
-        if (!is_array(post('akce')))
+
+    /**
+     * Should be called by Dispatcher only
+     * @param int $id
+     * @return void
+     */
+    function remove($id = null)
+    {
+        if (!is_array(post('data')) && !is_array(get('u'))) {
             $this->redirect('/admin/akce');
-        foreach (post('akce') as $id) {
-            if (Permissions::check('akce', P_OWNED)) {
+        }
+        if (!empty($_POST) && post('action') == 'confirm') {
+            foreach (post('data') as $id) {
                 $data = DBAkce::getSingleAkce($id);
                 DBAkce::removeAkce($id);
 
-                if (strcmp($data['a_od'], date('Y-m-d')) > 0) {
+                if (strcmp($data['a_do'], date('Y-m-d')) >= 0) {
                     $n = new Novinky(User::getUserID());
                     $n->akce()->remove($data['a_jmeno']);
                 }
-            } else {
-                $error = true;
             }
+            $this->redirect('/admin/akce', 'Akce odebrány');
         }
-        if (isset($error) && $error)
-            throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
-
-        $this->redirect('/admin/akce', 'Akce odebrány');
+        $data = array();
+        foreach (get('u') as $id) {
+            $item = DBAkce::getSingleAkce($id);
+            $data[] = array(
+                'id' => $item['a_id'],
+                'text' => $item['a_jmeno']
+            );
+        }
+        $this->render(
+            'files/View/Admin/RemovePrompt.inc',
+            array(
+                'header' => 'Správa akcí',
+                'prompt' => 'Opravdu chcete odstranit akce:',
+                'returnURL' => Request::getReferer(),
+                'data' => $data
+            )
+        );
     }
 
-    private function _checkData() {
-        $od = $this->date()->name('od')->getPost();
-        $do = $this->date()->name('do')->getPost();
+    /**
+     * Sends HTTP response, fetches data for parsing by View
+     * @see View_Admin_Akce_Overview
+     * @return void
+     */
+    private function _displayOverview() {
+        $currentId = 0;
+        $currentIndex = -1;
+        $data = array();
+        $akce = DBAkce::getWithItems();
+        foreach ($akce as $key => $item) {
+            if($item['a_id'] == $currentId) {
+                $data[$currentIndex]['userCount']++;
+                continue;
+            }
+            $currentId = $item['a_id'];
+            $currentIndex++;
+            $data[$currentIndex] = array(
+                'checkBox'  => getCheckbox('akce[]', $item['a_id']),
+                'name'      => $item['a_jmeno'],
+                'place'     => $item['a_kde'],
+                'date'      => formatDate($item['a_od'])
+                    . (($item['a_od'] != $item['a_do'])
+                    ? ' - ' . formatDate($item['a_do']) : ''),
+                'userCount' => 1,
+                'visible'   => getCheckbox($item['a_id'], '1', $item['a_visible'])
+            );
+        }
+        $this->render(
+            'files/View/Admin/Akce/Overview.inc',
+            array(
+        	   'data' => $data
+            )
+        );
+    }
+
+    /**
+     * Sends HTTP response, fetches data for parsing by View
+     * @see View_Admin_Akce_Form
+     * @return void
+     */
+    private function _displayForm($data, $form)
+    {
+        if(!$data || !is_array($dokumenty = unserialize($data['a_dokumenty']))) {
+            $dokumenty = array();
+        } else {
+            $dokumenty = DBDokumenty::getMultipleById($dokumenty);
+            foreach ($dokumenty as &$item) {
+                $new_data = array(
+                    'id' => $item['d_id'],
+                    'name' => $item['d_name']
+                );
+                $item = $new_data;
+            }
+        }
+        $this->render(
+            'files/View/Admin/Akce/Form.inc',
+            array(
+                'form' => $form,
+                'dokumenty' => $dokumenty
+            )
+        );
+    }
+
+    /**
+     * Updates DB to match input visibility
+     * @see View_Admin_Akce_Overview
+     * @return void
+     */
+    private function _processSave()
+    {
+        $items = DBAkce::getAkce();
+        foreach ($items as $item) {
+            if ((bool) post($item['a_id']) === (bool) $item['a_visible']) {
+                continue;
+            }
+            DBAkce::editAkce(
+                $item['a_id'], $item['a_jmeno'], $item['a_kde'],
+                $item['a_info'], $item['a_od'],
+                $item['a_do'], $item['a_kapacita'],
+                $item['a_dokumenty'], $item['a_lock'],
+                post($item['a_id']) ? '1' : '0'
+            );
+        }
+    }
+
+    /**
+     * Checks POST input
+     * @see View_Admin_Akce_Overview
+     * @return Form|array Returns empty array if form is valid
+     */
+    private function _checkData()
+    {
+        $od = $this->date('od')->getPost();
+        $do = $this->date('do')->getPost();
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0)
-            $do &= $od;
+            $do = $od;
 
-        $f = new Form();
-        $f->checkLength(post('jmeno'), 1, 255, 'Špatná délka jména akce', 'jmeno');
-        $f->checkLength(post('kde'), 1, 255, 'Špatná délka místa konání', 'kde');
-        $f->checkDate((string) $od, 'Špatný formát data ("Od")', 'od');
-        if ($od != $do) $f->checkDate((string) $do, 'Špatný formát data ("Do")', 'do');
-        $f->checkNumeric(post('kapacita'), 'Kapacita musí být zadána číselně', 'kapacita');
+        $form = new Form();
+        $form->checkLength(post('jmeno'), 1, 255, 'Špatná délka jména akce', 'jmeno');
+        $form->checkLength(post('kde'), 1, 255, 'Špatná délka místa konání', 'kde');
+        $form->checkDate((string) $od, 'Špatný formát data ("Od")', 'od');
+        if ($od != $do) {
+            $form->checkDate((string) $do, 'Špatný formát data ("Do")', 'do');
+        }
+        $form->checkNumeric(post('kapacita'), 'Kapacita musí být zadána číselně', 'kapacita');
 
-        return $f->isValid() ? true : $f;
+        return $form->isValid() ? array() : $form;
     }
 }
 ?>
