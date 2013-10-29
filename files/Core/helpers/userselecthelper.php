@@ -16,7 +16,7 @@ class UserSelectHelper
     public function userSelect($name = null) {
         $this->_defaultValues();
         if ($name !== null)
-            return $this->_name($name);
+            return $this->name($name);
         return $this;
     }
     private function _defaultValues() {

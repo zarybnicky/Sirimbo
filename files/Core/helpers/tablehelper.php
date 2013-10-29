@@ -12,7 +12,7 @@ class TableHelper
         $this->_defaultValues();
         return $this;
     }
-    function _defaultValues() {
+    private function _defaultValues() {
         $this->_name = '';
         $this->_data = array();
         $this->_columns = array();

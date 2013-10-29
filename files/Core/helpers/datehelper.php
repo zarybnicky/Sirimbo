@@ -24,11 +24,11 @@ class DateHelper
         $this->_defaultValues();
 
         if ($d && ($this->_setDate($d)) === null)
-            $this->_name($d);
+            $this->name($d);
 
         return $this;
     }
-    function _defaultValues() {
+    private function _defaultValues() {
         $this->_view = 'text';
         $this->_date = null;
         $this->_name = null;

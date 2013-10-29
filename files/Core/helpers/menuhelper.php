@@ -14,7 +14,7 @@ class MenuHelper
         $this->_defaultValues();
         return $this;
     }
-    function _defaultValues() {
+    private function _defaultValues() {
         $this->_left = -1;
         $this->_right = 0;
         $this->_float = 0;
