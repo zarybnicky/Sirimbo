@@ -10,7 +10,7 @@ class UserSelectHelper
     private $_tmpSwitch;
 
     public function __construct() {
-        return $this->_userselect();
+        return $this->userSelect();
     }
 
     public function userSelect($name = null) {
@@ -64,13 +64,15 @@ class UserSelectHelper
         $out = '<div class="' . $name . '">' . "\n";
 
         $out .= '<select name="' . $this->_name . '">' . "\n";
-        if (!post($this->_name))
+        if (!post($this->_name)) {
             $out .= '<option value="none" selected="selected">--- žádný ---</option>' . "\n";
-        else
+        } else {
             $out .= '<option value="none">--- žádný ---</option>' . "\n";
+        }
 
-        if ($this->_tmpSwitch)
+        if ($this->_tmpSwitch) {
             $out .= '<option value="temporary">--- dočasný ---</option>' . "\n";
+        }
 
         foreach ($this->_users as $user) {
             if (isset($user['u_narozeni']))
