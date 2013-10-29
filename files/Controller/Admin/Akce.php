@@ -16,9 +16,14 @@ class Controller_Admin_Akce extends Controller_Admin
 
                 foreach ($items as $item) {
                     $id = $item['a_id'];
-                    if ((bool) post($id) !== (bool) $item['a_visible'])
-                        DBAkce::editAkce($id, $item['a_jmeno'], $item['a_kde'], $item['a_info'], $item['a_od'],
-                            $item['a_do'], $item['a_kapacita'], $item['a_dokumenty'], $item['a_lock'], post($id) ? '1' : '0');
+                    if ((bool) post($id) !== (bool) $item['a_visible']) {
+                        DBAkce::editAkce(
+                            $id, $item['a_jmeno'], $item['a_kde'],
+                            $item['a_info'], $item['a_od'],
+                            $item['a_do'], $item['a_kapacita'],
+                            $item['a_dokumenty'], $item['a_lock'], post($id) ? '1' : '0'
+                        );
+                    }
                 }
                 break;
             case 'remove':
@@ -61,9 +66,11 @@ class Controller_Admin_Akce extends Controller_Admin
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0)
             $do = $od;
 
-        DBAkce::addAkce(post('jmeno'), post('kde'), post('info'),
+        DBAkce::addAkce(
+            post('jmeno'), post('kde'), post('info'),
             (string) $od, (string) $do, post('kapacita'), post('dokumenty'),
-            (post('lock') == 'lock') ? 1 : 0, post('visible') ? '1' : '0');
+            (post('lock') == 'lock') ? 1 : 0, post('visible') ? '1' : '0'
+        );
 
         $n = new Novinky(User::getUserID());
         $n->akce()->add('/member/akce', post('jmeno'));
@@ -98,9 +105,11 @@ class Controller_Admin_Akce extends Controller_Admin
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0)
             $do = $od;
 
-        DBAkce::editAkce($id, post('jmeno'), post('kde'), post('info'),
+        DBAkce::editAkce(
+            $id, post('jmeno'), post('kde'), post('info'),
             (string) $od, (string) $do, post('kapacita'), post('dokumenty'),
-            (post('lock') == 'lock') ? 1 : 0, post('visible') ? '1' : '0');
+            (post('lock') == 'lock') ? 1 : 0, post('visible') ? '1' : '0'
+        );
 
         $n = new Novinky(User::getUserID());
         $n->akce()->edit('/member/akce', post('jmeno'));

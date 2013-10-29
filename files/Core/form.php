@@ -28,10 +28,10 @@ class Form
     function checkDate($i, $message, $name = '') {
         if (preg_match(Form::REGEXP_DATE, $i)) {
             list($year, $month, $day) = explode('-', $i);
-            if (!(
-                $day == 31 && ($month == 4 || $month == 6 || $month == 9 || $month == 11) ||
-                $day >= 30 && $month == 2 ||
-                $month == 2 && $day == 29 && !($year % 4 == 0 && ($year % 100 != 0 || $year % 400 == 0))
+            if (
+                !($day == 31 && ($month == 4 || $month == 6 || $month == 9 || $month == 11)
+                || $day >= 30 && $month == 2
+                || $month == 2 && $day == 29 && !($year % 4 == 0 && ($year % 100 != 0 || $year % 400 == 0))
             )) {
                 return true;
             }

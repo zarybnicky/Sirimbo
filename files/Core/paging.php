@@ -63,16 +63,16 @@ class Paging
         $this->_recalculate();
     }
     private function _recalculate() {
-        if (!isset($this->_adapter) ||
-                (!isset($this->_itemsPerPage) && !isset($this->_itemsPerPageField) &&
-                    !isset($this->_defaultItemsPerPage)) ||
-                (!isset($this->_currentPage) && !isset($this->_currentPageField))) {
+        if (!isset($this->_adapter)
+            || (!isset($this->_itemsPerPage) && !isset($this->_itemsPerPageField)
+                && !isset($this->_defaultItemsPerPage))
+            || (!isset($this->_currentPage) && !isset($this->_currentPageField))) {
             $this->_valid = false;
             return;
         }
 
-        if (isset($this->_itemsPerPageField) &&
-                get($this->_itemsPerPageField) !== null)
+        if (isset($this->_itemsPerPageField)
+            && get($this->_itemsPerPageField) !== null)
             $this->_itemsPerPage = get($this->_itemsPerPageField);
         elseif (isset($this->_defaultItemsPerPage))
             $this->_itemsPerPage = $this->_defaultItemsPerPage;

@@ -22,24 +22,30 @@ class Controller_Admin_Permissions extends Controller_Admin
         $data = DBPermissions::getGroups();
         foreach ($data as &$row) {
             $new_data = array(
-                    'checkBox' => '<input type="checkbox" name="permissions[]" value="' . $row['pe_id'] . '" />',
-                    'name' => $row['pe_name'],
-                    'description' => $row['pe_description']
+                'checkBox' => '<input type="checkbox" name="permissions[]" value="' . $row['pe_id'] . '" />',
+                'name' => $row['pe_name'],
+                'description' => $row['pe_description']
             );
             $row = $new_data;
         }
-        $this->render('files/View/Admin/Permissions/Overview.inc', array(
+        $this->render(
+            'files/View/Admin/Permissions/Overview.inc',
+            array(
                 'showMenu' => !TISK,
                 'data' => $data
-        ));
+            )
+        );
     }
     function add($id = null) {
         if (empty($_POST) || is_object($f = $this->_checkData())) {
             if (!empty($_POST))
                 $this->redirect()->setMessage($f->getMessages());
-            $this->render('files/View/Admin/Permissions/Form.inc', array(
+            $this->render(
+                'files/View/Admin/Permissions/Form.inc',
+                array(
                     'action' => Request::getAction()
-            ));
+                )
+            );
             return;
         }
         $permissions = array();
@@ -64,9 +70,12 @@ class Controller_Admin_Permissions extends Controller_Admin
             } else {
                 $this->redirect()->setMessage($f->getMessages());
             }
-            $this->render('files/View/Admin/Permissions/Form.inc', array(
+            $this->render(
+                'files/View/Admin/Permissions/Form.inc',
+                array(
                     'action' => Request::getAction()
-            ));
+                )
+            );
             return;
         }
         $permissions = array();
@@ -74,7 +83,10 @@ class Controller_Admin_Permissions extends Controller_Admin
             $permissions[$name] = post($name);
         DBPermissions::editGroup($id, post('name'), post('description'), $permissions);
 
-        $this->redirect(post('referer') ? post('referer') : '/admin/permissions', 'Oprávnění úspěšně upravena');
+        $this->redirect(
+            post('referer') ? post('referer') : '/admin/permissions',
+            'Oprávnění úspěšně upravena'
+        );
     }
     function remove($id = null) {
         if (!is_array(post('data')) && !is_array(get('u')))
@@ -82,29 +94,38 @@ class Controller_Admin_Permissions extends Controller_Admin
         if (!empty($_POST) && post('action') == 'confirm') {
             foreach (post('data') as $id)
             DBPermissions::removeGroup($id);
-            $this->redirect('/admin/permissions',
-                'Úrovně odebrány. Nezapomeňte přiřadit uživatelům z těchto skupin jinou skupinu!');
+            $this->redirect(
+                '/admin/permissions',
+                'Úrovně odebrány. Nezapomeňte přiřadit uživatelům z těchto skupin jinou skupinu!'
+            );
         }
         $data = array();
         foreach (get('u') as $id) {
             $item = DBPermissions::getSingleGroup($id);
             $data[] = array(
-                    'id' => $item['pe_id'],
-                    'text' => $item['pe_name']
+                'id' => $item['pe_id'],
+                'text' => $item['pe_name']
             );
         }
-        $this->render('files/View/Admin/RemovePrompt.inc', array(
+        $this->render(
+            'files/View/Admin/RemovePrompt.inc',
+            array(
                 'header' => 'Správa oprávnění',
-                'prompt' => notice('Bude nutné přiřadit uživatelům z těchto skupin jinou skupinu!', true) .
-                    'Opravdu chcete odstranit uživatelské úrovně:',
+                'prompt' =>
+                    notice('Bude nutné přiřadit uživatelům z těchto skupin jinou skupinu!', true)
+                    . 'Opravdu chcete odstranit uživatelské úrovně:',
                 'returnURL' => Request::getReferer(),
                 'data' => $data
-        ));
+            )
+        );
     }
     private function _checkData() {
         $f = new Form();
         foreach (Settings::$permissions as $name => $item) {
-            $f->checkArrayKey(post($name), $item, 'Neplatná hodnota práva "' . $name . '"', $name);
+            $f->checkArrayKey(
+                post($name), $item,
+                'Neplatná hodnota práva "' . $name . '"', $name
+            );
             $permissions[$name] = post($name);
         }
         return $f->isValid() ? true : $f;

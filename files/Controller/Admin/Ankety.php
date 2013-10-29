@@ -10,15 +10,18 @@ class Controller_Admin_Ankety extends Controller_Admin
             $this->render("files/Admin/Ankety/Display.inc");
             return;
         }
-
         switch(post("action")) {
             case 'save':
                 $items = DBAnkety::getAnkety();
 
                 foreach ($items as $item) {
                     $id = $item['ak_id'];
-                    if ((bool) post($id) != $item['ak_visible'])
-                        DBAnkety::editAnketa($id, $item['ak_jmeno'], $item['ak_text'], $item['ak_kdo'], post($id) ? '1' : '0');
+                    if ((bool) post($id) != $item['ak_visible']) {
+                        DBAnkety::editAnketa(
+                            $id, $item['ak_jmeno'], $item['ak_text'],
+                            $item['ak_kdo'], post($id) ? '1' : '0'
+                        );
+                    }
                 }
                 break;
             case 'edit':
@@ -43,23 +46,24 @@ class Controller_Admin_Ankety extends Controller_Admin
             $this->render('files/Admin/Ankety/Form.inc');
             return;
         }
-        $visible = (bool) post("visible");
+        $visible = (bool) post('visible');
         if (!Permissions::check('ankety', P_ADMIN)) {
             $visible = false;
             $this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění ankety');
         }
-
-        DBAnkety::addAnketa(User::getUserID(), post('jmeno'), post('text'), '0',
-            (bool) $visible);
+        DBAnkety::addAnketa(
+            User::getUserID(), post('jmeno'), post('text'),
+            '0', (bool) $visible
+        );
         $data = DBAnkety::getLatestAnketa();
 
         if ($visible) {
             $n = new Novinky(User::getUserID());
             $n->ankety()->add(post('jmeno'));
         }
-        if (post("add_text")) {
-            DBAnkety::addAnketaItem($data['ak_id'], post("add_text"));
-            unset($_POST["add_text"]);
+        if (post('add_text')) {
+            DBAnkety::addAnketaItem($data['ak_id'], post('add_text'));
+            unset($_POST['add_text']);
         }
         $this->redirect('/admin/ankety/edit/' . $data['ak_id'], 'Anketa přidána');
     }
@@ -72,20 +76,19 @@ class Controller_Admin_Ankety extends Controller_Admin
         $items = DBAnkety::getAnketaItems($id);
 
         if (empty($_POST)) {
-            post("jmeno", $data["ak_jmeno"]);
-            post("text", $data["ak_text"]);
-            post("visible", $data["ak_visible"]);
+            post('jmeno', $data['ak_jmeno']);
+            post('text', $data['ak_text']);
+            post('visible', $data['ak_visible']);
 
             $this->render("files/Admin/Ankety/Form.inc");
             return;
         }
 
-        if (post("remove") > 0) {
-            DBAnkety::removeAnketaItem(post("remove"));
+        if (post('remove') > 0) {
+            DBAnkety::removeAnketaItem(post('remove'));
             $items = DBAnkety::getAnketaItems($id);
             $changed = true;
         }
-
         foreach ($items as $item) {
             if (post($item["aki_id"] . "-text") != $item["aki_text"]) {
                 DBAnkety::editAnketaItem($item["aki_id"], post($item["aki_id"] . "-text"));
@@ -94,8 +97,8 @@ class Controller_Admin_Ankety extends Controller_Admin
         }
         $items = DBAnkety::getAnketaItems($id);
 
-        if (post("add_text")) {
-            DBAnkety::addAnketaItem($id, post("add_text"));
+        if (post('add_text')) {
+            DBAnkety::addAnketaItem($id, post('add_text'));
             post('add_text', null);
             $items = DBAnkety::getAnketaItems($id);
             $changed = true;
@@ -103,13 +106,14 @@ class Controller_Admin_Ankety extends Controller_Admin
 
         $visible = (bool) post('visible');
         $visible_prev = $data['ak_visible'];
+
         if (!Permissions::check('ankety', P_ADMIN) && $visible != $visible_prev) {
             $visible = $visible_prev;
             $this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění ankety');
         }
 
-        if ($visible != $visible_prev || post('jmeno') != $data['ak_jmeno'] ||
-                post('text') != $data['ak_text']) {
+        if ($visible != $visible_prev || post('jmeno') != $data['ak_jmeno']
+            || post('text') != $data['ak_text']) {
             DBAnkety::editAnketa($id, post('jmeno'), post('text'), '0', $visible);
             $data = DBAnkety::getSingleAnketa($id);
             $changed = true;
@@ -126,9 +130,9 @@ class Controller_Admin_Ankety extends Controller_Admin
                     $n->ankety()->remove($data['ak_jmeno']);
             }
         }
-        post("jmeno", $data["ak_jmeno"]);
-        post("text", $data["ak_text"]);
-        post("visible", $data["ak_visible"]);
+        post('jmeno', $data['ak_jmeno']);
+        post('text', $data['ak_text']);
+        post('visible', $data['ak_visible']);
 
         $this->render("files/Admin/Ankety/Form.inc");
     }
@@ -153,7 +157,7 @@ class Controller_Admin_Ankety extends Controller_Admin
             }
         }
         if (isset($error) && $error)
-            throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
+            throw new AuthorizationException('Máte nedostatečnou autorizaci pro tuto akci!');
 
         $this->redirect('/admin/ankety', 'Ankety odebrány');
     }

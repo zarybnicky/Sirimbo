@@ -39,21 +39,25 @@ class Controller_Admin_Aktuality extends Controller_Admin
         }
         $preview = trim(substr(strip_tags(post('text')), 0, AKTUALITY_PREVIEW));
 
-        if (($foto_data = DBGalerie::getFotky(post('foto'))) &&
-                $foto_data[0]['gf_id'])
+        if (($foto_data = DBGalerie::getFotky(post('foto')))
+            && $foto_data[0]['gf_id'])
             $f_id = $foto_data[0]['gf_id'];
         else
             $f_id = 0;
 
-        $id = DBAktuality::addAktualita(User::getUserID(), post('kat'), post('jmeno'),
-            post('text'), $preview, post('foto'), $f_id);
+        $id = DBAktuality::addAktualita(
+            User::getUserID(), post('kat'), post('jmeno'),
+            post('text'), $preview, post('foto'), $f_id
+        );
 
         $n = new Novinky(User::getUserID());
         switch(post('kat')) {
             case AKTUALITY_VIDEA:
                 $n->video()->add('/aktuality/' . $id, post('jmeno'));
+                break;
             case AKTUALITY_CLANKY:
                 $n->clanek()->add('/aktuality/' . $id, post('jmeno'));
+                break;
         }
         $this->redirect('/admin/aktuality', 'Článek přidán');
     }
@@ -72,18 +76,20 @@ class Controller_Admin_Aktuality extends Controller_Admin
             $this->render("files/Admin/Aktuality/Form.inc");
             return;
         }
-        if (post('kat') != $data['at_kat'] || post('jmeno') != $data['at_jmeno'] ||
-                post('text') != $data['at_text'] || post('foto') != $data['at_foto']) {
+        if (post('kat') != $data['at_kat'] || post('jmeno') != $data['at_jmeno']
+            || post('text') != $data['at_text'] || post('foto') != $data['at_foto']) {
             $preview = trim(substr(strip_tags(post('text')), 0, AKTUALITY_PREVIEW));
 
-            if (($foto_data = DBGalerie::getFotky(post('foto'))) &&
-                    $foto_data[0]['gf_id'])
+            if (($foto_data = DBGalerie::getFotky(post('foto')))
+                && $foto_data[0]['gf_id'])
                 $f_id = $foto_data[0]['gf_id'];
             else
                 $f_id = 0;
 
-            DBAktuality::editAktualita($id, post('kat'), post('jmeno'), post('text'),
-                $preview, post('foto'), $f_id);
+            DBAktuality::editAktualita(
+                $id, post('kat'), post('jmeno'), post('text'),
+                $preview, post('foto'), $f_id
+            );
             $changed = true;
         }
         if (isset($changed) && $changed) {
@@ -91,11 +97,12 @@ class Controller_Admin_Aktuality extends Controller_Admin
             switch(post('kat')) {
                 case AKTUALITY_VIDEA:
                     $n->video()->edit('/aktuality/' . $id, post('jmeno'));
+                    break;
                 case AKTUALITY_CLANKY:
                     $n->clanek()->edit('/aktuality/' . $id, post('jmeno'));
+                    break;
             }
         }
-
         $this->redirect('/admin/aktuality', 'Článek změněn');
     }
     function remove($id = null) {

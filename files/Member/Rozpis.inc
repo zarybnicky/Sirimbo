@@ -24,11 +24,11 @@ foreach ($rozpis as $item) {
     } else {
         echo '<td class="unit">';
     }
-    
+
     DisplayRozpis::viewRozpisHeader($item);
     echo '<table style="margin:0 auto;">';
     echo '<tr><td>Od</td><td>Do</td><td>Tanečník</td></tr>';
-    
+
     $r_items = DBRozpis::getRozpisItem($item['r_id']);
     foreach ($r_items as $par) {
         echo '<form action="', $_SERVER['REQUEST_URI'], '" method="post">';
@@ -40,9 +40,9 @@ foreach ($rozpis as $item) {
             '</td>';
         if ($par['ri_partner'] == 0 && !$item['r_lock'] && !$par['ri_lock'] && Permissions::check('rozpis', P_MEMBER))
             echo '<td><button type="submit" name="action" value="signup">Rezervovat</button></td>';
-        if ($par['ri_partner'] != 0 && !$item['r_lock'] && !$par['ri_lock'] &&
-                ((Permissions::check('rozpis', P_MEMBER) && User::getParID() == $par['ri_partner']) ||
-                Permissions::check('rozpis', P_OWNED, $item['r_trener'])))
+        if ($par['ri_partner'] != 0 && !$item['r_lock'] && !$par['ri_lock']
+            && ((Permissions::check('rozpis', P_MEMBER) && User::getParID() == $par['ri_partner'])
+            || Permissions::check('rozpis', P_OWNED, $item['r_trener'])))
                 echo '<td><button type="submit" name="action" value="signout">Zrušit</button></td>';
         echo '</tr>';
         echo '</form>';

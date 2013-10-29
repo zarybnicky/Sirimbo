@@ -14,10 +14,13 @@ class Controller_Member_Nastenka extends Controller_Member
         $data = $pager->getItems();
 
         if (empty($data)) {
-            $this->render('files/View/Empty.inc', array(
+            $this->render(
+                'files/View/Empty.inc',
+                array(
                     'nadpis' => 'Upozornění',
                     'notice' => 'Žádná upozornění nejsou k dispozici'
-            ));
+                )
+            );
             return;
         }
         foreach ($data as &$item) {
@@ -37,10 +40,13 @@ class Controller_Member_Nastenka extends Controller_Member
             );
             $item = $new_data;
         }
-        $this->render('files/View/Member/Nastenka.inc', array(
+        $this->render(
+            'files/View/Member/Nastenka.inc',
+            array(
                 'data' => $data,
                 'navigation' => $pager->getNavigation()
-        ));
+            )
+        );
     }
 }
 ?>

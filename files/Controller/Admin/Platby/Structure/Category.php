@@ -6,10 +6,13 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         Permissions::checkError('platby', P_OWNED);
     }
     function view($id = null) {
-        $this->render('files/View/Admin/Platby/StructureSymbolOverview.inc', array(
+        $this->render(
+            'files/View/Admin/Platby/StructureSymbolOverview.inc',
+            array(
                 'data' => $this->getCategories(false),
                 'archived' => $this->getCategories(true)
-        ));
+            )
+        );
     }
     protected function getCategories($archived = false) {
         $out = array();
@@ -21,8 +24,9 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             $new_data['symbol'] = $array['pc_symbol'];
             $new_data['amount'] = ($array['pc_amount'] . ($array['pc_use_base'] ? ' * ?' : '')) . ' Kč';
             $new_data['validDate'] = $this->getDateDisplay($array['pc_valid_from'], $array['pc_valid_to']);
-            $new_data['buttons'] = $this->getEditLink('/admin/platby/structure/category/edit/' . $array['pc_id']) .
-                $this->getRemoveLink('/admin/platby/structure/category/remove/' . $array['pc_id']);
+            $new_data['buttons'] =
+                $this->getEditLink('/admin/platby/structure/category/edit/' . $array['pc_id'])
+                . $this->getRemoveLink('/admin/platby/structure/category/remove/' . $array['pc_id']);
             $out[] = $new_data;
         }
         return $out;
@@ -54,8 +58,10 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         $use_prefix = post('usePrefix') ? '1' : '0';
         $archive = post('archive') ? '1' : '0';
 
-        DBPlatbyCategory::insert(post('name'), post('symbol'), $amount, (string) $dueDate,
-            (string) $validFrom, (string) $validTo, $use_base, $use_prefix, $archive);
+        DBPlatbyCategory::insert(
+            post('name'), post('symbol'), $amount, (string) $dueDate,
+            (string) $validFrom, (string) $validTo, $use_base, $use_prefix, $archive
+        );
         $insertId = DBPlatbyCategory::getInsertId();
         if (get('group') && ($data = DBPlatbyGroup::getSingle(get('group')))) {
             DBPlatbyGroup::addChild(get('group'), $insertId);
@@ -66,20 +72,36 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
 
             if (!empty($conflicts)) {
                 DBPlatbyGroup::removeChild(get('category'), $insertId);
-                $this->redirect('/admin/platby/structure/group/edit/' . get('group'),
-                        'Specifický symbol byl přidán, ale nebyl přiřazen - takové přiřazení není platné.');
+                $this->redirect(
+                    '/admin/platby/structure/group/edit/' . get('group'),
+                    'Specifický symbol byl přidán, ale nebyl přiřazen - takové přiřazení není platné.'
+                );
             }
-            $this->redirect('/admin/platby/structure/group/edit/' . get('group'), 'Specifický symbol úspěšně přidán a přiřazen');
+            $this->redirect(
+                '/admin/platby/structure/group/edit/' . get('group'),
+                'Specifický symbol úspěšně přidán a přiřazen'
+            );
         }
-        $this->redirect(post('referer') ? post('referer') : '/admin/platby/structure', 'Specifický symbol úspěšně přidán');
+        $this->redirect(
+            post('referer') ? post('referer') : '/admin/platby/structure',
+            'Specifický symbol úspěšně přidán'
+        );
     }
     function edit($id = null) {
-        if (!$id || !($data = DBPlatbyCategory::getSingle($id)))
-            $this->redirect(post('referer') ? post('referer') : '/admin/platby/structure', 'Kategorie s takovým ID neexistuje');
+        if (!$id || !($data = DBPlatbyCategory::getSingle($id))) {
+            $this->redirect(
+                post('referer') ? post('referer') : '/admin/platby/structure',
+                'Kategorie s takovým ID neexistuje'
+            );
+        }
 
         if (post('action') == 'group') {
-            if (!($data = DBPlatbyGroup::getSingle(post('group'))))
-                $this->redirect('/admin/platby/structure/category/edit/' . $id, 'Kategorie s takovým ID neexistuje.');
+            if (!($data = DBPlatbyGroup::getSingle(post('group')))) {
+                $this->redirect(
+                    '/admin/platby/structure/category/edit/' . $id,
+                    'Kategorie s takovým ID neexistuje.'
+                );
+            }
 
             DBPlatbyGroup::addChild(post('group'), $id);
             $skupiny = DBPlatbyGroup::getSingleWithSkupiny(post('group'));
@@ -89,16 +111,28 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
 
             if (!empty($conflicts)) {
                 DBPlatbyGroup::removeChild(post('group'), $id);
-                $this->redirect('/admin/platby/structure/category/edit/' . $id,
-                    'Takové přiřazení není platné - způsobilo by, že jeden specifický symbol by byl v jedné skupině dvakrát.');
+                $this->redirect(
+                    '/admin/platby/structure/category/edit/' . $id,
+                    'Takové přiřazení není platné - způsobilo by, '
+                    . 'že jeden specifický symbol by byl v jedné skupině dvakrát.'
+                );
             }
-            $this->redirect('/admin/platby/structure/category/edit/' . $id, 'Kategorie byla úspěšně přiřazena.');
+            $this->redirect(
+                '/admin/platby/structure/category/edit/' . $id,
+                'Kategorie byla úspěšně přiřazena.'
+            );
         } elseif (post('action') == 'group_remove') {
-            if (!($data = DBPlatbyGroup::getSingle(post('group'))))
-                $this->redirect('/admin/platby/structure/category/edit/' . $id, 'Kategorie s takovým ID neexistuje.');
-
+            if (!($data = DBPlatbyGroup::getSingle(post('group')))) {
+                $this->redirect(
+                    '/admin/platby/structure/category/edit/' . $id,
+                    'Kategorie s takovým ID neexistuje.'
+                );
+            }
             DBPlatbyGroup::removeChild(post('group'), $id);
-            $this->redirect('/admin/platby/structure/category/edit/' . $id, 'Spojení s kategorií bylo úspěšně odstraněno.');
+            $this->redirect(
+                '/admin/platby/structure/category/edit/' . $id,
+                'Spojení s kategorií bylo úspěšně odstraněno.'
+            );
         }
 
         if (empty($_POST) || is_object($s = $this->checkPost('edit'))) {
@@ -138,15 +172,28 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         $use_prefix = post('usePrefix') ? '1' : '0';
         $archive = post('archive') ? '1' : '0';
 
-        DBPlatbyCategory::update($id, post('name'), post('symbol'), $amount, (string) $dueDate,
-            (string) $validFrom, (string) $validTo, $use_base, $use_prefix, $archive);
-        if (get('group'))
-            $this->redirect('/admin/platby/structure/group/edit/' . get('group'), 'Specifický symbol úspěšně upraven');
-        $this->redirect(post('referer') ? post('referer') : '/admin/platby/structure', 'Specifický symbol úspěšně upraven');
+        DBPlatbyCategory::update(
+            $id, post('name'), post('symbol'), $amount, (string) $dueDate,
+            (string) $validFrom, (string) $validTo, $use_base, $use_prefix, $archive
+        );
+        if (get('group')) {
+            $this->redirect(
+                '/admin/platby/structure/group/edit/' . get('group'),
+                'Specifický symbol úspěšně upraven'
+            );
+        }
+        $this->redirect(
+            post('referer') ? post('referer') : '/admin/platby/structure',
+            'Specifický symbol úspěšně upraven'
+        );
     }
     function remove($id = null) {
-        if (!$id || !($data = DBPlatbyCategory::getSingle($id)))
-            $this->redirect(post('referer') ? post('referer') : '/admin/platby/structure', 'Specifický symbol s takovým ID neexistuje');
+        if (!$id || !($data = DBPlatbyCategory::getSingle($id))) {
+            $this->redirect(
+                post('referer') ? post('referer') : '/admin/platby/structure',
+                'Specifický symbol s takovým ID neexistuje'
+            );
+        }
 
         if (post('action') == 'unlink') {
             $f = $this->_getLinkedObjects($id);
@@ -164,35 +211,53 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                 DBPlatbyItem::remove($data['pi_id']);
                 ++$itemCount;
             }
-            $this->redirect('/admin/platby/structure/category/remove/' . $id,
-                    'Spojení s \'' . $groupCount . '\' kategoriemi a s \'' . $itemCount . '\' platbami bylo odstraněno');
+            $this->redirect(
+                '/admin/platby/structure/category/remove/' . $id,
+                'Spojení s ' . $groupCount . ' kategoriemi a s ' . $itemCount . ' platbami bylo odstraněno'
+            );
             return;
         } elseif (post('action') == 'archive') {
-            DBPlatbyCategory::update($id, $data['pc_name'], $data['pc_symbol'], $data['pc_amount'],
-                $data['pc_date_due'], $data['pc_valid_from'], $data['pc_valid_to'], $data['pc_use_base'], $data['pc_use_prefix'], '1');
-            $this->redirect('/admin/platby/structure/category', 'Specifický symbol "' . $data['pc_symbol'] . '" byl archivován');
+            DBPlatbyCategory::update(
+                $id, $data['pc_name'], $data['pc_symbol'], $data['pc_amount'],
+                $data['pc_date_due'], $data['pc_valid_from'], $data['pc_valid_to'],
+                $data['pc_use_base'], $data['pc_use_prefix'], '1'
+            );
+            $this->redirect(
+                '/admin/platby/structure/category',
+                'Specifický symbol "' . $data['pc_symbol'] . '" byl archivován'
+            );
             return;
         }
-        if (((empty($_POST) || post('action') == 'confirm') && ($f = $this->_getLinkedObjects($id))) || empty($_POST)) {
+        if (((empty($_POST) || post('action') == 'confirm')
+             && ($f = $this->_getLinkedObjects($id)))
+            || empty($_POST)
+        ) {
             if (isset($f) && $f) {
                 $this->redirect()->setMessage(
-                        'Nemůžu odstranit specifický symbol s připojenými kategoriemi nebo položkami! ' .
-                        '<form action="" method="post">' .
-                            (!$data['pc_archive'] ?
-                                '<button type="submit" name="action" value="archive">Archivovat?</button> nebo ' : '') .
-                            '<button type="submit" name="action" value="unlink">' .
-                            'Odstranit všechna spojení se skupinami a kategoriemi a přesunout ovlivněné platby do nezařazených?</button>' .
-                        '</form>'
+                    'Nemůžu odstranit specifický symbol s připojenými kategoriemi nebo položkami! '
+                    . '<form action="" method="post">'
+                    .   (!$data['pc_archive']
+                        ? '<button type="submit" name="action" value="archive">Archivovat?</button> nebo '
+                        : '')
+                    .   '<button type="submit" name="action" value="unlink">'
+                    .   'Odstranit všechna spojení se skupinami a kategoriemi a přesunout ovlivněné platby do nezařazených?</button>'
+                    .   '</form>'
                 );
             }
-            $this->render('files/View/Admin/Platby/StructureSymbolRemove.inc', array(
+            $this->render(
+                'files/View/Admin/Platby/StructureSymbolRemove.inc',
+                array(
                     'id' => $id,
                     'name' => $data['pc_name']
-            ));
+                )
+            );
             return;
         }
         DBPlatbyCategory::delete($id);
-        $this->redirect(post('referer') ? post('referer') : '/admin/platby/structure', 'Specifický symbol byl odebrán');
+        $this->redirect(
+            post('referer') ? post('referer') : '/admin/platby/structure',
+            'Specifický symbol byl odebrán'
+        );
     }
     private function _getLinkedObjects($id) {
         $group = DBPlatbyCategory::getSingleWithGroups($id);
@@ -209,14 +274,14 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         $groups = DBPlatbyCategory::getSingleWithGroups($id);
         foreach ($groups as &$array) {
             $new_data = array(
-                    'buttons' => '<form action="" method="post">' .
-                        $this->getUnlinkGroupButton($array['pg_id']) .
-                        $this->getEditLink('/admin/platby/structure/group/edit/' . $array['pg_id']) .
-                        $this->getRemoveLink('/admin/platby/structure/group/remove/' . $array['pg_id']) .
-                        '</form>',
-                    'type' => ($array['pg_type'] == '1' ? 'Členské příspěvky' : 'Běžné platby'),
-                    'name' => $array['pg_name'],
-                    'base' => $array['pg_base']
+                'buttons' => '<form action="" method="post">'
+                . $this->getUnlinkGroupButton($array['pg_id'])
+                . $this->getEditLink('/admin/platby/structure/group/edit/' . $array['pg_id'])
+                . $this->getRemoveLink('/admin/platby/structure/group/remove/' . $array['pg_id'])
+                . '</form>',
+                'type' => ($array['pg_type'] == '1' ? 'Členské příspěvky' : 'Běžné platby'),
+                'name' => $array['pg_name'],
+                'base' => $array['pg_base']
             );
             $array = $new_data;
         }unset($array);
@@ -227,12 +292,15 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             $groupSelect[$array['pg_id']] = $array['pg_name'];
         }unset($array);
 
-        $this->render('files/View/Admin/Platby/StructureSymbolForm.inc', array(
+        $this->render(
+            'files/View/Admin/Platby/StructureSymbolForm.inc',
+            array(
                 'id' => $id,
                 'action' => $action,
                 'groups' => $groups,
                 'groupSelect' => $groupSelect
-        ));
+            )
+        );
     }
     protected function checkPost($action) {
         $f = new Form();
@@ -243,21 +311,40 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
 
         $validRange = $this->date('validRange')->range()->getPostRange();
         if ($validRange['from']->getYear() == '0000') {
-            $f->checkDate(str_replace('0000', '2000', (string) $validRange['from']), 'Datum platnosti není platné');
-            if ($validRange['to']->isValid() && $validRange['to']->getYear() == '0000')
-                $f->checkDate(str_replace('0000', '2000', (string) $validRange['to']), 'Datum platnosti (část \'do\') není platné');
-            else
-                $f->checkDate((string) $validRange['from'], 'Datum platnosti (část \'do\') není platné');
+            $f->checkDate(
+                str_replace('0000', '2000', (string) $validRange['from']),
+                'Datum platnosti není platné'
+            );
+            if ($validRange['to']->isValid() && $validRange['to']->getYear() == '0000') {
+                $f->checkDate(
+                    str_replace('0000', '2000', (string) $validRange['to']),
+                    'Datum platnosti (část \'do\') není platné'
+                );
+            } else {
+                $f->checkDate(
+                    (string) $validRange['from'],
+                    'Datum platnosti (část \'do\') není platné'
+                );
+            }
         } else {
-            $f->checkDate((string) $validRange['from'], 'Datum platnosti není platné');
-            if ($validRange['to']->isValid())
-                $f->checkDate((string) $validRange['from'], 'Datum platnosti (část \'do\') není platné');
+            $f->checkDate(
+                (string) $validRange['from'],
+                'Datum platnosti není platné'
+            );
+            if ($validRange['to']->isValid()) {
+                $f->checkDate(
+                    (string) $validRange['from'],
+                    'Datum platnosti (část \'do\') není platné'
+                );
+            }
         }
-        if (!post('archive'))
+        if (!post('archive')) {
             $f->checkBool(
-                !($active = DBPlatbyCategory::checkActiveSymbol(post('symbol'))) ||
-                    ($action == 'edit' ? $active['pc_id'] == Request::getID() : false),
-                $active ? ('Už existuje aktivní specifický symbol se symbolem ' . post('symbol') . ' (' . $active['pc_name'] . ')') : '', '');
+                !($active = DBPlatbyCategory::checkActiveSymbol(post('symbol')))
+                || ($action == 'edit' ? $active['pc_id'] == Request::getID() : false),
+                $active ? ('Už existuje aktivní specifický symbol se symbolem ' . post('symbol') . ' (' . $active['pc_name'] . ')') : '', ''
+            );
+        }
         $f->checkNotEmpty(post('name'), 'Zadejte prosím nějaké jméno.');
         $f->checkNumeric(post('symbol'), 'Zadejte prosím platný specifický symbol.');
         $f->checkRegexp(post('amount'), '/(\*)?([0-9]+)([.,][0-9]+)?/', 'Zadejte prosím platnou očekávanou částku.');

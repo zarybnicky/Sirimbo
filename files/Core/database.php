@@ -73,8 +73,8 @@ class Database
             throw new DatabaseException('Nastala chyba v dotazu na databázi.');
     }
     public static function isDatabaseError() {
-        return (get('file') == 'error' && get('id') &&
-            (get('id') == ER_DATABASE_CONNECTION || get('id') == ER_DATABASE));
+        return (get('file') == 'error' && get('id')
+        && (get('id') == ER_DATABASE_CONNECTION || get('id') == ER_DATABASE));
     }
 }
 ?>

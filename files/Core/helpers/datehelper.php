@@ -107,9 +107,9 @@ class DateHelper
                 return array('from' => $this->getPost(true), 'to' => new Date());
 
             return array('from' => $from, 'to' => $to);
-        } elseif (post($this->_name . '-from-year') && post($this->_name . '-from-month') &&
-                post($this->_name . '-from-day') && post($this->_name . '-to-year') && post($this->_name . '-to-month') &&
-                post($this->_name . '-to-day')) {
+        } elseif (post($this->_name . '-from-year') && post($this->_name . '-from-month')
+            && post($this->_name . '-from-day') && post($this->_name . '-to-year') && post($this->_name . '-to-month')
+            && post($this->_name . '-to-day')) {
             $from = new Date(post($this->_name . '-from-year') . '-' .
                     post($this->_name . '-from-month') . '-' .
                     post($this->_name . '-from-day'));
@@ -133,8 +133,8 @@ class DateHelper
 
         if (post($name)) {
             return new Date(post($name));
-        } elseif (post($name . '-year') && post($name . '-month') &&
-                post($name . '-day')) {
+        } elseif (post($name . '-year') && post($name . '-month')
+            && post($name . '-day')) {
             return new Date(post($name . '-year') . '-' .
                 post($name . '-month') . '-' .
                 post($name . '-day'));
