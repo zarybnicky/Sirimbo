@@ -10,10 +10,10 @@ class SelectHelper
         $this->_defaultValues();
 
         if ($n !== null)
-            return $this->_name($n);
+            return $this->name($n);
         return $this;
     }
-    function _defaultValues() {
+    private function _defaultValues() {
         $this->_name = '';
         $this->_value = null;
         $this->_options = array();
