@@ -7,6 +7,7 @@ public/galerie/*
 !public/galerie/.gitignore
 public/images/*
 !public/images/.gitignore
+public/style/**.png
 upload/*
 !upload/.gitignore
 log/*

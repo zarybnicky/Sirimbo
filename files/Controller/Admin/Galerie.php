@@ -123,28 +123,30 @@ class Controller_Admin_Galerie extends Controller_Admin
         unset($fs_thumbnail_dirs);
 
         foreach ($fs_dirs as $key => $parent) {
-            if (!isset($db_out_dirs[str_replace(GALERIE . DIRECTORY_SEPARATOR, '', $key)])
-                || (GALERIE . DIRECTORY_SEPARATOR . $db_out_dirs[$key] != $fs_dirs[$key])
+            $db_key = str_replace(GALERIE . DIRECTORY_SEPARATOR, '', $key);
+            if (isset($db_out_dirs[$db_key])
+                && (GALERIE . DIRECTORY_SEPARATOR . $db_out_dirs[$db_key]
+                    == $fs_dirs[$key])
             ) {
-                continue;
+                unset($fs_dirs[$key]);
+                unset($db_out_dirs[$db_key]);
             }
-            unset($fs_dirs[$key]);
-            unset($db_out_dirs[$key]);
         }
         foreach ($fs_files as $key => $parent) {
             if (!is_file(str_replace(GALERIE, GALERIE_THUMBS, $key))
-                && !$this->_createThumbnail($key, $parent)
+                && !$this->_createThumbnail($key)
             ) {
                 unset($fs_files[$key]);
                 continue;
             }
-            if (!isset($db_out_files[str_replace(GALERIE . DIRECTORY_SEPARATOR, '', $key)])
-                || (GALERIE . DIRECTORY_SEPARATOR . $db_out_files[$key] != $fs_files[$key])
+            $db_key = str_replace(GALERIE . DIRECTORY_SEPARATOR, '', $key);
+            if (isset($db_out_files[$db_key])
+                && (GALERIE . DIRECTORY_SEPARATOR . $db_out_files[$db_key]
+                    == $fs_files[$key])
             ) {
-                continue;
+                unset($fs_files[$key]);
+                unset($db_out_files[$db_key]);
             }
-            unset($fs_files[$key]);
-            unset($db_out_files[$key]);
         }
 
         foreach ($db_out_dirs as $dir => $parent) {
@@ -156,9 +158,10 @@ class Controller_Admin_Galerie extends Controller_Admin
 
         asort($fs_dirs);
         foreach ($fs_dirs as $dir => $parent) {
-            $parts = explode('/', $dir);
+            $db_dir = str_replace(GALERIE . DIRECTORY_SEPARATOR, '', $dir);
+            $parts = explode('/', $db_dir);
             $name = array_pop($parts);
-            $level = count($parts);
+            $level = count($parts) + 2;
             unset($parts);
 
             $tn_dir = str_replace(GALERIE, GALERIE_THUMBS, $dir);
@@ -166,13 +169,14 @@ class Controller_Admin_Galerie extends Controller_Admin
                 mkdir($tn_dir, 0777, true);
 
             DBGalerie::addDirByPath(
-                $name, $parent, $level,
-                str_replace(GALERIE . DIRECTORY_SEPARATOR, '', $dir)
+                $name,
+                str_replace(GALERIE . DIRECTORY_SEPARATOR, '', $parent),
+                $level,
+                $db_dir
             );
         }
-
         foreach ($fs_files as $file => $parent) {
-            if (!$this->_createThumbnail($file, $parent))
+            if (!file_exists(str_replace(GALERIE, GALERIE_THUMBS, $file)) && !$this->_createThumbnail($file))
                 continue;
 
             $parts = explode(DIRECTORY_SEPARATOR, $file);
@@ -352,6 +356,8 @@ class Controller_Admin_Galerie extends Controller_Admin
             if (is_dir($file_list[$key])) {
                 $out_dirs[$file_list[$key]] = ($dir_name == GALERIE ? GALERIE . DIRECTORY_SEPARATOR . '0' : $dir_name);
                 $this->_recursiveDirs($file_list[$key], $out_dirs, $out_files);
+            } elseif(is_file($file_list[$key])) {
+                $out_files[$file_list[$key]] = $dir_name;
             }
         }
     }
@@ -371,7 +377,7 @@ class Controller_Admin_Galerie extends Controller_Admin
         unset($objects);
         rmdir($dir);
     }
-    private function _createThumbnail($file, $parent) {
+    private function _createThumbnail($file) {
         $filetype = image_type_to_mime_type(exif_imagetype($file));
         if (!$filetype || !array_key_exists($filetype, Settings::$fotoTypes)) {
             unset($fs_files[$file]);
@@ -401,10 +407,9 @@ class Controller_Admin_Galerie extends Controller_Admin
             imageCopyResized($thumbnail, $source,
             0, 0, 0, 0, $nWidth, $nHeight, $width, $height);
         }
-        $tn_dir = str_replace(GALERIE, GALERIE_THUMBS', $parent);
         $tn_path = str_replace(GALERIE, GALERIE_THUMBS, $file);
-        if (!is_dir($tn_dir))
-            mkdir($tn_dir, 0777, true);
+        if (!is_dir(dirname($tn_path)))
+            mkdir(dirname($tn_path), 0777, true);
 
         $fn_write($thumbnail, $tn_path);
         imageDestroy($thumbnail);

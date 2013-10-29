@@ -120,15 +120,15 @@
  </target>
 
  <target name="phpunit" description="Run unit tests with PHPUnit">
-  <!--<exec executable="phpunit" failonerror="true">
-   <arg value="- -log-junit" />
-   <arg path="${basedir}/build/logs/junit.xml" />
-   <arg value="- -coverage-clover" />
-   <arg path="${basedir}/build/logs/clover.xml" />
-   <arg value="- -configuration" />
-   <arg path="${basedir}/tests/phpunit.xml" />
-   <arg value="${basedir}" />
-  </exec>-->
+  <exec executable="phpunit" failonerror="true">
+  	<arg value="--log-junit" />
+  	<arg path="${basedir}/build/logs/junit.xml" />
+  	<arg value="--coverage-clover" />
+  	<arg path="${basedir}/build/logs/clover.xml" />
+  	<arg value="--configuration" />
+  	<arg path="${basedir}/tests/phpunit.xml" />
+  	<arg value="${basedir}" />
+  </exec>
  </target>
 
  <target name="phpcb" description="Aggregate tool output with PHP_CodeBrowser">
