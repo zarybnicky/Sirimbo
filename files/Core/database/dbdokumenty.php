@@ -1,87 +1,118 @@
 <?php
 class DBDokumenty extends Database
 {
-    public static function getDokumenty() {
-        $res = DBDokumenty::query("SELECT u_jmeno,u_prijmeni,d_id,d_path,d_name,d_filename,d_kategorie,d_kdo" .
-            " FROM dokumenty LEFT JOIN users ON d_kdo=u_id ORDER BY d_id DESC");
-        return DBDokumenty::getArray($res);
+    public static function getDokumenty()
+    {
+        $res = self::query(
+            "SELECT *
+            FROM dokumenty
+            LEFT JOIN users ON d_kdo=u_id
+            ORDER BY d_id DESC"
+        );
+        return self::getArray($res);
     }
+    public static function getMultipleById($ids)
+    {
+        list($kat) = self::escape($ids);
 
-    public static function getDokumentyByKategorie($kat) {
-        list($kat) = DBDokumenty::escapeArray(array($kat));
-        $res = DBDokumenty::query("SELECT u_jmeno,u_prijmeni,d_id,d_path,d_name,d_filename,d_kategorie,d_kdo" .
-            " FROM dokumenty LEFT JOIN users ON d_kdo=u_id WHERE d_kategorie='$kat' ORDER BY d_id DESC");
-        return DBDokumenty::getArray($res);
+        $query = 'SELECT *
+            FROM dokumenty
+            LEFT JOIN users ON d_kdo=u_id
+            WHERE d_id IN (';
+        for($i = 0; $i < count($ids); $i++) {
+            $query .= "'{$ids[$i]}'";
+            if($i + 1 < count($ids)) {
+                $query .= ',';
+            }
+        }
+        $query .= ')';
+        $res = self::query($query);
+        return self::getArray($res);
     }
-
-    public static function getSingleDokument($id) {
-        list($id) = DBDokumenty::escapeArray(array($id));
-        $res = DBDokumenty::query("SELECT u_jmeno,u_prijmeni,d_id,d_path,d_name,d_filename,d_kategorie,d_kdo" .
-            " FROM dokumenty LEFT JOIN users ON d_kdo=u_id WHERE d_id='$id'");
+    public static function getDokumentyByKategorie($kat)
+    {
+        list($kat) = self::escape($kat);
+        $res = self::query(
+            "SELECT *
+            FROM dokumenty
+            LEFT JOIN users ON d_kdo=u_id
+            WHERE d_kategorie='$kat'
+            ORDER BY d_id DESC"
+        );
+        return self::getArray($res);
+    }
+    public static function getSingleDokument($id)
+    {
+        list($id) = self::escape($id);
+        $res = self::query(
+            "SELECT *
+            FROM dokumenty
+            LEFT JOIN users ON d_kdo=u_id
+            WHERE d_id='$id'"
+        );
         if (!$res) {
             return false;
         } else {
-            return DBDokumenty::getSingleRow($res);
+            return self::getSingleRow($res);
         }
     }
+    public static function getDokumentPath($id)
+    {
+        list($id) = self::escape($id);
 
-    public static function getDokumentPath($id) {
-        list($id) = DBDokumenty::escapeArray(array($id));
-
-        $res = DBDokumenty::query("SELECT d_path FROM dokumenty WHERE d_id='$id'");
+        $res = self::query("SELECT d_path FROM dokumenty WHERE d_id='$id'");
         if (!$res) {
             return false;
         } else {
-            $row = DBDokumenty::getSingleRow($res);
+            $row = self::getSingleRow($res);
             return $row["d_path"];
         }
     }
+    public static function getDokumentUserID($id)
+    {
+        list($id) = self::escape($id);
 
-    public static function getDokumentUserID($id) {
-        list($id) = DBDokumenty::escapeArray(array($id));
-
-        $res = DBDokumenty::query("SELECT d_kdo FROM dokumenty WHERE d_id='$id'");
+        $res = self::query("SELECT d_kdo FROM dokumenty WHERE d_id='$id'");
         if (!$res) {
             return false;
         } else {
-            $row = DBDokumenty::getSingleRow($res);
+            $row = self::getSingleRow($res);
             return $row["d_kdo"];
         }
     }
+    public static function getDokumentName($id)
+    {
+        list($id) = self::escape($id);
 
-    public static function getDokumentName($id) {
-        list($id) = DBDokumenty::escapeArray(array($id));
-
-        $res = DBDokumenty::query("SELECT d_name FROM dokumenty WHERE d_id='$id'");
+        $res = self::query("SELECT d_name FROM dokumenty WHERE d_id='$id'");
         if (!$res) {
             return false;
         } else {
-            $row = DBDokumenty::getSingleRow($res);
+            $row = self::getSingleRow($res);
             return $row["d_name"];
         }
     }
-
-    public static function addDokument($path, $name, $filename, $kategorie, $kdo) {
+    public static function addDokument($path, $name, $filename, $kategorie, $kdo)
+    {
         list($path, $name, $filename, $kategorie, $kdo) =
-            DBDokumenty::escapeArray(array($path, $name, $filename, $kategorie, $kdo));
+            self::escape($path, $name, $filename, $kategorie, $kdo);
 
-        DBDokumenty::query("INSERT INTO dokumenty (d_path,d_name,d_filename,d_kategorie,d_kdo) VALUES " .
+        self::query("INSERT INTO dokumenty (d_path,d_name,d_filename,d_kategorie,d_kdo) VALUES " .
             "('$path','$name','$filename','$kategorie','$kdo')");
         return self::getInsertId();
     }
+    public static function editDokument($id, $newname)
+    {
+        list($id, $newname) = self::escape($id, $newname);
 
-    public static function editDokument($id, $newname) {
-        list($id, $newname) = DBDokumenty::escapeArray(array($id, $newname));
-
-        DBDokumenty::query("UPDATE dokumenty SET d_name='$newname' WHERE d_id='$id'");
+        self::query("UPDATE dokumenty SET d_name='$newname' WHERE d_id='$id'");
 
         return true;
     }
-
     public static function removeDokument($id) {
-        list($id) = DBDokumenty::escapeArray(array($id));
+        list($id) = self::escape($id);
 
-        DBDokumenty::query("DELETE FROM dokumenty WHERE d_id='$id'");
+        self::query("DELETE FROM dokumenty WHERE d_id='$id'");
 
         return true;
     }

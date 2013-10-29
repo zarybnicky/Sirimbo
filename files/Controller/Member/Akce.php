@@ -1,28 +1,66 @@
 <?php
+/**
+ * Project TKOlomouc
+ *
+ * @category Akce
+ * @package TKOlomouc_Controllers
+ */
+
+/**
+ * @see Controller_Member
+ */
 require_once 'files/Controller/Member.php';
+
+/**
+ * @category Akce
+ * @package TKOlomouc_Controllers
+ */
 class Controller_Member_Akce extends Controller_Member
 {
-    function __construct() {
+    /**
+     * Checks for authorized access
+     * @return void
+     */
+    function __construct()
+    {
         Permissions::checkError('akce', P_VIEW);
     }
-    function view($id = null) {
+
+    /**
+     * Should be called by Dispatcher only
+     * @param int $id
+     * @return void
+     */
+    function view($id = null)
+    {
         if ($id) {
             $data = DBAkce::getSingleAkce($id, true);
-            if (!$data)
+            if (!$data) {
                 $this->redirect('/member/akce', 'Neexistuje žádná taková akce');
-
+            }
             $data = $this->_getRenderData($data);
-            $this->render('files/View/Member/Akce/Single.inc', array('data' => $data));
+            $this->render(
+                'files/View/Member/Akce/Single.inc',
+                array(
+                    'data' => $data
+                )
+            );
             return;
         }
         if (!empty($_POST) && post('id')
             && ($data = DBAkce::getSingleAkce(post('id')))) {
-            if (is_object($f = $this->_checkData($data, post('action')))) {
-                $this->redirect()->setMessage($f->getMessages());
+            if (is_object($form = $this->_checkData($data, post('action')))) {
+                $this->redirect()->setMessage($form->getMessages());
             } elseif (post('action') == 'signup') {
-                DBAkce::signUp(User::getUserID(), post('id'), User::getDatumNarozeni());
+                DBAkce::signUp(
+                    User::getUserID(),
+                    post('id'), User::getDatumNarozeni()
+                );
             } elseif (post('action') == 'signout') {
-                DBAkce::signOut(User::getUserID(), post('id'));
+                DBAkce::signOut(
+                    User::getUserID(),
+                    post('id')
+                );
             }
         }
         $akce = DBAkce::getAkce(true);
@@ -36,12 +74,24 @@ class Controller_Member_Akce extends Controller_Member
             );
             return;
         }
-        foreach ($akce as &$data)
+        foreach ($akce as &$data) {
             $data = $this->_getRenderData($data);
-
-        $this->render('files/View/Member/Akce/Overview.inc', array('akce' => $akce));
+        }
+        $this->render(
+            'files/View/Member/Akce/Overview.inc',
+            array(
+                'akce' => $akce
+            )
+        );
     }
-    private function _getRenderData(&$data) {
+
+    /**
+     * Parses data from DB for rendering
+     * @param array $data Akce data from DB
+     * @return array Data for rendering
+     */
+    private function _getRenderData(&$data)
+    {
         $items = DBAkce::getAkceItems($data['a_id']);
         $dokumenty = unserialize($data['a_dokumenty']);
         if (is_array($dokumenty)) {
@@ -70,16 +120,26 @@ class Controller_Member_Akce extends Controller_Member
             'dokumenty' => $dokumenty,
             'items' => $items
         );
-        $new_data['signIn'] = $new_data['showForm'] ? !DBAkce::isUserSignedUp($new_data['id'], User::getUserID()) : '';
+        $new_data['signIn'] = $new_data['showForm']
+            ? !DBAkce::isUserSignedUp($new_data['id'], User::getUserID())
+            : '';
         return $new_data;
     }
-    private function _checkData($data, $action) {
+
+    /**
+     * Checks POST input
+     * @param array $data Akce data from DB
+     * @param string $action POST action called
+     * @return Form|array Returns an empty array if Form is valid
+     */
+    private function _checkData($data, $action)
+    {
         $f = new Form();
         $f->checkBool(!$data['a_lock'], 'Tato akce je zamčená', '');
         $f->checkInArray($action, array('signup', 'signout'), 'Špatná akce', '');
         $f->checkNumeric(post('id'), 'Špatné ID', '');
 
-        return $f->isValid() ? true : $f;
+        return $f->isValid() ? array() : $f;
     }
 }
 ?>

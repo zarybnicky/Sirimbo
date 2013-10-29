@@ -1,23 +1,45 @@
+<?php
+/**
+ * Project TKOlomouc
+ *
+ * Akce Administration
+ * Form for a single Akce item
+ *
+ * @name View_Admin_Akce_Form
+ * @category Akce
+ * @package TKOlomouc_View
+ */
+?>
 <h1>Správa akcí</h1>
 <?php
-echo '<h2>', (Request::getAction() == 'add' ? 'Přidat uživatele' : 'Upravit uživatele'), '</h2>';
+echo '<h2>';
+echo Request::getAction() == 'add' ? 'Přidat uživatele' : 'Upravit uživatele';
+echo '</h2>';
 notice($this->redirect()->getMessage());
-if (isset($f) && is_object($f))
-    notice(implode('<br/>', $f->getMessages()));
+if ($this->form) {
+    notice(implode('<br/>', $this->form->getMessages()));
+}
 ?>
 <form action="" method="POST">
 <table>
     <tr>
         <td>Jméno akce (*): </td>
-        <td><input type="text" name="jmeno" value="<?php echo post("jmeno"); ?>" /></td>
+        <td>
+            <input type="text" name="jmeno" value="<?php echo post("jmeno"); ?>" />
+        </td>
         <td>Max. 255 znaků</td>
     </tr><tr>
         <td>Místo akce (*): </td>
-        <td><input type="text" name="kde" value="<?php echo post("kde"); ?>" /></td>
+        <td>
+            <input type="text" name="kde" value="<?php echo post("kde"); ?>" />
+        </td>
         <td>Max. 255 znaků</td>
     </tr><tr>
         <td>Další info: </td>
-        <td><textarea rows="15" cols="50" name="info"><?php echo post("info"); ?></textarea></td>
+        <td>
+            <textarea rows="15" cols="50" name="info"><?php echo post("info"); ?>
+            </textarea>
+        </td>
         <td></td>
     </tr><tr>
         <td>Od: (*)</td>
@@ -34,13 +56,15 @@ if (isset($f) && is_object($f))
     </tr><tr>
         <td>Dokumenty: </td>
         <td><?php
-            if (!post("dokumenty")) echo "Žádné dokumenty";
-            else {
-                foreach (post("dokumenty") as $id) {
-                    $data = DBDokumenty::getSingleDokument($id);
-                    echo "<a href=\"/member/download?id=", $id, "\">", $data["d_name"], "</a>";
-                }
-            }
+    if (!$this->dokumenty) :
+            ?>Žádné dokumenty<?php
+    else :
+        foreach ($this->dokumenty as $item) :
+            ?><a href="/member/download?id=<?php echo $item['id'];?>">
+                <?php echo $item['name'];?>
+            </a><?php
+        endforeach;
+    endif;
         ?></td>
         <td></td>
     </tr><tr>

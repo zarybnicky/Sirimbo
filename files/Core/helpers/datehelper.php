@@ -20,15 +20,18 @@ class DateHelper
     private $_toYear;
     private $_useRange;
 
-    function date($d = null) {
+    function date($d = null)
+    {
         $this->_defaultValues();
 
-        if ($d && ($this->_setDate($d)) === null)
+        if ($d && $this->_setDate($d) === null) {
             $this->name($d);
+        }
 
         return $this;
     }
-    private function _defaultValues() {
+    private function _defaultValues()
+    {
         $this->_view = 'text';
         $this->_date = null;
         $this->_name = null;
@@ -37,7 +40,8 @@ class DateHelper
         $this->_toYear = ((int) date('Y')) + 5;
         $this->_useRange = false;
     }
-    private function _setDate($d) {
+    private function _setDate($d)
+    {
         if (!is_a($d, 'Date') && is_string($d)) {
             $d = new Date($d);
         }
@@ -47,55 +51,65 @@ class DateHelper
             return $d;
         }
     }
-    function setDate($d = null) {
+    function setDate($d = null)
+    {
         $this->_date = $this->_setDate($d);
         return $this;
     }
-    function setFromDate($d = null) {
+    function setFromDate($d = null)
+    {
         $this->setDate($d);
         return $this;
     }
-    function setToDate($d = null) {
+    function setToDate($d = null)
+    {
         $this->_dateTo = $this->_setDate($d);
         return $this;
     }
-    function selectBox() {
+    function selectBox()
+    {
         $this->_view = 'select';
         return $this;
     }
-    function textBox() {
+    function textBox()
+    {
         $this->_view = 'text';
         return $this;
     }
-    function name($name) {
-        if ($name)
-            $this->_name = $name;
+    function name($name)
+    {
+        $this->_name = $name;
         return $this;
     }
-    function post($post) {
+    function post($post)
+    {
         $this->_post = (bool) $post;
         return $this;
     }
-    function fromYear($y) {
-        if ($y > 1800)
-            $this->_fromYear = $y;
+    function fromYear($y)
+    {
+        $this->_fromYear = $y;
         return $this;
     }
-    function toYear($y) {
-        if ($y < 2200 && $y > $this->_fromYear)
+    function toYear($y)
+    {
+        if ($y > $this->_fromYear) {
             $this->_toYear = $y;
+        } else {
+            $this->_toYear = $this->_fromYear;
+        }
         return $this;
     }
-    function range($b = true) {
-        if ($b)
-            $this->_useRange = true;
-        else
-            $this->_useRange = false;
+    function range($b = true)
+    {
+        $this->_useRange = (bool) $b;
         return $this;
     }
-    function getPostRange() {
-        if (!$this->_useRange)
+    function getPostRange()
+    {
+        if (!$this->_useRange) {
             return array('from' => $this->getPost(), 'to' => new Date());
+        }
 
         if (post($this->_name)) {
             if (strpos(post($this->_name), ' - ')) {
@@ -103,8 +117,9 @@ class DateHelper
                 $from = new Date($pieces[0]);
                 $to = new Date($pieces[1]);
             }
-            if (!isset($from) || !isset($to) || (!$from->isValid() && !$to->isValid()))
+            if (!isset($from) || !isset($to) || (!$from->isValid() && !$to->isValid())) {
                 return array('from' => $this->getPost(true), 'to' => new Date());
+            }
 
             return array('from' => $from, 'to' => $to);
         } elseif (
@@ -134,11 +149,14 @@ class DateHelper
             return array('from' => new Date(), 'to' => new Date());
         }
     }
-    function getPost($skipRangeCheck = false, $name = null) {
-        if ($name === null)
+    function getPost($skipRangeCheck = false, $name = null)
+    {
+        if ($name === null) {
             $name = $this->_name;
-        if ($this->_useRange && !$skipRangeCheck)
+        }
+        if ($this->_useRange && !$skipRangeCheck) {
             return $this->getPostRange()['from'];
+        }
 
         if (post($name)) {
             return new Date(post($name));
@@ -151,21 +169,24 @@ class DateHelper
             return new Date();
         }
     }
-    function __toString() {
+    function __toString()
+    {
         return $this->render();
     }
-    function render() {
+    function render()
+    {
         $out = '';
-
-        if ($this->_view == 'select') {//TODO ranged select... ftf
+        //TODO:ranged select... ftf
+        if ($this->_view == 'select') {
             $s = Helper::get()->select()->get(false);
 
             $s->name($this->_name . '-day')
                 ->value($this->_date ? $this->_date->getDay() : null)
                 ->options(array(), true)
                 ->option('00', 'Den');
-            for($i = 1; $i < 32; $i++)
+            for($i = 1; $i < 32; $i++) {
                 $s->option((($i < 10) ? ('0' . $i) : $i), $i);
+            }
             $out .= $s;
 
             $out .= $s->name($this->_name . '-month')
@@ -189,8 +210,9 @@ class DateHelper
                 ->value($this->_date ? $this->_date->getYear() : null)
                 ->options(array(), true)
                 ->option('0000', 'Rok');
-            for($i = $this->_fromYear; $i < $this->_toYear; $i++)
+            for($i = $this->_fromYear; $i < $this->_toYear; $i++) {
                 $s->option($i, $i);
+            }
             $out .= $s;
         } elseif ($this->_view == 'text') {
             $done = false;
@@ -220,7 +242,6 @@ class DateHelper
                     $selected = $this->_date ? $this->_date->getDate(Date::FORMAT_SIMPLIFIED) : '';
                 }
             }
-
             $out .= '<input type="text" name="' . $this->_name . '" value="' . $selected . '" />' . "\n";
         }
         return $out;

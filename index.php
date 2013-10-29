@@ -1,4 +1,11 @@
 <?php
+/**
+ * Project TKOlomouc
+ * The bootstrap
+ *
+ * @package TKOlomouc
+ */
+
 /*/sitewide OFF switch
 if (isset($_GET['file'])) {
     if (stripos($_GET['file'], 'cookie_set') !== false) {
@@ -13,7 +20,7 @@ if (isset($_GET['file'])) {
     }
 }
 if (!isset($_COOKIE['off_mode'])) {
-    include 'index2.php';
+    require 'index2.php';
     return;
 }
 //end OFF switch*/
@@ -21,13 +28,13 @@ if (!isset($_COOKIE['off_mode'])) {
 session_start();
 session_regenerate_id();
 
-include 'files/Core/settings.php';
-include 'files/Core/form.php';
-include 'files/Core/debug.php';
-include 'files/Core/log.php';
-include 'files/Core/request.php';
-include 'files/Controller/Interface.php';
-include 'files/Controller/Abstract.php';
+require 'files/Core/settings.php';
+require 'files/Core/form.php';
+require 'files/Core/debug.php';
+require 'files/Core/log.php';
+require 'files/Core/request.php';
+require 'files/Controller/Interface.php';
+require 'files/Controller/Abstract.php';
 
 define('TISK', (isset($_GET['view']) && $_GET['view'] == 'tisk') ? true : false);
 
@@ -64,7 +71,10 @@ if (session('login') === null) {
         && Request::getURL() !== 'member/profil/edit'
         && Request::getURL() !== 'logout'
     ) {
-        Helper::get()->redirect('/member/profil/edit', 'Prosím vyplňte požadované údaje.', true);
+        Helper::get()->redirect(
+            '/member/profil/edit',
+            'Prosím vyplňte požadované údaje.', true
+        );
     }
 }
 
