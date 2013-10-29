@@ -36,7 +36,7 @@ class Controller_Admin_Akce_Detail extends Controller_Admin_Akce
                 list($year) = explode('-', $data['u_narozeni']);
 
                 DBAkce::addAkceItem($id, $user, $year);
-                post('add-user', -1    );
+                post('add-user', -1);
                 $items = DBAkce::getAkceItems($id);
             }
         }

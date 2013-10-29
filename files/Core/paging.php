@@ -65,7 +65,7 @@ class Paging
     private function _recalculate() {
         if (!isset($this->_adapter)
             || (!isset($this->_itemsPerPage) && !isset($this->_itemsPerPageField)
-                && !isset($this->_defaultItemsPerPage))
+            && !isset($this->_defaultItemsPerPage))
             || (!isset($this->_currentPage) && !isset($this->_currentPageField))) {
             $this->_valid = false;
             return;

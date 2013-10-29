@@ -4,26 +4,26 @@ $mainForm = (new TableHelper())->table()
 ->column('value', 'Hodnota')
 ->data(array(
         array(
-                'desc' => 'Jméno:',
-                'value' => '<input type="text" name="name" value="' . post('name') . '"/>'
+            'desc' => 'Jméno:',
+            'value' => '<input type="text" name="name" value="' . post('name') . '"/>'
         ), array(
-                'desc' => 'Specifický symbol:',
-                'value' => '<input type="text" name="symbol" value="' . post('symbol') . '"/>'
+            'desc' => 'Specifický symbol:',
+            'value' => '<input type="text" name="symbol" value="' . post('symbol') . '"/>'
         ), array(
-                'desc' => 'Očekávaná částka:',
-                'value' => '<input type="text" name="amount" value="' . post('amount') . '"/>'
+            'desc' => 'Očekávaná částka:',
+            'value' => '<input type="text" name="amount" value="' . post('amount') . '"/>'
         ), array(
-                'desc' => 'Splatnost:',
-                'value' => (new DateHelper())->date('dueDate')
+            'desc' => 'Splatnost:',
+            'value' => (new DateHelper())->date('dueDate')
         ), array(
-                'desc' => 'Platnost:',
-                'value' => (new DateHelper())->date('validRange')->range()
+            'desc' => 'Platnost:',
+            'value' => (new DateHelper())->date('validRange')->range()
         ), array(
-                'desc' => 'Povolit prefix roku?:',
-                'value' => getCheckbox('usePrefix', '1')
+            'desc' => 'Povolit prefix roku?:',
+            'value' => getCheckbox('usePrefix', '1')
         ), array(
-                'desc' => 'Archivovat?:',
-                'value' => getCheckbox('archive', '1')
+            'desc' => 'Archivovat?:',
+            'value' => getCheckbox('archive', '1')
         )
 ));
 if (!empty($this->groups)) {
@@ -47,13 +47,13 @@ if (!empty($this->groupSelect)) {
     <?php echo $mainForm, getReturnInput();?>
     <button name="action" value="confirm">Uložit</button>&nbsp;<a href="<?php echo Request::getReferer();?>">Zpět</a><br/><br/>
 </form>
-<?php if ($this->action != 'add'): ?>
+<?php if ($this->action != 'add') : ?>
     <h3>Kategorie</h3>
     <?php if (isset($groupForm)) echo $groupForm;?>
     <form action="" method="post">
         <span class="big">Přidat:</span>
         <a href="/admin/platby/structure/group/add?category=<?php echo $this->id;?>">novou kategorii</a>
-        <?php if (isset($groupSelectBox)): ?>
+        <?php if (isset($groupSelectBox)) : ?>
             nebo existující: <?php echo $groupSelectBox;?>
             <button type="submit" name="action" value="group">odeslat</button>
         <?php endif;?>

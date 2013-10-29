@@ -12,9 +12,11 @@ if ($this->showMenu) {
         ->option('dancer', 'tanečníci')
         ->option('system', 'systémoví')
         ->option('ban', 'zabanovaní');
-    foreach ($this->groups as $group)
-        if ($group['id'])
+    foreach ($this->groups as $group) {
+        if ($group['id']) {
             $s->option($group['id'], $group['name']);
+        }
+    }
     echo $s;
     echo '&nbsp;řadit podle:&nbsp;';
     echo $s->select()
@@ -42,8 +44,9 @@ if ($this->showMenu) {
         ->content('Duplicitní uživatelé', '/admin/users/duplicate')
         ->content('Nepotvrzení uživatelé', '/admin/users/unconfirmed')
         ->content('Statistiky', '/admin/users/statistiky');
-    if (get('v') == 'status')
+    if (get('v') == 'status') {
         $f->content('Uložit změny', 'save', true);
+    }
     echo $f;
 }
 if ($this->data == array()) {
@@ -58,15 +61,16 @@ $table = $this->table()
     ->column('checkBox', '')
     ->column('index', '')
     ->column('fullName', 'Jméno');
-if ($this->view == 'status')
+if ($this->view == 'status') {
     $table->column('skupina', '')
         ->column('groupInfo', 'Oprávnění')
         ->column('dancer', 'Aktivní<br/>tanečník', 'center')
         ->column('system', 'Systémový<br/>uživatel', 'center');
-else
+} else {
     $table->column('colorBox', '')
         ->column('groupInfo', 'Oprávnění')
         ->column('birthDate', 'Datum<br/>narození');
+}
 echo $table;
 
 echo '</div>';

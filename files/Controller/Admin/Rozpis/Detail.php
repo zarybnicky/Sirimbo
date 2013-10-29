@@ -52,9 +52,9 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
             }
             $items = DBRozpis::getRozpisItem($id);
         } elseif (post('generate') == 'gen_add'
-                 && is_numeric(post('gen_add_hod'))
-                 && is_numeric(post('gen_add_len'))
-                 && preg_match('/^[0-9]{2}:[0-9]{2}$/', post('gen_add_od'))
+            && is_numeric(post('gen_add_hod'))
+            && is_numeric(post('gen_add_len'))
+            && preg_match('/^[0-9]{2}:[0-9]{2}$/', post('gen_add_od'))
         ) {
             $od = post('gen_add_od');
             $len = floor(post('gen_add_len') / 60) . ':'

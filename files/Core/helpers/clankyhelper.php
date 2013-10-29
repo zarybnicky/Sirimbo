@@ -4,7 +4,7 @@ class ClankyHelper
     private $_clanky;
     private $_offset;
     private $_number;
-    private $isSlideBox;
+    private $_isSlideBox;
 
     public function clanky() {
         $this->_defaultValues();
@@ -12,9 +12,9 @@ class ClankyHelper
     }
     private function _defaultValues() {
         $this->_clanky = null;
-        $this->offset = 0;
+        $this->_offset = 0;
         $this->_number = 20;
-        $this->isSlideBox = false;
+        $this->_isSlideBox = false;
     }
     public function data($data = null) {
         if ($data !== null)
@@ -23,7 +23,7 @@ class ClankyHelper
     }
     public function offset($o = null)  {
         if ($o !== null)
-            $this->offset = $o;
+            $this->_offset = $o;
         return $this;
     }
     public function number($n = null) {
@@ -33,22 +33,22 @@ class ClankyHelper
     }
     public function slideBox($s = null) {
         if ($s !== null)
-            $this->isSlideBox = $s;
+            $this->_isSlideBox = $s;
         return $this;
     }
     public function render() {
         if ($this->_clanky === null)
             $this->_clanky = DBAktuality::getAktuality(AKTUALITY_CLANKY);
-        if (($this->_number + $this->offset) > count($this->_clanky))
-            $this->_number = count($this->_clanky) - $this->offset;
+        if (($this->_number + $this->_offset) > count($this->_clanky))
+            $this->_number = count($this->_clanky) - $this->_offset;
         $out = '';
 
-        if (!$this->isSlideBox) {
+        if (!$this->_isSlideBox) {
             $out .= '<div class="clanky" style="padding:4px 7px;border:1px solid #FFB030;border-radius:15px;">';
             $out .= '<div class="h_section">Další články</div>';
             if ($this->_number <= 0)
                 $out .= '<div class="notice">Žádné další články</div>';
-            for($i = $this->offset; $i < ($this->offset + $this->_number); $i++) {
+            for($i = $this->_offset; $i < ($this->_offset + $this->_number); $i++) {
                 $out .= '<div>';
                 list($date, $time) = explode(' ', $this->_clanky[$i]['at_timestamp']);
                 $out .= '<span class="big">' .
@@ -62,10 +62,10 @@ class ClankyHelper
                     $out .= '<hr/>';
             }
             $out .= '</div>';
-        } elseif ($this->isSlideBox && $this->_number > 0) {
+        } elseif ($this->_isSlideBox && $this->_number > 0) {
             $out .= '<div id="TopFeaturesBlock">';
-            for($i = $this->offset; $i < ($this->offset + $this->_number); $i++) {
-                $out .= '<div class="Feature"' . (($i != $this->offset) ? ' style="display:none;"' : '') . '>';
+            for($i = $this->_offset; $i < ($this->_offset + $this->_number); $i++) {
+                $out .= '<div class="Feature"' . (($i != $this->_offset) ? ' style="display:none;"' : '') . '>';
                 $out .= '<h2 class="FeatureTitle">' . $this->_clanky[$i]['at_jmeno'] . '</h2>';
                 $out .= '<div class="FeaturePhoto">';
                 $foto = DBGalerie::getSingleFoto($this->_clanky[$i]['at_foto_main']);

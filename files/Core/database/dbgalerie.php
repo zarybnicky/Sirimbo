@@ -20,7 +20,7 @@ class DBGalerie extends Database
 
         return self::getArray($res);
     }
-    private static function recursiveChildren(&$dirs, &$out, $dirId, $count) {
+    private static function _recursiveChildren(&$dirs, &$out, $dirId, $count) {
         if (empty($dirs))
             return;
 
@@ -30,7 +30,7 @@ class DBGalerie extends Database
             $out[] = $dirs[$i];
             $id = $dirs[$i]['gd_id'];
             unset($dirs[$i]);
-            self::recursiveChildren($dirs, $out, $id, $count);
+            self::_recursiveChildren($dirs, $out, $id, $count);
         }
     }
     public static function getDirs($by_level = false, $sort = false) {
@@ -39,7 +39,7 @@ class DBGalerie extends Database
 
         if ($sort) {
             $out = array();
-            self::recursiveChildren($array, $out, 0, count($array));
+            self::_recursiveChildren($array, $out, 0, count($array));
             $array = $out;
         }
 

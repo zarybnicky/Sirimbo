@@ -1,7 +1,7 @@
 <?php
 class Database
 {
-    private static $connection = null;
+    private static $_connection = null;
 
     public static function getInstance() { return new self(); }
 
@@ -30,19 +30,19 @@ class Database
     }
 
     protected static function getConnection() {
-        if (Database::$connection != null)
+        if (self::$_connection != null)
             return;
-        Database::$connection = @mysql_connect(DB_SERVER, DB_USER, DB_PASS)
+        self::$_connection = @mysql_connect(DB_SERVER, DB_USER, DB_PASS)
             or static::databaseError(true);
-        @mysql_select_db(DB_DATABASE, Database::$connection)
+        @mysql_select_db(DB_DATABASE, self::$_connection)
             or static::databaseError(true);
-        @mysql_set_charset("utf8", Database::$connection)
+        @mysql_set_charset("utf8", self::$_connection)
             or static::databaseError(true);
     }
 
     protected static function query($query) {
         Database::getConnection();
-        $res = mysql_query($query, Database::$connection)
+        $res = mysql_query($query, self::$_connection)
             or static::databaseError();
 
         return $res;
@@ -63,7 +63,7 @@ class Database
         return $result;
     }
     public static function getInsertId() {
-        return mysql_insert_id(Database::$connection);
+        return mysql_insert_id(self::$_connection);
     }
     protected function databaseError($onConnection = false) {
         Log::write('MySQL Error: ' . mysql_errno() . ': ' . mysql_error());

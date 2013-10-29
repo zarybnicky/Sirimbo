@@ -1,13 +1,15 @@
 <h1>Dokumenty</h1>
 <?php if ($this->showMenu): ?>
-<form action="" method="GET">
-    <?php echo $this->select()
-        ->get()->name('kat')
-        ->option('', '---VŠE---')
-        ->option('1', 'Schůze, rady')
-        ->option('2', 'Soutěže')
-        ->option('3', 'Tábory')
-        ->option('0', 'Ostatní');?>
+<form action="" method="GET"><?php
+echo $this->select()
+    ->get()
+    ->name('kat')
+    ->option('', '---VŠE---')
+    ->option('1', 'Schůze, rady')
+    ->option('2', 'Soutěže')
+    ->option('3', 'Tábory')
+    ->option('0', 'Ostatní');
+?>
     <button type="submit">Zobrazit</button>
 </form>
 <?php endif; ?>

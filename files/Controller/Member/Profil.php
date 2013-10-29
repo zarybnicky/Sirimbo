@@ -82,7 +82,7 @@ class Controller_Member_Profil extends Controller_Member
             array(
                 'colorBox' => getColorBox($skupina['s_color_rgb'], $skupina['s_description']),
                 'skupinaData' => $skupina['s_name'],
-                'varSymbol' => User::var_symbol(User::getUserID()),
+                'varSymbol' => User::varSymbol(User::getUserID()),
                 'zaplacenoText' => User::getZaplaceno() ? 'zaplaceno' : 'nezaplaceno!',
                 'platby' => array(),
                 'platbyGroups' => $groupsOut

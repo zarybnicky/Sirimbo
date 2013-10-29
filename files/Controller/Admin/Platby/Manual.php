@@ -101,7 +101,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
     private function _getUsers() {
         $users = parent::getUserLookup(true);
         foreach ($users as &$array) {
-            $array = User::var_symbol($array['u_id']) . " - {$array['u_prijmeni']}, {$array['u_jmeno']}";
+            $array = User::varSymbol($array['u_id']) . " - {$array['u_prijmeni']}, {$array['u_jmeno']}";
         }
         return $users;
     }

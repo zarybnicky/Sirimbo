@@ -126,7 +126,7 @@ class Controller_Admin_Galerie extends Controller_Admin
             $db_key = str_replace(GALERIE . DIRECTORY_SEPARATOR, '', $key);
             if (isset($db_out_dirs[$db_key])
                 && (GALERIE . DIRECTORY_SEPARATOR . $db_out_dirs[$db_key]
-                    == $fs_dirs[$key])
+                == $fs_dirs[$key])
             ) {
                 unset($fs_dirs[$key]);
                 unset($db_out_dirs[$db_key]);

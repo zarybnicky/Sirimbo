@@ -36,7 +36,7 @@ ini_set('session.use_only_cookies', 1);
 
 mb_internal_encoding('UTF-8');
 
-function shutdown_handler() {
+function shutdownHandler() {
     if (($error = error_get_last()) === null)
         return;
     if ($error['type'] == E_ERROR || $error['type'] == E_RECOVERABLE_ERROR) {
@@ -49,7 +49,7 @@ function shutdown_handler() {
         header('Location: /error?id=script_fatal');
     }
 }
-function error_handler($severity, $message, $filepath, $line) {
+function errorHandler($severity, $message, $filepath, $line) {
     if ($severity & (E_STRICT | E_DEPRECATED)) {
         return false;
     }
@@ -63,8 +63,8 @@ function error_handler($severity, $message, $filepath, $line) {
     return true;
 }
 
-register_shutdown_function('shutdown_handler');
-set_error_handler('error_handler');
+register_shutdown_function('shutdownHandler');
+set_error_handler('errorHandler');
 
 date_default_timezone_set('Europe/Paris');
 

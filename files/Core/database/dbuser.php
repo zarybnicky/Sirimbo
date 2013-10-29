@@ -108,12 +108,13 @@ class DBUser extends Database implements Pagable
     }
 
     public static function getUserData($id) {
-        list($id) = DBUser::escapeArray(array($id));
+        list($id) = DBUser::escape($id);
 
         $res = DBUser::query(
         "SELECT users.*,skupiny.*,permissions.* FROM users
             LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
-            LEFT JOIN permissions ON u_group=pe_id");
+            LEFT JOIN permissions ON u_group=pe_id
+        WHERE u_id='$id'");
         if (!$res) {
             return false;
         } else {

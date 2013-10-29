@@ -4,11 +4,11 @@ class Controller_Error extends Controller_Abstract
     function view($id = null) {
         if (!get('id')) get('id', '');
 
-        function ucfirst_user(&$str, $key) {
+        function ucfirstUser(&$str, $key) {
             $str = ucfirst($str);
         }
         $array = explode('_', get('id'));
-        array_walk($array, 'ucfirst_user');
+        array_walk($array, 'ucfirstUser');
         $id = implode('', $array);
         $file = ERROR . DIRECTORY_SEPARATOR . $id . '.inc';
 

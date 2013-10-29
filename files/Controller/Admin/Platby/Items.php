@@ -122,7 +122,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
     private function _getUsers() {
         $users = $this->getUserLookup(true);
         foreach ($users as $key => &$array) {
-            $array = User::var_symbol($array['u_id']) . " - {$array['u_prijmeni']}, {$array['u_jmeno']}";
+            $array = User::varSymbol($array['u_id']) . " - {$array['u_prijmeni']}, {$array['u_jmeno']}";
         }
         return $users;
     }

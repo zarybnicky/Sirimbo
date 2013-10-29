@@ -61,8 +61,11 @@ if (session('login') === null) {
 } else {
     User::loadUser(session('id'));
     if (session('invalid_data') === '1'
-        && Request::getURL() !== 'member/profil/edit' && Request::getURL() !== 'logout')
+        && Request::getURL() !== 'member/profil/edit'
+        && Request::getURL() !== 'logout'
+    ) {
         Helper::get()->redirect('/member/profil/edit', 'Prosím vyplňte požadované údaje.', true);
+    }
 }
 
 $d = new Dispatcher();
