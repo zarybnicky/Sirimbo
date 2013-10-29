@@ -308,8 +308,10 @@ class Controller_Admin_Users extends Controller_Admin
             foreach ($skupiny as $skupina)
                 $skupinyselect->option($skupina['s_id'], $skupina['s_name']);
         }
+        $options['sort'] = in_array(get('s'), array('prijmeni', 'narozeni', 'var-symbol')) ?
+            get('s') : 'prijmeni';
         $options['filter'] = in_array(get('f'), array_merge(array('dancer', 'system', 'all', 'unconfirmed', 'ban'), $filter)) ?
-        get('f') : 'all';
+            get('f') : 'all';
         $pager = new Paging(new PagingAdapterDBSelect('DBUser', $options));
         $pager->setCurrentPageField('p');
         $pager->setItemsPerPageField('c');
@@ -319,16 +321,17 @@ class Controller_Admin_Users extends Controller_Admin
         $i = $pager->getItemsPerPage() * ($pager->getCurrentPage() - 1);
         foreach ($data as &$item) {
             $new_data = array(
-                'checkBox' => '<input type="checkbox" name="users[]" value="' . $item['u_id'] . '" />',
-                'index' => ++$i,
-                'fullName' => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
-                'colorBox' => getColorBox($item['s_color_rgb'], $item['s_description']),
+                'checkBox'  => '<input type="checkbox" name="users[]" value="' . $item['u_id'] . '" />',
+                'index'     => ++$i . '. ',
+                'varSymbol' => User::varSymbol($item['u_id']),
+                'fullName'  => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
+                'colorBox'  => getColorBox($item['s_color_rgb'], $item['s_description']),
                 'groupInfo' => $group_lookup[$item['u_group']]
             );
             switch($action) {
                 case 'status':
-                    $new_data['skupina'] = '<input type="hidden" name="save[]" value="' . $item['u_id'] . '"/>';
-                    $new_data['skupina'] .=  $skupinyselect->name($item['u_id'] . '-skupina')->value($item['u_skupina']);
+                    $new_data['skupina'] = '<input type="hidden" name="save[]" value="' . $item['u_id'] . '"/>'
+                                           . $skupinyselect->name($item['u_id'] . '-skupina')->value($item['u_skupina']);
                     $new_data['dancer'] = '<label>' . getCheckbox($item['u_id'] . '-dancer', '1', $item['u_dancer']) . '</label>';
                     $new_data['system'] = '<label>' . getCheckbox($item['u_id'] . '-system', '1', $item['u_system']) . '</label>';
                     break;
