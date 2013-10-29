@@ -24,7 +24,9 @@ class Controller_Admin_Dokumenty extends Controller_Admin
                 $fileName = $_FILES['file']['name'];
                 $fileName = str_replace(
                     array('#', '$', '%', '&', '^', '*', '?'),
-                    array('No.', 'Dolar', 'Procento', 'And', ''), $fileName);
+                    array('No.', 'Dolar', 'Procento', 'And', ''),
+                    $fileName
+                );
 
                 $path = 'upload/' . time() . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
 
@@ -33,8 +35,10 @@ class Controller_Admin_Dokumenty extends Controller_Admin
 
                 if (move_uploaded_file($fileUpload, $path)) {
                     chmod($path, 0666);
-                    $id = DBDokumenty::addDokument($path, post('name'), $fileName,
-                        post('kategorie'), User::getUserID());
+                    $id = DBDokumenty::addDokument(
+                        $path, post('name'), $fileName,
+                        post('kategorie'), User::getUserID()
+                    );
                     $this->redirect()->setMessage('Soubor byl úspěšně nahrán');
 
                     $n = new Novinky(User::getUserID());

@@ -22,10 +22,16 @@ class Controller_Registrace extends Controller_Abstract
                 if (DBUser::getUserID($login)) {
                     $this->redirect()->setMessage('Už tu někdo s takovým přihlašovacím jménem je :o(');
                 } else {
-                    User::register($login, post('pass'), post('jmeno'), post('prijmeni'),
-                        post('pohlavi'), post('email'), post('telefon'), (string) $narozeni, post('poznamky'));
-                    $this->redirect('/home', 'Registrace úspěšně proběhla.<br /><br />' .
-                            'Během několika dnů vám na email příjde potvrzení vašeho účtu, které vyřizuje administrátor ručně.');
+                    User::register(
+                        $login, post('pass'), post('jmeno'), post('prijmeni'),
+                        post('pohlavi'), post('email'), post('telefon'),
+                        (string) $narozeni, post('poznamky')
+                    );
+                    $this->redirect(
+                        '/home',
+                        'Registrace úspěšně proběhla.<br /><br />'
+                        . 'Během několika dnů vám na email příjde potvrzení vašeho účtu, které vyřizuje administrátor ručně.'
+                    );
                 }
             }
         }

@@ -6,6 +6,7 @@ unset($real_name);
 define('ROOT', $_SERVER['DOCUMENT_ROOT']);
 define('FILES', ROOT . DIRECTORY_SEPARATOR . 'files');
 define('GALERIE', ROOT . DIRECTORY_SEPARATOR . 'galerie');
+define('GALERIE_THUMBS', ROOT . DIRECTORY_SEPARATOR . 'galerie' . DIRECTORY_SEPARATOR . 'thumbnails');
 define('CORE', FILES . DIRECTORY_SEPARATOR . 'Core');
 define('SETTINGS', CORE . DIRECTORY_SEPARATOR . 'settings');
 define('ERROR', FILES . DIRECTORY_SEPARATOR . 'Error');

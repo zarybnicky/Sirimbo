@@ -17,8 +17,10 @@ class Controller_Admin_Galerie extends Controller_Admin
                 foreach ($items as $item) {
                     $id = $item['gd_id'];
                     if ((bool) post($id) !== (bool) $item['gd_hidden'])
-                        DBGalerie::editDir($id, $item['gd_name'], $item['gd_id_rodic'],
-                            $item['gd_level'], post($id) ? '1' : '0');
+                        DBGalerie::editDir(
+                            $id, $item['gd_name'], $item['gd_id_rodic'],
+                            $item['gd_level'], post($id) ? '1' : '0'
+                        );
                 }
                 break;
 
@@ -79,9 +81,9 @@ class Controller_Admin_Galerie extends Controller_Admin
             DBGalerie::removeDir($id);
             $scan = glob($data['gd_path'] . '/*');
             if (is_array($scan))
-                foreach ($scan as $index => $path){
+                foreach ($scan as $index => $path) {
                     @unlink($path);
-                    @unlink(str_replace('./galerie/', './galerie/thumbnails', $path));
+                    @unlink(str_replace(GALERIE, GALERIE . '/thumbnails', $path));
                 }
             @rmdir($data['gd_path']);
         }
@@ -106,30 +108,41 @@ class Controller_Admin_Galerie extends Controller_Admin
         $fs_files = array();
         $fs_thumbnails = array();
         $fs_thumbnail_dirs = array();
-        $this->_recursiveDirs("./galerie", $fs_dirs, $fs_files);
-        $this->_recursiveDirs("./galerie/thumbnails", $fs_thumbnail_dirs, $fs_thumbnails);
+        $this->_recursiveDirs(GALERIE, $fs_dirs, $fs_files);
+        $this->_recursiveDirs(GALERIE_THUMBS, $fs_thumbnail_dirs, $fs_thumbnails);
 
+        foreach ($fs_thumbnails as $file => $parent) {
+            if (!isset($fs_files[str_replace(GALERIE_THUMBS, GALERIE, $file)]))
+                unlink($file);
+        }
         foreach ($fs_thumbnail_dirs as $dir => $parent) {
-            if (!isset($fs_dirs[str_replace('./galerie/thumbnails/', './galerie/', $dir)]))
+            if (!isset($fs_dirs[str_replace(GALERIE_THUMBS, GALERIE, $dir)]))
                 $this->_rrmdir($dir);
         }
         unset($fs_thumbnails);
         unset($fs_thumbnail_dirs);
 
         foreach ($fs_dirs as $key => $parent) {
-            if (!isset($db_out_dirs[$key]) || ($db_out_dirs[$key] != $fs_dirs[$key]))
+            if (!isset($db_out_dirs[str_replace(GALERIE . DIRECTORY_SEPARATOR, '', $key)])
+                || (GALERIE . DIRECTORY_SEPARATOR . $db_out_dirs[$key] != $fs_dirs[$key])
+            ) {
                 continue;
+            }
             unset($fs_dirs[$key]);
             unset($db_out_dirs[$key]);
         }
         foreach ($fs_files as $key => $parent) {
-            if (!is_file(str_replace('./galerie', './galerie/thumbnails', $key)) && !$this->_createThumbnail($key, $parent)) {
+            if (!is_file(str_replace(GALERIE, GALERIE_THUMBS, $key))
+                && !$this->_createThumbnail($key, $parent)
+            ) {
                 unset($fs_files[$key]);
                 continue;
             }
-
-            if (!isset($db_out_files[$key]) || ($db_out_files[$key] != $fs_files[$key]))
+            if (!isset($db_out_files[str_replace(GALERIE . DIRECTORY_SEPARATOR, '', $key)])
+                || (GALERIE . DIRECTORY_SEPARATOR . $db_out_files[$key] != $fs_files[$key])
+            ) {
                 continue;
+            }
             unset($fs_files[$key]);
             unset($db_out_files[$key]);
         }
@@ -148,28 +161,38 @@ class Controller_Admin_Galerie extends Controller_Admin
             $level = count($parts);
             unset($parts);
 
-            $tn_dir = str_replace("./galerie/", './galerie/thumbnails/', $dir);
+            $tn_dir = str_replace(GALERIE, GALERIE_THUMBS, $dir);
             if (!is_dir($tn_dir))
                 mkdir($tn_dir, 0777, true);
 
-            DBGalerie::addDirByPath($name, $parent, $level, $dir);
+            DBGalerie::addDirByPath(
+                $name, $parent, $level,
+                str_replace(GALERIE . DIRECTORY_SEPARATOR, '', $dir)
+            );
         }
 
         foreach ($fs_files as $file => $parent) {
             if (!$this->_createThumbnail($file, $parent))
                 continue;
 
-            $parts = explode('/', $file);
+            $parts = explode(DIRECTORY_SEPARATOR, $file);
             $name = array_pop($parts);
 
-            DBGalerie::addFotoByPath($parent, $file, $name, User::getUserID());
+            DBGalerie::addFotoByPath(
+                str_replace(GALERIE . DIRECTORY_SEPARATOR, '', $parent),
+                str_replace(GALERIE . DIRECTORY_SEPARATOR, '', $file),
+                $name, User::getUserID()
+            );
         }
 
-        $this->redirect('/admin/galerie', 'Složek přidáno: ' . count($fs_dirs) . '<br/>' .
-            'Souborů přidáno: ' . count($fs_files) . '<br/>' .
-            '<br/>' .
-            'Složek odebráno: ' . count($db_out_dirs) . '<br/>' .
-            'Souborů odebráno: ' . count($db_out_files) . '<br/>');
+        $this->redirect(
+            '/admin/galerie',
+            'Složek přidáno: ' . count($fs_dirs) . '<br/>' .
+                'Souborů přidáno: ' . count($fs_files) . '<br/>' .
+                '<br/>' .
+                'Složek odebráno: ' . count($db_out_dirs) . '<br/>' .
+                'Souborů odebráno: ' . count($db_out_files) . '<br/>'
+        );
     }
     function upload($id = null) {
         if (empty($_POST)) {
@@ -181,14 +204,16 @@ class Controller_Admin_Galerie extends Controller_Admin
         $names = post('name');
 
         $count = count($files['name']);
-        for($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; $i++) {
             if ($files['error'][$i] > 0) {
                 $this->redirect()->setMessage('Nepodařilo se nahrát soubor číslo ' . ($i + 1));
                 continue;
             }
             if (!array_key_exists($files['type'][$i], Settings::$fotoTypes)) {
-                $this->redirect()->setMessage('Soubor číslo ' . ($i + 1) .
-                    ' není fotka podporovaného typu a byl přeskočen');
+                $this->redirect()->setMessage(
+                    'Soubor číslo ' . ($i + 1) .
+                    ' není fotka podporovaného typu a byl přeskočen'
+                );
                 continue;
             }
             $fileUpload = $files['tmp_name'][$i];
@@ -196,17 +221,20 @@ class Controller_Admin_Galerie extends Controller_Admin
             $fileName = $files['name'][$i];
             $fileName = str_replace(
                 array('#', '$', '%', '&', '^', '*', '?'),
-                array('No.', 'Dolar', 'Procento', 'And', ''), $fileName
+                array('No.', 'Dolar', 'Procento', 'And', ''),
+                $fileName
             );
             $pieces = explode('.', $fileName);
             $fileExt = Settings::$fotoTypes[$files['type'][$i]];
             $pieces[count($pieces) - 1] = $fileExt;
             $fileName = implode('.', $pieces);
-            $path = $dir['gd_path'] . '/' . $fileName;
+            $path = $dir['gd_path'] . DIRECTORY_SEPARATOR . $fileName;
 
-            if (is_file($path)) {
-                $this->redirect()->setMessage('Soubor číslo ' . ($i + 1) .
-                    ' nebo soubor se stejným názvem už existuje.');
+            if (is_file(GALERIE . $path)) {
+                $this->redirect()->setMessage(
+                    'Soubor číslo ' . ($i + 1) .
+                    ' nebo soubor se stejným názvem už existuje.'
+                );
                 continue;
             }
 
@@ -215,11 +243,11 @@ class Controller_Admin_Galerie extends Controller_Admin
 
             DBGalerie::addFoto($dir['gd_id'], $path, $names[$i], User::getUserID());
 
-            if (move_uploaded_file($fileUpload, $path)) {
-                chmod($path, 0666);
+            if (move_uploaded_file($fileUpload, GALERIE . DIRECTORY_SEPARATOR . $path)) {
+                chmod(GALERIE . $path, 0666);
                 $added = true;
 
-                list($width, $height) = getimagesize($path);
+                list($width, $height) = getimagesize(GALERIE . DIRECTORY_SEPARATOR . $path);
                 if (!(($width > THUMBNAIL_MAX) || ($height > THUMBNAIL_MAX))) {
                     $nWidth = $width;
                     $nHeight = $height;
@@ -235,13 +263,15 @@ class Controller_Admin_Galerie extends Controller_Admin
                 if (!function_exists('imagebmp') || !function_exists('imagecreatefrombmp'))
                     $this->render('files/Core/bmp.php');
 
-                if ($source = $fn_read($path)) {
+                if ($source = $fn_read(GALERIE . DIRECTORY_SEPARATOR . $path)) {
                     $thumbnail = imageCreateTruecolor($nWidth, $nHeight);
 
-                    imageCopyResized($thumbnail, $source,
-                    0, 0, 0, 0, $nWidth, $nHeight, $width, $height);
+                    imageCopyResized(
+                        $thumbnail, $source,
+                        0, 0, 0, 0, $nWidth, $nHeight, $width, $height
+                    );
                 }
-                $fn_write($thumbnail, str_replace('./galerie', './galerie/thumbnails', $path));
+                $fn_write($thumbnail, GALERIE_THUMBS . DIRECTORY_SEPARATOR . $path);
                 imageDestroy($thumbnail);
             } else {
                 $this->redirect()->setMessage('Nepodařilo se nahrát soubor číslo ' . ($i + 1));
@@ -280,8 +310,8 @@ class Controller_Admin_Galerie extends Controller_Admin
                     $data = DBGalerie::getSingleFoto($item_id);
                     DBGalerie::removeFoto($item_id);
 
-                    unlink($data['gf_path']);
-                    unlink(str_replace('./galerie', './galerie/thumbnails', $data['gd_path']));
+                    unlink(GALERIE . DIRECTORY_SEPARATOR . $data['gf_path']);
+                    unlink(GALERIE_THUMBS . DIRECTORY_SEPARATOR . $data['gf_path']);
                 }
                 $this->redirect()->setMessage('Fotky odebrány');
         }
@@ -309,7 +339,6 @@ class Controller_Admin_Galerie extends Controller_Admin
         $this->redirect('/admin/galerie', 'Složka úspěšně upravena');
     }
 
-
     private function _recursiveDirs($dir_name, &$out_dirs, &$out_files) {
         $file_list = scandir($dir_name);
 
@@ -318,13 +347,11 @@ class Controller_Admin_Galerie extends Controller_Admin
                 unset($file_list[$key]);
                 continue;
             }
-            $file_list[$key] = $dir_name . '/' . $file;
+            $file_list[$key] = $dir_name . DIRECTORY_SEPARATOR . $file;
 
             if (is_dir($file_list[$key])) {
-                $out_dirs[$file_list[$key]] = ($dir_name == './galerie' ? './galerie/0' : $dir_name);
+                $out_dirs[$file_list[$key]] = ($dir_name == GALERIE ? GALERIE . DIRECTORY_SEPARATOR . '0' : $dir_name);
                 $this->_recursiveDirs($file_list[$key], $out_dirs, $out_files);
-            } else if (!strstr($file_list[$key], '/tn_')) {
-                $out_files[$file_list[$key]] = ($dir_name == './galerie' ? './galerie/0' : $dir_name);
             }
         }
     }
@@ -335,10 +362,10 @@ class Controller_Admin_Galerie extends Controller_Admin
         $objects = scandir($dir);
         foreach ($objects as $object) {
             if (!in_array($object, array('.', '..'))) {
-                if (is_dir($dir . '/' . $object))
-                    $this->_rrmdir($dir . '/' . $object);
+                if (is_dir($dir . DIRECTORY_SEPARATOR . $object))
+                    $this->_rrmdir($dir . DIRECTORY_SEPARATOR . $object);
                 else
-                    unlink($dir . '/' . $object);
+                    unlink($dir . DIRECTORY_SEPARATOR . $object);
             }
         }
         unset($objects);
@@ -374,8 +401,8 @@ class Controller_Admin_Galerie extends Controller_Admin
             imageCopyResized($thumbnail, $source,
             0, 0, 0, 0, $nWidth, $nHeight, $width, $height);
         }
-        $tn_dir = str_replace('./galerie', './galerie/thumbnails', $parent);
-        $tn_path = str_replace('./galerie', './galerie/thumbnails', $file);
+        $tn_dir = str_replace(GALERIE, GALERIE_THUMBS', $parent);
+        $tn_path = str_replace(GALERIE, GALERIE_THUMBS, $file);
         if (!is_dir($tn_dir))
             mkdir($tn_dir, 0777, true);
 

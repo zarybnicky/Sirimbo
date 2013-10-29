@@ -42,21 +42,24 @@ class Controller_Admin_Pary extends Controller_Admin
         $data = DBPary::getActivePary();
         foreach ($data as &$row) {
             $new_data = array(
-                    'checkBox' => '<input type="checkbox" name="pary[]" value="' . $row["p_id"] . '" />',
-                    'fullNameMan' => $row['guy_surname'] . ', ' . $row['guy_name'],
-                    'fullNameWoman' => $row['gal'] ? ($row['gal_surname'] . ', ' . $row['gal_name']) : '',
-                    'standart' => $row['p_stt_trida'] . ' ' . $row['p_stt_body'] . 'F' . $row['p_stt_finale'],
-                    'latina' => $row['p_lat_trida'] . ' ' . $row['p_lat_body'] . 'F' . $row['p_lat_finale'],
-                    'hodnoceni' => $row['p_hodnoceni']
+                'checkBox'      => '<input type="checkbox" name="pary[]" value="' . $row["p_id"] . '" />',
+                'fullNameMan'   => $row['guy_surname'] . ', ' . $row['guy_name'],
+                'fullNameWoman' => $row['gal'] ? ($row['gal_surname'] . ', ' . $row['gal_name']) : '',
+                'standart'      => $row['p_stt_trida'] . ' ' . $row['p_stt_body'] . 'F' . $row['p_stt_finale'],
+                'latina'        => $row['p_lat_trida'] . ' ' . $row['p_lat_body'] . 'F' . $row['p_lat_finale'],
+                'hodnoceni'     => $row['p_hodnoceni']
             );
             $row = $new_data;
         }
-        $this->render("files/View/Admin/Pary/Overview.inc", array(
+        $this->render(
+            'files/View/Admin/Pary/Overview.inc',
+            array(
                 'showMenu' => !TISK,
                 'data' => $data,
                 'usersMen' => DBUser::getUsersByPohlavi('m'),
                 'usersWomen' => DBUser::getUsersByPohlavi('f')
-        ));
+            )
+        );
     }
     function edit($id = null) {
         if (!$id || !($data = DBPary::getSinglePar($id)))
@@ -70,20 +73,28 @@ class Controller_Admin_Pary extends Controller_Admin
             post('lat-body', $data['p_lat_body']);
             post('lat-finale', $data['p_lat_finale']);
 
-            $this->render('files/View/Admin/Pary/Form.inc', array(
-                    'fullName' => $data['guy_name'] . ' ' . $data['guy_surname'] . ' - ' .
-                        $data['gal_name'] . ' ' . $data['gal_surname']
-            ));
+            $this->render(
+                'files/View/Admin/Pary/Form.inc',
+                array(
+                    'fullName' =>
+                        $data['guy_name'] . ' ' . $data['guy_surname'] . ' - '
+                        . $data['gal_name'] . ' ' . $data['gal_surname']
+                )
+            );
             return;
         }
-        $stt_body = (post('stt-body') && is_numeric(post('stt-body'))) ?
-            post('stt-body') : 0;
-        $stt_finale = (post('stt-finale') && is_numeric(post('stt-finale'))) ?
-            post('stt-finale') : 0;
-        $lat_body = (post('lat-body') && is_numeric(post('lat-body'))) ?
-            post('lat-body') : 0;
-        $lat_finale = (post('lat-finale') && is_numeric(post('lat-finale'))) ?
-            post('lat-finale') : 0;
+        $stt_body =
+            (post('stt-body') && is_numeric(post('stt-body')))
+            ? post('stt-body') : 0;
+        $stt_finale =
+            (post('stt-finale') && is_numeric(post('stt-finale')))
+            ? post('stt-finale') : 0;
+        $lat_body =
+            (post('lat-body') && is_numeric(post('lat-body')))
+            ? post('lat-body') : 0;
+        $lat_finale =
+            (post('lat-finale') && is_numeric(post('lat-finale')))
+            ? post('lat-finale') : 0;
 
         $stt_amend = constant("AMEND_" . post('stt-trida'));
         $lat_amend = constant("AMEND_" . post('lat-trida'));
@@ -95,9 +106,10 @@ class Controller_Admin_Pary extends Controller_Admin
 
         $hodnoceni = $stt_base + $lat_base + $stt_bonus + $lat_bonus;
 
-        DBPary::editTridaBody($data['p_id'], post('stt-trida'), $stt_body,
-            $stt_finale, post('lat-trida'), $lat_body, $lat_finale, $hodnoceni);
-
+        DBPary::editTridaBody(
+            $data['p_id'], post('stt-trida'), $stt_body,
+            $stt_finale, post('lat-trida'), $lat_body, $lat_finale, $hodnoceni
+        );
         $this->redirect('/admin/pary', 'Třída a body změněny');
     }
 }

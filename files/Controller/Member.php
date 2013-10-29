@@ -11,17 +11,20 @@ class Controller_Member extends Controller_Abstract
         $data = DBNovinky::getLastNovinky(NOVINKY_COUNT);
         foreach ($data as &$row) {
             $new_row = array(
-                    'id' => $row['no_id'],
-                    'text' => $row['no_text'],
-                    'user' => $row['u_jmeno'] . ' ' . $row['u_prijmeni'],
-                    'timestamp' => formatTimestamp($row['no_timestamp'])
+                'id' => $row['no_id'],
+                'text' => $row['no_text'],
+                'user' => $row['u_jmeno'] . ' ' . $row['u_prijmeni'],
+                'timestamp' => formatTimestamp($row['no_timestamp'])
             );
             $row = $new_row;
         }
-        $this->render('files/View/Member/Home.inc', array(
+        $this->render(
+            'files/View/Member/Home.inc',
+            array(
                 'data' => $data,
                 'canEdit' => Permissions::check('novinky', P_OWNED)
-        ));
+            )
+        );
     }
     function sidebar() {
         $s = new Sidebar();

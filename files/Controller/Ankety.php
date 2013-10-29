@@ -29,10 +29,10 @@ class Controller_Ankety extends Controller_Abstract
             $new_row = array();
             foreach ($row['items'] as $item) {
                 $new_row['items'][] = array(
-                        'text' => $item['aki_text'],
-                        'pocet' => $item['aki_pocet'],
-                        'width' => $item['aki_pocet'] / $sum * 100,
-                        'color' => dechex(rand(40,220)) . dechex(rand(40,220)) . dechex(rand(40,220))
+                    'text' => $item['aki_text'],
+                    'pocet' => $item['aki_pocet'],
+                    'width' => $item['aki_pocet'] / $sum * 100,
+                    'color' => dechex(rand(40,220)) . dechex(rand(40,220)) . dechex(rand(40,220))
                 );
             }
             $new_row['id'] = $row['ak_id'];
@@ -41,9 +41,12 @@ class Controller_Ankety extends Controller_Abstract
 
             $row = $new_row;
         }
-        echo $this->render('files/View/Main/Ankety/Overview.inc', array(
+        echo $this->render(
+            'files/View/Main/Ankety/Overview.inc',
+            array(
                 'data' => $data
-        ));
+            )
+        );
     }
     function sidebar() { }
 }

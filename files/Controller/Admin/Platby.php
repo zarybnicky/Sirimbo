@@ -23,10 +23,15 @@ class Controller_Admin_Platby extends Controller_Admin
     protected function checkHeaders($headers, &$specific, &$variable, &$date, &$amount) {
         $headers = array_flip($headers);
 
-        if (isset($headers[$specific]) && isset($headers[$variable]) && isset($headers[$date]) && isset($headers[$amount]))
+        if (isset($headers[$specific])
+            && isset($headers[$variable])
+            && isset($headers[$date])
+            && isset($headers[$amount])
+        ) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
     protected function getCategoryList() {
         $in = DBPlatbyGroup::getGroupsWithCategories();
@@ -48,7 +53,10 @@ class Controller_Admin_Platby extends Controller_Admin
         foreach ($in as $array) {
             $key = (int) ($useSymbolKey ? $array['pc_symbol'] : $array['pc_id']);
 
-            if ($includeGroups && $group_id != $array['pg_id'] && !isset($out['group_' . $array['pg_id']])) {
+            if ($includeGroups
+                && $group_id != $array['pg_id']
+                && !isset($out['group_' . $array['pg_id']])
+            ) {
                 $out['group_' . $array['pg_id']] = $array;
                 $group_id = $array['pg_id'];
             }
@@ -61,16 +69,18 @@ class Controller_Admin_Platby extends Controller_Admin
     protected function getUserLookup($sort) {
         $in = DBUser::getUsers();
         if ($sort) {
-            usort($in, function($a, $b) {
-                $c = $a['u_prijmeni'];
-                $d = $b['u_prijmeni'];
-                return ($c > $d ? 1 : ($c < $d ? -1 : 0));
-            });
+            usort(
+                $in,
+                function ($a, $b) {
+                    $c = $a['u_prijmeni'];
+                    $d = $b['u_prijmeni'];
+                    return ($c > $d ? 1 : ($c < $d ? -1 : 0));
+                }
+            );
         }
         $out = array();
-        foreach ($in as $array) {
+        foreach ($in as $array)
             $out[(int) $array['u_id']] = $array;
-        }
         return $out;
     }
 }

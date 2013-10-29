@@ -3,13 +3,16 @@ class Controller_Aktualne extends Controller_Abstract
 {
     function view($id = null) {
         if ($id && ($data = DBAktuality::getSingleAktualita($id))) {
-            $this->render('files/View/Main/Aktuality/Single.inc', array(
+            $this->render(
+                'files/View/Main/Aktuality/Single.inc',
+                array(
                     'id'        => $data['at_id'],
                     'jmeno'        => $data['at_jmeno'],
                     'timestamp'    => $data['at_timestamp_add'],
                     'canEdit'    => Permissions::check('aktuality', P_OWNED, $data['at_kdo']),
                     'text'        => stripslashes(nl2br($data['at_text']))
-            ));
+                )
+            );
             return;
         }
         $this->redirect('/aktualne/posledni');
@@ -41,26 +44,32 @@ class Controller_Aktualne extends Controller_Abstract
         $data = DBAktuality::getAktuality($type);
 
         if (!$data)  {
-            $this->render('files/View/Empty.inc', array(
+            $this->render(
+                'files/View/Empty.inc',
+                array(
                     'nadpis' => $nadpis,
                     'notice' => 'Žádné články nejsou k dispozici.'
-            ));
+                )
+            );
             return;
         }
         foreach ($data as &$row) {
             $new_row = array(
-                    'id'         => $row['at_id'],
-                    'jmeno'      => $row['at_jmeno'],
-                    'timestamp'  => $row['at_timestamp_add'],
-                    'canEdit'    => Permissions::check('aktuality', P_OWNED, $row['at_kdo']),
-                    'preview'    => stripslashes(nl2br($row['at_preview']))
+                'id'         => $row['at_id'],
+                'jmeno'      => $row['at_jmeno'],
+                'timestamp'  => $row['at_timestamp_add'],
+                'canEdit'    => Permissions::check('aktuality', P_OWNED, $row['at_kdo']),
+                'preview'    => stripslashes(nl2br($row['at_preview']))
             );
             $row = $new_row;
         }
-        $this->render('files/View/Main/Aktuality/Overview.inc', array(
+        $this->render(
+            'files/View/Main/Aktuality/Overview.inc',
+            array(
                 'nadpis' => $nadpis,
                 'data' => $data
-        ));
+            )
+        );
     }
 }
 ?>

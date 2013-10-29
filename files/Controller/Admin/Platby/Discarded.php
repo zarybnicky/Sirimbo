@@ -8,15 +8,21 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
     function view($id = null) {
         $data = DBPlatbyRaw::getDiscarded();
         if (count($data) == 0) {
-            $this->redirect('/admin/platby', 'V databázi nejsou žádné vyřazené platby.');
+            $this->redirect(
+                '/admin/platby',
+                'V databázi nejsou žádné vyřazené platby.'
+            );
         }
         if (get('list')) {
             $this->_getTable($data, $result, $columns, $header);
-            $this->render('files/View/Admin/Platby/DiscardedTable.inc', array(
+            $this->render(
+                'files/View/Admin/Platby/DiscardedTable.inc',
+                array(
                     'data' => $result,
                     'columns' => $columns,
                     'header' => $header
-            ));
+                )
+            );
         } else {
             $this->_getList($data, $groupAmount, $groupDate);
             $this->render('files/View/Admin/Platby/DiscardedList.inc', array(
@@ -26,21 +32,35 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
         }
     }
     function remove($id = null) {
-        if (!$id && !($data = DBPlatbyRaw::getSingle($id)))
-            $this->redirect(Request::getReferer(), 'Platba se zadaným ID neexistuje.');
+        if (!$id && !($data = DBPlatbyRaw::getSingle($id))) {
+            $this->redirect(
+                Request::getReferer(),
+                'Platba se zadaným ID neexistuje.'
+            );
+        }
 
         DBPlatbyRaw::delete($id);
-        $this->redirect(Request::getReferer(), 'Platba byla odstraněna.');
+        $this->redirect(
+            Request::getReferer(),
+            'Platba byla odstraněna.'
+        );
     }
     private function _getTable($data, &$result, &$columns, &$header) {
-        if (get('list') == 'date')
-            $header = (get('year') == 'none' ? 'nezařazené podle data' :
-                (get('month') ? (get('year') . '/' . get('month')) : get('year')));
-        elseif (get('list') == 'amount')
-            $header = (get('amount') == 'none' ? 'nezařazené podle částky' :
-                (get('amount') . ' Kč'));
-        else
+        if (get('list') == 'date') {
+            $header =
+                (get('year') == 'none'
+                ? 'nezařazené podle data'
+                : (get('month')
+                  ? (get('year') . '/' . get('month'))
+                  : get('year')));
+        } elseif (get('list') == 'amount') {
+            $header =
+                (get('amount') == 'none'
+                ? 'nezařazené podle částky'
+                : (get('amount') . ' Kč'));
+        } else {
             $header = 'všechny';
+        }
 
         $result = array();
         $columnsTemp = array();
@@ -54,13 +74,19 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
                     if (get('year') == 'none')
                         continue;
                     $currentDate = new Date($row[$date]);
-                    if ($currentDate->getYear() != get('year') ||
-                            (get('month') && $currentDate->getMonth() != get('month')))
+                    if ($currentDate->getYear() != get('year')
+                        || (get('month') && $currentDate->getMonth() != get('month'))
+                    ) {
                         continue;
+                    }
                 } elseif (get('year') !== 'none') {
                     continue;
                 }
-            } elseif (get('list') == 'amount' && ((!isset($row[$amount]) ^ get('amount') == 'none') || get('amount') != (int) $row[$amount])) {
+            } elseif (
+                get('list') == 'amount'
+                && ((!isset($row[$amount]) ^ get('amount') == 'none')
+                   || get('amount') != (int) $row[$amount])
+            ) {
                 continue;
             }
             foreach ($row as $key => $value) {
@@ -69,8 +95,11 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
                 elseif (!isset($columnsTemp[$key]))
                     $columnsTemp[$key] = false;
             }
-            $row['edit'] = '<div style="width:51px">' . $this->getEditLink('/admin/platby/manual/' . $rawData['pr_id']) .
-                $this->getRemoveLink('/admin/platby/discarded/remove/' . $rawData['pr_id']) . '</div>';
+            $row['edit'] =
+                '<div style="width:51px">'
+                . $this->getEditLink('/admin/platby/manual/' . $rawData['pr_id'])
+                . $this->getRemoveLink('/admin/platby/discarded/remove/' . $rawData['pr_id'])
+                . '</div>';
             $result[] = $row;
         }
         if (empty($columnsTemp)) {

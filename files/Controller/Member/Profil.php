@@ -30,10 +30,12 @@ class Controller_Member_Profil extends Controller_Member
             $this->render("files/View/Member/Profil/PersonalData.inc");
             return;
         }
-        DBUser::setUserData(User::getUserID(), post('jmeno'), post('prijmeni'),
+        DBUser::setUserData(
+            User::getUserID(), post('jmeno'), post('prijmeni'),
             post('pohlavi'), post('email'), post('telefon'), (string) $narozeni,
             post('poznamky'), $data['u_group'], $data['u_skupina'],
-            $data['u_dancer'], $data['u_lock'], $data['u_ban'], $data['u_system']);
+            $data['u_dancer'], $data['u_lock'], $data['u_ban'], $data['u_system']
+        );
         $this->redirect('/member/profil', 'Upraveno');
     }
     function heslo($id = null) {
@@ -54,35 +56,38 @@ class Controller_Member_Profil extends Controller_Member
         foreach ($groups as $row) {
             if ($currentGroup != $row['pg_id']) {
                 $groupsOut[] = array(
-                        'name' => ('<span class="big" style="text-decoration:underline;">' . $row['pg_name'] . '</span>'),
-                        'type' => (!$row['pg_type'] ? 'Ostatní platby' : 'Členské příspěvky'),
-                        'symbol' => '',
-                        'amount' => '',
-                        'dueDate' => '',
-                        'validRange' => ''
+                    'name' => ('<span class="big" style="text-decoration:underline;">' . $row['pg_name'] . '</span>'),
+                    'type' => (!$row['pg_type'] ? 'Ostatní platby' : 'Členské příspěvky'),
+                    'symbol' => '',
+                    'amount' => '',
+                    'dueDate' => '',
+                    'validRange' => ''
                 );
                 $currentGroup = $row['pg_id'];
             }
             $groupsOut[] = array(
-                    'name' => $row['pc_name'],
-                    'type' => '',
-                    'symbol' => $row['pc_symbol'],
-                    'amount' => (($row['pc_use_base'] ? ($row['pc_amount'] * $row['pg_base']) : $row['pc_amount']) . ' Kč'),
-                    'dueDate' => (new Date($row['pc_date_due']))->getDate(Date::FORMAT_SIMPLIFIED),
-                    'validRange' => ((new Date($row['pc_valid_from']))->getDate(Date::FORMAT_SIMPLIFIED) .
-                                ((new Date($row['pc_valid_to']))->isValid() ?
-                                        (' - ' . (new Date($row['pc_valid_to']))->getDate(Date::FORMAT_SIMPLIFIED)) : ''))
+                'name' => $row['pc_name'],
+                'type' => '',
+                'symbol' => $row['pc_symbol'],
+                'amount' => (($row['pc_use_base'] ? ($row['pc_amount'] * $row['pg_base']) : $row['pc_amount']) . ' Kč'),
+                'dueDate' => (new Date($row['pc_date_due']))->getDate(Date::FORMAT_SIMPLIFIED),
+                'validRange' => ((new Date($row['pc_valid_from']))->getDate(Date::FORMAT_SIMPLIFIED) .
+                    ((new Date($row['pc_valid_to']))->isValid() ?
+                        (' - ' . (new Date($row['pc_valid_to']))->getDate(Date::FORMAT_SIMPLIFIED)) : ''))
             );
         }
         $skupina = User::getSkupinaData();
-        $this->render('files/View/Member/Profil/Platby.inc', array(
+        $this->render(
+            'files/View/Member/Profil/Platby.inc',
+            array(
                 'colorBox' => getColorBox($skupina['s_color_rgb'], $skupina['s_description']),
                 'skupinaData' => $skupina['s_name'],
                 'varSymbol' => User::var_symbol(User::getUserID()),
                 'zaplacenoText' => User::getZaplaceno() ? 'zaplaceno' : 'nezaplaceno!',
                 'platby' => array(),
                 'platbyGroups' => $groupsOut
-        ));
+            )
+        );
     }
     private function _checkData($action, $narozeni = null) {
         $f = new Form();
@@ -96,9 +101,9 @@ class Controller_Member_Profil extends Controller_Member
         } elseif ($action == 'heslo') {
             $f->checkPassword(post('newpass'), 'Neplatný formát hesla', 'newpass');
             $f->checkBool(DBUser::checkUser(User::getUserName(), User::crypt(post('oldpass'))),
-                    'Staré heslo je špatně', 'oldpass');
+                'Staré heslo je špatně', 'oldpass');
             $f->checkBool(post('newpass') == post('newpass_confirm'),
-                    'Nová hesla se neshodují', 'newpass_check');
+                'Nová hesla se neshodují', 'newpass_check');
         }
         return $f->isValid() ? null : $f;
     }

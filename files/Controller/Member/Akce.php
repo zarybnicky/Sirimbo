@@ -15,8 +15,8 @@ class Controller_Member_Akce extends Controller_Member
             $this->render('files/View/Member/Akce/Single.inc', array('data' => $data));
             return;
         }
-        if (!empty($_POST) && post('id') &&
-                ($data = DBAkce::getSingleAkce(post('id')))) {
+        if (!empty($_POST) && post('id')
+            && ($data = DBAkce::getSingleAkce(post('id')))) {
             if (is_object($f = $this->_checkData($data, post('action')))) {
                 $this->redirect()->setMessage($f->getMessages());
             } elseif (post('action') == 'signup') {
@@ -27,15 +27,18 @@ class Controller_Member_Akce extends Controller_Member
         }
         $akce = DBAkce::getAkce(true);
         if (empty($akce)) {
-            $this->render('files/View/Empty.inc', array(
+            $this->render(
+                'files/View/Empty.inc',
+                array(
                     'nadpis' => 'Klubové akce',
-                    'notice' => 'Žádné akce nejsou k dispozici.')
+                    'notice' => 'Žádné akce nejsou k dispozici.'
+                )
             );
             return;
         }
-        foreach ($akce as &$data) {
+        foreach ($akce as &$data)
             $data = $this->_getRenderData($data);
-        }
+
         $this->render('files/View/Member/Akce/Overview.inc', array('akce' => $akce));
     }
     private function _getRenderData(&$data) {
@@ -45,8 +48,8 @@ class Controller_Member_Akce extends Controller_Member
             foreach ($dokumenty as &$row) {
                 $dokument = DBDokumenty::getSingleDokument($row);
                 $new_row = array(
-                        'id' => $row,
-                        'name' => $dokument['d_name']
+                    'id' => $row,
+                    'name' => $dokument['d_name']
                 );
                 $row = $new_row;
             }
@@ -54,18 +57,18 @@ class Controller_Member_Akce extends Controller_Member
             $dokumenty = array();
         }
         $new_data = array(
-                'id' => $data['a_id'],
-                'jmeno' => $data['a_jmeno'],
-                'kde' => $data['a_kde'],
-                'datum' => formatDate($data['a_od']) .
+            'id' => $data['a_id'],
+            'jmeno' => $data['a_jmeno'],
+            'kde' => $data['a_kde'],
+            'datum' => formatDate($data['a_od']) .
                 (($data['a_od'] != $data['a_do']) ? ' - ' . formatDate($data['a_do']) : ''),
-                'kapacita' => $data['a_kapacita'],
-                'volno' => $data['a_kapacita'] - count($items),
-                'showForm' => Permissions::check('akce', P_MEMBER) && !$data['a_lock'],
-                'canEdit' => Permissions::check('akce', P_OWNED),
-                'info' => nl2br($data['a_info']),
-                'dokumenty' => $dokumenty,
-                'items' => $items
+            'kapacita' => $data['a_kapacita'],
+            'volno' => $data['a_kapacita'] - count($items),
+            'showForm' => Permissions::check('akce', P_MEMBER) && !$data['a_lock'],
+            'canEdit' => Permissions::check('akce', P_OWNED),
+            'info' => nl2br($data['a_info']),
+            'dokumenty' => $dokumenty,
+            'items' => $items
         );
         $new_data['signIn'] = $new_data['showForm'] ? !DBAkce::isUserSignedUp($new_data['id'], User::getUserID()) : '';
         return $new_data;

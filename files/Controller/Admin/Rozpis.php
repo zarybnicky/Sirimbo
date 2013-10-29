@@ -11,25 +11,27 @@ class Controller_Admin_Rozpis extends Controller_Admin
                 $items = DBRozpis::getRozpis();
                 foreach ($items as $item) {
                     $id = $item['r_id'];
-                    if ((bool) post($id) !== (bool) $item['r_visible'] &&
-                            Permissions::check('rozpis', P_OWNED, $item['r_trener'])) {
+                    if ((bool) post($id) !== (bool) $item['r_visible']
+                        && Permissions::check('rozpis', P_OWNED, $item['r_trener'])
+                    ) {
                         if (!Permissions::check('rozpis', P_ADMIN) && post($id) && !$item['r_visible']) {
                             $this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění rozpisu');
                         } else {
-                            DBRozpis::editRozpis($id, $item['r_trener'], $item['r_kde'],
-                                $item['r_datum'], post($id) ? '1' : '0', $item['r_lock'] ? '1' : '0');
-
+                            DBRozpis::editRozpis(
+                                $id, $item['r_trener'], $item['r_kde'],
+                                $item['r_datum'], post($id) ? '1' : '0', $item['r_lock'] ? '1' : '0'
+                            );
                             $n = new Novinky(User::getUserID());
                             if (!post($id)) {
                                 $n->rozpis()->remove(
-                                        (new Date($item['r_datum']))->getDate(Date::FORMAT_SIMPLIFIED),
-                                        $item['u_jmeno'] . ' ' . $item['u_prijmeni']
+                                    (new Date($item['r_datum']))->getDate(Date::FORMAT_SIMPLIFIED),
+                                    $item['u_jmeno'] . ' ' . $item['u_prijmeni']
                                 );
                             } else {
                                 $n->rozpis()->add(
-                                        '/member/rozpis',
-                                        (new Date($item['r_datum']))->getDate(Date::FORMAT_SIMPLIFIED),
-                                        $item['u_jmeno'] . ' ' . $item['u_prijmeni']
+                                    '/member/rozpis',
+                                    (new Date($item['r_datum']))->getDate(Date::FORMAT_SIMPLIFIED),
+                                    $item['u_jmeno'] . ' ' . $item['u_prijmeni']
                                 );
                             }
                         }
@@ -74,10 +76,10 @@ class Controller_Admin_Rozpis extends Controller_Admin
         $data = DBRozpis::getRozpis();
         foreach ($data as &$row) {
             $new_data = array(
-                    'canEdit' => Permissions::check('rozpis', P_OWNED, $row['r_trener']),
-                    'fullName' => $row['u_jmeno'] . ' ' . $row['u_prijmeni'],
-                    'datum' => formatDate($row['r_datum']),
-                    'kde' => $row['r_kde']
+                'canEdit' => Permissions::check('rozpis', P_OWNED, $row['r_trener']),
+                'fullName' => $row['u_jmeno'] . ' ' . $row['u_prijmeni'],
+                'datum' => formatDate($row['r_datum']),
+                'kde' => $row['r_kde']
             );
             if ($new_data['canEdit'])
                 $new_data['checkBox'] = '<input type="checkbox" name="rozpis[]" value="' . $row['r_id'] . '" />';
@@ -89,20 +91,26 @@ class Controller_Admin_Rozpis extends Controller_Admin
                 $new_data['visible'] = '&nbsp;' . ($row['r_visible'] ? '&#10003;' : '&#10799;');
             $row = $new_data;
         }
-        $this->render('files/View/Admin/Rozpis/Overview.inc', array(
+        $this->render(
+            'files/View/Admin/Rozpis/Overview.inc',
+            array(
                 'showMenu' => !TISK,
                 'data' => $data
-        ));
+            )
+        );
         return;
     }
     function add($id = null) {
         if (empty($_POST) || is_object($f = $this->_checkData())) {
             if (!empty($_POST))
                 $this->redirect()->setMessage($f->getMessages());
-            $this->render('files/View/Admin/Rozpis/Form.inc', array(
+            $this->render(
+                'files/View/Admin/Rozpis/Form.inc',
+                array(
                     'action' => Request::getAction(),
                     'isAdmin' => Permissions::check('rozpis', P_ADMIN)
-            ));
+                )
+            );
             return;
         }
         Permissions::checkError('rozpis', P_OWNED, post('trener'));
@@ -121,9 +129,9 @@ class Controller_Admin_Rozpis extends Controller_Admin
 
             $n = new Novinky(User::getUserID());
             $n->rozpis()->add(
-                    '/member/rozpis',
-                    $datum->getDate(Date::FORMAT_SIMPLIFIED),
-                    $trener_name
+                '/member/rozpis',
+                $datum->getDate(Date::FORMAT_SIMPLIFIED),
+                $trener_name
             );
         }
         $this->redirect('/admin/rozpis', 'Rozpis přidán');
@@ -144,10 +152,13 @@ class Controller_Admin_Rozpis extends Controller_Admin
             } else {
                 $this->redirect()->setMessage($f->getMessages());
             }
-            $this->render('files/View/Admin/Rozpis/Form.inc', array(
+            $this->render(
+                'files/View/Admin/Rozpis/Form.inc',
+                array(
                     'action' => Request::getAction(),
                     'isAdmin' => Permissions::check('rozpis', P_ADMIN)
-            ));
+                )
+            );
             return;
         }
         $datum = $this->date('datum')->getPost();
@@ -158,8 +169,10 @@ class Controller_Admin_Rozpis extends Controller_Admin
             $visible = $visible_prev;
             $this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění rozpisu');
         }
-        DBRozpis::editRozpis($id, post('trener'), post('kde'), (string) $datum, $visible,
-            post('lock'));
+        DBRozpis::editRozpis(
+            $id, post('trener'), post('kde'), (string) $datum,
+            $visible, post('lock')
+        );
 
         if ($visible) {
             if (!$visible_prev)
@@ -176,15 +189,15 @@ class Controller_Admin_Rozpis extends Controller_Admin
             $n = new Novinky(User::getUserID());
             if ($act == 'remove') {
                 $n->rozpis()->$act(
-                        $datum->getDate(Date::FORMAT_SIMPLIFIED),
-                        $trener_name
+                    $datum->getDate(Date::FORMAT_SIMPLIFIED),
+                    $trener_name
                 );
             } else {
                 $n->rozpis()->$act(
-                        '/member/rozpis',
-                        $datum->getDate(Date::FORMAT_SIMPLIFIED),
-                        $trener_name
-                );
+                    '/member/rozpis',
+                    $datum->getDate(Date::FORMAT_SIMPLIFIED),
+                    $trener_name
+               );
             }
         }
         $this->redirect('/admin/rozpis', 'Rozpis úspěšně upraven');

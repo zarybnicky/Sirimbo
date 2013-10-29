@@ -79,7 +79,7 @@
   <exec executable="phpmd">
    <arg path="${basedir}" />
    <arg value="xml" />
-   <arg value="unusedcode,codesize,controversial,naming" />
+   <arg value="unusedcode,codesize,naming" />
    <arg value="--reportfile" />
    <arg value="${basedir}/build/logs/pmd.xml" />
   </exec>
@@ -120,8 +120,7 @@
  </target>
 
  <target name="phpunit" description="Run unit tests with PHPUnit">
-  <!--
-  <exec executable="phpunit" failonerror="true"/>
+  <!--<exec executable="phpunit" failonerror="true">
    <arg value="- -log-junit" />
    <arg path="${basedir}/build/logs/junit.xml" />
    <arg value="- -coverage-clover" />
@@ -129,8 +128,7 @@
    <arg value="- -configuration" />
    <arg path="${basedir}/tests/phpunit.xml" />
    <arg value="${basedir}" />
-  </exec>
-  -->
+  </exec>-->
  </target>
 
  <target name="phpcb" description="Aggregate tool output with PHP_CodeBrowser">

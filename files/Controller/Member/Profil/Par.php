@@ -4,7 +4,9 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
 {
     function view($id = null) {
         $latest = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
-        $this->render('files/View/Member/Profil/CoupleOverview.inc', array(
+        $this->render(
+            'files/View/Member/Profil/CoupleOverview.inc',
+            array(
                 'havePartner' => !empty($latest) && $latest['u_id'],
                 'partnerFullName' => $latest['u_jmeno'] . ' ' . $latest['u_prijmeni'],
                 'sttTrida' => $latest['p_stt_trida'],
@@ -14,10 +16,11 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
                 'latBody' => $latest['p_lat_body'],
                 'latFinale' => $latest['p_lat_finale'],
                 'hodnoceni' => $latest['p_hodnoceni']
-        ));
+            )
+        );
     }
     function body($id = null) {
-        if (empty($_POST) || is_object($f = $this->_checkData('body'))) {
+        if (empty($_POST) || is_object($f = $this->_checkData())) {
             if (empty($_POST)) {
                 $par = DBPary::getSinglePar(User::getParID());
                 post('stt-trida', $par['p_stt_trida']);
@@ -33,14 +36,17 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
             return;
         }
         $hodnoceni =
-            (post('stt-body') + 40 * post('stt-finale')) * constant('AMEND_' . post('stt-trida')) +
-            (post('stt-body') + 40 * post('lat-finale')) * constant('AMEND_' . post('lat-trida')) +
-            constant('BONUS_' . post('stt-trida')) +
-            constant('BONUS_' . post('lat-trida'));
+            (post('stt-body') + 40 * post('stt-finale')) * constant('AMEND_' . post('stt-trida'))
+            + (post('stt-body') + 40 * post('lat-finale')) * constant('AMEND_' . post('lat-trida'))
+            + constant('BONUS_' . post('stt-trida'))
+            + constant('BONUS_' . post('lat-trida'));
 
-        DBPary::editTridaBody(User::getParID(),
+        DBPary::editTridaBody(
+            User::getParID(),
             post('stt-trida'), post('stt-body'), post('stt-finale'),
-            post('lat-trida'), post('lat-body'), post('lat-finale'), $hodnoceni);
+            post('lat-trida'), post('lat-body'), post('lat-finale'),
+            $hodnoceni
+        );
         $this->redirect("/member/profil/par", "Třída a body změněny");
     }
     function partner($id = null) {
@@ -67,12 +73,17 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
         }
 
         post('partner', $havePartner ? $latest['u_id'] : 'none');
-        $this->render('files/View/Member/Profil/PartnerOverview.inc', array(
+        $this->render(
+            'files/View/Member/Profil/PartnerOverview.inc',
+            array(
                 'havePartner' => $havePartner,
                 'partnerID' => $latest['u_id'],
                 'partnerFullName' => $latest['u_jmeno'] . ' ' . $latest['u_prijmeni'],
-                'users' => (User::getUserPohlavi() == "m") ? DBUser::getUsersByPohlavi("f") : DBUser::getUsersByPohlavi("m")
-        ));
+                'users' => (User::getUserPohlavi() == "m")
+                            ? DBUser::getUsersByPohlavi("f")
+                            : DBUser::getUsersByPohlavi("m")
+            )
+        );
     }
     function zadost($id = null) {
         if (!post('action'))
@@ -100,7 +111,6 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
                 foreach ($requests as $req) {
                     if ($req['pn_id'] != post('id'))
                         continue;
-
                     DBPary::deletePartnerRequest(post('id'));
                     $this->redirect('/member/profil/par', 'Žádost zrušena');
                 }
@@ -111,12 +121,18 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
         }
         $this->redirect('/member/profil', 'Žádná taková žádost tu není');
     }
-    private function _checkData($action, $data = null) {
+    private function _checkData() {
         $f = new Form();
-        $f->checkInArray(post('stt-trida'), array('Z', 'H', 'D', 'C', 'B', 'A', 'M'),
-                'Neplatná standartní třída', 'stt-trida');
-        $f->checkInArray(post('lat-trida'), array('Z', 'H', 'D', 'C', 'B', 'A', 'M'),
-                'Neplatná latinská třída', 'lat-trida');
+        $f->checkInArray(
+            post('stt-trida'),
+            array('Z', 'H', 'D', 'C', 'B', 'A', 'M'),
+            'Neplatná standartní třída', 'stt-trida'
+        );
+        $f->checkInArray(
+            post('lat-trida'),
+            array('Z', 'H', 'D', 'C', 'B', 'A', 'M'),
+            'Neplatná latinská třída', 'lat-trida'
+        );
         $f->checkNumberBetween(post('stt-body'), 0, 1000, 'Špatný počet standartních bodů', 'stt-body');
         $f->checkNumberBetween(post('lat-body'), 0, 1000, 'Špatný počet latinských bodů', 'lat-body');
         $f->checkNumberBetween(post('stt-finale'), 0, 10, 'Špatný počet standartních finálí', 'stt-finale');

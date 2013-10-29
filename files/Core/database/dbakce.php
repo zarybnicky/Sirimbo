@@ -2,8 +2,10 @@
 class DBAkce extends Database implements Pagable
 {
     public static function getAkce($onlyVisible = false) {
-        $res = DBAkce::query('SELECT * FROM akce' .
-                ($onlyVisible ? " WHERE a_visible='1'" : '') . ' ORDER BY a_od');
+        $res = DBAkce::query(
+            'SELECT * FROM akce'
+            . ($onlyVisible ? " WHERE a_visible='1'" : '') . ' ORDER BY a_od'
+        );
         return DBAkce::getArray($res);
     }
 

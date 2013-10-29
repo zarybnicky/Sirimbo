@@ -19,16 +19,19 @@ class Controller_Fotogalerie extends Controller_Abstract
         }
         foreach ($photos as &$row) {
             $new_row = array(
-                    'id' => $row['gf_id'],
-                    'src' => str_replace('./galerie', '/galerie/thumbnails', $row['gf_path']),
-                    'href' => '/' . Request::getURL() . '/foto/' . $row['gf_id']
+                'id' => $row['gf_id'],
+                'src' => '/galerie/thumbnails/' . $row['gf_path'],
+                'href' => '/' . Request::getURL() . '/foto/' . $row['gf_id']
             );
             $row = $new_row;
         }
-        $this->render('files/View/Main/Fotogalerie/Overview.inc', array(
+        $this->render(
+            'files/View/Main/Fotogalerie/Overview.inc',
+            array(
                 'nadpis' => $data['gd_name'],
                 'photos' => $photos
-        ));
+            )
+        );
     }
     function foto($id = null) {
         if (!$id || !($data = DBGalerie::getSingleFoto($id)))
@@ -43,15 +46,18 @@ class Controller_Fotogalerie extends Controller_Abstract
         }
         $hasPrev = isset($parent_dir[$current - 1]);
         $hasNext = isset($parent_dir[$current + 1]);
-        $this->render('files/View/Main/Fotogalerie/Single.inc', array(
-                'id'        => $id,
-                'src'        => $data['gf_path'],
+        $this->render(
+            'files/View/Main/Fotogalerie/Single.inc',
+            array(
+                'id'         => $id,
+                'src'        => '/galerie/' . $data['gf_path'],
                 'hasPrev'    => $hasPrev,
                 'prevURL'    => $hasPrev ? $parent_dir[$current - 1]['gf_id'] : '',
-                'returnURL'    => '/galerie' . ($data['gf_id_rodic'] > 0 ? ('/' . $data['gf_id_rodic']) : ''),
+                'returnURL'  => '/fotogalerie' . ($data['gf_id_rodic'] > 0 ? ('/' . $data['gf_id_rodic']) : ''),
                 'hasNext'    => $hasNext,
                 'nextURL'    => $hasNext ? $parent_dir[$current + 1]['gf_id'] : '',
-        ));
+            )
+        );
         return;
     }
     function sidebar() {

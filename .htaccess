@@ -7,6 +7,5 @@ RewriteRule ^(.*)$ /public/%1 [L,QSA]
 
 RewriteCond %{REQUEST_URI} !^/public/.* [NC]
 RewriteCond %{REQUEST_URI} !^/stats/.* [NC]
-RewriteCond %{REQUEST_URI} !^/?galerie/.+ [NC]
 RewriteCond $1 !^index\.php.* [NC]
 RewriteRule ^(.+)$ /index.php?file=$1 [NC,L,QSA]
