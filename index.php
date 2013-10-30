@@ -1,11 +1,4 @@
 <?php
-/**
- * Project TKOlomouc
- * The bootstrap
- *
- * @package TKOlomouc
- */
-
 /*/sitewide OFF switch
 if (isset($_GET['file'])) {
     if (stripos($_GET['file'], 'cookie_set') !== false) {

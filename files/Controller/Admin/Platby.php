@@ -2,13 +2,16 @@
 require_once 'files/Controller/Admin.php';
 class Controller_Admin_Platby extends Controller_Admin
 {
-    function __construct() {
+    function __construct()
+    {
         Permissions::checkError('platby', P_OWNED);
     }
-    function view($id = null) {
+    function view($id = null)
+    {
         $this->redirect('/admin/platby/overview');
     }
-    protected function recognizeHeaders($headers, &$specific, &$variable, &$date, &$amount) {
+    protected function recognizeHeaders($headers, &$specific, &$variable, &$date, &$amount)
+    {
         foreach ($headers as $key => $value) {
             if (mb_stripos($key, 'specif') !== false)
                 $specific = $key;
@@ -20,7 +23,8 @@ class Controller_Admin_Platby extends Controller_Admin
                 $amount = $key;
         }
     }
-    protected function checkHeaders($headers, &$specific, &$variable, &$date, &$amount) {
+    protected function checkHeaders($headers, &$specific, &$variable, &$date, &$amount)
+    {
         $headers = array_flip($headers);
 
         if (isset($headers[$specific])
@@ -33,7 +37,8 @@ class Controller_Admin_Platby extends Controller_Admin
             return false;
         }
     }
-    protected function getCategoryList() {
+    protected function getCategoryList()
+    {
         $in = DBPlatbyGroup::getGroupsWithCategories();
         $out = array();
         $group_id = 0;
@@ -46,7 +51,8 @@ class Controller_Admin_Platby extends Controller_Admin
         }
         return $out;
     }
-    protected function getCategoryLookup($useSymbolKey, $unique, $includeGroups) {
+    protected function getCategoryLookup($useSymbolKey, $unique, $includeGroups)
+    {
         $in = DBPlatbyGroup::getGroupsWithCategories();
         $out = array();
         $group_id = 0;
@@ -66,7 +72,8 @@ class Controller_Admin_Platby extends Controller_Admin
         }
         return $out;
     }
-    protected function getUserLookup($sort) {
+    protected function getUserLookup($sort)
+    {
         $in = DBUser::getUsers();
         if ($sort) {
             usort(
@@ -82,6 +89,32 @@ class Controller_Admin_Platby extends Controller_Admin
         foreach ($in as $array)
             $out[(int) $array['u_id']] = $array;
         return $out;
+    }
+    protected function getFromPost($id = null)
+    {
+        $item = new PlatbyItem();
+        $item->init(
+            null, post('variable'), post('date'), post('amount'),
+            post('prefix'), $id, post('specific')
+        );
+        $item->processWithSymbolLookup(
+            $this->getUserLookup(false),
+            $this->getCategoryLookup(true, true, false)
+        );
+
+        $error = array();
+        if (!$item->variable)
+            $error[] = 'Neplatné ID uživatele';
+        if (!$item->category_id)
+            $error[] = 'Neplatné ID kategorie';
+        if (!$item->date)
+            $error[] = 'Neplatné datum';
+        if (!$item->prefix)
+            $error[] = 'Neplatný prefix';
+        if ($item->amount < 0)
+            $error[] = 'Neplatná částka';
+
+        return $item->isValid ? $item : $error;
     }
 }
 ?>
