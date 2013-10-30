@@ -1,48 +1,21 @@
 <?php
-/**
- * Project TKOlomouc
- *
- * @category Akce
- * @package TKOlomouc_Controllers
- */
-
-/**
- * @see Controller_Member
- */
 require_once 'files/Controller/Member.php';
-
-/**
- * @category Akce
- * @package TKOlomouc_Controllers
- */
 class Controller_Member_Akce extends Controller_Member
 {
-    /**
-     * Checks for authorized access
-     * @return void
-     */
     function __construct()
     {
         Permissions::checkError('akce', P_VIEW);
     }
-
-    /**
-     * Should be called by Dispatcher only
-     * @param int $id
-     * @return void
-     */
     function view($id = null)
     {
         if ($id) {
-            $data = DBAkce::getSingleAkce($id, true);
-            if (!$data) {
+            if (!($data = DBAkce::getSingleAkce($id, true))) {
                 $this->redirect('/member/akce', 'Neexistuje žádná taková akce');
             }
-            $data = $this->_getRenderData($data);
             $this->render(
                 'files/View/Member/Akce/Single.inc',
                 array(
-                    'data' => $data
+                    'data' => $this->_getRenderData($data)
                 )
             );
             return;
@@ -84,12 +57,6 @@ class Controller_Member_Akce extends Controller_Member
             )
         );
     }
-
-    /**
-     * Parses data from DB for rendering
-     * @param array $data Akce data from DB
-     * @return array Data for rendering
-     */
     private function _getRenderData(&$data)
     {
         $items = DBAkce::getAkceItems($data['a_id']);
@@ -125,13 +92,6 @@ class Controller_Member_Akce extends Controller_Member
             : '';
         return $new_data;
     }
-
-    /**
-     * Checks POST input
-     * @param array $data Akce data from DB
-     * @param string $action POST action called
-     * @return Form|array Returns an empty array if Form is valid
-     */
     private function _checkData($data, $action)
     {
         $f = new Form();

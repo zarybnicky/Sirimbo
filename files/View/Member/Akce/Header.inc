@@ -1,14 +1,3 @@
-<?php
-/**
- * Project TKOlomouc
- *
- * Generic Akce header
- *
- * @name View_Main_Akce_Header
- * @category Akce
- * @package TKOlomouc_View
- */
-?>
 <div class="trenink_header" style="width:330px;">
     <div class="nadpis">
         <?php echo $this->jmeno;?>

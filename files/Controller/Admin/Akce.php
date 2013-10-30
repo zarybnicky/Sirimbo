@@ -1,36 +1,11 @@
 <?php
-/**
- * Project TKOlomouc
- *
- * @category Akce
- * @package TKOlomouc_Controllers
- */
-
-/**
- * @see Controller_Admin
- */
 require_once 'files/Controller/Admin.php';
-
-/**
- * @category Akce
- * @package TKOlomouc_Controllers
- */
 class Controller_Admin_Akce extends Controller_Admin
 {
-    /**
-     * Checks for authorized access
-     * @return void
-     */
     function __construct()
     {
         Permissions::checkError('akce', P_OWNED);
     }
-
-    /**
-     * Should be called by Dispatcher only
-     * @param int $id
-     * @return void
-     */
     function view($id = null)
     {
         switch(post('action')) {
@@ -57,12 +32,6 @@ class Controller_Admin_Akce extends Controller_Admin
         }
         $this->_displayOverview();
     }
-
-    /**
-     * Should be called by Dispatcher only
-     * @param int $id
-     * @return void
-     */
     function add($id = null)
     {
         if (empty($_POST) || is_object($form = $this->_checkData())) {
@@ -88,12 +57,6 @@ class Controller_Admin_Akce extends Controller_Admin
 
         $this->redirect('/admin/akce', 'Akce přidána');
     }
-
-    /**
-     * Should be called by Dispatcher only
-     * @param int $id
-     * @return void
-     */
     function edit($id = null)
     {
         if (!$id || !($data = DBAkce::getSingleAkce($id))) {
@@ -131,12 +94,6 @@ class Controller_Admin_Akce extends Controller_Admin
 
         $this->redirect('/admin/akce', 'Akce upravena');
     }
-
-    /**
-     * Should be called by Dispatcher only
-     * @param int $id
-     * @return void
-     */
     function remove($id = null)
     {
         if (!is_array(post('data')) && !is_array(get('u'))) {
@@ -172,13 +129,8 @@ class Controller_Admin_Akce extends Controller_Admin
             )
         );
     }
-
-    /**
-     * Sends HTTP response, fetches data for parsing by View
-     * @see View_Admin_Akce_Overview
-     * @return void
-     */
-    private function _displayOverview() {
+    private function _displayOverview()
+    {
         $currentId = 0;
         $currentIndex = -1;
         $data = array();
@@ -208,12 +160,6 @@ class Controller_Admin_Akce extends Controller_Admin
             )
         );
     }
-
-    /**
-     * Sends HTTP response, fetches data for parsing by View
-     * @see View_Admin_Akce_Form
-     * @return void
-     */
     private function _displayForm($data, $form)
     {
         if(!$data || !is_array($dokumenty = unserialize($data['a_dokumenty']))) {
@@ -236,12 +182,6 @@ class Controller_Admin_Akce extends Controller_Admin
             )
         );
     }
-
-    /**
-     * Updates DB to match input visibility
-     * @see View_Admin_Akce_Overview
-     * @return void
-     */
     private function _processSave()
     {
         $items = DBAkce::getAkce();

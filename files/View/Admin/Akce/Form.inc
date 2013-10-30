@@ -1,15 +1,3 @@
-<?php
-/**
- * Project TKOlomouc
- *
- * Akce Administration
- * Form for a single Akce item
- *
- * @name View_Admin_Akce_Form
- * @category Akce
- * @package TKOlomouc_View
- */
-?>
 <h1>Správa akcí</h1>
 <?php
 echo '<h2>';
