@@ -42,7 +42,7 @@ class Renderer
         $this->setVars($variables);
         unset($variables);
 
-        $this->_file = $name;
+        $this->_file = ROOT . DIRECTORY_SEPARATOR . $name;
         unset($name);
 
         extract($this->vars(), EXTR_SKIP);

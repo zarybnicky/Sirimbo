@@ -96,7 +96,7 @@
          description="Find coding standard violations using PHP_CodeSniffer and print human readable output. Intended for usage on the command line before committing.">
   <exec executable="phpcs">
    <arg value="--extensions=php,inc" />
-   <arg value="--standard=PEAR" />
+   <arg value="--standard=PSR2" />
    <arg path="${basedir}" />
   </exec>
  </target>
@@ -105,7 +105,7 @@
   <exec executable="phpcs" output="/dev/null">
    <arg value="--report=checkstyle" />
    <arg value="--report-file=${basedir}/build/logs/checkstyle.xml" />
-   <arg value="--standard=PEAR" />
+   <arg value="--standard=PSR2" />
    <arg value="--extensions=php,inc" />
    <arg value="--ignore=${basedir}/tests/*" />
    <arg path="${basedir}" />
@@ -125,7 +125,7 @@
  <target name="phpdox" description="Generate API documentation using phpDox">
   <exec executable="phpdox">
    <arg value="-f" />
-   <arg value="build/phpdox.xml" />
+   <arg value="phpdox.xml" />
   </exec>
  </target>
 

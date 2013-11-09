@@ -136,7 +136,7 @@ class Controller_Admin_Akce extends Controller_Admin
         $data = array();
         $akce = DBAkce::getWithItems();
         foreach ($akce as $key => $item) {
-            if($item['a_id'] == $currentId) {
+            if ($item['a_id'] == $currentId) {
                 $data[$currentIndex]['userCount']++;
                 continue;
             }
@@ -162,7 +162,7 @@ class Controller_Admin_Akce extends Controller_Admin
     }
     private function _displayForm($data, $form)
     {
-        if(!$data || !is_array($dokumenty = unserialize($data['a_dokumenty']))) {
+        if (!$data || !is_array($dokumenty = unserialize($data['a_dokumenty']))) {
             $dokumenty = array();
         } else {
             $dokumenty = DBDokumenty::getMultipleById($dokumenty);
@@ -198,24 +198,16 @@ class Controller_Admin_Akce extends Controller_Admin
             );
         }
     }
-
-    /**
-     * Checks POST input
-     * @see View_Admin_Akce_Overview
-     * @return Form|array Returns empty array if form is valid
-     */
     private function _checkData()
     {
         $od = $this->date('od')->getPost();
         $do = $this->date('do')->getPost();
-        if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0)
-            $do = $od;
 
         $form = new Form();
         $form->checkLength(post('jmeno'), 1, 255, 'Špatná délka jména akce', 'jmeno');
         $form->checkLength(post('kde'), 1, 255, 'Špatná délka místa konání', 'kde');
         $form->checkDate((string) $od, 'Špatný formát data ("Od")', 'od');
-        if ($od != $do) {
+        if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $form->checkDate((string) $do, 'Špatný formát data ("Do")', 'do');
         }
         $form->checkNumeric(post('kapacita'), 'Kapacita musí být zadána číselně', 'kapacita');

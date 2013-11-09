@@ -9,7 +9,7 @@
     <bootstrap />
 
     <!-- A phpDox project to process, you can have multiple projects in one config file -->
-    <project name="phpdox" source="${basedir}/../" workdir="${basedir}/phpdox">
+    <project name="phpdox" source="${basedir}" workdir="${basedir}/build/phpdox">
         <!--  @name    - The name of the project -->
         <!--  @source  - The source directory of the application to process -->
         <!--  @workdir - The directory to store the xml data files in -->
@@ -57,12 +57,12 @@
         </collector>
 
         <!--  Configuration of generation process -->
-        <generator output="${basedir}">
+        <generator output="${basedir}/build">
             <!-- @output - (Base-)Directory to store output data in -->
 
             <!-- A generation process consists of one or more build tasks and of (optional) enrich sources -->
 
-            <enrich path="${basedir}/logs">
+            <enrich path="${basedir/build/logs">
                 <!-- @path - (Base-)Directory of datafiles used for enrich process -->
 
                 <!-- enrichment source -->
@@ -95,7 +95,7 @@
             <!-- An engine and thus build node can have additional configuration child nodes, please check the documentation for the engine to find out more -->
 
             <!--  default engine "html" -->
-            <build engine="html" enabled="true" output="api">
+            <build engine="html" enabled="true" output="build/api">
                 <template dir="${phpDox.home}/templates/html" />
                 <file extension="xhtml" />
             </build>
@@ -109,7 +109,6 @@
                 <dot executable="/usr/bin/dot" options="" />
                 <file name="graph.png" options="" format="png" />
             </build>
-
             -->
 
         </generator>
