@@ -39,10 +39,10 @@ class Controller_Admin_Users extends Controller_Admin
                     }
                 }
                 break;
-            case null: break;
         }
-        if (get('v') === null)
+        if (get('v') === null) {
             get('v', 'info');
+        }
         $this->_displayOverview(get('v'));
     }
     function remove($id = null) {
