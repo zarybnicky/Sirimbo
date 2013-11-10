@@ -3,9 +3,7 @@ class DisplayRozpis
 {
     public static function viewRozpisHeader($data) {
         echo '<div class="trenink_header">';
-        echo '<div class="nadpis">';
-        echoFullJmeno($data);
-        echo '</div>';
+        echo '<div class="nadpis">', $data['u_jmeno'], '', $data['u_prijmeni'], '</div>';
         echo '<div style="letter-spacing:1px;font-weight:bold;">', formatDate($data['r_datum']), '</div>';
 
         if (Permissions::check('rozpis', P_OWNED, $data['r_id'])) {

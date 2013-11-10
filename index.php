@@ -21,15 +21,58 @@ if (!isset($_COOKIE['off_mode'])) {
 session_start();
 session_regenerate_id();
 
-require 'files/Core/settings.php';
-require 'files/Core/form.php';
-require 'files/Core/debug.php';
-require 'files/Core/log.php';
-require 'files/Core/request.php';
-require 'files/Controller/Interface.php';
-require 'files/Controller/Abstract.php';
 
-define('TISK', (isset($_GET['view']) && $_GET['view'] == 'tisk') ? true : false);
+//PSR generic autoloader
+require __DIR__ . DIRECTORY_SEPARATOR . 'lib'
+    . DIRECTORY_SEPARATOR . 'Psr4Autoloader.php';
+
+$autoloader = new \Psr\Autoload\Psr4Autoloader();
+
+$autoloader->addNamespace(
+    'TKOlomouc',
+    __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'library'
+);
+$autoloader->addNamespace(
+    'TKOlomouc',
+    __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'application'
+);
+
+$autoloader->register();
+
+
+//Twig-specific autoloader
+require __DIR__ . DIRECTORY_SEPARATOR . 'lib'
+    . DIRECTORY_SEPARATOR . 'Twig' . DIRECTORY_SEPARATOR . 'Autoloader.php';
+
+Twig_Autoloader::register();
+
+
+//Project specific settings
+require __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'application'
+    . DIRECTORY_SEPARATOR . 'constants.php';
+require SETTINGS . DIRECTORY_SEPARATOR . 'db.php';
+
+ini_set('session.use_trans_sid', 0);
+ini_set('session.use_only_cookies', 1);
+
+mb_internal_encoding('UTF-8');
+
+date_default_timezone_set('Europe/Paris');
+
+function errorHandler($severity, $message, $filepath, $line) {
+    if ($severity & (E_STRICT | E_DEPRECATED)) {
+        return false;
+    }
+    ob_end_clean();
+    if (Request::getURL() == 'error') {
+        Log::write("Recursive error message!");
+        die('Fatal error: Rekurzivní smyčka přesměrování!');
+    }
+    Log::write("$filepath, line $line ($severity): $message");
+    header('Location: /error?id=script_fatal');
+    return true;
+}
+set_error_handler('errorHandler');
 
 if (TISK) {
     ;

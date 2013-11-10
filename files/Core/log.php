@@ -15,4 +15,3 @@ class Log
         fclose(Log::$_logfile);
     }
 }
-?>

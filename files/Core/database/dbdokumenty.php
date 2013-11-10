@@ -21,7 +21,7 @@ class DBDokumenty extends Database
             WHERE d_id IN (';
         for($i = 0; $i < count($ids); $i++) {
             $query .= "'{$ids[$i]}'";
-            if($i + 1 < count($ids)) {
+            if ($i + 1 < count($ids)) {
                 $query .= ',';
             }
         }

@@ -3,7 +3,7 @@
 notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST" class="centerWTable">
-<?php echo $this->render('files/View/Member/Akce/Header.inc', $this->data);?>
+<?php echo $this->render('src/application/View/Member/Akce/Header.inc', $this->data);?>
 <table>
 <tr><td>Jméno<br/>Souboru</td><td>Kategorie</td>
 </tr>
@@ -22,7 +22,16 @@ if (!empty($doku)) {
 }
 ?>
 <tr>
-<td><?php echoTaborDokumenty("add-id", array(2, 3, 0));// = Soutěže, rady, ostatní ?></td>
+<td><?php
+$data = DBDokumenty::getDokumenty();
+
+$select = new \TKOlomouc\View\Helper\Select('add-id');
+$select->option('none', '---');
+foreach ($data as $item) {
+    $select->option($item['d_id'], "{$item['d_name']} ({$item['d_kategorie']})");
+}
+echo $select;
+?></td>
 <td><button type="submit" name="add" value="add">Přidat</button></td>
 </tr>
 </table>

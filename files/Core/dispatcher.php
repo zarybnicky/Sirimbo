@@ -1,7 +1,12 @@
 <?php
 class Dispatcher
 {
-    function getController($url) {
+    private $_preDispatch = array();
+    private $_postDispatch = array();
+    private $_controller;
+
+    private function _getController($url)
+    {
         $parts = array_map('ucfirst', explode('/', $url));
         array_unshift($parts, 'Controller');
 
@@ -19,11 +24,45 @@ class Dispatcher
             $class = implode('_', $parts);
         }
         include $file;
+
         try {
-            if (class_exists($class))
-                return new $class();
-            else
+            if (!class_exists($class)) {
                 throw new NotFoundRightException('Controller class "' . $class . '" not found');
+            }
+
+            $instance = new $class();
+
+            if (!($instance instanceof Controller_Interface)) {
+                throw new NotFoundRightException('Controller class "' . $controller . '" not instance of Controller_Interface');
+            }
+        } catch(ViewException $e) {
+            Log::write($e->getMessage() . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n" . $e->getTraceAsString());
+            ob_clean();
+            Helper::get()->redirect('/error?id=' . $e->getErrorFile());
+        } catch(Exception $e) {
+            Log::write($e->getMessage() . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n" . $e->getTraceAsString());
+            ob_clean();
+            Helper::get()->redirect('/error?id=' . (new ViewException(''))->getErrorFile());
+        }
+
+        return $instance;
+    }
+
+    private function _findMethod($action)
+    {
+        $action  = str_replace('-', '_', $action);
+        if (method_exists($this->_controller, $action)) {
+            $method = $action;
+        } else {
+            $method = 'view';
+        }
+        return $method;
+    }
+
+    private function _runScript($filename)
+    {
+        try {
+            include $filename;
         } catch(ViewException $e) {
             Log::write($e->getMessage() . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n" . $e->getTraceAsString());
             ob_clean();
@@ -34,22 +73,30 @@ class Dispatcher
             Helper::get()->redirect('/error?id=' . (new ViewException(''))->getErrorFile());
         }
     }
-    function dispatch($url, $action, $id = null) {
-        $controller = $this->getController($url);
 
-        if (!($controller instanceof Controller_Interface))
-            throw new NotFoundRightException('Controller class "' . $controller . '" not instance of Controller_Interface');
+    public function addPredispatchScript($filename)
+    {
+        $this->_preDispatch[] = $filename;
+    }
 
-        View::$controller = $controller;
+    public function addPostDispatchScript($filename)
+    {
+        $this->_postDispatch[] = $filename;
+    }
 
-        $action  = str_replace('-', '_', $action);
+    function dispatch($url, $action, $id = null)
+    {
+        $this->_controller = $this->_getController($url);
+        $method = $this->_findMethod($action);
+
+        View::$controller = $this->_controller;
+
+        foreach($this->_preDispatch as $file) {
+            $this->_runScript($file);
+        }
 
         try {
-            if (method_exists($controller, $action)) {
-                $controller->$action($id);
-            } else {
-                $controller->view($id);
-            }
+            $this->_controller->$method($id);
         } catch(ViewException $e) {
             Log::write($e->getMessage() . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n" . $e->getTraceAsString());
             ob_clean();
@@ -58,6 +105,10 @@ class Dispatcher
             Log::write($e->getMessage() . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n" . $e->getTraceAsString());
             ob_clean();
             Helper::get()->redirect('/error?id=' . (new ViewException(''))->getErrorFile());
+        }
+
+        foreach($this->_postDispatch as $file) {
+            $this->_runScript($file);
         }
     }
 }

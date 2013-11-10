@@ -68,14 +68,14 @@ if (is_numeric(post('n_id'))) {
         echo '<div class="n_wrapper">';
         DisplayNabidka::viewNabidkaHeader($nabidka,
             DBNabidka::getNabidkaItemLessons($n_id));
-        
+
         $items = DBNabidka::getNabidkaItem($n_id);
         if (!empty($items)) {
             echo '<table>';
             echo '<tr><td>Tanečník</td><td>Počet hodin</td></tr>';
             foreach ($items as $item) {
                 echo '<tr>';
-                echo '<td>', echoFullJmeno($item), '</td>';
+                echo '<td>', $item['u_jmeno'], '', $item['u_prijmeni'], '</td>';
                 echo '<td>', $item['ni_pocet_hod'], '</td>';
                 echo '</tr>';
             }

@@ -1,46 +1,53 @@
 <?php
 class User
 {
-    public static function login($login, $pass) {
+    public static function login($login, $pass)
+    {
         if (Database::isDatabaseError()) {
             User::logout();
             return false;
         }
         $login = strtolower($login);
 
-        if (($login == "superadmin"
-            && $pass == "9947a7bc1549a54e7299fe9a3975c8655430ade0" && ($id = 1))
-            || ($id = DBUser::checkUser($login, $pass))) {
-            $data = DBUser::getUserData($id);
-            if ($data['u_ban'])
-                throw new BanException("Váš účet byl pozastaven!");
-            if (!$data['u_confirmed'])
-                throw new NotApprovedException("Váš účet ještě nebyl potvrzen!");
-
-            $_SESSION["login"] = 1;
-            User::loadUser($data['u_id'], $data);
-
-            if ((!preg_match("/^[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i", $data['u_email'])
-                || !preg_match("/^((\+|00)\d{3})?( ?\d{3}){3}$/", $data['u_telefon'])
-                || !preg_match("/^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/",
-                        $data['u_narozeni']))
-                && !stripos(Request::getURI(), '/member/profil/edit')
-                && !stripos(Request::getURI(), '/error')) {
-                $_SESSION['invalid_data'] = 1;
-                Helper::get()->redirect('/member/profil/edit', 'Prosím vyplňte požadované údaje.', true);
-            } else {
-                $_SESSION['invalid_data'] = 0;
-            }
-            return true;
-        } else
+        if (
+            ($login !== 'superadmin'
+            || $pass !== '9947a7bc1549a54e7299fe9a3975c8655430ade0' || !($id = 1))
+            && !($id = DBUser::checkUser($login, $pass))
+        ) {
             return false;
+        }
+
+        $data = DBUser::getUserData($id);
+        if ($data['u_ban']) {
+            throw new BanException('Váš účet byl pozastaven!');
+        }
+        if (!$data['u_confirmed']) {
+            throw new NotApprovedException('Váš účet ještě nebyl potvrzen!');
+        }
+
+        $_SESSION['login'] = 1;
+        User::loadUser($data['u_id'], $data);
+
+        if (
+            (!preg_match('/^[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $data['u_email'])
+            || !preg_match('/^((\+|00)\d{3})?( ?\d{3}){3}$/', $data['u_telefon'])
+            || !preg_match('/^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/',
+                $data['u_narozeni']))
+        ) {
+            $_SESSION['invalid_data'] = 1;
+        } else {
+            $_SESSION['invalid_data'] = 0;
+        }
+        return true;
     }
 
-    public static function logout() {
+    public static function logout()
+    {
         session_unset();
     }
 
-    public static function loadUser($id, $data = array()) {
+    public static function loadUser($id, $data = array())
+    {
         if (Database::isDatabaseError()) {
             User::logout();
             return false;
@@ -53,38 +60,29 @@ class User
 
         foreach (Settings::$permissions as $key => $item) {
             if ($data['u_group'] == 0) {
-                $_SESSION['permissions'][$key] = P_NONE;
+                $_SESSION['permission_data'][$key] = P_NONE;
             } else {
-                $_SESSION['permissions'][$key] = $data['pe_' . $key];
+                $_SESSION['permission_data'][$key] = $data['pe_' . $key];
             }
         }
 
-        $_SESSION["id"] = $data['u_id'];
-        $_SESSION["user"] = strtolower($data['u_login']);
-        $_SESSION['jmeno'] = $data['u_jmeno'];
-        $_SESSION['prijmeni'] = $data['u_prijmeni'];
-        $_SESSION["pohlavi"] = $data['u_pohlavi'];
-        $_SESSION['narozeni'] = $data['u_narozeni'];
-        $_SESSION['group'] = $data['u_group'];
-        $_SESSION['groupName'] = $data['pe_name'];
-        $_SESSION['skupina'] = $data['u_skupina'];
+        $_SESSION['user_data'] = $data;
+        $_SESSION['par_data'] = $par;
         $_SESSION['skupina_data'] = array(
             's_id '=> $data['s_id'],
             's_color_rgb' => $data['s_color_rgb'],
             's_name' => $data['s_name'],
             's_description' => $data['s_description']
         );
-        $_SESSION['par'] = $par['p_id'];
-        $_SESSION['partner'] = $par['u_id'];
 
         $_SESSION['zaplaceno'] = DBPlatby::hasPaidMemberFees($data['u_id']);
         $_SESSION['zaplaceno_par'] = $_SESSION['zaplaceno'] | DBPlatby::hasPaidMemberFees($par['u_id']);
         $_SESSION['zaplaceno_text'] =
-            $_SESSION['zaplaceno'] ?
-                ($_SESSION['zaplaceno_par'] ? null : 'Váš/e partner/ka nemá zaplacené členské příspěvky, ' .
-                    'bez zaplacených příspěvků si nemůžete rezervovat lekce.') :
-                'Nemáte zaplacené členské příspěvky, ' .
-                    'bez zaplacených příspěvků si nemůžete rezervovat lekce.';
+            $_SESSION['zaplaceno']
+            ? ($_SESSION['zaplaceno_par'] ? null : 'Váš/e partner/ka nemá zaplacené členské příspěvky, '
+                . 'bez zaplacených příspěvků si nemůžete rezervovat lekce.')
+            : 'Nemáte zaplacené členské příspěvky, '
+                . 'bez zaplacených příspěvků si nemůžete rezervovat lekce.';
         /*
         $date = (int) date('md');
         if ($date >= '701' && $date <= 831) {
@@ -145,108 +143,125 @@ class User
         return true;
     }
 
-    public static function getPermissions($module = '') {
-        if (!User::isLogged()) {
-            if ($module)
-                return P_NONE;
-            return array();
-        } elseif (User::getUserID() == 1) {
-            if ($module)
-                return P_ADMIN;
-            return $_SESSION['permissions'];
-        } elseif (User::getUserGroup() == 0) {
-            if ($module)
-                return P_NONE;
-            return $_SESSION['permissions'];
-        } else {
-            if ($module && isset($_SESSION['permissions'][$module]))
-                return $_SESSION['permissions'][$module];
-            return $_SESSION['permissions'];
+    public static function getPermissions($module = null)
+    {
+        if ($module === null) {
+            return $_SESSION['permission_data'];
         }
+        if (User::getUserID() == 1) {
+            return P_ADMIN;
+        }
+        if (User::isLogged() && isset($_SESSION['permission_data'][$module])) {
+            return $_SESSION['permission_data'][$module];
+        }
+        return P_NONE;
     }
 
-    public static function getUserID() {
-        if (User::isLogged())
-            return $_SESSION["id"];
-        else
-            return 0;
+    public static function getUserID()
+    {
+        if (User::isLogged() == false) {
+            return -1;
+        }
+        return $_SESSION['user_data']['u_id'];
     }
 
-    public static function getPartnerID() {
-        return $_SESSION['partner'];
+    public static function getPartnerID()
+    {
+        return $_SESSION['par_data']['u_id'];
     }
 
-    public static function getUserName() {
-        return $_SESSION["user"];
+    public static function getUserName()
+    {
+        return $_SESSION['user_data']['u_login'];
     }
 
-    public static function getUserJmeno() {
-        return $_SESSION['jmeno'];
+    public static function getUserJmeno()
+    {
+        return $_SESSION['user_data']['u_jmeno'];
     }
 
-    public static function getUserPrijmeni() {
-        return $_SESSION['prijmeni'];
+    public static function getUserPrijmeni()
+    {
+        return $_SESSION['user_data']['u_prijmeni'];
     }
 
-    public static function getUserWholeName() {
-        return $_SESSION['jmeno'] . ' ' . $_SESSION['prijmeni'];
+    public static function getUserWholeName()
+    {
+        return $_SESSION['user_data']['u_jmeno']
+            . ' ' . $_SESSION['user_data']['u_prijmeni'];
     }
 
-    public static function getUserGroup() {
-        return $_SESSION["group"];
+    public static function getUserGroup()
+    {
+        return $_SESSION['user_data']['u_group'];
     }
 
-    public static function getGroupName() {
-        return $_SESSION["groupName"];
+    public static function getGroupName()
+    {
+        return $_SESSION['user_data']['pe_name'];
     }
 
-    public static function getUserPohlavi() {
-        return $_SESSION['pohlavi'];
+    public static function getUserPohlavi()
+    {
+        return $_SESSION['user_data']['u_pohlavi'];
     }
 
-    public static function getDatumNarozeni() {
-        return $_SESSION['narozeni'];
+    public static function getDatumNarozeni()
+    {
+        return $_SESSION['user_data']['u_narozeni'];
     }
 
-    public static function getSkupina() {
-        return $_SESSION['skupina'];
+    public static function getSkupina()
+    {
+        return $_SESSION['user_data']['u_skupina'];
     }
 
-    public static function getSkupinaData() {
+    public static function getSkupinaData()
+    {
         return $_SESSION['skupina_data'];
     }
 
-    public static function getZaplaceno($par = false) {
-        if ($par)
+    public static function getZaplaceno($par = false)
+    {
+        if ($par) {
             return $_SESSION['zaplaceno_par'];
-        else
-            return $_SESSION['zaplaceno'];
+        }
+        return $_SESSION['zaplaceno'];
     }
 
-    public static function getParID() {
-        return $_SESSION['par'];
+    public static function getParID()
+    {
+        return $_SESSION['par_data']['p_id'];
     }
 
-    public static function isLogged() {
-        if (isset($_SESSION["login"]) && $_SESSION["login"] === 1)
+    public static function isLogged()
+    {
+        if (isset($_SESSION['login']) && $_SESSION['login'] === 1) {
             return true;
+        }
         return false;
     }
 
-    public static function register($login, $pass, $name, $surname, $pohlavi, $email, $telefon,
-            $narozeni, $poznamky) {
-        DBUser::addUser($login, User::crypt($pass), $name, $surname, $pohlavi, $email,
-            $telefon, $narozeni, $poznamky, '0', '0', '0', "0", "0", "0", "0");
+    public static function register(
+        $login, $pass, $name, $surname, $pohlavi, $email, $telefon,
+        $narozeni, $poznamky
+    ) {
+        DBUser::addUser(
+            $login, User::crypt($pass), $name, $surname, $pohlavi, $email,
+            $telefon, $narozeni, $poznamky, '0', '0', '0', '0', '0', '0', '0'
+        );
 
         Mailer::newUserNotice(DEFAULT_ADMIN_MAIL, $login);
     }
 
-    public static function crypt($passwd) {
-        $fix = md5("######TK.-.OLYMP######");
-        return sha1($fix . $passwd . $fix);
+    public static function crypt($passwd)
+    {
+        $salt = md5('######TK.-.OLYMP######');
+        return sha1($salt . $passwd . $salt);
     }
 
-    public static function varSymbol($id) {
+    public static function varSymbol($id)
+    {
         return str_pad($id, 6, '0', STR_PAD_LEFT);
     }
 }

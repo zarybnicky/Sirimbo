@@ -35,7 +35,7 @@ foreach ($rozpis as $item) {
         echo '<tr>',
             '<td>', formatTime($par['ri_od'], 1), '</td>',
             '<td>', formatTime($par['ri_do'], 1), '</td>',
-            '<td>', echoFullJmeno($par),
+            '<td>', $par['u_jmeno'], ' ', $par['u_prijmeni'],
             '<input type="hidden" name="ri_id" value="', $par['ri_id'], '" />',
             '</td>';
         if ($par['ri_partner'] == 0 && !$item['r_lock'] && !$par['ri_lock'] && Permissions::check('rozpis', P_MEMBER))

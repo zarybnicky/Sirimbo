@@ -1,0 +1,127 @@
+<?php
+namespace TKOlomouc\Utility;
+
+class Miscellaneous {
+    function notice($text, $return = false) {
+        if (!$text) {
+            return;
+        }
+        if ($return) {
+            return '<div class="notice">' . $text . '</div>' . "\n";
+        }
+        echo '<div class="notice">', $text, '</div>', "\n";
+    }
+    function getColorBox($color, $popis) {
+        return '<div class="box" title="' . $popis . '" '
+            . 'style="background-color:' . $color . '"></div>';
+    }
+
+    function post($field = null, $value = null)
+    {
+        arrayManipulate($_POST, $field, $value);
+    }
+
+    function get($field = null, $value = null)
+    {
+        arrayManipulate($_GET, $field, $value);
+    }
+
+    function session($field = null, $value = null)
+    {
+        arrayManipulate($_SESSION, $field, $value);
+    }
+
+    function arrayManipulate($array, $field = null, $value = null)
+    {
+        if ($field === null) {
+            return $array;
+        }
+        if ($value !== null) {
+            $array[$field] = $value;
+        }
+        if (isset($array[$field])) {
+            return $array[$field];
+        }
+        return null;
+    }
+    function formatTime($str, $forDisplay) {
+        if ($forDisplay) {
+            return substr($str, 0, 5); //15:00:00
+        } else {
+            return $str . ':00';
+        }
+    }
+    function formatDate($str) {
+        list($year, $month, $day) = explode('-', $str);
+        return (int) $day . '. ' . (int) $month . '. ' . $year;
+    }
+    function formatTimestamp($str, $date_only = false) {
+        list($date, $time) = explode(' ', $str);
+        if ($date_only)
+            return formatDate($date);
+        $date = formatDate($date);
+        $time = formatTime($time, 1);
+        return implode(' ', array($date, $time));
+    }
+    function timeSubstract($first, $sec) {
+        if (strcmp($first, $sec) > 0) {
+            $tmp = $first;
+            $first = $sec;
+            $sec = $tmp;
+        }
+
+        list($f_hrs, $f_min) = explode(':', $first);
+        list($s_hrs, $s_min) = explode(':', $sec);
+
+        $m_diff = $f_min - $s_min;
+        $h_diff = $f_hrs - $s_hrs;
+
+        $r = abs($h_diff * 60 + $m_diff);
+
+        return (floor($r / 60) . ':' . ($r % 60));
+    }
+    function timeAdd($first, $sec) {
+        list($f_hrs, $f_min) = explode(':', $first);
+        list($s_hrs, $s_min) = explode(':', $sec);
+
+        $m = $f_min + $s_min;
+        $h = floor($m / 60) + $f_hrs + $s_hrs;
+
+        return ($h . ':' . ($m % 60));
+    }
+    function getCheckbox($name, $value = '', $default = false, $get = false, $readonly = false) {
+        if ($value === '')
+            $value = $name;
+        $checked = (($get == true) ?
+                        ((get($name) != false) ? true : false) :
+                        ((post($name) != false) ? true : false));
+        if (!$checked)
+            $checked = (bool) $default;
+        return '<input type="checkbox" name="' . $name . '" value="' . $value . '"' .
+                        ($checked ? ' checked="checked"' : '') . ($readonly ? ' readonly="readonly"' : '') . '/>';
+    }
+    function getRadio($name, $value, $default = false, $get = false, $readonly = false) {
+        $checked = (($get == true) ?
+                        ((get($name) == $value) ? true : false) :
+                        ((post($name) == $value) ? true : false));
+        if (($get == true) ? !get($name) : !post($name))
+            $checked = (bool) $default;
+        return '<input type="radio" name="' . $name . '" value="' . $value . '"' .
+                        ($checked ? ' checked="checked"' : '') . ($readonly ? ' readonly="readonly"' : '') . '/>';
+    }
+    function getReturnURI($default) {
+        return post('referer') ? post('referer') : $default;
+    }
+    function getReturnInput() {
+        return '<input type="hidden" name="referer" value="' . Request::getReferer() . '" />' . "\n";
+    }
+    function getIP() {
+        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+            return $_SERVER['HTTP_CLIENT_IP'];
+        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            return $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } else {
+            return $_SERVER['REMOTE_ADDR'];
+        }
+    }
+}

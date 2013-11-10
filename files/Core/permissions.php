@@ -7,10 +7,11 @@ class Permissions
     }
     public static function check($module, $level, $vlastnik = null)
     {
-        $l = User::getPermissions($module);
-        if ($l == P_OWNED && $level == P_OWNED && $vlastnik != null)
+        $perms = User::getPermissions($module);
+        if ($perms == P_OWNED && $level == P_OWNED && $vlastnik != null) {
             return User::getUserID() == $vlastnik;
-        return $l >= $level;
+        }
+        return $perms >= $level;
     }
     public static function checkError($module, $level, $redirect = null, $vlastnik = null)
     {

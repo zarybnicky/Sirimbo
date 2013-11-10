@@ -11,13 +11,16 @@ class Request
     private static $_id;
     private static $_referer;
 
-    public static function setDefault($_default) {
+    public static function setDefault($_default)
+    {
         self::$_default = $_default;
     }
-    public static function setURI($_uri) {
+    public static function setURI($_uri)
+    {
         self::$_uri = $_uri;
     }
-    public static function setURL($_url) {
+    public static function setURL($_url)
+    {
         self::$_url = $_url;
         $parts = explode('/', $_url);
 
@@ -31,9 +34,11 @@ class Request
         self::$_rawUrlParts = $parts;
 
         //Get an URL w/o numbers eg.
-        foreach ($parts as $key => $part)
-            if (is_numeric($part))
+        foreach ($parts as $key => $part) {
+            if (is_numeric($part)) {
                 unset($parts[$key]);
+            }
+        }
         $parts = array_values($parts);
         self::$_urlPartsLiteral = $parts;
 
@@ -56,38 +61,48 @@ class Request
                 : null);
     }
 
-    public static function getURI() {
+    public static function getURI()
+    {
         return self::$_uri;
     }
-    public static function getURL() {
+    public static function getURL()
+    {
         return self::$_url;
     }
-    public static function getRawURLParts() {
+    public static function getRawURLParts()
+    {
         return self::$_rawUrlParts;
     }
-    public static function getLiteralURL() {
+    public static function getLiteralURL()
+    {
         if (empty(self::$_urlPartsLiteral) || self::$_urlPartsLiteral[0] == '') {
             return self::$_default;
         }
         return implode('/', self::$_urlPartsLiteral);
     }
-    public static function getSection() {
+    public static function getSection()
+    {
         return isset(self::$_rawUrlParts[0]) ? self::$_rawUrlParts[0] : self::$_default;
     }
-    public static function getCanonical() {
+    public static function getCanonical()
+    {
         return self::getLiteralURL();
     }
-    public static function getAction() {
+    public static function getAction()
+    {
         return self::$_action;
     }
-    public static function getID() {
+    public static function getID()
+    {
         return self::$_id;
     }
 
-    public static function setReferer($referer) {
+    public static function setReferer($referer)
+    {
         self::$_referer = $referer;
     }
-    public static function getReferer() {
+    public static function getReferer()
+    {
         return self::$_referer;
     }
 }

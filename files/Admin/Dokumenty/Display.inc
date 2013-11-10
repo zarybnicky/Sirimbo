@@ -36,8 +36,7 @@ foreach ($dokumenty as $item) {
     echo '<td><a href="/member/download?id=', $item['d_id'], '">', $item['d_name'], '</a></td>';
     echo '<td>', $item['d_filename'], '</td>';
     echo '<td>', Settings::$documentTypes[$item['d_kategorie']], '</td>';
-    echo '<td>';
-    echoFullJmeno($item);
+    echo '<td>', $item['u_jmeno'], ' ', $item['u_prijmeni'];
     echo '</td>';
     echo '</tr>';
 }

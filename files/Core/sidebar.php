@@ -55,7 +55,7 @@ class Sidebar
             }
             $r = new Renderer();
             echo $this->blackbox('<span class="logo"></span>Ankety');
-            echo $this->whiteBox($r->render('files/View/Main/Ankety/Sidebar.inc', array(
+            echo $this->whiteBox($r->render('src/application/View/Main/Ankety/Sidebar.inc', array(
                     'id' => $data['ak_id'],
                     'text' => $data['ak_text'],
                     'items' => $items

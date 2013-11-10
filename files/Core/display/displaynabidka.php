@@ -3,9 +3,7 @@ class DisplayNabidka
 {
     public static function viewNabidkaHeader($data, $obsazeno) {
         echo '<div class="trenink_header">';
-        echo '<div class="nadpis">';
-        echoFullJmeno($data);
-        echo '</div>';
+        echo '<div class="nadpis">', $data['u_jmeno'], ' ', $data['u_prijmeni'], '</div>';
         echo '<div style="letter-spacing:1px;font-weight:bold;">', formatDate($data['n_od']);
         if ($data['n_od'] != $data['n_do'])
             echo ' - ', formatDate($data['n_do']);
@@ -16,9 +14,10 @@ class DisplayNabidka
             echo '<a href="/admin/nabidka/edit/', $data['n_id'], '">obecné</a>, ';
             echo '<a href="/admin/nabidka/detail/', $data['n_id'], '">tréninky</a>';
         }
-        if ($data['n_max_pocet_hod'] > 0)
+        if ($data['n_max_pocet_hod'] > 0) {
             echo '<div><span class="little">Maximálne hodin/pár:</span>',
                 '<span class="nadpis">', $data['n_max_pocet_hod'], '</span></div>';
+        }
         echo '<div><span class="little">Celkem hodin: </span>',
             '<span class="nadpis">', $data['n_pocet_hod'], '</span></div>';
         echo '<div><span class="little">Obsazených hodin: </span>',
