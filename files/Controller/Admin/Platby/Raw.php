@@ -96,7 +96,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
                 continue;
             } else {
                 DBPlatbyRaw::insert($serialized, $hash, '1', '0', true);
-                DBPlatbyItem::insert($item->variable, $item->category_id, DBPlatbyRaw::getInsertId(),
+                DBPlatbyItem::insert($item->variable, $item->categoryId, DBPlatbyRaw::getInsertId(),
                         $item->amount, $item->date, $item->prefix);
             }
         }
