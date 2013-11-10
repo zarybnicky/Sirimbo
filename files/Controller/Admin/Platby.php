@@ -105,7 +105,7 @@ class Controller_Admin_Platby extends Controller_Admin
         $error = array();
         if (!$item->variable)
             $error[] = 'Neplatné ID uživatele';
-        if (!$item->category_id)
+        if (!$item->categoryId)
             $error[] = 'Neplatné ID kategorie';
         if (!$item->date)
             $error[] = 'Neplatné datum';

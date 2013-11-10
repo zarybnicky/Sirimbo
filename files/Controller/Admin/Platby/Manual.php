@@ -64,7 +64,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
 
         if ($specific === null) {
             $recognized['specific'] = $emptyItem;
-        } elseif ($item->specific && $item->category_id) {
+        } elseif ($item->specific && $item->categoryId) {
             $recognized['specific'] = array(
                 'column' => $specific,
                 'value' => $item->specific
@@ -115,7 +115,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
                 'remainingTotal' => $remainingCount,
                 'raw' => $raw,
                 'guess' => array(
-                    'specific' => $item->category_id,
+                    'specific' => $item->categoryId,
                     'variable' => $item->variable,
                     'date' => (new Date($item->date))->getDate(Date::FORMAT_SIMPLIFIED),
                     'amount' => $item->amount,
@@ -167,7 +167,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
                 return;
             }
             DBPlatbyRaw::update(post('id'), $current['pr_raw'], $current['pr_hash'], '1', '0');
-            DBPlatbyItem::insert($item->variable, $item->category_id, post('id'), $item->amount, $item->date, $item->prefix);
+            DBPlatbyItem::insert($item->variable, $item->categoryId, post('id'), $item->amount, $item->date, $item->prefix);
         } elseif (post('action') == 'discard') {
             if (!$current['pr_discarded'])
                 DBPlatbyRaw::update(post('id'), $current['pr_raw'], $current['pr_hash'], '0', '1');

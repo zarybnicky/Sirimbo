@@ -45,7 +45,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             return;
         }
         DBPlatbyItem::insert(
-            $item->variable, $item->category_id, null, $item->amount,
+            $item->variable, $item->categoryId, null, $item->amount,
             $item->date, $item->prefix
         );
         $this->redirect('/admin/platby/items', 'Platba úspěšně přidána');
@@ -69,7 +69,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             return;
         }
         DBPlatbyItem::update(
-            $id, $item->variable, $item->category_id, $item->amount,
+            $id, $item->variable, $item->categoryId, $item->amount,
             $item->date, $item->prefix
         );
         $this->redirect('/admin/platby/items', 'Platba úspěšně upravena');
