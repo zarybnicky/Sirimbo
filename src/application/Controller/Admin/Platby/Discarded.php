@@ -1,6 +1,13 @@
 <?php
-require_once 'files/Controller/Admin/Platby.php';
-class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
+namespace TKOlomouc\Controller\Admin\Platby;
+
+use TKOlomouc\Controller\Admin\Platby;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Utility\Request;
+use TKOlomouc\Type\Date;
+use TKOlomouc\Model\DBPlatbyRaw;
+
+class Discarded extends Platby
 {
     function __construct() {
         Permissions::checkError('platby', P_OWNED);

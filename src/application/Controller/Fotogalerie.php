@@ -1,5 +1,11 @@
 <?php
-class Controller_Fotogalerie extends Controller_Abstract
+namespace TKOlomouc\Controller;
+
+use TKOlomouc\Model\DBGalerie;
+use TKOlomouc\Utility\Request;
+use TKOlomouc\Utility\Sidebar;
+
+class Fotogalerie extends ControllerAbstract
 {
     function view($id = null) {
         if ($id === null) {

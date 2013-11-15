@@ -1,5 +1,7 @@
 <?php
-class Controller_Error extends Controller_Abstract
+namespace TKOlomouc\Controller;
+
+class Error extends ControllerAbstract
 {
     function view($id = null) {
         if (!get('id')) get('id', '');

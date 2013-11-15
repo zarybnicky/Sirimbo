@@ -1,8 +1,10 @@
 <?php
 namespace TKOlomouc\Utility;
 
-class Miscellaneous {
-    function notice($text, $return = false) {
+class Miscellaneous
+{
+    function notice($text, $return = false)
+    {
         if (!$text) {
             return;
         }
@@ -11,6 +13,7 @@ class Miscellaneous {
         }
         echo '<div class="notice">', $text, '</div>', "\n";
     }
+
     function getColorBox($color, $popis) {
         return '<div class="box" title="' . $popis . '" '
             . 'style="background-color:' . $color . '"></div>';
@@ -44,18 +47,21 @@ class Miscellaneous {
         }
         return null;
     }
-    function formatTime($str, $forDisplay) {
+    function formatTime($str, $forDisplay)
+    {
         if ($forDisplay) {
             return substr($str, 0, 5); //15:00:00
         } else {
             return $str . ':00';
         }
     }
-    function formatDate($str) {
+    function formatDate($str)
+    {
         list($year, $month, $day) = explode('-', $str);
         return (int) $day . '. ' . (int) $month . '. ' . $year;
     }
-    function formatTimestamp($str, $date_only = false) {
+    function formatTimestamp($str, $date_only = false)
+    {
         list($date, $time) = explode(' ', $str);
         if ($date_only)
             return formatDate($date);
@@ -63,7 +69,8 @@ class Miscellaneous {
         $time = formatTime($time, 1);
         return implode(' ', array($date, $time));
     }
-    function timeSubstract($first, $sec) {
+    function timeSubstract($first, $sec)
+    {
         if (strcmp($first, $sec) > 0) {
             $tmp = $first;
             $first = $sec;
@@ -80,7 +87,8 @@ class Miscellaneous {
 
         return (floor($r / 60) . ':' . ($r % 60));
     }
-    function timeAdd($first, $sec) {
+    function timeAdd($first, $sec)
+    {
         list($f_hrs, $f_min) = explode(':', $first);
         list($s_hrs, $s_min) = explode(':', $sec);
 
@@ -89,33 +97,41 @@ class Miscellaneous {
 
         return ($h . ':' . ($m % 60));
     }
-    function getCheckbox($name, $value = '', $default = false, $get = false, $readonly = false) {
-        if ($value === '')
+    function getCheckbox($name, $value = '', $default = false, $get = false, $readonly = false)
+    {
+        if ($value === '') {
             $value = $name;
+        }
         $checked = (($get == true) ?
-                        ((get($name) != false) ? true : false) :
-                        ((post($name) != false) ? true : false));
-        if (!$checked)
+            ((get($name) != false) ? true : false) :
+            ((post($name) != false) ? true : false));
+        if (!$checked) {
             $checked = (bool) $default;
+        }
         return '<input type="checkbox" name="' . $name . '" value="' . $value . '"' .
-                        ($checked ? ' checked="checked"' : '') . ($readonly ? ' readonly="readonly"' : '') . '/>';
+            ($checked ? ' checked="checked"' : '') . ($readonly ? ' readonly="readonly"' : '') . '/>';
     }
-    function getRadio($name, $value, $default = false, $get = false, $readonly = false) {
+    function getRadio($name, $value, $default = false, $get = false, $readonly = false)
+    {
         $checked = (($get == true) ?
-                        ((get($name) == $value) ? true : false) :
-                        ((post($name) == $value) ? true : false));
-        if (($get == true) ? !get($name) : !post($name))
+            ((get($name) == $value) ? true : false) :
+            ((post($name) == $value) ? true : false));
+        if (!$checked) {
             $checked = (bool) $default;
+        }
         return '<input type="radio" name="' . $name . '" value="' . $value . '"' .
-                        ($checked ? ' checked="checked"' : '') . ($readonly ? ' readonly="readonly"' : '') . '/>';
+            ($checked ? ' checked="checked"' : '') . ($readonly ? ' readonly="readonly"' : '') . '/>';
     }
-    function getReturnURI($default) {
+    function getReturnURI($default)
+    {
         return post('referer') ? post('referer') : $default;
     }
-    function getReturnInput() {
+    function getReturnInput()
+    {
         return '<input type="hidden" name="referer" value="' . Request::getReferer() . '" />' . "\n";
     }
-    function getIP() {
+    function getIP()
+    {
         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
             return $_SERVER['HTTP_CLIENT_IP'];
         } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {

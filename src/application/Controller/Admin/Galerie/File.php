@@ -1,6 +1,17 @@
 <?php
-require_once 'files/Controller/Admin/Galerie.php';
-class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
+namespace TKOlomouc\Controller\Admin\Galerie;
+
+use TKOlomouc\Controller\Admin\Galerie;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Utility\Request;
+use TKOlomouc\Utility\Novinky;
+use TKOlomouc\Utility\User;
+use TKOlomouc\Utility\Form;
+use TKOlomouc\Model\DBGalerie;
+use TKOlomouc\View\Helper\Upload;
+use TKOlomouc\Settings;
+
+class File extends Galerie
 {
     public function __construct()
     {
@@ -73,14 +84,14 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
 
     private function _processUpload($parent)
     {
-        $uploadHelper = new UploadHelper('files');
+        $uploadHelper = new Upload('files');
         $uploadHelper->loadFromPost();
 
         if (!$uploadHelper->hasValidFiles() && $uploadHelper->hasFiles()) {
             $this->redirect()->setMessage($uploadHelper->getErrorMessages());
         }
 
-        $uploader = $uploadHelper->getFilledUploader();
+        $uploader = $uploadHelper->getFilledUploadHandler();
         foreach (Settings::$fotoTypes as $extension) {
             $uploader->addAllowedType($extension);
         }

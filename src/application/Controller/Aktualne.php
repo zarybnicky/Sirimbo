@@ -1,5 +1,11 @@
 <?php
-class Controller_Aktualne extends Controller_Abstract
+namespace TKOlomouc\Controller;
+
+use TKOlomouc\Utility\Sidebar;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Model\DBAktuality;
+
+class Aktualne extends ControllerAbstract
 {
     function view($id = null) {
         if ($id && ($data = DBAktuality::getSingleAktualita($id))) {
@@ -18,16 +24,16 @@ class Controller_Aktualne extends Controller_Abstract
         $this->redirect('/aktualne/posledni');
     }
     function posledni($id = null) {
-        $this->_aktualne("Nejnovější články");
+        $this->aktualne("Nejnovější články");
     }
     function videa($id = null) {
-        $this->_aktualne('Videa', AKTUALITY_VIDEA);
+        $this->aktualne('Videa', AKTUALITY_VIDEA);
     }
     function clanky($id = null) {
-        $this->_aktualne('Články', AKTUALITY_CLANKY);
+        $this->aktualne('Články', AKTUALITY_CLANKY);
     }
     function kratke_zpravy($id = null) {
-        $this->_aktualne('Krátké zprávy', AKTUALITY_KRATKE);
+        $this->aktualne('Krátké zprávy', AKTUALITY_KRATKE);
     }
     function sidebar() {
         $s = new Sidebar();
@@ -40,7 +46,7 @@ class Controller_Aktualne extends Controller_Abstract
 
         echo $s->commonItems();
     }
-    private function _aktualne($nadpis = "", $type = null) {
+    private function aktualne($nadpis = "", $type = null) {
         $data = DBAktuality::getAktuality($type);
 
         if (!$data) {

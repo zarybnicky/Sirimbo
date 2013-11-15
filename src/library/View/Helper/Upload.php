@@ -1,76 +1,77 @@
 <?php
 namespace TKOlomouc\View\Helper;
 
-class Upload
-{
-    private $_name;
-    private $_files;
-    private $_invalidFiles;
-    private $_emptyFiles;
-    private $_hasFiles;
+use TKOlomouc\View\Partial;
+use TKOlomouc\Utility\UploadHandler;
+use TKOlomouc\Utility\Log;
 
-    public function upload($name = null)
+class Upload extends Partial
+{
+    private $name         = '';
+    private $validFiles   = array();
+    private $invalidFiles = array();
+    private $emptyFiles   = array();
+    private $hasFiles     = false;
+
+    public function __construct($twig, $name = null)
     {
-        $this->_name = null;
-        $this->_files = array();
-        $this->_invalidFiles = array();
-        $this->_emptyFiles = array();
-        $this->_hasFiles = false;
+        parent::__construct($twig);
 
         if ($name !== null) {
-            $this->_name($name);
+            $this->name($name);
         }
         return $this;
     }
 
     public function name($name)
     {
-        $this->_name = $name;
+        $this->name = $name;
+
         return $this;
     }
 
     public function loadFromPost()
     {
-        if (!isset($_FILES[$this->_name]) || empty($_FILES[$this->_name])) {
+        if (!isset($files[$this->name]) || empty($files[$this->name])) {
             return array();
         }
-        if (!is_array($_FILES[$this->_name])) {
-            $input = array($_FILES[$this->_name]);
+        if (!is_array($files[$this->name])) {
+            $input = array($files[$this->name]);
         } else {
-            foreach ($_FILES[$this->_name] as $key => $data) {
+            foreach ($files[$this->name] as $key => $data) {
                 foreach ($data as $i => $value) {
                     $input[$i][$key] = $value;
                 }
             }
         }
         if (!empty($input)) {
-            $this->_hasFiles = true;
+            $this->hasFiles = true;
         }
         foreach ($input as $data) {
-            $this->_processFilesItem($data);
+            $this->processFilesItem($data);
         }
         return $this;
     }
 
-    private function _processFilesItem($data) {
+    private function processFilesItem($data) {
         $error = $data['error'];
         switch($error) {
             case UPLOAD_ERR_OK:
                 if ($data['size'] > 0) {
-                    $this->_files[] = $data;
+                    $this->validFiles[] = $data;
                 } else {
-                    $this->_emptyFiles[] = $data;
+                    $this->emptyFiles[] = $data;
                 }
                 return true;
             case UPLOAD_ERR_NO_FILE:
-                $this->_emptyFiles[] = $data;
+                $this->emptyFiles[] = $data;
                 return true;
             case UPLOAD_ERR_INI_SIZE:
             case UPLOAD_ERR_FORM_SIZE:
                 $logError = false;
                 $errorMessage = 'Soubor "' . $data['name'] . '" byl příliš velký, '
                     . 'největši povolená velikost souboru je '
-                    . ini_get('upload_max_filesize') . 'B';
+                    . ini_get('upload_maxfilesize') . 'B';
                 break;
             case UPLOAD_ERR_PARTIAL:
                 $logError = false;
@@ -87,66 +88,61 @@ class Upload
         if (isset($logError) && $logError) {
             Log::write($errorMessage);
         }
-        $this->_invalidFiles[] = array_merge(
+        $this->invalidFiles[] = array_merge(
             $data,
             array('error_message' => $errorMessage)
         );
         return false;
     }
 
-    public function getFilledUploader($loadFromPost = false)
+    public function getFilledUploadHandler()
     {
-        if ($loadFromPost) {
-            $this->loadFromPost();
-        }
-        $uploader = new Uploader();
-        foreach ($this->_files as $file) {
-            $uploader->addTempFile($file['tmp_name'], $file['name'], $file['size']);
+        $uploader = new UploadHandler();
+        foreach ($this->validFiles as $file) {
+            $uploader->addTempFile($file['tmpname'], $file['name'], $file['size']);
         }
         return $uploader;
     }
 
     public function hasFiles()
     {
-        return $this->_hasFiles;
+        return $this->hasFiles;
     }
 
     public function hasValidFiles()
     {
-        return !empty($this->_files);
+        return !empty($this->validFiles);
     }
 
     public function hasEmptyFiles()
     {
-        return !empty($this->_emptyFiles);
+        return !empty($this->emptyFiles);
     }
+
     public function hasInvalidFiles()
     {
-        return !empty($this->_invalidFiles);
+        return !empty($this->invalidFiles);
     }
 
     public function getValidFiles()
     {
-        return $this->_files;
+        return $this->validFiles;
     }
 
     public function getEmptyFiles()
     {
-        return $this->_emptyFiles;
+        return $this->emptyFiles;
     }
 
     public function getInvalidFiles()
     {
-        return $this->_invalidFiles;
+        return $this->invalidFiles;
     }
 
     public function getErrorMessages()
     {
-        if (empty($this->_invalidFiles)) {
-            return array();
-        }
         $messages = array();
-        foreach ($this->_invalidFiles as $data) {
+        foreach ($this->invalidFiles as $data) {
             $messages[] = $data['error_message'];
         }
         return $messages;
@@ -159,9 +155,9 @@ class Upload
 
     public function render()
     {
-        if ($this->_name === null) {
+        if ($this->name === null) {
             return '';
         }
-        return '<input name="' . $this->_name . '[]" multiple="multiple" type="file"/>';
+        return "<input name='{$this->name}[]' multiple='multiple' type='file'/>";
     }
 }

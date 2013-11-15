@@ -1,5 +1,11 @@
 <?php
-class Controller_Member extends Controller_Abstract
+namespace TKOlomouc\Controller;
+
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Utility\Sidebar;
+use TKOlomouc\Model\DBNovinky;
+
+class Member extends ControllerAbstract
 {
     function __construct() {
         Permissions::checkError('nastenka', P_VIEW);

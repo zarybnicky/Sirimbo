@@ -1,6 +1,17 @@
 <?php
-require_once 'files/Controller/Admin/Platby.php';
-class Controller_Admin_Platby_Items extends Controller_Admin_Platby
+namespace TKOlomouc\Controller\Admin\Platby;
+
+use TKOlomouc\Controller\Admin\Platby;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Utility\Form;
+use TKOlomouc\Utility\User;
+use TKOlomouc\Utility\Request;
+use TKOlomouc\Type\Date;
+use TKOlomouc\Model\DBUser;
+use TKOlomouc\Model\DBPlatbyItem;
+use TKOlomouc\Model\DBPlatbyRaw;
+
+class Items extends Platby
 {
     function __construct()
     {
@@ -135,7 +146,8 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
                 'id' => $id,
                 'raw' => $raw,
                 'users' => $users,
-                'categories' => $categories
+                'categories' => $categories,
+                'referer' => Request::getReferer()
             )
         );
     }

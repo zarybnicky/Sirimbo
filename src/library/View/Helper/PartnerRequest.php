@@ -1,9 +1,13 @@
 <?php
 namespace TKOlomouc\View\Helper;
 
-class PartnerRequest
+use TKOlomouc\View\Partial;
+use TKOlomouc\Model\DBPary;
+use TKOlomouc\Utility\User;
+
+class PartnerRequest extends Partial
 {
-    private $_id;
+    private $_id = null;
 
     public function partnerRequest($id = null) {
         if ($id !== null)
@@ -40,8 +44,7 @@ class PartnerRequest
 </div>
 </form>
             <?php
-            $out .= notice(ob_get_contents(), true);
-            ob_end_clean();
+            $out .= notice(ob_get_clean(), true);
         }
         return $out;
     }
@@ -66,8 +69,7 @@ class PartnerRequest
 </div>
 </form>
             <?php
-            $out .= notice(ob_get_contents(), true);
-            ob_end_clean();
+            $out .= notice(ob_get_clean(), true);
         }
         return $out;
     }

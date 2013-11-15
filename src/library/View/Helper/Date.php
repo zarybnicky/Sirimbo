@@ -1,121 +1,140 @@
 <?php
 namespace TKOlomouc\View\Helper;
 
+use TKOlomouc\View\Partial;
+
 /*
  * Example:
  * echo '<form action="" method="post">';
- * echo $this->_date('2012-12-21')->name('test1')->selectBox(), '<br/>';
- * echo $this->_date('2000-01-01')->name('test2')->textBox(), '<br/>';
- * echo $this->_date()->name('test1')->getPost(), '<br/>';
- * echo $this->_date()->name('test2')->getPost(), '<br/>';
+ * echo $this->date('2012-12-21')->name('test1')->selectBox(), '<br/>';
+ * echo $this->date('2000-01-01')->name('test2')->textBox(), '<br/>';
+ * echo $this->date()->name('test1')->getPost(), '<br/>';
+ * echo $this->date()->name('test2')->getPost(), '<br/>';
  * echo '<input type="submit" value="Send" />';
  * echo '</form>';
 */
-class Date
+class Date extends Partial
 {
-    private $_date;
-    private $_dateTo;
-    private $_view;
-    private $_name;
-    private $_post;
-    private $_fromYear;
-    private $_toYear;
-    private $_useRange;
+    //TODO: Split into Helper\Date\Simple and Helper\Date\Range (with Helper\Date as parent?)
 
-    function date($d = null)
+    private $name        = null;
+    private $date        = null;
+    private $dateTo      = null;
+    private $fromYear    = null;
+    private $toYear      = null;
+    private $isDateRange = false;
+    private $isPost      = true;
+    private $displayType = 'text';
+
+    public function __construct($twig, $d = null)
     {
-        $this->_defaultValues();
+        parent::__construct($twig);
 
-        if ($d && $this->_setDate($d) === null) {
+        $this->fromYear((int) date('Y') - 75);
+        $this->toYear((int) date('Y') + 5);
+
+        if ($d !== null && $this->setDate($d) === null) {
             $this->name($d);
         }
+    }
+
+    private function updateDate(&$var, $d)
+    {
+        if(!is_a($d, 'Date')) {
+            $d = new Date($d);
+        }
+
+        if (!$d->isValid()) {
+            return null;
+        }
+
+        $var = $d;
+        return $d;
+    }
+
+    public function setDate($d = null)
+    {
+        $this->updateDate($this->date, $d);
 
         return $this;
     }
-    private function _defaultValues()
+
+    public function setFromDate($d = null)
     {
-        $this->_view = 'text';
-        $this->_date = null;
-        $this->_name = null;
-        $this->_post = true;
-        $this->_fromYear = ((int) date('Y')) - 75;
-        $this->_toYear = ((int) date('Y')) + 5;
-        $this->_useRange = false;
+        $this->updateDate($this->date, $d);
+
+        return $this;
     }
-    private function _setDate($d)
+
+    public function setToDate($d = null)
     {
-        if (!is_a($d, 'Date') && is_string($d)) {
-            $d = new Date($d);
+        $this->updateDate($this->dateTo, $d);
+
+        return $this;
+    }
+
+    public function selectBox()
+    {
+        $this->displayType = 'select';
+
+        return $this;
+    }
+
+    public function textBox()
+    {
+        $this->displayType = 'text';
+
+        return $this;
+    }
+
+    public function name($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function post($post)
+    {
+        $this->isPost = (bool) $post;
+
+        return $this;
+    }
+
+    public function fromYear($year)
+    {
+        $this->fromYear = $year;
+
+        return $this;
+    }
+
+    public function toYear($year)
+    {
+        if ($year < $this->fromYear) {
+            $this->toYear = $this->fromYear;
+            return $this;
         }
-        if (!is_a($d, 'Date') || !$d->isValid()) {
-            return null;
-        } else {
-            return $d;
-        }
-    }
-    function setDate($d = null)
-    {
-        $this->_date = $this->_setDate($d);
+
+        $this->toYear = $year;
+
         return $this;
     }
-    function setFromDate($d = null)
+
+    public function range($useRange = true)
     {
-        $this->setDate($d);
+        $this->isDateRange = (bool) $useRange;
+
         return $this;
     }
-    function setToDate($d = null)
+    public function getPostRange()
     {
-        $this->_dateTo = $this->_setDate($d);
-        return $this;
-    }
-    function selectBox()
-    {
-        $this->_view = 'select';
-        return $this;
-    }
-    function textBox()
-    {
-        $this->_view = 'text';
-        return $this;
-    }
-    function name($name)
-    {
-        $this->_name = $name;
-        return $this;
-    }
-    function post($post)
-    {
-        $this->_post = (bool) $post;
-        return $this;
-    }
-    function fromYear($y)
-    {
-        $this->_fromYear = $y;
-        return $this;
-    }
-    function toYear($y)
-    {
-        if ($y > $this->_fromYear) {
-            $this->_toYear = $y;
-        } else {
-            $this->_toYear = $this->_fromYear;
-        }
-        return $this;
-    }
-    function range($b = true)
-    {
-        $this->_useRange = (bool) $b;
-        return $this;
-    }
-    function getPostRange()
-    {
-        if (!$this->_useRange) {
+        if (!$this->isDateRange) {
             return array('from' => $this->getPost(), 'to' => new Date());
         }
 
-        if (post($this->_name)) {
-            if (strpos(post($this->_name), ' - ')) {
-                $pieces = explode(' - ', post($this->_name));
+        if (post($this->name)) {
+            if (strpos(post($this->name), ' - ')) {
+                $pieces = explode(' - ', post($this->name));
                 $from = new Date($pieces[0]);
                 $to = new Date($pieces[1]);
             }
@@ -125,21 +144,22 @@ class Date
 
             return array('from' => $from, 'to' => $to);
         } elseif (
-            post($this->_name . '-from-year')
-            && post($this->_name . '-from-month')
-            && post($this->_name . '-from-day')
-            && post($this->_name . '-to-year') && post($this->_name . '-to-month')
-            && post($this->_name . '-to-day')
+            post($this->name . '-from-year')
+            && post($this->name . '-from-month')
+            && post($this->name . '-from-day')
+            && post($this->name . '-to-year')
+            && post($this->name . '-to-month')
+            && post($this->name . '-to-day')
         ) {
             $from = new Date(
-                post($this->_name . '-from-year') . '-'
-                . post($this->_name . '-from-month') . '-'
-                . post($this->_name . '-from-day')
+                post($this->name . '-from-year') . '-'
+                . post($this->name . '-from-month') . '-'
+                . post($this->name . '-from-day')
             );
             $to = new Date(
-                post($this->_name . '-to-year') . '-'
-                . post($this->_name . '-to-month') . '-'
-                . post($this->_name . '-to-day')
+                post($this->name . '-to-year') . '-'
+                . post($this->name . '-to-month') . '-'
+                . post($this->name . '-to-day')
             );
 
             if (!$from->isValid() && !$to->isValid()) {
@@ -151,12 +171,14 @@ class Date
             return array('from' => new Date(), 'to' => new Date());
         }
     }
-    function getPost($skipRangeCheck = false, $name = null)
+
+    public function getPost($skipRangeCheck = false, $name = null)
     {
         if ($name === null) {
-            $name = $this->_name;
+            $name = $this->name;
         }
-        if ($this->_useRange && !$skipRangeCheck) {
+
+        if ($this->isDateRange && !$skipRangeCheck) {
             return $this->getPostRange()['from'];
         }
 
@@ -171,81 +193,105 @@ class Date
             return new Date();
         }
     }
-    function __toString()
+
+    private function renderSelect()
+    {
+        $select = new Select();
+        $select->post();
+
+        //Day select
+        $select->name($this->name . '-day')
+        ->value($this->date ? $this->date->getDay() : null)
+        ->option('00', 'Den', true);
+
+        for($i = 1; $i < 32; $i++) {
+            $select->option(
+                ($i < 10) ? ('0' . $i) : $i,
+                $i . '.'
+            );
+        }
+        $out .= $select->render();
+
+        //Month select
+        $out .= $select->name($this->name . '-month')
+        ->value($this->date ? $this->date->getMonth() : null)
+        ->option('00', 'Měsíc', true)
+        ->option('01', 'Leden')
+        ->option('02', 'Únor')
+        ->option('03', 'Březen')
+        ->option('04', 'Duben')
+        ->option('05', 'Květen')
+        ->option('06', 'Červen')
+        ->option('07', 'Červenec')
+        ->option('08', 'Srpen')
+        ->option('09', 'Září')
+        ->option('10', 'Říjen')
+        ->option('11', 'Listopad')
+        ->option('12', 'Prosinec');
+
+        $out .= $select->render();
+
+        //Year select
+        $select->name($this->name . '-year')
+        ->value($this->date ? $this->date->getYear() : null)
+        ->option('0000', 'Rok', true);
+
+        for($i = $this->fromYear; $i < $this->toYear; $i++) {
+            $select->option($i, $i);
+        }
+        return $out . $select->render();
+    }
+
+    private function renderTextbox()
+    {
+        $done = false;
+        $selected = $this->isPost ? post($this->name) : get($this->name);
+
+        if ($this->isDateRange) {
+            if ($selected) {
+                $pieces = explode(' - ', $selected);
+                $from = new Date($pieces[0]);
+                $to = new Date($pieces[1]);
+            } elseif ($this->date && $this->dateTo) {
+                $from = $this->date;
+                $to = $this->dateTo;
+            } else {
+                $from = new Date();
+                $to = new Date();
+            }
+            if ($from->isValid() || $from->isValid()) {
+                $selected =
+                    $from->getDate(Date::FORMAT_SIMPLIFIED) . ' - '
+                    . $to->getDate(Date::FORMAT_SIMPLIFIED);
+                $done = true;
+            }
+        }
+        if (!$done) {
+            if ($selected) {
+                $date = new Date($selected);
+                $selected = $date->getDate(Date::FORMAT_SIMPLIFIED);
+            } else {
+                $selected = $this->date ? $this->date->getDate(Date::FORMAT_SIMPLIFIED) : '';
+            }
+        }
+        return "<input type='text' name='{$this->name}' value='{$selected}' />\n";
+    }
+
+    public function __toString()
     {
         return $this->render();
     }
-    function render()
+
+    public function render()
     {
-        $out = '';
-        //TODO:ranged select... ftf
-        if ($this->_view == 'select') {
-            $s = Helper::get()->select()->get(false);
-
-            $s->name($this->_name . '-day')
-                ->value($this->_date ? $this->_date->getDay() : null)
-                ->options(array(), true)
-                ->option('00', 'Den');
-            for($i = 1; $i < 32; $i++) {
-                $s->option((($i < 10) ? ('0' . $i) : $i), $i);
-            }
-            $out .= $s;
-
-            $out .= $s->name($this->_name . '-month')
-                ->value($this->_date ? $this->_date->getMonth() : null)
-                ->options(array(), true)
-                ->option('00', 'Měsíc')
-                ->option('01', 'Leden')
-                ->option('02', 'Únor')
-                ->option('03', 'Březen')
-                ->option('04', 'Duben')
-                ->option('05', 'Květen')
-                ->option('06', 'Červen')
-                ->option('07', 'Červenec')
-                ->option('08', 'Srpen')
-                ->option('09', 'Září')
-                ->option('10', 'Říjen')
-                ->option('11', 'Listopad')
-                ->option('12', 'Prosinec');
-
-            $s->name($this->_name . '-year')
-                ->value($this->_date ? $this->_date->getYear() : null)
-                ->options(array(), true)
-                ->option('0000', 'Rok');
-            for($i = $this->_fromYear; $i < $this->_toYear; $i++) {
-                $s->option($i, $i);
-            }
-            $out .= $s;
-        } elseif ($this->_view == 'text') {
-            $done = false;
-            $selected = $this->_post ? post($this->_name) : get($this->_name);
-            if ($this->_useRange) {
-                if ($selected) {
-                    $pieces = explode(' - ', $selected);
-                    $from = new Date($pieces[0]);
-                    $to = new Date($pieces[1]);
-                } elseif ($this->_date && $this->_dateTo) {
-                    $from = $this->_date;
-                    $to = $this->_dateTo;
-                } else {
-                    $from = new Date();
-                    $to = new Date();
-                }
-                if ($from->isValid() || $from->isValid()) {
-                    $selected = $from->getDate(Date::FORMAT_SIMPLIFIED) . ' - ' . $to->getDate(Date::FORMAT_SIMPLIFIED);
-                    $done = true;
-                }
-            }
-            if (!$done) {
-                if ($selected) {
-                    $date = new Date($selected);
-                    $selected = $date->getDate(Date::FORMAT_SIMPLIFIED);
-                } else {
-                    $selected = $this->_date ? $this->_date->getDate(Date::FORMAT_SIMPLIFIED) : '';
-                }
-            }
-            $out .= '<input type="text" name="' . $this->_name . '" value="' . $selected . '" />' . "\n";
+        //TODO: Utilize templates for <select>
+        //TODO: ranged date select!
+        if ($this->displayType == 'select') {
+            return $this->renderSelect();
         }
-        return $out;
+        if ($this->displayType == 'text') {
+            return $this->renderTextbox();
+        }
+        return '';
     }
 }

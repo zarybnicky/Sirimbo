@@ -36,7 +36,6 @@ if ($this->showMenu) {
 echo '<form action="" method="POST">';
 if ($this->showMenu) {
     $f = $this->menu()
-        ->float(MenuHelper::FLOAT_RIGHT)
         ->content('Přidat', '/admin/users/add')
         ->content('Upravit', 'edit', true)
         ->content('Odebrat', 'remove', true)

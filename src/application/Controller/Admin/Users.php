@@ -1,6 +1,21 @@
 <?php
-require_once 'files/Controller/Admin.php';
-class Controller_Admin_Users extends Controller_Admin
+namespace TKOlomouc\Controller\Admin;
+
+use TKOlomouc\Controller\Admin;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Utility\Request;
+use TKOlomouc\Utility\Mailer;
+use TKOlomouc\Utility\User;
+use TKOlomouc\Utility\Form;
+use TKOlomouc\Model\DBSkupiny;
+use TKOlomouc\Model\DBPermissions;
+use TKOlomouc\Model\DBUser;
+use TKOlomouc\Model\DBPary;
+use TKOlomouc\Model\Paging\Pager;
+use TKOlomouc\Model\Paging\PagerAdapterDb;
+use TKOlomouc\View\Helper\Select;
+
+class Users extends Admin
 {
     function __construct() {
         Permissions::checkError('users', P_OWNED);
@@ -46,11 +61,13 @@ class Controller_Admin_Users extends Controller_Admin
         $this->_displayOverview(get('v'));
     }
     function remove($id = null) {
-        if (!is_array(post('data')) && !is_array(get('u')))
+        if (!is_array(post('data')) && !is_array(get('u'))) {
             $this->redirect('/admin/users');
+        }
         if (!empty($_POST) && post('action') == 'confirm') {
-            foreach (post('data') as $id)
+            foreach (post('data') as $id) {
                 DBUser::removeUser($id);
+            }
             $this->redirect('/admin/users', 'Uživatelé odebráni');
         }
         $data = array();
@@ -152,7 +169,7 @@ class Controller_Admin_Users extends Controller_Admin
                 $s_group->option($group['pe_id'], $group['pe_name']);
 
             $skupiny = DBSkupiny::get();
-            $s_skupina = new SelectHelper();
+            $s_skupina = new Select();
             foreach ($skupiny as $skupina)
                 $s_skupina->option($skupina['s_id'], $skupina['s_name']);
 
@@ -312,7 +329,7 @@ class Controller_Admin_Users extends Controller_Admin
             get('s') : 'prijmeni';
         $options['filter'] = in_array(get('f'), array_merge(array('dancer', 'system', 'all', 'unconfirmed', 'ban'), $filter)) ?
             get('f') : 'all';
-        $pager = new Paging(new PagingAdapterDBSelect('DBUser', $options));
+        $pager = new Pager(new PagerAdapterDb('DBUser', $options));
         $pager->setCurrentPageField('p');
         $pager->setItemsPerPageField('c');
         $pager->setDefaultItemsPerPage(20);

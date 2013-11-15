@@ -1,5 +1,9 @@
 <?php
-class Controller_Nabizime extends Controller_Abstract
+namespace TKOlomouc\Controller;
+
+use TKOlomouc\Utility\Sidebar;
+
+class Nabizime extends ControllerAbstract
 {
     function view($id = null) {
         $this->redirect('/nabizime/obecne');

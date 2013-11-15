@@ -1,6 +1,18 @@
 <?php
-require_once 'files/Controller/Admin.php';
-class Controller_Admin_Nabidka extends Controller_Admin
+namespace TKOlomouc\Controller\Admin;
+
+use TKOlomouc\Controller\Admin;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Utility\Novinky;
+use TKOlomouc\Utility\User;
+use TKOlomouc\Utility\Request;
+use TKOlomouc\Utility\Form;
+use TKOlomouc\Type\Date;
+use TKOlomouc\Model\DBNabidka;
+use TKOlomouc\Model\DBUser;
+use TKOlomouc\View\Exception\AuthorizationException;
+
+class Nabidka extends Admin
 {
     function __construct() {
         Permissions::checkError('nabidka', P_OWNED);
@@ -97,7 +109,9 @@ class Controller_Admin_Nabidka extends Controller_Admin
                     'action' => Request::getAction(),
                     'returnURL' => Request::getReferer(),
                     'users' => DBUser::getUsersByPermission('nabidka', P_OWNED),
-                    'visible' => false
+                    'visible' => false,
+                    'isAdmin' => Permissions::check('nabidka', P_ADMIN),
+                    'userId' => User::getUserID()
                 )
             );
             return;
@@ -166,7 +180,9 @@ class Controller_Admin_Nabidka extends Controller_Admin
                     'action' => Request::getAction(),
                     'returnURL' => Request::getReferer(),
                     'users' => DBUser::getUsersByPermission('nabidka', P_OWNED),
-                    'visible' => $data['n_visible']
+                    'visible' => $data['n_visible'],
+                    'isAdmin' => Permissions::check('nabidka', P_ADMIN),
+                    'userId' => User::getUserID()
                 )
             );
             return;

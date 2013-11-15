@@ -1,5 +1,11 @@
 <?php
-class Controller_Nopassword extends Controller_Abstract
+namespace TKOlomouc\Controller;
+
+use TKOlomouc\Utility\User;
+use TKOlomouc\Utility\Mailer;
+use TKOlomouc\Model\DBUser;
+
+class Nopassword extends ControllerAbstract
 {
     function view($id = null) {
         if (post('action') == 'gen_pass' || post('action') == 'enter') {

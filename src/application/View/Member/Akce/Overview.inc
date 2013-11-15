@@ -14,7 +14,7 @@ vertical-align:top;border-bottom:1px dotted #999;padding:10px 5px;}
         foreach ($chunk as $data) : ?>
         <td class="unit">
             <form action="" method="post">
-            <?php echo $this->render('files/View/Member/Akce/Header.inc', $data);?>
+            <?php echo $this->render('src/application/View/Member/Akce/Header.inc', $data);?>
             <?php
             if ($data['showForm']) : ?>
                 <input type="hidden" name="id" value="<?php echo $data['id'];?>" />

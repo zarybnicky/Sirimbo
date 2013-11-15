@@ -1,5 +1,7 @@
 <?php
-class Controller_Kontakt extends Controller_Abstract
+namespace TKOlomouc\Controller;
+
+class Kontakt extends ControllerAbstract
 {
     function sidebar() { }
     function view($id = null) {

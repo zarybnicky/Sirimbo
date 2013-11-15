@@ -14,6 +14,6 @@ abstract class ViewAbstract
 
     protected function renderTemplate($filename, array $context)
     {
-        echo $this->twigEnvironment->render($filename, $context);
+        $this->twigEnvironment->display($filename, $context);
     }
 }

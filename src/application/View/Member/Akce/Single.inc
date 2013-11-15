@@ -1,4 +1,4 @@
-<?php echo $this->render('files/View/Member/Akce/Header.inc', $this->data);?>
+<?php echo $this->render('src/application/View/Member/Akce/Header.inc', $this->data);?>
 
 <div style="text-align:center;">
 

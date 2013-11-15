@@ -1,6 +1,13 @@
 <?php
-require_once 'files/Controller/Member.php';
-class Controller_Member_Akce extends Controller_Member
+namespace TKOlomouc\Controller\Member;
+
+use TKOlomouc\Controller\Member;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Utility\Form;
+use TKOlomouc\Model\DBAkce;
+use TKOlomouc\Model\DBDokumenty;
+
+class Akce extends Member
 {
     function __construct()
     {

@@ -1,6 +1,15 @@
 <?php
-require_once 'files/Controller/Member.php';
-class Controller_Member_Profil extends Controller_Member
+namespace TKOlomouc\Controller\Member;
+
+use TKOlomouc\Controller\Member;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Utility\User;
+use TKOlomouc\Utility\Form;
+use TKOlomouc\Model\DBUser;
+use TKOlomouc\Model\DBSkupiny;
+use TKOlomouc\Type\Date;
+
+class Profil extends Member
 {
     function __construct() {
         Permissions::checkError('nastenka', P_VIEW);

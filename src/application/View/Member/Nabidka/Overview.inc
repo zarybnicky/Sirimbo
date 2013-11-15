@@ -11,7 +11,7 @@
     <?php foreach ($chunk as $item) : ?>
         <td class="unit">
         <form action="" method="post">
-        <?php echo $this->render('files/View/Member/Nabidka/Header.inc', $item);?>
+        <?php echo $this->render('src/application/View/Member/Nabidka/Header.inc', $item);?>
         <table style="margin:0 auto;">
             <tr>
                 <td>Tanečník</td>

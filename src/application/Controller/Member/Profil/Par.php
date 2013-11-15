@@ -1,6 +1,14 @@
 <?php
-require_once 'files/Controller/Member/Profil.php';
-class Controller_Member_Profil_Par extends Controller_Member_Profil
+namespace TKOlomouc\Controller\Member\Profil;
+
+use TKOlomouc\Controller\Member\Profil;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Utility\User;
+use TKOlomouc\Utility\Form;
+use TKOlomouc\Model\DBPary;
+use TKOlomouc\Model\DBUser;
+
+class Par extends Profil
 {
     function view($id = null) {
         $latest = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());

@@ -1,6 +1,19 @@
 <?php
-require_once 'files/Controller/Admin.php';
-class Controller_Admin_Rozpis extends Controller_Admin
+namespace TKOlomouc\Controller\Admin;
+
+use TKOlomouc\Controller\Admin;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Utility\Novinky;
+use TKOlomouc\Utility\User;
+use TKOlomouc\Utility\Request;
+use TKOlomouc\Utility\Form;
+use TKOlomouc\Model\DBRozpis;
+use TKOlomouc\Model\DBUser;
+use TKOlomouc\View\Helper\Date as DateHelper;
+use TKOlomouc\View\Exception\AuthorizationException;
+use TKOlomouc\Type\Date;
+
+class Rozpis extends Admin
 {
     function __construct() {
         Permissions::checkError('rozpis', P_OWNED);
@@ -24,13 +37,13 @@ class Controller_Admin_Rozpis extends Controller_Admin
                             $n = new Novinky(User::getUserID());
                             if (!post($id)) {
                                 $n->rozpis()->remove(
-                                    (new Date($item['r_datum']))->getDate(Date::FORMAT_SIMPLIFIED),
+                                    (new DateHelper($item['r_datum']))->getDate(Date::FORMAT_SIMPLIFIED),
                                     $item['u_jmeno'] . ' ' . $item['u_prijmeni']
                                 );
                             } else {
                                 $n->rozpis()->add(
                                     '/member/rozpis',
-                                    (new Date($item['r_datum']))->getDate(Date::FORMAT_SIMPLIFIED),
+                                    (new DateHelper($item['r_datum']))->getDate(Date::FORMAT_SIMPLIFIED),
                                     $item['u_jmeno'] . ' ' . $item['u_prijmeni']
                                 );
                             }
@@ -60,7 +73,7 @@ class Controller_Admin_Rozpis extends Controller_Admin
                         if (strcmp($data['r_datum'], date('Y-m-d')) > 0 && $data['r_visible']) {
                             $n = new Novinky(User::getUserID());
                             $n->rozpis()->remove(
-                                (new Date($data['r_datum']))->getDate(Date::FORMAT_SIMPLIFIED),
+                                (new DateHelper($data['r_datum']))->getDate(Date::FORMAT_SIMPLIFIED),
                                 $trener['u_jmeno'] . ' ' . $trener['u_prijmeni']
                             );
                         }
@@ -108,7 +121,9 @@ class Controller_Admin_Rozpis extends Controller_Admin
                 'src/application/View/Admin/Rozpis/Form.inc',
                 array(
                     'action' => Request::getAction(),
-                    'isAdmin' => Permissions::check('rozpis', P_ADMIN)
+                    'isAdmin' => Permissions::check('rozpis', P_ADMIN),
+                    'userId' => User::getUserID(),
+                    'tutors' => DBUser::getUsersByPermission('rozpis', P_OWNED)
                 )
             );
             return;
@@ -156,7 +171,9 @@ class Controller_Admin_Rozpis extends Controller_Admin
                 'src/application/View/Admin/Rozpis/Form.inc',
                 array(
                     'action' => Request::getAction(),
-                    'isAdmin' => Permissions::check('rozpis', P_ADMIN)
+                    'isAdmin' => Permissions::check('rozpis', P_ADMIN),
+                    'userId' => User::getUserID(),
+                    'tutors' => DBUser::getUsersByPermission('rozpis', P_OWNED)
                 )
             );
             return;

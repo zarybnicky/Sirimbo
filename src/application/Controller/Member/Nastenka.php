@@ -1,12 +1,19 @@
 <?php
-require_once 'files/Controller/Member.php';
-class Controller_Member_Nastenka extends Controller_Member
+namespace TKOlomouc\Controller\Member;
+
+use TKOlomouc\Controller\Member;
+use TKOlomouc\Model\Paging\Pager;
+use TKOlomouc\Model\Paging\PagerAdapterDb;
+use TKOlomouc\Model\DBNastenka;
+use TKOlomouc\Utility\Permissions;
+
+class Nastenka extends Member
 {
     function __construct() {
         Permissions::checkError('nastenka', P_VIEW);
     }
     function view($id = null) {
-        $pager = new Paging(new PagingAdapterDBSelect('DBNastenka'));
+        $pager = new Pager(new PagerAdapterDb('DBNastenka'));
         $pager->setCurrentPageField('p');
         $pager->setItemsPerPageField('c');
         $pager->setDefaultItemsPerPage(10);

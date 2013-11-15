@@ -1,7 +1,7 @@
 <?php
 namespace TKOlomouc\View;
 
-abstract class Partial
+abstract class Partial extends ViewAbstract
 {
     protected function renderTemplate($filename, array $context)
     {

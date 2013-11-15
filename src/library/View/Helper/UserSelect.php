@@ -1,138 +1,127 @@
 <?php
 namespace TKOlomouc\View\Helper;
 
-class UserSelect
+use TKOlomouc\View\Partial;
+
+class UserSelect extends Partial
 {
-    private $_name;
-    private $_idVar;
-    private $_jmeno;
-    private $_prijmeni;
-    private $_users;
-    private $_type;
-    private $_tmpSwitch;
+    private final $file = 'Helper/UserSelect.tpl';
 
-    public function __construct() {
-        return $this->userSelect();
+    private $name         = 'user';
+    private $keyId        = 'u_id';
+    private $keyJmeno     = 'u_jmeno';
+    private $keyPrijmeni  = 'u_prijmeni';
+    private $keyBirthDate = 'u_narozeni';
+    private $data         = array();
+    private $type         = 'user';
+    private $showTempForm = true;
+
+    public function __construct($twig, $name = null)
+    {
+        parent::__construct($twig);
+
+        if($name !== null) {
+            $this->name($name);
+        }
     }
 
-    public function userSelect($name = null) {
-        $this->_defaultValues();
-        if ($name !== null)
-            return $this->name($name);
+    public function setName($name)
+    {
+        $this->name = $name;
+
         return $this;
     }
-    private function _defaultValues() {
-        $this->_name = "user";
-        $this->_idIndex = "u_id";
-        $this->_jmeno = "u_jmeno";
-        $this->_prijmeni = "u_prijmeni";
-        $this->_users = array();
-        $this->_type = 'user';
-        $this->_tmpSwitch = true;
-    }
-    public function name($name) {
-        $this->_name = $name;
+    public function setKeyId($key)
+    {
+        $this->keyId = $key;
+
         return $this;
     }
-    public function idVar($idVar) {
-        $this->_idIndex = $idVar;
+
+    public function setKeyJmeno($key)
+    {
+        $this->keyJmeno = $key;
+
         return $this;
     }
-    public function jmeno($jmeno) {
-        $this->_jmeno = $jmeno;
+
+    public function setKeyPrijmeni($key)
+    {
+        $this->keyPrijmeni = $key;
+
         return $this;
     }
-    public function prijmeni($prijmeni) {
-        $this->_prijmeni = $prijmeni;
+
+    public function setKeyBirthDate($key)
+    {
+        $this->keyBirthDate = $key;
+
         return $this;
     }
-    public function users(array $users) {
-        if (is_array($users))
-            $this->_users = $users;
+
+    public function setType($type)
+    {
+        if ($type == 'user' || $type == 'par') {
+            $this->type = $type;
+        }
         return $this;
     }
-    public function type($type) {
-        if ($type == 'user' || $type == 'par')
-            $this->_type = $type;
+
+    public function showTemporaryUserForm($value)
+    {
+        $this->showTempForm = (bool) $value;
+
         return $this;
     }
-    public function tmpSwitch($value) {
-        $this->_tmpSwitch = (bool) $value;
+
+    public function addUser($id, $fullName, $birthDate)
+    {
+        list($year, $month, $day) = explode('-', $birthDate);
+
+        $this->data[] = array(
+        	'id'   => $id,
+            'name' => $fullName,
+            'year' => $year
+        );
+    }
+
+    public function setUsers(array $users, $overwrite = false)
+    {
+        if($overwrite) {
+            $this->data[] = array();
+        }
+
+        foreach ($users as $item) {
+            $this->addUser(
+    	        $item[$this->keyId],
+                $item[$this->keyPrijmeni] . ', ' . $item[$this->keyJmeno],
+                $item[$this->keyBirthDate]
+            );
+        }
         return $this;
     }
-    public function render() {
+
+    public function render()
+    {
         $name = 'userselect' . rand(0, 1024);
 
-        $out = '<div class="' . $name . '">' . "\n";
+        $dateSelect = new Date($this->twigEnvironment, 'narozeni');
 
-        $out .= '<select name="' . $this->_name . '">' . "\n";
-        if (!post($this->_name)) {
-            $out .= '<option value="none" selected="selected">--- žádný ---</option>' . "\n";
-        } else {
-            $out .= '<option value="none">--- žádný ---</option>' . "\n";
-        }
-
-        if ($this->_tmpSwitch) {
-            $out .= '<option value="temporary">--- dočasný ---</option>' . "\n";
-        }
-
-        foreach ($this->_users as $user) {
-            if (isset($user['u_narozeni']))
-                list($year, $month, $day) = explode('-', $user['u_narozeni']);
-
-            $id = $user[$this->_idIndex];
-            if (post($this->_name) == $id)
-                $out .= '<option value="' . $id . '" selected="selected">';
-            else
-                $out .= '<option value="' . $id . '">';
-            $out .= $user[$this->_prijmeni] . ', ' . $user[$this->_jmeno] .
-                (isset($user['u_narozeni']) ? (', ' . $year) : '');
-            $out .= '</option>' . "\n";
-        }
-        $out .= '</select>' . "\n";
-
-        if ($this->_tmpSwitch) {
-            ob_start();
-        ?>
-<noscript><br/><a href="/admin/users/temporary">Nový dočasný uživatel</a></noscript>
-<div class="new" style="display:none;text-align:right;">
-Jméno: <input type="text" name="jmeno" size="8" /><br/>
-Příjmení: <input type="text" name="prijmeni" size="8" /><br/>
-Datum narození:&nbsp;<br/>
-<?php echo Helper::get()->date('narozeni'), '<br/>';?>
-<button type="submit">Uložit</button>
-</div>
-<div class="loading" style="display:none;"><img alt="Čekám na odezvu serveru..." src="/images/loading_bar.gif"/></div>
-<script type="text/javascript">
-(function($) {
-    $(function() {
-        if (typeof $.fn.tempUserSelect == "undefined" && typeof window.loadingUS == "undefined") {
-            window.loadingUS = true;
-            $.getScript("/scripts/tempUserSelect.js", function() {
-                $(".<?php echo $name;?>").tempUserSelect("<?php echo $this->_type;?>");
-                delete window.loadingUS;
-            });
-        } else {
-            $.delayed<?php echo $name ?> = function() {
-                if (typeof window.loadingUS == "undefined" && typeof $.fn.tempUserSelect != "undefined") {
-                    $(".<?php echo $name;?>").tempUserSelect("<?php echo $this->_type;?>");
-                } else {
-                    setTimeout(function() {$.delayed<?php echo $name?>();}, 200);
-                }
-            };
-            $.delayed<?php echo $name?>();
-        }
-    })
-}) (jQuery);
-</script>
-        <?php
-            $out .= ob_get_clean();
-        }
-        $out .= '</div>';
-
-        return $out;
+        return $this->renderTemplate(
+            $this->file,
+            array(
+        	    'divClass'     => $name,
+                'name'         => $this->name,
+                'date'         => $this->data,
+                'selected'     => post($this->name) === null ? false : '' . post($this->name),
+                'showTempForm' => $this->showTempForm,
+                'dateSelect'   => $dateSelect
+            )
+        );
     }
-    public function __toString() {
+
+    public function __toString()
+    {
         return $this->render();
     }
 }

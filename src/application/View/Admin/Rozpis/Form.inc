@@ -10,12 +10,12 @@ notice($this->redirect()->getMessage());
         <td><?php
             if (!$this->isAdmin) { ?>
             <select name="trener">
-                <option value="<?php echo User::getUserID();?>">Já</option>
+                <option value="<?= $this->userIdř ?>">Já</option>
             </select><?php
             } else {
                 echo $this->userSelect()
                     ->name('trener')
-                    ->users(DBUser::getUsersByPermission('rozpis', P_OWNED));
+                    ->users($this->tutors);
             }?>
         </td>
     </tr><tr>

@@ -47,7 +47,7 @@ if (!empty($this->skupinySelect)) {
 }
 ?>
 
-<?php echo $this->render('files/View/Admin/Platby/Navigation.inc');?>
+<?php echo $this->render('src/application/View/Admin/Platby/Navigation.inc');?>
 <?php echo '<h2>Kategorie plateb</h2>';?>
 <?php echo '<h3>', ($this->action == 'add' ? 'Přidat kategorii' : 'Upravit kategorii'), '</h3>';?>
 <form action="" method="post">

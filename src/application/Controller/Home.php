@@ -1,5 +1,9 @@
 <?php
-class Controller_Home extends Controller_Abstract
+namespace TKOlomouc\Controller;
+
+use TKOlomouc\Utility\Request;
+
+class Home extends ControllerAbstract
 {
     function view($id = null) {
         if (NABOR && Request::getURL() == '/') {

@@ -1,6 +1,15 @@
 <?php
-require_once 'files/Controller/Admin/Platby.php';
-class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
+namespace TKOlomouc\Controller\Admin\Platby;
+
+use TKOlomouc\Controller\Admin\Platby;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Utility\User;
+use TKOlomouc\Type\PlatbyItem;
+use TKOlomouc\Type\Date;
+use TKOlomouc\Model\DBPlatbyRaw;
+use TKOlomouc\Model\DBPlatbyItem;
+
+class Manual extends Platby
 {
     function __construct()
     {

@@ -1,5 +1,5 @@
 <?php
-$mainForm = (new TableHelper())->table()
+$mainForm = (new Table())->table()
 ->column('desc', '', 'r')
 ->column('value', 'Hodnota')
 ->data(array(
@@ -40,7 +40,7 @@ if (!empty($this->groupSelect)) {
 }
 ?>
 
-<?php echo $this->render('files/View/Admin/Platby/Navigation.inc');?>
+<?php echo $this->render('src/application/View/Admin/Platby/Navigation.inc');?>
 <h2>Kategorie plateb</h2>
 <?php echo '<h3>', ($this->action == 'add' ? 'Přidat specifický symbol' : 'Upravit specifický symbol'), '</h3>';?>
 <form action="" method="post">

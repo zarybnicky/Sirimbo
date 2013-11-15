@@ -7,9 +7,9 @@ notice($this->redirect()->getMessage());
 <table>
     <tr>
         <td>Trenér (*): </td>
-        <td><?php if (!Permissions::check('nabidka', P_ADMIN)) { ?>
+        <td><?php if (!$this->isAdmin) { ?>
         <select name="trener">
-            <option value="<?php echo User::getUserID();?>">Já</option>
+            <option value="<?= $this->userId ?>">Já</option>
         </select><?php
         } else {
             echo $this->userSelect()
@@ -36,9 +36,9 @@ notice($this->redirect()->getMessage());
         <td>(pokud je "Do" prázdné, počítá se jako "Od")</td>
     </tr><tr>
         <td>Viditelný: </td>
-        <td><label><?php echo (Permissions::check('nabidka', P_ADMIN) ?
+        <td><label><?= $this->isAdmin ?
             getCheckbox('visible', 'visible')
-            : ($this->visible ? '&#10003;' : '&#10799;'));?></label></td>
+            : ($this->visible ? '&#10003;' : '&#10799;');?></label></td>
     </tr><tr>
         <td>Uzamknout: </td>
         <td><label><?php echo getCheckbox('lock');?></label></td>

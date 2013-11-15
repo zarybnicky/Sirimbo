@@ -1,6 +1,19 @@
 <?php
-require_once 'files/Controller/Admin.php';
-class Controller_Admin_Nastenka extends Controller_Admin
+namespace TKOlomouc\Controller\Admin;
+
+use TKOlomouc\Controller\Admin;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Utility\Novinky;
+use TKOlomouc\Utility\User;
+use TKOlomouc\Utility\Request;
+use TKOlomouc\Utility\Form;
+use TKOlomouc\Model\Paging\Pager;
+use TKOlomouc\Model\Paging\PagerAdapterDb;
+use TKOlomouc\Model\DBNastenka;
+use TKOlomouc\Model\DBSkupiny;
+use TKOlomouc\View\Exception\AuthorizationException;
+
+class Nastenka extends Admin
 {
     function __construct() {
         Permissions::checkError('nastenka', P_OWNED);
@@ -31,7 +44,7 @@ class Controller_Admin_Nastenka extends Controller_Admin
                     $this->redirect('/admin/nastenka/edit/' . $nastenka[0]);
                 break;
         }
-        $pager = new Paging(new PagingAdapterDBSelect('DBNastenka'));
+        $pager = new Pager(new PagerAdapterDb('DBNastenka'));
         $pager->setCurrentPageField('p');
         $pager->setItemsPerPageField('c');
         $pager->setDefaultItemsPerPage(20);

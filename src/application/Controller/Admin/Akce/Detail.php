@@ -1,6 +1,12 @@
 <?php
-require_once 'files/Controller/Admin/Akce.php';
-class Controller_Admin_Akce_Detail extends Controller_Admin_Akce
+namespace TKOlomouc\Controller\Admin\Akce;
+
+use TKOlomouc\Controller\Admin\Akce;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Model\DBAkce;
+use TKOlomouc\Model\DBUser;
+
+class Detail extends Akce
 {
     function __construct()
     {
@@ -59,7 +65,7 @@ class Controller_Admin_Akce_Detail extends Controller_Admin_Akce
         );
         $akce = $new_data;
         $this->render(
-            'files/Admin/AkceDetail/Display.inc',
+            'src/application/View/Admin/Akce/Detail.inc',
             array(
                 'data' => $akce,
                 'users' => $users,

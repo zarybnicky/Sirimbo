@@ -1,59 +1,61 @@
 <?php
 namespace TKOlomouc\View\Helper;
 
-class Zpravy
+use TKOlomouc\View\Partial;
+
+class Zpravy extends Partial
 {
-    private $_zpravy;
-    private $_number;
+    private $data  = array();
+    private $count = 0;
 
-    public function zpravy() {
-        $this->_defaultValues();
+    public function addItem($name, $date, $text)
+    {
+        $this->data[] = array(
+        	'name' => $name,
+            'date' => $date,
+            'text' => $text
+        );
+    }
+
+    public function setData(array $data, $overwrite = true)
+    {
+        if ($overwrite) {
+            $this->data = array();
+        }
+
+        foreach ($data as $item) {
+            list($date, $time) = explode(' ', $this->data[$i]['at_timestamp']);
+
+            $this->addItem($item['at_jmeno'], formatDate($date), $item['at_text']);
+        }
+
         return $this;
     }
-    private function _defaultValues() {
-        $this->_zpravy = null;
-    }
-    public function data($data = null) {
-        if ($data !== null)
-            $this->_zpravy = $data;
+
+    public function setCount($count)
+    {
+        $this->count = $count;
+
         return $this;
     }
-    public function number($n = null) {
-        if ($n !== null)
-            $this->_number = $n;
-        return $this;
+
+    public function render()
+    {
+        if ($this->count > count($this->data)) {
+            $this->count = count($this->data);
+        }
+
+        return $this->renderTemplate(
+            $this->file,
+            array(
+        	    'data'  => $this->data,
+                'count' => $this->count
+            )
+        );
     }
-    public function render() {
-        if ($this->_zpravy === null)
-            $this->_zpravy = DBAktuality::getAktuality(AKTUALITY_KRATKE);
-        if ($this->_number > count($this->_zpravy))
-            $this->_number = count($this->_zpravy);
 
-        $out = '<div class="zpravy" style="width:250px;padding:5px;height:396px;border:1px solid #FFB030;border-radius:15px;">';
-        $out .= '<div class="h_section">Krátké zprávy</div>';
-        $out .= '<div style="overflow-y:scroll;padding:4px;height:345px;">';
-        if ($this->_number === 0)
-            $out .= '<div class="notice">Žádné zprávy</div>';
-        else
-            for($i = 0; $i < $this->_number; $i++) {
-                if (!isset($this->_zpravy[$i]))
-                    continue;
-
-                $out .= '<div>';
-                list($date, $time) = explode(' ', $this->_zpravy[$i]['at_timestamp']);
-                $out .= '<span class="big">' . $this->_zpravy[$i]['at_jmeno'] . '</span>' .
-                    '<span class="little">&nbsp;(' . formatDate($date) . ')</span>';
-                $out .= '<p style="text-align:left;">' . $this->_zpravy[$i]['at_text'] . '</p>';
-                $out .= '</div>';
-                if (isset($this->_zpravy[$i + 1]))
-                    $out .= '<hr/>';
-            }
-        $out .= '</div>';
-        $out .= '</div>';
-
-        return $out;
-    }
-    public function __toString()  {
+    public function __toString()
+    {
         return $this->render();
     }
 }

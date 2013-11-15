@@ -1,5 +1,10 @@
 <?php
-class Controller_Ankety extends Controller_Abstract
+namespace TKOlomouc\Controller;
+
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Model\DBAnkety;
+
+class Ankety extends ControllerAbstract
 {
     function view($id = null) {
         if (post('id')) {

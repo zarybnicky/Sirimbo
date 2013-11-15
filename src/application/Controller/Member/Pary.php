@@ -1,15 +1,16 @@
 <?php
-require_once 'files/Controller/Member.php';
-class Controller_Member_Pary extends Controller_Member
+namespace TKOlomouc\Controller\Member;
+
+use TKOlomouc\Controller\Member;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Model\DBPary;
+
+class Pary extends Member
 {
     function __construct() {
         Permissions::checkError('pary', P_VIEW);
     }
     function view($id = null) {
-        /*if ($id) {
-            $this->render('src/application/View/Member/Pary/Single.inc, array('id' => $id));
-            return;
-        }*/
         $pary = DBPary::getActiveParyByHodnoceni();
         if (empty($pary)) {
             $this->render(

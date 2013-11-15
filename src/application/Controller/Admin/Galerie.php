@@ -1,6 +1,13 @@
 <?php
-require_once 'files/Controller/Admin.php';
-class Controller_Admin_Galerie extends Controller_Admin
+namespace TKOlomouc\Controller\Admin;
+
+use TKOlomouc\Controller\Admin;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Utility\BMP;
+use TKOlomouc\Model\DBGalerie;
+use TKOlomouc\Settings;
+
+class Galerie extends Admin
 {
     function __construct()
     {
@@ -248,7 +255,7 @@ class Controller_Admin_Galerie extends Controller_Admin
 
         $fn_suffix = Settings::$gdFunctionSuffix[$filetype];
         if ($fn_suffix == 'BMP') {
-            include 'files/Core/bmp.php';
+            BMP;
         }
         $fn_read = 'imageCreateFrom' . $fn_suffix;
         $fn_write = 'image' . $fn_suffix;

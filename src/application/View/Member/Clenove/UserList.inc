@@ -1,4 +1,4 @@
-<?php echo $this->render('files/View/Member/Clenove/Navigation.inc');?>
+<?php echo $this->render('src/application/View/Member/Clenove/Navigation.inc');?>
 <h2>Členové abecedně</h2>
 <?php
 echo $this->table()

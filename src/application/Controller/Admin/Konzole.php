@@ -1,6 +1,11 @@
 <?php
-require_once 'files/Controller/Admin.php';
-class Controller_Admin_Konzole extends Controller_Admin
+namespace TKOlomouc\Controller\Admin;
+
+use TKOlomouc\Controller\Admin;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Utility\Debug;
+
+class Konzole extends Admin
 {
     function __construct() {
         Permissions::checkError('konzole', P_OWNED);

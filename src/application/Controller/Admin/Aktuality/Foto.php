@@ -1,6 +1,10 @@
 <?php
-require_once 'files/Controller/Admin/Aktuality.php';
-class Controller_Admin_Aktuality_Foto extends Controller_Admin_Aktuality
+namespace TKOlomouc\Controller\Admin\Aktuality;
+
+use TKOlomouc\Controller\Admin\Aktuality;
+use TKOlomouc\Utility\Permissions;
+
+class Foto extends Aktuality
 {
     function __construct() {
         Permissions::checkError('aktuality', P_OWNED);

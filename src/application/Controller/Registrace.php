@@ -1,5 +1,11 @@
 <?php
-class Controller_Registrace extends Controller_Abstract
+namespace TKOlomouc\Controller;
+
+use TKOlomouc\Utility\Form;
+use TKOlomouc\Utility\User;
+use TKOlomouc\Model\DBUser;
+
+class Registrace extends ControllerAbstract
 {
     function view($id = null) {
         if (!empty($_POST)) {

@@ -1,92 +1,115 @@
 <?php
 namespace TKOlomouc\View\Helper;
 
-class Select
-{
-    private $_name;
-    private $_value;
-    private $_options;
-    private $_get;
+use TKOlomouc\View\Partial;
 
-    function select($n = null) {
-        $this->_defaultValues();
+class Select extends Partial
+{
+    private final $file = 'Helper/Select.tpl';
+
+    private $name    = '';
+    private $value   = '';
+    private $options = array();
+    private $post    = true;
+
+    public function __construct($twig, $n = null)
+    {
+        parent::__construct($twig);
 
         if ($n !== null) {
             return $this->name($n);
         }
         return $this;
     }
-    private function _defaultValues() {
-        $this->_name = '';
-        $this->_value = null;
-        $this->_options = array();
-        $this->_get = false;
-    }
 
-    function name($name = '') {
-        if ($name)
-            $this->_name = $name;
+    public function name($name)
+    {
+        $this->name = $name;
+
         return $this;
     }
-    function value($value = null) {
-        if ($value)
-            $this->_value = $value;
+
+    public function value($value)
+    {
+        $this->value = $value;
+
         return $this;
     }
-    function option($value, $name = null, $overwrite = false) {
-        if ($overwrite)
-            $this->_options = array();
 
-        if ($name !== null)
-            $this->_options[$value] = $name;
-        elseif ($name === null)
-            $this->_options[$value] = $value;
+    public function post($post = true)
+    {
+        $this->post = (bool) $post;
+
         return $this;
     }
-    function options($options = array(), $overwrite = false, $literal = false) {
-        if ($overwrite === true)
-            $this->_options = array();
 
-        if (!is_array($options) || empty($options))
-            return $this;
+    public function get($get = true)
+    {
+        $this->post = !(bool) $get;
+
+        return $this;
+    }
+
+    public function option($value, $name = null, $overwrite = false)
+    {
+        if ($overwrite == true) {
+            $this->options = array();
+        }
+
+        if ($name === null) {
+            $name = $value;
+        }
+
+        $this->options[$value] = $name;
+
+        return $this;
+    }
+
+    public function options(
+        array $options,
+        $overwrite     = false,
+        $keyAsValue    = true,
+        $isAssociative = true
+    ) {
+        if ($overwrite) {
+            $this->options = array();
+        }
+
+        if ($keyAsValue == false) {
+            $options = array_flip($options);
+        }
 
         foreach ($options as $value => $name) {
-            if (!isset($name))
-                continue;
-            if ($literal)
-                $this->_options[$name] = $name;
-            else
-                $this->_options[$value] = $name;
-        }
-        return $this;
-    }
-    function get($get = true) {
-        $this->_get = (bool) $get;
-        return $this;
-    }
-    function post($post = true) {
-        $this->_get = !(bool) $post;
-        return $this;
-    }
-
-    function __toString() {
-        return $this->render();
-    }
-    function render() {
-        $out = '<select name="' . $this->_name . '">' . "\n";
-        if (!empty($this->_options)) {
-            $selected = $this->_get ? get($this->_name) : post($this->_name);
-            if ($selected === null)
-                $selected = $this->_value;
-            foreach ($this->_options as $value => $name) {
-                $out .= '<option value="' . $value . '"' .
-                    ($selected == $value ? ' selected="selected"' : '') .
-                    '>' . $name . '</option>' . "\n";
+            if ($isAssociative) {
+                $this->option($value, $name, false);
+            } else {
+                $this->option($name, $name, false);
             }
         }
-        $out .= '</select>' . "\n";
 
-        return $out;
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->render();
+    }
+
+    public function render()
+    {
+        $selected = $this->post ? post($this->name) : get($this->name);
+
+        if ($selected === null) {
+            $selected = $this->value;
+        }
+        return $this->renderTemplate(
+            $this->file,
+            array(
+        	    'name'     => $this->name,
+                'selected' => $selected,
+                'options'  => $this->options,
+            )
+        );
     }
 }
 ?>

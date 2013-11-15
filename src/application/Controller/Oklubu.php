@@ -1,5 +1,9 @@
 <?php
-class COntroller_Oklubu extends Controller_Abstract
+namespace TKOlomouc\Controller;
+
+use TKOlomouc\Utility\Sidebar;
+
+class Oklubu extends ControllerAbstract
 {
     function view($id = null) {
        $this->redirect('/oklubu/obecne');

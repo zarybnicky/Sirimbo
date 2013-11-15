@@ -1,6 +1,12 @@
 <?php
-require_once 'files/Controller/Member.php';
-class Controller_Member_Clenove extends Controller_Member
+namespace TKOlomouc\Controller\Member;
+
+use TKOlomouc\Controller\Member;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Utility\Request;
+use TKOlomouc\Model\DBUser;
+
+class Clenove extends Member
 {
     function __construct() {
         Permissions::checkError('users', P_VIEW);

@@ -7,19 +7,19 @@ notice($this->redirect()->getMessage());
 <table>
     <tr>
         <td>Jméno: </td>
-        <td colspan="<?php echo count(Settings::$permissions);?>">
+        <td colspan="<?php echo count($this->permissions);?>">
             <input type="text" name="name" value="<?php echo post('name'); ?>" />
         </td>
     </tr><tr>
         <td>Popis: </td>
-        <td colspan="<?php echo count(Settings::$permissions);?>">
+        <td colspan="<?php echo count($this->permissions);?>">
             <textarea rows="7" cols="60" name="description"><?php echo post("description"); ?></textarea>
         </td>
     </tr><?php
-    foreach (Settings::$permissions as $name => $item) {
+    foreach ($this->permissions as $name => $item) {
         echo '<tr>';
         echo '<td>', $item['name'], '</td>';
-        foreach (Settings::$permissionLevels as $key => $level_name) {
+        foreach ($this->permissionLevels as $key => $level_name) {
             echo '<td>';
             if (isset($item[$key])) {
                 echo '<label>', getRadio($name, $key, $item['default'] == $key), $level_name, '</label>';

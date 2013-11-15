@@ -40,7 +40,7 @@
         <td></td>
     </tr><tr>
         <td>Oprávnění: </td>
-        <td><?php echo User::getGroupName();?></td>
+        <td><?php echo \TKOlomouc\Utility\User::getGroupName();?></td>
         <td></td>
     </tr><tr>
         <td><button type="submit" name="action" value="confirm">Upravit</button></td>

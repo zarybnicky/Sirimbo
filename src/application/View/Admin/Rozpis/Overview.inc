@@ -5,7 +5,6 @@ notice($this->redirect()->getMessage());
 echo '<form action="" method="POST">';
 if ($this->showMenu) {
     echo $this->menu()
-        ->float(MenuHelper::FLOAT_RIGHT)
         ->content('Přidat', 'rozpis/add')
         ->content('Upravit', 'edit', true)
         ->content('Upravit tréninky', 'edit_detail', true)

@@ -1,6 +1,16 @@
 <?php
-require_once 'files/Controller/Admin.php';
-class Controller_Admin_Akce extends Controller_Admin
+namespace TKOlomouc\Controller\Admin;
+
+use TKOlomouc\Controller\Admin;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Utility\Novinky;
+use TKOlomouc\Utility\Form;
+use TKOlomouc\Utility\User;
+use TKOlomouc\Utility\Request;
+use TKOlomouc\Model\DBAkce;
+use TKOlomouc\Model\DBDokumenty;
+
+class Akce extends Admin
 {
     function __construct()
     {
@@ -20,7 +30,6 @@ class Controller_Admin_Akce extends Controller_Admin
                 );
             }
             break;
-
         case 'edit':
         case 'detail':
         case 'dokumenty':
@@ -156,7 +165,8 @@ class Controller_Admin_Akce extends Controller_Admin
         $this->render(
             'src/application/View/Admin/Akce/Overview.inc',
             array(
-        	   'data' => $data
+                'action' => Request::getAction(),
+        	    'data' => $data
             )
         );
     }

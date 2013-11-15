@@ -1,4 +1,5 @@
 <?php
+use TKOlomouc;
 /*/sitewide OFF switch
 if (isset($_GET['file'])) {
     if (stripos($_GET['file'], 'cookie_set') !== false) {
@@ -52,6 +53,7 @@ require __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'applicati
     . DIRECTORY_SEPARATOR . 'constants.php';
 require SETTINGS . DIRECTORY_SEPARATOR . 'db.php';
 
+
 ini_set('session.use_trans_sid', 0);
 ini_set('session.use_only_cookies', 1);
 
@@ -87,11 +89,10 @@ Request::setDefault('home');
 Request::setURL(get('file'));
 Request::setURI($_SERVER['REQUEST_URI']);
 Request::setReferer(session('referer_id'));
-unset($_GET['file']);
 
 if (session('login') === null) {
     if (post('action') == 'login' || post('action') == 'enter') {
-        post('pass', User::crypt(post('pass')));
+        post('pass', TKOlomouc\Utility\User::crypt(post('pass')));
 
         if (!User::login(post('login'), post('pass'))) {
             Helper::get()->redirect('/login', 'Špatné jméno nebo heslo!', true);
@@ -114,6 +115,6 @@ if (session('login') === null) {
     }
 }
 
-$d = new Dispatcher();
+$d = new TKOlomouc\Utility\Dispatcher();
 $d->dispatch(Request::getLiteralURL(), Request::getAction(), Request::getID());
 ?>

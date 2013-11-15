@@ -1,6 +1,13 @@
 <?php
-require_once 'files/Controller/Member.php';
-class Controller_Member_Nabidka extends Controller_Member
+namespace TKOlomouc\Controller\Member;
+
+use TKOlomouc\Controller\Member;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Utility\User;
+use TKOlomouc\Utility\Form;
+use TKOlomouc\Model\DBNabidka;
+
+class Nabidka extends Member
 {
     function __construct() {
         Permissions::checkError('nabidka', P_VIEW);

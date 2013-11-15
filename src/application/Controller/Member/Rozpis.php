@@ -1,6 +1,13 @@
 <?php
-require_once 'files/Controller/Member.php';
-class Controller_Member_Rozpis  extends Controller_Member
+namespace TKOlomouc\Controller\Member;
+
+use TKOlomouc\Controller\Member;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Utility\Form;
+use TKOlomouc\Utility\User;
+use TKOlomouc\Model\DBRozpis;
+
+class Rozpis  extends Member
 {
     function __construct() {
         Permissions::checkError('rozpis', P_VIEW);

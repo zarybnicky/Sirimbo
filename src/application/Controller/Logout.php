@@ -1,5 +1,9 @@
 <?php
-class Controller_Logout extends Controller_Abstract
+namespace TKOlomouc\Controller;
+
+use TKOlomouc\Utility\User;
+
+class Logout extends ControllerAbstract
 {
     function view($id = null) {
         User::logout();

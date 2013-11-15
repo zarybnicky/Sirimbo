@@ -1,5 +1,5 @@
 <?php
-echo $this->render('files/View/Admin/Platby/Navigation.inc');
+echo $this->render('src/application/View/Admin/Platby/Navigation.inc');
 echo '<h2>Kategorie plateb</h2>';
 
 echo '<span class="big">Přidat: </span> ';

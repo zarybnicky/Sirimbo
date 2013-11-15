@@ -1,5 +1,10 @@
 <?php
-class Controller_Admin extends Controller_Abstract
+namespace TKOlomouc\Controller;
+
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Utility\Sidebar;
+
+class Admin extends ControllerAbstract
 {
     function __construct()
     {

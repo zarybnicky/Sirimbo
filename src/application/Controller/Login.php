@@ -1,5 +1,9 @@
 <?php
-class Controller_Login extends Controller_Abstract
+namespace TKOlomouc\Controller;
+
+use TKOlomouc\Utility\User;
+
+class Login extends ControllerAbstract
 {
     function view($id = null) {
         if (User::isLogged()) {

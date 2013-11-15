@@ -1,6 +1,11 @@
 <?php
-require_once 'files/Controller/Admin/Platby.php';
-class Controller_Admin_Platby_Overview extends Controller_Admin_Platby
+namespace TKOlomouc\Controller\Admin\Platby;
+
+use TKOlomouc\Controller\Admin\Platby;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Model\DBUser;
+
+class Overview extends Platby
 {
     function __construct() {
         Permissions::checkError('platby', P_OWNED);

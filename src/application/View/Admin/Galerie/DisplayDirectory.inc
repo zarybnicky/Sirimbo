@@ -5,7 +5,6 @@ notice($this->redirect()->getMessage());
 <form action="" method="POST">
 <?php
 echo $this->menu()
-    ->float(MenuHelper::FLOAT_RIGHT)
     ->content('Přidat fotky', '/admin/galerie/file/upload?dir=' . $this->id)
     ->content('Upravit fotku', 'file/edit', true)
     ->content('Odstranit fotky', 'file/remove', true)

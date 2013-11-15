@@ -1,49 +1,47 @@
 <?php
-require_once'files/Controller/Admin.php';
-class Controller_Admin_Ankety extends Controller_Admin
+namespace TKOlomouc\Controller\Admin;
+
+use TKOlomouc\Controller\Admin;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Utility\Novinky;
+use TKOlomouc\Utility\User;
+use TKOlomouc\Model\DBAnkety;
+use TKOlomouc\View\Exception\AuthorizationException;
+use TKOlomouc\Utility\Request;
+
+class Ankety extends Admin
 {
-    function __construct() {
+    function __construct()
+    {
         Permissions::checkError('ankety', P_OWNED);
     }
-    function view($id = null) {
-        if (empty($_POST)) {
-            $this->render("files/Admin/Ankety/Display.inc");
-            return;
-        }
-        switch(post("action")) {
-            case 'save':
-                $items = DBAnkety::getAnkety();
 
-                foreach ($items as $item) {
-                    $id = $item['ak_id'];
-                    if ((bool) post($id) != $item['ak_visible']) {
-                        DBAnkety::editAnketa(
-                            $id, $item['ak_jmeno'], $item['ak_text'],
-                            $item['ak_kdo'], post($id) ? '1' : '0'
-                        );
-                    }
-                }
+    function view($id = null)
+    {
+        switch(post('action')) {
+            case 'save':
+                $this->processSave();
                 break;
+
             case 'edit':
                 $ankety = post('ankety');
-                if ($ankety[0])
+                if ($ankety[0]) {
                     $this->redirect('/admin/ankety/edit/' . $ankety[0]);
+                }
                 break;
 
             case 'remove':
-                if (!is_array(post('ankety')))
-                    break;
-                $url = '/admin/ankety/remove?';
-                foreach (post('ankety') as $id)
-                    $url .= '&u[]=' . $id;
-                $this->redirect($url);
+                if (!is_array(post('ankety'))) break;
+                $this->redirect(
+                    '/admin/ankety/remove?' . http_build_query(array('u' => post('ankety')))
+                );
                 break;
         }
-        $this->render("files/Admin/Ankety/Display.inc");
+        $this->displayOverview();
     }
     function add($id = null) {
         if (empty($_POST)) {
-            $this->render('files/Admin/Ankety/Form.inc');
+            $this->displayForm($data);
             return;
         }
         $visible = (bool) post('visible');
@@ -51,21 +49,19 @@ class Controller_Admin_Ankety extends Controller_Admin
             $visible = false;
             $this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění ankety');
         }
-        DBAnkety::addAnketa(
-            User::getUserID(), post('jmeno'), post('text'),
-            '0', (bool) $visible
+        $newId = DBAnkety::addAnketa(
+            User::getUserID(), post('jmeno'), post('text'), (bool) $visible
         );
-        $data = DBAnkety::getLatestAnketa();
 
         if ($visible) {
-            $n = new Novinky(User::getUserID());
-            $n->ankety()->add(post('jmeno'));
+            $news = new Novinky(User::getUserID());
+            $news->ankety()->add(post('jmeno'));
         }
         if (post('add_text')) {
-            DBAnkety::addAnketaItem($data['ak_id'], post('add_text'));
+            DBAnkety::addAnketaItem($newId, post('add_text'));
             unset($_POST['add_text']);
         }
-        $this->redirect('/admin/ankety/edit/' . $data['ak_id'], 'Anketa přidána');
+        $this->redirect('/admin/ankety/edit/' . $newId, 'Anketa přidána');
     }
     function edit($id = null) {
         if (!$id || !($data = DBAnkety::getSingleAnketa($id)))
@@ -80,7 +76,7 @@ class Controller_Admin_Ankety extends Controller_Admin
             post('text', $data['ak_text']);
             post('visible', $data['ak_visible']);
 
-            $this->render("files/Admin/Ankety/Form.inc");
+            $this->displayForm($data);
             return;
         }
 
@@ -112,54 +108,132 @@ class Controller_Admin_Ankety extends Controller_Admin
             $this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění ankety');
         }
 
-        if ($visible != $visible_prev || post('jmeno') != $data['ak_jmeno']
-            || post('text') != $data['ak_text']) {
-            DBAnkety::editAnketa($id, post('jmeno'), post('text'), '0', $visible);
+        if (
+            $visible != $visible_prev
+            || post('jmeno') != $data['ak_jmeno']
+            || post('text') != $data['ak_text']
+        ) {
+            DBAnkety::editAnketa($id, post('jmeno'), post('text'), $visible);
             $data = DBAnkety::getSingleAnketa($id);
             $changed = true;
         }
 
-        $n = new Novinky(User::getUserID());
+        $news = new Novinky(User::getUserID());
         if (isset($changed) && $changed) {
             if ($visible) {
                 if (!$visible_prev)
-                    $n->ankety()->add($data['ak_jmeno']);
+                    $news->ankety()->add($data['ak_jmeno']);
                 else
-                    $n->ankety()->edit($data['ak_jmeno']);
+                    $news->ankety()->edit($data['ak_jmeno']);
             } elseif (!$visible && $visible_prev) {
-                    $n->ankety()->remove($data['ak_jmeno']);
+                    $news->ankety()->remove($data['ak_jmeno']);
             }
         }
         post('jmeno', $data['ak_jmeno']);
         post('text', $data['ak_text']);
         post('visible', $data['ak_visible']);
 
-        $this->render("files/Admin/Ankety/Form.inc");
+        $this->displayForm($data);
     }
-    function remove($id = null) {
-        if (empty($_POST) || post('action') !== 'confirm') {
-            $this->render('files/Admin/Ankety/DisplayRemove.inc');
-            return;
-        }
-        if (!is_array(post('ankety')))
-            $this->redirect('/admin/ankety');
-        foreach (post('ankety') as $id) {
-            $data = DBAnkety::getSingleAnketa($id);
 
-            if (Permissions::check('ankety', P_OWNED, $data['ak_kdo'])) {
+    public function remove($id = null)
+    {
+        if (!is_array(post('data')) && !is_array(get('u'))) {
+            $this->redirect('/admin/ankety');
+        }
+        if (!empty($_POST) && post('action') == 'confirm') {
+            foreach (post('data') as $id) {
+                $data = DBAnkety::getSingleAnketa($id);
+
                 DBAnkety::removeAnketa($item);
                 if ($data['ak_visible']) {
                     $n = new Novinky(User::getUserID());
                     $n->ankety()->remove($data['ak_jmeno']);
                 }
-            } else {
-                $error = true;
             }
+            $this->redirect('/admin/ankety', 'Ankety odebrány');
         }
-        if (isset($error) && $error)
-            throw new AuthorizationException('Máte nedostatečnou autorizaci pro tuto akci!');
+        $data = array();
+        foreach (get('u') as $id) {
+            $item = DBAnkety::getSingleAnketa($id);
 
-        $this->redirect('/admin/ankety', 'Ankety odebrány');
+            $data[] = array(
+                'id' => $item['ak_id'],
+                'text' => $item['ak_jmeno']
+            );
+        }
+        $this->render(
+            'src/application/View/Admin/RemovePrompt.inc',
+            array(
+                'header' => 'Správa anket',
+                'prompt' => 'Opravdu chcete odstranit ankety:',
+                'returnURL' => Request::getReferer(),
+                'data' => $data
+            )
+        );
+    }
+
+    private function displayOverview()
+    {
+        $data = DBAnkety::getAnkety();
+        foreach ($data as &$item) {
+            $newData = array(
+                'id' => $item['ak_id'],
+                'visible' => $item['ak_visible'],
+                'jmeno' => $item['ak_jmeno;']
+            );
+            $item = $newData;
+        }
+
+        $this->render(
+            'src/application/View/Admin/Ankety/Display.inc',
+            array(
+                'data' => $data
+            )
+        );
+    }
+
+    private function displayForm($data)
+    {
+        if (Request::getAction() != 'add') {
+            $items = DBAnkety::getAnketaItems($data['ak_id']);
+        } else {
+            $items = array();
+        }
+        foreach ($items as &$item) {
+            $newData = array(
+                'id' => $item['aki_id'],
+                'text' => $item['aki_text'],
+                'pocet' => isset($item['aki_pocet']) ? (int) $item['aki_pocet'] : 0
+            );
+            $item = $newData;
+        }
+        $this->render(
+            'src/application/View/Admin/Ankety/Form.inc',
+            array(
+                'action' => Request::getAction(),
+                'canMakeVisible' => !Permissions::check('ankety', P_OWNED, $data['ak_kdo']),
+                'items' => $items
+            )
+        );
+    }
+
+    private function processSave()
+    {
+        $items = DBAnkety::getAnkety();
+
+        foreach ($items as $item) {
+            if($post($item['ak_id']) == $item['ak_visible']) {
+                continue;
+            }
+            DBAnkety::editAnketa(
+                $item['ak_id'],
+                $item['ak_jmeno'],
+                $item['ak_text'],
+                $item['ak_kdo'],
+                post($item['ak_id']) ? '1' : '0'
+            );
+        }
     }
 }
 ?>

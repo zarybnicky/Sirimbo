@@ -1,6 +1,12 @@
 <?php
-require_once 'files/Controller/Admin.php';
-class Controller_Admin_Pary extends Controller_Admin
+namespace TKOlomouc\Controller\Admin;
+
+use TKOlomouc\Controller\Admin;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Model\DBPary;
+use TKOlomouc\Model\DBUser;
+
+class Pary extends Admin
 {
     function __construct() {
         Permissions::checkError('pary', P_OWNED);

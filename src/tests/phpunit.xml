@@ -13,7 +13,8 @@
 	timeoutForSmallTests="1"
 	timeoutForMediumTests="10"
 	timeoutForLargeTests="60"
-	verbose="false">
+	verbose="false"
+>
     <testsuites>
         <testsuite name="Core">
             <directory>Core</directory>

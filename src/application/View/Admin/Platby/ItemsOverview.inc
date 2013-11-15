@@ -1,5 +1,5 @@
 <?php
-echo $this->render('files/View/Admin/Platby/Navigation.inc');
+echo $this->render('src/application/View/Admin/Platby/Navigation.inc');
 echo '<h2>Jednotlivé platby</h2>';
 
 if (!TISK) {
@@ -19,7 +19,6 @@ if (!TISK) {
 echo '<form action="" method="POST">';
 if (!TISK) {
     echo $this->menu()
-        ->float(MenuHelper::FLOAT_RIGHT)
         ->content('Přidat', '/admin/platby/items/add')
         ->content('Upravit', 'edit', true)
         ->content('Odebrat', 'remove', true);

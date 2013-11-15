@@ -1,6 +1,17 @@
 <?php
-require_once 'files/Controller/Admin/Platby/Structure.php';
-class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby_Structure
+namespace TKOlomouc\Controller\Admin\Platby\Structure;
+
+use TKOlomouc\Controller\Admin\Platby\Structure;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Utility\Request;
+use TKOlomouc\Utility\Form;
+use TKOlomouc\Model\DBPlatby;
+use TKOlomouc\Model\DBPlatbyGroup;
+use TKOlomouc\Model\DBPlatbyCategory;
+use TKOlomouc\Model\DBPlatbyRaw;
+use TKOlomouc\Model\DBPlatbyItem;
+
+class Category extends Structure
 {
     function __construct() {
         Permissions::checkError('platby', P_OWNED);

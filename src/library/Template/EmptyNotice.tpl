@@ -1,2 +1,9 @@
-<h1>{{ nadpis }}</h1>
-{{ notice }}
+{% extends parent %}
+
+{% block content %}
+    {% parent() %}
+    <h1>
+        {{ header }}
+    </h1>
+    {{ notice }}
+{% endblock %}

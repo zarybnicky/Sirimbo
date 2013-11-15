@@ -1,5 +1,5 @@
 <?php
-echo $this->render('files/View/Admin/Platby/Navigation.inc');
+echo $this->render('src/application/View/Admin/Platby/Navigation.inc');
 echo '<h2>Vyřazené platby</h2>';
 
 echo '<a style="display:block;margin-bottom:8px;" href="?list=all">Všechny platby</a>';

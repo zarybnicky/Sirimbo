@@ -4,7 +4,6 @@
 <form action="" method="POST">
 <?php
 echo $this->menu()
-    ->float(MenuHelper::FLOAT_RIGHT)
     ->content('Potvrdit', 'confirm', true)
     ->content('Odstranit', 'remove', true)
     ->content('Zpět', '../users');

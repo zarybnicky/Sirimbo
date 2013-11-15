@@ -1,5 +1,11 @@
 <?php
-class Controller_Member_Download extends Controller_Abstract
+namespace TKOlomouc\Controller\Member;
+
+use TKOlomouc\Controller\ControllerAbstract;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Model\DBDokumenty;
+
+class Download extends ControllerAbstract
 {
     function __construct() {
         Permissions::checkError('dokumenty', P_VIEW);

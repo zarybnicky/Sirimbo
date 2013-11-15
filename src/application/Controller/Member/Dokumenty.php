@@ -1,6 +1,12 @@
 <?php
-require_once 'files/Controller/Member.php';
-class Controller_Member_Dokumenty extends Controller_Member
+namespace TKOlomouc\Controller\Member;
+
+use TKOlomouc\Controller\Member;
+use TKOlomouc\Settings;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Model\DBDokumenty;
+
+class Dokumenty extends Member
 {
     function __construct() {
         Permissions::checkError('dokumenty', P_VIEW);

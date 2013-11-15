@@ -1,6 +1,15 @@
 <?php
-require_once 'files/Controller/Admin.php';
-class Controller_Admin_Skupiny extends Controller_Admin
+namespace TKOlomouc\Controller\Admin;
+
+use TKOlomouc\Controller\Admin;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Utility\Request;
+use TKOlomouc\Utility\Form;
+use TKOlomouc\Model\DBSkupiny;
+use TKOlomouc\Model\DBPlatby;
+use TKOlomouc\Model\DBPlatbyGroup;
+
+class Skupiny extends Admin
 {
     function __construct() {
         Permissions::checkError('skupiny', P_OWNED);

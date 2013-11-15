@@ -1,4 +1,4 @@
-<?php echo $this->render('files/View/Admin/Platby/Navigation.inc');?>
+<?php echo $this->render('src/application/View/Admin/Platby/Navigation.inc');?>
 <h2>Kategorie plateb</h2>
 <h3>Odstranit kategorii?</h3>
 <?php notice($this->redirect()->getMessage());?>

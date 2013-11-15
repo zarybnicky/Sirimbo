@@ -1,6 +1,14 @@
 <?php
-require_once 'files/Controller/Admin.php';
-class Controller_Admin_Permissions extends Controller_Admin
+namespace TKOlomouc\Controller\Admin;
+
+use TKOlomouc\Controller\Admin;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Utility\Request;
+use TKOlomouc\Utility\Form;
+use TKOlomouc\Model\DBPermissions;
+use TKOlomouc\Settings;
+
+class Permissions extends Admin
 {
     function __construct() {
         Permissions::checkError('permissions', P_ADMIN);
@@ -43,7 +51,9 @@ class Controller_Admin_Permissions extends Controller_Admin
             $this->render(
                 'src/application/View/Admin/Permissions/Form.inc',
                 array(
-                    'action' => Request::getAction()
+                    'action' => Request::getAction(),
+                    'permissions' => Settings::$permissions,
+                    'permissionLevels' => Settings::$permissionLevels
                 )
             );
             return;
@@ -73,7 +83,8 @@ class Controller_Admin_Permissions extends Controller_Admin
             $this->render(
                 'src/application/View/Admin/Permissions/Form.inc',
                 array(
-                    'action' => Request::getAction()
+                    'action' => Request::getAction(),
+                    'permissions' => Settings::$permissions
                 )
             );
             return;

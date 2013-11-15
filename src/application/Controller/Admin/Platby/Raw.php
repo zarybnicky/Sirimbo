@@ -1,6 +1,16 @@
 <?php
-require_once 'files/Controller/Admin/Platby.php';
-class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
+namespace TKOlomouc\Controller\Admin\Platby;
+
+use TKOlomouc\Controller\Admin\Platby;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Utility\CSVParser;
+use TKOlomouc\View\Exception\ViewException;
+use TKOlomouc\View\Helper\Upload;
+use TKOlomouc\Type\PlatbyItem;
+use TKOlomouc\Model\DBPlatbyRaw;
+use TKOlomouc\Model\DBPlatbyItem;
+
+class Raw extends Platby
 {
     const TEMP_DIR = './upload/csv/';
 
@@ -11,7 +21,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
         if (!empty($_POST) && post('action') == 'upload') {
             $this->_processUpload();
         }
-        $workDir = new DirectoryIterator(self::TEMP_DIR);
+        $workDir = new \DirectoryIterator(self::TEMP_DIR);
         $workDir->rewind();
         foreach ($workDir as $fileInfo) {
             if (!$fileInfo->isFile())
@@ -52,7 +62,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
         ));
     }
     private function _getParser($path) {
-        $fileinfo = new SplFileInfo($path);
+        $fileinfo = new \SplFileInfo($path);
         if (!$fileinfo->isReadable())
             $this->redirect('/admin/platby/raw', 'Soubor ' . str_replace(self::TEMP_DIR, '', $path) . ' není přístupný.');
         $parser = new CSVParser($fileinfo->openFile('r'));
@@ -103,7 +113,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
         unlink($parser->getFileObject()->getRealPath());
     }
     private function _processUpload() {
-        $upload = new UploadHelper();
+        $upload = new Upload();
         $upload->upload('in')->loadFromPost();
 
         $validFiles = $upload->hasValidFiles();
@@ -114,7 +124,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
             $this->redirect()->setMessage('Vyberte prosím nějaký soubor (prázdné soubory jsou automaticky odmítnuty).');
             return;
         }
-        $uploader = $upload->getFilledUploader();
+        $uploader = $upload->getFilledUploadHandler();
         $uploader->setOutputDir(self::TEMP_DIR);
         $uploader->addAllowedType('csv');
         $uploader->save();

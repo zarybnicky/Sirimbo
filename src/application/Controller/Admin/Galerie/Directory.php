@@ -1,6 +1,13 @@
 <?php
-require_once 'files/Controller/Admin/Galerie.php';
-class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
+namespace TKOlomouc\Controller\Admin\Galerie;
+
+use TKOlomouc\Controller\Admin\Galerie;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Utility\Request;
+use TKOlomouc\Utility\Form;
+use TKOlomouc\Model\DBGalerie;
+
+class Directory extends Galerie
 {
     public function __construct()
     {

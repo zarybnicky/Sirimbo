@@ -1,7 +1,7 @@
 <h1>Správa akcí</h1>
 <?php
 echo '<h2>';
-echo Request::getAction() == 'add' ? 'Přidat uživatele' : 'Upravit uživatele';
+echo $this->action == 'add' ? 'Přidat uživatele' : 'Upravit uživatele';
 echo '</h2>';
 notice($this->redirect()->getMessage());
 if ($this->form) {
@@ -66,9 +66,10 @@ if ($this->form) {
     </tr><tr>
         <td>
             <button type="submit">
-                <?php echo (Request::getAction() == 'add') ? 'Přidat' : 'Upravit';?>
+                <?php echo ($this->action == 'add') ? 'Přidat' : 'Upravit';?>
             </button>
-            <a href="/admin/akce">Zpět</a></td>
+            <a href="/admin/akce">Zpět</a>
+        </td>
         <td>Pole označená (*) jsou povinná</td>
         <td></td>
     </tr>

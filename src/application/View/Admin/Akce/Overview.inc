@@ -4,7 +4,6 @@
 notice($this->redirect()->getMessage());
 if (!TISK) {
     echo $this->menu()
-        ->float(MenuHelper::FLOAT_RIGHT)
         ->content('Přidat', 'akce/add')
         ->content('Upravit', 'edit', true)
         ->content('Upravit přihlášené', 'detail', true)

@@ -1,6 +1,11 @@
 <?php
-require_once 'files/Controller/Admin.php';
-class Controller_Admin_Novinky extends Controller_Admin
+namespace TKOlomouc\Controller\Admin;
+
+use TKOlomouc\Controller\Admin;
+use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Model\DBNovinky;
+
+class Novinky extends Admin
 {
     function __construct() {
         Permissions::checkError('nastenka', P_OWNED);
