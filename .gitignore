@@ -16,3 +16,6 @@ log/*
 !log/.gitignore
 stats/
 vendor/
+.buildpath
+.project
+.settings/*
