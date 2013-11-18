@@ -10,7 +10,7 @@ class DBUser extends Database implements Pagable
             $options['sort'] = 'prijmeni';
 
         $q = "SELECT users.*,skupiny.* FROM users
-            LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id";
+            LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id WHERE 1=1";
         switch($options['filter']) {
             case 'unconfirmed': $q .= " AND u_confirmed='0' AND u_ban='0'"; break;
             case 'ban': $q .= " AND u_ban='1'"; break;
@@ -272,7 +272,7 @@ class DBUser extends Database implements Pagable
                 WHERE
                     u_confirmed='1' AND u_ban='0' AND u_system='0' AND
                     (pg_type='1' OR pg_type IS NULL) AND (
-                        (CURDATE() >= pc_valid_from OR CURDATE() <= pc_valid_to) OR
+                        (CURDATE() >= pc_valid_from AND CURDATE() <= pc_valid_to) OR
                         (pc_use_prefix='1' AND pi_prefix = YEAR(CURDATE()) AND
                             DATE_SUB(CURDATE(), INTERVAL (YEAR(CURDATE())) YEAR) <= pc_valid_from AND
                             DATE_SUB(CURDATE(), INTERVAL (YEAR(CURDATE())) YEAR) >= pc_valid_to) OR
