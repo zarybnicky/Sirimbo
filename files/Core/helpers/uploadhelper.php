@@ -16,7 +16,7 @@ class UploadHelper
         $this->_hasFiles = false;
 
         if ($name !== null) {
-            $this->_name($name);
+            $this->name($name);
         }
         return $this;
     }

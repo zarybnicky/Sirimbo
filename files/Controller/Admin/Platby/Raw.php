@@ -122,7 +122,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
             $this->redirect()->setMessage('Nahrávané soubory musí být typu CSV.');
         }
         foreach ($uploader->getSavedFiles() as $path) {
-            $this->processCsv($path);
+            $this->_processCsv($path);
             $this->redirect()->setMessage('Soubor ' . str_replace(self::TEMP_DIR, '', $path) . ' byl zpracován.');
         }
     }
