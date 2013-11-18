@@ -5,6 +5,8 @@ use TKOlomouc\View\Partial;
 
 class Zpravy extends Partial
 {
+    private $file = 'src/library/Template/Helper/ClankyList.tpl';
+
     private $data  = array();
     private $count = 0;
 

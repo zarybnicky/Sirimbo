@@ -12,10 +12,10 @@ $form = array(
         'value' => '<input type="text" name="amount" value="' . post('amount') . '"/>'
     ), array(
         'desc' => 'Uživatel: ',
-        'value' => (new SelectHelper())->select('variable')->options($this->users)
+        'value' => (new TKOlomouc\View\Helper\Select())->select('variable')->options($this->users)
     ), array(
         'desc' => 'Specifický symbol:',
-        'value' => (new SelectHelper())->select('specific')->options($this->categories)
+        'value' => (new TKOlomouc\View\Helper\Select())->select('specific')->options($this->categories)
     ), array(
         'desc' => 'Prefix (rok):',
         'value' => '<input type="text" name="prefix" value="' . post('prefix') . '"/>'

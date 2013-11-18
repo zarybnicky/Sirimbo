@@ -5,7 +5,7 @@ use TKOlomouc\View\Partial;
 
 class UserSelect extends Partial
 {
-    private final $file = 'Helper/UserSelect.tpl';
+    private $file = 'src/library/Template/Helper/UserSelect.tpl';
 
     private $name         = 'user';
     private $keyId        = 'u_id';
@@ -16,10 +16,8 @@ class UserSelect extends Partial
     private $type         = 'user';
     private $showTempForm = true;
 
-    public function __construct($twig, $name = null)
+    public function __construct($name = null)
     {
-        parent::__construct($twig);
-
         if($name !== null) {
             $this->name($name);
         }

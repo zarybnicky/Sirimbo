@@ -1,5 +1,5 @@
 <?php
-$mainForm = (new TableHelper())->table()
+$mainForm = (new TKOlomouc\View\Helper\Table())->table()
     ->style('width:100%')
     ->showHeader(false)
     ->column('desc', '', 'r')
@@ -20,7 +20,7 @@ $mainForm = (new TableHelper())->table()
     );
 
 if (!empty($this->groups)) {
-    $groupForm = (new TableHelper())->table()
+    $groupForm = (new TKOlomouc\View\Helper\Table())->table()
         ->column('buttons', '', '', 'width:75px')
         ->column('type', 'Typ')
         ->column('name', 'Jméno')
@@ -28,7 +28,7 @@ if (!empty($this->groups)) {
         ->data($this->groups);
 }
 if (!empty($this->groupSelect)) {
-    $groupSelectBox = (new SelectHelper())->select('group')
+    $groupSelectBox = (new TKOlomouc\View\Helper\Select())->select('group')
         ->options($this->groupSelect);
 }
 ?>

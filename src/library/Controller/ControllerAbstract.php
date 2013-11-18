@@ -2,6 +2,7 @@
 namespace TKOlomouc\Controller;
 
 use TKOlomouc\Utility\Renderer;
+use TKOlomouc\Utility\Response;
 
 abstract class ControllerAbstract implements ControllerInterface
 {
@@ -19,7 +20,7 @@ abstract class ControllerAbstract implements ControllerInterface
     public function render($filename, array $vars = array(), $standalone = false)
     {
         $renderer = new Renderer();
-        $content = $enderer->render($filename, $vars);
+        $content = $renderer->render($filename, $vars);
 
         if ($standalone) {
             echo $content;
@@ -28,5 +29,10 @@ abstract class ControllerAbstract implements ControllerInterface
         include TISK ? HEADER_TISK : HEADER;
         echo $content;
         include TISK ? FOOTER_TISK : FOOTER;
+    }
+
+    public function redirect($link, $message = null, $overwrite = null)
+    {
+        Response::redirect($link, $message, $overwrite);
     }
 }

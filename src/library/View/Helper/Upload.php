@@ -13,10 +13,8 @@ class Upload extends Partial
     private $emptyFiles   = array();
     private $hasFiles     = false;
 
-    public function __construct($twig, $name = null)
+    public function __construct($name = null)
     {
-        parent::__construct($twig);
-
         if ($name !== null) {
             $this->name($name);
         }

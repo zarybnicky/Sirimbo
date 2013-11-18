@@ -3,10 +3,12 @@ $real_name = realpath(basename($_SERVER['SCRIPT_NAME']));
 define('ROOT', substr($real_name, 0, strpos($real_name, basename($_SERVER['SCRIPT_NAME'])) - 1));
 unset($real_name);
 
-define('LOG', ROOT . DIRECTORY_SEPARATOR . 'log');
+define('LOG_DIRECTORY', ROOT . DIRECTORY_SEPARATOR . 'log');
 define('LOG', LOG_DIRECTORY . DIRECTORY_SEPARATOR . 'error.log');
 define('DEBUG_LOG', LOG_DIRECTORY . DIRECTORY_SEPARATOR . 'debug.log');
 define('PHP_LOG', LOG_DIRECTORY . DIRECTORY_SEPARATOR . 'php.log');
+
+define('CONFIG', ROOT . DIRECTORY_SEPARATOR . 'config');
 
 define('PUBLIC_DIR', ROOT . DIRECTORY_SEPARATOR . 'public');
 define('GALERIE', PUBLIC_DIR . DIRECTORY_SEPARATOR . 'galerie');
@@ -17,10 +19,9 @@ define('LIBRARY', SOURCE . DIRECTORY_SEPARATOR . 'library');
 define('APPLICATION', SOURCE . DIRECTORY_SEPARATOR . 'application');
 define('CONTROLLER_DIRECTORY', APPLICATION . DIRECTORY_SEPARATOR . 'Controller');
 define('VIEW_DIRECTORY', APPLICATION . DIRECTORY_SEPARATOR . 'View');
-define('SETTINGS', APPLICATION . DIRECTORY_SEPARATOR . 'Settings');
 
 define('STATIC_DIR', APPLICATION . DIRECTORY_SEPARATOR . 'Static');
-define('HEADER', STATIC_DIR . 'Header.inc');
+define('HEADER', STATIC_DIR . DIRECTORY_SEPARATOR . 'Header.inc');
 define('FOOTER', STATIC_DIR . DIRECTORY_SEPARATOR . 'Footer.inc');
 define('HEADER_TISK', STATIC_DIR . DIRECTORY_SEPARATOR . 'HeaderTisk.inc');
 define('FOOTER_TISK', STATIC_DIR . DIRECTORY_SEPARATOR . 'FooterTisk.inc');

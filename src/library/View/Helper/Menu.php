@@ -5,7 +5,7 @@ use TKOlomouc\View\Partial;
 
 class Menu extends Partial
 {
-    private final $file = 'Helper/Menu.tpl';
+    private $file = 'src/library/Template/Helper/Menu.tpl';
 
     private $float = 'right';
     private $data  = array();

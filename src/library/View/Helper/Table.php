@@ -5,7 +5,7 @@ use TKOlomouc\View\Partial;
 
 class Table extends Partial
 {
-    private final $file = 'Helper/Table.tpl';
+    private $file = 'src/library/Template/Helper/Table.tpl';
 
     private $style      = '';
     private $data       = array();

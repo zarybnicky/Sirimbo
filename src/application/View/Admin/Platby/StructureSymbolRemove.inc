@@ -10,6 +10,6 @@ Opravdu chcete odstranit specifický symbol "<?php echo $this->name;?>"?
 <?php echo getReturnInput();?>
 <br/>
 <button type="submit" name="action" value="confirm">Odstranit</button>
-<a href="<?php echo Request::getReferer();?>">Zpět</a>
+<a href="<?php echo TKOlomouc\Utility\Request::getReferer();?>">Zpět</a>
 
 </form>

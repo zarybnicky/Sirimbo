@@ -5,17 +5,15 @@ use TKOlomouc\View\Partial;
 
 class Select extends Partial
 {
-    private final $file = 'Helper/Select.tpl';
+    private $file = 'src/library/Template/Helper/Select.tpl';
 
     private $name    = '';
     private $value   = '';
     private $options = array();
     private $post    = true;
 
-    public function __construct($twig, $n = null)
+    public function __construct($n = null)
     {
-        parent::__construct($twig);
-
         if ($n !== null) {
             return $this->name($n);
         }

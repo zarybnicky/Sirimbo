@@ -3,7 +3,7 @@ namespace TKOlomouc\Utility;
 
 class Miscellaneous
 {
-    function notice($text, $return = false)
+    public static function notice($text, $return = false)
     {
         if (!$text) {
             return;
@@ -14,27 +14,27 @@ class Miscellaneous
         echo '<div class="notice">', $text, '</div>', "\n";
     }
 
-    function getColorBox($color, $popis) {
+    public static function getColorBox($color, $popis) {
         return '<div class="box" title="' . $popis . '" '
             . 'style="background-color:' . $color . '"></div>';
     }
 
-    function post($field = null, $value = null)
+    public static function post($field = null, $value = null)
     {
-        arrayManipulate($_POST, $field, $value);
+        self::arrayManipulate($_POST, $field, $value);
     }
 
-    function get($field = null, $value = null)
+    public static function get($field = null, $value = null)
     {
-        arrayManipulate($_GET, $field, $value);
+        self::arrayManipulate($_GET, $field, $value);
     }
 
-    function session($field = null, $value = null)
+    public static function session($field = null, $value = null)
     {
-        arrayManipulate($_SESSION, $field, $value);
+        self::arrayManipulate($_SESSION, $field, $value);
     }
 
-    function arrayManipulate($array, $field = null, $value = null)
+    public static function arrayManipulate($array, $field = null, $value = null)
     {
         if ($field === null) {
             return $array;
@@ -47,7 +47,7 @@ class Miscellaneous
         }
         return null;
     }
-    function formatTime($str, $forDisplay)
+    public static function formatTime($str, $forDisplay)
     {
         if ($forDisplay) {
             return substr($str, 0, 5); //15:00:00
@@ -55,21 +55,22 @@ class Miscellaneous
             return $str . ':00';
         }
     }
-    function formatDate($str)
+    public static function formatDate($str)
     {
         list($year, $month, $day) = explode('-', $str);
         return (int) $day . '. ' . (int) $month . '. ' . $year;
     }
-    function formatTimestamp($str, $date_only = false)
+    public static function formatTimestamp($str, $date_only = false)
     {
         list($date, $time) = explode(' ', $str);
-        if ($date_only)
-            return formatDate($date);
-        $date = formatDate($date);
-        $time = formatTime($time, 1);
+        if ($date_only) {
+            return self::formatDate($date);
+        }
+        $date = self::formatDate($date);
+        $time = self::formatTime($time, 1);
         return implode(' ', array($date, $time));
     }
-    function timeSubstract($first, $sec)
+    public static function timeSubstract($first, $sec)
     {
         if (strcmp($first, $sec) > 0) {
             $tmp = $first;
@@ -87,7 +88,7 @@ class Miscellaneous
 
         return (floor($r / 60) . ':' . ($r % 60));
     }
-    function timeAdd($first, $sec)
+    public static function timeAdd($first, $sec)
     {
         list($f_hrs, $f_min) = explode(':', $first);
         list($s_hrs, $s_min) = explode(':', $sec);
@@ -97,40 +98,40 @@ class Miscellaneous
 
         return ($h . ':' . ($m % 60));
     }
-    function getCheckbox($name, $value = '', $default = false, $get = false, $readonly = false)
+    public static function getCheckbox($name, $value = '', $default = false, $get = false, $readonly = false)
     {
         if ($value === '') {
             $value = $name;
         }
         $checked = (($get == true) ?
-            ((get($name) != false) ? true : false) :
-            ((post($name) != false) ? true : false));
+            ((self::get($name) != false) ? true : false) :
+            ((self::post($name) != false) ? true : false));
         if (!$checked) {
             $checked = (bool) $default;
         }
         return '<input type="checkbox" name="' . $name . '" value="' . $value . '"' .
             ($checked ? ' checked="checked"' : '') . ($readonly ? ' readonly="readonly"' : '') . '/>';
     }
-    function getRadio($name, $value, $default = false, $get = false, $readonly = false)
+    public static function getRadio($name, $value, $default = false, $get = false, $readonly = false)
     {
         $checked = (($get == true) ?
-            ((get($name) == $value) ? true : false) :
-            ((post($name) == $value) ? true : false));
+            ((self::get($name) == $value) ? true : false) :
+            ((self::post($name) == $value) ? true : false));
         if (!$checked) {
             $checked = (bool) $default;
         }
         return '<input type="radio" name="' . $name . '" value="' . $value . '"' .
             ($checked ? ' checked="checked"' : '') . ($readonly ? ' readonly="readonly"' : '') . '/>';
     }
-    function getReturnURI($default)
+    public static function getReturnURI($default)
     {
-        return post('referer') ? post('referer') : $default;
+        return self::post('referer') ? self::post('referer') : $default;
     }
-    function getReturnInput()
+    public static function getReturnInput()
     {
         return '<input type="hidden" name="referer" value="' . Request::getReferer() . '" />' . "\n";
     }
-    function getIP()
+    public static function getIP()
     {
         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
             return $_SERVER['HTTP_CLIENT_IP'];

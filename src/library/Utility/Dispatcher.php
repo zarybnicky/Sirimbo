@@ -1,6 +1,7 @@
 <?php
 namespace TKOlomouc\Utility;
 
+use TKOlomouc\Controller\ControllerInterface;
 use TKOlomouc\View\Exception\NotFoundRightException;
 
 class Dispatcher
@@ -31,8 +32,8 @@ class Dispatcher
 
             $instance = new $class();
 
-            if (!($instance instanceof Controller_Interface)) {
-                throw new NotFoundRightException('Controller class "' . $controller . '" not instance of Controller_Interface');
+            if (!($instance instanceof ControllerInterface)) {
+                throw new NotFoundRightException('Controller class "' . $class . '" not instance of Controller_Interface');
             }
         } catch(ViewException $e) {
             Log::write($e->getMessage() . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n" . $e->getTraceAsString());

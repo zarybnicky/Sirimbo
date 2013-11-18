@@ -14,12 +14,12 @@ $form = array(
                 'recogValue' => $this->recognized['amount']['value']
         ), array(
                 'desc' => 'Uživatel: ',
-                'value' => (new SelectHelper())->select('variable')->options($this->users)->value($this->guess['variable']),
+                'value' => (new TKOlomouc\View\Helper\Select())->select('variable')->options($this->users)->value($this->guess['variable']),
                 'recogColumn' => $this->recognized['variable']['column'],
                 'recogValue' => $this->recognized['variable']['value']
         ), array(
                 'desc' => 'Kategorie:',
-                'value' => (new SelectHelper())->select('specific')->options($this->categories)->value($this->guess['specific']),
+                'value' => (new TKOlomouc\View\Helper\Select())->select('specific')->options($this->categories)->value($this->guess['specific']),
                 'recogColumn' => $this->recognized['specific']['column'],
                 'recogValue' => $this->recognized['specific']['value']
         ), array(

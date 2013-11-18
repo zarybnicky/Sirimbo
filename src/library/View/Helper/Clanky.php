@@ -6,8 +6,8 @@ use TKOlomouc\Type\Date;
 
 class Clanky extends Partial
 {
-    private final $fileList      = 'Helper/ClankyList.tpl';
-    private final $fileSlideshow = 'Helper/ClankySlideshow.tpl';
+    private $fileList      = 'src/library/Template/Helper/ClankyList.tpl';
+    private $fileSlideshow = 'src/library/Template/Helper/ClankySlideshow.tpl';
 
     private $data        = null;
     private $offset      = 0;

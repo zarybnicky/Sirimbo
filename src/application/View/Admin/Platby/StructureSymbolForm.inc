@@ -1,5 +1,5 @@
 <?php
-$mainForm = (new Table())->table()
+$mainForm = (new TKOlomouc\View\Helper\Table())->table()
 ->column('desc', '', 'r')
 ->column('value', 'Hodnota')
 ->data(array(
@@ -14,10 +14,10 @@ $mainForm = (new Table())->table()
             'value' => '<input type="text" name="amount" value="' . post('amount') . '"/>'
         ), array(
             'desc' => 'Splatnost:',
-            'value' => (new DateHelper())->date('dueDate')
+            'value' => (new TKOlomouc\View\Helper\Date())->date('dueDate')
         ), array(
             'desc' => 'Platnost:',
-            'value' => (new DateHelper())->date('validRange')->range()
+            'value' => (new TKOlomouc\View\Helper\Date())->date('validRange')->range()
         ), array(
             'desc' => 'Povolit prefix roku?:',
             'value' => getCheckbox('usePrefix', '1')
@@ -27,7 +27,7 @@ $mainForm = (new Table())->table()
         )
 ));
 if (!empty($this->groups)) {
-    $groupForm = (new TableHelper())->table()
+    $groupForm = (new TKOlomouc\View\Helper\Table())->table()
         ->column('buttons', '', '', 'width:75px')
         ->column('type', 'Typ')
         ->column('name', 'Jméno')
@@ -35,7 +35,7 @@ if (!empty($this->groups)) {
         ->data($this->groups);
 }
 if (!empty($this->groupSelect)) {
-    $groupSelectBox = (new SelectHelper())->select('group')
+    $groupSelectBox = (new TKOlomouc\View\Helper\Select())->select('group')
         ->options($this->groupSelect);
 }
 ?>
@@ -45,7 +45,9 @@ if (!empty($this->groupSelect)) {
 <?php echo '<h3>', ($this->action == 'add' ? 'Přidat specifický symbol' : 'Upravit specifický symbol'), '</h3>';?>
 <form action="" method="post">
     <?php echo $mainForm, getReturnInput();?>
-    <button name="action" value="confirm">Uložit</button>&nbsp;<a href="<?php echo Request::getReferer();?>">Zpět</a><br/><br/>
+    <button name="action" value="confirm">Uložit</button>
+    <a href="<?php echo TKOlomouc\Utility\Request::getReferer();?>">Zpět</a>
+    <br/><br/>
 </form>
 <?php if ($this->action != 'add') : ?>
     <h3>Kategorie</h3>

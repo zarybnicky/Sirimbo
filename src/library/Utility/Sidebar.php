@@ -21,7 +21,7 @@ class Sidebar
         if ($module != '' && !Permissions::check($module, $permission))
             return;
 
-        $active = stripos(Request::getURI(), $link) === 0;
+        $active = stripos(Request::getURL(), $link) === 0;
         $r = '<span class="arrow">.</span>' . $text;
         if ($active)
             return $this->blackBox($r . '<span class="point">.</span>', 'sidebar current', $link);

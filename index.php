@@ -1,5 +1,4 @@
 <?php
-use TKOlomouc;
 /*/sitewide OFF switch
 if (isset($_GET['file'])) {
     if (stripos($_GET['file'], 'cookie_set') !== false) {
@@ -24,10 +23,9 @@ session_regenerate_id();
 
 
 //PSR generic autoloader
-require __DIR__ . DIRECTORY_SEPARATOR . 'lib'
-    . DIRECTORY_SEPARATOR . 'Psr4Autoloader.php';
+require __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'autoload.php';
 
-$autoloader = new \Psr\Autoload\Psr4Autoloader();
+$autoloader = new Psr4Autoloader();
 
 $autoloader->addNamespace(
     'TKOlomouc',
@@ -37,22 +35,16 @@ $autoloader->addNamespace(
     'TKOlomouc',
     __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'application'
 );
-
 $autoloader->register();
 
 
-//Twig-specific autoloader
-require __DIR__ . DIRECTORY_SEPARATOR . 'lib'
-    . DIRECTORY_SEPARATOR . 'Twig' . DIRECTORY_SEPARATOR . 'Autoloader.php';
-
-Twig_Autoloader::register();
+//Composer autoloader
+require 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
 
 //Project specific settings
-require __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'application'
-    . DIRECTORY_SEPARATOR . 'constants.php';
-require SETTINGS . DIRECTORY_SEPARATOR . 'db.php';
-
+require __DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'constants.php';
+require __DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'db.php';
 
 ini_set('session.use_trans_sid', 0);
 ini_set('session.use_only_cookies', 1);
@@ -62,15 +54,15 @@ mb_internal_encoding('UTF-8');
 date_default_timezone_set('Europe/Paris');
 
 function errorHandler($severity, $message, $filepath, $line) {
-    if ($severity & (E_STRICT | E_DEPRECATED)) {
-        return false;
-    }
+    //if ($severity & (E_STRICT | E_DEPRECATED)) {
+    //    return false;
+    //}
     ob_end_clean();
-    if (Request::getURL() == 'error') {
-        Log::write("Recursive error message!");
+    if (TKOlomouc\Utility\Request::getURL() == 'error') {
+        TKOlomouc\Utility\Log::write("Recursive error message!");
         die('Fatal error: Rekurzivní smyčka přesměrování!');
     }
-    Log::write("$filepath, line $line ($severity): $message");
+    TKOlomouc\Utility\Log::write("$filepath, line $line ($severity): $message");
     header('Location: /error?id=script_fatal');
     return true;
 }
@@ -78,37 +70,40 @@ set_error_handler('errorHandler');
 
 if (TISK) {
     ;
-} elseif (!session('page_id')) {
-    session('page_id', $_SERVER['REQUEST_URI']);
-} elseif (!session('referer_id') || $_SERVER['REQUEST_URI'] != session('page_id')) {
-    session('referer_id', session('page_id'));
-    session('page_id', $_SERVER['REQUEST_URI']);
+} elseif (!TKOlomouc\Utility\Miscellaneous::session('page_id')) {
+    TKOlomouc\Utility\Miscellaneous::session('page_id', $_SERVER['REQUEST_URI']);
+} elseif (!session('referer_id') || $_SERVER['REQUEST_URI']
+    != TKOlomouc\Utility\Miscellaneous::session('page_id')
+) {
+    TKOlomouc\Utility\Miscellaneous::session('referer_id', TKOlomouc\Utility\Miscellaneous::session('page_id'));
+    TKOlomouc\Utility\Miscellaneous::session('page_id', $_SERVER['REQUEST_URI']);
 }
 
-Request::setDefault('home');
-Request::setURL(get('file'));
-Request::setURI($_SERVER['REQUEST_URI']);
-Request::setReferer(session('referer_id'));
+TKOlomouc\Utility\Request::setDefault('home');
+TKOlomouc\Utility\Request::setURL($_SERVER['REQUEST_URI']);
+TKOlomouc\Utility\Request::setReferer(TKOlomouc\Utility\Miscellaneous::session('referer_id'));
 
-if (session('login') === null) {
-    if (post('action') == 'login' || post('action') == 'enter') {
-        post('pass', TKOlomouc\Utility\User::crypt(post('pass')));
+if (TKOlomouc\Utility\Miscellaneous::session('login') === null) {
+    if (TKOlomouc\Utility\Miscellaneous::post('action') == 'login'
+        || TKOlomouc\Utility\Miscellaneous::post('action') == 'enter'
+    ) {
+        TKOlomouc\Utility\Miscellaneous::post('pass', TKOlomouc\Utility\User::crypt(TKOlomouc\Utility\Miscellaneous::post('pass')));
 
-        if (!User::login(post('login'), post('pass'))) {
-            Helper::get()->redirect('/login', 'Špatné jméno nebo heslo!', true);
-        } elseif (get('return')) {
-            Helper::get()->redirect(get('return'));
+        if (!TKOlomouc\Utility\User::login(TKOlomouc\Utility\Miscellaneous::post('login'), TKOlomouc\Utility\Miscellaneous::post('pass'))) {
+            TKOlomouc\Utility\Response::redirect('/login', 'Špatné jméno nebo heslo!', true);
+        } elseif (TKOlomouc\Utility\Miscellaneous::get('return')) {
+            TKOlomouc\Utility\Response::redirect(TKOlomouc\Utility\Miscellaneous::get('return'));
         } else {
-            Helper::get()->redirect('/member/home');
+            TKOlomouc\Utility\Response::redirect('/member/home');
         }
     }
 } else {
-    User::loadUser(session('id'));
-    if (session('invalid_data') === '1'
-        && Request::getURL() !== 'member/profil/edit'
-        && Request::getURL() !== 'logout'
+    TKOlomouc\Utility\User::loadUser(TKOlomouc\Utility\Miscellaneous::session('id'));
+    if (TKOlomouc\Utility\Miscellaneous::session('invalid_data') === '1'
+        && TKOlomouc\Utility\Request::getURL() !== 'member/profil/edit'
+        && TKOlomouc\Utility\Request::getURL() !== 'logout'
     ) {
-        Helper::get()->redirect(
+        TKOlomouc\Utility\Response::redirect(
             '/member/profil/edit',
             'Prosím vyplňte požadované údaje.', true
         );
@@ -116,5 +111,8 @@ if (session('login') === null) {
 }
 
 $d = new TKOlomouc\Utility\Dispatcher();
-$d->dispatch(Request::getLiteralURL(), Request::getAction(), Request::getID());
-?>
+$d->dispatch(
+    TKOlomouc\Utility\Request::getLiteralURL(),
+    TKOlomouc\Utility\Request::getAction(),
+    TKOlomouc\Utility\Request::getID()
+);

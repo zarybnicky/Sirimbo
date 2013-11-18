@@ -27,7 +27,7 @@ body{
     background-repeat:no-repeat;
 }
 EOS;
-?>        
+?>
     </style>
     <link href="/style/style.css" rel="stylesheet" type="text/css" />
     <meta name="msvalidate.01" content="7BD6C8B5748FC22EF06AB3AE89900885" />
@@ -52,8 +52,8 @@ EOS;
     <div id="header">
         <a href="/home" id="homelink"></a>
         <div id="userbox">
-        <?php if (!User::isLogged()) { ?>
-            <form action="<?php Request::getURI();?>" method="post"><div>
+        <?php if (!TKOlomouc\Utility\User::isLogged()) { ?>
+            <form action="<?php TKOlomouc\Utility\Request::getURL();?>" method="post"><div>
                 <button type="submit" name="action" value="enter" style="display:none;"></button>
                 <input style="width:70px;" type="text" name="login"
                 /><input style="width:70px;" type="password" name="pass" /><br />
@@ -63,12 +63,12 @@ EOS;
             </div></form>
         <?php
         } else {
-            echo User::getUserWholeName(), "<br />";
+            echo TKOlomouc\Utility\User::getUserWholeName(), "<br />";
             echo '<a href="/member/profil/platby">Platby</a> ',
                 '<a href="/member/profil">Profil</a> ',
                 '<a href="/logout">Odhlásit se</a>';
         }
-        $section = Request::getSection('home');
+        $section = TKOlomouc\Utility\Request::getSection('home');
         ?>
         </div>
         <div id="logo">
@@ -97,11 +97,11 @@ EOS;
         <div class="container">
             <div id="sidebar">
             <?php
-                View::$controller->sidebar();
+                TKOlomouc\Utility\View::$controller->sidebar();
             ?>
             </div>
             <div id="content">
                 <div style="float:right;clear:both;">
-                    <a href="<?php echo '/', Request::getURL(), '?', http_build_query(array_merge($_GET, array('view' => 'tisk'))); ?>">Tisknout</a>
+                    <a href="<?php echo '/', TKOlomouc\Utility\Request::getURL(), '?', http_build_query(array_merge($_GET, array('view' => 'tisk'))); ?>">Tisknout</a>
                 </div>
                 <div style="clear:both;"></div>

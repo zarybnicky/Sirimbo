@@ -5,15 +5,13 @@ use TKOlomouc\View\Partial;
 
 class ColorSelect extends Partial
 {
-    private final $file = 'Helper/ColorSelect.tpl';
+    private $file = 'src/library/Template/Helper/ColorSelect.tpl';
 
     private $field = '';
     private $value = '';
 
-    public function __construct($twig, $field = null, $value = null)
+    public function __construct($field = null, $value = null)
     {
-        parent::__construct($twig);
-
         if ($field !== null) {
             $this->field = $field;
         }

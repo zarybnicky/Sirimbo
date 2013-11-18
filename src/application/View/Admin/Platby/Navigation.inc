@@ -1,6 +1,7 @@
 <?php
 function _isActive($href) {
-    return strripos(Request::getLiteralURL(), $href) !== (strlen(Request::getLiteralURL()) - strlen($href));
+    return strripos(TKOlomouc\Utility\Request::getLiteralURL(), $href)
+        !== (strlen(TKOlomouc\Utility\Request::getLiteralURL()) - strlen($href));
 }
 function _getItem($name, $href) {
     $href = 'admin/' . $href;

@@ -1,9 +1,4 @@
-{% extends parent %}
-
-{% block content %}
-    {% parent() %}
-    <h1>
-        {{ header }}
-    </h1>
-    {{ notice }}
-{% endblock %}
+<h1>
+    <?= $this->header ?>
+</h1>
+<?= $this->notice ?>

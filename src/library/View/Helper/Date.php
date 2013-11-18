@@ -26,10 +26,8 @@ class Date extends Partial
     private $isPost      = true;
     private $displayType = 'text';
 
-    public function __construct($twig, $d = null)
+    public function __construct($d = null)
     {
-        parent::__construct($twig);
-
         $this->fromYear((int) date('Y') - 75);
         $this->toYear((int) date('Y') + 5);
 

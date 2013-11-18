@@ -12,11 +12,9 @@
 
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
 
-    {% block style %}
-    <link href="/style/style-tisk.css" rel="stylesheet" type="text/css" />
-    {% endblock style %}
+    <link href="/style/style.css" rel="stylesheet" type="text/css" />
 
-    <title>{% block title %}TK Olymp Olomouc{% endblock %}</title>
+    <title>TK Olymp Olomouc</title>
 
     <meta property="fb:app_id" content="132983570203245"/>
 

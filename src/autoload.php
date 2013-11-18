@@ -1,5 +1,4 @@
 <?php
-namespace Psr\Autoload;
 
 /**
  * An example of a general-purpose implementation that includes the optional

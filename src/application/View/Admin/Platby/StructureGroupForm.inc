@@ -1,5 +1,5 @@
 <?php
-$mainForm = (new TableHelper())->table()
+$mainForm = (new TKOlomouc\View\Helper\Table())->table()
     ->column('desc', '', 'r')
     ->column('value', 'Hodnota')
     ->data(array(
@@ -19,7 +19,7 @@ $mainForm = (new TableHelper())->table()
         )
     ));
 if (!empty($this->category)) {
-    $categoryForm = (new TableHelper())->table()
+    $categoryForm = (new TKOlomouc\View\Helper\Table())->table()
         ->column('buttons', '', '', 'width:75px')
         ->column('name', 'Jméno')
         ->column('specific', 'Specifický<br/>symbol')
@@ -32,17 +32,17 @@ if (!empty($this->category)) {
         ->data($this->category);
 }
 if (!empty($this->categorySelect)) {
-    $categorySelectBox = (new SelectHelper())->select('category')
+    $categorySelectBox = (new TKOlomouc\View\Helper\Select())->select('category')
         ->options($this->categorySelect);
 }
 if (!empty($this->skupiny)) {
-    $skupinyForm = (new TableHelper())->table()
+    $skupinyForm = (new TKOlomouc\View\Helper\Table())->table()
         ->column('buttons', '', '', 'width:75px')
         ->column('name', 'Jméno')
         ->data($this->skupiny);
 }
 if (!empty($this->skupinySelect)) {
-    $skupinySelectBox = (new SelectHelper())->select('skupiny')
+    $skupinySelectBox = (new TKOlomouc\View\Helper\Select())->select('skupiny')
         ->options($this->skupinySelect);
 }
 ?>
@@ -52,7 +52,9 @@ if (!empty($this->skupinySelect)) {
 <?php echo '<h3>', ($this->action == 'add' ? 'Přidat kategorii' : 'Upravit kategorii'), '</h3>';?>
 <form action="" method="post">
     <?php echo $mainForm, getReturnInput();?>
-    <button name="action" value="confirm">Uložit</button>&nbsp;<a href="<?php echo Request::getReferer();?>">Zpět</a><br/><br/>
+    <button name="action" value="confirm">Uložit</button>
+    <a href="<?php echo TKOlomouc\Utility\Request::getReferer();?>">Zpět</a>
+    <br/><br/>
 </form>
 <?php if ($this->action != 'add') : ?>
     <h3>Specifické symboly</h3>

@@ -5,6 +5,6 @@ abstract class Partial extends ViewAbstract
 {
     protected function renderTemplate($filename, array $context)
     {
-        return $this->twigEnvironment->render($filename, $context);
+        return parent::renderTemplate($filename, $context);
     }
 }

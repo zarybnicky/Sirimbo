@@ -4,7 +4,6 @@ namespace TKOlomouc\Utility;
 class Request
 {
     private static $_default = 'home';
-    private static $_uri;
     private static $_url;
     private static $_rawUrlParts;
     private static $_urlPartsLiteral;
@@ -16,10 +15,6 @@ class Request
     public static function setDefault($_default)
     {
         self::$_default = $_default;
-    }
-    public static function setURI($_uri)
-    {
-        self::$_uri = $_uri;
     }
     public static function setURL($_url)
     {
@@ -63,10 +58,6 @@ class Request
                 : null);
     }
 
-    public static function getURI()
-    {
-        return self::$_uri;
-    }
     public static function getURL()
     {
         return self::$_url;
