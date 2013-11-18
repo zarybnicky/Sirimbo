@@ -30,7 +30,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
                 }
         	    break;
         }
-        $this->_displayOverview();
+        $this->_displayOverview($id);
     }
     public function add($id = null)
     {
@@ -144,7 +144,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
         );
     }
 
-    private function _displayOverview()
+    private function _displayOverview($id)
     {
         $data = DBGalerie::getFotky($id);
         foreach($data as &$item) {
