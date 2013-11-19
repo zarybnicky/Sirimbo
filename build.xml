@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project name="TKOlomouc" default="build" basedir=".">
-    <property name="basedir" value="${project.basedir}" />
     <property name="threads" value="2"/>
+	<property name="basedir" value="${project.basedir}" />
 	
-    <target name="build" depends="clean,try-parallel,phpunit,phpcb" />
+    <target name="build" depends="prepare,try-parallel,phpunit,phpcb" />
 	
     <target name="run-parallel">
             <parallel threadCount="${threads}">
