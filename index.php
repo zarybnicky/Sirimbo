@@ -21,26 +21,8 @@ if (!isset($_COOKIE['off_mode'])) {
 session_start();
 session_regenerate_id();
 
-
-//PSR generic autoloader
-require __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'autoload.php';
-
-$autoloader = new Psr4Autoloader();
-
-$autoloader->addNamespace(
-    'TKOlomouc',
-    __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'library'
-);
-$autoloader->addNamespace(
-    'TKOlomouc',
-    __DIR__ . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'application'
-);
-$autoloader->register();
-
-
-//Composer autoloader
-require 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-
+//Project autoloader
+require 'src' . DIRECTORY_SEPARATOR . 'autoload.php';
 
 //Project specific settings
 require __DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'constants.php';
