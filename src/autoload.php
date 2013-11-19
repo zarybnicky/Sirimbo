@@ -1,5 +1,5 @@
 <?php
-require 'Psr4Autoloader.php';
+require __DIR__ . DIRECTORY_SEPARATOR . 'Psr4Autoloader.php';
 
 //PSR generic autoloader
 $autoloader = new Psr4Autoloader();
@@ -15,4 +15,5 @@ $autoloader->addNamespace(
 $autoloader->register();
 
 //Composer autoloader
-require '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+require __DIR__ . DIRECTORY_SEPARATOR
+    . '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';

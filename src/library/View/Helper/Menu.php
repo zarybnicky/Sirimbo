@@ -10,18 +10,19 @@ class Menu extends Partial
     private $float = 'right';
     private $data  = array();
 
-    const FLOAT = array(
-        0 => 'none',
-        1 => 'left',
-        2 => 'right'
-    );
     const FLOAT_NONE  = 'none';
     const FLOAT_LEFT  = 'left';
     const FLOAT_RIGHT = 'right';
 
+    private $float_types = array(
+        0 => self::FLOAT_NONE,
+        1 => self::FLOAT_LEFT,
+        2 => self::FLOAT_RIGHT
+    );
+
     public function float($float)
     {
-        if(!in_array($float, self::FLOAT)) {
+        if(!in_array($float, $this->float_types)) {
             $float = self::FLOAT_NONE;
         }
 
