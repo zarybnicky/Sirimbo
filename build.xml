@@ -16,9 +16,9 @@
     </target>
     <target name="tasks">
             <phingcall target="pdepend" />
-            <phingcall target="phpmd" />
+            <phingcall target="phpmd-ci" />
             <phingcall target="phpcpd" />
-            <phingcall target="phpcs" />
+            <phingcall target="phpcs-ci" />
             <phingcall target="phpdox" />
             <phingcall target="phploc" />
     </target>
