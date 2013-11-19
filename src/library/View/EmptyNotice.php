@@ -5,7 +5,7 @@ use TKOlomouc\Utility\Miscellaneous;
 
 class EmptyNotice extends ViewAbstract
 {
-    private final $filename = 'EmptyNotice.tpl';
+    private $filename = 'EmptyNotice.tpl';
     private $header;
     private $notice;
 

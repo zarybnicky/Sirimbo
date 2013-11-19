@@ -7,11 +7,11 @@ class Form
     private $messages = array();
     private $fields   = array();
 
-    private final $regexpDate     = '/^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/i';
-    private final $regexpEmail    = '/^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i';
-    private final $regexpPhone    = '/^((\+|00)\d{3})?( ?\d{3}){3}$/';
-    private final $regexpLogin    = '/^[A-Z0-9_]{3,20}$/i';
-    private final $regexpPassword = '/^[A-Z0-9_]{6,32}$/i';
+    private $regexpDate     = '/^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/i';
+    private $regexpEmail    = '/^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i';
+    private $regexpPhone    = '/^((\+|00)\d{3})?( ?\d{3}){3}$/';
+    private $regexpLogin    = '/^[A-Z0-9_]{3,20}$/i';
+    private $regexpPassword = '/^[A-Z0-9_]{6,32}$/i';
 
     function isValid()
     {

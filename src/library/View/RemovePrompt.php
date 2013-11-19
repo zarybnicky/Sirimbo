@@ -3,7 +3,7 @@ namespace TKOlomouc\View;
 
 class RemovePrompt extends ViewAbstract
 {
-    private final $filename = '';
+    private $filename = '';
     private $header;
     private $prompt;
     private $data = array();
