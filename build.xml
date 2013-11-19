@@ -19,7 +19,7 @@
             <phingcall target="phpmd" />
             <phingcall target="phpcpd" />
             <phingcall target="phpcs" />
-            <phingcall target="phpdoc" />
+            <phingcall target="phpdox" />
             <phingcall target="phploc" />
     </target>
     <target name="try-parallel"
@@ -57,13 +57,12 @@
     </target>
     
     <target name="lint" description="Perform syntax check of sourcecode files">
-        <apply executable="php" failonerror="true">
+        <apply executable="php">
             <arg value="-l" />
             
             <fileset dir="${basedir}/src">
                 <include name="**/*.php" />
                 <include name="**/*.inc" />
-                <modified />
             </fileset>
         </apply>
     </target>
@@ -79,13 +78,13 @@
     </target>
     
     <target name="pdepend" description="Calculate software metrics using PHP_Depend">
-     <exec executable="pdepend">
-      <arg value="--jdepend-xml=${basedir}/build/logs/jdepend.xml" />
-      <arg value="--jdepend-chart=${basedir}/build/pdepend/dependencies.svg" />
-      <arg value="--overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg" />
-      <arg value="--ignore=${basedir}/src/tests" />
-      <arg path="${basedir}/src" />
-     </exec>
+        <exec executable="pdepend">
+            <arg value="--jdepend-xml=${basedir}/build/logs/jdepend.xml" />
+            <arg value="--jdepend-chart=${basedir}/build/pdepend/dependencies.svg" />
+            <arg value="--overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg" />
+            <arg value="--ignore=${basedir}/src/tests" />
+            <arg path="${basedir}/src" />
+        </exec>
     </target>
     
     <target name="phpmd"
@@ -150,7 +149,7 @@
     </target>
     
     <target name="phpunit" description="Run unit tests with PHPUnit">
-        <exec executable="phpunit" failonerror="true">
+        <exec executable="phpunit">
             <arg value="--log-junit" />
             <arg path="${basedir}/build/logs/junit.xml" />
             <arg value="--coverage-clover" />
