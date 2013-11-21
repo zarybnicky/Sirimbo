@@ -154,7 +154,7 @@
             <arg path="${basedir}/build/logs/junit.xml" />
             <arg value="--coverage-clover" />
             <arg path="${basedir}/build/logs/clover.xml" />
-            <arg value="-" />
+            <arg value="-c" />
             <arg path="${basedir}/src/tests/phpunit.xml" />
             <arg value="${basedir}/src/tests" />
         </exec>
