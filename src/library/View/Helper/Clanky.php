@@ -58,7 +58,7 @@ class Clanky extends Partial
         /*
         if ($this->data === null) {
             $input = DBAktuality::getAktuality(AKTUALITY_CLANKY);
-            foreach($input as $item) {
+            foreach ($input as $item) {
                 $this->addData($item);
             }
         }

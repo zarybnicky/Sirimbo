@@ -34,10 +34,11 @@ class Dokumenty extends Admin
                 break;
 
             case 'remove':
-                if (!is_array(post('dokumenty'))) break;
-                $this->redirect(
-                    '/admin/dokumenty/remove?' . http_build_query(array('u' => post('dokumenty')))
-                );
+                if (is_array(post('dokumenty'))) {
+                    $this->redirect(
+                        '/admin/dokumenty/remove?' . http_build_query(array('u' => post('dokumenty')))
+                    );
+                }
                 break;
         }
 
@@ -141,7 +142,7 @@ class Dokumenty extends Admin
         return $form->isValid() ? true : $form;
     }
 
-    private function processSave()
+    private function processUpload()
     {
         if (empty($_FILES)) {
             return;

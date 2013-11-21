@@ -24,7 +24,7 @@ class DBDokumenty extends Adapter
             FROM dokumenty
             LEFT JOIN users ON d_kdo=u_id
             WHERE d_id IN (';
-        for($i = 0; $i < count($ids); $i++) {
+        for ($i = 0; $i < count($ids); $i++) {
             $query .= "'{$ids[$i]}'";
             if ($i + 1 < count($ids)) {
                 $query .= ',';

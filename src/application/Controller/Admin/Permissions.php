@@ -25,11 +25,11 @@ class Permissions extends Admin
                 }
                 break;
             case 'remove':
-                if (!is_array(post('permissions'))) {
-                    break;
+                if (is_array(post('permissions'))) {
+                    $this->redirect(
+                        '/admin/permissions/remove?' . http_build_query(array('u' => post('permissions')))
+                    );
                 }
-                $url = '/admin/permissions/remove?';
-                $this->redirect('/admin/permissions/remove?' . http_build_query(array('u' => post('permissions'))));
                 break;
         }
         $data = DBPermissions::getGroups();
@@ -52,9 +52,9 @@ class Permissions extends Admin
 
     public function add($id = null)
     {
-        if (empty($_POST) || is_object($f = $this->_checkData())) {
+        if (empty($_POST) || is_object($form = $this->checkData())) {
             if (!empty($_POST)) {
-                $this->redirect()->setMessage($f->getMessages());
+                $this->redirect()->setMessage($form->getMessages());
             }
             $this->render(
                 'src/application/View/Admin/Permissions/Form.inc',
@@ -67,8 +67,9 @@ class Permissions extends Admin
             return;
         }
         $permissions = array();
-        foreach (Settings::$permissions as $name => $item)
+        foreach (Settings::$permissions as $name => $item) {
             $permissions[$name] = post($name);
+        }
         DBPermissions::addGroup(post('name'), post('description'), $permissions);
 
         $this->redirect(post('referer') ? post('referer') : '/admin/permissions', 'Úroveň úspěšně přidána');
@@ -83,7 +84,7 @@ class Permissions extends Admin
             );
         }
 
-        if (empty($_POST) || is_object($f = $this->_checkData())) {
+        if (empty($_POST) || is_object($f = $this->checkData())) {
             if (empty($_POST)) {
                 post('name', $data['pe_name']);
                 post('description', $data['pe_description']);
@@ -148,7 +149,7 @@ class Permissions extends Admin
         );
     }
 
-    private function _checkData()
+    private function checkData()
     {
         $f = new Form();
 

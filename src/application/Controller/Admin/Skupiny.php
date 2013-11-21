@@ -26,10 +26,11 @@ class Skupiny extends Admin
                 }
                 break;
             case 'remove':
-                if (!is_array(post('data'))) {
-                    break;
+                if (is_array(post('data'))) {
+                    $this->redirect(
+                        '/admin/skupiny/remove?' . http_build_query(array('u' => post('data')))
+                    );
                 }
-                $this->redirect('/admin/skupiny/remove?' . http_build_query(array('u' => post('data'))));
                 break;
         }
         $data = DBSkupiny::get();
@@ -138,14 +139,14 @@ class Skupiny extends Admin
 
     public function remove($id = null)
     {
-        if (!$id || !($data = DBSkupiny::getSingle($id)))
+        if (!$id || !($data = DBSkupiny::getSingle($id))) {
             $this->redirect('/admin/skupiny', 'Skupina s takovým ID neexistuje');
-
+        }
         if (post('action') == 'unlink') {
-            $f = $this->getLinkedSkupinaObjects($id);
+            $linked = $this->getLinkedSkupinaObjects($id);
 
             $groupCount = 0;
-            foreach ($f['groups'] as $data) {
+            foreach ($linked['groups'] as $data) {
                 DBSkupiny::removeChild($id, $data['pg_id']);
                 ++$groupCount;
             }
@@ -221,21 +222,22 @@ class Skupiny extends Admin
     {
         $group = DBSkupiny::getSingleWithGroups($id);
 
-        if (empty($group))
+        if (empty($group)) {
             return array();
-        else
+        } else {
             return array('groups' => $group);
+        }
     }
 
     private function checkPost()
     {
-        $f = new Form();
+        $form = new Form();
 
-        $f->checkNotEmpty(post('name'), 'Zadejte prosím nějaké jméno.');
-        $f->checkNotEmpty(post('desc'), 'Zadejte prosím nějaký popis.');
-        $f->checkRegexp(post('color'), '/#[0-9a-f]{6}/i', 'Zadejte prosím platnou barvu.');
+        $form->checkNotEmpty(post('name'), 'Zadejte prosím nějaké jméno.');
+        $form->checkNotEmpty(post('desc'), 'Zadejte prosím nějaký popis.');
+        $form->checkRegexp(post('color'), '/#[0-9a-f]{6}/i', 'Zadejte prosím platnou barvu.');
 
-        return $f->isValid() ? true : $f;
+        return $form->isValid() ? true : $form;
     }
 
     private function getEditLink($link)

@@ -22,7 +22,7 @@ class Menu extends Partial
 
     public function float($float)
     {
-        if(!in_array($float, $this->float_types)) {
+        if (!in_array($float, $this->float_types)) {
             $float = self::FLOAT_NONE;
         }
 
@@ -46,7 +46,7 @@ class Menu extends Partial
         return $this;
     }
 
-    function render()
+    public function render()
     {
         return $this->renderTemplate(
             $this->file,
@@ -57,7 +57,7 @@ class Menu extends Partial
         );
     }
 
-    function __toString()
+    public function __toString()
     {
         return $this->render();
     }

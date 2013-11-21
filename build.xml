@@ -92,7 +92,7 @@
         <exec executable="phpmd">
             <arg path="${basedir}/src" />
             <arg value="text" />
-            <arg value="cleancode,codesize,design,naming,unusedcode" />
+            <arg value="codesize,design,naming,unusedcode" />
             <arg value="--exclude" />
             <arg value="${basedir}/src/tests" />
         </exec>
@@ -102,7 +102,7 @@
         <exec executable="phpmd">
             <arg path="${basedir}/src" />
             <arg value="xml" />
-            <arg value="cleancode,codesize,design,naming,unusedcode" />
+            <arg value="codesize,design,naming,unusedcode" />
             <arg value="--reportfile" />
             <arg value="${basedir}/build/logs/pmd.xml" />
             <arg value="--exclude" />

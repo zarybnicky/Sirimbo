@@ -30,4 +30,3 @@ class EmptyNotice extends ViewAbstract
         );
     }
 }
-?>

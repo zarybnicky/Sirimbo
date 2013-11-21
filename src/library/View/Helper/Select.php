@@ -65,8 +65,8 @@ class Select extends Partial
 
     public function options(
         array $options,
-        $overwrite     = false,
-        $keyAsValue    = true,
+        $overwrite = false,
+        $keyAsValue = true,
         $isAssociative = true
     ) {
         if ($overwrite) {
@@ -110,4 +110,3 @@ class Select extends Partial
         );
     }
 }
-?>

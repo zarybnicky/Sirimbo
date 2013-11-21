@@ -19,6 +19,6 @@ class Login extends ControllerAbstract
 
     public function sidebar()
     {
-    	;
+        ;
     }
 }

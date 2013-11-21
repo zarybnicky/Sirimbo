@@ -86,34 +86,34 @@ class Fotogalerie extends ControllerAbstract
 
         $level_prev = 0;
         foreach ($dirs as $dir) {
-            if ($dir['gd_hidden'] == '1')
+            if ($dir['gd_hidden'] == '1') {
                 continue;
-
+            }
             if ($dir['gd_level'] > $level_prev) {
                 echo '<ul class="fotolist">';
             } elseif ($dir['gd_level'] == $level_prev) {
                 echo '</li>';
             } else {
-                for($i = 0; $i < ($level_prev - $dir['gd_level']); $i++)
+                for ($i = 0; $i < ($level_prev - $dir['gd_level']); $i++)
                     echo '</li></ul>';
                 echo '</li>';
             }
-            if ($dir['gd_id'] == 0)
+            if ($dir['gd_id'] == 0) {
                 $link = "/fotogalerie";
-            else
+            } else {
                 $link = "/fotogalerie/" . $dir['gd_id'];
-
-            if ($dir['gd_id'] == Request::getID())
+            }
+            if ($dir['gd_id'] == Request::getID()) {
                 echo '<li><a class="current" href="', $link, '">';
-            else
+            } else {
                 echo '<li><a href="', $link, '">';
-
+            }
             echo '<img src="/style/directory.png" alt="Složka" />', $dir['gd_name'], '</a>';
             $level_prev = $dir['gd_level'];
         }
-        for($i = 0; $i < $level_prev; $i++)
+        for ($i = 0; $i < $level_prev; $i++) {
             echo '</li></ul>';
-
+        }
         echo '</li></ul>';
     }
 }

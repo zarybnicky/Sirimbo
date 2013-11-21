@@ -1,5 +1,6 @@
 <?php
 use TKOlomouc\Utility\Request;
+
 function _isActive($href) {
     return strripos(Request::getLiteralURL(), $href) !== (strlen(Request::getLiteralURL()) - strlen($href));
 }

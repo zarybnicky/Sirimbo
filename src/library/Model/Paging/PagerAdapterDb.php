@@ -9,14 +9,15 @@ class PagerAdapterDb implements PagerAdapterInterface
     private $dbAdapter;
     private $config;
 
-    function __construct($classname, $options = null) {
+    public function __construct($classname, $options = null)
+    {
         $this->setDatabase($classname);
         if ($options !== null) {
             $this->config = $options;
         }
     }
 
-    function setDatabase($classname)
+    public function setDatabase($classname)
     {
         if (!(call_user_func(array($classname, 'getInstance')) instanceof Pagable)) {
             throw new ViewException('Database does not implement interface Pageable');
@@ -24,7 +25,7 @@ class PagerAdapterDb implements PagerAdapterInterface
         $this->dbAdapter = $classname;
     }
 
-    function page($offset, $lenght, $options = null)
+    public function page($offset, $lenght, $options = null)
     {
         if ($this->dbAdapter === null) {
             return array();
@@ -35,7 +36,7 @@ class PagerAdapterDb implements PagerAdapterInterface
         );
     }
 
-    function count($options = null)
+    public function count($options = null)
     {
         if ($this->dbAdapter === null) {
             return 0;

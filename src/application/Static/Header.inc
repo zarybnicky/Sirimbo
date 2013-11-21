@@ -13,10 +13,15 @@
     <style type="text/css">
 <?php
     $date = (int) date("md");
-    if ($date < 320) $dir = 'zima';
-    else if ($date < 621) $dir = 'jaro';
-    else if ($date < 922) $dir = 'leto';
-    else $dir = 'podzim';
+    if ($date < 320) {
+        $dir = 'zima';
+    } elseif ($date < 621) {
+        $dir = 'jaro';
+    } elseif ($date < 922) {
+        $dir = 'leto';
+    } else {
+        $dir = 'podzim';
+    }
     echo <<<EOS
 body{
     background-color:white;

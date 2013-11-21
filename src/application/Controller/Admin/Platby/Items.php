@@ -103,8 +103,12 @@ class Items extends Platby
                 DBPlatbyItem::remove($id);
                 if ($item['pi_id_raw']) {
                     DBPlatbyRaw::update(
-                        $item['pi_id_raw'], $itemRaw['pr_raw'],
-                        $itemRaw['pr_hash'], '0', '1');
+                        $item['pi_id_raw'],
+                        $itemRaw['pr_raw'],
+                        $itemRaw['pr_hash'],
+                        '0',
+                        '1'
+                    );
                 }
             }
             $this->redirect('/admin/platby/items', 'Platby odebrány');

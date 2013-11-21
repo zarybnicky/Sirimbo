@@ -9,7 +9,7 @@
             <td>Jméno<br/>souboru</td>
             <td>Kategorie</td>
         </tr>
-        <?php foreach($this->dokumentyCurrent as $item) : ?>
+        <?php foreach ($this->dokumentyCurrent as $item) : ?>
         <tr>
             <td>
                 <?= $item['name'] ?>

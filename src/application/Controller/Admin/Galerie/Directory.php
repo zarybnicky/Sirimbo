@@ -35,7 +35,7 @@ class Directory extends Galerie
                         . http_build_query(array('u' => post('galerie')))
                     );
                 }
-            break;
+                break;
         }
         $this->displayOverview();
     }
@@ -161,7 +161,7 @@ class Directory extends Galerie
     private function displayOverview()
     {
         $data = DBGalerie::getFotky($id);
-        foreach($data as &$item) {
+        foreach ($data as &$item) {
             $newData = array(
                 'id'           => $item['gf_id'],
                 'checkBox'     => getCheckbox('galerie[]', $item['gf_id']),

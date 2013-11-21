@@ -8,11 +8,13 @@ class Error extends ControllerAbstract
         if (!get('id')) {
             get('id', '');
         }
-        function ucfirstUser(&$str, $key) {
-            $str = ucfirst($str);
-        }
         $array = explode('_', get('id'));
-        array_walk($array, 'ucfirstUser');
+        array_walk(
+            $array,
+            function (&$str, $key) {
+                $str = ucfirst($str);
+            }
+        );
         $id = implode('', $array);
         $file = ERROR . DIRECTORY_SEPARATOR . $id . '.inc';
 
@@ -35,6 +37,6 @@ class Error extends ControllerAbstract
 
     public function sidebar()
     {
-    	;
+        ;
     }
 }

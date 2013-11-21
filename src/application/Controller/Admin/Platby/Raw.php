@@ -27,8 +27,9 @@ class Raw extends Platby
         $workDir = new \DirectoryIterator(self::TEMP_DIR);
         $workDir->rewind();
         foreach ($workDir as $fileInfo) {
-            if (!$fileInfo->isFile())
+            if (!$fileInfo->isFile()) {
                 continue;
+            }
             $this->processCsv($fileInfo->getPathname());
             $this->redirect()->setMessage('Soubor ' . $fileInfo->getFilename() . ' byl zpracován.');
         }
@@ -100,15 +101,19 @@ class Raw extends Platby
             $amount = $columns['amount'];
         }
         if (!$this->checkHeaders($headers, $specific, $variable, $date, $amount)) {
-            $this->redirect('/admin/platby/raw/select_columns?path=' . str_replace(self::TEMP_DIR, '', $path),
-                    'Skript nemohl rozpoznat sloupce nutné pro zařazení plateb, je potřeba udělat to ručně. (soubor: ' . $path . ')');
+            $this->redirect(
+                '/admin/platby/raw/select_columns?path=' . str_replace(self::TEMP_DIR, '', $path),
+                'Skript nemohl rozpoznat sloupce nutné pro zařazení plateb,'
+                . ' je potřeba udělat to ručně. (soubor: ' . $path . ')'
+            );
         }
         $userLookup = $this->getUserLookup(false);
         $categoryLookup = $this->getCategoryLookup(true, true, false);
 
         foreach ($parser as $array) {
-            if (!$array)
+            if (!$array) {
                 continue;
+            }
             $serialized = serialize($array);
             $hash = md5($serialized);
 

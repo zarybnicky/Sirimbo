@@ -179,9 +179,8 @@ class Manual extends Platby
             }
             DBPlatbyRaw::update(post('id'), $current['pr_raw'], $current['pr_hash'], '1', '0');
             DBPlatbyItem::insert($item->variable, $item->category_id, post('id'), $item->amount, $item->date, $item->prefix);
-        } elseif (post('action') == 'discard') {
-            if (!$current['pr_discarded'])
-                DBPlatbyRaw::update(post('id'), $current['pr_raw'], $current['pr_hash'], '0', '1');
+        } elseif (post('action') == 'discard' && !$current['pr_discarded']) {
+            DBPlatbyRaw::update(post('id'), $current['pr_raw'], $current['pr_hash'], '0', '1');
         } elseif (post('action') == 'skip') {
             DBPlatbyRaw::skip(post('id'));
         } else {

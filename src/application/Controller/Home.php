@@ -18,6 +18,6 @@ class Home extends ControllerAbstract
 
     public function sidebar()
     {
-    	;
+        ;
     }
 }

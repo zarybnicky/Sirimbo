@@ -35,11 +35,11 @@ class Dispatcher
             if (!($instance instanceof ControllerInterface)) {
                 throw new NotFoundRightException('Controller class "' . $class . '" not instance of Controller_Interface');
             }
-        } catch(ViewException $e) {
+        } catch (ViewException $e) {
             Log::write($e->getMessage() . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n" . $e->getTraceAsString());
             ob_clean();
             Response::redirect('/error?id=' . $e->getErrorFile());
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             Log::write($e->getMessage() . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n" . $e->getTraceAsString());
             ob_clean();
             Response::redirect('/error?id=' . (new ViewException(''))->getErrorFile());
@@ -63,11 +63,11 @@ class Dispatcher
     {
         try {
             include $filename;
-        } catch(ViewException $e) {
+        } catch (ViewException $e) {
             Log::write($e->getMessage() . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n" . $e->getTraceAsString());
             ob_clean();
             Response::redirect('/error?id=' . $e->getErrorFile());
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             Log::write($e->getMessage() . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n" . $e->getTraceAsString());
             ob_clean();
             Response::redirect('/error?id=' . (new ViewException(''))->getErrorFile());
@@ -91,23 +91,23 @@ class Dispatcher
 
         View::$controller = $this->controller;
 
-        foreach($this->preDispatch as $file) {
+        foreach ($this->preDispatch as $file) {
             $this->runScript($file);
         }
 
         try {
             $this->controller->$method($id);
-        } catch(ViewException $e) {
+        } catch (ViewException $e) {
             Log::write($e->getMessage() . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n" . $e->getTraceAsString());
             ob_clean();
             Response::redirect('/error?id=' . $e->getErrorFile());
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             Log::write($e->getMessage() . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n" . $e->getTraceAsString());
             ob_clean();
             Response::redirect('/error?id=' . (new ViewException(''))->getErrorFile());
         }
 
-        foreach($this->postDispatch as $file) {
+        foreach ($this->postDispatch as $file) {
             $this->runScript($file);
         }
     }

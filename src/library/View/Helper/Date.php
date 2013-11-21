@@ -39,7 +39,7 @@ class Date extends Partial
 
     private function updateDate(&$var, $d)
     {
-        if(!is_a($d, 'DateFormat')) {
+        if (!is_a($d, 'DateFormat')) {
             $d = new DateFormat($d);
         }
 
@@ -185,9 +185,11 @@ class Date extends Partial
             return new DateFormat(post($name));
         } elseif (post($name . '-year') && post($name . '-month')
             && post($name . '-day')) {
-            return new DateFormat(post($name . '-year') . '-' .
-                post($name . '-month') . '-' .
-                post($name . '-day'));
+            return new DateFormat(
+                post($name . '-year') . '-'
+                . post($name . '-month') . '-'
+                . post($name . '-day')
+            );
         } else {
             return new DateFormat();
         }
@@ -203,7 +205,7 @@ class Date extends Partial
             ->value($this->date ? $this->date->getDay() : null)
             ->option('00', 'Den', true);
 
-        for($i = 1; $i < 32; $i++) {
+        for ($i = 1; $i < 32; $i++) {
             $select->option(
                 ($i < 10) ? ('0' . $i) : $i,
                 $i . '.'
@@ -235,7 +237,7 @@ class Date extends Partial
             ->value($this->date ? $this->date->getYear() : null)
             ->option('0000', 'Rok', true);
 
-        for($i = $this->fromYear; $i < $this->toYear; $i++) {
+        for ($i = $this->fromYear; $i < $this->toYear; $i++) {
             $select->option($i, $i);
         }
         return $out . $select->render();

@@ -13,6 +13,6 @@ class Logout extends ControllerAbstract
 
     public function sidebar()
     {
-    	;
+        ;
     }
 }

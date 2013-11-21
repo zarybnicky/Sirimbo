@@ -97,8 +97,11 @@ class DBAnkety extends Adapter
         list($id, $jmeno, $text, $visible) =
             self::escape($id, $jmeno, $text, $visible);
 
-        $res = self::query("UPDATE ankety SET ak_jmeno='$jmeno',ak_text='$text'," .
-            "ak_visible='$visible' WHERE ak_id='$id'");
+        $res = self::query(
+            "UPDATE ankety
+            SET ak_jmeno='$jmeno',ak_text='$text',ak_visible='$visible'
+            WHERE ak_id='$id'"
+        );
         return true;
     }
 
@@ -124,8 +127,10 @@ class DBAnkety extends Adapter
     {
         list($id_rodic, $text) = self::escape($id_rodic, $text);
 
-        $res = self::query("INSERT INTO ankety_item (aki_id_rodic,aki_text,aki_pocet) VALUES " .
-            "('$id_rodic','$text','0')");
+        $res = self::query(
+            "INSERT INTO ankety_item (aki_id_rodic,aki_text,aki_pocet) VALUES
+            ('$id_rodic','$text','0')"
+        );
         return true;
     }
 
@@ -150,8 +155,11 @@ class DBAnkety extends Adapter
     {
         list($id, $ip) = self::escape($id, $ip);
 
-        $res = self::query("SELECT akp_id FROM ankety_ip" .
-            " WHERE akp_id_rodic='$id' AND akp_ip=INET_ATON('$ip')");
+        $res = self::query(
+            "SELECT akp_id
+            FROM ankety_ip
+            WHERE akp_id_rodic='$id' AND akp_ip=INET_ATON('$ip')"
+        );
         $row = self::getSingleRow($res);
 
         return !($row && $row['akp_id']);
@@ -162,8 +170,12 @@ class DBAnkety extends Adapter
         list($id, $choice, $ip) = self::escape($id, $choice, $ip);
 
         $res = self::query("UPDATE ankety_item SET aki_pocet=aki_pocet+1 WHERE aki_id='$choice'");
-        $res = self::query("INSERT INTO ankety_ip (akp_id_rodic,akp_ip) VALUES" .
-            " ('$id', INET_ATON('$ip')) ON DUPLICATE KEY UPDATE akp_timestamp=CURRENT_TIMESTAMP");
+        $res = self::query(
+            "INSERT INTO ankety_ip
+            (akp_id_rodic,akp_ip) VALUES
+            ('$id', INET_ATON('$ip'))
+            ON DUPLICATE KEY UPDATE akp_timestamp=CURRENT_TIMESTAMP"
+        );
         return true;
     }
 }

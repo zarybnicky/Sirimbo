@@ -16,11 +16,11 @@ class Dokumenty extends Member
     public function view($id = null)
     {
         $kat = get('kat');
-        if (ctype_digit($kat))
+        if (ctype_digit($kat)) {
             $dokumenty = DBDokumenty::getDokumentyByKategorie($kat);
-        else
+        } else {
             $dokumenty = DBDokumenty::getDokumenty();
-
+        }
         foreach ($dokumenty as &$item) {
             $new_data = array(
                 'id' => $item['d_id'],

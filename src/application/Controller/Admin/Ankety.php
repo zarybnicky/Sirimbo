@@ -31,10 +31,11 @@ class Ankety extends Admin
                 break;
 
             case 'remove':
-                if (!is_array(post('ankety'))) break;
-                $this->redirect(
-                    '/admin/ankety/remove?' . http_build_query(array('u' => post('ankety')))
-                );
+                if (is_array(post('ankety'))) {
+                    $this->redirect(
+                        '/admin/ankety/remove?' . http_build_query(array('u' => post('ankety')))
+                    );
+                }
                 break;
         }
         $this->displayOverview();
@@ -52,7 +53,10 @@ class Ankety extends Admin
             $this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění ankety');
         }
         $newId = DBAnkety::addAnketa(
-            User::getUserID(), post('jmeno'), post('text'), (bool) $visible
+            User::getUserID(),
+            post('jmeno'),
+            post('text'),
+            (bool) $visible
         );
 
         if ($visible) {
@@ -112,8 +116,7 @@ class Ankety extends Admin
             $this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění ankety');
         }
 
-        if (
-            $visible != $visible_prev
+        if ($visible != $visible_prev
             || post('jmeno') != $data['ak_jmeno']
             || post('text') != $data['ak_text']
         ) {
@@ -125,10 +128,11 @@ class Ankety extends Admin
         $news = new Novinky(User::getUserID());
         if (isset($changed) && $changed) {
             if ($visible) {
-                if (!$visible_prev)
+                if (!$visible_prev) {
                     $news->ankety()->add($data['ak_jmeno']);
-                else
+                } else {
                     $news->ankety()->edit($data['ak_jmeno']);
+                }
             } elseif (!$visible && $visible_prev) {
                     $news->ankety()->remove($data['ak_jmeno']);
             }
@@ -227,7 +231,7 @@ class Ankety extends Admin
         $items = DBAnkety::getAnkety();
 
         foreach ($items as $item) {
-            if($post($item['ak_id']) == $item['ak_visible']) {
+            if ($post($item['ak_id']) == $item['ak_visible']) {
                 continue;
             }
             DBAnkety::editAnketa(

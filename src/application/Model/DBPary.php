@@ -297,8 +297,14 @@ class DBPary extends Adapter
     }
 
     public static function editTridaBody(
-        $p_id, $stt_trida, $stt_body, $stt_finale,
-        $lat_trida, $lat_body, $lat_finale, $hodnoceni
+        $p_id,
+        $stt_trida,
+        $stt_body,
+        $stt_finale,
+        $lat_trida,
+        $lat_body,
+        $lat_finale,
+        $hodnoceni
     ) {
         list(
             $p_id, $stt_trida, $stt_body, $stt_finale, $lat_trida, $lat_body,

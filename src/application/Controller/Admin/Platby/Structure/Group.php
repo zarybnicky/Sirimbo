@@ -58,9 +58,10 @@ class Group extends Structure
             DBPlatbyGroup::addChild($insertId, get('category'));
             $skupiny = DBPlatbyGroup::getSingleWithSkupiny($insertId);
             $conflicts = array();
-            foreach ($skupiny as $array)
-                $conflicts = array_merge($conflicts, DBPlatby::checkConflicts($array['s_id']));
 
+            foreach ($skupiny as $array) {
+                $conflicts = array_merge($conflicts, DBPlatby::checkConflicts($array['s_id']));
+            }
             if (!empty($conflicts)) {
                 DBPlatbyGroup::removeChild($insertId, get('category'));
                 $this->redirect(
@@ -149,9 +150,10 @@ class Group extends Structure
             DBPlatbyGroup::addChild($id, post('category'));
             $skupiny = DBPlatbyGroup::getSingleWithSkupiny($id);
             $conflicts = array();
-            foreach ($skupiny as $array)
-                $conflicts = array_merge($conflicts, DBPlatby::checkConflicts($array['s_id']));
 
+            foreach ($skupiny as $array) {
+                $conflicts = array_merge($conflicts, DBPlatby::checkConflicts($array['s_id']));
+            }
             if (!empty($conflicts)) {
                 DBPlatbyGroup::removeChild($id, post('category'));
                 $this->redirect(

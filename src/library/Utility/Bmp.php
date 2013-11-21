@@ -127,7 +127,7 @@ class BMP
 
         if ($filename) {
             $f = fopen($filename, "wb");
-            foreach ($header AS $h) {
+            foreach ($header as $h) {
                 fwrite($f, $h);
             }
 
@@ -142,7 +142,7 @@ class BMP
             fclose($f);
         }
         else {
-            foreach ($header AS $h) {
+            foreach ($header as $h) {
                 echo $h;
             }
 

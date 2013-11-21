@@ -18,7 +18,7 @@ class UserSelect extends Partial
 
     public function __construct($name = null)
     {
-        if($name !== null) {
+        if ($name !== null) {
             $this->name($name);
         }
     }
@@ -85,7 +85,7 @@ class UserSelect extends Partial
 
     public function setUsers(array $users, $overwrite = false)
     {
-        if($overwrite) {
+        if ($overwrite) {
             $this->data[] = array();
         }
 
@@ -123,4 +123,3 @@ class UserSelect extends Partial
         return $this->render();
     }
 }
-?>

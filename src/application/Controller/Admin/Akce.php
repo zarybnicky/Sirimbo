@@ -218,10 +218,15 @@ class Akce extends Admin
                 continue;
             }
             DBAkce::editAkce(
-                $item['a_id'], $item['a_jmeno'], $item['a_kde'],
-                $item['a_info'], $item['a_od'],
-                $item['a_do'], $item['a_kapacita'],
-                $item['a_dokumenty'], $item['a_lock'],
+                $item['a_id'],
+                $item['a_jmeno'],
+                $item['a_kde'],
+                $item['a_info'],
+                $item['a_od'],
+                $item['a_do'],
+                $item['a_kapacita'],
+                $item['a_dokumenty'],
+                $item['a_lock'],
                 post($item['a_id']) ? '1' : '0'
             );
         }

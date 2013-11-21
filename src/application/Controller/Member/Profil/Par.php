@@ -76,11 +76,17 @@ class Par extends Profil
                 $this->redirect('/member/profil/par');
             }
             if (User::getUserPohlavi() == "m") {
-                DBPary::newPartnerRequest(User::getUserID(),
-                    User::getUserID(), post("partner"));
+                DBPary::newPartnerRequest(
+                    User::getUserID(),
+                    User::getUserID(),
+                    post("partner")
+                );
             } else {
-                DBPary::newPartnerRequest(User::getUserID(),
-                    post("partner"), User::getUserID());
+                DBPary::newPartnerRequest(
+                    User::getUserID(),
+                    post("partner"),
+                    User::getUserID()
+                );
             }
             $this->redirect('/member/profil/par', 'Žádost o partnerství odeslána');
         }

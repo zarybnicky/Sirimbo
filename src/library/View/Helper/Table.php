@@ -29,7 +29,7 @@ class Table extends Partial
 
     public function column($id, $name, $class = null, $style = null, $overwrite = false)
     {
-        if($overwrite == true) {
+        if ($overwrite == true) {
             $this->columns = array();
         }
         $style = ($class !== null ? (' class="' . $class . '"') : '')
@@ -72,4 +72,3 @@ class Table extends Partial
         );
     }
 }
-?>

@@ -3,6 +3,7 @@ namespace TKOlomouc\View;
 
 use MtHaml;
 use TKOlomouc\Utility\Debug;
+
 abstract class ViewAbstract
 {
     abstract function render();
@@ -13,7 +14,7 @@ abstract class ViewAbstract
 
         try {
             return $mtHaml->compileString(file_get_contents($filename), $filename);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             Debug::dump($e);
         }
     }

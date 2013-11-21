@@ -149,19 +149,19 @@ class Users extends Admin
 
         if (empty($_POST) || is_object($form = $this->checkData('edit'))) {
             if (empty($_POST)) {
-                post('login',    $data['u_login']);
-                post('group',    $data['u_group']);
-                post('ban',      $data['u_ban']);
-                post('lock',     $data['u_lock']);
-                post('dancer',   $data['u_dancer']);
-                post('system',   $data['u_system']);
-                post('jmeno',    $data['u_jmeno']);
+                post('login', $data['u_login']);
+                post('group', $data['u_group']);
+                post('ban', $data['u_ban']);
+                post('lock', $data['u_lock']);
+                post('dancer', $data['u_dancer']);
+                post('system', $data['u_system']);
+                post('jmeno', $data['u_jmeno']);
                 post('prijmeni', $data['u_prijmeni']);
-                post('pohlavi',  $data['u_pohlavi']);
-                post('email',    $data['u_email']);
-                post('telefon',  $data['u_telefon']);
+                post('pohlavi', $data['u_pohlavi']);
+                post('email', $data['u_email']);
+                post('telefon', $data['u_telefon']);
                 post('narozeni', $data['u_narozeni']);
-                post('skupina',  $data['u_skupina']);
+                post('skupina', $data['u_skupina']);
                 post('poznamky', $data['u_poznamky']);
             } else {
                 $this->redirect()->setMessage($form->getMessages());

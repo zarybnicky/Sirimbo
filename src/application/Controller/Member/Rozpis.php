@@ -23,7 +23,7 @@ class Rozpis extends Member
         $data = DBRozpis::getSingleRozpis(post('ri_id'));
         $lesson = DBRozpis::getRozpisItemLesson(post('ri_id'));
 
-        if (post('action') == 'signup' && !is_object($this->_checkData($data, post('action')))) {
+        if (post('action') == 'signup' && !is_object($this->checkData($data, post('action')))) {
             if (!User::getZaplaceno() || (User::getPartnerID() > 0 && !User::getZaplaceno(true))) {
                 $this->redirect()->setMessage('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
             } elseif ($lesson['ri_partner']) {
@@ -32,7 +32,7 @@ class Rozpis extends Member
                 DBRozpis::rozpisSignUp(post('ri_id'), User::getParID());
                 $this->redirect()->setMessage('Hodina přidána');
             }
-        } elseif (post('action') == 'signout' && !is_object($this->_checkData($data, post('action')))) {
+        } elseif (post('action') == 'signout' && !is_object($this->checkData($data, post('action')))) {
             if ($lesson['ri_partner'] == 0) {
                 $this->redirect()->setMessage('Už je prázdno');
             } elseif (User::getParID() != $lesson['ri_partner'] && !Permissions::check('rozpis', P_OWNED, $data['n_trener'])) {
@@ -45,7 +45,7 @@ class Rozpis extends Member
         $this->render('files/Member/Rozpis.inc');
     }
 
-    private function _checkData($data, $action = 'signup')
+    private function checkData($data, $action = 'signup')
     {
         $f = new Form();
 

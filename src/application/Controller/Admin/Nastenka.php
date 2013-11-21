@@ -69,11 +69,13 @@ class Nastenka extends Admin
             } else {
                 $new_data['checkBox'] = '&nbsp;&#10799;';
             }
+
             $skupiny = DBNastenka::getNastenkaSkupiny($row['up_id']);
             $new_data['groups'] = '';
-            foreach ($skupiny as $skupina)
-                $new_data['groups'] .= getColorBox($skupina['ups_color'], $skupina['ups_popis']);
 
+            foreach ($skupiny as $skupina) {
+                $new_data['groups'] .= getColorBox($skupina['ups_color'], $skupina['ups_popis']);
+            }
             $row = $new_data;
         }
         $this->render(

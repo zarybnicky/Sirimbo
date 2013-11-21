@@ -106,8 +106,13 @@ class Aktuality extends Admin
         }
 
         DBAktuality::editAktualita(
-            $id, post('kat'), post('jmeno'), post('text'),
-            $preview, post('foto'), $fotoId
+            $id,
+            post('kat'),
+            post('jmeno'),
+            post('text'),
+            $preview,
+            post('foto'),
+            $fotoId
         );
 
         $news = new Novinky(User::getUserID());

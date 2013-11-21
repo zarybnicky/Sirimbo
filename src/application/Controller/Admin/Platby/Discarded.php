@@ -4,7 +4,7 @@ namespace TKOlomouc\Controller\Admin\Platby;
 use TKOlomouc\Controller\Admin\Platby;
 use TKOlomouc\Utility\Permissions;
 use TKOlomouc\Utility\Request;
-use TKOlomouc\Type\Date;
+use TKOlomouc\Type\DateFormat;
 use TKOlomouc\Model\DBPlatbyRaw;
 
 class Discarded extends Platby
@@ -80,14 +80,15 @@ class Discarded extends Platby
         $columnsTemp = array();
         foreach ($data as $rawData) {
             $row = unserialize($rawData['pr_raw']);
-            if (!$this->checkHeaders(array_flip($row), $specific, $variable, $date, $amount))
+            if (!$this->checkHeaders(array_flip($row), $specific, $variable, $date, $amount)) {
                 $this->recognizeHeaders($row, $specific, $variable, $date, $amount);
-
+            }
             if (get('list') == 'date') {
                 if (isset($row[$date]) && $row[$date]) {
-                    if (get('year') == 'none')
+                    if (get('year') == 'none') {
                         continue;
-                    $currentDate = new Date($row[$date]);
+                    }
+                    $currentDate = new DateFormat($row[$date]);
                     if ($currentDate->getYear() != get('year')
                         || (get('month') && $currentDate->getMonth() != get('month'))
                     ) {
@@ -104,10 +105,11 @@ class Discarded extends Platby
                 continue;
             }
             foreach ($row as $key => $value) {
-                if ($value)
+                if ($value) {
                     $columnsTemp[$key] = true;
-                elseif (!isset($columnsTemp[$key]))
+                } elseif (!isset($columnsTemp[$key])) {
                     $columnsTemp[$key] = false;
+                }
             }
             $row['edit'] =
                 '<div style="width:51px">'
@@ -121,16 +123,18 @@ class Discarded extends Platby
         } else {
             foreach ($result as &$row) {
                 foreach ($columnsTemp as $key => $value) {
-                    if (!isset($row[$key]))
+                    if (!isset($row[$key])) {
                         $row[$key] = '';
+                    }
                 }
             }
         }
 
         $columns = array(array('edit', 'Zařadit'));
         foreach ($columnsTemp as $key => $value) {
-            if (!$value)
+            if (!$value) {
                 continue;
+            }
             $columns[] = array($key, $key);
         }
     }
@@ -141,32 +145,35 @@ class Discarded extends Platby
         $groupAmount = array();
         foreach ($data as $row) {
             $row = unserialize($row['pr_raw']);
-            if (!$this->checkHeaders(array_flip($row), $specific, $variable, $date, $amount))
+            if (!$this->checkHeaders(array_flip($row), $specific, $variable, $date, $amount)) {
                 $this->recognizeHeaders($row, $specific, $variable, $date, $amount);
-
+            }
             if (isset($row[$date]) && $row[$date]) {
-                $currentDate = new Date($row[$date]);
-                if (!isset($groupDate[$currentDate->getYear()]))
+                $currentDate = new DateFormat($row[$date]);
+                if (!isset($groupDate[$currentDate->getYear()])) {
                     $groupDate[$currentDate->getYear()] = array('name' => $currentDate->getYear());
-
-                if (!isset($groupDate[$currentDate->getYear()]['months'][$currentDate->getMonth()]))
+                }
+                if (!isset($groupDate[$currentDate->getYear()]['months'][$currentDate->getMonth()])) {
                     $groupDate[$currentDate->getYear()]['months'][$currentDate->getMonth()] =
                         $currentDate->getYear() . '/' . $currentDate->getMonth();
+                }
             } elseif (!isset($groupDate['none'])) {
                 $groupDate['none'] = array('name' => 'Nerozpoznáno');
             }
 
             if (isset($row[$amount])) {
-                if (!isset($groupAmount[$row[$amount]]))
+                if (!isset($groupAmount[$row[$amount]])) {
                     $groupAmount[(int) $row[$amount]] = (int) $row[$amount] . ' Kč';
+                }
             } elseif (!isset($groupAmount['none'])) {
                 $groupAmount['none'] = 'Nerozpoznáno';
             }
         }
         krsort($groupAmount);
         krsort($groupDate);
-        foreach ($groupDate as $year)
+        foreach ($groupDate as $year) {
             krsort($year);
+        }
     }
 
     protected function getEditLink($link)

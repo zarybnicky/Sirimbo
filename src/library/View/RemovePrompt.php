@@ -32,7 +32,7 @@ class RemovePrompt extends ViewAbstract
         $this->returnURL = $url;
     }
 
-    function render()
+    public function render()
     {
         $this->renderTemplate(
             $this->filename,

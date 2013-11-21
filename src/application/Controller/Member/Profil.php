@@ -123,10 +123,16 @@ class Profil extends Member
             $f->checkPhone(post('telefon'), 'Neplatný formát telefoního čísla', 'telefon');
         } elseif ($action == 'heslo') {
             $f->checkPassword(post('newpass'), 'Neplatný formát hesla', 'newpass');
-            $f->checkBool(DBUser::checkUser(User::getUserName(), User::crypt(post('oldpass'))),
-                'Staré heslo je špatně', 'oldpass');
-            $f->checkBool(post('newpass') == post('newpass_confirm'),
-                'Nová hesla se neshodují', 'newpass_check');
+            $f->checkBool(
+                DBUser::checkUser(User::getUserName(), User::crypt(post('oldpass'))),
+                'Staré heslo je špatně',
+                'oldpass'
+            );
+            $f->checkBool(
+                post('newpass') == post('newpass_confirm'),
+                'Nová hesla se neshodují',
+                'newpass_check'
+            );
         }
         return $f->isValid() ? null : $f;
     }

@@ -5,24 +5,25 @@ class PagingAdapterArray implements PagerAdapterInterface
 {
     private $data;
 
-    function __construct($a = null)
+    public function __construct($a = null)
     {
         $this->setData($a);
     }
 
-    function setData($a)
+    public function setData($a)
     {
-        if (!isdata($a))
+        if (!is_array($a)) {
             return false;
+        }
         $this->data = $a;
     }
 
-    function page($offset, $length, $options = null)
+    public function page($offset, $length, $options = null)
     {
         return array_slice($this->data, $offset, $lenght);
     }
 
-    function count($options = null)
+    public function count($options = null)
     {
         return count($this->data);
     }

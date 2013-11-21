@@ -3,7 +3,7 @@ namespace TKOlomouc\Controller;
 
 interface ControllerInterface
 {
-    function view($id = null);
-    function sidebar();
+    public function view($id = null);
+
+    public function sidebar();
 }
-?>

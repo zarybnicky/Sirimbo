@@ -44,11 +44,15 @@ class Detail extends Nabidka
                 }
 
                 $rozdil_hod = post($item['ni_id'] . '-hodiny') - $item['ni_pocet_hod'];
+
                 if (($obsazeno + $rozdil_hod) > $data['n_pocet_hod']) {
                     post('pocet_hod', $obsazeno + $rozdil_hod);
                 }
-                DBNabidka::editNabidkaItem($item['ni_id'], post($item['ni_id'] . '-partner'),
-                    post($item['ni_id'] . '-hodiny'));
+                DBNabidka::editNabidkaItem(
+                    $item['ni_id'],
+                    post($item['ni_id'] . '-partner'),
+                    post($item['ni_id'] . '-hodiny')
+                );
             }
         }
         $items = DBNabidka::getNabidkaItem($id);
@@ -65,8 +69,11 @@ class Detail extends Nabidka
                 post('pocet_hod', $obsazeno + post('add_hodiny'));
             }
 
-            DBNabidka::addNabidkaItemLessons(post('add_partner'), $id,
-                post('add_hodiny'));
+            DBNabidka::addNabidkaItemLessons(
+                post('add_partner'),
+                $id,
+                post('add_hodiny')
+            );
 
             post('add_partner', null);
             post('add_hodiny', null);

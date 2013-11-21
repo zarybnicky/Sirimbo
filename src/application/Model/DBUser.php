@@ -37,10 +37,9 @@ class DBUser extends Adapter implements Pagable
                 break;
             case 'all':
             default:
+                $query .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0'";
                 if (is_numeric($options['filter'])) {
-                    $query .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0' AND u_group='{$options['filter']}'";
-                } else {
-                    $query .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0'";
+                    $query .= " AND u_group='{$options['filter']}'";
                 }
         }
         switch($options['sort']) {
@@ -81,10 +80,9 @@ class DBUser extends Adapter implements Pagable
                 break;
             case 'all':
             default:
+                $query .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0'";
                 if (is_numeric($options['filter'])) {
-                    $query .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0' AND u_group='{$options['filter']}'";
-                } else {
-                    $query .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0'";
+                    $query .= " AND u_group='{$options['filter']}'";
                 }
         }
         $query .= ' ORDER BY u_prijmeni';

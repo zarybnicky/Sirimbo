@@ -10,6 +10,6 @@ class Kontakt extends ControllerAbstract
 
     public function sidebar()
     {
-    	;
+        ;
     }
 }

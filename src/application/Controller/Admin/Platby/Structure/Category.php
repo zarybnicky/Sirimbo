@@ -55,7 +55,7 @@ class Category extends Structure
             if (!empty($_POST)) {
                 $this->redirect()->setMessage($form->getMessages());
             }
-            $this->_displayForm('add');
+            $this->displayForm('add');
             return;
         }
         $dueDate = (new Date('dueDate'))->getPost();
@@ -182,7 +182,7 @@ class Category extends Structure
                 post('usePrefix', $data['pc_use_prefix']);
                 post('archive', $data['pc_archive']);
             }
-            $this->_displayForm('edit');
+            $this->displayForm('edit');
             return;
         }
         $dueDate = (new Date('dueDate'))->getPost();
@@ -323,7 +323,7 @@ class Category extends Structure
         }
     }
 
-    private function _displayForm($action)
+    private function displayForm($action)
     {
         $id = Request::getID() ? Request::getID() : 0;
 

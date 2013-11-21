@@ -54,8 +54,8 @@ class Ankety extends ControllerAbstract
             )
         );
     }
-    function sidebar()
+    public function sidebar()
     {
-    	;
+        ;
     }
 }

@@ -68,9 +68,7 @@ class User
 
         $par = DBPary::getLatestPartner($data['u_id'], $data['u_pohlavi']);
 
-        $permissionCategories = array_flip(Settings::$permissions);
-
-        foreach ($permissionCategories as $item) {
+        foreach (Settings::$permissions as $item => $value) {
             if ($data['u_group'] == 0) {
                 $_SESSION['permission_data'][$item] = P_NONE;
             } else {

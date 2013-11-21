@@ -41,7 +41,7 @@ class Request
         self::$literalUrlParts = $parts;
 
         //Find controller action = the last string before a numerical one
-        for($i = count(self::$rawUrlParts) - 1; $i >= 0; $i--) {
+        for ($i = count(self::$rawUrlParts) - 1; $i >= 0; $i--) {
             if (!is_numeric(self::$rawUrlParts[$i])) {
                 continue;
             }

@@ -29,8 +29,10 @@ class Permissions
         } elseif (User::isLogged()) {
             throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
         } else {
-            Response::redirect('/login?return=' . Request::getURL(),
-                'Nemáte dostatečná oprávnění k zobrazení požadovaného obsahu');
+            Response::redirect(
+                '/login?return=' . Request::getURL(),
+                'Nemáte dostatečná oprávnění k zobrazení požadovaného obsahu'
+            );
         }
     }
 }

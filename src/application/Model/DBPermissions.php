@@ -30,7 +30,7 @@ class DBPermissions extends Adapter
         $name = $result[0];
         $description = $result[1];
 
-        for($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; $i++) {
             $permissions[$result[$i + 2]] = $result[$i + $count + 2];
         }
 
@@ -59,7 +59,7 @@ class DBPermissions extends Adapter
         $name = $result[1];
         $description = $result[2];
 
-        for($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; $i++) {
             $permissions[$result[$i + 3]] = $result[$i + $count + 3];
         }
         $q = "UPDATE permissions SET pe_name='$name',pe_description='$description'";

@@ -74,7 +74,7 @@ class Adapter
         $result = array();
         $rows = mysql_num_rows($resource);
 
-        for($i = 0; $i < $rows; $i++) {
+        for ($i = 0; $i < $rows; $i++) {
             $result[] = @mysql_fetch_assoc($resource);
         }
         return $result;
@@ -101,4 +101,3 @@ class Adapter
             && (get('id') == ER_DATABASE_CONNECTION || get('id') == ER_DATABASE));
     }
 }
-?>

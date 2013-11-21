@@ -50,10 +50,10 @@ class Aktualne extends ControllerAbstract
         $s = new Sidebar();
 
         echo $s->menuHeader();
-        echo $s->menuItem('Nejnovější články',    '/aktualne/posledni');
-        echo $s->menuItem('Videa',                '/aktualne/videa');
-        echo $s->menuItem('Články',               '/aktualne/clanky');
-        echo $s->menuItem('Krátké zprávy',        '/aktualne/kratke-zpravy');
+        echo $s->menuItem('Nejnovější články', '/aktualne/posledni');
+        echo $s->menuItem('Videa', '/aktualne/videa');
+        echo $s->menuItem('Články', '/aktualne/clanky');
+        echo $s->menuItem('Krátké zprávy', '/aktualne/kratke-zpravy');
 
         echo $s->commonItems();
     }

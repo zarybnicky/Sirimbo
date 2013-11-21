@@ -223,7 +223,7 @@ class Rozpis extends Admin
             if ((bool) post($id) === (bool) $item['r_visible']) {
                 continue;
             }
-            if(!Permissions::check('rozpis', P_OWNED, $item['r_trener'])) {
+            if (!Permissions::check('rozpis', P_OWNED, $item['r_trener'])) {
                 continue;
             }
             if (!Permissions::check('rozpis', P_ADMIN) && post($id) && !$item['r_visible']) {

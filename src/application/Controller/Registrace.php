@@ -54,6 +54,6 @@ class Registrace extends ControllerAbstract
 
     public function sidebar()
     {
-    	;
+        ;
     }
 }

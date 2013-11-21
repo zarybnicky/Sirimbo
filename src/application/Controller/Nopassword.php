@@ -47,6 +47,6 @@ class Nopassword extends ControllerAbstract
 
     public function sidebar()
     {
-    	;
+        ;
     }
 }

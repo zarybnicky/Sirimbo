@@ -19,7 +19,7 @@
             <directory>Core</directory>
         </testsuite>
     </testsuites>
-    
+
     <filter>
 	  <whitelist>
         <directory>../application</directory>
