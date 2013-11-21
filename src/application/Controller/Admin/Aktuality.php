@@ -23,8 +23,9 @@ class Aktuality extends Admin
             case 'edit':
             case 'foto':
                 $data = post('aktuality');
-                if ($data[0])
+                if ($data[0]) {
                     $this->redirect('/admin/aktuality/' . post('action') . '/' . $data[0]);
+                }
                 break;
             case 'remove':
                 if (is_array(post('akce'))) {
@@ -47,8 +48,7 @@ class Aktuality extends Admin
         }
         $preview = trim(substr(strip_tags(post('text')), 0, AKTUALITY_PREVIEW));
 
-        if (
-            ($foto_data = DBGalerie::getFotky(post('foto')))
+        if (($foto_data = DBGalerie::getFotky(post('foto')))
             && isset($foto_data[0]['gf_id'])
         ) {
             $f_id = $foto_data[0]['gf_id'];
@@ -57,8 +57,13 @@ class Aktuality extends Admin
         }
 
         $id = DBAktuality::addAktualita(
-            User::getUserID(), post('kat'), post('jmeno'),
-            post('text'), $preview, post('foto'), $f_id
+            User::getUserID(),
+            post('kat'),
+            post('jmeno'),
+            post('text'),
+            $preview,
+            post('foto'),
+            $f_id
         );
 
         $news = new Novinky(User::getUserID());
@@ -92,8 +97,7 @@ class Aktuality extends Admin
 
         $preview = trim(substr(strip_tags(post('text')), 0, AKTUALITY_PREVIEW));
 
-        if (
-            ($foto_data = DBGalerie::getFotky(post('foto')))
+        if (($foto_data = DBGalerie::getFotky(post('foto')))
             && isset($foto_data[0]['gf_id'])
         ) {
             $fotoId = $foto_data[0]['gf_id'];
@@ -192,14 +196,14 @@ class Aktuality extends Admin
             );
 
             switch ($item['at_kat']) {
-            	case AKTUALITY_CLANKY:
-            	    $newData['type'] = 'Články';
-            	    break;
-            	case AKTUALITY_VIDEA:
-            	    $newData['type'] = 'Videa';
-            	    break;
-            	case AKTUALITY_KRATKE:
-            	    $newData['type'] = 'Krátné zprávy';
+                case AKTUALITY_CLANKY:
+                    $newData['type'] = 'Články';
+                    break;
+                case AKTUALITY_VIDEA:
+                    $newData['type'] = 'Videa';
+                    break;
+                case AKTUALITY_KRATKE:
+                    $newData['type'] = 'Krátné zprávy';
             }
 
             $item = $newData;

@@ -27,18 +27,16 @@ class Rozpis extends Admin
                 $this->processSave();
                 break;
             case 'edit':
+            case 'detail':
                 $rozpis = post('rozpis');
-                if ($rozpis[0])
-                    $this->redirect('/admin/rozpis/edit/' . $rozpis[0]);
-                break;
-            case 'edit_detail':
-                $rozpis = post('rozpis');
-                if ($rozpis[0])
-                    $this->redirect('/admin/rozpis/detail/' . $rozpis[0]);
+                if ($rozpis[0]) {
+                    $this->redirect('/admin/rozpis/' . post('action') . '/' . $rozpis[0]);
+                }
                 break;
             case 'remove':
-                if (!is_array(post('rozpis')))
+                if (!is_array(post('rozpis'))) {
                     $this->redirect('/admin/rozpis');
+                }
                 foreach (post('rozpis') as $item) {
                     $trener = DBRozpis::getRozpisTrener($item);
                     $data = DBRozpis::getSingleRozpis($item);
@@ -56,8 +54,9 @@ class Rozpis extends Admin
                         $error = true;
                     }
                 }
-                if (isset($error) && $error)
+                if (isset($error) && $error) {
                     throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
+                }
 
                 $this->redirect('/admin/rozpis', 'Rozpisy odebrány');
         }
@@ -69,14 +68,16 @@ class Rozpis extends Admin
                 'datum' => formatDate($row['r_datum']),
                 'kde' => $row['r_kde']
             );
-            if ($new_data['canEdit'])
+            if ($new_data['canEdit']) {
                 $new_data['checkBox'] = '<input type="checkbox" name="rozpis[]" value="' . $row['r_id'] . '" />';
-            else
+            } else {
                 $new_data['checkBox'] = '<input type="checkbox" name="rozpis[]" value="" disabled="d" />';
-            if (Permissions::check('rozpis', P_ADMIN))
+            }
+            if (Permissions::check('rozpis', P_ADMIN)) {
                 $new_data['visible'] = getCheckbox($row['r_id'], '1', $row['r_visible']);
-            else
+            } else {
                 $new_data['visible'] = '&nbsp;' . ($row['r_visible'] ? '&#10003;' : '&#10799;');
+            }
             $row = $new_data;
         }
         $this->render(
@@ -88,10 +89,13 @@ class Rozpis extends Admin
         );
         return;
     }
-    function add($id = null) {
-        if (empty($_POST) || is_object($f = $this->checkData())) {
-            if (!empty($_POST))
-                $this->redirect()->setMessage($f->getMessages());
+
+    public function add($id = null)
+    {
+        if (empty($_POST) || is_object($form = $this->checkData())) {
+            if (!empty($_POST)) {
+                $this->redirect()->setMessage($form->getMessages());
+            }
             $this->render(
                 'src/application/View/Admin/Rozpis/Form.inc',
                 array(
@@ -111,14 +115,20 @@ class Rozpis extends Admin
             $visible = false;
             $this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění příspěvku');
         }
-        DBRozpis::addRozpis(post('trener'), post('kde'), (string) $datum, $visible, post('lock'));
+        DBRozpis::addRozpis(
+            post('trener'),
+            post('kde'),
+            (string) $datum,
+            $visible,
+            post('lock')
+        );
 
         if ($visible) {
             $trener_data = DBUser::getUserData(post('trener'));
             $trener_name = $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni'];
 
-            $n = new Novinky(User::getUserID());
-            $n->rozpis()->add(
+            $news = new Novinky(User::getUserID());
+            $news->rozpis()->add(
                 '/member/rozpis',
                 $datum->getDate(DateFormat::FORMAT_SIMPLIFIED),
                 $trener_name
@@ -126,12 +136,15 @@ class Rozpis extends Admin
         }
         $this->redirect('/admin/rozpis', 'Rozpis přidán');
     }
-    function edit($id = null) {
-        if (!$id || !($data = DBRozpis::getSingleRozpis($id)))
+
+    public function edit($id = null)
+    {
+        if (!$id || !($data = DBRozpis::getSingleRozpis($id))) {
             $this->redirect('/admin/rozpis', 'Rozpis s takovým ID neexistuje');
+        }
         Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
 
-        if (empty($_POST) || is_object($this->checkData())) {
+        if (empty($_POST) || is_object($form = $this->checkData())) {
             if (empty($_POST)) {
                 post('id', $id);
                 post('trener', $data['r_trener']);
@@ -140,7 +153,7 @@ class Rozpis extends Admin
                 post('visible', $data['r_visible']);
                 post('lock', $data['r_lock']);
             } else {
-                $this->redirect()->setMessage($f->getMessages());
+                $this->redirect()->setMessage($form->getMessages());
             }
             $this->render(
                 'src/application/View/Admin/Rozpis/Form.inc',
@@ -157,20 +170,27 @@ class Rozpis extends Admin
 
         $visible = (bool) post('visible');
         $visible_prev = $data['r_visible'];
+
         if (!Permissions::check('rozpis', P_ADMIN) && $visible && !$visible_prev) {
             $visible = $visible_prev;
             $this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění rozpisu');
         }
+
         DBRozpis::editRozpis(
-            $id, post('trener'), post('kde'), (string) $datum,
-            $visible, post('lock')
+            $id,
+            post('trener'),
+            post('kde'),
+            (string) $datum,
+            $visible,
+            post('lock')
         );
 
         if ($visible) {
-            if (!$visible_prev)
+            if (!$visible_prev) {
                 $act = 'add';
-            else
+            } else {
                 $act = 'edit';
+            }
         } elseif (!$visible && $visible_prev && strcmp($datum, date('Y-m-d')) > 0) {
             $act = 'remove';
         }
@@ -178,18 +198,18 @@ class Rozpis extends Admin
             $trener_data = DBUser::getUserData(post('trener'));
             $trener_name = $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni'];
 
-            $n = new Novinky(User::getUserID());
+            $news = new Novinky(User::getUserID());
             if ($act == 'remove') {
-                $n->rozpis()->$act(
+                $news->rozpis()->$act(
                     $datum->getDate(DateFormat::FORMAT_SIMPLIFIED),
                     $trener_name
                 );
             } else {
-                $n->rozpis()->$act(
+                $news->rozpis()->$act(
                     '/member/rozpis',
                     $datum->getDate(DateFormat::FORMAT_SIMPLIFIED),
                     $trener_name
-               );
+                );
             }
         }
         $this->redirect('/admin/rozpis', 'Rozpis úspěšně upraven');
@@ -212,8 +232,12 @@ class Rozpis extends Admin
             }
 
             DBRozpis::editRozpis(
-                $id, $item['r_trener'], $item['r_kde'],
-                $item['r_datum'], post($id) ? '1' : '0', $item['r_lock'] ? '1' : '0'
+                $id,
+                $item['r_trener'],
+                $item['r_kde'],
+                $item['r_datum'],
+                post($id) ? '1' : '0',
+                $item['r_lock'] ? '1' : '0'
             );
 
             $n = new Novinky(User::getUserID());
@@ -233,13 +257,14 @@ class Rozpis extends Admin
         }
     }
 
-    private function checkData() {
+    private function checkData()
+    {
         $datum = (new Date('datum'))->getPost();
 
-        $f = new Form();
-        $f->checkNumeric(post('trener'), 'Neplatný trenér', 'trener');
-        $f->checkDate((string) $datum, 'Neplatný formát data', 'datum');
+        $form = new Form();
+        $form->checkNumeric(post('trener'), 'Neplatný trenér', 'trener');
+        $form->checkDate((string) $datum, 'Neplatný formát data', 'datum');
 
-        return $f->isValid() ? true : $f;
+        return $form->isValid() ? true : $form;
     }
 }

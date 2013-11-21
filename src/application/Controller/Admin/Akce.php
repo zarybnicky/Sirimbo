@@ -21,25 +21,25 @@ class Akce extends Admin
     public function view($id = null)
     {
         switch(post('action')) {
-        case 'save':
-            $this->processSave();
-            $this->redirect('/admin/akce');
-            break;
-        case 'remove':
-            if (is_array(post('akce'))) {
-                $this->redirect(
-                    '/admin/akce/remove?' . http_build_query(array('u' => post('akce')))
-                );
-            }
-            break;
-        case 'edit':
-        case 'detail':
-        case 'dokumenty':
-            $akce = post('akce');
-            if ($akce[0]) {
-                $this->redirect('/admin/akce/' . post('action') . '/' . $akce[0]);
-            }
-            break;
+            case 'save':
+                $this->processSave();
+                $this->redirect('/admin/akce');
+                break;
+            case 'remove':
+                if (is_array(post('akce'))) {
+                    $this->redirect(
+                        '/admin/akce/remove?' . http_build_query(array('u' => post('akce')))
+                    );
+                }
+                break;
+            case 'edit':
+            case 'detail':
+            case 'dokumenty':
+                $akce = post('akce');
+                if ($akce[0]) {
+                    $this->redirect('/admin/akce/' . post('action') . '/' . $akce[0]);
+                }
+                break;
         }
         $this->displayOverview();
     }
@@ -59,9 +59,15 @@ class Akce extends Admin
             $do = $od;
         }
         DBAkce::addAkce(
-            post('jmeno'), post('kde'), post('info'),
-            (string) $od, (string) $do, post('kapacita'), post('dokumenty'),
-            (post('lock') == 'lock') ? 1 : 0, post('visible') ? '1' : '0'
+            post('jmeno'),
+            post('kde'),
+            post('info'),
+            (string) $od,
+            (string) $do,
+            post('kapacita'),
+            post('dokumenty'),
+            post('lock') == 'lock' ? 1 : 0,
+            post('visible') ? '1' : '0'
         );
 
         $n = new Novinky(User::getUserID());
@@ -97,9 +103,16 @@ class Akce extends Admin
             $do = $od;
         }
         DBAkce::editAkce(
-            $id, post('jmeno'), post('kde'), post('info'),
-            (string) $od, (string) $do, post('kapacita'), post('dokumenty'),
-            (post('lock') == 'lock') ? 1 : 0, post('visible') ? '1' : '0'
+            $id,
+            post('jmeno'),
+            post('kde'),
+            post('info'),
+            (string) $od,
+            (string) $do,
+            post('kapacita'),
+            post('dokumenty'),
+            post('lock') == 'lock' ? 1 : 0,
+            post('visible') ? '1' : '0'
         );
 
         $n = new Novinky(User::getUserID());
@@ -149,7 +162,7 @@ class Akce extends Admin
         $currentIndex = -1;
         $data = array();
         $akce = DBAkce::getWithItems();
-        foreach ($akce as $key => $item) {
+        foreach ($akce as $item) {
             if ($item['a_id'] == $currentId) {
                 $data[$currentIndex]['userCount']++;
                 continue;
@@ -171,7 +184,7 @@ class Akce extends Admin
             'src/application/View/Admin/Akce/Overview.inc',
             array(
                 'action' => Request::getAction(),
-        	    'data' => $data
+                'data' => $data
             )
         );
     }

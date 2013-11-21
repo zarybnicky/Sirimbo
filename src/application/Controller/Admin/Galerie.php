@@ -36,7 +36,7 @@ class Galerie extends Admin
                 if (is_array(post('galerie'))) {
                     $this->redirect(
                         '/admin/galerie/directory/remove?'
-                            . http_build_query(array('u' => post('galerie')))
+                        . http_build_query(array('u' => post('galerie')))
                     );
                 }
                 break;
@@ -61,10 +61,10 @@ class Galerie extends Admin
         unset($dbInFiles);
 
         $fsDirs = array(
-        	GALERIE . DIRECTORY_SEPARATOR => GALERIE . DIRECTORY_SEPARATOR
+            GALERIE . DIRECTORY_SEPARATOR => GALERIE . DIRECTORY_SEPARATOR
         );
         $fsThumbnailDirs = array(
-        	GALERIE_THUMBS . DIRECTORY_SEPARATOR => GALERIE_THUMBS . DIRECTORY_SEPARATOR
+            GALERIE_THUMBS . DIRECTORY_SEPARATOR => GALERIE_THUMBS . DIRECTORY_SEPARATOR
         );
         $fsFiles = array();
         $fsThumbnails = array();
@@ -156,7 +156,8 @@ class Galerie extends Admin
             DBGalerie::addFotoByPath(
                 $this->getCanonicalName($parent),
                 $this->getCanonicalName($file),
-                $name, User::getUserID()
+                $name,
+                User::getUserID()
             );
         }
         $this->redirect(
@@ -173,9 +174,11 @@ class Galerie extends Admin
     {
         return strtolower(
             preg_replace(
-                '/[^a-z0-9\._-]+/i', '-',
+                '/[^a-z0-9\._-]+/i',
+                '-',
                 preg_replace(
-                    '([^\w\s\d\-_~,;:\[\]\(\]]|[\.]{2,})', '',
+                    '([^\w\s\d\-_~,;:\[\]\(\]]|[\.]{2,})',
+                    '',
                     $name
                 )
             )
@@ -266,9 +269,16 @@ class Galerie extends Admin
         }
         $thumbnail = imageCreateTruecolor($nWidth, $nHeight);
         imageCopyResized(
-            $thumbnail, $source,
-            0, 0, 0, 0,
-            $nWidth, $nHeight, $width, $height
+            $thumbnail,
+            $source,
+            0,
+            0,
+            0,
+            0,
+            $nWidth,
+            $nHeight,
+            $width,
+            $height
         );
         $fn_write($thumbnail, $thumbFile);
         imageDestroy($thumbnail);
@@ -283,8 +293,11 @@ class Galerie extends Admin
                 continue;
             }
             DBGalerie::editDir(
-                $item['gd_id'], $item['gd_name'], $item['gd_id_rodic'],
-                $item['gd_level'], post($item['gd_id']) ? '1' : '0',
+                $item['gd_id'],
+                $item['gd_name'],
+                $item['gd_id_rodic'],
+                $item['gd_level'],
+                post($item['gd_id']) ? '1' : '0',
                 $item['gd_path']
             );
         }
@@ -295,7 +308,7 @@ class Galerie extends Admin
         $data = DBGalerie::getDirs(true, true);
         foreach ($data as &$item) {
             $new_data = array(
-            	'checkBox'  => getCheckbox('galerie[]', $item['gd_id']),
+                'checkBox'  => getCheckbox('galerie[]', $item['gd_id']),
                 'name'      => str_repeat('&nbsp;->', $item['gd_level'] - 1)
                     . ' ' . $item['gd_name'],
                 'hidden'    => getCheckbox($item['gd_id'], '1', $item['gd_hidden'])

@@ -7,7 +7,7 @@ if ($this->showMenu) {
     echo (new TKOlomouc\View\Helper\Menu())
         ->content('Přidat', 'rozpis/add')
         ->content('Upravit', 'edit', true)
-        ->content('Upravit tréninky', 'edit_detail', true)
+        ->content('Upravit tréninky', '_detail', true)
         ->content('Odstranit', 'remove', true)
         ->content('Uložit změny', 'save', true);
 }

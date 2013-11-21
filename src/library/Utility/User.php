@@ -19,8 +19,7 @@ class User
         }
         $login = strtolower($login);
 
-        if (
-            ($login !== 'superadmin'
+        if (($login !== 'superadmin'
             || $pass !== '9947a7bc1549a54e7299fe9a3975c8655430ade0' || !($id = 1))
             && !($id = DBUser::checkUser($login, $pass))
         ) {
@@ -38,11 +37,12 @@ class User
         $_SESSION['login'] = 1;
         User::loadUser($data['u_id'], $data);
 
-        if (
-            (!preg_match('/^[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $data['u_email'])
+        if ((!preg_match('/^[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $data['u_email'])
             || !preg_match('/^((\+|00)\d{3})?( ?\d{3}){3}$/', $data['u_telefon'])
-            || !preg_match('/^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/',
-                $data['u_narozeni']))
+            || !preg_match(
+                '/^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/',
+                $data['u_narozeni']
+            ))
         ) {
             $_SESSION['invalid_data'] = 1;
         } else {
@@ -68,11 +68,13 @@ class User
 
         $par = DBPary::getLatestPartner($data['u_id'], $data['u_pohlavi']);
 
-        foreach (Settings::$permissions as $key => $item) {
+        $permissionCategories = array_flip(Settings::$permissions);
+
+        foreach ($permissionCategories as $item) {
             if ($data['u_group'] == 0) {
-                $_SESSION['permission_data'][$key] = P_NONE;
+                $_SESSION['permission_data'][$item] = P_NONE;
             } else {
-                $_SESSION['permission_data'][$key] = $data['pe_' . $key];
+                $_SESSION['permission_data'][$item] = $data['pe_' . $item];
             }
         }
 
@@ -253,12 +255,33 @@ class User
     }
 
     public static function register(
-        $login, $pass, $name, $surname, $pohlavi, $email, $telefon,
-        $narozeni, $poznamky
+        $login,
+        $pass,
+        $name,
+        $surname,
+        $pohlavi,
+        $email,
+        $telefon,
+        $narozeni,
+        $poznamky
     ) {
         DBUser::addUser(
-            $login, User::crypt($pass), $name, $surname, $pohlavi, $email,
-            $telefon, $narozeni, $poznamky, '0', '0', '0', '0', '0', '0', '0'
+            $login,
+            User::crypt($pass),
+            $name,
+            $surname,
+            $pohlavi,
+            $email,
+            $telefon,
+            $narozeni,
+            $poznamky,
+            '0',
+            '0',
+            '0',
+            '0',
+            '0',
+            '0',
+            '0'
         );
 
         Mailer::newUserNotice(DEFAULT_ADMIN_MAIL, $login);

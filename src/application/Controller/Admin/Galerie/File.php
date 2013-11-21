@@ -23,20 +23,20 @@ class File extends Galerie
         if (!$id || !($data = DBGalerie::getSingleDir($id))) {
             $this->redirect(Request::getReferer(), 'Takový soubor neexistuje!');
         }
-        if (empty($_POST) || is_object($form = $this->_checkData())) {
+        if (empty($_POST) || is_object($form = $this->checkData())) {
             if (empty($_POST)) {
                 post('name', $data['gf_name']);
                 post('parent', $data['gf_id_rodic']);
             } else {
                 $this->redirect()->setMessage($form->getMessages());
             }
-            $this->_displayForm($id);
+            $this->displayForm($id);
             return;
         }
 
         $parent = DBGalerie::getSingleDir(post('parent'));
-        $newPath = $this->_sanitizePathname(
-            $this->_getCanonicalName(
+        $newPath = $this->sanitizePathname(
+            $this->getCanonicalName(
                 $parent['gd_path'] . DIRECTORY_SEPARATOR . post('name')
             )
         );
@@ -69,7 +69,7 @@ class File extends Galerie
     public function upload($id = null)
     {
         if (empty($_POST)) {
-            $this->_displayUpload();
+            $this->displayUpload();
             return;
         }
         $parentId = post('dir');
@@ -79,10 +79,10 @@ class File extends Galerie
         if (!($parent = DBGalerie::getSingleDir($parentId))) {
             $this->redirect('/admin/galerie/upload', 'Taková složka neexistuje');
         }
-        $this->_processUpload($parent);
+        $this->processUpload($parent);
     }
 
-    private function _processUpload($parent)
+    private function processUpload($parent)
     {
         $uploadHelper = new Upload('files');
         $uploadHelper->loadFromPost();
@@ -110,7 +110,7 @@ class File extends Galerie
                 'Žádné soubory nebyly nahrány!'
             );
         }
-        $this->_processUploadedFiles($parent, $uploader->getSavedFiles());
+        $this->processUploadedFiles($parent, $uploader->getSavedFiles());
 
         $this->redirect(
             '/admin/galerie',
@@ -118,11 +118,11 @@ class File extends Galerie
         );
     }
 
-    private function _processUploadedFiles($parent, $files)
+    private function processUploadedFiles($parent, $files)
     {
         $failCount = 0;
         foreach ($files as $path) {
-            if (!$this->_checkGetThumbnail($path)) {
+            if (!$this->checkGetThumbnail($path)) {
                 unlink($path);
                 $failCount++;
                 continue;
@@ -145,7 +145,7 @@ class File extends Galerie
         }
     }
 
-    private function _displayUpload()
+    private function displayUpload()
     {
         $dirs = DBGalerie::getDirs(true, true);
         foreach ($dirs as &$item) {
@@ -163,7 +163,7 @@ class File extends Galerie
         return;
     }
 
-    private function _displayForm($id)
+    private function displayForm($id)
     {
         $dirs = DBGalerie::getDirs(true, true);
         foreach ($dirs as &$item) {
@@ -185,7 +185,7 @@ class File extends Galerie
         );
     }
 
-    private function _checkData()
+    private function checkData()
     {
         $form = new Form();
 

@@ -19,44 +19,44 @@ class DBUser extends Adapter implements Pagable
         if (!isset($options['sort'])) {
             $options['sort'] = 'prijmeni';
         }
-        $q = "SELECT users.*,skupiny.* FROM users
+        $query = "SELECT users.*,skupiny.* FROM users
             LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id";
 
         switch($options['filter']) {
             case 'unconfirmed':
-                $q .= " AND u_confirmed='0' AND u_ban='0'";
+                $query .= " AND u_confirmed='0' AND u_ban='0'";
                 break;
             case 'ban':
-                $q .= " AND u_ban='1'";
+                $query .= " AND u_ban='1'";
                 break;
             case 'dancer':
-                $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0' AND u_dancer='1'";
+                $query .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0' AND u_dancer='1'";
                 break;
             case 'system':
-                $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='1'";
+                $query .= " AND u_confirmed='1' AND u_ban='0' AND u_system='1'";
                 break;
-       	    case 'all':
+            case 'all':
             default:
                 if (is_numeric($options['filter'])) {
-                    $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0' AND u_group='{$options['filter']}'";
+                    $query .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0' AND u_group='{$options['filter']}'";
                 } else {
-                    $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0'";
+                    $query .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0'";
                 }
         }
         switch($options['sort']) {
             case 'var-symbol':
-                $q .= ' ORDER BY u_id';
+                $query .= ' ORDER BY u_id';
                 break;
             case 'narozeni':
-                $q .= ' ORDER BY u_narozeni';
+                $query .= ' ORDER BY u_narozeni';
                 break;
             case 'prijmeni':
             default:
-                $q .= ' ORDER BY u_prijmeni';
+                $query .= ' ORDER BY u_prijmeni';
                 break;
         }
-        $q .= " LIMIT $offset,$count";
-        $res = self::query($q);
+        $query .= " LIMIT $offset,$count";
+        $res = self::query($query);
         return self::getArray($res);
     }
 
@@ -65,31 +65,31 @@ class DBUser extends Adapter implements Pagable
         if (!isset($options['filter'])) {
             $options['filter'] = 'all';
         }
-        $q = "SELECT COUNT(*) FROM users WHERE 1=1";
+        $query = "SELECT COUNT(*) FROM users WHERE 1=1";
         switch($options['filter']) {
             case 'unconfirmed':
-                $q .= " AND u_confirmed='0' AND u_ban='0'";
+                $query .= " AND u_confirmed='0' AND u_ban='0'";
                 break;
             case 'ban':
-                $q .= " AND u_ban='1'";
+                $query .= " AND u_ban='1'";
                 break;
             case 'dancer':
-                $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0' AND u_dancer='1'";
+                $query .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0' AND u_dancer='1'";
                 break;
             case 'system':
-                $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='1'";
+                $query .= " AND u_confirmed='1' AND u_ban='0' AND u_system='1'";
                 break;
             case 'all':
             default:
                 if (is_numeric($options['filter'])) {
-                    $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0' AND u_group='{$options['filter']}'";
+                    $query .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0' AND u_group='{$options['filter']}'";
                 } else {
-                    $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0'";
+                    $query .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0'";
                 }
         }
-        $q .= ' ORDER BY u_prijmeni';
+        $query .= ' ORDER BY u_prijmeni';
 
-        $res = self::query($q);
+        $res = self::query($query);
         $res = self::getSingleRow($res);
         return $res['COUNT(*)'];
     }
@@ -110,11 +110,11 @@ class DBUser extends Adapter implements Pagable
         }
     }
 
-    public static function getUserGroup($id)
+    public static function getUserGroup($uid)
     {
-        list($id) = self::escape($id);
+        list($uid) = self::escape($uid);
 
-        $res = self::query("SELECT u_group FROM users WHERE u_id='$id'");
+        $res = self::query("SELECT u_group FROM users WHERE u_id='$uid'");
         if (!$res) {
             return false;
         } else {
@@ -150,15 +150,15 @@ class DBUser extends Adapter implements Pagable
         }
     }
 
-    public static function getUserData($id)
+    public static function getUserData($uid)
     {
-        list($id) = self::escape($id);
+        list($uid) = self::escape($uid);
 
         $res = self::query(
             "SELECT users.*,skupiny.*,permissions.* FROM users
                 LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
                 LEFT JOIN permissions ON u_group=pe_id
-            WHERE u_id='$id'"
+            WHERE u_id='$uid'"
         );
         if (!$res) {
             return false;
@@ -172,9 +172,10 @@ class DBUser extends Adapter implements Pagable
         list($jmeno, $prijmeni) = self::escape($jmeno, $prijmeni);
 
         $res = self::query(
-        "SELECT * FROM users
-        WHERE u_jmeno LIKE '$jmeno' AND u_prijmeni LIKE '$prijmeni'
-        ORDER BY u_id");
+            "SELECT * FROM users
+            WHERE u_jmeno LIKE '$jmeno' AND u_prijmeni LIKE '$prijmeni'
+            ORDER BY u_id"
+        );
         if (!$res) {
             return false;
         } else {
@@ -200,11 +201,11 @@ class DBUser extends Adapter implements Pagable
         return array($user_id, $par_id);
     }
 
-    public static function isUserLocked($id)
+    public static function isUserLocked($uid)
     {
-        list($id) = self::escape($id);
+        list($uid) = self::escape($uid);
 
-        $res = self::query("SELECT u_lock FROM users WHERE u_id='$id'");
+        $res = self::query("SELECT u_lock FROM users WHERE u_id='$uid'");
         if (!$res) {
             return false;
         } else {
@@ -213,11 +214,11 @@ class DBUser extends Adapter implements Pagable
         }
     }
 
-    public static function isUserConfirmed($id)
+    public static function isUserConfirmed($uid)
     {
-        list($id) = self::escape($id);
+        list($uid) = self::escape($uid);
 
-        $res = self::query("SELECT u_confirmed FROM users WHERE u_id='$id'");
+        $res = self::query("SELECT u_confirmed FROM users WHERE u_id='$uid'");
         if (!$res) {
             return false;
         } else {
@@ -226,27 +227,27 @@ class DBUser extends Adapter implements Pagable
         }
     }
 
-    public static function confirmUser($id, $group, $skupina = '1', $dancer = 0)
+    public static function confirmUser($uid, $group, $skupina = '1', $dancer = 0)
     {
-        list($id, $group, $skupina, $dancer) =
-            self::escape($id, $group, $skupina, $dancer);
+        list($uid, $group, $skupina, $dancer) =
+            self::escape($uid, $group, $skupina, $dancer);
 
         self::query(
             "UPDATE users SET u_confirmed='1',u_group='$group',
-            u_skupina='$skupina',u_dancer='$dancer',u_system='0' WHERE u_id='$id'"
+            u_skupina='$skupina',u_dancer='$dancer',u_system='0' WHERE u_id='$uid'"
         );
     }
 
-    public static function setPassword($id, $passwd)
+    public static function setPassword($uid, $passwd)
     {
-        list($id, $passwd) = self::escape($id, $passwd);
+        list($uid, $passwd) = self::escape($uid, $passwd);
 
-        self::query("UPDATE users SET u_pass='$passwd' WHERE u_id='$id'");
+        self::query("UPDATE users SET u_pass='$passwd' WHERE u_id='$uid'");
         return true;
     }
 
     public static function setUserData(
-        $id,
+        $uid,
         $jmeno,
         $prijmeni,
         $pohlavi,
@@ -262,10 +263,10 @@ class DBUser extends Adapter implements Pagable
         $system
     ) {
         list(
-            $id, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $narozeni,
+            $uid, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $narozeni,
             $poznamky, $group, $skupina, $dancer, $lock, $ban, $system
         ) = self::escape(
-            $id, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $narozeni,
+            $uid, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $narozeni,
             $poznamky, $group, $skupina, $dancer, $lock, $ban, $system
         );
 
@@ -274,7 +275,7 @@ class DBUser extends Adapter implements Pagable
             u_jmeno='$jmeno',u_prijmeni='$prijmeni',u_pohlavi='$pohlavi',u_email='$email',
             u_telefon='$telefon',u_narozeni='$narozeni',u_poznamky='$poznamky',u_group='$group',
             u_skupina='$skupina',u_dancer='$dancer',u_lock='$lock',u_ban='$ban',u_system='$system'
-            WHERE u_id='$id'"
+            WHERE u_id='$uid'"
         );
         return true;
     }
@@ -320,19 +321,19 @@ class DBUser extends Adapter implements Pagable
         return true;
     }
 
-    public static function removeUser($id)
+    public static function removeUser($uid)
     {
-        list($id) = self::escape($id);
+        list($uid) = self::escape($uid);
 
-        self::query("DELETE FROM users WHERE u_id='$id'");
-        self::query("DELETE FROM rozpis WHERE r_trener='$id'");
-        self::query("DELETE FROM rozpis_item WHERE ri_partner='$id'");
-        self::query("DELETE FROM nabidka WHERE n_trener='$id'");
-        self::query("DELETE FROM nabidka_item WHERE ni_partner='$id'");
-        self::query("DELETE FROM akce_item WHERE ai_user='$id'");
+        self::query("DELETE FROM users WHERE u_id='$uid'");
+        self::query("DELETE FROM rozpis WHERE r_trener='$uid'");
+        self::query("DELETE FROM rozpis_item WHERE ri_partner='$uid'");
+        self::query("DELETE FROM nabidka WHERE n_trener='$uid'");
+        self::query("DELETE FROM nabidka_item WHERE ni_partner='$uid'");
+        self::query("DELETE FROM akce_item WHERE ai_user='$uid'");
 
-        DBPary::noPartner($id);
-        self::query("DELETE FROM pary WHERE p_id_partner='$id' AND p_archiv='0'");
+        DBPary::noPartner($uid);
+        self::query("DELETE FROM pary WHERE p_id_partner='$uid' AND p_archiv='0'");
 
         return true;
     }
@@ -342,8 +343,8 @@ class DBUser extends Adapter implements Pagable
         $res = self::query(
             "SELECT users.*,skupiny.* FROM users
             LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id"
-                . (($group == null || $group == L_ALL) ? '' : " WHERE u_group='$group'")
-                . " ORDER BY u_prijmeni"
+            . (($group == null || $group == L_ALL) ? '' : " WHERE u_group='$group'")
+            . " ORDER BY u_prijmeni"
         );
 
         return self::getArray($res);
@@ -447,9 +448,9 @@ class DBUser extends Adapter implements Pagable
         $res = self::query(
             "SELECT users.*,skupiny.* FROM users
                 LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
-            WHERE u_system='0' AND u_confirmed='1' AND u_ban='0' " .
-                ($group > L_ALL ? "AND u_group='$group' " : '') .
-                "ORDER BY u_prijmeni"
+            WHERE u_system='0' AND u_confirmed='1' AND u_ban='0' "
+            . ($group > L_ALL ? "AND u_group='$group' " : '')
+            . "ORDER BY u_prijmeni"
         );
         return self::getArray($res);
     }
@@ -459,9 +460,9 @@ class DBUser extends Adapter implements Pagable
         $res = self::query(
             "SELECT users.*,skupiny.* FROM users
                 LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
-            WHERE u_system='0' AND u_dancer='1' AND u_confirmed='1' AND u_ban='0' " .
-                ($group > -1 ? "AND u_group='$group' " : '') .
-            "ORDER BY u_prijmeni"
+            WHERE u_system='0' AND u_dancer='1' AND u_confirmed='1' AND u_ban='0' "
+            . ($group > -1 ? "AND u_group='$group' " : '')
+            . "ORDER BY u_prijmeni"
         );
         return self::getArray($res);
     }
