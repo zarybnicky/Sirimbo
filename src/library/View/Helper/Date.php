@@ -2,14 +2,15 @@
 namespace TKOlomouc\View\Helper;
 
 use TKOlomouc\View\Partial;
+use TKOlomouc\Type\DateFormat;
 
 /*
  * Example:
  * echo '<form action="" method="post">';
- * echo $this->date('2012-12-21')->name('test1')->selectBox(), '<br/>';
- * echo $this->date('2000-01-01')->name('test2')->textBox(), '<br/>';
- * echo $this->date()->name('test1')->getPost(), '<br/>';
- * echo $this->date()->name('test2')->getPost(), '<br/>';
+ * echo $date->setDate('2012-12-21')->name('test1')->selectBox(), '<br/>';
+ * echo date->setDate('2000-01-01')->name('test2')->textBox(), '<br/>';
+ * echo date->setDate()->name('test1')->getPost(), '<br/>';
+ * echo $date->setDate()->name('test2')->getPost(), '<br/>';
  * echo '<input type="submit" value="Send" />';
  * echo '</form>';
 */
@@ -38,8 +39,8 @@ class Date extends Partial
 
     private function updateDate(&$var, $d)
     {
-        if(!is_a($d, 'Date')) {
-            $d = new Date($d);
+        if(!is_a($d, 'DateFormat')) {
+            $d = new DateFormat($d);
         }
 
         if (!$d->isValid()) {
@@ -127,17 +128,17 @@ class Date extends Partial
     public function getPostRange()
     {
         if (!$this->isDateRange) {
-            return array('from' => $this->getPost(), 'to' => new Date());
+            return array('from' => $this->getPost(), 'to' => new DateFormat());
         }
 
         if (post($this->name)) {
             if (strpos(post($this->name), ' - ')) {
                 $pieces = explode(' - ', post($this->name));
-                $from = new Date($pieces[0]);
-                $to = new Date($pieces[1]);
+                $from = new DateFormat($pieces[0]);
+                $to = new DateFormat($pieces[1]);
             }
             if (!isset($from) || !isset($to) || (!$from->isValid() && !$to->isValid())) {
-                return array('from' => $this->getPost(true), 'to' => new Date());
+                return array('from' => $this->getPost(true), 'to' => new DateFormat());
             }
 
             return array('from' => $from, 'to' => $to);
@@ -149,24 +150,24 @@ class Date extends Partial
             && post($this->name . '-to-month')
             && post($this->name . '-to-day')
         ) {
-            $from = new Date(
+            $from = new DateFormat(
                 post($this->name . '-from-year') . '-'
                 . post($this->name . '-from-month') . '-'
                 . post($this->name . '-from-day')
             );
-            $to = new Date(
+            $to = new DateFormat(
                 post($this->name . '-to-year') . '-'
                 . post($this->name . '-to-month') . '-'
                 . post($this->name . '-to-day')
             );
 
             if (!$from->isValid() && !$to->isValid()) {
-                return array('from' => $this->getPost(true), 'to' => new Date());
+                return array('from' => $this->getPost(true), 'to' => new DateFormat());
             }
 
             return array('from' => $from, 'to' => $to);
         } else {
-            return array('from' => new Date(), 'to' => new Date());
+            return array('from' => new DateFormat(), 'to' => new DateFormat());
         }
     }
 
@@ -181,14 +182,14 @@ class Date extends Partial
         }
 
         if (post($name)) {
-            return new Date(post($name));
+            return new DateFormat(post($name));
         } elseif (post($name . '-year') && post($name . '-month')
             && post($name . '-day')) {
-            return new Date(post($name . '-year') . '-' .
+            return new DateFormat(post($name . '-year') . '-' .
                 post($name . '-month') . '-' .
                 post($name . '-day'));
         } else {
-            return new Date();
+            return new DateFormat();
         }
     }
 
@@ -199,8 +200,8 @@ class Date extends Partial
 
         //Day select
         $select->name($this->name . '-day')
-        ->value($this->date ? $this->date->getDay() : null)
-        ->option('00', 'Den', true);
+            ->value($this->date ? $this->date->getDay() : null)
+            ->option('00', 'Den', true);
 
         for($i = 1; $i < 32; $i++) {
             $select->option(
@@ -212,27 +213,27 @@ class Date extends Partial
 
         //Month select
         $out .= $select->name($this->name . '-month')
-        ->value($this->date ? $this->date->getMonth() : null)
-        ->option('00', 'Měsíc', true)
-        ->option('01', 'Leden')
-        ->option('02', 'Únor')
-        ->option('03', 'Březen')
-        ->option('04', 'Duben')
-        ->option('05', 'Květen')
-        ->option('06', 'Červen')
-        ->option('07', 'Červenec')
-        ->option('08', 'Srpen')
-        ->option('09', 'Září')
-        ->option('10', 'Říjen')
-        ->option('11', 'Listopad')
-        ->option('12', 'Prosinec');
+            ->value($this->date ? $this->date->getMonth() : null)
+            ->option('00', 'Měsíc', true)
+            ->option('01', 'Leden')
+            ->option('02', 'Únor')
+            ->option('03', 'Březen')
+            ->option('04', 'Duben')
+            ->option('05', 'Květen')
+            ->option('06', 'Červen')
+            ->option('07', 'Červenec')
+            ->option('08', 'Srpen')
+            ->option('09', 'Září')
+            ->option('10', 'Říjen')
+            ->option('11', 'Listopad')
+            ->option('12', 'Prosinec');
 
         $out .= $select->render();
 
         //Year select
         $select->name($this->name . '-year')
-        ->value($this->date ? $this->date->getYear() : null)
-        ->option('0000', 'Rok', true);
+            ->value($this->date ? $this->date->getYear() : null)
+            ->option('0000', 'Rok', true);
 
         for($i = $this->fromYear; $i < $this->toYear; $i++) {
             $select->option($i, $i);
@@ -248,28 +249,28 @@ class Date extends Partial
         if ($this->isDateRange) {
             if ($selected) {
                 $pieces = explode(' - ', $selected);
-                $from = new Date($pieces[0]);
-                $to = new Date($pieces[1]);
+                $from = new DateFormat($pieces[0]);
+                $to = new DateFormat($pieces[1]);
             } elseif ($this->date && $this->dateTo) {
                 $from = $this->date;
                 $to = $this->dateTo;
             } else {
-                $from = new Date();
-                $to = new Date();
+                $from = new DateFormat();
+                $to = new DateFormat();
             }
             if ($from->isValid() || $from->isValid()) {
                 $selected =
-                    $from->getDate(Date::FORMAT_SIMPLIFIED) . ' - '
-                    . $to->getDate(Date::FORMAT_SIMPLIFIED);
+                    $from->getDate(DateFormat::FORMAT_SIMPLIFIED) . ' - '
+                    . $to->getDate(DateFormat::FORMAT_SIMPLIFIED);
                 $done = true;
             }
         }
         if (!$done) {
             if ($selected) {
-                $date = new Date($selected);
-                $selected = $date->getDate(Date::FORMAT_SIMPLIFIED);
+                $date = new DateFormat($selected);
+                $selected = $date->getDate(DateFormat::FORMAT_SIMPLIFIED);
             } else {
-                $selected = $this->date ? $this->date->getDate(Date::FORMAT_SIMPLIFIED) : '';
+                $selected = $this->date ? $this->date->getDate(DateFormat::FORMAT_SIMPLIFIED) : '';
             }
         }
         return "<input type='text' name='{$this->name}' value='{$selected}' />\n";

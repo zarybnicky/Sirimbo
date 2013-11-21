@@ -3,12 +3,12 @@
 <?php notice($this->redirect()->getMessage());?>
 <form action="" method="POST">
 <?php
-echo $this->menu()
+echo (new TKOlomouc\View\Helper\Menu())
     ->content('Potvrdit', 'confirm', true)
     ->content('Odstranit', 'remove', true)
     ->content('Zpět', '../users');
 
-echo $this->table()
+echo (new TKOlomouc\View\Helper\Table())
     ->column('checkBox', '')
     ->column('group', 'Úroveň')
     ->column('skupina', 'Skupina')

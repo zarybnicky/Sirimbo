@@ -4,9 +4,9 @@ notice($this->redirect()->getMessage());
 
 if ($this->showMenu) {
     echo '<form action="" method="get">';
-    $s = $this->select();
     echo 'Uživatelé:&nbsp;';
-    $s->get()->name('f')
+    $s = (new TKOlomouc\View\Helper\Select('f'))
+        ->get()
         ->value('all')
         ->option('all', 'všichni')
         ->option('dancer', 'tanečníci')
@@ -19,14 +19,14 @@ if ($this->showMenu) {
     }
     echo $s;
     echo '&nbsp;řadit podle:&nbsp;';
-    echo $s->select()
-        ->get()->name('s')
+    echo (new TKOlomouc\View\Helper\Select('s'))
+        ->get()
         ->option('surname', 'příjmení')
         ->option('var-symbol', 'var. symbolu')
         ->option('narozeni', 'data narození');
     echo '&nbsp;zobrazení:&nbsp;';
-    echo $s->select()
-        ->get()->name('v')
+    echo (new TKOlomouc\View\Helper\Select('v'))
+        ->get()
         ->option('info', 'informace')
         ->option('status', 'status uživatele');
     echo '<button type="submit">Odeslat</button>';
@@ -35,7 +35,7 @@ if ($this->showMenu) {
 
 echo '<form action="" method="POST">';
 if ($this->showMenu) {
-    $f = $this->menu()
+    $f = (new TKOlomouc\View\Helper\Menu())
         ->content('Přidat', '/admin/users/add')
         ->content('Upravit', 'edit', true)
         ->content('Odebrat', 'remove', true)
@@ -54,12 +54,12 @@ if ($this->data == array()) {
 }
 echo '<div style="margin-right:150px">';
 
-$table = $this->table()
+$table = (new TKOlomouc\View\Helper\Table())
     ->style('width:100%')
-    ->data($this->data)
     ->column('checkBox', '')
     ->column('index', '')
-    ->column('fullName', 'Jméno');
+    ->column('fullName', 'Jméno')
+    ->data($this->data);
 if ($this->view == 'status') {
     $table->column('skupina', '')
         ->column('groupInfo', 'Oprávnění')

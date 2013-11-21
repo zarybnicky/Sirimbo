@@ -7,10 +7,13 @@ use TKOlomouc\Model\DBPary;
 
 class Pary extends Member
 {
-    function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('pary', P_VIEW);
     }
-    function view($id = null) {
+
+    public function view($id = null)
+    {
         $pary = DBPary::getActiveParyByHodnoceni();
         if (empty($pary)) {
             $this->render(
@@ -41,4 +44,3 @@ class Pary extends Member
         );
     }
 }
-?>

@@ -84,7 +84,7 @@ class Dispatcher
         $this->postDispatch[] = $filename;
     }
 
-    function dispatch($url, $action, $id = null)
+    public function dispatch($url, $action, $id = null)
     {
         $this->controller = $this->getController($url);
         $method = $this->findMethod($action);
@@ -112,4 +112,3 @@ class Dispatcher
         }
     }
 }
-?>

@@ -5,7 +5,7 @@ notice($this->redirect()->getMessage());
 <form action="" method="POST">
     <?php
     if (!TISK) {
-        echo $this->menu()
+        echo (new TKOlomouc\View\Helper\Menu())
             ->content('Přidat', 'aktuality/add')
             ->content('Upravit', 'edit', true)
             ->content('Upravit galerii', 'foto', true)

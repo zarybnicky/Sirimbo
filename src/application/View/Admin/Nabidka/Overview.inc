@@ -4,7 +4,7 @@ notice($this->redirect()->getMessage());
 
 echo '<form action="" method="POST">';
 if ($this->showMenu) {
-    echo $this->menu()
+    echo (new TKOlomouc\View\Helper\Menu())
         ->content('Přidat', 'nabidka/add')
         ->content('Upravit', 'edit', true)
         ->content('Upravit tréninky', 'edit_detail', true)
@@ -12,13 +12,13 @@ if ($this->showMenu) {
         ->content('Uložit změny', 'save', true);
 }
 echo '<div style="margin-right:150px;">';
-echo $this->table()
+echo (new TKOlomouc\View\Helper\Table())
     ->style('width:100%;')
-    ->data($this->data)
     ->column('checkBox', '')
     ->column('fullName', 'Trenér')
     ->column('date', 'Datum')
-    ->column('visible', 'Viditelný');
+    ->column('visible', 'Viditelný')
+    ->data($this->data);
 echo '</div>';
 echo '</form>';
 ?>

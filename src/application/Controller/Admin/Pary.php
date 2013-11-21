@@ -8,21 +8,27 @@ use TKOlomouc\Model\DBUser;
 
 class Pary extends Admin
 {
-    function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('pary', P_OWNED);
     }
-    function view($id = null) {
+
+    public function view($id = null)
+    {
         switch(post("action")) {
             case "remove":
-                if (!is_array(post("pary")))
+                if (!is_array(post("pary"))) {
                     break;
+                }
                 list($par) = post("pary");
                 $data = DBPary::getSinglePar($par);
 
-                if ($data['guy_id'])
+                if ($data['guy_id']) {
                     DBPary::noPartner($data['guy_id']);
-                if ($data['gal_id'])
+                }
+                if ($data['gal_id']) {
                     DBPary::noPartner($data['gal_id']);
+                }
 
                 $this->redirect()->setMessage('Pár odstraněn');
                 break;
@@ -30,19 +36,22 @@ class Pary extends Admin
                 $old_gal = DBPary::getLatestPartner(post("add_partner"), 'm');
                 $old_guy = DBPary::getLatestPartner(post("add_partnerka"), 'f');
 
-                if (post("add_partner"))
+                if (post("add_partner")) {
                     DBPary::newPartner(post("add_partner"), post("add_partnerka"));
-                if ($old_guy['u_id'])
+                }
+                if ($old_guy['u_id']) {
                     DBPary::noPartner($old_guy['u_id']);
-                if ($old_gal['u_id'])
+                }
+                if ($old_gal['u_id']) {
                     DBPary::noPartner($old_gal['u_id']);
-
+                }
                 $this->redirect()->setMessage('Pár přidán');
                 break;
             case 'edit':
                 $pary = post('pary');
-                if ($pary[0])
+                if ($pary[0]) {
                     $this->redirect('/admin/pary/edit/' . $pary[0]);
+                }
                 break;
         }
         $data = DBPary::getActivePary();
@@ -67,10 +76,12 @@ class Pary extends Admin
             )
         );
     }
-    function edit($id = null) {
-        if (!$id || !($data = DBPary::getSinglePar($id)))
-            $this->redirect('/admin/pary', 'Pár s takovým ID neexistuje');
 
+    public function edit($id = null)
+    {
+        if (!$id || !($data = DBPary::getSinglePar($id))) {
+            $this->redirect('/admin/pary', 'Pár s takovým ID neexistuje');
+        }
         if (empty($_POST)) {
             post('stt-trida', $data['p_stt_trida']);
             post('stt-body', $data['p_stt_body']);
@@ -119,4 +130,3 @@ class Pary extends Admin
         $this->redirect('/admin/pary', 'Třída a body změněny');
     }
 }
-?>

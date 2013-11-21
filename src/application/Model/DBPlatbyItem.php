@@ -5,8 +5,10 @@ use TKOlomouc\Model\Database\Adapter;
 
 class DBPlatbyItem extends Adapter
 {
-    public static function insert($uid, $cid, $rid, $amount, $date, $prefix) {
-        list($uid, $cid, $rid, $amount, $date, $prefix) = self::escape($uid, $cid, $rid, $amount, $date, $prefix);
+    public static function insert($uid, $cid, $rid, $amount, $date, $prefix)
+    {
+        list($uid, $cid, $rid, $amount, $date, $prefix) =
+            self::escape($uid, $cid, $rid, $amount, $date, $prefix);
 
         self::query(
             "INSERT INTO platby_item
@@ -21,8 +23,11 @@ class DBPlatbyItem extends Adapter
                 pi_prefix=VALUES(pi_prefix)"
         );
     }
-    public static function update($id, $uid, $cid, $amount, $date, $prefix) {
-        list($id, $uid, $cid, $amount, $date, $prefix) = self::escape($id, $uid, $cid, $amount, $date, $prefix);
+
+    public static function update($id, $uid, $cid, $amount, $date, $prefix)
+    {
+        list($id, $uid, $cid, $amount, $date, $prefix) =
+            self::escape($id, $uid, $cid, $amount, $date, $prefix);
 
         self::query(
             "UPDATE platby_item SET
@@ -34,48 +39,64 @@ class DBPlatbyItem extends Adapter
             WHERE pi_id='$id'"
         );
     }
-    public static function remove($id) {
+
+    public static function remove($id)
+    {
         list($id) = DBUser::escape($id);
 
         DBUser::query("DELETE FROM platby_item WHERE pi_id='$id'");
     }
-    public static function get($joined = false, $filter = array()) {
+
+    public static function get($joined = false, $filter = array())
+    {
         $query =
             'SELECT * FROM platby_item' .
             ($joined ?
                 ' LEFT JOIN users ON pi_id_user=u_id
                 LEFT JOIN platby_category ON pi_id_category=pc_id' : '');
+
         if (!empty($filter)) {
             $filter = array_combine(array_keys($filter), self::escapeArray(array_values($filter)));
 
             $query .= ' WHERE';
             $first = true;
+
             foreach ($filter as $key => $value) {
-                if (!$first)
+                if (!$first) {
                     $query .= ' AND ';
-                else
+                } else {
                     $first = false;
-                if (!is_array($value))
+                }
+                if (!is_array($value)) {
                     $query .= " $key='$value'";
-                else
+                } else {
                     $query .= " $key IN ('" . implode("','", $value) . "')";
+                }
             }
         }
         $res = self::query($query);
+
         return self::getArray($res);
     }
-    public static function getSingle($id, $joined = false) {
+
+    public static function getSingle($id, $joined = false)
+    {
         list($id) = self::escape($id);
 
-        $res = self::query("SELECT * FROM platby_item" .
-                ($joined ? ' LEFT JOIN users ON pi_id_user=u_id LEFT JOIN platby_category ON pi_id_category=pc_id' : '') .
-                " WHERE pi_id='$id'");
+        $res = self::query(
+            "SELECT * FROM platby_item"
+                . ($joined ? ' LEFT JOIN users ON pi_id_user=u_id LEFT JOIN platby_category ON pi_id_category=pc_id' : '')
+                . " WHERE pi_id='$id'"
+        );
         return self::getSingleRow($res);
     }
-    public static function getSingleByRawId($id) {
+
+    public static function getSingleByRawId($id)
+    {
         list($id) = self::escape($id);
 
         $res = self::query("SELECT * FROM platby_item WHERE pi_id_raw='$id'");
+
         return self::getSingleRow($res);
     }
 }

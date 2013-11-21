@@ -14,12 +14,12 @@ use TKOlomouc\Utility\Form;
 
 class Dokumenty extends Admin
 {
-    function __construct()
+    public function __construct()
     {
         Permissions::checkError('dokumenty', P_OWNED);
     }
 
-    function view($id = null)
+    public function view($id = null)
     {
         switch(post('action')) {
             case 'edit':
@@ -44,7 +44,7 @@ class Dokumenty extends Admin
         $this->displayOverview();
     }
 
-    function edit($id = null)
+    public function edit($id = null)
     {
         if (!$id || !($data = DBDokumenty::getSingleDokument($id))) {
             $this->redirect('/admin/dokumenty', 'Dokument s takovým ID neexistuje');
@@ -69,7 +69,7 @@ class Dokumenty extends Admin
         $this->redirect('/admin/dokumenty', 'Soubor byl úspěšně upraven');
     }
 
-    function remove($id = null)
+    public function remove($id = null)
     {
         if (!is_array(post('data')) && !is_array(get('u'))) {
             $this->redirect('/admin/dokumenty');
@@ -174,4 +174,3 @@ class Dokumenty extends Admin
         }
     }
 }
-?>

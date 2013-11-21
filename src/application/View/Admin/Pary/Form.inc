@@ -8,8 +8,7 @@ Pár: <?php echo $this->fullName;?>
 <tr>
     <td>Třída:</td>
     <td><?php
-        echo $this->select()
-            ->post()->name('stt-trida')
+        echo (new TKOlomouc\View\Helper\Select('stt-trida'))->post()
             ->options(array('Z', 'H', 'D', 'C', 'B', 'A', 'M'), true, true);
     ?></td>
 </tr>
@@ -24,8 +23,7 @@ Pár: <?php echo $this->fullName;?>
 <tr>
     <td>Třída:</td>
     <td><?php
-        echo $this->select()
-            ->post()->name('lat-trida')
+        echo (new TKOlomouc\View\Helper\Select('lat-trida'))->post()
             ->options(array('Z', 'H', 'D', 'C', 'B', 'A', 'M'), true, true);
     ?></td>
 </tr>

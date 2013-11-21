@@ -11,12 +11,12 @@ use TKOlomouc\Utility\Request;
 
 class Ankety extends Admin
 {
-    function __construct()
+    public function __construct()
     {
         Permissions::checkError('ankety', P_OWNED);
     }
 
-    function view($id = null)
+    public function view($id = null)
     {
         switch(post('action')) {
             case 'save':
@@ -39,7 +39,9 @@ class Ankety extends Admin
         }
         $this->displayOverview();
     }
-    function add($id = null) {
+
+    public function add($id = null)
+    {
         if (empty($_POST)) {
             $this->displayForm($data);
             return;
@@ -63,10 +65,12 @@ class Ankety extends Admin
         }
         $this->redirect('/admin/ankety/edit/' . $newId, 'Anketa přidána');
     }
-    function edit($id = null) {
-        if (!$id || !($data = DBAnkety::getSingleAnketa($id)))
-            $this->redirect('/admin/ankety', 'Anketa s takovým ID neexistuje');
 
+    public function edit($id = null)
+    {
+        if (!$id || !($data = DBAnkety::getSingleAnketa($id))) {
+            $this->redirect('/admin/ankety', 'Anketa s takovým ID neexistuje');
+        }
         Permissions::checkError('ankety', P_OWNED, $data['ak_kdo']);
 
         $items = DBAnkety::getAnketaItems($id);
@@ -236,4 +240,3 @@ class Ankety extends Admin
         }
     }
 }
-?>

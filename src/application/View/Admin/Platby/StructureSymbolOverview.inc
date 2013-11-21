@@ -5,7 +5,7 @@ echo '<h2>Specifické symboly</h2>';
 echo '<span class="big">Přidat: </span> ';
 echo '<a href="/admin/platby/structure/category/add">specifický symbol</a>';
 
-echo $this->table()
+echo (new TKOlomouc\View\Helper\Table())
     ->style('width:100%')
     ->column('buttons', '', '', 'width:50px')
     ->column('name', 'Název')
@@ -15,7 +15,7 @@ echo $this->table()
     ->data($this->data);
 
 echo '<h2>Archivované symboly</h2>';
-echo $this->table()
+echo (new TKOlomouc\View\Helper\Table())
     ->style('width:100%')
     ->column('buttons', '', '', 'width:50px')
     ->column('name', 'Název')

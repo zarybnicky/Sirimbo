@@ -13,7 +13,7 @@
             <td>Zámek</td>
         </tr>
         <?php
-        $userselect = $this->userSelect()
+        $userselect = (new TKOlomouc\View\Helper\UserSelect())
             ->idVar('p_id')
             ->type('par')
             ->users($this->users);
@@ -66,8 +66,8 @@
 <br/>
 <h2>Nabídky</h2>
 <?php
-$s = $this->select()
-    ->post()->name('n_id')
+$s = (new TKOlomouc\View\Helper\Select('n_id'))
+    ->post()
     ->option('none', '---');
 foreach ($this->nabidky as $item) {
     $s->option($item['id'], $item['date'] . ': ' . $item['fullName']);

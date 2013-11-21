@@ -7,12 +7,15 @@ use TKOlomouc\Utility\Form;
 use TKOlomouc\Utility\User;
 use TKOlomouc\Model\DBRozpis;
 
-class Rozpis  extends Member
+class Rozpis extends Member
 {
-    function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('rozpis', P_VIEW);
     }
-    function view($id = null) {
+
+    public function view($id = null)
+    {
         if (empty($_POST)) {
             $this->render('files/Member/Rozpis.inc');
             return;
@@ -41,12 +44,14 @@ class Rozpis  extends Member
         }
         $this->render('files/Member/Rozpis.inc');
     }
-    private function _checkData($data, $action = 'signup') {
+
+    private function _checkData($data, $action = 'signup')
+    {
         $f = new Form();
+
         $f->checkBool(!$data['r_lock'], 'Tento rozpis je uzamčený', '');
         $f->checkInArray($action, array('signup', 'signout'), 'Špatná akce', '');
 
         return $f->isValid() ? true : $f;
     }
 }
-?>

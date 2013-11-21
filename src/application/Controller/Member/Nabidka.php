@@ -9,13 +9,17 @@ use TKOlomouc\Model\DBNabidka;
 
 class Nabidka extends Member
 {
-    function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('nabidka', P_VIEW);
     }
-    function view($id = null) {
-        $this->redirect()->setMessage($this->_processPost());
+
+    public function view($id = null)
+    {
+        $this->redirect()->setMessage($this->processPost());
 
         $nabidky = DBNabidka::getNabidka();
+
         if (empty($nabidky)) {
             $this->render(
                 'src/application/View/Empty.inc',
@@ -68,25 +72,34 @@ class Nabidka extends Member
             )
         );
     }
-    private function _checkData($data) {
+
+    private function checkData($data)
+    {
         $f = new Form();
+
         $f->checkBool(!$data['n_lock'], 'Tato nabídka je uzamčená', '');
-        if (post('hodiny'))
+        if (post('hodiny')) {
             $f->checkNumeric(post('hodiny'), 'Špatný počet hodin', 'hodiny');
+        }
+
         return $f->isValid() ? null : $f;
     }
-    private function _processPost() {
-        if (empty($_POST))
+
+    private function processPost()
+    {
+        if (empty($_POST)) {
             return;
+        }
         $data = DBNabidka::getSingleNabidka(post('id'));
 
-        if (is_object($f = $this->_checkData($data))) {
+        if (is_object($f = $this->checkData($data))) {
             return $f->getMessages();
         } elseif (post('hodiny') > 0) {
             if (!User::getZaplaceno() || (User::getPartnerID() > 0 && !User::getZaplaceno(true))) {
                 return 'Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky';
             } elseif ($data['n_max_pocet_hod'] > 0
-                && (DBNabidka::getNabidkaLessons(post('id'), User::getParID()) + post('hodiny')) > $data['n_max_pocet_hod']) {
+                && (DBNabidka::getNabidkaLessons(post('id'), User::getParID()) + post('hodiny')) > $data['n_max_pocet_hod']
+            ) {
                 return 'Maximální počet hodin na pár je ' . $data['n_max_pocet_hod'] . '!';
             } elseif (($data['n_pocet_hod'] - DBNabidka::getNabidkaItemLessons(post('id'))) < post('hodiny')) {
                 return 'Tolik volných hodin tu není';
@@ -109,4 +122,3 @@ class Nabidka extends Member
         }
     }
 }
-?>

@@ -3,14 +3,17 @@ namespace TKOlomouc\Controller\Admin\Aktuality;
 
 use TKOlomouc\Controller\Admin\Aktuality;
 use TKOlomouc\Utility\Permissions;
+use TKOlomouc\Utility\Response;
 
 class Foto extends Aktuality
 {
-    function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('aktuality', P_OWNED);
     }
-    function view($id = null) {
 
+    public function view($id = null)
+    {
+        Response::redirect('/admin/aktuality', 'Ještě není implementováno...');
     }
 }
-?>

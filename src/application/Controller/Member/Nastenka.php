@@ -9,10 +9,13 @@ use TKOlomouc\Utility\Permissions;
 
 class Nastenka extends Member
 {
-    function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('nastenka', P_VIEW);
     }
-    function view($id = null) {
+
+    public function view($id = null)
+    {
         $pager = new Pager(new PagerAdapterDb('DBNastenka'));
         $pager->setCurrentPageField('p');
         $pager->setItemsPerPageField('c');
@@ -56,4 +59,3 @@ class Nastenka extends Member
         );
     }
 }
-?>

@@ -14,7 +14,8 @@ class Miscellaneous
         echo '<div class="notice">', $text, '</div>', "\n";
     }
 
-    public static function getColorBox($color, $popis) {
+    public static function getColorBox($color, $popis)
+    {
         return '<div class="box" title="' . $popis . '" '
             . 'style="background-color:' . $color . '"></div>';
     }
@@ -109,8 +110,8 @@ class Miscellaneous
         if (!$checked) {
             $checked = (bool) $default;
         }
-        return '<input type="checkbox" name="' . $name . '" value="' . $value . '"' .
-            ($checked ? ' checked="checked"' : '') . ($readonly ? ' readonly="readonly"' : '') . '/>';
+        return '<input type="checkbox" name="' . $name . '" value="' . $value . '"'
+            . ($checked ? ' checked="checked"' : '') . ($readonly ? ' readonly="readonly"' : '') . '/>';
     }
     public static function getRadio($name, $value, $default = false, $get = false, $readonly = false)
     {
@@ -120,8 +121,8 @@ class Miscellaneous
         if (!$checked) {
             $checked = (bool) $default;
         }
-        return '<input type="radio" name="' . $name . '" value="' . $value . '"' .
-            ($checked ? ' checked="checked"' : '') . ($readonly ? ' readonly="readonly"' : '') . '/>';
+        return '<input type="radio" name="' . $name . '" value="' . $value . '"'
+            . ($checked ? ' checked="checked"' : '') . ($readonly ? ' readonly="readonly"' : '') . '/>';
     }
     public static function getReturnURI($default)
     {

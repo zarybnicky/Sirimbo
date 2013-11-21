@@ -1,6 +1,6 @@
 <h1>Novinky</h1>
 <?php notice($this->redirect()->getMessage());?>
-<?php echo $this->partnerRequest()->getAll(); ?>
+<?php echo (new TKOlomouc\View\Helper\PartnerRequest())->getAll(); ?>
 
 <?php if ($this->data == array()) {
     notice('Žádné novinky');

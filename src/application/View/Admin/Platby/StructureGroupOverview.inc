@@ -5,7 +5,7 @@ echo '<h2>Kategorie plateb</h2>';
 echo '<span class="big">Přidat: </span> ';
 echo '<a href="/admin/platby/structure/group/add">kategorii</a>&nbsp;';
 
-echo $this->table()
+echo (new TKOlomouc\View\Helper\Table())
     ->style('width:100%')
     ->column('buttons', '', '', 'width:50px')
     ->column('name', 'Název')

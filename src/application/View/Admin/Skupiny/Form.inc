@@ -1,5 +1,5 @@
 <?php
-$mainForm = (new TKOlomouc\View\Helper\Table())->table()
+$mainForm = (new TKOlomouc\View\Helper\Table())
     ->style('width:100%')
     ->showHeader(false)
     ->column('desc', '', 'r')
@@ -11,7 +11,7 @@ $mainForm = (new TKOlomouc\View\Helper\Table())->table()
                 'value' => '<input type="text" name="name" value="' . post('name') . '" />'
             ), array(
                 'desc' => 'Barva',
-                'value' => $this->colorselect('color')
+                'value' => (new \TKOlomouc\View\Helper\ColorSelect('color'))
             ), array(
                 'desc' => 'Popis',
                 'value' => '<textarea rows="15" cols="50" name="desc">' . post('popis') . '</textarea>'
@@ -20,7 +20,7 @@ $mainForm = (new TKOlomouc\View\Helper\Table())->table()
     );
 
 if (!empty($this->groups)) {
-    $groupForm = (new TKOlomouc\View\Helper\Table())->table()
+    $groupForm = (new TKOlomouc\View\Helper\Table())
         ->column('buttons', '', '', 'width:75px')
         ->column('type', 'Typ')
         ->column('name', 'Jméno')
@@ -28,7 +28,7 @@ if (!empty($this->groups)) {
         ->data($this->groups);
 }
 if (!empty($this->groupSelect)) {
-    $groupSelectBox = (new TKOlomouc\View\Helper\Select())->select('group')
+    $groupSelectBox = (new TKOlomouc\View\Helper\Select('group'))
         ->options($this->groupSelect);
 }
 ?>

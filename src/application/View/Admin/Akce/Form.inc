@@ -31,11 +31,11 @@ if ($this->form) {
         <td></td>
     </tr><tr>
         <td>Od: (*)</td>
-        <td><?php echo $this->date('od')->textBox();?></td>
+        <td><?php echo (new \TKOlomouc\View\Helper\Date('od'))->textBox();?></td>
         <td></td>
     </tr><tr>
         <td>Do: </td>
-        <td><?php echo $this->date('do')->textBox();?></td>
+        <td><?php echo (new \TKOlomouc\View\Helper\Date('do'))->textBox();?></td>
         <td>(pokud je prázdný, počítá se jako "Od")</td>
     </tr><tr>
         <td>Kapacita (*): </td>

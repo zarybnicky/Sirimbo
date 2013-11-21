@@ -18,7 +18,7 @@
             </td>
             <td>
                 <?php
-                echo $this->select('category')
+                echo (new TKOlomouc\View\Helper\Select('category'))
                     ->option('1', 'Schůze, rady')
                     ->option('2', 'Soutěže')
                     ->option('3', 'Tábory')

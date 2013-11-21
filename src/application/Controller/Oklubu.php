@@ -5,37 +5,58 @@ use TKOlomouc\Utility\Sidebar;
 
 class Oklubu extends ControllerAbstract
 {
-    function view($id = null) {
+    public function view($id = null)
+    {
        $this->redirect('/oklubu/obecne');
     }
-    function obecne($id = null) {
+
+    public function obecne($id = null)
+    {
         $this->render('src/application/View/Main/OKlubu/Main.inc');
     }
-    function historie($id = null) {
+
+    public function historie($id = null)
+    {
         $this->render('src/application/View/Main/OKlubu/Historie.inc');
     }
-    function uspechy($id = null) {
+
+    public function uspechy($id = null)
+    {
         $this->render('src/application/View/Main/OKlubu/VCislech.inc');
     }
-    function mistrovstvi($id = null) {
+
+    public function mistrovstvi($id = null)
+    {
         $this->render('src/application/View/Main/OKlubu/Mistrovstvi.inc');
     }
-    function druzstva($id = null) {
+
+    public function druzstva($id = null)
+    {
         $this->render('src/application/View/Main/OKlubu/Druzstva.inc');
     }
-    function liga($id = null) {
+
+    public function liga($id = null)
+    {
         $this->render('src/application/View/Main/OKlubu/Liga.inc');
     }
-    function klubovi($id = null) {
+
+    public function klubovi($id = null)
+    {
         $this->render('src/application/View/Main/OKlubu/TreneriInt.inc');
     }
-    function externi($id = null) {
+
+    public function externi($id = null)
+    {
         $this->render('src/application/View/Main/OKlubu/TreneriExt.inc');
     }
-    function saly($id = null) {
+
+    public function saly($id = null)
+    {
         $this->render('src/application/View/Main/OKlubu/Saly.inc');
     }
-    function sidebar() {
+
+    public function sidebar()
+    {
         $s = new Sidebar();
 
         echo $s->menuHeader();
@@ -52,4 +73,3 @@ class Oklubu extends ControllerAbstract
         echo $s->commonItems();
     }
 }
-?>

@@ -7,27 +7,30 @@ use TKOlomouc\Utility\User;
 
 class PartnerRequest extends Partial
 {
-    private $_id = null;
+    private $userId = null;
 
-    public function partnerRequest($id = null) {
-        if ($id !== null)
-            $this->_id = $id;
-        else
-            $this->_id = User::getUserID();
-        return $this;
-    }
-    public function id($id = null) {
-        if ($id === null)
-            return $this->_id;
-        else
-            $this->_id = $id;
+    public function __construct($id = null)
+    {
+        if ($id === null) {
+            $id = User::getUserID();
+        }
+
+        $this->userId = $id;
         return $this;
     }
 
-    public function getRequestsByMe() {
-        $data = DBPary::getPartnerRequestsByMe($this->_id);
-        if (empty($data))
+    public function setId($id = null)
+    {
+        $this->userId = $id;
+
+        return $this;
+    }
+
+    public function getRequestsByMe()
+    {
+        if (!($data = DBPary::getPartnerRequestsByMe($this->userId))) {
             return '';
+        }
         $out = '';
         foreach ($data as $item) {
             ob_start();
@@ -48,10 +51,11 @@ class PartnerRequest extends Partial
         }
         return $out;
     }
-    public function getRequestsForMe() {
-        $data = DBPary::getPartnerRequestsForMe($this->_id);
-        if (empty($data))
+    public function getRequestsForMe()
+    {
+        if ($data = DBPary::getPartnerRequestsForMe($this->userId)) {
             return '';
+        }
         $out = '';
         foreach ($data as $item) {
             ob_start();
@@ -73,8 +77,8 @@ class PartnerRequest extends Partial
         }
         return $out;
     }
-    public function getAll() {
+    public function getAll()
+    {
         return ($this->getRequestsByMe() . $this->getRequestsForMe());
     }
 }
-?>

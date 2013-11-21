@@ -9,18 +9,19 @@ use TKOlomouc\Settings;
 
 class Galerie extends Admin
 {
-    function __construct()
+    public function __construct()
     {
         Permissions::checkError('galerie', P_OWNED);
     }
-    function view($id = null)
+
+    public function view($id = null)
     {
         switch(post('action')) {
             case 'galerie/save':
-                $this->_processSave();
+                $this->processSave();
                 break;
             case 'galerie/scan':
-                $this->_scan();
+                $this->scan();
                 break;
             case 'directory':
             case 'directory/edit':
@@ -40,10 +41,10 @@ class Galerie extends Admin
                 }
                 break;
         }
-        $this->_displayOverview();
+        $this->displayOverview();
     }
 
-    private function _scan($id = null)
+    private function scan($id = null)
     {
         $dbInDirs = DBGalerie::getDirsWithParentPath();
         $dbInFiles = DBGalerie::getFotkyWithParentPath();
@@ -67,8 +68,8 @@ class Galerie extends Admin
         );
         $fsFiles = array();
         $fsThumbnails = array();
-        $this->_recursiveDirs(GALERIE, $fsDirs, $fsFiles);
-        $this->_recursiveDirs(GALERIE_THUMBS, $fsThumbnailDirs, $fsThumbnails);
+        $this->recursiveDirs(GALERIE, $fsDirs, $fsFiles);
+        $this->recursiveDirs(GALERIE_THUMBS, $fsThumbnailDirs, $fsThumbnails);
 
         //Redundant thumbnails
         foreach ($fsThumbnails as $file => $parent) {
@@ -79,7 +80,7 @@ class Galerie extends Admin
         //Reduntant thumbnail directories
         foreach ($fsThumbnailDirs as $dir => $parent) {
             if (!isset($fsDirs[str_replace(GALERIE_THUMBS, GALERIE, $dir)])) {
-                $this->_rrmdir($dir);
+                $this->rrmdir($dir);
             }
         }
         unset($fsThumbnails);
@@ -87,7 +88,7 @@ class Galerie extends Admin
 
         //Check for new image directories
         foreach ($fsDirs as $key => $parent) {
-            $db_key = $this->_getCanonicalName($key);
+            $db_key = $this->getCanonicalName($key);
             if (isset($dbDirs[$db_key])
                 && (GALERIE . DIRECTORY_SEPARATOR . $dbDirs[$db_key]
                 == $fsDirs[$key])
@@ -100,12 +101,12 @@ class Galerie extends Admin
         //Check for new images
         foreach ($fsFiles as $key => $parent) {
             //If can't get a thumbnail, delete the file
-            if (!$this->_checkGetThumbnail($key)) {
+            if (!$this->checkGetThumbnail($key)) {
                 unlink($key);
                 unset($fsFiles[$key]);
                 continue;
             }
-            $db_key = $this->_getCanonicalName($key);
+            $db_key = $this->getCanonicalName($key);
             if (isset($dbFiles[$db_key])
                 && (GALERIE . DIRECTORY_SEPARATOR . $dbFiles[$db_key]
                 == $fsFiles[$key])
@@ -130,7 +131,7 @@ class Galerie extends Admin
             if (!is_dir($tn_dir)) {
                 mkdir($tn_dir, 0777, true);
             }
-            $db_dir = $this->_getCanonicalName($dir);
+            $db_dir = $this->getCanonicalName($dir);
             $parts = explode(DIRECTORY_SEPARATOR, $db_dir);
             $level = count($parts) + 1;
             $name = array_pop($parts);
@@ -141,7 +142,7 @@ class Galerie extends Admin
 
             DBGalerie::addDirByPath(
                 $name,
-                $this->_getCanonicalName($parent),
+                $this->getCanonicalName($parent),
                 $level,
                 $db_dir
             );
@@ -153,8 +154,8 @@ class Galerie extends Admin
             $name = array_pop($parts);
 
             DBGalerie::addFotoByPath(
-                $this->_getCanonicalName($parent),
-                $this->_getCanonicalName($file),
+                $this->getCanonicalName($parent),
+                $this->getCanonicalName($file),
                 $name, User::getUserID()
             );
         }
@@ -168,7 +169,7 @@ class Galerie extends Admin
         );
     }
 
-    protected function _sanitizePathname($name)
+    protected function sanitizePathname($name)
     {
         return strtolower(
             preg_replace(
@@ -181,7 +182,7 @@ class Galerie extends Admin
         );
     }
 
-    protected function _rrmdir($dir)
+    protected function rrmdir($dir)
     {
         if (!is_dir($dir)) {
             return false;
@@ -192,7 +193,7 @@ class Galerie extends Admin
                 continue;
             }
             if (is_dir($dir . DIRECTORY_SEPARATOR . $object)) {
-                $this->_rrmdir($dir . DIRECTORY_SEPARATOR . $object);
+                $this->rrmdir($dir . DIRECTORY_SEPARATOR . $object);
             } else {
                 unlink($dir . DIRECTORY_SEPARATOR . $object);
             }
@@ -201,12 +202,12 @@ class Galerie extends Admin
         rmdir($dir);
     }
 
-    protected function _getCanonicalName($file)
+    protected function getCanonicalName($file)
     {
         return trim(str_replace(GALERIE, '', $file), '/');
     }
 
-    protected function _checkGetThumbnail($file)
+    protected function checkGetThumbnail($file)
     {
         if (is_file(str_replace(GALERIE, GALERIE_THUMBS, $file))) {
             return true;
@@ -215,10 +216,10 @@ class Galerie extends Admin
         if (!is_dir(dirname($thumbFile))) {
             mkdir(dirname($thumbFile), 0777, true);
         }
-        return $this->_createThumbnail($file, $thumbFile);
+        return $this->createThumbnail($file, $thumbFile);
     }
 
-    private function _recursiveDirs($dir_name, &$out_dirs, &$out_files)
+    private function recursiveDirs($dir_name, &$out_dirs, &$out_files)
     {
         $file_list = scandir($dir_name);
         foreach ($file_list as $key => $file) {
@@ -229,14 +230,14 @@ class Galerie extends Admin
             $file_list[$key] = $dir_name . DIRECTORY_SEPARATOR . $file;
             if (is_dir($file_list[$key])) {
                 $out_dirs[$file_list[$key]] = $dir_name;
-                $this->_recursiveDirs($file_list[$key], $out_dirs, $out_files);
+                $this->recursiveDirs($file_list[$key], $out_dirs, $out_files);
             } elseif (is_file($file_list[$key])) {
                 $out_files[$file_list[$key]] = $dir_name;
             }
         }
     }
 
-    private function _createThumbnail($file, $thumbFile)
+    private function createThumbnail($file, $thumbFile)
     {
         $filetype = image_type_to_mime_type(exif_imagetype($file));
         if (!$filetype || !array_key_exists($filetype, Settings::$fotoTypes)) {
@@ -274,7 +275,7 @@ class Galerie extends Admin
         return true;
     }
 
-    private function _processSave()
+    private function processSave()
     {
         $items = DBGalerie::getDirs();
         foreach ($items as $item) {
@@ -289,7 +290,7 @@ class Galerie extends Admin
         }
     }
 
-    private function _displayOverview()
+    private function displayOverview()
     {
         $data = DBGalerie::getDirs(true, true);
         foreach ($data as &$item) {
@@ -307,4 +308,3 @@ class Galerie extends Admin
         );
     }
 }
-?>

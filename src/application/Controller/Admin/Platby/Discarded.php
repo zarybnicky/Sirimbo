@@ -9,10 +9,13 @@ use TKOlomouc\Model\DBPlatbyRaw;
 
 class Discarded extends Platby
 {
-    function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('platby', P_OWNED);
     }
-    function view($id = null) {
+
+    public function view($id = null)
+    {
         $data = DBPlatbyRaw::getDiscarded();
         if (count($data) == 0) {
             $this->redirect(
@@ -21,7 +24,7 @@ class Discarded extends Platby
             );
         }
         if (get('list')) {
-            $this->_getTable($data, $result, $columns, $header);
+            $this->getTable($data, $result, $columns, $header);
             $this->render(
                 'src/application/View/Admin/Platby/DiscardedTable.inc',
                 array(
@@ -31,14 +34,16 @@ class Discarded extends Platby
                 )
             );
         } else {
-            $this->_getList($data, $groupAmount, $groupDate);
+            $this->getList($data, $groupAmount, $groupDate);
             $this->render('src/application/View/Admin/Platby/DiscardedList.inc', array(
                     'groupByDate' => $groupDate,
                     'groupByAmount' => $groupAmount
             ));
         }
     }
-    function remove($id = null) {
+
+    public function remove($id = null)
+    {
         if (!$id && !($data = DBPlatbyRaw::getSingle($id))) {
             $this->redirect(
                 Request::getReferer(),
@@ -52,7 +57,9 @@ class Discarded extends Platby
             'Platba byla odstraněna.'
         );
     }
-    private function _getTable($data, &$result, &$columns, &$header) {
+
+    private function getTable($data, &$result, &$columns, &$header)
+    {
         if (get('list') == 'date') {
             $header =
                 (get('year') == 'none'
@@ -127,7 +134,9 @@ class Discarded extends Platby
             $columns[] = array($key, $key);
         }
     }
-    private function _getList($data, &$groupAmount, &$groupDate) {
+
+    private function getList($data, &$groupAmount, &$groupDate)
+    {
         $groupDate = array();
         $groupAmount = array();
         foreach ($data as $row) {
@@ -159,10 +168,14 @@ class Discarded extends Platby
         foreach ($groupDate as $year)
             krsort($year);
     }
-    protected function getEditLink($link) {
+
+    protected function getEditLink($link)
+    {
         return '<a href="' . $link . '"><img alt="Upravit" src="/images/wrench.png" /></a>';
     }
-    protected function getRemoveLink($link) {
+
+    protected function getRemoveLink($link)
+    {
         return '<a href="' . $link . '"><img alt="Odstranit" src="/images/cross.png" /></a>';
     }
 }

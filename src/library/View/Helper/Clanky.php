@@ -2,7 +2,7 @@
 namespace TKOlomouc\View\Helper;
 
 use TKOlomouc\View\Partial;
-use TKOlomouc\Type\Date;
+use TKOlomouc\Type\DateFormat;
 
 class Clanky extends Partial
 {
@@ -38,7 +38,7 @@ class Clanky extends Partial
     public function addItem($id, $name, $date, $preview, $photoPath)
     {
         if ($date instanceof Date) {
-            $date = $date->getDate(Date::FORMAT_SIMPLIFIED);
+            $date = $date->getDate(DateFormat::FORMAT_SIMPLIFIED);
         }
         $this->data[] = array(
         	'id'       => $id,

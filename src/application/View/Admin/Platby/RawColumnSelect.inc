@@ -4,7 +4,7 @@ echo '<h2>Import plateb</h2>';
 echo '<h3>Určení požadovaných sloupců</h3>';
 
 echo '<form action="" method="post">';
-echo $this->table()
+echo (new TKOlomouc\View\Helper\Table())
     ->style('width:100%')
     ->column('column', 'Název sloupce', '', 'text-align:right;')
     ->column('specific', 'Specifický<br/>symbol', 'center')

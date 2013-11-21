@@ -3,15 +3,15 @@ namespace TKOlomouc\Utility;
 
 class UploadHandler
 {
-    private $_files        = array();
-    private $_refusedFiles = array();
-    private $_savedFiles   = array();
-    private $_allowedTypes = array();
-    private $_outputDir    = '.';
+    private $files        = array();
+    private $refusedFiles = array();
+    private $savedFiles   = array();
+    private $allowedTypes = array();
+    private $outputDir    = '.';
 
     public function setOutputDir($dir)
     {
-        $this->_outputDir = $dir;
+        $this->outputDir = $dir;
     }
 
     public function addAllowedType($type)
@@ -22,7 +22,7 @@ class UploadHandler
         if (strpos($type, '*') !== false) {
             $type = str_replace('*', '', $type);
         }
-        $this->_allowedTypes[] = $type;
+        $this->allowedTypes[] = $type;
     }
 
     public function addTempFile($tempPath, $name, $size = 1)
@@ -30,17 +30,17 @@ class UploadHandler
         if ($size == 0) {
             return;
         }
-        $this->_files[] = array($tempPath, $name);
+        $this->files[] = array($tempPath, $name);
     }
 
     public function removeDisallowedFiles()
     {
-        if (empty($this->_allowedTypes)) {
+        if (empty($this->allowedTypes)) {
             return;
         }
-        foreach ($this->_files as $key => $file) {
+        foreach ($this->files as $key => $file) {
             $allowed = false;
-            foreach ($this->_allowedTypes as $extension) {
+            foreach ($this->allowedTypes as $extension) {
                 if (
                     strripos($file[1], $extension)
                     !== (strlen($file[1]) - strlen($extension))
@@ -51,16 +51,16 @@ class UploadHandler
                 break;
             }
             if (!$allowed) {
-                $this->_refusedFiles[] = $file;
-                unset($this->_files[$key]);
+                $this->refusedFiles[] = $file;
+                unset($this->files[$key]);
             }
         }
-        return count($this->_refusedFiles);
+        return count($this->refusedFiles);
     }
 
     public function sanitizeFilenames()
     {
-        foreach ($this->_files as &$file) {
+        foreach ($this->files as &$file) {
             $strip = array(
                 '~', '`', '!', '@', '#', '$', '%', '^', '&', '*',
                 '(', ')', '_', '=', '+', '[', '{', ']', '}', '\\',
@@ -74,44 +74,56 @@ class UploadHandler
             $file[1] = $clean;
         }
     }
-    public function getFiles() {
-        return $this->_files;
+
+    public function getFiles()
+    {
+        return $this->files;
     }
-    public function getRefusedFiles() {
-        return $this->_refusedFiles;
+
+    public function getRefusedFiles()
+    {
+        return $this->refusedFiles;
     }
-    public function getSavedFiles() {
-        return $this->_savedFiles;
+
+    public function getSavedFiles()
+    {
+        return $this->savedFiles;
     }
-    public function hasFiles() {
-        return !empty($this->_files);
+
+    public function hasFiles()
+    {
+        return !empty($this->files);
     }
-    public function hasRefusedFiles() {
-        return !empty($this->_refusedFiles);
+
+    public function hasRefusedFiles()
+    {
+        return !empty($this->refusedFiles);
     }
-    public function save($sanitizeNames = true, $removeDisallowed = true) {
+
+    public function save($sanitizeNames = true, $removeDisallowed = true)
+    {
         if ($sanitizeNames) {
             $this->sanitizeFilenames();
         }
         if ($removeDisallowed) {
             $this->removeDisallowedFiles();
         }
-        if (!file_exists($this->_outputDir)) {
-            $success = mkdir($this->_outputDir, 0777, true);
+        if (!file_exists($this->outputDir)) {
+            $success = mkdir($this->outputDir, 0777, true);
             if (!$success) {
-                Log::write("Could not create directory '{$this->_outputDir}'");
+                Log::write("Could not create directory '{$this->outputDir}'");
                 if (!(file_exists('./tmp') && !mkdir('./tmp'))) {
                     return false;
                 }
-                $this->_outputDir = './tmp';
+                $this->outputDir = './tmp';
                 Log::write('Saving to "./tmp"!');
             }
         }
-        foreach ($this->_files as $file) {
-            $path = $this->_outputDir . DIRECTORY_SEPARATOR . $file[1];
+        foreach ($this->files as $file) {
+            $path = $this->outputDir . DIRECTORY_SEPARATOR . $file[1];
             move_uploaded_file($file[0], $path);
             chmod($path, 0666);
-            $this->_savedFiles[] = $path;
+            $this->savedFiles[] = $path;
         }
         return true;
     }

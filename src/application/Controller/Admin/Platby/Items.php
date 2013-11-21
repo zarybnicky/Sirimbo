@@ -6,18 +6,20 @@ use TKOlomouc\Utility\Permissions;
 use TKOlomouc\Utility\Form;
 use TKOlomouc\Utility\User;
 use TKOlomouc\Utility\Request;
-use TKOlomouc\Type\Date;
 use TKOlomouc\Model\DBUser;
 use TKOlomouc\Model\DBPlatbyItem;
 use TKOlomouc\Model\DBPlatbyRaw;
+use TKOlomouc\Type\DateFormat;
+use TKOlomouc\View\Helper\Date;
 
 class Items extends Platby
 {
-    function __construct()
+    public function __construct()
     {
         Permissions::checkError('platby', P_OWNED);
     }
-    function view($id = null)
+
+    public function view($id = null)
     {
         switch(post('action')) {
             case 'edit':
@@ -35,24 +37,25 @@ class Items extends Platby
                 }
                 break;
         }
-        $data = $this->_getData();
+        $data = $this->getData();
         $this->render(
             'src/application/View/Admin/Platby/ItemsOverview.inc',
             array(
                 'users' => DBUser::getUsers(),
-                'categories' => $this->_getCategories(),
+                'categories' => $this->getCategories(),
                 'data' => $data
             )
         );
     }
-    function add($id = null)
+
+    public function add($id = null)
     {
         if (empty($_POST)) {
-            $this->_displayForm(0);
+            $this->displayForm(0);
             return;
         } elseif (!is_object($item = $this->getFromPost())) {
             $this->redirect()->setMessage($item);
-            $this->_displayForm(0);
+            $this->displayForm(0);
             return;
         }
         DBPlatbyItem::insert(
@@ -61,7 +64,8 @@ class Items extends Platby
         );
         $this->redirect('/admin/platby/items', 'Platba úspěšně přidána');
     }
-    function edit($id = null)
+
+    public function edit($id = null)
     {
         if (!$id || !($data = DBPlatbyItem::getSingle($id))) {
             $this->redirect('/admin/platby/items', 'Platba s takovým ID neexistuje');
@@ -72,11 +76,11 @@ class Items extends Platby
             post('variable', $data['pi_id_user']);
             post('specific', $data['pi_id_category']);
             post('prefix', $data['pi_prefix']);
-            $this->_displayForm($id);
+            $this->displayForm($id);
             return;
         } elseif (!is_object($item = $this->getFromPost($id))) {
             $this->redirect()->setMessage($item);
-            $this->_displayForm($id);
+            $this->displayForm($id);
             return;
         }
         DBPlatbyItem::update(
@@ -85,7 +89,8 @@ class Items extends Platby
         );
         $this->redirect('/admin/platby/items', 'Platba úspěšně upravena');
     }
-    function remove($id = null)
+
+    public function remove($id = null)
     {
         if (!is_array(post('data')) && !is_array(get('u'))) {
             $this->redirect('/admin/platby/items');
@@ -123,7 +128,8 @@ class Items extends Platby
             )
         );
     }
-    private function _displayForm($id)
+
+    private function displayForm($id)
     {
         $raw = array();
         if ($id && ($item = DBPlatbyItem::getSingle($id))
@@ -137,8 +143,8 @@ class Items extends Platby
                 );
             }
         }
-        $users = $this->_getUsers();
-        $categories = $this->_getCategories();
+        $users = $this->getUsers();
+        $categories = $this->getCategories();
         $this->render(
             'src/application/View/Admin/Platby/ItemsForm.inc',
             array(
@@ -151,7 +157,8 @@ class Items extends Platby
             )
         );
     }
-    private function _getCategories()
+
+    private function getCategories()
     {
         $out = $this->getCategoryLookup(false, false, true);
         foreach ($out as $key => &$array) {
@@ -163,7 +170,8 @@ class Items extends Platby
         }
         return $out;
     }
-    private function _getUsers()
+
+    private function getUsers()
     {
         $users = $this->getUserLookup(true);
         foreach ($users as $key => &$array) {
@@ -171,7 +179,8 @@ class Items extends Platby
         }
         return $users;
     }
-    private function _getData()
+
+    private function getData()
     {
         $filter = array();
         if (get('user') && is_numeric(get('user'))) {
@@ -183,7 +192,7 @@ class Items extends Platby
                 'checkBox' => '<input type="checkbox" name="data[]" value="' . $row['pi_id'] . '" />',
                 'fullName' => $row['u_prijmeni'] . ', ' . $row['u_jmeno'],
                 'category' => $row['pc_name'],
-                'date' => (new Date($row['pi_date']))->getDate(Date::FORMAT_SIMPLE_SPACED),
+                'date' => (new Date($row['pi_date']))->getDate(DateFormat::FORMAT_SIMPLE_SPACED),
                 'amount' => $row['pi_amount'] . 'Kč'
             );
             $row = $new_data;

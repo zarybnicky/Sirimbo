@@ -5,7 +5,8 @@ use TKOlomouc\Model\Database\Adapter;
 
 class DBPlatbyRaw extends Adapter
 {
-    public static function insert($raw, $hash, $sorted, $discarded, $updateValues) {
+    public static function insert($raw, $hash, $sorted, $discarded, $updateValues)
+    {
         list($raw, $hash, $sorted, $discarded) =
             self::escape($raw, $hash, $sorted, $discarded);
 
@@ -20,7 +21,9 @@ class DBPlatbyRaw extends Adapter
                 pr_discarded=VALUES(pr_discarded)" : '')
         );
     }
-    public static function update($id, $raw, $hash, $sorted, $discarded) {
+
+    public static function update($id, $raw, $hash, $sorted, $discarded)
+    {
         list($id, $raw, $hash, $sorted, $discarded) =
             self::escape($id, $raw, $hash, $sorted, $discarded);
 
@@ -30,8 +33,10 @@ class DBPlatbyRaw extends Adapter
             WHERE pr_id='$id'"
         );
     }
-    public static function skip($id) {
+    public static function skip($id)
+    {
         list($id) = self::escape($id);
+
         self::query(
             "REPLACE INTO platby_raw
             (pr_raw,pr_hash,pr_sorted,pr_discarded)
@@ -40,22 +45,35 @@ class DBPlatbyRaw extends Adapter
             WHERE pr_id='$id'"
         );
     }
-    public static function delete($id) {
+
+    public static function delete($id)
+    {
         list($id) = self::escape($id);
+
         self::query("DELETE FROM platby_raw WHERE pr_id='$id'");
     }
-    public static function getUnsorted() {
-        $res = self::query("SELECT * FROM platby_raw WHERE pr_sorted='0' AND pr_discarded='0' ORDER BY pr_id");
+
+    public static function getUnsorted()
+    {
+        $res = self::query(
+            "SELECT * FROM platby_raw WHERE pr_sorted='0' AND pr_discarded='0' ORDER BY pr_id"
+        );
         return self::getArray($res);
     }
-    public static function getDiscarded() {
+
+    public static function getDiscarded()
+    {
         $res = self::query("SELECT * FROM platby_raw WHERE pr_discarded='1'");
+
         return self::getArray($res);
     }
-    public static function getSingle($id) {
+
+    public static function getSingle($id)
+    {
         list($id) = self::escape($id);
 
         $res = self::query("SELECT * FROM platby_raw WHERE pr_id='$id'");
+
         return self::getSingleRow($res);
     }
 }

@@ -3,7 +3,7 @@
 <br/>
 <div class="center">
 <?php
-echo $this->table()
+echo (new TKOlomouc\View\Helper\Table())
     ->style('margin:0 auto;')
     ->column('group', '', 'r')
     ->column('count', 'Počet', 'center big')

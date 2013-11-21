@@ -12,7 +12,7 @@ notice($this->redirect()->getMessage());
                 <td>Počet hodin</td>
             </tr>
             <?php
-            $userselect = $this->userSelect()
+            $userselect = (new TKOlomouc\View\Helper\UserSelect())
                 ->users($this->users)
                 ->type('par')
                 ->idVar('p_id');

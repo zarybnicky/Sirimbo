@@ -9,12 +9,12 @@ use TKOlomouc\Model\DBNabidka;
 
 class Detail extends Rozpis
 {
-    function __construct()
+    public function __construct()
     {
         Permissions::checkError('rozpis', P_OWNED);
     }
 
-    function view($id = null)
+    public function view($id = null)
     {
         if (!$id || !($data = DBRozpis::getSingleRozpis($id))) {
             $this->redirect(
@@ -203,4 +203,3 @@ class Detail extends Rozpis
         }
     }
 }
-?>

@@ -9,18 +9,20 @@ use TKOlomouc\Utility\User;
 use TKOlomouc\Utility\Request;
 use TKOlomouc\Model\DBAkce;
 use TKOlomouc\Model\DBDokumenty;
+use TKOlomouc\View\Helper\Date;
 
 class Akce extends Admin
 {
-    function __construct()
+    public function __construct()
     {
         Permissions::checkError('akce', P_OWNED);
     }
-    function view($id = null)
+
+    public function view($id = null)
     {
         switch(post('action')) {
         case 'save':
-            $this->_processSave();
+            $this->processSave();
             $this->redirect('/admin/akce');
             break;
         case 'remove':
@@ -39,19 +41,20 @@ class Akce extends Admin
             }
             break;
         }
-        $this->_displayOverview();
+        $this->displayOverview();
     }
-    function add($id = null)
+
+    public function add($id = null)
     {
-        if (empty($_POST) || is_object($form = $this->_checkData())) {
+        if (empty($_POST) || is_object($form = $this->checkData())) {
             if (empty($_POST)) {
                 $form = array();
             }
-            $this->_displayForm(null, $form);
+            $this->displayForm(null, $form);
             return;
         }
-        $od = $this->date('od')->getPost();
-        $do = $this->date('do')->getPost();
+        $od = (new Date('od'))->getPost();
+        $do = (new Date('do'))->getPost();
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
         }
@@ -66,12 +69,13 @@ class Akce extends Admin
 
         $this->redirect('/admin/akce', 'Akce přidána');
     }
-    function edit($id = null)
+
+    public function edit($id = null)
     {
         if (!$id || !($data = DBAkce::getSingleAkce($id))) {
             $this->redirect('/admin/akce', 'Akce s takovým ID neexistuje');
         }
-        if (empty($_POST) || is_object($form = $this->_checkData())) {
+        if (empty($_POST) || is_object($form = $this->checkData())) {
             if (empty($_POST)) {
                 post('id', $id);
                 post('jmeno', $data['a_jmeno']);
@@ -84,11 +88,11 @@ class Akce extends Admin
                 post('visible', $data['a_visible']);
                 $form = array();
             }
-            $this->_displayForm($data, $form);
+            $this->displayForm($data, $form);
             return;
         }
-        $od = $this->date('od')->getPost();
-        $do = $this->date('do')->getPost();
+        $od = (new Date('od'))->getPost();
+        $do = (new Date('do'))->getPost();
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
         }
@@ -103,7 +107,8 @@ class Akce extends Admin
 
         $this->redirect('/admin/akce', 'Akce upravena');
     }
-    function remove($id = null)
+
+    public function remove($id = null)
     {
         if (!is_array(post('data')) && !is_array(get('u'))) {
             $this->redirect('/admin/akce');
@@ -138,7 +143,7 @@ class Akce extends Admin
             )
         );
     }
-    private function _displayOverview()
+    private function displayOverview()
     {
         $currentId = 0;
         $currentIndex = -1;
@@ -170,7 +175,7 @@ class Akce extends Admin
             )
         );
     }
-    private function _displayForm($data, $form)
+    private function displayForm($data, $form)
     {
         if (!$data || !is_array($dokumenty = unserialize($data['a_dokumenty']))) {
             $dokumenty = array();
@@ -192,7 +197,7 @@ class Akce extends Admin
             )
         );
     }
-    private function _processSave()
+    private function processSave()
     {
         $items = DBAkce::getAkce();
         foreach ($items as $item) {
@@ -208,10 +213,10 @@ class Akce extends Admin
             );
         }
     }
-    private function _checkData()
+    private function checkData()
     {
-        $od = $this->date('od')->getPost();
-        $do = $this->date('do')->getPost();
+        $od = (new Date('od'))->getPost();
+        $do = (new Date('do'))->getPost();
 
         $form = new Form();
         $form->checkLength(post('jmeno'), 1, 255, 'Špatná délka jména akce', 'jmeno');
@@ -225,4 +230,3 @@ class Akce extends Admin
         return $form->isValid() ? array() : $form;
     }
 }
-?>

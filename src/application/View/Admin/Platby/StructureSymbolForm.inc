@@ -1,5 +1,5 @@
 <?php
-$mainForm = (new TKOlomouc\View\Helper\Table())->table()
+$mainForm = (new TKOlomouc\View\Helper\Table())
 ->column('desc', '', 'r')
 ->column('value', 'Hodnota')
 ->data(array(
@@ -14,10 +14,10 @@ $mainForm = (new TKOlomouc\View\Helper\Table())->table()
             'value' => '<input type="text" name="amount" value="' . post('amount') . '"/>'
         ), array(
             'desc' => 'Splatnost:',
-            'value' => (new TKOlomouc\View\Helper\Date())->date('dueDate')
+            'value' => new TKOlomouc\View\Helper\Date('dueDate')
         ), array(
             'desc' => 'Platnost:',
-            'value' => (new TKOlomouc\View\Helper\Date())->date('validRange')->range()
+            'value' => (new TKOlomouc\View\Helper\Date('validRange'))->range()
         ), array(
             'desc' => 'Povolit prefix roku?:',
             'value' => getCheckbox('usePrefix', '1')
@@ -27,7 +27,7 @@ $mainForm = (new TKOlomouc\View\Helper\Table())->table()
         )
 ));
 if (!empty($this->groups)) {
-    $groupForm = (new TKOlomouc\View\Helper\Table())->table()
+    $groupForm = (new TKOlomouc\View\Helper\Table())
         ->column('buttons', '', '', 'width:75px')
         ->column('type', 'Typ')
         ->column('name', 'Jméno')
@@ -35,7 +35,7 @@ if (!empty($this->groups)) {
         ->data($this->groups);
 }
 if (!empty($this->groupSelect)) {
-    $groupSelectBox = (new TKOlomouc\View\Helper\Select())->select('group')
+    $groupSelectBox = (new TKOlomouc\View\Helper\Select('group'))
         ->options($this->groupSelect);
 }
 ?>

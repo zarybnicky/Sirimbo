@@ -7,8 +7,9 @@ use TKOlomouc\Utility\Sidebar;
 
 class Fotogalerie extends ControllerAbstract
 {
-    function view($id = null) {
-        if ($id === null) {
+    public function view($id = null)
+    {
+        if ($id == null) {
             $id = 0;
             $data = DBGalerie::getSingleDir(0);
         } elseif (!($data = DBGalerie::getSingleDir($id))) {
@@ -39,10 +40,12 @@ class Fotogalerie extends ControllerAbstract
             )
         );
     }
-    function foto($id = null) {
-        if (!$id || !($data = DBGalerie::getSingleFoto($id)))
-            $this->redirect('/fotogalerie', 'Taková fotka neexistuje');
 
+    public function foto($id = null)
+    {
+        if (!$id || !($data = DBGalerie::getSingleFoto($id))) {
+            $this->redirect('/fotogalerie', 'Taková fotka neexistuje');
+        }
         $parent_dir = DBGalerie::getFotky($data['gf_id_rodic']);
         foreach ($parent_dir as $key => $foto) {
             if ($foto['gf_id'] == $id) {
@@ -59,18 +62,21 @@ class Fotogalerie extends ControllerAbstract
                 'src'        => '/galerie/' . $data['gf_path'],
                 'hasPrev'    => $hasPrev,
                 'prevURL'    => $hasPrev ? $parent_dir[$current - 1]['gf_id'] : '',
-                'returnURL'  => '/fotogalerie' . ($data['gf_id_rodic'] > 0 ? ('/' . $data['gf_id_rodic']) : ''),
+                'returnURL'  => '/fotogalerie' . ($data['gf_id_rodic'] > 0
+                    ? ('/' . $data['gf_id_rodic']) : ''),
                 'hasNext'    => $hasNext,
                 'nextURL'    => $hasNext ? $parent_dir[$current + 1]['gf_id'] : '',
             )
         );
         return;
     }
-    function sidebar() {
+    public function sidebar()
+    {
         $dirs = DBGalerie::getDirs(true, true);
 
-        if (empty($dirs))
+        if (empty($dirs)) {
             return;
+        }
 
         $s = new Sidebar();
         echo $s->menuHeader();

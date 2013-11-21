@@ -27,7 +27,7 @@ notice($this->redirect()->getMessage());
     <tr>
         <td>Fotogalerie: </td>
         <td><?php
-            $s = $this->select()
+            $s = (new TKOlomouc\View\Helper\Select())
                 ->post()->name('foto')
                 ->value(post('foto'))
                 ->option('none', '---');

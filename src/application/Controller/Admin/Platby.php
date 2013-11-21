@@ -9,27 +9,34 @@ use TKOlomouc\Type\PlatbyItem;
 
 class Platby extends Admin
 {
-    function __construct()
+    public function __construct()
     {
         Permissions::checkError('platby', P_OWNED);
     }
-    function view($id = null)
+
+    public function view($id = null)
     {
         $this->redirect('/admin/platby/overview');
     }
+
     protected function recognizeHeaders($headers, &$specific, &$variable, &$date, &$amount)
     {
         foreach ($headers as $key => $value) {
-            if (mb_stripos($key, 'specif') !== false)
+            if (mb_stripos($key, 'specif') !== false) {
                 $specific = $key;
-            if (mb_stripos($key, 'variab') !== false)
+            }
+            if (mb_stripos($key, 'variab') !== false) {
                 $variable = $key;
-            if (mb_stripos($key, 'datum') !== false)
+            }
+            if (mb_stripos($key, 'datum') !== false) {
                 $date = $key;
-            if (mb_stripos($key, 'částka') !== false)
+            }
+            if (mb_stripos($key, 'částka') !== false) {
                 $amount = $key;
+            }
         }
     }
+
     protected function checkHeaders($headers, &$specific, &$variable, &$date, &$amount)
     {
         $headers = array_flip($headers);
@@ -44,6 +51,7 @@ class Platby extends Admin
             return false;
         }
     }
+
     protected function getCategoryList()
     {
         $in = DBPlatbyGroup::getGroupsWithCategories();
@@ -58,6 +66,7 @@ class Platby extends Admin
         }
         return $out;
     }
+
     protected function getCategoryLookup($useSymbolKey, $unique, $includeGroups)
     {
         $in = DBPlatbyGroup::getGroupsWithCategories();
@@ -73,12 +82,14 @@ class Platby extends Admin
                 $out['group_' . $array['pg_id']] = $array;
                 $group_id = $array['pg_id'];
             }
-            if ($unique && isset($out[$key]))
+            if ($unique && isset($out[$key])) {
                 continue;
+            }
             $out[$key] = $array;
         }
         return $out;
     }
+
     protected function getUserLookup($sort)
     {
         $in = DBUser::getUsers();
@@ -93,10 +104,12 @@ class Platby extends Admin
             );
         }
         $out = array();
-        foreach ($in as $array)
+        foreach ($in as $array) {
             $out[(int) $array['u_id']] = $array;
+        }
         return $out;
     }
+
     protected function getFromPost($id = null)
     {
         $item = new PlatbyItem();
@@ -110,18 +123,23 @@ class Platby extends Admin
         );
 
         $error = array();
-        if (!$item->variable)
+
+        if (!$item->variable) {
             $error[] = 'Neplatné ID uživatele';
-        if (!$item->category_id)
+        }
+        if (!$item->category_id) {
             $error[] = 'Neplatné ID kategorie';
-        if (!$item->date)
+        }
+        if (!$item->date) {
             $error[] = 'Neplatné datum';
-        if (!$item->prefix)
+        }
+        if (!$item->prefix) {
             $error[] = 'Neplatný prefix';
-        if ($item->amount < 0)
+        }
+        if ($item->amount < 0) {
             $error[] = 'Neplatná částka';
+        }
 
         return $item->isValid ? $item : $error;
     }
 }
-?>

@@ -6,15 +6,15 @@ use TKOlomouc\Utility\Sidebar;
 
 class Admin extends ControllerAbstract
 {
-    function __construct()
+    public function __construct()
     {
         Permissions::checkError('nastenka', P_OWNED);
     }
-    function view($id = null)
+    public function view($id = null)
     {
         $this->render('src/application/View/Admin/Home.inc');
     }
-    function sidebar()
+    public function sidebar()
     {
         $s = new Sidebar();
 
@@ -37,4 +37,3 @@ class Admin extends ControllerAbstract
         echo $s->commonItems();
     }
 }
-?>

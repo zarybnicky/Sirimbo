@@ -7,35 +7,46 @@ use TKOlomouc\Model\DBAktuality;
 
 class Aktualne extends ControllerAbstract
 {
-    function view($id = null) {
-        if ($id && ($data = DBAktuality::getSingleAktualita($id))) {
-            $this->render(
-                'src/application/View/Main/Aktuality/Single.inc',
-                array(
-                    'id'        => $data['at_id'],
-                    'jmeno'     => $data['at_jmeno'],
-                    'timestamp' => $data['at_timestamp_add'],
-                    'canEdit'   => Permissions::check('aktuality', P_OWNED, $data['at_kdo']),
-                    'text'      => stripslashes(nl2br($data['at_text']))
-                )
-            );
+    public function view($id = null)
+    {
+        if (!$id || !($data = DBAktuality::getSingleAktualita($id))) {
+            $this->redirect('/aktualne/posledni');
             return;
         }
-        $this->redirect('/aktualne/posledni');
+        $this->render(
+            'src/application/View/Main/Aktuality/Single.inc',
+            array(
+                'id'        => $data['at_id'],
+                'jmeno'     => $data['at_jmeno'],
+                'timestamp' => $data['at_timestamp_add'],
+                'canEdit'   => Permissions::check('aktuality', P_OWNED, $data['at_kdo']),
+                'text'      => stripslashes(nl2br($data['at_text']))
+            )
+        );
     }
-    function posledni($id = null) {
+
+    public function posledni($id = null)
+    {
         $this->aktualne("Nejnovější články");
     }
-    function videa($id = null) {
+
+    public function videa($id = null)
+    {
         $this->aktualne('Videa', AKTUALITY_VIDEA);
     }
-    function clanky($id = null) {
+
+    public function clanky($id = null)
+    {
         $this->aktualne('Články', AKTUALITY_CLANKY);
     }
-    function kratke_zpravy($id = null) {
+
+    public function kratke_zpravy($id = null)
+    {
         $this->aktualne('Krátké zprávy', AKTUALITY_KRATKE);
     }
-    function sidebar() {
+
+    public function sidebar()
+    {
         $s = new Sidebar();
 
         echo $s->menuHeader();
@@ -46,7 +57,9 @@ class Aktualne extends ControllerAbstract
 
         echo $s->commonItems();
     }
-    private function aktualne($nadpis = "", $type = null) {
+
+    private function aktualne($nadpis = "", $type = null)
+    {
         $data = DBAktuality::getAktuality($type);
 
         if (!$data) {
@@ -78,4 +91,3 @@ class Aktualne extends ControllerAbstract
         );
     }
 }
-?>

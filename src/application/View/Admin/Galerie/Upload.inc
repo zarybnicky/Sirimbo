@@ -8,13 +8,13 @@ notice($this->redirect()->getMessage());
     <tr>
         <td>Soubor</td>
         <td><?php
-        echo $this->upload('files');
+        echo (new TKOlomouc\View\Helper\Upload('files'));
         ?></td>
     </tr>
     <tr>
         <td>Složka: </td>
         <td><?php
-    $s = $this->select()->post()->name('dir');
+    $s = (new TKOlomouc\View\Helper\Select('dir'))->post();
     foreach ($this->dirs as $item) {
         $s->option($item['id'], $item['text']);
     }

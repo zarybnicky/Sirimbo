@@ -7,13 +7,16 @@ use TKOlomouc\Model\DBDokumenty;
 
 class Download extends ControllerAbstract
 {
-    function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('dokumenty', P_VIEW);
     }
-    function view($id = null) {
-        if (!get('id'))
-            $this->redirect('/member/dokumenty');
 
+    public function view($id = null)
+    {
+        if (!get('id')) {
+            $this->redirect('/member/dokumenty');
+        }
         $data = DBDokumenty::getSingleDokument(get('id'));
         $path = $data["d_path"];
         $fileName = $data["d_filename"];
@@ -26,4 +29,3 @@ class Download extends ControllerAbstract
         fclose($file);
     }
 }
-?>

@@ -7,10 +7,13 @@ use TKOlomouc\Model\DBUser;
 
 class Overview extends Platby
 {
-    function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('platby', P_OWNED);
     }
-    function view($id = null) {
+
+    public function view($id = null)
+    {
         $data = DBUser::getUsersWithSkupinaPlatby();
         $skupiny = array();
         $index = 0;

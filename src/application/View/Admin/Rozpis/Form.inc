@@ -13,7 +13,7 @@ notice($this->redirect()->getMessage());
                 <option value="<?= $this->userIdř ?>">Já</option>
             </select><?php
             } else {
-                echo $this->userSelect()
+                echo (new TKOlomouc\View\Helper\UserSelect())
                     ->name('trener')
                     ->users($this->tutors);
             }?>
@@ -23,7 +23,7 @@ notice($this->redirect()->getMessage());
         <td><input type="text" name="kde" value="<?php echo post("kde"); ?>" /></td>
     </tr><tr>
         <td>Datum: (*)</td>
-        <td><?php echo $this->date('datum')->textBox();?></td>
+        <td><?php echo (new \TKOlomouc\View\Helper\Date('datum'))->textBox();?></td>
     </tr><tr>
         <td>Viditelný: </td>
         <td><label><?php

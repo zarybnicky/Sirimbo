@@ -10,7 +10,8 @@ use TKOlomouc\Model\DBUser;
 
 class Par extends Profil
 {
-    function view($id = null) {
+    public function view($id = null)
+    {
         $latest = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
         $this->render(
             'src/application/View/Member/Profil/CoupleOverview.inc',
@@ -27,8 +28,10 @@ class Par extends Profil
             )
         );
     }
-    function body($id = null) {
-        if (empty($_POST) || is_object($f = $this->_checkData())) {
+
+    public function body($id = null)
+    {
+        if (empty($_POST) || is_object($f = $this->checkData())) {
             if (empty($_POST)) {
                 $par = DBPary::getSinglePar(User::getParID());
                 post('stt-trida', $par['p_stt_trida']);
@@ -57,7 +60,9 @@ class Par extends Profil
         );
         $this->redirect("/member/profil/par", "Třída a body změněny");
     }
-    function partner($id = null) {
+
+    public function partner($id = null)
+    {
         $latest = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
         $havePartner = !empty($latest) && $latest['u_id'];
 
@@ -93,17 +98,20 @@ class Par extends Profil
             )
         );
     }
-    function zadost($id = null) {
-        if (!post('action'))
+
+    public function zadost($id = null)
+    {
+        if (!post('action')) {
             $this->redirect('/member/profil');
+        }
         switch(post('action')) {
             case 'accept':
             case 'refuse':
                 $requests = DBPary::getPartnerRequestsForMe(User::getUserID());
                 foreach ($requests as $req) {
-                    if ($req['pn_id'] != post('id'))
+                    if ($req['pn_id'] != post('id')) {
                         continue;
-
+                    }
                     if (post('action') == 'accept') {
                         DBPary::acceptPartnerRequest(post('id'));
                         $this->redirect()->setMessage('žádost přijata');
@@ -117,8 +125,9 @@ class Par extends Profil
             case 'cancel':
                 $requests = DBPary::getPartnerRequestsByMe(User::getUserID());
                 foreach ($requests as $req) {
-                    if ($req['pn_id'] != post('id'))
+                    if ($req['pn_id'] != post('id')) {
                         continue;
+                    }
                     DBPary::deletePartnerRequest(post('id'));
                     $this->redirect('/member/profil/par', 'Žádost zrušena');
                 }
@@ -129,8 +138,10 @@ class Par extends Profil
         }
         $this->redirect('/member/profil', 'Žádná taková žádost tu není');
     }
-    private function _checkData() {
+    private function checkData()
+    {
         $f = new Form();
+
         $f->checkInArray(
             post('stt-trida'),
             array('Z', 'H', 'D', 'C', 'B', 'A', 'M'),
@@ -145,7 +156,7 @@ class Par extends Profil
         $f->checkNumberBetween(post('lat-body'), 0, 1000, 'Špatný počet latinských bodů', 'lat-body');
         $f->checkNumberBetween(post('stt-finale'), 0, 10, 'Špatný počet standartních finálí', 'stt-finale');
         $f->checkNumberBetween(post('lat-finale'), 0, 10, 'Špatný počet latinských finálí', 'lat-finale');
+
         return $f->isValid() ? null : $f;
     }
 }
-?>

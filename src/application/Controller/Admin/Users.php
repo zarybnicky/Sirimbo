@@ -14,23 +14,24 @@ use TKOlomouc\Model\DBPary;
 use TKOlomouc\Model\Paging\Pager;
 use TKOlomouc\Model\Paging\PagerAdapterDb;
 use TKOlomouc\View\Helper\Select;
+use TKOlomouc\View\Helper\Date;
 
 class Users extends Admin
 {
-    function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('users', P_OWNED);
     }
-    function view($id = null) {
+
+    public function view($id = null)
+    {
         switch(post('action')) {
             case 'edit':
-                $users = post('users');
-                if ($users[0])
-                    $this->redirect('/admin/users/edit/' . $users[0]);
-                break;
             case 'platby':
                 $users = post('users');
-                if ($users[0])
-                    $this->redirect('/admin/users/platby/' . $users[0]);
+                if ($users[0]) {
+                    $this->redirect('/admin/users/' . post('action') . '/' . $users[0]);
+                }
                 break;
             case 'remove':
                 if (!is_array(post('users'))) break;
@@ -55,12 +56,11 @@ class Users extends Admin
                 }
                 break;
         }
-        if (get('v') === null) {
-            get('v', 'info');
-        }
-        $this->_displayOverview(get('v'));
+        $this->displayOverview(get('v'));
     }
-    function remove($id = null) {
+
+    public function remove($id = null)
+    {
         if (!is_array(post('data')) && !is_array(get('u'))) {
             $this->redirect('/admin/users');
         }
@@ -89,14 +89,16 @@ class Users extends Admin
             )
         );
     }
-    function add($id = null) {
-        if (empty($_POST) || is_object($f = $this->_checkData('add'))) {
+
+    public function add($id = null)
+    {
+        if (empty($_POST) || is_object($f = $this->checkData('add'))) {
             if (!empty($_POST))
                 $this->redirect()->setMessage($f->getMessages());
-            $this->_displayForm();
+            $this->displayForm();
             return;
         }
-        $narozeni = $this->date('narozeni')->getPost();
+        $narozeni = (new Date('narozeni'))->getPost();
         DBUser::addUser(
             strtolower(post('login')), User::crypt(post('pass')),
             post('jmeno'), post('prijmeni'), post('pohlavi'), post('email'),
@@ -106,13 +108,23 @@ class Users extends Admin
         );
         $this->redirect('/admin/users', 'Uživatel úspěšně přidán');
     }
-    function edit($id = null) {
-        if (!$id || !($data = DBUser::getUserData($id)))
-            $this->redirect('/admin/users', 'Uživatel s takovým ID neexistuje');
-        if (!$data['u_confirmed'])
-            $this->redirect('/admin/users', 'Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
 
-        if (empty($_POST) || is_object($f = $this->_checkData('edit'))) {
+    public function edit($id = null)
+    {
+        if (!$id || !($data = DBUser::getUserData($id))) {
+            $this->redirect(
+                '/admin/users',
+                'Uživatel s takovým ID neexistuje'
+            );
+        }
+        if (!$data['u_confirmed']) {
+            $this->redirect(
+                '/admin/users',
+                'Uživatel "' . $data['u_login'] . '" ještě není potvrzený'
+            );
+        }
+
+        if (empty($_POST) || is_object($f = $this->checkData('edit'))) {
             if (empty($_POST)) {
                 post('login', $data['u_login']);
                 post('group', $data['u_group']);
@@ -131,10 +143,10 @@ class Users extends Admin
             } else {
                 $this->redirect()->setMessage($f->getMessages());
             }
-            $this->_displayForm();
+            $this->displayForm();
             return;
         }
-        $narozeni = $this->date('narozeni')->getPost();
+        $narozeni = (new Date('narozeni'))->getPost();
         DBUser::setUserData(
             $id, post('jmeno'), post('prijmeni'), post('pohlavi'), post('email'),
             post('telefon'), (string) $narozeni, post('poznamky'), post('group'),
@@ -143,15 +155,27 @@ class Users extends Admin
         );
         $this->redirect('/admin/users', 'Uživatel úspěšně upraven');
     }
-    function platby($id = null) {
-        if (!$id || !($data = DBUser::getUserData($id)))
-            $this->redirect('/admin/users', 'Uživatel s takovým ID neexistuje');
-        if (!$data['u_confirmed'])
-            $this->redirect('/admin/users', 'Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
+
+    public function platby($id = null)
+    {
+        if (!$id || !($data = DBUser::getUserData($id))) {
+            $this->redirect(
+                '/admin/users',
+                'Uživatel s takovým ID neexistuje'
+            );
+        }
+        if (!$data['u_confirmed']) {
+            $this->redirect(
+                '/admin/users',
+                'Uživatel "' . $data['u_login'] . '" ještě není potvrzený'
+            );
+        }
 
         $this->render('src/application/View/Admin/Users/Platby.inc');
     }
-    function unconfirmed($id = null) {
+
+    public function unconfirmed($id = null)
+    {
         if (empty($_POST) || !is_array(post('users'))) {
             $users = DBUser::getNewUsers();
             if (empty($users)) {
@@ -164,7 +188,7 @@ class Users extends Admin
                 );
             }
             $groups = DBPermissions::getGroups();
-            $s_group = $this->select();
+            $s_group = new Select();
             foreach ($groups as $group)
                 $s_group->option($group['pe_id'], $group['pe_name']);
 
@@ -208,10 +232,12 @@ class Users extends Admin
             $this->redirect('/admin/users/remove?' . http_build_query(array('u' => post('users'))));
         }
     }
-    function duplicate($id = null) {
-        if (!empty($_POST) && post('action') == 'remove' && post('users') && !empty($_POST['users']))
-            $this->redirect('/admin/users/remove?' . http_build_query(array('u' => post('users'))));
 
+    public function duplicate($id = null)
+    {
+        if (post('action') == 'remove' && post('users')) {
+            $this->redirect('/admin/users/remove?' . http_build_query(array('u' => post('users'))));
+        }
         $users = DBUser::getDuplicateUsers();
         foreach ($users as &$row) {
             $new_data = array(
@@ -233,7 +259,9 @@ class Users extends Admin
             )
         );
     }
-    function statistiky($id = null) {
+
+    public function statistiky($id = null)
+    {
         $all = DBUser::getUsers(L_ALL);
         $active = DBUser::getActiveUsers(L_ALL);
         $dancers = DBUser::getActiveDancers(L_ALL);
@@ -261,14 +289,16 @@ class Users extends Admin
             )
         );
     }
-    function temporary($id = null) {
+
+    public function temporary($id = null)
+    {
         $type = post('type');
         $jmeno = post('jmeno');
         $prijmeni = post('prijmeni');
-        $narozeni = $this->date('narozeni')->getPost();
+        $narozeni = (new Date('narozeni'))->getPost();
 
-        $login = preg_replace('/[^a-zA-Z0-9.-_]*/', '', strtolower($prijmeni)) . '_' .
-                preg_replace('/[^a-zA-Z0-9.-_]*/', '', strtolower($jmeno));
+        $login = preg_replace('/[^a-zA-Z0-9.-_]*/', '', strtolower($prijmeni)) . '_'
+            . preg_replace('/[^a-zA-Z0-9.-_]*/', '', strtolower($jmeno));
 
         if (!($id = DBUser::getUserByFullName($jmeno, $prijmeni)) && !($id = DBUser::getUserID($login))) {
             list($user_id, $par_id) = DBUser::addTemporaryUser($login, $jmeno, $prijmeni, $narozeni);
@@ -282,16 +312,17 @@ class Users extends Admin
                 )
             );
         } else {
-            if (is_array($id))
+            if (is_array($id)) {
                 $id = $id['u_id'];
-
+            }
             $data = DBUser::getUserData($id);
             $partner = DBPary::getLatestPartner($data['u_id'], $data['u_pohlavi']);
-            if ($partner && $partner['p_id'])
-                $par_id = $partner['p_id'];
-            else
-                $par_id = DBPary::noPartner($data['u_id']);
 
+            if ($partner && $partner['p_id']) {
+                $par_id = $partner['p_id'];
+            } else {
+                $par_id = DBPary::noPartner($data['u_id']);
+            }
             $narozeni = explode('-', $data['u_narozeni']);
 
             header('Content-Type: application/json');
@@ -303,15 +334,16 @@ class Users extends Admin
                 )
             );
         }
-        exit;
     }
 
-    private function _displayOverview($action) {
+    private function displayOverview($action = 'info')
+    {
         $groups = DBPermissions::getGroups();
         $group_lookup = array();
         foreach ($groups as &$row) {
-            if ($row['pe_id'])
+            if ($row['pe_id']) {
                 $filter[] = $row['pe_id'];
+            }
             $new_data = array(
                 'id' => $row['pe_id'],
                 'name' => $row['pe_name']
@@ -321,25 +353,26 @@ class Users extends Admin
         }
         if ($action == 'status') {
             $skupiny = DBSkupiny::get();
-            $skupinyselect = $this->select()->post();
-            foreach ($skupiny as $skupina)
+            $skupinyselect = (new Select())->post();
+            foreach ($skupiny as $skupina) {
                 $skupinyselect->option($skupina['s_id'], $skupina['s_name']);
+            }
         }
-        $options['sort'] = in_array(get('s'), array('prijmeni', 'narozeni', 'var-symbol')) ?
-            get('s') : 'prijmeni';
-        $options['filter'] = in_array(get('f'), array_merge(array('dancer', 'system', 'all', 'unconfirmed', 'ban'), $filter)) ?
-            get('f') : 'all';
+        $options['sort'] = in_array(get('s'), array('prijmeni', 'narozeni', 'var-symbol'))
+            ? get('s') : 'prijmeni';
+        $options['filter'] = in_array(get('f'), array_merge(array('dancer', 'system', 'all', 'unconfirmed', 'ban'), $filter))
+            ? get('f') : 'all';
         $pager = new Pager(new PagerAdapterDb('DBUser', $options));
         $pager->setCurrentPageField('p');
         $pager->setItemsPerPageField('c');
         $pager->setDefaultItemsPerPage(20);
         $pager->setPageRange(5);
         $data = $pager->getItems();
-        $i = $pager->getItemsPerPage() * ($pager->getCurrentPage() - 1);
+        $index = $pager->getItemsPerPage() * ($pager->getCurrentPage() - 1);
         foreach ($data as &$item) {
             $new_data = array(
                 'checkBox'  => '<input type="checkbox" name="users[]" value="' . $item['u_id'] . '" />',
-                'index'     => ++$i . '. ',
+                'index'     => ++$index . '. ',
                 'varSymbol' => User::varSymbol($item['u_id']),
                 'fullName'  => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
                 'colorBox'  => getColorBox($item['s_color_rgb'], $item['s_description']),
@@ -369,10 +402,9 @@ class Users extends Admin
                 'view' => $action
             )
         );
-        return;
     }
 
-    private function _displayForm() {
+    private function displayForm() {
         $groups = DBPermissions::getGroups();
         foreach ($groups as &$item) {
             $new_data = array(
@@ -380,7 +412,8 @@ class Users extends Admin
                 'name' => $item['pe_name']
             );
             $item = $new_data;
-        }unset($item);
+        } unset($item);
+
         $skupiny = DBSkupiny::get();
         foreach ($skupiny as &$item) {
             $new_data = array(
@@ -400,10 +433,11 @@ class Users extends Admin
         );
     }
 
-    private function _checkData($action = 'add') {
-        $narozeni = $this->date('narozeni')->getPost();
+    private function checkData($action = 'add') {
+        $narozeni = (new Date('narozeni'))->getPost();
 
         $f = new Form();
+
         $f->checkLength(post('jmeno'), 1, 40, 'Špatná délka jména', 'jmeno');
         $f->checkLength(post('prijmeni'), 1, 40, 'Špatná délka přijmení', 'prijmeni');
         $f->checkDate($narozeni, 'Neplatné datum narození', 'narozeni');

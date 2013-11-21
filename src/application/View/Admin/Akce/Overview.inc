@@ -3,7 +3,7 @@
 <?php
 notice($this->redirect()->getMessage());
 if (!TISK) {
-    echo $this->menu()
+    echo (new TKOlomouc\View\Helper\Menu())
         ->content('Přidat', 'akce/add')
         ->content('Upravit', 'edit', true)
         ->content('Upravit přihlášené', 'detail', true)
@@ -14,8 +14,8 @@ if (!TISK) {
 } else {
     echo '<div>';
 }
-echo $this->table()
-    ->style("width:100%")
+echo (new TKOlomouc\View\Helper\Table())
+    ->style('width:100%')
     ->column('checkBox', '')
     ->column('name', 'Jméno')
     ->column('place', 'Místo')

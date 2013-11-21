@@ -27,8 +27,8 @@ class Debug
         fwrite(
             $out,
             date(DATE_RFC822) . ":\n"
-            . $string
-            . "\n\n"
+                . $string
+                . "\n\n"
         );
         fclose($out);
     }

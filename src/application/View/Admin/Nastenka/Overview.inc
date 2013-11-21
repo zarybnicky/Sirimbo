@@ -4,7 +4,7 @@ notice($this->redirect()->getMessage());
 
 echo '<form action="" method="POST">';
 if ($this->showMenu) {
-    echo $this->menu()
+    echo (new TKOlomouc\View\Helper\Menu())
         ->content('Přidat', '/admin/nastenka/add')
         ->content('Upravit', 'edit', true)
         ->content('Odstranit', 'remove', true);
@@ -14,15 +14,15 @@ if (empty($this->data)) {
     return;
 }
 echo '<div style="margin-right:150px;">';
-echo $this->table()
+echo (new TKOlomouc\View\Helper\Table())
     ->style('width:100%')
-    ->data($this->data)
     ->column('checkBox', '')
     ->column('header', 'Nadpis')
     ->column('groups', 'Skupiny')
     ->column('fullName', 'Přidal')
     ->column('timestampAdd', 'Přidáno', '', 'width:83px;')
-    ->column('timestampEdit', 'Naposledy<br/>upraveno', '', 'width:83px');
+    ->column('timestampEdit', 'Naposledy<br/>upraveno', '', 'width:83px')
+    ->data($this->data);
 echo '</div>';
 echo '</form>';
 ?>

@@ -1,25 +1,26 @@
 <?php
-$mainForm = (new TKOlomouc\View\Helper\Table())->table()
+$mainForm = (new TKOlomouc\View\Helper\Table())
     ->column('desc', '', 'r')
     ->column('value', 'Hodnota')
     ->data(array(
         array(
                 'desc' => 'Typ:',
-                'value' => '<label>' . getRadio('type', '0', true) . 'Běžné platby</label><br/>' .
-                    '<label>' . getRadio('type', '1') . 'Členské příspěvky</label>'
+                'value' => '<label>' . getRadio('type', '0', true) . 'Běžné platby</label><br/>'
+                    . '<label>' . getRadio('type', '1') . 'Členské příspěvky</label>'
         ), array(
                 'desc' => 'Jméno:',
                 'value' => '<input type="text" name="name" value="' . post('name') . '"/>'
         ), array(
                 'desc' => 'Popis: ',
-                'value' => '<textarea rows="10" cols="50" name="description">' . post('description') . '</textarea>'
+                'value' => '<textarea rows="10" cols="50" name="description">'
+                    . post('description') . '</textarea>'
         ), array(
                 'desc' => 'Násobitel částky: ',
                 'value' => '<input type="text" name="base" value="' . post('base') . '"/>'
         )
     ));
 if (!empty($this->category)) {
-    $categoryForm = (new TKOlomouc\View\Helper\Table())->table()
+    $categoryForm = (new TKOlomouc\View\Helper\Table())
         ->column('buttons', '', '', 'width:75px')
         ->column('name', 'Jméno')
         ->column('specific', 'Specifický<br/>symbol')
@@ -32,17 +33,17 @@ if (!empty($this->category)) {
         ->data($this->category);
 }
 if (!empty($this->categorySelect)) {
-    $categorySelectBox = (new TKOlomouc\View\Helper\Select())->select('category')
+    $categorySelectBox = (new TKOlomouc\View\Helper\Select('category'))
         ->options($this->categorySelect);
 }
 if (!empty($this->skupiny)) {
-    $skupinyForm = (new TKOlomouc\View\Helper\Table())->table()
+    $skupinyForm = (new TKOlomouc\View\Helper\Table())
         ->column('buttons', '', '', 'width:75px')
         ->column('name', 'Jméno')
         ->data($this->skupiny);
 }
 if (!empty($this->skupinySelect)) {
-    $skupinySelectBox = (new TKOlomouc\View\Helper\Select())->select('skupiny')
+    $skupinySelectBox = (new TKOlomouc\View\Helper\Select('skupiny'))
         ->options($this->skupinySelect);
 }
 ?>

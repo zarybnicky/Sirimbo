@@ -6,7 +6,8 @@ use TKOlomouc\Model\DBAnkety;
 
 class Ankety extends ControllerAbstract
 {
-    function view($id = null) {
+    public function view($id = null)
+    {
         if (post('id')) {
             $currentIP = getIP();
             if (DBAnkety::isUniqueIP(post('id'), $currentIP)) {
@@ -31,7 +32,6 @@ class Ankety extends ControllerAbstract
             if ($sum == 0) {
                 $sum = 1;
             }
-
             $new_row = array();
             foreach ($row['items'] as $item) {
                 $new_row['items'][] = array(
@@ -54,6 +54,8 @@ class Ankety extends ControllerAbstract
             )
         );
     }
-    function sidebar() { }
+    function sidebar()
+    {
+    	;
+    }
 }
-?>

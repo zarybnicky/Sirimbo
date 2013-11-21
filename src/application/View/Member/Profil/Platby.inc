@@ -33,13 +33,12 @@ Více informací přijde brzy!
 
 <h2>Přehled plateb</h2>
 <?php
-echo $this->table()
-    ->data($this->platbyGroups)
+echo (new TKOlomouc\View\Helper\Table())
     ->column('name', 'Jméno', '', 'width:125px')
     ->column('type', 'Typ platby')
     ->column('symbol', 'Specifický symbol', '', 'width:75px')
     ->column('amount', 'Částka')
     ->column('dueDate', 'Splatnost')
-    ->column('validRange', 'Platnost');
+    ->column('validRange', 'Platnost')
+    ->data($this->platbyGroups);
 echo '<a href="/member/profil">Zpět</a>';
-?>

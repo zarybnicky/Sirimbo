@@ -7,7 +7,7 @@ echo '<a href="/admin/skupiny/add">kategorii</a>&nbsp;';
 
 echo '<form action="/admin/skupiny" method="POST">';
 echo '<div style="margin-right:150px">';
-echo $this->table()
+echo (new TKOlomouc\View\Helper\Table())
     ->style('width:100%')
     ->column('buttons', '', 'center', 'width:50px')
     ->column('colorBox', 'Barvy', 'center', 'width:45px')

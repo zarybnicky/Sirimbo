@@ -18,6 +18,7 @@ class DBGalerie extends Adapter
 
         return self::getArray($res);
     }
+
     public static function getFotkyWithParentPath($dir = false, $limit = -1, $offset = 0)
     {
         if ($dir !== false) {
@@ -32,7 +33,8 @@ class DBGalerie extends Adapter
 
         return self::getArray($res);
     }
-    private static function _recursiveChildren(&$dirs, &$out, $dirId, $count)
+
+    private static function recursiveChildren(&$dirs, &$out, $dirId, $count)
     {
         if (empty($dirs)) {
             return;
@@ -44,9 +46,10 @@ class DBGalerie extends Adapter
             $out[] = $dirs[$i];
             $id = $dirs[$i]['gd_id'];
             unset($dirs[$i]);
-            self::_recursiveChildren($dirs, $out, $id, $count);
+            self::recursiveChildren($dirs, $out, $id, $count);
         }
     }
+
     public static function getDirs($by_level = false, $sort = false)
     {
         $res = self::query(
@@ -57,11 +60,12 @@ class DBGalerie extends Adapter
 
         if ($sort) {
             $out = array();
-            self::_recursiveChildren($array, $out, 0, count($array));
+            self::recursiveChildren($array, $out, 0, count($array));
             $array = $out;
         }
         return $array;
     }
+
     public static function getDirsWithParentPath()
     {
         $res = self::query(
@@ -72,6 +76,7 @@ class DBGalerie extends Adapter
 
         return $array;
     }
+
     public static function getSubdirs($id)
     {
         list($id) = self::escape($id);
@@ -79,6 +84,7 @@ class DBGalerie extends Adapter
         $res = self::query("SELECT * FROM galerie_dir WHERE gd_id_rodic='$id'");
         return self::getArray($res);
     }
+
     public static function getSingleDir($id)
     {
         list($id) = self::escapeArray(array($id));
@@ -86,6 +92,7 @@ class DBGalerie extends Adapter
         $res = self::query("SELECT * FROM galerie_dir WHERE gd_id='$id'");
         return self::getSingleRow($res);
     }
+
     public static function getSingleFoto($id)
     {
         list($id) = self::escape($id);
@@ -93,6 +100,7 @@ class DBGalerie extends Adapter
         $res = self::query("SELECT * FROM galerie_foto WHERE gf_id='$id'");
         return self::getSingleRow($res);
     }
+
     public static function addFoto($dir, $path, $name, $kdo)
     {
         list($dir, $path, $name, $kdo) = self::escape($dir, $path, $name, $kdo);
@@ -104,6 +112,7 @@ class DBGalerie extends Adapter
         );
         return true;
     }
+
     public static function editFoto($id, $path, $dir = false, $name = false)
     {
         list($id, $path, $dir, $name) = self::escape($id, $path, $dir, $name);
@@ -117,6 +126,7 @@ class DBGalerie extends Adapter
 
         return true;
     }
+
     public static function editFotoReplacePath($parent, $original, $new)
     {
         list($parent, $original, $new) = self::escape($parent, $original, $new);
@@ -127,6 +137,7 @@ class DBGalerie extends Adapter
             WHERE gf_id_rodic='$parent'"
         );
     }
+
     public static function removeFoto($id)
     {
         list($id) = self::escape($id);
@@ -134,6 +145,7 @@ class DBGalerie extends Adapter
         self::query("DELETE FROM galerie_foto WHERE gf_id='$id'");
         return true;
     }
+
     public static function addDir($name, $parent, $level, $hidden, $path)
     {
         list($name, $parent, $level, $hidden, $path) =
@@ -146,6 +158,7 @@ class DBGalerie extends Adapter
         );
         return true;
     }
+
     public static function editDir($id, $name, $parent, $level, $hidden, $path)
     {
         list($id, $name, $parent, $level, $hidden, $path) =
@@ -158,6 +171,7 @@ class DBGalerie extends Adapter
             WHERE gd_id='$id'"
         );
     }
+
     public static function removeDir($id)
     {
         list($id) = self::escape($id);
@@ -168,6 +182,7 @@ class DBGalerie extends Adapter
 
         return true;
     }
+
     public static function addFotoByPath($dir, $path, $name, $kdo) {
         list($dir, $path, $name, $kdo) = self::escape($dir, $path, $name, $kdo);
 
@@ -180,6 +195,7 @@ class DBGalerie extends Adapter
         );
         return true;
     }
+
     public static function addDirByPath($name, $parent, $level, $path)
     {
         list($name, $parent, $level, $path) =
@@ -193,6 +209,7 @@ class DBGalerie extends Adapter
             ON DUPLICATE KEY UPDATE gd_name='$name'"
         );
     }
+
     public static function removeDirByPath($path)
     {
         list($path) = self::escape($path);
@@ -201,6 +218,7 @@ class DBGalerie extends Adapter
         self::query("DELETE FROM galerie_foto WHERE gf_id_rodic=(SELECT gd_id FROM galerie_dir WHERE gd_path='$path')");
         self::query("DELETE FROM galerie_dir WHERE gd_path='$path'");
     }
+
     public static function removeFotoByPath($path)
     {
         list($path) = self::escape($path);
@@ -209,4 +227,3 @@ class DBGalerie extends Adapter
         return true;
     }
 }
-?>

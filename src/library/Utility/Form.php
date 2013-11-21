@@ -13,27 +13,27 @@ class Form
     private $regexpLogin    = '/^[A-Z0-9_]{3,20}$/i';
     private $regexpPassword = '/^[A-Z0-9_]{6,32}$/i';
 
-    function isValid()
+    public function isValid()
     {
         return $this->valid;
     }
 
-    function getMessages()
+    public function getMessages()
     {
         return $this->messages;
     }
 
-    function getFields()
+    public function getFields()
     {
         return $this->fields;
     }
 
-    function checkDate($i, $message, $name = '')
+    public function checkDate($i, $message, $name = '')
     {
         if (preg_match($this->regexpDate, $i)) {
             list($year, $month, $day) = explode('-', $i);
-            if (
-                !($day == 31 && ($month == 4 || $month == 6 || $month == 9 || $month == 11)
+            if (!(
+                $day == 31 && ($month == 4 || $month == 6 || $month == 9 || $month == 11)
                 || $day >= 30 && $month == 2
                 || $month == 2 && $day == 29 && !($year % 4 == 0 && ($year % 100 != 0 || $year % 400 == 0))
                 )
@@ -45,27 +45,27 @@ class Form
         return false;
     }
 
-    function checkEmail($i, $message, $name = '')
+    public function checkEmail($i, $message, $name = '')
     {
         return $this->checkRegexp($i, $this->regexpEmail, $message, $name);
     }
 
-    function checkPhone($i, $message, $name = '')
+    public function checkPhone($i, $message, $name = '')
     {
         return $this->checkRegexp($i, $this->regexpPhone, $message, $name);
     }
 
-    function checkLogin($i, $message, $name = '')
+    public function checkLogin($i, $message, $name = '')
     {
         return $this->checkRegexp($i, $this->regexpLogin, $message, $name);
     }
 
-    function checkPassword($i, $message, $name = '')
+    public function checkPassword($i, $message, $name = '')
     {
         return $this->checkRegexp($i, $this->regexpPassword, $message, $name);
     }
 
-    function checkRegexp($i, $regexp, $message, $name = '')
+    public function checkRegexp($i, $regexp, $message, $name = '')
     {
         if (preg_match($regexp, $i)) {
             return true;
@@ -74,7 +74,7 @@ class Form
         return false;
     }
 
-    function checkLength($i, $min, $max, $message, $name = '')
+    public function checkLength($i, $min, $max, $message, $name = '')
     {
         $len = strlen($i);
         if ($len >= $min && $len <= $max) {
@@ -84,7 +84,7 @@ class Form
         return false;
     }
 
-    function checkInArray($i, $array, $message, $name = '')
+    public function checkInArray($i, $array, $message, $name = '')
     {
         if (in_array($i, $array)) {
             return true;
@@ -93,7 +93,7 @@ class Form
         return false;
     }
 
-    function checkArrayKey($i, $array, $message, $name = '')
+    public function checkArrayKey($i, $array, $message, $name = '')
     {
         if (array_key_exists($i, $array)) {
             return true;
@@ -102,7 +102,7 @@ class Form
         return false;
     }
 
-    function checkNotEmpty($i, $message, $name = '')
+    public function checkNotEmpty($i, $message, $name = '')
     {
         if ($i || $i === 0) {
             return true;
@@ -111,7 +111,7 @@ class Form
         return false;
     }
 
-    function checkNumeric($i, $message, $name = '')
+    public function checkNumeric($i, $message, $name = '')
     {
         if (is_numeric($i)) {
             return true;
@@ -120,7 +120,7 @@ class Form
         return false;
     }
 
-    function checkNumberBetween($i, $min, $max, $message, $name)
+    public function checkNumberBetween($i, $min, $max, $message, $name)
     {
         if (is_numeric($i) && $i >= $min && $i <= $max) {
             return true;
@@ -129,7 +129,7 @@ class Form
         return false;
     }
 
-    function checkBool($i, $message, $name)
+    public function checkBool($i, $message, $name)
     {
         if ((bool) $i) {
             return true;

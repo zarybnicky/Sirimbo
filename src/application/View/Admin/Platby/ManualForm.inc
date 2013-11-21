@@ -4,7 +4,7 @@ echo '<h2>Ruční třídění plateb</span> (zbývá ', $this->remainingTotal, '
 $form = array(
         array(
                 'desc' => 'Datum:',
-                'value' => $this->date('date')->setDate($this->guess['date'])->textBox(),
+                'value' => (new \TKOlomouc\View\Helper\Date('date'))->setDate($this->guess['date'])->textBox(),
                 'recogColumn' => $this->recognized['date']['column'],
                 'recogValue' => $this->recognized['date']['value']
         ), array(
@@ -14,12 +14,12 @@ $form = array(
                 'recogValue' => $this->recognized['amount']['value']
         ), array(
                 'desc' => 'Uživatel: ',
-                'value' => (new TKOlomouc\View\Helper\Select())->select('variable')->options($this->users)->value($this->guess['variable']),
+                'value' => (new TKOlomouc\View\Helper\Select('variable'))->options($this->users)->value($this->guess['variable']),
                 'recogColumn' => $this->recognized['variable']['column'],
                 'recogValue' => $this->recognized['variable']['value']
         ), array(
                 'desc' => 'Kategorie:',
-                'value' => (new TKOlomouc\View\Helper\Select())->select('specific')->options($this->categories)->value($this->guess['specific']),
+                'value' => (new TKOlomouc\View\Helper\Select('specific'))->options($this->categories)->value($this->guess['specific']),
                 'recogColumn' => $this->recognized['specific']['column'],
                 'recogValue' => $this->recognized['specific']['value']
         ), array(
@@ -29,7 +29,7 @@ $form = array(
                 'recogValue' => $this->recognized['prefix']['value']
         )
 );
-$formTable = $this->table()
+$formTable = (new TKOlomouc\View\Helper\Table())
     ->column('desc', '', 'r')
     ->column('value', 'Hodnota')
     ->column('recogColumn', 'Rozpoznáno:<br/>sloupec')
@@ -46,7 +46,7 @@ $formTable = $this->table()
 <br/>
 <?php
 echo '<h3>Data z banky</h3>';
-echo $this->table()
+echo (new TKOlomouc\View\Helper\Table())
     ->style('width:100%')
     ->showHeader(false)
     ->column('column', '', 'r', 'padding-right:5px')

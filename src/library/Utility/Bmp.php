@@ -23,7 +23,7 @@ class BMP
                 $out = array();
                 $count = strlen($row);
                 for ($i=0; $i<$count; $i++) {
-                    $out[] = $palette[    ord($row[$i])     ];
+                    $out[] = $palette[ord($row[$i])     ];
                 }
                 return $out;
             case 4:
@@ -31,8 +31,8 @@ class BMP
                 $count = strlen($row);
                 for ($i=0; $i<$count; $i++) {
                     $roww = ord($row[$i]);
-                    $out[] = $palette[    ($roww & 240) >> 4];
-                    $out[] = $palette[    ($roww & 15)      ];
+                    $out[] = $palette[($roww & 240) >> 4];
+                    $out[] = $palette[($roww & 15)      ];
                 }
                 return $out;
             case 1:
@@ -40,14 +40,14 @@ class BMP
                 $count = strlen($row);
                 for ($i=0; $i<$count; $i++) {
                     $roww = ord($row[$i]);
-                    $out[] = $palette[    ($roww & 128) >> 7];
-                    $out[] = $palette[    ($roww & 64) >> 6 ];
-                    $out[] = $palette[    ($roww & 32) >> 5 ];
-                    $out[] = $palette[    ($roww & 16) >> 4 ];
-                    $out[] = $palette[    ($roww & 8) >> 3  ];
-                    $out[] = $palette[    ($roww & 4) >> 2  ];
-                    $out[] = $palette[    ($roww & 2) >> 1  ];
-                    $out[] = $palette[    ($roww & 1)       ];
+                    $out[] = $palette[($roww & 128) >> 7];
+                    $out[] = $palette[($roww & 64) >> 6 ];
+                    $out[] = $palette[($roww & 32) >> 5 ];
+                    $out[] = $palette[($roww & 16) >> 4 ];
+                    $out[] = $palette[($roww & 8) >> 3  ];
+                    $out[] = $palette[($roww & 4) >> 2  ];
+                    $out[] = $palette[($roww & 2) >> 1  ];
+                    $out[] = $palette[($roww & 1)       ];
                 }
                 return $out;
         }
@@ -165,8 +165,8 @@ class BMP
         $header = fread($f, 54);
         $header = unpack(
             'c2identifier/Vfile_size/Vreserved/Vbitmap_data/Vheader_size/'
-            . 'Vwidth/Vheight/vplanes/vbits_per_pixel/Vcompression/Vdata_size/'
-            . 'Vh_resolution/Vv_resolution/Vcolors/Vimportant_colors',
+                . 'Vwidth/Vheight/vplanes/vbits_per_pixel/Vcompression/Vdata_size/'
+                . 'Vh_resolution/Vv_resolution/Vcolors/Vimportant_colors',
             $header
         );
 

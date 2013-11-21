@@ -8,11 +8,12 @@ use TKOlomouc\Model\DBUser;
 
 class Detail extends Akce
 {
-    function __construct()
+    public function __construct()
     {
         Permissions::checkError('akce', P_OWNED);
     }
-    function view($id = null)
+
+    public function view($id = null)
     {
         if (!$id || !($akce = DBAkce::getSingleAkce($id))) {
             $this->redirect('/admin/akce', 'Akce s takovým ID neexistuje');
@@ -22,15 +23,15 @@ class Detail extends Akce
         $users = DBUser::getActiveUsers();
 
         if (!empty($_POST)) {
-            if (post("remove") > 0) {
-                DBAkce::removeAkceItem(post("remove"));
+            if (post('remove') > 0) {
+                DBAkce::removeAkceItem(post('remove'));
                 $items = DBAkce::getAkceItems($id);
             }
             foreach ($items as $item) {
-                $item_id = $item["ai_id"];
+                $item_id = $item['ai_id'];
                 $user = post($item_id . '-user');
 
-                if ($user != $item["ai_user"]) {
+                if ($user != $item['ai_user']) {
                     $data = DBUser::getUserData($user);
                     list($year) = explode('-', $data['u_narozeni']);
                     DBAkce::editAkceItem($item_id, $user, $year);
@@ -38,8 +39,8 @@ class Detail extends Akce
             }
             $items = DBAkce::getAkceItems($id);
 
-            if (is_numeric(post("add-user"))) {
-                $user = post("add-user");
+            if (is_numeric(post('add-user'))) {
+                $user = post('add-user');
                 $data = DBUser::getUserData($user);
                 list($year) = explode('-', $data['u_narozeni']);
 
@@ -74,4 +75,3 @@ class Detail extends Akce
         );
     }
 }
-?>

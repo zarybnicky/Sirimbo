@@ -10,13 +10,17 @@ use TKOlomouc\Model\DBPlatbyGroup;
 use TKOlomouc\Model\DBPlatbyCategory;
 use TKOlomouc\Model\DBPlatbyRaw;
 use TKOlomouc\Model\DBPlatbyItem;
+use TKOlomouc\View\Helper\Date;
 
 class Category extends Structure
 {
-    function __construct() {
+    function __construct()
+    {
         Permissions::checkError('platby', P_OWNED);
     }
-    function view($id = null) {
+
+    function view($id = null)
+    {
         $this->render(
             'src/application/View/Admin/Platby/StructureSymbolOverview.inc',
             array(
@@ -25,7 +29,9 @@ class Category extends Structure
             )
         );
     }
-    protected function getCategories($archived = false) {
+
+    protected function getCategories($archived = false)
+    {
         $out = array();
 
         $categories = DBPlatbyCategory::get($archived);
@@ -42,7 +48,9 @@ class Category extends Structure
         }
         return $out;
     }
-    function add($id = null) {
+
+    function add($id = null)
+    {
         if (empty($_POST) || is_object($s = $this->checkPost('add'))) {
             if (!empty($_POST)) {
                 $this->redirect()->setMessage($s->getMessages());
@@ -50,9 +58,9 @@ class Category extends Structure
             $this->_displayForm('add');
             return;
         }
-        $dueDate = $this->date('dueDate')->getPost();
+        $dueDate = (new Date('dueDate'))->getPost();
 
-        $validRange = $this->date('validRange')->range()->getPostRange();
+        $validRange = (new Date('validRange'))->range()->getPostRange();
         $validFrom = $validRange['from'];
         $validTo = $validRange['to'];
         if (!$validTo->isValid())
@@ -98,7 +106,9 @@ class Category extends Structure
             'Specifický symbol úspěšně přidán'
         );
     }
-    function edit($id = null) {
+
+    function edit($id = null)
+    {
         if (!$id || !($data = DBPlatbyCategory::getSingle($id))) {
             $this->redirect(
                 post('referer') ? post('referer') : '/admin/platby/structure',
@@ -164,9 +174,9 @@ class Category extends Structure
             $this->_displayForm('edit');
             return;
         }
-        $dueDate = $this->date('dueDate')->getPost();
+        $dueDate = (new Date('dueDate'))->getPost();
 
-        $validRange = $this->date('validRange')->range()->getPostRange();
+        $validRange = (new Date('validRange'))->range()->getPostRange();
         $validFrom = $validRange['from'];
         $validTo = $validRange['to'];
         if (!$validTo->isValid())
@@ -198,7 +208,9 @@ class Category extends Structure
             'Specifický symbol úspěšně upraven'
         );
     }
-    function remove($id = null) {
+
+    function remove($id = null)
+    {
         if (!$id || !($data = DBPlatbyCategory::getSingle($id))) {
             $this->redirect(
                 post('referer') ? post('referer') : '/admin/platby/structure',
@@ -207,7 +219,7 @@ class Category extends Structure
         }
 
         if (post('action') == 'unlink') {
-            $f = $this->_getLinkedObjects($id);
+            $f = $this->getLinkedObjects($id);
 
             $groupCount = 0;
             foreach ($f['groups'] as $data) {
@@ -240,7 +252,7 @@ class Category extends Structure
             return;
         }
         if (((empty($_POST) || post('action') == 'confirm')
-            && ($f = $this->_getLinkedObjects($id)))
+            && ($f = $this->getLinkedObjects($id)))
             || empty($_POST)
         ) {
             if (isset($f) && $f) {
@@ -270,7 +282,9 @@ class Category extends Structure
             'Specifický symbol byl odebrán'
         );
     }
-    private function _getLinkedObjects($id) {
+
+    private function getLinkedObjects($id)
+    {
         $group = DBPlatbyCategory::getSingleWithGroups($id);
         $items = DBPlatbyItem::get(true, array('pc_id' => $id));
 
@@ -279,7 +293,9 @@ class Category extends Structure
         else
             return array('groups' => $group, 'items' => $items);
     }
-    private function _displayForm($action) {
+
+    private function _displayForm($action)
+    {
         $id = Request::getID() ? Request::getID() : 0;
 
         $groups = DBPlatbyCategory::getSingleWithGroups($id);
@@ -313,14 +329,16 @@ class Category extends Structure
             )
         );
     }
-    protected function checkPost($action) {
+
+    protected function checkPost($action)
+    {
         $f = new Form();
-        $dueDate = $this->date('dueDate')->getPost();
+        $dueDate = (new Date('dueDate'))->getPost();
         if ($dueDate->getYear() == '0000')
             $dueDate = str_replace('0000', '2000', (string) $dueDate);
         $f->checkDate($dueDate, 'Datum splatnosti není platné.');
 
-        $validRange = $this->date('validRange')->range()->getPostRange();
+        $validRange = (new Date('validRange'))->range()->getPostRange();
         if ($validRange['from']->getYear() == '0000') {
             $f->checkDate(
                 str_replace('0000', '2000', (string) $validRange['from']),

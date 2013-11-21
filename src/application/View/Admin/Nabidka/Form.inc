@@ -12,7 +12,7 @@ notice($this->redirect()->getMessage());
             <option value="<?= $this->userId ?>">Já</option>
         </select><?php
         } else {
-            echo $this->userSelect()
+            echo (new TKOlomouc\View\Helper\UserSelect())
                 ->name('trener')
                 ->users($this->users);
         } ?></td>
@@ -27,10 +27,10 @@ notice($this->redirect()->getMessage());
         <td>(0 = neomezeně)</td>
     </tr><tr>
         <td>Od: (*)</td>
-        <td><?php echo $this->date('od')->textBox();?></td>
+        <td><?php echo (new \TKOlomouc\View\Helper\Date('od'))->textBox();?></td>
     </tr><tr>
         <td>Do: </td>
-        <td><?php echo $this->date('do')->textBox();?></td>
+        <td><?php echo (new \TKOlomouc\View\Helper\Date('do'))->textBox();?></td>
     </tr><tr>
         <td></td>
         <td>(pokud je "Do" prázdné, počítá se jako "Od")</td>

@@ -9,10 +9,13 @@ use TKOlomouc\Utility\Request;
 
 class Detail extends Nabidka
 {
-    function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('nabidka', P_OWNED);
     }
-    function view($id = null) {
+
+    public function view($id = null)
+    {
         if (!$id || !($data = DBNabidka::getSingleNabidka($id))) {
             $this->redirect('/admin/nabidka', 'Nabídka s takovým ID neexistuje');
         }
@@ -120,4 +123,3 @@ class Detail extends Nabidka
         );
     }
 }
-?>

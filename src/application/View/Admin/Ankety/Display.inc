@@ -5,7 +5,7 @@
 <form action="" method="POST">
     <?php
     if (!TISK) {
-        echo $this->menu()
+        echo (new TKOlomouc\View\Helper\Menu())
             ->content('Přidat', 'ankety/add')
             ->content('Upravit', 'edit', true)
             ->content('Odstranit', 'remove', true)

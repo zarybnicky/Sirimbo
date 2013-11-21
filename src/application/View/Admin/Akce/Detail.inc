@@ -11,7 +11,7 @@
             <td></td>
         </tr>
         <?php
-        $userselect = $this->userSelect()->users($this->users);
+        $userselect = (new TKOlomouc\View\Helper\UserSelect())->users($this->users);
         foreach ($this->items as $item) :
         ?>
         <tr>

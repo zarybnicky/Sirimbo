@@ -8,13 +8,16 @@ use TKOlomouc\Model\DBUser;
 
 class Clenove extends Member
 {
-    function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('users', P_VIEW);
     }
-    function view($id = null) {
-        if (!$id || !($data = DBUser::getUserData($id)))
-            $this->redirect('/member/clenove/structure');
 
+    public function view($id = null)
+    {
+        if (!$id || !($data = DBUser::getUserData($id))) {
+            $this->redirect('/member/clenove/structure');
+        }
         $this->render(
             'src/application/View/Member/Clenove/Single.inc',
             array(
@@ -25,11 +28,14 @@ class Clenove extends Member
             )
         );
     }
-    function skupiny($id = null) {
+
+    public function skupiny($id = null)
+    {
         $currentID = 0;
         $currentKey = 0;
         $data = DBUser::getUsersWithSkupinaPlatby();
         $skupiny = array();
+
         foreach ($data as $item) {
             if ($item['s_id'] != $currentID) {
                 $index = 0;
@@ -51,17 +57,20 @@ class Clenove extends Member
             )
         );
     }
-    function seznam($id = null) {
+
+    public function seznam($id = null)
+    {
         $index = 0;
         $data = DBUser::getActiveUsers();
+
         foreach ($data as &$item) {
             $new_data = array(
                 'index' => ++$index . '.',
-                'fullName' => '<a href="/member/clenove/' . $item['u_id'] . '">' .
-                    '<img src="/style/person-small.png" alt="' . $item['u_jmeno'] . ' ' . $item['u_prijmeni'] .
-                    '" style="margin-bottom:-2px"/>' .
-                    '</a>' .
-                    '&nbsp;' . $item['u_prijmeni'] . ', ' . $item['u_jmeno']
+                'fullName' => '<a href="/member/clenove/' . $item['u_id'] . '">'
+                    . '<img src="/style/person-small.png" alt="' . $item['u_jmeno'] . ' ' . $item['u_prijmeni']
+                    . '" style="margin-bottom:-2px"/>'
+                    . '</a>'
+                    . '&nbsp;' . $item['u_prijmeni'] . ', ' . $item['u_jmeno']
             );
             $item = $new_data;
         }
@@ -72,12 +81,15 @@ class Clenove extends Member
             )
         );
     }
-    function structure($id = null) {
-        $data = DBUser::getUsersWithSkupinaPlatby();
+
+    public function structure($id = null)
+    {
         $skupiny = array();
         $index = 0;
         $currentID = 0;
         $currentKey = 0;
+        $data = DBUser::getUsersWithSkupinaPlatby();
+
         foreach ($data as $item) {
             if ($item['s_id'] != $currentID) {
                 $index = 0;
@@ -121,4 +133,3 @@ class Clenove extends Member
         );
     }
 }
-?>

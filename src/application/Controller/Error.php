@@ -3,9 +3,11 @@ namespace TKOlomouc\Controller;
 
 class Error extends ControllerAbstract
 {
-    function view($id = null) {
-        if (!get('id')) get('id', '');
-
+    public function view($id = null)
+    {
+        if (!get('id')) {
+            get('id', '');
+        }
         function ucfirstUser(&$str, $key) {
             $str = ucfirst($str);
         }
@@ -30,6 +32,9 @@ class Error extends ControllerAbstract
             )
         );
     }
-    function sidebar() { }
+
+    public function sidebar()
+    {
+    	;
+    }
 }
-?>

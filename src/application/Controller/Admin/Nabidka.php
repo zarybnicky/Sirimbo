@@ -7,17 +7,21 @@ use TKOlomouc\Utility\Novinky;
 use TKOlomouc\Utility\User;
 use TKOlomouc\Utility\Request;
 use TKOlomouc\Utility\Form;
-use TKOlomouc\Type\Date;
 use TKOlomouc\Model\DBNabidka;
 use TKOlomouc\Model\DBUser;
 use TKOlomouc\View\Exception\AuthorizationException;
+use TKOlomouc\View\Helper\Date;
+use TKOlomouc\Type\DateFormat;
 
 class Nabidka extends Admin
 {
-    function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('nabidka', P_OWNED);
     }
-    function view($id = null) {
+
+    public function view($id = null)
+    {
         switch(post('action')) {
             case 'save':
                 $items = DBNabidka::getNabidka();
@@ -34,17 +38,20 @@ class Nabidka extends Admin
                 break;
             case 'edit':
                 $nabidka = post('nabidka');
-                if ($nabidka[0])
+                if ($nabidka[0]) {
                     $this->redirect('/admin/nabidka/edit/' . $nabidka[0]);
+                }
                 break;
             case 'edit_detail':
                 $nabidka = post('nabidka');
-                if ($nabidka[0])
+                if ($nabidka[0]) {
                     $this->redirect('/admin/nabidka/detail/' . $nabidka[0]);
+                }
                 break;
             case 'remove':
-                if (!is_array(post('nabidka')))
+                if (!is_array(post('nabidka'))) {
                     break;
+                }
                 foreach (post('nabidka') as $item) {
                     $data = DBNabidka::getSingleNabidka($item);
                     if (!Permissions::check('nabidka', P_OWNED, $data['n_trener'])) {
@@ -59,14 +66,15 @@ class Nabidka extends Admin
                         $n->nabidka()->remove(
                             $od->getYear() == $do->getYear()
                             ? ($od->getDay() . '. ' . $od->getMonth() . '.')
-                            : $od->getDate(Date::FORMAT_SIMPLIFIED),
-                            $do->getDate(Date::FORMAT_SIMPLIFIED),
+                            : $od->getDate(DateFormat::FORMAT_SIMPLIFIED),
+                            $do->getDate(DateFormat::FORMAT_SIMPLIFIED),
                             $data['u_jmeno'] . ' ' . $data['u_prijmeni']
                         );
                     }
                 }
-                if (isset($error) && $error)
+                if (isset($error) && $error) {
                     throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
+                }
                 $this->redirect()->setMessage('Nabídky odebrány');
                 break;
         }
@@ -81,14 +89,16 @@ class Nabidka extends Admin
                        ? ' - ' . formatDate($row['n_do'])
                        : '')
             );
-            if ($new_data['canEdit'])
+            if ($new_data['canEdit']) {
                 $new_data['checkBox'] = '<input type="checkbox" name="nabidka[]" value="' . $row['n_id'] . '" />';
-            else
+            } else {
                 $new_data['checkBox'] = '&nbsp;&#10799;';
-            if (Permissions::check('nabidka', P_ADMIN))
+            }
+            if (Permissions::check('nabidka', P_ADMIN)) {
                 $new_data['visible'] = getCheckbox($row['n_id'], '1', $row['n_visible']);
-            else
+            } else {
                 $new_data['visible'] = '&nbsp;' . ($row['n_visible'] ? '&#10003;' : '&#10799;');
+            }
             $row = $new_data;
         }
         $this->render(
@@ -99,10 +109,13 @@ class Nabidka extends Admin
             )
         );
     }
-    function add($id = null) {
-        if (empty($_POST) || is_object($f = $this->_checkData())) {
-            if (!empty($_POST))
+
+    public function add($id = null)
+    {
+        if (empty($_POST) || is_object($f = $this->checkData())) {
+            if (!empty($_POST)) {
                 $this->redirect()->setMessage($f->getMessages());
+            }
             $this->render(
                 'src/application/View/Admin/Nabidka/Form.inc',
                 array(
@@ -118,19 +131,20 @@ class Nabidka extends Admin
         }
         Permissions::checkError('nabidka', P_OWNED, post('trener'));
 
-        $od = $this->date('od')->getPost();
-        $do = $this->date('do')->getPost();
-        if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0)
+        $od = (new Date('od'))->getPost();
+        $do = (new Date('do'))->getPost();
+        if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
+        }
 
         $visible = (bool) post('visible');
         if (!Permissions::check('nabidka', P_ADMIN) && $visible) {
             $visible = false;
             $this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění příspěvku');
         }
-        if (!is_numeric(post('max_pocet_hod')))
+        if (!is_numeric(post('max_pocet_hod'))) {
             post('max_pocet_hod', 0);
-
+        }
         DBNabidka::addNabidka(
             post('trener'), post('pocet_hod'), post('max_pocet_hod'),
             (string) $od, (string) $do, $visible, post('lock') ? 1 : 0
@@ -145,13 +159,15 @@ class Nabidka extends Admin
                 '/member/nabidka',
                 $od->getYear() == $do->getYear()
                 ? ($od->getDay() . '. ' . $od->getMonth() . '.')
-                : $od->getDate(Date::FORMAT_SIMPLIFIED),
-                $do->getDate(Date::FORMAT_SIMPLIFIED), $trener_name
+                : $od->getDate(DateFormat::FORMAT_SIMPLIFIED),
+                $do->getDate(DateFormat::FORMAT_SIMPLIFIED), $trener_name
             );
         }
         $this->redirect(getReturnURI('/admin/nabidka'), 'Nabídka přidána');
     }
-    function edit($id = null) {
+
+    public function edit($id = null)
+    {
         if (!$id || !($data = DBNabidka::getSingleNabidka($id))) {
             $this->redirect(
                 getReturnURI('/admin/nabidka'),
@@ -160,7 +176,7 @@ class Nabidka extends Admin
         }
         Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
 
-        if (empty($_POST) || is_object($f = $this->_checkData())) {
+        if (empty($_POST) || is_object($f = $this->checkData())) {
             if (empty($_POST)) {
                 post('id', $id);
                 post('trener', $data['n_trener']);
@@ -187,11 +203,11 @@ class Nabidka extends Admin
             );
             return;
         }
-        $od = $this->date('od')->getPost();
-        $do = $this->date('do')->getPost();
-        if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0)
+        $od = (new Date('od'))->getPost();
+        $do = (new Date('do'))->getPost();
+        if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
-
+        }
         $visible = (bool) post('visible');
         $visible_prev = $data['n_visible'];
         if (!Permissions::check('nabidka', P_ADMIN)
@@ -217,9 +233,9 @@ class Nabidka extends Admin
                 'nemůžu dál snížit maximální počet hodin'
             );
         }
-        if (!is_numeric($max_lessons))
+        if (!is_numeric($max_lessons)) {
             $max_lessons = 0;
-
+        }
         DBNabidka::editNabidka(
             $id, post('trener'), $pocet_hod, $max_lessons,
             (string) $od, (string) $do, $visible,
@@ -227,12 +243,14 @@ class Nabidka extends Admin
         );
 
         if ($visible) {
-            if (!$visible_prev)
+            if (!$visible_prev) {
                 $act = 'add';
-            else
+            } else {
                 $act = 'edit';
-        } elseif (!$visible && $visible_prev && strcmp($data['n_od'], date('Y-m-d')) > 0)
+            }
+        } elseif (!$visible && $visible_prev && strcmp($data['n_od'], date('Y-m-d')) > 0) {
             $act = 'remove';
+        }
 
         if (isset($act)) {
             $trener_data = DBUser::getUserData(post('trener'));
@@ -240,17 +258,17 @@ class Nabidka extends Admin
             if ($act == 'remove') {
                 $n->nabidka()->$act(
                     $od->getYear() == $do->getYear()
-                    ? ($od->getDay() . '. ' . $od->getMonth() . '.')
-                    : $od->getDate(Date::FORMAT_SIMPLIFIED),
-                    $do->getDate(Date::FORMAT_SIMPLIFIED),
+                        ? ($od->getDay() . '. ' . $od->getMonth() . '.')
+                        : $od->getDate(DateFormat::FORMAT_SIMPLIFIED),
+                    $do->getDate(DateFormat::FORMAT_SIMPLIFIED),
                     $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni']);
             } else {
                 $n->nabidka()->$act(
                     '/member/nabidka',
                     $od->getYear() == $do->getYear()
-                    ? ($od->getDay() . '. ' . $od->getMonth() . '.')
-                    : $od->getDate(Date::FORMAT_SIMPLIFIED),
-                    $do->getDate(Date::FORMAT_SIMPLIFIED),
+                        ? ($od->getDay() . '. ' . $od->getMonth() . '.')
+                        : $od->getDate(DateFormat::FORMAT_SIMPLIFIED),
+                    $do->getDate(DateFormat::FORMAT_SIMPLIFIED),
                     $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni']
                 );
             }
@@ -258,20 +276,20 @@ class Nabidka extends Admin
         $this->redirect(getReturnURI('/admin/nabidka'), 'Nabídka úspěšně upravena');
     }
 
-    private function _checkData() {
-        $od = $this->date('od')->getPost();
-        $do = $this->date('do')->getPost();
-        if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0)
-            $do = $od;
+    private function checkData() {
+        $od = (new Date('od'))->getPost();
+        $do = (new Date('do'))->getPost();
 
+        if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
+            $do = $od;
+        }
         $f = new Form();
         $f->checkNumeric(post('trener'), 'ID trenéra musí být číselné', 'trener');
         $f->checkNumeric(post('pocet_hod'), 'Počet hodin prosím zadejte čísly', 'pocet_hod');
         $f->checkDate((string) $od, 'Zadejte prosím platné datum ("Od")', 'od');
-        if ($do->isValid())
+        if ($do->isValid()) {
             $f->checkDate((string) $do, 'Zadejte prosím platné datum ("Do")', 'do');
-
+        }
         return $f->isValid() ? true : $f;
     }
 }
-?>

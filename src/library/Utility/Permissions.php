@@ -9,6 +9,7 @@ class Permissions
     {
         return User::getPermissions($module);
     }
+
     public static function check($module, $level, $vlastnik = null)
     {
         $perms = User::getPermissions($module);
@@ -17,11 +18,12 @@ class Permissions
         }
         return $perms >= $level;
     }
+
     public static function checkError($module, $level, $redirect = null, $vlastnik = null)
     {
-        if (Permissions::check($module, $level, $vlastnik))
+        if (Permissions::check($module, $level, $vlastnik)) {
             return true;
-
+        }
         if ($redirect !== null) {
             Response::redirect($redirect);
         } elseif (User::isLogged()) {

@@ -3,12 +3,12 @@
 <?php notice($this->redirect()->getMessage()); ?>
 <form action="" method="POST">
 <?php
-echo $this->menu()
+echo (new TKOlomouc\View\Helper\Menu())
     ->content('Odstranit', 'remove', true)
     ->content('Zpět', '../users');
 ?>
 <?php
-echo $this->table()
+echo (new TKOlomouc\View\Helper\Table())
     ->column('checkBox', '')
     ->column('colorBox', '')
     ->column('fullName', 'Jméno', '', 'max-width:140px;')

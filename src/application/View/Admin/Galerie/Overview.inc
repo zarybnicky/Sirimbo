@@ -4,7 +4,7 @@ notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST">
 <?php
-echo $this->menu()
+echo (new TKOlomouc\View\Helper\Menu())
     ->content('Přidat fotky', 'galerie/file/upload')
     ->content('Přidat složku', 'galerie/directory/add')
     ->content('Upravit fotky', 'directory', true)
@@ -13,7 +13,7 @@ echo $this->menu()
     ->content('Aktualizovat databázi', 'galerie/scan', true)
     ->content('Uložit změny', 'galerie/save', true);
 
-echo $this->table()
+echo (new TKOlomouc\View\Helper\Table())
     ->column('checkBox', '')
     ->column('name', 'Název')
     ->column('hidden', 'Skrytá')

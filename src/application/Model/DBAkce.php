@@ -19,8 +19,10 @@ class DBAkce extends Adapter implements Pagable
     {
         list($offset, $count, $options) = self::escape($offset, $count, $options);
 
-        $res = self::query("SELECT * FROM akce " .
-            ($options ? $options : '') . " LIMIT $offset,$count");
+        $res = self::query(
+            "SELECT * FROM akce "
+            . ($options ? $options : '') . " LIMIT $offset,$count"
+        );
         return self::getArray($res);
     }
 
@@ -39,8 +41,10 @@ class DBAkce extends Adapter implements Pagable
     {
         list($id) = self::escape($id);
 
-        $res = self::query("SELECT * FROM akce WHERE a_id='$id'" .
-                ($onlyVisible ? " AND a_visible='1'" : '') . ' ORDER BY a_od');
+        $res = self::query(
+            "SELECT * FROM akce WHERE a_id='$id'"
+                . ($onlyVisible ? " AND a_visible='1'" : '') . ' ORDER BY a_od'
+        );
         if (!$res) {
             return false;
         } else {
@@ -51,12 +55,13 @@ class DBAkce extends Adapter implements Pagable
     public static function getWithItems($visibleOnly = false)
     {
         $res = self::query(
-        "SELECT *
-        FROM akce
-        LEFT JOIN akce_item ON a_id=ai_id_rodic
-        LEFT JOIN users ON ai_user=u_id"
-        . ($visibleOnly ? " WHERE a_visible='1'" : '')
-        . " ORDER BY a_od,u_prijmeni");
+            "SELECT *
+            FROM akce
+            LEFT JOIN akce_item ON a_id=ai_id_rodic
+            LEFT JOIN users ON ai_user=u_id"
+            . ($visibleOnly ? " WHERE a_visible='1'" : '')
+            . " ORDER BY a_od,u_prijmeni"
+        );
         return self::getArray($res);
     }
 
@@ -65,10 +70,11 @@ class DBAkce extends Adapter implements Pagable
         list($id) = self::escape($id);
 
         $res = self::query(
-        "SELECT *
-        FROM akce_item
-        LEFT JOIN users ON ai_user=u_id
-        WHERE ai_id_rodic='$id' ORDER BY u_prijmeni");
+            "SELECT *
+            FROM akce_item
+            LEFT JOIN users ON ai_user=u_id
+            WHERE ai_id_rodic='$id' ORDER BY u_prijmeni"
+        );
         return self::getArray($res);
     }
 
@@ -77,8 +83,11 @@ class DBAkce extends Adapter implements Pagable
         list($jmeno, $kde, $info, $od, $do, $kapacita, $dokumenty, $lock, $visible) =
             self::escape($jmeno, $kde, $info, $od, $do, $kapacita, $dokumenty, $lock, $visible);
 
-        self::query("INSERT INTO akce (a_jmeno,a_kde,a_info,a_od,a_do,a_kapacita,a_dokumenty,a_lock,a_visible)" .
-            " VALUES ('$jmeno','$kde','$info','$od','$do','$kapacita','$dokumenty','$lock','$visible')");
+        self::query(
+            "INSERT INTO akce
+            (a_jmeno,a_kde,a_info,a_od,a_do,a_kapacita,a_dokumenty,a_lock,a_visible)
+            VALUES ('$jmeno','$kde','$info','$od','$do','$kapacita','$dokumenty','$lock','$visible')"
+        );
 
         return self::getInsertId();
     }
@@ -88,8 +97,12 @@ class DBAkce extends Adapter implements Pagable
         list($id, $jmeno, $kde, $info, $od, $do, $kapacita, $dokumenty, $lock, $visible) =
             self::escape($id, $jmeno, $kde, $info, $od, $do, $kapacita, $dokumenty, $lock, $visible);
 
-        self::query("UPDATE akce SET a_jmeno='$jmeno',a_kde='$kde',a_info='$info',a_od='$od',a_do='$do'," .
-            "a_kapacita='$kapacita',a_dokumenty='$dokumenty',a_lock='$lock',a_visible='$visible' WHERE a_id='$id'");
+        self::query(
+            "UPDATE akce
+            SET a_jmeno='$jmeno',a_kde='$kde',a_info='$info',a_od='$od',a_do='$do',
+                a_kapacita='$kapacita',a_dokumenty='$dokumenty',a_lock='$lock',a_visible='$visible'
+            WHERE a_id='$id'"
+        );
 
         return true;
     }
@@ -108,8 +121,10 @@ class DBAkce extends Adapter implements Pagable
     {
         list($uid, $pid, $rok_narozeni) = self::escape($uid, $pid, $rok_narozeni);
 
-        self::query("INSERT INTO akce_item (ai_id_rodic,ai_user,ai_rok_narozeni)" .
-            " VALUES ('$pid','$uid','$rok_narozeni')");
+        self::query(
+            "INSERT INTO akce_item (ai_id_rodic,ai_user,ai_rok_narozeni)
+            VALUES ('$pid','$uid','$rok_narozeni')"
+        );
 
         return true;
     }
@@ -128,6 +143,7 @@ class DBAkce extends Adapter implements Pagable
         list($id) = self::escape($id);
 
         $res = self::query("SELECT a_jmeno FROM akce WHERE a_id='$id'");
+
         if (!$res) {
             return false;
         } else {
@@ -140,8 +156,11 @@ class DBAkce extends Adapter implements Pagable
     {
         list($p_id, $u_id, $rok) = self::escape($p_id, $u_id, $rok);
 
-        self::query("INSERT INTO akce_item (ai_id_rodic,ai_user,ai_rok_narozeni)" .
-            " VALUES ('$p_id','$u_id','$rok')");
+        self::query(
+            "INSERT INTO akce_item
+            (ai_id_rodic,ai_user,ai_rok_narozeni)
+            VALUES ('$p_id','$u_id','$rok')"
+        );
 
         return true;
     }
@@ -150,8 +169,11 @@ class DBAkce extends Adapter implements Pagable
     {
         list($id, $u_id, $rok) = self::escape($id, $u_id, $rok);
 
-        self::query("UPDATE akce_item SET ai_user='$u_id',ai_rok_narozeni='$rok' WHERE" .
-            " ai_id='$id'");
+        self::query(
+            "UPDATE akce_item
+            SET ai_user='$u_id',ai_rok_narozeni='$rok'
+            WHERE ai_id='$id'"
+        );
 
         return true;
     }
@@ -170,6 +192,7 @@ class DBAkce extends Adapter implements Pagable
         list($a_id, $u_id) = self::escape($a_id, $u_id);
 
         $res = self::query("SELECT ai_id FROM akce_item WHERE ai_id_rodic='$a_id' AND ai_user='$u_id'");
+
         if (!$res) {
             return false;
         } else {
@@ -178,4 +201,3 @@ class DBAkce extends Adapter implements Pagable
         }
     }
 }
-?>

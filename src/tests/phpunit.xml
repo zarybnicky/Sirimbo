@@ -20,4 +20,12 @@
             <directory>Core</directory>
         </testsuite>
     </testsuites>
+    
+    <filter>
+	  <blacklist>
+	    <directory suffix=".php">/usr</directory>
+	    <directory>../../vendor</directory>
+	    <file>../Psr4Autoloader.php</file>
+	  </blacklist>
+	</filter>
 </phpunit>

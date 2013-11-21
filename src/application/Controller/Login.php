@@ -5,15 +5,20 @@ use TKOlomouc\Utility\User;
 
 class Login extends ControllerAbstract
 {
-    function view($id = null) {
+    public function view($id = null)
+    {
         if (User::isLogged()) {
-            if (get('return'))
+            if (get('return')) {
                 $this->redirect(get('return'));
-            else
+            } else {
                 $this->redirect('/member/home');
+            }
         }
         $this->render('src/application/View/Main/Login.inc');
     }
-    function sidebar() { }
+
+    public function sidebar()
+    {
+    	;
+    }
 }
-?>

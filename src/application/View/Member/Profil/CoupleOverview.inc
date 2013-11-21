@@ -1,6 +1,6 @@
 <h1>Profil</h1>
 <?php
-echo $this->partnerRequest()->getAll();
+echo (new TKOlomouc\View\Helper\PartnerRequest())->getAll();
 notice($this->redirect()->getMessage());
 ?>
 <?php if ($this->havePartner): ?>

@@ -4,18 +4,18 @@ notice($this->redirect()->getMessage());
 
 echo '<form action="" method="POST">';
 if ($this->showMenu) {
-    echo $this->menu()
+    echo (new TKOlomouc\View\Helper\Menu())
         ->content('Přidat', 'permissions/add')
         ->content('Upravit', 'edit', true)
         ->content('Odebrat', 'remove', true);
 }
 echo '<div style="margin-right:150px">';
-echo $this->table()
+echo (new TKOlomouc\View\Helper\Table())
     ->style('width:100%')
-    ->data($this->data)
     ->column('checkBox', '')
     ->column('name', 'Jméno')
-    ->column('description', 'Popis');
+    ->column('description', 'Popis')
+    ->data($this->data);
 echo '</div>';
 echo '</form>';
 ?>

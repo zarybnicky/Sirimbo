@@ -9,11 +9,12 @@ use TKOlomouc\Model\DBDokumenty;
 
 class Akce extends Member
 {
-    function __construct()
+    public function __construct()
     {
         Permissions::checkError('akce', P_VIEW);
     }
-    function view($id = null)
+
+    public function view($id = null)
     {
         if ($id) {
             if (!($data = DBAkce::getSingleAkce($id, true))) {
@@ -22,14 +23,15 @@ class Akce extends Member
             $this->render(
                 'src/application/View/Member/Akce/Single.inc',
                 array(
-                    'data' => $this->_getRenderData($data)
+                    'data' => $this->getRenderData($data)
                 )
             );
             return;
         }
         if (!empty($_POST) && post('id')
-            && ($data = DBAkce::getSingleAkce(post('id')))) {
-            if (is_object($form = $this->_checkData($data, post('action')))) {
+            && ($data = DBAkce::getSingleAkce(post('id')))
+        ) {
+            if (is_object($form = $this->checkData($data, post('action')))) {
                 $this->redirect()->setMessage($form->getMessages());
             } elseif (post('action') == 'signup') {
                 DBAkce::signUp(
@@ -55,7 +57,7 @@ class Akce extends Member
             return;
         }
         foreach ($akce as &$data) {
-            $data = $this->_getRenderData($data);
+            $data = $this->getRenderData($data);
         }
         $this->render(
             'src/application/View/Member/Akce/Overview.inc',
@@ -64,7 +66,8 @@ class Akce extends Member
             )
         );
     }
-    private function _getRenderData(&$data)
+
+    private function getRenderData(&$data)
     {
         $items = DBAkce::getAkceItems($data['a_id']);
         $dokumenty = unserialize($data['a_dokumenty']);
@@ -80,7 +83,7 @@ class Akce extends Member
         } else {
             $dokumenty = array();
         }
-        $new_data = array(
+        $newData = array(
             'id' => $data['a_id'],
             'jmeno' => $data['a_jmeno'],
             'kde' => $data['a_kde'],
@@ -94,14 +97,16 @@ class Akce extends Member
             'dokumenty' => $dokumenty,
             'items' => $items
         );
-        $new_data['signIn'] = $new_data['showForm']
-            ? !DBAkce::isUserSignedUp($new_data['id'], User::getUserID())
+        $newData['signIn'] = $newData['showForm']
+            ? !DBAkce::isUserSignedUp($newData['id'], User::getUserID())
             : '';
-        return $new_data;
+        return $newData;
     }
-    private function _checkData($data, $action)
+
+    private function checkData($data, $action)
     {
         $f = new Form();
+
         $f->checkBool(!$data['a_lock'], 'Tato akce je zamčená', '');
         $f->checkInArray($action, array('signup', 'signout'), 'Špatná akce', '');
         $f->checkNumeric(post('id'), 'Špatné ID', '');
@@ -109,4 +114,3 @@ class Akce extends Member
         return $f->isValid() ? array() : $f;
     }
 }
-?>

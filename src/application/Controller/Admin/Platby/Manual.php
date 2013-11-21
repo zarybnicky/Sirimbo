@@ -5,20 +5,22 @@ use TKOlomouc\Controller\Admin\Platby;
 use TKOlomouc\Utility\Permissions;
 use TKOlomouc\Utility\User;
 use TKOlomouc\Type\PlatbyItem;
-use TKOlomouc\Type\Date;
+use TKOlomouc\Type\Date as DateFormat;
 use TKOlomouc\Model\DBPlatbyRaw;
 use TKOlomouc\Model\DBPlatbyItem;
+use TKOlomouc\View\Helper\Date;
 
 class Manual extends Platby
 {
-    function __construct()
+    public function __construct()
     {
         Permissions::checkError('platby', P_OWNED);
     }
-    function view($id = null)
+
+    public function view($id = null)
     {
         if (!empty($_POST)) {
-            $this->_processPost();
+            $this->processPost();
         }
         $remaining = DBPlatbyRaw::getUnsorted();
         $remainingCount = count($remaining);
@@ -90,7 +92,7 @@ class Manual extends Platby
         } else {
             $recognized['date'] = array(
                 'column' => $date,
-                'value' => (new Date($item->date))->getDate(Date::FORMAT_SIMPLIFIED)
+                'value' => (new Date($item->date))->getDate(DateFormat::FORMAT_SIMPLIFIED)
             );
         }
 
@@ -126,18 +128,18 @@ class Manual extends Platby
                 'guess' => array(
                     'specific' => $item->category_id,
                     'variable' => $item->variable,
-                    'date' => (new Date($item->date))->getDate(Date::FORMAT_SIMPLIFIED),
+                    'date' => (new Date($item->date))->getDate(DateFormat::FORMAT_SIMPLIFIED),
                     'amount' => $item->amount,
                     'prefix' => $item->prefix
                 ),
-                'users' => $this->_getUsers(),
-                'categories' => $this->_getCategories(),
+                'users' => $this->getUsers(),
+                'categories' => $this->getCategories(),
                 'recognized' => $recognized
             )
         );
     }
 
-    private function _getCategories()
+    private function getCategories()
     {
         $categories = parent::getCategoryLookup(false, false, true);
         foreach ($categories as $key => &$array) {
@@ -150,7 +152,7 @@ class Manual extends Platby
         return $categories;
     }
 
-    private function _getUsers()
+    private function getUsers()
     {
         $users = parent::getUserLookup(true);
         foreach ($users as &$array) {
@@ -159,7 +161,7 @@ class Manual extends Platby
         return $users;
     }
 
-    private function _processPost()
+    private function processPost()
     {
         if (!post('id') || !($current = DBPlatbyRaw::getSingle(post('id')))) {
             $this->redirect()->setMessage('Zadaná platba neexistuje.');

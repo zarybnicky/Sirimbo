@@ -3,23 +3,24 @@ namespace TKOlomouc\Utility;
 
 class Request
 {
-    private static $_default = 'home';
-    private static $_url;
-    private static $_rawUrlParts;
-    private static $_urlPartsLiteral;
+    private static $defaultSection = 'home';
+    private static $rawUrl;
+    private static $rawUrlParts;
+    private static $literalUrlParts;
 
-    private static $_action;
-    private static $_id;
-    private static $_referer;
+    private static $action;
+    private static $id;
+    private static $referer;
 
-    public static function setDefault($_default)
+    public static function setDefault($defaultSection)
     {
-        self::$_default = $_default;
+        self::$defaultSection = $defaultSection;
     }
-    public static function setURL($_url)
+
+    public static function setURL($url)
     {
-        self::$_url = $_url;
-        $parts = explode('/', $_url);
+        self::$rawUrl = $url;
+        $parts = explode('/', $url);
 
         //Removes double slashes
         foreach ($parts as $key => $part) {
@@ -28,7 +29,7 @@ class Request
             }
         }
         $parts = array_values($parts);
-        self::$_rawUrlParts = $parts;
+        self::$rawUrlParts = $parts;
 
         //Get an URL w/o numbers eg.
         foreach ($parts as $key => $part) {
@@ -37,66 +38,72 @@ class Request
             }
         }
         $parts = array_values($parts);
-        self::$_urlPartsLiteral = $parts;
+        self::$literalUrlParts = $parts;
 
         //Find controller action = the last string before a numerical one
-        for($i = count(self::$_rawUrlParts) - 1; $i >= 0; $i--) {
-            if (!is_numeric(self::$_rawUrlParts[$i])) {
+        for($i = count(self::$rawUrlParts) - 1; $i >= 0; $i--) {
+            if (!is_numeric(self::$rawUrlParts[$i])) {
                 continue;
             }
-            $_id = self::$_rawUrlParts[$i];
-            if (isset(self::$_rawUrlParts[$i - 1]) && !is_numeric(self::$_rawUrlParts[$i - 1])) {
-                $_action = self::$_rawUrlParts[$i - 1];
+            $id = self::$rawUrlParts[$i];
+            if (isset(self::$rawUrlParts[$i - 1]) && !is_numeric(self::$rawUrlParts[$i - 1])) {
+                $_action = self::$rawUrlParts[$i - 1];
                 break;
             }
         }
-        self::$_id = isset($_id) ? $_id : null;
-        self::$_action = isset($_action)
+        self::$id = isset($id) ? $id : null;
+        self::$action = isset($_action)
             ? $_action
-            : (!empty(self::$_urlPartsLiteral)
-                ? self::$_urlPartsLiteral[count(self::$_urlPartsLiteral) - 1]
+            : (!empty(self::$literalUrlParts)
+                ? self::$literalUrlParts[count(self::$literalUrlParts) - 1]
                 : null);
     }
 
     public static function getURL()
     {
-        return self::$_url;
+        return self::$rawUrl;
     }
+
     public static function getRawURLParts()
     {
-        return self::$_rawUrlParts;
+        return self::$rawUrlParts;
     }
+
     public static function getLiteralURL()
     {
-        if (empty(self::$_urlPartsLiteral) || self::$_urlPartsLiteral[0] == '') {
-            return self::$_default;
+        if (empty(self::$literalUrlParts) || self::$literalUrlParts[0] == '') {
+            return self::$defaultSection;
         }
-        return implode('/', self::$_urlPartsLiteral);
+        return implode('/', self::$literalUrlParts);
     }
+
     public static function getSection()
     {
-        return isset(self::$_rawUrlParts[0]) ? self::$_rawUrlParts[0] : self::$_default;
+        return isset(self::$rawUrlParts[0]) ? self::$rawUrlParts[0] : self::$defaultSection;
     }
+
     public static function getCanonical()
     {
         return self::getLiteralURL();
     }
+
     public static function getAction()
     {
-        return self::$_action;
+        return self::$action;
     }
+
     public static function getID()
     {
-        return self::$_id;
+        return self::$id;
     }
 
     public static function setReferer($referer)
     {
-        self::$_referer = $referer;
+        self::$referer = $referer;
     }
+
     public static function getReferer()
     {
-        return self::$_referer;
+        return self::$referer;
     }
 }
-?>

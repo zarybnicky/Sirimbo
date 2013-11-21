@@ -9,12 +9,12 @@ use TKOlomouc\Settings;
 
 class Dokumenty extends Akce
 {
-    function __construct()
+    public function __construct()
     {
         Permissions::checkError('akce', P_OWNED);
     }
 
-    function view($id = null)
+    public function view($id = null)
     {
         if (!$id || !($akce = DBAkce::getSingleAkce($id))) {
             $this->redirect('/admin/akce', 'Akce s takovým ID neexistuje');
@@ -91,4 +91,3 @@ class Dokumenty extends Akce
         );
     }
 }
-?>

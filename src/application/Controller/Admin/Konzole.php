@@ -7,18 +7,22 @@ use TKOlomouc\Utility\Debug;
 
 class Konzole extends Admin
 {
-    function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('konzole', P_OWNED);
     }
-    function view($id = null) {
+
+    public function view($id = null)
+    {
         if (!empty($_POST) && post('code')) {
             $r = eval(stripslashes(post('code')));
-            if ($r === false)
+            if ($r === false) {
                 notice('Kód obsahuje syntaktickou chybu');
-            elseif (!empty($r))
+            } elseif (!empty($r)) {
                 notice(dump($r));
-            else
+            } else {
                 notice('Success!');
+            }
         }
         echo '<form action="' .  $_SERVER['REQUEST_URI'] . '" method="post">';
         echo 'Kód:<br/>';
@@ -27,4 +31,3 @@ class Konzole extends Admin
         echo '</form>';
     }
 }
-?>

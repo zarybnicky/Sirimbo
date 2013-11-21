@@ -1,7 +1,7 @@
 <h1>Profil</h1>
 <h2>Změna třídy a bodů</h2>
 <?php
-echo $this->partnerRequest()->getAll();
+echo (new TKOlomouc\View\Helper\PartnerRequest())->getAll();
 notice($this->redirect()->getMessage());
 ?>
 <form action="" method="post">
@@ -10,8 +10,8 @@ notice($this->redirect()->getMessage());
 <tr>
     <td>Třída:</td>
     <td><?php
-echo $this->select()
-    ->post()->name('stt-trida')
+echo (new TKOlomouc\View\Helper\Select('stt-trida'))
+    ->post()
     ->options(array('Z', 'H', 'D', 'C', 'B', 'A', 'M'), true, true);
     ?></td>
     <td></td>
@@ -30,8 +30,8 @@ echo $this->select()
 <tr>
     <td>Třída:</td>
     <td><?php
-        echo $this->select()
-            ->post()->name('lat-trida')
+        echo (new TKOlomouc\View\Helper\Select('lat-trida'))
+            ->post()
             ->options(array('Z', 'H', 'D', 'C', 'B', 'A', 'M'), true, true);
     ?></td>
     <td></td>

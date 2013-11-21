@@ -12,9 +12,8 @@ notice($this->redirect()->getMessage());
     <tr>
         <td>Složka</td>
         <td><?php
-$s = $this->select()
+$s = (new TKOlomouc\View\Helper\Select('parent'))
     ->post()
-    ->name('parent')
     ->option('0', '--');
 foreach ($this->dirs as $item) {
     $s->option($item['id'], $item['text']);

@@ -15,14 +15,18 @@ use TKOlomouc\View\Exception\AuthorizationException;
 
 class Nastenka extends Admin
 {
-    function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('nastenka', P_OWNED);
     }
-    function view($id = null) {
+
+    public function view($id = null)
+    {
         switch(post('action')) {
             case 'remove':
-                if (!is_array(post('nastenka')))
+                if (!is_array(post('nastenka'))) {
                     break;
+                }
                 $n = new Novinky(User::getUserID());
 
                 foreach (post('nastenka') as $item) {
@@ -34,14 +38,16 @@ class Nastenka extends Admin
                     DBNastenka::removeNastenka($item);
                     $n->nastenka()->remove();
                 }
-                if (isset($error) && $error)
+                if (isset($error) && $error) {
                     throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
+                }
                 $this->redirect()->setMessage('Příspěvky odebrány');
                 break;
             case 'edit':
                 $nastenka = post('nastenka');
-                if ($nastenka[0])
+                if ($nastenka[0]) {
                     $this->redirect('/admin/nastenka/edit/' . $nastenka[0]);
+                }
                 break;
         }
         $pager = new Pager(new PagerAdapterDb('DBNastenka'));
@@ -58,11 +64,11 @@ class Nastenka extends Admin
                 'timestampAdd' => formatTimestamp($row['up_timestamp_add'], true),
                 'timestampEdit' => formatTimestamp($row['up_timestamp'], true)
             );
-            if ($new_data['canEdit'])
+            if ($new_data['canEdit']) {
                 $new_data['checkBox'] = '<input type="checkbox" name="nastenka[]" value="' . $row['up_id'] . '" />';
-            else
+            } else {
                 $new_data['checkBox'] = '&nbsp;&#10799;';
-
+            }
             $skupiny = DBNastenka::getNastenkaSkupiny($row['up_id']);
             $new_data['groups'] = '';
             foreach ($skupiny as $skupina)
@@ -79,10 +85,13 @@ class Nastenka extends Admin
             )
         );
     }
-    function add($id = null) {
-        if (empty($_POST) || is_object($f = $this->_checkData())) {
-            if (!empty($_POST))
+
+    public function add($id = null)
+    {
+        if (empty($_POST) || is_object($f = $this->checkData())) {
+            if (!empty($_POST)) {
                 $this->redirect()->setMessage($f->getMessages());
+            }
             $this->render(
                 'src/application/View/Admin/Nastenka/Form.inc',
                 array(
@@ -93,13 +102,16 @@ class Nastenka extends Admin
             );
             return;
         }
-        $id = DBNastenka::addNastenka(User::getUserID(), post('nadpis'),
-            post('text'), post('lock') ? 1 : 0);
+        $id = DBNastenka::addNastenka(
+            User::getUserID(), post('nadpis'),
+            post('text'), post('lock') ? 1 : 0
+        );
 
         $skupiny = DBSkupiny::get();
         foreach ($skupiny as $skupina) {
-            if (!post('sk-' . $skupina['s_id']))
+            if (!post('sk-' . $skupina['s_id'])) {
                 continue;
+            }
             DBNastenka::addNastenkaSkupina(
                 $id, $skupina['s_id'], $skupina['s_color_rgb'], $skupina['s_description']
             );
@@ -109,14 +121,20 @@ class Nastenka extends Admin
 
         $this->redirect(getReturnURI('/admin/nastenka'), 'Příspěvek úspěšně přidán');
     }
-    function edit($id = null) {
-        if (!$id || !($data = DBNastenka::getSingleNastenka($id)))
-            $this->redirect(getReturnURI('/admin/nastenka'), 'Nástěnka s takovým ID neexistuje');
+
+    public function edit($id = null)
+    {
+        if (!$id || !($data = DBNastenka::getSingleNastenka($id))) {
+            $this->redirect(
+                getReturnURI('/admin/nastenka'),
+                'Nástěnka s takovým ID neexistuje'
+            );
+        }
 
         Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
         $skupiny = DBNastenka::getNastenkaSkupiny($id);
 
-        if (empty($_POST) || is_object($f = $this->_checkData())) {
+        if (empty($_POST) || is_object($f = $this->checkData())) {
             if (empty($_POST)) {
                 post('id', $id);
                 post('nadpis', $data['up_nadpis']);
@@ -142,8 +160,9 @@ class Nastenka extends Admin
         $skupiny = array();
         $skupiny_vse = DBSkupiny::get();
 
-        foreach ($skupiny_old as $skupina)
+        foreach ($skupiny_old as $skupina) {
             $skupiny[$skupina['ups_id_skupina']] = $skupina['ups_id'];
+        }
 
         $skupiny_old = $skupiny;
         unset($skupiny);
@@ -168,11 +187,13 @@ class Nastenka extends Admin
         $this->redirect(getReturnURI('/admin/nastenka'), 'Příspěvek úspěšně upraven');
     }
 
-    private function _checkData() {
+    private function checkData()
+    {
         $f = new Form();
+
         $f->checkNotEmpty(post('nadpis'), 'Zadejte nadpis', 'nadpis');
         $f->checkNotEmpty(post('text'), 'Zadejte nějaký text', 'text');
+
         return $f->isValid() ? true : $f;
     }
 }
-?>

@@ -8,10 +8,13 @@ use TKOlomouc\Model\DBDokumenty;
 
 class Dokumenty extends Member
 {
-    function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('dokumenty', P_VIEW);
     }
-    function view($id = null) {
+
+    public function view($id = null)
+    {
         $kat = get('kat');
         if (ctype_digit($kat))
             $dokumenty = DBDokumenty::getDokumentyByKategorie($kat);
@@ -37,4 +40,3 @@ class Dokumenty extends Member
         );
     }
 }
-?>

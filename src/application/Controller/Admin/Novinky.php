@@ -7,14 +7,17 @@ use TKOlomouc\Model\DBNovinky;
 
 class Novinky extends Admin
 {
-    function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('nastenka', P_OWNED);
     }
-    function view($id = null) {
-        if (!is_numeric(get('id')))
-            $this->redirect("/member/home", "Novinka s daným ID neexistuje");
+
+    public function view($id = null)
+    {
+        if (!is_numeric(get('id'))) {
+            $this->redirect('/member/home', 'Novinka s daným ID neexistuje');
+        }
         DBNovinky::removeNovinka(get('id'));
-        $this->redirect("/member/home", "Novinka odstraněna");
+        $this->redirect('/member/home', 'Novinka odstraněna');
     }
 }
-?>

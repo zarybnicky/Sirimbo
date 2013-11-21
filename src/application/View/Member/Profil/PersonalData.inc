@@ -32,7 +32,7 @@
         <td></td>
     </tr><tr>
         <td>Datum narození: (*)</td>
-        <td><?php echo $this->date('narozeni')->textBox(); ?></td>
+        <td><?php echo (new \TKOlomouc\View\Helper\Date('narozeni'))->textBox(); ?></td>
         <td></td>
     </tr><tr>
         <td>Poznámky: </td>

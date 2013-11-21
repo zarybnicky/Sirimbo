@@ -12,7 +12,8 @@ use TKOlomouc\Utility\Request;
 
 class Aktuality extends Admin
 {
-    public function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('aktuality', P_OWNED);
     }
 
@@ -212,4 +213,3 @@ class Aktuality extends Admin
         );
     }
 }
-?>

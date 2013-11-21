@@ -7,13 +7,16 @@ use TKOlomouc\Model\DBNovinky;
 
 class Member extends ControllerAbstract
 {
-    function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('nastenka', P_VIEW);
     }
-    function view($id = null)  {
-        if (isset($_SESSION['zaplaceno_text']))
-            $this->redirect()->setMessage($_SESSION['zaplaceno_text']);
 
+    public function view($id = null)
+    {
+        if (isset($_SESSION['zaplaceno_text'])) {
+            $this->redirect()->setMessage($_SESSION['zaplaceno_text']);
+        }
         $data = DBNovinky::getLastNovinky(NOVINKY_COUNT);
         foreach ($data as &$row) {
             $new_row = array(
@@ -32,7 +35,9 @@ class Member extends ControllerAbstract
             )
         );
     }
-    function sidebar() {
+
+    public function sidebar()
+    {
         $s = new Sidebar();
 
         echo $s->menuHeader();
@@ -49,4 +54,3 @@ class Member extends ControllerAbstract
         echo $s->commonItems();
     }
 }
-?>

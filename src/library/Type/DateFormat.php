@@ -1,7 +1,7 @@
 <?php
 namespace TKOlomouc\Type;
 
-class Date
+class DateFormat
 {
     private $valid;
     private $sqlFormat;
@@ -16,7 +16,7 @@ class Date
     const FORMAT_SIMPLIFIED = 'd. m. yyyy';
     const FORMAT_SLASHED = 'dd/mm/yyyy';
 
-    function __construct($s = null)
+    public function __construct($s = null)
     {
         $this->separators = array('-', '.' , '/');
         if (is_string($s)) {
@@ -24,12 +24,12 @@ class Date
         }
     }
 
-    function __toString()
+    public function __toString()
     {
         return $this->getDate();
     }
 
-    function separator($s = null, $reset = false)
+    public function separator($s = null, $reset = false)
     {
         if ($s === null) {
             return $this->separators;
@@ -40,7 +40,7 @@ class Date
         $this->separators[] = $s;
     }
 
-    function setDate($s)
+    public function setDate($s)
     {
         foreach ($this->separators as $sep) {
             if (strpos($s, $sep) === false) {
@@ -79,44 +79,44 @@ class Date
         return true;
     }
 
-    function getDate($format = Date::FORMAT_SQL)
+    public function getDate($format = self::FORMAT_SQL)
     {
         if (!$this->valid) {
             return '';
         }
         switch($format) {
-            case Date::FORMAT_SQL:
+            case self::FORMAT_SQL:
                 return $this->sqlFormat;
-            case Date::FORMAT_SIMPLE:
+            case self::FORMAT_SIMPLE:
                 return $this->day . '.' .     $this->month . '.' . $this->year;
-            case Date::FORMAT_SIMPLE_SPACED:
+            case self::FORMAT_SIMPLE_SPACED:
                 return $this->day . '. ' .     $this->month . '. ' . $this->year;
-            case Date::FORMAT_SIMPLIFIED:
+            case self::FORMAT_SIMPLIFIED:
                 return ((int) $this->day) . '. '
                     . ((int) $this->month) . '. ' . $this->year;
-            case Date::FORMAT_SLASHED:
+            case self::FORMAT_SLASHED:
                 return $this->day . '/' .     $this->month . '/' . $this->year;
             default:
                 return '';
         }
     }
 
-    function getDay()
+    public function getDay()
     {
         return $this->day;
     }
 
-    function getMonth()
+    public function getMonth()
     {
         return $this->month;
     }
 
-    function getYear()
+    public function getYear()
     {
         return $this->year;
     }
 
-    function isValid()
+    public function isValid()
     {
         return $this->valid;
     }

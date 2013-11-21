@@ -1,6 +1,6 @@
 <h1>Profil</h1>
 <?php
-echo $this->partnerRequest()->getAll();
+echo (new TKOlomouc\View\Helper\PartnerRequest())->getAll();
 notice($this->redirect()->getMessage());
 if ($this->havePartner) {
     echo "Právě tančím s: ", $this->partnerFullName;
@@ -9,7 +9,7 @@ if ($this->havePartner) {
 }
 ?>
 <form method="POST" action="">
-<?php echo $this->userSelect()
+<?php echo (new TKOlomouc\View\Helper\UserSelect())
     ->name('partner')->tmpSwitch(false)
     ->users($this->users);?>
 <button type="submit" name="action" value="confirm">Požádat o partnerství</button>

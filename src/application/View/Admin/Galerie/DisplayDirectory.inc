@@ -4,7 +4,7 @@ notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST">
 <?php
-echo $this->menu()
+echo (new TKOlomouc\View\Helper\Menu())
     ->content('Přidat fotky', '/admin/galerie/file/upload?dir=' . $this->id)
     ->content('Upravit fotku', 'file/edit', true)
     ->content('Odstranit fotky', 'file/remove', true)

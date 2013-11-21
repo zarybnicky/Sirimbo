@@ -3,16 +3,20 @@ namespace TKOlomouc\Controller\Admin\Platby;
 
 use TKOlomouc\Controller\Admin\Platby;
 use TKOlomouc\Utility\Permissions;
-use TKOlomouc\Type\Date;
 use TKOlomouc\Model\DBPlatbyGroup;
 use TKOlomouc\Model\DBPlatbyCategory;
+use TKOlomouc\View\Helper\Date;
+use TKOlomouc\Type\DateFormat;
 
 class Structure extends Platby
 {
-    function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('platby', P_OWNED);
     }
-    function view($id = null) {
+
+    public function view($id = null)
+    {
         $this->render('src/application/View/Admin/Platby/StructureOverview.inc', array(
                 'data' => $this->getCategories(),
                 'orphanGroupSkupina' => $this->getOrphanGroupSkupina(),
@@ -20,7 +24,9 @@ class Structure extends Platby
                 'orphanCategory' => $this->getOrphanCategory()
         ));
     }
-    protected function getCategories() {
+
+    protected function getCategories()
+    {
         $out = array();
         $categories = parent::getCategoryList();
 
@@ -40,7 +46,8 @@ class Structure extends Platby
         }
         return $out;
     }
-    protected function getOrphanGroupSkupina() {
+    protected function getOrphanGroupSkupina()
+    {
         $out = DBPlatbyGroup::getWithoutSkupina();
         foreach ($out as &$array) {
             $new_data = array(
@@ -52,7 +59,9 @@ class Structure extends Platby
         }
         return $out;
     }
-    protected function getOrphanGroupCategory() {
+
+    protected function getOrphanGroupCategory()
+    {
         $out = DBPlatbyGroup::getWithoutCategory();
         foreach ($out as &$array) {
             $new_data = array(
@@ -64,7 +73,9 @@ class Structure extends Platby
         }
         return $out;
     }
-    protected function getOrphanCategory() {
+
+    protected function getOrphanCategory()
+    {
         $out = DBPlatbyCategory::getOrphan();
         foreach ($out as &$array) {
             $new_data = array(
@@ -76,36 +87,49 @@ class Structure extends Platby
         }
         return $out;
     }
-    protected function getEditLink($link) {
+
+    protected function getEditLink($link)
+    {
         return '<a href="' . $link . '"><img alt="Upravit" src="/images/wrench.png" /></a>';
     }
-    protected function getRemoveLink($link) {
+
+    protected function getRemoveLink($link)
+    {
         return '<a href="' . $link . '"><img alt="Odstranit" src="/images/cross.png" /></a>';
     }
-    protected function getUnlinkGroupButton($id) {
+
+    protected function getUnlinkGroupButton($id)
+    {
         return
             '<input type="hidden" name="group" value="' . $id . '">' .
             '<button name="action" value="group_remove">' .
                 '<img alt="Odstranit spojení" src="/images/unlink.png" />' .
             '</button>';
     }
-    protected function getUnlinkCategoryButton($id) {
+
+    protected function getUnlinkCategoryButton($id)
+    {
         return
             '<input type="hidden" name="category" value="' . $id . '">' .
             '<button name="action" value="category_remove">' .
                 '<img alt="Odstranit spojení" src="/images/unlink.png" />' .
             '</button>';
     }
-    protected function getUnlinkSkupinaButton($id) {
+
+    protected function getUnlinkSkupinaButton($id)
+    {
         return
             '<input type="hidden" name="skupina" value="' . $id . '">' .
             '<button name="action" value="skupina_remove">' .
                 '<img alt="Odstranit spojení" src="/images/unlink.png" />' .
             '</button>';
     }
-    protected function getDateDisplay($from, $to) {
+    protected function getDateDisplay($from, $to)
+    {
         $from = new Date($from);
         $to = new Date($to);
-        return $from->getDate(Date::FORMAT_SIMPLIFIED) . ' - ' . (string) $to->getDate(Date::FORMAT_SIMPLIFIED);
+
+        return $from->getDate(DateFormat::FORMAT_SIMPLIFIED) . ' - '
+            . (string) $to->getDate(DateFormat::FORMAT_SIMPLIFIED);
     }
 }

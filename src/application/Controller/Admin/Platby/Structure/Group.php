@@ -10,18 +10,24 @@ use TKOlomouc\Model\DBSkupiny;
 use TKOlomouc\Model\DBPlatby;
 use TKOlomouc\Model\DBPlatbyGroup;
 use TKOlomouc\Model\DBPlatbyCategory;
+use TKOlomouc\Type\DateFormat;
 
 class Group extends Structure
 {
-    function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('platby', P_OWNED);
     }
-    function view($id = null) {
+
+    public function view($id = null)
+    {
         $this->render('src/application/View/Admin/Platby/StructureGroupOverview.inc', array(
                 'data' => $this->getGroups()
         ));
     }
-    protected function getGroups() {
+
+    protected function getGroups()
+    {
         $out = array();
         $groups = DBPlatbyGroup::getGroups();
         foreach ($groups as $array) {
@@ -35,14 +41,15 @@ class Group extends Structure
         }
         return $out;
     }
-    function add($id = null) {
+    public function add($id = null)
+    {
         if (empty($_POST) || is_object($s = $this->checkPost())) {
             if (empty($_POST)) {
                 post('base', 1);
             } else {
                 $this->redirect()->setMessage($s->getMessages());
             }
-            $this->_displayForm('add');
+            $this->displayForm('add');
             return;
         }
         DBPlatbyGroup::insert(post('type'), post('name'), post('description'), post('base'));
@@ -85,7 +92,9 @@ class Group extends Structure
             'Kategorie úspěšně přidána'
         );
     }
-    function edit($id = null) {
+
+    public function edit($id = null)
+    {
         if (!$id || !($data = DBPlatbyGroup::getSingle($id))) {
             $this->redirect(
                 post('referer') ? post('referer') : '/admin/platby/structure',
@@ -179,7 +188,7 @@ class Group extends Structure
             } else {
                 $this->redirect()->setMessage($s->getMessages());
             }
-            $this->_displayForm('edit', DBPlatbyGroup::getSingleWithCategories($id));
+            $this->displayForm('edit', DBPlatbyGroup::getSingleWithCategories($id));
             return;
         }
 
@@ -191,7 +200,9 @@ class Group extends Structure
             'Kategorie úspěšně upravena'
         );
     }
-    function remove($id = null) {
+
+    public function remove($id = null)
+    {
         if (!$id || !($data = DBPlatbyGroup::getSingle($id))) {
             $this->redirect(
                 post('referer') ? post('referer') : '/admin/platby/structure',
@@ -200,7 +211,7 @@ class Group extends Structure
         }
 
         if (post('action') == 'unlink') {
-            $f = $this->_getLinkedObjects($id);
+            $f = $this->getLinkedObjects($id);
 
             $categoryCount = 0;
             foreach ($f['categories'] as $data) {
@@ -221,7 +232,7 @@ class Group extends Structure
             return;
         }
         if (((empty($_POST) || post('action') == 'confirm')
-            && ($f = $this->_getLinkedObjects($id))) || empty($_POST)
+            && ($f = $this->getLinkedObjects($id))) || empty($_POST)
         ) {
             if (isset($f) && $f) {
                 $this->redirect()->setMessage(
@@ -244,16 +255,21 @@ class Group extends Structure
             'Kategorie byla odebrána'
         );
     }
-    private function _getLinkedObjects($id) {
+
+    private function getLinkedObjects($id)
+    {
         $cat = DBPlatbyGroup::getSingleWithCategories($id);
         $sku = DBPlatbyGroup::getSingleWithSkupiny($id);
 
-        if (empty($cat) && empty($sku))
+        if (empty($cat) && empty($sku)) {
             return array();
-        else
+        } else {
             return array('categories' => $cat, 'skupiny' => $sku);
+        }
     }
-    private function _displayForm($action, $data = array()) {
+
+    private function displayForm($action, $data = array())
+    {
         $id = Request::getID() ? Request::getID() : 0;
         foreach ($data as $key => &$array) {
             $new_data = array(
@@ -265,7 +281,7 @@ class Group extends Structure
                 'name' => $array['pc_name'],
                 'specific' => $array['pc_symbol'],
                 'amount' => ((float) $array['pc_amount'] * (float) $array['pg_base']),
-                'dueDate' => (new Date($array['pc_date_due']))->getDate(Date::FORMAT_SIMPLE_SPACED),
+                'dueDate' => (new Date($array['pc_date_due']))->getDate(DateFormat::FORMAT_SIMPLE_SPACED),
                 'validDate' => $this->getDateDisplay($array['pc_valid_from'], $array['pc_valid_to']),
                 'usePrefix' => '&nbsp;' . ($array['pc_use_prefix'] ? '&#10003;' : '&#10799;'),
                 'useBase' => '&nbsp;' . ($array['pc_use_base'] ? '&#10003;' : '&#10799;'),
@@ -312,8 +328,11 @@ class Group extends Structure
             )
         );
     }
-    protected function checkPost() {
+
+    protected function checkPost()
+    {
         $f = new Form();
+
         $f->checkInArray(post('type'), array('0', '1'), 'Neplatný typ kategorie');
         $f->checkNotEmpty(post('name'), 'Zadejte nějaký název platby');
         $f->checkNumeric(post('base'), 'Násobitel musí být zadán pouze čisly');
