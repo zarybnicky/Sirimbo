@@ -22,10 +22,9 @@
     </testsuites>
     
     <filter>
-	  <blacklist>
-	    <directory suffix=".php">/usr</directory>
-	    <directory>../../vendor</directory>
-	    <file>../Psr4Autoloader.php</file>
-	  </blacklist>
+	  <whitelist>
+        <directory>../application</directory>
+        <directory>../application</directory>
+	  </whitelist>
 	</filter>
 </phpunit>
