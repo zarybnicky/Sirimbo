@@ -40,7 +40,7 @@ TKOlymp.cz
 EOS;
         Mailer::_mail($to, $subject, $message, DEFAULT_FROM_MAIL, "");
     }
-    public static function newUserUotice($to, $username, $total_users = -1)
+    public static function newUserNotice($to, $username, $total_users = -1)
     {
         if ($total_users == -1) {
             $total_users = count(DBUser::getNewUsers());
