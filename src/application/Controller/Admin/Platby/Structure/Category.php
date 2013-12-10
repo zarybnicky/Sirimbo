@@ -401,11 +401,11 @@ class Category extends Structure
         if (!post('archive')) {
             $form->checkBool(
                 !($active = DBPlatbyCategory::checkActiveSymbol(post('symbol')))
-                    || ($action == 'edit' ? $active['pc_id'] == Request::getID() : false),
+                || ($action == 'edit' ? $active['pc_id'] == Request::getID() : false),
                 $active
-                    ? ('Už existuje aktivní specifický symbol se symbolem '
-                        . post('symbol') . ' (' . $active['pc_name'] . ')')
-                    : '',
+                ? ('Už existuje aktivní specifický symbol se symbolem '
+                . post('symbol') . ' (' . $active['pc_name'] . ')')
+                : '',
                 ''
             );
         }

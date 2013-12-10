@@ -165,10 +165,15 @@ class Pager
 
         $p = (isset($this->currentPageField) ? $this->currentPageField : 'p');
         $c = (isset($this->itemsPerPageField) ? $this->itemsPerPageField : 'c');
-        $url = http_build_query(array_merge($_GET, array(
-            $c => $perPage,
-            $p => $i)
-        ));
+        $url = http_build_query(
+            array_merge(
+                $_GET,
+                array(
+                    $c => $perPage,
+                    $p => $i
+                )
+            )
+        );
         return "<a href=\"?$url\">$label</a>";
     }
 

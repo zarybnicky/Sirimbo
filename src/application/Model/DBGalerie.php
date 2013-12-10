@@ -132,7 +132,7 @@ class DBGalerie extends Adapter
         list($parent, $original, $new) = self::escape($parent, $original, $new);
 
         self::query(
-        	"UPDATE galerie_foto
+            "UPDATE galerie_foto
             SET gf_path=REPLACE(gf_path,'$original','$new')
             WHERE gf_id_rodic='$parent'"
         );
@@ -183,7 +183,8 @@ class DBGalerie extends Adapter
         return true;
     }
 
-    public static function addFotoByPath($dir, $path, $name, $kdo) {
+    public static function addFotoByPath($dir, $path, $name, $kdo)
+    {
         list($dir, $path, $name, $kdo) = self::escape($dir, $path, $name, $kdo);
 
         self::query(

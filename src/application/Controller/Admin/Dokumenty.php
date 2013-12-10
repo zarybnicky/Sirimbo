@@ -163,8 +163,11 @@ class Dokumenty extends Admin
         if (move_uploaded_file($fileUpload, $path)) {
             chmod($path, 0666);
             $id = DBDokumenty::addDokument(
-                $path, post('name'), $fileName,
-                post('kategorie'), User::getUserID()
+                $path,
+                post('name'),
+                $fileName,
+                post('kategorie'),
+                User::getUserID()
             );
             $this->redirect()->setMessage('Soubor byl úspěšně nahrán');
 

@@ -43,7 +43,7 @@ class DBAkce extends Adapter implements Pagable
 
         $res = self::query(
             "SELECT * FROM akce WHERE a_id='$id'"
-                . ($onlyVisible ? " AND a_visible='1'" : '') . ' ORDER BY a_od'
+            . ($onlyVisible ? " AND a_visible='1'" : '') . ' ORDER BY a_od'
         );
         if (!$res) {
             return false;

@@ -1,5 +1,7 @@
 <?php
-class SidebarTest extends PHPUnit_Framework_TestCase
+namespace TKOlomouc\Tests\Unit;
+
+class SidebarTest extends \PHPUnit_Framework_TestCase
 {
     public function testSidebar()
     {

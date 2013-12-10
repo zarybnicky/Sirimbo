@@ -20,6 +20,9 @@ define('APPLICATION', SOURCE . DIRECTORY_SEPARATOR . 'application');
 define('CONTROLLER_DIRECTORY', APPLICATION . DIRECTORY_SEPARATOR . 'Controller');
 define('VIEW_DIRECTORY', APPLICATION . DIRECTORY_SEPARATOR . 'View');
 
+define('TEMPLATE_LIBRARY', LIBRARY . DIRECTORY_SEPARATOR . 'Template');
+define('TEMPLATE_APPLICATION', APPLICATION . DIRECTORY_SEPARATOR . 'Template');
+
 define('STATIC_DIR', APPLICATION . DIRECTORY_SEPARATOR . 'Static');
 define('HEADER', STATIC_DIR . DIRECTORY_SEPARATOR . 'Header.inc');
 define('FOOTER', STATIC_DIR . DIRECTORY_SEPARATOR . 'Footer.inc');
@@ -73,9 +76,3 @@ define('THUMBNAIL_MAX', 150);
 //-----Ciselne hodnoty urovni uzivatelu-----//
 define('L_ALL', '-1');
 define('L_UNCONFIRMED', '0');
-
-define('P_NONE', 1);
-define('P_VIEW', 2);
-define('P_MEMBER', 4);
-define('P_OWNED', 8);
-define('P_ADMIN', 16);

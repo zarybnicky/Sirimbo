@@ -29,9 +29,14 @@ class Nabidka extends Admin
                     $id = $item['n_id'];
                     if ((bool) post($id) !== (bool) $item['n_visible']) {
                         DBNabidka::editNabidka(
-                            $id, $item['n_trener'], $item['n_pocet_hod'],
-                            $item['n_max_pocet_hod'], $item['n_od'], $item['n_do'],
-                            post($id) ? '1' : '0', $item['n_lock']
+                            $id,
+                            $item['n_trener'],
+                            $item['n_pocet_hod'],
+                            $item['n_max_pocet_hod'],
+                            $item['n_od'],
+                            $item['n_do'],
+                            post($id) ? '1' : '0',
+                            $item['n_lock']
                         );
                     }
                 }
@@ -146,8 +151,13 @@ class Nabidka extends Admin
             post('max_pocet_hod', 0);
         }
         DBNabidka::addNabidka(
-            post('trener'), post('pocet_hod'), post('max_pocet_hod'),
-            (string) $od, (string) $do, $visible, post('lock') ? 1 : 0
+            post('trener'),
+            post('pocet_hod'),
+            post('max_pocet_hod'),
+            (string) $od,
+            (string) $do,
+            $visible,
+            post('lock') ? 1 : 0
         );
 
         if ($visible) {
@@ -160,7 +170,8 @@ class Nabidka extends Admin
                 $od->getYear() == $do->getYear()
                 ? ($od->getDay() . '. ' . $od->getMonth() . '.')
                 : $od->getDate(DateFormat::FORMAT_SIMPLIFIED),
-                $do->getDate(DateFormat::FORMAT_SIMPLIFIED), $trener_name
+                $do->getDate(DateFormat::FORMAT_SIMPLIFIED),
+                $trener_name
             );
         }
         $this->redirect(getReturnURI('/admin/nabidka'), 'Nabídka přidána');
@@ -237,9 +248,15 @@ class Nabidka extends Admin
             $max_lessons = 0;
         }
         DBNabidka::editNabidka(
-            $id, post('trener'), $pocet_hod, $max_lessons,
-            (string) $od, (string) $do, $visible,
-            post('lock') ? '1' : '0'
+            $id,
+            post('trener'),
+            $pocet_hod,
+            $max_lessons,
+            (string) $od,
+            (string) $do,
+            $visible,
+            post('lock') ? '1' :
+            '0'
         );
 
         if ($visible) {
@@ -276,7 +293,8 @@ class Nabidka extends Admin
         $this->redirect(getReturnURI('/admin/nabidka'), 'Nabídka úspěšně upravena');
     }
 
-    private function checkData() {
+    private function checkData()
+    {
         $od = (new Date('od'))->getPost();
         $do = (new Date('do'))->getPost();
 

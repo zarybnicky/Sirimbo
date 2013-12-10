@@ -17,4 +17,5 @@
     <?php if (count($this->data)-1 != $key) : ?>
         <hr/>
     <?php endif;?>
-<?php endforeach;?>
+<?php
+endforeach;

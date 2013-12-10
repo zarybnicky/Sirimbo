@@ -10,4 +10,3 @@ foreach ($this->data as $skupina) {
         ->column('hasPaid', 'Zaplaceno?', '', 'width:90px')
         ->column('amount', 'Částka', '', 'width:200px');
 }
-?>

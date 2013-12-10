@@ -1,18 +1,18 @@
 <phpunit
     bootstrap="bootstrap.php"
     colors="false"
-	convertErrorsToExceptions="true"
-	convertNoticesToExceptions="true"
-	convertWarningsToExceptions="true"
-	forceCoversAnnotation="false"
-	stopOnError="false"
-	stopOnFailure="false"
-	stopOnIncomplete="false"
-	stopOnSkipped="false"
-	timeoutForSmallTests="1"
-	timeoutForMediumTests="10"
-	timeoutForLargeTests="60"
-	verbose="false"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    forceCoversAnnotation="false"
+    stopOnError="false"
+    stopOnFailure="false"
+    stopOnIncomplete="false"
+    stopOnSkipped="false"
+    timeoutForSmallTests="1"
+    timeoutForMediumTests="10"
+    timeoutForLargeTests="60"
+    verbose="false"
 >
     <testsuites>
         <testsuite name="Core">
@@ -21,9 +21,9 @@
     </testsuites>
 
     <filter>
-	  <whitelist>
+      <whitelist>
         <directory>../application</directory>
         <directory>../application</directory>
-	  </whitelist>
-	</filter>
+      </whitelist>
+    </filter>
 </phpunit>

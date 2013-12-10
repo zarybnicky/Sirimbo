@@ -114,8 +114,13 @@ class Platby extends Admin
     {
         $item = new PlatbyItem();
         $item->init(
-            null, post('variable'), post('date'), post('amount'),
-            post('prefix'), $id, post('specific')
+            null,
+            post('variable'),
+            post('date'),
+            post('amount'),
+            post('prefix'),
+            $id,
+            post('specific')
         );
         $item->processWithSymbolLookup(
             $this->getUserLookup(false),

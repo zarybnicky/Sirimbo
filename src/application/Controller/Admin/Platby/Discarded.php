@@ -97,8 +97,7 @@ class Discarded extends Platby
                 } elseif (get('year') !== 'none') {
                     continue;
                 }
-            } elseif (
-                get('list') == 'amount'
+            } elseif (get('list') == 'amount'
                 && ((!isset($row[$amount]) ^ get('amount') == 'none')
                 || get('amount') != (int) $row[$amount])
             ) {

@@ -94,8 +94,9 @@ class Fotogalerie extends ControllerAbstract
             } elseif ($dir['gd_level'] == $level_prev) {
                 echo '</li>';
             } else {
-                for ($i = 0; $i < ($level_prev - $dir['gd_level']); $i++)
+                for ($i = 0; $i < ($level_prev - $dir['gd_level']); $i++) {
                     echo '</li></ul>';
+                }
                 echo '</li>';
             }
             if ($dir['gd_id'] == 0) {

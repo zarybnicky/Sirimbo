@@ -74,8 +74,11 @@ class Detail extends Rozpis
                     && preg_match('/^[0-9]{2}:[0-9]{2}$/', $do)
                 ) {
                     DBRozpis::editRozpisItem(
-                        $item['ri_id'], $partner,
-                        formatTime($od, 0), formatTime($do, 0), $lock
+                        $item['ri_id'],
+                        $partner,
+                        formatTime($od, 0),
+                        formatTime($do, 0),
+                        $lock
                     );
                 }
             }
@@ -177,8 +180,11 @@ class Detail extends Rozpis
                 $l_end = timeAdd($l_start, $length);
             }
             DBRozpis::editRozpisItem(
-                $item['ri_id'], $item['ri_partner'],
-                formatTime($l_start, 0), formatTime($l_end, 0), $item['ri_lock']
+                $item['ri_id'],
+                $item['ri_partner'],
+                formatTime($l_start, 0),
+                formatTime($l_end, 0),
+                $item['ri_lock']
             );
 
             $end = $l_end;

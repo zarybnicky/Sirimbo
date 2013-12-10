@@ -1,0 +1,24 @@
+%div.zpravy(style="width:250px;padding:5px;height:396px;border:1px solid #FFB030;border-radius:15px;")
+    %h2
+        Krátké zprávy
+
+    %div(style="overflow-y:scroll;padding:4px;height:345px;")
+        - foreach ($data as $key => $item)
+            %div
+                %span.big
+                    = $item['name']
+
+                %span.little
+                    &nbsp;(
+                    = $item['date']
+                    )
+
+                %p(style="text-align:left;")
+                    != $item['text']
+
+            - if (isset($data[$key + 1]))
+                %hr/
+
+        - if (empty($data))
+            .notice
+                Žádné zprávy

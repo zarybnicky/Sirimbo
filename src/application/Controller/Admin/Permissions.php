@@ -121,8 +121,9 @@ class Permissions extends Admin
             $this->redirect('/admin/permissions');
         }
         if (!empty($_POST) && post('action') == 'confirm') {
-            foreach (post('data') as $id)
-            DBPermissions::removeGroup($id);
+            foreach (post('data') as $id) {
+                DBPermissions::removeGroup($id);
+            }
             $this->redirect(
                 '/admin/permissions',
                 'Úrovně odebrány. Nezapomeňte přiřadit uživatelům z těchto skupin jinou skupinu!'
@@ -155,8 +156,10 @@ class Permissions extends Admin
 
         foreach (Settings::$permissions as $name => $item) {
             $f->checkArrayKey(
-                post($name), $item,
-                'Neplatná hodnota práva "' . $name . '"', $name
+                post($name),
+                $item,
+                'Neplatná hodnota práva "' . $name . '"',
+                $name
             );
             $permissions[$name] = post($name);
         }

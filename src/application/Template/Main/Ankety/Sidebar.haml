@@ -1,0 +1,14 @@
+%form(action="/ankety" method="POST")
+    %b
+        = echo $text;
+    %br/
+    - foreach ($items as $item)
+        %label
+            %input(type="radio" name="choice" value="#{$item['id']}")/
+            = $item['text'];
+
+    %button(type="submit" name="id" value="#{$id}")
+        Hlasovat
+
+    %a(href="/home/ankety")
+        Zobrazit

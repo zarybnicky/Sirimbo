@@ -142,8 +142,7 @@ class Date extends Partial
             }
 
             return array('from' => $from, 'to' => $to);
-        } elseif (
-            post($this->name . '-from-year')
+        } elseif (post($this->name . '-from-year')
             && post($this->name . '-from-month')
             && post($this->name . '-from-day')
             && post($this->name . '-to-year')

@@ -3,7 +3,8 @@ namespace TKOlomouc\View\Exception;
 
 class BanException extends ViewException
 {
-    public function getErrorFile() {
+    public function getErrorFile()
+    {
         return 'ban';
     }
 }

@@ -1,7 +1,9 @@
 <?php
-class LogTest extends PHPUnit_Framework_TestCase
+namespace TKOlomouc\Tests\Unit;
+
+class HelperTest extends \PHPUnit_Framework_TestCase
 {
-    public function testLog()
+    public function testHelper()
     {
         $this->markTestIncomplete(
             'This test has not been implemented yet.'

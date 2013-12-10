@@ -4,6 +4,8 @@ namespace TKOlomouc\Model\Database;
 use TKOlomouc\Utility\Log;
 use TKOlomouc\View\Exception\DatabaseConnectionException;
 use TKOlomouc\View\Exception\DatabaseException;
+use TKOlomouc\Utility\Debug;
+use TKOlomouc\Utility\Request;
 
 class Adapter
 {
@@ -26,7 +28,8 @@ class Adapter
         }
         if ($array) {
             $escape = implode("%%%%%", $array);
-            $escape = mysql_real_escape_string($escape);
+            $escape = self::$connection->quote($escape);
+            $escape = substr($escape, 1, strlen($escape) - 2);
             $array = explode("%%%%%", $escape);
         }
         if ($escaped) {
@@ -47,47 +50,35 @@ class Adapter
         if (self::$connection != null) {
             return;
         }
-        self::$connection = @mysql_connect(DB_SERVER, DB_USER, DB_PASS)
-            or self::databaseError(true);
-        @mysql_select_db(DB_DATABASE, self::$connection)
-            or self::databaseError(true);
-        @mysql_set_charset("utf8", self::$connection)
-            or self::databaseError(true);
+        self::$connection = new \PDO(DB_PDO, DB_USER, DB_PASS);
+        self::$connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        self::$connection->exec("SET NAMES utf8");
     }
 
     protected static function query($query)
     {
         self::getConnection();
-        $res = mysql_query($query, self::$connection)
-            or self::databaseError();
-
-        return $res;
+        return self::$connection->query($query);
     }
 
-    protected static function getSingleRow($resource)
+    protected static function getSingleRow(\PDOStatement $resource)
     {
-        return mysql_fetch_assoc($resource);
+        return $resource->fetch(\PDO::FETCH_ASSOC);
     }
 
-    protected static function getArray($resource)
+    protected static function getArray(\PDOStatement $resource)
     {
-        $result = array();
-        $rows = mysql_num_rows($resource);
-
-        for ($i = 0; $i < $rows; $i++) {
-            $result[] = @mysql_fetch_assoc($resource);
-        }
-        return $result;
+        return $resource->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public static function getInsertId()
     {
-        return mysql_insert_id(self::$connection);
+        return self::$connection->lastInsertId();
     }
 
     protected function databaseError($onConnection = false)
     {
-        Log::write('MySQL Error: ' . mysql_errno() . ': ' . mysql_error());
+        Log::write('MySQL Error: ' . implode(', ', self::$connection->errorInfo()));
         if ($onConnection) {
             throw new DatabaseConnectionException('Nastala chyba při pokusu o připojení k databázi.');
         } else {
@@ -95,9 +86,9 @@ class Adapter
         }
     }
 
-    public static function isDatabaseError()
+    public static function isDatabaseError(Request $request)
     {
-        return (get('file') == 'error' && get('id')
-            && (get('id') == ER_DATABASE_CONNECTION || get('id') == ER_DATABASE));
+        return ($request->getAction() == 'error'
+            && ($request->getID() == ER_DATABASE_CONNECTION || $request->getID() == ER_DATABASE));
     }
 }

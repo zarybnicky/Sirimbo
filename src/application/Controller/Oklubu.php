@@ -7,7 +7,7 @@ class Oklubu extends ControllerAbstract
 {
     public function view($id = null)
     {
-       $this->redirect('/oklubu/obecne');
+        $this->redirect('/oklubu/obecne');
     }
 
     public function obecne($id = null)

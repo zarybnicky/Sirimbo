@@ -9,10 +9,10 @@ if (count($this->groupByDate) > 0) {
     foreach ($this->groupByDate as $yearValue => $year) {
         $href = '?list=date&year=' . $yearValue;
         echo '<li style="margin-left:1em"><a href="', $href, '">', $year['name'], '</a></li>';
-        
-        if (!isset($year['months']))
+
+        if (!isset($year['months'])) {
             continue;
-        
+        }
         echo '<ul style="list-style:disc outside;margin-left:1em;">';
         foreach ($year['months'] as $monthValue => $month) {
             echo '<li style="margin-left:1em"><a href="', $href, '&month=', $monthValue, '">', $month, '</a>';
@@ -29,4 +29,3 @@ if (count($this->groupByAmount) > 0) {
     }
     echo '</ul>';
 }
-?>

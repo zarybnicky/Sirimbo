@@ -37,7 +37,7 @@ class RemovePrompt extends ViewAbstract
         $this->renderTemplate(
             $this->filename,
             array(
-        	    'header'    => $this->header,
+                'header'    => $this->header,
                 'prompt'    => $this->prompt,
                 'data'      => $this->data,
                 'returnURL' => $this->returnURL

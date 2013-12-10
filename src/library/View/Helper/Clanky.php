@@ -3,11 +3,13 @@ namespace TKOlomouc\View\Helper;
 
 use TKOlomouc\View\Partial;
 use TKOlomouc\Type\DateFormat;
+use TKOlomouc\Utility\Debug;
+use TKOlomouc\Utility\Miscellaneous;
 
 class Clanky extends Partial
 {
-    private $fileList      = 'src/library/Template/Helper/ClankyList.tpl';
-    private $fileSlideshow = 'src/library/Template/Helper/ClankySlideshow.tpl';
+    private $fileList      = 'Helper/ClankyList';
+    private $fileSlideshow = 'Helper/ClankySlideshow';
 
     private $data        = null;
     private $offset      = 0;
@@ -39,9 +41,11 @@ class Clanky extends Partial
     {
         if ($date instanceof Date) {
             $date = $date->getDate(DateFormat::FORMAT_SIMPLIFIED);
+        } else {
+            $date = Miscellaneous::formatDate($date);
         }
         $this->data[] = array(
-        	'id'       => $id,
+            'id'       => $id,
             'name'     => $name,
             'date'     => $date,
             'url'      => '/aktualne/' . $id,
@@ -52,21 +56,24 @@ class Clanky extends Partial
         return $this;
     }
 
-    public function populateFromDb()
+    public function populate(array $data)
     {
-        //TODO: Populate from DB
-        /*
-        if ($this->data === null) {
-            $input = DBAktuality::getAktuality(AKTUALITY_CLANKY);
-            foreach ($input as $item) {
-                $this->addData($item);
-            }
+        foreach ($data as $item) {
+            $this->addItem(
+                $item['at_id'],
+                $item['at_jmeno'],
+                $item['at_timestamp_add'],
+                $item['at_preview'],
+                $item['at_foto_main']
+            );
         }
-        */
     }
 
     public function render()
     {
+        if ($this->count <= 0 || count($this->data) <= 0) {
+            return '';
+        }
         if (($this->count + $this->offset) > count($this->data)) {
             $this->count = count($this->data) - $this->offset;
         }
@@ -76,23 +83,21 @@ class Clanky extends Partial
                 $this->fileList,
                 array(
                     'offset' => $this->offset,
-                    'count'  => $this->count,
-                    'data'   => $this->data
+                    'count' => $this->count,
+                    'data' => array_slice($this->data, $this->offset, $this->count)
                 )
             );
         }
-
-        if ($this->isSlideshow && $this->count > 0) {
+        if ($this->isSlideshow) {
             return $this->renderTemplate(
                 $this->fileSlideshow,
                 array(
                     'offset' => $this->offset,
-                    'count'  => $this->count,
-                    'data'   => $this->data
+                    'count' => $this->count,
+                    'data' => array_slice($this->data, $this->offset, $this->count)
                 )
             );
         }
-        return '';
     }
 
     public function __toString()

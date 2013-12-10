@@ -59,8 +59,12 @@ class Items extends Platby
             return;
         }
         DBPlatbyItem::insert(
-            $item->variable, $item->category_id, null, $item->amount,
-            $item->date, $item->prefix
+            $item->variable,
+            $item->category_id,
+            null,
+            $item->amount,
+            $item->date,
+            $item->prefix
         );
         $this->redirect('/admin/platby/items', 'Platba úspěšně přidána');
     }
@@ -84,8 +88,12 @@ class Items extends Platby
             return;
         }
         DBPlatbyItem::update(
-            $id, $item->variable, $item->category_id, $item->amount,
-            $item->date, $item->prefix
+            $id,
+            $item->variable,
+            $item->category_id,
+            $item->amount,
+            $item->date,
+            $item->prefix
         );
         $this->redirect('/admin/platby/items', 'Platba úspěšně upravena');
     }

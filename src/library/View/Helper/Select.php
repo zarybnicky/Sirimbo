@@ -103,7 +103,7 @@ class Select extends Partial
         return $this->renderTemplate(
             $this->file,
             array(
-        	    'name'     => $this->name,
+                'name'     => $this->name,
                 'selected' => $selected,
                 'options'  => $this->options,
             )

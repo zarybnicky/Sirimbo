@@ -126,8 +126,14 @@ class Raw extends Platby
                 continue;
             } else {
                 DBPlatbyRaw::insert($serialized, $hash, '1', '0', true);
-                DBPlatbyItem::insert($item->variable, $item->category_id, DBPlatbyRaw::getInsertId(),
-                        $item->amount, $item->date, $item->prefix);
+                DBPlatbyItem::insert(
+                    $item->variable,
+                    $item->category_id,
+                    DBPlatbyRaw::getInsertId(),
+                    $item->amount,
+                    $item->date,
+                    $item->prefix
+                );
             }
         }
         unlink($parser->getFileObject()->getRealPath());

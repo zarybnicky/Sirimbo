@@ -14,4 +14,3 @@ echo (new TKOlomouc\View\Helper\Table())
     ->data($this->data);
 echo '<button name="action" value="confirm">Odeslat</button>';
 echo '</form>';
-?>

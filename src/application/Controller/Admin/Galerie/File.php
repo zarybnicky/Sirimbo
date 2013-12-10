@@ -193,7 +193,8 @@ class File extends Galerie
         $form->checkBool(
             post('parent') >= 0 && is_numeric(post('parent'))
             && DBGalerie::getSingleDir(post('parent')),
-            'Zadaná nadsložka není platná', 'parent'
+            'Zadaná nadsložka není platná',
+            'parent'
         );
 
         return $form->isValid() ? array() : $form;

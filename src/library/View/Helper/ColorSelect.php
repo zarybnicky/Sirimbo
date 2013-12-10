@@ -39,14 +39,15 @@ class ColorSelect extends Partial
         return $this->render();
     }
 
-    public function render() {
+    public function render()
+    {
         if (!$this->value && post($this->field)) {
             $this->value = post($this->field);
         }
         return $this->renderTemplate(
             $this->file,
             array(
-        	    'field' => $this->field,
+                'field' => $this->field,
                 'value' => $this->value
             )
         );

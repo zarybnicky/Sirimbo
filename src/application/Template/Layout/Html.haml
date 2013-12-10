@@ -1,0 +1,111 @@
+
+!!!
+%html(prefix="og: http://ogp.me/ns#" lang="cs")
+    %head
+        != $head
+        %meta(http-equiv="Content-Type" content="text/html; charset=utf-8")/
+        %meta(name="keywords" content="taneční klub, tk, olymp, olomouc, tk olymp, sportovní tanec")/
+
+        %meta(name="ICBM" content="49.591700,17.285174")/
+        %meta(name="geo.placename" content="Olomouc, Česká Republika")/
+        %meta(name="geo.position" content="49.591700;17.285174")/
+        %meta(name="geo.region" content="cs")/
+
+        %link(rel="shortcut icon" type="image/x-icon" href="/favicon.ico")/
+
+        != $css
+        %link(href="/style/style.css" rel="stylesheet" type="text/css")/
+
+        :css
+            body{
+                background-color:white;
+                background-image:url("/style/#{$season}/logo-bg.png");
+                background-repeat:repeat-x;
+            } #header{
+                background-image:url("/style/#{$season}/logo.png");
+                background-repeat:no-repeat;
+            }
+
+        %title
+            = $title
+            TK Olymp Olomouc
+
+        %meta(property="fb:app_id" content="132983570203245")/
+
+        %meta(name="wot-verification" content="ec0cf41ab42dae52d3d4")/
+        %meta(name="msvalidate.01" content="7BD6C8B5748FC22EF06AB3AE89900885")/
+        %meta(name="google-site-verification" content="Hfe7zlgTDOIpJv4rKGQz2Xg8Aezb6sIO0aAxVhrml9w" )/
+        %meta(name="norton-safeweb-site-verification"
+            content="r44xj2vskhlgkyqcqm1hdgga2jdfj-idvyys0277y96s72k-tq0z-yyjdu7h3el6pi2gek0i4ykq3xgiguufrvuhj8nbj4n4miwjhvumhp35jfrafyynhj4ee8ctzpzh")/
+
+        != $javascript
+
+        %script(type="text/javascript" src="/scripts/jquery-1.10.2.min.js")
+        %script(type="text/javascript"
+            src="//connect.facebook.net/cs_CZ/all.js#xfbml=1&appId=132983570203245"
+            id="facebook-jssdk")
+        :javascript
+            var _gaq = _gaq || [];
+            _gaq.push(['_require','inpage_linkid','//www.google-analytics.com/plugins/ga/inpage_linkid.js'],
+            ['_setAccount','UA-44456908-1'],['_trackPageview']);
+            (function() {var ga = document.createElement('script');ga.type='text/javascript';ga.async=true;
+            ga.src='//www.google-analytics.com/ga.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(ga,s);
+            })();
+
+    %body
+        #fb-root
+        #all
+            #header
+                %a#homelink(href="/home")
+
+                #userbox
+                    != $userbox
+
+                #logo
+                    Taneční klub Olymp Olomouc
+
+                #topmenu
+                    != $topmenu
+                    %ul
+                        %li(class="first" class="#{$visible['home']}")
+                            %a(href="/home")
+                                Domů
+                        %li(class="#{$visible['oklubu']}")
+                            %a(href="/oklubu")
+                                O klubu
+                        %li(class="#{$visible['aktualne']}")
+                            %a(href="/aktualne")
+                                Aktuálně
+                        %li(class="#{$visible['fotogalerie']}")
+                            %a(href="/fotogalerie")
+                                Fotogalerie
+                        %li(class="#{$visible['nabizime']}")
+                            %a(href="/nabizime")
+                                Nabízíme
+                        %li(class="#{$visible['member']}")
+                            %a(href="/member/home")
+                                Členové
+                        %li(class="last" class="#{$visible['kontakt']}")
+                            %a(href="/kontakt")
+                                Kontakt
+
+            #main
+                .container
+                    #sidebar
+                        != $sidemenu
+
+                    #content
+                        != $toolbox
+                        != $content
+
+        #footer
+            .container
+                %a(href="/admin/home")
+                    Administrace
+                | Copyright &copy; 2013, TK Olymp Olomouc
+                | realizace:
+                %a(href="mailto:kuba.zarybnicky@post.cz")
+                    Jakub Zárybnický
+                , design:
+                %a(href="http://www.linnetdesign.cz")
+                    Linnet Design

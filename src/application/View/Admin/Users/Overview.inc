@@ -76,4 +76,3 @@ echo $table;
 echo '</div>';
 echo '</form>';
 echo '<div style="text-align:center;margin-right:150px;">', $this->navigation, '</div>';
-?>

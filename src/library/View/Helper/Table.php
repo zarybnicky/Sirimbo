@@ -64,7 +64,7 @@ class Table extends Partial
         return $this->renderTemplate(
             $this->file,
             array(
-        	    'style'      => $this->style,
+                'style'      => $this->style,
                 'showHeader' => $this->showHeader,
                 'data'       => $this->data,
                 'columns'    => $this->columns

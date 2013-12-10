@@ -1,51 +1,67 @@
 <?php
 namespace TKOlomouc\Controller;
 
-use TKOlomouc\Utility\Sidebar;
+use TKOlomouc\View\Helper\Sidebar;
+use TKOlomouc\Utility\Request;
 
 class Nabizime extends ControllerAbstract
 {
-    public function view($id = null)
+	protected function checkPermissions()
+	{
+        ;
+	}
+
+    public function view()
     {
         $this->redirect('/nabizime/obecne');
     }
 
-    public function obecne($id = null)
+    protected function show($file)
     {
-        $this->render('src/application/View/Main/Nabizime/Main.inc');
+        $view = new \TKOlomouc\View\StaticPage($this->request, $this->request->getView());
+        $view->setFile($file);
+        $view->set('sidemenu', $this->sidebar());
+        echo $view->render();
     }
 
-    public function vystoupeni($id = null)
+    public function obecne()
     {
-        $this->render('src/application/View/Main/Nabizime/Vystoupeni.inc');
+        $this->show('Main/Nabizime/Main');
     }
 
-    public function individualky($id = null)
+    public function vystoupeni()
     {
-        $this->render('src/application/View/Main/Nabizime/Individualky.inc');
+        $this->show('Main/Nabizime/Vystoupeni');
     }
 
-    public function seminare($id = null)
+    public function individualky()
     {
-        $this->render('src/application/View/Main/Nabizime/Seminare.inc');
+        $this->show('Main/Nabizime/Individualky');
     }
 
-    public function soustredeni($id = null)
+    public function seminare()
     {
-        $this->render('src/application/View/Main/Nabizime/Seminare.inc');
+        $this->show('Main/Nabizime/Seminare');
+    }
+
+    public function soustredeni()
+    {
+        $this->show('Main/Nabizime/Seminare');
     }
 
     public function sidebar()
     {
-        $s = new Sidebar();
+        $s = new Sidebar($this->request);
 
-        echo $s->menuHeader();
-        echo $s->menuItem('Nabízíme', '/nabizime/obecne');
-        echo $s->menuItem('Taneční vystoupení', '/nabizime/vystoupeni');
-        echo $s->menuItem('Individuální lekce', '/nabizime/individualky');
-        echo $s->menuItem('Skupinové semináře', '/nabizime/seminare');
-        echo $s->menuItem('Taneční soustředění', '/nabizime/soustredeni');
+        $out = $s->menuHeader();
+        $out .= $s->menuItem('Nabízíme', '/nabizime/obecne');
+        $out .= $s->menuItem('Taneční vystoupení', '/nabizime/vystoupeni');
+        $out .= $s->menuItem('Individuální lekce', '/nabizime/individualky');
+        $out .= $s->menuItem('Skupinové semináře', '/nabizime/seminare');
+        $out .= $s->menuItem('Taneční soustředění', '/nabizime/soustredeni');
 
-        echo $s->commonItems();
+        $out .= $s->commonItems();
+
+        return $out;
     }
 }

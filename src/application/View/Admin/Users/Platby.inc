@@ -3,4 +3,3 @@
 <?php
 notice($this->redirect()->getMessage());
 notice('Ještě není převedeno do nové verze plateb :(');
-?>

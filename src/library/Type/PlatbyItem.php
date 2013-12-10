@@ -14,7 +14,8 @@ class PlatbyItem
     public $categoryId;
     public $isValid;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->isValid = false;
     }
 
@@ -52,7 +53,7 @@ class PlatbyItem
     {
         $this->specific = (int) $specific;
         $this->variable = (int) $variable;
-        $this->date = (string) new Date($date);
+        $this->date = (string) new DateFormat($date);
         $amount = str_replace(',', '.', $amount);
         if (is_float(floatval($amount))) {
             $this->amount = number_format(floatval($amount), 2, '.', '');
@@ -79,7 +80,7 @@ class PlatbyItem
                     $this->categoryId = $categoryLookup[$this->specific]['pc_id'];
                 }
                 if (!$this->prefix) {
-                    $this->prefix = $this->date ? (new Date($this->date))->getYear() : 0;
+                    $this->prefix = $this->date ? (new DateFormat($this->date))->getYear() : 0;
                 }
             } else {
                 $specific = $this->specific;
@@ -95,7 +96,7 @@ class PlatbyItem
                     if (isset($categoryLookup[$specific]) && $categoryLookup[$specific]['pc_use_prefix'] && strlen($this->specific) >= 4) {
                         $this->prefix = substr($this->specific, 0, 4);
                     } else {
-                        $this->prefix = $this->date ? (new Date($this->date))->getYear() : 0;
+                        $this->prefix = $this->date ? (new DateFormat($this->date))->getYear() : 0;
                     }
                 }
             }

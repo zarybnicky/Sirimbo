@@ -2,10 +2,11 @@
 namespace TKOlomouc\View\Helper;
 
 use TKOlomouc\View\Partial;
+use TKOlomouc\Utility\Miscellaneous;
 
 class Zpravy extends Partial
 {
-    private $file = 'src/library/Template/Helper/ClankyList.tpl';
+    private $file = 'Helper/Zpravy';
 
     private $data  = array();
     private $count = 0;
@@ -13,22 +14,18 @@ class Zpravy extends Partial
     public function addItem($name, $date, $text)
     {
         $this->data[] = array(
-        	'name' => $name,
+            'name' => $name,
             'date' => $date,
             'text' => $text
         );
     }
 
-    public function setData(array $data, $overwrite = true)
+    public function populate(array $data)
     {
-        if ($overwrite) {
-            $this->data = array();
-        }
-
         foreach ($data as $item) {
-            list($date, $time) = explode(' ', $this->data[$i]['at_timestamp']);
+            list($date, $time) = explode(' ', $item['at_timestamp']);
 
-            $this->addItem($item['at_jmeno'], formatDate($date), $item['at_text']);
+            $this->addItem($item['at_jmeno'], Miscellaneous::formatDate($date), $item['at_text']);
         }
 
         return $this;
@@ -43,6 +40,9 @@ class Zpravy extends Partial
 
     public function render()
     {
+        if ($this->count <= 0 || count($this->data) <= 0) {
+            return '';
+        }
         if ($this->count > count($this->data)) {
             $this->count = count($this->data);
         }
@@ -50,7 +50,7 @@ class Zpravy extends Partial
         return $this->renderTemplate(
             $this->file,
             array(
-        	    'data'  => $this->data,
+                'data'  => array_slice($this->data, 0, $this->count),
                 'count' => $this->count
             )
         );

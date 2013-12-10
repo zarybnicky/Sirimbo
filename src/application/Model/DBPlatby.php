@@ -5,7 +5,8 @@ use TKOlomouc\Model\Database\Adapter;
 
 class DBPlatby extends Adapter
 {
-    public static function getInstance() {
+    public static function getInstance()
+    {
         return new self();
     }
 

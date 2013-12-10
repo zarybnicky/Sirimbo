@@ -124,8 +124,14 @@ class Pary extends Admin
         $hodnoceni = $stt_base + $lat_base + $stt_bonus + $lat_bonus;
 
         DBPary::editTridaBody(
-            $data['p_id'], post('stt-trida'), $stt_body,
-            $stt_finale, post('lat-trida'), $lat_body, $lat_finale, $hodnoceni
+            $data['p_id'],
+            post('stt-trida'),
+            $stt_body,
+            $stt_finale,
+            post('lat-trida'),
+            $lat_body,
+            $lat_finale,
+            $hodnoceni
         );
         $this->redirect('/admin/pary', 'Třída a body změněny');
     }

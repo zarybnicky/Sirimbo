@@ -60,4 +60,5 @@ if (!empty($this->groupSelect)) {
             <button type="submit" name="action" value="group">odeslat</button>
         <?php endif;?>
     </form>
-<?php endif;?>
+<?php
+endif;

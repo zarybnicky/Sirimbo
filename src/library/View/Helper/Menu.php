@@ -51,7 +51,7 @@ class Menu extends Partial
         return $this->renderTemplate(
             $this->file,
             array(
-        	    'float' => $this->float,
+                'float' => $this->float,
                 'data'  => $this->data
             )
         );

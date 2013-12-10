@@ -1,10 +1,12 @@
 <?php
 use TKOlomouc\Utility\Request;
 
-function _isActive($href) {
+function _isActive($href)
+{
     return strripos(Request::getLiteralURL(), $href) !== (strlen(Request::getLiteralURL()) - strlen($href));
 }
-function _getItem($name, $href) {
+function _getItem($name, $href)
+{
     $href = 'member/' . $href;
     if (_isActive($href)) {
         echo '<a href="/' . $href . '">' . $name . '</a>';
@@ -38,4 +40,5 @@ if (TISK) {
         <li><?php _getItem('Seznam skupin', 'clenove/skupiny');?>)</li>
     </ul>
 </div>
-<?php notice($this->redirect()->getMessage());?>
+<?php
+notice($this->redirect()->getMessage());

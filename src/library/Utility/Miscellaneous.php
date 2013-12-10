@@ -20,34 +20,6 @@ class Miscellaneous
             . 'style="background-color:' . $color . '"></div>';
     }
 
-    public static function post($field = null, $value = null)
-    {
-        self::arrayManipulate($_POST, $field, $value);
-    }
-
-    public static function get($field = null, $value = null)
-    {
-        self::arrayManipulate($_GET, $field, $value);
-    }
-
-    public static function session($field = null, $value = null)
-    {
-        self::arrayManipulate($_SESSION, $field, $value);
-    }
-
-    public static function arrayManipulate($array, $field = null, $value = null)
-    {
-        if ($field === null) {
-            return $array;
-        }
-        if ($value !== null) {
-            $array[$field] = $value;
-        }
-        if (isset($array[$field])) {
-            return $array[$field];
-        }
-        return null;
-    }
     public static function formatTime($str, $forDisplay)
     {
         if ($forDisplay) {
@@ -56,11 +28,13 @@ class Miscellaneous
             return $str . ':00';
         }
     }
+
     public static function formatDate($str)
     {
         list($year, $month, $day) = explode('-', $str);
         return (int) $day . '. ' . (int) $month . '. ' . $year;
     }
+
     public static function formatTimestamp($str, $date_only = false)
     {
         list($date, $time) = explode(' ', $str);
@@ -71,6 +45,7 @@ class Miscellaneous
         $time = self::formatTime($time, 1);
         return implode(' ', array($date, $time));
     }
+
     public static function timeSubstract($first, $sec)
     {
         if (strcmp($first, $sec) > 0) {
@@ -89,6 +64,7 @@ class Miscellaneous
 
         return (floor($r / 60) . ':' . ($r % 60));
     }
+
     public static function timeAdd($first, $sec)
     {
         list($f_hrs, $f_min) = explode(':', $first);
@@ -99,6 +75,7 @@ class Miscellaneous
 
         return ($h . ':' . ($m % 60));
     }
+
     public static function getCheckbox($name, $value = '', $default = false, $get = false, $readonly = false)
     {
         if ($value === '') {
@@ -113,6 +90,7 @@ class Miscellaneous
         return '<input type="checkbox" name="' . $name . '" value="' . $value . '"'
             . ($checked ? ' checked="checked"' : '') . ($readonly ? ' readonly="readonly"' : '') . '/>';
     }
+
     public static function getRadio($name, $value, $default = false, $get = false, $readonly = false)
     {
         $checked = (($get == true) ?
@@ -124,14 +102,17 @@ class Miscellaneous
         return '<input type="radio" name="' . $name . '" value="' . $value . '"'
             . ($checked ? ' checked="checked"' : '') . ($readonly ? ' readonly="readonly"' : '') . '/>';
     }
+
     public static function getReturnURI($default)
     {
         return self::post('referer') ? self::post('referer') : $default;
     }
+
     public static function getReturnInput()
     {
         return '<input type="hidden" name="referer" value="' . Request::getReferer() . '" />' . "\n";
     }
+
     public static function getIP()
     {
         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {

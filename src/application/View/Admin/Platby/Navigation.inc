@@ -1,18 +1,22 @@
 <?php
-function _isActive($href) {
+function _isActive($href)
+{
     return strripos(TKOlomouc\Utility\Request::getLiteralURL(), $href)
         !== (strlen(TKOlomouc\Utility\Request::getLiteralURL()) - strlen($href));
 }
-function _getItem($name, $href) {
+function _getItem($name, $href)
+{
     $href = 'admin/' . $href;
-    if (_isActive($href))
+    if (isActive($href)) {
         echo '<a href="/' . $href . '">' . $name . '</a>';
-    else
+    } else {
         echo $name;
+    }
 }
 echo '<h1>Správa plateb</h1>';
-if (TISK)
+if (TISK) {
     return;
+}
 ?>
 <style>
 #adminNavigation li {
@@ -28,19 +32,30 @@ if (TISK)
 <ul id="adminNavigation">
     <li><?php _getItem('Přehled', 'platby/overview');?></li>
     <li><?php _getItem('Hledání', 'platby/items');?></li>
-    <?php if (!_isActive('platby/structure/category') || !_isActive('platby/structure/group') || !_isActive('platby/structure')) : ?>
+    <?php
+    if (!_isActive('platby/structure/category') || !_isActive('platby/structure/group') || !_isActive('platby/structure')) :
+    ?>
         <li><?php _getItem('Struktura', 'platby/structure');?>:</li>
         <li>(<?php _getItem('Kategorie', 'platby/structure/group');?></li>
         <li><?php _getItem('Specifické symboly', 'platby/structure/category');?>)</li>
-    <?php else:?>
+    <?php
+    else:
+    ?>
         <li><?php _getItem('Struktura', 'platby/structure');?></li>
-    <?php endif;?>
-    <?php if (!_isActive('platby/raw') || !_isActive('platby/manual') || !_isActive('platby/discarded')) : ?>
+    <?php
+    endif;
+    if (!_isActive('platby/raw') || !_isActive('platby/manual') || !_isActive('platby/discarded')) :
+    ?>
         <li><?php _getItem('Import', 'platby/raw');?>:</li>
         <li>(<?php _getItem('Nezařazené platby', 'platby/manual');?></li>
         <li><?php _getItem('Vyřazené platby', 'platby/discarded');?>)</li>
-    <?php else:?>
+    <?php
+    else :
+    ?>
         <li><?php _getItem('Import', 'platby/raw');?></li>
-    <?php endif;?>
+    <?php
+    endif;
+    ?>
 </ul>
-<?php notice($this->redirect()->getMessage());?>
+<?php
+notice($this->redirect()->getMessage());

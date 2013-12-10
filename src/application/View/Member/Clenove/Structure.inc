@@ -11,4 +11,3 @@ foreach ($this->data as $skupina) {
         ->data($skupina['users']);
     echo '</div>';
 }
-?>

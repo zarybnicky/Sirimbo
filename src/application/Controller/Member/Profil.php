@@ -46,10 +46,20 @@ class Profil extends Member
             return;
         }
         DBUser::setUserData(
-            User::getUserID(), post('jmeno'), post('prijmeni'),
-            post('pohlavi'), post('email'), post('telefon'), (string) $narozeni,
-            post('poznamky'), $data['u_group'], $data['u_skupina'],
-            $data['u_dancer'], $data['u_lock'], $data['u_ban'], $data['u_system']
+            User::getUserID(),
+            post('jmeno'),
+            post('prijmeni'),
+            post('pohlavi'),
+            post('email'),
+            post('telefon'),
+            (string) $narozeni,
+            post('poznamky'),
+            $data['u_group'],
+            $data['u_skupina'],
+            $data['u_dancer'],
+            $data['u_lock'],
+            $data['u_ban'],
+            $data['u_system']
         );
         $this->redirect('/member/profil', 'Upraveno');
     }

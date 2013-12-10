@@ -41,4 +41,3 @@ if (!empty($this->raw)) {
         ->column('value', '', '', 'min-width:150px;padding-left:5px')
         ->data($this->raw);
 }
-?>

@@ -6,4 +6,3 @@ echo (new TKOlomouc\View\Helper\Table())
     ->column('header', 'Název')
     ->column('userCount', 'Počet členů')
     ->column('description', 'Popis');
-?>

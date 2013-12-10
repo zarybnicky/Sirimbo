@@ -36,7 +36,8 @@ class Akce extends Member
             } elseif (post('action') == 'signup') {
                 DBAkce::signUp(
                     User::getUserID(),
-                    post('id'), User::getDatumNarozeni()
+                    post('id'),
+                    User::getDatumNarozeni()
                 );
             } elseif (post('action') == 'signout') {
                 DBAkce::signOut(

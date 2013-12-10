@@ -1,7 +1,9 @@
 <?php
-class PagingTest extends PHPUnit_Framework_TestCase
+namespace TKOlomouc\Tests\Unit;
+
+class LogTest extends \PHPUnit_Framework_TestCase
 {
-    public function testPaging()
+    public function testLog()
     {
         $this->markTestIncomplete(
             'This test has not been implemented yet.'

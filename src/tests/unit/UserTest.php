@@ -1,7 +1,9 @@
 <?php
-class PermissionsTest extends PHPUnit_Framework_TestCase
+namespace TKOlomouc\Tests\Unit;
+
+class UserTest extends \PHPUnit_Framework_TestCase
 {
-    public function testPermissions()
+    public function testUser()
     {
         $this->markTestIncomplete(
             'This test has not been implemented yet.'

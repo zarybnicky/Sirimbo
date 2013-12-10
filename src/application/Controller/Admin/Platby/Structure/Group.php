@@ -195,7 +195,11 @@ class Group extends Structure
         }
 
         DBPlatbyGroup::update(
-            $id, post('type'), post('name'), post('description'), post('base')
+            $id,
+            post('type'),
+            post('name'),
+            post('description'),
+            post('base')
         );
         $this->redirect(
             post('referer') ? post('referer') : '/admin/platby/structure',
@@ -283,7 +287,7 @@ class Group extends Structure
                 'name' => $array['pc_name'],
                 'specific' => $array['pc_symbol'],
                 'amount' => ((float) $array['pc_amount'] * (float) $array['pg_base']),
-                'dueDate' => (new Date($array['pc_date_due']))->getDate(DateFormat::FORMAT_SIMPLE_SPACED),
+                'dueDate' => (new DateFormat($array['pc_date_due']))->getDate(DateFormat::FORMAT_SIMPLE_SPACED),
                 'validDate' => $this->getDateDisplay($array['pc_valid_from'], $array['pc_valid_to']),
                 'usePrefix' => '&nbsp;' . ($array['pc_use_prefix'] ? '&#10003;' : '&#10799;'),
                 'useBase' => '&nbsp;' . ($array['pc_use_base'] ? '&#10003;' : '&#10799;'),

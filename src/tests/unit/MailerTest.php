@@ -1,5 +1,7 @@
 <?php
-class MailerTest extends PHPUnit_Framework_TestCase
+namespace TKOlomouc\Tests\Unit;
+
+class MailerTest extends \PHPUnit_Framework_TestCase
 {
     public function testMailer()
     {

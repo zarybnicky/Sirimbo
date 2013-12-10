@@ -1,7 +1,9 @@
 <?php
 namespace TKOlomouc\Utility;
 
+use Exception;
 use TKOlomouc\Controller\ControllerInterface;
+use TKOlomouc\View\Exception\ViewException;
 use TKOlomouc\View\Exception\NotFoundRightException;
 
 class Dispatcher
@@ -10,8 +12,9 @@ class Dispatcher
     private $postDispatch = array();
     private $controller;
 
-    private function getController($url)
+    private function getController(Request $request)
     {
+        $url = $request->getLiteralURL();
         $parts = array_map('ucfirst', explode('/', $url));
         array_unshift($parts, 'TKOlomouc', 'Controller');
 
@@ -30,7 +33,7 @@ class Dispatcher
                 throw new NotFoundRightException('Controller class "' . $class . '" not found');
             }
 
-            $instance = new $class();
+            $instance = new $class($request);
 
             if (!($instance instanceof ControllerInterface)) {
                 throw new NotFoundRightException('Controller class "' . $class . '" not instance of Controller_Interface');
@@ -84,10 +87,10 @@ class Dispatcher
         $this->postDispatch[] = $filename;
     }
 
-    public function dispatch($url, $action, $id = null)
+    public function dispatch(Request $request)
     {
-        $this->controller = $this->getController($url);
-        $method = $this->findMethod($action);
+        $this->controller = $this->getController($request);
+        $method = $this->findMethod($request->getAction());
 
         View::$controller = $this->controller;
 
@@ -96,7 +99,7 @@ class Dispatcher
         }
 
         try {
-            $this->controller->$method($id);
+            $this->controller->$method($request);
         } catch (ViewException $e) {
             Log::write($e->getMessage() . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n" . $e->getTraceAsString());
             ob_clean();

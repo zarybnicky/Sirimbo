@@ -1,5 +1,7 @@
 <?php
-class RendererTest extends PHPUnit_Framework_TestCase
+namespace TKOlomouc\Tests\Unit;
+
+class RendererTest extends \PHPUnit_Framework_TestCase
 {
     public function testRenderer()
     {

@@ -1,5 +1,7 @@
 <?php
-class DispatcherTest extends PHPUnit_Framework_TestCase
+namespace TKOlomouc\Tests\Unit;
+
+class DispatcherTest extends \PHPUnit_Framework_TestCase
 {
     public function testDispatcher()
     {

@@ -5,4 +5,5 @@
             <img alt="<?php echo $item['id'];?>" src="<?php echo $item['src'];?>" />
         </div>
     </a>
-<?php endforeach;?>
+<?php
+endforeach;

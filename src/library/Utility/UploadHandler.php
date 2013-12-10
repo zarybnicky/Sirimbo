@@ -41,8 +41,7 @@ class UploadHandler
         foreach ($this->files as $key => $file) {
             $allowed = false;
             foreach ($this->allowedTypes as $extension) {
-                if (
-                    strripos($file[1], $extension)
+                if (strripos($file[1], $extension)
                     !== (strlen($file[1]) - strlen($extension))
                 ) {
                     continue;

@@ -79,4 +79,5 @@ if (!empty($this->skupinySelect)) {
             <button type="submit" name="action" value="skupiny">odeslat</button>
         <?php endif;?>
     </form>
-<?php endif;?>
+<?php
+endif;

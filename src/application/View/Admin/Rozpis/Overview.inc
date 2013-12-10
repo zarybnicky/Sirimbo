@@ -22,4 +22,3 @@ echo (new TKOlomouc\View\Helper\Table())
     ->data($this->data);
 echo '</div>';
 echo '</form>';
-?>

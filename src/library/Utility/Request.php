@@ -3,23 +3,28 @@ namespace TKOlomouc\Utility;
 
 class Request
 {
-    private static $defaultSection = 'home';
-    private static $rawUrl;
-    private static $rawUrlParts;
-    private static $literalUrlParts;
+    private static $rawUrlStatic;
 
-    private static $action;
-    private static $id;
-    private static $referer;
+    private $defaultSection = 'home';
+    private $rawUrl;
+    private $rawUrlParts;
+    private $literalUrlParts;
 
-    public static function setDefault($defaultSection)
+    private $action;
+    private $id;
+    private $referer;
+
+    private $view = 'html';
+
+    public function setDefault($defaultSection)
     {
-        self::$defaultSection = $defaultSection;
+        $this->defaultSection = $defaultSection;
     }
 
-    public static function setURL($url)
+    public function setURL($url)
     {
-        self::$rawUrl = $url;
+        self::$rawUrlStatic = $url;
+        $this->rawUrl = $url;
         $parts = explode('/', $url);
 
         //Removes double slashes
@@ -29,7 +34,7 @@ class Request
             }
         }
         $parts = array_values($parts);
-        self::$rawUrlParts = $parts;
+        $this->rawUrlParts = $parts;
 
         //Get an URL w/o numbers eg.
         foreach ($parts as $key => $part) {
@@ -38,72 +43,131 @@ class Request
             }
         }
         $parts = array_values($parts);
-        self::$literalUrlParts = $parts;
+        $this->literalUrlParts = $parts;
 
         //Find controller action = the last string before a numerical one
-        for ($i = count(self::$rawUrlParts) - 1; $i >= 0; $i--) {
-            if (!is_numeric(self::$rawUrlParts[$i])) {
+        for ($i = count($this->rawUrlParts) - 1; $i >= 0; $i--) {
+            if (!is_numeric($this->rawUrlParts[$i])) {
                 continue;
             }
-            $id = self::$rawUrlParts[$i];
-            if (isset(self::$rawUrlParts[$i - 1]) && !is_numeric(self::$rawUrlParts[$i - 1])) {
-                $_action = self::$rawUrlParts[$i - 1];
+            $id = $this->rawUrlParts[$i];
+            if (isset($this->rawUrlParts[$i - 1]) && !is_numeric($this->rawUrlParts[$i - 1])) {
+                $_action = $this->rawUrlParts[$i - 1];
                 break;
             }
         }
-        self::$id = isset($id) ? $id : null;
-        self::$action = isset($_action)
+        $this->id = isset($id) ? $id : null;
+        $this->action = isset($_action)
             ? $_action
-            : (!empty(self::$literalUrlParts)
-                ? self::$literalUrlParts[count(self::$literalUrlParts) - 1]
+            : (!empty($this->literalUrlParts)
+                ? $this->literalUrlParts[count($this->literalUrlParts) - 1]
                 : null);
     }
 
-    public static function getURL()
+    public function getURL()
     {
-        return self::$rawUrl;
+        return $this->rawUrl;
     }
 
-    public static function getRawURLParts()
+    public static function getURLStatic()
     {
-        return self::$rawUrlParts;
+        return self::$rawUrlStatic;
     }
 
-    public static function getLiteralURL()
+    public function getRawURLParts()
     {
-        if (empty(self::$literalUrlParts) || self::$literalUrlParts[0] == '') {
-            return self::$defaultSection;
+        return $this->rawUrlParts;
+    }
+
+    public function getLiteralURL()
+    {
+        if (empty($this->literalUrlParts) || $this->literalUrlParts[0] == '') {
+            return $this->defaultSection;
         }
-        return implode('/', self::$literalUrlParts);
+        return implode('/', $this->literalUrlParts);
     }
 
-    public static function getSection()
+    public function getSection()
     {
-        return isset(self::$rawUrlParts[0]) ? self::$rawUrlParts[0] : self::$defaultSection;
+        return isset($this->rawUrlParts[0]) ? $this->rawUrlParts[0] : $this->defaultSection;
     }
 
-    public static function getCanonical()
+    public function getCanonical()
     {
-        return self::getLiteralURL();
+        return $this->getLiteralURL();
     }
 
-    public static function getAction()
+    public function getAction()
     {
-        return self::$action;
+        return $this->action;
     }
 
-    public static function getID()
+    public function getID()
     {
-        return self::$id;
+        return $this->id;
     }
 
-    public static function setReferer($referer)
+    public function setReferer($referer)
     {
-        self::$referer = $referer;
+        $this->referer = $referer;
     }
 
-    public static function getReferer()
+    public function getReferer()
     {
-        return self::$referer;
+        return $this->referer;
+    }
+
+    public function getView()
+    {
+        return $this->view;
+    }
+
+    public function setView($view = 'html')
+    {
+        $this->view = $view;
+    }
+
+    public function post($field, $value = null)
+    {
+        return $this->arrayManipulate($_POST, $field, $value);
+    }
+
+    public function get($field, $value = null)
+    {
+        return $this->arrayManipulate($_GET, $field, $value);
+    }
+
+    public function session($field, $value = null)
+    {
+        return $this->arrayManipulate($_SESSION, $field, $value);
+    }
+
+    public function server($field, $value = null)
+    {
+        return $this->arrayManipulate($_SERVER, $field, $value);
+    }
+
+    public function files($field, $value = null)
+    {
+        return $this->arrayManipulate($_FILES, $field, $value);
+    }
+
+    public function cookie($field, $value = null)
+    {
+        return $this->arrayManipulate($_COOKIE, $field, $value);
+    }
+
+    protected function arrayManipulate(&$array, $field = null, $value = null)
+    {
+        if ($field === null) {
+            return $array;
+        }
+        if ($value !== null) {
+            $array[$field] = $value;
+        }
+        if (isset($array[$field])) {
+            return $array[$field];
+        }
+        return null;
     }
 }

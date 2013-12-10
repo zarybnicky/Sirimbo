@@ -5,7 +5,8 @@ use TKOlomouc\Utility\Miscellaneous;
 
 class EmptyNotice extends ViewAbstract
 {
-    private $filename = 'EmptyNotice.tpl';
+    private $file = 'EmptyNotice';
+
     private $header;
     private $notice;
 
@@ -16,15 +17,15 @@ class EmptyNotice extends ViewAbstract
 
     public function setNotice($notice)
     {
-        $this->notice = Miscellaneous\notice($notice);
+        $this->notice = $notice;
     }
 
     public function render()
     {
         $this->renderTemplate(
-            $this->filename,
+            $this->file,
             array(
-        	    'header' => $this->header,
+                'header' => $this->header,
                 'notice' => $this->notice
             )
         );

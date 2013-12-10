@@ -3,7 +3,8 @@ namespace TKOlomouc\View\Exception;
 
 class DatabaseConnectionException extends ViewException
 {
-    public function getErrorFile() {
+    public function getErrorFile()
+    {
         return 'database_connection';
     }
 }

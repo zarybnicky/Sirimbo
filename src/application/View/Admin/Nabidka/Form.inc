@@ -7,15 +7,16 @@ notice($this->redirect()->getMessage());
 <table>
     <tr>
         <td>Trenér (*): </td>
-        <td><?php if (!$this->isAdmin) { ?>
+        <td><?php if (!$this->isAdmin) : ?>
         <select name="trener">
             <option value="<?= $this->userId ?>">Já</option>
         </select><?php
-        } else {
+        else :
             echo (new TKOlomouc\View\Helper\UserSelect())
                 ->name('trener')
                 ->users($this->users);
-        } ?></td>
+        endif;
+        ?></td>
     </tr><tr>
         <td>Počet hodin (*): </td>
         <td><input type="text" name="pocet_hod" value="<?php echo post("pocet_hod"); ?>" /></td>

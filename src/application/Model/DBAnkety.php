@@ -55,7 +55,7 @@ class DBAnkety extends Adapter
 
         $latest = -1;
         foreach ($array as $row) {
-            if ($latest == $row['ak_id'])  {
+            if ($latest == $row['ak_id']) {
                 $result[count($result)-1]['items'][] = array(
                     'aki_id' => $row['aki_id'],
                     'aki_text' => $row['aki_text'],

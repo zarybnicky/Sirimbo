@@ -87,8 +87,14 @@ class Detail extends Nabidka
                 post('pocet_hod', $obsazeno);
             }
             DBNabidka::editNabidka(
-                $id, $data['n_trener'], post('pocet_hod'), $data['n_max_pocet_hod'],
-                $data['n_od'], $data['n_do'], $data['n_visible'], ($data['n_lock']) ? 1 : 0
+                $id,
+                $data['n_trener'],
+                post('pocet_hod'),
+                $data['n_max_pocet_hod'],
+                $data['n_od'],
+                $data['n_do'],
+                $data['n_visible'],
+                ($data['n_lock']) ? 1 : 0
             );
             $data = DBNabidka::getSingleNabidka($id);
         }

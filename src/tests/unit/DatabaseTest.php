@@ -1,5 +1,7 @@
 <?php
-class DatabaseTest extends PHPUnit_Framework_TestCase
+namespace TKOlomouc\Tests\Unit;
+
+class DatabaseTest extends \PHPUnit_Framework_TestCase
 {
     public function testDatabase()
     {

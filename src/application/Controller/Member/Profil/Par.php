@@ -54,8 +54,12 @@ class Par extends Profil
 
         DBPary::editTridaBody(
             User::getParID(),
-            post('stt-trida'), post('stt-body'), post('stt-finale'),
-            post('lat-trida'), post('lat-body'), post('lat-finale'),
+            post('stt-trida'),
+            post('stt-body'),
+            post('stt-finale'),
+            post('lat-trida'),
+            post('lat-body'),
+            post('lat-finale'),
             $hodnoceni
         );
         $this->redirect("/member/profil/par", "Třída a body změněny");
@@ -151,12 +155,14 @@ class Par extends Profil
         $f->checkInArray(
             post('stt-trida'),
             array('Z', 'H', 'D', 'C', 'B', 'A', 'M'),
-            'Neplatná standartní třída', 'stt-trida'
+            'Neplatná standartní třída',
+            'stt-trida'
         );
         $f->checkInArray(
             post('lat-trida'),
             array('Z', 'H', 'D', 'C', 'B', 'A', 'M'),
-            'Neplatná latinská třída', 'lat-trida'
+            'Neplatná latinská třída',
+            'lat-trida'
         );
         $f->checkNumberBetween(post('stt-body'), 0, 1000, 'Špatný počet standartních bodů', 'stt-body');
         $f->checkNumberBetween(post('lat-body'), 0, 1000, 'Špatný počet latinských bodů', 'lat-body');

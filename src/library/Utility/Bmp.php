@@ -13,7 +13,7 @@ namespace TKOlomouc\Utility;
 
 class BMP
 {
-    private static function str_split2($row, $bps, $palette)
+    private static function strSplit($row, $bps, $palette)
     {
         switch ($bps) {
             case 32:
@@ -140,8 +140,7 @@ class BMP
                 fwrite($f, $wid_pad);
             }
             fclose($f);
-        }
-        else {
+        } else {
             foreach ($header as $h) {
                 echo $h;
             }
@@ -165,8 +164,8 @@ class BMP
         $header = fread($f, 54);
         $header = unpack(
             'c2identifier/Vfile_size/Vreserved/Vbitmap_data/Vheader_size/'
-                . 'Vwidth/Vheight/vplanes/vbits_per_pixel/Vcompression/Vdata_size/'
-                . 'Vh_resolution/Vv_resolution/Vcolors/Vimportant_colors',
+            . 'Vwidth/Vheight/vplanes/vbits_per_pixel/Vcompression/Vdata_size/'
+            . 'Vh_resolution/Vv_resolution/Vcolors/Vimportant_colors',
             $header
         );
 
@@ -192,8 +191,7 @@ class BMP
             for ($i=0; $i<$colors; $i++) {
                 $palette[] = self::undword(fread($f, 4));
             }
-        }
-        else {
+        } else {
             if ($bps == 32) {
                 imagealphablending($img, false);
                 imagesavealpha($img, true);
@@ -204,7 +202,7 @@ class BMP
         //read pixels
         for ($y=$hei-1; $y>=0; $y--) {
             $row = fread($f, $wid2);
-            $pixels = self::str_split2($row, $bps, $palette);
+            $pixels = self::strSplit($row, $bps, $palette);
             for ($x=0; $x<$wid; $x++) {
                 self::makepixel($img, $x, $y, $pixels[$x], $bps);
             }

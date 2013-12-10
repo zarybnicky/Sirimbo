@@ -1,0 +1,18 @@
+%h1
+    = $header
+
+%form(action="" method="POST")
+    != $prompt
+    %br/
+    %br/
+    - foreach ($data as $item)
+        = $item['text']
+        %input(type="hidden" name="data[]" value="#{$item['id']}")/
+        %br/
+    %br/
+
+    %button(type="submit" name="action" value="confirm")
+        Odstranit
+
+    %a(href="#{$this->returnUrl}")
+       Zpět

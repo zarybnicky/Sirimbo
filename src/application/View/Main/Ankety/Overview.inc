@@ -17,4 +17,5 @@
         <div style="height:7px;">&nbsp;</div>
     <?php endforeach;?>
     <br />
-<?php endforeach;?>
+<?php
+endforeach;

@@ -101,7 +101,7 @@ class Skupiny extends Admin
                 $this->redirect(
                     '/admin/skupiny/edit/' . $id,
                     'Takové přiřazení není platné - způsobilo by,'
-                        . ' že jeden specifický symbol by byl v jedné skupině dvakrát.'
+                    . ' že jeden specifický symbol by byl v jedné skupině dvakrát.'
                 );
             }
             $this->redirect(
@@ -161,10 +161,10 @@ class Skupiny extends Admin
             if (isset($f) && $f) {
                 $this->redirect()->setMessage(
                     'Nemůžu odstranit skupinu s připojenými kategoriemi! '
-                        . '<form action="" method="post">'
-                        . '<button type="submit" name="action" value="unlink">'
-                        . 'Odstranit spojení?</button>'
-                        . '</form>'
+                    . '<form action="" method="post">'
+                    . '<button type="submit" name="action" value="unlink">'
+                    . 'Odstranit spojení?</button>'
+                    . '</form>'
                 );
             }
             $this->render(

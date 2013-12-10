@@ -26,4 +26,3 @@ echo 'Partnerka: ', (new TKOlomouc\View\Helper\UserSelect('add_partnerka'))->use
 echo '<button type="submit" name="action" value="add">Nový pár</button>';
 echo '</div>';
 echo '</form>';
-?>

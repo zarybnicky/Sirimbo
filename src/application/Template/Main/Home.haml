@@ -1,0 +1,38 @@
+!= $notice
+
+%div(style="width:710px")
+
+    != $clankySlideshow
+
+    %br/
+
+    %div(style="float:right;")
+
+        %div(style="text-align:left;margin: 0 auto;")
+            != $zpravy
+
+        %br/
+        %br/
+
+        %span.little
+            Podporuje nás:
+
+        %div(style="text-align:center;")
+            %a(href="http://www.kr-olomoucky.cz/" target="_blank")
+                %img(alt="Olomoucký kraj" src="/style/kraj-logo.gif")/
+
+        %div(style="text-align:center;")
+            %a(href="http://www.olomouc.eu/" target="_blank")
+                %img(alt="Město Olomouc" src="/style/olomouc-logo.jpg")/
+
+        %br/
+
+        %span.little(style="line-height:200%;")
+            Mediální partner:
+            %br/
+
+        %iframe(src="http://poutaky.denik.cz/olomoucky.denik.cz-300x300-zpravy_region.html"
+                style="width:300px;height:300px;border:0;overflow:auto;")
+
+    %div(style="margin-right:305px;")
+        != $clankyList

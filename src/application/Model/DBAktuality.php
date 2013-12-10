@@ -2,11 +2,13 @@
 namespace TKOlomouc\Model;
 
 use TKOlomouc\Model\Database\Adapter;
+use TKOlomouc\Utility\Debug;
 
 class DBAktuality extends Adapter
 {
-    public static function getAktuality($kat = 0, $kdo = 0) {
-        list($kat) = self::escape($kat);
+    public static function getAktuality($kat = 0, $kdo = 0)
+    {
+        list($kat, $kdo) = self::escape($kat, $kdo);
 
         $res = self::query(
             "SELECT *
@@ -17,7 +19,8 @@ class DBAktuality extends Adapter
         );
         return self::getArray($res);
     }
-    public static function getSingleAktualita($id) {
+    public static function getSingleAktualita($id)
+    {
         list($id) = self::escape($id);
 
         $res = self::query(
@@ -27,7 +30,8 @@ class DBAktuality extends Adapter
         );
         return self::getSingleRow($res);
     }
-    public static function addAktualita($kdo, $kat, $jmeno, $text, $preview, $foto, $foto_main) {
+    public static function addAktualita($kdo, $kat, $jmeno, $text, $preview, $foto, $foto_main)
+    {
         list($kdo, $kat, $jmeno, $text, $preview, $foto, $foto_main) =
             self::escape($kdo, $kat, $jmeno, $text, $preview, $foto, $foto_main);
 
@@ -38,7 +42,8 @@ class DBAktuality extends Adapter
         );
         return self::getInsertId();
     }
-    public static function editAktualita($id, $kat, $jmeno, $text, $preview, $foto, $foto_main) {
+    public static function editAktualita($id, $kat, $jmeno, $text, $preview, $foto, $foto_main)
+    {
         list($id, $kat, $jmeno, $text, $preview, $foto, $foto_main) =
             self::escape($id, $kat, $jmeno, $text, $preview, $foto, $foto_main);
 
@@ -56,7 +61,8 @@ class DBAktuality extends Adapter
             "DELETE FROM aktuality WHERE at_id='$id'"
         );
     }
-    public static function getAktualityFoto($id) {
+    public static function getAktualityFoto($id)
+    {
         list($id) = self::escape($id);
 
         $res = self::query(

@@ -1,0 +1,33 @@
+#TopFeaturesBlock
+    - foreach ($data as $key => $item)
+        .Feature(style="#{$key != $offset && "display:none;"}")
+            %h2.FeatureTitle
+                = $item['name']
+
+            .FeaturePhoto
+                %img(src="#{$item['photoUrl']}" alt="#{$item['name']}")/
+
+            %p
+
+            %p.FeatureBlurb
+                = $item['preview']
+
+            %ul.FeatureLinks
+                %li
+                    %a(href="#{$item['url']}")
+                        Více
+
+            %div(style="clear:both;")
+
+:javascript
+    (function($) {
+        $(function() {
+            if (typeof $.fn.topFeatures == "undefined") {
+                $.getScript("/scripts/topFeatures.min.js", function() {
+                    $("#TopFeaturesBlock").topFeatures()
+                });
+            } else {
+                $("#TopFeaturesBlock").topFeatures();
+            }
+        })
+    })(jQuery);

@@ -306,13 +306,8 @@ class DBPary extends Adapter
         $lat_finale,
         $hodnoceni
     ) {
-        list(
-            $p_id, $stt_trida, $stt_body, $stt_finale, $lat_trida, $lat_body,
-            $lat_finale, $hodnoceni
-        ) = self::escape(
-            $p_id, $stt_trida,
-            $stt_body, $stt_finale, $lat_trida, $lat_body, $lat_finale, $hodnoceni
-        );
+        list($p_id, $stt_trida, $stt_body, $stt_finale, $lat_trida, $lat_body, $lat_finale, $hodnoceni)
+            = self::escape($p_id, $stt_trida, $stt_body, $stt_finale, $lat_trida, $lat_body, $lat_finale, $hodnoceni);
 
         self::query(
             "UPDATE pary

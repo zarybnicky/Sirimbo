@@ -98,7 +98,8 @@ class CSVParser implements \Iterator
         return array_combine($this->headers, $parsed);
     }
 
-    public function rewind() {
+    public function rewind()
+    {
         $this->fileObject->rewind();
     }
 

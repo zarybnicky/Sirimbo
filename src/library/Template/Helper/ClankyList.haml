@@ -1,0 +1,26 @@
+%div.clanky(style="padding:4px 7px;border:1px solid #FFB030;border-radius:15px;")
+    %h2
+        Další články
+
+    - foreach ($data as $key => $item)
+        %div
+            %span.big
+                %a(href="#{$item['url']}")
+                    = $item['name']
+
+            %span.little
+                &nbsp;
+                = $item['date']
+
+            %p
+                = $item['preview']
+                &nbsp;&nbsp;
+                %a(href="#{$item['url']}")
+                    pokračujte zde
+
+        - if (isset($data[$key + 1]))
+            %hr/
+
+    - if (empty($data))
+        .notice
+            Žádné další články

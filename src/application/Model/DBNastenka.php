@@ -6,7 +6,8 @@ use TKOlomouc\Model\Database\Pagable;
 
 class DBNastenka extends Adapter implements Pagable
 {
-    public static function getInstance() {
+    public static function getInstance()
+    {
         return new self();
     }
 
@@ -17,7 +18,7 @@ class DBNastenka extends Adapter implements Pagable
             FROM upozorneni
                 LEFT JOIN users ON up_kdo=u_id
             ORDER BY up_timestamp_add DESC"
-                . (($offset !== null && $count !== null) ? " LIMIT $offset,$count" : '')
+            . (($offset !== null && $count !== null) ? " LIMIT $offset,$count" : '')
         );
         return self::getArray($res);
     }

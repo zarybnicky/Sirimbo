@@ -51,7 +51,8 @@ class Upload extends Partial
         return $this;
     }
 
-    private function processFilesItem($data) {
+    private function processFilesItem($data)
+    {
         $error = $data['error'];
         switch($error) {
             case UPLOAD_ERR_OK:

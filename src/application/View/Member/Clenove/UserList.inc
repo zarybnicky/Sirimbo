@@ -5,4 +5,3 @@ echo (new TKOlomouc\View\Helper\Table())
     ->column('index', '', 'r')
     ->column('fullName', 'Jméno')
     ->data($this->data);
-?>

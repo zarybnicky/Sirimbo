@@ -1,4 +1,5 @@
 <?php
+namespace TKOlomouc;
 
 /**
  * An example of a general-purpose implementation that includes the optional

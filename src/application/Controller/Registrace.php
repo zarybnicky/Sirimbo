@@ -40,15 +40,21 @@ class Registrace extends ControllerAbstract
             return;
         }
         User::register(
-            $login, post('pass'), post('jmeno'), post('prijmeni'),
-            post('pohlavi'), post('email'), post('telefon'),
-            (string) $narozeni, post('poznamky')
+            $login,
+            post('pass'),
+            post('jmeno'),
+            post('prijmeni'),
+            post('pohlavi'),
+            post('email'),
+            post('telefon'),
+            (string) $narozeni,
+            post('poznamky')
         );
         $this->redirect(
             '/home',
             'Registrace úspěšně proběhla.<br /><br />'
-                . 'Během několika dnů vám na email příjde potvrzení vašeho účtu,'
-                . ' které vyřizuje administrátor ručně.'
+            . 'Během několika dnů vám na email příjde potvrzení vašeho účtu,'
+            . ' které vyřizuje administrátor ručně.'
         );
     }
 

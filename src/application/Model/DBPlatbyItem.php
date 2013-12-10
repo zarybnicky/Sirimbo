@@ -85,8 +85,8 @@ class DBPlatbyItem extends Adapter
 
         $res = self::query(
             "SELECT * FROM platby_item"
-                . ($joined ? ' LEFT JOIN users ON pi_id_user=u_id LEFT JOIN platby_category ON pi_id_category=pc_id' : '')
-                . " WHERE pi_id='$id'"
+            . ($joined ? ' LEFT JOIN users ON pi_id_user=u_id LEFT JOIN platby_category ON pi_id_category=pc_id' : '')
+            . " WHERE pi_id='$id'"
         );
         return self::getSingleRow($res);
     }

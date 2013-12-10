@@ -105,8 +105,10 @@ class Nastenka extends Admin
             return;
         }
         $id = DBNastenka::addNastenka(
-            User::getUserID(), post('nadpis'),
-            post('text'), post('lock') ? 1 : 0
+            User::getUserID(),
+            post('nadpis'),
+            post('text'),
+            post('lock') ? 1 : 0
         );
 
         $skupiny = DBSkupiny::get();
@@ -115,7 +117,10 @@ class Nastenka extends Admin
                 continue;
             }
             DBNastenka::addNastenkaSkupina(
-                $id, $skupina['s_id'], $skupina['s_color_rgb'], $skupina['s_description']
+                $id,
+                $skupina['s_id'],
+                $skupina['s_color_rgb'],
+                $skupina['s_description']
             );
         }
         $n = new Novinky(User::getUserID());
@@ -174,8 +179,10 @@ class Nastenka extends Admin
                 continue;
             } elseif (post('sk-' . $skupina['s_id']) && !isset($skupiny_old[$skupina['s_id']])) {
                 DBNastenka::addNastenkaSkupina(
-                    $id, $skupina['s_id'],
-                    $skupina['s_color_rgb'], $skupina['s_description']
+                    $id,
+                    $skupina['s_id'],
+                    $skupina['s_color_rgb'],
+                    $skupina['s_description']
                 );
             } elseif (!post('sk-' . $skupina['s_id']) && isset($skupiny_old[$skupina['s_id']])) {
                 DBNastenka::removeNastenkaSkupina($skupiny_old[$skupina['s_id']]);

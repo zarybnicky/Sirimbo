@@ -43,4 +43,3 @@ if (!empty($this->orphanCategory)) {
         ->column('name', 'Název')
         ->data($this->orphanCategory);
 }
-?>

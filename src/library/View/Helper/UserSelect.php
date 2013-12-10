@@ -77,7 +77,7 @@ class UserSelect extends Partial
         list($year, $month, $day) = explode('-', $birthDate);
 
         $this->data[] = array(
-        	'id'   => $id,
+            'id'   => $id,
             'name' => $fullName,
             'year' => $year
         );
@@ -91,7 +91,7 @@ class UserSelect extends Partial
 
         foreach ($users as $item) {
             $this->addUser(
-    	        $item[$this->keyId],
+                $item[$this->keyId],
                 $item[$this->keyPrijmeni] . ', ' . $item[$this->keyJmeno],
                 $item[$this->keyBirthDate]
             );
@@ -108,7 +108,7 @@ class UserSelect extends Partial
         return $this->renderTemplate(
             $this->file,
             array(
-        	    'divClass'     => $name,
+                'divClass'     => $name,
                 'name'         => $this->name,
                 'date'         => $this->data,
                 'selected'     => post($this->name) === null ? false : '' . post($this->name),

@@ -17,4 +17,5 @@
         <?php endif;?>
     </div>
     </div><hr/>
-<?php endforeach;?>
+<?php
+endforeach;

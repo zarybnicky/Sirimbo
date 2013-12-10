@@ -52,4 +52,3 @@ echo (new TKOlomouc\View\Helper\Table())
     ->column('column', '', 'r', 'padding-right:5px')
     ->column('value', '', '', 'min-width:150px;padding-left:5px')
     ->data($this->raw);
-?>

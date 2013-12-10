@@ -57,8 +57,8 @@ class DBPlatbyCategory extends Adapter
     {
         $res = self::query(
             'SELECT * FROM platby_category'
-                . ($archived !== null ? (" WHERE pc_archive='" . ($archived ? '1' : '0') . "'") : '')
-                . ' ORDER BY pc_symbol'
+            . ($archived !== null ? (" WHERE pc_archive='" . ($archived ? '1' : '0') . "'") : '')
+            . ' ORDER BY pc_symbol'
         );
         return self::getArray($res);
     }
