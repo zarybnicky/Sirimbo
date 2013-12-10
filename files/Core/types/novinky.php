@@ -33,7 +33,7 @@ class Novinky
         'nabidka' => array(
                 'add' => 'Byla přidána nová <a href="%s">nabídka</a> od %s do %s s trenérem %s',
                 'edit' => '<a href="%s">Nabídka</a> od %s do %s s trenérem %s byla upravena.',
-                'remove' => '<a href="%s">Nabídka</a> od %s do %s s trenérem %s byla zrušena.'
+                'remove' => 'Nabídka od %s do %s s trenérem %s byla zrušena.'
         ),
         'nastenka' => array(
                 'add' => 'Byl přidán nový <a href="%s">příspěvek</a> na nástěnku',
