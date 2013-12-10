@@ -19,3 +19,4 @@ vendor/
 .buildpath
 .project
 .settings/*
+*.haml.php
