@@ -16,7 +16,7 @@
     if ($date < 320) $dir = 'zima';
     else if ($date < 621) $dir = 'jaro';
     else if ($date < 922) $dir = 'leto';
-    else if ($date < 2112) $dir = 'podzim';
+    else if ($date < 1221) $dir = 'podzim';
     else $dir = 'zima';
     echo <<<EOS
 body{
