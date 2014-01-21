@@ -64,14 +64,15 @@ if (TISK) {
     ;
 } elseif (!$request->session('page_id')) {
     $request->session('page_id', $_SERVER['REQUEST_URI']);
-} elseif (!session('referer_id') || $_SERVER['REQUEST_URI']
+} elseif (!$request->session('referer_id') || $_SERVER['REQUEST_URI']
     != $request->session('page_id')
 ) {
     $request->session('referer_id', $request->session('page_id'));
     $request->session('page_id', $_SERVER['REQUEST_URI']);
 }
-
-if ($request->session('login') === null) {
+if (strpos($request->getUrl(), 'error') <= 0 && $request->get('id')) {
+    echo 'Error';
+} elseif ($request->session('login') === null) {
     if ($request->post('action') == 'login'
         || $request->post('action') == 'enter'
     ) {
@@ -97,6 +98,5 @@ if ($request->session('login') === null) {
         );
     }
 }
-
 $d = new TKOlomouc\Utility\Dispatcher();
 $d->dispatch($request);

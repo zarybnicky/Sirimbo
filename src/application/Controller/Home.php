@@ -4,7 +4,6 @@ namespace TKOlomouc\Controller;
 use TKOlomouc\Utility\Request;
 use TKOlomouc\Utility\Response;
 use TKOlomouc\Model\DBAktuality;
-use TKOlomouc\Utility\Debug;
 
 class Home extends ControllerAbstract
 {

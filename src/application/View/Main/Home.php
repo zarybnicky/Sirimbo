@@ -6,7 +6,6 @@ use TKOlomouc\Utility\Miscellaneous;
 use TKOlomouc\View\ViewAbstract;
 use TKOlomouc\View\Helper\Zpravy;
 use TKOlomouc\View\Helper\Clanky;
-use TKOlomouc\Utility\Debug;
 use TKOlomouc\View\Layout;
 
 class Home extends Layout

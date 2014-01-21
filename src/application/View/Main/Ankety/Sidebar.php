@@ -31,7 +31,7 @@ class Sidebar extends Partial
         return $this->renderTemplate(
             $this->file,
             array(
-        	    'id' => $data['ak_id'],
+                'id' => $data['ak_id'],
                 'text' => $data['ak_text'],
                 'items' => $items
             )

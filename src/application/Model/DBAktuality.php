@@ -2,7 +2,6 @@
 namespace TKOlomouc\Model;
 
 use TKOlomouc\Model\Database\Adapter;
-use TKOlomouc\Utility\Debug;
 
 class DBAktuality extends Adapter
 {

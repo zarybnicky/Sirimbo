@@ -6,10 +6,10 @@ use TKOlomouc\Utility\Request;
 
 class Nabizime extends ControllerAbstract
 {
-	protected function checkPermissions()
-	{
+    protected function checkPermissions()
+    {
         ;
-	}
+    }
 
     public function view()
     {

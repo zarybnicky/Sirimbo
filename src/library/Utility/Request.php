@@ -23,6 +23,7 @@ class Request
 
     public function setURL($url)
     {
+        list($url) = explode('?', $url);
         self::$rawUrlStatic = $url;
         $this->rawUrl = $url;
         $parts = explode('/', $url);

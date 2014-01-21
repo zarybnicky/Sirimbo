@@ -12,8 +12,8 @@ class StaticPage extends Layout
         $this->file = $file;
     }
 
-	public function render()
-	{
+    public function render()
+    {
         if ($this->file === null) {
             throw new ViewException('A valid template file is required.');
         }
@@ -21,5 +21,5 @@ class StaticPage extends Layout
         $content = $this->renderTemplate($this->file, array());
         $this->set('content', $content);
         return $this->renderLayout();
-	}
+    }
 }

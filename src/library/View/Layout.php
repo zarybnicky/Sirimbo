@@ -77,8 +77,8 @@ abstract class Layout extends ViewAbstract
         array_push($this->section[$name], $content);
     }
 
-	protected function renderLayout(array $context = array())
-	{
+    protected function renderLayout(array $context = array())
+    {
         foreach ($this->section as $name => &$content) {
             if (!is_array($content)) {
                 continue;
@@ -96,5 +96,5 @@ abstract class Layout extends ViewAbstract
         $context += $this->section;
 
         return $this->renderTemplate('Layout/' . ucfirst($this->layout), $context);
-	}
+    }
 }

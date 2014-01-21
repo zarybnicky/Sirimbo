@@ -30,7 +30,7 @@ abstract class ViewAbstract
         $this->directories[] = $directory;
     }
 
-    protected function renderTemplate($template, array $context)
+    protected function renderTemplate($template, array $context = array())
     {
         $filename = $this->resolveName($template);
 
