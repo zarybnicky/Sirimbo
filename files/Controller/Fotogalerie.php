@@ -4,7 +4,7 @@ class Controller_Fotogalerie extends Controller_Abstract
     function view($id = null) {
         if ($id === null) {
             $id = 0;
-            $data = DBGalerie::getSingleDir(0);
+            $data = array('gd_name' => '');
         } elseif (!($data = DBGalerie::getSingleDir($id))) {
             $this->redirect('/fotogalerie', 'Taková složka neexistuje');
         }

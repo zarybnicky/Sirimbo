@@ -6,8 +6,8 @@ notice($this->redirect()->getMessage());
 <?php
 echo $this->menu()
     ->float(MenuHelper::FLOAT_RIGHT)
-    ->content('Přidat fotky', 'galerie/file/upload')
-    ->content('Přidat složku', 'galerie/directory/add')
+    ->content('Přidat fotky', '/admin/galerie/file/upload')
+    ->content('Přidat složku', '/admin/galerie/directory/add')
     ->content('Upravit fotky', 'directory', true)
     ->content('Upravit složku', 'directory/edit', true)
     ->content('Odebrat složku', 'directory/remove', true)

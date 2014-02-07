@@ -59,7 +59,7 @@ class Controller_Aktualne extends Controller_Abstract
                 'jmeno'      => $row['at_jmeno'],
                 'timestamp'  => $row['at_timestamp_add'],
                 'canEdit'    => Permissions::check('aktuality', P_OWNED, $row['at_kdo']),
-                'preview'    => stripslashes(nl2br($row['at_preview']))
+                'preview'    => $type == AKTUALITY_VIDEA ? '' : stripslashes(nl2br($row['at_preview']))
             );
             $row = $new_row;
         }

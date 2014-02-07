@@ -29,7 +29,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             'files/View/Admin/Platby/ItemsOverview.inc',
             array(
                 'users' => DBUser::getUsers(),
-                'categories' => $this->_getCategories(),
+                'categories' => $this->getCategoryLookup(true, true, false),
                 'data' => $data
             )
         );
@@ -165,7 +165,13 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         if (get('user') && is_numeric(get('user'))) {
             $filter['u_id'] = get('user');
         }
-        $data = DBPlatbyItem::get(true, $filter);
+        if (get('symbol') && is_numeric(get('symbol'))) {
+            $filter['pc_symbol'] = get('symbol');
+        }
+        $dateHelper = (new DateHelper())->date()->name('date')->range()->textBox()->post(false);
+        $date = $dateHelper->getPostRange();
+
+        $data = DBPlatbyItem::get(true, $filter, array('pi_date DESC'), $date);
         foreach ($data as &$row) {
             $new_data = array(
                 'checkBox' => '<input type="checkbox" name="data[]" value="' . $row['pi_id'] . '" />',

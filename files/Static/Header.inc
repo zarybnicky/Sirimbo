@@ -28,7 +28,7 @@ body{
     background-repeat:no-repeat;
 }
 EOS;
-?>        
+?>
     </style>
     <link href="/style/style.css" rel="stylesheet" type="text/css" />
     <meta name="msvalidate.01" content="7BD6C8B5748FC22EF06AB3AE89900885" />
@@ -82,7 +82,7 @@ EOS;
                 <li<?php echo ($section == 'oklubu') ? ' class="current"' : '';
                 ?>><a href="/oklubu">O klubu</a></li>
                 <li<?php echo ($section == 'aktualne') ? ' class="current"' : '';
-                ?>><a href="/aktualne">Aktuálně</a></li>
+                ?>><a href="/aktualne/clanky">Aktuálně</a></li>
                 <li<?php echo ($section == 'fotogalerie') ? ' class="current"' : '';
                 ?>><a href="/fotogalerie">Fotogalerie</a></li>
                 <li<?php echo ($section == 'nabizime') ? ' class="current"' : '';

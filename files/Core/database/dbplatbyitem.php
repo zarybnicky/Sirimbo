@@ -35,7 +35,7 @@ class DBPlatbyItem extends Database
 
         DBUser::query("DELETE FROM platby_item WHERE pi_id='$id'");
     }
-    public static function get($joined = false, $filter = array()) {
+    public static function get($joined = false, $filter = array(), $sort = array('pi_date DESC'), $date = array()) {
         $query =
             'SELECT * FROM platby_item' .
             ($joined ?
@@ -51,10 +51,32 @@ class DBPlatbyItem extends Database
                     $query .= ' AND ';
                 else
                     $first = false;
-                if (!is_array($value))
-                    $query .= " $key='$value'";
-                else
+
+                if (!is_array($value)) {
+                    $query .= " $key = '$value'";
+                } else {
                     $query .= " $key IN ('" . implode("','", $value) . "')";
+                }
+            }
+        }
+        if (!empty($date)) {
+            if (strpos($query, 'WHERE') === null) {
+                $query .= ' WHERE 1=1 ';
+            }
+            if($date['from']->isValid()) {
+                $query .= ' AND pi_date >= "' . $date['from']->getDate() . '" ';
+            }
+            if($date['to']->isValid()) {
+                $query .= ' AND pi_date <= "' . $date['to']->getDate() . '" ';
+            }
+        }
+        if (!empty($sort)) {
+            $query .= ' ORDER BY ';
+            foreach($sort as $item) {
+                if ($item != $sort[0]) { // if it is not the first item
+                    $query .= ', ';
+                }
+                $query .= $item;
             }
         }
         $res = self::query($query);
