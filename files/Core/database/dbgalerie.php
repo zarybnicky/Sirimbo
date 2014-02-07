@@ -150,7 +150,7 @@ class DBGalerie extends Database
         self::query(
             "UPDATE galerie_dir
             SET gd_name='$name',gd_id_rodic='$parent',
-            gd_level='$level',gd_hidden='$hidden',gd_path='$path'
+                gd_level='$level',gd_hidden='$hidden',gd_path='$path'
             WHERE gd_id='$id'"
         );
     }
@@ -167,10 +167,16 @@ class DBGalerie extends Database
     public static function addFotoByPath($dir, $path, $name, $kdo) {
         list($dir, $path, $name, $kdo) = self::escape($dir, $path, $name, $kdo);
 
+        if ($dir == '') {
+            $dir = 0;
+        } else {
+            $dir = "(SELECT gd_id FROM galerie_dir gd2 WHERE gd2.gd_path='$dir')";
+        }
+
         self::query(
             "INSERT INTO galerie_foto
             (gf_id_rodic,gf_path,gf_name,gf_kdo) VALUES
-            ((SELECT gd_id FROM (SELECT gd_id FROM galerie_dir WHERE gd_path='$dir') AS x),
+            ($dir,
             '$path','$name','$kdo')
             ON DUPLICATE KEY UPDATE gf_name='$name'"
         );
@@ -181,10 +187,16 @@ class DBGalerie extends Database
         list($name, $parent, $level, $path) =
             self::escape($name, $parent, $level, $path);
 
+        if ($parent == '') {
+            $parent = 0;
+        } else {
+            $parent = "(SELECT gd_id FROM galerie_dir gd2 WHERE gd2.gd_path='$parent')";
+        }
+
         self::query(
             "INSERT INTO galerie_dir
             (gd_name,gd_id_rodic,gd_level,gd_path) VALUES
-            ('$name',(SELECT gd_id FROM galerie_dir gd2 WHERE gd2.gd_path='$parent'),
+            ('$name',$parent,
             '$level','$path')
             ON DUPLICATE KEY UPDATE gd_name='$name'"
         );
@@ -193,9 +205,20 @@ class DBGalerie extends Database
     {
         list($path) = self::escape($path);
 
-        self::query("DELETE FROM galerie_dir WHERE gd_id_rodic=(SELECT gd_id FROM (SELECT gd_id FROM galerie_dir WHERE gd_path='$path') AS x)");
-        self::query("DELETE FROM galerie_foto WHERE gf_id_rodic=(SELECT gd_id FROM galerie_dir WHERE gd_path='$path')");
-        self::query("DELETE FROM galerie_dir WHERE gd_path='$path'");
+        if (!$path)
+            return;
+
+        self::query(
+            "DELETE FROM galerie_dir
+            WHERE gd_id_rodic=(SELECT (SELECT gd_id FROM galerie_dir gd2 WHERE gd2.gd_path='$path') as x)"
+        );
+        self::query(
+            "DELETE FROM galerie_foto
+            WHERE gf_id_rodic=(SELECT gd_id FROM galerie_dir WHERE gd_path='$path')"
+        );
+        self::query(
+            "DELETE FROM galerie_dir WHERE gd_path='$path'"
+        );
     }
     public static function removeFotoByPath($path)
     {

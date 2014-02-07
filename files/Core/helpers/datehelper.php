@@ -122,6 +122,17 @@ class DateHelper
             }
 
             return array('from' => $from, 'to' => $to);
+        } elseif (get($this->_name)) {
+            if (strpos(get($this->_name), ' - ')) {
+                $pieces = explode(' - ', get($this->_name));
+                $from = new Date($pieces[0]);
+                $to = new Date($pieces[1]);
+            }
+            if (!isset($from) || !isset($to) || (!$from->isValid() && !$to->isValid())) {
+                return array('from' => $this->getPost(true), 'to' => new Date());
+            }
+
+            return array('from' => $from, 'to' => $to);
         } elseif (
             post($this->_name . '-from-year')
             && post($this->_name . '-from-month')

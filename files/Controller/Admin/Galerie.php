@@ -52,12 +52,8 @@ class Controller_Admin_Galerie extends Controller_Admin
         unset($dbInDirs);
         unset($dbInFiles);
 
-        $fsDirs = array(
-        	GALERIE . DIRECTORY_SEPARATOR => GALERIE . DIRECTORY_SEPARATOR
-        );
-        $fsThumbnailDirs = array(
-        	GALERIE_THUMBS . DIRECTORY_SEPARATOR => GALERIE_THUMBS . DIRECTORY_SEPARATOR
-        );
+        $fsDirs = array();
+        $fsThumbnailDirs = array();
         $fsFiles = array();
         $fsThumbnails = array();
         $this->_recursiveDirs(GALERIE, $fsDirs, $fsFiles);
@@ -81,8 +77,8 @@ class Controller_Admin_Galerie extends Controller_Admin
         //Check for new image directories
         foreach ($fsDirs as $key => $parent) {
             $db_key = $this->_getCanonicalName($key);
-            if (isset($dbDirs[$db_key])
-                && (GALERIE . DIRECTORY_SEPARATOR . $dbDirs[$db_key]
+            if (array_key_exists($db_key, $dbDirs)
+                && (($dbDirs[$db_key] ? GALERIE . DIRECTORY_SEPARATOR . $dbDirs[$db_key] : GALERIE)
                 == $fsDirs[$key])
             ) {
                 unset($fsDirs[$key]);
@@ -99,7 +95,7 @@ class Controller_Admin_Galerie extends Controller_Admin
                 continue;
             }
             $db_key = $this->_getCanonicalName($key);
-            if (isset($dbFiles[$db_key])
+            if (array_key_exists($db_key, $dbFiles)
                 && (GALERIE . DIRECTORY_SEPARATOR . $dbFiles[$db_key]
                 == $fsFiles[$key])
             ) {
@@ -110,6 +106,10 @@ class Controller_Admin_Galerie extends Controller_Admin
 
         //Remove deleted files (in DB but not in filesystem)
         foreach ($dbDirs as $dir => $parent) {
+            if (!$dir) {
+                unset($dbDirs[$dir]);
+                continue;
+            }
             DBGalerie::removeDirByPath($dir);
         }
         foreach ($dbFiles as $file => $parent) {

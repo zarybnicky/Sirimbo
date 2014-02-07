@@ -4,7 +4,7 @@ function dumpPost($echo = false) {
         var_export($_POST);
         return;
     }
-    $out = fopen(DEBUG_LOG, 'a+');
+    $out = fopen(DEBUG_LOG, 'a');
     fwrite($out,  date(DATE_RFC822) . " - " .
         Request::getLiteralURL('home') . ":\n" .
         var_export($_POST, true) . "\n\n");
@@ -15,7 +15,7 @@ function dump($var, $echo = false) {
         var_export($var);
         return;
     }
-    $out = fopen(DEBUG_LOG, 'a+');
+    $out = fopen(DEBUG_LOG, 'a');
     fwrite($out,  date(DATE_RFC822) . " - " .
         Request::getLiteralURL('home') . ":\n" .
         var_export($var, true) . "\n\n");
@@ -27,8 +27,8 @@ function dbg($string, $backtrace = true) {
         $bt = $bt[1]['function'];
         $string = $bt[1]['file'] . ': ' . $bt[1]['line'] . ' - ' . $string;
     }
-    
-    $out = fopen(DEBUG_LOG, 'a+');
+
+    $out = fopen(DEBUG_LOG, 'a');
     fwrite($out,  date(DATE_RFC822) . " - " .
         Request::getLiteralURL('home') . ":\n" .
         $string . "\n\n");

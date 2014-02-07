@@ -30,7 +30,8 @@ class UploadHelper
     public function loadFromPost()
     {
         if (!isset($_FILES[$this->_name]) || empty($_FILES[$this->_name])) {
-            return array();
+            $this->_files = array();
+            return $this;
         }
         if (!is_array($_FILES[$this->_name])) {
             $input = array($_FILES[$this->_name]);

@@ -1,4 +1,8 @@
-<?php echo $this->render('files/View/Member/Akce/Header.inc', $this->data);?>
+<?php
+unset($data['info']);
+unset($data['dokumenty']);
+echo $this->render('files/View/Member/Akce/Header.inc', $data);
+?>
 
 <div style="text-align:center;">
 

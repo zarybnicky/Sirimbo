@@ -20,7 +20,7 @@ class Controller_Member_Clenove extends Controller_Member
         );
     }
     function skupiny($id = null) {
-        $currentID = 0;
+        $currentID = -1;
         $currentKey = 0;
         $data = DBUser::getUsersWithSkupinaPlatby();
         $skupiny = array();
@@ -28,7 +28,7 @@ class Controller_Member_Clenove extends Controller_Member
             if ($item['s_id'] != $currentID) {
                 $index = 0;
                 $currentID = $item['s_id'];
-                $currentKey = count($skupiny) - 1;
+                $currentKey = count($skupiny);
                 $skupiny[$currentKey] = array(
                     'header' => '<h3>' . getColorBox($item['s_color_rgb'], $item['s_description']) .
                         '&nbsp;&nbsp;' . $item['s_name'] . '</h2>',
@@ -70,13 +70,13 @@ class Controller_Member_Clenove extends Controller_Member
         $data = DBUser::getUsersWithSkupinaPlatby();
         $skupiny = array();
         $index = 0;
-        $currentID = 0;
+        $currentID = -1;
         $currentKey = 0;
         foreach ($data as $item) {
             if ($item['s_id'] != $currentID) {
                 $index = 0;
                 $currentID = $item['s_id'];
-                $currentKey = count($skupiny) - 1;
+                $currentKey = count($skupiny);
                 $skupiny[$currentKey] = array();
                 $skupiny[$currentKey]['info'] = array(
                     'header' => '<h3>' . getColorBox($item['s_color_rgb'], $item['s_description']) .
@@ -101,10 +101,10 @@ class Controller_Member_Clenove extends Controller_Member
             $skupina['info']['count'] = count($skupina['users']);
             if ($rightCount >= $leftCount) {
                 $skupina['info']['align'] = 'left';
-                $leftCount += ($skupina['info']['count'] + 1.5);
+                $leftCount += ($skupina['info']['count']);
             } else {
                 $skupina['info']['align'] = 'right';
-                $rightCount += ($skupina['info']['count'] + 1.5);
+                $rightCount += ($skupina['info']['count']);
             }
         }
         $this->render(
