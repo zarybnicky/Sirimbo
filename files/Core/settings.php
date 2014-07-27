@@ -119,7 +119,6 @@ define('NOVINKY_COUNT', 10);
 define('AKTUALITY_CLANKY', 1);
 define('AKTUALITY_VIDEA', 2);
 define('AKTUALITY_KRATKE', 3);
-define('AKTUALITY_PREVIEW', 200);
 define('THUMBNAIL_MAX', 150);
 
 //-----Ciselne hodnoty urovni uzivatelu-----//

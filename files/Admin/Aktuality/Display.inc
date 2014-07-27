@@ -1,6 +1,19 @@
 <h1>Správa aktualit</h1>
 <?php
 notice($this->redirect()->getMessage());
+
+if (!TISK) {
+    echo '<form action="" method="get">';
+
+    echo $this->select()->get()->name('f')
+        ->value('all')
+        ->option('0', 'vše')
+        ->option(AKTUALITY_CLANKY, 'články')
+        ->option(AKTUALITY_KRATKE, 'krátké zprávy')
+        ->option(AKTUALITY_VIDEA, 'videa');
+    echo '<button type="submit">Zobrazit</button>';
+    echo '</form><br/>';
+}
 ?>
 <form action="" method="POST">
 <?php
@@ -21,10 +34,9 @@ if (!TISK) {
 <td>Kategorie</td>
 </tr>
 <?php
-$aktuality = DBAktuality::getAktuality();
 foreach ($aktuality as $item) {
     echo '<tr>';
-    
+
     if (Permissions::check('aktuality', P_OWNED, $item['at_kdo']))
         echo '<td><input type="checkbox" name="aktuality[]" value="' . $item['at_id'] .
             '" /></td>';

@@ -126,7 +126,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
         }
         $data = array();
         foreach (get('u') as $id) {
-            $data = DBGalerie::getSingleDir($id);
+            $item = DBGalerie::getSingleDir($id);
             $data[] = array(
                 'id' => $item['gd_id'],
                 'text' => $item['gd_name']

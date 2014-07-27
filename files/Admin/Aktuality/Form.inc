@@ -4,15 +4,13 @@ echo '<h2>', (Request::getAction() == 'add' ? 'Přidat článek' : 'Upravit čl�
 notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST">
-<table>
+<table style="width:100%">
     <tr>
         <td>Jméno (*): </td>
-        <td><input type="text" name="jmeno" value="<?php echo post("jmeno"); ?>" /></td>
-        <td>Max. 255 znaků</td>
-    </tr><tr>
-        <td>Text: </td>
-        <td><textarea rows="15" cols="40" name="text"><?php echo post("text"); ?></textarea></td>
-        <td></td>
+        <td>
+            <input type="text" name="jmeno" value="<?php echo post("jmeno"); ?>" style="width:98%"/>
+        </td>
+        <td class="r">Max. 255 znaků</td>
     </tr><tr>
         <td>Kategorie (*): </td>
         <td>
@@ -22,28 +20,32 @@ notice($this->redirect()->getMessage());
         </td>
         <td></td>
     </tr><tr>
-        <td>Fotogalerie: </td>
-        <td><?php
-            $dirs = DBGalerie::getDirs(true, true);
-            
-            $s = $this->select()
-                ->post()->name('foto')
-                ->value(post('foto'))
-                ->option('none', '--');
-            foreach ($dirs as $dir)
-                $s->option($dir['gd_id'],
-                    str_repeat("-", $dir['gd_level'] - 1) . $dir['gd_name']);
-            echo $s;
-        ?></td>
+        <td>Shrnutí: </td>
+        <td></td>
+        <td class="r">20 - 50 slov</td>
+    </tr><tr>
+        <td colspan="3">
+            <textarea rows="5" cols="60" name="summary" style="width:99%"><?php echo post("summary"); ?></textarea>
+        </td>
+    </tr><tr>
+        <td>Text: </td>
+        <td></td>
         <td></td>
     </tr><tr>
-        <td><button type="submit"><?php
-            if (Request::getAction() == 'add') echo 'Přidat';
-            else echo 'Upravit';
-        ?></button></td>
-        <td>Pole označená (*) jsou povinná</td>
-        <td></td>
+        <td colspan="3">
+            <textarea rows="30" cols="60" name="text" style="width:99%"><?php echo post("text"); ?></textarea>
+        </td>
+    </tr><tr>
+        <td colspan="2">
+            <a href="/admin/aktuality">Zpět</a>
+            <?php if (Request::getAction() == 'add'): ?>
+                <button type="submit" name="action" value="foto">Přidat fotky</button>
+                <button type="submit" name="action" value="save">Přeskočit a uložit</button>
+            <?php else: ?>
+                <button type="submit">Upravit</button>
+            <?php endif; ?>
+        </td>
+        <td class="r">Pole označená (*) jsou povinná</td>
     </tr>
 </table>
 </form>
-<a href="/admin/aktuality">Zpět</a>

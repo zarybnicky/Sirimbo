@@ -33,10 +33,8 @@ class Controller_Aktualne extends Controller_Abstract
         $s = new Sidebar();
 
         echo $s->menuHeader();
-        echo $s->menuItem('Nejnovější články',    '/aktualne/posledni');
-        echo $s->menuItem('Videa',                '/aktualne/videa');
         echo $s->menuItem('Články',               '/aktualne/clanky');
-        echo $s->menuItem('Krátké zprávy',        '/aktualne/kratke-zpravy');
+        echo $s->menuItem('Videa',                '/aktualne/videa');
 
         echo $s->commonItems();
     }
@@ -59,7 +57,7 @@ class Controller_Aktualne extends Controller_Abstract
                 'jmeno'      => $row['at_jmeno'],
                 'timestamp'  => $row['at_timestamp_add'],
                 'canEdit'    => Permissions::check('aktuality', P_OWNED, $row['at_kdo']),
-                'preview'    => stripslashes(nl2br($row['at_preview']))
+                'preview'    => $type == AKTUALITY_VIDEA ? '' : stripslashes(nl2br($row['at_preview']))
             );
             $row = $new_row;
         }

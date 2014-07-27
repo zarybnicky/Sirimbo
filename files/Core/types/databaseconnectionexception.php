@@ -1,5 +1,5 @@
 <?php
-class DatabaseConenctionException extends ViewException
+class DatabaseConnectionException extends ViewException
 {
     public function getErrorFile() {
         return 'database_connection';

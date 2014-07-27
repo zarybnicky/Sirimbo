@@ -76,7 +76,7 @@ class Database
     {
         Log::write('MySQL Error: ' . mysql_errno() . ': ' . mysql_error());
         if ($onConnection) {
-            throw new DatabaseConenctionException('Nastala chyba při pokusu o připojení k databázi.');
+            throw new DatabaseConnectionException('Nastala chyba při pokusu o připojení k databázi.');
         } else {
             throw new DatabaseException('Nastala chyba v dotazu na databázi.');
         }
