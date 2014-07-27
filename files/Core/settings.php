@@ -31,9 +31,6 @@ set_include_path(
 spl_autoload_extensions('.php');
 spl_autoload_register();
 
-ini_set('session.use_trans_sid', 0);
-ini_set('session.use_only_cookies', 1);
-
 mb_internal_encoding('UTF-8');
 
 function shutdownHandler() {
