@@ -72,6 +72,7 @@ class Controller_Member_Clenove extends Controller_Member
         $index = 0;
         $currentID = 0;
         $currentKey = 0;
+
         foreach ($data as $item) {
             if ($item['s_id'] != $currentID) {
                 $index = 0;
@@ -95,6 +96,7 @@ class Controller_Member_Clenove extends Controller_Member
                     '<span style="font-weight:bold;color:red;">NE</span>'
             );
         }
+
         $leftCount = 0;
         $rightCount = 0;
         foreach ($skupiny as &$skupina) {
@@ -107,6 +109,7 @@ class Controller_Member_Clenove extends Controller_Member
                 $rightCount += ($skupina['info']['count'] + 1.5);
             }
         }
+
         $this->render(
             'files/View/Member/Clenove/Structure.inc',
             array(

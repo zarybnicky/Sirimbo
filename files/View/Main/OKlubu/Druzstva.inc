@@ -1,4 +1,4 @@
-﻿<h1>Výsledky našich družstev na Mistrovství České republiky</h1>
+<h1>Výsledky našich družstev na Mistrovství České republiky</h1>
 <style type="text/css">.main{text-size:120%;font-weight:bold;}</style>
 <h2>Most, 1999</h2>
 <table style="width:500px;">

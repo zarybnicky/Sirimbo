@@ -28,7 +28,7 @@ body{
     background-repeat:no-repeat;
 }
 EOS;
-?>        
+?>
     </style>
     <link href="/style/style.css" rel="stylesheet" type="text/css" />
     <meta name="msvalidate.01" content="7BD6C8B5748FC22EF06AB3AE89900885" />

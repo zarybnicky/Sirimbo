@@ -277,7 +277,7 @@ class DBUser extends Database implements Pagable
                             DATE_SUB(CURDATE(), INTERVAL (YEAR(CURDATE())) YEAR) <= pc_valid_from AND
                             DATE_SUB(CURDATE(), INTERVAL (YEAR(CURDATE())) YEAR) >= pc_valid_to) OR
                         pc_id IS NULL
-                    ) AND (pi_id_category=pc_id OR pi_id IS NULL)
+                    ) AND (pc_amount=0 OR pi_id_category=pc_id OR pi_id IS NULL)
                 GROUP BY u_id
                 ORDER BY s_id,u_prijmeni"
         );

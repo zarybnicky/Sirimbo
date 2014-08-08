@@ -40,7 +40,9 @@ class DBPlatbyItem extends Database
             'SELECT * FROM platby_item' .
             ($joined ?
                 ' LEFT JOIN users ON pi_id_user=u_id
-                LEFT JOIN platby_category ON pi_id_category=pc_id' : '');
+                LEFT JOIN platby_category ON pi_id_category=pc_id
+                LEFT JOIN platby_category_group ON pcg_id_category=pc_id
+                LEFT JOIN platby_group ON pg_id=pcg_id_group' : '');
         if (!empty($filter)) {
             $filter = array_combine(array_keys($filter), self::escapeArray(array_values($filter)));
 

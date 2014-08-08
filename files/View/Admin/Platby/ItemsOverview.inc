@@ -4,13 +4,21 @@ echo '<h2>Jednotlivé platby</h2>';
 
 if (!TISK) {
     echo '<form action="" method="get">';
-    echo '<span class="big">Omezit výběr podle uživatele:</span> ';
+    echo '<span class="big">Vybrat uživatele:</span> ';
     $s = $this->select()
         ->get()->name('user')
         ->value('all')
         ->option('all', '---');
     foreach ($this->users as $user)
         $s->option($user['u_id'], $user['u_prijmeni'] . ', ' . $user['u_jmeno']);
+    echo $s;
+    echo ', <span class="big">kategorii:</span>';
+    $s = $this->select()
+        ->get()->name('category')
+        ->value('all')
+        ->option('all', '---');
+    foreach ($this->categories as $key => $item)
+        $s->option($key, $item);
     echo $s;
     echo '<button type="submit">Odeslat</button>';
     echo '</form>';

@@ -165,6 +165,12 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         if (get('user') && is_numeric(get('user'))) {
             $filter['u_id'] = get('user');
         }
+        if (get('category') && is_numeric(get('category'))) {
+            $filter['pc_id'] = get('category');
+        } elseif (stripos(get('category'), 'group_') !== false) {
+            $filter['pg_id'] = substr(get('category'), 6);
+        }
+
         $data = DBPlatbyItem::get(true, $filter);
         foreach ($data as &$row) {
             $new_data = array(

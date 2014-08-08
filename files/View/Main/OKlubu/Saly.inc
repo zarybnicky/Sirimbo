@@ -1,6 +1,6 @@
-﻿<h1>Kde trénujeme:</h1>
+<h1>Kde trénujeme:</h1>
 <p>
-Náš klub dlouhá léta funguje pod záštitou dvou školských institucí. 
+Náš klub dlouhá léta funguje pod záštitou dvou školských institucí.
 Jsou jimi Základní škola Holečkova a Slovanské gymnázium Olomouc.
 </p>
 
@@ -15,7 +15,7 @@ Holečkova 10, Olomouc<br/>
 
 <div id="holeckova" style="width:308px; height:190px;clear:both;margin:20px auto;"
     onclick="window.location.href='http://mapy.cz/s/2LgX';"></div>
-    
+
 <script type="text/javascript" src="http://api4.mapy.cz/loader.js"></script>
 <script type="text/javascript">Loader.load(null, {api:"simple"});</script>
 <script type="text/javascript">
@@ -35,7 +35,7 @@ Jiřího z Poděbrad 13, Olomouc<br/>
 
 <div id="slovan" style="width:308px; height:190px;clear:both;margin:20px auto;"
     onclick="window.location.href='http://mapy.cz/s/2Lhv';"></div>
-    
+
 <script type="text/javascript" src="http://api4.mapy.cz/loader.js"></script>
 <script type="text/javascript">Loader.load(null, {api:"simple"});</script>
 <script type="text/javascript">

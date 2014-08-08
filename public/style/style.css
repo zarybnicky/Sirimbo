@@ -117,7 +117,7 @@ p { margin-bottom: 1em; }
 	left:0;
 	width:500px;
 	height:230px;
-	background-color:transparent; 
+	background-color:transparent;
 }
 .badlogin { border-bottom: 2px dotted red; }
 #userbox input {
