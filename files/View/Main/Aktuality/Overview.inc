@@ -11,8 +11,10 @@
     <?php endif;?>
     <br/>
 
+    <?php if ($row['preview']): ?>
     <?php echo stripslashes(nl2br($row['preview']));?>
     <a href="/aktualne/<?php $row['id']?>">...</a><br/>
+    <?php endif; ?>
 
     <?php if (count($this->data)-1 != $key) : ?>
         <hr/>

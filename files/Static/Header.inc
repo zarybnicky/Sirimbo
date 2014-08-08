@@ -82,7 +82,7 @@ EOS;
                 <li<?php echo ($section == 'oklubu') ? ' class="current"' : '';
                 ?>><a href="/oklubu">O klubu</a></li>
                 <li<?php echo ($section == 'aktualne') ? ' class="current"' : '';
-                ?>><a href="/aktualne">Aktuálně</a></li>
+                ?>><a href="/aktualne/clanky">Aktuálně</a></li>
                 <li<?php echo ($section == 'fotogalerie') ? ' class="current"' : '';
                 ?>><a href="/fotogalerie">Fotogalerie</a></li>
                 <li<?php echo ($section == 'nabizime') ? ' class="current"' : '';

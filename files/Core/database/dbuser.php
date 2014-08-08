@@ -262,24 +262,35 @@ class DBUser extends Database implements Pagable
 
     public static function getUsersWithSkupinaPlatby() {
         $res = self::query(
-                "SELECT * FROM users
-                    LEFT JOIN skupiny on s_id=u_skupina
-                    LEFT JOIN platby_group_skupina ON pgs_id_skupina=s_id
-                    LEFT JOIN platby_group ON pg_id=pgs_id_group
-                    LEFT JOIN platby_category_group ON pcg_id_group=pg_id
-                    LEFT JOIN platby_category ON pcg_id_category=pc_id
-                    LEFT OUTER JOIN platby_item ON u_id=pi_id_user
-                WHERE
-                    u_confirmed='1' AND u_ban='0' AND u_system='0' AND
-                    (pg_type='1' OR pg_type IS NULL) AND (
-                        (CURDATE() >= pc_valid_from AND CURDATE() <= pc_valid_to) OR
-                        (pc_use_prefix='1' AND pi_prefix = YEAR(CURDATE()) AND
+            "SELECT *
+            FROM users
+                LEFT JOIN skupiny on s_id=u_skupina
+                LEFT JOIN platby_group_skupina ON pgs_id_skupina=s_id
+                LEFT JOIN platby_group ON pg_id=pgs_id_group
+                LEFT JOIN platby_category_group ON pcg_id_group=pg_id
+                LEFT JOIN platby_category
+                    ON (
+                        pcg_id_category=pc_id AND
+                        (pc_use_prefix='0' AND (CURDATE() >= pc_valid_from AND CURDATE() <= pc_valid_to)) OR
+                        (pc_use_prefix='1' AND
                             DATE_SUB(CURDATE(), INTERVAL (YEAR(CURDATE())) YEAR) <= pc_valid_from AND
-                            DATE_SUB(CURDATE(), INTERVAL (YEAR(CURDATE())) YEAR) >= pc_valid_to) OR
-                        pc_id IS NULL
-                    ) AND (pc_amount=0 OR pi_id_category=pc_id OR pi_id IS NULL)
-                GROUP BY u_id
-                ORDER BY s_id,u_prijmeni"
+                            DATE_SUB(CURDATE(), INTERVAL (YEAR(CURDATE())) YEAR) >= pc_valid_to)
+                    )
+                LEFT JOIN platby_item
+                    ON (
+                        u_id=pi_id_user AND
+                        pi_id_category=pc_id AND
+                        (
+                            (pc_use_prefix='1' AND pi_prefix = YEAR(CURDATE())) OR
+                            pc_use_prefix='0'
+                        )
+                    )
+            WHERE
+                u_confirmed='1' AND u_ban='0' AND u_system='0' AND
+                (pg_type='1' OR pg_type IS NULL) AND pc_id IS NOT NULL
+            GROUP BY u_id
+            ORDER BY s_id,u_prijmeni
+        "
         );
         return self::getArray($res);
     }
