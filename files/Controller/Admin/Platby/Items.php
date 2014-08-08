@@ -29,7 +29,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             'files/View/Admin/Platby/ItemsOverview.inc',
             array(
                 'users' => DBUser::getUsers(),
-                'categories' => $this->getCategoryLookup(true, true, false),
+                'categories' => $this->_getCategories(),
                 'data' => $data
             )
         );

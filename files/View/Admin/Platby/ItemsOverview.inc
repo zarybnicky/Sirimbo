@@ -33,7 +33,7 @@ if (!TISK) {
     echo (new DateHelper())->date()->name('date')->range()->textBox()->post(false);
     echo '</td></tr>';
     echo '<tr><td></td><td><button type="submit">Odeslat</button></td></tr></table>';
-    echo '</form>';
+    echo '</form><br/>';
 }
 
 echo '<form action="" method="POST">';
