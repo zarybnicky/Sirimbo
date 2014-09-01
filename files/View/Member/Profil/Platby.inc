@@ -6,10 +6,8 @@ Variabilní symbol: <?php echo $this->varSymbol;?>
 <br/><br/>
 Aktuálně: <?php echo $this->zaplacenoText;?>
 <br/>
-Více informací přijde brzy!
-<br/><br/>
 
-<?php /*if (!empty($this->platby)): ?>
+<?php if (!empty($this->platby)): ?>
 <h2>Historie plateb</h2>
 <table>
     <tr>
@@ -29,7 +27,7 @@ Více informací přijde brzy!
     </tr>
     <?php endforeach;?>
 </table><br/>
-<?php endif;*/?>
+<?php endif; ?>
 
 <h2>Přehled plateb</h2>
 <?php
