@@ -95,7 +95,7 @@ class Controller_Admin_Nabidka extends Controller_Admin
                 'files/View/Admin/Nabidka/Form.inc',
                 array(
                     'action' => Request::getAction(),
-                    'returnURL' => Request::getReferer(),
+                    'returnURI' => Request::getReferer(),
                     'users' => DBUser::getUsersByPermission('nabidka', P_OWNED),
                     'visible' => false
                 )
@@ -164,7 +164,7 @@ class Controller_Admin_Nabidka extends Controller_Admin
                 'files/View/Admin/Nabidka/Form.inc',
                 array(
                     'action' => Request::getAction(),
-                    'returnURL' => Request::getReferer(),
+                    'returnURI' => Request::getReferer(),
                     'users' => DBUser::getUsersByPermission('nabidka', P_OWNED),
                     'visible' => $data['n_visible']
                 )

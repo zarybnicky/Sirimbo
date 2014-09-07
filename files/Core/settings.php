@@ -38,7 +38,7 @@ function shutdownHandler() {
         return;
     if ($error['type'] == E_ERROR || $error['type'] == E_RECOVERABLE_ERROR) {
         ob_end_clean();
-        if (Request::getURL() == 'error') {
+        if (Request::getURI() == 'error') {
             Log::write("Recursive error message!");
             die('Fatal error: Rekurzivní smyčka přesměrování!');
         }
@@ -51,7 +51,7 @@ function errorHandler($severity, $message, $filepath, $line) {
         return false;
     }
     ob_end_clean();
-    if (Request::getURL() == 'error') {
+    if (Request::getURI() == 'error') {
         Log::write("Recursive error message!");
         die('Fatal error: Rekurzivní smyčka přesměrování!');
     }

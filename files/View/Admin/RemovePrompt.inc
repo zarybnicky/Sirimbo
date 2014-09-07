@@ -8,5 +8,5 @@
 <?php endforeach;?>
 <br/>
 <button type="submit" name="action" value="confirm">Odstranit</button>
-<a href="<?php echo $this->returnURL;?>">Zpět</a>
+<a href="<?php echo $this->returnURI;?>">Zpět</a>
 </form>

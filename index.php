@@ -25,29 +25,27 @@ session_start();
 session_regenerate_id();
 
 require 'files/Core/settings.php';
-require 'files/Core/form.php';
+require 'files/Core/utils.php';
 require 'files/Core/debug.php';
 require 'files/Core/log.php';
 require 'files/Core/request.php';
 require 'files/Controller/Interface.php';
 require 'files/Controller/Abstract.php';
 
-define('TISK', (isset($_GET['view']) && $_GET['view'] == 'tisk') ? true : false);
+define('TISK', (get('view') == 'tisk') ? true : false);
 
 if (TISK) {
     ;
 } elseif (!session('page_id')) {
-    session('page_id', $_SERVER['REQUEST_URI']);
-} elseif (!session('referer_id') || $_SERVER['REQUEST_URI'] != session('page_id')) {
+    session('page_id', server('REQUEST_URI'));
+} elseif (!session('referer_id') || server('REQUEST_URI') != session('page_id')) {
     session('referer_id', session('page_id'));
-    session('page_id', $_SERVER['REQUEST_URI']);
+    session('page_id', server('REQUEST_URI'));
 }
 
 Request::setDefault('home');
-Request::setURL(get('file'));
-Request::setURI($_SERVER['REQUEST_URI']);
+Request::setURI(server('REQUEST_URI'));
 Request::setReferer(session('referer_id'));
-unset($_GET['file']);
 
 if (session('login') === null) {
     if (post('action') == 'login' || post('action') == 'enter') {
@@ -64,16 +62,17 @@ if (session('login') === null) {
 } else {
     User::loadUser(session('id'));
     if (session('invalid_data') === '1'
-        && Request::getURL() !== 'member/profil/edit'
-        && Request::getURL() !== 'logout'
+        && Request::getURI() !== 'member/profil/edit'
+        && Request::getURI() !== 'logout'
     ) {
         Helper::get()->redirect(
             '/member/profil/edit',
-            'Prosím vyplňte požadované údaje.', true
+            'Prosím vyplňte požadované údaje.',
+            true
         );
     }
 }
 
 $d = new Dispatcher();
-$d->dispatch(Request::getLiteralURL(), Request::getAction(), Request::getID());
+$d->dispatch(Request::getLiteralURI(), Request::getAction(), Request::getID());
 ?>

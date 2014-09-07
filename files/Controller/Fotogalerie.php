@@ -21,7 +21,7 @@ class Controller_Fotogalerie extends Controller_Abstract
             $new_row = array(
                 'id' => $row['gf_id'],
                 'src' => '/galerie/thumbnails/' . $row['gf_path'],
-                'href' => '/' . Request::getURL() . '/foto/' . $row['gf_id']
+                'href' => '/' . Request::getURI() . '/foto/' . $row['gf_id']
             );
             $row = $new_row;
         }
@@ -52,10 +52,10 @@ class Controller_Fotogalerie extends Controller_Abstract
                 'id'         => $id,
                 'src'        => '/galerie/' . $data['gf_path'],
                 'hasPrev'    => $hasPrev,
-                'prevURL'    => $hasPrev ? $parent_dir[$current - 1]['gf_id'] : '',
-                'returnURL'  => '/fotogalerie' . ($data['gf_id_rodic'] > 0 ? ('/' . $data['gf_id_rodic']) : ''),
+                'prevURI'    => $hasPrev ? $parent_dir[$current - 1]['gf_id'] : '',
+                'returnURI'  => '/fotogalerie' . ($data['gf_id_rodic'] > 0 ? ('/' . $data['gf_id_rodic']) : ''),
                 'hasNext'    => $hasNext,
-                'nextURL'    => $hasNext ? $parent_dir[$current + 1]['gf_id'] : '',
+                'nextURI'    => $hasNext ? $parent_dir[$current + 1]['gf_id'] : '',
             )
         );
         return;

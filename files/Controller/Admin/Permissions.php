@@ -15,7 +15,6 @@ class Controller_Admin_Permissions extends Controller_Admin
             case 'remove':
                 if (!is_array(post('permissions')))
                     break;
-                $url = '/admin/permissions/remove?';
                 $this->redirect('/admin/permissions/remove?' . http_build_query(array('u' => post('permissions'))));
                 break;
         }
@@ -114,7 +113,7 @@ class Controller_Admin_Permissions extends Controller_Admin
                 'prompt' =>
                     notice('Bude nutné přiřadit uživatelům z těchto skupin jinou skupinu!', true)
                     . 'Opravdu chcete odstranit uživatelské úrovně:',
-                'returnURL' => Request::getReferer(),
+                'returnURI' => Request::getReferer(),
                 'data' => $data
             )
         );

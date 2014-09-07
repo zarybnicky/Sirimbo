@@ -34,4 +34,4 @@ notice($this->redirect()->getMessage());
 </table>
 </form>
 
-<a href="<?php echo $this->returnURL?>">Zpět</a>
+<a href="<?php echo $this->returnURI?>">Zpět</a>

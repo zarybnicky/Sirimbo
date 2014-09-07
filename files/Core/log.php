@@ -7,7 +7,7 @@ class Log
     {
         Log::$_logfile = fopen(LOG, 'a+');
         fwrite(Log::$_logfile,  date(DATE_RFC822) . " - " .
-            Request::getLiteralURL('home') . ":\n" .
+            Request::getLiteralURI('home') . ":\n" .
             ($message ? "\tMessage: $message\n" : '') .
             "\tGET: " . json_encode($_GET) . "\n" .
             "\tPOST: " . json_encode($_POST) . "\n" .

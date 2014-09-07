@@ -3,9 +3,8 @@ class Request
 {
     private static $_default = 'home';
     private static $_uri;
-    private static $_url;
-    private static $_rawUrlParts;
-    private static $_urlPartsLiteral;
+    private static $_rawUriParts;
+    private static $_uriPartsLiteral;
 
     private static $_action;
     private static $_id;
@@ -15,11 +14,9 @@ class Request
         self::$_default = $_default;
     }
     public static function setURI($_uri) {
-        self::$_uri = $_uri;
-    }
-    public static function setURL($_url) {
-        self::$_url = $_url;
-        $parts = explode('/', $_url);
+        self::$_uri = trim($_uri, '/');
+
+        $parts = explode('/', $_uri);
 
         //Removes double slashes
         foreach ($parts as $key => $part) {
@@ -28,54 +25,51 @@ class Request
             }
         }
         $parts = array_values($parts);
-        self::$_rawUrlParts = $parts;
+        self::$_rawUriParts = $parts;
 
-        //Get an URL w/o numbers eg.
+        //Get an URI w/o numbers eg.
         foreach ($parts as $key => $part)
             if (is_numeric($part))
                 unset($parts[$key]);
         $parts = array_values($parts);
-        self::$_urlPartsLiteral = $parts;
+        self::$_uriPartsLiteral = $parts;
 
         //Find controller action = the last string before a numerical one
-        for($i = count(self::$_rawUrlParts) - 1; $i >= 0; $i--) {
-            if (!is_numeric(self::$_rawUrlParts[$i])) {
+        for($i = count(self::$_rawUriParts) - 1; $i >= 0; $i--) {
+            if (!is_numeric(self::$_rawUriParts[$i])) {
                 continue;
             }
-            $_id = self::$_rawUrlParts[$i];
-            if (isset(self::$_rawUrlParts[$i - 1]) && !is_numeric(self::$_rawUrlParts[$i - 1])) {
-                $_action = self::$_rawUrlParts[$i - 1];
+            $_id = self::$_rawUriParts[$i];
+            if (isset(self::$_rawUriParts[$i - 1]) && !is_numeric(self::$_rawUriParts[$i - 1])) {
+                $_action = self::$_rawUriParts[$i - 1];
                 break;
             }
         }
         self::$_id = isset($_id) ? $_id : null;
         self::$_action = isset($_action)
             ? $_action
-            : (!empty(self::$_urlPartsLiteral)
-                ? self::$_urlPartsLiteral[count(self::$_urlPartsLiteral) - 1]
+            : (!empty(self::$_uriPartsLiteral)
+                ? self::$_uriPartsLiteral[count(self::$_uriPartsLiteral) - 1]
                 : null);
     }
 
     public static function getURI() {
         return self::$_uri;
     }
-    public static function getURL() {
-        return self::$_url;
+    public static function getRawURIParts() {
+        return self::$_rawUriParts;
     }
-    public static function getRawURLParts() {
-        return self::$_rawUrlParts;
-    }
-    public static function getLiteralURL() {
-        if (empty(self::$_urlPartsLiteral) || self::$_urlPartsLiteral[0] == '') {
+    public static function getLiteralURI() {
+        if (empty(self::$_uriPartsLiteral) || self::$_uriPartsLiteral[0] == '') {
             return self::$_default;
         }
-        return implode('/', self::$_urlPartsLiteral);
+        return implode('/', self::$_uriPartsLiteral);
     }
     public static function getSection() {
-        return isset(self::$_rawUrlParts[0]) ? self::$_rawUrlParts[0] : self::$_default;
+        return isset(self::$_rawUriParts[0]) ? self::$_rawUriParts[0] : self::$_default;
     }
     public static function getCanonical() {
-        return self::getLiteralURL();
+        return self::getLiteralURI();
     }
     public static function getAction() {
         return self::$_action;

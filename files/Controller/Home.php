@@ -2,10 +2,12 @@
 class Controller_Home extends Controller_Abstract
 {
     function view($id = null) {
-        if (NABOR && Request::getURL() == '/')
-            $this->redirect('/nabor');
-        if (Request::getURL() == '/')
+        if (!Request::getURI()) {
+            if (NABOR) {
+                $this->redirect('/nabor');
+            }
             $this->redirect('/home');
+        }
 
         $this->render('files/View/Main/Home.inc');
     }
