@@ -72,6 +72,9 @@ class DBPlatbyItem extends Database
                 $query .= ' AND pi_date <= "' . $date['to']->getDate() . '" ';
             }
         }
+
+        $query .= ' GROUP BY pi_id';
+
         if (!empty($sort)) {
             $query .= ' ORDER BY ';
             foreach($sort as $item) {

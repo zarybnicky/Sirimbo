@@ -32,16 +32,16 @@ function phpGlobal(&$array, $field, $value) {
 }
 
 function post($field = null, $value = null) {
-    phpGlobal($_POST, $field, $value);
+    return phpGlobal($_POST, $field, $value);
 }
 function get($field = null, $value = null) {
-    phpGlobal($_GET, $field, $value);
+    return phpGlobal($_GET, $field, $value);
 }
 function session($field = null, $value = null) {
-    phpGlobal($_SESSION, $field, $value);
+    return phpGlobal($_SESSION, $field, $value);
 }
-function server($field, $value) {
-    phpGlobal($_SERVER, $field, $value);
+function server($field = null, $value = null) {
+    return phpGlobal($_SERVER, $field, $value);
 }
 
 function formatTime($str, $forDisplay) {

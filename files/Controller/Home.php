@@ -13,4 +13,3 @@ class Controller_Home extends Controller_Abstract
     }
     function sidebar() { }
 }
-?>

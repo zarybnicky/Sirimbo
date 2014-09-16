@@ -27,7 +27,8 @@ set_include_path(
     CORE . DIRECTORY_SEPARATOR . 'helpers' . PATH_SEPARATOR .
     CORE . DIRECTORY_SEPARATOR . 'paging' . PATH_SEPARATOR .
     CORE . DIRECTORY_SEPARATOR . 'types' . PATH_SEPARATOR .
-    get_include_path());
+    get_include_path()
+);
 spl_autoload_extensions('.php');
 spl_autoload_register();
 

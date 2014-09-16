@@ -75,4 +75,3 @@ if (session('login') === null) {
 
 $d = new Dispatcher();
 $d->dispatch(Request::getLiteralURI(), Request::getAction(), Request::getID());
-?>

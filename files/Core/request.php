@@ -15,7 +15,6 @@ class Request
     }
     public static function setURI($_uri) {
         self::$_uri = trim($_uri, '/');
-
         $parts = explode('/', $_uri);
 
         //Removes double slashes
