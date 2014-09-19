@@ -148,13 +148,15 @@ class Controller_Admin_Users extends Controller_Admin
             }
             $groups = DBPermissions::getGroups();
             $s_group = $this->select();
-            foreach ($groups as $group)
+            foreach ($groups as $group) {
                 $s_group->option($group['pe_id'], $group['pe_name']);
+            }
 
             $skupiny = DBSkupiny::get();
             $s_skupina = new SelectHelper();
-            foreach ($skupiny as $skupina)
+            foreach ($skupiny as $skupina) {
                 $s_skupina->option($skupina['s_id'], $skupina['s_name']);
+            }
 
             foreach ($users as &$row) {
                 $new_data = array(
@@ -181,7 +183,9 @@ class Controller_Admin_Users extends Controller_Admin
                 $data = DBUser::getUserData($id);
 
                 DBUser::confirmUser(
-                    $id, post($id . '-group'), post($id . '-skupina'),
+                    $id,
+                    post($id . '-group'),
+                    post($id . '-skupina'),
                     post($id . '-dancer') ? 1 : 0
                 );
                 Mailer::registrationConfirmNotice($data['u_email'], $data['u_login']);

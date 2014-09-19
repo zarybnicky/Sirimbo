@@ -3,11 +3,11 @@ RewriteEngine On
 RewriteCond %{REQUEST_URI} !^/index.php [NC]
 RewriteCond %{REQUEST_URI} ^/(.+)$
 RewriteCond %{DOCUMENT_ROOT}/public/%1 -f
-RewriteRule ^(.*)$ /public/%1 [L,QSA]
+RewriteRule ^(.*)$ /public/%1 [L]
 
 RewriteCond %{REQUEST_URI} !^/public/.* [NC]
 RewriteCond %{REQUEST_URI} !^/stats/.* [NC]
 RewriteCond %{REQUEST_URI} !^/test.html [NC]
 RewriteCond %{REQUEST_URI} !^/test_oklubu.html [NC]
 RewriteCond $1 !^index\.php [NC]
-RewriteRule ^(.*)$ /index.php [NC,L,QSA]
+RewriteRule ^(.*)$ /index.php [NC,L]
