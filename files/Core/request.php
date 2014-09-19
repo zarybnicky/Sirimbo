@@ -14,6 +14,8 @@ class Request
         self::$_default = $_default;
     }
     public static function setURI($_uri) {
+        $_uri = explode('?', $_uri)[0];
+
         self::$_uri = trim($_uri, '/');
         $parts = explode('/', $_uri);
 
