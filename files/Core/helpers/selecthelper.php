@@ -69,12 +69,14 @@ class SelectHelper
     function __toString() {
         return $this->render();
     }
+
     function render() {
         $out = '<select name="' . $this->_name . '">' . "\n";
         if (!empty($this->_options)) {
             $selected = $this->_get ? get($this->_name) : post($this->_name);
-            if ($selected === null)
+            if ($selected === null) {
                 $selected = $this->_value;
+            }
             foreach ($this->_options as $value => $name) {
                 $out .= '<option value="' . $value . '"' .
                     ($selected == $value ? ' selected="selected"' : '') .
@@ -86,4 +88,3 @@ class SelectHelper
         return $out;
     }
 }
-?>

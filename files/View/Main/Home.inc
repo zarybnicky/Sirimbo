@@ -1,30 +1,42 @@
-<?php notice($this->redirect()->getMessage()); ?>
+<?php echo $this->clanky()->number(5)->highlights(true);?>
 
-<div style="width:710px;">
+<div class="container">
+  <?php notice($this->redirect()->getMessage()); ?>
 
-<?php echo $this->clanky()->number(5)->slideBox(true);?>
-<br/>
-<div style="float:right;">
-    <div style="text-align:left;margin: 0 auto;">
-        <?php echo $this->zpravy()->number(20);?>
-    </div><br/><br/>
+  <?php echo $this->zpravy()->number(10);?>
+  <!-- Dodat "vice zde >>" na konec boxu -->
 
-    <span class="little">Podporuje nás:</span>
+  <div class="container-third">
+    <div class="widget">
+      <div class="widget-title">Videa z posledních soutěží</div>
+      <div class="widget-content">
+        Videa...
+      </div>
+    </div>
+  </div>
 
-    <div style="text-align:center;"><a href="http://www.kr-olomoucky.cz/" target="_blank">
-        <img alt="Olomoucký kraj" src="/style/logo-kraj.png" />
-    </a></div>
-    <div style="text-align:center;"><a href="http://www.olomouc.eu/" target="_blank">
-        <img alt="Město Olomouc" src="/style/logo-olomouc.jpg" />
-    </a></div>
-    <br/>
-    <span class="little" style="line-height:200%;">Mediální partner:<br/></span>
-
-    <iframe src="http://poutaky.denik.cz/olomoucky.denik.cz-300x300-zpravy_region.html"
-        style="width:300px;height:300px;border:0;overflow:auto;"></iframe>
+  <div class="container-third">
+    <div class="widget">
+      <div class="widget-title">O klubu</div>
+      <div class="widget-content">
+        <p>
+          <b>TK Olymp Olomouc</b> je tradiční taneční klub zabývající se výchovou
+          standardních a latinskoamerických tanečníků. V novém tisíciletí
+          patří mezi nejúspěšnější české kluby. Naše páry pravidelně sbírají
+          úspěchy v České republice i na mezinárodním poli.
+        </p>
+        <p>
+          Nabízíme atraktivní volnočasovou aktivitu dětem, kvalitní zázemí
+          sportovním tanečníkům a příjemné prostředí pro všechny, co mají
+          rádi tanec.
+        </p>
+        <div style="text-align:right;font-size:85%;">
+          <a href="#">více zde &raquo;</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-<div style="margin-right:305px;">
-<?php echo $this->clanky()->number(9)->offset(5)->slideBox(false);?>
-</div>
-
+<div class="container">
+  <?php echo $this->clanky()->number(9)->offset(5)->highlights(false);?>
 </div>

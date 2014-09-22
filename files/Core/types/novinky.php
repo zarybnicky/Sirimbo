@@ -81,18 +81,24 @@ class Novinky
         return $this;
     }
 
-    function add($_) {
+    function add() {
         $this->_insert('add', func_get_args());
-    } function edit($_) {
+    }
+    function edit() {
         $this->_insert('edit', func_get_args());
-    } function remove($_) {
+    }
+    function remove() {
         $this->_insert('remove', func_get_args());
     }
 
     private function _insert($action, $parameters) {
-        $format = is_array(self::$_format[$this->_current]) ? self::$_format[$this->_current][$action] : self::$_format[$this->_current];
-        if ($format === null)
+        $format = is_array(self::$_format[$this->_current]) ?
+            self::$_format[$this->_current][$action] :
+            self::$_format[$this->_current];
+
+        if ($format === null) {
             return;
+        }
 
         $text = call_user_func_array('sprintf', array_merge(array($format), $parameters));
         DBNovinky::addNovinka($this->_user, $text);

@@ -97,6 +97,11 @@ strong { font-weight: bold; }
     font-size: 90%;
     background: white;
 }
+.widget-content {
+    border: 1px solid #ccc;
+    padding: 7px;
+    background-color: white;
+}
 
 /* Top black block */
 #top {
@@ -229,12 +234,6 @@ strong { font-weight: bold; }
     display:block !important;
 }
 
-#about-box {
-    border: 1px solid #ccc;
-    padding: 7px;
-    background-color: white;
-}
-
 /* Highlights banner */
 .highlights {
     margin-bottom: 20px;
@@ -329,12 +328,8 @@ strong { font-weight: bold; }
 /* Results container */
 .results {
     margin: 0;
-    position: relative;
 }
 .results .competition {
-    border: 1px solid #ccc;
-    background: white;
-    padding: 7px;
     margin-top: 5px;
 }
 .results .competition ul {
@@ -395,4 +390,10 @@ strong { font-weight: bold; }
 }
 .article-small .desc {
 
+}
+
+/* General classes */
+.scroll-y {
+    overflow-y: scroll;
+    height: 400px;
 }

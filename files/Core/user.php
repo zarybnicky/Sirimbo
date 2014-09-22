@@ -228,9 +228,7 @@ class User
     }
 
     public static function isLogged() {
-        if (isset($_SESSION["login"]) && $_SESSION["login"] === 1)
-            return true;
-        return false;
+        return isset($_SESSION["login"]) && $_SESSION["login"] === 1;
     }
 
     public static function register($login, $pass, $name, $surname, $pohlavi, $email, $telefon,

@@ -17,22 +17,40 @@ class ZpravyHelper
         return $this;
     }
     public function number($n = null) {
-        if ($n !== null)
+        if ($n !== null) {
             $this->_number = $n;
+        }
         return $this;
     }
     public function render() {
-        if ($this->_zpravy === null)
+        if ($this->_zpravy === null) {
             $this->_zpravy = DBAktuality::getAktuality(AKTUALITY_KRATKE);
-        if ($this->_number > count($this->_zpravy))
+        }
+        if ($this->_number > count($this->_zpravy)) {
             $this->_number = count($this->_zpravy);
+        }
 
-        $out = '<div class="zpravy" style="width:250px;padding:5px;height:396px;border:1px solid #FFB030;border-radius:15px;">';
-        $out .= '<div class="h_section">Krátké zprávy</div>';
+        $data = array_map(
+            function ($val) {
+                return array(
+                    'text' => $val['at_text']
+                );
+            },
+            $this->_zpravy
+        );
+
+        $r = new Renderer();
+        return $r->render(
+            'files/View/Helper/Zpravy.inc',
+            array('data' => $data)
+        );
+
+/*
+        $out = '<div class="zpravy">';
         $out .= '<div style="overflow-y:scroll;padding:4px;height:345px;">';
-        if ($this->_number === 0)
+        if ($this->_number === 0) {
             $out .= '<div class="notice">Žádné zprávy</div>';
-        else
+        } else {
             for($i = 0; $i < $this->_number; $i++) {
                 if (!isset($this->_zpravy[$i]))
                     continue;
@@ -46,10 +64,12 @@ class ZpravyHelper
                 if (isset($this->_zpravy[$i + 1]))
                     $out .= '<hr/>';
             }
+        }
         $out .= '</div>';
         $out .= '</div>';
 
         return $out;
+*/
     }
     public function __toString()  {
         return $this->render();

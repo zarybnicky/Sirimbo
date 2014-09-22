@@ -1,7 +1,5 @@
 <?php
-$real_name = realpath(basename($_SERVER['SCRIPT_NAME']));
-$_SERVER['DOCUMENT_ROOT'] = substr($real_name, 0, strpos($real_name, basename($_SERVER['SCRIPT_NAME'])) - 1);
-unset($real_name);
+$_SERVER['DOCUMENT_ROOT'] = implode(DIRECTORY_SEPARATOR, array_slice(explode(DIRECTORY_SEPARATOR, dirname(__FILE__)), 0, -2));
 
 define('ROOT', $_SERVER['DOCUMENT_ROOT']);
 define('FILES', ROOT . DIRECTORY_SEPARATOR . 'files');

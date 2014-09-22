@@ -4,7 +4,7 @@ class ClankyHelper
     private $_clanky;
     private $_offset;
     private $_number;
-    private $_isSlideBox;
+    private $_highlights;
 
     public function clanky() {
         $this->_defaultValues();
@@ -31,16 +31,51 @@ class ClankyHelper
             $this->_number = $n;
         return $this;
     }
-    public function slideBox($s = null) {
+    public function highlights($s = null) {
         if ($s !== null)
-            $this->_isSlideBox = $s;
+            $this->_highlights = $s;
         return $this;
     }
     public function render() {
-        if ($this->_clanky === null)
+        if ($this->_clanky === null) {
             $this->_clanky = DBAktuality::getAktuality(AKTUALITY_CLANKY);
-        if (($this->_number + $this->_offset) > count($this->_clanky))
+        }
+        if (($this->_number + $this->_offset) > count($this->_clanky)) {
             $this->_number = count($this->_clanky) - $this->_offset;
+        }
+
+        $data = array_map(
+            function ($val) {
+                list($date, $time) = explode(' ', $val['at_timestamp']);
+                $photo = DBGalerie::getSingleFoto($val['at_foto_main']);
+                $photo_uri = $photo ? $photo['gf_path'] : '';
+
+                return array(
+                    'uri'  => '/aktualne/' . $val['at_id'],
+                    'name' => $val['at_jmeno'],
+                    'date' => formatDate($date),
+                    'description' => $val['at_preview'],
+                    'title_photo_uri' => 'galerie/' . $photo_uri,
+                    'category' => 'Články'
+                    //FIXME: Články - kategorie (tagy?)
+                );
+            },
+            $this->_clanky
+        );
+
+        if (false) {//$this->_highlights) {
+            $template = 'files/View/Helper/Highlights.inc';
+        } else {
+            $template = 'files/View/Helper/Clanky.inc';
+        }
+
+        $r = new Renderer();
+        return $r->render(
+            $template,
+            array('data' => $data)
+        );
+
+/*
         $out = '';
 
         if (!$this->_isSlideBox) {
@@ -98,6 +133,7 @@ class ClankyHelper
             <?php
         }
         return $out;
+*/
     }
     public function __toString()  {
         return $this->render();
