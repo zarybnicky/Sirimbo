@@ -2,36 +2,37 @@
 require_once 'files/Controller/Admin/Aktuality.php';
 class Controller_Admin_Aktuality_Foto extends Controller_Admin_Aktuality
 {
-    function __construct() {
+    public function __construct() {
         Permissions::checkError('aktuality', P_OWNED);
     }
-    function view($id = null) {
+
+    public function view($id = null) {
         if (!($article = DBAktuality::getSingleAktualita($id))) {
             $this->redirect('/admin/aktuality', 'Takový článek neexistuje');
         }
-
         if (empty($_POST) || !post('foto')) {
-            if (get('dir_id') === null) {
-                if ($article['at_foto'] != 0) {
-                    $this->redirect('/admin/aktuality/foto/' . $id . '?dir_id=' . $article['at_foto']);
+            if (get('dir') === null) {
+                if ($article['at_foto']) {
+                    $this->redirect('/admin/aktuality/foto/' . $id . '?dir=' . $article['at_foto']);
                 } else {
-                    get('dir_id', 0);
-                    $dir = array('gd_name' => 'Hlavní');
+                    get('dir', 0);
                 }
-            } elseif (!($dir = DBGalerie::getSingleDir(get('dir_id')))) {
-                $this->redirect('/admin/aktuality/foto/' . $id . '?dir_id=0', 'Taková složka neexistuje');
+            }
+
+            if (!($dir = DBGalerie::getSingleDir(get('dir')))) {
+                $this->redirect('/admin/aktuality/foto/' . $id . '?dir=0', 'Taková složka neexistuje');
                 return;
             }
 
-            $photos = DBGalerie::getFotky(get('dir_id'));
-
-            foreach ($photos as &$row) {
-                $new_row = array(
-                    'id' => $row['gf_id'],
-                    'src' => '/galerie/thumbnails/' . $row['gf_path']
-                );
-                $row = $new_row;
-            }
+            $photos = array_map(
+                function ($item) {
+                    return array(
+                        'id' => $item['gf_id'],
+                        'src' => '/galerie/thumbnails/' . $item['gf_path']
+                    );
+                },
+                DBGalerie::getFotky(get('dir'))
+            );
 
             $dirs = DBGalerie::getDirs(true, true);
             foreach ($dirs as $item) {
@@ -49,24 +50,14 @@ class Controller_Admin_Aktuality_Foto extends Controller_Admin_Aktuality
             );
             return;
         }
+        if (get('dir') === null) {
+            get('dir', 0);
+        }
 
         DBAktuality::editAktualita(
             $id, $article['at_kat'], $article['at_jmeno'],
-            $article['at_text'], $article['at_preview'], get('dir_id'), post('foto')
+            $article['at_text'], $article['at_preview'], get('dir'), post('foto')
         );
-        $n = new Novinky(User::getUserID());
-        if (get('notify')) {
-            switch($article['at_kat']) {
-            	case AKTUALITY_VIDEA:
-            	    $n->video()->add('/aktualne/' . $id, $article['at_jmeno']);
-            	    break;
-            	case AKTUALITY_CLANKY:
-            	    $n->clanek()->add('/aktualne/' . $id, $article['at_jmeno']);
-            	    break;
-            }
-        }
-
         $this->redirect('/admin/aktuality', 'Článek upraven.');
     }
 }
-?>
