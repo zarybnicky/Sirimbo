@@ -12,10 +12,10 @@ class Controller_Member extends Controller_Abstract
         $data = array_map(
             function($item) {
                 return array(
-                    'id' => $row['no_id'],
-                    'text' => $row['no_text'],
-                    'user' => $row['u_jmeno'] . ' ' . $row['u_prijmeni'],
-                    'timestamp' => formatTimestamp($row['no_timestamp'])
+                    'id' => $item['no_id'],
+                    'text' => $item['no_text'],
+                    'user' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
+                    'timestamp' => formatTimestamp($item['no_timestamp'])
                 );
             },
             DBNovinky::getLastNovinky(NOVINKY_COUNT)

@@ -9,6 +9,10 @@ class NoticeHelper {
     }
 
     public function render() {
+        if (!$this->text) {
+            return '';
+        }
+
         return '<div class="notice">' . $this->text . '</div>' . "\n";
     }
 

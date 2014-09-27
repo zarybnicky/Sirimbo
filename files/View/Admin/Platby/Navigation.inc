@@ -43,4 +43,3 @@ function _getItem($name, $href) {
     <?php endif;?>
 </ul>
 <?php echo $this->notice($this->redirect()->getMessage());?>
-</div>
