@@ -392,6 +392,33 @@ strong { font-weight: bold; }
 
 }
 
+/* Gallery classes */
+.foto_full {
+    display:block;
+    margin:3px;
+}
+.foto_full img {
+
+}
+.foto_preview {
+    margin:6px;
+    float:left;
+}
+.foto_preview_in {
+    display:table-cell;
+    vertical-align:middle;
+    width:150px;
+    height:150px;
+}
+.foto_preview_in img {
+    display:block;
+    margin:auto;
+}
+.foto_desc {
+    text-align:center;
+    padding:3px;
+}
+
 /* General classes */
 .scroll-y {
     overflow-y: scroll;

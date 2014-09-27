@@ -26,7 +26,6 @@ $items[] = array('af_id' => 1, 'af_path' => './galerie/xichty treneru/jerry.jpg'
 $items[] = array('af_id' => 2, 'af_path' => './galerie/xichty treneru/jerry.jpg');
 $items[] = array('af_id' => 3, 'af_path' => './galerie/xichty treneru/jerry.jpg');
 
-//DisplayAktuality::viewClanek($data, true);
 if (empty($items)) {
     notice('Žádné vybrané fotky');
     return;

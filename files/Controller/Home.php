@@ -8,7 +8,6 @@ class Controller_Home extends Controller_Abstract
             }
             $this->redirect('/home');
         }
-
         $this->render('files/View/Main/Home.inc');
     }
     function sidebar() { }

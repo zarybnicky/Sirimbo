@@ -2,20 +2,20 @@
 class Controller_Aktualne extends Controller_Abstract
 {
     function view($id = null) {
-        if ($id && ($data = DBAktuality::getSingleAktualita($id))) {
-            $this->render(
-                'files/View/Main/Aktuality/Single.inc',
-                array(
-                    'id'        => $data['at_id'],
-                    'jmeno'     => $data['at_jmeno'],
-                    'timestamp' => $data['at_timestamp_add'],
-                    'canEdit'   => Permissions::check('aktuality', P_OWNED, $data['at_kdo']),
-                    'text'      => stripslashes(nl2br($data['at_text']))
-                )
-            );
-            return;
+        if (!$id || !($data = DBAktuality::getSingleAktualita($id))) {
+            $this->redirect('/aktualne/posledni');
         }
-        $this->redirect('/aktualne/posledni');
+        $this->render(
+            'files/View/Main/Aktuality/Single.inc',
+            array(
+                'id'        => $data['at_id'],
+                'jmeno'     => $data['at_jmeno'],
+                'timestamp' => $data['at_timestamp_add'],
+                'canEdit'   => Permissions::check('aktuality', P_OWNED, $data['at_kdo']),
+                'text'      => stripslashes(nl2br($data['at_text']))
+            )
+        );
+        return;
     }
     function posledni($id = null) {
         $this->_aktualne("Nejnovější články");
@@ -51,16 +51,18 @@ class Controller_Aktualne extends Controller_Abstract
             );
             return;
         }
-        foreach ($data as &$row) {
-            $new_row = array(
-                'id'         => $row['at_id'],
-                'jmeno'      => $row['at_jmeno'],
-                'timestamp'  => $row['at_timestamp_add'],
-                'canEdit'    => Permissions::check('aktuality', P_OWNED, $row['at_kdo']),
-                'preview'    => $type == AKTUALITY_VIDEA ? '' : stripslashes(nl2br($row['at_preview']))
-            );
-            $row = $new_row;
-        }
+        $data = array_map(
+            function($item) {
+                return array(
+                    'id'        => $item['at_id'],
+                    'jmeno'     => $item['at_jmeno'],
+                    'timestamp' => $item['at_timestamp_add'],
+                    'canEdit'   => Permissions::check('aktuality', P_OWNED, $item['at_kdo']),
+                    'preview'   => stripslashes(nl2br($row['at_preview']))
+                );
+            },
+            $data
+        );
         $this->render(
             'files/View/Main/Aktuality/Overview.inc',
             array(
@@ -70,4 +72,3 @@ class Controller_Aktualne extends Controller_Abstract
         );
     }
 }
-?>

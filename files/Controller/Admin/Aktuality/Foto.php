@@ -13,14 +13,19 @@ class Controller_Admin_Aktuality_Foto extends Controller_Admin_Aktuality
         if (empty($_POST) || !post('foto')) {
             if (get('dir') === null) {
                 if ($article['at_foto']) {
-                    $this->redirect('/admin/aktuality/foto/' . $id . '?dir=' . $article['at_foto']);
+                    $this->redirect(
+                        '/admin/aktuality/foto/' . $id . '?dir=' . $article['at_foto']
+                    );
                 } else {
                     get('dir', 0);
                 }
             }
 
             if (!($dir = DBGalerie::getSingleDir(get('dir')))) {
-                $this->redirect('/admin/aktuality/foto/' . $id . '?dir=0', 'Taková složka neexistuje');
+                $this->redirect(
+                    '/admin/aktuality/foto/' . $id . '?dir=0',
+                    'Taková složka neexistuje'
+                );
                 return;
             }
 

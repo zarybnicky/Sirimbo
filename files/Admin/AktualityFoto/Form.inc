@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Správa článků</h1>
 
 <?php notice($this->redirect()->getMessage());
@@ -13,8 +14,8 @@ echo '</form>';
 echo '<form action="" method="post">';
 
 foreach ($this->photos as $item) {
-    echo '<div class="f_preview">';
-    echo '<div class="f_img">';
+    echo '<div class="foto_preview">';
+    echo '<div class="foto_preview_in">';
     echo '<img alt="' . $item['id'] . '" src="' . $item['src'] . '" />';
     echo '</div>';
     echo '<div class="foto_desc">';
@@ -23,7 +24,8 @@ foreach ($this->photos as $item) {
     echo '</div>';
 }
 echo '<div style="clear:both">';
-echo '<button type="submit">Potvrdit</button>';
+echo $this->submit('Potvrdit');
 echo '<a href="/admin/aktuality">Zpět</a>';
 echo '</div>';
 echo '</form>';
+echo '</div>';

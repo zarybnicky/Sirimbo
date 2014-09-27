@@ -4,38 +4,45 @@ class Controller_Fotogalerie extends Controller_Abstract
     function view($id = null) {
         if ($id === null) {
             $id = 0;
-            $data = array('gd_name' => '');
-        } elseif (!($data = DBGalerie::getSingleDir($id))) {
+            $dir = array('gd_name' => '');
+        } elseif (!($dir = DBGalerie::getSingleDir($id))) {
             $this->redirect('/fotogalerie', 'Taková složka neexistuje');
         }
 
         $photos = DBGalerie::getFotky($id);
+
         if (empty($photos)) {
             $this->render('files/View/Empty.inc', array(
-                'nadpis' => $data['gd_name'],
+                'nadpis' => $dir['gd_name'],
                 'notice' => 'Žádné fotky k dispozici.'
             ));
             return;
         }
-        foreach ($photos as &$row) {
-            $new_row = array(
-                'id' => $row['gf_id'],
-                'src' => '/galerie/thumbnails/' . $row['gf_path'],
-                'href' => '/' . Request::getURI() . '/foto/' . $row['gf_id']
-            );
-            $row = $new_row;
-        }
+
+        $photos = array_map(
+            function($item) {
+                return array(
+                    'id' => $item['gf_id'],
+                    'src' => '/galerie/thumbnails/' . $item['gf_path'],
+                    'href' => '/' . Request::getURI() . '/foto/' . $item['gf_id']
+                );
+            },
+            $photos
+        );
+
         $this->render(
             'files/View/Main/Fotogalerie/Overview.inc',
             array(
-                'nadpis' => $data['gd_name'],
+                'nadpis' => $dir['gd_name'],
                 'photos' => $photos
             )
         );
     }
+
     function foto($id = null) {
-        if (!$id || !($data = DBGalerie::getSingleFoto($id)))
+        if (!$id || !($data = DBGalerie::getSingleFoto($id))) {
             $this->redirect('/fotogalerie', 'Taková fotka neexistuje');
+        }
 
         $parent_dir = DBGalerie::getFotky($data['gf_id_rodic']);
         foreach ($parent_dir as $key => $foto) {
@@ -58,7 +65,6 @@ class Controller_Fotogalerie extends Controller_Abstract
                 'nextURI'    => $hasNext ? $parent_dir[$current + 1]['gf_id'] : '',
             )
         );
-        return;
     }
     function sidebar() {
         $dirs = DBGalerie::getDirs(true, true);

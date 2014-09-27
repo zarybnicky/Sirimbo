@@ -4,20 +4,22 @@ class Controller_Member extends Controller_Abstract
     function __construct() {
         Permissions::checkError('nastenka', P_VIEW);
     }
+
     function view($id = null)  {
         if (isset($_SESSION['zaplaceno_text']))
             $this->redirect()->setMessage($_SESSION['zaplaceno_text']);
 
-        $data = DBNovinky::getLastNovinky(NOVINKY_COUNT);
-        foreach ($data as &$row) {
-            $new_row = array(
-                'id' => $row['no_id'],
-                'text' => $row['no_text'],
-                'user' => $row['u_jmeno'] . ' ' . $row['u_prijmeni'],
-                'timestamp' => formatTimestamp($row['no_timestamp'])
-            );
-            $row = $new_row;
-        }
+        $data = array_map(
+            function($item) {
+                return array(
+                    'id' => $row['no_id'],
+                    'text' => $row['no_text'],
+                    'user' => $row['u_jmeno'] . ' ' . $row['u_prijmeni'],
+                    'timestamp' => formatTimestamp($row['no_timestamp'])
+                );
+            },
+            DBNovinky::getLastNovinky(NOVINKY_COUNT)
+        );
         $this->render(
             'files/View/Member/Home.inc',
             array(

@@ -28,4 +28,3 @@ foreach ($items as $item) {
     echo $item['gf_path'], '<br/>';
 }
 echo '</form>';
-?>

@@ -1,4 +1,4 @@
-<?php echo $this->clanky()->number(5)->highlights(true);?>
+<?php echo $this->clanky()->number(3)->highlights(true);?>
 
 <div class="container">
   <?php notice($this->redirect()->getMessage()); ?>
