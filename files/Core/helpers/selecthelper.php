@@ -13,6 +13,7 @@ class SelectHelper
             return $this->name($n);
         return $this;
     }
+
     private function _defaultValues() {
         $this->_name = '';
         $this->_value = null;
@@ -25,11 +26,13 @@ class SelectHelper
             $this->_name = $name;
         return $this;
     }
+
     function value($value = null) {
         if ($value)
             $this->_value = $value;
         return $this;
     }
+
     function option($value, $name = null, $overwrite = false) {
         if ($overwrite)
             $this->_options = array();
@@ -40,6 +43,7 @@ class SelectHelper
             $this->_options[$value] = $value;
         return $this;
     }
+
     function options($options = array(), $overwrite = false, $literal = false) {
         if ($overwrite === true)
             $this->_options = array();
@@ -57,10 +61,12 @@ class SelectHelper
         }
         return $this;
     }
+
     function get($get = true) {
         $this->_get = (bool) $get;
         return $this;
     }
+
     function post($post = true) {
         $this->_get = !(bool) $post;
         return $this;

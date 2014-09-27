@@ -28,8 +28,8 @@ notice($this->redirect()->getMessage());
     </tr><tr>
         <td>Pohlaví (*): </td>
         <td>
-            <label><?php echo getRadio('pohlavi', 'm');?>Muž</label>&nbsp;
-            <label><?php echo getRadio('pohlavi', 'f');?>Žena</label>
+            <label><?php echo $this->radio('pohlavi', 'm');?>Muž</label>&nbsp;
+            <label><?php echo $this->radio('pohlavi', 'f');?>Žena</label>
         </td>
         <td></td>
     </tr><tr>
@@ -78,7 +78,7 @@ notice($this->redirect()->getMessage());
         <td><?php
         foreach ($this->skupiny as $item) {
             echo getColorBox($item['color'], $item['popis']);
-            echo '<label>', getRadio('skupina', $item['id']), $item['popis'], '</label><br/>';
+            echo '<label>', $this->radio('skupina', $item['id']), $item['popis'], '</label><br/>';
         }?></td>
         <td></td>
     </tr><tr>

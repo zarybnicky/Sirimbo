@@ -36,7 +36,7 @@ foreach ($items as $item) {
     echo '<div class="image">';
     echo '<img src="', str_replace('./galerie', '/galerie/thumbnails', $item['af_path']), '" alt="', $$item['af_id'], '" />';
     echo '</div>';
-    echo '<label>', getRadio('hlavni', $item['af_id'], $data['at_foto_main']), ' Hlavní</label>';
+    echo '<label>', $this->radio('hlavni', $item['af_id'])->defaultState($data['at_foto_main']), ' Hlavní</label>';
     echo '</div>';
 }
 echo '<div style="clear:both;"></div>'

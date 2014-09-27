@@ -40,15 +40,15 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
         $data = array();
         foreach ($parser->headers() as $key => $name) {
             $data[] = array(
-                    'column' => $name,
-                    'specific' => getRadio('specific', $name, $name == $specific),
-                    'variable' => getRadio('variable', $name, $name == $variable),
-                    'date' => getRadio('date', $name, $name == $date),
-                    'amount' => getRadio('amount', $name, $name == $amount)
+                'column' => $name,
+                'specific' => $this->radio('specific', $name)->defaultState($name == $specific),
+                'variable' => $this->radio('variable', $name)->defaultState($name == $variable),
+                'date' => $this->radio('date', $name)->defaultState($name == $date),
+                'amount' => $this->radio('amount', $name)->defaultState($name == $amount)
             );
         }
         $this->render('files/View/Admin/Platby/RawColumnSelect.inc', array(
-                'data' => $data
+            'data' => $data
         ));
     }
     private function _getParser($path) {

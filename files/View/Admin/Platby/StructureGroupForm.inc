@@ -5,8 +5,8 @@ $mainForm = (new TableHelper())->table()
     ->data(array(
         array(
                 'desc' => 'Typ:',
-                'value' => '<label>' . getRadio('type', '0', true) . 'Běžné platby</label><br/>' .
-                    '<label>' . getRadio('type', '1') . 'Členské příspěvky</label>'
+                'value' => '<label>' . $this->radio('type', '0')->defaultState(true) . 'Běžné platby</label><br/>' .
+                    '<label>' . $this->radio('type', '1') . 'Členské příspěvky</label>'
         ), array(
                 'desc' => 'Jméno:',
                 'value' => '<input type="text" name="name" value="' . post('name') . '"/>'

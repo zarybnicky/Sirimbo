@@ -17,10 +17,9 @@ foreach ($this->photos as $item) {
     echo '<div class="f_img">';
     echo '<img alt="' . $item['id'] . '" src="' . $item['src'] . '" />';
     echo '</div>';
-    echo '<div class="f_popis">';
-    echo getRadio('foto', $item['id']);
-    echo '</div>';
-    echo '<br />';
+    echo '<div class="foto_desc">';
+    echo $this->radio('foto', $item['id']);
+    echo '<br/><br/></div>';
     echo '</div>';
 }
 echo '<div style="clear:both">';

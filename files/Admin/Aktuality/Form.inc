@@ -14,9 +14,9 @@ notice($this->redirect()->getMessage());
     </tr><tr>
         <td>Kategorie (*): </td>
         <td>
-            <label><?php echo getRadio('kat', 1);?>Články</label>&nbsp;
-            <label><?php echo getRadio('kat', 2);?>Videa</label>&nbsp;
-            <label><?php echo getRadio('kat', 3);?>Krátké zprávy</label>
+            <label><?php echo $this->radio('kat', 1);?>Články</label>&nbsp;
+            <label><?php echo $this->radio('kat', 2);?>Videa</label>&nbsp;
+            <label><?php echo $this->radio('kat', 3);?>Krátké zprávy</label>
         </td>
         <td></td>
     </tr><tr>

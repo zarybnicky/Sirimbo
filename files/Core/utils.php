@@ -34,12 +34,15 @@ function phpGlobal(&$array, $field, $value) {
 function post($field = null, $value = null) {
     return phpGlobal($_POST, $field, $value);
 }
+
 function get($field = null, $value = null) {
     return phpGlobal($_GET, $field, $value);
 }
+
 function session($field = null, $value = null) {
     return phpGlobal($_SESSION, $field, $value);
 }
+
 function server($field = null, $value = null) {
     return phpGlobal($_SERVER, $field, $value);
 }
@@ -119,17 +122,6 @@ function echoTaborDokumenty($list_name, $kats) {
         }
     }
     echo '</select>', "\n";
-}
-function getCheckbox($name, $value = '', $default = false, $get = false, $readonly = false) {
-    if ($value === '')
-        $value = $name;
-    $checked = (($get == true) ?
-        ((get($name) != false) ? true : false) :
-        ((post($name) != false) ? true : false));
-    if (!$checked)
-        $checked = (bool) $default;
-    return '<input type="checkbox" name="' . $name . '" value="' . $value . '"' .
-        ($checked ? ' checked="checked"' : '') . ($readonly ? ' readonly="readonly"' : '') . '/>';
 }
 
 function getRadio($name, $value, $default = false, $get = false, $readonly = false) {

@@ -22,7 +22,7 @@ notice($this->redirect()->getMessage());
         foreach (Settings::$permissionLevels as $key => $level_name) {
             echo '<td>';
             if (isset($item[$key])) {
-                echo '<label>', getRadio($name, $key, $item['default'] == $key), $level_name, '</label>';
+                echo '<label>', $this->radio($name, $key)->defaultState($item['default'] == $key), $level_name, '</label>';
             }
             echo '</td>';
         }
