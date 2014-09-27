@@ -1,7 +1,7 @@
 <h1>Správa anket</h1>
 <?php
 echo '<h2>', (Request::getAction() == 'add' ? 'Přidat anketu' : 'Upravit anketu'), '</h2>';
-notice($this->redirect()->getMessage());
+echo $this->notice($this->redirect()->getMessage());
 ?>
 <form action="" method="post">
 <button type="submit" name="action" value="enter" style="display:none;">Enter</button>

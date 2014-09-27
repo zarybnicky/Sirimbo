@@ -1,4 +1,4 @@
-<?php notice($this->redirect()->getMessage());?>
+<?php echo $this->notice($this->redirect()->getMessage());?>
 
 <p style="text-align:center;">Pokud jste zapomněli heslo, pošleme Vám nové na e-mail, který
 jste zadali při registraci</p>

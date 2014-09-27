@@ -1,9 +1,9 @@
 <h1>Správa dokumentů</h1>
 <?php
-notice($this->redirect()->getMessage());
+echo $this->notice($this->redirect()->getMessage());
 
 if (!is_array(get('u')))
-    notice('Žádné dokumenty');
+    echo $this->notice('Žádné dokumenty');
 ?>
 <form action="" method="POST">
 Opravdu chcete odstranit dokumenty:<br/><br/>

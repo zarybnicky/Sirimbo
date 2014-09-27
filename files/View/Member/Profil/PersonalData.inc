@@ -1,6 +1,6 @@
 <h1>Profil</h1>
 <h2>Osobní údaje</h2>
-<?php notice($this->redirect()->getMessage());?>
+<?php echo $this->notice($this->redirect()->getMessage());?>
 <form action="" method="POST">
 <table>
     <tr>

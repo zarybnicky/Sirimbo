@@ -1,7 +1,7 @@
 <h1>Správa rozpisů</h1>
 <?php
 echo '<h2>', ($this->action == 'add' ? 'Přidat rozpis' : 'Upravit rozpis'), '</h2>';
-notice($this->redirect()->getMessage());
+echo $this->notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST">
 <table>

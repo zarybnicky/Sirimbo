@@ -36,4 +36,4 @@ if (TISK) {
         <li><?php _getItem('Seznam skupin', 'clenove/skupiny');?>)</li>
     </ul>
 </div>
-<?php notice($this->redirect()->getMessage());?>
+<?php echo $this->notice($this->redirect()->getMessage());?>

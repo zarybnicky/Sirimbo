@@ -34,7 +34,7 @@ if (!empty($this->groupSelect)) {
 ?>
 <h1>Správa skupin</h1>
 <?php echo '<h2>', ($this->action == 'add' ? 'Přidat skupinu' : 'Upravit skupinu'), '</h2>';?>
-<?php notice($this->redirect()->getMessage());?>
+<?php echo $this->notice($this->redirect()->getMessage());?>
 <form action="" method="POST">
     <?php echo $mainForm;?>
     <button type="submit" name="action" value="confirm">Uložit</button>&nbsp;<a href="/admin/skupiny">Zpět</a>

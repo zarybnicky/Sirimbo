@@ -1,7 +1,7 @@
 <?php echo $this->render('files/View/Admin/Platby/Navigation.inc');?>
 <h2>Kategorie plateb</h2>
 <h3>Odstranit kategorii?</h3>
-<?php notice($this->redirect()->getMessage());?>
+<?php echo $this->notice($this->redirect()->getMessage());?>
 
 <form action="" method="POST">
 

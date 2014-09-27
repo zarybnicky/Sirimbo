@@ -1,6 +1,6 @@
 <h1>Správa fotogalerie</h1>
 <?php
-notice($this->redirect()->getMessage());
+echo $this->notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST">
 <?php
@@ -13,7 +13,7 @@ echo $this->menu()
 ?>
 <?php
 if (!count($this->files)) :
-    notice('Žádné fotky');
+    echo $this->notice('Žádné fotky');
 else :
 ?>
 

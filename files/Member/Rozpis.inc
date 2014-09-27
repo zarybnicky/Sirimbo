@@ -1,12 +1,12 @@
 <h1>Rozpis tréninků</h1>
 <?php
-notice($this->redirect()->getMessage());
+echo $this->notice($this->redirect()->getMessage());
 if (isset($f) && is_object($f))
-    notice($f->getMessages());
+    echo $this->notice($f->getMessages());
 
 $rozpis = DBRozpis::getRozpis();
 if (empty($rozpis)) {
-    notice('Žádná nabídka k dispozici');
+    echo $this->notice('Žádná nabídka k dispozici');
     return;
 }
 echo '<style type="text/css">';

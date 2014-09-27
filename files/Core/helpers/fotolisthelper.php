@@ -43,7 +43,7 @@ class FotoListHelper
     }
     function render() {
         if (!$this->_data && !($this->_data = DBGalerie::getSingleDir($this->_id))) {
-            return notice('Taková složka neexistuje', true);
+            return $this->notice('Taková složka neexistuje');
         }
         if (empty($this->_subdirs) && !$this->_selector)
             $this->_subdirs = DBGalerie::getSubdirs($this->_id);
@@ -53,7 +53,7 @@ class FotoListHelper
         $out = '<h2>' . $this->_data['gd_name'] . '</h2>';
 
         if (empty($this->_fotky) && empty($this->_subdirs)) {
-            return $out . notice('Žádné fotky', true);
+            return $out . $this->notice('Žádné fotky');
         }
         if (!$this->_selector) {
             foreach ($this->_subdirs as $item) {

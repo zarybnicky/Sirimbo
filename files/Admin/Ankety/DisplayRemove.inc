@@ -1,9 +1,9 @@
 <h1>Správa anket</h1>
 <?php
-notice($this->redirect()->getMessage());
+echo $this->notice($this->redirect()->getMessage());
 
 if (!is_array(get('u')))
-    notice('Žádné akce');
+    echo $this->notice('Žádné akce');
 ?>
 <form action="" method="POST">
 Opravdu chcete odstranit ankety:<br/><br/>

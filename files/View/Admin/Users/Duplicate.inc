@@ -1,6 +1,6 @@
 <h1>Správa uživatelů</h1>
 <h2>Duplicitní uživatelé</h2>
-<?php notice($this->redirect()->getMessage()); ?>
+<?php echo $this->notice($this->redirect()->getMessage()); ?>
 <form action="" method="POST">
 <?php
 echo $this->menu()

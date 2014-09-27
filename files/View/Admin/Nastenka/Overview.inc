@@ -1,6 +1,6 @@
 <h1>Správa nástěnky</h1>
 <?php
-notice($this->redirect()->getMessage());
+echo $this->notice($this->redirect()->getMessage());
 
 echo '<form action="" method="POST">';
 if ($this->showMenu) {
@@ -11,7 +11,7 @@ if ($this->showMenu) {
         ->content('Odstranit', 'remove', true);
 }
 if (empty($this->data)) {
-    notice('Žádné položky za toto období');
+    echo $this->notice('Žádné položky za toto období');
     return;
 }
 echo '<div style="margin-right:150px;">';

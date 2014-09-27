@@ -9,11 +9,11 @@ class Controller_Admin_Konzole extends Controller_Admin
         if (!empty($_POST) && post('code')) {
             $r = eval(stripslashes(post('code')));
             if ($r === false)
-                notice('Kód obsahuje syntaktickou chybu');
+                echo $this->notice('Kód obsahuje syntaktickou chybu');
             elseif (!empty($r))
-                notice(dump($r));
+                echo $this->notice(dump($r));
             else
-                notice('Success!');
+                echo $this->notice('Success!');
         }
         echo '<form action="' .  $_SERVER['REQUEST_URI'] . '" method="post">';
         echo 'Kód:<br/>';

@@ -1,5 +1,5 @@
 <h1>Registrace</h1>
-<?php notice($this->redirect()->getMessage());?>
+<?php echo $this->notice($this->redirect()->getMessage());?>
 
 <form action="" method="POST">
 <table>

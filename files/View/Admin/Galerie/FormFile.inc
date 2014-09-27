@@ -1,7 +1,5 @@
 <h1>Správa fotogalerie</h1>
-<?php
-notice($this->redirect()->getMessage());
-?>
+<?php echo $this->notice($this->redirect()->getMessage()); ?>
 <form action="" method="post">
 <h2>Upravit soubor</h2>
 <table>

@@ -2,7 +2,7 @@
 <h2>Změna třídy a bodů</h2>
 <?php
 echo $this->partnerRequest()->getAll();
-notice($this->redirect()->getMessage());
+echo $this->notice($this->redirect()->getMessage());
 ?>
 <form action="" method="post">
 <table>

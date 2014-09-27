@@ -1,6 +1,6 @@
 <h1>Správa dokumentů</h1>
 <?php
-notice($this->redirect()->getMessage());
+echo $this->notice($this->redirect()->getMessage());
 
 if (isset($this->form)) {
     echo '<form action="" method="POST">';

@@ -37,11 +37,11 @@ function shutdownHandler() {
         return;
     if ($error['type'] == E_ERROR || $error['type'] == E_RECOVERABLE_ERROR) {
         ob_end_clean();
+        Log::write($error['type'] . ': ' . $error['message'] . ' in ' . $error['file'] . ': ' . $error['line']);
         if (Request::getURI() == 'error') {
             Log::write("Recursive error message!");
             die('Fatal error: Rekurzivní smyčka přesměrování!');
         }
-        Log::write($error['type'] . ': ' . $error['message'] . ' in ' . $error['file'] . ': ' . $error['line']);
         header('Location: /error?id=script_fatal');
     }
 }

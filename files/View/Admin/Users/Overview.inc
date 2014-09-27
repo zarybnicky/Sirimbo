@@ -1,6 +1,6 @@
 <h1>Správa uživatelů</h1>
 <?php
-notice($this->redirect()->getMessage());
+echo $this->notice($this->redirect()->getMessage());
 
 if ($this->showMenu) {
     echo '<form action="" method="get">';
@@ -50,7 +50,7 @@ if ($this->showMenu) {
     echo $f;
 }
 if ($this->data == array()) {
-    notice('Žádní takoví uživatelé');
+    echo $this->notice('Žádní takoví uživatelé');
     return;
 }
 echo '<div style="margin-right:150px">';

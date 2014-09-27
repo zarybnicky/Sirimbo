@@ -1,6 +1,6 @@
 <h1>Správa skupin</h1>
 <?php
-notice($this->redirect()->getMessage());
+echo $this->notice($this->redirect()->getMessage());
 
 echo '<span class="big">Přidat: </span> ';
 echo '<a href="/admin/skupiny/add">kategorii</a>&nbsp;';

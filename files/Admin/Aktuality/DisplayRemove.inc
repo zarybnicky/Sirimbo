@@ -1,9 +1,9 @@
 <h1>Správa aktualit</h1>
 <?php
-notice($this->redirect()->getMessage());
+echo $this->notice($this->redirect()->getMessage());
 
 if (!is_array(get('u')))
-    notice('Žádné aktuality');
+    echo $this->notice('Žádné aktuality');
 ?>
 <form action="" method="POST">
 Opravdu chcete odstranit články:<br/><br/>

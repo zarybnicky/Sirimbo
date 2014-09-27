@@ -1,6 +1,6 @@
 <h1>Správa aktualit</h1>
 <?php
-notice($this->redirect()->getMessage());
+echo $this->notice($this->redirect()->getMessage());
 
 if (!TISK) {
     echo '<form action="" method="get">';

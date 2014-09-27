@@ -1,7 +1,7 @@
 <h1>Profil</h1>
 <?php
 echo $this->partnerRequest()->getAll();
-notice($this->redirect()->getMessage());
+echo $this->notice($this->redirect()->getMessage());
 ?>
 <?php if ($this->havePartner): ?>
     Právě tančím s: <?php echo $this->partnerFullName;?>

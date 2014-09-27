@@ -1,9 +1,9 @@
 <h1>Novinky</h1>
-<?php notice($this->redirect()->getMessage());?>
+<?php echo $this->notice($this->redirect()->getMessage());?>
 <?php echo $this->partnerRequest()->getAll(); ?>
 
 <?php if ($this->data == array()) {
-    notice('Žádné novinky');
+    echo $this->notice('Žádné novinky');
     return;
 }?>
 

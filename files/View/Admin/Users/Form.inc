@@ -1,7 +1,7 @@
 <h1>Správa uživatelů</h1>
 <?php
 echo '<h2>', ($this->action == 'add' ? 'Přidat uživatele' : 'Upravit uživatele'), '</h2>';
-notice($this->redirect()->getMessage());
+echo $this->notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST">
 <table>

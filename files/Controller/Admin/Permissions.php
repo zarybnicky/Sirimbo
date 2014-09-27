@@ -111,7 +111,7 @@ class Controller_Admin_Permissions extends Controller_Admin
             array(
                 'header' => 'Správa oprávnění',
                 'prompt' =>
-                    notice('Bude nutné přiřadit uživatelům z těchto skupin jinou skupinu!', true)
+                    $this->notice('Bude nutné přiřadit uživatelům z těchto skupin jinou skupinu!')
                     . 'Opravdu chcete odstranit uživatelské úrovně:',
                 'returnURI' => Request::getReferer(),
                 'data' => $data

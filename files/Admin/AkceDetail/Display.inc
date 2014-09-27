@@ -1,7 +1,5 @@
 <h1>Správa akcí</h1>
-<?php
-notice($this->redirect()->getMessage());
-?>
+<?php echo $this->notice($this->redirect()->getMessage()); ?>
 <form action="" method="POST" class="centerWTable">
 <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
 <?php echo $this->render('files/View/Member/Akce/Header.inc', $this->data);?>

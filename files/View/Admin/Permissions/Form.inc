@@ -1,7 +1,7 @@
 <h1>Správa oprávnění</h1>
 <?php
 echo '<h2>', ($this->action == 'add' ? 'Přidat uživatelskou skupinu' : 'Upravit uživatelskou skupinu'), '</h2>';
-notice($this->redirect()->getMessage());
+echo $this->notice($this->redirect()->getMessage());
 ?>
 <form action="" method="POST">
 <table>

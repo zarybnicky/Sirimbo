@@ -1,7 +1,5 @@
 <h1>Správa nabídky</h1>
-<?php
-notice($this->redirect()->getMessage());
-?>
+<?php echo $this->notice($this->redirect()->getMessage()); ?>
 <form action="" method="POST" class="centerWTable">
 <button type="submit" name="action" value="add" style="display:none;">Enter</button>
 <div class="n_wrapper">

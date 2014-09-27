@@ -1,6 +1,6 @@
 <h1>Profil</h1>
 <h2>Změna hesla</h2>
-<?php notice($this->redirect()->getMessage());?>
+<?php echo $this->notice($this->redirect()->getMessage());?>
 <form action="" method="post">
 <table>
 <tr><td>Staré heslo:</td><td><input type="password" name="oldpass" /></td></tr>

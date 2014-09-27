@@ -1,7 +1,5 @@
 <h1>Správa anket</h1>
-<?php
-notice($this->redirect()->getMessage());
-?>
+<?php echo $this->notice($this->redirect()->getMessage()); ?>
 <form action="" method="POST">
 <?php
 if (!TISK) {

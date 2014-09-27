@@ -1,6 +1,6 @@
 <h1>Správa párů</h1>
 <h2>Změna třídy a bodů</h2>
-<?php notice($this->redirect()->getMessage());?>
+<?php echo $this->notice($this->redirect()->getMessage());?>
 <form action="" method="POST">
 Pár: <?php echo $this->fullName;?>
 <table>

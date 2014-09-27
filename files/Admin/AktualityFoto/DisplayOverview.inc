@@ -1,6 +1,6 @@
 <h1>Správa fotogalerie článků</h1>
 <?php
-notice($this->redirect()->getMessage());
+echo $this->notice($this->redirect()->getMessage());
 
 echo '<form action="" method="get">';
 $s = $this->select()
@@ -27,7 +27,7 @@ $items[] = array('af_id' => 2, 'af_path' => './galerie/xichty treneru/jerry.jpg'
 $items[] = array('af_id' => 3, 'af_path' => './galerie/xichty treneru/jerry.jpg');
 
 if (empty($items)) {
-    notice('Žádné vybrané fotky');
+    echo $this->notice('Žádné vybrané fotky');
     return;
 }
 foreach ($items as $item) {

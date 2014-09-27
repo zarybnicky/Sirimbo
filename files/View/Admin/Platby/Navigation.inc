@@ -42,4 +42,4 @@ if (TISK)
         <li><?php _getItem('Import', 'platby/raw');?></li>
     <?php endif;?>
 </ul>
-<?php notice($this->redirect()->getMessage());?>
+<?php echo $this->notice($this->redirect()->getMessage());?>

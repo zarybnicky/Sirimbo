@@ -1,7 +1,7 @@
 <div class="container">
 <h1>Správa článků</h1>
 
-<?php notice($this->redirect()->getMessage());
+<?php echo $this->notice($this->redirect()->getMessage());
 
 echo '<form action="" method="get">';
 echo $this->select()

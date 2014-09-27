@@ -1,6 +1,6 @@
 <h1>Správa párů</h1>
 <?php
-notice($this->redirect()->getMessage());
+echo $this->notice($this->redirect()->getMessage());
 
 echo '<form action="" method="POST">';
 if ($this->showMenu) {

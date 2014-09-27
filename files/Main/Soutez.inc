@@ -11,7 +11,7 @@ if (!empty($_POST)) {
                 post('2porotce'), post('3porotce'), post('4porotce'), post('5porotce'));
             View::redirect('/home', 'Děkujeme za Vaše návrhy, těšíme se na Vás na naší soutěži.');
         } else {
-            notice('Toto IDT už je v databázi, asi už jste odeslali Vaše návrhy');
+            echo $this->notice('Toto IDT už je v databázi, asi už jste odeslali Vaše návrhy');
         }
     }
 }
@@ -41,7 +41,7 @@ table.k td.r {padding-right:10px;text-align:right;}
 </style>
 <?php
 if (is_object($f) && !$f->isValid()) {
-    notice(implode('<br/>', $f->getMessages()));
+    echo $this->notice(implode('<br/>', $f->getMessages()));
 }
 ?>
 <form action="<?php echo Request::getURI();?>#form" method="POST">

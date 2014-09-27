@@ -1,5 +1,5 @@
 <h1>Klubové akce</h1>
-<?php notice($this->redirect()->getMessage());?>
+<?php echo $this->notice($this->redirect()->getMessage());?>
 
 <style type="text/css">
 .unit {background:inherit;border:none;

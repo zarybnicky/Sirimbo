@@ -3,9 +3,9 @@
 echo '<h2>';
 echo Request::getAction() == 'add' ? 'Přidat uživatele' : 'Upravit uživatele';
 echo '</h2>';
-notice($this->redirect()->getMessage());
+echo $this->notice($this->redirect()->getMessage());
 if ($this->form) {
-    notice(implode('<br/>', $this->form->getMessages()));
+    echo $this->notice(implode('<br/>', $this->form->getMessages()));
 }
 ?>
 <form action="" method="POST">

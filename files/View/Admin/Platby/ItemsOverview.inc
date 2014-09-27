@@ -45,7 +45,7 @@ if (!TISK) {
         ->content('Odebrat', 'remove', true);
 }
 if ($this->data == array()) {
-    notice('Žádné takové platby');
+    echo $this->notice('Žádné takové platby');
     return;
 }
 echo '<div style="margin-right:150px">';

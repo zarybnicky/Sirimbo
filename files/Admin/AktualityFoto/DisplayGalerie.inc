@@ -1,6 +1,6 @@
 <h1>Správa fotogalerie článků</h1>
 <?php
-notice($this->redirect()->getMessage());
+echo $this->notice($this->redirect()->getMessage());
 
 echo '<form action="" method="get">';
 $s = $this->select()
@@ -9,8 +9,10 @@ $s = $this->select()
     ->option('no', '-------------');
 
 $dirs = DBGalerie::getDirs(true, true);
-foreach ($dirs as $dir)
-    $s->option($dir['gd_id'], str_repeat("&nbsp;&nbsp;", $dir['gd_level'] - 1) . $dir['gd_name']);
+foreach ($dirs as $dir) {
+    $s->option($dir['gd_id'], str_repeat("&nbsp;&nbsp;", $dir['gd_level'] - 1)
+                                        . $dir['gd_name']);
+}
 echo $s;
 echo '<button type="submit">Zobrazit</button>';
 echo '</form>';
@@ -21,7 +23,7 @@ echo '<button type="submit" name="action" value="enter" style="display:none;">En
 $id = get('dir');
 $items = DBGalerie::getFotky($id);
 if (empty($items)) {
-    notice('Žádné fotky');
+    echo $this->notice('Žádné fotky');
     return;
 }
 foreach ($items as $item) {

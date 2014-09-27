@@ -1,7 +1,7 @@
 <?php echo $this->clanky()->number(3)->highlights(true);?>
 
 <div class="container">
-  <?php notice($this->redirect()->getMessage()); ?>
+  <?php echo $this->notice($this->redirect()->getMessage()); ?>
 
   <?php echo $this->zpravy()->number(10);?>
   <!-- Dodat "vice zde >>" na konec boxu -->

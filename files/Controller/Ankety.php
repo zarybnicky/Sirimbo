@@ -6,9 +6,9 @@ class Controller_Ankety extends Controller_Abstract
             $currentIP = getIP();
             if (DBAnkety::isUniqueIP(post('id'), $currentIP)) {
                 DBAnkety::vote(post('id'), post('choice'), $currentIP);
-                notice('Váš hlas byl uložen');
+                echo $this->notice('Váš hlas byl uložen');
             } else {
-                notice('Z vaší IP adresy už někdo hlasoval.');
+                echo $this->notice('Z vaší IP adresy už někdo hlasoval.');
             }
         }
         if (array() === ($data = DBAnkety::getAnketyWithItems(true))) {
