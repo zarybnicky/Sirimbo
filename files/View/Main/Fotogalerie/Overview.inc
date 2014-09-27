@@ -1,3 +1,4 @@
+<div class="container">
 <h2><?php echo $this->nadpis;?></h2>
 <?php foreach ($this->photos as $item): ?>
     <a href="<?php echo $item['href'];?>" class="f_preview">
@@ -6,3 +7,4 @@
         </div>
     </a>
 <?php endforeach;?>
+</div>

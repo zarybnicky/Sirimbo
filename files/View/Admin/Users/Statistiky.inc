@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Správa uživatelů</h1>
 <h2>Statistiky</h2>
 <br/>
@@ -11,4 +12,5 @@ echo $this->table()
 ?>
 <br/>
 <a href="/admin/users">Zpět</a>
+</div>
 </div>

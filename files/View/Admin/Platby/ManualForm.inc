@@ -1,3 +1,4 @@
+<div class="container">
 <?php
 echo $this->render('files/View/Admin/Platby/Navigation.inc');
 echo '<h2>Ruční třídění plateb</span> (zbývá ', $this->remainingTotal, ')</h2>';
@@ -53,3 +54,4 @@ echo $this->table()
     ->column('value', '', '', 'min-width:150px;padding-left:5px')
     ->data($this->raw);
 ?>
+</div>

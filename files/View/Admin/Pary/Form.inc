@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Správa párů</h1>
 <h2>Změna třídy a bodů</h2>
 <?php echo $this->notice($this->redirect()->getMessage());?>
@@ -42,3 +43,4 @@ Pár: <?php echo $this->fullName;?>
 </form>
 
 <a href="/admin/pary">Zpět</a>
+</div>

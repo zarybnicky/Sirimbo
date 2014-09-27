@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Kontakty</h1>
 
 <style type="text/css">
@@ -100,3 +101,4 @@ table.k b {color:#572E00;}
     <td>vit.spurny(zavináč)gmail.com</td>
 </tr>
 </table>
+</div>

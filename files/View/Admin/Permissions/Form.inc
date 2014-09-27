@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Správa oprávnění</h1>
 <?php
 echo '<h2>', ($this->action == 'add' ? 'Přidat uživatelskou skupinu' : 'Upravit uživatelskou skupinu'), '</h2>';
@@ -33,3 +34,4 @@ echo $this->notice($this->redirect()->getMessage());
 <button type="submit" name="action"><?php echo ($this->action == 'add' ? 'Přidat' : 'Upravit'); ?></button>
 <a href="/admin/permissions">Zpět</a>
 </form>
+</div>

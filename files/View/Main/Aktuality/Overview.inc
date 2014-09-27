@@ -1,3 +1,4 @@
+<div class="container">
 <h1><?php echo $this->nadpis;?></h1>
 <?php foreach ($this->data as $key => $row) : ?>
     <a href="/aktualne/<?php echo $row['id'];?>" style="font-size:115%;color:#572E00;margin:5px 0 5px 0;">
@@ -20,3 +21,4 @@
         <hr/>
     <?php endif;?>
 <?php endforeach;?>
+</div>

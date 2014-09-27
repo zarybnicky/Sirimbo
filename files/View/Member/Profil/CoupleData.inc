@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Profil</h1>
 <h2>Změna třídy a bodů</h2>
 <?php
@@ -50,3 +51,4 @@ echo $this->select()
 <button type="submit" name="action">Změnit třídu a body</button>
 <a href="/member/profil/par">Zpět</a>
 </form>
+</div>

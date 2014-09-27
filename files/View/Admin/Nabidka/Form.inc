@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Správa nabídky</h1>
 <?php
 echo '<h2>', ($this->action == 'add' ? 'Přidat nabídku' : 'Upravit nabídku'), '</h2>';
@@ -54,3 +55,4 @@ echo $this->notice($this->redirect()->getMessage());
 </form>
 
 <a href="<?php echo $this->returnURI;?>">Zpět</a>
+</div>

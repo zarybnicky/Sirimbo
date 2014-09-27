@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Správa fotogalerie</h1>
 <?php echo $this->notice($this->redirect()->getMessage()); ?>
 <h2>Upload</h2>
@@ -27,3 +28,4 @@
     </tr>
 </table>
 </form>
+</div>

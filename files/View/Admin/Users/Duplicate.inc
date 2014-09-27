@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Správa uživatelů</h1>
 <h2>Duplicitní uživatelé</h2>
 <?php echo $this->notice($this->redirect()->getMessage()); ?>
@@ -20,3 +21,4 @@ echo $this->table()
     ->data($this->data);
 ?>
 </form>
+</div>

@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Správa fotogalerie</h1>
 <?php
 echo $this->notice($this->redirect()->getMessage());
@@ -35,3 +36,4 @@ else :
 
 <?php endif; ?>
 </form>
+</div>

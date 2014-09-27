@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Profil</h1>
 <h2>Osobní údaje</h2>
 <?php echo $this->notice($this->redirect()->getMessage());?>
@@ -51,3 +52,4 @@
 </form>
 
 <a href="/member/profil">Zpět</a>
+</div>

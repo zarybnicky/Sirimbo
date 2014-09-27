@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Správa akcí</h1>
 <form action="" method="POST">
 <?php
@@ -27,3 +28,4 @@ echo $this->table()
 echo '</div>';
 ?>
 </form>
+</div>

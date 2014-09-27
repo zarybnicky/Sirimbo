@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Profil</h1>
 <?php
 echo $this->partnerRequest()->getAll();
@@ -18,3 +19,4 @@ if ($this->havePartner) {
 <?php endif;?>
 <a href="/member/profil/par">Zpět</a>
 </form>
+</div>

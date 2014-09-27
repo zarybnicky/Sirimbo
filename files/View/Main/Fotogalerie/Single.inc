@@ -1,3 +1,4 @@
+<div class="container">
 <div style="text-align:center;">
 
 <?php if ($this->hasPrev): ?>
@@ -23,3 +24,4 @@
         <img alt="<?php echo $this->id;?>" src="<?php echo $this->src;?>" />
     </div></div>
 </a>
+</div>

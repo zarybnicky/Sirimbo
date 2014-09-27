@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Kde trénujeme:</h1>
 <p>
 Náš klub dlouhá léta funguje pod záštitou dvou školských institucí.
@@ -43,3 +44,4 @@ Jiřího z Poděbrad 13, Olomouc<br/>
     var m = new SMap(JAK.gel("slovan"),center, 15, 1);
    m.addMarker(center);
 </script>
+</div>

@@ -1,3 +1,4 @@
+<div class="container">
 <?php
 $mainForm = (new TableHelper())->table()
     ->style('width:100%')
@@ -52,3 +53,4 @@ if (!empty($this->groupSelect)) {
         <?php endif;?>
     </form>
 <?php endif;?>
+</div>

@@ -56,7 +56,7 @@ class Controller_Aktualne extends Controller_Abstract
                     'jmeno'     => $item['at_jmeno'],
                     'timestamp' => $item['at_timestamp_add'],
                     'canEdit'   => Permissions::check('aktuality', P_OWNED, $item['at_kdo']),
-                    'preview'   => stripslashes(nl2br($row['at_preview']))
+                    'preview'   => stripslashes(nl2br($item['at_preview']))
                 );
             },
             $data

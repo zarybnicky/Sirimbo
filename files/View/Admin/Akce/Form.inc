@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Správa akcí</h1>
 <?php
 echo '<h2>';
@@ -74,3 +75,4 @@ if ($this->form) {
     </tr>
 </table>
 </form>
+</div>

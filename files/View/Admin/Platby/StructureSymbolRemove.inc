@@ -1,3 +1,4 @@
+<div class="container">
 <?php echo $this->render('files/View/Admin/Platby/Navigation.inc');?>
 <h2>Kategorie plateb</h2>
 <h3>Odstranit specifický symbol?</h3>
@@ -13,3 +14,4 @@ Opravdu chcete odstranit specifický symbol "<?php echo $this->name;?>"?
 <a href="<?php echo Request::getReferer();?>">Zpět</a>
 
 </form>
+</div>

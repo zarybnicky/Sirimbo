@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Nabízíme</h1>
 <h2>Lekce pro začátečníky</h2>
 <ul class="list">
@@ -36,3 +37,4 @@
     <li>taneční a pohybové hry, seznámení s hudbou a základními kroky</li>
     <li>vyučuje mladý proškolený trénérský kolektiv v kombinaci se zkušenými učiteli</li>
 </ul>
+</div>

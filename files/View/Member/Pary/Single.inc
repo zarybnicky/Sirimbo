@@ -1,3 +1,4 @@
+<div class="container">
 <?php
 $data = DBPary::getSinglePar($this->id);
 $guy_partners = DBPary::getPreviousPartners($data['guy_id']);
@@ -47,3 +48,5 @@ if (!$gal_partners) {
 }
 echo '<br />';
 echo '<a href="/member/zebricek">Zpět</a>';
+?>
+</div>

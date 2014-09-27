@@ -1,3 +1,4 @@
+<div class="container">
 <?php
 echo $this->render('files/View/Admin/Platby/Navigation.inc');
 echo '<h2>Vyřazené platby</h2>';
@@ -30,3 +31,4 @@ if (count($this->groupByAmount) > 0) {
     echo '</ul>';
 }
 ?>
+</div>

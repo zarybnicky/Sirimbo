@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Upozornění</h1>
 <?php foreach ($this->data as $item): ?>
 <div>
@@ -27,3 +28,4 @@
 <hr/>
 <?php endforeach;?>
 <div style="text-align:center;"><?php echo $this->navigation;?></div>
+</div>

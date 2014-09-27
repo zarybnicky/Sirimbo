@@ -1,3 +1,4 @@
+<div class="container">
 <?php
 echo $this->render('files/View/Admin/Platby/Navigation.inc');
 echo '<h2>Kategorie plateb</h2>';
@@ -11,3 +12,5 @@ echo $this->table()
     ->column('name', 'Název')
     ->column('type', 'Typ platby')
     ->data($this->data);
+?>
+</div>

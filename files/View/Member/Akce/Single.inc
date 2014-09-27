@@ -1,3 +1,4 @@
+<div class="container">
 <?php
 unset($data['info']);
 unset($data['dokumenty']);
@@ -28,4 +29,5 @@ else: ?>
 <?php
 endif; ?>
 <a href="/member/akce">Zpět</a>
+</div>
 </div>

@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Klubové akce</h1>
 <?php echo $this->notice($this->redirect()->getMessage());?>
 
@@ -37,3 +38,4 @@ vertical-align:top;border-bottom:1px dotted #999;padding:10px 5px;}
     <?php
     endforeach; ?>
 </table>
+</div>

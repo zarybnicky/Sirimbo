@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Nabídka tréninků</h1>
 <?php echo $this->notice($this->redirect()->getMessage());?>
 
@@ -37,5 +38,7 @@
         </form>
         </td>
     <?php endforeach;?>
+    </tr>
 <?php endforeach;?>
 </table>
+</div>

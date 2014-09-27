@@ -1,3 +1,4 @@
+<div class="container">
 <?php echo $this->notice($this->redirect()->getMessage()); ?>
 <br/>
 <form action="" method="post">
@@ -11,3 +12,4 @@
 <tr><td colspan="2"><a href="/nopassword">Zapomněli jste heslo?</a></td></tr>
 </table>
 </form>
+</div>

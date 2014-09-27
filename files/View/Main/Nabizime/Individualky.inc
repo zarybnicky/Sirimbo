@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Nabízíme</h1>
 <h2>Individuální lekce</h2>
 <ul class="list">
@@ -5,3 +6,4 @@
     <li>trénink je šitý na míru potřebám a požadavkům daného párů</li>
     <li>nedílná součást tanečního sportu a vhodný doplněk a zpestření pro tzv. hobby tanečníky</li>
 </ul>
+</div>

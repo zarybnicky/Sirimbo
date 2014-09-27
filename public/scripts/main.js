@@ -52,9 +52,11 @@ $(function() {
             },
             {
                 'queue': false,
-                'stop': function() {
+                'start': function() {
+                    $('#menu').css('border-bottom', '0');
+                },
+                'done': function() {
                     $(this).css('display', 'none');
-                    $('#menu').css('border-bottom', 'none');
                 }
             }
         );

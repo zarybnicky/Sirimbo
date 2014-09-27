@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Dokumenty</h1>
 <?php if ($this->showMenu): ?>
 <form action="" method="GET"><?php
@@ -30,3 +31,4 @@ echo $this->select()
     </tr>
     <?php endforeach;?>
 </table>
+</div>

@@ -1,3 +1,4 @@
+<div class="container">
 <?php
 echo $this->render('files/View/Admin/Platby/Navigation.inc');
 echo '<h2>Struktura plateb</h2>';
@@ -50,3 +51,4 @@ if (!empty($this->orphanCategory)) {
         ->data($this->orphanCategory);
 }
 ?>
+</div>

@@ -1,3 +1,4 @@
+<div class="container">
 <?php
 echo $this->render('files/View/Admin/Platby/Navigation.inc');
 echo '<h2>Jednotlivé platby</h2>';
@@ -59,3 +60,5 @@ echo $this->table()
     ->column('category', 'Kategorie');
 echo '</div>';
 echo '</form>';
+?>
+</div>

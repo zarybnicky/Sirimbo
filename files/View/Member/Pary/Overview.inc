@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Žebříček párů</h1>
 <?php echo $this->notice($this->redirect()->getMessage());?>
 
@@ -23,3 +24,4 @@
 </tr>
 <?php endforeach;?>
 </table>
+</div>

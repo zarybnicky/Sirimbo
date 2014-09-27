@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Nabízíme</h1>
 <h2>Taneční vystoupení</h2>
 <ul class="list">
@@ -12,3 +13,4 @@
 Reference: každoročně vystupujeme na reprezentačních plesů středních škol a
 gymnázií, univerzity a jednotlivých fakult, politických stran a dalších akcí
 jako na vesnických slavnostech, tanečních zábavách atp.
+</div>

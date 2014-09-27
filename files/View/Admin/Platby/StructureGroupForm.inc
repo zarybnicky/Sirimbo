@@ -1,3 +1,4 @@
+<div class="container">
 <?php
 $mainForm = (new TableHelper())->table()
     ->column('desc', '', 'r')
@@ -77,3 +78,4 @@ if (!empty($this->skupinySelect)) {
         <?php endif;?>
     </form>
 <?php endif;?>
+</div>

@@ -1,3 +1,4 @@
+<div class="container">
 <?php
 $mainForm = $this->table()
 ->column('desc', '', 'r')
@@ -59,3 +60,4 @@ if (!empty($this->groupSelect)) {
         <?php endif;?>
     </form>
 <?php endif;?>
+</div>

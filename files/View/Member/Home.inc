@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Novinky</h1>
 <?php echo $this->notice($this->redirect()->getMessage());?>
 <?php echo $this->partnerRequest()->getAll(); ?>
@@ -18,3 +19,4 @@
     </div>
     </div><hr/>
 <?php endforeach;?>
+</div>

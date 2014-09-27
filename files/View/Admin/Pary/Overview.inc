@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Správa párů</h1>
 <?php
 echo $this->notice($this->redirect()->getMessage());
@@ -28,3 +29,4 @@ echo '<button type="submit" name="action" value="add">Nový pár</button>';
 echo '</div>';
 echo '</form>';
 ?>
+</div>

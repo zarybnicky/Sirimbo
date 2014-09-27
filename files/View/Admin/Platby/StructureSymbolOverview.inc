@@ -1,3 +1,4 @@
+<div class="container">
 <?php
 echo $this->render('files/View/Admin/Platby/Navigation.inc');
 echo '<h2>Specifické symboly</h2>';
@@ -23,3 +24,5 @@ echo $this->table()
     ->column('validDate', 'Platí pro období')
     ->column('amount', 'Částka')
     ->data($this->archived);
+?>
+</div>

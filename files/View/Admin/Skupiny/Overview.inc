@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Správa skupin</h1>
 <?php
 echo $this->notice($this->redirect()->getMessage());
@@ -15,3 +16,5 @@ echo $this->table()
     ->data($this->data);
 echo '</div>';
 echo '</form>';
+?>
+</div>

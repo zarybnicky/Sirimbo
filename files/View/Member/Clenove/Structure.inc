@@ -1,3 +1,4 @@
+<div class="container">
 <?php echo $this->render('files/View/Member/Clenove/Navigation.inc');?>
 <h2>Členové podle skupin</h2>
 <?php
@@ -12,3 +13,4 @@ foreach ($this->data as $skupina) {
     echo '</div>';
 }
 ?>
+</div>

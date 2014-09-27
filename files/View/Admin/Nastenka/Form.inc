@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Správa nástěnky</h1>
 <?php
 echo '<h2>', ($this->action == 'add' ? 'Přidat příspěvek' : 'Upravit příspěvek'), '</h2>';
@@ -7,7 +8,7 @@ echo $this->notice($this->redirect()->getMessage());
 <table>
     <tr>
         <td>Nadpis:</td>
-        <td><input type="text" name="nadpis" value="<?php echo post("nadpis");?>" />
+        <td><input type="text" name="nadpis" value="<?php echo post("nadpis");?>" /></td>
     </tr><tr>
         <td>Text:</td>
         <td><textarea cols="50" rows="15" name="text"><?php echo post("text");?></textarea></td>
@@ -35,3 +36,4 @@ echo $this->notice($this->redirect()->getMessage());
 </form>
 
 <a href="<?php echo $this->returnURI?>">Zpět</a>
+</div>

@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Profil</h1>
 <h2>Moje platby</h2>
 
@@ -41,3 +42,4 @@ echo $this->table()
     ->column('validRange', 'Platnost');
 echo '<a href="/member/profil">Zpět</a>';
 ?>
+</div>

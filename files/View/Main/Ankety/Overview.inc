@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Ankety</h1>
 
 <?php foreach ($this->data as $row): ?>
@@ -18,3 +19,4 @@
     <?php endforeach;?>
     <br />
 <?php endforeach;?>
+</div>

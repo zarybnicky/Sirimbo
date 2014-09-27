@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Registrace</h1>
 <?php echo $this->notice($this->redirect()->getMessage());?>
 
@@ -48,3 +49,4 @@
     </tr>
 </table>
 </form>
+</div>

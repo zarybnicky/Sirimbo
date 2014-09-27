@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Správa nástěnky</h1>
 <?php
 echo $this->notice($this->redirect()->getMessage());
@@ -28,3 +29,4 @@ echo '</div>';
 echo '</form>';
 ?>
 <div style="margin-right:150px;text-align:center;"><?php echo $this->navigation;?></div>
+</div>

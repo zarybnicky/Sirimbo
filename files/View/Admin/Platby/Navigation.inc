@@ -1,4 +1,7 @@
+<h1>Správa plateb</h1>
 <?php
+if (TISK) return;
+
 function _isActive($href) {
     return strripos(Request::getLiteralURI(), $href) !== (strlen(Request::getLiteralURI()) - strlen($href));
 }
@@ -9,9 +12,6 @@ function _getItem($name, $href) {
     else
         echo $name;
 }
-echo '<h1>Správa plateb</h1>';
-if (TISK)
-    return;
 ?>
 <style>
 #adminNavigation li {
@@ -43,3 +43,4 @@ if (TISK)
     <?php endif;?>
 </ul>
 <?php echo $this->notice($this->redirect()->getMessage());?>
+</div>

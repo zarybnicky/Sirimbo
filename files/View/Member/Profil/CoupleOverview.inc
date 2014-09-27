@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Profil</h1>
 <?php
 echo $this->partnerRequest()->getAll();
@@ -26,3 +27,4 @@ echo $this->notice($this->redirect()->getMessage());
 <?php endif;?>
 <a href="/member/profil/par/partner">Změnit partnera</a>
 <a href="/member/profil">Zpět</a>
+</div>
