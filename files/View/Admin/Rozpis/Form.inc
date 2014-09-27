@@ -28,13 +28,13 @@ notice($this->redirect()->getMessage());
         <td>Viditelný: </td>
         <td><label><?php
             if ($this->isAdmin)
-                echo getCheckbox('visible', 'visible', false);
+                echo $this->checkbox('visible', 'visible')->defaultState(false);
             else
                 echo (post('visible') ? '&#10003;' : '&#10799;');
         ?></label></td>
     </tr><tr>
         <td>Uzamknout: </td>
-        <td><label><?php echo getCheckbox('lock', 'lock')?></label></td>
+        <td><label><?php echo $this->checkbox('lock', 'lock')?></label></td>
     </tr><tr>
         <td><button type="submit"><?php
             echo ($this->action == 'add' ? 'Přidat' : 'Upravit');

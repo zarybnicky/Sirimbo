@@ -1,19 +1,4 @@
 <?php
-function notice($text, $return = false) {
-    if (!$text)
-        return;
-
-    if (!$return) {
-        echo '<div class="notice">', $text, '</div>', "\n";
-    } else {
-        return '<div class="notice">' . $text . '</div>' . "\n";
-    }
-}
-function getColorBox($color, $popis) {
-    return '<div class="box" title="' . $popis . '" ' .
-        'style="background-color:' . $color . '"></div>';
-}
-
 function phpGlobal(&$array, $field, $value) {
     if ($field === null) {
         return $array;

@@ -37,11 +37,11 @@ notice($this->redirect()->getMessage());
     </tr><tr>
         <td>Viditelný: </td>
         <td><label><?php echo (Permissions::check('nabidka', P_ADMIN) ?
-            getCheckbox('visible', 'visible')
+            $this->checkbox('visible', 'visible')
             : ($this->visible ? '&#10003;' : '&#10799;'));?></label></td>
     </tr><tr>
         <td>Uzamknout: </td>
-        <td><label><?php echo getCheckbox('lock');?></label></td>
+        <td><label><?php echo $this->checkbox('lock');?></label></td>
         <td></td>
     </tr><tr>
         <td><button type="submit"><?php

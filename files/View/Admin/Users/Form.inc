@@ -50,19 +50,19 @@ notice($this->redirect()->getMessage());
         <td></td>
     </tr><tr>
         <td>Uzamknout: </td>
-        <td><label><?php echo getCheckbox('lock', 'lock');?></label></td>
+        <td><label><?php echo $this->checkbox('lock', 'lock');?></label></td>
         <td></td>
     </tr><tr>
         <td>Ban: </td>
-        <td><label><?php echo getCheckbox('ban', 'ban');?></label></td>
+        <td><label><?php echo $this->checkbox('ban', 'ban');?></label></td>
         <td></td>
     </tr><tr>
         <td>Aktivní tanečník: </td>
-        <td><label><?php echo getCheckbox('dancer', 'dancer');?></label></td>
+        <td><label><?php echo $this->checkbox('dancer', 'dancer');?></label></td>
         <td></td>
     </tr><tr>
         <td>Systémový uživatel: </td>
-        <td><label><?php echo getCheckbox('system', 'system');?></label></td>
+        <td><label><?php echo $this->checkbox('system', 'system');?></label></td>
         <td></td>
     </tr><tr>
         <td>Oprávnění (*): </td>
@@ -77,7 +77,7 @@ notice($this->redirect()->getMessage());
         <td>Skupina (*): </td>
         <td><?php
         foreach ($this->skupiny as $item) {
-            echo getColorBox($item['color'], $item['popis']);
+            echo $this->colorbox($item['color'], $item['popis']);
             echo '<label>', $this->radio('skupina', $item['id']), $item['popis'], '</label><br/>';
         }?></td>
         <td></td>

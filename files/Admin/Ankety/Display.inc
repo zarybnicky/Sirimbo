@@ -23,15 +23,16 @@ if (!TISK) {
 $ankety = DBAnkety::getAnkety();
 foreach ($ankety as $item) {
     echo '<tr>';
-    
-    if (Permissions::check('ankety', P_OWNED, $item['ak_kdo']))
-        echo '<td><input type="checkbox" name="ankety[]" value="' . $item['ak_id'] .
-            '" /></td>';
-    else
-        echo '<td><input type="checkbox" name="ankety[]" value="' .
-            '" disabled="disabled" /></td>';
+
+    echo '<td>',
+        $this->checkbox('ankety[]', $item['ak_id'])
+             ->disabled(Permissions::check('ankety', P_OWNED,$item['ak_kdo'])),
+        '</td>';
     echo '<td>', $item['ak_jmeno'], '</td>';
-    echo '<td>' . getCheckbox($item['ak_id'], '1', $item['ak_visible']) . '</td>';
+    echo '<td>',
+        $this->checkbox($item['ak_id'], '1')
+             ->defaultState($item['ak_visible']),
+        '</td>';
     echo '</tr>';
 }
 ?>

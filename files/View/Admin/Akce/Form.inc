@@ -57,11 +57,11 @@ if ($this->form) {
         <td></td>
     </tr><tr>
         <td>Uzamknout: </td>
-        <td><label><?php echo getCheckbox('lock', 'lock')?></label></td>
+        <td><label><?php echo $this->checkbox('lock', 'lock')?></label></td>
         <td></td>
     </tr><tr>
         <td>Viditelný: </td>
-        <td><label><?php echo getCheckbox('visible', 'visible')?></label></td>
+        <td><label><?php echo $this->checkbox('visible', 'visible')?></label></td>
         <td></td>
     </tr><tr>
         <td>

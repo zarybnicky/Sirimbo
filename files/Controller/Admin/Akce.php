@@ -143,14 +143,14 @@ class Controller_Admin_Akce extends Controller_Admin
             $currentId = $item['a_id'];
             $currentIndex++;
             $data[$currentIndex] = array(
-                'checkBox'  => getCheckbox('akce[]', $item['a_id']),
+                'checkBox'  => $this->checkbox('akce[]', $item['a_id']),
                 'name'      => $item['a_jmeno'],
                 'place'     => $item['a_kde'],
                 'date'      => formatDate($item['a_od'])
                     . (($item['a_od'] != $item['a_do'])
                     ? ' - ' . formatDate($item['a_do']) : ''),
                 'userCount' => 1,
-                'visible'   => getCheckbox($item['a_id'], '1', $item['a_visible'])
+                'visible'   => $this->checkbox($item['a_id'], '1')->defaultState($item['a_visible'])
             );
         }
         $this->render(

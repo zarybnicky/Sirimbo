@@ -161,10 +161,10 @@ class Controller_Admin_Users extends Controller_Admin
             foreach ($users as &$row) {
                 $new_data = array(
                     'id' => $row['u_id'],
-                    'checkBox' => '<input type="checkbox" name="users[]" value="' . $row['u_id'] . '" />',
+                    'checkBox' => $this->checkbox('users[]', $row['u_id']),
                     'group' => $s_group->post()->name($row['u_id'] . '-group'),
                     'skupina' => $s_skupina->post()->name($row['u_id'] . '-skupina'),
-                    'dancer' => '<input type="checkbox" name="' . $row['u_id'] . '-dancer" value="dancer" />',
+                    'dancer' => $this->checkbox($row['u_id'] . '-dancer', 'dancer'),
                     'fullName' => $row['u_jmeno'] . ' ' . $row['u_prijmeni'],
                     'narozeni' => formatDate($row['u_narozeni'])
                 );
@@ -203,8 +203,8 @@ class Controller_Admin_Users extends Controller_Admin
         foreach ($users as &$row) {
             $new_data = array(
                 'id' => $row['u_id'],
-                'checkBox' => '<input type="checkbox" name="users[]" value="' . $row['u_id'] . '" />',
-                'colorBox' => getColorBox($row['s_color_rgb'], $row['s_description']),
+                'checkBox' => $this->checkbox('users[]', $row['u_id']),
+                'colorBox' => $this->colorbox($row['s_color_rgb'], $row['s_description']),
                 'fullName' => $row['u_prijmeni'] . ', ' . $row['u_jmeno'],
                 'email' => $row['u_email'],
                 'telefon' => $row['u_telefon'],
@@ -325,19 +325,19 @@ class Controller_Admin_Users extends Controller_Admin
         $i = $pager->getItemsPerPage() * ($pager->getCurrentPage() - 1);
         foreach ($data as &$item) {
             $new_data = array(
-                'checkBox'  => '<input type="checkbox" name="users[]" value="' . $item['u_id'] . '" />',
+                'checkBox' => $this->checkbox('users[]', $row['u_id']),
                 'index'     => ++$i . '. ',
                 'varSymbol' => User::varSymbol($item['u_id']),
                 'fullName'  => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
-                'colorBox'  => getColorBox($item['s_color_rgb'], $item['s_description']),
+                'colorBox'  => $this->colorbox($item['s_color_rgb'], $item['s_description']),
                 'groupInfo' => $group_lookup[$item['u_group']]
             );
             switch($action) {
                 case 'status':
                     $new_data['skupina'] = '<input type="hidden" name="save[]" value="' . $item['u_id'] . '"/>'
                                            . $skupinyselect->name($item['u_id'] . '-skupina')->value($item['u_skupina']);
-                    $new_data['dancer'] = '<label>' . getCheckbox($item['u_id'] . '-dancer', '1', $item['u_dancer']) . '</label>';
-                    $new_data['system'] = '<label>' . getCheckbox($item['u_id'] . '-system', '1', $item['u_system']) . '</label>';
+                    $new_data['dancer'] = '<label>' . $this->checkbox($item['u_id'] . '-dancer', '1')->defaultState($item['u_dancer']) . '</label>';
+                    $new_data['system'] = '<label>' . $this->checkbox($item['u_id'] . '-system', '1')->defaultState($item['u_system']) . '</label>';
                     break;
                 case 'info':
                 default:

@@ -26,7 +26,7 @@ if (!empty($this->items)) {
             formatTime($item['ri_do'], 1), '"/></td>';
         echo '<td><button type="submit" name="remove" value="', $item['ri_id'],
             '">Odstranit</button></td>';
-        echo '<td>', getCheckbox($item['ri_id'] . '-lock', 'lock', $item['ri_lock']), '</td>';
+        echo '<td>', $this->checkbox($item['ri_id'] . '-lock', 'lock')->defaultState($item['ri_lock']), '</td>';
         echo '</tr>';
     }
 }

@@ -53,7 +53,7 @@ class Controller_Admin_Nastenka extends Controller_Admin
             $skupiny = DBNastenka::getNastenkaSkupiny($row['up_id']);
             $new_data['groups'] = '';
             foreach ($skupiny as $skupina)
-                $new_data['groups'] .= getColorBox($skupina['ups_color'], $skupina['ups_popis']);
+                $new_data['groups'] .= $this->colorbox($skupina['ups_color'], $skupina['ups_popis']);
 
             $row = $new_data;
         }

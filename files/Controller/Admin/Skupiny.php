@@ -23,7 +23,7 @@ class Controller_Admin_Skupiny extends Controller_Admin
             $new_data = array(
                 'buttons' => $this->_getEditLink('/admin/skupiny/edit/' . $item['s_id']) .
                     $this->_getRemoveLink('/admin/skupiny/remove/' . $item['s_id']),
-                'colorBox' => getColorBox($item['s_color_rgb'], $item['s_description']),
+                'colorBox' => $this->colorbox($item['s_color_rgb'], $item['s_description']),
                 'name' => $item['s_name']
             );
             $item = $new_data;

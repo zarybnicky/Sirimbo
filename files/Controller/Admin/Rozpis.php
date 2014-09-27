@@ -81,14 +81,12 @@ class Controller_Admin_Rozpis extends Controller_Admin
                 'datum' => formatDate($row['r_datum']),
                 'kde' => $row['r_kde']
             );
-            if ($new_data['canEdit'])
-                $new_data['checkBox'] = '<input type="checkbox" name="rozpis[]" value="' . $row['r_id'] . '" />';
-            else
-                $new_data['checkBox'] = '<input type="checkbox" name="rozpis[]" value="" disabled="d" />';
-            if (Permissions::check('rozpis', P_ADMIN))
-                $new_data['visible'] = getCheckbox($row['r_id'], '1', $row['r_visible']);
-            else
+            $new_data['checkbox'] = $this->checkbox('rozpis[]', $row['r_id'])->readonly($new_data['canEdit']);
+            if (Permissions::check('rozpis', P_ADMIN)) {
+                $new_data['visible'] = $this->checkbox($row['r_id'], '1')->defaultState($row['r_visible']);
+            } else {
                 $new_data['visible'] = '&nbsp;' . ($row['r_visible'] ? '&#10003;' : '&#10799;');
+            }
             $row = $new_data;
         }
         $this->render(

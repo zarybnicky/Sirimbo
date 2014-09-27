@@ -26,7 +26,7 @@ class Controller_Member_Nastenka extends Controller_Member
         foreach ($data as &$item) {
             $skupiny = DBNastenka::getNastenkaSkupiny($item['up_id']);
             foreach ($skupiny as &$skupina) {
-                $new_data = getColorBox($skupina['ups_color'], $skupina['ups_popis']);
+                $new_data = $this->colorbox($skupina['ups_color'], $skupina['ups_popis']);
                 $skupina = $new_data;
             }
             $new_data = array(

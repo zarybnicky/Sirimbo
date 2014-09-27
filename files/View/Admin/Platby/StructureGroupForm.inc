@@ -32,17 +32,17 @@ if (!empty($this->category)) {
         ->data($this->category);
 }
 if (!empty($this->categorySelect)) {
-    $categorySelectBox = (new SelectHelper())->select('category')
+    $categorySelectBox = $this->select('category')
         ->options($this->categorySelect);
 }
 if (!empty($this->skupiny)) {
-    $skupinyForm = (new TableHelper())->table()
+    $skupinyForm = $this->table()
         ->column('buttons', '', '', 'width:75px')
         ->column('name', 'Jméno')
         ->data($this->skupiny);
 }
 if (!empty($this->skupinySelect)) {
-    $skupinySelectBox = (new SelectHelper())->select('skupiny')
+    $skupinySelectBox = $this->select('skupiny')
         ->options($this->skupinySelect);
 }
 ?>

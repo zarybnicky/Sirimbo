@@ -1,5 +1,5 @@
 <?php
-$mainForm = (new TableHelper())->table()
+$mainForm = $this->table()
 ->column('desc', '', 'r')
 ->column('value', 'Hodnota')
 ->data(array(
@@ -14,20 +14,20 @@ $mainForm = (new TableHelper())->table()
             'value' => '<input type="text" name="amount" value="' . post('amount') . '"/>'
         ), array(
             'desc' => 'Splatnost:',
-            'value' => (new DateHelper())->date('dueDate')
+            'value' => $this->date('dueDate')
         ), array(
             'desc' => 'Platnost:',
-            'value' => (new DateHelper())->date('validRange')->range()
+            'value' => $this->date('validRange')->range()
         ), array(
             'desc' => 'Povolit prefix roku?:',
-            'value' => getCheckbox('usePrefix', '1')
+            'value' => $this->checkbox('usePrefix', '1')
         ), array(
             'desc' => 'Archivovat?:',
-            'value' => getCheckbox('archive', '1')
+            'value' => $this->checkbox('archive', '1')
         )
 ));
 if (!empty($this->groups)) {
-    $groupForm = (new TableHelper())->table()
+    $groupForm = $this->table()
         ->column('buttons', '', '', 'width:75px')
         ->column('type', 'Typ')
         ->column('name', 'Jméno')
@@ -35,7 +35,7 @@ if (!empty($this->groups)) {
         ->data($this->groups);
 }
 if (!empty($this->groupSelect)) {
-    $groupSelectBox = (new SelectHelper())->select('group')
+    $groupSelectBox = $this->select('group')
         ->options($this->groupSelect);
 }
 ?>

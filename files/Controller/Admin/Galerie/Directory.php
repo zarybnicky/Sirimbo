@@ -150,7 +150,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
         foreach($data as &$item) {
             $newData = array(
                 'id'           => $item['gf_id'],
-        	    'checkBox'     => getCheckbox('galerie[]', $item['gf_id']),
+        	    'checkBox'     => $this->checkbox('galerie[]', $item['gf_id']),
                 'name'         => $item['gf_name'],
                 'thumbnailURI' => '/galerie/thumbnails/', $item['gf_path']
             );

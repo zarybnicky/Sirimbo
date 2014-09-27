@@ -15,8 +15,7 @@ notice($this->redirect()->getMessage());
         <td><input type="text" name="text" value="<?php echo post('text');?>" /></td>
     </tr><tr>
         <td>Viditelný: </td>
-        <td><label><?php echo getCheckbox('visible', 'visible', false, false,
-            !Permissions::check('ankety', P_OWNED));?></label>
+        <td><label><?php echo $this->checkbox('visible', 'visible')->readonly(!Permissions::check('ankety', P_OWNED));?></label>
         </td>
     </tr><tr>
         <td>Text</td><td>Počet hlasů</td>

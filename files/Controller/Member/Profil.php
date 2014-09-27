@@ -80,7 +80,7 @@ class Controller_Member_Profil extends Controller_Member
         $this->render(
             'files/View/Member/Profil/Platby.inc',
             array(
-                'colorBox' => getColorBox($skupina['s_color_rgb'], $skupina['s_description']),
+                'colorBox' => $this->colorbox($skupina['s_color_rgb'], $skupina['s_description']),
                 'skupinaData' => $skupina['s_name'],
                 'varSymbol' => User::varSymbol(User::getUserID()),
                 'zaplacenoText' => User::getZaplaceno() ? 'zaplaceno' : 'nezaplaceno!',

@@ -24,7 +24,7 @@ echo $s;
     </tr>
     <tr>
         <td>Skrytá složka</td>
-        <td><?= getCheckbox('hidden', '1');?></td>
+        <td><?= $this->checkbox('hidden', '1');?></td>
     </tr>
     <tr>
         <td></td>
