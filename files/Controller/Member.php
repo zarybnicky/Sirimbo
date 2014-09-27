@@ -31,7 +31,6 @@ class Controller_Member extends Controller_Abstract
     function sidebar() {
         $s = new Sidebar();
 
-        echo $s->menuHeader();
         echo $s->menuItem('Novinky',          '/member/home');
         echo $s->menuItem('Nástěnka',         '/member/nastenka');
         echo $s->menuItem('Rozpis tréninků',  '/member/rozpis');
@@ -41,8 +40,5 @@ class Controller_Member extends Controller_Abstract
         echo $s->menuItem('Žebříček',         '/member/pary');
         echo $s->menuItem('Přehled členů',    '/member/clenove/structure');
         echo $s->menuItem('Profil',           '/member/profil');
-
-        echo $s->commonItems();
     }
 }
-?>

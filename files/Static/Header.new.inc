@@ -52,36 +52,36 @@
         <img alt="" src="/style/logo-small.png" />
       </div>
       <ul id="menu-inner">
-        <li><a href="#">Domů</a></li>
+        <li><a href="/home">Domů</a></li>
         <li class="menu-more">
-          <a href="#">O klubu</a>
+          <a href="/oklubu">O klubu</a>
           <ul>
-            <li><a href="#">Historie</a></li>
-            <li><a href="#">Úspěchy v číslech</a></li>
-            <li><a href="#">Mistrovství ČR</a></li>
-            <li><a href="#">Mistrovství družstev</a></li>
-            <li><a href="#">Taneční liga</a></li>
-            <li><a href="#">Kluboví trenéři</a></li>
-            <li><a href="#">Externí trenéři</a></li>
-            <li><a href="#">Kde trénujeme</a></li>
-            <li><a href="#">Stanovy klubu</a></li>
+            <li><a href="/oklubu/historie">Historie</a></li>
+            <li><a href="/oklubu/uspechy">Úspěchy v číslech</a></li>
+            <li><a href="/oklubu/mistrovstvi">Mistrovství ČR</a></li>
+            <li><a href="/oklubu/druzstva">Mistrovství družstev</a></li>
+            <li><a href="/oklubu/liga">Taneční liga</a></li>
+            <li><a href="/oklubu/treneri/externi">Externí trenéři</a></li>
+            <li><a href="/oklubu/treneri/klubovi">Kluboví trenéři</a></li>
+            <li><a href="/oklubu/saly">Kde trénujeme</a></li>
+            <li><a href="/oklubu//stanovy.pdf">Stanovy klubu</a></li>
           </ul>
         </li>
-        <li><a href="#">Novinky</a></li>
+        <li><a href="/aktualne/clanky">Novinky</a></li>
         <li class="menu-more">
-          <a href="#">Nabízíme</a>
+          <a href="/nabizime">Nabízíme</a>
           <ul>
-            <li><a href="#">Taneční kurzy</a></li>
-            <li><a href="#">Taneční vystoupení</a></li>
-            <li><a href="#">Taneční soustředění</a></li>
-            <li><a href="#">Tancování pro děti</a></li>
-            <li><a href="#">Zázemí pro taneční sport</a></li>
+            <li><a href="/nabizime/obecne">Taneční kurzy</a></li>
+            <li><a href="/nabizime/vystoupeni">Taneční vystoupení</a></li>
+            <li><a href="/nabizime/soustredeni">Taneční soustředění</a></li>
+            <li><a href="/nabizime/seminare">Tancování pro děti</a></li>
+            <li><a href="/nabizime/individualky">Zázemí pro taneční sport</a></li>
           </ul>
         </li>
-        <li><a href="#">Fotogalerie</a></li>
-        <li><a href="#">Kontakt</a></li>
+        <li><a href="/fotogalerie">Fotogalerie</a></li>
+        <li><a href="/kontakt">Kontakt</a></li>
         <li class="menu-right">
-          <a href="#">Pro členy</a>
+          <a href="/member/home">Pro členy</a>
         </li>
       </ul>
     </div>

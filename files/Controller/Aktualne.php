@@ -32,12 +32,10 @@ class Controller_Aktualne extends Controller_Abstract
     function sidebar() {
         $s = new Sidebar();
 
-        echo $s->menuHeader();
-        echo $s->menuItem('Články',               '/aktualne/clanky');
-        echo $s->menuItem('Videa',                '/aktualne/videa');
-
-        echo $s->commonItems();
+        echo $s->menuItem('Články', '/aktualne/clanky');
+        echo $s->menuItem('Videa', '/aktualne/videa');
     }
+
     private function _aktualne($nadpis = "", $type = null) {
         $data = DBAktuality::getAktuality($type);
 

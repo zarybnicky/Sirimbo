@@ -124,16 +124,6 @@ function echoTaborDokumenty($list_name, $kats) {
     echo '</select>', "\n";
 }
 
-function getRadio($name, $value, $default = false, $get = false, $readonly = false) {
-    $checked = (($get == true) ?
-        ((get($name) == $value) ? true : false) :
-        ((post($name) == $value) ? true : false));
-    if (($get == true) ? !get($name) : !post($name))
-        $checked = (bool) $default;
-    return '<input type="radio" name="' . $name . '" value="' . $value . '"' .
-        ($checked ? ' checked="checked"' : '') . ($readonly ? ' readonly="readonly"' : '') . '/>';
-}
-
 function getReturnURI($default) {
     return post('referer') ? post('referer') : $default;
 }

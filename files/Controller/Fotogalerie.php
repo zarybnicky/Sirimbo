@@ -72,10 +72,6 @@ class Controller_Fotogalerie extends Controller_Abstract
         if (empty($dirs))
             return;
 
-        $s = new Sidebar();
-        echo $s->menuHeader();
-        unset($s);
-
         echo '<ul class="fotoroot" style="padding-top:5px;"><li>';
 
         $level_prev = 0;
