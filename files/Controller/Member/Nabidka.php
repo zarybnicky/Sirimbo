@@ -69,8 +69,9 @@ class Controller_Member_Nabidka extends Controller_Member
         return $f->isValid() ? null : $f;
     }
     private function _processPost() {
-        if (empty($_POST))
+        if (empty($_POST)) {
             return;
+        }
         $data = DBNabidka::getSingleNabidka(post('id'));
 
         if (is_object($f = $this->_checkData($data))) {
@@ -102,4 +103,3 @@ class Controller_Member_Nabidka extends Controller_Member
         }
     }
 }
-?>

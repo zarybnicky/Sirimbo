@@ -81,6 +81,10 @@ strong { font-weight: bold; }
     float: left;
     width: 33.33%;
 }
+.container-half {
+    float:left;
+    width: 50%;
+}
 
 .widget {
     border: 1px solid #ccc;
@@ -459,3 +463,21 @@ strong { font-weight: bold; }
 .big {font-size: 124%;color: #500;}
 .center {text-align:center;}
 .list {list-style:disc outside none;padding-left:15px;}
+
+.up_header {
+	border:1px solid #ffe3b7;
+	background-color:#fff0e2;
+	padding:5px 8px;
+}
+.trenink_header {
+	border:1px solid #ffe3b7;
+	background-color:#fff0e2;
+	padding:5px;
+	margin:0 auto 5px;
+	width:200px;
+	text-align:center;
+}
+.up_header .nadpis, .trenink_header .nadpis {
+	font-weight:bold;
+	font-size:115%;
+}

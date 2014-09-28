@@ -3,7 +3,13 @@
 <?php echo $this->notice($this->redirect()->getMessage());?>
 
 <style type="text/css">
-.unit {background:inherit;border:none;vertical-align:top;border-bottom:1px dotted #999;padding:10px 5px;}
+.unit {
+  background:inherit;
+  border:none;
+  vertical-align:top;
+  border-bottom:1px dotted #999;
+  padding:10px 5px;
+}
 </style>
 
 <table style="width:100%;">

@@ -122,4 +122,3 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
         );
     }
 }
-?>
