@@ -80,7 +80,10 @@
         </li>
         <li><a href="/fotogalerie">Fotogalerie</a></li>
         <li><a href="/kontakt">Kontakt</a></li>
-        <li class="menu-right">
+        <li class="menu-right menu-more">
+          <a href="/admin/home">Administrace</a>
+        </li>
+        <li class="menu-right menu-more">
           <a href="/member/home">Pro členy</a>
         </li>
       </ul>

@@ -1,12 +1,12 @@
 <?php
-class RadioHelper {
+class CheckboxHelper {
     protected $name;
     protected $value;
     protected $defaultState;
     protected $get;
     protected $readonly;
 
-    public function radio($name, $value = null) {
+    public function checkbox($name, $value = null) {
         if ($value === null) {
             $value = $name;
         }

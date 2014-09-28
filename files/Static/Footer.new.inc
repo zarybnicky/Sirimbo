@@ -33,17 +33,13 @@
         </a>
       </div>
 
-      <span style="margin-bottom:40px;">
-        Copyright © 2014, TK Olymp Olomouc
-      </span>
-
       <span>
         design a realizace:
         <a href="mailto:kuba.zarybnicky@post.cz">Jakub Zárybnický</a>
       </span>
 
       <span>
-        <a href="/admin/home">Administrace</a>
+        © 2014 TK Olymp Olomouc
       </span>
     </div>
     <script type="text/javascript" src="/scripts/main.js"></script>
