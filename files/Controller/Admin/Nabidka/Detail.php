@@ -6,9 +6,12 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
         Permissions::checkError('nabidka', P_OWNED);
     }
     function view($id = null) {
-        if (!$id || !($data = DBNabidka::getSingleNabidka($id)))
-            $this->redirect('/admin/nabidka', 'Nabídka s takovým ID neexistuje');
-
+        if (!$id || !($data = DBNabidka::getSingleNabidka($id))) {
+            $this->redirect(
+                '/admin/nabidka',
+                'Nabídka s takovým ID neexistuje'
+            );
+        }
         Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
 
         $items = DBNabidka::getNabidkaItem($id);

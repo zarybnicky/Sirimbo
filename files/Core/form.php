@@ -6,6 +6,7 @@ class Form
     private $_fields;
 
     const REGEXP_DATE = '/^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/i';
+    const REGEXP_TIME = '/^[012]?\d[:\.]\d\d$/';
     const REGEXP_EMAIL = '/^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i';
     const REGEXP_PHONE = '/^((\+|00)\d{3})?( ?\d{3}){3}$/';
     const REGEXP_LOGIN = '/^[A-Z0-9_]{3,20}$/i';
@@ -39,6 +40,9 @@ class Form
         }
         $this->_error($message, $name);
         return false;
+    }
+    function checkTime($i, $message, $name = '') {
+        return $this->checkRegexp($i, Form::REGEXP_TIME, $message, $name);
     }
     function checkEmail($i, $message, $name = '') {
         return $this->checkRegexp($i, Form::REGEXP_EMAIL, $message, $name);

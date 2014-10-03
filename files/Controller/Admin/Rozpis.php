@@ -81,7 +81,7 @@ class Controller_Admin_Rozpis extends Controller_Admin
                 'datum' => formatDate($row['r_datum']),
                 'kde' => $row['r_kde']
             );
-            $new_data['checkbox'] = $this->checkbox('rozpis[]', $row['r_id'])->readonly($new_data['canEdit']);
+            $new_data['checkBox'] = $this->checkbox('rozpis[]', $row['r_id'])->readonly($new_data['canEdit']);
             if (Permissions::check('rozpis', P_ADMIN)) {
                 $new_data['visible'] = $this->checkbox($row['r_id'], '1')->defaultState($row['r_visible']);
             } else {
@@ -139,7 +139,7 @@ class Controller_Admin_Rozpis extends Controller_Admin
             $this->redirect('/admin/rozpis', 'Rozpis s takovým ID neexistuje');
         Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
 
-        if (empty($_POST) || is_object($this->_checkData())) {
+        if (empty($_POST) || is_object($f = $this->_checkData())) {
             if (empty($_POST)) {
                 post('id', $id);
                 post('trener', $data['r_trener']);

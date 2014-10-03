@@ -25,7 +25,8 @@ class Controller_Member_Rozpis  extends Controller_Member
                             'canCancel' => $item['ri_partner'] != 0 &&
                                 !$rozpis['r_lock'] &&
                                 !$item['ri_lock'] &&
-                                ((Permissions::check('rozpis', P_MEMBER) && User::getParID() == $item['ri_partner'])
+                                ((Permissions::check('rozpis', P_MEMBER) &&
+                                  User::getParID() == $item['ri_partner'])
                                  || Permissions::check('rozpis', P_OWNED, $rozpis['r_trener']))
                         );
                     },
