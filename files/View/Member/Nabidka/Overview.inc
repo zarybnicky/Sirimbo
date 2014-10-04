@@ -29,7 +29,13 @@
                 <td><?php echo $row['fullName'];?></td>
                 <td><?php echo $row['hourCount'];?></td>
                 <?php if ($row['canDelete']) : ?>
-                <td><button type="submit" name="un_id" value="<?php echo $row['deleteTicket'];?>">&times;</button></td>
+                  <td>
+                    <button type="submit"
+                            name="un_id"
+                            value="<?php echo $row['deleteTicket'];?>">
+                      &times;
+                    </button>
+                  </td>
                 <?php endif;?>
             </tr>
             <?php endforeach;?>

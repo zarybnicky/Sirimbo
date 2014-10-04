@@ -68,17 +68,17 @@ class Date
             case Date::FORMAT_SQL:
                 return $this->_sqlFormat;
             case Date::FORMAT_SIMPLE:
-                return $this->_day . '.' .     $this->_month . '.' . $this->_year;
+                return $this->_day . '.' . $this->_month . '.' . $this->_year;
                 break;
             case Date::FORMAT_SIMPLE_SPACED:
-                return $this->_day . '. ' .     $this->_month . '. ' . $this->_year;
+                return $this->_day . '. ' . $this->_month . '. ' . $this->_year;
                 break;
             case Date::FORMAT_SIMPLIFIED:
                 return ((int) $this->_day) . '. ' .
                     ((int) $this->_month) . '. ' . $this->_year;
                 break;
             case Date::FORMAT_SLASHED:
-                return $this->_day . '/' .     $this->_month . '/' . $this->_year;
+                return $this->_day . '/' . $this->_month . '/' . $this->_year;
                 break;
             default:
                 return '';

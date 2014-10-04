@@ -20,12 +20,13 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
         if (post()) {
             $items = $this->processPost($id, $data, $items);
             DBRozpis::editRozpisItemMultiple($items);
+            $this->redirect('/' . Request::getURI());
         }
 
         $users = DBPary::getPartners();
 
         $items = array_map(
-            function ($item) use ($data) {
+            function ($item) {
                 return array(
                     'id' => $item['ri_id'],
                     'partner' => $item['ri_partner'],
@@ -44,12 +45,69 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
             'canEdit' => Permissions::check('nabidka', P_OWNED, $data['r_trener'])
         );
 
+        $nabidky = DBNabidka::getNabidka();
+        usort(
+            $nabidky,
+            function ($a, $b) {
+                $a1 = $a['u_prijmeni'] . $a['u_jmeno'] . $a['n_od'];
+                $b1 = $b['u_prijmeni'] . $b['u_jmeno'] . $b['n_od'];
+                return $a1 < $b1 ? -1 : ($a1 > $b1 ? 1 : 0);
+            }
+        );
+
+        $nabidky_select = array();
+        foreach ($nabidky as $item) {
+            $nabidky_select[$item['n_id']] =
+                $item['u_prijmeni'] . ', ' . $item['u_jmeno'] .
+                ' (' . formatDate($item['n_od']) .
+                (($item['n_od'] != $item['n_do']) ?
+                 (' - ' . formatDate($item['n_do'])) :
+                 '') .
+                ')';
+        }
+
+        if (get('n') && ($nabidka = DBNabidka::getSingleNabidka(get('n')))) {
+            $nabidka_items = array_map(
+                function ($item) {
+                    return array(
+                        'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
+                        'lessonCount' => $item['ni_pocet_hod']
+                    );
+                },
+                DBNabidka::getNabidkaItem(get('n'))
+            );
+            
+            $obsazeno = array_reduce(
+                $nabidka_items,
+                function ($carry, $item) {
+                    return $carry + $item['lessonCount'];
+                },
+                0
+            );
+
+            $nabidka = array(
+                'id' => $nabidka['n_id'],
+                'fullName' => $nabidka['u_jmeno'] . ' ' . $nabidka['u_prijmeni'],
+                'datum' => formatDate($nabidka['n_od'])
+                . ($nabidka['n_od'] != $nabidka['n_do'] ? ' - ' . formatDate($nabidka['n_do']) : ''),
+                'canEdit' => false,
+                'hourMax' => $nabidka['n_max_pocet_hod'],
+                'hourTotal' => $nabidka['n_pocet_hod'],
+                'hourReserved' => $obsazeno,
+                'hourFree' => $nabidka['n_pocet_hod'] - $obsazeno
+            );
+
+            $nabidka['items'] = $nabidka_items;
+        }
+
         $this->render(
             'files/View/Admin/Rozpis/Detail.inc',
             array(
                 'data' => $data,
                 'users' => $users,
-                'items' => $items
+                'items' => $items,
+                'nabidky' => $nabidky_select,
+                'nabidka' => isset($nabidka) ? $nabidka : array()
             )
         );
     }
@@ -59,7 +117,6 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
             DBRozpis::removeRozpisItem(post('remove'));
             $items = DBRozpis::getRozpisItem($id);
         }
-
         //Update all
         foreach ($items as &$item) {
             $item['ri_partner'] = (post($item['ri_id'] . '-partner') == 'none')
@@ -72,19 +129,20 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
 
         //Try to add a new item
         if (post('add_od') && post('add_do')) {
-            $this->checkAdd();
-            //XXX
-
-            $newId = DBRozpis::addRozpisItem(
-                $id,
-                (post('add_partner') == 'none') ? "0" : post('add_partner'),
-                formatTime(post('add_od'), 0),
-                formatTime(post('add_do'), 0),
-                (int) post('add_lock')
-            );
-            $items[] = DBRozpis::getRozpisItemLesson($newId);
-
-            post('add_partner', null);
+            if (is_object($f = $this->checkAdd())) {
+                $this->redirect()->setMessage($f->getMessages());
+            } else {
+                $newId = DBRozpis::addRozpisItem(
+                    $id,
+                    (post('add_partner') == 'none') ? "0" : post('add_partner'),
+                    formatTime(post('add_od'), 0),
+                    formatTime(post('add_do'), 0),
+                    (int) (bool) post('add_lock')
+                );
+                $items[] = DBRozpis::getRozpisItemLesson($newId);
+                
+                post('add_partner', null);
+            }
         }
         
         switch (post('action')) {
@@ -100,7 +158,7 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
                 );
 
                 $end = "00:00";
-                foreach ($items as $item) {
+                foreach ($items as &$item) {
                     $l_start = formatTime($item['ri_od'], 1);
                     $l_end = formatTime($item['ri_do'], 1);
                     $length = timeSubstract($l_end, $l_start);
@@ -120,8 +178,10 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
                 }
                 break;
             case 'add_multiple':
-                $this->checkAddMultiple();
-                //XXX
+                if (is_object($f = $this->checkAddMultiple())) {
+                    $this->redirect()->setMessage($f->getMessages());
+                    break;
+                }
 
                 $od = post('add_multi_od');
                 $len = floor(post('add_multi_len') / 60) . ':' .
@@ -137,13 +197,12 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
                         '0'
                     );
                     $items[] = DBRozpis::getRozpisItemLesson($newId);
-
+                    
                     $od = $do;
                     $do = timeAdd($od, $len);
                 }
                 break;
         }
-
         return $items;
     }
 

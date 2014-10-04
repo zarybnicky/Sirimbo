@@ -69,62 +69,48 @@
         </tr>
         <tr>
           <td>
-            <button type="submit" name="action" value="submit">Uložit</button>
           </td>
         </tr>
       </table>
     </div>
-    <br/>
-    <h2>Nabídky</h2>
+    <div>
+      <button type="submit" name="action" value="submit">Uložit</button>
+      <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
+      <button type="submit" name="action" value="overlap">Opravit přesahy</button><br/>
+      <button type="submit" name="action" value="add_multiple">Přidat více:</button>
+      <input type="text" name="add_multi_hod" size="2" /> hodin po
+      <input type="text" name="add_multi_len" size="3" /> minutách od
+      <input type="text" name="add_multi_od" size="5" /> hodin
+    </div>
+  </form>
+  <br/>
+  <h2>Nabídky</h2>
+  <form action="" method="get">
     <?php
-    $nabidky = DBNabidka::getNabidka();
-    
-    $s = $this->select()
-              ->post()->name('n_id')
-                      ->option('none', '--');
-    foreach ($nabidky as $item)
-      $s->option($item['n_id'],
-                 formatDate($item['n_od']) . ($item['n_od'] != $item['n_do'] ?
-                                                               (' - ' . formatDate($item['n_do'])) : '') .
-    ': ' . $item['u_jmeno'] . ' ' . $item['u_prijmeni']);
-    echo $s;
+    echo $this->select()
+              ->get()
+              ->name('n')
+              ->option('', '--')
+              ->options($this->nabidky);
     ?>
-    <button type="submit" name="action" value="select">Vybrat nabídku</button>
-    <?php
-    if (is_numeric(post('n_id'))) {
-      $n_id = post('n_id');
-      if (!($nabidka = DBNabidka::getSingleNabidka($n_id))) {
-        echo 'Nabídka se zadaným ID neexistuje!';
-      } else {
-        echo '<div class="n_wrapper">';
-        DisplayNabidka::viewNabidkaHeader(
-          $nabidka,
-          DBNabidka::getNabidkaItemLessons($n_id)
-        );
-        
-        $items = DBNabidka::getNabidkaItem($n_id);
-        if (!empty($items)) {
-          echo '<table>';
-          echo '<tr><td>Tanečník</td><td>Počet hodin</td></tr>';
-          foreach ($items as $item) {
-            echo '<tr>';
-            echo '<td>', echoFullJmeno($item), '</td>';
-            echo '<td>', $item['ni_pocet_hod'], '</td>';
-            echo '</tr>';
-          }
-          echo '</table>';
-        }
-        echo '</div>';
-      }
-    }
-    ?>
-    <br/><br/>
-    <h2>Pomocník</h2>
-    <button type="submit" name="generate" value="overlap">Opravit přesahy</button><br/>
-    <button type="submit" name="generate" value="gen_add">Přidat</button>
-    <input type="text" name="gen_add_hod" size="2" /> hodin po
-    <input type="text" name="gen_add_len" size="3" /> minutách od
-    <input type="text" name="gen_add_od" size="5" /> hodin
+    <button type="submit">Vybrat nabídku</button>
+    <?php if ($this->nabidka) : ?>
+      <div class="n_wrapper">
+        <?php echo $this->render('files/View/Member/Nabidka/Header.inc', $this->nabidka); ?>
+        <table>
+          <tr>
+            <td>Tanečník</td>
+            <td>Počet hodin</td>
+          </tr>
+          <?php foreach ($this->nabidka['items'] as $item) : ?>
+            <tr>
+              <td><?php echo $item['fullName']; ?></td>
+              <td><?php echo $item['lessonCount']; ?></td>
+            </tr>
+          <?php endforeach; ?>
+        </table>
+      </div>
+    <?php endif; ?>
   </form>
   <br/>
   <a href="/admin/rozpis">Zpět</a>

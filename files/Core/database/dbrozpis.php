@@ -143,6 +143,9 @@ class DBRozpis extends Database
         list($parent_id, $user_id, $od, $do, $lock) =
             self::escape($parent_id, $user_id, $od, $do, $lock);
 
+        dump("INSERT INTO rozpis_item (ri_id_rodic,ri_partner,ri_od,ri_do,ri_lock)" .
+             " VALUES ('$parent_id','$user_id','$od','$do','$lock')" .
+             " ON DUPLICATE KEY UPDATE ri_partner='$user_id',ri_do='$do',ri_lock='$lock'");
         self::query("INSERT INTO rozpis_item (ri_id_rodic,ri_partner,ri_od,ri_do,ri_lock)" .
             " VALUES ('$parent_id','$user_id','$od','$do','$lock')" .
             " ON DUPLICATE KEY UPDATE ri_partner='$user_id',ri_do='$do',ri_lock='$lock'");
