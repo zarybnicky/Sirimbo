@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Správa nabídky</h1>
 <?php echo $this->notice($this->redirect()->getMessage()); ?>
 <form action="" method="POST" class="centerWTable">
@@ -36,3 +37,4 @@ if (!empty($this->items)) {
 </div>
 <a href="<?php echo Request::getReferer();?>">Zpět</a>
 </form>
+</div>

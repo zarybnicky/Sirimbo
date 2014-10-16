@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Správa anket</h1>
 <?php
 echo $this->notice($this->redirect()->getMessage());
@@ -21,3 +22,4 @@ foreach (get('u') as $id) {
 <button type="submit" name="action" value="remove_confirm">Odstranit</button>
 <a href="<?php echo Request::getReferer()?>">Zpět</a>
 </form>
+</div>

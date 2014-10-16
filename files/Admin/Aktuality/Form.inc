@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Správa aktualit</h1>
 <?php
 echo '<h2>', (Request::getAction() == 'add' ? 'Přidat článek' : 'Upravit článek'), '</h2>';
@@ -49,3 +50,4 @@ echo $this->notice($this->redirect()->getMessage());
     </tr>
 </table>
 </form>
+</div>

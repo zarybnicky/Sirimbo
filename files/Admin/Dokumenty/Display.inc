@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Správa dokumentů</h1>
 <?php
 echo $this->notice($this->redirect()->getMessage());
@@ -59,3 +60,4 @@ foreach ($dokumenty as $item) {
 <tr><td></td><td><button type="submit" name="action" value="upload">Upload</button></td></tr>
 </table>
 </form>
+</div>

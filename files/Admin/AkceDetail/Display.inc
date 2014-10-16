@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Správa akcí</h1>
 <?php echo $this->notice($this->redirect()->getMessage()); ?>
 <form action="" method="POST" class="centerWTable">
@@ -32,3 +33,4 @@ if (!empty($this->items)) {
 <button type="submit" name="action" value="submit">Uložit</button>
 <a href="/admin/akce">Zpět</a>
 </form>
+</div>

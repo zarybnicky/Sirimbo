@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Správa aktualit</h1>
 <?php
 echo $this->notice($this->redirect()->getMessage());
@@ -34,7 +35,7 @@ if (!TISK) {
 <td>Kategorie</td>
 </tr>
 <?php
-foreach ($aktuality as $item) {
+foreach ($this->aktuality as $item) {
     echo '<tr>';
 
     if (Permissions::check('aktuality', P_OWNED, $item['at_kdo']))
@@ -55,3 +56,4 @@ foreach ($aktuality as $item) {
 </table>
 </div>
 </form>
+</div>

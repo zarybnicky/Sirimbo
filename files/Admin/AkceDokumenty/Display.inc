@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Správa akcí</h1>
 <?php echo $this->notice($this->redirect()->getMessage()); ?>
 <form action="" method="POST" class="centerWTable">
@@ -26,3 +27,4 @@ if (!empty($doku)) {
 </table>
 <a href="/admin/akce">Zpět</a>
 </form>
+</div>

@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Správa nabídky</h1>
 <?php
 echo $this->notice($this->redirect()->getMessage());
@@ -23,3 +24,4 @@ echo $this->table()
 echo '</div>';
 echo '</form>';
 ?>
+</div>

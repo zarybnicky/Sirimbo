@@ -1,3 +1,4 @@
+<div class="container">
 <h1>Správa anket</h1>
 <?php echo $this->notice($this->redirect()->getMessage()); ?>
 <form action="" method="POST">
@@ -36,3 +37,4 @@ foreach ($ankety as $item) {
 ?>
 </table>
 </form>
+</div>
