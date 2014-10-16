@@ -17,7 +17,6 @@ function _getItem($name, $href) {
 #adminNavigation li {
     display:inline;
     font-size: 115%;
-    color: #572E00;
     padding: 0 5px;
     font-weight:bold;
 } #adminNavigation li a {

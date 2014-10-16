@@ -12,12 +12,12 @@
 }
 </style>
 
-<table style="width:100%;"
+<table style="width:100%;">
 
 <?php foreach (array_chunk($this->data, 2) as $chunk) : ?>
     <tr>
     <?php foreach ($chunk as $item) : ?>
-      <td>
+      <td class="unit">
       <?php echo $this->render('files/View/Member/Rozpis/Header.inc', $item); ?>
         <table style="margin:0 auto;">
           <tr>

@@ -17,10 +17,10 @@ echo $this->select()
 
 <table>
     <tr>
-        <td>Jméno souboru</td>
-        <td>Soubor</td>
-        <td>Kategorie</td>
-        <td>Uploadoval</td>
+        <th>Jméno souboru</th>
+        <th>Soubor</th>
+        <th>Kategorie</th>
+        <th>Uploadoval</th>
     </tr>
     <?php foreach ($this->data as $item): ?>
     <tr>

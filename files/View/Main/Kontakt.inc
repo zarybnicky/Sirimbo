@@ -5,7 +5,7 @@
 table.k {border:none;}
 table.k td {border:none;background:none;}
 table.k td.r {padding-right:10px;text-align:right;}
-table.k b {color:#572E00;}
+table.k b {color:#333;}
 </style>
 <table class="k">
 <tr><td><h2>Taneční klub Olymp Olomouc</h2></td></tr>

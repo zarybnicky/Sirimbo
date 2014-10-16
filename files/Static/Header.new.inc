@@ -15,6 +15,8 @@
     <meta property="fb:app_id" content="132983570203245"/>
     <script type="text/javascript" src="/scripts/jquery-1.10.2.min.js"></script>
     <script type="text/javascript" src="/scripts/masonry.pkgd.min.js"></script>
+    <script type="text/javascript" src="/scripts/imagesloaded.pkgd.min.js"></script>
+
     <script type="text/javascript" src="//connect.facebook.net/cs_CZ/all.js#xfbml=1&appId=132983570203245" id="facebook-jssdk"></script>
     <script type="text/javascript">
      var _gaq = _gaq || [];

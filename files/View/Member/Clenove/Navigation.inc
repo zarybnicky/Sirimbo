@@ -21,7 +21,6 @@ if (TISK) {
 #adminNavigation li {
     display:inline;
     font-size: 110%;
-    color: #572E00;
     padding: 0 5px;
     font-weight:bold;
 } #adminNavigation li a {

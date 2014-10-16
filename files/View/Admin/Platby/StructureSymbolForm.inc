@@ -21,10 +21,10 @@ $mainForm = $this->table()
             'value' => $this->date('validRange')->range()
         ), array(
             'desc' => 'Povolit prefix roku?:',
-            'value' => $this->checkbox('usePrefix', '1')
+            'value' => (string) $this->checkbox('usePrefix', '1')
         ), array(
             'desc' => 'Archivovat?:',
-            'value' => $this->checkbox('archive', '1')
+            'value' => (string) $this->checkbox('archive', '1')
         )
 ));
 if (!empty($this->groups)) {
