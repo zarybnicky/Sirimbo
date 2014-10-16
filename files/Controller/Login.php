@@ -1,4 +1,3 @@
-
 <?php
 class Controller_Login extends Controller_Abstract
 {
@@ -9,5 +8,4 @@ class Controller_Login extends Controller_Abstract
         }
         $this->render('files/View/Main/Login.inc');
     }
-    function sidebar() { }
 }

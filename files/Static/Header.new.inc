@@ -47,44 +47,4 @@
       </div>
     </div>
 
-    <div id="menu">
-      <div id="menu-logo">
-        <img alt="" src="/style/logo-small.png" />
-      </div>
-      <ul id="menu-inner">
-        <li><a href="/home">Domů</a></li>
-        <li class="menu-more">
-          <a href="/oklubu">O klubu</a>
-          <ul>
-            <li><a href="/oklubu/historie">Historie</a></li>
-            <li><a href="/oklubu/uspechy">Úspěchy v číslech</a></li>
-            <li><a href="/oklubu/mistrovstvi">Mistrovství ČR</a></li>
-            <li><a href="/oklubu/druzstva">Mistrovství družstev</a></li>
-            <li><a href="/oklubu/liga">Taneční liga</a></li>
-            <li><a href="/oklubu/treneri/externi">Externí trenéři</a></li>
-            <li><a href="/oklubu/treneri/klubovi">Kluboví trenéři</a></li>
-            <li><a href="/oklubu/saly">Kde trénujeme</a></li>
-            <li><a href="/oklubu//stanovy.pdf">Stanovy klubu</a></li>
-          </ul>
-        </li>
-        <li><a href="/aktualne/clanky">Novinky</a></li>
-        <li class="menu-more">
-          <a href="/nabizime">Nabízíme</a>
-          <ul>
-            <li><a href="/nabizime/obecne">Taneční kurzy</a></li>
-            <li><a href="/nabizime/vystoupeni">Taneční vystoupení</a></li>
-            <li><a href="/nabizime/soustredeni">Taneční soustředění</a></li>
-            <li><a href="/nabizime/seminare">Tancování pro děti</a></li>
-            <li><a href="/nabizime/individualky">Zázemí pro taneční sport</a></li>
-          </ul>
-        </li>
-        <li><a href="/fotogalerie">Fotogalerie</a></li>
-        <li><a href="/kontakt">Kontakt</a></li>
-        <li class="menu-right menu-more">
-          <a href="/admin/home">Administrace</a>
-        </li>
-        <li class="menu-right menu-more">
-          <a href="/member/home">Pro členy</a>
-        </li>
-      </ul>
-    </div>
+    <?php echo View::$controller->navbar(); ?>

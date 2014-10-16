@@ -29,11 +29,12 @@ class Controller_Aktualne extends Controller_Abstract
     function kratke_zpravy($id = null) {
         $this->_aktualne('Krátké zprávy', AKTUALITY_KRATKE);
     }
-    function sidebar() {
-        $s = new Sidebar();
-
-        echo $s->menuItem('Články', '/aktualne/clanky');
-        echo $s->menuItem('Videa', '/aktualne/videa');
+    public function navbar() {
+        return parent::navbar() .
+            new Navbar(
+                include SETTINGS . '/menu/novinky.php',
+                false
+            );
     }
 
     private function _aktualne($nadpis = "", $type = null) {

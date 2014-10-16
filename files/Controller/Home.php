@@ -10,5 +10,4 @@ class Controller_Home extends Controller_Abstract
         }
         $this->render('files/View/Main/Home.inc');
     }
-    function sidebar() { }
 }

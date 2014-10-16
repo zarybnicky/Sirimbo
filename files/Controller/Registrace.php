@@ -37,6 +37,4 @@ class Controller_Registrace extends Controller_Abstract
         }
         $this->render('files/View/Main/Registrace.inc');
     }
-    function sidebar() { }
 }
-?>

@@ -31,17 +31,11 @@ class Controller_Oklubu extends Controller_Abstract
     public function saly($id = null) {
         $this->render('files/View/Main/OKlubu/Saly.inc');
     }
-    public function sidebar() {
-        $s = new Sidebar();
-
-        echo $s->menuItem('Historie',          '/oklubu/historie');
-        echo $s->menuItem('Úspěchy v číslech', '/oklubu/uspechy');
-        echo $s->menuItem('Mistrovství ČR',    '/oklubu/mistrovstvi');
-        echo $s->menuItem('Družstva',          '/oklubu/druzstva');
-        echo $s->menuItem('Taneční liga',      '/oklubu/liga');
-        echo $s->menuItem('Kluboví trenéři',   '/oklubu/treneri/klubovi');
-        echo $s->menuItem('Externí trenéři',   '/oklubu/treneri/externi');
-        echo $s->menuItem('Kde trénujeme',     '/oklubu/saly');
-        echo $s->menuItem('Stanovy klubu',     '/oklubu/stanovy.pdf');
+    public function navbar() {
+        return parent::navbar() .
+            new Navbar(
+                include SETTINGS . '/menu/oklubu.php',
+                false
+            );
     }
 }

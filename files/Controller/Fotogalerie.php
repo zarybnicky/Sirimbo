@@ -53,57 +53,68 @@ class Controller_Fotogalerie extends Controller_Abstract
         }
         $hasPrev = isset($parent_dir[$current - 1]);
         $hasNext = isset($parent_dir[$current + 1]);
+
         $this->render(
             'files/View/Main/Fotogalerie/Single.inc',
             array(
-                'id'         => $id,
-                'src'        => '/galerie/' . $data['gf_path'],
-                'hasPrev'    => $hasPrev,
-                'prevURI'    => $hasPrev ? $parent_dir[$current - 1]['gf_id'] : '',
-                'returnURI'  => '/fotogalerie' . ($data['gf_id_rodic'] > 0 ? ('/' . $data['gf_id_rodic']) : ''),
-                'hasNext'    => $hasNext,
-                'nextURI'    => $hasNext ? $parent_dir[$current + 1]['gf_id'] : '',
+                'id'        => $id,
+                'src'       => '/galerie/' . $data['gf_path'],
+                'hasPrev'   => $hasPrev,
+                'hasNext'   => $hasNext,
+                'prevURI'   => $hasPrev ? $parent_dir[$current - 1]['gf_id'] : '',
+                'nextURI'   => $hasNext ? $parent_dir[$current + 1]['gf_id'] : '',
+                'returnURI' => '/fotogalerie' . ($data['gf_id_rodic'] > 0 ? ('/' . $data['gf_id_rodic']) : ''),
+                'sidebar'   => $this->sidebar()
             )
         );
     }
-    function sidebar() {
+
+    public function sidebar() {
         $dirs = DBGalerie::getDirs(true, true);
 
-        if (empty($dirs))
+        if (empty($dirs)) {
             return;
+        }
 
-        echo '<ul class="fotoroot" style="padding-top:5px;"><li>';
+        $out = '<ul class="fotoroot"><li>';
 
         $level_prev = 0;
         foreach ($dirs as $dir) {
-            if ($dir['gd_hidden'] == '1')
+            if ($dir['gd_hidden'] == '1') {
                 continue;
+            }
 
             if ($dir['gd_level'] > $level_prev) {
-                echo '<ul class="fotolist">';
+                $out .= '<ul class="foto_list">';
             } elseif ($dir['gd_level'] == $level_prev) {
-                echo '</li>';
+                $out .= '</li>';
             } else {
-                for($i = 0; $i < ($level_prev - $dir['gd_level']); $i++)
-                    echo '</li></ul>';
-                echo '</li>';
+                for($i = 0; $i < ($level_prev - $dir['gd_level']); $i++) {
+                    $out .= '</li></ul>';
+                }
+                $out .= '</li>';
             }
-            if ($dir['gd_id'] == 0)
+            if ($dir['gd_id'] == 0) {
                 $link = "/fotogalerie";
-            else
+            } else {
                 $link = "/fotogalerie/" . $dir['gd_id'];
+            }
 
-            if ($dir['gd_id'] == Request::getID())
-                echo '<li><a class="current" href="', $link, '">';
-            else
-                echo '<li><a href="', $link, '">';
+            if ($dir['gd_id'] == Request::getID()) {
+                $out .= '<li><a class="current" href="' . $link . '">';
+            } else {
+                $out .= '<li><a href="' . $link . '">';
+            }
 
-            echo '<img src="/style/directory.png" alt="Složka" />', $dir['gd_name'], '</a>';
+            $out .= '' . $dir['gd_name'] . '</a>';
             $level_prev = $dir['gd_level'];
         }
-        for($i = 0; $i < $level_prev; $i++)
-            echo '</li></ul>';
 
-        echo '</li></ul>';
+        for ($i = 0; $i < $level_prev; $i++) {
+            $out .= '</li></ul>';
+        }
+
+        $out .= '</li></ul>';
+        return $out;
     }
 }

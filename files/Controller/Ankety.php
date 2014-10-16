@@ -49,6 +49,4 @@ class Controller_Ankety extends Controller_Abstract
             )
         );
     }
-    function sidebar() { }
 }
-?>

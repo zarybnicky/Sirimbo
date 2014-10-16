@@ -19,13 +19,12 @@ class Controller_Nabizime extends Controller_Abstract
     function soustredeni($id = null) {
         $this->render('files/View/Main/Nabizime/Seminare.inc');
     }
-    function sidebar() {
-        $s = new Sidebar();
-
-        echo $s->menuItem('Nabízíme',            '/nabizime/obecne');
-        echo $s->menuItem('Taneční vystoupení',  '/nabizime/vystoupeni');
-        echo $s->menuItem('Individuální lekce',  '/nabizime/individualky');
-        echo $s->menuItem('Skupinové semináře',  '/nabizime/seminare');
-        echo $s->menuItem('Taneční soustředění', '/nabizime/soustredeni');
+    
+    public function navbar() {
+        return parent::navbar() .
+            new Navbar(
+                include SETTINGS . '/menu/nabizime.php',
+                false
+            );        
     }
 }

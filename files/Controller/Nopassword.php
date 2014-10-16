@@ -32,6 +32,4 @@ class Controller_Nopassword extends Controller_Abstract
         }
         $this->render('files/View/Main/Nopassword.inc');
     }
-    function sidebar() { }
 }
-?>

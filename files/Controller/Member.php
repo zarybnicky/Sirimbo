@@ -28,17 +28,12 @@ class Controller_Member extends Controller_Abstract
             )
         );
     }
-    function sidebar() {
-        $s = new Sidebar();
 
-        echo $s->menuItem('Novinky',          '/member/home');
-        echo $s->menuItem('Nástěnka',         '/member/nastenka');
-        echo $s->menuItem('Rozpis tréninků',  '/member/rozpis');
-        echo $s->menuItem('Nabidka tréninků', '/member/nabidka');
-        echo $s->menuItem('Klubové akce',     '/member/akce');
-        echo $s->menuItem('Dokumenty',        '/member/dokumenty');
-        echo $s->menuItem('Žebříček',         '/member/pary');
-        echo $s->menuItem('Přehled členů',    '/member/clenove/structure');
-        echo $s->menuItem('Profil',           '/member/profil');
+    public function navbar() {
+        return parent::navbar() .
+            new Navbar(
+                include SETTINGS . '/menu/member.inner.php',
+                false
+            );
     }
 }

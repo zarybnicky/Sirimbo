@@ -5,6 +5,4 @@ class Controller_Logout extends Controller_Abstract
         User::logout();
         $this->redirect('/home', 'Byli jste úspěšně odhlášeni.');
     }
-    function sidebar() { }
 }
-?>
