@@ -32,21 +32,6 @@
 </div>
 
 <div style="margin-bottom:2em;">
-<h2>Kamila Limberková (Dostálová)</h2>
-<img alt="Kamila Limberková" src="/images/treneri/kamca.jpg" class="f_doc_right" style="height:150px;" />
-<ul class="list">
-<li>2x titul Mistr České republiky v latinskoamerických tancích (2004 a 2006)</li>
-<li>2x titul Vicemistr České republiky v latinskoamerických tancích (2003 a 2005)</li>
-<li>1x titul Vicemistr České republiky kategorie děti 3 (1996)</li>
-<li>členka národního reprezentačního týmu České republiky</li>
-<li>1. místo v Taneční lize (žebříček párů mezinárodní třídy)</li>
-<li>vítěžka a finalistka významných evropských soutěží</li>
-<li>čtvrtfinalistka mistrovství světa a Evropy</li>
-<li>trenérka semifinalistů mistrovství ČR v deseti tancích</li>
-</ul>
-</div>
-
-<div style="margin-bottom:2em;">
 <h2>Martin Odstrčil</h2>
 <img alt="Martin Odstrčil" src="/images/treneri/martin.jpg" class="f_doc_right" style="height:150px;" />
 <ul class="list">

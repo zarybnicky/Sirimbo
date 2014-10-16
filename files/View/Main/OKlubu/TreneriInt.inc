@@ -47,18 +47,6 @@
 </ul>
 </div>
 
-<div style="margin-bottom:3em;">
-<img alt="Kristýna Hlavicová" src="/images/treneri/kristina.jpg" class="f_doc_right" style="height:150px;"/>
-<h2>Kristýna Hlavicová</h2>
-<ul class="list">
-<li>aktivní tanečnice, držitelka mezinárodní třídy ve standardních tancích</li>
-<li>4x finalistka mistrovství ČR juniorů a mládeže </li>
-<li>členka národního reprezentačního týmu České republiky</li>
-<li>finalistka významných evropských soutěží (Maribor, Varazdn, Zagreb, Isola)</li>
-<li>absolventka kvalifikačního studia pro porotce a trenéry 3. třídy tanečního sportu</li>
-</ul>
-</div>
-
 <div style="margin-bottom:1.5em;">
 <img alt="Tereza Jendrulková" src="/images/treneri/terka.jpg" class="f_doc_right" style="height:150px;"/>
 <h2>Tereza Jendrulková</h2>
@@ -88,21 +76,6 @@
 </ul>
 </div>
 
-<div style="margin-bottom:2em;">
-<h2>Bc. Pavel John</h2>
-<img alt="Bc. Pavel John" src="/images/treneri/pavel.jpg" class="f_doc_right" style="height:150px;"/>
-<ul class="list">
-<li>finalista mistrovství ČR v deseti tancích</li>
-<li>semifinalista mistrovství ČR ve standardních tancích</li>
-<li>člen národního reprezentačního týmu České republiky</li>
-<li>8x finalista mistrovství ČR juniorů a mládeže (4x medaile)</li>
-<li>4x titul Mistr České republiky družstev </li>
-<li>finalista významných evropských soutěží v kategorii mládež (Berlín, Wels, Bratislava, Ostrava)</li>
-<li>účastník mistrovství světa do 18 let v deseti tancích (Estonsko)</li>
-<li>absolvent kvalifikačního studia pro porotce a trenéry 3. třídy tanečního sportu</li>
-</ul>
-</div>
-
 <div style="margin-bottom:2.5em;">
 <img alt="Radim Stupka" src="/images/treneri/radim.jpg" class="f_doc_right" style="height:150px;"/>
 <h2>Radim Stupka</h2>
@@ -115,15 +88,3 @@
 <li>absolvent kvalifikačního studia pro porotce a trenéry 3. třídy tanečního sportu</li>
 </ul>
 </div>
-
-<div>
-<img alt="Rudolf Stupka" src="/images/treneri/ruda2.jpg" class="f_doc_right" style="height:150px;"/>
-<h2>Rudolf Stupka</h2>
-<ul class="list">
-<li>aktivní tanečník, držitel mezinárodní třídy ve standardních tancích</li>
-<li>účastník mistrovství ČR ve standardních tancích</li>
-<li>absolvent kvalifikačního studia pro porotce a trenéry 3. třídy tanečního sportu</li>
-</ul>
-</div>
-</div>
-
