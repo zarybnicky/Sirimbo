@@ -17,6 +17,7 @@
         <?php echo stripslashes(nl2br($row['preview']));?><br/>
         <a href="/aktualne/<?php $row['id']?>" class="little">více zde &raquo;</a><br/>
       <?php endif; ?>
+      <br/>
     </div>
   <?php endforeach;?>
 </div>
