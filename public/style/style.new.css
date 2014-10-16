@@ -319,7 +319,7 @@ th {
 }
 .highlights-image {
     position: absolute;
-    margin-left: -470px;
+    margin-left: -50%;
     left: 50%;
     width: auto;
     height: auto;
