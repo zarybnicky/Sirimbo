@@ -363,7 +363,7 @@ th {
 .videos li {
     position: relative;
 }
-.videos li:after {
+.videos li a:after {
     content: "";
     display:block;
     position: absolute;
