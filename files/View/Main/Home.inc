@@ -10,7 +10,18 @@
     <div class="widget">
       <div class="widget-title">Videa z posledních soutěží</div>
       <div class="widget-content">
-        Videa...
+        <ul class="videos">
+          <li>
+            <a href="https://www.youtube.com/watch?v=6nj5RT8FLa4">
+              <img alt="" src="//i3.ytimg.com/vi/6nj5RT8FLa4/hqdefault.jpg" />
+            </a>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/watch?v=szgAEUOIrmc">
+              <img alt="" src="//i3.ytimg.com/vi/szgAEUOIrmc/hqdefault.jpg" />
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
