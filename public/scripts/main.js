@@ -1,12 +1,14 @@
 var masonry;
 $(function() {
     var container = document.querySelector('#more-articles');
-    imagesLoaded( container, function() {
-        masonry = new Masonry(container, {
-            "columnWidth": ".grid-sizer",
-            "itemSelector": ".item"
+    if (container) {
+        imagesLoaded( container, function() {
+            masonry = new Masonry(container, {
+                "columnWidth": ".grid-sizer",
+                "itemSelector": ".item"
+            });
         });
-    });
+    }
 
     var menuHeight = $("#menu").outerHeight();
     var headerHeight = $("#header-inner").outerHeight() + menuHeight - 7;

@@ -41,7 +41,6 @@ blockquote, q { quotes: "" ""; }
 p {
     margin-bottom:.6em;
     text-align:justify;
-    text-indent: 1em;
 }
 a {
     text-decoration: none;
@@ -485,6 +484,29 @@ th {
     overflow-y: scroll;
     height: 400px;
 }
+
+.article h1 {
+    font-size: 250%;
+}
+.article .date {
+    margin-bottom: 20px;
+}
+.article .summary {
+    font-size: 150%;
+    color: #303C3C;
+    margin-bottom: 20px;
+}
+.article .image img {
+    display: block;
+    width: 700px;
+    margin-bottom: 20px;
+}
+.article .text {
+    width: 700px;
+    text-align: justify;
+    margin-bottom: 20px;
+}
+
 .notice {
 	padding: 10px 0 10px 20px;
 	position: relative;

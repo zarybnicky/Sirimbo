@@ -63,7 +63,7 @@ class ClankyHelper
                     'name' => $val['at_jmeno'],
                     'date' => formatDate($date),
                     'description' => $val['at_preview'],
-                    'title_photo_uri' => 'galerie/' . $photo_uri,
+                    'title_photo_uri' => '/galerie/' . $photo_uri,
                     'category' => 'Zprávy'
                     //FIXME: Články - kategorie (tagy?)
                 );
