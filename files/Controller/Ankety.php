@@ -1,7 +1,7 @@
 <?php
 class Controller_Ankety extends Controller_Abstract
 {
-    function view($id = null) {
+    public function view($id = null) {
         if (post('id')) {
             $currentIP = getIP();
             if (DBAnkety::isUniqueIP(post('id'), $currentIP)) {

@@ -1,7 +1,7 @@
 <?php
 class Controller_Home extends Controller_Abstract
 {
-    function view($id = null) {
+    public function view($id = null) {
         if (!Request::getURI()) {
             if (NABOR) {
                 $this->redirect('/nabor');

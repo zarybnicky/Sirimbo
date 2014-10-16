@@ -1,13 +1,14 @@
 <?php
 class Controller_Member extends Controller_Abstract
 {
-    function __construct() {
+    public function __construct() {
         Permissions::checkError('nastenka', P_VIEW);
     }
 
-    function view($id = null)  {
-        if (isset($_SESSION['zaplaceno_text']))
+    public function view($id = null)  {
+        if (isset($_SESSION['zaplaceno_text'])) {
             $this->redirect()->setMessage($_SESSION['zaplaceno_text']);
+        }
 
         $data = array_map(
             function($item) {
@@ -20,6 +21,7 @@ class Controller_Member extends Controller_Abstract
             },
             DBNovinky::getLastNovinky(NOVINKY_COUNT)
         );
+
         $this->render(
             'files/View/Member/Home.inc',
             array(

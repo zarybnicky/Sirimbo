@@ -97,7 +97,7 @@ class UserSelectHelper
 Jméno: <input type="text" name="jmeno" size="8" /><br/>
 Příjmení: <input type="text" name="prijmeni" size="8" /><br/>
 Datum narození:&nbsp;<br/>
-<?php echo Helper::get()->date('narozeni'), '<br/>';?>
+<?php echo Helper::instance()->date('narozeni'), '<br/>';?>
 <button type="submit">Uložit</button>
 </div>
 <div class="loading" style="display:none;"><img alt="Čekám na odezvu serveru..." src="/images/loading_bar.gif"/></div>

@@ -70,12 +70,12 @@ class Controller_Admin_Nabidka extends Controller_Admin
                        : '')
             );
             if ($new_data['canEdit']) {
-                $new_data['checkBox'] = $this->checkbox('nabidka[]', $row['n_id']);
+                $new_data['checkBox'] = (string) $this->checkbox('nabidka[]', $row['n_id']);
             } else {
                 $new_data['checkBox'] = '&nbsp;&#10799;';
             }
             if (Permissions::check('nabidka', P_ADMIN))
-                $new_data['visible'] = $this->checkbox($row['n_id'], '1')->defaultState($row['n_visible']);
+                $new_data['visible'] = (string) $this->checkbox($row['n_id'], '1')->defaultState($row['n_visible']);
             else
                 $new_data['visible'] = '&nbsp;' . ($row['n_visible'] ? '&#10003;' : '&#10799;');
             $row = $new_data;

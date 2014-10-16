@@ -27,7 +27,7 @@ class User
                 && !stripos(Request::getURI(), '/member/profil/edit')
                 && !stripos(Request::getURI(), '/error')) {
                 $_SESSION['invalid_data'] = 1;
-                Helper::get()->redirect('/member/profil/edit', 'Prosím vyplňte požadované údaje.', true);
+                Helper::instance()->redirect('/member/profil/edit', 'Prosím vyplňte požadované údaje.', true);
             } else {
                 $_SESSION['invalid_data'] = 0;
             }

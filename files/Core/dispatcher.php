@@ -27,11 +27,11 @@ class Dispatcher
         } catch(ViewException $e) {
             Log::write($e->getMessage() . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n" . $e->getTraceAsString());
             ob_clean();
-            Helper::get()->redirect('/error?id=' . $e->getErrorFile());
+            Helper::instance()->redirect('/error?id=' . $e->getErrorFile());
         } catch(Exception $e) {
             Log::write($e->getMessage() . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n" . $e->getTraceAsString());
             ob_clean();
-            Helper::get()->redirect('/error?id=' . (new ViewException(''))->getErrorFile());
+            Helper::instance()->redirect('/error?id=' . (new ViewException(''))->getErrorFile());
         }
     }
     function dispatch($url, $action, $id = null) {
@@ -53,11 +53,11 @@ class Dispatcher
         } catch(ViewException $e) {
             Log::write($e->getMessage() . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n" . $e->getTraceAsString());
             ob_clean();
-            Helper::get()->redirect('/error?id=' . $e->getErrorFile());
+            Helper::instance()->redirect('/error?id=' . $e->getErrorFile());
         } catch(Exception $e) {
             Log::write($e->getMessage() . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n" . $e->getTraceAsString());
             ob_clean();
-            Helper::get()->redirect('/error?id=' . (new ViewException(''))->getErrorFile());
+            Helper::instance()->redirect('/error?id=' . (new ViewException(''))->getErrorFile());
         }
     }
 }

@@ -1,10 +1,11 @@
 <?php
 class Controller_Admin extends Controller_Abstract
 {
-    function __construct() {
+    public function __construct() {
         Permissions::checkError('nastenka', P_OWNED);
     }
-    function view($id = null) {
+
+    public function view($id = null) {
         $this->render('files/View/Admin/Home.inc');
     }
 

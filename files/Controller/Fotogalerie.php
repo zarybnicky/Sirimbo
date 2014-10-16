@@ -1,7 +1,7 @@
 <?php
 class Controller_Fotogalerie extends Controller_Abstract
 {
-    function view($id = null) {
+    public function view($id = null) {
         if ($id === null) {
             $id = 0;
             $dir = array('gd_name' => '');
@@ -34,12 +34,13 @@ class Controller_Fotogalerie extends Controller_Abstract
             'files/View/Main/Fotogalerie/Overview.inc',
             array(
                 'nadpis' => $dir['gd_name'],
-                'photos' => $photos
+                'photos' => $photos,
+                'sidebar' => $this->sidebar()
             )
         );
     }
 
-    function foto($id = null) {
+    public function foto($id = null) {
         if (!$id || !($data = DBGalerie::getSingleFoto($id))) {
             $this->redirect('/fotogalerie', 'Taková fotka neexistuje');
         }

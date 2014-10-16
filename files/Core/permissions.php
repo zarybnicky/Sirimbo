@@ -18,11 +18,11 @@ class Permissions
             return true;
 
         if ($redirect !== null) {
-            Helper::get()->redirect($redirect);
+            Helper::instance()->redirect($redirect);
         } elseif (User::isLogged()) {
             throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
         } else {
-            Helper::get()->redirect('/login?return=' . Request::getURI(),
+            Helper::instance()->redirect('/login?return=' . Request::getURI(),
                 'Nemáte dostatečná oprávnění k zobrazení požadovaného obsahu');
         }
     }

@@ -287,10 +287,10 @@ class Controller_Admin_Galerie extends Controller_Admin
         $data = DBGalerie::getDirs(true, true);
         foreach ($data as &$item) {
             $new_data = array(
-            	'checkBox' => $this->checkbox('galerie[]', $item['gd_id']),
+            	'checkBox' => (string) $this->checkbox('galerie[]', $item['gd_id']),
                 'name'     => str_repeat('&nbsp;->', $item['gd_level'] - 1)
                     . ' ' . $item['gd_name'],
-                'hidden'   => $this->checkbox($item['gd_id'], '1')->defaultState($item['gd_hidden'])
+                'hidden'   => (string) $this->checkbox($item['gd_id'], '1')->defaultState($item['gd_hidden'])
             );
             $item = $new_data;
         }

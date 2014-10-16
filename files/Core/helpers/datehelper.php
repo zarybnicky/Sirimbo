@@ -189,7 +189,7 @@ class DateHelper
         $out = '';
         //TODO:ranged select... ftf
         if ($this->_view == 'select') {
-            $s = Helper::get()->select()->get(false);
+            $s = Helper::instance()->select()->get(false);
 
             $s->name($this->_name . '-day')
                 ->value($this->_date ? $this->_date->getDay() : null)

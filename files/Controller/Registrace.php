@@ -1,7 +1,7 @@
 <?php
 class Controller_Registrace extends Controller_Abstract
 {
-    function view($id = null) {
+    public function view($id = null) {
         if (!empty($_POST)) {
             $narozeni = $this->date('narozeni')->getPost();
 

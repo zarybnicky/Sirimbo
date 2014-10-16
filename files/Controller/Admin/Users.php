@@ -161,10 +161,10 @@ class Controller_Admin_Users extends Controller_Admin
             foreach ($users as &$row) {
                 $new_data = array(
                     'id' => $row['u_id'],
-                    'checkBox' => $this->checkbox('users[]', $row['u_id']),
+                    'checkBox' => (string) $this->checkbox('users[]', $row['u_id']),
                     'group' => $s_group->post()->name($row['u_id'] . '-group'),
                     'skupina' => $s_skupina->post()->name($row['u_id'] . '-skupina'),
-                    'dancer' => $this->checkbox($row['u_id'] . '-dancer', 'dancer'),
+                    'dancer' => (string) $this->checkbox($row['u_id'] . '-dancer', 'dancer'),
                     'fullName' => $row['u_jmeno'] . ' ' . $row['u_prijmeni'],
                     'narozeni' => formatDate($row['u_narozeni'])
                 );
@@ -203,7 +203,7 @@ class Controller_Admin_Users extends Controller_Admin
         foreach ($users as &$row) {
             $new_data = array(
                 'id' => $row['u_id'],
-                'checkBox' => $this->checkbox('users[]', $row['u_id']),
+                'checkBox' => (string) $this->checkbox('users[]', $row['u_id']),
                 'colorBox' => $this->colorbox($row['s_color_rgb'], $row['s_description']),
                 'fullName' => $row['u_prijmeni'] . ', ' . $row['u_jmeno'],
                 'email' => $row['u_email'],
@@ -325,7 +325,7 @@ class Controller_Admin_Users extends Controller_Admin
         $i = $pager->getItemsPerPage() * ($pager->getCurrentPage() - 1);
         foreach ($data as &$item) {
             $new_data = array(
-                'checkBox' => $this->checkbox('users[]', $row['u_id']),
+                'checkBox' => (string) $this->checkbox('users[]', $item['u_id']),
                 'index'     => ++$i . '. ',
                 'varSymbol' => User::varSymbol($item['u_id']),
                 'fullName'  => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],

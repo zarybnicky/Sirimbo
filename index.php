@@ -48,15 +48,15 @@ Request::setURI(server('REQUEST_URI'));
 Request::setReferer(session('referer_id'));
 
 if (session('login') === null) {
-    if (post('action') == 'login' || post('action') == 'enter') {
+    if (post('login') && post('pass')) {
         post('pass', User::crypt(post('pass')));
 
         if (!User::login(post('login'), post('pass'))) {
-            Helper::get()->redirect('/login', 'Špatné jméno nebo heslo!', true);
+            Helper::instance()->redirect('/login', 'Špatné jméno nebo heslo!', true);
         } elseif (get('return')) {
-            Helper::get()->redirect(get('return'));
+            Helper::instance()->redirect(get('return'));
         } else {
-            Helper::get()->redirect('/member/home');
+            Helper::instance()->redirect('/member/home');
         }
     }
 } else {
@@ -65,7 +65,7 @@ if (session('login') === null) {
         && Request::getURI() !== 'member/profil/edit'
         && Request::getURI() !== 'logout'
     ) {
-        Helper::get()->redirect(
+        Helper::instance()->redirect(
             '/member/profil/edit',
             'Prosím vyplňte požadované údaje.',
             true

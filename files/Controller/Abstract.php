@@ -32,17 +32,8 @@ abstract class Controller_Abstract implements Controller_Interface
         echo $content;
         include TISK ? FOOTER_TISK : FOOTER;
     }
-    public function __call($name, $args) {
-        $trace = debug_backtrace();
-        $class = (isset($trace[1]['class']) ? $trace[1]['class'] : null);
 
-        if (is_subclass_of($class, __CLASS__)) {
-            if (empty($args))
-                return Helper::get()->$name();
-            else
-                return call_user_func_array(array(Helper::get(), $name), $args);
-        } else {
-            throw new ViewException("Neplatná akce $name pro ${__CLASS__}");
-        }
+    public function __call($name, $args) {
+        return Helper::invoke($name, $args);
     }
 }
