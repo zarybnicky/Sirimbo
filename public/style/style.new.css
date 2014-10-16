@@ -231,13 +231,13 @@ th {
     list-style: none;
     margin: 0 auto;
 }
-#menu li, .submenu li {
+.menu-inner li {
     float: left;
     padding: 7px 7px;
     display: block;
     color: #303C3C;
 }
-#menu a, .submenu a {
+.menu-inner a {
     text-decoration: none;
     color: #303C3C;
     text-transform: uppercase;

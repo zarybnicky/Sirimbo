@@ -1,4 +1,4 @@
-+<?php
+<?php
 class Controller_Aktualne extends Controller_Abstract
 {
     public function view($id = null) {
@@ -58,13 +58,13 @@ class Controller_Aktualne extends Controller_Abstract
             return;
         }
         $data = array_map(
-            function($item) {
+            function($item) use ($type) {
                 return array(
                     'id'        => $item['at_id'],
                     'jmeno'     => $item['at_jmeno'],
                     'timestamp' => $item['at_timestamp_add'],
                     'canEdit'   => Permissions::check('aktuality', P_OWNED, $item['at_kdo']),
-                    'preview'   => stripslashes(nl2br($item['at_preview']))
+                    'preview'   => $type != AKTUALITY_VIDEA ? stripslashes(nl2br($item['at_preview'])) : ''
                 );
             },
             $data
