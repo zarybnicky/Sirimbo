@@ -326,7 +326,7 @@ th {
     max-width: none;
 }
 .highlights-image img {
-    zoom: 1.25;
+    width: 100%;
 }
 .highlights-info {
     position: absolute;
