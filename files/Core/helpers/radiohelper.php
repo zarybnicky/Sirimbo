@@ -40,8 +40,8 @@ class RadioHelper {
         $checked =
             $this->defaultState ||
             (($this->get == true) ?
-             (get($this->name) != false) :
-             (post($this->name) != false));
+             (get($this->name) == $this->value) :
+             (post($this->name) == $this->value));
 
         return
             '<input type="radio"' .
