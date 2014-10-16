@@ -12,12 +12,12 @@
       <div class="widget-content">
         <ul class="videos">
           <li>
-            <a href="https://www.youtube.com/watch?v=6nj5RT8FLa4" class="no-a">
+            <a href="https://www.youtube.com/watch?v=6nj5RT8FLa4" target="_blank" class="no-a">
               <img alt="" src="//i3.ytimg.com/vi/6nj5RT8FLa4/hqdefault.jpg" />
             </a>
           </li>
           <li>
-            <a href="https://www.youtube.com/watch?v=szgAEUOIrmc" class="no-a">
+            <a href="https://www.youtube.com/watch?v=szgAEUOIrmc" target="_blank" class="no-a">
               <img alt="" src="//i3.ytimg.com/vi/szgAEUOIrmc/hqdefault.jpg" />
             </a>
           </li>
