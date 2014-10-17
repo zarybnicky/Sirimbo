@@ -1,41 +1,42 @@
-<div class="container">
-<h1>Klubové akce</h1>
-<?php echo $this->notice($this->redirect()->getMessage());?>
+<?= $this->header('Klubové akce') ?>
 
-<style type="text/css">
-.unit {background:inherit;border:none;
-vertical-align:top;border-bottom:1px dotted #999;padding:10px 5px;}
-.unit form {text-align:center;}
-</style>
-<table style="width:100%;">
+<div class="container">
+  <?php echo $this->notice($this->redirect()->getMessage());?>
+
+  <style type="text/css">
+   .unit {background:inherit;border:none;
+          vertical-align:top;border-bottom:1px dotted #999;padding:10px 5px;}
+   .unit form {text-align:center;}
+  </style>
+  <table style="width:100%;">
     <?php
     foreach (array_chunk($this->akce, 2) as $chunk) : ?>
-    <tr>
+      <tr>
         <?php
         foreach ($chunk as $data) : ?>
-        <td class="unit">
+          <td class="unit">
             <form action="" method="post">
-            <?php echo $this->render('files/View/Member/Akce/Header.inc', $data);?>
-            <?php
-            if ($data['showForm']) : ?>
+              <?php echo $this->render('files/View/Member/Akce/Header.inc', $data);?>
+              <?php
+              if ($data['showForm']) : ?>
                 <input type="hidden" name="id" value="<?php echo $data['id'];?>" />
                 <?php
                 if ($data['signIn']) : ?>
-                <button type="submit" name="action" value="signup">Přihlásit se</button> &bull;
+                  <button type="submit" name="action" value="signup">Přihlásit se</button> &bull;
                 <?php
                 else: ?>
-                <button type="submit" name="action" value="signout">Odhlásit se</button> &bull;
+                  <button type="submit" name="action" value="signout">Odhlásit se</button> &bull;
                 <?php
                 endif; ?>
-            <?php
-            endif; ?>
-            <a href="/member/akce/<?php echo $data['id'];?>">Zobrazit přihlášené</a>
+              <?php
+              endif; ?>
+              <a href="/member/akce/<?php echo $data['id'];?>">Zobrazit přihlášené</a>
             </form>
-        </td>
+          </td>
         <?php
         endforeach; ?>
-    </tr>
+      </tr>
     <?php
     endforeach; ?>
-</table>
+  </table>
 </div>

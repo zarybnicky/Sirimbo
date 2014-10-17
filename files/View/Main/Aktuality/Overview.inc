@@ -1,5 +1,6 @@
+<?= $this->header($this->nadpis) ?>
+
 <div class="container article-preview">
-  <h1><?php echo $this->nadpis;?></h1>
   <?php foreach ($this->data as $key => $row) : ?>
     <a href="/aktualne/<?php echo $row['id'];?>" class="big">
       <?php echo $row['jmeno'];?>

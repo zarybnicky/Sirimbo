@@ -1,10 +1,11 @@
+<?= $this->header('Profil') ?>
+
 <div class="container">
-<h1>Profil</h1>
-<?php
-echo $this->partnerRequest()->getAll();
-echo $this->notice($this->redirect()->getMessage());
-?>
-<?php if ($this->havePartner): ?>
+  <?php
+  echo $this->partnerRequest()->getAll();
+  echo $this->notice($this->redirect()->getMessage());
+  ?>
+  <?php if ($this->havePartner): ?>
     Právě tančím s: <?php echo $this->partnerFullName;?>
     <h2>Třídy a body:</h2>
     <h3>Standardní tance:</h3>
@@ -22,9 +23,9 @@ echo $this->notice($this->redirect()->getMessage());
     V "Olympáckém žebříčku" máme <?php echo $this->hodnoceni;?> bodů.
     <br />
     <a href="/member/profil/par/body">Změnit třídu a body</a>
-<?php else: ?>
+  <?php else: ?>
     Právě s nikým netančím.<br/>
-<?php endif;?>
-<a href="/member/profil/par/partner">Změnit partnera</a>
-<a href="/member/profil">Zpět</a>
+  <?php endif;?>
+  <a href="/member/profil/par/partner">Změnit partnera</a>
+  <a href="/member/profil">Zpět</a>
 </div>

@@ -1,52 +1,53 @@
-<div class="container">
-<h1>Registrace</h1>
-<?php echo $this->notice($this->redirect()->getMessage());?>
+<?= $this->header('Reistrace') ?>
 
-<form action="" method="POST">
-<table>
-    <tr>
+<div class="container">
+  <?php echo $this->notice($this->redirect()->getMessage());?>
+
+  <form action="" method="POST">
+    <table>
+      <tr>
         <td>Uživatel (*): </td>
         <td><input type="text" name="username" value="<?php echo post("username"); ?>" /></td>
         <td>Pouze písmena bez diakritiky, číslice a podtržítka, 3 - 20 znaků</td>
-    </tr><tr>
+      </tr><tr>
         <td>Heslo (*): </td>
         <td><input type="password" name="pass" value="<?php echo post("pass"); ?>"/></td>
         <td>Pouze písmena bez diakritiky, číslice a podtržítka, 6 - 32 znaků</td>
-    </tr><tr>
+      </tr><tr>
         <td>Jméno (*): </td>
         <td><input type="text" name="jmeno" value="<?php echo post("jmeno"); ?>" /></td>
         <td>Max. 40 znaků</td>
-    </tr><tr>
+      </tr><tr>
         <td>Příjmení (*): </td>
         <td><input type="text" name="prijmeni" value="<?php echo post("prijmeni"); ?>" /></td>
         <td>Max. 40 znaků</td>
-    </tr><tr>
+      </tr><tr>
         <td>Pohlaví (*): </td>
         <td>
-            <label><?php echo $this->radio('pohlavi', 'm');?>Muž</label>&nbsp;
-            <label><?php echo $this->radio('pohlavi', 'f');?>Žena</label>
+          <label><?php echo $this->radio('pohlavi', 'm');?>Muž</label>&nbsp;
+          <label><?php echo $this->radio('pohlavi', 'f');?>Žena</label>
         </td>
-    </tr><tr>
+      </tr><tr>
         <td>E-mail (*): </td>
         <td><input type="text" name="email" value="<?php echo post("email"); ?>" /></td>
         <td>Max. 50 znaků, ve formátu e-mail adresy</td>
-    </tr><tr>
+      </tr><tr>
         <td>Telefon (*): </td>
         <td><input type="text" name="telefon" value="<?php echo post("telefon"); ?>" /></td>
         <td></td>
-    </tr><tr>
+      </tr><tr>
         <td>Datum narození: (*)</td>
         <td><?php echo $this->date('narozeni')->textBox();?></td>
         <td></td>
-    </tr><tr>
+      </tr><tr>
         <td>Poznámky: </td>
         <td><textarea rows="15" cols="35" name="poznamky"><?php echo post("poznamky"); ?></textarea></td>
         <td></td>
-    </tr><tr>
+      </tr><tr>
         <td><button type="submit" name="action" value="register">Registrovat</button></td>
         <td>Pole označená (*) jsou povinná</td>
         <td></td>
-    </tr>
-</table>
-</form>
+      </tr>
+    </table>
+  </form>
 </div>

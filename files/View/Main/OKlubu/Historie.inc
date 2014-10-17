@@ -1,5 +1,5 @@
+<?= $this->header('Historie klubu') ?>
 <div class="container">
-<h1>Historie klubu</h1>
 <h2>1989</h2>
 <p>
   <img alt="TK Olymp, založen 1989" src="/images/historie/historie.jpg" class="f_doc_right" style="height:206px;">
@@ -119,6 +119,7 @@
 <h2>2008</h2>
 <p>
   <img alt="Radim Stupka s Kristýnou Hlavicovou" src="/images/historie/radim_kiki.jpg" class="f_doc_right" style="height:222px;">
+  <img alt="Miroslav Hýža s Kristýnou Hudeovou" src="/images/historie/mirek_kiki.jpg" class="f_doc_left" style="height:222px;">
   "Zlatá" generace párů, která byla v rámci českého tanečního sportu v mnoha
   směrech unikátní, se pomalu rozutekla po studiích a řada přišla na další
   páry. Semifinále mistrovství České republiky v deseti tancích si zatančili
@@ -134,7 +135,6 @@
   mládež.
 </p>
 <p>
-  <img alt="Miroslav Hýža s Kristýnou Hudeovou" src="/images/historie/mirek_kiki.jpg" class="f_doc_left" style="height:222px;">
   V kategorii dospělých se nejlépe umístil Miroslav Hýža s novou partnerkou
   Kristýnou Hudeovou, kteří se na Mistrovství ČR v deseti tancích probojovali
   do semifinále (11. místo).
@@ -152,12 +152,12 @@
   obsadili jedenáctou příčku.
 </p>
 <p>
-  <img alt="Mistrovství družstev 2010" src="/images/historie/druzstvo2010.jpg" class="f_doc_left" style="height:200px;">
   Velký úspěch zaznamenala juniorská družstva. Jak ve standardních, tak v
   latinskoamerických tancích, si naši junioři zatančili finále, v
   latinskoamerických tancích vybojovali bronzovou medaili!
 </p>
 <p>
+  <img alt="Mistrovství družstev 2010" src="/images/historie/druzstvo2010.jpg" class="f_doc_left" style="height:200px;">
   V roce 2011 jsme měli znovu zastoupení v semifinále Mistrovství České
   republiky deseti tanců, kategorie dospělých.  Nově složený pár Radim Stupka a
   Tereza Jendrulková obsadil deváté místo. Na stejné soutěži v kategorii junior

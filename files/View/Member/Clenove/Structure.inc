@@ -1,5 +1,5 @@
-<div class="container">
 <?php echo $this->render('files/View/Member/Clenove/Navigation.inc');?>
+<div class="container">
 <h2>Členové podle skupin</h2>
 <?php
 foreach ($this->data as $skupina) {

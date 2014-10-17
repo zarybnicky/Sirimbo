@@ -215,8 +215,7 @@ th {
 }
 .submenu {
     z-index: 9;
-    background-color: #EAEAEA;
-    margin-bottom: 7px;
+    background-color: #ccc;
 }
 #menu-logo {
     position: absolute;
@@ -557,4 +556,10 @@ th {
 .up_header .nadpis, .trenink_header .nadpis {
 	font-weight:bold;
 	font-size:115%;
+}
+
+.header-section {
+    padding: 10px 0 50px 0;
+    margin-bottom: 10px;
+    background: #EAEAEA url("/style/header-section.png") no-repeat 50% 10%;
 }

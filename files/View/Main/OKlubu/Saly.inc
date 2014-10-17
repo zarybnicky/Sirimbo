@@ -1,5 +1,6 @@
+<?= $this->header('Kde trénujeme') ?>
+
 <div class="container">
-  <h1>Kde trénujeme:</h1>
   <p>
     Náš klub dlouhá léta funguje pod záštitou dvou školských institucí.
     Jsou jimi Základní škola Holečkova a Slovanské gymnázium Olomouc.
