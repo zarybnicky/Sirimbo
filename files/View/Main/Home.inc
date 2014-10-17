@@ -1,6 +1,10 @@
 <?php echo $this->clanky()->number(3)->highlights(true);?>
 
 <div class="container">
+  <div style="padding:0 5px;margin-top:-10px;">
+    <img alt="" src="/images/logo_soutez.jpg" style="width:100%" />
+  </div>
+
   <?php echo $this->notice($this->redirect()->getMessage()); ?>
 
   <?php echo $this->zpravy()->number(10);?>
