@@ -2,7 +2,9 @@
 
 <div class="container">
   <div style="padding:0 5px;margin-top:-10px;">
-    <img alt="" src="/images/logo_soutez.jpg" style="width:100%" />
+    <a href="http://tkolymp.cz/aktualne/197">
+      <img alt="" src="/images/logo_soutez.jpg" style="width:100%" />
+    </a>
   </div>
 
   <?php echo $this->notice($this->redirect()->getMessage()); ?>
