@@ -24,11 +24,15 @@ class Controller_Member_Nastenka extends Controller_Member
             return;
         }
         foreach ($data as &$item) {
-            $skupiny = DBNastenka::getNastenkaSkupiny($item['up_id']);
-            foreach ($skupiny as &$skupina) {
-                $new_data = $this->colorbox($skupina['ups_color'], $skupina['ups_popis']);
-                $skupina = $new_data;
-            }
+            $skupiny = array_map(
+                function ($skupina) {
+                    return (string) $this->colorbox(
+                        $skupina['ups_color'],
+                        $skupina['ups_popis']
+                    );
+                },
+                DBNastenka::getNastenkaSkupiny($item['up_id'])
+            );
             $new_data = array(
                 'id' => $item['up_id'],
                 'nadpis' => $item['up_nadpis'],

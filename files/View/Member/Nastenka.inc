@@ -9,9 +9,11 @@
           <?php if ($item['canEdit']): ?>
             &nbsp;-&nbsp;<a href="/admin/nastenka/edit/<?php echo $item['id'];?>">Editovat</a>
           <?php endif;?>
+          <?php if ($item['skupinyBoxes']): ?>
           <div style="padding:2px 0;"><div style="float:left;" class="little">skupiny:&nbsp;</div>
             <?php foreach ($item['skupinyBoxes'] as $box) echo $box; ?>
           </div>
+          <?php endif; ?>
         </div>
         <div style="float:right;text-align:right;">
           <div>
