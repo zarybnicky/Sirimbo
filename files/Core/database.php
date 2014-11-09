@@ -83,8 +83,8 @@ class Database
     }
     public static function isDatabaseError()
     {
-        return (get('file') == 'error' && get('id')
-            && (get('id') == ER_DATABASE_CONNECTION || get('id') == ER_DATABASE));
+        return get('file') == 'error' && get('id') &&
+            stripos(get('id'), 'database') !== null;
     }
 }
 ?>

@@ -5,16 +5,16 @@ class Permissions
     {
         return User::getPermissions($module);
     }
-    public static function check($module, $level, $vlastnik = null)
+    public static function check($module, $level, $owner = null)
     {
         $l = User::getPermissions($module);
-        if ($l == P_OWNED && $level == P_OWNED && $vlastnik != null)
-            return User::getUserID() == $vlastnik;
+        if ($l == P_OWNED && $level == P_OWNED && $owner != null)
+            return User::getUserID() == $owner;
         return $l >= $level;
     }
-    public static function checkError($module, $level, $redirect = null, $vlastnik = null)
+    public static function checkError($module, $level, $redirect = null, $owner = null)
     {
-        if (Permissions::check($module, $level, $vlastnik))
+        if (Permissions::check($module, $level, $owner))
             return true;
 
         if ($redirect !== null) {

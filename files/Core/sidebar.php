@@ -9,10 +9,10 @@ class Sidebar
         Sidebar::$hasSidebarDiv = true;
     }
 
-    function menuHeader() {
+    public function menuHeader() {
         return $this->blackBox('<span class="logo"></span>Menu');
     }
-    function menuItem($text, $link, $module = '', $permission = L_ALL) {
+    public function menuItem($text, $link, $module = '', $permission = P_NONE) {
         if ($module != '' && !Permissions::check($module, $permission))
             return;
 
@@ -23,7 +23,7 @@ class Sidebar
         else
             return $this->whiteBox($r, 'sidebar', $link);
     }
-    function blackBox($text, $class = '', $link = '') {
+    public function blackBox($text, $class = '', $link = '') {
         $text = '<div class="dark-in">' . $text . '</div>';
         if ($link != '') {
             $text = '<a href="' . $link . '">' . $text . '</a>';
@@ -31,7 +31,7 @@ class Sidebar
         return '<div class="dark-out' .
             ($class ? ' ' . $class : '') . '">' . $text . '</div>';
     }
-    function whiteBox($text, $class = '', $link = '') {
+    public function whiteBox($text, $class = '', $link = '') {
         $text = '<div class="light-in">' . $text . '</div>';
         if ($link != '') {
             $text = '<a href="' . $link . '">' . $text . '</a>';
@@ -40,9 +40,10 @@ class Sidebar
             ($class ? ' ' . $class : '') . '">' . $text . '</div>';
     }
 
-    function commonItems() {
-        if (Database::isDatabaseError())
+    public function commonItems() {
+        if (Database::isDatabaseError()) {
             return;
+        }
 
         if ($data = DBAnkety::getAnketyWithItems(true, getIP())) {
             $data = $data[array_rand($data)];

@@ -244,7 +244,7 @@ class DBUser extends Database implements Pagable
         $res = DBUser::query(
         "SELECT users.*,skupiny.* FROM users
             LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id" .
-        (($group == null || $group == L_ALL) ? '' : " WHERE u_group='$group'") .
+        (($group == null) ? '' : " WHERE u_group='$group'") .
         " ORDER BY u_prijmeni");
 
         return DBUser::getArray($res);
@@ -334,22 +334,22 @@ class DBUser extends Database implements Pagable
         return DBUser::getArray($res);
     }
 
-    public static function getActiveUsers($group = L_ALL) {
+    public static function getActiveUsers($group = null) {
         $res = DBUser::query(
         "SELECT users.*,skupiny.* FROM users
             LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
         WHERE u_system='0' AND u_confirmed='1' AND u_ban='0' " .
-            ($group > L_ALL ? "AND u_group='$group' " : '') .
+        ($group !== null ? "AND u_group='$group' " : '') .
             "ORDER BY u_prijmeni ");
         return DBUser::getArray($res);
     }
 
-    public static function getActiveDancers($group = L_ALL) {
+    public static function getActiveDancers($group = null) {
         $res = DBUser::query(
         "SELECT users.*,skupiny.* FROM users
             LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
         WHERE u_system='0' AND u_dancer='1' AND u_confirmed='1' AND u_ban='0' " .
-            ($group > -1 ? "AND u_group='$group' " : '') .
+            ($group !== null ? "AND u_group='$group' " : '') .
         "ORDER BY u_prijmeni");
         return DBUser::getArray($res);
     }

@@ -221,9 +221,9 @@ class Controller_Admin_Users extends Controller_Admin
         );
     }
     function statistiky($id = null) {
-        $all = DBUser::getUsers(L_ALL);
-        $active = DBUser::getActiveUsers(L_ALL);
-        $dancers = DBUser::getActiveDancers(L_ALL);
+        $all = DBUser::getUsers();
+        $active = DBUser::getActiveUsers();
+        $dancers = DBUser::getActiveDancers();
         $data = array(
             array('Uživatelé v databázi', count($all)),
             array('Aktivní uživatelé', count($active)),

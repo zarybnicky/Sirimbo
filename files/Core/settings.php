@@ -71,28 +71,10 @@ include SETTINGS . DIRECTORY_SEPARATOR . 'db.php';
 
 define('NABOR', '0');
 
-//-----Aliasy chyb-----//
-define('ER_AUTHORIZATION', 'authorization');
-define('ER_CORRUPT_DATA', 'corrupt_data');
-define('ER_BAN', 'ban');
-define('ER_DATABASE', 'database');
-define('ER_DATABASE_CONNECTION', 'database_connection');
-define('ER_PREPARING_FILE', 'preparing_file');
-define('ER_CORRUPT_KEY_FILE', 'corrupt_key_file');
-define('ER_NOT_APPROVED', 'not_approved');
-define('ER_NOT_FOUND_RIGHT', 'not_found_right');
-define('ER_NOT_POSSIBLE', 'not_possible');
-define('ER_SCRIPT_FATAL', 'script_fatal');
-
-define('NOVINKY_COUNT', 10);
 define('AKTUALITY_CLANKY', 1);
 define('AKTUALITY_VIDEA', 2);
 define('AKTUALITY_KRATKE', 3);
 define('THUMBNAIL_MAX', 150);
-
-//-----Ciselne hodnoty urovni uzivatelu-----//
-define('L_ALL', '-1');
-define('L_UNCONFIRMED', '0');
 
 define('P_NONE', 1);
 define('P_VIEW', 2);

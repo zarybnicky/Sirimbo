@@ -19,7 +19,7 @@ class Controller_Member extends Controller_Abstract
                     'timestamp' => formatTimestamp($item['no_timestamp'])
                 );
             },
-            DBNovinky::getLastNovinky(NOVINKY_COUNT)
+            DBNovinky::getLastNovinky(10)
         );
 
         $this->render(
