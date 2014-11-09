@@ -29,9 +29,11 @@ class Request
         self::$_rawUriParts = $parts;
 
         //Get an URI w/o numbers eg.
-        foreach ($parts as $key => $part)
-            if (is_numeric($part))
+        foreach ($parts as $key => $part) {
+            if (is_numeric($part)) {
                 unset($parts[$key]);
+            }
+        }
         $parts = array_values($parts);
         self::$_uriPartsLiteral = $parts;
 
@@ -52,6 +54,7 @@ class Request
             : (!empty(self::$_uriPartsLiteral)
                 ? self::$_uriPartsLiteral[count(self::$_uriPartsLiteral) - 1]
                 : null);
+        self::$_action = str_replace('-', '_', self::$_action);
     }
 
     public static function getURI() {
@@ -86,4 +89,3 @@ class Request
         return self::$_referer;
     }
 }
-?>

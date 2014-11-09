@@ -75,4 +75,14 @@ if (session('login') === null) {
 }
 
 $d = new Dispatcher();
-$d->dispatch(Request::getLiteralURI(), Request::getAction(), Request::getID());
+try {
+    $d->dispatch(Request::getLiteralURI(), Request::getAction(), Request::getID());
+} catch (ViewException $e) {
+    Log::write($e->getMessage() . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n" . $e->getTraceAsString());
+    ob_clean();
+    Helper::instance()->redirect('/error?id=' . $e->getErrorFile());
+} catch (Exception $e) {
+    Log::write($e->getMessage() . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n" . $e->getTraceAsString());
+    ob_clean();
+    Helper::instance()->redirect('/error?id=' . (new ViewException(''))->getErrorFile());
+}
