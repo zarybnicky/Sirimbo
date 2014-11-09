@@ -1,5 +1,5 @@
 <?= $this->header('Historie klubu') ?>
-<div class="container">
+<div class="container full">
 <h2>1989</h2>
 <p>
   <img alt="TK Olymp, založen 1989" src="/images/historie/historie.jpg" class="f_doc_right" style="height:206px;">

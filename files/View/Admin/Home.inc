@@ -1,3 +1,3 @@
-<div class="container">
+<div class="container full">
   <h1>Administrace</h1>
 </div>

@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container full">
 <?php
 echo $this->render('files/View/Admin/Platby/Navigation.inc');
 echo '<h2>Specifické symboly</h2>';

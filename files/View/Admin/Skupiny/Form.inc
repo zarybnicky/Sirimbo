@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container full">
 <?php
 $mainForm = (new TableHelper())->table()
     ->style('width:100%')

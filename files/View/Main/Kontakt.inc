@@ -1,6 +1,6 @@
 <?= $this->header('Kontakty') ?>
 
-<div class="container">
+<div class="container full">
   <style type="text/css">
    table.k {border:none;}
    table.k td {border:none;background:none;}

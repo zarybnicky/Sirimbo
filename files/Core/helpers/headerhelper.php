@@ -10,7 +10,7 @@ class HeaderHelper {
     public function render() {
         return
             '<div class="header-section">' .
-            '<div class="container">' .
+            '<div class="container full">' .
             '<h1>' .
             $this->nadpis .
             '</h1>' .

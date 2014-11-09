@@ -1,6 +1,6 @@
 <?= $this->header('Úspěchy v číslech') ?>
 
-<div class="container">
+<div class="container full">
   <h2>Mistrovství České republiky:</h2>
   <h3>kategorie junior a mládež</h3>
   <span class="big">3</span> páry získaly titul Mistr České republiky<br/>

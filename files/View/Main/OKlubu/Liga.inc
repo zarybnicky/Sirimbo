@@ -1,6 +1,6 @@
 <?= $this->header('Výsledky našich párů na taneční lize') ?>
 
-<div class="container">
+<div class="container full">
   <style type="text/css">
    .mcr td {text-align:center;}
    .mcr td:last-child {text-align:left;}

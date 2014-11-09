@@ -1,6 +1,6 @@
 <?= $this->header('Reistrace') ?>
 
-<div class="container">
+<div class="container full">
   <?php echo $this->notice($this->redirect()->getMessage());?>
 
   <form action="" method="POST">

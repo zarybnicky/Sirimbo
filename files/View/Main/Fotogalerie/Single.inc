@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container full">
   <div class="container-fifth">
     <?php echo $this->sidebar ?>
   </div>

@@ -1,6 +1,6 @@
 <?= $this->header('Profil') ?>
 
-<div class="container">
+<div class="container full">
   <?php echo $this->notice($this->redirect()->getMessage());?>
 
   <a href="/member/profil/edit">Upravit osobní údaje</a><br/>

@@ -1,6 +1,6 @@
 <?= $this->header('Osobní údaje') ?>
 
-<div class="container">
+<div class="container full">
   <?php echo $this->notice($this->redirect()->getMessage());?>
   <form action="" method="POST">
     <table>

@@ -1,6 +1,6 @@
 <?php echo $this->render('files/View/Member/Clenove/Navigation.inc');?>
 
-<div class="container">
+<div class="container full">
 <h2><?php echo $this->fullName;?></h2>
 E-mail: <?php echo $this->email;?><br/>
 Telefon: <?php echo $this->telefon;?><br/>

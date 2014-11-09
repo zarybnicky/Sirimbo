@@ -1,6 +1,6 @@
 <?= $this->header('Kluboví trenéři') ?>
 
-<div class="container">
+<div class="container full">
   <div style="margin-bottom:1.5em;">
     <h2>Miroslav Hýža</h2>
     <img alt="Miroslav Hýža" alt="" src="/images/treneri/mirek.jpg" class="f_doc_right" style="height:150px;"/>

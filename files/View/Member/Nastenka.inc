@@ -1,6 +1,6 @@
 <?= $this->header('Upozornění') ?>
 
-<div class="container">
+<div class="container full">
   <?php foreach ($this->data as $item): ?>
     <div>
       <div class="up_header">

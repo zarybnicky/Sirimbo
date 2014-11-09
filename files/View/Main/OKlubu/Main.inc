@@ -1,6 +1,6 @@
 <?= $this->header('O klubu'); ?>
 
-<div class="container">
+<div class="container full">
   <img alt="Mistrovství družstev 2010"
        src="/images/akce/druzstva2010_4.jpg"
        style="display:block;margin:0 auto 20px;" />

@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container full">
 <h1>Správa nabídky</h1>
 <?php
 echo '<h2>', ($this->action == 'add' ? 'Přidat nabídku' : 'Upravit nabídku'), '</h2>';

@@ -1,6 +1,6 @@
 <?= $this->header('Moje platby') ?>
 
-<div class="container">
+<div class="container full">
   <?php echo $this->colorBox, '&nbsp;', $this->skupinaData;?><br/>
   Variabilní symbol: <?php echo $this->varSymbol;?>
   <br/><br/>

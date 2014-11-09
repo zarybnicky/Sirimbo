@@ -35,7 +35,7 @@
 
     <div id="top"></div>
 
-    <div class="container">
+    <div class="container full">
       <div id="header">
         <div id="header-inner">
           <?php echo $this->login(); ?>

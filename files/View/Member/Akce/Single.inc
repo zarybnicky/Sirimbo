@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container full">
 <?php
 unset($data['info']);
 unset($data['dokumenty']);

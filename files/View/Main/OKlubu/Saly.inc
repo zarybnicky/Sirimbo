@@ -1,6 +1,6 @@
 <?= $this->header('Kde trénujeme') ?>
 
-<div class="container">
+<div class="container full">
   <p>
     Náš klub dlouhá léta funguje pod záštitou dvou školských institucí.
     Jsou jimi Základní škola Holečkova a Slovanské gymnázium Olomouc.

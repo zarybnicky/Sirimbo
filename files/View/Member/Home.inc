@@ -1,6 +1,6 @@
 <?= $this->header('Novinky') ?>
 
-<div class="container">
+<div class="container full">
   <?php echo $this->notice($this->redirect()->getMessage());?>
   <?php echo $this->partnerRequest()->getAll(); ?>
 

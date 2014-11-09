@@ -1,6 +1,6 @@
 <?= $this->header('Žebříček párů') ?>
 
-<div class="container">
+<div class="container full">
   <?php echo $this->notice($this->redirect()->getMessage());?>
 
   <table>

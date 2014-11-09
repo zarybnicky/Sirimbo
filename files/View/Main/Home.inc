@@ -1,6 +1,6 @@
 <?php echo $this->clanky()->number(3)->highlights(true);?>
 
-<div class="container">
+<div class="container full">
   <div style="padding:0 5px;margin-top:-10px;">
     <a href="http://tkolymp.cz/aktualne/197">
       <img alt="" src="/images/logo_soutez.jpg" style="width:100%" />
@@ -54,6 +54,6 @@
     </div>
   </div>
 </div>
-<div class="container">
+<div class="container full">
   <?php echo $this->clanky()->number(9)->offset(5)->highlights(false);?>
 </div>

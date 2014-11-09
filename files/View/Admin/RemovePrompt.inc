@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container full">
   <h1><?php echo $this->header;?></h1>
   <form action="" method="POST">
     <?php echo $this->prompt;?><br/><br/>

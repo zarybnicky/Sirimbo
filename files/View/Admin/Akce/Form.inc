@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container full">
 <h1>Správa akcí</h1>
 <?php
 echo '<h2>';

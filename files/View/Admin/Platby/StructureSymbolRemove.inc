@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container full">
 <?php echo $this->render('files/View/Admin/Platby/Navigation.inc');?>
 <h2>Kategorie plateb</h2>
 <h3>Odstranit specifický symbol?</h3>

@@ -1,6 +1,6 @@
 <?= $this->header('Dokumenty') ?>
 
-<div class="container">
+<div class="container full">
   <?php if ($this->showMenu): ?>
     <form action="" method="GET">
       <?php

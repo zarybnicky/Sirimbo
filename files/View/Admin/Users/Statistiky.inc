@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container full">
 <h1>Správa uživatelů</h1>
 <h2>Statistiky</h2>
 <br/>

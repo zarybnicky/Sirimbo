@@ -1,6 +1,6 @@
 <?= $this->header('Klubové akce') ?>
 
-<div class="container">
+<div class="container full">
   <?php echo $this->notice($this->redirect()->getMessage());?>
 
   <style type="text/css">

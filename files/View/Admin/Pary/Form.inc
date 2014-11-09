@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container full">
 <h1>Správa párů</h1>
 <h2>Změna třídy a bodů</h2>
 <?php echo $this->notice($this->redirect()->getMessage());?>

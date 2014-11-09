@@ -1,6 +1,6 @@
 <?= $this->header('Změna třídy a bodů') ?>
 
-<div class="container">
+<div class="container full">
   <?php
   echo $this->partnerRequest()->getAll();
   echo $this->notice($this->redirect()->getMessage());

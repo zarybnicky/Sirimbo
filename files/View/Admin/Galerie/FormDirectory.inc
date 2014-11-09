@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container full">
 <h1>Správa fotogalerie</h1>
 <?php echo $this->notice($this->redirect()->getMessage()); ?>
 <form action="" method="post">

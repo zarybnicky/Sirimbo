@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container full">
 <h1>Nabízíme</h1>
 <h2>Lekce pro začátečníky</h2>
 <ul class="list">
