@@ -108,10 +108,6 @@ public static $permissions = array(
         'name' => "Aktuality",
         'default' => P_VIEW,
         P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1),
-    'ankety' => array(
-        'name' => "Ankety",
-        'default' => P_VIEW,
-        P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1),
     'dokumenty' => array(
         'name' => "Dokumenty",
         'default' => P_MEMBER,

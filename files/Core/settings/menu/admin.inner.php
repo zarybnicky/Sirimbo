@@ -56,11 +56,6 @@ return array(
         array()
     ),
     array(
-        'Ankety',
-        '/admin/ankety',
-        array()
-    ),
-    array(
         'Oprávnění',
         '/admin/permissions',
         array()

@@ -19,11 +19,6 @@ class Novinky
                 'edit' => 'Video "<a href="%s">%s</a>" bylo upraveno.',
                 'remove' => 'Video "%s" bylo odstraněno.'
         ),
-        'ankety' => array(
-                'add' => 'Byla přidána nová anketa, "%s".',
-                'edit' => 'Anketa "%s" byla upravena.',
-                'remove' => 'Anketu "%s" byla zrušena.'
-        ),
         'dokumenty' => array(
                 'add' => 'Byl přidán nový dokument, "<a href="%s">%s</a>".',
                 'edit' => 'Dokument "<a href="%s">%s</a>" byl upraven.',
@@ -60,9 +55,6 @@ class Novinky
         return $this;
     }function video() {
         $this->_current = 'video';
-        return $this;
-    } function ankety() {
-        $this->_current = 'ankety';
         return $this;
     } function dokumenty() {
         $this->_current = 'dokumenty';

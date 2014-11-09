@@ -20,11 +20,10 @@ class Dispatcher
             $class = implode('_', $parts);
         }
         include $file;
-        if (class_exists($class)) {
-            return new $class();
-        } else {
-            throw new NotFoundRightException('Controller "' . $class . '" not found');
+        if (!class_exists($class)) {
+            throw new NotFoundRightException('Class "' . $class . '" not found');
         }
+        return new $class();
     }
     public function dispatch($url, $action, $id = null)
     {
@@ -32,7 +31,7 @@ class Dispatcher
 
         if (!($controller instanceof Controller_Interface)) {
             throw new NotFoundRightException(
-                'Controller "' . $controller . '"is not an instance of Controller_Interface'
+                'Class "' . $controller . '" is not an instance of Controller_Interface'
             );
         }
 
