@@ -1,14 +1,16 @@
-<div class="container">
+<div class="container full">
 <h1>Správa článků</h1>
 
 <?php echo $this->notice($this->redirect()->getMessage());
 
 echo '<form action="" method="get">';
 echo $this->select()
-          ->get()->name('dir')->value('none')
+          ->get()
+          ->name('dir')
+          ->value('none')
           ->option('none', '------ vyberte složku ------')
           ->options($this->dirs);
-echo '<button type="submit">Zobrazit</button>';
+echo $this->submit('Zobrazit');
 echo '</form>';
 
 echo '<form action="" method="post">';

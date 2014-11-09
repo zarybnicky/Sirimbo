@@ -45,7 +45,7 @@ class Controller_Admin_Aktuality_Foto extends Controller_Admin_Aktuality
             }
 
             $this->render(
-                'files/Admin/AktualityFoto/Form.inc',
+                'files/View/Admin/Aktuality/FormFoto.inc',
                 array(
                     'nadpis' => $dir['gd_name'],
                     'photos' => $photos,

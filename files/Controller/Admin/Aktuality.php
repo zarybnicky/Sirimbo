@@ -26,17 +26,31 @@ class Controller_Admin_Aktuality extends Controller_Admin
                 $this->redirect($url);
                 break;
         }
-        $data = DBAktuality::getAktuality(get('f'));
+        $data = array_map(
+            function($item) {
+                return array(
+                    'checkBox' => $this->checkbox('aktuality[]', $item['at_id'])
+                                       ->readonly(Permissions::check('aktuality', P_OWNED, $item['at_kdo'])),
+                    'name' => $item['at_jmeno'],
+                    'description' => ($item['at_kat'] == AKTUALITY_CLANKY ? 'Články' :
+                                      ($item['at_kat'] == AKTUALITY_VIDEA ? 'Videa' :
+                                       ($item['at_kat'] == AKTUALITY_KRATKE ? 'Krátké zprávy' :
+                                        '')))
+                );
+            },
+            DBAktuality::getAktuality(get('f'))
+        );
         $this->render(
-            'files/Admin/Aktuality/Display.inc',
+            'files/View/Admin/Aktuality/Overview.inc',
             array(
-        	    'aktuality' => $data
+        	    'data' => $data,
+                'showMenu' => !TISK
             )
         );
     }
     function add($id = null) {
         if (empty($_POST)) {
-            $this->render('files/Admin/Aktuality/Form.inc');
+            $this->render('files/View/Admin/Aktuality/Form.inc');
             return;
         }
 
@@ -72,7 +86,7 @@ class Controller_Admin_Aktuality extends Controller_Admin
             post('summary', $data['at_preview']);
             post("text", stripslashes($data["at_text"]));
 
-            $this->render("files/Admin/Aktuality/Form.inc");
+            $this->render("files/View/Admin/Aktuality/Form.inc");
             return;
         }
         if (post('kat') != $data['at_kat'] || post('jmeno') != $data['at_jmeno']
@@ -96,33 +110,52 @@ class Controller_Admin_Aktuality extends Controller_Admin
         }
         $this->redirect('/admin/aktuality', 'Článek změněn');
     }
-    function remove($id = null) {
-        if (empty($_POST) || post('action') !== 'confirm') {
-            $this->render('files/Admin/Aktuality/DisplayRemove.inc');
-            return;
-        }
-        if (!is_array(post('aktuality')))
+    function remove($id = null)
+    {
+        if (!is_array(post('data')) && !is_array(get('u'))) {
             $this->redirect('/admin/aktuality');
-        foreach (post('aktuality') as $id) {
-            $data = DBAktuality::getSingleAktualita($id);
-
-            if (Permissions::check('aktuality', P_OWNED, $data['at_kdo'])) {
-                DBAktuality::removeAktualita($id);
-                $n = new Novinky(User::getUserID());
-                switch($data['at_kat']) {
-                    case AKTUALITY_VIDEA:
-                        $n->video()->remove($data['at_jmeno']);
-                    case AKTUALITY_CLANKY:
-                        $n->clanek()->remove($data['at_jmeno']);
-                }
-            } else {
-                $error = true;
-            }
         }
-        if (isset($error) && $error)
-            throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
+        if (!empty($_POST) && post('action') == 'confirm') {
+            foreach (post('aktuality') as $id) {
+                $data = DBAktuality::getSingleAktualita($id);
+                
+                if (Permissions::check('aktuality', P_OWNED, $data['at_kdo'])) {
+                    DBAktuality::removeAktualita($id);
+                    $n = new Novinky(User::getUserID());
+                    switch($data['at_kat']) {
+                        case AKTUALITY_VIDEA:
+                            $n->video()->remove($data['at_jmeno']);
+                            break;
+                        case AKTUALITY_CLANKY:
+                            $n->clanek()->remove($data['at_jmeno']);
+                            break;
+                    }
+                } else {
+                    $error = true;
+                }
+            }
+            if (isset($error) && $error) {
+                throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
+            }
+            $this->redirect('/admin/aktuality', 'Články odebrány');
+        }
 
-        $this->redirect('/admin/aktuality', 'Články odebrány');
+        $data = array();
+        foreach (get('u') as $id) {
+            $item = DBAktuality::getSingleAktualita($id);
+            $data[] = array(
+                'id' => $item['at_id'],
+                'text' => $item['at_jmeno']
+            );
+        }        
+        $this->render(
+            'files/View/Admin/RemovePrompt.inc',
+            array(
+                'header' => 'Správa aktualit',
+                'prompt' => 'Opravdu chcete odstranit články:',
+                'returnURI' => Request::getReferer(),
+                'data' => $data
+            )
+        );
     }
 }
-?>

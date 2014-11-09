@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container full">
 <h1>Správa aktualit</h1>
 <?php
 echo '<h2>', (Request::getAction() == 'add' ? 'Přidat článek' : 'Upravit článek'), '</h2>';

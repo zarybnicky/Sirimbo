@@ -6,10 +6,6 @@ class Controller_Admin_Dokumenty extends Controller_Admin
         Permissions::checkError('dokumenty', P_OWNED);
     }
     function view($id = null) {
-        if (empty($_POST)) {
-            $this->render('files/Admin/Dokumenty/Display.inc');
-            return;
-        }
         switch(post('action')) {
             case 'edit':
                 $dokumenty = post('dokumenty');
@@ -46,7 +42,7 @@ class Controller_Admin_Dokumenty extends Controller_Admin
                 } else {
                     $this->redirect()->setMessage('Bohužel, zkus to znova :o(');
                 }
-                $this->render('files/Admin/Dokumenty/Display.inc');
+                $this->redirect('/admin/dokumenty');
                 return;
 
             case 'remove':
@@ -58,6 +54,25 @@ class Controller_Admin_Dokumenty extends Controller_Admin
                 $this->redirect($url);
                 break;
         }
+        $data = array_map(
+            function($item) {
+                return array(
+                    'checkBox' => $this->checkbox('dokumenty[]', $item['d_id'])
+                                       ->readonly(Permissions::check('dokumenty', P_OWNED, $item['d_kdo'])),
+                    'link' => '<a href="/member/download?id=' . $item['d_id'], '">' . $item['d_name'] . '</a>',
+                    'name' => $item['d_filename'],
+                    'category' => Settings::$documentTypes[$item['d_kategorie']],
+                    'by' => $item['u_jmeno'] . ' ' . $item['u_prijmeni']
+                );
+            },
+            DBDokumenty::getDokumenty()
+        );
+        $this->render(
+            'files/View/Admin/Dokumenty/Overview.inc',
+            array(
+                'data' => $data
+            )
+        );
     }
     function edit($id = null) {
         if (!$id || !($data = DBDokumenty::getSingleDokument($id)))
@@ -69,33 +84,52 @@ class Controller_Admin_Dokumenty extends Controller_Admin
             DBDokumenty::editDokument($id, $newname);
             $this->redirect('/admin/dokumenty', 'Příspěvek úspěšně upraven');
         }
-        $this->render('files/Admin/Dokumenty/Display.inc', array(
-            'form' => $data
-        ));
+        $this->render(
+            'files/View/Admin/Dokumenty/Form.inc',
+            array(
+                'name' => $data['d_name']
+            )
+        );
     }
     function remove($id = null) {
-        if (empty($_POST) || post('action') !== 'confirm') {
-            $this->render('files/Admin/Dokumenty/DisplayRemove.inc');
-            return;
-        }
-        if (!is_array(post('dokumenty')))
+        if (!is_array(post('data')) && !is_array(get('u'))) {
             $this->redirect('/admin/dokumenty');
-        foreach (post('dokumenty') as $id) {
-            $data = DBDokumenty::getSingleDokument($id);
-            if (Permissions::check('dokumenty', P_OWNED, $data['d_kdo'])) {
-                unlink($data['d_path']);
-                DBDokumenty::removeDokument($id);
-
-                $n = new Novinky(User::getUserID());
-                $n->dokumenty()->remove($data['d_name']);
-            } else {
-                $error = true;
-            }
         }
-        if (isset($error) && $error)
-            throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
 
-        $this->redirect('/admin/dokumenty', 'Dokumenty odebrány');
+        if (!empty($_POST) && post('action') == 'confirm') {
+            foreach (post('dokumenty') as $id) {
+                $data = DBDokumenty::getSingleDokument($id);
+                if (Permissions::check('dokumenty', P_OWNED, $data['d_kdo'])) {
+                    unlink($data['d_path']);
+                    DBDokumenty::removeDokument($id);
+
+                    $n = new Novinky(User::getUserID());
+                    $n->dokumenty()->remove($data['d_name']);
+                } else {
+                    $error = true;
+                }
+            }
+            if (isset($error) && $error) {
+                throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
+            }
+            $this->redirect('/admin/dokumenty', 'Dokumenty odebrány');
+        }
+
+        $data = array();
+        foreach (get('u') as $id) {
+            $data[] = array(
+                'id' => $id,
+                'text' => DBDokumenty::getDokumentName($id)
+            );
+        }
+        $this->render(
+            'files/View/Admin/RemovePrompt.inc',
+            array(
+                'header' => 'Správa dokumentů',
+                'prompt' => 'Opravdu chcete odstranit dokumenty:',
+                'returnURI' => Request::getReferer(),
+                'data' => $data
+            )
+        );
     }
 }
-?>
