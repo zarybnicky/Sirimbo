@@ -24,6 +24,7 @@ ini_set('session.use_only_cookies', 1);
 session_start();
 session_regenerate_id();
 
+require 'files/autoload.php';
 require 'files/Core/settings.php';
 require 'files/Core/utils.php';
 require 'files/Core/debug.php';

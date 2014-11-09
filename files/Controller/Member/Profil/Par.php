@@ -2,7 +2,23 @@
 require_once 'files/Controller/Member/Profil.php';
 class Controller_Member_Profil_Par extends Controller_Member_Profil
 {
-    function view($id = null) {
+    const AMEND_Z = 0.2;
+    const AMEND_H = 0.5;
+    const AMEND_D = 1.0;
+    const AMEND_C = 1.6;
+    const AMEND_B = 2.1;
+    const AMEND_A = 2.7;
+    const AMEND_M = 3.4;
+    
+    const BONUS_Z = 0;
+    const BONUS_H = 80;   //400*AMEND_Z + BONUS_Z
+    const BONUS_D = 280;  //400*AMEND_H + BONUS_H
+    const BONUS_C = 680;  //400*AMEND_D + BONUS_D
+    const BONUS_B = 1320; //400*AMEND_C + BONUS_C
+    const BONUS_A = 2160; //400*AMEND_B + BONUS_B
+    const BONUS_M = 3240; //400*AMEND_A + BONUS_A
+
+    public function view($id = null) {
         $latest = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
         $this->render(
             'files/View/Member/Profil/CoupleOverview.inc',
@@ -19,7 +35,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
             )
         );
     }
-    function body($id = null) {
+    public function body($id = null) {
         if (empty($_POST) || is_object($f = $this->_checkData())) {
             if (empty($_POST)) {
                 $par = DBPary::getSinglePar(User::getParID());
@@ -35,11 +51,16 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
             $this->render('files/View/Member/Profil/CoupleData.inc');
             return;
         }
+        $stt_amend = 'AMEND_' . post('stt-trida');
+        $stt_bonus = 'BONUS_' . post('stt_trida');
+        $lat_amend = 'AMEND_' . post('lat-trida');
+        $lat_bonus = 'BONUS_' . post('lat_trida');
+        
         $hodnoceni =
-            (post('stt-body') + 40 * post('stt-finale')) * constant('AMEND_' . post('stt-trida'))
-            + (post('stt-body') + 40 * post('lat-finale')) * constant('AMEND_' . post('lat-trida'))
-            + constant('BONUS_' . post('stt-trida'))
-            + constant('BONUS_' . post('lat-trida'));
+            (post('stt-body') + 40 * post('stt-finale')) * self::$$stt_amend +
+            (post('lat-body') + 40 * post('lat-finale')) * self::$$lat_amend +
+            self::$$stt_bonus +
+            self::$$lat_bonus;
 
         DBPary::editTridaBody(
             User::getParID(),
@@ -49,7 +70,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
         );
         $this->redirect("/member/profil/par", "Třída a body změněny");
     }
-    function partner($id = null) {
+    public function partner($id = null) {
         $latest = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
         $havePartner = !empty($latest) && $latest['u_id'];
 
@@ -85,16 +106,18 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
             )
         );
     }
-    function zadost($id = null) {
-        if (!post('action'))
+    public function zadost($id = null) {
+        if (!post('action')) {
             $this->redirect('/member/profil');
+        }
         switch(post('action')) {
             case 'accept':
             case 'refuse':
                 $requests = DBPary::getPartnerRequestsForMe(User::getUserID());
                 foreach ($requests as $req) {
-                    if ($req['pn_id'] != post('id'))
+                    if ($req['pn_id'] != post('id')) {
                         continue;
+                    }
 
                     if (post('action') == 'accept') {
                         DBPary::acceptPartnerRequest(post('id'));
@@ -109,8 +132,9 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
             case 'cancel':
                 $requests = DBPary::getPartnerRequestsByMe(User::getUserID());
                 foreach ($requests as $req) {
-                    if ($req['pn_id'] != post('id'))
+                    if ($req['pn_id'] != post('id')) {
                         continue;
+                    }
                     DBPary::deletePartnerRequest(post('id'));
                     $this->redirect('/member/profil/par', 'Žádost zrušena');
                 }

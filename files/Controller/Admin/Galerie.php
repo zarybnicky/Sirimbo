@@ -2,11 +2,27 @@
 require_once 'files/Controller/Admin.php';
 class Controller_Admin_Galerie extends Controller_Admin
 {
-    function __construct()
+    const IMAGE_TYPES = array(
+        'image/pjpeg' => 'jpg',
+        'image/jpeg' => 'jpg',
+        'image/gif' => 'gif',
+        'image/bmp' => 'bmp',
+        'image/x-png' => 'png'
+    );
+
+    const IMAGE_SUFFIX = array(
+        'image/pjpeg' => 'JPEG',
+        'image/jpeg' => 'JPEG',
+        'image/gif' => 'GIF',
+        'image/bmp' => 'BMP',
+        'image/x-png' => 'PNG'
+    );
+    
+    public function __construct()
     {
         Permissions::checkError('galerie', P_OWNED);
     }
-    function view($id = null)
+    public function view($id = null)
     {
         switch(post('action')) {
             case 'galerie/save':
@@ -232,7 +248,7 @@ class Controller_Admin_Galerie extends Controller_Admin
     private function _createThumbnail($file, $thumbFile)
     {
         $filetype = image_type_to_mime_type(exif_imagetype($file));
-        if (!$filetype || !array_key_exists($filetype, Settings::$fotoTypes)) {
+        if (!$filetype || !array_key_exists($filetype, self::IMAGE_TYPES)) {
             unlink($file);
             return false;
         }
@@ -246,7 +262,7 @@ class Controller_Admin_Galerie extends Controller_Admin
             $nHeight = round($height * $scale);
         }
 
-        $fn_suffix = Settings::$gdFunctionSuffix[$filetype];
+        $fn_suffix = self::IMAGE_SUFFIX[$filetype];
         if ($fn_suffix == 'BMP') {
             include 'files/Core/bmp.php';
         }

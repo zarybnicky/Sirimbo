@@ -1,5 +1,5 @@
 <?php
-$_SERVER['DOCUMENT_ROOT'] = implode(DIRECTORY_SEPARATOR, array_slice(explode(DIRECTORY_SEPARATOR, dirname(__FILE__)), 0, -2));
+$root = implode(DIRECTORY_SEPARATOR, array_slice(explode(DIRECTORY_SEPARATOR, __DIR__), 0, -2));
 
 define('ROOT', $_SERVER['DOCUMENT_ROOT']);
 define('FILES', ROOT . DIRECTORY_SEPARATOR . 'files');
@@ -9,8 +9,8 @@ define('GALERIE_THUMBS', GALERIE . DIRECTORY_SEPARATOR . 'thumbnails');
 define('CORE', FILES . DIRECTORY_SEPARATOR . 'Core');
 define('SETTINGS', CORE . DIRECTORY_SEPARATOR . 'settings');
 define('ERROR', FILES . DIRECTORY_SEPARATOR . 'Error');
-define('HEADER', FILES . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'Header.new.inc');
-define('FOOTER', FILES . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'Footer.new.inc');
+define('HEADER', FILES . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'Header.inc');
+define('FOOTER', FILES . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'Footer.inc');
 define('HEADER_TISK', FILES . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'HeaderTisk.inc');
 define('FOOTER_TISK', FILES . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'FooterTisk.inc');
 
@@ -18,43 +18,33 @@ define('LOG', ROOT . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'error.
 define('DEBUG_LOG', ROOT . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'debug.log');
 define('PHP_LOG', ROOT . 'log' . DIRECTORY_SEPARATOR . 'php.log');
 
-set_include_path(
-    CORE . PATH_SEPARATOR .
-    CORE . DIRECTORY_SEPARATOR . 'database' . PATH_SEPARATOR .
-    CORE . DIRECTORY_SEPARATOR . 'display' . PATH_SEPARATOR .
-    CORE . DIRECTORY_SEPARATOR . 'helpers' . PATH_SEPARATOR .
-    CORE . DIRECTORY_SEPARATOR . 'paging' . PATH_SEPARATOR .
-    CORE . DIRECTORY_SEPARATOR . 'types' . PATH_SEPARATOR .
-    get_include_path()
-);
-spl_autoload_extensions('.php');
-spl_autoload_register();
-
 mb_internal_encoding('UTF-8');
 
 function shutdownHandler() {
     if (($error = error_get_last()) === null)
         return;
-    if ($error['type'] == E_ERROR || $error['type'] == E_RECOVERABLE_ERROR) {
-        ob_end_clean();
-        Log::write($error['type'] . ': ' . $error['message'] . ' in ' . $error['file'] . ': ' . $error['line']);
-        if (Request::getURI() == 'error') {
-            Log::write("Recursive error message!");
-            die('Fatal error: Rekurzivní smyčka přesměrování!');
-        }
-        header('Location: /error?id=script_fatal');
+    if ($error['type'] & (E_STRICT | E_DEPRECATED | E_NOTICE)) {
+        return;
     }
-}
-function errorHandler($severity, $message, $filepath, $line) {
-    if ($severity & (E_STRICT | E_DEPRECATED)) {
-        return false;
-    }
+
     ob_end_clean();
+    Log::write("{$error['type']}: {$error['message']} in {$error['file']}: {$error['line']}");
     if (Request::getURI() == 'error') {
         Log::write("Recursive error message!");
         die('Fatal error: Rekurzivní smyčka přesměrování!');
     }
+    header('Location: /error?id=script_fatal');
+}
+function errorHandler($severity, $message, $filepath, $line) {
+    if ($severity & (E_STRICT | E_DEPRECATED | E_NOTICE)) {
+        return false;
+    }
+    ob_end_clean();
     Log::write("$severity: $message in $filepath: $line");
+    if (Request::getURI() == 'error') {
+        Log::write("Recursive error message!");
+        die('Fatal error: Rekurzivní smyčka přesměrování!');
+    }
     header('Location: /error?id=script_fatal');
     return true;
 }
@@ -80,23 +70,6 @@ if (DEBUG) {
 include SETTINGS . DIRECTORY_SEPARATOR . 'db.php';
 
 define('NABOR', '0');
-
-//-----Hodnoceni paru-----//
-define('AMEND_Z', '0.2');
-define('AMEND_H', '0.5');
-define('AMEND_D', '1.0');
-define('AMEND_C', '1.6');
-define('AMEND_B', '2.1');
-define('AMEND_A', '2.7');
-define('AMEND_M', '3.4');
-
-define('BONUS_Z', '0');
-define('BONUS_H', '80');    //400*AMEND_Z + BONUS_Z
-define('BONUS_D', '280');    //400*AMEND_H + BONUS_H
-define('BONUS_C', '680');    //400*AMEND_D + BONUS_D
-define('BONUS_B', '1320');    //400*AMEND_C + BONUS_C
-define('BONUS_A', '2160');    //400*AMEND_B + BONUS_B
-define('BONUS_M', '3240');    //400*AMEND_A + BONUS_A
 
 //-----Aliasy chyb-----//
 define('ER_AUTHORIZATION', 'authorization');
@@ -210,19 +183,4 @@ public static $permissions = array(
         'default' => P_VIEW,
         P_VIEW => 1)
 );
-public static $fotoTypes = array(
-    'image/pjpeg' => 'jpg',
-    'image/jpeg' => 'jpg',
-    'image/gif' => 'gif',
-    'image/bmp' => 'bmp',
-    'image/x-png' => 'png'
-);
-public static $gdFunctionSuffix = array(
-    'image/pjpeg' => 'JPEG',
-    'image/jpeg' => 'JPEG',
-    'image/gif' => 'GIF',
-    'image/bmp' => 'BMP',
-    'image/x-png' => 'PNG'
-);
 }
-?>
