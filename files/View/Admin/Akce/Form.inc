@@ -1,5 +1,5 @@
+<?= $this->header('Správa akcí') ?>
 <div class="container full">
-<h1>Správa akcí</h1>
 <?php
 echo '<h2>';
 echo Request::getAction() == 'add' ? 'Přidat uživatele' : 'Upravit uživatele';

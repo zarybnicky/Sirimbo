@@ -1,5 +1,5 @@
+<?= $this->header('Správa oprávnění') ?>
 <div class="container full">
-<h1>Správa oprávnění</h1>
 <?php
 echo $this->notice($this->redirect()->getMessage());
 

@@ -11,7 +11,7 @@ function _getItem($name, $href) {
   }
 }
 if (TISK) {
-  echo '<h1>Přehled členů</h1>';
+  echo $this->header('Přehled členů');
   return;
 }
 ?>

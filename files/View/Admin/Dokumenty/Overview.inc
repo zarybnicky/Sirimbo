@@ -1,5 +1,5 @@
+<?= $this->header('Správa dokumentů') ?>
 <div class="container full">
-    <h1>Správa dokumentů</h1>
     <?= $this->notice($this->redirect()->getMessage()); ?>
     <form action="/admin/dokumenty" method="POST">
         <?php

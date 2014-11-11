@@ -1,5 +1,5 @@
+<?= $this->header('Správa aktualit') ?>
 <div class="container full">
-    <h1>Správa aktualit</h1>
     <?php
     echo $this->notice($this->redirect()->getMessage());
 

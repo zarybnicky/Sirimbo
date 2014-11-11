@@ -1,5 +1,5 @@
+<?= $this->header('Správa aktualit') ?>
 <div class="container full">
-<h1>Správa aktualit</h1>
 <?php
 echo '<h2>', (Request::getAction() == 'add' ? 'Přidat článek' : 'Upravit článek'), '</h2>';
 echo $this->notice($this->redirect()->getMessage());

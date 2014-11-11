@@ -1,4 +1,4 @@
-<h1>Správa plateb</h1>
+<?= $this->header('Správa plateb') ?>
 <?php
 if (TISK) return;
 

@@ -1,7 +1,8 @@
+<?= $this->header('Správa článků') ?>
 <div class="container full">
-<h1>Správa článků</h1>
 
-<?php echo $this->notice($this->redirect()->getMessage());
+<?php
+echo $this->notice($this->redirect()->getMessage());
 
 echo '<form action="" method="get">';
 echo $this->select()

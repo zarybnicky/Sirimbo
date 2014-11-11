@@ -1,10 +1,10 @@
+<?= $this->header('Správa rozpisů');?>
 <div class="container full">
-  <h1>Správa rozpisů</h1>
-  <?php echo $this->notice($this->redirect()->getMessage()); ?>
+  <?= $this->notice($this->redirect()->getMessage()); ?>
   <form action="" method="POST">
     <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
     <div class="r_wrapper">
-      <?php echo $this->render('files/View/Member/Rozpis/Header.inc', $this->data); ?>
+      <?= $this->render('files/View/Member/Rozpis/Header.inc', $this->data); ?>
       <table>
         <tr>
           <td>Tanečník</td>

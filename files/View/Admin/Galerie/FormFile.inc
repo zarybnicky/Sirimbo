@@ -1,5 +1,5 @@
+<?= $this->header('Správa fotogalerie') ?>
 <div class="container full">
-<h1>Správa fotogalerie</h1>
 <?php echo $this->notice($this->redirect()->getMessage()); ?>
 <form action="" method="post">
 <h2>Upravit soubor</h2>

@@ -1,3 +1,4 @@
+<?= $this->header('Správa skupin') ?>
 <div class="container full">
 <?php
 $mainForm = (new TableHelper())->table()
@@ -33,7 +34,6 @@ if (!empty($this->groupSelect)) {
         ->options($this->groupSelect);
 }
 ?>
-<h1>Správa skupin</h1>
 <?php echo '<h2>', ($this->action == 'add' ? 'Přidat skupinu' : 'Upravit skupinu'), '</h2>';?>
 <?php echo $this->notice($this->redirect()->getMessage());?>
 <form action="" method="POST">

@@ -1,5 +1,5 @@
+<?=´$this->header('Správa uživatelů') ?>
 <div class="container full">
-<h1>Správa uživatelů</h1>
 <?php
 echo '<h2>', ($this->action == 'add' ? 'Přidat uživatele' : 'Upravit uživatele'), '</h2>';
 echo $this->notice($this->redirect()->getMessage());

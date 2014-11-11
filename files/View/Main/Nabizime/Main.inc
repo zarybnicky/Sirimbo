@@ -1,5 +1,5 @@
+<?= $this->header('Nabízíme') ?>
 <div class="container full">
-<h1>Nabízíme</h1>
 <h2>Lekce pro začátečníky</h2>
 <ul class="list">
     <li>vhodné pro všechny, kteří ještě netančili nebo prošli kurzy v tanečních</li>
