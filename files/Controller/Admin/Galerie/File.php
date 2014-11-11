@@ -81,7 +81,7 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
         }
 
         $uploader = $uploadHelper->getFilledUploader();
-        foreach (self::IMAGE_TYPES as $extension) {
+        foreach ($this->imageTypes as $extension) {
             $uploader->addAllowedType($extension);
         }
 

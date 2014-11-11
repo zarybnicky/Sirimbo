@@ -19,13 +19,45 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
         $users = DBPary::getPartners();
 
         if (empty($_POST)) {
+            $userSelect = $this->userSelect()
+                               ->users($users)
+                               ->type('par')
+                               ->idVar('p_id');
+            
             $this->render(
                 'files/Admin/NabidkaDetail/Display.inc',
                 array(
-                    'data' => $data,
+                    'nabidka' => array(
+                        'id' => $data['n_id'],
+                        'fullName' => $data['u_jmeno'] . ' ' . $data['u_prijmeni'],
+                        'datum' => formatDate($data['n_od'])
+                        . ($data['n_od'] != $data['n_do'] ? ' - ' . formatDate($data['n_do']) : ''),
+                        'canEdit' => false,
+                        'hourMax' => $data['n_max_pocet_hod'],
+                        'hourTotal' => $data['n_pocet_hod'],
+                        'hourReserved' => $obsazeno,
+                        'hourFree' => $data['n_pocet_hod'] - $obsazeno
+                    ),
                     'obsazeno' => $obsazeno,
                     'users' => $users,
-                    'items' => $items
+                    'items' => array_map(
+                        function ($item) {
+                            return array(
+                                'user' => $userSelect->defaultValue($item['ni_partner'])
+                                                     ->name($item['ni_partner'] . '-partner'),
+                                'lessonCount' => (
+                                    '<input type="text" name="' . $item['ni_id'] .
+                                    '-hodiny" value="' . $item['ni_pocet_hod'] .
+                                    '" size=1/>'
+                                ),
+                                'removeButton' => (
+                                    '<button type="submit" name="remove" value="' .
+                                    $item['ni_id'] . '">' . 'Odstranit</button>'
+                                )
+                            );
+                        },
+                        $items
+                    )
                 )
             );
             return;
@@ -86,15 +118,6 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
             );
             $data = DBNabidka::getSingleNabidka($id);
         }
-        $this->render(
-            'files/Admin/NabidkaDetail/Display.inc',
-            array(
-                'data' => $data,
-                'obsazeno' => $obsazeno,
-                'users' => $users,
-                'items' => $items
-            )
-        );
-    }
+        $this->redirect('/admin/nabidka/detail/' . $id);
+  }
 }
-?>

@@ -1,8 +1,8 @@
 <div class="container full">
-  <div class="container-fifth">
+  <div class="container fifth">
     <?php echo $this->sidebar ?>
   </div>
-  <div class="container-four-fifths">
+  <div class="container four-fifths">
     <h2><?php echo $this->nadpis;?></h2>
     <?php foreach ($this->photos as $item): ?>
       <a href="<?php echo $item['href'];?>" class="foto_preview no-a">

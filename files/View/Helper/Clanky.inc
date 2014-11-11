@@ -2,7 +2,7 @@
   <div class="widget-title">Více článků</div>
   <div id="more-articles">
     <?php foreach ($this->data as $item): ?>
-    <div class="container-third">
+    <div class="container third">
       <div class="article-small">
         <a class="no-a" href="#">
           <div class="image">

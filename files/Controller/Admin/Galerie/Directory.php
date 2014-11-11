@@ -73,11 +73,13 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
             return;
         }
         $parent = DBGalerie::getSingleDir(post('parent'));
-        $newPath = $this->_sanitizePathname(
-            $this->_getCanonicalName(
-                $parent['gd_path'] . DIRECTORY_SEPARATOR . post('name')
-            )
-        );
+        $newPath =
+            $parent['gd_path'] . DIRECTORY_SEPARATOR .
+            $this->_sanitizePathname(
+                $this->_getCanonicalName(
+                    post('name')
+                )
+            );
 
         if ($data['gd_path'] != $newPath) {
             if (file_exists(GALERIE . DIRECTORY_SEPARATOR . $newPath)) {
@@ -152,7 +154,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
                 'id'           => $item['gf_id'],
         	    'checkBox'     => (string) $this->checkbox('galerie[]', $item['gf_id']),
                 'name'         => $item['gf_name'],
-                'thumbnailURI' => '/galerie/thumbnails/', $item['gf_path']
+                'thumbnailURI' => '/galerie/thumbnails/' . $item['gf_path']
             );
             $item = $newData;
         }
@@ -161,7 +163,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
             'files/View/Admin/Galerie/DisplayDirectory.inc',
             array(
                 'id' => $id,
-                'files' => DBGalerie::getFotky($id)
+                'files' => $data
             )
         );
     }

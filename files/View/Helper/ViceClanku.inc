@@ -1,9 +1,9 @@
 <div class="widget">
   <div class="widget-title">Více článků</div>
   <div id="more-articles">
-    <div class="container-third grid-sizer"></div>
+    <div class="container third grid-sizer"></div>
     <?php foreach ($this->data as $item): ?>
-      <div class="container-third item">
+      <div class="container third item">
         <div class="article-small">
           <a class="no-a image" href="<?php echo $item['uri'] ?>">
             <img alt="" src="<?php echo $item['title_photo_uri'] ?>" />

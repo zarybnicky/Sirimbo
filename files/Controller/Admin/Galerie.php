@@ -2,7 +2,7 @@
 require_once 'files/Controller/Admin.php';
 class Controller_Admin_Galerie extends Controller_Admin
 {
-    const IMAGE_TYPES = array(
+    protected $imageType = array(
         'image/pjpeg' => 'jpg',
         'image/jpeg' => 'jpg',
         'image/gif' => 'gif',
@@ -10,7 +10,7 @@ class Controller_Admin_Galerie extends Controller_Admin
         'image/x-png' => 'png'
     );
 
-    const IMAGE_SUFFIX = array(
+    protected $imageSuffix = array(
         'image/pjpeg' => 'JPEG',
         'image/jpeg' => 'JPEG',
         'image/gif' => 'GIF',
@@ -248,7 +248,7 @@ class Controller_Admin_Galerie extends Controller_Admin
     private function _createThumbnail($file, $thumbFile)
     {
         $filetype = image_type_to_mime_type(exif_imagetype($file));
-        if (!$filetype || !array_key_exists($filetype, self::IMAGE_TYPES)) {
+        if (!$filetype || !array_key_exists($filetype, $this->imageTypes)) {
             unlink($file);
             return false;
         }
@@ -262,7 +262,7 @@ class Controller_Admin_Galerie extends Controller_Admin
             $nHeight = round($height * $scale);
         }
 
-        $fn_suffix = self::IMAGE_SUFFIX[$filetype];
+        $fn_suffix = $this->imageSuffix[$filetype];
         if ($fn_suffix == 'BMP') {
             include 'files/Core/bmp.php';
         }

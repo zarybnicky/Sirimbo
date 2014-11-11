@@ -2,12 +2,13 @@
 class UserSelectHelper
 {
     private $_name;
-    private $_idVar;
+    private $_idIndex;
     private $_jmeno;
     private $_prijmeni;
     private $_users;
     private $_type;
     private $_tmpSwitch;
+    private $_default;
 
     public function __construct() {
         return $this->userSelect();
@@ -27,6 +28,7 @@ class UserSelectHelper
         $this->_users = array();
         $this->_type = 'user';
         $this->_tmpSwitch = true;
+        $this->_default = null;
     }
     public function name($name) {
         $this->_name = $name;
@@ -58,13 +60,18 @@ class UserSelectHelper
         $this->_tmpSwitch = (bool) $value;
         return $this;
     }
+    public function defaultValue($value) {
+        $this->_default = $value;
+        return $this;
+    }
     public function render() {
         $name = 'userselect' . rand(0, 1024);
+        $selected = post($this->_name) !== null ? post($this->_name) : $this->_default;
 
         $out = '<div class="' . $name . '">' . "\n";
 
         $out .= '<select name="' . $this->_name . '">' . "\n";
-        if (!post($this->_name)) {
+        if (!$selected) {
             $out .= '<option value="none" selected="selected">--- žádný ---</option>' . "\n";
         } else {
             $out .= '<option value="none">--- žádný ---</option>' . "\n";
@@ -79,7 +86,7 @@ class UserSelectHelper
                 list($year, $month, $day) = explode('-', $user['u_narozeni']);
 
             $id = $user[$this->_idIndex];
-            if (post($this->_name) == $id)
+            if ($id == $selected)
                 $out .= '<option value="' . $id . '" selected="selected">';
             else
                 $out .= '<option value="' . $id . '">';
@@ -134,4 +141,3 @@ Datum narození:&nbsp;<br/>
         return $this->render();
     }
 }
-?>

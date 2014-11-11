@@ -1,8 +1,8 @@
 <div class="container full">
-  <div class="container-fifth">
+  <div class="container fifth">
     <?php echo $this->sidebar ?>
   </div>
-  <div class="container-four-fifths">
+  <div class="container four-fifths">
     <div style="text-align:center;">
       <?php if ($this->hasPrev): ?>
         <a href="<?php echo $this->prevURI;?>">&lt;&lt;</a>

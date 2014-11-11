@@ -1,18 +1,12 @@
 <?php echo $this->clanky()->number(3)->highlights(true);?>
 
 <div class="container full">
-  <div style="padding:0 5px;margin-top:-10px;">
-    <a href="http://tkolymp.cz/aktualne/197">
-      <img alt="" src="/images/logo_soutez.jpg" style="width:100%" />
-    </a>
-  </div>
-
   <?php echo $this->notice($this->redirect()->getMessage()); ?>
 
   <?php echo $this->zpravy()->number(10);?>
   <!-- Dodat "vice zde >>" na konec boxu -->
 
-  <div class="container-third">
+  <div class="container third">
     <div class="widget">
       <div class="widget-title">Videa z posledních soutěží</div>
       <div class="widget-content">
@@ -32,7 +26,7 @@
     </div>
   </div>
 
-  <div class="container-third">
+  <div class="container third">
     <div class="widget">
       <div class="widget-title">O klubu</div>
       <div class="widget-content">

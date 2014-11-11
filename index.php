@@ -57,7 +57,7 @@ if (session('login') === null) {
         } elseif (get('return')) {
             Helper::instance()->redirect(get('return'));
         } else {
-            Helper::instance()->redirect('/member/home');
+            Helper::instance()->redirect('/member/nastenka');
         }
     }
 } else {
