@@ -1,4 +1,4 @@
-<?=´$this->header('Správa uživatelů') ?>
+<?= $this->header('Správa uživatelů') ?>
 <div class="container full">
 <?php
 echo '<h2>', ($this->action == 'add' ? 'Přidat uživatele' : 'Upravit uživatele'), '</h2>';

@@ -25,7 +25,7 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
                                ->idVar('p_id');
             
             $this->render(
-                'files/Admin/NabidkaDetail/Display.inc',
+                'files/View/Admin/Nabidka/Detail.inc',
                 array(
                     'nabidka' => array(
                         'id' => $data['n_id'],
@@ -41,10 +41,11 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
                     'obsazeno' => $obsazeno,
                     'users' => $users,
                     'items' => array_map(
-                        function ($item) {
+                        function ($item) use ($userSelect) {
                             return array(
-                                'user' => $userSelect->defaultValue($item['ni_partner'])
-                                                     ->name($item['ni_partner'] . '-partner'),
+                                'user' =>
+                                    (string) $userSelect->defaultValue($item['ni_partner'])
+                                                        ->name($item['ni_partner'] . '-partner'),
                                 'lessonCount' => (
                                     '<input type="text" name="' . $item['ni_id'] .
                                     '-hodiny" value="' . $item['ni_pocet_hod'] .

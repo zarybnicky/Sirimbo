@@ -10,12 +10,9 @@ class SubmitHelper {
     public function render() {
         return
             '<a href="javascript:void(0)"' .
-            ' onclick="$(this).parent().parent().parent().submit()">' .
+            ' onclick="this.form.submit()">' .
             $this->text .
-            '</a>' .
-            '<button type="submit">' .
-            $this->text .
-            '</button>';
+            '</a>';
     }
 
     public function __toString() {
