@@ -78,7 +78,7 @@
       <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
       <button type="submit" name="action" value="overlap">Opravit přesahy</button><br/>
       <button type="submit" name="action" value="add_multiple">Přidat více:</button>
-      <input type="text" name="add_multi_hod" size="2" /> hodin po
+      <input type="text" name="add_multi_num" size="2" /> hodin po
       <input type="text" name="add_multi_len" size="3" /> minutách od
       <input type="text" name="add_multi_od" size="5" /> hodin
     </div>
