@@ -14,9 +14,9 @@
           content="r44xj2vskhlgkyqcqm1hdgga2jdfj-idvyys0277y96s72k-tq0z-yyjdu7h3el6pi2gek0i4ykq3xgiguufrvuhj8nbj4n4miwjhvumhp35jfrafyynhj4ee8ctzpzh" />
     <meta property="fb:app_id" content="132983570203245"/>
     <script type="text/javascript" src="/scripts/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="/scripts/polyfill.object-fit.min.js"></script>
     <script type="text/javascript" src="/scripts/masonry.pkgd.min.js"></script>
     <script type="text/javascript" src="/scripts/imagesloaded.pkgd.min.js"></script>
-
     <script type="text/javascript" src="//connect.facebook.net/cs_CZ/all.js#xfbml=1&appId=132983570203245" id="facebook-jssdk"></script>
     <script type="text/javascript">
      var _gaq = _gaq || [];
@@ -28,6 +28,7 @@
     </script>
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="stylesheet" type="text/css" href="/style/style.css" />
+    <link rel="stylesheet" type="text/css" href="/style/polyfill.object-fit.css" />
     <title>TK Olymp Olomouc</title>
   </head>
   <body>

@@ -9,6 +9,10 @@ $(function() {
             });
         });
     }
+    objectFit.polyfill({
+        selector: '.highlights-image img',
+        fittype: 'cover'
+    });
 
     var menuHeight = $("#menu").outerHeight();
     var headerHeight = $("#header-inner").outerHeight() + menuHeight - 7;
