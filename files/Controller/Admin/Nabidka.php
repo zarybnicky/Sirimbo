@@ -57,6 +57,31 @@ class Controller_Admin_Nabidka extends Controller_Admin
                     throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
                 $this->redirect()->setMessage('Nabídky odebrány');
                 break;
+                
+        case 'duplicate':
+                foreach (post('nabidka') as $oldId) {
+                    $data = DBNabidka::getSingleNabidka($oldId);
+                    $items = DBNabidka::getNabidkaItem($oldId);
+
+                    $newId = DBNabidka::addNabidka(
+                        $data['n_trener'],
+                        $data['n_pocet_hod'],
+                        $data['n_max_pocet_hod'],
+                        $data['n_od'],
+                        $data['n_do'],
+                        $data['n_visible'],
+                        $data['n_lock']
+                    );
+                    foreach ($items as $item) {
+                        DBNabidka::addNabidkaItemLessons(
+                            $item['ni_partner'],
+                            $newId,
+                            $item['ni_pocet_hod']
+                        );
+                    }
+                }
+                $this->redirect('/admin/nabidka');
+                break;
         }
         $data = DBNabidka::getNabidka();
         foreach ($data as &$row) {

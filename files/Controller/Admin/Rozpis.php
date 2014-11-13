@@ -72,8 +72,33 @@ class Controller_Admin_Rozpis extends Controller_Admin
                     throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
 
                 $this->redirect('/admin/rozpis', 'Rozpisy odebrány');
+                
+            case 'duplicate':
+                foreach (post('rozpis') as $oldId) {
+                    $data = DBRozpis::getSingleRozpis($oldId);
+                    $items = DBRozpis::getRozpisItem($oldId);
+
+                    $newId = DBRozpis::addRozpis(
+                        $data['r_trener'],
+                        $data['r_kde'],
+                        $data['r_datum'],
+                        $data['r_visible'],
+                        $data['r_lock']
+                    );
+                    foreach ($items as $item) {
+                        DBRozpis::addRozpisItem(
+                            $newId,
+                            $item['ri_partner'],
+                            $item['ri_od'],
+                            $item['ri_do'],
+                            $item['ri_lock']
+                        );
+                    }
+                }
+                $this->redirect('/admin/rozpis');
+                break;
         }
-        $data = DBRozpis::getRozpis();
+        $data = DBRozpis::getRozpis(true);
         foreach ($data as &$row) {
             $new_data = array(
                 'canEdit' => Permissions::check('rozpis', P_OWNED, $row['r_trener']),

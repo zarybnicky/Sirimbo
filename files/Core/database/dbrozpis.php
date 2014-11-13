@@ -1,9 +1,12 @@
 <?php
 class DBRozpis extends Database
 {
-    public static function getRozpis() {
-        $res = self::query("SELECT u_jmeno,u_prijmeni,r_id,r_trener,r_kde,r_datum,r_visible,r_lock" .
-            " FROM rozpis LEFT JOIN users ON r_trener=u_id ORDER BY r_datum");
+    public static function getRozpis($descending = false) {
+        $res = self::query(
+            "SELECT u_jmeno,u_prijmeni,r_id,r_trener,r_kde,r_datum,r_visible,r_lock" .
+            " FROM rozpis LEFT JOIN users ON r_trener=u_id ORDER BY r_datum" .
+            ($descending ? ' DESC' : '')
+        );
         return self::getArray($res);
     }
 
@@ -93,7 +96,7 @@ class DBRozpis extends Database
         self::query("INSERT INTO rozpis (r_trener,r_kde,r_datum,r_visible,r_lock) VALUES " .
             "('$trener','$kde','$datum','$visible','$lock')");
 
-        return true;
+        return self::getInsertId();
     }
 
     public static function editRozpis($id, $trener, $kde, $datum, $visible, $lock) {

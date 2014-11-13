@@ -29,7 +29,7 @@ class DBNabidka extends Database
         DBNabidka::query("INSERT INTO nabidka (n_trener,n_pocet_hod,n_max_pocet_hod,n_od,n_do,n_visible,n_lock) VALUES " .
             "('$trener','$pocet_hod','$max_hod','$od','$do','$visible','$lock')");
 
-        return true;
+        return self::getInsertId();
     }
 
     public static function editNabidka($id, $trener, $pocet_hod, $max_hod, $od, $do, $visible, $lock) {

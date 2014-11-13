@@ -11,6 +11,7 @@ if ($this->showMenu) {
         ->content('Upravit', 'edit', true)
         ->content('Upravit tréninky', 'edit_detail', true)
         ->content('Odstranit', 'remove', true)
+        ->content('Duplikovat', 'duplicate', true)
         ->content('Uložit změny', 'save', true);
 }
 echo '<div style="margin-right:150px;">';
