@@ -321,6 +321,7 @@ th {
 .highlights-image img {
     height: 100%;
     object-fit: cover;
+    object-position:center center;
 }
 .highlights-info {
     position: absolute;
