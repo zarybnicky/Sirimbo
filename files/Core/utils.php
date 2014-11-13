@@ -39,10 +39,12 @@ function formatTime($str, $forDisplay) {
         return $str . ':00';
     }
 }
+
 function formatDate($str) {
     list($year, $month, $day) = explode('-', $str);
     return (int)$day . '. ' . (int)$month . '. ' . $year;
 }
+
 function formatTimestamp($str, $date_only = false) {
     list($date, $time) = explode(' ', $str);
     if ($date_only)
@@ -51,32 +53,7 @@ function formatTimestamp($str, $date_only = false) {
     $time = formatTime($time, 1);
     return implode(' ', array($date, $time));
 }
-function timeSubstract($first, $sec) {
-    if (strcmp($first, $sec) > 0) {
-        $tmp = $first;
-        $first = $sec;
-        $sec = $tmp;
-    }
 
-    list($f_hrs, $f_min) = explode(':', $first);
-    list($s_hrs, $s_min) = explode(':', $sec);
-
-    $m_diff = $f_min - $s_min;
-    $h_diff = $f_hrs - $s_hrs;
-
-    $r = abs($h_diff * 60 + $m_diff);
-
-    return (floor($r / 60) . ':' . ($r % 60));
-}
-function timeAdd($first, $sec) {
-    list($f_hrs, $f_min) = explode(':', $first);
-    list($s_hrs, $s_min) = explode(':', $sec);
-
-    $m = $f_min + $s_min;
-    $h = floor($m / 60) + $f_hrs + $s_hrs;
-
-    return ($h . ':' . ($m % 60));
-}
 function getReturnURI($default) {
     return post('referer') ? post('referer') : $default;
 }

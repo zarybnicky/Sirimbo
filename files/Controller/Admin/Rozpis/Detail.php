@@ -155,49 +155,48 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
                     }
                 );
 
-                $end = "00:00";
+                $lastEnd = DateTimeImmutable::createFromFormat('H:i', '00:00');
                 foreach ($items as &$item) {
-                    $l_start = formatTime($item['ri_od'], 1);
-                    $l_end = formatTime($item['ri_do'], 1);
-                    $length = timeSubstract($l_end, $l_start);
-                    
-                    if (strcmp($end, $l_start) > 0) {
-                        $l_start = $end;
-                        $l_end = timeAdd($l_start, $length);
+                    $start = DateTimeImmutable::createFromFormat('H:i:s', $item['ri_od']);
+                    $end = DateTimeImmutable::createFromFormat('H:i:s', $item['ri_do']);
+                    $length = $start->diff($end);
+
+                    if ($lastEnd > $start) {
+                        $start = $lastEnd;
+                        $end = $start->add($length);
                     }
-                    if (strcmp($l_start, $l_end) > 0) {
-                        $l_end = timeAdd($l_start, $length);
+                    if ($start > $end) {
+                        $end = $start->add($length);
                     }
+                    $lastEnd = $end;
                     
-                    $item['ri_od'] = formatTime($l_start, 0);
-                    $item['ri_do'] = formatTime($l_end, 0);
-                    
-                    $end = $l_end;
+                    $item['ri_od'] = $start->format('H:i:s');
+                    $item['ri_do'] = $end->format('H:i:s');
                 }
                 break;
+                
             case 'add_multiple':
                 if (is_object($f = $this->checkAddMultiple())) {
                     $this->redirect()->setMessage($f->getMessages());
                     break;
                 }
 
-                $od = post('add_multi_od');
-                $len = floor(post('add_multi_len') / 60) . ':' .
-                    (int)(post('add_multi_len') % 60);
-                $do = timeAdd($od, $len);
+                $start = DateTimeImmutable::createFromFormat('H:i', post('add_multi_od'));
+                $length = new DateInterval('PT' . post('add_multi_len') . 'M');
+                $end = $start->add($length);
                 
                 for($i = 0; $i < post('add_multi_num'); $i++) {
                     $newId = DBRozpis::addRozpisItem(
                         $id,
                         '0',
-                        formatTime($od, 0),
-                        formatTime($do, 0),
+                        $start->format('H:i:s'),
+                        $end->format('H:i:s'),
                         '0'
                     );
                     $items[] = DBRozpis::getRozpisItemLesson($newId);
                     
-                    $od = $do;
-                    $do = timeAdd($od, $len);
+                    $start = $end;
+                    $end = $start->add($length);
                 }
                 break;
         }
