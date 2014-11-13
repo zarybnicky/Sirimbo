@@ -13,19 +13,16 @@ class DBDokumenty extends Database
     }
     public static function getMultipleById($ids)
     {
-        list($kat) = self::escape($ids);
-
+        list($ids) = self::escape($ids);
+        if (empty($ids)) {
+            return array();
+        }
+        
         $query = 'SELECT *
             FROM dokumenty
             LEFT JOIN users ON d_kdo=u_id
-            WHERE d_id IN (';
-        for($i = 0; $i < count($ids); $i++) {
-            $query .= "'{$ids[$i]}'";
-            if($i + 1 < count($ids)) {
-                $query .= ',';
-            }
-        }
-        $query .= ')';
+            WHERE d_id IN (\'' . implode('\',\'', $ids) . '\')';
+        
         $res = self::query($query);
         return self::getArray($res);
     }

@@ -77,38 +77,6 @@ function timeAdd($first, $sec) {
 
     return ($h . ':' . ($m % 60));
 }
-function echoTaborDokumenty($list_name, $kats) {
-    echo '<select name="', $list_name, '">', "\n";
-    echo '<option value="none"';
-    if (!post($list_name))
-        echo ' selected="selected"';
-    echo '>Vyber si :o)</option>', "\n";
-    if (is_array($kats)) {
-        foreach ($kats as $kat) {
-            $doku = DBDokumenty::getDokumentyByKategorie($kat);
-
-            foreach ($doku as $item) {
-                echo '<option value="', $item['d_id'], '"';
-                if (post($list_name) == $item['d_id'])
-                    echo ' selected="selected"';
-                echo '>', $item['d_name'], ' (', $item['d_kategorie'], ')';
-                echo '</option>', "\n";
-            }
-        }
-    } else {
-        $doku = DBDokumenty::getDokumentyByKategorie($kats);
-
-        foreach ($doku as $item) {
-            echo '<option value="', $item['d_id'], '"';
-            if (post($list_name) == $item['d_id'])
-                echo ' selected="selected"';
-            echo '>', $item['d_name'], ' (', Settings::$documentTypes[$item['d_kategorie']], ')';
-            echo '</option>', "\n";
-        }
-    }
-    echo '</select>', "\n";
-}
-
 function getReturnURI($default) {
     return post('referer') ? post('referer') : $default;
 }

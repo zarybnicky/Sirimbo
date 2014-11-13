@@ -3,30 +3,11 @@
     <?= $this->notice($this->redirect()->getMessage()); ?>
     <form action="" method="POST" class="centerWTable">
         <?= $this->render('files/View/Member/Akce/Header.inc', $this->data);?>
-        <table>
-            <tr>
-                <td>Jméno<br/>Souboru</td>
-                <td>Kategorie</td>
-            </tr>
-            <?php
-            if (!empty($doku)) {
-                $count = count($doku);
-                for($i = 0; $i < $count; $i++) {
-                    $data = DBDokumenty::getSingleDokument($doku[$i]);
-                    echo '<tr>';
-                    echo '<td>', $data['d_name'], '</td>';
-                    echo '<td>', Settings::$documentTypes[$data['d_kategorie']], '</td>';
-                    echo '<td><button type="submit" name="remove" value="', $i,
-                    '">Odstranit</button></td>';
-                    echo '</tr>';
-                }
-            }
-            ?>
-            <tr>
-                <td><?php echoTaborDokumenty("add-id", array(2, 3, 0));// = Soutěže, rady, ostatní ?></td>
-                <td><button type="submit" name="add" value="add">Přidat</button></td>
-            </tr>
-        </table>
+        <?= $this->table()
+                 ->data($this->documents)
+                 ->column('name', 'Jméno<br/>souboru')
+                 ->column('category', 'Kategorie')
+                 ->column('removeButton', '');?>
         <a href="/admin/akce">Zpět</a>
     </form>
 </div>
