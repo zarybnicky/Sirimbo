@@ -88,7 +88,7 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
         $items = DBNabidka::getNabidkaItem($id);
         $obsazeno = DBNabidka::getNabidkaItemLessons($id);
 
-        if (is_numeric(post("add_hodiny")) && is_numeric(post("add_partner"))) {
+        if (is_numeric(post("add_hodiny")) && is_numeric(post("add_partner")) && post('add_partner')) {
             $hodiny = post("add_hodiny");
             $partner = post("add_partner");
 

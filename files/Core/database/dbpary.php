@@ -152,9 +152,9 @@ class DBPary extends Database
     public static function newPartner($partner, $partnerka) {
         list($partner, $partnerka) = DBPary::escapeArray(array($partner, $partnerka));
 
-        if ($partner == '0' || $partner == 'none')
+        if ($partner == '0')
             return;
-        if ($partnerka == '0' || $partnerka == 'none') {
+        if ($partnerka == '0') {
             DBPary::noPartner($partner);
             return;
         }
@@ -171,7 +171,7 @@ class DBPary extends Database
     public static function noPartner($partner) {
         list($partner) = DBPary::escapeArray(array($partner));
 
-        if ($partner == '0' || $partner == 'none')
+        if ($partner == '0')
             return;
 
         /*DBPary::query(        //REMOVES ALL FROM NABIDKA

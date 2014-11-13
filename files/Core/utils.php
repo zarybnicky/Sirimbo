@@ -84,19 +84,3 @@ function getReturnURI($default) {
 function getReturnInput() {
     return '<input type="hidden" name="referer" value="' . Request::getReferer() . '" />' . "\n";
 }
-
-function echoFullJmeno($userData) {
-    if (is_array($userData)) {
-        echo $userData['u_jmeno'], ' ',  $userData['u_prijmeni'];
-    }
-}
-
-function getIP() {
-    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-        return $_SERVER['HTTP_CLIENT_IP'];
-    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        return $_SERVER['HTTP_X_FORWARDED_FOR'];
-    } else {
-        return $_SERVER['REMOTE_ADDR'];
-    }
-}

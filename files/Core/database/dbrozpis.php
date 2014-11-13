@@ -180,7 +180,7 @@ class DBRozpis extends Database
                         array('ri_partner', 'ri_od', 'ri_do', 'ri_lock')
                     )
                 );
-           },
+            },
             $data
         );
 

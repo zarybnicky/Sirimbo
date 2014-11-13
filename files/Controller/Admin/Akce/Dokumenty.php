@@ -31,8 +31,8 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Admin_Akce
                     $akce["a_kapacita"], serialize($documents),
                     $akce["a_lock"], $akce['a_visible']
                 );
-                $akce = DBAkce::getSingleAkce($id);
             }
+            $this->redirect('/admin/akce/dokumenty/' . $id, 'Úspěšně upraveno');
         }
         
         $booked = count(DBAkce::getAkceItems($id));
@@ -81,7 +81,7 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Admin_Akce
             'removeButton' => ''
         );
         $this->render(
-            'files/Admin/AkceDokumenty/Display.inc',
+            'files/View/Admin/Akce/Dokumenty.inc',
             array(
                 'data' => $akce,
                 'documents' => $documents

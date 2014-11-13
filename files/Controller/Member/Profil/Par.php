@@ -75,12 +75,12 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
         $havePartner = !empty($latest) && $latest['u_id'];
 
         if (!empty($_POST)) {
-            if (post("partner") == "none" || (post('action') == 'dumpthem' && $havePartner)) {
+            if (!post("partner") || (post('action') == 'dumpthem' && $havePartner)) {
                 DBPary::noPartner(User::getUserID());
                 DBPary::noPartner($latest['u_id']);
                 $this->redirect('/member/profil/par', 'Partnerství zrušeno');
             }
-            if (post('partner') == $latest['u_id'] || (post('partner') == "none" && $latest['u_id'] == '0')) {
+            if (post('partner') == $latest['u_id'] || (!post('partner') && $latest['u_id'] == '0')) {
                 $this->redirect('/member/profil/par');
             }
             if (User::getUserPohlavi() == "m") {
@@ -93,7 +93,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
             $this->redirect('/member/profil/par', 'Žádost o partnerství odeslána');
         }
 
-        post('partner', $havePartner ? $latest['u_id'] : 'none');
+        post('partner', $havePartner ? $latest['u_id'] : '0');
         $this->render(
             'files/View/Member/Profil/PartnerOverview.inc',
             array(

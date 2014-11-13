@@ -119,9 +119,7 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
         }
         //Update all
         foreach ($items as &$item) {
-            $item['ri_partner'] = (post($item['ri_id'] . '-partner') == 'none')
-                ? '0'
-                : post($item['ri_id'] . '-partner');
+            $item['ri_partner'] = post($item['ri_id'] . '-partner');
             $item['ri_od'] = formatTime(post($item['ri_id'] . '-od'), 0);
             $item['ri_do'] = formatTime(post($item['ri_id'] . '-do'), 0);
             $item['ri_lock'] = post($item['ri_id'] . '-lock') ? 1 : 0;
@@ -134,7 +132,7 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
             } else {
                 $newId = DBRozpis::addRozpisItem(
                     $id,
-                    (post('add_partner') == 'none') ? "0" : post('add_partner'),
+                    post('add_partner'),
                     formatTime(post('add_od'), 0),
                     formatTime(post('add_do'), 0),
                     (int) (bool) post('add_lock')
@@ -203,14 +201,15 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
                 }
                 break;
         }
+
         return $items;
     }
 
     protected function checkAdd() {
         $f = new Form();
 
-        $f->checkBool(
-            is_numeric(post('add_partner')) || post('add_partner') == 'none',
+        $f->checkNumeric(
+            post('add_partner'),
             'Neplatný partner u přidávané lekce',
             'add_partner'
         );

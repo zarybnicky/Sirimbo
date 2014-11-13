@@ -72,9 +72,9 @@ class UserSelectHelper
 
         $out .= '<select name="' . $this->_name . '">' . "\n";
         if (!$selected) {
-            $out .= '<option value="none" selected="selected">--- žádný ---</option>' . "\n";
+            $out .= '<option value="0" selected="selected">--- žádný ---</option>' . "\n";
         } else {
-            $out .= '<option value="none">--- žádný ---</option>' . "\n";
+            $out .= '<option value="0">--- žádný ---</option>' . "\n";
         }
 
         if ($this->_tmpSwitch) {
