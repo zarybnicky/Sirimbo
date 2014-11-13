@@ -1,6 +1,6 @@
 <?= $this->header($this->jmeno); ?>
 
-<div class="container article">
+<div class="container full article">
   <div class="date little">
     <?php echo formatTimestamp($this->timestamp)?>
     <?php if ($this->canEdit) : ?>
