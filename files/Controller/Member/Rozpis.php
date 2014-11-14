@@ -2,11 +2,11 @@
 require_once 'files/Controller/Member.php';
 class Controller_Member_Rozpis  extends Controller_Member
 {
-    function __construct() {
+    public function __construct() {
         Permissions::checkError('rozpis', P_VIEW);
     }
 
-    function view($id = null) {
+    public function view($id = null) {
         $this->redirect()->setMessage($this->_processPost());
 
         $data = array_map(

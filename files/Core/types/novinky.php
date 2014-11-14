@@ -42,44 +42,51 @@ class Novinky
         ),
     );
 
-    function __construct($userID) {
+    public function __construct($userID) {
         $this->_user = $userID;
         $this->_current = null;
     }
 
-    function akce() {
+    public function akce() {
         $this->_current = 'akce';
         return $this;
-    } function clanek() {
+    }
+    public function clanek() {
         $this->_current = 'clanek';
         return $this;
-    }function video() {
+    }
+    public function video() {
         $this->_current = 'video';
         return $this;
-    } function dokumenty() {
+    }
+    public function dokumenty() {
         $this->_current = 'dokumenty';
         return $this;
-    } function galerie() {
+    }
+    public function galerie() {
         $this->_current = 'galerie';
         return $this;
-    } function nabidka() {
+    }
+    public function nabidka() {
         $this->_current = 'nabidka';
         return $this;
-    } function nastenka() {
+    }
+    public function nastenka() {
         $this->_current = 'nastenka';
         return $this;
-    } function rozpis() {
+    }
+    public function rozpis() {
         $this->_current = 'rozpis';
         return $this;
     }
 
-    function add() {
+    public function add() {
         $this->_insert('add', func_get_args());
     }
-    function edit() {
+    public function edit() {
         $this->_insert('edit', func_get_args());
     }
-    function remove() {
+    public function remove() {
         $this->_insert('remove', func_get_args());
     }
 

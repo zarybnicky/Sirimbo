@@ -1,6 +1,6 @@
 <?php
 interface PagingAdapterInterface
 {
-    function page($offset, $length, $options = null);
-    function count($options = null);
+    public function page($offset, $length, $options = null);
+    public function count($options = null);
 }

@@ -8,7 +8,7 @@ class TableHelper
     private $_style;
     private $_showHeader;
 
-    function table() {
+    public function table() {
         $this->_defaultValues();
         return $this;
     }
@@ -20,21 +20,21 @@ class TableHelper
         $this->_style = '';
         $this->_showHeader = true;
     }
-    function name($n) {
+    public function name($n) {
         $this->_name = $n;
         return $this;
     }
-    function style($s) {
+    public function style($s) {
         $this->_style = ' style="' . $s . '"';
         return $this;
     }
-    function data($d) {
+    public function data($d) {
         if ($d instanceof Traversable || (is_array($d) && is_array(reset($d)))) {
             $this->_data = $d;
         }
         return $this;
     }
-    function columns($columns, $overwrite = false) {
+    public function columns($columns, $overwrite = false) {
         if ($overwrite) {
             $this->_columns = null;
         }
@@ -49,24 +49,24 @@ class TableHelper
         }
         return $this;
     }
-    function column($id, $name, $class = null, $style = null) {
+    public function column($id, $name, $class = null, $style = null) {
         $html = ($class !== null ? (' class="' . $class . '"') : '')
                 . ($style !== null ? (' style="' . $style . '"') : '');
 
         $this->_columns[] = array($id, $name, $html);
         return $this;
     }
-    function showHeader($b) {
+    public function showHeader($b) {
         $this->_showHeader = (bool) $b;
         return $this;
     }
     private function _getCounter() {
         return ' ' . $this->_index . '.';
     }
-    function __toString() {
+    public function __toString() {
         return $this->render();
     }
-    function render() {
+    public function render() {
         if ($this->_data === null && $this->_columns === null) {
             return '';
         }

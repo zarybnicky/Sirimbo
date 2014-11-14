@@ -2,10 +2,10 @@
 require_once 'files/Controller/Admin.php';
 class Controller_Admin_Konzole extends Controller_Admin
 {
-    function __construct() {
+    public function __construct() {
         Permissions::checkError('konzole', P_OWNED);
     }
-    function view($id = null) {
+    public function view($id = null) {
         if (!empty($_POST) && post('code')) {
             $r = eval(stripslashes(post('code')));
             if ($r === false)

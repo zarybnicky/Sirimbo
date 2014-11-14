@@ -10,7 +10,7 @@ class MenuHelper
     const FLOAT_LEFT = 1;
     const FLOAT_RIGHT = 2;
 
-    function menu() {
+    public function menu() {
         $this->_defaultValues();
         return $this;
     }
@@ -20,22 +20,22 @@ class MenuHelper
         $this->_float = 0;
         $this->_content = array();
     }
-    function left($left) {
+    public function left($left) {
         if ($left >= -1)
             $this->_left = $left;
         return $this;
     }
-    function right($right) {
+    public function right($right) {
         if ($right >= -1)
             $this->_right = $right;
         return $this;
     }
-    function float($type) {
+    public function float($type) {
         if (is_int($type))
             $this->_float = $type;
         return $this;
     }
-    function content($name, $url, $button = false, $replace = false) {
+    public function content($name, $url, $button = false, $replace = false) {
         if (!$name || !$url)
             return $this;
         if ($replace)
@@ -45,7 +45,7 @@ class MenuHelper
 
         return $this;
     }
-    function render() {
+    public function render() {
         $out = '<div class="sticky" style="width:150px;';
         if ($this->_right > -1) $out .= 'margin-left:' . $this->_right . 'px;';
         if ($this->_left > -1) $out .= 'margin-right:' . $this->_left . 'px;';
@@ -88,7 +88,7 @@ class MenuHelper
         $out .= '</div>';
         return $out;
     }
-    function __toString() {
+    public function __toString() {
         return $this->render();
     }
 }

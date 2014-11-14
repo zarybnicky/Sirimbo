@@ -7,7 +7,7 @@ class FotoListHelper
     private $_fotky;
     private $_selector;
 
-    function fotoList() {
+    public function fotoList() {
         $this->_id = -1;
         $this->_data = array();
         $this->_subdirs = array();
@@ -15,33 +15,33 @@ class FotoListHelper
         $this->_selector = false;
         return $this;
     }
-    function id($id) {
+    public function id($id) {
         if ($id >= 0)
             $this->_id = $id;
         return $this;
     }
-    function data($data) {
+    public function data($data) {
         if (is_array($data))
             $this->_data = $data;
         if ($this->_id == -1)
             $this->_id = $this->_data['gd_id'];
         return $this;
     }
-    function subdirs($data) {
+    public function subdirs($data) {
         if (is_array($data))
             $this->_subdirs = $data;
         return $this;
     }
-    function fotky($data) {
+    public function fotky($data) {
         if (is_array($data))
             $this->_fotky = $data;
         return $this;
     }
-    function selector($set) {
+    public function selector($set) {
         $this->_selector = $set ? true : false;
         return $this;
     }
-    function render() {
+    public function render() {
         if (!$this->_data && !($this->_data = DBGalerie::getSingleDir($this->_id))) {
             return $this->notice('Taková složka neexistuje');
         }
@@ -86,7 +86,7 @@ class FotoListHelper
 
         return $out;
     }
-    function __toString() {
+    public function __toString() {
         return $this->render();
     }
 }

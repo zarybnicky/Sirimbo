@@ -2,10 +2,10 @@
 require_once 'files/Controller/Admin/Platby.php';
 class Controller_Admin_Platby_Overview extends Controller_Admin_Platby
 {
-    function __construct() {
+    public function __construct() {
         Permissions::checkError('platby', P_OWNED);
     }
-    function view($id = null) {
+    public function view($id = null) {
         $data = DBUser::getUsersWithSkupinaPlatby();
         $skupiny = array();
         $index = 0;

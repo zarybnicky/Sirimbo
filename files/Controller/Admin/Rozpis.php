@@ -2,10 +2,10 @@
 require_once 'files/Controller/Admin.php';
 class Controller_Admin_Rozpis extends Controller_Admin
 {
-    function __construct() {
+    public function __construct() {
         Permissions::checkError('rozpis', P_OWNED);
     }
-    function view($id = null) {
+    public function view($id = null) {
         switch(post('action')) {
             case 'save':
                 $items = DBRozpis::getRozpis();
@@ -123,7 +123,7 @@ class Controller_Admin_Rozpis extends Controller_Admin
         );
         return;
     }
-    function add($id = null) {
+    public function add($id = null) {
         if (empty($_POST) || is_object($f = $this->_checkData())) {
             if (!empty($_POST))
                 $this->redirect()->setMessage($f->getMessages());
@@ -159,7 +159,7 @@ class Controller_Admin_Rozpis extends Controller_Admin
         }
         $this->redirect('/admin/rozpis', 'Rozpis přidán');
     }
-    function edit($id = null) {
+    public function edit($id = null) {
         if (!$id || !($data = DBRozpis::getSingleRozpis($id)))
             $this->redirect('/admin/rozpis', 'Rozpis s takovým ID neexistuje');
         Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);

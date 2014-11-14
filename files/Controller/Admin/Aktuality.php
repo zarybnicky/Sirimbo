@@ -2,10 +2,10 @@
 require_once 'files/Controller/Admin.php';
 class Controller_Admin_Aktuality extends Controller_Admin
 {
-    function __construct() {
+    public function __construct() {
         Permissions::checkError('aktuality', P_OWNED);
     }
-    function view($id = null) {
+    public function view($id = null) {
         switch(post("action")) {
             case 'edit':
                 $aktuality = post('aktuality');
@@ -48,7 +48,7 @@ class Controller_Admin_Aktuality extends Controller_Admin
             )
         );
     }
-    function add($id = null) {
+    public function add($id = null) {
         if (empty($_POST)) {
             $this->render('files/View/Admin/Aktuality/Form.inc');
             return;
@@ -74,7 +74,7 @@ class Controller_Admin_Aktuality extends Controller_Admin
             $this->redirect('/admin/aktuality/foto/' . $id . '?notify=true', 'Uloženo');
         }
     }
-    function edit($id = null) {
+    public function edit($id = null) {
         if (!$id || !($data = DBAktuality::getSingleAktualita($id)))
             $this->redirect('/admin/aktuality', 'Článek s takovým ID neexistuje');
 
@@ -110,7 +110,7 @@ class Controller_Admin_Aktuality extends Controller_Admin
         }
         $this->redirect('/admin/aktuality', 'Článek změněn');
     }
-    function remove($id = null)
+    public function remove($id = null)
     {
         if (!is_array(post('data')) && !is_array(get('u'))) {
             $this->redirect('/admin/aktuality');

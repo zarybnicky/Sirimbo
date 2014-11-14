@@ -2,10 +2,10 @@
 require_once 'files/Controller/Admin.php';
 class Controller_Admin_Users extends Controller_Admin
 {
-    function __construct() {
+    public function __construct() {
         Permissions::checkError('users', P_OWNED);
     }
-    function view($id = null) {
+    public function view($id = null) {
         switch(post('action')) {
             case 'edit':
                 $users = post('users');
@@ -45,7 +45,7 @@ class Controller_Admin_Users extends Controller_Admin
         }
         $this->_displayOverview(get('v'));
     }
-    function remove($id = null) {
+    public function remove($id = null) {
         if (!is_array(post('data')) && !is_array(get('u')))
             $this->redirect('/admin/users');
         if (!empty($_POST) && post('action') == 'confirm') {
@@ -72,7 +72,7 @@ class Controller_Admin_Users extends Controller_Admin
             )
         );
     }
-    function add($id = null) {
+    public function add($id = null) {
         if (empty($_POST) || is_object($f = $this->_checkData('add'))) {
             if (!empty($_POST))
                 $this->redirect()->setMessage($f->getMessages());
@@ -89,7 +89,7 @@ class Controller_Admin_Users extends Controller_Admin
         );
         $this->redirect('/admin/users', 'Uživatel úspěšně přidán');
     }
-    function edit($id = null) {
+    public function edit($id = null) {
         if (!$id || !($data = DBUser::getUserData($id)))
             $this->redirect('/admin/users', 'Uživatel s takovým ID neexistuje');
         if (!$data['u_confirmed'])
@@ -126,7 +126,7 @@ class Controller_Admin_Users extends Controller_Admin
         );
         $this->redirect('/admin/users', 'Uživatel úspěšně upraven');
     }
-    function platby($id = null) {
+    public function platby($id = null) {
         if (!$id || !($data = DBUser::getUserData($id)))
             $this->redirect('/admin/users', 'Uživatel s takovým ID neexistuje');
         if (!$data['u_confirmed'])
@@ -134,7 +134,7 @@ class Controller_Admin_Users extends Controller_Admin
 
         $this->render('files/View/Admin/Users/Platby.inc');
     }
-    function unconfirmed($id = null) {
+    public function unconfirmed($id = null) {
         if (empty($_POST) || !is_array(post('users'))) {
             $users = DBUser::getNewUsers();
             if (empty($users)) {
@@ -195,7 +195,7 @@ class Controller_Admin_Users extends Controller_Admin
             $this->redirect('/admin/users/remove?' . http_build_query(array('u' => post('users'))));
         }
     }
-    function duplicate($id = null) {
+    public function duplicate($id = null) {
         if (!empty($_POST) && post('action') == 'remove' && post('users') && !empty($_POST['users']))
             $this->redirect('/admin/users/remove?' . http_build_query(array('u' => post('users'))));
 
@@ -220,7 +220,7 @@ class Controller_Admin_Users extends Controller_Admin
             )
         );
     }
-    function statistiky($id = null) {
+    public function statistiky($id = null) {
         $all = DBUser::getUsers();
         $active = DBUser::getActiveUsers();
         $dancers = DBUser::getActiveDancers();
@@ -248,7 +248,7 @@ class Controller_Admin_Users extends Controller_Admin
             )
         );
     }
-    function temporary($id = null) {
+    public function temporary($id = null) {
         $type = post('type');
         $jmeno = post('jmeno');
         $prijmeni = post('prijmeni');

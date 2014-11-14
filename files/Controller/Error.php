@@ -1,7 +1,7 @@
 <?php
 class Controller_Error extends Controller_Abstract
 {
-    function view($id = null) {
+    public function view($id = null) {
         if (!get('id')) get('id', '');
 
         function ucfirstUser(&$str, $key) {

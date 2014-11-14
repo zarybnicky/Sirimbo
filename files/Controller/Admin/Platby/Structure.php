@@ -2,10 +2,10 @@
 require_once 'files/Controller/Admin/Platby.php';
 class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
 {
-    function __construct() {
+    public function __construct() {
         Permissions::checkError('platby', P_OWNED);
     }
-    function view($id = null) {
+    public function view($id = null) {
         $this->render('files/View/Admin/Platby/StructureOverview.inc', array(
                 'data' => $this->getCategories(),
                 'orphanGroupSkupina' => $this->getOrphanGroupSkupina(),

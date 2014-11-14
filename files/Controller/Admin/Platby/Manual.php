@@ -2,11 +2,11 @@
 require_once 'files/Controller/Admin/Platby.php';
 class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
 {
-    function __construct()
+    public function __construct()
     {
         Permissions::checkError('platby', P_OWNED);
     }
-    function view($id = null)
+    public function view($id = null)
     {
         if (!empty($_POST)) {
             $this->_processPost();

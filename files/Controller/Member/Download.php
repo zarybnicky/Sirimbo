@@ -1,10 +1,10 @@
 <?php
 class Controller_Member_Download extends Controller_Abstract
 {
-    function __construct() {
+    public function __construct() {
         Permissions::checkError('dokumenty', P_VIEW);
     }
-    function view($id = null) {
+    public function view($id = null) {
         if (!get('id'))
             $this->redirect('/member/dokumenty');
 
@@ -20,4 +20,3 @@ class Controller_Member_Download extends Controller_Abstract
         fclose($file);
     }
 }
-?>

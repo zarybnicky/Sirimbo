@@ -15,7 +15,7 @@ class Paging
     private $_valid;
     private $_adapter;
 
-    function __construct(PagingAdapterInterface $d = null) {
+    public function __construct(PagingAdapterInterface $d = null) {
         if ($d instanceof PagingAdapterInterface) {
             $this->_adapter = $d;
             $this->_totalItems = $this->_adapter->count();
@@ -24,40 +24,40 @@ class Paging
         return $this;
     }
 
-    function setAdapter(PagingAdapterInterface $d) {
+    public function setAdapter(PagingAdapterInterface $d) {
         if (!($d instanceof PagingAdapterInterface))
             return false;
         $this->_adapter = $d;
         $this->_totalItems = $this->_adapter->count();
         $this->_recalculate();
     }
-    function setCurrentPage($p) {
+    public function setCurrentPage($p) {
         if (!is_numeric($p))
             return false;
         $this->_currentPage = $p;
         $this->_recalculate();
     }
-    function setCurrentPageField($f) {
+    public function setCurrentPageField($f) {
         $this->_currentPageField = $f;
         $this->_recalculate();
     }
-    function setItemsPerPageField($f) {
+    public function setItemsPerPageField($f) {
         $this->_itemsPerPageField = $f;
         $this->_recalculate();
     }
-    function setDefaultItemsPerPage($i) {
+    public function setDefaultItemsPerPage($i) {
         if (!is_numeric($i))
             return false;
         $this->_defaultItemsPerPage = $i;
         $this->_recalculate();
     }
-    function setItemsPerPage($p) {
+    public function setItemsPerPage($p) {
         if (!is_numeric($p))
             return false;
         $this->_itemsPerPage = $p;
         $this->_recalculate();
     }
-    function setPageRange($p) {
+    public function setPageRange($p) {
         if (is_numeric($p))
             $this->_pageRange = $p;
         $this->_recalculate();
@@ -118,7 +118,7 @@ class Paging
         return;
     }
 
-    function getPages() {
+    public function getPages() {
         if (!$this->_valid)
             return false;
         return array(
@@ -131,7 +131,7 @@ class Paging
             'pagesInRange' => $this->_pagesInRange
         );
     }
-    function getLink($i, $label, $perPage = null) {
+    public function getLink($i, $label, $perPage = null) {
         if (!$this->_valid)
             return false;
         if ($perPage === null)
@@ -145,7 +145,7 @@ class Paging
         ));
         return "<a href=\"?$url\">$label</a>";
     }
-    function getNavigation() {
+    public function getNavigation() {
         if ($this->getPageCount() <= 1)
             return $this->getCountSetting();
 
@@ -182,7 +182,7 @@ class Paging
         }
         return $out . '<br/>' . $this->getCountSetting();
     }
-    function getCountSetting() {
+    public function getCountSetting() {
         if ($this->_totalItems <= 5)
             return '';
         $options = array(5, 10, 20, 50);
@@ -207,42 +207,42 @@ class Paging
         $out .= ' položek na stránku';
         return $out;
     }
-    function getPreviousPage() {
+    public function getPreviousPage() {
         if (!$this->_valid)
             return false;
         return $this->_previousPage;
     }
-    function getCurrentPage() {
+    public function getCurrentPage() {
         if (!$this->_valid)
             return false;
         return $this->_currentPage;
     }
-    function getNextPage() {
+    public function getNextPage() {
         if (!$this->_valid)
             return false;
         return $this->_nextPage;
     }
-    function getPageCount() {
+    public function getPageCount() {
         if (!$this->_valid)
             return false;
         return $this->_pageCount;
     }
-    function getItemsPerPage() {
+    public function getItemsPerPage() {
         if (!$this->_valid)
             return false;
         return $this->_itemsPerPage;
     }
-    function getTotalItems() {
+    public function getTotalItems() {
         if (!$this->_valid)
             return false;
         return $this->_totalItems;
     }
-    function getPagesInRange() {
+    public function getPagesInRange() {
         if (!$this->_valid)
             return false;
         return $this->_pagesInRange;
     }
-    function getItems() {
+    public function getItems() {
         if (!$this->_valid)
             return array();
 

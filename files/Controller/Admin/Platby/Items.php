@@ -2,11 +2,11 @@
 require_once 'files/Controller/Admin/Platby.php';
 class Controller_Admin_Platby_Items extends Controller_Admin_Platby
 {
-    function __construct()
+    public function __construct()
     {
         Permissions::checkError('platby', P_OWNED);
     }
-    function view($id = null)
+    public function view($id = null)
     {
         switch(post('action')) {
             case 'edit':
@@ -34,7 +34,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             )
         );
     }
-    function add($id = null)
+    public function add($id = null)
     {
         if (empty($_POST)) {
             $this->_displayForm(0);
@@ -50,7 +50,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         );
         $this->redirect('/admin/platby/items', 'Platba úspěšně přidána');
     }
-    function edit($id = null)
+    public function edit($id = null)
     {
         if (!$id || !($data = DBPlatbyItem::getSingle($id))) {
             $this->redirect('/admin/platby/items', 'Platba s takovým ID neexistuje');
@@ -74,7 +74,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         );
         $this->redirect('/admin/platby/items', 'Platba úspěšně upravena');
     }
-    function remove($id = null)
+    public function remove($id = null)
     {
         if (!is_array(post('data')) && !is_array(get('u'))) {
             $this->redirect('/admin/platby/items');

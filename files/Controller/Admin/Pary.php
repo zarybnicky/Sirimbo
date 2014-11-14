@@ -2,10 +2,10 @@
 require_once 'files/Controller/Admin.php';
 class Controller_Admin_Pary extends Controller_Admin
 {
-    function __construct() {
+    public function __construct() {
         Permissions::checkError('pary', P_OWNED);
     }
-    function view($id = null) {
+    public function view($id = null) {
         switch(post("action")) {
             case "remove":
                 if (!is_array(post("pary")))
@@ -61,7 +61,7 @@ class Controller_Admin_Pary extends Controller_Admin
             )
         );
     }
-    function edit($id = null) {
+    public function edit($id = null) {
         if (!$id || !($data = DBPary::getSinglePar($id)))
             $this->redirect('/admin/pary', 'Pár s takovým ID neexistuje');
 

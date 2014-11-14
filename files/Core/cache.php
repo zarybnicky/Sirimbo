@@ -6,41 +6,40 @@ class Cache
     private $_name = '';
     private $_time;
 
-    function __construct($name, $content = false) {
+    public function __construct($name, $content = false) {
         $this->reset($name, $content);
     }
 
-    function reset($name, $new = false) {
+    public function reset($name, $new = false) {
         $this->_name = $name;
         $this->_content = $new;
         $this->_valid = true;
         $this->_time = time();
     }
-    function set($new) {
+    public function set($new) {
         $this->_content = $new;
         $this->_valid = true;
         $this->_time = time();
     }
-    function get() {
+    public function get() {
         if ($this->_valid == true)
             return $this->_content;
         else
             return false;
     }
-    function setName($name) {
+    public function setName($name) {
         $this->_name = $name;
     }
-    function getName() {
+    public function getName() {
         return $this->_name;
     }
-    function getTime() {
+    public function getTime() {
         return $this->_time;
     }
-    function invalidate() {
+    public function invalidate() {
         $this->_valid = false;
     }
-    function isValid() {
+    public function isValid() {
         return $this->_valid;
     }
 }
-?>

@@ -2,13 +2,13 @@
 require_once 'files/Controller/Member.php';
 class Controller_Member_Profil extends Controller_Member
 {
-    function __construct() {
+    public function __construct() {
         Permissions::checkError('nastenka', P_VIEW);
     }
-    function view($id = null) {
+    public function view($id = null) {
         $this->render('files/View/Member/Profil/Overview.inc');
     }
-    function edit($id = null) {
+    public function edit($id = null) {
         $data = DBUser::getUserData(User::getUserID());
         $narozeni = $this->date('narozeni')->getPost();
 
@@ -38,7 +38,7 @@ class Controller_Member_Profil extends Controller_Member
         );
         $this->redirect('/member/profil', 'Upraveno');
     }
-    function heslo($id = null) {
+    public function heslo($id = null) {
         if (empty($_POST) || is_object($f = $this->_checkData('heslo'))) {
             if (!empty($_POST)) {
                 $this->redirect()->setMessage($f->getMessages());
@@ -49,7 +49,7 @@ class Controller_Member_Profil extends Controller_Member
         DBUser::setPassword(User::getUserID(), User::crypt(post('newpass')));
         $this->redirect('/member/profil', 'Heslo změněno');
     }
-    function platby($id = null) {
+    public function platby($id = null) {
         $groupsOut = array();
         $groups = DBSkupiny::getSingleWithCategories(User::getSkupina());
         $currentGroup = 0;

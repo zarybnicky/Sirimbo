@@ -2,10 +2,10 @@
 require_once 'files/Controller/Admin/Nabidka.php';
 class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
 {
-    function __construct() {
+    public function __construct() {
         Permissions::checkError('nabidka', P_OWNED);
     }
-    function view($id = null) {
+    public function view($id = null) {
         if (!$id || !($data = DBNabidka::getSingleNabidka($id))) {
             $this->redirect(
                 '/admin/nabidka',

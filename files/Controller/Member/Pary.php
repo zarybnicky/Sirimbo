@@ -2,10 +2,10 @@
 require_once 'files/Controller/Member.php';
 class Controller_Member_Pary extends Controller_Member
 {
-    function __construct() {
+    public function __construct() {
         Permissions::checkError('pary', P_VIEW);
     }
-    function view($id = null) {
+    public function view($id = null) {
         /*if ($id) {
             $this->render('files/View/Member/Pary/Single.inc, array('id' => $id));
             return;

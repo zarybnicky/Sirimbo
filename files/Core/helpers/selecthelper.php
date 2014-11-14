@@ -6,7 +6,7 @@ class SelectHelper
     private $_options;
     private $_get;
 
-    function select($n = null) {
+    public function select($n = null) {
         $this->_defaultValues();
 
         if ($n !== null)
@@ -21,19 +21,19 @@ class SelectHelper
         $this->_get = false;
     }
 
-    function name($name = '') {
+    public function name($name = '') {
         if ($name)
             $this->_name = $name;
         return $this;
     }
 
-    function value($value = null) {
+    public function value($value = null) {
         if ($value)
             $this->_value = $value;
         return $this;
     }
 
-    function option($value, $name = null, $overwrite = false) {
+    public function option($value, $name = null, $overwrite = false) {
         if ($overwrite)
             $this->_options = array();
 
@@ -44,7 +44,7 @@ class SelectHelper
         return $this;
     }
 
-    function options($options = array(), $overwrite = false, $literal = false) {
+    public function options($options = array(), $overwrite = false, $literal = false) {
         if ($overwrite === true)
             $this->_options = array();
 
@@ -62,21 +62,21 @@ class SelectHelper
         return $this;
     }
 
-    function get($get = true) {
+    public function get($get = true) {
         $this->_get = (bool) $get;
         return $this;
     }
 
-    function post($post = true) {
+    public function post($post = true) {
         $this->_get = !(bool) $post;
         return $this;
     }
 
-    function __toString() {
+    public function __toString() {
         return $this->render();
     }
 
-    function render() {
+    public function render() {
         $out = '<select name="' . $this->_name . '">' . "\n";
         if (!empty($this->_options)) {
             $selected = $this->_get ? get($this->_name) : post($this->_name);

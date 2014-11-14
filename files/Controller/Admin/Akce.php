@@ -2,11 +2,11 @@
 require_once 'files/Controller/Admin.php';
 class Controller_Admin_Akce extends Controller_Admin
 {
-    function __construct()
+    public function __construct()
     {
         Permissions::checkError('akce', P_OWNED);
     }
-    function view($id = null)
+    public function view($id = null)
     {
         switch(post('action')) {
         case 'save':
@@ -32,7 +32,7 @@ class Controller_Admin_Akce extends Controller_Admin
         }
         $this->_displayOverview();
     }
-    function add($id = null)
+    public function add($id = null)
     {
         if (empty($_POST) || is_object($form = $this->_checkData())) {
             if (empty($_POST)) {
@@ -57,7 +57,7 @@ class Controller_Admin_Akce extends Controller_Admin
 
         $this->redirect('/admin/akce', 'Akce přidána');
     }
-    function edit($id = null)
+    public function edit($id = null)
     {
         if (!$id || !($data = DBAkce::getSingleAkce($id))) {
             $this->redirect('/admin/akce', 'Akce s takovým ID neexistuje');
@@ -94,7 +94,7 @@ class Controller_Admin_Akce extends Controller_Admin
 
         $this->redirect('/admin/akce', 'Akce upravena');
     }
-    function remove($id = null)
+    public function remove($id = null)
     {
         if (!is_array(post('data')) && !is_array(get('u'))) {
             $this->redirect('/admin/akce');

@@ -4,7 +4,7 @@ class ColorSelectHelper
     private $_field;
     private $_value;
 
-    function colorselect($field = null, $value = null) {
+    public function colorselect($field = null, $value = null) {
         $this->_defaultValues();
         if ($field !== null)
             $this->_field = $field;
@@ -16,18 +16,18 @@ class ColorSelectHelper
         $this->_field = '';
         $this->_value = '';
     }
-    function field($field) {
+    public function field($field) {
         $this->_field = $field;
         return $this;
     }
-    function value($value) {
+    public function value($value) {
         $this->_value = $value;
         return $this;
     }
-    function __toString() {
+    public function __toString() {
         return $this->render();
     }
-    function render() {
+    public function render() {
         if (!$this->_value && post($this->_field))
             $this->_value = post($this->_field);
 

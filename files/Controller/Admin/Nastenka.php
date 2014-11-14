@@ -2,10 +2,10 @@
 require_once 'files/Controller/Admin.php';
 class Controller_Admin_Nastenka extends Controller_Admin
 {
-    function __construct() {
+    public function __construct() {
         Permissions::checkError('nastenka', P_OWNED);
     }
-    function view($id = null) {
+    public function view($id = null) {
         switch(post('action')) {
             case 'remove':
                 if (!is_array(post('nastenka')))
@@ -66,7 +66,7 @@ class Controller_Admin_Nastenka extends Controller_Admin
             )
         );
     }
-    function add($id = null) {
+    public function add($id = null) {
         if (empty($_POST) || is_object($f = $this->_checkData())) {
             if (!empty($_POST))
                 $this->redirect()->setMessage($f->getMessages());
@@ -96,7 +96,7 @@ class Controller_Admin_Nastenka extends Controller_Admin
 
         $this->redirect(getReturnURI('/admin/nastenka'), 'Příspěvek úspěšně přidán');
     }
-    function edit($id = null) {
+    public function edit($id = null) {
         if (!$id || !($data = DBNastenka::getSingleNastenka($id)))
             $this->redirect(getReturnURI('/admin/nastenka'), 'Nástěnka s takovým ID neexistuje');
 

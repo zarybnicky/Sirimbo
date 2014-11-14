@@ -2,10 +2,10 @@
 require_once 'files/Controller/Admin.php';
 class Controller_Admin_Dokumenty extends Controller_Admin
 {
-    function __construct() {
+    public function __construct() {
         Permissions::checkError('dokumenty', P_OWNED);
     }
-    function view($id = null) {
+    public function view($id = null) {
         switch(post('action')) {
             case 'edit':
                 $dokumenty = post('dokumenty');
@@ -74,7 +74,7 @@ class Controller_Admin_Dokumenty extends Controller_Admin
             )
         );
     }
-    function edit($id = null) {
+    public function edit($id = null) {
         if (!$id || !($data = DBDokumenty::getSingleDokument($id)))
             $this->redirect('/admin/dokumenty', 'Dokument s takovým ID neexistuje');
 
@@ -91,7 +91,7 @@ class Controller_Admin_Dokumenty extends Controller_Admin
             )
         );
     }
-    function remove($id = null) {
+    public function remove($id = null) {
         if (!is_array(post('data')) && !is_array(get('u'))) {
             $this->redirect('/admin/dokumenty');
         }

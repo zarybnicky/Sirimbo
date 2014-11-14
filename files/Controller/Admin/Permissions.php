@@ -2,10 +2,10 @@
 require_once 'files/Controller/Admin.php';
 class Controller_Admin_Permissions extends Controller_Admin
 {
-    function __construct() {
+    public function __construct() {
         Permissions::checkError('permissions', P_ADMIN);
     }
-    function view($id = null) {
+    public function view($id = null) {
         switch(post('action')) {
             case 'edit':
                 $data = post('permissions');
@@ -35,7 +35,7 @@ class Controller_Admin_Permissions extends Controller_Admin
             )
         );
     }
-    function add($id = null) {
+    public function add($id = null) {
         if (empty($_POST) || is_object($f = $this->_checkData())) {
             if (!empty($_POST))
                 $this->redirect()->setMessage($f->getMessages());
@@ -54,7 +54,7 @@ class Controller_Admin_Permissions extends Controller_Admin
 
         $this->redirect(post('referer') ? post('referer') : '/admin/permissions', 'Úroveň úspěšně přidána');
     }
-    function edit($id = null) {
+    public function edit($id = null) {
         if (!$id || !($data = DBPermissions::getSingleGroup($id)))
             $this->redirect(post('referer') ? post('referer') : '/admin/permissions',
                 'Skupina s takovým ID neexistuje');
@@ -87,7 +87,7 @@ class Controller_Admin_Permissions extends Controller_Admin
             'Oprávnění úspěšně upravena'
         );
     }
-    function remove($id = null) {
+    public function remove($id = null) {
         if (!is_array(post('data')) && !is_array(get('u')))
             $this->redirect('/admin/permissions');
         if (!empty($_POST) && post('action') == 'confirm') {

@@ -2,10 +2,10 @@
 require_once 'files/Controller/Member.php';
 class Controller_Member_Nastenka extends Controller_Member
 {
-    function __construct() {
+    public function __construct() {
         Permissions::checkError('nastenka', P_VIEW);
     }
-    function view($id = null) {
+    public function view($id = null) {
         $pager = new Paging(new PagingAdapterDBSelect('DBNastenka'));
         $pager->setCurrentPageField('p');
         $pager->setItemsPerPageField('c');

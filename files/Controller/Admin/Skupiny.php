@@ -2,10 +2,10 @@
 require_once 'files/Controller/Admin.php';
 class Controller_Admin_Skupiny extends Controller_Admin
 {
-    function __construct() {
+    public function __construct() {
         Permissions::checkError('skupiny', P_OWNED);
     }
-    function view($id = null) {
+    public function view($id = null) {
         switch(post('action')) {
             case 'edit':
                 $skupiny = post('data');
@@ -36,7 +36,7 @@ class Controller_Admin_Skupiny extends Controller_Admin
             )
         );
     }
-    function add($id = null) {
+    public function add($id = null) {
         if (empty($_POST) || is_object($f = $this->_checkPost())) {
             if (!empty($_POST)) {
                 $this->redirect()->setMessage($f->getMessages());
@@ -63,7 +63,7 @@ class Controller_Admin_Skupiny extends Controller_Admin
         }
         $this->redirect('/admin/skupiny', 'Skupina úspěšně přidána');
     }
-    function edit($id = null) {
+    public function edit($id = null) {
         if (!$id || !($data = DBSkupiny::getSingle($id)))
             $this->redirect('/admin/skupiny', 'Skupina s takovým ID neexistuje');
 
@@ -104,7 +104,7 @@ class Controller_Admin_Skupiny extends Controller_Admin
         DBSkupiny::update($id, post('name'), post('color'), post('desc'));
         $this->redirect('/admin/skupiny', 'Skupina úspěšně upravena');
     }
-    function remove($id = null) {
+    public function remove($id = null) {
         if (!$id || !($data = DBSkupiny::getSingle($id)))
             $this->redirect('/admin/skupiny', 'Skupina s takovým ID neexistuje');
 

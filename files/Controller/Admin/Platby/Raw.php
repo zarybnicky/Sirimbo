@@ -4,10 +4,10 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
 {
     const TEMP_DIR = './upload/csv/';
 
-    function __construct() {
+    public function __construct() {
         Permissions::checkError('platby', P_OWNED);
     }
-    function view($id = null) {
+    public function view($id = null) {
         if (!empty($_POST) && post('action') == 'upload') {
             $this->_processUpload();
         }
@@ -22,7 +22,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
 
         $this->render('files/View/Admin/Platby/RawUpload.inc');
     }
-    function select_columns($id = null) {
+    public function select_columns($id = null) {
         $path = self::TEMP_DIR . str_replace('../', '', get('path'));
 
         if (!empty($_POST)) {

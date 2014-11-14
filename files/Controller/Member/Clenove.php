@@ -2,10 +2,10 @@
 require_once 'files/Controller/Member.php';
 class Controller_Member_Clenove extends Controller_Member
 {
-    function __construct() {
+    public function __construct() {
         Permissions::checkError('users', P_VIEW);
     }
-    function view($id = null) {
+    public function view($id = null) {
         if (!$id || !($data = DBUser::getUserData($id)))
             $this->redirect('/member/clenove/structure');
 
@@ -19,7 +19,7 @@ class Controller_Member_Clenove extends Controller_Member
             )
         );
     }
-    function skupiny($id = null) {
+    public function skupiny($id = null) {
         $currentID = -1;
         $currentKey = 0;
         $data = DBUser::getUsersWithSkupinaPlatby();
@@ -45,7 +45,7 @@ class Controller_Member_Clenove extends Controller_Member
             )
         );
     }
-    function seznam($id = null) {
+    public function seznam($id = null) {
         $index = 0;
         $data = DBUser::getActiveUsers();
         foreach ($data as &$item) {
@@ -66,7 +66,7 @@ class Controller_Member_Clenove extends Controller_Member
             )
         );
     }
-    function structure($id = null) {
+    public function structure($id = null) {
         $data = DBUser::getUsersWithSkupinaPlatby();
         $skupiny = array();
         $index = 0;

@@ -2,10 +2,10 @@
 require_once 'files/Controller/Member.php';
 class Controller_Member_Nabidka extends Controller_Member
 {
-    function __construct() {
+    public function __construct() {
         Permissions::checkError('nabidka', P_VIEW);
     }
-    function view($id = null) {
+    public function view($id = null) {
         $this->redirect()->setMessage($this->_processPost());
 
         $nabidky = DBNabidka::getNabidka();

@@ -14,22 +14,22 @@ class Date
     const FORMAT_SIMPLIFIED = 'd. m. yyyy';
     const FORMAT_SLASHED = 'dd/mm/yyyy';
 
-    function __construct($s = null) {
+    public function __construct($s = null) {
         $this->_separators = array('-', '.' , '/');
         if (is_string($s))
             $this->setDate($s);
     }
-    function __toString() {
+    public function __toString() {
         return $this->getDate();
     }
-    function separator($s = null, $reset = false) {
+    public function separator($s = null, $reset = false) {
         if ($s === null)
             return $this->_separators;
         if ($reset)
             $this->_separators = array();
         $this->_separators[] = $s;
     }
-    function setDate($s) {
+    public function setDate($s) {
         foreach ($this->_separators as $sep) {
             if (strpos($s, $sep) === false)
                 continue;
@@ -61,7 +61,7 @@ class Date
         $this->_valid = true;
         return true;
     }
-    function getDate($format = Date::FORMAT_SQL) {
+    public function getDate($format = Date::FORMAT_SQL) {
         if (!$this->_valid)
             return '';
         switch($format) {
@@ -84,16 +84,16 @@ class Date
                 return '';
         }
     }
-    function getDay() {
+    public function getDay() {
         return $this->_day;
     }
-    function getMonth() {
+    public function getMonth() {
         return $this->_month;
     }
-    function getYear() {
+    public function getYear() {
         return $this->_year;
     }
-    function isValid() {
+    public function isValid() {
         return $this->_valid;
     }
 }

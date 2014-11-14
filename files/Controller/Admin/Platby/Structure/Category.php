@@ -2,10 +2,10 @@
 require_once 'files/Controller/Admin/Platby/Structure.php';
 class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby_Structure
 {
-    function __construct() {
+    public function __construct() {
         Permissions::checkError('platby', P_OWNED);
     }
-    function view($id = null) {
+    public function view($id = null) {
         $this->render(
             'files/View/Admin/Platby/StructureSymbolOverview.inc',
             array(
@@ -31,7 +31,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         }
         return $out;
     }
-    function add($id = null) {
+    public function add($id = null) {
         if (empty($_POST) || is_object($s = $this->checkPost('add'))) {
             if (!empty($_POST)) {
                 $this->redirect()->setMessage($s->getMessages());
@@ -87,7 +87,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             'Specifický symbol úspěšně přidán'
         );
     }
-    function edit($id = null) {
+    public function edit($id = null) {
         if (!$id || !($data = DBPlatbyCategory::getSingle($id))) {
             $this->redirect(
                 post('referer') ? post('referer') : '/admin/platby/structure',
@@ -187,7 +187,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             'Specifický symbol úspěšně upraven'
         );
     }
-    function remove($id = null) {
+    public function remove($id = null) {
         if (!$id || !($data = DBPlatbyCategory::getSingle($id))) {
             $this->redirect(
                 post('referer') ? post('referer') : '/admin/platby/structure',

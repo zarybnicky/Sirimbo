@@ -2,11 +2,11 @@
 require_once 'files/Controller/Admin.php';
 class Controller_Admin_Platby extends Controller_Admin
 {
-    function __construct()
+    public function __construct()
     {
         Permissions::checkError('platby', P_OWNED);
     }
-    function view($id = null)
+    public function view($id = null)
     {
         $this->redirect('/admin/platby/overview');
     }

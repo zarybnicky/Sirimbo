@@ -2,10 +2,10 @@
 require_once 'files/Controller/Admin.php';
 class Controller_Admin_Nabidka extends Controller_Admin
 {
-    function __construct() {
+    public function __construct() {
         Permissions::checkError('nabidka', P_OWNED);
     }
-    function view($id = null) {
+    public function view($id = null) {
         switch(post('action')) {
             case 'save':
                 $items = DBNabidka::getNabidka();
@@ -113,7 +113,7 @@ class Controller_Admin_Nabidka extends Controller_Admin
             )
         );
     }
-    function add($id = null) {
+    public function add($id = null) {
         if (empty($_POST) || is_object($f = $this->_checkData())) {
             if (!empty($_POST))
                 $this->redirect()->setMessage($f->getMessages());
@@ -163,7 +163,7 @@ class Controller_Admin_Nabidka extends Controller_Admin
         }
         $this->redirect(getReturnURI('/admin/nabidka'), 'Nabídka přidána');
     }
-    function edit($id = null) {
+    public function edit($id = null) {
         if (!$id || !($data = DBNabidka::getSingleNabidka($id))) {
             $this->redirect(
                 getReturnURI('/admin/nabidka'),

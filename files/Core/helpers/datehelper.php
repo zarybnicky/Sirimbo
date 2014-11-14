@@ -20,7 +20,7 @@ class DateHelper
     private $_toYear;
     private $_useRange;
 
-    function date($d = null)
+    public function date($d = null)
     {
         $this->_defaultValues();
 
@@ -51,47 +51,47 @@ class DateHelper
             return $d;
         }
     }
-    function setDate($d = null)
+    public function setDate($d = null)
     {
         $this->_date = $this->_setDate($d);
         return $this;
     }
-    function setFromDate($d = null)
+    public function setFromDate($d = null)
     {
         $this->setDate($d);
         return $this;
     }
-    function setToDate($d = null)
+    public function setToDate($d = null)
     {
         $this->_dateTo = $this->_setDate($d);
         return $this;
     }
-    function selectBox()
+    public function selectBox()
     {
         $this->_view = 'select';
         return $this;
     }
-    function textBox()
+    public function textBox()
     {
         $this->_view = 'text';
         return $this;
     }
-    function name($name)
+    public function name($name)
     {
         $this->_name = $name;
         return $this;
     }
-    function post($post)
+    public function post($post)
     {
         $this->_post = (bool) $post;
         return $this;
     }
-    function fromYear($y)
+    public function fromYear($y)
     {
         $this->_fromYear = $y;
         return $this;
     }
-    function toYear($y)
+    public function toYear($y)
     {
         if ($y > $this->_fromYear) {
             $this->_toYear = $y;
@@ -100,12 +100,12 @@ class DateHelper
         }
         return $this;
     }
-    function range($b = true)
+    public function range($b = true)
     {
         $this->_useRange = (bool) $b;
         return $this;
     }
-    function getPostRange()
+    public function getPostRange()
     {
         if (!$this->_useRange) {
             return array('from' => $this->getPost(), 'to' => new Date());
@@ -160,7 +160,7 @@ class DateHelper
             return array('from' => new Date(), 'to' => new Date());
         }
     }
-    function getPost($skipRangeCheck = false, $name = null)
+    public function getPost($skipRangeCheck = false, $name = null)
     {
         if ($name === null) {
             $name = $this->_name;
@@ -180,11 +180,11 @@ class DateHelper
             return new Date();
         }
     }
-    function __toString()
+    public function __toString()
     {
         return $this->render();
     }
-    function render()
+    public function render()
     {
         $out = '';
         //TODO:ranged select... ftf
