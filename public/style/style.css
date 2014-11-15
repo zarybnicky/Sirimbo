@@ -82,6 +82,10 @@ th {
     border: 1px solid #dfdfdf;
     background-color: #f5f5f5;
 }
+table.nocolor td, table.nocolor th {
+    border: none;
+    background: none;
+}
 
 .r {text-align:right;}
 
@@ -91,36 +95,33 @@ th {
   clear:both;
 }
 
+.container {
+    float:left;
+}
 .container.full {
+    float:none !important;
     width: 960px;
     margin: 0 auto;
 }
 .container.third {
-    float: left;
     width: 33.33%;
 }
 .container.two-thirds {
-    float: left;
     width: 66.66%;
 }
 .container.fifth {
-    float: left;
     width: 20%;
 }
 .containet.two-fifths {
-    float: left;
     width: 40%;
 }
 .container.three-fifths {
-    float: left;
     width: 60%
 }
 .container.four-fifths {
-    float: left;
     width: 80%
 }
 .container.half {
-    float: left;
     width: 50%;
 }
 
@@ -134,12 +135,15 @@ th {
     margin: -5px -5px 5px;
     border-bottom: 1px solid #ccc;
     border-top: 2px solid #0255a5;
-    padding: 15px;
-    text-transform: uppercase;
+    padding: 5px;
     font-size: 90%;
     background: white;
 }
-.widget-content {
+.widget-title.big {
+    padding: 15px !important;
+    text-transform: uppercase;
+}
+.widget-content{
     border: 1px solid #ccc;
     padding: 7px;
     background-color: white;
@@ -541,19 +545,17 @@ th {
 .center {text-align:center;}
 .list {list-style:disc outside none;padding-left:15px;}
 
-.up_header, .trenink_header {
-	border:1px solid #f5f5f5;
-	background-color:#fcfcfc;
-	padding:5px 8px;
+.trenink-header {
+    margin:0 auto;
+    text-align:center;
 }
-.trenink_header {
-	margin:0 auto 5px;
-	width:200px;
-	text-align:center;
+.up_header .nadpis, .trenink-header .title {
+    font-weight:bold;
+    font-size:115%;
 }
-.up_header .nadpis, .trenink_header .nadpis {
-	font-weight:bold;
-	font-size:115%;
+.trenink-header .date {
+    letter-spacing:1px;
+    font-weight:bold;
 }
 
 .header-section {
