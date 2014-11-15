@@ -23,6 +23,31 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
                                ->users($users)
                                ->type('par')
                                ->idVar('p_id');
+
+            $items = array_map(
+                function ($item) use ($userSelect) {
+                    return array(
+                        'user' =>
+                        (string) $userSelect->defaultValue($item['ni_partner'])
+                                            ->name($item['ni_partner'] . '-partner'),
+                        'lessonCount' => (
+                            '<input type="text" name="' . $item['ni_id'] .
+                            '-hodiny" value="' . $item['ni_pocet_hod'] .
+                            '" size=1/>'
+                        ),
+                        'removeButton' => (string) $this->submit('Odstranit')
+                                                        ->name('remove')
+                                                        ->value($item['ni_id'])
+                    );
+                },
+                $items
+            );
+            $items[] = array(
+                'user' => (string) $userSelect->defaultValue(null)
+                                              ->name('add_partner'),
+                'lessonCount' => '<input type="text" name="add_hodiny" value="" size=1/>',
+                'removeButton' => (string) $this->submit('Přidat')
+            );
             
             $this->render(
                 'files/View/Admin/Nabidka/Detail.inc',
@@ -40,25 +65,7 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
                     ),
                     'obsazeno' => $obsazeno,
                     'users' => $users,
-                    'items' => array_map(
-                        function ($item) use ($userSelect) {
-                            return array(
-                                'user' =>
-                                    (string) $userSelect->defaultValue($item['ni_partner'])
-                                                        ->name($item['ni_partner'] . '-partner'),
-                                'lessonCount' => (
-                                    '<input type="text" name="' . $item['ni_id'] .
-                                    '-hodiny" value="' . $item['ni_pocet_hod'] .
-                                    '" size=1/>'
-                                ),
-                                'removeButton' => (
-                                    '<button type="submit" name="remove" value="' .
-                                    $item['ni_id'] . '">' . 'Odstranit</button>'
-                                )
-                            );
-                        },
-                        $items
-                    )
+                    'items' => $items
                 )
             );
             return;

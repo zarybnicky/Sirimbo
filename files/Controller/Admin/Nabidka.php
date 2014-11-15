@@ -83,7 +83,7 @@ class Controller_Admin_Nabidka extends Controller_Admin
                 $this->redirect('/admin/nabidka');
                 break;
         }
-        $data = DBNabidka::getNabidka();
+        $data = DBNabidka::getNabidka(true);
         foreach ($data as &$row) {
             $new_data = array(
                 'canEdit' => Permissions::check('nabidka', P_OWNED, $row['n_trener']),

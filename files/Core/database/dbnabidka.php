@@ -1,9 +1,12 @@
 <?php
 class DBNabidka extends Database
 {
-    public static function getNabidka() {
-        $res = DBNabidka::query("SELECT u_id,u_jmeno,u_prijmeni,nabidka.*" .
-            " FROM nabidka LEFT JOIN users ON n_trener=u_id ORDER BY n_od");
+    public static function getNabidka($desc = false) {
+        $res = DBNabidka::query(
+            "SELECT u_id,u_jmeno,u_prijmeni,nabidka.* " .
+            "FROM nabidka LEFT JOIN users ON n_trener=u_id ORDER BY n_od" .
+            ($desc ? ' DESC' : '')
+        );
         return DBNabidka::getArray($res);
     }
 
