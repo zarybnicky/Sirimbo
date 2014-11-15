@@ -29,7 +29,7 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
                     return array(
                         'user' =>
                         (string) $userSelect->defaultValue($item['ni_partner'])
-                                            ->name($item['ni_partner'] . '-partner'),
+                                            ->name($item['ni_id'] . '-partner'),
                         'lessonCount' => (
                             '<input type="text" name="' . $item['ni_id'] .
                             '-hodiny" value="' . $item['ni_pocet_hod'] .

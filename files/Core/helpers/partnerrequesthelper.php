@@ -38,7 +38,7 @@ class PartnerRequestHelper
 </div>
 </form>
             <?php
-            $out .= notice(ob_get_contents());
+            $out .= Helper::instance()->notice(ob_get_contents());
             ob_end_clean();
         }
         return $out;
@@ -64,7 +64,7 @@ class PartnerRequestHelper
 </div>
 </form>
             <?php
-            $out .= notice(ob_get_contents());
+            $out .= Helper::instance()->notice(ob_get_contents());
             ob_end_clean();
         }
         return $out;
