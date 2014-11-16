@@ -22,7 +22,7 @@ class DBRozpis extends Database
     public static function rozpisSignOut($rid) {
         list($rid) = self::escape($rid);
         if (!self::isRozpisFree($rid)) {
-            $res = self::query("UPDATE rozpis_item SET ri_partner='' WHERE ri_id='$rid'");
+            $res = self::query("UPDATE rozpis_item SET ri_partner='0' WHERE ri_id='$rid'");
             return true;
         } else
             return false;

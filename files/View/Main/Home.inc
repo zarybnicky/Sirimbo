@@ -8,7 +8,7 @@
 
   <div class="container third">
     <div class="widget">
-      <div class="widget-title">Videa z posledních soutěží</div>
+      <div class="widget-title text">Videa z posledních soutěží</div>
       <div class="widget-content">
         <ul class="videos">
           <li>
@@ -28,7 +28,7 @@
 
   <div class="container third">
     <div class="widget">
-      <div class="widget-title">O klubu</div>
+      <div class="widget-title text">O klubu</div>
       <div class="widget-content">
         <p>
           <b>TK Olymp Olomouc</b> je tradiční taneční klub zabývající se výchovou

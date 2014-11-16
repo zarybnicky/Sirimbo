@@ -139,7 +139,7 @@ table.nocolor td, table.nocolor th {
     font-size: 90%;
     background: white;
 }
-.widget-title.big {
+.widget-title.text {
     padding: 15px !important;
     text-transform: uppercase;
 }

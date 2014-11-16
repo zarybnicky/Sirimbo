@@ -7,7 +7,10 @@ class Controller_Member_Rozpis  extends Controller_Member
     }
 
     public function view($id = null) {
-        $this->redirect()->setMessage($this->_processPost());
+        if ($_POST) {
+            $this->redirect()->setMessage($this->_processPost());
+            $this->redirect('/member/rozpis');
+        }
 
         $data = array_map(
             function($rozpis) {

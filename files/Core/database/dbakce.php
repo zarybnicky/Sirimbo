@@ -156,4 +156,3 @@ class DBAkce extends Database implements Pagable
         }
     }
 }
-?>

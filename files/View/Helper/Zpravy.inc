@@ -1,6 +1,6 @@
 <div class="container third">
   <div class="widget">
-    <div class="widget-title">Výsledky posledních soutěží</div>
+    <div class="widget-title text">Výsledky posledních soutěží</div>
     <ul class="results scroll-y">
     <?php foreach ($this->data as $item): ?>
       <li class="competition">

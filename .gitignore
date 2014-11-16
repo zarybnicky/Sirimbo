@@ -16,7 +16,7 @@ log/*
 stats/
 *~
 [#]*[#]
-galerie
-style
-images
-scripts
+/galerie
+/style
+/images
+/scripts

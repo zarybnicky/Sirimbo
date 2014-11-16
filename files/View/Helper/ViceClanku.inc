@@ -1,5 +1,5 @@
 <div class="widget">
-  <div class="widget-title">Více článků</div>
+  <div class="widget-title text">Více článků</div>
   <div id="more-articles">
     <div class="container third grid-sizer"></div>
     <?php foreach ($this->data as $item): ?>
