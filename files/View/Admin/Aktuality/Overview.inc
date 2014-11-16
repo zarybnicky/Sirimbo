@@ -36,7 +36,7 @@
                       ->data($this->data)
                       ->column('checkBox', '')
                       ->column('name', 'Jméno')
-                      ->column('category', 'Kategorie');
+                      ->column('category', 'Kategorie', null, 'width:120px');
             ?>
         </div>
     </form>

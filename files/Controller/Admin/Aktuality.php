@@ -32,10 +32,10 @@ class Controller_Admin_Aktuality extends Controller_Admin
                     'checkBox' => $this->checkbox('aktuality[]', $item['at_id'])
                                        ->readonly(Permissions::check('aktuality', P_OWNED, $item['at_kdo'])),
                     'name' => $item['at_jmeno'],
-                    'description' => ($item['at_kat'] == AKTUALITY_CLANKY ? 'Články' :
-                                      ($item['at_kat'] == AKTUALITY_VIDEA ? 'Videa' :
-                                       ($item['at_kat'] == AKTUALITY_KRATKE ? 'Krátké zprávy' :
-                                        '')))
+                    'category' => ($item['at_kat'] == AKTUALITY_CLANKY ? 'Články' :
+                                   ($item['at_kat'] == AKTUALITY_VIDEA ? 'Videa' :
+                                    ($item['at_kat'] == AKTUALITY_KRATKE ? 'Krátké zprávy' :
+                                     '')))
                 );
             },
             DBAktuality::getAktuality(get('f'))
