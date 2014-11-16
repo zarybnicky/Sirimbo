@@ -1,60 +1,50 @@
 <?= $this->header('Rozpis tréninků') ?>
 
 <div class="container full">
-  <?php echo $this->notice($this->redirect()->getMessage()); ?>
-
-  <style type="text/css">
-   .unit {
-     background:inherit;
-     border:none;
-     vertical-align:top;
-     border-bottom:1px dotted #999;
-     padding:10px 5px;
-   }
-  </style>
-
-  <table style="width:100%;">
-    <?php foreach (array_chunk($this->data, 2) as $chunk) : ?>
-      <tr>
-        <?php foreach ($chunk as $item) : ?>
-          <td class="unit">
-            <?php echo $this->render('files/View/Member/Rozpis/Header.inc', $item); ?>
-            <table style="margin:0 auto;">
-              <tr>
-                <td>Od</td>
-                <td>Do</td>
-                <td>Tanečník</td>
-              </tr>
-              <?php foreach ($item['items'] as $row): ?>
-                <form action="" method="post">
-                  <tr>
-                    <td><?php echo $row['timeFrom']; ?></td>
-                    <td><?php echo $row['timeTo']; ?></td>
-                    <td>
-                      <?php echo $row['fullName']; ?>
-                      <input type="hidden" name="ri_id" value="<?php echo $row['id'] ?>" />
-                    </td>
-                    <?php if ($row['canReserve']): ?>
-                      <td>
-                        <button type="submit" name="action" value="signup">
-                          Rezervovat
-                        </button>
-                      </td>
-                    <?php endif; ?>
-                    <?php if ($row['canCancel']): ?>
-                      <td>
-                        <button type="submit" name="action" value="signout">
-                          Zrušit
-                        </button>
-                      </td>
-                    <?php endif; ?>
-                  </tr>
-                </form>
-              <?php endforeach; ?>
-            </table>
-          </td>
-        <?php endforeach; ?>
-      </tr>
-    <?php endforeach; ?>
-  </table>
+    <?= $this->notice($this->redirect()->getMessage()); ?>
 </div>
+
+<table class="nocolor" style="margin: 0 auto">
+    <?php foreach (array_chunk($this->data, 2) as $row) : ?>
+        <tr>
+            <?php foreach ($row as $item): ?>
+                <td style="vertical-align:top">
+                    <div class="widget">
+                        <div class="widget-title center">
+                            <?= $this->render('files/View/Member/Rozpis/Header.inc', $item); ?>
+                        </div>
+                        <table class="widget-content nocolor" style="width:100%">
+                            <?php foreach ($item['items'] as $lesson): ?>
+                                <tr>
+                                    <td style="text-align:center">
+                                        <?= $lesson['timeFrom']; ?> -
+                                        <?= $lesson['timeTo']; ?>
+                                    </td>
+                                    <td>
+                                        <?= $lesson['fullName']; ?>
+                                    </td>
+                                    <td class="center big" style="height:20px;width:20px;">
+                                        <form action="" method="post">
+                                            <input type="hidden"
+                                                   name="ri_id"
+                                                   value="<?= $lesson['id'] ?>" />
+                                            <?php if ($lesson['canReserve']): ?>
+                                                <?= $this->submit('+')
+                                                         ->name('action')
+                                                         ->value('signup') ?>
+                                            <?php elseif ($lesson['canCancel']): ?>
+                                                <?= $this->submit('&times;')
+                                                         ->name('action')
+                                                         ->value('signout') ?>
+                                            <?php endif; ?>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </table>
+                    </div>
+                </td>
+            <?php endforeach; ?>
+        </tr>
+    <?php endforeach; ?>
+</table>

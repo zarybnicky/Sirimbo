@@ -136,10 +136,10 @@ table.nocolor td, table.nocolor th {
     border-bottom: 1px solid #ccc;
     border-top: 2px solid #0255a5;
     padding: 5px;
-    font-size: 90%;
     background: white;
 }
 .widget-title.text {
+    font-size: 90%;
     padding: 15px !important;
     text-transform: uppercase;
 }

@@ -8,28 +8,23 @@ class Controller_Admin_Nabidka extends Controller_Admin
     public function view($id = null) {
         switch(post('action')) {
             case 'save':
-                $items = DBNabidka::getNabidka();
-                foreach ($items as $item) {
-                    $id = $item['n_id'];
-                    if ((bool) post($id) !== (bool) $item['n_visible']) {
+                foreach (DBNabidka::getNabidka() as $item) {
+                    if ((bool) post($item['n_id']) !== (bool) $item['n_visible']) {
                         DBNabidka::editNabidka(
-                            $id, $item['n_trener'], $item['n_pocet_hod'],
-                            $item['n_max_pocet_hod'], $item['n_od'], $item['n_do'],
-                            post($id) ? '1' : '0', $item['n_lock']
+                            $item['n_id'],
+                            $item['n_trener'],
+                            $item['n_pocet_hod'],
+                            $item['n_max_pocet_hod'],
+                            $item['n_od'],
+                            $item['n_do'],
+                            post($item['n_id']) ? '1' : '0',
+                            $item['n_lock']
                         );
                     }
                 }
+                $this->redirect('/admin/nabidka', 'Nabídky upraveny');
                 break;
-            case 'edit':
-                $nabidka = post('nabidka');
-                if ($nabidka[0])
-                    $this->redirect('/admin/nabidka/edit/' . $nabidka[0]);
-                break;
-            case 'edit_detail':
-                $nabidka = post('nabidka');
-                if ($nabidka[0])
-                    $this->redirect('/admin/nabidka/detail/' . $nabidka[0]);
-                break;
+
             case 'remove':
                 if (!is_array(post('nabidka')))
                     break;
@@ -55,10 +50,10 @@ class Controller_Admin_Nabidka extends Controller_Admin
                 }
                 if (isset($error) && $error)
                     throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
-                $this->redirect()->setMessage('Nabídky odebrány');
+                $this->redirect('/admin/nabidka', 'Nabídky odebrány');
                 break;
-                
-        case 'duplicate':
+
+            case 'duplicate':
                 foreach (post('nabidka') as $oldId) {
                     $data = DBNabidka::getSingleNabidka($oldId);
                     $items = DBNabidka::getNabidkaItem($oldId);
@@ -83,28 +78,40 @@ class Controller_Admin_Nabidka extends Controller_Admin
                 $this->redirect('/admin/nabidka');
                 break;
         }
-        $data = DBNabidka::getNabidka(true);
-        foreach ($data as &$row) {
-            $new_data = array(
-                'canEdit' => Permissions::check('nabidka', P_OWNED, $row['n_trener']),
-                'fullName' => $row['u_jmeno'] . ' ' . $row['u_prijmeni'],
-                'date' =>
-                    formatDate($row['n_od'])
-                    . ($row['n_do'] != $row['n_od']
-                       ? ' - ' . formatDate($row['n_do'])
-                       : '')
-            );
-            if ($new_data['canEdit']) {
-                $new_data['checkBox'] = (string) $this->checkbox('nabidka[]', $row['n_id']);
-            } else {
-                $new_data['checkBox'] = '&nbsp;&#10799;';
-            }
-            if (Permissions::check('nabidka', P_ADMIN))
-                $new_data['visible'] = (string) $this->checkbox($row['n_id'], '1')->defaultState($row['n_visible']);
-            else
-                $new_data['visible'] = '&nbsp;' . ($row['n_visible'] ? '&#10003;' : '&#10799;');
-            $row = $new_data;
-        }
+
+        $data = array_map(
+            function ($item) {
+                $isTrainer = Permissions::check('nabidka', P_OWNED, $item['n_trener']);
+                $isAdmin = Permissions::check('nabidka', P_ADMIN);
+                
+                return array(
+                    'canEdit' => $isTrainer,
+                    'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
+                    'date' => (
+                        formatDate($item['n_od']) .
+                        ($item['n_do'] != $item['n_od']
+                         ? ' - ' . formatDate($item['n_do'])
+                         : '')
+                    ),
+                    'links' => (
+                        '<a href="/admin/nabidka/edit/' . $item['n_id'] . '">obecné</a>, ' .
+                        '<a href="/admin/nabidka/detail/' . $item['n_id'] . '">tréninky</a>'
+                    ),
+                    'visible' => (
+                        $isAdmin ?
+                        (string) $this->checkbox($item['n_id'], '1')
+                                      ->defaultState($item['n_visible']) :
+                        '&nbsp;' . ($item['n_visible'] ? '&#10003;' : '&#10799;')   
+                    ),
+                    'checkBox' => (
+                        $isTrainer ?
+                        (string) $this->checkbox('nabidka[]', $item['n_id']) :
+                        '&nbsp;&#10799;'
+                    )
+                );
+            },
+            DBNabidka::getNabidka(true)
+        );
         $this->render(
             'files/View/Admin/Nabidka/Overview.inc',
             array(
@@ -115,8 +122,9 @@ class Controller_Admin_Nabidka extends Controller_Admin
     }
     public function add($id = null) {
         if (empty($_POST) || is_object($f = $this->_checkData())) {
-            if (!empty($_POST))
+            if (!empty($_POST)) {
                 $this->redirect()->setMessage($f->getMessages());
+            }
             $this->render(
                 'files/View/Admin/Nabidka/Form.inc',
                 array(
@@ -284,4 +292,3 @@ class Controller_Admin_Nabidka extends Controller_Admin
         return $f->isValid() ? true : $f;
     }
 }
-?>

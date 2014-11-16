@@ -5,11 +5,60 @@ class Controller_Member_Nabidka extends Controller_Member
     public function __construct() {
         Permissions::checkError('nabidka', P_VIEW);
     }
+    
     public function view($id = null) {
         $this->redirect()->setMessage($this->_processPost());
 
-        $nabidky = DBNabidka::getNabidka();
-        if (empty($nabidky)) {
+        $data = array_map(
+            function ($data) {
+                $items = array_map(
+                    function ($item) use ($data) {
+                        return array(
+                            'id' => $item['u_id'],
+                            'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
+                            'hourCount' => $item['ni_pocet_hod'],
+                            'canDelete' =>
+                                (!$data['n_lock']
+                                 && Permissions::check('nabidka', P_MEMBER)
+                                 && ($item['p_id'] === User::getParID()
+                                     || Permissions::check('nabidka', P_OWNED, $data['n_trener']))),
+                            'deleteTicket' => $item['p_id'] . '-' . $data['n_id']
+                        );
+                    },
+                    DBNabidka::getNabidkaItem($data['n_id'])
+                );
+
+                $obsazeno = array_reduce(
+                    $items,
+                    function ($carry, $item) {
+                        return $carry + $item['hourCount'];
+                    },
+                    0
+                );
+
+                return array(
+                    'id' => $data['n_id'],
+                    'fullName' => $data['u_jmeno'] . ' ' . $data['u_prijmeni'],
+                    'datum' => formatDate($data['n_od'])
+                    . ($data['n_od'] != $data['n_do'] ? ' - ' . formatDate($data['n_do']) : ''),
+                    'canEdit' => Permissions::check('nabidka', P_OWNED, $data['n_trener']),
+                    'hourMax' => $data['n_max_pocet_hod'],
+                    'hourTotal' => $data['n_pocet_hod'],
+                    'hourReserved' => $obsazeno,
+                    'hourFree' => $data['n_pocet_hod'] - $obsazeno,
+                    'canAdd' => !$data['n_lock'] && Permissions::check('nabidka', P_MEMBER),
+                    'items' => $items
+                );
+            },
+            array_filter(
+                DBNabidka::getNabidka(),
+                function ($item) {
+                    return $item['n_visible'];
+                }
+            )
+        );
+
+        if (empty($data)) {
             $this->render(
                 'files/View/Empty.inc',
                 array(
@@ -19,45 +68,11 @@ class Controller_Member_Nabidka extends Controller_Member
             );
             return;
         }
-        foreach ($nabidky as $key => &$data) {
-            if (!$data['n_visible']) {
-                unset($nabidky[$key]);
-                continue;
-            }
-            $items = DBNabidka::getNabidkaItem($data['n_id']);
-            $obsazeno = 0;
-            foreach ($items as &$row) {
-                $new_data = array(
-                    'id' => $row['u_id'],
-                    'fullName' => $row['u_jmeno'] . ' ' . $row['u_prijmeni'],
-                    'hourCount' => $row['ni_pocet_hod'],
-                    'canDelete' => !$data['n_lock'] && Permissions::check('nabidka', P_MEMBER)
-                        && ($row['p_id'] === User::getParID()
-                        || Permissions::check('nabidka', P_OWNED, $data['n_trener'])),
-                    'deleteTicket' => $row['p_id'] . '-' . $data['n_id']
-                );
-                $obsazeno += $row['ni_pocet_hod'];
-                $row = $new_data;
-            }
-            $new_data = array(
-                'id' => $data['n_id'],
-                'fullName' => $data['u_jmeno'] . ' ' . $data['u_prijmeni'],
-                'datum' => formatDate($data['n_od'])
-                    . ($data['n_od'] != $data['n_do'] ? ' - ' . formatDate($data['n_do']) : ''),
-                'canEdit' => Permissions::check('nabidka', P_OWNED, $data['n_trener']),
-                'hourMax' => $data['n_max_pocet_hod'],
-                'hourTotal' => $data['n_pocet_hod'],
-                'hourReserved' => $obsazeno,
-                'hourFree' => $data['n_pocet_hod'] - $obsazeno,
-                'canAdd' => !$data['n_lock'] && Permissions::check('nabidka', P_MEMBER),
-                'items'    => $items
-            );
-            $data = $new_data;
-        }
+
         $this->render(
             'files/View/Member/Nabidka/Overview.inc',
             array(
-                'data' => $nabidky
+                'data' => $data
             )
         );
     }
