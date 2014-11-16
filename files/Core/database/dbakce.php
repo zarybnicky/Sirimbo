@@ -38,14 +38,13 @@ class DBAkce extends Database implements Pagable
         }
     }
 
-    public static function getWithItems($visibleOnly = false) {
+    public static function getWithItemCount() {
         $res = self::query(
-        "SELECT *
-        FROM akce
-        LEFT JOIN akce_item ON a_id=ai_id_rodic
-        LEFT JOIN users ON ai_user=u_id"
-        . ($visibleOnly ? " WHERE a_visible='1'" : '')
-        . " ORDER BY a_od,u_prijmeni");
+            'SELECT *, COUNT(ai_id_rodic) as a_obsazeno
+             FROM akce
+             LEFT JOIN akce_item ON a_id=ai_id_rodic
+             GROUP BY ai_id_rodic'
+        );
         return self::getArray($res);
     }
 

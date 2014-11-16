@@ -58,8 +58,9 @@ class Controller_Admin_Dokumenty extends Controller_Admin
             function($item) {
                 return array(
                     'checkBox' => $this->checkbox('dokumenty[]', $item['d_id'])
-                                       ->readonly(Permissions::check('dokumenty', P_OWNED, $item['d_kdo'])),
-                    'link' => '<a href="/member/download?id=' . $item['d_id'], '">' . $item['d_name'] . '</a>',
+                                       ->readonly(Permissions::check('dokumenty', P_OWNED, $item['d_kdo']))
+                                       ->render(),
+                    'link' => '<a href="/member/download?id=' . $item['d_id'] . '">' . $item['d_name'] . '</a>',
                     'name' => $item['d_filename'],
                     'category' => Settings::$documentTypes[$item['d_kategorie']],
                     'by' => $item['u_jmeno'] . ' ' . $item['u_prijmeni']
@@ -70,7 +71,8 @@ class Controller_Admin_Dokumenty extends Controller_Admin
         $this->render(
             'files/View/Admin/Dokumenty/Overview.inc',
             array(
-                'data' => $data
+                'data' => $data,
+                'showMenu' => !TISK
             )
         );
     }

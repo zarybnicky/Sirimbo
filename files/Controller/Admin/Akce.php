@@ -32,6 +32,7 @@ class Controller_Admin_Akce extends Controller_Admin
         }
         $this->_displayOverview();
     }
+
     public function add($id = null)
     {
         if (empty($_POST) || is_object($form = $this->_checkData())) {
@@ -57,6 +58,7 @@ class Controller_Admin_Akce extends Controller_Admin
 
         $this->redirect('/admin/akce', 'Akce přidána');
     }
+
     public function edit($id = null)
     {
         if (!$id || !($data = DBAkce::getSingleAkce($id))) {
@@ -94,6 +96,7 @@ class Controller_Admin_Akce extends Controller_Admin
 
         $this->redirect('/admin/akce', 'Akce upravena');
     }
+
     public function remove($id = null)
     {
         if (!is_array(post('data')) && !is_array(get('u'))) {
@@ -129,37 +132,42 @@ class Controller_Admin_Akce extends Controller_Admin
             )
         );
     }
+
     private function _displayOverview()
     {
-        $currentId = 0;
-        $currentIndex = -1;
-        $data = array();
-        $akce = DBAkce::getWithItems();
-        foreach ($akce as $key => $item) {
-            if ($item['a_id'] == $currentId) {
-                $data[$currentIndex]['userCount']++;
-                continue;
-            }
-            $currentId = $item['a_id'];
-            $currentIndex++;
-            $data[$currentIndex] = array(
-                'checkBox'  => (string) $this->checkbox('akce[]', $item['a_id']),
-                'name'      => $item['a_jmeno'],
-                'place'     => $item['a_kde'],
-                'date'      => formatDate($item['a_od'])
-                    . (($item['a_od'] != $item['a_do'])
-                    ? ' - ' . formatDate($item['a_do']) : ''),
-                'userCount' => 1,
-                'visible'   => (string) $this->checkbox($item['a_id'], '1')->defaultState($item['a_visible'])
-            );
-        }
+        $data = array_map(
+            function($item) {
+                return array(
+                    'checkBox' => $this->checkbox('akce[]', $item['a_id'])
+                                       ->render(),
+                    'name' => $item['a_jmeno'],
+                    'date' => (
+                        formatDate($item['a_od'])
+                        . (($item['a_od'] != $item['a_do'])
+                           ? ' - ' . formatDate($item['a_do']) : '')
+                    ),
+                    'userCount' => $item['a_obsazeno'] . '/' . $item['a_kapacita'],
+                    'visible' => $this->checkbox($item['a_id'], '1')
+                                      ->defaultState($item['a_visible'])
+                                      ->render(),
+                    'links' => (
+                        '<a href="/admin/akce/edit/' . $item['a_id'] . '">obecné</a>, ' .
+                        '<a href="/admin/akce/detail/' . $item['a_id'] . '">účastníci</a>, ' .
+                        '<a href="/admin/akce/dokumenty/' . $item['a_id'] . '">dokumenty</a>'
+                    )
+                );
+            },
+            DBAkce::getWithItemCount()
+        );
+
         $this->render(
             'files/View/Admin/Akce/Overview.inc',
             array(
-        	   'data' => $data
+               'data' => $data
             )
         );
     }
+
     private function _displayForm($data, $form)
     {
         if (!$data || !is_array($dokumenty = unserialize($data['a_dokumenty']))) {
@@ -182,6 +190,7 @@ class Controller_Admin_Akce extends Controller_Admin
             )
         );
     }
+
     private function _processSave()
     {
         $items = DBAkce::getAkce();
@@ -198,6 +207,7 @@ class Controller_Admin_Akce extends Controller_Admin
             );
         }
     }
+
     private function _checkData()
     {
         $od = $this->date('od')->getPost();
@@ -215,4 +225,3 @@ class Controller_Admin_Akce extends Controller_Admin
         return $form->isValid() ? array() : $form;
     }
 }
-?>
