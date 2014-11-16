@@ -1,10 +1,10 @@
+<?= $this->render('files/View/Admin/Platby/Navigation.inc');?>
+<?= $this->subheader('Struktura plateb') ?>
+
 <div class="container full">
 <?php
-echo $this->render('files/View/Admin/Platby/Navigation.inc');
-echo '<h2>Struktura plateb</h2>';
-
 echo '<span class="big">Přidat: </span> ';
-echo '<a href="/admin/platby/structure/group/add">kategorii</a>&nbsp;';
+echo '<a href="/admin/platby/structure/group/add">kategorii</a>, ';
 echo '<a href="/admin/platby/structure/category/add">specifický symbol</a>';
 
 echo $this->table()

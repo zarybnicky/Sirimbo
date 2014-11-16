@@ -222,7 +222,8 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
                 'files/View/Admin/Platby/StructureGroupRemove.inc',
                 array(
                     'id' => $id,
-                    'name' => $data['pg_name']
+                    'name' => $data['pg_name'],
+                    'backlink' => Request::getReferer()
                 )
             );
             return;
@@ -297,7 +298,8 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
                 'category' => $data,
                 'categorySelect' => $categorySelect,
                 'skupiny' => $skupiny,
-                'skupinySelect' => $skupinySelect
+                'skupinySelect' => $skupinySelect,
+                'backlink' => Request::getReferer()
             )
         );
     }

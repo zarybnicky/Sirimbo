@@ -1,8 +1,8 @@
+<?= $this->render('files/View/Admin/Platby/Navigation.inc') ?>
+<?= $this->subheader('Jednotlivé platby') ?>
+
 <div class="container full">
 <?php
-echo $this->render('files/View/Admin/Platby/Navigation.inc');
-echo '<h2>Jednotlivé platby</h2>';
-
 if (!TISK) {
     echo '<form action="" method="get">';
     echo '<span class="big">Omezit výběr:</span>';

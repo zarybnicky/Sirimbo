@@ -1,7 +1,8 @@
+<?= $this->render('files/View/Admin/Platby/Navigation.inc') ?>
+<?= $this->subheader('Import plateb') ?>
+
 <div class="container full">
 <?php
-echo $this->render('files/View/Admin/Platby/Navigation.inc');
-echo '<h2>Import plateb</h2>';
 echo '<h3>Určení požadovaných sloupců</h3>';
 
 echo '<form action="" method="post">';

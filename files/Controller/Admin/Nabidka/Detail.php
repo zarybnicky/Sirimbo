@@ -65,7 +65,8 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
                     ),
                     'obsazeno' => $obsazeno,
                     'users' => $users,
-                    'items' => $items
+                    'items' => $items,
+                    'backlink' => Request::getReferer()
                 )
             );
             return;

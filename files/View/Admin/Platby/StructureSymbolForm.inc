@@ -1,4 +1,9 @@
+<?= $this->render('files/View/Admin/Platby/Navigation.inc');?>
+<?= $this->subheader('Kategorie plateb') ?>
+
 <div class="container full">
+<?= '<h3>' . ($this->action == 'add' ? 'Přidat specifický symbol' : 'Upravit specifický symbol') . '</h3>';?>
+
 <?php
 $mainForm = $this->table()
 ->column('desc', '', 'r')
@@ -41,21 +46,18 @@ if (!empty($this->groupSelect)) {
 }
 ?>
 
-<?php echo $this->render('files/View/Admin/Platby/Navigation.inc');?>
-<h2>Kategorie plateb</h2>
-<?php echo '<h3>', ($this->action == 'add' ? 'Přidat specifický symbol' : 'Upravit specifický symbol'), '</h3>';?>
 <form action="" method="post">
     <?php echo $mainForm, getReturnInput();?>
-    <button name="action" value="confirm">Uložit</button>&nbsp;<a href="<?php echo Request::getReferer();?>">Zpět</a><br/><br/>
+    <button name="action" value="confirm">Uložit</button>&nbsp;<a href="<?= $this->backlink ?>">Zpět</a><br/><br/>
 </form>
 <?php if ($this->action != 'add') : ?>
     <h3>Kategorie</h3>
     <?php if (isset($groupForm)) echo $groupForm;?>
     <form action="" method="post">
         <span class="big">Přidat:</span>
-        <a href="/admin/platby/structure/group/add?category=<?php echo $this->id;?>">novou kategorii</a>
+        <a href="/admin/platby/structure/group/add?category=<?= $this->id;?>">novou kategorii</a>
         <?php if (isset($groupSelectBox)) : ?>
-            nebo existující: <?php echo $groupSelectBox;?>
+            nebo existující: <?= $groupSelectBox;?>
             <button type="submit" name="action" value="group">odeslat</button>
         <?php endif;?>
     </form>

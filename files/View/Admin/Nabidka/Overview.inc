@@ -20,7 +20,7 @@
                  ->column('fullName', 'Trenér')
                  ->column('date', 'Datum')
                  ->column('visible', 'Viditelný')
-                 ->column('links', 'Odkazy'); ?>
+                 ->column('links', 'Upravit'); ?>
         </div>
     </form>
 </div>

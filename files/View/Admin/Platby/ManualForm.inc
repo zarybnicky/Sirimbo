@@ -1,7 +1,10 @@
+<?= $this->render('files/View/Admin/Platby/Navigation.inc') ?>
+<?= $this->subheader(
+        'Ruční třídění plateb</span> (zbývá ' . $this->remainingTotal . ')'
+    ) ?>
+
 <div class="container full">
 <?php
-echo $this->render('files/View/Admin/Platby/Navigation.inc');
-echo '<h2>Ruční třídění plateb</span> (zbývá ', $this->remainingTotal, ')</h2>';
 $form = array(
         array(
                 'desc' => 'Datum:',

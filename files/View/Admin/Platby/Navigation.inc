@@ -23,6 +23,7 @@ function _getItem($name, $href) {
     font-weight:normal;
 }
 </style>
+<div class="container full">
 <ul id="adminNavigation">
     <li><?php _getItem('Přehled', 'platby/overview');?></li>
     <li><?php _getItem('Hledání', 'platby/items');?></li>
@@ -42,3 +43,4 @@ function _getItem($name, $href) {
     <?php endif;?>
 </ul>
 <?php echo $this->notice($this->redirect()->getMessage());?>
+</div>

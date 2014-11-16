@@ -1,4 +1,4 @@
-<form action="<?php Request::getURI();?>" method="post">
+<form action="" method="post">
   <div id="userbox">
     <div id="userbox-inner">
       <input style="width:70px;" type="text" name="login" />

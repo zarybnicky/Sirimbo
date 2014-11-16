@@ -1,6 +1,7 @@
+<?= $this->render('files/View/Admin/Platby/Navigation.inc') ?>
+<?= $this->subheader('Dočasná statistika - členové podle skupin') ?>
+
 <div class="container full">
-<?php echo $this->render('files/View/Admin/Platby/Navigation.inc');?>
-<h2>Dočasná statistika - členové podle skupin</h2>
 <?php
 foreach ($this->data as $skupina) {
     echo $this->table()

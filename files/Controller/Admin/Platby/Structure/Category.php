@@ -248,7 +248,8 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                 'files/View/Admin/Platby/StructureSymbolRemove.inc',
                 array(
                     'id' => $id,
-                    'name' => $data['pc_name']
+                    'name' => $data['pc_name'],
+                    'backlink' => Request::getReferer()
                 )
             );
             return;
@@ -298,7 +299,8 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                 'id' => $id,
                 'action' => $action,
                 'groups' => $groups,
-                'groupSelect' => $groupSelect
+                'groupSelect' => $groupSelect,
+                'backlink' => Request::getReferer()
             )
         );
     }

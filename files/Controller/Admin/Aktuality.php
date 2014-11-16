@@ -50,7 +50,12 @@ class Controller_Admin_Aktuality extends Controller_Admin
     }
     public function add($id = null) {
         if (empty($_POST)) {
-            $this->render('files/View/Admin/Aktuality/Form.inc');
+            $this->render(
+                'files/View/Admin/Aktuality/Form.inc',
+                array(
+                    'action' => Request::getAction()
+                )
+            );
             return;
         }
 

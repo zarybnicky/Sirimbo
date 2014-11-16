@@ -135,7 +135,8 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
                 'id' => $id,
                 'raw' => $raw,
                 'users' => $users,
-                'categories' => $categories
+                'categories' => $categories,
+                'backlink' => Request::getReferer()
             )
         );
     }

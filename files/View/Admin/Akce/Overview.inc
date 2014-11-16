@@ -20,7 +20,7 @@ echo $this->table()
           ->column('date', 'Datum')
           ->column('userCount', 'Kapacita')
           ->column('visible', 'Viditelný')
-          ->column('links', 'Odkazy')
+          ->column('links', 'Upravit')
           ->data($this->data);
 echo '</div>';
 ?>

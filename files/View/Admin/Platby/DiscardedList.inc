@@ -1,8 +1,8 @@
+<?= $this->render('files/View/Admin/Platby/Navigation.inc') ?>
+<?= $this->subheader('Vyřazené platby') ?>
+
 <div class="container full">
 <?php
-echo $this->render('files/View/Admin/Platby/Navigation.inc');
-echo '<h2>Vyřazené platby</h2>';
-
 echo '<a style="display:block;margin-bottom:8px;" href="?list=all">Všechny platby</a>';
 if (count($this->groupByDate) > 0) {
     echo '<span class="big">Platby podle rozpoznaného data:</span>';
@@ -10,10 +10,10 @@ if (count($this->groupByDate) > 0) {
     foreach ($this->groupByDate as $yearValue => $year) {
         $href = '?list=date&year=' . $yearValue;
         echo '<li style="margin-left:1em"><a href="', $href, '">', $year['name'], '</a></li>';
-        
+
         if (!isset($year['months']))
             continue;
-        
+
         echo '<ul style="list-style:disc outside;margin-left:1em;">';
         foreach ($year['months'] as $monthValue => $month) {
             echo '<li style="margin-left:1em"><a href="', $href, '&month=', $monthValue, '">', $month, '</a>';

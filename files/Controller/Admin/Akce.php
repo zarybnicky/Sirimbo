@@ -20,26 +20,18 @@ class Controller_Admin_Akce extends Controller_Admin
                 );
             }
             break;
-
-        case 'edit':
-        case 'detail':
-        case 'dokumenty':
-            $akce = post('akce');
-            if ($akce[0]) {
-                $this->redirect('/admin/akce/' . post('action') . '/' . $akce[0]);
-            }
-            break;
         }
+        
         $this->_displayOverview();
     }
 
     public function add($id = null)
     {
         if (empty($_POST) || is_object($form = $this->_checkData())) {
-            if (empty($_POST)) {
-                $form = array();
+            if (!empty($_POST)) {
+                $this->redirect()->setMessage($form->getMessages());
             }
-            $this->_displayForm(null, $form);
+            $this->_displayForm(null);
             return;
         }
         $od = $this->date('od')->getPost();
@@ -65,7 +57,9 @@ class Controller_Admin_Akce extends Controller_Admin
             $this->redirect('/admin/akce', 'Akce s takovým ID neexistuje');
         }
         if (empty($_POST) || is_object($form = $this->_checkData())) {
-            if (empty($_POST)) {
+            if (!empty($_POST)) {
+                $this->redirect()->setMessage($form->getMessages());
+            } else {
                 post('id', $id);
                 post('jmeno', $data['a_jmeno']);
                 post('kde', $data['a_kde']);
@@ -75,9 +69,8 @@ class Controller_Admin_Akce extends Controller_Admin
                 post('kapacita', $data['a_kapacita']);
                 post('lock', $data['a_lock']);
                 post('visible', $data['a_visible']);
-                $form = array();
             }
-            $this->_displayForm($data, $form);
+            $this->_displayForm($data);
             return;
         }
         $od = $this->date('od')->getPost();
@@ -168,7 +161,7 @@ class Controller_Admin_Akce extends Controller_Admin
         );
     }
 
-    private function _displayForm($data, $form)
+    private function _displayForm($data)
     {
         if (!$data || !is_array($dokumenty = unserialize($data['a_dokumenty']))) {
             $dokumenty = array();
@@ -185,8 +178,9 @@ class Controller_Admin_Akce extends Controller_Admin
         $this->render(
             'files/View/Admin/Akce/Form.inc',
             array(
-                'form' => $form,
-                'dokumenty' => $dokumenty
+                'dokumenty' => $dokumenty,
+                'header' => Request::getAction() == 'add' ? 'Přidat uživatele' : 'Upravit uživatele',
+                'action' => Request::getAction() == 'add' ? 'Přidat' : 'Upravit'
             )
         );
     }

@@ -1,4 +1,9 @@
+<?= $this->render('files/View/Admin/Platby/Navigation.inc') ?>
+<?= $this->subheader('Kategorie plateb') ?>
+
 <div class="container full">
+<?= '<h3>', ($this->action == 'add' ? 'Přidat kategorii' : 'Upravit kategorii'), '</h3>';?>
+
 <?php
 $mainForm = (new TableHelper())->table()
     ->column('desc', '', 'r')
@@ -48,21 +53,18 @@ if (!empty($this->skupinySelect)) {
 }
 ?>
 
-<?php echo $this->render('files/View/Admin/Platby/Navigation.inc');?>
-<?php echo '<h2>Kategorie plateb</h2>';?>
-<?php echo '<h3>', ($this->action == 'add' ? 'Přidat kategorii' : 'Upravit kategorii'), '</h3>';?>
 <form action="" method="post">
     <?php echo $mainForm, getReturnInput();?>
-    <button name="action" value="confirm">Uložit</button>&nbsp;<a href="<?php echo Request::getReferer();?>">Zpět</a><br/><br/>
+    <button name="action" value="confirm">Uložit</button>&nbsp;<a href="<?= $this->backlink ?>">Zpět</a><br/><br/>
 </form>
 <?php if ($this->action != 'add') : ?>
     <h3>Specifické symboly</h3>
     <?php if (isset($categoryForm)) echo $categoryForm;?>
     <form action="" method="post">
         <span class="big">Přidat:</span>
-        <a href="/admin/platby/structure/category/add?group=<?php echo $this->id;?>">nový specifický symbol</a>
+        <a href="/admin/platby/structure/category/add?group=<?= $this->id;?>">nový specifický symbol</a>
         <?php if (isset($categorySelectBox)) : ?>
-            nebo existující: <?php echo $categorySelectBox;?>
+            nebo existující: <?= $categorySelectBox;?>
             <button type="submit" name="action" value="category">odeslat</button>
         <?php endif;?>
     </form>
@@ -71,9 +73,9 @@ if (!empty($this->skupinySelect)) {
     <?php if (isset($skupinyForm)) echo $skupinyForm;?>
     <form action="" method="post">
         <span class="big">Přidat:</span>
-        <a href="/admin/skupiny/add?group=<?php echo $this->id;?>">novou skupinu</a>
+        <a href="/admin/skupiny/add?group=<?= $this->id;?>">novou skupinu</a>
         <?php if (isset($skupinySelectBox)) : ?>
-            nebo existující: <?php echo $skupinySelectBox;?>
+            nebo existující: <?= $skupinySelectBox;?>
             <button type="submit" name="action" value="skupiny">odeslat</button>
         <?php endif;?>
     </form>

@@ -20,7 +20,7 @@ echo $this->table()
     ->column('datum', 'Datum')
     ->column('kde', 'Místo')
     ->column('visible', 'Viditelný')
-    ->column('links', 'Odkazy')
+    ->column('links', 'Upravit')
     ->data($this->data);
 echo '</div>';
 echo '</form>';

@@ -1,7 +1,7 @@
+<?= $this->render('files/View/Admin/Platby/Navigation.inc') ?>
+<?= $this->subheader('Jednotlivé platby') ?>
 <div class="container full">
 <?php
-echo $this->render('files/View/Admin/Platby/Navigation.inc');
-echo '<h2>Jednotlivé platby</h2>';
 echo '<h3>', ($this->action == 'add' ? 'Přidat platbu' : 'Upravit platbu'), '</h3>';
 
 $form = array(
@@ -29,7 +29,7 @@ $formTable = $this->table()
 ?>
 <form action="" method="post">
     <?php echo $formTable, getReturnInput();?>
-    <button name="action" value="confirm">Uložit</button>&nbsp;<a href="<?php echo Request::getReferer();?>">Zpět</a>
+    <button name="action" value="confirm">Uložit</button>&nbsp;<a href="<?= $this->backlink ?>">Zpět</a>
 </form>
 <br/>
 <?php

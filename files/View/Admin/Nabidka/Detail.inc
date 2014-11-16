@@ -13,6 +13,6 @@
             ?>
         </div>
         <?= $this->submit('Uložit');?>
-        <a href="<?= Request::getReferer();?>">Zpět</a>
+        <a href="<?= $this->backlink ?>">Zpět</a>
     </form>
 </div>
