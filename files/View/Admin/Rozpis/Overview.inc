@@ -8,10 +8,8 @@ if ($this->showMenu) {
     echo $this->menu()
         ->float(MenuHelper::FLOAT_RIGHT)
         ->content('Přidat', 'rozpis/add')
-        ->content('Upravit', 'edit', true)
-        ->content('Upravit tréninky', 'edit_detail', true)
-        ->content('Odstranit', 'remove', true)
         ->content('Duplikovat', 'duplicate', true)
+        ->content('Odstranit', 'remove', true)
         ->content('Uložit změny', 'save', true);
 }
 echo '<div style="margin-right:150px;">';
@@ -22,6 +20,7 @@ echo $this->table()
     ->column('datum', 'Datum')
     ->column('kde', 'Místo')
     ->column('visible', 'Viditelný')
+    ->column('links', 'Odkazy')
     ->data($this->data);
 echo '</div>';
 echo '</form>';

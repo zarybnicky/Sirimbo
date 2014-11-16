@@ -38,16 +38,7 @@ class Controller_Admin_Rozpis extends Controller_Admin
                     }
                 }
                 break;
-            case 'edit':
-                $rozpis = post('rozpis');
-                if ($rozpis[0])
-                    $this->redirect('/admin/rozpis/edit/' . $rozpis[0]);
-                break;
-            case 'edit_detail':
-                $rozpis = post('rozpis');
-                if ($rozpis[0])
-                    $this->redirect('/admin/rozpis/detail/' . $rozpis[0]);
-                break;
+
             case 'remove':
                 if (!is_array(post('rozpis')))
                     $this->redirect('/admin/rozpis');
@@ -98,22 +89,33 @@ class Controller_Admin_Rozpis extends Controller_Admin
                 $this->redirect('/admin/rozpis');
                 break;
         }
-        $data = DBRozpis::getRozpis(true);
-        foreach ($data as &$row) {
-            $new_data = array(
-                'canEdit' => Permissions::check('rozpis', P_OWNED, $row['r_trener']),
-                'fullName' => $row['u_jmeno'] . ' ' . $row['u_prijmeni'],
-                'datum' => formatDate($row['r_datum']),
-                'kde' => $row['r_kde']
-            );
-            $new_data['checkBox'] = (string) $this->checkbox('rozpis[]', $row['r_id'])->readonly($new_data['canEdit']);
-            if (Permissions::check('rozpis', P_ADMIN)) {
-                $new_data['visible'] = (string) $this->checkbox($row['r_id'], '1')->defaultState($row['r_visible']);
-            } else {
-                $new_data['visible'] = '&nbsp;' . ($row['r_visible'] ? '&#10003;' : '&#10799;');
-            }
-            $row = $new_data;
-        }
+
+        $data = array_map(
+            function ($item) {
+                $isTrainer = Permissions::check('rozpis', P_OWNED, $item['r_trener']);
+                $isAdmin = Permissions::check('rozpis', P_ADMIN);
+                return array(
+                    'canEdit' => $isTrainer,
+                    'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
+                    'datum' => formatDate($item['r_datum']),
+                    'kde' => $item['r_kde'],
+                    'checkBox' => (string) $this->checkbox('rozpis[]', $item['r_id'])
+                                                ->readonly($isTrainer),
+                    'visible' => (
+                        $isAdmin ?
+                        (string) $this->checkbox($item['r_id'], '1')
+                                      ->defaultState($item['r_visible']) :
+                        ('&nbsp;' . ($item['r_visible'] ? '&#10003;' : '&#10799;'))
+                    ),
+                    'links' => (
+                        '<a href="/admin/rozpis/edit/' . $item['r_id'] . '">obecné</a>, ' .
+                        '<a href="/admin/rozpis/detail/' . $item['r_id'] . '">tréninky</a>'
+                    )
+                );
+            },
+            DBRozpis::getRozpis(true)
+        );
+        
         $this->render(
             'files/View/Admin/Rozpis/Overview.inc',
             array(
@@ -123,6 +125,7 @@ class Controller_Admin_Rozpis extends Controller_Admin
         );
         return;
     }
+    
     public function add($id = null) {
         if (empty($_POST) || is_object($f = $this->_checkData())) {
             if (!empty($_POST))
