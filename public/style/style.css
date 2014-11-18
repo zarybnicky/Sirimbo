@@ -99,7 +99,7 @@ table.nocolor td, table.nocolor th {
     float:left;
 }
 .container.full {
-    float:none !important;
+    float:none;
     width: 960px;
     margin: 0 auto;
 }
@@ -251,6 +251,40 @@ table.nocolor td, table.nocolor th {
     margin-right: -7px;
 }
 
+.menu-side {
+    position: relative;
+}
+.menu-side ul {
+    position:absolute;
+    right:7px;
+    top: 25px;
+    width: 250px;
+}
+.menu-side .more {
+    position:relative;
+}
+.menu-side .more:after {
+    content: "";
+    display:block;
+    position: absolute;
+    top: 18px;
+    right: 15px;
+    width: 13px;
+    height: 5px;
+    background: url("/style/arrow-down.png") no-repeat;
+}
+
+.menu-side ul, .menu-more ul {
+    list-style: none;
+    background-color: white;
+    border: solid #e0e0e0;
+    border-width: 1px 1px 0;
+}
+.menu-side ul li, .menu-more ul li {
+    padding: 10px 13px !important;
+    border-bottom: 1px solid #ccc;
+}
+
 /* Expanded menu */
 .menu-more {
     position: relative;
@@ -267,20 +301,15 @@ table.nocolor td, table.nocolor th {
     background: url("/style/arrow-down.png") no-repeat;
 }
 .menu-more ul {
+    width: 250px;
     display:none;
     position: absolute;
-    top:100%;
-    width: 250px;
     margin-left: -13px;
-    background-color: white;
+    top:100%;
     z-index: 11;
-    border: solid #eee;
-    border-width: 1px 1px 0;
 }
 .menu-more ul li {
     width: 224px;
-    padding: 10px 13px !important;
-    border-bottom: 1px solid #ccc;
 }
 .menu-more:hover ul {
     display:block !important;
@@ -542,6 +571,7 @@ table.nocolor td, table.nocolor th {
 
 .little {font-size: 90%;color: #555;}
 .big {font-size: 124%;color: #333;}
+.emph {font-weight:bold}
 .center {text-align:center;}
 .list {list-style:disc outside none;padding-left:15px;}
 
@@ -559,7 +589,10 @@ table.nocolor td, table.nocolor th {
 }
 
 .header-section {
-    padding: 10px 0 50px 0;
+    padding: 10px 0 25px 0;
     margin-bottom: 10px;
     background: #EAEAEA url("/style/header-section.png") no-repeat 50% 10%;
+}
+.header-section h1, .header-section h2 {
+    margin: 0 275px 0 17px;
 }

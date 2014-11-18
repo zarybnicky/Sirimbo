@@ -20,6 +20,10 @@ abstract class Controller_Abstract implements Controller_Interface
         );
     }
 
+    public function sidebar() {
+        return '';
+    }
+
     public function render($filename, array $vars = array(), $standalone = false) {
         $renderer = new Renderer();
         $content = $renderer->render($filename, $vars);

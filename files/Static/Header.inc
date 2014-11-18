@@ -51,3 +51,4 @@
     </div>
 
     <?php echo View::$controller->navbar(); ?>
+    <?php echo View::$controller->sidebar(); ?>

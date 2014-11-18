@@ -1,19 +1,30 @@
 <?php
 class HeaderHelper {
-    protected $nadpis;
+    protected $header;
+    protected $subheader;
 
-    public function header($nadpis) {
-        $this->nadpis = $nadpis;
+    public function header($header) {
+        $this->header = $header;
+        $this->subheader = null;
+        return $this;
+    }
+
+    public function subheader($subheader) {
+        $this->subheader = $subheader;
         return $this;
     }
     
     public function render() {
+        $text = '<h1>' . $this->header . '</h1>';
+
+        if ($this->subheader) {
+            $text .= '<h2>' . $this->subheader . '</h2>';
+        }
+
         return
             '<div class="header-section">' .
             '<div class="container full">' .
-            '<h1>' .
-            $this->nadpis .
-            '</h1>' .
+            $text .
             '</div>' .
             '</div>';
     }

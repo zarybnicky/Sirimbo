@@ -1,42 +1,36 @@
 <?php
-class Sidebar
-{
-    public static $hasSidebarDiv = false;
+class Sidebar {
+    protected $data;
+    protected $toplevel;
 
-    public function __construct() {
-        if (!Sidebar::$hasSidebarDiv)
-            echo '<style type="text/css">#content{margin-left:110px !important;}</style>';
-        Sidebar::$hasSidebarDiv = true;
+    public function __construct($data) {
+        $this->data = $data;
     }
 
-    public function menuHeader() {
-        return $this->blackBox('<span class="logo"></span>Menu');
-    }
-    public function menuItem($text, $link, $module = '', $permission = P_NONE) {
-        if ($module != '' && !Permissions::check($module, $permission))
-            return;
+    public function __toString() {
+        $out = '<div class="container full menu-side"><ul>';
 
-        $active = stripos(Request::getURI(), $link) === 0;
-        $r = '<span class="arrow">.</span>' . $text;
-        if ($active)
-            return $this->blackBox($r . '<span class="point">.</span>', 'sidebar current', $link);
-        else
-            return $this->whiteBox($r, 'sidebar', $link);
-    }
-    public function blackBox($text, $class = '', $link = '') {
-        $text = '<div class="dark-in">' . $text . '</div>';
-        if ($link != '') {
-            $text = '<a href="' . $link . '">' . $text . '</a>';
+        foreach ($this->data as $item) {
+            if (!empty($item[2])) {
+                $out .= '<li class="more">';
+            } else {
+                $out .= '<li>';
+            }
+
+
+            if (strripos(Request::getLiteralURI(), trim($item[1], '/')) === 0) {
+                $out .= '<a class="emph no-a">';
+            } elseif ($item[1]) {
+                $out .= '<a href="' . $item[1] . '">';
+            } else {
+                $out .= '<a>';
+            }
+            $out .= $item[0];
+            $out .= '</a>';
+
+            $out .= '</li>';
         }
-        return '<div class="dark-out' .
-            ($class ? ' ' . $class : '') . '">' . $text . '</div>';
-    }
-    public function whiteBox($text, $class = '', $link = '') {
-        $text = '<div class="light-in">' . $text . '</div>';
-        if ($link != '') {
-            $text = '<a href="' . $link . '">' . $text . '</a>';
-        }
-        return '<div class="light-out' .
-            ($class ? ' ' . $class : '') . '">' . $text . '</div>';
+
+        return $out . '</ul></div>';
     }
 }

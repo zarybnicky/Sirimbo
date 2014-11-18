@@ -1,5 +1,6 @@
 <?= $this->render('files/View/Admin/Platby/Navigation.inc') ?>
 <?= $this->subheader('Jednotlivé platby') ?>
+
 <div class="container full">
 <?php
 echo '<h3>', ($this->action == 'add' ? 'Přidat platbu' : 'Upravit platbu'), '</h3>';

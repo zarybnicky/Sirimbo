@@ -14,11 +14,12 @@ class Navbar {
             $out .= '<div id="menu-logo">';
             $out .= '  <img alt="" src="/style/logo-small.png" />';
             $out .= '</div>';
+            $out .= '<ul class="menu-inner">';
         } else {
             $out = '<div class="submenu">';
+            $out .= '<ul class="menu-inner">';
         }
 
-        $out .= '<ul class="menu-inner">';
         foreach ($this->data as $item) {
             if (isset($item[3]) && $item[3] && !empty($item[2])) {
                 $out .= '<li class="menu-more menu-right">';
@@ -29,6 +30,7 @@ class Navbar {
             } else {
                 $out .= '<li>';
             }
+            
             if ($item[1]) {
                 $out .= '<a href="' . $item[1] . '">';
             } else {
@@ -53,8 +55,7 @@ class Navbar {
 
             $out .= '</li>';
         }
-        $out .= '</ul>';
 
-        return $out . '</div>';
+        return $out . '</ul></div>';
     }
 }

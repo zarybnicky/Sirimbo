@@ -7,40 +7,13 @@ return array(
     ),
     array(
         'Výsledky',
-        '/oklubu/uspechy',
-        array(
-            array(
-                'Mistrovství ČR',
-                '/oklubu/mistrovstvi',
-                array()
-            ),
-            array(
-                'Mistrovství družstev',
-                '/oklubu/druzstva',
-                array()
-            ),
-            array(
-                'Taneční liga',
-                '/oklubu/liga',
-                array()
-            )
-        )
+        '/oklubu/vysledky',
+        include SETTINGS . '/menu/oklubu.vysledky.php'
     ),
     array(
         'Trenéři',
         '/oklubu/treneri',
-        array(
-            array(
-                'Kluboví trenéři',
-                '/oklubu/treneri/klubovi',
-                array()
-            ),
-            array(
-                'Externí trenéři',
-                '/oklubu/treneri/externi',
-                array()
-            )
-        )
+        include SETTINGS . '/menu/oklubu.treneri.php'
     ),
     array(
         'Kde trénujeme',
