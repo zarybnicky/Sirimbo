@@ -11,9 +11,14 @@ return array(
         include SETTINGS . '/menu/oklubu.vysledky.php'
     ),
     array(
-        'Trenéři',
-        '/oklubu/treneri',
-        include SETTINGS . '/menu/oklubu.treneri.php'
+        'Kluboví trenéři',
+        '/oklubu/treneri/klubovi',
+        array()
+    ),
+    array(
+        'Externí trenéři',
+        '/oklubu/treneri/externi',
+        array()
     ),
     array(
         'Kde trénujeme',

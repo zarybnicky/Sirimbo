@@ -3,7 +3,7 @@ require_once 'files/Controller/Oklubu.php';
 class Controller_Oklubu_Treneri extends Controller_Oklubu
 {
     public function view($id = null) {
-        $this->render('files/View/Empty.inc');
+        $this->redirect('/oklubu/obecne');
     }
 
     public function klubovi($id = null) {
@@ -16,7 +16,18 @@ class Controller_Oklubu_Treneri extends Controller_Oklubu
 
     public function sidebar() {
         return new Sidebar(
-            include SETTINGS . '/menu/oklubu.treneri.php'
+            array(
+                array(
+                    'Kluboví trenéři',
+                    '/oklubu/treneri/klubovi',
+                    array()
+                ),
+                array(
+                    'Externí trenéři',
+                    '/oklubu/treneri/externi',
+                    array()
+                )
+            )
         );
     }
 }

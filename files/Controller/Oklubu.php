@@ -13,6 +13,14 @@ class Controller_Oklubu extends Controller_Abstract
         $this->render('files/View/Main/OKlubu/Historie.inc');
     }
 
+    public function klubovi($id = null) {
+        $this->render('files/View/Main/OKlubu/TreneriInt.inc');
+    }
+
+    public function externi($id = null) {
+        $this->render('files/View/Main/OKlubu/TreneriExt.inc');
+    }
+
     public function saly($id = null) {
         $this->render('files/View/Main/OKlubu/Saly.inc');
     }

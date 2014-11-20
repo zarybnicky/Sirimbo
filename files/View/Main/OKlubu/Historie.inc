@@ -15,12 +15,14 @@
             do české taneční špičky.
         </p>
         <img alt="TK Olymp, založen 1989"
-             src="/images/historie/historie.jpg" />
+             src="/images/historie/historie.jpg"
+             class="block-center"
+             style="height:257px;" />
 
         <h2>1995</h2>
         <p>
             Poprvé o sobě dal TK Olymp Olomouc výrazněji vědět v roce 1995, kdy
-            se formace s názvem Karlštejn, pod vedením PDr. Miroslava Hýži a
+            se formace s názvem Karlštejn, pod vedením PhDr. Miroslava Hýži a
             Marie Hýžové dostala do republikového finále.
         </p>
         <p>
@@ -36,7 +38,9 @@
             trvala pouze do konce roku 1998.
         </p>
         <img alt="Tři oříšky pro Popelku"
-             src="/images/historie/tri_orisky.jpg" />
+             src="/images/historie/tri_orisky.jpg"
+             class="block-center"
+             style="height:222px;" />
 
         <h2>1997</h2>
         <p>
@@ -61,7 +65,9 @@
             obsadil krásné čtvrté místo.
         </p>
         <img alt="mistři Martin Korder s Hanou Švajdovou"
-             src="/images/historie/martin_hanca.jpg" />
+             src="/images/historie/martin_hanca.jpg"
+             class="block-center"
+             style="height:222px" />
 
         <h2>2000</h2>
         <p>
@@ -82,7 +88,9 @@
             v kategorii dospělých roku 2005.
         </p>
         <img alt="mistři Miroslav Hýža s Denisou Walterovou"
-             src="/images/historie/mistr_desitky.jpg">
+             src="/images/historie/mistr_desitky.jpg"
+             class="block-center"
+             style="height:222px" />
 
         <h2>2004</h2>
         <p>
@@ -105,7 +113,9 @@
             celkového počtu 29 párů.
         </p>
         <img alt="Mistrovství světa 2004"
-             src="/images/historie/slowfox_nice.jpg" style="height:222px;">
+             src="/images/historie/slowfox_nice.jpg"
+             class="block-center"
+             style="height:222px" />
 
         <h2>2006</h2>
         <p>
@@ -132,7 +142,9 @@
             Kateřinou Přibylovou.
         </p>
         <img alt="Pavel John s Terezou Jendrulkovou"
-             src="/images/historie/pavel_terka.jpg" />
+             src="/images/historie/pavel_terka.jpg"
+             class="block-center"
+             style="height:222px" />
 
         <h2>2008</h2>
         <p>
@@ -152,14 +164,18 @@
             deseti tancích (5. místo) v kategorii mládež.
         </p>
         <img alt="Radim Stupka s Kristýnou Hlavicovou"
-             src="/images/historie/radim_kiki.jpg" />
+             src="/images/historie/radim_kiki.jpg"
+             class="block-center"
+             style="height:302px" />
         <p>
             V kategorii dospělých se nejlépe umístil Miroslav Hýža s novou
             partnerkou Kristýnou Hudeovou, kteří se na Mistrovství ČR v deseti
             tancích probojovali do semifinále (11. místo).
         </p>
         <img alt="Miroslav Hýža s Kristýnou Hudeovou"
-             src="/images/historie/mirek_kiki.jpg" />
+             src="/images/historie/mirek_kiki.jpg"
+             class="block-center"
+             style="320px" />
 
         <h2>2010</h2>
         <p>
@@ -173,14 +189,18 @@
             jedenáctou příčku.
         </p>
         <img alt="Adam Jendrulek s Alenou Starečkovou"
-             src="/images/historie/adam_alena.jpg" />
+             src="/images/historie/adam_alena.jpg"
+             class="block-center"
+             style="height:200px" />
         <p>
             Velký úspěch zaznamenala juniorská družstva. Jak ve standardních,
             tak v latinskoamerických tancích, si naši junioři zatančili finále,
             v latinskoamerických tancích vybojovali bronzovou medaili!
         </p>
         <img alt="Mistrovství družstev 2010"
-             src="/images/historie/druzstvo2010.jpg" />
+             src="/images/historie/druzstvo2010.jpg"
+             class="block-center"
+             style="222px" />
 
         <h2>2011</h2>
         <p>
