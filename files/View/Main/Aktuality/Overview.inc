@@ -2,7 +2,7 @@
 
 <div class="container full">
     <?php foreach ($this->data as $key => $row) : ?>
-        <div class="article-list">
+        <div class="article-list clear">
             <div class="image">
                 <img src="<?= $row['title_photo_thumb_uri'] ?>" />
             </div>

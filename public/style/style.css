@@ -89,7 +89,7 @@ table.nocolor td, table.nocolor th {
 
 .r {text-align:right;}
 
-.container:after, .widget:after, #header, #menu, .menu-inner {
+.container:after, .widget:after, #header, #menu, .menu-inner, .clear {
   content:"";
   display:table;
   clear:both;
@@ -484,6 +484,7 @@ table.nocolor td, table.nocolor th {
     position:relative;
     padding-left:160px;
     min-height:150px;
+    margin-bottom:10px;
 }
 .article-list .image {
     position:absolute;
