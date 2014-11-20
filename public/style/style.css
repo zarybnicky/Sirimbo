@@ -480,6 +480,33 @@ table.nocolor td, table.nocolor th {
 
 }
 
+.article-list {
+    position:relative;
+    padding-left:160px;
+    min-height:150px;
+}
+.article-list .image {
+    position:absolute;
+    top:5px;
+    left:0;
+    width:150px;
+    height:150px;
+    text-align:center;
+}
+.article-list .name {
+    font-size: 180%;
+    line-height: 120%;
+}
+.article-list .info {
+    margin-bottom:10px;
+}
+.article-list .desc {
+    margin: 0 300px 0 0;
+}
+.article-list .more {
+    float:right;
+}
+
 /* Gallery classes */
 .foto_list {
     list-style-position: inside;

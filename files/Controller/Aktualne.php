@@ -19,6 +19,7 @@ class Controller_Aktualne extends Controller_Abstract
                 'description' => $data['at_preview'],
                 'text' => stripslashes(nl2br($data['at_text'])),
                 'title_photo_uri' => '/galerie/' . $photo_uri,
+                'title_photo_thumb_uri' => '/galerie/thumbnails/' . $photo_uri,
                 'category' => 'Zprávy'
             )
         );
@@ -59,12 +60,17 @@ class Controller_Aktualne extends Controller_Abstract
         }
         $data = array_map(
             function($item) use ($type) {
+                $photo = DBGalerie::getSingleFoto($item['at_foto_main']);
+                $photo_uri = $photo ? $photo['gf_path'] : '';
+
                 return array(
                     'id'        => $item['at_id'],
                     'jmeno'     => $item['at_jmeno'],
                     'timestamp' => $item['at_timestamp_add'],
                     'canEdit'   => Permissions::check('aktuality', P_OWNED, $item['at_kdo']),
-                    'preview'   => $type != AKTUALITY_VIDEA ? stripslashes(nl2br($item['at_preview'])) : ''
+                    'preview'   => $type != AKTUALITY_VIDEA ? stripslashes(nl2br($item['at_preview'])) : '',
+                    'title_photo_uri' => '/galerie/' . $photo_uri,
+                    'title_photo_thumb_uri' => '/galerie/thumbnails/' . $photo_uri
                 );
             },
             $data
