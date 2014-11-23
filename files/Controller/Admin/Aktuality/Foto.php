@@ -6,7 +6,8 @@ class Controller_Admin_Aktuality_Foto extends Controller_Admin_Aktuality
         Permissions::checkError('aktuality', P_OWNED);
     }
 
-    public function view($id = null) {
+    public function view($request) {
+        $id = $request->getId();
         if (!($article = DBAktuality::getSingleAktualita($id))) {
             $this->redirect('/admin/aktuality', 'Takový článek neexistuje');
         }

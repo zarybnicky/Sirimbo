@@ -7,8 +7,9 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
         Permissions::checkError('galerie', P_OWNED);
     }
 
-    public function view($id = null)
+    public function view($request)
     {
+        $id = $request->getId();
         if (!($data = DBGalerie::getSingleDir($id))) {
             $this->redirect('/admin/galerie', 'Složka s takovým ID neexistuje');
         }
@@ -32,7 +33,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
         }
         $this->_displayOverview($id);
     }
-    public function add($id = null)
+    public function add($request)
     {
         if (empty($_POST) || is_object($form = $this->_checkData())) {
             if (!empty($_POST)) {
@@ -53,8 +54,9 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
         $this->redirect('/admin/galerie', 'Složka přidána');
     }
 
-    public function edit($id = null)
+    public function edit($request)
     {
+        $id = $request->getId();
         if ($id == 0) {
             $this->redirect('/admin/galerie', 'Není možné upravit hlavní složku');
         }
@@ -107,7 +109,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
         $this->redirect('/admin/galerie', 'Složka byla úspěšně upravena.');
     }
 
-    public function remove($id = null)
+    public function remove($request)
     {
         if (!is_array(post('data')) && !is_array(get('u'))) {
             $this->redirect('/admin/galerie');
@@ -140,7 +142,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
                 'header' => 'Správa galerie',
                 'prompt' => 'Opravdu chcete odstranit složky '
                     . 'se všemi podsložkami a fotkami:',
-                'returnURI' => Request::getReferer(),
+                'returnURI' => $request->getReferer(),
                 'data' => $data
             )
         );

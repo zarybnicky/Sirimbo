@@ -6,8 +6,9 @@ class Controller_Admin_Akce_Detail extends Controller_Admin_Akce
     {
         Permissions::checkError('akce', P_OWNED);
     }
-    public function view($id = null)
+    public function view($request)
     {
+        $id = $request->getId();
         if (!$id || !($akce = DBAkce::getSingleAkce($id))) {
             $this->redirect('/admin/akce', 'Akce s takovým ID neexistuje');
         }

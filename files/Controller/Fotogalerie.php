@@ -1,7 +1,8 @@
 <?php
 class Controller_Fotogalerie extends Controller_Abstract
 {
-    public function view($id = null) {
+    public function view($request) {
+        $id = $request->getID();
         if ($id === null) {
             $id = 0;
             $dir = array('gd_name' => '');
@@ -24,7 +25,7 @@ class Controller_Fotogalerie extends Controller_Abstract
                 return array(
                     'id' => $item['gf_id'],
                     'src' => '/galerie/thumbnails/' . $item['gf_path'],
-                    'href' => '/' . Request::getURI() . '/foto/' . $item['gf_id']
+                    'href' => '/' . $request->getURI() . '/foto/' . $item['gf_id']
                 );
             },
             $photos
@@ -40,7 +41,8 @@ class Controller_Fotogalerie extends Controller_Abstract
         );
     }
 
-    public function foto($id = null) {
+    public function foto($request) {
+        $id = $request->getID();
         if (!$id || !($data = DBGalerie::getSingleFoto($id))) {
             $this->redirect('/fotogalerie', 'Taková fotka neexistuje');
         }
@@ -101,7 +103,7 @@ class Controller_Fotogalerie extends Controller_Abstract
                 $link = "/fotogalerie/" . $dir['gd_id'];
             }
 
-            if ($dir['gd_id'] == Request::getID()) {
+            if ($dir['gd_id'] == $request->getID()) {
                 $out .= '<li><a class="current" href="' . $link . '">';
             } else {
                 $out .= '<li><a href="' . $link . '">';

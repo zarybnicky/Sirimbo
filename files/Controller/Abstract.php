@@ -1,7 +1,7 @@
 <?php
 abstract class Controller_Abstract implements Controller_Interface
 {
-    abstract public function view($id = null);
+    abstract public function view($request);
 
     public function navbar() {
         $menu = include SETTINGS . '/menu/main.php';

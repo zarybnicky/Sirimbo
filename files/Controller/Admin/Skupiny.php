@@ -5,7 +5,7 @@ class Controller_Admin_Skupiny extends Controller_Admin
     public function __construct() {
         Permissions::checkError('skupiny', P_OWNED);
     }
-    public function view($id = null) {
+    public function view($request) {
         switch(post('action')) {
             case 'edit':
                 $skupiny = post('data');
@@ -36,12 +36,12 @@ class Controller_Admin_Skupiny extends Controller_Admin
             )
         );
     }
-    public function add($id = null) {
+    public function add($request) {
         if (empty($_POST) || is_object($f = $this->_checkPost())) {
             if (!empty($_POST)) {
                 $this->redirect()->setMessage($f->getMessages());
             }
-            $this->_displayForm('add');
+            $this->_displayForm('add', $request->getId());
             return;
         }
         DBSkupiny::insert(post('name'), post('color'), post('desc'));
@@ -63,7 +63,8 @@ class Controller_Admin_Skupiny extends Controller_Admin
         }
         $this->redirect('/admin/skupiny', 'Skupina úspěšně přidána');
     }
-    public function edit($id = null) {
+    public function edit($request) {
+        $id = $request->getId();
         if (!$id || !($data = DBSkupiny::getSingle($id)))
             $this->redirect('/admin/skupiny', 'Skupina s takovým ID neexistuje');
 
@@ -98,13 +99,14 @@ class Controller_Admin_Skupiny extends Controller_Admin
             } else {
                 $this->redirect()->setMessage($f->getMessages());
             }
-            $this->_displayForm('edit');
+            $this->_displayForm('edit', $request->getId());
             return;
         }
         DBSkupiny::update($id, post('name'), post('color'), post('desc'));
         $this->redirect('/admin/skupiny', 'Skupina úspěšně upravena');
     }
-    public function remove($id = null) {
+    public function remove($request) {
+        $id = $request->getId();
         if (!$id || !($data = DBSkupiny::getSingle($id)))
             $this->redirect('/admin/skupiny', 'Skupina s takovým ID neexistuje');
 
@@ -138,7 +140,7 @@ class Controller_Admin_Skupiny extends Controller_Admin
                 array(
                     'header' => 'Správa skupin',
                     'prompt' => 'Opravdu chcete odstranit skupinu?',
-                    'returnURI' => Request::getReferer(),
+                    'returnURI' => $request->getReferer(),
                     'data' => array(array('id' => $data['s_id'], 'text' => $data['s_name']))
                 )
             );
@@ -147,8 +149,8 @@ class Controller_Admin_Skupiny extends Controller_Admin
         DBSkupiny::delete($id);
         $this->redirect('/admin/skupiny', 'Skupina byla úspěšně odebrána.');
     }
-    private function _displayForm($action) {
-        $id = Request::getID() ? Request::getID() : '0';
+    private function _displayForm($action, $id) {
+        $id = $id ? $id : '0';
 
         $groups = DBSkupiny::getSingleWithGroups($id);
         foreach ($groups as &$array) {

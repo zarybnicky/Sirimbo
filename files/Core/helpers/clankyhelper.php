@@ -7,15 +7,11 @@ class ClankyHelper
     private $_highlights;
 
     public function clanky() {
-        $this->_defaultValues();
-        return $this;
-    }
-
-    private function _defaultValues() {
         $this->_clanky = null;
         $this->_offset = 0;
         $this->_number = 20;
         $this->_highlights = false;
+        return $this;
     }
 
     public function data($data = null) {
@@ -54,7 +50,7 @@ class ClankyHelper
 
         $data = array_map(
             function ($val) {
-                list($date, $time) = explode(' ', $val['at_timestamp']);
+                list($date) = explode(' ', $val['at_timestamp']);
                 $photo = DBGalerie::getSingleFoto($val['at_foto_main']);
                 $photo_uri = $photo ? $photo['gf_path'] : '';
 

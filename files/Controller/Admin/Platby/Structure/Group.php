@@ -5,7 +5,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
     public function __construct() {
         Permissions::checkError('platby', P_OWNED);
     }
-    public function view($id = null) {
+    public function view($request) {
         $this->render('files/View/Admin/Platby/StructureGroupOverview.inc', array(
                 'data' => $this->getGroups()
         ));
@@ -24,14 +24,14 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
         }
         return $out;
     }
-    public function add($id = null) {
+    public function add($request) {
         if (empty($_POST) || is_object($s = $this->checkPost())) {
             if (empty($_POST)) {
                 post('base', 1);
             } else {
                 $this->redirect()->setMessage($s->getMessages());
             }
-            $this->_displayForm('add');
+            $this->_displayForm('add', 0);
             return;
         }
         DBPlatbyGroup::insert(post('type'), post('name'), post('description'), post('base'));
@@ -74,7 +74,8 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
             'Kategorie úspěšně přidána'
         );
     }
-    public function edit($id = null) {
+    public function edit($request) {
+        $id = $request->getId();
         if (!$id || !($data = DBPlatbyGroup::getSingle($id))) {
             $this->redirect(
                 post('referer') ? post('referer') : '/admin/platby/structure',
@@ -168,7 +169,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
             } else {
                 $this->redirect()->setMessage($s->getMessages());
             }
-            $this->_displayForm('edit', DBPlatbyGroup::getSingleWithCategories($id));
+            $this->_displayForm('edit', $id, DBPlatbyGroup::getSingleWithCategories($id));
             return;
         }
 
@@ -180,7 +181,8 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
             'Kategorie úspěšně upravena'
         );
     }
-    public function remove($id = null) {
+    public function remove($request) {
+        $id = $request->getId();
         if (!$id || !($data = DBPlatbyGroup::getSingle($id))) {
             $this->redirect(
                 post('referer') ? post('referer') : '/admin/platby/structure',
@@ -223,7 +225,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
                 array(
                     'id' => $id,
                     'name' => $data['pg_name'],
-                    'backlink' => Request::getReferer()
+                    'referer' => $request->getReferer()
                 )
             );
             return;
@@ -243,8 +245,8 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
         else
             return array('categories' => $cat, 'skupiny' => $sku);
     }
-    private function _displayForm($action, $data = array()) {
-        $id = Request::getID() ? Request::getID() : 0;
+    private function _displayForm($action, $id, $data = array()) {
+        $id = $id ? $id : 0;
         foreach ($data as $key => &$array) {
             $new_data = array(
                 'buttons' => '<form action="" method="post">'
@@ -299,7 +301,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
                 'categorySelect' => $categorySelect,
                 'skupiny' => $skupiny,
                 'skupinySelect' => $skupinySelect,
-                'backlink' => Request::getReferer()
+                'referer' => $request->getReferer()
             )
         );
     }

@@ -6,7 +6,7 @@ class Controller_Member_Rozpis  extends Controller_Member
         Permissions::checkError('rozpis', P_VIEW);
     }
 
-    public function view($id = null) {
+    public function view($request) {
         if ($_POST) {
             $this->redirect()->setMessage($this->_processPost());
             $this->redirect('/member/rozpis');

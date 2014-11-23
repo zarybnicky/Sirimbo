@@ -5,7 +5,7 @@ class Controller_Admin_Nabidka extends Controller_Admin
     public function __construct() {
         Permissions::checkError('nabidka', P_OWNED);
     }
-    public function view($id = null) {
+    public function view($request) {
         switch(post('action')) {
             case 'save':
                 foreach (DBNabidka::getNabidka() as $item) {
@@ -120,7 +120,7 @@ class Controller_Admin_Nabidka extends Controller_Admin
             )
         );
     }
-    public function add($id = null) {
+    public function add($request) {
         if (empty($_POST) || is_object($f = $this->_checkData())) {
             if (!empty($_POST)) {
                 $this->redirect()->setMessage($f->getMessages());
@@ -128,8 +128,9 @@ class Controller_Admin_Nabidka extends Controller_Admin
             $this->render(
                 'files/View/Admin/Nabidka/Form.inc',
                 array(
-                    'action' => Request::getAction(),
-                    'returnURI' => Request::getReferer(),
+                    'action' => $request->getAction(),
+                    'referer' => $request->getReferer(),
+                    'returnURI' => $request->getReferer(),
                     'users' => DBUser::getUsersByPermission('nabidka', P_OWNED),
                     'visible' => false
                 )
@@ -169,12 +170,16 @@ class Controller_Admin_Nabidka extends Controller_Admin
                 $do->getDate(Date::FORMAT_SIMPLIFIED), $trener_name
             );
         }
-        $this->redirect(getReturnURI('/admin/nabidka'), 'Nabídka přidána');
+        $this->redirect(
+            post('referer') ? post('referer') : '/admin/nabidka',
+            'Nabídka přidána'
+        );
     }
-    public function edit($id = null) {
+    public function edit($request) {
+        $id = $request->getId();
         if (!$id || !($data = DBNabidka::getSingleNabidka($id))) {
             $this->redirect(
-                getReturnURI('/admin/nabidka'),
+                post('referer') ? post('referer') : '/admin/nabidka',
                 'Nabídka s takovým ID neexistuje'
             );
         }
@@ -197,8 +202,9 @@ class Controller_Admin_Nabidka extends Controller_Admin
             $this->render(
                 'files/View/Admin/Nabidka/Form.inc',
                 array(
-                    'action' => Request::getAction(),
-                    'returnURI' => Request::getReferer(),
+                    'action' => $request->getAction(),
+                    'referer' => $request->getReferer(),
+                    'returnURI' => $request->getReferer(),
                     'users' => DBUser::getUsersByPermission('nabidka', P_OWNED),
                     'visible' => $data['n_visible']
                 )
@@ -273,7 +279,10 @@ class Controller_Admin_Nabidka extends Controller_Admin
                 );
             }
         }
-        $this->redirect(getReturnURI('/admin/nabidka'), 'Nabídka úspěšně upravena');
+        $this->redirect(
+            post('referer') ? post('referer') : '/admin/nabidka',
+            'Nabídka úspěšně upravena'
+        );
     }
 
     private function _checkData() {

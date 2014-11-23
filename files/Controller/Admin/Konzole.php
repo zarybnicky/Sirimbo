@@ -5,7 +5,7 @@ class Controller_Admin_Konzole extends Controller_Admin
     public function __construct() {
         Permissions::checkError('konzole', P_OWNED);
     }
-    public function view($id = null) {
+    public function view($request) {
         if (!empty($_POST) && post('code')) {
             $r = eval(stripslashes(post('code')));
             if ($r === false)
@@ -22,4 +22,3 @@ class Controller_Admin_Konzole extends Controller_Admin
         echo '</form>';
     }
 }
-?>

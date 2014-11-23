@@ -1,7 +1,8 @@
 <?php
 class Controller_Aktualne extends Controller_Abstract
 {
-    public function view($id = null) {
+    public function view($request) {
+        $id = $request->getID();
         if (!$id || !($data = DBAktuality::getSingleAktualita($id))) {
             $this->redirect('/aktualne/posledni');
         }
@@ -25,16 +26,16 @@ class Controller_Aktualne extends Controller_Abstract
         );
         return;
     }
-    public function posledni($id = null) {
+    public function posledni($request) {
         $this->_aktualne("Nejnovější články");
     }
-    public function videa($id = null) {
+    public function videa($request) {
         $this->_aktualne('Videa', AKTUALITY_VIDEA);
     }
-    public function clanky($id = null) {
+    public function clanky($request) {
         $this->_aktualne('Články', AKTUALITY_CLANKY);
     }
-    public function kratke_zpravy($id = null) {
+    public function kratke_zpravy($request) {
         $this->_aktualne('Krátké zprávy', AKTUALITY_KRATKE);
     }
     public function navbar() {

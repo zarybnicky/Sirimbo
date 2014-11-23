@@ -18,7 +18,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
     const BONUS_A = 2160; //400*AMEND_B + BONUS_B
     const BONUS_M = 3240; //400*AMEND_A + BONUS_A
 
-    public function view($id = null) {
+    public function view($request) {
         $latest = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
         $this->render(
             'files/View/Member/Profil/CoupleOverview.inc',
@@ -35,7 +35,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
             )
         );
     }
-    public function body($id = null) {
+    public function body($request) {
         if (empty($_POST) || is_object($f = $this->_checkData())) {
             if (empty($_POST)) {
                 $par = DBPary::getSinglePar(User::getParID());
@@ -73,7 +73,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
         );
         $this->redirect("/member/profil/par", "Třída a body změněny");
     }
-    public function partner($id = null) {
+    public function partner($request) {
         $latest = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
         $havePartner = !empty($latest) && $latest['u_id'];
 
@@ -109,7 +109,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
             )
         );
     }
-    public function zadost($id = null) {
+    public function zadost($request) {
         if (!post('action')) {
             $this->redirect('/member/profil');
         }
@@ -167,4 +167,3 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
         return $f->isValid() ? null : $f;
     }
 }
-?>

@@ -1,19 +1,20 @@
 <?php
 require_once 'files/Controller/Oklubu.php';
-class Controller_Oklubu_Vysledky extends Controller_Oklubu {
-    public function view($id = null) {
+class Controller_Oklubu_Vysledky extends Controller_Oklubu
+{
+    public function view($request) {
         $this->render('files/View/Main/OKlubu/VCislech.inc');
     }
     
-    public function mistrovstvi($id = null) {
+    public function mistrovstvi($request) {
         $this->render('files/View/Main/OKlubu/Mistrovstvi.inc');
     }
     
-    public function druzstva($id = null) {
+    public function druzstva($request) {
         $this->render('files/View/Main/OKlubu/Druzstva.inc');
     }
     
-    public function liga($id = null) {
+    public function liga($request) {
         $this->render('files/View/Main/OKlubu/Liga.inc');
     }
 

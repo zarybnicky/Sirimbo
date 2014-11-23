@@ -6,7 +6,7 @@ function dumpPost($echo = false) {
     }
     $out = fopen(DEBUG_LOG, 'a');
     fwrite($out,  date(DATE_RFC822) . " - " .
-        Request::getLiteralURI('home') . ":\n" .
+        $_SERVER['REQUEST_URI'] . ":\n" .
         var_export($_POST, true) . "\n\n");
     fclose($out);
 }
@@ -17,7 +17,7 @@ function dump($var, $echo = false) {
     }
     $out = fopen(DEBUG_LOG, 'a');
     fwrite($out,  date(DATE_RFC822) . " - " .
-        Request::getLiteralURI('home') . ":\n" .
+        $_SERVER['REQUEST_URI'] . ":\n" .
         var_export($var, true) . "\n\n");
     fclose($out);
 }
@@ -30,8 +30,7 @@ function dbg($string, $backtrace = true) {
 
     $out = fopen(DEBUG_LOG, 'a');
     fwrite($out,  date(DATE_RFC822) . " - " .
-        Request::getLiteralURI('home') . ":\n" .
+        $_SERVER['REQUEST_URI'] . ":\n" .
         $string . "\n\n");
     fclose($out);
 }
-?>

@@ -5,7 +5,7 @@ class Controller_Member_Nastenka extends Controller_Member
     public function __construct() {
         Permissions::checkError('nastenka', P_VIEW);
     }
-    public function view($id = null) {
+    public function view($request) {
         $pager = new Paging(new PagingAdapterDBSelect('DBNastenka'));
         $pager->setCurrentPageField('p');
         $pager->setItemsPerPageField('c');

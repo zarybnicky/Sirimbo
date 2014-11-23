@@ -5,7 +5,7 @@ class Controller_Member_Dokumenty extends Controller_Member
     public function __construct() {
         Permissions::checkError('dokumenty', P_VIEW);
     }
-    public function view($id = null) {
+    public function view($request) {
         $kat = get('kat');
         if (ctype_digit($kat))
             $dokumenty = DBDokumenty::getDokumentyByKategorie($kat);
@@ -31,4 +31,3 @@ class Controller_Member_Dokumenty extends Controller_Member
         );
     }
 }
-?>

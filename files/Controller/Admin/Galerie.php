@@ -22,7 +22,7 @@ class Controller_Admin_Galerie extends Controller_Admin
     {
         Permissions::checkError('galerie', P_OWNED);
     }
-    public function view($id = null)
+    public function view($request)
     {
         switch(post('action')) {
             case 'galerie/save':
@@ -52,7 +52,7 @@ class Controller_Admin_Galerie extends Controller_Admin
         $this->_displayOverview();
     }
 
-    private function _scan($id = null)
+    private function _scan($request)
     {
         $dbInDirs = DBGalerie::getDirsWithParentPath();
         $dbInFiles = DBGalerie::getFotkyWithParentPath();

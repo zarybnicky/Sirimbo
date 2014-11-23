@@ -6,7 +6,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
     {
         Permissions::checkError('platby', P_OWNED);
     }
-    public function view($id = null)
+    public function view($request)
     {
         switch(post('action')) {
             case 'edit':
@@ -34,7 +34,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             )
         );
     }
-    public function add($id = null)
+    public function add($request)
     {
         if (empty($_POST)) {
             $this->_displayForm(0);
@@ -50,8 +50,9 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         );
         $this->redirect('/admin/platby/items', 'Platba úspěšně přidána');
     }
-    public function edit($id = null)
+    public function edit($request)
     {
+        $id = $request->getId();
         if (!$id || !($data = DBPlatbyItem::getSingle($id))) {
             $this->redirect('/admin/platby/items', 'Platba s takovým ID neexistuje');
         }
@@ -74,7 +75,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         );
         $this->redirect('/admin/platby/items', 'Platba úspěšně upravena');
     }
-    public function remove($id = null)
+    public function remove($request)
     {
         if (!is_array(post('data')) && !is_array(get('u'))) {
             $this->redirect('/admin/platby/items');
@@ -107,7 +108,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             array(
                 'header' => 'Správa plateb',
                 'prompt' => 'Opravdu chcete odstranit platby:',
-                'returnURI' => Request::getReferer(),
+                'returnURI' => $request->getReferer(),
                 'data' => $data
             )
         );
@@ -131,12 +132,12 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         $this->render(
             'files/View/Admin/Platby/ItemsForm.inc',
             array(
-                'action' => Request::getAction(),
+                'action' => $request->getAction(),
+                'referer' => $request->getReferer(),
                 'id' => $id,
                 'raw' => $raw,
                 'users' => $users,
-                'categories' => $categories,
-                'backlink' => Request::getReferer()
+                'categories' => $categories
             )
         );
     }

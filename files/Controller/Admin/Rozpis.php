@@ -5,7 +5,7 @@ class Controller_Admin_Rozpis extends Controller_Admin
     public function __construct() {
         Permissions::checkError('rozpis', P_OWNED);
     }
-    public function view($id = null) {
+    public function view($request) {
         switch(post('action')) {
             case 'save':
                 $items = DBRozpis::getRozpis();
@@ -126,14 +126,14 @@ class Controller_Admin_Rozpis extends Controller_Admin
         return;
     }
     
-    public function add($id = null) {
+    public function add($request) {
         if (empty($_POST) || is_object($f = $this->_checkData())) {
             if (!empty($_POST))
                 $this->redirect()->setMessage($f->getMessages());
             $this->render(
                 'files/View/Admin/Rozpis/Form.inc',
                 array(
-                    'action' => Request::getAction(),
+                    'action' => $request->getAction(),
                     'isAdmin' => Permissions::check('rozpis', P_ADMIN)
                 )
             );
@@ -162,7 +162,8 @@ class Controller_Admin_Rozpis extends Controller_Admin
         }
         $this->redirect('/admin/rozpis', 'Rozpis přidán');
     }
-    public function edit($id = null) {
+    public function edit($request) {
+        $id = $request->getId();
         if (!$id || !($data = DBRozpis::getSingleRozpis($id)))
             $this->redirect('/admin/rozpis', 'Rozpis s takovým ID neexistuje');
         Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
@@ -181,7 +182,7 @@ class Controller_Admin_Rozpis extends Controller_Admin
             $this->render(
                 'files/View/Admin/Rozpis/Form.inc',
                 array(
-                    'action' => Request::getAction(),
+                    'action' => $request->getAction(),
                     'isAdmin' => Permissions::check('rozpis', P_ADMIN)
                 )
             );
@@ -239,4 +240,3 @@ class Controller_Admin_Rozpis extends Controller_Admin
         return $f->isValid() ? true : $f;
     }
 }
-?>

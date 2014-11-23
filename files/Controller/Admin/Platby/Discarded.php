@@ -5,7 +5,7 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
     public function __construct() {
         Permissions::checkError('platby', P_OWNED);
     }
-    public function view($id = null) {
+    public function view($request) {
         $data = DBPlatbyRaw::getDiscarded();
         if (count($data) == 0) {
             $this->redirect(
@@ -31,17 +31,18 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
             ));
         }
     }
-    public function remove($id = null) {
+    public function remove($request) {
+        $id = $request->getId();
         if (!$id && !($data = DBPlatbyRaw::getSingle($id))) {
             $this->redirect(
-                Request::getReferer(),
+                $request->getReferer(),
                 'Platba se zadaným ID neexistuje.'
             );
         }
 
         DBPlatbyRaw::delete($id);
         $this->redirect(
-            Request::getReferer(),
+            $request->getReferer(),
             'Platba byla odstraněna.'
         );
     }

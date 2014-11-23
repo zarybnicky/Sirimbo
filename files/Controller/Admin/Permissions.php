@@ -5,7 +5,7 @@ class Controller_Admin_Permissions extends Controller_Admin
     public function __construct() {
         Permissions::checkError('permissions', P_ADMIN);
     }
-    public function view($id = null) {
+    public function view($request) {
         switch(post('action')) {
             case 'edit':
                 $data = post('permissions');
@@ -35,14 +35,14 @@ class Controller_Admin_Permissions extends Controller_Admin
             )
         );
     }
-    public function add($id = null) {
+    public function add($request) {
         if (empty($_POST) || is_object($f = $this->_checkData())) {
             if (!empty($_POST))
                 $this->redirect()->setMessage($f->getMessages());
             $this->render(
                 'files/View/Admin/Permissions/Form.inc',
                 array(
-                    'action' => Request::getAction()
+                    'action' => $request->getAction()
                 )
             );
             return;
@@ -54,7 +54,8 @@ class Controller_Admin_Permissions extends Controller_Admin
 
         $this->redirect(post('referer') ? post('referer') : '/admin/permissions', 'Úroveň úspěšně přidána');
     }
-    public function edit($id = null) {
+    public function edit($request) {
+        $id = $request->getId();
         if (!$id || !($data = DBPermissions::getSingleGroup($id)))
             $this->redirect(post('referer') ? post('referer') : '/admin/permissions',
                 'Skupina s takovým ID neexistuje');
@@ -72,7 +73,7 @@ class Controller_Admin_Permissions extends Controller_Admin
             $this->render(
                 'files/View/Admin/Permissions/Form.inc',
                 array(
-                    'action' => Request::getAction()
+                    'action' => $request->getAction()
                 )
             );
             return;
@@ -87,7 +88,7 @@ class Controller_Admin_Permissions extends Controller_Admin
             'Oprávnění úspěšně upravena'
         );
     }
-    public function remove($id = null) {
+    public function remove($request) {
         if (!is_array(post('data')) && !is_array(get('u')))
             $this->redirect('/admin/permissions');
         if (!empty($_POST) && post('action') == 'confirm') {
@@ -113,7 +114,7 @@ class Controller_Admin_Permissions extends Controller_Admin
                 'prompt' =>
                     $this->notice('Bude nutné přiřadit uživatelům z těchto skupin jinou skupinu!')
                     . 'Opravdu chcete odstranit uživatelské úrovně:',
-                'returnURI' => Request::getReferer(),
+                'returnURI' => $request->getReferer(),
                 'data' => $data
             )
         );
@@ -130,4 +131,3 @@ class Controller_Admin_Permissions extends Controller_Admin
         return $f->isValid() ? true : $f;
     }
 }
-?>

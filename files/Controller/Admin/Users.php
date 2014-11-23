@@ -5,7 +5,7 @@ class Controller_Admin_Users extends Controller_Admin
     public function __construct() {
         Permissions::checkError('users', P_OWNED);
     }
-    public function view($id = null) {
+    public function view($request) {
         switch(post('action')) {
             case 'edit':
                 $users = post('users');
@@ -45,7 +45,7 @@ class Controller_Admin_Users extends Controller_Admin
         }
         $this->_displayOverview(get('v'));
     }
-    public function remove($id = null) {
+    public function remove($request) {
         if (!is_array(post('data')) && !is_array(get('u')))
             $this->redirect('/admin/users');
         if (!empty($_POST) && post('action') == 'confirm') {
@@ -67,12 +67,12 @@ class Controller_Admin_Users extends Controller_Admin
             array(
                 'header' => 'Správa uživatelů',
                 'prompt' => 'Opravdu chcete odstranit uživatele:',
-                'returnURI' => Request::getReferer(),
+                'returnURI' => $request->getReferer(),
                 'data' => $data
             )
         );
     }
-    public function add($id = null) {
+    public function add($request) {
         if (empty($_POST) || is_object($f = $this->_checkData('add'))) {
             if (!empty($_POST))
                 $this->redirect()->setMessage($f->getMessages());
@@ -89,7 +89,8 @@ class Controller_Admin_Users extends Controller_Admin
         );
         $this->redirect('/admin/users', 'Uživatel úspěšně přidán');
     }
-    public function edit($id = null) {
+    public function edit($request) {
+        $id = $request->getId();
         if (!$id || !($data = DBUser::getUserData($id)))
             $this->redirect('/admin/users', 'Uživatel s takovým ID neexistuje');
         if (!$data['u_confirmed'])
@@ -126,7 +127,8 @@ class Controller_Admin_Users extends Controller_Admin
         );
         $this->redirect('/admin/users', 'Uživatel úspěšně upraven');
     }
-    public function platby($id = null) {
+    public function platby($request) {
+        $id = $request->getId();
         if (!$id || !($data = DBUser::getUserData($id)))
             $this->redirect('/admin/users', 'Uživatel s takovým ID neexistuje');
         if (!$data['u_confirmed'])
@@ -134,7 +136,7 @@ class Controller_Admin_Users extends Controller_Admin
 
         $this->render('files/View/Admin/Users/Platby.inc');
     }
-    public function unconfirmed($id = null) {
+    public function unconfirmed($request) {
         if (empty($_POST) || !is_array(post('users'))) {
             $users = DBUser::getNewUsers();
             if (empty($users)) {
@@ -195,7 +197,7 @@ class Controller_Admin_Users extends Controller_Admin
             $this->redirect('/admin/users/remove?' . http_build_query(array('u' => post('users'))));
         }
     }
-    public function duplicate($id = null) {
+    public function duplicate($request) {
         if (!empty($_POST) && post('action') == 'remove' && post('users') && !empty($_POST['users']))
             $this->redirect('/admin/users/remove?' . http_build_query(array('u' => post('users'))));
 
@@ -220,7 +222,7 @@ class Controller_Admin_Users extends Controller_Admin
             )
         );
     }
-    public function statistiky($id = null) {
+    public function statistiky($request) {
         $all = DBUser::getUsers();
         $active = DBUser::getActiveUsers();
         $dancers = DBUser::getActiveDancers();
@@ -248,7 +250,7 @@ class Controller_Admin_Users extends Controller_Admin
             )
         );
     }
-    public function temporary($id = null) {
+    public function temporary($request) {
         $type = post('type');
         $jmeno = post('jmeno');
         $prijmeni = post('prijmeni');
@@ -325,11 +327,11 @@ class Controller_Admin_Users extends Controller_Admin
         $i = $pager->getItemsPerPage() * ($pager->getCurrentPage() - 1);
         foreach ($data as &$item) {
             $new_data = array(
-                'checkBox' => (string) $this->checkbox('users[]', $item['u_id']),
+                'checkBox' => $this->checkbox('users[]', $item['u_id'])->render(),
                 'index'     => ++$i . '. ',
                 'varSymbol' => User::varSymbol($item['u_id']),
                 'fullName'  => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
-                'colorBox'  => $this->colorbox($item['s_color_rgb'], $item['s_description']),
+                'colorBox'  => $this->colorbox($item['s_color_rgb'], $item['s_description'])->render(),
                 'groupInfo' => $group_lookup[$item['u_group']]
             );
             switch($action) {
@@ -380,7 +382,7 @@ class Controller_Admin_Users extends Controller_Admin
         $this->render(
             'files/View/Admin/Users/Form.inc',
             array(
-                'action' => Request::getAction(),
+                'action' => $request->getAction(),
                 'groups' => $groups,
                 'skupiny' => $skupiny
             )

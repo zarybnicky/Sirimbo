@@ -5,7 +5,8 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
     public function __construct() {
         Permissions::checkError('nabidka', P_OWNED);
     }
-    public function view($id = null) {
+    public function view($request) {
+        $id = $request->getId();
         if (!$id || !($data = DBNabidka::getSingleNabidka($id))) {
             $this->redirect(
                 '/admin/nabidka',
@@ -66,7 +67,7 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
                     'obsazeno' => $obsazeno,
                     'users' => $users,
                     'items' => $items,
-                    'backlink' => Request::getReferer()
+                    'backlink' => $request->getReferer()
                 )
             );
             return;

@@ -5,10 +5,10 @@ class Controller_Member_Profil extends Controller_Member
     public function __construct() {
         Permissions::checkError('nastenka', P_VIEW);
     }
-    public function view($id = null) {
+    public function view($request) {
         $this->render('files/View/Member/Profil/Overview.inc');
     }
-    public function edit($id = null) {
+    public function edit($request) {
         $data = DBUser::getUserData(User::getUserID());
         $narozeni = $this->date('narozeni')->getPost();
 
@@ -38,7 +38,7 @@ class Controller_Member_Profil extends Controller_Member
         );
         $this->redirect('/member/profil', 'Upraveno');
     }
-    public function heslo($id = null) {
+    public function heslo($request) {
         if (empty($_POST) || is_object($f = $this->_checkData('heslo'))) {
             if (!empty($_POST)) {
                 $this->redirect()->setMessage($f->getMessages());
@@ -49,7 +49,7 @@ class Controller_Member_Profil extends Controller_Member
         DBUser::setPassword(User::getUserID(), User::crypt(post('newpass')));
         $this->redirect('/member/profil', 'Heslo změněno');
     }
-    public function platby($id = null) {
+    public function platby($request) {
         $groupsOut = array();
         $groups = DBSkupiny::getSingleWithCategories(User::getSkupina());
         $currentGroup = 0;
@@ -108,4 +108,3 @@ class Controller_Member_Profil extends Controller_Member
         return $f->isValid() ? null : $f;
     }
 }
-?>

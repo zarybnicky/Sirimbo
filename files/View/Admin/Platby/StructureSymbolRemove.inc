@@ -8,9 +8,11 @@
     <form action="" method="POST">
         Opravdu chcete odstranit specifický symbol "<?= $this->name;?>"?
         <input type="hidden" name="data[]" value="<?= $this->id;?>" />
-        <?= getReturnInput();?>
+        <input type="hidden"
+               name="referer"
+               value="<?= $this->referer ?>" />
         <br/>
         <button type="submit" name="action" value="confirm">Odstranit</button>
-        <a href="<?= $this->backlink ?>">Zpět</a>
+        <a href="<?= $this->referer ?>">Zpět</a>
     </form>
 </div>

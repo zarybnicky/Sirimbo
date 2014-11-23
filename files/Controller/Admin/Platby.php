@@ -6,7 +6,7 @@ class Controller_Admin_Platby extends Controller_Admin
     {
         Permissions::checkError('platby', P_OWNED);
     }
-    public function view($id = null)
+    public function view($request)
     {
         $this->redirect('/admin/platby/overview');
     }
@@ -117,4 +117,3 @@ class Controller_Admin_Platby extends Controller_Admin
         return $item->isValid ? $item : $error;
     }
 }
-?>

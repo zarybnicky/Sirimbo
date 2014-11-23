@@ -17,15 +17,19 @@ echo $this->notice($this->redirect()->getMessage());
         <td><?php echo $this->checkbox('lock');?></td>
     </tr><tr>
         <td>Skupiny:</td>
-        <td><?php
-        foreach ($this->skupiny as $item) {
-            if (true) //$item['us_platba_mesic'] > 0 || $item['us_platba_ctvrtrok'] > 0 || $item['us_platba_pulrok'] > 0
-                echo $this->checkbox('sk-' . $item['s_id'], '1'), ' ',
-                    $this->colorbox($item['s_color_rgb'], $item['s_description']), ' ',
-                    $item['s_name'], '<br/>';
-        }
-        echo getReturnInput();
-        ?></td>
+        <td>
+            <?php
+            foreach ($this->skupiny as $item) {
+                if (true) //$item['us_platba_mesic'] > 0 || $item['us_platba_ctvrtrok'] > 0 || $item['us_platba_pulrok'] > 0
+                    echo $this->checkbox('sk-' . $item['s_id'], '1'), ' ',
+                $this->colorbox($item['s_color_rgb'], $item['s_description']), ' ',
+                $item['s_name'], '<br/>';
+            }
+            ?>
+            <input type="hidden"
+                   name="referer"
+                   value="<?= $this->referer ?>" />
+        </td>
     </tr><tr>
         <td><button type="submit"><?php
             echo ($this->action == 'add' ? 'Přidat' : 'Upravit');

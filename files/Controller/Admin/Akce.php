@@ -6,7 +6,8 @@ class Controller_Admin_Akce extends Controller_Admin
     {
         Permissions::checkError('akce', P_OWNED);
     }
-    public function view($id = null)
+
+    public function view($request)
     {
         switch(post('action')) {
         case 'save':
@@ -21,11 +22,11 @@ class Controller_Admin_Akce extends Controller_Admin
             }
             break;
         }
-        
+
         $this->_displayOverview();
     }
 
-    public function add($id = null)
+    public function add($request)
     {
         if (empty($_POST) || is_object($form = $this->_checkData())) {
             if (!empty($_POST)) {
@@ -51,8 +52,9 @@ class Controller_Admin_Akce extends Controller_Admin
         $this->redirect('/admin/akce', 'Akce přidána');
     }
 
-    public function edit($id = null)
+    public function edit($request)
     {
+        $id = $request->getID();
         if (!$id || !($data = DBAkce::getSingleAkce($id))) {
             $this->redirect('/admin/akce', 'Akce s takovým ID neexistuje');
         }
@@ -90,7 +92,7 @@ class Controller_Admin_Akce extends Controller_Admin
         $this->redirect('/admin/akce', 'Akce upravena');
     }
 
-    public function remove($id = null)
+    public function remove($request)
     {
         if (!is_array(post('data')) && !is_array(get('u'))) {
             $this->redirect('/admin/akce');
@@ -120,7 +122,7 @@ class Controller_Admin_Akce extends Controller_Admin
             array(
                 'header' => 'Správa akcí',
                 'prompt' => 'Opravdu chcete odstranit akce:',
-                'returnURI' => Request::getReferer(),
+                'returnURI' => $request->getReferer(),
                 'data' => $data
             )
         );
@@ -179,8 +181,8 @@ class Controller_Admin_Akce extends Controller_Admin
             'files/View/Admin/Akce/Form.inc',
             array(
                 'dokumenty' => $dokumenty,
-                'header' => Request::getAction() == 'add' ? 'Přidat uživatele' : 'Upravit uživatele',
-                'action' => Request::getAction() == 'add' ? 'Přidat' : 'Upravit'
+                'header' => $request->getAction() == 'add' ? 'Přidat uživatele' : 'Upravit uživatele',
+                'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit'
             )
         );
     }

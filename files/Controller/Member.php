@@ -5,7 +5,7 @@ class Controller_Member extends Controller_Abstract
         Permissions::checkError('nastenka', P_VIEW);
     }
 
-    public function view($id = null)  {
+    public function view($request)  {
         if (isset($_SESSION['zaplaceno_text'])) {
             $this->redirect()->setMessage($_SESSION['zaplaceno_text']);
         }

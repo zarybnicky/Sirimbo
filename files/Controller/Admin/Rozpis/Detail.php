@@ -5,7 +5,8 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
     public function __construct() {
         Permissions::checkError('rozpis', P_OWNED);
     }
-    public function view($id = null) {
+    public function view($request) {
+        $id = $request->getId();
         if (!$id || !($data = DBRozpis::getSingleRozpis($id))) {
             $this->redirect(
                 '/admin/rozpis',
@@ -20,7 +21,7 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
         if (post()) {
             $items = $this->processPost($id, $data, $items);
             DBRozpis::editRozpisItemMultiple($items);
-            $this->redirect('/' . Request::getURI());
+            $this->redirect('/' . $request->getURI());
         }
 
         $users = DBPary::getPartners();

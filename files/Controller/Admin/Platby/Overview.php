@@ -5,7 +5,7 @@ class Controller_Admin_Platby_Overview extends Controller_Admin_Platby
     public function __construct() {
         Permissions::checkError('platby', P_OWNED);
     }
-    public function view($id = null) {
+    public function view($request) {
         $data = DBUser::getUsersWithSkupinaPlatby();
         $skupiny = array();
         $index = 0;

@@ -7,10 +7,11 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
         Permissions::checkError('galerie', P_OWNED);
     }
 
-    public function edit($id = null)
+    public function edit($request)
     {
+        $id = $request->getId();
         if(!$id || !($data = DBGalerie::getSingleDir($id))) {
-            $this->redirect(Request::getReferer(), 'Takový soubor neexistuje!');
+            $this->redirect($request->getReferer(), 'Takový soubor neexistuje!');
         }
         if(empty($_POST) || is_object($form = $this->_checkData())) {
             if(empty($_POST)) {
@@ -55,7 +56,7 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
         );
     }
 
-    public function upload($id = null)
+    public function upload($request)
     {
         if (empty($_POST)) {
             $this->_displayUpload();
@@ -169,7 +170,7 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
             array(
                 'id' => $id,
                 'dirs' => $dirs,
-                'referer' => Request::getReferer()
+                'referer' => $request->getReferer()
             )
         );
     }

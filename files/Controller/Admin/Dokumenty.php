@@ -5,7 +5,7 @@ class Controller_Admin_Dokumenty extends Controller_Admin
     public function __construct() {
         Permissions::checkError('dokumenty', P_OWNED);
     }
-    public function view($id = null) {
+    public function view($request) {
         switch(post('action')) {
             case 'edit':
                 $dokumenty = post('dokumenty');
@@ -76,7 +76,8 @@ class Controller_Admin_Dokumenty extends Controller_Admin
             )
         );
     }
-    public function edit($id = null) {
+    public function edit($request) {
+        $id = $request->getId();
         if (!$id || !($data = DBDokumenty::getSingleDokument($id)))
             $this->redirect('/admin/dokumenty', 'Dokument s takovým ID neexistuje');
 
@@ -93,7 +94,7 @@ class Controller_Admin_Dokumenty extends Controller_Admin
             )
         );
     }
-    public function remove($id = null) {
+    public function remove($request) {
         if (!is_array(post('data')) && !is_array(get('u'))) {
             $this->redirect('/admin/dokumenty');
         }
@@ -129,7 +130,7 @@ class Controller_Admin_Dokumenty extends Controller_Admin
             array(
                 'header' => 'Správa dokumentů',
                 'prompt' => 'Opravdu chcete odstranit dokumenty:',
-                'returnURI' => Request::getReferer(),
+                'returnURI' => $request->getReferer(),
                 'data' => $data
             )
         );

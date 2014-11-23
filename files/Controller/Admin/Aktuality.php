@@ -5,7 +5,7 @@ class Controller_Admin_Aktuality extends Controller_Admin
     public function __construct() {
         Permissions::checkError('aktuality', P_OWNED);
     }
-    public function view($id = null) {
+    public function view($request) {
         switch(post("action")) {
             case 'edit':
                 $aktuality = post('aktuality');
@@ -48,12 +48,12 @@ class Controller_Admin_Aktuality extends Controller_Admin
             )
         );
     }
-    public function add($id = null) {
+    public function add($request) {
         if (empty($_POST)) {
             $this->render(
                 'files/View/Admin/Aktuality/Form.inc',
                 array(
-                    'action' => Request::getAction()
+                    'action' => $request->getAction()
                 )
             );
             return;
@@ -79,9 +79,11 @@ class Controller_Admin_Aktuality extends Controller_Admin
             $this->redirect('/admin/aktuality/foto/' . $id . '?notify=true', 'Uloženo');
         }
     }
-    public function edit($id = null) {
-        if (!$id || !($data = DBAktuality::getSingleAktualita($id)))
+    public function edit($request) {
+        $id = $request->getId();
+        if (!$id || !($data = DBAktuality::getSingleAktualita($id))) {
             $this->redirect('/admin/aktuality', 'Článek s takovým ID neexistuje');
+        }
 
         Permissions::checkError('aktuality', P_OWNED, $data['at_kdo']);
 
@@ -115,7 +117,7 @@ class Controller_Admin_Aktuality extends Controller_Admin
         }
         $this->redirect('/admin/aktuality', 'Článek změněn');
     }
-    public function remove($id = null)
+    public function remove($request)
     {
         if (!is_array(post('data')) && !is_array(get('u'))) {
             $this->redirect('/admin/aktuality');
@@ -158,7 +160,7 @@ class Controller_Admin_Aktuality extends Controller_Admin
             array(
                 'header' => 'Správa aktualit',
                 'prompt' => 'Opravdu chcete odstranit články:',
-                'returnURI' => Request::getReferer(),
+                'returnURI' => $request->getReferer(),
                 'data' => $data
             )
         );

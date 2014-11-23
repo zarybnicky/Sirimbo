@@ -6,8 +6,9 @@ class Controller_Member_Akce extends Controller_Member
     {
         Permissions::checkError('akce', P_VIEW);
     }
-    public function view($id = null)
+    public function view($request)
     {
+        $id = $request->getId();
         if ($id) {
             if (!($data = DBAkce::getSingleAkce($id, true))) {
                 $this->redirect('/member/akce', 'Neexistuje žádná taková akce');

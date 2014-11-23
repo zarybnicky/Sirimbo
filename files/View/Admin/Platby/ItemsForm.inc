@@ -29,8 +29,12 @@ $formTable = $this->table()
     ->data($form);
 ?>
 <form action="" method="post">
-    <?php echo $formTable, getReturnInput();?>
-    <button name="action" value="confirm">Uložit</button>&nbsp;<a href="<?= $this->backlink ?>">Zpět</a>
+    <?= $formTable ?>
+    <input type="hidden"
+           name="referer"
+           value="<?= $this->referer ?>" />
+    <button name="action" value="confirm">Uložit</button>
+    <a href="<?= $this->referer ?>">Zpět</a>
 </form>
 <br/>
 <?php

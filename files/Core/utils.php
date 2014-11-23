@@ -28,10 +28,6 @@ function session($field = null, $value = null) {
     return phpGlobal($_SESSION, $field, $value);
 }
 
-function server($field = null, $value = null) {
-    return phpGlobal($_SERVER, $field, $value);
-}
-
 function formatTime($str, $forDisplay) {
     if ($forDisplay) {
         return substr($str, 0, 5); //15:00:00
@@ -52,12 +48,4 @@ function formatTimestamp($str, $date_only = false) {
     $date = formatDate($date);
     $time = formatTime($time, 1);
     return implode(' ', array($date, $time));
-}
-
-function getReturnURI($default) {
-    return post('referer') ? post('referer') : $default;
-}
-
-function getReturnInput() {
-    return '<input type="hidden" name="referer" value="' . Request::getReferer() . '" />' . "\n";
 }

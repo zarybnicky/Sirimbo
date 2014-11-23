@@ -5,7 +5,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
     public function __construct() {
         Permissions::checkError('platby', P_OWNED);
     }
-    public function view($id = null) {
+    public function view($request) {
         $this->render(
             'files/View/Admin/Platby/StructureSymbolOverview.inc',
             array(
@@ -31,12 +31,12 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         }
         return $out;
     }
-    public function add($id = null) {
-        if (empty($_POST) || is_object($s = $this->checkPost('add'))) {
+    public function add($request) {
+        if (empty($_POST) || is_object($s = $this->checkPost('add', 0))) {
             if (!empty($_POST)) {
                 $this->redirect()->setMessage($s->getMessages());
             }
-            $this->_displayForm('add');
+            $this->_displayForm('add', 0);
             return;
         }
         $dueDate = $this->date('dueDate')->getPost();
@@ -87,7 +87,8 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             'Specifický symbol úspěšně přidán'
         );
     }
-    public function edit($id = null) {
+    public function edit($request) {
+        $id = $request->getId();
         if (!$id || !($data = DBPlatbyCategory::getSingle($id))) {
             $this->redirect(
                 post('referer') ? post('referer') : '/admin/platby/structure',
@@ -135,7 +136,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             );
         }
 
-        if (empty($_POST) || is_object($s = $this->checkPost('edit'))) {
+        if (empty($_POST) || is_object($s = $this->checkPost('edit', $id))) {
             if (!empty($_POST)) {
                 $this->redirect()->setMessage($s->getMessages());
             } else {
@@ -150,7 +151,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                 post('usePrefix', $data['pc_use_prefix']);
                 post('archive', $data['pc_archive']);
             }
-            $this->_displayForm('edit');
+            $this->_displayForm('edit', $id);
             return;
         }
         $dueDate = $this->date('dueDate')->getPost();
@@ -187,7 +188,8 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             'Specifický symbol úspěšně upraven'
         );
     }
-    public function remove($id = null) {
+    public function remove($request) {
+        $id = $request->getId();
         if (!$id || !($data = DBPlatbyCategory::getSingle($id))) {
             $this->redirect(
                 post('referer') ? post('referer') : '/admin/platby/structure',
@@ -249,7 +251,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                 array(
                     'id' => $id,
                     'name' => $data['pc_name'],
-                    'backlink' => Request::getReferer()
+                    'referer' => $request->getReferer()
                 )
             );
             return;
@@ -269,8 +271,8 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         else
             return array('groups' => $group, 'items' => $items);
     }
-    private function _displayForm($action) {
-        $id = Request::getID() ? Request::getID() : 0;
+    private function _displayForm($action, $id) {
+        $id = $id ? $id : 0;
 
         $groups = DBPlatbyCategory::getSingleWithGroups($id);
         foreach ($groups as &$array) {
@@ -300,11 +302,11 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                 'action' => $action,
                 'groups' => $groups,
                 'groupSelect' => $groupSelect,
-                'backlink' => Request::getReferer()
+                'referer' => $request->getReferer()
             )
         );
     }
-    protected function checkPost($action) {
+    protected function checkPost($action, $id) {
         $f = new Form();
         $dueDate = $this->date('dueDate')->getPost();
         if ($dueDate->getYear() == '0000')
@@ -343,7 +345,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         if (!post('archive')) {
             $f->checkBool(
                 !($active = DBPlatbyCategory::checkActiveSymbol(post('symbol')))
-                || ($action == 'edit' ? $active['pc_id'] == Request::getID() : false),
+                || ($action == 'edit' ? $active['pc_id'] == $id : false),
                 $active ? ('Už existuje aktivní specifický symbol se symbolem ' . post('symbol') . ' (' . $active['pc_name'] . ')') : '', ''
             );
         }

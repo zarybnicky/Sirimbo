@@ -6,7 +6,7 @@ class Controller_Member_Nabidka extends Controller_Member
         Permissions::checkError('nabidka', P_VIEW);
     }
     
-    public function view($id = null) {
+    public function view($request) {
         $this->redirect()->setMessage($this->_processPost());
 
         $data = array_map(

@@ -47,8 +47,12 @@ if (!empty($this->groupSelect)) {
 ?>
 
 <form action="" method="post">
-    <?php echo $mainForm, getReturnInput();?>
-    <button name="action" value="confirm">Uložit</button>&nbsp;<a href="<?= $this->backlink ?>">Zpět</a><br/><br/>
+    <?= $mainForm ?>
+    <input type="hidden"
+           name="referer"
+           value="<?= $this->referer ?>" />
+    <button name="action" value="confirm">Uložit</button>
+    <a href="<?= $this->referer ?>">Zpět</a><br/><br/>
 </form>
 <?php if ($this->action != 'add') : ?>
     <h3>Kategorie</h3>

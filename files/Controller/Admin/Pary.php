@@ -5,7 +5,7 @@ class Controller_Admin_Pary extends Controller_Admin
     public function __construct() {
         Permissions::checkError('pary', P_OWNED);
     }
-    public function view($id = null) {
+    public function view($request) {
         switch(post("action")) {
             case "remove":
                 if (!is_array(post("pary")))
@@ -68,7 +68,8 @@ class Controller_Admin_Pary extends Controller_Admin
             )
         );
     }
-    public function edit($id = null) {
+    public function edit($request) {
+        $id = $request->getId();
         if (!$id || !($data = DBPary::getSinglePar($id)))
             $this->redirect('/admin/pary', 'Pár s takovým ID neexistuje');
 

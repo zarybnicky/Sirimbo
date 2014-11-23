@@ -77,7 +77,9 @@
             </tr>
             <tr>
                 <td>
-                    <?= getReturnInput() ?>
+                    <input type="hidden"
+                           name="referer"
+                           value="<?= $this->referer ?>" />
                     <?= $this->submit(($this->action == 'add') ?
                                        'Přidat' :
                                        'Upravit'); ?>

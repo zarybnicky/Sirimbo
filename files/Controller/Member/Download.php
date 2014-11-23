@@ -4,7 +4,7 @@ class Controller_Member_Download extends Controller_Abstract
     public function __construct() {
         Permissions::checkError('dokumenty', P_VIEW);
     }
-    public function view($id = null) {
+    public function view($request) {
         if (!get('id'))
             $this->redirect('/member/dokumenty');
 

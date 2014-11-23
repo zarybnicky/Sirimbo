@@ -5,7 +5,8 @@ class Controller_Member_Clenove extends Controller_Member
     public function __construct() {
         Permissions::checkError('users', P_VIEW);
     }
-    public function view($id = null) {
+    public function view($request) {
+        $id = $request->getId();
         if (!$id || !($data = DBUser::getUserData($id)))
             $this->redirect('/member/clenove/structure');
 
@@ -15,11 +16,11 @@ class Controller_Member_Clenove extends Controller_Member
                 'fullName' => $data['u_prijmeni'] . ', ' . $data['u_jmeno'],
                 'email' => $data['u_email'],
                 'telefon' => $data['u_telefon'],
-                'referer' => Request::getReferer()
+                'referer' => $request->getReferer()
             )
         );
     }
-    public function skupiny($id = null) {
+    public function skupiny($request) {
         $currentID = -1;
         $currentKey = 0;
         $data = DBUser::getUsersWithSkupinaPlatby();
@@ -45,7 +46,7 @@ class Controller_Member_Clenove extends Controller_Member
             )
         );
     }
-    public function seznam($id = null) {
+    public function seznam($request) {
         $index = 0;
         $data = DBUser::getActiveUsers();
         foreach ($data as &$item) {
@@ -66,7 +67,7 @@ class Controller_Member_Clenove extends Controller_Member
             )
         );
     }
-    public function structure($id = null) {
+    public function structure($request) {
         $data = DBUser::getUsersWithSkupinaPlatby();
         $skupiny = array();
         $index = 0;
@@ -118,4 +119,3 @@ class Controller_Member_Clenove extends Controller_Member
         );
     }
 }
-?>

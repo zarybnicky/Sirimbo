@@ -29,7 +29,7 @@ function shutdownHandler() {
 
     ob_end_clean();
     Log::write("{$error['type']}: {$error['message']} in {$error['file']}: {$error['line']}");
-    if (Request::getURI() == 'error') {
+    if (strpos('error', $_SERVER['REQUEST_URI']) !== false) {
         Log::write("Recursive error message!");
         die('Fatal error: Rekurzivní smyčka přesměrování!');
     }
@@ -41,7 +41,7 @@ function errorHandler($severity, $message, $filepath, $line) {
     }
     ob_end_clean();
     Log::write("$severity: $message in $filepath: $line");
-    if (Request::getURI() == 'error') {
+    if (strpos('error', $_SERVER['REQUEST_URI']) !== false) {
         Log::write("Recursive error message!");
         die('Fatal error: Rekurzivní smyčka přesměrování!');
     }

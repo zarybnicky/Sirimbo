@@ -6,7 +6,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
     {
         Permissions::checkError('platby', P_OWNED);
     }
-    public function view($id = null)
+    public function view($request)
     {
         if (!empty($_POST)) {
             $this->_processPost();
@@ -14,6 +14,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
         $remaining = DBPlatbyRaw::getUnsorted();
         $remainingCount = count($remaining);
 
+        $id = $request->getId();
         if ($id && ($data = DBPlatbyRaw::getSingle($id))) {
             if ($data['pr_sorted']) {
                 $this->redirect(

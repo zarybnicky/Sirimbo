@@ -1,7 +1,7 @@
 <?php
 class Controller_Nopassword extends Controller_Abstract
 {
-    public function view($id = null) {
+    public function view($request) {
         if (post('action') == 'gen_pass' || post('action') == 'enter') {
             post('name', strtolower(post('name')));
 

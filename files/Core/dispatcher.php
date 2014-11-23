@@ -25,9 +25,9 @@ class Dispatcher
         }
         return new $class();
     }
-    public function dispatch($url, $action, $id = null)
+    public function dispatch($request)
     {
-        $controller = $this->getController($url);
+        $controller = $this->getController($request->getLiteralURI());
 
         if (!($controller instanceof Controller_Interface)) {
             throw new NotFoundRightException(
@@ -37,10 +37,11 @@ class Dispatcher
 
         View::$controller = $controller;
 
+        $action = $request->getAction();
         if (method_exists($controller, $action)) {
-            $controller->$action($id);
+            $controller->$action($request);
         } else {
-            $controller->view($id);
+            $controller->view($request);
         }
     }
 }
