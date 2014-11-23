@@ -51,16 +51,19 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
             $this->render('files/View/Member/Profil/CoupleData.inc');
             return;
         }
-        $stt_amend = 'AMEND_' . post('stt-trida');
-        $stt_bonus = 'BONUS_' . post('stt_trida');
-        $lat_amend = 'AMEND_' . post('lat-trida');
-        $lat_bonus = 'BONUS_' . post('lat_trida');
+        $stt_amend = constant('self::AMEND_' . post('stt-trida'));
+        $stt_bonus = constant('self::BONUS_' . post('stt-trida'));
+        $lat_amend = constant('self::AMEND_' . post('lat-trida'));
+        $lat_bonus = constant('self::BONUS_' . post('lat-trida'));
+
+        $stt_body_capped = post('stt-body') > 200 ? 200 : post('stt-body');
+        $lat_body_capped = post('lat-body') > 200 ? 200 : post('lat-body');
         
         $hodnoceni =
-            (post('stt-body') + 40 * post('stt-finale')) * self::$$stt_amend +
-            (post('lat-body') + 40 * post('lat-finale')) * self::$$lat_amend +
-            self::$$stt_bonus +
-            self::$$lat_bonus;
+            ($stt_body_capped + 40 * post('stt-finale')) * $stt_amend +
+            ($lat_body_capped + 40 * post('lat-finale')) * $lat_amend +
+            $stt_bonus +
+            $lat_bonus;
 
         DBPary::editTridaBody(
             User::getParID(),

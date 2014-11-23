@@ -16,7 +16,7 @@ define('FOOTER_TISK', FILES . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARAT
 
 define('LOG', ROOT . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'error.log');
 define('DEBUG_LOG', ROOT . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'debug.log');
-define('PHP_LOG', ROOT . 'log' . DIRECTORY_SEPARATOR . 'php.log');
+define('PHP_LOG', ROOT . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'php.log');
 
 mb_internal_encoding('UTF-8');
 

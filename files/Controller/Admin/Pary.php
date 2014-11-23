@@ -18,8 +18,9 @@ class Controller_Admin_Pary extends Controller_Admin
                 if ($data['gal_id'])
                     DBPary::noPartner($data['gal_id']);
 
-                $this->redirect()->setMessage('Pár odstraněn');
+                $this->redirect('/admin/pary', 'Pár odstraněn');
                 break;
+
             case 'add':
                 $old_gal = DBPary::getLatestPartner(post("add_partner"), 'm');
                 $old_guy = DBPary::getLatestPartner(post("add_partnerka"), 'f');
@@ -31,26 +32,32 @@ class Controller_Admin_Pary extends Controller_Admin
                 if ($old_gal['u_id'])
                     DBPary::noPartner($old_gal['u_id']);
 
-                $this->redirect()->setMessage('Pár přidán');
+                $this->redirect('/admin/pary', 'Pár přidán');
                 break;
+
             case 'edit':
                 $pary = post('pary');
                 if ($pary[0])
                     $this->redirect('/admin/pary/edit/' . $pary[0]);
+                else
+                    $this->redirect('/admin/pary');
                 break;
         }
-        $data = DBPary::getActivePary();
-        foreach ($data as &$row) {
-            $new_data = array(
-                'checkBox'      => '<input type="checkbox" name="pary[]" value="' . $row["p_id"] . '" />',
-                'fullNameMan'   => $row['guy_surname'] . ', ' . $row['guy_name'],
-                'fullNameWoman' => $row['gal'] ? ($row['gal_surname'] . ', ' . $row['gal_name']) : '',
-                'standart'      => $row['p_stt_trida'] . ' ' . $row['p_stt_body'] . 'F' . $row['p_stt_finale'],
-                'latina'        => $row['p_lat_trida'] . ' ' . $row['p_lat_body'] . 'F' . $row['p_lat_finale'],
-                'hodnoceni'     => $row['p_hodnoceni']
-            );
-            $row = $new_data;
-        }
+
+        $data = array_map(
+            function ($item) {
+                return array(
+                    'checkBox' => $this->checkbox('pary[]', $item['p_id'])->render(),
+                    'fullNameMan' => $item['guy_surname'] . ', ' . $item['guy_name'],
+                    'fullNameWoman' => $item['gal'] ? ($item['gal_surname'] . ', ' . $item['gal_name']) : '',
+                    'standart' => $item['p_stt_trida'] . ' ' . $item['p_stt_body'] . 'F' . $item['p_stt_finale'],
+                    'latina' => $item['p_lat_trida'] . ' ' . $item['p_lat_body'] . 'F' . $item['p_lat_finale'],
+                    'hodnoceni' => $item['p_hodnoceni']
+                );
+            },
+            DBPary::getActivePary()
+        );
+
         $this->render(
             'files/View/Admin/Pary/Overview.inc',
             array(
@@ -86,23 +93,26 @@ class Controller_Admin_Pary extends Controller_Admin
         $stt_body =
             (post('stt-body') && is_numeric(post('stt-body')))
             ? post('stt-body') : 0;
+        $stt_body_capped = $stt_body > 200 ? 200 : $stt_body;
         $stt_finale =
             (post('stt-finale') && is_numeric(post('stt-finale')))
             ? post('stt-finale') : 0;
         $lat_body =
             (post('lat-body') && is_numeric(post('lat-body')))
             ? post('lat-body') : 0;
+        $lat_body_capped = $lat_body > 200 ? 200 : $lat_body;
         $lat_finale =
             (post('lat-finale') && is_numeric(post('lat-finale')))
             ? post('lat-finale') : 0;
 
-        $stt_amend = constant("AMEND_" . post('stt-trida'));
-        $lat_amend = constant("AMEND_" . post('lat-trida'));
-        $stt_base = ($stt_body + 40 * $stt_finale) * $stt_amend;
-        $lat_base = ($lat_body + 40 * $lat_finale) * $lat_amend;
+        require_once 'files/Controller/Member/Profil/Par.php';
+        $stt_amend = constant('Controller_Member_Profil_Par::AMEND_' . post('stt-trida'));
+        $lat_amend = constant('Controller_Member_Profil_Par::AMEND_' . post('lat-trida'));
+        $stt_base = ($stt_body_capped + 40 * $stt_finale) * $stt_amend;
+        $lat_base = ($lat_body_capped + 40 * $lat_finale) * $lat_amend;
 
-        $stt_bonus = constant("BONUS_" . post('stt-trida'));
-        $lat_bonus = constant("BONUS_" . post('lat-trida'));
+        $stt_bonus = constant('Controller_Member_Profil_Par::BONUS_' . post('stt-trida'));
+        $lat_bonus = constant('Controller_Member_Profil_Par::BONUS_' . post('lat-trida'));
 
         $hodnoceni = $stt_base + $lat_base + $stt_bonus + $lat_bonus;
 
@@ -113,4 +123,3 @@ class Controller_Admin_Pary extends Controller_Admin
         $this->redirect('/admin/pary', 'Třída a body změněny');
     }
 }
-?>

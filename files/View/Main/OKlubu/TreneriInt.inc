@@ -88,3 +88,4 @@
       <li>absolvent kvalifikačního studia pro porotce a trenéry 3. třídy tanečního sportu</li>
     </ul>
   </div>
+</div>
