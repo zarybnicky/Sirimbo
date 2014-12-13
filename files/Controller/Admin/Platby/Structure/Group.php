@@ -18,8 +18,8 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
             $new_data['name'] = $array['pg_name'];
             $new_data['type'] = $array['pg_type'] ? 'Členské příspěvky' : 'Běžné platby';
             $new_data['buttons'] =
-                $this->getEditLink('/admin/platby/structure/category/edit/' . $array['pg_id'])
-                . $this->getRemoveLink('/admin/platby/structure/category/remove/' . $array['pg_id']);
+                $this->getEditLink('/admin/platby/structure/group/edit/' . $array['pg_id'])
+                . $this->getRemoveLink('/admin/platby/structure/group/remove/' . $array['pg_id']);
             $out[] = $new_data;
         }
         return $out;

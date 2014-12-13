@@ -277,8 +277,8 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             $new_data = array(
                 'buttons' => '<form action="" method="post">'
                 . $this->getUnlinkGroupButton($array['pg_id'])
-                . $this->getEditLink('/admin/platby/structure/group/edit/' . $array['pg_id'])
-                . $this->getRemoveLink('/admin/platby/structure/group/remove/' . $array['pg_id'])
+                . $this->getEditLink('/admin/platby/structure/category/edit/' . $array['pg_id'])
+                . $this->getRemoveLink('/admin/platby/structure/category/remove/' . $array['pg_id'])
                 . '</form>',
                 'type' => ($array['pg_type'] == '1' ? 'Členské příspěvky' : 'Běžné platby'),
                 'name' => $array['pg_name'],
