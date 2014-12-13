@@ -20,10 +20,10 @@ $mainForm = $this->table()
             'value' => '<input type="text" name="amount" value="' . post('amount') . '"/>'
         ), array(
             'desc' => 'Splatnost:',
-            'value' => $this->date('dueDate')
+            'value' => $this->date('dueDate')->render()
         ), array(
             'desc' => 'Platnost:',
-            'value' => $this->date('validRange')->range()
+            'value' => $this->date('validRange')->range()->render()
         ), array(
             'desc' => 'Povolit prefix roku?:',
             'value' => (string) $this->checkbox('usePrefix', '1')
@@ -31,14 +31,16 @@ $mainForm = $this->table()
             'desc' => 'Archivovat?:',
             'value' => (string) $this->checkbox('archive', '1')
         )
-));
+))
+->render();
 if (!empty($this->groups)) {
     $groupForm = $this->table()
         ->column('buttons', '', '', 'width:75px')
         ->column('type', 'Typ')
         ->column('name', 'Jméno')
         ->column('base', 'Násobitel částky')
-        ->data($this->groups);
+        ->data($this->groups)
+        ->render();
 }
 if (!empty($this->groupSelect)) {
     $groupSelectBox = $this->select('group')
