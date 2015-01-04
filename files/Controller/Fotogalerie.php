@@ -35,7 +35,7 @@ class Controller_Fotogalerie extends Controller_Abstract
             array(
                 'nadpis' => $dir['gd_name'],
                 'photos' => $photos,
-                'sidebar' => $this->sidebar()
+                'sidebar' => $this->sidemenu()
             )
         );
     }
@@ -65,12 +65,12 @@ class Controller_Fotogalerie extends Controller_Abstract
                 'prevURI'   => $hasPrev ? $parent_dir[$current - 1]['gf_id'] : '',
                 'nextURI'   => $hasNext ? $parent_dir[$current + 1]['gf_id'] : '',
                 'returnURI' => '/fotogalerie' . ($data['gf_id_rodic'] > 0 ? ('/' . $data['gf_id_rodic']) : ''),
-                'sidebar'   => $this->sidebar()
+                'sidebar'   => $this->sidemenu()
             )
         );
     }
 
-    public function sidebar() {
+    public function sidemenu() {
         $dirs = DBGalerie::getDirs(true, true);
 
         if (empty($dirs)) {
