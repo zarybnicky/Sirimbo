@@ -29,8 +29,7 @@ class Controller_Admin_Aktuality extends Controller_Admin
         $data = array_map(
             function($item) {
                 return array(
-                    'checkBox' => $this->checkbox('aktuality[]', $item['at_id'])
-                                       ->readonly(Permissions::check('aktuality', P_OWNED, $item['at_kdo'])),
+                    'checkBox' => $this->checkbox('aktuality[]', $item['at_id'])->render(),
                     'name' => $item['at_jmeno'],
                     'category' => ($item['at_kat'] == AKTUALITY_CLANKY ? 'Články' :
                                    ($item['at_kat'] == AKTUALITY_VIDEA ? 'Videa' :
