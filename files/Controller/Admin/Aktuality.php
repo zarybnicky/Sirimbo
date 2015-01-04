@@ -120,7 +120,7 @@ class Controller_Admin_Aktuality extends Controller_Admin
             $this->redirect('/admin/aktuality');
         }
         if (!empty($_POST) && post('action') == 'confirm') {
-            foreach (post('aktuality') as $id) {
+            foreach (post('data') as $id) {
                 $data = DBAktuality::getSingleAktualita($id);
                 
                 if (Permissions::check('aktuality', P_OWNED, $data['at_kdo'])) {
