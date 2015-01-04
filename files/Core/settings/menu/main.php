@@ -13,7 +13,7 @@ return array(
     array(
         'Novinky',
         '/aktualne/clanky',
-        include SETTINGS . '/menu/novinky.php'
+        array()
     ),
     array(
         'Nabízíme',

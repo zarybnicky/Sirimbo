@@ -46,8 +46,8 @@
             </tr><tr>
                 <td colspan="2">
                     <a href="/admin/aktuality">Zpět</a>
+                    <button type="submit" name="action" value="foto">Přidat fotky</button>
                     <?php if ($this->action == 'add'): ?>
-                        <button type="submit" name="action" value="foto">Přidat fotky</button>
                         <button type="submit" name="action" value="save">Přeskočit a uložit</button>
                     <?php else: ?>
                         <button type="submit">Upravit</button>

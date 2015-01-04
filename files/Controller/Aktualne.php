@@ -38,14 +38,6 @@ class Controller_Aktualne extends Controller_Abstract
     public function kratke_zpravy($request) {
         $this->_aktualne('Krátké zprávy', AKTUALITY_KRATKE);
     }
-    public function navbar() {
-        return parent::navbar() .
-            new Navbar(
-                include SETTINGS . '/menu/novinky.php',
-                false
-            );
-    }
-
     private function _aktualne($nadpis = "", $type = null) {
         $data = DBAktuality::getAktuality($type);
 

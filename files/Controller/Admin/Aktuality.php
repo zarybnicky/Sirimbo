@@ -96,8 +96,11 @@ class Controller_Admin_Aktuality extends Controller_Admin
             $this->render("files/View/Admin/Aktuality/Form.inc");
             return;
         }
-        if (post('kat') != $data['at_kat'] || post('jmeno') != $data['at_jmeno']
-            || post('text') != $data['at_text'] || post('summary') != $data['at_preview']) {
+        if (post('kat') != $data['at_kat']
+            || post('jmeno') != $data['at_jmeno']
+            || post('text') != $data['at_text']
+            || post('summary') != $data['at_preview']
+        ) {
             DBAktuality::editAktualita(
                 $id, post('kat'), post('jmeno'), post('text'),
                 post('summary'), $data['at_foto'], $data['at_foto_main']
