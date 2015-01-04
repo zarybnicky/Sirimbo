@@ -325,11 +325,13 @@ class Controller_Admin_Users extends Controller_Admin
         $i = $pager->getItemsPerPage() * ($pager->getCurrentPage() - 1);
         foreach ($data as &$item) {
             $new_data = array(
-                'checkBox' => (string) $this->checkbox('users[]', $item['u_id']),
+                'checkBox' => $this->checkbox('users[]', $item['u_id'])
+                                   ->render(),
                 'index'     => ++$i . '. ',
                 'varSymbol' => User::varSymbol($item['u_id']),
                 'fullName'  => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
-                'colorBox'  => $this->colorbox($item['s_color_rgb'], $item['s_description']),
+                'colorBox'  => $this->colorbox($item['s_color_rgb'], $item['s_description'])
+                                    ->render(),
                 'groupInfo' => $group_lookup[$item['u_group']]
             );
             switch($action) {
