@@ -90,7 +90,12 @@ class Controller_Admin_Aktuality extends Controller_Admin
             post('summary', $data['at_preview']);
             post("text", stripslashes($data["at_text"]));
 
-            $this->render("files/View/Admin/Aktuality/Form.inc");
+            $this->render(
+                "files/View/Admin/Aktuality/Form.inc",
+                array(
+                    'action' => 'edit'
+                )
+            );
             return;
         }
         if (post('kat') != $data['at_kat'] || post('jmeno') != $data['at_jmeno']

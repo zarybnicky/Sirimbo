@@ -248,7 +248,7 @@ class Controller_Admin_Galerie extends Controller_Admin
     private function _createThumbnail($file, $thumbFile)
     {
         $filetype = image_type_to_mime_type(exif_imagetype($file));
-        if (!$filetype || !array_key_exists($filetype, $this->imageTypes)) {
+        if (!$filetype || !array_key_exists($filetype, $this->imageType)) {
             unlink($file);
             return false;
         }
