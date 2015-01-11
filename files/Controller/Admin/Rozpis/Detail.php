@@ -144,61 +144,65 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
         }
         
         switch (post('action')) {
-            case 'overlap':
-                //Sort by begin time
-                usort(
-                    $items,
-                    function ($a, $b) {
-                        $a = $a['ri_od'];
-                        $b = $b['ri_od'];
-                        return $a < $b ? -1 : ($a == $b ? 0 : 1);
-                    }
+        case 'overlap':
+            //Sort by begin time
+            usort(
+                $items,
+                function ($a, $b) {
+                    $a = $a['ri_od'];
+                    $b = $b['ri_od'];
+                    return $a < $b ? -1 : ($a == $b ? 0 : 1);
+                }
+            );
+            
+            $lastEnd = DateTime::createFromFormat('H:i', '00:00');
+            foreach ($items as &$item) {
+                $start = DateTime::createFromFormat('H:i:s', $item['ri_od']);
+                $end = DateTime::createFromFormat('H:i:s', $item['ri_do']);
+                $length = $start->diff($end);
+                
+                if ($lastEnd > $start) {
+                    $start = clone $lastEnd;
+                    $end = clone $start;
+                    $end->add($length);
+                }
+                if ($start > $end) {
+                    $end = clone $start;
+                    $end->add($length);
+                }
+                $lastEnd = $end;
+                
+                $item['ri_od'] = $start->format('H:i:s');
+                $item['ri_do'] = $end->format('H:i:s');
+            }
+            break;
+            
+        case 'add_multiple':
+            if (is_object($f = $this->checkAddMultiple())) {
+                $this->redirect()->setMessage($f->getMessages());
+                break;
+            }
+            
+            $start = DateTime::createFromFormat('H:i', post('add_multi_od'));
+            $length = new DateInterval('PT' . post('add_multi_len') . 'M');
+            $end = clone $start;
+            $end->add($length);
+            
+            for ($i = 0; $i < post('add_multi_num'); $i++) {
+                $newId = DBRozpis::addRozpisItem(
+                    $id,
+                    '0',
+                    $start->format('H:i:s'),
+                    $end->format('H:i:s'),
+                    '0'
                 );
-
-                $lastEnd = DateTimeImmutable::createFromFormat('H:i', '00:00');
-                foreach ($items as &$item) {
-                    $start = DateTimeImmutable::createFromFormat('H:i:s', $item['ri_od']);
-                    $end = DateTimeImmutable::createFromFormat('H:i:s', $item['ri_do']);
-                    $length = $start->diff($end);
-
-                    if ($lastEnd > $start) {
-                        $start = $lastEnd;
-                        $end = $start->add($length);
-                    }
-                    if ($start > $end) {
-                        $end = $start->add($length);
-                    }
-                    $lastEnd = $end;
-                    
-                    $item['ri_od'] = $start->format('H:i:s');
-                    $item['ri_do'] = $end->format('H:i:s');
-                }
-                break;
+                $items[] = DBRozpis::getRozpisItemLesson($newId);
                 
-            case 'add_multiple':
-                if (is_object($f = $this->checkAddMultiple())) {
-                    $this->redirect()->setMessage($f->getMessages());
-                    break;
-                }
-
-                $start = DateTimeImmutable::createFromFormat('H:i', post('add_multi_od'));
-                $length = new DateInterval('PT' . post('add_multi_len') . 'M');
-                $end = $start->add($length);
-                
-                for($i = 0; $i < post('add_multi_num'); $i++) {
-                    $newId = DBRozpis::addRozpisItem(
-                        $id,
-                        '0',
-                        $start->format('H:i:s'),
-                        $end->format('H:i:s'),
-                        '0'
-                    );
-                    $items[] = DBRozpis::getRozpisItemLesson($newId);
-                    
-                    $start = $end;
-                    $end = $start->add($length);
-                }
-                break;
+                $start = $end;
+                $end = clone $start;
+                $end->add($length);
+            }
+            break;
         }
 
         return $items;
