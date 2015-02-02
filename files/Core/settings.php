@@ -155,7 +155,7 @@ public static $permissions = array(
     'users' => array(
         'name' => "Uživatelé",
         'default' => P_VIEW,
-        P_NONE => 1, P_VIEW => 1, P_ADMIN => 1    ),
+        P_NONE => 1, P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1    ),
     'main' => array(
         'name' => "Veřejná část",
         'default' => P_VIEW,

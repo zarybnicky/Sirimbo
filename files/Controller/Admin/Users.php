@@ -73,6 +73,7 @@ class Controller_Admin_Users extends Controller_Admin
         );
     }
     public function add($id = null) {
+        Permissions::checkError('users', P_ADMIN);
         if (empty($_POST) || is_object($f = $this->_checkData('add'))) {
             if (!empty($_POST))
                 $this->redirect()->setMessage($f->getMessages());
@@ -90,6 +91,7 @@ class Controller_Admin_Users extends Controller_Admin
         $this->redirect('/admin/users', 'Uživatel úspěšně přidán');
     }
     public function edit($id = null) {
+        Permissions::checkError('users', P_ADMIN);
         if (!$id || !($data = DBUser::getUserData($id)))
             $this->redirect('/admin/users', 'Uživatel s takovým ID neexistuje');
         if (!$data['u_confirmed'])
@@ -135,6 +137,7 @@ class Controller_Admin_Users extends Controller_Admin
         $this->render('files/View/Admin/Users/Platby.inc');
     }
     public function unconfirmed($id = null) {
+        Permissions::checkError('users', P_ADMIN);
         if (empty($_POST) || !is_array(post('users'))) {
             $users = DBUser::getNewUsers();
             if (empty($users)) {
@@ -196,6 +199,7 @@ class Controller_Admin_Users extends Controller_Admin
         }
     }
     public function duplicate($id = null) {
+        Permissions::checkError('users', P_ADMIN);
         if (!empty($_POST) && post('action') == 'remove' && post('users') && !empty($_POST['users']))
             $this->redirect('/admin/users/remove?' . http_build_query(array('u' => post('users'))));
 
