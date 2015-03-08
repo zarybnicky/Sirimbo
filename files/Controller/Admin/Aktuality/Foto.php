@@ -13,6 +13,7 @@ class Controller_Admin_Aktuality_Foto extends Controller_Admin_Aktuality
         }
         if (empty($_POST) || !post('foto')) {
             if (get('dir') === null) {
+                dump($article);
                 if ($article['at_foto']) {
                     $this->redirect(
                         '/admin/aktuality/foto/' . $id . '?dir=' . $article['at_foto']

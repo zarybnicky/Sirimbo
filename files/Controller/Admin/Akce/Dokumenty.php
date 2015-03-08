@@ -47,8 +47,7 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Admin_Akce
             'kapacita' => $akce['a_kapacita'],
             'volno' => $akce['a_kapacita'] - $booked,
             'showForm' => Permissions::check('akce', P_MEMBER) && !$akce['a_lock'],
-            'canEdit' => Permissions::check('akce', P_OWNED),
-            'info' => nl2br($akce['a_info'])
+            'canEdit' => Permissions::check('akce', P_OWNED)
         );
         
         $documents = array_map(

@@ -3,7 +3,6 @@ class Renderer
 {
     protected $cache;
     protected $vars;
-    protected $file;
 
     public function __construct() {
         $this->vars = array();
@@ -33,14 +32,14 @@ class Renderer
     public function render($name, array $vars = array()) {
         array_push($this->cache, $this->vars);
         $this->vars = $vars;
-        $this->file = ROOT . DIRECTORY_SEPARATOR . $name;
+        $file = ROOT . DIRECTORY_SEPARATOR . $name;
 
-        if (!file_exists($this->file)) {
-            Log::write('Could not find file "' . $this->file . '"');
+        if (!file_exists($file)) {
+            Log::write('Could not find file "' . $file . '"');
             throw new NotFoundRightException("Soubor nebyl nalezen!");
         }
         ob_start();
-        include $this->file;
+        include $file;
 
         $this->vars = array_pop($this->cache);
 

@@ -21,14 +21,14 @@ class Controller_Admin_Rozpis extends Controller_Admin
                                 $id, $item['r_trener'], $item['r_kde'],
                                 $item['r_datum'], post($id) ? '1' : '0', $item['r_lock'] ? '1' : '0'
                             );
-                            $n = new Novinky(User::getUserID());
+                            $news = new Novinky(User::getUserID());
                             if (!post($id)) {
-                                $n->rozpis()->remove(
+                                $news->rozpis()->remove(
                                     (new Date($item['r_datum']))->getDate(Date::FORMAT_SIMPLIFIED),
                                     $item['u_jmeno'] . ' ' . $item['u_prijmeni']
                                 );
                             } else {
-                                $n->rozpis()->add(
+                                $news->rozpis()->add(
                                     '/member/rozpis',
                                     (new Date($item['r_datum']))->getDate(Date::FORMAT_SIMPLIFIED),
                                     $item['u_jmeno'] . ' ' . $item['u_prijmeni']
@@ -49,8 +49,8 @@ class Controller_Admin_Rozpis extends Controller_Admin
                     if (Permissions::check('rozpis', P_OWNED, $trener['u_id'])) {
                         DBRozpis::removeRozpis($item);
                         if (strcmp($data['r_datum'], date('Y-m-d')) > 0 && $data['r_visible']) {
-                            $n = new Novinky(User::getUserID());
-                            $n->rozpis()->remove(
+                            $news = new Novinky(User::getUserID());
+                            $news->rozpis()->remove(
                                 (new Date($data['r_datum']))->getDate(Date::FORMAT_SIMPLIFIED),
                                 $trener['u_jmeno'] . ' ' . $trener['u_prijmeni']
                             );
@@ -103,8 +103,9 @@ class Controller_Admin_Rozpis extends Controller_Admin
                                                 ->readonly($isTrainer),
                     'visible' => (
                         $isAdmin ?
-                        (string) $this->checkbox($item['r_id'], '1')
-                                      ->defaultState($item['r_visible']) :
+                        $this->checkbox($item['r_id'], '1')
+                             ->set($item['r_visible'])
+                             ->render() :
                         ('&nbsp;' . ($item['r_visible'] ? '&#10003;' : '&#10799;'))
                     ),
                     'links' => (
@@ -153,8 +154,8 @@ class Controller_Admin_Rozpis extends Controller_Admin
             $trener_data = DBUser::getUserData(post('trener'));
             $trener_name = $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni'];
 
-            $n = new Novinky(User::getUserID());
-            $n->rozpis()->add(
+            $news = new Novinky(User::getUserID());
+            $news->rozpis()->add(
                 '/member/rozpis',
                 $datum->getDate(Date::FORMAT_SIMPLIFIED),
                 $trener_name
@@ -213,14 +214,14 @@ class Controller_Admin_Rozpis extends Controller_Admin
             $trener_data = DBUser::getUserData(post('trener'));
             $trener_name = $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni'];
 
-            $n = new Novinky(User::getUserID());
+            $news = new Novinky(User::getUserID());
             if ($act == 'remove') {
-                $n->rozpis()->$act(
+                $news->rozpis()->$act(
                     $datum->getDate(Date::FORMAT_SIMPLIFIED),
                     $trener_name
                 );
             } else {
-                $n->rozpis()->$act(
+                $news->rozpis()->$act(
                     '/member/rozpis',
                     $datum->getDate(Date::FORMAT_SIMPLIFIED),
                     $trener_name

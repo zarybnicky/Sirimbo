@@ -4,12 +4,14 @@ class Sidebar {
     protected $request;
     protected $toplevel;
 
-    public function __construct($request, $data) {
-        $thie->request = $request;
+    public function __construct($data, $uri)
+    {
         $this->data = $data;
+        $this->uri = $uri;
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         $out = '<div class="container full menu-side"><ul>';
 
         foreach ($this->data as $item) {
@@ -20,7 +22,7 @@ class Sidebar {
             }
 
 
-            if (strripos($this->request->getLiteralURI(), trim($item[1], '/')) === 0) {
+            if (strripos($this->uri, trim($item[1], '/')) === 0) {
                 $out .= '<a class="emph no-a">';
             } elseif ($item[1]) {
                 $out .= '<a href="' . $item[1] . '">';

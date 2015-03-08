@@ -99,9 +99,10 @@ class Controller_Admin_Nabidka extends Controller_Admin
                     ),
                     'visible' => (
                         $isAdmin ?
-                        (string) $this->checkbox($item['n_id'], '1')
-                                      ->defaultState($item['n_visible']) :
-                        '&nbsp;' . ($item['n_visible'] ? '&#10003;' : '&#10799;')   
+                        $this->checkbox($item['n_id'], '1')
+                             ->set($item['n_visible'])
+                             ->render() :
+                        ('&nbsp;' . ($item['n_visible'] ? '&#10003;' : '&#10799;'))
                     ),
                     'checkBox' => (
                         $isTrainer ?

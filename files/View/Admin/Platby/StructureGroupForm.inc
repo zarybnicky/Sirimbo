@@ -11,7 +11,7 @@ $mainForm = (new TableHelper())->table()
     ->data(array(
         array(
                 'desc' => 'Typ:',
-                'value' => '<label>' . $this->radio('type', '0')->defaultState(true) . 'Běžné platby</label><br/>' .
+                'value' => '<label>' . $this->radio('type', '0')->set(true) . 'Běžné platby</label><br/>' .
                     '<label>' . $this->radio('type', '1') . 'Členské příspěvky</label>'
         ), array(
                 'desc' => 'Jméno:',

@@ -1,7 +1,8 @@
 <?php
 class Controller_Aktualne extends Controller_Abstract
 {
-    public function view($request) {
+    public function view($request)
+    {
         $id = $request->getID();
         if (!$id || !($data = DBAktuality::getSingleAktualita($id))) {
             $this->redirect('/aktualne/posledni');
@@ -26,19 +27,24 @@ class Controller_Aktualne extends Controller_Abstract
         );
         return;
     }
-    public function posledni($request) {
+
+    public function posledni($request)
+    {
         $this->_aktualne("Nejnovější články");
     }
-    public function videa($request) {
-        $this->_aktualne('Videa', AKTUALITY_VIDEA);
-    }
-    public function clanky($request) {
+
+    public function clanky($request)
+    {
         $this->_aktualne('Články', AKTUALITY_CLANKY);
     }
-    public function kratke_zpravy($request) {
+
+    public function kratke_zpravy($request)
+    {
         $this->_aktualne('Krátké zprávy', AKTUALITY_KRATKE);
     }
-    private function _aktualne($nadpis = "", $type = null) {
+
+    private function _aktualne($nadpis = "", $type = null)
+    {
         $data = DBAktuality::getAktuality($type);
 
         if (!$data) {
@@ -61,7 +67,7 @@ class Controller_Aktualne extends Controller_Abstract
                     'jmeno'     => $item['at_jmeno'],
                     'timestamp' => $item['at_timestamp_add'],
                     'canEdit'   => Permissions::check('aktuality', P_OWNED, $item['at_kdo']),
-                    'preview'   => $type != AKTUALITY_VIDEA ? stripslashes(nl2br($item['at_preview'])) : '',
+                    'preview'   => stripslashes(nl2br($item['at_preview'])),
                     'title_photo_uri' => '/galerie/' . $photo_uri,
                     'title_photo_thumb_uri' => '/galerie/thumbnails/' . $photo_uri
                 );

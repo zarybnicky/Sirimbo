@@ -25,29 +25,29 @@ class Controller_Admin_Galerie extends Controller_Admin
     public function view($request)
     {
         switch(post('action')) {
-            case 'galerie/save':
-                $this->_processSave();
-                break;
-            case 'galerie/scan':
-                $this->_scan();
-                break;
-            case 'directory':
-            case 'directory/edit':
-                $galerie = post('galerie');
-                if (isset($galerie[0])) {
-                    $this->redirect(
-                        '/admin/galerie/' . post('action') . '/' . $galerie[0]
-                    );
-                }
-                break;
-            case 'directory/remove':
-                if (is_array(post('galerie'))) {
-                    $this->redirect(
-                        '/admin/galerie/directory/remove?'
-                            . http_build_query(array('u' => post('galerie')))
-                    );
-                }
-                break;
+        case 'galerie/save':
+            $this->_processSave();
+            break;
+        case 'galerie/scan':
+            $this->_scan();
+            break;
+        case 'directory':
+        case 'directory/edit':
+            $galerie = post('galerie');
+            if (isset($galerie[0])) {
+                $this->redirect(
+                    '/admin/galerie/' . post('action') . '/' . $galerie[0]
+                );
+            }
+            break;
+        case 'directory/remove':
+            if (is_array(post('galerie'))) {
+                $this->redirect(
+                    '/admin/galerie/directory/remove?'
+                    . http_build_query(array('u' => post('galerie')))
+                );
+            }
+            break;
         }
         $this->_displayOverview();
     }
@@ -239,7 +239,7 @@ class Controller_Admin_Galerie extends Controller_Admin
             if (is_dir($file_list[$key])) {
                 $out_dirs[$file_list[$key]] = $dir_name;
                 $this->_recursiveDirs($file_list[$key], $out_dirs, $out_files);
-            } elseif(is_file($file_list[$key])) {
+            } elseif (is_file($file_list[$key])) {
                 $out_files[$file_list[$key]] = $dir_name;
             }
         }
@@ -248,7 +248,7 @@ class Controller_Admin_Galerie extends Controller_Admin
     private function _createThumbnail($file, $thumbFile)
     {
         $filetype = image_type_to_mime_type(exif_imagetype($file));
-        if (!$filetype || !array_key_exists($filetype, $this->imageTypes)) {
+        if (!$filetype || !array_key_exists($filetype, $this->imageType)) {
             unlink($file);
             return false;
         }
@@ -303,10 +303,13 @@ class Controller_Admin_Galerie extends Controller_Admin
         $data = DBGalerie::getDirs(true, true);
         foreach ($data as &$item) {
             $new_data = array(
-            	'checkBox' => (string) $this->checkbox('galerie[]', $item['gd_id']),
+            	'checkBox' => $this->checkbox('galerie[]', $item['gd_id'])
+                                   ->render(),
                 'name'     => str_repeat('&nbsp;->', $item['gd_level'] - 1)
                     . ' ' . $item['gd_name'],
-                'hidden'   => (string) $this->checkbox($item['gd_id'], '1')->defaultState($item['gd_hidden'])
+                'hidden'   => $this->checkbox($item['gd_id'], '1')
+                                   ->set($item['gd_hidden'])
+                                   ->render()
             );
             $item = $new_data;
         }
@@ -316,4 +319,3 @@ class Controller_Admin_Galerie extends Controller_Admin
         );
     }
 }
-?>

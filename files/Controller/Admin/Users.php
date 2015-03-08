@@ -338,8 +338,8 @@ class Controller_Admin_Users extends Controller_Admin
                 case 'status':
                     $new_data['skupina'] = '<input type="hidden" name="save[]" value="' . $item['u_id'] . '"/>'
                                            . $skupinyselect->name($item['u_id'] . '-skupina')->value($item['u_skupina']);
-                    $new_data['dancer'] = '<label>' . $this->checkbox($item['u_id'] . '-dancer', '1')->defaultState($item['u_dancer']) . '</label>';
-                    $new_data['system'] = '<label>' . $this->checkbox($item['u_id'] . '-system', '1')->defaultState($item['u_system']) . '</label>';
+                    $new_data['dancer'] = '<label>' . $this->checkbox($item['u_id'] . '-dancer', '1')->set($item['u_dancer']) . '</label>';
+                    $new_data['system'] = '<label>' . $this->checkbox($item['u_id'] . '-system', '1')->set($item['u_system']) . '</label>';
                     break;
                 case 'info':
                 default:

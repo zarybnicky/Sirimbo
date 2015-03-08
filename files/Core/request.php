@@ -125,20 +125,12 @@ class Request
     public function getURI() {
         return $this->uri;
     }
-    public function getRawURIParts() {
-        return $this->rawUriParts;
-    }
+
     public function getLiteralURI() {
         if (empty($this->uriPartsLiteral) || $this->uriPartsLiteral[0] == '') {
             return $this->defaultPath;
         }
         return implode('/', $this->uriPartsLiteral);
-    }
-    public function getSection() {
-        return isset($this->rawUriParts[0]) ? $this->rawUriParts[0] : $this->defaultPath;
-    }
-    public function getCanonical() {
-        return self::getLiteralURI();
     }
     public function getAction() {
         return $this->action;

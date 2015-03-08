@@ -11,7 +11,7 @@ echo $this->notice($this->redirect()->getMessage());
         <td><?php
             if (!$this->isAdmin) { ?>
             <select name="trener">
-                <option value="<?php echo User::getUserID();?>">Já</option>
+                <option value="<?= User::getUserID();?>">Já</option>
             </select><?php
             } else {
                 echo $this->userSelect()
@@ -21,21 +21,21 @@ echo $this->notice($this->redirect()->getMessage());
         </td>
     </tr><tr>
         <td>Místo (*): </td>
-        <td><input type="text" name="kde" value="<?php echo post("kde"); ?>" /></td>
+        <td><input type="text" name="kde" value="<?= post("kde"); ?>" /></td>
     </tr><tr>
         <td>Datum: (*)</td>
-        <td><?php echo $this->date('datum')->textBox();?></td>
+        <td><?= $this->date('datum')->textBox();?></td>
     </tr><tr>
         <td>Viditelný: </td>
         <td><label><?php
             if ($this->isAdmin)
-                echo $this->checkbox('visible', 'visible')->defaultState(false);
+                echo $this->checkbox('visible', 'visible')->set(false);
             else
                 echo (post('visible') ? '&#10003;' : '&#10799;');
         ?></label></td>
     </tr><tr>
         <td>Uzamknout: </td>
-        <td><label><?php echo $this->checkbox('lock', 'lock')?></label></td>
+        <td><label><?= $this->checkbox('lock', 'lock')?></label></td>
     </tr><tr>
         <td><button type="submit"><?php
             echo ($this->action == 'add' ? 'Přidat' : 'Upravit');

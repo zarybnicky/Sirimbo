@@ -23,36 +23,36 @@
         ?>
           <tr>
             <td>
-              <?php echo $userselect->name($item['id'] . '-partner'); ?>
+              <?= $userselect->name($item['id'] . '-partner'); ?>
             </td>
             <td>
               <input type="text"
                      size="5"
-                     name="<?php echo $item['id']; ?>-od"
-                     value="<?php echo $item['timeFrom']; ?>"/>
+                     name="<?= $item['id']; ?>-od"
+                     value="<?= $item['timeFrom']; ?>"/>
             </td>
             <td>
               <input type="text"
                      size="5"
-                     name="<?php echo $item['id']; ?>-do"
-                     value="<?php echo $item['timeTo']; ?>"/>
+                     name="<?= $item['id']; ?>-do"
+                     value="<?= $item['timeTo']; ?>"/>
             </td>
             <td>
               <button type="submit"
                       name="remove"
-                      value="<?php echo $item['id']; ?>">
+                      value="<?= $item['id']; ?>">
                 Odstranit
               </button>
             </td>
             <td>
-              <?php echo $this->checkbox($item['id'] . '-lock', 'lock')
-                              ->defaultState($item['lock']); ?>
+              <?= $this->checkbox($item['id'] . '-lock', 'lock')
+                              ->set($item['lock']); ?>
             </td>
           </tr>
         <?php endforeach; ?>
         <tr>
           <td>
-            <?php echo $userselect->name('add_partner'); ?>
+            <?= $userselect->name('add_partner'); ?>
           </td>
           <td>
             <input type="text" name="add_od" size="5" value="" />
@@ -96,7 +96,7 @@
     <button type="submit">Vybrat nabídku</button>
     <?php if ($this->nabidka) : ?>
       <div class="n_wrapper">
-        <?php echo $this->render('files/View/Member/Nabidka/Header.inc', $this->nabidka); ?>
+        <?= $this->render('files/View/Member/Nabidka/Header.inc', $this->nabidka); ?>
         <table>
           <tr>
             <td>Tanečník</td>
@@ -104,8 +104,8 @@
           </tr>
           <?php foreach ($this->nabidka['items'] as $item) : ?>
             <tr>
-              <td><?php echo $item['fullName']; ?></td>
-              <td><?php echo $item['lessonCount']; ?></td>
+              <td><?= $item['fullName']; ?></td>
+              <td><?= $item['lessonCount']; ?></td>
             </tr>
           <?php endforeach; ?>
         </table>

@@ -9,45 +9,62 @@ class Controller_Admin_Akce extends Controller_Admin
 
     public function view($request)
     {
-        switch(post('action')) {
-        case 'save':
-            $this->_processSave();
-            $this->redirect('/admin/akce');
-            break;
-        case 'remove':
-            if (is_array(post('akce'))) {
-                $this->redirect(
-                    '/admin/akce/remove?' . http_build_query(array('u' => post('akce')))
-                );
-            }
-            break;
+        switch($request->post('action')) {
+            case 'save':
+                $this->processSave();
+                $this->redirect('/admin/akce');
+                break;
+
+            case 'remove':
+                if (!is_array($request->post('akce'))) {
+                    $this->redirect('/admin/akce');
+                } else {
+                    $this->redirect(
+                        '/admin/akce/remove?' .
+                        http_build_query(
+                            array('u' => $request->post('akce'))
+                        )
+                    );
+                }
+                break;
         }
 
-        $this->_displayOverview();
+        $this->displayOverview();
     }
 
     public function add($request)
     {
-        if (empty($_POST) || is_object($form = $this->_checkData())) {
-            if (!empty($_POST)) {
-                $this->redirect()->setMessage($form->getMessages());
-            }
-            $this->_displayForm(null);
+        if (!$request->post()) {
+            $this->displayForm($request);
             return;
         }
-        $od = $this->date('od')->getPost();
-        $do = $this->date('do')->getPost();
+
+        $form = $this->checkData($request);
+        if (is_object($form)) {
+            $this->redirect()->setMessage($form->getMessages());
+            $this->displayForm($request);
+            return;
+        }
+
+        $od = $this->date('od')->getPost($request);
+        $do = $this->date('do')->getPost($request);
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
         }
         DBAkce::addAkce(
-            post('jmeno'), post('kde'), post('info'),
-            (string) $od, (string) $do, post('kapacita'), post('dokumenty'),
-            (post('lock') == 'lock') ? 1 : 0, post('visible') ? '1' : '0'
+            $request->post('jmeno'),
+            $request->post('kde'),
+            $request->post('info'),
+            (string) $od,
+            (string) $do,
+            $request->post('kapacita'),
+            $request->post('dokumenty'),
+            ($request->post('lock') == 'lock') ? 1 : 0,
+            $request->post('visible') ? '1' : '0'
         );
 
-        $n = new Novinky(User::getUserID());
-        $n->akce()->add('/member/akce', post('jmeno'));
+        $news = new Novinky(User::getUserID());
+        $news->akce()->add('/member/akce', $request->post('jmeno'));
 
         $this->redirect('/admin/akce', 'Akce přidána');
     }
@@ -58,57 +75,63 @@ class Controller_Admin_Akce extends Controller_Admin
         if (!$id || !($data = DBAkce::getSingleAkce($id))) {
             $this->redirect('/admin/akce', 'Akce s takovým ID neexistuje');
         }
-        if (empty($_POST) || is_object($form = $this->_checkData())) {
-            if (!empty($_POST)) {
-                $this->redirect()->setMessage($form->getMessages());
-            } else {
-                post('id', $id);
-                post('jmeno', $data['a_jmeno']);
-                post('kde', $data['a_kde']);
-                post('info', $data['a_info']);
-                post('od', $data['a_od']);
-                post('do', $data['a_do']);
-                post('kapacita', $data['a_kapacita']);
-                post('lock', $data['a_lock']);
-                post('visible', $data['a_visible']);
-            }
-            $this->_displayForm($data);
+
+        if (!$request->post()) {
+            $this->displayForm($request, $data);
             return;
         }
-        $od = $this->date('od')->getPost();
-        $do = $this->date('do')->getPost();
+
+        $form = $this->checkData();
+        if (is_object($form)) {
+            $this->redirect()->setMessage($form->getMessages());
+            $this->displayForm($request, $data);
+            return;
+        }
+
+        $od = $this->date('od')->getPost($request);
+        $do = $this->date('do')->getPost($request);
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
         }
+
         DBAkce::editAkce(
-            $id, post('jmeno'), post('kde'), post('info'),
-            (string) $od, (string) $do, post('kapacita'), post('dokumenty'),
-            (post('lock') == 'lock') ? 1 : 0, post('visible') ? '1' : '0'
+            $id,
+            $request->post('jmeno'),
+            $request->post('kde'),
+            $request->post('info'),
+            (string) $od,
+            (string) $do,
+            $request->post('kapacita'),
+            $request->post('dokumenty'),
+            ($request->post('lock') == 'lock') ? 1 : 0,
+            $request->post('visible') ? '1' : '0'
         );
 
-        $n = new Novinky(User::getUserID());
-        $n->akce()->edit('/member/akce', post('jmeno'));
+        $news = new Novinky(User::getUserID());
+        $news->akce()->edit('/member/akce', $request->post('jmeno'));
 
         $this->redirect('/admin/akce', 'Akce upravena');
     }
 
     public function remove($request)
     {
-        if (!is_array(post('data')) && !is_array(get('u'))) {
+        if (!is_array($request->post('data')) && !is_array($request->get('u'))) {
             $this->redirect('/admin/akce');
         }
-        if (!empty($_POST) && post('action') == 'confirm') {
-            foreach (post('data') as $id) {
+        if ($request->post('action') == 'confirm') {
+            foreach ($request->post('data') as $id) {
                 $data = DBAkce::getSingleAkce($id);
                 DBAkce::removeAkce($id);
 
                 if (strcmp($data['a_do'], date('Y-m-d')) >= 0) {
-                    $n = new Novinky(User::getUserID());
-                    $n->akce()->remove($data['a_jmeno']);
+                    $news = new Novinky(User::getUserID());
+                    $news->akce()->remove($data['a_jmeno']);
                 }
             }
             $this->redirect('/admin/akce', 'Akce odebrány');
+            return;
         }
+
         $data = array();
         foreach (get('u') as $id) {
             $item = DBAkce::getSingleAkce($id);
@@ -128,7 +151,7 @@ class Controller_Admin_Akce extends Controller_Admin
         );
     }
 
-    private function _displayOverview()
+    private function displayOverview()
     {
         $data = array_map(
             function($item) {
@@ -143,7 +166,7 @@ class Controller_Admin_Akce extends Controller_Admin
                     ),
                     'userCount' => $item['a_obsazeno'] . '/' . $item['a_kapacita'],
                     'visible' => $this->checkbox($item['a_id'], '1')
-                                      ->defaultState($item['a_visible'])
+                                      ->set($item['a_visible'])
                                       ->render(),
                     'links' => (
                         '<a href="/admin/akce/edit/' . $item['a_id'] . '">obecné</a>, ' .
@@ -163,31 +186,44 @@ class Controller_Admin_Akce extends Controller_Admin
         );
     }
 
-    private function _displayForm($data)
+    private function displayForm($request, $data = array())
     {
-        if (!$data || !is_array($dokumenty = unserialize($data['a_dokumenty']))) {
-            $dokumenty = array();
+        if ($data) {
+            $dokumenty = array_map(
+                function ($item) {
+                    return array(
+                        'id' => $item['d_id'],
+                        'name' => $item['d_name']
+                    );
+                },
+                DBDokumenty::getMultipleById(
+                    unserialize($data['a_dokumenty'])
+                )
+            );
         } else {
-            $dokumenty = DBDokumenty::getMultipleById($dokumenty);
-            foreach ($dokumenty as &$item) {
-                $new_data = array(
-                    'id' => $item['d_id'],
-                    'name' => $item['d_name']
-                );
-                $item = $new_data;
-            }
+            $dokumenty = array();
         }
+
         $this->render(
             'files/View/Admin/Akce/Form.inc',
             array(
                 'dokumenty' => $dokumenty,
                 'header' => $request->getAction() == 'add' ? 'Přidat uživatele' : 'Upravit uživatele',
-                'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit'
+                'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit',
+                'id' => $data ? $data['a_id'] : null,
+                'jmeno' => $request->post('jmeno') ?: $data['a_jmeno'],
+                'kde' => $request->post('kde') ?: $data['a_kde'],
+                'info' => $request->post('info') ?: $data['a_info'],
+                'od' => $request->post('od') ?: $data['a_od'],
+                'do' => $request->post('do') ?: $data['a_do'],
+                'kapacita' => $request->post('kapacita') ?: $data['a_kapacita'],
+                'lock' => $request->post('lock') ?: $data['a_lock'],
+                'visible' => $request->post('visible') ?: $data['a_visible']
             )
         );
     }
 
-    private function _processSave()
+    private function processSave()
     {
         $items = DBAkce::getAkce();
         foreach ($items as $item) {
@@ -204,7 +240,7 @@ class Controller_Admin_Akce extends Controller_Admin
         }
     }
 
-    private function _checkData()
+    private function checkData()
     {
         $od = $this->date('od')->getPost();
         $do = $this->date('do')->getPost();

@@ -1,6 +1,6 @@
 <div class="container full">
   <div class="container fifth">
-    <?php echo $this->sidebar ?>
+    <?php echo $this->sidemenu ?>
   </div>
   <div class="container four-fifths">
     <div style="text-align:center;">

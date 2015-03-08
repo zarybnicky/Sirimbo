@@ -5,7 +5,7 @@ abstract class Controller_Abstract implements Controller_Interface
 
     public function navbar() {
         $menu = include SETTINGS . '/menu/main.php';
-        
+
         if (Permissions::check('nastenka', P_OWNED)) {
             $menu = array_merge($menu, include SETTINGS . '/menu/admin.php');
         }

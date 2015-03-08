@@ -22,7 +22,7 @@ foreach ($this->photos as $item) {
     echo '<img alt="' . $item['id'] . '" src="' . $item['src'] . '" />';
     echo '</div>';
     echo '<div class="foto_desc">';
-    echo $this->radio('foto', $item['id']);
+    echo $this->radio('foto', $item['id'])->set($item['id'] == $this->checked);
     echo '<br/><br/></div>';
     echo '</div>';
 }
