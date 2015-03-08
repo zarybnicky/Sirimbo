@@ -22,6 +22,7 @@ class Controller_Admin_Users extends Controller_Admin
                 $this->redirect('/admin/users/remove?' . http_build_query(array('u' => post('users'))));
                 break;
             case 'save':
+                Permissions::checkError('users', P_ADMIN);
                 foreach (post('save') as $user_id) {
                     $user = DBUser::getUserData($user_id);
                     if (((bool) post($user_id . '-dancer')) !== ((bool) $user['u_dancer'])
@@ -46,6 +47,7 @@ class Controller_Admin_Users extends Controller_Admin
         $this->_displayOverview(get('v'));
     }
     public function remove($id = null) {
+        Permissions::checkError('users', P_ADMIN);
         if (!is_array(post('data')) && !is_array(get('u')))
             $this->redirect('/admin/users');
         if (!empty($_POST) && post('action') == 'confirm') {
