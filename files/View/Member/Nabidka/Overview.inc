@@ -4,12 +4,12 @@
   <?= $this->notice($this->redirect()->getMessage());?>
 </div>
 
-<form action="" method="post">
-    <table class="nocolor" style="margin: 0 auto">
-        <?php foreach (array_chunk($this->data, 2) as $chunk) : ?>
-            <tr>
-                <?php foreach ($chunk as $item) : ?>
-                    <td style="vertical-align:top">
+<table class="nocolor" style="margin: 0 auto">
+    <?php foreach (array_chunk($this->data, 2) as $chunk) : ?>
+        <tr>
+            <?php foreach ($chunk as $item) : ?>
+                <td style="vertical-align:top">
+                    <form action="" method="post">
                         <div class="widget">
                             <div class="widget-title center">
                                 <?= $this->render('files/View/Member/Nabidka/Header.inc', $item);?>
@@ -45,7 +45,7 @@
                                         <input type="text"
                                                name="hodiny"
                                                size="2"
-                                               value="<?= post('hodiny');?>" />
+                                               value="<?= $this->hodiny ?>" />
                                         <input type="hidden"
                                                name="id"
                                                value="<?= $item['id'];?>" />
@@ -54,9 +54,9 @@
                                 </div>
                             </div>
                         </div>
-                    </td>
-                <?php endforeach;?>
-            </tr>
-        <?php endforeach;?>
-    </table>
-</form>
+                    </form>
+                </td>
+            <?php endforeach;?>
+        </tr>
+    <?php endforeach;?>
+</table>

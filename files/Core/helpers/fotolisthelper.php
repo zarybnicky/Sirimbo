@@ -57,7 +57,7 @@ class FotoListHelper
         }
         if (!$this->_selector) {
             foreach ($this->_subdirs as $item) {
-                $out .= '<div class="f"><a href="' . $_SERVER['REQUEST_URI'] . '/' . $item['gd_id'] . '">';
+                $out .= '<div class="f"><a href="' . $item['gd_id'] . '">';
                 $out .= '<div class="f_img"><div class="f_preview">';
                 $out .= '<img alt="' . $item['gd_id'] . '" src="/images/folder.png" />';
                 $out .= '</div></div>';
@@ -70,7 +70,7 @@ class FotoListHelper
 
             $out .= '<div class="f">';
             if (!$this->_selector)
-                $out .= '<a href="' . $_SERVER['REQUEST_URI'] . '/foto/' . $item['gf_id'] . '">';
+                $out .= '<a href="/foto/' . $item['gf_id'] . '">';
             $out .= '<div class="f_img"><div class="f_preview">';
             $out .= '<img alt="' . $item['gf_id'] . '" src="' . $tn . '" />';
             $out .= '</div></div>';

@@ -4,26 +4,32 @@ class Controller_Oklubu_Treneri extends Controller_Oklubu
 {
     public function view($request)
     {
-        $this->request = $request;
         $this->redirect('/oklubu/obecne');
     }
 
     public function klubovi($request)
     {
-        $this->request = $request;
-        $this->render('files/View/Main/OKlubu/TreneriInt.inc');
+        $this->render(
+            'files/View/Main/OKlubu/TreneriInt.inc',
+            array(
+                'sidebar' => $this->sidebar($request->getUri())
+            )
+        );
     }
 
     public function externi($request)
     {
-        $this->request = $request;
-        $this->render('files/View/Main/OKlubu/TreneriExt.inc');
+        $this->render(
+            'files/View/Main/OKlubu/TreneriExt.inc',
+            array(
+                'sidebar' => $this->sidebar($request->getUri())
+            )
+        );
     }
 
-    public function sidebar()
+    public function sidebar($uri)
     {
         return new Sidebar(
-            $this->request,
             array(
                 array(
                     'Kluboví trenéři',
@@ -35,7 +41,8 @@ class Controller_Oklubu_Treneri extends Controller_Oklubu
                     '/oklubu/treneri/externi',
                     array()
                 )
-            )
+            ),
+            $uri
         );
     }
 }

@@ -14,27 +14,23 @@ class ClankyHelper
         return $this;
     }
 
-    public function data($data = null) {
-        if ($data !== null)
-            $this->_clanky = $data;
+    public function data($data) {
+        $this->_clanky = $data;
         return $this;
     }
 
-    public function offset($o = null)  {
-        if ($o !== null)
-            $this->_offset = $o;
+    public function offset($o)  {
+        $this->_offset = $o;
         return $this;
     }
 
-    public function number($n = null) {
-        if ($n !== null)
-            $this->_number = $n;
+    public function number($n) {
+        $this->_number = $n;
         return $this;
     }
 
-    public function highlights($s = null) {
-        if ($s !== null)
-            $this->_highlights = $s;
+    public function highlights($s) {
+        $this->_highlights = $s;
         return $this;
     }
 

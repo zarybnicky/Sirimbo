@@ -9,10 +9,10 @@ define('GALERIE_THUMBS', GALERIE . DIRECTORY_SEPARATOR . 'thumbnails');
 define('CORE', FILES . DIRECTORY_SEPARATOR . 'Core');
 define('SETTINGS', CORE . DIRECTORY_SEPARATOR . 'settings');
 define('ERROR', FILES . DIRECTORY_SEPARATOR . 'Error');
-define('HEADER', FILES . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'Header.inc');
-define('FOOTER', FILES . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'Footer.inc');
-define('HEADER_TISK', FILES . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'HeaderTisk.inc');
-define('FOOTER_TISK', FILES . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'FooterTisk.inc');
+define('HEADER', 'files' . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'Header.inc');
+define('FOOTER', 'files' . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'Footer.inc');
+define('HEADER_TISK', 'files' . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'HeaderTisk.inc');
+define('FOOTER_TISK', 'files' . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'FooterTisk.inc');
 
 define('LOG', ROOT . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'error.log');
 define('DEBUG_LOG', ROOT . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'debug.log');
@@ -21,14 +21,32 @@ define('PHP_LOG', ROOT . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'ph
 mb_internal_encoding('UTF-8');
 
 function shutdownHandler() {
-    if (($error = error_get_last()) === null)
+    if (($error = error_get_last()) === null) {
         return;
+    }
     if ($error['type'] & (E_STRICT | E_DEPRECATED | E_NOTICE)) {
         return;
     }
 
     ob_end_clean();
-    Log::write("{$error['type']}: {$error['message']} in {$error['file']}: {$error['line']}");
+    $msg = "{$error['type']}: {$error['message']} in {$error['file']}: {$error['line']}";
+    $ignore = 0;
+    foreach (debug_backtrace() as $k => $v) {
+        if ($k < $ignore) {
+            continue;
+        }
+        array_walk(
+            $v['args'],
+            function (&$item, $key) {
+                $item = var_export($item, true);
+            }
+        );
+        $msg .= "\n#" . ($k - $ignore) . ' '
+              . $v['file'] . '(' . $v['line'] . '): '
+              . (isset($v['class']) ? $v['class'] . '->' : '')
+              . $v['function'] . '(' . implode(', ', $v['args']) . ')';
+    }
+    Log::write($msg);
     if (strpos('error', $_SERVER['REQUEST_URI']) !== false) {
         Log::write("Recursive error message!");
         die('Fatal error: Rekurzivní smyčka přesměrování!');
@@ -40,7 +58,24 @@ function errorHandler($severity, $message, $filepath, $line) {
         return false;
     }
     ob_end_clean();
-    Log::write("$severity: $message in $filepath: $line");
+    $msg = "$severity: $message in $filepath: $line";
+    $ignore = 0;
+    foreach (debug_backtrace() as $k => $v) {
+        if ($k < $ignore) {
+            continue;
+        }
+        array_walk(
+            $v['args'],
+            function (&$item, $key) {
+                $item = var_export($item, true);
+            }
+        );
+        $msg .= "\n#" . ($k - $ignore) . ' '
+              . $v['file'] . '(' . $v['line'] . '): '
+              . (isset($v['class']) ? $v['class'] . '->' : '')
+              . $v['function'] . '(' . implode(', ', $v['args']) . ')';
+    }
+    Log::write($msg);
     if (strpos('error', $_SERVER['REQUEST_URI']) !== false) {
         Log::write("Recursive error message!");
         die('Fatal error: Rekurzivní smyčka přesměrování!');

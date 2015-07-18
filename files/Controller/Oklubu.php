@@ -8,27 +8,52 @@ class Controller_Oklubu extends Controller_Abstract
 
     public function obecne($request)
     {
-        $this->render('files/View/Main/OKlubu/Main.inc');
+        $this->render(
+            'files/View/Main/OKlubu/Main.inc',
+            array(
+                'sidebar' => $this->sidebar($request->getUri())
+            )
+        );
     }
 
     public function historie($request)
     {
-        $this->render('files/View/Main/OKlubu/Historie.inc');
+        $this->render(
+            'files/View/Main/OKlubu/Historie.inc',
+            array(
+                'sidebar' => $this->sidebar($request->getUri())
+            )
+        );
     }
 
     public function klubovi($request)
     {
-        $this->render('files/View/Main/OKlubu/TreneriInt.inc');
+        $this->render(
+            'files/View/Main/OKlubu/TreneriInt.inc',
+            array(
+                'sidebar' => $this->sidebar($request->getUri())
+            )
+        );
     }
 
     public function externi($request)
     {
-        $this->render('files/View/Main/OKlubu/TreneriExt.inc');
+        $this->render(
+            'files/View/Main/OKlubu/TreneriExt.inc',
+            array(
+                'sidebar' => $this->sidebar($request->getUri())
+            )
+        );
     }
 
     public function saly($request)
     {
-        $this->render('files/View/Main/OKlubu/Saly.inc');
+        $this->render(
+            'files/View/Main/OKlubu/Saly.inc',
+            array(
+                'sidebar' => $this->sidebar($request->getUri())
+            )
+        );
     }
 
     public function navbar()
@@ -40,10 +65,11 @@ class Controller_Oklubu extends Controller_Abstract
             );
     }
 
-    public function sidebar()
+    public function sidebar($uri)
     {
         return new Sidebar(
-            include SETTINGS . '/menu/oklubu.php'
+            include SETTINGS . '/menu/oklubu.php',
+            $uri
         );
     }
 }

@@ -11,19 +11,18 @@ class Controller_Admin_Aktuality_Foto extends Controller_Admin_Aktuality
         if (!($article = DBAktuality::getSingleAktualita($id))) {
             $this->redirect('/admin/aktuality', 'Takový článek neexistuje');
         }
-        if (empty($_POST) || !post('foto')) {
-            if (get('dir') === null) {
-                dump($article);
+        if (!$request->post('foto')) {
+            if ($request->get('dir') === null) {
                 if ($article['at_foto']) {
                     $this->redirect(
                         '/admin/aktuality/foto/' . $id . '?dir=' . $article['at_foto']
                     );
                 } else {
-                    get('dir', 0);
+                    $request->get('dir', 0);
                 }
             }
 
-            if (!($dir = DBGalerie::getSingleDir(get('dir')))) {
+            if (!($dir = DBGalerie::getSingleDir($request->get('dir')))) {
                 $this->redirect(
                     '/admin/aktuality/foto/' . $id . '?dir=0',
                     'Taková složka neexistuje'
@@ -38,7 +37,7 @@ class Controller_Admin_Aktuality_Foto extends Controller_Admin_Aktuality
                         'src' => '/galerie/thumbnails/' . $item['gf_path']
                     );
                 },
-                DBGalerie::getFotky(get('dir'))
+                DBGalerie::getFotky($request->get('dir'))
             );
 
             $dirs = DBGalerie::getDirs(true, true);
@@ -57,13 +56,18 @@ class Controller_Admin_Aktuality_Foto extends Controller_Admin_Aktuality
             );
             return;
         }
-        if (get('dir') === null) {
-            get('dir', 0);
+        if ($request->get('dir') === null) {
+            $request->get('dir', 0);
         }
 
         DBAktuality::editAktualita(
-            $id, $article['at_kat'], $article['at_jmeno'],
-            $article['at_text'], $article['at_preview'], get('dir'), post('foto')
+            $id,
+            $article['at_kat'],
+            $article['at_jmeno'],
+            $article['at_text'],
+            $article['at_preview'],
+            $request->get('dir'),
+            $request->post('foto')
         );
         $this->redirect('/admin/aktuality', 'Článek upraven.');
     }

@@ -45,6 +45,27 @@
         © 2014 TK Olymp Olomouc
       </span>
     </div>
+    <script type="text/javascript" src="/scripts/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="/scripts/masonry.pkgd.min.js"></script>
+    <script type="text/javascript" src="/scripts/imagesloaded.pkgd.min.js"></script>
+    <script type="text/javascript" src="/scripts/polyfill.object-fit.min.js"></script>
+    <!-- <script type="text/javascript" src="/scripts/semantic.min.js"></script>-->
     <script type="text/javascript" src="/scripts/main.js"></script>
+    <script type="text/javascript"
+            src="//connect.facebook.net/cs_CZ/all.js#xfbml=1&appId=132983570203245"
+            id="facebook-jssdk"></script>
+    <script type="text/javascript">
+     var _gaq = _gaq || [];
+     _gaq.push(['_require','inpage_linkid','//www.google-analytics.com/plugins/ga/inpage_linkid.js'],
+               ['_setAccount','UA-44456908-1'],['_trackPageview']);
+     (function() {
+         var ga = document.createElement('script');
+         ga.type='text/javascript';
+         ga.async=true;
+         ga.src='//www.google-analytics.com/ga.js';
+         var s=document.getElementsByTagName('script')[0];
+         s.parentNode.insertBefore(ga,s);
+     })();
+    </script>
   </body>
 </html>

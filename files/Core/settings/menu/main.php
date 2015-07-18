@@ -16,6 +16,11 @@ return array(
         array()
     ),
     array(
+        'Video',
+        '/video',
+        array()
+    ),
+    array(
         'Nabízíme',
         '/nabizime',
         include SETTINGS . '/menu/nabizime.php'

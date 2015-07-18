@@ -5,7 +5,7 @@
 <?= '<h3>', ($this->action == 'add' ? 'Přidat kategorii' : 'Upravit kategorii'), '</h3>';?>
 
 <?php
-$mainForm = (new TableHelper())->table()
+$mainForm = $this->table()
     ->column('desc', '', 'r')
     ->column('value', 'Hodnota')
     ->data(array(
@@ -25,7 +25,7 @@ $mainForm = (new TableHelper())->table()
         )
     ));
 if (!empty($this->category)) {
-    $categoryForm = (new TableHelper())->table()
+    $categoryForm = $this->table()
         ->column('buttons', '', '', 'width:75px')
         ->column('name', 'Jméno')
         ->column('specific', 'Specifický<br/>symbol')

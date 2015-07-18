@@ -21,15 +21,13 @@ class SelectHelper
         $this->_get = false;
     }
 
-    public function name($name = '') {
-        if ($name)
-            $this->_name = $name;
+    public function name($name) {
+        $this->_name = $name;
         return $this;
     }
 
-    public function value($value = null) {
-        if ($value)
-            $this->_value = $value;
+    public function set($value) {
+        $this->_value = $value;
         return $this;
     }
 
@@ -79,10 +77,7 @@ class SelectHelper
     public function render() {
         $out = '<select name="' . $this->_name . '">' . "\n";
         if (!empty($this->_options)) {
-            $selected = $this->_get ? get($this->_name) : post($this->_name);
-            if ($selected === null) {
-                $selected = $this->_value;
-            }
+            $selected = $this->_value;
             foreach ($this->_options as $value => $name) {
                 $out .= '<option value="' . $value . '"' .
                     ($selected == $value ? ' selected="selected"' : '') .

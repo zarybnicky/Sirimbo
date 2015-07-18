@@ -10,23 +10,23 @@ class Controller_Admin_Akce extends Controller_Admin
     public function view($request)
     {
         switch($request->post('action')) {
-            case 'save':
-                $this->processSave();
-                $this->redirect('/admin/akce');
-                break;
+        case 'save':
+            $this->processSave();
+            $this->redirect('/admin/akce');
+            break;
 
-            case 'remove':
-                if (!is_array($request->post('akce'))) {
-                    $this->redirect('/admin/akce');
-                } else {
-                    $this->redirect(
-                        '/admin/akce/remove?' .
-                        http_build_query(
-                            array('u' => $request->post('akce'))
-                        )
-                    );
-                }
-                break;
+        case 'remove':
+            if (!is_array($request->post('akce'))) {
+                $this->redirect('/admin/akce');
+            } else {
+                $this->redirect(
+                    '/admin/akce/remove?' .
+                    http_build_query(
+                        array('u' => $request->post('akce'))
+                    )
+                );
+            }
+            break;
         }
 
         $this->displayOverview();
@@ -63,9 +63,6 @@ class Controller_Admin_Akce extends Controller_Admin
             $request->post('visible') ? '1' : '0'
         );
 
-        $news = new Novinky(User::getUserID());
-        $news->akce()->add('/member/akce', $request->post('jmeno'));
-
         $this->redirect('/admin/akce', 'Akce přidána');
     }
 
@@ -81,7 +78,7 @@ class Controller_Admin_Akce extends Controller_Admin
             return;
         }
 
-        $form = $this->checkData();
+        $form = $this->checkData($request);
         if (is_object($form)) {
             $this->redirect()->setMessage($form->getMessages());
             $this->displayForm($request, $data);
@@ -107,9 +104,6 @@ class Controller_Admin_Akce extends Controller_Admin
             $request->post('visible') ? '1' : '0'
         );
 
-        $news = new Novinky(User::getUserID());
-        $news->akce()->edit('/member/akce', $request->post('jmeno'));
-
         $this->redirect('/admin/akce', 'Akce upravena');
     }
 
@@ -122,18 +116,13 @@ class Controller_Admin_Akce extends Controller_Admin
             foreach ($request->post('data') as $id) {
                 $data = DBAkce::getSingleAkce($id);
                 DBAkce::removeAkce($id);
-
-                if (strcmp($data['a_do'], date('Y-m-d')) >= 0) {
-                    $news = new Novinky(User::getUserID());
-                    $news->akce()->remove($data['a_jmeno']);
-                }
             }
             $this->redirect('/admin/akce', 'Akce odebrány');
             return;
         }
 
         $data = array();
-        foreach (get('u') as $id) {
+        foreach ($request->get('u') as $id) {
             $item = DBAkce::getSingleAkce($id);
             $data[] = array(
                 'id' => $item['a_id'],
@@ -154,7 +143,7 @@ class Controller_Admin_Akce extends Controller_Admin
     private function displayOverview()
     {
         $data = array_map(
-            function($item) {
+            function ($item) {
                 return array(
                     'checkBox' => $this->checkbox('akce[]', $item['a_id'])
                                        ->render(),
@@ -169,9 +158,9 @@ class Controller_Admin_Akce extends Controller_Admin
                                       ->set($item['a_visible'])
                                       ->render(),
                     'links' => (
-                        '<a href="/admin/akce/edit/' . $item['a_id'] . '">obecné</a>, ' .
-                        '<a href="/admin/akce/detail/' . $item['a_id'] . '">účastníci</a>, ' .
-                        '<a href="/admin/akce/dokumenty/' . $item['a_id'] . '">dokumenty</a>'
+                        '<a href="/admin/akce/edit/' . $item['a_id'] . '">obecné</a>, '
+                        . '<a href="/admin/akce/detail/' . $item['a_id'] . '">účastníci</a>, '
+                        . '<a href="/admin/akce/dokumenty/' . $item['a_id'] . '">dokumenty</a>'
                     )
                 );
             },
@@ -211,14 +200,14 @@ class Controller_Admin_Akce extends Controller_Admin
                 'header' => $request->getAction() == 'add' ? 'Přidat uživatele' : 'Upravit uživatele',
                 'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit',
                 'id' => $data ? $data['a_id'] : null,
-                'jmeno' => $request->post('jmeno') ?: $data['a_jmeno'],
-                'kde' => $request->post('kde') ?: $data['a_kde'],
-                'info' => $request->post('info') ?: $data['a_info'],
-                'od' => $request->post('od') ?: $data['a_od'],
-                'do' => $request->post('do') ?: $data['a_do'],
-                'kapacita' => $request->post('kapacita') ?: $data['a_kapacita'],
-                'lock' => $request->post('lock') ?: $data['a_lock'],
-                'visible' => $request->post('visible') ?: $data['a_visible']
+                'jmeno' => $request->post('jmeno') ?: $data ? $data['a_jmeno'] : '',
+                'kde' => $request->post('kde') ?: $data ? $data['a_kde'] : '',
+                'info' => $request->post('info') ?: $data ? $data['a_info'] : '',
+                'od' => $request->post('od') ?: $data ? $data['a_od'] : '',
+                'do' => $request->post('do') ?: $data ? $data['a_do'] : '',
+                'kapacita' => $request->post('kapacita') ?: $data ? $data['a_kapacita'] : '',
+                'lock' => $request->post('lock') ?: $data ? $data['a_lock'] : '',
+                'visible' => $request->post('visible') ?: $data ? $data['a_visible'] : ''
             )
         );
     }
@@ -227,32 +216,37 @@ class Controller_Admin_Akce extends Controller_Admin
     {
         $items = DBAkce::getAkce();
         foreach ($items as $item) {
-            if ((bool) post($item['a_id']) === (bool) $item['a_visible']) {
+            if ((bool) $request->post($item['a_id']) === (bool) $item['a_visible']) {
                 continue;
             }
             DBAkce::editAkce(
-                $item['a_id'], $item['a_jmeno'], $item['a_kde'],
-                $item['a_info'], $item['a_od'],
-                $item['a_do'], $item['a_kapacita'],
-                $item['a_dokumenty'], $item['a_lock'],
-                post($item['a_id']) ? '1' : '0'
+                $item['a_id'],
+                $item['a_jmeno'],
+                $item['a_kde'],
+                $item['a_info'],
+                $item['a_od'],
+                $item['a_do'],
+                $item['a_kapacita'],
+                $item['a_dokumenty'],
+                $item['a_lock'],
+                $request->post($item['a_id']) ? '1' : '0'
             );
         }
     }
 
-    private function checkData()
+    private function checkData($request)
     {
         $od = $this->date('od')->getPost();
         $do = $this->date('do')->getPost();
 
         $form = new Form();
-        $form->checkLength(post('jmeno'), 1, 255, 'Špatná délka jména akce', 'jmeno');
-        $form->checkLength(post('kde'), 1, 255, 'Špatná délka místa konání', 'kde');
+        $form->checkLength($request->post('jmeno'), 1, 255, 'Špatná délka jména akce', 'jmeno');
+        $form->checkLength($request->post('kde'), 1, 255, 'Špatná délka místa konání', 'kde');
         $form->checkDate((string) $od, 'Špatný formát data ("Od")', 'od');
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $form->checkDate((string) $do, 'Špatný formát data ("Do")', 'do');
         }
-        $form->checkNumeric(post('kapacita'), 'Kapacita musí být zadána číselně', 'kapacita');
+        $form->checkNumeric($request->post('kapacita'), 'Kapacita musí být zadána číselně', 'kapacita');
 
         return $form->isValid() ? array() : $form;
     }

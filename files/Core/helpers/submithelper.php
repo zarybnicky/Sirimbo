@@ -1,4 +1,4 @@
-<?php 
+<?php
 class SubmitHelper {
     protected $text;
     protected $name;
@@ -20,7 +20,7 @@ class SubmitHelper {
         $this->value = $value;
         return $this;
     }
-    
+
     public function render() {
         return '<button type="submit"' .
             ($this->name ? ' name="' . $this->name . '"' : '') .

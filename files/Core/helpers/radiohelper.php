@@ -2,7 +2,7 @@
 class RadioHelper {
     protected $name;
     protected $value;
-    protected $defaultState;
+    protected $state;
     protected $readonly;
 
     public function radio($name, $value = null) {
@@ -13,14 +13,14 @@ class RadioHelper {
         $this->name = $name;
         $this->value = $value;
 
-        $this->defaultState = false;
+        $this->state = false;
         $this->readonly = false;
 
         return $this;
     }
 
     public function set($val) {
-        $this->defaultState = $val;
+        $this->state = $val;
         return $this;
     }
 
@@ -28,13 +28,13 @@ class RadioHelper {
         $this->readonly = $val;
         return $this;
     }
-    
+
     public function render() {
         return
             '<input type="radio"' .
             " name=\"{$this->name}\" " .
             " value=\"{$this->value}\"" .
-            ($this->defaultState ? ' checked="checked"' : '') .
+            ($this->state ? ' checked="checked"' : '') .
             ($this->readonly ? ' readonly="readonly"' : '') .
             '/>';
     }

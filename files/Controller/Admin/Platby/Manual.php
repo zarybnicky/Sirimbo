@@ -8,8 +8,8 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
     }
     public function view($request)
     {
-        if (!empty($_POST)) {
-            $this->_processPost();
+        if (!$request->post()) {
+            $this->processPost($request);
         }
         $remaining = DBPlatbyRaw::getUnsorted();
         $remainingCount = count($remaining);
@@ -122,14 +122,14 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
                     'amount' => $item->amount,
                     'prefix' => $item->prefix
                 ),
-                'users' => $this->_getUsers(),
-                'categories' => $this->_getCategories(),
+                'users' => $this->getUsers(),
+                'categories' => $this->getCategories(),
                 'recognized' => $recognized
             )
         );
     }
 
-    private function _getCategories()
+    private function getCategories()
     {
         $categories = parent::getCategoryLookup(false, false, true);
         foreach ($categories as $key => &$array) {
@@ -142,7 +142,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
         return $categories;
     }
 
-    private function _getUsers()
+    private function getUsers()
     {
         $users = parent::getUserLookup(true);
         foreach ($users as &$array) {
@@ -151,29 +151,49 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
         return $users;
     }
 
-    private function _processPost()
+    private function processPost($request)
     {
-        if (!post('id') || !($current = DBPlatbyRaw::getSingle(post('id')))) {
+        if (!$request->post('id') || !($current = DBPlatbyRaw::getSingle($request->post('id')))) {
             $this->redirect()->setMessage('Zadaná platba neexistuje.');
             return;
-        } elseif ($current['pr_sorted'] && ($item = DBPlatbyItem::getSingleByRawId(post('id')))) {
+        } elseif ($current['pr_sorted'] && ($item = DBPlatbyItem::getSingleByRawId($request->post('id')))) {
             $this->redirect()->setMessage('Zadaná platba už byla zařazená.');
             return;
         }
-        if (post('action') == 'confirm') {
-            if (empty($_POST)) {
+        if ($request->post('action') == 'confirm') {
+            if (!$request->$request->post()) {
                 return;
             } elseif (!is_object($item = $this->getFromPost())) {
                 $this->redirect()->setMessage($item);
                 return;
             }
-            DBPlatbyRaw::update(post('id'), $current['pr_raw'], $current['pr_hash'], '1', '0');
-            DBPlatbyItem::insert($item->variable, $item->categoryId, post('id'), $item->amount, $item->date, $item->prefix);
-        } elseif (post('action') == 'discard') {
-            if (!$current['pr_discarded'])
-                DBPlatbyRaw::update(post('id'), $current['pr_raw'], $current['pr_hash'], '0', '1');
-        } elseif (post('action') == 'skip') {
-            DBPlatbyRaw::skip(post('id'));
+            DBPlatbyRaw::update(
+                $request->post('id'),
+                $current['pr_raw'],
+                $current['pr_hash'],
+                '1',
+                '0'
+            );
+            DBPlatbyItem::insert(
+                $item->variable,
+                $item->categoryId,
+                $request->post('id'),
+                $item->amount,
+                $item->date,
+                $item->prefix
+            );
+        } elseif ($request->post('action') == 'discard') {
+            if (!$current['pr_discarded']) {
+                DBPlatbyRaw::update(
+                    $request->post('id'),
+                    $current['pr_raw'],
+                    $current['pr_hash'],
+                    '0',
+                    '1'
+                );
+            }
+        } elseif ($request->post('action') == 'skip') {
+            DBPlatbyRaw::skip($request->post('id'));
         } else {
             $this->redirect()->setMessage('Neplatná POST akce.');
         }

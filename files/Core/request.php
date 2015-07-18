@@ -9,7 +9,8 @@ class Request
     protected $getParams;
     protected $postParams;
     protected $fileParams;
-    
+    protected $sessionParams;
+
     protected $defaultPath = 'home';
     protected $rawUriParts;
     protected $uriPartsLiteral;
@@ -26,7 +27,8 @@ class Request
         $cookieParams,
         $getParams,
         $postParams,
-        $fileParams
+        $fileParams,
+        $sessionParams
     ) {
         $this->setURI($uri);
         $this->method = $method;
@@ -36,18 +38,19 @@ class Request
         $this->getParams = $getParams;
         $this->postParams = $postParams;
         $this->fileParams = $fileParams;
+        $this->sessionParams = $sessionParams;
     }
 
     protected function phpGlobal(&$array, $field, $value) {
         if ($field === null) {
             return $array;
         }
-        
+
         if ($value !== null) {
             $array[$field] = $value;
             return;
         }
-        
+
         if (isset($array[$field])) {
             return $array[$field];
         } else {
@@ -71,13 +74,21 @@ class Request
         return $this->phpGlobal($this->postParams, $field, $value);
     }
 
-    public function getFileParam() {
-        return $this->fileParams;
+    public function files($field = null, $value = null) {
+        return $this->phpGlobal($this->fileParams, $field, $value);
+    }
+
+    public function session($field = null, $value = null) {
+        if ($value !== null) {
+            $_SESSION[$field] = $value;
+        }
+        return $this->phpGlobal($this->sessionParams, $field, $value);
     }
 
     public function setDefault($defaultPath) {
         $this->defaultPath = $defaultPath;
     }
+
     public function setURI($uri) {
         $uri = explode('?', $uri)[0];
 
@@ -103,22 +114,24 @@ class Request
         $this->uriPartsLiteral = $parts;
 
         //Find controller action = the last string before a numerical one
-        for($i = count($this->rawUriParts) - 1; $i >= 0; $i--) {
+        for ($i = count($this->rawUriParts) - 1; $i >= 0; $i--) {
             if (!is_numeric($this->rawUriParts[$i])) {
                 continue;
             }
             $id = $this->rawUriParts[$i];
-            if (isset($this->rawUriParts[$i - 1]) && !is_numeric($this->rawUriParts[$i - 1])) {
+            if (isset($this->rawUriParts[$i - 1]) &&
+                !is_numeric($this->rawUriParts[$i - 1])
+            ) {
                 $action = $this->rawUriParts[$i - 1];
                 break;
             }
         }
         $this->id = isset($id) ? $id : null;
         $this->action = isset($action)
-            ? $action
-            : (!empty($this->uriPartsLiteral)
-                ? $this->uriPartsLiteral[count($this->uriPartsLiteral) - 1]
-                : null);
+                      ? $action
+                      : (!empty($this->uriPartsLiteral)
+                         ? $this->uriPartsLiteral[count($this->uriPartsLiteral) - 1]
+                         : null);
         $this->action = str_replace('-', '_', $this->action);
     }
 

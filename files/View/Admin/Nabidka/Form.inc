@@ -1,5 +1,5 @@
 <?= $this->header('Správa nabídky') ?>
-<?= $this->subheader(($this->action == 'add' ? 'Přidat' : 'Upravit') . ' nabídku') ?>
+<?= $this->subheader($this->header) ?>
 <div class="container full">
     <?= $this->notice($this->redirect()->getMessage()); ?>
 
@@ -17,7 +17,9 @@
                     <?php else : ?>
                         <?= $this->userSelect()
                                  ->name('trener')
-                                 ->users($this->users); ?>
+                                 ->users($this->users)
+                                 ->set($this->trener)
+                                 ->render() ?>
                     <?php endif; ?>
                 </td>
             </tr>
@@ -26,7 +28,7 @@
                 <td>
                     <input type="text"
                            name="pocet_hod"
-                           value="<?= post("pocet_hod"); ?>" />
+                           value="<?= $this->pocet_hod ?>" />
                 </td>
             </tr>
             <tr>
@@ -36,7 +38,7 @@
                 <td>
                     <input type="text"
                            name="max_pocet_hod"
-                           value="<?= post("max_pocet_hod"); ?>" />
+                           value="<?= $this->max_pocet_hod ?>" />
                 </td>
             </tr>
             <tr>
@@ -45,11 +47,15 @@
             </tr>
             <tr>
                 <td>Od: (*)</td>
-                <td><?= $this->date('od')->textBox();?></td>
+                <td><?= $this->date('od')
+                             ->textBox()
+                             ->set($this->od) ?></td>
             </tr>
             <tr>
                 <td>Do: </td>
-                <td><?= $this->date('do')->textBox();?></td>
+                <td><?= $this->date('do')
+                             ->textBox()
+                             ->set($this->do) ?></td>
             </tr>
             <tr>
                 <td></td>
@@ -59,11 +65,12 @@
                 <td>Viditelný: </td>
                 <td>
                     <label>
-                        <?= (Permissions::check('nabidka', P_ADMIN) ?
-                             $this->checkbox('visible', 'visible') :
-                             ($this->visible ?
-                              '&#10003;' :
-                              '&#10799;'));?>
+                        <?= (Permissions::check('nabidka', P_ADMIN)
+                             ? $this->checkbox('visible', 'visible')
+                                    ->set($this->visible)
+                             : ($this->visible
+                                ? '&#10003;'
+                                : '&#10799;')) ?>
                     </label>
                 </td>
             </tr>
@@ -71,7 +78,7 @@
                 <td>Uzamknout: </td>
                 <td>
                     <label>
-                        <?= $this->checkbox('lock');?>
+                        <?= $this->checkbox('lock')->set($this->lock) ?>
                     </label>
                 </td>
             </tr>
@@ -80,14 +87,12 @@
                     <input type="hidden"
                            name="referer"
                            value="<?= $this->referer ?>" />
-                    <?= $this->submit(($this->action == 'add') ?
-                                       'Přidat' :
-                                       'Upravit'); ?>
+                    <?= $this->submit($this->action); ?>
                     </button>
                 </td>
                 <td>Pole označená (*) jsou povinná</td>
             </tr>
         </table>
     </form>
-    <a href="<?= $this->returnURI;?>">Zpět</a>
+    <a href="<?= $this->referer ?>">Zpět</a>
 </div>

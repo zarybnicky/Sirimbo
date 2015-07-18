@@ -6,88 +6,78 @@ class Controller_Admin_Rozpis extends Controller_Admin
         Permissions::checkError('rozpis', P_OWNED);
     }
     public function view($request) {
-        switch(post('action')) {
-            case 'save':
-                $items = DBRozpis::getRozpis();
-                foreach ($items as $item) {
-                    $id = $item['r_id'];
-                    if ((bool) post($id) !== (bool) $item['r_visible']
-                        && Permissions::check('rozpis', P_OWNED, $item['r_trener'])
-                    ) {
-                        if (!Permissions::check('rozpis', P_ADMIN) && post($id) && !$item['r_visible']) {
-                            $this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění rozpisu');
-                        } else {
-                            DBRozpis::editRozpis(
-                                $id, $item['r_trener'], $item['r_kde'],
-                                $item['r_datum'], post($id) ? '1' : '0', $item['r_lock'] ? '1' : '0'
-                            );
-                            $news = new Novinky(User::getUserID());
-                            if (!post($id)) {
-                                $news->rozpis()->remove(
-                                    (new Date($item['r_datum']))->getDate(Date::FORMAT_SIMPLIFIED),
-                                    $item['u_jmeno'] . ' ' . $item['u_prijmeni']
-                                );
-                            } else {
-                                $news->rozpis()->add(
-                                    '/member/rozpis',
-                                    (new Date($item['r_datum']))->getDate(Date::FORMAT_SIMPLIFIED),
-                                    $item['u_jmeno'] . ' ' . $item['u_prijmeni']
-                                );
-                            }
-                        }
-                    }
+        switch($request->post('action')) {
+        case 'save':
+            $items = DBRozpis::getRozpis();
+            foreach ($items as $item) {
+                $id = $item['r_id'];
+                if ((bool) $request->post($id) == (bool) $item['r_visible']
+                    || !Permissions::check('rozpis', P_OWNED, $item['r_trener'])
+                ) {
+                    continue;
                 }
-                break;
-
-            case 'remove':
-                if (!is_array(post('rozpis')))
-                    $this->redirect('/admin/rozpis');
-                foreach (post('rozpis') as $item) {
-                    $trener = DBRozpis::getRozpisTrener($item);
-                    $data = DBRozpis::getSingleRozpis($item);
-
-                    if (Permissions::check('rozpis', P_OWNED, $trener['u_id'])) {
-                        DBRozpis::removeRozpis($item);
-                        if (strcmp($data['r_datum'], date('Y-m-d')) > 0 && $data['r_visible']) {
-                            $news = new Novinky(User::getUserID());
-                            $news->rozpis()->remove(
-                                (new Date($data['r_datum']))->getDate(Date::FORMAT_SIMPLIFIED),
-                                $trener['u_jmeno'] . ' ' . $trener['u_prijmeni']
-                            );
-                        }
-                    } else {
-                        $error = true;
-                    }
-                }
-                if (isset($error) && $error)
-                    throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
-
-                $this->redirect('/admin/rozpis', 'Rozpisy odebrány');
-                
-            case 'duplicate':
-                foreach (post('rozpis') as $oldId) {
-                    $data = DBRozpis::getSingleRozpis($oldId);
-                    $items = DBRozpis::getRozpisItem($oldId);
-
-                    $newId = DBRozpis::addRozpis(
-                        $data['r_trener'],
-                        $data['r_kde'],
-                        $data['r_datum'],
-                        $data['r_visible'],
-                        $data['r_lock']
+                if (!Permissions::check('rozpis', P_ADMIN) &&
+                    $request->post($id) &&
+                    !$item['r_visible']
+                ) {
+                    $this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění rozpisu');
+                } else {
+                    DBRozpis::editRozpis(
+                        $id,
+                        $item['r_trener'],
+                        $item['r_kde'],
+                        $item['r_datum'],
+                        $request->post($id) ? '1' : '0',
+                        $item['r_lock'] ? '1' : '0'
                     );
-                    foreach ($items as $item) {
-                        DBRozpis::addRozpisItem(
-                            $newId,
-                            $item['ri_partner'],
-                            $item['ri_od'],
-                            $item['ri_do'],
-                            $item['ri_lock']
-                        );
-                    }
                 }
+            }
+            break;
+
+        case 'remove':
+            if (!is_array($request->post('rozpis'))) {
                 $this->redirect('/admin/rozpis');
-                break;
+            }
+            foreach ($request->post('rozpis') as $item) {
+                $trener = DBRozpis::getRozpisTrener($item);
+                $data = DBRozpis::getSingleRozpis($item);
+
+                if (Permissions::check('rozpis', P_OWNED, $trener['u_id'])) {
+                    DBRozpis::removeRozpis($item);
+                } else {
+                    $error = true;
+                }
+            }
+            if (isset($error) && $error) {
+                throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
+            }
+
+            $this->redirect('/admin/rozpis', 'Rozpisy odebrány');
+
+        case 'duplicate':
+            foreach ($request->post('rozpis') as $oldId) {
+                $data = DBRozpis::getSingleRozpis($oldId);
+                $items = DBRozpis::getRozpisItem($oldId);
+
+                $newId = DBRozpis::addRozpis(
+                    $data['r_trener'],
+                    $data['r_kde'],
+                    $data['r_datum'],
+                    $data['r_visible'],
+                    $data['r_lock']
+                );
+                foreach ($items as $item) {
+                    DBRozpis::addRozpisItem(
+                        $newId,
+                        $item['ri_partner'],
+                        $item['ri_od'],
+                        $item['ri_do'],
+                        $item['ri_lock']
+                    );
+                }
+            }
+            $this->redirect('/admin/rozpis');
+            break;
         }
 
         $data = array_map(
@@ -116,7 +106,7 @@ class Controller_Admin_Rozpis extends Controller_Admin
             },
             DBRozpis::getRozpis(true)
         );
-        
+
         $this->render(
             'files/View/Admin/Rozpis/Overview.inc',
             array(
@@ -126,11 +116,12 @@ class Controller_Admin_Rozpis extends Controller_Admin
         );
         return;
     }
-    
+
     public function add($request) {
-        if (empty($_POST) || is_object($f = $this->_checkData())) {
-            if (!empty($_POST))
+        if (!$request->post() || is_object($f = $this->checkData($request))) {
+            if ($request->post()) {
                 $this->redirect()->setMessage($f->getMessages());
+            }
             $this->render(
                 'files/View/Admin/Rozpis/Form.inc',
                 array(
@@ -140,43 +131,40 @@ class Controller_Admin_Rozpis extends Controller_Admin
             );
             return;
         }
-        Permissions::checkError('rozpis', P_OWNED, post('trener'));
+        Permissions::checkError('rozpis', P_OWNED, $request->post('trener'));
         $datum = $this->date('datum')->getPost();
-        $visible = (bool) post('visible');
+        $visible = (bool) $request->post('visible');
 
         if (!Permissions::check('rozpis', P_ADMIN) && $visible) {
             $visible = false;
             $this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění příspěvku');
         }
-        DBRozpis::addRozpis(post('trener'), post('kde'), (string) $datum, $visible, post('lock'));
-
-        if ($visible) {
-            $trener_data = DBUser::getUserData(post('trener'));
-            $trener_name = $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni'];
-
-            $news = new Novinky(User::getUserID());
-            $news->rozpis()->add(
-                '/member/rozpis',
-                $datum->getDate(Date::FORMAT_SIMPLIFIED),
-                $trener_name
-            );
-        }
+        DBRozpis::addRozpis(
+            $request->post('trener'),
+            $request->post('kde'),
+            (string) $datum,
+            $visible ? '1' : '0',
+            $request->post('lock') ? '1' : '0'
+        );
         $this->redirect('/admin/rozpis', 'Rozpis přidán');
     }
-    public function edit($request) {
+
+    public function edit($request)
+    {
         $id = $request->getId();
-        if (!$id || !($data = DBRozpis::getSingleRozpis($id)))
+        if (!$id || !($data = DBRozpis::getSingleRozpis($id))) {
             $this->redirect('/admin/rozpis', 'Rozpis s takovým ID neexistuje');
+        }
         Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
 
-        if (empty($_POST) || is_object($f = $this->_checkData())) {
-            if (empty($_POST)) {
-                post('id', $id);
-                post('trener', $data['r_trener']);
-                post('kde', $data['r_kde']);
-                post('datum', $data['r_datum']);
-                post('visible', $data['r_visible']);
-                post('lock', $data['r_lock']);
+        if (!$request->post() || is_object($f = $this->checkData($request))) {
+            if (!$request->post()) {
+                $request->post('id', $id);
+                $request->post('trener', $data['r_trener']);
+                $request->post('kde', $data['r_kde']);
+                $request->post('datum', $data['r_datum']);
+                $request->post('visible', $data['r_visible']);
+                $request->post('lock', $data['r_lock']);
             } else {
                 $this->redirect()->setMessage($f->getMessages());
             }
@@ -191,51 +179,30 @@ class Controller_Admin_Rozpis extends Controller_Admin
         }
         $datum = $this->date('datum')->getPost();
 
-        $visible = (bool) post('visible');
+        $visible = (bool) $request->post('visible');
         $visible_prev = $data['r_visible'];
         if (!Permissions::check('rozpis', P_ADMIN) && $visible && !$visible_prev) {
             $visible = $visible_prev;
             $this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění rozpisu');
         }
         DBRozpis::editRozpis(
-            $id, post('trener'), post('kde'), (string) $datum,
-            $visible, post('lock')
+            $id,
+            $request->post('trener'),
+            $request->post('kde'),
+            (string) $datum,
+            $visible,
+            $request->post('lock')
         );
 
-        if ($visible) {
-            if (!$visible_prev)
-                $act = 'add';
-            else
-                $act = 'edit';
-        } elseif (!$visible && $visible_prev && strcmp($datum, date('Y-m-d')) > 0) {
-            $act = 'remove';
-        }
-        if (isset($act)) {
-            $trener_data = DBUser::getUserData(post('trener'));
-            $trener_name = $trener_data['u_jmeno'] . ' ' . $trener_data['u_prijmeni'];
-
-            $news = new Novinky(User::getUserID());
-            if ($act == 'remove') {
-                $news->rozpis()->$act(
-                    $datum->getDate(Date::FORMAT_SIMPLIFIED),
-                    $trener_name
-                );
-            } else {
-                $news->rozpis()->$act(
-                    '/member/rozpis',
-                    $datum->getDate(Date::FORMAT_SIMPLIFIED),
-                    $trener_name
-               );
-            }
-        }
         $this->redirect('/admin/rozpis', 'Rozpis úspěšně upraven');
     }
 
-    private function _checkData() {
+    private function checkData($request)
+    {
         $datum = $this->date('datum')->getPost();
 
         $f = new Form();
-        $f->checkNumeric(post('trener'), 'Neplatný trenér', 'trener');
+        $f->checkNumeric($request->post('trener'), 'Neplatný trenér', 'trener');
         $f->checkDate((string) $datum, 'Neplatný formát data', 'datum');
 
         return $f->isValid() ? true : $f;

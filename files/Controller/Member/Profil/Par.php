@@ -9,7 +9,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
     const AMEND_B = 2.1;
     const AMEND_A = 2.7;
     const AMEND_M = 3.4;
-    
+
     const BONUS_Z = 0;
     const BONUS_H = 80;   //400*AMEND_Z + BONUS_Z
     const BONUS_D = 280;  //400*AMEND_H + BONUS_H
@@ -18,8 +18,12 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
     const BONUS_A = 2160; //400*AMEND_B + BONUS_B
     const BONUS_M = 3240; //400*AMEND_A + BONUS_A
 
-    public function view($request) {
-        $latest = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
+    public function view($request)
+    {
+        $latest = DBPary::getLatestPartner(
+            User::getUserID(),
+            User::getUserPohlavi()
+        );
         $this->render(
             'files/View/Member/Profil/CoupleOverview.inc',
             array(
@@ -35,68 +39,89 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
             )
         );
     }
-    public function body($request) {
-        if (empty($_POST) || is_object($f = $this->_checkData())) {
-            if (empty($_POST)) {
+
+    public function body($request)
+    {
+        if (!$request->post() || is_object($f = $this->checkData($request))) {
+            if (!$request->post()) {
                 $par = DBPary::getSinglePar(User::getParID());
-                post('stt-trida', $par['p_stt_trida']);
-                post('stt-body', $par['p_stt_body']);
-                post('stt-finale', $par['p_stt_finale']);
-                post('lat-trida', $par['p_lat_trida']);
-                post('lat-body', $par['p_lat_body']);
-                post('lat-finale', $par['p_lat_finale']);
+                $request->post('stt-trida', $par['p_stt_trida']);
+                $request->post('stt-body', $par['p_stt_body']);
+                $request->post('stt-finale', $par['p_stt_finale']);
+                $request->post('lat-trida', $par['p_lat_trida']);
+                $request->post('lat-body', $par['p_lat_body']);
+                $request->post('lat-finale', $par['p_lat_finale']);
             } else {
                 $this->redirect()->setMessage($f->getMessages());
             }
             $this->render('files/View/Member/Profil/CoupleData.inc');
             return;
         }
-        $stt_amend = constant('self::AMEND_' . post('stt-trida'));
-        $stt_bonus = constant('self::BONUS_' . post('stt-trida'));
-        $lat_amend = constant('self::AMEND_' . post('lat-trida'));
-        $lat_bonus = constant('self::BONUS_' . post('lat-trida'));
+        $stt_amend = constant('self::AMEND_' . $request->post('stt-trida'));
+        $stt_bonus = constant('self::BONUS_' . $request->post('stt-trida'));
+        $lat_amend = constant('self::AMEND_' . $request->post('lat-trida'));
+        $lat_bonus = constant('self::BONUS_' . $request->post('lat-trida'));
 
-        $stt_body_capped = post('stt-body') > 200 ? 200 : post('stt-body');
-        $lat_body_capped = post('lat-body') > 200 ? 200 : post('lat-body');
-        
-        $hodnoceni =
-            ($stt_body_capped + 40 * post('stt-finale')) * $stt_amend +
-            ($lat_body_capped + 40 * post('lat-finale')) * $lat_amend +
-            $stt_bonus +
-            $lat_bonus;
+        $stt_body_capped = $request->post('stt-body') > 200 ? 200 : $request->post('stt-body');
+        $lat_body_capped = $request->post('lat-body') > 200 ? 200 : $request->post('lat-body');
+
+        $hodnoceni
+            = ($stt_body_capped + 40 * $request->post('stt-finale')) * $stt_amend
+            + ($lat_body_capped + 40 * $request->post('lat-finale')) * $lat_amend
+            + $stt_bonus
+            + $lat_bonus;
 
         DBPary::editTridaBody(
             User::getParID(),
-            post('stt-trida'), post('stt-body'), post('stt-finale'),
-            post('lat-trida'), post('lat-body'), post('lat-finale'),
+            $request->post('stt-trida'),
+            $request->post('stt-body'),
+            $request->post('stt-finale'),
+            $request->post('lat-trida'),
+            $request->post('lat-body'),
+            $request->post('lat-finale'),
             $hodnoceni
         );
         $this->redirect("/member/profil/par", "Třída a body změněny");
     }
-    public function partner($request) {
-        $latest = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
+
+    public function partner($request)
+    {
+        $latest = DBPary::getLatestPartner(
+            User::getUserID(),
+            User::getUserPohlavi()
+        );
         $havePartner = !empty($latest) && $latest['u_id'];
 
-        if (!empty($_POST)) {
-            if (!post("partner") || (post('action') == 'dumpthem' && $havePartner)) {
+        if ($request->post()) {
+            if (!$request->post("partner") ||
+                ($request->post('action') == 'dumpthem' && $havePartner)
+            ) {
                 DBPary::noPartner(User::getUserID());
                 DBPary::noPartner($latest['u_id']);
                 $this->redirect('/member/profil/par', 'Partnerství zrušeno');
             }
-            if (post('partner') == $latest['u_id'] || (!post('partner') && $latest['u_id'] == '0')) {
+            if ($request->post('partner') == $latest['u_id'] ||
+                (!$request->post('partner') && $latest['u_id'] == '0')
+            ) {
                 $this->redirect('/member/profil/par');
             }
             if (User::getUserPohlavi() == "m") {
-                DBPary::newPartnerRequest(User::getUserID(),
-                    User::getUserID(), post("partner"));
+                DBPary::newPartnerRequest(
+                    User::getUserID(),
+                    User::getUserID(),
+                    $request->post("partner")
+                );
             } else {
-                DBPary::newPartnerRequest(User::getUserID(),
-                    post("partner"), User::getUserID());
+                DBPary::newPartnerRequest(
+                    User::getUserID(),
+                    $request->post("partner"),
+                    User::getUserID()
+                );
             }
             $this->redirect('/member/profil/par', 'Žádost o partnerství odeslána');
         }
 
-        post('partner', $havePartner ? $latest['u_id'] : '0');
+        $request->post('partner', $havePartner ? $latest['u_id'] : '0');
         $this->render(
             'files/View/Member/Profil/PartnerOverview.inc',
             array(
@@ -109,61 +134,91 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
             )
         );
     }
-    public function zadost($request) {
-        if (!post('action')) {
+
+    public function zadost($request)
+    {
+        if (!$request->post('action')) {
             $this->redirect('/member/profil');
         }
-        switch(post('action')) {
-            case 'accept':
-            case 'refuse':
-                $requests = DBPary::getPartnerRequestsForMe(User::getUserID());
-                foreach ($requests as $req) {
-                    if ($req['pn_id'] != post('id')) {
-                        continue;
-                    }
+        switch($request->post('action')) {
+        case 'accept':
+        case 'refuse':
+            $requests = DBPary::getPartnerRequestsForMe(User::getUserID());
+            foreach ($requests as $req) {
+                if ($req['pn_id'] != $request->post('id')) {
+                    continue;
+                }
 
-                    if (post('action') == 'accept') {
-                        DBPary::acceptPartnerRequest(post('id'));
-                        $this->redirect()->setMessage('žádost přijata');
-                    } else {
-                        DBPary::deletePartnerRequest(post('id'));
-                        $this->redirect()->setMessage('žádost zamitnuta');
-                    }
-                    $this->redirect('/member/profil/par');
+                if ($request->post('action') == 'accept') {
+                    DBPary::acceptPartnerRequest($request->post('id'));
+                    $this->redirect()->setMessage('žádost přijata');
+                } else {
+                    DBPary::deletePartnerRequest($request->post('id'));
+                    $this->redirect()->setMessage('žádost zamitnuta');
                 }
-                break;
-            case 'cancel':
-                $requests = DBPary::getPartnerRequestsByMe(User::getUserID());
-                foreach ($requests as $req) {
-                    if ($req['pn_id'] != post('id')) {
-                        continue;
-                    }
-                    DBPary::deletePartnerRequest(post('id'));
-                    $this->redirect('/member/profil/par', 'Žádost zrušena');
+                $this->redirect('/member/profil/par');
+            }
+            break;
+        case 'cancel':
+            $requests = DBPary::getPartnerRequestsByMe(User::getUserID());
+            foreach ($requests as $req) {
+                if ($req['pn_id'] != $request->post('id')) {
+                    continue;
                 }
-                break;
-            default:
-                $this->redirect('/member/profil');
-                break;
+                DBPary::deletePartnerRequest($request->post('id'));
+                $this->redirect('/member/profil/par', 'Žádost zrušena');
+            }
+            break;
+        default:
+            $this->redirect('/member/profil');
+            break;
         }
         $this->redirect('/member/profil', 'Žádná taková žádost tu není');
     }
-    private function _checkData() {
+
+    private function checkData($request)
+    {
         $f = new Form();
         $f->checkInArray(
-            post('stt-trida'),
+            $request->post('stt-trida'),
             array('Z', 'H', 'D', 'C', 'B', 'A', 'M'),
-            'Neplatná standartní třída', 'stt-trida'
+            'Neplatná standartní třída',
+            'stt-trida'
         );
         $f->checkInArray(
-            post('lat-trida'),
+            $request->post('lat-trida'),
             array('Z', 'H', 'D', 'C', 'B', 'A', 'M'),
-            'Neplatná latinská třída', 'lat-trida'
+            'Neplatná latinská třída',
+            'lat-trida'
         );
-        $f->checkNumberBetween(post('stt-body'), 0, 1000, 'Špatný počet standartních bodů', 'stt-body');
-        $f->checkNumberBetween(post('lat-body'), 0, 1000, 'Špatný počet latinských bodů', 'lat-body');
-        $f->checkNumberBetween(post('stt-finale'), 0, 10, 'Špatný počet standartních finálí', 'stt-finale');
-        $f->checkNumberBetween(post('lat-finale'), 0, 10, 'Špatný počet latinských finálí', 'lat-finale');
+        $f->checkNumberBetween(
+            $request->post('stt-body'),
+            0,
+            1000,
+            'Špatný počet standartních bodů',
+            'stt-body'
+        );
+        $f->checkNumberBetween(
+            $request->post('lat-body'),
+            0,
+            1000,
+            'Špatný počet latinských bodů',
+            'lat-body'
+        );
+        $f->checkNumberBetween(
+            $request->post('stt-finale'),
+            0,
+            10,
+            'Špatný počet standartních finálí',
+            'stt-finale'
+        );
+        $f->checkNumberBetween(
+            $request->post('lat-finale'),
+            0,
+            10,
+            'Špatný počet latinských finálí',
+            'lat-finale'
+        );
         return $f->isValid() ? null : $f;
     }
 }

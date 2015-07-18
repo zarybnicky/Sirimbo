@@ -1,31 +1,18 @@
 <?php
-function phpGlobal(&$array, $field, $value) {
-    if ($field === null) {
-        return $array;
-    }
-
-    if ($value !== null) {
-        $array[$field] = $value;
-        return;
-    }
-
-    if (isset($array[$field])) {
-        return $array[$field];
-    } else {
-        return null;
-    }
-}
-
 function post($field = null, $value = null) {
-    return phpGlobal($_POST, $field, $value);
+    throw new BadFunctionCallException(
+        "post() called (field: '$field', value: '$value')"
+    );
 }
-
 function get($field = null, $value = null) {
-    return phpGlobal($_GET, $field, $value);
+    throw new BadFunctionCallException(
+        "get() called (field: '$field', value: '$value')"
+    );
 }
-
 function session($field = null, $value = null) {
-    return phpGlobal($_SESSION, $field, $value);
+    throw new BadFunctionCallException(
+        "session() called (field: '$field', value: '$value')"
+    );
 }
 
 function formatTime($str, $forDisplay) {
@@ -43,9 +30,10 @@ function formatDate($str) {
 
 function formatTimestamp($str, $date_only = false) {
     list($date, $time) = explode(' ', $str);
-    if ($date_only)
+    if ($date_only) {
         return formatDate($date);
+    }
     $date = formatDate($date);
     $time = formatTime($time, 1);
-    return implode(' ', array($date, $time));
+    return $date . ' ' . $time;
 }

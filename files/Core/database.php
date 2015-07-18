@@ -1,11 +1,17 @@
 <?php
 class Database
 {
-    private static $_connection = null;
+    private static $_connection;
+    protected static $request;
 
     public static function getInstance()
     {
         return new self();
+    }
+
+    public static function setRequest($request)
+    {
+        static::$request = $request;
     }
 
     protected static function escapeArray($array)
@@ -83,8 +89,10 @@ class Database
     }
     public static function isDatabaseError()
     {
-        return get('file') == 'error' && get('id') &&
-            stripos(get('id'), 'database') !== null;
+        return (
+            static::$request->get('file') == 'error' &&
+            static::$request->get('id') &&
+            stripos(static::$request->get('id'), 'database') !== null
+        );
     }
 }
-?>

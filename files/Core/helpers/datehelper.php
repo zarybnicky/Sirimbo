@@ -54,6 +54,12 @@ class DateHelper
         }
     }
 
+    public function set($d)
+    {
+        $this->setDate($d);
+        return $this;
+    }
+
     public function setDate($d)
     {
         $this->date = $this->_setDate($d);
@@ -112,54 +118,55 @@ class DateHelper
         return $this;
     }
 
-    public function getPostRange()
+    public function getPostRange($request)
     {
         if (!$this->useRange) {
-            return array('from' => $this->getPost(), 'to' => new Date());
+            return array('from' => $this->getPost($request), 'to' => new Date());
         }
 
-        if (post($this->name)) {
-            if (strpos(post($this->name), ' - ')) {
-                $pieces = explode(' - ', post($this->name));
+        if ($request->post($this->name)) {
+            if (strpos($request->post($this->name), ' - ')) {
+                $pieces = explode(' - ', $request->post($this->name));
                 $from = new Date($pieces[0]);
                 $to = new Date($pieces[1]);
             }
             if (!isset($from) || !isset($to) || (!$from->isValid() && !$to->isValid())) {
-                return array('from' => $this->getPost(true), 'to' => new Date());
+                return array('from' => $this->getPost($request, true), 'to' => new Date());
             }
 
             return array('from' => $from, 'to' => $to);
-        } elseif (get($this->name)) {
-            if (strpos(get($this->name), ' - ')) {
-                $pieces = explode(' - ', get($this->name));
+        } elseif ($request->get($this->name)) {
+            if (strpos($request->get($this->name), ' - ')) {
+                $pieces = explode(' - ', $request->get($this->name));
                 $from = new Date($pieces[0]);
                 $to = new Date($pieces[1]);
             }
             if (!isset($from) || !isset($to) || (!$from->isValid() && !$to->isValid())) {
-                return array('from' => $this->getPost(true), 'to' => new Date());
+                return array('from' => $this->getPost($request, true), 'to' => new Date());
             }
 
             return array('from' => $from, 'to' => $to);
         } elseif (
-            post($this->name . '-from-year')
-            && post($this->name . '-from-month')
-            && post($this->name . '-from-day')
-            && post($this->name . '-to-year') && post($this->name . '-to-month')
-            && post($this->name . '-to-day')
+            $request->post($this->name . '-from-year')
+            && $request->post($this->name . '-from-month')
+            && $request->post($this->name . '-from-day')
+            && $request->post($this->name . '-to-year')
+            && $request->post($this->name . '-to-month')
+            && $request->post($this->name . '-to-day')
         ) {
             $from = new Date(
-                post($this->name . '-from-year') . '-'
-                . post($this->name . '-from-month') . '-'
-                . post($this->name . '-from-day')
+                $request->post($this->name . '-from-year') . '-'
+                . $request->post($this->name . '-from-month') . '-'
+                . $request->post($this->name . '-from-day')
             );
             $to = new Date(
-                post($this->name . '-to-year') . '-'
-                . post($this->name . '-to-month') . '-'
-                . post($this->name . '-to-day')
+                $request->post($this->name . '-to-year') . '-'
+                . $request->post($this->name . '-to-month') . '-'
+                . $request->post($this->name . '-to-day')
             );
 
             if (!$from->isValid() && !$to->isValid()) {
-                return array('from' => $this->getPost(true), 'to' => new Date());
+                return array('from' => $this->getPost($request, true), 'to' => new Date());
             }
 
             return array('from' => $from, 'to' => $to);
@@ -168,22 +175,26 @@ class DateHelper
         }
     }
 
-    public function getPost($skipRangeCheck = false, $name = null)
+    public function getPost($request, $skipRangeCheck = false, $name = null)
     {
         if ($name === null) {
             $name = $this->name;
         }
         if ($this->useRange && !$skipRangeCheck) {
-            return $this->getPostRange()['from'];
+            return $this->getPostRange($request)['from'];
         }
 
         if (post($name)) {
-            return new Date(post($name));
-        } elseif (post($name . '-year') && post($name . '-month')
-            && post($name . '-day')) {
-            return new Date(post($name . '-year') . '-' .
-                post($name . '-month') . '-' .
-                post($name . '-day'));
+            return new Date($request->post($name));
+        } elseif ($request->post($name . '-year') &&
+                  $request->post($name . '-month') &&
+                  $request->post($name . '-day')
+        ) {
+            return new Date(
+                $request->post($name . '-year') . '-'
+                . $request->post($name . '-month') . '-'
+                . $request->post($name . '-day')
+            );
         } else {
             return new Date();
         }
@@ -202,10 +213,10 @@ class DateHelper
             $s = Helper::instance()->select();
 
             $s->name($this->name . '-day')
-                ->value($this->date ? $this->date->getDay() : null)
-                ->options(array(), true)
-                ->option('00', 'Den');
-            for($i = 1; $i < 32; $i++) {
+              ->value($this->date ? $this->date->getDay() : null)
+              ->options(array(), true)
+              ->option('00', 'Den');
+            for ($i = 1; $i < 32; $i++) {
                 $s->option((($i < 10) ? ('0' . $i) : $i), $i);
             }
             $out .= $s;
@@ -231,19 +242,15 @@ class DateHelper
                 ->value($this->date ? $this->date->getYear() : null)
                 ->options(array(), true)
                 ->option('0000', 'Rok');
-            for($i = $this->fromYear; $i < $this->toYear; $i++) {
+            for ($i = $this->fromYear; $i < $this->toYear; $i++) {
                 $s->option($i, $i);
             }
             $out .= $s;
         } elseif ($this->view == 'text') {
             $done = false;
-            $selected = $this->post ? post($this->name) : get($this->name);
+
             if ($this->useRange) {
-                if ($selected) {
-                    $pieces = explode(' - ', $selected);
-                    $from = new Date($pieces[0]);
-                    $to = new Date($pieces[1]);
-                } elseif ($this->date && $this->dateTo) {
+                if ($this->date && $this->dateTo) {
                     $from = $this->date;
                     $to = $this->dateTo;
                 } else {
@@ -256,12 +263,23 @@ class DateHelper
                 }
             }
             if (!$done) {
-                if ($selected) {
-                    $date = new Date($selected);
-                    $selected = $date->getDate(Date::FORMAT_SIMPLIFIED);
-                } else {
-                    $selected = $this->date ? $this->date->getDate(Date::FORMAT_SIMPLIFIED) : '';
+                $selected = $this->date ? $this->date->getDate(Date::FORMAT_SIMPLIFIED) : '';
+            }
+            if (!$selected) {
+                $msg = 'Rendering DateHelper without a set date.';
+                foreach (debug_backtrace() as $k => $v) {
+                    array_walk(
+                        $v['args'],
+                        function (&$item, $key) {
+                            $item = (string) $item;
+                        }
+                    );
+                    $msg .= "\n#$k "
+                          . $v['file'] . '(' . $v['line'] . '): '
+                          . (isset($v['class']) ? $v['class'] . '->' : '')
+                          . $v['function'] . '(' . implode(', ', $v['args']) . ')';
                 }
+                Log::write($msg);
             }
             $out .= '<input type="text" name="' . $this->name . '" value="' . $selected . '" />' . "\n";
         }

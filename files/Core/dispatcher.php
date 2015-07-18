@@ -35,8 +35,6 @@ class Dispatcher
             );
         }
 
-        View::$controller = $controller;
-
         $action = $request->getAction();
         if (method_exists($controller, $action)) {
             $controller->$action($request);

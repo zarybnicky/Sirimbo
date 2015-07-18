@@ -14,10 +14,10 @@ $form = array(
                 'value' => '<input type="text" name="amount" value="' . post('amount') . '"/>'
         ), array(
                 'desc' => 'Uživatel: ',
-                'value' => (new SelectHelper())->select('variable')->options($this->users)
+                'value' => $this->select('variable')->options($this->users)->render()
         ), array(
                 'desc' => 'Specifický symbol:',
-                'value' => (new SelectHelper())->select('specific')->options($this->categories)
+                'value' => $this->select('specific')->options($this->categories)->render()
         ), array(
                 'desc' => 'Prefix (rok):',
                 'value' => '<input type="text" name="prefix" value="' . post('prefix') . '"/>'

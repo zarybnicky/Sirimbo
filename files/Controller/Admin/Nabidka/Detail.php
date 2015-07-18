@@ -2,10 +2,13 @@
 require_once 'files/Controller/Admin/Nabidka.php';
 class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
 {
-    public function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('nabidka', P_OWNED);
     }
-    public function view($request) {
+
+    public function view($request)
+    {
         $id = $request->getId();
         if (!$id || !($data = DBNabidka::getSingleNabidka($id))) {
             $this->redirect(
@@ -19,7 +22,7 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
         $obsazeno = DBNabidka::getNabidkaItemLessons($id);
         $users = DBPary::getPartners();
 
-        if (empty($_POST)) {
+        if (!$request->post()) {
             $userSelect = $this->userSelect()
                                ->users($users)
                                ->type('par')
@@ -36,9 +39,10 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
                             '-hodiny" value="' . $item['ni_pocet_hod'] .
                             '" size=1/>'
                         ),
-                        'removeButton' => (string) $this->submit('Odstranit')
-                                                        ->name('remove')
-                                                        ->value($item['ni_id'])
+                        'removeButton' => $this->submit('Odstranit')
+                                               ->name('remove')
+                                               ->set($item['ni_id'])
+                                               ->render()
                     );
                 },
                 $items
@@ -49,15 +53,19 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
                 'lessonCount' => '<input type="text" name="add_hodiny" value="" size=1/>',
                 'removeButton' => (string) $this->submit('Přidat')
             );
-            
+
             $this->render(
                 'files/View/Admin/Nabidka/Detail.inc',
                 array(
                     'nabidka' => array(
                         'id' => $data['n_id'],
                         'fullName' => $data['u_jmeno'] . ' ' . $data['u_prijmeni'],
-                        'datum' => formatDate($data['n_od'])
-                        . ($data['n_od'] != $data['n_do'] ? ' - ' . formatDate($data['n_do']) : ''),
+                        'datum' => (
+                            formatDate($data['n_od'])
+                            . ($data['n_od'] != $data['n_do']
+                               ? ' - ' . formatDate($data['n_do'])
+                               : '')
+                        ),
                         'canEdit' => false,
                         'hourMax' => $data['n_max_pocet_hod'],
                         'hourTotal' => $data['n_pocet_hod'],
@@ -73,58 +81,73 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
             return;
         }
 
-        if (post("remove") > 0) {
-            DBNabidka::removeNabidkaItem($id, post(post("remove") . "-partner"));
+        if ($request->post("remove") > 0) {
+            DBNabidka::removeNabidkaItem(
+                $id,
+                $request->post($request->post("remove") . "-partner")
+            );
             $items = DBNabidka::getNabidkaItem($id);
             $obsazeno = DBNabidka::getNabidkaItemLessons($id);
         }
+
+        $maxLessons = $data['n_max_pocet_hodin'];
+
         foreach ($items as $item) {
-            if (post($item["ni_id"] . "-partner") != $item["ni_partner"]
-                || post($item["ni_id"] . "-hodiny") != $item["ni_pocet_hod"]
-            ) {
-                if ($data['n_max_pocet_hod'] > 0 && post($item['ni_id'] . '-hodiny') > $data['n_max_pocet_hod']) {
-                    post($item['ni_id'] . '-hodiny', $data['n_max_pocet_hod']);
+            $partner = $item["ni_partner"];
+            $partnerNew = $request->post($item["ni_id"] . "-partner");
+            $count = $item['ni_pocet_hod'];
+            $countNew = $request->post($item["ni_id"] . "-hodiny");
+
+            if ($partner != $partnerNew || $countNew != $countNew) {
+                if (0 < $maxLessons && $maxLessons < $countNew) {
+                    $countNew = $maxLessons;
                 }
 
-                $rozdil_hod = post($item["ni_id"] . "-hodiny") - $item["ni_pocet_hod"];
-                if (($obsazeno + $rozdil_hod) > $data["n_pocet_hod"]) {
-                    post("pocet_hod", $obsazeno + $rozdil_hod);
-                }
-                DBNabidka::editNabidkaItem($item["ni_id"], post($item["ni_id"] . "-partner"),
-                    post($item["ni_id"] . "-hodiny"));
+                DBNabidka::editNabidkaItem(
+                    $item["ni_id"],
+                    $partnerNew,
+                    $countNew
+                );
             }
         }
         $items = DBNabidka::getNabidkaItem($id);
         $obsazeno = DBNabidka::getNabidkaItemLessons($id);
 
-        if (is_numeric(post("add_hodiny")) && is_numeric(post("add_partner")) && post('add_partner')) {
-            $hodiny = post("add_hodiny");
-            $partner = post("add_partner");
+        if (
+            is_numeric($request->post("add_hodiny")) &&
+            is_numeric($request->post("add_partner")) &&
+            $request->post('add_partner')
+        ) {
+            $partner = $request->post('add_partner');
+            $count = $request->post("add_hodiny");
+            $request->post('add_partner', null);
+            $request->post('add_hodiny', null);
 
-            if ($data['n_max_pocet_hod'] > 0 && post('add_hodiny') > $data['n_max_pocet_hod']) {
-                post('add_hodiny', $data['n_max_pocet_hod']);
+            if (0 < $maxLessons && $maxLessons < $count) {
+                $count = $maxLessons;
             }
-            if (($obsazeno + post('add_hodiny')) > post("pocet_hod")) {
-                post("pocet_hod", $obsazeno + post('add_hodiny'));
-            }
 
-            DBNabidka::addNabidkaItemLessons(post("add_partner"), $id,
-                post("add_hodiny"));
+            DBNabidka::addNabidkaItemLessons(
+                $request->post("add_partner"),
+                $id,
+                $count
+            );
 
-            post('add_partner', null);
-            post('add_hodiny', null);
             $items = DBNabidka::getNabidkaItem($id);
             $obsazeno = DBNabidka::getNabidkaItemLessons($id);
         }
 
         //-----Dorovnávání skutečného a nastaveného počtu hodin-----//
-        if (post("pocet_hod") > $data["n_pocet_hod"]) {
-            if (post("pocet_hod") < $obsazeno) {
-                post("pocet_hod", $obsazeno);
-            }
+        if ($obsazeno > $data["n_pocet_hod"]) {
             DBNabidka::editNabidka(
-                $id, $data["n_trener"], post("pocet_hod"), $data['n_max_pocet_hod'],
-                $data["n_od"], $data["n_do"], $data['n_visible'], ($data["n_lock"]) ? 1 : 0
+                $id,
+                $data["n_trener"],
+                $obsazeno,
+                $data['n_max_pocet_hod'],
+                $data["n_od"],
+                $data["n_do"],
+                $data['n_visible'],
+                ($data["n_lock"]) ? 1 : 0
             );
             $data = DBNabidka::getSingleNabidka($id);
         }

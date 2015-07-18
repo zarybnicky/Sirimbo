@@ -8,7 +8,7 @@ class UserSelectHelper
     private $_users;
     private $_type;
     private $_tmpSwitch;
-    private $_default;
+    private $_selected;
 
     public function __construct() {
         return $this->userSelect();
@@ -28,7 +28,6 @@ class UserSelectHelper
         $this->_users = array();
         $this->_type = 'user';
         $this->_tmpSwitch = true;
-        $this->_default = null;
     }
     public function name($name) {
         $this->_name = $name;
@@ -60,16 +59,15 @@ class UserSelectHelper
         $this->_tmpSwitch = (bool) $value;
         return $this;
     }
-    public function defaultValue($value) {
-        $this->_default = $value;
+    public function set($value) {
+        $this->_selected = $value;
         return $this;
     }
     public function render() {
         $name = 'userselect' . rand(0, 1024);
-        $selected = post($this->_name) !== null ? post($this->_name) : $this->_default;
+        $selected = $this->_selected !== null ? $this->_selected : '';
 
         $out = '<div class="' . $name . '">' . "\n";
-
         $out .= '<select name="' . $this->_name . '">' . "\n";
         if (!$selected) {
             $out .= '<option value="0" selected="selected">--- žádný ---</option>' . "\n";
@@ -104,7 +102,7 @@ class UserSelectHelper
 Jméno: <input type="text" name="jmeno" size="8" /><br/>
 Příjmení: <input type="text" name="prijmeni" size="8" /><br/>
 Datum narození:&nbsp;<br/>
-<?php echo Helper::instance()->date('narozeni'), '<br/>';?>
+<?php echo Helper::instance()->date('narozeni')->render(), '<br/>';?>
 <button type="submit">Uložit</button>
 </div>
 <div class="loading" style="display:none;"><img alt="Čekám na odezvu serveru..." src="/images/loading_bar.gif"/></div>

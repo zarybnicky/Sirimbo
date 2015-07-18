@@ -15,7 +15,8 @@ class Paging
     private $_valid;
     private $_adapter;
 
-    public function __construct(PagingAdapterInterface $d = null) {
+    public function __construct(PagingAdapterInterface $d = null)
+    {
         if ($d instanceof PagingAdapterInterface) {
             $this->_adapter = $d;
             $this->_totalItems = $this->_adapter->count();
@@ -24,92 +25,121 @@ class Paging
         return $this;
     }
 
-    public function setAdapter(PagingAdapterInterface $d) {
-        if (!($d instanceof PagingAdapterInterface))
+    public function setAdapter(PagingAdapterInterface $d)
+    {
+        if (!($d instanceof PagingAdapterInterface)) {
             return false;
+        }
         $this->_adapter = $d;
         $this->_totalItems = $this->_adapter->count();
         $this->_recalculate();
     }
-    public function setCurrentPage($p) {
-        if (!is_numeric($p))
+
+    public function setCurrentPage($p)
+    {
+        if (!is_numeric($p)) {
             return false;
+        }
         $this->_currentPage = $p;
         $this->_recalculate();
     }
-    public function setCurrentPageField($f) {
-        $this->_currentPageField = $f;
-        $this->_recalculate();
-    }
-    public function setItemsPerPageField($f) {
-        $this->_itemsPerPageField = $f;
-        $this->_recalculate();
-    }
-    public function setDefaultItemsPerPage($i) {
-        if (!is_numeric($i))
+
+    public function setItemsPerPage($p)
+    {
+        if (!is_numeric($p)) {
             return false;
-        $this->_defaultItemsPerPage = $i;
-        $this->_recalculate();
-    }
-    public function setItemsPerPage($p) {
-        if (!is_numeric($p))
-            return false;
+        }
         $this->_itemsPerPage = $p;
         $this->_recalculate();
     }
-    public function setPageRange($p) {
-        if (is_numeric($p))
-            $this->_pageRange = $p;
+
+    public function setCurrentPageField($f)
+    {
+        $this->_currentPageField = $f;
+    }
+
+    public function setItemsPerPageField($f)
+    {
+        $this->_itemsPerPageField = $f;
+    }
+
+    public function setDefaultItemsPerPage($i)
+    {
+        if (!is_numeric($i)) {
+            return false;
+        }
+        $this->_defaultItemsPerPage = $i;
         $this->_recalculate();
     }
-    private function _recalculate() {
+
+    public function setPageRange($p)
+    {
+        if (is_numeric($p)) {
+            $this->_pageRange = $p;
+        }
+        $this->_recalculate();
+    }
+
+    private function _recalculate()
+    {
         if (!isset($this->_adapter)
-            || (!isset($this->_itemsPerPage) && !isset($this->_itemsPerPageField)
-            && !isset($this->_defaultItemsPerPage))
-            || (!isset($this->_currentPage) && !isset($this->_currentPageField))) {
+            || (!isset($this->_itemsPerPage)
+                && !isset($this->_itemsPerPageField)
+                && !isset($this->_defaultItemsPerPage))
+            || (!isset($this->_currentPage)
+                && !isset($this->_currentPageField))
+        ) {
             $this->_valid = false;
             return;
         }
 
-        if (isset($this->_itemsPerPageField)
-            && get($this->_itemsPerPageField) !== null)
-            $this->_itemsPerPage = get($this->_itemsPerPageField);
-        elseif (isset($this->_defaultItemsPerPage))
-            $this->_itemsPerPage = $this->_defaultItemsPerPage;
-        else
-            $this->_itemsPerPage = 20;
+        if (!$this->_itemsPerPage) {
+            if (isset($this->_defaultItemsPerPage)) {
+                $this->_itemsPerPage = $this->_defaultItemsPerPage;
+            } else {
+                $this->_itemsPerPage = 20;
+            }
+        }
 
-        if (get($this->_currentPageField) !== null)
-            $this->_currentPage = get($this->_currentPageField);
-        else
+        if (!$this->_currentPage) {
             $this->_currentPage = 1;
+        }
 
         $this->_pageCount = ceil($this->_totalItems / $this->_itemsPerPage);
-        if ($this->_currentPage < 1)
+        if ($this->_currentPage < 1) {
             $this->_currentPage = 1;
-        elseif ($this->_currentPage > $this->_pageCount && $this->_pageCount > 0)
+        } elseif ($this->_currentPage > $this->_pageCount && $this->_pageCount > 0) {
             $this->_currentPage = $this->_pageCount;
+        }
 
-        $this->_previousPage = $this->_currentPage > 1 ?
-            $this->_currentPage - 1 : 1;
-        $this->_nextPage = $this->_currentPage < $this->_pageCount ?
-            $this->_currentPage + 1 :
-            ($this->_pageCount > 0 ? $this->_pageCount : 1);
+        $this->_previousPage = $this->_currentPage > 1
+                             ? $this->_currentPage - 1
+                             : 1;
+        $this->_nextPage = $this->_currentPage < $this->_pageCount
+                         ? $this->_currentPage + 1
+                         : ($this->_pageCount > 0
+                            ? $this->_pageCount
+                            : 1);
         $this->_pagesInRange = array();
 
         if (isset($this->_pageRange)) {
             $halfRange = floor($this->_pageRange / 2);
 
-            if ($this->_pageRange > $this->_pageCount)
+            if ($this->_pageRange > $this->_pageCount) {
                 $this->_pagesInRange = range(1, $this->_pageCount);
-            elseif ($this->_currentPage - $halfRange <= 1)
+            } elseif ($this->_currentPage - $halfRange <= 1) {
                 $this->_pagesInRange = range(1, $this->_pageRange);
-            elseif ($this->_currentPage + $halfRange >= $this->_pageCount) {
-                $this->_pagesInRange = range($this->_pageCount - $this->_pageRange + 1, $this->_pageCount);
+            } elseif ($this->_currentPage + $halfRange >= $this->_pageCount) {
+                $this->_pagesInRange = range(
+                    $this->_pageCount - $this->_pageRange + 1,
+                    $this->_pageCount
+                );
+            } else {
+                $this->_pagesInRange = range(
+                    $this->_currentPage - $halfRange,
+                    $this->_currentPage + $halfRange
+                );
             }
-            else
-                $this->_pagesInRange = range($this->_currentPage - $halfRange,
-                    $this->_currentPage + $halfRange);
         } else {
             $this->_pagesInRange = range(1, $this->_pageCount);
         }
@@ -119,8 +149,9 @@ class Paging
     }
 
     public function getPages() {
-        if (!$this->_valid)
+        if (!$this->_valid) {
             return false;
+        }
         return array(
             'first' => 1,
             'previous' => $this->_previousPage,
@@ -131,123 +162,147 @@ class Paging
             'pagesInRange' => $this->_pagesInRange
         );
     }
-    public function getLink($i, $label, $perPage = null) {
-        if (!$this->_valid)
+    public function getLink($get, $i, $label, $perPage = null) {
+        if (!$this->_valid) {
             return false;
-        if ($perPage === null)
+        }
+        if ($perPage === null) {
             $perPage = $this->_itemsPerPage;
+        }
 
-        $p = (isset($this->_currentPageField) ? $this->_currentPageField : 'p');
-        $c = (isset($this->_itemsPerPageField) ? $this->_itemsPerPageField : 'c');
-        $url = http_build_query(array_merge($_GET, array(
-            $c => $perPage,
-            $p => $i)
-        ));
+        $p = isset($this->_currentPageField)
+           ? $this->_currentPageField
+           : 'p';
+        $c = isset($this->_itemsPerPageField)
+           ? $this->_itemsPerPageField
+           : 'c';
+        $url = http_build_query(
+            array_merge(
+                $get,
+                array(
+                    $c => $perPage,
+                    $p => $i
+                )
+            )
+        );
         return "<a href=\"?$url\">$label</a>";
     }
-    public function getNavigation() {
-        if ($this->getPageCount() <= 1)
-            return $this->getCountSetting();
+    public function getNavigation($get) {
+        if ($this->getPageCount() <= 1) {
+            return $this->getCountSetting($get);
+        }
 
         $out = '';
         if ($this->getCurrentPage() != 1) {
-            $out .= $this->getLink(1, '&lt;&lt;') . '&nbsp;';
-            $out .= $this->getLink($this->getPreviousPage(), '&lt;');
+            $out .= $this->getLink($get, 1, '&lt;&lt;') . '&nbsp;';
+            $out .= $this->getLink($get, $this->getPreviousPage(), '&lt;');
         } else {
             $out .= '<span style="padding:0 2px;">&lt;&lt;</span>&nbsp;';
             $out .= '<span style="padding:0 2px;">&lt;</span>';
         }
         $pages = $this->getPagesInRange();
-        if (end($pages) + 10 < $this->_pageCount)
+        if (end($pages) + 10 < $this->_pageCount) {
             array_push($pages, end($pages) + 10);
-        if (reset($pages) - 10 > 1)
+        }
+        if (reset($pages) - 10 > 1) {
             array_unshift($pages, reset($pages) - 10);
+        }
 
         $out .= '&nbsp;|';
         foreach ($pages as $i) {
             $out .= '<div style="text-align:center;width:3ex;display:inline-block;*display:inline;">';
-            if ($i != $this->getCurrentPage())
-                $out .= $this->getLink($i, $i);
-            else
+            if ($i != $this->getCurrentPage()) {
+                $out .= $this->getLink($get, $i, $i);
+            } else {
                 $out .= $i;
+            }
             $out .= '</div>|';
         }
         $out .= '&nbsp;';
         if ($this->getCurrentPage() != $this->getPageCount()) {
-            $out .= $this->getLink($this->getNextPage(), '&gt;') . '&nbsp;';
-            $out .= $this->getLink($this->getPageCount(), '&gt;&gt;');
+            $out .= $this->getLink($get, $this->getNextPage(), '&gt;') . '&nbsp;';
+            $out .= $this->getLink($get, $this->getPageCount(), '&gt;&gt;');
         } else {
             $out .= '<span style="padding:0 2px;">&gt;</span>&nbsp;';
             $out .= '<span style="padding:0 2px;">&gt;&gt;</span>';
         }
-        return $out . '<br/>' . $this->getCountSetting();
+        return $out . '<br/>' . $this->getCountSetting($get);
     }
-    public function getCountSetting() {
-        if ($this->_totalItems <= 5)
+    public function getCountSetting($get) {
+        if ($this->_totalItems <= 5) {
             return '';
+        }
         $options = array(5, 10, 20, 50);
 
         $out = 'zobrazit ';
-        if ($this->_itemsPerPage === $this->_totalItems)
+        if ($this->_itemsPerPage === $this->_totalItems) {
             $out .= '<span style="padding:0 2px;">vše</span>';
-        else
-            $out .= $this->getLink(1, 'vše', $this->_totalItems);
+        } else {
+            $out .= $this->getLink($get, 1, 'vše', $this->_totalItems);
+        }
 
         foreach ($options as $option) {
-            if ($option > $this->_totalItems)
+            if ($option > $this->_totalItems) {
                 continue;
+            }
 
             if ($this->_itemsPerPage == $option) {
                 $out .= '&nbsp;|&nbsp;<span style="padding:0 2px;">' . $option . '</span>';
             } else {
                 $i = floor($this->_itemsPerPage * ($this->_currentPage - 1) / $option) + 1;
-                $out .= '&nbsp;|&nbsp;' . $this->getLink($i, $option, $option);
+                $out .= '&nbsp;|&nbsp;' . $this->getLink($get, $i, $option, $option);
             }
         }
         $out .= ' položek na stránku';
         return $out;
     }
     public function getPreviousPage() {
-        if (!$this->_valid)
+        if (!$this->_valid) {
             return false;
+        }
         return $this->_previousPage;
     }
     public function getCurrentPage() {
-        if (!$this->_valid)
+        if (!$this->_valid) {
             return false;
+        }
         return $this->_currentPage;
     }
     public function getNextPage() {
-        if (!$this->_valid)
+        if (!$this->_valid) {
             return false;
+        }
         return $this->_nextPage;
     }
     public function getPageCount() {
-        if (!$this->_valid)
+        if (!$this->_valid) {
             return false;
+        }
         return $this->_pageCount;
     }
     public function getItemsPerPage() {
-        if (!$this->_valid)
+        if (!$this->_valid) {
             return false;
+        }
         return $this->_itemsPerPage;
     }
     public function getTotalItems() {
-        if (!$this->_valid)
+        if (!$this->_valid) {
             return false;
+        }
         return $this->_totalItems;
     }
     public function getPagesInRange() {
-        if (!$this->_valid)
+        if (!$this->_valid) {
             return false;
+        }
         return $this->_pagesInRange;
     }
     public function getItems() {
-        if (!$this->_valid)
+        if (!$this->_valid) {
             return array();
-
+        }
         $offset = $this->_itemsPerPage * ($this->_currentPage - 1);
         return $this->_adapter->page($offset, $this->_itemsPerPage);
     }
 }
-?>

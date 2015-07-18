@@ -9,14 +9,14 @@ class Controller_Admin_Aktuality extends Controller_Admin
 
     public function view($request)
     {
-        switch(post('action')) {
+        switch($request->post('action')) {
         case 'remove':
-            if (!is_array(post('aktuality'))) {
+            if (!is_array($request->post('aktuality'))) {
                 $this->redirect('/admin/aktuality');
                 break;
             }
             $url = '/admin/aktuality/remove?';
-            foreach (post('aktuality') as $id) {
+            foreach ($request->post('aktuality') as $id) {
                 $url .= '&u[]=' . $id;
             }
             $this->redirect($url);
@@ -35,12 +35,12 @@ class Controller_Admin_Aktuality extends Controller_Admin
                                       ? 'Krátké zprávy'
                                       : '')),
                     'links' => $editable
-                    ? ('<a href="/admin/aktuality/edit/' . $item['at_id'] . '">obecné</a>, ' .
-                       '<a href="/admin/aktuality/foto/' . $item['at_id'] . '">galerie</a>')
+                    ? ('<a href="/admin/aktuality/edit/' . $item['at_id'] . '">obecné</a>, '
+                       . '<a href="/admin/aktuality/foto/' . $item['at_id'] . '">galerie</a>')
                     : ''
                 );
             },
-            DBAktuality::getAktuality(get('f'))
+            DBAktuality::getAktuality($request->get('f'))
         );
         $this->render(
             'files/View/Admin/Aktuality/Overview.inc',
@@ -52,7 +52,7 @@ class Controller_Admin_Aktuality extends Controller_Admin
     }
     public function add($request)
     {
-        if (empty($_POST)) {
+        if (!$request->post()) {
             $this->render(
                 'files/View/Admin/Aktuality/Form.inc',
                 array(
@@ -63,16 +63,22 @@ class Controller_Admin_Aktuality extends Controller_Admin
         }
 
         $id = DBAktuality::addAktualita(
-            User::getUserID(), post('kat'), post('jmeno'),
-            post('text'), post('summary'), '0', '0'
+            User::getUserID(),
+            $request->post('kat'),
+            $request->post('jmeno'),
+            $request->post('text'),
+            $request->post('summary'),
+            '0',
+            '0'
         );
 
-        if (post('action') == 'save') {
-            $news = new Novinky(User::getUserID());
-            $news->clanek()->add('/aktualne/' . $id, post('jmeno'));
+        if ($request->post('action') == 'save') {
             $this->redirect('/admin/aktuality', 'Článek přidán');
         } else {
-            $this->redirect('/admin/aktuality/foto/' . $id . '?notify=true', 'Uloženo');
+            $this->redirect(
+                '/admin/aktuality/foto/' . $id . '?notify=true',
+                'Uloženo'
+            );
         }
     }
 
@@ -85,7 +91,7 @@ class Controller_Admin_Aktuality extends Controller_Admin
 
         Permissions::checkError('aktuality', P_OWNED, $data['at_kdo']);
 
-        if (empty($_POST)) {
+        if (!$request->post()) {
             $this->render(
                 'files/View/Admin/Aktuality/Form.inc',
                 array(
@@ -98,42 +104,35 @@ class Controller_Admin_Aktuality extends Controller_Admin
             );
             return;
         }
-        if (post('kat') != $data['at_kat']
-            || post('jmeno') != $data['at_jmeno']
-            || post('text') != $data['at_text']
-            || post('summary') != $data['at_preview']
+        if ($request->post('kat') != $data['at_kat']
+            || $request->post('jmeno') != $data['at_jmeno']
+            || $request->post('text') != $data['at_text']
+            || $request->post('summary') != $data['at_preview']
         ) {
             DBAktuality::editAktualita(
                 $id,
-                post('category'),
-                post('name'),
-                post('text'),
-                post('summary'),
+                $request->post('category'),
+                $request->post('name'),
+                $request->post('text'),
+                $request->post('summary'),
                 $data['at_foto'],
                 $data['at_foto_main']
             );
-            $changed = true;
-        }
-        if (isset($changed) && $changed) {
-            $news = new Novinky(User::getUserID());
-            $news->clanek()->edit('/aktualne/' . $id, post('jmeno'));
         }
         $this->redirect('/admin/aktuality', 'Článek změněn');
     }
 
     public function remove($request)
     {
-        if (!is_array(post('data')) && !is_array(get('u'))) {
+        if (!is_array($request->post('data')) && !is_array(get('u'))) {
             $this->redirect('/admin/aktuality');
         }
-        if (!empty($_POST) && post('action') == 'confirm') {
-            foreach (post('aktuality') as $id) {
+        if ($request->post() && $request->post('action') == 'confirm') {
+            foreach ($request->post('aktuality') as $id) {
                 $data = DBAktuality::getSingleAktualita($id);
 
                 if (Permissions::check('aktuality', P_OWNED, $data['at_kdo'])) {
                     DBAktuality::removeAktualita($id);
-                    $news = new Novinky(User::getUserID());
-                    $news->clanek()->remove($data['at_jmeno']);
                 } else {
                     $error = true;
                 }

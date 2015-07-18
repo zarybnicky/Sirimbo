@@ -17,14 +17,14 @@ class Controller_Admin_Galerie extends Controller_Admin
         'image/bmp' => 'BMP',
         'image/x-png' => 'PNG'
     );
-    
+
     public function __construct()
     {
         Permissions::checkError('galerie', P_OWNED);
     }
     public function view($request)
     {
-        switch(post('action')) {
+        switch($request->post('action')) {
         case 'galerie/save':
             $this->_processSave();
             break;
@@ -33,18 +33,18 @@ class Controller_Admin_Galerie extends Controller_Admin
             break;
         case 'directory':
         case 'directory/edit':
-            $galerie = post('galerie');
+            $galerie = $request->post('galerie');
             if (isset($galerie[0])) {
                 $this->redirect(
-                    '/admin/galerie/' . post('action') . '/' . $galerie[0]
+                    '/admin/galerie/' . $request->post('action') . '/' . $galerie[0]
                 );
             }
             break;
         case 'directory/remove':
-            if (is_array(post('galerie'))) {
+            if (is_array($request->post('galerie'))) {
                 $this->redirect(
                     '/admin/galerie/directory/remove?'
-                    . http_build_query(array('u' => post('galerie')))
+                    . http_build_query(array('u' => $request->post('galerie')))
                 );
             }
             break;
@@ -287,12 +287,15 @@ class Controller_Admin_Galerie extends Controller_Admin
     {
         $items = DBGalerie::getDirs();
         foreach ($items as $item) {
-            if ((bool) post($item['gd_id']) === (bool) $item['gd_hidden']) {
+            if ((bool) $request->post($item['gd_id']) === (bool) $item['gd_hidden']) {
                 continue;
             }
             DBGalerie::editDir(
-                $item['gd_id'], $item['gd_name'], $item['gd_id_rodic'],
-                $item['gd_level'], post($item['gd_id']) ? '1' : '0',
+                $item['gd_id'],
+                $item['gd_name'],
+                $item['gd_id_rodic'],
+                $item['gd_level'],
+                $request->post($item['gd_id']) ? '1' : '0',
                 $item['gd_path']
             );
         }

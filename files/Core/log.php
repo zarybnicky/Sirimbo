@@ -2,16 +2,25 @@
 class Log
 {
     private static $_logfile;
+    protected static $request;
+
+    public static function setRequest($request)
+    {
+        static::$request = $request;
+    }
 
     public static function write($message)
     {
         Log::$_logfile = fopen(LOG, 'a+');
-        fwrite(Log::$_logfile,  date(DATE_RFC822) . " - " .
-            $_SERVER['REQUEST_URI'] . ":\n" .
-            ($message ? "\tMessage: $message\n" : '') .
-            "\tGET: " . json_encode($_GET) . "\n" .
-            "\tPOST: " . json_encode($_POST) . "\n" .
-            "\tSESSION: " . json_encode($_SESSION) . "\n\n");
+        fwrite(
+            Log::$_logfile,
+            date(DATE_RFC822) . " - "
+            . static::$request->server('REQUEST_URI') . ":\n"
+            . "\tMessage: $message\n"
+            . "\tGET: " . json_encode(static::$request->get()) . "\n"
+            . "\tPOST: " . json_encode(static::$request->post()) . "\n"
+            . "\tSESSION: " . json_encode(static::$request->session()) . "\n\n"
+        );
         fclose(Log::$_logfile);
     }
 }
