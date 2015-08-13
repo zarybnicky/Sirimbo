@@ -5,19 +5,19 @@
     <?php foreach ($this->data as $item): ?>
       <div class="container third item">
         <div class="article-small">
-          <a class="no-a image" href="<?php echo $item['uri'] ?>">
-            <img alt="" src="<?php echo $item['title_photo_uri'] ?>" />
+          <a class="no-a image" href="<?= $item['uri'] ?>">
+            <img alt="" src="<?= $item['title_photo_uri'] ?>" />
           </a>
           <div class="info">
-            <div class="category"><?php echo $item['category']; ?></div>
+            <div class="category"><?= $item['category']; ?></div>
             <div class="name">
-              <a href="<?php echo $item['uri'] ?>">
-                <?php echo $item['name']; ?>
+              <a href="<?= $item['uri'] ?>">
+                <?= $item['name']; ?>
               </a>
             </div>
-            <p class="desc"><?php echo $item['description']; ?></p>
+            <p class="desc"><?= $item['description']; ?></p>
             <div style="text-align:right;font-size:85%;">
-              <a href="<?php echo $item['uri'] ?>">
+              <a href="<?= $item['uri'] ?>">
                 více zde &raquo;
               </a>
             </div>

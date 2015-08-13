@@ -1,7 +1,7 @@
 <?php
 class Database
 {
-    private static $_connection;
+    protected static $connection;
     protected static $request;
 
     public static function getInstance()
@@ -16,7 +16,7 @@ class Database
 
     protected static function escapeArray($array)
     {
-        Database::getConnection();
+        static::getConnection();
         $escaped = array();
         foreach ($array as $key => $value) {
             if (is_array($value)) {
@@ -42,20 +42,20 @@ class Database
     }
     protected static function getConnection()
     {
-        if (self::$_connection != null) {
+        if (self::$connection != null) {
             return;
         }
-        self::$_connection = @mysql_connect(DB_SERVER, DB_USER, DB_PASS)
+        self::$connection = @mysql_connect(DB_SERVER, DB_USER, DB_PASS)
             or static::databaseError(true);
-        @mysql_select_db(DB_DATABASE, self::$_connection)
+        @mysql_select_db(DB_DATABASE, self::$connection)
             or static::databaseError(true);
-        @mysql_set_charset("utf8", self::$_connection)
+        @mysql_set_charset("utf8", self::$connection)
             or static::databaseError(true);
     }
     protected static function query($query)
     {
-        Database::getConnection();
-        $res = mysql_query($query, self::$_connection)
+        static::getConnection();
+        $res = mysql_query($query, self::$connection)
             or static::databaseError();
 
         return $res;
@@ -64,6 +64,7 @@ class Database
     {
         return mysql_fetch_assoc($resource);
     }
+
     protected static function getArray($resource)
     {
         $result = array();
@@ -76,7 +77,7 @@ class Database
     }
     public static function getInsertId()
     {
-        return mysql_insert_id(self::$_connection);
+        return mysql_insert_id(self::$connection);
     }
     protected function databaseError($onConnection = false)
     {

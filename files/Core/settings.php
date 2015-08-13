@@ -20,7 +20,8 @@ define('PHP_LOG', ROOT . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'ph
 
 mb_internal_encoding('UTF-8');
 
-function shutdownHandler() {
+function shutdownHandler()
+{
     if (($error = error_get_last()) === null) {
         return;
     }
@@ -30,21 +31,17 @@ function shutdownHandler() {
 
     ob_end_clean();
     $msg = "{$error['type']}: {$error['message']} in {$error['file']}: {$error['line']}";
-    $ignore = 0;
     foreach (debug_backtrace() as $k => $v) {
-        if ($k < $ignore) {
-            continue;
-        }
         array_walk(
             $v['args'],
             function (&$item, $key) {
                 $item = var_export($item, true);
             }
         );
-        $msg .= "\n#" . ($k - $ignore) . ' '
-              . $v['file'] . '(' . $v['line'] . '): '
-              . (isset($v['class']) ? $v['class'] . '->' : '')
-              . $v['function'] . '(' . implode(', ', $v['args']) . ')';
+        $msg .= "\n#$k "
+             . "{$v['file']}({$v['line']}): "
+             . (isset($v['class']) ? $v['class'] . '->' : '')
+             . $v['function'] . '(' . implode(', ', $v['args']) . ')';
     }
     Log::write($msg);
     if (strpos('error', $_SERVER['REQUEST_URI']) !== false) {
@@ -53,7 +50,8 @@ function shutdownHandler() {
     }
     header('Location: /error?id=script_fatal');
 }
-function errorHandler($severity, $message, $filepath, $line) {
+function errorHandler($severity, $message, $filepath, $line)
+{
     if ($severity & (E_STRICT | E_DEPRECATED | E_NOTICE)) {
         return false;
     }
