@@ -7,6 +7,7 @@ class DBAktuality extends Database
         $res = DBAktuality::query(
             "SELECT *
             FROM aktuality
+            LEFT JOIN galerie_foto ON gf_id=at_foto_main
             WHERE 1=1" . ($kat != 0 ? " AND at_kat='$kat'" : '') .
             ($kdo > 0 ? " AND at_kdo='$kdo'" : '') .
             " ORDER BY at_timestamp_add DESC"
@@ -19,6 +20,7 @@ class DBAktuality extends Database
         $res = DBAktuality::query(
             "SELECT *
             FROM aktuality
+            LEFT JOIN galerie_foto ON gf_id=at_foto_main
             WHERE at_id='$id'"
         );
         return DBAktuality::getSingleRow($res);
