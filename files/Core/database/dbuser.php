@@ -99,7 +99,7 @@ class DBUser extends Database implements Pagable
     public static function getUserDataByNameEmail($login, $email) {
         list($login, $email) = DBUser::escapeArray(array($login, $email));
 
-        $res = DBUser::query("SELECT * FROM users WHERE LOWER(u_login)=LOWER('$login') AND u_email='$email'");
+        $res = DBUser::query("SELECT * FROM users WHERE LOWER(u_login)=LOWER('$login') AND LOWER(u_email)=LOWER('$email')");
         if (!$res) {
             return false;
         } else {
@@ -259,7 +259,7 @@ class DBUser extends Database implements Pagable
         WHERE u_pohlavi='$pohlavi' ORDER BY u_prijmeni");
         return DBUser::getArray($res);
     }
-            
+
     public static function getUsersWithSkupinaPlatby() {
         $res = self::query(
             "SELECT *
