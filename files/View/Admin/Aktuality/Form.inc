@@ -43,10 +43,15 @@
                 <td></td>
             </tr><tr>
                 <td colspan="3">
-                    <textarea rows="30"
+                    <textarea name="text"
+                              id="text"
+                              rows="30"
                               cols="60"
-                              name="text"
                               style="width:99%"><?= $this->text ?></textarea>
+                    <script src="/scripts/ckeditor/ckeditor.js"></script>
+                    <script>
+                     CKEDITOR.replace('text');
+                    </script>
                 </td>
             </tr><tr>
                 <td colspan="2">

@@ -1,14 +1,4 @@
 <?php
-/*
- * Example:
-echo '<form action="" method="post">';
-echo $this->date('2012-12-21')->name('test1')->selectBox(), '<br/>';
-echo $this->date('2000-01-01')->name('test2')->textBox(), '<br/>';
-echo $this->date()->name('test1')->getPost(), '<br/>';
-echo $this->date()->name('test2')->getPost(), '<br/>';
-echo '<input type="submit" value="Send" />';
-echo '</form>';
-*/
 class DateHelper
 {
     protected $date;
@@ -184,7 +174,7 @@ class DateHelper
             return $this->getPostRange($request)['from'];
         }
 
-        if (post($name)) {
+        if ($request->post($name)) {
             return new Date($request->post($name));
         } elseif ($request->post($name . '-year') &&
                   $request->post($name . '-month') &&
@@ -264,22 +254,6 @@ class DateHelper
             }
             if (!$done) {
                 $selected = $this->date ? $this->date->getDate(Date::FORMAT_SIMPLIFIED) : '';
-            }
-            if (!$selected) {
-                $msg = 'Rendering DateHelper without a set date.';
-                foreach (debug_backtrace() as $k => $v) {
-                    array_walk(
-                        $v['args'],
-                        function (&$item, $key) {
-                            $item = (string) $item;
-                        }
-                    );
-                    $msg .= "\n#$k "
-                          . $v['file'] . '(' . $v['line'] . '): '
-                          . (isset($v['class']) ? $v['class'] . '->' : '')
-                          . $v['function'] . '(' . implode(', ', $v['args']) . ')';
-                }
-                Log::write($msg);
             }
             $out .= '<input type="text" name="' . $this->name . '" value="' . $selected . '" />' . "\n";
         }

@@ -31,17 +31,17 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
             }
             break;
         }
-        $this->_displayOverview($id);
+        $this->displayOverview($id);
     }
     public function add($request)
     {
         if (!$request->post()) {
-            $this->_displayForm('add');
+            $this->displayForm($request, 'add');
             return;
         }
-        if (is_object($form = $this->_checkData($request))) {
+        if (is_object($form = $this->checkData($request))) {
             $this->redirect()->setMessage($form->getMessages());
-            $this->_displayForm('add');
+            $this->displayForm($request, 'add');
             return;
         }
         $parent = DBGalerie::getSingleDir($request->post('parent'));
@@ -72,12 +72,12 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
             $request->post('name', $data['gd_name']);
             $request->post('parent', $data['gd_id_rodic']);
             $request->post('hidden', $data['gd_hidden'] ? '1' : '0');
-            $this->_displayForm('edit');
+            $this->displayForm($request, 'edit');
             return;
         }
-        if (is_object($form = $this->_checkData())) {
+        if (is_object($form = $this->checkData())) {
             $this->redirect()->setMessage($form->getMessages());
-            $this->_displayForm('edit');
+            $this->displayForm($request, 'edit');
             return;
         }
         $parent = DBGalerie::getSingleDir($request->post('parent'));
@@ -120,7 +120,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
 
     public function remove($request)
     {
-        if (!is_array($request->post('data')) && !is_array(get('u'))) {
+        if (!is_array($request->post('data')) && !is_array($request->get('u'))) {
             $this->redirect('/admin/galerie');
         }
         if ($request->post('action') == 'confirm') {
@@ -157,7 +157,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
         );
     }
 
-    private function _displayOverview($id)
+    private function displayOverview($id)
     {
         $data = DBGalerie::getFotky($id);
         foreach ($data as &$item) {
@@ -179,7 +179,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
         );
     }
 
-    private function _displayForm($action)
+    private function displayForm($request, $action)
     {
         $dirs = DBGalerie::getDirs(true, true);
         foreach ($dirs as &$item) {
@@ -194,13 +194,16 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
             'files/View/Admin/Galerie/FormDirectory.inc',
             array(
                 'dirs' => $dirs,
-                'action' => $action
+                'action' => $action,
+                'name' => $request->post('name'),
+                'parent' => $request->post('parent'),
+                'hidden' => $request->post('hidden')
             )
         );
         return;
     }
 
-    private function _checkData($request)
+    protected function checkData($request)
     {
         $form = new Form();
         $form->checkNotEmpty(
@@ -209,9 +212,9 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
             'name'
         );
         $form->checkBool(
-            $request->post('parent') >= 0 &&
-            is_numeric($request->post('parent')) &&
-            DBGalerie::getSingleDir($request->post('parent')),
+            $request->post('parent') >= 0
+            && is_numeric($request->post('parent'))
+            && DBGalerie::getSingleDir($request->post('parent')),
             'Zadaná nadsložka není platná',
             'parent'
         );

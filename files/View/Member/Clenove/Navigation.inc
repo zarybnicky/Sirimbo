@@ -1,25 +1,21 @@
+<?= $this->header('Přehled členů') ?>
 <?php
-function _isActive($href) {
-  return strripos(Request::getLiteralURI(), $href) !== (strlen(Request::getLiteralURI()) - strlen($href));
-}
-function _getItem($name, $href) {
-  $href = 'member/' . $href;
-  if (_isActive($href)) {
-    return '<a href="/' . $href . '">' . $name . '</a>';
-  } else {
-    return $name;
-  }
-}
-if (TISK) {
-  echo $this->header('Přehled členů');
-  return;
-}
+if (TISK) return;
+
+$uri = $this->uri;
+$isActive = function ($href) use ($uri) {
+    return strripos($uri, $href) !== (strlen($uri) - strlen($href));
+};
+$getItem = function ($name, $href) use ($isActive) {
+    $href = 'member/' . $href;
+    if ($isActive($href)) {
+        return '<a href="/' . $href . '">' . $name . '</a>';
+    } else {
+        return $name;
+    }
+};
 ?>
 <style>
- #adminNavigation {
-   display:inline;
-   font-size: 50%;
- }
  #adminNavigation li {
    display:inline;
    font-size: 110%;
@@ -29,14 +25,12 @@ if (TISK) {
    font-weight:normal;
  }
 </style>
-<?=
-$this->header(
-  "Přehled členů" . 
-  "<ul id=\"adminNavigation\" class=\"small\">" .
-  "<li>(" . _getItem('Členové podle skupin', 'clenove/structure') . "</li>" .
-  "<li>" . _getItem('Členové abecedně', 'clenove/seznam') . "</li>" .
-  "<li>" . _getItem('Seznam skupin', 'clenove/skupiny') . ")</li>" .
-  "</ul>"
-) ?>
+<div class="container full">
+    <ul id="adminNavigation" class="small">
+        <li><?= $getItem('Členové podle skupin', 'clenove/structure') ?></li>
+        <li><?= $getItem('Členové abecedně', 'clenove/seznam') ?></li>
+        <li><?= $getItem('Seznam skupin', 'clenove/skupiny') ?></li>
+    </ul>
+</div>
 
-<?php echo $this->notice($this->redirect()->getMessage());?>
+<?= $this->notice($this->redirect()->getMessage());?>

@@ -53,7 +53,9 @@ class Controller_Admin_Permissions extends Controller_Admin
             $this->render(
                 'files/View/Admin/Permissions/Form.inc',
                 array(
-                    'action' => $request->getAction()
+                    'action' => $request->getAction(),
+                    'name' => $request->post('name'),
+                    'description' => $request->post('description')
                 )
             );
             return;
@@ -97,7 +99,9 @@ class Controller_Admin_Permissions extends Controller_Admin
             $this->render(
                 'files/View/Admin/Permissions/Form.inc',
                 array(
-                    'action' => $request->getAction()
+                    'action' => $request->getAction(),
+                    'name' => $request->post('name'),
+                    'description' => $request->post('description')
                 )
             );
             return;

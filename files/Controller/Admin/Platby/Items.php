@@ -31,7 +31,11 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             array(
                 'users' => DBUser::getUsers(),
                 'categories' => $this->getCategories(),
-                'data' => $data
+                'data' => $data,
+                'uri' => $request->getLiteralURI(),
+                'user' => $request->get('user') ?: '',
+                'category' => $request->get('category') ?: '',
+                'date' => $request->get('date') ?: ''
             )
         );
     }
@@ -153,7 +157,13 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
                 'id' => $id,
                 'raw' => $raw,
                 'users' => $users,
-                'categories' => $categories
+                'categories' => $categories,
+                'date' => $request->post('date'),
+                'amount' => $request->post('amount'),
+                'variable' => $request->post('variable'),
+                'specific' => $request->post('specific'),
+                'prefix' => $request->post('prefix'),
+                'uri' => $request->getLiteralURI()
             )
         );
     }
@@ -188,8 +198,8 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         } elseif (stripos($request->get('category'), 'group_') !== false) {
             $filter['pg_id'] = substr($request->get('category'), 6);
         }
-        $dateHelper = $this->date()->name('date')->range()->textBox()->post(false);
-        $date = $dateHelper->getPostRange();
+        $dateHelper = $this->date()->name('date')->range()->textBox();
+        $date = $dateHelper->getPostRange($request);
 
         $data = DBPlatbyItem::get(true, $filter, array('pi_date DESC'), $date);
 

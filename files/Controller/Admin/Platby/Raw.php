@@ -24,7 +24,12 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
             $this->redirect()->setMessage('Soubor ' . $fileInfo->getFilename() . ' byl zpracován.');
         }
 
-        $this->render('files/View/Admin/Platby/RawUpload.inc');
+        $this->render(
+            'files/View/Admin/Platby/RawUpload.inc',
+            array(
+                'uri' => $request->getLiteralURI()
+            )
+        );
     }
     public function select_columns($request)
     {
@@ -69,7 +74,8 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
         $this->render(
             'files/View/Admin/Platby/RawColumnSelect.inc',
             array(
-                'data' => $data
+                'data' => $data,
+                'uri' => $request->getLiteralURI()
             )
         );
     }

@@ -1,4 +1,4 @@
-<?= $this->render('files/View/Admin/Platby/Navigation.inc') ?>
+<?= $this->render('files/View/Admin/Platby/Navigation.inc', array('uri' => $this->uri)) ?>
 <?= $this->subheader('Kategorie plateb') ?>
 
 <div class="container full">
@@ -10,18 +10,21 @@ $mainForm = $this->table()
     ->column('value', 'Hodnota')
     ->data(array(
         array(
-                'desc' => 'Typ:',
-                'value' => '<label>' . $this->radio('type', '0')->set(true) . 'Běžné platby</label><br/>' .
-                    '<label>' . $this->radio('type', '1') . 'Členské příspěvky</label>'
+            'desc' => 'Typ:',
+            'value' => (
+                '<label>' . $this->radio('type', '0')->set(true) . 'Běžné platby</label><br/>' .
+                '<label>' . $this->radio('type', '1') . 'Členské
+příspěvky</label>'
+            )
         ), array(
-                'desc' => 'Jméno:',
-                'value' => '<input type="text" name="name" value="' . post('name') . '"/>'
+            'desc' => 'Jméno:',
+            'value' => '<input type="text" name="name" value="' . $this->name . '"/>'
         ), array(
-                'desc' => 'Popis: ',
-                'value' => '<textarea rows="10" cols="50" name="description">' . post('description') . '</textarea>'
+            'desc' => 'Popis: ',
+            'value' => '<textarea rows="10" cols="50" name="description">' . $this->description . '</textarea>'
         ), array(
-                'desc' => 'Násobitel částky: ',
-                'value' => '<input type="text" name="base" value="' . post('base') . '"/>'
+            'desc' => 'Násobitel částky: ',
+            'value' => '<input type="text" name="base" value="' . $this->base . '"/>'
         )
     ));
 if (!empty($this->category)) {

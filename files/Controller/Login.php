@@ -3,7 +3,7 @@ class Controller_Login extends Controller_Abstract
 {
     public function view($request) {
         if (User::isLogged()) {
-            $uri = get('return') ? get('return') : '/member/home';
+            $uri = $request->get('return') ? $request->get('return') : '/member/home';
             $this->redirect($uri);
         }
         $this->render('files/View/Main/Login.inc');

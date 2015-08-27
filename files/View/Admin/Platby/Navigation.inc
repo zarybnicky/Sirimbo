@@ -1,16 +1,17 @@
 <?= $this->header('Správa plateb') ?>
 <?php
 if (TISK) return;
-
-function _isActive($href) {
-    return strripos(Request::getLiteralURI(), $href) !== (strlen(Request::getLiteralURI()) - strlen($href));
-}
-function _getItem($name, $href) {
+$uri = $this->uri;
+$isActive = function ($href) use ($uri) {
+    return strripos($uri, $href) !== (strlen($uri) - strlen($href));
+};
+$getItem = function ($name, $href) use ($isActive) {
     $href = 'admin/' . $href;
-    if (_isActive($href))
-        echo '<a href="/' . $href . '">' . $name . '</a>';
-    else
-        echo $name;
+    if ($isActive($href)) {
+        return '<a href="/' . $href . '">' . $name . '</a>';
+    } else {
+        return $name;
+    }
 }
 ?>
 <style>
@@ -25,22 +26,22 @@ function _getItem($name, $href) {
 </style>
 <div class="container full">
 <ul id="adminNavigation">
-    <li><?php _getItem('Přehled', 'platby/overview');?></li>
-    <li><?php _getItem('Hledání', 'platby/items');?></li>
-    <?php if (!_isActive('platby/structure/category') || !_isActive('platby/structure/group') || !_isActive('platby/structure')) : ?>
-        <li><?php _getItem('Struktura', 'platby/structure');?>:</li>
-        <li>(<?php _getItem('Kategorie', 'platby/structure/group');?></li>
-        <li><?php _getItem('Specifické symboly', 'platby/structure/category');?>)</li>
+    <li><?= $getItem('Přehled', 'platby/overview');?></li>
+    <li><?= $getItem('Hledání', 'platby/items');?></li>
+    <?php if (!$isActive('platby/structure/category') || !$isActive('platby/structure/group') || !$isActive('platby/structure')) : ?>
+        <li><?= $getItem('Struktura', 'platby/structure');?>:</li>
+        <li>(<?= $getItem('Kategorie', 'platby/structure/group');?></li>
+        <li><?= $getItem('Specifické symboly', 'platby/structure/category');?>)</li>
     <?php else:?>
-        <li><?php _getItem('Struktura', 'platby/structure');?></li>
+        <li><?= $getItem('Struktura', 'platby/structure');?></li>
     <?php endif;?>
-    <?php if (!_isActive('platby/raw') || !_isActive('platby/manual') || !_isActive('platby/discarded')) : ?>
-        <li><?php _getItem('Import', 'platby/raw');?>:</li>
-        <li>(<?php _getItem('Nezařazené platby', 'platby/manual');?></li>
-        <li><?php _getItem('Vyřazené platby', 'platby/discarded');?>)</li>
+    <?php if (!$isActive('platby/raw') || !$isActive('platby/manual') || !$isActive('platby/discarded')) : ?>
+        <li><?= $getItem('Import', 'platby/raw');?>:</li>
+        <li>(<?= $getItem('Nezařazené platby', 'platby/manual');?></li>
+        <li><?= $getItem('Vyřazené platby', 'platby/discarded');?>)</li>
     <?php else:?>
-        <li><?php _getItem('Import', 'platby/raw');?></li>
+        <li><?= $getItem('Import', 'platby/raw');?></li>
     <?php endif;?>
 </ul>
-<?php echo $this->notice($this->redirect()->getMessage());?>
+<?= $this->notice($this->redirect()->getMessage());?>
 </div>

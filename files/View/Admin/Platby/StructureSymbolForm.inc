@@ -1,4 +1,4 @@
-<?= $this->render('files/View/Admin/Platby/Navigation.inc');?>
+<?= $this->render('files/View/Admin/Platby/Navigation.inc', array('uri' => $this->uri)) ?>
 <?= $this->subheader('Kategorie plateb') ?>
 
 <div class="container full">
@@ -11,25 +11,25 @@ $mainForm = $this->table()
 ->data(array(
         array(
             'desc' => 'Jméno:',
-            'value' => '<input type="text" name="name" value="' . post('name') . '"/>'
+            'value' => '<input type="text" name="name" value="' . $this->name . '"/>'
         ), array(
             'desc' => 'Specifický symbol:',
-            'value' => '<input type="text" name="symbol" value="' . post('symbol') . '"/>'
+            'value' => '<input type="text" name="symbol" value="' . $this->symbol . '"/>'
         ), array(
             'desc' => 'Očekávaná částka:',
-            'value' => '<input type="text" name="amount" value="' . post('amount') . '"/>'
+            'value' => '<input type="text" name="amount" value="' . $this->amount . '"/>'
         ), array(
             'desc' => 'Splatnost:',
-            'value' => $this->date('dueDate')
+            'value' => $this->date('dueDate')->set($this->dueDate)
         ), array(
             'desc' => 'Platnost:',
-            'value' => $this->date('validRange')->range()
+            'value' => $this->date('validRange')->range()->set($this->validRange)
         ), array(
             'desc' => 'Povolit prefix roku?:',
-            'value' => (string) $this->checkbox('usePrefix', '1')
+            'value' => (string) $this->checkbox('usePrefix', '1')->set($this->usePrefix)
         ), array(
             'desc' => 'Archivovat?:',
-            'value' => (string) $this->checkbox('archive', '1')
+            'value' => (string) $this->checkbox('archive', '1')->set($this->archive)
         )
 ));
 if (!empty($this->groups)) {

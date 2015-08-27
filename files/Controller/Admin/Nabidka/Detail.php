@@ -32,7 +32,7 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
                 function ($item) use ($userSelect) {
                     return array(
                         'user' =>
-                        (string) $userSelect->defaultValue($item['ni_partner'])
+                        (string) $userSelect->set($item['ni_partner'])
                                             ->name($item['ni_id'] . '-partner'),
                         'lessonCount' => (
                             '<input type="text" name="' . $item['ni_id'] .
@@ -41,14 +41,14 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
                         ),
                         'removeButton' => $this->submit('Odstranit')
                                                ->name('remove')
-                                               ->set($item['ni_id'])
+                                               ->value($item['ni_id'])
                                                ->render()
                     );
                 },
                 $items
             );
             $items[] = array(
-                'user' => (string) $userSelect->defaultValue(null)
+                'user' => (string) $userSelect->set(null)
                                               ->name('add_partner'),
                 'lessonCount' => '<input type="text" name="add_hodiny" value="" size=1/>',
                 'removeButton' => (string) $this->submit('Přidat')

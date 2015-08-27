@@ -16,7 +16,8 @@ class Controller_Member_Clenove extends Controller_Member
                 'fullName' => $data['u_prijmeni'] . ', ' . $data['u_jmeno'],
                 'email' => $data['u_email'],
                 'telefon' => $data['u_telefon'],
-                'referer' => $request->getReferer()
+                'referer' => $request->getReferer(),
+                'uri' => $request->getLiteralURI()
             )
         );
     }
@@ -42,7 +43,8 @@ class Controller_Member_Clenove extends Controller_Member
         $this->render(
             'files/View/Member/Clenove/SkupinyList.inc',
             array(
-                'data' => $skupiny
+                'data' => $skupiny,
+                'uri' => $request->getLiteralURI()
             )
         );
     }
@@ -63,7 +65,8 @@ class Controller_Member_Clenove extends Controller_Member
         $this->render(
             'files/View/Member/Clenove/UserList.inc',
             array(
-                'data' => $data
+                'data' => $data,
+                'uri' => $request->getLiteralURI()
             )
         );
     }
@@ -114,7 +117,8 @@ class Controller_Member_Clenove extends Controller_Member
         $this->render(
             'files/View/Member/Clenove/Structure.inc',
             array(
-                'data' => $skupiny
+                'data' => $skupiny,
+                'uri' => $request->getLiteralURI()
             )
         );
     }

@@ -1,20 +1,4 @@
 <?php
-function post($field = null, $value = null) {
-    throw new BadFunctionCallException(
-        "post() called (field: '$field', value: '$value')"
-    );
-}
-function get($field = null, $value = null) {
-    throw new BadFunctionCallException(
-        "get() called (field: '$field', value: '$value')"
-    );
-}
-function session($field = null, $value = null) {
-    throw new BadFunctionCallException(
-        "session() called (field: '$field', value: '$value')"
-    );
-}
-
 function formatTime($str, $forDisplay) {
     if ($forDisplay) {
         return substr($str, 0, 5); //15:00:00

@@ -15,28 +15,46 @@ class Controller_Member_Profil extends Controller_Member
     public function edit($request)
     {
         $data = DBUser::getUserData(User::getUserID());
-        $narozeni = $this->date('narozeni')->getPost();
+        $narozeni = $this->date('narozeni')->getPost($request);
 
-        if (!$request->post() ||
-            is_object($f = $this->checkData($request, 'edit', $narozeni))
-        ) {
-            if (!$request->post()) {
-                $request->post("login", User::getUserName());
-                $request->post("group", $data["u_group"]);
-                $request->post("lock", $data["u_lock"]);
-                $request->post("jmeno", $data["u_jmeno"]);
-                $request->post("prijmeni", $data["u_prijmeni"]);
-                $request->post("pohlavi", $data["u_pohlavi"]);
-                $request->post("email", $data["u_email"]);
-                $request->post("telefon", $data["u_telefon"]);
-                $request->post('narozeni', $data['u_narozeni']);
-                $request->post("poznamky", $data["u_poznamky"]);
-            } else {
-                $this->redirect()->setMessage($f->getMessages());
-            }
-            $this->render("files/View/Member/Profil/PersonalData.inc");
+        if (!$request->post()) {
+            $this->render(
+                'files/View/Member/Profil/PersonalData.inc',
+                array(
+                    'login' => User::getUserName(),
+                    'group' => $data['u_group'],
+                    'lock' => $data['u_lock'],
+                    'jmeno' => $data['u_jmeno'],
+                    'prijmeni' => $data['u_prijmeni'],
+                    'pohlavi' => $data['u_pohlavi'],
+                    'email' => $data['u_email'],
+                    'telefon' => $data['u_telefon'],
+                    'narozeni' => $data['u_narozeni'],
+                    'poznamky' => $data['u_poznamky']
+                )
+            );
             return;
         }
+
+        if (is_object($f = $this->checkData($request, 'edit', $narozeni))) {
+            $this->redirect()->setMessage($f->getMessages());
+            $this->render(
+                'files/View/Member/Profil/PersonalData.inc',
+                array(
+                    'login' => $request->post('login'),
+                    'group' => $request->post('group'),
+                    'lock' => $request->post('lock'),
+                    'jmeno' => $request->post('jmeno'),
+                    'prijmeni' => $request->post('prijmeni'),
+                    'email' => $request->post('email'),
+                    'telefon' => $request->post('telefon'),
+                    'narozeni' => $request->post('narozeni'),
+                    'poznamky' => $request->post('poznamky')
+                )
+            );
+            return;
+        }
+
         DBUser::setUserData(
             User::getUserID(),
             $request->post('jmeno'),

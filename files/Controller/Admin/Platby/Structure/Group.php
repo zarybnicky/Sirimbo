@@ -12,7 +12,8 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
         $this->render(
             'files/View/Admin/Platby/StructureGroupOverview.inc',
             array(
-                'data' => $this->getGroups()
+                'data' => $this->getGroups(),
+                'uri' => $request->getLiteralURI()
             )
         );
     }
@@ -32,14 +33,15 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
         }
         return $out;
     }
-    public function add($request) {
+    public function add($request)
+    {
         if (!$request->post() || is_object($s = $this->checkPost($request))) {
             if (!$request->post()) {
                 $request->post('base', 1);
             } else {
                 $this->redirect()->setMessage($s->getMessages());
             }
-            $this->displayForm('add', 0);
+            $this->displayForm($request, 'add', 0);
             return;
         }
         DBPlatbyGroup::insert(
@@ -49,10 +51,10 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
             $request->post('base')
         );
         $insertId = DBPlatbyGroup::getInsertId();
-        if (get('category') &&
-            ($data = DBPlatbyCategory::getSingle(get('category')))
+        if ($request->get('category') &&
+            ($data = DBPlatbyCategory::getSingle($request->get('category')))
         ) {
-            DBPlatbyGroup::addChild($insertId, get('category'));
+            DBPlatbyGroup::addChild($insertId, $request->get('category'));
             $skupiny = DBPlatbyGroup::getSingleWithSkupiny($insertId);
             $conflicts = array();
             foreach ($skupiny as $array) {
@@ -60,29 +62,29 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
             }
 
             if (!empty($conflicts)) {
-                DBPlatbyGroup::removeChild($insertId, get('category'));
+                DBPlatbyGroup::removeChild($insertId, $request->get('category'));
                 $this->redirect(
-                    '/admin/platby/structure/category/edit/' . get('category'),
+                    '/admin/platby/structure/category/edit/' . $request->get('category'),
                     'Kategorie byla přidána, ale nebyla přiřazena - takové přiřazení není platné.'
                 );
             }
             $this->redirect(
-                '/admin/platby/structure/category/edit/' . get('category'),
+                '/admin/platby/structure/category/edit/' . $request->get('category'),
                 'Kategorie úspěšně přidána a přiřazena'
             );
-        } elseif (get('skupina') &&
-                  ($data = DBSkupiny::getSingle(get('skupina')))) {
-            DBSkupiny::addChild(get('skupina'), $insertId);
-            $conflicts = DBPlatby::checkConflicts(get('skupina'));
+        } elseif ($request->get('skupina') &&
+                  ($data = DBSkupiny::getSingle($request->get('skupina')))) {
+            DBSkupiny::addChild($request->get('skupina'), $insertId);
+            $conflicts = DBPlatby::checkConflicts($request->get('skupina'));
             if (!empty($conflicts)) {
-                DBSkupiny::removeChild(get('skupina'), $insertId);
+                DBSkupiny::removeChild($request->get('skupina'), $insertId);
                 $this->redirect(
-                    '/admin/skupiny/edit/' . get('skupina'),
+                    '/admin/skupiny/edit/' . $request->get('skupina'),
                     'Kategorie byla přidána, ale nebyla přiřazena - takové přiřazení není platné.'
                 );
             }
             $this->redirect(
-                '/admin/skupiny/edit/' . get('skupiny'),
+                '/admin/skupiny/edit/' . $request->get('skupiny'),
                 'Kategorie úspěšně přidána a přiřazena'
             );
         }
@@ -189,7 +191,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
             } else {
                 $this->redirect()->setMessage($s->getMessages());
             }
-            $this->displayForm('edit', $id, DBPlatbyGroup::getSingleWithCategories($id));
+            $this->displayForm($request, 'edit', $id, DBPlatbyGroup::getSingleWithCategories($id));
             return;
         }
 
@@ -251,7 +253,8 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
                 array(
                     'id' => $id,
                     'name' => $data['pg_name'],
-                    'referer' => $request->getReferer()
+                    'referer' => $request->getReferer(),
+                    'uri' => $request->getLiteralURI()
                 )
             );
             return;
@@ -275,7 +278,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
         }
     }
 
-    private function displayForm($action, $id, $data = array())
+    private function displayForm($request, $action, $id, $data = array())
     {
         $id = $id ?: 0;
         foreach ($data as $key => &$array) {
@@ -335,7 +338,11 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
                 'categorySelect' => $categorySelect,
                 'skupiny' => $skupiny,
                 'skupinySelect' => $skupinySelect,
-                'referer' => $request->getReferer()
+                'referer' => $request->getReferer(),
+                'name' => $request->post('name'),
+                'description' => $request->post('description'),
+                'base' => $request->post('base'),
+                'uri' => $request->getLiteralURI()
             )
         );
     }

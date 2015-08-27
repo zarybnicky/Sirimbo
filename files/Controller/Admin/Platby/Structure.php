@@ -12,7 +12,8 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
                 'data' => $this->getCategories(),
                 'orphanGroupSkupina' => $this->getOrphanGroupSkupina(),
                 'orphanGroupCategory' => $this->getOrphanGroupCategory(),
-                'orphanCategory' => $this->getOrphanCategory()
+                'orphanCategory' => $this->getOrphanCategory(),
+                'uri' => $request->getLiteralURI()
             )
         );
     }

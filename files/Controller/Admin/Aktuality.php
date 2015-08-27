@@ -46,6 +46,7 @@ class Controller_Admin_Aktuality extends Controller_Admin
             'files/View/Admin/Aktuality/Overview.inc',
             array(
                 'data' => $data,
+                'f' => $request->get('f') ?: '',
                 'showMenu' => !TISK
             )
         );
@@ -124,7 +125,7 @@ class Controller_Admin_Aktuality extends Controller_Admin
 
     public function remove($request)
     {
-        if (!is_array($request->post('data')) && !is_array(get('u'))) {
+        if (!is_array($request->post('data')) && !is_array($request->get('u'))) {
             $this->redirect('/admin/aktuality');
         }
         if ($request->post() && $request->post('action') == 'confirm') {
@@ -144,7 +145,7 @@ class Controller_Admin_Aktuality extends Controller_Admin
         }
 
         $data = array();
-        foreach (get('u') as $id) {
+        foreach ($request->get('u') as $id) {
             $item = DBAktuality::getSingleAktualita($id);
             $data[] = array(
                 'id' => $item['at_id'],

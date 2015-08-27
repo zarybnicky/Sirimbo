@@ -124,7 +124,8 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
                 ),
                 'users' => $this->getUsers(),
                 'categories' => $this->getCategories(),
-                'recognized' => $recognized
+                'recognized' => $recognized,
+                'uri' => $request->getLiteralURI()
             )
         );
     }

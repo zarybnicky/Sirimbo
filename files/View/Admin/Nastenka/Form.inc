@@ -1,20 +1,18 @@
 <?= $this->header('Správa nástěnky') ?>
+<?= $this->subheader($this->action == 'add' ? 'Přidat příspěvek' : 'Upravit příspěvek') ?>
 <div class="container full">
-<?php
-echo '<h2>', ($this->action == 'add' ? 'Přidat příspěvek' : 'Upravit příspěvek'), '</h2>';
-echo $this->notice($this->redirect()->getMessage());
-?>
+<?= $this->notice($this->redirect()->getMessage()) ?>
 <form action="" method="POST">
 <table>
     <tr>
         <td>Nadpis:</td>
-        <td><input type="text" name="nadpis" value="<?php echo post("nadpis");?>" /></td>
+        <td><input type="text" name="nadpis" value="<?= $this->nadpis ?>" /></td>
     </tr><tr>
         <td>Text:</td>
-        <td><textarea cols="50" rows="15" name="text"><?php echo post("text");?></textarea></td>
+        <td><textarea cols="50" rows="15" name="text"><?= $this->text ?></textarea></td>
     </tr><tr>
         <td>Uzamknout:</td>
-        <td><?php echo $this->checkbox('lock');?></td>
+        <td><?= $this->checkbox('lock')->set($this->lock) ?></td>
     </tr><tr>
         <td>Skupiny:</td>
         <td>
@@ -39,5 +37,5 @@ echo $this->notice($this->redirect()->getMessage());
 </table>
 </form>
 
-<a href="<?php echo $this->returnURI?>">Zpět</a>
+<a href="<?= $this->returnURI?>">Zpět</a>
 </div>

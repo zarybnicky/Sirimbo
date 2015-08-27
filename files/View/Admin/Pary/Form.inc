@@ -1,42 +1,44 @@
 <?= $this->header('Správa párů') ?>
+<?= $this->subheader('Změna třídy a bodů') ?>
 <div class="container full">
-<h2>Změna třídy a bodů</h2>
-<?php echo $this->notice($this->redirect()->getMessage());?>
+<?= $this->notice($this->redirect()->getMessage());?>
 <form action="" method="POST">
-Pár: <?php echo $this->fullName;?>
+Pár: <?= $this->fullName;?>
 <table>
 <tr><td>Standart:</td><td></td></tr>
 <tr>
     <td>Třída:</td>
-    <td><?php
-        echo $this->select()
-            ->post()->name('stt-trida')
-            ->options(array('Z', 'H', 'D', 'C', 'B', 'A', 'M'), true, true);
+    <td><?= $this->select()
+                 ->post()
+                 ->name('stt-trida')
+                 ->set($this->stt_trida)
+                 ->options(array('Z', 'H', 'D', 'C', 'B', 'A', 'M'), true, true);
     ?></td>
 </tr>
 <tr>
     <td>Body:</td>
-    <td><input type="text" name="stt-body" value="<?php echo post('stt-body');?>" /></td>
+    <td><input type="text" name="stt-body" value="<?= $this->stt_body ?>" /></td>
 </tr>
 <tr><td>Finále:</td>
-    <td><input type="text" name="stt-finale" value="<?php echo post('stt-finale');?>" /></td>
+    <td><input type="text" name="stt-finale" value="<?= $this->stt_finale ?>" /></td>
 </tr>
 <tr><td>Latina:</td><td></td></tr>
 <tr>
     <td>Třída:</td>
-    <td><?php
-        echo $this->select()
-            ->post()->name('lat-trida')
-            ->options(array('Z', 'H', 'D', 'C', 'B', 'A', 'M'), true, true);
+    <td><?= $this->select()
+                 ->post()
+                 ->name('lat-trida')
+                 ->set($this->lat_trida)
+                 ->options(array('Z', 'H', 'D', 'C', 'B', 'A', 'M'), true, true);
     ?></td>
 </tr>
 <tr>
     <td>Body:</td>
-    <td><input type="text" name="lat-body" value="<?php echo post('lat-body');?>" /></td>
+    <td><input type="text" name="lat-body" value="<?= $this->lat_body ?>" /></td>
 </tr>
 <tr>
     <td>Finále:</td>
-    <td><input type="text" name="lat-finale" value="<?php echo post('lat-finale');?>" /></td>
+    <td><input type="text" name="lat-finale" value="<?= $this->lat_finale ?>" /></td>
 </tr>
 </table>
     <button type="submit" name="action" value="edit_confirm">Změnit třídu a body</button>

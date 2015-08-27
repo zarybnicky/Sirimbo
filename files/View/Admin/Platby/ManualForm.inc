@@ -1,4 +1,4 @@
-<?= $this->render('files/View/Admin/Platby/Navigation.inc') ?>
+<?= $this->render('files/View/Admin/Platby/Navigation.inc', array('uri' => $this->uri)) ?>
 <?= $this->subheader(
         'Ruční třídění plateb</span> (zbývá ' . $this->remainingTotal . ')'
     ) ?>

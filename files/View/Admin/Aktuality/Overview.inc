@@ -7,9 +7,8 @@
         echo '<form action="" method="get">';
 
         echo $this->select()
-                  ->get()
                   ->name('f')
-                  ->value('all')
+                  ->set($this->f ?: '0')
                   ->option('0', 'vše')
                   ->option(AKTUALITY_CLANKY, 'články')
                   ->option(AKTUALITY_KRATKE, 'krátké zprávy');

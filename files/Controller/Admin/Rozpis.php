@@ -126,13 +126,18 @@ class Controller_Admin_Rozpis extends Controller_Admin
                 'files/View/Admin/Rozpis/Form.inc',
                 array(
                     'action' => $request->getAction(),
-                    'isAdmin' => Permissions::check('rozpis', P_ADMIN)
+                    'isAdmin' => Permissions::check('rozpis', P_ADMIN),
+                    'trener' => $request->post('trener'),
+                    'kde' => $request->post('kde'),
+                    'datum' => $request->post('datum'),
+                    'visible' => $request->post('visible'),
+                    'lock' => $request->post('lock')
                 )
             );
             return;
         }
         Permissions::checkError('rozpis', P_OWNED, $request->post('trener'));
-        $datum = $this->date('datum')->getPost();
+        $datum = $this->date('datum')->getPost($request);
         $visible = (bool) $request->post('visible');
 
         if (!Permissions::check('rozpis', P_ADMIN) && $visible) {
@@ -172,12 +177,17 @@ class Controller_Admin_Rozpis extends Controller_Admin
                 'files/View/Admin/Rozpis/Form.inc',
                 array(
                     'action' => $request->getAction(),
-                    'isAdmin' => Permissions::check('rozpis', P_ADMIN)
+                    'isAdmin' => Permissions::check('rozpis', P_ADMIN),
+                    'trener' => $request->post('trener'),
+                    'kde' => $request->post('kde'),
+                    'datum' => $request->post('datum'),
+                    'visible' => $request->post('visible'),
+                    'lock' => $request->post('lock')
                 )
             );
             return;
         }
-        $datum = $this->date('datum')->getPost();
+        $datum = $this->date('datum')->getPost($request);
 
         $visible = (bool) $request->post('visible');
         $visible_prev = $data['r_visible'];
@@ -191,7 +201,7 @@ class Controller_Admin_Rozpis extends Controller_Admin
             $request->post('kde'),
             (string) $datum,
             $visible,
-            $request->post('lock')
+            $request->post('lock') ? '1' : '0'
         );
 
         $this->redirect('/admin/rozpis', 'Rozpis úspěšně upraven');
@@ -199,7 +209,7 @@ class Controller_Admin_Rozpis extends Controller_Admin
 
     private function checkData($request)
     {
-        $datum = $this->date('datum')->getPost();
+        $datum = $this->date('datum')->getPost($request);
 
         $f = new Form();
         $f->checkNumeric($request->post('trener'), 'Neplatný trenér', 'trener');

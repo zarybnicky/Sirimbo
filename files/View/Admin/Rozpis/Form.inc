@@ -1,9 +1,7 @@
 <?= $this->header('Správa rozpisů') ?>
+<?= $this->subheader($this->action == 'add' ? 'Přidat rozpis' : 'Upravit rozpis') ?>
 <div class="container full">
-<?php
-echo '<h2>', ($this->action == 'add' ? 'Přidat rozpis' : 'Upravit rozpis'), '</h2>';
-echo $this->notice($this->redirect()->getMessage());
-?>
+<?= $this->notice($this->redirect()->getMessage()) ?>
 <form action="" method="POST">
 <table>
     <tr>
@@ -16,30 +14,29 @@ echo $this->notice($this->redirect()->getMessage());
             } else {
                 echo $this->userSelect()
                     ->name('trener')
+                    ->set($this->trener)
                     ->users(DBUser::getUsersByPermission('rozpis', P_OWNED));
             }?>
         </td>
     </tr><tr>
         <td>Místo (*): </td>
-        <td><input type="text" name="kde" value="<?= post("kde"); ?>" /></td>
+        <td><input type="text" name="kde" value="<?= $this->kde ?>" /></td>
     </tr><tr>
         <td>Datum: (*)</td>
-        <td><?= $this->date('datum')->textBox();?></td>
+        <td><?= $this->date('datum')->set($this->datum)->textBox();?></td>
     </tr><tr>
         <td>Viditelný: </td>
         <td><label><?php
             if ($this->isAdmin)
-                echo $this->checkbox('visible', 'visible')->set(false);
+                echo $this->checkbox('visible', 'visible')->set($this->visible);
             else
-                echo (post('visible') ? '&#10003;' : '&#10799;');
+                echo ($this->visible ? '&#10003;' : '&#10799;');
         ?></label></td>
     </tr><tr>
         <td>Uzamknout: </td>
-        <td><label><?= $this->checkbox('lock', 'lock')?></label></td>
+        <td><label><?= $this->checkbox('lock', 'lock')->set($this->lock) ?></label></td>
     </tr><tr>
-        <td><button type="submit"><?php
-            echo ($this->action == 'add' ? 'Přidat' : 'Upravit');
-        ?></button></td>
+        <td><button type="submit"><?= $this->action == 'add' ? 'Přidat' : 'Upravit' ?></button></td>
         <td>Pole označená (*) jsou povinná</td>
     </tr>
 </table>

@@ -54,7 +54,17 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
             } else {
                 $this->redirect()->setMessage($f->getMessages());
             }
-            $this->render('files/View/Member/Profil/CoupleData.inc');
+            $this->render(
+                'files/View/Member/Profil/CoupleData.inc',
+                array(
+                    'stt_trida' => $request->post('stt_trida'),
+                    'stt_body' => $request->post('stt_body'),
+                    'stt_finale' => $request->post('stt_finale'),
+                    'lat_trida' => $request->post('lat_trida'),
+                    'lat_body' => $request->post('lat_body'),
+                    'lat_finale' => $request->post('lat_finale')
+                )
+            );
             return;
         }
         $stt_amend = constant('self::AMEND_' . $request->post('stt-trida'));

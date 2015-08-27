@@ -8,11 +8,11 @@ if ($this->showMenu) {
     $s = $this->select();
     echo 'Uživatelé:&nbsp;';
     $s->get()->name('f')
-        ->value('all')
-        ->option('all', 'všichni')
-        ->option('dancer', 'tanečníci')
-        ->option('system', 'systémoví')
-        ->option('ban', 'zabanovaní');
+      ->set($this->f ?: 'all')
+      ->option('all', 'všichni')
+      ->option('dancer', 'tanečníci')
+      ->option('system', 'systémoví')
+      ->option('ban', 'zabanovaní');
     foreach ($this->groups as $group) {
         if ($group['id']) {
             $s->option($group['id'], $group['name']);
@@ -21,15 +21,17 @@ if ($this->showMenu) {
     echo $s;
     echo '&nbsp;řadit podle:&nbsp;';
     echo $s->select()
-        ->get()->name('s')
-        ->option('surname', 'příjmení')
-        ->option('var-symbol', 'var. symbolu')
-        ->option('narozeni', 'data narození');
+           ->get()->name('s')
+           ->set($this->s ?: 'surname')
+           ->option('surname', 'příjmení')
+           ->option('var-symbol', 'var. symbolu')
+           ->option('narozeni', 'data narození');
     echo '&nbsp;zobrazení:&nbsp;';
     echo $s->select()
-        ->get()->name('v')
-        ->option('info', 'informace')
-        ->option('status', 'status uživatele');
+           ->get()->name('v')
+           ->set($this->v ?: 'info')
+           ->option('info', 'informace')
+           ->option('status', 'status uživatele');
     echo '<button type="submit">Odeslat</button>';
     echo '</form><br/>';
 }
@@ -45,7 +47,7 @@ if ($this->showMenu) {
         ->content('Duplicitní uživatelé', '/admin/users/duplicate')
         ->content('Nepotvrzení uživatelé', '/admin/users/unconfirmed')
         ->content('Statistiky', '/admin/users/statistiky');
-    if (get('v') == 'status') {
+    if ($this->v == 'status') {
         $f->content('Uložit změny', 'save', true);
     }
     echo $f;

@@ -12,7 +12,8 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             'files/View/Admin/Platby/StructureSymbolOverview.inc',
             array(
                 'data' => $this->getCategories(false),
-                'archived' => $this->getCategories(true)
+                'archived' => $this->getCategories(true),
+                'uri' => $request->getLiteralURI()
             )
         );
     }
@@ -36,16 +37,16 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
     }
     public function add($request)
     {
-        if (!$request->post() || is_object($s = $this->checkPost('add', 0))) {
+        if (!$request->post() || is_object($s = $this->checkPost($request, 'add', 0))) {
             if ($request->post()) {
                 $this->redirect()->setMessage($s->getMessages());
             }
-            $this->_displayForm('add', 0);
+            $this->_displayForm($request, 'add', 0);
             return;
         }
-        $dueDate = $this->date('dueDate')->getPost();
+        $dueDate = $this->date('dueDate')->getPost($request);
 
-        $validRange = $this->date('validRange')->range()->getPostRange();
+        $validRange = $this->date('validRange')->range()->getPostRange($request);
         $validFrom = $validRange['from'];
         $validTo = $validRange['to'];
         if (!$validTo->isValid())
@@ -153,7 +154,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             );
         }
 
-        if (!$request->post() || is_object($s = $this->checkPost('edit', $id))) {
+        if (!$request->post() || is_object($s = $this->checkPost($request, 'edit', $id))) {
             if ($request->post()) {
                 $this->redirect()->setMessage($s->getMessages());
             } else {
@@ -168,12 +169,12 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                 $request->post('usePrefix', $data['pc_use_prefix']);
                 $request->post('archive', $data['pc_archive']);
             }
-            $this->_displayForm('edit', $id);
+            $this->_displayForm($request, 'edit', $id);
             return;
         }
-        $dueDate = $this->date('dueDate')->getPost();
+        $dueDate = $this->date('dueDate')->getPost($request);
 
-        $validRange = $this->date('validRange')->range()->getPostRange();
+        $validRange = $this->date('validRange')->range()->getPostRange($request);
         $validFrom = $validRange['from'];
         $validTo = $validRange['to'];
         if (!$validTo->isValid()) {
@@ -290,7 +291,8 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                 array(
                     'id' => $id,
                     'name' => $data['pc_name'],
-                    'referer' => $request->getReferer()
+                    'referer' => $request->getReferer(),
+                    'uri' => $request->getLiteralURI()
                 )
             );
             return;
@@ -311,7 +313,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             return array('groups' => $group, 'items' => $items);
         }
     }
-    private function _displayForm($action, $id) {
+    private function _displayForm($request, $action, $id) {
         $id = $id ?: 0;
 
         $groups = DBPlatbyCategory::getSingleWithGroups($id);
@@ -342,20 +344,28 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                 'action' => $action,
                 'groups' => $groups,
                 'groupSelect' => $groupSelect,
-                'referer' => $request->getReferer()
+                'referer' => $request->getReferer(),
+                'name' => $request->post('name'),
+                'symbol' => $request->post('symbol'),
+                'amount' => $request->post('amount'),
+                'dueDate' => $request->post('dueDate'),
+                'validRange' => $request->post('validRange'),
+                'usePrefix' => $request->post('usePrefix'),
+                'archive' => $request->post('archive'),
+                'uri' => $request->getLiteralURI()
             )
         );
     }
-    protected function checkPost($action, $id)
+    protected function checkPost($request, $action, $id)
     {
         $f = new Form();
-        $dueDate = $this->date('dueDate')->getPost();
+        $dueDate = $this->date('dueDate')->getPost($request);
         if ($dueDate->getYear() == '0000') {
             $dueDate = str_replace('0000', '2000', (string) $dueDate);
         }
         $f->checkDate($dueDate, 'Datum splatnosti není platné.');
 
-        $validRange = $this->date('validRange')->range()->getPostRange();
+        $validRange = $this->date('validRange')->range()->getPostRange($request);
         if ($validRange['from']->getYear() == '0000') {
             $f->checkDate(
                 str_replace('0000', '2000', (string) $validRange['from']),

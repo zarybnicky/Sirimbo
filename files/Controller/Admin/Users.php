@@ -101,10 +101,10 @@ class Controller_Admin_Users extends Controller_Admin
             if ($request->post()) {
                 $this->redirect()->setMessage($f->getMessages());
             }
-            $this->displayForm();
+            $this->displayForm($request);
             return;
         }
-        $narozeni = $this->date('narozeni')->getPost();
+        $narozeni = $this->date('narozeni')->getPost($request);
         DBUser::addUser(
             strtolower($request->post('login')),
             User::crypt($request->post('pass')),
@@ -162,10 +162,10 @@ class Controller_Admin_Users extends Controller_Admin
             } else {
                 $this->redirect()->setMessage($f->getMessages());
             }
-            $this->displayForm();
+            $this->displayForm($request);
             return;
         }
-        $narozeni = $this->date('narozeni')->getPost();
+        $narozeni = $this->date('narozeni')->getPost($request);
         DBUser::setUserData(
             $id,
             $request->post('jmeno'),
@@ -335,7 +335,7 @@ class Controller_Admin_Users extends Controller_Admin
         $type = $request->post('type');
         $jmeno = $request->post('jmeno');
         $prijmeni = $request->post('prijmeni');
-        $narozeni = $this->date('narozeni')->getPost();
+        $narozeni = $this->date('narozeni')->getPost($request);
 
         $login = preg_replace('/[^a-zA-Z0-9.-_]*/', '', strtolower($prijmeni))
                . '_'
@@ -458,44 +458,63 @@ class Controller_Admin_Users extends Controller_Admin
                 'groups' => $groups,
                 'data' => $data,
                 'navigation' => $pager->getNavigation($request->get()),
-                'view' => $action
+                'view' => $action,
+                'f' => $request->get('f') ?: '',
+                'v' => $request->get('v') ?: '',
+                's' => $request->get('s') ?: ''
             )
         );
         return;
     }
 
-    private function displayForm()
+    private function displayForm($request)
     {
-        $groups = DBPermissions::getGroups();
-        foreach ($groups as &$item) {
-            $new_data = array(
-                'id' => $item['pe_id'],
-                'name' => $item['pe_name']
-            );
-            $item = $new_data;
-        }
-        unset($item);
-        $skupiny = DBSkupiny::get();
-        foreach ($skupiny as &$item) {
-            $new_data = array(
-                'id' => $item['s_id'],
-                'color' => $item['s_color_rgb'],
-                'popis' => $item['s_description']
-            );
-            $item = $new_data;
-        }
+        $groups = array_map(
+            function ($item) {
+                return array(
+                    'id' => $item['pe_id'],
+                    'name' => $item['pe_name']
+                );
+            },
+            DBPermissions::getGroups()
+        );
+        $skupiny = array_map(
+            function ($item) {
+                return array(
+                    'id' => $item['s_id'],
+                    'color' => $item['s_color_rgb'],
+                    'popis' => $item['s_description']
+                );
+            },
+            DBSkupiny::get()
+        );
         $this->render(
             'files/View/Admin/Users/Form.inc',
             array(
                 'action' => $request->getAction(),
                 'groups' => $groups,
-                'skupiny' => $skupiny
+                'skupiny' => $skupiny,
+                'login' => $request->post('login'),
+                'pass' => $request->post('pass'),
+                'jmeno' => $request->post('jmeno'),
+                'prijmeni' => $request->post('prijmeni'),
+                'pohlavi' => $request->post('pohlavi'),
+                'email' => $request->post('email'),
+                'telefon' => $request->post('telefon'),
+                'narozeni' => $request->post('narozeni'),
+                'poznamky' => $request->post('poznamky'),
+                'lock' => $request->post('lock'),
+                'ban' => $request->post('ban'),
+                'dancer' => $request->post('dancer'),
+                'system' => $request->post('system'),
+                'group' => $request->post('group'),
+                'skupina' => $request->post('skupina')
             )
         );
     }
 
     private function checkData($request, $action = 'add') {
-        $narozeni = $this->date('narozeni')->getPost();
+        $narozeni = $this->date('narozeni')->getPost($request);
 
         $f = new Form();
         $f->checkLength($request->post('jmeno'), 1, 40, 'Špatná délka jména', 'jmeno');

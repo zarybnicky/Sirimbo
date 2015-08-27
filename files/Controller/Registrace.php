@@ -3,7 +3,7 @@ class Controller_Registrace extends Controller_Abstract
 {
     public function view($request) {
         if ($request->post()) {
-            $narozeni = $this->date('narozeni')->getPost();
+            $narozeni = $this->date('narozeni')->getPost($request);
 
             $f = new Form();
             $f->checkLogin($request->post('username'), 'Špatný formát přihlašovacího jména', 'username');
@@ -41,6 +41,19 @@ class Controller_Registrace extends Controller_Abstract
                 }
             }
         }
-        $this->render('files/View/Main/Registrace.inc');
+        $this->render(
+            'files/View/Main/Registrace.inc',
+            array(
+                'username' => $request->post('username'),
+                'pass' => $request->post('pass'),
+                'jmeno' => $request->post('jmeno'),
+                'prijmeni' => $request->post('prijmeni'),
+                'pohlavi' => $request->post('pohlavi'),
+                'email' => $request->post('email'),
+                'telefon' => $request->post('telefon'),
+                'narozeni' => $request->post('narozeni'),
+                'poznamky' => $request->post('poznamky')
+            )
+        );
     }
 }

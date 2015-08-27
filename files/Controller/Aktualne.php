@@ -19,7 +19,7 @@ class Controller_Aktualne extends Controller_Abstract
                 'timestamp' => $data['at_timestamp_add'],
                 'canEdit' => Permissions::check('aktuality', P_OWNED, $data['at_kdo']),
                 'description' => $data['at_preview'],
-                'text' => stripslashes(nl2br($data['at_text'])),
+                'text' => $data['at_text'],
                 'title_photo_uri' => '/galerie/' . $photo_uri,
                 'title_photo_thumb_uri' => '/galerie/thumbnails/' . $photo_uri,
                 'category' => 'Zprávy'
@@ -67,7 +67,7 @@ class Controller_Aktualne extends Controller_Abstract
                     'jmeno'     => $item['at_jmeno'],
                     'timestamp' => $item['at_timestamp_add'],
                     'canEdit'   => Permissions::check('aktuality', P_OWNED, $item['at_kdo']),
-                    'preview'   => stripslashes(nl2br($item['at_preview'])),
+                    'preview'   => $item['at_preview'],
                     'title_photo_uri' => '/galerie/' . $photo_uri,
                     'title_photo_thumb_uri' => '/galerie/thumbnails/' . $photo_uri
                 );

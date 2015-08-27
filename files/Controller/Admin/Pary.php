@@ -81,19 +81,19 @@ class Controller_Admin_Pary extends Controller_Admin
         }
 
         if (!$request->post()) {
-            $request->post('stt-trida', $data['p_stt_trida']);
-            $request->post('stt-body', $data['p_stt_body']);
-            $request->post('stt-finale', $data['p_stt_finale']);
-            $request->post('lat-trida', $data['p_lat_trida']);
-            $request->post('lat-body', $data['p_lat_body']);
-            $request->post('lat-finale', $data['p_lat_finale']);
-
             $this->render(
                 'files/View/Admin/Pary/Form.inc',
                 array(
-                    'fullName' =>
+                    'fullName' => (
                         $data['guy_name'] . ' ' . $data['guy_surname'] . ' - '
                         . $data['gal_name'] . ' ' . $data['gal_surname']
+                    ),
+                    'stt_trida' => $data['p_stt_trida'],
+                    'stt_body' => $data['p_stt_body'],
+                    'stt_finale' => $data['p_stt_finale'],
+                    'lat_trida' => $data['p_lat_trida'],
+                    'lat_body' => $data['p_lat_body'],
+                    'lat_finale' => $data['p_lat_finale']
                 )
             );
             return;

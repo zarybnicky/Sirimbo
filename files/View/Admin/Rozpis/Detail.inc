@@ -19,11 +19,10 @@
                            ->type('par')
                            ->users($this->users);
         foreach ($this->items as $item) :
-          post($item['id'] . '-partner', $item['partner']);
         ?>
           <tr>
             <td>
-              <?= $userselect->name($item['id'] . '-partner'); ?>
+              <?= $userselect->name($item['id'] . '-partner')->set($item['partner']) ?>
             </td>
             <td>
               <input type="text"
@@ -91,6 +90,7 @@
               ->get()
               ->name('n')
               ->option('', '--')
+              ->set($this->selected_nabidka)
               ->options($this->nabidky);
     ?>
     <button type="submit">Vybrat nabídku</button>

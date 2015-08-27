@@ -8,7 +8,7 @@ class Controller_Utility_Urldecode extends Controller_Abstract
         echo '<input type="submit" />';
         echo '</form>';
 
-        if (get('t'))
-            echo urldecode(get('t'));
+        if ($request->get('t'))
+            echo urldecode($request->get('t'));
     }
 }

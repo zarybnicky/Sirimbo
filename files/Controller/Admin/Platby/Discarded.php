@@ -13,22 +13,27 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
                 'V databázi nejsou žádné vyřazené platby.'
             );
         }
-        if (get('list')) {
+        if ($request->get('list')) {
             $this->_getTable($data, $result, $columns, $header);
             $this->render(
                 'files/View/Admin/Platby/DiscardedTable.inc',
                 array(
                     'data' => $result,
                     'columns' => $columns,
-                    'header' => $header
+                    'header' => $header,
+                    'uri' => $request->getLiteralURI()
                 )
             );
         } else {
             $this->_getList($data, $groupAmount, $groupDate);
-            $this->render('files/View/Admin/Platby/DiscardedList.inc', array(
+            $this->render(
+                'files/View/Admin/Platby/DiscardedList.inc',
+                array(
                     'groupByDate' => $groupDate,
-                    'groupByAmount' => $groupAmount
-            ));
+                    'groupByAmount' => $groupAmount,
+                    'uri' => $request->getLiteralURI()
+                )
+            );
         }
     }
     public function remove($request) {
@@ -47,18 +52,18 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
         );
     }
     private function _getTable($data, &$result, &$columns, &$header) {
-        if (get('list') == 'date') {
+        if ($request->get('list') == 'date') {
             $header =
-                (get('year') == 'none'
+                ($request->get('year') == 'none'
                 ? 'nezařazené podle data'
-                : (get('month')
-                  ? (get('year') . '/' . get('month'))
-                  : get('year')));
-        } elseif (get('list') == 'amount') {
+                : ($request->get('month')
+                  ? ($request->get('year') . '/' . $request->get('month'))
+                  : $request->get('year')));
+        } elseif ($request->get('list') == 'amount') {
             $header =
-                (get('amount') == 'none'
+                ($request->get('amount') == 'none'
                 ? 'nezařazené podle částky'
-                : (get('amount') . ' Kč'));
+                : ($request->get('amount') . ' Kč'));
         } else {
             $header = 'všechny';
         }
@@ -70,23 +75,23 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
             if (!$this->checkHeaders(array_flip($row), $specific, $variable, $date, $amount))
                 $this->recognizeHeaders($row, $specific, $variable, $date, $amount);
 
-            if (get('list') == 'date') {
+            if ($request->get('list') == 'date') {
                 if (isset($row[$date]) && $row[$date]) {
-                    if (get('year') == 'none')
+                    if ($request->get('year') == 'none')
                         continue;
                     $currentDate = new Date($row[$date]);
-                    if ($currentDate->getYear() != get('year')
-                        || (get('month') && $currentDate->getMonth() != get('month'))
+                    if ($currentDate->getYear() != $request->get('year')
+                        || ($request->get('month') && $currentDate->getMonth() != $request->get('month'))
                     ) {
                         continue;
                     }
-                } elseif (get('year') !== 'none') {
+                } elseif ($request->get('year') !== 'none') {
                     continue;
                 }
             } elseif (
-                get('list') == 'amount'
-                && ((!isset($row[$amount]) ^ get('amount') == 'none')
-                || get('amount') != (int) $row[$amount])
+                $request->get('list') == 'amount'
+                && ((!isset($row[$amount]) ^ $request->get('amount') == 'none')
+                || $request->get('amount') != (int) $row[$amount])
             ) {
                 continue;
             }

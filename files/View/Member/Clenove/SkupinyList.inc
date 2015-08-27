@@ -1,6 +1,5 @@
-<?php echo $this->render('files/View/Member/Clenove/Navigation.inc');?>
+<?= $this->render('files/View/Member/Clenove/Navigation.inc', array('uri' => $this->uri)) ?>
 <div class="container full">
-<h2>Seznam skupin</h2>
 <?php
 echo $this->table()
     ->data($this->data)

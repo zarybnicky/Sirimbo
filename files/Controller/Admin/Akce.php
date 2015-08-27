@@ -11,7 +11,7 @@ class Controller_Admin_Akce extends Controller_Admin
     {
         switch($request->post('action')) {
         case 'save':
-            $this->processSave();
+            $this->processSave($request);
             $this->redirect('/admin/akce');
             break;
 
@@ -212,7 +212,7 @@ class Controller_Admin_Akce extends Controller_Admin
         );
     }
 
-    private function processSave()
+    private function processSave($request)
     {
         $items = DBAkce::getAkce();
         foreach ($items as $item) {
@@ -236,8 +236,8 @@ class Controller_Admin_Akce extends Controller_Admin
 
     private function checkData($request)
     {
-        $od = $this->date('od')->getPost();
-        $do = $this->date('do')->getPost();
+        $od = $this->date('od')->getPost($request);
+        $do = $this->date('do')->getPost($request);
 
         $form = new Form();
         $form->checkLength($request->post('jmeno'), 1, 255, 'Špatná délka jména akce', 'jmeno');

@@ -30,8 +30,12 @@ function shutdownHandler()
     }
 
     ob_end_clean();
+
     $msg = "{$error['type']}: {$error['message']} in {$error['file']}: {$error['line']}";
     foreach (debug_backtrace() as $k => $v) {
+        if ($k <= 0) {
+            continue;
+        }
         array_walk(
             $v['args'],
             function (&$item, $key) {
@@ -57,9 +61,8 @@ function errorHandler($severity, $message, $filepath, $line)
     }
     ob_end_clean();
     $msg = "$severity: $message in $filepath: $line";
-    $ignore = 0;
     foreach (debug_backtrace() as $k => $v) {
-        if ($k < $ignore) {
+        if ($k <= 0) {
             continue;
         }
         array_walk(
@@ -68,7 +71,7 @@ function errorHandler($severity, $message, $filepath, $line)
                 $item = var_export($item, true);
             }
         );
-        $msg .= "\n#" . ($k - $ignore) . ' '
+        $msg .= "\n#$k "
               . $v['file'] . '(' . $v['line'] . '): '
               . (isset($v['class']) ? $v['class'] . '->' : '')
               . $v['function'] . '(' . implode(', ', $v['args']) . ')';

@@ -16,12 +16,12 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
         if(!$request->post()) {
             $request->post('name', $data['gf_name']);
             $request->post('parent', $data['gf_id_rodic']);
-            $this->_displayForm($id);
+            $this->displayForm($request, $id);
             return;
         }
         if (is_object($form = $this->_checkData())) {
             $this->redirect()->setMessage($form->getMessages());
-            $this->_displayForm($id);
+            $this->displayForm($request, $id);
             return;
         }
 
@@ -60,7 +60,7 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
     public function upload($request)
     {
         if (!$request->post()) {
-            $this->_displayUpload();
+            $this->displayUpload();
             return;
         }
         $parentId = $request->post('dir');
@@ -134,7 +134,7 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
         }
     }
 
-    private function _displayUpload()
+    private function displayUpload()
     {
         $dirs = DBGalerie::getDirs(true, true);
         foreach ($dirs as &$item) {
@@ -152,7 +152,7 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
         return;
     }
 
-    private function _displayForm($id)
+    private function displayForm($request, $id)
     {
         $dirs = DBGalerie::getDirs(true, true);
         foreach ($dirs as &$item) {
@@ -169,7 +169,9 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
             array(
                 'id' => $id,
                 'dirs' => $dirs,
-                'referer' => $request->getReferer()
+                'referer' => $request->getReferer(),
+                'parent' => $request->post('parent'),
+                'name' => $request->post('name')
             )
         );
     }

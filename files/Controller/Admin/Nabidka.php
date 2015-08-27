@@ -129,8 +129,8 @@ class Controller_Admin_Nabidka extends Controller_Admin
 
         Permissions::checkError('nabidka', P_OWNED, $request->post('trener'));
 
-        $od = $this->date('od')->getPost();
-        $do = $this->date('do')->getPost();
+        $od = $this->date('od')->getPost($request);
+        $do = $this->date('do')->getPost($request);
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
         }
@@ -181,8 +181,8 @@ class Controller_Admin_Nabidka extends Controller_Admin
             return;
         }
 
-        $od = $this->date('od')->getPost();
-        $do = $this->date('do')->getPost();
+        $od = $this->date('od')->getPost($request);
+        $do = $this->date('do')->getPost($request);
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
         }
@@ -268,8 +268,8 @@ class Controller_Admin_Nabidka extends Controller_Admin
     }
 
     private function checkData($request) {
-        $od = $this->date('od')->getPost();
-        $do = $this->date('do')->getPost();
+        $od = $this->date('od')->getPost($request);
+        $do = $this->date('do')->getPost($request);
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
         }

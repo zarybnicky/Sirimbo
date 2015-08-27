@@ -19,7 +19,7 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
         $items = DBRozpis::getRozpisItem($id);
 
         if ($request->post()) {
-            $items = $this->processPost($id, $data, $items);
+            $items = $this->processPost($request, $id, $data, $items);
             DBRozpis::editRozpisItemMultiple($items);
             $this->redirect('/' . $request->getURI());
         }
@@ -67,7 +67,7 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
                 ')';
         }
 
-        if (get('n') && ($nabidka = DBNabidka::getSingleNabidka(get('n')))) {
+        if ($request->get('n') && ($nabidka = DBNabidka::getSingleNabidka($request->get('n')))) {
             $nabidka_items = array_map(
                 function ($item) {
                     return array(
@@ -75,7 +75,7 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
                         'lessonCount' => $item['ni_pocet_hod']
                     );
                 },
-                DBNabidka::getNabidkaItem(get('n'))
+                DBNabidka::getNabidkaItem($request->get('n'))
             );
 
             $obsazeno = array_reduce(
@@ -107,13 +107,14 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
                 'data' => $data,
                 'users' => $users,
                 'items' => $items,
+                'selected_nabidka' => $request->get('n'),
                 'nabidky' => $nabidky_select,
                 'nabidka' => isset($nabidka) ? $nabidka : array()
             )
         );
     }
 
-    protected function processPost($id, $data, $items) {
+    protected function processPost($request, $id, $data, $items) {
         if ($request->post('remove') > 0) {
             DBRozpis::removeRozpisItem($request->post('remove'));
             $items = DBRozpis::getRozpisItem($id);
