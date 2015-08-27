@@ -5,7 +5,7 @@ class DBVideo extends Database
     {
         $res = self::query(
             'SELECT v_id, v_name, v_date, v_text, v_playlist, v_uri
-            FROM video ORDER BY v_date'
+            FROM video ORDER BY v_date DESC'
         );
         return self::getArray($res);
     }
