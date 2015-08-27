@@ -50,6 +50,7 @@
                               style="width:99%"><?= $this->text ?></textarea>
                     <script src="/scripts/ckeditor/ckeditor.js"></script>
                     <script>
+                     CKEDITOR.config.allowedContent = true;
                      CKEDITOR.replace('text');
                     </script>
                 </td>

@@ -36,7 +36,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="stylesheet" type="text/css" href="/style/style.css" />
     <link rel="stylesheet" type="text/css" href="/style/polyfill.object-fit.css" />
-    <!-- <link rel="stylesheet" type="text/css" href="/style/semantic.min.css" />-->
+    <link rel="stylesheet" type="text/css" href="/style/video.min.css" />
     <title>TK Olymp Olomouc</title>
   </head>
   <body>
