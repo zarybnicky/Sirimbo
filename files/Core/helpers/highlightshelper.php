@@ -20,7 +20,7 @@ class HighlightsHelper
                     'description' => $val['at_preview'],
                     'title_photo_uri' => (
                         $val['at_foto_main']
-                        ? '/galerie/' . $val['at_foto_main']
+                        ? '/galerie/' . $val['gf_path']
                         : ''
                     ),
                     'category' => 'Zprávy'
