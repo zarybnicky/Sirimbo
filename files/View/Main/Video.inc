@@ -7,5 +7,4 @@
                 </div>
         </div>
     <?php endforeach; ?>
-    <script>$('.ui.video').video();</script>
 </div>

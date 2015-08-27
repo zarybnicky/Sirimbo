@@ -1,5 +1,7 @@
 var masonry;
 $(function() {
+    $('.ui.video').video();
+
     var container = document.querySelector('#more-articles');
     if (container) {
         imagesLoaded( container, function() {
