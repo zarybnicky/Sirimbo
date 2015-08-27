@@ -1,6 +1,5 @@
-<?php echo $this->render('files/View/Member/Clenove/Navigation.inc');?>
+<?= $this->render('files/View/Member/Clenove/Navigation.inc', array('uri' => $this->uri));?>
 <div class="container full">
-<h2>Členové podle skupin</h2>
 <?php
 foreach ($this->data as $skupina) {
     echo '<div style="width:49%;float:', $skupina['info']['align'], '">';

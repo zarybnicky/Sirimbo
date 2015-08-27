@@ -1,8 +1,8 @@
-<?php echo $this->render('files/View/Member/Clenove/Navigation.inc');?>
+<?= $this->render('files/View/Member/Clenove/Navigation.inc', array('uri' => $this->uri)) ?>
 
 <div class="container full">
-<h2><?php echo $this->fullName;?></h2>
-E-mail: <?php echo $this->email;?><br/>
-Telefon: <?php echo $this->telefon;?><br/>
-<a href="<?php echo $this->referer;?>">Zpět</a>
+    <h2><?= $this->fullName;?></h2>
+    E-mail: <?= $this->email;?><br/>
+    Telefon: <?= $this->telefon;?><br/>
+    <a href="<?= $this->referer;?>">Zpět</a>
 </div>

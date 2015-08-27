@@ -34,38 +34,43 @@ require 'files/Core/request.php';
 require 'files/Controller/Interface.php';
 require 'files/Controller/Abstract.php';
 
-define('TISK', (get('view') == 'tisk') ? true : false);
+$request = new Request(
+    $_SERVER['REQUEST_URI'],
+    $_SERVER['REQUEST_METHOD'],
+    getallheaders(),
+    $_SERVER,
+    $_COOKIE,
+    $_GET,
+    $_POST,
+    $_FILES,
+    $_SESSION
+);
+$_SERVER = $_COOKIE = $_GET = $_POST = $_FILES = array();
+$request->setDefault('home');
+$request->setReferer($request->session('referer_id'));
+
+Database::setRequest($request);
+Log::setRequest($request);
+
+define('TISK', ($request->get('view') == 'tisk') ? true : false);
 
 if (TISK) {
     ;
-} elseif (!session('page_id')) {
-    session('page_id', server('REQUEST_URI'));
-} elseif (!session('referer_id') || server('REQUEST_URI') != session('page_id')) {
-    session('referer_id', session('page_id'));
-    session('page_id', server('REQUEST_URI'));
+} elseif (!$request->session('page_id')) {
+    $request->session('page_id', $request->server('REQUEST_URI'));
+} elseif (
+    !$request->session('referer_id') ||
+    $request->server('REQUEST_URI') != $request->session('page_id')
+) {
+    $request->session('referer_id', $request->session('page_id'));
+    $request->session('page_id', $request->server('REQUEST_URI'));
 }
 
-Request::setDefault('home');
-Request::setURI(server('REQUEST_URI'));
-Request::setReferer(session('referer_id'));
-
-if (session('login') === null) {
-    if (post('login') && post('pass')) {
-        post('pass', User::crypt(post('pass')));
-
-        if (!User::login(post('login'), post('pass'))) {
-            Helper::instance()->redirect('/login', 'Špatné jméno nebo heslo!', true);
-        } elseif (get('return')) {
-            Helper::instance()->redirect(get('return'));
-        } else {
-            Helper::instance()->redirect('/member/nastenka');
-        }
-    }
-} else {
-    User::loadUser(session('id'));
-    if (session('invalid_data') === '1'
-        && Request::getURI() !== 'member/profil/edit'
-        && Request::getURI() !== 'logout'
+if ($request->session('login') !== null) {
+    User::loadUser($request->session('id'));
+    if ($request->session('invalid_data') === '1'
+        && $request->getURI() !== 'member/profil/edit'
+        && $request->getURI() !== 'logout'
     ) {
         Helper::instance()->redirect(
             '/member/profil/edit',
@@ -73,17 +78,35 @@ if (session('login') === null) {
             true
         );
     }
+} elseif ($request->post('login') && $request->post('pass')) {
+    $request->post('pass', User::crypt($request->post('pass')));
+
+    if (!User::login($request->post('login'), $request->post('pass'))) {
+        Helper::instance()->redirect('/login', 'Špatné jméno nebo heslo!', true);
+    } elseif ($request->get('return')) {
+        Helper::instance()->redirect($request->get('return'));
+    } else {
+        Helper::instance()->redirect('/member/nastenka');
+    }
 }
 
 $d = new Dispatcher();
 try {
-    $d->dispatch(Request::getLiteralURI(), Request::getAction(), Request::getID());
+    $d->dispatch($request);
 } catch (ViewException $e) {
-    Log::write($e->getMessage() . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n" . $e->getTraceAsString());
+    Log::write(
+        $e->getMessage()
+        . '(' . $e->getFile() . ':' . $e->getLine() . ")\n"
+        . $e->getTraceAsString()
+    );
     ob_clean();
     Helper::instance()->redirect('/error?id=' . $e->getErrorFile());
 } catch (Exception $e) {
-    Log::write($e->getMessage() . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n" . $e->getTraceAsString());
+    Log::write(
+        $e->getMessage()
+        . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n"
+        . $e->getTraceAsString()
+    );
     ob_clean();
     Helper::instance()->redirect('/error?id=' . (new ViewException(''))->getErrorFile());
 }

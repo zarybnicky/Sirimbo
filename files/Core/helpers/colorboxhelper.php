@@ -9,7 +9,7 @@ class ColorBoxHelper {
 
         return $this;
     }
-    
+
     public function render() {
         return '<div class="box" ' .
             "title=\"{$this->popis}\" " .

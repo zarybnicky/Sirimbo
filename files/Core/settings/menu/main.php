@@ -13,12 +13,17 @@ return array(
     array(
         'Novinky',
         '/aktualne/clanky',
-        include SETTINGS . '/menu/novinky.php'
+        array()
     ),
     array(
         'Nabízíme',
         '/nabizime',
         include SETTINGS . '/menu/nabizime.php'
+    ),
+    array(
+        'Videa',
+        '/video',
+        array()
     ),
     array(
         'Fotogalerie',

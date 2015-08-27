@@ -1,4 +1,4 @@
-<?= $this->render('files/View/Admin/Platby/Navigation.inc') ?>
+<?= $this->render('files/View/Admin/Platby/Navigation.inc', array('uri' => $this->uri)) ?>
 <?= $this->subheader('Jednotlivé platby') ?>
 
 <div class="container full">
@@ -11,7 +11,7 @@ if (!TISK) {
     echo '<td>';
     $s = $this->select()
         ->get()->name('user')
-        ->value('all')
+        ->set($this->user ?: 'all')
         ->option('all', '---');
     foreach ($this->users as $user)
         $s->option($user['u_id'], $user['u_prijmeni'] . ', ' . $user['u_jmeno']);
@@ -22,7 +22,7 @@ if (!TISK) {
     echo '<td>';
     $s = $this->select()
         ->get()->name('category')
-        ->value('all')
+        ->set($this->category ?: 'all')
         ->option('all', '---');
     foreach ($this->categories as $key => $item)
         $s->option($key, $item);
@@ -31,7 +31,7 @@ if (!TISK) {
 
     echo '<tr><td>datum</td>';
     echo '<td>';
-    echo (new DateHelper())->date()->name('date')->range()->textBox()->post(false);
+    echo $this->date()->name('date')->range()->set($this->date)->textBox();
     echo '</td></tr>';
     echo '<tr><td></td><td><button type="submit">Odeslat</button></td></tr></table>';
     echo '</form><br/>';

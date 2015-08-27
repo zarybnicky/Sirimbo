@@ -2,60 +2,68 @@
 require_once 'files/Controller/Admin.php';
 class Controller_Admin_Dokumenty extends Controller_Admin
 {
-    public function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('dokumenty', P_OWNED);
     }
-    public function view($id = null) {
-        switch(post('action')) {
-            case 'edit':
-                $dokumenty = post('dokumenty');
-                if ($dokumenty[0])
-                    $this->redirect('/admin/dokumenty/edit/' . $dokumenty[0]);
-                break;
 
-            case 'upload':
-                if (empty($_FILES))
-                    break;
-                $fileUpload = $_FILES['file']['tmp_name'];
-                $fileName = $_FILES['file']['name'];
-                $fileName = str_replace(
-                    array('#', '$', '%', '&', '^', '*', '?'),
-                    array('No.', 'Dolar', 'Procento', 'And', ''),
-                    $fileName
+    public function view($request)
+    {
+        switch($request->post('action')) {
+        case 'edit':
+            $dokumenty = $request->post('dokumenty');
+            if ($dokumenty[0]) {
+                $this->redirect('/admin/dokumenty/edit/' . $dokumenty[0]);
+            }
+            break;
+
+        case 'upload':
+            if (!$request->files()) {
+                break;
+            }
+            $fileUpload = $request->files('file')['tmp_name'];
+            $fileName = $request->files('file')['name'];
+            $fileName = str_replace(
+                array('#', '$', '%', '&', '^', '*', '?'),
+                array('No.', 'Dolar', 'Procento', 'And', ''),
+                $fileName
+            );
+
+            $path = 'upload/' . time() . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
+
+            if (!$request->post('name')) {
+                $request->post('name', $fileName);
+            }
+
+            if (move_uploaded_file($fileUpload, $path)) {
+                chmod($path, 0666);
+                $id = DBDokumenty::addDokument(
+                    $path,
+                    $request->post('name'),
+                    $fileName,
+                    $request->post('kategorie'),
+                    User::getUserID()
                 );
+                $this->redirect()->setMessage('Soubor byl úspěšně nahrán');
+            } else {
+                $this->redirect()->setMessage('Bohužel, zkus to znova :o(');
+            }
+            $this->redirect('/admin/dokumenty');
+            return;
 
-                $path = 'upload/' . time() . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
-
-                if (!post('name'))
-                    post('name', $fileName);
-
-                if (move_uploaded_file($fileUpload, $path)) {
-                    chmod($path, 0666);
-                    $id = DBDokumenty::addDokument(
-                        $path, post('name'), $fileName,
-                        post('kategorie'), User::getUserID()
-                    );
-                    $this->redirect()->setMessage('Soubor byl úspěšně nahrán');
-
-                    $n = new Novinky(User::getUserID());
-                    $n->dokumenty()->add('/member/download?id=' . $id, post('name'));
-                } else {
-                    $this->redirect()->setMessage('Bohužel, zkus to znova :o(');
-                }
-                $this->redirect('/admin/dokumenty');
-                return;
-
-            case 'remove':
-                if (!is_array(post('dokumenty')))
-                    break;
-                $url = '/admin/dokumenty/remove?';
-                foreach (post('dokumenty') as $id)
-                    $url .= '&u[]=' . $id;
-                $this->redirect($url);
+        case 'remove':
+            if (!is_array($request->post('dokumenty'))) {
                 break;
+            }
+            $url = '/admin/dokumenty/remove?';
+            foreach ($request->post('dokumenty') as $id) {
+                $url .= '&u[]=' . $id;
+            }
+            $this->redirect($url);
+            break;
         }
         $data = array_map(
-            function($item) {
+            function ($item) {
                 return array(
                     'checkBox' => $this->checkbox('dokumenty[]', $item['d_id'])
                                        ->readonly(Permissions::check('dokumenty', P_OWNED, $item['d_kdo']))
@@ -76,12 +84,15 @@ class Controller_Admin_Dokumenty extends Controller_Admin
             )
         );
     }
-    public function edit($id = null) {
-        if (!$id || !($data = DBDokumenty::getSingleDokument($id)))
+    public function edit($request)
+    {
+        $id = $request->getId();
+        if (!$id || !($data = DBDokumenty::getSingleDokument($id))) {
             $this->redirect('/admin/dokumenty', 'Dokument s takovým ID neexistuje');
+        }
 
-        if (!empty($_POST) && post('newname')) {
-            $newname = post('newname');
+        if ($request->post('newname')) {
+            $newname = $request->post('newname');
 
             DBDokumenty::editDokument($id, $newname);
             $this->redirect('/admin/dokumenty', 'Příspěvek úspěšně upraven');
@@ -93,20 +104,18 @@ class Controller_Admin_Dokumenty extends Controller_Admin
             )
         );
     }
-    public function remove($id = null) {
-        if (!is_array(post('data')) && !is_array(get('u'))) {
+    public function remove($request)
+    {
+        if (!is_array($request->post('data')) && !is_array($request->get('u'))) {
             $this->redirect('/admin/dokumenty');
         }
 
-        if (!empty($_POST) && post('action') == 'confirm') {
-            foreach (post('dokumenty') as $id) {
+        if ($request->post('action') == 'confirm') {
+            foreach ($request->post('dokumenty') as $id) {
                 $data = DBDokumenty::getSingleDokument($id);
                 if (Permissions::check('dokumenty', P_OWNED, $data['d_kdo'])) {
                     unlink($data['d_path']);
                     DBDokumenty::removeDokument($id);
-
-                    $n = new Novinky(User::getUserID());
-                    $n->dokumenty()->remove($data['d_name']);
                 } else {
                     $error = true;
                 }
@@ -118,7 +127,7 @@ class Controller_Admin_Dokumenty extends Controller_Admin
         }
 
         $data = array();
-        foreach (get('u') as $id) {
+        foreach ($request->get('u') as $id) {
             $data[] = array(
                 'id' => $id,
                 'text' => DBDokumenty::getDokumentName($id)
@@ -129,7 +138,7 @@ class Controller_Admin_Dokumenty extends Controller_Admin
             array(
                 'header' => 'Správa dokumentů',
                 'prompt' => 'Opravdu chcete odstranit dokumenty:',
-                'returnURI' => Request::getReferer(),
+                'returnURI' => $request->getReferer(),
                 'data' => $data
             )
         );

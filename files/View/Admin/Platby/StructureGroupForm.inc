@@ -1,31 +1,34 @@
-<?= $this->render('files/View/Admin/Platby/Navigation.inc') ?>
+<?= $this->render('files/View/Admin/Platby/Navigation.inc', array('uri' => $this->uri)) ?>
 <?= $this->subheader('Kategorie plateb') ?>
 
 <div class="container full">
 <?= '<h3>', ($this->action == 'add' ? 'Přidat kategorii' : 'Upravit kategorii'), '</h3>';?>
 
 <?php
-$mainForm = (new TableHelper())->table()
+$mainForm = $this->table()
     ->column('desc', '', 'r')
     ->column('value', 'Hodnota')
     ->data(array(
         array(
-                'desc' => 'Typ:',
-                'value' => '<label>' . $this->radio('type', '0')->defaultState(true) . 'Běžné platby</label><br/>' .
-                    '<label>' . $this->radio('type', '1') . 'Členské příspěvky</label>'
+            'desc' => 'Typ:',
+            'value' => (
+                '<label>' . $this->radio('type', '0')->set(true) . 'Běžné platby</label><br/>' .
+                '<label>' . $this->radio('type', '1') . 'Členské
+příspěvky</label>'
+            )
         ), array(
-                'desc' => 'Jméno:',
-                'value' => '<input type="text" name="name" value="' . post('name') . '"/>'
+            'desc' => 'Jméno:',
+            'value' => '<input type="text" name="name" value="' . $this->name . '"/>'
         ), array(
-                'desc' => 'Popis: ',
-                'value' => '<textarea rows="10" cols="50" name="description">' . post('description') . '</textarea>'
+            'desc' => 'Popis: ',
+            'value' => '<textarea rows="10" cols="50" name="description">' . $this->description . '</textarea>'
         ), array(
-                'desc' => 'Násobitel částky: ',
-                'value' => '<input type="text" name="base" value="' . post('base') . '"/>'
+            'desc' => 'Násobitel částky: ',
+            'value' => '<input type="text" name="base" value="' . $this->base . '"/>'
         )
     ));
 if (!empty($this->category)) {
-    $categoryForm = (new TableHelper())->table()
+    $categoryForm = $this->table()
         ->column('buttons', '', '', 'width:75px')
         ->column('name', 'Jméno')
         ->column('specific', 'Specifický<br/>symbol')
@@ -54,8 +57,12 @@ if (!empty($this->skupinySelect)) {
 ?>
 
 <form action="" method="post">
-    <?php echo $mainForm, getReturnInput();?>
-    <button name="action" value="confirm">Uložit</button>&nbsp;<a href="<?= $this->backlink ?>">Zpět</a><br/><br/>
+    <?= $mainForm ?>
+    <input type="hidden"
+           name="referer"
+           value="<?= $this->referer ?>" />
+    <button name="action" value="confirm">Uložit</button>
+    <a href="<?= $this->referer ?>">Zpět</a><br/><br/>
 </form>
 <?php if ($this->action != 'add') : ?>
     <h3>Specifické symboly</h3>

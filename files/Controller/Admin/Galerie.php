@@ -17,42 +17,42 @@ class Controller_Admin_Galerie extends Controller_Admin
         'image/bmp' => 'BMP',
         'image/x-png' => 'PNG'
     );
-    
+
     public function __construct()
     {
         Permissions::checkError('galerie', P_OWNED);
     }
-    public function view($id = null)
+    public function view($request)
     {
-        switch(post('action')) {
-            case 'galerie/save':
-                $this->_processSave();
-                break;
-            case 'galerie/scan':
-                $this->_scan();
-                break;
-            case 'directory':
-            case 'directory/edit':
-                $galerie = post('galerie');
-                if (isset($galerie[0])) {
-                    $this->redirect(
-                        '/admin/galerie/' . post('action') . '/' . $galerie[0]
-                    );
-                }
-                break;
-            case 'directory/remove':
-                if (is_array(post('galerie'))) {
-                    $this->redirect(
-                        '/admin/galerie/directory/remove?'
-                            . http_build_query(array('u' => post('galerie')))
-                    );
-                }
-                break;
+        switch($request->post('action')) {
+        case 'galerie/save':
+            $this->_processSave();
+            break;
+        case 'galerie/scan':
+            $this->_scan();
+            break;
+        case 'directory':
+        case 'directory/edit':
+            $galerie = $request->post('galerie');
+            if (isset($galerie[0])) {
+                $this->redirect(
+                    '/admin/galerie/' . $request->post('action') . '/' . $galerie[0]
+                );
+            }
+            break;
+        case 'directory/remove':
+            if (is_array($request->post('galerie'))) {
+                $this->redirect(
+                    '/admin/galerie/directory/remove?'
+                    . http_build_query(array('u' => $request->post('galerie')))
+                );
+            }
+            break;
         }
         $this->_displayOverview();
     }
 
-    private function _scan($id = null)
+    private function _scan($request)
     {
         $dbInDirs = DBGalerie::getDirsWithParentPath();
         $dbInFiles = DBGalerie::getFotkyWithParentPath();
@@ -239,7 +239,7 @@ class Controller_Admin_Galerie extends Controller_Admin
             if (is_dir($file_list[$key])) {
                 $out_dirs[$file_list[$key]] = $dir_name;
                 $this->_recursiveDirs($file_list[$key], $out_dirs, $out_files);
-            } elseif(is_file($file_list[$key])) {
+            } elseif (is_file($file_list[$key])) {
                 $out_files[$file_list[$key]] = $dir_name;
             }
         }
@@ -287,12 +287,15 @@ class Controller_Admin_Galerie extends Controller_Admin
     {
         $items = DBGalerie::getDirs();
         foreach ($items as $item) {
-            if ((bool) post($item['gd_id']) === (bool) $item['gd_hidden']) {
+            if ((bool) $request->post($item['gd_id']) === (bool) $item['gd_hidden']) {
                 continue;
             }
             DBGalerie::editDir(
-                $item['gd_id'], $item['gd_name'], $item['gd_id_rodic'],
-                $item['gd_level'], post($item['gd_id']) ? '1' : '0',
+                $item['gd_id'],
+                $item['gd_name'],
+                $item['gd_id_rodic'],
+                $item['gd_level'],
+                $request->post($item['gd_id']) ? '1' : '0',
                 $item['gd_path']
             );
         }
@@ -303,10 +306,13 @@ class Controller_Admin_Galerie extends Controller_Admin
         $data = DBGalerie::getDirs(true, true);
         foreach ($data as &$item) {
             $new_data = array(
-            	'checkBox' => (string) $this->checkbox('galerie[]', $item['gd_id']),
+            	'checkBox' => $this->checkbox('galerie[]', $item['gd_id'])
+                                   ->render(),
                 'name'     => str_repeat('&nbsp;->', $item['gd_level'] - 1)
                     . ' ' . $item['gd_name'],
-                'hidden'   => (string) $this->checkbox($item['gd_id'], '1')->defaultState($item['gd_hidden'])
+                'hidden'   => $this->checkbox($item['gd_id'], '1')
+                                   ->set($item['gd_hidden'])
+                                   ->render()
             );
             $item = $new_data;
         }
@@ -316,4 +322,3 @@ class Controller_Admin_Galerie extends Controller_Admin
         );
     }
 }
-?>

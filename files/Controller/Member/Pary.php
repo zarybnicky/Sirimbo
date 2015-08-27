@@ -5,11 +5,7 @@ class Controller_Member_Pary extends Controller_Member
     public function __construct() {
         Permissions::checkError('pary', P_VIEW);
     }
-    public function view($id = null) {
-        /*if ($id) {
-            $this->render('files/View/Member/Pary/Single.inc, array('id' => $id));
-            return;
-        }*/
+    public function view($request) {
         $pary = DBPary::getActiveParyByHodnoceni();
         if (empty($pary)) {
             $this->render(
@@ -40,4 +36,3 @@ class Controller_Member_Pary extends Controller_Member
         );
     }
 }
-?>

@@ -1,31 +1,63 @@
 <?php
 class Controller_Oklubu extends Controller_Abstract
 {
-    public function view($id = null) {
-       $this->redirect('/oklubu/obecne');
+    public function view($request)
+    {
+        $this->redirect('/oklubu/obecne');
     }
 
-    public function obecne($id = null) {
-        $this->render('files/View/Main/OKlubu/Main.inc');
+    public function obecne($request)
+    {
+        $this->render(
+            'files/View/Main/OKlubu/Main.inc',
+            array(
+                'sidebar' => $this->sidebar($request->getUri())
+            )
+        );
     }
 
-    public function historie($id = null) {
-        $this->render('files/View/Main/OKlubu/Historie.inc');
+    public function historie($request)
+    {
+        $this->render(
+            'files/View/Main/OKlubu/Historie.inc',
+            array(
+                'sidebar' => $this->sidebar($request->getUri())
+            )
+        );
     }
 
-    public function klubovi($id = null) {
-        $this->render('files/View/Main/OKlubu/TreneriInt.inc');
+    public function klubovi($request)
+    {
+        $this->render(
+            'files/View/Main/OKlubu/TreneriInt.inc',
+            array(
+                'sidebar' => $this->sidebar($request->getUri())
+            )
+        );
     }
 
-    public function externi($id = null) {
-        $this->render('files/View/Main/OKlubu/TreneriExt.inc');
+    public function externi($request)
+    {
+        $this->render(
+            'files/View/Main/OKlubu/TreneriExt.inc',
+            array(
+                'sidebar' => $this->sidebar($request->getUri())
+            )
+        );
     }
 
-    public function saly($id = null) {
-        $this->render('files/View/Main/OKlubu/Saly.inc');
+    public function saly($request)
+    {
+        $this->render(
+            'files/View/Main/OKlubu/Saly.inc',
+            array(
+                'sidebar' => $this->sidebar($request->getUri())
+            )
+        );
     }
 
-    public function navbar() {
+    public function navbar()
+    {
         return parent::navbar() .
             new Navbar(
                 include SETTINGS . '/menu/oklubu.php',
@@ -33,9 +65,11 @@ class Controller_Oklubu extends Controller_Abstract
             );
     }
 
-    public function sidebar() {
+    public function sidebar($uri)
+    {
         return new Sidebar(
-            include SETTINGS . '/menu/oklubu.php'
+            include SETTINGS . '/menu/oklubu.php',
+            $uri
         );
     }
 }

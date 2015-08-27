@@ -1,4 +1,4 @@
-<?= $this->render('files/View/Admin/Platby/Navigation.inc') ?>
+<?= $this->render('files/View/Admin/Platby/Navigation.inc', array('uri' => $this->uri)) ?>
 <?= $this->subheader(
         'Ruční třídění plateb</span> (zbývá ' . $this->remainingTotal . ')'
     ) ?>
@@ -18,12 +18,12 @@ $form = array(
                 'recogValue' => $this->recognized['amount']['value']
         ), array(
                 'desc' => 'Uživatel: ',
-                'value' => (new SelectHelper())->select('variable')->options($this->users)->value($this->guess['variable']),
+                'value' => $this->select('variable')->options($this->users)->value($this->guess['variable']),
                 'recogColumn' => $this->recognized['variable']['column'],
                 'recogValue' => $this->recognized['variable']['value']
         ), array(
                 'desc' => 'Kategorie:',
-                'value' => (new SelectHelper())->select('specific')->options($this->categories)->value($this->guess['specific']),
+                'value' => $this->select('specific')->options($this->categories)->value($this->guess['specific']),
                 'recogColumn' => $this->recognized['specific']['column'],
                 'recogValue' => $this->recognized['specific']['value']
         ), array(

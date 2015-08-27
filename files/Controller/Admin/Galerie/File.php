@@ -7,26 +7,28 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
         Permissions::checkError('galerie', P_OWNED);
     }
 
-    public function edit($id = null)
+    public function edit($request)
     {
+        $id = $request->getId();
         if(!$id || !($data = DBGalerie::getSingleDir($id))) {
-            $this->redirect(Request::getReferer(), 'Takový soubor neexistuje!');
+            $this->redirect($request->getReferer(), 'Takový soubor neexistuje!');
         }
-        if(empty($_POST) || is_object($form = $this->_checkData())) {
-            if(empty($_POST)) {
-                post('name', $data['gf_name']);
-                post('parent', $data['gf_id_rodic']);
-            } else {
-                $this->redirect()->setMessage($form->getMessages());
-            }
-            $this->_displayForm($id);
+        if(!$request->post()) {
+            $request->post('name', $data['gf_name']);
+            $request->post('parent', $data['gf_id_rodic']);
+            $this->displayForm($request, $id);
+            return;
+        }
+        if (is_object($form = $this->_checkData())) {
+            $this->redirect()->setMessage($form->getMessages());
+            $this->displayForm($request, $id);
             return;
         }
 
-        $parent = DBGalerie::getSingleDir(post('parent'));
+        $parent = DBGalerie::getSingleDir($request->post('parent'));
         $newPath = $this->_sanitizePathname(
             $this->_getCanonicalName(
-                $parent['gd_path'] . DIRECTORY_SEPARATOR . post('name')
+                $parent['gd_path'] . DIRECTORY_SEPARATOR . $request->post('name')
             )
         );
 
@@ -48,20 +50,20 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
             $data['gf_path'] = $newPath;
         }
 
-        DBGalerie::editFoto($id, $data['gf_path'], post('parent'), post('name'));
+        DBGalerie::editFoto($id, $data['gf_path'], $request->post('parent'), $request->post('name'));
         $this->redirect(
-            '/admin/galerie/directory/' . post('parent'),
+            '/admin/galerie/directory/' . $request->post('parent'),
             'Soubor byl úspěšně upraven'
         );
     }
 
-    public function upload($id = null)
+    public function upload($request)
     {
-        if (empty($_POST)) {
-            $this->_displayUpload();
+        if (!$request->post()) {
+            $this->displayUpload();
             return;
         }
-        $parentId = post('dir');
+        $parentId = $request->post('dir');
         if (!is_numeric($parentId) || $parentId < 0) {
             $parentId = 0;
         }
@@ -128,13 +130,11 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
             );
         }
         if (count($files) > $failCount) {
-            $news = new Novinky(User::getUserID());
-            $news->galerie()->edit($parent['gd_name']);
             $this->redirect('/admin/galerie', 'Fotky přidány');
         }
     }
 
-    private function _displayUpload()
+    private function displayUpload()
     {
         $dirs = DBGalerie::getDirs(true, true);
         foreach ($dirs as &$item) {
@@ -152,7 +152,7 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
         return;
     }
 
-    private function _displayForm($id)
+    private function displayForm($request, $id)
     {
         $dirs = DBGalerie::getDirs(true, true);
         foreach ($dirs as &$item) {
@@ -169,7 +169,9 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
             array(
                 'id' => $id,
                 'dirs' => $dirs,
-                'referer' => Request::getReferer()
+                'referer' => $request->getReferer(),
+                'parent' => $request->post('parent'),
+                'name' => $request->post('name')
             )
         );
     }
@@ -178,10 +180,10 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
     {
         $form = new Form();
 
-        $form->checkNotEmpty(post('name'), 'Zadejte prosím nějaký popis', 'name');
+        $form->checkNotEmpty($request->post('name'), 'Zadejte prosím nějaký popis', 'name');
         $form->checkBool(
-            post('parent') >= 0 && is_numeric(post('parent'))
-            && DBGalerie::getSingleDir(post('parent')),
+            $request->post('parent') >= 0 && is_numeric($request->post('parent'))
+            && DBGalerie::getSingleDir($request->post('parent')),
             'Zadaná nadsložka není platná', 'parent'
         );
 

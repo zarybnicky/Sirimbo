@@ -5,7 +5,7 @@ class Controller_Admin_Platby_Overview extends Controller_Admin_Platby
     public function __construct() {
         Permissions::checkError('platby', P_OWNED);
     }
-    public function view($id = null) {
+    public function view($request) {
         $data = DBUser::getUsersWithSkupinaPlatby();
         $skupiny = array();
         $index = 0;
@@ -41,8 +41,12 @@ class Controller_Admin_Platby_Overview extends Controller_Admin_Platby
             $skupina['info']['count'] = count($skupina['users']);
         }
 
-        $this->render('files/View/Admin/Platby/Statistics.inc', array(
-                'data' => $skupiny
-        ));
+        $this->render(
+            'files/View/Admin/Platby/Statistics.inc',
+            array(
+                'data' => $skupiny,
+                'uri' => $request->getLiteralURI()
+            )
+        );
     }
 }

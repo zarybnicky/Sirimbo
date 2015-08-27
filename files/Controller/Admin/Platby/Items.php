@@ -6,95 +6,114 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
     {
         Permissions::checkError('platby', P_OWNED);
     }
-    public function view($id = null)
+
+    public function view($request)
     {
-        switch(post('action')) {
-            case 'edit':
-                $users = post('data');
-                if ($users[0]) {
-                    $this->redirect('/admin/platby/items/edit/' . $users[0]);
-                }
-                break;
-            case 'remove':
-                if (is_array(post('data'))) {
-                    $this->redirect(
-                        '/admin/platby/items/remove?'
-                        . http_build_query(array('u' => post('data')))
-                    );
-                }
-                break;
+        switch($request->post('action')) {
+        case 'edit':
+            $users = $request->post('data');
+            if ($users[0]) {
+                $this->redirect('/admin/platby/items/edit/' . $users[0]);
+            }
+            break;
+        case 'remove':
+            if (is_array($request->post('data'))) {
+                $this->redirect(
+                    '/admin/platby/items/remove?'
+                    . http_build_query(array('u' => $request->post('data')))
+                );
+            }
+            break;
         }
-        $data = $this->_getData();
+        $data = $this->getData($request);
         $this->render(
             'files/View/Admin/Platby/ItemsOverview.inc',
             array(
                 'users' => DBUser::getUsers(),
-                'categories' => $this->_getCategories(),
-                'data' => $data
+                'categories' => $this->getCategories(),
+                'data' => $data,
+                'uri' => $request->getLiteralURI(),
+                'user' => $request->get('user') ?: '',
+                'category' => $request->get('category') ?: '',
+                'date' => $request->get('date') ?: ''
             )
         );
     }
-    public function add($id = null)
+    public function add($request)
     {
-        if (empty($_POST)) {
-            $this->_displayForm(0);
+        if (!$request->post()) {
+            $this->displayForm(0, $request);
             return;
         } elseif (!is_object($item = $this->getFromPost())) {
             $this->redirect()->setMessage($item);
-            $this->_displayForm(0);
+            $this->displayForm(0, $request);
             return;
         }
         DBPlatbyItem::insert(
-            $item->variable, $item->categoryId, null, $item->amount,
-            $item->date, $item->prefix
+            $item->variable,
+            $item->categoryId,
+            null,
+            $item->amount,
+            $item->date,
+            $item->prefix
         );
         $this->redirect('/admin/platby/items', 'Platba úspěšně přidána');
     }
-    public function edit($id = null)
+    public function edit($request)
     {
+        $id = $request->getId();
         if (!$id || !($data = DBPlatbyItem::getSingle($id))) {
             $this->redirect('/admin/platby/items', 'Platba s takovým ID neexistuje');
         }
-        if (empty($_POST)) {
-            post('date', $data['pi_date']);
-            post('amount', $data['pi_amount']);
-            post('variable', $data['pi_id_user']);
-            post('specific', $data['pi_id_category']);
-            post('prefix', $data['pi_prefix']);
-            $this->_displayForm($id);
+        if (!$request->post()) {
+            $request->post('date', $data['pi_date']);
+            $request->post('amount', $data['pi_amount']);
+            $request->post('variable', $data['pi_id_user']);
+            $request->post('specific', $data['pi_id_category']);
+            $request->post('prefix', $data['pi_prefix']);
+            $this->displayForm($id, $request);
             return;
         } elseif (!is_object($item = $this->getFromPost($id))) {
             $this->redirect()->setMessage($item);
-            $this->_displayForm($id);
+            $this->displayForm($id, $request);
             return;
         }
         DBPlatbyItem::update(
-            $id, $item->variable, $item->categoryId, $item->amount,
-            $item->date, $item->prefix
+            $id,
+            $item->variable,
+            $item->categoryId,
+            $item->amount,
+            $item->date,
+            $item->prefix
         );
         $this->redirect('/admin/platby/items', 'Platba úspěšně upravena');
     }
-    public function remove($id = null)
+
+    public function remove($request)
     {
-        if (!is_array(post('data')) && !is_array(get('u'))) {
+        if (!is_array($request->post('data')) && !is_array($request->get('u'))) {
             $this->redirect('/admin/platby/items');
         }
-        if (!empty($_POST) && post('action') == 'confirm') {
-            foreach (post('data') as $id) {
+        if ($request->post() && $request->post('action') == 'confirm') {
+            foreach ($request->post('data') as $id) {
                 $item = DBPlatbyItem::getSingle($id);
                 $itemRaw = DBPlatbyRaw::getSingle($item['pi_id_raw']);
 
                 DBPlatbyItem::remove($id);
                 if ($item['pi_id_raw']) {
                     DBPlatbyRaw::update(
-                        $item['pi_id_raw'], $itemRaw['pr_raw'],
-                        $itemRaw['pr_hash'], '0', '1');
+                        $item['pi_id_raw'],
+                        $itemRaw['pr_raw'],
+                        $itemRaw['pr_hash'],
+                        '0',
+                        '1'
+                    );
                 }
             }
             $this->redirect('/admin/platby/items', 'Platby odebrány');
         }
         $data = array();
-        foreach (get('u') as $id) {
+        foreach ($request->get('u') as $id) {
             $item = DBPlatbyItem::getSingle($id, true);
             $data[] = array(
                 'id' => $item['pi_id'],
@@ -107,16 +126,18 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             array(
                 'header' => 'Správa plateb',
                 'prompt' => 'Opravdu chcete odstranit platby:',
-                'returnURI' => Request::getReferer(),
+                'returnURI' => $request->getReferer(),
                 'data' => $data
             )
         );
     }
-    private function _displayForm($id)
+    private function displayForm($request, $id)
     {
         $raw = array();
-        if ($id && ($item = DBPlatbyItem::getSingle($id))
-            && ($data = DBPlatbyRaw::getSingle($item['pi_id_raw']))
+        if (
+            $id &&
+            ($item = DBPlatbyItem::getSingle($id)) &&
+            ($data = DBPlatbyRaw::getSingle($item['pi_id_raw']))
         ) {
             $data = unserialize($data['pr_raw']);
             foreach ($data as $key => $value) {
@@ -126,21 +147,27 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
                 );
             }
         }
-        $users = $this->_getUsers();
-        $categories = $this->_getCategories();
+        $users = $this->getUsers();
+        $categories = $this->getCategories();
         $this->render(
             'files/View/Admin/Platby/ItemsForm.inc',
             array(
-                'action' => Request::getAction(),
+                'action' => $request->getAction(),
+                'referer' => $request->getReferer(),
                 'id' => $id,
                 'raw' => $raw,
                 'users' => $users,
                 'categories' => $categories,
-                'backlink' => Request::getReferer()
+                'date' => $request->post('date'),
+                'amount' => $request->post('amount'),
+                'variable' => $request->post('variable'),
+                'specific' => $request->post('specific'),
+                'prefix' => $request->post('prefix'),
+                'uri' => $request->getLiteralURI()
             )
         );
     }
-    private function _getCategories()
+    private function getCategories()
     {
         $out = $this->getCategoryLookup(false, false, true);
         foreach ($out as $key => &$array) {
@@ -152,7 +179,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         }
         return $out;
     }
-    private function _getUsers()
+    private function getUsers()
     {
         $users = $this->getUserLookup(true);
         foreach ($users as $key => &$array) {
@@ -160,19 +187,19 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         }
         return $users;
     }
-    private function _getData()
+    private function getData($request)
     {
         $filter = array();
-        if (get('user') && is_numeric(get('user'))) {
-            $filter['u_id'] = get('user');
+        if ($request->get('user') && is_numeric($request->get('user'))) {
+            $filter['u_id'] = $request->get('user');
         }
-        if (get('category') && is_numeric(get('category'))) {
-            $filter['pc_id'] = get('category');
-        } elseif (stripos(get('category'), 'group_') !== false) {
-            $filter['pg_id'] = substr(get('category'), 6);
+        if ($request->get('category') && is_numeric($request->get('category'))) {
+            $filter['pc_id'] = $request->get('category');
+        } elseif (stripos($request->get('category'), 'group_') !== false) {
+            $filter['pg_id'] = substr($request->get('category'), 6);
         }
-        $dateHelper = (new DateHelper())->date()->name('date')->range()->textBox()->post(false);
-        $date = $dateHelper->getPostRange();
+        $dateHelper = $this->date()->name('date')->range()->textBox();
+        $date = $dateHelper->getPostRange($request);
 
         $data = DBPlatbyItem::get(true, $filter, array('pi_date DESC'), $date);
 

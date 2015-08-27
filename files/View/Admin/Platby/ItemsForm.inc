@@ -1,4 +1,4 @@
-<?= $this->render('files/View/Admin/Platby/Navigation.inc') ?>
+<?= $this->render('files/View/Admin/Platby/Navigation.inc', array('uri' => $this->uri)) ?>
 <?= $this->subheader('Jednotlivé platby') ?>
 
 <div class="container full">
@@ -8,19 +8,19 @@ echo '<h3>', ($this->action == 'add' ? 'Přidat platbu' : 'Upravit platbu'), '</
 $form = array(
         array(
                 'desc' => 'Datum:',
-                'value' => $this->date('date')->textBox()
+                'value' => $this->date('date')->set($this->date)->textBox()
         ), array(
                 'desc' => 'Částka (Kč):',
-                'value' => '<input type="text" name="amount" value="' . post('amount') . '"/>'
+                'value' => '<input type="text" name="amount" value="' . $this->amount . '"/>'
         ), array(
                 'desc' => 'Uživatel: ',
-                'value' => (new SelectHelper())->select('variable')->options($this->users)
+                'value' => $this->select('variable')->options($this->users)->set($this->variable)->render()
         ), array(
                 'desc' => 'Specifický symbol:',
-                'value' => (new SelectHelper())->select('specific')->options($this->categories)
+                'value' => $this->select('specific')->options($this->categories)->set($this->specific)->render()
         ), array(
                 'desc' => 'Prefix (rok):',
-                'value' => '<input type="text" name="prefix" value="' . post('prefix') . '"/>'
+                'value' => '<input type="text" name="prefix" value="' . $this->prefix . '"/>'
         )
 );
 $formTable = $this->table()
@@ -29,8 +29,12 @@ $formTable = $this->table()
     ->data($form);
 ?>
 <form action="" method="post">
-    <?php echo $formTable, getReturnInput();?>
-    <button name="action" value="confirm">Uložit</button>&nbsp;<a href="<?= $this->backlink ?>">Zpět</a>
+    <?= $formTable ?>
+    <input type="hidden"
+           name="referer"
+           value="<?= $this->referer ?>" />
+    <button name="action" value="confirm">Uložit</button>
+    <a href="<?= $this->referer ?>">Zpět</a>
 </form>
 <br/>
 <?php

@@ -1,4 +1,4 @@
-<?= $this->render('files/View/Admin/Platby/Navigation.inc');?>
+<?= $this->render('files/View/Admin/Platby/Navigation.inc', array('uri' => $this->uri)) ?>
 <?= $this->subheader('Kategorie plateb') ?>
 
 <div class="container full">
@@ -11,36 +11,34 @@ $mainForm = $this->table()
 ->data(array(
         array(
             'desc' => 'Jméno:',
-            'value' => '<input type="text" name="name" value="' . post('name') . '"/>'
+            'value' => '<input type="text" name="name" value="' . $this->name . '"/>'
         ), array(
             'desc' => 'Specifický symbol:',
-            'value' => '<input type="text" name="symbol" value="' . post('symbol') . '"/>'
+            'value' => '<input type="text" name="symbol" value="' . $this->symbol . '"/>'
         ), array(
             'desc' => 'Očekávaná částka:',
-            'value' => '<input type="text" name="amount" value="' . post('amount') . '"/>'
+            'value' => '<input type="text" name="amount" value="' . $this->amount . '"/>'
         ), array(
             'desc' => 'Splatnost:',
-            'value' => $this->date('dueDate')->render()
+            'value' => $this->date('dueDate')->set($this->dueDate)
         ), array(
             'desc' => 'Platnost:',
-            'value' => $this->date('validRange')->range()->render()
+            'value' => $this->date('validRange')->range()->set($this->validRange)
         ), array(
             'desc' => 'Povolit prefix roku?:',
-            'value' => (string) $this->checkbox('usePrefix', '1')
+            'value' => (string) $this->checkbox('usePrefix', '1')->set($this->usePrefix)
         ), array(
             'desc' => 'Archivovat?:',
-            'value' => (string) $this->checkbox('archive', '1')
+            'value' => (string) $this->checkbox('archive', '1')->set($this->archive)
         )
-))
-->render();
+));
 if (!empty($this->groups)) {
     $groupForm = $this->table()
         ->column('buttons', '', '', 'width:75px')
         ->column('type', 'Typ')
         ->column('name', 'Jméno')
         ->column('base', 'Násobitel částky')
-        ->data($this->groups)
-        ->render();
+        ->data($this->groups);
 }
 if (!empty($this->groupSelect)) {
     $groupSelectBox = $this->select('group')
@@ -49,8 +47,12 @@ if (!empty($this->groupSelect)) {
 ?>
 
 <form action="" method="post">
-    <?php echo $mainForm, getReturnInput();?>
-    <button name="action" value="confirm">Uložit</button>&nbsp;<a href="<?= $this->backlink ?>">Zpět</a><br/><br/>
+    <?= $mainForm ?>
+    <input type="hidden"
+           name="referer"
+           value="<?= $this->referer ?>" />
+    <button name="action" value="confirm">Uložit</button>
+    <a href="<?= $this->referer ?>">Zpět</a><br/><br/>
 </form>
 <?php if ($this->action != 'add') : ?>
     <h3>Kategorie</h3>

@@ -2,20 +2,28 @@
 require_once 'files/Controller/Admin.php';
 class Controller_Admin_Permissions extends Controller_Admin
 {
-    public function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('permissions', P_ADMIN);
     }
-    public function view($id = null) {
-        switch(post('action')) {
+
+    public function view($request)
+    {
+        switch($request->post('action')) {
             case 'edit':
-                $data = post('permissions');
-                if ($data[0])
+                $data = $request->post('permissions');
+                if ($data[0]) {
                     $this->redirect('/admin/permissions/edit/' . $data[0]);
+                }
                 break;
             case 'remove':
-                if (!is_array(post('permissions')))
+                if (!is_array($request->post('permissions'))) {
                     break;
-                $this->redirect('/admin/permissions/remove?' . http_build_query(array('u' => post('permissions'))));
+                }
+                $this->redirect(
+                    '/admin/permissions/remove?' .
+                    http_build_query(array('u' => $request->post('permissions')))
+                );
                 break;
         }
         $data = DBPermissions::getGroups();
@@ -35,36 +43,55 @@ class Controller_Admin_Permissions extends Controller_Admin
             )
         );
     }
-    public function add($id = null) {
-        if (empty($_POST) || is_object($f = $this->_checkData())) {
-            if (!empty($_POST))
+
+    public function add($request)
+    {
+        if (!$request->post() || is_object($f = $this->checkData($request))) {
+            if ($request->post) {
                 $this->redirect()->setMessage($f->getMessages());
+            }
             $this->render(
                 'files/View/Admin/Permissions/Form.inc',
                 array(
-                    'action' => Request::getAction()
+                    'action' => $request->getAction(),
+                    'name' => $request->post('name'),
+                    'description' => $request->post('description')
                 )
             );
             return;
         }
         $permissions = array();
-        foreach (Settings::$permissions as $name => $item)
-            $permissions[$name] = post($name);
-        DBPermissions::addGroup(post('name'), post('description'), $permissions);
+        foreach (array_keys(Settings::$permissions) as $name) {
+            $permissions[$name] = $request->post($name);
+        }
+        DBPermissions::addGroup(
+            $request->post('name'),
+            $request->post('description'),
+            $permissions
+        );
 
-        $this->redirect(post('referer') ? post('referer') : '/admin/permissions', 'Úroveň úspěšně přidána');
+        $this->redirect(
+            $request->post('referer') ?: '/admin/permissions',
+            'Úroveň úspěšně přidána'
+        );
     }
-    public function edit($id = null) {
-        if (!$id || !($data = DBPermissions::getSingleGroup($id)))
-            $this->redirect(post('referer') ? post('referer') : '/admin/permissions',
-                'Skupina s takovým ID neexistuje');
 
-        if (empty($_POST) || is_object($f = $this->_checkData())) {
-            if (empty($_POST)) {
-                post('name', $data['pe_name']);
-                post('description', $data['pe_description']);
+    public function edit($request)
+    {
+        $id = $request->getId();
+        if (!$id || !($data = DBPermissions::getSingleGroup($id))) {
+            $this->redirect(
+                $request->post('referer') ?: '/admin/permissions',
+                'Skupina s takovým ID neexistuje'
+            );
+        }
+
+        if (!$request->post() || is_object($f = $this->checkData($request))) {
+            if (!$request->post()) {
+                $request->post('name', $data['pe_name']);
+                $request->post('description', $data['pe_description']);
                 foreach (Settings::$permissions as $name => $item) {
-                    post($name, $data['pe_' . $name]);
+                    $request->post($name, $data['pe_' . $name]);
                 }
             } else {
                 $this->redirect()->setMessage($f->getMessages());
@@ -72,34 +99,46 @@ class Controller_Admin_Permissions extends Controller_Admin
             $this->render(
                 'files/View/Admin/Permissions/Form.inc',
                 array(
-                    'action' => Request::getAction()
+                    'action' => $request->getAction(),
+                    'name' => $request->post('name'),
+                    'description' => $request->post('description')
                 )
             );
             return;
         }
         $permissions = array();
-        foreach (Settings::$permissions as $name => $item)
-            $permissions[$name] = post($name);
-        DBPermissions::editGroup($id, post('name'), post('description'), $permissions);
+        foreach (Settings::$permissions as $name => $item) {
+            $permissions[$name] = $request->post($name);
+        }
+        DBPermissions::editGroup(
+            $id,
+            $request->post('name'),
+            $request->post('description'),
+            $permissions
+        );
 
         $this->redirect(
-            post('referer') ? post('referer') : '/admin/permissions',
+            $request->post('referer') ?: '/admin/permissions',
             'Oprávnění úspěšně upravena'
         );
     }
-    public function remove($id = null) {
-        if (!is_array(post('data')) && !is_array(get('u')))
+
+    public function remove($request)
+    {
+        if (!is_array($request->post('data')) && !is_array($request->get('u'))) {
             $this->redirect('/admin/permissions');
-        if (!empty($_POST) && post('action') == 'confirm') {
-            foreach (post('data') as $id)
-            DBPermissions::removeGroup($id);
+        }
+        if ($request->post() && $request->post('action') == 'confirm') {
+            foreach ($request->post('data') as $id) {
+                DBPermissions::removeGroup($id);
+            }
             $this->redirect(
                 '/admin/permissions',
                 'Úrovně odebrány. Nezapomeňte přiřadit uživatelům z těchto skupin jinou skupinu!'
             );
         }
         $data = array();
-        foreach (get('u') as $id) {
+        foreach ($request->get('u') as $id) {
             $item = DBPermissions::getSingleGroup($id);
             $data[] = array(
                 'id' => $item['pe_id'],
@@ -113,21 +152,21 @@ class Controller_Admin_Permissions extends Controller_Admin
                 'prompt' =>
                     $this->notice('Bude nutné přiřadit uživatelům z těchto skupin jinou skupinu!')
                     . 'Opravdu chcete odstranit uživatelské úrovně:',
-                'returnURI' => Request::getReferer(),
+                'returnURI' => $request->getReferer(),
                 'data' => $data
             )
         );
     }
-    private function _checkData() {
+
+    private function checkData($request)
+    {
         $f = new Form();
         foreach (Settings::$permissions as $name => $item) {
             $f->checkArrayKey(
-                post($name), $item,
+                $request->post($name), $item,
                 'Neplatná hodnota práva "' . $name . '"', $name
             );
-            $permissions[$name] = post($name);
         }
         return $f->isValid() ? true : $f;
     }
 }
-?>

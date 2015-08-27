@@ -14,18 +14,19 @@
             echo $this->select()
                       ->post()
                       ->name('stt-trida')
+                      ->set($this->stt_trida)
                       ->options(array('Z', 'H', 'D', 'C', 'B', 'A', 'M'), true, true);
             ?></td>
         <td></td>
       </tr>
       <tr>
         <td>Body:</td>
-        <td><input type="text" name="stt-body" value="<?php echo post('stt-body');?>" /></td>
+        <td><input type="text" name="stt-body" value="<?= $this->stt_body ?>" /></td>
         <td>0 až 1000</td>
       </tr>
       <tr>
         <td>Finále:</td>
-        <td><input type="text" name="stt-finale" value="<?php echo post('stt-finale');?>" /></td>
+        <td><input type="text" name="stt-finale" value="<?= $this->stt_finale ?>" /></td>
         <td>0 až 10</td>
       </tr>
       <tr><td>Latina:</td><td></td><td></td></tr>
@@ -35,18 +36,19 @@
             echo $this->select()
                       ->post()
                       ->name('lat-trida')
+                      ->set($this->lat_trida)
                       ->options(array('Z', 'H', 'D', 'C', 'B', 'A', 'M'), true, true);
             ?></td>
         <td></td>
       </tr>
       <tr>
         <td>Body:</td>
-        <td><input type="text" name="lat-body" value="<?php echo post('lat-body');?>" /></td>
+        <td><input type="text" name="lat-body" value="<?= $this->lat_body ?>" /></td>
         <td>0 až 1000</td>
       </tr>
       <tr>
         <td>Finále:</td>
-        <td><input type="text" name="lat-finale" value="<?php echo post('lat-finale');?>" /></td>
+        <td><input type="text" name="lat-finale" value="<?= $this->lat_finale ?>" /></td>
         <td>0 až 10</td>
       </tr>
     </table>

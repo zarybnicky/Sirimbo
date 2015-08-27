@@ -5,8 +5,10 @@ class Controller_Member_Nastenka extends Controller_Member
     public function __construct() {
         Permissions::checkError('nastenka', P_VIEW);
     }
-    public function view($id = null) {
+    public function view($request) {
         $pager = new Paging(new PagingAdapterDBSelect('DBNastenka'));
+        $pager->setCurrentPage($request->get('p'));
+        $pager->setItemsPerPage($request->get('c'));
         $pager->setCurrentPageField('p');
         $pager->setItemsPerPageField('c');
         $pager->setDefaultItemsPerPage(10);
@@ -48,7 +50,7 @@ class Controller_Member_Nastenka extends Controller_Member
             'files/View/Member/Nastenka.inc',
             array(
                 'data' => $data,
-                'navigation' => $pager->getNavigation()
+                'navigation' => $pager->getNavigation($request->get())
             )
         );
     }

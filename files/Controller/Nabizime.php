@@ -1,30 +1,35 @@
 <?php
 class Controller_Nabizime extends Controller_Abstract
 {
-    public function view($id = null) {
+    public function view($request) {
         $this->redirect('/nabizime/obecne');
     }
-    public function obecne($id = null) {
+
+    public function obecne($request) {
         $this->render('files/View/Main/Nabizime/Main.inc');
     }
-    public function vystoupeni($id = null) {
+
+    public function vystoupeni($request) {
         $this->render('files/View/Main/Nabizime/Vystoupeni.inc');
     }
-    public function individualky($id = null) {
+
+    public function individualky($request) {
         $this->render('files/View/Main/Nabizime/Individualky.inc');
     }
-    public function seminare($id = null) {
+
+    public function seminare($request) {
         $this->render('files/View/Main/Nabizime/Seminare.inc');
     }
-    public function soustredeni($id = null) {
+
+    public function soustredeni($request) {
         $this->render('files/View/Main/Nabizime/Seminare.inc');
     }
-    
+
     public function navbar() {
         return parent::navbar() .
             new Navbar(
                 include SETTINGS . '/menu/nabizime.php',
                 false
-            );        
+            );
     }
 }

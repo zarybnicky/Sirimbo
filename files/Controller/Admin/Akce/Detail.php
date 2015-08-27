@@ -6,19 +6,20 @@ class Controller_Admin_Akce_Detail extends Controller_Admin_Akce
     {
         Permissions::checkError('akce', P_OWNED);
     }
-    public function view($id = null)
+    public function view($request)
     {
+        $id = $request->getId();
         if (!$id || !($akce = DBAkce::getSingleAkce($id))) {
             $this->redirect('/admin/akce', 'Akce s takovým ID neexistuje');
         }
 
-        if (!empty($_POST)) {
-            if (post("remove") > 0) {
-                DBAkce::removeAkceItem(post("remove"));
+        if ($request->post()) {
+            if ($request->post("remove") > 0) {
+                DBAkce::removeAkceItem($request->post("remove"));
             }
 
             foreach (DBAkce::getAkceItems($id) as $item) {
-                $user = post($item["ai_id"] . '-user');
+                $user = $request->post($item["ai_id"] . '-user');
 
                 if (!$user) {
                     DBAkce::removeAkceItem($item['ai_id']);
@@ -29,17 +30,17 @@ class Controller_Admin_Akce_Detail extends Controller_Admin_Akce
                 }
             }
 
-            if (is_numeric(post("add-user")) && post('add-user') > 0) {
-                $user = post("add-user");
+            if (is_numeric($request->post("add-user")) && $request->post('add-user') > 0) {
+                $user = $request->post("add-user");
                 $data = DBUser::getUserData($user);
                 list($year) = explode('-', $data['u_narozeni']);
 
                 DBAkce::addAkceItem($id, $user, $year);
-                post('add-user', 0);
+                $request->post('add-user', 0);
             }
             $this->redirect('/admin/akce/detail/' . $id, 'Úspěšně upraveno');
         }
-        
+
         $data = array(
             'id' => $akce['a_id'],
             'jmeno' => $akce['a_jmeno'],
@@ -58,19 +59,20 @@ class Controller_Admin_Akce_Detail extends Controller_Admin_Akce
 
         $userSelect = $this->userSelect()->users(DBUser::getActiveUsers());
         $items = array_map(
-            function($item) use ($userSelect) {
+            function ($item) use ($userSelect) {
                 return array(
-                    'name' => (string) $userSelect->name($item['ai_id'] . '-user')
-                                                  ->defaultValue($item['ai_user']),
+                    'name' => $userSelect->name($item['ai_id'] . '-user')
+                                         ->set($item['ai_user'])
+                                         ->render(),
                     'removeButton' =>
-                        '<button type="submit" name="remove" ' .
-                        'value="' . $item['ai_id'] . '">Odstranit</button>'
+                        '<button type="submit" name="remove" '
+                        . 'value="' . $item['ai_id'] . '">Odstranit</button>'
                 );
             },
             DBAkce::getAkceItems($id)
         );
         $items[] = array(
-            'name' => $userSelect->name('add-user')->defaultValue(0),
+            'name' => $userSelect->name('add-user')->set(0),
             'removeButton' => '<button type="submit" name="add" value="add">Přidat</button>'
         );
 

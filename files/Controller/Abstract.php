@@ -1,11 +1,11 @@
 <?php
 abstract class Controller_Abstract implements Controller_Interface
 {
-    abstract public function view($id = null);
+    abstract public function view($request);
 
     public function navbar() {
         $menu = include SETTINGS . '/menu/main.php';
-        
+
         if (Permissions::check('nastenka', P_OWNED)) {
             $menu = array_merge($menu, include SETTINGS . '/menu/admin.php');
         }
@@ -20,10 +20,6 @@ abstract class Controller_Abstract implements Controller_Interface
         );
     }
 
-    public function sidebar() {
-        return '';
-    }
-
     public function render($filename, array $vars = array(), $standalone = false) {
         $renderer = new Renderer();
         $content = $renderer->render($filename, $vars);
@@ -32,9 +28,17 @@ abstract class Controller_Abstract implements Controller_Interface
             echo $content;
             return;
         }
-        include TISK ? HEADER_TISK : HEADER;
+
+        $args = array(
+            'navbar' => $this->navbar()
+        );
+        if (isset($vars['sidebar']))
+        {
+            $args['sidebar'] = $vars['sidebar'];
+        }
+        echo $renderer->render(TISK ? HEADER_TISK : HEADER, $args);
         echo $content;
-        include TISK ? FOOTER_TISK : FOOTER;
+        echo $renderer->render(TISK ? FOOTER_TISK : FOOTER);
     }
 
     public function __call($name, $args) {

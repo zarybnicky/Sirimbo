@@ -36,13 +36,12 @@
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="stylesheet" type="text/css" href="/style/style.css" />
     <link rel="stylesheet" type="text/css" href="/style/polyfill.object-fit.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="/style/semantic.min.css" />-->
     <title>TK Olymp Olomouc</title>
   </head>
   <body>
     <div id="fb-root"></div>
-
     <div id="top"></div>
-
     <div class="container full">
       <div id="header">
         <div id="header-inner">
@@ -57,5 +56,5 @@
       </div>
     </div>
 
-    <?php echo View::$controller->navbar(); ?>
-    <?php echo View::$controller->sidebar(); ?>
+    <?= isset($this->navbar) ? $this->navbar : '' ?>
+    <?= isset($this->sidebar) ? $this->sidebar : '' ?>

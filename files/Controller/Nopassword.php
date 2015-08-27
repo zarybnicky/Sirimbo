@@ -1,11 +1,17 @@
 <?php
 class Controller_Nopassword extends Controller_Abstract
 {
-    public function view($id = null) {
-        if (post('action') == 'gen_pass' || post('action') == 'enter') {
-            post('name', strtolower(post('name')));
+    public function view($request) {
+        if ($request->post('action') == 'gen_pass' ||
+            $request->post('action') == 'enter'
+        ) {
+            $request->post('name', strtolower($request->post('name')));
 
-            if ($data = DBUser::getUserDataByNameEmail(post('name'), post('email'))) {
+            $data = DBUser::getUserDataByNameEmail(
+                $request->post('name'),
+                $request->post('email')
+            );
+            if ($data) {
                 $base = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
                 $password = substr(str_shuffle(str_repeat($base, 5)), 0, 8);
                 $passwordCrypt = User::crypt($password);

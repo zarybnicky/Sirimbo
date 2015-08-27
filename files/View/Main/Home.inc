@@ -1,10 +1,14 @@
-<?php echo $this->clanky()->number(3)->highlights(true);?>
+<?= $this->highlights($this->highlights);?>
 
 <div class="container full">
-  <?php echo $this->notice($this->redirect()->getMessage()); ?>
+  <?= $this->notice($this->redirect()->getMessage()); ?>
 
-  <?php echo $this->zpravy()->number(10);?>
-  <!-- Dodat "vice zde >>" na konec boxu -->
+  <div class="container third">
+    <div class="widget">
+      <div class="widget-title text">Výsledky posledních soutěží</div>
+      <?= $this->results($this->results);?>
+    </div>
+  </div>
 
   <div class="container third">
     <div class="widget">
@@ -49,5 +53,5 @@
   </div>
 </div>
 <div class="container full">
-  <?php echo $this->clanky()->number(9)->offset(5)->highlights(false);?>
+  <?= $this->articles($this->moreArticles);?>
 </div>

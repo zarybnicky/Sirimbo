@@ -1,12 +1,12 @@
 <?php
 class Date
 {
-    private $_valid;
-    private $_sqlFormat;
-    private $_year;
-    private $_month;
-    private $_day;
-    private $_separators;
+    protected $valid;
+    protected $sqlFormat;
+    protected $year;
+    protected $month;
+    protected $day;
+    protected $separators;
 
     const FORMAT_SQL = 'yyyy-mm-dd';
     const FORMAT_SIMPLE = 'dd.mm.yyyy';
@@ -15,22 +15,25 @@ class Date
     const FORMAT_SLASHED = 'dd/mm/yyyy';
 
     public function __construct($s = null) {
-        $this->_separators = array('-', '.' , '/');
+        $this->separators = array('-', '.' , '/');
         if (is_string($s))
             $this->setDate($s);
     }
+
     public function __toString() {
         return $this->getDate();
     }
+
     public function separator($s = null, $reset = false) {
         if ($s === null)
-            return $this->_separators;
+            return $this->separators;
         if ($reset)
-            $this->_separators = array();
-        $this->_separators[] = $s;
+            $this->separators = array();
+        $this->separators[] = $s;
     }
+
     public function setDate($s) {
-        foreach ($this->_separators as $sep) {
+        foreach ($this->separators as $sep) {
             if (strpos($s, $sep) === false)
                 continue;
             $pieces = explode($sep, $s);
@@ -38,8 +41,8 @@ class Date
                 unset($pieces);
         }
         if (!isset($pieces)) {
-            if (!$this->_sqlFormat)
-                $this->_valid = false;
+            if (!$this->sqlFormat)
+                $this->valid = false;
             return false;
         }
         foreach ($pieces as &$piece) {
@@ -50,50 +53,55 @@ class Date
         if (strlen($pieces[2]) == 4) {
             $pieces = array_reverse($pieces);
         } elseif (strlen($pieces[0]) != 4) {
-            if (!$this->_sqlFormat)
-                $this->_valid = false;
+            if (!$this->sqlFormat)
+                $this->valid = false;
             return false;
         }
-        $this->_year = $pieces[0];
-        $this->_month = $pieces[1];
-        $this->_day = $pieces[2];
-        $this->_sqlFormat = implode('-', $pieces);
-        $this->_valid = true;
+        $this->year = $pieces[0];
+        $this->month = $pieces[1];
+        $this->day = $pieces[2];
+        $this->sqlFormat = implode('-', $pieces);
+        $this->valid = true;
         return true;
     }
+
     public function getDate($format = Date::FORMAT_SQL) {
-        if (!$this->_valid)
+        if (!$this->valid)
             return '';
         switch($format) {
             case Date::FORMAT_SQL:
-                return $this->_sqlFormat;
+                return $this->sqlFormat;
             case Date::FORMAT_SIMPLE:
-                return $this->_day . '.' . $this->_month . '.' . $this->_year;
+                return $this->day . '.' . $this->month . '.' . $this->year;
                 break;
             case Date::FORMAT_SIMPLE_SPACED:
-                return $this->_day . '. ' . $this->_month . '. ' . $this->_year;
+                return $this->day . '. ' . $this->month . '. ' . $this->year;
                 break;
             case Date::FORMAT_SIMPLIFIED:
-                return ((int) $this->_day) . '. ' .
-                    ((int) $this->_month) . '. ' . $this->_year;
+                return ((int) $this->day) . '. ' .
+                    ((int) $this->month) . '. ' . $this->year;
                 break;
             case Date::FORMAT_SLASHED:
-                return $this->_day . '/' . $this->_month . '/' . $this->_year;
+                return $this->day . '/' . $this->month . '/' . $this->year;
                 break;
             default:
                 return '';
         }
     }
+
     public function getDay() {
-        return $this->_day;
+        return $this->day;
     }
+
     public function getMonth() {
-        return $this->_month;
+        return $this->month;
     }
+
     public function getYear() {
-        return $this->_year;
+        return $this->year;
     }
+
     public function isValid() {
-        return $this->_valid;
+        return $this->valid;
     }
 }

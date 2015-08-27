@@ -71,6 +71,14 @@ class Form
         $this->_error($message, $name);
         return false;
     }
+    public function checkMaxLength($i, $max, $message, $name = '') {
+        $len = strlen($i);
+        if ($len <= $max)
+            return true;
+
+        $this->_error($message, $name);
+        return false;
+    }
     public function checkInArray($i, $array, $message, $name = '') {
         if (in_array($i, $array))
             return true;

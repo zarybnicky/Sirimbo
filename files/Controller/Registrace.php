@@ -1,31 +1,37 @@
 <?php
 class Controller_Registrace extends Controller_Abstract
 {
-    public function view($id = null) {
-        if (!empty($_POST)) {
-            $narozeni = $this->date('narozeni')->getPost();
+    public function view($request) {
+        if ($request->post()) {
+            $narozeni = $this->date('narozeni')->getPost($request);
 
             $f = new Form();
-            $f->checkLogin(post('username'), 'Špatný formát přihlašovacího jména', 'username');
-            $f->checkPassword(post('pass'), 'Špatný formát hesla', 'pass');
-            $f->checkLength(post('jmeno'), 1, 40, 'Špatná délka jména', 'jmeno');
-            $f->checkLength(post('prijmeni'), 1, 40, 'Špatná délka přijmení', 'prijmeni');
-            $f->checkInArray(post('pohlavi'), array('m', 'f'), 'Neplatné pohlaví', 'pohlavi');
-            $f->checkEmail(post('email'), 'Neplatný formát emailu', 'email');
-            $f->checkPhone(post('telefon'), 'Neplatný formát telefoního čísla', 'telefon');
+            $f->checkLogin($request->post('username'), 'Špatný formát přihlašovacího jména', 'username');
+            $f->checkPassword($request->post('pass'), 'Špatný formát hesla', 'pass');
+            $f->checkLength($request->post('jmeno'), 1, 40, 'Špatná délka jména', 'jmeno');
+            $f->checkLength($request->post('prijmeni'), 1, 40, 'Špatná délka přijmení', 'prijmeni');
+            $f->checkInArray($request->post('pohlavi'), array('m', 'f'), 'Neplatné pohlaví', 'pohlavi');
+            $f->checkEmail($request->post('email'), 'Neplatný formát emailu', 'email');
+            $f->checkPhone($request->post('telefon'), 'Neplatný formát telefoního čísla', 'telefon');
             $f->checkDate((string) $narozeni, 'Neplatné datum narození', 'narozeni');
 
             if (!$f->isValid()) {
                 $this->redirect()->setMessage(implode('<br/>', $f->getMessages()));
             } else {
-                $login = strtolower(post('username'));
+                $login = strtolower($request->post('username'));
                 if (DBUser::getUserID($login)) {
                     $this->redirect()->setMessage('Už tu někdo s takovým přihlašovacím jménem je :o(');
                 } else {
                     User::register(
-                        $login, post('pass'), post('jmeno'), post('prijmeni'),
-                        post('pohlavi'), post('email'), post('telefon'),
-                        (string) $narozeni, post('poznamky')
+                        $login,
+                        $request->post('pass'),
+                        $request->post('jmeno'),
+                        $request->post('prijmeni'),
+                        $request->post('pohlavi'),
+                        $request->post('email'),
+                        $request->post('telefon'),
+                        (string) $narozeni,
+                        $request->post('poznamky')
                     );
                     $this->redirect(
                         '/home',
@@ -35,6 +41,19 @@ class Controller_Registrace extends Controller_Abstract
                 }
             }
         }
-        $this->render('files/View/Main/Registrace.inc');
+        $this->render(
+            'files/View/Main/Registrace.inc',
+            array(
+                'username' => $request->post('username'),
+                'pass' => $request->post('pass'),
+                'jmeno' => $request->post('jmeno'),
+                'prijmeni' => $request->post('prijmeni'),
+                'pohlavi' => $request->post('pohlavi'),
+                'email' => $request->post('email'),
+                'telefon' => $request->post('telefon'),
+                'narozeni' => $request->post('narozeni'),
+                'poznamky' => $request->post('poznamky')
+            )
+        );
     }
 }

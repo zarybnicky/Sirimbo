@@ -6,22 +6,23 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Admin_Akce
     {
         Permissions::checkError('akce', P_OWNED);
     }
-    public function view($id = null)
+    public function view($request)
     {
+        $id = $request->getId();
         if (!$id || !($akce = DBAkce::getSingleAkce($id))) {
             $this->redirect('/admin/akce', 'Akce s takovým ID neexistuje');
         }
         $documents = unserialize($akce["a_dokumenty"]);
 
-        if (!empty($_POST)) {
-            if (post("remove") !== null) {
-                unset($documents[array_search(post('remove'), $documents)]);
+        if ($request->post()) {
+            if ($request->post("remove") !== null) {
+                unset($documents[array_search($request->post('remove'), $documents)]);
                 $documents = array_values($documents);
                 $changed = true;
             }
-            if (post("add-id") && DBDokumenty::getSingleDokument(post("add-id"))) {
-                $documents[] = post("add-id");
-                post('add-id', 0);
+            if ($request->post("add-id") && DBDokumenty::getSingleDokument($request->post("add-id"))) {
+                $documents[] = $request->post("add-id");
+                $request->post('add-id', 0);
                 $changed = true;
             }
             if (isset($changed) && $changed) {
@@ -34,7 +35,7 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Admin_Akce
             }
             $this->redirect('/admin/akce/dokumenty/' . $id, 'Úspěšně upraveno');
         }
-        
+
         $booked = count(DBAkce::getAkceItems($id));
         $akce = array(
             'id' => $akce['a_id'],
@@ -46,10 +47,9 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Admin_Akce
             'kapacita' => $akce['a_kapacita'],
             'volno' => $akce['a_kapacita'] - $booked,
             'showForm' => Permissions::check('akce', P_MEMBER) && !$akce['a_lock'],
-            'canEdit' => Permissions::check('akce', P_OWNED),
-            'info' => nl2br($akce['a_info'])
+            'canEdit' => Permissions::check('akce', P_OWNED)
         );
-        
+
         $documents = array_map(
             function($item) {
                 return array(

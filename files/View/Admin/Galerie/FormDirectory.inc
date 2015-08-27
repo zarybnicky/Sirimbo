@@ -1,20 +1,21 @@
 <?= $this->header('Správa fotogalerie') ?>
 <div class="container full">
-<?php echo $this->notice($this->redirect()->getMessage()); ?>
+<?= $this->notice($this->redirect()->getMessage()); ?>
 <form action="" method="post">
 <h2>Přidat složku</h2>
 <table>
     <tr>
         <td>Název</td>
-        <td><input type="text" name="name" value="<?= post('name');?>"/></td>
+        <td><input type="text" name="name" value="<?= $this->name ?>"/></td>
     </tr>
     <tr>
         <td>Nadsložka</td>
         <td><?php
 $s = $this->select()
-    ->post()
-    ->name('parent')
-    ->option('0', '--');
+          ->post()
+          ->name('parent')
+          ->set($this->parent)
+          ->option('0', '--');
 foreach ($this->dirs as $item) {
     $s->option($item['id'], $item['text']);
 }
@@ -23,7 +24,7 @@ echo $s;
     </tr>
     <tr>
         <td>Skrytá složka</td>
-        <td><?= $this->checkbox('hidden', '1');?></td>
+        <td><?= $this->checkbox('hidden', '1')->set($this->hidden;?></td>
     </tr>
     <tr>
         <td></td>

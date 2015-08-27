@@ -1,23 +1,99 @@
 <?php
 class Request
 {
-    private static $_default = 'home';
-    private static $_uri;
-    private static $_rawUriParts;
-    private static $_uriPartsLiteral;
+    protected $uri;
+    protected $method;
+    protected $headers;
+    protected $serverParams;
+    protected $cookieParams;
+    protected $getParams;
+    protected $postParams;
+    protected $fileParams;
+    protected $sessionParams;
 
-    private static $_action;
-    private static $_id;
-    private static $_referer;
+    protected $defaultPath = 'home';
+    protected $rawUriParts;
+    protected $uriPartsLiteral;
 
-    public static function setDefault($_default) {
-        self::$_default = $_default;
+    protected $action;
+    protected $id;
+    protected $referer;
+
+    public function __construct(
+        $uri,
+        $method,
+        $headers,
+        $serverParams,
+        $cookieParams,
+        $getParams,
+        $postParams,
+        $fileParams,
+        $sessionParams
+    ) {
+        $this->setURI($uri);
+        $this->method = $method;
+        $this->headers = $headers;
+        $this->serverParams = $serverParams;
+        $this->cookieParams = $cookieParams;
+        $this->getParams = $getParams;
+        $this->postParams = $postParams;
+        $this->fileParams = $fileParams;
+        $this->sessionParams = $sessionParams;
     }
-    public static function setURI($_uri) {
-        $_uri = explode('?', $_uri)[0];
 
-        self::$_uri = trim($_uri, '/');
-        $parts = explode('/', $_uri);
+    protected function phpGlobal(&$array, $field, $value) {
+        if ($field === null) {
+            return $array;
+        }
+
+        if ($value !== null) {
+            $array[$field] = $value;
+            return;
+        }
+
+        if (isset($array[$field])) {
+            return $array[$field];
+        } else {
+            return null;
+        }
+    }
+
+    public function server($field = null, $value = null) {
+        return $this->phpGlobal($this->serverParams, $field, $value);
+    }
+
+    public function cookie($field = null, $value = null) {
+        return $this->phpGlobal($this->cookieParams, $field, $value);
+    }
+
+    public function get($field = null, $value = null) {
+        return $this->phpGlobal($this->getParams, $field, $value);
+    }
+
+    public function post($field = null, $value = null) {
+        return $this->phpGlobal($this->postParams, $field, $value);
+    }
+
+    public function files($field = null, $value = null) {
+        return $this->phpGlobal($this->fileParams, $field, $value);
+    }
+
+    public function session($field = null, $value = null) {
+        if ($value !== null) {
+            $_SESSION[$field] = $value;
+        }
+        return $this->phpGlobal($this->sessionParams, $field, $value);
+    }
+
+    public function setDefault($defaultPath) {
+        $this->defaultPath = $defaultPath;
+    }
+
+    public function setURI($uri) {
+        $uri = explode('?', $uri)[0];
+
+        $this->uri = trim($uri, '/');
+        $parts = explode('/', $uri);
 
         //Removes double slashes
         foreach ($parts as $key => $part) {
@@ -26,7 +102,7 @@ class Request
             }
         }
         $parts = array_values($parts);
-        self::$_rawUriParts = $parts;
+        $this->rawUriParts = $parts;
 
         //Get an URI w/o numbers eg.
         foreach ($parts as $key => $part) {
@@ -35,57 +111,51 @@ class Request
             }
         }
         $parts = array_values($parts);
-        self::$_uriPartsLiteral = $parts;
+        $this->uriPartsLiteral = $parts;
 
         //Find controller action = the last string before a numerical one
-        for($i = count(self::$_rawUriParts) - 1; $i >= 0; $i--) {
-            if (!is_numeric(self::$_rawUriParts[$i])) {
+        for ($i = count($this->rawUriParts) - 1; $i >= 0; $i--) {
+            if (!is_numeric($this->rawUriParts[$i])) {
                 continue;
             }
-            $_id = self::$_rawUriParts[$i];
-            if (isset(self::$_rawUriParts[$i - 1]) && !is_numeric(self::$_rawUriParts[$i - 1])) {
-                $_action = self::$_rawUriParts[$i - 1];
+            $id = $this->rawUriParts[$i];
+            if (isset($this->rawUriParts[$i - 1]) &&
+                !is_numeric($this->rawUriParts[$i - 1])
+            ) {
+                $action = $this->rawUriParts[$i - 1];
                 break;
             }
         }
-        self::$_id = isset($_id) ? $_id : null;
-        self::$_action = isset($_action)
-            ? $_action
-            : (!empty(self::$_uriPartsLiteral)
-                ? self::$_uriPartsLiteral[count(self::$_uriPartsLiteral) - 1]
-                : null);
-        self::$_action = str_replace('-', '_', self::$_action);
+        $this->id = isset($id) ? $id : null;
+        $this->action = isset($action)
+                      ? $action
+                      : (!empty($this->uriPartsLiteral)
+                         ? $this->uriPartsLiteral[count($this->uriPartsLiteral) - 1]
+                         : null);
+        $this->action = str_replace('-', '_', $this->action);
     }
 
-    public static function getURI() {
-        return self::$_uri;
+    public function getURI() {
+        return $this->uri;
     }
-    public static function getRawURIParts() {
-        return self::$_rawUriParts;
-    }
-    public static function getLiteralURI() {
-        if (empty(self::$_uriPartsLiteral) || self::$_uriPartsLiteral[0] == '') {
-            return self::$_default;
+
+    public function getLiteralURI() {
+        if (empty($this->uriPartsLiteral) || $this->uriPartsLiteral[0] == '') {
+            return $this->defaultPath;
         }
-        return implode('/', self::$_uriPartsLiteral);
+        return implode('/', $this->uriPartsLiteral);
     }
-    public static function getSection() {
-        return isset(self::$_rawUriParts[0]) ? self::$_rawUriParts[0] : self::$_default;
+    public function getAction() {
+        return $this->action;
     }
-    public static function getCanonical() {
-        return self::getLiteralURI();
-    }
-    public static function getAction() {
-        return self::$_action;
-    }
-    public static function getID() {
-        return self::$_id;
+    public function getID() {
+        return $this->id;
     }
 
-    public static function setReferer($referer) {
-        self::$_referer = $referer;
+    public function setReferer($referer) {
+        $this->referer = $referer;
     }
-    public static function getReferer() {
-        return self::$_referer;
+    public function getReferer() {
+        return $this->referer;
     }
 }

@@ -2,8 +2,7 @@
 class CheckboxHelper {
     protected $name;
     protected $value;
-    protected $defaultState;
-    protected $get;
+    protected $state;
     protected $readonly;
 
     public function checkbox($name, $value = null) {
@@ -14,20 +13,14 @@ class CheckboxHelper {
         $this->name = $name;
         $this->value = $value;
 
-        $this->defaultState = false;
-        $this->get = false;
+        $this->state = false;
         $this->readonly = false;
 
         return $this;
     }
 
-    public function defaultState($val) {
-        $this->defaultState = $val;
-        return $this;
-    }
-
-    public function get($val) {
-        $this->get = $val;
+    public function set($val) {
+        $this->state = (bool) $val;
         return $this;
     }
 
@@ -35,19 +28,13 @@ class CheckboxHelper {
         $this->readonly = $val;
         return $this;
     }
-    
-    public function render() {
-        $checked =
-            $this->defaultState ||
-            (($this->get == true) ?
-             (get($this->name) != false) :
-             (post($this->name) != false));
 
+    public function render() {
         return
             '<input type="checkbox"' .
             " name=\"{$this->name}\" " .
             " value=\"{$this->value}\"" .
-            ($checked ? ' checked="checked"' : '') .
+            ($this->state ? ' checked="checked"' : '') .
             ($this->readonly ? ' readonly="readonly"' : '') .
             '/>';
     }

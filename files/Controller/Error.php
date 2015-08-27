@@ -1,13 +1,11 @@
 <?php
 class Controller_Error extends Controller_Abstract
 {
-    public function view($id = null) {
-        if (!get('id')) get('id', '');
-
+    public function view($request) {
         function ucfirstUser(&$str, $key) {
             $str = ucfirst($str);
         }
-        $array = explode('_', get('id'));
+        $array = explode('_', $request->get('id'));
         array_walk($array, 'ucfirstUser');
         $id = implode('', $array);
         $file = ERROR . DIRECTORY_SEPARATOR . $id . '.inc';

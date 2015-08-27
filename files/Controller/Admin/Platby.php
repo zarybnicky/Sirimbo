@@ -6,21 +6,25 @@ class Controller_Admin_Platby extends Controller_Admin
     {
         Permissions::checkError('platby', P_OWNED);
     }
-    public function view($id = null)
+    public function view($request)
     {
         $this->redirect('/admin/platby/overview');
     }
     protected function recognizeHeaders($headers, &$specific, &$variable, &$date, &$amount)
     {
         foreach ($headers as $key => $value) {
-            if (mb_stripos($key, 'specif') !== false)
+            if (mb_stripos($key, 'specif') !== false) {
                 $specific = $key;
-            if (mb_stripos($key, 'variab') !== false)
+            }
+            if (mb_stripos($key, 'variab') !== false) {
                 $variable = $key;
-            if (mb_stripos($key, 'datum') !== false)
+            }
+            if (mb_stripos($key, 'datum') !== false) {
                 $date = $key;
-            if (mb_stripos($key, 'částka') !== false)
+            }
+            if (mb_stripos($key, 'částka') !== false) {
                 $amount = $key;
+            }
         }
     }
     protected function checkHeaders($headers, &$specific, &$variable, &$date, &$amount)
@@ -43,7 +47,9 @@ class Controller_Admin_Platby extends Controller_Admin
         $out = array();
         $group_id = 0;
         foreach ($in as $array) {
-            if ($group_id != $array['pg_id'] && !isset($out['group_' . $array['pg_id']])) {
+            if ($group_id != $array['pg_id']
+                && !isset($out['group_' . $array['pg_id']])
+            ) {
                 $out[] = array('group_' . $array['pg_id'], $array);
                 $group_id = $array['pg_id'];
             }
@@ -57,7 +63,9 @@ class Controller_Admin_Platby extends Controller_Admin
         $out = array();
         $group_id = 0;
         foreach ($in as $array) {
-            $key = (int) ($useSymbolKey ? $array['pc_symbol'] : $array['pc_id']);
+            $key = (int) ($useSymbolKey
+                          ? $array['pc_symbol']
+                          : $array['pc_id']);
 
             if ($includeGroups
                 && $group_id != $array['pg_id']
@@ -66,8 +74,9 @@ class Controller_Admin_Platby extends Controller_Admin
                 $out['group_' . $array['pg_id']] = $array;
                 $group_id = $array['pg_id'];
             }
-            if ($unique && isset($out[$key]))
+            if ($unique && isset($out[$key])) {
                 continue;
+            }
             $out[$key] = $array;
         }
         return $out;
@@ -86,16 +95,22 @@ class Controller_Admin_Platby extends Controller_Admin
             );
         }
         $out = array();
-        foreach ($in as $array)
+        foreach ($in as $array) {
             $out[(int) $array['u_id']] = $array;
+        }
         return $out;
     }
     protected function getFromPost($id = null)
     {
         $item = new PlatbyItem();
         $item->init(
-            null, post('variable'), post('date'), post('amount'),
-            post('prefix'), $id, post('specific')
+            null,
+            $request->post('variable'),
+            $request->post('date'),
+            $request->post('amount'),
+            $request->post('prefix'),
+            $id,
+            $request->post('specific')
         );
         $item->processWithSymbolLookup(
             $this->getUserLookup(false),
@@ -103,18 +118,22 @@ class Controller_Admin_Platby extends Controller_Admin
         );
 
         $error = array();
-        if (!$item->variable)
+        if (!$item->variable) {
             $error[] = 'Neplatné ID uživatele';
-        if (!$item->categoryId)
+        }
+        if (!$item->categoryId) {
             $error[] = 'Neplatné ID kategorie';
-        if (!$item->date)
+        }
+        if (!$item->date) {
             $error[] = 'Neplatné datum';
-        if (!$item->prefix)
+        }
+        if (!$item->prefix) {
             $error[] = 'Neplatný prefix';
-        if ($item->amount < 0)
+        }
+        if ($item->amount < 0) {
             $error[] = 'Neplatná částka';
+        }
 
         return $item->isValid ? $item : $error;
     }
 }
-?>

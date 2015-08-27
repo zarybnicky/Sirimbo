@@ -5,13 +5,17 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
     public function __construct() {
         Permissions::checkError('platby', P_OWNED);
     }
-    public function view($id = null) {
-        $this->render('files/View/Admin/Platby/StructureOverview.inc', array(
+    public function view($request) {
+        $this->render(
+            'files/View/Admin/Platby/StructureOverview.inc',
+            array(
                 'data' => $this->getCategories(),
                 'orphanGroupSkupina' => $this->getOrphanGroupSkupina(),
                 'orphanGroupCategory' => $this->getOrphanGroupCategory(),
-                'orphanCategory' => $this->getOrphanCategory()
-        ));
+                'orphanCategory' => $this->getOrphanCategory(),
+                'uri' => $request->getLiteralURI()
+            )
+        );
     }
     protected function getCategories() {
         $out = array();

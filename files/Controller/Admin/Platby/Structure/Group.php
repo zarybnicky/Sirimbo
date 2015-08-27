@@ -2,15 +2,24 @@
 require_once 'files/Controller/Admin/Platby/Structure.php';
 class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_Structure
 {
-    public function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('platby', P_OWNED);
     }
-    public function view($id = null) {
-        $this->render('files/View/Admin/Platby/StructureGroupOverview.inc', array(
-                'data' => $this->getGroups()
-        ));
+
+    public function view($request)
+    {
+        $this->render(
+            'files/View/Admin/Platby/StructureGroupOverview.inc',
+            array(
+                'data' => $this->getGroups(),
+                'uri' => $request->getLiteralURI()
+            )
+        );
     }
-    protected function getGroups() {
+
+    protected function getGroups()
+    {
         $out = array();
         $groups = DBPlatbyGroup::getGroups();
         foreach ($groups as $array) {
@@ -24,77 +33,90 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
         }
         return $out;
     }
-    public function add($id = null) {
-        if (empty($_POST) || is_object($s = $this->checkPost())) {
-            if (empty($_POST)) {
-                post('base', 1);
+    public function add($request)
+    {
+        if (!$request->post() || is_object($s = $this->checkPost($request))) {
+            if (!$request->post()) {
+                $request->post('base', 1);
             } else {
                 $this->redirect()->setMessage($s->getMessages());
             }
-            $this->_displayForm('add');
+            $this->displayForm($request, 'add', 0);
             return;
         }
-        DBPlatbyGroup::insert(post('type'), post('name'), post('description'), post('base'));
+        DBPlatbyGroup::insert(
+            $request->post('type'),
+            $request->post('name'),
+            $request->post('description'),
+            $request->post('base')
+        );
         $insertId = DBPlatbyGroup::getInsertId();
-        if (get('category') && ($data = DBPlatbyCategory::getSingle(get('category')))) {
-            DBPlatbyGroup::addChild($insertId, get('category'));
+        if ($request->get('category') &&
+            ($data = DBPlatbyCategory::getSingle($request->get('category')))
+        ) {
+            DBPlatbyGroup::addChild($insertId, $request->get('category'));
             $skupiny = DBPlatbyGroup::getSingleWithSkupiny($insertId);
             $conflicts = array();
-            foreach ($skupiny as $array)
+            foreach ($skupiny as $array) {
                 $conflicts = array_merge($conflicts, DBPlatby::checkConflicts($array['s_id']));
+            }
 
             if (!empty($conflicts)) {
-                DBPlatbyGroup::removeChild($insertId, get('category'));
+                DBPlatbyGroup::removeChild($insertId, $request->get('category'));
                 $this->redirect(
-                    '/admin/platby/structure/category/edit/' . get('category'),
+                    '/admin/platby/structure/category/edit/' . $request->get('category'),
                     'Kategorie byla přidána, ale nebyla přiřazena - takové přiřazení není platné.'
                 );
             }
             $this->redirect(
-                '/admin/platby/structure/category/edit/' . get('category'),
+                '/admin/platby/structure/category/edit/' . $request->get('category'),
                 'Kategorie úspěšně přidána a přiřazena'
             );
-        } elseif (get('skupina') && ($data = DBSkupiny::getSingle(get('skupina')))) {
-            DBSkupiny::addChild(get('skupina'), $insertId);
-            $conflicts = DBPlatby::checkConflicts(get('skupina'));
+        } elseif ($request->get('skupina') &&
+                  ($data = DBSkupiny::getSingle($request->get('skupina')))) {
+            DBSkupiny::addChild($request->get('skupina'), $insertId);
+            $conflicts = DBPlatby::checkConflicts($request->get('skupina'));
             if (!empty($conflicts)) {
-                DBSkupiny::removeChild(get('skupina'), $insertId);
+                DBSkupiny::removeChild($request->get('skupina'), $insertId);
                 $this->redirect(
-                    '/admin/skupiny/edit/' . get('skupina'),
+                    '/admin/skupiny/edit/' . $request->get('skupina'),
                     'Kategorie byla přidána, ale nebyla přiřazena - takové přiřazení není platné.'
                 );
             }
             $this->redirect(
-                '/admin/skupiny/edit/' . get('skupiny'),
+                '/admin/skupiny/edit/' . $request->get('skupiny'),
                 'Kategorie úspěšně přidána a přiřazena'
             );
         }
         $this->redirect(
-            post('referer') ? post('referer') : '/admin/platby/structure',
+            $request->post('referer') ?: '/admin/platby/structure',
             'Kategorie úspěšně přidána'
         );
     }
-    public function edit($id = null) {
+
+    public function edit($request)
+    {
+        $id = $request->getId();
         if (!$id || !($data = DBPlatbyGroup::getSingle($id))) {
             $this->redirect(
-                post('referer') ? post('referer') : '/admin/platby/structure',
+                $request->post('referer') ?: '/admin/platby/structure',
                 'Kategorie s takovým ID neexistuje'
             );
         }
 
-        if (post('action') == 'skupiny') {
-            if (!($data = DBSkupiny::getSingle(post('skupiny')))) {
+        if ($request->post('action') == 'skupiny') {
+            if (!($data = DBSkupiny::getSingle($request->post('skupiny')))) {
                 $this->redirect(
                     '/admin/platby/structure/group/edit/' . $id,
                     'Kategorie s takovým ID neexistuje.'
                 );
             }
 
-            DBSkupiny::addChild(post('skupiny'), $id);
-            $conflicts = DBPlatby::checkConflicts(post('skupiny'));
+            DBSkupiny::addChild($request->post('skupiny'), $id);
+            $conflicts = DBPlatby::checkConflicts($request->post('skupiny'));
 
             if (!empty($conflicts)) {
-                DBSkupiny::removeChild(post('skupiny'), $id);
+                DBSkupiny::removeChild($request->post('skupiny'), $id);
                 $this->redirect(
                     '/admin/platby/structure/group/edit/' . $id,
                     'Takové přiřazení není platné - způsobilo by, '
@@ -105,35 +127,36 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
                 '/admin/platby/structure/group/edit/' . $id,
                 'Kategorie byla úspěšně přiřazena.'
             );
-        } elseif (post('action') == 'skupina_remove') {
-            if (!($data = DBSkupiny::getSingle(post('skupina')))) {
+        } elseif ($request->post('action') == 'skupina_remove') {
+            if (!($data = DBSkupiny::getSingle($request->post('skupina')))) {
                 $this->redirect(
                     '/admin/platby/structure/group/edit/' . $id,
                     'Skupina s takovým ID neexistuje.'
                 );
             }
 
-            DBSkupiny::removeChild(post('skupina'), $id);
+            DBSkupiny::removeChild($request->post('skupina'), $id);
             $this->redirect(
                 '/admin/platby/structure/group/edit/' . $id,
                 'Spojení s kategorií bylo úspěšně odstraněno.'
             );
-        } elseif (post('action') == 'category') {
-            if (!($data = DBPlatbyCategory::getSingle(post('category')))) {
+        } elseif ($request->post('action') == 'category') {
+            if (!($data = DBPlatbyCategory::getSingle($request->post('category')))) {
                 $this->redirect(
                     '/admin/platby/structure/group/edit/' . $id,
                     'Kategorie s takovým ID neexistuje.'
                 );
             }
 
-            DBPlatbyGroup::addChild($id, post('category'));
+            DBPlatbyGroup::addChild($id, $request->post('category'));
             $skupiny = DBPlatbyGroup::getSingleWithSkupiny($id);
             $conflicts = array();
-            foreach ($skupiny as $array)
+            foreach ($skupiny as $array) {
                 $conflicts = array_merge($conflicts, DBPlatby::checkConflicts($array['s_id']));
+            }
 
             if (!empty($conflicts)) {
-                DBPlatbyGroup::removeChild($id, post('category'));
+                DBPlatbyGroup::removeChild($id, $request->post('category'));
                 $this->redirect(
                     '/admin/platby/structure/group/edit/' . $id,
                     'Takové přiřazení není platné - způsobilo by, '
@@ -144,52 +167,59 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
                 '/admin/platby/structure/group/edit/' . $id,
                 'Kategorie byla úspěšně přiřazena.'
             );
-        } elseif (post('action') == 'category_remove') {
-            if (!($data = DBPlatbyCategory::getSingle(post('category')))) {
+        } elseif ($request->post('action') == 'category_remove') {
+            if (!($data = DBPlatbyCategory::getSingle($request->post('category')))) {
                 $this->redirect(
                     '/admin/platby/structure/group/edit/' . $id,
                     'Specifický symbol s takovým ID neexistuje.'
                 );
             }
 
-            DBPlatbyGroup::removeChild($id, post('category'));
+            DBPlatbyGroup::removeChild($id, $request->post('category'));
             $this->redirect(
                 '/admin/platby/structure/group/edit/' . $id,
                 'Spojení se specifickým symbolem bylo úspěšně odstraněno.'
             );
         }
 
-        if (empty($_POST) || is_object($s = $this->checkPost())) {
-            if (empty($_POST)) {
-                post('type', $data['pg_type']);
-                post('name', $data['pg_name']);
-                post('description', $data['pg_description']);
-                post('base', $data['pg_base']);
+       if (!$request->post() || is_object($s = $this->checkPost($request))) {
+            if (!$request->post()) {
+                $request->post('type', $data['pg_type']);
+                $request->post('name', $data['pg_name']);
+                $request->post('description', $data['pg_description']);
+                $request->post('base', $data['pg_base']);
             } else {
                 $this->redirect()->setMessage($s->getMessages());
             }
-            $this->_displayForm('edit', DBPlatbyGroup::getSingleWithCategories($id));
+            $this->displayForm($request, 'edit', $id, DBPlatbyGroup::getSingleWithCategories($id));
             return;
         }
 
         DBPlatbyGroup::update(
-            $id, post('type'), post('name'), post('description'), post('base')
+            $id,
+            $request->post('type'),
+            $request->post('name'),
+            $request->post('description'),
+            $request->post('base')
         );
         $this->redirect(
-            post('referer') ? post('referer') : '/admin/platby/structure',
+            $request->post('referer') ?: '/admin/platby/structure',
             'Kategorie úspěšně upravena'
         );
     }
-    public function remove($id = null) {
+
+    public function remove($request)
+    {
+        $id = $request->getId();
         if (!$id || !($data = DBPlatbyGroup::getSingle($id))) {
             $this->redirect(
-                post('referer') ? post('referer') : '/admin/platby/structure',
+                $request->post('referer') ?: '/admin/platby/structure',
                 'Kategorie s takovým ID neexistuje'
             );
         }
 
-        if (post('action') == 'unlink') {
-            $f = $this->_getLinkedObjects($id);
+        if ($request->post('action') == 'unlink') {
+            $f = $this->getLinkedObjects($id);
 
             $categoryCount = 0;
             foreach ($f['categories'] as $data) {
@@ -209,8 +239,8 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
             );
             return;
         }
-        if (((empty($_POST) || post('action') == 'confirm')
-            && ($f = $this->_getLinkedObjects($id))) || empty($_POST)
+        if (((!$request->post() || $request->post('action') == 'confirm')
+            && ($f = $this->getLinkedObjects($id))) || !$request->post()
         ) {
             if (isset($f) && $f) {
                 $this->redirect()->setMessage(
@@ -223,28 +253,34 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
                 array(
                     'id' => $id,
                     'name' => $data['pg_name'],
-                    'backlink' => Request::getReferer()
+                    'referer' => $request->getReferer(),
+                    'uri' => $request->getLiteralURI()
                 )
             );
             return;
         }
         DBPlatbyGroup::delete($id);
         $this->redirect(
-            post('referer') ? post('referer') : '/admin/platby/structure',
+            $request->post('referer') ?: '/admin/platby/structure',
             'Kategorie byla odebrána'
         );
     }
-    private function _getLinkedObjects($id) {
+
+    private function getLinkedObjects($id)
+    {
         $cat = DBPlatbyGroup::getSingleWithCategories($id);
         $sku = DBPlatbyGroup::getSingleWithSkupiny($id);
 
-        if (empty($cat) && empty($sku))
+        if (empty($cat) && empty($sku)) {
             return array();
-        else
+        } else {
             return array('categories' => $cat, 'skupiny' => $sku);
+        }
     }
-    private function _displayForm($action, $data = array()) {
-        $id = Request::getID() ? Request::getID() : 0;
+
+    private function displayForm($request, $action, $id, $data = array())
+    {
+        $id = $id ?: 0;
         foreach ($data as $key => &$array) {
             $new_data = array(
                 'buttons' => '<form action="" method="post">'
@@ -262,13 +298,15 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
                 'archive' => '&nbsp;' . ($array['pc_archive'] ? '&#10003;' : '&#10799;')
             );
             $array = $new_data;
-        }unset($array);
+        }
+        unset($array);
 
         $categoryNotInGroup = DBPlatbyCategory::getNotInGroup($id);
         $categorySelect = array();
         foreach ($categoryNotInGroup as $array) {
             $categorySelect[$array['pc_id']] = $array['pc_symbol'] . ' - ' . $array['pc_name'];
-        }unset($array);
+        }
+        unset($array);
 
         $skupiny = DBPlatbyGroup::getSingleWithSkupiny($id);
         foreach ($skupiny as &$array) {
@@ -282,7 +320,8 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
                 . '&nbsp;' . $array['s_name']
             );
             $array = $new_data;
-        }unset($array);
+        }
+        unset($array);
 
         $skupinyNotInGroup = DBSkupiny::getNotInGroup($id);
         $skupinySelect = array();
@@ -299,15 +338,19 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
                 'categorySelect' => $categorySelect,
                 'skupiny' => $skupiny,
                 'skupinySelect' => $skupinySelect,
-                'backlink' => Request::getReferer()
+                'referer' => $request->getReferer(),
+                'name' => $request->post('name'),
+                'description' => $request->post('description'),
+                'base' => $request->post('base'),
+                'uri' => $request->getLiteralURI()
             )
         );
     }
-    protected function checkPost() {
+    protected function checkPost($request) {
         $f = new Form();
-        $f->checkInArray(post('type'), array('0', '1'), 'Neplatný typ kategorie');
-        $f->checkNotEmpty(post('name'), 'Zadejte nějaký název platby');
-        $f->checkNumeric(post('base'), 'Násobitel musí být zadán pouze čisly');
+        $f->checkInArray($request->post('type'), array('0', '1'), 'Neplatný typ kategorie');
+        $f->checkNotEmpty($request->post('name'), 'Zadejte nějaký název platby');
+        $f->checkNumeric($request->post('base'), 'Násobitel musí být zadán pouze čisly');
 
         return $f->isValid() ? true : $f;
     }

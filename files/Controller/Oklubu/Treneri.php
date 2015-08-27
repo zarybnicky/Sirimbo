@@ -2,19 +2,33 @@
 require_once 'files/Controller/Oklubu.php';
 class Controller_Oklubu_Treneri extends Controller_Oklubu
 {
-    public function view($id = null) {
+    public function view($request)
+    {
         $this->redirect('/oklubu/obecne');
     }
 
-    public function klubovi($id = null) {
-        $this->render('files/View/Main/OKlubu/TreneriInt.inc');
+    public function klubovi($request)
+    {
+        $this->render(
+            'files/View/Main/OKlubu/TreneriInt.inc',
+            array(
+                'sidebar' => $this->sidebar($request->getUri())
+            )
+        );
     }
 
-    public function externi($id = null) {
-        $this->render('files/View/Main/OKlubu/TreneriExt.inc');
+    public function externi($request)
+    {
+        $this->render(
+            'files/View/Main/OKlubu/TreneriExt.inc',
+            array(
+                'sidebar' => $this->sidebar($request->getUri())
+            )
+        );
     }
 
-    public function sidebar() {
+    public function sidebar($uri)
+    {
         return new Sidebar(
             array(
                 array(
@@ -27,7 +41,8 @@ class Controller_Oklubu_Treneri extends Controller_Oklubu
                     '/oklubu/treneri/externi',
                     array()
                 )
-            )
+            ),
+            $uri
         );
     }
 }

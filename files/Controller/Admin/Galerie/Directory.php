@@ -7,79 +7,86 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
         Permissions::checkError('galerie', P_OWNED);
     }
 
-    public function view($id = null)
+    public function view($request)
     {
+        $id = $request->getId();
         if (!($data = DBGalerie::getSingleDir($id))) {
             $this->redirect('/admin/galerie', 'Složka s takovým ID neexistuje');
         }
-        switch (post('action')) {
-        	case 'file/edit':
-        	    $galerie = post('galerie');
-        	    if (isset($galerie[0])) {
-        	        $this->redirect(
-                        '/admin/galerie/file/' . post('action') . '/' . $galerie[0]
-        	        );
-        	    }
-        	    break;
-        	case 'file/remove':
-                if (is_array(post('galerie'))) {
-                    $this->redirect(
-                        '/admin/galerie/file/remove?'
-                            . http_build_query(array('u' => post('galerie')))
-                    );
-                }
-        	    break;
-        }
-        $this->_displayOverview($id);
-    }
-    public function add($id = null)
-    {
-        if (empty($_POST) || is_object($form = $this->_checkData())) {
-            if (!empty($_POST)) {
-                $this->redirect()->setMessage($form->getMessages());
+        switch ($request->post('action')) {
+        case 'file/edit':
+            $galerie = $request->post('galerie');
+            if (isset($galerie[0])) {
+                $this->redirect(
+                    '/admin/galerie/file/' . $request->post('action') . '/' . $galerie[0]
+                );
             }
-            $this->_displayForm('add');
+            break;
+        case 'file/remove':
+            if (is_array($request->post('galerie'))) {
+                $this->redirect(
+                    '/admin/galerie/file/remove?'
+                    . http_build_query(array('u' => $request->post('galerie')))
+                );
+            }
+            break;
+        }
+        $this->displayOverview($id);
+    }
+    public function add($request)
+    {
+        if (!$request->post()) {
+            $this->displayForm($request, 'add');
             return;
         }
-        $parent = DBGalerie::getSingleDir(post('parent'));
+        if (is_object($form = $this->checkData($request))) {
+            $this->redirect()->setMessage($form->getMessages());
+            $this->displayForm($request, 'add');
+            return;
+        }
+        $parent = DBGalerie::getSingleDir($request->post('parent'));
         $dirPath = $parent['gd_path'] . DIRECTORY_SEPARATOR
-            . $this->_sanitizePathname(post('name'));
+            . $this->_sanitizePathname($request->post('name'));
         mkdir($dirPath, 0777, true);
 
         DBGalerie::addDir(
-            post('name'), $parent['gd_id'], $parent['gd_level'] + 1,
-            post('hidden') ? '1' : '0', $dirPath
+            $request->post('name'),
+            $parent['gd_id'],
+            $parent['gd_level'] + 1,
+            $request->post('hidden') ? '1' : '0',
+            $dirPath
         );
         $this->redirect('/admin/galerie', 'Složka přidána');
     }
 
-    public function edit($id = null)
+    public function edit($request)
     {
+        $id = $request->getId();
         if ($id == 0) {
             $this->redirect('/admin/galerie', 'Není možné upravit hlavní složku');
         }
         if (!($data = DBGalerie::getSingleDir($id))) {
             $this->redirect('/admin/galerie', 'Taková složka neexistuje');
         }
-        if (empty($_POST) || is_object($form = $this->_checkData())) {
-            if (empty($_POST)) {
-                post('name', $data['gd_name']);
-                post('parent', $data['gd_id_rodic']);
-                post('hidden', $data['gd_hidden'] ? '1' : '0');
-            } else {
-                $this->redirect()->setMessage($form->getMessages());
-            }
-            $this->_displayForm('edit');
+        if (!$request->post()) {
+            $request->post('name', $data['gd_name']);
+            $request->post('parent', $data['gd_id_rodic']);
+            $request->post('hidden', $data['gd_hidden'] ? '1' : '0');
+            $this->displayForm($request, 'edit');
             return;
         }
-        $parent = DBGalerie::getSingleDir(post('parent'));
-        $newPath =
-            $parent['gd_path'] . DIRECTORY_SEPARATOR .
-            $this->_sanitizePathname(
-                $this->_getCanonicalName(
-                    post('name')
-                )
-            );
+        if (is_object($form = $this->checkData())) {
+            $this->redirect()->setMessage($form->getMessages());
+            $this->displayForm($request, 'edit');
+            return;
+        }
+        $parent = DBGalerie::getSingleDir($request->post('parent'));
+        $newPath = $parent['gd_path'] . DIRECTORY_SEPARATOR
+                 . $this->_sanitizePathname(
+                     $this->_getCanonicalName(
+                         $request->post('name')
+                     )
+                 );
 
         if ($data['gd_path'] != $newPath) {
             if (file_exists(GALERIE . DIRECTORY_SEPARATOR . $newPath)) {
@@ -101,19 +108,23 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
         }
 
         DBGalerie::editDir(
-            $id, post('name'), $parent['gd_id'], $parent['gd_level'] + 1,
-            post('hidden') ? '1' : '0', $data['gd_path']
+            $id,
+            $request->post('name'),
+            $parent['gd_id'],
+            $parent['gd_level'] + 1,
+            $request->post('hidden') ? '1' : '0',
+            $data['gd_path']
         );
         $this->redirect('/admin/galerie', 'Složka byla úspěšně upravena.');
     }
 
-    public function remove($id = null)
+    public function remove($request)
     {
-        if (!is_array(post('data')) && !is_array(get('u'))) {
+        if (!is_array($request->post('data')) && !is_array($request->get('u'))) {
             $this->redirect('/admin/galerie');
         }
-        if (!empty($_POST) && post('action') == 'confirm') {
-            foreach (post('data') as $id) {
+        if ($request->post('action') == 'confirm') {
+            foreach ($request->post('data') as $id) {
                 if (!($data = DBGalerie::getSingleDir($id))) {
                     continue;
                 }
@@ -127,7 +138,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
             $this->redirect('/admin/galerie', 'Složky odebrány');
         }
         $data = array();
-        foreach (get('u') as $id) {
+        foreach ($request->get('u') as $id) {
             $item = DBGalerie::getSingleDir($id);
             $data[] = array(
                 'id' => $item['gd_id'],
@@ -140,16 +151,16 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
                 'header' => 'Správa galerie',
                 'prompt' => 'Opravdu chcete odstranit složky '
                     . 'se všemi podsložkami a fotkami:',
-                'returnURI' => Request::getReferer(),
+                'returnURI' => $request->getReferer(),
                 'data' => $data
             )
         );
     }
 
-    private function _displayOverview($id)
+    private function displayOverview($id)
     {
         $data = DBGalerie::getFotky($id);
-        foreach($data as &$item) {
+        foreach ($data as &$item) {
             $newData = array(
                 'id'           => $item['gf_id'],
         	    'checkBox'     => (string) $this->checkbox('galerie[]', $item['gf_id']),
@@ -168,7 +179,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
         );
     }
 
-    private function _displayForm($action)
+    private function displayForm($request, $action)
     {
         $dirs = DBGalerie::getDirs(true, true);
         foreach ($dirs as &$item) {
@@ -183,23 +194,29 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
             'files/View/Admin/Galerie/FormDirectory.inc',
             array(
                 'dirs' => $dirs,
-                'action' => $action
+                'action' => $action,
+                'name' => $request->post('name'),
+                'parent' => $request->post('parent'),
+                'hidden' => $request->post('hidden')
             )
         );
         return;
     }
 
-    private function _checkData()
+    protected function checkData($request)
     {
         $form = new Form();
         $form->checkNotEmpty(
-            post('name'),
-            'Název složky nesmí být prázdný', 'name'
+            $request->post('name'),
+            'Název složky nesmí být prázdný',
+            'name'
         );
         $form->checkBool(
-            post('parent') >= 0 && is_numeric(post('parent'))
-            && DBGalerie::getSingleDir(post('parent')),
-            'Zadaná nadsložka není platná', 'parent'
+            $request->post('parent') >= 0
+            && is_numeric($request->post('parent'))
+            && DBGalerie::getSingleDir($request->post('parent')),
+            'Zadaná nadsložka není platná',
+            'parent'
         );
         return $form->isValid() ? array() : $form;
     }

@@ -5,10 +5,11 @@ class Controller_Admin_Novinky extends Controller_Admin
     public function __construct() {
         Permissions::checkError('nastenka', P_OWNED);
     }
-    public function view($id = null) {
-        if (!is_numeric(get('id')))
+    public function view($request) {
+        if (!is_numeric($request->get('id'))) {
             $this->redirect("/member/home", "Novinka s daným ID neexistuje");
-        DBNovinky::removeNovinka(get('id'));
+        }
+        DBNovinky::removeNovinka($request->get('id'));
         $this->redirect("/member/home", "Novinka odstraněna");
     }
 }

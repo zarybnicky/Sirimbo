@@ -1,12 +1,14 @@
 <?= $this->header('Dokumenty') ?>
 
 <div class="container full">
+  <?= $this->notice($this->redirect()->getMessage());?>
   <?php if ($this->showMenu): ?>
     <form action="" method="GET">
       <?php
       echo $this->select()
                 ->get()
                 ->name('kat')
+                ->set($this->kat)
                 ->option('', '---VŠE---')
                 ->option('1', 'Schůze, rady')
                 ->option('2', 'Soutěže')
@@ -26,12 +28,12 @@
     </tr>
     <?php foreach ($this->data as $item): ?>
       <tr>
-        <td><?php echo $item['name'];?></td>
-        <td><a href="/member/download?id=<?php echo $item['id'];?>">
-          <?php echo $item['fileName'];?>
+        <td><?= $item['name'];?></td>
+        <td><a href="/member/download?id=<?= $item['id'];?>">
+          <?= $item['fileName'];?>
         </a></td>
-        <td><?php echo $item['kategorie'];?></td>
-        <td><?php echo $item['uploadedBy'];?></td>
+        <td><?= $item['kategorie'];?></td>
+        <td><?= $item['uploadedBy'];?></td>
       </tr>
     <?php endforeach;?>
   </table>

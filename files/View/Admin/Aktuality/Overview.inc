@@ -7,13 +7,11 @@
         echo '<form action="" method="get">';
 
         echo $this->select()
-                  ->get()
                   ->name('f')
-                  ->value('all')
+                  ->set($this->f ?: '0')
                   ->option('0', 'vše')
                   ->option(AKTUALITY_CLANKY, 'články')
-                  ->option(AKTUALITY_KRATKE, 'krátké zprávy')
-                  ->option(AKTUALITY_VIDEA, 'videa');
+                  ->option(AKTUALITY_KRATKE, 'krátké zprávy');
         echo '<button type="submit">Zobrazit</button>';
         echo '</form><br/>';
     }
@@ -24,8 +22,6 @@
             echo $this->menu()
                       ->float(MenuHelper::FLOAT_RIGHT)
                       ->content('Přidat', 'aktuality/add')
-                      ->content('Upravit', 'edit', true)
-                      ->content('Upravit galerii', 'foto', true)
                       ->content('Odebrat', 'remove', true);
         }
         ?>
@@ -36,7 +32,8 @@
                       ->data($this->data)
                       ->column('checkBox', '')
                       ->column('name', 'Jméno')
-                      ->column('category', 'Kategorie', null, 'width:120px');
+                      ->column('category', 'Kategorie', null, 'width:120px')
+                      ->column('links', 'Upravit', null, 'width:120px');
             ?>
         </div>
     </form>

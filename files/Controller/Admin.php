@@ -5,7 +5,7 @@ class Controller_Admin extends Controller_Abstract
         Permissions::checkError('nastenka', P_OWNED);
     }
 
-    public function view($id = null) {
+    public function view($request) {
         $this->render('files/View/Admin/Home.inc');
     }
 

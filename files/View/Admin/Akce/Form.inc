@@ -7,34 +7,40 @@
             <tr>
                 <td>Jméno akce (*): </td>
                 <td>
-                    <input type="text" name="jmeno" value="<?= post("jmeno"); ?>" />
+                    <input type="text" name="jmeno" value="<?= $this->jmeno ?>" />
                 </td>
                 <td>Max. 255 znaků</td>
             </tr>
             <tr>
                 <td>Místo akce (*): </td>
                 <td>
-                    <input type="text" name="kde" value="<?= post("kde"); ?>" />
+                    <input type="text" name="kde" value="<?= $this->kde ?>" />
                 </td>
                 <td>Max. 255 znaků</td>
             </tr>
             <tr>
                 <td>Další info: </td>
                 <td>
-                    <textarea rows="15" cols="50" name="info">
-                        <?= post("info"); ?>
-                    </textarea>
+                    <textarea rows="15"
+                              cols="50"
+                              name="info"><?= $this->info ?></textarea>
                 </td>
                 <td></td>
             </tr>
             <tr>
                 <td>Od: (*)</td>
-                <td><?= $this->date('od')->textBox();?></td>
+                <td><?= $this->date()
+                             ->name('od')
+                             ->setDate($this->od)
+                             ->textBox();?></td>
                 <td></td>
             </tr>
             <tr>
                 <td>Do: </td>
-                <td><?= $this->date('do')->textBox();?></td>
+                <td><?= $this->date()
+                             ->name('do')
+                             ->setDate($this->do)
+                             ->textBox();?></td>
                 <td>(pokud je prázdný, počítá se jako "Od")</td>
             </tr>
             <tr>
@@ -42,7 +48,7 @@
                 <td>
                     <input type="text"
                            name="kapacita"
-                           value="<?= post("kapacita"); ?>" />
+                           value="<?= $this->kapacita ?>" />
                 </td>
                 <td>Pouze číslice</td>
             </tr>
@@ -64,14 +70,20 @@
             <tr>
                 <td>Uzamknout: </td>
                 <td>
-                    <label><?= $this->checkbox('lock', 'lock')?></label>
+                    <label>
+                        <?= $this->checkbox('lock', 'lock')
+                                 ->set($this->lock) ?>
+                    </label>
                 </td>
                 <td></td>
             </tr>
             <tr>
                 <td>Viditelný: </td>
                 <td>
-                    <label><?= $this->checkbox('visible', 'visible')?></label>
+                    <label>
+                        <?= $this->checkbox('visible', 'visible')
+                                 ->set($this->visible) ?>
+                    </label>
                 </td>
                 <td></td>
             </tr>

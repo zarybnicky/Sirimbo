@@ -51,6 +51,11 @@ return array(
         array()
     ),
     array(
+        'Video',
+        '/admin/video',
+        array()
+    ),
+    array(
         'Dokumenty',
         '/admin/dokumenty',
         array()
