@@ -27,16 +27,17 @@ class UploadHelper
         return $this;
     }
 
-    public function loadFromPost()
+    public function loadFromPost($request)
     {
-        if (!isset($_FILES[$this->_name]) || empty($_FILES[$this->_name])) {
+        $files = $request->files($this->_name);
+        if (!$files) {
             $this->_files = array();
             return $this;
         }
-        if (!is_array($_FILES[$this->_name])) {
-            $input = array($_FILES[$this->_name]);
+        if (!is_array($files)) {
+            $input = array($files);
         } else {
-            foreach ($_FILES[$this->_name] as $key => $data) {
+            foreach ($files as $key => $data) {
                 foreach ($data as $i => $value) {
                     $input[$i][$key] = $value;
                 }
@@ -93,11 +94,8 @@ class UploadHelper
         return false;
     }
 
-    public function getFilledUploader($loadFromPost = false)
+    public function getFilledUploader()
     {
-        if ($loadFromPost) {
-            $this->loadFromPost();
-        }
         $uploader = new Uploader();
         foreach ($this->_files as $file) {
             $uploader->addTempFile($file['tmp_name'], $file['name'], $file['size']);

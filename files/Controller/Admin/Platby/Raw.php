@@ -12,7 +12,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
     public function view($request)
     {
         if ($request->post() && $request->post('action') == 'upload') {
-            $this->processUpload();
+            $this->processUpload($request);
         }
         $workDir = new DirectoryIterator(self::TEMP_DIR);
         $workDir->rewind();
@@ -147,10 +147,10 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
         }
         unlink($parser->getFileObject()->getRealPath());
     }
-    private function processUpload()
+    private function processUpload($request)
     {
         $upload = new UploadHelper();
-        $upload->upload('in')->loadFromPost();
+        $upload->upload('in')->loadFromPost($request);
 
         $validFiles = $upload->hasValidFiles();
         if ($upload->hasInvalidFiles()) {

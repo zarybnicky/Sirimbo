@@ -70,13 +70,13 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
         if (!($parent = DBGalerie::getSingleDir($parentId))) {
             $this->redirect('/admin/galerie/upload', 'Taková složka neexistuje');
         }
-        $this->_processUpload($parent);
+        $this->_processUpload($parent, $request);
     }
 
-    private function _processUpload($parent)
+    private function _processUpload($parent, $request)
     {
         $uploadHelper = new UploadHelper('files');
-        $uploadHelper->loadFromPost();
+        $uploadHelper->loadFromPost($request);
 
         if (!$uploadHelper->hasValidFiles() && $uploadHelper->hasFiles()) {
             $this->redirect()->setMessage($uploadHelper->getErrorMessages());
