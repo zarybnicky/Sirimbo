@@ -8,7 +8,7 @@
                  ->data($this->items)
                  ->column('name', 'Uživatel')
                  ->column('removeButton', '') ?>
-        <button type="submit" name="action" value="submit">Uložit</button>
+        <?= $this->submit('Uložit')->data('action', 'submit') ?>
         <a href="/admin/akce">Zpět</a>
     </form>
 </div>

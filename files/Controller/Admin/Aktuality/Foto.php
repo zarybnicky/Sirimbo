@@ -50,6 +50,7 @@ class Controller_Admin_Aktuality_Foto extends Controller_Admin_Aktuality
                 array(
                     'nadpis' => $dir['gd_name'],
                     'photos' => $photos,
+                    'dir' => $request->get('dir') ?: '',
                     'dirs' => $dirs_out,
                     'checked' => $article['at_foto_main']
                 )

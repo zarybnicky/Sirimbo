@@ -11,9 +11,7 @@
       <tr>
         <td>Třída:</td>
         <td><?php
-            echo $this->select()
-                      ->post()
-                      ->name('stt-trida')
+            echo $this->select('stt-trida')
                       ->set($this->stt_trida)
                       ->options(array('Z', 'H', 'D', 'C', 'B', 'A', 'M'), true, true);
             ?></td>
@@ -33,9 +31,7 @@
       <tr>
         <td>Třída:</td>
         <td><?php
-            echo $this->select()
-                      ->post()
-                      ->name('lat-trida')
+            echo $this->select('lat-trida')
                       ->set($this->lat_trida)
                       ->options(array('Z', 'H', 'D', 'C', 'B', 'A', 'M'), true, true);
             ?></td>
@@ -52,7 +48,7 @@
         <td>0 až 10</td>
       </tr>
     </table>
-    <button type="submit" name="action">Změnit třídu a body</button>
+    <?= $this->submit('Změnit třídu a body') ?>
     <a href="/member/profil/par">Zpět</a>
   </form>
 </div>

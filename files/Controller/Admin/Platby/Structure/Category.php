@@ -279,10 +279,9 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                     'Nemůžu odstranit specifický symbol s připojenými kategoriemi nebo položkami! '
                     . '<form action="" method="post">'
                     .   (!$data['pc_archive']
-                        ? '<button type="submit" name="action" value="archive">Archivovat?</button> nebo '
-                        : '')
-                    .   '<button type="submit" name="action" value="unlink">'
-                    .   'Odstranit všechna spojení se skupinami a kategoriemi a přesunout ovlivněné platby do nezařazených?</button>'
+                         ? ($this->submit('Archivovat?')->data('action', 'archive') . ' nebo ')
+                         : '')
+                    .    $this->submit('Odstranit všechna spojení se skupinami a kategoriemi a přesunout ovlivněné platby do nezařazených?')->data('action', 'unlink')
                     .   '</form>'
                 );
             }

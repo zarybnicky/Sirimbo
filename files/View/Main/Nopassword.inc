@@ -16,7 +16,7 @@ jste zadali při registraci</p>
 </tr>
 <tr>
     <td></td>
-    <td><button type="submit" name="action" value="gen_pass">Generovat heslo</button></td>
+    <td><?= $this->submit('Generovat heslo')->data('action', 'gen_pass') ?></td>
 </tr>
 </table>
 </form>

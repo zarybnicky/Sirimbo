@@ -6,13 +6,12 @@
     if ($this->showMenu) {
         echo '<form action="" method="get">';
 
-        echo $this->select()
-                  ->name('f')
+        echo $this->select('f')
                   ->set($this->f ?: '0')
                   ->option('0', 'vše')
                   ->option(AKTUALITY_CLANKY, 'články')
                   ->option(AKTUALITY_KRATKE, 'krátké zprávy');
-        echo '<button type="submit">Zobrazit</button>';
+        echo $this->submit('Zobrazit');
         echo '</form><br/>';
     }
     ?>
@@ -20,20 +19,18 @@
         <?php
         if ($this->showMenu) {
             echo $this->menu()
-                      ->float(MenuHelper::FLOAT_RIGHT)
                       ->content('Přidat', 'aktuality/add')
                       ->content('Odebrat', 'remove', true);
         }
         ?>
         <div style="margin-right:150px">
-            <?php
-            echo $this->table()
-                      ->style('width:100%')
-                      ->data($this->data)
-                      ->column('checkBox', '')
-                      ->column('name', 'Jméno')
-                      ->column('category', 'Kategorie', null, 'width:120px')
-                      ->column('links', 'Upravit', null, 'width:120px');
+            <?= $this->table()
+                     ->style('width:100%')
+                     ->data($this->data)
+                     ->column('checkBox', '')
+                     ->column('name', 'Jméno')
+                     ->column('category', 'Kategorie', null, 'width:120px')
+                     ->column('links', 'Upravit', null, 'width:120px');
             ?>
         </div>
     </form>

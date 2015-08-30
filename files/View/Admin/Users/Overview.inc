@@ -5,14 +5,13 @@ echo $this->notice($this->redirect()->getMessage());
 
 if ($this->showMenu) {
     echo '<form action="" method="get">';
-    $s = $this->select();
     echo 'Uživatelé:&nbsp;';
-    $s->get()->name('f')
-      ->set($this->f ?: 'all')
-      ->option('all', 'všichni')
-      ->option('dancer', 'tanečníci')
-      ->option('system', 'systémoví')
-      ->option('ban', 'zabanovaní');
+    $s = $this->select('f')
+              ->set($this->f ?: 'all')
+              ->option('all', 'všichni')
+              ->option('dancer', 'tanečníci')
+              ->option('system', 'systémoví')
+              ->option('ban', 'zabanovaní');
     foreach ($this->groups as $group) {
         if ($group['id']) {
             $s->option($group['id'], $group['name']);
@@ -20,26 +19,23 @@ if ($this->showMenu) {
     }
     echo $s;
     echo '&nbsp;řadit podle:&nbsp;';
-    echo $s->select()
-           ->get()->name('s')
-           ->set($this->s ?: 'surname')
-           ->option('surname', 'příjmení')
-           ->option('var-symbol', 'var. symbolu')
-           ->option('narozeni', 'data narození');
+    echo $this->select('s')
+              ->set($this->s ?: 'surname')
+              ->option('surname', 'příjmení')
+              ->option('var-symbol', 'var. symbolu')
+              ->option('narozeni', 'data narození');
     echo '&nbsp;zobrazení:&nbsp;';
-    echo $s->select()
-           ->get()->name('v')
-           ->set($this->v ?: 'info')
-           ->option('info', 'informace')
-           ->option('status', 'status uživatele');
-    echo '<button type="submit">Odeslat</button>';
+    echo $this->select('v')
+              ->set($this->v ?: 'info')
+              ->option('info', 'informace')
+              ->option('status', 'status uživatele');
+    echo $this->submit('Odeslat');
     echo '</form><br/>';
 }
 
 echo '<form action="" method="POST">';
 if ($this->showMenu) {
     $f = $this->menu()
-        ->float(MenuHelper::FLOAT_RIGHT)
         ->content('Přidat', '/admin/users/add')
         ->content('Upravit', 'edit', true)
         ->content('Odebrat', 'remove', true)
@@ -52,7 +48,7 @@ if ($this->showMenu) {
     }
     echo $f;
 }
-if ($this->data == array()) {
+if (!$this->data) {
     echo $this->notice('Žádní takoví uživatelé');
     return;
 }

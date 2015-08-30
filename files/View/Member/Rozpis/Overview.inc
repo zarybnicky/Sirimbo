@@ -30,12 +30,10 @@
                                                    value="<?= $lesson['id'] ?>" />
                                             <?php if ($lesson['canReserve']): ?>
                                                 <?= $this->submit('+')
-                                                         ->name('action')
-                                                         ->value('signup') ?>
+                                                         ->data('action', 'signup') ?>
                                             <?php elseif ($lesson['canCancel']): ?>
                                                 <?= $this->submit('&times;')
-                                                         ->name('action')
-                                                         ->value('signout') ?>
+                                                         ->data('action', 'signout') ?>
                                             <?php endif; ?>
                                         </form>
                                     </td>

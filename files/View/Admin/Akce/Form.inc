@@ -1,5 +1,4 @@
-<?= $this->header('Správa akcí') ?>
-<?= $this->subheader($this->header) ?>
+<?= $this->header('Správa akcí', $this->header) ?>
 <div class="container full">
     <?= $this->notice($this->redirect()->getMessage()); ?>
     <form action="" method="POST">
@@ -29,18 +28,12 @@
             </tr>
             <tr>
                 <td>Od: (*)</td>
-                <td><?= $this->date()
-                             ->name('od')
-                             ->setDate($this->od)
-                             ->textBox();?></td>
+                <td><?= $this->date('od', $this->od)->textBox() ?></td>
                 <td></td>
             </tr>
             <tr>
                 <td>Do: </td>
-                <td><?= $this->date()
-                             ->name('do')
-                             ->setDate($this->do)
-                             ->textBox();?></td>
+                <td><?= $this->date('do', $this->do)->textBox() ?></td>
                 <td>(pokud je prázdný, počítá se jako "Od")</td>
             </tr>
             <tr>
@@ -71,8 +64,7 @@
                 <td>Uzamknout: </td>
                 <td>
                     <label>
-                        <?= $this->checkbox('lock', 'lock')
-                                 ->set($this->lock) ?>
+                        <?= $this->checkbox('lock', 'lock')->set($this->lock) ?>
                     </label>
                 </td>
                 <td></td>
@@ -81,8 +73,7 @@
                 <td>Viditelný: </td>
                 <td>
                     <label>
-                        <?= $this->checkbox('visible', 'visible')
-                                 ->set($this->visible) ?>
+                        <?= $this->checkbox('visible', 'visible')->set($this->visible) ?>
                     </label>
                 </td>
                 <td></td>

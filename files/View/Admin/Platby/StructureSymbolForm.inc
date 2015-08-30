@@ -20,29 +20,30 @@ $mainForm = $this->table()
             'value' => '<input type="text" name="amount" value="' . $this->amount . '"/>'
         ), array(
             'desc' => 'Splatnost:',
-            'value' => $this->date('dueDate')->set($this->dueDate)
+            'value' => $this->date('dueDate', $this->dueDate)
         ), array(
             'desc' => 'Platnost:',
-            'value' => $this->date('validRange')->range()->set($this->validRange)
+            'value' => $this->date('validRange', $this->validRange)->range()
         ), array(
             'desc' => 'Povolit prefix roku?:',
-            'value' => (string) $this->checkbox('usePrefix', '1')->set($this->usePrefix)
+            'value' => $this->checkbox('usePrefix', '1')->set($this->usePrefix)->render()
         ), array(
             'desc' => 'Archivovat?:',
-            'value' => (string) $this->checkbox('archive', '1')->set($this->archive)
+            'value' => $this->checkbox('archive', '1')->set($this->archive)->render()
         )
-));
+))
+->render();
 if (!empty($this->groups)) {
     $groupForm = $this->table()
-        ->column('buttons', '', '', 'width:75px')
-        ->column('type', 'Typ')
-        ->column('name', 'Jméno')
-        ->column('base', 'Násobitel částky')
-        ->data($this->groups);
+                      ->column('buttons', '', '', 'width:90px')
+                      ->column('type', 'Typ')
+                      ->column('name', 'Jméno')
+                      ->column('base', 'Násobitel částky')
+                      ->data($this->groups)
+                      ->render();
 }
 if (!empty($this->groupSelect)) {
-    $groupSelectBox = $this->select('group')
-        ->options($this->groupSelect);
+    $groupSelectBox = $this->select('group')->options($this->groupSelect);
 }
 ?>
 
@@ -62,7 +63,7 @@ if (!empty($this->groupSelect)) {
         <a href="/admin/platby/structure/group/add?category=<?= $this->id;?>">novou kategorii</a>
         <?php if (isset($groupSelectBox)) : ?>
             nebo existující: <?= $groupSelectBox;?>
-            <button type="submit" name="action" value="group">odeslat</button>
+            <?= $this->submit('Odeslat')->data('action', 'group') ?>
         <?php endif;?>
     </form>
 <?php endif;?>

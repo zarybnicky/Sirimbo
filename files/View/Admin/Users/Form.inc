@@ -1,5 +1,7 @@
-<?= $this->header('Správa uživatelů') ?>
-<?= $this->subheader($this->action == 'add' ? 'Přidat uživatele' : 'Upravit uživatele') ?>
+<?= $this->header(
+    'Správa uživatelů',
+    $this->action == 'add' ? 'Přidat uživatele' : 'Upravit uživatele'
+) ?>
 <div class="container full">
 <?= $this->notice($this->redirect()->getMessage()) ?>
 <form action="" method="POST">
@@ -41,7 +43,7 @@
         <td>Pouze číslice a +, max. 13 znaků</td>
     </tr><tr>
         <td>Datum narození: (*)</td>
-        <td><?= $this->date('narozeni')->set($this->narozeni)->textBox(); ?></td>
+        <td><?= $this->date('narozeni', $this->narozeni)->textBox() ?></td>
         <td></td>
     </tr><tr>
         <td>Poznámky: </td>
@@ -66,7 +68,7 @@
     </tr><tr>
         <td>Oprávnění (*): </td>
         <td><?php
-        $s = $this->select()->post()->name('group')->set($this->group);
+        $s = $this->select('group')->set($this->group);
         foreach ($this->groups as $item)
             $s->option($item['id'], $item['name']);
         echo $s;
@@ -81,7 +83,7 @@
         }?></td>
         <td></td>
     </tr><tr>
-        <td><button type="submit"><?= $this->action == 'add' ? 'Přidat' : 'Upravit' ?></button></td>
+        <td><?= $this->submit($this->action == 'add' ? 'Přidat' : 'Upravit') ?></td>
         <td>Pole označená (*) jsou povinná</td>
         <td></td>
     </tr>

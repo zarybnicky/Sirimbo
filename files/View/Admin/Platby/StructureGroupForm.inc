@@ -12,9 +12,8 @@ $mainForm = $this->table()
         array(
             'desc' => 'Typ:',
             'value' => (
-                '<label>' . $this->radio('type', '0')->set(true) . 'Běžné platby</label><br/>' .
-                '<label>' . $this->radio('type', '1') . 'Členské
-příspěvky</label>'
+                '<label>' . $this->radio('type', '0')->set($this->type == '0') . 'Běžné platby</label><br/>' .
+                '<label>' . $this->radio('type', '1')->set($this->type == '1') . 'Členské příspěvky</label>'
             )
         ), array(
             'desc' => 'Jméno:',
@@ -41,8 +40,7 @@ if (!empty($this->category)) {
         ->data($this->category);
 }
 if (!empty($this->categorySelect)) {
-    $categorySelectBox = $this->select('category')
-        ->options($this->categorySelect);
+    $categorySelectBox = $this->select('category')->options($this->categorySelect);
 }
 if (!empty($this->skupiny)) {
     $skupinyForm = $this->table()
@@ -51,8 +49,7 @@ if (!empty($this->skupiny)) {
         ->data($this->skupiny);
 }
 if (!empty($this->skupinySelect)) {
-    $skupinySelectBox = $this->select('skupiny')
-        ->options($this->skupinySelect);
+    $skupinySelectBox = $this->select('skupiny')->options($this->skupinySelect);
 }
 ?>
 
@@ -72,7 +69,7 @@ if (!empty($this->skupinySelect)) {
         <a href="/admin/platby/structure/category/add?group=<?= $this->id;?>">nový specifický symbol</a>
         <?php if (isset($categorySelectBox)) : ?>
             nebo existující: <?= $categorySelectBox;?>
-            <button type="submit" name="action" value="category">odeslat</button>
+            <?= $this->submit('Odeslat')->data('action', 'category') ?>
         <?php endif;?>
     </form>
     <br/>
@@ -83,7 +80,7 @@ if (!empty($this->skupinySelect)) {
         <a href="/admin/skupiny/add?group=<?= $this->id;?>">novou skupinu</a>
         <?php if (isset($skupinySelectBox)) : ?>
             nebo existující: <?= $skupinySelectBox;?>
-            <button type="submit" name="action" value="skupiny">odeslat</button>
+            <?= $this->submit('Odeslat')->data('action', 'skupiny') ?>
         <?php endif;?>
     </form>
 <?php endif;?>

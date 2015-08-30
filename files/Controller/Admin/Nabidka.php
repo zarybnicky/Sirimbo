@@ -99,7 +99,7 @@ class Controller_Admin_Nabidka extends Controller_Admin
                                                  : '&#10799;'))
                     ),
                     'checkBox' => ($isTrainer
-                                   ? (string) $this->checkbox('nabidka[]', $item['n_id'])
+                                   ? $this->checkbox('nabidka[]', $item['n_id'])->render()
                                    : '&nbsp;&#10799;')
                 );
             },

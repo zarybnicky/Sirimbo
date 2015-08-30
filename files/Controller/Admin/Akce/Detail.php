@@ -64,16 +64,14 @@ class Controller_Admin_Akce_Detail extends Controller_Admin_Akce
                     'name' => $userSelect->name($item['ai_id'] . '-user')
                                          ->set($item['ai_user'])
                                          ->render(),
-                    'removeButton' =>
-                        '<button type="submit" name="remove" '
-                        . 'value="' . $item['ai_id'] . '">Odstranit</button>'
+                    'removeButton' => $this->submit('Odstranit')->data('remove', $item['ai_id'])
                 );
             },
             DBAkce::getAkceItems($id)
         );
         $items[] = array(
             'name' => $userSelect->name('add-user')->set(0),
-            'removeButton' => '<button type="submit" name="add" value="add">Přidat</button>'
+            'removeButton' => $this->submit('Přidat')->data('add, 'add')
         );
 
         $this->render(

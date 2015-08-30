@@ -15,10 +15,7 @@
             <tr>
                 <td></td>
                 <td>
-                    <?= $this->submit('Upravit'); ?>
-                    <button type="submit" name="action" value="edit_confirm">
-                        Upravit
-                    </button>
+                    <?= $this->submit('Upravit')->data('action', 'edit_confirm') ?>
                 </td>
             </tr>
         </table>

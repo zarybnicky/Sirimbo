@@ -2,8 +2,8 @@
 <?= $this->subheader('Vyřazené platby') ?>
 
 <div class="container full">
+<a style="display:block;margin-bottom:8px;" href="?list=all">Všechny platby</a>
 <?php
-echo '<a style="display:block;margin-bottom:8px;" href="?list=all">Všechny platby</a>';
 if (count($this->groupByDate) > 0) {
     echo '<span class="big">Platby podle rozpoznaného data:</span>';
     echo '<ul style="list-style:disc outside;">';

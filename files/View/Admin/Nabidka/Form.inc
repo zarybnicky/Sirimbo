@@ -1,5 +1,4 @@
-<?= $this->header('Správa nabídky') ?>
-<?= $this->subheader($this->header) ?>
+<?= $this->header('Správa nabídky', $this->header) ?>
 <div class="container full">
     <?= $this->notice($this->redirect()->getMessage()); ?>
 
@@ -47,15 +46,11 @@
             </tr>
             <tr>
                 <td>Od: (*)</td>
-                <td><?= $this->date('od')
-                             ->textBox()
-                             ->set($this->od) ?></td>
+                <td><?= $this->date('od', $this->od)->textBox() ?></td>
             </tr>
             <tr>
                 <td>Do: </td>
-                <td><?= $this->date('do')
-                             ->textBox()
-                             ->set($this->do) ?></td>
+                <td><?= $this->date('do', $this->do)->textBox() ?></td>
             </tr>
             <tr>
                 <td></td>
@@ -87,7 +82,7 @@
                     <input type="hidden"
                            name="referer"
                            value="<?= $this->referer ?>" />
-                    <?= $this->submit($this->action); ?>
+                    <?= $this->submit($this->action) ?>
                     </button>
                 </td>
                 <td>Pole označená (*) jsou povinná</td>

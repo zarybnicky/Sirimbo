@@ -12,7 +12,7 @@
                name="referer"
                value="<?= $this->referer ?>" />
         <br/>
-        <button type="submit" name="action" value="confirm">Odstranit</button>
+        <?= $this->submit('Odstranit')->data('action', 'confirm') ?>
         <a href="<?= $this->referer ?>">Zpět</a>
     </form>
 </div>

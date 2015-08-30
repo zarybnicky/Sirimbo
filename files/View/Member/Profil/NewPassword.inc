@@ -1,7 +1,7 @@
 <?= $this->header('Změna hesla') ?>
 
 <div class="container full">
-  <?php echo $this->notice($this->redirect()->getMessage());?>
+  <?= $this->notice($this->redirect()->getMessage()) ?>
   <form action="" method="post">
     <table>
       <tr>
@@ -17,7 +17,7 @@
         <td><input type="password" name="newpass_confirm" /></td>
       </tr>
       <tr>
-        <td><button type="submit" name="action">Změnit heslo</button></td>
+        <td><?= $this->submit('Změnit heslo') ?></td>
         <td>Pouze písmena bez diakritiky, číslice a podtržítka, 6 - 32 znaků</td>
       </tr>
     </table>

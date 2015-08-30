@@ -159,16 +159,17 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
 
     private function displayOverview($id)
     {
-        $data = DBGalerie::getFotky($id);
-        foreach ($data as &$item) {
-            $newData = array(
-                'id'           => $item['gf_id'],
-        	    'checkBox'     => (string) $this->checkbox('galerie[]', $item['gf_id']),
-                'name'         => $item['gf_name'],
-                'thumbnailURI' => '/galerie/thumbnails/' . $item['gf_path']
-            );
-            $item = $newData;
-        }
+        $data = array_map(
+            function ($item) {
+                return array(
+                    'id' => $item['gf_id'],
+                    'checkBox' => $this->checkbox('galerie[]', $item['gf_id'])->render(),
+                    'name' => $item['gf_name'],
+                    'thumbnailURI' => '/galerie/thumbnails/' . $item['gf_path']
+                );
+            },
+            DBGalerie::getFotky($id)
+        );
 
         $this->render(
             'files/View/Admin/Galerie/DisplayDirectory.inc',
@@ -181,15 +182,17 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
 
     private function displayForm($request, $action)
     {
-        $dirs = DBGalerie::getDirs(true, true);
-        foreach ($dirs as &$item) {
-            $new_data = array(
-                'id'    => $item['gd_id'],
-                'text'  => str_repeat('&nbsp;&nbsp;', $item['gd_level'] - 1)
-                . $item['gd_name']
-            );
-            $item = $new_data;
-        }
+        $dirs = array_map(
+            function ($item) {
+                return array(
+                    'id'    => $item['gd_id'],
+                    'text'  => str_repeat('&nbsp;&nbsp;', $item['gd_level'] - 1)
+                    . $item['gd_name']
+                );
+            },
+            DBGalerie::getDirs(true, true)
+        );
+
         $this->render(
             'files/View/Admin/Galerie/FormDirectory.inc',
             array(

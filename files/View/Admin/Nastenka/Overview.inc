@@ -1,12 +1,10 @@
 <?= $this->header('Správa nástěnky') ?>
 <div class="container full">
+    <?= $this->notice($this->redirect()->getMessage()) ?>
+    <form action="" method="POST">
 <?php
-echo $this->notice($this->redirect()->getMessage());
-
-echo '<form action="" method="POST">';
 if ($this->showMenu) {
     echo $this->menu()
-        ->float(MenuHelper::FLOAT_RIGHT)
         ->content('Přidat', '/admin/nastenka/add')
         ->content('Upravit', 'edit', true)
         ->content('Odstranit', 'remove', true);
@@ -26,7 +24,7 @@ echo $this->table()
     ->column('timestampAdd', 'Přidáno', '', 'width:83px;')
     ->column('timestampEdit', 'Naposledy<br/>upraveno', '', 'width:83px');
 echo '</div>';
-echo '</form>';
 ?>
-<div style="margin-right:150px;text-align:center;"><?php echo $this->navigation;?></div>
+    </form>
+    <div style="margin-right:150px;text-align:center;"><?= $this->navigation ?></div>
 </div>

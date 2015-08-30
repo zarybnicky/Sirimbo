@@ -5,7 +5,6 @@
         <?php
         if ($this->showMenu) {
             echo $this->menu()
-                      ->float(MenuHelper::FLOAT_RIGHT)
                       ->content('Přejmenovat', 'edit', true)
                       ->content('Odstranit', 'remove', true);
         }

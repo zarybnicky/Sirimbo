@@ -1,10 +1,9 @@
 <?= $this->header('Správa fotogalerie') ?>
 <div class="container full">
-<?php echo $this->notice($this->redirect()->getMessage()); ?>
+<?= $this->notice($this->redirect()->getMessage()) ?>
 <form action="" method="POST">
 <?php
 echo $this->menu()
-    ->float(MenuHelper::FLOAT_RIGHT)
     ->content('Přidat fotky', '/admin/galerie/file/upload')
     ->content('Přidat složku', '/admin/galerie/directory/add')
     ->content('Upravit fotky', 'directory', true)

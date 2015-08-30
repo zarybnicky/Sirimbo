@@ -1,5 +1,7 @@
-<?= $this->header('Správa nástěnky') ?>
-<?= $this->subheader($this->action == 'add' ? 'Přidat příspěvek' : 'Upravit příspěvek') ?>
+<?= $this->header(
+    'Správa nástěnky',
+    $this->action == 'add' ? 'Přidat příspěvek' : 'Upravit příspěvek'
+) ?>
 <div class="container full">
 <?= $this->notice($this->redirect()->getMessage()) ?>
 <form action="" method="POST">
@@ -29,9 +31,7 @@
                    value="<?= $this->referer ?>" />
         </td>
     </tr><tr>
-        <td><button type="submit"><?php
-            echo ($this->action == 'add' ? 'Přidat' : 'Upravit');
-        ?></button></td>
+        <td><?= $this->submit($this->action == 'add' ? 'Přidat' : 'Upravit') ?></td>
         <td>Pole označená (*) jsou povinná</td>
     </tr>
 </table>

@@ -245,7 +245,9 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
             if (isset($f) && $f) {
                 $this->redirect()->setMessage(
                     'Nemůžu odstranit kategorii s připojenými skupinami nebo specifickými symboly! '
-                    . '<form action="" method="post"><button type="submit" name="action" value="unlink">Odstranit spojení?</button></form>'
+                    . '<form action="" method="post">'
+                    . $this->submit('Odstranit spojení?')->data('action', 'unlink')
+                    . '</form>'
                 );
             }
             $this->render(
@@ -340,6 +342,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
                 'skupinySelect' => $skupinySelect,
                 'referer' => $request->getReferer(),
                 'name' => $request->post('name'),
+                'type' => $request->post('type'),
                 'description' => $request->post('description'),
                 'base' => $request->post('base'),
                 'uri' => $request->getLiteralURI()

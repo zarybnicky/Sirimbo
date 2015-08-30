@@ -1,6 +1,7 @@
 <?= $this->header('Správa nabídky') ?>
 <div class="container full">
     <?= $this->notice($this->redirect()->getMessage()); ?>
+
     <form action="" method="POST" class="centerWTable">
         <button type="submit" name="action" value="add" style="display:none;">Enter</button>
         <div class="n_wrapper">
@@ -12,7 +13,7 @@
                      ->column('removeButton', '');
             ?>
         </div>
-        <?= $this->submit('Uložit');?>
+        <?= $this->submit('Uložit') ?>
         <a href="<?= $this->backlink ?>">Zpět</a>
     </form>
 </div>

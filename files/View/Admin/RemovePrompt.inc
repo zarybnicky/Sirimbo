@@ -1,14 +1,14 @@
 <?= $this->header($this->header) ?>
 <div class="container full">
-  <form action="" method="POST">
-    <?php echo $this->prompt;?><br/><br/>
-    <?php foreach ($this->data as $row): ?>
-      <?php echo $row['text']?>
-      <input type="hidden" name="data[]" value="<?php echo $row['id']?>" />
-      <br />
-    <?php endforeach;?>
-    <br/>
-    <button type="submit" name="action" value="confirm">Odstranit</button>
-    <a href="<?php echo $this->returnURI;?>">Zpět</a>
-  </form>
+    <form action="" method="POST">
+        <?= $this->prompt;?><br/><br/>
+        <?php foreach ($this->data as $row): ?>
+            <?= $row['text']?>
+            <input type="hidden" name="data[]" value="<?= $row['id']?>" />
+            <br />
+        <?php endforeach;?>
+        <br/>
+        <?= $this->submit('Odstranit')->data('action', 'confirm') ?>
+        <a href="<?= $this->returnURI;?>">Zpět</a>
+    </form>
 </div>

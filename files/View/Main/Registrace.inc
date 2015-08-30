@@ -37,14 +37,14 @@
         <td></td>
       </tr><tr>
         <td>Datum narození: (*)</td>
-        <td><?= $this->date('narozeni')->set($this->narozeni)->textBox();?></td>
+        <td><?= $this->date('narozeni', $this->narozeni)->textBox() ?></td>
         <td></td>
       </tr><tr>
         <td>Poznámky: </td>
         <td><textarea rows="15" cols="35" name="poznamky"><?= $this->poznamky ?></textarea></td>
         <td></td>
       </tr><tr>
-        <td><button type="submit" name="action" value="register">Registrovat</button></td>
+        <td><?= $this->submit('Registrovat se')->data('action', 'register') ?></td>
         <td>Pole označená (*) jsou povinná</td>
         <td></td>
       </tr>

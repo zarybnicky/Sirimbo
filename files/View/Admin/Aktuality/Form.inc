@@ -1,5 +1,7 @@
-<?= $this->header('Správa aktualit')
-         ->subheader(($this->action == 'add' ? 'Přidat' : 'Upravit') . ' článek') ?>
+<?= $this->header(
+    'Správa aktualit',
+    ($this->action == 'add' ? 'Přidat' : 'Upravit') . ' článek'
+) ?>
 <div class="container full">
     <?= $this->notice($this->redirect()->getMessage()) ?>
     <form action="" method="POST">
@@ -57,11 +59,11 @@
             </tr><tr>
                 <td colspan="2">
                     <a href="/admin/aktuality">Zpět</a>
-                    <button type="submit" name="action" value="foto">Přidat fotky</button>
+                    <?= $this->submit('Přidat fotky')->data('action', 'foto') ?>
                     <?php if ($this->action == 'add'): ?>
-                        <button type="submit" name="action" value="save">Přeskočit a uložit</button>
+                        <?= $this->submit('Přeskočit a uložit')->data('action', 'save') ?>
                     <?php else: ?>
-                        <button type="submit">Upravit</button>
+                        <?= $this->submit('Upravit')->data('action', 'save') ?>
                     <?php endif; ?>
                 </td>
                 <td class="r">Pole označená (*) jsou povinná</td>

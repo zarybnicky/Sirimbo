@@ -21,7 +21,7 @@ class Controller_Admin_Konzole extends Controller_Admin
         echo '<form action="' .  $request->server('REQUEST_URI') . '" method="post">';
         echo 'Kód:<br/>';
         echo '<textarea name="code" rows="10" cols="20"></textarea><br/>';
-        echo '<button type="submit">Zpracovat</button>';
+        echo $this->submit('Zpracovat');
         echo '</form>';
     }
 }

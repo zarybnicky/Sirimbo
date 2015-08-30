@@ -4,21 +4,13 @@ class SelectHelper
     private $_name;
     private $_value;
     private $_options;
-    private $_get;
 
     public function select($n = null) {
-        $this->_defaultValues();
-
-        if ($n !== null)
-            return $this->name($n);
-        return $this;
-    }
-
-    private function _defaultValues() {
-        $this->_name = '';
+        $this->_name = $n ?: '';
         $this->_value = null;
         $this->_options = array();
-        $this->_get = false;
+
+        return $this;
     }
 
     public function name($name) {
@@ -57,16 +49,6 @@ class SelectHelper
             else
                 $this->_options[$value] = $name;
         }
-        return $this;
-    }
-
-    public function get($get = true) {
-        $this->_get = (bool) $get;
-        return $this;
-    }
-
-    public function post($post = true) {
-        $this->_get = !(bool) $post;
         return $this;
     }
 

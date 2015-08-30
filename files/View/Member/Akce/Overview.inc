@@ -1,7 +1,7 @@
 <?= $this->header('Klubové akce') ?>
 
 <div class="container full">
-  <?= $this->notice($this->redirect()->getMessage());?>
+  <?= $this->notice($this->redirect()->getMessage()) ?>
 
   <style type="text/css">
    .unit {
@@ -21,12 +21,12 @@
               <?php if ($data['showForm']) : ?>
                 <input type="hidden" name="id" value="<?= $data['id'];?>" />
                 <?php if ($data['signIn']) : ?>
-                  <button type="submit" name="action" value="signup">Přihlásit se</button> &bull;
+                  <?= $this->submit('Přihlásit se')->data('action', 'signup') ?> &bull;
                 <?php else: ?>
-                  <button type="submit" name="action" value="signout">Odhlásit se</button> &bull;
+                  <?= $this->submit('Odhlásit se')->data('action', 'signout') ?> &bull;
                 <?php endif; ?>
               <?php endif; ?>
-              <a href="/member/akce/<?= $data['id'];?>">Zobrazit přihlášené</a>
+              <a href="/member/akce/<?= $data['id'] ?>">Zobrazit přihlášené</a>
             </form>
           </td>
         <?php endforeach; ?>

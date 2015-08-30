@@ -181,9 +181,7 @@ class Controller_Admin_Skupiny extends Controller_Admin
                 $this->redirect()->setMessage(
                     'Nemůžu odstranit skupinu s připojenými kategoriemi! '
                     . '<form action="" method="post">'
-                    . $this->submit('Odstranit spojení?')
-                           ->name('action')
-                           ->value('unlink')
+                    . $this->submit('Odstranit spojení?')->data('action', 'unlink')
                     . '</form>'
                 );
             }

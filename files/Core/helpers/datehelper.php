@@ -10,49 +10,56 @@ class DateHelper
     protected $toYear;
     protected $useRange;
 
-    public function date($d = null)
+    public function date($name, $value = null)
     {
         $this->view = 'text';
         $this->date = null;
-        $this->name = null;
+        $this->name = $name;
         $this->post = true;
         $this->fromYear = ((int) date('Y')) - 75;
         $this->toYear = ((int) date('Y')) + 5;
         $this->useRange = false;
 
-        if ($d) {
-            $date = $this->_setDate($d);
-            if ($date) {
-                $this->date = $date;
-            } else {
-                $this->name($d);
-            }
+        if ($value) {
+            list($from, $to) = $this->createDate($value);
+            $this->date = $from;
+            $this->dateTo = $to;
         }
 
         return $this;
     }
 
-    protected function _setDate($date)
+    protected function createDate($date)
     {
-        if (!is_a($date, 'Date') && is_string($date)) {
-            $date = new Date($date);
+        if (is_a($date, 'Date')) {
+            return array($date, null);
         }
-        if (!is_a($date, 'Date') || !$date->isValid()) {
-            return null;
+        if (!is_string($date)) {
+            return array(null, null);
+        }
+        if (strpos($date, ' - ')) {
+            $pieces = explode(' - ', $date);
+            $from = new Date($pieces[0]);
+            $to = new Date($pieces[1]);
+            return array(
+                $from->isValid() ? $from : null,
+                $to->isValid() ? $to : null
+            );
         } else {
-            return $date;
+            $date = new Date($date);
+            return array($date->isValid() ? $date : null, null);
         }
+    }
+
+    public function name($name)
+    {
+        $this->name = $name;
+        return $this;
     }
 
     public function set($d)
     {
-        $this->setDate($d);
-        return $this;
-    }
-
-    public function setDate($d)
-    {
-        $this->date = $this->_setDate($d);
+        $this->date = $this->createDate($d);
         return $this;
     }
 
@@ -77,12 +84,6 @@ class DateHelper
     public function textBox()
     {
         $this->view = 'text';
-        return $this;
-    }
-
-    public function name($name)
-    {
-        $this->name = $name;
         return $this;
     }
 

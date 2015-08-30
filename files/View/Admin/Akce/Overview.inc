@@ -1,11 +1,10 @@
 <?= $this->header('Správa akcí') ?>
 <div class="container full">
-<form action="" method="POST">
-<?php
-echo $this->notice($this->redirect()->getMessage());
+    <?= $this->notice($this->redirect()->getMessage()) ?>
+    <form action="" method="POST">
+        <?php
 if (!TISK) {
     echo $this->menu()
-              ->float(MenuHelper::FLOAT_RIGHT)
               ->content('Přidat', 'akce/add')
               ->content('Odstranit', 'remove', true)
               ->content('Uložit změny', 'save', true);
@@ -23,6 +22,6 @@ echo $this->table()
           ->column('links', 'Upravit')
           ->data($this->data);
 echo '</div>';
-?>
-</form>
+        ?>
+    </form>
 </div>

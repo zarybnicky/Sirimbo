@@ -145,8 +145,7 @@ class Controller_Admin_Akce extends Controller_Admin
         $data = array_map(
             function ($item) {
                 return array(
-                    'checkBox' => $this->checkbox('akce[]', $item['a_id'])
-                                       ->render(),
+                    'checkBox' => $this->checkbox('akce[]', $item['a_id'])->render(),
                     'name' => $item['a_jmeno'],
                     'date' => (
                         formatDate($item['a_od'])

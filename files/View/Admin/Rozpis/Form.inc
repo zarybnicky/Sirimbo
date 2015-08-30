@@ -1,5 +1,7 @@
-<?= $this->header('Správa rozpisů') ?>
-<?= $this->subheader($this->action == 'add' ? 'Přidat rozpis' : 'Upravit rozpis') ?>
+<?= $this->header(
+    'Správa rozpisů',
+    $this->action == 'add' ? 'Přidat rozpis' : 'Upravit rozpis'
+) ?>
 <div class="container full">
 <?= $this->notice($this->redirect()->getMessage()) ?>
 <form action="" method="POST">
@@ -23,7 +25,7 @@
         <td><input type="text" name="kde" value="<?= $this->kde ?>" /></td>
     </tr><tr>
         <td>Datum: (*)</td>
-        <td><?= $this->date('datum')->set($this->datum)->textBox();?></td>
+        <td><?= $this->date('datum', $this->datum)->textBox() ?></td>
     </tr><tr>
         <td>Viditelný: </td>
         <td><label><?php
@@ -36,7 +38,7 @@
         <td>Uzamknout: </td>
         <td><label><?= $this->checkbox('lock', 'lock')->set($this->lock) ?></label></td>
     </tr><tr>
-        <td><button type="submit"><?= $this->action == 'add' ? 'Přidat' : 'Upravit' ?></button></td>
+        <td><?= $this->submit($this->action == 'add' ? 'Přidat' : 'Upravit') ?></td>
         <td>Pole označená (*) jsou povinná</td>
     </tr>
 </table>

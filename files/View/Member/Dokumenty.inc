@@ -4,18 +4,15 @@
   <?= $this->notice($this->redirect()->getMessage());?>
   <?php if ($this->showMenu): ?>
     <form action="" method="GET">
-      <?php
-      echo $this->select()
-                ->get()
-                ->name('kat')
-                ->set($this->kat)
-                ->option('', '---VŠE---')
-                ->option('1', 'Schůze, rady')
-                ->option('2', 'Soutěže')
-                ->option('3', 'Tábory')
-                ->option('0', 'Ostatní');
+      <?= $this->select('kat')
+               ->set($this->kat)
+               ->option('', '---VŠE---')
+               ->option('1', 'Schůze, rady')
+               ->option('2', 'Soutěže')
+               ->option('3', 'Tábory')
+               ->option('0', 'Ostatní');
       ?>
-      <button type="submit">Zobrazit</button>
+      <?= $this->submit('Zobrazit') ?>
     </form>
   <?php endif; ?>
 

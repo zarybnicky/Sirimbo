@@ -1,5 +1,4 @@
-<?= $this->header('Správa skupin') ?>
-<?= $this->subheader($this->header) ?>
+<?= $this->header('Správa skupin', $this->header) ?>
 <div class="container full">
     <?= $this->notice($this->redirect()->getMessage());?>
     <form action="" method="POST">
@@ -15,14 +14,14 @@
                              'value' => '<input type="text" name="name" value="' . $this->name . '" />'
                          ), array(
                              'desc' => 'Barva',
-                             'value' => $this->colorselect('color')->set($this->color)
+                             'value' => $this->colorselect('color', $this->color)
                          ), array(
                              'desc' => 'Popis',
                              'value' => '<textarea rows="15" cols="50" name="desc">' . $this->popis . '</textarea>'
                          )
                      )
                  ); ?>
-        <button type="submit" name="action" value="confirm">Uložit</button>
+        <?= $this->submit('Uložit')->data('action', 'confirm') ?>
         <a href="/admin/skupiny">Zpět</a>
     </form>
     <br/>
@@ -42,9 +41,8 @@
                 novou kategorii</a>
             <?php if ($this->groupSelect): ?>
                 nebo existující:
-                <?= $this->select('group')
-                         ->options($this->groupSelect) ?>
-                <button type="submit" name="action" value="group">odeslat</button>
+                <?= $this->select('group')->options($this->groupSelect) ?>
+                <?= $this->submit('Odeslat')->data('action', 'group') ?>
             <?php endif;?>
         </form>
     <?php endif;?>

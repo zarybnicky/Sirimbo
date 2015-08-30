@@ -1,16 +1,13 @@
 <?= $this->header('Správa fotogalerie') ?>
 <div class="container full">
-<?php
-echo $this->notice($this->redirect()->getMessage());
-?>
+<?= $this->notice($this->redirect()->getMessage()) ?>
 <form action="" method="POST">
 <?php
 echo $this->menu()
-    ->float(MenuHelper::FLOAT_RIGHT)
-    ->content('Přidat fotky', '/admin/galerie/file/upload?dir=' . $this->id)
-    ->content('Upravit fotku', 'file/edit', true)
-    ->content('Odstranit fotky', 'file/remove', true)
-    ->content('Zpět', '/admin/galerie');
+          ->content('Přidat fotky', '/admin/galerie/file/upload?dir=' . $this->id)
+          ->content('Upravit fotku', 'file/edit', true)
+          ->content('Odstranit fotky', 'file/remove', true)
+          ->content('Zpět', '/admin/galerie');
 ?>
 <?php
 if (!count($this->files)) :

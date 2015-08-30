@@ -27,7 +27,7 @@ class Controller_Admin_Aktuality extends Controller_Admin
                 $editable = Permissions::check('aktuality', P_OWNED, $item['at_kdo']);
                 return array(
                     'checkBox' => $this->checkbox('aktuality[]', $item['at_id'])
-                                       ->readonly($editable),
+                                       ->readonly($editable)->render(),
                     'name' => $item['at_jmeno'],
                     'category' => ($item['at_kat'] == AKTUALITY_CLANKY
                                    ? 'Články'

@@ -33,7 +33,7 @@
         <td></td>
       </tr><tr>
         <td>Datum narození: (*)</td>
-        <td><?= $this->date('narozeni')->set($this->narozeni)->textBox(); ?></td>
+        <td><?= $this->date('narozeni', $this->narozeni)->textBox() ?></td>
         <td></td>
       </tr><tr>
         <td>Poznámky: </td>
@@ -44,7 +44,7 @@
         <td><?= User::getGroupName() ?></td>
         <td></td>
       </tr><tr>
-        <td><button type="submit" name="action" value="confirm">Upravit</button></td>
+        <td><?= $this->submit('Upravit')->data('action', 'confirm') ?></td>
         <td></td>
         <td>Pole označená (*) jsou povinná</td>
       </tr>

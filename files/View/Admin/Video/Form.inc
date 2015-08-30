@@ -1,5 +1,4 @@
-<?= $this->header('Správa videí')
-         ->subheader($this->header) ?>
+<?= $this->header('Správa videí', $this->header) ?>
 <div class="container full">
     <?= $this->notice($this->redirect()->getMessage()) ?>
     <form action="" method="post">
@@ -32,7 +31,7 @@
             </tr>
             <tr>
                 <td>
-                    <button type="submit">Upravit</button>
+                    <?= $this->submit('Upravit') ?>
                     <a href="/admin/video">Zpět</a>
                 </td>
                 <td>Pole označená (*) jsou povinná</td>

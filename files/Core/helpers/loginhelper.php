@@ -1,10 +1,12 @@
 <?php
 class LoginHelper {
-    public function login() {
+    public function login()
+    {
         return $this;
     }
 
-    public function render() {
+    public function render()
+    {
         if (User::isLogged()) {
             $template = 'files/View/Helper/Userbox.inc';
             $name = User::getUserWholeName();
@@ -20,7 +22,8 @@ class LoginHelper {
         );
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return $this->render();
     }
 }

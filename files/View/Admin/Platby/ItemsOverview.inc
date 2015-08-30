@@ -2,45 +2,51 @@
 <?= $this->subheader('Jednotlivé platby') ?>
 
 <div class="container full">
+<?php if (!TISK): ?>
+    <form action="" method="get">
+        <span class="big">Omezit výběr:</span>
+        <table>
+            <tr>
+                <td>uživatel</td>
+                <td>
+                    <?php
+                    $s = $this->select('user')
+                              ->set($this->user ?: 'all')
+                              ->option('all', '---');
+                    foreach ($this->users as $user) {
+                        $s->option($user['u_id'], $user['u_prijmeni'] . ', ' . $user['u_jmeno']);
+                    }
+                    echo $s;
+                    ?>
+                </td>
+            </tr>
+            <tr>
+                <td>spec. symbol</td>
+                <td>
+                    <?= $this->select('category')
+                             ->set($this->category ?: 'all')
+                             ->option('all', '---')
+                             ->options($this->categories);
+                    ?>
+                </td>
+            </tr>
+            <tr>
+                <td>datum</td>
+                <td><?= $this->date('date', $this->date)->range()->textBox() ?></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><?= $this->submit('Odeslat') ?></td>
+            </tr>
+        </table>
+    </form>
+    <br/>
+<?php endif; ?>
+
+<form action="" method="POST">
 <?php
 if (!TISK) {
-    echo '<form action="" method="get">';
-    echo '<span class="big">Omezit výběr:</span>';
-
-    echo '<table><tr><td>uživatel</td>';
-    echo '<td>';
-    $s = $this->select()
-        ->get()->name('user')
-        ->set($this->user ?: 'all')
-        ->option('all', '---');
-    foreach ($this->users as $user)
-        $s->option($user['u_id'], $user['u_prijmeni'] . ', ' . $user['u_jmeno']);
-    echo $s;
-    echo '</td></tr>';
-
-    echo '<tr><td>spec. symbol</td>';
-    echo '<td>';
-    $s = $this->select()
-        ->get()->name('category')
-        ->set($this->category ?: 'all')
-        ->option('all', '---');
-    foreach ($this->categories as $key => $item)
-        $s->option($key, $item);
-    echo $s;
-    echo '</td></tr>';
-
-    echo '<tr><td>datum</td>';
-    echo '<td>';
-    echo $this->date()->name('date')->range()->set($this->date)->textBox();
-    echo '</td></tr>';
-    echo '<tr><td></td><td><button type="submit">Odeslat</button></td></tr></table>';
-    echo '</form><br/>';
-}
-
-echo '<form action="" method="POST">';
-if (!TISK) {
     echo $this->menu()
-        ->float(MenuHelper::FLOAT_RIGHT)
         ->content('Přidat', '/admin/platby/items/add')
         ->content('Upravit', 'edit', true)
         ->content('Odebrat', 'remove', true);

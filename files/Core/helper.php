@@ -2,11 +2,10 @@
 class Helper
 {
     private static $instance;
-    private static $registry = array();
 
     public function __call($name, $args) {
         $class = ucfirst($name) . 'Helper';
-        
+
         if (!class_exists($class)) {
             include CORE . DIRECTORY_SEPARATOR . 'helpers' .
                 DIRECTORY_SEPARATOR . strtolower($class) . '.php';
@@ -15,10 +14,7 @@ class Helper
             }
         }
 
-        if (!isset(self::$registry[$class])) {
-            self::$registry[$class] = new $class();
-        }
-        return call_user_func_array(array(self::$registry[$class], $name), $args);
+        return call_user_func_array(array(new $class(), $name), $args);
     }
 
     private function __construct() { }

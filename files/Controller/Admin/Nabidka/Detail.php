@@ -51,7 +51,7 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
                 'user' => (string) $userSelect->set(null)
                                               ->name('add_partner'),
                 'lessonCount' => '<input type="text" name="add_hodiny" value="" size=1/>',
-                'removeButton' => (string) $this->submit('Přidat')
+                'removeButton' => $this->submit('Přidat')->render()
             );
 
             $this->render(

@@ -55,9 +55,7 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Admin_Akce
                 return array(
                     'name' => $item['d_name'],
                     'category' => Settings::$documentTypes[$item['d_kategorie']],
-                    'removeButton' =>
-                        '<button type="submit" name="remove" ' .
-                        'value="' . $item['d_id'] . '">Odstranit</button>'
+                    'removeButton' => $this->submit('Odstranit')->data('remove', $item['d_id'])
                 );
             },
             DBDokumenty::getMultipleById($documents)
@@ -77,7 +75,7 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Admin_Akce
                                ->options($allDocuments);
         $documents[] = array(
             'name' => (string) $documentSelect,
-            'category' => '<button type="submit" name="add" value="add">Přidat</button>',
+            'category' => $this->submit('Přidat')->data('add', 'add')
             'removeButton' => ''
         );
         $this->render(

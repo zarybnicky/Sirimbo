@@ -228,10 +228,10 @@ class Controller_Admin_Users extends Controller_Admin
             foreach ($users as &$row) {
                 $new_data = array(
                     'id' => $row['u_id'],
-                    'checkBox' => (string) $this->checkbox('users[]', $row['u_id']),
+                    'checkBox' => $this->checkbox('users[]', $row['u_id'])->render(),
                     'group' => $s_group->post()->name($row['u_id'] . '-group'),
                     'skupina' => $s_skupina->post()->name($row['u_id'] . '-skupina'),
-                    'dancer' => (string) $this->checkbox($row['u_id'] . '-dancer', 'dancer'),
+                    'dancer' => $this->checkbox($row['u_id'] . '-dancer', 'dancer')->render(),
                     'fullName' => $row['u_jmeno'] . ' ' . $row['u_prijmeni'],
                     'narozeni' => formatDate($row['u_narozeni'])
                 );
@@ -280,7 +280,7 @@ class Controller_Admin_Users extends Controller_Admin
         foreach ($users as &$row) {
             $new_data = array(
                 'id' => $row['u_id'],
-                'checkBox' => (string) $this->checkbox('users[]', $row['u_id']),
+                'checkBox' => $this->checkbox('users[]', $row['u_id'])->render(),
                 'colorBox' => $this->colorbox($row['s_color_rgb'], $row['s_description']),
                 'fullName' => $row['u_prijmeni'] . ', ' . $row['u_jmeno'],
                 'email' => $row['u_email'],
@@ -404,7 +404,7 @@ class Controller_Admin_Users extends Controller_Admin
         }
         if ($action == 'status') {
             $skupiny = DBSkupiny::get();
-            $skupinyselect = $this->select()->post();
+            $skupinyselect = $this->select();
             foreach ($skupiny as $skupina) {
                 $skupinyselect->option($skupina['s_id'], $skupina['s_name']);
             }

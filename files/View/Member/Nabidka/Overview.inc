@@ -32,8 +32,7 @@
                                             <td>
                                                 <?php if ($row['canDelete']) : ?>
                                                     <?= $this->submit('&times')
-                                                             ->name('un_id')
-                                                             ->value($row['deleteTicket']) ?>
+                                                             ->data('un_id', $row['deleteTicket']) ?>
                                                 <?php endif;?>
                                             </td>
                                         </tr>

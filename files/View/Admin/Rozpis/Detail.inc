@@ -37,15 +37,10 @@
                      value="<?= $item['timeTo']; ?>"/>
             </td>
             <td>
-              <button type="submit"
-                      name="remove"
-                      value="<?= $item['id']; ?>">
-                Odstranit
-              </button>
+              <?= $this->submit('Odstranit')->data('remove', $item['id']) ?>
             </td>
             <td>
-              <?= $this->checkbox($item['id'] . '-lock', 'lock')
-                              ->set($item['lock']); ?>
+              <?= $this->checkbox($item['id'] . '-lock', 'lock')->set($item['lock']) ?>
             </td>
           </tr>
         <?php endforeach; ?>
@@ -60,7 +55,7 @@
             <input type="text" name="add_do" size="5" value="" />
           </td>
           <td>
-            <button type="submit" name="action" value="add">Přidat</button>
+            <?= $this->submit('Přidat')->data('action', 'add') ?>
           </td>
           <td>
             <input type="checkbox" name="add_lock" value="lock" />
@@ -73,10 +68,11 @@
       </table>
     </div>
     <div>
-      <button type="submit" name="action" value="submit">Uložit</button>
       <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
-      <button type="submit" name="action" value="overlap">Opravit přesahy</button><br/>
-      <button type="submit" name="action" value="add_multiple">Přidat více:</button>
+      <?= $this->submit('Uložit')->data('action', 'submit') ?>
+      <?= $this->submit('Opravit přesahy')->data('action', 'overlap') ?>
+      <br />
+      <?= $this->submit('Přidat více')->data('action', 'add_multiple') ?>
       <input type="text" name="add_multi_num" size="2" /> hodin po
       <input type="text" name="add_multi_len" size="3" /> minutách od
       <input type="text" name="add_multi_od" size="5" /> hodin
@@ -85,15 +81,12 @@
   <br/>
   <h2>Nabídky</h2>
   <form action="" method="get">
-    <?php
-    echo $this->select()
-              ->get()
-              ->name('n')
-              ->option('', '--')
-              ->set($this->selected_nabidka)
-              ->options($this->nabidky);
+    <?= $this->select('n')
+             ->set($this->selected_nabidka)
+             ->option('', '--')
+             ->options($this->nabidky);
     ?>
-    <button type="submit">Vybrat nabídku</button>
+    <?= $this->submit('Vybrat nabídku') ?>
     <?php if ($this->nabidka) : ?>
       <div class="n_wrapper">
         <?= $this->render('files/View/Member/Nabidka/Header.inc', $this->nabidka); ?>

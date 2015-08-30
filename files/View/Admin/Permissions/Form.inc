@@ -1,8 +1,8 @@
-<?= $this->header('Správa oprávnění') ?>
-<?= $this->subheader(
-    $this->action == 'add'
-    ? 'Přidat uživatelskou skupinu'
-    : 'Upravit uživatelskou skupinu'
+<?= $this->header(
+    'Správa oprávnění',
+    ($this->action == 'add')
+        ? 'Přidat uživatelskou skupinu'
+        : 'Upravit uživatelskou skupinu'
 ) ?>
 <div class="container full">
 <?= $this->notice($this->redirect()->getMessage()) ?>
@@ -33,7 +33,7 @@
     }
     ?>
 </table>
-<button type="submit" name="action"><?= $this->action == 'add' ? 'Přidat' : 'Upravit' ?></button>
+<?= $this->submit($this->action == 'add' ? 'Přidat' : 'Upravit') ?>
 <a href="/admin/permissions">Zpět</a>
 </form>
 </div>
