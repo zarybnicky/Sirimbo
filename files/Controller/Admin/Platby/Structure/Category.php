@@ -19,21 +19,21 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
     }
     protected function getCategories($archived = false)
     {
-        $out = array();
-
-        $categories = DBPlatbyCategory::get($archived);
-        foreach ($categories as $array) {
-            $new_data = array();
-            $new_data['name'] = $array['pc_name'];
-            $new_data['symbol'] = $array['pc_symbol'];
-            $new_data['amount'] = ($array['pc_amount'] . ($array['pc_use_base'] ? ' * ?' : '')) . ' Kč';
-            $new_data['validDate'] = $this->getDateDisplay($array['pc_valid_from'], $array['pc_valid_to']);
-            $new_data['buttons'] =
-                $this->getEditLink('/admin/platby/structure/category/edit/' . $array['pc_id'])
-                . $this->getRemoveLink('/admin/platby/structure/category/remove/' . $array['pc_id']);
-            $out[] = $new_data;
-        }
-        return $out;
+        return array_map(
+            function ($item) {
+                return array(
+                    'name' => $item['pc_name'],
+                    'symbol' => $item['pc_symbol'],
+                    'amount' => ($item['pc_amount'] . ($item['pc_use_base'] ? ' * ?' : '')) . ' Kč',
+                    'validDate' => $this->getDateDisplay($item['pc_valid_from'], $item['pc_valid_to']),
+                    'buttons' => (
+                        $this->getEditLink('/admin/platby/structure/category/edit/' . $item['pc_id'])
+                        . $this->getRemoveLink('/admin/platby/structure/category/remove/' . $item['pc_id'])
+                    )
+                );
+            },
+            DBPlatbyCategory::get($archived)
+        );
     }
     public function add($request)
     {
@@ -99,7 +99,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             );
         }
         $this->redirect(
-            $request->post('referer') ?: '/admin/platby/structure',
+            $request->post('referer') ?: '/admin/platby/structure/category',
             'Specifický symbol úspěšně přidán'
         );
     }
@@ -211,7 +211,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             );
         }
         $this->redirect(
-            $request->post('referer') ?: '/admin/platby/structure',
+            $request->post('referer') ?: '/admin/platby/structure/category',
             'Specifický symbol úspěšně upraven'
         );
     }
@@ -220,7 +220,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         $id = $request->getId();
         if (!$id || !($data = DBPlatbyCategory::getSingle($id))) {
             $this->redirect(
-                $request->post('referer') ?: '/admin/platby/structure',
+                $request->post('referer') ?: '/admin/platby/structure/category',
                 'Specifický symbol s takovým ID neexistuje'
             );
         }

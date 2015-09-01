@@ -48,7 +48,7 @@ class DBSkupiny extends Database
                     LEFT JOIN skupiny ON pgs_id_skupina=s_id
                     LEFT JOIN platby_category ON pcg_id_category=pc_id
                 WHERE s_id='$id' AND pc_archive!='1'
-                ORDER BY pg_type,pg_id,pc_date_due ASC"
+                ORDER BY pg_type,pg_id,pc_symbol,pc_date_due ASC"
         );
         return self::getArray($res);
     }
