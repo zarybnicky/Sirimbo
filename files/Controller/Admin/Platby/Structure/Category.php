@@ -108,7 +108,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         $id = $request->getId();
         if (!$id || !($data = DBPlatbyCategory::getSingle($id))) {
             $this->redirect(
-                $request->post('referer') ?: '/admin/platby/structure',
+                $request->post('referer') ?: '/admin/platby/structure/category',
                 'Kategorie s takovým ID neexistuje'
             );
         }
@@ -298,7 +298,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         }
         DBPlatbyCategory::delete($id);
         $this->redirect(
-            $request->post('referer') ?: '/admin/platby/structure',
+            $request->post('referer') ?: '/admin/platby/structure/category',
             'Specifický symbol byl odebrán'
         );
     }

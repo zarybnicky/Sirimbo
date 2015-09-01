@@ -29,7 +29,7 @@
     </table><br/>
   <?php endif; ?>
 
-  <h2>Přehled plateb</h2>
+  <h2>Výběr plateb</h2>
   <?php
   echo $this->table()
             ->data($this->platbyGroups)

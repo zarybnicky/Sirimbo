@@ -89,7 +89,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
             );
         }
         $this->redirect(
-            $request->post('referer') ?: '/admin/platby/structure',
+            $request->post('referer') ?: '/admin/platby/structure/group',
             'Kategorie úspěšně přidána'
         );
     }
@@ -99,7 +99,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
         $id = $request->getId();
         if (!$id || !($data = DBPlatbyGroup::getSingle($id))) {
             $this->redirect(
-                $request->post('referer') ?: '/admin/platby/structure',
+                $request->post('referer') ?: '/admin/platby/structure/group',
                 'Kategorie s takovým ID neexistuje'
             );
         }
@@ -203,7 +203,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
             $request->post('base')
         );
         $this->redirect(
-            $request->post('referer') ?: '/admin/platby/structure',
+            $request->post('referer') ?: '/admin/platby/structure/group',
             'Kategorie úspěšně upravena'
         );
     }
@@ -213,7 +213,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
         $id = $request->getId();
         if (!$id || !($data = DBPlatbyGroup::getSingle($id))) {
             $this->redirect(
-                $request->post('referer') ?: '/admin/platby/structure',
+                $request->post('referer') ?: '/admin/platby/structure/group',
                 'Kategorie s takovým ID neexistuje'
             );
         }
@@ -263,7 +263,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
         }
         DBPlatbyGroup::delete($id);
         $this->redirect(
-            $request->post('referer') ?: '/admin/platby/structure',
+            $request->post('referer') ?: '/admin/platby/structure/group',
             'Kategorie byla odebrána'
         );
     }
