@@ -215,16 +215,16 @@ class Controller_Admin_Galerie extends Controller_Admin
         return trim(str_replace(GALERIE, '', $file), '/');
     }
 
-    protected function _checkGetThumbnail($file)
+    protected function _checkGetThumbnail($original)
     {
-        if(is_file(str_replace(GALERIE, GALERIE_THUMBS, $file))) {
+        $thumbnail = str_replace(GALERIE, GALERIE_THUMBS, $original);
+        if (is_file($thumbnail)) {
             return true;
         }
-        $thumbFile = str_replace(GALERIE, GALERIE_THUMBS, $file);
-        if (!is_dir(dirname($thumbFile))) {
-            mkdir(dirname($thumbFile), 0777, true);
+        if (!is_dir(dirname($thumbnail))) {
+            mkdir(dirname($thumbnail), 0777, true);
         }
-        return $this->_createThumbnail($file, $thumbFile);
+        return $this->_createThumbnail($original, $thumbmail);
     }
 
     private function _recursiveDirs($dir_name, &$out_dirs, &$out_files)

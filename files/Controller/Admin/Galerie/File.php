@@ -88,7 +88,7 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
             $uploader->addAllowedType($extension);
         }
 
-        $uploader->setOutputDir($parent['gd_path']);
+        $uploader->setOutputDir(GALERIE . DIRECTORY_SEPARATOR . $parent['gd_path']);
         $uploader->save(true, true);
         if ($uploader->hasRefusedFiles()) {
             $this->redirect()->setMessage(
