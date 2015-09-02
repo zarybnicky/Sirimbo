@@ -11,7 +11,7 @@
             <tr>
                 <td>Složka: </td>
                 <td><?php
-                    $s = $this->select('dir');
+                    $s = $this->select('dir')->set($this->dir);
                     foreach ($this->dirs as $item) {
                         $s->option($item['id'], $item['text']);
                     }

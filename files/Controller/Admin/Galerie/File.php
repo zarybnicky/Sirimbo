@@ -60,7 +60,7 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
     public function upload($request)
     {
         if (!$request->post()) {
-            $this->displayUpload();
+            $this->displayUpload($request);
             return;
         }
         $parentId = $request->post('dir');
@@ -75,7 +75,8 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
 
     private function _processUpload($parent, $request)
     {
-        $uploadHelper = new UploadHelper('files');
+        $uploadHelper = new UploadHelper();
+        $uploadHelper->upload('files');
         $uploadHelper->loadFromPost($request);
 
         if (!$uploadHelper->hasValidFiles() && $uploadHelper->hasFiles()) {
@@ -134,20 +135,24 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
         }
     }
 
-    private function displayUpload()
+    private function displayUpload($request)
     {
-        $dirs = DBGalerie::getDirs(true, true);
-        foreach ($dirs as &$item) {
-            $new_data = array(
-                'id'    => $item['gd_id'],
-                'text'  => str_repeat('&nbsp;&nbsp;', $item['gd_level'] - 1)
-                . $item['gd_name']
-            );
-            $item = $new_data;
-        }
+        $dirs = array_map(
+            function ($item) {
+                return array(
+                    'id'    => $item['gd_id'],
+                    'text'  => str_repeat('&nbsp;&nbsp;', $item['gd_level'] - 1)
+                    . $item['gd_name']
+                );
+            },
+            DBGalerie::getDirs(true, true)
+        );
         $this->render(
             'files/View/Admin/Galerie/Upload.inc',
-            array('dirs' => $dirs)
+            array(
+                'dirs' => $dirs,
+                'dir' => $request->get('dir') ?: '0'
+            )
         );
         return;
     }
