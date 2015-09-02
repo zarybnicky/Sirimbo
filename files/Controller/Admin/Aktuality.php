@@ -109,21 +109,16 @@ class Controller_Admin_Aktuality extends Controller_Admin
             );
             return;
         }
-        if ($request->post('kat') != $data['at_kat']
-            || $request->post('jmeno') != $data['at_jmeno']
-            || $request->post('text') != $data['at_text']
-            || $request->post('summary') != $data['at_preview']
-        ) {
-            DBAktuality::editAktualita(
-                $id,
-                $request->post('category'),
-                $request->post('name'),
-                $request->post('text'),
-                $request->post('summary'),
-                $data['at_foto'],
-                $data['at_foto_main']
-            );
-        }
+
+        DBAktuality::editAktualita(
+            $id,
+            $request->post('category'),
+            $request->post('name'),
+            $request->post('text'),
+            $request->post('summary'),
+            $data['at_foto'],
+            $data['at_foto_main']
+        );
         $this->redirect('/admin/aktuality', 'Článek změněn');
     }
 
