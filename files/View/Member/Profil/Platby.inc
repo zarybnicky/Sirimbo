@@ -3,9 +3,9 @@
 <div class="container full">
   <?php echo $this->colorBox, '&nbsp;', $this->skupinaData;?><br/>
   Variabilní symbol: <?php echo $this->varSymbol;?>
-  <br/><br/>
-  Aktuálně: <?php echo $this->zaplacenoText;?>
   <br/>
+  Aktuálně: <?php echo $this->zaplacenoText;?>
+  <br/><br/>
 
   <?php if (!empty($this->platby)): ?>
     <h2>Historie plateb</h2>

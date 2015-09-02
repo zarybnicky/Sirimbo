@@ -22,7 +22,7 @@ class Controller_Fotogalerie extends Controller_Abstract
         }
 
         $photos = array_map(
-            function($item) {
+            function ($item) use ($request) {
                 return array(
                     'id' => $item['gf_id'],
                     'src' => '/galerie/thumbnails/' . $item['gf_path'],
@@ -37,7 +37,7 @@ class Controller_Fotogalerie extends Controller_Abstract
             array(
                 'nadpis' => $dir['gd_name'],
                 'photos' => $photos,
-                'sidemenu' => $this->sidemenu()
+                'sidemenu' => $this->sidemenu($request)
             )
         );
     }
@@ -69,12 +69,12 @@ class Controller_Fotogalerie extends Controller_Abstract
                 'prevURI'   => $hasPrev ? $parent_dir[$current - 1]['gf_id'] : '',
                 'nextURI'   => $hasNext ? $parent_dir[$current + 1]['gf_id'] : '',
                 'returnURI' => '/fotogalerie' . ($data['gf_id_rodic'] > 0 ? ('/' . $data['gf_id_rodic']) : ''),
-                'sidemenu'   => $this->sidemenu()
+                'sidemenu'   => $this->sidemenu($request)
             )
         );
     }
 
-    public function sidemenu()
+    public function sidemenu($request)
     {
         $dirs = DBGalerie::getDirs(true, true);
 

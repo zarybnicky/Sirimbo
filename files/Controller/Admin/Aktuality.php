@@ -57,7 +57,11 @@ class Controller_Admin_Aktuality extends Controller_Admin
             $this->render(
                 'files/View/Admin/Aktuality/Form.inc',
                 array(
-                    'action' => $request->getAction()
+                    'action' => $request->getAction(),
+                    'category' => '',
+                    'name' => '',
+                    'summary' => '',
+                    'text' => ''
                 )
             );
             return;

@@ -44,15 +44,15 @@ class Controller_Registrace extends Controller_Abstract
         $this->render(
             'files/View/Main/Registrace.inc',
             array(
-                'username' => $request->post('username'),
-                'pass' => $request->post('pass'),
-                'jmeno' => $request->post('jmeno'),
-                'prijmeni' => $request->post('prijmeni'),
-                'pohlavi' => $request->post('pohlavi'),
-                'email' => $request->post('email'),
-                'telefon' => $request->post('telefon'),
-                'narozeni' => $request->post('narozeni'),
-                'poznamky' => $request->post('poznamky')
+                'username' => $request->post('username') ?: '',
+                'pass' => $request->post('pass') ?: '',
+                'jmeno' => $request->post('jmeno') ?: '',
+                'prijmeni' => $request->post('prijmeni' ?: ''),
+                'pohlavi' => $request->post('pohlavi') ?: '',
+                'email' => $request->post('email') ?: '',
+                'telefon' => $request->post('telefon') ?: '',
+                'narozeni' => $request->post('narozeni') ?: '',
+                'poznamky' => $request->post('poznamky') ?: ''
             )
         );
     }

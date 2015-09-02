@@ -82,9 +82,9 @@ class Controller_Admin_Nastenka extends Controller_Admin
                     'referer' => $request->getReferer(),
                     'returnURI' => $request->getReferer(),
                     'skupiny' => DBSkupiny::get(),
-                    'nadpis' => $request->post('nadpis'),
-                    'text' => $request->post('text'),
-                    'lock' => $request->post('lock')
+                    'nadpis' => $request->post('nadpis') ?: '',
+                    'text' => $request->post('text') ?: '',
+                    'lock' => $request->post('lock') ?: ''
                 )
             );
             return;
@@ -146,9 +146,9 @@ class Controller_Admin_Nastenka extends Controller_Admin
                     'referer' => $request->getReferer(),
                     'returnURI' => $request->getReferer(),
                     'skupiny' => DBSkupiny::get(),
-                    'nadpis' => $request->post('nadpis'),
-                    'text' => $request->post('text'),
-                    'lock' => $request->post('lock')
+                    'nadpis' => $request->post('nadpis') ?: '',
+                    'text' => $request->post('text') ?: '',
+                    'lock' => $request->post('lock') ?: ''
                 )
             );
             return;

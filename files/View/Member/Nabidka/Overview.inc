@@ -43,8 +43,7 @@
                                         Počet hodin:
                                         <input type="text"
                                                name="hodiny"
-                                               size="2"
-                                               value="<?= $this->hodiny ?>" />
+                                               size="2" />
                                         <input type="hidden"
                                                name="id"
                                                value="<?= $item['id'];?>" />

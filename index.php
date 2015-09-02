@@ -66,32 +66,32 @@ if (TISK) {
     $request->session('page_id', $request->server('REQUEST_URI'));
 }
 
-if ($request->session('login') !== null) {
-    User::loadUser($request->session('id'));
-    if ($request->session('invalid_data') === '1'
-        && $request->getURI() !== 'member/profil/edit'
-        && $request->getURI() !== 'logout'
-    ) {
-        Helper::instance()->redirect(
-            '/member/profil/edit',
-            'Prosím vyplňte požadované údaje.',
-            true
-        );
-    }
-} elseif ($request->post('login') && $request->post('pass')) {
-    $request->post('pass', User::crypt($request->post('pass')));
-
-    if (!User::login($request->post('login'), $request->post('pass'))) {
-        Helper::instance()->redirect('/login', 'Špatné jméno nebo heslo!', true);
-    } elseif ($request->get('return')) {
-        Helper::instance()->redirect($request->get('return'));
-    } else {
-        Helper::instance()->redirect('/member/nastenka');
-    }
-}
-
-$d = new Dispatcher();
 try {
+    if ($request->session('login') !== null) {
+        User::loadUser($request->session('id'));
+        if ($request->session('invalid_data') === '1'
+            && $request->getURI() !== 'member/profil/edit'
+            && $request->getURI() !== 'logout'
+        ) {
+            Helper::instance()->redirect(
+                '/member/profil/edit',
+                'Prosím vyplňte požadované údaje.',
+                true
+            );
+        }
+    } elseif ($request->post('login') && $request->post('pass')) {
+        $request->post('pass', User::crypt($request->post('pass')));
+
+        if (!User::login($request->post('login'), $request->post('pass'))) {
+            Helper::instance()->redirect('/login', 'Špatné jméno nebo heslo!', true);
+        } elseif ($request->get('return')) {
+            Helper::instance()->redirect($request->get('return'));
+        } else {
+            Helper::instance()->redirect('/member/nastenka');
+        }
+    }
+
+    $d = new Dispatcher();
     $d->dispatch($request);
 } catch (ViewException $e) {
     Log::write(

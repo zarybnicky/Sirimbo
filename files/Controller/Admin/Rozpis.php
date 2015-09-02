@@ -127,11 +127,11 @@ class Controller_Admin_Rozpis extends Controller_Admin
                 array(
                     'action' => $request->getAction(),
                     'isAdmin' => Permissions::check('rozpis', P_ADMIN),
-                    'trener' => $request->post('trener'),
-                    'kde' => $request->post('kde'),
-                    'datum' => $request->post('datum'),
-                    'visible' => $request->post('visible'),
-                    'lock' => $request->post('lock')
+                    'trener' => $request->post('trener') ?: '',
+                    'kde' => $request->post('kde') ?: '',
+                    'datum' => $request->post('datum') ?: '',
+                    'visible' => $request->post('visible') ?: '',
+                    'lock' => $request->post('lock') ?: ''
                 )
             );
             return;

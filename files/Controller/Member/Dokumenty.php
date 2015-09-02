@@ -20,7 +20,7 @@ class Controller_Member_Dokumenty extends Controller_Member
             'files/View/Member/Dokumenty.inc',
             array(
                 'showMenu' => !TISK,
-                'kat' => $request->get('kat'),
+                'kat' => $request->get('kat') ?: '',
                 'data' => array_map(
                     function ($item) {
                         return array(

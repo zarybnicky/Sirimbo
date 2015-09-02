@@ -1,11 +1,11 @@
 <?= $this->render('files/View/Admin/Platby/Navigation.inc', array('uri' => $this->uri)) ?>
-<?= $this->subheader('Kategorie plateb') ?>
+<?= $this->subheader($this->action == 'add' ? 'Přidat kategorii' : 'Upravit kategorii') ?>
 
 <div class="container full">
-<?= '<h3>', ($this->action == 'add' ? 'Přidat kategorii' : 'Upravit kategorii'), '</h3>';?>
 
 <?php
 $mainForm = $this->table()
+    ->showHeader(false)
     ->column('desc', '', 'r')
     ->column('value', 'Hodnota')
     ->data(array(

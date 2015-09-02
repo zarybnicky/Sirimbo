@@ -75,7 +75,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
             $this->displayForm($request, 'edit');
             return;
         }
-        if (is_object($form = $this->checkData())) {
+        if (is_object($form = $this->checkData($request))) {
             $this->redirect()->setMessage($form->getMessages());
             $this->displayForm($request, 'edit');
             return;

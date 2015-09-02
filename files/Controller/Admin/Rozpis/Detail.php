@@ -20,7 +20,9 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
 
         if ($request->post()) {
             $items = $this->processPost($request, $id, $data, $items);
-            DBRozpis::editRozpisItemMultiple($items);
+            if ($items) {
+                DBRozpis::editRozpisItemMultiple($items);
+            }
             $this->redirect('/' . $request->getURI());
         }
 
@@ -107,7 +109,7 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
                 'data' => $data,
                 'users' => $users,
                 'items' => $items,
-                'selected_nabidka' => $request->get('n'),
+                'selected_nabidka' => $request->get('n') ?: '',
                 'nabidky' => $nabidky_select,
                 'nabidka' => isset($nabidka) ? $nabidka : array()
             )
@@ -180,7 +182,7 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
             break;
 
         case 'add_multiple':
-            if (is_object($f = $this->checkAddMultiple())) {
+            if (is_object($f = $this->checkAddMultiple($request))) {
                 $this->redirect()->setMessage($f->getMessages());
                 break;
             }

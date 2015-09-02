@@ -315,20 +315,21 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
     private function _displayForm($request, $action, $id) {
         $id = $id ?: 0;
 
-        $groups = DBPlatbyCategory::getSingleWithGroups($id);
-        foreach ($groups as &$array) {
-            $new_data = array(
-                'buttons' => '<form action="" method="post">'
-                . $this->getUnlinkGroupButton($array['pg_id'])
-                . $this->getEditLink('/admin/platby/structure/category/edit/' . $array['pg_id'])
-                . $this->getRemoveLink('/admin/platby/structure/category/remove/' . $array['pg_id'])
-                . '</form>',
-                'type' => ($array['pg_type'] == '1' ? 'Členské příspěvky' : 'Běžné platby'),
-                'name' => $array['pg_name'],
-                'base' => $array['pg_base']
-            );
-            $array = $new_data;
-        }unset($array);
+        $groups = array_map(
+            function ($item) {
+                return array(
+                    'buttons' => '<form action="" method="post">'
+                    . $this->getUnlinkGroupButton($item['pg_id'])
+                    . '</form>',
+                    'type' => ($item['pg_type'] == '1' ? 'Členské příspěvky' : 'Běžné platby'),
+                    'name' => $item['pg_name'] . '('
+                    . $this->getEditLink('/admin/platby/structure/group/edit/' . $item['pg_id'])
+                    . $this->getRemoveLink('/admin/platby/structure/group/remove/' . $item['pg_id']) . ')',
+                    'base' => $item['pg_base']
+                );
+            },
+            DBPlatbyCategory::getSingleWithGroups($id)
+        );
 
         $groupNotInCategory = DBPlatbyGroup::getNotInCategory($id);
         $groupSelect = array();
@@ -344,13 +345,13 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                 'groups' => $groups,
                 'groupSelect' => $groupSelect,
                 'referer' => $request->getReferer(),
-                'name' => $request->post('name'),
-                'symbol' => $request->post('symbol'),
-                'amount' => $request->post('amount'),
-                'dueDate' => $request->post('dueDate'),
-                'validRange' => $request->post('validRange'),
-                'usePrefix' => $request->post('usePrefix'),
-                'archive' => $request->post('archive'),
+                'name' => $request->post('name') ?: '',
+                'symbol' => $request->post('symbol') ?: '',
+                'amount' => $request->post('amount') ?: '',
+                'dueDate' => $request->post('dueDate') ?: '',
+                'validRange' => $request->post('validRange') ?: '',
+                'usePrefix' => $request->post('usePrefix') ?: '',
+                'archive' => $request->post('archive') ?: '',
                 'uri' => $request->getLiteralURI()
             )
         );
