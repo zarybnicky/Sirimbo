@@ -10,10 +10,10 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
     public function edit($request)
     {
         $id = $request->getId();
-        if(!$id || !($data = DBGalerie::getSingleDir($id))) {
+        if (!$id || !($data = DBGalerie::getSingleDir($id))) {
             $this->redirect($request->getReferer(), 'Takový soubor neexistuje!');
         }
-        if(!$request->post()) {
+        if (!$request->post()) {
             $request->post('name', $data['gf_name']);
             $request->post('parent', $data['gf_id_rodic']);
             $this->displayForm($request, $id);
@@ -54,6 +54,45 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
         $this->redirect(
             '/admin/galerie/directory/' . $request->post('parent'),
             'Soubor byl úspěšně upraven'
+        );
+    }
+
+    public function remove($request)
+    {
+        Permissions::checkError('users', P_ADMIN);
+        if (!is_array($request->post('data')) && !is_array($request->get('u'))) {
+            $this->redirect('/admin/galerie');
+        }
+        if ($request->post() && $request->post('action') == 'confirm') {
+            foreach ($request->post('data') as $id) {
+                $item = DBGalerie::getSingleFoto($id);
+
+                unlink(GALERIE . DIRECTORY_SEPARATOR . $item);
+                unlink(GALERIE_THUMBS . DIRECTORY_SEPARATOR . $item);
+                DBGalerie::removeFoto($id);
+            }
+            $this->redirect('/admin/galerie', 'Fotografie odebrány');
+        }
+
+        $data = array_map(
+            function ($id) {
+                $item = DBGalerie::getSingleFoto($id);
+                return array(
+                    'id' => $id,
+                    'text' => $item['gf_name']
+                );
+            },
+            $request->get('u')
+        );
+
+        $this->render(
+            'files/View/Admin/RemovePrompt.inc',
+            array(
+                'header' => 'Správa galerie',
+                'prompt' => 'Opravdu chcete odstranit fotografie:',
+                'returnURI' => $request->getReferer(),
+                'data' => $data
+            )
         );
     }
 

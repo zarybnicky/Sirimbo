@@ -15,15 +15,15 @@ if (!count($this->files)) :
 else :
 ?>
 
-<div style="margin-right:150px;">';
+<div style="margin-right:150px;">
 <?php foreach ($this->files as $item) : ?>
     <div>
-        <div class="f_preview">
-            <div class="f_img">
+        <div class="foto_preview">
+            <div class="foto_preview_in">
                 <img alt="<?= $item['id'] ?>" src="<?= $item['thumbnailURI']?>" />
             </div>
         </div>
-        <div class="f_popis">
+        <div class="foto_desc">
             <?= $item['checkBox'] ?>
             <?= $item['name'] ?>
         </div>
