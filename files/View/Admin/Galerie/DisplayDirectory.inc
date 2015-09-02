@@ -22,10 +22,10 @@ else :
             <div class="foto_preview_in">
                 <img alt="<?= $item['id'] ?>" src="<?= $item['thumbnailURI']?>" />
             </div>
-        </div>
-        <div class="foto_desc">
-            <?= $item['checkBox'] ?>
-            <?= $item['name'] ?>
+            <div class="foto_desc">
+                <?= $item['checkBox'] ?>
+                <?= $item['name'] ?>
+            </div>
         </div>
     </div>
 <?php endforeach; ?>
