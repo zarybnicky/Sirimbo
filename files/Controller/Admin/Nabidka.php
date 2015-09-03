@@ -234,7 +234,7 @@ class Controller_Admin_Nabidka extends Controller_Admin
         );
     }
 
-    protected function displayForm($request, $data)
+    protected function displayForm($request, $data = null)
     {
         $this->render(
             'files/View/Admin/Nabidka/Form.inc',
