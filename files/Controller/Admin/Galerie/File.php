@@ -67,8 +67,8 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
             foreach ($request->post('data') as $id) {
                 $item = DBGalerie::getSingleFoto($id);
 
-                unlink(GALERIE . DIRECTORY_SEPARATOR . $item);
-                unlink(GALERIE_THUMBS . DIRECTORY_SEPARATOR . $item);
+                unlink(GALERIE . DIRECTORY_SEPARATOR . $item['gf_path']);
+                unlink(GALERIE_THUMBS . DIRECTORY_SEPARATOR . $item['gf_path']);
                 DBGalerie::removeFoto($id);
             }
             $this->redirect('/admin/galerie', 'Fotografie odebrány');
