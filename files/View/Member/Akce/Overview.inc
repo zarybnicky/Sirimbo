@@ -19,7 +19,7 @@
             <form action="" method="post">
               <?= $this->render('files/View/Member/Akce/Header.inc', $data);?>
               <?php if ($data['showForm']) : ?>
-                <input type="hidden" name="id" value="<?= $data['id'];?>" />
+                <?= $this->hidden('id', $data['id']) ?>
                 <?php if ($data['signIn']) : ?>
                   <?= $this->submit('Přihlásit se')->data('action', 'signup') ?> &bull;
                 <?php else: ?>

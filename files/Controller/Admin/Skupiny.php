@@ -280,10 +280,8 @@ class Controller_Admin_Skupiny extends Controller_Admin
     }
     private function getUnlinkGroupButton($id)
     {
-        return
-            '<input type="hidden" name="group" value="' . $id . '">'
-            . '<button name="action" value="group_remove">'
-            . '<img alt="Odstranit spojení" src="/images/unlink.png" />'
-            . '</button>';
+        return $this->hidden('group', $id)
+            . $this->submit('<img alt="Odstranit spojení" src="/images/unlink.png" />')
+                   ->data('action', 'group_remove');
     }
 }

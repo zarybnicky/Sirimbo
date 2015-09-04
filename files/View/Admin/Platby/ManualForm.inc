@@ -1,37 +1,37 @@
 <?= $this->render('files/View/Admin/Platby/Navigation.inc', array('uri' => $this->uri)) ?>
 <?= $this->subheader(
-        'Ruční třídění plateb</span> (zbývá ' . $this->remainingTotal . ')'
-    ) ?>
+    'Ruční třídění plateb</span> (zbývá ' . $this->remainingTotal . ')'
+) ?>
 
 <div class="container full">
 <?php
 $form = array(
-        array(
-                'desc' => 'Datum:',
-                'value' => $this->date('date', $this->guess['date'])->textBox(),
-                'recogColumn' => $this->recognized['date']['column'],
-                'recogValue' => $this->recognized['date']['value']
-        ), array(
-                'desc' => 'Částka (Kč):',
-                'value' => '<input type="text" name="amount" value="' . $this->guess['amount'] . '"/>',
-                'recogColumn' => $this->recognized['amount']['column'],
-                'recogValue' => $this->recognized['amount']['value']
-        ), array(
-                'desc' => 'Uživatel: ',
-                'value' => $this->select('variable')->options($this->users)->value($this->guess['variable']),
-                'recogColumn' => $this->recognized['variable']['column'],
-                'recogValue' => $this->recognized['variable']['value']
-        ), array(
-                'desc' => 'Kategorie:',
-                'value' => $this->select('specific')->options($this->categories)->value($this->guess['specific']),
-                'recogColumn' => $this->recognized['specific']['column'],
-                'recogValue' => $this->recognized['specific']['value']
-        ), array(
-                'desc' => 'Prefix (rok):',
-                'value' => '<input type="text" name="prefix" value="' . $this->guess['prefix'] . '"/>',
-                'recogColumn' => '',
-                'recogValue' => $this->recognized['prefix']['value']
-        )
+    array(
+        'desc' => 'Datum:',
+        'value' => $this->date('date', $this->guess['date'])->textBox(),
+        'recogColumn' => $this->recognized['date']['column'],
+        'recogValue' => $this->recognized['date']['value']
+    ), array(
+        'desc' => 'Částka (Kč):',
+        'value' => '<input type="text" name="amount" value="' . $this->guess['amount'] . '"/>',
+        'recogColumn' => $this->recognized['amount']['column'],
+        'recogValue' => $this->recognized['amount']['value']
+    ), array(
+        'desc' => 'Uživatel: ',
+        'value' => $this->select('variable')->options($this->users)->value($this->guess['variable'])->render(),
+        'recogColumn' => $this->recognized['variable']['column'],
+        'recogValue' => $this->recognized['variable']['value']
+    ), array(
+        'desc' => 'Kategorie:',
+        'value' => $this->select('specific')->options($this->categories)->value($this->guess['specific'])->render(),
+        'recogColumn' => $this->recognized['specific']['column'],
+        'recogValue' => $this->recognized['specific']['value']
+    ), array(
+        'desc' => 'Prefix (rok):',
+        'value' => '<input type="text" name="prefix" value="' . $this->guess['prefix'] . '"/>',
+        'recogColumn' => '',
+        'recogValue' => $this->recognized['prefix']['value']
+    )
 );
 $formTable = $this->table()
     ->column('desc', '', 'r')
@@ -41,11 +41,11 @@ $formTable = $this->table()
     ->data($form);
 ?>
 <form action="" method="post">
-    <?php echo $formTable;?>
-    <input type="hidden" name="id" value="<?php echo $this->id;?>" />
-    <button name="action" value="confirm">Uložit</button>&nbsp;
-    <button name="action" value="discard">Odstranit</button>&nbsp;
-    <button name="action" value="skip">Přeskočit</button>
+    <?= $formTable;?>
+    <?= $this->hidden('id', $this->id) ?>
+    <?= $this->submit('Uložit')->data('action', 'confirm') ?>&nbsp;
+    <?= $this->submit('Odstranit')->data('action', 'discard') ?>&nbsp;
+    <?= $this->submit('Přeskočit')->data('action', 'skip') ?>
 </form>
 <br/>
 <?php

@@ -33,7 +33,7 @@
                                                 <?php if ($row['canDelete']) : ?>
                                                     <?= $this->submit('&times')
                                                              ->data('un_id', $row['deleteTicket']) ?>
-                                                <?php endif;?>
+                                                <?php endif ?>
                                             </td>
                                         </tr>
                                     <?php endforeach;?>
@@ -44,9 +44,7 @@
                                         <input type="text"
                                                name="hodiny"
                                                size="2" />
-                                        <input type="hidden"
-                                               name="id"
-                                               value="<?= $item['id'];?>" />
+                                        <?= $this->hidden('id', $item['id']) ?>
                                         <?= $this->submit('Přidat') ?>
                                     <?php endif;?>
                                 </div>

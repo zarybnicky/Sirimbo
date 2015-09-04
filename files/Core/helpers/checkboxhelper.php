@@ -1,9 +1,11 @@
 <?php
-class CheckboxHelper {
+class CheckboxHelper
+{
     protected $name;
     protected $value;
     protected $state;
     protected $readonly;
+    protected $label;
 
     public function checkbox($name, $value = null)
     {
@@ -17,12 +19,20 @@ class CheckboxHelper {
         $this->state = false;
         $this->readonly = false;
 
+        $this->label = null;
+
         return $this;
     }
 
     public function set($val)
     {
         $this->state = (bool) $val;
+        return $this;
+    }
+
+    public function label($str)
+    {
+        $this->label = $str;
         return $this;
     }
 
@@ -34,13 +44,16 @@ class CheckboxHelper {
 
     public function render()
     {
-        return
-            '<input type="checkbox"' .
-            " name=\"{$this->name}\" " .
-            " value=\"{$this->value}\"" .
-            ($this->state ? ' checked="checked"' : '') .
-            ($this->readonly ? ' readonly="readonly"' : '') .
-            '/>';
+        $out = '<input type="checkbox"'
+             . " name=\"{$this->name}\" "
+             . " value=\"{$this->value}\""
+             . ($this->state ? ' checked="checked"' : '')
+             . ($this->readonly ? ' readonly="readonly"' : '')
+             . '/>';
+        if ($this->label) {
+            $out = "<label>$out {$this->label}</label>";
+        }
+        return $out;
     }
 
     public function __toString()

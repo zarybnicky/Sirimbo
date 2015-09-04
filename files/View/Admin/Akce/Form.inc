@@ -63,18 +63,14 @@
             <tr>
                 <td>Uzamknout: </td>
                 <td>
-                    <label>
-                        <?= $this->checkbox('lock', 'lock')->set($this->lock) ?>
-                    </label>
+                    <?= $this->checkbox('lock', 'lock')->set($this->lock) ?>
                 </td>
                 <td></td>
             </tr>
             <tr>
                 <td>Viditelný: </td>
                 <td>
-                    <label>
-                        <?= $this->checkbox('visible', 'visible')->set($this->visible) ?>
-                    </label>
+                    <?= $this->checkbox('visible', 'visible')->set($this->visible) ?>
                 </td>
                 <td></td>
             </tr>

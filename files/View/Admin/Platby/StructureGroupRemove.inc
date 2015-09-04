@@ -7,10 +7,8 @@
 
     <form action="" method="POST">
         Opravdu chcete odstranit kategorii plateb "<?= $this->name;?>"?
-        <input type="hidden" name="data[]" value="<?= $this->id;?>" />
-        <input type="hidden"
-               name="referer"
-               value="<?= $this->referer ?>" />
+        <?= $this->hidden('data[]', $this->id) ?>
+        <?= $this->hidden('referer', $this->referer) ?>
         <br/>
         <?= $this->submit('Odstranit')->data('action', 'confirm') ?>
         <a href="<?= $this->referer ?>">Zpět</a>

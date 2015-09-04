@@ -59,29 +59,20 @@
             <tr>
                 <td>Viditelný: </td>
                 <td>
-                    <label>
-                        <?= (Permissions::check('nabidka', P_ADMIN)
-                             ? $this->checkbox('visible', 'visible')
-                                    ->set($this->visible)
-                             : ($this->visible
-                                ? '&#10003;'
-                                : '&#10799;')) ?>
-                    </label>
+                    <?= Permissions::check('nabidka', P_ADMIN)
+                        ? $this->checkbox('visible', 'visible')->set($this->visible)
+                        : ($this->visible ? '&#10003;' : '&#10799;') ?>
                 </td>
             </tr>
             <tr>
                 <td>Uzamknout: </td>
                 <td>
-                    <label>
-                        <?= $this->checkbox('lock')->set($this->lock) ?>
-                    </label>
+                    <?= $this->checkbox('lock')->set($this->lock) ?>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <input type="hidden"
-                           name="referer"
-                           value="<?= $this->referer ?>" />
+                    <?= $this->hidden('referef', $this->referer) ?>
                     <?= $this->submit($this->action) ?>
                     </button>
                 </td>

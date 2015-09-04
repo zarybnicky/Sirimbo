@@ -18,14 +18,13 @@
             </tr><tr>
                 <td>Kategorie (*): </td>
                 <td>
-                    <label><?= $this->radio('category', 1)
-                                    ->set($this->category == 1);?>
-                        Články
-                    </label>&nbsp;
-                    <label><?= $this->radio('category', 3)
-                                    ->set($this->category == 3);?>
-                        Krátké zprávy
-                    </label>
+                    <?= $this->radio('category', 1)
+                             ->set($this->category == 1)
+                             ->label('Články') ?>
+                    &nbsp;
+                    <?= $this->radio('category', 3)
+                             ->set($this->category == 3)
+                             ->label('Krátké zprávy') ?>
                 </td>
                 <td></td>
             </tr><tr>

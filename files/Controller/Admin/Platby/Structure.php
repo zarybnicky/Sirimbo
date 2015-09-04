@@ -2,10 +2,13 @@
 require_once 'files/Controller/Admin/Platby.php';
 class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
 {
-    public function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('platby', P_OWNED);
     }
-    public function view($request) {
+
+    public function view($request)
+    {
         $this->render(
             'files/View/Admin/Platby/StructureOverview.inc',
             array(
@@ -17,92 +20,121 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
             )
         );
     }
-    protected function getCategories() {
-        $out = array();
-        $categories = parent::getCategoryList();
 
-        $current_group = 0;
-        foreach ($categories as $array) {
-            $new_data = array();
-            if (strpos($array[0], 'group_') !== false) {
-                $new_data['name'] = '<span class="big" style="text-decoration:underline;">' . $array[1]['pg_name'] . '</span>';
-                $new_data['buttons'] = $this->getEditLink('/admin/platby/structure/group/edit/' . $array[1]['pg_id']) .
-                        $this->getRemoveLink('/admin/platby/structure/group/remove/' . $array[1]['pg_id']);
-            } else {
-                $new_data['name'] = '&nbsp;- ' . $array[1]['pc_name'] . ' (' . $array[1]['pc_symbol'] . ')';
-                $new_data['buttons'] = $this->getEditLink('/admin/platby/structure/category/edit/' . $array[1]['pc_id']) .
-                    $this->getRemoveLink('/admin/platby/structure/category/remove/' . $array[1]['pc_id']);
-            }
-            $out[] = $new_data;
-        }
-        return $out;
+    protected function getCategories()
+    {
+        return array_map(
+            function ($item) {
+                if (strpos($item[0], 'group_') !== false) {
+                    $prefix = '/admin/platby/structure/group';
+                    return array(
+                        'name' => '<span class="big" style="text-decoration:underline;">' . $item[1]['pg_name'] . '</span>',
+                        'buttons' => (
+                            $this->getEditLink($prefix . '/edit/' . $item[1]['pg_id']) .
+                            $this->getRemoveLink($prefix . '/remove/' . $item[1]['pg_id'])
+                        )
+                    );
+                } else {
+                    $prefix = '/admin/platby/structure/category';
+                    return array(
+                        'name' => '&nbsp;- ' . $item[1]['pc_name'] . ' (' . $item[1]['pc_symbol'] . ')',
+                        'buttons' => (
+                            $this->getEditLink($prefix . '/edit/' . $item[1]['pc_id'])
+                            . $this->getRemoveLink($prefix . '/remove/' . $item[1]['pc_id'])
+                        )
+                    );
+                }
+            },
+            parent::getCategoryList()
+        );
     }
-    protected function getOrphanGroupSkupina() {
-        $out = DBPlatbyGroup::getWithoutSkupina();
-        foreach ($out as &$array) {
-            $new_data = array(
-                    'name' => $array['pg_name'],
-                    'buttons' => $this->getEditLink('/admin/platby/structure/group/edit/' . $array['pg_id']) .
-                        $this->getRemoveLink('/admin/platby/structure/group/remove/' . $array['pg_id'])
-            );
-            $array = $new_data;
-        }
-        return $out;
+
+    protected function getOrphanGroupSkupina()
+    {
+        $prefix = '/admin/platby/structure/group';
+        return array_map(
+            function ($item) use ($prefix) {
+                return array(
+                    'name' => $item['pg_name'],
+                    'buttons' => (
+                        $this->getEditLink($prefix .'/edit/' . $item['pg_id'])
+                        . $this->getRemoveLink($prefix . '/remove/' . $item['pg_id'])
+                    )
+                );
+            },
+            DBPlatbyGroup::getWithoutSkupina()
+        );
     }
-    protected function getOrphanGroupCategory() {
-        $out = DBPlatbyGroup::getWithoutCategory();
-        foreach ($out as &$array) {
-            $new_data = array(
-                    'name' => $array['pg_name'],
-                    'buttons' => $this->getEditLink('/admin/platby/structure/group/edit/' . $array['pg_id']) .
-                        $this->getRemoveLink('/admin/platby/structure/group/remove/' . $array['pg_id'])
-            );
-            $array = $new_data;
-        }
-        return $out;
+
+    protected function getOrphanGroupCategory()
+    {
+        $prefix = '/admin/platby/structure/group';
+        return array_map(
+            function ($item) use ($prefix) {
+                return array(
+                    'name' => $item['pg_name'],
+                    'buttons' => (
+                        $this->getEditLink($prefix .'/edit/' . $item['pg_id'])
+                        . $this->getRemoveLink($prefix . '/remove/' . $item['pg_id'])
+                    )
+                );
+            },
+            DBPlatbyGroup::getWithoutCategory()
+        );
     }
-    protected function getOrphanCategory() {
-        $out = DBPlatbyCategory::getOrphan();
-        foreach ($out as &$array) {
-            $new_data = array(
-                    'name' => $array['pc_name'],
-                    'buttons' => $this->getEditLink('/admin/platby/structure/category/edit/' . $array['pc_id']) .
-                        $this->getRemoveLink('/admin/platby/structure/category/remove/' . $array['pc_id'])
-            );
-            $array = $new_data;
-        }
-        return $out;
+    protected function getOrphanCategory()
+    {
+        $prefix = '/admin/platby/structure/category';
+        return array_map(
+            function ($item) use ($prefix) {
+                return array(
+                    'name' => $item['pc_name'],
+                    'buttons' => (
+                        $this->getEditLink($prefix . '/edit/' . $item['pc_id'])
+                        . $this->getRemoveLink($prefix . '/remove/' . $item['pc_id'])
+                    )
+                );
+            },
+            DBPlatbyCategory::getOrphan()
+        );
     }
-    protected function getEditLink($link) {
+
+    protected function getEditLink($link)
+    {
         return '<a href="' . $link . '"><img alt="Upravit" src="/images/wrench.png" /></a>';
     }
-    protected function getRemoveLink($link) {
+
+    protected function getRemoveLink($link)
+    {
         return '<a href="' . $link . '"><img alt="Odstranit" src="/images/cross.png" /></a>';
     }
-    protected function getUnlinkGroupButton($id) {
-        return
-            '<input type="hidden" name="group" value="' . $id . '">' .
-            '<button name="action" value="group_remove">' .
-                '<img alt="Odstranit spojení" src="/images/unlink.png" />' .
-            '</button>';
+
+    protected function getUnlinkGroupButton($id)
+    {
+        return $this->hidden('group', $id)
+             . $this->submit('<img alt="Odstranit spojení" src="/images/unlink.png" />')
+                    ->data('action', 'group_remove');
     }
-    protected function getUnlinkCategoryButton($id) {
-        return
-            '<input type="hidden" name="category" value="' . $id . '">' .
-            '<button name="action" value="category_remove">' .
-                '<img alt="Odstranit spojení" src="/images/unlink.png" />' .
-            '</button>';
+
+    protected function getUnlinkCategoryButton($id)
+    {
+        return $this->hidden('category', $id)
+             . $this->submit('<img alt="Odstranit spojení" src="/images/unlink.png" />')
+                    ->data('action', 'category_remove');
     }
-    protected function getUnlinkSkupinaButton($id) {
-        return
-            '<input type="hidden" name="skupina" value="' . $id . '">' .
-            '<button name="action" value="skupina_remove">' .
-                '<img alt="Odstranit spojení" src="/images/unlink.png" />' .
-            '</button>';
+
+    protected function getUnlinkSkupinaButton($id)
+    {
+        return $this->hidden('skupina', $id)
+             . $this->submit('<img alt="Odstranit spojení" src="/images/unlink.png" />')
+                    ->data('action', 'skupina_remove');
     }
+
     protected function getDateDisplay($from, $to) {
         $from = new Date($from);
         $to = new Date($to);
-        return $from->getDate(Date::FORMAT_SIMPLIFIED) . ' - ' . (string) $to->getDate(Date::FORMAT_SIMPLIFIED);
+        return $from->getDate(Date::FORMAT_SIMPLIFIED)
+            . ' - '
+            . $to->getDate(Date::FORMAT_SIMPLIFIED);
     }
 }

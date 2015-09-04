@@ -12,8 +12,13 @@ $mainForm = $this->table()
         array(
             'desc' => 'Typ:',
             'value' => (
-                '<label>' . $this->radio('type', '0')->set($this->type == '0') . 'Běžné platby</label><br/>' .
-                '<label>' . $this->radio('type', '1')->set($this->type == '1') . 'Členské příspěvky</label>'
+                $this->radio('type', '0')
+                     ->set($this->type == '0')
+                     ->label('Běžné platby')
+                . '<br/>' .
+                $this->radio('type', '1')
+                     ->set($this->type == '1')
+                     ->label('Členské příspěvky')
             )
         ), array(
             'desc' => 'Jméno:',
@@ -55,11 +60,10 @@ if (!empty($this->skupinySelect)) {
 
 <form action="" method="post">
     <?= $mainForm ?>
-    <input type="hidden"
-           name="referer"
-           value="<?= $this->referer ?>" />
-    <button name="action" value="confirm">Uložit</button>
-    <a href="<?= $this->referer ?>">Zpět</a><br/><br/>
+    <?= $this->hidden('referer', $this->referer) ?>
+    <?= $this->submit('Uložit')->data('action', 'confirm') ?>
+    <a href="<?= $this->referer ?>">Zpět</a><br/>
+    <br/>
 </form>
 <?php if ($this->action != 'add') : ?>
     <h3>Specifické symboly</h3>

@@ -34,10 +34,10 @@ class SubmitHelper
 
     public function render()
     {
-        return '<button type="submit"' .
-            ($this->name ? ' name="' . $this->name . '"' : '') .
-            ($this->value ? ' value="' . $this->value . '"' : '') .
-            '>' . $this->text . '</button>';
+        return '<button type="submit"'
+            . ($this->name ? " name=\"{$this->name}\"" : '')
+            . ($this->value ? " value=\"{$this->value}\"" : '')
+            . '>' . $this->text . '</button>';
     }
 
     public function __toString()

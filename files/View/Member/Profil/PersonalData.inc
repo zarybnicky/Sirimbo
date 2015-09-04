@@ -19,8 +19,8 @@
       </tr><tr>
         <td>Pohlaví: </td>
         <td>
-          <label><?= $this->radio('pohlavi', 'm')->set($this->pohlavi == 'm') ?>Muž</label>&nbsp;
-          <label><?= $this->radio('pohlavi', 'f')->set($this->pohlavi == 'f') ?>Žena</label>
+          <?= $this->radio('pohlavi', 'm')->set($this->pohlavi == 'm')->label('Muž') ?>&nbsp;
+          <?= $this->radio('pohlavi', 'f')->set($this->pohlavi == 'f')->label('Žena') ?>
         </td>
         <td></td>
       </tr><tr>

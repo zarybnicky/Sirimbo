@@ -402,6 +402,8 @@ class Controller_Admin_Users extends Controller_Admin
             $group_lookup[$row['pe_id']] = $row['pe_name'];
             $row = $new_data;
         }
+
+        $skupinyselect = $this->select();
         if ($action == 'status') {
             $skupiny = DBSkupiny::get();
             $skupinyselect = $this->select();
@@ -409,10 +411,16 @@ class Controller_Admin_Users extends Controller_Admin
                 $skupinyselect->option($skupina['s_id'], $skupina['s_name']);
             }
         }
-        $options['sort'] = in_array($request->get('s'), array('prijmeni', 'narozeni', 'var-symbol'))
+
+        $sortOptions = array('prijmeni', 'narozeni', 'var-symbol');
+        $filterOptions = array_merge(
+            array('dancer', 'system', 'all', 'unconfirmed', 'ban'),
+            $filter
+        );
+        $options['sort'] = in_array($request->get('s'), $sortOptions)
                          ? $request->get('s')
                          : 'prijmeni';
-        $options['filter'] = in_array($request->get('f'), array_merge(array('dancer', 'system', 'all', 'unconfirmed', 'ban'), $filter))
+        $options['filter'] = in_array($request->get('f'), $filterOptions)
                            ? $request->get('f')
                            : 'all';
 
@@ -423,34 +431,37 @@ class Controller_Admin_Users extends Controller_Admin
         $pager->setItemsPerPageField('c');
         $pager->setDefaultItemsPerPage(20);
         $pager->setPageRange(5);
-        $data = $pager->getItems();
+
         $i = $pager->getItemsPerPage() * ($pager->getCurrentPage() - 1);
-        foreach ($data as &$item) {
-            $new_data = array(
-                'checkBox'  => $this->checkbox('users[]', $item['u_id'])->render(),
-                'index'     => ++$i . '. ',
-                'varSymbol' => User::varSymbol($item['u_id']),
-                'fullName'  => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
-                'colorBox'  => $this->colorbox($item['s_color_rgb'], $item['s_description'])->render(),
-                'groupInfo' => $group_lookup[$item['u_group']]
-            );
-            switch($action) {
-            case 'status':
-                $new_data['skupina'] = '<input type="hidden" name="save[]" value="' . $item['u_id'] . '"/>'
-                                     . $skupinyselect->name($item['u_id'] . '-skupina')
-                                                     ->set($item['u_skupina']);
-                $new_data['dancer'] = '<label>' . $this->checkbox($item['u_id'] . '-dancer', '1')
-                                                       ->set($item['u_dancer']) . '</label>';
-                $new_data['system'] = '<label>' . $this->checkbox($item['u_id'] . '-system', '1')
-                                                       ->set($item['u_system']) . '</label>';
-                break;
-            case 'info':
-            default:
-                $new_data['birthDate'] = formatDate($item['u_narozeni']);
-                break;
-            }
-            $item = $new_data;
-        }
+
+        $data = array_map(
+            function ($item) use ($action, $group_lookup, &$i, $skupinyselect) {
+                $out = array(
+                    'checkBox'  => $this->checkbox('users[]', $item['u_id'])->render(),
+                    'index'     => ++$i . '. ',
+                    'varSymbol' => User::varSymbol($item['u_id']),
+                    'fullName'  => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
+                    'birthDate' => formatDate($item['u_narozeni']),
+                    'colorBox'  => $this->colorbox($item['s_color_rgb'], $item['s_description'])
+                                        ->render(),
+                    'groupInfo' => $group_lookup[$item['u_group']]
+                );
+                if ($action == 'status') {
+                    $out['skupina'] = (
+                        $this->hidden('save[]', $item['u_id'])
+                        . $skupinyselect->name($item['u_id'] . '-skupina')
+                                        ->set($item['u_skupina'])
+                    );
+                    $out['dancer'] = $this->checkbox($item['u_id'] . '-dancer', '1')
+                                          ->set($item['u_dancer'])->render();
+                    $out['system'] = $this->checkbox($item['u_id'] . '-system', '1')
+                                          ->set($item['u_system'])->render();
+                }
+                return $out;
+            },
+            $pager->getItems()
+        );
+
         $this->render(
             'files/View/Admin/Users/Overview.inc',
             array(
@@ -494,21 +505,21 @@ class Controller_Admin_Users extends Controller_Admin
                 'action' => $request->getAction(),
                 'groups' => $groups,
                 'skupiny' => $skupiny,
-                'login' => $request->post('login'),
-                'pass' => $request->post('pass'),
-                'jmeno' => $request->post('jmeno'),
-                'prijmeni' => $request->post('prijmeni'),
-                'pohlavi' => $request->post('pohlavi'),
-                'email' => $request->post('email'),
-                'telefon' => $request->post('telefon'),
-                'narozeni' => $request->post('narozeni'),
-                'poznamky' => $request->post('poznamky'),
-                'lock' => $request->post('lock'),
-                'ban' => $request->post('ban'),
-                'dancer' => $request->post('dancer'),
-                'system' => $request->post('system'),
-                'group' => $request->post('group'),
-                'skupina' => $request->post('skupina')
+                'login' => $request->post('login') ?: '',
+                'pass' => $request->post('pass') ?: '',
+                'jmeno' => $request->post('jmeno') ?: '',
+                'prijmeni' => $request->post('prijmeni') ?: '',
+                'pohlavi' => $request->post('pohlavi') ?: '',
+                'email' => $request->post('email') ?: '',
+                'telefon' => $request->post('telefon') ?: '',
+                'narozeni' => $request->post('narozeni') ?: '',
+                'poznamky' => $request->post('poznamky') ?: '',
+                'lock' => $request->post('lock') ?: '',
+                'ban' => $request->post('ban') ?: '',
+                'dancer' => $request->post('dancer') ?: '',
+                'system' => $request->post('system') ?: '',
+                'group' => $request->post('group') ?: '',
+                'skupina' => $request->post('skupina') ?: ''
             )
         );
     }

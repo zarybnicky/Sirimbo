@@ -4,7 +4,7 @@
         <?= $this->prompt;?><br/><br/>
         <?php foreach ($this->data as $row): ?>
             <?= $row['text']?>
-            <input type="hidden" name="data[]" value="<?= $row['id']?>" />
+            <?= $this->hidden('data[]', $row['id'] ?>
             <br />
         <?php endforeach;?>
         <br/>

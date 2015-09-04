@@ -29,8 +29,8 @@
     </tr><tr>
         <td>Pohlaví (*): </td>
         <td>
-            <label><?= $this->radio('pohlavi', 'm')->set($this->pohlavi == 'm') ?>Muž</label>&nbsp;
-            <label><?= $this->radio('pohlavi', 'f')->set($this->pohlavi == 'f') ?>Žena</label>
+            <?= $this->radio('pohlavi', 'm')->set($this->pohlavi == 'm')->label('Muž') ?>&nbsp;
+            <?= $this->radio('pohlavi', 'f')->set($this->pohlavi == 'f')->label('Žena') ?>
         </td>
         <td></td>
     </tr><tr>
@@ -51,19 +51,19 @@
         <td></td>
     </tr><tr>
         <td>Uzamknout: </td>
-        <td><label><?= $this->checkbox('lock', 'lock')->set($this->lock) ?></label></td>
+        <td><?= $this->checkbox('lock', 'lock')->set($this->lock) ?></td>
         <td></td>
     </tr><tr>
         <td>Ban: </td>
-        <td><label><?= $this->checkbox('ban', 'ban')->set($this->ban) ?></label></td>
+        <td><?= $this->checkbox('ban', 'ban')->set($this->ban) ?></td>
         <td></td>
     </tr><tr>
         <td>Aktivní tanečník: </td>
-        <td><label><?= $this->checkbox('dancer', 'dancer')->set($this->dancer) ?></label></td>
+        <td><?= $this->checkbox('dancer', 'dancer')->set($this->dancer) ?></td>
         <td></td>
     </tr><tr>
         <td>Systémový uživatel: </td>
-        <td><label><?= $this->checkbox('system', 'system')->set($this->system) ?></label></td>
+        <td><?= $this->checkbox('system', 'system')->set($this->system) ?></td>
         <td></td>
     </tr><tr>
         <td>Oprávnění (*): </td>
@@ -78,8 +78,10 @@
         <td>Skupina (*): </td>
         <td><?php
         foreach ($this->skupiny as $item) {
-            echo $this->colorbox($item['color'], $item['popis']);
-            echo '<label>', $this->radio('skupina', $item['id'])->set($this->skupina == $item['id']), $item['popis'], '</label><br/>';
+            echo $this->radio('skupina', $item['id'])
+                      ->set($this->skupina == $item['id'])
+                      ->label($this->colorbox($item['color'], $item['popis']) . $item['popis']);
+            echo '<br/>';
         }?></td>
         <td></td>
     </tr><tr>

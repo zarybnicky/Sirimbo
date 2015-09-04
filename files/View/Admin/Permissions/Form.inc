@@ -25,7 +25,9 @@
         foreach (Settings::$permissionLevels as $key => $level_name) {
             echo '<td>';
             if (isset($item[$key])) {
-                echo '<label>', $this->radio($name, $key)->set($item['default'] == $key), $level_name, '</label>';
+                echo $this->radio($name, $key)
+                          ->set($item['default'] == $key)
+                          ->label($level_name);
             }
             echo '</td>';
         }

@@ -28,15 +28,15 @@
         <td><?= $this->date('datum', $this->datum)->textBox() ?></td>
     </tr><tr>
         <td>Viditelný: </td>
-        <td><label><?php
+        <td><?php
             if ($this->isAdmin)
                 echo $this->checkbox('visible', 'visible')->set($this->visible);
             else
                 echo ($this->visible ? '&#10003;' : '&#10799;');
-        ?></label></td>
+        ?></td>
     </tr><tr>
         <td>Uzamknout: </td>
-        <td><label><?= $this->checkbox('lock', 'lock')->set($this->lock) ?></label></td>
+        <td><?= $this->checkbox('lock', 'lock')->set($this->lock) ?></td>
     </tr><tr>
         <td><?= $this->submit($this->action == 'add' ? 'Přidat' : 'Upravit') ?></td>
         <td>Pole označená (*) jsou povinná</td>

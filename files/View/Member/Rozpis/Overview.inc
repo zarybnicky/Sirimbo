@@ -25,9 +25,7 @@
                                     </td>
                                     <td class="center big" style="height:20px;width:20px;">
                                         <form action="" method="post">
-                                            <input type="hidden"
-                                                   name="ri_id"
-                                                   value="<?= $lesson['id'] ?>" />
+                                            <?= $this->hidden('ri_id', $lesson['id']) ?>
                                             <?php if ($lesson['canReserve']): ?>
                                                 <?= $this->submit('+')
                                                          ->data('action', 'signup') ?>

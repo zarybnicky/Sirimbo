@@ -26,9 +26,7 @@
                 $item['s_name'], '<br/>';
             }
             ?>
-            <input type="hidden"
-                   name="referer"
-                   value="<?= $this->referer ?>" />
+            <?= $this->hidden('referer', $this->referer) ?>
         </td>
     </tr><tr>
         <td><?= $this->submit($this->action == 'add' ? 'Přidat' : 'Upravit') ?></td>

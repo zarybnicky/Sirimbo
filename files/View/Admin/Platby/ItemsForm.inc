@@ -6,22 +6,28 @@
 echo '<h3>', ($this->action == 'add' ? 'Přidat platbu' : 'Upravit platbu'), '</h3>';
 
 $form = array(
-        array(
-                'desc' => 'Datum:',
-                'value' => $this->date('date', $this->date)->textBox()
-        ), array(
-                'desc' => 'Částka (Kč):',
-                'value' => '<input type="text" name="amount" value="' . $this->amount . '"/>'
-        ), array(
-                'desc' => 'Uživatel: ',
-                'value' => $this->select('variable')->options($this->users)->set($this->variable)->render()
-        ), array(
-                'desc' => 'Specifický symbol:',
-                'value' => $this->select('specific')->options($this->categories)->set($this->specific)->render()
-        ), array(
-                'desc' => 'Prefix (rok):',
-                'value' => '<input type="text" name="prefix" value="' . $this->prefix . '"/>'
-        )
+    array(
+        'desc' => 'Datum:',
+        'value' => $this->date('date', $this->date)->textBox()
+    ), array(
+        'desc' => 'Částka (Kč):',
+        'value' => '<input type="text" name="amount" value="' . $this->amount . '"/>'
+    ), array(
+        'desc' => 'Uživatel: ',
+        'value' => $this->select('variable')
+                        ->options($this->users)
+                        ->set($this->variable)
+                        ->render()
+    ), array(
+        'desc' => 'Specifický symbol:',
+        'value' => $this->select('specific')
+                        ->options($this->categories)
+                        ->set($this->specific)
+                        ->render()
+    ), array(
+        'desc' => 'Prefix (rok):',
+        'value' => '<input type="text" name="prefix" value="' . $this->prefix . '"/>'
+    )
 );
 $formTable = $this->table()
     ->column('desc', '', 'r')
@@ -30,9 +36,7 @@ $formTable = $this->table()
 ?>
 <form action="" method="post">
     <?= $formTable ?>
-    <input type="hidden"
-           name="referer"
-           value="<?= $this->referer ?>" />
+    <?= $this->hidden('referer', $this->referer) ?>
     <button name="action" value="confirm">Uložit</button>
     <a href="<?= $this->referer ?>">Zpět</a>
 </form>
