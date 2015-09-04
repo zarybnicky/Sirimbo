@@ -69,7 +69,7 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
                         'canEdit' => false,
                         'hourMax' => $data['n_max_pocet_hod'],
                         'hourTotal' => $data['n_pocet_hod'],
-                        'hourReserved' => $obsazeno,
+                        'hourReserved' => $obsazeno ?: '',
                         'hourFree' => $data['n_pocet_hod'] - $obsazeno
                     ),
                     'obsazeno' => $obsazeno,

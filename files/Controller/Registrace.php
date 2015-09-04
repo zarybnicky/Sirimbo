@@ -47,7 +47,7 @@ class Controller_Registrace extends Controller_Abstract
                 'username' => $request->post('username') ?: '',
                 'pass' => $request->post('pass') ?: '',
                 'jmeno' => $request->post('jmeno') ?: '',
-                'prijmeni' => $request->post('prijmeni' ?: ''),
+                'prijmeni' => $request->post('prijmeni') ?: '',
                 'pohlavi' => $request->post('pohlavi') ?: '',
                 'email' => $request->post('email') ?: '',
                 'telefon' => $request->post('telefon') ?: '',
