@@ -59,7 +59,6 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
 
     public function remove($request)
     {
-        Permissions::checkError('users', P_ADMIN);
         if (!is_array($request->post('data')) && !is_array($request->get('u'))) {
             $this->redirect('/admin/galerie');
         }
