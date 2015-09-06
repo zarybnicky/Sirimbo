@@ -1,10 +1,10 @@
 <?php
-class HiddenHelper
+class TextHelper
 {
     protected $name;
     protected $value;
 
-    public function hidden($name, $value = null)
+    public function text($name, $value = null)
     {
         if ($value === null) {
             $value = $name;
@@ -18,7 +18,7 @@ class HiddenHelper
 
     public function render()
     {
-        return '<input type="hidden"'
+        return '<input type="text"'
              . " name=\"{$this->name}\" "
              . " value=\"{$this->value}\" />";
     }

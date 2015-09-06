@@ -221,27 +221,29 @@ class Controller_Admin_Users extends Controller_Admin
 
             $skupiny = DBSkupiny::get();
             $s_skupina = new SelectHelper();
+            $s_skupina->select();
             foreach ($skupiny as $skupina) {
                 $s_skupina->option($skupina['s_id'], $skupina['s_name']);
             }
 
-            foreach ($users as &$row) {
-                $new_data = array(
-                    'id' => $row['u_id'],
-                    'checkBox' => $this->checkbox('users[]', $row['u_id'])->render(),
-                    'group' => $s_group->post()->name($row['u_id'] . '-group'),
-                    'skupina' => $s_skupina->post()->name($row['u_id'] . '-skupina'),
-                    'dancer' => $this->checkbox($row['u_id'] . '-dancer', 'dancer')->render(),
-                    'fullName' => $row['u_jmeno'] . ' ' . $row['u_prijmeni'],
-                    'narozeni' => formatDate($row['u_narozeni'])
-                );
-                $row = $new_data;
-            }
+            $users = array_map(
+                function ($item) {
+                    return array(
+                        'id' => $item['u_id'],
+                        'checkBox' => $this->checkbox('users[]', $item['u_id'])->render(),
+                        'group' => $s_group->name($item['u_id'] . '-group')->render(),
+                        'skupina' => $s_skupina->name($item['u_id'] . '-skupina')->render(),
+                        'dancer' => $this->checkbox($item['u_id'] . '-dancer', 'dancer')->render(),
+                        'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
+                        'narozeni' => formatDate($item['u_narozeni'])
+                    );
+                },
+                $users
+            );
+
             $this->render(
                 'files/View/Admin/Users/Unconfirmed.inc',
-                array(
-                    'data' => $users
-                )
+                array('data' => $users)
             );
             return;
         }
