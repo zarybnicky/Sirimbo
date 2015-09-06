@@ -22,6 +22,7 @@
         <script type="text/javascript"
                 src="/scripts/imagesloaded.pkgd.min.js"></script>
     <?php endif; ?>
+    <script src="/scripts/jquery.sticky.js"></script>
     <script type="text/javascript"
             src="//connect.facebook.net/cs_CZ/all.js#xfbml=1&appId=132983570203245"
             id="facebook-jssdk"></script>

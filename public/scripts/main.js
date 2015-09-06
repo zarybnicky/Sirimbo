@@ -1,6 +1,7 @@
 var masonry;
 $(function() {
     $('.ui.video').video();
+    $(".sticky").sticky({topSpacing:40});
 
     var container = document.querySelector('#more-articles');
     if (container) {
