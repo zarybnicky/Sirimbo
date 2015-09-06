@@ -227,7 +227,7 @@ class Controller_Admin_Users extends Controller_Admin
             }
 
             $users = array_map(
-                function ($item) use ($s_group, $s_select) {
+                function ($item) use ($s_group, $s_skupina) {
                     return array(
                         'id' => $item['u_id'],
                         'checkBox' => $this->checkbox('users[]', $item['u_id'])->render(),
