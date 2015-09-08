@@ -51,7 +51,13 @@ class Form
         return $this->checkRegexp($i, Form::REGEXP_PHONE, $message, $name);
     }
     public function checkLogin($i, $message, $name = '') {
-        return $this->checkRegexp($i, Form::REGEXP_LOGIN, $message, $name);
+        return (
+            $this->checkRegexp($i, Form::REGEXP_LOGIN, $message, $name)
+            && $this->checkBool(
+                !DBUser::getUserID(strtolower($i)),
+                'Toto přihlašovací jméno je obsazené.', $name
+            )
+        );
     }
     public function checkPassword($i, $message, $name = '') {
         return $this->checkRegexp($i, Form::REGEXP_PASSWORD, $message, $name);

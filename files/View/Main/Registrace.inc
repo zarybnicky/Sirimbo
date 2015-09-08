@@ -1,4 +1,4 @@
-<?= $this->header('Reistrace') ?>
+<?= $this->header('Registrace') ?>
 
 <div class="container full">
   <?= $this->notice($this->redirect()->getMessage());?>
@@ -7,7 +7,7 @@
     <table>
       <tr>
           <td>Uživatel (*): </td>
-          <td><?= $this->text('username', $ths->username) ?></td>
+          <td><?= $this->text('username', $this->username) ?></td>
         <td>Pouze písmena bez diakritiky, číslice a podtržítka, 3 - 20 znaků</td>
       </tr><tr>
           <td>Heslo (*): </td>
@@ -41,11 +41,17 @@
           <td><?= $this->date('narozeni', $this->narozeni)->textBox() ?></td>
           <td></td>
       </tr><tr>
-          <td>Poznámky: </td>
+          <td>Vztah ke klubu: </td>
           <td>
-              <textarea rows="15" cols="35" name="poznamky">
-                  <?= $this->poznamky ?>
-              </textarea>
+              <?= $this->radio('poznamky', 'dancer')
+                       ->set($this->poznamky == 'dancer')
+                       ->label('Tanečník/tanečníce') ?><br>
+              <?= $this->radio('poznamky', 'parent')
+                       ->set($this->poznamky == 'parent')
+                       ->label('Rodič tanečníka') ?><br>
+              <?= $this->radio('poznamky', 'other')
+                       ->set($this->poznamky == 'other')
+                       ->label('Jiné: ' . $this->text('other', $this->other)) ?>
           </td>
           <td></td>
       </tr><tr>

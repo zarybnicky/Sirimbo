@@ -16,6 +16,7 @@
                  ->column('dancer', 'Aktivní<br/>tanečník', 'center')
                  ->column('fullName', 'Jméno', '', 'max-width:140px')
                  ->column('narozeni', 'Datum<br/>narození')
+                 ->column('poznamky', 'Poznámka')
                  ->data($this->data)
         ?>
     </form>

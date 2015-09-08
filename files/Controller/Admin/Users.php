@@ -104,7 +104,7 @@ class Controller_Admin_Users extends Controller_Admin
             $this->displayForm($request);
             return;
         }
-        $narozeni = $this->date('narozeni')->getPost($request);
+
         DBUser::addUser(
             strtolower($request->post('login')),
             User::crypt($request->post('pass')),
@@ -113,7 +113,7 @@ class Controller_Admin_Users extends Controller_Admin
             $request->post('pohlavi'),
             $request->post('email'),
             $request->post('telefon'),
-            (string) $narozeni,
+            (string) $this->date('narozeni')->getPost($request),
             $request->post('poznamky'),
             $request->post('group'),
             $request->post('skupina'),
@@ -235,7 +235,8 @@ class Controller_Admin_Users extends Controller_Admin
                         'skupina' => $s_skupina->name($item['u_id'] . '-skupina')->render(),
                         'dancer' => $this->checkbox($item['u_id'] . '-dancer', 'dancer')->render(),
                         'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
-                        'narozeni' => formatDate($item['u_narozeni'])
+                        'narozeni' => formatDate($item['u_narozeni']),
+                        'poznamky' => $item['u_poznamky']
                     );
                 },
                 $users
@@ -540,10 +541,6 @@ class Controller_Admin_Users extends Controller_Admin
         if ($action == 'add') {
             $f->checkLogin($request->post('login'), 'Špatný formát přihlašovacího jména', 'login');
             $f->checkPassword($request->post('pass'), 'Špatný formát hesla', 'pass');
-            $f->checkBool(
-                !DBUser::getUserID($request->post('login')),
-                'Uživatel s takovým přihlašovacím jménem už tu je', 'login'
-            );
         }
         return $f->isValid() ? true : $f;
     }
