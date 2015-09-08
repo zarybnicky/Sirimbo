@@ -235,6 +235,7 @@ class User
             $telefon, $narozeni, $poznamky, '0', '0', '0', "0", "0", "0", "0");
 
         Mailer::newUserNotice(DEFAULT_ADMIN_MAIL, $login);
+        Mailer::newUserNotice('hyzam@tkolymp.cz', $login);
     }
 
     public static function crypt($passwd) {
