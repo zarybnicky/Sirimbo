@@ -18,12 +18,12 @@ $form = array(
         'recogValue' => $this->recognized['amount']['value']
     ), array(
         'desc' => 'Uživatel: ',
-        'value' => $this->select('variable')->options($this->users)->value($this->guess['variable'])->render(),
+        'value' => $this->select('variable')->options($this->users)->set($this->guess['variable'])->render(),
         'recogColumn' => $this->recognized['variable']['column'],
         'recogValue' => $this->recognized['variable']['value']
     ), array(
         'desc' => 'Kategorie:',
-        'value' => $this->select('specific')->options($this->categories)->value($this->guess['specific'])->render(),
+        'value' => $this->select('specific')->options($this->categories)->set($this->guess['specific'])->render(),
         'recogColumn' => $this->recognized['specific']['column'],
         'recogValue' => $this->recognized['specific']['value']
     ), array(

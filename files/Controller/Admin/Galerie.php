@@ -29,7 +29,7 @@ class Controller_Admin_Galerie extends Controller_Admin
             $this->_processSave();
             break;
         case 'galerie/scan':
-            $this->_scan();
+            $this->_scan($request);
             break;
         case 'directory':
         case 'directory/edit':

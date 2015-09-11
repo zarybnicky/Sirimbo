@@ -131,7 +131,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             )
         );
     }
-    private function displayForm($request, $id)
+    private function displayForm($id, $request)
     {
         $raw = array();
         if (
@@ -212,7 +212,8 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
                     'date' => (new Date($item['pi_date']))->getDate(Date::FORMAT_SIMPLE_SPACED),
                     'amount' => $item['pi_amount'] . 'Kč'
                 );
-            }
+            },
+            $data
         );
     }
 }
