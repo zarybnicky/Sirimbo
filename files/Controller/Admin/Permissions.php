@@ -47,20 +47,16 @@ class Controller_Admin_Permissions extends Controller_Admin
 
     public function add($request)
     {
-        if (!$request->post() || is_object($f = $this->checkData($request))) {
-            if ($request->post) {
-                $this->redirect()->setMessage($f->getMessages());
-            }
-            $this->render(
-                'files/View/Admin/Permissions/Form.inc',
-                array(
-                    'action' => $request->getAction(),
-                    'name' => $request->post('name'),
-                    'description' => $request->post('description')
-                )
-            );
+        if (!$request->post()) {
+            $this->renderForm($request);
             return;
         }
+        if (is_object($f = $this->checkData($request))) {
+            $this->redirect()->setMessage($f->getMessages());
+            $this->renderForm($request);
+            return;
+        }
+
         $permissions = array();
         foreach (array_keys(Settings::$permissions) as $name) {
             $permissions[$name] = $request->post($name);
@@ -87,28 +83,18 @@ class Controller_Admin_Permissions extends Controller_Admin
             );
         }
 
-        if (!$request->post() || is_object($f = $this->checkData($request))) {
-            if (!$request->post()) {
-                $request->post('name', $data['pe_name']);
-                $request->post('description', $data['pe_description']);
-                foreach (Settings::$permissions as $name => $item) {
-                    $request->post($name, $data['pe_' . $name]);
-                }
-            } else {
-                $this->redirect()->setMessage($f->getMessages());
-            }
-            $this->render(
-                'files/View/Admin/Permissions/Form.inc',
-                array(
-                    'action' => $request->getAction(),
-                    'name' => $request->post('name'),
-                    'description' => $request->post('description')
-                )
-            );
+        if (!$request->post()) {
+            $this->renderForm($request, $data);
             return;
         }
+        if (is_object($f = $this->checkData($request))) {
+            $this->redirect()->setMessage($f->getMessages());
+            $this->renderForm($request, $data);
+            return;
+        }
+
         $permissions = array();
-        foreach (Settings::$permissions as $name => $item) {
+        foreach (array_keys(Settings::$permissions) as $name) {
             $permissions[$name] = $request->post($name);
         }
         DBPermissions::editGroup(
@@ -138,23 +124,67 @@ class Controller_Admin_Permissions extends Controller_Admin
                 'Úrovně odebrány. Nezapomeňte přiřadit uživatelům z těchto skupin jinou skupinu!'
             );
         }
-        $data = array();
-        foreach ($request->get('u') as $id) {
-            $item = DBPermissions::getSingleGroup($id);
-            $data[] = array(
-                'id' => $item['pe_id'],
-                'text' => $item['pe_name']
-            );
-        }
+        $data = array_map(
+            function ($id) {
+                $item = DBPermissions::getSingleGroup($id);
+                return array(
+                    'id' => $item['pe_id'],
+                    'text' => $item['pe_name']
+                );
+            },
+            $request->get('u')
+        );
+
         $this->render(
             'files/View/Admin/RemovePrompt.inc',
             array(
                 'header' => 'Správa oprávnění',
                 'prompt' =>
-                    $this->notice('Bude nutné přiřadit uživatelům z těchto skupin jinou skupinu!')
+                    $this->notice('Uživatelům z těchto skupin bude nutmné přiřadit jinou skupinu!')
                     . 'Opravdu chcete odstranit uživatelské úrovně:',
                 'returnURI' => $request->getReferer(),
                 'data' => $data
+            )
+        );
+    }
+
+    protected function renderForm($request, $data = null)
+    {
+        if (!$request->post()) {
+            foreach (Settings::$permissions as $name => $item) {
+                $request->post($name, $data['pe_' . $name]);
+            }
+        }
+        $settings = array_map(
+            function ($name, $item) use ($request, $data) {
+                $value = $request->post($name) ?: $data ? $data['pe_' . $name] : $item['default'];
+                return array(
+                    'name' => $item['name'],
+                    'value' => $value,
+                    'items' => array_map(
+                        function ($key, $levelName) use ($name, $item, $value) {
+                            return isset($item[$key])
+                                ? $this->radio($name, $key)
+                                       ->set($key == $value)
+                                       ->label($levelName)
+                                : '';
+                        },
+                        array_keys(Settings::$permissionLevels),
+                        array_values(Settings::$permissionLevels)
+                    )
+                );
+            },
+            array_keys(Settings::$permissions),
+            array_values(Settings::$permissions)
+        );
+
+        $this->render(
+            'files/View/Admin/Permissions/Form.inc',
+            array(
+                'action' => $request->getAction(),
+                'name' => $request->post('name') ?: $data ? $data['pe_name'] : '',
+                'description' => $request->post('description') ?: $data ? $data['pe_description'] : '',
+                'settings' => $settings
             )
         );
     }

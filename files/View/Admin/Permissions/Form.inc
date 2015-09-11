@@ -21,17 +21,11 @@
         </td>
     </tr>
     <?php
-    foreach (Settings::$permissions as $name => $item) {
+    foreach ($this->settings as $item) {
         echo '<tr>';
         echo '<td>', $item['name'], '</td>';
-        foreach (Settings::$permissionLevels as $key => $level_name) {
-            echo '<td>';
-            if (isset($item[$key])) {
-                echo $this->radio($name, $key)
-                          ->set($item['default'] == $key)
-                          ->label($level_name);
-            }
-            echo '</td>';
+        foreach ($item['items'] as $level) {
+            echo "<td>$level</td>";
         }
         echo '</tr>';
     }

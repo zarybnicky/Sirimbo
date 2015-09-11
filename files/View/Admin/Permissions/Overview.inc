@@ -10,7 +10,7 @@
                       ->content('Odebrat', 'remove', true);
         }
         ?>
-        <div<?= $this->showMenu ? 'style="margin-right:150px"' : '' ?>>
+        <div<?= $this->showMenu ? ' style="margin-right:150px"' : '' ?>>
             <?= $this->table()
                      ->style('width:100%')
                      ->data($this->data)
