@@ -20,10 +20,11 @@
         <td>
             <?php
             foreach ($this->skupiny as $item) {
-                if (true) //$item['us_platba_mesic'] > 0 || $item['us_platba_ctvrtrok'] > 0 || $item['us_platba_pulrok'] > 0
-                    echo $this->checkbox('sk-' . $item['s_id'], '1'), ' ',
-                $this->colorbox($item['s_color_rgb'], $item['s_description']), ' ',
-                $item['s_name'], '<br/>';
+                echo $this->checkbox('sk-' . $item['s_id'], '1')
+                          ->set($this->skupinySelected[$item['s_id']])
+                          ->label($this->colorbox($item['s_color_rgb'], $item['s_description'])
+                                  . '&nbsp;' . $item['s_name']);
+                echo '<br>';
             }
             ?>
             <?= $this->hidden('referer', $this->referer) ?>

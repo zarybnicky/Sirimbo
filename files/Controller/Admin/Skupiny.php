@@ -167,7 +167,7 @@ class Controller_Admin_Skupiny extends Controller_Admin
                 DBSkupiny::removeChild($id, $data['pg_id']);
                 ++$groupCount;
             }
-            unset($data);
+
             $this->redirect(
                 '/admin/platby/structure/category/remove/' . $id,
                 'Spojení s ' . $groupCount . ' kategoriemi byla odstraněna.'
@@ -233,7 +233,6 @@ class Controller_Admin_Skupiny extends Controller_Admin
         foreach ($groupNotInSkupina as $array) {
             $groupSelect[$array['pg_id']] = $array['pg_name'];
         }
-        unset($array);
 
         $this->render(
             'files/View/Admin/Skupiny/Form.inc',

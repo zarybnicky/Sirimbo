@@ -12,18 +12,19 @@ class Controller_Admin_Nabidka extends Controller_Admin
         switch($request->post('action')) {
         case 'save':
             foreach (DBNabidka::getNabidka() as $item) {
-                if ((bool) $request->post($item['n_id']) !== (bool) $item['n_visible']) {
-                    DBNabidka::editNabidka(
-                        $item['n_id'],
-                        $item['n_trener'],
-                        $item['n_pocet_hod'],
-                        $item['n_max_pocet_hod'],
-                        $item['n_od'],
-                        $item['n_do'],
-                        $request->post($item['n_id']) ? '1' : '0',
-                        $item['n_lock']
-                    );
+                if ((bool) $request->post($item['n_id']) == (bool) $item['n_visible']) {
+                    continue;
                 }
+                DBNabidka::editNabidka(
+                    $item['n_id'],
+                    $item['n_trener'],
+                    $item['n_pocet_hod'],
+                    $item['n_max_pocet_hod'],
+                    $item['n_od'],
+                    $item['n_do'],
+                    $request->post($item['n_id']) ? '1' : '0',
+                    $item['n_lock']
+                );
             }
             $this->redirect('/admin/nabidka', 'Nabídky upraveny');
             break;
@@ -236,6 +237,12 @@ class Controller_Admin_Nabidka extends Controller_Admin
 
     protected function displayForm($request, $data = null)
     {
+        $isAdmin = Permissions::check('nabidka', P_ADMIN);
+        if ($isAdmin) {
+            $treneri = DBUser::getUsersByPermission('nabidka', P_OWNED);
+        } else {
+            $treneri = array(DBUser::getUserData(User::getUserID()));
+        }
         $this->render(
             'files/View/Admin/Nabidka/Form.inc',
             array(
@@ -246,7 +253,8 @@ class Controller_Admin_Nabidka extends Controller_Admin
                              ? 'Přidat'
                              : 'Upravit'),
                 'referer' => $request->getReferer(),
-                'users' => DBUser::getUsersByPermission('nabidka', P_OWNED),
+                'users' => $treneri,
+                'idAdmin' => $isAdmin ?: '',
                 'id' => $data ? $data['n_id'] : null,
                 'trener' => ($request->post('trener')
                              ?: $data ? $data['n_trener'] : ''),

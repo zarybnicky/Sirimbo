@@ -198,14 +198,16 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
     private function displayForm($request, $id)
     {
         $dirs = DBGalerie::getDirs(true, true);
-        foreach ($dirs as &$item) {
-            $new_data = array(
-                'id'    => $item['gd_id'],
-                'text'  => str_repeat('&nbsp;&nbsp;', $item['gd_level'] - 1)
-                . $item['gd_name']
-            );
-            $item = $new_data;
-        }
+        $dirs = array_map(
+            function ($item) {
+                return array(
+                    'id'    => $item['gd_id'],
+                    'text'  => str_repeat('&nbsp;&nbsp;', $item['gd_level'] - 1)
+                    . $item['gd_name']
+                );
+            },
+            $dirs
+        );
 
         $this->render(
             'files/View/Admin/Galerie/FormFile.inc',

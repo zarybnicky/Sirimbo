@@ -10,15 +10,17 @@
 <table>
     <tr>
         <td>Jméno: </td>
-        <td colspan="<?= count(Settings::$permissions) ?>">
-            <input type="text" name="name" value="<?= $this->name ?>" />
+        <td colspan="<?= count(Settings::$permissionLevels) ?>">
+            <?= $this->text('name', $this->name) ?>
         </td>
-    </tr><tr>
+    </tr>
+    <tr>
         <td>Popis: </td>
-        <td colspan="<?= count(Settings::$permissions) ?>">
-            <textarea rows="7" cols="60" name="description"><?= $this->description ?></textarea>
+        <td colspan="<?= count(Settings::$permissionLevels) ?>">
+            <?= $this->text('description', $this->description)->size(35) ?>
         </td>
-    </tr><?php
+    </tr>
+    <?php
     foreach (Settings::$permissions as $name => $item) {
         echo '<tr>';
         echo '<td>', $item['name'], '</td>';

@@ -117,25 +117,20 @@ class Controller_Admin_Rozpis extends Controller_Admin
         return;
     }
 
-    public function add($request) {
-        if (!$request->post() || is_object($f = $this->checkData($request))) {
-            if ($request->post()) {
-                $this->redirect()->setMessage($f->getMessages());
-            }
-            $this->render(
-                'files/View/Admin/Rozpis/Form.inc',
-                array(
-                    'action' => $request->getAction(),
-                    'isAdmin' => Permissions::check('rozpis', P_ADMIN),
-                    'trener' => $request->post('trener') ?: '',
-                    'kde' => $request->post('kde') ?: '',
-                    'datum' => $request->post('datum') ?: '',
-                    'visible' => $request->post('visible') ?: '',
-                    'lock' => $request->post('lock') ?: ''
-                )
-            );
+    public function add($request)
+    {
+        if (!$request->post()) {
+            $this->displayForm($request);
             return;
         }
+
+        $form = $this->checkData($request);
+        if (is_object($form)) {
+            $this->redirect()->setMessage($f->getMessages());
+            $this->displayForm($request);
+            return;
+        }
+
         Permissions::checkError('rozpis', P_OWNED, $request->post('trener'));
         $datum = $this->date('datum')->getPost($request);
         $visible = (bool) $request->post('visible');
@@ -162,31 +157,17 @@ class Controller_Admin_Rozpis extends Controller_Admin
         }
         Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
 
-        if (!$request->post() || is_object($f = $this->checkData($request))) {
-            if (!$request->post()) {
-                $request->post('id', $id);
-                $request->post('trener', $data['r_trener']);
-                $request->post('kde', $data['r_kde']);
-                $request->post('datum', $data['r_datum']);
-                $request->post('visible', $data['r_visible']);
-                $request->post('lock', $data['r_lock']);
-            } else {
-                $this->redirect()->setMessage($f->getMessages());
-            }
-            $this->render(
-                'files/View/Admin/Rozpis/Form.inc',
-                array(
-                    'action' => $request->getAction(),
-                    'isAdmin' => Permissions::check('rozpis', P_ADMIN),
-                    'trener' => $request->post('trener'),
-                    'kde' => $request->post('kde'),
-                    'datum' => $request->post('datum'),
-                    'visible' => $request->post('visible'),
-                    'lock' => $request->post('lock')
-                )
-            );
+        if (!$request->post()) {
+            $this->displayForm($request, $data);
+        }
+
+        $form = $this->checkData($request);
+        if (is_object($form)) {
+            $this->redirect()->setMessage($form->getMessages());
+            $this->displayForm($request, $data);
             return;
         }
+
         $datum = $this->date('datum')->getPost($request);
 
         $visible = (bool) $request->post('visible');
@@ -205,6 +186,30 @@ class Controller_Admin_Rozpis extends Controller_Admin
         );
 
         $this->redirect('/admin/rozpis', 'Rozpis úspěšně upraven');
+    }
+
+    protected function displayForm($request, $data = null)
+    {
+        $isAdmin = Permissions::check('rozpis', P_ADMIN);
+        if ($isAdmin) {
+            $treneri = DBUser::getUsersByPermission('rozpis', P_OWNED);
+        } else {
+            $treneri = array(DBUser::getUserData(User::getUserID()));
+        }
+
+        $this->render(
+            'files/View/Admin/Rozpis/Form.inc',
+            array(
+                'action' => $request->getAction(),
+                'isAdmin' => $isAdmin,
+                'treneri' => $treneri,
+                'trener' => $request->post('trener') ?: $data ? $data['r_trener'] : '',
+                'kde' => $request->post('kde') ?: $data ? $data['r_kde'] : '',
+                'datum' => $request->post('datum') ?: $data ? $data['r_datum'] : '',
+                'visible' => $request->post('visible') ?: $data ? $data['r_visible'] : '',
+                'lock' => $request->post('lock') ?: $data ? $data['r_lock'] : ''
+            )
+        );
     }
 
     private function checkData($request)

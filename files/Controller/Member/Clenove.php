@@ -50,18 +50,19 @@ class Controller_Member_Clenove extends Controller_Member
     }
     public function seznam($request) {
         $index = 0;
-        $data = DBUser::getActiveUsers();
-        foreach ($data as &$item) {
-            $new_data = array(
-                'index' => ++$index . '.',
-                'fullName' => '<a href="/member/clenove/' . $item['u_id'] . '">' .
-                    '<img src="/style/person-small.png" alt="' . $item['u_jmeno'] . ' ' . $item['u_prijmeni'] .
-                    '" style="margin-bottom:-2px"/>' .
-                    '</a>' .
-                    '&nbsp;' . $item['u_prijmeni'] . ', ' . $item['u_jmeno']
-            );
-            $item = $new_data;
-        }
+        $data = array_map(
+            function ($item) use (&$index) {
+                return array(
+                    'index' => ++$index . '.',
+                    'fullName' => '<a href="/member/clenove/' . $item['u_id'] . '">'
+                    . '<img src="/style/person-small.png" alt="' . $item['u_jmeno'] . ' ' . $item['u_prijmeni']
+                    . '" style="margin-bottom:-2px"/>'
+                    . '</a>'
+                    . '&nbsp;' . $item['u_prijmeni'] . ', ' . $item['u_jmeno']
+                );
+            },
+            DBUser::getActiveUsers()
+        );
         $this->render(
             'files/View/Member/Clenove/UserList.inc',
             array(

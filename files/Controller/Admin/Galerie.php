@@ -304,18 +304,20 @@ class Controller_Admin_Galerie extends Controller_Admin
     private function _displayOverview()
     {
         $data = DBGalerie::getDirs(true, true);
-        foreach ($data as &$item) {
-            $new_data = array(
-            	'checkBox' => $this->checkbox('galerie[]', $item['gd_id'])
-                                   ->render(),
-                'name'     => str_repeat('&nbsp;->', $item['gd_level'] - 1)
-                    . ' ' . $item['gd_name'],
-                'hidden'   => $this->checkbox($item['gd_id'], '1')
-                                   ->set($item['gd_hidden'])
-                                   ->render()
-            );
-            $item = $new_data;
-        }
+        $data = array_map(
+            function ($item) {
+                return array(
+                    'checkBox' => $this->checkbox('galerie[]', $item['gd_id'])->render(),
+                    'name'     => str_repeat('&nbsp;->', $item['gd_level'] - 1)
+                                  . ' ' . $item['gd_name'],
+                    'hidden'   => $this->checkbox($item['gd_id'], '1')
+                                       ->set($item['gd_hidden'])
+                                       ->render()
+                );
+            },
+            $data
+        );
+
         $this->render(
             'files/View/Admin/Galerie/Overview.inc',
             array('data' => $data)

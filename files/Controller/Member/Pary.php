@@ -6,8 +6,8 @@ class Controller_Member_Pary extends Controller_Member
         Permissions::checkError('pary', P_VIEW);
     }
     public function view($request) {
-        $pary = DBPary::getActiveParyByHodnoceni();
-        if (empty($pary)) {
+        $data = DBPary::getActiveParyByHodnoceni();
+        if (empty($data)) {
             $this->render(
                 'files/View/Empty.inc',
                 array(
@@ -17,21 +17,24 @@ class Controller_Member_Pary extends Controller_Member
             );
             return;
         }
-        foreach ($pary as &$item) {
-            $new_data = array(
-                'id' => $item['p_id'],
-                'partnerName' => $item['guy_name'] . ' ' . $item['guy_surname'],
-                'partnerkaName' => $item['gal_name'] . ' ' . $item['gal_surname'],
-                'latina' => $item['p_stt_trida'] . ' ' . $item['p_stt_body'] . 'F' . $item['p_stt_finale'],
-                'standart' => $item['p_lat_trida'] . ' ' . $item['p_lat_body'] . 'F' . $item['p_lat_finale'],
-                'hodnoceni' => $item['p_hodnoceni']
-            );
-            $item = $new_data;
-        }
+        $data = array_map(
+            function ($item) {
+                return array(
+                    'id' => $item['p_id'],
+                    'partnerName' => $item['guy_name'] . ' ' . $item['guy_surname'],
+                    'partnerkaName' => $item['gal_name'] . ' ' . $item['gal_surname'],
+                    'latina' => $item['p_stt_trida'] . ' ' . $item['p_stt_body'] . 'F' . $item['p_stt_finale'],
+                    'standart' => $item['p_lat_trida'] . ' ' . $item['p_lat_body'] . 'F' . $item['p_lat_finale'],
+                    'hodnoceni' => $item['p_hodnoceni']
+                );
+            },
+            $data
+        );
+
         $this->render(
             'files/View/Member/Pary/Overview.inc',
             array(
-                'data' => $pary
+                'data' => $data
             )
         );
     }

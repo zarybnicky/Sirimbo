@@ -63,23 +63,21 @@ class Controller_Member_Akce extends Controller_Member
             )
         );
     }
-    private function _getRenderData(&$data)
+    private function _getRenderData($data)
     {
         $items = DBAkce::getAkceItems($data['a_id']);
-        $dokumenty = unserialize($data['a_dokumenty']);
-        if (is_array($dokumenty)) {
-            foreach ($dokumenty as &$row) {
-                $dokument = DBDokumenty::getSingleDokument($row);
-                $new_row = array(
-                    'id' => $row,
+        $dokumenty = array_map(
+            function ($item) {
+                $dokument = DBDokumenty::getSingleDokument($item);
+                return array(
+                    'id' => $item,
                     'name' => $dokument['d_name']
                 );
-                $row = $new_row;
-            }
-        } else {
-            $dokumenty = array();
-        }
-        $new_data = array(
+            },
+            unserialize($data['a_dokumenty']) ?: array()
+        );
+
+        $out = array(
             'id' => $data['a_id'],
             'jmeno' => $data['a_jmeno'],
             'kde' => $data['a_kde'],
@@ -93,10 +91,10 @@ class Controller_Member_Akce extends Controller_Member
             'dokumenty' => $dokumenty,
             'items' => $items
         );
-        $new_data['signIn'] = $new_data['showForm']
-                            ? !DBAkce::isUserSignedUp($new_data['id'], User::getUserID())
-                            : '';
-        return $new_data;
+        $out['signIn'] = $out['showForm']
+                       ? !DBAkce::isUserSignedUp($out['id'], User::getUserID())
+                       : '';
+        return $out;
     }
     private function checkData($request, $data, $action)
     {

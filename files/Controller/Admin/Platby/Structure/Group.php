@@ -20,19 +20,19 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
 
     protected function getGroups()
     {
-        $out = array();
-        $groups = DBPlatbyGroup::getGroups();
-        foreach ($groups as $array) {
-            $new_data = array();
-            $new_data['name'] = $array['pg_name'];
-            $new_data['type'] = $array['pg_type'] ? 'Členské příspěvky' : 'Běžné platby';
-            $new_data['buttons'] =
-                $this->getEditLink('/admin/platby/structure/group/edit/' . $array['pg_id'])
-                . $this->getRemoveLink('/admin/platby/structure/group/remove/' . $array['pg_id']);
-            $out[] = $new_data;
-        }
-        return $out;
+        return array_map(
+            function ($item) {
+                return array(
+                    'name' => $item['pg_name'],
+                    'type' => $item['pg_type'] ? 'Členské příspěvky' : 'Běžné platby',
+                    'buttons' => $this->getEditLink('/admin/platby/structure/group/edit/' . $item['pg_id'])
+                    . $this->getRemoveLink('/admin/platby/structure/group/remove/' . $item['pg_id'])
+                );
+            },
+            DBPlatbyGroup::getGroups()
+        );
     }
+
     public function add($request)
     {
         if (!$request->post() || is_object($s = $this->checkPost($request))) {
@@ -226,7 +226,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
                 DBPlatbyGroup::removeChild($id, $data['pc_id']);
                 ++$categoryCount;
             }
-            unset($data);
+
             $skupinaCount = 0;
             foreach ($f['skupiny'] as $data) {
                 DBSkupiny::removeChild($data['s_id'], $id);
@@ -283,47 +283,48 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
     private function displayForm($request, $action, $id, $data = array())
     {
         $id = $id ?: 0;
-        foreach ($data as $key => &$array) {
-            $new_data = array(
-                'buttons' => '<form action="" method="post">'
-                . $this->getUnlinkCategoryButton($array['pc_id'])
-                . $this->getEditLink('/admin/platby/structure/category/edit/' . $array['pc_id'])
-                . $this->getRemoveLink('/admin/platby/structure/category/remove/    ' . $array['pc_id'])
-                . '</form>',
-                'name' => $array['pc_name'],
-                'specific' => $array['pc_symbol'],
-                'amount' => ((float) $array['pc_amount'] * (float) $array['pg_base']),
-                'dueDate' => (new Date($array['pc_date_due']))->getDate(Date::FORMAT_SIMPLE_SPACED),
-                'validDate' => $this->getDateDisplay($array['pc_valid_from'], $array['pc_valid_to']),
-                'usePrefix' => '&nbsp;' . ($array['pc_use_prefix'] ? '&#10003;' : '&#10799;'),
-                'useBase' => '&nbsp;' . ($array['pc_use_base'] ? '&#10003;' : '&#10799;'),
-                'archive' => '&nbsp;' . ($array['pc_archive'] ? '&#10003;' : '&#10799;')
-            );
-            $array = $new_data;
-        }
-        unset($array);
+        $data = array_map(
+            function ($item) {
+                return array(
+                    'buttons' => '<form action="" method="post">'
+                    . $this->getUnlinkCategoryButton($item['pc_id'])
+                    . $this->getEditLink('/admin/platby/structure/category/edit/' . $item['pc_id'])
+                    . $this->getRemoveLink('/admin/platby/structure/category/remove/    ' . $item['pc_id'])
+                    . '</form>',
+                    'name' => $item['pc_name'],
+                    'specific' => $item['pc_symbol'],
+                    'amount' => ((float) $item['pc_amount'] * (float) $item['pg_base']),
+                    'dueDate' => (new Date($item['pc_date_due']))->getDate(Date::FORMAT_SIMPLE_SPACED),
+                    'validDate' => $this->getDateDisplay($item['pc_valid_from'], $item['pc_valid_to']),
+                    'usePrefix' => '&nbsp;' . ($item['pc_use_prefix'] ? '&#10003;' : '&#10799;'),
+                    'useBase' => '&nbsp;' . ($item['pc_use_base'] ? '&#10003;' : '&#10799;'),
+                    'archive' => '&nbsp;' . ($item['pc_archive'] ? '&#10003;' : '&#10799;')
+                );
+            },
+            $data
+        );
 
         $categoryNotInGroup = DBPlatbyCategory::getNotInGroup($id);
         $categorySelect = array();
         foreach ($categoryNotInGroup as $array) {
             $categorySelect[$array['pc_id']] = $array['pc_symbol'] . ' - ' . $array['pc_name'];
         }
-        unset($array);
 
         $skupiny = DBPlatbyGroup::getSingleWithSkupiny($id);
-        foreach ($skupiny as &$array) {
-            $new_data = array(
-                'buttons' => '<form action="" method="post">'
-                . $this->getUnlinkSkupinaButton($array['s_id'])
-                . $this->getEditLink('/admin/skupiny/edit/' . $array['s_id'])
-                . $this->getRemoveLink('/admin/skupiny/remove?u[]=' . $array['s_id'])
-                . '</form>',
-                'name' => $this->colorbox($array['s_color_rgb'], $array['s_description'])
-                . '&nbsp;' . $array['s_name']
-            );
-            $array = $new_data;
-        }
-        unset($array);
+        $skupiny = array_map(
+            function ($item) {
+                return array(
+                    'buttons' => '<form action="" method="post">'
+                    . $this->getUnlinkSkupinaButton($array['s_id'])
+                    . $this->getEditLink('/admin/skupiny/edit/' . $array['s_id'])
+                    . $this->getRemoveLink('/admin/skupiny/remove?u[]=' . $array['s_id'])
+                    . '</form>',
+                    'name' => $this->colorbox($array['s_color_rgb'], $array['s_description'])
+                    . '&nbsp;' . $array['s_name']
+                );
+            },
+            $skupiny
+        );
 
         $skupinyNotInGroup = DBSkupiny::getNotInGroup($id);
         $skupinySelect = array();

@@ -5,30 +5,30 @@
     <div>
       <div class="up_header">
         <div style="float:left;">
-          <span class="nadpis"><?php echo $item['nadpis'];?></span>
+          <span class="nadpis"><?= $item['nadpis'];?></span>
           <?php if ($item['canEdit']): ?>
-            &nbsp;-&nbsp;<a href="/admin/nastenka/edit/<?php echo $item['id'];?>">Editovat</a>
+            &nbsp;-&nbsp;<a href="/admin/nastenka/edit/<?= $item['id'];?>">Editovat</a>
           <?php endif;?>
           <?php if ($item['skupinyBoxes']): ?>
           <div style="padding:2px 0;"><div style="float:left;" class="little">skupiny:&nbsp;</div>
-            <?php foreach ($item['skupinyBoxes'] as $box) echo $box; ?>
+            <?= $item['skupinyBoxes'] ?>
           </div>
           <?php endif; ?>
         </div>
         <div style="float:right;text-align:right;">
           <div>
-            <span class="little">přidal: </span><?php echo $item['addedBy'];?>
+            <span class="little">přidal: </span><?= $item['addedBy'];?>
             <br/>
-            <span class="little">přidáno: </span><?php echo $item['addedTimestamp'];?>
+            <span class="little">přidáno: </span><?= $item['addedTimestamp'];?>
           </div>
         </div>
         <div style="clear:both;"></div>
       </div>
       <div style="padding-top:8px;">
-        <?php echo $item['text'];?>
+        <?= $item['text'];?>
       </div>
     </div>
     <hr/>
   <?php endforeach;?>
-  <div style="text-align:center;"><?php echo $this->navigation;?></div>
+  <div style="text-align:center;"><?= $this->navigation;?></div>
 </div>

@@ -279,20 +279,21 @@ class Controller_Admin_Users extends Controller_Admin
             );
         }
 
-        $users = DBUser::getDuplicateUsers();
-        foreach ($users as &$row) {
-            $new_data = array(
-                'id' => $row['u_id'],
-                'checkBox' => $this->checkbox('users[]', $row['u_id'])->render(),
-                'colorBox' => $this->colorbox($row['s_color_rgb'], $row['s_description']),
-                'fullName' => $row['u_prijmeni'] . ', ' . $row['u_jmeno'],
-                'email' => $row['u_email'],
-                'telefon' => $row['u_telefon'],
-                'narozeni' => formatDate($row['u_narozeni']),
-                'timestamp' => formatTimestamp($row['u_timestamp'])
-            );
-            $row = $new_data;
-        }
+        $users = array_map(
+            function ($item) {
+                return array(
+                    'id' => $item['u_id'],
+                    'checkBox' => $this->checkbox('users[]', $item['u_id'])->render(),
+                    'colorBox' => $this->colorbox($item['s_color_rgb'], $item['s_description']),
+                    'fullName' => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
+                    'email' => $item['u_email'],
+                    'telefon' => $item['u_telefon'],
+                    'narozeni' => formatDate($item['u_narozeni']),
+                    'timestamp' => formatTimestamp($item['u_timestamp'])
+                );
+            },
+            DBUser::getDuplicateUsers()
+        );
         $this->render(
             'files/View/Admin/Users/Duplicate.inc',
             array(
@@ -307,24 +308,28 @@ class Controller_Admin_Users extends Controller_Admin
         $all = DBUser::getUsers();
         $active = DBUser::getActiveUsers();
         $dancers = DBUser::getActiveDancers();
-        $data = array(
-            array('Uživatelé v databázi', count($all)),
-            array('Aktivní uživatelé', count($active)),
-            array('Aktivní tanečníci', count($dancers))
+
+        $data = array_map(
+            function ($item) {
+                return array(
+                    'group' => $item['pe_name'],
+                    'count' => $item['count']
+                );
+            },
+            DBUser::getGroupCounts()
         );
 
-        $groupcount = DBUser::getGroupCounts();
-        foreach ($groupcount as $group) {
-            $data[] = array($group['pe_name'], $group['count']);
-        }
+        $all = DBUser::getUsers();
+        $active = DBUser::getActiveUsers();
+        $dancers = DBUser::getActiveDancers();
 
-        foreach ($data as &$row) {
-            $new_data = array(
-                'group' => $row[0],
-                'count' => $row[1]
-            );
-            $row = $new_data;
-        }
+        array_unshift(
+            $data,
+            array('group' => 'Uživatelé v databázi', 'count' => count($all)),
+            array('group' => 'Aktivní uživatelé', 'count' => count($active)),
+            array('group' => 'Aktivní tanečníci', 'count' => count($dancers))
+        );
+
         $this->render(
             'files/View/Admin/Users/Statistiky.inc',
             array(
@@ -394,17 +399,24 @@ class Controller_Admin_Users extends Controller_Admin
     {
         $groups = DBPermissions::getGroups();
         $group_lookup = array();
-        foreach ($groups as &$row) {
-            if ($row['pe_id']) {
-                $filter[] = $row['pe_id'];
-            }
-            $new_data = array(
-                'id' => $row['pe_id'],
-                'name' => $row['pe_name']
-            );
+        foreach ($groups as $row) {
             $group_lookup[$row['pe_id']] = $row['pe_name'];
-            $row = $new_data;
         }
+        $filter = array_map(
+            function ($item) {
+                return $item['pe_id'];
+            },
+            $groups
+        );
+        $groups = array_map(
+            function ($item) {
+                return array(
+                    'id' => $item['pe_id'],
+                    'name' => $item['pe_name']
+                );
+            },
+            $groups
+        );
 
         $skupinyselect = $this->select();
         if ($action == 'status') {

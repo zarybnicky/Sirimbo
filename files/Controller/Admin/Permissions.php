@@ -26,15 +26,16 @@ class Controller_Admin_Permissions extends Controller_Admin
                 );
                 break;
         }
-        $data = DBPermissions::getGroups();
-        foreach ($data as &$row) {
-            $new_data = array(
-                'checkBox' => '<input type="checkbox" name="permissions[]" value="' . $row['pe_id'] . '" />',
-                'name' => $row['pe_name'],
-                'description' => $row['pe_description']
-            );
-            $row = $new_data;
-        }
+        $data = array_map(
+            function ($item) {
+                return array(
+                    'checkBox' => $this->checkbox('permissions[]', $item['pe_id']),
+                    'name' => $item['pe_name'],
+                    'description' => $item['pe_description']
+                );
+            },
+            DBPermissions::getGroups()
+        );
         $this->render(
             'files/View/Admin/Permissions/Overview.inc',
             array(

@@ -25,27 +25,31 @@ class Controller_Member_Nastenka extends Controller_Member
             );
             return;
         }
-        foreach ($data as &$item) {
-            $skupiny = array_map(
-                function ($skupina) {
-                    return (string) $this->colorbox(
-                        $skupina['ups_color'],
-                        $skupina['ups_popis']
-                    );
-                },
-                DBNastenka::getNastenkaSkupiny($item['up_id'])
-            );
-            $new_data = array(
-                'id' => $item['up_id'],
-                'nadpis' => $item['up_nadpis'],
-                'canEdit' => Permissions::check('nastenka', P_OWNED, $item['up_kdo']),
-                'skupinyBoxes' => $skupiny,
-                'addedBy' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
-                'addedTimestamp' => formatTimestamp($item['up_timestamp_add']),
-                'text' => stripslashes($item['up_text'])
-            );
-            $item = $new_data;
-        }
+
+        $data = array_map(
+            function ($item) {
+                $skupiny = array_map(
+                    function ($skupina) {
+                        return (string) $this->colorbox(
+                            $skupina['ups_color'],
+                            $skupina['ups_popis']
+                        );
+                    },
+                    DBNastenka::getNastenkaSkupiny($item['up_id'])
+                );
+                return array(
+                    'id' => $item['up_id'],
+                    'nadpis' => $item['up_nadpis'],
+                    'canEdit' => Permissions::check('nastenka', P_OWNED, $item['up_kdo']),
+                    'skupinyBoxes' => implode('', $skupiny),
+                    'addedBy' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
+                    'addedTimestamp' => formatTimestamp($item['up_timestamp_add']),
+                    'text' => stripslashes($item['up_text'])
+                );
+            },
+            $data
+        );
+
         $this->render(
             'files/View/Member/Nastenka.inc',
             array(
@@ -55,4 +59,3 @@ class Controller_Member_Nastenka extends Controller_Member
         );
     }
 }
-?>

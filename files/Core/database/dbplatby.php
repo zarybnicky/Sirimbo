@@ -18,7 +18,7 @@ class DBPlatby extends Database
                         LEFT JOIN platby_category ON pc_id=pcg_id_category
                     WHERE pgs_id_skupina='$sid'
                     GROUP BY pc_symbol
-                    HAVING COUNT(pcg_id) > 1
+                    HAVING COUNT(*) > 1
                 ) dupl
             WHERE pcg.pcg_id=dupl.pcg_id"
         );

@@ -8,21 +8,14 @@
 <table>
     <tr>
         <td>Trenér (*): </td>
-        <td><?php
-            if (!$this->isAdmin) { ?>
-            <select name="trener">
-                <option value="<?= User::getUserID();?>">Já</option>
-            </select><?php
-            } else {
-                echo $this->userSelect()
-                    ->name('trener')
-                    ->set($this->trener)
-                    ->users(DBUser::getUsersByPermission('rozpis', P_OWNED));
-            }?>
+        <td><?= $this->userSelect('trener')
+                     ->set($this->trener)
+                     ->tmpSwitch($this->isAdmin)
+                     ->users($this->treneri) ?>
         </td>
     </tr><tr>
         <td>Místo (*): </td>
-        <td><input type="text" name="kde" value="<?= $this->kde ?>" /></td>
+        <td><?= $this->text('kde', $this->kde) ?></td>
     </tr><tr>
         <td>Datum: (*)</td>
         <td><?= $this->date('datum', $this->datum)->textBox() ?></td>

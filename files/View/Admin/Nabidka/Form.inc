@@ -9,36 +9,20 @@
             <tr>
                 <td>Trenér (*):</td>
                 <td>
-                    <?php if (!Permissions::check('nabidka', P_ADMIN)) : ?>
-                        <select name="trener">
-                            <option value="<?= User::getUserID();?>">Já</option>
-                        </select>
-                    <?php else : ?>
-                        <?= $this->userSelect()
-                                 ->name('trener')
-                                 ->users($this->users)
-                                 ->set($this->trener)
-                                 ->render() ?>
-                    <?php endif; ?>
+                    <?= $this->userSelect('trener')
+                             ->users($this->users)
+                             ->set($this->trener)
+                             ->tmpSwitch($this->isAdmin)
+                             ->render() ?>
                 </td>
             </tr>
             <tr>
                 <td>Počet hodin (*):</td>
-                <td>
-                    <input type="text"
-                           name="pocet_hod"
-                           value="<?= $this->pocet_hod ?>" />
-                </td>
+                <td><?= $this->text('pocet_hod', $this->pocet_hod) ?></td>
             </tr>
             <tr>
-                <td>
-                    Max. počet hodin/pár (*):
-                </td>
-                <td>
-                    <input type="text"
-                           name="max_pocet_hod"
-                           value="<?= $this->max_pocet_hod ?>" />
-                </td>
+                <td>Max. počet hodin/pár (*):</td>
+                <td><?= $this->text('max_pocet_hod', $this->max_pocet_hod) ?></td>
             </tr>
             <tr>
                 <td></td>
@@ -59,16 +43,14 @@
             <tr>
                 <td>Viditelný: </td>
                 <td>
-                    <?= Permissions::check('nabidka', P_ADMIN)
+                    <?= $this->isAdmin
                         ? $this->checkbox('visible', 'visible')->set($this->visible)
                         : ($this->visible ? '&#10003;' : '&#10799;') ?>
                 </td>
             </tr>
             <tr>
                 <td>Uzamknout: </td>
-                <td>
-                    <?= $this->checkbox('lock')->set($this->lock) ?>
-                </td>
+                <td><?= $this->checkbox('lock')->set($this->lock) ?></td>
             </tr>
             <tr>
                 <td>

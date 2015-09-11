@@ -3,6 +3,7 @@ class TextHelper
 {
     protected $name;
     protected $value;
+    protected $size;
 
     public function text($name, $value = null)
     {
@@ -12,13 +13,21 @@ class TextHelper
 
         $this->name = $name;
         $this->value = $value;
+        $this->size = null;
 
+        return $this;
+    }
+
+    public function size($size)
+    {
+        $this->size = $size;
         return $this;
     }
 
     public function render()
     {
         return '<input type="text"'
+             . ($this->size ? " size=\"{$this->size}\"" : '')
              . " name=\"{$this->name}\" "
              . " value=\"{$this->value}\" />";
     }

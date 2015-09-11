@@ -203,16 +203,16 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
 
         $data = DBPlatbyItem::get(true, $filter, array('pi_date DESC'), $date);
 
-        foreach ($data as &$row) {
-            $new_data = array(
-                'checkBox' => '<input type="checkbox" name="data[]" value="' . $row['pi_id'] . '" />',
-                'fullName' => $row['u_prijmeni'] . ', ' . $row['u_jmeno'],
-                'category' => $row['pc_name'],
-                'date' => (new Date($row['pi_date']))->getDate(Date::FORMAT_SIMPLE_SPACED),
-                'amount' => $row['pi_amount'] . 'Kč'
-            );
-            $row = $new_data;
-        }
-        return $data;
+        return array_map(
+            function ($item) {
+                return array(
+                    'checkBox' => $this->checkbox('data[]', $item['pi_id'])->render(),
+                    'fullName' => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
+                    'category' => $item['pc_name'],
+                    'date' => (new Date($item['pi_date']))->getDate(Date::FORMAT_SIMPLE_SPACED),
+                    'amount' => $item['pi_amount'] . 'Kč'
+                );
+            }
+        );
     }
 }

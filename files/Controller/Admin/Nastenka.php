@@ -39,28 +39,29 @@ class Controller_Admin_Nastenka extends Controller_Admin
         $pager->setDefaultItemsPerPage(20);
         $pager->setPageRange(5);
         $data = $pager->getItems();
-        foreach ($data as &$row) {
-            $new_data = array(
-                'canEdit' => Permissions::check('nastenka', P_OWNED, $row['up_kdo']),
-                'header' => $row['up_nadpis'],
-                'fullName' => $row['u_jmeno'] . ' ' . $row['u_prijmeni'],
-                'timestampAdd' => formatTimestamp($row['up_timestamp_add'], true),
-                'timestampEdit' => formatTimestamp($row['up_timestamp'], true)
-            );
-            if ($new_data['canEdit']) {
-                $new_data['checkBox'] = '<input type="checkbox" name="nastenka[]" value="' . $row['up_id'] . '" />';
-            } else {
-                $new_data['checkBox'] = '&nbsp;&#10799;';
-            }
 
-            $skupiny = DBNastenka::getNastenkaSkupiny($row['up_id']);
-            $new_data['groups'] = '';
-            foreach ($skupiny as $skupina) {
-                $new_data['groups'] .= $this->colorbox($skupina['ups_color'], $skupina['ups_popis']);
-            }
+        $data = array_map(
+            function ($item) {
+                $canEdit = Permissions::check('nastenka', P_OWNED, $item['up_kdo']);
+                return array(
+                    'canEdit' => $canEdit,
+                    'checkBox' => $canEdit ? $this->checkbox('nastenka[]', $item['up_id']) : '&nbsp;&#10799;',
+                    'header' => $item['up_nadpis'],
+                    'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
+                    'timestampAdd' => formatTimestamp($item['up_timestamp_add'], true),
+                    'timestampEdit' => formatTimestamp($item['up_timestamp'], true),
+                    'groups' => array_reduce(
+                        DBNastenka::getNastenkaSkupiny($item['up_id']),
+                        function ($carry, $item) {
+                            return $carry . $this->colorbox($item['ups_color'], $item['ups_popis']);
+                        },
+                        ''
+                    )
+                );
+            },
+            $data
+        );
 
-            $row = $new_data;
-        }
         $this->render(
             'files/View/Admin/Nastenka/Overview.inc',
             array(
@@ -75,13 +76,19 @@ class Controller_Admin_Nastenka extends Controller_Admin
             if ($request->post()) {
                 $this->redirect()->setMessage($f->getMessages());
             }
+            $skupiny = DBSkupiny::get();
+            $skupinySelected = array();
+            foreach ($skupiny as $item) {
+                $skupinySelected[$item['s_id']] = $request->post('sk-' . $item['s_id']);
+            }
             $this->render(
                 'files/View/Admin/Nastenka/Form.inc',
                 array(
                     'action' => $request->getAction(),
                     'referer' => $request->getReferer(),
                     'returnURI' => $request->getReferer(),
-                    'skupiny' => DBSkupiny::get(),
+                    'skupiny' => $skupiny,
+                    'skupinySelected' => $skupinySelected,
                     'nadpis' => $request->post('nadpis') ?: '',
                     'text' => $request->post('text') ?: '',
                     'lock' => $request->post('lock') ?: ''
@@ -123,15 +130,16 @@ class Controller_Admin_Nastenka extends Controller_Admin
                 'Nástěnka s takovým ID neexistuje'
             );
         }
-
         Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
-        $skupiny = DBNastenka::getNastenkaSkupiny($id);
 
         if (!$request->post() || is_object($f = $this->checkData($request))) {
+            $skupiny = DBNastenka::getNastenkaSkupiny($id);
+
             if (!$request->post()) {
                 $request->post('id', $id);
                 $request->post('nadpis', $data['up_nadpis']);
                 $request->post('text', stripslashes($data['up_text']));
+
                 foreach ($skupiny as $skupina) {
                     $request->post('sk-' . $skupina['ups_id_skupina'], 1);
                 }
@@ -139,13 +147,20 @@ class Controller_Admin_Nastenka extends Controller_Admin
             } else {
                 $this->redirect()->setMessage($f->getMessages());
             }
+            $skupiny = DBSkupiny::get();
+            $skupinySelected = array();
+            foreach ($skupiny as $item) {
+                $skupinySelected[$item['s_id']] = $request->post('sk-' . $item['s_id']);
+            }
+
             $this->render(
                 'files/View/Admin/Nastenka/Form.inc',
                 array(
                     'action' => $request->getAction(),
                     'referer' => $request->getReferer(),
                     'returnURI' => $request->getReferer(),
-                    'skupiny' => DBSkupiny::get(),
+                    'skupiny' => $skupiny,
+                    'skupinySelected' => $skupinySelected,
                     'nadpis' => $request->post('nadpis') ?: '',
                     'text' => $request->post('text') ?: '',
                     'lock' => $request->post('lock') ?: ''
@@ -153,23 +168,22 @@ class Controller_Admin_Nastenka extends Controller_Admin
             );
             return;
         }
-        $skupiny_old = $skupiny;
-        $skupiny = array();
-        $skupiny_vse = DBSkupiny::get();
 
-        foreach ($skupiny_old as $skupina) {
-            $skupiny[$skupina['ups_id_skupina']] = $skupina['ups_id'];
+        $skupiny_all = DBSkupiny::get();
+        $skupiny_old = array();
+        foreach (DBNastenka::getNastenkaSkupiny($id) as $skupina) {
+            $skupiny_old[$skupina['ups_id_skupina']] = $skupina['ups_id'];
+        }
+        $skupiny_new = array();
+        foreach ($skupiny_all as $item) {
+            $skupiny_new[$item['s_id']] = (bool) $request->post('sk-' . $item['s_id']);
         }
 
-        $skupiny_old = $skupiny;
-        unset($skupiny);
-
-        foreach ($skupiny_vse as $skupina) {
+        foreach ($skupiny_all as $skupina) {
             $groupOld = isset($skupiny_old[$skupina['s_id']]);
-            $groupNew = (bool) $request->post('sk-' . $skupina['s_id']);
-            if ($groupNew === $groupOld) {
-                continue;
-            } elseif ($groupNew && !$groupOld) {
+            $groupNew = $skupiny_new[$skupina['s_id']];
+
+            if ($groupNew && !$groupOld) {
                 DBNastenka::addNastenkaSkupina(
                     $id,
                     $skupina['s_id'],

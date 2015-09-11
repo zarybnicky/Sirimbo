@@ -75,7 +75,7 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Admin_Akce
                                ->options($allDocuments);
         $documents[] = array(
             'name' => (string) $documentSelect,
-            'category' => $this->submit('Přidat')->data('add', 'add')
+            'category' => $this->submit('Přidat')->data('add', 'add'),
             'removeButton' => ''
         );
         $this->render(

@@ -228,13 +228,12 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         if ($request->post('action') == 'unlink') {
             $f = $this->_getLinkedObjects($id);
 
-            $groupCount = 0;
+            $groupCount = count($f['groups']);
             foreach ($f['groups'] as $data) {
                 DBPlatbyGroup::removeChild($data['pg_id'], $id);
-                ++$groupCount;
             }
-            unset($data);
-            $itemCount = 0;
+
+            $itemCount = count($f['items']);
             foreach ($f['items'] as $data) {
                 $raw = DBPlatbyRaw::getSingle($data['pi_id_raw']);
                 DBPlatbyRaw::update(
@@ -245,7 +244,6 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                     '0'
                 );
                 DBPlatbyItem::remove($data['pi_id']);
-                ++$itemCount;
             }
             $this->redirect(
                 '/admin/platby/structure/category/remove/' . $id,
@@ -254,7 +252,8 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             return;
         } elseif ($request->post('action') == 'archive') {
             DBPlatbyCategory::update(
-                $id, $data['pc_name'],
+                $id,
+                $data['pc_name'],
                 $data['pc_symbol'],
                 $data['pc_amount'],
                 $data['pc_date_due'],
@@ -335,7 +334,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         $groupSelect = array();
         foreach ($groupNotInCategory as $array) {
             $groupSelect[$array['pg_id']] = $array['pg_name'];
-        }unset($array);
+        }
 
         $this->render(
             'files/View/Admin/Platby/StructureSymbolForm.inc',
