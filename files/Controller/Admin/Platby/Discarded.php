@@ -14,7 +14,7 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
             );
         }
         if ($request->get('list')) {
-            $this->_getTable($data, $result, $columns, $header);
+            $this->_getTable($request, $data, $result, $columns, $header);
             $this->render(
                 'files/View/Admin/Platby/DiscardedTable.inc',
                 array(
@@ -51,7 +51,7 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
             'Platba byla odstraněna.'
         );
     }
-    private function _getTable($data, &$result, &$columns, &$header) {
+    private function _getTable($request, $data, &$result, &$columns, &$header) {
         if ($request->get('list') == 'date') {
             $header =
                 ($request->get('year') == 'none'
