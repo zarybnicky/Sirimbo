@@ -43,9 +43,7 @@
             <tr>
                 <td>Viditelný: </td>
                 <td>
-                    <?= $this->isAdmin
-                        ? $this->checkbox('visible', 'visible')->set($this->visible)
-                        : ($this->visible ? '&#10003;' : '&#10799;') ?>
+                    <?= $this->checkbox('visible', 'visible')->set($this->visible) ?>
                 </td>
             </tr>
             <tr>

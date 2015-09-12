@@ -21,12 +21,7 @@
         <td><?= $this->date('datum', $this->datum)->textBox() ?></td>
     </tr><tr>
         <td>Viditelný: </td>
-        <td><?php
-            if ($this->isAdmin)
-                echo $this->checkbox('visible', 'visible')->set($this->visible);
-            else
-                echo ($this->visible ? '&#10003;' : '&#10799;');
-        ?></td>
+        <td><?= $this->checkbox('visible', 'visible')->set($this->visible) ?></td>
     </tr><tr>
         <td>Uzamknout: </td>
         <td><?= $this->checkbox('lock', 'lock')->set($this->lock) ?></td>
