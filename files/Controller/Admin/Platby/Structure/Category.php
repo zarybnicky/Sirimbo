@@ -41,7 +41,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             if ($request->post()) {
                 $this->redirect()->setMessage($s->getMessages());
             }
-            $this->_displayForm($request, 'add', 0);
+            $this->displayForm($request, 'add', 0);
             return;
         }
         $dueDate = $this->date('dueDate')->getPost($request);
@@ -49,10 +49,11 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         $validRange = $this->date('validRange')->range()->getPostRange($request);
         $validFrom = $validRange['from'];
         $validTo = $validRange['to'];
-        if (!$validTo->isValid())
+        if (!$validTo->isValid()) {
             $validTo = $validFrom;
-        elseif (strcasecmp((string) $validFrom, (string) $validTo) > 0)
+        } elseif (strcasecmp((string) $validFrom, (string) $validTo) > 0) {
             $validFrom = $validTo;
+        }
 
         $amount = $request->post('amount');
         $use_base = '0';
@@ -60,8 +61,6 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             $use_base = '1';
             $amount = str_replace('*', '', $amount);
         }
-        $use_prefix = $request->post('usePrefix') ? '1' : '0';
-        $archive = $request->post('archive') ? '1' : '0';
 
         DBPlatbyCategory::insert(
             $request->post('name'),
@@ -71,8 +70,8 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             (string) $validFrom,
             (string) $validTo,
             $use_base,
-            $use_prefix,
-            $archive
+            $request->post('usePrefix') ? '1' : '0',
+            $request->post('archive') ? '1' : '0'
         );
         $insertId = DBPlatbyCategory::getInsertId();
         if (
@@ -169,7 +168,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                 $request->post('usePrefix', $data['pc_use_prefix']);
                 $request->post('archive', $data['pc_archive']);
             }
-            $this->_displayForm($request, 'edit', $id);
+            $this->displayForm($request, 'edit', $id);
             return;
         }
         $dueDate = $this->date('dueDate')->getPost($request);
@@ -226,7 +225,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         }
 
         if ($request->post('action') == 'unlink') {
-            $f = $this->_getLinkedObjects($id);
+            $f = $this->getLinkedObjects($id);
 
             $groupCount = count($f['groups']);
             foreach ($f['groups'] as $data) {
@@ -270,7 +269,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             return;
         }
         if (((!$request->post() || $request->post('action') == 'confirm')
-            && ($f = $this->_getLinkedObjects($id)))
+            && ($f = $this->getLinkedObjects($id)))
             || !$request->post()
         ) {
             if (isset($f) && $f) {
@@ -301,7 +300,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             'Specifický symbol byl odebrán'
         );
     }
-    private function _getLinkedObjects($id) {
+    protected function getLinkedObjects($id) {
         $group = DBPlatbyCategory::getSingleWithGroups($id);
         $items = DBPlatbyItem::get(true, array('pc_id' => $id));
 
@@ -311,7 +310,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             return array('groups' => $group, 'items' => $items);
         }
     }
-    private function _displayForm($request, $action, $id) {
+    protected function displayForm($request, $action, $id) {
         $id = $id ?: 0;
 
         $groups = array_map(

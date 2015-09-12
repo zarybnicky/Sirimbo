@@ -2,10 +2,13 @@
 require_once 'files/Controller/Admin/Platby.php';
 class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
 {
-    public function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('platby', P_OWNED);
     }
-    public function view($request) {
+
+    public function view($request)
+    {
         $data = DBPlatbyRaw::getDiscarded();
         if (count($data) == 0) {
             $this->redirect(
@@ -36,7 +39,9 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
             );
         }
     }
-    public function remove($request) {
+
+    public function remove($request)
+    {
         $id = $request->getId();
         if (!$id && !($data = DBPlatbyRaw::getSingle($id))) {
             $this->redirect(
@@ -51,7 +56,9 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
             'Platba byla odstraněna.'
         );
     }
-    private function _getTable($request, $data, &$result, &$columns, &$header) {
+
+    private function _getTable($request, $data, &$result, &$columns, &$header)
+    {
         if ($request->get('list') == 'date') {
             $header =
                 ($request->get('year') == 'none'
@@ -126,7 +133,9 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
             $columns[] = array($key, $key);
         }
     }
-    private function _getList($data, &$groupAmount, &$groupDate) {
+
+    private function _getList($data, &$groupAmount, &$groupDate)
+    {
         $groupDate = array();
         $groupAmount = array();
         foreach ($data as $row) {
@@ -158,10 +167,14 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
         foreach ($groupDate as $year)
             krsort($year);
     }
-    protected function getEditLink($link) {
-        return '<a href="' . $link . '"><img alt="Upravit" src="/images/wrench.png" /></a>';
+
+    protected function getEditLink($link)
+    {
+        return '<a href="' . $link . '" title="Upravit"><img alt="Upravit" src="/style/icon-pencil.png" /></a>';
     }
-    protected function getRemoveLink($link) {
-        return '<a href="' . $link . '"><img alt="Odstranit" src="/images/cross.png" /></a>';
+
+    protected function getRemoveLink($link)
+    {
+        return '<a href="' . $link . '" title="Odstranit"><img alt="Odstranit" src="/style/icon-trash-o.png" /></a>';
     }
 }

@@ -101,12 +101,12 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
 
     protected function getEditLink($link)
     {
-        return '<a href="' . $link . '"><img alt="Upravit" src="/images/wrench.png" /></a>';
+        return '<a href="' . $link . '" title="Upravit"><img alt="Upravit" src="/style/icon-pencil.png" /></a>';
     }
 
     protected function getRemoveLink($link)
     {
-        return '<a href="' . $link . '"><img alt="Odstranit" src="/images/cross.png" /></a>';
+        return '<a href="' . $link . '" title="Odstranit"><img alt="Odstranit" src="/style/icon-trash-o.png" /></a>';
     }
 
     protected function getUnlinkGroupButton($id)
