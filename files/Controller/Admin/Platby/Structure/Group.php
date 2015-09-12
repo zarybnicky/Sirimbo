@@ -315,12 +315,12 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
             function ($item) {
                 return array(
                     'buttons' => '<form action="" method="post">'
-                    . $this->getUnlinkSkupinaButton($array['s_id'])
-                    . $this->getEditLink('/admin/skupiny/edit/' . $array['s_id'])
-                    . $this->getRemoveLink('/admin/skupiny/remove?u[]=' . $array['s_id'])
+                    . $this->getUnlinkSkupinaButton($item['s_id'])
+                    . $this->getEditLink('/admin/skupiny/edit/' . $item['s_id'])
+                    . $this->getRemoveLink('/admin/skupiny/remove?u[]=' . $item['s_id'])
                     . '</form>',
-                    'name' => $this->colorbox($array['s_color_rgb'], $array['s_description'])
-                    . '&nbsp;' . $array['s_name']
+                    'name' => $this->colorbox($item['s_color_rgb'], $item['s_description'])
+                    . '&nbsp;' . $item['s_name']
                 );
             },
             $skupiny

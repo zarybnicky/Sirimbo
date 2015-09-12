@@ -57,10 +57,7 @@ class Controller_Admin_Users extends Controller_Admin
             break;
         }
         Permissions::checkError('users', P_ADMIN);
-        if ($request->get('v') === null) {
-            $request->get('v', 'info');
-        }
-        $this->displayOverview($request, $request->get('v'));
+        $this->displayOverview($request);
     }
 
     public function remove($request)
@@ -397,48 +394,42 @@ class Controller_Admin_Users extends Controller_Admin
         exit;
     }
 
-    private function displayOverview($request, $action)
+    private function displayOverview($request)
     {
-        $groups = DBPermissions::getGroups();
-        $group_lookup = array();
-        foreach ($groups as $row) {
-            $group_lookup[$row['pe_id']] = $row['pe_name'];
-        }
-        $filter = array_map(
-            function ($item) {
-                return $item['pe_id'];
-            },
-            $groups
-        );
-        $groups = array_map(
-            function ($item) {
-                return array(
-                    'id' => $item['pe_id'],
-                    'name' => $item['pe_name']
-                );
-            },
-            $groups
-        );
-
-        $skupinyselect = $this->select();
-        if ($action == 'status') {
-            $skupiny = DBSkupiny::get();
-            $skupinyselect = $this->select();
-            foreach ($skupiny as $skupina) {
-                $skupinyselect->option($skupina['s_id'], $skupina['s_name']);
-            }
+        $groupOptions = array('all' => 'všechna');
+        foreach (DBPermissions::getGroups() as $row) {
+            $groupOptions[$row['pe_id']] = $row['pe_name'];
         }
 
-        $sortOptions = array('prijmeni', 'narozeni', 'var-symbol');
-        $filterOptions = array_merge(
-            array('dancer', 'system', 'all', 'unconfirmed', 'ban'),
-            $filter
+        $skupinyOptions = array('all' => 'všechny');
+        foreach (DBSkupiny::get() as $item) {
+            $skupinyOptions[$item['s_id']] = $item['s_name'];
+        }
+
+        $sortOptions = array(
+            'prijmeni' => 'přijmení',
+            'narozeni' => 'data narození',
+            'var-symbol' => 'var. symbolu'
         );
-        $options['sort'] = in_array($request->get('s'), $sortOptions)
-                         ? $request->get('s')
+
+        $statusOptions = array(
+            'all' => 'všichni',
+            'dancer' => 'tanečníci',
+            'system' => 'systémoví',
+            'ban' => 'zabanovaní'
+        );
+
+        $options['group'] = in_array($request->get('group'), array_keys($groupOptions))
+                          ? $request->get('group')
+                          : 'all';
+        $options['skupina'] = in_array($request->get('skupina'), array_keys($skupinyOptions))
+                            ? $request->get('skupina')
+                            : 'all';
+        $options['sort'] = in_array($request->get('sort'), array_keys($sortOptions))
+                         ? $request->get('sort')
                          : 'prijmeni';
-        $options['filter'] = in_array($request->get('f'), $filterOptions)
-                           ? $request->get('f')
+        $options['status'] = in_array($request->get('status'), array_keys($statusOptions))
+                           ? $request->get('status')
                            : 'all';
 
         $pager = new Paging(new PagingAdapterDBSelect('DBUser', $options));
@@ -451,8 +442,15 @@ class Controller_Admin_Users extends Controller_Admin
 
         $i = $pager->getItemsPerPage() * ($pager->getCurrentPage() - 1);
 
+        $action = $request->get('view') ?: 'info';
+        if ($action == 'status') {
+            $skupinySelect = $this->select()->options($skupinyOptions);
+        } else {
+            $skupinySelect = null;
+        }
+
         $data = array_map(
-            function ($item) use ($action, $group_lookup, &$i, $skupinyselect) {
+            function ($item) use ($action, $groupOptions, &$i, $skupinySelect) {
                 $out = array(
                     'checkBox'  => $this->checkbox('users[]', $item['u_id'])->render(),
                     'index'     => ++$i . '. ',
@@ -461,12 +459,12 @@ class Controller_Admin_Users extends Controller_Admin
                     'birthDate' => formatDate($item['u_narozeni']),
                     'colorBox'  => $this->colorbox($item['s_color_rgb'], $item['s_description'])
                                         ->render(),
-                    'groupInfo' => $group_lookup[$item['u_group']]
+                    'groupInfo' => $groupOptions[$item['u_group']]
                 );
                 if ($action == 'status') {
                     $out['skupina'] = (
                         $this->hidden('save[]', $item['u_id'])
-                        . $skupinyselect->name($item['u_id'] . '-skupina')
+                        . $skupinySelect->name($item['u_id'] . '-skupina')
                                         ->set($item['u_skupina'])
                     );
                     $out['dancer'] = $this->checkbox($item['u_id'] . '-dancer', '1')
@@ -485,13 +483,18 @@ class Controller_Admin_Users extends Controller_Admin
             'files/View/Admin/Users/Overview.inc',
             array(
                 'showMenu' => !TISK,
-                'groups' => $groups,
+                'groupOptions' => $groupOptions,
+                'skupinyOptions' => $skupinyOptions,
+                'sortOptions' => $sortOptions,
+                'statusOptions' => $statusOptions,
                 'data' => $data,
                 'navigation' => $pager->getNavigation($request->get()),
                 'view' => $action,
-                'f' => $request->get('f') ?: '',
-                'v' => $request->get('v') ?: '',
-                's' => $request->get('s') ?: ''
+                'status' => $request->get('status') ?: '',
+                'skupina' => $request->get('skupina') ?: '',
+                'group' => $request->get('group') ?: '',
+                'view' => $request->get('view') ?: '',
+                'sort' => $request->get('sort') ?: ''
             )
         );
         return;

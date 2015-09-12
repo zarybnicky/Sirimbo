@@ -111,7 +111,7 @@ class Controller_Admin_Dokumenty extends Controller_Admin
         }
 
         if ($request->post('action') == 'confirm') {
-            foreach ($request->post('dokumenty') as $id) {
+            foreach ($request->post('data') as $id) {
                 $data = DBDokumenty::getSingleDokument($id);
                 if (Permissions::check('dokumenty', P_OWNED, $data['d_kdo'])) {
                     unlink($data['d_path']);

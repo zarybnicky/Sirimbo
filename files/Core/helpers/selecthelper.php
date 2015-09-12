@@ -66,7 +66,7 @@ class SelectHelper
             function ($value, $name) use ($selected) {
                 return (
                     '<option value="' . $value . '"'
-                    . ($selected == $value ? ' selected="selected"' : '')
+                    . ((string) $selected === (string) $value ? ' selected="selected"' : '')
                     . ">$name</option>\n"
                 );
             },

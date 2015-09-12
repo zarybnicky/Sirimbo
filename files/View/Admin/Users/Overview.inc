@@ -1,39 +1,63 @@
 <?= $this->header('Správa uživatelů') ?>
 <div class="container full">
+<?= $this->notice($this->redirect()->getMessage()) ?>
+
+<?php if ($this->showMenu): ?>
+    <form action="" method="get">
+        <table>
+            <tr>
+                <td>Uživatelé:</td>
+                <td>
+                    <?= $this->select('status')
+                             ->set($this->status ?: 'all')
+                             ->options($this->statusOptions) ?>
+                </td>
+            </tr>
+            <tr>
+                <td>Skupina:</td>
+                <td>
+                    <?= $this->select('skupina')
+                             ->set($this->skupina ?: 'all')
+                             ->options($this->skupinyOptions) ?>
+                </td>
+            </tr>
+            <tr>
+                <td>Oprávnění:</td>
+                <td>
+                    <?= $this->select('group')
+                             ->set($this->group ?: 'all')
+                             ->options($this->groupOptions) ?>
+                </td>
+            </tr>
+            <tr>
+                <td>Řadit podle:</td>
+                <td>
+                    <?= $this->select('sort')
+                             ->set($this->sort ?: 'prijmeni')
+                             ->options($this->sortOptions) ?>
+                </td>
+            </tr>
+            <tr>
+                <td>Zobrazení:</td>
+                <td>
+                    <?= $this->select('view')
+                             ->set($this->view ?: 'info')
+                             ->option('info', 'informace')
+                             ->option('status', 'status uživatele') ?>
+                </td>
+            </tr>
+            <tr>
+                <td><?= $this->submit('Odeslat') ?></td>
+                <td></td>
+            </tr>
+        </table>
+    </form>
+    <br>
+<?php endif ?>
+
+<form action="" method="POST">
+
 <?php
-echo $this->notice($this->redirect()->getMessage());
-
-if ($this->showMenu) {
-    echo '<form action="" method="get">';
-    echo 'Uživatelé:&nbsp;';
-    $s = $this->select('f')
-              ->set($this->f ?: 'all')
-              ->option('all', 'všichni')
-              ->option('dancer', 'tanečníci')
-              ->option('system', 'systémoví')
-              ->option('ban', 'zabanovaní');
-    foreach ($this->groups as $group) {
-        if ($group['id']) {
-            $s->option($group['id'], $group['name']);
-        }
-    }
-    echo $s;
-    echo '&nbsp;řadit podle:&nbsp;';
-    echo $this->select('s')
-              ->set($this->s ?: 'surname')
-              ->option('surname', 'příjmení')
-              ->option('var-symbol', 'var. symbolu')
-              ->option('narozeni', 'data narození');
-    echo '&nbsp;zobrazení:&nbsp;';
-    echo $this->select('v')
-              ->set($this->v ?: 'info')
-              ->option('info', 'informace')
-              ->option('status', 'status uživatele');
-    echo $this->submit('Odeslat');
-    echo '</form><br/>';
-}
-
-echo '<form action="" method="POST">';
 if ($this->showMenu) {
     $f = $this->menu()
         ->content('Přidat', '/admin/users/add')
@@ -43,7 +67,7 @@ if ($this->showMenu) {
         ->content('Duplicitní uživatelé', '/admin/users/duplicate')
         ->content('Nepotvrzení uživatelé', '/admin/users/unconfirmed')
         ->content('Statistiky', '/admin/users/statistiky');
-    if ($this->v == 'status') {
+    if ($this->view == 'status') {
         $f->content('Uložit změny', 'save', true);
     }
     echo $f;

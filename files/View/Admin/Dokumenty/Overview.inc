@@ -45,7 +45,7 @@
             <tr>
                 <td></td>
                 <td>
-                    <?= $this->submit('Upload') ?>
+                    <?= $this->submit('Upload')->data('action', 'upload') ?>
                 </td>
             </tr>
         </table>

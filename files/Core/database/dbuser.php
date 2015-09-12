@@ -18,11 +18,16 @@ class DBUser extends Database implements Pagable
             case 'system': $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='1'"; break;
        	    case 'all':
             default:
-                if (is_numeric($options['filter']))
-                    $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0' AND u_group='{$options['filter']}'";
-                else
-                    $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0'";
+                $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0'";
         }
+
+        if (is_numeric($options['group'])) {
+            $q .= " AND u_group='{$options['group']}'";
+        }
+        if (is_numeric($options['skupina'])) {
+            $q .= " AND u_skupina='{$options['skupina']}'";
+        }
+
         switch($options['sort']) {
             case 'var-symbol':    $q .= ' ORDER BY u_id'; break;
             case 'narozeni':    $q .= ' ORDER BY u_narozeni'; break;
