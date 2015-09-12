@@ -4,15 +4,9 @@ class DBUser extends Database implements Pagable
     public static function getInstance() { return new self(); }
 
     public static function getPage($offset, $count, $options = null) {
-        if (!isset($options['filter']))
-            $options['filter'] = 'all';
-        if (!isset($options['sort']))
-            $options['sort'] = 'prijmeni';
-
         $q = "SELECT users.*,skupiny.* FROM users
             LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id WHERE 1=1";
-        switch($options['filter']) {
-            case 'unconfirmed': $q .= " AND u_confirmed='0' AND u_ban='0'"; break;
+        switch($options['status']) {
             case 'ban': $q .= " AND u_ban='1'"; break;
             case 'dancer': $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0' AND u_dancer='1'"; break;
             case 'system': $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='1'"; break;

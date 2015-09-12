@@ -224,7 +224,7 @@ class Controller_Admin_Galerie extends Controller_Admin
         if (!is_dir(dirname($thumbnail))) {
             mkdir(dirname($thumbnail), 0777, true);
         }
-        return $this->_createThumbnail($original, $thumbmail);
+        return $this->_createThumbnail($original, $thumbnail);
     }
 
     private function _recursiveDirs($dir_name, &$out_dirs, &$out_files)

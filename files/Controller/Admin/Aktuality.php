@@ -69,8 +69,8 @@ class Controller_Admin_Aktuality extends Controller_Admin
 
         $id = DBAktuality::addAktualita(
             User::getUserID(),
-            $request->post('kat'),
-            $request->post('jmeno'),
+            $request->post('category'),
+            $request->post('name'),
             $request->post('text'),
             $request->post('summary'),
             '0',
