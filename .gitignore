@@ -1,14 +1,6 @@
-eclipse/.metadata/*
-!eclipse/.metadata/.gitignore
-eclipse/TKOlomouc/.settings/*
-!eclipse/TKOlomouc/.settings/.gitignore
 files/Core/settings/db.php
 public/galerie/*
 !public/galerie/.gitignore
-public/images/*
-!public/images/.gitignore
-public/style/*.png
-public/style/**/*.png
 upload/*
 !upload/.gitignore
 log/*
