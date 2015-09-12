@@ -126,24 +126,19 @@ class Controller_Admin_Rozpis extends Controller_Admin
 
         $form = $this->checkData($request);
         if (is_object($form)) {
-            $this->redirect()->setMessage($f->getMessages());
+            $this->redirect()->setMessage($form->getMessages());
             $this->displayForm($request);
             return;
         }
 
         Permissions::checkError('rozpis', P_OWNED, $request->post('trener'));
         $datum = $this->date('datum')->getPost($request);
-        $visible = (bool) $request->post('visible');
 
-        if (!Permissions::check('rozpis', P_ADMIN) && $visible) {
-            $visible = false;
-            $this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění příspěvku');
-        }
         DBRozpis::addRozpis(
             $request->post('trener'),
             $request->post('kde'),
             (string) $datum,
-            $visible ? '1' : '0',
+            $request->post('visible') ? '1' : '0',
             $request->post('lock') ? '1' : '0'
         );
         $this->redirect('/admin/rozpis', 'Rozpis přidán');
@@ -170,18 +165,12 @@ class Controller_Admin_Rozpis extends Controller_Admin
 
         $datum = $this->date('datum')->getPost($request);
 
-        $visible = (bool) $request->post('visible');
-        $visible_prev = $data['r_visible'];
-        if (!Permissions::check('rozpis', P_ADMIN) && $visible && !$visible_prev) {
-            $visible = $visible_prev;
-            $this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění rozpisu');
-        }
         DBRozpis::editRozpis(
             $id,
             $request->post('trener'),
             $request->post('kde'),
             (string) $datum,
-            $visible,
+            $request->post('visible') ? '1' : '0',
             $request->post('lock') ? '1' : '0'
         );
 

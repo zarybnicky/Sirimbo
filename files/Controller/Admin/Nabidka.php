@@ -136,11 +136,6 @@ class Controller_Admin_Nabidka extends Controller_Admin
             $do = $od;
         }
 
-        $visible = (bool) $request->post('visible');
-        if (!Permissions::check('nabidka', P_ADMIN) && $visible) {
-            $visible = false;
-            $this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění příspěvku');
-        }
         if (!is_numeric($request->post('max_pocet_hod'))) {
             $request->post('max_pocet_hod', 0);
         }
@@ -151,7 +146,7 @@ class Controller_Admin_Nabidka extends Controller_Admin
             $request->post('max_pocet_hod'),
             (string) $od,
             (string) $do,
-            $visible,
+            $request->post('visible') ? '1' : '0',
             $request->post('lock') ? 1 : 0
         );
 
@@ -188,14 +183,6 @@ class Controller_Admin_Nabidka extends Controller_Admin
             $do = $od;
         }
 
-        $visible = (bool) $request->post('visible');
-        $visible_prev = $data['n_visible'];
-        if (!Permissions::check('nabidka', P_ADMIN)
-            && $visible && !$visible_prev
-        ) {
-            $visible = false;
-            $this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění nabídky');
-        }
         $items = DBNabidka::getNabidkaItemLessons($id);
         $pocet_hod = $request->post('pocet_hod');
         if ($pocet_hod < $items) {
@@ -225,7 +212,7 @@ class Controller_Admin_Nabidka extends Controller_Admin
             $max_lessons,
             (string) $od,
             (string) $do,
-            $visible,
+            $request->post('visible') ? '1' : '0',
             $request->post('lock') ? '1' : '0'
         );
 
