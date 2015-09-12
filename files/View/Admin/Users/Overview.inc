@@ -50,6 +50,7 @@ if ($this->showMenu) {
 }
 if (!$this->data) {
     echo $this->notice('Žádní takoví uživatelé');
+    echo '</div>';
     return;
 }
 echo '<div style="margin-right:150px">';
@@ -64,7 +65,8 @@ if ($this->view == 'status') {
     $table->column('skupina', '')
         ->column('groupInfo', 'Oprávnění')
         ->column('dancer', 'Aktivní<br/>tanečník', 'center')
-        ->column('system', 'Systémový<br/>uživatel', 'center');
+        ->column('system', 'Systémový<br/>uživatel', 'center')
+        ->column('ban', 'Ban', 'center');
 } else {
     $table->column('colorBox', '')
         ->column('groupInfo', 'Oprávnění')

@@ -31,9 +31,10 @@ class Controller_Admin_Users extends Controller_Admin
             Permissions::checkError('users', P_ADMIN);
             foreach ($request->post('save') as $user_id) {
                 $user = DBUser::getUserData($user_id);
-                if (((bool) $request->post($user_id . '-dancer')) !== ((bool) $user['u_dancer']) ||
-                    ((bool) $request->post($user_id . '-system')) !== ((bool) $user['u_system']) ||
-                    ($request->post($user_id . '-skupina') != $user['u_skupina'])
+                if (((bool) $request->post($user_id . '-dancer')) !== ((bool) $user['u_dancer'])
+                    || ((bool) $request->post($user_id . '-system')) !== ((bool) $user['u_system'])
+                    || ((bool) $request->post($user_id . '-ban')) !== ((bool) $user['u_ban'])
+                    || ($request->post($user_id . '-skupina') != $user['u_skupina'])
                 ) {
                     DBUser::setUserData(
                         $user_id,
@@ -48,7 +49,7 @@ class Controller_Admin_Users extends Controller_Admin
                         $request->post($user_id . '-skupina'),
                         $request->post($user_id . '-dancer') ? '1' : '0',
                         $user['u_lock'] ? '1' : '0',
-                        $user['u_ban'] ? '1' : '0',
+                        $request->post($user_id . '-ban') ? '1' : '0',
                         $request->post($user_id . '-system') ? '1' : '0'
                     );
                 }
@@ -212,6 +213,7 @@ class Controller_Admin_Users extends Controller_Admin
                         'notice' => 'Žádní nepotvrzení uživatelé nejsou v databázi.'
                     )
                 );
+                return;
             }
             $groups = DBPermissions::getGroups();
             $s_group = $this->select();
@@ -471,6 +473,8 @@ class Controller_Admin_Users extends Controller_Admin
                                           ->set($item['u_dancer'])->render();
                     $out['system'] = $this->checkbox($item['u_id'] . '-system', '1')
                                           ->set($item['u_system'])->render();
+                    $out['ban'] = $this->checkbox($item['u_id'] . '-ban', '1')
+                                       ->set($item['u_ban'])->render();
                 }
                 return $out;
             },
