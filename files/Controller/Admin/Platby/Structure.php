@@ -109,6 +109,13 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
         return '<a href="' . $link . '" title="Odstranit"><img alt="Odstranit" src="/style/icon-trash-o.png" /></a>';
     }
 
+    protected function getDuplicateCategoryButton($id)
+    {
+        return $this->submit('<img title="Duplikovat" alt="Duplikovat" src="/style/icon-files-o.png" />')
+                    ->style('border:none;background:none;cursor:pointer;')
+                    ->data('category_duplicate', $id);
+    }
+
     protected function getUnlinkGroupButton($id)
     {
         return $this->hidden('group', $id)

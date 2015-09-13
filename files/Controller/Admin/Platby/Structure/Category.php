@@ -8,6 +8,33 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
     }
     public function view($request)
     {
+        if ($id = $request->post('category_duplicate')) {
+            if (!($data = DBPlatbyCategory::getSingle($id))) {
+                $this->redirect(
+                    '/admin/platby/structure/category',
+                    'Takový specifický symobl neexistuje.'
+                );
+            }
+
+            DBPlatbyCategory::insert(
+                $data['pc_name'],
+                'NULL',
+                $data['pc_amount'],
+                $data['pc_date_due'],
+                $data['pc_valid_from'],
+                $data['pc_valid_to'],
+                $data['pc_use_base'],
+                $data['pc_use_prefix'],
+                $data['pc_archive']
+            );
+            $insertId = DBPlatbyCategory::getInsertId();
+
+            $groups = DBPlatbyCategory::getSingleWithGroups($id);
+            foreach ($groups as $group) {
+                DBPlatbyGroup::addChild($group['pg_id'], $insertId);
+            }
+        }
+
         $this->render(
             'files/View/Admin/Platby/StructureSymbolOverview.inc',
             array(
@@ -17,6 +44,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             )
         );
     }
+
     protected function getCategories($archived = false)
     {
         return array_map(
@@ -28,6 +56,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                     'validDate' => $this->getDateDisplay($item['pc_valid_from'], $item['pc_valid_to']),
                     'buttons' => (
                         $this->getEditLink('/admin/platby/structure/category/edit/' . $item['pc_id'])
+                        . $this->getDuplicateCategoryButton($item['pc_id'])
                         . $this->getRemoveLink('/admin/platby/structure/category/remove/' . $item['pc_id'])
                     )
                 );
@@ -35,6 +64,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             DBPlatbyCategory::get($archived)
         );
     }
+
     public function add($request)
     {
         if (!$request->post() || is_object($s = $this->checkPost($request, 'add', 0))) {
@@ -44,9 +74,8 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             $this->displayForm($request, 'add', 0);
             return;
         }
-        $dueDate = $this->date('dueDate')->getPost($request);
 
-        $validRange = $this->date('validRange')->range()->getPostRange($request);
+        $validRange = $this->date('validRange')->getPostRange($request);
         $validFrom = $validRange['from'];
         $validTo = $validRange['to'];
         if (!$validTo->isValid()) {
@@ -66,7 +95,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             $request->post('name'),
             $request->post('symbol'),
             $amount,
-            (string) $dueDate,
+            (string) $this->date('dueDate')->getPost($request),
             (string) $validFrom,
             (string) $validTo,
             $use_base,
@@ -102,6 +131,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             'Specifický symbol úspěšně přidán'
         );
     }
+
     public function edit($request)
     {
         $id = $request->getId();
@@ -214,6 +244,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             'Specifický symbol úspěšně upraven'
         );
     }
+
     public function remove($request)
     {
         $id = $request->getId();
@@ -300,7 +331,9 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             'Specifický symbol byl odebrán'
         );
     }
-    protected function getLinkedObjects($id) {
+
+    protected function getLinkedObjects($id)
+    {
         $group = DBPlatbyCategory::getSingleWithGroups($id);
         $items = DBPlatbyItem::get(true, array('pc_id' => $id));
 
@@ -310,9 +343,9 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             return array('groups' => $group, 'items' => $items);
         }
     }
-    protected function displayForm($request, $action, $id) {
-        $id = $id ?: 0;
 
+    protected function displayForm($request, $action, $id = 0)
+    {
         $groups = array_map(
             function ($item) {
                 return array(
@@ -354,6 +387,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             )
         );
     }
+
     protected function checkPost($request, $action, $id)
     {
         $f = new Form();

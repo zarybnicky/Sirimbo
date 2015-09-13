@@ -16,7 +16,7 @@ class DBPlatby extends Database
                     SELECT pcg_id FROM platby_category_group
                         INNER JOIN platby_group_skupina ON pcg_id_group=pgs_id_group
                         LEFT JOIN platby_category ON pc_id=pcg_id_category
-                    WHERE pgs_id_skupina='$sid'
+                    WHERE pgs_id_skupina='$sid' AND pc_symbol IS NOT NULL
                     GROUP BY pc_symbol
                     HAVING COUNT(*) > 1
                 ) dupl

@@ -8,7 +8,7 @@ class DBPlatbyCategory extends Database
                 "INSERT INTO platby_category
                     (pc_name,pc_symbol,pc_amount,pc_date_due,pc_valid_from,pc_valid_to,pc_use_base,pc_use_prefix,pc_archive)
                 VALUES
-                    ('$name','$symbol','$amount','$dueDate','$validFrom','$validTo','$useBase','$usePrefix','$archive')"
+                    ('$name',$symbol,'$amount','$dueDate','$validFrom','$validTo','$useBase','$usePrefix','$archive')"
         );
     }
     public static function update($id, $name, $symbol, $amount, $dueDate, $validFrom, $validTo, $useBase, $usePrefix, $archive) {
@@ -16,7 +16,7 @@ class DBPlatbyCategory extends Database
             self::escape($id, $name, $symbol, $amount, $dueDate, $validFrom, $validTo, $useBase, $usePrefix, $archive);
         self::query(
                 "UPDATE platby_category SET
-                    pc_name='$name',pc_symbol='$symbol',pc_amount='$amount',pc_date_due='$dueDate',pc_valid_from='$validFrom',
+                    pc_name='$name',pc_symbol=$symbol,pc_amount='$amount',pc_date_due='$dueDate',pc_valid_from='$validFrom',
                     pc_valid_to='$validTo',pc_use_base='$useBase',pc_use_prefix='$usePrefix',pc_archive='$archive'
                 WHERE pc_id='$id'"
         );

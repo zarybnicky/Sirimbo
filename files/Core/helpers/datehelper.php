@@ -111,10 +111,6 @@ class DateHelper
 
     public function getPostRange($request)
     {
-        if (!$this->useRange) {
-            return array('from' => $this->getPost($request), 'to' => new Date());
-        }
-
         if ($request->post($this->name)) {
             if (strpos($request->post($this->name), ' - ')) {
                 $pieces = explode(' - ', $request->post($this->name));
@@ -166,15 +162,11 @@ class DateHelper
         }
     }
 
-    public function getPost($request, $skipRangeCheck = false, $name = null)
+    public function getPost($request, $name = null)
     {
         if ($name === null) {
             $name = $this->name;
         }
-        if ($this->useRange && !$skipRangeCheck) {
-            return $this->getPostRange($request)['from'];
-        }
-
         if ($request->post($name)) {
             return new Date($request->post($name));
         } elseif ($request->post($name . '-year') &&
