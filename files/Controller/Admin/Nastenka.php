@@ -169,31 +169,33 @@ class Controller_Admin_Nastenka extends Controller_Admin
             return;
         }
 
-        $skupiny_all = DBSkupiny::get();
         $skupiny_old = array();
         foreach (DBNastenka::getNastenkaSkupiny($id) as $skupina) {
             $skupiny_old[$skupina['ups_id_skupina']] = $skupina['ups_id'];
         }
+
         $skupiny_new = array();
-        foreach ($skupiny_all as $item) {
-            $skupiny_new[$item['s_id']] = (bool) $request->post('sk-' . $item['s_id']);
-        }
-
-        foreach ($skupiny_all as $skupina) {
-            $groupOld = isset($skupiny_old[$skupina['s_id']]);
-            $groupNew = $skupiny_new[$skupina['s_id']];
-
-            if ($groupNew && !$groupOld) {
-                DBNastenka::addNastenkaSkupina(
-                    $id,
-                    $skupina['s_id'],
-                    $skupina['s_color_rgb'],
-                    $skupina['s_description']
-                );
-            } elseif (!$groupNew && $groupOld) {
-                DBNastenka::removeNastenkaSkupina($skupiny_old[$skupina['s_id']]);
+        foreach (DBSkupiny::get() as $item) {
+            if ($request->post('sk-' . $item['s_id'])) {
+                $skupiny_new[$item['s_id']] = $item;
             }
         }
+
+        $oldIds = array_keys($skupiny_old);
+        $newIds = array_keys($skupiny_new);
+        foreach (array_diff($oldIds, $newIds) as $removed) {
+            DBNastenka::removeNastenkaSkupina($skupiny_old[$removed]);
+        }
+        foreach (array_diff($newIds, $oldIds) as $added) {
+            $skupinaData = $skupiny_new[$added];
+            DBNastenka::addNastenkaSkupina(
+                $id,
+                $skupinaData['s_id'],
+                $skupinaData['s_color_rgb'],
+                $skupinaData['s_description']
+            );
+        }
+
         DBNastenka::editNastenka(
             $id,
             $request->post('nadpis'),

@@ -15,8 +15,8 @@ class RedirectHelper
 
         if (isset($_SESSION['REDIRECT_MESSAGE'])) {
             $_SESSION['REDIRECT_MESSAGE'] .= '<br />' . $message;
-        } else {
-            $_SESSION['REDIRECT_MESSAGE'] .= $message;
+        } elseif ($message) {
+            $_SESSION['REDIRECT_MESSAGE'] = $message;
         }
 
         header('Location: ' . $link);

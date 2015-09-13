@@ -116,27 +116,6 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
                     ->data('category_duplicate', $id);
     }
 
-    protected function getUnlinkGroupButton($id)
-    {
-        return $this->hidden('group', $id)
-             . $this->submit('<img alt="Odstranit spojení" src="/images/unlink.png" />')
-                    ->data('action', 'group_remove');
-    }
-
-    protected function getUnlinkCategoryButton($id)
-    {
-        return $this->hidden('category', $id)
-             . $this->submit('<img alt="Odstranit spojení" src="/images/unlink.png" />')
-                    ->data('action', 'category_remove');
-    }
-
-    protected function getUnlinkSkupinaButton($id)
-    {
-        return $this->hidden('skupina', $id)
-             . $this->submit('<img alt="Odstranit spojení" src="/images/unlink.png" />')
-                    ->data('action', 'skupina_remove');
-    }
-
     protected function getDateDisplay($from, $to) {
         $from = new Date($from);
         $to = new Date($to);

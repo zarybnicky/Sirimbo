@@ -2,9 +2,9 @@
 <?= $this->subheader($this->action == 'add' ? 'Přidat specifický symbol' : 'Upravit specifický symbol') ?>
 
 <div class="container full">
+<form action="" method="post">
 
-<?php
-$mainForm = $this->table()
+<?= $this->table()
 ->showHeader(false)
 ->column('desc', '', 'r')
 ->column('value', 'Hodnota')
@@ -32,38 +32,19 @@ $mainForm = $this->table()
         'value' => $this->checkbox('archive', '1')->set($this->archive)->render()
     )
 ))
-->render();
-if (!empty($this->groups)) {
-    $groupForm = $this->table()
-                      ->column('buttons', '', '', 'width:90px')
-                      ->column('name', 'Jméno')
-                      ->column('type', 'Typ')
-                      ->column('base', 'Násobitel částky')
-                      ->data($this->groups)
-                      ->render();
-}
-if (!empty($this->groupSelect)) {
-    $groupSelectBox = $this->select('group')->options($this->groupSelect);
-}
-?>
-
-<form action="" method="post">
-    <?= $mainForm ?>
+->render() ?>
     <?= $this->hidden('referer', $this->referer) ?>
+    <br/>
+    <h3>Kategorie</h3>
+    <?= $this->table()
+             ->column('buttons', '')
+             ->column('name', 'Jméno')
+             ->column('type', 'Typ')
+             ->column('base', 'Násobitel částky')
+             ->data($this->groups)
+             ->render() ?>
+    <br>
     <?= $this->submit('Uložit')->data('action', 'confirm') ?>
     <a href="<?= $this->referer ?>">Zpět</a><br/>
-    <br/>
 </form>
-<?php if ($this->action != 'add') : ?>
-    <h3>Přiřazené kategorie</h3>
-    <?php if (isset($groupForm)) echo $groupForm;?>
-    <form action="" method="post">
-        <span class="big">Přiřadit</span>
-        <a href="/admin/platby/structure/group/add?category=<?= $this->id;?>">novou kategorii</a>
-        <?php if (isset($groupSelectBox)) : ?>
-            nebo existující: <?= $groupSelectBox;?>
-            <?= $this->submit('Přiřadit')->data('action', 'group') ?>
-        <?php endif;?>
-    </form>
-<?php endif;?>
 </div>

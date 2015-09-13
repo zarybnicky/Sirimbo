@@ -103,29 +103,11 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             $request->post('archive') ? '1' : '0'
         );
         $insertId = DBPlatbyCategory::getInsertId();
-        if (
-            $request->get('group') &&
-            ($data = DBPlatbyGroup::getSingle($request->get('group')))
-        ) {
-            DBPlatbyGroup::addChild($request->get('group'), $insertId);
-            $skupiny = DBPlatbyGroup::getSingleWithSkupiny($request->get('group'));
-            $conflicts = array();
-            foreach ($skupiny as $array) {
-                $conflicts = array_merge($conflicts, DBPlatby::checkConflicts($array['s_id']));
-            }
 
-            if (!empty($conflicts)) {
-                DBPlatbyGroup::removeChild($request->get('category'), $insertId);
-                $this->redirect(
-                    '/admin/platby/structure/group/edit/' . $request->get('group'),
-                    'Specifický symbol byl přidán, ale nebyl přiřazen - takové přiřazení není platné.'
-                );
-            }
-            $this->redirect(
-                '/admin/platby/structure/group/edit/' . $request->get('group'),
-                'Specifický symbol úspěšně přidán a přiřazen'
-            );
+        foreach ($request->post('group') as $item) {
+            DBPlatbyGroup::addChild($item, $insertId);
         }
+
         $this->redirect(
             $request->post('referer') ?: '/admin/platby/structure/category',
             'Specifický symbol úspěšně přidán'
@@ -139,47 +121,6 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             $this->redirect(
                 $request->post('referer') ?: '/admin/platby/structure/category',
                 'Kategorie s takovým ID neexistuje'
-            );
-        }
-
-        if ($request->post('action') == 'group') {
-            if (!($data = DBPlatbyGroup::getSingle($request->post('group')))) {
-                $this->redirect(
-                    '/admin/platby/structure/category/edit/' . $id,
-                    'Kategorie s takovým ID neexistuje.'
-                );
-            }
-
-            DBPlatbyGroup::addChild($request->post('group'), $id);
-            $skupiny = DBPlatbyGroup::getSingleWithSkupiny($request->post('group'));
-            $conflicts = array();
-            foreach ($skupiny as $array) {
-                $conflicts = array_merge($conflicts, DBPlatby::checkConflicts($array['s_id']));
-            }
-
-            if (!empty($conflicts)) {
-                DBPlatbyGroup::removeChild($request->post('group'), $id);
-                $this->redirect(
-                    '/admin/platby/structure/category/edit/' . $id,
-                    'Takové přiřazení není platné - způsobilo by, '
-                    . 'že jeden specifický symbol by byl v jedné skupině dvakrát.'
-                );
-            }
-            $this->redirect(
-                '/admin/platby/structure/category/edit/' . $id,
-                'Kategorie byla úspěšně přiřazena.'
-            );
-        } elseif ($request->post('action') == 'group_remove') {
-            if (!($data = DBPlatbyGroup::getSingle($request->post('group')))) {
-                $this->redirect(
-                    '/admin/platby/structure/category/edit/' . $id,
-                    'Kategorie s takovým ID neexistuje.'
-                );
-            }
-            DBPlatbyGroup::removeChild($request->post('group'), $id);
-            $this->redirect(
-                '/admin/platby/structure/category/edit/' . $id,
-                'Spojení s kategorií bylo úspěšně odstraněno.'
             );
         }
 
@@ -233,6 +174,21 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             $use_prefix,
             $archive
         );
+
+        $groupsOld = array_map(
+            function ($item) {
+                return $item['pg_id'];
+            },
+            DBPlatbyCategory::getSingleWithGroups($id)
+        );
+        $groupsNew = $request->post('group') ?: array();
+        foreach (array_diff($groupsOld, $groupsNew) as $removed) {
+            DBPlatbyGroup::removeChild($removed, $id);
+        }
+        foreach (array_diff($groupsNew, $groupsOld) as $added) {
+            DBPlatbyGroup::addChild($added, $id);
+        }
+
         if ($request->get('group')) {
             $this->redirect(
                 '/admin/platby/structure/group/edit/' . $request->get('group'),
@@ -346,27 +302,27 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
 
     protected function displayForm($request, $action, $id = 0)
     {
+        $groupsSelected = array_flip(
+            array_map(
+                function ($item) {
+                    return $item['pg_id'];
+                },
+                DBPlatbyCategory::getSingleWithGroups($id)
+            )
+        );
         $groups = array_map(
-            function ($item) {
+            function ($item) use ($groupsSelected) {
                 return array(
-                    'buttons' => '<form action="" method="post">'
-                    . $this->getUnlinkGroupButton($item['pg_id'])
-                    . '</form>',
+                    'buttons' => $this->checkbox('group[]', $item['pg_id'])
+                                      ->set(isset($groupsSelected[$item['pg_id']]))
+                                      ->render(),
                     'type' => ($item['pg_type'] == '1' ? 'Členské příspěvky' : 'Běžné platby'),
-                    'name' => $item['pg_name'] . '('
-                    . $this->getEditLink('/admin/platby/structure/group/edit/' . $item['pg_id'])
-                    . $this->getRemoveLink('/admin/platby/structure/group/remove/' . $item['pg_id']) . ')',
+                    'name' => $item['pg_name'],
                     'base' => $item['pg_base']
                 );
             },
-            DBPlatbyCategory::getSingleWithGroups($id)
+            DBPlatbyGroup::getGroups()
         );
-
-        $groupNotInCategory = DBPlatbyGroup::getNotInCategory($id);
-        $groupSelect = array();
-        foreach ($groupNotInCategory as $array) {
-            $groupSelect[$array['pg_id']] = $array['pg_name'];
-        }
 
         $this->render(
             'files/View/Admin/Platby/StructureSymbolForm.inc',
@@ -374,7 +330,6 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                 'id' => $id,
                 'action' => $action,
                 'groups' => $groups,
-                'groupSelect' => $groupSelect,
                 'referer' => $request->getReferer(),
                 'name' => $request->post('name') ?: '',
                 'symbol' => $request->post('symbol') ?: '',

@@ -21,29 +21,16 @@
                          )
                      )
                  ); ?>
+        <br>
+        <h2>Kategorie plateb</h2>
+        <?= $this->table()
+                 ->column('buttons', '', '', 'width:90px')
+                 ->column('type', 'Typ')
+                 ->column('name', 'Jméno')
+                 ->column('base', 'Násobitel částky')
+                 ->data($this->groups) ?>
+        <br>
         <?= $this->submit('Uložit')->data('action', 'confirm') ?>
         <a href="/admin/skupiny">Zpět</a>
     </form>
-    <br/>
-    <?php if ($this->action != 'add'): ?>
-        <?= '<h2>Kategorie plateb</h2>' ?>
-        <?php if ($this->groups): ?>
-            <?= $this->table()
-                     ->column('buttons', '', '', 'width:90px')
-                     ->column('type', 'Typ')
-                     ->column('name', 'Jméno')
-                     ->column('base', 'Násobitel částky')
-                     ->data($this->groups) ?>
-        <?php endif; ?>
-        <form action="" method="post">
-            <span class="big">Přidat:</span>
-            <a href="/admin/platby/structure/group/add?skupina=<?= $this->id ?>">
-                novou kategorii</a>
-            <?php if ($this->groupSelect): ?>
-                nebo existující:
-                <?= $this->select('group')->options($this->groupSelect) ?>
-                <?= $this->submit('Odeslat')->data('action', 'group') ?>
-            <?php endif;?>
-        </form>
-    <?php endif;?>
 </div>
