@@ -8,7 +8,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
     }
     public function view($request)
     {
-        if (!$request->post()) {
+        if ($request->post()) {
             $this->processPost($request);
         }
         $remaining = DBPlatbyRaw::getUnsorted();
