@@ -8,10 +8,23 @@
 <table>
     <tr>
         <td>Nadpis:</td>
-        <td><input type="text" name="nadpis" value="<?= $this->nadpis ?>" /></td>
+        <td><?= $this->text('nadpis', $this->nadpis) ?></td>
     </tr><tr>
         <td>Text:</td>
-        <td><textarea cols="50" rows="15" name="text"><?= $this->text ?></textarea></td>
+        <td></td>
+    </tr><tr>
+        <td colspan="3">
+            <textarea name="text"
+                      id="text"
+                      rows="30"
+                      cols="60"
+                      style="width:99%"><?= $this->text ?></textarea>
+            <script src="/scripts/ckeditor/ckeditor.js"></script>
+            <script>
+             CKEDITOR.config.allowedContent = true;
+             CKEDITOR.replace('text');
+            </script>
+        </td>
     </tr><tr>
         <td>Uzamknout:</td>
         <td><?= $this->checkbox('lock')->set($this->lock) ?></td>

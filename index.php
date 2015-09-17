@@ -51,6 +51,7 @@ $request->setReferer($request->session('referer_id'));
 
 Database::setRequest($request);
 Log::setRequest($request);
+Permissions::setRequest($request);
 
 define('TISK', ($request->get('view') == 'tisk') ? true : false);
 

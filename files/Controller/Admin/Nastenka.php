@@ -138,7 +138,7 @@ class Controller_Admin_Nastenka extends Controller_Admin
             if (!$request->post()) {
                 $request->post('id', $id);
                 $request->post('nadpis', $data['up_nadpis']);
-                $request->post('text', stripslashes($data['up_text']));
+                $request->post('text', $data['up_text']);
 
                 foreach ($skupiny as $skupina) {
                     $request->post('sk-' . $skupina['ups_id_skupina'], 1);

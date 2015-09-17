@@ -1,7 +1,6 @@
 <?php
 class Log
 {
-    private static $_logfile;
     protected static $request;
 
     public static function setRequest($request)
@@ -11,9 +10,9 @@ class Log
 
     public static function write($message)
     {
-        Log::$_logfile = fopen(LOG, 'a+');
+        $logfile = fopen(LOG, 'a+');
         fwrite(
-            Log::$_logfile,
+            $logfile,
             date(DATE_RFC822) . " - "
             . static::$request->server('REQUEST_URI') . ":\n"
             . "\tMessage: $message\n"
@@ -21,6 +20,6 @@ class Log
             . "\tPOST: " . json_encode(static::$request->post()) . "\n"
             . "\tSESSION: " . json_encode(static::$request->session()) . "\n\n"
         );
-        fclose(Log::$_logfile);
+        fclose($logfile);
     }
 }
