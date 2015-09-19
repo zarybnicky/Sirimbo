@@ -11,21 +11,23 @@ class DBDokumenty extends Database
         );
         return self::getArray($res);
     }
+
     public static function getMultipleById($ids)
     {
         list($ids) = self::escape($ids);
         if (empty($ids)) {
             return array();
         }
-        
+
         $query = 'SELECT *
             FROM dokumenty
             LEFT JOIN users ON d_kdo=u_id
             WHERE d_id IN (\'' . implode('\',\'', $ids) . '\')';
-        
+
         $res = self::query($query);
         return self::getArray($res);
     }
+
     public static function getDokumentyByKategorie($kat)
     {
         list($kat) = self::escape($kat);
@@ -38,6 +40,20 @@ class DBDokumenty extends Database
         );
         return self::getArray($res);
     }
+
+    public static function getDokumentyByAuthor($author)
+    {
+        list($author) = self::escape($author);
+        $res = self::query(
+            "SELECT *
+            FROM dokumenty
+            LEFT JOIN users ON d_kdo=u_id
+            WHERE d_kdo='$author'
+            ORDER BY d_id DESC"
+        );
+        return self::getArray($res);
+    }
+
     public static function getSingleDokument($id)
     {
         list($id) = self::escape($id);
@@ -53,6 +69,7 @@ class DBDokumenty extends Database
             return self::getSingleRow($res);
         }
     }
+
     public static function getDokumentPath($id)
     {
         list($id) = self::escape($id);
@@ -65,6 +82,7 @@ class DBDokumenty extends Database
             return $row["d_path"];
         }
     }
+
     public static function getDokumentUserID($id)
     {
         list($id) = self::escape($id);
@@ -77,6 +95,7 @@ class DBDokumenty extends Database
             return $row["d_kdo"];
         }
     }
+
     public static function getDokumentName($id)
     {
         list($id) = self::escape($id);
@@ -89,6 +108,7 @@ class DBDokumenty extends Database
             return $row["d_name"];
         }
     }
+
     public static function addDokument($path, $name, $filename, $kategorie, $kdo)
     {
         list($path, $name, $filename, $kategorie, $kdo) =
@@ -98,6 +118,7 @@ class DBDokumenty extends Database
             "('$path','$name','$filename','$kategorie','$kdo')");
         return self::getInsertId();
     }
+
     public static function editDokument($id, $newname)
     {
         list($id, $newname) = self::escape($id, $newname);
@@ -106,7 +127,9 @@ class DBDokumenty extends Database
 
         return true;
     }
-    public static function removeDokument($id) {
+
+    public static function removeDokument($id)
+    {
         list($id) = self::escape($id);
 
         self::query("DELETE FROM dokumenty WHERE d_id='$id'");
@@ -114,4 +137,3 @@ class DBDokumenty extends Database
         return true;
     }
 }
-?>

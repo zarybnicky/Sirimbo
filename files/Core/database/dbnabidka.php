@@ -10,6 +10,17 @@ class DBNabidka extends Database
         return self::getArray($res);
     }
 
+    public static function getNabidkyByTrener($trener, $desc = false) {
+        list($trener) = self::escape($trener);
+        $res = self::query(
+            "SELECT u_id,u_jmeno,u_prijmeni,nabidka.*
+            FROM nabidka LEFT JOIN users ON n_trener=u_id
+            WHERE n_trener='$trener'
+            ORDER BY n_od" . ($desc ? ' DESC' : '')
+        );
+        return self::getArray($res);
+    }
+
     public static function getSingleNabidka($id) {
         list($id) = self::escapeArray(array($id));
 

@@ -1,63 +1,76 @@
+
 <?php
 class DBAktuality extends Database
 {
-    public static function getAktuality($kat = 0, $kdo = 0) {
-        list($kat) = DBAktuality::escapeArray(array($kat));
+    public static function getAktuality($kat = 0, $kdo = 0)
+    {
+        list($kat) = self::escape($kat);
 
-        $res = DBAktuality::query(
+        $res = self::query(
             "SELECT *
             FROM aktuality
             LEFT JOIN galerie_foto ON gf_id=at_foto_main
-            WHERE 1=1" . ($kat != 0 ? " AND at_kat='$kat'" : '') .
-            ($kdo > 0 ? " AND at_kdo='$kdo'" : '') .
-            " ORDER BY at_timestamp_add DESC"
+            WHERE 1=1"
+            . ($kat ? " AND at_kat='$kat'" : '')
+            . ($kdo ? " AND at_kdo='$kdo'" : '')
+            . " ORDER BY at_timestamp_add DESC"
         );
-        return DBAktuality::getArray($res);
+        return self::getArray($res);
     }
-    public static function getSingleAktualita($id) {
-        list($id) = DBAktuality::escapeArray(array($id));
 
-        $res = DBAktuality::query(
+    public static function getSingleAktualita($id)
+    {
+        list($id) = self::escape($id);
+
+        $res = self::query(
             "SELECT *
             FROM aktuality
             LEFT JOIN galerie_foto ON gf_id=at_foto_main
             WHERE at_id='$id'"
         );
-        return DBAktuality::getSingleRow($res);
+        return self::getSingleRow($res);
     }
-    public static function addAktualita($kdo, $kat, $jmeno, $text, $preview, $foto, $foto_main) {
-        list($kdo, $kat, $jmeno, $text, $preview, $foto, $foto_main) =
-            DBAktuality::escapeArray(array($kdo, $kat, $jmeno, $text, $preview, $foto, $foto_main));
 
-        DBAktuality::query(
+    public static function addAktualita($kdo, $kat, $jmeno, $text, $preview, $foto, $foto_main)
+    {
+        list($kdo, $kat, $jmeno, $text, $preview, $foto, $foto_main) =
+            self::escape($kdo, $kat, $jmeno, $text, $preview, $foto, $foto_main);
+
+        self::query(
             "INSERT INTO aktuality (at_kdo,at_kat,at_jmeno,at_text,at_preview,at_foto,at_foto_main,at_timestamp_add)
             VALUES ('$kdo','$kat','$jmeno','$text','$preview','$foto','$foto_main',NOW())"
         );
         return self::getInsertId();
     }
-    public static function editAktualita($id, $kat, $jmeno, $text, $preview, $foto, $foto_main) {
-        list($id, $kat, $jmeno, $text, $preview, $foto, $foto_main) =
-            DBAktuality::escapeArray(array($id, $kat, $jmeno, $text, $preview, $foto, $foto_main));
 
-        DBAktuality::query(
+    public static function editAktualita($id, $kat, $jmeno, $text, $preview, $foto, $foto_main)
+    {
+        list($id, $kat, $jmeno, $text, $preview, $foto, $foto_main) =
+            self::escape($id, $kat, $jmeno, $text, $preview, $foto, $foto_main);
+
+        self::query(
             "UPDATE aktuality SET at_kat='$kat',at_jmeno='$jmeno',at_text='$text',
             at_preview='$preview',at_foto='$foto',at_foto_main='$foto_main'
             WHERE at_id='$id'"
         );
     }
-    public static function removeAktualita($id) {
-        list($id) = DBAktuality::escapeArray(array($id));
 
-        DBAktuality::query(
+    public static function removeAktualita($id)
+    {
+        list($id) = self::escape($id);
+
+        self::query(
             "DELETE FROM aktuality WHERE at_id='$id'"
         );
     }
-    public static function getAktualityFoto($id) {
-        list($id) = DBAktuality::escapeArray(array($id));
 
-        $res = DBAktuality::query(
+    public static function getAktualityFoto($id)
+    {
+        list($id) = self::escape($id);
+
+        $res = self::query(
             "SELECT * FROM aktuality_foto WHERE af_id_rodic='$id'"
         );
-        return DBAktuality::getArray($res);
+        return self::getArray($res);
     }
 }

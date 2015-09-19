@@ -10,6 +10,17 @@ class DBRozpis extends Database
         return self::getArray($res);
     }
 
+    public static function getRozpisyByTrener($trener, $descending = false) {
+        list($trener) = self::escape($trener);
+        $res = self::query(
+            "SELECT u_jmeno,u_prijmeni,r_id,r_trener,r_kde,r_datum,r_visible,r_lock
+            FROM rozpis LEFT JOIN users ON r_trener=u_id
+            WHERE r_trener='$trener'
+            ORDER BY r_datum" . ($descending ? ' DESC' : '')
+        );
+        return self::getArray($res);
+    }
+
     public static function rozpisSignUp($rid, $uid) {
         list($rid, $uid) = self::escape($rid, $uid);
         if (self::isRozpisFree($rid)) {
@@ -186,9 +197,9 @@ class DBRozpis extends Database
 
         $columns = array_keys(reset($data));
         $rows = self::escapeArray(array_values($data));
-        
+
         $q = 'UPDATE rozpis_item SET ';
-        
+
         $columns_string = array();
         foreach ($columns as $col_index => $col) {
             $s = $col . ' = CASE';

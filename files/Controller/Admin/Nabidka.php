@@ -11,7 +11,12 @@ class Controller_Admin_Nabidka extends Controller_Admin
     {
         switch($request->post('action')) {
         case 'save':
-            foreach (DBNabidka::getNabidka() as $item) {
+            if (Permissions::check('nabidka', P_ADMIN)) {
+                $data = DBNabidka::getNabidka(true);
+            } else {
+                $data = DBNabidka::getNabidkyByTrener(User::getUserID(), true);
+            }
+            foreach ($data as $item) {
                 if ((bool) $request->post($item['n_id']) == (bool) $item['n_visible']) {
                     continue;
                 }
@@ -73,13 +78,15 @@ class Controller_Admin_Nabidka extends Controller_Admin
             break;
         }
 
+        if (Permissions::check('nabidka', P_ADMIN)) {
+            $data = DBNabidka::getNabidka(true);
+        } else {
+            $data = DBNabidka::getNabidkyByTrener(User::getUserID(), true);
+        }
+
         $data = array_map(
             function ($item) {
-                $isTrainer = Permissions::check('nabidka', P_OWNED, $item['n_trener']);
-                $isAdmin = Permissions::check('nabidka', P_ADMIN);
-
                 return array(
-                    'canEdit' => $isTrainer,
                     'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
                     'date' => (
                         formatDate($item['n_od']) .
@@ -91,20 +98,15 @@ class Controller_Admin_Nabidka extends Controller_Admin
                         '<a href="/admin/nabidka/edit/' . $item['n_id'] . '">obecné</a>, ' .
                         '<a href="/admin/nabidka/detail/' . $item['n_id'] . '">tréninky</a>'
                     ),
-                    'visible' => ($isAdmin
-                                  ? $this->checkbox($item['n_id'], '1')
-                                         ->set($item['n_visible'])
-                                         ->render()
-                                  : ('&nbsp;' . ($item['n_visible']
-                                                 ? '&#10003;'
-                                                 : '&#10799;'))
+                    'visible' => (
+                        $this->checkbox($item['n_id'], '1')
+                             ->set($item['n_visible'])
+                             ->render()
                     ),
-                    'checkBox' => ($isTrainer
-                                   ? $this->checkbox('nabidka[]', $item['n_id'])->render()
-                                   : '&nbsp;&#10799;')
+                    'checkBox' => $this->checkbox('nabidka[]', $item['n_id'])->render()
                 );
             },
-            DBNabidka::getNabidka(true)
+            $data
         );
         $this->render(
             'files/View/Admin/Nabidka/Overview.inc',

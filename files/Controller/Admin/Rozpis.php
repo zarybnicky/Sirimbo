@@ -8,29 +8,24 @@ class Controller_Admin_Rozpis extends Controller_Admin
     public function view($request) {
         switch($request->post('action')) {
         case 'save':
-            $items = DBRozpis::getRozpis();
-            foreach ($items as $item) {
+            if (Permissions::check('rozpis', P_ADMIN)) {
+                $data = DBRozpis::getRozpis(true);
+            } else {
+                $data = DBRozpis::getRozpisyByTrener(User::getUserID(), true);
+            }
+            foreach ($data as $item) {
                 $id = $item['r_id'];
-                if ((bool) $request->post($id) == (bool) $item['r_visible']
-                    || !Permissions::check('rozpis', P_OWNED, $item['r_trener'])
-                ) {
+                if ((bool) $request->post($id) == (bool) $item['r_visible']) {
                     continue;
                 }
-                if (!Permissions::check('rozpis', P_ADMIN) &&
-                    $request->post($id) &&
-                    !$item['r_visible']
-                ) {
-                    $this->redirect()->setMessage('Nemáte dostatečná oprávnění ke zviditelnění rozpisu');
-                } else {
-                    DBRozpis::editRozpis(
-                        $id,
-                        $item['r_trener'],
-                        $item['r_kde'],
-                        $item['r_datum'],
-                        $request->post($id) ? '1' : '0',
-                        $item['r_lock'] ? '1' : '0'
-                    );
-                }
+                DBRozpis::editRozpis(
+                    $id,
+                    $item['r_trener'],
+                    $item['r_kde'],
+                    $item['r_datum'],
+                    $request->post($id) ? '1' : '0',
+                    $item['r_lock'] ? '1' : '0'
+                );
             }
             break;
 
@@ -80,23 +75,24 @@ class Controller_Admin_Rozpis extends Controller_Admin
             break;
         }
 
+        if (Permissions::check('rozpis', P_ADMIN)) {
+            $data = DBRozpis::getRozpis(true);
+        } else {
+            $data = DBRozpis::getRozpisyByTrener(User::getUserID(), true);
+        }
+
         $data = array_map(
             function ($item) {
-                $isTrainer = Permissions::check('rozpis', P_OWNED, $item['r_trener']);
                 $isAdmin = Permissions::check('rozpis', P_ADMIN);
                 return array(
-                    'canEdit' => $isTrainer,
                     'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
                     'datum' => formatDate($item['r_datum']),
                     'kde' => $item['r_kde'],
-                    'checkBox' => (string) $this->checkbox('rozpis[]', $item['r_id'])
-                                                ->readonly($isTrainer),
+                    'checkBox' => $this->checkbox('rozpis[]', $item['r_id'])->render(),
                     'visible' => (
-                        $isAdmin ?
                         $this->checkbox($item['r_id'], '1')
                              ->set($item['r_visible'])
-                             ->render() :
-                        ('&nbsp;' . ($item['r_visible'] ? '&#10003;' : '&#10799;'))
+                             ->render()
                     ),
                     'links' => (
                         '<a href="/admin/rozpis/edit/' . $item['r_id'] . '">obecné</a>, ' .
@@ -104,7 +100,7 @@ class Controller_Admin_Rozpis extends Controller_Admin
                     )
                 );
             },
-            DBRozpis::getRozpis(true)
+            $data
         );
 
         $this->render(

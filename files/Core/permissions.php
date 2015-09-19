@@ -16,15 +16,17 @@ class Permissions
     public static function check($module, $level, $owner = null)
     {
         $l = User::getPermissions($module);
-        if ($l == P_OWNED && $level == P_OWNED && $owner != null)
+        if ($l == P_OWNED && $level == P_OWNED && $owner != null) {
             return User::getUserID() == $owner;
+        }
         return $l >= $level;
     }
 
-    public static function checkError($module, $level, $redirect = null, $owner = null)
+    public static function checkError($module, $level, $owner = null, $redirect = null)
     {
-        if (Permissions::check($module, $level, $owner))
+        if (Permissions::check($module, $level, $owner)) {
             return true;
+        }
 
         if ($redirect !== null) {
             Helper::instance()->redirect($redirect);

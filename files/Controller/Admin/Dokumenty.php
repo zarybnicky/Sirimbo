@@ -62,11 +62,17 @@ class Controller_Admin_Dokumenty extends Controller_Admin
             $this->redirect($url);
             break;
         }
+
+        if (Permissions::check('dokumenty', P_ADMIN)) {
+            $data = DBDokumenty::getDokumenty();
+        } else {
+            $data = DBDokumenty::getDokumentyByAuthor(User::getUserID());
+        }
+
         $data = array_map(
             function ($item) {
                 return array(
                     'checkBox' => $this->checkbox('dokumenty[]', $item['d_id'])
-                                       ->readonly(Permissions::check('dokumenty', P_OWNED, $item['d_kdo']))
                                        ->render(),
                     'link' => '<a href="/member/download?id=' . $item['d_id'] . '">' . $item['d_name'] . '</a>',
                     'name' => $item['d_filename'],
@@ -74,7 +80,7 @@ class Controller_Admin_Dokumenty extends Controller_Admin
                     'by' => $item['u_jmeno'] . ' ' . $item['u_prijmeni']
                 );
             },
-            DBDokumenty::getDokumenty()
+            $data
         );
         $this->render(
             'files/View/Admin/Dokumenty/Overview.inc',
@@ -90,11 +96,10 @@ class Controller_Admin_Dokumenty extends Controller_Admin
         if (!$id || !($data = DBDokumenty::getSingleDokument($id))) {
             $this->redirect('/admin/dokumenty', 'Dokument s takovým ID neexistuje');
         }
+        Permissions::checkError('dokumenty', P_OWNED, $data['d_kdo']);
 
         if ($request->post('newname')) {
-            $newname = $request->post('newname');
-
-            DBDokumenty::editDokument($id, $newname);
+            DBDokumenty::editDokument($id, $request->post('newname'));
             $this->redirect('/admin/dokumenty', 'Příspěvek úspěšně upraven');
         }
         $this->render(

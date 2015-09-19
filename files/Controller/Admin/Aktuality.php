@@ -9,8 +9,7 @@ class Controller_Admin_Aktuality extends Controller_Admin
 
     public function view($request)
     {
-        switch($request->post('action')) {
-        case 'remove':
+        if ($request->post('action') == 'remove') {
             if (!is_array($request->post('aktuality'))) {
                 $this->redirect('/admin/aktuality');
                 break;
@@ -22,25 +21,31 @@ class Controller_Admin_Aktuality extends Controller_Admin
             $this->redirect($url);
             break;
         }
+
+        if (Permissions::check('aktuality', P_ADMIN)) {
+            $data = DBAktuality::getAktuality($request->get('f'));
+        } else {
+            $data = DBAktuality::getAktuality($request->get('f'), User::getUserID());
+        }
+
         $data = array_map(
             function ($item) {
-                $editable = Permissions::check('aktuality', P_OWNED, $item['at_kdo']);
                 return array(
                     'checkBox' => $this->checkbox('aktuality[]', $item['at_id'])
-                                       ->readonly($editable)->render(),
+                                       ->render(),
                     'name' => $item['at_jmeno'],
                     'category' => ($item['at_kat'] == AKTUALITY_CLANKY
                                    ? 'Články'
                                    : ($item['at_kat'] == AKTUALITY_KRATKE
                                       ? 'Krátké zprávy'
                                       : '')),
-                    'links' => $editable
-                    ? ('<a href="/admin/aktuality/edit/' . $item['at_id'] . '">obecné</a>, '
-                       . '<a href="/admin/aktuality/foto/' . $item['at_id'] . '">galerie</a>')
-                    : ''
+                    'links' => (
+                        '<a href="/admin/aktuality/edit/' . $item['at_id'] . '">obecné</a>, '
+                        . '<a href="/admin/aktuality/foto/' . $item['at_id'] . '">galerie</a>'
+                    )
                 );
             },
-            DBAktuality::getAktuality($request->get('f'))
+            $data
         );
         $this->render(
             'files/View/Admin/Aktuality/Overview.inc',
