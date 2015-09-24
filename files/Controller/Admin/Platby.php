@@ -100,7 +100,8 @@ class Controller_Admin_Platby extends Controller_Admin
         }
         return $out;
     }
-    protected function getFromPost($id = null)
+
+    protected function getFromPost($request, $id = null)
     {
         $item = new PlatbyItem();
         $item->init(

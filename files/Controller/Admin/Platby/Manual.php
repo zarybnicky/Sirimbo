@@ -154,22 +154,23 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
 
     private function processPost($request)
     {
-        if (!$request->post('id') || !($current = DBPlatbyRaw::getSingle($request->post('id')))) {
+        $id = $request->post('id');
+        if (!$id || !($current = DBPlatbyRaw::getSingle($id))) {
             $this->redirect()->setMessage('Zadaná platba neexistuje.');
             return;
-        } elseif ($current['pr_sorted'] && ($item = DBPlatbyItem::getSingleByRawId($request->post('id')))) {
+        } elseif ($current['pr_sorted'] && ($item = DBPlatbyItem::getSingleByRawId($id))) {
             $this->redirect()->setMessage('Zadaná platba už byla zařazená.');
             return;
         }
-        if ($request->post('action') == 'confirm') {
-            if (!$request->$request->post()) {
-                return;
-            } elseif (!is_object($item = $this->getFromPost())) {
+
+        switch ($request->post('action')) {
+        case 'confirm':
+            if (!is_object($item = $this->getFromPost($request))) {
                 $this->redirect()->setMessage($item);
                 return;
             }
             DBPlatbyRaw::update(
-                $request->post('id'),
+                $id,
                 $current['pr_raw'],
                 $current['pr_hash'],
                 '1',
@@ -178,26 +179,29 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
             DBPlatbyItem::insert(
                 $item->variable,
                 $item->categoryId,
-                $request->post('id'),
+                $id,
                 $item->amount,
                 $item->date,
                 $item->prefix
             );
-        } elseif ($request->post('action') == 'discard') {
-            if (!$current['pr_discarded']) {
-                DBPlatbyRaw::update(
-                    $request->post('id'),
-                    $current['pr_raw'],
-                    $current['pr_hash'],
-                    '0',
-                    '1'
-                );
-            }
-        } elseif ($request->post('action') == 'skip') {
-            DBPlatbyRaw::skip($request->post('id'));
-        } else {
+            break;
+        case 'discard':
+            DBPlatbyRaw::update(
+                $id,
+                $current['pr_raw'],
+                $current['pr_hash'],
+                '0',
+                '1'
+            );
+            break;
+        case 'skip':
+            DBPlatbyRaw::skip($id);
+            break;
+        default:
             $this->redirect()->setMessage('Neplatná POST akce.');
+            break;
         }
+
         $this->redirect('/admin/platby/manual');
     }
 }

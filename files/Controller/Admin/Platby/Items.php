@@ -44,7 +44,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         if (!$request->post()) {
             $this->displayForm(0, $request);
             return;
-        } elseif (!is_object($item = $this->getFromPost())) {
+        } elseif (!is_object($item = $this->getFromPost($request))) {
             $this->redirect()->setMessage($item);
             $this->displayForm(0, $request);
             return;
@@ -73,7 +73,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             $request->post('prefix', $data['pi_prefix']);
             $this->displayForm($id, $request);
             return;
-        } elseif (!is_object($item = $this->getFromPost($id))) {
+        } elseif (!is_object($item = $this->getFromPost($request, $id))) {
             $this->redirect()->setMessage($item);
             $this->displayForm($id, $request);
             return;

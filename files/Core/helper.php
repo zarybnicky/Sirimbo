@@ -3,7 +3,8 @@ class Helper
 {
     private static $instance;
 
-    public function __call($name, $args) {
+    public function __call($name, $args)
+    {
         $class = ucfirst($name) . 'Helper';
 
         if (!class_exists($class)) {
@@ -17,16 +18,20 @@ class Helper
         return call_user_func_array(array(new $class(), $name), $args);
     }
 
-    private function __construct() { }
+    private function __construct()
+    {
+    }
 
-    public static function instance() {
+    public static function instance()
+    {
         if (!isset(self::$instance)) {
             self::$instance = new Helper();
         }
         return self::$instance;
     }
 
-    public static function invoke($name, $args) {
+    public static function invoke($name, $args)
+    {
         return self::instance()->__call($name, $args);
     }
 }

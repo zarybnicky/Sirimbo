@@ -21,6 +21,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
                 continue;
             }
             $this->processCsv($fileInfo->getPathname());
+            unlink($fileInfo->getRealPath());
             $this->redirect()->setMessage('Soubor ' . $fileInfo->getFilename() . ' byl zpracován.');
         }
 
@@ -145,8 +146,8 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
                 );
             }
         }
-        unlink($parser->getFileObject()->getRealPath());
     }
+
     private function processUpload($request)
     {
         $upload = new UploadHelper();
