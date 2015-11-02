@@ -50,6 +50,9 @@ class Controller_Admin_Rozpis extends Controller_Admin
             $this->redirect('/admin/rozpis', 'Rozpisy odebrány');
 
         case 'duplicate':
+            if (!is_array($request->post('rozpis'))) {
+                $this->redirect('/admin/rozpis');
+            }
             foreach ($request->post('rozpis') as $oldId) {
                 $data = DBRozpis::getSingleRozpis($oldId);
                 $items = DBRozpis::getRozpisItem($oldId);

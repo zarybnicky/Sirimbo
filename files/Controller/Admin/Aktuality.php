@@ -30,8 +30,9 @@ class Controller_Admin_Aktuality extends Controller_Admin
 
         $data = array_map(
             function ($item) {
+                $id = $item['at_id'];
                 return array(
-                    'checkBox' => $this->checkbox('aktuality[]', $item['at_id'])
+                    'checkBox' => $this->checkbox('aktuality[]', $id)
                                        ->render(),
                     'name' => $item['at_jmeno'],
                     'category' => ($item['at_kat'] == AKTUALITY_CLANKY
@@ -40,8 +41,8 @@ class Controller_Admin_Aktuality extends Controller_Admin
                                       ? 'Krátké zprávy'
                                       : '')),
                     'links' => (
-                        '<a href="/admin/aktuality/edit/' . $item['at_id'] . '">obecné</a>, '
-                        . '<a href="/admin/aktuality/foto/' . $item['at_id'] . '">galerie</a>'
+                        '<a href="/admin/aktuality/edit/' . $id . '">obecné</a>, '
+                        . '<a href="/admin/aktuality/foto/' . $id . '">galerie</a>'
                     )
                 );
             },
@@ -133,7 +134,7 @@ class Controller_Admin_Aktuality extends Controller_Admin
             $this->redirect('/admin/aktuality');
         }
         if ($request->post() && $request->post('action') == 'confirm') {
-            foreach ($request->post('aktuality') as $id) {
+            foreach ($request->post('data') as $id) {
                 $data = DBAktuality::getSingleAktualita($id);
 
                 if (Permissions::check('aktuality', P_OWNED, $data['at_kdo'])) {
