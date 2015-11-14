@@ -15,9 +15,9 @@ class Controller_Member_Rozpis  extends Controller_Member
         }
 
         $data = array_map(
-            function($rozpis) {
+            function ($rozpis) {
                 $items = array_map(
-                    function($item) use ($rozpis) {
+                    function ($item) use ($rozpis) {
                         return array(
                             'id' => $item['ri_id'],
                             'fullName' => "{$item['u_jmeno']} {$item['u_prijmeni']}",
@@ -51,30 +51,28 @@ class Controller_Member_Rozpis  extends Controller_Member
                     'canEdit' => Permissions::check('nabidka', P_OWNED, $rozpis['r_trener'])
                 );
             },
-           array_filter(
+            array_filter(
                 DBRozpis::getRozpis(),
-                function($item) {
-                    return $item['r_visible'];
+                function ($item) {
+                    return $item['r_visible'] && (date('Y-m-d') <= $item['r_datum']);
                 }
             )
         );
 
-        if (empty($data)) {
+        if ($data) {
+            $this->render(
+                'files/View/Member/Rozpis/Overview.inc',
+                array('data' => $data)
+            );
+        } else {
             $this->render(
                 'files/View/Empty.inc',
                 array(
                     'nadpis' => 'Rozpis tréninků',
-                    'notice' => 'Žádné rozpisy nejsou k dispozici.'
+                    'notice' => 'Žádné aktuální rozpisy nejsou k dispozici.'
                 )
             );
-            return;
         }
-        $this->render(
-            'files/View/Member/Rozpis/Overview.inc',
-            array(
-                'data' => $data
-            )
-        );
     }
 
     protected function checkData($request, $data, $action = 'signup')
@@ -86,7 +84,8 @@ class Controller_Member_Rozpis  extends Controller_Member
         return $f->isValid() ? true : $f;
     }
 
-    protected function processPost($request) {
+    protected function processPost($request)
+    {
         $data = DBRozpis::getSingleRozpis($request->post('ri_id'));
         $lesson = DBRozpis::getRozpisItemLesson($request->post('ri_id'));
 
@@ -105,7 +104,9 @@ class Controller_Member_Rozpis  extends Controller_Member
         } elseif ($request->post('action') == 'signout') {
             if ($lesson['ri_partner'] == 0) {
                 return 'Už je prázdno';
-            } elseif (User::getParID() != $lesson['ri_partner'] && !Permissions::check('rozpis', P_OWNED, $data['n_trener'])) {
+            } elseif (User::getParID() != $lesson['ri_partner']
+                      && !Permissions::check('rozpis', P_OWNED, $data['n_trener'])
+            ) {
                 return 'Nedostatečná oprávnění!';
             } else {
                 DBRozpis::rozpisSignOut($request->post('ri_id'));

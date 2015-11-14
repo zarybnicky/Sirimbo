@@ -243,7 +243,7 @@ class Controller_Admin_Nabidka extends Controller_Admin
                              : 'Upravit'),
                 'referer' => $request->getReferer(),
                 'users' => $treneri,
-                'idAdmin' => $isAdmin ?: '',
+                'isAdmin' => $isAdmin ?: '',
                 'id' => $data ? $data['n_id'] : null,
                 'trener' => ($request->post('trener')
                              ?: $data ? $data['n_trener'] : ''),

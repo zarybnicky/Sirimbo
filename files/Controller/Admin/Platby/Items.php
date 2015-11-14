@@ -158,11 +158,11 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
                 'raw' => $raw,
                 'users' => $users,
                 'categories' => $categories,
-                'date' => $request->post('date'),
-                'amount' => $request->post('amount'),
-                'variable' => $request->post('variable'),
-                'specific' => $request->post('specific'),
-                'prefix' => $request->post('prefix'),
+                'date' => $request->post('date') ?: '',
+                'amount' => $request->post('amount') ?: '',
+                'variable' => $request->post('variable') ?: '',
+                'specific' => $request->post('specific') ?: '',
+                'prefix' => $request->post('prefix') ?: '',
                 'uri' => $request->getLiteralURI()
             )
         );

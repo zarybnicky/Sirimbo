@@ -179,11 +179,9 @@ class Controller_Admin_Rozpis extends Controller_Admin
     protected function displayForm($request, $data = null)
     {
         $isAdmin = Permissions::check('rozpis', P_ADMIN);
-        if ($isAdmin) {
-            $treneri = DBUser::getUsersByPermission('rozpis', P_OWNED);
-        } else {
-            $treneri = array(DBUser::getUserData(User::getUserID()));
-        }
+        $treneri = $isAdmin
+                 ? DBUser::getUsersByPermission('rozpis', P_OWNED)
+                 : array(DBUser::getUserData(User::getUserID()));
 
         $this->render(
             'files/View/Admin/Rozpis/Form.inc',
@@ -191,11 +189,11 @@ class Controller_Admin_Rozpis extends Controller_Admin
                 'action' => $request->getAction(),
                 'isAdmin' => $isAdmin,
                 'treneri' => $treneri,
-                'trener' => $request->post('trener') ?: $data ? $data['r_trener'] : '',
-                'kde' => $request->post('kde') ?: $data ? $data['r_kde'] : '',
-                'datum' => $request->post('datum') ?: $data ? $data['r_datum'] : '',
-                'visible' => $request->post('visible') ?: $data ? $data['r_visible'] : '',
-                'lock' => $request->post('lock') ?: $data ? $data['r_lock'] : ''
+                'trener' => $request->post('trener') ?: ($data ? $data['r_trener'] : ''),
+                'kde' => $request->post('kde') ?: ($data ? $data['r_kde'] : ''),
+                'datum' => $request->post('datum') ?: ($data ? $data['r_datum'] : ''),
+                'visible' => $request->post('visible') ?: ($data ? $data['r_visible'] : ''),
+                'lock' => $request->post('lock') ?: ($data ? $data['r_lock'] : '')
             )
         );
     }

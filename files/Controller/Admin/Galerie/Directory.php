@@ -200,9 +200,9 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
             array(
                 'dirs' => $dirs,
                 'action' => $action,
-                'name' => $request->post('name'),
-                'parent' => $request->post('parent'),
-                'hidden' => $request->post('hidden')
+                'name' => $request->post('name') ?: '',
+                'parent' => $request->post('parent') ?: '',
+                'hidden' => $request->post('hidden') ?: ''
             )
         );
         return;
