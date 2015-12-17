@@ -126,7 +126,7 @@ class Controller_Admin_Nabidka extends Controller_Admin
         $form = $this->checkData($request);
         if (is_object($form)) {
             $this->redirect()->setMessage($form->getMessages());
-            $form->displayForm($request);
+            $this->displayForm($request);
             return;
         }
 
