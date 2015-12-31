@@ -98,6 +98,9 @@ class Controller_Member_Profil extends Controller_Member
         $groups = DBSkupiny::getSingleWithCategories(User::getSkupina());
         $currentGroup = 0;
         foreach ($groups as $row) {
+            if (!$row['pc_visible']) {
+                continue;
+            }
             if ($currentGroup != $row['pg_id']) {
                 $groupsOut[] = array(
                     'name' => ('<span class="big" style="text-decoration:underline;">'

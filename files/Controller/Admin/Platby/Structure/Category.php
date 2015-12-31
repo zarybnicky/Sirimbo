@@ -25,7 +25,8 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                 $data['pc_valid_to'],
                 $data['pc_use_base'],
                 $data['pc_use_prefix'],
-                $data['pc_archive']
+                $data['pc_archive'],
+                $data['pc_visible']
             );
             $insertId = DBPlatbyCategory::getInsertId();
 
@@ -100,11 +101,12 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             (string) $validTo,
             $use_base,
             $request->post('usePrefix') ? '1' : '0',
-            $request->post('archive') ? '1' : '0'
+            $request->post('archive') ? '1' : '0',
+            $request->post('visible') ? '1' : '0'
         );
         $insertId = DBPlatbyCategory::getInsertId();
 
-        foreach ($request->post('group') as $item) {
+        foreach ($request->post('group') ?: array() as $item) {
             DBPlatbyGroup::addChild($item, $insertId);
         }
 
@@ -138,6 +140,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                 $request->post('validRange', $data['pc_valid_from'] . ' - ' . $data['pc_valid_to']);
                 $request->post('usePrefix', $data['pc_use_prefix']);
                 $request->post('archive', $data['pc_archive']);
+                $request->post('visible', $data['pc_visible']);
             }
             $this->displayForm($request, 'edit', $id);
             return;
@@ -161,6 +164,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         }
         $use_prefix = $request->post('usePrefix') ? '1' : '0';
         $archive = $request->post('archive') ? '1' : '0';
+        $visible = $request->post('visible') ? '1' : '0';
 
         DBPlatbyCategory::update(
             $id,
@@ -172,7 +176,8 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             (string) $validTo,
             $use_base,
             $use_prefix,
-            $archive
+            $archive,
+            $visible
         );
 
         $groupsOld = array_map(
@@ -247,7 +252,8 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                 $data['pc_valid_to'],
                 $data['pc_use_base'],
                 $data['pc_use_prefix'],
-                '1'
+                '1',
+                $data['pc_visible']
             );
             $this->redirect(
                 '/admin/platby/structure/category',
@@ -293,11 +299,9 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         $group = DBPlatbyCategory::getSingleWithGroups($id);
         $items = DBPlatbyItem::get(true, array('pc_id' => $id));
 
-        if (empty($group) && empty($items)) {
-            return array();
-        } else {
-            return array('groups' => $group, 'items' => $items);
-        }
+        return ($group || $items)
+            ? array('groups' => $group, 'items' => $items)
+            : array();
     }
 
     protected function displayForm($request, $action, $id = 0)
@@ -338,6 +342,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                 'validRange' => $request->post('validRange') ?: '',
                 'usePrefix' => $request->post('usePrefix') ?: '',
                 'archive' => $request->post('archive') ?: '',
+                'visible' => $request->post('visible') ?: '',
                 'uri' => $request->getLiteralURI()
             )
         );

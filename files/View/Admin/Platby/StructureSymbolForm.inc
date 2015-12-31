@@ -11,16 +11,16 @@
 ->data(array(
     array(
         'desc' => 'Jméno:',
-        'value' => '<input type="text" name="name" value="' . $this->name . '"/>'
+        'value' => $this->text('name', $this->name)
     ), array(
         'desc' => 'Specifický symbol:',
-        'value' => '<input type="text" name="symbol" value="' . $this->symbol . '"/>'
+        'value' => $this->text('symbol', $this->symbol)
     ), array(
         'desc' => 'Očekávaná částka:',
-        'value' => '<input type="text" name="amount" value="' . $this->amount . '"/>'
+        'value' => $this->text('amount', $this->amount)
     ), array(
         'desc' => 'Splatnost:',
-        'value' => $this->date('dueDate', $this->dueDate)
+        'value' => $this->date('dueDate', $this->dueDate)->render()
     ), array(
         'desc' => 'Platnost:',
         'value' => $this->date('validRange', $this->validRange)->range()
@@ -30,6 +30,9 @@
     ), array(
         'desc' => 'Archivovat?:',
         'value' => $this->checkbox('archive', '1')->set($this->archive)->render()
+    ), array(
+        'desc' => 'Viditelný:',
+        'value' => $this->checkbox('visible', '1')->set($this->visible)->render()
     )
 ))
 ->render() ?>
