@@ -17,17 +17,16 @@
   </div>
 
   <div style="margin-bottom:2em;">
-    <h2>Ing. Filip Karásek a Sabina Karásková</h2>
-    <img alt="Ing. Filip Karásek a Sabina Karásková" src="/images/treneri/filip_sabka.jpg" class="f_doc_right" style="height:150px;" />
+    <h2>Ing. Filip Karásek</h2>
+    <img alt="Ing. Filip Karásek" src="/images/treneri/filip_sabka.jpg" class="f_doc_right" style="height:150px;" />
     <ul class="list">
-      <li>aktivní tanečníci, držitelé mezinárodní třídy v latinskoamerických tancích</li>
-      <li>členové národního reprezentačního týmu České republiky</li>
-      <li>vicemistři České republiky v latinskoamerických tancích (2012)</li>
-      <li>nejlepší současný latinskoamerický pár v ČR (2011)</li>
-      <li>2. místo v Taneční lize (žebříček párů mezinárodní třídy)</li>
-      <li>čtvrtfinalisté mistrovství Evropy</li>
-      <li>titul Vicemistr České republiky družstev</li>
-      <li>Filip: absolvent kvalifikačního studia pro porotce a trenéry 3. třídy tanečního sportu</li>
+      <li>profesionální tanečník</li>
+      <li>Mistr ČR v latinsko-amerických tancích v kategorii profesionálů pro rok 2016</li>
+      <li>trojnásobný Mistr ČR v latinsko-amerických tancích v hlavní kategorii</li>
+      <li>semifinalista Mistroství Evropy</li>
+      <li>čtvrtfinalista Mistrovství světa</li>
+      <li>semifinalista Světových her v Kolumbii</li>
+      <li>absolvent kvalifikačního studia pro porotce a trenéry 3. třídy tanečního sportu</li>
     </ul>
   </div>
 
@@ -73,5 +72,4 @@
       <li>porotce s nejvyšší mezinárodní licencí WDSF – porotce mistrovství světa</li>
     </ul>
   </div>
-
 </div>

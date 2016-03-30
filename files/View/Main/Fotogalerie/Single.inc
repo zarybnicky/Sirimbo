@@ -23,9 +23,8 @@
 
     <a href="<?php echo $this->returnURI;?>">
       <div class="foto_full">
-        <img alt="<?php echo $this->id;?>" src="<?php echo $this->src;?>" />
+        <img alt="<?php echo $this->id;?>" src="<?php echo $this->src;?>" style="max-width:100%"/>
       </div>
     </a>
   </div>
 </div>
-

@@ -71,7 +71,7 @@ class Controller_Admin_Akce_Detail extends Controller_Admin_Akce
         );
         $items[] = array(
             'name' => $userSelect->name('add-user')->set(0),
-            'removeButton' => $this->submit('Přidat')->data('add, 'add')
+            'removeButton' => $this->submit('Přidat')->data('add', 'add')
         );
 
         $this->render(

@@ -46,46 +46,4 @@
       <li>studentka Fakulty tělesné kultury na UP v Olomouci</li>
     </ul>
   </div>
-
-  <div style="margin-bottom:1.5em;">
-    <img alt="Tereza Jendrulková" src="/images/treneri/terka.jpg" class="f_doc_right" style="height:150px;"/>
-    <h2>Tereza Jendrulková</h2>
-    <ul class="list">
-      <li>aktivní tanečnice, držitelka mezinárodní třídy ve standardních a latinskoamerických tancích</li>
-      <li>finalistka mistrovství ČR v deseti tancích</li>
-      <li>semifinalistka mistrovství ČR ve standardních tancích</li>
-      <li>10x finalistka mistrovství ČR juniorů a mládeže (5x medaile)</li>
-      <li>členka národního reprezentačního týmu České republiky</li>
-      <li>4x titul Mistr České republiky družstev  </li>
-      <li>finalistka významných evropských soutěží v kategorii mládež (Berlín, Wels, Bratislava, Ostrava)</li>
-      <li>účastníce mistrovství světa do 18 let v deseti tancích (Tallin - Estonsko)</li>
-    </ul>
-  </div>
-
-  <div style="margin-bottom:1.5em;">
-    <img alt="Adam Jendrulek" src="/images/treneri/adam.jpg" class="f_doc_right" style="height:150px;"/>
-    <h2>Adam Jendrulek</h2>
-    <ul class="list">
-      <li>semifinalista mistrovství ČR v deseti tancích</li>
-      <li>čtvrtfinalista mistrovství ČR ve standardních tancích</li>
-      <li>6x finalista mistrovství ČR juniorů a mládeže (3x medaile)</li>
-      <li>člen národního reprezentačního týmu České republiky</li>
-      <li>finalista mistrovství ČR juniorů a mládeže</li>
-      <li>finalista významných evropských soutěží v kategorii mládež (Szeged, Oradea, Bratislava)</li>
-      <li>účastník mistrovství světa ve standardních tancích do 18 let (Lotyšsko - Riga)</li>
-    </ul>
-  </div>
-
-  <div style="margin-bottom:2.5em;">
-    <img alt="Radim Stupka" src="/images/treneri/radim.jpg" class="f_doc_right" style="height:150px;"/>
-    <h2>Radim Stupka</h2>
-    <ul class="list">
-      <li>aktivní tanečník, držitel mezinárodní třídy ve standardních i latinskoamerických tancích</li>
-      <li>semifinalista mistrovství ČR v deseti tancích</li>
-      <li>7x finále mistrovství ČR juniorů a mládeže (1x medaile)</li>
-      <li>člen národního reprezentačního týmu České republiky</li>
-      <li>finalista významných evropských soutěží (Maribor, Varazdn, Zagreb, Isola, Paříž)</li>
-      <li>absolvent kvalifikačního studia pro porotce a trenéry 3. třídy tanečního sportu</li>
-    </ul>
-  </div>
 </div>
