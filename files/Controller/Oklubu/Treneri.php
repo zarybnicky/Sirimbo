@@ -7,26 +7,6 @@ class Controller_Oklubu_Treneri extends Controller_Oklubu
         $this->redirect('/oklubu/obecne');
     }
 
-    public function klubovi($request)
-    {
-        $this->render(
-            'files/View/Main/OKlubu/TreneriInt.inc',
-            array(
-                'sidebar' => $this->sidebar($request->getUri())
-            )
-        );
-    }
-
-    public function externi($request)
-    {
-        $this->render(
-            'files/View/Main/OKlubu/TreneriExt.inc',
-            array(
-                'sidebar' => $this->sidebar($request->getUri())
-            )
-        );
-    }
-
     public function sidebar($uri)
     {
         return new Sidebar(
