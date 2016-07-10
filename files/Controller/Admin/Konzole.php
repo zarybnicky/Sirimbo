@@ -18,10 +18,16 @@ class Controller_Admin_Konzole extends Controller_Admin
                 echo $this->notice('Success!');
             }
         }
-        echo '<form action="' .  $request->server('REQUEST_URI') . '" method="post">';
-        echo 'Kód:<br/>';
-        echo '<textarea name="code" rows="10" cols="20"></textarea><br/>';
-        echo $this->submit('Zpracovat');
-        echo '</form>';
+        echo (string) new Tag(
+            'form',
+            array('action' => '', 'method' => 'post'),
+            'Kód:<br/>',
+            new Tag(
+                'textarea',
+                array('name' => 'code', 'rows' => 10, 'cols' => 10),
+                $request->post('code')
+            ),
+            $this->submit('Zpracovat')
+        );
     }
 }

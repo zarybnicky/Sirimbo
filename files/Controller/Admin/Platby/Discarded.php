@@ -108,11 +108,11 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
                 elseif (!isset($columnsTemp[$key]))
                     $columnsTemp[$key] = false;
             }
-            $row['edit'] =
-                '<div style="width:51px">'
-                . $this->getEditLink('/admin/platby/manual/' . $rawData['pr_id'])
-                . $this->getRemoveLink('/admin/platby/discarded/remove/' . $rawData['pr_id'])
-                . '</div>';
+            $row['edit'] = new Tag(
+                'div', array('style' => 'width:51px'),
+                $this->editLink('/admin/platby/manual/' . $rawData['pr_id']),
+                $this->removeLink('/admin/platby/discarded/remove/' . $rawData['pr_id'])
+            );
             $result[] = $row;
         }
         if (empty($columnsTemp)) {
@@ -166,15 +166,5 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
         krsort($groupDate);
         foreach ($groupDate as $year)
             krsort($year);
-    }
-
-    protected function getEditLink($link)
-    {
-        return '<a href="' . $link . '" title="Upravit"><img alt="Upravit" src="/style/icon-pencil.png" /></a>';
-    }
-
-    protected function getRemoveLink($link)
-    {
-        return '<a href="' . $link . '" title="Odstranit"><img alt="Odstranit" src="/style/icon-trash-o.png" /></a>';
     }
 }

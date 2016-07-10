@@ -64,20 +64,23 @@ class SelectHelper
         $selected = $this->value;
         $options = array_map(
             function ($value, $name) use ($selected) {
-                return (
-                    '<option value="' . $value . '"'
-                    . ((string) $selected === (string) $value ? ' selected="selected"' : '')
-                    . ">$name</option>\n"
+                return new Tag(
+                    'option',
+                    array(
+                        'value' => $value,
+                        'selected' => (string) $selected === (string) $value
+                    ),
+                    $name
                 );
             },
             array_keys($this->options),
             array_values($this->options)
         );
 
-        return (
-            '<select name="' . $this->name . '">' . "\n"
-            . implode('', $options)
-            . "</select>\n"
+        return (string) new Tag(
+            'select',
+            array('name' => $this->name),
+            $options
         );
     }
 

@@ -1,5 +1,6 @@
 <?php
-class Sidebar {
+class Sidebar
+{
     protected $data;
     protected $request;
     protected $toplevel;
@@ -12,29 +13,27 @@ class Sidebar {
 
     public function __toString()
     {
-        $out = '<div class="container full menu-side"><ul>';
+        $list = new Tag('ul');
 
         foreach ($this->data as $item) {
-            if (!empty($item[2])) {
-                $out .= '<li class="more">';
-            } else {
-                $out .= '<li>';
-            }
-
-
-            if (strripos($this->uri, trim($item[1], '/')) === 0) {
-                $out .= '<a class="emph no-a">';
-            } elseif ($item[1]) {
-                $out .= '<a href="' . $item[1] . '">';
-            } else {
-                $out .= '<a>';
-            }
-            $out .= $item[0];
-            $out .= '</a>';
-
-            $out .= '</li>';
+            $link = new Tag(
+                'a',
+                array(
+                    'class' => (
+                        (strripos($this->uri, trim($item[1], '/')) === 0)
+                        ? 'emph no-a' : ''
+                    ),
+                    'href' => $item[1] ?: ''
+                ),
+                $item[0]
+            );
+            $list->add(
+                new Tag('li', array('class' => $item[2] ? 'more' : ''), $link)
+            );
         }
 
-        return $out . '</ul></div>';
+        $root = new Tag('div', array('class' => 'container full menu-side'));
+        $root->add($list);
+        return (string) $root;
     }
 }

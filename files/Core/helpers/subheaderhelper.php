@@ -1,5 +1,6 @@
 <?php
-class SubheaderHelper {
+class SubheaderHelper
+{
     protected $text;
 
     public function subheader($text)
@@ -10,12 +11,11 @@ class SubheaderHelper {
 
     public function render()
     {
-        return
-            '<div class="container full">' .
-            '<h2>' .
-            $this->text .
-            '</h2>' .
-            '</div>';
+        return (string) new Tag(
+            'div',
+            array('class' => 'container full'),
+            new Tag('h2', array(), $this->text)
+        );
     }
 
     public function __toString()

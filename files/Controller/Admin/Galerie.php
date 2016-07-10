@@ -167,14 +167,13 @@ class Controller_Admin_Galerie extends Controller_Admin
                 $name, User::getUserID()
             );
         }
-        $this->redirect(
-            '/admin/galerie',
-            'Složek přidáno: '      . count($fsDirs) . '<br/>'
-            . 'Souborů přidáno: '   . count($fsFiles) . '<br/>'
-            . '<br/>'
-            . 'Složek odebráno: '   . count($dbDirs) . '<br/>'
-            . 'Souborů odebráno: '  . count($dbFiles) . '<br/>'
-        );
+        $this->redirect()
+            ->setMessage('Složek přidáno: ' . count($fsDirs))
+            ->setMessage('Souborů přidáno: '   . count($fsFiles))
+            ->setMessage('')
+            ->setMessage('Složek odebráno: '   . count($dbDirs))
+            ->setMessage('Souborů odebráno: '  . count($dbFiles))
+            ->sendRedirect('/admin/galerie');
     }
 
     protected function _sanitizePathname($name)

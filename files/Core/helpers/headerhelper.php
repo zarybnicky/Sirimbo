@@ -12,13 +12,20 @@ class HeaderHelper {
 
     public function render()
     {
-        return
-            '<div class="header-section">'
-            . '<div class="container full">'
-            . "<h1>{$this->header}</h1>"
-            . ($this->subheader ? "<h2>$this->subheader</h2>" : '')
-            . '</div>'
-            . '</div>';
+        return (string) new Tag(
+            'div',
+            array('class' => 'header-section'),
+            new Tag(
+                'div',
+                array('class' => 'container full'),
+                array(
+                    new Tag('h1', array(), $this->header),
+                    ($this->subheader
+                     ? new Tag('h2', array(), $this->subheader)
+                     : '')
+                )
+            )
+        );
     }
 
     public function __toString()

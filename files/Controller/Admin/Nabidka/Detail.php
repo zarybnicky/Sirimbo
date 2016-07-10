@@ -35,9 +35,11 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
                         (string) $userSelect->set($item['ni_partner'])
                                             ->name($item['ni_id'] . '-partner'),
                         'lessonCount' => (
-                            '<input type="text" name="' . $item['ni_id'] .
-                            '-hodiny" value="' . $item['ni_pocet_hod'] .
-                            '" size=1/>'
+                            $this->text(
+                                $item['ni_id'] . '-hodiny',
+                                $item['ni_pocet_hod']
+                            )->size(1)
+                            ->render()
                         ),
                         'removeButton' => $this->submit('Odstranit')
                                                ->name('remove')
@@ -50,7 +52,7 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
             $items[] = array(
                 'user' => (string) $userSelect->set(null)
                                               ->name('add_partner'),
-                'lessonCount' => '<input type="text" name="add_hodiny" value="" size=1/>',
+                'lessonCount' => $this->text('add_hodiny')->size('1'),
                 'removeButton' => $this->submit('Přidat')->render()
             );
 

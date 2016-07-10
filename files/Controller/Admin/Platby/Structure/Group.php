@@ -25,8 +25,10 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
                 return array(
                     'name' => $item['pg_name'],
                     'type' => $item['pg_type'] ? 'Členské příspěvky' : 'Běžné platby',
-                    'buttons' => $this->getEditLink('/admin/platby/structure/group/edit/' . $item['pg_id'])
-                    . $this->getRemoveLink('/admin/platby/structure/group/remove/' . $item['pg_id'])
+                    'buttons' => (
+                        $this->editLink('/admin/platby/structure/group/edit/' . $item['pg_id'])
+                        . $this->removeLink('/admin/platby/structure/group/remove/' . $item['pg_id'])
+                    )
                 );
             },
             DBPlatbyGroup::getGroups()
@@ -167,9 +169,11 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
             if (isset($f) && $f) {
                 $this->redirect()->setMessage(
                     'Nemůžu odstranit kategorii s připojenými skupinami nebo specifickými symboly! '
-                    . '<form action="" method="post">'
-                    . $this->submit('Odstranit spojení?')->data('action', 'unlink')
-                    . '</form>'
+                    . new Tag(
+                        'form',
+                        array('action' => '', 'method' => 'post'),
+                        $this->submit('Odstranit spojení?')->data('action', 'unlink')
+                    )
                 );
             }
             $this->render(

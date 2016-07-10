@@ -25,5 +25,4 @@ return array(
         '/nabizime/individualky',
         array()
     )
-
 );

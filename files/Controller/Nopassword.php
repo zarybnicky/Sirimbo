@@ -1,41 +1,43 @@
 <?php
 class Controller_Nopassword extends Controller_Abstract
 {
-    public function view($request) {
-        if ($request->post('action') == 'gen_pass' ||
-            $request->post('action') == 'enter'
-        ) {
-            $request->post('name', strtolower($request->post('name')));
-
-            $data = DBUser::getUserDataByNameEmail(
-                $request->post('name'),
-                $request->post('email')
-            );
-            if ($data) {
-                $base = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-                $password = substr(str_shuffle(str_repeat($base, 5)), 0, 8);
-                $passwordCrypt = User::crypt($password);
-
-                DBUser::setPassword($data['u_id'], $passwordCrypt);
-
-                if (DBUser::checkUser($data['u_login'], $passwordCrypt)) {
-                    Mailer::newPassword($data['u_email'], $password);
-                    $this->redirect(
-                        '/home',
-                        'Povedlo se, za chvíli byste měli dostat e-mail s novým heslem.<br/>'
-                        . 'V případě problémů prosím kontaktujte administrátora.'
-                    );
-                } else {
-                    $this->redirect()->setMessage(
-                        'Něco se nepovedlo, prosím kontaktujte administrátory.'
-                    );
-                }
-            } else {
-                $this->redirect()->setMessage(
-                    'Špatná kombinace přihlašovacího jména a emailu, zkuste to prosím znovu.'
-                );
-            }
+    public function view($request)
+    {
+        if (!in_array($request->post('action'), array('gen_pass', 'enter'))) {
+            $this->render('files/View/Main/Nopassword.inc');
+            return;
         }
-        $this->render('files/View/Main/Nopassword.inc');
+
+        $data = DBUser::getUserDataByNameEmail(
+            strtolower($request->post('name')),
+            $request->post('email')
+        );
+
+        if (!$data) {
+            $this->redirect(
+                '/nopassword',
+                'Špatná kombinace uživatelského jména a emailu.'
+            );
+        }
+
+        $base = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        $password = substr(str_shuffle(str_repeat($base, 5)), 0, 8);
+        $passwordCrypt = User::crypt($password);
+
+        DBUser::setPassword($data['u_id'], $passwordCrypt);
+
+        if (!DBUser::checkUser($data['u_login'], $passwordCrypt)) {
+            $this->redirect(
+                '/nopassword',
+                'Nepodařilo se změnit heslo, prosím kontaktujte administrátora.'
+            );
+        }
+
+        Mailer::newPassword($data['u_email'], $password);
+
+        $this->redirect(
+            '/home',
+            'Heslo bylo úspěšně změněno, za chvíli byste jej měli obdržet v e-mailu'
+        );
     }
 }

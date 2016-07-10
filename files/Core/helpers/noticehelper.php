@@ -14,7 +14,11 @@ class NoticeHelper
         if (!$this->text) {
             return '';
         }
-        return '<div class="notice">' . $this->text . '</div>' . "\n";
+        return (string) new Tag(
+            'div',
+            array('class' => 'notice'),
+            $this->text
+        );
     }
 
     public function __toString()

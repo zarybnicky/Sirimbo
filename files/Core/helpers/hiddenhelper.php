@@ -18,9 +18,14 @@ class HiddenHelper
 
     public function render()
     {
-        return '<input type="hidden"'
-             . " name=\"{$this->name}\" "
-             . " value=\"{$this->value}\" />";
+        return (string) new Tag(
+            'input',
+            array(
+                'type' => 'hidden',
+                'name' => $this->name,
+                'value' => $this->value
+            )
+        );
     }
 
     public function __toString()

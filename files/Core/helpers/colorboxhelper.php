@@ -1,21 +1,27 @@
 <?php
-class ColorBoxHelper {
-    protected $popis;
+class ColorBoxHelper
+{
     protected $color;
+    protected $description;
 
-    public function colorbox($color, $popis)
+    public function colorbox($color, $description)
     {
         $this->color = $color;
-        $this->popis = $popis;
+        $this->description = $description;
 
         return $this;
     }
 
     public function render()
     {
-        return '<div class="box" ' .
-            "title=\"{$this->popis}\" " .
-            "style=\"background-color:{$this->color}\"></div>";
+        return (string) new Tag(
+            'div',
+            array(
+                'class' => 'box',
+                'title' => $this->description,
+                'style' => 'background-color:' . $this->color
+            )
+        );
     }
 
     public function __toString()

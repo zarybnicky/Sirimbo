@@ -44,16 +44,20 @@ class CheckboxHelper
 
     public function render()
     {
-        $out = '<input type="checkbox"'
-             . " name=\"{$this->name}\" "
-             . " value=\"{$this->value}\""
-             . ($this->state ? ' checked="checked"' : '')
-             . ($this->readonly ? ' readonly="readonly"' : '')
-             . '/>';
-        if ($this->label) {
-            $out = "<label>$out {$this->label}</label>";
+        $checkbox = new Tag(
+            'input',
+            array(
+                'type' => 'checkbox',
+                'name' => $this->name,
+                'value' => $this->value,
+                'checked' => $this->state,
+                'readonly' => $this->readonly
+            )
+        );
+        if (!$this->label) {
+            return (string) $checkbox;
         }
-        return $out;
+        return "<label>$checkbox {$this->label}</label>";
     }
 
     public function __toString()

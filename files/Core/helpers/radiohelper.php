@@ -44,16 +44,20 @@ class RadioHelper
 
     public function render()
     {
-        $out = '<input type="radio"'
-             . " name=\"{$this->name}\" "
-             . " value=\"{$this->value}\""
-             . ($this->state ? ' checked="checked"' : '')
-             . ($this->readonly ? ' readonly="readonly"' : '')
-             . '/>';
-        if ($this->label) {
-            $out = "<label>$out {$this->label}</label>";
+        $radio = new Tag(
+            'input',
+            array(
+                'type' => 'radio',
+                'name' => $this->name,
+                'value' => $this->value,
+                'checked' => $this->state,
+                'readonly' => $this->readonly
+            )
+        );
+        if (!$this->label) {
+            return (string) $radio;
         }
-        return $out;
+        return "<label>$radio {$this->label}</label>";
     }
 
     public function __toString()

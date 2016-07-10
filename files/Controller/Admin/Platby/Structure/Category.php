@@ -56,9 +56,9 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                     'amount' => ($item['pc_amount'] . ($item['pc_use_base'] ? ' * ?' : '')) . ' Kč',
                     'validDate' => $this->getDateDisplay($item['pc_valid_from'], $item['pc_valid_to']),
                     'buttons' => (
-                        $this->getEditLink('/admin/platby/structure/category/edit/' . $item['pc_id'])
+                        $this->editLink('/admin/platby/structure/category/edit/' . $item['pc_id'])
                         . $this->getDuplicateCategoryButton($item['pc_id'])
-                        . $this->getRemoveLink('/admin/platby/structure/category/remove/' . $item['pc_id'])
+                        . $this->removeLink('/admin/platby/structure/category/remove/' . $item['pc_id'])
                     )
                 );
             },
@@ -268,12 +268,14 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             if (isset($f) && $f) {
                 $this->redirect()->setMessage(
                     'Nemůžu odstranit specifický symbol s připojenými kategoriemi nebo položkami! '
-                    . '<form action="" method="post">'
-                    .   (!$data['pc_archive']
+                    . new Tag(
+                        'form',
+                        array('action' => '', 'method' => 'post'),
+                        (!$data['pc_archive']
                          ? ($this->submit('Archivovat?')->data('action', 'archive') . ' nebo ')
-                         : '')
-                    .    $this->submit('Odstranit všechna spojení se skupinami a kategoriemi a přesunout ovlivněné platby do nezařazených?')->data('action', 'unlink')
-                    .   '</form>'
+                         : ''),
+                        $this->submit('Odstranit všechna spojení se skupinami a kategoriemi a přesunout ovlivněné platby do nezařazených?')->data('action', 'unlink')
+                    )
                 );
             }
             $this->render(

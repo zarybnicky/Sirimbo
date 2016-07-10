@@ -76,51 +76,47 @@ class Controller_Fotogalerie extends Controller_Abstract
 
     public function sidemenu($request)
     {
-        $dirs = DBGalerie::getDirs(true, true);
-
-        if (empty($dirs)) {
+        if (!($dirs = DBGalerie::getDirs(true, true))) {
             return;
         }
 
-        $out = '<ul class="fotoroot"><li>';
+        $root = $tip = new Tag('ul', array('class' => 'fotoroot'));
+        $stack = array($root);
+        $level = 0;
 
-        $level_prev = 0;
         foreach ($dirs as $dir) {
             if ($dir['gd_hidden'] == '1') {
                 continue;
             }
 
-            if ($dir['gd_level'] > $level_prev) {
-                $out .= '<ul class="foto_list">';
-            } elseif ($dir['gd_level'] == $level_prev) {
-                $out .= '</li>';
-            } else {
-                for($i = 0; $i < ($level_prev - $dir['gd_level']); $i++) {
-                    $out .= '</li></ul>';
+            if ($dir['gd_level'] > $level) {
+                $newTip = new Tag('ul', array('class' => 'foto_list'));
+                $tip->add($newTip);
+                $stack[] = $newTip;
+                $tip = $newTip;
+            } elseif ($dir['gd_level'] > $level) {
+                for ($i = 0; $i < ($level - $dir['gd_level']); $i++) {
+                    $tip = array_pop($stack);
                 }
-                $out .= '</li>';
             }
-            if ($dir['gd_id'] == 0) {
-                $link = "/fotogalerie";
-            } else {
-                $link = "/fotogalerie/" . $dir['gd_id'];
-            }
+            $level = $dir['gd_level'];
 
-            if ($dir['gd_id'] == $request->getID()) {
-                $out .= '<li><a class="current" href="' . $link . '">';
-            } else {
-                $out .= '<li><a href="' . $link . '">';
-            }
-
-            $out .= '' . $dir['gd_name'] . '</a>';
-            $level_prev = $dir['gd_level'];
+            $tip->add(
+                new Tag(
+                    'li',
+                    array(),
+                    new Tag(
+                        'a',
+                        array(
+                            'class' => ($dir['gd_id'] == $request->getID()) ? 'current' : '',
+                            'href' => ($dir['gd_id'] == 0) ? '/fotogalerie' : "/fotogalerie/{$dir['gd_id']}"
+                        ),
+                        $dir['gd_name']
+                    )
+                )
+            );
         }
 
-        for ($i = 0; $i < $level_prev; $i++) {
-            $out .= '</li></ul>';
-        }
-
-        $out .= '</li></ul>';
-        return $out;
+        return (string) $root;
     }
 }

@@ -42,11 +42,15 @@ class SubmitHelper
 
     public function render()
     {
-        return '<button type="submit"'
-            . ($this->name ? " name=\"{$this->name}\"" : '')
-            . ($this->value ? " value=\"{$this->value}\"" : '')
-            . ($this->style ? " style=\"{$this->style}\"" : '')
-            . '>' . $this->text . '</button>';
+        return (string) new Tag(
+            'button',
+            array(
+                'name' => $this->name,
+                'value' => $this->value,
+                'style' => $this->style
+            ),
+            $this->text
+        );
     }
 
     public function __toString()

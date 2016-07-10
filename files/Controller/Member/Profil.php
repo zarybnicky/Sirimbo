@@ -103,8 +103,11 @@ class Controller_Member_Profil extends Controller_Member
             }
             if ($currentGroup != $row['pg_id']) {
                 $groupsOut[] = array(
-                    'name' => ('<span class="big" style="text-decoration:underline;">'
-                               . $row['pg_name'] . '</span>'),
+                    'name' => new Tag(
+                        'span',
+                        array('class' => 'big', 'style' => 'text-decoration:underline'),
+                        $row['pg_name']
+                    ),
                     'type' => (!$row['pg_type']
                                ? 'Ostatní platby'
                                : 'Členské příspěvky'),

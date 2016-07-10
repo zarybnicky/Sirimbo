@@ -28,10 +28,14 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
                 if (strpos($item[0], 'group_') !== false) {
                     $prefix = '/admin/platby/structure/group';
                     return array(
-                        'name' => '<span class="big" style="text-decoration:underline;">' . $item[1]['pg_name'] . '</span>',
+                        'name' => new Tag(
+                            'span',
+                            array('class' => 'big', 'style' => 'text-decoration:underline'),
+                            $item[1]['pg_name']
+                        ),
                         'buttons' => (
-                            $this->getEditLink($prefix . '/edit/' . $item[1]['pg_id']) .
-                            $this->getRemoveLink($prefix . '/remove/' . $item[1]['pg_id'])
+                            $this->editLink($prefix . '/edit/' . $item[1]['pg_id']) .
+                            $this->removeLink($prefix . '/remove/' . $item[1]['pg_id'])
                         )
                     );
                 } else {
@@ -39,8 +43,8 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
                     return array(
                         'name' => '&nbsp;- ' . $item[1]['pc_name'] . ' (' . $item[1]['pc_symbol'] . ')',
                         'buttons' => (
-                            $this->getEditLink($prefix . '/edit/' . $item[1]['pc_id'])
-                            . $this->getRemoveLink($prefix . '/remove/' . $item[1]['pc_id'])
+                            $this->editLink($prefix . '/edit/' . $item[1]['pc_id'])
+                            . $this->removeLink($prefix . '/remove/' . $item[1]['pc_id'])
                         )
                     );
                 }
@@ -57,8 +61,8 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
                 return array(
                     'name' => $item['pg_name'],
                     'buttons' => (
-                        $this->getEditLink($prefix .'/edit/' . $item['pg_id'])
-                        . $this->getRemoveLink($prefix . '/remove/' . $item['pg_id'])
+                        $this->editLink($prefix .'/edit/' . $item['pg_id'])
+                        . $this->removeLink($prefix . '/remove/' . $item['pg_id'])
                     )
                 );
             },
@@ -74,8 +78,8 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
                 return array(
                     'name' => $item['pg_name'],
                     'buttons' => (
-                        $this->getEditLink($prefix .'/edit/' . $item['pg_id'])
-                        . $this->getRemoveLink($prefix . '/remove/' . $item['pg_id'])
+                        $this->editLink($prefix .'/edit/' . $item['pg_id'])
+                        . $this->removeLink($prefix . '/remove/' . $item['pg_id'])
                     )
                 );
             },
@@ -90,23 +94,13 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
                 return array(
                     'name' => $item['pc_name'],
                     'buttons' => (
-                        $this->getEditLink($prefix . '/edit/' . $item['pc_id'])
-                        . $this->getRemoveLink($prefix . '/remove/' . $item['pc_id'])
+                        $this->editLink($prefix . '/edit/' . $item['pc_id'])
+                        . $this->removeLink($prefix . '/remove/' . $item['pc_id'])
                     )
                 );
             },
             DBPlatbyCategory::getOrphan()
         );
-    }
-
-    protected function getEditLink($link)
-    {
-        return '<a href="' . $link . '" title="Upravit"><img alt="Upravit" src="/style/icon-pencil.png" /></a>';
-    }
-
-    protected function getRemoveLink($link)
-    {
-        return '<a href="' . $link . '" title="Odstranit"><img alt="Odstranit" src="/style/icon-trash-o.png" /></a>';
     }
 
     protected function getDuplicateCategoryButton($id)

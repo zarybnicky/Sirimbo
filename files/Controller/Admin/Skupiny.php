@@ -30,8 +30,10 @@ class Controller_Admin_Skupiny extends Controller_Admin
         $data = array_map(
             function ($item) {
                 return array(
-                    'buttons' => ($this->getEditLink('/admin/skupiny/edit/' . $item['s_id'])
-                                  . $this->getRemoveLink('/admin/skupiny/remove/' . $item['s_id'])),
+                    'buttons' => (
+                        $this->editLink('/admin/skupiny/edit/' . $item['s_id'])
+                        . $this->removeLink('/admin/skupiny/remove/' . $item['s_id'])
+                    ),
                     'colorBox' => $this->colorbox($item['s_color_rgb'], $item['s_description'])
                                        ->render(),
                     'name' => $item['s_name']
@@ -141,9 +143,11 @@ class Controller_Admin_Skupiny extends Controller_Admin
             if (isset($f) && $f) {
                 $this->redirect()->setMessage(
                     'Nemůžu odstranit skupinu s připojenými kategoriemi! '
-                    . '<form action="" method="post">'
-                    . $this->submit('Odstranit spojení?')->data('action', 'unlink')
-                    . '</form>'
+                    . new Tag(
+                        'form',
+                        array('action' => '', 'mthod' => 'post'),
+                        $this->submit('Odstranit spojení?')->data('action', 'unlink')
+                    )
                 );
             }
             $this->render(
@@ -229,13 +233,5 @@ class Controller_Admin_Skupiny extends Controller_Admin
         $f->checkRegexp($request->post('color'), '/#[0-9a-f]{6}/i', 'Zadejte prosím platnou barvu.');
 
         return $f->isValid() ? true : $f;
-    }
-    private function getEditLink($link)
-    {
-        return '<a href="' . $link . '" title="Upravit"><img alt="Upravit" src="/style/icon-pencil.png" /></a>';
-    }
-    private function getRemoveLink($link)
-    {
-        return '<a href="' . $link . '" title="Odstranit"><img alt="Odstranit" src="/style/icon-trash-o.png" /></a>';
     }
 }

@@ -149,16 +149,23 @@ class UploadHelper
         return $messages;
     }
 
-    public function __toString()
-    {
-        return $this->render();
-    }
-
     public function render()
     {
         if ($this->_name === null) {
             return '';
         }
-        return '<input name="' . $this->_name . '[]" multiple="multiple" type="file"/>';
+        return (string) new Tag(
+            'input',
+            array(
+                'name' => $this->_name . '[]',
+                'multiple' => true,
+                'type' => 'file'
+            )
+        );
+    }
+
+    public function __toString()
+    {
+        return $this->render();
     }
 }

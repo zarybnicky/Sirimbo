@@ -26,10 +26,15 @@ class TextHelper
 
     public function render()
     {
-        return '<input type="text"'
-             . ($this->size ? " size=\"{$this->size}\"" : '')
-             . " name=\"{$this->name}\" "
-             . " value=\"{$this->value}\" />";
+        return (string) new Tag(
+            'input',
+            array(
+                'type' => 'text',
+                'size' => $this->size,
+                'name' => $this->name,
+                'value' => $this->value
+            )
+        );
     }
 
     public function __toString()

@@ -98,4 +98,3 @@ class TableHelper
         return ob_get_clean();
     }
 }
-?>

@@ -191,7 +191,7 @@ class DateHelper
     public function render()
     {
         $out = '';
-        //TODO:ranged select... ftf
+        //TODO:ranged select...
         if ($this->view == 'select') {
             $s = Helper::instance()->select();
 
@@ -206,20 +206,21 @@ class DateHelper
 
             $out .= $s->name($this->name . '-month')
                 ->value($this->date ? $this->date->getMonth() : null)
-                ->options(array(), true)
-                ->option('00', 'Měsíc')
-                ->option('01', 'Leden')
-                ->option('02', 'Únor')
-                ->option('03', 'Březen')
-                ->option('04', 'Duben')
-                ->option('05', 'Květen')
-                ->option('06', 'Červen')
-                ->option('07', 'Červenec')
-                ->option('08', 'Srpen')
-                ->option('09', 'Září')
-                ->option('10', 'Říjen')
-                ->option('11', 'Listopad')
-                ->option('12', 'Prosinec');
+                ->options(array(
+                    '00' => 'Měsíc',
+                    '01' => 'Leden',
+                    '02' => 'Únor',
+                    '03' => 'Březen',
+                    '04' => 'Duben',
+                    '05' => 'Květen',
+                    '06' => 'Červen',
+                    '07' => 'Červenec',
+                    '08' => 'Srpen',
+                    '09' => 'Září',
+                    '10' => 'Říjen',
+                    '11' => 'Listopad',
+                    '12' => 'Prosinec'
+                ), true);
 
             $s->name($this->name . '-year')
                 ->value($this->date ? $this->date->getYear() : null)
@@ -241,14 +242,23 @@ class DateHelper
                     $to = new Date();
                 }
                 if ($from->isValid() || $from->isValid()) {
-                    $selected = $from->getDate(Date::FORMAT_SIMPLIFIED) . ' - ' . $to->getDate(Date::FORMAT_SIMPLIFIED);
+                    $selected = $from->getDate(Date::FORMAT_SIMPLIFIED)
+                              . ' - '
+                              . $to->getDate(Date::FORMAT_SIMPLIFIED);
                     $done = true;
                 }
             }
             if (!$done) {
                 $selected = $this->date ? $this->date->getDate(Date::FORMAT_SIMPLIFIED) : '';
             }
-            $out .= '<input type="text" name="' . $this->name . '" value="' . $selected . '" />' . "\n";
+            $out .= new Tag(
+                'input',
+                array(
+                    'type' => 'text',
+                    'name' => $this->name,
+                    'value' => $selected
+                )
+            );
         }
         return $out;
     }

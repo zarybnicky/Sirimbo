@@ -18,23 +18,31 @@ class Controller_Admin_Platby_Overview extends Controller_Admin_Platby
                 $currentKey = count($skupiny);
                 $skupiny[$currentKey] = array();
                 $skupiny[$currentKey]['info'] = array(
-                    'header' => '<h3>' . $this->colorbox($item['s_color_rgb'], $item['s_description']) .
-                        '&nbsp;&nbsp;' . $item['s_name'] . '</h2>'
+                    'header' => new Tag(
+                        'h3',
+                        array(),
+                        $this->colorbox($item['s_color_rgb'], $item['s_description']),
+                        '&nbsp;&nbsp;' . $item['s_name']
+                    )
                 );
                 $skupiny[$currentKey]['users'] = array();
             }
             $skupiny[$currentKey]['users'][] = array(
                 'index' => ++$index . '.',
-                'fullName' => '<a href="/member/clenove/' . $item['u_id'] . '">' .
-                    '<img src="/style/person-small.png" alt="' . $item['u_jmeno'] . ' ' . $item['u_prijmeni'] .
-                    '" style="margin-bottom:-2px"/>' .
-                    '</a>' .
-                    '&nbsp;' . $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
-                'hasPaid' => ($item['pi_id'] ? '<span style="color:green">ANO</span>' : '<span style="font-weight:bold;color:red">NE</span>'),
-                'amount' => ($item['pi_amount'] == ($item['pc_amount'] * $item['pg_base']) ?
-                    '<span style="color:green">' . (int) $item['pi_amount'] . ' Kč</span>' :
-                    '<span style="font-weight:bold;color:red">' .
-                        (int) $item['pi_amount'] . ' Kč</span> (' . (int) ($item['pc_amount'] * $item['pg_base']) . ' Kč)')
+                'fullName' => $this->person($item),
+                'hasPaid' => new Tag(
+                    'span',
+                    array(
+                        'style' => 'font-weight:bold;'
+                        . 'color:' . ($item['pi_id'] ? 'green' : 'red')
+                    ),
+                    $item['pi_id'] ? 'ANO' : 'NE'
+                ),
+                'amount' => $item['pi_amount'] == ($item['pc_amount'] * $item['pg_base'])
+                ? ('<span style="color:green">' . (int) $item['pi_amount'] . ' Kč</span>')
+                : ('<span style="font-weight:bold;color:red">'
+                   . (int) $item['pi_amount'] . ' Kč</span> ('
+                   . (int) ($item['pc_amount'] * $item['pg_base']) . ' Kč)')
             );
         }
         foreach ($skupiny as &$skupina) {

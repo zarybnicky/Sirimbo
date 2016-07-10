@@ -33,7 +33,11 @@ class Controller_Admin_Video extends Controller_Admin
                     'uri' => $item['v_uri'],
                     'date' => $item['v_date'],
                     'playlist' => $item['v_playlist'] ? 'ano' : 'ne',
-                    'links' => '<a href="/admin/video/edit/' . $item['v_id'] . '">obecné</a>'
+                    'links' => new Tag(
+                        'a',
+                        array('href' => '/admin/video/edit/' . $item['v_id']),
+                        'obecné'
+                    )
                 );
             },
             DBVideo::getAll()

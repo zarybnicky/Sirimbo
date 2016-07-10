@@ -73,4 +73,3 @@ class PartnerRequestHelper
         return ($this->getRequestsByMe() . $this->getRequestsForMe());
     }
 }
-?>

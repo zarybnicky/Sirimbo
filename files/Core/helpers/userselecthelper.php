@@ -80,8 +80,9 @@ class UserSelectHelper
         }
 
         foreach ($this->_users as $user) {
-            if (isset($user['u_narozeni']))
+            if (isset($user['u_narozeni'])) {
                 list($year, $month, $day) = explode('-', $user['u_narozeni']);
+            }
 
             $id = $user[$this->_idIndex];
             if ($id == $selected)
@@ -135,7 +136,9 @@ Datum narození:&nbsp;<br/>
 
         return $out;
     }
-    public function __toString() {
+
+    public function __toString()
+    {
         return $this->render();
     }
 }
