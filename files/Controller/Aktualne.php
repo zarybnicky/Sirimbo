@@ -22,7 +22,16 @@ class Controller_Aktualne extends Controller_Abstract
                 'text' => $data['at_text'],
                 'title_photo_uri' => '/galerie/' . $photo_uri,
                 'title_photo_thumb_uri' => '/galerie/thumbnails/' . $photo_uri,
-                'category' => 'Zprávy'
+                'category' => 'Zprávy',
+                'meta' => array(
+                    array('property' => 'og:title', 'content' => $data['at_jmeno']),
+                    array('property' => 'og:type', 'content' => 'article'),
+                    array('property' => 'og:url', 'content' => 'http://tkolymp.cz/aktualne/' . $data['at_id']),
+                    array('property' => 'og:image', 'content' => 'http://tkolymp.cz/galerie/thumbnails/' . $photo_uri),
+                    array('property' => 'og:site_name', 'TK Olymp'),
+                    array('property' => 'og:description', $data['at_preview'])
+                ),
+                'html_title' => $data['at_jmeno']
             )
         );
         return;

@@ -30,11 +30,18 @@ abstract class Controller_Abstract implements Controller_Interface
         }
 
         $args = array(
-            'navbar' => $this->navbar()
+            'navbar' => $this->navbar(),
+            'meta' => array(),
+            'html_title' => null
         );
-        if (isset($vars['sidebar']))
-        {
+        if (isset($vars['sidebar'])) {
             $args['sidebar'] = $vars['sidebar'];
+        }
+        if (isset($vars['meta'])) {
+            $args['meta'] = $vars['meta'];
+        }
+        if (isset($vars['html_title'])) {
+            $args['html_title'] = $vars['html_title'];
         }
         echo $renderer->render(TISK ? HEADER_TISK : HEADER, $args);
         echo $content;
