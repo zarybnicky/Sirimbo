@@ -69,12 +69,12 @@ class DBAkce extends Database implements Pagable
         return self::getInsertId();
     }
 
-    public static function editAkce($id, $jmeno, $kde, $info, $od, $do, $kapacita, $dokumenty, $lock, $visible) {
-        list($id, $jmeno, $kde, $info, $od, $do, $kapacita, $dokumenty, $lock, $visible) =
-            self::escape($id, $jmeno, $kde, $info, $od, $do, $kapacita, $dokumenty, $lock, $visible);
+    public static function editAkce($id, $jmeno, $kde, $info, $od, $do, $kapacita, $lock, $visible) {
+        list($id, $jmeno, $kde, $info, $od, $do, $kapacita, $lock, $visible) =
+            self::escape($id, $jmeno, $kde, $info, $od, $do, $kapacita, $lock, $visible);
 
         self::query("UPDATE akce SET a_jmeno='$jmeno',a_kde='$kde',a_info='$info',a_od='$od',a_do='$do'," .
-            "a_kapacita='$kapacita',a_dokumenty='$dokumenty',a_lock='$lock',a_visible='$visible' WHERE a_id='$id'");
+            "a_kapacita='$kapacita',a_lock='$lock',a_visible='$visible' WHERE a_id='$id'");
 
         return true;
     }

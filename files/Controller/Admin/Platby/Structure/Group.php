@@ -54,10 +54,10 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
         );
         $insertId = DBPlatbyGroup::getInsertId();
 
-        foreach ($request->post('category') as $item) {
+        foreach ($request->post('category') ?: array() as $item) {
             DBPlatbyGroup::addChild($insertId, $item);
         }
-        foreach ($request->post('skupiny') as $item) {
+        foreach ($request->post('skupiny') ?: array() as $item) {
             DBSkupiny::addChild($item, $insertId);
         }
 

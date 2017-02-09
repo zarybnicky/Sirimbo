@@ -25,9 +25,9 @@ class Controller_Admin_Konzole extends Controller_Admin
             new Tag(
                 'textarea',
                 array('name' => 'code', 'rows' => 10, 'cols' => 10),
-                $request->post('code')
+                $request->post('code') ?: ''
             ),
-            $this->submit('Zpracovat')
+            $this->submit('Zpracovat')->render()
         );
     }
 }

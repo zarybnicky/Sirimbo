@@ -21,7 +21,7 @@ class Controller_Admin_Platby_Overview extends Controller_Admin_Platby
                     'header' => new Tag(
                         'h3',
                         array(),
-                        $this->colorbox($item['s_color_rgb'], $item['s_description']),
+                        $this->colorbox($item['s_color_rgb'], $item['s_description'])->render(),
                         '&nbsp;&nbsp;' . $item['s_name']
                     )
                 );
@@ -29,7 +29,7 @@ class Controller_Admin_Platby_Overview extends Controller_Admin_Platby
             }
             $skupiny[$currentKey]['users'][] = array(
                 'index' => ++$index . '.',
-                'fullName' => $this->person($item),
+                'fullName' => $this->person($item)->render(),
                 'hasPaid' => new Tag(
                     'span',
                     array(

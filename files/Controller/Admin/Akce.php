@@ -58,7 +58,7 @@ class Controller_Admin_Akce extends Controller_Admin
             (string) $od,
             (string) $do,
             $request->post('kapacita'),
-            array(),
+            serialize(array()),
             ($request->post('lock') == 'lock') ? 1 : 0,
             $request->post('visible') ? '1' : '0'
         );
@@ -99,7 +99,6 @@ class Controller_Admin_Akce extends Controller_Admin
             (string) $od,
             (string) $do,
             $request->post('kapacita'),
-            $request->post('dokumenty'),
             ($request->post('lock') == 'lock') ? 1 : 0,
             $request->post('visible') ? '1' : '0'
         );

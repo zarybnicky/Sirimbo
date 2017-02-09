@@ -1,11 +1,11 @@
 <?php
 class EditLinkHelper
 {
-    protected $name;
+    protected $link;
 
-    public function editLink($name)
+    public function editLink($link)
     {
-        $this->name = $name;
+        $this->link = $link;
         return $this;
     }
 

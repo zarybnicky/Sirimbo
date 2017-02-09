@@ -1,11 +1,11 @@
 <?php
 class RemoveLinkHelper
 {
-    protected $name;
+    protected $link;
 
-    public function removeLink($name)
+    public function removeLink($link)
     {
-        $this->name = $name;
+        $this->link = $link;
         return $this;
     }
 
@@ -16,7 +16,7 @@ class RemoveLinkHelper
             array('href' => $this->link, 'title' => 'Upravit'),
             new Tag(
                 'img',
-                array('alt' => 'Upravit', 'src' => '/style/icon-pencil.png')
+                array('alt' => 'Upravit', 'src' => '/style/icon-trash-o.png')
             )
         );
     }

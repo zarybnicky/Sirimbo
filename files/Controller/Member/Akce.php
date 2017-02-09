@@ -9,8 +9,7 @@ class Controller_Member_Akce extends Controller_Member
 
     public function view($request)
     {
-        $id = $request->getId();
-        if ($id) {
+        if ($id = $request->getId()) {
             if (!($data = DBAkce::getSingleAkce($id, true))) {
                 $this->redirect('/member/akce', 'Neexistuje žádná taková akce');
             }

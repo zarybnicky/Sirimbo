@@ -510,7 +510,7 @@ class Controller_Admin_Users extends Controller_Admin
                 return array(
                     'id' => $item['s_id'],
                     'color' => $item['s_color_rgb'],
-                    'popis' => $item['s_description']
+                    'popis' => $item['s_name']
                 );
             },
             DBSkupiny::get()

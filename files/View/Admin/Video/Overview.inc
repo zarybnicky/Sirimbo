@@ -2,7 +2,9 @@
 <div class="container full">
     <?= $this->notice($this->redirect()->getMessage()) ?>
     <form action="" method="post">
-        Titulní stránka: <?= $this->video1 ?>, <?= $this->video2 ?> <?= $this->submit() ?>
+        Titulní stránka:<br>
+        <?= $this->video1 ?> <?= $this->video2 ?><br>
+        <?= $this->submit('Odeslat') ?>
     </form>
     <form action="" method="post">
         <div class="r">
@@ -13,7 +15,6 @@
             <?= $this->table()
                      ->style('width:100%')
                      ->data($this->data)
-                     ->column('checkBox', '')
                      ->column('name', 'Jméno')
                      ->column('uri', 'URI')
                      ->column('playlist', 'Playlist?')

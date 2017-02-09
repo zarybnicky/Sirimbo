@@ -35,7 +35,7 @@ class Controller_Member_Clenove extends Controller_Member
                     'header' => new Tag(
                         'h3',
                         array(),
-                        $this->colorbox($item['s_color_rgb'], $item['s_description']),
+                        $this->colorbox($item['s_color_rgb'], $item['s_description'])->render(),
                         '&nbsp;&nbsp;',
                         $item['s_name']
                     ),
@@ -89,7 +89,7 @@ class Controller_Member_Clenove extends Controller_Member
                     'header' => new Tag(
                         'h3',
                         array(),
-                        $this->colorbox($item['s_color_rgb'], $item['s_description']),
+                        $this->colorbox($item['s_color_rgb'], $item['s_description'])->render(),
                         '&nbsp;&nbsp;' . $item['s_name']
                     )
                 );

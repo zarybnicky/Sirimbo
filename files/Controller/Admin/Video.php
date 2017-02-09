@@ -37,11 +37,9 @@ class Controller_Admin_Video extends Controller_Admin
         $data = array_map(
             function ($item) {
                 return array(
-                    'checkBox' => (
-                        $this->editLink('/admin/video/edit/' . $item['v_id'])
-                        . $this->removeLink('/admin/video/remove?u=' . $item['v_id'])
-                    ),
-                    'name' => $item['v_name'],
+                    'name' => $item['v_name'] . ' ('
+                    . $this->editLink('/admin/video/edit/' . $item['v_id']). '&nbsp;' 
+                    . $this->removeLink('/admin/video/remove?u=' . $item['v_id']) . ')',
                     'text' => $item['v_text'],
                     'uri' => $item['v_uri'],
                     'date' => $item['v_date'],

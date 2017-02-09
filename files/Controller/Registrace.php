@@ -76,6 +76,6 @@ class Controller_Registrace extends Controller_Abstract
             ->setMessage('')
             ->setMessage('Během několika dnů vám na email příjde potvrzení vašeho účtu, '
                          . 'které vyřizuje administrátor ručně.')
-            ->sendRedirect('/home');
+            ->redirect('/home');
     }
 }

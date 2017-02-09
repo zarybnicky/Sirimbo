@@ -32,7 +32,7 @@ abstract class Controller_Abstract implements Controller_Interface
         $args = array(
             'navbar' => $this->navbar(),
             'meta' => array(),
-            'html_title' => null
+            'html_title' => ''
         );
         if (isset($vars['sidebar'])) {
             $args['sidebar'] = $vars['sidebar'];

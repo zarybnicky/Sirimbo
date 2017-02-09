@@ -30,11 +30,11 @@ return array(
         '/member/dokumenty',
         array()
     ),
-    array(
-        'Žebříček',
-        '/member/pary',
-        array()
-    ),
+    // array(
+    //     'Žebříček',
+    //     '/member/pary',
+    //     array()
+    // ),
     array(
         'Přehled členů',
         '/member/clenove/structure',

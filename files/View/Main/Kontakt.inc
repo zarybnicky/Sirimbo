@@ -48,7 +48,7 @@
     </tr>
     <tr>
       <td class="r">email:</td>
-      <td>hyzam(zavináč)tkolymp.cz</td>
+      <td>hyzam(zavináč)seznam.cz</td>
     </tr>
     <tr><td>&nbsp;</td><td></td></tr>
     <tr>

@@ -23,11 +23,11 @@ class RedirectHelper
         exit;
     }
 
-    public static function setMessage($message)
+    public function setMessage($message)
     {
         if (is_array($message)) {
             foreach ($message as $row) {
-                self::setMessage($row);
+                $this->setMessage($row);
             }
             return;
         }
@@ -37,9 +37,10 @@ class RedirectHelper
         } else {
             $_SESSION['REDIRECT_MESSAGE'] = $message;
         }
+        return $this;
     }
 
-    public static function getMessage()
+    public function getMessage()
     {
         if (!isset($_SESSION['REDIRECT_MESSAGE'])) {
             return '';
