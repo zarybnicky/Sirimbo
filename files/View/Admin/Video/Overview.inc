@@ -2,6 +2,9 @@
 <div class="container full">
     <?= $this->notice($this->redirect()->getMessage()) ?>
     <form action="" method="post">
+        Titulní stránka: <?= $this->video1 ?>, <?= $this->video2 ?> <?= $this->submit() ?>
+    </form>
+    <form action="" method="post">
         <div class="r">
             <a href="/admin/video/add">Přidat</a>
             <button name="action" value="remove">Odebrat</button>
@@ -14,8 +17,7 @@
                      ->column('name', 'Jméno')
                      ->column('uri', 'URI')
                      ->column('playlist', 'Playlist?')
-                     ->column('date', 'Datum přidání')
-                     ->column('links', 'Upravit') ?>
+                     ->column('date', 'Datum přidání') ?>
         <?php else: ?>
             <?= $this->notice('Žádná videa') ?>
         <?php endif ?>

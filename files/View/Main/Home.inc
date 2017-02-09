@@ -14,18 +14,7 @@
     <div class="widget">
       <div class="widget-title text">Videa z posledních soutěží</div>
       <div class="widget-content">
-        <ul class="videos">
-          <li>
-            <a href="https://www.youtube.com/watch?v=CIG63Z16MBc" target="_blank" class="no-a">
-              <img alt="" src="//i3.ytimg.com/vi/CIG63Z16MBc/hqdefault.jpg" />
-            </a>
-          </li>
-          <li>
-            <a href="https://www.youtube.com/watch?v=Vad4KWQbHns" target="_blank" class="no-a">
-              <img alt="" src="//i3.ytimg.com/vi/Vad4KWQbHns/hqdefault.jpg" />
-            </a>
-          </li>
-        </ul>
+          <?= $this->videos ?>
       </div>
     </div>
   </div>

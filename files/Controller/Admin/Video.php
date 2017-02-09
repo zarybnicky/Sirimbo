@@ -10,6 +10,12 @@ class Controller_Admin_Video extends Controller_Admin
     public function view($request)
     {
         if ($request->post()) {
+            if ($request->post('video1')) {
+                DBParameters::set('title_video1', $request->post('video1'));
+                DBParameters::set('title_video2', $request->post('video2'));
+                $this->redirect('/admin/video');
+            }
+
             if ($request->post('action') == 'remove'
                 && $request->post('video')
             ) {
@@ -23,29 +29,33 @@ class Controller_Admin_Video extends Controller_Admin
                 $this->redirect('/admin/video');
             }
         }
+
+        $videos = DBVideo::getAll();
+
+        $select = $this->select()->optionsAssoc($videos, 'v_id', 'v_name');
+
         $data = array_map(
             function ($item) {
                 return array(
-                    'checkBox' => $this->checkbox('video[]', $item['v_id'])
-                                       ->render(),
+                    'checkBox' => (
+                        $this->editLink('/admin/video/edit/' . $item['v_id'])
+                        . $this->removeLink('/admin/video/remove?u=' . $item['v_id'])
+                    ),
                     'name' => $item['v_name'],
                     'text' => $item['v_text'],
                     'uri' => $item['v_uri'],
                     'date' => $item['v_date'],
-                    'playlist' => $item['v_playlist'] ? 'ano' : 'ne',
-                    'links' => new Tag(
-                        'a',
-                        array('href' => '/admin/video/edit/' . $item['v_id']),
-                        'obecné'
-                    )
+                    'playlist' => $item['v_playlist'] ? 'ano' : 'ne'
                 );
             },
-            DBVideo::getAll()
+            $videos
         );
         $this->render(
             'files/View/Admin/Video/Overview.inc',
             array(
-                'data' => $data
+                'data' => $data,
+                'video1' => $select->name('video1')->set(DBParameters::get('title_video1'))->render(),
+                'video2' => $select->name('video2')->set(DBParameters::get('title_video2'))->render()
             )
         );
     }

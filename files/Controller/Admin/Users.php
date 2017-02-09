@@ -213,17 +213,11 @@ class Controller_Admin_Users extends Controller_Admin
                 return;
             }
             $groups = DBPermissions::getGroups();
-            $s_group = $this->select();
-            foreach ($groups as $group) {
-                $s_group->option($group['pe_id'], $group['pe_name']);
-            }
+            $s_group = $this->select()->optionsAssoc($groups, 'pe_id', 'pe_name');
 
             $skupiny = DBSkupiny::get();
             $s_skupina = new SelectHelper();
-            $s_skupina->select();
-            foreach ($skupiny as $skupina) {
-                $s_skupina->option($skupina['s_id'], $skupina['s_name']);
-            }
+            $s_skupina->select()->optionsAssoc($skupiny, 's_id', 's_name');
 
             $users = array_map(
                 function ($item) use ($s_group, $s_skupina) {

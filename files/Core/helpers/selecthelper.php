@@ -59,6 +59,17 @@ class SelectHelper
         return $this;
     }
 
+    public function optionsAssoc($options, $value, $name, $overwrite = false)
+    {
+        if ($overwrite) {
+            $this->options = array();
+        }
+        foreach ($options as $x) {
+            $this->options[$x[$value]] = $x[$name];
+        }
+        return $this;
+    }
+
     public function render()
     {
         $selected = $this->value;
