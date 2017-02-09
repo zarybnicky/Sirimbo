@@ -357,6 +357,17 @@ table.nocolor td, table.nocolor th {
     object-fit: cover;
     object-position:center center;
 }
+.highlights li img, .article-small img {
+    transition: all .25s ease-in-out;
+}
+.article-small .image {
+    overflow: hidden;
+}
+.highlights li:hover img, .article-small:hover img {
+    -moz-transform: scale(1.2);
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+}
 .highlights-info {
     position: absolute;
     min-height: 70px;
