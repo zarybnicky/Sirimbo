@@ -44,4 +44,3 @@ class DBPlatby extends Database
         return self::getArray($res);
     }
 }
-?>

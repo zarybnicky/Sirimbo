@@ -63,7 +63,7 @@ class DBAkce extends Database implements Pagable
             "SELECT *
             FROM akce_item
             LEFT JOIN users ON ai_user=u_id
-            WHERE ai_id_rodic='$id' ORDER BY u_prijmeni",
+            WHERE ai_id_rodic='?' ORDER BY u_prijmeni",
             $id
         );
         return self::getArray($res);

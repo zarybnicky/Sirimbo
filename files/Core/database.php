@@ -79,7 +79,7 @@ class Database
     }
     protected static function getSingleRow($resource)
     {
-        return mysql_fetch_assoc($resource);
+        return $resource ? mysql_fetch_assoc($resource) : false;
     }
 
     protected static function getArray($resource)

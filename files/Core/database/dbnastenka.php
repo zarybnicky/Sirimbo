@@ -3,7 +3,8 @@ class DBNastenka extends Database implements Pagable
 {
     public static function getInstance() { return new self(); }
 
-    public static function getNastenka($offset = null, $count = null) {
+    public static function getNastenka($offset = null, $count = null)
+    {
         $res = DBNastenka::query(
         "SELECT *
         FROM upozorneni
@@ -12,46 +13,52 @@ class DBNastenka extends Database implements Pagable
         return DBNastenka::getArray($res);
     }
 
-    public static function getPage($offset, $count, $options = null) {
+    public static function getPage($offset, $count, $options = null)
+    {
         return DBNastenka::getNastenka($offset, $count);
     }
-    public static function getCount($options = null) {
+
+    public static function getCount($options = null)
+    {
         return DBNastenka::getNastenkaCount();
     }
 
-    public static function getNastenkaCount() {
-        $res = DBNastenka::query(
-        "SELECT COUNT(*) FROM upozorneni");
+    public static function getNastenkaCount()
+    {
+        $res = DBNastenka::query("SELECT COUNT(*) FROM upozorneni");
         $res = DBNastenka::getSingleRow($res);
         return $res['COUNT(*)'];
     }
 
-    public static function getNastenkaSkupiny($id) {
-        list($id) = DBNastenka::escape($id);
-
-        $res = DBNastenka::query("SELECT * FROM upozorneni_skupiny WHERE ups_id_rodic='$id'");
+    public static function getNastenkaSkupiny($id)
+    {
+        $res = DBNastenka::query(
+            "SELECT * FROM upozorneni_skupiny WHERE ups_id_rodic='?'",
+            $id
+        );
         return DBNastenka::getArray($res);
     }
 
-    public static function addNastenkaSkupina($rodic, $skupina, $color, $popis) {
-        list($rodic, $skupina, $color, $popis) =
-            DBNastenka::escape($rodic, $skupina, $color, $popis);
-
-        DBNastenka::query("INSERT INTO upozorneni_skupiny (ups_id_rodic,ups_id_skupina,ups_color,ups_popis)
-            VALUES ('$rodic','$skupina','$color','$popis')");
+    public static function addNastenkaSkupina($rodic, $skupina, $color, $popis)
+    {
+        DBNastenka::query(
+            "INSERT INTO upozorneni_skupiny (ups_id_rodic,ups_id_skupina,ups_color,ups_popis)
+            VALUES ('?','?','?','?')",
+            $rodic, $skupina, $color, $popis
+        );
     }
 
-    public static function removeNastenkaSkupina($id) {
-        list($id) = DBNastenka::escape($id);
-
-        DBNastenka::query("DELETE FROM upozorneni_skupiny WHERE ups_id='$id'");
+    public static function removeNastenkaSkupina($id)
+    {
+        DBNastenka::query("DELETE FROM upozorneni_skupiny WHERE ups_id='?'", $id);
     }
 
-    public static function getNastenkaUserName($id) {
-        list($id) = DBNastenka::escape($id);
-
-        $res = DBNastenka::query("SELECT u_login FROM upozorneni LEFT JOIN users ON up_kdo=u_id WHERE " .
-            "up_id='$id'");
+    public static function getNastenkaUserName($id)
+    {
+        $res = DBNastenka::query(
+            "SELECT u_login FROM upozorneni LEFT JOIN users ON up_kdo=u_id WHERE up_id='?'",
+            $id
+        );
         if (!$res) {
             return false;
         } else {
@@ -60,11 +67,12 @@ class DBNastenka extends Database implements Pagable
         }
     }
 
-    public static function getSingleNastenka($id) {
-        list($id) = DBNastenka::escape($id);
-
-        $res = DBNastenka::query("SELECT *" .
-            " FROM upozorneni LEFT JOIN users ON up_kdo=u_id WHERE up_id='$id'");
+    public static function getSingleNastenka($id)
+    {
+        $res = DBNastenka::query(
+            "SELECT * FROM upozorneni LEFT JOIN users ON up_kdo=u_id WHERE up_id='?'",
+            $id
+        );
         if (!$res) {
             return false;
         } else {
@@ -72,10 +80,9 @@ class DBNastenka extends Database implements Pagable
         }
     }
 
-    public static function isNastenkaLocked($id) {
-        list($id) = DBNastenka::escape($id);
-
-        $res = DBNastenka::query("SELECT up_lock FROM upozorneni WHERE up_id='$id'");
+    public static function isNastenkaLocked($id)
+    {
+        $res = DBNastenka::query("SELECT up_lock FROM upozorneni WHERE up_id='?'", $id);
         if (!$res) {
             return false;
         } else {
@@ -84,31 +91,29 @@ class DBNastenka extends Database implements Pagable
         }
     }
 
-    public static function addNastenka($userid, $nadpis, $text, $lock) {
-        list($userid, $nadpis, $text, $lock) =
-            DBNastenka::escape($userid, $nadpis, $text, $lock);
-
-        DBNastenka::query("INSERT INTO upozorneni (up_kdo,up_nadpis,up_text,up_lock,up_timestamp_add) VALUES " .
-            "('$userid','$nadpis','$text','$lock',NOW())");
+    public static function addNastenka($userid, $nadpis, $text, $lock)
+    {
+        DBNastenka::query(
+            "INSERT INTO upozorneni
+            (up_kdo,up_nadpis,up_text,up_lock,up_timestamp_add) VALUES ('?','?','?','?',NOW())",
+            $userid, $nadpis, $text, $lock
+        );
         return DBNastenka::getInsertId();
     }
 
-    public static function editNastenka($id, $nadpis, $text, $lock) {
-        list($id, $nadpis, $text, $lock) =
-            DBNastenka::escape($id, $nadpis, $text, $lock);
-
-        DBNastenka::query("UPDATE upozorneni SET " .
-            "up_nadpis='$nadpis',up_text='$text',up_lock='$lock' WHERE up_id='$id'");
-
+    public static function editNastenka($id, $nadpis, $text, $lock)
+    {
+        DBNastenka::query(
+            "UPDATE upozorneni SET up_nadpis='?',up_text='?',up_lock='?' WHERE up_id='?'",
+            $nadpis, $text, $lock, $id
+        );
         return true;
     }
 
-    public static function removeNastenka($id) {
-        list($id) = DBNastenka::escape($id);
-
-        DBNastenka::query("DELETE FROM upozorneni WHERE up_id='$id'");
-        DBNastenka::query("DELETE FROM upozorneni_skupiny WHERE ups_id_rodic='$id'");
-
+    public static function removeNastenka($id)
+    {
+        DBNastenka::query("DELETE FROM upozorneni WHERE up_id='?'", $id);
+        DBNastenka::query("DELETE FROM upozorneni_skupiny WHERE ups_id_rodic='?'", $id);
         return true;
     }
 }
