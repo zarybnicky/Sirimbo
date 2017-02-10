@@ -77,7 +77,7 @@ class DBGalerie extends Database
     }
     public static function getSingleDir($id)
     {
-        list($id) = self::escapeArray(array($id));
+        list($id) = self::escape($id);
 
         $res = self::query("SELECT * FROM galerie_dir WHERE gd_id='$id'");
         return self::getSingleRow($res);

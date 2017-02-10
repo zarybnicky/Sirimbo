@@ -57,10 +57,8 @@ class DBUser extends Database implements Pagable
     }
 
     public static function checkUser($login, $pass) {
-        list($login, $pass) = DBUser::escapeArray(array($login, $pass));
-
         $res = DBUser::query("SELECT * FROM users WHERE
-            LOWER(u_login)=LOWER('$login') AND u_pass='$pass'");
+            LOWER(u_login)='?' AND u_pass='?'", strtolower($login), $pass);
         if (!$res) {
             return false;
         } else {
@@ -70,10 +68,7 @@ class DBUser extends Database implements Pagable
     }
 
     public static function getUserGroup($id) {
-        list($id) = DBUser::escapeArray(array($id));
-
-        $res = DBUser::query("SELECT u_group FROM users WHERE " .
-            "u_id='$id'");
+        $res = DBUser::query("SELECT u_group FROM users WHERE u_id='?'", $id);
         if (!$res) {
             return false;
         } else {
@@ -83,10 +78,7 @@ class DBUser extends Database implements Pagable
     }
 
     public static function getUserID($login) {
-        list($login) = DBUser::escapeArray(array($login));
-
-        $res = DBUser::query("SELECT u_id FROM users WHERE " .
-            "u_login='$login'");
+        $res = DBUser::query("SELECT u_id FROM users WHERE u_login='?'", $login);
         if (!$res) {
             return false;
         } else {
@@ -96,9 +88,10 @@ class DBUser extends Database implements Pagable
     }
 
     public static function getUserDataByNameEmail($login, $email) {
-        list($login, $email) = DBUser::escapeArray(array($login, $email));
-
-        $res = DBUser::query("SELECT * FROM users WHERE LOWER(u_login)=LOWER('$login') AND LOWER(u_email)=LOWER('$email')");
+        $res = DBUser::query(
+            "SELECT * FROM users WHERE LOWER(u_login)='?' AND LOWER(u_email)='?'",
+            strtolower($login), strtolower($email)
+        );
         if (!$res) {
             return false;
         } else {
@@ -107,13 +100,12 @@ class DBUser extends Database implements Pagable
     }
 
     public static function getUserData($id) {
-        list($id) = DBUser::escape($id);
-
         $res = DBUser::query(
-        "SELECT users.*,skupiny.*,permissions.* FROM users
-            LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
-            LEFT JOIN permissions ON u_group=pe_id
-        WHERE u_id='$id'");
+            "SELECT users.*,skupiny.*,permissions.* FROM users
+                LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
+                LEFT JOIN permissions ON u_group=pe_id
+             WHERE u_id='?'", $id
+        );
         if (!$res) {
             return false;
         } else {
@@ -122,12 +114,12 @@ class DBUser extends Database implements Pagable
     }
 
     public static function getUserByFullName($jmeno, $prijmeni) {
-        list($jmeno, $prijmeni) = DBUser::escapeArray(array($jmeno, $prijmeni));
-
         $res = DBUser::query(
-        "SELECT * FROM users
-        WHERE u_jmeno LIKE '$jmeno' AND u_prijmeni LIKE '$prijmeni'
-        ORDER BY u_id");
+            "SELECT * FROM users
+            WHERE u_jmeno LIKE '?' AND u_prijmeni LIKE '?'
+            ORDER BY u_id",
+            $jmeno, $prijmeni
+        );
         if (!$res) {
             return false;
         } else {
@@ -135,13 +127,12 @@ class DBUser extends Database implements Pagable
         }
     }
     public static function addTemporaryUser($login, $jmeno, $prijmeni, $narozeni) {
-        list($login, $jmeno, $prijmeni, $narozeni) =
-            DBUser::escapeArray(array($login, $jmeno, $prijmeni, $narozeni));
-
         DBUser::query(
-        "INSERT INTO users
-            (u_login,u_pass,u_jmeno,u_prijmeni,u_narozeni,u_confirmed,u_temporary,u_system,u_group)
-        VALUES ('$login','','$jmeno','$prijmeni','$narozeni','1','1','1','0')");
+            "INSERT INTO users
+                (u_login,u_pass,u_jmeno,u_prijmeni,u_narozeni,u_confirmed,u_temporary,u_system,u_group)
+            VALUES ('?','','?','?','?','1','1','1','0')",
+            $login, $jmeno, $prijmeni, $narozeni
+        );
         $user_id = mysql_insert_id();
 
         DBUser::query("INSERT INTO pary (p_id_partner, p_archiv) VALUES ('" . $user_id . "','0')");
@@ -151,9 +142,7 @@ class DBUser extends Database implements Pagable
     }
 
     public static function isUserLocked($id) {
-        list($id) = DBUser::escapeArray(array($id));
-
-        $res = DBUser::query("SELECT u_lock FROM users WHERE u_id='$id'");
+        $res = DBUser::query("SELECT u_lock FROM users WHERE u_id='?'", $id);
         if (!$res) {
             return false;
         } else {
@@ -163,9 +152,7 @@ class DBUser extends Database implements Pagable
     }
 
     public static function isUserConfirmed($id) {
-        list($id) = DBUser::escapeArray(array($id));
-
-        $res = DBUser::query("SELECT u_confirmed FROM users WHERE u_id='$id'");
+        $res = DBUser::query("SELECT u_confirmed FROM users WHERE u_id='?'", $id);
         if (!$res) {
             return false;
         } else {
@@ -175,56 +162,51 @@ class DBUser extends Database implements Pagable
     }
 
     public static function confirmUser($id, $group, $skupina = '1', $dancer = 0) {
-        list($id, $group, $skupina, $dancer) =
-            DBUser::escapeArray(array($id, $group, $skupina, $dancer));
-
-        DBUser::query("UPDATE users SET u_confirmed='1',u_group='$group',
-            u_skupina='$skupina',u_dancer='$dancer',u_system='0' WHERE u_id='$id'");
+        DBUser::query(
+            "UPDATE users SET u_confirmed='1',u_group='?',u_skupina='?',u_dancer='?',u_system='0' WHERE u_id='?'",
+            $group, $skupina, $dancer, $id
+        );
     }
 
     public static function setPassword($id, $passwd) {
-        list($id, $passwd) = DBUser::escapeArray(array($id, $passwd));
-
-        DBUser::query("UPDATE users SET u_pass='$passwd' WHERE u_id='$id'");
+        DBUser::query("UPDATE users SET u_pass='?' WHERE u_id='?'", $passwd, $id);
         return true;
     }
 
     public static function setUserData($id, $jmeno, $prijmeni, $pohlavi, $email, $telefon,
             $narozeni, $poznamky, $group, $skupina, $dancer, $lock, $ban, $system) {
-        list($id, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $narozeni, $poznamky, $group,
-            $skupina, $dancer, $lock, $ban, $system) = DBUser::escapeArray(array($id, $jmeno,
-            $prijmeni, $pohlavi, $email, $telefon, $narozeni, $poznamky, $group, $skupina,
-            $dancer, $lock, $ban, $system));
-
-        DBUser::query("UPDATE users SET " .
-            "u_jmeno='$jmeno',u_prijmeni='$prijmeni',u_pohlavi='$pohlavi',u_email='$email'," .
-            "u_telefon='$telefon',u_narozeni='$narozeni',u_poznamky='$poznamky',u_group='$group'," .
-            "u_skupina='$skupina',u_dancer='$dancer',u_lock='$lock',u_ban='$ban',u_system='$system'" .
-            " WHERE u_id='$id'");
+        DBUser::query(
+            "UPDATE users SET " .
+            "u_jmeno='?',u_prijmeni='?',u_pohlavi='?',u_email='?'," .
+            "u_telefon='?',u_narozeni='?',u_poznamky='?',u_group='?'," .
+            "u_skupina='?',u_dancer='?',u_lock='?',u_ban='?',u_system='?'" .
+            " WHERE u_id='?'",
+            $jmeno, $prijmeni, $pohlavi, $email, $telefon, $narozeni, $poznamky,
+            $group, $skupina, $dancer, $lock, $ban, $system, $id
+        );
         return true;
     }
 
     public static function addUser($login, $pass, $jmeno, $prijmeni, $pohlavi, $email, $telefon,
             $narozeni, $poznamky, $group, $skupina, $dancer, $lock, $ban, $confirmed, $system) {
-
-        list($login, $pass, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $narozeni, $poznamky,
-            $group, $skupina, $dancer, $lock, $ban, $confirmed, $system) =
-                DBUser::escapeArray(array($login, $pass, $jmeno, $prijmeni, $pohlavi, $email,
-                $telefon, $narozeni, $poznamky, $group, $skupina, $dancer, $lock, $ban,
-                $confirmed, $system));
-
-        DBUser::query("INSERT INTO users " .
+        DBUser::query(
+            "INSERT INTO users " .
             "(u_login,u_pass,u_jmeno,u_prijmeni,u_pohlavi,u_email,u_telefon,u_narozeni," .
             "u_poznamky,u_group,u_skupina,u_dancer,u_lock,u_ban,u_confirmed,u_system) VALUES " .
-            "('$login','$pass','$jmeno','$prijmeni','$pohlavi','$email','$telefon','$narozeni'," .
-            "'$poznamky','$group','$skupina','$dancer','$lock','$ban','$confirmed','$system')");
-        DBUser::query("INSERT INTO pary (p_id_partner) VALUES " .
-            "((SELECT u_id FROM users WHERE u_login='$login'))");
+            "('?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?')",
+            $login, $pass, $jmeno, $prijmeni, $pohlavi, $email, $telefon,
+            $narozeni, $poznamky, $group, $skupina, $dancer, $lock, $ban,
+            $confirmed, $system
+        );
+        DBUser::query(
+            "INSERT INTO pary (p_id_partner) VALUES ((SELECT u_id FROM users WHERE u_login='?'))",
+            $login
+        );
         return true;
     }
 
     public static function removeUser($id) {
-        list($id) = DBUser::escapeArray(array($id));
+        list($id) = DBUser::escape($id);
 
         DBUser::query("DELETE FROM users WHERE u_id='$id'");
         DBUser::query("DELETE FROM rozpis WHERE r_trener='$id'");
@@ -250,7 +232,7 @@ class DBUser extends Database implements Pagable
     }
 
     public static function getUsersByPohlavi($pohlavi) {
-        list($pohlavi) = DBUser::escapeArray(array($pohlavi));
+        list($pohlavi) = DBUser::escape($pohlavi);
 
         $res = DBUser::query(
         "SELECT * FROM users
@@ -288,7 +270,7 @@ class DBUser extends Database implements Pagable
     }
 
     public static function getUsersByPermission($module, $permission) {
-        list($module, $permission) = DBUser::escapeArray(array($module, $permission));
+        list($module, $permission) = DBUser::escape($module, $permission);
         $res = DBUser::query(
         "SELECT users.*,skupiny.* FROM users
             LEFT JOIN permissions ON u_group=pe_id

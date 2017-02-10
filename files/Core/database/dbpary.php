@@ -40,7 +40,7 @@ class DBPary extends Database
     }
 
     public static function getSinglePar($id) {
-        list($id) = DBPary::escapeArray(array($id));
+        list($id) = DBPary::escape($id);
 
         $res = DBPary::query(
             "SELECT p_id,
@@ -61,7 +61,7 @@ class DBPary extends Database
     }
 
     public static function getLatestPartner($partner, $pohlavi) {
-        list($partner, $pohlavi) = DBPary::escapeArray(array($partner, $pohlavi));
+        list($partner, $pohlavi) = DBPary::escape($partner, $pohlavi);
 
         $res = DBPary::query(
             'SELECT *
@@ -106,7 +106,7 @@ class DBPary extends Database
     }
 
     public static function getVysledky($id) {
-        list($id) = DBPary::escapeArray(array($id));
+        list($id) = DBPary::escape($id);
 
         $res = DBPary::query(
             "SELECT *
@@ -121,7 +121,7 @@ class DBPary extends Database
     }
 
     public static function getPreviousPartners($id) {
-        list($id) = DBPary::escapeArray(array($id));
+        list($id) = DBPary::escape($id);
 
         $res = DBPary::query(
             "SELECT p_id,
@@ -150,7 +150,7 @@ class DBPary extends Database
     }
 
     public static function newPartner($partner, $partnerka) {
-        list($partner, $partnerka) = DBPary::escapeArray(array($partner, $partnerka));
+        list($partner, $partnerka) = DBPary::escape($partner, $partnerka);
 
         if ($partner == '0')
             return;
@@ -169,7 +169,7 @@ class DBPary extends Database
     }
 
     public static function noPartner($partner) {
-        list($partner) = DBPary::escapeArray(array($partner));
+        list($partner) = DBPary::escape($partner);
 
         if ($partner == '0')
             return;
@@ -193,7 +193,7 @@ class DBPary extends Database
     }
 
     public static function getPartnerRequestsForMe($id) {
-        list($id) = DBPary::escapeArray(array($id));
+        list($id) = DBPary::escape($id);
 
         $res = DBPary::query(
         "SELECT pn_id, pn_navrhl, u_jmeno, u_prijmeni, u_pohlavi
@@ -204,7 +204,7 @@ class DBPary extends Database
     }
 
     public static function getPartnerRequestsByMe($id) {
-        list($id) = DBPary::escapeArray(array($id));
+        list($id) = DBPary::escape($id);
 
         if (User::getUserPohlavi() == "m")
             $res = DBPary::query(
@@ -221,7 +221,7 @@ class DBPary extends Database
     }
 
     public static function newPartnerRequest($navrhl, $partner, $partnerka) {
-        list($navrhl, $partner, $partnerka) = DBPary::escapeArray(array($navrhl, $partner, $partnerka));
+        list($navrhl, $partner, $partnerka) = DBPary::escape($navrhl, $partner, $partnerka);
 
         DBPary::query("
         INSERT INTO pary_navrh
@@ -230,7 +230,7 @@ class DBPary extends Database
     }
 
     public static function acceptPartnerRequest($id) {
-        list($id) = DBPary::escapeArray(array($id));
+        list($id) = DBPary::escape($id);
 
         $res = DBPary::query("SELECT pn_partner,pn_partnerka FROM pary_navrh WHERE pn_id='$id'");
 
@@ -242,7 +242,7 @@ class DBPary extends Database
     }
 
     public static function deletePartnerRequest($id) {
-        list($id) = DBPary::escapeArray(array($id));
+        list($id) = DBPary::escape($id);
 
         DBPary::query("DELETE FROM pary_navrh WHERE pn_id='$id'");
     }
@@ -250,8 +250,8 @@ class DBPary extends Database
     public static function editTridaBody($p_id, $stt_trida, $stt_body, $stt_finale,
             $lat_trida, $lat_body, $lat_finale, $hodnoceni) {
         list($p_id, $stt_trida, $stt_body, $stt_finale, $lat_trida, $lat_body,
-            $lat_finale, $hodnoceni) = DBPary::escapeArray(array($p_id, $stt_trida,
-            $stt_body, $stt_finale, $lat_trida, $lat_body, $lat_finale, $hodnoceni));
+            $lat_finale, $hodnoceni) = DBPary::escape($p_id, $stt_trida,
+            $stt_body, $stt_finale, $lat_trida, $lat_body, $lat_finale, $hodnoceni);
 
         DBPary::query(
             "UPDATE pary

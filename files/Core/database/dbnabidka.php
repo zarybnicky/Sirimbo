@@ -22,7 +22,7 @@ class DBNabidka extends Database
     }
 
     public static function getSingleNabidka($id) {
-        list($id) = self::escapeArray(array($id));
+        list($id) = self::escape($id);
 
         $res = self::query(
         "SELECT n_id,u_jmeno,u_prijmeni,nabidka.*
@@ -38,7 +38,7 @@ class DBNabidka extends Database
 
     public static function addNabidka($trener, $pocet_hod, $max_hod, $od, $do, $visible, $lock) {
         list($trener, $pocet_hod, $max_hod, $od, $do, $visible, $lock) =
-            self::escapeArray(array($trener, $pocet_hod, $max_hod, $od, $do, $visible, $lock));
+            self::escape($trener, $pocet_hod, $max_hod, $od, $do, $visible, $lock);
 
         self::query("INSERT INTO nabidka (n_trener,n_pocet_hod,n_max_pocet_hod,n_od,n_do,n_visible,n_lock) VALUES " .
             "('$trener','$pocet_hod','$max_hod','$od','$do','$visible','$lock')");
@@ -48,7 +48,7 @@ class DBNabidka extends Database
 
     public static function editNabidka($id, $trener, $pocet_hod, $max_hod, $od, $do, $visible, $lock) {
         list($id, $trener, $pocet_hod, $max_hod, $od, $do, $visible, $lock) =
-            self::escapeArray(array($id, $trener, $pocet_hod, $max_hod, $od, $do, $visible, $lock));
+            self::escape($id, $trener, $pocet_hod, $max_hod, $od, $do, $visible, $lock);
 
         self::query("UPDATE nabidka SET n_trener='$trener',n_pocet_hod='$pocet_hod',n_max_pocet_hod='$max_hod',n_od='$od'," .
             "n_do='$do',n_visible='$visible',n_lock='$lock' WHERE n_id='$id'");
@@ -57,7 +57,7 @@ class DBNabidka extends Database
     }
 
     public static function removeNabidka($id) {
-        list($id) = self::escapeArray(array($id));
+        list($id) = self::escape($id);
 
         self::query("DELETE FROM nabidka WHERE n_id='$id'");
         self::query("DELETE FROM nabidka_item WHERE ni_id_rodic='$id'");
@@ -66,7 +66,7 @@ class DBNabidka extends Database
     }
 
     public static function getNabidkaItem($parent_id) {
-        list($parent_id) = self::escapeArray(array($parent_id));
+        list($parent_id) = self::escape($parent_id);
 
         $res = self::query(
         "SELECT p_id,u_id,u_jmeno,u_prijmeni,nabidka_item.*
@@ -78,7 +78,7 @@ class DBNabidka extends Database
     }
 
     public static function getNabidkaItemLessons($id) {
-        list($id) = self::escapeArray(array($id));
+        list($id) = self::escape($id);
 
         $res = self::query("SELECT SUM(ni_pocet_hod) FROM nabidka_item WHERE ni_id_rodic='$id'");
         if (!$res) {
@@ -90,7 +90,7 @@ class DBNabidka extends Database
     }
 
     public static function getNabidkaMaxItems($id) {
-        list($id) = self::escapeArray(array($id));
+        list($id) = self::escape($id);
 
         $res = self::query("SELECT MAX(ni_pocet_hod) FROM nabidka_item WHERE ni_id_rodic='$id'");
         if (!$res) {
@@ -102,7 +102,7 @@ class DBNabidka extends Database
     }
 
     public static function getNabidkaLessons($parent_id, $u_id) {
-        list($parent_id, $u_id) = self::escapeArray(array($parent_id, $u_id));
+        list($parent_id, $u_id) = self::escape($parent_id, $u_id);
 
         $res = self::query("SELECT ni_pocet_hod FROM nabidka_item WHERE ni_id_rodic='$parent_id' AND " .
             "ni_partner='$u_id'");
@@ -115,7 +115,7 @@ class DBNabidka extends Database
     }
 
     public static function addNabidkaItemLessons($user_id, $parent_id, $pocet_hod) {
-        list($user_id, $parent_id, $pocet_hod) = self::escapeArray(array($user_id, $parent_id, $pocet_hod));
+        list($user_id, $parent_id, $pocet_hod) = self::escape($user_id, $parent_id, $pocet_hod);
 
         self::query("INSERT INTO nabidka_item (ni_partner,ni_id_rodic,ni_pocet_hod)" .
             " VALUES ('$user_id','$parent_id','$pocet_hod')" .
@@ -125,7 +125,7 @@ class DBNabidka extends Database
     }
 
     public static function editNabidkaItem($id, $partner, $pocet_hod) {
-        list($id, $partner, $pocet_hod) = self::escapeArray(array($id, $partner, $pocet_hod));
+        list($id, $partner, $pocet_hod) = self::escape($id, $partner, $pocet_hod);
 
         $res = self::query(
         "SELECT ni_id,ni_id_rodic FROM nabidka_item
@@ -152,7 +152,7 @@ class DBNabidka extends Database
     }
 
     public static function removeNabidkaItem($parent_id, $u_id) {
-        list($parent_id, $u_id) = self::escapeArray(array($parent_id, $u_id));
+        list($parent_id, $u_id) = self::escape($parent_id, $u_id);
 
         self::query("DELETE FROM nabidka_item WHERE ni_id_rodic='$parent_id' AND " .
             "ni_partner='$u_id'");
@@ -161,7 +161,7 @@ class DBNabidka extends Database
     }
 
     public static function removeNabidkaItemByID($id) {
-        list($id) = self::escapeArray(array($id));
+        list($id) = self::escape($id);
 
         self::query("DELETE FROM nabidka_item WHERE ni_id='$id'");
 

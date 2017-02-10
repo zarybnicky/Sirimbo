@@ -8,7 +8,7 @@ class DBNovinky extends Database
     }
 
     public static function getLastNovinky($number) {
-        list($number) = self::escapeArray(array($number));
+        list($number) = self::escape($number);
 
         $res = self::query(
                 "SELECT * FROM novinky
@@ -19,12 +19,12 @@ class DBNovinky extends Database
     }
 
     public static function addNovinka($uid, $text) {
-        list($uid, $text) = self::escapeArray(array($uid, $text));
+        list($uid, $text) = self::escape($uid, $text);
         self::query("INSERT INTO novinky (no_id_user, no_text) VALUES ('$uid','$text')");
     }
 
     public static function removeNovinka($id) {
-        list($id) = self::escapeArray(array($id));
+        list($id) = self::escape($id);
         self::query("DELETE FROM novinky WHERE no_id=$id");
     }
 }

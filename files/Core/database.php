@@ -54,10 +54,27 @@ class Database
     }
     protected static function query($query)
     {
+        if (func_num_args() > 1) {
+            $args = static::escapeArray(array_slice(func_get_args(), 1));
+            $q = '';
+            while (strpos($query, '?') !== false) {
+                if (!$args) {
+                    throw new ViewException('Invalid query call');
+                }
+                list($x, $rest) = explode('?', $query, 2);
+                $q .= $x . array_shift($args);
+                $query = $rest;
+            }
+            if ($args) {
+                throw new ViewException('Invalid query call');
+            }
+            $query = $q . $query;
+        }
         static::getConnection();
-        $res = mysql_query($query, self::$connection)
-            or static::databaseError();
-
+        $res = mysql_query($query, self::$connection);
+        if (!$res) {
+            static::databaseError();
+        }
         return $res;
     }
     protected static function getSingleRow($resource)

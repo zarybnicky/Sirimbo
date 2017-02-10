@@ -6,7 +6,7 @@ class DBPermissions extends Database
         return DBPermissions::getArray($res);
     }
     public static function getSingleGroup($id) {
-        list($id) = DBPermissions::escapeArray(array($id));
+        list($id) = DBPermissions::escape($id);
 
         $res = DBPermissions::query("SELECT * FROM permissions WHERE pe_id='$id'");
         return DBPermissions::getSingleRow($res);
@@ -51,7 +51,7 @@ class DBPermissions extends Database
         return true;
     }
     public static function removeGroup($id) {
-        list($id) = DBPermissions::escapeArray(array($id));
+        list($id) = DBPermissions::escape($id);
 
         DBPermissions::query("DELETE FROM permissions WHERE pe_id='$id'");
         return true;
