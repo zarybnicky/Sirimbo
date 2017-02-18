@@ -73,7 +73,7 @@ class Controller_Member_Akce extends Controller_Member
                     'name' => $dokument['d_name']
                 );
             },
-            unserialize($data['a_dokumenty']) ?: array()
+            array_filter(explode(',', $data['a_dokumenty'])) ?: array()
         );
 
         $out = array(

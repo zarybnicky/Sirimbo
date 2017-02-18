@@ -58,7 +58,7 @@ class Controller_Admin_Akce extends Controller_Admin
             (string) $od,
             (string) $do,
             $request->post('kapacita'),
-            serialize(array()),
+            '',
             ($request->post('lock') == 'lock') ? 1 : 0,
             $request->post('visible') ? '1' : '0'
         );
@@ -99,6 +99,7 @@ class Controller_Admin_Akce extends Controller_Admin
             (string) $od,
             (string) $do,
             $request->post('kapacita'),
+            $data['a_dokumenty'],
             ($request->post('lock') == 'lock') ? 1 : 0,
             $request->post('visible') ? '1' : '0'
         );
@@ -184,7 +185,7 @@ class Controller_Admin_Akce extends Controller_Admin
                     );
                 },
                 DBDokumenty::getMultipleById(
-                    unserialize($data['a_dokumenty'])
+                    array_filter(explode(',', $data['a_dokumenty']))
                 )
             );
         } else {

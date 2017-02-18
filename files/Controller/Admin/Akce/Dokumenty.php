@@ -12,9 +12,10 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Admin_Akce
         if (!$id || !($akce = DBAkce::getSingleAkce($id))) {
             $this->redirect('/admin/akce', 'Akce s takovým ID neexistuje');
         }
-        $documents = unserialize($akce["a_dokumenty"]);
+        $documents = array_filter(explode(',', $akce["a_dokumenty"]));
 
         if ($request->post()) {
+            $changed = false;
             if ($request->post("remove") !== null) {
                 unset($documents[array_search($request->post('remove'), $documents)]);
                 $documents = array_values($documents);
@@ -25,11 +26,11 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Admin_Akce
                 $request->post('add-id', 0);
                 $changed = true;
             }
-            if (isset($changed) && $changed) {
+            if ($changed) {
                 DBAkce::editAkce(
                     $akce["a_id"], $akce["a_jmeno"], $akce["a_kde"],
                     $akce["a_info"], $akce["a_od"], $akce["a_do"],
-                    $akce["a_kapacita"], serialize($documents),
+                    $akce["a_kapacita"], implode(',', $documents),
                     $akce["a_lock"], $akce['a_visible']
                 );
             }
