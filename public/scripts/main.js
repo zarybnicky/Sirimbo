@@ -5,7 +5,7 @@ $(function() {
 
     var container = document.querySelector('#more-articles');
     if (container) {
-        imagesLoaded( container, function() {
+        imagesLoaded(container, function() {
             masonry = new Masonry(container, {
                 "columnWidth": ".grid-sizer",
                 "itemSelector": ".item"
@@ -23,76 +23,55 @@ $(function() {
     var prevScroll = $(window).scrollTop();
 
     function fixTopMenu(fast) {
-        $('#menu').css("position", "fixed")
-            .css("top", "0")
-            .css("opacity", "1");
+        $('#menu').css("position", "fixed").css("top", "0").css("opacity", "1");
         $('.highlights').css("padding-top", menuHeight + 5);
-        $('#menu-logo').stop().animate(
-            {
-                'opacity': '1'
+        $('#menu-logo').stop().animate({
+            'opacity': '1'
+        }, {
+            'queue': false,
+            'start': function() {
+                $(this).css('display', 'block');
+                $('#menu').css('border-bottom', '1px solid #000');
             },
-            {
-                'queue': false,
-                'start': function() {
-                    $(this).css('display', 'block');
-                    $('#menu').css('border-bottom', '1px solid #000');
-                },
-                'duration': fast ? 0 : 500
-            }
-        );
-        $('#menu .menu-inner').stop().animate(
-            {
-                'padding-left': '30px',
-                'width': '930px'
-            },
-            {
-                'queue': false,
-                'duration': fast ? 0 : 500
-            }
-        );
+            'duration': fast ? 0 : 500
+        });
+        $('#menu .menu-inner').stop().animate({
+            'padding-left': '30px',
+            'width': '930px'
+        }, {
+            'queue': false,
+            'duration': fast ? 0 : 500
+        });
     }
 
     function releaseTopMenu() {
         $('#menu').css("position", "static")
         $('.highlights').css("padding-top", "0");
-        $('#menu-logo').stop().animate(
-            {
-                'opacity': '0'
+        $('#menu-logo').stop().animate({
+            'opacity': '0'
+        }, {
+            'queue': false,
+            'start': function() {
+                $('#menu').css('border-bottom', '0');
             },
-            {
-                'queue': false,
-                'start': function() {
-                    $('#menu').css('border-bottom', '0');
-                },
-                'done': function() {
-                    $(this).css('display', 'none');
-                }
+            'done': function() {
+                $(this).css('display', 'none');
             }
-        );
-        $('#menu .menu-inner').stop().animate(
-            {
-                'padding-left': '0',
-                'width': '960px'
-            },
-            {
-                'queue': false,
-            }
-        );
-
+        });
+        $('#menu .menu-inner').stop().animate({
+            'padding-left': '0',
+            'width': '960px'
+        }, {
+            'queue': false,
+        });
     }
 
     function initTopMenu() {
         $(window).scroll(function() {
             scrollTop = $(window).scrollTop();
-            if (
-                scrollTop >= headerHeight &&
-                    prevScroll < headerHeight
-            ) {
+            if (scrollTop >= headerHeight && prevScroll < headerHeight) {
                 fixTopMenu(false);
-            } else if(
-                scrollTop < headerHeight &&
-                    prevScroll >= headerHeight
-            ) {
+            } else if (scrollTop < headerHeight && prevScroll >= headerHeight) {
                 releaseTopMenu();
             }
             prevScroll = scrollTop;
@@ -124,49 +103,30 @@ $(function() {
     }
     $(".highlights-info").height(maxHeight($(".highlights-info")));
 
-    $(".highlights li").filter(
-        function(index, element) {
-            return $(this).find(".highlights-info .desc")
-                .is(":not(:empty)");
-        }
-    ).hover(
-        function() {
-            var height = minHeight($(this).siblings()
-                                   .find(".highlights-info")) + 59;
-            $(this).find(".highlights-info").animate(
-                {
-                    "height": height
-                },
-                {
-                    "start": function() {
-                        $(this).find(".desc")
-                            .css("opacity", "0")
-                            .css("display", "block")
-                            .animate(
-                                {
-                                    "opacity" : "1"
-                                }
-                            );
-                    },
-                    "duration": 250
-                }
-            );
-        },
-        function() {
-            var height = minHeight($(this).siblings()
-                                   .find(".highlights-info"));
-            $(this).find(".highlights-info")
-                .animate(
-                    {
-                        "height": height
-                    },
-                    {
-                        "start": function() {
-                            $(this).find(".desc").fadeOut(100);
-                        },
-                        "duration": 250
-                    }
-                );
-        }
-    );
+    $(".highlights li").filter(function(index, element) {
+        return $(this).find(".highlights-info .desc").is(":not(:empty)");
+    }).hover(function() {
+        var height = minHeight($(this).siblings().find(".highlights-info")) + 59;
+        $(this).find(".highlights-info").animate({
+            "height": height
+        }, {
+            "start": function() {
+                $(this).find(".desc")
+                    .css("opacity", "0")
+                    .css("display", "block")
+                    .animate({ "opacity" : "1" });
+            },
+            "duration": 250
+        });
+    }, function() {
+        var height = minHeight($(this).siblings() .find(".highlights-info"));
+        $(this).find(".highlights-info").animate({
+            "height": height
+        }, {
+            "start": function() {
+                $(this).find(".desc").fadeOut(100);
+            },
+            "duration": 250
+        });
+    });
 });

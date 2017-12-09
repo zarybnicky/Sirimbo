@@ -45,7 +45,7 @@ abstract class Controller_Abstract implements Controller_Interface
         }
         echo $renderer->render(TISK ? HEADER_TISK : HEADER, $args);
         echo $content;
-        echo $renderer->render(TISK ? FOOTER_TISK : FOOTER);
+        echo $renderer->render(TISK ? FOOTER_TISK : FOOTER, ['filename' => $filename]);
     }
 
     public function __call($name, $args) {

@@ -13,6 +13,8 @@ class Controller_Admin_Video extends Controller_Admin
             if ($request->post('video1')) {
                 DBParameters::set('title_video1', $request->post('video1'));
                 DBParameters::set('title_video2', $request->post('video2'));
+                DBParameters::set('title_video3', $request->post('video3'));
+                DBParameters::set('title_video4', $request->post('video4'));
                 $this->redirect('/admin/video');
             }
 
@@ -38,8 +40,8 @@ class Controller_Admin_Video extends Controller_Admin
             function ($item) {
                 return array(
                     'name' => $item['v_name'] . ' ('
-                    . $this->editLink('/admin/video/edit/' . $item['v_id']). '&nbsp;' 
-                    . $this->removeLink('/admin/video/remove?u=' . $item['v_id']) . ')',
+                          . $this->editLink('/admin/video/edit/' . $item['v_id']). '&nbsp;'
+                          . $this->removeLink('/admin/video/remove?u=' . $item['v_id']) . ')',
                     'text' => $item['v_text'],
                     'uri' => $item['v_uri'],
                     'date' => $item['v_date'],
@@ -53,7 +55,9 @@ class Controller_Admin_Video extends Controller_Admin
             array(
                 'data' => $data,
                 'video1' => $select->name('video1')->set(DBParameters::get('title_video1'))->render(),
-                'video2' => $select->name('video2')->set(DBParameters::get('title_video2'))->render()
+                'video2' => $select->name('video2')->set(DBParameters::get('title_video2'))->render(),
+                'video3' => $select->name('video3')->set(DBParameters::get('title_video3'))->render(),
+                'video4' => $select->name('video4')->set(DBParameters::get('title_video4'))->render()
             )
         );
     }

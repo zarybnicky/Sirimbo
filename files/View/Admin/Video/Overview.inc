@@ -4,6 +4,7 @@
     <form action="" method="post">
         Titulní stránka:<br>
         <?= $this->video1 ?> <?= $this->video2 ?><br>
+        <?= $this->video3 ?> <?= $this->video4 ?><br>
         <?= $this->submit('Odeslat') ?>
     </form>
     <form action="" method="post">

@@ -3,14 +3,14 @@
 <div class="container full">
   <?= $this->notice($this->redirect()->getMessage()); ?>
 
-  <div class="container third">
+  <!--<div class="container third">
     <div class="widget">
       <div class="widget-title text">Výsledky posledních soutěží</div>
-      <?= $this->results($this->results);?>
+      < ?= $this->results($this->results);?>
     </div>
-  </div>
+  </div>-->
 
-  <div class="container third">
+  <div class="container two-thirds">
     <div class="widget">
       <div class="widget-title text">Videa z posledních soutěží</div>
       <div class="widget-content">
