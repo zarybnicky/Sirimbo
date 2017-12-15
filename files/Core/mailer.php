@@ -1,30 +1,37 @@
 <?php
+require 'phpmailer.php';
+require 'smtp.php';
+
 class Mailer
 {
     private static function _mail($to, $subject, $message, $from, $headers)
     {
-        if (empty($from) || !$from) {
-            $from = DEFAULT_FROM_MAIL;
-        }
-        $headers = (strlen($headers) > 0 ? $headers . "\n" : '')
-                   . "From: $from\n"
-                   . "MIME-Version: 1.0\n"
-                   . "Content-type: text/plain; charset=\"UTF-8\";\n"
-                   . "Content-Transfer-Encoding: 8bit\n"
-                   . "\n";
+        $mail = new PHPMailer();
 
-        if (is_array($to)) {
-            foreach ($to as $email) {
-                mail($email, "=?utf-8?B?" . base64_encode($subject) . "?=", $message, $headers);
-            }
-        } else {
-            mail($to, "=?utf-8?B?" . base64_encode($subject) . "?=", $message, $headers);
+        $mail->isSMTP();
+        $mail->Host = 'mail.zarybnicky.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'jakub@zarybnicky.com';
+        $mail->Password = '***REMOVED***';
+        $mail->SMTPSecure = 'tls';
+        $mail->Port = 587;
+        $mail->CharSet = 'utf-8';
+
+        $mail->setFrom('noreply@tkolymp.cz', 'TK Olymp.cz');
+        foreach (is_array($to) ? $to : array($to) as $addr) {
+            $mail->addAddress($addr, '');
         }
+        $mail->Subject = $subject;
+        $mail->Body = $message;
+
+        $mail->send();
     }
+
     public static function customMail($to, $subject, $message, $from = '', $headers = '')
     {
         Mailer::_mail($to, $subject, $message, $from, $headers);
     }
+
     public static function newPassword($to, $newpass)
     {
         $subject = "TKOlymp.cz - nové heslo";
@@ -32,7 +39,7 @@ class Mailer
 Vy nebo někdo jiný jste požádali jste o vygenerování nového hesla.
 Heslo si můžete změnit hned po přihlášení v nabídce Profil.
 
-Heslo:
+Dočasné heslo:
 $newpass
 
 S pozdravem
@@ -40,6 +47,7 @@ TKOlymp.cz
 EOS;
         Mailer::_mail($to, $subject, $message, DEFAULT_FROM_MAIL, "");
     }
+
     public static function newUserNotice($to, $username, $total_users = -1)
     {
         if ($total_users == -1) {
@@ -53,6 +61,7 @@ EOS;
 
         Mailer::_mail($to, $subject, $message, DEFAULT_FROM_MAIL, "");
     }
+
     public static function registrationConfirmNotice($to, $username)
     {
         $subject = "TKOlymp.cz - potvrzení registrace";
@@ -66,4 +75,3 @@ EOS;
         Mailer::_mail($to, $subject, $message, DEFAULT_FROM_MAIL, "");
     }
 }
-?>

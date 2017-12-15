@@ -90,7 +90,7 @@ set_error_handler('errorHandler');
 
 date_default_timezone_set('Europe/Paris');
 
-define('DEFAULT_FROM_MAIL', 'TK Olymp.cz <noreply@tkolymp.cz>');
+define('DEFAULT_FROM_MAIL', 'noreply@tkolymp.cz');
 define('DEFAULT_ADMIN_MAIL', 'tkolymp@tkolymp.cz');
 
 //ini_set('log_errors' , '1');
