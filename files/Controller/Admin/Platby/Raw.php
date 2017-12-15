@@ -27,9 +27,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
 
         $this->render(
             'files/View/Admin/Platby/RawUpload.inc',
-            array(
-                'uri' => $request->getLiteralURI()
-            )
+            ['uri' => $request->getLiteralURI()]
         );
     }
     public function select_columns($request)
@@ -39,12 +37,12 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
         if ($request->post()) {
             $this->processCsv(
                 $path,
-                array(
+                [
                     'specific' => $request->post('specific'),
                     'variable' => $request->post('variable'),
                     'date' => $request->post('date'),
                     'amount' => $request->post('amount')
-                )
+                ]
             );
             $this->redirect(
                 '/admin/platby/raw',
@@ -54,9 +52,9 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
         $parser = $this->getParser($path);
         $this->recognizeHeaders(array_flip($parser->headers()), $specific, $variable, $date, $amount);
 
-        $data = array();
+        $data = [];
         foreach ($parser->headers() as $name) {
-            $data[] = array(
+            $data[] = [
                 'column' => $name,
                 'specific' => $this->radio('specific', $name)
                                    ->set($name == $specific)
@@ -70,14 +68,11 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
                 'amount' => $this->radio('amount', $name)
                                  ->set($name == $amount)
                                  ->render()
-            );
+            ];
         }
         $this->render(
             'files/View/Admin/Platby/RawColumnSelect.inc',
-            array(
-                'data' => $data,
-                'uri' => $request->getLiteralURI()
-            )
+            ['data' => $data, 'uri' => $request->getLiteralURI()]
         );
     }
     private function getParser($path)

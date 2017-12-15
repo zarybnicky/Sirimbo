@@ -20,22 +20,22 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
             $this->_getTable($request, $data, $result, $columns, $header);
             $this->render(
                 'files/View/Admin/Platby/DiscardedTable.inc',
-                array(
+                [
                     'data' => $result,
                     'columns' => $columns,
                     'header' => $header,
                     'uri' => $request->getLiteralURI()
-                )
+                ]
             );
         } else {
             $this->_getList($data, $groupAmount, $groupDate);
             $this->render(
                 'files/View/Admin/Platby/DiscardedList.inc',
-                array(
+                [
                     'groupByDate' => $groupDate,
                     'groupByAmount' => $groupAmount,
                     'uri' => $request->getLiteralURI()
-                )
+                ]
             );
         }
     }
@@ -75,8 +75,8 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
             $header = 'všechny';
         }
 
-        $result = array();
-        $columnsTemp = array();
+        $result = [];
+        $columnsTemp = [];
         foreach ($data as $rawData) {
             $row = unserialize($rawData['pr_raw']);
             if (!$this->checkHeaders(array_flip($row), $specific, $variable, $date, $amount))
@@ -109,7 +109,7 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
                     $columnsTemp[$key] = false;
             }
             $row['edit'] = new Tag(
-                'div', array('style' => 'width:51px'),
+                'div', ['style' => 'width:51px'],
                 $this->editLink('/admin/platby/manual/' . $rawData['pr_id']),
                 $this->removeLink('/admin/platby/discarded/remove/' . $rawData['pr_id'])
             );
@@ -126,18 +126,18 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
             }
         }
 
-        $columns = array(array('edit', 'Zařadit'));
+        $columns = [['edit', 'Zařadit']];
         foreach ($columnsTemp as $key => $value) {
             if (!$value)
                 continue;
-            $columns[] = array($key, $key);
+            $columns[] = [$key, $key];
         }
     }
 
     private function _getList($data, &$groupAmount, &$groupDate)
     {
-        $groupDate = array();
-        $groupAmount = array();
+        $groupDate = [];
+        $groupAmount = [];
         foreach ($data as $row) {
             $row = unserialize($row['pr_raw']);
             if (!$this->checkHeaders(array_flip($row), $specific, $variable, $date, $amount))
@@ -146,13 +146,13 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
             if (isset($row[$date]) && $row[$date]) {
                 $currentDate = new Date($row[$date]);
                 if (!isset($groupDate[$currentDate->getYear()]))
-                    $groupDate[$currentDate->getYear()] = array('name' => $currentDate->getYear());
+                    $groupDate[$currentDate->getYear()] = ['name' => $currentDate->getYear()];
 
                 if (!isset($groupDate[$currentDate->getYear()]['months'][$currentDate->getMonth()]))
                     $groupDate[$currentDate->getYear()]['months'][$currentDate->getMonth()] =
                         $currentDate->getYear() . '/' . $currentDate->getMonth();
             } elseif (!isset($groupDate['none'])) {
-                $groupDate['none'] = array('name' => 'Nerozpoznáno');
+                $groupDate['none'] = ['name' => 'Nerozpoznáno'];
             }
 
             if (isset($row[$amount])) {

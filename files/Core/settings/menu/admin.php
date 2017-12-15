@@ -1,10 +1,10 @@
 <?php
-return array(
-    array(
+return [
+    [
         'Administrace',
         '/admin',
         include SETTINGS . '/menu/admin.inner.php',
-        array(),
+        [],
         true
-    )
-);
+    ]
+];

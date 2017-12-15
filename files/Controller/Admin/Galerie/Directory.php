@@ -26,7 +26,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
             if (is_array($request->post('galerie'))) {
                 $this->redirect(
                     '/admin/galerie/file/remove?'
-                    . http_build_query(array('u' => $request->post('galerie')))
+                    . http_build_query(['u' => $request->post('galerie')])
                 );
             }
             break;
@@ -141,22 +141,19 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
         $data = array_map(
             function ($id) {
                 $item = DBGalerie::getSingleDir($id);
-                return array(
-                    'id' => $item['gd_id'],
-                    'text' => $item['gd_name']
-                );
+                return ['id' => $item['gd_id'], 'text' => $item['gd_name']];
             },
             $request->get('u')
         );
         $this->render(
             'files/View/Admin/RemovePrompt.inc',
-            array(
+            [
                 'header' => 'Správa galerie',
                 'prompt' => 'Opravdu chcete odstranit složky '
                     . 'se všemi podsložkami a fotkami:',
                 'returnURI' => $request->getReferer(),
                 'data' => $data
-            )
+            ]
         );
     }
 
@@ -164,21 +161,21 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
     {
         $this->render(
             'files/View/Admin/Galerie/DisplayDirectory.inc',
-            array(
+            [
                 'id' => $id,
                 'files' => array_map(
                     function ($item) {
-                        return array(
+                        return [
                             'id' => $item['gf_id'],
                             'name' => $this->checkbox('galerie[]', $item['gf_id'])
                                            ->label($item['gf_name'])
                                            ->render(),
                             'thumbnailURI' => '/galerie/thumbnails/' . $item['gf_path']
-                        );
+                        ];
                     },
                     DBGalerie::getFotky($id)
                 )
-            )
+            ]
         );
     }
 
@@ -186,24 +183,24 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
     {
         $dirs = array_map(
             function ($item) {
-                return array(
+                return [
                     'id'    => $item['gd_id'],
                     'text'  => str_repeat('&nbsp;&nbsp;', $item['gd_level'] - 1)
                     . $item['gd_name']
-                );
+                ];
             },
             DBGalerie::getDirs(true, true)
         );
 
         $this->render(
             'files/View/Admin/Galerie/FormDirectory.inc',
-            array(
+            [
                 'dirs' => $dirs,
                 'action' => $action,
                 'name' => $request->post('name') ?: '',
                 'parent' => $request->post('parent') ?: '',
                 'hidden' => $request->post('hidden') ?: ''
-            )
+            ]
         );
         return;
     }
@@ -223,6 +220,6 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
             'Zadaná nadsložka není platná',
             'parent'
         );
-        return $form->isValid() ? array() : $form;
+        return $form->isValid() ? [] : $form;
     }
 }

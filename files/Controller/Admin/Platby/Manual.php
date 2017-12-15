@@ -43,90 +43,81 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
         $item->init($raw[$specific], $raw[$variable], $raw[$date], $raw[$amount]);
         $item->processWithSymbolLookup($userLookup, $categoryLookup);
 
-        $emptyItem = array(
-            'column' => '&nbsp;---',
-            'value' => '&nbsp;---'
-        );
+        $emptyItem = ['column' => '&nbsp;---', 'value' => '&nbsp;---'];
 
         if ($variable === null) {
             $recognized['variable'] = $emptyItem;
         } elseif ($item->variable) {
-            $recognized['variable'] = array(
+            $recognized['variable'] = [
                 'column' => $variable,
                 'value' => $userLookup[$item->variable]['u_jmeno'] . ' '
                     . $userLookup[$item->variable]['u_prijmeni']
-            );
+            ];
         } else {
-            $recognized['variable'] = array(
+            $recognized['variable'] = [
                 'column' => $variable,
                 'value' => '&nbsp;--- (není v DB: id ' . $raw[$variable] . ')'
-            );
+            ];
         }
 
         if ($specific === null) {
             $recognized['specific'] = $emptyItem;
         } elseif ($item->specific && $item->categoryId) {
-            $recognized['specific'] = array(
+            $recognized['specific'] = [
                 'column' => $specific,
                 'value' => $item->specific
-            );
+            ];
         } else {
-            $recognized['specific'] = array(
+            $recognized['specific'] = [
                 'column' => $specific,
                 'value' => '&nbsp;--- (není v DB: symbol ' . $raw[$specific] . ')'
-            );
+            ];
         }
 
         if ($date === null) {
             $recognized['date'] = $emptyItem;
         } else {
-            $recognized['date'] = array(
+            $recognized['date'] = [
                 'column' => $date,
                 'value' => (new Date($item->date))->getDate(Date::FORMAT_SIMPLIFIED)
-            );
+            ];
         }
 
         if ($amount === null) {
             $recognized['amount'] = $emptyItem;
         } else {
-            $recognized['amount'] = array(
-                'column' => $amount,
-                'value' => $raw[$amount]
-            );
+            $recognized['amount'] = ['column' => $amount, 'value' => $raw[$amount]];
         }
 
-        $recognized['prefix'] = array(
+        $recognized['prefix'] = [
             'column' => '&nbsp;---',
             'value' => ($item->prefix ? $item->prefix : '&nbsp;---')
-        );
+        ];
 
-        $new = array();
+        $new = [];
         foreach ($raw as $key => &$value) {
-            $new[] = array(
-                'column' => $key,
-                'value' => $value
-            );
+            $new[] = ['column' => $key, 'value' => $value];
         }
         $raw = $new;
 
         $this->render(
             'files/View/Admin/Platby/ManualForm.inc',
-            array(
+            [
                 'id' => $id,
                 'remainingTotal' => $remainingCount,
                 'raw' => $raw,
-                'guess' => array(
+                'guess' => [
                     'specific' => $item->categoryId,
                     'variable' => $item->variable,
                     'date' => (new Date($item->date))->getDate(Date::FORMAT_SIMPLIFIED),
                     'amount' => $item->amount,
                     'prefix' => $item->prefix
-                ),
+                ],
                 'users' => $this->getUsers(),
                 'categories' => $this->getCategories(),
                 'recognized' => $recognized,
                 'uri' => $request->getLiteralURI()
-            )
+            ]
         );
     }
 

@@ -10,7 +10,7 @@
                 <td>
                     <?= $this->select('stt-trida')
                              ->set($this->stt_trida)
-                             ->options(array('Z', 'H', 'D', 'C', 'B', 'A', 'M'), true, true);
+                             ->options(['Z', 'H', 'D', 'C', 'B', 'A', 'M'], true, true);
                     ?>
                 </td>
             </tr>
@@ -27,7 +27,7 @@
                 <td>
                     <?= $this->select('lat-trida')
                              ->set($this->lat_trida)
-                             ->options(array('Z', 'H', 'D', 'C', 'B', 'A', 'M'), true, true);
+                             ->options(['Z', 'H', 'D', 'C', 'B', 'A', 'M'], true, true);
                     ?>
                 </td>
             </tr>

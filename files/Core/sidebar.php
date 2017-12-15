@@ -18,21 +18,21 @@ class Sidebar
         foreach ($this->data as $item) {
             $link = new Tag(
                 'a',
-                array(
+                [
                     'class' => (
                         (strripos($this->uri, trim($item[1], '/')) === 0)
                         ? 'emph no-a' : ''
                     ),
                     'href' => $item[1] ?: ''
-                ),
+                ],
                 $item[0]
             );
             $list->add(
-                new Tag('li', array('class' => $item[2] ? 'more' : ''), $link)
+                new Tag('li', ['class' => $item[2] ? 'more' : ''], $link)
             );
         }
 
-        $root = new Tag('div', array('class' => 'container full menu-side'));
+        $root = new Tag('div', ['class' => 'container full menu-side']);
         $root->add($list);
         return (string) $root;
     }

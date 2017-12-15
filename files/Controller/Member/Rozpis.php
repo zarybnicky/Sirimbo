@@ -18,7 +18,7 @@ class Controller_Member_Rozpis  extends Controller_Member
             function ($rozpis) {
                 $items = array_map(
                     function ($item) use ($rozpis) {
-                        return array(
+                        return [
                             'id' => $item['ri_id'],
                             'fullName' => "{$item['u_jmeno']} {$item['u_prijmeni']}",
                             'timeFrom' => formatTime($item['ri_od'], 1),
@@ -37,19 +37,19 @@ class Controller_Member_Rozpis  extends Controller_Member
                                      && User::getParID() == $item['ri_partner'])
                                     || Permissions::check('rozpis', P_OWNED, $rozpis['r_trener']))
                             )
-                        );
+                        ];
                     },
                     DBRozpis::getRozpisItem($rozpis['r_id'])
                 );
 
-                return array(
+                return [
                     'id' => $rozpis['r_id'],
                     'datum' => formatDate($rozpis['r_datum']),
                     'kde' => $rozpis['r_kde'],
                     'fullName' => $rozpis['u_jmeno'] . ' ' . $rozpis['u_prijmeni'],
                     'items' => $items,
                     'canEdit' => Permissions::check('nabidka', P_OWNED, $rozpis['r_trener'])
-                );
+                ];
             },
             array_filter(
                 DBRozpis::getRozpis(),
@@ -62,15 +62,15 @@ class Controller_Member_Rozpis  extends Controller_Member
         if ($data) {
             $this->render(
                 'files/View/Member/Rozpis/Overview.inc',
-                array('data' => $data)
+                ['data' => $data]
             );
         } else {
             $this->render(
                 'files/View/Empty.inc',
-                array(
+                [
                     'nadpis' => 'Rozpis tréninků',
                     'notice' => 'Žádné aktuální rozpisy nejsou k dispozici.'
-                )
+                ]
             );
         }
     }
@@ -79,7 +79,7 @@ class Controller_Member_Rozpis  extends Controller_Member
     {
         $f = new Form();
         $f->checkBool(!$data['r_lock'], 'Tento rozpis je uzamčený', '');
-        $f->checkInArray($action, array('signup', 'signout'), 'Špatná akce', '');
+        $f->checkInArray($action, ['signup', 'signout'], 'Špatná akce', '');
 
         return $f->isValid() ? true : $f;
     }

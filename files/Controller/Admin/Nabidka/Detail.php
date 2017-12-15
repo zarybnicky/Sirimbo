@@ -30,7 +30,7 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
 
             $items = array_map(
                 function ($item) use ($userSelect) {
-                    return array(
+                    return [
                         'user' =>
                         (string) $userSelect->set($item['ni_partner'])
                                             ->name($item['ni_id'] . '-partner'),
@@ -45,21 +45,21 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
                                                ->name('remove')
                                                ->value($item['ni_id'])
                                                ->render()
-                    );
+                    ];
                 },
                 $items
             );
-            $items[] = array(
+            $items[] = [
                 'user' => (string) $userSelect->set(null)
                                               ->name('add_partner'),
                 'lessonCount' => $this->text('add_hodiny')->size('1'),
                 'removeButton' => $this->submit('Přidat')->render()
-            );
+            ];
 
             $this->render(
                 'files/View/Admin/Nabidka/Detail.inc',
-                array(
-                    'nabidka' => array(
+                [
+                    'nabidka' => [
                         'id' => $data['n_id'],
                         'fullName' => $data['u_jmeno'] . ' ' . $data['u_prijmeni'],
                         'datum' => (
@@ -73,12 +73,12 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
                         'hourTotal' => $data['n_pocet_hod'],
                         'hourReserved' => $obsazeno ?: '',
                         'hourFree' => $data['n_pocet_hod'] - $obsazeno
-                    ),
+                    ],
                     'obsazeno' => $obsazeno,
                     'users' => $users,
                     'items' => $items,
                     'backlink' => $request->getReferer()
-                )
+                ]
             );
             return;
         }

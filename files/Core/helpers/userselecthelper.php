@@ -25,7 +25,7 @@ class UserSelectHelper
         $this->_idIndex = "u_id";
         $this->_jmeno = "u_jmeno";
         $this->_prijmeni = "u_prijmeni";
-        $this->_users = array();
+        $this->_users = [];
         $this->_type = 'user';
         $this->_tmpSwitch = true;
     }

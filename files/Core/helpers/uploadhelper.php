@@ -10,9 +10,9 @@ class UploadHelper
     public function upload($name = null)
     {
         $this->_name = null;
-        $this->_files = array();
-        $this->_invalidFiles = array();
-        $this->_emptyFiles = array();
+        $this->_files = [];
+        $this->_invalidFiles = [];
+        $this->_emptyFiles = [];
         $this->_hasFiles = false;
 
         if ($name !== null) {
@@ -31,11 +31,11 @@ class UploadHelper
     {
         $files = $request->files($this->_name);
         if (!$files) {
-            $this->_files = array();
+            $this->_files = [];
             return $this;
         }
         if (!is_array($files)) {
-            $input = array($files);
+            $input = [$files];
         } else {
             foreach ($files as $key => $data) {
                 foreach ($data as $i => $value) {
@@ -87,10 +87,7 @@ class UploadHelper
         if (isset($logError) && $logError) {
             Log::write($errorMessage);
         }
-        $this->_invalidFiles[] = array_merge(
-            $data,
-            array('error_message' => $errorMessage)
-        );
+        $this->_invalidFiles[] = array_merge($data, ['error_message' => $errorMessage]);
         return false;
     }
 
@@ -140,9 +137,9 @@ class UploadHelper
     public function getErrorMessages()
     {
         if (empty($this->_invalidFiles)) {
-            return array();
+            return [];
         }
-        $messages = array();
+        $messages = [];
         foreach ($this->_invalidFiles as $data) {
             $messages[] = $data['error_message'];
         }
@@ -156,11 +153,7 @@ class UploadHelper
         }
         return (string) new Tag(
             'input',
-            array(
-                'name' => $this->_name . '[]',
-                'multiple' => true,
-                'type' => 'file'
-            )
+            ['name' => $this->_name . '[]', 'multiple' => true, 'type' => 'file']
         );
     }
 

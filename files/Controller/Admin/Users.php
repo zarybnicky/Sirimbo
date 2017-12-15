@@ -25,7 +25,7 @@ class Controller_Admin_Users extends Controller_Admin
             if (!is_array($request->post('users'))) {
                 break;
             }
-            $this->redirect('/admin/users/remove?' . http_build_query(array('u' => $request->post('users'))));
+            $this->redirect('/admin/users/remove?' . http_build_query(['u' => $request->post('users')]));
             break;
         case 'save':
             Permissions::checkError('users', P_ADMIN);
@@ -72,23 +72,23 @@ class Controller_Admin_Users extends Controller_Admin
             }
             $this->redirect('/admin/users', 'Uživatelé odebráni');
         }
-        $data = array();
+        $data = [];
         foreach ($request->get('u') as $id) {
             $item = DBUser::getUserData($id);
-            $data[] = array(
+            $data[] = [
                 'id' => $item['u_id'],
                 'text' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'] . ' - ' .
                     $item['u_login']
-            );
+            ];
         }
         $this->render(
             'files/View/Admin/RemovePrompt.inc',
-            array(
+            [
                 'header' => 'Správa uživatelů',
                 'prompt' => 'Opravdu chcete odstranit uživatele:',
                 'returnURI' => $request->getReferer(),
                 'data' => $data
-            )
+            ]
         );
     }
 
@@ -205,10 +205,10 @@ class Controller_Admin_Users extends Controller_Admin
             if (empty($users)) {
                 $this->render(
                     'files/View/Empty.inc',
-                    array(
+                    [
                         'nadpis' => 'Správa uživatelů',
                         'notice' => 'Žádní nepotvrzení uživatelé nejsou v databázi.'
-                    )
+                    ]
                 );
                 return;
             }
@@ -221,7 +221,7 @@ class Controller_Admin_Users extends Controller_Admin
 
             $users = array_map(
                 function ($item) use ($s_group, $s_skupina) {
-                    return array(
+                    return [
                         'id' => $item['u_id'],
                         'checkBox' => $this->checkbox('users[]', $item['u_id'])->render(),
                         'group' => $s_group->name($item['u_id'] . '-group')->render(),
@@ -230,14 +230,14 @@ class Controller_Admin_Users extends Controller_Admin
                         'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
                         'narozeni' => formatDate($item['u_narozeni']),
                         'poznamky' => $item['u_poznamky']
-                    );
+                    ];
                 },
                 $users
             );
 
             $this->render(
                 'files/View/Admin/Users/Unconfirmed.inc',
-                array('data' => $users)
+                ['data' => $users]
             );
             return;
         }
@@ -255,7 +255,7 @@ class Controller_Admin_Users extends Controller_Admin
             }
             $this->redirect('/admin/users', 'Uživatelé potvrzeni');
         } elseif ($request->post('action') == 'remove') {
-            $this->redirect('/admin/users/remove?' . http_build_query(array('u' => $request->post('users'))));
+            $this->redirect('/admin/users/remove?' . http_build_query(['u' => $request->post('users')]));
         }
     }
 
@@ -268,13 +268,13 @@ class Controller_Admin_Users extends Controller_Admin
         ) {
             $this->redirect(
                 '/admin/users/remove?'
-                . http_build_query(array('u' => $request->post('users')))
+                . http_build_query(['u' => $request->post('users')])
             );
         }
 
         $users = array_map(
             function ($item) {
-                return array(
+                return [
                     'id' => $item['u_id'],
                     'checkBox' => $this->checkbox('users[]', $item['u_id'])->render(),
                     'colorBox' => $this->colorbox($item['s_color_rgb'], $item['s_description']),
@@ -283,15 +283,13 @@ class Controller_Admin_Users extends Controller_Admin
                     'telefon' => $item['u_telefon'],
                     'narozeni' => formatDate($item['u_narozeni']),
                     'timestamp' => formatTimestamp($item['u_timestamp'])
-                );
+                ];
             },
             DBUser::getDuplicateUsers()
         );
         $this->render(
             'files/View/Admin/Users/Duplicate.inc',
-            array(
-                'data' => $users
-            )
+            ['data' => $users]
         );
     }
 
@@ -304,10 +302,7 @@ class Controller_Admin_Users extends Controller_Admin
 
         $data = array_map(
             function ($item) {
-                return array(
-                    'group' => $item['pe_name'],
-                    'count' => $item['count']
-                );
+                return ['group' => $item['pe_name'], 'count' => $item['count']];
             },
             DBUser::getGroupCounts()
         );
@@ -318,16 +313,14 @@ class Controller_Admin_Users extends Controller_Admin
 
         array_unshift(
             $data,
-            array('group' => 'Uživatelé v databázi', 'count' => count($all)),
-            array('group' => 'Aktivní uživatelé', 'count' => count($active)),
-            array('group' => 'Aktivní tanečníci', 'count' => count($dancers))
+            ['group' => 'Uživatelé v databázi', 'count' => count($all)],
+            ['group' => 'Aktivní uživatelé', 'count' => count($active)],
+            ['group' => 'Aktivní tanečníci', 'count' => count($dancers)]
         );
 
         $this->render(
             'files/View/Admin/Users/Statistiky.inc',
-            array(
-                'data' => $data
-            )
+            ['data' => $data]
         );
     }
 
@@ -349,14 +342,14 @@ class Controller_Admin_Users extends Controller_Admin
 
             header('Content-Type: application/json');
             echo json_encode(
-                array(
+                [
                     'user_id' => $user_id,
                     'par_id' => $par_id,
                     'jmeno' => $jmeno,
                     'prijmeni' => $prijmeni,
                     'narozeni' => (string) $narozeni,
                     'rok' => $narozeni->getYear()
-                )
+                ]
             );
         } else {
             if (is_array($id)) {
@@ -375,14 +368,14 @@ class Controller_Admin_Users extends Controller_Admin
 
             header('Content-Type: application/json');
             echo json_encode(
-                array(
+                [
                     'user_id' => $data['u_id'],
                     'par_id' => $par_id,
                     'jmeno' => $data['u_jmeno'],
                     'prijmeni' => $data['u_prijmeni'],
                     'narozeni' => $data['u_narozeni'],
                     'rok' => array_shift($narozeni)
-                )
+                ]
             );
         }
         exit;
@@ -390,28 +383,28 @@ class Controller_Admin_Users extends Controller_Admin
 
     private function displayOverview($request)
     {
-        $groupOptions = array('all' => 'všechna');
+        $groupOptions = ['all' => 'všechna'];
         foreach (DBPermissions::getGroups() as $row) {
             $groupOptions[$row['pe_id']] = $row['pe_name'];
         }
 
-        $skupinyOptions = array('all' => 'všechny');
+        $skupinyOptions = ['all' => 'všechny'];
         foreach (DBSkupiny::get() as $item) {
             $skupinyOptions[$item['s_id']] = $item['s_name'];
         }
 
-        $sortOptions = array(
+        $sortOptions = [
             'prijmeni' => 'přijmení',
             'narozeni' => 'data narození',
             'var-symbol' => 'var. symbolu'
-        );
+        ];
 
-        $statusOptions = array(
+        $statusOptions = [
             'all' => 'všichni',
             'dancer' => 'tanečníci',
             'system' => 'systémoví',
             'ban' => 'zabanovaní'
-        );
+        ];
 
         $options['group'] = in_array($request->get('group'), array_keys($groupOptions))
                           ? $request->get('group')
@@ -445,7 +438,7 @@ class Controller_Admin_Users extends Controller_Admin
 
         $data = array_map(
             function ($item) use ($action, $groupOptions, &$i, $skupinySelect) {
-                $out = array(
+                $out = [
                     'checkBox'  => $this->checkbox('users[]', $item['u_id'])->render(),
                     'index'     => ++$i . '. ',
                     'varSymbol' => User::varSymbol($item['u_id']),
@@ -454,7 +447,7 @@ class Controller_Admin_Users extends Controller_Admin
                     'colorBox'  => $this->colorbox($item['s_color_rgb'], $item['s_description'])
                                         ->render(),
                     'groupInfo' => $groupOptions[$item['u_group']]
-                );
+                ];
                 if ($action == 'status') {
                     $out['skupina'] = (
                         $this->hidden('save[]', $item['u_id'])
@@ -475,7 +468,7 @@ class Controller_Admin_Users extends Controller_Admin
 
         $this->render(
             'files/View/Admin/Users/Overview.inc',
-            array(
+            [
                 'showMenu' => !TISK,
                 'groupOptions' => $groupOptions,
                 'skupinyOptions' => $skupinyOptions,
@@ -489,7 +482,7 @@ class Controller_Admin_Users extends Controller_Admin
                 'group' => $request->get('group') ?: '',
                 'view' => $request->get('view') ?: '',
                 'sort' => $request->get('sort') ?: ''
-            )
+            ]
         );
         return;
     }
@@ -498,26 +491,23 @@ class Controller_Admin_Users extends Controller_Admin
     {
         $groups = array_map(
             function ($item) {
-                return array(
-                    'id' => $item['pe_id'],
-                    'name' => $item['pe_name']
-                );
+                return ['id' => $item['pe_id'], 'name' => $item['pe_name']];
             },
             DBPermissions::getGroups()
         );
         $skupiny = array_map(
             function ($item) {
-                return array(
+                return [
                     'id' => $item['s_id'],
                     'color' => $item['s_color_rgb'],
                     'popis' => $item['s_name']
-                );
+                ];
             },
             DBSkupiny::get()
         );
         $this->render(
             'files/View/Admin/Users/Form.inc',
-            array(
+            [
                 'action' => $request->getAction(),
                 'groups' => $groups,
                 'skupiny' => $skupiny,
@@ -536,7 +526,7 @@ class Controller_Admin_Users extends Controller_Admin
                 'system' => $request->post('system') ?: '',
                 'group' => $request->post('group') ?: '',
                 'skupina' => $request->post('skupina') ?: ''
-            )
+            ]
         );
     }
 
@@ -547,7 +537,7 @@ class Controller_Admin_Users extends Controller_Admin
         $f->checkLength($request->post('jmeno'), 1, 40, 'Špatná délka jména', 'jmeno');
         $f->checkLength($request->post('prijmeni'), 1, 40, 'Špatná délka přijmení', 'prijmeni');
         $f->checkDate($narozeni, 'Neplatné datum narození', 'narozeni');
-        $f->checkInArray($request->post('pohlavi'), array('m', 'f'), 'Neplatné pohlaví', 'pohlavi');
+        $f->checkInArray($request->post('pohlavi'), ['m', 'f'], 'Neplatné pohlaví', 'pohlavi');
         $f->checkEmail($request->post('email'), 'Neplatný formát emailu', 'email');
         $f->checkPhone($request->post('telefon'), 'Neplatný formát telefoního čísla', 'telefon');
 

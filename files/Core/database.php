@@ -17,7 +17,7 @@ class Database
     protected static function escapeArray($array)
     {
         static::getConnection();
-        $escaped = array();
+        $escaped = [];
         foreach ($array as $key => $value) {
             if (is_array($value)) {
                 $escaped[$key] = self::escapeArray($value);
@@ -31,7 +31,7 @@ class Database
         }
         if ($escaped) {
             foreach ($escaped as $key => $value) {
-                array_splice($array, $key, 0, array($value));
+                array_splice($array, $key, 0, [$value]);
             }
         }
         return $array;
@@ -84,7 +84,7 @@ class Database
 
     protected static function getArray($resource)
     {
-        $result = array();
+        $result = [];
         $rows = mysql_num_rows($resource);
 
         for($i = 0; $i < $rows; $i++) {

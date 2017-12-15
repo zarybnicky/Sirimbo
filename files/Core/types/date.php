@@ -6,7 +6,7 @@ class Date
     protected $year;
     protected $month;
     protected $day;
-    protected $separators;
+    protected $separators = ['-', '.' , '/'];
 
     const FORMAT_SQL = 'yyyy-mm-dd';
     const FORMAT_SIMPLE = 'dd.mm.yyyy';
@@ -15,9 +15,9 @@ class Date
     const FORMAT_SLASHED = 'dd/mm/yyyy';
 
     public function __construct($s = null) {
-        $this->separators = array('-', '.' , '/');
-        if (is_string($s))
+        if (is_string($s)) {
             $this->setDate($s);
+        }
     }
 
     public function __toString() {
@@ -28,7 +28,7 @@ class Date
         if ($s === null)
             return $this->separators;
         if ($reset)
-            $this->separators = array();
+            $this->separators = [];
         $this->separators[] = $s;
     }
 
@@ -79,7 +79,7 @@ class Date
                 break;
             case Date::FORMAT_SIMPLIFIED:
                 return ((int) $this->day) . '. ' .
-                    ((int) $this->month) . '. ' . $this->year;
+                       ((int) $this->month) . '. ' . $this->year;
                 break;
             case Date::FORMAT_SLASHED:
                 return $this->day . '/' . $this->month . '/' . $this->year;

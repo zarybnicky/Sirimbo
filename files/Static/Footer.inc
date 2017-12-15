@@ -71,7 +71,7 @@
 </script>
 <?php if ($this->filename === 'files/View/Main/Home.inc') : ?>
   <div id="my_popup" style="display:none;width:100%;height:100%;">
-    <img alt="" src="/images/nabor.png" style="height:80%;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);" />
+    <img alt="" src="/images/nabor.png" style="max-height:80%;max-width:100%;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);" />
   </div>
   <script>
    $(document).ready(function() {

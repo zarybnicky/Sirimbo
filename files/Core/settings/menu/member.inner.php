@@ -1,48 +1,11 @@
 <?php
-return array(
-    array(
-        'Novinky',
-        '/member/home',
-        array()
-    ),
-    array(
-        'Nástěnka',
-        '/member/nastenka',
-        array()
-    ),
-    array(
-        'Rozpis',
-        '/member/rozpis',
-        array()
-    ),
-    array(
-        'Nabídka',
-        '/member/nabidka',
-        array()
-    ),
-    array(
-        'Akce',
-        '/member/akce',
-        array()
-    ),
-    array(
-        'Dokumenty',
-        '/member/dokumenty',
-        array()
-    ),
-    // array(
-    //     'Žebříček',
-    //     '/member/pary',
-    //     array()
-    // ),
-    array(
-        'Přehled členů',
-        '/member/clenove/structure',
-        array()
-    ),
-    array(
-        'Profil',
-        '/member/profil',
-        array()
-    ),
-);
+return [
+    ['Novinky', '/member/home', []],
+    ['Nástěnka', '/member/nastenka', []],
+    ['Rozpis', '/member/rozpis', []],
+    ['Nabídka', '/member/nabidka', []],
+    ['Akce', '/member/akce', []],
+    ['Dokumenty', '/member/dokumenty', []],
+    ['Přehled členů', '/member/clenove/structure', []],
+    ['Profil', '/member/profil', []],
+];

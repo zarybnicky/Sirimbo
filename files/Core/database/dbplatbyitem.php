@@ -42,7 +42,7 @@ class DBPlatbyItem extends Database
         self::query("DELETE FROM platby_item WHERE pi_id='$id'");
     }
 
-    public static function get($joined = false, $filter = array(), $sort = array('pi_date DESC'), $date = array())
+    public static function get($joined = false, $filter = [], $sort = ['pi_date DESC'], $date = [])
     {
         $query
             = 'SELECT * FROM platby_item'
@@ -54,7 +54,7 @@ class DBPlatbyItem extends Database
 
         if ($filter) {
             $filter = array_combine(array_keys($filter), self::escapeArray(array_values($filter)));
-            $where = array();
+            $where = [];
             foreach ($filter as $key => $value) {
                 if (!is_array($value)) {
                     $where[] = "$key = '$value'";

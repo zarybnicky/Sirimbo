@@ -138,7 +138,7 @@ class DBUser extends Database implements Pagable
         DBUser::query("INSERT INTO pary (p_id_partner, p_archiv) VALUES ('" . $user_id . "','0')");
         $par_id = mysql_insert_id();
 
-        return array($user_id, $par_id);
+        return [$user_id, $par_id];
     }
 
     public static function isUserLocked($id) {

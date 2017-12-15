@@ -30,23 +30,23 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
 
         $items = array_map(
             function ($item) {
-                return array(
+                return [
                     'id' => $item['ri_id'],
                     'partner' => $item['ri_partner'],
                     'timeFrom' => formatTime($item['ri_od'], 1),
                     'timeTo' => formatTime($item['ri_do'], 1),
                     'lock' => (bool) $item['ri_lock']
-                );
+                ];
             },
             $items
         );
-        $data = array(
+        $data = [
             'id' => $data['r_id'],
             'datum' => formatDate($data['r_datum']),
             'kde' => $data['r_kde'],
             'fullName' => $data['u_jmeno'] . ' ' . $data['u_prijmeni'],
             'canEdit' => Permissions::check('nabidka', P_OWNED, $data['r_trener'])
-        );
+        ];
 
         $nabidky = DBNabidka::getNabidka();
         usort(
@@ -58,7 +58,7 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
             }
         );
 
-        $nabidky_select = array();
+        $nabidky_select = [];
         foreach ($nabidky as $item) {
             $nabidky_select[$item['n_id']] =
                 $item['u_prijmeni'] . ', ' . $item['u_jmeno'] .
@@ -72,10 +72,10 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
         if ($request->get('n') && ($nabidka = DBNabidka::getSingleNabidka($request->get('n')))) {
             $nabidka_items = array_map(
                 function ($item) {
-                    return array(
+                    return [
                         'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
                         'lessonCount' => $item['ni_pocet_hod']
-                    );
+                    ];
                 },
                 DBNabidka::getNabidkaItem($request->get('n'))
             );
@@ -88,7 +88,7 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
                 0
             );
 
-            $nabidka = array(
+            $nabidka = [
                 'id' => $nabidka['n_id'],
                 'fullName' => $nabidka['u_jmeno'] . ' ' . $nabidka['u_prijmeni'],
                 'datum' => formatDate($nabidka['n_od'])
@@ -98,21 +98,21 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
                 'hourTotal' => $nabidka['n_pocet_hod'],
                 'hourReserved' => $obsazeno,
                 'hourFree' => $nabidka['n_pocet_hod'] - $obsazeno
-            );
+            ];
 
             $nabidka['items'] = $nabidka_items;
         }
 
         $this->render(
             'files/View/Admin/Rozpis/Detail.inc',
-            array(
+            [
                 'data' => $data,
                 'users' => $users,
                 'items' => $items,
                 'selected_nabidka' => $request->get('n') ?: '',
                 'nabidky' => $nabidky_select,
-                'nabidka' => isset($nabidka) ? $nabidka : array()
-            )
+                'nabidka' => isset($nabidka) ? $nabidka : []
+            ]
         );
     }
 

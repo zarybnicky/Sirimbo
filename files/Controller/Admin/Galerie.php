@@ -2,21 +2,21 @@
 require_once 'files/Controller/Admin.php';
 class Controller_Admin_Galerie extends Controller_Admin
 {
-    protected $imageType = array(
+    protected $imageType = [
         'image/pjpeg' => 'jpg',
         'image/jpeg' => 'jpg',
         'image/gif' => 'gif',
         'image/bmp' => 'bmp',
         'image/x-png' => 'png'
-    );
+    ];
 
-    protected $imageSuffix = array(
+    protected $imageSuffix = [
         'image/pjpeg' => 'JPEG',
         'image/jpeg' => 'JPEG',
         'image/gif' => 'GIF',
         'image/bmp' => 'BMP',
         'image/x-png' => 'PNG'
-    );
+    ];
 
     public function __construct()
     {
@@ -44,7 +44,7 @@ class Controller_Admin_Galerie extends Controller_Admin
             if (is_array($request->post('galerie'))) {
                 $this->redirect(
                     '/admin/galerie/directory/remove?'
-                    . http_build_query(array('u' => $request->post('galerie')))
+                    . http_build_query(['u' => $request->post('galerie')])
                 );
             }
             break;
@@ -56,8 +56,8 @@ class Controller_Admin_Galerie extends Controller_Admin
     {
         $dbInDirs = DBGalerie::getDirsWithParentPath();
         $dbInFiles = DBGalerie::getFotkyWithParentPath();
-        $dbDirs = array();
-        $dbFiles = array();
+        $dbDirs = [];
+        $dbFiles = [];
 
         foreach ($dbInDirs as $dir) {
             $dbDirs[$dir['gd_path']] = $dir['gd_path_rodic'];
@@ -68,10 +68,10 @@ class Controller_Admin_Galerie extends Controller_Admin
         unset($dbInDirs);
         unset($dbInFiles);
 
-        $fsDirs = array();
-        $fsThumbnailDirs = array();
-        $fsFiles = array();
-        $fsThumbnails = array();
+        $fsDirs = [];
+        $fsThumbnailDirs = [];
+        $fsFiles = [];
+        $fsThumbnails = [];
         $this->_recursiveDirs(GALERIE, $fsDirs, $fsFiles);
         $this->_recursiveDirs(GALERIE_THUMBS, $fsThumbnailDirs, $fsThumbnails);
 
@@ -196,7 +196,7 @@ class Controller_Admin_Galerie extends Controller_Admin
         }
         $objects = scandir($dir);
         foreach ($objects as $object) {
-            if (in_array($object, array('.', '..'))) {
+            if (in_array($object, ['.', '..'])) {
                 continue;
             }
             if (is_dir($dir . DIRECTORY_SEPARATOR . $object)) {
@@ -230,7 +230,7 @@ class Controller_Admin_Galerie extends Controller_Admin
     {
         $file_list = scandir($dir_name);
         foreach ($file_list as $key => $file) {
-            if (in_array($file, array('.','..','thumbnails', '.gitignore'))) {
+            if (in_array($file, ['.', '..', 'thumbnails', '.gitignore'])) {
                 unset($file_list[$key]);
                 continue;
             }
@@ -305,21 +305,21 @@ class Controller_Admin_Galerie extends Controller_Admin
         $data = DBGalerie::getDirs(true, true);
         $data = array_map(
             function ($item) {
-                return array(
+                return [
                     'checkBox' => $this->checkbox('galerie[]', $item['gd_id'])->render(),
                     'name'     => str_repeat('&nbsp;->', $item['gd_level'] - 1)
                                   . ' ' . $item['gd_name'],
                     'hidden'   => $this->checkbox($item['gd_id'], '1')
                                        ->set($item['gd_hidden'])
                                        ->render()
-                );
+                ];
             },
             $data
         );
 
         $this->render(
             'files/View/Admin/Galerie/Overview.inc',
-            array('data' => $data)
+            ['data' => $data]
         );
     }
 }

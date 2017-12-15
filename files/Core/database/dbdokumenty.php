@@ -16,7 +16,7 @@ class DBDokumenty extends Database
     {
         list($ids) = self::escape($ids);
         if (empty($ids)) {
-            return array();
+            return [];
         }
 
         $query = 'SELECT *

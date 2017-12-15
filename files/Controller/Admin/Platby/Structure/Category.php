@@ -38,11 +38,11 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
 
         $this->render(
             'files/View/Admin/Platby/StructureSymbolOverview.inc',
-            array(
+            [
                 'data' => $this->getCategories(false),
                 'archived' => $this->getCategories(true),
                 'uri' => $request->getLiteralURI()
-            )
+            ]
         );
     }
 
@@ -50,7 +50,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
     {
         return array_map(
             function ($item) {
-                return array(
+                return [
                     'name' => $item['pc_name'],
                     'symbol' => $item['pc_symbol'],
                     'amount' => ($item['pc_amount'] . ($item['pc_use_base'] ? ' * ?' : '')) . ' Kč',
@@ -60,7 +60,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                         . $this->getDuplicateCategoryButton($item['pc_id'])
                         . $this->removeLink('/admin/platby/structure/category/remove/' . $item['pc_id'])
                     )
-                );
+                ];
             },
             DBPlatbyCategory::get($archived)
         );
@@ -106,7 +106,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         );
         $insertId = DBPlatbyCategory::getInsertId();
 
-        foreach ($request->post('group') ?: array() as $item) {
+        foreach ($request->post('group') ?: [] as $item) {
             DBPlatbyGroup::addChild($item, $insertId);
         }
 
@@ -186,7 +186,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             },
             DBPlatbyCategory::getSingleWithGroups($id)
         );
-        $groupsNew = $request->post('group') ?: array();
+        $groupsNew = $request->post('group') ?: [];
         foreach (array_diff($groupsOld, $groupsNew) as $removed) {
             DBPlatbyGroup::removeChild($removed, $id);
         }
@@ -270,7 +270,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                     'Nemůžu odstranit specifický symbol s připojenými kategoriemi nebo položkami! '
                     . new Tag(
                         'form',
-                        array('action' => '', 'method' => 'post'),
+                        ['action' => '', 'method' => 'post'],
                         (!$data['pc_archive']
                          ? ($this->submit('Archivovat?')->data('action', 'archive') . ' nebo ')
                          : ''),
@@ -280,12 +280,12 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             }
             $this->render(
                 'files/View/Admin/Platby/StructureSymbolRemove.inc',
-                array(
+                [
                     'id' => $id,
                     'name' => $data['pc_name'],
                     'referer' => $request->getReferer(),
                     'uri' => $request->getLiteralURI()
-                )
+                ]
             );
             return;
         }
@@ -299,11 +299,11 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
     protected function getLinkedObjects($id)
     {
         $group = DBPlatbyCategory::getSingleWithGroups($id);
-        $items = DBPlatbyItem::get(true, array('pc_id' => $id));
+        $items = DBPlatbyItem::get(true, ['pc_id' => $id]);
 
         return ($group || $items)
-            ? array('groups' => $group, 'items' => $items)
-            : array();
+            ? ['groups' => $group, 'items' => $items]
+            : [];
     }
 
     protected function displayForm($request, $action, $id = 0)
@@ -318,21 +318,21 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         );
         $groups = array_map(
             function ($item) use ($groupsSelected) {
-                return array(
+                return [
                     'buttons' => $this->checkbox('group[]', $item['pg_id'])
                                       ->set(isset($groupsSelected[$item['pg_id']]))
                                       ->render(),
                     'type' => ($item['pg_type'] == '1' ? 'Členské příspěvky' : 'Běžné platby'),
                     'name' => $item['pg_name'],
                     'base' => $item['pg_base']
-                );
+                ];
             },
             DBPlatbyGroup::getGroups()
         );
 
         $this->render(
             'files/View/Admin/Platby/StructureSymbolForm.inc',
-            array(
+            [
                 'id' => $id,
                 'action' => $action,
                 'groups' => $groups,
@@ -346,7 +346,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                 'archive' => $request->post('archive') ?: '',
                 'visible' => $request->post('visible') ?: '',
                 'uri' => $request->getLiteralURI()
-            )
+            ]
         );
     }
 

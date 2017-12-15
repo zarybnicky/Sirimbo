@@ -6,7 +6,7 @@ class Controller_Fotogalerie extends Controller_Abstract
         $id = $request->getID();
         if ($id === null) {
             $id = 0;
-            $dir = array('gd_name' => '');
+            $dir = ['gd_name' => ''];
         } elseif (!($dir = DBGalerie::getSingleDir($id))) {
             $this->redirect('/fotogalerie', 'Taková složka neexistuje');
         }
@@ -14,31 +14,31 @@ class Controller_Fotogalerie extends Controller_Abstract
         $photos = DBGalerie::getFotky($id);
 
         if (empty($photos)) {
-            $this->render('files/View/Empty.inc', array(
+            $this->render('files/View/Empty.inc', [
                 'nadpis' => $dir['gd_name'],
                 'notice' => 'Žádné fotky k dispozici.'
-            ));
+            ]);
             return;
         }
 
         $photos = array_map(
             function ($item) use ($request) {
-                return array(
+                return [
                     'id' => $item['gf_id'],
                     'src' => '/galerie/thumbnails/' . $item['gf_path'],
                     'href' => '/' . $request->getURI() . '/foto/' . $item['gf_id']
-                );
+                ];
             },
             $photos
         );
 
         $this->render(
             'files/View/Main/Fotogalerie/Overview.inc',
-            array(
+            [
                 'nadpis' => $dir['gd_name'],
                 'photos' => $photos,
                 'sidemenu' => $this->sidemenu($request)
-            )
+            ]
         );
     }
 
@@ -61,7 +61,7 @@ class Controller_Fotogalerie extends Controller_Abstract
 
         $this->render(
             'files/View/Main/Fotogalerie/Single.inc',
-            array(
+            [
                 'id'        => $id,
                 'src'       => '/galerie/' . $data['gf_path'],
                 'hasPrev'   => $hasPrev,
@@ -70,7 +70,7 @@ class Controller_Fotogalerie extends Controller_Abstract
                 'nextURI'   => $hasNext ? $parent_dir[$current + 1]['gf_id'] : '',
                 'returnURI' => '/fotogalerie' . ($data['gf_id_rodic'] > 0 ? ('/' . $data['gf_id_rodic']) : ''),
                 'sidemenu'   => $this->sidemenu($request)
-            )
+            ]
         );
     }
 
@@ -80,8 +80,8 @@ class Controller_Fotogalerie extends Controller_Abstract
             return;
         }
 
-        $root = $tip = new Tag('ul', array('class' => 'fotoroot'));
-        $stack = array($root);
+        $root = $tip = new Tag('ul', ['class' => 'fotoroot']);
+        $stack = [$root];
         $level = 0;
 
         foreach ($dirs as $dir) {
@@ -90,7 +90,7 @@ class Controller_Fotogalerie extends Controller_Abstract
             }
 
             if ($dir['gd_level'] > $level) {
-                $newTip = new Tag('ul', array('class' => 'foto_list'));
+                $newTip = new Tag('ul', ['class' => 'foto_list']);
                 $tip->add($newTip);
                 $stack[] = $newTip;
                 $tip = $newTip;
@@ -104,13 +104,13 @@ class Controller_Fotogalerie extends Controller_Abstract
             $tip->add(
                 new Tag(
                     'li',
-                    array(),
+                    [],
                     new Tag(
                         'a',
-                        array(
+                        [
                             'class' => ($dir['gd_id'] == $request->getID()) ? 'current' : '',
                             'href' => ($dir['gd_id'] == 0) ? '/fotogalerie' : "/fotogalerie/{$dir['gd_id']}"
-                        ),
+                        ],
                         $dir['gd_name']
                     )
                 )

@@ -28,12 +28,12 @@ class TextHelper
     {
         return (string) new Tag(
             'input',
-            array(
+            [
                 'type' => 'text',
                 'size' => $this->size,
                 'name' => $this->name,
                 'value' => $this->value
-            )
+            ]
         );
     }
 

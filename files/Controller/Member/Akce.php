@@ -15,9 +15,7 @@ class Controller_Member_Akce extends Controller_Member
             }
             $this->render(
                 'files/View/Member/Akce/Single.inc',
-                array(
-                    'data' => $this->_getRenderData($data)
-                )
+                ['data' => $this->_getRenderData($data)]
             );
             return;
         }
@@ -45,10 +43,7 @@ class Controller_Member_Akce extends Controller_Member
         if (empty($akce)) {
             $this->render(
                 'files/View/Empty.inc',
-                array(
-                    'nadpis' => 'Klubové akce',
-                    'notice' => 'Žádné akce nejsou k dispozici.'
-                )
+                ['nadpis' => 'Klubové akce', 'notice' => 'Žádné akce nejsou k dispozici.']
             );
             return;
         }
@@ -57,9 +52,7 @@ class Controller_Member_Akce extends Controller_Member
         }
         $this->render(
             'files/View/Member/Akce/Overview.inc',
-            array(
-                'akce' => $akce
-            )
+            ['akce' => $akce]
         );
     }
     private function _getRenderData($data)
@@ -68,15 +61,12 @@ class Controller_Member_Akce extends Controller_Member
         $dokumenty = array_map(
             function ($item) {
                 $dokument = DBDokumenty::getSingleDokument($item);
-                return array(
-                    'id' => $item,
-                    'name' => $dokument['d_name']
-                );
+                return ['id' => $item, 'name' => $dokument['d_name']];
             },
-            array_filter(explode(',', $data['a_dokumenty'])) ?: array()
+            array_filter(explode(',', $data['a_dokumenty'])) ?: []
         );
 
-        $out = array(
+        $out = [
             'id' => $data['a_id'],
             'jmeno' => $data['a_jmeno'],
             'kde' => $data['a_kde'],
@@ -89,7 +79,7 @@ class Controller_Member_Akce extends Controller_Member
             'info' => nl2br($data['a_info']),
             'dokumenty' => $dokumenty,
             'items' => $items
-        );
+        ];
         $out['signIn'] = $out['showForm']
                        ? !DBAkce::isUserSignedUp($out['id'], User::getUserID())
                        : '';
@@ -99,10 +89,10 @@ class Controller_Member_Akce extends Controller_Member
     {
         $f = new Form();
         $f->checkBool(!$data['a_lock'], 'Tato akce je zamčená', '');
-        $f->checkInArray($action, array('signup', 'signout'), 'Špatná akce', '');
+        $f->checkInArray($action, ['signup', 'signout'], 'Špatná akce', '');
         $f->checkNumeric($request->post('id'), 'Špatné ID', '');
 
-        return $f->isValid() ? array() : $f;
+        return $f->isValid() ? [] : $f;
     }
 }
 ?>

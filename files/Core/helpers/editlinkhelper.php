@@ -13,11 +13,8 @@ class EditLinkHelper
     {
         return (string) new Tag(
             'a',
-            array('href' => $this->link, 'title' => 'Upravit'),
-            new Tag(
-                'img',
-                array('alt' => 'Upravit', 'src' => '/style/icon-pencil.png')
-            )
+            ['href' => $this->link, 'title' => 'Upravit'],
+            new Tag('img', ['alt' => 'Upravit', 'src' => '/style/icon-pencil.png'])
         );
     }
 

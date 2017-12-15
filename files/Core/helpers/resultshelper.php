@@ -13,9 +13,7 @@ class ResultsHelper
     {
         $data = array_map(
             function ($val) {
-                return array(
-                    'text' => $val['at_text']
-                );
+                return ['text' => $val['at_text']];
             },
             $this->data
         );
@@ -23,7 +21,7 @@ class ResultsHelper
         $r = new Renderer();
         return $r->render(
             'files/View/Helper/Zpravy.inc',
-            array('data' => $data)
+            ['data' => $data]
         );
     }
 

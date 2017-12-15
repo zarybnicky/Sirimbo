@@ -22,26 +22,23 @@ class Controller_Admin_Permissions extends Controller_Admin
                 }
                 $this->redirect(
                     '/admin/permissions/remove?' .
-                    http_build_query(array('u' => $request->post('permissions')))
+                    http_build_query(['u' => $request->post('permissions')])
                 );
                 break;
         }
         $data = array_map(
             function ($item) {
-                return array(
+                return [
                     'checkBox' => $this->checkbox('permissions[]', $item['pe_id']),
                     'name' => $item['pe_name'],
                     'description' => $item['pe_description']
-                );
+                ];
             },
             DBPermissions::getGroups()
         );
         $this->render(
             'files/View/Admin/Permissions/Overview.inc',
-            array(
-                'showMenu' => !TISK,
-                'data' => $data
-            )
+            ['showMenu' => !TISK, 'data' => $data]
         );
     }
 
@@ -57,7 +54,7 @@ class Controller_Admin_Permissions extends Controller_Admin
             return;
         }
 
-        $permissions = array();
+        $permissions = [];
         foreach (array_keys(Settings::$permissions) as $name) {
             $permissions[$name] = $request->post($name);
         }
@@ -93,7 +90,7 @@ class Controller_Admin_Permissions extends Controller_Admin
             return;
         }
 
-        $permissions = array();
+        $permissions = [];
         foreach (array_keys(Settings::$permissions) as $name) {
             $permissions[$name] = $request->post($name);
         }
@@ -127,24 +124,21 @@ class Controller_Admin_Permissions extends Controller_Admin
         $data = array_map(
             function ($id) {
                 $item = DBPermissions::getSingleGroup($id);
-                return array(
-                    'id' => $item['pe_id'],
-                    'text' => $item['pe_name']
-                );
+                return ['id' => $item['pe_id'], 'text' => $item['pe_name']];
             },
             $request->get('u')
         );
 
         $this->render(
             'files/View/Admin/RemovePrompt.inc',
-            array(
+            [
                 'header' => 'Správa oprávnění',
                 'prompt' =>
                     $this->notice('Uživatelům z těchto skupin bude nutmné přiřadit jinou skupinu!')
                     . 'Opravdu chcete odstranit uživatelské úrovně:',
                 'returnURI' => $request->getReferer(),
                 'data' => $data
-            )
+            ]
         );
     }
 
@@ -158,7 +152,7 @@ class Controller_Admin_Permissions extends Controller_Admin
         $settings = array_map(
             function ($name, $item) use ($request, $data) {
                 $value = $request->post($name) ?: $data ? $data['pe_' . $name] : $item['default'];
-                return array(
+                return [
                     'name' => $item['name'],
                     'value' => $value,
                     'items' => array_map(
@@ -172,7 +166,7 @@ class Controller_Admin_Permissions extends Controller_Admin
                         array_keys(Settings::$permissionLevels),
                         array_values(Settings::$permissionLevels)
                     )
-                );
+                ];
             },
             array_keys(Settings::$permissions),
             array_values(Settings::$permissions)
@@ -180,12 +174,12 @@ class Controller_Admin_Permissions extends Controller_Admin
 
         $this->render(
             'files/View/Admin/Permissions/Form.inc',
-            array(
+            [
                 'action' => $request->getAction(),
                 'name' => $request->post('name') ?: $data ? $data['pe_name'] : '',
                 'description' => $request->post('description') ?: $data ? $data['pe_description'] : '',
                 'settings' => $settings
-            )
+            ]
         );
     }
 

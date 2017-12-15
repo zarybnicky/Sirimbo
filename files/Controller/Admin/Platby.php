@@ -44,23 +44,23 @@ class Controller_Admin_Platby extends Controller_Admin
     protected function getCategoryList()
     {
         $in = DBPlatbyGroup::getGroupsWithCategories();
-        $out = array();
+        $out = [];
         $group_id = 0;
         foreach ($in as $array) {
             if ($group_id != $array['pg_id']
                 && !isset($out['group_' . $array['pg_id']])
             ) {
-                $out[] = array('group_' . $array['pg_id'], $array);
+                $out[] = ['group_' . $array['pg_id'], $array];
                 $group_id = $array['pg_id'];
             }
-            $out[] = array($array['pc_id'], $array);
+            $out[] = [$array['pc_id'], $array];
         }
         return $out;
     }
     protected function getCategoryLookup($useSymbolKey, $unique, $includeGroups)
     {
         $in = DBPlatbyGroup::getGroupsWithCategories();
-        $out = array();
+        $out = [];
         $group_id = 0;
         foreach ($in as $array) {
             $key = (int) ($useSymbolKey
@@ -94,7 +94,7 @@ class Controller_Admin_Platby extends Controller_Admin
                 }
             );
         }
-        $out = array();
+        $out = [];
         foreach ($in as $array) {
             $out[(int) $array['u_id']] = $array;
         }
@@ -118,7 +118,7 @@ class Controller_Admin_Platby extends Controller_Admin
             $this->getCategoryLookup(true, true, false)
         );
 
-        $error = array();
+        $error = [];
         if (!$item->variable) {
             $error[] = 'Neplatné ID uživatele';
         }

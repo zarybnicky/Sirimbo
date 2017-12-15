@@ -69,7 +69,7 @@ class DBPary extends Database
                     'WHERE p_id_partner="' . $partner . '"' :
                     'WHERE p_id_partnerka="' . $partner . '"') .
                 ' AND p_archiv="0"');
-        if (($res === false || ($res = self::getSingleRow($res)) == array()) && $pohlavi == 'f') {
+        if (($res === false || ($res = self::getSingleRow($res)) == []) && $pohlavi == 'f') {
             $res = self::query(
                 "SELECT *
                 FROM pary

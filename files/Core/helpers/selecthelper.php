@@ -9,7 +9,7 @@ class SelectHelper
     {
         $this->name = $name ?: '';
         $this->value = null;
-        $this->options = array();
+        $this->options = [];
 
         return $this;
     }
@@ -29,7 +29,7 @@ class SelectHelper
     public function option($value, $name = null, $overwrite = false)
     {
         if ($overwrite) {
-            $this->options = array();
+            $this->options = [];
         }
 
         if ($name !== null) {
@@ -40,10 +40,10 @@ class SelectHelper
         return $this;
     }
 
-    public function options($options = array(), $overwrite = false, $literal = false)
+    public function options($options = [], $overwrite = false, $literal = false)
     {
         if ($overwrite) {
-            $this->options = array();
+            $this->options = [];
         }
 
         foreach ($options as $value => $name) {
@@ -62,7 +62,7 @@ class SelectHelper
     public function optionsAssoc($options, $value, $name, $overwrite = false)
     {
         if ($overwrite) {
-            $this->options = array();
+            $this->options = [];
         }
         foreach ($options as $x) {
             $this->options[$x[$value]] = $x[$name];
@@ -77,10 +77,10 @@ class SelectHelper
             function ($value, $name) use ($selected) {
                 return new Tag(
                     'option',
-                    array(
+                    [
                         'value' => $value,
                         'selected' => (string) $selected === (string) $value
-                    ),
+                    ],
                     $name
                 );
             },
@@ -90,7 +90,7 @@ class SelectHelper
 
         return (string) new Tag(
             'select',
-            array('name' => $this->name),
+            ['name' => $this->name],
             $options
         );
     }

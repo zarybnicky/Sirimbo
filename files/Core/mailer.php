@@ -18,7 +18,7 @@ class Mailer
         $mail->CharSet = 'utf-8';
 
         $mail->setFrom('noreply@tkolymp.cz', 'TK Olymp.cz');
-        foreach (is_array($to) ? $to : array($to) as $addr) {
+        foreach (is_array($to) ? $to : [$to] as $addr) {
             $mail->addAddress($addr, '');
         }
         $mail->Subject = $subject;

@@ -32,10 +32,10 @@ class Controller_Admin_Aktuality_Foto extends Controller_Admin_Aktuality
 
             $photos = array_map(
                 function ($item) {
-                    return array(
+                    return [
                         'id' => $item['gf_id'],
                         'src' => '/galerie/thumbnails/' . $item['gf_path']
-                    );
+                    ];
                 },
                 DBGalerie::getFotky($request->get('dir'))
             );
@@ -47,13 +47,13 @@ class Controller_Admin_Aktuality_Foto extends Controller_Admin_Aktuality
 
             $this->render(
                 'files/View/Admin/Aktuality/FormFoto.inc',
-                array(
+                [
                     'nadpis' => $dir['gd_name'],
                     'photos' => $photos,
                     'dir' => $request->get('dir') ?: '',
                     'dirs' => $dirs_out,
                     'checked' => $article['at_foto_main']
-                )
+                ]
             );
             return;
         }

@@ -32,22 +32,19 @@ class DateHelper
     protected function createDate($date)
     {
         if (is_a($date, 'Date')) {
-            return array($date, null);
+            return [$date, null];
         }
         if (!is_string($date)) {
-            return array(null, null);
+            return [null, null];
         }
         if (strpos($date, ' - ')) {
             $pieces = explode(' - ', $date);
             $from = new Date($pieces[0]);
             $to = new Date($pieces[1]);
-            return array(
-                $from->isValid() ? $from : null,
-                $to->isValid() ? $to : null
-            );
+            return [$from->isValid() ? $from : null, $to->isValid() ? $to : null];
         } else {
             $date = new Date($date);
-            return array($date->isValid() ? $date : null, null);
+            return [$date->isValid() ? $date : null, null];
         }
     }
 
@@ -118,10 +115,10 @@ class DateHelper
                 $to = new Date($pieces[1]);
             }
             if (!isset($from) || !isset($to) || (!$from->isValid() && !$to->isValid())) {
-                return array('from' => $this->getPost($request, true), 'to' => new Date());
+                return ['from' => $this->getPost($request, true), 'to' => new Date()];
             }
 
-            return array('from' => $from, 'to' => $to);
+            return ['from' => $from, 'to' => $to];
         } elseif ($request->get($this->name)) {
             if (strpos($request->get($this->name), ' - ')) {
                 $pieces = explode(' - ', $request->get($this->name));
@@ -129,10 +126,10 @@ class DateHelper
                 $to = new Date($pieces[1]);
             }
             if (!isset($from) || !isset($to) || (!$from->isValid() && !$to->isValid())) {
-                return array('from' => $this->getPost($request, true), 'to' => new Date());
+                return ['from' => $this->getPost($request, true), 'to' => new Date()];
             }
 
-            return array('from' => $from, 'to' => $to);
+            return ['from' => $from, 'to' => $to];
         } elseif (
             $request->post($this->name . '-from-year')
             && $request->post($this->name . '-from-month')
@@ -153,12 +150,12 @@ class DateHelper
             );
 
             if (!$from->isValid() && !$to->isValid()) {
-                return array('from' => $this->getPost($request, true), 'to' => new Date());
+                return ['from' => $this->getPost($request, true), 'to' => new Date()];
             }
 
-            return array('from' => $from, 'to' => $to);
+            return ['from' => $from, 'to' => $to];
         } else {
-            return array('from' => new Date(), 'to' => new Date());
+            return ['from' => new Date(), 'to' => new Date()];
         }
     }
 
@@ -197,7 +194,7 @@ class DateHelper
 
             $s->name($this->name . '-day')
               ->value($this->date ? $this->date->getDay() : null)
-              ->options(array(), true)
+              ->options([], true)
               ->option('00', 'Den');
             for ($i = 1; $i < 32; $i++) {
                 $s->option((($i < 10) ? ('0' . $i) : $i), $i);
@@ -206,7 +203,7 @@ class DateHelper
 
             $out .= $s->name($this->name . '-month')
                 ->value($this->date ? $this->date->getMonth() : null)
-                ->options(array(
+                ->options([
                     '00' => 'Měsíc',
                     '01' => 'Leden',
                     '02' => 'Únor',
@@ -220,11 +217,11 @@ class DateHelper
                     '10' => 'Říjen',
                     '11' => 'Listopad',
                     '12' => 'Prosinec'
-                ), true);
+                ], true);
 
             $s->name($this->name . '-year')
                 ->value($this->date ? $this->date->getYear() : null)
-                ->options(array(), true)
+                ->options([], true)
                 ->option('0000', 'Rok');
             for ($i = $this->fromYear; $i < $this->toYear; $i++) {
                 $s->option($i, $i);
@@ -253,11 +250,7 @@ class DateHelper
             }
             $out .= new Tag(
                 'input',
-                array(
-                    'type' => 'text',
-                    'name' => $this->name,
-                    'value' => $selected
-                )
+                ['type' => 'text', 'name' => $this->name, 'value' => $selected]
             );
         }
         return $out;

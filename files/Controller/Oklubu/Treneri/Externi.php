@@ -6,9 +6,7 @@ class Controller_Oklubu_Treneri_Externi extends Controller_Oklubu_Treneri
     {
         $this->render(
             'files/View/Main/OKlubu/TreneriExt.inc',
-            array(
-                'sidebar' => $this->sidebar($request->getUri())
-            )
+            ['sidebar' => $this->sidebar($request->getUri())]
         );
     }
 }

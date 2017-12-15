@@ -14,22 +14,22 @@ class Controller_Member extends Controller_Abstract
 
         $data = array_map(
             function ($item) {
-                return array(
+                return [
                     'id' => $item['no_id'],
                     'text' => $item['no_text'],
                     'user' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
                     'timestamp' => formatTimestamp($item['no_timestamp'])
-                );
+                ];
             },
             DBNovinky::getLastNovinky(10)
         );
 
         $this->render(
             'files/View/Member/Home.inc',
-            array(
+            [
                 'data' => $data,
                 'canEdit' => Permissions::check('novinky', P_OWNED)
-            )
+            ]
         );
     }
 

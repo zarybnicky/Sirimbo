@@ -1,4 +1,4 @@
-<?= $this->render('files/View/Member/Clenove/Navigation.inc', array('uri' => $this->uri)) ?>
+<?= $this->render('files/View/Member/Clenove/Navigation.inc', ['uri' => $this->uri]) ?>
 <div class="container full">
 <?php
 echo $this->table()

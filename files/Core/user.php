@@ -38,7 +38,7 @@ class User
         session_unset();
     }
 
-    public static function loadUser($id, $data = array()) {
+    public static function loadUser($id, $data = []) {
         if (Database::isDatabaseError()) {
             User::logout();
             return false;
@@ -66,12 +66,12 @@ class User
         $_SESSION['group'] = $data['u_group'];
         $_SESSION['groupName'] = $data['pe_name'];
         $_SESSION['skupina'] = $data['u_skupina'];
-        $_SESSION['skupina_data'] = array(
+        $_SESSION['skupina_data'] = [
             's_id '=> $data['s_id'],
             's_color_rgb' => $data['s_color_rgb'],
             's_name' => $data['s_name'],
             's_description' => $data['s_description']
-        );
+        ];
         $_SESSION['par'] = $par['p_id'];
         $_SESSION['partner'] = $par['u_id'];
 
@@ -147,7 +147,7 @@ class User
         if (!User::isLogged()) {
             if ($module)
                 return P_NONE;
-            return array();
+            return [];
         } elseif (User::getUserID() == 1) {
             if ($module)
                 return P_ADMIN;

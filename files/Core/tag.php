@@ -3,7 +3,7 @@ class Tag extends Widget
 {
     protected $name = '';
 
-    public function __construct($name, array $attributes = array(), $child = array())
+    public function __construct($name, array $attributes = [], $child = [])
     {
         parent::__construct(
             $attributes,
@@ -17,14 +17,14 @@ class Tag extends Widget
         static $voidTags;
         static $validAttributes;
         if (!$voidTags) {
-            $voidTags = array(
+            $voidTags = [
                 'area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img',
                 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track',
                 'wbr', 'basefont', 'bgsound', 'frame', 'isindex'
-            );
+            ];
         }
         if (!$validAttributes) {
-            $validAttributes = array(
+            $validAttributes = [
                 'accept', 'acceptCharset', 'accessKey', 'action',
                 'allowFullScreen', 'allowTransparency', 'alt', 'async',
                 'autoCapitalize', 'autoComplete', 'autoCorrect', 'autoFocus',
@@ -49,7 +49,7 @@ class Tag extends Widget
                 'spellCheck', 'src', 'srcDoc', 'srcSet', 'start', 'step',
                 'style', 'summary', 'tabIndex', 'target', 'title', 'type',
                 'unselectable', 'useMap', 'value', 'width', 'wmode', 'wrap'
-            );
+            ];
         }
         $tag = '<' . $this->name;
 
@@ -57,7 +57,7 @@ class Tag extends Widget
             if (!in_array($key, $validAttributes)) {
                 continue;
             }
-            if ($value === null || $value === false || $value === array()) {
+            if ($value === null || $value === false || $value === []) {
                 continue;
             }
             if ($value === true) {
@@ -78,10 +78,6 @@ class Tag extends Widget
         }
         $tag .= '>';
 
-        return array(
-            $tag,
-            $this->getChildren(),
-            "</{$this->name}>"
-        );
+        return [$tag, $this->getChildren(), "</{$this->name}>"];
     }
 }

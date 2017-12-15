@@ -41,7 +41,7 @@ class Controller_Admin_Akce_Detail extends Controller_Admin_Akce
             $this->redirect('/admin/akce/detail/' . $id, 'Úspěšně upraveno');
         }
 
-        $data = array(
+        $data = [
             'id' => $akce['a_id'],
             'jmeno' => $akce['a_jmeno'],
             'kde' => $akce['a_kde'],
@@ -55,31 +55,28 @@ class Controller_Admin_Akce_Detail extends Controller_Admin_Akce
                 && !$akce['a_lock'],
             'canEdit' => Permissions::check('akce', P_OWNED),
             'info' => nl2br($akce['a_info'])
-        );
+        ];
 
         $userSelect = $this->userSelect()->users(DBUser::getActiveUsers());
         $items = array_map(
             function ($item) use ($userSelect) {
-                return array(
+                return [
                     'name' => $userSelect->name($item['ai_id'] . '-user')
                                          ->set($item['ai_user'])
                                          ->render(),
                     'removeButton' => $this->submit('Odstranit')->data('remove', $item['ai_id'])
-                );
+                ];
             },
             DBAkce::getAkceItems($id)
         );
-        $items[] = array(
+        $items[] = [
             'name' => $userSelect->name('add-user')->set(0),
             'removeButton' => $this->submit('Přidat')->data('add', 'add')
-        );
+        ];
 
         $this->render(
             'files/View/Admin/Akce/Detail.inc',
-            array(
-                'data' => $data,
-                'items' => $items
-            )
+            ['data' => $data, 'items' => $items]
         );
     }
 }

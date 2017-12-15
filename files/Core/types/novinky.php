@@ -3,44 +3,44 @@ class Novinky
 {
     private $_user;
     private $_current;
-    private static $_format = array(
-        'akce' => array(
+    private static $_format = [
+        'akce' => [
                 'add' => 'Byla přidána nová akce, "<a href="%s">%s</a>".',
                 'edit' => 'Akce "<a href="%s">%s</a>" byla upravena.',
                 'remove' => 'Akce "%s" byla zrušena.'
-        ),
-        'clanek' => array(
+        ],
+        'clanek' => [
                 'add' => 'Byl přidán nový článek, "<a href="%s">%s</a>".',
                 'edit' => 'Článek "<a href="%s">%s</a>" byl upraven.',
                 'remove' => 'Článek "%s" byl odstraněn.'
-        ),
-        'video' => array(
+        ],
+        'video' => [
                 'add' => 'Bylo přidáno nové video, "<a href="%s">%s</a>".',
                 'edit' => 'Video "<a href="%s">%s</a>" bylo upraveno.',
                 'remove' => 'Video "%s" bylo odstraněno.'
-        ),
-        'dokumenty' => array(
+        ],
+        'dokumenty' => [
                 'add' => 'Byl přidán nový dokument, "<a href="%s">%s</a>".',
                 'edit' => 'Dokument "<a href="%s">%s</a>" byl upraven.',
                 'remove' => 'Dokument "%s" byl odstraněn.'
-        ),
+        ],
         'galerie' => 'Galerie "%s" byla upravena.',
-        'nabidka' => array(
+        'nabidka' => [
                 'add' => 'Byla přidána nová <a href="%s">nabídka</a> od %s do %s s trenérem %s',
                 'edit' => '<a href="%s">Nabídka</a> od %s do %s s trenérem %s byla upravena.',
                 'remove' => 'Nabídka od %s do %s s trenérem %s byla zrušena.'
-        ),
-        'nastenka' => array(
+        ],
+        'nastenka' => [
                 'add' => 'Byl přidán nový <a href="%s">příspěvek</a> na nástěnku',
                 'edit' => null,
                 'remove' => null
-        ),
-        'rozpis' => array(
+        ],
+        'rozpis' => [
                 'add' => 'Byl přidán nový <a href="%s">rozpis</a> dne %s s trenérem %s.',
                 'edit' => '<a href="%s">Rozpis</a> dne %s s trenérem %s byl upraven.',
                 'remove' => 'Rozpis dne %s s trenérem %s byl odstraněn.'
-        ),
-    );
+        ],
+    ];
 
     public function __construct($userID) {
         $this->_user = $userID;
@@ -99,7 +99,7 @@ class Novinky
             return;
         }
 
-        $text = call_user_func_array('sprintf', array_merge(array($format), $parameters));
+        $text = call_user_func_array('sprintf', array_merge([$format], $parameters));
         DBNovinky::addNovinka($this->_user, $text);
     }
 }

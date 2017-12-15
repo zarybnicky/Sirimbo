@@ -14,8 +14,8 @@ class TableHelper
     }
     private function _defaultValues() {
         $this->_name = '';
-        $this->_data = array();
-        $this->_columns = array();
+        $this->_data = [];
+        $this->_columns = [];
         $this->_index = 0;
         $this->_style = '';
         $this->_showHeader = true;
@@ -45,7 +45,7 @@ class TableHelper
             if (!is_array($c)) {
                 continue;
             }
-            call_user_func_array(array($this, 'column'), $c);
+            call_user_func_array([$this, 'column'], $c);
         }
         return $this;
     }
@@ -53,7 +53,7 @@ class TableHelper
         $html = ($class !== null ? (' class="' . $class . '"') : '')
                 . ($style !== null ? (' style="' . $style . '"') : '');
 
-        $this->_columns[] = array($id, $name, $html);
+        $this->_columns[] = [$id, $name, $html];
         return $this;
     }
     public function showHeader($b) {

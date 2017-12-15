@@ -187,9 +187,7 @@ class DBRozpis extends Database
             function ($item) {
                 return array_intersect_key(
                     $item,
-                    array_flip(
-                        array('ri_partner', 'ri_od', 'ri_do', 'ri_lock')
-                    )
+                    array_flip(['ri_partner', 'ri_od', 'ri_do', 'ri_lock'])
                 );
             },
             $data
@@ -200,7 +198,7 @@ class DBRozpis extends Database
 
         $q = 'UPDATE rozpis_item SET ';
 
-        $columns_string = array();
+        $columns_string = [];
         foreach ($columns as $col_index => $col) {
             $s = $col . ' = CASE';
             foreach ($rows as $row_index => $row) {

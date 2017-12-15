@@ -55,7 +55,7 @@ class DBGalerie extends Database
         $array = self::getArray($res);
 
         if ($sort) {
-            $out = array();
+            $out = [];
             self::_recursiveChildren($array, $out, 0, count($array));
             $array = $out;
         }

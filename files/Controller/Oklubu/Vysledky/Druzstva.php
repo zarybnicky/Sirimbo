@@ -6,9 +6,7 @@ class Controller_Oklubu_Vysledky_Druzstva extends Controller_Oklubu_Vysledky
     {
         $this->render(
             'files/View/Main/OKlubu/Druzstva.inc',
-            array(
-                'sidebar' => $this->sidebar($request->getUri())
-            )
+            ['sidebar' => $this->sidebar($request->getUri())]
         );
     }
 }

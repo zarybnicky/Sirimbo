@@ -6,9 +6,7 @@ class Controller_Oklubu_Vysledky extends Controller_Oklubu
     {
         $this->render(
             'files/View/Main/OKlubu/VCislech.inc',
-            array(
-                'sidebar' => $this->sidebar($request->getUri())
-            )
+            ['sidebar' => $this->sidebar($request->getUri())]
         );
     }
 

@@ -15,7 +15,7 @@ class Controller_Member_Nabidka extends Controller_Member
             function ($data) {
                 $items = array_map(
                     function ($item) use ($data) {
-                        return array(
+                        return [
                             'id' => $item['u_id'],
                             'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
                             'hourCount' => $item['ni_pocet_hod'],
@@ -25,7 +25,7 @@ class Controller_Member_Nabidka extends Controller_Member
                                  && ($item['p_id'] === User::getParID()
                                      || Permissions::check('nabidka', P_OWNED, $data['n_trener']))),
                             'deleteTicket' => $item['p_id'] . '-' . $data['n_id']
-                        );
+                        ];
                     },
                     DBNabidka::getNabidkaItem($data['n_id'])
                 );
@@ -38,7 +38,7 @@ class Controller_Member_Nabidka extends Controller_Member
                     0
                 );
 
-                return array(
+                return [
                     'id' => $data['n_id'],
                     'fullName' => $data['u_jmeno'] . ' ' . $data['u_prijmeni'],
                     'datum' => formatDate($data['n_od'])
@@ -50,7 +50,7 @@ class Controller_Member_Nabidka extends Controller_Member
                     'hourFree' => $data['n_pocet_hod'] - $obsazeno,
                     'canAdd' => !$data['n_lock'] && Permissions::check('nabidka', P_MEMBER),
                     'items' => $items
-                );
+                ];
             },
             array_filter(
                 DBNabidka::getNabidka(),
@@ -63,19 +63,17 @@ class Controller_Member_Nabidka extends Controller_Member
         if (empty($data)) {
             $this->render(
                 'files/View/Empty.inc',
-                array(
+                [
                     'nadpis' => 'Nabídka tréninků',
                     'notice' => 'Žádná nabídka k dispozici'
-                )
+                ]
             );
             return;
         }
 
         $this->render(
             'files/View/Member/Nabidka/Overview.inc',
-            array(
-                'data' => $data
-            )
+            ['data' => $data]
         );
     }
     private function checkData($request, $data) {

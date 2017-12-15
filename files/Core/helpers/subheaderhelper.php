@@ -13,8 +13,8 @@ class SubheaderHelper
     {
         return (string) new Tag(
             'div',
-            array('class' => 'container full'),
-            new Tag('h2', array(), $this->text)
+            ['class' => 'container full'],
+            new Tag('h2', [], $this->text)
         );
     }
 

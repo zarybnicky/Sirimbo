@@ -15,7 +15,7 @@ class DBPermissions extends Database
         $count = count($permissions);
         $keys = array_keys($permissions);
         $values = array_values($permissions);
-        $result = DBPermissions::escapeArray(array_merge(array($name, $description), $keys, $values));
+        $result = DBPermissions::escapeArray(array_merge([$name, $description], $keys, $values));
         $name = $result[0];
         $description = $result[1];
         for($i = 0; $i < $count; $i++)
@@ -35,7 +35,7 @@ class DBPermissions extends Database
         $count = count($permissions);
         $values = array_values($permissions);
         $keys = array_keys($permissions);
-        $result = DBPermissions::escapeArray(array_merge(array($id, $name, $description), $keys, $values));
+        $result = DBPermissions::escapeArray(array_merge([$id, $name, $description], $keys, $values));
         $id = $result[0];
         $name = $result[1];
         $description = $result[2];

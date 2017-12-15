@@ -120,7 +120,7 @@ class Paging
                          : ($this->_pageCount > 0
                             ? $this->_pageCount
                             : 1);
-        $this->_pagesInRange = array();
+        $this->_pagesInRange = [];
 
         if (isset($this->_pageRange)) {
             $halfRange = floor($this->_pageRange / 2);
@@ -152,7 +152,7 @@ class Paging
         if (!$this->_valid) {
             return false;
         }
-        return array(
+        return [
             'first' => 1,
             'previous' => $this->_previousPage,
             'current' => $this->_currentPage,
@@ -160,7 +160,7 @@ class Paging
             'last' => $this->_pageCount,
             'total' => $this->_totalItems,
             'pagesInRange' => $this->_pagesInRange
-        );
+        ];
     }
     public function getLink($get, $i, $label, $perPage = null) {
         if (!$this->_valid) {
@@ -176,15 +176,7 @@ class Paging
         $c = isset($this->_itemsPerPageField)
            ? $this->_itemsPerPageField
            : 'c';
-        $url = http_build_query(
-            array_merge(
-                $get,
-                array(
-                    $c => $perPage,
-                    $p => $i
-                )
-            )
-        );
+        $url = http_build_query(array_merge($get, [$c => $perPage, $p => $i]));
         return "<a href=\"?$url\">$label</a>";
     }
     public function getNavigation($get) {
@@ -232,7 +224,7 @@ class Paging
         if ($this->_totalItems <= 5) {
             return '';
         }
-        $options = array(5, 10, 20, 50);
+        $options = [5, 10, 20, 50];
 
         $out = 'zobrazit ';
         if ($this->_itemsPerPage === $this->_totalItems) {
@@ -300,7 +292,7 @@ class Paging
     }
     public function getItems() {
         if (!$this->_valid) {
-            return array();
+            return [];
         }
         $offset = $this->_itemsPerPage * ($this->_currentPage - 1);
         return $this->_adapter->page($offset, $this->_itemsPerPage);

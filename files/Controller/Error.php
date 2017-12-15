@@ -20,10 +20,7 @@ class Controller_Error extends Controller_Abstract
 
         $this->render(
             'files/View/Empty.inc',
-            array(
-                'nadpis' => 'Chyba',
-                'notice' => $notice
-            )
+            ['nadpis' => 'Chyba', 'notice' => $notice]
         );
     }
 }

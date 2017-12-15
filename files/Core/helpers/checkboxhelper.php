@@ -46,13 +46,13 @@ class CheckboxHelper
     {
         $checkbox = new Tag(
             'input',
-            array(
+            [
                 'type' => 'checkbox',
                 'name' => $this->name,
                 'value' => $this->value,
                 'checked' => $this->state,
                 'readonly' => $this->readonly
-            )
+            ]
         );
         if (!$this->label) {
             return (string) $checkbox;

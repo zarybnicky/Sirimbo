@@ -6,7 +6,7 @@ class CSVParser implements Iterator
     private $_enclosure = '"';
     private $_escape = '\\';
     private $_associative = false;
-    private $_headers = array();
+    private $_headers = [];
     private $_encoding = 'UTF-8';
     private $_recode = false;
 

@@ -43,7 +43,7 @@ class Controller_Admin_Nastenka extends Controller_Admin
         $data = array_map(
             function ($item) {
                 $canEdit = Permissions::check('nastenka', P_OWNED, $item['up_kdo']);
-                return array(
+                return [
                     'canEdit' => $canEdit,
                     'checkBox' => $canEdit ? $this->checkbox('nastenka[]', $item['up_id']) : '&nbsp;&#10799;',
                     'header' => $item['up_nadpis'],
@@ -57,18 +57,18 @@ class Controller_Admin_Nastenka extends Controller_Admin
                         },
                         ''
                     )
-                );
+                ];
             },
             $data
         );
 
         $this->render(
             'files/View/Admin/Nastenka/Overview.inc',
-            array(
+            [
                 'showMenu' => !TISK,
                 'data' => $data,
                 'navigation' => $pager->getNavigation($request->get())
-            )
+            ]
         );
     }
     public function add($request) {
@@ -77,13 +77,13 @@ class Controller_Admin_Nastenka extends Controller_Admin
                 $this->redirect()->setMessage($f->getMessages());
             }
             $skupiny = DBSkupiny::get();
-            $skupinySelected = array();
+            $skupinySelected = [];
             foreach ($skupiny as $item) {
                 $skupinySelected[$item['s_id']] = $request->post('sk-' . $item['s_id']);
             }
             $this->render(
                 'files/View/Admin/Nastenka/Form.inc',
-                array(
+                [
                     'action' => $request->getAction(),
                     'referer' => $request->getReferer(),
                     'returnURI' => $request->getReferer(),
@@ -92,7 +92,7 @@ class Controller_Admin_Nastenka extends Controller_Admin
                     'nadpis' => $request->post('nadpis') ?: '',
                     'text' => $request->post('text') ?: '',
                     'lock' => $request->post('lock') ?: ''
-                )
+                ]
             );
             return;
         }
@@ -148,14 +148,14 @@ class Controller_Admin_Nastenka extends Controller_Admin
                 $this->redirect()->setMessage($f->getMessages());
             }
             $skupiny = DBSkupiny::get();
-            $skupinySelected = array();
+            $skupinySelected = [];
             foreach ($skupiny as $item) {
                 $skupinySelected[$item['s_id']] = $request->post('sk-' . $item['s_id']);
             }
 
             $this->render(
                 'files/View/Admin/Nastenka/Form.inc',
-                array(
+                [
                     'action' => $request->getAction(),
                     'referer' => $request->getReferer(),
                     'returnURI' => $request->getReferer(),
@@ -164,17 +164,17 @@ class Controller_Admin_Nastenka extends Controller_Admin
                     'nadpis' => $request->post('nadpis') ?: '',
                     'text' => $request->post('text') ?: '',
                     'lock' => $request->post('lock') ?: ''
-                )
+                ]
             );
             return;
         }
 
-        $skupiny_old = array();
+        $skupiny_old = [];
         foreach (DBNastenka::getNastenkaSkupiny($id) as $skupina) {
             $skupiny_old[$skupina['ups_id_skupina']] = $skupina['ups_id'];
         }
 
-        $skupiny_new = array();
+        $skupiny_new = [];
         foreach (DBSkupiny::get() as $item) {
             if ($request->post('sk-' . $item['s_id'])) {
                 $skupiny_new[$item['s_id']] = $item;

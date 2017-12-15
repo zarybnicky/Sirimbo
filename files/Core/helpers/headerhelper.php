@@ -14,16 +14,16 @@ class HeaderHelper {
     {
         return (string) new Tag(
             'div',
-            array('class' => 'header-section'),
+            ['class' => 'header-section'],
             new Tag(
                 'div',
-                array('class' => 'container full'),
-                array(
-                    new Tag('h1', array(), $this->header),
+                ['class' => 'container full'],
+                [
+                    new Tag('h1', [], $this->header),
                     ($this->subheader
-                     ? new Tag('h2', array(), $this->subheader)
+                     ? new Tag('h2', [], $this->subheader)
                      : '')
-                )
+                ]
             )
         );
     }

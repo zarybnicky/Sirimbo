@@ -13,7 +13,7 @@ class HighlightsHelper
     {
         $data = array_map(
             function ($val) {
-                return array(
+                return [
                     'uri'  => '/aktualne/' . $val['at_id'],
                     'name' => $val['at_jmeno'],
                     'date' => formatDate($val['at_timestamp'], true),
@@ -25,7 +25,7 @@ class HighlightsHelper
                     ),
                     'category' => 'Zprávy'
                     //FIXME: Články - kategorie (tagy?)
-                );
+                ];
             },
             $this->data
         );
@@ -33,7 +33,7 @@ class HighlightsHelper
         $r = new Renderer();
         return $r->render(
             'files/View/Helper/Highlights.inc',
-            array('data' => $data)
+            ['data' => $data]
         );
     }
 

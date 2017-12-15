@@ -16,10 +16,7 @@ class LoginHelper {
         }
 
         $r = new Renderer();
-        return $r->render(
-            $template,
-            array('name' => $name)
-        );
+        return $r->render($template, ['name' => $name]);
     }
 
     public function __toString()

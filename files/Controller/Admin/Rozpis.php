@@ -87,7 +87,7 @@ class Controller_Admin_Rozpis extends Controller_Admin
         $data = array_map(
             function ($item) {
                 $isAdmin = Permissions::check('rozpis', P_ADMIN);
-                return array(
+                return [
                     'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
                     'datum' => formatDate($item['r_datum']),
                     'kde' => $item['r_kde'],
@@ -101,17 +101,14 @@ class Controller_Admin_Rozpis extends Controller_Admin
                         '<a href="/admin/rozpis/edit/' . $item['r_id'] . '">obecné</a>, ' .
                         '<a href="/admin/rozpis/detail/' . $item['r_id'] . '">tréninky</a>'
                     )
-                );
+                ];
             },
             $data
         );
 
         $this->render(
             'files/View/Admin/Rozpis/Overview.inc',
-            array(
-                'showMenu' => !TISK,
-                'data' => $data
-            )
+            ['showMenu' => !TISK, 'data' => $data]
         );
         return;
     }
@@ -181,11 +178,11 @@ class Controller_Admin_Rozpis extends Controller_Admin
         $isAdmin = Permissions::check('rozpis', P_ADMIN);
         $treneri = $isAdmin
                  ? DBUser::getUsersByPermission('rozpis', P_OWNED)
-                 : array(DBUser::getUserData(User::getUserID()));
+                 : [DBUser::getUserData(User::getUserID())];
 
         $this->render(
             'files/View/Admin/Rozpis/Form.inc',
-            array(
+            [
                 'action' => $request->getAction(),
                 'isAdmin' => $isAdmin,
                 'treneri' => $treneri,
@@ -194,7 +191,7 @@ class Controller_Admin_Rozpis extends Controller_Admin
                 'datum' => $request->post('datum') ?: ($data ? $data['r_datum'] : ''),
                 'visible' => $request->post('visible') ?: ($data ? $data['r_visible'] : ''),
                 'lock' => $request->post('lock') ?: ($data ? $data['r_lock'] : '')
-            )
+            ]
         );
     }
 

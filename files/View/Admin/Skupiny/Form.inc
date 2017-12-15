@@ -8,18 +8,18 @@
                  ->column('desc', '', 'r')
                  ->column('value', '')
                  ->data(
-                     array(
-                         array(
+                     [
+                         [
                              'desc' => 'Jméno',
                              'value' => '<input type="text" name="name" value="' . $this->name . '" />'
-                         ), array(
+                         ], [
                              'desc' => 'Barva',
                              'value' => $this->colorselect('color', $this->color)
-                         ), array(
+                         ], [
                              'desc' => 'Popis',
                              'value' => '<textarea rows="15" cols="50" name="desc">' . $this->popis . '</textarea>'
-                         )
-                     )
+                         ]
+                     ]
                  ); ?>
         <br>
         <h2>Kategorie plateb</h2>

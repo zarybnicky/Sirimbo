@@ -38,7 +38,7 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Admin_Akce
         }
 
         $booked = count(DBAkce::getAkceItems($id));
-        $akce = array(
+        $akce = [
             'id' => $akce['a_id'],
             'jmeno' => $akce['a_jmeno'],
             'kde' => $akce['a_kde'],
@@ -49,21 +49,21 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Admin_Akce
             'volno' => $akce['a_kapacita'] - $booked,
             'showForm' => Permissions::check('akce', P_MEMBER) && !$akce['a_lock'],
             'canEdit' => Permissions::check('akce', P_OWNED)
-        );
+        ];
 
         $documents = array_map(
             function($item) {
-                return array(
+                return [
                     'name' => $item['d_name'],
                     'category' => Settings::$documentTypes[$item['d_kategorie']],
                     'removeButton' => $this->submit('Odstranit')->data('remove', $item['d_id'])
-                );
+                ];
             },
             DBDokumenty::getMultipleById($documents)
         );
 
-        $allDocuments = array();
-        foreach (array(2, 3, 0) as $category) {
+        $allDocuments = [];
+        foreach ([2, 3, 0] as $category) {
             foreach (DBDokumenty::getDokumentyByKategorie($category) as $item) {
                 $allDocuments[$item['d_id']] =
                     Settings::$documentTypes[$item['d_kategorie']] . ' - ' .
@@ -74,17 +74,17 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Admin_Akce
                                ->name('add-id')
                                ->option('', '----------')
                                ->options($allDocuments);
-        $documents[] = array(
+        $documents[] = [
             'name' => (string) $documentSelect,
             'category' => $this->submit('Přidat')->data('add', 'add'),
             'removeButton' => ''
-        );
+        ];
         $this->render(
             'files/View/Admin/Akce/Dokumenty.inc',
-            array(
+            [
                 'data' => $akce,
                 'documents' => $documents
-            )
+            ]
         );
     }
 }

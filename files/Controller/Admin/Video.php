@@ -23,9 +23,7 @@ class Controller_Admin_Video extends Controller_Admin
             ) {
                 $this->redirect(
                     '/admin/video/remove?' .
-                    http_build_query(
-                        array('u' => $request->post('video'))
-                    )
+                    http_build_query(['u' => $request->post('video')])
                 );
             } else {
                 $this->redirect('/admin/video');
@@ -38,7 +36,7 @@ class Controller_Admin_Video extends Controller_Admin
 
         $data = array_map(
             function ($item) {
-                return array(
+                return [
                     'name' => $item['v_name'] . ' ('
                           . $this->editLink('/admin/video/edit/' . $item['v_id']). '&nbsp;'
                           . $this->removeLink('/admin/video/remove?u=' . $item['v_id']) . ')',
@@ -46,19 +44,19 @@ class Controller_Admin_Video extends Controller_Admin
                     'uri' => $item['v_uri'],
                     'date' => $item['v_date'],
                     'playlist' => $item['v_playlist'] ? 'ano' : 'ne'
-                );
+                ];
             },
             $videos
         );
         $this->render(
             'files/View/Admin/Video/Overview.inc',
-            array(
+            [
                 'data' => $data,
                 'video1' => $select->name('video1')->set(DBParameters::get('title_video1'))->render(),
                 'video2' => $select->name('video2')->set(DBParameters::get('title_video2'))->render(),
                 'video3' => $select->name('video3')->set(DBParameters::get('title_video3'))->render(),
                 'video4' => $select->name('video4')->set(DBParameters::get('title_video4'))->render()
-            )
+            ]
         );
     }
 
@@ -137,37 +135,34 @@ class Controller_Admin_Video extends Controller_Admin
         $data = array_map(
             function ($id) {
                 $item = DBVideo::getSingle($id);
-                return array(
-                    'id' => $item['v_id'],
-                    'text' => $item['v_name']
-                );
+                return ['id' => $item['v_id'], 'text' => $item['v_name']];
             },
             $request->get('u')
         );
 
         $this->render(
             'files/View/Admin/RemovePrompt.inc',
-            array(
+            [
                 'header' => 'Správa videí',
                 'prompt' => 'Opravdu chcete odstranit videa:',
                 'returnURI' => $request->getReferer(),
                 'data' => $data
-            )
+            ]
         );
     }
 
-    protected function displayForm($request, $data = array())
+    protected function displayForm($request, $data = [])
     {
         $this->render(
             'files/View/Admin/Video/Form.inc',
-            array(
+            [
                 'header' => $request->getAction() == 'add' ? 'Přidat video' : 'Upravit video',
                 'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit',
                 'id' => $data ? $data['v_id'] : null,
                 'name' => $request->post('name') ?: ($data ? $data['v_name'] : ''),
                 'text' => $request->post('text') ?: ($data ? $data['v_text'] : ''),
                 'uri' => $request->post('uri') ?: ($data ? $data['v_uri'] : '')
-            )
+            ]
         );
     }
 

@@ -16,17 +16,17 @@ class ColorSelectHelper
     {
         $widget = new Tag(
             'input',
-            array(
+            [
                 'id' => 'color-' . $this->field,
                 'type' => 'color',
                 'name' => $this->field,
                 'value' => $this->value
-            )
+            ]
         );
-        $widget->addStylesheet(array('src' => '/style/spectrum.css'));
-        $widget->addScript(array('src' => '/scripts/spectrum.js'));
+        $widget->addStylesheet(['src' => '/style/spectrum.css']);
+        $widget->addScript(['src' => '/scripts/spectrum.js']);
         $widget->addScript(
-            array(),
+            [],
             <<<EOS
 $('#color-{$this->field}').spectrum({
   color:'{$this->value}',

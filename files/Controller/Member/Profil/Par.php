@@ -26,7 +26,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
         );
         $this->render(
             'files/View/Member/Profil/CoupleOverview.inc',
-            array(
+            [
                 'havePartner' => !empty($latest) && $latest['u_id'],
                 'partnerFullName' => $latest['u_jmeno'] . ' ' . $latest['u_prijmeni'],
                 'sttTrida' => $latest['p_stt_trida'],
@@ -36,7 +36,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
                 'latBody' => $latest['p_lat_body'],
                 'latFinale' => $latest['p_lat_finale'],
                 'hodnoceni' => $latest['p_hodnoceni']
-            )
+            ]
         );
     }
 
@@ -56,14 +56,14 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
             }
             $this->render(
                 'files/View/Member/Profil/CoupleData.inc',
-                array(
+                [
                     'stt_trida' => $request->post('stt_trida') ?: '',
                     'stt_body' => $request->post('stt_body') ?: '',
                     'stt_finale' => $request->post('stt_finale') ?: '',
                     'lat_trida' => $request->post('lat_trida') ?: '',
                     'lat_body' => $request->post('lat_body') ?: '',
                     'lat_finale' => $request->post('lat_finale') ?: ''
-                )
+                ]
             );
             return;
         }
@@ -134,14 +134,14 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
         $request->post('partner', $havePartner ? $latest['u_id'] : '0');
         $this->render(
             'files/View/Member/Profil/PartnerOverview.inc',
-            array(
+            [
                 'havePartner' => $havePartner,
                 'partnerID' => $latest['u_id'],
                 'partnerFullName' => $latest['u_jmeno'] . ' ' . $latest['u_prijmeni'],
                 'users' => (User::getUserPohlavi() == "m")
                             ? DBUser::getUsersByPohlavi("f")
                             : DBUser::getUsersByPohlavi("m")
-            )
+            ]
         );
     }
 
@@ -191,13 +191,13 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
         $f = new Form();
         $f->checkInArray(
             $request->post('stt-trida'),
-            array('Z', 'H', 'D', 'C', 'B', 'A', 'M'),
+            ['Z', 'H', 'D', 'C', 'B', 'A', 'M'],
             'Neplatná standartní třída',
             'stt-trida'
         );
         $f->checkInArray(
             $request->post('lat-trida'),
-            array('Z', 'H', 'D', 'C', 'B', 'A', 'M'),
+            ['Z', 'H', 'D', 'C', 'B', 'A', 'M'],
             'Neplatná latinská třída',
             'lat-trida'
         );

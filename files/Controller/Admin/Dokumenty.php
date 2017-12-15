@@ -24,8 +24,8 @@ class Controller_Admin_Dokumenty extends Controller_Admin
             $fileUpload = $request->files('file')['tmp_name'];
             $fileName = $request->files('file')['name'];
             $fileName = str_replace(
-                array('#', '$', '%', '&', '^', '*', '?'),
-                array('No.', 'Dolar', 'Procento', 'And', ''),
+                ['#', '$', '%', '&', '^', '*', '?'],
+                ['No.', 'Dolar', 'Procento', 'And', ''],
                 $fileName
             );
 
@@ -71,23 +71,20 @@ class Controller_Admin_Dokumenty extends Controller_Admin
 
         $data = array_map(
             function ($item) {
-                return array(
+                return [
                     'checkBox' => $this->checkbox('dokumenty[]', $item['d_id'])
                                        ->render(),
                     'link' => '<a href="/member/download?id=' . $item['d_id'] . '">' . $item['d_name'] . '</a>',
                     'name' => $item['d_filename'],
                     'category' => Settings::$documentTypes[$item['d_kategorie']],
                     'by' => $item['u_jmeno'] . ' ' . $item['u_prijmeni']
-                );
+                ];
             },
             $data
         );
         $this->render(
             'files/View/Admin/Dokumenty/Overview.inc',
-            array(
-                'data' => $data,
-                'showMenu' => !TISK
-            )
+            ['data' => $data, 'showMenu' => !TISK]
         );
     }
     public function edit($request)
@@ -104,9 +101,7 @@ class Controller_Admin_Dokumenty extends Controller_Admin
         }
         $this->render(
             'files/View/Admin/Dokumenty/Form.inc',
-            array(
-                'name' => $data['d_name']
-            )
+            ['name' => $data['d_name']]
         );
     }
     public function remove($request)
@@ -131,21 +126,21 @@ class Controller_Admin_Dokumenty extends Controller_Admin
             $this->redirect('/admin/dokumenty', 'Dokumenty odebrány');
         }
 
-        $data = array();
+        $data = [];
         foreach ($request->get('u') as $id) {
-            $data[] = array(
+            $data[] = [
                 'id' => $id,
                 'text' => DBDokumenty::getDokumentName($id)
-            );
+            ];
         }
         $this->render(
             'files/View/Admin/RemovePrompt.inc',
-            array(
+            [
                 'header' => 'Správa dokumentů',
                 'prompt' => 'Opravdu chcete odstranit dokumenty:',
                 'returnURI' => $request->getReferer(),
                 'data' => $data
-            )
+            ]
         );
     }
 }

@@ -31,7 +31,7 @@ class Controller_Admin_Aktuality extends Controller_Admin
         $data = array_map(
             function ($item) {
                 $id = $item['at_id'];
-                return array(
+                return [
                     'checkBox' => $this->checkbox('aktuality[]', $id)
                                        ->render(),
                     'name' => $item['at_jmeno'],
@@ -44,17 +44,17 @@ class Controller_Admin_Aktuality extends Controller_Admin
                         '<a href="/admin/aktuality/edit/' . $id . '">obecné</a>, '
                         . '<a href="/admin/aktuality/foto/' . $id . '">galerie</a>'
                     )
-                );
+                ];
             },
             $data
         );
         $this->render(
             'files/View/Admin/Aktuality/Overview.inc',
-            array(
+            [
                 'data' => $data,
                 'f' => $request->get('f') ?: '',
                 'showMenu' => !TISK
-            )
+            ]
         );
     }
     public function add($request)
@@ -62,13 +62,13 @@ class Controller_Admin_Aktuality extends Controller_Admin
         if (!$request->post()) {
             $this->render(
                 'files/View/Admin/Aktuality/Form.inc',
-                array(
+                [
                     'action' => $request->getAction(),
                     'category' => '',
                     'name' => '',
                     'summary' => '',
                     'text' => ''
-                )
+                ]
             );
             return;
         }
@@ -105,13 +105,13 @@ class Controller_Admin_Aktuality extends Controller_Admin
         if (!$request->post()) {
             $this->render(
                 'files/View/Admin/Aktuality/Form.inc',
-                array(
+                [
                     'action' => $request->getAction(),
                     'category' => $data['at_kat'],
                     'name' => $data['at_jmeno'],
                     'summary' => $data['at_preview'],
                     'text' => $data['at_text']
-                )
+                ]
             );
             return;
         }
@@ -149,22 +149,22 @@ class Controller_Admin_Aktuality extends Controller_Admin
             $this->redirect('/admin/aktuality', 'Články odebrány');
         }
 
-        $data = array();
+        $data = [];
         foreach ($request->get('u') as $id) {
             $item = DBAktuality::getSingleAktualita($id);
-            $data[] = array(
+            $data[] = [
                 'id' => $item['at_id'],
                 'text' => $item['at_jmeno']
-            );
+            ];
         }
         $this->render(
             'files/View/Admin/RemovePrompt.inc',
-            array(
+            [
                 'header' => 'Správa aktualit',
                 'prompt' => 'Opravdu chcete odstranit články:',
                 'returnURI' => $request->getReferer(),
                 'data' => $data
-            )
+            ]
         );
     }
 }

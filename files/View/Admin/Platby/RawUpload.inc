@@ -1,4 +1,4 @@
-<?= $this->render('files/View/Admin/Platby/Navigation.inc', array('uri' => $this->uri)) ?>
+<?= $this->render('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri]) ?>
 <?= $this->subheader('Import plateb') ?>
 
 <div class="container full">

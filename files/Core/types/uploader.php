@@ -1,10 +1,10 @@
 <?php
 class Uploader
 {
-    private $_files = array();
-    private $_refusedFiles = array();
-    private $_savedFiles = array();
-    private $_allowedTypes = array();
+    private $_files = [];
+    private $_refusedFiles = [];
+    private $_savedFiles = [];
+    private $_allowedTypes = [];
     private $_outputDir = '.';
 
     public function __construct()
@@ -32,7 +32,7 @@ class Uploader
         if ($size == 0) {
             return;
         }
-        $this->_files[] = array($tempPath, $name);
+        $this->_files[] = [$tempPath, $name];
     }
 
     public function removeDisallowedFiles()
@@ -63,15 +63,15 @@ class Uploader
     public function sanitizeFilenames()
     {
         foreach ($this->_files as &$file) {
-            $strip = array(
+            $strip = [
                 '~', '`', '!', '@', '#', '$', '%', '^', '&', '*',
                 '(', ')', '_', '=', '+', '[', '{', ']', '}', '\\',
                 '|', ';', ':', '\"', '\'', '&#8216;', '&#8217;',
                 '&#8220;', '&#8221;', '&#8211;', '&#8212;',
                 'â€”', 'â€“', ',', '<', '>', '/', '?'
-            );
+            ];
             $clean = trim(str_replace($strip, '', strip_tags($file[1])));
-            $clean = preg_replace(array('/\s+/', '/\.\./'), array('-', '.'), $clean);
+            $clean = preg_replace(['/\s+/', '/\.\./'], ['-', '.'], $clean);
 
             $file[1] = $clean;
         }

@@ -119,81 +119,81 @@ define('P_ADMIN', 16);
 
 class Settings
 {
-public static $documentTypes = array(
+public static $documentTypes = [
     '1'        => 'Schůze, rady',
     '2'        => 'Soutěže',
     '3'        => 'Tábory',
     '0'        => 'Ostatní'
-);
+];
 
-public static $permissionLevels = array(
+public static $permissionLevels = [
     P_NONE => 'Bez přístupu',
     P_VIEW => 'Zobrazit',
     P_MEMBER => 'Editovat',
     P_OWNED => 'Admin (svoje)',
     P_ADMIN => 'Admin'
-);
+];
 
-public static $permissions = array(
-    'akce' => array(
+public static $permissions = [
+    'akce' => [
         'name' => "Akce",
         'default' => P_MEMBER,
-        P_NONE => 1, P_VIEW => 1, P_MEMBER => 1, P_OWNED => 1, P_ADMIN => 1),
-    'aktuality' => array(
+        P_NONE => 1, P_VIEW => 1, P_MEMBER => 1, P_OWNED => 1, P_ADMIN => 1],
+    'aktuality' => [
         'name' => "Aktuality",
         'default' => P_VIEW,
-        P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1),
-    'dokumenty' => array(
+        P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1],
+    'dokumenty' => [
         'name' => "Dokumenty",
         'default' => P_MEMBER,
-        P_NONE => 1, P_MEMBER => 1, P_OWNED => 1, P_ADMIN => 1),
-    'galerie' => array(
+        P_NONE => 1, P_MEMBER => 1, P_OWNED => 1, P_ADMIN => 1],
+    'galerie' => [
         'name' => "Fotogalerie",
         'default' => P_VIEW,
-        P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1),
-    'konzole' => array(
+        P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1],
+    'konzole' => [
         'name' => "Konzole",
         'default' => P_NONE,
-        P_NONE => 1, P_ADMIN => 1),
-    'nabidka' => array(
+        P_NONE => 1, P_ADMIN => 1],
+    'nabidka' => [
         'name' => "Nabídka",
         'default' => P_MEMBER,
-        P_NONE => 1, P_VIEW => 1, P_MEMBER => 1, P_OWNED => 1, P_ADMIN => 1),
-    'nastenka' => array(
+        P_NONE => 1, P_VIEW => 1, P_MEMBER => 1, P_OWNED => 1, P_ADMIN => 1],
+    'nastenka' => [
         'name' => "Nástěnka",
         'default' => P_VIEW,
-        P_NONE => 1, P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1),
-    'novinky' => array(
+        P_NONE => 1, P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1],
+    'novinky' => [
         'name' => "Novinky",
         'default' => P_VIEW,
-        P_NONE => 1, P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1),
-    'pary' => array(
+        P_NONE => 1, P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1],
+    'pary' => [
         'name' => "Páry",
         'default' => P_VIEW,
-        P_NONE => 1, P_VIEW => 1, P_ADMIN => 1),
-    'platby' => array(
+        P_NONE => 1, P_VIEW => 1, P_ADMIN => 1],
+    'platby' => [
         'name' => "Platby",
         'default' => P_NONE,
-        P_NONE => 1, P_ADMIN => 1),
-    'permissions' => array(
+        P_NONE => 1, P_ADMIN => 1],
+    'permissions' => [
         'name' => "Oprávnění",
         'default' => P_NONE,
-        P_NONE => 1, P_ADMIN => 1),
-    'rozpis' => array(
+        P_NONE => 1, P_ADMIN => 1],
+    'rozpis' => [
         'name' => "Rozpis",
         'default' => P_MEMBER,
-        P_NONE => 1, P_VIEW => 1, P_MEMBER => 1, P_OWNED => 1, P_ADMIN => 1),
-    'skupiny' => array(
+        P_NONE => 1, P_VIEW => 1, P_MEMBER => 1, P_OWNED => 1, P_ADMIN => 1],
+    'skupiny' => [
         'name' => "Skupiny",
         'default' => P_VIEW,
-        P_NONE => 1, P_VIEW => 1, P_ADMIN => 1),
-    'users' => array(
+        P_NONE => 1, P_VIEW => 1, P_ADMIN => 1],
+    'users' => [
         'name' => "Uživatelé",
         'default' => P_VIEW,
-        P_NONE => 1, P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1    ),
-    'main' => array(
+        P_NONE => 1, P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1],
+    'main' => [
         'name' => "Veřejná část",
         'default' => P_VIEW,
-        P_VIEW => 1)
-);
+        P_VIEW => 1]
+    ];
 }

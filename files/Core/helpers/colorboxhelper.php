@@ -16,11 +16,11 @@ class ColorBoxHelper
     {
         return (string) new Tag(
             'div',
-            array(
+            [
                 'class' => 'box',
                 'title' => $this->description,
                 'style' => 'background-color:' . $this->color
-            )
+            ]
         );
     }
 

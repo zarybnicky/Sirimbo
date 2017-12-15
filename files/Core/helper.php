@@ -15,7 +15,7 @@ class Helper
             }
         }
 
-        return call_user_func_array(array(new $class(), $name), $args);
+        return call_user_func_array([new $class(), $name], $args);
     }
 
     private function __construct()

@@ -16,14 +16,14 @@ class PersonHelper
     {
         return (string) new Tag(
             'a',
-            array('href' => '/member/clenove/' . $this->id),
+            ['href' => '/member/clenove/' . $this->id],
             new Tag(
                 'img',
-                array(
+                [
                     'src' => '/style/person-small.png',
                     'alt' => $this->name,
                     'style' => 'margin-bottom:-2px'
-                )
+                ]
             ),
             '&nbsp;' . $this->nameR
         );

@@ -44,11 +44,7 @@ class SubmitHelper
     {
         return (string) new Tag(
             'button',
-            array(
-                'name' => $this->name,
-                'value' => $this->value,
-                'style' => $this->style
-            ),
+            ['name' => $this->name, 'value' => $this->value, 'style' => $this->style],
             $this->text
         );
     }

@@ -52,26 +52,26 @@ class Controller_Admin_Pary extends Controller_Admin
 
         $data = array_map(
             function ($item) {
-                return array(
+                return [
                     'checkBox' => $this->checkbox('pary[]', $item['p_id'])->render(),
                     'fullNameMan' => $item['guy_surname'] . ', ' . $item['guy_name'],
                     'fullNameWoman' => $item['gal'] ? ($item['gal_surname'] . ', ' . $item['gal_name']) : '',
                     'standart' => $item['p_stt_trida'] . ' ' . $item['p_stt_body'] . 'F' . $item['p_stt_finale'],
                     'latina' => $item['p_lat_trida'] . ' ' . $item['p_lat_body'] . 'F' . $item['p_lat_finale'],
                     'hodnoceni' => $item['p_hodnoceni']
-                );
+                ];
             },
             DBPary::getActivePary()
         );
 
         $this->render(
             'files/View/Admin/Pary/Overview.inc',
-            array(
+            [
                 'showMenu' => !TISK,
                 'data' => $data,
                 'usersMen' => DBUser::getUsersByPohlavi('m'),
                 'usersWomen' => DBUser::getUsersByPohlavi('f')
-            )
+            ]
         );
     }
     public function edit($request) {
@@ -83,7 +83,7 @@ class Controller_Admin_Pary extends Controller_Admin
         if (!$request->post()) {
             $this->render(
                 'files/View/Admin/Pary/Form.inc',
-                array(
+                [
                     'fullName' => (
                         $data['guy_name'] . ' ' . $data['guy_surname'] . ' - '
                         . $data['gal_name'] . ' ' . $data['gal_surname']
@@ -94,7 +94,7 @@ class Controller_Admin_Pary extends Controller_Admin
                     'lat_trida' => $data['p_lat_trida'],
                     'lat_body' => $data['p_lat_body'],
                     'lat_finale' => $data['p_lat_finale']
-                )
+                ]
             );
             return;
         }

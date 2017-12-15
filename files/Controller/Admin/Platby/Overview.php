@@ -7,7 +7,7 @@ class Controller_Admin_Platby_Overview extends Controller_Admin_Platby
     }
     public function view($request) {
         $data = DBUser::getUsersWithSkupinaPlatby();
-        $skupiny = array();
+        $skupiny = [];
         $index = 0;
         $currentID = -1;
         $currentKey = 0;
@@ -16,26 +16,26 @@ class Controller_Admin_Platby_Overview extends Controller_Admin_Platby
                 $index = 0;
                 $currentID = $item['s_id'];
                 $currentKey = count($skupiny);
-                $skupiny[$currentKey] = array();
-                $skupiny[$currentKey]['info'] = array(
+                $skupiny[$currentKey] = [];
+                $skupiny[$currentKey]['info'] = [
                     'header' => new Tag(
                         'h3',
-                        array(),
+                        [],
                         $this->colorbox($item['s_color_rgb'], $item['s_description'])->render(),
                         '&nbsp;&nbsp;' . $item['s_name']
                     )
-                );
-                $skupiny[$currentKey]['users'] = array();
+                ];
+                $skupiny[$currentKey]['users'] = [];
             }
-            $skupiny[$currentKey]['users'][] = array(
+            $skupiny[$currentKey]['users'][] = [
                 'index' => ++$index . '.',
                 'fullName' => $this->person($item)->render(),
                 'hasPaid' => new Tag(
                     'span',
-                    array(
+                    [
                         'style' => 'font-weight:bold;'
                         . 'color:' . ($item['pi_id'] ? 'green' : 'red')
-                    ),
+                    ],
                     $item['pi_id'] ? 'ANO' : 'NE'
                 ),
                 'amount' => $item['pi_amount'] == ($item['pc_amount'] * $item['pg_base'])
@@ -43,7 +43,7 @@ class Controller_Admin_Platby_Overview extends Controller_Admin_Platby
                 : ('<span style="font-weight:bold;color:red">'
                    . (int) $item['pi_amount'] . ' Kč</span> ('
                    . (int) ($item['pc_amount'] * $item['pg_base']) . ' Kč)')
-            );
+            ];
         }
         foreach ($skupiny as &$skupina) {
             $skupina['info']['count'] = count($skupina['users']);
@@ -51,10 +51,7 @@ class Controller_Admin_Platby_Overview extends Controller_Admin_Platby
 
         $this->render(
             'files/View/Admin/Platby/Statistics.inc',
-            array(
-                'data' => $skupiny,
-                'uri' => $request->getLiteralURI()
-            )
+            ['data' => $skupiny, 'uri' => $request->getLiteralURI()]
         );
     }
 }

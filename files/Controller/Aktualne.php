@@ -13,7 +13,7 @@ class Controller_Aktualne extends Controller_Abstract
 
         $this->render(
             'files/View/Main/Aktuality/Single.inc',
-            array(
+            [
                 'id' => $data['at_id'],
                 'jmeno' => $data['at_jmeno'],
                 'timestamp' => $data['at_timestamp_add'],
@@ -23,16 +23,16 @@ class Controller_Aktualne extends Controller_Abstract
                 'title_photo_uri' => '/galerie/' . $photo_uri,
                 'title_photo_thumb_uri' => '/galerie/thumbnails/' . $photo_uri,
                 'category' => 'Zprávy',
-                'meta' => array(
-                    array('property' => 'og:title', 'content' => $data['at_jmeno']),
-                    array('property' => 'og:type', 'content' => 'article'),
-                    array('property' => 'og:url', 'content' => 'http://tkolymp.cz/aktualne/' . $data['at_id']),
-                    array('property' => 'og:image', 'content' => 'http://tkolymp.cz/galerie/thumbnails/' . $photo_uri),
-                    array('property' => 'og:site_name', 'TK Olymp'),
-                    array('property' => 'og:description', $data['at_preview'])
-                ),
+                'meta' => [
+                    ['property' => 'og:title', 'content' => $data['at_jmeno']],
+                    ['property' => 'og:type', 'content' => 'article'],
+                    ['property' => 'og:url', 'content' => 'http://tkolymp.cz/aktualne/' . $data['at_id']],
+                    ['property' => 'og:image', 'content' => 'http://tkolymp.cz/galerie/thumbnails/' . $photo_uri],
+                    ['property' => 'og:site_name', 'TK Olymp'],
+                    ['property' => 'og:description', $data['at_preview']]
+                ],
                 'html_title' => $data['at_jmeno']
-            )
+            ]
         );
         return;
     }
@@ -59,10 +59,10 @@ class Controller_Aktualne extends Controller_Abstract
         if (!$data) {
             $this->render(
                 'files/View/Empty.inc',
-                array(
+                [
                     'nadpis' => $nadpis,
                     'notice' => 'Žádné články nejsou k dispozici.'
-                )
+                ]
             );
             return;
         }
@@ -71,7 +71,7 @@ class Controller_Aktualne extends Controller_Abstract
                 $photo = DBGalerie::getSingleFoto($item['at_foto_main']);
                 $photo_uri = $photo ? $photo['gf_path'] : '';
 
-                return array(
+                return [
                     'id'        => $item['at_id'],
                     'jmeno'     => $item['at_jmeno'],
                     'timestamp' => $item['at_timestamp_add'],
@@ -79,16 +79,13 @@ class Controller_Aktualne extends Controller_Abstract
                     'preview'   => $item['at_preview'],
                     'title_photo_uri' => '/galerie/' . $photo_uri,
                     'title_photo_thumb_uri' => '/galerie/thumbnails/' . $photo_uri
-                );
+                ];
             },
             $data
         );
         $this->render(
             'files/View/Main/Aktuality/Overview.inc',
-            array(
-                'nadpis' => $nadpis,
-                'data' => $data
-            )
+            ['nadpis' => $nadpis, 'data' => $data]
         );
     }
 }

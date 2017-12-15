@@ -11,13 +11,13 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
     {
         $this->render(
             'files/View/Admin/Platby/StructureOverview.inc',
-            array(
+            [
                 'data' => $this->getCategories(),
                 'orphanGroupSkupina' => $this->getOrphanGroupSkupina(),
                 'orphanGroupCategory' => $this->getOrphanGroupCategory(),
                 'orphanCategory' => $this->getOrphanCategory(),
                 'uri' => $request->getLiteralURI()
-            )
+            ]
         );
     }
 
@@ -27,26 +27,26 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
             function ($item) {
                 if (strpos($item[0], 'group_') !== false) {
                     $prefix = '/admin/platby/structure/group';
-                    return array(
+                    return [
                         'name' => new Tag(
                             'span',
-                            array('class' => 'big', 'style' => 'text-decoration:underline'),
+                            ['class' => 'big', 'style' => 'text-decoration:underline'],
                             $item[1]['pg_name']
                         ),
                         'buttons' => (
                             $this->editLink($prefix . '/edit/' . $item[1]['pg_id']) .
                             $this->removeLink($prefix . '/remove/' . $item[1]['pg_id'])
                         )
-                    );
+                    ];
                 } else {
                     $prefix = '/admin/platby/structure/category';
-                    return array(
+                    return [
                         'name' => '&nbsp;- ' . $item[1]['pc_name'] . ' (' . $item[1]['pc_symbol'] . ')',
                         'buttons' => (
                             $this->editLink($prefix . '/edit/' . $item[1]['pc_id'])
                             . $this->removeLink($prefix . '/remove/' . $item[1]['pc_id'])
                         )
-                    );
+                    ];
                 }
             },
             parent::getCategoryList()
@@ -58,13 +58,13 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
         $prefix = '/admin/platby/structure/group';
         return array_map(
             function ($item) use ($prefix) {
-                return array(
+                return [
                     'name' => $item['pg_name'],
                     'buttons' => (
                         $this->editLink($prefix .'/edit/' . $item['pg_id'])
                         . $this->removeLink($prefix . '/remove/' . $item['pg_id'])
                     )
-                );
+                ];
             },
             DBPlatbyGroup::getWithoutSkupina()
         );
@@ -75,13 +75,13 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
         $prefix = '/admin/platby/structure/group';
         return array_map(
             function ($item) use ($prefix) {
-                return array(
+                return [
                     'name' => $item['pg_name'],
                     'buttons' => (
                         $this->editLink($prefix .'/edit/' . $item['pg_id'])
                         . $this->removeLink($prefix . '/remove/' . $item['pg_id'])
                     )
-                );
+                ];
             },
             DBPlatbyGroup::getWithoutCategory()
         );
@@ -91,13 +91,13 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
         $prefix = '/admin/platby/structure/category';
         return array_map(
             function ($item) use ($prefix) {
-                return array(
+                return [
                     'name' => $item['pc_name'],
                     'buttons' => (
                         $this->editLink($prefix . '/edit/' . $item['pc_id'])
                         . $this->removeLink($prefix . '/remove/' . $item['pc_id'])
                     )
-                );
+                ];
             },
             DBPlatbyCategory::getOrphan()
         );

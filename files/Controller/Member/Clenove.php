@@ -12,69 +12,62 @@ class Controller_Member_Clenove extends Controller_Member
 
         $this->render(
             'files/View/Member/Clenove/Single.inc',
-            array(
+            [
                 'fullName' => $data['u_prijmeni'] . ', ' . $data['u_jmeno'],
                 'email' => $data['u_email'],
                 'telefon' => $data['u_telefon'],
                 'referer' => $request->getReferer(),
                 'uri' => $request->getLiteralURI()
-            )
+            ]
         );
     }
     public function skupiny($request) {
         $currentID = -1;
         $currentKey = 0;
         $data = DBUser::getUsersWithSkupinaPlatby();
-        $skupiny = array();
+        $skupiny = [];
         foreach ($data as $item) {
             if ($item['s_id'] != $currentID) {
-                $index = 0;
                 $currentID = $item['s_id'];
                 $currentKey = count($skupiny);
-                $skupiny[$currentKey] = array(
+                $skupiny[$currentKey] = [
                     'header' => new Tag(
                         'h3',
-                        array(),
+                        [],
                         $this->colorbox($item['s_color_rgb'], $item['s_description'])->render(),
                         '&nbsp;&nbsp;',
                         $item['s_name']
                     ),
                     'description' => $item['s_description'],
                     'userCount' => 0
-                );
+                ];
             }
             $skupiny[$currentKey]['userCount']++;
         }
         $this->render(
             'files/View/Member/Clenove/SkupinyList.inc',
-            array(
-                'data' => $skupiny,
-                'uri' => $request->getLiteralURI()
-            )
+            ['data' => $skupiny, 'uri' => $request->getLiteralURI()]
         );
     }
     public function seznam($request) {
         $index = 0;
         $data = array_map(
             function ($item) use (&$index) {
-                return array(
-                    'index' => ++$index . '.',
-                    'fullName' => $this->person($item)
-                );
+                return ['index' => ++$index . '.', 'fullName' => $this->person($item)];
             },
             DBUser::getActiveUsers()
         );
         $this->render(
             'files/View/Member/Clenove/UserList.inc',
-            array(
+            [
                 'data' => $data,
                 'uri' => $request->getLiteralURI()
-            )
+            ]
         );
     }
     public function structure($request) {
         $data = DBUser::getUsersWithSkupinaPlatby();
-        $skupiny = array();
+        $skupiny = [];
         $index = 0;
         $currentID = -1;
         $currentKey = 0;
@@ -84,29 +77,26 @@ class Controller_Member_Clenove extends Controller_Member
                 $index = 0;
                 $currentID = $item['s_id'];
                 $currentKey = count($skupiny);
-                $skupiny[$currentKey] = array();
-                $skupiny[$currentKey]['info'] = array(
+                $skupiny[$currentKey] = [];
+                $skupiny[$currentKey]['info'] = [
                     'header' => new Tag(
                         'h3',
-                        array(),
+                        [],
                         $this->colorbox($item['s_color_rgb'], $item['s_description'])->render(),
                         '&nbsp;&nbsp;' . $item['s_name']
                     )
-                );
-                $skupiny[$currentKey]['users'] = array();
+                ];
+                $skupiny[$currentKey]['users'] = [];
             }
-            $skupiny[$currentKey]['users'][] = array(
+            $skupiny[$currentKey]['users'][] = [
                 'index' => ++$index . '.',
                 'fullName' => $this->person($item),
                 'hasPaid' => new Tag(
                     'span',
-                    array(
-                        'style' => 'font-weight:bold;'
-                        . 'color:' . ($item['pi_id'] ? 'green' : 'red')
-                    ),
+                    ['style' => 'font-weight:bold;' . 'color:' . ($item['pi_id'] ? 'green' : 'red')],
                     $item['pi_id'] ? 'ANO' : 'NE'
                 )
-            );
+            ];
         }
 
         $leftCount = 0;
@@ -124,10 +114,7 @@ class Controller_Member_Clenove extends Controller_Member
 
         $this->render(
             'files/View/Member/Clenove/Structure.inc',
-            array(
-                'data' => $skupiny,
-                'uri' => $request->getLiteralURI()
-            )
+            ['data' => $skupiny, 'uri' => $request->getLiteralURI()]
         );
     }
 }

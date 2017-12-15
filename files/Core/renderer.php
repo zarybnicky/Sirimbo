@@ -5,8 +5,8 @@ class Renderer
     protected $vars;
 
     public function __construct() {
-        $this->vars = array();
-        $this->cache = array();
+        $this->vars = [];
+        $this->cache = [];
     }
 
     public function __get($key) {
@@ -29,7 +29,7 @@ class Renderer
         return Helper::invoke($name, $args);
     }
 
-    public function render($name, array $vars = array()) {
+    public function render($name, array $vars = []) {
         array_push($this->cache, $this->vars);
         $this->vars = $vars;
         $file = ROOT . DIRECTORY_SEPARATOR . $name;

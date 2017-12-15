@@ -6,7 +6,7 @@ class Controller_Registrace extends Controller_Abstract
         if (!$request->post()) {
             $this->render(
                 'files/View/Main/Registrace.inc',
-                array(
+                [
                     'username' => '',
                     'pass' => '',
                     'jmeno' => '',
@@ -17,17 +17,17 @@ class Controller_Registrace extends Controller_Abstract
                     'narozeni' => '',
                     'poznamky' => '',
                     'other' => ''
-                )
+                ]
             );
             return;
         }
 
         $narozeni = (string) $this->date('narozeni')->getPost($request);
-        $poznamkyMap = array(
+        $poznamkyMap = [
             'parent' => 'Rodič tanečníka',
             'dancer' => 'Tanečník/tanečníce',
             'other' => $request->post('other')
-        );
+        ];
         $poznamky = $poznamkyMap[$request->post('poznamky')];
 
         $f = new Form();
@@ -35,7 +35,7 @@ class Controller_Registrace extends Controller_Abstract
         $f->checkPassword($request->post('pass'), 'Špatný formát hesla', 'pass');
         $f->checkLength($request->post('jmeno'), 1, 40, 'Špatná délka jména', 'jmeno');
         $f->checkLength($request->post('prijmeni'), 1, 40, 'Špatná délka přijmení', 'prijmeni');
-        $f->checkInArray($request->post('pohlavi'), array('m', 'f'), 'Neplatné pohlaví', 'pohlavi');
+        $f->checkInArray($request->post('pohlavi'), ['m', 'f'], 'Neplatné pohlaví', 'pohlavi');
         $f->checkEmail($request->post('email'), 'Neplatný formát emailu', 'email');
         $f->checkPhone($request->post('telefon'), 'Neplatný formát telefoního čísla', 'telefon');
         $f->checkDate($narozeni, 'Neplatné datum narození', 'narozeni');
@@ -44,7 +44,7 @@ class Controller_Registrace extends Controller_Abstract
             $this->redirect()->setMessage($f->getMessages());
             $this->render(
                 'files/View/Main/Registrace.inc',
-                array(
+                [
                     'username' => $request->post('username') ?: '',
                     'pass' => $request->post('pass') ?: '',
                     'jmeno' => $request->post('jmeno') ?: '',
@@ -55,7 +55,7 @@ class Controller_Registrace extends Controller_Abstract
                     'narozeni' => $request->post('narozeni') ?: '',
                     'poznamky' => $request->post('poznamky') ?: '',
                     'other' => $request->post('other') ?: ''
-                )
+                ]
             );
             return;
         }

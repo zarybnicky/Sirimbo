@@ -20,11 +20,7 @@ class HiddenHelper
     {
         return (string) new Tag(
             'input',
-            array(
-                'type' => 'hidden',
-                'name' => $this->name,
-                'value' => $this->value
-            )
+            ['type' => 'hidden', 'name' => $this->name, 'value' => $this->value]
         );
     }
 

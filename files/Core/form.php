@@ -14,8 +14,8 @@ class Form
 
     public function __construct() {
         $this->_valid = true;
-        $this->_messages = array();
-        $this->_fields = array();
+        $this->_messages = [];
+        $this->_fields = [];
     }
     public function isValid() {
         return $this->_valid;

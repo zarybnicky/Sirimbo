@@ -1,4 +1,4 @@
-<?= $this->render('files/View/Admin/Platby/Navigation.inc', array('uri' => $this->uri)) ?>
+<?= $this->render('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri]) ?>
 <?= $this->subheader($this->action == 'add' ? 'Přidat kategorii' : 'Upravit kategorii') ?>
 
 <div class="container full">
@@ -7,8 +7,8 @@
     ->showHeader(false)
     ->column('desc', '', 'r')
     ->column('value', 'Hodnota')
-    ->data(array(
-        array(
+    ->data([
+        [
             'desc' => 'Typ:',
             'value' => (
                 $this->radio('type', '0')
@@ -19,17 +19,17 @@
                      ->set($this->type == '1')
                      ->label('Členské příspěvky')
             )
-        ), array(
+        ], [
             'desc' => 'Jméno:',
             'value' => '<input type="text" name="name" value="' . $this->name . '"/>'
-        ), array(
+        ], [
             'desc' => 'Popis: ',
             'value' => '<textarea rows="10" cols="50" name="description">' . $this->description . '</textarea>'
-        ), array(
+        ], [
             'desc' => 'Násobitel částky: ',
             'value' => '<input type="text" name="base" value="' . $this->base . '"/>'
-        )
-    )) ?>
+        ]
+    ]) ?>
     <br>
     <h3>Specifické symboly</h3>
     <?= $this->table()

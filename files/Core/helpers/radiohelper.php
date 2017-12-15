@@ -46,13 +46,13 @@ class RadioHelper
     {
         $radio = new Tag(
             'input',
-            array(
+            [
                 'type' => 'radio',
                 'name' => $this->name,
                 'value' => $this->value,
                 'checked' => $this->state,
                 'readonly' => $this->readonly
-            )
+            ]
         );
         if (!$this->label) {
             return (string) $radio;

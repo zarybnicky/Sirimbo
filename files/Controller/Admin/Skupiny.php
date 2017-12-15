@@ -21,15 +21,13 @@ class Controller_Admin_Skupiny extends Controller_Admin
             }
             $this->redirect(
                 '/admin/skupiny/remove?'
-                . http_build_query(
-                    array('u' => $request->post('data'))
-                )
+                . http_build_query(['u' => $request->post('data')])
             );
             break;
         }
         $data = array_map(
             function ($item) {
-                return array(
+                return [
                     'buttons' => (
                         $this->editLink('/admin/skupiny/edit/' . $item['s_id'])
                         . $this->removeLink('/admin/skupiny/remove/' . $item['s_id'])
@@ -37,16 +35,13 @@ class Controller_Admin_Skupiny extends Controller_Admin
                     'colorBox' => $this->colorbox($item['s_color_rgb'], $item['s_description'])
                                        ->render(),
                     'name' => $item['s_name']
-                );
+                ];
             },
             DBSkupiny::get()
         );
         $this->render(
             'files/View/Admin/Skupiny/Overview.inc',
-            array(
-                'showMenu' => !TISK,
-                'data' => $data
-            )
+            ['showMenu' => !TISK, 'data' => $data]
         );
     }
 
@@ -106,7 +101,7 @@ class Controller_Admin_Skupiny extends Controller_Admin
             },
             DBSkupiny::getSingleWithGroups($id)
         );
-        $groupsNew = $request->post('group') ?: array();
+        $groupsNew = $request->post('group') ?: [];
         foreach (array_diff($groupsOld, $groupsNew) as $removed) {
             DBSkupiny::removeChild($id, $removed);
         }
@@ -145,24 +140,19 @@ class Controller_Admin_Skupiny extends Controller_Admin
                     'Nemůžu odstranit skupinu s připojenými kategoriemi! '
                     . new Tag(
                         'form',
-                        array('action' => '', 'mthod' => 'post'),
+                        ['action' => '', 'mthod' => 'post'],
                         $this->submit('Odstranit spojení?')->data('action', 'unlink')
                     )
                 );
             }
             $this->render(
                 'files/View/Admin/RemovePrompt.inc',
-                array(
+                [
                     'header' => 'Správa skupin',
                     'prompt' => 'Opravdu chcete odstranit skupinu?',
                     'returnURI' => $request->getReferer(),
-                    'data' => array(
-                        array(
-                            'id' => $data['s_id'],
-                            'text' => $data['s_name']
-                        )
-                    )
-                )
+                    'data' => [['id' => $data['s_id'], 'text' => $data['s_name']]]
+                ]
             );
             return;
         }
@@ -185,7 +175,7 @@ class Controller_Admin_Skupiny extends Controller_Admin
 
         $groups = array_map(
             function ($item) use ($groupsSelected) {
-                return array(
+                return [
                     'buttons' => $this->checkbox('group[]', $item['pg_id'])
                                       ->set(isset($groupsSelected[$item['pg_id']]))
                                       ->render(),
@@ -194,7 +184,7 @@ class Controller_Admin_Skupiny extends Controller_Admin
                                : 'Běžné platby'),
                     'name' => $item['pg_name'],
                     'base' => $item['pg_base']
-                );
+                ];
             },
             DBPlatbyGroup::getGroups()
         );
@@ -202,7 +192,7 @@ class Controller_Admin_Skupiny extends Controller_Admin
         $action = $request->getAction();
         $this->render(
             'files/View/Admin/Skupiny/Form.inc',
-            array(
+            [
                 'id' => $id,
                 'name' => $request->post('name') ?: $data ? $data['s_name'] : '',
                 'color' => $request->post('color') ?: $data ? $data['s_color_rgb'] : '',
@@ -210,19 +200,14 @@ class Controller_Admin_Skupiny extends Controller_Admin
                 'action' => $action,
                 'header' => $action == 'add' ? 'Přidat skupinu' : 'Upravit skupinu',
                 'groups' => $groups
-            )
+            ]
         );
     }
 
     private function getLinkedSkupinaObjects($id)
     {
         $group = DBSkupiny::getSingleWithGroups($id);
-
-        if (empty($group)) {
-            return array();
-        } else {
-            return array('groups' => $group);
-        }
+        return $group ? ['groups' => $group] : [];
     }
     private function checkPost($request)
     {

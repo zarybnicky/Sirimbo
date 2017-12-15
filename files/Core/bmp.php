@@ -18,14 +18,14 @@ class BMP
             case 24:
                 return str_split($row, $bps/8);
             case 8:
-                $out = array();
+                $out = [];
                 $count = strlen($row);
                 for ($i=0; $i<$count; $i++) {
                     $out[] = $palette[    ord($row[$i])     ];
                 }
                 return $out;
             case 4:
-                $out = array();
+                $out = [];
                 $count = strlen($row);
                 for ($i=0; $i<$count; $i++) {
                     $roww = ord($row[$i]);
@@ -34,7 +34,7 @@ class BMP
                 }
                 return $out;
             case 1:
-                $out = array();
+                $out = [];
                 $count = strlen($row);
                 for ($i=0; $i<$count; $i++) {
                     $roww = ord($row[$i]);
@@ -172,7 +172,7 @@ class BMP
             die('Not a valid bmp file');
         }
 
-        if (!in_array($header['bits_per_pixel'], array(24, 32, 8, 4, 1))) {
+        if (!in_array($header['bits_per_pixel'], [24, 32, 8, 4, 1])) {
             die('Only 1, 4, 8, 24 and 32 bit BMP images are supported');
         }
 
@@ -196,7 +196,7 @@ class BMP
                 imagealphablending($img, false);
                 imagesavealpha($img, true);
             }
-            $palette = array();
+            $palette = [];
         }
 
         //read pixels

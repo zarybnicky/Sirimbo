@@ -1,10 +1,10 @@
 <?php
-return array(
-    array(
+return [
+    [
         'Pro členy',
         '/member',
         include SETTINGS . '/menu/member.inner.php',
-        array(),
+        [],
         true
-    )
-);
+    ]
+];

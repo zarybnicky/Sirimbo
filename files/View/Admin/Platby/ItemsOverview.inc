@@ -1,4 +1,4 @@
-<?= $this->render('files/View/Admin/Platby/Navigation.inc', array('uri' => $this->uri)) ?>
+<?= $this->render('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri]) ?>
 <?= $this->subheader('Jednotlivé platby') ?>
 
 <div class="container full">
@@ -51,7 +51,7 @@ if (!TISK) {
         ->content('Upravit', 'edit', true)
         ->content('Odebrat', 'remove', true);
 }
-if ($this->data == array()) {
+if ($this->data == []) {
     echo $this->notice('Žádné takové platby');
     return;
 }

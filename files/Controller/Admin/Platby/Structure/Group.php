@@ -11,10 +11,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
     {
         $this->render(
             'files/View/Admin/Platby/StructureGroupOverview.inc',
-            array(
-                'data' => $this->getGroups(),
-                'uri' => $request->getLiteralURI()
-            )
+            ['data' => $this->getGroups(), 'uri' => $request->getLiteralURI()]
         );
     }
 
@@ -22,14 +19,14 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
     {
         return array_map(
             function ($item) {
-                return array(
+                return [
                     'name' => $item['pg_name'],
                     'type' => $item['pg_type'] ? 'Členské příspěvky' : 'Běžné platby',
                     'buttons' => (
                         $this->editLink('/admin/platby/structure/group/edit/' . $item['pg_id'])
                         . $this->removeLink('/admin/platby/structure/group/remove/' . $item['pg_id'])
                     )
-                );
+                ];
             },
             DBPlatbyGroup::getGroups()
         );
@@ -54,10 +51,10 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
         );
         $insertId = DBPlatbyGroup::getInsertId();
 
-        foreach ($request->post('category') ?: array() as $item) {
+        foreach ($request->post('category') ?: [] as $item) {
             DBPlatbyGroup::addChild($insertId, $item);
         }
-        foreach ($request->post('skupiny') ?: array() as $item) {
+        foreach ($request->post('skupiny') ?: [] as $item) {
             DBSkupiny::addChild($item, $insertId);
         }
 
@@ -104,7 +101,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
             },
             DBPlatbyGroup::getSingleWithCategories($id)
         );
-        $categoryNew = $request->post('category') ?: array();
+        $categoryNew = $request->post('category') ?: [];
         foreach (array_diff($categoryOld, $categoryNew) as $removed) {
             DBPlatbyGroup::removeChild($id, $removed);
         }
@@ -118,7 +115,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
             },
             DBPlatbyGroup::getSingleWithSkupiny($id)
         );
-        $skupinyNew = $request->post('skupiny') ?: array();
+        $skupinyNew = $request->post('skupiny') ?: [];
         foreach (array_diff($skupinyOld, $skupinyNew) as $removed) {
             DBSkupiny::removeChild($removed, $id);
         }
@@ -171,19 +168,19 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
                     'Nemůžu odstranit kategorii s připojenými skupinami nebo specifickými symboly! '
                     . new Tag(
                         'form',
-                        array('action' => '', 'method' => 'post'),
+                        ['action' => '', 'method' => 'post'],
                         $this->submit('Odstranit spojení?')->data('action', 'unlink')
                     )
                 );
             }
             $this->render(
                 'files/View/Admin/Platby/StructureGroupRemove.inc',
-                array(
+                [
                     'id' => $id,
                     'name' => $data['pg_name'],
                     'referer' => $request->getReferer(),
                     'uri' => $request->getLiteralURI()
-                )
+                ]
             );
             return;
         }
@@ -200,9 +197,9 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
         $sku = DBPlatbyGroup::getSingleWithSkupiny($id);
 
         if (empty($cat) && empty($sku)) {
-            return array();
+            return [];
         } else {
-            return array('categories' => $cat, 'skupiny' => $sku);
+            return ['categories' => $cat, 'skupiny' => $sku];
         }
     }
 
@@ -219,7 +216,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
         );
         $categories = array_map(
             function ($item) use ($categoriesSelected, $data) {
-                return array(
+                return [
                     'buttons' => $this->checkbox('category[]', $item['pc_id'])
                                       ->set(isset($categoriesSelected[$item['pc_id']]))
                                       ->render(),
@@ -231,7 +228,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
                     'usePrefix' => '&nbsp;' . ($item['pc_use_prefix'] ? '&#10003;' : '&#10799;'),
                     'useBase' => '&nbsp;' . ($item['pc_use_base'] ? '&#10003;' : '&#10799;'),
                     'archive' => '&nbsp;' . ($item['pc_archive'] ? '&#10003;' : '&#10799;')
-                );
+                ];
             },
             DBPlatbyCategory::get(false)
         );
@@ -246,20 +243,20 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
         );
         $skupiny = array_map(
             function ($item) use ($skupinySelected) {
-                return array(
+                return [
                     'buttons' => $this->checkbox('skupiny[]', $item['s_id'])
                                       ->set(isset($skupinySelected[$item['s_id']]))
                                       ->render(),
                     'name' => $this->colorbox($item['s_color_rgb'], $item['s_description'])
                     . '&nbsp;' . $item['s_name']
-                );
+                ];
             },
             DBSkupiny::get()
         );
 
         $this->render(
             'files/View/Admin/Platby/StructureGroupForm.inc',
-            array(
+            [
                 'id' => $id,
                 'action' => $action,
                 'category' => $categories,
@@ -270,12 +267,12 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
                 'description' => $request->post('description'),
                 'base' => $request->post('base'),
                 'uri' => $request->getLiteralURI()
-            )
+            ]
         );
     }
     protected function checkPost($request) {
         $f = new Form();
-        $f->checkInArray($request->post('type'), array('0', '1'), 'Neplatný typ kategorie');
+        $f->checkInArray($request->post('type'), ['0', '1'], 'Neplatný typ kategorie');
         $f->checkNotEmpty($request->post('name'), 'Zadejte nějaký název platby');
         $f->checkNumeric($request->post('base'), 'Násobitel musí být zadán pouze čisly');
 

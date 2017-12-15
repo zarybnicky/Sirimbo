@@ -1,87 +1,17 @@
 <?php
-return array(
-    array(
-        'Uživatelé',
-        '/admin/users',
-        array(),
-        array('users', P_OWNED)
-    ),
-    array(
-        'Skupiny',
-        '/admin/skupiny',
-        array(),
-        array('skupiny', P_OWNED)
-    ),
-    array(
-        'Platby',
-        '/admin/platby',
-        array(),
-        array('platby', P_OWNED)
-    ),
-    array(
-        'Páry',
-        '/admin/pary',
-        array(),
-        array('pary', P_OWNED)
-    ),
-    array(
-        'Články',
-        '/admin/aktuality',
-        array(),
-        array('aktuality', P_OWNED)
-    ),
-    array(
-        'Nástěnka',
-        '/admin/nastenka',
-        array(),
-        array('nastenka', P_OWNED)
-    ),
-    array(
-        'Rozpis',
-        '/admin/rozpis',
-        array(),
-        array('rozpis', P_OWNED)
-    ),
-    array(
-        'Nabídka',
-        '/admin/nabidka',
-        array(),
-        array('nabidka', P_OWNED)
-    ),
-    array(
-        'Akce',
-        '/admin/akce',
-        array(),
-        array('akce', P_OWNED)
-    ),
-    array(
-        'Galerie',
-        '/admin/galerie',
-        array(),
-        array('galerie', P_OWNED)
-    ),
-    array(
-        'Video',
-        '/admin/video',
-        array(),
-        array('aktuality', P_OWNED)
-    ),
-    array(
-        'Dokumenty',
-        '/admin/dokumenty',
-        array(),
-        array('dokumenty', P_OWNED)
-    ),
-    array(
-        'Oprávnění',
-        '/admin/permissions',
-        array(),
-        array('permissions', P_OWNED)
-    ),
-    array(
-        'Konzole',
-        '/admin/konzole',
-        array(),
-        array('konzole', P_OWNED)
-    )
-);
+return [
+    ['Uživatelé', '/admin/users', [], ['users', P_OWNED]],
+    ['Skupiny', '/admin/skupiny', [], ['skupiny', P_OWNED]],
+    ['Platby', '/admin/platby', [], ['platby', P_OWNED]],
+    ['Páry', '/admin/pary', [], ['pary', P_OWNED]],
+    ['Články', '/admin/aktuality', [], ['aktuality', P_OWNED]],
+    ['Nástěnka', '/admin/nastenka', [], ['nastenka', P_OWNED]],
+    ['Rozpis', '/admin/rozpis', [], ['rozpis', P_OWNED]],
+    ['Nabídka', '/admin/nabidka', [],['nabidka', P_OWNED]],
+    ['Akce', '/admin/akce', [], ['akce', P_OWNED]],
+    ['Galerie', '/admin/galerie', [], ['galerie', P_OWNED]],
+    ['Video', '/admin/video', [], ['aktuality', P_OWNED]],
+    ['Dokumenty', '/admin/dokumenty', [], ['dokumenty', P_OWNED]],
+    ['Oprávnění', '/admin/permissions', [], ['permissions', P_OWNED]],
+    ['Konzole', '/admin/konzole', [], ['konzole', P_OWNED]],
+];

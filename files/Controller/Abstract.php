@@ -20,7 +20,7 @@ abstract class Controller_Abstract implements Controller_Interface
         );
     }
 
-    public function render($filename, array $vars = array(), $standalone = false) {
+    public function render($filename, array $vars = [], $standalone = false) {
         $renderer = new Renderer();
         $content = $renderer->render($filename, $vars);
 
@@ -29,11 +29,11 @@ abstract class Controller_Abstract implements Controller_Interface
             return;
         }
 
-        $args = array(
+        $args = [
             'navbar' => $this->navbar(),
-            'meta' => array(),
+            'meta' => [],
             'html_title' => ''
-        );
+        ];
         if (isset($vars['sidebar'])) {
             $args['sidebar'] = $vars['sidebar'];
         }

@@ -20,11 +20,11 @@ class Controller_Admin_Konzole extends Controller_Admin
         }
         echo (string) new Tag(
             'form',
-            array('action' => '', 'method' => 'post'),
+            ['action' => '', 'method' => 'post'],
             'Kód:<br/>',
             new Tag(
                 'textarea',
-                array('name' => 'code', 'rows' => 10, 'cols' => 10),
+                ['name' => 'code', 'rows' => 10, 'cols' => 10],
                 $request->post('code') ?: ''
             ),
             $this->submit('Zpracovat')->render()

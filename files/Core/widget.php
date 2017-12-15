@@ -1,12 +1,12 @@
 <?php
 class Widget extends Tree
 {
-    protected $stylesheets = array();
-    protected $scripts = array();
+    protected $stylesheets = [];
+    protected $scripts = [];
 
-    public function __construct(array $attributes = array(), $child = array())
+    public function __construct(array $attributes = [], $child = [])
     {
-        $children = array();
+        $children = [];
         array_walk_recursive(
             (array_slice(func_get_args(), 1)),
             function ($a) use (&$children) {
@@ -50,7 +50,7 @@ class Widget extends Tree
 
     public function addStylesheet(array $attributes, $source = '')
     {
-        $attributes = array_merge(array('rel' => 'stylesheet'), $attributes);
+        $attributes = array_merge(['rel' => 'stylesheet'], $attributes);
         $this->stylesheets[] = new Tag('style', $attributes, $source);
     }
 
@@ -66,9 +66,9 @@ class Widget extends Tree
 
     public function renderToString()
     {
-        $result = array($this->render());
-        $pre = array();
-        $post = array();
+        $result = [$this->render()];
+        $pre = [];
+        $post = [];
         $this->traverse(
             function ($val, $x) use (&$pre, &$post) {
                 if ($x instanceof self) {
@@ -89,7 +89,7 @@ class Widget extends Tree
     protected function renderChild($element)
     {
         $result = '';
-        $stack = array($element);
+        $stack = [$element];
         while ($stack) {
             $x = array_pop($stack);
             while ($x instanceof self) {

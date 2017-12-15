@@ -20,7 +20,7 @@ class Controller_Member_Profil extends Controller_Member
         if (!$request->post()) {
             $this->render(
                 'files/View/Member/Profil/PersonalData.inc',
-                array(
+                [
                     'login' => User::getUserName(),
                     'group' => $data['u_group'],
                     'lock' => $data['u_lock'],
@@ -31,7 +31,7 @@ class Controller_Member_Profil extends Controller_Member
                     'telefon' => $data['u_telefon'],
                     'narozeni' => $data['u_narozeni'],
                     'poznamky' => $data['u_poznamky']
-                )
+                ]
             );
             return;
         }
@@ -40,7 +40,7 @@ class Controller_Member_Profil extends Controller_Member
             $this->redirect()->setMessage($f->getMessages());
             $this->render(
                 'files/View/Member/Profil/PersonalData.inc',
-                array(
+                [
                     'login' => $request->post('login'),
                     'group' => $request->post('group'),
                     'lock' => $request->post('lock'),
@@ -50,7 +50,7 @@ class Controller_Member_Profil extends Controller_Member
                     'telefon' => $request->post('telefon'),
                     'narozeni' => $request->post('narozeni'),
                     'poznamky' => $request->post('poznamky')
-                )
+                ]
             );
             return;
         }
@@ -94,7 +94,7 @@ class Controller_Member_Profil extends Controller_Member
 
     public function platby($request)
     {
-        $groupsOut = array();
+        $groupsOut = [];
         $groups = DBSkupiny::getSingleWithCategories(User::getSkupina());
         $currentGroup = 0;
         foreach ($groups as $row) {
@@ -102,12 +102,12 @@ class Controller_Member_Profil extends Controller_Member
                 continue;
             }
             if ($currentGroup != $row['pg_id']) {
-                $groupsOut[] = array(
+                $groupsOut[] = [
                     'name' => new Tag(
                         'span',
-                        array('class' => 'big', 'style' => 'text-decoration:underline'),
+                        ['class' => 'big', 'style' => 'text-decoration:underline'],
                         $row['pg_name']
-                    ),
+                    ],
                     'type' => (!$row['pg_type']
                                ? 'Ostatní platby'
                                : 'Členské příspěvky'),
@@ -118,7 +118,7 @@ class Controller_Member_Profil extends Controller_Member
                 );
                 $currentGroup = $row['pg_id'];
             }
-            $groupsOut[] = array(
+            $groupsOut[] = [
                 'name' => $row['pc_name'],
                 'type' => '',
                 'symbol' => $row['pc_symbol'],
@@ -127,19 +127,19 @@ class Controller_Member_Profil extends Controller_Member
                 'validRange' => ((new Date($row['pc_valid_from']))->getDate(Date::FORMAT_SIMPLIFIED) .
                     ((new Date($row['pc_valid_to']))->isValid() ?
                         (' - ' . (new Date($row['pc_valid_to']))->getDate(Date::FORMAT_SIMPLIFIED)) : ''))
-            );
+            ];
         }
         $skupina = User::getSkupinaData();
         $this->render(
             'files/View/Member/Profil/Platby.inc',
-            array(
+            [
                 'colorBox' => $this->colorbox($skupina['s_color_rgb'], $skupina['s_description']),
                 'skupinaData' => $skupina['s_name'],
                 'varSymbol' => User::varSymbol(User::getUserID()),
                 'zaplacenoText' => User::getZaplaceno() ? 'zaplaceno' : 'nezaplaceno!',
-                'platby' => array(),
+                'platby' => [],
                 'platbyGroups' => $groupsOut
-            )
+            ]
         );
     }
 
@@ -168,7 +168,7 @@ class Controller_Member_Profil extends Controller_Member
             );
             $f->checkInArray(
                 $request->post('pohlavi'),
-                array('m', 'f'),
+                ['m', 'f'],
                 'Neplatné pohlaví',
                 'pohlavi'
             );

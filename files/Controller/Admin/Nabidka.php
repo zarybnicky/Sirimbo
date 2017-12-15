@@ -86,7 +86,7 @@ class Controller_Admin_Nabidka extends Controller_Admin
 
         $data = array_map(
             function ($item) {
-                return array(
+                return [
                     'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
                     'date' => (
                         formatDate($item['n_od']) .
@@ -104,16 +104,13 @@ class Controller_Admin_Nabidka extends Controller_Admin
                              ->render()
                     ),
                     'checkBox' => $this->checkbox('nabidka[]', $item['n_id'])->render()
-                );
+                ];
             },
             $data
         );
         $this->render(
             'files/View/Admin/Nabidka/Overview.inc',
-            array(
-                'showMenu' => !TISK,
-                'data' => $data
-            )
+            ['showMenu' => !TISK, 'data' => $data]
         );
     }
     public function add($request)
@@ -230,11 +227,11 @@ class Controller_Admin_Nabidka extends Controller_Admin
         if ($isAdmin) {
             $treneri = DBUser::getUsersByPermission('nabidka', P_OWNED);
         } else {
-            $treneri = array(DBUser::getUserData(User::getUserID()));
+            $treneri = [DBUser::getUserData(User::getUserID())];
         }
         $this->render(
             'files/View/Admin/Nabidka/Form.inc',
-            array(
+            [
                 'header' => ($request->getAction() == 'add'
                              ? 'Přidat nabídku'
                              : 'Upravit nabídku'),
@@ -259,7 +256,7 @@ class Controller_Admin_Nabidka extends Controller_Admin
                               ?: $data ? $data['n_visible'] : false),
                 'lock' => ($request->post('lock')
                            ?: $data ? $data['n_lock'] : '')
-            )
+            ]
         );
         return;
     }

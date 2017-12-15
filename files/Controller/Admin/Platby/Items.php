@@ -20,7 +20,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             if (is_array($request->post('data'))) {
                 $this->redirect(
                     '/admin/platby/items/remove?'
-                    . http_build_query(array('u' => $request->post('data')))
+                    . http_build_query(['u' => $request->post('data')])
                 );
             }
             break;
@@ -28,7 +28,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         $data = $this->getData($request);
         $this->render(
             'files/View/Admin/Platby/ItemsOverview.inc',
-            array(
+            [
                 'users' => DBUser::getUsers(),
                 'categories' => $this->getCategories(),
                 'data' => $data,
@@ -36,7 +36,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
                 'user' => $request->get('user') ?: '',
                 'category' => $request->get('category') ?: '',
                 'date' => $request->get('date') ?: ''
-            )
+            ]
         );
     }
     public function add($request)
@@ -112,28 +112,28 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             }
             $this->redirect('/admin/platby/items', 'Platby odebrány');
         }
-        $data = array();
+        $data = [];
         foreach ($request->get('u') as $id) {
             $item = DBPlatbyItem::getSingle($id, true);
-            $data[] = array(
+            $data[] = [
                 'id' => $item['pi_id'],
                 'text' => $item['u_jmeno'] . ' ' . $item['u_prijmeni']
                     . ' - ' . $item['pc_name']
-            );
+            ];
         }
         $this->render(
             'files/View/Admin/RemovePrompt.inc',
-            array(
+            [
                 'header' => 'Správa plateb',
                 'prompt' => 'Opravdu chcete odstranit platby:',
                 'returnURI' => $request->getReferer(),
                 'data' => $data
-            )
+            ]
         );
     }
     private function displayForm($id, $request)
     {
-        $raw = array();
+        $raw = [];
         if (
             $id &&
             ($item = DBPlatbyItem::getSingle($id)) &&
@@ -141,17 +141,14 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         ) {
             $data = unserialize($data['pr_raw']);
             foreach ($data as $key => $value) {
-                $raw[] = array(
-                    'column' => $key,
-                    'value' => $value
-                );
+                $raw[] = ['column' => $key, 'value' => $value];
             }
         }
         $users = $this->getUsers();
         $categories = $this->getCategories();
         $this->render(
             'files/View/Admin/Platby/ItemsForm.inc',
-            array(
+            [
                 'action' => $request->getAction(),
                 'referer' => $request->getReferer(),
                 'id' => $id,
@@ -164,7 +161,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
                 'specific' => $request->post('specific') ?: '',
                 'prefix' => $request->post('prefix') ?: '',
                 'uri' => $request->getLiteralURI()
-            )
+            ]
         );
     }
     private function getCategories()
@@ -189,7 +186,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
     }
     private function getData($request)
     {
-        $filter = array();
+        $filter = [];
         if ($request->get('user') && is_numeric($request->get('user'))) {
             $filter['u_id'] = $request->get('user');
         }
@@ -201,17 +198,17 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         $dateHelper = $this->date('date')->range()->textBox();
         $date = $dateHelper->getPostRange($request);
 
-        $data = DBPlatbyItem::get(true, $filter, array('pi_date DESC'), $date);
+        $data = DBPlatbyItem::get(true, $filter, ['pi_date DESC'], $date);
 
         return array_map(
             function ($item) {
-                return array(
+                return [
                     'checkBox' => $this->checkbox('data[]', $item['pi_id'])->render(),
                     'fullName' => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
                     'category' => $item['pc_name'],
                     'date' => (new Date($item['pi_date']))->getDate(Date::FORMAT_SIMPLE_SPACED),
                     'amount' => $item['pi_amount'] . 'Kč'
-                );
+                ];
             },
             $data
         );

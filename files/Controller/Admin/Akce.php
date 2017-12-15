@@ -21,9 +21,7 @@ class Controller_Admin_Akce extends Controller_Admin
             } else {
                 $this->redirect(
                     '/admin/akce/remove?' .
-                    http_build_query(
-                        array('u' => $request->post('akce'))
-                    )
+                    http_build_query(['u' => $request->post('akce')])
                 );
             }
             break;
@@ -121,22 +119,22 @@ class Controller_Admin_Akce extends Controller_Admin
             return;
         }
 
-        $data = array();
+        $data = [];
         foreach ($request->get('u') as $id) {
             $item = DBAkce::getSingleAkce($id);
-            $data[] = array(
+            $data[] = [
                 'id' => $item['a_id'],
                 'text' => $item['a_jmeno']
-            );
+            ];
         }
         $this->render(
             'files/View/Admin/RemovePrompt.inc',
-            array(
+            [
                 'header' => 'Správa akcí',
                 'prompt' => 'Opravdu chcete odstranit akce:',
                 'returnURI' => $request->getReferer(),
                 'data' => $data
-            )
+            ]
         );
     }
 
@@ -144,7 +142,7 @@ class Controller_Admin_Akce extends Controller_Admin
     {
         $data = array_map(
             function ($item) {
-                return array(
+                return [
                     'checkBox' => $this->checkbox('akce[]', $item['a_id'])->render(),
                     'name' => $item['a_jmeno'],
                     'date' => (
@@ -161,40 +159,38 @@ class Controller_Admin_Akce extends Controller_Admin
                         . '<a href="/admin/akce/detail/' . $item['a_id'] . '">účastníci</a>, '
                         . '<a href="/admin/akce/dokumenty/' . $item['a_id'] . '">dokumenty</a>'
                     )
-                );
+                ];
             },
             DBAkce::getWithItemCount()
         );
 
         $this->render(
             'files/View/Admin/Akce/Overview.inc',
-            array(
-               'data' => $data
-            )
+            ['data' => $data]
         );
     }
 
-    private function displayForm($request, $data = array())
+    private function displayForm($request, $data = [])
     {
         if ($data) {
             $dokumenty = array_map(
                 function ($item) {
-                    return array(
+                    return [
                         'id' => $item['d_id'],
                         'name' => $item['d_name']
-                    );
+                    ];
                 },
                 DBDokumenty::getMultipleById(
                     array_filter(explode(',', $data['a_dokumenty']))
                 )
             );
         } else {
-            $dokumenty = array();
+            $dokumenty = [];
         }
 
         $this->render(
             'files/View/Admin/Akce/Form.inc',
-            array(
+            [
                 'dokumenty' => $dokumenty,
                 'header' => $request->getAction() == 'add' ? 'Přidat uživatele' : 'Upravit uživatele',
                 'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit',
@@ -207,7 +203,7 @@ class Controller_Admin_Akce extends Controller_Admin
                 'kapacita' => $request->post('kapacita') ?: $data ? $data['a_kapacita'] : '',
                 'lock' => $request->post('lock') ?: $data ? $data['a_lock'] : '',
                 'visible' => $request->post('visible') ?: $data ? $data['a_visible'] : ''
-            )
+            ]
         );
     }
 
@@ -247,6 +243,6 @@ class Controller_Admin_Akce extends Controller_Admin
         }
         $form->checkNumeric($request->post('kapacita'), 'Kapacita musí být zadána číselně', 'kapacita');
 
-        return $form->isValid() ? array() : $form;
+        return $form->isValid() ? [] : $form;
     }
 }

@@ -18,10 +18,10 @@ class Controller_Member_Nastenka extends Controller_Member
         if (empty($data)) {
             $this->render(
                 'files/View/Empty.inc',
-                array(
+                [
                     'nadpis' => 'Upozornění',
                     'notice' => 'Žádná upozornění nejsou k dispozici'
-                )
+                ]
             );
             return;
         }
@@ -37,7 +37,7 @@ class Controller_Member_Nastenka extends Controller_Member
                     },
                     DBNastenka::getNastenkaSkupiny($item['up_id'])
                 );
-                return array(
+                return [
                     'id' => $item['up_id'],
                     'nadpis' => $item['up_nadpis'],
                     'canEdit' => Permissions::check('nastenka', P_OWNED, $item['up_kdo']),
@@ -45,17 +45,17 @@ class Controller_Member_Nastenka extends Controller_Member
                     'addedBy' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
                     'addedTimestamp' => formatTimestamp($item['up_timestamp_add']),
                     'text' => stripslashes($item['up_text'])
-                );
+                ];
             },
             $data
         );
 
         $this->render(
             'files/View/Member/Nastenka.inc',
-            array(
+            [
                 'data' => $data,
                 'navigation' => $pager->getNavigation($request->get())
-            )
+            ]
         );
     }
 }

@@ -5,7 +5,7 @@ class Tree
     protected $value;
     protected $children;
 
-    public function __construct($name, $value, $children = array())
+    public function __construct($name, $value, $children = [])
     {
         $this->name = $name;
         $this->value = $value;
@@ -47,7 +47,7 @@ class Tree
 
     public function addAt($n, Tree $element)
     {
-        array_splice($this->children, $n, 0, array($element));
+        array_splice($this->children, $n, 0, [$element]);
     }
 
     public function removeAt($n)
@@ -62,7 +62,7 @@ class Tree
 
     public function traverse($fn)
     {
-        $stack = array($this);
+        $stack = [$this];
         while ($stack) {
             $current = array_pop($stack);
             if ($current instanceof Tree) {
@@ -78,9 +78,9 @@ class Tree
 
     public function flattenPostorder()
     {
-        $result = array();
-        $stack = array($this);
-        $ancestors = array();
+        $result = [];
+        $stack = [$this];
+        $ancestors = [];
         while ($stack) {
             $x = end($stack);
             if ($children = $x->getChildren()) {
