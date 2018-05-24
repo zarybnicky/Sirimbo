@@ -45,11 +45,11 @@ class Database
         if (self::$connection != null) {
             return;
         }
-        self::$connection = @mysql_connect(DB_SERVER, DB_USER, DB_PASS)
+        self::$connection = mysql_connect(DB_SERVER, DB_USER, DB_PASS)
             or static::databaseError(true);
-        @mysql_select_db(DB_DATABASE, self::$connection)
+        mysql_select_db(DB_DATABASE, self::$connection)
             or static::databaseError(true);
-        @mysql_set_charset("utf8", self::$connection)
+        mysql_set_charset("utf8", self::$connection)
             or static::databaseError(true);
     }
     protected static function query($query)

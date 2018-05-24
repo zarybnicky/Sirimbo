@@ -1,0 +1,36 @@
+version: '2'
+
+services:
+  mysqldb:
+    image: mysql/mysql-server:5.7
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: olymp
+      MYSQL_USER: olymp
+      MYSQL_PASSWORD: admin
+    volumes:
+      - ./mysql-init:/docker-entrypoint-initdb.d
+      - ./mysql-data:/var/lib/mysql
+      - ./conf/my.cnf:/etc/my.cnf
+
+  phpfpm:
+    image: bitnami/php-fpm:5.6
+    links:
+      - mysqldb
+    volumes:
+      - ..:/app
+    tty: true
+
+  nginx:
+    image: bitnami/nginx:latest
+    depends_on:
+      - phpfpm
+    ports:
+      - 3000:3000
+    volumes:
+      - ..:/app
+      - ./conf/vhost.conf:/bitnami/nginx/conf/vhosts/olymp.conf
+    tty: true

@@ -77,7 +77,7 @@ function errorHandler($severity, $message, $filepath, $line)
               . $v['function'] . '(' . implode(', ', $v['args']) . ')';
     }
     Log::write($msg);
-    if (strpos('error', $_SERVER['REQUEST_URI']) !== false) {
+    if (isset($_SERVER['REQUEST_URI']) && strpos('error', $_SERVER['REQUEST_URI']) !== false) {
         Log::write("Recursive error message!");
         die('Fatal error: Rekurzivní smyčka přesměrování!');
     }
