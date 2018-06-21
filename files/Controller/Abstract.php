@@ -20,7 +20,8 @@ abstract class Controller_Abstract implements Controller_Interface
         );
     }
 
-    public function render($filename, array $vars = [], $standalone = false) {
+    public function render($filename, array $vars = [], $standalone = false)
+    {
         $renderer = new Renderer();
         $content = $renderer->render($filename, $vars);
 

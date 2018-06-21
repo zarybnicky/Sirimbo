@@ -1,9 +1,13 @@
 <?php
 class DBPlatby extends Database
 {
-    public static function getInstance() { return new self(); }
+    public static function getInstance()
+    {
+        return new self();
+    }
 
-    public static function checkConflicts($sid) {
+    public static function checkConflicts($sid)
+    {
         list($sid) = self::escape($sid);
         $res = self::query(
             "SELECT skupiny.*,platby_group.*,platby_category.*
@@ -25,7 +29,8 @@ class DBPlatby extends Database
         return self::getArray($res);
     }
 
-    public static function hasPaidMemberFees($uid) {
+    public static function hasPaidMemberFees($uid)
+    {
         list($uid) = self::escape($uid);
         $res = self::query(
             "SELECT * FROM platby_item
@@ -39,7 +44,7 @@ class DBPlatby extends Database
                 pg_type='1' AND
                 u_id='$uid' AND
                 u_skupina=s_id AND
-                (CURDATE() >= pc_valid_from OR CURDATE() <= pc_valid_to)"
+                (CURDATE() >= pc_valid_from AND CURDATE() <= pc_valid_to)"
         );
         return self::getArray($res);
     }

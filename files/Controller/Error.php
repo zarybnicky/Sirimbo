@@ -1,8 +1,10 @@
 <?php
 class Controller_Error extends Controller_Abstract
 {
-    public function view($request) {
-        function ucfirstUser(&$str, $key) {
+    public function view($request)
+    {
+        function ucfirstUser(&$str, $key)
+        {
             $str = ucfirst($str);
         }
         $array = explode('_', $request->get('id'));

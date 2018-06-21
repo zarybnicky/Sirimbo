@@ -13,7 +13,7 @@ class DBSoutez extends Database
 
     public static function getByIDT($idt)
     {
-        $res = self::query("SELECT * FROM soutez WHERE s_idt='$idt'", $idt);
+        $res = self::query("SELECT * FROM soutez WHERE s_idt='?'", $idt);
         return self::getSingleRow($res);
     }
 }

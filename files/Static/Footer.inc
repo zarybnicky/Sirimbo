@@ -22,27 +22,16 @@
                     </a>
                 </div>
             </td>
-            <td style="border:none;background:none;text-align:center">
-                <span>Mediální partner:</span>
-                <div style="width:480px;margin:0 auto 40px">
-                    <a class="no-a" href="http://www.kr-olomoucky.cz/" target="_blank">
-                        <iframe
-                            src="http://poutaky.denik.cz/olomoucky.denik.cz-300x300-zpravy_region.html"
-                            style="width:300px;height:300px;border:0;overflow:auto;">
-                        </iframe>
-                    </a>
-                </div>
-            </td>
         </tr>
     </table>
 
     <span>
         design a realizace:
-        <a href="mailto:kuba.zarybnicky@post.cz">Jakub Zárybnický</a>
+        <a href="mailto:jakub@zarybnicky.com">Jakub Zárybnický</a>
     </span>
 
     <span>
-        © 2014 TK Olymp Olomouc
+        © 2017 TK Olymp Olomouc
     </span>
 </div>
 
@@ -69,17 +58,5 @@
      s.parentNode.insertBefore(ga,s);
  })();
 </script>
-<?php if ($this->filename === 'files/View/Main/Home.inc') : ?>
-  <div id="my_popup" style="display:none;width:100%;height:100%;">
-    <img alt="" src="/images/nabor.png" style="max-height:80%;max-width:100%;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);" />
-  </div>
-  <script>
-   $(document).ready(function() {
-       $('#my_popup').click(function () {$('#my_popup').popup('hide');});
-       $('#my_popup').popup({ autoopen: true });
-   });
-  </script>
-<?php endif; ?>
-
   </body>
 </html>

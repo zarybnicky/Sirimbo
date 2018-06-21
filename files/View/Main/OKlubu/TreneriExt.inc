@@ -17,20 +17,6 @@
   </div>
 
   <div style="margin-bottom:2em;">
-    <h2>Ing. Filip Karásek</h2>
-    <img alt="Ing. Filip Karásek" src="/images/treneri/filip_sabka.jpg" class="f_doc_right" style="height:150px;" />
-    <ul class="list">
-      <li>profesionální tanečník</li>
-      <li>Mistr ČR v latinsko-amerických tancích v kategorii profesionálů pro rok 2016</li>
-      <li>trojnásobný Mistr ČR v latinsko-amerických tancích v hlavní kategorii</li>
-      <li>semifinalista Mistroství Evropy</li>
-      <li>čtvrtfinalista Mistrovství světa</li>
-      <li>semifinalista Světových her v Kolumbii</li>
-      <li>absolvent kvalifikačního studia pro porotce a trenéry 3. třídy tanečního sportu</li>
-    </ul>
-  </div>
-
-  <div style="margin-bottom:2em;">
     <h2>Martin Odstrčil</h2>
     <img alt="Martin Odstrčil" src="/images/treneri/martin.jpg" class="f_doc_right" style="height:150px;" />
     <ul class="list">
