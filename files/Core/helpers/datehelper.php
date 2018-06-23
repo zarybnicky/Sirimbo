@@ -3,22 +3,18 @@ class DateHelper
 {
     protected $date;
     protected $dateTo;
-    protected $view;
     protected $name;
     protected $post;
-    protected $fromYear;
-    protected $toYear;
     protected $useRange;
+    protected $cls;
 
     public function date($name, $value = null)
     {
-        $this->view = 'text';
         $this->date = null;
         $this->name = $name;
         $this->post = true;
-        $this->fromYear = ((int) date('Y')) - 75;
-        $this->toYear = ((int) date('Y')) + 5;
         $this->useRange = false;
+        $this->cls = 'form-control';
 
         if ($value) {
             list($from, $to) = $this->createDate($value);
@@ -72,37 +68,15 @@ class DateHelper
         return $this;
     }
 
-    public function selectBox()
-    {
-        $this->view = 'select';
-        return $this;
-    }
-
-    public function textBox()
-    {
-        $this->view = 'text';
-        return $this;
-    }
-
-    public function fromYear($y)
-    {
-        $this->fromYear = $y;
-        return $this;
-    }
-
-    public function toYear($y)
-    {
-        if ($y > $this->fromYear) {
-            $this->toYear = $y;
-        } else {
-            $this->toYear = $this->fromYear;
-        }
-        return $this;
-    }
-
     public function range($b = true)
     {
         $this->useRange = (bool) $b;
+        return $this;
+    }
+
+    public function cls($cls)
+    {
+        $this->cls = $cls;
         return $this;
     }
 
@@ -117,7 +91,6 @@ class DateHelper
             if (!isset($from) || !isset($to) || (!$from->isValid() && !$to->isValid())) {
                 return ['from' => $this->getPost($request, true), 'to' => new Date()];
             }
-
             return ['from' => $from, 'to' => $to];
         } elseif ($request->get($this->name)) {
             if (strpos($request->get($this->name), ' - ')) {
@@ -128,31 +101,6 @@ class DateHelper
             if (!isset($from) || !isset($to) || (!$from->isValid() && !$to->isValid())) {
                 return ['from' => $this->getPost($request, true), 'to' => new Date()];
             }
-
-            return ['from' => $from, 'to' => $to];
-        } elseif (
-            $request->post($this->name . '-from-year')
-            && $request->post($this->name . '-from-month')
-            && $request->post($this->name . '-from-day')
-            && $request->post($this->name . '-to-year')
-            && $request->post($this->name . '-to-month')
-            && $request->post($this->name . '-to-day')
-        ) {
-            $from = new Date(
-                $request->post($this->name . '-from-year') . '-'
-                . $request->post($this->name . '-from-month') . '-'
-                . $request->post($this->name . '-from-day')
-            );
-            $to = new Date(
-                $request->post($this->name . '-to-year') . '-'
-                . $request->post($this->name . '-to-month') . '-'
-                . $request->post($this->name . '-to-day')
-            );
-
-            if (!$from->isValid() && !$to->isValid()) {
-                return ['from' => $this->getPost($request, true), 'to' => new Date()];
-            }
-
             return ['from' => $from, 'to' => $to];
         } else {
             return ['from' => new Date(), 'to' => new Date()];
@@ -166,15 +114,6 @@ class DateHelper
         }
         if ($request->post($name)) {
             return new Date($request->post($name));
-        } elseif ($request->post($name . '-year') &&
-                  $request->post($name . '-month') &&
-                  $request->post($name . '-day')
-        ) {
-            return new Date(
-                $request->post($name . '-year') . '-'
-                . $request->post($name . '-month') . '-'
-                . $request->post($name . '-day')
-            );
         } else {
             return new Date();
         }
@@ -187,72 +126,28 @@ class DateHelper
 
     public function render()
     {
-        $out = '';
-        //TODO:ranged select...
-        if ($this->view == 'select') {
-            $s = Helper::instance()->select();
+        $val = null;
 
-            $s->name($this->name . '-day')
-              ->value($this->date ? $this->date->getDay() : null)
-              ->options([], true)
-              ->option('00', 'Den');
-            for ($i = 1; $i < 32; $i++) {
-                $s->option((($i < 10) ? ('0' . $i) : $i), $i);
+        if ($this->useRange) {
+            if ($this->date && $this->dateTo) {
+                $from = $this->date;
+                $to = $this->dateTo;
+            } else {
+                $from = new Date();
+                $to = new Date();
             }
-            $out .= $s;
-
-            $out .= $s->name($this->name . '-month')
-                ->value($this->date ? $this->date->getMonth() : null)
-                ->options([
-                    '00' => 'Měsíc',
-                    '01' => 'Leden',
-                    '02' => 'Únor',
-                    '03' => 'Březen',
-                    '04' => 'Duben',
-                    '05' => 'Květen',
-                    '06' => 'Červen',
-                    '07' => 'Červenec',
-                    '08' => 'Srpen',
-                    '09' => 'Září',
-                    '10' => 'Říjen',
-                    '11' => 'Listopad',
-                    '12' => 'Prosinec'
-                ], true);
-
-            $s->name($this->name . '-year')
-                ->value($this->date ? $this->date->getYear() : null)
-                ->options([], true)
-                ->option('0000', 'Rok');
-            for ($i = $this->fromYear; $i < $this->toYear; $i++) {
-                $s->option($i, $i);
+            if ($from->isValid() || $from->isValid()) {
+                $val = $from->getDate(Date::FORMAT_SIMPLIFIED)
+                    . ' - '
+                    . $to->getDate(Date::FORMAT_SIMPLIFIED);
             }
-            $out .= $s;
-        } elseif ($this->view == 'text') {
-            $done = false;
-
-            if ($this->useRange) {
-                if ($this->date && $this->dateTo) {
-                    $from = $this->date;
-                    $to = $this->dateTo;
-                } else {
-                    $from = new Date();
-                    $to = new Date();
-                }
-                if ($from->isValid() || $from->isValid()) {
-                    $selected = $from->getDate(Date::FORMAT_SIMPLIFIED)
-                              . ' - '
-                              . $to->getDate(Date::FORMAT_SIMPLIFIED);
-                    $done = true;
-                }
-            }
-            if (!$done) {
-                $selected = $this->date ? $this->date->getDate(Date::FORMAT_SIMPLIFIED) : '';
-            }
-            $out .= new Tag(
-                'input',
-                ['type' => 'text', 'name' => $this->name, 'value' => $selected]
-            );
         }
-        return $out;
+        if (!$val) {
+            $val = $this->date ? $this->date->getDate(Date::FORMAT_SIMPLIFIED) : '';
+        }
+        return (string) new Tag(
+            'input',
+            ['type' => 'text', 'name' => $this->name, 'value' => $val, 'class' => $this->cls]
+        );
     }
 }

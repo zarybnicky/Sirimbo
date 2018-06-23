@@ -15,7 +15,7 @@ class TextHelper
         $this->name = $name;
         $this->value = $value;
         $this->size = null;
-        $this->cls = null;
+        $this->cls = 'form-control';
 
         return $this;
     }

@@ -18,7 +18,7 @@
                 <td><?= $this->text('kde', $this->kde) ?></td>
             </tr><tr>
                 <td>Datum: (*)</td>
-                <td><?= $this->date('datum', $this->datum)->textBox() ?></td>
+                <td><?= $this->date('datum', $this->datum) ?></td>
             </tr><tr>
                 <td>Viditelný: </td>
                 <td><?= $this->checkbox('visible', 'visible')->set($this->visible) ?></td>

@@ -2,70 +2,43 @@
     'Správa aktualit',
     ($this->action == 'add' ? 'Přidat' : 'Upravit') . ' článek'
 ) ?>
-<div class="container full">
-    <form action="" method="POST">
-        <table style="width:100%">
-            <tr>
-                <td>Jméno (*): </td>
-                <td>
-                    <input type="text"
-                           name="name"
-                           value="<?= $this->name ?>"
-                           style="width:98%"/>
-                </td>
-                <td class="r">Max. 255 znaků</td>
-            </tr><tr>
-                <td>Kategorie (*): </td>
-                <td>
-                    <?= $this->radio('category', 1)
-                             ->set($this->category == 1)
-                             ->label('Články') ?>
-                    &nbsp;
-                    <?= $this->radio('category', 3)
-                             ->set($this->category == 3)
-                             ->label('Krátké zprávy') ?>
-                </td>
-                <td></td>
-            </tr><tr>
-                <td>Shrnutí: </td>
-                <td></td>
-                <td class="r">20 - 50 slov</td>
-            </tr><tr>
-                <td colspan="3">
-                    <textarea rows="5"
-                              cols="60"
-                              name="summary"
-                              style="width:99%"><?= $this->summary ?></textarea>
-                </td>
-            </tr><tr>
-                <td>Text: </td>
-                <td></td>
-                <td></td>
-            </tr><tr>
-                <td colspan="3">
-                    <textarea name="text"
-                              id="text"
-                              rows="30"
-                              cols="60"
-                              style="width:99%"><?= $this->text ?></textarea>
-                    <script src="/scripts/ckeditor/ckeditor.js"></script>
-                    <script>
-                     CKEDITOR.config.allowedContent = true;
-                     CKEDITOR.replace('text');
-                    </script>
-                </td>
-            </tr><tr>
-                <td colspan="2">
-                    <a class="btn btn-outline-primary" href="/admin/aktuality">Zpět</a>
-                    <?= $this->submit('Přidat fotky')->data('action', 'foto') ?>
-                    <?php if ($this->action == 'add'): ?>
-                        <?= $this->submit('Přeskočit a uložit')->data('action', 'save') ?>
-                    <?php else: ?>
-                        <?= $this->submit('Upravit')->data('action', 'save') ?>
-                    <?php endif; ?>
-                </td>
-                <td class="r">Pole označená (*) jsou povinná</td>
-            </tr>
-        </table>
-    </form>
+<div class="container">
+  <form action="" method="POST">
+    <div class="form-group">
+      <label for="name">Název</label>
+      <input type="text" name="name" placeholder="Název"
+             class="form-control" aria-describedby="nameHelp"
+             value="<?= $this->name ?>" />
+      <small id="nameHelp" class="form-text text-muted">Nejvíce 255 znaků</small>
+    </div>
+    <div class="form-group">
+      <label for="category">Kategorie</label>
+      <div class="form-check">
+        <?= $this->radio('category', 1)->set($this->category == 1)->label('Články') ?>
+      </div>
+      <div class="form-check">
+        <?= $this->radio('category', 3)->set($this->category == 3)->label('Krátké zprávy') ?>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="summary">Další info</label>
+      <textarea class="form-control" name="summary" rows="5"><?= $this->summary ?></textarea>
+    </div>
+    <div class="form-group">
+      <label for="text">Další info</label>
+      <textarea class="form-control" name="text" rows="30"><?= $this->text ?></textarea>
+    </div>
+    <script src="/scripts/ckeditor/ckeditor.js"></script>
+    <script>
+     CKEDITOR.config.allowedContent = true;
+     CKEDITOR.replace('text');
+    </script>
+    <div class="form-group">
+      <a class="btn btn-outline-primary" href="/admin/aktuality">Zpět</a>
+      <?= $this->submit('Přidat fotky')->data('action', 'foto') ?>
+      <?= $this->submit(
+          ($this->action == 'add') ? 'Přeskočit a uložit' : 'Upravit'
+      )->data('action', 'save') ?>
+    </div>
+  </form>
 </div>

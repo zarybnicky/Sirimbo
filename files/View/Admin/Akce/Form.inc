@@ -1,86 +1,47 @@
 <?= $this->header('Správa akcí', $this->header) ?>
-<div class="container full">
-    <form action="" method="POST">
-        <table>
-            <tr>
-                <td>Jméno akce (*): </td>
-                <td>
-                    <input type="text" name="jmeno" value="<?= $this->jmeno ?>" />
-                </td>
-                <td>Max. 255 znaků</td>
-            </tr>
-            <tr>
-                <td>Místo akce (*): </td>
-                <td>
-                    <input type="text" name="kde" value="<?= $this->kde ?>" />
-                </td>
-                <td>Max. 255 znaků</td>
-            </tr>
-            <tr>
-                <td>Další info: </td>
-                <td>
-                    <textarea rows="15"
-                              cols="50"
-                              name="info"><?= $this->info ?></textarea>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Od: (*)</td>
-                <td><?= $this->date('od', $this->od)->textBox() ?></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Do: </td>
-                <td><?= $this->date('do', $this->do)->textBox() ?></td>
-                <td>(pokud je prázdný, počítá se jako "Od")</td>
-            </tr>
-            <tr>
-                <td>Kapacita (*): </td>
-                <td>
-                    <input type="text"
-                           name="kapacita"
-                           value="<?= $this->kapacita ?>" />
-                </td>
-                <td>Pouze číslice</td>
-            </tr>
-            <tr>
-                <td>Dokumenty: </td>
-                <td>
-                    <?php if ($this->dokumenty) : ?>
-                        <?php foreach ($this->dokumenty as $item) : ?>
-                            <a href="/member/download?id=<?= $item['id'];?>">
-                                <?= $item['name'];?>
-                            </a>
-                        <?php endforeach; ?>
-                    <?php else : ?>
-                        Žádné dokumenty
-                    <?php endif; ?>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Uzamknout: </td>
-                <td>
-                    <?= $this->checkbox('lock', 'lock')->set($this->lock) ?>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Viditelný: </td>
-                <td>
-                    <?= $this->checkbox('visible', 'visible')->set($this->visible) ?>
-                </td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>
-                  <?= $this->submit($this->action) ?>
-                  <a class="btn btn-outline-primary" href="/admin/akce">Zpět</a>
-                </td>
-                <td>Pole označená (*) jsou povinná</td>
-                <td></td>
-            </tr>
-        </table>
-    </form>
+<div class="container">
+  <form action="" method="POST">
+    <div class="form-group">
+      <label for="jmeno">Název akce</label>
+      <input type="text" name="jmeno" placeholder="Název akce"
+             class="form-control" aria-describedby="jmenoHelp"
+             value="<?= $this->jmeno ?>" />
+      <small id="jmenoHelp" class="form-text text-muted">Nejvíce 255 znaků</small>
+    </div>
+    <div class="form-group">
+      <label for="kde">Název akce</label>
+      <input type="text" name="kde" placeholder="Místo akce"
+             class="form-control" aria-describedby="kdeHelp"
+             value="<?= $this->kde ?>" />
+      <small id="kdeHelp" class="form-text text-muted">Nejvíce 255 znaků</small>
+    </div>
+    <div class="form-group">
+      <label for="info">Další info</label>
+      <textarea class="form-control" name="info" rows="15"><?= $this->info ?></textarea>
+    </div>
+    <div class="form-group">
+      <label for="od">Den začátku (*)</label>
+      <?= $this->date('od', $this->od) ?>
+    </div>
+    <div class="form-group">
+      <label for="od">Den konce (*)</label>
+      <?= $this->date('do', $this->do) ?>
+      <small class="form-text text-muted">(pokud je prázdný, počítá se jako "Od")</small>
+    </div>
+    <div class="form-group">
+      <label for="kapacita">Kapacita (*)</label>
+      <?= $this->text('kapacita', $this->kapacita) ?>
+      <small class="form-text text-muted">Pouze číslice</small>
+    </div>
+    <div class="form-check">
+      <?= $this->checkbox('visible', 'visible')->label('Uzamknout')->set($this->visible) ?>
+    </div>
+    <div class="form-check">
+      <?= $this->checkbox('visible', 'visible')->label('Zviditelnit')->set($this->visible) ?>
+    </div>
+    <div class="form-group">
+      <?= $this->submit($this->action) ?>
+      <a class="btn btn-outline-primary" href="/admin/akce">Zpět</a>
+    </div>
+  </form>
 </div>

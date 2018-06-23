@@ -28,11 +28,11 @@
             </tr>
             <tr>
                 <td>Od: (*)</td>
-                <td><?= $this->date('od', $this->od)->textBox() ?></td>
+                <td><?= $this->date('od', $this->od) ?></td>
             </tr>
             <tr>
                 <td>Do: </td>
-                <td><?= $this->date('do', $this->do)->textBox() ?></td>
+                <td><?= $this->date('do', $this->do) ?></td>
             </tr>
             <tr>
                 <td></td>

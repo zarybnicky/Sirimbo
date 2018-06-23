@@ -1,5 +1,5 @@
 <?= $this->header('Správa akcí') ?>
-<div class="container full">
+<div class="container">
     <form action="" method="POST">
         <?php
 if (!TISK) {

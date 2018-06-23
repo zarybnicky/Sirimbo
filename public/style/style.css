@@ -133,34 +133,6 @@ table.nocolor td, table.nocolor th {
     object-fit: cover;
 }
 
-.article-list {
-    position:relative;
-    padding-left:160px;
-    min-height:150px;
-    margin-bottom:10px;
-}
-.article-list .image {
-    position:absolute;
-    top:5px;
-    left:0;
-    width:150px;
-    height:150px;
-    text-align:center;
-}
-.article-list .name {
-    font-size: 180%;
-    line-height: 120%;
-}
-.article-list .info {
-    margin-bottom:10px;
-}
-.article-list .desc {
-    margin: 0 300px 0 0;
-}
-.article-list .more {
-    float:right;
-}
-
 /* Gallery classes */
 .foto_list {
     list-style-position: inside;
@@ -188,29 +160,6 @@ table.nocolor td, table.nocolor th {
 .foto_desc {
     text-align:center;
     padding:3px;
-}
-
-.article h1 {
-    font-size: 250%;
-}
-.article .date {
-    margin-bottom: 20px;
-}
-.article .summary {
-    font-size: 150%;
-    color: #303C3C;
-    margin-bottom: 20px;
-}
-.article .image img {
-    display: block;
-    max-width: 700px;
-    max-height: 700px;
-    margin-bottom: 20px;
-}
-.article .text {
-    width: 700px;
-    text-align: justify;
-    margin-bottom: 20px;
 }
 
 .notice {
@@ -278,7 +227,19 @@ table.nocolor td, table.nocolor th {
     border-bottom: 3px solid #ff4635;
 }
 .courses .courses__desc {
-    margin: 2rem 0;
+    padding: 2rem 0;
+}
+@media (max-width: 767px) {
+    .courses .courses__desc {
+        order: 0;
+    }
+    .courses .courses__img {
+        order: 1;
+        text-align: center !important;
+    }
+}
+.courses img {
+    max-width: 80vw;
 }
 
 .navbar {

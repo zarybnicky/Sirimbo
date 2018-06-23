@@ -1,5 +1,5 @@
 <?= $this->header($this->header) ?>
-<div class="container full">
+<div class="container">
     <form action="" method="POST">
         <?= $this->prompt;?><br/><br/>
         <?php foreach ($this->data as $row): ?>

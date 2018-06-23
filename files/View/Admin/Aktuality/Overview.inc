@@ -1,5 +1,5 @@
 <?= $this->header('Správa aktualit') ?>
-<div class="container full">
+<div class="container">
     <?php
     if ($this->showMenu) {
         echo '<form action="" method="get">';

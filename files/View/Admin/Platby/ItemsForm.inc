@@ -8,7 +8,7 @@ echo '<h3>', ($this->action == 'add' ? 'Přidat platbu' : 'Upravit platbu'), '</
 $form = [
     [
         'desc' => 'Datum:',
-        'value' => $this->date('date', $this->date)->textBox()
+        'value' => $this->date('date', $this->date)
     ], [
         'desc' => 'Částka (Kč):',
         'value' => '<input type="text" name="amount" value="' . $this->amount . '"/>'

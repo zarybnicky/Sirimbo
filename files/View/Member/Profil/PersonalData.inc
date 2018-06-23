@@ -32,7 +32,7 @@
         <td></td>
       </tr><tr>
         <td>Datum narození: (*)</td>
-        <td><?= $this->date('narozeni', $this->narozeni)->textBox() ?></td>
+        <td><?= $this->date('narozeni', $this->narozeni) ?></td>
         <td></td>
       </tr><tr>
         <td>Poznámky: </td>

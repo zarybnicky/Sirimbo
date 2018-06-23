@@ -1,32 +1,21 @@
 <?= $this->header($this->nadpis) ?>
 
-<div class="container full">
-    <?php foreach ($this->data as $key => $row) : ?>
-        <div class="article-list clear">
-            <div class="image">
-                <img src="<?= $row['title_photo_thumb_uri'] ?>" />
-            </div>
-            <div class="name">
-                <a href="/aktualne/<?= $row['id'] ?>">
-                    <?= $row['jmeno'] ?>
-                </a>
-            </div>
-            <div class="info little">
-                <?= formatTimestamp($row['timestamp'])?>
-                <?php if ($row['canEdit']) : ?>
-                    - <a href="/admin/aktuality/edit/<?= $row['id'] ?>">Upravit</a>
-                <?php endif;?>
-            </div>
-            <div class="desc">
-                <div>
-                    <?= $row['preview'] ?>
-                </div>
-                <div class="more">
-                    <a href="/aktualne/<?= $row['id']?>">
-                        více zde &raquo;
-                    </a>
-                </div>
-            </div>
-        </div>
-    <?php endforeach;?>
+<div class="container">
+  <?php foreach ($this->data as $row) : ?>
+    <div class="row mb-2">
+      <div class="col-md-auto align-self-center">
+        <img style="max-width:100%" src="<?= $row['title_photo_thumb_uri'] ?>" />
+      </div>
+      <div class="col align-self-center">
+        <h3><a href="/aktualne/<?= $row['id'] ?>"><?= $row['jmeno'] ?></a></h3>
+        <small>
+          <?= formatTimestamp($row['timestamp'])?>
+          <?php if ($row['canEdit']) : ?>
+            - <a href="/admin/aktuality/edit/<?= $row['id'] ?>">Upravit</a>
+          <?php endif;?>
+        </small><br>
+        <p><?= $row['preview'] ?></p>
+      </div>
+    </div>
+  <?php endforeach;?>
 </div>

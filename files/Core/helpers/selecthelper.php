@@ -90,7 +90,7 @@ class SelectHelper
 
         return (string) new Tag(
             'select',
-            ['name' => $this->name],
+            ['name' => $this->name, 'class' => 'custom-select'],
             $options
         );
     }

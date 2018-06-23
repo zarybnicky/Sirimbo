@@ -61,7 +61,7 @@
             Vyučuje mladý proškolený trénérský kolektiv v kombinaci se&nbsp;zkušenými&nbsp;učiteli.
           </p>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 courses__img">
           <img alt="" src="/images/julca-mikulas.jpg" style="" />
         </div>
       </div>
@@ -70,7 +70,7 @@
   <div>
     <div class="container">
       <div class="row">
-        <div class="col-md-6 text-right">
+        <div class="col-md-6 courses__img text-right">
           <img alt="" src="/images/boruvci.jpg" style="" />
         </div>
         <div class="col-md-6 courses__desc">
@@ -106,7 +106,7 @@
             a tanečníků mezinárodní třídy.
           </p>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 courses__img">
           <img alt="" src="/images/david-verca.jpg" style="" />
         </div>
       </div>
@@ -115,7 +115,7 @@
   <div>
     <div class="container">
       <div class="row">
-        <div class="col-md-6 text-right">
+        <div class="col-md-6 courses__img text-right">
           <img alt="" src="/images/vilda-lat.jpg" style="" />
         </div>
         <div class="col-md-6 courses__desc">

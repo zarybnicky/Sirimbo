@@ -192,7 +192,7 @@ class Controller_Admin_Akce extends Controller_Admin
             'files/View/Admin/Akce/Form.inc',
             [
                 'dokumenty' => $dokumenty,
-                'header' => $request->getAction() == 'add' ? 'Přidat uživatele' : 'Upravit uživatele',
+                'header' => $request->getAction() == 'add' ? 'Přidat akci' : 'Upravit akci',
                 'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit',
                 'id' => $data ? $data['a_id'] : null,
                 'jmeno' => $request->post('jmeno') ?: $data ? $data['a_jmeno'] : '',

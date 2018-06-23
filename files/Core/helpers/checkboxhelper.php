@@ -6,6 +6,8 @@ class CheckboxHelper
     protected $state;
     protected $readonly;
     protected $label;
+    protected $labelCls;
+    protected $cls;
 
     public function checkbox($name, $value = null)
     {
@@ -20,6 +22,8 @@ class CheckboxHelper
         $this->readonly = false;
 
         $this->label = null;
+        $this->labelCls = 'form-check-label';
+        $this->cls = 'form-check-input';
 
         return $this;
     }
@@ -42,6 +46,18 @@ class CheckboxHelper
         return $this;
     }
 
+    public function labelCls($labelCls)
+    {
+        $this->labelCls = $labelCls;
+        return $this;
+    }
+
+    public function label($str)
+    {
+        $this->label = $str;
+        return $this;
+    }
+
     public function render()
     {
         $checkbox = new Tag(
@@ -51,7 +67,8 @@ class CheckboxHelper
                 'name' => $this->name,
                 'value' => $this->value,
                 'checked' => $this->state,
-                'readonly' => $this->readonly
+                'readonly' => $this->readonly,
+                'class' => $this->cls
             ]
         );
         if (!$this->label) {

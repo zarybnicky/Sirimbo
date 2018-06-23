@@ -68,7 +68,7 @@ class UserSelectHelper
         $selected = $this->_selected !== null ? $this->_selected : '';
 
         $out = '<div class="' . $name . '">' . "\n";
-        $out .= '<select name="' . $this->_name . '">' . "\n";
+        $out .= '<select class="custom-select" name="' . $this->_name . '">' . "\n";
         if (!$selected) {
             $out .= '<option value="0" selected="selected">--- žádný ---</option>' . "\n";
         } else {

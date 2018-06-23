@@ -32,7 +32,7 @@
             </tr>
             <tr>
                 <td>datum</td>
-                <td><?= $this->date('date', $this->date)->range()->textBox() ?></td>
+                <td><?= $this->date('date', $this->date)->range() ?></td>
             </tr>
             <tr>
                 <td></td>

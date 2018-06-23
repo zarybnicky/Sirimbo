@@ -8,7 +8,7 @@
     $form = [
         [
             'desc' => 'Datum:',
-            'value' => $this->date('date', $this->guess['date'])->textBox(),
+            'value' => $this->date('date', $this->guess['date']),
             'recogColumn' => $this->recognized['date']['column'],
             'recogValue' => $this->recognized['date']['value']
         ], [

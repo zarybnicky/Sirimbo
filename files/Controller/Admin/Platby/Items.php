@@ -179,7 +179,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
     private function getUsers()
     {
         $users = $this->getUserLookup(true);
-        foreach ($users as $key => &$array) {
+        foreach ($users as &$array) {
             $array = User::varSymbol($array['u_id']) . " - {$array['u_prijmeni']}, {$array['u_jmeno']}";
         }
         return $users;
@@ -195,8 +195,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         } elseif (stripos($request->get('category'), 'group_') !== false) {
             $filter['pg_id'] = substr($request->get('category'), 6);
         }
-        $dateHelper = $this->date('date')->range()->textBox();
-        $date = $dateHelper->getPostRange($request);
+        $date = $this->date('date')->range()->getPostRange($request);
 
         $data = DBPlatbyItem::get(true, $filter, ['pi_date DESC'], $date);
 
