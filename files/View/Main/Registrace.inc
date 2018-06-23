@@ -1,8 +1,6 @@
 <?= $this->header('Registrace') ?>
 
 <div class="container full">
-  <?= $this->notice($this->redirect()->getMessage());?>
-
   <form action="" method="POST">
     <table>
       <tr>

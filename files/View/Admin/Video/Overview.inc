@@ -1,6 +1,6 @@
 <?= $this->header('Správa videí') ?>
+
 <div class="container full">
-    <?= $this->notice($this->redirect()->getMessage()) ?>
     <form action="" method="post">
         Titulní stránka:<br>
         <?= $this->video1 ?> <?= $this->video2 ?><br>

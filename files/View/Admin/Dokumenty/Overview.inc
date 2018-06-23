@@ -1,6 +1,6 @@
 <?= $this->header('Správa dokumentů') ?>
+
 <div class="container full">
-    <?= $this->notice($this->redirect()->getMessage()); ?>
     <form action="/admin/dokumenty" method="POST">
         <?php
         if ($this->showMenu) {

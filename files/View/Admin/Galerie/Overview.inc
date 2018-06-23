@@ -1,6 +1,5 @@
 <?= $this->header('Správa fotogalerie') ?>
 <div class="container full">
-<?= $this->notice($this->redirect()->getMessage()) ?>
 <form action="" method="POST">
 <?php
 echo $this->menu()

@@ -1,7 +1,6 @@
 <?= $this->header('Dokumenty') ?>
 
 <div class="container full">
-  <?= $this->notice($this->redirect()->getMessage());?>
   <?php if ($this->showMenu): ?>
     <form action="" method="GET">
       <?= $this->select('kat')

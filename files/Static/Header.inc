@@ -69,3 +69,8 @@
           </div>
         </div>
       </nav>
+
+      <?php if ($notice = $this->redirect()->getMessage()): ?>
+        <div class="container"><div class="row"><?= $this->notice($notice); ?></div></div>
+      <?php endif; ?>
+

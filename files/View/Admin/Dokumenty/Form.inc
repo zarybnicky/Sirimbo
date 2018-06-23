@@ -1,7 +1,6 @@
 <?= $this->header('Správa dokumentů') ?>
-<div class="container full">
-    <?= $this->notice($this->redirect()->getMessage()); ?>
 
+<div class="container full">
     <form action="" method="POST">
         <table>
             <tr>

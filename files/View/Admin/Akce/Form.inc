@@ -1,6 +1,5 @@
 <?= $this->header('Správa akcí', $this->header) ?>
 <div class="container full">
-    <?= $this->notice($this->redirect()->getMessage()); ?>
     <form action="" method="POST">
         <table>
             <tr>

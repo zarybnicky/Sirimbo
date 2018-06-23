@@ -1,6 +1,5 @@
 <?= $this->header('Správa uživatelů') ?>
 <div class="container full">
-<?= $this->notice($this->redirect()->getMessage()) ?>
 
 <?php if ($this->showMenu): ?>
     <form action="" method="get">

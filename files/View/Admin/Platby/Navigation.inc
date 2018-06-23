@@ -43,5 +43,4 @@ $getItem = function ($name, $href) use ($isActive) {
         <li><?= $getItem('Import', 'platby/raw');?></li>
     <?php endif;?>
 </ul>
-<?= $this->notice($this->redirect()->getMessage());?>
 </div>

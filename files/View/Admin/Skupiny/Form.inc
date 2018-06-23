@@ -1,6 +1,5 @@
 <?= $this->header('Správa skupin', $this->header) ?>
 <div class="container full">
-    <?= $this->notice($this->redirect()->getMessage());?>
     <form action="" method="POST">
         <?= $this->table()
                  ->style('width:100%')

@@ -1,6 +1,5 @@
 <?= $this->header($this->header) ?>
 <div class="container full">
-    <?= $this->notice($this->redirect()->getMessage()) ?>
     <form action="" method="POST">
         <?= $this->prompt;?><br/><br/>
         <?php foreach ($this->data as $row): ?>

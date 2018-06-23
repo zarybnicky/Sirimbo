@@ -1,6 +1,5 @@
 <?= $this->header('Správa skupin') ?>
 <div class="container full">
-    <?= $this->notice($this->redirect()->getMessage()) ?>
     <a href="/admin/skupiny/add">Přidat skupinu</a>
     <?= $this->table()
              ->style('width:100%')

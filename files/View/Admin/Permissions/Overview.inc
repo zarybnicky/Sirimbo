@@ -1,6 +1,5 @@
 <?= $this->header('Správa oprávnění') ?>
 <div class="container full">
-    <?= $this->notice($this->redirect()->getMessage()) ?>
     <form action="" method="POST">
         <?php
         if ($this->showMenu) {

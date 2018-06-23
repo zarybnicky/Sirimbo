@@ -2,8 +2,8 @@
     'Správa rozpisů',
     $this->action == 'add' ? 'Přidat rozpis' : 'Upravit rozpis'
 ) ?>
+
 <div class="container full">
-    <?= $this->notice($this->redirect()->getMessage()) ?>
     <form action="" method="POST">
         <table>
             <tr>

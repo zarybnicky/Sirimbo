@@ -1,7 +1,5 @@
 <?= $this->header('Správa fotogalerie', 'Upload') ?>
 <div class="container full">
-    <?= $this->notice($this->redirect()->getMessage()); ?>
-
     <form enctype="multipart/form-data" action="" method="post">
         <table>
             <tr>

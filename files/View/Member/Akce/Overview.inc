@@ -1,8 +1,6 @@
 <?= $this->header('Klubové akce') ?>
 
 <div class="container full">
-  <?= $this->notice($this->redirect()->getMessage()) ?>
-
   <style type="text/css">
    .unit {
        background:inherit;border:none;

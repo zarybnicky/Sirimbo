@@ -32,5 +32,3 @@ $getItem = function ($name, $href) use ($isActive) {
         <li><?= $getItem('Seznam skupin', 'clenove/skupiny') ?></li>
     </ul>
 </div>
-
-<?= $this->notice($this->redirect()->getMessage());?>

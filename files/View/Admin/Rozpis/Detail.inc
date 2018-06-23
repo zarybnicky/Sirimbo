@@ -1,6 +1,6 @@
 <?= $this->header('Správa rozpisů');?>
+
 <div class="container full">
-  <?= $this->notice($this->redirect()->getMessage()); ?>
   <form action="" method="POST">
     <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
     <div class="r_wrapper">

@@ -1,7 +1,6 @@
 <?= $this->header('Změna hesla') ?>
 
 <div class="container full">
-  <?= $this->notice($this->redirect()->getMessage()) ?>
   <form action="" method="post">
     <table>
       <tr>

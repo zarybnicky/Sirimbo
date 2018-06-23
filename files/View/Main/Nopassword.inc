@@ -1,5 +1,4 @@
 <?= $this->header('Zapomenuté heslo') ?>
-<?= $this->notice($this->redirect()->getMessage()) ?>
 
 <div class="container full">
     <p>

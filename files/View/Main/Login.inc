@@ -1,6 +1,4 @@
 <div class="container full">
-    <?= $this->notice($this->redirect()->getMessage()); ?>
-    <br/>
     <form action="" method="post">
         <table style="margin: 0 auto;">
             <tr>

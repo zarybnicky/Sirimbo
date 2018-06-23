@@ -1,7 +1,6 @@
 <?= $this->header('Správa uživatelů') ?>
 <div class="container full">
     <h2>Duplicitní uživatelé</h2>
-    <?= $this->notice($this->redirect()->getMessage()); ?>
     <form action="" method="POST">
         <?= $this->menu()
                  ->content('Odstranit', 'remove', true)

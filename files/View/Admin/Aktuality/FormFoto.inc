@@ -1,6 +1,5 @@
 <?= $this->header('Správa článků') ?>
 <div class="container full">
-    <?= $this->notice($this->redirect()->getMessage()) ?>
     <form action="" method="get">
         <?= $this->select('dir')
                  ->set($this->dir ?: 'none')

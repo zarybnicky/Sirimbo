@@ -1,10 +1,8 @@
 <?= $this->header('Změna třídy a bodů') ?>
 
 <div class="container full">
-  <?php
-  echo $this->partnerRequest()->getAll();
-  echo $this->notice($this->redirect()->getMessage());
-  ?>
+  <?= $this->partnerRequest()->getAll(); ?>
+
   <form action="" method="post">
     <table>
       <tr><td>Standart:</td><td></td><td></td></tr>

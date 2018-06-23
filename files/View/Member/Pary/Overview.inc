@@ -1,8 +1,6 @@
 <?= $this->header('Žebříček párů') ?>
 
 <div class="container full">
-  <?php echo $this->notice($this->redirect()->getMessage());?>
-
   <table>
     <tr>
       <th>Pořadí</th>
@@ -21,7 +19,6 @@
         <td><?php echo $item['latina'];?></td>
         <td><?php echo $item['standart'];?></td>
         <td><?php echo $item['hodnoceni'];?></td>
-        <!--<td><a href="/member/pary/<php echo $item['id'];?>">Profil</a></td>-->
       </tr>
     <?php endforeach;?>
   </table>

@@ -1,10 +1,7 @@
 <?= $this->header('Profil') ?>
 
 <div class="container full">
-  <?php
-  echo $this->partnerRequest()->getAll();
-  echo $this->notice($this->redirect()->getMessage());
-  ?>
+  <?= $this->partnerRequest()->getAll(); ?>
   <?php if ($this->havePartner): ?>
     Právě tančím s: <?php echo $this->partnerFullName;?>
     <h2>Třídy a body:</h2>

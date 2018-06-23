@@ -3,7 +3,6 @@
     $this->action == 'add' ? 'Přidat uživatele' : 'Upravit uživatele'
 ) ?>
 <div class="container full">
-<?= $this->notice($this->redirect()->getMessage()) ?>
 <form action="" method="POST">
 <table>
     <tr>

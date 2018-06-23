@@ -1,8 +1,6 @@
 <?= $this->header('Správa aktualit') ?>
 <div class="container full">
     <?php
-    echo $this->notice($this->redirect()->getMessage());
-
     if ($this->showMenu) {
         echo '<form action="" method="get">';
 

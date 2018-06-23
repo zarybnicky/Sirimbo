@@ -1,6 +1,5 @@
 <?= $this->header('Správa fotogalerie', 'Upravit soubor') ?>
 <div class="container full">
-    <?= $this->notice($this->redirect()->getMessage()); ?>
     <form action="" method="post">
         <table>
             <tr>

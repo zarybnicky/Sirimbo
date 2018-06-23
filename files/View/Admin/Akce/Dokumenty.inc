@@ -1,6 +1,5 @@
 <?= $this->header('Správa akcí') ?>
 <div class="container full">
-    <?= $this->notice($this->redirect()->getMessage()); ?>
     <form action="" method="POST" class="centerWTable">
         <?= $this->render('files/View/Member/Akce/Header.inc', $this->data);?>
         <?= $this->table()

@@ -3,7 +3,6 @@
 <div class="container full">
     <?php
     echo $this->partnerRequest()->getAll();
-    echo $this->notice($this->redirect()->getMessage());
     if ($this->havePartner) {
         echo "Právě tančím s: ", $this->partnerFullName;
     } else {

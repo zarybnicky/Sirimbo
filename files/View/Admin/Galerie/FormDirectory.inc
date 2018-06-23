@@ -3,7 +3,6 @@
     $this->action == 'add' ? 'Přidat složku' : 'Upravit složku'
 ) ?>
 <div class="container full">
-    <?= $this->notice($this->redirect()->getMessage()); ?>
     <form action="" method="post">
         <table>
             <tr>

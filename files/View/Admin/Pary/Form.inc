@@ -1,6 +1,6 @@
 <?= $this->header('Správa párů', 'Změna třídy a bodů') ?>
+
 <div class="container full">
-    <?= $this->notice($this->redirect()->getMessage());?>
     <form action="" method="POST">
         Pár: <?= $this->fullName;?>
         <table>
