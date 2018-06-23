@@ -17,7 +17,9 @@ services:
       - ./conf/my.cnf:/etc/my.cnf
 
   phpfpm:
-    image: bitnami/php-fpm:5.6
+    build:
+      context: ./php-fpm
+      dockerfile: Dockerfile
     links:
       - mysqldb
     volumes:
