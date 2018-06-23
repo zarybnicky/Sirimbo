@@ -1,17 +1,25 @@
 <br/>
 <div id="footer">
-    <table style="margin:0 auto">
-        <tr>
-            <td style="border:none;background:none;text-align:center">
-                <div style="width:480px;margin:0 auto 40px">
+    <div class="container">
+        <div class="row" style="text-align:center">
+            <div class="col" style="display:flex;flex-direction:column;justify-content:space-around;">
+                <div>
                     <a class="no-a" href="https://www.facebook.com/tkolymp"
                        target="_blank">
                         <img alt="Facebook, stránka Taneční klub Olymp Olomouc"
                              src="/style/fb-logo.png" />
                     </a>
                 </div>
+                <div>
+                    design a realizace:
+                    <a href="mailto:jakub@zarybnicky.com">Jakub Zárybnický</a>
+                    <br>
+                    © 2018 TK Olymp Olomouc
+                </div>
+            </div>
+            <div class="col">
                 <span>Podporuje nás:</span>
-                <div style="width:480px;margin:0 auto 40px">
+                <div>
                     <a class="no-a" href="http://www.kr-olomoucky.cz/" target="_blank">
                         <img alt="Olomoucký kraj" src="/style/logo-kraj.png" />
                     </a>
@@ -21,25 +29,18 @@
                              style="height:85px;width:auto;"/>
                     </a>
                 </div>
-            </td>
+            </div>
         </tr>
     </table>
-
-    <span>
-        design a realizace:
-        <a href="mailto:jakub@zarybnicky.com">Jakub Zárybnický</a>
-    </span>
-
-    <span>
-        © 2017 TK Olymp Olomouc
-    </span>
 </div>
 
-<script type="text/javascript" src="/scripts/jquery.popupoverlay.js"></script>
+<script type="text/javascript" src="/scripts/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="/scripts/popper.min.js"></script>
+<script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
 <script type="text/javascript" src="/scripts/jquery.sticky.js"></script>
-<script type="text/javascript" src="/scripts/masonry.pkgd.min.js"></script>
-<script type="text/javascript" src="/scripts/imagesloaded.pkgd.min.js"></script>
 <script type="text/javascript" src="/scripts/polyfill.object-fit.min.js"></script>
+<script type="text/javascript" src="/scripts/stickyfill.min.js"></script>
+<script type="text/javascript" src="/scripts/leaflet.js"></script>
 <script type="text/javascript" src="/scripts/video.min.js"></script>
 <script type="text/javascript" src="/scripts/main.js"></script>
 <script type="text/javascript"

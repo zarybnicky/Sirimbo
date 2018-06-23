@@ -10,10 +10,6 @@ class Controller_Admin extends Controller_Abstract
     }
 
     public function navbar() {
-        return parent::navbar() .
-            new Navbar(
-                include SETTINGS . '/menu/admin.inner.php',
-                false
-            );
+        return array_merge(parent::navbar(), [include SETTINGS . '/menu/admin.inner.php']);
     }
 }

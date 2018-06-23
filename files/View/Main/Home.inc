@@ -1,46 +1,218 @@
-<?= $this->highlights($this->highlights);?>
+<?php if ($notice = $this->redirect()->getMessage()): ?>
+  <div class="container"><div class="row"><?= $this->notice($notice); ?></div></div>
+<?php endif; ?>
 
-<div class="container full">
-  <?= $this->notice($this->redirect()->getMessage()); ?>
+<div id="carousel" class="carousel slide" data-ride="carousel">
+  <ol class="carousel-indicators">
+    <li data-target="#carousel" data-slide-to="0" class="active"></li>
+    <li data-target="#carousel" data-slide-to="1"></li>
+    <li data-target="#carousel" data-slide-to="2"></li>
+  </ol>
+  <div class="carousel-inner">
+    <?php $first = true; foreach ($this->highlights as $item): ?>
+      <div class="carousel-item<?php if ($first) { echo " active"; $first = false; } ?>"
+          style="background-image:url(<?= $item['title_photo_uri'] ?>)">
+        <img src="<?= $item['title_photo_uri'] ?>" alt="First slide" />
+        <div class="carousel-caption">
+          <a href="<?= $item['uri'] ?>"><h3><?= $item['name']; ?></h3></a>
+          <p class="d-none d-md-block"><?= $item['description']; ?></p>
+        </div>
+      </div>
+    <?php endforeach; ?>
+  </div>
+  <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Předchozí</span>
+  </a>
+  <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Další</span>
+  </a>
+</div>
 
-  <!--<div class="container third">
-    <div class="widget">
-      <div class="widget-title text">Výsledky posledních soutěží</div>
-      < ?= $this->results($this->results);?>
+<div class="container about" style="margin-top:3.5rem;margin-bottom:3.5rem">
+  <div class="row">
+    <div class="col-md-6">
+      <h2>O klubu</h2>
+      <p>
+        <b>TK Olymp Olomouc</b> je tradiční taneční klub zabývající se výchovou
+        standardních a latinskoamerických tanečníků. V novém tisíciletí
+        patří mezi nejúspěšnější české kluby. Naše páry pravidelně sbírají
+        úspěchy v České republice i na mezinárodním poli.
+      </p>
+      <p>
+        Nabízíme atraktivní volnočasovou aktivitu dětem, kvalitní zázemí
+        sportovním tanečníkům a příjemné prostředí pro všechny, co mají
+        rádi tanec.
+      </p>
     </div>
-  </div>-->
+    <div class="col-md-6" style="text-align:center">
+      <img class="logo-image" alt="" src="/style/logo-big.png" />
+    </div>
+  </div>
+</div>
 
-  <div class="container two-thirds">
-    <div class="widget">
-      <div class="widget-title text">Videa z posledních soutěží</div>
-      <div class="widget-content">
-          <?= $this->videos ?>
+<div class="courses">
+  <div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 courses__desc" style="text-align:right">
+          <h4>Taneční přípravka (5&ndash;7&nbsp;let)</h4>
+          <p>
+            Taneční a pohybové hry, seznámení s hudbou a základními kroky.
+          </p>
+          <p>
+            Vyučuje mladý proškolený trénérský kolektiv v kombinaci se&nbsp;zkušenými&nbsp;učiteli.
+          </p>
+        </div>
+        <div class="col-md-6">
+          <img alt="" src="/images/julca-mikulas.jpg" style="" />
+        </div>
       </div>
     </div>
   </div>
-
-  <div class="container third">
-    <div class="widget">
-      <div class="widget-title text">O klubu</div>
-      <div class="widget-content">
-        <p>
-          <b>TK Olymp Olomouc</b> je tradiční taneční klub zabývající se výchovou
-          standardních a latinskoamerických tanečníků. V novém tisíciletí
-          patří mezi nejúspěšnější české kluby. Naše páry pravidelně sbírají
-          úspěchy v České republice i na mezinárodním poli.
-        </p>
-        <p>
-          Nabízíme atraktivní volnočasovou aktivitu dětem, kvalitní zázemí
-          sportovním tanečníkům a příjemné prostředí pro všechny, co mají
-          rádi tanec.
-        </p>
-        <div style="text-align:right;font-size:85%;">
-          <a href="#">více zde &raquo;</a>
+  <div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <img alt="" src="/images/boruvci.jpg" style="" />
+        </div>
+        <div class="col-md-6 courses__desc">
+          <h4>Tančení pro děti (8&ndash;14&nbsp;let)</h4>
+          <p>
+            Pohybová a taneční průprava, základní figury a techniky standardních a latinskoamerických tanců.
+          </p>
+          <p>
+            Možné jako kroužek i jako příprava na taneční sport.
+          </p>
+          <p>
+            Vyučuje mladý proškolený trénérský kolektiv, složený z mistrů České republiky a tanečníků mezinárodní třídy.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 courses__desc" style="text-align:right">
+          <h4>Lekce pro začátečníky (15+&nbsp;let)</h4>
+          <p>
+            Vhodné pro všechny, kteří ještě netančili nebo prošli kurzy v tanečních.
+          </p>
+          <p>
+            Vyučujeme základní figury a techniky standardních a
+            latinskoamerických tanců, držení těla, souhru s partnerem a soulad s
+            hudbou.
+          </p>
+          <p>
+            Vyučuje mladý proškolený trénérský kolektiv, složený z mistrů České republiky
+            a tanečníků mezinárodní třídy.
+          </p>
+        </div>
+        <div class="col-md-6">
+          <img alt="" src="/images/david-verca.jpg" style="" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 text-right">
+          <img alt="" src="/images/vilda-lat.jpg" style="" />
+        </div>
+        <div class="col-md-6 courses__desc">
+          <h4>Taneční sport</h4>
+          <p>
+            Vhodné pro pokročilé tanečníky se soutěžními ambicemi od dětí po dospělé.
+          </p>
+          <p>
+            Tréninkový plán je zaměřený na výuku techniky standardních a latinskoamerických
+            tanců, kondiční a fyzickou přípravu a soutěžní podání tanečního
+            sportu.
+          </p>
+          <p>
+            Vyučují extérní lektoři z Prahy, Brna, Ostravy - trenéři nejlepších párů
+            a mistrů České republiky.
+          </p>
+          <p>
+            Volné tréninky pro vlastní samostatné trénování, možnost individuálních
+            lekcí s extérními trenéry.
+          </p>
         </div>
       </div>
     </div>
   </div>
 </div>
-<div class="container full">
-  <?= $this->articles($this->moreArticles);?>
+
+<div class="container news">
+  <div class="row" style="margin-top:3.5rem;margin-bottom:3.5rem">
+    <div class="col-md-6">
+      <h3><a href="/aktualne/clanky">Aktuálně</a></h3>
+      <div class="row">
+        <?php foreach ($this->moreArticles as $item): ?>
+          <div class="col">
+            <div class="article-small card">
+              <a class="card-img-top image" href="<?= $item['uri'] ?>">
+                <img alt="" src="<?= $item['title_photo_uri'] ?>" />
+              </a>
+              <div class="card-body">
+                <h4 class="card-title">
+                  <a href="<?= $item['uri'] ?>"><?= $item['name']; ?></a>
+                </h4>
+                <p class="card-text"><?= $item['description']; ?></p>
+                <div style="text-align:right;font-size:85%;">
+                  <a href="<?= $item['uri'] ?>">více zde &raquo;</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        <?php endforeach; ?>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <h3><a href="/video">Videa ze soutěží</a></h3>
+      <ul class="list-group">
+        <?php foreach ($this->videos as $x): ?>
+          <li class="list-group-item">
+            <a class="video row" href="<?= $x['link'] ?>">
+              <div class="col-4"><img style="max-width:100%" alt="" src="<?= $x['image'] ?>"/></div>
+              <div class="col-8"><h5><?= $x['name'] ?></h5></div>
+            </a>
+          </li>
+        <?php endforeach; ?>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="container contact">
+  <h2>Kontakt</h2>
+  <div class="row">
+    <div class="col-md">
+      <h3>Taneční klub</h3>
+      <p>
+        <b>Taneční klub Olymp Olomouc</b><br>
+        Jiráskova 25, 779 00 Olomouc<br>
+        IČO: 68347286<br>
+        <a href="mailto:tkolymp@tkolymp.cz">tkolymp@tkolymp.cz</a>
+      </p>
+      <h3>Taneční sály</h3>
+      <p>
+        <b>Taneční centrum při FZŠ Holečkova</b><br>
+        Holečkova 10, 779 00 Olomouc<br>
+        (vchod brankou u zastávky <i>Povel, škola</i>)
+      </p>
+      <p>
+        <b>Tělocvična Slovanského gymnázia</b><br>
+        Jiřího z Poděbrad 13, 779 00 Olomouc<br>
+        (vchod bránou z ulice <i>U reálky</i>)
+      </p>
+    </div>
+    <div class="col-md">
+      <div id="m" style="height:50vh"></div>
+    </div>
+  </div>
 </div>

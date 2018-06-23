@@ -4,17 +4,16 @@ class Controller_Oklubu_Treneri extends Controller_Oklubu
 {
     public function view($request)
     {
-        $this->redirect('/oklubu/obecne');
+        $this->redirect('/oklubu/klubovi');
     }
 
-    public function sidebar($uri)
+    public function klubovi($request)
     {
-        return new Sidebar(
-            [
-                ['Kluboví trenéři', '/oklubu/treneri/klubovi', []],
-                ['Externí trenéři', '/oklubu/treneri/externi', []]
-            ],
-            $uri
-        );
+        $this->render('files/View/Main/OKlubu/TreneriInt.inc');
+    }
+
+    public function externi($request)
+    {
+        $this->render('files/View/Main/OKlubu/TreneriExt.inc');
     }
 }

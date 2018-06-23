@@ -1,14 +1,10 @@
 <form action="" method="post">
   <div id="userbox">
     <div id="userbox-inner">
-      <input style="width:70px;" type="text" name="login" />
-      <input style="width:70px;" type="password" name="pass" /><br />
+      <input style="width:70px;" type="text" name="login" autocomplete="username" />
+      <input style="width:70px;" type="password" name="pass" autocomplete="current-password" /><br />
       <a href="/registrace">Registrace</a>&nbsp;
-      <a href="javascript:void(0)"
-         onclick="$(this).parent().parent().parent().submit()">
-        <!-- FIXME: Form submit -->
-        Přihlásit se
-      </a>
+      <button type="submit">Přihlásit se</button>
     </div>
   </div>
 </form>

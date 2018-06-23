@@ -35,10 +35,6 @@ class Controller_Member extends Controller_Abstract
 
     public function navbar()
     {
-        return parent::navbar() .
-            new Navbar(
-                include SETTINGS . '/menu/member.inner.php',
-                false
-            );
+        return array_merge(parent::navbar(), [include SETTINGS . '/menu/member.inner.php']);
     }
 }

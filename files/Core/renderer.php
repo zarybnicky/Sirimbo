@@ -26,6 +26,9 @@ class Renderer
     }
 
     public function __call($name, $args) {
+        if (isset($this->vars[$name]) && is_callable($this->vars[$name])) {
+            return call_user_func_array($this->vars[$name], $args);
+        }
         return Helper::invoke($name, $args);
     }
 

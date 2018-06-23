@@ -23,7 +23,7 @@
         </tr>
         <tr><td><h3>Klubová rada</h3></td></tr>
         <tr>
-            <td class="r"><b>Mgr. Miroslav Hýžová</b></td>
+            <td class="r"><b>Mgr. Miroslav Hýža</b></td>
             <td><b>předseda, šéftrenér</b></td>
         </tr>
         <tr>

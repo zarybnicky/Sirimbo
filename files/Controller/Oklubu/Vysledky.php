@@ -4,17 +4,21 @@ class Controller_Oklubu_Vysledky extends Controller_Oklubu
 {
     public function view($request)
     {
-        $this->render(
-            'files/View/Main/OKlubu/VCislech.inc',
-            ['sidebar' => $this->sidebar($request->getUri())]
-        );
+        $this->render('files/View/Main/OKlubu/VCislech.inc');
     }
 
-    public function sidebar($uri)
+    public function druzstva($request)
     {
-        return new Sidebar(
-            include SETTINGS . '/menu/oklubu.vysledky.php',
-            $uri
-        );
+        $this->render('files/View/Main/OKlubu/Druzstva.inc');
+    }
+
+    public function liga($request)
+    {
+        $this->render('files/View/Main/OKlubu/Liga.inc');
+    }
+
+    public function mistrovstvi($request)
+    {
+        $this->render('files/View/Main/OKlubu/Mistrovstvi.inc');
     }
 }

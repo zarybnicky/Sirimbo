@@ -26,10 +26,6 @@ class Controller_Nabizime extends Controller_Abstract
     }
 
     public function navbar() {
-        return parent::navbar() .
-            new Navbar(
-                include SETTINGS . '/menu/nabizime.php',
-                false
-            );
+        return array_merge(parent::navbar(), [include SETTINGS . '/menu/nabizime.php']);
     }
 }

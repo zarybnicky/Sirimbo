@@ -22,7 +22,6 @@ class Controller_Aktualne extends Controller_Abstract
                 'text' => $data['at_text'],
                 'title_photo_uri' => '/galerie/' . $photo_uri,
                 'title_photo_thumb_uri' => '/galerie/thumbnails/' . $photo_uri,
-                'category' => 'Zprávy',
                 'meta' => [
                     ['property' => 'og:title', 'content' => $data['at_jmeno']],
                     ['property' => 'og:type', 'content' => 'article'],
