@@ -48,5 +48,5 @@
 </table>
 </form>
 
-<a href="<?= $this->returnURI?>">Zpět</a>
+<a class="btn btn-outline-primary" href="<?= $this->returnURI?>">Zpět</a>
 </div>

@@ -43,5 +43,5 @@
 
         <?= $this->submit('Změnit třídu a body')->data('action', 'edit_confirm') ?>
     </form>
-    <a href="/admin/pary">Zpět</a>
+    <a class="btn btn-outline-primary" href="/admin/pary">Zpět</a>
 </div>

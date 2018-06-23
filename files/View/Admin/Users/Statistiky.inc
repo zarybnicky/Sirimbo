@@ -11,6 +11,6 @@ echo $this->table()
     ->data($this->data);
 ?>
 <br/>
-<a href="/admin/users">Zpět</a>
+<a class="btn btn-outline-primary" href="/admin/users">Zpět</a>
 </div>
 </div>

@@ -56,7 +56,7 @@
                 </td>
             </tr><tr>
                 <td colspan="2">
-                    <a href="/admin/aktuality">Zpět</a>
+                    <a class="btn btn-outline-primary" href="/admin/aktuality">Zpět</a>
                     <?= $this->submit('Přidat fotky')->data('action', 'foto') ?>
                     <?php if ($this->action == 'add'): ?>
                         <?= $this->submit('Přeskočit a uložit')->data('action', 'save') ?>

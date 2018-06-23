@@ -38,7 +38,7 @@ $formTable = $this->table()
     <?= $formTable ?>
     <?= $this->hidden('referer', $this->referer) ?>
     <button name="action" value="confirm">Uložit</button>
-    <a href="<?= $this->referer ?>">Zpět</a>
+    <a class="btn btn-outline-primary" href="<?= $this->referer ?>">Zpět</a>
 </form>
 <br/>
 <?php

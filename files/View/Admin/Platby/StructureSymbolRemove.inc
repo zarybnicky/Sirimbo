@@ -9,6 +9,6 @@
         <?= $this->hidden('referer', $this->referer) ?>
         <br/>
         <?= $this->submit('Odstranit')->data('action', 'confirm') ?>
-        <a href="<?= $this->referer ?>">Zpět</a>
+        <a class="btn btn-outline-primary" href="<?= $this->referer ?>">Zpět</a>
     </form>
 </div>

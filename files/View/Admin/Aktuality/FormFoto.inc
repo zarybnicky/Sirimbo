@@ -23,7 +23,7 @@
         <?php endforeach; ?>
         <div style="clear:both">
             <?= $this->submit('Potvrdit') ?>
-            <a href="/admin/aktuality">Zpět</a>
+            <a class="btn btn-outline-primary" href="/admin/aktuality">Zpět</a>
         </div>
     </form>
 </div>

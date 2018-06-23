@@ -39,5 +39,5 @@
            ->column('amount', 'Částka')
            ->column('dueDate', 'Splatnost')
            ->column('validRange', 'Platnost'); ?>
-  <a href="/member/profil">Zpět</a>
+  <a class="btn btn-outline-primary" href="/member/profil">Zpět</a>
 </div>

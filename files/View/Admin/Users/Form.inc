@@ -90,5 +90,5 @@
     </tr>
 </table>
 </form>
-<a href="/admin/users">Zpět</a>
+<a class="btn btn-outline-primary" href="/admin/users">Zpět</a>
 </div>

@@ -47,6 +47,6 @@
       </tr>
     </table>
     <?= $this->submit('Změnit třídu a body') ?>
-    <a href="/member/profil/par">Zpět</a>
+    <a class="btn btn-outline-primary" href="/member/profil/par">Zpět</a>
   </form>
 </div>

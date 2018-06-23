@@ -23,6 +23,6 @@
   <?php else: ?>
     Právě s nikým netančím.<br/>
   <?php endif;?>
-  <a href="/member/profil/par/partner">Změnit partnera</a>
-  <a href="/member/profil">Zpět</a>
+  <a class="btn btn-outline-primary" href="/member/profil/par/partner">Změnit partnera</a>
+  <a class="btn btn-outline-primary" href="/member/profil">Zpět</a>
 </div>

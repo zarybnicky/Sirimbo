@@ -58,5 +58,5 @@
             </tr>
         </table>
     </form>
-    <a href="<?= $this->referer ?>">Zpět</a>
+    <a class="btn btn-outline-primary" href="<?= $this->referer ?>">Zpět</a>
 </div>

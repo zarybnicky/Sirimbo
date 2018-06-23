@@ -106,8 +106,7 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
     protected function getDuplicateCategoryButton($id)
     {
         return $this->submit('<img title="Duplikovat" alt="Duplikovat" src="/style/icon-files-o.png" />')
-                    ->style('border:none;background:none;cursor:pointer;')
-                    ->data('category_duplicate', $id);
+            ->data('category_duplicate', $id)->cls('btn');
     }
 
     protected function getDateDisplay($from, $to) {

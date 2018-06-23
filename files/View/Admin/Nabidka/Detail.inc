@@ -1,6 +1,6 @@
 <?= $this->header('Správa nabídky') ?>
-<div class="container full">
-    <form action="" method="POST" class="centerWTable">
+<div class="container">
+    <form action="" method="POST">
         <button type="submit" name="action" value="add" style="display:none;">Enter</button>
         <div class="n_wrapper">
             <?= $this->render('files/View/Member/Nabidka/Header.inc', $this->nabidka) ?>
@@ -12,6 +12,6 @@
             ?>
         </div>
         <?= $this->submit('Uložit') ?>
-        <a href="<?= $this->backlink ?>">Zpět</a>
+        <a class="btn btn-outline-primary" href="/admin/permissions">Zpět</a>
     </form>
 </div>

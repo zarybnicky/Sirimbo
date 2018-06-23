@@ -16,25 +16,10 @@
         <meta name="norton-safeweb-site-verification"
               content="r44xj2vskhlgkyqcqm1hdgga2jdfj-idvyys0277y96s72k-tq0z-yyjdu7h3el6pi2gek0i4ykq3xgiguufrvuhj8nbj4n4miwjhvumhp35jfrafyynhj4ee8ctzpzh" />
         <?php foreach ($this->meta as $meta): ?>
-            <meta <?= implode(' ', array_map(
-                  function($k, $v){return "$k=\"$v\"";},
-                  array_keys($meta),
-                  array_values($meta)
-                  )) ?> />
+          <meta <?= $meta ?> />
         <?php endforeach; ?>
         <meta property="fb:app_id" content="132983570203245"/>
 
-        <script type="text/javascript"
-                src="//connect.facebook.net/cs_CZ/all.js#xfbml=1&appId=132983570203245"
-                id="facebook-jssdk"></script>
-        <script type="text/javascript">
-         var _gaq = _gaq || [];
-         _gaq.push(['_require','inpage_linkid','//www.google-analytics.com/plugins/ga/inpage_linkid.js'],
-                   ['_setAccount','UA-44v456908-1'],['_trackPageview']);
-         (function() {var ga = document.createElement('script');ga.type='text/javascript';ga.async=true;
-             ga.src='//www.google-analytics.com/ga.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(ga,s);
-         })();
-        </script>
         <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
         <link rel="stylesheet" type="text/css" href="/style/polyfill.object-fit.css" />
         <link rel="stylesheet" type="text/css" href="/style/video.min.css" />

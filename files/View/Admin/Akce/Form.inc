@@ -75,8 +75,9 @@
             </tr>
             <tr>
                 <td>
-                    <?= $this->submit($this->action) ?>
-                    <a href="/admin/akce">Zpět</a></td>
+                  <?= $this->submit($this->action) ?>
+                  <a class="btn btn-outline-primary" href="/admin/akce">Zpět</a>
+                </td>
                 <td>Pole označená (*) jsou povinná</td>
                 <td></td>
             </tr>

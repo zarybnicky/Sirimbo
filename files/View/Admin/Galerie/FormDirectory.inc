@@ -29,7 +29,7 @@
                 <td></td>
                 <td>
                     <?= $this->submit($this->action == 'add' ? 'Přidat složku' : 'Upravit složku') ?>
-                    <a href="/admin/galerie">Zpět</a>
+                    <a class="btn btn-outline-primary" href="/admin/galerie">Zpět</a>
                 </td>
             </tr>
         </table>

@@ -4,6 +4,7 @@ class TextHelper
     protected $name;
     protected $value;
     protected $size;
+    protected $cls;
 
     public function text($name, $value = null)
     {
@@ -14,6 +15,7 @@ class TextHelper
         $this->name = $name;
         $this->value = $value;
         $this->size = null;
+        $this->cls = null;
 
         return $this;
     }
@@ -24,12 +26,19 @@ class TextHelper
         return $this;
     }
 
+    public function cls($cls)
+    {
+        $this->cls = $cls;
+        return $this;
+    }
+
     public function render()
     {
         return (string) new Tag(
             'input',
             [
                 'type' => 'text',
+                'class' => $this->cls,
                 'size' => $this->size,
                 'name' => $this->name,
                 'value' => $this->value

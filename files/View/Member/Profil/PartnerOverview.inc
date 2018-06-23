@@ -18,6 +18,6 @@
         <?php if ($this->havePartner): ?>
             <?= $this->submit('Rozejít se')->data('action', 'dumpthem') ?>
         <?php endif;?>
-        <a href="/member/profil/par">Zpět</a>
+        <a class="btn btn-outline-primary" href="/member/profil/par">Zpět</a>
     </form>
 </div>

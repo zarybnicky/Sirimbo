@@ -32,7 +32,7 @@
             <tr>
                 <td>
                     <?= $this->submit('Upravit') ?>
-                    <a href="/admin/video">Zpět</a>
+                    <a class="btn btn-outline-primary" href="/admin/video">Zpět</a>
                 </td>
                 <td>Pole označená (*) jsou povinná</td>
             </tr>

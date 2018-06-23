@@ -50,5 +50,5 @@
   }
   ?>
   <br />
-  <a href="/member/zebricek">Zpět</a>
+  <a class="btn btn-outline-primary" href="/member/zebricek">Zpět</a>
 </div>

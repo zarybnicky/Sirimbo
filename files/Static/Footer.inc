@@ -43,7 +43,7 @@
 <script type="text/javascript" src="/scripts/leaflet.js"></script>
 <script type="text/javascript" src="/scripts/video.min.js"></script>
 <script type="text/javascript" src="/scripts/main.js"></script>
-<script type="text/javascript"
+<script async="true" type="text/javascript"
         src="//connect.facebook.net/cs_CZ/all.js#xfbml=1&appId=132983570203245"
         id="facebook-jssdk"></script>
 <script type="text/javascript">

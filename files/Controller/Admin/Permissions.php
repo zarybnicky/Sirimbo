@@ -158,18 +158,18 @@ class Controller_Admin_Permissions extends Controller_Admin
                     'items' => array_map(
                         function ($key, $levelName) use ($name, $item, $value) {
                             return isset($item[$key])
-                                ? $this->radio($name, $key)
+                                ? $this->bsRadio($name, $key)
                                        ->set($key == $value)
                                        ->label($levelName)
                                 : '';
                         },
                         array_keys(Settings::$permissionLevels),
-                        array_values(Settings::$permissionLevels)
+                        Settings::$permissionLevels
                     )
                 ];
             },
             array_keys(Settings::$permissions),
-            array_values(Settings::$permissions)
+            Settings::$permissions
         );
 
         $this->render(

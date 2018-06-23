@@ -52,7 +52,13 @@ abstract class Controller_Abstract implements Controller_Interface
             'html_title' => ''
         ];
         if (isset($vars['meta'])) {
-            $args['meta'] = $vars['meta'];
+            $args['meta'] = array_map(
+                function ($k, $v) {
+                    return "$k=\"$v\"";
+                },
+                array_keys($vars['meta']),
+                $vars['meta']
+            );
         }
         if (isset($vars['html_title'])) {
             $args['html_title'] = $vars['html_title'];
@@ -62,7 +68,8 @@ abstract class Controller_Abstract implements Controller_Interface
         echo $renderer->render(TISK ? FOOTER_TISK : FOOTER, ['filename' => $filename]);
     }
 
-    public function __call($name, $args) {
+    public function __call($name, $args)
+    {
         return Helper::invoke($name, $args);
     }
 }

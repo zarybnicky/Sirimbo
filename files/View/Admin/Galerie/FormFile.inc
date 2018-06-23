@@ -23,7 +23,7 @@
                 <td></td>
                 <td>
                     <?= $this->submit('Upravit')->data('action', 'add') ?>
-                    <a href="<?= $this->referer ?>">Zpět</a>
+                    <a class="btn btn-outline-primary" href="<?= $this->referer ?>">Zpět</a>
                 </td>
             </tr>
         </table>

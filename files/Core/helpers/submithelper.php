@@ -12,6 +12,7 @@ class SubmitHelper
         $this->name = null;
         $this->value = null;
         $this->style = null;
+        $this->cls = 'btn btn-primary';
         return $this;
     }
 
@@ -34,9 +35,9 @@ class SubmitHelper
         return $this;
     }
 
-    public function style($style)
+    public function cls($cls)
     {
-        $this->style = $style;
+        $this->cls = $cls;
         return $this;
     }
 
@@ -44,7 +45,7 @@ class SubmitHelper
     {
         return (string) new Tag(
             'button',
-            ['name' => $this->name, 'value' => $this->value, 'style' => $this->style],
+            ['name' => $this->name, 'value' => $this->value, 'class' => $this->cls],
             $this->text
         );
     }

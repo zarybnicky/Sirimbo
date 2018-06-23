@@ -25,6 +25,6 @@
                 <?php endforeach; ?>
             </table>
         <?php endif; ?>
-        <a href="/member/akce">Zpět</a>
+        <a class="btn btn-outline-primary" href="/member/akce">Zpět</a>
     </div>
 </div>

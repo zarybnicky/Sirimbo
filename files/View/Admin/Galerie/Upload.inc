@@ -19,7 +19,7 @@
             <tr>
                 <td>
                     <?= $this->submit('Nahrát na server')->data('action', 'upload') ?>
-                    <a href="/admin/galerie">Zpět</a>
+                    <a class="btn btn-outline-primary" href="/admin/galerie">Zpět</a>
                 </td>
             </tr>
         </table>
