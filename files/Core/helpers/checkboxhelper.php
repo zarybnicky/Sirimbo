@@ -52,9 +52,9 @@ class CheckboxHelper
         return $this;
     }
 
-    public function label($str)
+    public function cls($str)
     {
-        $this->label = $str;
+        $this->cls = $str;
         return $this;
     }
 
@@ -74,7 +74,7 @@ class CheckboxHelper
         if (!$this->label) {
             return (string) $checkbox;
         }
-        return "<label>$checkbox {$this->label}</label>";
+        return "<label class='{$this->labelCls}'>$checkbox {$this->label}</label>";
     }
 
     public function __toString()

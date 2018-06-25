@@ -7,7 +7,7 @@
   <div class="carousel-inner">
     <?php $first = true; foreach ($this->highlights as $item): ?>
       <div class="carousel-item<?php if ($first) { echo " active"; $first = false; } ?>"
-          style="background-image:url(<?= $item['title_photo_uri'] ?>)">
+          style="background-image:linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.4)),url(<?= $item['title_photo_uri'] ?>)">
         <img src="<?= $item['title_photo_uri'] ?>" alt="First slide" />
         <div class="carousel-caption">
           <a href="<?= $item['uri'] ?>"><h3><?= $item['name']; ?></h3></a>
@@ -32,13 +32,13 @@
       <h2>O klubu</h2>
       <p>
         <b>TK Olymp Olomouc</b> je tradiční taneční klub zabývající se výchovou
-        standardních a latinskoamerických tanečníků. V novém tisíciletí
-        patří mezi nejúspěšnější české kluby. Naše páry pravidelně sbírají
-        úspěchy v České republice i na mezinárodním poli.
+        standardních a&nbsp;latinskoamerických tanečníků. V&nbsp;novém tisíciletí
+        patří mezi&nbsp;nejúspěšnější české kluby. Naše páry pravidelně sbírají
+        úspěchy v&nbsp;České republice i&nbsp;na&nbsp;mezinárodním poli.
       </p>
       <p>
         Nabízíme atraktivní volnočasovou aktivitu dětem, kvalitní zázemí
-        sportovním tanečníkům a příjemné prostředí pro všechny, co mají
+        sportovním tanečníkům a&nbsp;příjemné prostředí pro&nbsp;všechny, co&nbsp;mají
         rádi tanec.
       </p>
     </div>
@@ -55,10 +55,10 @@
         <div class="col-md-6 courses__desc" style="text-align:right">
           <h4>Taneční přípravka (5&ndash;7&nbsp;let)</h4>
           <p>
-            Taneční a pohybové hry, seznámení s hudbou a základními kroky.
+            Taneční a&nbsp;pohybové hry, seznámení s&nbsp;hudbou a&nbsp;základními kroky.
           </p>
           <p>
-            Vyučuje mladý proškolený trénérský kolektiv v kombinaci se&nbsp;zkušenými&nbsp;učiteli.
+            Vyučuje mladý proškolený trénérský kolektiv v&nbsp;kombinaci se&nbsp;zkušenými&nbsp;učiteli.
           </p>
         </div>
         <div class="col-md-6 courses__img">
@@ -74,15 +74,17 @@
           <img alt="" src="/images/boruvci.jpg" style="" />
         </div>
         <div class="col-md-6 courses__desc">
-          <h4>Tančení pro děti (8&ndash;14&nbsp;let)</h4>
+          <h4>Tančení pro&nbsp;děti (8&ndash;14&nbsp;let)</h4>
           <p>
-            Pohybová a taneční průprava, základní figury a techniky standardních a latinskoamerických tanců.
+            Pohybová a&nbsp;taneční průprava, základní figury a&nbsp;techniky standardních
+            a&nbsp;latinskoamerických tanců.
           </p>
           <p>
-            Možné jako kroužek i jako příprava na taneční sport.
+            Možné jako kroužek i&nbsp;jako příprava na&nbsp;taneční sport.
           </p>
           <p>
-            Vyučuje mladý proškolený trénérský kolektiv, složený z mistrů České republiky a tanečníků mezinárodní třídy.
+            Vyučuje mladý proškolený trénérský kolektiv, složený z&nbsp;mistrů České
+            republiky a&nbsp;tanečníků mezinárodní třídy.
           </p>
         </div>
       </div>
@@ -92,18 +94,18 @@
     <div class="container">
       <div class="row">
         <div class="col-md-6 courses__desc" style="text-align:right">
-          <h4>Lekce pro začátečníky (15+&nbsp;let)</h4>
+          <h4>Lekce pro&nbsp;začátečníky (15+&nbsp;let)</h4>
           <p>
-            Vhodné pro všechny, kteří ještě netančili nebo prošli kurzy v tanečních.
+            Vhodné pro všechny, kteří ještě netančili nebo prošli kurzy v&nbsp;tanečních.
           </p>
           <p>
             Vyučujeme základní figury a techniky standardních a
-            latinskoamerických tanců, držení těla, souhru s partnerem a soulad s
-            hudbou.
+            latinskoamerických tanců, držení těla, souhru s&nbsp;partnerem a&nbsp;soulad
+            s&nbsp;hudbou.
           </p>
           <p>
-            Vyučuje mladý proškolený trénérský kolektiv, složený z mistrů České republiky
-            a tanečníků mezinárodní třídy.
+            Vyučuje mladý proškolený trénérský kolektiv, složený z&nbsp;mistrů České republiky
+            a&nbsp;tanečníků mezinárodní třídy.
           </p>
         </div>
         <div class="col-md-6 courses__img">
@@ -121,20 +123,21 @@
         <div class="col-md-6 courses__desc">
           <h4>Taneční sport</h4>
           <p>
-            Vhodné pro pokročilé tanečníky se soutěžními ambicemi od dětí po dospělé.
+            Vhodné pro&nbsp;pokročilé tanečníky se&nbsp;soutěžními ambicemi od&nbsp;dětí
+            po&nbsp;dospělé.
           </p>
           <p>
-            Tréninkový plán je zaměřený na výuku techniky standardních a latinskoamerických
-            tanců, kondiční a fyzickou přípravu a soutěžní podání tanečního
+            Tréninkový plán je zaměřený na výuku techniky standardních a&nbsp;latinskoamerických
+            tanců, kondiční a&nbsp;fyzickou přípravu a&nbsp;soutěžní podání tanečního
             sportu.
           </p>
           <p>
-            Vyučují extérní lektoři z Prahy, Brna, Ostravy - trenéři nejlepších párů
-            a mistrů České republiky.
+            Vyučují extérní lektoři z&nbsp;Prahy, Brna, Ostravy - trenéři nejlepších párů
+            a&nbsp;mistrů České republiky.
           </p>
           <p>
-            Volné tréninky pro vlastní samostatné trénování, možnost individuálních
-            lekcí s extérními trenéry.
+            Volné tréninky pro&nbsp;vlastní samostatné trénování, možnost individuálních
+            lekcí s&nbsp;extérními trenéry.
           </p>
         </div>
       </div>
@@ -199,12 +202,12 @@
       <p>
         <b>Taneční centrum při FZŠ Holečkova</b><br>
         Holečkova 10, 779 00 Olomouc<br>
-        (vchod brankou u zastávky <i>Povel, škola</i>)
+        (vchod brankou u&nbsp;zastávky <i>Povel, škola</i>)
       </p>
       <p>
         <b>Tělocvična Slovanského gymnázia</b><br>
         Jiřího z Poděbrad 13, 779 00 Olomouc<br>
-        (vchod bránou z ulice <i>U reálky</i>)
+        (vchod bránou z&nbsp;ulice <i>U reálky</i>)
       </p>
     </div>
     <div class="col-md">

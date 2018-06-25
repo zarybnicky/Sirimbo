@@ -107,7 +107,7 @@ class Controller_Member_Profil extends Controller_Member
                         'span',
                         ['class' => 'big', 'style' => 'text-decoration:underline'],
                         $row['pg_name']
-                    ],
+                    ),
                     'type' => (!$row['pg_type']
                                ? 'Ostatní platby'
                                : 'Členské příspěvky'),
@@ -115,7 +115,7 @@ class Controller_Member_Profil extends Controller_Member
                     'amount' => '',
                     'dueDate' => '',
                     'validRange' => ''
-                );
+                ];
                 $currentGroup = $row['pg_id'];
             }
             $groupsOut[] = [
