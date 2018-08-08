@@ -44,7 +44,7 @@ class DBAktuality extends Database
     {
         self::query(
             "UPDATE aktuality
-            SET at_kat='?',at_jmeno='?',at_text='?',xat_preview='?',at_foto='?',at_foto_main='?'
+            SET at_kat='?',at_jmeno='?',at_text='?',at_preview='?',at_foto='?',at_foto_main='?'
             WHERE at_id='?'",
             $kat, $jmeno, $text, $preview, $foto, $foto_main, $id
         );
