@@ -1,6 +1,6 @@
 <?= $this->header('Klubové akce') ?>
 
-<div class="container full">
+<div class="container">
     <?php
     $data = $this->data;
     unset($data['info']);

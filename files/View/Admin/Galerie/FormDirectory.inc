@@ -1,37 +1,26 @@
-<?= $this->header(
-    'Správa fotogalerie',
-    $this->action == 'add' ? 'Přidat složku' : 'Upravit složku'
-) ?>
-<div class="container full">
-    <form action="" method="post">
-        <table>
-            <tr>
-                <td>Název</td>
-                <td><input type="text" name="name" value="<?= $this->name ?>"/></td>
-            </tr>
-            <tr>
-                <td>Nadsložka</td>
-                <td><?php
-                    $s = $this->select('parent')
-                              ->set($this->parent)
-                              ->option('0', '--');
-                    foreach ($this->dirs as $item) {
-                        $s->option($item['id'], $item['text']);
-                    }
-                    echo $s;
-                    ?></td>
-            </tr>
-            <tr>
-                <td>Skrytá složka</td>
-                <td><?= $this->checkbox('hidden', '1')->set($this->hidden) ?></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <?= $this->submit($this->action == 'add' ? 'Přidat složku' : 'Upravit složku') ?>
-                    <a class="btn btn-outline-primary" href="/admin/galerie">Zpět</a>
-                </td>
-            </tr>
-        </table>
-    </form>
+<?= $this->header('Správa fotogalerie', ($this->action == 'add' ? 'Přidat' : 'Upravit') . ' složku') ?>
+<div class="container">
+  <form action="" method="post">
+    <div class="form-group">
+      <label for="name">Název</label>
+      <?= $this->text('name', $ŧhis->info) ?>
+    </div>
+    <div class="form-group">
+      <label for="parent">Nadsložka</label>
+      <?php
+      $s = $this->select('parent')->set($this->parent)->option('0', '--');
+      foreach ($this->dirs as $item) {
+          $s->option($item['id'], $item['text']);
+      }
+      echo $s;
+      ?>
+    </div>
+    <div class="form-check">
+      <?= $this->checkbox('hidden', '1')->label('Skrýt')->set($this->hidden) ?>
+    </div>
+    <div class="form-group">
+      <a class="btn btn-outline-primary" href="/admin/galerie">Zpět</a>
+      <?= $this->submit($this->action == 'add' ? 'Přidat' : 'Upravit') ?>
+    </div>
+  </form>
 </div>

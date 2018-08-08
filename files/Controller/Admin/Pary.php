@@ -56,7 +56,7 @@ class Controller_Admin_Pary extends Controller_Admin
                     'checkBox' => $this->checkbox('pary[]', $item['p_id'])->render(),
                     'fullNameMan' => $item['guy_surname'] . ', ' . $item['guy_name'],
                     'fullNameWoman' => $item['gal'] ? ($item['gal_surname'] . ', ' . $item['gal_name']) : '',
-                    'standart' => $item['p_stt_trida'] . ' ' . $item['p_stt_body'] . 'F' . $item['p_stt_finale'],
+                    'standard' => $item['p_stt_trida'] . ' ' . $item['p_stt_body'] . 'F' . $item['p_stt_finale'],
                     'latina' => $item['p_lat_trida'] . ' ' . $item['p_lat_body'] . 'F' . $item['p_lat_finale'],
                     'hodnoceni' => $item['p_hodnoceni']
                 ];

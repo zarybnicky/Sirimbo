@@ -1,6 +1,6 @@
 <?= $this->header('Profil') ?>
 
-<div class="container full">
+<div class="container">
     <?php
     echo $this->partnerRequest()->getAll();
     if ($this->havePartner) {

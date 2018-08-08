@@ -1,6 +1,6 @@
 <?= $this->header('Správa rozpisů');?>
 
-<div class="container full">
+<div class="container">
   <form action="" method="POST">
     <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
     <div class="r_wrapper">
@@ -14,56 +14,23 @@
           <td>Zámek</td>
         </tr>
         <?php
-        $userselect = $this->userSelect()
-                           ->idVar('p_id')
-                           ->type('par')
-                           ->users($this->users);
+        $userselect = $this->userSelect()->idVar('p_id')->type('par')->users($this->users);
         foreach ($this->items as $item) :
         ?>
           <tr>
-            <td>
-              <?= $userselect->name($item['id'] . '-partner')->set($item['partner']) ?>
-            </td>
-            <td>
-              <input type="text"
-                     size="5"
-                     name="<?= $item['id']; ?>-od"
-                     value="<?= $item['timeFrom']; ?>"/>
-            </td>
-            <td>
-              <input type="text"
-                     size="5"
-                     name="<?= $item['id']; ?>-do"
-                     value="<?= $item['timeTo']; ?>"/>
-            </td>
-            <td>
-              <?= $this->submit('Odstranit')->data('remove', $item['id']) ?>
-            </td>
-            <td>
-              <?= $this->checkbox($item['id'] . '-lock', 'lock')->set($item['lock']) ?>
-            </td>
+            <td><?= $userselect->name($item['id'] . '-partner')->set($item['partner']) ?></td>
+            <td><?= $this->text($item['id'] . '-od', $item['timeFrom'])->size(5) ?></td>
+            <td><?= $this->text($item['id'] . '-do', $item['timeTo'])->size(5) ?></td>
+            <td><?= $this->submit('Odstranit')->data('remove', $item['id']) ?></td>
+            <td><?= $this->checkbox($item['id'] . '-lock', 'lock')->set($item['lock']) ?></td>
           </tr>
         <?php endforeach; ?>
         <tr>
-          <td>
-            <?= $userselect->name('add_partner'); ?>
-          </td>
-          <td>
-            <input type="text" name="add_od" size="5" value="" />
-          </td>
-          <td>
-            <input type="text" name="add_do" size="5" value="" />
-          </td>
-          <td>
-            <?= $this->submit('Přidat')->data('action', 'add') ?>
-          </td>
-          <td>
-            <input type="checkbox" name="add_lock" value="lock" />
-          </td>
-        </tr>
-        <tr>
-          <td>
-          </td>
+          <td><?= $userselect->name('add_partner'); ?></td>
+          <td><?= $this->text('add_od')->size(5) ?>
+          <td><?= $this->text('add_do')->size(5) ?>
+          <td><?= $this->submit('Přidat')->data('action', 'add') ?></td>
+          <td><?= $this->checkbox('add_lock', 'lock') ?>
         </tr>
       </table>
     </div>
@@ -73,9 +40,9 @@
       <?= $this->submit('Opravit přesahy')->data('action', 'overlap') ?>
       <br />
       <?= $this->submit('Přidat více')->data('action', 'add_multiple') ?>
-      <input type="text" name="add_multi_num" size="2" /> hodin po
-      <input type="text" name="add_multi_len" size="3" /> minutách od
-      <input type="text" name="add_multi_od" size="5" /> hodin
+      <?= $this->text('add_multi_num')->size(2) ?> hodin po
+      <?= $this->text('add_multi_len')->size(3) ?> minutách od
+      <?= $this->text('add_multi_od')->size(5) ?> hodin
     </div>
   </form>
   <br/>

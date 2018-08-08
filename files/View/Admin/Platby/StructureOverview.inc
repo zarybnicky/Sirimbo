@@ -1,24 +1,16 @@
 <?= $this->render('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri])?>
 <?= $this->subheader('Struktura plateb') ?>
 
-<div class="container full">
-<?php
-echo '<span class="big">Přidat: </span> ';
-echo '<a href="/admin/platby/structure/group/add">kategorii</a>, ';
-echo '<a href="/admin/platby/structure/category/add">specifický symbol</a>';
+<div class="container">
+<span class="big">Přidat: </span>
+<a href="/admin/platby/structure/group/add">kategorii</a>
+<a href="/admin/platby/structure/category/add">specifický symbol</a>
 
-echo $this->table()
+<?= $this->table()
     ->style('width:100%')
     ->column('buttons', '', '', 'width:50px')
     ->column('name', 'Název')
-    ->data($this->data);
-?>
-
-<div style="">
-<?php foreach ($this->data as $row): ?>
-
-<?php endforeach;?>
-</div>
+    ->data($this->data) ?>
 
 <?php
 if (!empty($this->orphanGroupSkupina)) {

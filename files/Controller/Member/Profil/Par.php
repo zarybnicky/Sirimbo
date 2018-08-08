@@ -192,7 +192,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
         $f->checkInArray(
             $request->post('stt-trida'),
             ['Z', 'H', 'D', 'C', 'B', 'A', 'M'],
-            'Neplatná standartní třída',
+            'Neplatná standardní třída',
             'stt-trida'
         );
         $f->checkInArray(
@@ -205,7 +205,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
             $request->post('stt-body'),
             0,
             1000,
-            'Špatný počet standartních bodů',
+            'Špatný počet standardních bodů',
             'stt-body'
         );
         $f->checkNumberBetween(
@@ -219,7 +219,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
             $request->post('stt-finale'),
             0,
             10,
-            'Špatný počet standartních finálí',
+            'Špatný počet standardních finálí',
             'stt-finale'
         );
         $f->checkNumberBetween(

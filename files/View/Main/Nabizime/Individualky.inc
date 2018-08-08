@@ -1,5 +1,5 @@
 <?= $this->header('Nabízíme') ?>
-<div class="container full">
+<div class="container">
 <h2>Individuální lekce</h2>
 <ul class="list">
     <li>vhodné pro všechny - začátečníky, pokročilé, děti i dospělé</li>

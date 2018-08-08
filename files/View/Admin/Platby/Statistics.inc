@@ -1,7 +1,7 @@
 <?= $this->render('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri]) ?>
 <?= $this->subheader('Dočasná statistika - členové podle skupin') ?>
 
-<div class="container full">
+<div class="container">
 <?php
 foreach ($this->data as $skupina) {
     echo $this->table()

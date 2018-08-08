@@ -1,5 +1,5 @@
 <?= $this->header('Správa uživatelů') ?>
-<div class="container full">
+<div class="container">
 
 <?php if ($this->showMenu): ?>
     <form action="" method="get">

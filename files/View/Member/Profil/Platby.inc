@@ -1,6 +1,6 @@
 <?= $this->header('Moje platby') ?>
 
-<div class="container full">
+<div class="container">
   <?= $this->colorBox, '&nbsp;', $this->skupinaData;?><br>
   Č.ú.: 1806875329/0800<br>
   Variabilní symbol: <?= $this->varSymbol;?><br>

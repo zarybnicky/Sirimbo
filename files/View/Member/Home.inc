@@ -1,7 +1,7 @@
 <?= $this->header('Novinky') ?>
 
-<div class="container full">
-  <?php echo $this->partnerRequest()->getAll(); ?>
+<div class="container">
+  <?= $this->partnerRequest()->getAll(); ?>
 
   <?php
   if (!$this->data) {

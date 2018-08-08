@@ -1,6 +1,6 @@
 <?= $this->header('Správa párů') ?>
 
-<div class="container full">
+<div class="container">
     <form action="" method="POST">
         <?php
         if ($this->showMenu) {
@@ -17,7 +17,7 @@
                      ->column('checkBox', '')
                      ->column('fullNameMan', 'Partner')
                      ->column('fullNameWoman', 'Partnerka')
-                     ->column('standart', 'Standart')
+                     ->column('standard', 'Standard')
                      ->column('latina', 'Latina')
                      ->column('hodnoceni', 'Body');
             ?>

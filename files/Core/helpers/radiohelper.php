@@ -48,6 +48,7 @@ class RadioHelper
             'input',
             [
                 'type' => 'radio',
+                'class' => 'form-check-input',
                 'name' => $this->name,
                 'value' => $this->value,
                 'checked' => $this->state,
@@ -57,7 +58,7 @@ class RadioHelper
         if (!$this->label) {
             return (string) $radio;
         }
-        return "<label>$radio {$this->label}</label>";
+        return "<label class='form-check-label'>$radio {$this->label}</label>";
     }
 
     public function __toString()

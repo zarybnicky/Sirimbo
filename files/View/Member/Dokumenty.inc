@@ -1,6 +1,6 @@
 <?= $this->header('Dokumenty') ?>
 
-<div class="container full">
+<div class="container">
   <?php if ($this->showMenu): ?>
     <form action="" method="GET">
       <?= $this->select('kat')

@@ -1,7 +1,7 @@
 <?= $this->render('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri])?>
 <?= $this->subheader('Specifické symboly') ?>
 
-<div class="container full">
+<div class="container">
     <form action="" method="post">
         <a href="/admin/platby/structure/category/add">Přidat specifický symbol</a>
         <?= $this->table()

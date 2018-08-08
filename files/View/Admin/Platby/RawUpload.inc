@@ -1,7 +1,7 @@
 <?= $this->render('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri]) ?>
 <?= $this->subheader('Import plateb') ?>
 
-<div class="container full">
+<div class="container">
     <h3>Upload souboru CSV</h3>
     <form action="" method="POST" enctype="multipart/form-data">
         <?= $this->upload('in') ?>

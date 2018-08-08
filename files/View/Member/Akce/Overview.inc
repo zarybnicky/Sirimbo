@@ -1,6 +1,6 @@
 <?= $this->header('Klubové akce') ?>
 
-<div class="container full">
+<div class="container">
   <style type="text/css">
    .unit {
        background:inherit;border:none;

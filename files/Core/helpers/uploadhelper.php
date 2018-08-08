@@ -153,7 +153,7 @@ class UploadHelper
         }
         return (string) new Tag(
             'input',
-            ['name' => $this->_name . '[]', 'multiple' => true, 'type' => 'file']
+            ['name' => $this->_name . '[]', 'class' => 'form-control-file', 'multiple' => true, 'type' => 'file']
         );
     }
 

@@ -1,49 +1,39 @@
 <?= $this->header('Změna třídy a bodů') ?>
 
-<div class="container full">
+<div class="container">
   <?= $this->partnerRequest()->getAll(); ?>
 
   <form action="" method="post">
     <table>
-      <tr><td>Standart:</td><td></td><td></td></tr>
+      <tr><td colspan="2">Standard:</td></tr>
       <tr>
         <td>Třída:</td>
-        <td><?php
-            echo $this->select('stt-trida')
-                      ->set($this->stt_trida)
-                      ->options(['Z', 'H', 'D', 'C', 'B', 'A', 'M'], true, true);
-            ?></td>
-        <td></td>
+        <td><?= $this->select('stt-trida')
+                  ->set($this->stt_trida)
+                  ->options(['Z', 'H', 'D', 'C', 'B', 'A', 'M'], true, true); ?></td>
       </tr>
       <tr>
         <td>Body:</td>
-        <td><input type="text" name="stt-body" value="<?= $this->stt_body ?>" /></td>
-        <td>0 až 1000</td>
+        <td><?= $this->text('stt-body', $this->stt_body) ?></td>
       </tr>
       <tr>
         <td>Finále:</td>
-        <td><input type="text" name="stt-finale" value="<?= $this->stt_finale ?>" /></td>
-        <td>0 až 10</td>
+        <td><?= $this->text('stt-finale', $this->stt_finale) ?></td>
       </tr>
-      <tr><td>Latina:</td><td></td><td></td></tr>
+      <tr><td colspan="2">Latina:</td></tr>
       <tr>
         <td>Třída:</td>
-        <td><?php
-            echo $this->select('lat-trida')
-                      ->set($this->lat_trida)
-                      ->options(['Z', 'H', 'D', 'C', 'B', 'A', 'M'], true, true);
-            ?></td>
-        <td></td>
+        <td><?= $this->select('lat-trida')
+                  ->set($this->lat_trida)
+                  ->options(['Z', 'H', 'D', 'C', 'B', 'A', 'M'], true, true); ?></td>
       </tr>
       <tr>
         <td>Body:</td>
-        <td><input type="text" name="lat-body" value="<?= $this->lat_body ?>" /></td>
-        <td>0 až 1000</td>
+        <td><?= $this->text('lat-body', $this->lat_body) ?></td>
       </tr>
       <tr>
         <td>Finále:</td>
-        <td><input type="text" name="lat-finale" value="<?= $this->lat_finale ?>" /></td>
-        <td>0 až 10</td>
+        <td><?= $this->text('lat-finale', $this->lat_finale) ?></td>
       </tr>
     </table>
     <?= $this->submit('Změnit třídu a body') ?>

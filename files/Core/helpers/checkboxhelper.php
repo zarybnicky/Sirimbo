@@ -60,6 +60,18 @@ class CheckboxHelper
 
     public function render()
     {
+        if (!$this->label) {
+            return new Tag(
+                'input',
+                [
+                    'type' => 'checkbox',
+                    'name' => $this->name,
+                    'value' => $this->value,
+                    'checked' => $this->state,
+                    'readonly' => $this->readonly
+                ]
+            );
+        }
         $checkbox = new Tag(
             'input',
             [
@@ -71,9 +83,6 @@ class CheckboxHelper
                 'class' => $this->cls
             ]
         );
-        if (!$this->label) {
-            return (string) $checkbox;
-        }
         return "<label class='{$this->labelCls}'>$checkbox {$this->label}</label>";
     }
 

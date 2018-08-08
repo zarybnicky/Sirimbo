@@ -24,7 +24,7 @@ $getItem = function ($name, $href) use ($isActive) {
     font-weight:normal;
 }
 </style>
-<div class="container full">
+<div class="container">
 <ul id="adminNavigation">
     <li><?= $getItem('Přehled', 'platby/overview');?></li>
     <li><?= $getItem('Hledání', 'platby/items');?></li>

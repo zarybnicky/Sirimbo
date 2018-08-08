@@ -1,5 +1,5 @@
 <?= $this->header('Správa fotogalerie') ?>
-<div class="container full">
+<div class="container">
 <form action="" method="POST">
 <?php
 echo $this->menu()

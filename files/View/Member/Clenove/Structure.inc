@@ -1,5 +1,5 @@
 <?= $this->render('files/View/Member/Clenove/Navigation.inc', ['uri' => $this->uri]);?>
-<div class="container full">
+<div class="container">
 <?php
 foreach ($this->data as $skupina) {
     echo '<div style="width:49%;float:', $skupina['info']['align'], '">';

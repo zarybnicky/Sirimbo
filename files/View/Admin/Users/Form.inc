@@ -1,94 +1,92 @@
-<?= $this->header(
-    'Správa uživatelů',
-    $this->action == 'add' ? 'Přidat uživatele' : 'Upravit uživatele'
-) ?>
-<div class="container full">
-<form action="" method="POST">
-<table>
-    <tr>
-        <td>Uživatel (*): </td>
-        <td><input type="text" name="login" value="<?= $this->login ?>" <?php
-            if ($this->action == 'edit') echo 'readonly="readonly"';
-        ?>/></td>
-        <td>Pouze písmena bez diakritiky, číslice a podtržítka, 3 - 20 znaků</td>
-    </tr><tr>
-        <td>Heslo (*): </td>
-        <td><input type="text" name="pass" value="<?= $this->pass ?>" <?php
-            if ($this->action == 'edit') echo 'disabled="disabled"';
-        ?>/></td>
-        <td>Pouze písmena bez diakritiky, číslice a podtržítka, 6 - 32 znaků</td>
-    </tr><tr>
-        <td>Jméno (*): </td>
-        <td><input type="text" name="jmeno" value="<?= $this->jmeno ?>" /></td>
-        <td>Max. 40 znaků</td>
-    </tr><tr>
-        <td>Příjmení (*): </td>
-        <td><input type="text" name="prijmeni" value="<?= $this->prijmeni ?>" /></td>
-        <td>Max. 40 znaků</td>
-    </tr><tr>
-        <td>Pohlaví (*): </td>
-        <td>
-            <?= $this->radio('pohlavi', 'm')->set($this->pohlavi == 'm')->label('Muž') ?>&nbsp;
-            <?= $this->radio('pohlavi', 'f')->set($this->pohlavi == 'f')->label('Žena') ?>
-        </td>
-        <td></td>
-    </tr><tr>
-        <td>E-mail (*): </td>
-        <td><input type="text" name="email" value="<?= $this->email ?>" /></td>
-        <td>Max. 50 znaků, ve formátu e-mail adresy</td>
-    </tr><tr>
-        <td>Telefon (*): </td>
-        <td><input type="text" name="telefon" value="<?= $this->telefon ?>" /></td>
-        <td>Pouze číslice a +, max. 13 znaků</td>
-    </tr><tr>
-        <td>Datum narození: (*)</td>
-        <td><?= $this->date('narozeni', $this->narozeni) ?></td>
-        <td></td>
-    </tr><tr>
-        <td>Poznámky: </td>
-        <td><textarea rows="15" cols="50" name="poznamky"><?= $this->poznamky ?></textarea></td>
-        <td></td>
-    </tr><tr>
-        <td>Uzamknout: </td>
-        <td><?= $this->checkbox('lock', 'lock')->set($this->lock) ?></td>
-        <td></td>
-    </tr><tr>
-        <td>Ban: </td>
-        <td><?= $this->checkbox('ban', 'ban')->set($this->ban) ?></td>
-        <td></td>
-    </tr><tr>
-        <td>Aktivní tanečník: </td>
-        <td><?= $this->checkbox('dancer', 'dancer')->set($this->dancer) ?></td>
-        <td></td>
-    </tr><tr>
-        <td>Systémový uživatel: </td>
-        <td><?= $this->checkbox('system', 'system')->set($this->system) ?></td>
-        <td></td>
-    </tr><tr>
-        <td>Oprávnění (*): </td>
-        <td><?php
-        $s = $this->select('group')->set($this->group);
-        foreach ($this->groups as $item)
-            $s->option($item['id'], $item['name']);
-        echo $s;
-        ?></td>
-        <td></td>
-    </tr><tr>
-        <td>Skupina (*): </td>
-        <td><?php
-        foreach ($this->skupiny as $item) {
-            echo $this->radio('skupina', $item['id'])
-                      ->set($this->skupina == $item['id'])
-                      ->label($this->colorbox($item['color'], $item['popis']) . $item['popis']);
-            echo '<br/>';
-        }?></td>
-        <td></td>
-    </tr><tr>
-        <td><?= $this->submit($this->action == 'add' ? 'Přidat' : 'Upravit') ?></td>
-        <td>Pole označená (*) jsou povinná</td>
-        <td></td>
-    </tr>
-</table>
-</form>
-<a class="btn btn-outline-primary" href="/admin/users">Zpět</a>
+<?= $this->header('Správa uživatelů', ($this->action == 'add' ? 'Přidat' : 'Upravit') . ' uživatele') ?>
+<div class="container">
+  <form action="" method="POST">
+    <div class="form-group">
+      <label for="login">Přihlašovací jméno</label>
+      <?= $this->text('login', $this->login)->readonly($this->action == 'edit') ?>
+      <small class="form-text text-muted">
+        Pouze písmena bez diakritiky, číslice a podtržítka, 3 - 20 znaků
+      </small>
+    </div>
+    <div class="form-group">
+      <label for="pass">Heslo</label>
+      <?= $this->text('pass', $this->pass)->disabled($this->action == 'edit') ?>
+      <small class="form-text text-muted">
+        Pouze písmena bez diakritiky, číslice a podtržítka, 6 - 32 znaků
+      </small>
+    </div>
+    <div class="form-group">
+      <label for="jmeno">Jméno</label>
+      <?= $this->text('jmeno', $this->jmeno) ?>
+      <small class="form-text text-muted">Max. 40 znaků</small>
+    </div>
+    <div class="form-group">
+      <label for="prijmeni">Příjmení</label>
+      <?= $this->text('prijmeni', $this->prijmeni) ?>
+      <small class="form-text text-muted">Max. 40 znaků</small>
+    </div>
+    <div class="form-group">
+      <label for="pohlavi">Pohlaví</label>
+      <div class="form-check form-check-inline">
+        <?= $this->radio('pohlavi', 'm')->set($this->pohlavi == 'm')->label('Muž') ?>
+      </div>
+      <div class="form-check form-check-inline">
+        <?= $this->radio('pohlavi', 'f')->set($this->pohlavi == 'f')->label('Žena') ?>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="email">E-mail</label>
+      <?= $this->text('email', $this->email) ?>
+      <small class="form-text text-muted">Max. 50 znaků</small>
+    </div>
+    <div class="form-group">
+      <label for="telefon">Telefon</label>
+      <?= $this->text('telefon', $this->telefon) ?>
+      <small class="form-text text-muted">Pouze číslice a +, max. 13 znaků</small>
+    </div>
+    <div class="form-group">
+      <label for="od">Datum narození</label>
+      <?= $this->date('narozeni', $this->narozeni) ?>
+    </div>
+    <div class="form-group">
+      <label for="poznamky">Poznámky</label>
+      <textarea class="form-control" name="poznamky" rows="15"><?= $this->poznamky ?></textarea>
+    </div>
+    <div class="form-check">
+      <?= $this->checkbox('lock', 'lock')->label('Uzamknout')->set($this->lock) ?>
+    </div>
+    <div class="form-check">
+      <?= $this->checkbox('ban', 'ban')->label('Ban')->set($this->ban) ?>
+    </div>
+    <div class="form-check">
+      <?= $this->checkbox('dancer', 'dancer')->label('Aktivní tanečník')->set($this->dancer) ?>
+    </div>
+    <div class="form-check">
+      <?= $this->checkbox('system', 'system')->label('Systémový uživatel')->set($this->system) ?>
+    </div>
+    <div class="form-group">
+      <label for="group">Oprávnění</label>
+      <?php
+      $s = $this->select('group')->set($this->group);
+      foreach ($this->groups as $item) {
+          $s->option($item['id'], $item['name']);
+      }
+      echo $s;
+      ?>
+    </div>
+    <div class="form-group">
+      <label for="skupina">Skupina</label>
+      <?php
+      foreach ($this->skupiny as $item) {
+          echo $this->radio('skupina', $item['id'])
+                   ->set($this->skupina == $item['id'])
+                   ->label($this->colorbox($item['color'], $item['popis']) . $item['popis']);
+          echo '<br/>';
+      }?>
+    </div>
+    <div class="form-group">
+      <a class="btn btn-outline-primary" href="/admin/users">Zpět</a>
+      <?= $this->submit($this->action == 'add' ? 'Přidat' : 'Upravit') ?>
+    </div>
+  </form>
 </div>

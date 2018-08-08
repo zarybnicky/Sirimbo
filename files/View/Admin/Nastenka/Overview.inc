@@ -1,6 +1,6 @@
 <?= $this->header('Správa nástěnky') ?>
-<div class="container full">
-    <form action="" method="POST">
+<div class="container">
+  <form action="" method="POST">
 <?php
 if ($this->showMenu) {
     echo $this->menu()
@@ -24,6 +24,6 @@ echo $this->table()
     ->column('timestampEdit', 'Naposledy<br/>upraveno', '', 'width:83px');
 echo '</div>';
 ?>
-    </form>
-    <div style="margin-right:150px;text-align:center;"><?= $this->navigation ?></div>
+  </form>
+  <div style="margin-right:150px;text-align:center;"><?= $this->navigation ?></div>
 </div>

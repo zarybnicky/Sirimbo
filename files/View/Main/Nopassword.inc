@@ -1,21 +1,20 @@
 <?= $this->header('Zapomenuté heslo') ?>
 
-<div class="container full">
+<div class="container">
     <p>
         Pokud jste zapomněli heslo, pošleme Vám nové na e-mail, který
         jste zadali při registraci.
     </p>
 
     <form action="" method="post">
-        <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
         <table>
             <tr>
                 <td>Uživatelské jméno:</td>
-                <td><input type="text" name="name" /></td>
+                <td><?= $this->text('name') ?></td>
             </tr>
             <tr>
                 <td>Email:</td>
-                <td><input type="text" name="email" /></td>
+                <td><?= $this->ŧext('email') ?></td>
             </tr>
             <tr>
                 <td></td>

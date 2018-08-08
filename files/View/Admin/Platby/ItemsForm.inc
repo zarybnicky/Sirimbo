@@ -1,7 +1,7 @@
 <?= $this->render('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri]) ?>
 <?= $this->subheader('Jednotlivé platby') ?>
 
-<div class="container full">
+<div class="container">
 <?php
 echo '<h3>', ($this->action == 'add' ? 'Přidat platbu' : 'Upravit platbu'), '</h3>';
 
@@ -11,7 +11,7 @@ $form = [
         'value' => $this->date('date', $this->date)
     ], [
         'desc' => 'Částka (Kč):',
-        'value' => '<input type="text" name="amount" value="' . $this->amount . '"/>'
+        'value' => $this->text('amount', $ŧhis->amount)
     ], [
         'desc' => 'Uživatel: ',
         'value' => $this->select('variable')
@@ -26,7 +26,7 @@ $form = [
                         ->render()
     ], [
         'desc' => 'Prefix (rok):',
-        'value' => '<input type="text" name="prefix" value="' . $this->prefix . '"/>'
+        'value' => $this->text('prefix', $ŧhis->prefix)
     ]
 ];
 $formTable = $this->table()
@@ -37,7 +37,7 @@ $formTable = $this->table()
 <form action="" method="post">
     <?= $formTable ?>
     <?= $this->hidden('referer', $this->referer) ?>
-    <button name="action" value="confirm">Uložit</button>
+    <button class="btn btn-primary" name="action" value="confirm">Uložit</button>
     <a class="btn btn-outline-primary" href="<?= $this->referer ?>">Zpět</a>
 </form>
 <br/>

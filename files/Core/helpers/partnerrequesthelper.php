@@ -29,10 +29,10 @@ class PartnerRequestHelper
 <form action="/member/profil/par/zadost" method="POST">
 <div style="width:100%;">
     <span style="float:left;">
-        Žádáte uživatele <?php echo $item['u_jmeno'], ' ',$item['u_prijmeni'];?> o partnerství.
+        Žádáte uživatele <?= $item['u_jmeno'], ' ',$item['u_prijmeni'];?> o partnerství.
     </span>
     <span style="text-align:right;float:right;margin-right:15px;">
-        <input type="hidden" name="id" value="<?php echo $item['pn_id'];?>" />
+        <?= $this->hidden('id', $item['pn_id']) ?>
         <button type="submit" name="action" value="cancel">Zrušit</button>
     </span>
 </div>
@@ -57,7 +57,7 @@ class PartnerRequestHelper
         Uživatel <?php echo $item['u_jmeno'], ' ', $item['u_prijmeni'];?> Vás žádá o partnerství.
     </span>
     <span style="text-align:right;float:right;margin-right:15px;">
-        <input type="hidden" name="id" value="<?php echo $item['pn_id'];?>" />
+        <?= $this->hidden('id', $item['pn_id']) ?>
         <button type="submit" name="action" value="accept">Přijmout</button>
         <button type="submit" name="action" value="refuse">Odmítnout</button>
     </span>

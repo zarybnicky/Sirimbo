@@ -10,6 +10,7 @@ class SelectHelper
         $this->name = $name ?: '';
         $this->value = null;
         $this->options = [];
+        $this->cls = 'form-control';
 
         return $this;
     }
@@ -23,6 +24,12 @@ class SelectHelper
     public function set($value)
     {
         $this->value = $value;
+        return $this;
+    }
+
+    public function cls($cls)
+    {
+        $this->cls = $cls;
         return $this;
     }
 
@@ -90,7 +97,7 @@ class SelectHelper
 
         return (string) new Tag(
             'select',
-            ['name' => $this->name, 'class' => 'custom-select'],
+            ['name' => $this->name, 'class' => $this->cls],
             $options
         );
     }

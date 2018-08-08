@@ -1,62 +1,42 @@
 <?= $this->header('Správa nabídky', $this->header) ?>
-<div class="container full">
-    <form action="" method="POST">
-        <button type="submit" style="display:none;">Enter</button>
-
-        <table>
-            <tr>
-                <td>Trenér (*):</td>
-                <td>
-                    <?= $this->userSelect('trener')
-                             ->users($this->users)
-                             ->set($this->trener)
-                             ->tmpSwitch($this->isAdmin)
-                             ->render() ?>
-                </td>
-            </tr>
-            <tr>
-                <td>Počet hodin (*):</td>
-                <td><?= $this->text('pocet_hod', $this->pocet_hod) ?></td>
-            </tr>
-            <tr>
-                <td>Max. počet hodin/pár (*):</td>
-                <td><?= $this->text('max_pocet_hod', $this->max_pocet_hod) ?></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>(0 = neomezeně)</td>
-            </tr>
-            <tr>
-                <td>Od: (*)</td>
-                <td><?= $this->date('od', $this->od) ?></td>
-            </tr>
-            <tr>
-                <td>Do: </td>
-                <td><?= $this->date('do', $this->do) ?></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>(pokud je "Do" prázdné, počítá se jako "Od")</td>
-            </tr>
-            <tr>
-                <td>Viditelný: </td>
-                <td>
-                    <?= $this->checkbox('visible', 'visible')->set($this->visible) ?>
-                </td>
-            </tr>
-            <tr>
-                <td>Uzamknout: </td>
-                <td><?= $this->checkbox('lock')->set($this->lock) ?></td>
-            </tr>
-            <tr>
-                <td>
-                    <?= $this->hidden('referef', $this->referer) ?>
-                    <?= $this->submit($this->action) ?>
-                    </button>
-                </td>
-                <td>Pole označená (*) jsou povinná</td>
-            </tr>
-        </table>
-    </form>
-    <a class="btn btn-outline-primary" href="<?= $this->referer ?>">Zpět</a>
+<div class="container">
+  <form action="" method="POST">
+    <button type="submit" style="display:none;">Enter</button>
+    <div class="form-group">
+      <label for="trewner">Trenér</label>
+      <?= $this->userSelect('trener')
+             ->users($this->users)
+             ->set($this->trener)
+             ->tmpSwitch($this->isAdmin) ?>
+    </div>
+    <div class="form-group">
+      <label for="pocet_hod">Počet hodin</label>
+      <?= $this->text('pocet_hod', $this->pocet_hod) ?>
+    </div>
+    <div class="form-group">
+      <label for="max_pocet_hod">Max. počet hodin/pár</label>
+      <?= $this->text('max_pocet_hod', $this->max_pocet_hod) ?>
+      <small class="form-text text-muted">"0" = neomezeně</small>
+    </div>
+    <div class="form-group">
+      <label for="od">Od</label>
+      <?= $this->date('od', $this->od) ?>
+    </div>
+    <div class="form-group">
+      <label for="do">Do</label>
+      <?= $this->date('od', $this->od) ?>
+      <small class="form-text text-muted">(pokud je prázdné, počítá se jako "Od")</small>
+    </div>
+    <div class="form-check">
+      <?= $this->checkbox('visible', 'visible')->label('Zviditelnit')->set($this->visible) ?>
+    </div>
+    <div class="form-check">
+      <?= $this->checkbox('lock')->label('Uzamknout')->set($this->lock) ?>
+    </div>
+    <div class="form-group">
+      <?= $this->hidden('referef', $this->referer) ?>
+      <?= $this->submit($this->action) ?>
+      <a class="btn btn-outline-primary" href="<?= $this->referer ?>">Zpět</a>
+    </div>
+  </form>
 </div>

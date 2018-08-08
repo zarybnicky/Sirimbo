@@ -42,7 +42,7 @@
  }
 </style>
 
-<div class="container full">
+<div class="container">
     <?php foreach ($this->data as $item): ?>
         <div style="clear:both" class="video-item">
             <div class="thumb">

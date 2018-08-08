@@ -26,8 +26,7 @@
                     <?= $this->select('category')
                              ->set($this->category ?: 'all')
                              ->option('all', '---')
-                             ->options($this->categories);
-                    ?>
+                             ->options($this->categories) ?>
                 </td>
             </tr>
             <tr>
@@ -51,7 +50,7 @@ if (!TISK) {
         ->content('Upravit', 'edit', true)
         ->content('Odebrat', 'remove', true);
 }
-if ($this->data == []) {
+if (!$this->data) {
     echo $this->notice('Žádné takové platby');
     return;
 }

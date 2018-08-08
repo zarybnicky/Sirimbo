@@ -1,6 +1,6 @@
 <?= $this->header('Přehled párů') ?>
 
-<div class="container full">
+<div class="container">
   <?php
   $data = DBPary::getSinglePar($this->id);
   $guy_partners = DBPary::getPreviousPartners($data['guy_id']);

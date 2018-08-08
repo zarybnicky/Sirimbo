@@ -1,6 +1,6 @@
 <?= $this->header('Žebříček párů') ?>
 
-<div class="container full">
+<div class="container">
   <table>
     <tr>
       <th>Pořadí</th>
@@ -17,7 +17,7 @@
         <td><?php echo $item['partnerName'];?></td>
         <td><?php echo $item['partnerkaName'];?></td>
         <td><?php echo $item['latina'];?></td>
-        <td><?php echo $item['standart'];?></td>
+        <td><?php echo $item['standard'];?></td>
         <td><?php echo $item['hodnoceni'];?></td>
       </tr>
     <?php endforeach;?>

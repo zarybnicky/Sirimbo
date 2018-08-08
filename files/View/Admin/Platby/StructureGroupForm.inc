@@ -21,13 +21,13 @@
             )
         ], [
             'desc' => 'Jméno:',
-            'value' => '<input type="text" name="name" value="' . $this->name . '"/>'
+            'value' => $this->text('name', $ŧhis->name)
         ], [
             'desc' => 'Popis: ',
-            'value' => '<textarea rows="10" cols="50" name="description">' . $this->description . '</textarea>'
+            'value' => '<textarea class="form-control" rows="10" cols="50" name="description">' . $this->description . '</textarea>'
         ], [
             'desc' => 'Násobitel částky: ',
-            'value' => '<input type="text" name="base" value="' . $this->base . '"/>'
+            'value' => $this->text('base', $this->base)
         ]
     ]) ?>
     <br>

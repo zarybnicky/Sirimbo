@@ -5,6 +5,9 @@ class TextHelper
     protected $value;
     protected $size;
     protected $cls;
+    protected $placeholder;
+    protected $readonly;
+    protected $disabled;
 
     public function text($name, $value = null)
     {
@@ -16,6 +19,9 @@ class TextHelper
         $this->value = $value;
         $this->size = null;
         $this->cls = 'form-control';
+        $this->placeholder = null;
+        $this->readonly = false;
+        $this->disabled = false;
 
         return $this;
     }
@@ -32,6 +38,24 @@ class TextHelper
         return $this;
     }
 
+    public function placeholder($x)
+    {
+        $this->placeholder = $x;
+        return $this;
+    }
+
+    public function readonly($x)
+    {
+        $this->readonly = $x;
+        return $this;
+    }
+
+    public function disabled($x)
+    {
+        $this->disabled = $x;
+        return $this;
+    }
+
     public function render()
     {
         return (string) new Tag(
@@ -41,7 +65,10 @@ class TextHelper
                 'class' => $this->cls,
                 'size' => $this->size,
                 'name' => $this->name,
-                'value' => $this->value
+                'value' => $this->value,
+                'placeholder' => $this->placeholder,
+                'readonly' => $this->readonly,
+                'disabled' => $this->disabled
             ]
         );
     }

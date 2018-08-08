@@ -1,6 +1,6 @@
 <?= $this->header('Externí trenéři') ?>
 
-<div class="container full">
+<div class="container">
   <div style="margin-bottom:2em;">
     <h2>Ing. Jaroslav Kučera</h2>
     <img alt="Ing. Jaroslav Kučera" src="/images/treneri/jerry.jpg" class="f_doc_right" style="height:150px;"/>
