@@ -8,27 +8,55 @@ class Controller_Member extends Controller_Abstract
 
     public function view($request)
     {
-        if (isset($_SESSION['zaplaceno_text'])) {
-            $this->redirect()->setMessage($_SESSION['zaplaceno_text']);
+        $pager = new Paging(new PagingAdapterDBSelect('DBNastenka'));
+        $pager->setCurrentPage($request->get('p'));
+        $pager->setItemsPerPage($request->get('c'));
+        $pager->setCurrentPageField('p');
+        $pager->setItemsPerPageField('c');
+        $pager->setDefaultItemsPerPage(10);
+        $pager->setPageRange(5);
+        $data = $pager->getItems();
+
+        if (empty($data)) {
+            $this->render(
+                'files/View/Empty.inc',
+                [
+                    'nadpis' => 'Upozornění',
+                    'notice' => 'Žádná upozornění nejsou k dispozici'
+                ]
+            );
+            return;
         }
 
         $data = array_map(
             function ($item) {
+                $skupiny = array_map(
+                    function ($skupina) {
+                        return (string) $this->colorbox(
+                            $skupina['ups_color'],
+                            $skupina['ups_popis']
+                        );
+                    },
+                    DBNastenka::getNastenkaSkupiny($item['up_id'])
+                );
                 return [
-                    'id' => $item['no_id'],
-                    'text' => $item['no_text'],
-                    'user' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
-                    'timestamp' => formatTimestamp($item['no_timestamp'])
+                    'id' => $item['up_id'],
+                    'nadpis' => $item['up_nadpis'],
+                    'canEdit' => Permissions::check('nastenka', P_OWNED, $item['up_kdo']),
+                    'skupinyBoxes' => implode('', $skupiny),
+                    'addedBy' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
+                    'addedTimestamp' => formatTimestamp($item['up_timestamp_add']),
+                    'text' => stripslashes($item['up_text'])
                 ];
             },
-            DBNovinky::getLastNovinky(10)
+            $data
         );
 
         $this->render(
-            'files/View/Member/Home.inc',
+            'files/View/Member/Nastenka.inc',
             [
                 'data' => $data,
-                'canEdit' => Permissions::check('novinky', P_OWNED)
+                'navigation' => $pager->getNavigation($request->get())
             ]
         );
     }

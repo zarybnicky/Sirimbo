@@ -1,7 +1,6 @@
 <?php
 return [
-    ['Novinky', '/member/home', []],
-    ['Nástěnka', '/member/nastenka', []],
+    ['Nástěnka', '/member/home', []],
     ['Rozpis', '/member/rozpis', []],
     ['Nabídka', '/member/nabidka', []],
     ['Akce', '/member/akce', []],
