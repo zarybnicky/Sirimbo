@@ -2,52 +2,50 @@
 require_once 'files/Controller/Admin.php';
 class Controller_Admin_Pary extends Controller_Admin
 {
-    public function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('pary', P_OWNED);
     }
-    public function view($request) {
-        switch($request->post("action")) {
-        case "remove":
-            if (!is_array($request->post("pary"))) {
+
+    public function view($request)
+    {
+        switch ($request->post("action")) {
+            case "remove":
+                if (!is_array($request->post("pary"))) {
+                    break;
+                }
+                list($par) = $request->post("pary");
+                $data = DBPary::getSinglePar($par);
+
+                if ($data['guy_id']) {
+                    DBPary::noPartner($data['guy_id']);
+                }
+                if ($data['gal_id']) {
+                    DBPary::noPartner($data['gal_id']);
+                }
+
+                $this->redirect('/admin/pary', 'Pár odstraněn');
                 break;
-            }
-            list($par) = $request->post("pary");
-            $data = DBPary::getSinglePar($par);
 
-            if ($data['guy_id']) {
-                DBPary::noPartner($data['guy_id']);
-            }
-            if ($data['gal_id']) {
-                DBPary::noPartner($data['gal_id']);
-            }
+            case 'add':
+                if ($request->post("add_partner")) {
+                    DBPary::newPartner($request->post("add_partner"), $request->post("add_partnerka"));
+                }
+                $this->redirect('/admin/pary', 'Pár přidán');
+                break;
 
-            $this->redirect('/admin/pary', 'Pár odstraněn');
-            break;
+            case 'edit':
+                $pary = $request->post('pary');
+                $this->redirect('/admin/pary' . ($pary[0] ? '/edit/' . $pary[0] : ''));
+                break;
 
-        case 'add':
-            $old_gal = DBPary::getLatestPartner($request->post("add_partner"), 'm');
-            $old_guy = DBPary::getLatestPartner($request->post("add_partnerka"), 'f');
-
-            if ($request->post("add_partner")) {
-                DBPary::newPartner($request->post("add_partner"), $request->post("add_partnerka"));
-            }
-            if ($old_guy['u_id']) {
-                DBPary::noPartner($old_guy['u_id']);
-            }
-            if ($old_gal['u_id']) {
-                DBPary::noPartner($old_gal['u_id']);
-            }
-
-            $this->redirect('/admin/pary', 'Pár přidán');
-            break;
-
-        case 'edit':
-            $pary = $request->post('pary');
-            if ($pary[0])
-                $this->redirect('/admin/pary/edit/' . $pary[0]);
-            else
-                $this->redirect('/admin/pary');
-            break;
+            case 'fix_unpaired':
+                $xs = DBPary::getUnpairedUsers();
+                foreach ($xs as $x) {
+                    DBPary::noPartner($x['u_id']);
+                }
+                $this->redirect('/admin/pary', count($xs) . ' chybných záznamů opraveno');
+                break;
         }
 
         $data = array_map(
@@ -74,7 +72,9 @@ class Controller_Admin_Pary extends Controller_Admin
             ]
         );
     }
-    public function edit($request) {
+
+    public function edit($request)
+    {
         $id = $request->getId();
         if (!$id || !($data = DBPary::getSinglePar($id))) {
             $this->redirect('/admin/pary', 'Pár s takovým ID neexistuje');
@@ -101,14 +101,14 @@ class Controller_Admin_Pary extends Controller_Admin
         $stt_body =
             ($request->post('stt-body') && is_numeric($request->post('stt-body')))
             ? $request->post('stt-body') : 0;
-        $stt_body_capped = $stt_body > 200 ? 200 : $stt_body;
+        $stt_body_capped = max($stt_body, 200);
         $stt_finale =
             ($request->post('stt-finale') && is_numeric($request->post('stt-finale')))
             ? $request->post('stt-finale') : 0;
         $lat_body =
             ($request->post('lat-body') && is_numeric($request->post('lat-body')))
             ? $request->post('lat-body') : 0;
-        $lat_body_capped = $lat_body > 200 ? 200 : $lat_body;
+        $lat_body_capped = max($lat_body, 200);
         $lat_finale =
             ($request->post('lat-finale') && is_numeric($request->post('lat-finale')))
             ? $request->post('lat-finale') : 0;

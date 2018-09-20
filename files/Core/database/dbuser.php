@@ -187,8 +187,11 @@ class DBUser extends Database implements Pagable
         return true;
     }
 
-    public static function addUser($login, $pass, $jmeno, $prijmeni, $pohlavi, $email, $telefon,
-            $narozeni, $poznamky, $group, $skupina, $dancer, $lock, $ban, $confirmed, $system) {
+    public static function addUser(
+        $login, $pass, $jmeno, $prijmeni, $pohlavi, $email, $telefon,
+        $narozeni, $poznamky, $group, $skupina, $dancer, $lock, $ban,
+        $confirmed, $system
+    ) {
         DBUser::query(
             "INSERT INTO users " .
             "(u_login,u_pass,u_jmeno,u_prijmeni,u_pohlavi,u_email,u_telefon,u_narozeni," .
@@ -198,10 +201,8 @@ class DBUser extends Database implements Pagable
             $narozeni, $poznamky, $group, $skupina, $dancer, $lock, $ban,
             $confirmed, $system
         );
-        DBUser::query(
-            "INSERT INTO pary (p_id_partner) VALUES ((SELECT u_id FROM users WHERE u_login='?'))",
-            $login
-        );
+        $uid = mysql_insert_id();
+        DBUser::query("INSERT INTO pary (p_id_partner, p_id_partnerka) VALUES ('$uid', '0')");
         return true;
     }
 

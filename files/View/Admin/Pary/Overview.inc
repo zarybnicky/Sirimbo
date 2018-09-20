@@ -6,7 +6,8 @@
         if ($this->showMenu) {
             echo $this->menu()
                       ->content('Upravit', 'edit', true)
-                      ->content('Odebrat', 'remove', true);
+                      ->content('Odebrat', 'remove', true)
+                      ->content('Opravit nespárované', 'fix_unpaired', true);
         }
         ?>
 
