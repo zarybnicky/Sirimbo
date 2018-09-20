@@ -36,3 +36,13 @@ services:
       - ..:/app
       - ./conf/vhost.conf:/bitnami/nginx/conf/vhosts/olymp.conf
     tty: true
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:4.7
+    restart: always
+    environment:
+      - "PMA_HOST=mysqldb"
+      - "PMA_PORT=3306"
+      - "PMA_ABSOLUTE_URI=http://localhost:3001/"
+    ports:
+      - 3001:80
