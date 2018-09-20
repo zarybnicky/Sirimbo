@@ -145,7 +145,7 @@ class Controller_Admin_Video extends Controller_Admin
             [
                 'header' => 'Správa videí',
                 'prompt' => 'Opravdu chcete odstranit videa:',
-                'returnURI' => $request->getReferer(),
+                'returnURI' => $request->getReferer() ?: '/admin/video',
                 'data' => $data
             ]
         );

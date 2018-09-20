@@ -86,7 +86,7 @@ class Controller_Admin_Users extends Controller_Admin
             [
                 'header' => 'Správa uživatelů',
                 'prompt' => 'Opravdu chcete odstranit uživatele:',
-                'returnURI' => $request->getReferer(),
+                'returnURI' => $request->getReferer() ?: '/admin/users',
                 'data' => $data
             ]
         );

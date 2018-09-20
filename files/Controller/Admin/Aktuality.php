@@ -162,7 +162,7 @@ class Controller_Admin_Aktuality extends Controller_Admin
             [
                 'header' => 'Správa aktualit',
                 'prompt' => 'Opravdu chcete odstranit články:',
-                'returnURI' => $request->getReferer(),
+                'returnURI' => $request->getReferer() ?: '/admin/aktuality',
                 'data' => $data
             ]
         );

@@ -3,11 +3,11 @@
     <table style="margin: 0 auto;">
       <tr>
         <td class="r">Jméno:</td>
-        <td><?= $this->text('login')->size(8) ?></td>
+        <td><?= $this->text('login', '')->size(8) ?></td>
       </tr>
       <tr>
         <td class="r">Heslo:</td>
-        <td><input type="password" name="pass" size="8" /></td>
+        <td><input class="form-control" type="password" name="pass" size="8" /></td>
       </tr>
       <tr>
         <td class="r"><a href="/registrace">Registrovat se</a></td>

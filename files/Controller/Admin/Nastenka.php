@@ -85,8 +85,7 @@ class Controller_Admin_Nastenka extends Controller_Admin
                 'files/View/Admin/Nastenka/Form.inc',
                 [
                     'action' => $request->getAction(),
-                    'referer' => $request->getReferer(),
-                    'returnURI' => $request->getReferer(),
+                    'returnURI' => $request->getReferer() ?: '/admin/nastenka',
                     'skupiny' => $skupiny,
                     'skupinySelected' => $skupinySelected,
                     'nadpis' => $request->post('nadpis') ?: '',
@@ -116,10 +115,7 @@ class Controller_Admin_Nastenka extends Controller_Admin
             );
         }
 
-        $this->redirect(
-            $request->post('referer') ?: '/admin/nastenka',
-            'Příspěvek úspěšně přidán'
-        );
+        $this->redirect($request->post('referer'), 'Příspěvek úspěšně přidán');
     }
 
     public function edit($request) {
@@ -157,8 +153,7 @@ class Controller_Admin_Nastenka extends Controller_Admin
                 'files/View/Admin/Nastenka/Form.inc',
                 [
                     'action' => $request->getAction(),
-                    'referer' => $request->getReferer(),
-                    'returnURI' => $request->getReferer(),
+                    'returnURI' => $request->getReferer() ?: '/admin/nastenka',
                     'skupiny' => $skupiny,
                     'skupinySelected' => $skupinySelected,
                     'nadpis' => $request->post('nadpis') ?: '',
@@ -203,10 +198,7 @@ class Controller_Admin_Nastenka extends Controller_Admin
             ($request->post('lock') == 'lock') ? 1 : 0
         );
 
-        $this->redirect(
-            $request->post('referer') ?: '/admin/nastenka',
-            'Příspěvek úspěšně upraven'
-        );
+        $this->redirect($request->post('referer'), 'Příspěvek úspěšně upraven');
     }
 
     private function checkData($request) {

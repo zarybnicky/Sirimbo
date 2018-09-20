@@ -87,7 +87,7 @@ class Database
         $result = [];
         $rows = mysql_num_rows($resource);
 
-        for($i = 0; $i < $rows; $i++) {
+        for ($i = 0; $i < $rows; $i++) {
             $result[] = @mysql_fetch_assoc($resource);
         }
         return $result;

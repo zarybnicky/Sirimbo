@@ -9,7 +9,7 @@
         <td>Pouze písmena bez diakritiky, číslice a podtržítka, 3 - 20 znaků</td>
       </tr><tr>
           <td>Heslo (*): </td>
-          <td><input type="password" name="pass" value="<?= $this->pass ?>"/></td>
+          <td><input class="form-control" type="password" name="pass" value="<?= $this->pass ?>"/></td>
           <td>Pouze písmena bez diakritiky, číslice a podtržítka, 6 - 32 znaků</td>
       </tr><tr>
           <td>Jméno (*): </td>
@@ -35,7 +35,7 @@
           <td><?= $this->text('telefon', $this->telefon) ?></td>
           <td></td>
       </tr><tr>
-          <td>Datum narození: (*)</td>
+          <td>Datum narození (*):</td>
           <td><?= $this->date('narozeni', $this->narozeni) ?></td>
           <td></td>
       </tr><tr>

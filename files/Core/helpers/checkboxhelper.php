@@ -61,7 +61,7 @@ class CheckboxHelper
     public function render()
     {
         if (!$this->label) {
-            return new Tag(
+            return (string) new Tag(
                 'input',
                 [
                     'type' => 'checkbox',

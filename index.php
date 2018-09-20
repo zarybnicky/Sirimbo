@@ -47,25 +47,13 @@ $request = new Request(
 );
 $_SERVER = $_COOKIE = $_GET = $_POST = $_FILES = array();
 $request->setDefault('home');
-$request->setReferer($request->session('referer_id'));
+$request->setReferer($request->server('HTTP_REFERER'));
 
 Database::setRequest($request);
 Log::setRequest($request);
 Permissions::setRequest($request);
 
 define('TISK', ($request->get('view') == 'tisk') ? true : false);
-
-if (TISK) {
-    ;
-} elseif (!$request->session('page_id')) {
-    $request->session('page_id', $request->server('REQUEST_URI'));
-} elseif (
-    !$request->session('referer_id') ||
-    $request->server('REQUEST_URI') != $request->session('page_id')
-) {
-    $request->session('referer_id', $request->session('page_id'));
-    $request->session('page_id', $request->server('REQUEST_URI'));
-}
 
 try {
     if ($request->session('login') !== null) {

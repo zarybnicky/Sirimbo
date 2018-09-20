@@ -151,7 +151,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
                 'header' => 'Správa galerie',
                 'prompt' => 'Opravdu chcete odstranit složky '
                     . 'se všemi podsložkami a fotkami:',
-                'returnURI' => $request->getReferer(),
+                'returnURI' => $request->getReferer() ?: '/admin/galerie',
                 'data' => $data
             ]
         );

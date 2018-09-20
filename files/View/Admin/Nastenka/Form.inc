@@ -32,7 +32,7 @@
       ?>
     </div>
     <div class="form-group">
-      <?= $this->hidden('referer', $this->referer) ?>
+      <?= $this->hidden('referer', $this->returnURI) ?>
       <?= $this->submit($this->action == 'add' ? 'Přidat' : 'Upravit') ?>
       <a class="btn btn-outline-primary" href="<?= $this->returnURI ?>">Zpět</a>
     </div>

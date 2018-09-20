@@ -86,7 +86,7 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
             [
                 'header' => 'Správa galerie',
                 'prompt' => 'Opravdu chcete odstranit fotografie:',
-                'returnURI' => $request->getReferer(),
+                'returnURI' => $request->getReferer() ?: '/admin/galerie',
                 'data' => $data
             ]
         );

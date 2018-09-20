@@ -132,7 +132,7 @@ class Controller_Admin_Akce extends Controller_Admin
             [
                 'header' => 'Správa akcí',
                 'prompt' => 'Opravdu chcete odstranit akce:',
-                'returnURI' => $request->getReferer(),
+                'returnURI' => $request->getReferer() ?: '/admin/akce',
                 'data' => $data
             ]
         );

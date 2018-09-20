@@ -126,7 +126,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             [
                 'header' => 'Správa plateb',
                 'prompt' => 'Opravdu chcete odstranit platby:',
-                'returnURI' => $request->getReferer(),
+                'returnURI' => $request->getReferer() ?: '/admin/platby/items',
                 'data' => $data
             ]
         );

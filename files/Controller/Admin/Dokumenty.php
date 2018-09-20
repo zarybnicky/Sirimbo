@@ -138,7 +138,7 @@ class Controller_Admin_Dokumenty extends Controller_Admin
             [
                 'header' => 'Správa dokumentů',
                 'prompt' => 'Opravdu chcete odstranit dokumenty:',
-                'returnURI' => $request->getReferer(),
+                'returnURI' => $request->getReferer() ?: '/admin/dokumenty',
                 'data' => $data
             ]
         );

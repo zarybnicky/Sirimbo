@@ -26,9 +26,9 @@
           </tr>
         <?php endforeach; ?>
         <tr>
-          <td><?= $userselect->name('add_partner'); ?></td>
-          <td><?= $this->text('add_od')->size(5) ?>
-          <td><?= $this->text('add_do')->size(5) ?>
+          <td><?= $userselect->name('add_partner')->set(null); ?></td>
+          <td><?= $this->text('add_od', '')->size(5) ?>
+          <td><?= $this->text('add_do', '')->size(5) ?>
           <td><?= $this->submit('Přidat')->data('action', 'add') ?></td>
           <td><?= $this->checkbox('add_lock', 'lock') ?>
         </tr>
@@ -40,9 +40,9 @@
       <?= $this->submit('Opravit přesahy')->data('action', 'overlap') ?>
       <br />
       <?= $this->submit('Přidat více')->data('action', 'add_multiple') ?>
-      <?= $this->text('add_multi_num')->size(2) ?> hodin po
-      <?= $this->text('add_multi_len')->size(3) ?> minutách od
-      <?= $this->text('add_multi_od')->size(5) ?> hodin
+      <?= $this->text('add_multi_num', '')->size(2) ?> hodin po
+      <?= $this->text('add_multi_len', '')->size(3) ?> minutách od
+      <?= $this->text('add_multi_od', '')->size(5) ?> hodin
     </div>
   </form>
   <br/>

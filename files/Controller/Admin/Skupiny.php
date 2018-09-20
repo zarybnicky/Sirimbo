@@ -150,7 +150,7 @@ class Controller_Admin_Skupiny extends Controller_Admin
                 [
                     'header' => 'Správa skupin',
                     'prompt' => 'Opravdu chcete odstranit skupinu?',
-                    'returnURI' => $request->getReferer(),
+                    'returnURI' => $request->getReferer() ?: '/admin/skupiny',
                     'data' => [['id' => $data['s_id'], 'text' => $data['s_name']]]
                 ]
             );
