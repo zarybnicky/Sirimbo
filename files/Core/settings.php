@@ -18,6 +18,8 @@ define('LOG', ROOT . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'error.
 define('DEBUG_LOG', ROOT . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'debug.log');
 define('PHP_LOG', ROOT . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'php.log');
 
+include ROOT . DIRECTORY_SEPARATOR . 'config.php';
+
 mb_internal_encoding('UTF-8');
 
 function shutdownHandler()
@@ -88,24 +90,10 @@ function errorHandler($severity, $message, $filepath, $line)
 register_shutdown_function('shutdownHandler');
 set_error_handler('errorHandler');
 
-date_default_timezone_set('Europe/Paris');
-
-define('DEFAULT_FROM_MAIL', 'TK Olymp.cz <noreply@tkolymp.cz>');
-define('DEFAULT_ADMIN_MAIL', 'tkolymp@tkolymp.cz');
-
-//ini_set('log_errors' , '1');
-//ini_set('error_log' , PHP_LOG);
-//ini_set('display_errors' , '0');
-
 define('DEBUG', '1');
 if (DEBUG) {
-    //ini_set('display_errors','On');
     error_reporting(-1);
 }
-
-include SETTINGS . DIRECTORY_SEPARATOR . 'db.php';
-
-define('NABOR', '0');
 
 define('AKTUALITY_CLANKY', 1);
 define('AKTUALITY_KRATKE', 3);

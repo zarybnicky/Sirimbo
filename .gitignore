@@ -1,4 +1,4 @@
-files/Core/settings/db.php
+config.php
 public/galerie/*
 !public/galerie/.gitignore
 upload/*
