@@ -144,7 +144,7 @@ class DBPary extends Database
         return self::getArray($res);
     }
 
-    public static function newPartner($partner, $partnerka)
+    public static function newCouple($partner, $partnerka)
     {
         list($partner, $partnerka) = self::escape($partner, $partnerka);
         if ($partner == '0' || $partner == '0') {
@@ -157,8 +157,8 @@ class DBPary extends Database
             return;
         }
 
-        $oldM = DBPary::getLatestPartner($partner, 'm');
-        $oldF = DBPary::getLatestPartner($partnerka, 'f');
+        $oldM = self::getLatestPartner($partner, 'm');
+        $oldF = self::getLatestPartner($partnerka, 'f');
 
         self::query(
             "UPDATE pary
@@ -168,27 +168,40 @@ class DBPary extends Database
         );
 
         if ($oldM['u_id']) {
-            DBPary::noPartner($oldM['u_id']);
+            self::noPartner($oldM['u_id']);
         }
         if ($oldF['u_id']) {
-            DBPary::noPartner($oldF['u_id']);
+            self::noPartner($oldF['u_id']);
         }
 
         self::query("INSERT INTO pary (p_id_partner, p_id_partnerka) VALUES ('$partner','$partnerka')");
     }
 
+    public static function removeCouple($id)
+    {
+        $data = DBPary::getSinglePar($id);
+        self::noPartner($data['guy_id']);
+    }
+
     public static function noPartner($partner)
     {
         list($partner) = self::escape($partner);
-
         if ($partner == '0') {
             return;
         }
+        $dataM = self::getLatestPartner($partner, 'm');
+        $dataF = self::getLatestPartner($partner, 'f');
 
         self::query("UPDATE pary SET p_archiv='1',p_timestamp_archive=NOW()" .
             " WHERE (p_id_partner='$partner' OR p_id_partnerka='$partner') AND p_archiv='0'");
 
         self::query("INSERT INTO pary (p_id_partner, p_id_partnerka) VALUES ('$partner','0')");
+        if ($dataM['u_id'] && $partner != $dataM['u_id']) {
+            self::query("INSERT INTO pary (p_id_partner, p_id_partnerka) VALUES ('{$dataM['u_id']}','0')");
+        }
+        if ($dataF['u_id'] && $partner != $dataF['u_id'] && $dataM['u_id'] != $dataF['u_id']) {
+            self::query("INSERT INTO pary (p_id_partner, p_id_partnerka) VALUES ('{$dataF['u_id']}','0')");
+        }
         return mysql_insert_id();
     }
 
@@ -243,7 +256,7 @@ class DBPary extends Database
 
         if ($res) {
             $row = self::getSingleRow($res);
-            self::newPartner($row['pn_partner'], $row['pn_partnerka']);
+            self::newCouple($row['pn_partner'], $row['pn_partnerka']);
             self::query("DELETE FROM pary_navrh WHERE pn_id='$id'");
         }
     }

@@ -14,22 +14,15 @@ class Controller_Admin_Pary extends Controller_Admin
                 if (!is_array($request->post("pary"))) {
                     break;
                 }
-                list($par) = $request->post("pary");
-                $data = DBPary::getSinglePar($par);
-
-                if ($data['guy_id']) {
-                    DBPary::noPartner($data['guy_id']);
+                foreach ($request->post("pary") as $par) {
+                    DBPary::removeCouple($par);
                 }
-                if ($data['gal_id']) {
-                    DBPary::noPartner($data['gal_id']);
-                }
-
                 $this->redirect('/admin/pary', 'Pár odstraněn');
                 break;
 
             case 'add':
                 if ($request->post("add_partner")) {
-                    DBPary::newPartner($request->post("add_partner"), $request->post("add_partnerka"));
+                    DBPary::newCouple($request->post("add_partner"), $request->post("add_partnerka"));
                 }
                 $this->redirect('/admin/pary', 'Pár přidán');
                 break;
