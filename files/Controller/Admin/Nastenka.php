@@ -2,35 +2,13 @@
 require_once 'files/Controller/Admin.php';
 class Controller_Admin_Nastenka extends Controller_Admin
 {
-    public function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('nastenka', P_OWNED);
     }
-    public function view($request) {
-        switch($request->post('action')) {
-        case 'remove':
-            if (!is_array($request->post('nastenka'))) {
-                break;
-            }
-            foreach ($request->post('nastenka') as $item) {
-                $data = DBNastenka::getSingleNastenka($item);
-                if (!Permissions::check('nastenka', P_OWNED, $data['up_kdo'])) {
-                    $error = true;
-                    continue;
-                }
-                DBNastenka::removeNastenka($item);
-            }
-            if (isset($error) && $error) {
-                throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
-            }
-            $this->redirect()->setMessage('Příspěvky odebrány');
-            break;
-        case 'edit':
-            $nastenka = $request->post('nastenka');
-            if ($nastenka[0]) {
-                $this->redirect('/admin/nastenka/edit/' . $nastenka[0]);
-            }
-            break;
-        }
+
+    public function view($request)
+    {
         $pager = new Paging(new PagingAdapterDBSelect('DBNastenka'));
         $pager->setCurrentPage($request->get('p'));
         $pager->setItemsPerPage($request->get('c'));
@@ -40,16 +18,22 @@ class Controller_Admin_Nastenka extends Controller_Admin
         $pager->setPageRange(5);
         $data = $pager->getItems();
 
+        $showButtonsCol = false;
         $data = array_map(
-            function ($item) {
+            function ($item) use (&$showButtonsCol) {
                 $canEdit = Permissions::check('nastenka', P_OWNED, $item['up_kdo']);
+                $buttons = '';
+                if ($canEdit) {
+                    $showButtonsCol = true;
+                    $buttons = $this->editLink('/admin/nastenka/edit/' . $item['up_id'])
+                        . '&nbsp;&nbsp;'
+                        . $this->removeLink('/admin/nastenka/remove/' . $item['up_id']);
+                }
                 return [
-                    'canEdit' => $canEdit,
-                    'checkBox' => $canEdit ? $this->checkbox('nastenka[]', $item['up_id']) : '&nbsp;&#10799;',
+                    'buttons' => $buttons,
                     'header' => $item['up_nadpis'],
                     'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
                     'timestampAdd' => formatTimestamp($item['up_timestamp_add'], true),
-                    'timestampEdit' => formatTimestamp($item['up_timestamp'], true),
                     'groups' => array_reduce(
                         DBNastenka::getNastenkaSkupiny($item['up_id']),
                         function ($carry, $item) {
@@ -65,13 +49,15 @@ class Controller_Admin_Nastenka extends Controller_Admin
         $this->render(
             'files/View/Admin/Nastenka/Overview.inc',
             [
-                'showMenu' => !TISK,
+                'showButtonsCol' => $showButtonsCol,
                 'data' => $data,
                 'navigation' => $pager->getNavigation($request->get())
             ]
         );
     }
-    public function add($request) {
+
+    public function add($request)
+    {
         if (!$request->post() || is_object($f = $this->checkData($request))) {
             if ($request->post()) {
                 $this->redirect()->setMessage($f->getMessages());
@@ -118,7 +104,8 @@ class Controller_Admin_Nastenka extends Controller_Admin
         $this->redirect($request->post('referer'), 'Příspěvek úspěšně přidán');
     }
 
-    public function edit($request) {
+    public function edit($request)
+    {
         $id = $request->getId();
         if (!$id || !($data = DBNastenka::getSingleNastenka($id))) {
             $this->redirect(
@@ -201,7 +188,36 @@ class Controller_Admin_Nastenka extends Controller_Admin
         $this->redirect($request->post('referer'), 'Příspěvek úspěšně upraven');
     }
 
-    private function checkData($request) {
+    public function remove($request)
+    {
+        $id = $request->getId();
+        if (!$id || !($data = DBNastenka::getSingleNastenka($id))) {
+            $this->redirect(
+                $request->post('referer') ?: '/admin/nastenka',
+                'Příspěvek s takovým ID neexistuje'
+            );
+        }
+        Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
+
+        if (!$request->post() || $request->post('action') != 'confirm') {
+            $this->render(
+                'files/View/Admin/RemovePrompt.inc',
+                [
+                    'header' => 'Správa nástěnky',
+                    'prompt' => 'Opravdu chcete odstranit příspěvek:',
+                    'returnURI' => $request->getReferer() ?: '/admin/nastenka',
+                    'data' => [['id' => $data['up_id'], 'text' => $data['up_nadpis']]]
+                ]
+            );
+            return;
+        }
+
+        DBNastenka::removeNastenka($id);
+        $this->redirect('/admin/nastenka', 'Příspěvek odebrán');
+    }
+
+    private function checkData($request)
+    {
         $f = new Form();
         $f->checkNotEmpty($request->post('nadpis'), 'Zadejte nadpis', 'nadpis');
         $f->checkNotEmpty($request->post('text'), 'Zadejte nějaký text', 'text');

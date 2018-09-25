@@ -150,7 +150,9 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
         $failCount = 0;
         foreach ($files as $path) {
             if (!$this->_checkGetThumbnail($path)) {
-                unlink($path);
+                if (is_file($path)) {
+                    unlink($path);
+                }
                 $failCount++;
                 continue;
             }

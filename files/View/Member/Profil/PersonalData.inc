@@ -20,7 +20,7 @@
         </td>
       </tr><tr>
         <td>E-mail (*): </td>
-        <td><?= $this->text('email', $this->emailn) ?></td>
+        <td><?= $this->text('email', $this->email) ?></td>
       </tr><tr>
         <td>Telefon (*): </td>
         <td><?= $this->text('telefon', $this->telefon) ?></td>

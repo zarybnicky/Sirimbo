@@ -9,22 +9,22 @@ class Controller_Admin_Akce extends Controller_Admin
 
     public function view($request)
     {
-        switch($request->post('action')) {
-        case 'save':
-            $this->processSave($request);
-            $this->redirect('/admin/akce');
-            break;
-
-        case 'remove':
-            if (!is_array($request->post('akce'))) {
+        switch ($request->post('action')) {
+            case 'save':
+                $this->processSave($request);
                 $this->redirect('/admin/akce');
-            } else {
-                $this->redirect(
-                    '/admin/akce/remove?' .
-                    http_build_query(['u' => $request->post('akce')])
-                );
-            }
-            break;
+                break;
+
+            case 'remove':
+                if (!is_array($request->post('akce'))) {
+                    $this->redirect('/admin/akce');
+                } else {
+                    $this->redirect(
+                        '/admin/akce/remove?' .
+                        http_build_query(['u' => $request->post('akce')])
+                    );
+                }
+                break;
         }
 
         $this->displayOverview();
@@ -195,14 +195,14 @@ class Controller_Admin_Akce extends Controller_Admin
                 'header' => $request->getAction() == 'add' ? 'Přidat akci' : 'Upravit akci',
                 'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit',
                 'id' => $data ? $data['a_id'] : null,
-                'jmeno' => $request->post('jmeno') ?: $data ? $data['a_jmeno'] : '',
-                'kde' => $request->post('kde') ?: $data ? $data['a_kde'] : '',
-                'info' => $request->post('info') ?: $data ? $data['a_info'] : '',
-                'od' => $request->post('od') ?: $data ? $data['a_od'] : '',
-                'do' => $request->post('do') ?: $data ? $data['a_do'] : '',
-                'kapacita' => $request->post('kapacita') ?: $data ? $data['a_kapacita'] : '',
-                'lock' => $request->post('lock') ?: $data ? $data['a_lock'] : '',
-                'visible' => $request->post('visible') ?: $data ? $data['a_visible'] : ''
+                'jmeno' => $request->post('jmeno') ?: ($data ? $data['a_jmeno'] : ''),
+                'kde' => $request->post('kde') ?: ($data ? $data['a_kde'] : ''),
+                'info' => $request->post('info') ?: ($data ? $data['a_info'] : ''),
+                'od' => $request->post('od') ?: ($data ? $data['a_od'] : ''),
+                'do' => $request->post('do') ?: ($data ? $data['a_do'] : ''),
+                'kapacita' => $request->post('kapacita') ?: ($data ? $data['a_kapacita'] : ''),
+                'lock' => $request->post('lock') ?: ($data ? $data['a_lock'] : ''),
+                'visible' => $request->post('visible') ?: ($data ? $data['a_visible'] : '')
             ]
         );
     }

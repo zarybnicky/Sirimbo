@@ -274,7 +274,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                         (!$data['pc_archive']
                          ? ($this->submit('Archivovat?')->data('action', 'archive') . ' nebo ')
                          : ''),
-                        $this->submit('Odstranit všechna spojení se skupinami a kategoriemi a přesunout ovlivněné platby do nezařazených?')->data('action', 'unlink')
+                        (string) $this->submit('Odstranit všechna spojení se skupinami a kategoriemi a přesunout ovlivněné platby do nezařazených?')->data('action', 'unlink')
                     )
                 );
             }

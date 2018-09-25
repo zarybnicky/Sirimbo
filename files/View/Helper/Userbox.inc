@@ -1,8 +1,6 @@
 <div id="userbox">
   <div id="userbox-inner">
-    <?php echo User::getUserWholeName(); ?><br />
-    <a href="/member/profil/platby">Platby</a>
-    <a href="/member/profil">Profil</a>
+    <a style="font-size:100%" href="/member/profil"><?= User::getUserWholeName(); ?></a><br />
     <a href="/logout">Odhlásit se</a>
   </div>
 </div>

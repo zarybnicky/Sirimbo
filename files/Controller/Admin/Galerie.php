@@ -24,35 +24,35 @@ class Controller_Admin_Galerie extends Controller_Admin
     }
     public function view($request)
     {
-        switch($request->post('action')) {
-        case 'galerie/save':
-            $this->_processSave();
-            break;
-        case 'galerie/scan':
-            $this->_scan($request);
-            break;
-        case 'directory':
-        case 'directory/edit':
-            $galerie = $request->post('galerie');
-            if (isset($galerie[0])) {
-                $this->redirect(
-                    '/admin/galerie/' . $request->post('action') . '/' . $galerie[0]
-                );
-            }
-            break;
-        case 'directory/remove':
-            if (is_array($request->post('galerie'))) {
-                $this->redirect(
-                    '/admin/galerie/directory/remove?'
-                    . http_build_query(['u' => $request->post('galerie')])
-                );
-            }
-            break;
+        switch ($request->post('action')) {
+            case 'galerie/save':
+                $this->_processSave($request);
+                break;
+            case 'galerie/scan':
+                $this->_scan();
+                break;
+            case 'directory':
+            case 'directory/edit':
+                $galerie = $request->post('galerie');
+                if (isset($galerie[0])) {
+                    $this->redirect(
+                        '/admin/galerie/' . $request->post('action') . '/' . $galerie[0]
+                    );
+                }
+                break;
+            case 'directory/remove':
+                if (is_array($request->post('galerie'))) {
+                    $this->redirect(
+                        '/admin/galerie/directory/remove?'
+                        . http_build_query(['u' => $request->post('galerie')])
+                    );
+                }
+                break;
         }
         $this->_displayOverview();
     }
 
-    private function _scan($request)
+    private function _scan()
     {
         $dbInDirs = DBGalerie::getDirsWithParentPath();
         $dbInFiles = DBGalerie::getFotkyWithParentPath();
@@ -282,7 +282,7 @@ class Controller_Admin_Galerie extends Controller_Admin
         return true;
     }
 
-    private function _processSave()
+    private function _processSave($request)
     {
         $items = DBGalerie::getDirs();
         foreach ($items as $item) {

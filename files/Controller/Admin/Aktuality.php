@@ -12,14 +12,14 @@ class Controller_Admin_Aktuality extends Controller_Admin
         if ($request->post('action') == 'remove') {
             if (!is_array($request->post('aktuality'))) {
                 $this->redirect('/admin/aktuality');
-                break;
+                return;
             }
             $url = '/admin/aktuality/remove?';
             foreach ($request->post('aktuality') as $id) {
                 $url .= '&u[]=' . $id;
             }
             $this->redirect($url);
-            break;
+            return;
         }
 
         if (Permissions::check('aktuality', P_ADMIN)) {

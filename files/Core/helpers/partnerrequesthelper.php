@@ -32,7 +32,7 @@ class PartnerRequestHelper
         Žádáte uživatele <?= $item['u_jmeno'], ' ',$item['u_prijmeni'];?> o partnerství.
     </span>
     <span style="text-align:right;float:right;margin-right:15px;">
-        <?= $this->hidden('id', $item['pn_id']) ?>
+        <input type="hidden" name="id" value="<?= $item['pn_id'];?>" />
         <button type="submit" name="action" value="cancel">Zrušit</button>
     </span>
 </div>

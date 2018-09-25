@@ -10,11 +10,11 @@
         <table>
             <tr>
                 <td>Uživatelské jméno:</td>
-                <td><?= $this->text('name') ?></td>
+                <td><?= $this->text('name', '') ?></td>
             </tr>
             <tr>
                 <td>Email:</td>
-                <td><?= $this->ŧext('email') ?></td>
+                <td><?= $this->text('email', '') ?></td>
             </tr>
             <tr>
                 <td></td>

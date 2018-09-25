@@ -96,16 +96,26 @@ table.nocolor td, table.nocolor th {
     line-height: 150%;
     color: white;
 }
-#userbox button {
+#userbox button, button.a {
     display: inline;
     background: none;
     border: none;
     padding: 0;
     margin: 0;
 }
-#userbox button:hover {
+#userbox button:hover, button.a:hover {
     text-decoration: underline;
     cursor: pointer;
+}
+.inline-radio label {
+    vertical-align: middle;
+}
+.inline-radio .form-check-input {
+    position: static;
+}
+.inline-radio input[type=text] {
+    width: 200px;
+    display:inline-block;
 }
 
 /* Video container */

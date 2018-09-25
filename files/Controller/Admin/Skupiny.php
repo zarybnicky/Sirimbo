@@ -194,9 +194,9 @@ class Controller_Admin_Skupiny extends Controller_Admin
             'files/View/Admin/Skupiny/Form.inc',
             [
                 'id' => $id,
-                'name' => $request->post('name') ?: $data ? $data['s_name'] : '',
-                'color' => $request->post('color') ?: $data ? $data['s_color_rgb'] : '',
-                'popis' => $request->post('popis') ?: $data ? $data['s_description'] : '',
+                'name' => $request->post('name') ?: ($data ? $data['s_name'] : ''),
+                'color' => $request->post('color') ?: ($data ? $data['s_color_rgb'] : ''),
+                'popis' => $request->post('popis') ?: ($data ? $data['s_description'] : ''),
                 'action' => $action,
                 'header' => $action == 'add' ? 'Přidat skupinu' : 'Upravit skupinu',
                 'groups' => $groups

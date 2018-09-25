@@ -75,12 +75,13 @@
       ?>
     </div>
     <div class="form-group">
-      <label for="skupina">Skupina</label>
+      <div style="font-weight:bold">Skupiny</div>
       <?php
       foreach ($this->skupiny as $item) {
           echo $this->radio('skupina', $item['id'])
                    ->set($this->skupina == $item['id'])
-                   ->label($this->colorbox($item['color'], $item['popis']) . $item['popis']);
+                   ->label($this->colorbox($item['color'], $item['popis'])
+                        . '&nbsp;' . $item['popis']);
           echo '<br/>';
       }?>
     </div>

@@ -20,7 +20,7 @@
       <?= $this->checkbox('lock')->label('Uzamknout')->set($this->lock) ?>
     </div>
     <div class="form-group">
-      <label>Skupiny</label>
+      <div style="font-weight:bold">Skupiny</div>
       <?php
       foreach ($this->skupiny as $item) {
           echo $this->checkbox('sk-' . $item['s_id'], '1')

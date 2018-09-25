@@ -215,10 +215,11 @@ class User
     }
 
     public static function getZaplaceno($par = false) {
-        if ($par)
-            return $_SESSION['zaplaceno_par'];
-        else
-            return $_SESSION['zaplaceno'];
+        return true;
+        // if ($par)
+        //     return $_SESSION['zaplaceno_par'];
+        // else
+        //     return $_SESSION['zaplaceno'];
     }
 
     public static function getParID() {

@@ -47,9 +47,11 @@
               <?= $this->radio('poznamky', 'parent')
                        ->set($this->poznamky == 'parent')
                        ->label('Rodič tanečníka') ?><br>
-              <?= $this->radio('poznamky', 'other')
+              <div class="inline-radio">
+                <?= $this->radio('poznamky', 'other')
                        ->set($this->poznamky == 'other')
                        ->label('Jiné: ' . $this->text('other', $this->other)) ?>
+              </div>
           </td>
           <td></td>
       </tr><tr>

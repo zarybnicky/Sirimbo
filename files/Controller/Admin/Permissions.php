@@ -151,7 +151,7 @@ class Controller_Admin_Permissions extends Controller_Admin
         }
         $settings = array_map(
             function ($name, $item) use ($request, $data) {
-                $value = $request->post($name) ?: $data ? $data['pe_' . $name] : $item['default'];
+                $value = $request->post($name) ?: ($data ? $data['pe_' . $name] : $item['default']);
                 return [
                     'name' => $item['name'],
                     'value' => $value,
@@ -176,8 +176,8 @@ class Controller_Admin_Permissions extends Controller_Admin
             'files/View/Admin/Permissions/Form.inc',
             [
                 'action' => $request->getAction(),
-                'name' => $request->post('name') ?: $data ? $data['pe_name'] : '',
-                'description' => $request->post('description') ?: $data ? $data['pe_description'] : '',
+                'name' => $request->post('name') ?: ($data ? $data['pe_name'] : ''),
+                'description' => $request->post('description') ?: ($data ? $data['pe_description'] : ''),
                 'settings' => $settings
             ]
         );

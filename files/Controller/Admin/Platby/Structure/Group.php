@@ -169,7 +169,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
                     . new Tag(
                         'form',
                         ['action' => '', 'method' => 'post'],
-                        $this->submit('Odstranit spojení?')->data('action', 'unlink')
+                        (string) $this->submit('Odstranit spojení?')->data('action', 'unlink')
                     )
                 );
             }
@@ -262,10 +262,10 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
                 'category' => $categories,
                 'skupiny' => $skupiny,
                 'referer' => $request->getReferer(),
-                'name' => $request->post('name'),
-                'type' => $request->post('type'),
-                'description' => $request->post('description'),
-                'base' => $request->post('base'),
+                'name' => $request->post('name') ?: '',
+                'type' => $request->post('type') ?: '',
+                'description' => $request->post('description') ?: '',
+                'base' => $request->post('base') ?: '',
                 'uri' => $request->getLiteralURI()
             ]
         );
