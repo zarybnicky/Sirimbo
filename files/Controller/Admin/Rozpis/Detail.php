@@ -2,10 +2,13 @@
 require_once 'files/Controller/Admin/Rozpis.php';
 class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
 {
-    public function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('rozpis', P_OWNED);
     }
-    public function view($request) {
+
+    public function view($request)
+    {
         $id = $request->getId();
         if (!$id || !($data = DBRozpis::getSingleRozpis($id))) {
             $this->redirect(
@@ -116,7 +119,8 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
         );
     }
 
-    protected function processPost($request, $id, $data, $items) {
+    protected function processPost($request, $id, $data, $items)
+    {
         if ($request->post('remove') > 0) {
             DBRozpis::removeRozpisItem($request->post('remove'));
             $items = DBRozpis::getRozpisItem($id);
@@ -148,71 +152,72 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
         }
 
         switch ($request->post('action')) {
-        case 'overlap':
-            //Sort by begin time
-            usort(
-                $items,
-                function ($a, $b) {
-                    $a = $a['ri_od'];
-                    $b = $b['ri_od'];
-                    return $a < $b ? -1 : ($a == $b ? 0 : 1);
-                }
-            );
-
-            $lastEnd = DateTime::createFromFormat('H:i', '00:00');
-            foreach ($items as &$item) {
-                $start = DateTime::createFromFormat('H:i:s', $item['ri_od']);
-                $end = DateTime::createFromFormat('H:i:s', $item['ri_do']);
-                $length = $start->diff($end);
-
-                if ($lastEnd > $start) {
-                    $start = clone $lastEnd;
-                    $end = clone $start;
-                    $end->add($length);
-                }
-                if ($start > $end) {
-                    $end = clone $start;
-                    $end->add($length);
-                }
-                $lastEnd = $end;
-
-                $item['ri_od'] = $start->format('H:i:s');
-                $item['ri_do'] = $end->format('H:i:s');
-            }
-            break;
-
-        case 'add_multiple':
-            if (is_object($f = $this->checkAddMultiple($request))) {
-                $this->redirect()->setMessage($f->getMessages());
-                break;
-            }
-
-            $start = DateTime::createFromFormat('H:i', $request->post('add_multi_od'));
-            $length = new DateInterval('PT' . $request->post('add_multi_len') . 'M');
-            $end = clone $start;
-            $end->add($length);
-
-            for ($i = 0; $i < $request->post('add_multi_num'); $i++) {
-                $newId = DBRozpis::addRozpisItem(
-                    $id,
-                    '0',
-                    $start->format('H:i:s'),
-                    $end->format('H:i:s'),
-                    '0'
+            case 'overlap':
+                //Sort by begin time
+                usort(
+                    $items,
+                    function ($a, $b) {
+                        $a = $a['ri_od'];
+                        $b = $b['ri_od'];
+                        return $a < $b ? -1 : ($a == $b ? 0 : 1);
+                    }
                 );
-                $items[] = DBRozpis::getRozpisItemLesson($newId);
 
-                $start = $end;
+                $lastEnd = DateTime::createFromFormat('H:i', '00:00');
+                foreach ($items as &$item) {
+                    $start = DateTime::createFromFormat('H:i:s', $item['ri_od']);
+                    $end = DateTime::createFromFormat('H:i:s', $item['ri_do']);
+                    $length = $start->diff($end);
+
+                    if ($lastEnd > $start) {
+                        $start = clone $lastEnd;
+                        $end = clone $start;
+                        $end->add($length);
+                    }
+                    if ($start > $end) {
+                        $end = clone $start;
+                        $end->add($length);
+                    }
+                    $lastEnd = $end;
+
+                    $item['ri_od'] = $start->format('H:i:s');
+                    $item['ri_do'] = $end->format('H:i:s');
+                }
+                break;
+
+            case 'add_multiple':
+                if (is_object($f = $this->checkAddMultiple($request))) {
+                    $this->redirect()->setMessage($f->getMessages());
+                    break;
+                }
+
+                $start = DateTime::createFromFormat('H:i', $request->post('add_multi_od'));
+                $length = new DateInterval('PT' . $request->post('add_multi_len') . 'M');
                 $end = clone $start;
                 $end->add($length);
-            }
-            break;
+
+                for ($i = 0; $i < $request->post('add_multi_num'); $i++) {
+                    $newId = DBRozpis::addRozpisItem(
+                        $id,
+                        '0',
+                        $start->format('H:i:s'),
+                        $end->format('H:i:s'),
+                        '0'
+                    );
+                    $items[] = DBRozpis::getRozpisItemLesson($newId);
+
+                    $start = $end;
+                    $end = clone $start;
+                    $end->add($length);
+                }
+                break;
         }
 
         return $items;
     }
 
-    protected function checkAdd($request) {
+    protected function checkAdd($request)
+    {
         $f = new Form();
 
         $f->checkNumeric(
@@ -234,7 +239,8 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
         return $f->isValid() ? true : $f;
     }
 
-    protected function checkAddMultiple($request) {
+    protected function checkAddMultiple($request)
+    {
         $f = new Form();
 
         $f->checkNumeric(

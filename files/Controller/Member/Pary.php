@@ -2,10 +2,13 @@
 require_once 'files/Controller/Member.php';
 class Controller_Member_Pary extends Controller_Member
 {
-    public function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('pary', P_VIEW);
     }
-    public function view($request) {
+
+    public function view($request)
+    {
         $data = DBPary::getActiveParyByHodnoceni();
         if (empty($data)) {
             $this->render(

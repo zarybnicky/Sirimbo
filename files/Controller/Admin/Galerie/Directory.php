@@ -10,26 +10,27 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
     public function view($request)
     {
         $id = $request->getId();
-        if (!($data = DBGalerie::getSingleDir($id))) {
+        if (!DBGalerie::getSingleDir($id)) {
             $this->redirect('/admin/galerie', 'Složka s takovým ID neexistuje');
         }
         switch ($request->post('action')) {
-        case 'file/edit':
-            $galerie = $request->post('galerie');
-            if (isset($galerie[0])) {
-                $this->redirect(
-                    '/admin/galerie/file/edit/' . $galerie[0]
-                );
-            }
-            break;
-        case 'file/remove':
-            if (is_array($request->post('galerie'))) {
-                $this->redirect(
-                    '/admin/galerie/file/remove?'
-                    . http_build_query(['u' => $request->post('galerie')])
-                );
-            }
-            break;
+            case 'file/edit':
+                $galerie = $request->post('galerie');
+                if (isset($galerie[0])) {
+                    $this->redirect(
+                        '/admin/galerie/file/edit/' . $galerie[0]
+                    );
+                }
+                break;
+
+            case 'file/remove':
+                if (is_array($request->post('galerie'))) {
+                    $this->redirect(
+                        '/admin/galerie/file/remove?'
+                        . http_build_query(['u' => $request->post('galerie')])
+                    );
+                }
+                break;
         }
         $this->displayOverview($id);
     }
@@ -130,7 +131,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
                     continue;
                 }
                 DBGalerie::removeDir($id);
-                if(!$data['gd_path']) {
+                if (!$data['gd_path']) {
                     continue;
                 }
                 $this->_rrmdir(GALERIE . DIRECTORY_SEPARATOR . $data['gd_path']);

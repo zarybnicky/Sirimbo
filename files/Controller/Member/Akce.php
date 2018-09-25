@@ -95,4 +95,3 @@ class Controller_Member_Akce extends Controller_Member
         return $f->isValid() ? [] : $f;
     }
 }
-?>

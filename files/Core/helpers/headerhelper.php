@@ -1,5 +1,6 @@
 <?php
-class HeaderHelper {
+class HeaderHelper
+{
     protected $header;
     protected $subheader;
 

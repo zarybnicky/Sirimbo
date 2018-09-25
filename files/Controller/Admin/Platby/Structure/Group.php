@@ -74,7 +74,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
             );
         }
 
-       if (!$request->post() || is_object($s = $this->checkPost($request))) {
+        if (!$request->post() || is_object($s = $this->checkPost($request))) {
             if (!$request->post()) {
                 $request->post('type', $data['pg_type']);
                 $request->post('name', $data['pg_name']);
@@ -270,7 +270,9 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
             ]
         );
     }
-    protected function checkPost($request) {
+
+    protected function checkPost($request)
+    {
         $f = new Form();
         $f->checkInArray($request->post('type'), ['0', '1'], 'Neplatný typ kategorie');
         $f->checkNotEmpty($request->post('name'), 'Zadejte nějaký název platby');

@@ -1,6 +1,6 @@
 <?php
 require_once 'files/Controller/Member.php';
-class Controller_Member_Rozpis  extends Controller_Member
+class Controller_Member_Rozpis extends Controller_Member
 {
     public function __construct()
     {

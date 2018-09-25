@@ -6,24 +6,26 @@ class Controller_Admin_Skupiny extends Controller_Admin
     {
         Permissions::checkError('skupiny', P_OWNED);
     }
+
     public function view($request)
     {
         switch($request->post('action')) {
-        case 'edit':
-            $skupiny = $request->post('data');
-            if ($skupiny[0]) {
-                $this->redirect('/admin/skupiny/edit/' . $skupiny[0]);
-            }
-            break;
-        case 'remove':
-            if (!is_array($request->post('data'))) {
+            case 'edit':
+                $skupiny = $request->post('data');
+                if ($skupiny[0]) {
+                    $this->redirect('/admin/skupiny/edit/' . $skupiny[0]);
+                }
                 break;
-            }
-            $this->redirect(
-                '/admin/skupiny/remove?'
-                . http_build_query(['u' => $request->post('data')])
-            );
-            break;
+
+            case 'remove':
+                if (!is_array($request->post('data'))) {
+                    break;
+                }
+                $this->redirect(
+                    '/admin/skupiny/remove?'
+                    . http_build_query(['u' => $request->post('data')])
+                );
+                break;
         }
         $data = array_map(
             function ($item) {

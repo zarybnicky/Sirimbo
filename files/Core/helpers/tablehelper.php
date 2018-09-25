@@ -8,11 +8,14 @@ class TableHelper
     private $_style;
     private $_showHeader;
 
-    public function table() {
+    public function table()
+    {
         $this->_defaultValues();
         return $this;
     }
-    private function _defaultValues() {
+
+    private function _defaultValues()
+    {
         $this->_name = '';
         $this->_data = [];
         $this->_columns = [];
@@ -20,21 +23,29 @@ class TableHelper
         $this->_style = '';
         $this->_showHeader = true;
     }
-    public function name($n) {
+
+    public function name($n)
+    {
         $this->_name = $n;
         return $this;
     }
-    public function style($s) {
+
+    public function style($s)
+    {
         $this->_style = ' style="' . $s . '"';
         return $this;
     }
-    public function data($d) {
+
+    public function data($d)
+    {
         if ($d instanceof Traversable || (is_array($d) && is_array(reset($d)))) {
             $this->_data = $d;
         }
         return $this;
     }
-    public function columns($columns, $overwrite = false) {
+
+    public function columns($columns, $overwrite = false)
+    {
         if ($overwrite) {
             $this->_columns = null;
         }
@@ -49,24 +60,34 @@ class TableHelper
         }
         return $this;
     }
-    public function column($id, $name, $class = null, $style = null) {
+
+    public function column($id, $name, $class = null, $style = null)
+    {
         $html = ($class !== null ? (' class="' . $class . '"') : '')
                 . ($style !== null ? (' style="' . $style . '"') : '');
 
         $this->_columns[] = [$id, $name, $html];
         return $this;
     }
-    public function showHeader($b) {
+
+    public function showHeader($b)
+    {
         $this->_showHeader = (bool) $b;
         return $this;
     }
-    private function _getCounter() {
+
+    private function _getCounter()
+    {
         return ' ' . $this->_index . '.';
     }
-    public function __toString() {
+
+    public function __toString()
+    {
         return $this->render();
     }
-    public function render() {
+
+    public function render()
+    {
         if ($this->_data === null && $this->_columns === null) {
             return '';
         }

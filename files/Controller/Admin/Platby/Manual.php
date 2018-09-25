@@ -6,6 +6,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
     {
         Permissions::checkError('platby', P_OWNED);
     }
+
     public function view($request)
     {
         if ($request->post()) {
@@ -155,42 +156,45 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
         }
 
         switch ($request->post('action')) {
-        case 'confirm':
-            if (!is_object($item = $this->getFromPost($request))) {
-                $this->redirect()->setMessage($item);
-                return;
-            }
-            DBPlatbyRaw::update(
-                $id,
-                $current['pr_raw'],
-                $current['pr_hash'],
-                '1',
-                '0'
-            );
-            DBPlatbyItem::insert(
-                $item->variable,
-                $item->categoryId,
-                $id,
-                $item->amount,
-                $item->date,
-                $item->prefix
-            );
-            break;
-        case 'discard':
-            DBPlatbyRaw::update(
-                $id,
-                $current['pr_raw'],
-                $current['pr_hash'],
-                '0',
-                '1'
-            );
-            break;
-        case 'skip':
-            DBPlatbyRaw::skip($id);
-            break;
-        default:
-            $this->redirect()->setMessage('Neplatná POST akce.');
-            break;
+            case 'confirm':
+                if (!is_object($item = $this->getFromPost($request))) {
+                    $this->redirect()->setMessage($item);
+                    return;
+                }
+                DBPlatbyRaw::update(
+                    $id,
+                    $current['pr_raw'],
+                    $current['pr_hash'],
+                    '1',
+                    '0'
+                );
+                DBPlatbyItem::insert(
+                    $item->variable,
+                    $item->categoryId,
+                    $id,
+                    $item->amount,
+                    $item->date,
+                    $item->prefix
+                );
+                break;
+
+            case 'discard':
+                DBPlatbyRaw::update(
+                    $id,
+                    $current['pr_raw'],
+                    $current['pr_hash'],
+                    '0',
+                    '1'
+                );
+                break;
+
+            case 'skip':
+                DBPlatbyRaw::skip($id);
+                break;
+
+            default:
+                $this->redirect()->setMessage('Neplatná POST akce.');
+                break;
         }
 
         $this->redirect('/admin/platby/manual');

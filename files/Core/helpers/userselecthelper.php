@@ -10,17 +10,22 @@ class UserSelectHelper
     private $_tmpSwitch;
     private $_selected;
 
-    public function __construct() {
+    public function __construct()
+    {
         return $this->userSelect();
     }
 
-    public function userSelect($name = null) {
+    public function userSelect($name = null)
+    {
         $this->_defaultValues();
-        if ($name !== null)
+        if ($name !== null) {
             return $this->name($name);
+        }
         return $this;
     }
-    private function _defaultValues() {
+
+    private function _defaultValues()
+    {
         $this->_name = "user";
         $this->_idIndex = "u_id";
         $this->_jmeno = "u_jmeno";
@@ -29,41 +34,61 @@ class UserSelectHelper
         $this->_type = 'user';
         $this->_tmpSwitch = true;
     }
-    public function name($name) {
+
+    public function name($name)
+    {
         $this->_name = $name;
         return $this;
     }
-    public function idVar($idVar) {
+
+    public function idVar($idVar)
+    {
         $this->_idIndex = $idVar;
         return $this;
     }
-    public function jmeno($jmeno) {
+
+    public function jmeno($jmeno)
+    {
         $this->_jmeno = $jmeno;
         return $this;
     }
-    public function prijmeni($prijmeni) {
+
+    public function prijmeni($prijmeni)
+    {
         $this->_prijmeni = $prijmeni;
         return $this;
     }
-    public function users(array $users) {
-        if (is_array($users))
+
+    public function users(array $users)
+    {
+        if (is_array($users)) {
             $this->_users = $users;
+        }
         return $this;
     }
-    public function type($type) {
-        if ($type == 'user' || $type == 'par')
+
+    public function type($type)
+    {
+        if ($type == 'user' || $type == 'par') {
             $this->_type = $type;
+        }
         return $this;
     }
-    public function tmpSwitch($value) {
+
+    public function tmpSwitch($value)
+    {
         $this->_tmpSwitch = (bool) $value;
         return $this;
     }
-    public function set($value) {
+
+    public function set($value)
+    {
         $this->_selected = $value;
         return $this;
     }
-    public function render() {
+
+    public function render()
+    {
         $name = 'userselect' . rand(0, 1024);
         $selected = $this->_selected !== null ? $this->_selected : '';
 
@@ -85,10 +110,8 @@ class UserSelectHelper
             }
 
             $id = $user[$this->_idIndex];
-            if ($id == $selected)
-                $out .= '<option value="' . $id . '" selected="selected">';
-            else
-                $out .= '<option value="' . $id . '">';
+            $out .= '<option value="' . $id;
+            $out .= $id == $selected ? '" selected="selected">' : '">';
             $out .= $user[$this->_prijmeni] . ', ' . $user[$this->_jmeno] .
                 (isset($user['u_narozeni']) ? (', ' . $year) : '');
             $out .= '</option>' . "\n";

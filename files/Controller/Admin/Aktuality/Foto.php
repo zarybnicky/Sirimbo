@@ -2,11 +2,13 @@
 require_once 'files/Controller/Admin/Aktuality.php';
 class Controller_Admin_Aktuality_Foto extends Controller_Admin_Aktuality
 {
-    public function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('aktuality', P_OWNED);
     }
 
-    public function view($request) {
+    public function view($request)
+    {
         $id = $request->getId();
         if (!($article = DBAktuality::getSingleAktualita($id))) {
             $this->redirect('/admin/aktuality', 'Takový článek neexistuje');

@@ -1,5 +1,6 @@
 <?php
-class LoginHelper {
+class LoginHelper
+{
     public function login()
     {
         return $this;

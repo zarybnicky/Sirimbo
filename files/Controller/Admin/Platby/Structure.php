@@ -109,7 +109,8 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
             ->data('category_duplicate', $id)->cls('btn');
     }
 
-    protected function getDateDisplay($from, $to) {
+    protected function getDateDisplay($from, $to)
+    {
         $from = new Date($from);
         $to = new Date($to);
         return $from->getDate(Date::FORMAT_SIMPLIFIED)

@@ -150,38 +150,40 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
         if (!$request->post('action')) {
             $this->redirect('/member/profil');
         }
-        switch($request->post('action')) {
-        case 'accept':
-        case 'refuse':
-            $requests = DBPary::getPartnerRequestsForMe(User::getUserID());
-            foreach ($requests as $req) {
-                if ($req['pn_id'] != $request->post('id')) {
-                    continue;
-                }
+        switch ($request->post('action')) {
+            case 'accept':
+            case 'refuse':
+                $requests = DBPary::getPartnerRequestsForMe(User::getUserID());
+                foreach ($requests as $req) {
+                    if ($req['pn_id'] != $request->post('id')) {
+                        continue;
+                    }
 
-                if ($request->post('action') == 'accept') {
-                    DBPary::acceptPartnerRequest($request->post('id'));
-                    $this->redirect()->setMessage('žádost přijata');
-                } else {
+                    if ($request->post('action') == 'accept') {
+                        DBPary::acceptPartnerRequest($request->post('id'));
+                        $this->redirect()->setMessage('žádost přijata');
+                    } else {
+                        DBPary::deletePartnerRequest($request->post('id'));
+                        $this->redirect()->setMessage('žádost zamitnuta');
+                    }
+                    $this->redirect('/member/profil/par');
+                }
+                break;
+
+            case 'cancel':
+                $requests = DBPary::getPartnerRequestsByMe(User::getUserID());
+                foreach ($requests as $req) {
+                    if ($req['pn_id'] != $request->post('id')) {
+                        continue;
+                    }
                     DBPary::deletePartnerRequest($request->post('id'));
-                    $this->redirect()->setMessage('žádost zamitnuta');
+                    $this->redirect('/member/profil/par', 'Žádost zrušena');
                 }
-                $this->redirect('/member/profil/par');
-            }
-            break;
-        case 'cancel':
-            $requests = DBPary::getPartnerRequestsByMe(User::getUserID());
-            foreach ($requests as $req) {
-                if ($req['pn_id'] != $request->post('id')) {
-                    continue;
-                }
-                DBPary::deletePartnerRequest($request->post('id'));
-                $this->redirect('/member/profil/par', 'Žádost zrušena');
-            }
-            break;
-        default:
-            $this->redirect('/member/profil');
-            break;
+                break;
+
+            default:
+                $this->redirect('/member/profil');
+                break;
         }
         $this->redirect('/member/profil', 'Žádná taková žádost tu není');
     }

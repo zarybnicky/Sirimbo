@@ -52,37 +52,42 @@ class UploadHelper
         return $this;
     }
 
-    private function _processFilesItem($data) {
+    private function _processFilesItem($data)
+    {
         $error = $data['error'];
-        switch($error) {
-        case UPLOAD_ERR_OK:
-            if ($data['size'] > 0) {
-                $this->_files[] = $data;
-            } else {
+        switch ($error) {
+            case UPLOAD_ERR_OK:
+                if ($data['size'] > 0) {
+                    $this->_files[] = $data;
+                } else {
+                    $this->_emptyFiles[] = $data;
+                }
+                return true;
+
+            case UPLOAD_ERR_NO_FILE:
                 $this->_emptyFiles[] = $data;
-            }
-            return true;
-        case UPLOAD_ERR_NO_FILE:
-            $this->_emptyFiles[] = $data;
-            return true;
-        case UPLOAD_ERR_INI_SIZE:
-        case UPLOAD_ERR_FORM_SIZE:
-            $logError = false;
-            $errorMessage = 'Soubor "' . $data['name'] . '" byl příliš velký, '
-                          . 'největši povolená velikost souboru je '
-                          . ini_get('upload_max_filesize') . 'B';
-            break;
-        case UPLOAD_ERR_PARTIAL:
-            $logError = false;
-            $errorMessage = 'Nahrávání souboru bylo přerušeno, zkuste to prosím znovu.';
-            break;
-        case UPLOAD_ERR_CANT_WRITE:
-        case UPLOAD_ERR_EXTENSION:
-        case UPLOAD_ERR_NO_TMP_DIR:
-            $logError = true;
-            $errorMessage = 'Došlo k chybě při ukládání souboru (kód: '
-                          . $error . '), kontaktujte prosím administrátora.';
-            break;
+                return true;
+
+            case UPLOAD_ERR_INI_SIZE:
+            case UPLOAD_ERR_FORM_SIZE:
+                $logError = false;
+                $errorMessage = 'Soubor "' . $data['name'] . '" byl příliš velký, '
+                    . 'největši povolená velikost souboru je '
+                    . ini_get('upload_max_filesize') . 'B';
+                break;
+
+            case UPLOAD_ERR_PARTIAL:
+                $logError = false;
+                $errorMessage = 'Nahrávání souboru bylo přerušeno, zkuste to prosím znovu.';
+                break;
+
+            case UPLOAD_ERR_CANT_WRITE:
+            case UPLOAD_ERR_EXTENSION:
+            case UPLOAD_ERR_NO_TMP_DIR:
+                $logError = true;
+                $errorMessage = 'Došlo k chybě při ukládání souboru (kód: '
+                    . $error . '), kontaktujte prosím administrátora.';
+                break;
         }
         if (isset($logError) && $logError) {
             Log::write($errorMessage);

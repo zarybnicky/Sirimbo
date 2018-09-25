@@ -9,21 +9,22 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
 
     public function view($request)
     {
-        switch($request->post('action')) {
-        case 'edit':
-            $users = $request->post('data');
-            if ($users[0]) {
-                $this->redirect('/admin/platby/items/edit/' . $users[0]);
-            }
-            break;
-        case 'remove':
-            if (is_array($request->post('data'))) {
-                $this->redirect(
-                    '/admin/platby/items/remove?'
-                    . http_build_query(['u' => $request->post('data')])
-                );
-            }
-            break;
+        switch ($request->post('action')) {
+            case 'edit':
+                $users = $request->post('data');
+                if ($users[0]) {
+                    $this->redirect('/admin/platby/items/edit/' . $users[0]);
+                }
+                break;
+
+            case 'remove':
+                if (is_array($request->post('data'))) {
+                    $this->redirect(
+                        '/admin/platby/items/remove?'
+                        . http_build_query(['u' => $request->post('data')])
+                    );
+                }
+                break;
         }
         $data = $this->getData($request);
         $this->render(
@@ -131,11 +132,11 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             ]
         );
     }
+
     private function displayForm($id, $request)
     {
         $raw = [];
-        if (
-            $id &&
+        if ($id &&
             ($item = DBPlatbyItem::getSingle($id)) &&
             ($data = DBPlatbyRaw::getSingle($item['pi_id_raw']))
         ) {
@@ -164,6 +165,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             ]
         );
     }
+
     private function getCategories()
     {
         $out = $this->getCategoryLookup(false, false, true);
@@ -176,6 +178,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         }
         return $out;
     }
+
     private function getUsers()
     {
         $users = $this->getUserLookup(true);
@@ -184,6 +187,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         }
         return $users;
     }
+
     private function getData($request)
     {
         $filter = [];

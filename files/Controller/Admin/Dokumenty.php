@@ -9,58 +9,58 @@ class Controller_Admin_Dokumenty extends Controller_Admin
 
     public function view($request)
     {
-        switch($request->post('action')) {
-        case 'edit':
-            $dokumenty = $request->post('dokumenty');
-            if ($dokumenty[0]) {
-                $this->redirect('/admin/dokumenty/edit/' . $dokumenty[0]);
-            }
-            break;
-
-        case 'upload':
-            if (!$request->files()) {
+        switch ($request->post('action')) {
+            case 'edit':
+                $dokumenty = $request->post('dokumenty');
+                if ($dokumenty[0]) {
+                    $this->redirect('/admin/dokumenty/edit/' . $dokumenty[0]);
+                }
                 break;
-            }
-            $fileUpload = $request->files('file')['tmp_name'];
-            $fileName = $request->files('file')['name'];
-            $fileName = str_replace(
-                ['#', '$', '%', '&', '^', '*', '?'],
-                ['No.', 'Dolar', 'Procento', 'And', ''],
-                $fileName
-            );
 
-            $path = 'upload/' . time() . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
-
-            if (!$request->post('name')) {
-                $request->post('name', $fileName);
-            }
-
-            if (move_uploaded_file($fileUpload, $path)) {
-                chmod($path, 0666);
-                $id = DBDokumenty::addDokument(
-                    $path,
-                    $request->post('name'),
-                    $fileName,
-                    $request->post('kategorie'),
-                    User::getUserID()
+            case 'upload':
+                if (!$request->files()) {
+                    break;
+                }
+                $fileUpload = $request->files('file')['tmp_name'];
+                $fileName = $request->files('file')['name'];
+                $fileName = str_replace(
+                    ['#', '$', '%', '&', '^', '*', '?'],
+                    ['No.', 'Dolar', 'Procento', 'And', ''],
+                    $fileName
                 );
-                $this->redirect()->setMessage('Soubor byl úspěšně nahrán');
-            } else {
-                $this->redirect()->setMessage('Bohužel, zkus to znova :o(');
-            }
-            $this->redirect('/admin/dokumenty');
-            return;
 
-        case 'remove':
-            if (!is_array($request->post('dokumenty'))) {
+                $path = 'upload/' . time() . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
+
+                if (!$request->post('name')) {
+                    $request->post('name', $fileName);
+                }
+
+                if (move_uploaded_file($fileUpload, $path)) {
+                    chmod($path, 0666);
+                    $id = DBDokumenty::addDokument(
+                        $path,
+                        $request->post('name'),
+                        $fileName,
+                        $request->post('kategorie'),
+                        User::getUserID()
+                    );
+                    $this->redirect()->setMessage('Soubor byl úspěšně nahrán');
+                } else {
+                    $this->redirect()->setMessage('Bohužel, zkus to znova :o(');
+                }
+                $this->redirect('/admin/dokumenty');
+                return;
+
+            case 'remove':
+                if (!is_array($request->post('dokumenty'))) {
+                    break;
+                }
+                $url = '/admin/dokumenty/remove?';
+                foreach ($request->post('dokumenty') as $id) {
+                    $url .= '&u[]=' . $id;
+                }
+                $this->redirect($url);
                 break;
-            }
-            $url = '/admin/dokumenty/remove?';
-            foreach ($request->post('dokumenty') as $id) {
-                $url .= '&u[]=' . $id;
-            }
-            $this->redirect($url);
-            break;
         }
 
         if (Permissions::check('dokumenty', P_ADMIN)) {

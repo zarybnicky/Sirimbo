@@ -1,7 +1,8 @@
 <?php
 class DBRozpis extends Database
 {
-    public static function getRozpis($descending = false) {
+    public static function getRozpis($descending = false)
+    {
         $res = self::query(
             "SELECT u_jmeno,u_prijmeni,r_id,r_trener,r_kde,r_datum,r_visible,r_lock" .
             " FROM rozpis LEFT JOIN users ON r_trener=u_id ORDER BY r_datum" .
@@ -10,7 +11,8 @@ class DBRozpis extends Database
         return self::getArray($res);
     }
 
-    public static function getRozpisyByTrener($trener, $descending = false) {
+    public static function getRozpisyByTrener($trener, $descending = false)
+    {
         list($trener) = self::escape($trener);
         $res = self::query(
             "SELECT u_jmeno,u_prijmeni,r_id,r_trener,r_kde,r_datum,r_visible,r_lock
@@ -21,39 +23,44 @@ class DBRozpis extends Database
         return self::getArray($res);
     }
 
-    public static function rozpisSignUp($rid, $uid) {
+    public static function rozpisSignUp($rid, $uid)
+    {
         list($rid, $uid) = self::escape($rid, $uid);
-        if (self::isRozpisFree($rid)) {
-            $res = self::query("UPDATE rozpis_item SET ri_partner='$uid' WHERE ri_id='$rid'");
-            return true;
-        } else
-            return false;
-    }
-
-    public static function rozpisSignOut($rid) {
-        list($rid) = self::escape($rid);
         if (!self::isRozpisFree($rid)) {
-            $res = self::query("UPDATE rozpis_item SET ri_partner='0' WHERE ri_id='$rid'");
-            return true;
-        } else
             return false;
+        }
+        self::query("UPDATE rozpis_item SET ri_partner='$uid' WHERE ri_id='$rid'");
+        return true;
     }
 
-    public static function getRozpisItem($rid) {
+    public static function rozpisSignOut($rid)
+    {
+        list($rid) = self::escape($rid);
+        if (self::isRozpisFree($rid)) {
+            return false;
+        }
+        self::query("UPDATE rozpis_item SET ri_partner='0' WHERE ri_id='$rid'");
+        return true;
+    }
+
+    public static function getRozpisItem($rid)
+    {
         list($rid) = self::escape($rid);
 
         $res = self::query(
-        "SELECT p_id,u_id,u_login,u_jmeno,u_prijmeni,ri_id,ri_id_rodic,ri_partner,
-            ri_od,ri_do,ri_lock
-        FROM rozpis_item
-            LEFT JOIN pary ON ri_partner=p_id
-            LEFT JOIN users ON p_id_partner=u_id
-        WHERE ri_id_rodic='$rid'
-        ORDER BY ri_od");
+            "SELECT p_id,u_id,u_login,u_jmeno,u_prijmeni,ri_id,ri_id_rodic,ri_partner,
+               ri_od,ri_do,ri_lock
+            FROM rozpis_item
+                LEFT JOIN pary ON ri_partner=p_id
+                LEFT JOIN users ON p_id_partner=u_id
+            WHERE ri_id_rodic='$rid'
+            ORDER BY ri_od"
+        );
         return self::getArray($res);
     }
 
-    public static function getRozpisItemLesson($ri_id) {
+    public static function getRozpisItemLesson($ri_id)
+    {
         list($ri_id) = self::escape($ri_id);
 
         $res = self::query("SELECT u_id,u_login,u_jmeno,u_prijmeni,r_trener,ri_id,ri_id_rodic,ri_partner," .
@@ -62,31 +69,32 @@ class DBRozpis extends Database
         return self::getSingleRow($res);
     }
 
-    public static function isRozpisFree($rid) {
+    public static function isRozpisFree($rid)
+    {
         list($rid) = self::escape($rid);
 
         $res = self::query("SELECT ri_partner FROM rozpis_item WHERE ri_id='$rid'");
         if (!$res) {
             return false;
-        } else {
-            $row = self::getSingleRow($res);
-            return !(bool)$row["ri_partner"];
         }
+        $row = self::getSingleRow($res);
+        return !(bool)$row["ri_partner"];
     }
 
-    public static function getSingleRozpis($id) {
+    public static function getSingleRozpis($id)
+    {
         list($id) = self::escape($id);
 
         $res = self::query("SELECT r_id,r_trener,u_jmeno,u_prijmeni,r_kde,r_datum,r_visible,r_lock" .
             " FROM rozpis LEFT JOIN users ON r_trener=u_id WHERE r_id='$id'");
         if (!$res) {
             return false;
-       } else {
-            return self::getSingleRow($res);
         }
+        return self::getSingleRow($res);
     }
 
-    public static function getRozpisTrener($id) {
+    public static function getRozpisTrener($id)
+    {
         list($id) = self::escape($id);
 
         $res = self::query(
@@ -95,12 +103,12 @@ class DBRozpis extends Database
         );
         if (!$res) {
             return false;
-        } else {
-            return self::getSingleRow($res);
         }
+        return self::getSingleRow($res);
     }
 
-    public static function addRozpis($trener, $kde, $datum, $visible, $lock) {
+    public static function addRozpis($trener, $kde, $datum, $visible, $lock)
+    {
         list($trener, $kde, $datum, $visible, $lock) =
             self::escape($trener, $kde, $datum, $visible, $lock);
 
@@ -110,7 +118,8 @@ class DBRozpis extends Database
         return self::getInsertId();
     }
 
-    public static function editRozpis($id, $trener, $kde, $datum, $visible, $lock) {
+    public static function editRozpis($id, $trener, $kde, $datum, $visible, $lock)
+    {
         list($id, $trener, $kde, $datum, $visible, $lock) =
             self::escape($id, $trener, $kde, $datum, $visible, $lock);
 
@@ -120,7 +129,8 @@ class DBRozpis extends Database
         return true;
     }
 
-    public static function removeRozpis($id) {
+    public static function removeRozpis($id)
+    {
         list($id) = self::escape($id);
 
         self::query("DELETE FROM rozpis WHERE r_id='$id'");
@@ -129,31 +139,32 @@ class DBRozpis extends Database
         return true;
     }
 
-    public static function isRozpisLocked($id) {
+    public static function isRozpisLocked($id)
+    {
         list($id) = self::escape($id);
 
         $res = self::query("SELECT r_lock FROM rozpis WHERE r_id='$id'");
         if (!$res) {
             return false;
-        } else {
-            $row = self::getSingleRow($res);
-            return (bool)$row["r_lock"];
         }
+        $row = self::getSingleRow($res);
+        return (bool)$row["r_lock"];
     }
 
-    public static function isRozpisVisible($id) {
+    public static function isRozpisVisible($id)
+    {
         list($id) = self::escape($id);
 
         $res = self::query("SELECT r_visible FROM rozpis WHERE r_id='$id'");
         if (!$res) {
             return false;
-        } else {
-            $row = self::getSingleRow($res);
-            return (bool)$row["r_visible"];
         }
+        $row = self::getSingleRow($res);
+        return (bool)$row["r_visible"];
     }
 
-    public static function addRozpisItem($parent_id, $user_id, $od, $do, $lock) {
+    public static function addRozpisItem($parent_id, $user_id, $od, $do, $lock)
+    {
         list($parent_id, $user_id, $od, $do, $lock) =
             self::escape($parent_id, $user_id, $od, $do, $lock);
 
@@ -164,7 +175,8 @@ class DBRozpis extends Database
         return self::getInsertId();
     }
 
-    public static function editRozpisItem($id, $partner, $od, $do, $lock) {
+    public static function editRozpisItem($id, $partner, $od, $do, $lock)
+    {
         list($id, $partner, $od, $do, $lock) = self::escape($id, $partner, $od, $do, $lock);
 
         self::query(
@@ -175,7 +187,8 @@ class DBRozpis extends Database
         return true;
     }
 
-    public static function editRozpisItemMultiple($data) {
+    public static function editRozpisItemMultiple($data)
+    {
         $ids = array_map(
             function ($item) {
                 return $item['ri_id'];
@@ -216,7 +229,8 @@ class DBRozpis extends Database
         return $ids;
     }
 
-    public static function removeRozpisItem($id) {
+    public static function removeRozpisItem($id)
+    {
         list($id) = self::escape($id);
 
         self::query("DELETE FROM rozpis_item WHERE ri_id='$id'");

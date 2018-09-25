@@ -3,25 +3,27 @@ class PartnerRequestHelper
 {
     private $_id;
 
-    public function partnerRequest($id = null) {
-        if ($id !== null)
-            $this->_id = $id;
-        else
-            $this->_id = User::getUserID();
-        return $this;
-    }
-    public function id($id = null) {
-        if ($id === null)
-            return $this->_id;
-        else
-            $this->_id = $id;
+    public function partnerRequest($id = null)
+    {
+        $this->_id = $id !== null ? $id : User::getUserID();
         return $this;
     }
 
-    public function getRequestsByMe() {
+    public function id($id = null)
+    {
+        if ($id === null) {
+            return $this->_id;
+        }
+        $this->_id = $id;
+        return $this;
+    }
+
+    public function getRequestsByMe()
+    {
         $data = DBPary::getPartnerRequestsByMe($this->_id);
-        if (empty($data))
+        if (empty($data)) {
             return '';
+        }
         $out = '';
         foreach ($data as $item) {
             ob_start();
@@ -43,10 +45,12 @@ class PartnerRequestHelper
         }
         return $out;
     }
-    public function getRequestsForMe() {
+    public function getRequestsForMe()
+    {
         $data = DBPary::getPartnerRequestsForMe($this->_id);
-        if (empty($data))
+        if (empty($data)) {
             return '';
+        }
         $out = '';
         foreach ($data as $item) {
             ob_start();
@@ -69,7 +73,8 @@ class PartnerRequestHelper
         }
         return $out;
     }
-    public function getAll() {
+    public function getAll()
+    {
         return ($this->getRequestsByMe() . $this->getRequestsForMe());
     }
 }

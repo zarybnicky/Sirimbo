@@ -76,7 +76,9 @@ class Controller_Member_Nabidka extends Controller_Member
             ['data' => $data]
         );
     }
-    private function checkData($request, $data) {
+
+    private function checkData($request, $data)
+    {
         $f = new Form();
         $f->checkBool(!$data['n_lock'], 'Tato nabídka je uzamčená', '');
         if ($request->post('hodiny')) {
@@ -84,6 +86,7 @@ class Controller_Member_Nabidka extends Controller_Member
         }
         return $f->isValid() ? null : $f;
     }
+
     private function processPost($request)
     {
         if (!$request->post()) {

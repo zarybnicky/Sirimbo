@@ -2,14 +2,17 @@
 require_once 'files/Controller/Member.php';
 class Controller_Member_Clenove extends Controller_Member
 {
-    public function __construct() {
+    public function __construct()
+    {
         Permissions::checkError('users', P_VIEW);
     }
-    public function view($request) {
-        $id = $request->getId();
-        if (!$id || !($data = DBUser::getUserData($id)))
-            $this->redirect('/member/clenove/structure');
 
+    public function view($request)
+    {
+        $id = $request->getId();
+        if (!$id || !($data = DBUser::getUserData($id))) {
+            $this->redirect('/member/clenove/structure');
+        }
         $this->render(
             'files/View/Member/Clenove/Single.inc',
             [
@@ -21,7 +24,9 @@ class Controller_Member_Clenove extends Controller_Member
             ]
         );
     }
-    public function skupiny($request) {
+
+    public function skupiny($request)
+    {
         $currentID = -1;
         $currentKey = 0;
         $data = DBUser::getUsersWithSkupinaPlatby();
@@ -49,7 +54,9 @@ class Controller_Member_Clenove extends Controller_Member
             ['data' => $skupiny, 'uri' => $request->getLiteralURI()]
         );
     }
-    public function seznam($request) {
+
+    public function seznam($request)
+    {
         $index = 0;
         $data = array_map(
             function ($item) use (&$index) {
@@ -65,7 +72,9 @@ class Controller_Member_Clenove extends Controller_Member
             ]
         );
     }
-    public function structure($request) {
+
+    public function structure($request)
+    {
         $data = DBUser::getUsersWithSkupinaPlatby();
         $skupiny = [];
         $index = 0;

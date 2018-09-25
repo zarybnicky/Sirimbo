@@ -41,7 +41,8 @@ class Request
         $this->sessionParams = $sessionParams;
     }
 
-    protected function phpGlobal(&$array, $field, $value) {
+    protected function phpGlobal(&$array, $field, $value)
+    {
         if ($field === null) {
             return $array;
         }
@@ -58,38 +59,46 @@ class Request
         }
     }
 
-    public function server($field = null, $value = null) {
+    public function server($field = null, $value = null)
+    {
         return $this->phpGlobal($this->serverParams, $field, $value);
     }
 
-    public function cookie($field = null, $value = null) {
+    public function cookie($field = null, $value = null)
+    {
         return $this->phpGlobal($this->cookieParams, $field, $value);
     }
 
-    public function get($field = null, $value = null) {
+    public function get($field = null, $value = null)
+    {
         return $this->phpGlobal($this->getParams, $field, $value);
     }
 
-    public function post($field = null, $value = null) {
+    public function post($field = null, $value = null)
+    {
         return $this->phpGlobal($this->postParams, $field, $value);
     }
 
-    public function files($field = null, $value = null) {
+    public function files($field = null, $value = null)
+    {
         return $this->phpGlobal($this->fileParams, $field, $value);
     }
 
-    public function session($field = null, $value = null) {
+    public function session($field = null, $value = null)
+    {
         if ($value !== null) {
             $_SESSION[$field] = $value;
         }
         return $this->phpGlobal($this->sessionParams, $field, $value);
     }
 
-    public function setDefault($defaultPath) {
+    public function setDefault($defaultPath)
+    {
         $this->defaultPath = $defaultPath;
     }
 
-    public function setURI($uri) {
+    public function setURI($uri)
+    {
         $uri = explode('?', $uri)[0];
 
         $this->uri = trim($uri, '/');
@@ -135,27 +144,36 @@ class Request
         $this->action = str_replace('-', '_', $this->action);
     }
 
-    public function getURI() {
+    public function getURI()
+    {
         return $this->uri;
     }
 
-    public function getLiteralURI() {
+    public function getLiteralURI()
+    {
         if (empty($this->uriPartsLiteral) || $this->uriPartsLiteral[0] == '') {
             return $this->defaultPath;
         }
         return implode('/', $this->uriPartsLiteral);
     }
-    public function getAction() {
+
+    public function getAction()
+    {
         return $this->action;
     }
-    public function getID() {
+
+    public function getID()
+    {
         return $this->id;
     }
 
-    public function setReferer($referer) {
+    public function setReferer($referer)
+    {
         $this->referer = $referer;
     }
-    public function getReferer() {
+
+    public function getReferer()
+    {
         return $this->referer;
     }
 }
