@@ -81,7 +81,7 @@ class Controller_Fotogalerie extends Controller_Abstract
         }
 
         $root = $tip = new Tag('ul', ['class' => 'fotoroot']);
-        $stack = [$root];
+        $stack = [];
         $level = 0;
 
         foreach ($dirs as $dir) {
@@ -90,11 +90,11 @@ class Controller_Fotogalerie extends Controller_Abstract
             }
 
             if ($dir['gd_level'] > $level) {
+                $stack[] = $tip;
                 $newTip = new Tag('ul', ['class' => 'foto_list']);
                 $tip->add($newTip);
-                $stack[] = $newTip;
                 $tip = $newTip;
-            } elseif ($dir['gd_level'] > $level) {
+            } elseif ($dir['gd_level'] < $level) {
                 for ($i = 0; $i < ($level - $dir['gd_level']); $i++) {
                     $tip = array_pop($stack);
                 }
