@@ -62,10 +62,6 @@
             <td></td><td>kontaktní osoba pro nové zájemce a členské příspěvky</td>
         </tr>
         <tr>
-            <td class="r">mobil:</td>
-            <td>777 154 730</td>
-        </tr>
-        <tr>
             <td class="r">email:</td>
             <td>lucishek(zavinac)seznam.cz</td>
         </tr>
