@@ -9,41 +9,29 @@ class Controller_Admin_Video extends Controller_Admin
 
     public function view($request)
     {
-        if ($request->post()) {
-            if ($request->post('video1')) {
-                DBParameters::set('title_video1', $request->post('video1'));
-                DBParameters::set('title_video2', $request->post('video2'));
-                DBParameters::set('title_video3', $request->post('video3'));
-                DBParameters::set('title_video4', $request->post('video4'));
-                $this->redirect('/admin/video');
-            }
-
-            if ($request->post('action') == 'remove'
-                && $request->post('video')
-            ) {
-                $this->redirect(
-                    '/admin/video/remove?' .
-                    http_build_query(['u' => $request->post('video')])
-                );
-            } else {
-                $this->redirect('/admin/video');
-            }
+        if ($request->post('video1')) {
+            DBParameters::set('title_video1', $request->post('video1'));
+            DBParameters::set('title_video2', $request->post('video2'));
+            DBParameters::set('title_video3', $request->post('video3'));
+            DBParameters::set('title_video4', $request->post('video4'));
+            $this->redirect('/admin/video');
         }
 
         $videos = DBVideo::getAll();
-
         $select = $this->select()->optionsAssoc($videos, 'v_id', 'v_name');
-
         $data = array_map(
             function ($item) {
+                $parts = explode('?', $item['v_uri']);
+                $uri = array_shift($parts);
                 return [
-                    'name' => $item['v_name'] . ' ('
-                          . $this->editLink('/admin/video/edit/' . $item['v_id']). '&nbsp;'
-                          . $this->removeLink('/admin/video/remove?u=' . $item['v_id']) . ')',
+                    'buttons' => $this->editLink('/admin/video/edit/' . $item['v_id'])
+                        . '&nbsp;'
+                        . $this->removeLink('/admin/video/remove/' . $item['v_id']),
+                    'name' => $item['v_name'],
                     'text' => $item['v_text'],
-                    'uri' => $item['v_uri'],
+                    'uri' => $uri,
                     'date' => $item['v_date'],
-                    'playlist' => $item['v_playlist'] ? 'ano' : 'ne'
+                    'playlist' => $parts ? 'ano' : 'ne'
                 ];
             },
             $videos
@@ -117,36 +105,23 @@ class Controller_Admin_Video extends Controller_Admin
 
     public function remove($request)
     {
-        if (!$request->post('data') && !$request->get('u')) {
+        if (!$request->getId()) {
             $this->redirect('/admin/video');
         }
 
-        if ($request->post('action') == 'confirm' && $request->post('data')) {
-            foreach ($request->post('data') as $item) {
-                DBVideo::remove($item);
-            }
-            $this->redirect('/admin/video', 'Videa odebrány');
+        if ($request->post('action') == 'confirm') {
+            DBVideo::remove($request->getId());
+            $this->redirect('/admin/video', 'Video odebráno');
         }
 
-        if ($request->post()) {
-            $this->redirect($request->server('REQUEST_URI'));
-        }
-
-        $data = array_map(
-            function ($id) {
-                $item = DBVideo::getSingle($id);
-                return ['id' => $item['v_id'], 'text' => $item['v_name']];
-            },
-            $request->get('u')
-        );
-
+        $item = DBVideo::getSingle($request->getId());
         $this->render(
             'files/View/Admin/RemovePrompt.inc',
             [
                 'header' => 'Správa videí',
-                'prompt' => 'Opravdu chcete odstranit videa:',
+                'prompt' => 'Opravdu chcete odstranit video:',
                 'returnURI' => $request->getReferer() ?: '/admin/video',
-                'data' => $data
+                'data' => [['id' => $item['v_id'], 'text' => $item['v_name']]]
             ]
         );
     }
