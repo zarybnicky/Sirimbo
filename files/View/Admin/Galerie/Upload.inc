@@ -15,7 +15,7 @@
       ?>
     </div>
     <div class="form-group">
-      <?= $this->submit('Nahrát na server')->data('action', 'upload') ?>
+      <?= $this->submit('Nahrát na server')i ?>
       <a class="btn btn-outline-primary" href="/admin/galerie">Zpět</a>
     </div>
   </form>

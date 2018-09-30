@@ -220,16 +220,6 @@ class Controller_Admin_Users extends Controller_Admin
     public function duplicate($request)
     {
         Permissions::checkError('users', P_ADMIN);
-        if ($request->post() &&
-            $request->post('action') == 'remove' &&
-            $request->post('users')
-        ) {
-            $this->redirect(
-                '/admin/users/remove?'
-                . http_build_query(['u' => $request->post('users')])
-            );
-        }
-
         $users = array_map(
             function ($item) {
                 return [

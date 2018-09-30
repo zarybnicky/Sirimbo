@@ -25,13 +25,11 @@ class Controller_Admin_Galerie extends Controller_Admin
 
     public function view($request)
     {
-        switch ($request->post('action')) {
-            case 'save':
-                $this->_processSave($request);
-                break;
-            case 'scan':
-                $this->_scan();
-                break;
+        if ($request->post('action') == 'save') {
+            $this->_processSave($request);
+        }
+        if ($request->post('action') == 'scan') {
+            $this->_scan();
         }
 
         $data = DBGalerie::getDirs(true, true);

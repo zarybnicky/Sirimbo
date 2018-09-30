@@ -30,7 +30,7 @@
            ->data($this->groups) ?>
 
     <div class="form-group">
-      <?= $this->submit('Uložit')->data('action', 'confirm') ?>
+      <?= $this->submit('Uložit') ?>
       <a class="btn btn-outline-primary" href="/admin/skupiny">Zpět</a>
     </div>
   </form>

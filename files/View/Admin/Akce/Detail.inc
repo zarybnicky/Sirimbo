@@ -6,7 +6,7 @@
                  ->data($this->items)
                  ->column('name', 'Uživatel')
                  ->column('removeButton', '') ?>
-        <?= $this->submit('Uložit')->data('action', 'submit') ?>
+        <?= $this->submit('Uložit') ?>
         <a class="btn btn-outline-primary" href="/admin/permissions">Zpět</a>
     </form>
 </div>

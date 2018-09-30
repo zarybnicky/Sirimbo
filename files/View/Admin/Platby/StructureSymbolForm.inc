@@ -47,7 +47,7 @@
              ->data($this->groups)
              ->render() ?>
     <br>
-    <?= $this->submit('Uložit')->data('action', 'confirm') ?>
+    <?= $this->submit('Uložit') ?>
     <a class="btn btn-outline-primary" href="<?= $this->referer ?>">Zpět</a><br/>
 </form>
 </div>

@@ -19,7 +19,7 @@
     </div>
     <div class="form-group">
       <a class="btn btn-outline-primary" href="<?= $this->referer ?>">Zpět</a>
-      <?= $this->submit('Upravit') -> data('action', 'add') ?>
+      <?= $this->submit('Upravit') ?>
     </div>
   </form>
 </div>
