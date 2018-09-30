@@ -59,37 +59,26 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
 
     public function remove($request)
     {
-        if (!is_array($request->post('data')) && !is_array($request->get('u'))) {
+        if (!$request->getId()) {
             $this->redirect('/admin/galerie');
         }
-        if ($request->post() && $request->post('action') == 'confirm') {
-            foreach ($request->post('data') as $id) {
-                $item = DBGalerie::getSingleFoto($id);
+        $id = $request->getId();
 
-                unlink(GALERIE . DIRECTORY_SEPARATOR . $item['gf_path']);
-                unlink(GALERIE_THUMBS . DIRECTORY_SEPARATOR . $item['gf_path']);
-                DBGalerie::removeFoto($id);
-            }
-            $this->redirect('/admin/galerie', 'Fotografie odebrány');
+        if ($request->post('action') == 'confirm') {
+            $item = DBGalerie::getSingleFoto($id);
+            DBGalerie::removeFoto($id);
+            unlink(GALERIE . DIRECTORY_SEPARATOR . $item['gf_path']);
+            unlink(GALERIE_THUMBS . DIRECTORY_SEPARATOR . $item['gf_path']);
+            $this->redirect('/admin/galerie', 'Fotografie odebrána');
         }
 
-        $data = array_map(
-            function ($id) {
-                $item = DBGalerie::getSingleFoto($id);
-                return ['id' => $id, 'text' => $item['gf_name']];
-            },
-            $request->get('u')
-        );
-
-        $this->render(
-            'files/View/Admin/RemovePrompt.inc',
-            [
-                'header' => 'Správa galerie',
-                'prompt' => 'Opravdu chcete odstranit fotografie:',
-                'returnURI' => $request->getReferer() ?: '/admin/galerie',
-                'data' => $data
-            ]
-        );
+        $item = DBGalerie::getSingleFoto($id);
+        $this->render('files/View/Admin/RemovePrompt.inc', [
+            'header' => 'Správa galerie',
+            'prompt' => 'Opravdu chcete odstranit fotografie:',
+            'returnURI' => $request->getReferer() ?: '/admin/galerie',
+            'data' => [['id' => $id, 'text' => $item['gf_name']]]
+        ]);
     }
 
     public function upload($request)

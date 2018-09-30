@@ -22,34 +22,38 @@ class Controller_Admin_Galerie extends Controller_Admin
     {
         Permissions::checkError('galerie', P_OWNED);
     }
+
     public function view($request)
     {
         switch ($request->post('action')) {
-            case 'galerie/save':
+            case 'save':
                 $this->_processSave($request);
                 break;
-            case 'galerie/scan':
+            case 'scan':
                 $this->_scan();
                 break;
-            case 'directory':
-            case 'directory/edit':
-                $galerie = $request->post('galerie');
-                if (isset($galerie[0])) {
-                    $this->redirect(
-                        '/admin/galerie/' . $request->post('action') . '/' . $galerie[0]
-                    );
-                }
-                break;
-            case 'directory/remove':
-                if (is_array($request->post('galerie'))) {
-                    $this->redirect(
-                        '/admin/galerie/directory/remove?'
-                        . http_build_query(['u' => $request->post('galerie')])
-                    );
-                }
-                break;
         }
-        $this->_displayOverview();
+
+        $data = DBGalerie::getDirs(true, true);
+        $data = array_map(
+            function ($item) {
+                return [
+                    'buttons' => (
+                        $this->editLink('/admin/galerie/directory/edit/' . $item['gd_id']) . '&nbsp;' .
+                        $this->duplicateLink('/admin/galerie/directory/' . $item['gd_id']) . '&nbsp;' .
+                        $this->removeLink('/admin/galerie/directory/remove/' . $item['gd_id'])
+                    ),
+                    'name' => str_repeat('&nbsp;->', $item['gd_level'] - 1) . ' ' . $item['gd_name'],
+                    'hidden' => (string) $this->checkbox($item['gd_id'], '1') ->set($item['gd_hidden'])
+                ];
+            },
+            $data
+        );
+
+        $this->render(
+            'files/View/Admin/Galerie/Overview.inc',
+            ['data' => $data]
+        );
     }
 
     private function _scan()
@@ -143,7 +147,7 @@ class Controller_Admin_Galerie extends Controller_Admin
             $parts = explode(DIRECTORY_SEPARATOR, $db_dir);
             $level = count($parts) + 1;
             $name = array_pop($parts);
-            if(!$name) {
+            if (!$name) {
                 $name = 'Hlavní';
             }
             unset($parts);
@@ -298,28 +302,5 @@ class Controller_Admin_Galerie extends Controller_Admin
                 $item['gd_path']
             );
         }
-    }
-
-    private function _displayOverview()
-    {
-        $data = DBGalerie::getDirs(true, true);
-        $data = array_map(
-            function ($item) {
-                return [
-                    'checkBox' => $this->checkbox('galerie[]', $item['gd_id'])->render(),
-                    'name'     => str_repeat('&nbsp;->', $item['gd_level'] - 1)
-                                  . ' ' . $item['gd_name'],
-                    'hidden'   => $this->checkbox($item['gd_id'], '1')
-                                       ->set($item['gd_hidden'])
-                                       ->render()
-                ];
-            },
-            $data
-        );
-
-        $this->render(
-            'files/View/Admin/Galerie/Overview.inc',
-            ['data' => $data]
-        );
     }
 }

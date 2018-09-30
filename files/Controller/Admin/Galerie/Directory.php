@@ -13,26 +13,20 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
         if (!DBGalerie::getSingleDir($id)) {
             $this->redirect('/admin/galerie', 'Složka s takovým ID neexistuje');
         }
-        switch ($request->post('action')) {
-            case 'file/edit':
-                $galerie = $request->post('galerie');
-                if (isset($galerie[0])) {
-                    $this->redirect(
-                        '/admin/galerie/file/edit/' . $galerie[0]
-                    );
-                }
-                break;
 
-            case 'file/remove':
-                if (is_array($request->post('galerie'))) {
-                    $this->redirect(
-                        '/admin/galerie/file/remove?'
-                        . http_build_query(['u' => $request->post('galerie')])
-                    );
-                }
-                break;
-        }
-        $this->displayOverview($id);
+        $this->render('files/View/Admin/Galerie/DisplayDirectory.inc', [
+            'id' => $id,
+            'files' => array_map(
+                function ($item) {
+                    return [
+                        'id' => $item['gf_id'],
+                        'name' => $item['gf_name'],
+                        'thumbnailURI' => '/galerie/thumbnails/' . $item['gf_path']
+                    ];
+                },
+                DBGalerie::getFotky($id)
+            )
+        ]);
     }
 
     public function add($request)
@@ -122,30 +116,22 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
 
     public function remove($request)
     {
-        if (!is_array($request->post('data')) && !is_array($request->get('u'))) {
+        if (!$request->getId()) {
             $this->redirect('/admin/galerie');
         }
+        $id = $request->getId();
+
         if ($request->post('action') == 'confirm') {
-            foreach ($request->post('data') as $id) {
-                if (!($data = DBGalerie::getSingleDir($id))) {
-                    continue;
-                }
-                DBGalerie::removeDir($id);
-                if (!$data['gd_path']) {
-                    continue;
-                }
+            $data = DBGalerie::getSingleDir($id);
+            DBGalerie::removeDir($id);
+            if ($data['gd_path']) {
                 $this->_rrmdir(GALERIE . DIRECTORY_SEPARATOR . $data['gd_path']);
                 $this->_rrmdir(GALERIE_THUMBS . DIRECTORY_SEPARATOR . $data['gd_path']);
             }
-            $this->redirect('/admin/galerie', 'Složky odebrány');
+            $this->redirect('/admin/galerie', 'Složka odebrána');
         }
-        $data = array_map(
-            function ($id) {
-                $item = DBGalerie::getSingleDir($id);
-                return ['id' => $item['gd_id'], 'text' => $item['gd_name']];
-            },
-            $request->get('u')
-        );
+
+        $item = DBGalerie::getSingleDir($id);
         $this->render(
             'files/View/Admin/RemovePrompt.inc',
             [
@@ -153,29 +139,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
                 'prompt' => 'Opravdu chcete odstranit složky '
                     . 'se všemi podsložkami a fotkami:',
                 'returnURI' => $request->getReferer() ?: '/admin/galerie',
-                'data' => $data
-            ]
-        );
-    }
-
-    private function displayOverview($id)
-    {
-        $this->render(
-            'files/View/Admin/Galerie/DisplayDirectory.inc',
-            [
-                'id' => $id,
-                'files' => array_map(
-                    function ($item) {
-                        return [
-                            'id' => $item['gf_id'],
-                            'name' => $this->checkbox('galerie[]', $item['gf_id'])
-                                           ->label($item['gf_name'])
-                                           ->render(),
-                            'thumbnailURI' => '/galerie/thumbnails/' . $item['gf_path']
-                        ];
-                    },
-                    DBGalerie::getFotky($id)
-                )
+                'data' => [['id' => $item['gd_id'], 'text' => $item['gd_name']]]
             ]
         );
     }
