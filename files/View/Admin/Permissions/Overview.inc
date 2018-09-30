@@ -1,21 +1,12 @@
 <?= $this->header('Správa oprávnění') ?>
 <div class="container">
   <form action="" method="POST">
-    <?php
-    if ($this->showMenu) {
-        echo $this->menu()
-                 ->content('Přidat', 'permissions/add')
-                 ->content('Upravit', 'edit', true)
-                 ->content('Odebrat', 'remove', true);
-    }
-    ?>
-    <div<?= $this->showMenu ? ' style="margin-right:150px"' : '' ?>>
-      <?= $this->table()
-             ->style('width:100%')
-             ->data($this->data)
-             ->column('checkBox', '')
-             ->column('name', 'Jméno')
-             ->column('description', 'Popis') ?>
-    </div>
+    <a href="/admin/permissions/add" class="btn btn-primary">Přidat</a>
+    <?= $this->table()
+           ->style('width:100%')
+           ->data($this->data)
+           ->column('buttons', '')
+           ->column('name', 'Jméno')
+           ->column('description', 'Popis') ?>
   </form>
 </div>

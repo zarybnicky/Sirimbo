@@ -9,27 +9,12 @@ class Controller_Admin_Permissions extends Controller_Admin
 
     public function view($request)
     {
-        switch($request->post('action')) {
-            case 'edit':
-                $data = $request->post('permissions');
-                if ($data[0]) {
-                    $this->redirect('/admin/permissions/edit/' . $data[0]);
-                }
-                break;
-            case 'remove':
-                if (!is_array($request->post('permissions'))) {
-                    break;
-                }
-                $this->redirect(
-                    '/admin/permissions/remove?' .
-                    http_build_query(['u' => $request->post('permissions')])
-                );
-                break;
-        }
         $data = array_map(
             function ($item) {
                 return [
-                    'checkBox' => $this->checkbox('permissions[]', $item['pe_id']),
+                    'buttons' => $this->editLink('/admin/permissions/edit/' . $item['pe_id'])
+                        . '&nbsp;&nbsp;'
+                        . $this->removeLink('/admin/permissions/remove/' . $item['pe_id']),
                     'name' => $item['pe_name'],
                     'description' => $item['pe_description']
                 ];
@@ -38,7 +23,7 @@ class Controller_Admin_Permissions extends Controller_Admin
         );
         $this->render(
             'files/View/Admin/Permissions/Overview.inc',
-            ['showMenu' => !TISK, 'data' => $data]
+            ['data' => $data]
         );
     }
 
@@ -109,37 +94,28 @@ class Controller_Admin_Permissions extends Controller_Admin
 
     public function remove($request)
     {
-        if (!is_array($request->post('data')) && !is_array($request->get('u'))) {
+        if (!$request->getId()) {
             $this->redirect('/admin/permissions');
         }
-        if ($request->post() && $request->post('action') == 'confirm') {
-            foreach ($request->post('data') as $id) {
-                DBPermissions::removeGroup($id);
-            }
+        $id = $request->getId();
+
+        if ($request->post('action') == 'confirm') {
+            DBPermissions::removeGroup($id);
             $this->redirect(
                 '/admin/permissions',
-                'Úrovně odebrány. Nezapomeňte přiřadit uživatelům z těchto skupin jinou skupinu!'
+                'Úroveň odebrána. Nezapomeňte přiřadit uživatelům z této skupiny jinou skupinu!'
             );
         }
-        $data = array_map(
-            function ($id) {
-                $item = DBPermissions::getSingleGroup($id);
-                return ['id' => $item['pe_id'], 'text' => $item['pe_name']];
-            },
-            $request->get('u')
-        );
 
-        $this->render(
-            'files/View/Admin/RemovePrompt.inc',
-            [
-                'header' => 'Správa oprávnění',
-                'prompt' =>
-                    $this->notice('Uživatelům z těchto skupin bude nutmné přiřadit jinou skupinu!')
-                    . 'Opravdu chcete odstranit uživatelské úrovně:',
-                'returnURI' => $request->getReferer() ?: '/admin/permissions',
-                'data' => $data
-            ]
-        );
+        $item = DBPermissions::getSingleGroup($id);
+        $this->render('files/View/Admin/RemovePrompt.inc', [
+            'header' => 'Správa oprávnění',
+            'prompt' =>
+                $this->notice('Uživatelům z této skupiny bude nutné přiřadit jinou skupinu!')
+                . 'Opravdu chcete odstranit uživatelskou úroveň:',
+            'returnURI' => $request->getReferer() ?: '/admin/permissions',
+            'data' => [['id' => $item['pe_id'], 'text' => $item['pe_name']]]
+        ]);
     }
 
     protected function renderForm($request, $data = null)
