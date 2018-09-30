@@ -20,6 +20,7 @@ class DBAkce extends Database implements Pagable
         );
         return self::getArray($res);
     }
+
     public static function getCount($options = null)
     {
         $res = self::query("SELECT COUNT(*) FROM akce");
@@ -52,7 +53,7 @@ class DBAkce extends Database implements Pagable
             'SELECT *, COUNT(ai_id_rodic) as a_obsazeno
              FROM akce
              LEFT JOIN akce_item ON a_id=ai_id_rodic
-             GROUP BY ai_id_rodic'
+             GROUP BY ai_id_rodic ORDER BY a_od DESC'
         );
         return self::getArray($res);
     }
@@ -93,7 +94,7 @@ class DBAkce extends Database implements Pagable
     public static function removeAkce($id)
     {
         self::query("DELETE FROM akce WHERE a_id='?'", $id);
-        self::query("DELETE FROM akce_item WHERE ai_id_rodic=''", $id);
+        self::query("DELETE FROM akce_item WHERE ai_id_rodic='?'", $id);
         return true;
     }
 

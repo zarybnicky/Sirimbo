@@ -9,25 +9,39 @@ class Controller_Admin_Akce extends Controller_Admin
 
     public function view($request)
     {
-        switch ($request->post('action')) {
-            case 'save':
-                $this->processSave($request);
-                $this->redirect('/admin/akce');
-                break;
-
-            case 'remove':
-                if (!is_array($request->post('akce'))) {
-                    $this->redirect('/admin/akce');
-                } else {
-                    $this->redirect(
-                        '/admin/akce/remove?' .
-                        http_build_query(['u' => $request->post('akce')])
-                    );
-                }
-                break;
+        if ($request->post('action') == 'save') {
+            $this->processSave($request);
+            $this->redirect('/admin/akce');
         }
 
-        $this->displayOverview();
+        $data = array_map(
+            function ($item) {
+                return [
+                    'name' => $item['a_jmeno'],
+                    'date' => (
+                        formatDate($item['a_od'])
+                        . (($item['a_od'] != $item['a_do'])
+                           ? ' - ' . formatDate($item['a_do']) : '')
+                    ),
+                    'userCount' => $item['a_obsazeno'] . '/' . $item['a_kapacita'],
+                    'visible' => $this->checkbox($item['a_id'], '1')
+                                      ->set($item['a_visible'])
+                                      ->render(),
+                    'links' => (
+                        '<a href="/admin/akce/edit/' . $item['a_id'] . '">obecné</a>, '
+                        . '<a href="/admin/akce/detail/' . $item['a_id'] . '">účastníci</a>, '
+                        . '<a href="/admin/akce/dokumenty/' . $item['a_id'] . '">dokumenty</a>'
+                    ),
+                    'buttons' => $this->removeLink('/admin/akce/remove/' . $item['a_id'])
+                ];
+            },
+            DBAkce::getWithItemCount()
+        );
+
+        $this->render(
+            'files/View/Admin/Akce/Overview.inc',
+            ['data' => $data]
+        );
     }
 
     public function add($request)
@@ -107,66 +121,28 @@ class Controller_Admin_Akce extends Controller_Admin
 
     public function remove($request)
     {
-        if (!is_array($request->post('data')) && !is_array($request->get('u'))) {
+        if (!$request->getId()) {
             $this->redirect('/admin/akce');
         }
+        $id = $request->getId();
         if ($request->post('action') == 'confirm') {
-            foreach ($request->post('data') as $id) {
-                $data = DBAkce::getSingleAkce($id);
-                DBAkce::removeAkce($id);
-            }
+            DBAkce::removeAkce($id);
             $this->redirect('/admin/akce', 'Akce odebrány');
             return;
         }
 
-        $data = [];
-        foreach ($request->get('u') as $id) {
-            $item = DBAkce::getSingleAkce($id);
-            $data[] = [
-                'id' => $item['a_id'],
-                'text' => $item['a_jmeno']
-            ];
-        }
+        $item = DBAkce::getSingleAkce($id);
         $this->render(
             'files/View/Admin/RemovePrompt.inc',
             [
                 'header' => 'Správa akcí',
                 'prompt' => 'Opravdu chcete odstranit akce:',
                 'returnURI' => $request->getReferer() ?: '/admin/akce',
-                'data' => $data
+                'data' => [[
+                    'id' => $item['a_id'],
+                    'text' => $item['a_jmeno']
+                ]]
             ]
-        );
-    }
-
-    private function displayOverview()
-    {
-        $data = array_map(
-            function ($item) {
-                return [
-                    'checkBox' => $this->checkbox('akce[]', $item['a_id'])->render(),
-                    'name' => $item['a_jmeno'],
-                    'date' => (
-                        formatDate($item['a_od'])
-                        . (($item['a_od'] != $item['a_do'])
-                           ? ' - ' . formatDate($item['a_do']) : '')
-                    ),
-                    'userCount' => $item['a_obsazeno'] . '/' . $item['a_kapacita'],
-                    'visible' => $this->checkbox($item['a_id'], '1')
-                                      ->set($item['a_visible'])
-                                      ->render(),
-                    'links' => (
-                        '<a href="/admin/akce/edit/' . $item['a_id'] . '">obecné</a>, '
-                        . '<a href="/admin/akce/detail/' . $item['a_id'] . '">účastníci</a>, '
-                        . '<a href="/admin/akce/dokumenty/' . $item['a_id'] . '">dokumenty</a>'
-                    )
-                ];
-            },
-            DBAkce::getWithItemCount()
-        );
-
-        $this->render(
-            'files/View/Admin/Akce/Overview.inc',
-            ['data' => $data]
         );
     }
 

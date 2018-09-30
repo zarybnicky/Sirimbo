@@ -1,26 +1,16 @@
 <?= $this->header('Správa akcí') ?>
 <div class="container">
     <form action="" method="POST">
-        <?php
-if (!TISK) {
-    echo $this->menu()
-              ->content('Přidat', 'akce/add')
-              ->content('Odstranit', 'remove', true)
-              ->content('Uložit změny', 'save', true);
-    echo '<div style="margin-right:150px;">';
-} else {
-    echo '<div>';
-}
-echo $this->table()
-          ->style('width:100%')
-          ->column('checkBox', '')
-          ->column('name', 'Jméno')
-          ->column('date', 'Datum')
-          ->column('userCount', 'Kapacita')
-          ->column('visible', 'Viditelný')
-          ->column('links', 'Upravit')
-          ->data($this->data);
-echo '</div>';
-        ?>
+        <a href="/admin/akce/add" class="btn btn-primary">Přidat</a>
+        <button class="btn btn-primary" name="action" value="save">Uložit změny</button>
+        <?= $this->table()
+               ->style('width:100%')
+               ->column('buttons', '')
+               ->column('links', 'Upravit')
+               ->column('name', 'Jméno')
+               ->column('date', 'Datum')
+               ->column('userCount', 'Kapacita')
+               ->column('visible', 'Viditelný')
+               ->data($this->data); ?>
     </form>
 </div>
