@@ -14,7 +14,7 @@ class EditLinkHelper
     public function render()
     {
         if ($this->button) {
-            return "<button style='padding:0' name='action' value='{$this->link}'>" .
+            return "<button class='a' name='action' value='{$this->link}'>" .
                 "<img alt='Upravit' src='/style/icon-pencil.png' />" .
                 "</button>";
         }
