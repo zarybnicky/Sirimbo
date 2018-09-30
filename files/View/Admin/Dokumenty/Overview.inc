@@ -2,22 +2,13 @@
 
 <div class="container">
   <form action="/admin/dokumenty" method="POST">
-    <?php
-    if ($this->showMenu) {
-        echo $this->menu()
-                 ->content('Přejmenovat', 'edit', true)
-                 ->content('Odstranit', 'remove', true);
-    }
-    echo '<div style="margin-right:150px">';
-    echo $this->table()
-             ->data($this->data)
-             ->column('checkBox', '')
-             ->column('link', 'Jméno souboru')
-             ->column('name', 'Soubor')
-             ->column('category', 'Kategorie')
-             ->column('by', 'Nahrál');
-    echo '</div>';
-    ?>
+    <?= $this->table()
+           ->data($this->data)
+           ->column('buttons', '')
+           ->column('link', 'Jméno souboru')
+           ->column('name', 'Soubor')
+           ->column('category', 'Kategorie')
+           ->column('by', 'Nahrál') ?>
   </form>
   <hr />
   <h2>Upload</h2>

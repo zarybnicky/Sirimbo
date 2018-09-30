@@ -9,71 +9,48 @@ class Controller_Admin_Dokumenty extends Controller_Admin
 
     public function view($request)
     {
-        switch ($request->post('action')) {
-            case 'edit':
-                $dokumenty = $request->post('dokumenty');
-                if ($dokumenty[0]) {
-                    $this->redirect('/admin/dokumenty/edit/' . $dokumenty[0]);
-                }
-                break;
+        if ($request->post('action') == 'upload' && $request->files()) {
+            $fileUpload = $request->files('file')['tmp_name'];
+            $fileName = $request->files('file')['name'];
+            $fileName = str_replace(
+                ['#', '$', '%', '&', '^', '*', '?'],
+                ['No.', 'Dolar', 'Procento', 'And', ''],
+                $fileName
+            );
 
-            case 'upload':
-                if (!$request->files()) {
-                    break;
-                }
-                $fileUpload = $request->files('file')['tmp_name'];
-                $fileName = $request->files('file')['name'];
-                $fileName = str_replace(
-                    ['#', '$', '%', '&', '^', '*', '?'],
-                    ['No.', 'Dolar', 'Procento', 'And', ''],
-                    $fileName
-                );
+            $path = 'upload/' . time() . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
 
-                $path = 'upload/' . time() . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
+            if (!$request->post('name')) {
+                $request->post('name', $fileName);
+            }
 
-                if (!$request->post('name')) {
-                    $request->post('name', $fileName);
-                }
-
-                if (move_uploaded_file($fileUpload, $path)) {
-                    chmod($path, 0666);
-                    $id = DBDokumenty::addDokument(
-                        $path,
-                        $request->post('name'),
-                        $fileName,
-                        $request->post('kategorie'),
-                        User::getUserID()
-                    );
-                    $this->redirect()->setMessage('Soubor byl úspěšně nahrán');
-                } else {
-                    $this->redirect()->setMessage('Bohužel, zkus to znova :o(');
-                }
-                $this->redirect('/admin/dokumenty');
+            if (!move_uploaded_file($fileUpload, $path)) {
+                $this->redirect('/admin/dokumenty', 'Soubor se nepodařilo nahrát...');
                 return;
+            }
 
-            case 'remove':
-                if (!is_array($request->post('dokumenty'))) {
-                    break;
-                }
-                $url = '/admin/dokumenty/remove?';
-                foreach ($request->post('dokumenty') as $id) {
-                    $url .= '&u[]=' . $id;
-                }
-                $this->redirect($url);
-                break;
+            chmod($path, 0666);
+            DBDokumenty::addDokument(
+                $path,
+                $request->post('name'),
+                $fileName,
+                $request->post('kategorie'),
+                User::getUserID()
+            );
+            $this->redirect('/admin/dokumenty', 'Soubor byl úspěšně nahrán');
+            return;
         }
 
-        if (Permissions::check('dokumenty', P_ADMIN)) {
-            $data = DBDokumenty::getDokumenty();
-        } else {
-            $data = DBDokumenty::getDokumentyByAuthor(User::getUserID());
-        }
+        $data = Permissions::check('dokumenty', P_ADMIN)
+            ? DBDokumenty::getDokumenty()
+            : DBDokumenty::getDokumentyByAuthor(User::getUserID());
 
         $data = array_map(
             function ($item) {
                 return [
-                    'checkBox' => $this->checkbox('dokumenty[]', $item['d_id'])
-                                       ->render(),
+                    'buttons' => $this->editLink('/admin/dokumenty/edit/' . $item['d_id'])
+                        . '&nbsp;&nbsp;'
+                        . $this->removeLink('/admin/dokumenty/remove/' . $item['d_id']),
                     'link' => '<a href="/member/download?id=' . $item['d_id'] . '">' . $item['d_name'] . '</a>',
                     'name' => $item['d_filename'],
                     'category' => Settings::$documentTypes[$item['d_kategorie']],
@@ -87,6 +64,7 @@ class Controller_Admin_Dokumenty extends Controller_Admin
             ['data' => $data, 'showMenu' => !TISK]
         );
     }
+
     public function edit($request)
     {
         $id = $request->getId();
@@ -104,42 +82,34 @@ class Controller_Admin_Dokumenty extends Controller_Admin
             ['name' => $data['d_name']]
         );
     }
+
     public function remove($request)
     {
-        if (!is_array($request->post('data')) && !is_array($request->get('u'))) {
+        if (!$request->getId()) {
             $this->redirect('/admin/dokumenty');
         }
+        $id = $request->getId();
 
         if ($request->post('action') == 'confirm') {
-            foreach ($request->post('data') as $id) {
-                $data = DBDokumenty::getSingleDokument($id);
-                if (Permissions::check('dokumenty', P_OWNED, $data['d_kdo'])) {
-                    unlink($data['d_path']);
-                    DBDokumenty::removeDokument($id);
-                } else {
-                    $error = true;
-                }
-            }
-            if (isset($error) && $error) {
+            $data = DBDokumenty::getSingleDokument($id);
+            if (!Permissions::check('dokumenty', P_OWNED, $data['d_kdo'])) {
                 throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
             }
-            $this->redirect('/admin/dokumenty', 'Dokumenty odebrány');
+            unlink($data['d_path']);
+            DBDokumenty::removeDokument($id);
+            $this->redirect('/admin/dokumenty', 'Dokument odebrán');
         }
 
-        $data = [];
-        foreach ($request->get('u') as $id) {
-            $data[] = [
-                'id' => $id,
-                'text' => DBDokumenty::getDokumentName($id)
-            ];
-        }
         $this->render(
             'files/View/Admin/RemovePrompt.inc',
             [
                 'header' => 'Správa dokumentů',
-                'prompt' => 'Opravdu chcete odstranit dokumenty:',
+                'prompt' => 'Opravdu chcete odstranit dokument:',
                 'returnURI' => $request->getReferer() ?: '/admin/dokumenty',
-                'data' => $data
+                'data' => [[
+                    'id' => $id,
+                    'text' => DBDokumenty::getDokumentName($id)
+                ]]
             ]
         );
     }
