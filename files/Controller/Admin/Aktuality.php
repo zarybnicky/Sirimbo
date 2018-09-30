@@ -9,67 +9,47 @@ class Controller_Admin_Aktuality extends Controller_Admin
 
     public function view($request)
     {
-        if ($request->post('action') == 'remove') {
-            if (!is_array($request->post('aktuality'))) {
-                $this->redirect('/admin/aktuality');
-                return;
-            }
-            $url = '/admin/aktuality/remove?';
-            foreach ($request->post('aktuality') as $id) {
-                $url .= '&u[]=' . $id;
-            }
-            $this->redirect($url);
-            return;
-        }
-
-        if (Permissions::check('aktuality', P_ADMIN)) {
-            $data = DBAktuality::getAktuality($request->get('f'));
-        } else {
-            $data = DBAktuality::getAktuality($request->get('f'), User::getUserID());
-        }
+        $data = Permissions::check('aktuality', P_ADMIN)
+            ? DBAktuality::getAktuality($request->get('f'))
+            : DBAktuality::getAktuality($request->get('f'), User::getUserID());
 
         $data = array_map(
             function ($item) {
                 $id = $item['at_id'];
                 return [
-                    'checkBox' => $this->checkbox('aktuality[]', $id)
-                                       ->render(),
                     'name' => $item['at_jmeno'],
                     'category' => ($item['at_kat'] == AKTUALITY_CLANKY
                                    ? 'Články'
                                    : ($item['at_kat'] == AKTUALITY_KRATKE
                                       ? 'Krátké zprávy'
                                       : '')),
+                    'added' => formatDate($item['at_timestamp_add']),
                     'links' => (
-                        '<a href="/admin/aktuality/edit/' . $id . '">obecné</a>, '
-                        . '<a href="/admin/aktuality/foto/' . $id . '">galerie</a>'
-                    )
+                        '<a href="/admin/aktuality/edit/' . $id . '">obecné</a>, ' .
+                        '<a href="/admin/aktuality/foto/' . $id . '">galerie</a>'
+                    ),
+                    'buttons' => $this->removeLink('/admin/aktuality/remove/' . $id)
                 ];
             },
             $data
         );
-        $this->render(
-            'files/View/Admin/Aktuality/Overview.inc',
-            [
-                'data' => $data,
-                'f' => $request->get('f') ?: '',
-                'showMenu' => !TISK
-            ]
-        );
+        $this->render('files/View/Admin/Aktuality/Overview.inc', [
+            'data' => $data,
+            'f' => $request->get('f') ?: '',
+            'showMenu' => !TISK
+        ]);
     }
+
     public function add($request)
     {
         if (!$request->post()) {
-            $this->render(
-                'files/View/Admin/Aktuality/Form.inc',
-                [
-                    'action' => $request->getAction(),
-                    'category' => '',
-                    'name' => '',
-                    'summary' => '',
-                    'text' => ''
-                ]
-            );
+            $this->render('files/View/Admin/Aktuality/Form.inc', [
+                'action' => $request->getAction(),
+                'category' => '',
+                'name' => '',
+                'summary' => '',
+                'text' => ''
+            ]);
             return;
         }
 
@@ -130,41 +110,28 @@ class Controller_Admin_Aktuality extends Controller_Admin
 
     public function remove($request)
     {
-        if (!is_array($request->post('data')) && !is_array($request->get('u'))) {
+        if (!$request->getId()) {
             $this->redirect('/admin/aktuality');
         }
-        if ($request->post() && $request->post('action') == 'confirm') {
-            foreach ($request->post('data') as $id) {
-                $data = DBAktuality::getSingleAktualita($id);
-
-                if (Permissions::check('aktuality', P_OWNED, $data['at_kdo'])) {
-                    DBAktuality::removeAktualita($id);
-                } else {
-                    $error = true;
-                }
-            }
-            if (isset($error) && $error) {
+        $id = $request->getId();
+        if ($request->post('action') == 'confirm') {
+            $data = DBAktuality::getSingleAktualita($id);
+            if (!Permissions::check('aktuality', P_OWNED, $data['at_kdo'])) {
                 throw new AuthorizationException('Máte nedostatečnou autorizaci pro tuto akci!');
             }
-            $this->redirect('/admin/aktuality', 'Články odebrány');
+            DBAktuality::removeAktualita($id);
+            $this->redirect('/admin/aktuality', 'Článek odebrán');
         }
 
-        $data = [];
-        foreach ($request->get('u') as $id) {
-            $item = DBAktuality::getSingleAktualita($id);
-            $data[] = [
+        $item = DBAktuality::getSingleAktualita($id);
+        $this->render('files/View/Admin/RemovePrompt.inc', [
+            'header' => 'Správa aktualit',
+            'prompt' => 'Opravdu chcete odstranit články:',
+            'returnURI' => $request->getReferer() ?: '/admin/aktuality',
+            'data' => [[
                 'id' => $item['at_id'],
                 'text' => $item['at_jmeno']
-            ];
-        }
-        $this->render(
-            'files/View/Admin/RemovePrompt.inc',
-            [
-                'header' => 'Správa aktualit',
-                'prompt' => 'Opravdu chcete odstranit články:',
-                'returnURI' => $request->getReferer() ?: '/admin/aktuality',
-                'data' => $data
-            ]
-        );
+            ]]
+        ]);
     }
 }

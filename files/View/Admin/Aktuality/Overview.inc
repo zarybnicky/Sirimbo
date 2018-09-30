@@ -2,7 +2,7 @@
 <div class="container">
     <?php
     if ($this->showMenu) {
-        echo '<form action="" method="get">';
+        echo '<form action="" class="form-inline" method="get">';
 
         echo $this->select('f')
                   ->set($this->f ?: '0')
@@ -14,22 +14,14 @@
     }
     ?>
     <form action="" method="POST">
-        <?php
-        if ($this->showMenu) {
-            echo $this->menu()
-                      ->content('Přidat', 'aktuality/add')
-                      ->content('Odebrat', 'remove', true);
-        }
-        ?>
-        <div style="margin-right:150px">
-            <?= $this->table()
-                     ->style('width:100%')
-                     ->data($this->data)
-                     ->column('checkBox', '')
-                     ->column('name', 'Jméno')
-                     ->column('category', 'Kategorie', null, 'width:120px')
-                     ->column('links', 'Upravit', null, 'width:120px');
-            ?>
-        </div>
+        <a href="/admin/aktuality/add" class="btn btn-primary">Nový článek</a>
+        <?= $this->table()
+             ->style('width:100%')
+             ->data($this->data)
+             ->column('buttons', '')
+             ->column('links', 'Upravit')
+             ->column('name', 'Jméno')
+             ->column('category', 'Kategorie')
+             ->column('added', 'Přidán dne') ?>
     </form>
 </div>
