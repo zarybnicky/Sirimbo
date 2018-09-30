@@ -9,79 +9,27 @@ class Controller_Admin_Nabidka extends Controller_Admin
 
     public function view($request)
     {
-        switch ($request->post('action')) {
-            case 'save':
-                if (Permissions::check('nabidka', P_ADMIN)) {
-                    $data = DBNabidka::getNabidka(true);
-                } else {
-                    $data = DBNabidka::getNabidkyByTrener(User::getUserID(), true);
-                }
-                foreach ($data as $item) {
-                    if ((bool) $request->post($item['n_id']) == (bool) $item['n_visible']) {
-                        continue;
-                    }
-                    DBNabidka::editNabidka(
-                        $item['n_id'],
-                        $item['n_trener'],
-                        $item['n_pocet_hod'],
-                        $item['n_max_pocet_hod'],
-                        $item['n_od'],
-                        $item['n_do'],
-                        $request->post($item['n_id']) ? '1' : '0',
-                        $item['n_lock']
-                    );
-                }
-                $this->redirect('/admin/nabidka', 'Nabídky upraveny');
-                break;
+        $data = Permissions::check('nabidka', P_ADMIN)
+            ? DBNabidka::getNabidka(true)
+            : DBNabidka::getNabidkyByTrener(User::getUserID(), true);
 
-            case 'remove':
-                if (!$request->post('nabidka')) {
-                    break;
+        if ($request->post('action') == 'save') {
+            foreach ($data as $item) {
+                if ((bool) $request->post($item['n_id']) == (bool) $item['n_visible']) {
+                    continue;
                 }
-                foreach ($request->post('nabidka') as $item) {
-                    $data = DBNabidka::getSingleNabidka($item);
-                    if (!Permissions::check('nabidka', P_OWNED, $data['n_trener'])) {
-                        $error = true;
-                        continue;
-                    }
-                    DBNabidka::removeNabidka($item);
-                }
-                if (isset($error) && $error) {
-                    throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
-                }
-                $this->redirect('/admin/nabidka', 'Nabídky odebrány');
-                break;
-
-            case 'duplicate':
-                foreach ($request->post('nabidka') as $oldId) {
-                    $data = DBNabidka::getSingleNabidka($oldId);
-                    $items = DBNabidka::getNabidkaItem($oldId);
-
-                    $newId = DBNabidka::addNabidka(
-                        $data['n_trener'],
-                        $data['n_pocet_hod'],
-                        $data['n_max_pocet_hod'],
-                        $data['n_od'],
-                        $data['n_do'],
-                        $data['n_visible'],
-                        $data['n_lock']
-                    );
-                    foreach ($items as $item) {
-                        DBNabidka::addNabidkaItemLessons(
-                            $item['ni_partner'],
-                            $newId,
-                            $item['ni_pocet_hod']
-                        );
-                    }
-                }
-                $this->redirect('/admin/nabidka');
-                break;
-        }
-
-        if (Permissions::check('nabidka', P_ADMIN)) {
-            $data = DBNabidka::getNabidka(true);
-        } else {
-            $data = DBNabidka::getNabidkyByTrener(User::getUserID(), true);
+                DBNabidka::editNabidka(
+                    $item['n_id'],
+                    $item['n_trener'],
+                    $item['n_pocet_hod'],
+                    $item['n_max_pocet_hod'],
+                    $item['n_od'],
+                    $item['n_do'],
+                    $request->post($item['n_id']) ? '1' : '0',
+                    $item['n_lock']
+                );
+            }
+            $this->redirect('/admin/nabidka');
         }
 
         $data = array_map(
@@ -94,16 +42,13 @@ class Controller_Admin_Nabidka extends Controller_Admin
                          ? ' - ' . formatDate($item['n_do'])
                          : '')
                     ),
+                    'buttons' => $this->duplicateLink('/admin/nabidka/duplicate/' . $item['n_id'])
+                        . '&nbsp;' . $this->removeLink('/admin/nabidka/remove/' . $item['n_id']),
                     'links' => (
                         '<a href="/admin/nabidka/edit/' . $item['n_id'] . '">obecné</a>, ' .
                         '<a href="/admin/nabidka/detail/' . $item['n_id'] . '">tréninky</a>'
                     ),
-                    'visible' => (
-                        $this->checkbox($item['n_id'], '1')
-                             ->set($item['n_visible'])
-                             ->render()
-                    ),
-                    'checkBox' => $this->checkbox('nabidka[]', $item['n_id'])->render()
+                    'visible' => (string) $this->checkbox($item['n_id'], '1')->set($item['n_visible'])
                 ];
             },
             $data
@@ -222,6 +167,42 @@ class Controller_Admin_Nabidka extends Controller_Admin
             $request->post('referer') ?: '/admin/nabidka',
             'Nabídka úspěšně upravena'
         );
+    }
+
+    public function duplicate($request)
+    {
+        $oldId = $request->getId();
+        $data = DBNabidka::getSingleNabidka($oldId);
+        $items = DBNabidka::getNabidkaItem($oldId);
+
+        $newId = DBNabidka::addNabidka(
+            $data['n_trener'],
+            $data['n_pocet_hod'],
+            $data['n_max_pocet_hod'],
+            $data['n_od'],
+            $data['n_do'],
+            $data['n_visible'],
+            $data['n_lock']
+        );
+        foreach ($items as $item) {
+            DBNabidka::addNabidkaItemLessons(
+                $item['ni_partner'],
+                $newId,
+                $item['ni_pocet_hod']
+            );
+        }
+        $this->redirect('/admin/nabidka');
+    }
+
+    public function remove($request)
+    {
+        $id = $request->getId();
+        $data = DBNabidka::getSingleNabidka($id);
+        if (!Permissions::check('nabidka', P_OWNED, $data['n_trener'])) {
+            throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
+        }
+        DBNabidka::removeNabidka($id);
+        $this->redirect('/admin/nabidka');
     }
 
     protected function displayForm($request, $data = null)
