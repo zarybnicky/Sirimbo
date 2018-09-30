@@ -10,26 +10,11 @@ class Controller_Admin_Pary extends Controller_Admin
     public function view($request)
     {
         switch ($request->post("action")) {
-            case "remove":
-                if (!is_array($request->post("pary"))) {
-                    break;
-                }
-                foreach ($request->post("pary") as $par) {
-                    DBPary::removeCouple($par);
-                }
-                $this->redirect('/admin/pary', 'Pár odstraněn');
-                break;
-
             case 'add':
                 if ($request->post("add_partner")) {
                     DBPary::newCouple($request->post("add_partner"), $request->post("add_partnerka"));
                 }
                 $this->redirect('/admin/pary', 'Pár přidán');
-                break;
-
-            case 'edit':
-                $pary = $request->post('pary');
-                $this->redirect('/admin/pary' . ($pary[0] ? '/edit/' . $pary[0] : ''));
                 break;
 
             case 'fix_unpaired':
@@ -44,7 +29,9 @@ class Controller_Admin_Pary extends Controller_Admin
         $data = array_map(
             function ($item) {
                 return [
-                    'checkBox' => $this->checkbox('pary[]', $item['p_id'])->render(),
+                    'buttons' => $this->editLink('/admin/pary/edit/' . $item['p_id'])
+                        . '&nbsp;&nbsp;'
+                        . $this->removeLink('/admin/pary/remove/' . $item['p_id']),
                     'fullNameMan' => $item['guy_surname'] . ', ' . $item['guy_name'],
                     'fullNameWoman' => $item['gal'] ? ($item['gal_surname'] . ', ' . $item['gal_name']) : '',
                     'standard' => $item['p_stt_trida'] . ' ' . $item['p_stt_body'] . 'F' . $item['p_stt_finale'],
@@ -128,5 +115,14 @@ class Controller_Admin_Pary extends Controller_Admin
             $hodnoceni
         );
         $this->redirect('/admin/pary', 'Třída a body změněny');
+    }
+
+    public function remove($request)
+    {
+        $id = $request->getId();
+        if ($id) {
+            DBPary::removeCouple($id);
+        }
+        $this->redirect('/admin/pary', 'Pár odstraněn');
     }
 }
