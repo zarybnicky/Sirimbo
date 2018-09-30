@@ -57,8 +57,8 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                     'validDate' => $this->getDateDisplay($item['pc_valid_from'], $item['pc_valid_to']),
                     'buttons' => (
                         $this->editLink('/admin/platby/structure/category/edit/' . $item['pc_id'])
-                        . $this->getDuplicateCategoryButton($item['pc_id'])
-                        . $this->removeLink('/admin/platby/structure/category/remove/' . $item['pc_id'])
+                        . '&nbsp;' . $this->getDuplicateCategoryButton($item['pc_id'])
+                        . '&nbsp;' . $this->removeLink('/admin/platby/structure/category/remove/' . $item['pc_id'])
                     )
                 ];
             },

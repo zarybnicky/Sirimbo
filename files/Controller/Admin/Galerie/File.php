@@ -10,7 +10,7 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
     public function edit($request)
     {
         $id = $request->getId();
-        if (!$id || !($data = DBGalerie::getSingleDir($id))) {
+        if (!$id || !($data = DBGalerie::getSingleFoto($id))) {
             $this->redirect($request->getReferer(), 'Takový soubor neexistuje!');
         }
         if (!$request->post()) {
