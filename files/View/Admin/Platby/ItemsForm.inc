@@ -4,14 +4,13 @@
 <div class="container">
 <?php
 echo '<h3>', ($this->action == 'add' ? 'Přidat platbu' : 'Upravit platbu'), '</h3>';
-
 $form = [
     [
         'desc' => 'Datum:',
         'value' => $this->date('date', $this->date)
     ], [
         'desc' => 'Částka (Kč):',
-        'value' => $this->text('amount', $ŧhis->amount)
+        'value' => $this->text('amount', $this->amount)
     ], [
         'desc' => 'Uživatel: ',
         'value' => $this->select('variable')
@@ -26,7 +25,7 @@ $form = [
                         ->render()
     ], [
         'desc' => 'Prefix (rok):',
-        'value' => $this->text('prefix', $ŧhis->prefix)
+        'value' => $this->text('prefix', $this->prefix)
     ]
 ];
 $formTable = $this->table()

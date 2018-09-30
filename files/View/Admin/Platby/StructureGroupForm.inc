@@ -21,7 +21,7 @@
             )
         ], [
             'desc' => 'Jméno:',
-            'value' => $this->text('name', $ŧhis->name)
+            'value' => $this->text('name', $this->name)
         ], [
             'desc' => 'Popis: ',
             'value' => '<textarea class="form-control" rows="10" cols="50" name="description">' . $this->description . '</textarea>'

@@ -10,7 +10,7 @@
                [
                    [
                        'desc' => 'Jméno',
-                       'value' => $this->text('name', $ŧhis->name)
+                       'value' => $this->text('name', $this->name)
                    ], [
                        'desc' => 'Barva',
                        'value' => $this->colorselect('color', $this->color)

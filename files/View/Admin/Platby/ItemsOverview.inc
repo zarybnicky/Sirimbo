@@ -34,7 +34,9 @@
                 <td><?= $this->date('date', $this->date)->range() ?></td>
             </tr>
             <tr>
-                <td></td>
+                <td><a href="/admin/platby/items/add" class="btn btn-primary">
+                  Nová platba
+                </a></td>
                 <td><?= $this->submit('Odeslat') ?></td>
             </tr>
         </table>
@@ -43,27 +45,13 @@
 <?php endif; ?>
 
 <form action="" method="POST">
-<?php
-if (!TISK) {
-    echo $this->menu()
-        ->content('Přidat', '/admin/platby/items/add')
-        ->content('Upravit', 'edit', true)
-        ->content('Odebrat', 'remove', true);
-}
-if (!$this->data) {
-    echo $this->notice('Žádné takové platby');
-    return;
-}
-echo '<div style="margin-right:150px">';
-echo $this->table()
-    ->style('width:100%')
-    ->data($this->data)
-    ->column('checkBox', '')
-    ->column('amount', 'Částka', 'r')
-    ->column('date', 'Datum')
-    ->column('fullName', 'Uživatel')
-    ->column('category', 'Kategorie');
-echo '</div>';
-echo '</form>';
-?>
+  <?= $this->table()
+         ->style('width:100%')
+         ->data($this->data)
+         ->column('buttons', '')
+         ->column('amount', 'Částka', 'r')
+         ->column('date', 'Datum')
+         ->column('fullName', 'Uživatel')
+         ->column('category', 'Kategorie') ?>
+</form>
 </div>

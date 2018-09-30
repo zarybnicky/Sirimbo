@@ -3,7 +3,7 @@
   <form action="" method="post">
     <div class="form-group">
       <label for="name">Název</label>
-      <?= $this->text('name', $ŧhis->info) ?>
+      <?= $this->text('name', $this->info) ?>
     </div>
     <div class="form-group">
       <label for="parent">Nadsložka</label>

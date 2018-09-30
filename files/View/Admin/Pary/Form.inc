@@ -12,11 +12,11 @@
     </div>
     <div class="form-group">
       <label for="stt-body">Body</label>
-      <?= $this->text('stt-body', $ŧhis->stt_body) ?>
+      <?= $this->text('stt-body', $this->stt_body) ?>
     </div>
     <div class="form-group">
       <label for="stt-finale">Finále</label>
-      <?= $this->text('stt-finale', $ŧhis->stt_finale) ?>
+      <?= $this->text('stt-finale', $this->stt_finale) ?>
     </div>
 
     <h4>Latina</h4>
@@ -28,11 +28,11 @@
     </div>
     <div class="form-group">
       <label for="lat-body">Body</label>
-      <?= $this->text('lat-body', $ŧhis->lat_body) ?>
+      <?= $this->text('lat-body', $this->lat_body) ?>
     </div>
     <div class="form-group">
       <label for="lat-finale">Finále</label>
-      <?= $this->text('lat-finale', $ŧhis->lat_finale) ?>
+      <?= $this->text('lat-finale', $this->lat_finale) ?>
     </div>
     <div class="form-group">
       <?= $this->submit('Upravit')->data('action', 'edit_confirm') ?>

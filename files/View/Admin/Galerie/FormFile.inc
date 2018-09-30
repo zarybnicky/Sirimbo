@@ -3,7 +3,7 @@
   <form action="" method="post">
     <div class="form-group">
       <label for="name">Popis</label>
-      <?= $this->text('name', $ŧhis->name) ?>
+      <?= $this->text('name', $this->name) ?>
     </div>
     <div class="form-group">
       <label for="parent">Nadsložka</label>
