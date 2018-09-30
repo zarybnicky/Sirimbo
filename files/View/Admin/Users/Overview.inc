@@ -46,38 +46,29 @@
                 </td>
             </tr>
             <tr>
-                <td><?= $this->submit('Odeslat') ?></td>
-                <td></td>
+                <td colspan="2"><?= $this->submit('Filtrovat') ?></td>
             </tr>
         </table>
     </form>
+    <a href="/admin/users/add" class="btn btn-outline-primary">Nový uživatel</a>
+    <a href="/admin/users/duplicate" class="btn btn-outline-primary">Duplicitní uživatelé</a>
+    <a href="/admin/users/unconfirmed" class="btn btn-outline-primary">Nepotvrzení uživatelé</a>
+    <a href="/admin/users/statistiky" class="btn btn-outline-primary">Statistiky</a>
+    <?php if ($this->view == 'status'): ?>
+      <br><br>
+      <button class="btn btn-primary" name="action" value="save">Uložit změny</button>
+    <?php endif ?>
     <br>
 <?php endif ?>
 
 <form action="" method="POST">
 
 <?php
-if ($this->showMenu) {
-    $f = $this->menu()
-        ->content('Přidat', '/admin/users/add')
-        ->content('Upravit', 'edit', true)
-        ->content('Odebrat', 'remove', true)
-        ->content('Zobrazit platby', 'platby', true)
-        ->content('Duplicitní uživatelé', '/admin/users/duplicate')
-        ->content('Nepotvrzení uživatelé', '/admin/users/unconfirmed')
-        ->content('Statistiky', '/admin/users/statistiky');
-    if ($this->view == 'status') {
-        $f->content('Uložit změny', 'save', true);
-    }
-    echo $f;
-}
 if (!$this->data) {
     echo $this->notice('Žádní takoví uživatelé');
     echo '</div>';
     return;
 }
-echo '<div style="margin-right:150px">';
-
 $table = $this->table()
     ->style('width:100%')
     ->data($this->data)
@@ -97,9 +88,7 @@ if ($this->view == 'status') {
         ->column('varSymbol', 'Variabilní<br/>symbol');
 }
 echo $table;
-
-echo '</div>';
-echo '</form>';
-echo '<div style="text-align:center;margin-right:150px;">', $this->navigation, '</div>';
 ?>
+</form>
+<div style="text-align:center"><?= $this->navigation ?></div>
 </div>

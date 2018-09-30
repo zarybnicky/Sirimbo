@@ -2,13 +2,10 @@
 <div class="container">
   <h2>Duplicitní uživatelé</h2>
   <form action="" method="POST">
-    <?= $this->menu()
-           ->content('Odstranit', 'remove', true)
-           ->content('Zpět', '../users') ?>
     <?= $this->table()
-           ->column('checkBox', '')
-           ->column('colorBox', '')
-           ->column('fullName', 'Jméno', '', 'max-width:140px;')
+           ->style('width:100%')
+           ->column('buttons', '')
+           ->column('fullName', 'Jméno')
            ->column('email', 'Email')
            ->column('telefon', 'Telefon')
            ->column('narozeni', 'Datum<br/>narození')

@@ -2,12 +2,9 @@
 <div class="container">
   <h2>Nepotvrzení uživatelé</h2>
   <form action="" method="POST">
-    <?= $this->menu()
-           ->content('Potvrdit', 'confirm', true)
-           ->content('Odstranit', 'remove', true)
-           ->content('Zpět', '../users') ?>
     <?= $this->table()
-           ->column('checkBox', '')
+           ->style('width:100%')
+           ->column('buttons', '')
            ->column('group', 'Úroveň')
            ->column('skupina', 'Skupina')
            ->column('dancer', 'Aktivní<br/>tanečník', 'center')
