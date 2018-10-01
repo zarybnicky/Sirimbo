@@ -5,7 +5,7 @@
     <tr>
       <?php foreach ($chunk as $item) : ?>
         <td style="vertical-align:top">
-          <form action="" method="post">
+          <form action="" class="form-inline" method="post">
             <div class="widget">
               <div class="widget-title center">
                 <?= $this->render('files/View/Member/Nabidka/Header.inc', $item);?>
@@ -36,7 +36,7 @@
                 </table>
                 <div style="text-align:center;padding:10px 0 5px">
                   <?php if ($item['canAdd']) : ?>
-                    Počet hodin: <?= $this->text('hodiny')->size(2) ?>
+                    Počet hodin: <?= $this->text('hodiny', '')->size(2) ?>
                     <?= $this->hidden('id', $item['id']) ?>
                     <?= $this->submit('Přidat') ?>
                   <?php endif;?>
