@@ -83,14 +83,6 @@ class User
         $_SESSION['par'] = $par['p_id'];
         $_SESSION['partner'] = $par['u_id'];
 
-        $_SESSION['zaplaceno'] = DBPlatby::hasPaidMemberFees($data['u_id']);
-        $_SESSION['zaplaceno_par'] = $_SESSION['zaplaceno'] | DBPlatby::hasPaidMemberFees($par['u_id']);
-        $_SESSION['zaplaceno_text'] =
-            $_SESSION['zaplaceno'] ?
-                ($_SESSION['zaplaceno_par'] ? null : 'Váš/e partner/ka nemá zaplacené členské příspěvky, ' .
-                    'bez zaplacených příspěvků si nemůžete rezervovat lekce.') :
-                'Nemáte zaplacené členské příspěvky, ' .
-                    'bez zaplacených příspěvků si nemůžete rezervovat lekce.';
         return true;
     }
 
@@ -98,16 +90,17 @@ class User
     {
         if (!User::isLogged()) {
             return $module ? P_NONE : [];
-        } elseif (User::getUserID() == 1) {
-            return $module ? P_ADMIN : $_SESSION['permissions'];
-        } elseif (User::getUserGroup() == 0) {
-            return $module ? P_NONE : $_SESSION['permissions'];
-        } else {
-            if ($module && isset($_SESSION['permissions'][$module])) {
-                return $_SESSION['permissions'][$module];
-            }
-            return $_SESSION['permissions'];
         }
+        if (User::getUserID() == 1) {
+            return $module ? P_ADMIN : $_SESSION['permissions'];
+        }
+        if (User::getUserGroup() == 0) {
+            return $module ? P_NONE : $_SESSION['permissions'];
+        }
+        if ($module && isset($_SESSION['permissions'][$module])) {
+            return $_SESSION['permissions'][$module];
+        }
+        return $_SESSION['permissions'];
     }
 
     public static function getUserID()
@@ -173,10 +166,11 @@ class User
     public static function getZaplaceno($par = false)
     {
         return true;
+        // $paidSelf = DBPlatby::hasPaidMemberFees($_SESSION['id']);
         // if ($par)
-        //     return $_SESSION['zaplaceno_par'];
+        //     return $paidSelf | DBPlatby::hasPaidMemberFees($_SESSION['partner'])
         // else
-        //     return $_SESSION['zaplaceno'];
+        //     return $paidSelf;
     }
 
     public static function getParID()
