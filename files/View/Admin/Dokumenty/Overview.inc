@@ -15,7 +15,7 @@
   <form action="" method="post" enctype="multipart/form-data">
     <div class="form-group">
       <label for="name">Název</label>
-      <?= $this->text('name')->placeholder('Název') ?>
+      <?= $this->text('name', '')->placeholder('Název') ?>
     </div>
     <div class="form-group">
       <input type="file" class="form-control-file" name="file">
