@@ -42,7 +42,7 @@
         </table>
     </form>
     <br/>
-<?php endif; ?>
+<?php endif ?>
 
 <form action="" method="POST">
   <?= $this->table()

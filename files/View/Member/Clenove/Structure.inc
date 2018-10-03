@@ -1,4 +1,4 @@
-<?= $this->render('files/View/Member/Clenove/Navigation.inc', ['uri' => $this->uri]);?>
+<?= $this->render('files/View/Member/Clenove/Navigation.inc', ['uri' => $this->uri]) ?>
 <div class="container">
 <?php
 foreach ($this->data as $skupina) {

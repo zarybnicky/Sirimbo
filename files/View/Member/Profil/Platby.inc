@@ -1,12 +1,11 @@
 <?= $this->header('Moje platby') ?>
 
 <div class="container">
-  <?= $this->colorBox, '&nbsp;', $this->skupinaData;?><br>
+  <?= $this->colorBox, '&nbsp;', $this->skupinaData ?><br>
   Č.ú.: 1806875329/0800<br>
-  Variabilní symbol: <?= $this->varSymbol;?><br>
+  Variabilní symbol: <?= $this->varSymbol ?><br>
   <br/>
-  Aktuálně: <?= $this->zaplacenoText;?>
-  <br/><br/>
+  <?= $this->zaplacenoText ? "Aktuálně: {$this->zaplacenoText}<br><br>" : '' ?>
 
   <?php if (!empty($this->platby)): ?>
     <h2>Historie plateb</h2>
@@ -20,15 +19,15 @@
       </tr>
       <?php foreach ($this->platby as $platba): ?>
         <tr>
-          <td><?= $platba['colorBox'];?></td>
-          <td><?= $platba['obdobi'];?> Kč</td>
-          <td><?= $platba['castka'];?> Kč</td>
-          <td><?= $platba['datum'];?></td>
-          <td><?= $platba['platnost'];?></td>
+          <td><?= $platba['colorBox'] ?></td>
+          <td><?= $platba['obdobi'] ?> Kč</td>
+          <td><?= $platba['castka'] ?> Kč</td>
+          <td><?= $platba['datum'] ?></td>
+          <td><?= $platba['platnost'] ?></td>
         </tr>
-      <?php endforeach;?>
+      <?php endforeach ?>
     </table><br/>
-  <?php endif; ?>
+  <?php endif ?>
 
   <h2>Výběr plateb</h2>
   <?= $this->table()
@@ -38,6 +37,6 @@
            ->column('symbol', 'Specifický symbol', '', 'width:75px')
            ->column('amount', 'Částka')
            ->column('dueDate', 'Splatnost')
-           ->column('validRange', 'Platnost'); ?>
+           ->column('validRange', 'Platnost') ?>
   <a class="btn btn-outline-primary" href="/member/profil">Zpět</a>
 </div>

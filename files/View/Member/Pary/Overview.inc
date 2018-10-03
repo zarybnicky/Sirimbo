@@ -13,13 +13,13 @@
 
     <?php $i = 1; foreach ($this->data as $item): ?>
       <tr>
-        <td style="text-align:right;"><?php echo $i++;?>. </td>
-        <td><?php echo $item['partnerName'];?></td>
-        <td><?php echo $item['partnerkaName'];?></td>
-        <td><?php echo $item['latina'];?></td>
-        <td><?php echo $item['standard'];?></td>
-        <td><?php echo $item['hodnoceni'];?></td>
+        <td style="text-align:right;"><?= $i++ ?>. </td>
+        <td><?= $item['partnerName'] ?></td>
+        <td><?= $item['partnerkaName'] ?></td>
+        <td><?= $item['latina'] ?></td>
+        <td><?= $item['standard'] ?></td>
+        <td><?= $item['hodnoceni'] ?></td>
       </tr>
-    <?php endforeach;?>
+    <?php endforeach ?>
   </table>
 </div>

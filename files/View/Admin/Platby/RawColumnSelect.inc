@@ -11,7 +11,7 @@
     ->column('variable', 'Variabilní<br/>symbol', 'center')
     ->column('date', 'Datum platby', 'center')
     ->column('amount', 'Částka', 'center')
-    ->data($this->data); ?>
+    ->data($this->data) ?>
     <button name="action" value="confirm">Odeslat</button>
   </form>
 </div>

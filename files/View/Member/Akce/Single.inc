@@ -20,9 +20,9 @@
                     <tr>
                         <td><?= $item['u_jmeno'] . ' ' . $item['u_prijmeni'] ?></td>
                     </tr>
-                <?php endforeach; ?>
+                <?php endforeach ?>
             </table>
-        <?php endif; ?>
+        <?php endif ?>
         <a class="btn btn-outline-primary" href="/member/akce">Zpět</a>
     </div>
 </div>

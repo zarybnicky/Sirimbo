@@ -130,13 +130,14 @@ class Controller_Member_Profil extends Controller_Member
             ];
         }
         $skupina = User::getSkupinaData();
+        $zaplaceno = User::getZaplaceno();
         $this->render(
             'files/View/Member/Profil/Platby.inc',
             [
                 'colorBox' => $this->colorbox($skupina['s_color_rgb'], $skupina['s_description']),
                 'skupinaData' => $skupina['s_name'],
                 'varSymbol' => User::varSymbol(User::getUserID()),
-                'zaplacenoText' => User::getZaplaceno() ? 'zaplaceno' : 'nezaplaceno!',
+                'zaplacenoText' => $zaplaceno === null ? '' : ($zaplaceno ? 'zaplaceno' : 'nezaplaceno!'),
                 'platby' => [],
                 'platbyGroups' => $groupsOut
             ]

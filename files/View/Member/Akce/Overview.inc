@@ -15,20 +15,20 @@
         <?php foreach ($chunk as $data) : ?>
           <td class="unit">
             <form action="" method="post">
-              <?= $this->render('files/View/Member/Akce/Header.inc', $data);?>
+              <?= $this->render('files/View/Member/Akce/Header.inc', $data) ?>
               <?php if ($data['showForm']) : ?>
                 <?= $this->hidden('id', $data['id']) ?>
                 <?php if ($data['signIn']) : ?>
                   <?= $this->submit('Přihlásit se')->data('action', 'signup') ?> &bull;
                 <?php else: ?>
                   <?= $this->submit('Odhlásit se')->data('action', 'signout') ?> &bull;
-                <?php endif; ?>
-              <?php endif; ?>
+                <?php endif ?>
+              <?php endif ?>
               <a href="/member/akce/<?= $data['id'] ?>">Zobrazit přihlášené</a>
             </form>
           </td>
-        <?php endforeach; ?>
+        <?php endforeach ?>
       </tr>
-    <?php endforeach; ?>
+    <?php endforeach ?>
   </table>
 </div>

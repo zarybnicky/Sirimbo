@@ -12,10 +12,10 @@
           <?= formatTimestamp($row['timestamp'])?>
           <?php if ($row['canEdit']) : ?>
             - <a href="/admin/aktuality/edit/<?= $row['id'] ?>">Upravit</a>
-          <?php endif;?>
+          <?php endif ?>
         </small><br>
         <p><?= $row['preview'] ?></p>
       </div>
     </div>
-  <?php endforeach;?>
+  <?php endforeach ?>
 </div>

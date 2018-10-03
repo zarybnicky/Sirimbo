@@ -1,7 +1,7 @@
 <?= $this->header('Změna třídy a bodů') ?>
 
 <div class="container">
-  <?= $this->partnerRequest()->getAll(); ?>
+  <?= $this->partnerRequest()->getAll() ?>
 
   <form action="" method="post">
     <table>
@@ -10,7 +10,7 @@
         <td>Třída:</td>
         <td><?= $this->select('stt-trida')
                   ->set($this->stt_trida)
-                  ->options(['Z', 'H', 'D', 'C', 'B', 'A', 'M'], true, true); ?></td>
+                  ->options(['Z', 'H', 'D', 'C', 'B', 'A', 'M'], true, true) ?></td>
       </tr>
       <tr>
         <td>Body:</td>
@@ -25,7 +25,7 @@
         <td>Třída:</td>
         <td><?= $this->select('lat-trida')
                   ->set($this->lat_trida)
-                  ->options(['Z', 'H', 'D', 'C', 'B', 'A', 'M'], true, true); ?></td>
+                  ->options(['Z', 'H', 'D', 'C', 'B', 'A', 'M'], true, true) ?></td>
       </tr>
       <tr>
         <td>Body:</td>

@@ -1,10 +1,10 @@
-<?= $this->header('Správa rozpisů');?>
+<?= $this->header('Správa rozpisů') ?>
 
 <div class="container">
   <form action="" method="POST">
     <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
     <div class="r_wrapper">
-      <?= $this->render('files/View/Member/Rozpis/Header.inc', $this->data); ?>
+      <?= $this->render('files/View/Member/Rozpis/Header.inc', $this->data) ?>
       <table>
         <tr>
           <td>Tanečník</td>
@@ -24,9 +24,9 @@
             <td><?= $this->submit('Odstranit')->data('remove', $item['id']) ?></td>
             <td><?= $this->checkbox($item['id'] . '-lock', 'lock')->set($item['lock']) ?></td>
           </tr>
-        <?php endforeach; ?>
+        <?php endforeach ?>
         <tr>
-          <td><?= $userselect->name('add_partner')->set(null); ?></td>
+          <td><?= $userselect->name('add_partner')->set(null) ?></td>
           <td><?= $this->text('add_od', '')->size(5) ?>
           <td><?= $this->text('add_do', '')->size(5) ?>
           <td><?= $this->submit('Přidat')->data('action', 'add') ?></td>
@@ -56,7 +56,7 @@
     <?= $this->submit('Vybrat nabídku') ?>
     <?php if ($this->nabidka) : ?>
       <div class="n_wrapper">
-        <?= $this->render('files/View/Member/Nabidka/Header.inc', $this->nabidka); ?>
+        <?= $this->render('files/View/Member/Nabidka/Header.inc', $this->nabidka) ?>
         <table>
           <tr>
             <td>Tanečník</td>
@@ -64,13 +64,13 @@
           </tr>
           <?php foreach ($this->nabidka['items'] as $item) : ?>
             <tr>
-              <td><?= $item['fullName']; ?></td>
-              <td><?= $item['lessonCount']; ?></td>
+              <td><?= $item['fullName'] ?></td>
+              <td><?= $item['lessonCount'] ?></td>
             </tr>
-          <?php endforeach; ?>
+          <?php endforeach ?>
         </table>
       </div>
-    <?php endif; ?>
+    <?php endif ?>
   </form>
   <br/>
   <a class="btn btn-outline-primary" href="/admin/rozpis">Zpět</a>

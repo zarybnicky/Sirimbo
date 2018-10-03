@@ -31,7 +31,7 @@
         <li style="margin-left:1em">
           <a href="?list=amount&amount=<?= $value ?>"><?= $name ?></a>
         </li>
-      <?php endforeach; ?>
+      <?php endforeach ?>
     </ul>
   <?php endif ?>
 </div>

@@ -13,7 +13,7 @@
       ?>
       <?= $this->submit('Zobrazit') ?>
     </form>
-  <?php endif; ?>
+  <?php endif ?>
 
   <table>
     <tr>
@@ -24,13 +24,13 @@
     </tr>
     <?php foreach ($this->data as $item): ?>
       <tr>
-        <td><?= $item['name'];?></td>
-        <td><a href="/member/download?id=<?= $item['id'];?>">
-          <?= $item['fileName'];?>
+        <td><?= $item['name'] ?></td>
+        <td><a href="/member/download?id=<?= $item['id'] ?>">
+          <?= $item['fileName'] ?>
         </a></td>
-        <td><?= $item['kategorie'];?></td>
-        <td><?= $item['uploadedBy'];?></td>
+        <td><?= $item['kategorie'] ?></td>
+        <td><?= $item['uploadedBy'] ?></td>
       </tr>
-    <?php endforeach;?>
+    <?php endforeach ?>
   </table>
 </div>

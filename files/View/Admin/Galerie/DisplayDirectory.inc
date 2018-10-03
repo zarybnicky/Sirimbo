@@ -19,6 +19,6 @@
           <?= $item['name'] ?>
         </div>
       </div>
-    <?php endforeach; ?>
+    <?php endforeach ?>
   </form>
 </div>

@@ -17,7 +17,7 @@
               content="r44xj2vskhlgkyqcqm1hdgga2jdfj-idvyys0277y96s72k-tq0z-yyjdu7h3el6pi2gek0i4ykq3xgiguufrvuhj8nbj4n4miwjhvumhp35jfrafyynhj4ee8ctzpzh" />
         <?php foreach ($this->meta as $meta): ?>
           <meta <?= $meta ?> />
-        <?php endforeach; ?>
+        <?php endforeach ?>
         <meta property="fb:app_id" content="132983570203245"/>
 
         <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
@@ -50,12 +50,12 @@
                 </ul>
               <?php endforeach ?>
             </div>
-            <?= $this->login(); ?>
+            <?= $this->login() ?>
           </div>
         </div>
       </nav>
 
       <?php if ($notice = $this->redirect()->getMessage()): ?>
-        <div class="container"><div class="row"><?= $this->notice($notice); ?></div></div>
-      <?php endif; ?>
+        <div class="container"><div class="row"><?= $this->notice($notice) ?></div></div>
+      <?php endif ?>
 

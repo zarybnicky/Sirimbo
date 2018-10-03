@@ -8,17 +8,17 @@
           <form action="" class="form-inline" method="post">
             <div class="widget">
               <div class="widget-title center">
-                <?= $this->render('files/View/Member/Nabidka/Header.inc', $item);?>
+                <?= $this->render('files/View/Member/Nabidka/Header.inc', $item) ?>
               </div>
               <div class="widget-content">
                 <table class="nocolor" style="width:100%">
                   <?php foreach ($item['items'] as $row) : ?>
                     <tr>
                       <td>
-                        <?= $row['fullName'];?>
+                        <?= $row['fullName'] ?>
                       </td>
                       <td>
-                        <?= $row['hourCount'];?>
+                        <?= $row['hourCount'] ?>
                         <?= (($row['hourCount'] == 1) ?
                             'hodina' :
                             (($row['hourCount'] > 1 &&
@@ -32,20 +32,20 @@
                         <?php endif ?>
                       </td>
                     </tr>
-                  <?php endforeach;?>
+                  <?php endforeach ?>
                 </table>
                 <div style="text-align:center;padding:10px 0 5px">
                   <?php if ($item['canAdd']) : ?>
                     Počet hodin: <?= $this->text('hodiny', '')->size(2) ?>
                     <?= $this->hidden('id', $item['id']) ?>
                     <?= $this->submit('Přidat') ?>
-                  <?php endif;?>
+                  <?php endif ?>
                 </div>
               </div>
             </div>
           </form>
         </td>
-      <?php endforeach;?>
+      <?php endforeach ?>
     </tr>
-  <?php endforeach;?>
+  <?php endforeach ?>
 </table>

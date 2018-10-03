@@ -1,28 +1,28 @@
 <?= $this->header('Profil') ?>
 
 <div class="container">
-  <?= $this->partnerRequest()->getAll(); ?>
+  <?= $this->partnerRequest()->getAll() ?>
   <?php if ($this->havePartner): ?>
-    Právě tančím s: <?php echo $this->partnerFullName;?>
+    Právě tančím s: <?= $this->partnerFullName ?>
     <h2>Třídy a body:</h2>
     <h3>Standardní tance:</h3>
     <br />
-    Třída: <span style="font-weight:bolder;"><?php echo $this->sttTrida;?></span>,
-    body: <?php echo $this->sttBody;?>,
-    finále: <?php echo $this->sttFinale;?>
+    Třída: <span style="font-weight:bolder;"><?= $this->sttTrida ?></span>,
+    body: <?= $this->sttBody ?>,
+    finále: <?= $this->sttFinale ?>
     <br />
     <h3>Latinsko-americké tance:</h3>
     <br />
-    Třída: <span style="font-weight:bolder;"><?php echo $this->latTrida;?></span>,
-    body: <?php echo $this->latBody;?>,
-    finále: <?php echo $this->latFinale;?>
+    Třída: <span style="font-weight:bolder;"><?= $this->latTrida ?></span>,
+    body: <?= $this->latBody ?>,
+    finále: <?= $this->latFinale ?>
     <br /><br/>
-    V "Olympáckém žebříčku" máme <?php echo $this->hodnoceni;?> bodů.
+    V "Olympáckém žebříčku" máme <?= $this->hodnoceni ?> bodů.
     <br />
     <a href="/member/profil/par/body">Změnit třídu a body</a>
   <?php else: ?>
     Právě s nikým netančím.<br/>
-  <?php endif;?>
+  <?php endif ?>
   <a class="btn btn-outline-primary" href="/member/profil/par/partner">Změnit partnera</a>
   <a class="btn btn-outline-primary" href="/member/profil">Zpět</a>
 </div>

@@ -1,4 +1,4 @@
-<?= $this->header('O klubu'); ?>
+<?= $this->header('O klubu') ?>
 
 <div class="container">
   <img alt="Mistrovství družstev 2010"

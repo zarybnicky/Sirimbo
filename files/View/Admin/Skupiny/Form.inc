@@ -19,7 +19,7 @@
                        'value' => '<textarea rows="15" cols="50" name="desc">' . $this->popis . '</textarea>'
                    ]
                ]
-           ); ?>
+           ) ?>
     <br>
     <h2>Kategorie plateb</h2>
     <?= $this->table()

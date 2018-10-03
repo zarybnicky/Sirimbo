@@ -4,7 +4,7 @@
 <div class="container">
     <h3>Odstranit kategorii?</h3>
     <form action="" method="POST">
-        Opravdu chcete odstranit kategorii plateb "<?= $this->name;?>"?
+        Opravdu chcete odstranit kategorii plateb "<?= $this->name ?>"?
         <?= $this->hidden('data[]', $this->id) ?>
         <?= $this->hidden('referer', $this->referer) ?>
         <br/>

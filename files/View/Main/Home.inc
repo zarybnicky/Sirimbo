@@ -10,11 +10,11 @@
           style="background-image:linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.4)),url(<?= $item['title_photo_uri'] ?>)">
         <img src="<?= $item['title_photo_uri'] ?>" alt="First slide" />
         <div class="carousel-caption">
-          <a href="<?= $item['uri'] ?>"><h3><?= $item['name']; ?></h3></a>
-          <p class="d-none d-md-block"><?= $item['description']; ?></p>
+          <a href="<?= $item['uri'] ?>"><h3><?= $item['name'] ?></h3></a>
+          <p class="d-none d-md-block"><?= $item['description'] ?></p>
         </div>
       </div>
-    <?php endforeach; ?>
+    <?php endforeach ?>
   </div>
   <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -158,16 +158,16 @@
               </a>
               <div class="card-body">
                 <h4 class="card-title">
-                  <a href="<?= $item['uri'] ?>"><?= $item['name']; ?></a>
+                  <a href="<?= $item['uri'] ?>"><?= $item['name'] ?></a>
                 </h4>
-                <p class="card-text"><?= $item['description']; ?></p>
+                <p class="card-text"><?= $item['description'] ?></p>
                 <div style="text-align:right;font-size:85%;">
                   <a href="<?= $item['uri'] ?>">více zde &raquo;</a>
                 </div>
               </div>
             </div>
           </div>
-        <?php endforeach; ?>
+        <?php endforeach ?>
       </div>
     </div>
 
@@ -181,7 +181,7 @@
               <div class="col-8"><h5><?= $x['name'] ?></h5></div>
             </a>
           </li>
-        <?php endforeach; ?>
+        <?php endforeach ?>
       </ul>
     </div>
   </div>

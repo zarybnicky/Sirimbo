@@ -126,7 +126,7 @@ class UserSelectHelper
 Jméno: <input type="text" name="jmeno" size="8" /><br/>
 Příjmení: <input type="text" name="prijmeni" size="8" /><br/>
 Datum narození:&nbsp;<br/>
-<?php echo Helper::instance()->date('narozeni')->render(), '<br/>';?>
+<?= Helper::instance()->date('narozeni')->render(), '<br/>' ?>
 <button type="submit">Uložit</button>
 </div>
 <div class="loading" style="display:none;"><img alt="Čekám na odezvu serveru..." src="/images/loading_bar.gif"/></div>
@@ -136,18 +136,18 @@ Datum narození:&nbsp;<br/>
         if (typeof $.fn.tempUserSelect == "undefined" && typeof window.loadingUS == "undefined") {
             window.loadingUS = true;
             $.getScript("/scripts/tempUserSelect.js", function() {
-                $(".<?php echo $name;?>").tempUserSelect("<?php echo $this->_type;?>");
+                $(".<?= $name ?>").tempUserSelect("<?= $this->_type ?>");
                 delete window.loadingUS;
             });
         } else {
-            $.delayed<?php echo $name ?> = function() {
+            $.delayed<?= $name ?> = function() {
                 if (typeof window.loadingUS == "undefined" && typeof $.fn.tempUserSelect != "undefined") {
-                    $(".<?php echo $name;?>").tempUserSelect("<?php echo $this->_type;?>");
+                    $(".<?= $name ?>").tempUserSelect("<?= $this->_type ?>");
                 } else {
-                    setTimeout(function() {$.delayed<?php echo $name?>();}, 200);
+                    setTimeout(function() {$.delayed<?= $name?>();}, 200);
                 }
             };
-            $.delayed<?php echo $name?>();
+            $.delayed<?= $name?>();
         }
     })
 }) (jQuery);

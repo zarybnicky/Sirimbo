@@ -59,7 +59,7 @@
                 <?= formatDate($item['date']) ?>
             </div>
         </div>
-    <?php endforeach; ?>
+    <?php endforeach ?>
 </div>
 
 <div id="video-popup" style="display:none"></div>

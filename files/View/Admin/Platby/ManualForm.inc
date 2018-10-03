@@ -39,20 +39,18 @@
                       ->data($form);
     ?>
     <form action="" method="post">
-        <?= $formTable;?>
+        <?= $formTable ?>
         <?= $this->hidden('id', $this->id) ?>
         <?= $this->submit('Uložit')->data('action', 'confirm') ?>&nbsp;
         <?= $this->submit('Odstranit')->data('action', 'discard') ?>&nbsp;
         <?= $this->submit('Přeskočit')->data('action', 'skip') ?>
     </form>
     <br/>
-    <?php
-    echo '<h3>Data z banky</h3>';
-    echo $this->table()
+    <h3>Data z banky</h3>
+    <?= $this->table()
               ->style('width:100%')
               ->showHeader(false)
               ->column('column', '', 'r', 'padding-right:5px')
               ->column('value', '', '', 'min-width:150px;padding-left:5px')
-              ->data($this->raw);
-    ?>
+              ->data($this->raw) ?>
 </div>

@@ -11,6 +11,6 @@
                ->column('date', 'Datum')
                ->column('userCount', 'Kapacita')
                ->column('visible', 'Viditelný')
-               ->data($this->data); ?>
+               ->data($this->data) ?>
     </form>
 </div>

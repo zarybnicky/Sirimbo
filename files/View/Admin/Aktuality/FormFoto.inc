@@ -20,7 +20,7 @@
           <br/><br/>
         </div>
       </div>
-    <?php endforeach; ?>
+    <?php endforeach ?>
     <div class="form-group" style="clear:both">
       <?= $this->submit('Potvrdit') ?>
       <a class="btn btn-outline-primary" href="/admin/aktuality">Zpět</a>

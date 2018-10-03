@@ -1,7 +1,7 @@
 <?= $this->header('Správa akcí') ?>
 <div class="container">
     <form action="" method="POST">
-        <?= $this->render('files/View/Member/Akce/Header.inc', $this->data);?>
+        <?= $this->render('files/View/Member/Akce/Header.inc', $this->data) ?>
         <?= $this->table()
                  ->data($this->items)
                  ->column('name', 'Uživatel')

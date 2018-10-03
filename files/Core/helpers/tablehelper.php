@@ -93,26 +93,26 @@ class TableHelper
         }
         ob_start();
         ?>
-<table<?php echo $this->_style;?>>
+<table<?= $this->_style ?>>
     <?php if ($this->_showHeader) : ?>
     <thead>
         <tr>
             <?php foreach ($this->_columns as $c): ?>
-            <th><?php echo $c[1];?></th>
-            <?php endforeach;?>
+            <th><?= $c[1] ?></th>
+            <?php endforeach ?>
         </tr>
     </thead>
-    <?php endif;?>
+    <?php endif ?>
     <tbody>
-        <?php foreach ($this->_data as $row): ++$this->_index; if (!$row) continue;?>
+        <?php foreach ($this->_data as $row): ++$this->_index; if (!$row) continue ?>
         <tr>
             <?php foreach ($this->_columns as $c): ?>
-            <td<?php echo $c[2];?>>
-            <?php echo $row[$c[0]] == '{counter}' ? $this->_getCounter() : $row[$c[0]];?>
+            <td<?= $c[2] ?>>
+            <?= $row[$c[0]] == '{counter}' ? $this->_getCounter() : $row[$c[0]] ?>
             </td>
-            <?php endforeach;?>
+            <?php endforeach ?>
         </tr>
-        <?php endforeach;?>
+        <?php endforeach ?>
     </tbody>
 </table>
         <?php
