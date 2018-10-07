@@ -1,4 +1,3 @@
-<?= $this->header('Správa fotogalerie', 'Upravit soubor') ?>
 <div class="container">
   <form action="" method="post">
     <div class="form-group">

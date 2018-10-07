@@ -1,5 +1,4 @@
 <?= $this->render('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri]) ?>
-<?= $this->subheader('Vyřazené platby') ?>
 
 <div class="container">
   <a style="display:block;margin-bottom:8px;" href="?list=all">Všechny platby</a>

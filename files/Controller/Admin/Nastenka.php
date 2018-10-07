@@ -46,14 +46,12 @@ class Controller_Admin_Nastenka extends Controller_Admin
             $data
         );
 
-        $this->render(
-            'files/View/Admin/Nastenka/Overview.inc',
-            [
-                'showButtonsCol' => $showButtonsCol,
-                'data' => $data,
-                'navigation' => $pager->getNavigation($request->get())
-            ]
-        );
+        $this->render('files/View/Admin/Nastenka/Overview.inc', [
+            'header' => 'Správa nástěnky',
+            'showButtonsCol' => $showButtonsCol,
+            'data' => $data,
+            'navigation' => $pager->getNavigation($request->get())
+        ]);
     }
 
     public function add($request)
@@ -67,18 +65,17 @@ class Controller_Admin_Nastenka extends Controller_Admin
             foreach ($skupiny as $item) {
                 $skupinySelected[$item['s_id']] = $request->post('sk-' . $item['s_id']);
             }
-            $this->render(
-                'files/View/Admin/Nastenka/Form.inc',
-                [
-                    'action' => $request->getAction(),
-                    'returnURI' => $request->getReferer() ?: '/admin/nastenka',
-                    'skupiny' => $skupiny,
-                    'skupinySelected' => $skupinySelected,
-                    'nadpis' => $request->post('nadpis') ?: '',
-                    'text' => $request->post('text') ?: '',
-                    'lock' => $request->post('lock') ?: ''
-                ]
-            );
+            $this->render('files/View/Admin/Nastenka/Form.inc', [
+                'header' => 'Správa nástěnky',
+                'subheader' => ($this->action == 'add' ? 'Přidat' : 'Upravit') . ' příspěvek',
+                'action' => $request->getAction(),
+                'returnURI' => $request->getReferer() ?: '/admin/nastenka',
+                'skupiny' => $skupiny,
+                'skupinySelected' => $skupinySelected,
+                'nadpis' => $request->post('nadpis') ?: '',
+                'text' => $request->post('text') ?: '',
+                'lock' => $request->post('lock') ?: ''
+            ]);
             return;
         }
         $id = DBNastenka::addNastenka(
@@ -136,18 +133,17 @@ class Controller_Admin_Nastenka extends Controller_Admin
                 $skupinySelected[$item['s_id']] = $request->post('sk-' . $item['s_id']);
             }
 
-            $this->render(
-                'files/View/Admin/Nastenka/Form.inc',
-                [
-                    'action' => $request->getAction(),
-                    'returnURI' => $request->getReferer() ?: '/admin/nastenka',
-                    'skupiny' => $skupiny,
-                    'skupinySelected' => $skupinySelected,
-                    'nadpis' => $request->post('nadpis') ?: '',
-                    'text' => $request->post('text') ?: '',
-                    'lock' => $request->post('lock') ?: ''
-                ]
-            );
+            $this->render('files/View/Admin/Nastenka/Form.inc', [
+                'header' => 'Správa nástěnky',
+                'subheader' => ($this->action == 'add' ? 'Přidat' : 'Upravit') . ' příspěvek',
+                'action' => $request->getAction(),
+                'returnURI' => $request->getReferer() ?: '/admin/nastenka',
+                'skupiny' => $skupiny,
+                'skupinySelected' => $skupinySelected,
+                'nadpis' => $request->post('nadpis') ?: '',
+                'text' => $request->post('text') ?: '',
+                'lock' => $request->post('lock') ?: ''
+            ]);
             return;
         }
 
@@ -200,15 +196,12 @@ class Controller_Admin_Nastenka extends Controller_Admin
         Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
 
         if (!$request->post() || $request->post('action') != 'confirm') {
-            $this->render(
-                'files/View/Admin/RemovePrompt.inc',
-                [
-                    'header' => 'Správa nástěnky',
-                    'prompt' => 'Opravdu chcete odstranit příspěvek:',
-                    'returnURI' => $request->getReferer() ?: '/admin/nastenka',
-                    'data' => [['id' => $data['up_id'], 'text' => $data['up_nadpis']]]
-                ]
-            );
+            $this->render('files/View/Admin/RemovePrompt.inc', [
+                'header' => 'Správa nástěnky',
+                'prompt' => 'Opravdu chcete odstranit příspěvek:',
+                'returnURI' => $request->getReferer() ?: '/admin/nastenka',
+                'data' => [['id' => $data['up_id'], 'text' => $data['up_nadpis']]]
+            ]);
             return;
         }
 

@@ -42,15 +42,13 @@ class Controller_Admin_Pary extends Controller_Admin
             DBPary::getActivePary()
         );
 
-        $this->render(
-            'files/View/Admin/Pary/Overview.inc',
-            [
-                'showMenu' => !TISK,
-                'data' => $data,
-                'usersMen' => DBUser::getUsersByPohlavi('m'),
-                'usersWomen' => DBUser::getUsersByPohlavi('f')
-            ]
-        );
+        $this->render('files/View/Admin/Pary/Overview.inc', [
+            'header' => 'Správa párů',
+            'showMenu' => !TISK,
+            'data' => $data,
+            'usersMen' => DBUser::getUsersByPohlavi('m'),
+            'usersWomen' => DBUser::getUsersByPohlavi('f')
+        ]);
     }
 
     public function edit($request)
@@ -61,21 +59,20 @@ class Controller_Admin_Pary extends Controller_Admin
         }
 
         if (!$request->post()) {
-            $this->render(
-                'files/View/Admin/Pary/Form.inc',
-                [
-                    'fullName' => (
-                        $data['guy_name'] . ' ' . $data['guy_surname'] . ' - '
-                        . $data['gal_name'] . ' ' . $data['gal_surname']
-                    ),
-                    'stt_trida' => $data['p_stt_trida'],
-                    'stt_body' => $data['p_stt_body'],
-                    'stt_finale' => $data['p_stt_finale'],
-                    'lat_trida' => $data['p_lat_trida'],
-                    'lat_body' => $data['p_lat_body'],
-                    'lat_finale' => $data['p_lat_finale']
-                ]
-            );
+            $this->render('files/View/Admin/Pary/Form.inc', [
+                'header' => 'Správa párů',
+                'subheader' => 'Změna třídy a bodů',
+                'fullName' => (
+                    $data['guy_name'] . ' ' . $data['guy_surname'] . ' - '
+                    . $data['gal_name'] . ' ' . $data['gal_surname']
+                ),
+                'stt_trida' => $data['p_stt_trida'],
+                'stt_body' => $data['p_stt_body'],
+                'stt_finale' => $data['p_stt_finale'],
+                'lat_trida' => $data['p_lat_trida'],
+                'lat_body' => $data['p_lat_body'],
+                'lat_finale' => $data['p_lat_finale']
+            ]);
             return;
         }
         $stt_body =

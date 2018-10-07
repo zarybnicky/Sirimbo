@@ -9,7 +9,9 @@ class Controller_Member_Profil extends Controller_Member
 
     public function view($request)
     {
-        $this->render('files/View/Member/Profil/Overview.inc');
+        $this->render('files/View/Member/Profil/Overview.inc', [
+            'header' => 'Profil'
+        ]);
     }
 
     public function edit($request)
@@ -18,40 +20,36 @@ class Controller_Member_Profil extends Controller_Member
         $narozeni = $this->date('narozeni')->getPost($request);
 
         if (!$request->post()) {
-            $this->render(
-                'files/View/Member/Profil/PersonalData.inc',
-                [
-                    'login' => User::getUserName(),
-                    'group' => $data['u_group'],
-                    'lock' => $data['u_lock'],
-                    'jmeno' => $data['u_jmeno'],
-                    'prijmeni' => $data['u_prijmeni'],
-                    'pohlavi' => $data['u_pohlavi'],
-                    'email' => $data['u_email'],
-                    'telefon' => $data['u_telefon'],
-                    'narozeni' => $data['u_narozeni'],
-                    'poznamky' => $data['u_poznamky']
-                ]
-            );
+            $this->render('files/View/Member/Profil/PersonalData.inc', [
+                'header' => 'Osobní údaje',
+                'login' => User::getUserName(),
+                'group' => $data['u_group'],
+                'lock' => $data['u_lock'],
+                'jmeno' => $data['u_jmeno'],
+                'prijmeni' => $data['u_prijmeni'],
+                'pohlavi' => $data['u_pohlavi'],
+                'email' => $data['u_email'],
+                'telefon' => $data['u_telefon'],
+                'narozeni' => $data['u_narozeni'],
+                'poznamky' => $data['u_poznamky']
+            ]);
             return;
         }
 
         if (is_object($f = $this->checkData($request, 'edit', $narozeni))) {
             $this->redirect()->setMessage($f->getMessages());
-            $this->render(
-                'files/View/Member/Profil/PersonalData.inc',
-                [
-                    'login' => $request->post('login'),
-                    'group' => $request->post('group'),
-                    'lock' => $request->post('lock'),
-                    'jmeno' => $request->post('jmeno'),
-                    'prijmeni' => $request->post('prijmeni'),
-                    'email' => $request->post('email'),
-                    'telefon' => $request->post('telefon'),
-                    'narozeni' => $request->post('narozeni'),
-                    'poznamky' => $request->post('poznamky')
-                ]
-            );
+            $this->render('files/View/Member/Profil/PersonalData.inc', [
+                'header' => 'Osobní údaje',
+                'login' => $request->post('login'),
+                'group' => $request->post('group'),
+                'lock' => $request->post('lock'),
+                'jmeno' => $request->post('jmeno'),
+                'prijmeni' => $request->post('prijmeni'),
+                'email' => $request->post('email'),
+                'telefon' => $request->post('telefon'),
+                'narozeni' => $request->post('narozeni'),
+                'poznamky' => $request->post('poznamky')
+            ]);
             return;
         }
 
@@ -82,7 +80,9 @@ class Controller_Member_Profil extends Controller_Member
             if ($request->post()) {
                 $this->redirect()->setMessage($f->getMessages());
             }
-            $this->render('files/View/Member/Profil/NewPassword.inc');
+            $this->render('files/View/Member/Profil/NewPassword.inc', [
+                'header' => 'Změna hesla'
+            ]);
             return;
         }
         DBUser::setPassword(
@@ -131,17 +131,15 @@ class Controller_Member_Profil extends Controller_Member
         }
         $skupina = User::getSkupinaData();
         $zaplaceno = User::getZaplaceno();
-        $this->render(
-            'files/View/Member/Profil/Platby.inc',
-            [
-                'colorBox' => $this->colorbox($skupina['s_color_rgb'], $skupina['s_description']),
-                'skupinaData' => $skupina['s_name'],
-                'varSymbol' => User::varSymbol(User::getUserID()),
-                'zaplacenoText' => $zaplaceno === null ? '' : ($zaplaceno ? 'zaplaceno' : 'nezaplaceno!'),
-                'platby' => [],
-                'platbyGroups' => $groupsOut
-            ]
-        );
+        $this->render('files/View/Member/Profil/Platby.inc', [
+            'header' => 'Moje platby',
+            'colorBox' => $this->colorbox($skupina['s_color_rgb'], $skupina['s_description']),
+            'skupinaData' => $skupina['s_name'],
+            'varSymbol' => User::varSymbol(User::getUserID()),
+            'zaplacenoText' => $zaplaceno === null ? '' : ($zaplaceno ? 'zaplaceno' : 'nezaplaceno!'),
+            'platby' => [],
+            'platbyGroups' => $groupsOut
+        ]);
     }
 
     private function checkData($request, $action, $narozeni = null)

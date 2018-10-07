@@ -9,16 +9,15 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
 
     public function view($request)
     {
-        $this->render(
-            'files/View/Admin/Platby/StructureOverview.inc',
-            [
-                'data' => $this->getCategories(),
-                'orphanGroupSkupina' => $this->getOrphanGroupSkupina(),
-                'orphanGroupCategory' => $this->getOrphanGroupCategory(),
-                'orphanCategory' => $this->getOrphanCategory(),
-                'uri' => $request->getLiteralURI()
-            ]
-        );
+        $this->render('files/View/Admin/Platby/StructureOverview.inc', [
+            'header' => 'Správa plateb',
+            'subheader' => 'Struktura plateb',
+            'data' => $this->getCategories(),
+            'orphanGroupSkupina' => $this->getOrphanGroupSkupina(),
+            'orphanGroupCategory' => $this->getOrphanGroupCategory(),
+            'orphanCategory' => $this->getOrphanCategory(),
+            'uri' => $request->getLiteralURI()
+        ]);
     }
 
     protected function getCategories()

@@ -1,5 +1,3 @@
-<?= $this->header('Dokumenty') ?>
-
 <div class="container">
   <?php if ($this->showMenu): ?>
     <form action="" method="GET">

@@ -38,10 +38,10 @@ class Controller_Admin_Akce extends Controller_Admin
             DBAkce::getWithItemCount()
         );
 
-        $this->render(
-            'files/View/Admin/Akce/Overview.inc',
-            ['data' => $data]
-        );
+        $this->render('files/View/Admin/Akce/Overview.inc', [
+            'header' => 'Správa akcí',
+            'data' => $data
+        ]);
     }
 
     public function add($request)
@@ -132,18 +132,15 @@ class Controller_Admin_Akce extends Controller_Admin
         }
 
         $item = DBAkce::getSingleAkce($id);
-        $this->render(
-            'files/View/Admin/RemovePrompt.inc',
-            [
-                'header' => 'Správa akcí',
-                'prompt' => 'Opravdu chcete odstranit akce:',
-                'returnURI' => $request->getReferer() ?: '/admin/akce',
-                'data' => [[
-                    'id' => $item['a_id'],
-                    'text' => $item['a_jmeno']
-                ]]
-            ]
-        );
+        $this->render('files/View/Admin/RemovePrompt.inc', [
+            'header' => 'Správa akcí',
+            'prompt' => 'Opravdu chcete odstranit akce:',
+            'returnURI' => $request->getReferer() ?: '/admin/akce',
+            'data' => [[
+                'id' => $item['a_id'],
+                'text' => $item['a_jmeno']
+            ]]
+        ]);
     }
 
     private function displayForm($request, $data = [])
@@ -164,23 +161,21 @@ class Controller_Admin_Akce extends Controller_Admin
             $dokumenty = [];
         }
 
-        $this->render(
-            'files/View/Admin/Akce/Form.inc',
-            [
-                'dokumenty' => $dokumenty,
-                'header' => $request->getAction() == 'add' ? 'Přidat akci' : 'Upravit akci',
-                'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit',
-                'id' => $data ? $data['a_id'] : null,
-                'jmeno' => $request->post('jmeno') ?: ($data ? $data['a_jmeno'] : ''),
-                'kde' => $request->post('kde') ?: ($data ? $data['a_kde'] : ''),
-                'info' => $request->post('info') ?: ($data ? $data['a_info'] : ''),
-                'od' => $request->post('od') ?: ($data ? $data['a_od'] : ''),
-                'do' => $request->post('do') ?: ($data ? $data['a_do'] : ''),
-                'kapacita' => $request->post('kapacita') ?: ($data ? $data['a_kapacita'] : ''),
-                'lock' => $request->post('lock') ?: ($data ? $data['a_lock'] : ''),
-                'visible' => $request->post('visible') ?: ($data ? $data['a_visible'] : '')
-            ]
-        );
+        $this->render('files/View/Admin/Akce/Form.inc', [
+            'header' => 'Správa akcí',
+            'subheader' => $request->getAction() == 'add' ? 'Přidat akci' : 'Upravit akci',
+            'dokumenty' => $dokumenty,
+            'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit',
+            'id' => $data ? $data['a_id'] : null,
+            'jmeno' => $request->post('jmeno') ?: ($data ? $data['a_jmeno'] : ''),
+            'kde' => $request->post('kde') ?: ($data ? $data['a_kde'] : ''),
+            'info' => $request->post('info') ?: ($data ? $data['a_info'] : ''),
+            'od' => $request->post('od') ?: ($data ? $data['a_od'] : ''),
+            'do' => $request->post('do') ?: ($data ? $data['a_do'] : ''),
+            'kapacita' => $request->post('kapacita') ?: ($data ? $data['a_kapacita'] : ''),
+            'lock' => $request->post('lock') ?: ($data ? $data['a_lock'] : ''),
+            'visible' => $request->post('visible') ?: ($data ? $data['a_visible'] : '')
+        ]);
     }
 
     private function processSave($request)

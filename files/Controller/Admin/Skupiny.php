@@ -23,10 +23,11 @@ class Controller_Admin_Skupiny extends Controller_Admin
             },
             DBSkupiny::get()
         );
-        $this->render(
-            'files/View/Admin/Skupiny/Overview.inc',
-            ['showMenu' => !TISK, 'data' => $data]
-        );
+        $this->render('files/View/Admin/Skupiny/Overview.inc', [
+            'header' => 'Správa skupin',
+            'showMenu' => !TISK,
+            'data' => $data
+        ]);
     }
 
     public function add($request)
@@ -129,15 +130,12 @@ class Controller_Admin_Skupiny extends Controller_Admin
                     )
                 );
             }
-            $this->render(
-                'files/View/Admin/RemovePrompt.inc',
-                [
-                    'header' => 'Správa skupin',
-                    'prompt' => 'Opravdu chcete odstranit skupinu?',
-                    'returnURI' => $request->getReferer() ?: '/admin/skupiny',
-                    'data' => [['id' => $data['s_id'], 'text' => $data['s_name']]]
-                ]
-            );
+            $this->render('files/View/Admin/RemovePrompt.inc', [
+                'header' => 'Správa skupin',
+                'prompt' => 'Opravdu chcete odstranit skupinu?',
+                'returnURI' => $request->getReferer() ?: '/admin/skupiny',
+                'data' => [['id' => $data['s_id'], 'text' => $data['s_name']]]
+            ]);
             return;
         }
         DBSkupiny::delete($id);
@@ -174,18 +172,16 @@ class Controller_Admin_Skupiny extends Controller_Admin
         );
 
         $action = $request->getAction();
-        $this->render(
-            'files/View/Admin/Skupiny/Form.inc',
-            [
-                'id' => $id,
-                'name' => $request->post('name') ?: ($data ? $data['s_name'] : ''),
-                'color' => $request->post('color') ?: ($data ? $data['s_color_rgb'] : ''),
-                'popis' => $request->post('popis') ?: ($data ? $data['s_description'] : ''),
-                'action' => $action,
-                'header' => $action == 'add' ? 'Přidat skupinu' : 'Upravit skupinu',
-                'groups' => $groups
-            ]
-        );
+        $this->render('files/View/Admin/Skupiny/Form.inc', [
+            'header' => 'Správa skupin',
+            'subheader' => $action == 'add' ? 'Přidat skupinu' : 'Upravit skupinu',
+            'id' => $id,
+            'name' => $request->post('name') ?: ($data ? $data['s_name'] : ''),
+            'color' => $request->post('color') ?: ($data ? $data['s_color_rgb'] : ''),
+            'popis' => $request->post('popis') ?: ($data ? $data['s_description'] : ''),
+            'action' => $action,
+            'groups' => $groups
+        ]);
     }
 
     private function getLinkedSkupinaObjects($id)

@@ -1,5 +1,3 @@
-<?= $this->header('Správa párů') ?>
-
 <div class="container">
   <form action="" method="POST">
     <?= $this->table()

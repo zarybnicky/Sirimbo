@@ -1,5 +1,3 @@
-<?= $this->header('Kde trénujeme') ?>
-
 <div class="container">
   <p>
     <h2>Fakultní základní škola Holečkova</h2>

@@ -1,5 +1,3 @@
-<?= $this->header('Změna hesla') ?>
-
 <div class="container">
   <form action="" method="post">
     <table>

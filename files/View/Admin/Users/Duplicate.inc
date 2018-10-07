@@ -1,6 +1,4 @@
-<?= $this->header('Správa uživatelů') ?>
 <div class="container">
-  <h2>Duplicitní uživatelé</h2>
   <form action="" method="POST">
     <?= $this->table()
            ->style('width:100%')

@@ -1,5 +1,3 @@
-<?= $this->header('Nabídka tréninků')?>
-
 <table class="nocolor" style="margin: 0 auto">
   <?php foreach (array_chunk($this->data, 2) as $chunk) : ?>
     <tr>

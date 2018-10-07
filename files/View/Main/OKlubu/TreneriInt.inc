@@ -1,5 +1,3 @@
-<?= $this->header('Kluboví trenéři') ?>
-
 <div class="container">
     <div style="margin-bottom:1.5em;">
         <h2>Mgr. Miroslav Hýža</h2>

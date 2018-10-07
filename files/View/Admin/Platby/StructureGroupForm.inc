@@ -1,5 +1,4 @@
 <?= $this->render('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri]) ?>
-<?= $this->subheader($this->action == 'add' ? 'Přidat kategorii' : 'Upravit kategorii') ?>
 
 <div class="container full">
 <form action="" method="post">

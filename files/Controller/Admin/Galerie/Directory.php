@@ -15,6 +15,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
         }
 
         $this->render('files/View/Admin/Galerie/DisplayDirectory.inc', [
+            'header' => 'Správa fotogalerie',
             'id' => $id,
             'files' => array_map(
                 function ($item) {
@@ -132,16 +133,12 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
         }
 
         $item = DBGalerie::getSingleDir($id);
-        $this->render(
-            'files/View/Admin/RemovePrompt.inc',
-            [
-                'header' => 'Správa galerie',
-                'prompt' => 'Opravdu chcete odstranit složky '
-                    . 'se všemi podsložkami a fotkami:',
-                'returnURI' => $request->getReferer() ?: '/admin/galerie',
-                'data' => [['id' => $item['gd_id'], 'text' => $item['gd_name']]]
-            ]
-        );
+        $this->render('files/View/Admin/RemovePrompt.inc', [
+            'header' => 'Správa galerie',
+            'prompt' => 'Opravdu chcete odstranit složky se všemi podsložkami a fotkami:',
+            'returnURI' => $request->getReferer() ?: '/admin/galerie',
+            'data' => [['id' => $item['gd_id'], 'text' => $item['gd_name']]]
+        ]);
     }
 
     private function displayForm($request, $action)
@@ -157,16 +154,15 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
             DBGalerie::getDirs(true, true)
         );
 
-        $this->render(
-            'files/View/Admin/Galerie/FormDirectory.inc',
-            [
-                'dirs' => $dirs,
-                'action' => $action,
-                'name' => $request->post('name') ?: '',
-                'parent' => $request->post('parent') ?: '',
-                'hidden' => $request->post('hidden') ?: ''
-            ]
-        );
+        $this->render('files/View/Admin/Galerie/FormDirectory.inc', [
+            'header' => 'Správa fotogalerie',
+            'subheader' => ($this->action == 'add' ? 'Přidat' : 'Upravit') . ' složku',
+            'dirs' => $dirs,
+            'action' => $action,
+            'name' => $request->post('name') ?: '',
+            'parent' => $request->post('parent') ?: '',
+            'hidden' => $request->post('hidden') ?: ''
+        ]);
         return;
     }
 

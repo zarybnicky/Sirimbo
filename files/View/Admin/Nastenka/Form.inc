@@ -1,4 +1,3 @@
-<?= $this->header('Správa nástěnky', ($this->action == 'add' ? 'Přidat' : 'Upravit') . ' příspěvek') ?>
 <div class="container">
   <form action="" method="POST">
     <div class="form-group">

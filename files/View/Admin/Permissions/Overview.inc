@@ -1,4 +1,3 @@
-<?= $this->header('Správa oprávnění') ?>
 <div class="container">
   <form action="" method="POST">
     <a href="/admin/permissions/add" class="btn btn-primary">Přidat</a>

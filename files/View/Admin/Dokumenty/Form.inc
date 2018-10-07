@@ -1,5 +1,3 @@
-<?= $this->header('Správa dokumentů') ?>
-
 <div class="container">
   <form action="" method="POST">
     <b><?= $this->name ?></b><br><br>

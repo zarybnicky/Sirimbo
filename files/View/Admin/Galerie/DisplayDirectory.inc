@@ -1,4 +1,3 @@
-<?= $this->header('Správa fotogalerie') ?>
 <div class="container">
   <?php
   if (!count($this->files)) {

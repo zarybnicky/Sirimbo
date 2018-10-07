@@ -1,4 +1,3 @@
-<?= $this->header('Správa skupin', $this->header) ?>
 <div class="container">
   <form action="" method="POST">
     <?= $this->table()

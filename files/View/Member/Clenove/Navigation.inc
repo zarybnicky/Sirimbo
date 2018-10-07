@@ -1,4 +1,3 @@
-<?= $this->header('Přehled členů') ?>
 <?php
 if (TISK) return;
 

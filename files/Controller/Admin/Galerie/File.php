@@ -173,10 +173,12 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
             },
             DBGalerie::getDirs(true, true)
         );
-        $this->render(
-            'files/View/Admin/Galerie/Upload.inc',
-            ['dirs' => $dirs, 'dir' => $request->get('dir') ?: '0']
-        );
+        $this->render('files/View/Admin/Galerie/Upload.inc', [
+            'header' => 'Správa fotogalerie',
+            'subheader' => 'Upload',
+            'dirs' => $dirs,
+            'dir' => $request->get('dir') ?: '0'
+        ]);
         return;
     }
 
@@ -194,16 +196,15 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
             $dirs
         );
 
-        $this->render(
-            'files/View/Admin/Galerie/FormFile.inc',
-            [
-                'id' => $id,
-                'dirs' => $dirs,
-                'referer' => $request->getReferer(),
-                'parent' => $request->post('parent'),
-                'name' => $request->post('name')
-            ]
-        );
+        $this->render('files/View/Admin/Galerie/FormFile.inc', [
+            'header' => 'Správa fotogalerie',
+            'subheader' => 'Upravit soubor',
+            'id' => $id,
+            'dirs' => $dirs,
+            'referer' => $request->getReferer(),
+            'parent' => $request->post('parent'),
+            'name' => $request->post('name')
+        ]);
     }
 
     private function _checkData()
@@ -214,7 +215,8 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
         $form->checkBool(
             $request->post('parent') >= 0 && is_numeric($request->post('parent'))
             && DBGalerie::getSingleDir($request->post('parent')),
-            'Zadaná nadsložka není platná', 'parent'
+            'Zadaná nadsložka není platná',
+            'parent'
         );
 
         return $form->isValid() ? [] : $form;

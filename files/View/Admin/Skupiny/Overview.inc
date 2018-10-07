@@ -1,4 +1,3 @@
-<?= $this->header('Správa skupin') ?>
 <div class="container">
   <a class="btn btn-primary" href="/admin/skupiny/add">Přidat skupinu</a>
   <?= $this->table()

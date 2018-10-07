@@ -1,5 +1,4 @@
 <?= $this->render('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri]) ?>
-<?= $this->subheader('Dočasná statistika - členové podle skupin') ?>
 
 <div class="container">
 <?php

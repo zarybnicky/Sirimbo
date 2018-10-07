@@ -56,30 +56,28 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
                 'removeButton' => $this->submit('Přidat')->render()
             ];
 
-            $this->render(
-                'files/View/Admin/Nabidka/Detail.inc',
-                [
-                    'nabidka' => [
-                        'id' => $data['n_id'],
-                        'fullName' => $data['u_jmeno'] . ' ' . $data['u_prijmeni'],
-                        'datum' => (
-                            formatDate($data['n_od'])
-                            . ($data['n_od'] != $data['n_do']
-                               ? ' - ' . formatDate($data['n_do'])
-                               : '')
-                        ),
-                        'canEdit' => false,
-                        'hourMax' => $data['n_max_pocet_hod'],
-                        'hourTotal' => $data['n_pocet_hod'],
-                        'hourReserved' => $obsazeno ?: '',
-                        'hourFree' => $data['n_pocet_hod'] - $obsazeno
-                    ],
-                    'obsazeno' => $obsazeno,
-                    'users' => $users,
-                    'items' => $items,
-                    'backlink' => $request->getReferer()
-                ]
-            );
+            $this->render('files/View/Admin/Nabidka/Detail.inc', [
+                'header' => 'Správa nabídky',
+                'nabidka' => [
+                    'id' => $data['n_id'],
+                    'fullName' => $data['u_jmeno'] . ' ' . $data['u_prijmeni'],
+                    'datum' => (
+                        formatDate($data['n_od'])
+                        . ($data['n_od'] != $data['n_do']
+                           ? ' - ' . formatDate($data['n_do'])
+                           : '')
+                    ),
+                    'canEdit' => false,
+                    'hourMax' => $data['n_max_pocet_hod'],
+                    'hourTotal' => $data['n_pocet_hod'],
+                    'hourReserved' => $obsazeno ?: '',
+                    'hourFree' => $data['n_pocet_hod'] - $obsazeno
+                ],
+                'obsazeno' => $obsazeno,
+                'users' => $users,
+                'items' => $items,
+                'backlink' => $request->getReferer()
+            ]);
             return;
         }
 

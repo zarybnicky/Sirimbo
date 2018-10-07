@@ -54,18 +54,15 @@ class Controller_Admin_Users extends Controller_Admin
         }
 
         $item = DBUser::getUserData($id);
-        $this->render(
-            'files/View/Admin/RemovePrompt.inc',
-            [
-                'header' => 'Správa uživatelů',
-                'prompt' => 'Opravdu chcete odstranit uživatele:',
-                'returnURI' => $request->getReferer() ?: '/admin/users',
-                'data' => [[
-                    'id' => $item['u_id'],
-                    'text' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'] . ' - ' . $item['u_login']
-                ]]
-            ]
-        );
+        $this->render('files/View/Admin/RemovePrompt.inc', [
+            'header' => 'Správa uživatelů',
+            'prompt' => 'Opravdu chcete odstranit uživatele:',
+            'returnURI' => $request->getReferer() ?: '/admin/users',
+            'data' => [[
+                'id' => $item['u_id'],
+                'text' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'] . ' - ' . $item['u_login']
+            ]]
+        ]);
     }
 
     public function add($request)
@@ -179,7 +176,7 @@ class Controller_Admin_Users extends Controller_Admin
         $users = DBUser::getNewUsers();
         if (empty($users)) {
             $this->render('files/View/Empty.inc', [
-                'nadpis' => 'Správa uživatelů',
+                'header' => 'Správa uživatelů',
                 'notice' => 'Žádní nepotvrzení uživatelé nejsou v databázi.'
             ]);
             return;
@@ -211,10 +208,11 @@ class Controller_Admin_Users extends Controller_Admin
             $users
         );
 
-        $this->render(
-            'files/View/Admin/Users/Unconfirmed.inc',
-            ['data' => $users]
-        );
+        $this->render('files/View/Admin/Users/Unconfirmed.inc', [
+            'header' => 'Správa uživatelů',
+            'subheader' => 'Nepotvrzení uživatelé',
+            'data' => $users
+        ]);
     }
 
     public function duplicate($request)
@@ -235,10 +233,11 @@ class Controller_Admin_Users extends Controller_Admin
             },
             DBUser::getDuplicateUsers()
         );
-        $this->render(
-            'files/View/Admin/Users/Duplicate.inc',
-            ['data' => $users]
-        );
+        $this->render('files/View/Admin/Users/Duplicate.inc', [
+            'header' => 'Správa uživatelů',
+            'subheader' => 'Duplicitní uživatelé',
+            'data' => $users
+        ]);
     }
 
     public function statistiky($request)
@@ -266,10 +265,11 @@ class Controller_Admin_Users extends Controller_Admin
             ['group' => 'Aktivní tanečníci', 'count' => count($dancers)]
         );
 
-        $this->render(
-            'files/View/Admin/Users/Statistiky.inc',
-            ['data' => $data]
-        );
+        $this->render('files/View/Admin/Users/Statistiky.inc', [
+            'header' => 'Správa uživatelů',
+            'subheader' => 'Statistiky',
+            'data' => $data
+        ]);
     }
 
     public function temporary($request)
@@ -414,24 +414,22 @@ class Controller_Admin_Users extends Controller_Admin
             $pager->getItems()
         );
 
-        $this->render(
-            'files/View/Admin/Users/Overview.inc',
-            [
-                'showMenu' => !TISK,
-                'groupOptions' => $groupOptions,
-                'skupinyOptions' => $skupinyOptions,
-                'sortOptions' => $sortOptions,
-                'statusOptions' => $statusOptions,
-                'data' => $data,
-                'navigation' => $pager->getNavigation($request->get()),
-                'view' => $action,
-                'status' => $request->get('status') ?: '',
-                'skupina' => $request->get('skupina') ?: '',
-                'group' => $request->get('group') ?: '',
-                'view' => $request->get('view') ?: '',
-                'sort' => $request->get('sort') ?: ''
-            ]
-        );
+        $this->render('files/View/Admin/Users/Overview.inc', [
+            'header' => 'Správa uživatelů',
+            'showMenu' => !TISK,
+            'groupOptions' => $groupOptions,
+            'skupinyOptions' => $skupinyOptions,
+            'sortOptions' => $sortOptions,
+            'statusOptions' => $statusOptions,
+            'data' => $data,
+            'navigation' => $pager->getNavigation($request->get()),
+            'view' => $action,
+            'status' => $request->get('status') ?: '',
+            'skupina' => $request->get('skupina') ?: '',
+            'group' => $request->get('group') ?: '',
+            'view' => $request->get('view') ?: '',
+            'sort' => $request->get('sort') ?: ''
+        ]);
         return;
     }
 
@@ -453,29 +451,28 @@ class Controller_Admin_Users extends Controller_Admin
             },
             DBSkupiny::get()
         );
-        $this->render(
-            'files/View/Admin/Users/Form.inc',
-            [
-                'action' => $request->getAction(),
-                'groups' => $groups,
-                'skupiny' => $skupiny,
-                'login' => $request->post('login') ?: '',
-                'pass' => $request->post('pass') ?: '',
-                'jmeno' => $request->post('jmeno') ?: '',
-                'prijmeni' => $request->post('prijmeni') ?: '',
-                'pohlavi' => $request->post('pohlavi') ?: '',
-                'email' => $request->post('email') ?: '',
-                'telefon' => $request->post('telefon') ?: '',
-                'narozeni' => $request->post('narozeni') ?: '',
-                'poznamky' => $request->post('poznamky') ?: '',
-                'lock' => $request->post('lock') ?: '',
-                'ban' => $request->post('ban') ?: '',
-                'dancer' => $request->post('dancer') ?: '',
-                'system' => $request->post('system') ?: '',
-                'group' => $request->post('group') ?: '',
-                'skupina' => $request->post('skupina') ?: ''
-            ]
-        );
+        $this->render('files/View/Admin/Users/Form.inc', [
+            'header' => 'Správa uživatelů',
+            'subheader' => ($request->getAction() == 'add' ? 'Přidat' : 'Upravit') . ' uživatele',
+            'action' => $request->getAction(),
+            'groups' => $groups,
+            'skupiny' => $skupiny,
+            'login' => $request->post('login') ?: '',
+            'pass' => $request->post('pass') ?: '',
+            'jmeno' => $request->post('jmeno') ?: '',
+            'prijmeni' => $request->post('prijmeni') ?: '',
+            'pohlavi' => $request->post('pohlavi') ?: '',
+            'email' => $request->post('email') ?: '',
+            'telefon' => $request->post('telefon') ?: '',
+            'narozeni' => $request->post('narozeni') ?: '',
+            'poznamky' => $request->post('poznamky') ?: '',
+            'lock' => $request->post('lock') ?: '',
+            'ban' => $request->post('ban') ?: '',
+            'dancer' => $request->post('dancer') ?: '',
+            'system' => $request->post('system') ?: '',
+            'group' => $request->post('group') ?: '',
+            'skupina' => $request->post('skupina') ?: ''
+        ]);
     }
 
     private function checkData($request, $action = 'add')

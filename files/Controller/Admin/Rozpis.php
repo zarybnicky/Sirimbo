@@ -50,10 +50,11 @@ class Controller_Admin_Rozpis extends Controller_Admin
             $data
         );
 
-        $this->render(
-            'files/View/Admin/Rozpis/Overview.inc',
-            ['showMenu' => !TISK, 'data' => $data]
-        );
+        $this->render('files/View/Admin/Rozpis/Overview.inc', [
+            'header' => 'Správa rozpisů',
+            'showMenu' => !TISK,
+            'data' => $data
+        ]);
     }
 
     public function add($request)
@@ -160,19 +161,18 @@ class Controller_Admin_Rozpis extends Controller_Admin
                  ? DBUser::getUsersByPermission('rozpis', P_OWNED)
                  : [DBUser::getUserData(User::getUserID())];
 
-        $this->render(
-            'files/View/Admin/Rozpis/Form.inc',
-            [
-                'action' => $request->getAction(),
-                'isAdmin' => $isAdmin,
-                'treneri' => $treneri,
-                'trener' => $request->post('trener') ?: ($data ? $data['r_trener'] : ''),
-                'kde' => $request->post('kde') ?: ($data ? $data['r_kde'] : ''),
-                'datum' => $request->post('datum') ?: ($data ? $data['r_datum'] : ''),
-                'visible' => $request->post('visible') ?: ($data ? $data['r_visible'] : ''),
-                'lock' => $request->post('lock') ?: ($data ? $data['r_lock'] : '')
-            ]
-        );
+        $this->render('files/View/Admin/Rozpis/Form.inc', [
+            'header' => 'Správa rozpisů',
+            'subheader' => ($this->action == 'add' ? 'Přidat' : 'Upravit') . ' rozpis',
+            'action' => $request->getAction(),
+            'isAdmin' => $isAdmin,
+            'treneri' => $treneri,
+            'trener' => $request->post('trener') ?: ($data ? $data['r_trener'] : ''),
+            'kde' => $request->post('kde') ?: ($data ? $data['r_kde'] : ''),
+            'datum' => $request->post('datum') ?: ($data ? $data['r_datum'] : ''),
+            'visible' => $request->post('visible') ?: ($data ? $data['r_visible'] : ''),
+            'lock' => $request->post('lock') ?: ($data ? $data['r_lock'] : '')
+        ]);
     }
 
     private function checkData($request)

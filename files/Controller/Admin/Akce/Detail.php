@@ -74,9 +74,10 @@ class Controller_Admin_Akce_Detail extends Controller_Admin_Akce
             'removeButton' => $this->submit('Přidat')->data('add', 'add')
         ];
 
-        $this->render(
-            'files/View/Admin/Akce/Detail.inc',
-            ['data' => $data, 'items' => $items]
-        );
+        $this->render('files/View/Admin/Akce/Detail.inc', [
+            'header' => 'Správa akcí',
+            'data' => $data,
+            'items' => $items
+        ]);
     }
 }

@@ -1,5 +1,3 @@
-<?= $this->header('Změna třídy a bodů') ?>
-
 <div class="container">
   <?= $this->partnerRequest()->getAll() ?>
 

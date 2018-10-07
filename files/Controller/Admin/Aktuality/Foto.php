@@ -24,7 +24,7 @@ class Controller_Admin_Aktuality_Foto extends Controller_Admin_Aktuality
                 }
             }
 
-            if (!($dir = DBGalerie::getSingleDir($request->get('dir')))) {
+            if (!DBGalerie::getSingleDir($request->get('dir'))) {
                 $this->redirect(
                     '/admin/aktuality/foto/' . $id . '?dir=0',
                     'Taková složka neexistuje'
@@ -47,16 +47,13 @@ class Controller_Admin_Aktuality_Foto extends Controller_Admin_Aktuality
                 $dirs_out[$item['gd_id']] = str_repeat("&nbsp;&nbsp;", $item['gd_level'] - 1) . $item['gd_name'];
             }
 
-            $this->render(
-                'files/View/Admin/Aktuality/FormFoto.inc',
-                [
-                    'nadpis' => $dir['gd_name'],
-                    'photos' => $photos,
-                    'dir' => $request->get('dir') ?: '',
-                    'dirs' => $dirs_out,
-                    'checked' => $article['at_foto_main']
-                ]
-            );
+            $this->render('files/View/Admin/Aktuality/FormFoto.inc', [
+                'header' => 'Správa článků',
+                'photos' => $photos,
+                'dir' => $request->get('dir') ?: '',
+                'dirs' => $dirs_out,
+                'checked' => $article['at_foto_main']
+            ]);
             return;
         }
         if ($request->get('dir') === null) {

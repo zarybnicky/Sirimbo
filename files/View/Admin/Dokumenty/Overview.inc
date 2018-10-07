@@ -1,5 +1,3 @@
-<?= $this->header('Správa dokumentů') ?>
-
 <div class="container">
   <form action="/admin/dokumenty" method="POST">
     <?= $this->table()

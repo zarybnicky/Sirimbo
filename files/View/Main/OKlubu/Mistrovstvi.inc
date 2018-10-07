@@ -1,5 +1,3 @@
-<?= $this->header('Výsledky našich párů na Mistrovství ČR') ?>
-
 <div class="container">
   <style type="text/css">
    .mcr td {text-align:center;}

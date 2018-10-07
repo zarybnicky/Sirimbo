@@ -1,5 +1,3 @@
-<?= $this->header($this->jmeno) ?>
-
 <div class="container article">
   <small>
     <?= formatTimestamp($this->timestamp)?>

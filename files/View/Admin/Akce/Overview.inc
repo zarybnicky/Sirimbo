@@ -1,4 +1,3 @@
-<?= $this->header('Správa akcí') ?>
 <div class="container">
     <form action="" method="POST">
         <a href="/admin/akce/add" class="btn btn-primary">Přidat</a>

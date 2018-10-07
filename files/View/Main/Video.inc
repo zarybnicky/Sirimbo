@@ -1,5 +1,3 @@
-<?= $this->header('Video') ?>
-
 <style>
  .video-item .thumb {
      float:left;

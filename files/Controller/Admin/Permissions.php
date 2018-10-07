@@ -21,10 +21,10 @@ class Controller_Admin_Permissions extends Controller_Admin
             },
             DBPermissions::getGroups()
         );
-        $this->render(
-            'files/View/Admin/Permissions/Overview.inc',
-            ['data' => $data]
-        );
+        $this->render('files/View/Admin/Permissions/Overview.inc', [
+            'header' => 'Správa oprávnění',
+            'data' => $data
+        ]);
     }
 
     public function add($request)
@@ -148,15 +148,18 @@ class Controller_Admin_Permissions extends Controller_Admin
             Settings::$permissions
         );
 
-        $this->render(
-            'files/View/Admin/Permissions/Form.inc',
-            [
-                'action' => $request->getAction(),
-                'name' => $request->post('name') ?: ($data ? $data['pe_name'] : ''),
-                'description' => $request->post('description') ?: ($data ? $data['pe_description'] : ''),
-                'settings' => $settings
-            ]
-        );
+        $this->render('files/View/Admin/Permissions/Form.inc', [
+            'header' => 'Správa oprávnění',
+            'subheader' => (
+                ($this->action == 'add')
+                ? 'Přidat uživatelskou skupinu'
+                : 'Upravit uživatelskou skupinu'
+            ),
+            'action' => $request->getAction(),
+            'name' => $request->post('name') ?: ($data ? $data['pe_name'] : ''),
+            'description' => $request->post('description') ?: ($data ? $data['pe_description'] : ''),
+            'settings' => $settings
+        ]);
     }
 
     private function checkData($request)

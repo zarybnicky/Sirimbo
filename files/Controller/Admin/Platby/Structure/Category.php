@@ -36,14 +36,13 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             }
         }
 
-        $this->render(
-            'files/View/Admin/Platby/StructureSymbolOverview.inc',
-            [
-                'data' => $this->getCategories(false),
-                'archived' => $this->getCategories(true),
-                'uri' => $request->getLiteralURI()
-            ]
-        );
+        $this->render('files/View/Admin/Platby/StructureSymbolOverview.inc', [
+            'header' => 'Správa plateb',
+            'subheader' => 'Specifické symboly',
+            'data' => $this->getCategories(false),
+            'archived' => $this->getCategories(true),
+            'uri' => $request->getLiteralURI()
+        ]);
     }
 
     protected function getCategories($archived = false)
@@ -278,15 +277,14 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                     )
                 );
             }
-            $this->render(
-                'files/View/Admin/Platby/StructureSymbolRemove.inc',
-                [
-                    'id' => $id,
-                    'name' => $data['pc_name'],
-                    'referer' => $request->getReferer(),
-                    'uri' => $request->getLiteralURI()
-                ]
-            );
+            $this->render('files/View/Admin/Platby/StructureSymbolRemove.inc', [
+                'header' => 'Správa plateb',
+                'subheader' => 'Specifické symboly_',
+                'id' => $id,
+                'name' => $data['pc_name'],
+                'referer' => $request->getReferer(),
+                'uri' => $request->getLiteralURI()
+            ]);
             return;
         }
         DBPlatbyCategory::delete($id);
@@ -330,24 +328,23 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             DBPlatbyGroup::getGroups()
         );
 
-        $this->render(
-            'files/View/Admin/Platby/StructureSymbolForm.inc',
-            [
-                'id' => $id,
-                'action' => $action,
-                'groups' => $groups,
-                'referer' => $request->getReferer(),
-                'name' => $request->post('name') ?: '',
-                'symbol' => $request->post('symbol') ?: '',
-                'amount' => $request->post('amount') ?: '',
-                'dueDate' => $request->post('dueDate') ?: '',
-                'validRange' => $request->post('validRange') ?: '',
-                'usePrefix' => $request->post('usePrefix') ?: '',
-                'archive' => $request->post('archive') ?: '',
-                'visible' => $request->post('visible') ?: '',
-                'uri' => $request->getLiteralURI()
-            ]
-        );
+        $this->render('files/View/Admin/Platby/StructureSymbolForm.inc', [
+            'header' => 'Správa plateb',
+            'subheader' => ($this->action == 'add' ? 'Přidat' : 'Upravit') . ' specifický symbol',
+            'id' => $id,
+            'action' => $action,
+            'groups' => $groups,
+            'referer' => $request->getReferer(),
+            'name' => $request->post('name') ?: '',
+            'symbol' => $request->post('symbol') ?: '',
+            'amount' => $request->post('amount') ?: '',
+            'dueDate' => $request->post('dueDate') ?: '',
+            'validRange' => $request->post('validRange') ?: '',
+            'usePrefix' => $request->post('usePrefix') ?: '',
+            'archive' => $request->post('archive') ?: '',
+            'visible' => $request->post('visible') ?: '',
+            'uri' => $request->getLiteralURI()
+        ]);
     }
 
     protected function checkPost($request, $action, $id)

@@ -20,6 +20,6 @@ class Controller_Error extends Controller_Abstract
             $notice = "Chybová stránka s daným ID nebyla nalezena";
         }
         $this->redirect()->setMessage($notice);
-        $this->render('files/View/Empty.inc', ['nadpis' => 'Chyba']);
+        $this->render('files/View/Empty.inc', ['header' => 'Chyba']);
     }
 }

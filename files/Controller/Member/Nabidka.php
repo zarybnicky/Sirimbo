@@ -61,20 +61,17 @@ class Controller_Member_Nabidka extends Controller_Member
         );
 
         if (empty($data)) {
-            $this->render(
-                'files/View/Empty.inc',
-                [
-                    'nadpis' => 'Nabídka tréninků',
-                    'notice' => 'Žádná nabídka k dispozici'
-                ]
-            );
+            $this->render('files/View/Empty.inc', [
+                'header' => 'Nabídka tréninků',
+                'notice' => 'Žádná nabídka k dispozici'
+            ]);
             return;
         }
 
-        $this->render(
-            'files/View/Member/Nabidka/Overview.inc',
-            ['data' => $data]
-        );
+        $this->render('files/View/Member/Nabidka/Overview.inc', [
+            'header' => 'Nabídka tréninků',
+            'data' => $data
+        ]);
     }
 
     private function checkData($request, $data)

@@ -37,18 +37,17 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             $data
         );
 
-        $this->render(
-            'files/View/Admin/Platby/ItemsOverview.inc',
-            [
-                'users' => DBUser::getUsers(),
-                'categories' => $this->getCategories(),
-                'data' => $data,
-                'uri' => $request->getLiteralURI(),
-                'user' => $request->get('user') ?: '',
-                'category' => $request->get('category') ?: '',
-                'date' => $request->get('date') ?: ''
-            ]
-        );
+        $this->render('files/View/Admin/Platby/ItemsOverview.inc', [
+            'header' => 'Správa plateb',
+            'subheader' => 'Jednotlivé platby',
+            'users' => DBUser::getUsers(),
+            'categories' => $this->getCategories(),
+            'data' => $data,
+            'uri' => $request->getLiteralURI(),
+            'user' => $request->get('user') ?: '',
+            'category' => $request->get('category') ?: '',
+            'date' => $request->get('date') ?: ''
+        ]);
     }
 
     public function add($request)
@@ -124,19 +123,16 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             $this->redirect('/admin/platby/items', 'Platby odebrány');
         }
         $item = DBPlatbyItem::getSingle($id, true);
-        $this->render(
-            'files/View/Admin/RemovePrompt.inc',
-            [
-                'header' => 'Správa plateb',
-                'prompt' => 'Opravdu chcete odstranit platbu:',
-                'returnURI' => $request->getReferer() ?: '/admin/platby/items',
-                'data' => [[
-                    'id' => $item['pi_id'],
-                    'text' => $item['u_jmeno'] . ' ' . $item['u_prijmeni']
-                    . ' - ' . $item['pc_name']
-                ]]
-            ]
-        );
+        $this->render('files/View/Admin/RemovePrompt.inc', [
+            'header' => 'Správa plateb',
+            'prompt' => 'Opravdu chcete odstranit platbu:',
+            'returnURI' => $request->getReferer() ?: '/admin/platby/items',
+            'data' => [[
+                'id' => $item['pi_id'],
+                'text' => $item['u_jmeno'] . ' ' . $item['u_prijmeni']
+                . ' - ' . $item['pc_name']
+            ]]
+        ]);
     }
 
     private function displayForm($id, $request)
@@ -153,23 +149,22 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         }
         $users = $this->getUsers();
         $categories = $this->getCategories();
-        $this->render(
-            'files/View/Admin/Platby/ItemsForm.inc',
-            [
-                'action' => $request->getAction(),
-                'referer' => $request->getReferer(),
-                'id' => $id,
-                'raw' => $raw,
-                'users' => $users,
-                'categories' => $categories,
-                'date' => $request->post('date') ?: '',
-                'amount' => $request->post('amount') ?: '',
-                'variable' => $request->post('variable') ?: '',
-                'specific' => $request->post('specific') ?: '',
-                'prefix' => $request->post('prefix') ?: '',
-                'uri' => $request->getLiteralURI()
-            ]
-        );
+        $this->render('files/View/Admin/Platby/ItemsForm.inc', [
+            'header' => 'Správa plateb',
+            'subheader' => 'Jednotlivé platby',
+            'action' => $request->getAction(),
+            'referer' => $request->getReferer(),
+            'id' => $id,
+            'raw' => $raw,
+            'users' => $users,
+            'categories' => $categories,
+            'date' => $request->post('date') ?: '',
+            'amount' => $request->post('amount') ?: '',
+            'variable' => $request->post('variable') ?: '',
+            'specific' => $request->post('specific') ?: '',
+            'prefix' => $request->post('prefix') ?: '',
+            'uri' => $request->getLiteralURI()
+        ]);
     }
 
     private function getCategories()

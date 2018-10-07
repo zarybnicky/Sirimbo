@@ -34,6 +34,7 @@ class Controller_Admin_Aktuality extends Controller_Admin
             $data
         );
         $this->render('files/View/Admin/Aktuality/Overview.inc', [
+            'header' => 'Správa aktualit',
             'data' => $data,
             'f' => $request->get('f') ?: '',
             'showMenu' => !TISK
@@ -44,6 +45,8 @@ class Controller_Admin_Aktuality extends Controller_Admin
     {
         if (!$request->post()) {
             $this->render('files/View/Admin/Aktuality/Form.inc', [
+                'header' => 'Správa aktualit',
+                'subheader' => ($this->action == 'add' ? 'Přidat' : 'Upravit') . ' článek',
                 'action' => $request->getAction(),
                 'category' => '',
                 'name' => '',
@@ -83,16 +86,15 @@ class Controller_Admin_Aktuality extends Controller_Admin
         Permissions::checkError('aktuality', P_OWNED, $data['at_kdo']);
 
         if (!$request->post()) {
-            $this->render(
-                'files/View/Admin/Aktuality/Form.inc',
-                [
-                    'action' => $request->getAction(),
-                    'category' => $data['at_kat'],
-                    'name' => $data['at_jmeno'],
-                    'summary' => $data['at_preview'],
-                    'text' => $data['at_text']
-                ]
-            );
+            $this->render('files/View/Admin/Aktuality/Form.inc', [
+                'header' => 'Správa aktualit',
+                'subheader' => ($this->action == 'add' ? 'Přidat' : 'Upravit') . ' článek',
+                'action' => $request->getAction(),
+                'category' => $data['at_kat'],
+                'name' => $data['at_jmeno'],
+                'summary' => $data['at_preview'],
+                'text' => $data['at_text']
+            ]);
             return;
         }
 

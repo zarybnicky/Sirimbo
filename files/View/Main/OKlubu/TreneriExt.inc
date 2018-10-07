@@ -1,5 +1,3 @@
-<?= $this->header('Externí trenéři') ?>
-
 <div class="container">
   <div style="margin-bottom:2em;">
     <h2>Ing. Jaroslav Kučera</h2>

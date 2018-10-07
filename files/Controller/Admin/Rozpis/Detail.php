@@ -106,17 +106,15 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
             $nabidka['items'] = $nabidka_items;
         }
 
-        $this->render(
-            'files/View/Admin/Rozpis/Detail.inc',
-            [
-                'data' => $data,
-                'users' => $users,
-                'items' => $items,
-                'selected_nabidka' => $request->get('n') ?: '',
-                'nabidky' => $nabidky_select,
-                'nabidka' => isset($nabidka) ? $nabidka : []
-            ]
-        );
+        $this->render('files/View/Admin/Rozpis/Detail.inc', [
+            'header' => 'Správa rozpisů',
+            'data' => $data,
+            'users' => $users,
+            'items' => $items,
+            'selected_nabidka' => $request->get('n') ?: '',
+            'nabidky' => $nabidky_select,
+            'nabidka' => isset($nabidka) ? $nabidka : []
+        ]);
     }
 
     protected function processPost($request, $id, $data, $items)

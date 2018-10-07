@@ -49,9 +49,11 @@ class Controller_Admin_Platby_Overview extends Controller_Admin_Platby
             $skupina['info']['count'] = count($skupina['users']);
         }
 
-        $this->render(
-            'files/View/Admin/Platby/Statistics.inc',
-            ['data' => $skupiny, 'uri' => $request->getLiteralURI()]
-        );
+        $this->render('files/View/Admin/Platby/Statistics.inc', [
+            'header' => 'Správa plateb',
+            'subheader' => 'Dočasná statistika - členové podle skupin',
+            'data' => $skupiny,
+            'uri' => $request->getLiteralURI()
+        ]);
     }
 }

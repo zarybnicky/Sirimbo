@@ -1,5 +1,3 @@
-<?= $this->header('Klubové akce') ?>
-
 <div class="container">
   <style type="text/css">
    .unit {

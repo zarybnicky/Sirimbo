@@ -1,4 +1,3 @@
-<?= $this->header('Správa článků') ?>
 <div class="container">
   <form action="" method="get">
     <?= $this->select('dir')

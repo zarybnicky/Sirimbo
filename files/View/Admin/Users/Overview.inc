@@ -1,4 +1,3 @@
-<?= $this->header('Správa uživatelů') ?>
 <div class="container">
 
 <?php if ($this->showMenu): ?>

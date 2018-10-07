@@ -13,16 +13,14 @@ class Controller_Member_Clenove extends Controller_Member
         if (!$id || !($data = DBUser::getUserData($id))) {
             $this->redirect('/member/clenove/structure');
         }
-        $this->render(
-            'files/View/Member/Clenove/Single.inc',
-            [
-                'fullName' => $data['u_prijmeni'] . ', ' . $data['u_jmeno'],
-                'email' => $data['u_email'],
-                'telefon' => $data['u_telefon'],
-                'referer' => $request->getReferer(),
-                'uri' => $request->getLiteralURI()
-            ]
-        );
+        $this->render('files/View/Member/Clenove/Single.inc', [
+            'header' => 'Přehled členů',
+            'fullName' => $data['u_prijmeni'] . ', ' . $data['u_jmeno'],
+            'email' => $data['u_email'],
+            'telefon' => $data['u_telefon'],
+            'referer' => $request->getReferer(),
+            'uri' => $request->getLiteralURI()
+        ]);
     }
 
     public function skupiny($request)
@@ -49,10 +47,11 @@ class Controller_Member_Clenove extends Controller_Member
             }
             $skupiny[$currentKey]['userCount']++;
         }
-        $this->render(
-            'files/View/Member/Clenove/SkupinyList.inc',
-            ['data' => $skupiny, 'uri' => $request->getLiteralURI()]
-        );
+        $this->render('files/View/Member/Clenove/SkupinyList.inc', [
+            'header' => 'Přehled členů',
+            'data' => $skupiny,
+            'uri' => $request->getLiteralURI()
+        ]);
     }
 
     public function seznam($request)
@@ -64,13 +63,11 @@ class Controller_Member_Clenove extends Controller_Member
             },
             DBUser::getActiveUsers()
         );
-        $this->render(
-            'files/View/Member/Clenove/UserList.inc',
-            [
-                'data' => $data,
-                'uri' => $request->getLiteralURI()
-            ]
-        );
+        $this->render('files/View/Member/Clenove/UserList.inc', [
+            'header' => 'Přehled členů',
+            'data' => $data,
+            'uri' => $request->getLiteralURI()
+        ]);
     }
 
     public function structure($request)
@@ -121,9 +118,10 @@ class Controller_Member_Clenove extends Controller_Member
             }
         }
 
-        $this->render(
-            'files/View/Member/Clenove/Structure.inc',
-            ['data' => $skupiny, 'uri' => $request->getLiteralURI()]
-        );
+        $this->render('files/View/Member/Clenove/Structure.inc', [
+            'header' => 'Přehled členů',
+            'data' => $skupiny,
+            'uri' => $request->getLiteralURI()
+        ]);
     }
 }

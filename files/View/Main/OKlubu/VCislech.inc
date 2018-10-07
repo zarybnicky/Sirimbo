@@ -1,5 +1,3 @@
-<?= $this->header('Úspěchy v číslech') ?>
-
 <div class="container">
   <h2>Mistrovství České republiky:</h2>
   <h3>kategorie junior a mládež</h3>

@@ -1,5 +1,3 @@
-<?= $this->header('Žebříček párů') ?>
-
 <div class="container">
   <table>
     <tr>

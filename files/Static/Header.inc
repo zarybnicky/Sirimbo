@@ -27,7 +27,7 @@
         <link rel="stylesheet" type="text/css" href="/style/leaflet.css" />
         <link rel="stylesheet" type="text/css" href="/style/style.css" />
         <title>
-            <?= $this->html_title ? "{$this->html_title} | TK Olymp Olomouc" : 'TK Olymp Olomouc' ?>
+            <?= isset($this->header) ? "{$this->header} | TK Olymp Olomouc" : 'TK Olymp Olomouc' ?>
         </title>
     </head>
     <body>
@@ -54,6 +54,17 @@
           </div>
         </div>
       </nav>
+
+      <?php if (isset($this->header)) : ?>
+        <div class="header-section">
+          <div class="container full">
+            <h1><?= $this->header ?></h1>
+            <?php if (isset($this->subheader)) : ?>
+              <h2><?= $this->subheader ?></h2>
+            <?php endif ?>
+          </div>
+        </div>
+      <?php endif ?>
 
       <?php if ($notice = $this->redirect()->getMessage()): ?>
         <div class="container"><div class="row"><?= $this->notice($notice) ?></div></div>

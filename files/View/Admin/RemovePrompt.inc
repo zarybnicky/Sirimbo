@@ -1,8 +1,7 @@
-<?= $this->header($this->header) ?>
 <div class="container">
     <form action="" method="POST">
         <?= $this->prompt ?><br/><br/>
-        <?php foreach ($this->data as $row): ?>
+        <?php foreach ($this->data as $row) : ?>
             <?= $row['text']?>
             <?= $this->hidden('data[]', $row['id']) ?>
             <br />

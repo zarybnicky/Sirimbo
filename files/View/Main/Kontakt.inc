@@ -1,5 +1,3 @@
-<?= $this->header('Kontakty') ?>
-
 <div class="container">
     <style type="text/css">
      table.k {border:none;}

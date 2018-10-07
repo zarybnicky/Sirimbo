@@ -1,4 +1,3 @@
-<?= $this->header('Správa akcí') ?>
 <div class="container full">
     <form action="" method="POST">
         <?= $this->render('files/View/Member/Akce/Header.inc', $this->data) ?>

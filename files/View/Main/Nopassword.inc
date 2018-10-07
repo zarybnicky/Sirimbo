@@ -1,5 +1,3 @@
-<?= $this->header('Zapomenuté heslo') ?>
-
 <div class="container">
     <p>
         Pokud jste zapomněli heslo, pošleme Vám nové na e-mail, který

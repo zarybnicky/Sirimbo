@@ -16,6 +16,9 @@ class Controller_Video extends Controller_Abstract
             },
             DBVideo::getAll()
         );
-        $this->render('files/View/Main/Video.inc', ['data' => $data]);
+        $this->render('files/View/Main/Video.inc', [
+            'header' => 'Video',
+            'data' => $data
+        ]);
     }
 }

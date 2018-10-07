@@ -1,4 +1,3 @@
-<?= $this->header('Správa nabídky', $this->header) ?>
 <div class="container">
   <form action="" method="POST">
     <button type="submit" style="display:none;">Enter</button>

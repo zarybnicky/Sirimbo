@@ -1,4 +1,3 @@
-<?= $this->header('Nabízíme') ?>
 <div class="container">
 <h2>Lekce pro začátečníky</h2>
 <ul class="list">

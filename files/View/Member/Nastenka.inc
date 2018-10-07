@@ -1,5 +1,3 @@
-<?= $this->header('Upozornění') ?>
-
 <div class="container">
   <?php foreach ($this->data as $item): ?>
     <div>

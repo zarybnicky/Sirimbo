@@ -101,25 +101,24 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
         }
         $raw = $new;
 
-        $this->render(
-            'files/View/Admin/Platby/ManualForm.inc',
-            [
-                'id' => $id,
-                'remainingTotal' => $remainingCount,
-                'raw' => $raw,
-                'guess' => [
-                    'specific' => $item->categoryId,
-                    'variable' => $item->variable,
-                    'date' => (new Date($item->date))->getDate(Date::FORMAT_SIMPLIFIED),
-                    'amount' => $item->amount,
-                    'prefix' => $item->prefix
-                ],
-                'users' => $this->getUsers(),
-                'categories' => $this->getCategories(),
-                'recognized' => $recognized,
-                'uri' => $request->getLiteralURI()
-            ]
-        );
+        $this->render('files/View/Admin/Platby/ManualForm.inc', [
+            'header' => 'Správa plateb',
+            'subheader' => 'Ruční třídění plateb</span> (zbývá ' . $this->remainingTotal . ')',
+            'id' => $id,
+            'remainingTotal' => $remainingCount,
+            'raw' => $raw,
+            'guess' => [
+                'specific' => $item->categoryId,
+                'variable' => $item->variable,
+                'date' => (new Date($item->date))->getDate(Date::FORMAT_SIMPLIFIED),
+                'amount' => $item->amount,
+                'prefix' => $item->prefix
+            ],
+            'users' => $this->getUsers(),
+            'categories' => $this->getCategories(),
+            'recognized' => $recognized,
+            'uri' => $request->getLiteralURI()
+        ]);
     }
 
     private function getCategories()

@@ -1,5 +1,3 @@
-<?= $this->header('Osobní údaje') ?>
-
 <div class="container">
   <form action="" method="POST">
     <table>

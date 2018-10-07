@@ -1,9 +1,3 @@
-<?= $this->header(
-    'Správa oprávnění',
-    ($this->action == 'add')
-        ? 'Přidat uživatelskou skupinu'
-        : 'Upravit uživatelskou skupinu'
-) ?>
 <div class="container full">
   <form action="" method="POST">
     <div class="form-group row">

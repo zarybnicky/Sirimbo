@@ -53,10 +53,11 @@ class Controller_Admin_Nabidka extends Controller_Admin
             },
             $data
         );
-        $this->render(
-            'files/View/Admin/Nabidka/Overview.inc',
-            ['showMenu' => !TISK, 'data' => $data]
-        );
+        $this->render('files/View/Admin/Nabidka/Overview.inc', [
+            'header' => 'Správa nabídky',
+            'showMenu' => !TISK,
+            'data' => $data
+        ]);
     }
 
     public function add($request)
@@ -213,24 +214,22 @@ class Controller_Admin_Nabidka extends Controller_Admin
         } else {
             $treneri = [DBUser::getUserData(User::getUserID())];
         }
-        $this->render(
-            'files/View/Admin/Nabidka/Form.inc',
-            [
-                'header' => $request->getAction() == 'add' ? 'Přidat nabídku' : 'Upravit nabídku',
-                'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit',
-                'referer' => $request->getReferer(),
-                'users' => $treneri,
-                'isAdmin' => $isAdmin ?: '',
-                'id' => $data ? $data['n_id'] : null,
-                'trener' => $request->post('trener') ?: ($data ? $data['n_trener'] : ''),
-                'pocet_hod' => $request->post('pocet_hod') ?: ($data ? $data['n_pocet_hod'] : ''),
-                'max_pocet_hod' => $request->post('max_pocet_hod') ?: ($data ? $data['n_max_pocet_hod'] : ''),
-                'od' => $request->post('od') ?: ($data ? $data['n_od'] : ''),
-                'do' => $request->post('do') ?: ($data ? $data['n_do'] : ''),
-                'visible' => $request->post('visible') ?: ($data ? $data['n_visible'] : false),
-                'lock' => $request->post('lock') ?: ($data ? $data['n_lock'] : '')
-            ]
-        );
+        $this->render('files/View/Admin/Nabidka/Form.inc', [
+            'header' => 'Správa nabídky',
+            'subheader' => $request->getAction() == 'add' ? 'Přidat nabídku' : 'Upravit nabídku',
+            'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit',
+            'referer' => $request->getReferer(),
+            'users' => $treneri,
+            'isAdmin' => $isAdmin ?: '',
+            'id' => $data ? $data['n_id'] : null,
+            'trener' => $request->post('trener') ?: ($data ? $data['n_trener'] : ''),
+            'pocet_hod' => $request->post('pocet_hod') ?: ($data ? $data['n_pocet_hod'] : ''),
+            'max_pocet_hod' => $request->post('max_pocet_hod') ?: ($data ? $data['n_max_pocet_hod'] : ''),
+            'od' => $request->post('od') ?: ($data ? $data['n_od'] : ''),
+            'do' => $request->post('do') ?: ($data ? $data['n_do'] : ''),
+            'visible' => $request->post('visible') ?: ($data ? $data['n_visible'] : false),
+            'lock' => $request->post('lock') ?: ($data ? $data['n_lock'] : '')
+        ]);
         return;
     }
 

@@ -1,5 +1,4 @@
 <?= $this->render('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri]) ?>
-<?= $this->subheader($this->action == 'add' ? 'Přidat specifický symbol' : 'Upravit specifický symbol') ?>
 
 <div class="container">
 <form action="" method="post">

@@ -18,13 +18,10 @@ class Controller_Member extends Controller_Abstract
         $data = $pager->getItems();
 
         if (empty($data)) {
-            $this->render(
-                'files/View/Empty.inc',
-                [
-                    'nadpis' => 'Upozornění',
-                    'notice' => 'Žádná upozornění nejsou k dispozici'
-                ]
-            );
+            $this->render('files/View/Empty.inc', [
+                'header' => 'Upozornění',
+                'notice' => 'Žádná upozornění nejsou k dispozici'
+            ]);
             return;
         }
 
@@ -52,13 +49,11 @@ class Controller_Member extends Controller_Abstract
             $data
         );
 
-        $this->render(
-            'files/View/Member/Nastenka.inc',
-            [
-                'data' => $data,
-                'navigation' => $pager->getNavigation($request->get())
-            ]
-        );
+        $this->render('files/View/Member/Nastenka.inc', [
+            'header' => 'Upozornění',
+            'data' => $data,
+            'navigation' => $pager->getNavigation($request->get())
+        ]);
     }
 
     public function navbar()

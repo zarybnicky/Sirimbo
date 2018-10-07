@@ -1,5 +1,4 @@
 <?= $this->render('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri]) ?>
-<?= $this->subheader('Kategorie plateb') ?>
 
 <div class="container">
     <h3>Odstranit specifický symbol?</h3>

@@ -4,21 +4,19 @@ class Controller_Registrace extends Controller_Abstract
     public function view($request)
     {
         if (!$request->post()) {
-            $this->render(
-                'files/View/Main/Registrace.inc',
-                [
-                    'username' => '',
-                    'pass' => '',
-                    'jmeno' => '',
-                    'prijmeni' => '',
-                    'pohlavi' => '',
-                    'email' => '',
-                    'telefon' => '',
-                    'narozeni' => '',
-                    'poznamky' => '',
-                    'other' => ''
-                ]
-            );
+            $this->render('files/View/Main/Registrace.inc', [
+                'header' => 'Registrace',
+                'username' => '',
+                'pass' => '',
+                'jmeno' => '',
+                'prijmeni' => '',
+                'pohlavi' => '',
+                'email' => '',
+                'telefon' => '',
+                'narozeni' => '',
+                'poznamky' => '',
+                'other' => ''
+            ]);
             return;
         }
 
@@ -42,21 +40,19 @@ class Controller_Registrace extends Controller_Abstract
 
         if (!$f->isValid()) {
             $this->redirect()->setMessage($f->getMessages());
-            $this->render(
-                'files/View/Main/Registrace.inc',
-                [
-                    'username' => $request->post('username') ?: '',
-                    'pass' => $request->post('pass') ?: '',
-                    'jmeno' => $request->post('jmeno') ?: '',
-                    'prijmeni' => $request->post('prijmeni') ?: '',
-                    'pohlavi' => $request->post('pohlavi') ?: '',
-                    'email' => $request->post('email') ?: '',
-                    'telefon' => $request->post('telefon') ?: '',
-                    'narozeni' => $request->post('narozeni') ?: '',
-                    'poznamky' => $request->post('poznamky') ?: '',
-                    'other' => $request->post('other') ?: ''
-                ]
-            );
+            $this->render('files/View/Main/Registrace.inc', [
+                'header' => 'Registrace',
+                'username' => $request->post('username') ?: '',
+                'pass' => $request->post('pass') ?: '',
+                'jmeno' => $request->post('jmeno') ?: '',
+                'prijmeni' => $request->post('prijmeni') ?: '',
+                'pohlavi' => $request->post('pohlavi') ?: '',
+                'email' => $request->post('email') ?: '',
+                'telefon' => $request->post('telefon') ?: '',
+                'narozeni' => $request->post('narozeni') ?: '',
+                'poznamky' => $request->post('poznamky') ?: '',
+                'other' => $request->post('other') ?: ''
+            ]);
             return;
         }
 

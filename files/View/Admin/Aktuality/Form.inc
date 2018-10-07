@@ -1,7 +1,3 @@
-<?= $this->header(
-    'Správa aktualit',
-    ($this->action == 'add' ? 'Přidat' : 'Upravit') . ' článek'
-) ?>
 <div class="container">
   <form action="" method="POST">
     <div class="form-group">

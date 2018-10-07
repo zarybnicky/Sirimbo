@@ -1,4 +1,3 @@
-<?= $this->header('Správa nabídky') ?>
 <div class="container">
   <form action="" method="POST">
     <a href="/admin/nabidka/add" class="btn btn-primary">Nová nabídka</a>

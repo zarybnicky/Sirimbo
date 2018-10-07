@@ -60,18 +60,15 @@ class Controller_Member_Rozpis extends Controller_Member
         );
 
         if ($data) {
-            $this->render(
-                'files/View/Member/Rozpis/Overview.inc',
-                ['data' => $data]
-            );
+            $this->render('files/View/Member/Rozpis/Overview.inc', [
+                'header' => 'Rozpis tréninků',
+                'data' => $data
+            ]);
         } else {
-            $this->render(
-                'files/View/Empty.inc',
-                [
-                    'nadpis' => 'Rozpis tréninků',
-                    'notice' => 'Žádné aktuální rozpisy nejsou k dispozici.'
-                ]
-            );
+            $this->render('files/View/Empty.inc', [
+                'header' => 'Rozpis tréninků',
+                'notice' => 'Žádné aktuální rozpisy nejsou k dispozici.'
+            ]);
         }
     }
 

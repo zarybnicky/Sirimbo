@@ -13,10 +13,10 @@ class Controller_Member_Akce extends Controller_Member
             if (!($data = DBAkce::getSingleAkce($id, true))) {
                 $this->redirect('/member/akce', 'Neexistuje žádná taková akce');
             }
-            $this->render(
-                'files/View/Member/Akce/Single.inc',
-                ['data' => $this->_getRenderData($data)]
-            );
+            $this->render('files/View/Member/Akce/Single.inc', [
+                'header' => 'Klubové akce',
+                'data' => $this->_getRenderData($data)
+            ]);
             return;
         }
         if ($request->post('id')
@@ -41,19 +41,19 @@ class Controller_Member_Akce extends Controller_Member
         }
         $akce = DBAkce::getAkce(true);
         if (empty($akce)) {
-            $this->render(
-                'files/View/Empty.inc',
-                ['nadpis' => 'Klubové akce', 'notice' => 'Žádné akce nejsou k dispozici.']
-            );
+            $this->render('files/View/Empty.inc', [
+                'header' => 'Klubové akce',
+                'notice' => 'Žádné akce nejsou k dispozici.'
+            ]);
             return;
         }
         foreach ($akce as &$data) {
             $data = $this->_getRenderData($data);
         }
-        $this->render(
-            'files/View/Member/Akce/Overview.inc',
-            ['akce' => $akce]
-        );
+        $this->render('files/View/Member/Akce/Overview.inc', [
+            'header' => 'Klubové akce',
+            'akce' => $akce
+        ]);
     }
     private function _getRenderData($data)
     {

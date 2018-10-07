@@ -9,10 +9,12 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
 
     public function view($request)
     {
-        $this->render(
-            'files/View/Admin/Platby/StructureGroupOverview.inc',
-            ['data' => $this->getGroups(), 'uri' => $request->getLiteralURI()]
-        );
+        $this->render('files/View/Admin/Platby/StructureGroupOverview.inc', [
+            'header' => 'Správa plateb',
+            'subheader' => 'Kategorie plateb',
+            'data' => $this->getGroups(),
+            'uri' => $request->getLiteralURI()
+        ]);
     }
 
     protected function getGroups()
@@ -173,15 +175,14 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
                     )
                 );
             }
-            $this->render(
-                'files/View/Admin/Platby/StructureGroupRemove.inc',
-                [
-                    'id' => $id,
-                    'name' => $data['pg_name'],
-                    'referer' => $request->getReferer(),
-                    'uri' => $request->getLiteralURI()
-                ]
-            );
+            $this->render('files/View/Admin/Platby/StructureGroupRemove.inc', [
+                'header' => 'Správa plateb',
+                'subheader' => 'Kategorie plateb',
+                'id' => $id,
+                'name' => $data['pg_name'],
+                'referer' => $request->getReferer(),
+                'uri' => $request->getLiteralURI()
+            ]);
             return;
         }
         DBPlatbyGroup::delete($id);
@@ -254,21 +255,20 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
             DBSkupiny::get()
         );
 
-        $this->render(
-            'files/View/Admin/Platby/StructureGroupForm.inc',
-            [
-                'id' => $id,
-                'action' => $action,
-                'category' => $categories,
-                'skupiny' => $skupiny,
-                'referer' => $request->getReferer(),
-                'name' => $request->post('name') ?: '',
-                'type' => $request->post('type') ?: '',
-                'description' => $request->post('description') ?: '',
-                'base' => $request->post('base') ?: '',
-                'uri' => $request->getLiteralURI()
-            ]
-        );
+        $this->render('files/View/Admin/Platby/StructureGroupForm.inc', [
+            'header' => 'Správa plateb',
+            'subheader' => $this->action == 'add' ? 'Přidat kategorii' : 'Upravit kategorii',
+            'id' => $id,
+            'action' => $action,
+            'category' => $categories,
+            'skupiny' => $skupiny,
+            'referer' => $request->getReferer(),
+            'name' => $request->post('name') ?: '',
+            'type' => $request->post('type') ?: '',
+            'description' => $request->post('description') ?: '',
+            'base' => $request->post('base') ?: '',
+            'uri' => $request->getLiteralURI()
+        ]);
     }
 
     protected function checkPost($request)

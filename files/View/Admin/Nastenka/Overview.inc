@@ -1,4 +1,3 @@
-<?= $this->header('Správa nástěnky') ?>
 <div class="container">
   <form action="" method="POST">
     <a href="/admin/nastenka/add" class="btn btn-primary">Přidat</a>

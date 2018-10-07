@@ -1,4 +1,3 @@
-<?= $this->header('Správa plateb') ?>
 <?php
 if (TISK) return;
 $uri = $this->uri;

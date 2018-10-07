@@ -16,24 +16,22 @@ class Controller_Member_Dokumenty extends Controller_Member
             $dokumenty = DBDokumenty::getDokumenty();
         }
 
-        $this->render(
-            'files/View/Member/Dokumenty.inc',
-            [
-                'showMenu' => !TISK,
-                'kat' => $request->get('kat') ?: '',
-                'data' => array_map(
-                    function ($item) {
-                        return [
-                            'id' => $item['d_id'],
-                            'name' => $item['d_name'],
-                            'fileName' => $item['d_filename'],
-                            'kategorie' => Settings::$documentTypes[$item['d_kategorie']],
-                            'uploadedBy' => $item['u_jmeno'] . ' ' . $item['u_prijmeni']
-                        ];
-                    },
-                    $dokumenty
-                )
-            ]
-        );
+        $this->render('files/View/Member/Dokumenty.inc', [
+            'header' => 'Dokumenty',
+            'showMenu' => !TISK,
+            'kat' => $request->get('kat') ?: '',
+            'data' => array_map(
+                function ($item) {
+                    return [
+                        'id' => $item['d_id'],
+                        'name' => $item['d_name'],
+                        'fileName' => $item['d_filename'],
+                        'kategorie' => Settings::$documentTypes[$item['d_kategorie']],
+                        'uploadedBy' => $item['u_jmeno'] . ' ' . $item['u_prijmeni']
+                    ];
+                },
+                $dokumenty
+            )
+        ]);
     }
 }

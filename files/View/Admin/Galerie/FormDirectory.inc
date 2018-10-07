@@ -1,4 +1,3 @@
-<?= $this->header('Správa fotogalerie', ($this->action == 'add' ? 'Přidat' : 'Upravit') . ' složku') ?>
 <div class="container">
   <form action="" method="post">
     <div class="form-group">

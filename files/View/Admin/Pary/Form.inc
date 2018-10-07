@@ -1,5 +1,3 @@
-<?= $this->header('Správa párů', 'Změna třídy a bodů') ?>
-
 <div class="container">
   <form action="" method="POST">
     <h3>Pár: <?= $this->fullName ?></h3>

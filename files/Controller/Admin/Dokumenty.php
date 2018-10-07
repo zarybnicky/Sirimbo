@@ -59,10 +59,11 @@ class Controller_Admin_Dokumenty extends Controller_Admin
             },
             $data
         );
-        $this->render(
-            'files/View/Admin/Dokumenty/Overview.inc',
-            ['data' => $data, 'showMenu' => !TISK]
-        );
+        $this->render('files/View/Admin/Dokumenty/Overview.inc', [
+            'header' => 'Správa dokumentů',
+            'data' => $data,
+            'showMenu' => !TISK
+        ]);
     }
 
     public function edit($request)
@@ -77,10 +78,10 @@ class Controller_Admin_Dokumenty extends Controller_Admin
             DBDokumenty::editDokument($id, $request->post('newname'));
             $this->redirect('/admin/dokumenty', 'Příspěvek úspěšně upraven');
         }
-        $this->render(
-            'files/View/Admin/Dokumenty/Form.inc',
-            ['name' => $data['d_name']]
-        );
+        $this->render('files/View/Admin/Dokumenty/Form.inc', [
+            'header' => 'Správa dokumentů',
+            'name' => $data['d_name']
+        ]);
     }
 
     public function remove($request)
@@ -100,17 +101,14 @@ class Controller_Admin_Dokumenty extends Controller_Admin
             $this->redirect('/admin/dokumenty', 'Dokument odebrán');
         }
 
-        $this->render(
-            'files/View/Admin/RemovePrompt.inc',
-            [
-                'header' => 'Správa dokumentů',
-                'prompt' => 'Opravdu chcete odstranit dokument:',
-                'returnURI' => $request->getReferer() ?: '/admin/dokumenty',
-                'data' => [[
-                    'id' => $id,
-                    'text' => DBDokumenty::getDokumentName($id)
-                ]]
-            ]
-        );
+        $this->render('files/View/Admin/RemovePrompt.inc', [
+            'header' => 'Správa dokumentů',
+            'prompt' => 'Opravdu chcete odstranit dokument:',
+            'returnURI' => $request->getReferer() ?: '/admin/dokumenty',
+            'data' => [[
+                'id' => $id,
+                'text' => DBDokumenty::getDokumentName($id)
+            ]]
+        ]);
     }
 }

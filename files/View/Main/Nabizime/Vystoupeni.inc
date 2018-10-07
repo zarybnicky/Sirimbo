@@ -1,6 +1,4 @@
-<?= $this->header('Nabízíme') ?>
 <div class="container">
-    <h2>Taneční vystoupení</h2>
     <ul class="list">
         <li>vystoupení standardních a latinskoamerických tanců na reprezentační
             plesy, firemní akce, oslavy</li>

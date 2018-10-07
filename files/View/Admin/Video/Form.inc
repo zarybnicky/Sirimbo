@@ -1,5 +1,3 @@
-<?= $this->header('Správa videí', $this->header) ?>
-
 <div class="container">
   <form action="" method="post">
     <div class="form-group">

@@ -1,5 +1,3 @@
-<?= $this->header('Správa rozpisů') ?>
-
 <div class="container">
   <form action="" method="POST">
     <a href="/admin/rozpis/add" class="btn btn-primary">Nový rozpis</a>

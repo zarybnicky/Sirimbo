@@ -1,5 +1,3 @@
-<?= $this->header('Přehled párů') ?>
-
 <div class="container">
   <?php
   $data = DBPary::getSinglePar($this->id);

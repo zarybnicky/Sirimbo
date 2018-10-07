@@ -1,5 +1,3 @@
-<?= $this->header('Výsledky našich párů na Mistrovství České republiky družstev') ?>
-
 <div class="container">
   <h2>Otrokovice, 2011</h2>
   <h3>Dospělí STT</h3>

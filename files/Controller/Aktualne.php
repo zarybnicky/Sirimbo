@@ -30,7 +30,7 @@ class Controller_Aktualne extends Controller_Abstract
                     ['property' => 'og:site_name', 'TK Olymp'],
                     ['property' => 'og:description', $data['at_preview']]
                 ],
-                'html_title' => $data['at_jmeno']
+                'header' => $data['at_jmeno']
             ]
         );
         return;
@@ -56,13 +56,10 @@ class Controller_Aktualne extends Controller_Abstract
         $data = DBAktuality::getAktuality($type);
 
         if (!$data) {
-            $this->render(
-                'files/View/Empty.inc',
-                [
-                    'nadpis' => $nadpis,
-                    'notice' => 'Žádné články nejsou k dispozici.'
-                ]
-            );
+            $this->render('files/View/Empty.inc', [
+                'header' => $nadpis,
+                'notice' => 'Žádné články nejsou k dispozici.'
+            ]);
             return;
         }
         $data = array_map(
@@ -82,9 +79,9 @@ class Controller_Aktualne extends Controller_Abstract
             },
             $data
         );
-        $this->render(
-            'files/View/Main/Aktuality/Overview.inc',
-            ['nadpis' => $nadpis, 'data' => $data]
-        );
+        $this->render('files/View/Main/Aktuality/Overview.inc', [
+            'header' => $nadpis,
+            'data' => $data
+        ]);
     }
 }

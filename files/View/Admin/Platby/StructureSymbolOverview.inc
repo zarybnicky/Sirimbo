@@ -1,5 +1,4 @@
 <?= $this->render('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri])?>
-<?= $this->subheader('Specifické symboly') ?>
 
 <div class="container">
     <form action="" method="post">

@@ -36,16 +36,14 @@ class Controller_Admin_Video extends Controller_Admin
             },
             $videos
         );
-        $this->render(
-            'files/View/Admin/Video/Overview.inc',
-            [
-                'data' => $data,
-                'video1' => $select->name('video1')->set(DBParameters::get('title_video1'))->render(),
-                'video2' => $select->name('video2')->set(DBParameters::get('title_video2'))->render(),
-                'video3' => $select->name('video3')->set(DBParameters::get('title_video3'))->render(),
-                'video4' => $select->name('video4')->set(DBParameters::get('title_video4'))->render()
-            ]
-        );
+        $this->render('files/View/Admin/Video/Overview.inc', [
+            'nadpis' => 'Správa videí',
+            'data' => $data,
+            'video1' => $select->name('video1')->set(DBParameters::get('title_video1'))->render(),
+            'video2' => $select->name('video2')->set(DBParameters::get('title_video2'))->render(),
+            'video3' => $select->name('video3')->set(DBParameters::get('title_video3'))->render(),
+            'video4' => $select->name('video4')->set(DBParameters::get('title_video4'))->render()
+        ]);
     }
 
     public function add($request)
@@ -115,30 +113,25 @@ class Controller_Admin_Video extends Controller_Admin
         }
 
         $item = DBVideo::getSingle($request->getId());
-        $this->render(
-            'files/View/Admin/RemovePrompt.inc',
-            [
-                'header' => 'Správa videí',
-                'prompt' => 'Opravdu chcete odstranit video:',
-                'returnURI' => $request->getReferer() ?: '/admin/video',
-                'data' => [['id' => $item['v_id'], 'text' => $item['v_name']]]
-            ]
-        );
+        $this->render('files/View/Admin/RemovePrompt.inc', [
+            'header' => 'Správa videí',
+            'prompt' => 'Opravdu chcete odstranit video:',
+            'returnURI' => $request->getReferer() ?: '/admin/video',
+            'data' => [['id' => $item['v_id'], 'text' => $item['v_name']]]
+        ]);
     }
 
     protected function displayForm($request, $data = [])
     {
-        $this->render(
-            'files/View/Admin/Video/Form.inc',
-            [
-                'header' => $request->getAction() == 'add' ? 'Přidat video' : 'Upravit video',
-                'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit',
-                'id' => $data ? $data['v_id'] : null,
-                'name' => $request->post('name') ?: ($data ? $data['v_name'] : ''),
-                'text' => $request->post('text') ?: ($data ? $data['v_text'] : ''),
-                'uri' => $request->post('uri') ?: ($data ? $data['v_uri'] : '')
-            ]
-        );
+        $this->render('files/View/Admin/Video/Form.inc', [
+            'header' => 'Správa videí',
+            'subheader' => $request->getAction() == 'add' ? 'Přidat video' : 'Upravit video',
+            'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit',
+            'id' => $data ? $data['v_id'] : null,
+            'name' => $request->post('name') ?: ($data ? $data['v_name'] : ''),
+            'text' => $request->post('text') ?: ($data ? $data['v_text'] : ''),
+            'uri' => $request->post('uri') ?: ($data ? $data['v_uri'] : '')
+        ]);
     }
 
     protected function checkData($request)

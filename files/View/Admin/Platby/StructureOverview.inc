@@ -1,5 +1,4 @@
 <?= $this->render('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri])?>
-<?= $this->subheader('Struktura plateb') ?>
 
 <div class="container">
 <span class="big">Přidat: </span>

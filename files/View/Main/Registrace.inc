@@ -1,5 +1,3 @@
-<?= $this->header('Registrace') ?>
-
 <div class="container">
   <form action="" method="POST">
     <table>

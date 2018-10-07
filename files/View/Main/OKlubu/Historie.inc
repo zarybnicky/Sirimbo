@@ -1,5 +1,3 @@
-<?= $this->header('Historie klubu') ?>
-
 <div class="container">
   <h2>1989</h2>
   <p>

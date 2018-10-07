@@ -1,5 +1,4 @@
 <?= $this->render('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri]) ?>
-<?= $this->subheader('Jednotlivé platby') ?>
 
 <div class="container full">
 <?php if (!TISK): ?>

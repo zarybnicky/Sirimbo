@@ -49,6 +49,8 @@ abstract class Controller_Abstract implements Controller_Interface
             'renderNavbarItem' => [$this, 'renderNavbarItem'],
             'navbar' => $this->navbar(),
             'meta' => [],
+            'header' => isset($vars['header']) ? $vars['header'] : null,
+            'subheader' => isset($vars['subheader']) ? $vars['subheader'] : null,
             'html_title' => ''
         ];
         if (isset($vars['meta'])) {

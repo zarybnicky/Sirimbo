@@ -25,10 +25,11 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
             $this->redirect()->setMessage('Soubor ' . $fileInfo->getFilename() . ' byl zpracován.');
         }
 
-        $this->render(
-            'files/View/Admin/Platby/RawUpload.inc',
-            ['uri' => $request->getLiteralURI()]
-        );
+        $this->render('files/View/Admin/Platby/RawUpload.inc', [
+            'header' => 'Správa plateb',
+            'subheader' => 'Import plateb',
+            'uri' => $request->getLiteralURI()
+        ]);
     }
     public function select_columns($request)
     {
@@ -70,10 +71,12 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
                                  ->render()
             ];
         }
-        $this->render(
-            'files/View/Admin/Platby/RawColumnSelect.inc',
-            ['data' => $data, 'uri' => $request->getLiteralURI()]
-        );
+        $this->render('files/View/Admin/Platby/RawColumnSelect.inc', [
+            'header' => 'Správa plateb',
+            'subheader' => 'Import plateb',
+            'data' => $data,
+            'uri' => $request->getLiteralURI()
+        ]);
     }
     private function getParser($path)
     {

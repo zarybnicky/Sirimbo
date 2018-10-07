@@ -1,5 +1,3 @@
-<?= $this->header($this->nadpis) ?>
-
 <div class="container">
   <?php foreach ($this->data as $row) : ?>
     <div class="row mb-2">

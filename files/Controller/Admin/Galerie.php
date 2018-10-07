@@ -48,10 +48,10 @@ class Controller_Admin_Galerie extends Controller_Admin
             $data
         );
 
-        $this->render(
-            'files/View/Admin/Galerie/Overview.inc',
-            ['data' => $data]
-        );
+        $this->render('files/View/Admin/Galerie/Overview.inc', [
+            'header' => 'Správa fotogalerie',
+            'data' => $data
+        ]);
     }
 
     private function _scan()

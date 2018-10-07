@@ -24,20 +24,18 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
             User::getUserID(),
             User::getUserPohlavi()
         );
-        $this->render(
-            'files/View/Member/Profil/CoupleOverview.inc',
-            [
-                'havePartner' => !empty($latest) && $latest['u_id'],
-                'partnerFullName' => $latest['u_jmeno'] . ' ' . $latest['u_prijmeni'],
-                'sttTrida' => $latest['p_stt_trida'],
-                'sttBody' => $latest['p_stt_body'],
-                'sttFinale' => $latest['p_stt_finale'],
-                'latTrida' => $latest['p_lat_trida'],
-                'latBody' => $latest['p_lat_body'],
-                'latFinale' => $latest['p_lat_finale'],
-                'hodnoceni' => $latest['p_hodnoceni']
-            ]
-        );
+        $this->render('files/View/Member/Profil/CoupleOverview.inc', [
+            'header' => 'Profil',
+            'havePartner' => !empty($latest) && $latest['u_id'],
+            'partnerFullName' => $latest['u_jmeno'] . ' ' . $latest['u_prijmeni'],
+            'sttTrida' => $latest['p_stt_trida'],
+            'sttBody' => $latest['p_stt_body'],
+            'sttFinale' => $latest['p_stt_finale'],
+            'latTrida' => $latest['p_lat_trida'],
+            'latBody' => $latest['p_lat_body'],
+            'latFinale' => $latest['p_lat_finale'],
+            'hodnoceni' => $latest['p_hodnoceni']
+        ]);
     }
 
     public function body($request)
@@ -54,17 +52,15 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
             } else {
                 $this->redirect()->setMessage($f->getMessages());
             }
-            $this->render(
-                'files/View/Member/Profil/CoupleData.inc',
-                [
-                    'stt_trida' => $request->post('stt_trida') ?: '',
-                    'stt_body' => $request->post('stt_body') ?: '',
-                    'stt_finale' => $request->post('stt_finale') ?: '',
-                    'lat_trida' => $request->post('lat_trida') ?: '',
-                    'lat_body' => $request->post('lat_body') ?: '',
-                    'lat_finale' => $request->post('lat_finale') ?: ''
-                ]
-            );
+            $this->render('files/View/Member/Profil/CoupleData.inc', [
+                'header' => 'Změna třídy a bodů',
+                'stt_trida' => $request->post('stt_trida') ?: '',
+                'stt_body' => $request->post('stt_body') ?: '',
+                'stt_finale' => $request->post('stt_finale') ?: '',
+                'lat_trida' => $request->post('lat_trida') ?: '',
+                'lat_body' => $request->post('lat_body') ?: '',
+                'lat_finale' => $request->post('lat_finale') ?: ''
+            ]);
             return;
         }
         $stt_amend = constant('self::AMEND_' . $request->post('stt-trida'));
@@ -132,17 +128,15 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
         }
 
         $request->post('partner', $havePartner ? $latest['u_id'] : '0');
-        $this->render(
-            'files/View/Member/Profil/PartnerOverview.inc',
-            [
-                'havePartner' => $havePartner,
-                'partnerID' => $latest['u_id'],
-                'partnerFullName' => $latest['u_jmeno'] . ' ' . $latest['u_prijmeni'],
-                'users' => (User::getUserPohlavi() == "m")
-                            ? DBUser::getUsersByPohlavi("f")
-                            : DBUser::getUsersByPohlavi("m")
-            ]
-        );
+        $this->render('files/View/Member/Profil/PartnerOverview.inc', [
+            'header' => 'Profil',
+            'havePartner' => $havePartner,
+            'partnerID' => $latest['u_id'],
+            'partnerFullName' => $latest['u_jmeno'] . ' ' . $latest['u_prijmeni'],
+            'users' => (User::getUserPohlavi() == "m")
+                        ? DBUser::getUsersByPohlavi("f")
+                        : DBUser::getUsersByPohlavi("m")
+        ]);
     }
 
     public function zadost($request)

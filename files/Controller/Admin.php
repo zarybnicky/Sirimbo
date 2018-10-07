@@ -8,7 +8,9 @@ class Controller_Admin extends Controller_Abstract
 
     public function view($request)
     {
-        $this->render('files/View/Admin/Home.inc');
+        $this->render('files/View/Admin/Home.inc', [
+            'header' => 'Administrace'
+        ]);
     }
 
     public function navbar()

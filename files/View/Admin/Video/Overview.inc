@@ -1,5 +1,3 @@
-<?= $this->header('Správa videí') ?>
-
 <div class="container">
   <form action="" method="post">
     Titulní stránka:<br>

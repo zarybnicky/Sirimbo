@@ -1,6 +1,4 @@
-<?= $this->header('Správa uživatelů') ?>
 <div class="container">
-  <h2>Statistiky</h2>
   <div class="center">
     <?= $this->table()
            ->style('margin:0 auto;')

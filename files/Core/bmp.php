@@ -213,12 +213,16 @@ class BMP
     }
 }
 
-function imagebmp(&$img, $filename = false)
-{
-    return BMP::imagebmp($img, $filename);
+if (!function_exists('imagebmp')) {
+    function imagebmp(&$img, $filename = false)
+    {
+        return BMP::imagebmp($img, $filename);
+    }
 }
 
-function imagecreatefrombmp($filename)
-{
-    return BMP::imagecreatefrombmp($filename);
+if (!function_exists('imagecreatefrombmp')) {
+    function imagecreatefrombmp($filename)
+    {
+        return BMP::imagecreatefrombmp($filename);
+    }
 }

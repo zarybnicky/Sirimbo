@@ -1,5 +1,3 @@
-<?= $this->header('Profil') ?>
-
 <div class="container">
     <?php
     echo $this->partnerRequest()->getAll();

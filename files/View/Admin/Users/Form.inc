@@ -1,4 +1,3 @@
-<?= $this->header('Správa uživatelů', ($this->action == 'add' ? 'Přidat' : 'Upravit') . ' uživatele') ?>
 <div class="container">
   <form action="" method="POST">
     <div class="form-group">

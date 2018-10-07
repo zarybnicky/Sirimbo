@@ -1,4 +1,3 @@
-<?= $this->header('Správa akcí', $this->header) ?>
 <div class="container">
   <form action="" method="POST">
     <div class="form-group">

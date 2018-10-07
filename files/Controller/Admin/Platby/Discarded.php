@@ -18,25 +18,23 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
         }
         if ($request->get('list')) {
             $this->_getTable($request, $data, $result, $columns, $header);
-            $this->render(
-                'files/View/Admin/Platby/DiscardedTable.inc',
-                [
-                    'data' => $result,
-                    'columns' => $columns,
-                    'header' => $header,
-                    'uri' => $request->getLiteralURI()
-                ]
-            );
+            $this->render('files/View/Admin/Platby/DiscardedTable.inc', [
+                'header' => 'Správa plateb',
+                'subheader' => 'Vyřazené platby (' . $this->header . ')',
+                'data' => $result,
+                'columns' => $columns,
+                'header' => $header,
+                'uri' => $request->getLiteralURI()
+            ]);
         } else {
             $this->_getList($data, $groupAmount, $groupDate);
-            $this->render(
-                'files/View/Admin/Platby/DiscardedList.inc',
-                [
-                    'groupByDate' => $groupDate,
-                    'groupByAmount' => $groupAmount,
-                    'uri' => $request->getLiteralURI()
-                ]
-            );
+            $this->render('files/View/Admin/Platby/DiscardedList.inc', [
+                'header' => 'Správa plateb',
+                'subheader' => 'Vyřazené platby',
+                'groupByDate' => $groupDate,
+                'groupByAmount' => $groupAmount,
+                'uri' => $request->getLiteralURI()
+            ]);
         }
     }
 

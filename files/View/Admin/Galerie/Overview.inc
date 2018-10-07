@@ -1,4 +1,3 @@
-<?= $this->header('Správa fotogalerie') ?>
 <div class="container">
   <form action="" method="POST">
     <a class="btn btn-outline-primary" href="/admin/galerie/file/upload">Přidat fotky</a>

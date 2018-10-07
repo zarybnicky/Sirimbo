@@ -1,4 +1,3 @@
-<?= $this->header('Správa aktualit') ?>
 <div class="container">
     <?php
     if ($this->showMenu) {

@@ -79,12 +79,10 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Admin_Akce
             'category' => $this->submit('Přidat')->data('add', 'add'),
             'removeButton' => ''
         ];
-        $this->render(
-            'files/View/Admin/Akce/Dokumenty.inc',
-            [
-                'data' => $akce,
-                'documents' => $documents
-            ]
-        );
+        $this->render('files/View/Admin/Akce/Dokumenty.inc', [
+            'header' => 'Správa akcí',
+            'data' => $akce,
+            'documents' => $documents
+        ]);
     }
 }
