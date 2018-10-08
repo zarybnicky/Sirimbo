@@ -8,10 +8,6 @@ return [
         'Ban',
         'Administrátor vám zakázal přístup, obraťte se na něj (sekce Kontakt).'
     ],
-    'corruptData' => [
-        'Nebyla odeslána validní data!',
-        'Server zjistil chybu v odeslaných datech, jenž byly tebou odeslány.  Pokud jsi členem, kontaktuj prosím neprodleně administrátora.'
-    ],
     'database' => [
         'Kritická chyba v dotazu na databázi.',
         'Databáze je součást, bez které nemůže TkOlymp.cz fungovat. Nefunkčnost může trvat delší dobu.'
@@ -29,10 +25,6 @@ Pokud jsi byl přihlášen, došlo k automatickému odhlášení. Pokud se při 
     'notFoundRight' => [
         'Správný požadavek, ale žádná odpověď',
         'To znamená, že stránka kterou chceš vidět by měla existovat, ale server jí nedokáže najít. Tato chyba může být způsobena prací administrátora na serveru, takže když se vrátíš zpět a zopakuješ požadavek, už by to mělo jít.'
-    ],
-    'notPossible' => [
-        'Nenalezeno',
-        'Váš prohlížeč poslal požadavek na něco, co na webu TKOlymp.cz prostě není. Zkuste se znovu proklikat z hlavní stránky a pokud to, co hledáte opravdu neexistuje, napište administrátorům.'
     ],
     'scriptFatal' => [
         'Vnitřní chyba skriptu',

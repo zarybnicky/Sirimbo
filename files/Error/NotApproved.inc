@@ -1,4 +1,4 @@
-<b>Účet nebyl potvrzen</b>
+<b>Účet ještě nebyl potvrzen</b>
 <br/>
 <br/>
-Administrátor vám ještě nepovolil přístup na stránky.
+Administrátor vám zatím nepovolil přístup na stránky.

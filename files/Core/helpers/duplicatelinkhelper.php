@@ -18,7 +18,7 @@ class DuplicateLinkHelper
                 "<img alt='Duplikovat' src='/style/icon-files-o.png' />" .
                 "</button>";
         }
-        return "<a href='{$this->link}' title='Duplikocat'>" .
+        return "<a href='{$this->link}' title='Duplikovat'>" .
             "<img alt='Duplikovat' src='/style/icon-files-o.png' />" .
             "</a>";
     }

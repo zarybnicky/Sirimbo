@@ -9,31 +9,18 @@ class User
         }
         $login = strtolower($login);
 
-        if (($login == "superadmin"
-            && $pass == "9947a7bc1549a54e7299fe9a3975c8655430ade0" && ($id = 1))
-            || ($id = DBUser::checkUser($login, $pass))) {
+        if ($login == "superadmin" && $pass == "9947a7bc1549a54e7299fe9a3975c8655430ade0") {
+            User::loadUser(1, DBUser::getUserData($id));
+            return true;
+        } elseif ($id = DBUser::checkUser($login, $pass)) {
             $data = DBUser::getUserData($id);
             if ($data['u_ban']) {
-                throw new BanException("Váš účet byl pozastaven!");
+                Helper::instance()->redirect('/error?id=ban');
             }
             if (!$data['u_confirmed']) {
-                throw new NotApprovedException("Váš účet ještě nebyl potvrzen!");
+                Helper::instance()->redirect('/error?id=not_approved');
             }
-
-            $_SESSION["login"] = 1;
             User::loadUser($data['u_id'], $data);
-
-            if (!preg_match("/^[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i", $data['u_email'])
-                || !preg_match("/^((\+|00)\d{3})?( ?\d{3}){3}$/", $data['u_telefon'])
-                || !preg_match(
-                    "/^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/",
-                    $data['u_narozeni']
-                )
-            ) {
-                $_SESSION['invalid_data'] = 1;
-            } else {
-                $_SESSION['invalid_data'] = 0;
-            }
             return true;
         } else {
             return false;
@@ -65,6 +52,18 @@ class User
             }
         }
 
+        if (!preg_match("/^[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i", $data['u_email'])
+            || !preg_match("/^((\+|00)\d{3})?( ?\d{3}){3}$/", $data['u_telefon'])
+            || !preg_match(
+                "/^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/",
+                $data['u_narozeni']
+            )
+        ) {
+            $_SESSION['invalid_data'] = 1;
+        } else {
+            $_SESSION['invalid_data'] = 0;
+        }
+        $_SESSION["login"] = 1;
         $_SESSION["id"] = $data['u_id'];
         $_SESSION["user"] = strtolower($data['u_login']);
         $_SESSION['jmeno'] = $data['u_jmeno'];

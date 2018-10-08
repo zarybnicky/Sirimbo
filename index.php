@@ -72,7 +72,7 @@ try {
         $request->post('pass', User::crypt($request->post('pass')));
 
         if (!User::login($request->post('login'), $request->post('pass'))) {
-            Helper::instance()->redirect('/login', 'Špatné jméno nebo heslo!', true);
+            Helper::instance()->redirect('/login', 'Špatné jméno nebo heslo!');
         } elseif ($request->get('return')) {
             Helper::instance()->redirect($request->get('return'));
         } else {
