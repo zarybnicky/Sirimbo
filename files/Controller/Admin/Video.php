@@ -55,7 +55,7 @@ class Controller_Admin_Video extends Controller_Admin
 
         $form = $this->checkData($request);
         if (!$form->isValid()) {
-            $this->redirect()->setMessage($form->getMessages());
+            $this->redirect()->warning($form->getMessages());
             $this->displayForm($request);
             return;
         }
@@ -67,7 +67,7 @@ class Controller_Admin_Video extends Controller_Admin
             false
         );
 
-        $this->redirect('/admin/video', 'Video bylo přidáno');
+        $this->redirect('/admin/video');
     }
 
     public function edit($request)
@@ -75,7 +75,8 @@ class Controller_Admin_Video extends Controller_Admin
         $id = $request->getId();
         $data = DBVideo::getSingle($id);
         if (!$id || !$data) {
-            $this->redirect('/admin/aktuality', 'Článek s takovým ID neexistuje');
+            $this->redirect()->warning('Článek s takovým ID neexistuje');
+            $this->redirect('/admin/aktuality');
         }
 
         if (!$request->post()) {
@@ -85,7 +86,7 @@ class Controller_Admin_Video extends Controller_Admin
 
         $form = $this->checkData($request);
         if (!$form->isValid()) {
-            $this->redirect()->setMessage($form->getMessages());
+            $this->redirect()->warning($form->getMessages());
             $this->displayForm($request, $data);
             return;
         }
@@ -98,7 +99,7 @@ class Controller_Admin_Video extends Controller_Admin
             false
         );
 
-        $this->redirect('/admin/video', 'Video bylo přidáno');
+        $this->redirect('/admin/video');
     }
 
     public function remove($request)
@@ -109,7 +110,8 @@ class Controller_Admin_Video extends Controller_Admin
 
         if ($request->post('action') == 'confirm') {
             DBVideo::remove($request->getId());
-            $this->redirect('/admin/video', 'Video odebráno');
+            $this->redirect()->info('Video odebráno');
+            $this->redirect('/admin/video');
         }
 
         $item = DBVideo::getSingle($request->getId());

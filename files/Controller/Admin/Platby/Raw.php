@@ -22,7 +22,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
             }
             $this->processCsv($fileInfo->getPathname());
             unlink($fileInfo->getRealPath());
-            $this->redirect()->setMessage('Soubor ' . $fileInfo->getFilename() . ' byl zpracován.');
+            $this->redirect()->success('Soubor ' . $fileInfo->getFilename() . ' byl zpracován.');
         }
 
         $this->render('files/View/Admin/Platby/RawUpload.inc', [
@@ -45,10 +45,8 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
                     'amount' => $request->post('amount')
                 ]
             );
-            $this->redirect(
-                '/admin/platby/raw',
-                'Soubor ' . $request->get('path') . ' byl zpracován.'
-            );
+            $this->redirect()->success('Soubor ' . $request->get('path') . ' byl zpracován.');
+            $this->redirect('/admin/platby/raw');
         }
         $parser = $this->getParser($path);
         $this->recognizeHeaders(array_flip($parser->headers()), $specific, $variable, $date, $amount);
@@ -82,10 +80,8 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
     {
         $fileinfo = new SplFileInfo($path);
         if (!$fileinfo->isReadable()) {
-            $this->redirect(
-                '/admin/platby/raw',
-                'Soubor ' . str_replace(self::TEMP_DIR, '', $path) . ' není přístupný.'
-            );
+            $this->redirect()->danger('Soubor ' . str_replace(self::TEMP_DIR, '', $path) . ' není přístupný.');
+            $this->redirect('/admin/platby/raw');
         }
         $parser = new CSVParser($fileinfo->openFile('r'));
         $parser->associative(true);
@@ -110,10 +106,8 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
             $amount = $columns['amount'];
         }
         if (!$this->checkHeaders($headers, $specific, $variable, $date, $amount)) {
-            $this->redirect(
-                '/admin/platby/raw/select_columns?path=' . str_replace(self::TEMP_DIR, '', $path),
-                'Skript nemohl rozpoznat sloupce nutné pro zařazení plateb, je potřeba udělat to ručně. (soubor: ' . $path . ')'
-            );
+            $this->redirect()->info('Skript nemohl rozpoznat sloupce nutné pro zařazení plateb, je potřeba udělat to ručně. (soubor: ' . $path . ')');
+            $this->redirect('/admin/platby/raw/select_columns?path=' . str_replace(self::TEMP_DIR, '', $path));
         }
         $userLookup = $this->getUserLookup(false);
         $categoryLookup = $this->getCategoryLookup(true, true, false);
@@ -153,10 +147,10 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
 
         $validFiles = $upload->hasValidFiles();
         if ($upload->hasInvalidFiles()) {
-            $this->redirect()->setMessage($upload->getErrorMessages());
+            $this->redirect()->warning($upload->getErrorMessages());
             return;
         } elseif ($upload->hasEmptyFiles() && empty($validFiles)) {
-            $this->redirect()->setMessage('Vyberte prosím nějaký soubor (prázdné soubory jsou automaticky odmítnuty).');
+            $this->redirect()->info('Vyberte prosím nějaký soubor (prázdné soubory jsou automaticky odmítnuty).');
             return;
         }
         $uploader = $upload->getFilledUploader();
@@ -164,11 +158,11 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
         $uploader->addAllowedType('csv');
         $uploader->save();
         if ($uploader->hasRefusedFiles()) {
-            $this->redirect()->setMessage('Nahrávané soubory musí být typu CSV.');
+            $this->redirect()->warning('Nahrávané soubory musí být typu CSV.');
         }
         foreach ($uploader->getSavedFiles() as $path) {
             $this->processCsv($path);
-            $this->redirect()->setMessage('Soubor ' . str_replace(self::TEMP_DIR, '', $path) . ' byl zpracován.');
+            $this->redirect()->success('Soubor ' . str_replace(self::TEMP_DIR, '', $path) . ' byl zpracován.');
         }
     }
 }

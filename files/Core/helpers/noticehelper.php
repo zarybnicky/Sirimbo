@@ -3,8 +3,9 @@ class NoticeHelper
 {
     protected $text;
 
-    public function notice($text)
+    public function notice($text, $type = 'info')
     {
+        $this->type = $type;
         $this->text = $text;
         return $this;
     }
@@ -14,7 +15,8 @@ class NoticeHelper
         if (!$this->text) {
             return '';
         }
-        return (string) new Tag('div', ['class' => 'notice'], $this->text);
+        return '<div class="alert alert-' . $this->type . '" role="alert">'
+            . $this->text . '</div>';
     }
 
     public function __toString()

@@ -53,7 +53,7 @@ class Controller_Admin_Akce extends Controller_Admin
 
         $form = $this->checkData($request);
         if (is_object($form)) {
-            $this->redirect()->setMessage($form->getMessages());
+            $this->redirect()->warning($form->getMessages());
             $this->displayForm($request);
             return;
         }
@@ -75,14 +75,16 @@ class Controller_Admin_Akce extends Controller_Admin
             $request->post('visible') ? '1' : '0'
         );
 
-        $this->redirect('/admin/akce', 'Akce přidána');
+        $this->redirect()->success('Akce přidána');
+        $this->redirect('/admin/akce');
     }
 
     public function edit($request)
     {
         $id = $request->getID();
         if (!$id || !($data = DBAkce::getSingleAkce($id))) {
-            $this->redirect('/admin/akce', 'Akce s takovým ID neexistuje');
+            $this->redirect()->warning('Akce s takovým ID neexistuje');
+            $this->redirect('/admin/akce');
         }
 
         if (!$request->post()) {
@@ -92,7 +94,7 @@ class Controller_Admin_Akce extends Controller_Admin
 
         $form = $this->checkData($request);
         if (is_object($form)) {
-            $this->redirect()->setMessage($form->getMessages());
+            $this->redirect()->warning($form->getMessages());
             $this->displayForm($request, $data);
             return;
         }
@@ -116,7 +118,8 @@ class Controller_Admin_Akce extends Controller_Admin
             $request->post('visible') ? '1' : '0'
         );
 
-        $this->redirect('/admin/akce', 'Akce upravena');
+        $this->redirect()->success('Akce upravena');
+        $this->redirect('/admin/akce');
     }
 
     public function remove($request)
@@ -127,7 +130,8 @@ class Controller_Admin_Akce extends Controller_Admin
         $id = $request->getId();
         if ($request->post('action') == 'confirm') {
             DBAkce::removeAkce($id);
-            $this->redirect('/admin/akce', 'Akce odebrány');
+            $this->redirect()->success('Akce odebrány');
+            $this->redirect('/admin/akce');
             return;
         }
 

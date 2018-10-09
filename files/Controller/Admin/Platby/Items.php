@@ -56,7 +56,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             $this->displayForm(0, $request);
             return;
         } elseif (!is_object($item = $this->getFromPost($request))) {
-            $this->redirect()->setMessage($item);
+            $this->redirect()->warning($item);
             $this->displayForm(0, $request);
             return;
         }
@@ -68,14 +68,15 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             $item->date,
             $item->prefix
         );
-        $this->redirect('/admin/platby/items', 'Platba úspěšně přidána');
+        $this->redirect('/admin/platby/items');
     }
 
     public function edit($request)
     {
         $id = $request->getId();
         if (!$id || !($data = DBPlatbyItem::getSingle($id))) {
-            $this->redirect('/admin/platby/items', 'Platba s takovým ID neexistuje');
+            $this->redirect()->warning('Platba s takovým ID neexistuje');
+            $this->redirect('/admin/platby/items');
         }
         if (!$request->post()) {
             $request->post('date', $data['pi_date']);
@@ -86,7 +87,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             $this->displayForm($id, $request);
             return;
         } elseif (!is_object($item = $this->getFromPost($request, $id))) {
-            $this->redirect()->setMessage($item);
+            $this->redirect()->warning($item);
             $this->displayForm($id, $request);
             return;
         }
@@ -98,7 +99,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             $item->date,
             $item->prefix
         );
-        $this->redirect('/admin/platby/items', 'Platba úspěšně upravena');
+        $this->redirect('/admin/platby/items');
     }
 
     public function remove($request)
@@ -120,7 +121,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
                     '1'
                 );
             }
-            $this->redirect('/admin/platby/items', 'Platby odebrány');
+            $this->redirect('/admin/platby/items');
         }
         $item = DBPlatbyItem::getSingle($id, true);
         $this->render('files/View/Admin/RemovePrompt.inc', [

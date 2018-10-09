@@ -66,7 +66,7 @@ class Controller_Admin_Rozpis extends Controller_Admin
 
         $form = $this->checkData($request);
         if (is_object($form)) {
-            $this->redirect()->setMessage($form->getMessages());
+            $this->redirect()->warning($form->getMessages());
             $this->displayForm($request);
             return;
         }
@@ -81,14 +81,15 @@ class Controller_Admin_Rozpis extends Controller_Admin
             $request->post('visible') ? '1' : '0',
             $request->post('lock') ? '1' : '0'
         );
-        $this->redirect('/admin/rozpis', 'Rozpis přidán');
+        $this->redirect('/admin/rozpis');
     }
 
     public function edit($request)
     {
         $id = $request->getId();
         if (!$id || !($data = DBRozpis::getSingleRozpis($id))) {
-            $this->redirect('/admin/rozpis', 'Rozpis s takovým ID neexistuje');
+            $this->redirect()->warning('Rozpis s takovým ID neexistuje');
+            $this->redirect('/admin/rozpis');
         }
         Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
 
@@ -98,7 +99,7 @@ class Controller_Admin_Rozpis extends Controller_Admin
 
         $form = $this->checkData($request);
         if (is_object($form)) {
-            $this->redirect()->setMessage($form->getMessages());
+            $this->redirect()->warning($form->getMessages());
             $this->displayForm($request, $data);
             return;
         }
@@ -114,7 +115,7 @@ class Controller_Admin_Rozpis extends Controller_Admin
             $request->post('lock') ? '1' : '0'
         );
 
-        $this->redirect('/admin/rozpis', 'Rozpis úspěšně upraven');
+        $this->redirect('/admin/rozpis');
     }
 
     public function duplicate($request)

@@ -34,7 +34,7 @@ class Controller_Admin_Permissions extends Controller_Admin
             return;
         }
         if (is_object($f = $this->checkData($request))) {
-            $this->redirect()->setMessage($f->getMessages());
+            $this->redirect()->warning($f->getMessages());
             $this->renderForm($request);
             return;
         }
@@ -49,20 +49,15 @@ class Controller_Admin_Permissions extends Controller_Admin
             $permissions
         );
 
-        $this->redirect(
-            $request->post('referer') ?: '/admin/permissions',
-            'Úroveň úspěšně přidána'
-        );
+        $this->redirect($request->post('referer') ?: '/admin/permissions');
     }
 
     public function edit($request)
     {
         $id = $request->getId();
         if (!$id || !($data = DBPermissions::getSingleGroup($id))) {
-            $this->redirect(
-                $request->post('referer') ?: '/admin/permissions',
-                'Skupina s takovým ID neexistuje'
-            );
+            $this->redirect()->warning('Skupina s takovým ID neexistuje');
+            $this->redirect($request->post('referer') ?: '/admin/permissions');
         }
 
         if (!$request->post()) {
@@ -70,7 +65,7 @@ class Controller_Admin_Permissions extends Controller_Admin
             return;
         }
         if (is_object($f = $this->checkData($request))) {
-            $this->redirect()->setMessage($f->getMessages());
+            $this->redirect()->warning($f->getMessages());
             $this->renderForm($request, $data);
             return;
         }
@@ -86,10 +81,7 @@ class Controller_Admin_Permissions extends Controller_Admin
             $permissions
         );
 
-        $this->redirect(
-            $request->post('referer') ?: '/admin/permissions',
-            'Oprávnění úspěšně upravena'
-        );
+        $this->redirect($request->post('referer') ?: '/admin/permissions');
     }
 
     public function remove($request)
@@ -101,10 +93,8 @@ class Controller_Admin_Permissions extends Controller_Admin
 
         if ($request->post('action') == 'confirm') {
             DBPermissions::removeGroup($id);
-            $this->redirect(
-                '/admin/permissions',
-                'Úroveň odebrána. Nezapomeňte přiřadit uživatelům z této skupiny jinou skupinu!'
-            );
+            $this->redirect()->info('Úroveň odebrána. Nezapomeňte přiřadit uživatelům z této skupiny jinou skupinu!');
+            $this->redirect('/admin/permissions');
         }
 
         $item = DBPermissions::getSingleGroup($id);

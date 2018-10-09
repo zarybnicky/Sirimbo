@@ -9,7 +9,7 @@ class Controller_Member_Nabidka extends Controller_Member
 
     public function view($request)
     {
-        $this->redirect()->setMessage($this->processPost($request));
+        $this->processPost($request);
 
         $data = array_map(
             function ($data) {
@@ -92,32 +92,32 @@ class Controller_Member_Nabidka extends Controller_Member
         $data = DBNabidka::getSingleNabidka($request->post('id'));
 
         if (is_object($f = $this->checkData($request, $data))) {
-            return $f->getMessages();
-        } elseif ($request->post('hodiny') > 0) {
+            $this->redirect()->warning($f->getMessages());
+            return;
+        }
+        if ($request->post('hodiny') > 0) {
             if (!User::getZaplaceno() || (User::getPartnerID() > 0 && !User::getZaplaceno(true))) {
-                return 'Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky';
+                $this->redirect()->danger('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
             } elseif ($data['n_max_pocet_hod'] > 0
                       && (DBNabidka::getNabidkaLessons($request->post('id'), User::getParID())
                           + $request->post('hodiny')) > $data['n_max_pocet_hod']
             ) {
-                return 'Maximální počet hodin na pár je ' . $data['n_max_pocet_hod'] . '!';
+                $this->redirect()->danger('Maximální počet hodin na pár je ' . $data['n_max_pocet_hod'] . '!');
             } elseif (($data['n_pocet_hod'] - DBNabidka::getNabidkaItemLessons($request->post('id'))) < $request->post('hodiny')) {
-                return 'Tolik volných hodin tu není';
+                $this->redirect()->danger('Tolik volných hodin tu není');
             } else {
                 DBNabidka::addNabidkaItemLessons(User::getParID(), $request->post('id'), $request->post('hodiny'));
                 $request->post('hodiny', null);
-                return 'Hodiny přidány';
             }
         } elseif ($request->post('un_id') !== null) {
             list($u_id, $n_id) = explode('-', $request->post('un_id'));
 
             if (!DBNabidka::getNabidkaLessons($n_id, $u_id)) {
-                return 'Neplatný požadavek!';
+                $this->redirect()->danger('Neplatný požadavek!');
             } elseif ($u_id != User::getParID() && !Permissions::check('nabidka', P_OWNED, $data['n_trener'])) {
-                return 'Nedostatečná oprávnění!';
+                $this->redirect()->danger('Nedostatečná oprávnění!');
             } else {
                 DBNabidka::removeNabidkaItem($n_id, $u_id);
-                return 'Hodiny odebrány';
             }
         }
     }

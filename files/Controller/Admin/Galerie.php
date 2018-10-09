@@ -166,16 +166,18 @@ class Controller_Admin_Galerie extends Controller_Admin
             DBGalerie::addFotoByPath(
                 $this->_getCanonicalName($parent),
                 $this->_getCanonicalName($file),
-                $name, User::getUserID()
+                $name,
+                User::getUserID()
             );
         }
-        $this->redirect()
-            ->setMessage('Složek přidáno: ' . count($fsDirs))
-            ->setMessage('Souborů přidáno: '   . count($fsFiles))
-            ->setMessage('')
-            ->setMessage('Složek odebráno: '   . count($dbDirs))
-            ->setMessage('Souborů odebráno: '  . count($dbFiles))
-            ->sendRedirect('/admin/galerie');
+        $this->redirect()->info(
+            'Složek přidáno: ' . count($fsDirs) . '<br>' .
+            'Souborů přidáno: ' . count($fsFiles) . '<br>' .
+            '<br>' .
+            'Složek odebráno: ' . count($dbDirs) . '<br>' .
+            'Souborů odebráno: ' . count($dbFiles)
+        );
+        $this->redirect('/admin/galerie');
     }
 
     protected function _sanitizePathname($name)

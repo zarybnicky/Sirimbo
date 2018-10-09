@@ -40,7 +40,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
             if (!$request->post()) {
                 $request->post('base', 1);
             } else {
-                $this->redirect()->setMessage($s->getMessages());
+                $this->redirect()->warning($s->getMessages());
             }
             $this->displayForm($request, 'add', 0);
             return;
@@ -60,20 +60,15 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
             DBSkupiny::addChild($item, $insertId);
         }
 
-        $this->redirect(
-            $request->post('referer') ?: '/admin/platby/structure/group',
-            'Kategorie úspěšně přidána'
-        );
+        $this->redirect($request->post('referer') ?: '/admin/platby/structure/group');
     }
 
     public function edit($request)
     {
         $id = $request->getId();
         if (!$id || !($data = DBPlatbyGroup::getSingle($id))) {
-            $this->redirect(
-                $request->post('referer') ?: '/admin/platby/structure/group',
-                'Kategorie s takovým ID neexistuje'
-            );
+            $this->redirect()->warning('Kategorie s takovým ID neexistuje');
+            $this->redirect($request->post('referer') ?: '/admin/platby/structure/group');
         }
 
         if (!$request->post() || is_object($s = $this->checkPost($request))) {
@@ -83,7 +78,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
                 $request->post('description', $data['pg_description']);
                 $request->post('base', $data['pg_base']);
             } else {
-                $this->redirect()->setMessage($s->getMessages());
+                $this->redirect()->warning($s->getMessages());
             }
             $this->displayForm($request, 'edit', $id);
             return;
@@ -125,20 +120,15 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
             DBSkupiny::addChild($added, $id);
         }
 
-        $this->redirect(
-            $request->post('referer') ?: '/admin/platby/structure/group',
-            'Kategorie úspěšně upravena'
-        );
+        $this->redirect($request->post('referer') ?: '/admin/platby/structure/group');
     }
 
     public function remove($request)
     {
         $id = $request->getId();
         if (!$id || !($data = DBPlatbyGroup::getSingle($id))) {
-            $this->redirect(
-                $request->post('referer') ?: '/admin/platby/structure/group',
-                'Kategorie s takovým ID neexistuje'
-            );
+            $this->redirect()->warning('Kategorie s takovým ID neexistuje');
+            $this->redirect($request->post('referer') ?: '/admin/platby/structure/group');
         }
 
         if ($request->post('action') == 'unlink') {
@@ -155,19 +145,19 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
                 DBSkupiny::removeChild($data['s_id'], $id);
                 ++$skupinaCount;
             }
-            $this->redirect(
-                '/admin/platby/structure/group/remove/' . $id,
+            $this->redirect()->info(
                 'Spojení s ' . $skupinaCount . ' skupinami a s '
                 . $categoryCount . ' kategoriemi bylo odstraněno'
             );
+            $this->redirect('/admin/platby/structure/group/remove/' . $id);
             return;
         }
         if (((!$request->post() || $request->post('action') == 'confirm')
             && ($f = $this->getLinkedObjects($id))) || !$request->post()
         ) {
             if (isset($f) && $f) {
-                $this->redirect()->setMessage(
-                    'Nemůžu odstranit kategorii s připojenými skupinami nebo specifickými symboly! '
+                $this->redirect()->info(
+                    'Nelze odstranit kategorii s připojenými skupinami nebo specifickými symboly! '
                     . new Tag(
                         'form',
                         ['action' => '', 'method' => 'post'],
@@ -186,10 +176,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
             return;
         }
         DBPlatbyGroup::delete($id);
-        $this->redirect(
-            $request->post('referer') ?: '/admin/platby/structure/group',
-            'Kategorie byla odebrána'
-        );
+        $this->redirect($request->post('referer') ?: '/admin/platby/structure/group');
     }
 
     private function getLinkedObjects($id)

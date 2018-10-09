@@ -50,7 +50,7 @@ class Controller_Admin_Users extends Controller_Admin
 
         if ($request->post('action') == 'confirm') {
             DBUser::removeUser($id);
-            $this->redirect('/admin/users', 'Uživatel odstraněn');
+            $this->redirect('/admin/users');
         }
 
         $item = DBUser::getUserData($id);
@@ -70,7 +70,7 @@ class Controller_Admin_Users extends Controller_Admin
         Permissions::checkError('users', P_ADMIN);
         if (!$request->post() || is_object($f = $this->checkData($request, 'add'))) {
             if ($request->post()) {
-                $this->redirect()->setMessage($f->getMessages());
+                $this->redirect()->warning($f->getMessages());
             }
             $this->displayForm($request);
             return;
@@ -94,7 +94,7 @@ class Controller_Admin_Users extends Controller_Admin
             '1',
             $request->post('system') ? '1' : '0'
         );
-        $this->redirect('/admin/users', 'Uživatel úspěšně přidán');
+        $this->redirect('/admin/users');
     }
 
     public function edit($request)
@@ -102,16 +102,12 @@ class Controller_Admin_Users extends Controller_Admin
         Permissions::checkError('users', P_ADMIN);
         $id = $request->getId();
         if (!$id || !($data = DBUser::getUserData($id))) {
-            $this->redirect(
-                '/admin/users',
-                'Uživatel s takovým ID neexistuje'
-            );
+            $this->redirect()->warning('Uživatel s takovým ID neexistuje');
+            $this->redirect('/admin/users');
         }
         if (!$data['u_confirmed']) {
-            $this->redirect(
-                '/admin/users',
-                'Uživatel "' . $data['u_login'] . '" ještě není potvrzený'
-            );
+            $this->redirect()->warning('Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
+            $this->redirect('/admin/users');
         }
 
         if (!$request->post() || is_object($f = $this->checkData($request, 'edit'))) {
@@ -131,7 +127,7 @@ class Controller_Admin_Users extends Controller_Admin
                 $request->post('skupina', $data['u_skupina']);
                 $request->post('poznamky', $data['u_poznamky']);
             } else {
-                $this->redirect()->setMessage($f->getMessages());
+                $this->redirect()->warning($f->getMessages());
             }
             $this->displayForm($request);
             return;
@@ -153,7 +149,7 @@ class Controller_Admin_Users extends Controller_Admin
             $request->post('ban') ? 1 : 0,
             $request->post('system') ? 1 : 0
         );
-        $this->redirect('/admin/users', 'Uživatel úspěšně upraven');
+        $this->redirect('/admin/users');
     }
 
     public function unconfirmed($request)

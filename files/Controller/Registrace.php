@@ -39,7 +39,7 @@ class Controller_Registrace extends Controller_Abstract
         $f->checkDate($narozeni, 'Neplatné datum narození', 'narozeni');
 
         if (!$f->isValid()) {
-            $this->redirect()->setMessage($f->getMessages());
+            $this->redirect()->warning($f->getMessages());
             $this->render('files/View/Main/Registrace.inc', [
                 'header' => 'Registrace',
                 'username' => $request->post('username') ?: '',
@@ -67,11 +67,11 @@ class Controller_Registrace extends Controller_Abstract
             $narozeni,
             $poznamky
         );
-        $this->redirect()
-            ->setMessage('Registrace úspěšně proběhla.')
-            ->setMessage('')
-            ->setMessage('Během několika dnů vám na email příjde potvrzení vašeho účtu, '
-                         . 'které vyřizuje administrátor ručně.')
-            ->redirect('/home');
+        $this->redirect()->success(
+            '<h4 class="alert-heading">Registrace úspěšně proběhla.</h4>' .
+            '<p>Během několika dnů vám na email příjde potvrzení vašeho účtu, ' .
+            'které vyřizuje administrátor ručně.<p>'
+        );
+        $this->redirect('/home');
     }
 }

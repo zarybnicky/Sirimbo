@@ -11,10 +11,8 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
     {
         $id = $request->getId();
         if (!$id || !($data = DBNabidka::getSingleNabidka($id))) {
-            $this->redirect(
-                '/admin/nabidka',
-                'Nabídka s takovým ID neexistuje'
-            );
+            $this->redirect()->warning('Nabídka s takovým ID neexistuje');
+            $this->redirect('/admin/nabidka');
         }
         Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
 

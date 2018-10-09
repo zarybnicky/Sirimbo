@@ -16,10 +16,8 @@ class Controller_Nopassword extends Controller_Abstract
         );
 
         if (!$data) {
-            $this->redirect(
-                '/nopassword',
-                'Špatná kombinace uživatelského jména a emailu.'
-            );
+            $this->redirect()->warning('Špatná kombinace uživatelského jména a emailu.');
+            $this->redirect('/nopassword');
         }
 
         $base = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -29,17 +27,13 @@ class Controller_Nopassword extends Controller_Abstract
         DBUser::setPassword($data['u_id'], $passwordCrypt);
 
         if (!DBUser::checkUser($data['u_login'], $passwordCrypt)) {
-            $this->redirect(
-                '/nopassword',
-                'Nepodařilo se změnit heslo, prosím kontaktujte administrátora.'
-            );
+            $this->redirect()->danger('Nepodařilo se změnit heslo, prosím kontaktujte administrátora.');
+            $this->redirect('/nopassword');
         }
 
         Mailer::newPassword($data['u_email'], $password);
 
-        $this->redirect(
-            '/home',
-            'Heslo bylo úspěšně změněno, za chvíli byste jej měli obdržet v e-mailu'
-        );
+        $this->redirect()->success('Heslo bylo úspěšně změněno, za chvíli byste jej měli obdržet v e-mailu');
+        $this->redirect('/home');
     }
 }

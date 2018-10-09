@@ -87,7 +87,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
             $request->post('lat-finale'),
             $hodnoceni
         );
-        $this->redirect("/member/profil/par", "Třída a body změněny");
+        $this->redirect("/member/profil/par");
     }
 
     public function partner($request)
@@ -104,7 +104,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
             ) {
                 DBPary::noPartner(User::getUserID());
                 DBPary::noPartner($latest['u_id']);
-                $this->redirect('/member/profil/par', 'Partnerství zrušeno');
+                $this->redirect('/member/profil/par');
             }
             if ($request->post('partner') == $latest['u_id'] ||
                 (!$request->post('partner') && $latest['u_id'] == '0')
@@ -124,7 +124,8 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
                     User::getUserID()
                 );
             }
-            $this->redirect('/member/profil/par', 'Žádost o partnerství odeslána');
+            $this->redirect()->info('Žádost o partnerství odeslána');
+            $this->redirect('/member/profil/par');
         }
 
         $request->post('partner', $havePartner ? $latest['u_id'] : '0');
@@ -155,10 +156,10 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
 
                     if ($request->post('action') == 'accept') {
                         DBPary::acceptPartnerRequest($request->post('id'));
-                        $this->redirect()->setMessage('žádost přijata');
+                        $this->redirect()->success('žádost přijata');
                     } else {
                         DBPary::deletePartnerRequest($request->post('id'));
-                        $this->redirect()->setMessage('žádost zamitnuta');
+                        $this->redirect()->info('žádost zamitnuta');
                     }
                     $this->redirect('/member/profil/par');
                 }
@@ -171,7 +172,8 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
                         continue;
                     }
                     DBPary::deletePartnerRequest($request->post('id'));
-                    $this->redirect('/member/profil/par', 'Žádost zrušena');
+                    $this->redirect()->info('žádost zrušena');
+                    $this->redirect('/member/profil/par');
                 }
                 break;
 
@@ -179,7 +181,8 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
                 $this->redirect('/member/profil');
                 break;
         }
-        $this->redirect('/member/profil', 'Žádná taková žádost tu není');
+        $this->redirect()->warning('Žádná taková žádost tu není');
+        $this->redirect('/member/profil');
     }
 
     private function checkData($request)

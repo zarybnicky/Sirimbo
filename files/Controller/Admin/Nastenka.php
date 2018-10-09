@@ -58,7 +58,7 @@ class Controller_Admin_Nastenka extends Controller_Admin
     {
         if (!$request->post() || is_object($f = $this->checkData($request))) {
             if ($request->post()) {
-                $this->redirect()->setMessage($f->getMessages());
+                $this->redirect()->warning($f->getMessages());
             }
             $skupiny = DBSkupiny::get();
             $skupinySelected = [];
@@ -98,17 +98,15 @@ class Controller_Admin_Nastenka extends Controller_Admin
             );
         }
 
-        $this->redirect($request->post('referer'), 'Příspěvek úspěšně přidán');
+        $this->redirect($request->post('referer'));
     }
 
     public function edit($request)
     {
         $id = $request->getId();
         if (!$id || !($data = DBNastenka::getSingleNastenka($id))) {
-            $this->redirect(
-                $request->post('referer') ?: '/admin/nastenka',
-                'Nástěnka s takovým ID neexistuje'
-            );
+            $this->redirect()->warning('Nástěnka s takovým ID neexistuje');
+            $this->redirect($request->post('referer') ?: '/admin/nastenka');
         }
         Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
 
@@ -125,7 +123,7 @@ class Controller_Admin_Nastenka extends Controller_Admin
                 }
                 $request->post('lock', $data['up_lock']);
             } else {
-                $this->redirect()->setMessage($f->getMessages());
+                $this->redirect()->warning($f->getMessages());
             }
             $skupiny = DBSkupiny::get();
             $skupinySelected = [];
@@ -181,17 +179,15 @@ class Controller_Admin_Nastenka extends Controller_Admin
             ($request->post('lock') == 'lock') ? 1 : 0
         );
 
-        $this->redirect($request->post('referer'), 'Příspěvek úspěšně upraven');
+        $this->redirect($request->post('referer'));
     }
 
     public function remove($request)
     {
         $id = $request->getId();
         if (!$id || !($data = DBNastenka::getSingleNastenka($id))) {
-            $this->redirect(
-                $request->post('referer') ?: '/admin/nastenka',
-                'Příspěvek s takovým ID neexistuje'
-            );
+            $this->redirect()->warning('Příspěvek s takovým ID neexistuje');
+            $this->redirect($request->post('referer') ?: '/admin/nastenka');
         }
         Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
 
@@ -206,7 +202,7 @@ class Controller_Admin_Nastenka extends Controller_Admin
         }
 
         DBNastenka::removeNastenka($id);
-        $this->redirect('/admin/nastenka', 'Příspěvek odebrán');
+        $this->redirect('/admin/nastenka');
     }
 
     private function checkData($request)

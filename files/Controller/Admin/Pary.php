@@ -14,7 +14,7 @@ class Controller_Admin_Pary extends Controller_Admin
                 if ($request->post("add_partner")) {
                     DBPary::newCouple($request->post("add_partner"), $request->post("add_partnerka"));
                 }
-                $this->redirect('/admin/pary', 'Pár přidán');
+                $this->redirect('/admin/pary');
                 break;
 
             case 'fix_unpaired':
@@ -22,7 +22,8 @@ class Controller_Admin_Pary extends Controller_Admin
                 foreach ($xs as $x) {
                     DBPary::noPartner($x['u_id']);
                 }
-                $this->redirect('/admin/pary', count($xs) . ' chybných záznamů opraveno');
+                $this->redirect()->info(count($xs) . ' chybných záznamů opraveno');
+                $this->redirect('/admin/pary');
                 break;
         }
 
@@ -55,7 +56,8 @@ class Controller_Admin_Pary extends Controller_Admin
     {
         $id = $request->getId();
         if (!$id || !($data = DBPary::getSinglePar($id))) {
-            $this->redirect('/admin/pary', 'Pár s takovým ID neexistuje');
+            $this->redirect()->warning('Pár s takovým ID neexistuje');
+            $this->redirect('/admin/pary');
         }
 
         if (!$request->post()) {
@@ -111,7 +113,8 @@ class Controller_Admin_Pary extends Controller_Admin
             $lat_finale,
             $hodnoceni
         );
-        $this->redirect('/admin/pary', 'Třída a body změněny');
+        $this->redirect()->success('Třída a body změněny');
+        $this->redirect('/admin/pary');
     }
 
     public function remove($request)
@@ -120,6 +123,7 @@ class Controller_Admin_Pary extends Controller_Admin
         if ($id) {
             DBPary::removeCouple($id);
         }
-        $this->redirect('/admin/pary', 'Pár odstraněn');
+        $this->redirect()->success('Pár odstraněn');
+        $this->redirect('/admin/pary');
     }
 }

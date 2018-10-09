@@ -10,7 +10,7 @@ class Controller_Member_Rozpis extends Controller_Member
     public function view($request)
     {
         if ($request->post()) {
-            $this->redirect()->setMessage($this->processPost($request));
+            $this->processPost($request);
             $this->redirect('/member/rozpis');
         }
 
@@ -87,27 +87,25 @@ class Controller_Member_Rozpis extends Controller_Member
         $lesson = DBRozpis::getRozpisItemLesson($request->post('ri_id'));
 
         if (is_object($f = $this->checkData($request, $data, $request->post('action')))) {
-            return $f->getMessages();
+            $this->redirect()->warning($f->getMessages());
+            return;
         }
         if ($request->post('action') == 'signup') {
             if (!User::getZaplaceno() || (User::getPartnerID() > 0 && !User::getZaplaceno(true))) {
-                return 'Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky';
+                $this->redirect()->warning('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
             } elseif ($lesson['ri_partner']) {
-                return 'Už je obsazeno';
+                $this->redirect()->warning('Lekce už je obsazená');
             } else {
                 DBRozpis::rozpisSignUp($request->post('ri_id'), User::getParID());
-                return 'Hodina přidána';
             }
         } elseif ($request->post('action') == 'signout') {
             if ($lesson['ri_partner'] == 0) {
-                return 'Už je prázdno';
             } elseif (User::getParID() != $lesson['ri_partner']
                       && !Permissions::check('rozpis', P_OWNED, $data['n_trener'])
             ) {
-                return 'Nedostatečná oprávnění!';
+                $this->redirect()->warning('Nedostatečná oprávnění!');
             } else {
                 DBRozpis::rozpisSignOut($request->post('ri_id'));
-                return 'Hodina odebrána';
             }
         }
     }

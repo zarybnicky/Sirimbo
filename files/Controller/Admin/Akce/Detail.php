@@ -10,7 +10,8 @@ class Controller_Admin_Akce_Detail extends Controller_Admin_Akce
     {
         $id = $request->getId();
         if (!$id || !($akce = DBAkce::getSingleAkce($id))) {
-            $this->redirect('/admin/akce', 'Akce s takovým ID neexistuje');
+            $this->redirect()->warning('Akce s takovým ID neexistuje');
+            $this->redirect('/admin/akce');
         }
 
         if ($request->post()) {
@@ -38,7 +39,7 @@ class Controller_Admin_Akce_Detail extends Controller_Admin_Akce
                 DBAkce::addAkceItem($id, $user, $year);
                 $request->post('add-user', 0);
             }
-            $this->redirect('/admin/akce/detail/' . $id, 'Úspěšně upraveno');
+            $this->redirect('/admin/akce/detail/' . $id);
         }
 
         $data = [

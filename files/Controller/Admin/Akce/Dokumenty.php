@@ -10,7 +10,8 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Admin_Akce
     {
         $id = $request->getId();
         if (!$id || !($akce = DBAkce::getSingleAkce($id))) {
-            $this->redirect('/admin/akce', 'Akce s takovým ID neexistuje');
+            $this->redirect()->warning('Akce s takovým ID neexistuje');
+            $this->redirect('/admin/akce');
         }
         $documents = array_filter(explode(',', $akce["a_dokumenty"]));
 
@@ -34,7 +35,7 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Admin_Akce
                     $akce["a_lock"], $akce['a_visible']
                 );
             }
-            $this->redirect('/admin/akce/dokumenty/' . $id, 'Úspěšně upraveno');
+            $this->redirect('/admin/akce/dokumenty/' . $id);
         }
 
         $booked = count(DBAkce::getAkceItems($id));

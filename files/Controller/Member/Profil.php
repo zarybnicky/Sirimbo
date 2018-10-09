@@ -37,7 +37,7 @@ class Controller_Member_Profil extends Controller_Member
         }
 
         if (is_object($f = $this->checkData($request, 'edit', $narozeni))) {
-            $this->redirect()->setMessage($f->getMessages());
+            $this->redirect()->warning($f->getMessages());
             $this->render('files/View/Member/Profil/PersonalData.inc', [
                 'header' => 'Osobní údaje',
                 'login' => $request->post('login'),
@@ -69,7 +69,7 @@ class Controller_Member_Profil extends Controller_Member
             $data['u_ban'],
             $data['u_system']
         );
-        $this->redirect('/member/profil', 'Upraveno');
+        $this->redirect('/member/profil');
     }
 
     public function heslo($request)
@@ -78,7 +78,7 @@ class Controller_Member_Profil extends Controller_Member
             is_object($f = $this->checkData($request, 'heslo'))
         ) {
             if ($request->post()) {
-                $this->redirect()->setMessage($f->getMessages());
+                $this->redirect()->warning($f->getMessages());
             }
             $this->render('files/View/Member/Profil/NewPassword.inc', [
                 'header' => 'Změna hesla'
@@ -89,7 +89,7 @@ class Controller_Member_Profil extends Controller_Member
             User::getUserID(),
             User::crypt($request->post('newpass'))
         );
-        $this->redirect('/member/profil', 'Heslo změněno');
+        $this->redirect('/member/profil');
     }
 
     public function platby($request)

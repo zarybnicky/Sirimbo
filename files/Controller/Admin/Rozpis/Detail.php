@@ -11,10 +11,8 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
     {
         $id = $request->getId();
         if (!$id || !($data = DBRozpis::getSingleRozpis($id))) {
-            $this->redirect(
-                '/admin/rozpis',
-                'Rozpis s takovým ID neexistuje'
-            );
+            $this->redirect()->warning('Rozpis s takovým ID neexistuje');
+            $this->redirect('/admin/rozpis');
         }
 
         Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
@@ -134,7 +132,7 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
         //Try to add a new item
         if ($request->post('add_od') && $request->post('add_do')) {
             if (is_object($f = $this->checkAdd($request))) {
-                $this->redirect()->setMessage($f->getMessages());
+                $this->redirect()->warning($f->getMessages());
             } else {
                 $newId = DBRozpis::addRozpisItem(
                     $id,
@@ -185,7 +183,7 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
 
             case 'add_multiple':
                 if (is_object($f = $this->checkAddMultiple($request))) {
-                    $this->redirect()->setMessage($f->getMessages());
+                    $this->redirect()->warning($f->getMessages());
                     break;
                 }
 

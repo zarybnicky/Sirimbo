@@ -69,7 +69,7 @@ class Controller_Admin_Nabidka extends Controller_Admin
 
         $form = $this->checkData($request);
         if (is_object($form)) {
-            $this->redirect()->setMessage($form->getMessages());
+            $this->redirect()->warning($form->getMessages());
             $this->displayForm($request);
             return;
         }
@@ -96,20 +96,16 @@ class Controller_Admin_Nabidka extends Controller_Admin
             $request->post('lock') ? 1 : 0
         );
 
-        $this->redirect(
-            $request->post('referer') ?: '/admin/nabidka',
-            'Nabídka přidána'
-        );
+        $this->redirect()->success('Nabídka přidána');
+        $this->redirect($request->post('referer') ?: '/admin/nabidka');
     }
 
     public function edit($request)
     {
         $id = $request->getId();
         if (!$id || !($data = DBNabidka::getSingleNabidka($id))) {
-            $this->redirect(
-                $request->post('referer') ?: '/admin/nabidka',
-                'Nabídka s takovým ID neexistuje'
-            );
+            $this->redirect()->warning('Nabídka s takovým ID neexistuje');
+            $this->redirect($request->post('referer') ?: '/admin/nabidka');
         }
         Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
 
@@ -120,7 +116,7 @@ class Controller_Admin_Nabidka extends Controller_Admin
 
         $form = $this->checkData($request);
         if (is_object($form)) {
-            $this->redirect()->setMessage($form->getMessages());
+            $this->redirect()->warning($form->getMessages());
             $this->displayForm($request, $data);
             return;
         }
@@ -135,18 +131,18 @@ class Controller_Admin_Nabidka extends Controller_Admin
         $pocet_hod = $request->post('pocet_hod');
         if ($pocet_hod < $items) {
             $pocet_hod = $items;
-            $this->redirect()->setMessage(
+            $this->redirect()->warning(
                 'Obsazených hodin už je víc než jste zadali, ' .
-                'nemůžu dál snížit počet hodin'
+                'nelze už dál snížit počet hodin'
             );
         }
         $max_lessons = $request->post('max_pocet_hod');
         $max_lessons_old = DBNabidka::getNabidkaMaxItems($id);
         if ($max_lessons < $max_lessons_old && $max_lessons != 0) {
             $max_lessons = $max_lessons_old;
-            $this->redirect()->setMessage(
+            $this->redirect()->warning(
                 'Zadaný maximální počet hodin/pár je méně než už je zarezervováno, ' .
-                'nemůžu dál snížit maximální počet hodin'
+                'nelze už dál snížit maximální počet hodin'
             );
         }
         if (!is_numeric($max_lessons)) {
@@ -164,10 +160,8 @@ class Controller_Admin_Nabidka extends Controller_Admin
             $request->post('lock') ? '1' : '0'
         );
 
-        $this->redirect(
-            $request->post('referer') ?: '/admin/nabidka',
-            'Nabídka úspěšně upravena'
-        );
+        $this->redirect()->success('Nabídka úspěšně upravena');
+        $this->redirect($request->post('referer') ?: '/admin/nabidka');
     }
 
     public function duplicate($request)

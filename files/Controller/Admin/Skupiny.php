@@ -37,7 +37,7 @@ class Controller_Admin_Skupiny extends Controller_Admin
             return;
         }
         if (is_object($f = $this->checkPost($request))) {
-            $this->redirect()->setMessage($f->getMessages());
+            $this->redirect()->warning($f->getMessages());
             $this->displayForm($request);
             return;
         }
@@ -52,14 +52,15 @@ class Controller_Admin_Skupiny extends Controller_Admin
             DBSkupiny::addChild($insertId, $item);
         }
 
-        $this->redirect('/admin/skupiny', 'Skupina úspěšně přidána');
+        $this->redirect('/admin/skupiny');
     }
 
     public function edit($request)
     {
         $id = $request->getId();
         if (!$id || !($data = DBSkupiny::getSingle($id))) {
-            $this->redirect('/admin/skupiny', 'Skupina s takovým ID neexistuje');
+            $this->redirect()->warning('Skupina s takovým ID neexistuje');
+            $this->redirect('/admin/skupiny');
         }
 
         if (!$request->post()) {
@@ -68,7 +69,7 @@ class Controller_Admin_Skupiny extends Controller_Admin
         }
 
         if (is_object($f = $this->checkPost($request))) {
-            $this->redirect()->setMessage($f->getMessages());
+            $this->redirect()->warning($f->getMessages());
             $this->displayForm($request, $data);
             return;
         }
@@ -94,14 +95,15 @@ class Controller_Admin_Skupiny extends Controller_Admin
             DBSkupiny::addChild($id, $added);
         }
 
-        $this->redirect('/admin/skupiny', 'Skupina úspěšně upravena');
+        $this->redirect('/admin/skupiny');
     }
 
     public function remove($request)
     {
         $id = $request->getId();
         if (!$id || !($data = DBSkupiny::getSingle($id))) {
-            $this->redirect('/admin/skupiny', 'Skupina s takovým ID neexistuje');
+            $this->redirect()->warning('Skupina s takovým ID neexistuje');
+            $this->redirect('/admin/skupiny');
         }
 
         if ($request->post('action') == 'unlink') {
@@ -113,15 +115,13 @@ class Controller_Admin_Skupiny extends Controller_Admin
                 ++$groupCount;
             }
 
-            $this->redirect(
-                '/admin/skupiny/remove/' . $id,
-                'Spojení s ' . $groupCount . ' kategoriemi byla odstraněna.'
-            );
+            $this->redirect()->info('Spojení s ' . $groupCount . ' kategoriemi byla odstraněna.');
+            $this->redirect('/admin/skupiny/remove/' . $id);
             return;
         }
         if (($f = $this->getLinkedSkupinaObjects($id)) || !$request->post()) {
             if (isset($f) && $f) {
-                $this->redirect()->setMessage(
+                $this->redirect()->info(
                     'Nemůžu odstranit skupinu s připojenými kategoriemi! '
                     . new Tag(
                         'form',
@@ -139,7 +139,7 @@ class Controller_Admin_Skupiny extends Controller_Admin
             return;
         }
         DBSkupiny::delete($id);
-        $this->redirect('/admin/skupiny', 'Skupina byla úspěšně odebrána.');
+        $this->redirect('/admin/skupiny');
     }
 
     private function displayForm($request, $data = null)

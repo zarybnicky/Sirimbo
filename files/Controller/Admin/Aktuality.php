@@ -67,12 +67,9 @@ class Controller_Admin_Aktuality extends Controller_Admin
         );
 
         if ($request->post('action') == 'save') {
-            $this->redirect('/admin/aktuality', 'Článek přidán');
+            $this->redirect('/admin/aktuality');
         } else {
-            $this->redirect(
-                '/admin/aktuality/foto/' . $id . '?notify=true',
-                'Uloženo'
-            );
+            $this->redirect('/admin/aktuality/foto/' . $id . '?notify=true');
         }
     }
 
@@ -80,7 +77,8 @@ class Controller_Admin_Aktuality extends Controller_Admin
     {
         $id = $request->getId();
         if (!$id || !($data = DBAktuality::getSingleAktualita($id))) {
-            $this->redirect('/admin/aktuality', 'Článek s takovým ID neexistuje');
+            $this->redirect()->warning('Článek s takovým ID neexistuje');
+            $this->redirect('/admin/aktuality');
         }
 
         Permissions::checkError('aktuality', P_OWNED, $data['at_kdo']);
@@ -107,7 +105,7 @@ class Controller_Admin_Aktuality extends Controller_Admin
             $data['at_foto'],
             $data['at_foto_main']
         );
-        $this->redirect('/admin/aktuality', 'Článek změněn');
+        $this->redirect('/admin/aktuality');
     }
 
     public function remove($request)
@@ -122,7 +120,7 @@ class Controller_Admin_Aktuality extends Controller_Admin
                 throw new AuthorizationException('Máte nedostatečnou autorizaci pro tuto akci!');
             }
             DBAktuality::removeAktualita($id);
-            $this->redirect('/admin/aktuality', 'Článek odebrán');
+            $this->redirect('/admin/aktuality');
         }
 
         $item = DBAktuality::getSingleAktualita($id);

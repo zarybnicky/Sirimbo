@@ -14,9 +14,9 @@ class Controller_Member_Download extends Controller_Abstract
 
         $data = DBDokumenty::getSingleDokument($request->get('id'));
         $path = $data['d_path'];
-
         if (!is_file($path)) {
-            $this->redirect('/member/dokumenty', 'Soubor nebyl nalezen.');
+            $this->redirect()->warning('Soubor nebyl nalezen.');
+            $this->redirect('/member/dokumenty');
         }
 
         header('Pragma: no-cache');

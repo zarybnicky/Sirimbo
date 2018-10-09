@@ -11,7 +11,8 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
     {
         $id = $request->getId();
         if (!$id || !($data = DBGalerie::getSingleFoto($id))) {
-            $this->redirect($request->getReferer(), 'Takový soubor neexistuje!');
+            $this->redirect()->warning('Takový soubor neexistuje!');
+            $this->redirect($request->getReferer());
         }
         if (!$request->post()) {
             $request->post('name', $data['gf_name']);
@@ -20,7 +21,7 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
             return;
         }
         if (is_object($form = $this->_checkData())) {
-            $this->redirect()->setMessage($form->getMessages());
+            $this->redirect()->warning($form->getMessages());
             $this->displayForm($request, $id);
             return;
         }
@@ -34,10 +35,8 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
 
         if ($data['gf_path'] != $newPath) {
             if (file_exists(GALERIE . DIRECTORY_SEPARATOR . $newPath)) {
-                $this->redirect(
-                    '/admin/galerie/file/edit/' . $id,
-                    'V dané složce už existuje soubor se stejným názvem.'
-                );
+                $this->redirect()->danger('V dané složce už existuje soubor se stejným názvem.');
+                $this->redirect('/admin/galerie/file/edit/' . $id);
             }
             rename(
                 GALERIE . DIRECTORY_SEPARATOR . $data['gd_path'],
@@ -51,10 +50,7 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
         }
 
         DBGalerie::editFoto($id, $data['gf_path'], $request->post('parent'), $request->post('name'));
-        $this->redirect(
-            '/admin/galerie/directory/' . $request->post('parent'),
-            'Soubor byl úspěšně upraven'
-        );
+        $this->redirect('/admin/galerie/directory/' . $request->post('parent'));
     }
 
     public function remove($request)
@@ -69,7 +65,7 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
             DBGalerie::removeFoto($id);
             unlink(GALERIE . DIRECTORY_SEPARATOR . $item['gf_path']);
             unlink(GALERIE_THUMBS . DIRECTORY_SEPARATOR . $item['gf_path']);
-            $this->redirect('/admin/galerie', 'Fotografie odebrána');
+            $this->redirect('/admin/galerie');
         }
 
         $item = DBGalerie::getSingleFoto($id);
@@ -92,7 +88,8 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
             $parentId = 0;
         }
         if (!($parent = DBGalerie::getSingleDir($parentId))) {
-            $this->redirect('/admin/galerie/upload', 'Taková složka neexistuje');
+            $this->redirect()->warning('Taková složka neexistuje');
+            $this->redirect('/admin/galerie/upload');
         }
         $this->_processUpload($parent, $request);
     }
@@ -104,7 +101,7 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
         $uploadHelper->loadFromPost($request);
 
         if (!$uploadHelper->hasValidFiles() && $uploadHelper->hasFiles()) {
-            $this->redirect()->setMessage($uploadHelper->getErrorMessages());
+            $this->redirect()->warning($uploadHelper->getErrorMessages());
         }
 
         $uploader = $uploadHelper->getFilledUploader();
@@ -115,23 +112,19 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
         $uploader->setOutputDir(GALERIE . DIRECTORY_SEPARATOR . $parent['gd_path']);
         $uploader->save(true, true);
         if ($uploader->hasRefusedFiles()) {
-            $this->redirect()->setMessage(
+            $this->redirect()->warning(
                 'Počet zamítnutých souborů: ' . count($uploader->getRefusedFiles())
             );
         }
 
         if (count($uploader->getSavedFiles()) == 0) {
-            $this->redirect(
-                '/admin/galerie/upload',
-                'Žádné soubory nebyly nahrány!'
-            );
+            $this->redirect()->info('Žádné soubory nebyly nahrány!');
+            $this->redirect('/admin/galerie/upload');
         }
         $this->_processUploadedFiles($parent, $uploader->getSavedFiles());
 
-        $this->redirect(
-            '/admin/galerie',
-            'Počet nahraných souborů: ' . count($uploader->getSavedFiles())
-        );
+        $this->redirect()->info('Počet nahraných souborů: ' . count($uploader->getSavedFiles()));
+        $this->redirect('/admin/galerie');
     }
 
     private function _processUploadedFiles($parent, $files)
@@ -152,12 +145,13 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
             DBGalerie::addFoto($parent['gd_id'], $path, $name, User::getUserID());
         }
         if ($failCount > 0) {
-            $this->redirect()->setMessage(
+            $this->redirect()->warning(
                 'Počet neůspěšně zpracovaných souborů: ' . $failCount
             );
         }
         if (count($files) > $failCount) {
-            $this->redirect('/admin/galerie', 'Fotky přidány');
+            $this->redirect()->info('Fotky přidány');
+            $this->redirect('/admin/galerie');
         }
     }
 

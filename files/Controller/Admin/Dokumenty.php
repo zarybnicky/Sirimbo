@@ -25,7 +25,8 @@ class Controller_Admin_Dokumenty extends Controller_Admin
             }
 
             if (!move_uploaded_file($fileUpload, $path)) {
-                $this->redirect('/admin/dokumenty', 'Soubor se nepodařilo nahrát...');
+                $this->redirect()->danger('Nepodařilo se soubor nahrát.');
+                $this->redirect('/admin/dokumenty');
                 return;
             }
 
@@ -37,7 +38,8 @@ class Controller_Admin_Dokumenty extends Controller_Admin
                 $request->post('kategorie'),
                 User::getUserID()
             );
-            $this->redirect('/admin/dokumenty', 'Soubor byl úspěšně nahrán');
+            $this->redirect()->success('Soubor byl nahrán úspěšně');
+            $this->redirect('/admin/dokumenty');
             return;
         }
 
@@ -70,13 +72,15 @@ class Controller_Admin_Dokumenty extends Controller_Admin
     {
         $id = $request->getId();
         if (!$id || !($data = DBDokumenty::getSingleDokument($id))) {
-            $this->redirect('/admin/dokumenty', 'Dokument s takovým ID neexistuje');
+            $this->redirect()->warning('Dokument s takovým ID neexistuje');
+            $this->redirect('/admin/dokumenty');
         }
         Permissions::checkError('dokumenty', P_OWNED, $data['d_kdo']);
 
         if ($request->post('newname')) {
             DBDokumenty::editDokument($id, $request->post('newname'));
-            $this->redirect('/admin/dokumenty', 'Příspěvek úspěšně upraven');
+            $this->redirect()->success('Dokument upraven');
+            $this->redirect('/admin/dokumenty');
         }
         $this->render('files/View/Admin/Dokumenty/Form.inc', [
             'header' => 'Správa dokumentů',
@@ -98,7 +102,7 @@ class Controller_Admin_Dokumenty extends Controller_Admin
             }
             unlink($data['d_path']);
             DBDokumenty::removeDokument($id);
-            $this->redirect('/admin/dokumenty', 'Dokument odebrán');
+            $this->redirect('/admin/dokumenty');
         }
 
         $this->render('files/View/Admin/RemovePrompt.inc', [

@@ -11,7 +11,8 @@ class Controller_Member_Akce extends Controller_Member
     {
         if ($id = $request->getId()) {
             if (!($data = DBAkce::getSingleAkce($id, true))) {
-                $this->redirect('/member/akce', 'Neexistuje žádná taková akce');
+                $this->redirect()->warning('Neexistuje žádná taková akce');
+                $this->redirect('/member/akce');
             }
             $this->render('files/View/Member/Akce/Single.inc', [
                 'header' => 'Klubové akce',
@@ -23,7 +24,7 @@ class Controller_Member_Akce extends Controller_Member
             && ($data = DBAkce::getSingleAkce($request->post('id')))
         ) {
             if (is_object($form = $this->checkData($request, $data, $request->post('action')))) {
-                $this->redirect()->setMessage($form->getMessages());
+                $this->redirect()->warning($form->getMessages());
             } elseif ($request->post('action') == 'signup') {
                 $date = explode('-', User::getDatumNarozeni());
 
