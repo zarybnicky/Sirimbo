@@ -28,7 +28,7 @@ class DBPermissions extends Database
         }
 
         $q = "INSERT INTO permissions (pe_name,pe_description";
-        foreach ($permissions as $key => $item) {
+        foreach (array_keys($permissions) as $key) {
             $q .= ',pe_' . $key;
         }
         $q .= ") VALUES ('$name','$description'";

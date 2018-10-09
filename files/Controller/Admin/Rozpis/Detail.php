@@ -20,7 +20,7 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
         $items = DBRozpis::getRozpisItem($id);
 
         if ($request->post()) {
-            $items = $this->processPost($request, $id, $data, $items);
+            $items = $this->processPost($request, $id, $items);
             if ($items) {
                 DBRozpis::editRozpisItemMultiple($items);
             }
@@ -115,7 +115,7 @@ class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
         ]);
     }
 
-    protected function processPost($request, $id, $data, $items)
+    protected function processPost($request, $id, $items)
     {
         if ($request->post('remove') > 0) {
             DBRozpis::removeRozpisItem($request->post('remove'));

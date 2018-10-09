@@ -1,40 +1,40 @@
 <?php
 class Controller_Oklubu extends Controller_Abstract
 {
-    public function view($request)
+    public function view()
     {
         $this->redirect('/oklubu/obecne');
     }
 
-    public function obecne($request)
+    public function obecne()
     {
         $this->render('files/View/Main/OKlubu/Main.inc', [
             'header' => 'O klubu'
         ]);
     }
 
-    public function historie($request)
+    public function historie()
     {
         $this->render('files/View/Main/OKlubu/Historie.inc', [
             'header' => 'Historie klubu'
         ]);
     }
 
-    public function klubovi($request)
+    public function klubovi()
     {
         $this->render('files/View/Main/OKlubu/TreneriInt.inc', [
             'header' => 'Kluboví trenéři'
         ]);
     }
 
-    public function externi($request)
+    public function externi()
     {
         $this->render('files/View/Main/OKlubu/TreneriExt.inc', [
             'header' => 'Externí trenéři'
         ]);
     }
 
-    public function saly($request)
+    public function saly()
     {
         $this->render('files/View/Main/OKlubu/Saly.inc', [
             'header' => 'Kde trénujeme'

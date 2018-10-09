@@ -3,13 +3,8 @@ class Controller_Error extends Controller_Abstract
 {
     public function view($request)
     {
-        function ucfirstUser(&$str, $key)
-        {
-            $str = ucfirst($str);
-        }
         $array = explode('_', $request->get('id'));
-        array_walk($array, 'ucfirstUser');
-        $id = implode('', $array);
+        $id = implode('', array_map('ucfirst', $array));
         $file = ERROR . DIRECTORY_SEPARATOR . $id . '.inc';
 
         if (file_exists($file)) {

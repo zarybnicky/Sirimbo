@@ -7,7 +7,7 @@ class Controller_Member_Profil extends Controller_Member
         Permissions::checkError('nastenka', P_VIEW);
     }
 
-    public function view($request)
+    public function view()
     {
         $this->render('files/View/Member/Profil/Overview.inc', [
             'header' => 'Profil'
@@ -92,7 +92,7 @@ class Controller_Member_Profil extends Controller_Member
         $this->redirect('/member/profil');
     }
 
-    public function platby($request)
+    public function platby()
     {
         $groupsOut = [];
         $groups = DBSkupiny::getSingleWithCategories(User::getSkupina());

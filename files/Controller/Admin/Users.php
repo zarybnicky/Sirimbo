@@ -211,7 +211,7 @@ class Controller_Admin_Users extends Controller_Admin
         ]);
     }
 
-    public function duplicate($request)
+    public function duplicate()
     {
         Permissions::checkError('users', P_ADMIN);
         $users = array_map(
@@ -236,7 +236,7 @@ class Controller_Admin_Users extends Controller_Admin
         ]);
     }
 
-    public function statistiky($request)
+    public function statistiky()
     {
         Permissions::checkError('users', P_ADMIN);
         $all = DBUser::getUsers();
