@@ -12,9 +12,4 @@ class Controller_Admin extends Controller_Abstract
             'header' => 'Administrace'
         ]);
     }
-
-    public function navbar()
-    {
-        return array_merge(parent::navbar(), [include SETTINGS . '/menu/admin.inner.php']);
-    }
 }
