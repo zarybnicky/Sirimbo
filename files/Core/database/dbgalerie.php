@@ -1,7 +1,7 @@
 <?php
 class DBGalerie extends Database
 {
-    public static function getFotky($dir = null, $limit = -1, $offset = 0)
+    public static function getFotky($dir = null)
     {
         if ($dir !== null) {
             list($dir) = self::escape($dir);
@@ -9,24 +9,18 @@ class DBGalerie extends Database
         $res = self::query(
             'SELECT * FROM galerie_foto'
             . ($dir !== null ? (' WHERE gf_id_rodic="' . $dir . '"') : '')
-            . ($limit > -1 ? (' LIMIT ' . $offset . ',' . $limit) : '')
+            . ' ORDER BY gf_id DESC'
         );
 
         return self::getArray($res);
     }
 
-    public static function getFotkyWithParentPath($dir = false, $limit = -1, $offset = 0)
+    public static function getFotkyWithParentPath()
     {
-        if ($dir !== false) {
-            list($dir) = self::escape($dir);
-        }
         $res = self::query(
             'SELECT *,(SELECT gd_path FROM galerie_dir WHERE gd_id=gf_id_rodic) AS gf_path_rodic
-            FROM galerie_foto '
-            . ($dir !== false ? ('WHERE gf_id_rodic="' . $dir . '" ') : '')
-            . ($limit > -1 ? ('LIMIT ' . $offset . ',' . $limit) : '')
+            FROM galerie_foto'
         );
-
         return self::getArray($res);
     }
 
