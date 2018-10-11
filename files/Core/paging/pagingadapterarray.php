@@ -13,7 +13,7 @@ class PagingAdapterArray implements PagingAdapterInterface
     }
 
     public function page($offset, $length, $options = null) {
-        return array_slice($this->_array, $offset, $length);
+        return array_slice($this->_array, $offset, $lenght);
     }
     public function count($options = null) {
         return count($this->_array);

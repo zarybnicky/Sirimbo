@@ -72,7 +72,7 @@ class Controller_Member_Rozpis extends Controller_Member
         }
     }
 
-    protected function checkData($data, $action = 'signup')
+    protected function checkData($request, $data, $action = 'signup')
     {
         $f = new Form();
         $f->checkBool(!$data['r_lock'], 'Tento rozpis je uzamčený', '');
@@ -86,7 +86,7 @@ class Controller_Member_Rozpis extends Controller_Member
         $data = DBRozpis::getSingleRozpis($request->post('ri_id'));
         $lesson = DBRozpis::getRozpisItemLesson($request->post('ri_id'));
 
-        if (is_object($f = $this->checkData($data, $request->post('action')))) {
+        if (is_object($f = $this->checkData($request, $data, $request->post('action')))) {
             $this->redirect()->warning($f->getMessages());
             return;
         }

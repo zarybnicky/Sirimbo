@@ -12,7 +12,7 @@ class Controller_Admin_Platby extends Controller_Admin
     }
     protected function recognizeHeaders($headers, &$specific, &$variable, &$date, &$amount)
     {
-        foreach (array_keys($headers) as $key) {
+        foreach ($headers as $key => $value) {
             if (mb_stripos($key, 'specif') !== false) {
                 $specific = $key;
             }

@@ -40,7 +40,7 @@ function shutdownHandler()
         }
         array_walk(
             $v['args'],
-            function (&$item) {
+            function (&$item, $key) {
                 $item = var_export($item, true);
             }
         );
@@ -69,7 +69,7 @@ function errorHandler($severity, $message, $filepath, $line)
         }
         array_walk(
             $v['args'],
-            function (&$item) {
+            function (&$item, $key) {
                 $item = var_export($item, true);
             }
         );

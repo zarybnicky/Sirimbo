@@ -36,17 +36,17 @@ class Controller_Aktualne extends Controller_Abstract
         return;
     }
 
-    public function posledni()
+    public function posledni($request)
     {
         $this->_aktualne("Nejnovější články");
     }
 
-    public function clanky()
+    public function clanky($request)
     {
         $this->_aktualne('Články', AKTUALITY_CLANKY);
     }
 
-    public function kratke_zpravy()
+    public function kratke_zpravy($request)
     {
         $this->_aktualne('Krátké zprávy', AKTUALITY_KRATKE);
     }
@@ -63,7 +63,7 @@ class Controller_Aktualne extends Controller_Abstract
             return;
         }
         $data = array_map(
-            function ($item) use ($type) {
+            function($item) use ($type) {
                 $photo = DBGalerie::getSingleFoto($item['at_foto_main']);
                 $photo_uri = $photo ? $photo['gf_path'] : '';
 

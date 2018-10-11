@@ -1,38 +1,38 @@
 <?php
 class Controller_Nabizime extends Controller_Abstract
 {
-    public function view()
+    public function view($request)
     {
         $this->redirect('/nabizime/obecne');
     }
 
-    public function obecne()
+    public function obecne($request)
     {
         $this->render('files/View/Main/Nabizime/Main.inc', [
             'header' => 'Nabízíme'
         ]);
     }
 
-    public function vystoupeni()
+    public function vystoupeni($request)
     {
         $this->render('files/View/Main/Nabizime/Vystoupeni.inc', [
             'header' => 'Taneční vystoupení'
         ]);
     }
 
-    public function individualky()
+    public function individualky($request)
     {
         $this->render('files/View/Main/Nabizime/Individualky.inc', [
             'header' => 'Individuální lekce'
         ]);
     }
 
-    public function seminare()
+    public function seminare($request)
     {
         $this->render('files/View/Main/Nabizime/Seminare.inc');
     }
 
-    public function soustredeni()
+    public function soustredeni($request)
     {
         $this->render('files/View/Main/Nabizime/Seminare.inc');
     }

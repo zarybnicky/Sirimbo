@@ -106,7 +106,7 @@ class UserSelectHelper
 
         foreach ($this->_users as $user) {
             if (isset($user['u_narozeni'])) {
-                list($year) = explode('-', $user['u_narozeni']);
+                list($year, $month, $day) = explode('-', $user['u_narozeni']);
             }
 
             $id = $user[$this->_idIndex];

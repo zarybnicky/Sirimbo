@@ -4,7 +4,7 @@ require 'smtp.php';
 
 class Mailer
 {
-    private static function _mail($to, $subject, $message)
+    private static function _mail($to, $subject, $message, $from, $headers)
     {
         $mail = new PHPMailer();
 
@@ -27,6 +27,11 @@ class Mailer
         $mail->send();
     }
 
+    public static function customMail($to, $subject, $message, $from = '', $headers = '')
+    {
+        Mailer::_mail($to, $subject, $message, $from, $headers);
+    }
+
     public static function newPassword($to, $newpass)
     {
         $subject = "TKOlymp.cz - nové heslo";
@@ -40,7 +45,7 @@ $newpass
 S pozdravem
 TKOlymp.cz
 EOS;
-        Mailer::_mail($to, $subject, $message);
+        Mailer::_mail($to, $subject, $message, DEFAULT_FROM_MAIL, "");
     }
 
     public static function newUserNotice($to, $username, $total_users = -1)
@@ -51,11 +56,10 @@ EOS;
 
         $subject = "TKOlymp.cz - nový uživatel ($username)";
         $message = "Na TKOlymp.cz se registroval uživatel $username a čeká na potvrzení registrace.\n";
-        if ($total_users > 0) {
+        if ($total_users > 0)
             $message .= "Celkem nepotvrzených uživatelů: $total_users";
-        }
 
-        Mailer::_mail($to, $subject, $message);
+        Mailer::_mail($to, $subject, $message, DEFAULT_FROM_MAIL, "");
     }
 
     public static function registrationConfirmNotice($to, $username)
@@ -68,6 +72,6 @@ Nyní se už můžete přihlásit s údaji, které jste zadali při registraci.
 S pozdravem
 TKOlymp.cz
 EOS;
-        Mailer::_mail($to, $subject, $message);
+        Mailer::_mail($to, $subject, $message, DEFAULT_FROM_MAIL, "");
     }
 }
