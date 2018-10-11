@@ -48,7 +48,7 @@ class Controller_Admin_Skupiny extends Controller_Admin
         );
         $insertId = DBSkupiny::getInsertId();
 
-        foreach ($request->post('group') as $item) {
+        foreach ($request->post('group') ?: [] as $item) {
             DBSkupiny::addChild($insertId, $item);
         }
 
