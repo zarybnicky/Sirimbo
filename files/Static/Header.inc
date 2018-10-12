@@ -42,13 +42,13 @@
           </button>
           <div class="collapse navbar-collapse ml-lg-0 ml-3" id="nav">
             <div class="flex-column" style="flex-grow:1">
-              <?php foreach ($this->navbar as $row): ?>
-                <ul class="navbar-nav">
+              <?php $first = true; foreach ($this->navbar as $row): ?>
+                <ul class="navbar-nav <?= $first ? '' : 'd-none d-md-flex' ?>">
                   <?php foreach ($row as $item): ?>
                     <?= $this->renderNavbarItem($item) ?>
                   <?php endforeach ?>
                 </ul>
-              <?php endforeach ?>
+              <?php $first = false; endforeach ?>
             </div>
             <?= $this->login() ?>
           </div>
