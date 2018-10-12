@@ -11,9 +11,6 @@ class DBUser extends Database implements Pagable
             case 'ban':
                 $q .= " AND u_ban='1'";
                 break;
-            case 'dancer':
-                $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0' AND u_dancer='1'";
-                break;
             case 'system':
                 $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='1'";
                 break;
@@ -59,9 +56,6 @@ class DBUser extends Database implements Pagable
                 break;
             case 'ban':
                 $q .= " AND u_ban='1'";
-                break;
-            case 'dancer':
-                $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0' AND u_dancer='1'";
                 break;
             case 'system':
                 $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='1'";
@@ -192,11 +186,13 @@ class DBUser extends Database implements Pagable
         }
     }
 
-    public static function confirmUser($id, $group, $skupina = '1', $dancer = 0)
+    public static function confirmUser($id, $group, $skupina = '1')
     {
         DBUser::query(
-            "UPDATE users SET u_confirmed='1',u_group='?',u_skupina='?',u_dancer='?',u_system='0' WHERE u_id='?'",
-            $group, $skupina, $dancer, $id
+            "UPDATE users SET u_confirmed='1',u_group='?',u_skupina='?',u_system='0' WHERE u_id='?'",
+            $group,
+            $skupina,
+            $id
         );
     }
 
@@ -207,32 +203,32 @@ class DBUser extends Database implements Pagable
     }
 
     public static function setUserData($id, $jmeno, $prijmeni, $pohlavi, $email, $telefon,
-            $narozeni, $poznamky, $group, $skupina, $dancer, $lock, $ban, $system
+            $narozeni, $poznamky, $group, $skupina, $lock, $ban, $system
     ) {
         DBUser::query(
             "UPDATE users SET " .
             "u_jmeno='?',u_prijmeni='?',u_pohlavi='?',u_email='?'," .
             "u_telefon='?',u_narozeni='?',u_poznamky='?',u_group='?'," .
-            "u_skupina='?',u_dancer='?',u_lock='?',u_ban='?',u_system='?'" .
+            "u_skupina='?',u_lock='?',u_ban='?',u_system='?'" .
             " WHERE u_id='?'",
             $jmeno, $prijmeni, $pohlavi, $email, $telefon, $narozeni, $poznamky,
-            $group, $skupina, $dancer, $lock, $ban, $system, $id
+            $group, $skupina, $lock, $ban, $system, $id
         );
         return true;
     }
 
     public static function addUser(
         $login, $pass, $jmeno, $prijmeni, $pohlavi, $email, $telefon,
-        $narozeni, $poznamky, $group, $skupina, $dancer, $lock, $ban,
+        $narozeni, $poznamky, $group, $skupina, $lock, $ban,
         $confirmed, $system
     ) {
         DBUser::query(
             "INSERT INTO users " .
             "(u_login,u_pass,u_jmeno,u_prijmeni,u_pohlavi,u_email,u_telefon,u_narozeni," .
-            "u_poznamky,u_group,u_skupina,u_dancer,u_lock,u_ban,u_confirmed,u_system) VALUES " .
-            "('?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?')",
+            "u_poznamky,u_group,u_skupina,u_lock,u_ban,u_confirmed,u_system) VALUES " .
+            "('?','?','?','?','?','?','?','?','?','?','?','?','?','?','?')",
             $login, $pass, $jmeno, $prijmeni, $pohlavi, $email, $telefon,
-            $narozeni, $poznamky, $group, $skupina, $dancer, $lock, $ban,
+            $narozeni, $poznamky, $group, $skupina, $lock, $ban,
             $confirmed, $system
         );
         $uid = mysql_insert_id();
@@ -373,18 +369,6 @@ class DBUser extends Database implements Pagable
             WHERE u_system='0' AND u_confirmed='1' AND u_ban='0' " .
             ($group !== null ? "AND u_group='$group' " : '') .
                 "ORDER BY u_prijmeni "
-        );
-        return DBUser::getArray($res);
-    }
-
-    public static function getActiveDancers($group = null)
-    {
-        $res = DBUser::query(
-            "SELECT users.*,skupiny.* FROM users
-                LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
-            WHERE u_system='0' AND u_dancer='1' AND u_confirmed='1' AND u_ban='0' " .
-                ($group !== null ? "AND u_group='$group' " : '') .
-            "ORDER BY u_prijmeni"
         );
         return DBUser::getArray($res);
     }

@@ -64,7 +64,6 @@ class Controller_Member_Profil extends Controller_Member
             $request->post('poznamky'),
             $data['u_group'],
             $data['u_skupina'],
-            $data['u_dancer'],
             $data['u_lock'],
             $data['u_ban'],
             $data['u_system']

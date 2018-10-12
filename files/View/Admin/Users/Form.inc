@@ -58,9 +58,6 @@
       <?= $this->checkbox('ban', 'ban')->label('Ban')->set($this->ban) ?>
     </div>
     <div class="form-check">
-      <?= $this->checkbox('dancer', 'dancer')->label('Aktivní tanečník')->set($this->dancer) ?>
-    </div>
-    <div class="form-check">
       <?= $this->checkbox('system', 'system')->label('Systémový uživatel')->set($this->system) ?>
     </div>
     <div class="form-group">

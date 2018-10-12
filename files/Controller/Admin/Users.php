@@ -13,8 +13,7 @@ class Controller_Admin_Users extends Controller_Admin
         if ($request->post('action') == 'save') {
             foreach ($request->post('save') as $user_id) {
                 $user = DBUser::getUserData($user_id);
-                if (((bool) $request->post($user_id . '-dancer')) !== ((bool) $user['u_dancer'])
-                    || ((bool) $request->post($user_id . '-system')) !== ((bool) $user['u_system'])
+                if (((bool) $request->post($user_id . '-system')) !== ((bool) $user['u_system'])
                     || ((bool) $request->post($user_id . '-ban')) !== ((bool) $user['u_ban'])
                     || ($request->post($user_id . '-skupina') != $user['u_skupina'])
                 ) {
@@ -29,7 +28,6 @@ class Controller_Admin_Users extends Controller_Admin
                         $user['u_poznamky'],
                         $user['u_group'],
                         $request->post($user_id . '-skupina'),
-                        $request->post($user_id . '-dancer') ? '1' : '0',
                         $user['u_lock'] ? '1' : '0',
                         $request->post($user_id . '-ban') ? '1' : '0',
                         $request->post($user_id . '-system') ? '1' : '0'
@@ -88,7 +86,6 @@ class Controller_Admin_Users extends Controller_Admin
             $request->post('poznamky'),
             $request->post('group'),
             $request->post('skupina'),
-            $request->post('dancer') ? '1' : '0',
             $request->post('lock') ? '1' : '0',
             $request->post('ban') ? '1' : '0',
             '1',
@@ -116,7 +113,6 @@ class Controller_Admin_Users extends Controller_Admin
                 $request->post('group', $data['u_group']);
                 $request->post('ban', $data['u_ban']);
                 $request->post('lock', $data['u_lock']);
-                $request->post('dancer', $data['u_dancer']);
                 $request->post('system', $data['u_system']);
                 $request->post('jmeno', $data['u_jmeno']);
                 $request->post('prijmeni', $data['u_prijmeni']);
@@ -144,7 +140,6 @@ class Controller_Admin_Users extends Controller_Admin
             $request->post('poznamky'),
             $request->post('group'),
             $request->post('skupina'),
-            $request->post('dancer') ? 1 : 0,
             $request->post('lock') ? 1 : 0,
             $request->post('ban') ? 1 : 0,
             $request->post('system') ? 1 : 0
@@ -162,8 +157,7 @@ class Controller_Admin_Users extends Controller_Admin
             DBUser::confirmUser(
                 $id,
                 $request->post($id . '-group'),
-                $request->post($id . '-skupina'),
-                $request->post($id . '-dancer') ? 1 : 0
+                $request->post($id . '-skupina')
             );
             Mailer::registrationConfirmNotice($data['u_email'], $data['u_login']);
             $this->redirect('/admin/users/unconfirmed');
@@ -195,7 +189,6 @@ class Controller_Admin_Users extends Controller_Admin
                     ),
                     'group' => $s_group->name($item['u_id'] . '-group')->render(),
                     'skupina' => $s_skupina->name($item['u_id'] . '-skupina')->render(),
-                    'dancer' => $this->checkbox($item['u_id'] . '-dancer', 'dancer')->render(),
                     'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
                     'narozeni' => formatDate($item['u_narozeni']),
                     'poznamky' => $item['u_poznamky']
@@ -249,12 +242,10 @@ class Controller_Admin_Users extends Controller_Admin
 
         $all = DBUser::getUsers();
         $active = DBUser::getActiveUsers();
-        $dancers = DBUser::getActiveDancers();
         array_unshift(
             $data,
             ['group' => 'Uživatelé v databázi', 'count' => count($all)],
-            ['group' => 'Aktivní uživatelé', 'count' => count($active)],
-            ['group' => 'Aktivní tanečníci', 'count' => count($dancers)]
+            ['group' => 'Aktivní uživatelé', 'count' => count($active)]
         );
 
         $this->render('files/View/Admin/Users/Statistiky.inc', [
@@ -340,7 +331,6 @@ class Controller_Admin_Users extends Controller_Admin
 
         $statusOptions = [
             'all' => 'všichni',
-            'dancer' => 'tanečníci',
             'system' => 'systémoví',
             'ban' => 'zabanovaní'
         ];
@@ -394,8 +384,6 @@ class Controller_Admin_Users extends Controller_Admin
                         . $skupinySelect->name($item['u_id'] . '-skupina')
                                         ->set($item['u_skupina'])
                     );
-                    $out['dancer'] = $this->checkbox($item['u_id'] . '-dancer', '1')
-                                          ->set($item['u_dancer'])->render();
                     $out['system'] = $this->checkbox($item['u_id'] . '-system', '1')
                                           ->set($item['u_system'])->render();
                     $out['ban'] = $this->checkbox($item['u_id'] . '-ban', '1')
@@ -460,7 +448,6 @@ class Controller_Admin_Users extends Controller_Admin
             'poznamky' => $request->post('poznamky') ?: '',
             'lock' => $request->post('lock') ?: '',
             'ban' => $request->post('ban') ?: '',
-            'dancer' => $request->post('dancer') ?: '',
             'system' => $request->post('system') ?: '',
             'group' => $request->post('group') ?: '',
             'skupina' => $request->post('skupina') ?: ''

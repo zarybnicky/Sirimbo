@@ -77,7 +77,6 @@ $table = $this->table()
 if ($this->view == 'status') {
     $table->column('skupina', '')
         ->column('groupInfo', 'Oprávnění')
-        ->column('dancer', 'Aktivní<br/>tanečník', 'center')
         ->column('system', 'Systémový<br/>uživatel', 'center')
         ->column('ban', 'Ban', 'center');
 } else {
