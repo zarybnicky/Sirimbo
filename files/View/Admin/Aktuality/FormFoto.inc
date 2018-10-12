@@ -1,11 +1,12 @@
 <div class="container">
-  <form action="" method="get">
-    <?= $this->select('dir')
-           ->set($this->dir ?: 'none')
-           ->option('none', '------ vyberte složku ------')
-           ->options($this->dirs)
-    ?>
-    <?= $this->submit('Zobrazit') ?>
+  <form class="form-inline" action="" method="get">
+    <div class="form-group">
+      <?= $this->select('dir')
+             ->set($this->dir ?: 'none')
+             ->option('none', '------ vyberte složku ------')
+             ->options($this->dirs) ?>
+    </div>
+    <div class="form-group"><?= $this->submit('Zobrazit') ?></div>
   </form>
 
   <form action="" method="post">
@@ -15,7 +16,9 @@
           <img alt="<?= $item['id'] ?>" src="<?= $item['src'] ?>" />
         </div>
         <div class="foto_desc">
-          <?= $this->radio('foto', $item['id'])->set($item['id'] == $this->checked) ?>
+          <?= $this->radio('foto', $item['id'])
+                 ->set($item['id'] == $this->checked)
+                 ->label($item['name']) ?>
           <br/><br/>
         </div>
       </div>

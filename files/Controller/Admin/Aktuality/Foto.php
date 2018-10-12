@@ -33,6 +33,7 @@ class Controller_Admin_Aktuality_Foto extends Controller_Admin_Aktuality
                 function ($item) {
                     return [
                         'id' => $item['gf_id'],
+                        'name' => $item['gf_name'],
                         'src' => '/galerie/thumbnails/' . $item['gf_path']
                     ];
                 },
