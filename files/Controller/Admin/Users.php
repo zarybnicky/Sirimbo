@@ -239,9 +239,6 @@ class Controller_Admin_Users extends Controller_Admin
     public function statistiky($request)
     {
         Permissions::checkError('users', P_ADMIN);
-        $all = DBUser::getUsers();
-        $active = DBUser::getActiveUsers();
-        $dancers = DBUser::getActiveDancers();
 
         $data = array_map(
             function ($item) {
@@ -253,7 +250,6 @@ class Controller_Admin_Users extends Controller_Admin
         $all = DBUser::getUsers();
         $active = DBUser::getActiveUsers();
         $dancers = DBUser::getActiveDancers();
-
         array_unshift(
             $data,
             ['group' => 'Uživatelé v databázi', 'count' => count($all)],

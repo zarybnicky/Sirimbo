@@ -3,14 +3,21 @@ class DBUser extends Database implements Pagable
 {
     public static function getInstance() { return new self(); }
 
-    public static function getPage($offset, $count, $options = null) {
+    public static function getPage($offset, $count, $options = null)
+    {
         $q = "SELECT users.*,skupiny.* FROM users
             LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id WHERE 1=1";
-        switch($options['status']) {
-            case 'ban': $q .= " AND u_ban='1'"; break;
-            case 'dancer': $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0' AND u_dancer='1'"; break;
-            case 'system': $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='1'"; break;
-       	    case 'all':
+        switch ($options['status']) {
+            case 'ban':
+                $q .= " AND u_ban='1'";
+                break;
+            case 'dancer':
+                $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0' AND u_dancer='1'";
+                break;
+            case 'system':
+                $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='1'";
+                break;
+            case 'all':
             default:
                 $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0'";
         }
@@ -22,32 +29,50 @@ class DBUser extends Database implements Pagable
             $q .= " AND u_skupina='{$options['skupina']}'";
         }
 
-        switch($options['sort']) {
-            case 'var-symbol':    $q .= ' ORDER BY u_id'; break;
-            case 'narozeni':    $q .= ' ORDER BY u_narozeni'; break;
+        switch ($options['sort']) {
+            case 'var-symbol':
+                $q .= ' ORDER BY u_id';
+                break;
+            case 'narozeni':
+                $q .= ' ORDER BY u_narozeni';
+                break;
             case 'prijmeni':
-            default:            $q .= ' ORDER BY u_prijmeni'; break;
+            default:
+                $q .= ' ORDER BY u_prijmeni';
+                break;
         }
         $q .= " LIMIT $offset,$count";
         $res = DBUser::query($q);
         return DBUser::getArray($res);
     }
-    public static function getCount($options = null) {
-        if (!isset($options['filter']))
+
+    public static function getCount($options = null)
+    {
+        if (!isset($options['filter'])) {
             $options['filter'] = 'all';
+        }
 
         $q = "SELECT COUNT(*) FROM users WHERE 1=1";
-        switch($options['filter']) {
-            case 'unconfirmed': $q .= " AND u_confirmed='0' AND u_ban='0'"; break;
-            case 'ban': $q .= " AND u_ban='1'"; break;
-            case 'dancer': $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0' AND u_dancer='1'"; break;
-            case 'system': $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='1'"; break;
+        switch ($options['filter']) {
+            case 'unconfirmed':
+                $q .= " AND u_confirmed='0' AND u_ban='0'";
+                break;
+            case 'ban':
+                $q .= " AND u_ban='1'";
+                break;
+            case 'dancer':
+                $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0' AND u_dancer='1'";
+                break;
+            case 'system':
+                $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='1'";
+                break;
             case 'all':
             default:
-                if (is_numeric($options['filter']))
+                if (is_numeric($options['filter'])) {
                     $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0' AND u_group='{$options['filter']}'";
-                else
+                } else {
                     $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0'";
+                }
         }
         $q .= ' ORDER BY u_prijmeni';
 
@@ -56,77 +81,81 @@ class DBUser extends Database implements Pagable
         return $res['COUNT(*)'];
     }
 
-    public static function checkUser($login, $pass) {
+    public static function checkUser($login, $pass)
+    {
         $res = DBUser::query("SELECT * FROM users WHERE
             LOWER(u_login)='?' AND u_pass='?'", strtolower($login), $pass);
         if (!$res) {
             return false;
-        } else {
-            $row = DBUser::getSingleRow($res);
-            return $row["u_id"];
         }
+        $row = DBUser::getSingleRow($res);
+        return $row["u_id"];
     }
 
-    public static function getUserGroup($id) {
+    public static function getUserGroup($id)
+    {
         $res = DBUser::query("SELECT u_group FROM users WHERE u_id='?'", $id);
         if (!$res) {
             return false;
-        } else {
-            $row = DBUser::getSingleRow($res);
-            return $row["u_group"];
         }
+        $row = DBUser::getSingleRow($res);
+        return $row["u_group"];
     }
 
-    public static function getUserID($login) {
+    public static function getUserID($login)
+    {
         $res = DBUser::query("SELECT u_id FROM users WHERE u_login='?'", $login);
         if (!$res) {
             return false;
-        } else {
-            $row = DBUser::getSingleRow($res);
-            return $row["u_id"];
         }
+        $row = DBUser::getSingleRow($res);
+        return $row["u_id"];
     }
 
-    public static function getUserDataByNameEmail($login, $email) {
+    public static function getUserDataByNameEmail($login, $email)
+    {
         $res = DBUser::query(
             "SELECT * FROM users WHERE LOWER(u_login)='?' AND LOWER(u_email)='?'",
-            strtolower($login), strtolower($email)
+            strtolower($login),
+            strtolower($email)
         );
         if (!$res) {
             return false;
-        } else {
-            return DBUser::getSingleRow($res);
         }
+        return DBUser::getSingleRow($res);
     }
 
-    public static function getUserData($id) {
+    public static function getUserData($id)
+    {
         $res = DBUser::query(
             "SELECT users.*,skupiny.*,permissions.* FROM users
                 LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
                 LEFT JOIN permissions ON u_group=pe_id
-             WHERE u_id='?'", $id
+             WHERE u_id='?'",
+            $id
         );
         if (!$res) {
             return false;
-        } else {
-            return DBUser::getSingleRow($res);
         }
+        return DBUser::getSingleRow($res);
     }
 
-    public static function getUserByFullName($jmeno, $prijmeni) {
+    public static function getUserByFullName($jmeno, $prijmeni)
+    {
         $res = DBUser::query(
             "SELECT * FROM users
             WHERE u_jmeno LIKE '?' AND u_prijmeni LIKE '?'
             ORDER BY u_id",
-            $jmeno, $prijmeni
+            $jmeno,
+            $prijmeni
         );
         if (!$res) {
             return false;
-        } else {
-            return DBUser::getSingleRow($res);
         }
+        return DBUser::getSingleRow($res);
     }
-    public static function addTemporaryUser($login, $jmeno, $prijmeni, $narozeni) {
+    public static function addTemporaryUser($login, $jmeno, $prijmeni, $narozeni)
+    {
         DBUser::query(
             "INSERT INTO users
                 (u_login,u_pass,u_jmeno,u_prijmeni,u_narozeni,u_confirmed,u_temporary,u_system,u_group)
@@ -141,7 +170,8 @@ class DBUser extends Database implements Pagable
         return [$user_id, $par_id];
     }
 
-    public static function isUserLocked($id) {
+    public static function isUserLocked($id)
+    {
         $res = DBUser::query("SELECT u_lock FROM users WHERE u_id='?'", $id);
         if (!$res) {
             return false;
@@ -151,7 +181,8 @@ class DBUser extends Database implements Pagable
         }
     }
 
-    public static function isUserConfirmed($id) {
+    public static function isUserConfirmed($id)
+    {
         $res = DBUser::query("SELECT u_confirmed FROM users WHERE u_id='?'", $id);
         if (!$res) {
             return false;
@@ -161,20 +192,23 @@ class DBUser extends Database implements Pagable
         }
     }
 
-    public static function confirmUser($id, $group, $skupina = '1', $dancer = 0) {
+    public static function confirmUser($id, $group, $skupina = '1', $dancer = 0)
+    {
         DBUser::query(
             "UPDATE users SET u_confirmed='1',u_group='?',u_skupina='?',u_dancer='?',u_system='0' WHERE u_id='?'",
             $group, $skupina, $dancer, $id
         );
     }
 
-    public static function setPassword($id, $passwd) {
+    public static function setPassword($id, $passwd)
+    {
         DBUser::query("UPDATE users SET u_pass='?' WHERE u_id='?'", $passwd, $id);
         return true;
     }
 
     public static function setUserData($id, $jmeno, $prijmeni, $pohlavi, $email, $telefon,
-            $narozeni, $poznamky, $group, $skupina, $dancer, $lock, $ban, $system) {
+            $narozeni, $poznamky, $group, $skupina, $dancer, $lock, $ban, $system
+    ) {
         DBUser::query(
             "UPDATE users SET " .
             "u_jmeno='?',u_prijmeni='?',u_pohlavi='?',u_email='?'," .
@@ -206,7 +240,8 @@ class DBUser extends Database implements Pagable
         return true;
     }
 
-    public static function removeUser($id) {
+    public static function removeUser($id)
+    {
         list($id) = DBUser::escape($id);
 
         DBUser::query("DELETE FROM users WHERE u_id='$id'");
@@ -222,27 +257,31 @@ class DBUser extends Database implements Pagable
         return true;
     }
 
-    public static function getUsers($group = null) {
+    public static function getUsers($group = null)
+    {
         $res = DBUser::query(
-        "SELECT users.*,skupiny.* FROM users
-            LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id" .
-        (($group == null) ? '' : " WHERE u_group='$group'") .
-        " ORDER BY u_prijmeni");
-
+            "SELECT users.*,skupiny.* FROM users" .
+            " LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id" .
+            (($group == null) ? '' : " WHERE u_group='$group'") .
+            " ORDER BY u_prijmeni"
+        );
         return DBUser::getArray($res);
     }
 
-    public static function getUsersByPohlavi($pohlavi) {
+    public static function getUsersByPohlavi($pohlavi)
+    {
         list($pohlavi) = DBUser::escape($pohlavi);
 
         $res = DBUser::query(
-        "SELECT * FROM users
-            LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
-        WHERE u_pohlavi='$pohlavi' ORDER BY u_prijmeni");
+            "SELECT * FROM users
+                LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
+            WHERE u_pohlavi='$pohlavi' ORDER BY u_prijmeni"
+        );
         return DBUser::getArray($res);
     }
 
-    public static function getUsersWithSkupinaPlatby() {
+    public static function getUsersWithSkupinaPlatby()
+    {
         $res = self::query(
             "SELECT *
             FROM users
@@ -270,76 +309,91 @@ class DBUser extends Database implements Pagable
         return self::getArray($res);
     }
 
-    public static function getUsersByPermission($module, $permission) {
+    public static function getUsersByPermission($module, $permission)
+    {
         list($module, $permission) = DBUser::escape($module, $permission);
         $res = DBUser::query(
-        "SELECT users.*,skupiny.* FROM users
-            LEFT JOIN permissions ON u_group=pe_id
-            LEFT JOIN skupiny ON u_skupina=s_id
-        WHERE pe_$module >= '$permission'
-        ORDER BY u_prijmeni");
+            "SELECT users.*,skupiny.* FROM users
+                LEFT JOIN permissions ON u_group=pe_id
+                LEFT JOIN skupiny ON u_skupina=s_id
+            WHERE pe_$module >= '$permission'
+            ORDER BY u_prijmeni"
+        );
         return DBUser::getArray($res);
     }
 
-    public static function getNewUsers() {
+    public static function getNewUsers()
+    {
         $res = DBUser::query(
-        "SELECT * FROM users
-            LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
-        WHERE u_confirmed='0' ORDER BY u_prijmeni");
+            "SELECT * FROM users
+                LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
+            WHERE u_confirmed='0' ORDER BY u_prijmeni"
+        );
         return DBUser::getArray($res);
     }
 
-    public static function getDuplicateUsers() {
+    public static function getDuplicateUsers()
+    {
         $res = DBUser::query(
-        "SELECT u1.*,skupiny.* FROM users u1
-            LEFT JOIN skupiny ON u1.u_skupina=skupiny.s_id
-        WHERE EXISTS (SELECT * FROM users u2 WHERE
-            ((u1.u_jmeno=u2.u_jmeno AND u1.u_prijmeni=u2.u_prijmeni) OR
-            u1.u_email=u2.u_email OR u1.u_telefon=u2.u_telefon) AND u1.u_id!=u2.u_id)
-        ORDER BY u_email, u_telefon, u_prijmeni");
+            "SELECT u1.*,skupiny.* FROM users u1
+                LEFT JOIN skupiny ON u1.u_skupina=skupiny.s_id
+            WHERE EXISTS (SELECT * FROM users u2 WHERE
+                ((u1.u_jmeno=u2.u_jmeno AND u1.u_prijmeni=u2.u_prijmeni) OR
+                u1.u_email=u2.u_email OR u1.u_telefon=u2.u_telefon) AND u1.u_id!=u2.u_id)
+            ORDER BY u_email, u_telefon, u_prijmeni"
+        );
         return DBUser::getArray($res);
     }
 
-    public static function getBannedUsers() {
+    public static function getBannedUsers()
+    {
         $res = DBUser::query(
-        "SELECT u1.*,skupiny.* FROM users u1
-            LEFT JOIN skupiny ON u1.u_skupina=skupiny.s_id
-        WHERE u_ban='1' ORDER BY u_prijmeni");
+            "SELECT u1.*,skupiny.* FROM users u1
+                LEFT JOIN skupiny ON u1.u_skupina=skupiny.s_id
+            WHERE u_ban='1' ORDER BY u_prijmeni"
+        );
         return DBUser::getArray($res);
     }
 
-    public static function getUnconfirmedUsers() {
+    public static function getUnconfirmedUsers()
+    {
         $res = DBUser::query(
-        "SELECT u1.*,skupiny.* FROM users u1
-            LEFT JOIN skupiny ON u1.u_skupina=skupiny.s_id
-        WHERE u_banconfirmed='0' ORDER BY u_prijmeni");
+            "SELECT u1.*,skupiny.* FROM users u1
+                LEFT JOIN skupiny ON u1.u_skupina=skupiny.s_id
+            WHERE u_banconfirmed='0' ORDER BY u_prijmeni"
+        );
         return DBUser::getArray($res);
     }
 
-    public static function getActiveUsers($group = null) {
+    public static function getActiveUsers($group = null)
+    {
         $res = DBUser::query(
-        "SELECT users.*,skupiny.* FROM users
-            LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
-        WHERE u_system='0' AND u_confirmed='1' AND u_ban='0' " .
-        ($group !== null ? "AND u_group='$group' " : '') .
-            "ORDER BY u_prijmeni ");
-        return DBUser::getArray($res);
-    }
-
-    public static function getActiveDancers($group = null) {
-        $res = DBUser::query(
-        "SELECT users.*,skupiny.* FROM users
-            LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
-        WHERE u_system='0' AND u_dancer='1' AND u_confirmed='1' AND u_ban='0' " .
+            "SELECT users.*,skupiny.* FROM users
+                LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
+            WHERE u_system='0' AND u_confirmed='1' AND u_ban='0' " .
             ($group !== null ? "AND u_group='$group' " : '') .
-        "ORDER BY u_prijmeni");
+                "ORDER BY u_prijmeni "
+        );
         return DBUser::getArray($res);
     }
-    public static function getGroupCounts() {
+
+    public static function getActiveDancers($group = null)
+    {
         $res = DBUser::query(
-        "SELECT u_group,count(*) as count,permissions.*
-        FROM users LEFT JOIN permissions ON u_group=pe_id group by u_group");
+            "SELECT users.*,skupiny.* FROM users
+                LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
+            WHERE u_system='0' AND u_dancer='1' AND u_confirmed='1' AND u_ban='0' " .
+                ($group !== null ? "AND u_group='$group' " : '') .
+            "ORDER BY u_prijmeni"
+        );
+        return DBUser::getArray($res);
+    }
+    public static function getGroupCounts()
+    {
+        $res = DBUser::query(
+            "SELECT u_group,count(*) as count,permissions.*
+            FROM users LEFT JOIN permissions ON u_group=pe_id group by u_group"
+        );
         return DBUser::getArray($res);
     }
 }
-?>
