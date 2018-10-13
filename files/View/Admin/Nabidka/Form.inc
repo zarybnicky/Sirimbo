@@ -33,9 +33,9 @@
       <?= $this->checkbox('lock')->label('Uzamknout')->set($this->lock) ?>
     </div>
     <div class="form-group">
-      <?= $this->hidden('referer', $this->referer) ?>
+      <?= $this->hidden('returnURI', $this->returnURI) ?>
       <?= $this->submit($this->action) ?>
-      <a class="btn btn-outline-primary" href="<?= $this->referer ?>">Zpět</a>
+      <a class="btn btn-outline-primary" href="<?= $this->returnURI ?>">Zpět</a>
     </div>
   </form>
 </div>

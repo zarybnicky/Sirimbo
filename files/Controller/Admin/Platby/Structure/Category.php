@@ -107,7 +107,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             DBPlatbyGroup::addChild($item, $insertId);
         }
 
-        $this->redirect($request->post('referer') ?: '/admin/platby/structure/category');
+        $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/category');
     }
 
     public function edit($request)
@@ -115,7 +115,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         $id = $request->getId();
         if (!$id || !($data = DBPlatbyCategory::getSingle($id))) {
             $this->redirect()->warning('Kategorie s takovým ID neexistuje');
-            $this->redirect($request->post('referer') ?: '/admin/platby/structure/category');
+            $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/category');
         }
 
         if (!$request->post() || is_object($s = $this->checkPost($request, 'edit', $id))) {
@@ -189,7 +189,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         if ($request->get('group')) {
             $this->redirect('/admin/platby/structure/group/edit/' . $request->get('group'));
         }
-        $this->redirect($request->post('referer') ?: '/admin/platby/structure/category');
+        $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/category');
     }
 
     public function remove($request)
@@ -197,7 +197,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         $id = $request->getId();
         if (!$id || !($data = DBPlatbyCategory::getSingle($id))) {
             $this->redirect()->warning('Specifický symbol s takovým ID neexistuje');
-            $this->redirect($request->post('referer') ?: '/admin/platby/structure/category');
+            $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/category');
         }
 
         if ($request->post('action') == 'unlink') {
@@ -263,13 +263,13 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                 'subheader' => 'Specifické symboly_',
                 'id' => $id,
                 'name' => $data['pc_name'],
-                'referer' => $request->getReferer(),
+                'returnURI' => $request->getReferer(),
                 'uri' => $request->getLiteralURI()
             ]);
             return;
         }
         DBPlatbyCategory::delete($id);
-        $this->redirect($request->post('referer') ?: '/admin/platby/structure/category');
+        $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/category');
     }
 
     protected function getLinkedObjects($id)
@@ -312,7 +312,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             'id' => $id,
             'action' => $action,
             'groups' => $groups,
-            'referer' => $request->getReferer(),
+            'returnURI' => $request->getReferer(),
             'name' => $request->post('name') ?: '',
             'symbol' => $request->post('symbol') ?: '',
             'amount' => $request->post('amount') ?: '',

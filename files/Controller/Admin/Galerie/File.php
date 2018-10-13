@@ -195,7 +195,7 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
             'subheader' => 'Upravit soubor',
             'id' => $id,
             'dirs' => $dirs,
-            'referer' => $request->getReferer(),
+            'returnURI' => $request->getReferer(),
             'parent' => $request->post('parent'),
             'name' => $request->post('name')
         ]);

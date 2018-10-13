@@ -18,7 +18,7 @@ class Controller_Member_Clenove extends Controller_Member
             'fullName' => $data['u_prijmeni'] . ', ' . $data['u_jmeno'],
             'email' => $data['u_email'],
             'telefon' => $data['u_telefon'],
-            'referer' => $request->getReferer(),
+            'returnURI' => $request->getReferer(),
             'uri' => $request->getLiteralURI()
         ]);
     }

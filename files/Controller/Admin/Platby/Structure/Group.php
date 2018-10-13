@@ -60,7 +60,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
             DBSkupiny::addChild($item, $insertId);
         }
 
-        $this->redirect($request->post('referer') ?: '/admin/platby/structure/group');
+        $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/group');
     }
 
     public function edit($request)
@@ -68,7 +68,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
         $id = $request->getId();
         if (!$id || !($data = DBPlatbyGroup::getSingle($id))) {
             $this->redirect()->warning('Kategorie s takovým ID neexistuje');
-            $this->redirect($request->post('referer') ?: '/admin/platby/structure/group');
+            $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/group');
         }
 
         if (!$request->post() || is_object($s = $this->checkPost($request))) {
@@ -120,7 +120,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
             DBSkupiny::addChild($added, $id);
         }
 
-        $this->redirect($request->post('referer') ?: '/admin/platby/structure/group');
+        $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/group');
     }
 
     public function remove($request)
@@ -128,7 +128,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
         $id = $request->getId();
         if (!$id || !($data = DBPlatbyGroup::getSingle($id))) {
             $this->redirect()->warning('Kategorie s takovým ID neexistuje');
-            $this->redirect($request->post('referer') ?: '/admin/platby/structure/group');
+            $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/group');
         }
 
         if ($request->post('action') == 'unlink') {
@@ -170,13 +170,13 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
                 'subheader' => 'Kategorie plateb',
                 'id' => $id,
                 'name' => $data['pg_name'],
-                'referer' => $request->getReferer(),
+                'returnURI' => $request->getReferer(),
                 'uri' => $request->getLiteralURI()
             ]);
             return;
         }
         DBPlatbyGroup::delete($id);
-        $this->redirect($request->post('referer') ?: '/admin/platby/structure/group');
+        $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/group');
     }
 
     private function getLinkedObjects($id)
@@ -249,7 +249,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
             'action' => $action,
             'category' => $categories,
             'skupiny' => $skupiny,
-            'referer' => $request->getReferer(),
+            'returnURI' => $request->getReferer(),
             'name' => $request->post('name') ?: '',
             'type' => $request->post('type') ?: '',
             'description' => $request->post('description') ?: '',

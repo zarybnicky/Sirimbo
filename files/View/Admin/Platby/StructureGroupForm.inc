@@ -49,8 +49,8 @@
              ->column('name', 'Jméno')
              ->data($this->skupiny) ?>
     <br/>
-    <?= $this->hidden('referer', $this->referer) ?>
+    <?= $this->hidden('returnURI', $this->returnURI) ?>
     <?= $this->submit('Uložit')->data('action', 'confirm') ?>
-    <a class="btn btn-outline-primary" href="<?= $this->referer ?>">Zpět</a><br/>
+    <a class="btn btn-outline-primary" href="<?= $this->returnURI ?>">Zpět</a><br/>
 </form>
 </div>

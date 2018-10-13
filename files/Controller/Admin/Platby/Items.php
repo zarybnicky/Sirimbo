@@ -154,7 +154,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             'header' => 'Správa plateb',
             'subheader' => 'Jednotlivé platby',
             'action' => $request->getAction(),
-            'referer' => $request->getReferer(),
+            'returnURI' => $request->getReferer(),
             'id' => $id,
             'raw' => $raw,
             'users' => $users,

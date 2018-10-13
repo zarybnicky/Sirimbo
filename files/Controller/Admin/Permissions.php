@@ -49,7 +49,7 @@ class Controller_Admin_Permissions extends Controller_Admin
             $permissions
         );
 
-        $this->redirect($request->post('referer') ?: '/admin/permissions');
+        $this->redirect($request->post('returnURI') ?: '/admin/permissions');
     }
 
     public function edit($request)
@@ -57,7 +57,7 @@ class Controller_Admin_Permissions extends Controller_Admin
         $id = $request->getId();
         if (!$id || !($data = DBPermissions::getSingleGroup($id))) {
             $this->redirect()->warning('Skupina s takovým ID neexistuje');
-            $this->redirect($request->post('referer') ?: '/admin/permissions');
+            $this->redirect($request->post('returnURI') ?: '/admin/permissions');
         }
 
         if (!$request->post()) {
@@ -81,7 +81,7 @@ class Controller_Admin_Permissions extends Controller_Admin
             $permissions
         );
 
-        $this->redirect($request->post('referer') ?: '/admin/permissions');
+        $this->redirect($request->post('returnURI') ?: '/admin/permissions');
     }
 
     public function remove($request)

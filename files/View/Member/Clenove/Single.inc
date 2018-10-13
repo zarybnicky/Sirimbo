@@ -4,5 +4,5 @@
   <h2><?= $this->fullName ?></h2>
   E-mail: <?= $this->email ?><br/>
   Telefon: <?= $this->telefon ?><br/>
-  <a class="btn btn-outline-primary" href="<?= $this->referer ?>">Zpět</a>
+  <a class="btn btn-outline-primary" href="<?= $this->returnURI ?>">Zpět</a>
 </div>

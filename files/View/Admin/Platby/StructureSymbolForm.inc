@@ -35,7 +35,7 @@
     ]
 ])
 ->render() ?>
-    <?= $this->hidden('referer', $this->referer) ?>
+    <?= $this->hidden('returnURI', $this->returnURI) ?>
     <br/>
     <h3>Kategorie</h3>
     <?= $this->table()
@@ -47,6 +47,6 @@
              ->render() ?>
     <br>
     <?= $this->submit('Uložit') ?>
-    <a class="btn btn-outline-primary" href="<?= $this->referer ?>">Zpět</a><br/>
+    <a class="btn btn-outline-primary" href="<?= $this->returnURI ?>">Zpět</a><br/>
 </form>
 </div>

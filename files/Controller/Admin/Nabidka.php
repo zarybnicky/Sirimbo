@@ -97,7 +97,7 @@ class Controller_Admin_Nabidka extends Controller_Admin
         );
 
         $this->redirect()->success('Nabídka přidána');
-        $this->redirect($request->post('referer') ?: '/admin/nabidka');
+        $this->redirect($request->post('returnURI') ?: '/admin/nabidka');
     }
 
     public function edit($request)
@@ -105,7 +105,7 @@ class Controller_Admin_Nabidka extends Controller_Admin
         $id = $request->getId();
         if (!$id || !($data = DBNabidka::getSingleNabidka($id))) {
             $this->redirect()->warning('Nabídka s takovým ID neexistuje');
-            $this->redirect($request->post('referer') ?: '/admin/nabidka');
+            $this->redirect($request->post('returnURI') ?: '/admin/nabidka');
         }
         Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
 
@@ -161,7 +161,7 @@ class Controller_Admin_Nabidka extends Controller_Admin
         );
 
         $this->redirect()->success('Nabídka úspěšně upravena');
-        $this->redirect($request->post('referer') ?: '/admin/nabidka');
+        $this->redirect($request->post('returnURI') ?: '/admin/nabidka');
     }
 
     public function duplicate($request)
@@ -212,7 +212,7 @@ class Controller_Admin_Nabidka extends Controller_Admin
             'header' => 'Správa nabídky',
             'subheader' => $request->getAction() == 'add' ? 'Přidat nabídku' : 'Upravit nabídku',
             'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit',
-            'referer' => $request->getReferer(),
+            'returnURI' => $request->getReferer(),
             'users' => $treneri,
             'isAdmin' => $isAdmin ?: '',
             'id' => $data ? $data['n_id'] : null,

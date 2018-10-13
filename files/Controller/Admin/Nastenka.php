@@ -98,7 +98,7 @@ class Controller_Admin_Nastenka extends Controller_Admin
             );
         }
 
-        $this->redirect($request->post('referer'));
+        $this->redirect($request->post('returnURI'));
     }
 
     public function edit($request)
@@ -106,7 +106,7 @@ class Controller_Admin_Nastenka extends Controller_Admin
         $id = $request->getId();
         if (!$id || !($data = DBNastenka::getSingleNastenka($id))) {
             $this->redirect()->warning('Nástěnka s takovým ID neexistuje');
-            $this->redirect($request->post('referer') ?: '/admin/nastenka');
+            $this->redirect($request->post('returnURI') ?: '/admin/nastenka');
         }
         Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
 
@@ -179,7 +179,7 @@ class Controller_Admin_Nastenka extends Controller_Admin
             ($request->post('lock') == 'lock') ? 1 : 0
         );
 
-        $this->redirect($request->post('referer'));
+        $this->redirect($request->post('returnURI'));
     }
 
     public function remove($request)
@@ -187,7 +187,7 @@ class Controller_Admin_Nastenka extends Controller_Admin
         $id = $request->getId();
         if (!$id || !($data = DBNastenka::getSingleNastenka($id))) {
             $this->redirect()->warning('Příspěvek s takovým ID neexistuje');
-            $this->redirect($request->post('referer') ?: '/admin/nastenka');
+            $this->redirect($request->post('returnURI') ?: '/admin/nastenka');
         }
         Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
 
