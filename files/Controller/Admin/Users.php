@@ -42,13 +42,13 @@ class Controller_Admin_Users extends Controller_Admin
     {
         Permissions::checkError('users', P_ADMIN);
         if (!$request->getId()) {
-            $this->redirect('/admin/users');
+            $this->redirect($request->post('returnURI') ?: '/admin/users');
         }
         $id = $request->getId();
 
         if ($request->post('action') == 'confirm') {
             DBUser::removeUser($id);
-            $this->redirect('/admin/users');
+            $this->redirect($request->post('returnURI') ?: '/admin/users');
         }
 
         $item = DBUser::getUserData($id);
@@ -91,7 +91,7 @@ class Controller_Admin_Users extends Controller_Admin
             '1',
             $request->post('system') ? '1' : '0'
         );
-        $this->redirect('/admin/users');
+        $this->redirect($request->post('returnURI') ?: '/admin/users');
     }
 
     public function edit($request)
@@ -100,11 +100,11 @@ class Controller_Admin_Users extends Controller_Admin
         $id = $request->getId();
         if (!$id || !($data = DBUser::getUserData($id))) {
             $this->redirect()->warning('Uživatel s takovým ID neexistuje');
-            $this->redirect('/admin/users');
+            $this->redirect($request->post('returnURI') ?: '/admin/users');
         }
         if (!$data['u_confirmed']) {
             $this->redirect()->warning('Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
-            $this->redirect('/admin/users');
+            $this->redirect($request->post('returnURI') ?: '/admin/users');
         }
 
         if (!$request->post() || is_object($f = $this->checkData($request, 'edit'))) {
@@ -144,7 +144,7 @@ class Controller_Admin_Users extends Controller_Admin
             $request->post('ban') ? 1 : 0,
             $request->post('system') ? 1 : 0
         );
-        $this->redirect('/admin/users');
+        $this->redirect($request->post('returnURI') ?: '/admin/users');
     }
 
     public function unconfirmed($request)
@@ -435,6 +435,7 @@ class Controller_Admin_Users extends Controller_Admin
             'header' => 'Správa uživatelů',
             'subheader' => ($request->getAction() == 'add' ? 'Přidat' : 'Upravit') . ' uživatele',
             'action' => $request->getAction(),
+            'returnURI' => $request->post('returnURI') ?: ($request->getReferer() ?: '/admin/users'),
             'groups' => $groups,
             'skupiny' => $skupiny,
             'login' => $request->post('login') ?: '',
