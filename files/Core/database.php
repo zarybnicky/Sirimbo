@@ -16,7 +16,6 @@ class Database
 
     protected static function escapeArray($array)
     {
-        static::getConnection();
         $escaped = [];
         foreach ($array as $key => $value) {
             if (is_array($value)) {
@@ -26,7 +25,7 @@ class Database
         }
         if ($array) {
             $escape = implode("%%%%%", $array);
-            $escape = mysql_real_escape_string($escape);
+            $escape = static::getConnection()->real_escape_string($escape);
             $array = explode("%%%%%", $escape);
         }
         if ($escaped) {
@@ -44,15 +43,13 @@ class Database
 
     protected static function getConnection()
     {
-        if (self::$connection != null) {
-            return;
+        if (self::$connection == null) {
+            self::$connection = new mysqli(DB_SERVER, DB_USER, DB_PASS, DB_DATABASE)
+                or static::databaseError(true);
+            self::$connection->set_charset("utf8")
+                or static::databaseError(true);
         }
-        self::$connection = mysql_connect(DB_SERVER, DB_USER, DB_PASS)
-            or static::databaseError(true);
-        mysql_select_db(DB_DATABASE, self::$connection)
-            or static::databaseError(true);
-        mysql_set_charset("utf8", self::$connection)
-            or static::databaseError(true);
+        return self::$connection;
     }
 
     protected static function query($query)
@@ -73,8 +70,7 @@ class Database
             }
             $query = $q . $query;
         }
-        static::getConnection();
-        $res = mysql_query($query, self::$connection);
+        $res = static::getConnection()->query($query);
         if (!$res) {
             static::databaseError();
         }
@@ -83,28 +79,26 @@ class Database
 
     protected static function getSingleRow($resource)
     {
-        return $resource ? mysql_fetch_assoc($resource) : false;
+        return $resource ? $resource->fetch_assoc() : false;
     }
 
     protected static function getArray($resource)
     {
         $result = [];
-        $rows = mysql_num_rows($resource);
-
-        for ($i = 0; $i < $rows; $i++) {
-            $result[] = @mysql_fetch_assoc($resource);
+        while ($row = $resource->fetch_assoc()) {
+            $result[] = $row;
         }
         return $result;
     }
 
     public static function getInsertId()
     {
-        return mysql_insert_id(self::$connection);
+        return self::$connection->insert_id;
     }
 
     protected function databaseError($onConnection = false)
     {
-        Log::write('MySQL Error: ' . mysql_errno() . ': ' . mysql_error());
+        Log::write('MySQL Error: ' . self::$connection->errno . ': ' . self::$connection->error);
         if ($onConnection) {
             throw new DatabaseConnectionException('Nastala chyba při pokusu o připojení k databázi.');
         } else {
