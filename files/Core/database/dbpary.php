@@ -179,7 +179,7 @@ class DBPary extends Database
 
     public static function removeCouple($id)
     {
-        $data = DBPary::getSinglePar($id);
+        $data = self::getSinglePar($id);
         self::noPartner($data['guy_id']);
     }
 
@@ -202,7 +202,7 @@ class DBPary extends Database
         if ($dataF['u_id'] && $partner != $dataF['u_id'] && $dataM['u_id'] != $dataF['u_id']) {
             self::query("INSERT INTO pary (p_id_partner, p_id_partnerka) VALUES ('{$dataF['u_id']}','0')");
         }
-        return mysql_insert_id();
+        return self::getInsertId();
     }
 
     public static function getPartnerRequestsForMe($id)

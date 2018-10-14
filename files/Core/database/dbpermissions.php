@@ -3,16 +3,16 @@ class DBPermissions extends Database
 {
     public static function getGroups()
     {
-        $res = DBPermissions::query("SELECT * FROM permissions");
-        return DBPermissions::getArray($res);
+        $res = self::query("SELECT * FROM permissions");
+        return self::getArray($res);
     }
 
     public static function getSingleGroup($id)
     {
-        list($id) = DBPermissions::escape($id);
+        list($id) = self::escape($id);
 
-        $res = DBPermissions::query("SELECT * FROM permissions WHERE pe_id='$id'");
-        return DBPermissions::getSingleRow($res);
+        $res = self::query("SELECT * FROM permissions WHERE pe_id='$id'");
+        return self::getSingleRow($res);
     }
 
     public static function addGroup($name, $description, $permissions)
@@ -20,7 +20,7 @@ class DBPermissions extends Database
         $count = count($permissions);
         $keys = array_keys($permissions);
         $values = array_values($permissions);
-        $result = DBPermissions::escapeArray(array_merge([$name, $description], $keys, $values));
+        $result = self::escapeArray(array_merge([$name, $description], $keys, $values));
         $name = $result[0];
         $description = $result[1];
         for ($i = 0; $i < $count; $i++) {
@@ -37,7 +37,7 @@ class DBPermissions extends Database
         }
         $q .= ')';
 
-        DBPermissions::query($q);
+        self::query($q);
     }
 
     public static function editGroup($id, $name, $description, $permissions)
@@ -45,7 +45,7 @@ class DBPermissions extends Database
         $count = count($permissions);
         $values = array_values($permissions);
         $keys = array_keys($permissions);
-        $result = DBPermissions::escapeArray(array_merge([$id, $name, $description], $keys, $values));
+        $result = self::escapeArray(array_merge([$id, $name, $description], $keys, $values));
         $id = $result[0];
         $name = $result[1];
         $description = $result[2];
@@ -59,15 +59,15 @@ class DBPermissions extends Database
         }
         $q .= " WHERE pe_id='$id'";
 
-        DBPermissions::query($q);
+        self::query($q);
         return true;
     }
 
     public static function removeGroup($id)
     {
-        list($id) = DBPermissions::escape($id);
+        list($id) = self::escape($id);
 
-        DBPermissions::query("DELETE FROM permissions WHERE pe_id='$id'");
+        self::query("DELETE FROM permissions WHERE pe_id='$id'");
         return true;
     }
 }

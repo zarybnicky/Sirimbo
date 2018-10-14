@@ -36,10 +36,12 @@ class Database
         }
         return $array;
     }
+
     protected static function escape($string)
     {
         return self::escapeArray(func_get_args());
     }
+
     protected static function getConnection()
     {
         if (self::$connection != null) {
@@ -52,6 +54,7 @@ class Database
         mysql_set_charset("utf8", self::$connection)
             or static::databaseError(true);
     }
+
     protected static function query($query)
     {
         if (func_num_args() > 1) {
@@ -77,6 +80,7 @@ class Database
         }
         return $res;
     }
+
     protected static function getSingleRow($resource)
     {
         return $resource ? mysql_fetch_assoc($resource) : false;
@@ -92,10 +96,12 @@ class Database
         }
         return $result;
     }
+
     public static function getInsertId()
     {
         return mysql_insert_id(self::$connection);
     }
+
     protected function databaseError($onConnection = false)
     {
         Log::write('MySQL Error: ' . mysql_errno() . ': ' . mysql_error());
@@ -105,6 +111,7 @@ class Database
             throw new DatabaseException('Nastala chyba v dotazu na databázi.');
         }
     }
+
     public static function isDatabaseError()
     {
         return (

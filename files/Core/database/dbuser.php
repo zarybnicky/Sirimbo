@@ -39,8 +39,8 @@ class DBUser extends Database implements Pagable
                 break;
         }
         $q .= " LIMIT $offset,$count";
-        $res = DBUser::query($q);
-        return DBUser::getArray($res);
+        $res = self::query($q);
+        return self::getArray($res);
     }
 
     public static function getCount($options = null)
@@ -70,45 +70,45 @@ class DBUser extends Database implements Pagable
         }
         $q .= ' ORDER BY u_prijmeni';
 
-        $res = DBUser::query($q);
-        $res = DBUser::getSingleRow($res);
+        $res = self::query($q);
+        $res = self::getSingleRow($res);
         return $res['COUNT(*)'];
     }
 
     public static function checkUser($login, $pass)
     {
-        $res = DBUser::query("SELECT * FROM users WHERE
+        $res = self::query("SELECT * FROM users WHERE
             LOWER(u_login)='?' AND u_pass='?'", strtolower($login), $pass);
         if (!$res) {
             return false;
         }
-        $row = DBUser::getSingleRow($res);
+        $row = self::getSingleRow($res);
         return $row["u_id"];
     }
 
     public static function getUserGroup($id)
     {
-        $res = DBUser::query("SELECT u_group FROM users WHERE u_id='?'", $id);
+        $res = self::query("SELECT u_group FROM users WHERE u_id='?'", $id);
         if (!$res) {
             return false;
         }
-        $row = DBUser::getSingleRow($res);
+        $row = self::getSingleRow($res);
         return $row["u_group"];
     }
 
     public static function getUserID($login)
     {
-        $res = DBUser::query("SELECT u_id FROM users WHERE u_login='?'", $login);
+        $res = self::query("SELECT u_id FROM users WHERE u_login='?'", $login);
         if (!$res) {
             return false;
         }
-        $row = DBUser::getSingleRow($res);
+        $row = self::getSingleRow($res);
         return $row["u_id"];
     }
 
     public static function getUserDataByNameEmail($login, $email)
     {
-        $res = DBUser::query(
+        $res = self::query(
             "SELECT * FROM users WHERE LOWER(u_login)='?' AND LOWER(u_email)='?'",
             strtolower($login),
             strtolower($email)
@@ -116,12 +116,12 @@ class DBUser extends Database implements Pagable
         if (!$res) {
             return false;
         }
-        return DBUser::getSingleRow($res);
+        return self::getSingleRow($res);
     }
 
     public static function getUserData($id)
     {
-        $res = DBUser::query(
+        $res = self::query(
             "SELECT users.*,skupiny.*,permissions.* FROM users
                 LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
                 LEFT JOIN permissions ON u_group=pe_id
@@ -131,12 +131,12 @@ class DBUser extends Database implements Pagable
         if (!$res) {
             return false;
         }
-        return DBUser::getSingleRow($res);
+        return self::getSingleRow($res);
     }
 
     public static function getUserByFullName($jmeno, $prijmeni)
     {
-        $res = DBUser::query(
+        $res = self::query(
             "SELECT * FROM users
             WHERE u_jmeno LIKE '?' AND u_prijmeni LIKE '?'
             ORDER BY u_id",
@@ -146,49 +146,49 @@ class DBUser extends Database implements Pagable
         if (!$res) {
             return false;
         }
-        return DBUser::getSingleRow($res);
+        return self::getSingleRow($res);
     }
     public static function addTemporaryUser($login, $jmeno, $prijmeni, $narozeni)
     {
-        DBUser::query(
+        self::query(
             "INSERT INTO users
                 (u_login,u_pass,u_jmeno,u_prijmeni,u_narozeni,u_confirmed,u_temporary,u_system,u_group)
             VALUES ('?','','?','?','?','1','1','1','0')",
             $login, $jmeno, $prijmeni, $narozeni
         );
-        $user_id = mysql_insert_id();
+        $user_id = self::getInsertId();
 
-        DBUser::query("INSERT INTO pary (p_id_partner, p_archiv) VALUES ('" . $user_id . "','0')");
-        $par_id = mysql_insert_id();
+        self::query("INSERT INTO pary (p_id_partner, p_archiv) VALUES ('" . $user_id . "','0')");
+        $par_id = self::getInsertId();
 
         return [$user_id, $par_id];
     }
 
     public static function isUserLocked($id)
     {
-        $res = DBUser::query("SELECT u_lock FROM users WHERE u_id='?'", $id);
+        $res = self::query("SELECT u_lock FROM users WHERE u_id='?'", $id);
         if (!$res) {
             return false;
         } else {
-            $row = DBUser::getSingleRow($res);
+            $row = self::getSingleRow($res);
             return (bool) $row["u_lock"];
         }
     }
 
     public static function isUserConfirmed($id)
     {
-        $res = DBUser::query("SELECT u_confirmed FROM users WHERE u_id='?'", $id);
+        $res = self::query("SELECT u_confirmed FROM users WHERE u_id='?'", $id);
         if (!$res) {
             return false;
         } else {
-            $row = DBUser::getSingleRow($res);
+            $row = self::getSingleRow($res);
             return (bool) $row["u_confirmed"];
         }
     }
 
     public static function confirmUser($id, $group, $skupina = '1')
     {
-        DBUser::query(
+        self::query(
             "UPDATE users SET u_confirmed='1',u_group='?',u_skupina='?',u_system='0' WHERE u_id='?'",
             $group,
             $skupina,
@@ -198,14 +198,14 @@ class DBUser extends Database implements Pagable
 
     public static function setPassword($id, $passwd)
     {
-        DBUser::query("UPDATE users SET u_pass='?' WHERE u_id='?'", $passwd, $id);
+        self::query("UPDATE users SET u_pass='?' WHERE u_id='?'", $passwd, $id);
         return true;
     }
 
     public static function setUserData($id, $jmeno, $prijmeni, $pohlavi, $email, $telefon,
             $narozeni, $poznamky, $group, $skupina, $lock, $ban, $system
     ) {
-        DBUser::query(
+        self::query(
             "UPDATE users SET " .
             "u_jmeno='?',u_prijmeni='?',u_pohlavi='?',u_email='?'," .
             "u_telefon='?',u_narozeni='?',u_poznamky='?',u_group='?'," .
@@ -222,7 +222,7 @@ class DBUser extends Database implements Pagable
         $narozeni, $poznamky, $group, $skupina, $lock, $ban,
         $confirmed, $system
     ) {
-        DBUser::query(
+        self::query(
             "INSERT INTO users " .
             "(u_login,u_pass,u_jmeno,u_prijmeni,u_pohlavi,u_email,u_telefon,u_narozeni," .
             "u_poznamky,u_group,u_skupina,u_lock,u_ban,u_confirmed,u_system) VALUES " .
@@ -231,49 +231,49 @@ class DBUser extends Database implements Pagable
             $narozeni, $poznamky, $group, $skupina, $lock, $ban,
             $confirmed, $system
         );
-        $uid = mysql_insert_id();
-        DBUser::query("INSERT INTO pary (p_id_partner, p_id_partnerka) VALUES ('$uid', '0')");
+        $uid = self::getInsertId();
+        self::query("INSERT INTO pary (p_id_partner, p_id_partnerka) VALUES ('$uid', '0')");
         return true;
     }
 
     public static function removeUser($id)
     {
-        list($id) = DBUser::escape($id);
+        list($id) = self::escape($id);
 
-        DBUser::query("DELETE FROM users WHERE u_id='$id'");
-        DBUser::query("DELETE FROM rozpis WHERE r_trener='$id'");
-        DBUser::query("DELETE FROM rozpis_item WHERE ri_partner='$id'");
-        DBUser::query("DELETE FROM nabidka WHERE n_trener='$id'");
-        DBUser::query("DELETE FROM nabidka_item WHERE ni_partner='$id'");
-        DBUser::query("DELETE FROM akce_item WHERE ai_user='$id'");
+        self::query("DELETE FROM users WHERE u_id='$id'");
+        self::query("DELETE FROM rozpis WHERE r_trener='$id'");
+        self::query("DELETE FROM rozpis_item WHERE ri_partner='$id'");
+        self::query("DELETE FROM nabidka WHERE n_trener='$id'");
+        self::query("DELETE FROM nabidka_item WHERE ni_partner='$id'");
+        self::query("DELETE FROM akce_item WHERE ai_user='$id'");
 
         DBPary::noPartner($id);
-        DBUser::query("DELETE FROM pary WHERE p_id_partner='$id' AND p_archiv='0'");
+        self::query("DELETE FROM pary WHERE p_id_partner='$id' AND p_archiv='0'");
 
         return true;
     }
 
     public static function getUsers($group = null)
     {
-        $res = DBUser::query(
+        $res = self::query(
             "SELECT users.*,skupiny.* FROM users" .
             " LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id" .
             (($group == null) ? '' : " WHERE u_group='$group'") .
             " ORDER BY u_prijmeni"
         );
-        return DBUser::getArray($res);
+        return self::getArray($res);
     }
 
     public static function getUsersByPohlavi($pohlavi)
     {
-        list($pohlavi) = DBUser::escape($pohlavi);
+        list($pohlavi) = self::escape($pohlavi);
 
-        $res = DBUser::query(
+        $res = self::query(
             "SELECT * FROM users
                 LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
             WHERE u_pohlavi='$pohlavi' ORDER BY u_prijmeni"
         );
-        return DBUser::getArray($res);
+        return self::getArray($res);
     }
 
     public static function getUsersWithSkupinaPlatby()
@@ -307,30 +307,30 @@ class DBUser extends Database implements Pagable
 
     public static function getUsersByPermission($module, $permission)
     {
-        list($module, $permission) = DBUser::escape($module, $permission);
-        $res = DBUser::query(
+        list($module, $permission) = self::escape($module, $permission);
+        $res = self::query(
             "SELECT users.*,skupiny.* FROM users
                 LEFT JOIN permissions ON u_group=pe_id
                 LEFT JOIN skupiny ON u_skupina=s_id
             WHERE pe_$module >= '$permission'
             ORDER BY u_prijmeni"
         );
-        return DBUser::getArray($res);
+        return self::getArray($res);
     }
 
     public static function getNewUsers()
     {
-        $res = DBUser::query(
+        $res = self::query(
             "SELECT * FROM users
                 LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
             WHERE u_confirmed='0' ORDER BY u_prijmeni"
         );
-        return DBUser::getArray($res);
+        return self::getArray($res);
     }
 
     public static function getDuplicateUsers()
     {
-        $res = DBUser::query(
+        $res = self::query(
             "SELECT u1.*,skupiny.* FROM users u1
                 LEFT JOIN skupiny ON u1.u_skupina=skupiny.s_id
             WHERE EXISTS (SELECT * FROM users u2 WHERE
@@ -338,46 +338,46 @@ class DBUser extends Database implements Pagable
                 u1.u_email=u2.u_email OR u1.u_telefon=u2.u_telefon) AND u1.u_id!=u2.u_id)
             ORDER BY u_email, u_telefon, u_prijmeni"
         );
-        return DBUser::getArray($res);
+        return self::getArray($res);
     }
 
     public static function getBannedUsers()
     {
-        $res = DBUser::query(
+        $res = self::query(
             "SELECT u1.*,skupiny.* FROM users u1
                 LEFT JOIN skupiny ON u1.u_skupina=skupiny.s_id
             WHERE u_ban='1' ORDER BY u_prijmeni"
         );
-        return DBUser::getArray($res);
+        return self::getArray($res);
     }
 
     public static function getUnconfirmedUsers()
     {
-        $res = DBUser::query(
+        $res = self::query(
             "SELECT u1.*,skupiny.* FROM users u1
                 LEFT JOIN skupiny ON u1.u_skupina=skupiny.s_id
             WHERE u_banconfirmed='0' ORDER BY u_prijmeni"
         );
-        return DBUser::getArray($res);
+        return self::getArray($res);
     }
 
     public static function getActiveUsers($group = null)
     {
-        $res = DBUser::query(
+        $res = self::query(
             "SELECT users.*,skupiny.* FROM users
                 LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
             WHERE u_system='0' AND u_confirmed='1' AND u_ban='0' " .
             ($group !== null ? "AND u_group='$group' " : '') .
                 "ORDER BY u_prijmeni "
         );
-        return DBUser::getArray($res);
+        return self::getArray($res);
     }
     public static function getGroupCounts()
     {
-        $res = DBUser::query(
+        $res = self::query(
             "SELECT u_group,count(*) as count,permissions.*
             FROM users LEFT JOIN permissions ON u_group=pe_id group by u_group"
         );
-        return DBUser::getArray($res);
+        return self::getArray($res);
     }
 }
