@@ -10,7 +10,7 @@ class SelectHelper
         $this->name = $name ?: '';
         $this->value = null;
         $this->options = [];
-        $this->cls = 'form-control';
+        $this->cls = 'form-control select2';
 
         return $this;
     }

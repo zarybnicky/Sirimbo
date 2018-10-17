@@ -93,7 +93,7 @@ class UserSelectHelper
         $selected = $this->_selected !== null ? $this->_selected : '';
 
         $out = '<div class="' . $name . '">' . "\n";
-        $out .= '<select class="custom-select" name="' . $this->_name . '">' . "\n";
+        $out .= '<select class="form-control select2" name="' . $this->_name . '">' . "\n";
         if (!$selected) {
             $out .= '<option value="0" selected="selected">--- žádný ---</option>' . "\n";
         } else {
@@ -106,7 +106,7 @@ class UserSelectHelper
 
         foreach ($this->_users as $user) {
             if (isset($user['u_narozeni'])) {
-                list($year, $month, $day) = explode('-', $user['u_narozeni']);
+                list($year) = explode('-', $user['u_narozeni']);
             }
 
             $id = $user[$this->_idIndex];

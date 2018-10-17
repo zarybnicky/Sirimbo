@@ -25,6 +25,8 @@
         <link rel="stylesheet" type="text/css" href="/style/video.min.css" />
         <link rel="stylesheet" type="text/css" href="/style/bootstrap.min.css" />
         <link rel="stylesheet" type="text/css" href="/style/leaflet.css" />
+        <link rel="stylesheet" type="text/css" href="/style/select2.min.css" />
+        <link rel="stylesheet" type="text/css" href="/style/select2-bootstrap.css" />
         <link rel="stylesheet" type="text/css" href="/style/style.css" />
         <title>
             <?= isset($this->header) ? "{$this->header} | TK Olymp Olomouc" : 'TK Olymp Olomouc' ?>
@@ -37,7 +39,7 @@
           <h1 class="navbar-brand my-0 py-0 ml-lg-2 mx-3">
             <a href="/"><img alt="" src="/style/logo-wide-white.png" /></a>
           </h1>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav">
+          <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#nav">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse ml-lg-0 ml-3" id="nav">
