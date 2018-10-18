@@ -1,15 +1,17 @@
 <?= $this->render('files/View/Member/Clenove/Navigation.inc', ['uri' => $this->uri]) ?>
 <div class="container">
-<?php
-foreach ($this->data as $skupina) {
-    echo '<div style="width:49%;float:', $skupina['info']['align'], '">';
-    echo $this->table()
-        ->style("width:100%")
-        ->data($skupina['users'])
-        ->column('index', '', 'r', 'width:40px')
-        ->column('fullName', $skupina['info']['header'])
-        ->column('hasPaid', 'Zaplaceno?', '', 'width:40px');
-    echo '</div>';
-}
-?>
+  <div class="row flex-wrap">
+    <?php foreach ($this->columns as $col) : ?>
+      <div class="col-12 col-md-6">
+        <?php foreach ($col as $skupina) : ?>
+          <?= $this->table()
+                 ->style("width:100%;margin-bottom:.5rem")
+                 ->data($skupina['users'])
+                 ->column('index', '', 'r', 'width:40px')
+                 ->column('fullName', $skupina['info']['header'])
+                 ->column('hasPaid', 'Zaplaceno?', '', 'width:40px') ?>
+        <?php endforeach ?>
+      </div>
+    <?php endforeach ?>
+  </div>
 </div>

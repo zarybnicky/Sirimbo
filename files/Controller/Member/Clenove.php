@@ -86,7 +86,7 @@ class Controller_Member_Clenove extends Controller_Member
                 $skupiny[$currentKey] = [];
                 $skupiny[$currentKey]['info'] = [
                     'header' => new Tag(
-                        'h3',
+                        'big',
                         [],
                         $this->colorbox($item['s_color_rgb'], $item['s_description'])->render(),
                         '&nbsp;&nbsp;' . $item['s_name']
@@ -105,22 +105,23 @@ class Controller_Member_Clenove extends Controller_Member
             ];
         }
 
+        $columns = [[], []];
         $leftCount = 0;
         $rightCount = 0;
         foreach ($skupiny as &$skupina) {
             $skupina['info']['count'] = count($skupina['users']);
             if ($rightCount >= $leftCount) {
-                $skupina['info']['align'] = 'left';
+                $columns[0][] = $skupina;
                 $leftCount += ($skupina['info']['count']);
             } else {
-                $skupina['info']['align'] = 'right';
+                $columns[1][] = $skupina;
                 $rightCount += ($skupina['info']['count']);
             }
         }
 
         $this->render('files/View/Member/Clenove/Structure.inc', [
             'header' => 'Přehled členů',
-            'data' => $skupiny,
+            'columns' => $columns,
             'uri' => $request->getLiteralURI()
         ]);
     }
