@@ -22,7 +22,7 @@
                     </td>
                     <td>
                       <?php if ($row['canDelete']) : ?>
-                        <?= $this->submit('&times')->cls('btn btn-outline-primary btn-sm')
+                        <?= $this->submit('&times')->cls('py-0 btn btn-outline-primary btn-sm')
                                ->data('un_id', $row['deleteTicket']) ?>
                       <?php endif ?>
                     </td>

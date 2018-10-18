@@ -6,24 +6,28 @@
           <div class="widget-title center">
             <?= $this->render('files/View/Member/Rozpis/Header.inc', $item) ?>
           </div>
-          <table class="widget-content nocolor" style="width:100%">
-            <?php foreach ($item['items'] as $lesson): ?>
-              <tr>
-                <td><?= $lesson['timeFrom'] ?>-<?= $lesson['timeTo'] ?></td>
-                <td><?= $lesson['fullName'] ?></td>
-                <td class="text-center" style="width:45px;">
-                  <form action="" method="post">
-                    <?= $this->hidden('ri_id', $lesson['id']) ?>
-                    <?php if ($lesson['canReserve']): ?>
-                      <?= $this->submit('+')->cls('btn btn-outline-primary btn-sm')->data('action', 'signup') ?>
-                    <?php elseif ($lesson['canCancel']): ?>
-                      <?= $this->submit('&times;')->cls('btn btn-outline-primary btn-sm')->data('action', 'signout') ?>
-                    <?php endif ?>
-                  </form>
-                </td>
-              </tr>
-            <?php endforeach ?>
-          </table>
+          <div class="widget-content">
+            <table class="nocolor mx-auto">
+              <?php foreach ($item['items'] as $lesson): ?>
+                <tr>
+                  <td>
+                    <form action="" method="post">
+                      <span class="pr-1">
+                        <?= $lesson['timeFrom'] ?>-<?= $lesson['timeTo'] ?>
+                      </span>
+                      <?= $lesson['fullName'] ?>
+                      <?= $this->hidden('ri_id', $lesson['id']) ?>
+                      <?php if ($lesson['canReserve']): ?>
+                        <?= $this->submit('+')->cls('py-0 btn btn-outline-primary btn-sm')->data('action', 'signup') ?>
+                      <?php elseif ($lesson['canCancel']): ?>
+                        <?= $this->submit('&times;')->cls('py-0 btn btn-outline-primary btn-sm')->data('action', 'signout') ?>
+                      <?php endif ?>
+                    </form>
+                  </td>
+                </tr>
+              <?php endforeach ?>
+            </table>
+          </div>
         </div>
       </div>
     <?php endforeach ?>
