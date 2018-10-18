@@ -172,7 +172,7 @@ class Controller_Admin_Users extends Controller_Admin
             return;
         }
         $groups = DBPermissions::getGroups();
-        $s_group = $this->select()->optionsAssoc($groups, 'pe_id', 'pe_name');
+        $s_group = $this->select()->optionsAssoc($groups, 'pe_id', 'pe_name')->set(3);
 
         $skupiny = DBSkupiny::get();
         $s_skupina = new SelectHelper();
