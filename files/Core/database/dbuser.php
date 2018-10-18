@@ -45,12 +45,20 @@ class DBUser extends Database implements Pagable
 
     public static function getCount($options = null)
     {
-        if (!isset($options['filter'])) {
-            $options['filter'] = 'all';
+        if (!isset($options['status'])) {
+            $options['status'] = 'all';
         }
 
         $q = "SELECT COUNT(*) FROM users WHERE 1=1";
-        switch ($options['filter']) {
+
+        if (is_numeric($options['group'])) {
+            $q .= " AND u_group='{$options['group']}'";
+        }
+        if (is_numeric($options['skupina'])) {
+            $q .= " AND u_skupina='{$options['skupina']}'";
+        }
+
+        switch ($options['status']) {
             case 'unconfirmed':
                 $q .= " AND u_confirmed='0' AND u_ban='0'";
                 break;
@@ -62,13 +70,9 @@ class DBUser extends Database implements Pagable
                 break;
             case 'all':
             default:
-                if (is_numeric($options['filter'])) {
-                    $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0' AND u_group='{$options['filter']}'";
-                } else {
-                    $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0'";
-                }
+                $q .= " AND u_confirmed='1' AND u_ban='0' AND u_system='0'";
+                break;
         }
-        $q .= ' ORDER BY u_prijmeni';
 
         $res = self::query($q);
         $res = self::getSingleRow($res);
