@@ -20,6 +20,7 @@ class RadioHelper
         $this->readonly = false;
 
         $this->label = null;
+        $this->cls = 'form-check';
 
         return $this;
     }
@@ -42,6 +43,12 @@ class RadioHelper
         return $this;
     }
 
+    public function inline($val = true)
+    {
+        $this->cls = $val ? 'form-check form-check-inline' : 'form-check';
+        return $this;
+    }
+
     public function render()
     {
         $radio = new Tag(
@@ -55,10 +62,10 @@ class RadioHelper
                 'readonly' => $this->readonly
             ]
         );
-        if (!$this->label) {
-            return (string) $radio;
-        }
-        return "<label class='form-check-label'>$radio {$this->label}</label>";
+        return "<div class='{$this->cls}'>"
+            . $radio
+            . ($this->label ? "<label class='form-check-label'>{$this->label}</label>" : '')
+            . "</div>";
     }
 
     public function __toString()

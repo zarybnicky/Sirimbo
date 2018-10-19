@@ -22,8 +22,7 @@ class CheckboxHelper
         $this->readonly = false;
 
         $this->label = null;
-        $this->labelCls = 'form-check-label';
-        $this->cls = 'form-check-input';
+        $this->cls = 'form-check';
 
         return $this;
     }
@@ -46,44 +45,29 @@ class CheckboxHelper
         return $this;
     }
 
-    public function labelCls($labelCls)
+    public function inline($val = true)
     {
-        $this->labelCls = $labelCls;
-        return $this;
-    }
-
-    public function cls($str)
-    {
-        $this->cls = $str;
+        $this->cls = $val ? 'form-check form-check-inline' : 'form-check';
         return $this;
     }
 
     public function render()
     {
-        if (!$this->label) {
-            return (string) new Tag(
-                'input',
-                [
-                    'type' => 'checkbox',
-                    'name' => $this->name,
-                    'value' => $this->value,
-                    'checked' => $this->state,
-                    'readonly' => $this->readonly
-                ]
-            );
-        }
         $checkbox = new Tag(
             'input',
             [
                 'type' => 'checkbox',
+                'class' => 'form-check-input',
                 'name' => $this->name,
                 'value' => $this->value,
                 'checked' => $this->state,
-                'readonly' => $this->readonly,
-                'class' => $this->cls
+                'readonly' => $this->readonly
             ]
         );
-        return "<label class='{$this->labelCls}'>$checkbox {$this->label}</label>";
+        return "<div class='{$this->cls}'>"
+            . $checkbox
+            . ($this->label ? "<label class='form-check-label'>{$this->label}</label>" : '')
+            . "</div>";
     }
 
     public function __toString()

@@ -1,62 +1,94 @@
 <div class="container">
   <form action="" method="POST">
-    <table>
-      <tr>
-          <td>Uživatel (*): </td>
-          <td><?= $this->text('username', $this->username) ?></td>
-        <td>Pouze písmena bez diakritiky, číslice a podtržítka, 3 - 20 znaků</td>
-      </tr><tr>
-          <td>Heslo (*): </td>
-          <td><input class="form-control" type="password" name="pass" value="<?= $this->pass ?>"/></td>
-          <td>Pouze písmena bez diakritiky, číslice a podtržítka, 6 - 32 znaků</td>
-      </tr><tr>
-          <td>Jméno (*): </td>
-          <td><?= $this->text('jmeno', $this->jmeno) ?></td>
-          <td>Max. 40 znaků</td>
-      </tr><tr>
-          <td>Příjmení (*): </td>
-          <td><?= $this->text('prijmeni', $this->prijmeni) ?></td>
-          <td>Max. 40 znaků</td>
-      </tr><tr>
-          <td>Pohlaví (*): </td>
-          <td>
-              <?= $this->radio('pohlavi', 'm')->set($this->pohlavi == 'm')->label('Muž') ?>&nbsp;
-              <?= $this->radio('pohlavi', 'f')->set($this->pohlavi == 'f')->label('Žena') ?>
-          </td>
-          <td></td>
-      </tr><tr>
-          <td>E-mail (*): </td>
-          <td><?= $this->text('email', $this->email) ?></td>
-          <td>Max. 50 znaků, ve formátu e-mail adresy</td>
-      </tr><tr>
-          <td>Telefon (*): </td>
-          <td><?= $this->text('telefon', $this->telefon) ?></td>
-          <td></td>
-      </tr><tr>
-          <td>Datum narození (*):</td>
-          <td><?= $this->date('narozeni', $this->narozeni) ?></td>
-          <td></td>
-      </tr><tr>
-          <td>Vztah ke klubu: </td>
-          <td>
-              <?= $this->radio('poznamky', 'dancer')
-                       ->set($this->poznamky == 'dancer')
-                       ->label('Tanečník/tanečníce') ?><br>
-              <?= $this->radio('poznamky', 'parent')
-                       ->set($this->poznamky == 'parent')
-                       ->label('Rodič tanečníka') ?><br>
-              <div class="inline-radio">
-                <?= $this->radio('poznamky', 'other')
-                       ->set($this->poznamky == 'other')
-                       ->label('Jiné: ' . $this->text('other', $this->other)) ?>
-              </div>
-          </td>
-          <td></td>
-      </tr><tr>
-          <td><?= $this->submit('Registrovat se')->data('action', 'register') ?></td>
-          <td>Pole označená (*) jsou povinná</td>
-          <td></td>
-      </tr>
-    </table>
+
+    <div class="form-row">
+      <div class="form-group col-12 col-md-6">
+        <label for="username">Přihlašovací jméno</label>
+        <?= $this->text('username', $this->username) ?>
+        <small class="form-text text-muted">
+          Pouze písmena bez diakritiky, číslice a podtržítka, 3 - 20 znaků
+        </small>
+      </div>
+      <div class="form-group col-12 col-md-6">
+        <label for="pass">Heslo</label>
+        <input class="form-control" type="password" name="pass" value="<?= $this->pass ?>"/>
+        <small class="form-text text-muted">
+          Pouze písmena bez diakritiky, číslice a podtržítka, 6 - 32 znaků
+        </small>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-12 col-md-6">
+        <label for="jmeno">Jméno</label>
+        <?= $this->text('jmeno', $this->jmeno) ?>
+      </div>
+      <div class="form-group col-12 col-md-6">
+        <label for="prijmeni">Příjmení</label>
+        <?= $this->text('prijmeni', $this->prijmeni) ?>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <?= $this->radio('pohlavi', 'm')->set($this->pohlavi == 'm')->label('Muž')->inline() ?>
+      <?= $this->radio('pohlavi', 'f')->set($this->pohlavi == 'f')->label('Žena')->inline() ?>
+    </div>
+
+    <div class="form-group">
+      <label for="narozeni">Datum narození</label>
+      <?= $this->date('narozeni', $this->narozeni) ?>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-12 col-md-6">
+        <label for="email">E-mail</label>
+        <?= $this->text('email', $this->email) ?>
+      </div>
+      <div class="form-group col-12 col-md-6">
+        <label for="telefon">Telefon</label>
+        <?= $this->text('telefon', $this->telefon) ?>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="skupina">Skupina</label>
+      <?php
+      $s = $this->select('skupina')->set($this->skupina ?: '10');
+      foreach ($this->skupiny as $item) {
+          $s->option(
+              $item['id'],
+              $this->colorbox($item['color'], $item['popis']) . '&nbsp;' . $item['popis']
+          );
+      }
+      echo $s;
+      ?>
+    </div>
+
+    <div class="form-group">
+      <label for="poznamky">Vztah ke klubu</label>
+      <div class="form-inline">
+        <?= $this->radio('poznamky', 'dancer')
+               ->set($this->poznamky == 'dancer')
+               ->label('Tanečník/tanečníce') ?>
+      </div>
+      <div class="form-inline">
+        <?php $i = $this->text('dancer-name', $this->dancerName)
+                       ->placeholder('jméno tanečníka')
+                       ->cls('form-control ml-2') ?>
+        <?= $this->radio('poznamky', 'parent')
+               ->set($this->poznamky == 'parent')
+               ->label('Rodič tanečníka: ' . $i) ?>
+      </div>
+      <div class="form-inline">
+        <?php $i = $this->text('other', $this->other)
+                       ->placeholder('vztah ke klubu')
+                       ->cls('form-control ml-2') ?>
+        <?= $this->radio('poznamky', 'other')
+               ->set($this->poznamky == 'other')
+               ->label('Jiný ' . $i) ?>
+      </div>
+    </div>
+
+    <?= $this->submit('Registrovat se')->data('action', 'register') ?>
   </form>
 </div>

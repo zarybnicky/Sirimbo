@@ -4,8 +4,19 @@ class Controller_Registrace extends Controller_Abstract
     public function view($request)
     {
         if (!$request->post()) {
+            $skupiny = array_map(
+                function ($item) {
+                    return [
+                        'id' => $item['s_id'],
+                        'color' => $item['s_color_rgb'],
+                        'popis' => $item['s_name']
+                    ];
+                },
+                DBSkupiny::get()
+            );
             $this->render('files/View/Main/Registrace.inc', [
                 'header' => 'Registrace',
+                'skupiny' => $skupiny,
                 'username' => '',
                 'pass' => '',
                 'jmeno' => '',
@@ -15,6 +26,8 @@ class Controller_Registrace extends Controller_Abstract
                 'telefon' => '',
                 'narozeni' => '',
                 'poznamky' => '',
+                'dancerName' => '',
+                'skupina' => '0',
                 'other' => ''
             ]);
             return;
@@ -22,9 +35,9 @@ class Controller_Registrace extends Controller_Abstract
 
         $narozeni = (string) $this->date('narozeni')->getPost($request);
         $poznamkyMap = [
-            'parent' => 'Rodič tanečníka',
-            'dancer' => 'Tanečník/tanečníce',
-            'other' => $request->post('other')
+            'parent' => 'Rodič tanečníka: ' . $request->post('dancer-name'),
+            'dancer' => 'Tanečník/tanečnice',
+            'other' => 'Jiný vztah: ' . $request->post('other')
         ];
         $poznamky = $poznamkyMap[$request->post('poznamky')];
 
@@ -39,9 +52,21 @@ class Controller_Registrace extends Controller_Abstract
         $f->checkDate($narozeni, 'Neplatné datum narození', 'narozeni');
 
         if (!$f->isValid()) {
+            $skupiny = array_map(
+                function ($item) {
+                    return [
+                        'id' => $item['s_id'],
+                        'color' => $item['s_color_rgb'],
+                        'popis' => $item['s_name']
+                    ];
+                },
+                DBSkupiny::get()
+            );
+
             $this->redirect()->warning($f->getMessages());
             $this->render('files/View/Main/Registrace.inc', [
                 'header' => 'Registrace',
+                'skupiny' => $skupiny,
                 'username' => $request->post('username') ?: '',
                 'pass' => $request->post('pass') ?: '',
                 'jmeno' => $request->post('jmeno') ?: '',
@@ -51,6 +76,8 @@ class Controller_Registrace extends Controller_Abstract
                 'telefon' => $request->post('telefon') ?: '',
                 'narozeni' => $request->post('narozeni') ?: '',
                 'poznamky' => $request->post('poznamky') ?: '',
+                'dancerName' => $request->post('dancer-name') ?: '',
+                'skupina' => $request->post('skupina') ?: '',
                 'other' => $request->post('other') ?: ''
             ]);
             return;
@@ -65,7 +92,8 @@ class Controller_Registrace extends Controller_Abstract
             $request->post('email'),
             $request->post('telefon'),
             $narozeni,
-            $poznamky
+            $poznamky,
+            $request->post('skupina')
         );
         $this->redirect()->success(
             '<h4 class="alert-heading">Registrace úspěšně proběhla.</h4>' .

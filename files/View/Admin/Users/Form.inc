@@ -71,7 +71,7 @@
       ?>
     </div>
     <div class="form-group">
-      <div style="font-weight:bold">Skupiny</div>
+      <div style="font-weight:bold">Skupina</div>
       <?php
       foreach ($this->skupiny as $item) {
           echo $this->radio('skupina', $item['id'])

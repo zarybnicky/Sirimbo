@@ -188,7 +188,7 @@ class Controller_Admin_Users extends Controller_Admin
                         $this->removeLink('/admin/users/remove/' . $item['u_id'])
                     ),
                     'group' => $s_group->name($item['u_id'] . '-group')->render(),
-                    'skupina' => $s_skupina->name($item['u_id'] . '-skupina')->render(),
+                    'skupina' => $s_skupina->name($item['u_id'] . '-skupina')->set($item['u_skupina'])->render(),
                     'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
                     'narozeni' => formatDate($item['u_narozeni']),
                     'poznamky' => $item['u_poznamky']

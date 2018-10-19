@@ -183,11 +183,13 @@ class User
     }
 
     public static function register(
-        $login, $pass, $name, $surname, $pohlavi, $email, $telefon, $narozeni, $poznamky
+        $login, $pass, $name, $surname, $pohlavi, $email, $telefon, $narozeni,
+        $poznamky, $skupina
     ) {
         DBUser::addUser(
             $login, User::crypt($pass), $name, $surname, $pohlavi, $email,
-            $telefon, $narozeni, $poznamky, '0', '0', '0', "0", "0", "0", "0"
+            $telefon, $narozeni, $poznamky, '0', $skupina, '0', "0", "0", "0",
+            "0"
         );
 
         Mailer::newUserNotice(DEFAULT_ADMIN_MAIL, $login);
