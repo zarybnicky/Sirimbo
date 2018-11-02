@@ -99,7 +99,7 @@ class Controller_Member_Clenove extends Controller_Member
                 'fullName' => $this->person($item),
                 'hasPaid' => new Tag(
                     'span',
-                    ['style' => 'font-weight:bold;' . 'color:' . ($item['pi_id'] ? 'green' : 'red')],
+                    ['style' => 'font-weight:bold;color:' . ($item['pi_id'] ? 'green' : 'red')],
                     $item['pi_id'] ? 'ANO' : 'NE'
                 )
             ];

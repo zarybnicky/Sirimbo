@@ -19,7 +19,7 @@ class Controller_Admin_Platby_Overview extends Controller_Admin_Platby
                 $skupiny[$currentKey] = [];
                 $skupiny[$currentKey]['info'] = [
                     'header' => new Tag(
-                        'h3',
+                        'big',
                         [],
                         $this->colorbox($item['s_color_rgb'], $item['s_description'])->render(),
                         '&nbsp;&nbsp;' . $item['s_name']
@@ -32,10 +32,7 @@ class Controller_Admin_Platby_Overview extends Controller_Admin_Platby
                 'fullName' => $this->person($item)->render(),
                 'hasPaid' => new Tag(
                     'span',
-                    [
-                        'style' => 'font-weight:bold;'
-                        . 'color:' . ($item['pi_id'] ? 'green' : 'red')
-                    ],
+                    ['style' => 'font-weight:bold;color:' . ($item['pi_id'] ? 'green' : 'red')],
                     $item['pi_id'] ? 'ANO' : 'NE'
                 ),
                 'amount' => $item['pi_amount'] == ($item['pc_amount'] * $item['pg_base'])
@@ -45,14 +42,25 @@ class Controller_Admin_Platby_Overview extends Controller_Admin_Platby
                    . (int) ($item['pc_amount'] * $item['pg_base']) . ' Kč)')
             ];
         }
+
+        $columns = [[], []];
+        $leftCount = 0;
+        $rightCount = 0;
         foreach ($skupiny as &$skupina) {
             $skupina['info']['count'] = count($skupina['users']);
+            if ($rightCount >= $leftCount) {
+                $columns[0][] = $skupina;
+                $leftCount += ($skupina['info']['count']);
+            } else {
+                $columns[1][] = $skupina;
+                $rightCount += ($skupina['info']['count']);
+            }
         }
 
         $this->render('files/View/Admin/Platby/Statistics.inc', [
             'header' => 'Správa plateb',
-            'subheader' => 'Dočasná statistika - členové podle skupin',
-            'data' => $skupiny,
+            'subheader' => 'Členové podle skupin',
+            'columns' => $columns,
             'uri' => $request->getLiteralURI()
         ]);
     }

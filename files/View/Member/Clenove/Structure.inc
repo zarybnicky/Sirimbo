@@ -1,4 +1,5 @@
 <?= $this->render('files/View/Member/Clenove/Navigation.inc', ['uri' => $this->uri]) ?>
+
 <div class="container">
   <div class="row flex-wrap">
     <?php foreach ($this->columns as $col) : ?>
