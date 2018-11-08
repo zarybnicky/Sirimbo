@@ -151,7 +151,7 @@
       <h3><a href="/aktualne/clanky">Aktuálně</a></h3>
       <div class="row">
         <?php foreach ($this->moreArticles as $item): ?>
-          <div class="col">
+          <div class="col-12 col-md-6 pb-2">
             <div class="article-small card">
               <a class="card-img-top image" href="<?= $item['uri'] ?>">
                 <img alt="" src="<?= $item['title_photo_uri'] ?>" />
