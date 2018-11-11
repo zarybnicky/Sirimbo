@@ -164,7 +164,7 @@ class User
 
     public static function getZaplaceno($par = false)
     {
-        return null;
+        return true;
         // $paidSelf = DBPlatby::hasPaidMemberFees($_SESSION['id']);
         // if ($par)
         //     return $paidSelf | DBPlatby::hasPaidMemberFees($_SESSION['partner'])
