@@ -25,7 +25,7 @@
             <td><b>předseda, šéftrenér</b></td>
         </tr>
         <tr>
-            <td></td><td>kontaktní osoba pro vystoupení a soutěže a organizaci tréninků</td>
+            <td></td><td>kontaktní osoba pro vystoupení, soutěže, organizaci tréninků a fakturaci</td>
         </tr>
         <tr>
             <td class="r">mobil:</td>
@@ -49,7 +49,7 @@
         </tr>
         <tr>
             <td class="r">email:</td>
-            <td>tkolymp(zavináč)tkolymp.cz</td>
+            <td>marie.hy(zavináč)seznam.cz</td>
         </tr>
         <tr><td>&nbsp;</td><td></td></tr>
         <tr>
