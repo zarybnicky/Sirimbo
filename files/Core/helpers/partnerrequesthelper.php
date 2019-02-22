@@ -37,6 +37,7 @@ class PartnerRequestHelper
         <input type="hidden" name="id" value="<?= $item['pn_id'] ?>" />
         <button type="submit" name="action" value="cancel">Zrušit</button>
     </span>
+    <div style="clear:both"></div>
 </div>
 </form>
             <?php
@@ -61,10 +62,11 @@ class PartnerRequestHelper
         Uživatel <?= $item['u_jmeno'], ' ', $item['u_prijmeni'] ?> Vás žádá o partnerství.
     </span>
     <span style="text-align:right;float:right;margin-right:15px;">
-        <?= $this->hidden('id', $item['pn_id']) ?>
+        <?= Helper::instance()->hidden('id', $item['pn_id']) ?>
         <button type="submit" name="action" value="accept">Přijmout</button>
         <button type="submit" name="action" value="refuse">Odmítnout</button>
     </span>
+    <div style="clear:both"></div>
 </div>
 </form>
             <?php
