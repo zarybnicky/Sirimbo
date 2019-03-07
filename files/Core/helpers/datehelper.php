@@ -82,41 +82,23 @@ class DateHelper
 
     public function getPostRange($request)
     {
-        if ($request->post($this->name)) {
-            if (strpos($request->post($this->name), ' - ')) {
-                $pieces = explode(' - ', $request->post($this->name));
-                $from = new Date($pieces[0]);
-                $to = new Date($pieces[1]);
-            }
-            if (!isset($from) || !isset($to) || (!$from->isValid() && !$to->isValid())) {
-                return ['from' => $this->getPost($request, true), 'to' => new Date()];
-            }
-            return ['from' => $from, 'to' => $to];
-        } elseif ($request->get($this->name)) {
-            if (strpos($request->get($this->name), ' - ')) {
-                $pieces = explode(' - ', $request->get($this->name));
-                $from = new Date($pieces[0]);
-                $to = new Date($pieces[1]);
-            }
-            if (!isset($from) || !isset($to) || (!$from->isValid() && !$to->isValid())) {
-                return ['from' => $this->getPost($request, true), 'to' => new Date()];
-            }
-            return ['from' => $from, 'to' => $to];
-        } else {
+        if (!$request->post($this->name)) {
             return ['from' => new Date(), 'to' => new Date()];
         }
+        if (strpos($request->post($this->name), ' - ')) {
+            $pieces = explode(' - ', $request->post($this->name));
+            $from = new Date($pieces[0]);
+            $to = new Date($pieces[1]);
+        }
+        if (!isset($from) || !isset($to) || (!$from->isValid() && !$to->isValid())) {
+            return ['from' => $this->getPost($request), 'to' => new Date()];
+        }
+        return ['from' => $from, 'to' => $to];
     }
 
-    public function getPost($request, $name = null)
+    public function getPost($request)
     {
-        if ($name === null) {
-            $name = $this->name;
-        }
-        if ($request->post($name)) {
-            return new Date($request->post($name));
-        } else {
-            return new Date();
-        }
+        return new Date($request->post($this->name));
     }
 
     public function __toString()

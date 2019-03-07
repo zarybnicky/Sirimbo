@@ -23,7 +23,7 @@
     </div>
     <div class="form-group">
       <label for="do">Do</label>
-      <?= $this->date('od', $this->od) ?>
+      <?= $this->date('do', $this->do) ?>
       <small class="form-text text-muted">(pokud je prázdné, počítá se jako "Od")</small>
     </div>
     <div class="form-check">
