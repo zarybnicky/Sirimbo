@@ -11,6 +11,6 @@
       ?>
     </div>
     <?= $this->submit('Uložit') ?>
-    <a class="btn btn-outline-primary" href="/admin/permissions">Zpět</a>
+    <a class="btn btn-outline-primary" href="/admin/nabidka">Zpět</a>
   </form>
 </div>

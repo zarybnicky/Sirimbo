@@ -96,11 +96,10 @@ class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
             $count = $item['ni_pocet_hod'];
             $countNew = $request->post($item["ni_id"] . "-hodiny");
 
-            if ($partner != $partnerNew || $countNew != $countNew) {
+            if ($partner != $partnerNew || $count != $countNew) {
                 if (0 < $maxLessons && $maxLessons < $countNew) {
                     $countNew = $maxLessons;
                 }
-
                 DBNabidka::editNabidkaItem(
                     $item["ni_id"],
                     $partnerNew,
