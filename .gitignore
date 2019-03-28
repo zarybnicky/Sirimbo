@@ -12,3 +12,7 @@ stats/
 /style
 /images
 /scripts
+.direnv/
+.ghc.environment*
+dist/
+dist-newstyle/

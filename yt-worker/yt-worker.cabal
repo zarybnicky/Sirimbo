@@ -1,0 +1,42 @@
+cabal-version:       2.2
+name:                yt-worker
+version:             0.1.0.0
+license:             BSD-3-Clause
+author:              Jakub Zárybnický
+maintainer:          jakub@zarybnicky.com
+
+executable yt-worker
+  main-is:             Main.hs
+  hs-source-dirs:      src
+  default-language:    Haskell2010
+  ghc-options:        -Wall
+                      -Wcompat
+                      -Wincomplete-uni-patterns
+                      -Wincomplete-record-updates
+                      -Wredundant-constraints
+                      -Wmonomorphism-restriction
+                      -fwarn-tabs
+                      -fdiagnostics-color=never
+
+  build-depends:       base ^>=4.11.1.0
+                     , aeson
+                     , bytestring
+                     , conduit
+                     , directory
+                     , filepath
+                     , gogol
+                     , gogol-core
+                     , gogol-youtube
+                     , lens
+                     , monad-logger
+                     , mtl
+                     , mysql-simple
+                     , persistent
+                     , persistent-mysql
+                     , persistent-template
+                     , resourcet
+                     , split
+                     , text
+                     , time
+
+  other-modules:       Schema
