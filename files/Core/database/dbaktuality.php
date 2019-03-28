@@ -54,10 +54,4 @@ class DBAktuality extends Database
     {
         self::query("DELETE FROM aktuality WHERE at_id='?'", $id);
     }
-
-    public static function getAktualityFoto($id)
-    {
-        $res = self::query("SELECT * FROM aktuality_foto WHERE af_id_rodic='?'", $id);
-        return self::getArray($res);
-    }
 }

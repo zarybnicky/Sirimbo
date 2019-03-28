@@ -69,13 +69,11 @@ class DBPary extends Database
         if ($pohlavi == 'm') {
             $q = 'SELECT * FROM pary'
                 . ' LEFT JOIN users ON p_id_partnerka=u_id'
-                . ' LEFT JOIN users_platby ON up_id_user=u_id'
                 . ' WHERE p_id_partner="' . $partner . '"'
                 . ' AND p_archiv="0"';
         } else {
             $q = 'SELECT * FROM pary'
                 . ' LEFT JOIN users ON p_id_partner=u_id'
-                . ' LEFT JOIN users_platby ON up_id_user=u_id'
                 . ' WHERE p_id_partnerka!="0"'
                 . ' AND p_id_partnerka="' . $partner . '"'
                 . ' AND p_archiv="0"';
@@ -86,7 +84,6 @@ class DBPary extends Database
                 "SELECT *
                 FROM pary
                     LEFT JOIN users ON p_id_partnerka=u_id
-                    LEFT JOIN users_platby ON up_id_user=u_id
                 WHERE p_id_partner='$partner' AND p_archiv='0'"
             );
             if ($res !== false) {
