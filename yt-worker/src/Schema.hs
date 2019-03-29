@@ -66,7 +66,7 @@ module Schema
 
 import Data.ByteString (ByteString)
 import Data.Text (Text)
-import Data.Time (Day, UTCTime)
+import Data.Time (Day, TimeOfDay, UTCTime)
 import Database.Persist.TH
 
 
@@ -81,8 +81,8 @@ Event sql=akce
   capacity Int sql=a_kapacita default=0 sqltype=INT(11)
   documents Text sql=a_dokumenty
   updatedAt UTCTime sql=a_timestamp sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
-  lock Bool sql=a_lock default=0
-  visible Bool sql=a_visible default=0
+  lock Text sql=a_lock sqltype=enum('0','1') default='0'
+  visible Text sql=a_visible sqltype=enum('0','1') default='0'
   deriving Show
 
 EventItem sql=akce_item
@@ -122,7 +122,7 @@ PhotoDirectory sql=galerie_dir
   name Text sql=gd_name
   level Int sql=gd_level default=1 sqltype=SMALLINT(6)
   path Text sql=gd_path
-  hidden Bool sql=gd_hidden default=0
+  hidden Text sql=gd_hidden sqltype=enum('0','1') default='0'
   deriving Show
 
 Photo sql=galerie_foto
@@ -141,8 +141,8 @@ Reservation sql=nabidka
   maximumPerPair Int sql=n_max_pocet_hod default=0 sqltype=INT(11)
   from Day sql=n_od
   to Day sql=n_do
-  visible Bool sql=n_visible default=0
-  lock Bool sql=n_lock default=0
+  visible Text sql=n_visible sqltype=enum('0','1') default='0'
+  lock Text sql=n_lock sqltype=enum('0','1') default='0'
   updatedAt UTCTime sql=n_timestamp sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   deriving Show
 
@@ -151,7 +151,7 @@ ReservationItem sql=nabidka_item
   parent ReservationId sql=ni_id_rodic
   partner UserId sql=ni_partner
   numberLessons Int sql=ni_pocet_hod default=1 sqltype=SMALLINT(3)
-  lock Bool sql=ni_lock default=0
+  lock Text sql=ni_lock sqltype=enum('0','1') default='0'
   UniqueReservationItem parent partner sql=ni_id_rodic
   deriving Show
 
@@ -172,13 +172,13 @@ Couple sql=pary
   partnerLeader UserId sql=p_id_partner
   partnerFollower UserId sql=p_id_partnerka default=0
   standardClass Text sql=p_stt_trida default='Z' sqltype=enum('Z','H','D','C','B','A','M')
-  standardPoints Int sql=p_stt_body default=0 sqltype=SMALLINT(5)
-  standardFinals Int sql=p_stt_finale default=0 sqltype=TINYINT(1)
+  standardPoints Int sql=p_stt_body default=0 "sqltype=SMALLINT(5) UNSIGNED"
+  standardFinals Int sql=p_stt_finale default=0 "sqltype=TINYINT(1) UNSIGNED"
   latinClass Text sql=p_lat_trida default='Z' sqltype=enum('Z','H','D','C','B','A','M')
-  latinPoints Int sql=p_lat_body default=0 sqltype=SMALLINT(5)
-  latinFinals Int sql=p_lat_finale default=0 sqltype=TINYINT(1)
-  score Int sql=p_hodnoceni default=0 sqltype=MEDIUMINT(8)
-  archived Bool sql=p_archiv default=0
+  latinPoints Int sql=p_lat_body default=0 "sqltype=SMALLINT(5) UNSIGNED"
+  latinFinals Int sql=p_lat_finale default=0 "sqltype=TINYINT(1) UNSIGNED"
+  score Int sql=p_hodnoceni default=0 "sqltype=MEDIUMINT(8) UNSIGNED"
+  archived Text sql=p_archiv sqltype=enum('0','1') default='0'
   createdAt UTCTime sql=p_timestamp_add sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   archivedAt UTCTime sql=p_timestamp_archive sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   deriving Show
@@ -221,10 +221,10 @@ PaymentCategory sql=platby_category
   dueDate Day sql=pc_date_due
   validFrom Day sql=pc_valid_from
   validTo Day sql=pc_valid_to
-  useBase Bool sql=pc_use_base default=0
-  usePrefix Bool sql=pc_use_prefix default=0
-  archived Bool sql=pc_archive default=0
-  visible Bool sql=pc_visible default=1
+  useBase Text sql=pc_use_base sqltype=enum('0','1') default='0'
+  usePrefix Text sql=pc_use_prefix sqltype=enum('0','1') default='0'
+  archived Text sql=pc_archive sqltype=enum('0','1') default='0'
+  visible Text sql=pc_visible sqltype=enum('0','1') default='1'
   deriving Show
 
 PaymentCategoryGroup sql=platby_category_group
@@ -236,7 +236,7 @@ PaymentCategoryGroup sql=platby_category_group
 
 PaymentGroup sql=platby_group
   Id sql=pg_id
-  type Int sql=pg_type default=0
+  type Text sql=pg_type sqltype=enum('0','1') default=0
   name Text sql=pg_name sqltype=VARCHAR(50)
   description Text sql=pg_description
   base Int sql=pg_base default=0 sqltype=INT(11)
@@ -264,16 +264,16 @@ PaymentRaw sql=platby_raw
   Id sql=pr_id
   raw ByteString sql=pr_raw
   hash Text sql=pr_hash sqltype=VARCHAR(32)
-  sorted Bool sql=pr_sorted default=0
-  discarded Bool sql=pr_discarded default=0
+  sorted Text sql=pr_sorted sqltype=enum('0','1') default='0'
+  discarded Text sql=pr_discarded sqltype=enum('0','1') default='0'
 
 Schedule sql=rozpis
   Id sql=r_id
   trainer UserId sql=r_trener
   location Text sql=r_kde sqltype=VARCHAR(100)
   date Day sql=r_datum
-  visible Bool sql=r_visible default=0
-  lock Bool sql=r_lock default=0
+  visible Text sql=r_visible sqltype=enum('0','1') default='0'
+  lock Text sql=r_lock sqltype=enum('0','1') default='0'
   updatedAt UTCTime sql=r_timestamp sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   deriving Show
 
@@ -281,9 +281,9 @@ ScheduleItem sql=rozpis_item
   Id sql=ri_id
   parent ScheduleId sql=ri_id_rodic
   partner UserId sql=ri_partner default=0
-  from Day sql=ri_od
-  to Day sql=ri_do
-  lock Bool sql=ri_lock default=0
+  from TimeOfDay sql=ri_od
+  to TimeOfDay sql=ri_do
+  lock Text sql=ri_lock sqltype=enum('0','1') default='0'
   deriving Show
 
 UserGroup sql=skupiny
@@ -300,7 +300,7 @@ Announcement sql=upozorneni
   title Text sql=up_nadpis
   text Text sql=up_text
   colors Int sql=up_barvy default=0 sqltype=INT(11)
-  lock Bool sql=up_lock default=0
+  lock Text sql=up_lock sqltype=enum('0','1') default='0'
   updatedAt UTCTime sql=up_timestamp sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   createdAt UTCTime sql=up_timestamp_add sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   deriving Show
@@ -328,12 +328,12 @@ User sql=users
   level Int sql=u_level default=0 sqltype=TINYINT(3)
   paymentGroup PaymentGroupId sql=u_group
   userGroup UserGroupId sql=u_skupina default=1
-  dancer Bool sql=u_dancer default=0
-  ban Bool sql=u_ban default=0
-  lock Bool sql=u_lock default=0
-  confirmed Bool sql=u_confirmed default=0
-  temporary Bool sql=u_temporary default=0
-  system Bool sql=u_system default=0
+  dancer Text sql=u_dancer sqltype=enum('0','1') default='0'
+  ban Text sql=u_ban sqltype=enum('0','1') default='0'
+  lock Text sql=u_lock sqltype=enum('0','1') default='0'
+  confirmed Text sql=u_confirmed sqltype=enum('0','1') default='0'
+  temporary Text sql=u_temporary sqltype=enum('0','1') default='0'
+  system Text sql=u_system sqltype=enum('0','1') default='0'
   deriving Show
 
 Video sql=video
