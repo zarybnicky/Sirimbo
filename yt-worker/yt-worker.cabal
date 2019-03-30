@@ -34,6 +34,7 @@ executable yt-worker
                      , persistent
                      , persistent-mysql
                      , persistent-template
+                     , process
                      , resourcet
                      , split
                      , text

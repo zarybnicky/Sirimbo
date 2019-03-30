@@ -1,22 +1,39 @@
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module Main
   ( main
+  , printMigrations
+  , getChannelUploads
+  , redirectPrompt
+  , getYTToken
   ) where
 
-import Control.Lens ((&), (.~), (<&>), (?~))
-import Control.Monad.Logger (LoggingT, runStdoutLoggingT)
+import Control.Lens
+import Control.Monad.IO.Class
+import Control.Monad.Logger (runStdoutLoggingT)
 import Data.Text (Text)
+import qualified Data.Text as T
+import qualified Data.Text.IO as T
 import Database.Persist.MySQL
+import GHC.TypeLits (Symbol)
 import Network.Google
-import qualified Network.Google.YouTube as YouTube
+import Network.Google.Auth
+import Network.Google.YouTube
+import System.Exit (exitFailure)
 import System.IO (stdout)
+import System.Info (os)
+import System.Process (rawSystem)
 
 import Schema (migrateAll)
 
-
 main :: IO ()
-main = runStdoutLoggingT $ withMySQLPool connectInfo 1 $ runSqlPool sql
+main = pure ()
+
+printMigrations :: IO ()
+printMigrations = runStdoutLoggingT . withMySQLPool connectInfo 1 . runSqlPool $ printMigration migrateAll
   where
     connectInfo =
       defaultConnectInfo
@@ -26,26 +43,37 @@ main = runStdoutLoggingT $ withMySQLPool connectInfo 1 $ runSqlPool sql
         , connectDatabase = "olymp"
         }
 
-sql :: SqlPersistT (LoggingT IO) ()
-sql = printMigration migrateAll
-
-
-
 -- https://developers.google.com/youtube/v3/docs/channels/list
-
--- | This gets the Information about an spreadsheet.
--- In order to be able to run these examples you need to
--- create a service acount from google's developers console
--- and copy the dowloaded json file to ~/.config/gcloud/application_default_credentials.json.
---
--- you must also share with your service the spreadsheet that you want to get the info of.
--- In order to do this you must share the sheet with the email address of your service
--- which is in your downloaded service config file.
---
--- after doing above step just pass the sreadsheet id to the function.
-exampleGetChannel :: Text -> IO YouTube.ChannelListResponse
-exampleGetChannel channelId = do
+getChannelUploads :: Text -> IO [PlayListItemSnippet]
+getChannelUploads channelId = do
   lgr <- newLogger Debug stdout
-  env <- newEnv <&> (envLogger .~ lgr) . (envScopes .~ YouTube.youTubeReadOnlyScope)
-  runResourceT . runGoogle env $
-    send (YouTube.channelsList "contentDetails" & YouTube.cId ?~ channelId)
+  env <- newEnv <&> (envLogger .~ lgr) . (envScopes .~ youTubeReadOnlyScope)
+  runResourceT . runGoogle env $ do
+    chs <- send $ channelsList "contentDetails" & cId ?~ channelId
+    plis <- flip mapM (chs ^.. clrItems . each . chaContentDetails . _Just . ccdRelatedPlayLists . _Just . ccdrplUploads . _Just) $ \(uploadPlaylistId :: Text) -> do
+      vs <- send (playListItemsList "snippet" & plilPlayListId ?~ uploadPlaylistId)
+      pure $ vs ^.. plilrItems . each . pliSnippet . _Just
+    pure $ plis >>= id
+
+getYTToken ::
+     AllowScopes (s :: [Symbol])
+  => OAuthClient
+  -> Logger
+  -> proxy s
+  -> IO (Maybe RefreshToken)
+getYTToken c lgr p = do
+  mgr <- newManager tlsManagerSettings
+  code <- redirectPrompt c p
+  auth <- exchange (FromClient c code) lgr mgr
+  pure (_tokenRefresh (_token auth))
+
+redirectPrompt :: AllowScopes (s :: [Symbol]) => OAuthClient -> proxy s -> IO (OAuthCode s)
+redirectPrompt c p = do
+  let url = formURL c p
+  T.putStrLn $ "Opening URL " `T.append` url
+  _ <- case os of
+    "darwin" -> rawSystem "open"     [T.unpack url]
+    "linux"  -> rawSystem "xdg-open" [T.unpack url]
+    _        -> T.putStrLn "Unsupported OS" >> exitFailure
+  T.putStrLn "Please input the authorisation code: "
+  OAuthCode <$> T.getLine
