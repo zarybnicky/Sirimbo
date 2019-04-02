@@ -62,12 +62,15 @@ module Schema
   , User(..)
   , VideoId
   , Video(..)
+  , VideoSourceId
+  , VideoSource(..)
   ) where
 
 import Data.ByteString (ByteString)
 import Data.Text (Text)
 import Data.Time (Day, TimeOfDay, UTCTime)
 import Database.Persist.TH
+  (mkMigrate, mkPersist, persistLowerCase, share, sqlSettings)
 
 
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
@@ -344,5 +347,14 @@ Video sql=video
   text Text sql=v_text MigrationOnly
   isPlaylist Bool sql=v_playlist
   updatedAt UTCTime sql=v_timestamp sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
+  deriving Show
+
+VideoSource sql=video_source
+  Id sql=vs_id
+  url Text sql=vs_url
+  title Text Maybe sql=vs_title default=NULL
+  description Text Maybe sql=vs_description default=NULL
+  createdAt UTCTime sql=vs_created_at sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
+  lastCheckedAt UTCTime Maybe sql=vs_last_checked sqltype=TIMESTAMP
   deriving Show
 |]
