@@ -11,8 +11,9 @@ module Main
   , getYTToken
   ) where
 
+import Control.Applicative ((<|>))
 import Control.Lens
-import Control.Monad.IO.Class
+import Control.Monad (forM)
 import Control.Monad.Logger (runStdoutLoggingT)
 import Data.Text (Text)
 import qualified Data.Text as T
@@ -44,16 +45,25 @@ printMigrations = runStdoutLoggingT . withMySQLPool connectInfo 1 . runSqlPool $
         }
 
 -- https://developers.google.com/youtube/v3/docs/channels/list
-getChannelUploads :: Text -> IO [PlayListItemSnippet]
-getChannelUploads channelId = do
+getChannelUploads :: Text -> IO (Maybe Text, [PlayListItemSnippet])
+getChannelUploads chanId = do
   lgr <- newLogger Debug stdout
   env <- newEnv <&> (envLogger .~ lgr) . (envScopes .~ youTubeReadOnlyScope)
   runResourceT . runGoogle env $ do
-    chs <- send $ channelsList "contentDetails" & cId ?~ channelId
-    plis <- flip mapM (chs ^.. clrItems . each . chaContentDetails . _Just . ccdRelatedPlayLists . _Just . ccdrplUploads . _Just) $ \(uploadPlaylistId :: Text) -> do
-      vs <- send (playListItemsList "snippet" & plilPlayListId ?~ uploadPlaylistId)
-      pure $ vs ^.. plilrItems . each . pliSnippet . _Just
-    pure $ plis >>= id
+    chan <- send $ channelsList "contentDetails" & cId ?~ chanId
+    let uploads = chan ^.. clrItems . each . chaContentDetails . _Just . ccdRelatedPlayLists . _Just . ccdrplUploads . _Just
+    plis <- forM uploads $ \(playId :: Text) -> do
+      vs <- send (playListItemsList "snippet" & plilPlayListId ?~ playId & plilMaxResults .~ 50)
+      pure (vs ^. plilrNextPageToken, vs ^.. plilrItems . each . pliSnippet . _Just)
+    pure $ foldr (\(mNext, xs) (mNext', ys) -> (mNext <|> mNext', xs ++ ys)) (Nothing, []) plis
+
+getChannelPlaylists :: Text -> IO [PlayList]
+getChannelPlaylists chanId = do
+  lgr <- newLogger Debug stdout
+  env <- newEnv <&> (envLogger .~ lgr) . (envScopes .~ youTubeReadOnlyScope)
+  runResourceT . runGoogle env $ do
+    lists <- send $ playListsList "snippet" & pllChannelId ?~ chanId
+    pure $ lists ^. pllrItems
 
 getYTToken ::
      AllowScopes (s :: [Symbol])
