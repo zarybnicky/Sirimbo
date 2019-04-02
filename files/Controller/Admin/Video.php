@@ -18,7 +18,7 @@ class Controller_Admin_Video extends Controller_Admin
         }
 
         $videos = DBVideo::getAll();
-        $select = $this->select()->optionsAssoc($videos, 'v_id', 'v_name');
+        $select = $this->select()->optionsAssoc($videos, 'v_id', 'v_title');
         $data = array_map(
             function ($item) {
                 $parts = explode('?', $item['v_uri']);
@@ -27,11 +27,10 @@ class Controller_Admin_Video extends Controller_Admin
                     'buttons' => $this->editLink('/admin/video/edit/' . $item['v_id'])
                         . '&nbsp;'
                         . $this->removeLink('/admin/video/remove/' . $item['v_id']),
-                    'name' => $item['v_name'],
-                    'text' => $item['v_text'],
+                    'title' => $item['v_title'],
                     'uri' => $uri,
-                    'date' => $item['v_date'],
-                    'playlist' => $parts ? 'ano' : 'ne'
+                    'created' => formatTimestamp($item['v_created_at'], true),
+                    'playlist' => $item['v_playlist']
                 ];
             },
             $videos
@@ -61,9 +60,11 @@ class Controller_Admin_Video extends Controller_Admin
         }
 
         DBVideo::add(
-            $request->post('name'),
-            $request->post('text'),
             $request->post('uri'),
+            $request->post('title'),
+            $request->post('author'),
+            $request->post('desc'),
+            $request->post('playlist') ?: null,
             false
         );
 
@@ -93,9 +94,11 @@ class Controller_Admin_Video extends Controller_Admin
 
         DBVideo::edit(
             $id,
-            $request->post('name'),
-            $request->post('text'),
             $request->post('uri'),
+            $request->post('title'),
+            $request->post('author'),
+            $request->post('desc'),
+            $request->post('playlist') ?: null,
             false
         );
 
@@ -119,7 +122,7 @@ class Controller_Admin_Video extends Controller_Admin
             'header' => 'Správa videí',
             'prompt' => 'Opravdu chcete odstranit video:',
             'returnURI' => $request->getReferer() ?: '/admin/video',
-            'data' => [['id' => $item['v_id'], 'text' => $item['v_name']]]
+            'data' => [['id' => $item['v_id'], 'text' => $item['v_title']]]
         ]);
     }
 
@@ -130,9 +133,11 @@ class Controller_Admin_Video extends Controller_Admin
             'subheader' => $request->getAction() == 'add' ? 'Přidat video' : 'Upravit video',
             'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit',
             'id' => $data ? $data['v_id'] : null,
-            'name' => $request->post('name') ?: ($data ? $data['v_name'] : ''),
-            'text' => $request->post('text') ?: ($data ? $data['v_text'] : ''),
-            'uri' => $request->post('uri') ?: ($data ? $data['v_uri'] : '')
+            'uri' => $request->post('uri') ?: ($data ? $data['v_uri'] : ''),
+            'title' => $request->post('title') ?: ($data ? $data['v_title'] : ''),
+            'author' => $request->post('author') ?: ($data ? $data['v_author'] : ''),
+            'desc' => $request->post('desc') ?: ($data ? $data['v_description'] : ''),
+            'playlist' => $request->post('playlist') ?: ($data ? ($data['v_playlist'] ?: '') : '')
         ]);
     }
 
@@ -140,25 +145,8 @@ class Controller_Admin_Video extends Controller_Admin
     {
         $form = new Form();
         $form->checkNotEmpty(
-            $request->post('name'),
-            'Zadejte prosím název videa',
-            'name'
-        );
-        $form->checkMaxLength(
-            $request->post('name'),
-            255,
-            'Název videa může mít maximálně 255 znaků',
-            'name'
-        );
-        $form->checkNotEmpty(
             $request->post('uri'),
-            'Zadejce prosím URI videa',
-            'uri'
-        );
-        $form->checkMaxLength(
-            $request->post('uri'),
-            255,
-            'URI videa může mít maximálně 255 znaků',
+            'Zadejce prosím ID videa',
             'uri'
         );
         return $form;

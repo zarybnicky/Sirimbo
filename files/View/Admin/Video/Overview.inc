@@ -12,10 +12,10 @@
              ->style('width:100%')
              ->data($this->data)
              ->column('buttons', '', null, 'width:55px')
-             ->column('name', 'Jméno')
+             ->column('title', 'Jméno')
              ->column('uri', 'URI', null)
-             ->column('playlist', 'V playlistu?')
-             ->column('date', 'Datum přidání', null, 'width:100px') ?>
+             ->column('playlist', 'Playlist')
+             ->column('created', 'Přidáno', null, 'width:100px') ?>
     <?php else: ?>
       <?= $this->notice('Žádná videa') ?>
     <?php endif ?>

@@ -51,10 +51,10 @@
             <div class="info">
                 <h3>
                     <a href="#" data-id="<?= $item['uri'] ?>">
-                        <?= $item['name'] ?>
+                        <?= $item['title'] ?>
                     </a>
                 </h3>
-                <?= formatDate($item['date']) ?>
+                <?= formatTimestamp($item['date'], true) ?>
             </div>
         </div>
     <?php endforeach ?>

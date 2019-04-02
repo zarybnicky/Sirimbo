@@ -7,10 +7,10 @@ class Controller_Video extends Controller_Abstract
             function ($item) {
                 list($id, $query) = array_merge(explode('?', $item['v_uri']), ['']);
                 return [
-                    'name' => $item['v_name'],
-                    'date' => $item['v_date'],
+                    'title' => $item['v_title'],
+                    'date' => $item['v_created_at'],
                     'uri' => "//www.youtube.com/embed/$id?$query&amp;autoplay=1",
-                    'playlist' => (bool) $item['v_playlist'],
+                    'playlist' => $item['v_playlist'],
                     'thumbnail' => "https://i3.ytimg.com/vi/$id/mqdefault.jpg"
                 ];
             },

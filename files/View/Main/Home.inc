@@ -178,7 +178,7 @@
           <li class="list-group-item">
             <a class="video row" href="<?= $x['link'] ?>">
               <div class="col-4"><img style="max-width:100%" alt="" src="<?= $x['image'] ?>"/></div>
-              <div class="col-8"><h5><?= $x['name'] ?></h5></div>
+              <div class="col-8"><h5><?= $x['title'] ?></h5></div>
             </a>
           </li>
         <?php endforeach ?>

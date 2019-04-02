@@ -4,8 +4,8 @@ class DBVideo extends Database
     public static function getAll()
     {
         $res = self::query(
-            'SELECT v_id, v_name, v_date, v_text, v_playlist, v_uri
-            FROM video ORDER BY v_date DESC, v_timestamp DESC'
+            'SELECT v_id, v_uri, v_title, v_author, v_description, v_playlist, v_created_at, v_updated_at
+            FROM video ORDER BY v_created_at DESC'
         );
         return self::getArray($res);
     }
@@ -13,7 +13,7 @@ class DBVideo extends Database
     public static function getSingle($id)
     {
         $res = self::query(
-            "SELECT v_id, v_name, v_date, v_text, v_playlist, v_uri
+            "SELECT v_id, v_uri, v_title, v_author, v_description, v_playlist, v_created_at, v_updated_at
             FROM video
             WHERE v_id='?'",
             $id
@@ -29,24 +29,24 @@ class DBVideo extends Database
         return $query[0];
     }
 
-    public static function add($name, $text, $uri, $playlist)
+    public static function add($uri, $title, $author, $desc, $playlist)
     {
         self::query(
             "INSERT INTO video
-             (v_name, v_text, v_uri, v_playlist, v_date)
+             (v_uri, v_title, v_author, v_description, v_playlist)
              VALUES
-             ('?', '?', '?', '?', NOW())",
-            $name, $text, self::getYtId($uri), $playlist ? '1' : '0'
+             ('?', '?', '?', '?', '?')",
+            self::getYtId($uri), $title, $author, $desc, $playlist
         );
         return self::getInsertId();
     }
 
-    public static function edit($id, $name, $text, $uri, $playlist)
+    public static function edit($id, $uri, $title, $author, $desc, $playlist)
     {
         self::query(
-            "UPDATE video SET v_name='?', v_text='?', v_uri='?', v_playlist='?'
+            "UPDATE video SET v_uri='?', v_title='?', v_author='?', v_description='?', v_playlist='?'
              WHERE v_id='?'",
-            $name, $text, self::getYtId($uri), $playlist ? '1' : '0', $id
+            $uri, $title, $author, $desc, $playlist, $id
         );
     }
 

@@ -1,12 +1,26 @@
 <div class="container">
   <form action="" method="post">
     <div class="form-group">
-      <label for="name">Jméno</label>
-      <?= $this->text('name', $this->name) ?>
+      <label for="uri">
+        ID videa (např. <code>https://www.youtube.com/watch?v=<b>lt6h7Fgxohs</b></code>)
+      </label>
+      <?= $this->text('uri', $this->uri) ?>
     </div>
     <div class="form-group">
-      <label for="name">URI</label>
-      <?= $this->text('uri', $this->uri) ?>
+      <label for="title">Jméno</label>
+      <?= $this->text('title', $this->title) ?>
+    </div>
+    <div class="form-group">
+      <label for="author">Autor/kanál</label>
+      <?= $this->text('author', $this->author) ?>
+    </div>
+    <div class="form-group">
+      <label for="desc">Popis</label>
+      <?= $this->text('desc', $this->desc) ?>
+    </div>
+    <div class="form-group">
+      <label for="playlist">ID playlistu (nepovinné)</label>
+      <?= $this->text('playlist', $this->playlist) ?>
     </div>
     <div class="form-group">
       <?= $this->submit('Upravit') ?>

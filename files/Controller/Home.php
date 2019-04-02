@@ -51,7 +51,7 @@ class Controller_Home extends Controller_Abstract
                 $x = DBVideo::getSingle($id);
                 list($id, $query) = array_merge(explode('?', $x['v_uri']), ['']);
                 return [
-                    'name' => $x['v_name'],
+                    'title' => $x['v_title'],
                     'link' => "https://www.youtube.com/watch?v=$id" . ($query ? "&amp;$query" : ''),
                     'image' => "https://i3.ytimg.com/vi/$id/hqdefault.jpg"
                 ];

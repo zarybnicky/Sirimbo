@@ -341,12 +341,13 @@ User sql=users
 
 Video sql=video
   Id sql=v_id
-  title Text sql=v_name sqltype=VARCHAR(255)
-  createdAt Day sql=v_date
-  uri Text sql=v_uri sqltype=VARCHAR(255)
-  text Text sql=v_text MigrationOnly
-  isPlaylist Bool sql=v_playlist
-  updatedAt UTCTime sql=v_timestamp sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
+  uri Text sql=v_uri
+  title Text sql=v_title
+  author Text sql=v_author
+  description Text sql=v_description
+  playlistId Text sql=v_playlist
+  createdAt UTCTime sql=v_created_at sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
+  updatedAt UTCTime sql=v_updated_at sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   deriving Show
 
 VideoSource sql=video_source
