@@ -33,10 +33,10 @@ class DBVideo extends Database
     {
         self::query(
             "INSERT INTO video
-             (v_uri, v_title, v_author, v_description, v_playlist)
+             (v_uri, v_title, v_author, v_description, v_playlist, v_created_at)
              VALUES
-             ('?', '?', '?', '?', '?')",
-            self::getYtId($uri), $title, $author, $desc, $playlist
+             ('?', '?', '?', '?', ?, NOW())",
+            self::getYtId($uri), $title, $author, $desc, $playlist ? "'$playlist'" : 'NULL'
         );
         return self::getInsertId();
     }
@@ -44,9 +44,9 @@ class DBVideo extends Database
     public static function edit($id, $uri, $title, $author, $desc, $playlist)
     {
         self::query(
-            "UPDATE video SET v_uri='?', v_title='?', v_author='?', v_description='?', v_playlist='?'
+            "UPDATE video SET v_uri='?', v_title='?', v_author='?', v_description='?', v_playlist=?
              WHERE v_id='?'",
-            $uri, $title, $author, $desc, $playlist, $id
+            $uri, $title, $author, $desc, $playlist ? "'$playlist'" : 'NULL', $id
         );
     }
 

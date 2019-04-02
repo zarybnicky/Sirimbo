@@ -25,7 +25,7 @@ class DBVideoSource extends Database
     {
         self::query(
             "INSERT INTO video_source
-             (vs_url) VALUES ('?')",
+             (vs_url, vs_created_at) VALUES ('?', NOW())",
             $url
         );
         return self::getInsertId();

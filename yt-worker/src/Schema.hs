@@ -346,7 +346,7 @@ Video sql=video
   author Text sql=v_author
   description Text sql=v_description
   playlistId Text sql=v_playlist
-  createdAt UTCTime sql=v_created_at sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
+  createdAt UTCTime sql=v_created_at
   updatedAt UTCTime sql=v_updated_at sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   deriving Show
 
@@ -355,7 +355,7 @@ VideoSource sql=video_source
   url Text sql=vs_url
   title Text Maybe sql=vs_title default=NULL
   description Text Maybe sql=vs_description default=NULL
-  createdAt UTCTime sql=vs_created_at sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
-  lastCheckedAt UTCTime Maybe sql=vs_last_checked sqltype=TIMESTAMP
+  createdAt UTCTime sql=vs_created_at
+  lastCheckedAt UTCTime Maybe sql=vs_last_checked sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   deriving Show
 |]
