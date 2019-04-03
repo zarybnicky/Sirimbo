@@ -1,11 +1,18 @@
 <div class="container">
-  <form action="" method="post">
-    Titulní stránka:<br>
-    <?= $this->video1 ?> <?= $this->video2 ?><br>
-    <?= $this->video3 ?> <?= $this->video4 ?><br>
-    <?= $this->submit('Uložit') ?><br>
-    <a class="btn btn-primary" href="/admin/video/add">Nové video</a>
-  </form>
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link <?= $this->action == 'orphan' ? 'active' : '' ?>"
+         style="color:#303C3C!important" href="/admin/video/orphan">Jednotlivá videa</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link <?= $this->action == 'playlist' ? 'active' : '' ?>"
+         style="color:#303C3C!important" href="/admin/video/playlist">Playlisty</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" style="color:#303C3C!important" href="/admin/video/title">Titulní stránka</a>
+    </li>
+  </ul>
+  <a class="btn btn-primary" href="/admin/video/add">Nové video</a>
   <form action="" method="post">
     <?php if ($this->data): ?>
       <?= $this->table()
@@ -14,10 +21,10 @@
              ->column('buttons', '', null, 'width:55px')
              ->column('title', 'Jméno')
              ->column('uri', 'ID videa', null)
-             ->column('playlist', 'Playlist')
              ->column('created', 'Přidáno', null, 'width:100px') ?>
     <?php else: ?>
       <?= $this->notice('Žádná videa') ?>
     <?php endif ?>
   </form>
+  <div style="text-align:center"><?= $this->navigation ?></div>
 </div>

@@ -5,14 +5,14 @@ class Paging
     private $_currentPage;
     private $_nextPage;
     private $_itemsPerPage;
-    private $_defaultItemsPerPage;
-    private $_itemsPerPageField;
-    private $_currentPageField;
-    private $_pageRange;
+    private $_defaultItemsPerPage = 20;
+    private $_itemsPerPageField = 'c';
+    private $_currentPageField = 'p';
+    private $_pageRange = 5;
     private $_pageCount;
     private $_totalItems;
     private $_pagesInRange;
-    private $_valid;
+    private $_valid = false;
     private $_adapter;
 
     public function __construct(PagingAdapterInterface $d = null)
@@ -21,7 +21,7 @@ class Paging
             $this->_adapter = $d;
             $this->_totalItems = $this->_adapter->count();
         }
-        $this->_valid = false;
+        $this->_recalculate();
         return $this;
     }
 
@@ -82,13 +82,7 @@ class Paging
 
     private function _recalculate()
     {
-        if (!isset($this->_adapter)
-            || (!isset($this->_itemsPerPage)
-                && !isset($this->_itemsPerPageField)
-                && !isset($this->_defaultItemsPerPage))
-            || (!isset($this->_currentPage)
-                && !isset($this->_currentPageField))
-        ) {
+        if (!isset($this->_adapter)) {
             $this->_valid = false;
             return;
         }

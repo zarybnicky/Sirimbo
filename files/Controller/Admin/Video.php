@@ -9,16 +9,62 @@ class Controller_Admin_Video extends Controller_Admin
 
     public function view($request)
     {
-        if ($request->post('video1')) {
-            DBParameters::set('title_video1', $request->post('video1'));
-            DBParameters::set('title_video2', $request->post('video2'));
-            DBParameters::set('title_video3', $request->post('video3'));
-            DBParameters::set('title_video4', $request->post('video4'));
-            $this->redirect('/admin/video');
-        }
+        $this->redirect('/admin/video/playlist');
+    }
 
-        $videos = DBVideo::getAll();
-        $select = $this->select()->optionsAssoc($videos, 'v_id', 'v_title');
+    public function playlist($request)
+    {
+        if ($request->getId()) {
+            $list = DbVideoList::getSingle($request->getId());
+            $data = array_map(
+                function ($item) {
+                    $parts = explode('?', $item['v_uri']);
+                    $uri = array_shift($parts);
+                    return [
+                        'buttons' => $this->editLink('/admin/video/edit/' . $item['v_id'])
+                            . '&nbsp;'
+                            . $this->removeLink('/admin/video/remove/' . $item['v_id']),
+                        'title' => $item['v_title'],
+                        'uri' => $uri,
+                        'created' => formatTimestamp($item['v_created_at'], true)
+                    ];
+                },
+                DBVideo::getByPlaylist($request->getId())
+            );
+            $this->render('files/View/Admin/Video/Overview.inc', [
+                'header' => 'Správa videí',
+                'data' => $data,
+                'action' => 'playlist',
+                'subheader' => $list['vl_title'],
+                'navigation' => ''
+            ]);
+        } else {
+            $data = array_map(
+                function ($item) {
+                    return [
+                        'buttons' => $this->editLink('/admin/video/playlist/' . $item['vl_id']),
+                        'title' => $item['vl_title'],
+                        'uri' => $item['vl_url'],
+                        'created' => formatTimestamp($item['vl_created_at'], true)
+                    ];
+                },
+                DBVideoList::getAll()
+            );
+            $this->render('files/View/Admin/Video/Overview.inc', [
+                'header' => 'Správa videí',
+                'data' => $data,
+                'action' => 'playlist',
+                'navigation' => ''
+            ]);
+        }
+    }
+
+    public function orphan($request)
+    {
+        $pager = new Paging();
+        $pager->setAdapter(new PagingAdapterDBSelect('DBVideo', 'orphan'));
+        $pager->setItemsPerPage($request->get('c'));
+        $pager->setCurrentPage($request->get('p'));
         $data = array_map(
             function ($item) {
                 $parts = explode('?', $item['v_uri']);
@@ -29,15 +75,31 @@ class Controller_Admin_Video extends Controller_Admin
                         . $this->removeLink('/admin/video/remove/' . $item['v_id']),
                     'title' => $item['v_title'],
                     'uri' => $uri,
-                    'created' => formatTimestamp($item['v_created_at'], true),
-                    'playlist' => $item['v_playlist']
+                    'created' => formatTimestamp($item['v_created_at'], true)
                 ];
             },
-            $videos
+            $pager->getItems()
         );
         $this->render('files/View/Admin/Video/Overview.inc', [
             'header' => 'Správa videí',
             'data' => $data,
+            'action' => 'orphan',
+            'navigation' => $pager->getNavigation($request->get())
+        ]);
+    }
+
+    public function title($request)
+    {
+        if ($request->post('video1')) {
+            DBParameters::set('title_video1', $request->post('video1'));
+            DBParameters::set('title_video2', $request->post('video2'));
+            DBParameters::set('title_video3', $request->post('video3'));
+            DBParameters::set('title_video4', $request->post('video4'));
+            $this->redirect('/admin/video/title');
+        }
+        $select = $this->select()->optionsAssoc(DBVideo::getAll(), 'v_id', 'v_title');
+        $this->render('files/View/Admin/Video/Title.inc', [
+            'header' => 'Správa videí',
             'video1' => $select->name('video1')->set(DBParameters::get('title_video1'))->render(),
             'video2' => $select->name('video2')->set(DBParameters::get('title_video2'))->render(),
             'video3' => $select->name('video3')->set(DBParameters::get('title_video3'))->render(),
