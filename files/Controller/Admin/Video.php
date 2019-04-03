@@ -36,7 +36,7 @@ class Controller_Admin_Video extends Controller_Admin
             $videos
         );
         $this->render('files/View/Admin/Video/Overview.inc', [
-            'nadpis' => 'Správa videí',
+            'header' => 'Správa videí',
             'data' => $data,
             'video1' => $select->name('video1')->set(DBParameters::get('title_video1'))->render(),
             'video2' => $select->name('video2')->set(DBParameters::get('title_video2'))->render(),

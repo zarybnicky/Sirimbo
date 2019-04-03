@@ -11,6 +11,7 @@ return [
     ['Akce', '/admin/akce', [], ['akce', P_OWNED]],
     ['Galerie', '/admin/galerie', [], ['galerie', P_OWNED]],
     ['Video', '/admin/video', [], ['aktuality', P_OWNED]],
+    ['Zdroje videa', '/admin/video/source', [], ['aktuality', P_OWNED]],
     ['Dokumenty', '/admin/dokumenty', [], ['dokumenty', P_OWNED]],
     ['Oprávnění', '/admin/permissions', [], ['permissions', P_OWNED]],
 ];

@@ -13,7 +13,7 @@
              ->data($this->data)
              ->column('buttons', '', null, 'width:55px')
              ->column('title', 'Jméno')
-             ->column('uri', 'URI', null)
+             ->column('uri', 'ID videa', null)
              ->column('playlist', 'Playlist')
              ->column('created', 'Přidáno', null, 'width:100px') ?>
     <?php else: ?>

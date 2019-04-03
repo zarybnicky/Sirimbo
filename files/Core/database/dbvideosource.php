@@ -4,7 +4,7 @@ class DBVideoSource extends Database
     public static function getAll()
     {
         $res = self::query(
-            'SELECT vs_id, vs_title, vs_description, vs_created_at, vs_last_checked
+            'SELECT vs_id, vs_url, vs_title, vs_description, vs_created_at, vs_last_checked
             FROM video_source ORDER BY vs_created_at DESC'
         );
         return self::getArray($res);
@@ -13,7 +13,7 @@ class DBVideoSource extends Database
     public static function getSingle($id)
     {
         $res = self::query(
-            "SELECT vs_id, vs_title, vs_description, vs_created_at, vs_last_checked
+            "SELECT vs_id, vs_url, vs_title, vs_description, vs_created_at, vs_last_checked
             FROM video_source
             WHERE vs_id='?'",
             $id
@@ -34,11 +34,11 @@ class DBVideoSource extends Database
     public static function edit($id, $url, $title, $desc)
     {
         self::query(
-            "UPDATE video_source SET vs_url='?', vs_title='?', vs_description='?'
+            "UPDATE video_source SET vs_url='?', vs_title=?, vs_description=?
              WHERE vs_id='?'",
             $url,
-            $title,
-            $desc,
+            $title ? "'$title'" : 'null',
+            $desc ? "'$desc'" : 'null',
             $id
         );
     }

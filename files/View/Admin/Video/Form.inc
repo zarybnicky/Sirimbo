@@ -2,7 +2,8 @@
   <form action="" method="post">
     <div class="form-group">
       <label for="uri">
-        ID videa (např. <code>https://www.youtube.com/watch?v=<b>lt6h7Fgxohs</b></code>)
+        ID videa (např. <code>https://www.youtube.com/watch?v=<b>lt6h7Fgxohs</b></code>)<br>
+        Ostatní pole se později zjistí z YouTube, pokud zůstanou prázdná.
       </label>
       <?= $this->text('uri', $this->uri) ?>
     </div>
@@ -23,7 +24,7 @@
       <?= $this->text('playlist', $this->playlist) ?>
     </div>
     <div class="form-group">
-      <?= $this->submit('Upravit') ?>
+      <?= $this->submit($this->action) ?>
       <a class="btn btn-outline-primary" href="/admin/video">Zpět</a>
     </div>
   </form>
