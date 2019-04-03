@@ -7,6 +7,16 @@ CREATE TABLE `video_source` (
     `vs_last_checked` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE `video_list`(
+    `vl_id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `vl_url` TEXT CHARACTER SET utf8 NOT NULL,
+    `vl_title` TEXT CHARACTER SET utf8 NOT NULL,
+    `vl_description` TEXT CHARACTER SET utf8 NOT NULL,
+    `vl_count` BIGINT NOT NULL,
+    `vl_created_at` DATETIME NOT NULL,
+    `vl_last_checked` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 ALTER TABLE `video` DROP COLUMN `v_date`;
 ALTER TABLE `video` CHANGE `v_uri` `v_uri` TEXT CHARACTER SET utf8 NOT NULL;
 ALTER TABLE `video` CHANGE `v_name` `v_title` TEXT CHARACTER SET utf8 NOT NULL AFTER v_uri;

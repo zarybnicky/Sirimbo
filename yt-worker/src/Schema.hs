@@ -10,6 +10,9 @@
 
 module Schema
   ( migrateAll
+  , EntityField(..)
+  , Unique(..)
+
   , EventId
   , Event(..)
   , EventItemId
@@ -62,6 +65,8 @@ module Schema
   , User(..)
   , VideoId
   , Video(..)
+  , VideoListId
+  , VideoList(..)
   , VideoSourceId
   , VideoSource(..)
   ) where
@@ -69,6 +74,7 @@ module Schema
 import Data.ByteString (ByteString)
 import Data.Text (Text)
 import Data.Time (Day, TimeOfDay, UTCTime)
+import Database.Persist
 import Database.Persist.TH
   (mkMigrate, mkPersist, persistLowerCase, share, sqlSettings)
 
@@ -345,9 +351,19 @@ Video sql=video
   title Text sql=v_title
   author Text sql=v_author
   description Text sql=v_description
-  playlistId Text sql=v_playlist
+  playlistId Text Maybe sql=v_playlist
   createdAt UTCTime sql=v_created_at
   updatedAt UTCTime sql=v_updated_at sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
+  deriving Show
+
+VideoList sql=video_list
+  Id sql=vl_id
+  url Text sql=vl_url
+  title Text sql=vl_title
+  description Text sql=vl_description
+  itemCount Int sql=vl_count
+  createdAt UTCTime sql=vl_created_at
+  lastCheckedAt UTCTime Maybe sql=vl_last_checked sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   deriving Show
 
 VideoSource sql=video_source
@@ -358,4 +374,5 @@ VideoSource sql=video_source
   createdAt UTCTime sql=vs_created_at
   lastCheckedAt UTCTime Maybe sql=vs_last_checked sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   deriving Show
+
 |]

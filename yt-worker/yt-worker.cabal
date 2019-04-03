@@ -22,6 +22,7 @@ executable yt-worker
                      , aeson
                      , bytestring
                      , conduit
+                     , containers
                      , directory
                      , filepath
                      , gogol
@@ -39,5 +40,7 @@ executable yt-worker
                      , split
                      , text
                      , time
+                     , transformers
+                     , unordered-containers
 
   other-modules:       Schema
