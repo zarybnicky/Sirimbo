@@ -24,6 +24,7 @@ executable yt-worker
                      , conduit
                      , containers
                      , directory
+                     , exceptions
                      , filepath
                      , gogol
                      , gogol-core
@@ -41,6 +42,7 @@ executable yt-worker
                      , text
                      , time
                      , transformers
+                     , unliftio-core
                      , unordered-containers
 
   other-modules:       Schema
