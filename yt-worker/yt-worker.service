@@ -1,0 +1,7 @@
+[Unit]
+Description=Olymp/YT Worker service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/yt-worker
+StandardError=journal

@@ -1,0 +1,10 @@
+[Unit]
+Description=Olymp/YT Worker service timer
+
+[Timer]
+Unit=yt-worker.service
+OnBootSec=10min
+OnUnitActiveSec=70min
+
+[Install]
+WantedBy=multi-user.target

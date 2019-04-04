@@ -6,9 +6,20 @@ let
     rev = "dc4b2a58a827dc5680e2570ab2fce6e103711e79";
     sha256 = "1lp5qmpdndmrjdfc912rlhax5blf31g75malcq6zpm6k870hmp9x";
   };
-in pkgs.haskellPackages.extend (pkgs.haskell.lib.packageSourceOverrides {
-  yt-worker = ./.;
-  gogol = "${gogol}/gogol";
-  gogol-core = "${gogol}/core";
-  gogol-youtube = "${gogol}/gogol-youtube";
+in with pkgs.haskell.lib; pkgs.haskellPackages.extend (self: super: {
+  yt-worker = overrideCabal (self.callCabal2nix "yt-worker" ./. {}) (drv: {
+    enableSharedExecutables = false;
+    enableSharedLibraries = false;
+    configureFlags = [
+      "--ghc-option=-optl=-static"
+      "--ghc-option=-optl=-pthread"
+      "--ghc-option=-optl=-L${pkgs.gmp6.override { withStatic = true; }}/lib"
+      "--ghc-option=-optl=-L${pkgs.zlib.static}/lib"
+      "--ghc-option=-optl=-L${pkgs.glibc.static}/lib"
+      "--ghc-option=-optl=-L${pkgs.ncurses.override { enableStatic = true; }}/lib"
+    ];
+  });
+  gogol = self.callCabal2nix "gogol" "${gogol}/gogol" {};
+  gogol-core = self.callCabal2nix "gogol-core" "${gogol}/core" {};
+  gogol-youtube = self.callCabal2nix "gogol-youtube" "${gogol}/gogol-youtube" {};
 })
