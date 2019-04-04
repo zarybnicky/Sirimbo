@@ -1,11 +1,10 @@
 <style>
- .video-item .thumb {
-     float:left;
-     height:90px;
-     margin-right:8px;
+ .playlist {
+     padding: .3rem .5rem;
  }
- .video-item .info {
-     padding-top:13px
+ .playlist.active {
+     background-color: #eee;
+     font-weight: bolder;
  }
  #video-popup {
      z-index:11;
@@ -41,25 +40,29 @@
 </style>
 
 <div class="container">
-    <?php foreach ($this->data as $item): ?>
-        <div style="clear:both" class="video-item">
-            <div class="thumb">
-                <a href="#" class="no-a" data-id="<?= $item['uri'] ?>">
-                    <img src="<?= $item['thumbnail'] ?>" style="width:150px" />
-                </a>
-            </div>
-            <div class="info">
-                <h3>
-                    <a href="#" data-id="<?= $item['uri'] ?>">
-                        <?= $item['title'] ?>
-                    </a>
-                </h3>
-                <?= formatTimestamp($item['date'], true) ?>
-            </div>
-        </div>
-    <?php endforeach ?>
-</div>
 
+  <?php foreach ($this->videos as $item): ?>
+    <a class="row video-item" href="<?= $item['uri'] ?>">
+      <div class="col-sm-auto p-0 pb-2">
+        <img src="<?= $item['thumbnail'] ?>" style="width:150px" />
+      </div>
+      <div class="col">
+        <b><?= $item['title'] ?></b><br>
+        <?= formatTimestamp($item['date'], true) ?>
+      </div>
+    </a>
+  <?php endforeach ?>
+
+  <?php if ($this->videos) : ?><h3>Seznamy videí</h3><?php endif ?>
+  <?php foreach ($this->playlists as $item): ?>
+    <div class="playlist <?= $this->playlist == $item['id'] ? 'active' : '' ?>">
+      <a href="/video?playlist=<?= $item['id'] ?>">
+        <b><?= $item['title'] ?></b>
+      </a>
+    </div>
+  <?php endforeach ?>
+
+</div>
 <div id="video-popup" style="display:none"></div>
 
 <script>
@@ -72,8 +75,9 @@
      jQuery('#video-popup').click(function () {
          jQuery(this).empty().hide();
      });
-     jQuery('.video-item a').click(function () {
-         jQuery('#video-popup').append('<div><iframe src="' + $(this).data('id') + '" frameborder="0" allowfullscreen></iframe></div>').show();
+     jQuery('.video-item').click(function (e) {
+         e.preventDefault();
+         jQuery('#video-popup').append('<div><iframe src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen></iframe></div>').show();
      });
  })();
 </script>

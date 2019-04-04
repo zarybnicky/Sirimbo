@@ -85,9 +85,8 @@ loadPlaylistsForChannel chanId = do
   now <- liftIO getCurrentTime
   lgr <- newLogger Debug stdout
   env <- newEnv <&> (envLogger .~ lgr) . (envScopes .~ youTubeReadOnlyScope)
-  playlists <- runResourceT . runGoogle env $ do
-    lists <- send $ playListsList "snippet,contentDetails" & pllChannelId ?~ chanId
-    pure $ lists ^. pllrItems
+  playlists <- fmap snd . runResourceT . runGoogle env . runWriterT $
+    getPlaylistsForChannel chanId Nothing
 
   dbPlaylists :: [Entity Schema.VideoList] <- runMysql $ selectList [] []
 
@@ -111,6 +110,19 @@ loadPlaylistsForChannel chanId = do
             if cnt /= plCount
               then tell [entityVal dbList]
               else pure ()
+
+getPlaylistsForChannel ::
+     Text
+  -> Maybe Text
+  -> WriterT [PlayList] (Google '[ "https://www.googleapis.com/auth/youtube.readonly"]) ()
+getPlaylistsForChannel chanId pageToken = do
+  lists <- send $ playListsList "snippet,contentDetails"
+    & pllChannelId ?~ chanId
+    & pllPageToken .~ pageToken
+  tell (lists ^. pllrItems)
+  case lists ^. pllrNextPageToken of
+    Nothing -> pure ()
+    Just token -> getPlaylistsForChannel chanId (Just token)
 
 
 loadUploads :: [(Key VideoSource, Text)] -> IO [Schema.Video]

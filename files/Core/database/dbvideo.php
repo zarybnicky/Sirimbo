@@ -10,10 +10,10 @@ class DBVideo extends Database implements Pagable
     {
         switch ($options) {
             case 'orphan':
-                $filter = 'v_playlist IS NULL ORDER BY v_created_at';
+                $filter = 'v_playlist IS NULL OR v_playlist="" ORDER BY v_created_at';
                 break;
             case 'playlist':
-                $filter = 'v_playlist IS NOT NULL ORDER BY v_playlist DESC';
+                $filter = 'v_playlist IS NOT NULL AND v_playlist<>"" ORDER BY v_playlist DESC';
                 break;
             default:
                 $filter = '1=1 ORDER BY v_created_at';
@@ -29,10 +29,10 @@ class DBVideo extends Database implements Pagable
     {
         switch ($options) {
             case 'orphan':
-                $filter = 'v_playlist IS NULL';
+                $filter = 'v_playlist IS NULL OR v_playlist=""';
                 break;
             case 'playlist':
-                $filter = 'v_playlist IS NOT NULL';
+                $filter = 'v_playlist IS NOT NULL AND v_playlist<>""';
                 break;
             default:
                 $filter = '1=1';
@@ -49,6 +49,17 @@ class DBVideo extends Database implements Pagable
         $res = self::query(
             'SELECT v_id, v_uri, v_title, v_author, v_description, v_playlist, v_created_at, v_updated_at
             FROM video ORDER BY v_created_at DESC'
+        );
+        return self::getArray($res);
+    }
+
+    public static function getOrphan()
+    {
+        $res = self::query(
+            'SELECT v_id, v_uri, v_title, v_author, v_description, v_playlist, v_created_at, v_updated_at
+            FROM video
+            WHERE v_playlist IS NULL OR v_playlist=""
+            ORDER BY v_created_at DESC'
         );
         return self::getArray($res);
     }
