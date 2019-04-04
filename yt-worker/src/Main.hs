@@ -1,5 +1,7 @@
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GADTs #-}
@@ -32,21 +34,25 @@ import Control.Monad.Logger (MonadLogger, runStdoutLoggingT)
 import Control.Monad.Reader
 import Control.Monad.Trans.Resource (ResourceT, MonadResource)
 import Control.Monad.Writer
+import Data.Aeson (FromJSON)
 import Data.IORef (newIORef, modifyIORef', readIORef)
 import Data.List (find)
-import Data.Maybe (catMaybes)
+import Data.Maybe (catMaybes, fromMaybe)
 import Data.Set (Set)
 import qualified Data.Set as S
 import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.IO as T
 import Data.Time (getCurrentTime)
+import Data.Yaml (decodeFileThrow)
 import Database.Persist
 import Database.Persist.MySQL
+import GHC.Generics (Generic)
 import GHC.TypeLits (Symbol)
 import Network.Google
 import Network.Google.Auth
 import Network.Google.YouTube
+import System.Environment (lookupEnv)
 import System.Exit (exitFailure)
 import System.IO (stdout)
 import System.Info (os)
@@ -76,24 +82,38 @@ instance {-# OVERLAPPING #-} (Monad m, MonadIO m, MonadCatch m, MonadResource m)
 instance MonadGoogle s m => MonadGoogle s (ResourceT m) where
   liftGoogle = lift . liftGoogle
 
+data AppConfig = AppConfig
+  { dbHost :: String
+  , dbUser :: String
+  , dbPassword :: String
+  , dbDatabase :: String
+  } deriving (Show, Generic, FromJSON)
+
 liftMysql :: (MonadUnliftIO m, HasPool m) => ReaderT SqlBackend m a -> m a
 liftMysql f = runSqlPool f =<< getPool
 
 main :: IO ()
-main = runResourceT . runStdoutLoggingT . withMySQLPool connectInfo 1 $ \pool -> do
+main = do
   lgr <- newLogger Debug stdout
-  env <- newEnv <&> (envLogger .~ lgr) . (envScopes .~ youTubeReadOnlyScope)
-  flip runReaderT (AppEnv env pool) $ do
+  mgr <- liftIO $ newManager tlsManagerSettings
+  cred <- getApplicationDefault mgr
+  env <- newEnvWith cred lgr mgr <&> (envScopes .~ youTubeReadOnlyScope)
+
+  configFile <- fromMaybe "config.yaml" <$> lookupEnv "CONFIG"
+  putStrLn $ "Reading config from: " <> configFile
+  AppConfig{..} <- decodeFileThrow configFile
+
+  let connectInfo =
+        defaultConnectInfo
+        { connectHost = dbHost
+        , connectUser = dbUser
+        , connectPassword = dbPassword
+        , connectDatabase = dbDatabase
+        }
+
+  runResourceT . runStdoutLoggingT . withMySQLPool connectInfo 1 $ \pool -> flip runReaderT (AppEnv env pool) $ do
     checkNewVideos
     checkPlaylistMappings
-  where
-    connectInfo =
-      defaultConnectInfo
-        { connectHost = "127.0.0.1"
-        , connectUser = "olymp"
-        , connectPassword = "admin"
-        , connectDatabase = "olymp"
-        }
 
 checkNewVideos :: (MonadMysql m, MonadGoogle AppScope m) => m ()
 checkNewVideos = do

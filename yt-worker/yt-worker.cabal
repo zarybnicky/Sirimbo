@@ -44,5 +44,6 @@ executable yt-worker
                      , transformers
                      , unliftio-core
                      , unordered-containers
+                     , yaml
 
   other-modules:       Schema
