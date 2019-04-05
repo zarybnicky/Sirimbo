@@ -1,9 +1,10 @@
-cabal-version:       2.2
+cabal-version:       2.0
 name:                yt-worker
 version:             0.1.0.0
 license:             BSD-3-Clause
 author:              Jakub Zárybnický
 maintainer:          jakub@zarybnicky.com
+build-type:          Simple
 
 executable yt-worker
   main-is:             Main.hs
@@ -18,7 +19,7 @@ executable yt-worker
                       -fwarn-tabs
                       -fdiagnostics-color=never
 
-  build-depends:       base ^>=4.11.1.0
+  build-depends:       base >=4.10 && <4.14
                      , aeson
                      , bytestring
                      , conduit
@@ -32,9 +33,8 @@ executable yt-worker
                      , lens
                      , monad-logger
                      , mtl
-                     , mysql-simple
                      , persistent
-                     , persistent-mysql
+                     , persistent-mysql-haskell
                      , persistent-template
                      , process
                      , resourcet

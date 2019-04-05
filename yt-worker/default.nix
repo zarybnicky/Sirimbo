@@ -17,8 +17,11 @@ in with pkgs.haskell.lib; pkgs.haskellPackages.extend (self: super: {
       "--ghc-option=-optl=-L${pkgs.zlib.static}/lib"
       "--ghc-option=-optl=-L${pkgs.glibc.static}/lib"
       "--ghc-option=-optl=-L${pkgs.ncurses.override { enableStatic = true; }}/lib"
+      "--ghc-option=-optl=-L${(pkgs.pcre.overrideAttrs (old: { dontDisableStatic = true; })).out}/lib"
+      "--ghc-option=-optl=-L${(pkgs.openssl.override { static = true; }).out}/lib"
     ];
   });
+  binary-parsers = dontCheck super.binary-parsers;
   gogol = self.callCabal2nix "gogol" "${gogol}/gogol" {};
   gogol-core = self.callCabal2nix "gogol-core" "${gogol}/core" {};
   gogol-youtube = self.callCabal2nix "gogol-youtube" "${gogol}/gogol-youtube" {};
