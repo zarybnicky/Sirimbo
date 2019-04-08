@@ -9,7 +9,7 @@ class Controller_Admin_Video extends Controller_Admin
 
     public function view($request)
     {
-        $this->redirect('/admin/video/playlist');
+        $this->redirect('/admin/video/orphan');
     }
 
     public function playlist($request)
