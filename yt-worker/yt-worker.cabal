@@ -17,7 +17,6 @@ executable yt-worker
                       -Wredundant-constraints
                       -Wmonomorphism-restriction
                       -fwarn-tabs
-                      -fdiagnostics-color=never
 
   build-depends:       base >=4.10 && <4.14
                      , aeson
