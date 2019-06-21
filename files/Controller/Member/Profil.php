@@ -9,8 +9,20 @@ class Controller_Member_Profil extends Controller_Member
 
     public function view($request)
     {
+        $id = User::getUserID();
+        $data = DBUser::getUserData($id);
+        $p = DBPary::getLatestPartner($id, User::getUserPohlavi());
+        $s = User::getSkupinaData();
+
         $this->render('files/View/Member/Profil/Overview.inc', [
-            'header' => 'Profil'
+            'header' => $data['u_jmeno'] . ' ' . $data['u_prijmeni'],
+            'ageGroup' => User::getAgeGroup(explode('-', $data['u_narozeni'])[0]),
+            'partner' => $p ? "{$p['u_jmeno']} {$p['u_prijmeni']}" : '',
+            'class' => $p && $p['u_prijmeni'] ? "STT {$p['p_stt_trida']} / LAT {$p['p_lat_trida']}" : '',
+            'skupina' => (
+                $this->colorbox($s['s_color_rgb'], $s['s_name']) .
+                '&nbsp;' . $s['s_name']
+            )
         ]);
     }
 
