@@ -34,7 +34,7 @@ services:
       - 3000:3000
     volumes:
       - ..:/app
-      - ./conf/vhost.conf:/bitnami/nginx/conf/vhosts/olymp.conf
+      - ./conf/vhost.conf:/opt/bitnami/nginx/conf/server_blocks/olymp.conf
     tty: true
 
   phpmyadmin:

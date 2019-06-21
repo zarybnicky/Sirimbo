@@ -1,32 +1,20 @@
 <div class="container">
-  <style type="text/css">
-   .unit {
-       background:inherit;border:none;
-       vertical-align:top;border-bottom:1px dotted #999;padding:10px 5px;
-       width:50%;
-   }
-   .unit form {text-align:center;}
-  </style>
-  <table style="width:100%;">
-    <?php foreach (array_chunk($this->akce, 2) as $chunk) : ?>
-      <tr>
-        <?php foreach ($chunk as $data) : ?>
-          <td class="unit">
-            <form action="" method="post">
-              <?= $this->render('files/View/Member/Akce/Header.inc', $data) ?>
-              <?php if ($data['showForm']) : ?>
-                <?= $this->hidden('id', $data['id']) ?>
-                <?php if ($data['signIn']) : ?>
-                  <?= $this->submit('Přihlásit se')->data('action', 'signup') ?> &bull;
-                <?php else: ?>
-                  <?= $this->submit('Odhlásit se')->data('action', 'signout') ?> &bull;
-                <?php endif ?>
-              <?php endif ?>
-              <a href="/member/akce/<?= $data['id'] ?>">Zobrazit přihlášené</a>
-            </form>
-          </td>
-        <?php endforeach ?>
-      </tr>
+  <div class="row flex-wrap flex-space-around">
+    <?php foreach ($this->akce as $item): ?>
+      <div class="col-12 col-lg-6 pb-2 text-center">
+        <form action="" method="post">
+          <?= $this->render('files/View/Member/Akce/Header.inc', $item) ?>
+          <?php if ($item['showForm']) : ?>
+            <?= $this->hidden('id', $item['id']) ?>
+            <?= $this->submit($item['signIn'] ? 'Přihlásit se' : 'Odhlásit se')
+                   ->cls('btn btn-outline-primary btn-sm')
+                   ->data('action', $item['signIn'] ? 'signup' : 'signout') ?>
+          <?php endif ?>
+          <a href="/member/akce/<?= $item['id'] ?>" class="btn btn-outline-primary btn-sm">
+            Zobrazit přihlášené
+          </a>
+        </form>
+      </div>
     <?php endforeach ?>
-  </table>
+  </div>
 </div>
