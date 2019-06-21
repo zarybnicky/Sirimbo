@@ -1,21 +1,19 @@
 <div class="container">
   <form action="" method="post">
-    <table style="margin: 0 auto;">
-      <tr>
-        <td class="r">Jméno:</td>
-        <td><?= $this->text('login', '')->size(8) ?></td>
-      </tr>
-      <tr>
-        <td class="r">Heslo:</td>
-        <td><input class="form-control" type="password" name="pass" size="8" /></td>
-      </tr>
-      <tr>
-        <td class="r"><a href="/registrace">Registrovat se</a></td>
-        <td><?= $this->submit('Přihlásit se')->data('action', 'login') ?></td>
-      </tr>
-      <tr>
-        <td colspan="2"><a href="/nopassword">Zapomněli jste heslo?</a></td>
-      </tr>
-    </table>
+    <div class="row justify-content-center m-3">
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="form-group">
+          <input class="form-control" name="login" placeholder="Jméno" />
+        </div>
+        <div class="form-group">
+          <input class="form-control" name="password" placeholder="Heslo" type="password" />
+        </div>
+        <div class="form-group">
+          <?= $this->submit('Přihlásit se')->data('action', 'login') ?>
+          <a class="btn btn-outline-primary" href="/registrace">Registrovat se</a>
+        </div>
+        <a href="/nopassword">Zapomněli jste heslo?</a>
+      </div>
+    </div>
   </form>
 </div>
