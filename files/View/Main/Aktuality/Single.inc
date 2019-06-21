@@ -9,7 +9,7 @@
   <h3><?= $this->description ?></h3>
 
   <div class="row">
-    <div class="col-md-9 col-lg-6 text-justify">
+    <div class="col-md-10 col-lg-7 text-justify">
       <img style="display:block;max-width:100%" alt="" src="<?= $this->title_photo_uri ?>" />
 
       <?= $this->text ?>
