@@ -210,8 +210,6 @@ class Controller_Admin_Akce extends Controller_Admin
         $do = $this->date('do')->getPost($request);
 
         $form = new Form();
-        $form->checkLength($request->post('jmeno'), 1, 255, 'Špatná délka jména akce', 'jmeno');
-        $form->checkLength($request->post('kde'), 1, 255, 'Špatná délka místa konání', 'kde');
         $form->checkDate((string) $od, 'Špatný formát data ("Od")', 'od');
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $form->checkDate((string) $do, 'Špatný formát data ("Do")', 'do');

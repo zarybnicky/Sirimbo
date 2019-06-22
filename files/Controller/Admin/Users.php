@@ -456,8 +456,6 @@ class Controller_Admin_Users extends Controller_Admin
         $narozeni = $this->date('narozeni')->getPost($request);
 
         $f = new Form();
-        $f->checkLength($request->post('jmeno'), 1, 40, 'Špatná délka jména', 'jmeno');
-        $f->checkLength($request->post('prijmeni'), 1, 40, 'Špatná délka přijmení', 'prijmeni');
         $f->checkDate($narozeni, 'Neplatné datum narození', 'narozeni');
         $f->checkInArray($request->post('pohlavi'), ['m', 'f'], 'Neplatné pohlaví', 'pohlavi');
         $f->checkEmail($request->post('email'), 'Neplatný formát emailu', 'email');

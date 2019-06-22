@@ -10,7 +10,7 @@ class Form
     const REGEXP_EMAIL = '/^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i';
     const REGEXP_PHONE = '/^((\+|00)\d{3})?( ?\d{3}){3}$/';
     const REGEXP_LOGIN = '/^[A-Z0-9_]{3,20}$/i';
-    const REGEXP_PASSWORD = '/^[A-Z0-9_]{6,32}$/i';
+    const REGEXP_PASSWORD = '/^[A-Z0-9_]{6,}$/i';
 
     public function __construct() {
         $this->_valid = true;
@@ -64,14 +64,6 @@ class Form
     }
     public function checkRegexp($i, $regexp, $message, $name = '') {
         if (preg_match($regexp, $i))
-            return true;
-
-        $this->_error($message, $name);
-        return false;
-    }
-    public function checkLength($i, $min, $max, $message, $name = '') {
-        $len = strlen($i);
-        if ($len >= $min && $len <= $max)
             return true;
 
         $this->_error($message, $name);

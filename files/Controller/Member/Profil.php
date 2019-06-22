@@ -162,20 +162,6 @@ class Controller_Member_Profil extends Controller_Member
                 'Neplatné datum narození',
                 'narozeni'
             );
-            $f->checkLength(
-                $request->post('jmeno'),
-                1,
-                40,
-                'Špatná délka jména',
-                'jmeno'
-            );
-            $f->checkLength(
-                $request->post('prijmeni'),
-                1,
-                40,
-                'Špatná délka přijmení',
-                'prijmeni'
-            );
             $f->checkInArray(
                 $request->post('pohlavi'),
                 ['m', 'f'],

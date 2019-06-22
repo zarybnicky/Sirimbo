@@ -44,8 +44,6 @@ class Controller_Registrace extends Controller_Abstract
         $f = new Form();
         $f->checkLogin($request->post('username'), 'Špatný formát přihlašovacího jména', 'username');
         $f->checkPassword($request->post('pass'), 'Špatný formát hesla', 'pass');
-        $f->checkLength($request->post('jmeno'), 1, 40, 'Špatná délka jména', 'jmeno');
-        $f->checkLength($request->post('prijmeni'), 1, 40, 'Špatná délka přijmení', 'prijmeni');
         $f->checkInArray($request->post('pohlavi'), ['m', 'f'], 'Neplatné pohlaví', 'pohlavi');
         $f->checkEmail($request->post('email'), 'Neplatný formát emailu', 'email');
         $f->checkPhone($request->post('telefon'), 'Neplatný formát telefoního čísla', 'telefon');

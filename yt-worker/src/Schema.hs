@@ -82,8 +82,8 @@ import Database.Persist.TH
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
 Event sql=akce
   Id sql=a_id
-  name Text sql=a_jmeno sqltype=VARCHAR(255)
-  location Text sql=a_kde sqltype=VARCHAR(255)
+  name Text sql=a_jmeno
+  location Text sql=a_kde
   info Text sql=a_info
   from Day sql=a_od
   to Day sql=a_do
@@ -105,9 +105,9 @@ Article sql=aktuality
   Id sql=at_id
   createdBy UserId sql=at_kdo
   category Text sql=at_kat
-  title Text sql=at_jmeno sqltype=VARCHAR(255)
+  title Text sql=at_jmeno
   text Text sql=at_text
-  preview Text sql=at_preview sqltype=VARCHAR(200)
+  preview Text sql=at_preview
   photo Int sql=at_foto MigrationOnly sqltype=INT(11)
   titlePhoto PhotoId sql=at_foto_main
   updatedAt UTCTime sql=at_timestamp sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
@@ -116,9 +116,9 @@ Article sql=aktuality
 
 Document sql=dokumenty
   Id sql=d_id
-  path Text sql=d_path sqltype=VARCHAR(50)
-  name Text sql=d_name sqltype=VARCHAR(80)
-  filename Text sql=d_filename sqltype=VARCHAR(80)
+  path Text sql=d_path
+  name Text sql=d_name
+  filename Text sql=d_filename
   category Text sql=d_kategorie sqltype=SMALLINT(3)
   createdBy UserId sql=d_kdo
   updatedAt UTCTime sql=d_timestamp sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
@@ -224,7 +224,7 @@ Permission sql=permissions
 
 PaymentCategory sql=platby_category
   Id sql=pc_id
-  name Text sql=pc_name sqltype=VARCHAR(50)
+  name Text sql=pc_name
   symbol Int sql=pc_symbol sqltype=INT(11)
   amount Double sql=pc_amount sqltype=DECIMAL(10,2)
   dueDate Day sql=pc_date_due
@@ -246,7 +246,7 @@ PaymentCategoryGroup sql=platby_category_group
 PaymentGroup sql=platby_group
   Id sql=pg_id
   type Text sql=pg_type sqltype=enum('0','1') default=0
-  name Text sql=pg_name sqltype=VARCHAR(50)
+  name Text sql=pg_name
   description Text sql=pg_description
   base Int sql=pg_base default=0 sqltype=INT(11)
   deriving Show
@@ -279,7 +279,7 @@ PaymentRaw sql=platby_raw
 Schedule sql=rozpis
   Id sql=r_id
   trainer UserId sql=r_trener
-  location Text sql=r_kde sqltype=VARCHAR(100)
+  location Text sql=r_kde
   date Day sql=r_datum
   visible Text sql=r_visible sqltype=enum('0','1') default='0'
   lock Text sql=r_lock sqltype=enum('0','1') default='0'
@@ -297,7 +297,7 @@ ScheduleItem sql=rozpis_item
 
 UserGroup sql=skupiny
   Id sql=s_id
-  name Text sql=s_name sqltype=VARCHAR(50)
+  name Text sql=s_name
   description Text sql=s_description
   colorRgb Text sql=s_color_rgb sqltype=VARCHAR(7)
   colorText Text sql=s_color_text sqltype=VARCHAR(20)
@@ -325,11 +325,11 @@ AnnouncementGroup sql=upozorneni_skupiny
 User sql=users
   Id sql=u_id
   login Text sql=u_login sqltype=CHAR(20)
-  password Text sql=u_pass sqltype=CHAR(40)
-  name Text sql=u_jmeno sqltype=VARCHAR(40)
-  surname Text sql=u_prijmeni sqltype=VARCHAR(40)
+  password Text sql=u_pass
+  name Text sql=u_jmeno
+  surname Text sql=u_prijmeni
   gender Text sql=u_pohlavi
-  email Text sql=u_email sqltype=VARCHAR(50)
+  email Text sql=u_email
   phone Text sql=u_telefon sqltype=CHAR(17)
   birthDate Day sql=u_narozeni
   notes Text sql=u_poznamky
