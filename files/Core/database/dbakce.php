@@ -114,17 +114,6 @@ class DBAkce extends Database implements Pagable
         return true;
     }
 
-    public static function getAkceName($id)
-    {
-        $res = self::query("SELECT a_jmeno FROM akce WHERE a_id='?'", $id);
-        if (!$res) {
-            return false;
-        } else {
-            $row = self::getSingleRow($res);
-            return $row["a_jmeno"];
-        }
-    }
-
     public static function addAkceItem($p_id, $u_id, $rok)
     {
         self::query(

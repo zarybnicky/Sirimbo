@@ -4,11 +4,6 @@ class Database
     protected static $connection;
     protected static $request;
 
-    public static function getInstance()
-    {
-        return new self();
-    }
-
     public static function setRequest($request)
     {
         static::$request = $request;

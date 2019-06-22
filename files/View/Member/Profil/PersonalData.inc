@@ -29,9 +29,6 @@
         <td>Poznámky: </td>
         <td><textarea rows="15" cols="50" name="poznamky"><?= $this->poznamky ?></textarea></td>
       </tr><tr>
-        <td>Oprávnění: </td>
-        <td><?= User::getGroupName() ?></td>
-      </tr><tr>
         <td colspan="2"><?= $this->submit('Upravit')->data('action', 'confirm') ?></td>
       </tr>
     </table>

@@ -139,30 +139,6 @@ class DBRozpis extends Database
         return true;
     }
 
-    public static function isRozpisLocked($id)
-    {
-        list($id) = self::escape($id);
-
-        $res = self::query("SELECT r_lock FROM rozpis WHERE r_id='$id'");
-        if (!$res) {
-            return false;
-        }
-        $row = self::getSingleRow($res);
-        return (bool)$row["r_lock"];
-    }
-
-    public static function isRozpisVisible($id)
-    {
-        list($id) = self::escape($id);
-
-        $res = self::query("SELECT r_visible FROM rozpis WHERE r_id='$id'");
-        if (!$res) {
-            return false;
-        }
-        $row = self::getSingleRow($res);
-        return (bool)$row["r_visible"];
-    }
-
     public static function addRozpisItem($parent_id, $user_id, $od, $do, $lock)
     {
         list($parent_id, $user_id, $od, $do, $lock) =

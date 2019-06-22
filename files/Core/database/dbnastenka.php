@@ -1,8 +1,6 @@
 <?php
 class DBNastenka extends Database implements Pagable
 {
-    public static function getInstance() { return new self(); }
-
     public static function getNastenka($offset = null, $count = null)
     {
         $res = self::query(
@@ -19,11 +17,6 @@ class DBNastenka extends Database implements Pagable
     }
 
     public static function getCount($options = null)
-    {
-        return self::getNastenkaCount();
-    }
-
-    public static function getNastenkaCount()
     {
         $res = self::query("SELECT COUNT(*) FROM upozorneni");
         $res = self::getSingleRow($res);
@@ -53,20 +46,6 @@ class DBNastenka extends Database implements Pagable
         self::query("DELETE FROM upozorneni_skupiny WHERE ups_id='?'", $id);
     }
 
-    public static function getNastenkaUserName($id)
-    {
-        $res = self::query(
-            "SELECT u_login FROM upozorneni LEFT JOIN users ON up_kdo=u_id WHERE up_id='?'",
-            $id
-        );
-        if (!$res) {
-            return false;
-        } else {
-            $row = self::getSingleRow($res);
-            return $row["u_login"];
-        }
-    }
-
     public static function getSingleNastenka($id)
     {
         $res = self::query(
@@ -77,17 +56,6 @@ class DBNastenka extends Database implements Pagable
             return false;
         } else {
             return self::getSingleRow($res);
-        }
-    }
-
-    public static function isNastenkaLocked($id)
-    {
-        $res = self::query("SELECT up_lock FROM upozorneni WHERE up_id='?'", $id);
-        if (!$res) {
-            return false;
-        } else {
-            $row = self::getSingleRow($res);
-            return $row["up_lock"];
         }
     }
 

@@ -20,18 +20,6 @@ class DBSkupiny extends Database
         );
     }
 
-    public static function getNotInGroup($id)
-    {
-        list($id) = self::escape($id);
-        $res = self::query(
-            "SELECT * FROM skupiny
-            WHERE NOT EXISTS (
-                SELECT pgs_id FROM platby_group_skupina WHERE pgs_id_skupina=s_id AND pgs_id_group='$id'
-            )"
-        );
-        return self::getArray($res);
-    }
-
     public static function getSingleWithGroups($id)
     {
         list($id) = self::escape($id);

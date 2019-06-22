@@ -1,8 +1,6 @@
 <?php
 class DBUser extends Database implements Pagable
 {
-    public static function getInstance() { return new self(); }
-
     public static function getPage($offset, $count, $options = null)
     {
         $q = "SELECT users.*,skupiny.* FROM users
@@ -86,18 +84,7 @@ class DBUser extends Database implements Pagable
         if (!$res) {
             return false;
         }
-        $row = self::getSingleRow($res);
-        return $row["u_id"];
-    }
-
-    public static function getUserGroup($id)
-    {
-        $res = self::query("SELECT u_group FROM users WHERE u_id='?'", $id);
-        if (!$res) {
-            return false;
-        }
-        $row = self::getSingleRow($res);
-        return $row["u_group"];
+        return self::getSingleRow($res)["u_id"];
     }
 
     public static function getUserID($login)
@@ -166,28 +153,6 @@ class DBUser extends Database implements Pagable
         $par_id = self::getInsertId();
 
         return [$user_id, $par_id];
-    }
-
-    public static function isUserLocked($id)
-    {
-        $res = self::query("SELECT u_lock FROM users WHERE u_id='?'", $id);
-        if (!$res) {
-            return false;
-        } else {
-            $row = self::getSingleRow($res);
-            return (bool) $row["u_lock"];
-        }
-    }
-
-    public static function isUserConfirmed($id)
-    {
-        $res = self::query("SELECT u_confirmed FROM users WHERE u_id='?'", $id);
-        if (!$res) {
-            return false;
-        } else {
-            $row = self::getSingleRow($res);
-            return (bool) $row["u_confirmed"];
-        }
     }
 
     public static function confirmUser($id, $group, $skupina = '1')

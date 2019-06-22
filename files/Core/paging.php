@@ -13,26 +13,18 @@ class Paging
     private $_totalItems;
     private $_pagesInRange;
     private $_valid = false;
-    private $_adapter;
+    private $_source;
 
-    public function __construct(PagingAdapterInterface $d = null)
+    public function __construct($source, $options = null)
     {
-        if ($d instanceof PagingAdapterInterface) {
-            $this->_adapter = $d;
-            $this->_totalItems = $this->_adapter->count();
+        if (!in_array('Pagable', class_implements($source))) {
+            throw new ViewException('Database does not implement interface Pageable');
         }
+        $this->_source = $source;
+        $this->_sourceOpts = $options;
+        $this->_totalItems = call_user_func([$source, 'getCount'], $options);
         $this->_recalculate();
         return $this;
-    }
-
-    public function setAdapter(PagingAdapterInterface $d)
-    {
-        if (!($d instanceof PagingAdapterInterface)) {
-            return false;
-        }
-        $this->_adapter = $d;
-        $this->_totalItems = $this->_adapter->count();
-        $this->_recalculate();
     }
 
     public function setCurrentPage($p)
@@ -51,16 +43,6 @@ class Paging
         }
         $this->_itemsPerPage = $p;
         $this->_recalculate();
-    }
-
-    public function setCurrentPageField($f)
-    {
-        $this->_currentPageField = $f;
-    }
-
-    public function setItemsPerPageField($f)
-    {
-        $this->_itemsPerPageField = $f;
     }
 
     public function setDefaultItemsPerPage($i)
@@ -82,17 +64,13 @@ class Paging
 
     private function _recalculate()
     {
-        if (!isset($this->_adapter)) {
+        if (!isset($this->_source)) {
             $this->_valid = false;
             return;
         }
 
         if (!$this->_itemsPerPage) {
-            if (isset($this->_defaultItemsPerPage)) {
-                $this->_itemsPerPage = $this->_defaultItemsPerPage;
-            } else {
-                $this->_itemsPerPage = 20;
-            }
+            $this->_itemsPerPage = $this->_defaultItemsPerPage ?: 20;
         }
 
         if (!$this->_currentPage) {
@@ -106,14 +84,8 @@ class Paging
             $this->_currentPage = $this->_pageCount;
         }
 
-        $this->_previousPage = $this->_currentPage > 1
-                             ? $this->_currentPage - 1
-                             : 1;
-        $this->_nextPage = $this->_currentPage < $this->_pageCount
-                         ? $this->_currentPage + 1
-                         : ($this->_pageCount > 0
-                            ? $this->_pageCount
-                            : 1);
+        $this->_previousPage = max(1, $this->_currentPage - 1);
+        $this->_nextPage = min($this->_currentPage + 1, max($this->_pageCount, 1));
         $this->_pagesInRange = [];
 
         if (isset($this->_pageRange)) {
@@ -139,10 +111,10 @@ class Paging
         }
 
         $this->_valid = true;
-        return;
     }
 
-    public function getPages() {
+    public function getPages()
+    {
         if (!$this->_valid) {
             return false;
         }
@@ -156,7 +128,9 @@ class Paging
             'pagesInRange' => $this->_pagesInRange
         ];
     }
-    public function getLink($get, $i, $label, $perPage = null) {
+
+    public function getLink($get, $i, $label, $perPage = null)
+    {
         if (!$this->_valid) {
             return false;
         }
@@ -164,29 +138,27 @@ class Paging
             $perPage = $this->_itemsPerPage;
         }
 
-        $p = isset($this->_currentPageField)
-           ? $this->_currentPageField
-           : 'p';
-        $c = isset($this->_itemsPerPageField)
-           ? $this->_itemsPerPageField
-           : 'c';
+        $p = $this->_currentPageField ?: 'p';
+        $c = $this->_itemsPerPageField ?: 'c';
         $url = http_build_query(array_merge($get, [$c => $perPage, $p => $i]));
         return "<a href=\"?$url\">$label</a>";
     }
-    public function getNavigation($get) {
-        if ($this->getPageCount() <= 1) {
+
+    public function getNavigation($get)
+    {
+        if ($this->_pageCount <= 1) {
             return $this->getCountSetting($get);
         }
 
         $out = '';
         if ($this->getCurrentPage() != 1) {
             $out .= $this->getLink($get, 1, '&lt;&lt;') . '&nbsp;';
-            $out .= $this->getLink($get, $this->getPreviousPage(), '&lt;');
+            $out .= $this->getLink($get, $this->_previousPage, '&lt;');
         } else {
             $out .= '<span style="padding:0 2px;">&lt;&lt;</span>&nbsp;';
             $out .= '<span style="padding:0 2px;">&lt;</span>';
         }
-        $pages = $this->getPagesInRange();
+        $pages = $this->_pagesInRange;
         if (end($pages) + 10 < $this->_pageCount) {
             array_push($pages, end($pages) + 10);
         }
@@ -205,16 +177,18 @@ class Paging
             $out .= '</div>|';
         }
         $out .= '&nbsp;';
-        if ($this->getCurrentPage() != $this->getPageCount()) {
-            $out .= $this->getLink($get, $this->getNextPage(), '&gt;') . '&nbsp;';
-            $out .= $this->getLink($get, $this->getPageCount(), '&gt;&gt;');
+        if ($this->getCurrentPage() != $this->_pageCount) {
+            $out .= $this->getLink($get, $this->_nextPage, '&gt;') . '&nbsp;';
+            $out .= $this->getLink($get, $this->_pageCount, '&gt;&gt;');
         } else {
             $out .= '<span style="padding:0 2px;">&gt;</span>&nbsp;';
             $out .= '<span style="padding:0 2px;">&gt;&gt;</span>';
         }
         return $out . '<br/>' . $this->getCountSetting($get);
     }
-    public function getCountSetting($get) {
+
+    public function getCountSetting($get)
+    {
         if ($this->_totalItems <= 5) {
             return '';
         }
@@ -242,53 +216,31 @@ class Paging
         $out .= ' položek na stránku';
         return $out;
     }
-    public function getPreviousPage() {
-        if (!$this->_valid) {
-            return false;
-        }
-        return $this->_previousPage;
-    }
+
     public function getCurrentPage() {
         if (!$this->_valid) {
             return false;
         }
         return $this->_currentPage;
     }
-    public function getNextPage() {
-        if (!$this->_valid) {
-            return false;
-        }
-        return $this->_nextPage;
-    }
-    public function getPageCount() {
-        if (!$this->_valid) {
-            return false;
-        }
-        return $this->_pageCount;
-    }
+
     public function getItemsPerPage() {
         if (!$this->_valid) {
             return false;
         }
         return $this->_itemsPerPage;
     }
-    public function getTotalItems() {
-        if (!$this->_valid) {
-            return false;
-        }
-        return $this->_totalItems;
-    }
-    public function getPagesInRange() {
-        if (!$this->_valid) {
-            return false;
-        }
-        return $this->_pagesInRange;
-    }
-    public function getItems() {
+
+    public function getItems()
+    {
         if (!$this->_valid) {
             return [];
         }
-        $offset = $this->_itemsPerPage * ($this->_currentPage - 1);
-        return $this->_adapter->page($offset, $this->_itemsPerPage);
+        return call_user_func(
+            [$this->_source, 'getPage'],
+            $this->_itemsPerPage * ($this->_currentPage - 1),
+            $this->_itemsPerPage,
+            $this->_sourceOpts
+        );
     }
 }

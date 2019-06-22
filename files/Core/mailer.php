@@ -27,11 +27,6 @@ class Mailer
         $mail->send();
     }
 
-    public static function customMail($to, $subject, $message, $from = '', $headers = '')
-    {
-        Mailer::_mail($to, $subject, $message, $from, $headers);
-    }
-
     public static function newPassword($to, $newpass)
     {
         $subject = "TKOlymp.cz - nové heslo";

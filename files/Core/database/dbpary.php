@@ -106,15 +106,6 @@ class DBPary extends Database
         return self::getArray($res);
     }
 
-    public static function getVysledky($id)
-    {
-        $res = self::query(
-            "SELECT * FROM pary WHERE p_id='?' AND p_archiv='0'",
-            $id
-        );
-        return self::getSingleRow($res);
-    }
-
     public static function getPreviousPartners($id)
     {
         $res = self::query(

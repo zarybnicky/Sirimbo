@@ -45,16 +45,6 @@ class Tree
         }
     }
 
-    public function addAt($n, Tree $element)
-    {
-        array_splice($this->children, $n, 0, [$element]);
-    }
-
-    public function removeAt($n)
-    {
-        array_splice($this->children, $n, 1);
-    }
-
     public function update($fn)
     {
         $this->value = $fn($this->value, $this);
@@ -74,29 +64,6 @@ class Tree
                 }
             }
         }
-    }
-
-    public function flattenPostorder()
-    {
-        $result = [];
-        $stack = [$this];
-        $ancestors = [];
-        while ($stack) {
-            $x = end($stack);
-            if ($children = $x->getChildren()) {
-                if ($x !== end($ancestors)) {
-                    $ancestors[] = $x;
-                    for (end($children); key($children) !== null; prev($children)) {
-                        $stack[] = current($children);
-                    }
-                    continue;
-                }
-                array_pop($ancestors);
-            }
-            $result[] = $x->getValue();
-            array_pop($stack);
-        }
-        return $result;
     }
 
     public function __toString()

@@ -1,11 +1,6 @@
 <?php
 class DBPlatby extends Database
 {
-    public static function getInstance()
-    {
-        return new self();
-    }
-
     public static function checkConflicts($sid)
     {
         list($sid) = self::escape($sid);

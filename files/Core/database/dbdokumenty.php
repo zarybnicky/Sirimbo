@@ -70,28 +70,6 @@ class DBDokumenty extends Database
         }
     }
 
-    public static function getDokumentPath($id)
-    {
-        $res = self::query("SELECT d_path FROM dokumenty WHERE d_id='?'", $id);
-        if (!$res) {
-            return false;
-        } else {
-            $row = self::getSingleRow($res);
-            return $row["d_path"];
-        }
-    }
-
-    public static function getDokumentUserID($id)
-    {
-        $res = self::query("SELECT d_kdo FROM dokumenty WHERE d_id='?'", $id);
-        if (!$res) {
-            return false;
-        } else {
-            $row = self::getSingleRow($res);
-            return $row["d_kdo"];
-        }
-    }
-
     public static function getDokumentName($id)
     {
         $res = self::query("SELECT d_name FROM dokumenty WHERE d_id='?'", $id);

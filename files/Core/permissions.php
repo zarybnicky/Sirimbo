@@ -8,11 +8,6 @@ class Permissions
         static::$request = $request;
     }
 
-    public static function get($module)
-    {
-        return User::getPermissions($module);
-    }
-
     public static function check($module, $level, $owner = null)
     {
         $l = User::getPermissions($module);

@@ -1,11 +1,6 @@
 <?php
 class DBVideo extends Database implements Pagable
 {
-    public static function getInstance()
-    {
-        return new self();
-    }
-
     public static function getPage($offset, $count, $options = null)
     {
         switch ($options) {

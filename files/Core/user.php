@@ -117,16 +117,6 @@ class User
         return $_SESSION["user"];
     }
 
-    public static function getUserJmeno()
-    {
-        return $_SESSION['jmeno'];
-    }
-
-    public static function getUserPrijmeni()
-    {
-        return $_SESSION['prijmeni'];
-    }
-
     public static function getUserWholeName()
     {
         return $_SESSION['jmeno'] . ' ' . $_SESSION['prijmeni'];
@@ -135,11 +125,6 @@ class User
     public static function getUserGroup()
     {
         return $_SESSION["group"];
-    }
-
-    public static function getGroupName()
-    {
-        return $_SESSION["groupName"];
     }
 
     public static function getUserPohlavi()

@@ -5,7 +5,6 @@ set_include_path(
     $core . 'database' . PATH_SEPARATOR .
     $core . 'display' . PATH_SEPARATOR .
     $core . 'helpers' . PATH_SEPARATOR .
-    $core . 'paging' . PATH_SEPARATOR .
     $core . 'types' . PATH_SEPARATOR .
     get_include_path()
 );

@@ -44,28 +44,6 @@ class DBPlatbyGroup extends Database
         list($id) = self::escape($id);
         self::query("DELETE FROM platby_group WHERE pg_id='$id'");
     }
-    public static function getNotInCategory($id)
-    {
-        list($id) = self::escape($id);
-        $res = self::query(
-            "SELECT * FROM platby_group
-            WHERE NOT EXISTS (
-                SELECT pcg_id FROM platby_category_group WHERE pcg_id_group=pg_id AND pcg_id_category='$id'
-            )"
-        );
-        return self::getArray($res);
-    }
-    public static function getNotInSkupina($id)
-    {
-        list($id) = self::escape($id);
-        $res = self::query(
-            "SELECT * FROM platby_group
-            WHERE NOT EXISTS (
-                SELECT pgs_id FROM platby_group_skupina WHERE pgs_id_group=pg_id AND pgs_id_skupina='$id'
-            )"
-        );
-        return self::getArray($res);
-    }
     public static function getGroups()
     {
         $res = self::query('SELECT * FROM platby_group ORDER BY pg_type,pg_id');

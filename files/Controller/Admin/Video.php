@@ -61,8 +61,7 @@ class Controller_Admin_Video extends Controller_Admin
 
     public function orphan($request)
     {
-        $pager = new Paging();
-        $pager->setAdapter(new PagingAdapterDBSelect('DBVideo', 'orphan'));
+        $pager = new Paging('DBVideo', 'orphan');
         $pager->setItemsPerPage($request->get('c'));
         $pager->setCurrentPage($request->get('p'));
         $data = array_map(
