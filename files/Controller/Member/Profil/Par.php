@@ -20,10 +20,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
 
     public function view($request)
     {
-        $latest = DBPary::getLatestPartner(
-            User::getUserID(),
-            User::getUserPohlavi()
-        );
+        $latest = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
         $this->render('files/View/Member/Profil/CoupleOverview.inc', [
             'header' => 'Profil',
             'havePartner' => !empty($latest) && $latest['u_id'],
@@ -87,15 +84,12 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
             $request->post('lat-finale'),
             $hodnoceni
         );
-        $this->redirect("/member/profil/par");
+        $this->redirect("/member/profil");
     }
 
     public function partner($request)
     {
-        $latest = DBPary::getLatestPartner(
-            User::getUserID(),
-            User::getUserPohlavi()
-        );
+        $latest = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
         $havePartner = !empty($latest) && $latest['u_id'];
 
         if ($request->post()) {
@@ -104,12 +98,12 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
             ) {
                 DBPary::noPartner(User::getUserID());
                 DBPary::noPartner($latest['u_id']);
-                $this->redirect('/member/profil/par');
+                $this->redirect('/member/profil');
             }
             if ($request->post('partner') == $latest['u_id'] ||
                 (!$request->post('partner') && $latest['u_id'] == '0')
             ) {
-                $this->redirect('/member/profil/par');
+                $this->redirect('/member/profil');
             }
             if (User::getUserPohlavi() == "m") {
                 DBPary::newPartnerRequest(
@@ -125,7 +119,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
                 );
             }
             $this->redirect()->info('Žádost o partnerství odeslána');
-            $this->redirect('/member/profil/par');
+            $this->redirect('/member/profil');
         }
 
         $request->post('partner', $havePartner ? $latest['u_id'] : '0');
@@ -161,7 +155,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
                         DBPary::deletePartnerRequest($request->post('id'));
                         $this->redirect()->info('žádost zamitnuta');
                     }
-                    $this->redirect('/member/profil/par');
+                    $this->redirect('/member/profil');
                 }
                 break;
 
@@ -173,7 +167,7 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
                     }
                     DBPary::deletePartnerRequest($request->post('id'));
                     $this->redirect()->info('žádost zrušena');
-                    $this->redirect('/member/profil/par');
+                    $this->redirect('/member/profil');
                 }
                 break;
 

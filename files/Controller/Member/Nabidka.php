@@ -96,7 +96,7 @@ class Controller_Member_Nabidka extends Controller_Member
             return;
         }
         if ($request->post('hodiny') > 0) {
-            if (!User::getZaplaceno() || (User::getPartnerID() > 0 && !User::getZaplaceno(true))) {
+            if (!User::getZaplaceno(true)) {
                 $this->redirect()->danger('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
             } elseif ($data['n_max_pocet_hod'] > 0
                       && (DBNabidka::getNabidkaLessons($request->post('id'), User::getParID())

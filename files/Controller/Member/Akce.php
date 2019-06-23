@@ -26,7 +26,7 @@ class Controller_Member_Akce extends Controller_Member
             if (is_object($form = $this->checkData($request, $data, $request->post('action')))) {
                 $this->redirect()->warning($form->getMessages());
             } elseif ($request->post('action') == 'signup') {
-                $date = explode('-', User::getDatumNarozeni());
+                $date = explode('-', User::getUserData()['u_narozeni']);
 
                 DBAkce::signUp(
                     User::getUserID(),

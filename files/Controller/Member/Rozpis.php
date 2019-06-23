@@ -91,7 +91,7 @@ class Controller_Member_Rozpis extends Controller_Member
             return;
         }
         if ($request->post('action') == 'signup') {
-            if (!User::getZaplaceno() || (User::getPartnerID() > 0 && !User::getZaplaceno(true))) {
+            if (!User::getZaplaceno(true)) {
                 $this->redirect()->warning('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
             } elseif ($lesson['ri_partner']) {
                 $this->redirect()->warning('Lekce už je obsazená');

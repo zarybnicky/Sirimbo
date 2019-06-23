@@ -9,20 +9,55 @@ class Controller_Member_Profil extends Controller_Member
 
     public function view($request)
     {
-        $id = User::getUserID();
-        $data = DBUser::getUserData($id);
-        $p = DBPary::getLatestPartner($id, User::getUserPohlavi());
+        $data = User::getUserData();
         $s = User::getSkupinaData();
+
+        $groupsOut = [];
+        $groups = DBSkupiny::getSingleWithCategories(User::getSkupina());
+        $currentGroup = 0;
+        foreach ($groups as $row) {
+            if (!$row['pc_visible']) {
+                continue;
+            }
+            if ($currentGroup != $row['pg_id']) {
+                $groupsOut[] = [
+                    'name' => new Tag(
+                        'span',
+                        ['class' => 'big', 'style' => 'text-decoration:underline'],
+                        $row['pg_name']
+                    ),
+                    'type' => $row['pg_type'] ? 'Členské příspěvky' : 'Ostatní platby',
+                    'symbol' => '',
+                    'amount' => '',
+                    'dueDate' => '',
+                    'validRange' => ''
+                ];
+                $currentGroup = $row['pg_id'];
+            }
+            $groupsOut[] = [
+                'name' => $row['pc_name'],
+                'type' => '',
+                'symbol' => $row['pc_symbol'],
+                'amount' => ($row['pc_use_base'] ? ($row['pc_amount'] * $row['pg_base']) : $row['pc_amount']) . ' Kč',
+                'dueDate' => (new Date($row['pc_date_due']))->getDate(Date::FORMAT_SIMPLIFIED),
+                'validRange' => ((new Date($row['pc_valid_from']))->getDate(Date::FORMAT_SIMPLIFIED) .
+                    ((new Date($row['pc_valid_to']))->isValid() ?
+                        (' - ' . (new Date($row['pc_valid_to']))->getDate(Date::FORMAT_SIMPLIFIED)) : ''))
+            ];
+        }
 
         $this->render('files/View/Member/Profil/Overview.inc', [
             'header' => $data['u_jmeno'] . ' ' . $data['u_prijmeni'],
             'ageGroup' => User::getAgeGroup(explode('-', $data['u_narozeni'])[0]),
-            'partner' => $p ? "{$p['u_jmeno']} {$p['u_prijmeni']}" : '',
-            'class' => $p && $p['u_prijmeni'] ? "STT {$p['p_stt_trida']} / LAT {$p['p_lat_trida']}" : '',
+            'coupleData' => User::getCoupleData(),
             'skupina' => (
                 $this->colorbox($s['s_color_rgb'], $s['s_name']) .
                 '&nbsp;' . $s['s_name']
-            )
+            ),
+            'varSymbol' => User::varSymbol(User::getUserID()),
+            'hasPaid' => User::getZaplaceno(),
+            'platby' => [],
+            'platbyGroups' => $groupsOut,
         ]);
     }
 
@@ -34,7 +69,7 @@ class Controller_Member_Profil extends Controller_Member
         if (!$request->post()) {
             $this->render('files/View/Member/Profil/PersonalData.inc', [
                 'header' => 'Osobní údaje',
-                'login' => User::getUserName(),
+                'login' => $data['u_login'],
                 'group' => $data['u_group'],
                 'lock' => $data['u_lock'],
                 'jmeno' => $data['u_jmeno'],
@@ -103,90 +138,19 @@ class Controller_Member_Profil extends Controller_Member
         $this->redirect('/member/profil');
     }
 
-    public function platby($request)
-    {
-        $groupsOut = [];
-        $groups = DBSkupiny::getSingleWithCategories(User::getSkupina());
-        $currentGroup = 0;
-        foreach ($groups as $row) {
-            if (!$row['pc_visible']) {
-                continue;
-            }
-            if ($currentGroup != $row['pg_id']) {
-                $groupsOut[] = [
-                    'name' => new Tag(
-                        'span',
-                        ['class' => 'big', 'style' => 'text-decoration:underline'],
-                        $row['pg_name']
-                    ),
-                    'type' => (!$row['pg_type']
-                               ? 'Ostatní platby'
-                               : 'Členské příspěvky'),
-                    'symbol' => '',
-                    'amount' => '',
-                    'dueDate' => '',
-                    'validRange' => ''
-                ];
-                $currentGroup = $row['pg_id'];
-            }
-            $groupsOut[] = [
-                'name' => $row['pc_name'],
-                'type' => '',
-                'symbol' => $row['pc_symbol'],
-                'amount' => (($row['pc_use_base'] ? ($row['pc_amount'] * $row['pg_base']) : $row['pc_amount']) . ' Kč'),
-                'dueDate' => (new Date($row['pc_date_due']))->getDate(Date::FORMAT_SIMPLIFIED),
-                'validRange' => ((new Date($row['pc_valid_from']))->getDate(Date::FORMAT_SIMPLIFIED) .
-                    ((new Date($row['pc_valid_to']))->isValid() ?
-                        (' - ' . (new Date($row['pc_valid_to']))->getDate(Date::FORMAT_SIMPLIFIED)) : ''))
-            ];
-        }
-        $skupina = User::getSkupinaData();
-        $zaplaceno = User::getZaplaceno();
-        $this->render('files/View/Member/Profil/Platby.inc', [
-            'header' => 'Moje platby',
-            'colorBox' => $this->colorbox($skupina['s_color_rgb'], $skupina['s_description']),
-            'skupinaData' => $skupina['s_name'],
-            'varSymbol' => User::varSymbol(User::getUserID()),
-            'zaplacenoText' => $zaplaceno === null ? '' : ($zaplaceno ? 'zaplaceno' : 'nezaplaceno!'),
-            'platby' => [],
-            'platbyGroups' => $groupsOut
-        ]);
-    }
-
     private function checkData($request, $action, $narozeni = null)
     {
         $f = new Form();
         if ($action == 'edit') {
-            $f->checkDate(
-                (string) $narozeni,
-                'Neplatné datum narození',
-                'narozeni'
-            );
-            $f->checkInArray(
-                $request->post('pohlavi'),
-                ['m', 'f'],
-                'Neplatné pohlaví',
-                'pohlavi'
-            );
-            $f->checkEmail(
-                $request->post('email'),
-                'Neplatný formát emailu',
-                'email'
-            );
-            $f->checkPhone(
-                $request->post('telefon'),
-                'Neplatný formát telefoního čísla',
-                'telefon'
-            );
+            $f->checkDate((string) $narozeni, 'Neplatné datum narození', 'narozeni');
+            $f->checkInArray($request->post('pohlavi'), ['m', 'f'], 'Neplatné pohlaví', 'pohlavi');
+            $f->checkEmail($request->post('email'), 'Neplatný formát emailu', 'email');
+            $f->checkPhone($request->post('telefon'), 'Neplatný formát telefoního čísla', 'telefon');
         } elseif ($action == 'heslo') {
-            $f->checkPassword(
-                $request->post('newpass'),
-                'Neplatný formát hesla',
-                'newpass'
-            );
+            $f->checkPassword($request->post('newpass'), 'Neplatný formát hesla', 'newpass');
             $f->checkBool(
                 DBUser::checkUser(
-                    User::getUserName(),
+                    User::getUserData()['u_login'],
                     User::crypt($request->post('oldpass'))
                 ),
                 'Staré heslo je špatně',

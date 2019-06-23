@@ -10,7 +10,8 @@ class LoginHelper
     {
         if (User::isLogged()) {
             $template = 'files/View/Helper/Userbox.inc';
-            $name = User::getUserWholeName();
+            $user = User::getUserData();
+            $name = $user['u_jmeno'] . ' ' . $user['u_prijmeni'];
         } else {
             $template = 'files/View/Helper/Login.inc';
             $name = '';

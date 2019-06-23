@@ -63,15 +63,13 @@ class User
         } else {
             $_SESSION['invalid_data'] = 0;
         }
-        $_SESSION["login"] = 1;
-        $_SESSION["id"] = $data['u_id'];
-        $_SESSION["user"] = strtolower($data['u_login']);
+        $_SESSION['login'] = 1;
+        $_SESSION['user_data'] = $data;
+        $_SESSION['couple_data'] = $par;
+        $_SESSION['id'] = $data['u_id'];
         $_SESSION['jmeno'] = $data['u_jmeno'];
         $_SESSION['prijmeni'] = $data['u_prijmeni'];
-        $_SESSION["pohlavi"] = $data['u_pohlavi'];
-        $_SESSION['narozeni'] = $data['u_narozeni'];
-        $_SESSION['group'] = $data['u_group'];
-        $_SESSION['groupName'] = $data['pe_name'];
+        $_SESSION['pohlavi'] = $data['u_pohlavi'];
         $_SESSION['skupina'] = $data['u_skupina'];
         $_SESSION['skupina_data'] = [
             's_id '=> $data['s_id'],
@@ -93,7 +91,7 @@ class User
         if (User::getUserID() == 1) {
             return $module ? P_ADMIN : $_SESSION['permissions'];
         }
-        if (User::getUserGroup() == 0) {
+        if (User::getUserData()['u_group'] == 0) {
             return $module ? P_NONE : $_SESSION['permissions'];
         }
         if ($module && isset($_SESSION['permissions'][$module])) {
@@ -104,7 +102,7 @@ class User
 
     public static function getUserID()
     {
-        return User::isLogged() ? $_SESSION["id"] : 0;
+        return User::isLogged() ? $_SESSION['id'] : 0;
     }
 
     public static function getPartnerID()
@@ -112,29 +110,19 @@ class User
         return $_SESSION['partner'];
     }
 
-    public static function getUserName()
+    public static function getUserData()
     {
-        return $_SESSION["user"];
+        return $_SESSION['user_data'];
     }
 
-    public static function getUserWholeName()
+    public static function getCoupleData()
     {
-        return $_SESSION['jmeno'] . ' ' . $_SESSION['prijmeni'];
-    }
-
-    public static function getUserGroup()
-    {
-        return $_SESSION["group"];
+        return $_SESSION['couple_data'];
     }
 
     public static function getUserPohlavi()
     {
         return $_SESSION['pohlavi'];
-    }
-
-    public static function getDatumNarozeni()
-    {
-        return $_SESSION['narozeni'];
     }
 
     public static function getSkupina()
@@ -150,8 +138,8 @@ class User
     public static function getZaplaceno($par = false)
     {
         $paidSelf = DBPlatby::hasPaidMemberFees($_SESSION['id']);
-        if ($par) {
-            return $paidSelf | DBPlatby::hasPaidMemberFees($_SESSION['partner']);
+        if ($par && $_SESSION['partner']) {
+            return $paidSelf && DBPlatby::hasPaidMemberFees($_SESSION['partner']);
         } else {
             return $paidSelf;
         }
@@ -194,7 +182,7 @@ class User
 
     public static function isLogged()
     {
-        return isset($_SESSION["login"]) && $_SESSION["login"] === 1;
+        return isset($_SESSION['login']) && $_SESSION['login'] === 1;
     }
 
     public static function register(
@@ -203,8 +191,8 @@ class User
     ) {
         DBUser::addUser(
             $login, User::crypt($pass), $name, $surname, $pohlavi, $email,
-            $telefon, $narozeni, $poznamky, '0', $skupina, '0', "0", "0", "0",
-            "0"
+            $telefon, $narozeni, $poznamky, '0', $skupina, '0', '0', '0', '0',
+            '0'
         );
 
         Mailer::newUserNotice(DEFAULT_ADMIN_MAIL, $login);
@@ -213,7 +201,7 @@ class User
 
     public static function crypt($passwd)
     {
-        $fix = md5("######TK.-.OLYMP######");
+        $fix = md5('######TK.-.OLYMP######');
         return sha1($fix . $passwd . $fix);
     }
 
