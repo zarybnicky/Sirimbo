@@ -152,7 +152,7 @@ public static $permissions = [
         'default' => P_VIEW,
         P_NONE => 1, P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1],
     'novinky' => [
-        'name' => "Novinky",
+        'name' => "Články",
         'default' => P_VIEW,
         P_NONE => 1, P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1],
     'pary' => [

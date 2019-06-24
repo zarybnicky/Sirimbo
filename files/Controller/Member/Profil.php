@@ -14,13 +14,9 @@ class Controller_Member_Profil extends Controller_Member
 
         $groupsOut = [];
         $groups = DBSkupiny::getSingleWithCategories(User::getSkupina());
-        $currentGroup = 0;
         foreach ($groups as $row) {
             if (!$row['pc_visible']) {
                 continue;
-            }
-            if ($currentGroup != $row['pg_id']) {
-                $currentGroup = $row['pg_id'];
             }
             $groupsOut[] = [
                 'name' => $row['pc_name'],
