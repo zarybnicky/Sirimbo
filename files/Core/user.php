@@ -210,7 +210,7 @@ class User
         return str_pad($id, 6, '0', STR_PAD_LEFT);
     }
 
-    public static generateMsmtCsv()
+    public static function generateMsmtCsv()
     {
         $out = implode(';', [
             'JMENO',

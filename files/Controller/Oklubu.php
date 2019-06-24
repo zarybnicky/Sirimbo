@@ -13,13 +13,6 @@ class Controller_Oklubu extends Controller_Abstract
         ]);
     }
 
-    public function historie($request)
-    {
-        $this->render('files/View/Main/OKlubu/Historie.inc', [
-            'header' => 'Historie klubu'
-        ]);
-    }
-
     public function klubovi($request)
     {
         $this->render('files/View/Main/OKlubu/TreneriInt.inc', [
