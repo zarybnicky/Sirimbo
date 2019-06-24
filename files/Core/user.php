@@ -209,4 +209,63 @@ class User
     {
         return str_pad($id, 6, '0', STR_PAD_LEFT);
     }
+
+    public static generateMsmtCsv()
+    {
+        $out = implode(';', [
+            'JMENO',
+            'DALSI_JMENA',
+            'PRIJMENI',
+            'DATUM_NAROZENI',
+
+            'NAZEV_OBCE',
+            'NAZEV_CASTI_OBCE',
+            'NAZEV_ULICE',
+            'CISLO_POPISNE',
+            'CISLO_ORIENTACNI',
+            'PSC',
+
+            'STRECHA',
+            'SVAZ',
+            'KLUB',
+            'ODDIL',
+
+            'DRUH_SPORTU',
+            'SPORTOVEC',
+            'TRENER',
+            'CLENSTVI_OD',
+            'CLENSTVI_DO',
+            'OBCANSTVI',
+            'EXT_ID'
+        ]);
+
+        $platby = DBPlatby::getOldestPayment();
+        foreach (DBUser::getUsers() as $u) {
+            if ($u['u_ban'] || $u['u_temporary'] || !$u['u_confirmed'] || $u['u_system']) {
+                continue;
+            }
+            $out .= '
+' . implode(';', [
+                $u['u_jmeno'],
+                '',
+                $u['u_prijmeni'],
+                csvDate($u['u_narozeni']),
+                '', '', '', '', '', '',
+                '', '', '', '',
+                '66',
+                $u['u_dancer'] ? '1' : '0',
+                $u['u_level'] > 3 ? '1' : '0',
+                csvDate($platby[$u['u_id']]),
+                '',
+                '',
+                ''
+            ]);
+        }
+        return $out;
+    }
+}
+
+function csvDate($x)
+{
+    return implode('.', array_reverse(explode('-', $x)));
 }

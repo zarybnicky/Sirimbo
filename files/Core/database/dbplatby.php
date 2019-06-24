@@ -53,4 +53,14 @@ class DBPlatby extends Database
             $uid
         ));
     }
+
+    public static function getOldestPayment()
+    {
+        $res = self::query("SELECT pi_id_user, MIN(pi_date) AS pi_date FROM platby_item GROUP BY pi_id_user");
+        $out = [];
+        foreach (self::getArray($res) as $row) {
+            $out[$row['pi_id_user']] = $row['pi_date'];
+        }
+        return $out;
+    }
 }
