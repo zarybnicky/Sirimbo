@@ -43,4 +43,14 @@ class DBPlatby extends Database
         );
         return self::getArray($res);
     }
+
+    public static function getPaymentHistory($uid)
+    {
+        return self::getArray(self::query(
+            "SELECT * FROM platby_item
+                INNER JOIN platby_category ON pi_id_category=pc_id
+             WHERE pi_id_user='?'",
+            $uid
+        ));
+    }
 }

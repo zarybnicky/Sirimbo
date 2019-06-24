@@ -5,7 +5,7 @@
     <a class="btn btn-outline-primary" href="/member/profil/heslo">Změnit heslo</a>
     <a class="btn btn-outline-primary" href="/member/profil/par/partner">Změnit partnera</a>
     <?php if ($this->coupleData && $this->coupleData['u_id']) : ?>
-      <a href="/member/profil/par/body">Změnit třídu a body</a>
+      <a class="btn btn-outline-primary" href="/member/profil/par/body">Změnit třídu a body</a>
     <?php endif ?>
   </div>
 
@@ -20,10 +20,10 @@
     <div class="mb-2">
       Partner(ka): <?= $p['u_jmeno'] ?> <?= $p['u_prijmeni'] ?><br>
       Standardní tance:
-      <?= $p['p_stt_trida'] ?> (<?= $p['p_stt_finale'] ?>F<?= $p['p_stt_body'] ?>)
+      <?= $p['p_stt_trida'] ?> <?= $p['p_stt_body'] ?>, <?= $p['p_stt_finale'] ?>F
       <br>
       Latinsko-americké tance:
-      <?= $p['p_lat_trida'] ?> (<?= $p['p_lat_finale'] ?>F<?= $p['p_lat_body'] ?>)
+      <?= $p['p_lat_trida'] ?> <?= $p['p_lat_body'] ?>, <?= $p['p_lat_finale'] ?>F
     </div>
   <?php endif ?>
 
@@ -36,22 +36,22 @@
 
   <?= $this->table()
          ->data($this->platbyGroups)
-         ->column('name', 'Jméno', '', 'width:125px')
+         ->column('name', 'Jméno')
          ->column('type', 'Typ platby')
-         ->column('symbol', 'Specifický symbol', '', 'width:75px')
+         ->column('symbol', 'Spec. symbol', '', 'width:75px')
          ->column('amount', 'Částka')
          ->column('dueDate', 'Splatnost')
          ->column('validRange', 'Platnost') ?>
 
   <?php if (!empty($this->platby)): ?>
-    <h3>Historie plateb</h3>
+    <h3 class="mt-2">Historie plateb</h3>
     <?= $this->table()
            ->data($this->platby)
-           ->column('colorBox', 'Skupina')
-           ->column('obdobi', 'Období')
-           ->column('castka', 'castka')
-           ->column('datum', 'Placeno')
-           ->column('platnost', 'Platí do') ?>
+           ->column('type', 'Typ')
+           ->column('varSymbol', 'Spec. symbol')
+           ->column('amount', 'Částka')
+           ->column('paidOn', 'Placeno')
+           ->column('validFor', 'Platí do') ?>
   <?php endif ?>
 
 </div>

@@ -20,23 +20,11 @@ class Controller_Member_Profil extends Controller_Member
                 continue;
             }
             if ($currentGroup != $row['pg_id']) {
-                $groupsOut[] = [
-                    'name' => new Tag(
-                        'span',
-                        ['class' => 'big', 'style' => 'text-decoration:underline'],
-                        $row['pg_name']
-                    ),
-                    'type' => $row['pg_type'] ? 'Členské příspěvky' : 'Ostatní platby',
-                    'symbol' => '',
-                    'amount' => '',
-                    'dueDate' => '',
-                    'validRange' => ''
-                ];
                 $currentGroup = $row['pg_id'];
             }
             $groupsOut[] = [
                 'name' => $row['pc_name'],
-                'type' => '',
+                'type' => $row['pg_type'] ? 'Členské příspěvky' : 'Ostatní platby',
                 'symbol' => $row['pc_symbol'],
                 'amount' => ($row['pc_use_base'] ? ($row['pc_amount'] * $row['pg_base']) : $row['pc_amount']) . ' Kč',
                 'dueDate' => (new Date($row['pc_date_due']))->getDate(Date::FORMAT_SIMPLIFIED),
@@ -45,6 +33,19 @@ class Controller_Member_Profil extends Controller_Member
                         (' - ' . (new Date($row['pc_valid_to']))->getDate(Date::FORMAT_SIMPLIFIED)) : ''))
             ];
         }
+
+        $platby = array_map(
+            function ($row) {
+                return [
+                    'type' => $row['pc_name'],
+                    'varSymbol' => $row['pc_symbol'],
+                    'amount' => $row['pi_amount'],
+                    'paidOn' => formatDate($row['pi_date']),
+                    'validFor' => formatDate($row['pc_valid_from']) . ' - ' . formatDate($row['pc_valid_to']),
+                ];
+            },
+            DBPlatby::getPaymentHistory(User::getUserID())
+        );
 
         $this->render('files/View/Member/Profil/Overview.inc', [
             'header' => $data['u_jmeno'] . ' ' . $data['u_prijmeni'],
@@ -56,7 +57,7 @@ class Controller_Member_Profil extends Controller_Member
             ),
             'varSymbol' => User::varSymbol(User::getUserID()),
             'hasPaid' => User::getZaplaceno(),
-            'platby' => [],
+            'platby' => $platby,
             'platbyGroups' => $groupsOut,
         ]);
     }
