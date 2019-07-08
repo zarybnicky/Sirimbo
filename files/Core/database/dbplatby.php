@@ -28,7 +28,7 @@ class DBPlatby extends Database
     {
         list($uid) = self::escape($uid);
         $res = self::query(
-            "SELECT * FROM platby_item
+            "SELECT COUNT(*) FROM platby_item
                 INNER JOIN platby_category ON pc_id=pi_id_category
                 INNER JOIN platby_category_group ON pcg_id_category=pc_id
                 INNER JOIN platby_group ON pg_id=pcg_id_group
@@ -39,9 +39,10 @@ class DBPlatby extends Database
                 pg_type='1' AND
                 u_id='$uid' AND
                 u_skupina=s_id AND
-                (CURDATE() >= pc_valid_from AND CURDATE() <= pc_valid_to)"
+                CURDATE() >= pc_valid_from AND
+                CURDATE() <= pc_valid_to"
         );
-        return self::getArray($res);
+        return self::getSingleRow($res)['COUNT(*)'];
     }
 
     public static function getPaymentHistory($uid)
