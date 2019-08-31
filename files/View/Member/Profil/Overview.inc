@@ -7,6 +7,7 @@
     <?php if ($this->coupleData && $this->coupleData['u_id']) : ?>
       <a class="btn btn-outline-primary" href="/member/profil/par/body">Změnit třídu a body</a>
     <?php endif ?>
+    <a class="btn btn-outline-primary" href="/logout">Odhlásit se</a>
   </div>
 
   <div class="mb-2">

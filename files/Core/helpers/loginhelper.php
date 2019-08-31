@@ -9,16 +9,14 @@ class LoginHelper
     public function render()
     {
         if (User::isLogged()) {
-            $template = 'files/View/Helper/Userbox.inc';
             $user = User::getUserData();
             $name = $user['u_jmeno'] . ' ' . $user['u_prijmeni'];
+            return "<div id=\"userbox\"><i class=\"fas fa-user\"></i><a href=\"/member/profil\">$name</a></div>";
         } else {
-            $template = 'files/View/Helper/Login.inc';
-            $name = '';
+            $template = 'files/View/Login.inc';
+            $r = new Renderer();
+            return $r->render($template);
         }
-
-        $r = new Renderer();
-        return $r->render($template, ['name' => $name]);
     }
 
     public function __toString()

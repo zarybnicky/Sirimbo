@@ -1,7 +1,7 @@
 <?php
 return [
-    ['O klubu', '/', require SETTINGS . '/menu/oklubu.php'],
-    ['Články', '/aktualne/clanky'],
+    ['Klub', '/', require SETTINGS . '/menu/oklubu.php'],
+    ['Aktuality', '/aktualne/clanky'],
     ['Videa', '/video'],
     ['Fotogalerie', '/fotogalerie'],
     ['Kontakt', '/kontakt'],

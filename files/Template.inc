@@ -41,13 +41,18 @@
           <div class="flex-column" style="flex-grow:1">
             <?php $first = true; foreach ($this->navbar as $row) : ?>
               <ul class="navbar-nav <?= $first ? '' : 'd-none d-md-flex' ?>">
-                <?php foreach ($row as $item) : ?>
-                  <?= $this->renderNavbarItem($item) ?>
-                <?php endforeach ?>
+                <?php
+                foreach ($row as $item) {
+                    echo $this->renderNavbarItem($item);
+                }
+                if ($first) {
+                    echo $this->login();
+                }
+                $first = false;
+                ?>
               </ul>
-            <?php $first = false; endforeach ?>
+            <?php endforeach ?>
           </div>
-          <?= $this->login() ?>
         </div>
       </div>
     </nav>
