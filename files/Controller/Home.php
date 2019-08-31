@@ -3,11 +3,8 @@ class Controller_Home extends Controller_Abstract
 {
     public function view($request)
     {
-        if (!$request->getURI()) {
-            if (NABOR) {
-                $this->redirect('/nabor');
-            }
-            $this->redirect('/home');
+        if (!$request->getURI() && NABOR) {
+            $this->redirect('/nabor');
         }
 
         $articles = DBAktuality::getAktuality(AKTUALITY_CLANKY);

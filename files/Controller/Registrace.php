@@ -98,6 +98,6 @@ class Controller_Registrace extends Controller_Abstract
             '<p>Během několika dnů vám na email příjde potvrzení vašeho účtu, ' .
             'které vyřizuje administrátor ručně.<p>'
         );
-        $this->redirect('/home');
+        $this->redirect('/');
     }
 }

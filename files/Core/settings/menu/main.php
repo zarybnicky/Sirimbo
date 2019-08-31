@@ -1,6 +1,6 @@
 <?php
 return [
-    ['O klubu', '/oklubu', require SETTINGS . '/menu/oklubu.php'],
+    ['O klubu', '/', require SETTINGS . '/menu/oklubu.php'],
     ['Články', '/aktualne/clanky'],
     ['Videa', '/video'],
     ['Fotogalerie', '/fotogalerie'],

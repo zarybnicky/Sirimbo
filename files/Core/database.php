@@ -2,7 +2,7 @@
 class Database
 {
     protected static $connection;
-    protected static $request;
+    public static $request;
 
     public static function setRequest($request)
     {

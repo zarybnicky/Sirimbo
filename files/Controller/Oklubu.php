@@ -1,18 +1,6 @@
 <?php
 class Controller_Oklubu extends Controller_Abstract
 {
-    public function view($request)
-    {
-        $this->redirect('/oklubu/obecne');
-    }
-
-    public function obecne($request)
-    {
-        $this->render('files/View/Main/OKlubu/Main.inc', [
-            'header' => 'O klubu'
-        ]);
-    }
-
     public function klubovi($request)
     {
         $this->render('files/View/Main/OKlubu/TreneriInt.inc', [

@@ -34,6 +34,6 @@ class Controller_Nopassword extends Controller_Abstract
         Mailer::newPassword($data['u_email'], $password);
 
         $this->redirect()->success('Heslo bylo úspěšně změněno, za chvíli byste jej měli obdržet v e-mailu');
-        $this->redirect('/home');
+        $this->redirect('/');
     }
 }

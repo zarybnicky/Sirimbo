@@ -11,7 +11,7 @@ class Request
     protected $fileParams;
     protected $sessionParams;
 
-    protected $defaultPath = 'home';
+    protected $defaultPath;
     protected $rawUriParts;
     protected $uriPartsLiteral;
 

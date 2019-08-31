@@ -19,8 +19,12 @@ abstract class Controller_Abstract implements Controller_Interface
         ) {
             return '';
         }
+        $active = $item[1] === ('/' . Database::$request->getURI())
+            || (strlen($item[1]) > 1 && strpos('/' . Database::$request->getURI(), $item[1]) === 0);
+        $active = $active ? ' active' : '';
+
         if (!isset($item[2]) || empty($item[2])) {
-            return '<li class="nav-item"><a class="nav-link" href="'
+            return '<li class="nav-item' . $active . '"><a class="nav-link" href="'
                 . $item[1] . '">' . $item[0] . '</a></li>';
         }
         $x = '<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">' . $item[0] . '</a>';
@@ -32,7 +36,7 @@ abstract class Controller_Abstract implements Controller_Interface
             $x .= '<a class="dropdown-item" href="' . $sub[1] . '">' . $sub[0] . '</a>';
         }
         $x .= '</div>';
-        return '<li class="nav-item dropdown">' . $x . '</li>';
+        return '<li class="nav-item' . $active . ' dropdown">' . $x . '</li>';
     }
 
     public function render($filename, array $vars = [], $standalone = false)
