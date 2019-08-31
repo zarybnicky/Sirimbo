@@ -15,26 +15,21 @@
     <meta name="google-site-verification" content="Hfe7zlgTDOIpJv4rKGQz2Xg8Aezb6sIO0aAxVhrml9w" />
     <meta name="norton-safeweb-site-verification"
           content="r44xj2vskhlgkyqcqm1hdgga2jdfj-idvyys0277y96s72k-tq0z-yyjdu7h3el6pi2gek0i4ykq3xgiguufrvuhj8nbj4n4miwjhvumhp35jfrafyynhj4ee8ctzpzh" />
-    <?php foreach ($this->meta as $meta): ?>
+    <?php foreach ($this->meta as $meta) : ?>
       <meta <?= $meta ?> />
     <?php endforeach ?>
     <meta property="fb:app_id" content="132983570203245"/>
 
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="stylesheet" type="text/css" href="/style/polyfill.object-fit.css" />
-    <link rel="stylesheet" type="text/css" href="/style/video.min.css" />
-    <link rel="stylesheet" type="text/css" href="/style/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="/style/leaflet.css" />
-    <link rel="stylesheet" type="text/css" href="/style/select2.min.css" />
-    <link rel="stylesheet" type="text/css" href="/style/select2-bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="/style/style.css" />
+    <link rel="stylesheet" type="text/css" href="/style.css" />
     <title>
       <?= isset($this->header) ? "{$this->header} | TK Olymp Olomouc" : 'TK Olymp Olomouc' ?>
     </title>
   </head>
   <body>
     <div id="fb-root"></div>
-    <nav class="navbar navbar-expand-md navbar-dark sticky-top">
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
       <div class="container">
         <h1 class="navbar-brand my-0 py-0 ml-lg-2 mx-3">
           <a href="/"><img alt="" src="/style/logo-wide-white.png" /></a>

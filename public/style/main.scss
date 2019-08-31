@@ -1,42 +1,31 @@
-a {
-    text-decoration: none;
-    color: #303C3C;
-}
-a:hover {
-    color: black;
-}
+$blackish:  #1e1e1e;
+$red:       #c90029;
+$light-red: #e80b30;
+$greyish:   #efefef;
 
-strong { font-weight: bold; }
+$primary: $red;
+$secondary: $light-red;
+$dark: $blackish;
+$light: $greyish;
 
-table {
-    border-collapse: separate;
-    border-spacing: 1px;
-}
-th, td {
-    padding: 3px;
-    vertical-align: middle;
-}
-td {
-    border: 1px solid #f5f5f5;
-    background-color: #fcfcfc;
-}
-th {
-    border: 1px solid #dfdfdf;
-    background-color: #f5f5f5;
-}
-table.nocolor td, table.nocolor th {
-    border: none;
-    background: none;
-}
+$link-color: $red;
+$link-hover-color: $light-red;
+$link-hover-decoration: none;
 
-.r {text-align:right;}
+@import '../../bootstrap/scss/functions';
+@import '../../bootstrap/scss/variables';
 
+table { border-collapse: separate; border-spacing: 1px; }
+th, td { padding: 3px; vertical-align: middle; }
+td { border: 1px solid #f5f5f5; background-color: #fcfcfc; }
+th { border: 1px solid #dfdfdf; background-color: #f5f5f5; }
+table.nocolor td, table.nocolor th { border: none; background: none; }
+.r { text-align:right; }
 .container:after, .widget:after, #header, .clear {
   content:"";
   display:table;
   clear:both;
 }
-
 .widget {
     border: 1px solid #ccc;
     background: #EEE;
@@ -60,7 +49,6 @@ table.nocolor td, table.nocolor th {
     padding: 7px;
     background-color: white;
 }
-
 #footer {
     text-align:center;
     background-color:#fff3f2;
@@ -119,7 +107,7 @@ table.nocolor td, table.nocolor th {
 }
 
 /* Video container */
-.video col-4:after {
+.video .col-4:after {
     content: "";
     display:block;
     position: absolute;
@@ -127,7 +115,7 @@ table.nocolor td, table.nocolor th {
     left: 0;
     width: 100%;
     height: 100%;
-    background: url("/images/play_white.png") no-repeat center;
+    background: url("/images/play_white.png") no-repeat center/35%;
 }
 
 /* Small article box */
@@ -174,41 +162,36 @@ table.nocolor td, table.nocolor th {
 
 .notice {
     width: 100%;
-	padding: 10px 0 10px 20px;
-	position: relative;
-	overflow: auto;
-	margin: 5px 0 10px 0;
-	border: 1px solid #555;
-	background-color: #bbb;
+    padding: 10px 0 10px 20px;
+    position: relative;
+    overflow: auto;
+    margin: 5px 0 10px 0;
+    border: 1px solid #555;
+    background-color: #bbb;
 }
 .color {
-	background-color:white;
-	color:white;
-	display:inline;
-	padding: 0 5px;
-	content: '';
-	line-height:10px;
+    background-color:white;
+    color:white;
+    display:inline;
+    padding: 0 5px;
+    content: '';
+    line-height:10px;
 }
 .box {
-	display: inline-block;
-	*display:inline;
-	width:10px;
-	height:10px;
-	border:1px solid black;
-	margin:0 1px;
-	line-height:10px;
+    display: inline-block;
+    width:10px;
+    height:10px;
+    border:1px solid black;
+    margin:0 1px;
+    line-height:10px;
 }
 
-.f_doc {border:1px solid black;}
-.f_doc_center {margin: 5px auto;display:block;border:1px solid black;}
-.f_doc_left {margin-right:15px;border:1px solid black;float:left;}
 .f_doc_right {margin-left:15px;border:1px solid black;float:right;}
 
 .little {font-size: 90%;color: #555;}
 .big {font-size: 124%;color: #333;}
 .emph {font-weight:bold}
 .center {text-align:center;}
-.block-center {display:block;margin-left:auto;margin-right:auto;}
 .list {list-style:disc outside none;padding-left:15px;}
 
 .trenink-header {
@@ -253,9 +236,6 @@ table.nocolor td, table.nocolor th {
     max-width: 80vw;
 }
 
-.navbar {
-    background-color: #ff3c2b;
-}
 @media (max-width: 767px) {
     .navbar-expand-md .container {
         max-height: 100vh;
@@ -263,11 +243,8 @@ table.nocolor td, table.nocolor th {
     }
 }
 .nav-link {
-    color: #eee !important;
+    text-transform: uppercase;
     font-weight: bold;
-}
-.nav-link:hover {
-    color: #fff !important;
 }
 .nav-item {
     flex-shrink: 0;
@@ -277,13 +254,13 @@ table.nocolor td, table.nocolor th {
     height: 60vh;
 }
 .carousel-item {
-    background-size: 100% 100%, cover;
     background-position: top left, 50% 30%;
-    width: 100%;
+    background-size: 100% 100%, cover;
     height: 100%;
+    width: 100%;
 }
 .carousel-item img {
-  visibility: hidden;
+    visibility: hidden;
 }
 .carousel-caption a {
     color: white;
@@ -293,3 +270,48 @@ table.nocolor td, table.nocolor th {
     width: 250px;
     max-width: 50vw;
 }
+
+// Configuration
+@import '../../bootstrap/scss/mixins';
+@import '../../bootstrap/scss/utilities';
+
+// Layout & components
+@import '../../bootstrap/scss/root';
+@import '../../bootstrap/scss/reboot';
+@import '../../bootstrap/scss/type';
+@import '../../bootstrap/scss/images';
+@import '../../bootstrap/scss/grid';
+@import '../../bootstrap/scss/tables';
+@import '../../bootstrap/scss/forms';
+@import '../../bootstrap/scss/buttons';
+@import '../../bootstrap/scss/transitions';
+@import '../../bootstrap/scss/dropdown';
+@import '../../bootstrap/scss/button-group';
+@import '../../bootstrap/scss/nav';
+@import '../../bootstrap/scss/navbar';
+@import '../../bootstrap/scss/card';
+@import '../../bootstrap/scss/breadcrumb';
+@import '../../bootstrap/scss/pagination';
+@import '../../bootstrap/scss/badge';
+@import '../../bootstrap/scss/alert';
+@import '../../bootstrap/scss/progress';
+@import '../../bootstrap/scss/list-group';
+@import '../../bootstrap/scss/close';
+@import '../../bootstrap/scss/toasts';
+@import '../../bootstrap/scss/modal';
+@import '../../bootstrap/scss/tooltip';
+@import '../../bootstrap/scss/popover';
+@import '../../bootstrap/scss/carousel';
+@import '../../bootstrap/scss/spinners';
+
+// Helpers
+@import '../../bootstrap/scss/helpers';
+
+// Utilities
+@import '../../bootstrap/scss/utilities/api';
+
+// Libraries
+@import 'polyfill.object-fit';
+@import 'leaflet';
+@import 'select2.min';
+@import 'select2-bootstrap';

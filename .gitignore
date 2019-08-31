@@ -5,14 +5,12 @@ upload/*
 !upload/.gitignore
 log/*
 !log/.gitignore
-stats/
 *~
 [#]*[#]
-/galerie
-/style
-/images
-/scripts
 .direnv/
 .ghc.environment*
 dist/
 dist-newstyle/
+node_modules/
+package-lock.json
+.stack-work/

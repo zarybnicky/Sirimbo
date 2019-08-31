@@ -1,7 +1,5 @@
 var masonry;
 $(function() {
-  $('.ui.video').video();
-
   objectFit.polyfill({
     selector: '.highlights-image img',
     fittype: 'cover'
