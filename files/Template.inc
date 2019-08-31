@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    
+
     <meta name="keywords" content="taneční klub, tk, olymp, olomouc, tk olymp, sportovní tanec" />
     <meta name="wot-verification" content="ec0cf41ab42dae52d3d4"/>
     <meta name="ICBM" content="49.591700,17.285174"/>
@@ -19,7 +19,7 @@
       <meta <?= $meta ?> />
     <?php endforeach ?>
     <meta property="fb:app_id" content="132983570203245"/>
-    
+
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="stylesheet" type="text/css" href="/style/polyfill.object-fit.css" />
     <link rel="stylesheet" type="text/css" href="/style/video.min.css" />
@@ -44,9 +44,9 @@
         </button>
         <div class="collapse navbar-collapse ml-lg-0 ml-3" id="nav">
           <div class="flex-column" style="flex-grow:1">
-            <?php $first = true; foreach ($this->navbar as $row): ?>
+            <?php $first = true; foreach ($this->navbar as $row) : ?>
               <ul class="navbar-nav <?= $first ? '' : 'd-none d-md-flex' ?>">
-                <?php foreach ($row as $item): ?>
+                <?php foreach ($row as $item) : ?>
                   <?= $this->renderNavbarItem($item) ?>
                 <?php endforeach ?>
               </ul>
@@ -113,7 +113,6 @@
     <script type="text/javascript" src="/scripts/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="/scripts/popper.min.js"></script>
     <script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/scripts/jquery.sticky.js"></script>
     <script type="text/javascript" src="/scripts/polyfill.object-fit.min.js"></script>
     <script type="text/javascript" src="/scripts/stickyfill.min.js"></script>
     <script type="text/javascript" src="/scripts/leaflet.js"></script>

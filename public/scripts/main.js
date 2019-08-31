@@ -1,7 +1,6 @@
 var masonry;
 $(function() {
   $('.ui.video').video();
-  $(".sticky").sticky({topSpacing:40});
 
   objectFit.polyfill({
     selector: '.highlights-image img',
