@@ -18,7 +18,6 @@ class Controller_Member_Dokumenty extends Controller_Member
 
         $this->render('files/View/Member/Dokumenty.inc', [
             'header' => 'Dokumenty',
-            'showMenu' => !TISK,
             'kat' => $request->get('kat') ?: '',
             'data' => array_map(
                 function ($item) {

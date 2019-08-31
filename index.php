@@ -53,8 +53,6 @@ Database::setRequest($request);
 Log::setRequest($request);
 Permissions::setRequest($request);
 
-define('TISK', ($request->get('view') == 'tisk') ? true : false);
-
 try {
     if ($request->session('login') !== null) {
         User::loadUser($request->session('id'));

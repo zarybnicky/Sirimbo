@@ -52,7 +52,6 @@ class Controller_Admin_Rozpis extends Controller_Admin
 
         $this->render('files/View/Admin/Rozpis/Overview.inc', [
             'header' => 'Správa rozpisů',
-            'showMenu' => !TISK,
             'data' => $data
         ]);
     }

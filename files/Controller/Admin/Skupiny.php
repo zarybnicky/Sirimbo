@@ -25,7 +25,6 @@ class Controller_Admin_Skupiny extends Controller_Admin
         );
         $this->render('files/View/Admin/Skupiny/Overview.inc', [
             'header' => 'Správa skupin',
-            'showMenu' => !TISK,
             'data' => $data
         ]);
     }

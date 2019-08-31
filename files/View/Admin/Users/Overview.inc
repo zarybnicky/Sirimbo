@@ -1,6 +1,5 @@
 <div class="container">
 
-<?php if ($this->showMenu): ?>
     <form action="" method="get">
         <table>
             <tr>
@@ -49,10 +48,8 @@
             </tr>
         </table>
     </form>
-<?php endif ?>
 
 <form action="" method="POST">
-<?php if ($this->showMenu): ?>
     <a href="/admin/users/add" class="btn btn-outline-primary">Nový uživatel</a>
     <a href="/admin/users/duplicate" class="btn btn-outline-primary">Duplicitní uživatelé</a>
     <a href="/admin/users/unconfirmed" class="btn btn-outline-primary">Nepotvrzení uživatelé</a>
@@ -62,7 +59,6 @@
       <button class="btn btn-primary" name="action" value="save">Uložit změny</button>
     <?php endif ?>
     <br>
-<?php endif ?>
 
 <?php
 if (!$this->data) {

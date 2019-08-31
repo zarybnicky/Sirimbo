@@ -37,7 +37,6 @@ class Controller_Admin_Aktuality extends Controller_Admin
             'header' => 'Správa aktualit',
             'data' => $data,
             'f' => $request->get('f') ?: '',
-            'showMenu' => !TISK
         ]);
     }
 

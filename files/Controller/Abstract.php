@@ -49,6 +49,7 @@ abstract class Controller_Abstract implements Controller_Interface
             'renderNavbarItem' => [$this, 'renderNavbarItem'],
             'navbar' => $this->navbar(),
             'meta' => [],
+            'content' => $content,
             'header' => isset($vars['header']) ? $vars['header'] : null,
             'subheader' => isset($vars['subheader']) ? $vars['subheader'] : null,
             'html_title' => ''
@@ -65,9 +66,8 @@ abstract class Controller_Abstract implements Controller_Interface
         if (isset($vars['html_title'])) {
             $args['html_title'] = $vars['html_title'];
         }
-        echo $renderer->render(TISK ? HEADER_TISK : HEADER, $args);
-        echo $content;
-        echo $renderer->render(TISK ? FOOTER_TISK : FOOTER, ['filename' => $filename]);
+
+        echo $renderer->render(TEMPLATE, $args);
     }
 
     public function __call($name, $args)

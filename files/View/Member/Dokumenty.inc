@@ -1,5 +1,4 @@
 <div class="container">
-  <?php if ($this->showMenu): ?>
     <form action="" method="GET">
       <?= $this->select('kat')
                ->set($this->kat)
@@ -11,7 +10,6 @@
       ?>
       <?= $this->submit('Zobrazit') ?>
     </form>
-  <?php endif ?>
 
   <table>
     <tr>

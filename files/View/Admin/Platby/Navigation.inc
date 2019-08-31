@@ -1,5 +1,4 @@
 <?php
-if (TISK) return;
 $uri = $this->uri;
 $isActive = function ($href) use ($uri) {
     return strripos($uri, $href) !== (strlen($uri) - strlen($href));

@@ -55,7 +55,6 @@ class Controller_Admin_Nabidka extends Controller_Admin
         );
         $this->render('files/View/Admin/Nabidka/Overview.inc', [
             'header' => 'Správa nabídky',
-            'showMenu' => !TISK,
             'data' => $data
         ]);
     }

@@ -1,6 +1,5 @@
 <div class="container">
     <?php
-    if ($this->showMenu) {
         echo '<form action="" class="form-inline" method="get">';
 
         echo $this->select('f')
@@ -10,7 +9,6 @@
                   ->option(AKTUALITY_KRATKE, 'krátké zprávy');
         echo $this->submit('Zobrazit');
         echo '</form><br/>';
-    }
     ?>
     <form action="" method="POST">
         <a href="/admin/aktuality/add" class="btn btn-primary">Nový článek</a>

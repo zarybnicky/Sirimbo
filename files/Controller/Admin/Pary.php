@@ -45,7 +45,6 @@ class Controller_Admin_Pary extends Controller_Admin
 
         $this->render('files/View/Admin/Pary/Overview.inc', [
             'header' => 'Správa párů',
-            'showMenu' => !TISK,
             'data' => $data,
             'usersMen' => DBUser::getUsersByPohlavi('m'),
             'usersWomen' => DBUser::getUsersByPohlavi('f')

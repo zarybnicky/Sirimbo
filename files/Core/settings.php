@@ -1,22 +1,15 @@
 <?php
-$root = implode(DIRECTORY_SEPARATOR, array_slice(explode(DIRECTORY_SEPARATOR, __DIR__), 0, -2));
-
 define('ROOT', $_SERVER['DOCUMENT_ROOT']);
 define('FILES', ROOT . DIRECTORY_SEPARATOR . 'files');
-define('PUBLIC_DIR', ROOT . DIRECTORY_SEPARATOR . 'public');
-define('GALERIE', PUBLIC_DIR . DIRECTORY_SEPARATOR . 'galerie');
+define('GALERIE', ROOT . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'galerie');
 define('GALERIE_THUMBS', GALERIE . DIRECTORY_SEPARATOR . 'thumbnails');
 define('CORE', FILES . DIRECTORY_SEPARATOR . 'Core');
 define('SETTINGS', CORE . DIRECTORY_SEPARATOR . 'settings');
 define('ERROR', FILES . DIRECTORY_SEPARATOR . 'Error');
-define('HEADER', 'files' . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'Header.inc');
-define('FOOTER', 'files' . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'Footer.inc');
-define('HEADER_TISK', 'files' . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'HeaderTisk.inc');
-define('FOOTER_TISK', 'files' . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'FooterTisk.inc');
+define('TEMPLATE', 'files' . DIRECTORY_SEPARATOR . 'Static' . DIRECTORY_SEPARATOR . 'Template.inc');
 
 define('LOG', ROOT . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'error.log');
 define('DEBUG_LOG', ROOT . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'debug.log');
-define('PHP_LOG', ROOT . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'php.log');
 
 include ROOT . DIRECTORY_SEPARATOR . 'config.php';
 
@@ -107,81 +100,81 @@ define('P_ADMIN', 16);
 
 class Settings
 {
-public static $documentTypes = [
-    '1'        => 'Schůze, rady',
-    '2'        => 'Soutěže',
-    '3'        => 'Tábory',
-    '0'        => 'Ostatní'
-];
+    public static $documentTypes = [
+        '1'        => 'Schůze, rady',
+        '2'        => 'Soutěže',
+        '3'        => 'Tábory',
+        '0'        => 'Ostatní'
+    ];
 
-public static $permissionLevels = [
-    P_NONE => 'Bez přístupu',
-    P_VIEW => 'Zobrazit',
-    P_MEMBER => 'Editovat',
-    P_OWNED => 'Admin (svoje)',
-    P_ADMIN => 'Admin'
-];
+    public static $permissionLevels = [
+        P_NONE => 'Bez přístupu',
+        P_VIEW => 'Zobrazit',
+        P_MEMBER => 'Editovat',
+        P_OWNED => 'Admin (svoje)',
+        P_ADMIN => 'Admin'
+    ];
 
-public static $permissions = [
-    'akce' => [
-        'name' => "Akce",
-        'default' => P_MEMBER,
-        P_NONE => 1, P_VIEW => 1, P_MEMBER => 1, P_OWNED => 1, P_ADMIN => 1],
-    'aktuality' => [
-        'name' => "Aktuality",
-        'default' => P_VIEW,
-        P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1],
-    'dokumenty' => [
-        'name' => "Dokumenty",
-        'default' => P_MEMBER,
-        P_NONE => 1, P_MEMBER => 1, P_OWNED => 1, P_ADMIN => 1],
-    'galerie' => [
-        'name' => "Fotogalerie",
-        'default' => P_VIEW,
-        P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1],
-    'konzole' => [
-        'name' => "Konzole",
-        'default' => P_NONE,
-        P_NONE => 1, P_ADMIN => 1],
-    'nabidka' => [
-        'name' => "Nabídka",
-        'default' => P_MEMBER,
-        P_NONE => 1, P_VIEW => 1, P_MEMBER => 1, P_OWNED => 1, P_ADMIN => 1],
-    'nastenka' => [
-        'name' => "Nástěnka",
-        'default' => P_VIEW,
-        P_NONE => 1, P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1],
-    'novinky' => [
-        'name' => "Články",
-        'default' => P_VIEW,
-        P_NONE => 1, P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1],
-    'pary' => [
-        'name' => "Páry",
-        'default' => P_VIEW,
-        P_NONE => 1, P_VIEW => 1, P_ADMIN => 1],
-    'platby' => [
-        'name' => "Platby",
-        'default' => P_NONE,
-        P_NONE => 1, P_ADMIN => 1],
-    'permissions' => [
-        'name' => "Oprávnění",
-        'default' => P_NONE,
-        P_NONE => 1, P_ADMIN => 1],
-    'rozpis' => [
-        'name' => "Rozpis",
-        'default' => P_MEMBER,
-        P_NONE => 1, P_VIEW => 1, P_MEMBER => 1, P_OWNED => 1, P_ADMIN => 1],
-    'skupiny' => [
-        'name' => "Skupiny",
-        'default' => P_VIEW,
-        P_NONE => 1, P_VIEW => 1, P_ADMIN => 1],
-    'users' => [
-        'name' => "Uživatelé",
-        'default' => P_VIEW,
-        P_NONE => 1, P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1],
-    'main' => [
-        'name' => "Veřejná část",
-        'default' => P_VIEW,
-        P_VIEW => 1]
+    public static $permissions = [
+        'akce' => [
+            'name' => "Akce",
+            'default' => P_MEMBER,
+            P_NONE => 1, P_VIEW => 1, P_MEMBER => 1, P_OWNED => 1, P_ADMIN => 1],
+        'aktuality' => [
+            'name' => "Aktuality",
+            'default' => P_VIEW,
+            P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1],
+        'dokumenty' => [
+            'name' => "Dokumenty",
+            'default' => P_MEMBER,
+            P_NONE => 1, P_MEMBER => 1, P_OWNED => 1, P_ADMIN => 1],
+        'galerie' => [
+            'name' => "Fotogalerie",
+            'default' => P_VIEW,
+            P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1],
+        'konzole' => [
+            'name' => "Konzole",
+            'default' => P_NONE,
+            P_NONE => 1, P_ADMIN => 1],
+        'nabidka' => [
+            'name' => "Nabídka",
+            'default' => P_MEMBER,
+            P_NONE => 1, P_VIEW => 1, P_MEMBER => 1, P_OWNED => 1, P_ADMIN => 1],
+        'nastenka' => [
+            'name' => "Nástěnka",
+            'default' => P_VIEW,
+            P_NONE => 1, P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1],
+        'novinky' => [
+            'name' => "Články",
+            'default' => P_VIEW,
+            P_NONE => 1, P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1],
+        'pary' => [
+            'name' => "Páry",
+            'default' => P_VIEW,
+            P_NONE => 1, P_VIEW => 1, P_ADMIN => 1],
+        'platby' => [
+            'name' => "Platby",
+            'default' => P_NONE,
+            P_NONE => 1, P_ADMIN => 1],
+        'permissions' => [
+            'name' => "Oprávnění",
+            'default' => P_NONE,
+            P_NONE => 1, P_ADMIN => 1],
+        'rozpis' => [
+            'name' => "Rozpis",
+            'default' => P_MEMBER,
+            P_NONE => 1, P_VIEW => 1, P_MEMBER => 1, P_OWNED => 1, P_ADMIN => 1],
+        'skupiny' => [
+            'name' => "Skupiny",
+            'default' => P_VIEW,
+            P_NONE => 1, P_VIEW => 1, P_ADMIN => 1],
+        'users' => [
+            'name' => "Uživatelé",
+            'default' => P_VIEW,
+            P_NONE => 1, P_VIEW => 1, P_OWNED => 1, P_ADMIN => 1],
+        'main' => [
+            'name' => "Veřejná část",
+            'default' => P_VIEW,
+            P_VIEW => 1]
     ];
 }

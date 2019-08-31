@@ -392,7 +392,6 @@ class Controller_Admin_Users extends Controller_Admin
 
         $this->render('files/View/Admin/Users/Overview.inc', [
             'header' => 'Správa uživatelů',
-            'showMenu' => !TISK,
             'groupOptions' => $groupOptions,
             'skupinyOptions' => $skupinyOptions,
             'sortOptions' => $sortOptions,

@@ -1,7 +1,6 @@
 <?= $this->render('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri]) ?>
 
 <div class="container full">
-<?php if (!TISK): ?>
     <form action="" method="get">
         <span class="big">Omezit výběr:</span>
         <table>
@@ -41,7 +40,6 @@
         </table>
     </form>
     <br/>
-<?php endif ?>
 
 <form action="" method="POST">
   <?= $this->table()

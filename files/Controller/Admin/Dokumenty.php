@@ -64,7 +64,6 @@ class Controller_Admin_Dokumenty extends Controller_Admin
         $this->render('files/View/Admin/Dokumenty/Overview.inc', [
             'header' => 'Správa dokumentů',
             'data' => $data,
-            'showMenu' => !TISK
         ]);
     }
 
