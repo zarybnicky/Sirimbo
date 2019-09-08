@@ -55,7 +55,6 @@
     <a href="/admin/users/unconfirmed" class="btn btn-outline-primary">Nepotvrzení uživatelé</a>
     <a href="/admin/users/statistiky" class="btn btn-outline-primary">Statistiky</a>
     <?php if ($this->view == 'status'): ?>
-      <br><br>
       <button class="btn btn-primary" name="action" value="save">Uložit změny</button>
     <?php endif ?>
     <br>

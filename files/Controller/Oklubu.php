@@ -1,6 +1,11 @@
 <?php
 class Controller_Oklubu extends Controller_Abstract
 {
+    public function view($request)
+    {
+        $this->redirect('/');
+    }
+
     public function klubovi($request)
     {
         $this->render('files/View/Main/OKlubu/TreneriInt.inc', [

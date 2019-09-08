@@ -15,20 +15,24 @@
        CKEDITOR.replace('text');
       </script>
     </div>
-    <div class="form-check">
-      <?= $this->checkbox('lock')->label('Uzamknout')->set($this->lock) ?>
-    </div>
     <div class="form-group">
-      <div style="font-weight:bold">Skupiny</div>
+      <label>Skupiny</label>
       <?php
       foreach ($this->skupiny as $item) {
+          echo '<div class="form-check">';
           echo $this->checkbox('sk-' . $item['s_id'], '1')
                    ->set($this->skupinySelected[$item['s_id']])
                    ->label($this->colorbox($item['s_color_rgb'], $item['s_description'])
                         . '&nbsp;' . $item['s_name']);
-          echo '<br>';
+          echo '</div>';
       }
       ?>
+    </div>
+    <br>
+    <div class="form-group">
+      <div class="form-check">
+        <?= $this->checkbox('lock')->label('Uzamknout')->set($this->lock) ?>
+      </div>
     </div>
     <div class="form-group">
       <?= $this->hidden('returnURI', $this->returnURI) ?>
