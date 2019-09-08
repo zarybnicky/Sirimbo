@@ -2869,7 +2869,7 @@ table.nocolor td, table.nocolor th { border: none; background: none; }
 
 .r { text-align: right; }
 
-.container:after, .widget:after, #header, .clear { content: ""; display: table; clear: both; }
+.widget:after, #header, .clear { content: ""; display: table; clear: both; }
 
 .widget { border: 1px solid #ccc; background: #EEE; margin: 0 5px; padding: 5px; }
 
@@ -2884,6 +2884,23 @@ table.nocolor td, table.nocolor th { border: none; background: none; }
 #footer span { display: block; margin: 10px 0 5px; }
 
 .dropdown-no-arrow::after { display: none !important; }
+
+.navbar.navbar-dark > .container { margin: 0; padding: 0; max-width: 100%; flex-wrap: wrap !important; }
+
+@media (max-width: 991.98px) { .navbar .container { padding: 0; }
+  .navbar .container .container { max-height: max-content; } }
+
+@media (min-width: 768px) { .navbars { padding-top: .5rem; padding-bottom: .5rem; } }
+
+#navbar-second { background-color: #c90029; }
+
+#navbar-second .nav-link { text-transform: none; color: #fff; }
+
+#navbar-second .active { text-decoration: underline; }
+
+.nav-link.userbox { text-transform: none; }
+
+.nav-link.userbox a { color: #fff; font-size: .9rem; }
 
 .inline-radio label { vertical-align: middle; }
 
@@ -4145,11 +4162,11 @@ a.btn.disabled, fieldset:disabled a.btn { pointer-events: none; }
 
 .tab-content > .active { display: block; }
 
-.navbar { position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: 0.5rem 1rem; }
+.navbar { position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: 0 0; }
 
 .navbar .container, .navbar .container-fluid, .navbar .container-sm, .navbar .container-md, .navbar .container-lg, .navbar .container-xl { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; }
 
-.navbar-brand { display: inline-block; padding-top: 0.3125rem; padding-bottom: 0.3125rem; margin-right: 1rem; font-size: 1.25rem; line-height: inherit; white-space: nowrap; }
+.navbar-brand { display: inline-block; padding-top: 0.3125rem; padding-bottom: 0.3125rem; margin-right: 0; font-size: 1.25rem; line-height: inherit; white-space: nowrap; }
 
 .navbar-brand:hover, .navbar-brand:focus { text-decoration: none; }
 

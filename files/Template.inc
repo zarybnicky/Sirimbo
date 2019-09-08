@@ -31,29 +31,39 @@
 
     <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
       <div class="container">
-        <h1 class="navbar-brand my-0 py-0 ml-lg-2 mx-3">
-          <a href="/"><img alt="" src="/style/logo-wide-white.png" /></a>
-        </h1>
-        <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#nav">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse ml-lg-0 ml-3" id="nav">
-          <div class="flex-column" style="flex-grow:1">
-            <?php $first = true; foreach ($this->navbar as $row) : ?>
-              <ul class="navbar-nav <?= $first ? '' : 'd-none d-md-flex' ?>">
-                <?php
-                foreach ($row as $item) {
+        <div class="container">
+          <h1 class="navbar-brand my-0 py-0 ml-lg-2 mx-3">
+            <a href="/"><img alt="" src="/style/logo-wide-white.png" /></a>
+          </h1>
+          <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target=".navbars">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="navbars collapse navbar-collapse ml-lg-0 ml-3">
+            <div class="flex-column" style="flex-grow:1">
+              <ul class="navbar-nav">
+                <?php foreach ($this->navbar[0] as $item) {
                     echo $this->renderNavbarItem($item);
-                }
-                if ($first) {
-                    echo $this->login();
-                }
-                $first = false;
-                ?>
+                } ?>
+                <?= $this->login() ?>
               </ul>
-            <?php endforeach ?>
+            </div>
           </div>
         </div>
+        <?php if (count($this->navbar) > 1) : ?>
+          <div class="w-100" id="navbar-second">
+            <div class="container">
+              <div class="navbars collapse navbar-collapse ml-lg-0 ml-3">
+                <div class="flex-column" style="flex-grow:1">
+                  <ul class="navbar-nav">
+                    <?php foreach ($this->navbar[1] as $item) {
+                        echo $this->renderNavbarItem($item);
+                    } ?>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        <?php endif ?>
       </div>
     </nav>
 

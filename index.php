@@ -74,7 +74,7 @@ try {
         } elseif ($request->get('return')) {
             Helper::instance()->redirect($request->get('return'));
         } else {
-            Helper::instance()->redirect('/member/nastenka');
+            Helper::instance()->redirect('/member/home');
         }
     }
 
