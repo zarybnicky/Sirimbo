@@ -16,7 +16,7 @@
     <meta name="norton-safeweb-site-verification"
           content="r44xj2vskhlgkyqcqm1hdgga2jdfj-idvyys0277y96s72k-tq0z-yyjdu7h3el6pi2gek0i4ykq3xgiguufrvuhj8nbj4n4miwjhvumhp35jfrafyynhj4ee8ctzpzh" />
     <?php foreach ($this->meta as $meta) : ?>
-      <meta <?= $meta ?> />
+    <meta <?php foreach ($meta as $k => $v) { echo "$k=\"$v\""; } ?>/>
     <?php endforeach ?>
     <meta property="fb:app_id" content="132983570203245"/>
 
@@ -42,7 +42,7 @@
             <div class="flex-column" style="flex-grow:1">
               <ul class="navbar-nav">
                 <?php foreach ($this->navbar[0] as $item) {
-                    echo $this->renderNavbarItem($item);
+                    echo $this->navbarItem($item);
                 } ?>
                 <div class="w-100"></div>
                 <?= $this->login() ?>
@@ -57,7 +57,7 @@
                 <div class="flex-column" style="flex-grow:1">
                   <ul class="navbar-nav">
                     <?php foreach ($this->navbar[1] as $item) {
-                        echo $this->renderNavbarItem($item);
+                        echo $this->navbarItem($item);
                     } ?>
                   </ul>
                 </div>
