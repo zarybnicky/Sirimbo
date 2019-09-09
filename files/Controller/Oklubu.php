@@ -26,9 +26,4 @@ class Controller_Oklubu extends Controller_Abstract
             'header' => 'Kde trénujeme'
         ]);
     }
-
-    public function navbar()
-    {
-        return array_merge(parent::navbar(), [include SETTINGS . '/menu/oklubu.php']);
-    }
 }

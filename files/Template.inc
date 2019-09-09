@@ -44,6 +44,7 @@
                 <?php foreach ($this->navbar[0] as $item) {
                     echo $this->renderNavbarItem($item);
                 } ?>
+                <div class="w-100"></div>
                 <?= $this->login() ?>
               </ul>
             </div>

@@ -52,9 +52,4 @@ class Controller_Member extends Controller_Abstract
             'navigation' => $pager->getNavigation($request->get())
         ]);
     }
-
-    public function navbar()
-    {
-        return array_merge(parent::navbar(), [include SETTINGS . '/menu/member.inner.php']);
-    }
 }
