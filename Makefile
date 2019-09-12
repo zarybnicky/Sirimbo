@@ -10,3 +10,4 @@ style-watch:
 upload:
 	rsync -azP files/ olymp.z:/var/www/html/files
 
+.PHONY: upload
