@@ -43,12 +43,7 @@ class Controller_Aktualne extends Controller_Abstract
 
     public function clanky($request)
     {
-        $this->_aktualne('Články', AKTUALITY_CLANKY);
-    }
-
-    public function kratke_zpravy($request)
-    {
-        $this->_aktualne('Krátké zprávy', AKTUALITY_KRATKE);
+        $this->_aktualne('Články', 1);
     }
 
     private function _aktualne($nadpis = "", $type = null)

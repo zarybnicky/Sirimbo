@@ -9,20 +9,11 @@ class Controller_Admin_Aktuality extends Controller_Admin
 
     public function view($request)
     {
-        $data = Permissions::check('aktuality', P_ADMIN)
-            ? DBAktuality::getAktuality($request->get('f'))
-            : DBAktuality::getAktuality($request->get('f'), User::getUserID());
-
         $data = array_map(
             function ($item) {
                 $id = $item['at_id'];
                 return [
                     'name' => $item['at_jmeno'],
-                    'category' => ($item['at_kat'] == AKTUALITY_CLANKY
-                                   ? 'Články'
-                                   : ($item['at_kat'] == AKTUALITY_KRATKE
-                                      ? 'Krátké zprávy'
-                                      : '')),
                     'added' => formatDate($item['at_timestamp_add']),
                     'links' => (
                         '<a href="/admin/aktuality/edit/' . $id . '">obecné</a>, ' .
@@ -31,12 +22,13 @@ class Controller_Admin_Aktuality extends Controller_Admin
                     'buttons' => $this->removeLink('/admin/aktuality/remove/' . $id)
                 ];
             },
-            $data
+            Permissions::check('aktuality', P_ADMIN)
+            ? DBAktuality::getAktuality(1)
+            : DBAktuality::getAktuality(1, User::getUserID())
         );
         $this->render('files/View/Admin/Aktuality/Overview.inc', [
             'header' => 'Správa aktualit',
             'data' => $data,
-            'f' => $request->get('f') ?: '',
         ]);
     }
 
@@ -47,7 +39,6 @@ class Controller_Admin_Aktuality extends Controller_Admin
                 'header' => 'Správa aktualit',
                 'subheader' => ($this->action == 'add' ? 'Přidat' : 'Upravit') . ' článek',
                 'action' => $request->getAction(),
-                'category' => '',
                 'name' => '',
                 'summary' => '',
                 'text' => ''
@@ -57,7 +48,7 @@ class Controller_Admin_Aktuality extends Controller_Admin
 
         $id = DBAktuality::addAktualita(
             User::getUserID(),
-            $request->post('category'),
+            1,
             $request->post('name'),
             $request->post('text'),
             $request->post('summary'),
@@ -82,27 +73,34 @@ class Controller_Admin_Aktuality extends Controller_Admin
 
         Permissions::checkError('aktuality', P_OWNED, $data['at_kdo']);
 
-        if (!$request->post()) {
+        $error = false;
+        if ($request->post() && ($date = DateTime::createFromFormat('j. n. Y i:s', $request->post('createdAt'))) === false) {
+            $this->redirect()->danger('Špatný formát data "Publikováno" (D. M. RRRR HH:SS)');
+            $error = true;
+        }
+
+        if (!$request->post() || $error) {
             $this->render('files/View/Admin/Aktuality/Form.inc', [
                 'header' => 'Správa aktualit',
                 'subheader' => ($this->action == 'add' ? 'Přidat' : 'Upravit') . ' článek',
                 'action' => $request->getAction(),
-                'category' => $data['at_kat'],
-                'name' => $data['at_jmeno'],
-                'summary' => $data['at_preview'],
-                'text' => $data['at_text']
+                'name' => $request->post('name') ?: $data['at_jmeno'],
+                'summary' => $request->post('summary') ?: $data['at_preview'],
+                'text' => $request->post('text') ?: $data['at_text'],
+                'createdAt' => $request->post('createdAt') ?: formatTimestamp($data['at_timestamp_add']),
             ]);
             return;
         }
 
         DBAktuality::editAktualita(
             $id,
-            $request->post('category'),
+            1,
             $request->post('name'),
             $request->post('text'),
             $request->post('summary'),
             $data['at_foto'],
-            $data['at_foto_main']
+            $data['at_foto_main'],
+            $date->format('Y-m-d H:i:s')
         );
         $this->redirect('/admin/aktuality');
     }
