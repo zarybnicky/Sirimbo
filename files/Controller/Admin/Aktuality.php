@@ -14,7 +14,7 @@ class Controller_Admin_Aktuality extends Controller_Admin
                 $id = $item['at_id'];
                 return [
                     'name' => $item['at_jmeno'],
-                    'added' => formatDate($item['at_timestamp_add']),
+                    'added' => formatTimestamp($item['at_timestamp_add']),
                     'links' => (
                         '<a href="/admin/aktuality/edit/' . $id . '">obecné</a>, ' .
                         '<a href="/admin/aktuality/foto/' . $id . '">galerie</a>'
@@ -74,7 +74,7 @@ class Controller_Admin_Aktuality extends Controller_Admin
         Permissions::checkError('aktuality', P_OWNED, $data['at_kdo']);
 
         $error = false;
-        if ($request->post() && ($date = DateTime::createFromFormat('j. n. Y i:s', $request->post('createdAt'))) === false) {
+        if ($request->post() && ($date = DateTime::createFromFormat('j. n. Y h:i', $request->post('createdAt'))) === false) {
             $this->redirect()->danger('Špatný formát data "Publikováno" (D. M. RRRR HH:SS)');
             $error = true;
         }
