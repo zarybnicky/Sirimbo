@@ -6,7 +6,7 @@
           <input class="form-control" name="login" placeholder="Jméno" />
         </div>
         <div class="form-group">
-          <input class="form-control" name="password" placeholder="Heslo" type="password" />
+          <input class="form-control" name="pass" placeholder="Heslo" type="password" />
         </div>
         <div class="form-group">
           <?= $this->submit('Přihlásit se')->data('action', 'login') ?>
