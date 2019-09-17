@@ -1,0 +1,139 @@
+[
+  {
+    "title": "Klub",
+    "children": [
+      {
+        "title": "Kluboví trenéři",
+        "url": "/oklubu/treneri/klubovi"
+      },
+      {
+        "title": "Externí trenéři",
+        "url": "/oklubu/treneri/externi"
+      },
+      {
+        "title": "Kde trénujeme",
+        "url": "/oklubu/saly"
+      }
+    ]
+  },
+  {
+    "title": "Aktuality",
+    "url": "/aktualne/clanky"
+  },
+  {
+    "title": "Videa",
+    "url": "/video"
+  },
+  {
+    "title": "Fotogalerie",
+    "url": "/video"
+  },
+  {
+    "title": "Kontakt",
+    "url": "/kontakt"
+  }
+]
+
+[
+  {
+    "title": "Nástěnka",
+    "url": "/member/home"
+  },
+  {
+    "title": "Rozpis",
+    "url": "/member/rozpis"
+  },
+  {
+    "title": "Nabídka",
+    "url": "/member/nabidka"
+  },
+  {
+    "title": "Akce",
+    "url": "/member/akce"
+  },
+  {
+    "title": "Dokumenty",
+    "url": "/member/dokumenty"
+  },
+  {
+    "title": "Členové",
+    "url": "/member/clenove/structure"
+  },
+  {
+    "title": "Profil",
+    "url": "/member/profil"
+  }
+]
+
+[
+  {
+    "title": "Uživatelé",
+    "url": "/admin/users",
+    "permission": "view_user_admin"
+  },
+  {
+    "title": "Skupiny",
+    "url": "/admin/",
+    "permission": "view_group_admin"
+  },
+  {
+    "title": "Platby",
+    "url": "/admin/platby",
+    "permission": "view_payment_admin"
+  },
+  {
+    "title": "Páry",
+    "url": "/admin/pary",
+    "permission": "view_couple_admin"
+  },
+  {
+    "title": "Články",
+    "url": "/admin/aktuality",
+    "permission": "view_article_admin"
+  },
+  {
+    "title": "Nástěnka",
+    "url": "/admin/nastenka",
+    "permission": "view_announcement_admin"
+  },
+  {
+    "title": "Rozpis",
+    "url": "/admin/rozpis",
+    "permission": "view_schedule_admin"
+  },
+  {
+    "title": "Nabídka",
+    "url": "/admin/nabidka",
+    "permission": "view_planning_admin"
+  },
+  {
+    "title": "Akce",
+    "url": "/admin/akce",
+    "permission": "view_events_admin"
+  },
+  {
+    "title": "Galerie",
+    "url": "/admin/galerie",
+    "permission": "view_photo_admin"
+  },
+  {
+    "title": "Video",
+    "url": "/admin/video",
+    "permission": "view_video_admin"
+  },
+  {
+    "title": "Dokumenty",
+    "url": "/admin/dokumenty",
+    "permission": "view_document_admin"
+  },
+  {
+    "title": "Oprávnění",
+    "url": "/admin/permissions",
+    "permission": "view_permission_admin"
+  },
+  {
+    "title": "Stránky",
+    "url": "/admin/site",
+    "permission": "view_site_admin"
+  }
+]

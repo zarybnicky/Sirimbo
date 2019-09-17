@@ -3,10 +3,33 @@ class Controller_Home extends Controller_Abstract
 {
     public function view($request)
     {
-        if (!$request->getURI() && NABOR) {
-            $this->redirect('/nabor');
+        $uri = $request->getURI();
+        if (in_array(strtolower($uri), ['/', '/home', '/index.php'])) {
+            return $this->home();
         }
 
+        if (!($page = DBPage::getByUrl($uri))) {
+            throw new NotFoundException("Page '$uri' not found");
+        }
+
+        if ($page['p_type'] === 'plain' || $page['p_type'] === 'quill') {
+            $this->render('files/View/Plain.inc', array_merge(
+                [
+                    'header' => $page['p_title'],
+                    'html' => $page['p_html']
+                ],
+                json_decode($page['p_parameters'])
+            ));
+        } else {
+            //Case-by-case rendering?
+            //K-V map of special render Class::methods?
+            //Just accept Class::method from the use?rl
+            throw new Exception('TODO');
+        }
+    }
+
+    public function home()
+    {
         $articles = DBAktuality::getAktuality(AKTUALITY_CLANKY);
 
         $highlights = array_map(

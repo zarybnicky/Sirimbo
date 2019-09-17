@@ -26,6 +26,10 @@ Pokud jsi byl přihlášen, došlo k automatickému odhlášení. Pokud se při 
         'Správný požadavek, ale žádná odpověď',
         'To znamená, že stránka kterou chceš vidět by měla existovat, ale server jí nedokáže najít. Tato chyba může být způsobena prací administrátora na serveru, takže když se vrátíš zpět a zopakuješ požadavek, už by to mělo jít.'
     ],
+    'notFound' => [
+        'Stránka nenalezena',
+        'Požadovaná stránka na serveru nejspíš neexistuje.'
+    ],
     'scriptFatal' => [
         'Vnitřní chyba skriptu',
         'Nastala chyba k jejímuž popisu neexistují konkrétní informace. Kontaktuj prosím administrátora a popiš všechno, co jsi dělal, co mohlo chybu způsobit.'
