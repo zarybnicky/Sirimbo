@@ -74,7 +74,7 @@ class Controller_Admin_Aktuality extends Controller_Admin
         Permissions::checkError('aktuality', P_OWNED, $data['at_kdo']);
 
         $error = false;
-        if ($request->post() && ($date = DateTime::createFromFormat('j. n. Y h:i', $request->post('createdAt'))) === false) {
+        if ($request->post() && ($date = DateTime::createFromFormat('j. n. Y H:i', $request->post('createdAt'))) === false) {
             $this->redirect()->danger('Špatný formát data "Publikováno" (D. M. RRRR HH:SS)');
             $error = true;
         }
