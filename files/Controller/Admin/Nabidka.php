@@ -213,7 +213,6 @@ class Controller_Admin_Nabidka extends Controller_Admin
             'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit',
             'returnURI' => $request->getReferer(),
             'users' => $treneri,
-            'isAdmin' => $isAdmin ?: '',
             'id' => $data ? $data['n_id'] : null,
             'trener' => $request->post('trener') ?: ($data ? $data['n_trener'] : ''),
             'pocet_hod' => $request->post('pocet_hod') ?: ($data ? $data['n_pocet_hod'] : ''),

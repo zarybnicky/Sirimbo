@@ -4,7 +4,6 @@
       <label for="trener">Trenér</label>
       <?= $this->userSelect('trener')
              ->set($this->trener)
-             ->tmpSwitch($this->isAdmin)
              ->users($this->treneri) ?>
     </div>
     <div class="form-group">

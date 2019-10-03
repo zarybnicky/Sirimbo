@@ -3,7 +3,7 @@ class DBUser extends Database implements Pagable
 {
     public static function getPage($offset, $count, $options = null)
     {
-        $q = "SELECT users.*,skupiny.* FROM users
+        $q = "SELECT users.*, skupiny.* FROM users
             LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id WHERE 1=1";
         switch ($options['status']) {
             case 'ban':
@@ -113,7 +113,7 @@ class DBUser extends Database implements Pagable
     public static function getUserData($id)
     {
         $res = self::query(
-            "SELECT users.*,skupiny.*,permissions.* FROM users
+            "SELECT users.*, skupiny.*, permissions.* FROM users
                 LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
                 LEFT JOIN permissions ON u_group=pe_id
              WHERE u_id='?'",
@@ -138,21 +138,6 @@ class DBUser extends Database implements Pagable
             return false;
         }
         return self::getSingleRow($res);
-    }
-    public static function addTemporaryUser($login, $jmeno, $prijmeni, $narozeni)
-    {
-        self::query(
-            "INSERT INTO users
-                (u_login,u_pass,u_jmeno,u_prijmeni,u_narozeni,u_confirmed,u_temporary,u_system,u_group)
-            VALUES ('?','','?','?','?','1','1','1','0')",
-            $login, $jmeno, $prijmeni, $narozeni
-        );
-        $user_id = self::getInsertId();
-
-        self::query("INSERT INTO pary (p_id_partner, p_archiv) VALUES ('" . $user_id . "','0')");
-        $par_id = self::getInsertId();
-
-        return [$user_id, $par_id];
     }
 
     public static function confirmUser($id, $group, $skupina = '1')

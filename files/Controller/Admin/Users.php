@@ -255,62 +255,6 @@ class Controller_Admin_Users extends Controller_Admin
         ]);
     }
 
-    public function temporary($request)
-    {
-        $jmeno = $request->post('jmeno');
-        $prijmeni = $request->post('prijmeni');
-        $narozeni = $this->date('narozeni')->getPost($request);
-
-        $login = preg_replace('/[^a-zA-Z0-9.-_]*/', '', strtolower($prijmeni))
-               . '_'
-               . preg_replace('/[^a-zA-Z0-9.-_]*/', '', strtolower($jmeno));
-
-        if (!($id = DBUser::getUserByFullName($jmeno, $prijmeni)) &&
-            !($id = DBUser::getUserID($login))
-        ) {
-            list($user_id, $par_id) = DBUser::addTemporaryUser($login, $jmeno, $prijmeni, $narozeni);
-
-            header('Content-Type: application/json');
-            echo json_encode(
-                [
-                    'user_id' => $user_id,
-                    'par_id' => $par_id,
-                    'jmeno' => $jmeno,
-                    'prijmeni' => $prijmeni,
-                    'narozeni' => (string) $narozeni,
-                    'rok' => $narozeni->getYear()
-                ]
-            );
-        } else {
-            if (is_array($id)) {
-                $id = $id['u_id'];
-            }
-
-            $data = DBUser::getUserData($id);
-            $partner = DBPary::getLatestPartner($data['u_id'], $data['u_pohlavi']);
-            if ($partner && $partner['p_id']) {
-                $par_id = $partner['p_id'];
-            } else {
-                $par_id = DBPary::noPartner($data['u_id']);
-            }
-
-            $narozeni = explode('-', $data['u_narozeni']);
-
-            header('Content-Type: application/json');
-            echo json_encode(
-                [
-                    'user_id' => $data['u_id'],
-                    'par_id' => $par_id,
-                    'jmeno' => $data['u_jmeno'],
-                    'prijmeni' => $data['u_prijmeni'],
-                    'narozeni' => $data['u_narozeni'],
-                    'rok' => array_shift($narozeni)
-                ]
-            );
-        }
-        exit;
-    }
-
     private function displayOverview($request)
     {
         $groupOptions = ['all' => 'všechna'];
