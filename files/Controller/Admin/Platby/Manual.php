@@ -120,14 +120,13 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
     private function getCategories()
     {
         $categories = parent::getCategoryLookup(false, false, true);
-        foreach ($categories as $key => &$array) {
-            if (strpos($key, 'group_') !== false) {
-                $array = "{$array['pg_name']}:";
-            } else {
-                $array = "{$array['pc_symbol']} - {$array['pc_name']}";
+        $res = [];
+        foreach ($categories as $key => $array) {
+            if (strpos($key, 'group_') === false) {
+                $res[$key] = "{$array['pc_symbol']} - {$array['pc_name']}";
             }
         }
-        return $categories;
+        return $res;
     }
 
     private function getUsers()
