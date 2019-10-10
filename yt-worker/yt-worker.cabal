@@ -1,7 +1,7 @@
 cabal-version:       2.0
 name:                yt-worker
 version:             0.1.0.0
-license:             BSD-3-Clause
+license:             BSD3
 author:              Jakub Zárybnický
 maintainer:          jakub@zarybnicky.com
 build-type:          Simple

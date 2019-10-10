@@ -10,10 +10,9 @@
     <form method="POST" action="">
         <?= $this->userSelect()
                  ->name('partner')
-                 ->tmpSwitch(false)
                  ->users($this->users) ?>
         <?= $this->submit('Požádat o partnerství')->data('action', 'confirm') ?>
-        <?php if ($this->havePartner): ?>
+        <?php if ($this->havePartner) : ?>
             <?= $this->submit('Rozejít se')->data('action', 'dumpthem') ?>
         <?php endif ?>
         <a class="btn btn-outline-primary" href="/member/profil/par">Zpět</a>

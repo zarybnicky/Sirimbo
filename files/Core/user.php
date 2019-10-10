@@ -137,14 +137,12 @@ class User
 
     public static function getZaplaceno($par = false)
     {
-        return true;
-
-        // $paidSelf = DBPlatby::hasPaidMemberFees($_SESSION['id']);
-        // if ($par && $_SESSION['partner']) {
-        //     return $paidSelf && DBPlatby::hasPaidMemberFees($_SESSION['partner']);
-        // } else {
-        //     return $paidSelf;
-        // }
+        $paidSelf = DBPlatby::hasPaidMemberFees($_SESSION['id']);
+        if ($par && $_SESSION['partner']) {
+            return $paidSelf && DBPlatby::hasPaidMemberFees($_SESSION['partner']);
+        } else {
+            return $paidSelf;
+        }
     }
 
     public static function getAgeGroup($year)

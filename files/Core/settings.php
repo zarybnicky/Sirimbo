@@ -88,8 +88,6 @@ if (DEBUG) {
     error_reporting(-1);
 }
 
-define('AKTUALITY_CLANKY', 1);
-define('AKTUALITY_KRATKE', 3);
 define('THUMBNAIL_MAX', 150);
 
 define('P_NONE', 1);

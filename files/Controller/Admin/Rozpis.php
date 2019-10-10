@@ -165,7 +165,6 @@ class Controller_Admin_Rozpis extends Controller_Admin
             'header' => 'Správa rozpisů',
             'subheader' => ($this->action == 'add' ? 'Přidat' : 'Upravit') . ' rozpis',
             'action' => $request->getAction(),
-            'isAdmin' => $isAdmin,
             'treneri' => $treneri,
             'trener' => $request->post('trener') ?: ($data ? $data['r_trener'] : ''),
             'kde' => $request->post('kde') ?: ($data ? $data['r_kde'] : ''),

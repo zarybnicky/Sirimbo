@@ -7,21 +7,18 @@
              value="<?= $this->name ?>" />
       <small id="nameHelp" class="form-text text-muted">Nejvíce 255 znaků</small>
     </div>
-    <div class="form-group">
-      <label for="category">Kategorie</label>
-      <div class="form-check">
-        <?= $this->radio('category', 1)->set($this->category == 1)->label('Články') ?>
+    <?php if (isset($this->createdAt)) : ?>
+      <div class="form-group">
+        <label for="createdAt">Publikováno</label>
+        <?= $this->text('createdAt', $this->createdAt) ?>
       </div>
-      <div class="form-check">
-        <?= $this->radio('category', 3)->set($this->category == 3)->label('Krátké zprávy') ?>
-      </div>
-    </div>
+    <?php endif ?>
     <div class="form-group">
-      <label for="summary">Další info</label>
+      <label for="summary">Shrnutí</label>
       <textarea class="form-control" name="summary" rows="5"><?= $this->summary ?></textarea>
     </div>
     <div class="form-group">
-      <label for="text">Další info</label>
+      <label for="text">Text článku</label>
       <textarea class="form-control" name="text" rows="30"><?= $this->text ?></textarea>
     </div>
     <script src="/scripts/ckeditor/ckeditor.js"></script>

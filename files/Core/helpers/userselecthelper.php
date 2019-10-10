@@ -7,7 +7,6 @@ class UserSelectHelper
     private $_prijmeni;
     private $_users;
     private $_type;
-    private $_tmpSwitch;
     private $_selected;
 
     public function __construct()
@@ -32,7 +31,6 @@ class UserSelectHelper
         $this->_prijmeni = "u_prijmeni";
         $this->_users = [];
         $this->_type = 'user';
-        $this->_tmpSwitch = true;
     }
 
     public function name($name)
@@ -75,12 +73,6 @@ class UserSelectHelper
         return $this;
     }
 
-    public function tmpSwitch($value)
-    {
-        $this->_tmpSwitch = (bool) $value;
-        return $this;
-    }
-
     public function set($value)
     {
         $this->_selected = $value;
@@ -100,10 +92,6 @@ class UserSelectHelper
             $out .= '<option value="0">--- žádný ---</option>' . "\n";
         }
 
-        if ($this->_tmpSwitch) {
-            $out .= '<option value="temporary">--- dočasný ---</option>' . "\n";
-        }
-
         foreach ($this->_users as $user) {
             if (isset($user['u_narozeni'])) {
                 list($year) = explode('-', $user['u_narozeni']);
@@ -117,44 +105,6 @@ class UserSelectHelper
             $out .= '</option>' . "\n";
         }
         $out .= '</select>' . "\n";
-
-        if ($this->_tmpSwitch) {
-            ob_start();
-        ?>
-<noscript><br/><a href="/admin/users/temporary">Nový dočasný uživatel</a></noscript>
-<div class="new" style="display:none;text-align:right;">
-Jméno: <input type="text" name="jmeno" size="8" /><br/>
-Příjmení: <input type="text" name="prijmeni" size="8" /><br/>
-Datum narození:&nbsp;<br/>
-<?= Helper::instance()->date('narozeni')->render(), '<br/>' ?>
-<button type="submit">Uložit</button>
-</div>
-<div class="loading" style="display:none;"><img alt="Čekám na odezvu serveru..." src="/images/loading_bar.gif"/></div>
-<script type="text/javascript">
-(function($) {
-    $(function() {
-        if (typeof $.fn.tempUserSelect == "undefined" && typeof window.loadingUS == "undefined") {
-            window.loadingUS = true;
-            $.getScript("/scripts/tempUserSelect.js", function() {
-                $(".<?= $name ?>").tempUserSelect("<?= $this->_type ?>");
-                delete window.loadingUS;
-            });
-        } else {
-            $.delayed<?= $name ?> = function() {
-                if (typeof window.loadingUS == "undefined" && typeof $.fn.tempUserSelect != "undefined") {
-                    $(".<?= $name ?>").tempUserSelect("<?= $this->_type ?>");
-                } else {
-                    setTimeout(function() {$.delayed<?= $name?>();}, 200);
-                }
-            };
-            $.delayed<?= $name?>();
-        }
-    })
-}) (jQuery);
-</script>
-        <?php
-            $out .= ob_get_clean();
-        }
         $out .= '</div>';
 
         return $out;

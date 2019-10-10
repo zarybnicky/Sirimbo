@@ -5,8 +5,8 @@
         <div class="form-group pb-1">
           <input class="form-control" name="login" placeholder="Uživatelské jméno" />
         </div>
-        <div class="form-group pb-1">
-          <input class="form-control" name="password" placeholder="Heslo" type="password" />
+        <div class="form-group">
+          <input class="form-control" name="pass" placeholder="Heslo" type="password" />
         </div>
         <div class="form-group pb-2">
           <?= $this->submit('Přihlásit se')->data('action', 'login') ?>

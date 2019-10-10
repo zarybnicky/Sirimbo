@@ -5,8 +5,7 @@
       <label for="trewner">Trenér</label>
       <?= $this->userSelect('trener')
              ->users($this->users)
-             ->set($this->trener)
-             ->tmpSwitch($this->isAdmin) ?>
+             ->set($this->trener) ?>
     </div>
     <div class="form-group">
       <label for="pocet_hod">Počet hodin</label>

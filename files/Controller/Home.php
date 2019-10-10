@@ -7,7 +7,7 @@ class Controller_Home extends Controller_Abstract
             $this->redirect('/nabor');
         }
 
-        $articles = DBAktuality::getAktuality(AKTUALITY_CLANKY);
+        $articles = DBAktuality::getAktuality(1);
 
         $highlights = array_map(
             function ($val) {
