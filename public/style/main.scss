@@ -71,6 +71,9 @@ table.nocolor td, table.nocolor th { border: none; background: none; }
     display: none !important;
 }
 
+.bg-red {
+    background-color: $red;
+}
 $navbar-padding-x: 0;
 $navbar-padding-y: 0;
 .navbar.navbar-dark > .container {

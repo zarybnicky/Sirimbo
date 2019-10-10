@@ -2885,6 +2885,8 @@ table.nocolor td, table.nocolor th { border: none; background: none; }
 
 .dropdown-no-arrow::after { display: none !important; }
 
+.bg-red { background-color: #c90029; }
+
 .navbar.navbar-dark > .container { margin: 0; padding: 0; max-width: 100%; flex-wrap: wrap !important; }
 
 @media (max-width: 991.98px) { .navbar .container { padding: 0; }

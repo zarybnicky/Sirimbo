@@ -16,6 +16,9 @@ class NavbarItemHelper
         if (!is_array($item)) {
             return "<div class='$item'></div>";
         }
+        if (isset($item[3]) && $item[3] && !Permissions::check($item[3][0], $item[3][1])) {
+            return '';
+        }
         $active = $item[1] === ('/' . Database::$request->getURI())
             || (strlen($item[1]) > 1 && strpos('/' . Database::$request->getURI(), $item[1]) === 0);
         $active = $active ? ' active' : '';

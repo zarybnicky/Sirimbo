@@ -29,10 +29,10 @@
   <body>
     <div id="fb-root"></div>
 
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
+    <nav class="navbar navbar-expand-md navbar-dark bg-red sticky-top">
       <div class="container">
         <div class="container">
-          <h1 class="navbar-brand my-0 py-0 ml-lg-2 mx-3">
+          <h1 class="navbar-brand my-0 ml-lg-2 mx-3">
             <a href="/"><img alt="" src="/style/logo-wide-white.png" /></a>
           </h1>
           <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target=".navbars">

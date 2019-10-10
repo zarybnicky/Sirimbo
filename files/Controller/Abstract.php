@@ -14,17 +14,30 @@ abstract class Controller_Abstract implements Controller_Interface
         }
 
         echo $renderer->render(TEMPLATE, [
-            'navbar' => [[
-                ['Klub', '/', [
-                    ['Kluboví trenéři', '/oklubu/treneri/klubovi'],
-                    ['Externí trenéři', '/oklubu/treneri/externi'],
-                    ['Kde trénujeme', '/oklubu/saly'],
-                ]],
-                ['Aktuality', '/aktualne/clanky'],
-                ['Videa', '/video'],
-                ['Fotogalerie', '/fotogalerie'],
-                ['Kontakt', '/kontakt'],
-            ], [
+            'navbar' => $this->getNavbar(),
+            'content' => $content,
+            'meta' => isset($vars['meta']) ? $vars['meta'] : [],
+            'header' => isset($vars['header']) ? $vars['header'] : null,
+            'subheader' => isset($vars['subheader']) ? $vars['subheader'] : null,
+            'html_title' => isset($vars['html_title']) ? $vars['html_title'] : ''
+        ]);
+    }
+
+    private function getNavbar()
+    {
+        $menu = [[
+            ['Klub', '/', [
+                ['Kluboví trenéři', '/oklubu/treneri/klubovi'],
+                ['Externí trenéři', '/oklubu/treneri/externi'],
+                ['Kde trénujeme', '/oklubu/saly'],
+            ]],
+            ['Aktuality', '/aktualne/clanky'],
+            ['Videa', '/video'],
+            ['Fotogalerie', '/fotogalerie'],
+            ['Kontakt', '/kontakt'],
+        ]];
+        if (Permissions::check('nastenka', P_VIEW)) {
+            $menu[] = [
                 ['Nástěnka', '/member/home', []],
                 ['Rozpis', '/member/rozpis', []],
                 ['Nabídka', '/member/nabidka', []],
@@ -47,15 +60,11 @@ abstract class Controller_Abstract implements Controller_Interface
                     ['Video', '/admin/video', [], ['aktuality', P_OWNED]],
                     ['Dokumenty', '/admin/dokumenty', [], ['dokumenty', P_OWNED]],
                     ['Oprávnění', '/admin/permissions', [], ['permissions', P_OWNED]],
-                    ['Stránky', '/admin/site', [], ['site', P_OWNED]],
+                    ['Stránky', '/admin/site', [], ['users', P_ADMIN]],
                 ], ['nastenka', P_OWNED]]
-            ]],
-            'content' => $content,
-            'meta' => isset($vars['meta']) ? $vars['meta'] : [],
-            'header' => isset($vars['header']) ? $vars['header'] : null,
-            'subheader' => isset($vars['subheader']) ? $vars['subheader'] : null,
-            'html_title' => isset($vars['html_title']) ? $vars['html_title'] : ''
-        ]);
+            ];
+        }
+        return $menu;
     }
 
     public function __call($name, $args)
