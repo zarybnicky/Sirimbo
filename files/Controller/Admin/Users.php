@@ -84,12 +84,21 @@ class Controller_Admin_Users extends Controller_Admin
             $request->post('telefon'),
             (string) $this->date('narozeni')->getPost($request),
             $request->post('poznamky'),
+            $request->post('ulice'),
+            $request->post('popisne'),
+            $request->post('orientacni'),
+            $request->post('district'),
+            $request->post('city'),
+            $request->post('postal'),
+            $request->post('nationality'),
             $request->post('group'),
             $request->post('skupina'),
             $request->post('lock') ? '1' : '0',
             $request->post('ban') ? '1' : '0',
             '1',
-            $request->post('system') ? '1' : '0'
+            $request->post('system') ? '1' : '0',
+            $request->post('trener') ? '1' : '0',
+            $request->post('dancer') ? '1' : '0'
         );
         $this->redirect($request->post('returnURI') ?: '/admin/users');
     }
@@ -390,7 +399,9 @@ class Controller_Admin_Users extends Controller_Admin
             'ban' => $request->post('ban') ?: '',
             'system' => $request->post('system') ?: '',
             'group' => $request->post('group') ?: '',
-            'skupina' => $request->post('skupina') ?: ''
+            'skupina' => $request->post('skupina') ?: '',
+            'dancer' => $request->post('dancer') ?: '',
+            'trener' => $request->post('trener') ?: ''
         ]);
     }
 

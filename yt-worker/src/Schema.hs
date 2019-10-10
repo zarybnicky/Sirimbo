@@ -332,7 +332,7 @@ User sql=users
   email Text sql=u_email
   phone Text sql=u_telefon sqltype=CHAR(17)
   birthDate Day sql=u_narozeni
-  notes Text sql=u_poznamky
+  notes Text sql=u_poznamky default=''
   updatedAt UTCTime sql=u_timestamp sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   level Int sql=u_level default=0 sqltype=TINYINT(3)
   paymentGroup PaymentGroupId sql=u_group
@@ -341,8 +341,19 @@ User sql=users
   ban Text sql=u_ban sqltype=enum('0','1') default='0'
   lock Text sql=u_lock sqltype=enum('0','1') default='0'
   confirmed Text sql=u_confirmed sqltype=enum('0','1') default='0'
-  temporary Text sql=u_temporary sqltype=enum('0','1') default='0'
   system Text sql=u_system sqltype=enum('0','1') default='0'
+  street Text sql=u_street
+  conscriptionNumber Text sql=u_conscription_number default=''
+  orientationNumber Text sql=u_orientation_number default=''
+  district Text sql=u_district default=''
+  city Text sql=u_city
+  postalCode Text sql=u_postal_code
+  nationality Text sql=u_nationality
+  memberSince UTCTime Maybe sql=u_member_since
+  memberUntil UTCTime Maybe sql=u_member_until default=NULL
+  createdAt UTCTime sql=u_created_at sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
+  teacher Text sql=u_teacher sqltype=enum('0','1') default='0'
+  gdprSignedAt UTCTime Maybe sql=u_gdpr_signed_at
   deriving Show
 
 Video sql=video

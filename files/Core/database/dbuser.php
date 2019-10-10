@@ -156,34 +156,38 @@ class DBUser extends Database implements Pagable
         return true;
     }
 
-    public static function setUserData($id, $jmeno, $prijmeni, $pohlavi, $email, $telefon,
-            $narozeni, $poznamky, $group, $skupina, $lock, $ban, $system
+    public static function setUserData(
+        $id, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $narozeni, $poznamky,
+        $street, $popisne, $orientacni, $district, $city, $postal, $nationality,
+        $group, $skupina, $lock, $ban, $system, $dancer, $trener
     ) {
         self::query(
-            "UPDATE users SET " .
-            "u_jmeno='?',u_prijmeni='?',u_pohlavi='?',u_email='?'," .
-            "u_telefon='?',u_narozeni='?',u_poznamky='?',u_group='?'," .
-            "u_skupina='?',u_lock='?',u_ban='?',u_system='?'" .
-            " WHERE u_id='?'",
+            "UPDATE users SET u_jmeno='?',u_prijmeni='?',u_pohlavi='?',u_email='?'," .
+            "u_telefon='?',u_narozeni='?',u_poznamky='?',u_street='?',u_conscription_number='?'," .
+            "u_orientation_number='?',u_district='?',u_city='?',u_postal_code='?'," .
+            "u_nationality='?',u_group='?',u_skupina='?',u_lock='?',u_ban='?',u_system='?',u_dancer='?'" .
+            ",u_trener='?' WHERE u_id='?'",
             $jmeno, $prijmeni, $pohlavi, $email, $telefon, $narozeni, $poznamky,
-            $group, $skupina, $lock, $ban, $system, $id
+            $street, $popisne, $orientacni, $district, $city, $postal, $nationality,
+            $group, $skupina, $lock, $ban, $system, $dancer, $trener, $id
         );
         return true;
     }
 
     public static function addUser(
-        $login, $pass, $jmeno, $prijmeni, $pohlavi, $email, $telefon,
-        $narozeni, $poznamky, $group, $skupina, $lock, $ban,
-        $confirmed, $system
+        $login, $pass, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $narozeni, $poznamky,
+        $street, $popisne, $orientacni, $district, $city, $postal, $nationality,
+        $group, $skupina, $lock, $ban, $confirmed, $system, $dancer, $trener
     ) {
         self::query(
             "INSERT INTO users " .
-            "(u_login,u_pass,u_jmeno,u_prijmeni,u_pohlavi,u_email,u_telefon,u_narozeni," .
-            "u_poznamky,u_group,u_skupina,u_lock,u_ban,u_confirmed,u_system) VALUES " .
-            "('?','?','?','?','?','?','?','?','?','?','?','?','?','?','?')",
-            $login, $pass, $jmeno, $prijmeni, $pohlavi, $email, $telefon,
-            $narozeni, $poznamky, $group, $skupina, $lock, $ban,
-            $confirmed, $system
+            "(u_login,u_pass,u_jmeno,u_prijmeni,u_pohlavi,u_email,u_telefon,u_narozeni,u_poznamky," .
+            "u_street,u_conscription_number,u_orientation_number,u_district,u_city,u_postal_code,u_nationality" .
+            "u_group,u_skupina,u_lock,u_ban,u_confirmed,u_system,u_dancer,u_trener) VALUES " .
+            "('?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?')",
+            $login, $pass, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $narozeni, $poznamky,
+            $street, $popisne, $orientacni, $district, $city, $postal, $nationality,
+            $group, $skupina, $lock, $ban, $confirmed, $system, $dancer, $trener
         );
         $uid = self::getInsertId();
         self::query("INSERT INTO pary (p_id_partner, p_id_partnerka) VALUES ('$uid', '0')");
@@ -210,7 +214,7 @@ class DBUser extends Database implements Pagable
     public static function getUsers($group = null)
     {
         $res = self::query(
-            "SELECT users.*,skupiny.* FROM users" .
+            "SELECT users.*, skupiny.* FROM users" .
             " LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id" .
             (($group == null) ? '' : " WHERE u_group='$group'") .
             " ORDER BY u_prijmeni"
@@ -263,7 +267,7 @@ class DBUser extends Database implements Pagable
     {
         list($module, $permission) = self::escape($module, $permission);
         $res = self::query(
-            "SELECT users.*,skupiny.* FROM users
+            "SELECT users.*, skupiny.* FROM users
                 LEFT JOIN permissions ON u_group=pe_id
                 LEFT JOIN skupiny ON u_skupina=s_id
             WHERE pe_$module >= '$permission'
