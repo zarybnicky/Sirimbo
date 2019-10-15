@@ -4,6 +4,7 @@ class SelectHelper
     protected $name;
     protected $value;
     protected $options;
+    protected $cls;
 
     public function select($name = null)
     {

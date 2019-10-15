@@ -1,7 +1,7 @@
 <?php
 class NavbarItemHelper
 {
-    protected $text;
+    protected $item;
 
     public function navbarItem($item)
     {

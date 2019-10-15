@@ -91,7 +91,7 @@ class Database
         return self::$connection->insert_id;
     }
 
-    protected function databaseError($onConnection = false)
+    protected static function databaseError($onConnection = false)
     {
         Log::write('MySQL Error: ' . self::$connection->errno . ': ' . self::$connection->error);
         if ($onConnection) {

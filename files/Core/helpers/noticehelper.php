@@ -1,6 +1,7 @@
 <?php
 class NoticeHelper
 {
+    protected $type;
     protected $text;
 
     public function notice($text, $type = 'info')

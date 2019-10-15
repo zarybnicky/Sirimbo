@@ -6,25 +6,22 @@ class Dispatcher
         $parts = array_map('ucfirst', explode('/', $url));
         array_unshift($parts, 'Controller');
 
-        $file = FILES . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $parts) . '.php';
         $class = implode('_', $parts);
 
-        while (!file_exists($file)) {
+        while (!class_exists($class)) {
             array_pop($parts);
             if (empty($parts)) {
-                $file = FILES . DIRECTORY_SEPARATOR . 'Controller' . DIRECTORY_SEPARATOR . 'Home.php';
                 $class = 'Controller_Home';
                 break;
             }
-            $file = FILES . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $parts) . '.php';
             $class = implode('_', $parts);
         }
-        include $file;
         if (!class_exists($class)) {
             throw new NotFoundRightException('Class "' . $class . '" not found');
         }
         return new $class();
     }
+
     public function dispatch($request)
     {
         $controller = $this->getController($request->getLiteralURI());

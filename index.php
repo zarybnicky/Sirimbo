@@ -25,14 +25,8 @@ ob_start();
 session_start();
 session_regenerate_id();
 
-require 'files/autoload.php';
+require 'vendor/autoload.php';
 require 'files/Core/settings.php';
-require 'files/Core/utils.php';
-require 'files/Core/debug.php';
-require 'files/Core/log.php';
-require 'files/Core/request.php';
-require 'files/Controller/Interface.php';
-require 'files/Controller/Abstract.php';
 
 $request = new Request(
     $_SERVER['REQUEST_URI'],

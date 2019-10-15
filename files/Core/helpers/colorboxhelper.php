@@ -1,5 +1,5 @@
 <?php
-class ColorBoxHelper
+class ColorboxHelper
 {
     protected $color;
     protected $description;

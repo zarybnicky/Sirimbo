@@ -187,12 +187,14 @@ class User
 
     public static function register(
         $login, $pass, $name, $surname, $pohlavi, $email, $telefon, $narozeni,
-        $poznamky, $skupina
+        $poznamky, $street, $popisne, $orientacni, $district, $city, $postal,
+        $nationality, $skupina, $dancer
     ) {
         DBUser::addUser(
             $login, User::crypt($pass), $name, $surname, $pohlavi, $email,
-            $telefon, $narozeni, $poznamky, '0', $skupina, '0', '0', '0', '0',
-            '0'
+            $telefon, $narozeni, $poznamky, $street, $popisne, $orientacni,
+            $district, $city, $postal, $nationality,
+            '0', $skupina, '0', '0', '0', '0', $dancer ? '1' : '0', '0'
         );
 
         Mailer::newUserNotice(DEFAULT_ADMIN_MAIL, $login);
@@ -250,11 +252,19 @@ class User
                 '',
                 $u['u_prijmeni'],
                 csvDate($u['u_narozeni']),
-                '', '', '', '', '', '',
-                '', '', '', '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
                 '66',
                 $u['u_dancer'] ? '1' : '0',
-                $u['u_level'] > 3 ? '1' : '0',
+                $u['u_trener'] ? '1' : '0',
                 csvDate($platby[$u['u_id']]),
                 '',
                 '',

@@ -3,6 +3,7 @@ class PersonHelper
 {
     protected $id;
     protected $name;
+    protected $nameR;
 
     public function person($user)
     {

@@ -5,6 +5,7 @@ class SubmitHelper
     protected $name;
     protected $value;
     protected $style;
+    protected $cls;
 
     public function submit($text)
     {

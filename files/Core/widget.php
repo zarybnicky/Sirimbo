@@ -4,7 +4,7 @@ class Widget extends Tree
     protected $stylesheets = [];
     protected $scripts = [];
 
-    public function __construct(array $attributes = [], $child = [])
+    public function __construct(array $attributes = [])
     {
         $children = [];
         array_walk_recursive(

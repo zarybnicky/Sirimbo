@@ -58,13 +58,13 @@ class DateHelper
 
     public function setFromDate($d)
     {
-        $this->date = $this->setDate($d);
+        $this->date = $this->createDate($d);
         return $this;
     }
 
     public function setToDate($d)
     {
-        $this->dateTo = $this->setDate($d);
+        $this->dateTo = $this->createDate($d);
         return $this;
     }
 

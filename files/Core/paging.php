@@ -14,6 +14,7 @@ class Paging
     private $_pagesInRange;
     private $_valid = false;
     private $_source;
+    private $_sourceOpts;
 
     public function __construct($source, $options = null)
     {

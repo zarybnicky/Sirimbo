@@ -6,6 +6,7 @@ class RadioHelper
     protected $state;
     protected $readonly;
     protected $label;
+    protected $cls;
 
     public function radio($name, $value = null)
     {

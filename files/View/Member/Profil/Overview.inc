@@ -4,7 +4,7 @@
     <a class="btn btn-outline-primary" href="/member/profil/edit">Upravit osobní údaje</a>
     <a class="btn btn-outline-primary" href="/member/profil/heslo">Změnit heslo</a>
     <a class="btn btn-outline-primary" href="/member/profil/par/partner">Změnit partnera</a>
-    <?php if ($this->coupleData && $this->coupleData['u_id']) : ?>
+    <?php if (isset($this->coupleData) && $this->coupleData['u_id']) : ?>
       <a class="btn btn-outline-primary" href="/member/profil/par/body">Změnit třídu a body</a>
     <?php endif ?>
     <a class="btn btn-outline-primary" href="/logout">Odhlásit se</a>
@@ -15,7 +15,7 @@
     Věková kategorie: <?= $this->ageGroup ?>
   </div>
 
-  <?php if ($this->coupleData && $this->coupleData['u_id']) : ?>
+  <?php if (isset($this->coupleData) && $this->coupleData['u_id']) : ?>
     <h3>Pár</h3>
     <?php $p = $this->coupleData ?>
     <div class="mb-2">

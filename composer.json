@@ -1,0 +1,20 @@
+{
+  "name": "zarybnicky/tkolymp.cz",
+  "type": "project",
+  "require": {
+    "phpstan/phpstan": "^0.11.16"
+  },
+  "autoload": {
+    "files": [
+      "files/Core/utils.php",
+      "files/Core/debug.php"
+    ],
+    "classmap": [
+      "files/Core/",
+      "files/Core/database/",
+      "files/Core/helpers/",
+      "files/Core/types",
+      "files/Controller"
+    ]
+  }
+}

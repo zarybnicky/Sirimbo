@@ -3,7 +3,7 @@ class Tag extends Widget
 {
     protected $name = '';
 
-    public function __construct($name, array $attributes = [], $child = [])
+    public function __construct($name, array $attributes = [])
     {
         parent::__construct(
             $attributes,
