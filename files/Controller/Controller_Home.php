@@ -3,10 +3,6 @@ class Controller_Home extends Controller_Abstract
 {
     public function view($request)
     {
-        if (!$request->getURI() && NABOR) {
-            $this->redirect('/nabor');
-        }
-
         $articles = DBAktuality::getAktuality(1);
 
         $highlights = array_map(

@@ -1,16 +1,18 @@
 <?php
-class Controller_Admin_Nabidka_Detail extends Controller_Admin_Nabidka
+class Controller_Admin_Nabidka_Detail extends Controller_Abstract
 {
     public function __construct()
     {
-        parent::__construct();
         Permissions::checkError('nabidka', P_OWNED);
     }
 
     public function view($request)
     {
-        $id = $request->getId();
-        if (!$id || !($data = DBNabidka::getSingleNabidka($id))) {
+        if (!$id = $request->getId()) {
+            $this->redirect()->warning('Nabídka s takovým ID neexistuje');
+            $this->redirect('/admin/nabidka');
+        }
+        if (!$data = DBNabidka::getSingleNabidka($id)) {
             $this->redirect()->warning('Nabídka s takovým ID neexistuje');
             $this->redirect('/admin/nabidka');
         }

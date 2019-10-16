@@ -1,9 +1,8 @@
 <?php
-class Controller_Admin_Aktuality extends Controller_Admin
+class Controller_Admin_Aktuality extends Controller_Abstract
 {
     public function __construct()
     {
-        parent::__construct();
         Permissions::checkError('aktuality', P_OWNED);
     }
 
@@ -65,8 +64,11 @@ class Controller_Admin_Aktuality extends Controller_Admin
 
     public function edit($request)
     {
-        $id = $request->getId();
-        if (!$id || !($data = DBAktuality::getSingleAktualita($id))) {
+        if (!$id = $request->getId()) {
+            $this->redirect()->warning('Článek s takovým ID neexistuje');
+            $this->redirect('/admin/aktuality');
+        }
+        if (!$data = DBAktuality::getSingleAktualita($id)) {
             $this->redirect()->warning('Článek s takovým ID neexistuje');
             $this->redirect('/admin/aktuality');
         }
@@ -74,7 +76,8 @@ class Controller_Admin_Aktuality extends Controller_Admin
         Permissions::checkError('aktuality', P_OWNED, $data['at_kdo']);
 
         $error = false;
-        if ($request->post() && ($date = DateTime::createFromFormat('j. n. Y H:i', $request->post('createdAt'))) === false) {
+        $date = DateTime::createFromFormat('j. n. Y H:i', $request->post('createdAt'));
+        if ($request->post() && $date === false) {
             $this->redirect()->danger('Špatný formát data "Publikováno" (D. M. RRRR HH:SS)');
             $error = true;
         }

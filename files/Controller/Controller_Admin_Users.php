@@ -1,9 +1,8 @@
 <?php
-class Controller_Admin_Users extends Controller_Admin
+class Controller_Admin_Users extends Controller_Abstract
 {
     public function __construct()
     {
-        parent::__construct();
         Permissions::checkError('users', P_OWNED);
     }
 
@@ -106,8 +105,11 @@ class Controller_Admin_Users extends Controller_Admin
     public function edit($request)
     {
         Permissions::checkError('users', P_ADMIN);
-        $id = $request->getId();
-        if (!$id || !($data = DBUser::getUserData($id))) {
+        if (!$id = $request->getId()) {
+            $this->redirect()->warning('Uživatel s takovým ID neexistuje');
+            $this->redirect($request->post('returnURI') ?: '/admin/users');
+        }
+        if (!$data = DBUser::getUserData($id)) {
             $this->redirect()->warning('Uživatel s takovým ID neexistuje');
             $this->redirect($request->post('returnURI') ?: '/admin/users');
         }
@@ -317,8 +319,9 @@ class Controller_Admin_Users extends Controller_Admin
         $data = array_map(
             function ($item) use ($action, $groupOptions, &$i, $skupinySelect) {
                 $out = [
-                    'checkBox' => $this->editLink('/admin/users/edit/' . $item['u_id'])
-                    . '&nbsp;' . $this->removeLink('/admin/users/remove/' . $item['u_id']),
+                    // 'checkBox' => $this->editLink('/admin/users/edit/'
+                    // . $item['u_id'])
+                    'checkBox' => '&nbsp;' . $this->removeLink('/admin/users/remove/' . $item['u_id']),
                     'index' => ++$i . '. ',
                     'varSymbol' => User::varSymbol($item['u_id']),
                     'fullName' => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],

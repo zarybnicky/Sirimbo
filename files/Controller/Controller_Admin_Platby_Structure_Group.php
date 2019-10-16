@@ -1,5 +1,5 @@
 <?php
-class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_Structure
+class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
 {
     public function __construct()
     {
@@ -65,8 +65,11 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
 
     public function edit($request)
     {
-        $id = $request->getId();
-        if (!$id || !($data = DBPlatbyGroup::getSingle($id))) {
+        if (!$id = $request->getId()) {
+            $this->redirect()->warning('Kategorie s takovým ID neexistuje');
+            $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/group');
+        }
+        if (!$data = DBPlatbyGroup::getSingle($id)) {
             $this->redirect()->warning('Kategorie s takovým ID neexistuje');
             $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/group');
         }
@@ -125,8 +128,11 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
 
     public function remove($request)
     {
-        $id = $request->getId();
-        if (!$id || !($data = DBPlatbyGroup::getSingle($id))) {
+        if (!$id = $request->getId()) {
+            $this->redirect()->warning('Kategorie s takovým ID neexistuje');
+            $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/group');
+        }
+        if (!$data = DBPlatbyGroup::getSingle($id)) {
             $this->redirect()->warning('Kategorie s takovým ID neexistuje');
             $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/group');
         }
@@ -212,7 +218,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby_St
                     'specific' => $item['pc_symbol'],
                     'amount' => ((float) $item['pc_amount'] * (float) $data['pg_base']),
                     'dueDate' => (new Date($item['pc_date_due']))->getDate(Date::FORMAT_SIMPLE_SPACED),
-                    'validDate' => $this->getDateDisplay($item['pc_valid_from'], $item['pc_valid_to']),
+                    'validDate' => formatRange($item['pc_valid_from'], $item['pc_valid_to']),
                     'usePrefix' => '&nbsp;' . ($item['pc_use_prefix'] ? '&#10003;' : '&#10799;'),
                     'useBase' => '&nbsp;' . ($item['pc_use_base'] ? '&#10003;' : '&#10799;'),
                     'archive' => '&nbsp;' . ($item['pc_archive'] ? '&#10003;' : '&#10799;')

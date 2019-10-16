@@ -1,9 +1,8 @@
 <?php
-class Controller_Member_Dokumenty extends Controller_Member
+class Controller_Member_Dokumenty extends Controller_Abstract
 {
     public function __construct()
     {
-        parent::__construct();
         Permissions::checkError('dokumenty', P_VIEW);
     }
 

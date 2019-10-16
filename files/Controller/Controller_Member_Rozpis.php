@@ -1,9 +1,8 @@
 <?php
-class Controller_Member_Rozpis extends Controller_Member
+class Controller_Member_Rozpis extends Controller_Abstract
 {
     public function __construct()
     {
-        parent::__construct();
         Permissions::checkError('rozpis', P_VIEW);
     }
 
@@ -92,9 +91,8 @@ class Controller_Member_Rozpis extends Controller_Member
         }
         if ($request->post('action') == 'signup') {
             // if (!User::getZaplaceno(true)) {
-            if (false) {
-                $this->redirect()->warning('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
-            } elseif ($lesson['ri_partner']) {
+            // $this->redirect()->warning('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
+            if ($lesson['ri_partner']) {
                 $this->redirect()->warning('Lekce už je obsazená');
             } else {
                 DBRozpis::rozpisSignUp($request->post('ri_id'), User::getParID());

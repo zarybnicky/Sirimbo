@@ -1,9 +1,8 @@
 <?php
-class Controller_Admin_Platby extends Controller_Admin
+class Controller_Admin_Platby extends Controller_Abstract
 {
     public function __construct()
     {
-        parent::__construct();
         Permissions::checkError('platby', P_OWNED);
     }
 

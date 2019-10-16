@@ -1,9 +1,8 @@
 <?php
-class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
+class Controller_Admin_Galerie_Directory extends Controller_Abstract
 {
     public function __construct()
     {
-        parent::__construct();
         Permissions::checkError('galerie', P_OWNED);
     }
 
@@ -44,7 +43,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
         }
         $parent = DBGalerie::getSingleDir($request->post('parent'));
         $dirPath = $parent['gd_path'] . DIRECTORY_SEPARATOR
-                 . $this->_sanitizePathname($request->post('name'));
+                 . sanitizePathname($request->post('name'));
         mkdir($dirPath, 0777, true);
 
         DBGalerie::addDir(
@@ -82,8 +81,8 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
         }
         $parent = DBGalerie::getSingleDir($request->post('parent'));
         $newPath = $parent['gd_path'] . DIRECTORY_SEPARATOR
-                 . $this->_sanitizePathname(
-                     $this->_getCanonicalName($request->post('name'))
+                 . sanitizePathname(
+                     getCanonicalName($request->post('name'))
                  );
 
         if ($data['gd_path'] != $newPath) {
@@ -125,8 +124,8 @@ class Controller_Admin_Galerie_Directory extends Controller_Admin_Galerie
             $data = DBGalerie::getSingleDir($id);
             DBGalerie::removeDir($id);
             if ($data['gd_path']) {
-                $this->_rrmdir(GALERIE . DIRECTORY_SEPARATOR . $data['gd_path']);
-                $this->_rrmdir(GALERIE_THUMBS . DIRECTORY_SEPARATOR . $data['gd_path']);
+                rrmdir(GALERIE . DIRECTORY_SEPARATOR . $data['gd_path']);
+                rrmdir(GALERIE_THUMBS . DIRECTORY_SEPARATOR . $data['gd_path']);
             }
             $this->redirect('/admin/galerie');
         }

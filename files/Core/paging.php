@@ -25,7 +25,6 @@ class Paging
         $this->_sourceOpts = $options;
         $this->_totalItems = call_user_func([$source, 'getCount'], $options);
         $this->_recalculate();
-        return $this;
     }
 
     public function setCurrentPage($p)

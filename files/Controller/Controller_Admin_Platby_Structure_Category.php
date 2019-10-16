@@ -1,5 +1,5 @@
 <?php
-class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby_Structure
+class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
 {
     public function __construct()
     {
@@ -52,7 +52,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                     'name' => $item['pc_name'],
                     'symbol' => $item['pc_symbol'],
                     'amount' => ($item['pc_amount'] . ($item['pc_use_base'] ? ' * ?' : '')) . ' Kč',
-                    'validDate' => $this->getDateDisplay($item['pc_valid_from'], $item['pc_valid_to']),
+                    'validDate' => formatRange($item['pc_valid_from'], $item['pc_valid_to']),
                     'buttons' => (
                         $this->editLink('/admin/platby/structure/category/edit/' . $item['pc_id'])
                         . '&nbsp;' . $this->getDuplicateCategoryButton($item['pc_id'])
@@ -62,6 +62,12 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             },
             DBPlatbyCategory::get($archived)
         );
+    }
+
+    protected function getDuplicateCategoryButton($id)
+    {
+        return $this->submit('<img title="Duplikovat" alt="Duplikovat" src="/style/icon-files-o.png" />')
+            ->data('category_duplicate', $id)->cls('a');
     }
 
     public function add($request)
@@ -113,8 +119,11 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
 
     public function edit($request)
     {
-        $id = $request->getId();
-        if (!$id || !($data = DBPlatbyCategory::getSingle($id))) {
+        if (!$id = $request->getId()) {
+            $this->redirect()->warning('Kategorie s takovým ID neexistuje');
+            $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/category');
+        }
+        if (!$data = DBPlatbyCategory::getSingle($id)) {
             $this->redirect()->warning('Kategorie s takovým ID neexistuje');
             $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/category');
         }
@@ -195,8 +204,11 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
 
     public function remove($request)
     {
-        $id = $request->getId();
-        if (!$id || !($data = DBPlatbyCategory::getSingle($id))) {
+        if (!$id = $request->getId()) {
+            $this->redirect()->warning('Specifický symbol s takovým ID neexistuje');
+            $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/category');
+        }
+        if (!$data = DBPlatbyCategory::getSingle($id)) {
             $this->redirect()->warning('Specifický symbol s takovým ID neexistuje');
             $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/category');
         }

@@ -31,7 +31,6 @@ class CSVParser implements Iterator
             $this->_headers = $this->current();
             $this->next();
         }
-        return $this;
     }
     public function delimiter($char = null) {
         if ($char === null)

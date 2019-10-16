@@ -70,29 +70,26 @@ class UploadHelper
 
             case UPLOAD_ERR_INI_SIZE:
             case UPLOAD_ERR_FORM_SIZE:
-                $logError = false;
                 $errorMessage = 'Soubor "' . $data['name'] . '" byl příliš velký, '
                     . 'největši povolená velikost souboru je '
                     . ini_get('upload_max_filesize') . 'B';
+                $this->_invalidFiles[] = array_merge($data, ['error_message' => $errorMessage]);
                 break;
 
             case UPLOAD_ERR_PARTIAL:
-                $logError = false;
                 $errorMessage = 'Nahrávání souboru bylo přerušeno, zkuste to prosím znovu.';
+                $this->_invalidFiles[] = array_merge($data, ['error_message' => $errorMessage]);
                 break;
 
             case UPLOAD_ERR_CANT_WRITE:
             case UPLOAD_ERR_EXTENSION:
             case UPLOAD_ERR_NO_TMP_DIR:
-                $logError = true;
                 $errorMessage = 'Došlo k chybě při ukládání souboru (kód: '
                     . $error . '), kontaktujte prosím administrátora.';
+                Log::write($errorMessage);
+                $this->_invalidFiles[] = array_merge($data, ['error_message' => $errorMessage]);
                 break;
         }
-        if (isset($logError) && $logError) {
-            Log::write($errorMessage);
-        }
-        $this->_invalidFiles[] = array_merge($data, ['error_message' => $errorMessage]);
         return false;
     }
 

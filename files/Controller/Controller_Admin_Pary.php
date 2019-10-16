@@ -1,9 +1,8 @@
 <?php
-class Controller_Admin_Pary extends Controller_Admin
+class Controller_Admin_Pary extends Controller_Abstract
 {
     public function __construct()
     {
-        parent::__construct();
         Permissions::checkError('pary', P_OWNED);
     }
 
@@ -53,8 +52,11 @@ class Controller_Admin_Pary extends Controller_Admin
 
     public function edit($request)
     {
-        $id = $request->getId();
-        if (!$id || !($data = DBPary::getSinglePar($id))) {
+        if (!$id = $request->getId()) {
+            $this->redirect()->warning('Pár s takovým ID neexistuje');
+            $this->redirect('/admin/pary');
+        }
+        if (!$data = DBPary::getSinglePar($id)) {
             $this->redirect()->warning('Pár s takovým ID neexistuje');
             $this->redirect('/admin/pary');
         }

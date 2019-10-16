@@ -73,8 +73,11 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
 
     public function edit($request)
     {
-        $id = $request->getId();
-        if (!$id || !($data = DBPlatbyItem::getSingle($id))) {
+        if (!$id = $request->getId()) {
+            $this->redirect()->warning('Platba s takovým ID neexistuje');
+            $this->redirect('/admin/platby/items');
+        }
+        if (!$data = DBPlatbyItem::getSingle($id)) {
             $this->redirect()->warning('Platba s takovým ID neexistuje');
             $this->redirect('/admin/platby/items');
         }

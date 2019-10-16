@@ -1,9 +1,8 @@
 <?php
-class Controller_Admin_Video_Source extends Controller_Admin
+class Controller_Admin_Video_Source extends Controller_Abstract
 {
     public function __construct()
     {
-        parent::__construct();
         Permissions::checkError('aktuality', P_OWNED);
     }
 

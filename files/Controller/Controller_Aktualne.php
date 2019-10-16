@@ -3,8 +3,10 @@ class Controller_Aktualne extends Controller_Abstract
 {
     public function view($request)
     {
-        $id = $request->getID();
-        if (!$id || !($data = DBAktuality::getSingleAktualita($id))) {
+        if (!($id = $request->getID())) {
+            $this->redirect('/aktualne/posledni');
+        }
+        if (!($data = DBAktuality::getSingleAktualita($id))) {
             $this->redirect('/aktualne/posledni');
         }
 
@@ -33,7 +35,6 @@ class Controller_Aktualne extends Controller_Abstract
                 'header' => $data['at_jmeno']
             ]
         );
-        return;
     }
 
     public function posledni($request)

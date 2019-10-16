@@ -3286,7 +3286,7 @@ class PHPMailer
         $result = 'localhost.localdomain';
         if (!empty($this->Hostname)) {
             $result = $this->Hostname;
-        } elseif (isset($_SERVER) and array_key_exists('SERVER_NAME', $_SERVER) and !empty($_SERVER['SERVER_NAME'])) {
+        } elseif (array_key_exists('SERVER_NAME', $_SERVER) and !empty($_SERVER['SERVER_NAME'])) {
             $result = $_SERVER['SERVER_NAME'];
         } elseif (function_exists('gethostname') && gethostname() !== false) {
             $result = gethostname();

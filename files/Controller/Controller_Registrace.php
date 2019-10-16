@@ -26,6 +26,13 @@ class Controller_Registrace extends Controller_Abstract
                 'telefon' => '',
                 'narozeni' => '',
                 'poznamky' => '',
+                'street' => '',
+                'popisne' => '',
+                'orientacni' => '',
+                'district' => '',
+                'city' => '',
+                'postal' => '',
+                'nationality' => '203',
                 'dancerName' => '',
                 'skupina' => '0',
                 'other' => ''
@@ -44,10 +51,13 @@ class Controller_Registrace extends Controller_Abstract
         $f = new Form();
         $f->checkLogin($request->post('username'), 'Špatný formát přihlašovacího jména', 'username');
         $f->checkPassword($request->post('pass'), 'Špatný formát hesla', 'pass');
-        $f->checkInArray($request->post('pohlavi'), ['m', 'f'], 'Neplatné pohlaví', 'pohlavi');
         $f->checkEmail($request->post('email'), 'Neplatný formát emailu', 'email');
         $f->checkPhone($request->post('telefon'), 'Neplatný formát telefoního čísla', 'telefon');
         $f->checkDate($narozeni, 'Neplatné datum narození', 'narozeni');
+        $f->checkNotEmpty($request->post('orientacni'), 'Vyplňte číslo orientační bydliště', 'orientacni');
+        $f->checkNotEmpty($request->post('city'), 'Vyplňte město bydliště', 'city');
+        $f->checkNotEmpty($request->post('postal'), 'Vyplňte PSČ bydliště', 'postal');
+        $f->checkNotEmpty($request->post('nationality'), 'Vyplňte vaši národnost', 'nationality');
 
         if (!$f->isValid()) {
             $skupiny = array_map(
@@ -74,6 +84,13 @@ class Controller_Registrace extends Controller_Abstract
                 'telefon' => $request->post('telefon') ?: '',
                 'narozeni' => $request->post('narozeni') ?: '',
                 'poznamky' => $request->post('poznamky') ?: '',
+                'street' => $request->post('street') ?: '',
+                'popisne' => $request->post('popisne') ?: '',
+                'orientacni' => $request->post('orientacni') ?: '',
+                'district' => $request->post('district') ?: '',
+                'city' => $request->post('city') ?: '',
+                'postal' => $request->post('postal') ?: '',
+                'nationality' => $request->post('nationality') ?: '',
                 'dancerName' => $request->post('dancer-name') ?: '',
                 'skupina' => $request->post('skupina') ?: '',
                 'other' => $request->post('other') ?: ''
@@ -91,13 +108,13 @@ class Controller_Registrace extends Controller_Abstract
             $request->post('telefon'),
             $narozeni,
             $poznamky,
-            $street,
-            $popisne,
-            $orientacni,
-            $district,
-            $city,
-            $postal,
-            $nationality,
+            $request->post('street'),
+            $request->post('popisne'),
+            $request->post('orientacni'),
+            $request->post('district'),
+            $request->post('city'),
+            $request->post('postal'),
+            $request->post('nationality'),
             $request->post('skupina'),
             $request->post('poznamky') === 'dancer'
         );

@@ -1,9 +1,8 @@
 <?php
-class Controller_Admin_Dokumenty extends Controller_Admin
+class Controller_Admin_Dokumenty extends Controller_Abstract
 {
     public function __construct()
     {
-        parent::__construct();
         Permissions::checkError('dokumenty', P_OWNED);
     }
 
@@ -69,8 +68,11 @@ class Controller_Admin_Dokumenty extends Controller_Admin
 
     public function edit($request)
     {
-        $id = $request->getId();
-        if (!$id || !($data = DBDokumenty::getSingleDokument($id))) {
+        if (!$id = $request->getId()) {
+            $this->redirect()->warning('Dokument s takovým ID neexistuje');
+            $this->redirect('/admin/dokumenty');
+        }
+        if (!$data = DBDokumenty::getSingleDokument($id)) {
             $this->redirect()->warning('Dokument s takovým ID neexistuje');
             $this->redirect('/admin/dokumenty');
         }

@@ -65,7 +65,7 @@ class DBPlatbyItem extends Database
             $query .= ' WHERE ' . implode(' AND ', $where);
         }
         if (!empty($date)) {
-            if (strpos($query, 'WHERE') === null) {
+            if (strpos($query, 'WHERE') === false) {
                 $query .= ' WHERE 1=1 ';
             }
             if ($date['from']->isValid()) {

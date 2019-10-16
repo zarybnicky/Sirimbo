@@ -1,5 +1,5 @@
 _<?php
-class Controller_Member_Profil_Par extends Controller_Member_Profil
+class Controller_Member_Profil_Par extends Controller_Abstract
 {
     const AMEND_Z = 0.2;
     const AMEND_H = 0.5;
@@ -36,18 +36,27 @@ class Controller_Member_Profil_Par extends Controller_Member_Profil
 
     public function body($request)
     {
-        if (!$request->post() || is_object($f = $this->checkData($request))) {
-            if (!$request->post()) {
-                $par = DBPary::getSinglePar(User::getParID());
-                $request->post('stt-trida', $par['p_stt_trida']);
-                $request->post('stt-body', $par['p_stt_body']);
-                $request->post('stt-finale', $par['p_stt_finale']);
-                $request->post('lat-trida', $par['p_lat_trida']);
-                $request->post('lat-body', $par['p_lat_body']);
-                $request->post('lat-finale', $par['p_lat_finale']);
-            } else {
-                $this->redirect()->setMessage($f->getMessages());
-            }
+        if (!$request->post()) {
+            $par = DBPary::getSinglePar(User::getParID());
+            $request->post('stt-trida', $par['p_stt_trida']);
+            $request->post('stt-body', $par['p_stt_body']);
+            $request->post('stt-finale', $par['p_stt_finale']);
+            $request->post('lat-trida', $par['p_lat_trida']);
+            $request->post('lat-body', $par['p_lat_body']);
+            $request->post('lat-finale', $par['p_lat_finale']);
+            $this->render('files/View/Member/Profil/CoupleData.inc', [
+                'header' => 'Změna třídy a bodů',
+                'stt_trida' => $request->post('stt_trida') ?: '',
+                'stt_body' => $request->post('stt_body') ?: '',
+                'stt_finale' => $request->post('stt_finale') ?: '',
+                'lat_trida' => $request->post('lat_trida') ?: '',
+                'lat_body' => $request->post('lat_body') ?: '',
+                'lat_finale' => $request->post('lat_finale') ?: ''
+            ]);
+            return;
+        }
+        if (is_object($f = $this->checkData($request))) {
+            $this->redirect()->setMessage($f->getMessages());
             $this->render('files/View/Member/Profil/CoupleData.inc', [
                 'header' => 'Změna třídy a bodů',
                 'stt_trida' => $request->post('stt_trida') ?: '',

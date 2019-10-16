@@ -1,16 +1,18 @@
 <?php
-class Controller_Admin_Rozpis_Detail extends Controller_Admin_Rozpis
+class Controller_Admin_Rozpis_Detail extends Controller_Abstract
 {
     public function __construct()
     {
-        parent::__construct();
         Permissions::checkError('rozpis', P_OWNED);
     }
 
     public function view($request)
     {
-        $id = $request->getId();
-        if (!$id || !($data = DBRozpis::getSingleRozpis($id))) {
+        if (!$id = $request->getId()) {
+            $this->redirect()->warning('Rozpis s takovým ID neexistuje');
+            $this->redirect('/admin/rozpis');
+        }
+        if (!$data = DBRozpis::getSingleRozpis($id)) {
             $this->redirect()->warning('Rozpis s takovým ID neexistuje');
             $this->redirect('/admin/rozpis');
         }

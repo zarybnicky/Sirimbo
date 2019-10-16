@@ -1,16 +1,17 @@
 <?php
-class Controller_Member_Clenove extends Controller_Member
+class Controller_Member_Clenove extends Controller_Abstract
 {
     public function __construct()
     {
-        parent::__construct();
         Permissions::checkError('users', P_VIEW);
     }
 
     public function view($request)
     {
-        $id = $request->getId();
-        if (!$id || !($data = DBUser::getUserData($id))) {
+        if (!($id = $request->getId())) {
+            $this->redirect('/member/clenove/structure');
+        }
+        if (!($data = DBUser::getUserData($id))) {
             $this->redirect('/member/clenove/structure');
         }
         $this->render('files/View/Member/Clenove/Single.inc', [

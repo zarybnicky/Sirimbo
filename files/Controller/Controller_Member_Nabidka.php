@@ -1,9 +1,8 @@
 <?php
-class Controller_Member_Nabidka extends Controller_Member
+class Controller_Member_Nabidka extends Controller_Abstract
 {
     public function __construct()
     {
-        parent::__construct();
         Permissions::checkError('nabidka', P_VIEW);
     }
 
@@ -97,11 +96,10 @@ class Controller_Member_Nabidka extends Controller_Member
         }
         if ($request->post('hodiny') > 0) {
             // if (!User::getZaplaceno(true)) {
-            if (false) {
-                $this->redirect()->danger('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
-            } elseif ($data['n_max_pocet_hod'] > 0
-                      && (DBNabidka::getNabidkaLessons($request->post('id'), User::getParID())
-                          + $request->post('hodiny')) > $data['n_max_pocet_hod']
+                // $this->redirect()->danger('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
+            if ($data['n_max_pocet_hod'] > 0
+                && (DBNabidka::getNabidkaLessons($request->post('id'), User::getParID())
+                   + $request->post('hodiny')) > $data['n_max_pocet_hod']
             ) {
                 $this->redirect()->danger('Maximální počet hodin na pár je ' . $data['n_max_pocet_hod'] . '!');
             } elseif (($data['n_pocet_hod'] - DBNabidka::getNabidkaItemLessons($request->post('id'))) < $request->post('hodiny')) {

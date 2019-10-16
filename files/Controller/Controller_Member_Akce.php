@@ -1,9 +1,8 @@
 <?php
-class Controller_Member_Akce extends Controller_Member
+class Controller_Member_Akce extends Controller_Abstract
 {
     public function __construct()
     {
-        parent::__construct();
         Permissions::checkError('akce', P_VIEW);
     }
 

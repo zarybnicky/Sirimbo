@@ -6,6 +6,7 @@
   },
   "autoload": {
     "files": [
+      "config.php",
       "files/Core/utils.php",
       "files/Core/debug.php"
     ],

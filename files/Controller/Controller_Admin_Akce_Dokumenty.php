@@ -1,16 +1,18 @@
 <?php
-class Controller_Admin_Akce_Dokumenty extends Controller_Admin_Akce
+class Controller_Admin_Akce_Dokumenty extends Controller_Abstract
 {
     public function __construct()
     {
-        parent::__construct();
         Permissions::checkError('akce', P_OWNED);
     }
 
     public function view($request)
     {
-        $id = $request->getId();
-        if (!$id || !($akce = DBAkce::getSingleAkce($id))) {
+        if (!$id = $request->getId()) {
+            $this->redirect()->warning('Akce s takovým ID neexistuje');
+            $this->redirect('/admin/akce');
+        }
+        if (!$akce = DBAkce::getSingleAkce($id)) {
             $this->redirect()->warning('Akce s takovým ID neexistuje');
             $this->redirect('/admin/akce');
         }

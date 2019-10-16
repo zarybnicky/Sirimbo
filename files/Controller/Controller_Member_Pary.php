@@ -1,9 +1,8 @@
 <?php
-class Controller_Member_Pary extends Controller_Member
+class Controller_Member_Pary extends Controller_Abstract
 {
     public function __construct()
     {
-        parent::__construct();
         Permissions::checkError('pary', P_VIEW);
     }
 

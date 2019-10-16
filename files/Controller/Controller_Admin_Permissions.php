@@ -1,9 +1,8 @@
 <?php
-class Controller_Admin_Permissions extends Controller_Admin
+class Controller_Admin_Permissions extends Controller_Abstract
 {
     public function __construct()
     {
-        parent::__construct();
         Permissions::checkError('permissions', P_ADMIN);
     }
 
@@ -54,8 +53,11 @@ class Controller_Admin_Permissions extends Controller_Admin
 
     public function edit($request)
     {
-        $id = $request->getId();
-        if (!$id || !($data = DBPermissions::getSingleGroup($id))) {
+        if (!$id = $request->getId()) {
+            $this->redirect()->warning('Skupina s takovým ID neexistuje');
+            $this->redirect($request->post('returnURI') ?: '/admin/permissions');
+        }
+        if (!$data = DBPermissions::getSingleGroup($id)) {
             $this->redirect()->warning('Skupina s takovým ID neexistuje');
             $this->redirect($request->post('returnURI') ?: '/admin/permissions');
         }

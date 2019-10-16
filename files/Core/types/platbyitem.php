@@ -26,8 +26,7 @@ class PlatbyItem
         $this->specific = (int) $specific;
         $this->variable = (int) $variable;
         $this->date = (string) new Date($date);
-        $amount = floatval(str_replace(',', '.', $amount));
-        $this->amount = is_float($amount) ? number_format($amount, 2, '.', '') : '0.00';
+        $this->amount = number_format(floatval(str_replace(',', '.', $amount)), 2, '.', '');
         $this->prefix = (int) $prefix;
         $this->id = (int) $id;
         $this->categoryId = (int) $categoryId;

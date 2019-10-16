@@ -1,19 +1,27 @@
 <?php
-class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
+class Controller_Admin_Galerie_File extends Controller_Abstract
 {
     public function __construct()
     {
-        parent::__construct();
         Permissions::checkError('galerie', P_OWNED);
+    }
+
+    public function view($request)
+    {
+        $this->redirect('/admin/galerie');
     }
 
     public function edit($request)
     {
-        $id = $request->getId();
-        if (!$id || !($data = DBGalerie::getSingleFoto($id))) {
+        if (!$id = $request->getId()) {
             $this->redirect()->warning('Takový soubor neexistuje!');
             $this->redirect($request->getReferer());
         }
+        if (!$data = DBGalerie::getSingleFoto($id)) {
+            $this->redirect()->warning('Takový soubor neexistuje!');
+            $this->redirect($request->getReferer());
+        }
+
         if (!$request->post()) {
             $request->post('name', $data['gf_name']);
             $request->post('parent', $data['gf_id_rodic']);
@@ -27,8 +35,8 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
         }
 
         $parent = DBGalerie::getSingleDir($request->post('parent'));
-        $newPath = $this->_sanitizePathname(
-            $this->_getCanonicalName(
+        $newPath = sanitizePathname(
+            getCanonicalName(
                 $parent['gd_path'] . DIRECTORY_SEPARATOR . $request->post('name')
             )
         );
@@ -105,7 +113,7 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
         }
 
         $uploader = $uploadHelper->getFilledUploader();
-        foreach ($this->imageType as $extension) {
+        foreach (Settings::$imageType as $extension) {
             $uploader->addAllowedType($extension);
         }
 
@@ -131,7 +139,7 @@ class Controller_Admin_Galerie_File extends Controller_Admin_Galerie
     {
         $failCount = 0;
         foreach ($files as $path) {
-            if (!$this->_checkGetThumbnail($path)) {
+            if (!checkGetThumbnail($path)) {
                 if (is_file($path)) {
                     unlink($path);
                 }

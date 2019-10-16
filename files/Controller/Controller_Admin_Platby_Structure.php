@@ -101,19 +101,4 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
             DBPlatbyCategory::getOrphan()
         );
     }
-
-    protected function getDuplicateCategoryButton($id)
-    {
-        return $this->submit('<img title="Duplikovat" alt="Duplikovat" src="/style/icon-files-o.png" />')
-            ->data('category_duplicate', $id)->cls('a');
-    }
-
-    protected function getDateDisplay($from, $to)
-    {
-        $from = new Date($from);
-        $to = new Date($to);
-        return $from->getDate(Date::FORMAT_SIMPLIFIED)
-            . ' - '
-            . $to->getDate(Date::FORMAT_SIMPLIFIED);
-    }
 }

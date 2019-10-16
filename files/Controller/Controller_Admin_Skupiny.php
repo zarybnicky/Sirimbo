@@ -1,9 +1,8 @@
 <?php
-class Controller_Admin_Skupiny extends Controller_Admin
+class Controller_Admin_Skupiny extends Controller_Abstract
 {
     public function __construct()
     {
-        parent::__construct();
         Permissions::checkError('skupiny', P_OWNED);
     }
 
@@ -56,8 +55,11 @@ class Controller_Admin_Skupiny extends Controller_Admin
 
     public function edit($request)
     {
-        $id = $request->getId();
-        if (!$id || !($data = DBSkupiny::getSingle($id))) {
+        if (!$id = $request->getId()) {
+            $this->redirect()->warning('Skupina s takovým ID neexistuje');
+            $this->redirect('/admin/skupiny');
+        }
+        if (!$data = DBSkupiny::getSingle($id)) {
             $this->redirect()->warning('Skupina s takovým ID neexistuje');
             $this->redirect('/admin/skupiny');
         }
@@ -99,8 +101,11 @@ class Controller_Admin_Skupiny extends Controller_Admin
 
     public function remove($request)
     {
-        $id = $request->getId();
-        if (!$id || !($data = DBSkupiny::getSingle($id))) {
+        if (!$id = $request->getId()) {
+            $this->redirect()->warning('Skupina s takovým ID neexistuje');
+            $this->redirect('/admin/skupiny');
+        }
+        if (!$data = DBSkupiny::getSingle($id)) {
             $this->redirect()->warning('Skupina s takovým ID neexistuje');
             $this->redirect('/admin/skupiny');
         }

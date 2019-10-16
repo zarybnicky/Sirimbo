@@ -9,11 +9,6 @@ class UserSelectHelper
     private $_type;
     private $_selected;
 
-    public function __construct()
-    {
-        return $this->userSelect();
-    }
-
     public function userSelect($name = null)
     {
         $this->_defaultValues();
@@ -93,15 +88,13 @@ class UserSelectHelper
         }
 
         foreach ($this->_users as $user) {
-            if (isset($user['u_narozeni'])) {
-                list($year) = explode('-', $user['u_narozeni']);
-            }
-
             $id = $user[$this->_idIndex];
             $out .= '<option value="' . $id;
             $out .= $id == $selected ? '" selected="selected">' : '">';
-            $out .= $user[$this->_prijmeni] . ', ' . $user[$this->_jmeno] .
-                (isset($user['u_narozeni']) ? (', ' . $year) : '');
+            $out .= $user[$this->_prijmeni] . ', ' . $user[$this->_jmeno];
+            if (isset($user['u_narozeni'])) {
+                $out .= ', ' . explode('-', $user['u_narozeni'])[0];
+            }
             $out .= '</option>' . "\n";
         }
         $out .= '</select>' . "\n";

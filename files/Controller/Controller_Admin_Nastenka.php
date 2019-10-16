@@ -1,9 +1,8 @@
 <?php
-class Controller_Admin_Nastenka extends Controller_Admin
+class Controller_Admin_Nastenka extends Controller_Abstract
 {
     public function __construct()
     {
-        parent::__construct();
         Permissions::checkError('nastenka', P_OWNED);
     }
 
@@ -99,8 +98,11 @@ class Controller_Admin_Nastenka extends Controller_Admin
 
     public function edit($request)
     {
-        $id = $request->getId();
-        if (!$id || !($data = DBNastenka::getSingleNastenka($id))) {
+        if (!$id = $request->getId()) {
+            $this->redirect()->warning('Nástěnka s takovým ID neexistuje');
+            $this->redirect($request->post('returnURI') ?: '/admin/nastenka');
+        }
+        if (!$data = DBNastenka::getSingleNastenka($id)) {
             $this->redirect()->warning('Nástěnka s takovým ID neexistuje');
             $this->redirect($request->post('returnURI') ?: '/admin/nastenka');
         }
@@ -180,8 +182,11 @@ class Controller_Admin_Nastenka extends Controller_Admin
 
     public function remove($request)
     {
-        $id = $request->getId();
-        if (!$id || !($data = DBNastenka::getSingleNastenka($id))) {
+        if (!$id = $request->getId()) {
+            $this->redirect()->warning('Příspěvek s takovým ID neexistuje');
+            $this->redirect($request->post('returnURI') ?: '/admin/nastenka');
+        }
+        if (!$data = DBNastenka::getSingleNastenka($id)) {
             $this->redirect()->warning('Příspěvek s takovým ID neexistuje');
             $this->redirect($request->post('returnURI') ?: '/admin/nastenka');
         }

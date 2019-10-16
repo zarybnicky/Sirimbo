@@ -45,13 +45,17 @@ class Controller_Fotogalerie extends Controller_Abstract
 
     public function foto($request)
     {
-        $id = $request->getID();
-        if (!$id || !($data = DBGalerie::getSingleFoto($id))) {
+        if (!$id = $request->getID()) {
+            $this->redirect()->warning('Taková fotka neexistuje');
+            $this->redirect('/fotogalerie');
+        }
+        if (!$data = DBGalerie::getSingleFoto($id)) {
             $this->redirect()->warning('Taková fotka neexistuje');
             $this->redirect('/fotogalerie');
         }
 
         $parent_dir = DBGalerie::getFotky($data['gf_id_rodic']);
+        $current = 0;
         foreach ($parent_dir as $key => $foto) {
             if ($foto['gf_id'] == $id) {
                 $current = $key;

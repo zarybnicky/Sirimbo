@@ -1,9 +1,8 @@
 <?php
-class Controller_Admin_Aktuality_Foto extends Controller_Admin_Aktuality
+class Controller_Admin_Aktuality_Foto extends Controller_Abstract
 {
     public function __construct()
     {
-        parent::__construct();
         Permissions::checkError('aktuality', P_OWNED);
     }
 
@@ -41,6 +40,7 @@ class Controller_Admin_Aktuality_Foto extends Controller_Admin_Aktuality
             );
 
             $dirs = DBGalerie::getDirs(true, true);
+            $dirs_out = [];
             foreach ($dirs as $item) {
                 $dirs_out[$item['gd_id']] = str_repeat("&nbsp;&nbsp;", $item['gd_level'] - 1) . $item['gd_name'];
             }
@@ -65,7 +65,8 @@ class Controller_Admin_Aktuality_Foto extends Controller_Admin_Aktuality
             $article['at_text'],
             $article['at_preview'],
             $request->get('dir'),
-            $request->post('foto')
+            $request->post('foto'),
+            $article['at_timestamp_add']
         );
         $this->redirect('/admin/aktuality');
     }

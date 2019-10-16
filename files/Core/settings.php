@@ -11,8 +11,6 @@ define('TEMPLATE', 'files' . DIRECTORY_SEPARATOR . 'Template.inc');
 define('LOG', ROOT . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'error.log');
 define('DEBUG_LOG', ROOT . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'debug.log');
 
-include ROOT . DIRECTORY_SEPARATOR . 'config.php';
-
 mb_internal_encoding('UTF-8');
 
 function shutdownHandler()
@@ -33,7 +31,7 @@ function shutdownHandler()
         }
         array_walk(
             $v['args'],
-            function (&$item, $key) {
+            function (&$item) {
                 $item = var_export($item, true);
             }
         );
@@ -174,5 +172,19 @@ class Settings
             'name' => "Veřejná část",
             'default' => P_VIEW,
             P_VIEW => 1]
+    ];
+
+    public static $imageType = [
+        'image/pjpeg' => 'jpg',
+        'image/jpeg' => 'jpg',
+        'image/gif' => 'gif',
+        'image/x-png' => 'png'
+    ];
+
+    public static $imageSuffix = [
+        'image/pjpeg' => 'JPEG',
+        'image/jpeg' => 'JPEG',
+        'image/gif' => 'GIF',
+        'image/x-png' => 'PNG'
     ];
 }
