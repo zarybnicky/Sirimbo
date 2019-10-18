@@ -1,6 +1,6 @@
-all: style
+all: public/style.css
 
-style:
+public/style.css: public/style/main.scss
 	sassc -t compact public/style/main.scss public/style.css
 
 style-watch:
@@ -10,4 +10,7 @@ style-watch:
 upload:
 	rsync -azP files/ olymp.z:/var/www/html/files
 
-.PHONY: upload
+upload-beta:
+	rsync -azP files/ olymp.z:/var/www/html-beta/files
+
+.PHONY: upload upload-beta style-watch

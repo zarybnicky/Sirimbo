@@ -1,1 +1,0 @@
-rsync -azP files/ olymp.z:/var/www/html-beta/files
