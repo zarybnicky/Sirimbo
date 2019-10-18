@@ -319,9 +319,10 @@ class Controller_Admin_Users extends Controller_Abstract
         $data = array_map(
             function ($item) use ($action, $groupOptions, &$i, $skupinySelect) {
                 $out = [
-                    // 'checkBox' => $this->editLink('/admin/users/edit/'
-                    // . $item['u_id'])
-                    'checkBox' => '&nbsp;' . $this->removeLink('/admin/users/remove/' . $item['u_id']),
+                    'checkBox' => (
+                        $this->editLink('/admin/users/edit/' . $item['u_id']) . '&nbsp;' .
+                        $this->removeLink('/admin/users/remove/' . $item['u_id'])
+                    ),
                     'index' => ++$i . '. ',
                     'varSymbol' => User::varSymbol($item['u_id']),
                     'fullName' => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],

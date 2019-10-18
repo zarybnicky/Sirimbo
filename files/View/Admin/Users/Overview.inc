@@ -50,7 +50,7 @@
     </form>
 
 <form action="" method="POST">
-  <!-- <a href="/admin/users/add" class="btn btn-outline-primary">Nový uživatel</a> -->
+    <a href="/admin/users/add" class="btn btn-outline-primary">Nový uživatel</a>
     <a href="/admin/users/duplicate" class="btn btn-outline-primary">Duplicitní uživatelé</a>
     <a href="/admin/users/unconfirmed" class="btn btn-outline-primary">Nepotvrzení uživatelé</a>
     <a href="/admin/users/statistiky" class="btn btn-outline-primary">Statistiky</a>

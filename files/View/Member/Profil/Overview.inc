@@ -1,7 +1,7 @@
 <div class="container">
   <?= $this->partnerRequest()->getAll() ?>
   <div class="mb-2">
-    <!-- <a class="btn btn-outline-primary" href="/member/profil/edit">Upravit osobní údaje</a> -->
+    <a class="btn btn-outline-primary" href="/member/profil/edit">Upravit osobní údaje</a>
     <a class="btn btn-outline-primary" href="/member/profil/heslo">Změnit heslo</a>
     <a class="btn btn-outline-primary" href="/member/profil/par/partner">Změnit partnera</a>
     <?php if (isset($this->coupleData) && $this->coupleData['u_id']) : ?>
