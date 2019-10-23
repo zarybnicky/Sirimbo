@@ -381,7 +381,6 @@ class SMTP
      * @param string $authtype The auth type (PLAIN, LOGIN, NTLM, CRAM-MD5, XOAUTH2)
      * @param string $realm The auth realm for NTLM
      * @param string $workstation The auth workstation for NTLM
-     * @param null|OAuth $OAuth An optional OAuth instance (@see PHPMailerOAuth)
      * @return bool True if successfully authenticated.* @access public
      */
     public function authenticate(
@@ -389,8 +388,7 @@ class SMTP
         $password,
         $authtype = null,
         $realm = '',
-        $workstation = '',
-        $OAuth = null
+        $workstation = ''
     ) {
         if (!$this->server_caps) {
             $this->setError('Authentication is not allowed before HELO/EHLO');
@@ -413,7 +411,7 @@ class SMTP
             );
 
             if (empty($authtype)) {
-                foreach (['CRAM-MD5', 'LOGIN', 'PLAIN', 'NTLM', 'XOAUTH2'] as $method) {
+                foreach (['CRAM-MD5', 'LOGIN', 'PLAIN'] as $method) {
                     if (in_array($method, $this->server_caps['AUTH'])) {
                         $authtype = $method;
                         break;
@@ -461,69 +459,6 @@ class SMTP
                     return false;
                 }
                 break;
-            case 'XOAUTH2':
-                //If the OAuth Instance is not set. Can be a case when PHPMailer is used
-                //instead of PHPMailerOAuth
-                if (is_null($OAuth)) {
-                    return false;
-                }
-                $oauth = $OAuth->getOauth64();
-
-                // Start authentication
-                if (!$this->sendCommand('AUTH', 'AUTH XOAUTH2 ' . $oauth, 235)) {
-                    return false;
-                }
-                break;
-            case 'NTLM':
-                /*
-                 * ntlm_sasl_client.php
-                 * Bundled with Permission
-                 *
-                 * How to telnet in windows:
-                 * http://technet.microsoft.com/en-us/library/aa995718%28EXCHG.65%29.aspx
-                 * PROTOCOL Docs http://curl.haxx.se/rfc/ntlm.html#ntlmSmtpAuthentication
-                 */
-                require_once 'extras/ntlm_sasl_client.php';
-                $temp = new stdClass;
-                $ntlm_client = new ntlm_sasl_client_class;
-                //Check that functions are available
-                if (!$ntlm_client->initialize($temp)) {
-                    $this->setError($temp->error);
-                    $this->edebug(
-                        'You need to enable some modules in your php.ini file: '
-                        . $this->error['error'],
-                        self::DEBUG_CLIENT
-                    );
-                    return false;
-                }
-                //msg1
-                $msg1 = $ntlm_client->typeMsg1($realm, $workstation); //msg1
-
-                if (!$this->sendCommand(
-                    'AUTH NTLM',
-                    'AUTH NTLM ' . base64_encode($msg1),
-                    334
-                )
-                ) {
-                    return false;
-                }
-                //Though 0 based, there is a white space after the 3 digit number
-                //msg2
-                $challenge = substr($this->last_reply, 3);
-                $challenge = base64_decode($challenge);
-                $ntlm_res = $ntlm_client->NTLMResponse(
-                    substr($challenge, 24, 8),
-                    $password
-                );
-                //msg3
-                $msg3 = $ntlm_client->typeMsg3(
-                    $ntlm_res,
-                    $username,
-                    $realm,
-                    $workstation
-                );
-                // send encoded username
-                return $this->sendCommand('Username', base64_encode($msg3), 235);
             case 'CRAM-MD5':
                 // Start authentication
                 if (!$this->sendCommand('AUTH CRAM-MD5', 'AUTH CRAM-MD5', 334)) {
