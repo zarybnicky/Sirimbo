@@ -49,30 +49,37 @@ class Controller_Admin_Nastenka extends Controller_Abstract
         ]);
     }
 
+    public function renderForm($request)
+    {
+        $skupiny = DBSkupiny::get();
+        $skupinySelected = [];
+        foreach ($skupiny as $item) {
+            $skupinySelected[$item['s_id']] = $request->post('sk-' . $item['s_id']);
+        }
+        $this->render('files/View/Admin/Nastenka/Form.inc', [
+            'header' => 'Správa nástěnky',
+            'subheader' => ($request->getAction() === 'add') ? 'Přidat příspěvek' : 'Upravit příspěvek',
+            'action' => $request->getAction(),
+            'returnURI' => $request->getReferer() ?: '/admin/nastenka',
+            'skupiny' => $skupiny,
+            'skupinySelected' => $skupinySelected,
+            'nadpis' => $request->post('nadpis') ?: '',
+            'text' => $request->post('text') ?: '',
+            'lock' => $request->post('lock') ?: ''
+        ]);
+    }
+
     public function add($request)
     {
-        if (!$request->post() || is_object($f = $this->checkData($request))) {
-            if ($request->post()) {
-                $this->redirect()->warning($f->getMessages());
-            }
-            $skupiny = DBSkupiny::get();
-            $skupinySelected = [];
-            foreach ($skupiny as $item) {
-                $skupinySelected[$item['s_id']] = $request->post('sk-' . $item['s_id']);
-            }
-            $this->render('files/View/Admin/Nastenka/Form.inc', [
-                'header' => 'Správa nástěnky',
-                'subheader' => 'Přidat příspěvek',
-                'action' => $request->getAction(),
-                'returnURI' => $request->getReferer() ?: '/admin/nastenka',
-                'skupiny' => $skupiny,
-                'skupinySelected' => $skupinySelected,
-                'nadpis' => $request->post('nadpis') ?: '',
-                'text' => $request->post('text') ?: '',
-                'lock' => $request->post('lock') ?: ''
-            ]);
-            return;
+        if (!$request->post()) {
+            return $this->renderForm($request);
         }
+        $f = $this->checkData($request);
+        if (is_object($f)) {
+            $this->redirect()->warning($f->getMessages());
+            return $this->renderForm($request);
+        }
+
         $id = DBNastenka::addNastenka(
             User::getUserID(),
             $request->post('nadpis'),
@@ -108,39 +115,20 @@ class Controller_Admin_Nastenka extends Controller_Abstract
         }
         Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
 
-        if (!$request->post() || is_object($f = $this->checkData($request))) {
-            $skupiny = DBNastenka::getNastenkaSkupiny($id);
-
-            if (!$request->post()) {
-                $request->post('id', $id);
-                $request->post('nadpis', $data['up_nadpis']);
-                $request->post('text', $data['up_text']);
-
-                foreach ($skupiny as $skupina) {
-                    $request->post('sk-' . $skupina['ups_id_skupina'], 1);
-                }
-                $request->post('lock', $data['up_lock']);
-            } else {
-                $this->redirect()->warning($f->getMessages());
+        if (!$request->post()) {
+            $request->post('id', $id);
+            $request->post('nadpis', $data['up_nadpis']);
+            $request->post('text', $data['up_text']);
+            foreach (DBNastenka::getNastenkaSkupiny($id) as $skupina) {
+                $request->post('sk-' . $skupina['ups_id_skupina'], 1);
             }
-            $skupiny = DBSkupiny::get();
-            $skupinySelected = [];
-            foreach ($skupiny as $item) {
-                $skupinySelected[$item['s_id']] = $request->post('sk-' . $item['s_id']);
-            }
-
-            $this->render('files/View/Admin/Nastenka/Form.inc', [
-                'header' => 'Správa nástěnky',
-                'subheader' => 'Upravit příspěvek',
-                'action' => $request->getAction(),
-                'returnURI' => $request->getReferer() ?: '/admin/nastenka',
-                'skupiny' => $skupiny,
-                'skupinySelected' => $skupinySelected,
-                'nadpis' => $request->post('nadpis') ?: '',
-                'text' => $request->post('text') ?: '',
-                'lock' => $request->post('lock') ?: ''
-            ]);
-            return;
+            $request->post('lock', $data['up_lock']);
+            return $this->renderForm($request);
+        }
+        $f = $this->checkData($request);
+        if (is_object($f)) {
+            $this->redirect()->warning($f->getMessages());
+            return $this->renderForm($request);
         }
 
         $skupiny_old = [];

@@ -36,14 +36,14 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
 
     public function add($request)
     {
-        if (!$request->post() || is_object($s = $this->checkPost($request))) {
-            if (!$request->post()) {
-                $request->post('base', 1);
-            } else {
-                $this->redirect()->warning($s->getMessages());
-            }
-            $this->displayForm($request, 'add', 0);
-            return;
+        if (!$request->post()) {
+            $request->post('base', 1);
+            return $this->displayForm($request, 'add', 0);
+        }
+        $s = $this->checkPost($request);
+        if (is_object($s)) {
+            $this->redirect()->warning($s->getMessages());
+            return $this->displayForm($request, 'add', 0);
         }
         DBPlatbyGroup::insert(
             $request->post('type'),
@@ -74,17 +74,17 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
             $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/group');
         }
 
-        if (!$request->post() || is_object($s = $this->checkPost($request))) {
-            if (!$request->post()) {
-                $request->post('type', $data['pg_type']);
-                $request->post('name', $data['pg_name']);
-                $request->post('description', $data['pg_description']);
-                $request->post('base', $data['pg_base']);
-            } else {
-                $this->redirect()->warning($s->getMessages());
-            }
-            $this->displayForm($request, 'edit', $id);
-            return;
+        if (!$request->post()) {
+            $request->post('type', $data['pg_type']);
+            $request->post('name', $data['pg_name']);
+            $request->post('description', $data['pg_description']);
+            $request->post('base', $data['pg_base']);
+            return $this->displayForm($request, 'edit', $id);
+        }
+        $s = $this->checkPost($request);
+        if (is_object($s)) {
+            $this->redirect()->warning($s->getMessages());
+            return $this->displayForm($request, 'edit', $id);
         }
 
         DBPlatbyGroup::update(

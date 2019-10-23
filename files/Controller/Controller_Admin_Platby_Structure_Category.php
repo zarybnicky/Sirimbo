@@ -72,12 +72,13 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
 
     public function add($request)
     {
-        if (!$request->post() || is_object($s = $this->checkPost($request, 'add', 0))) {
-            if ($request->post()) {
-                $this->redirect()->warning($s->getMessages());
-            }
-            $this->displayForm($request, 'add', 0);
-            return;
+        if (!$request->post()) {
+            return $this->displayForm($request, 'add', 0);
+        }
+        $s = $this->checkPost($request, 'add', 0);
+        if (is_object($s)) {
+            $this->redirect()->warning($s->getMessages());
+            return $this->displayForm($request, 'add', 0);
         }
 
         $validRange = $this->date('validRange')->getPostRange($request);
@@ -128,24 +129,24 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/category');
         }
 
-        if (!$request->post() || is_object($s = $this->checkPost($request, 'edit', $id))) {
-            if ($request->post()) {
-                $this->redirect()->warning($s->getMessages());
-            } else {
-                if ($data['pc_use_base']) {
-                    $data['pc_amount'] = '*' . $data['pc_amount'];
-                }
-                $request->post('name', $data['pc_name']);
-                $request->post('symbol', $data['pc_symbol']);
-                $request->post('amount', $data['pc_amount']);
-                $request->post('dueDate', $data['pc_date_due']);
-                $request->post('validRange', $data['pc_valid_from'] . ' - ' . $data['pc_valid_to']);
-                $request->post('usePrefix', $data['pc_use_prefix']);
-                $request->post('archive', $data['pc_archive']);
-                $request->post('visible', $data['pc_visible']);
+        if (!$request->post()) {
+            if ($data['pc_use_base']) {
+                $data['pc_amount'] = '*' . $data['pc_amount'];
             }
-            $this->displayForm($request, 'edit', $id);
-            return;
+            $request->post('name', $data['pc_name']);
+            $request->post('symbol', $data['pc_symbol']);
+            $request->post('amount', $data['pc_amount']);
+            $request->post('dueDate', $data['pc_date_due']);
+            $request->post('validRange', $data['pc_valid_from'] . ' - ' . $data['pc_valid_to']);
+            $request->post('usePrefix', $data['pc_use_prefix']);
+            $request->post('archive', $data['pc_archive']);
+            $request->post('visible', $data['pc_visible']);
+            return $this->displayForm($request, 'edit', $id);
+        }
+        $s = $this->checkPost($request, 'edit', $id);
+        if (is_object($s)) {
+            $this->redirect()->warning($s->getMessages());
+            return $this->displayForm($request, 'edit', $id);
         }
         $dueDate = $this->date('dueDate')->getPost($request);
 
