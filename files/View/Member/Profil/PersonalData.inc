@@ -1,38 +1,81 @@
-<div class="container">
-  <form action="" method="POST">
-    <table>
-      <tr>
-        <td>Uživatel: </td>
-        <td><?= $this->login ?></td>
-      </tr><tr>
-        <td>Jméno: </td>
-        <td><?= $this->text('jmeno', $this->jmeno) ?></td>
-      </tr><tr>
-        <td>Příjmení: </td>
-        <td><?= $this->text('prijmeni', $this->prijmeni) ?></td>
-      </tr><tr>
-        <td>Pohlaví: </td>
-        <td>
-          <?= $this->radio('pohlavi', 'm')->set($this->pohlavi == 'm')->label('Muž') ?>&nbsp;
-          <?= $this->radio('pohlavi', 'f')->set($this->pohlavi == 'f')->label('Žena') ?>
-        </td>
-      </tr><tr>
-        <td>E-mail (*): </td>
-        <td><?= $this->text('email', $this->email) ?></td>
-      </tr><tr>
-        <td>Telefon (*): </td>
-        <td><?= $this->text('telefon', $this->telefon) ?></td>
-      </tr><tr>
-        <td>Datum narození: (*)</td>
-        <td><?= $this->date('narozeni', $this->narozeni) ?></td>
-      </tr><tr>
-        <td>Poznámky: </td>
-        <td><textarea rows="15" cols="50" name="poznamky"><?= $this->poznamky ?></textarea></td>
-      </tr><tr>
-        <td colspan="2"><?= $this->submit('Upravit')->data('action', 'confirm') ?></td>
-      </tr>
-    </table>
-  </form>
+<form class="container" action="" method="POST">
+  <div class="form-row mb-2">
+    <div class="form-group col-12 col-md-6">
+      <label for="jmeno">Jméno</label>
+      <?= $this->text('jmeno', $this->jmeno) ?>
+    </div>
+    <div class="form-group col-12 col-md-6">
+      <label for="prijmeni">Příjmení</label>
+      <?= $this->text('prijmeni', $this->prijmeni) ?>
+    </div>
+  </div>
 
-  <a class="btn btn-outline-primary" href="/member/profil">Zpět</a>
-</div>
+  <div class="form-row mb-2">
+    <div class="form-group col-12 col-md-6">
+      <label for="narozeni">Datum narození</label>
+      <?= $this->date('narozeni', $this->narozeni) ?>
+    </div>
+    <div class="form-group col-12 col-md-6 pt-4">
+      <?= $this->radio('pohlavi', 'm')->set($this->pohlavi == 'm')->label('Muž')->inline() ?>
+      <?= $this->radio('pohlavi', 'f')->set($this->pohlavi == 'f')->label('Žena')->inline() ?>
+    </div>
+  </div>
+
+  <div class="form-row mb-2">
+    <div class="form-group col-12 col-md-6">
+      <label for="email">E-mail</label>
+      <?= $this->text('email', $this->email) ?>
+    </div>
+    <div class="form-group col-12 col-md-6">
+      <label for="telefon">Telefon</label>
+      <?= $this->text('telefon', $this->telefon) ?>
+    </div>
+  </div>
+
+  <div class="mt-3 mb-1 text-muted">Bydliště</div>
+  <div class="form-row mb-2">
+    <div class="form-group mb-2 col-12 col-md-6">
+      <label for="street">Ulice</label>
+      <?= $this->text('street', $this->street) ?>
+    </div>
+    <div class="form-group col-6 col-md-3">
+      <label for="popisne">Č. popisné</label>
+      <?= $this->text('popisne', $this->popisne) ?>
+    </div>
+    <div class="form-group col-6 col-md-3">
+      <label for="orientacni">Č. orientační</label>
+      <?= $this->text('orientacni', $this->orientacni) ?>
+    </div>
+
+    <div class="form-group mb-2 col-12 col-md-6">
+      <label for="city">Město</label>
+      <?= $this->text('city', $this->city) ?>
+    </div>
+    <div class="form-group col-12 col-md-6">
+      <label for="district">Část města</label>
+      <?= $this->text('district', $this->district) ?>
+    </div>
+
+    <div class="form-group col-12 col-md-6">
+      <label for="postal">PSČ</label>
+      <?= $this->text('postal', $this->postal) ?>
+    </div>
+  </div>
+
+  <div class="form-group mb-2">
+    <label for="nationality">Národnost</label>
+    <?= $this->select('nationality')
+           ->options(Countries::$countries)
+           ->set($this->nationality) ?>
+  </div>
+
+  <div class="form-check mb-2 pl-0">
+    <?= $this->checkbox('dancer', 'dancer')->label('Aktivní tanečník?')->set($this->dancer) ?>
+  </div>
+
+  <div class="form-group mb-2">
+    <?= $this->hidden('returnURI', $this->returnURI) ?>
+    <a class="btn btn-outline-primary" href="/member/profil">Zpět</a>
+    <?= $this->submit('Upravit') ?>
+  </div>
+</form>

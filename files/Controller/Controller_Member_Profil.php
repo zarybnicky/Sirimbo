@@ -57,43 +57,55 @@ class Controller_Member_Profil extends Controller_Abstract
         ]);
     }
 
+    public function renderPersonalForm($request)
+    {
+        $this->render('files/View/Member/Profil/PersonalData.inc', [
+            'header' => 'Osobní údaje',
+            'lock' => $request->post('lock'),
+            'jmeno' => $request->post('jmeno'),
+            'prijmeni' => $request->post('prijmeni'),
+            'pohlavi' => $request->post('pohlavi'),
+            'email' => $request->post('email'),
+            'telefon' => $request->post('telefon'),
+            'narozeni' => $request->post('narozeni'),
+            'street' => $request->post('street'),
+            'popisne' => $request->post('popisne'),
+            'orientacni' => $request->post('orientacni'),
+            'city' => $request->post('city'),
+            'district' => $request->post('district'),
+            'postal' => $request->post('postal'),
+            'nationality' => $request->post('nationality'),
+            'dancer' => $request->post('dancer'),
+        ]);
+    }
+
     public function edit($request)
     {
         $data = DBUser::getUserData(User::getUserID());
         $narozeni = $this->date('narozeni')->getPost($request);
 
         if (!$request->post()) {
-            $this->render('files/View/Member/Profil/PersonalData.inc', [
-                'header' => 'Osobní údaje',
-                'login' => $data['u_login'],
-                'group' => $data['u_group'],
-                'lock' => $data['u_lock'],
-                'jmeno' => $data['u_jmeno'],
-                'prijmeni' => $data['u_prijmeni'],
-                'pohlavi' => $data['u_pohlavi'],
-                'email' => $data['u_email'],
-                'telefon' => $data['u_telefon'],
-                'narozeni' => $data['u_narozeni'],
-                'poznamky' => $data['u_poznamky']
-            ]);
-            return;
+            $request->post('jmeno', $data['u_jmeno']);
+            $request->post('prijmeni', $data['u_prijmeni']);
+            $request->post('pohlavi', $data['u_pohlavi']);
+            $request->post('narozeni', $data['u_narozeni']);
+            $request->post('email', $data['u_email']);
+            $request->post('telefon', $data['u_telefon']);
+            $request->post('street', $data['u_street']);
+            $request->post('popisne', $data['u_conscription_number']);
+            $request->post('orientacni', $data['u_orientation_number']);
+            $request->post('city', $data['u_city']);
+            $request->post('district', $data['u_district']);
+            $request->post('postal', $data['u_postal_code']);
+            $request->post('nationality', $data['u_nationality']);
+            $request->post('dancer', $data['u_dancer']);
+            return $this->renderPersonalForm($request);
         }
 
-        if (is_object($f = $this->checkData($request, 'edit', $narozeni))) {
+        $f = $this->checkData($request, 'edit', $narozeni);
+        if (is_object($f)) {
             $this->redirect()->warning($f->getMessages());
-            $this->render('files/View/Member/Profil/PersonalData.inc', [
-                'header' => 'Osobní údaje',
-                'login' => $request->post('login'),
-                'group' => $request->post('group'),
-                'lock' => $request->post('lock'),
-                'jmeno' => $request->post('jmeno'),
-                'prijmeni' => $request->post('prijmeni'),
-                'email' => $request->post('email'),
-                'telefon' => $request->post('telefon'),
-                'narozeni' => $request->post('narozeni'),
-                'poznamky' => $request->post('poznamky')
-            ]);
-            return;
+            return $this->renderPersonalForm($request);
         }
 
         DBUser::setUserData(
@@ -104,28 +116,40 @@ class Controller_Member_Profil extends Controller_Abstract
             $request->post('email'),
             $request->post('telefon'),
             (string) $narozeni,
-            $request->post('poznamky'),
+            $data['u_poznamky'],
+            $request->post('street'),
+            $request->post('popisne'),
+            $request->post('orientacni'),
+            $request->post('district'),
+            $request->post('city'),
+            $request->post('postal'),
+            $request->post('nationality'),
             $data['u_group'],
             $data['u_skupina'],
             $data['u_lock'],
             $data['u_ban'],
-            $data['u_system']
+            $data['u_system'],
+            $request->post('dancer') ? '1' : '0',
+            $data['u_teacher'],
+            $data['u_member_since'],
+            $data['u_member_until'],
+            $data['u_gdpr_signed_at']
         );
         $this->redirect('/member/profil');
     }
 
     public function heslo($request)
     {
-        if (!$request->post() ||
-            is_object($f = $this->checkData($request, 'heslo'))
-        ) {
-            if ($request->post()) {
-                $this->redirect()->warning($f->getMessages());
-            }
-            $this->render('files/View/Member/Profil/NewPassword.inc', [
+        if (!$request->post()) {
+            return $this->render('files/View/Member/Profil/NewPassword.inc', [
                 'header' => 'Změna hesla'
             ]);
-            return;
+        }
+        if (is_object($f = $this->checkData($request, 'heslo'))) {
+            $this->redirect()->warning($f->getMessages());
+            return $this->render('files/View/Member/Profil/NewPassword.inc', [
+                'header' => 'Změna hesla'
+            ]);
         }
         DBUser::setPassword(
             User::getUserID(),

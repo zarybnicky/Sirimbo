@@ -25,11 +25,23 @@ class Controller_Admin_Users extends Controller_Abstract
                         $user['u_telefon'],
                         $user['u_narozeni'],
                         $user['u_poznamky'],
+                        $user['u_street'],
+                        $user['u_conscription_number'],
+                        $user['u_orientation_number'],
+                        $user['u_district'],
+                        $user['u_city'],
+                        $user['u_postal_code'],
+                        $user['u_nationality'],
                         $user['u_group'],
                         $request->post($user_id . '-skupina'),
                         $user['u_lock'] ? '1' : '0',
                         $request->post($user_id . '-ban') ? '1' : '0',
-                        $request->post($user_id . '-system') ? '1' : '0'
+                        $request->post($user_id . '-system') ? '1' : '0',
+                        $user['u_dancer'],
+                        $user['u_teacher'],
+                        $user['u_member_since'],
+                        $user['u_member_until'],
+                        $user['u_gdpr_signed_at']
                     );
                 }
             }
@@ -65,12 +77,13 @@ class Controller_Admin_Users extends Controller_Abstract
     public function add($request)
     {
         Permissions::checkError('users', P_ADMIN);
-        if (!$request->post() || is_object($f = $this->checkData($request, 'add'))) {
-            if ($request->post()) {
-                $this->redirect()->warning($f->getMessages());
-            }
-            $this->displayForm($request);
-            return;
+        if (!$request->post()) {
+            return $this->displayForm($request);
+        }
+        $f = $this->checkData($request, 'add');
+        if (is_object($f)) {
+            $this->redirect()->warning($f->getMessages());
+            return $this->displayForm($request);
         }
 
         DBUser::addUser(
@@ -83,7 +96,7 @@ class Controller_Admin_Users extends Controller_Abstract
             $request->post('telefon'),
             (string) $this->date('narozeni')->getPost($request),
             $request->post('poznamky'),
-            $request->post('ulice'),
+            $request->post('street'),
             $request->post('popisne'),
             $request->post('orientacni'),
             $request->post('district'),
@@ -96,7 +109,7 @@ class Controller_Admin_Users extends Controller_Abstract
             $request->post('ban') ? '1' : '0',
             '1',
             $request->post('system') ? '1' : '0',
-            $request->post('trener') ? '1' : '0',
+            $request->post('teacher') ? '1' : '0',
             $request->post('dancer') ? '1' : '0'
         );
         $this->redirect($request->post('returnURI') ?: '/admin/users');
@@ -118,27 +131,37 @@ class Controller_Admin_Users extends Controller_Abstract
             $this->redirect($request->post('returnURI') ?: '/admin/users');
         }
 
-        if (!$request->post() || is_object($f = $this->checkData($request, 'edit'))) {
-            if (!$request->post()) {
-                $request->post('login', $data['u_login']);
-                $request->post('group', $data['u_group']);
-                $request->post('ban', $data['u_ban']);
-                $request->post('lock', $data['u_lock']);
-                $request->post('system', $data['u_system']);
-                $request->post('jmeno', $data['u_jmeno']);
-                $request->post('prijmeni', $data['u_prijmeni']);
-                $request->post('pohlavi', $data['u_pohlavi']);
-                $request->post('email', $data['u_email']);
-                $request->post('telefon', $data['u_telefon']);
-                $request->post('narozeni', $data['u_narozeni']);
-                $request->post('skupina', $data['u_skupina']);
-                $request->post('poznamky', $data['u_poznamky']);
-            } else {
-                $this->redirect()->warning($f->getMessages());
-            }
-            $this->displayForm($request);
-            return;
+        if (!$request->post()) {
+            $request->post('login', $data['u_login']);
+            $request->post('group', $data['u_group']);
+            $request->post('ban', $data['u_ban']);
+            $request->post('lock', $data['u_lock']);
+            $request->post('system', $data['u_system']);
+            $request->post('dancer', $data['u_dancer']);
+            $request->post('teacher', $data['u_teacher']);
+            $request->post('jmeno', $data['u_jmeno']);
+            $request->post('prijmeni', $data['u_prijmeni']);
+            $request->post('pohlavi', $data['u_pohlavi']);
+            $request->post('email', $data['u_email']);
+            $request->post('telefon', $data['u_telefon']);
+            $request->post('narozeni', $data['u_narozeni']);
+            $request->post('skupina', $data['u_skupina']);
+            $request->post('poznamky', $data['u_poznamky']);
+            $request->post('street', $data['u_street']);
+            $request->post('popisne', $data['u_conscription_number']);
+            $request->post('orientacni', $data['u_orientation_number']);
+            $request->post('district', $data['u_district']);
+            $request->post('city', $data['u_city']);
+            $request->post('postal', $data['u_postal_code']);
+            $request->post('nationality', $data['u_nationality']);
+            return $this->displayForm($request);
         }
+        $f = $this->checkData($request, 'edit');
+        if (is_object($f)) {
+            $this->redirect()->warning($f->getMessages());
+            return $this->displayForm($request);
+        }
+
         $narozeni = $this->date('narozeni')->getPost($request);
         DBUser::setUserData(
             $id,
@@ -149,11 +172,23 @@ class Controller_Admin_Users extends Controller_Abstract
             $request->post('telefon'),
             (string) $narozeni,
             $request->post('poznamky'),
+            $request->post('street'),
+            $request->post('popisne'),
+            $request->post('orientacni'),
+            $request->post('district'),
+            $request->post('city'),
+            $request->post('postal'),
+            $request->post('nationality'),
             $request->post('group'),
             $request->post('skupina'),
             $request->post('lock') ? 1 : 0,
             $request->post('ban') ? 1 : 0,
-            $request->post('system') ? 1 : 0
+            $request->post('system') ? 1 : 0,
+            $request->post('dancer') ? 1 : 0,
+            $request->post('teacher') ? 1 : 0,
+            $data['u_member_since'],
+            $data['u_member_until'],
+            $data['u_gdpr_signed_at']
         );
         $this->redirect($request->post('returnURI') ?: '/admin/users');
     }
@@ -398,13 +433,20 @@ class Controller_Admin_Users extends Controller_Abstract
             'telefon' => $request->post('telefon') ?: '',
             'narozeni' => $request->post('narozeni') ?: '',
             'poznamky' => $request->post('poznamky') ?: '',
+            'street' => $request->post('street') ?: '',
+            'popisne' => $request->post('popisne') ?: '',
+            'orientacni' => $request->post('orientacni') ?: '',
+            'district' => $request->post('district') ?: '',
+            'city' => $request->post('city') ?: '',
+            'postal' => $request->post('postal') ?: '',
+            'nationality' => $request->post('nationality') ?: '',
             'lock' => $request->post('lock') ?: '',
             'ban' => $request->post('ban') ?: '',
             'system' => $request->post('system') ?: '',
             'group' => $request->post('group') ?: '',
             'skupina' => $request->post('skupina') ?: '',
             'dancer' => $request->post('dancer') ?: '',
-            'trener' => $request->post('trener') ?: ''
+            'teacher' => $request->post('teacher') ?: ''
         ]);
     }
 
