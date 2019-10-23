@@ -55,7 +55,7 @@
 
   <?php if ($this->videos) : ?><h3>Seznamy videí</h3><?php endif ?>
   <?php foreach ($this->playlists as $item): ?>
-    <div class="playlist <?= $this->playlist == $item['id'] ? 'active' : '' ?>">
+    <div class="playlist <?= isset($this->playlist) && ($this->playlist == $item['id']) ? 'active' : '' ?>">
       <a href="/video?playlist=<?= $item['id'] ?>">
         <b><?= $item['title'] ?></b>
       </a>

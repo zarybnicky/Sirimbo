@@ -264,7 +264,7 @@ class User
                 '',
                 '66',
                 $u['u_dancer'] ? '1' : '0',
-                $u['u_trener'] ? '1' : '0',
+                $u['u_teacher'] ? '1' : '0',
                 csvDate($platby[$u['u_id']]),
                 '',
                 '',
