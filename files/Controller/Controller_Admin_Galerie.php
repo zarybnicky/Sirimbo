@@ -166,6 +166,9 @@ class Controller_Admin_Galerie extends Controller_Abstract
     private function _recursiveDirs($dir_name, &$out_dirs, &$out_files)
     {
         $file_list = scandir($dir_name);
+        if (!$file_list) {
+            return;
+        }
         foreach ($file_list as $key => $file) {
             if (in_array($file, ['.', '..', 'thumbnails', '.gitignore'])) {
                 unset($file_list[$key]);

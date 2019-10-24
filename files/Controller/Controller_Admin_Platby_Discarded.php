@@ -144,15 +144,14 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
             if (isset($row[$date]) && $row[$date]) {
                 $currentDate = new Date($row[$date]);
                 if (!isset($groupDate[$currentDate->getYear()])) {
-                    $groupDate[$currentDate->getYear()] = ['name' => $currentDate->getYear()];
+                    $groupDate[$currentDate->getYear()] = ['name' => $currentDate->getYear(), 'months' => []];
                 }
-
                 if (!isset($groupDate[$currentDate->getYear()]['months'][$currentDate->getMonth()])) {
                     $groupDate[$currentDate->getYear()]['months'][$currentDate->getMonth()] =
                         $currentDate->getYear() . '/' . $currentDate->getMonth();
                 }
             } elseif (!isset($groupDate['none'])) {
-                $groupDate['none'] = ['name' => 'Nerozpoznáno'];
+                $groupDate['none'] = ['name' => 'Nerozpoznáno', 'months' => []];
             }
 
             if (isset($row[$amount])) {

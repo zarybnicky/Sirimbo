@@ -75,15 +75,12 @@ class Controller_Admin_Aktuality extends Controller_Abstract
 
         Permissions::checkError('aktuality', P_OWNED, $data['at_kdo']);
 
-        $error = false;
         $date = DateTime::createFromFormat('j. n. Y H:i', $request->post('createdAt'));
-        if ($request->post() && $date === false) {
-            $this->redirect()->danger('Špatný formát data "Publikováno" (D. M. RRRR HH:SS)');
-            $error = true;
-        }
-
-        if (!$request->post() || $error) {
-            $this->render('files/View/Admin/Aktuality/Form.inc', [
+        if (!$request->post() || $date === false) {
+            if ($date === false) {
+                $this->redirect()->danger('Špatný formát data "Publikováno" (D. M. RRRR HH:SS)');
+            }
+            return $this->render('files/View/Admin/Aktuality/Form.inc', [
                 'header' => 'Správa aktualit',
                 'subheader' => 'Upravit článek',
                 'action' => $request->getAction(),
@@ -92,7 +89,6 @@ class Controller_Admin_Aktuality extends Controller_Abstract
                 'text' => $request->post('text') ?: $data['at_text'],
                 'createdAt' => $request->post('createdAt') ?: formatTimestamp($data['at_timestamp_add']),
             ]);
-            return;
         }
 
         DBAktuality::editAktualita(

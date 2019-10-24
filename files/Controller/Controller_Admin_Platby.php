@@ -13,7 +13,7 @@ class Controller_Admin_Platby extends Controller_Abstract
 
     protected function recognizeHeaders($headers, &$specific, &$variable, &$date, &$amount)
     {
-        foreach ($headers as $key => $value) {
+        foreach (array_keys($headers) as $key) {
             if (mb_stripos($key, 'specif') !== false) {
                 $specific = $key;
             }
@@ -28,20 +28,16 @@ class Controller_Admin_Platby extends Controller_Abstract
             }
         }
     }
+
     protected function checkHeaders($headers, &$specific, &$variable, &$date, &$amount)
     {
         $headers = array_flip($headers);
-
-        if (isset($headers[$specific])
+        return isset($headers[$specific])
             && isset($headers[$variable])
             && isset($headers[$date])
-            && isset($headers[$amount])
-        ) {
-            return true;
-        } else {
-            return false;
-        }
+            && isset($headers[$amount]);
     }
+
     protected function getCategoryList()
     {
         $in = DBPlatbyGroup::getGroupsWithCategories();
@@ -58,6 +54,7 @@ class Controller_Admin_Platby extends Controller_Abstract
         }
         return $out;
     }
+
     protected function getCategoryLookup($useSymbolKey, $unique, $includeGroups)
     {
         $in = DBPlatbyGroup::getGroupsWithCategories();
@@ -82,6 +79,7 @@ class Controller_Admin_Platby extends Controller_Abstract
         }
         return $out;
     }
+
     protected function getUserLookup($sort)
     {
         $in = DBUser::getUsers();

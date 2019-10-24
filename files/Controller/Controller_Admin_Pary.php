@@ -62,7 +62,7 @@ class Controller_Admin_Pary extends Controller_Abstract
         }
 
         if (!$request->post()) {
-            $this->render('files/View/Admin/Pary/Form.inc', [
+            return $this->render('files/View/Admin/Pary/Form.inc', [
                 'header' => 'Správa párů',
                 'subheader' => 'Změna třídy a bodů',
                 'fullName' => (
@@ -76,22 +76,13 @@ class Controller_Admin_Pary extends Controller_Abstract
                 'lat_body' => $data['p_lat_body'],
                 'lat_finale' => $data['p_lat_finale']
             ]);
-            return;
         }
-        $stt_body =
-            ($request->post('stt-body') && is_numeric($request->post('stt-body')))
-            ? $request->post('stt-body') : 0;
+        $stt_body = intval($request->post('stt-body'));
         $stt_body_capped = max($stt_body, 200);
-        $stt_finale =
-            ($request->post('stt-finale') && is_numeric($request->post('stt-finale')))
-            ? $request->post('stt-finale') : 0;
-        $lat_body =
-            ($request->post('lat-body') && is_numeric($request->post('lat-body')))
-            ? $request->post('lat-body') : 0;
+        $stt_finale = intval($request->post('stt-finale'));
+        $lat_body = intval($request->post('lat-body'));
         $lat_body_capped = max($lat_body, 200);
-        $lat_finale =
-            ($request->post('lat-finale') && is_numeric($request->post('lat-finale')))
-            ? $request->post('lat-finale') : 0;
+        $lat_finale = intval($request->post('lat-finale'));
 
         $stt_amend = constant('Controller_Member_Profil_Par::AMEND_' . $request->post('stt-trida'));
         $lat_amend = constant('Controller_Member_Profil_Par::AMEND_' . $request->post('lat-trida'));
