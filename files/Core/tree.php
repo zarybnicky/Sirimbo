@@ -1,8 +1,16 @@
 <?php
 class Tree
 {
+    /**
+     * @var string
+     */
     protected $name;
+
     protected $value;
+
+    /**
+     * @var Tree[]
+     */
     protected $children;
 
     public function __construct($name, $value, $children = [])
@@ -39,7 +47,7 @@ class Tree
 
     public function remove(Tree $element)
     {
-        $key = array_search($this->children, $element);
+        $key = array_search($element, $this->children);
         if ($key) {
             unset($this->children[$key]);
         }

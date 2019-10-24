@@ -40,9 +40,9 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
             $request->post('base', 1);
             return $this->displayForm($request, 'add', 0);
         }
-        $s = $this->checkPost($request);
-        if (is_object($s)) {
-            $this->redirect()->warning($s->getMessages());
+        $form = $this->checkData($request);
+        if (!$form->isValid()) {
+            $this->redirect()->warning($form->getMessages());
             return $this->displayForm($request, 'add', 0);
         }
         DBPlatbyGroup::insert(
@@ -81,9 +81,9 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
             $request->post('base', $data['pg_base']);
             return $this->displayForm($request, 'edit', $id);
         }
-        $s = $this->checkPost($request);
-        if (is_object($s)) {
-            $this->redirect()->warning($s->getMessages());
+        $form = $this->checkData($request);
+        if (!$form->isValid()) {
+            $this->redirect()->warning($form->getMessages());
             return $this->displayForm($request, 'edit', $id);
         }
 
@@ -264,13 +264,12 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
         ]);
     }
 
-    protected function checkPost($request)
+    protected function checkData($request): Form
     {
         $f = new Form();
         $f->checkInArray($request->post('type'), ['0', '1'], 'Neplatný typ kategorie');
         $f->checkNotEmpty($request->post('name'), 'Zadejte nějaký název platby');
         $f->checkNumeric($request->post('base'), 'Násobitel musí být zadán pouze čisly');
-
-        return $f->isValid() ? true : $f;
+        return $f;
     }
 }

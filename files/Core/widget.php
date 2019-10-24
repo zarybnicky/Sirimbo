@@ -7,8 +7,9 @@ class Widget extends Tree
     public function __construct(array $attributes = [])
     {
         $children = [];
+        $childrenInput = array_slice(func_get_args(), 1);
         array_walk_recursive(
-            (array_slice(func_get_args(), 1)),
+            $childrenInput,
             function ($a) use (&$children) {
                 $children[] = $a;
             }

@@ -64,9 +64,8 @@ class Controller_Admin_Nabidka extends Controller_Abstract
             $this->displayForm($request);
             return;
         }
-
         $form = $this->checkData($request);
-        if (is_object($form)) {
+        if (!$form->isValid()) {
             $this->redirect()->warning($form->getMessages());
             $this->displayForm($request);
             return;
@@ -114,9 +113,8 @@ class Controller_Admin_Nabidka extends Controller_Abstract
             $this->displayForm($request, $data);
             return;
         }
-
         $form = $this->checkData($request);
-        if (is_object($form)) {
+        if (!$form->isValid()) {
             $this->redirect()->warning($form->getMessages());
             $this->displayForm($request, $data);
             return;
@@ -227,7 +225,7 @@ class Controller_Admin_Nabidka extends Controller_Abstract
         return;
     }
 
-    private function checkData($request)
+    private function checkData($request): Form
     {
         $od = $this->date('od')->getPost($request);
         $do = $this->date('do')->getPost($request);
@@ -243,6 +241,6 @@ class Controller_Admin_Nabidka extends Controller_Abstract
             $f->checkDate((string) $do, 'Zadejte prosím platné datum ("Do")', 'do');
         }
 
-        return $f->isValid() ? true : $f;
+        return $f;
     }
 }

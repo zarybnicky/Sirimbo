@@ -33,13 +33,12 @@ class Controller_Admin_Galerie_Directory extends Controller_Abstract
     public function add($request)
     {
         if (!$request->post()) {
-            $this->displayForm($request, 'add');
-            return;
+            return $this->displayForm($request, 'add');
         }
-        if (is_object($form = $this->checkData($request))) {
+        $form = $this->checkData($request);
+        if (!$form->isValid()) {
             $this->redirect()->warning($form->getMessages());
-            $this->displayForm($request, 'add');
-            return;
+            return $this->displayForm($request, 'add');
         }
         $parent = DBGalerie::getSingleDir($request->post('parent'));
         $dirPath = $parent['gd_path'] . DIRECTORY_SEPARATOR
@@ -71,13 +70,12 @@ class Controller_Admin_Galerie_Directory extends Controller_Abstract
             $request->post('name', $data['gd_name']);
             $request->post('parent', $data['gd_id_rodic']);
             $request->post('hidden', $data['gd_hidden'] ? '1' : '0');
-            $this->displayForm($request, 'edit');
-            return;
+            return $this->displayForm($request, 'edit');
         }
-        if (is_object($form = $this->checkData($request))) {
+        $form = $this->checkData($request);
+        if (!$form->isValid()) {
             $this->redirect()->warning($form->getMessages());
-            $this->displayForm($request, 'edit');
-            return;
+            return $this->displayForm($request, 'edit');
         }
         $parent = DBGalerie::getSingleDir($request->post('parent'));
         $newPath = $parent['gd_path'] . DIRECTORY_SEPARATOR
@@ -179,6 +177,6 @@ class Controller_Admin_Galerie_Directory extends Controller_Abstract
             'Zadaná nadsložka není platná',
             'parent'
         );
-        return $form->isValid() ? [] : $form;
+        return $form;
     }
 }

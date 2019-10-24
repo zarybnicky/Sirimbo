@@ -32,8 +32,9 @@ class Controller_Admin_Permissions extends Controller_Abstract
             $this->renderForm($request);
             return;
         }
-        if (is_object($f = $this->checkData($request))) {
-            $this->redirect()->warning($f->getMessages());
+        $form = $this->checkData($request);
+        if (!$form->isValid()) {
+            $this->redirect()->warning($form->getMessages());
             $this->renderForm($request);
             return;
         }
@@ -66,8 +67,9 @@ class Controller_Admin_Permissions extends Controller_Abstract
             $this->renderForm($request, $data);
             return;
         }
-        if (is_object($f = $this->checkData($request))) {
-            $this->redirect()->warning($f->getMessages());
+        $form = $this->checkData($request);
+        if (!$form->isValid()) {
+            $this->redirect()->warning($form->getMessages());
             $this->renderForm($request, $data);
             return;
         }
@@ -154,7 +156,7 @@ class Controller_Admin_Permissions extends Controller_Abstract
         ]);
     }
 
-    private function checkData($request)
+    private function checkData($request): Form
     {
         $f = new Form();
         foreach (Settings::$permissions as $name => $item) {
@@ -163,6 +165,6 @@ class Controller_Admin_Permissions extends Controller_Abstract
                 'Neplatná hodnota práva "' . $name . '"', $name
             );
         }
-        return $f->isValid() ? true : $f;
+        return $f;
     }
 }

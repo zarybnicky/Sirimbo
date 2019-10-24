@@ -71,28 +71,27 @@ class Controller_Member_Rozpis extends Controller_Abstract
         }
     }
 
-    protected function checkData($request, $data, $action = 'signup')
+    protected function checkData($request, $data, $action = 'signup'): Form
     {
         $f = new Form();
         $f->checkBool(!$data['r_lock'], 'Tento rozpis je uzamčený', '');
         $f->checkInArray($action, ['signup', 'signout'], 'Špatná akce', '');
-
-        return $f->isValid() ? true : $f;
+        return $f;
     }
 
     protected function processPost($request)
     {
         $data = DBRozpis::getSingleRozpis($request->post('ri_id'));
         $lesson = DBRozpis::getRozpisItemLesson($request->post('ri_id'));
-
-        if (is_object($f = $this->checkData($request, $data, $request->post('action')))) {
-            $this->redirect()->warning($f->getMessages());
+        $form = $this->checkData($request, $data, $request->post('action'));
+        if (!$form->isValid()) {
+            $this->redirect()->warning($form->getMessages());
             return;
         }
         if ($request->post('action') == 'signup') {
-            // if (!User::getZaplaceno(true)) {
-            // $this->redirect()->warning('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
-            if ($lesson['ri_partner']) {
+            if (!User::getZaplacenoPar()) {
+                $this->redirect()->warning('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
+            } elseif ($lesson['ri_partner']) {
                 $this->redirect()->warning('Lekce už je obsazená');
             } else {
                 DBRozpis::rozpisSignUp($request->post('ri_id'), User::getParID());

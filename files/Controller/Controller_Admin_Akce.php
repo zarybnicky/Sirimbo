@@ -46,15 +46,13 @@ class Controller_Admin_Akce extends Controller_Abstract
     public function add($request)
     {
         if (!$request->post()) {
-            $this->displayForm($request);
-            return;
+            return $this->displayForm($request);
         }
 
         $form = $this->checkData($request);
-        if (is_object($form)) {
+        if (!$form->isValid()) {
             $this->redirect()->warning($form->getMessages());
-            $this->displayForm($request);
-            return;
+            return $this->displayForm($request);
         }
 
         $od = $this->date('od')->getPost($request);
@@ -90,15 +88,13 @@ class Controller_Admin_Akce extends Controller_Abstract
         }
 
         if (!$request->post()) {
-            $this->displayForm($request, $data);
-            return;
+            return $this->displayForm($request, $data);
         }
 
         $form = $this->checkData($request);
-        if (is_object($form)) {
+        if (!$form->isValid()) {
             $this->redirect()->warning($form->getMessages());
-            $this->displayForm($request, $data);
-            return;
+            return $this->displayForm($request, $data);
         }
 
         $od = $this->date('od')->getPost($request);
@@ -206,7 +202,7 @@ class Controller_Admin_Akce extends Controller_Abstract
         }
     }
 
-    private function checkData($request)
+    private function checkData($request): Form
     {
         $od = $this->date('od')->getPost($request);
         $do = $this->date('do')->getPost($request);
@@ -218,6 +214,6 @@ class Controller_Admin_Akce extends Controller_Abstract
         }
         $form->checkNumeric($request->post('kapacita'), 'Kapacita musí být zadána číselně', 'kapacita');
 
-        return $form->isValid() ? [] : $form;
+        return $form;
     }
 }

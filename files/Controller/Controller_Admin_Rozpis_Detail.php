@@ -133,8 +133,9 @@ class Controller_Admin_Rozpis_Detail extends Controller_Abstract
 
         //Try to add a new item
         if ($request->post('add_od') && $request->post('add_do')) {
-            if (is_object($f = $this->checkAdd($request))) {
-                $this->redirect()->warning($f->getMessages());
+            $form = $this->checkAdd($request);
+            if (!$form->isValid()) {
+                $this->redirect()->warning($form->getMessages());
             } else {
                 $newId = DBRozpis::addRozpisItem(
                     $id,
@@ -184,8 +185,9 @@ class Controller_Admin_Rozpis_Detail extends Controller_Abstract
                 break;
 
             case 'add_multiple':
-                if (is_object($f = $this->checkAddMultiple($request))) {
-                    $this->redirect()->warning($f->getMessages());
+                $form = $this->checkAddMultiple($request);
+                if (!$form->isValid()) {
+                    $this->redirect()->warning($form->getMessages());
                     break;
                 }
 
@@ -214,10 +216,9 @@ class Controller_Admin_Rozpis_Detail extends Controller_Abstract
         return $items;
     }
 
-    protected function checkAdd($request)
+    protected function checkAdd($request): Form
     {
         $f = new Form();
-
         $f->checkNumeric(
             $request->post('add_partner'),
             'Neplatný partner u přidávané lekce',
@@ -233,14 +234,12 @@ class Controller_Admin_Rozpis_Detail extends Controller_Abstract
             'Neplatný formát času "do" u přidávané lekce',
             'add_do'
         );
-
-        return $f->isValid() ? true : $f;
+        return $f;
     }
 
-    protected function checkAddMultiple($request)
+    protected function checkAddMultiple($request): Form
     {
         $f = new Form();
-
         $f->checkNumeric(
             $request->post('add_multi_num'),
             'Neplatný počet přidávaných hodin',
@@ -256,7 +255,6 @@ class Controller_Admin_Rozpis_Detail extends Controller_Abstract
             'Neplatný formát času "od" u přidávaných hodin',
             'add_multi_od'
         );
-
-        return $f->isValid() ? true : $f;
+        return $f;
     }
 }

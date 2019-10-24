@@ -123,7 +123,6 @@
                  ->set($this->skupina == $item['id'])
                  ->label($this->colorbox($item['color'], $item['popis'])
                       . '&nbsp;' . $item['popis']);
-        echo '<br/>';
     }?>
   </div>
   <div class="form-group">

@@ -73,14 +73,14 @@ class Controller_Member_Nabidka extends Controller_Abstract
         ]);
     }
 
-    private function checkData($request, $data)
+    private function checkData($request, $data): Form
     {
         $f = new Form();
         $f->checkBool(!$data['n_lock'], 'Tato nabídka je uzamčená', '');
         if ($request->post('hodiny')) {
             $f->checkNumeric($request->post('hodiny'), 'Špatný počet hodin', 'hodiny');
         }
-        return $f->isValid() ? null : $f;
+        return $f;
     }
 
     private function processPost($request)
@@ -89,15 +89,15 @@ class Controller_Member_Nabidka extends Controller_Abstract
             return;
         }
         $data = DBNabidka::getSingleNabidka($request->post('id'));
-
-        if (is_object($f = $this->checkData($request, $data))) {
-            $this->redirect()->warning($f->getMessages());
+        $form = $this->checkData($request, $data);
+        if (!$form->isValid()) {
+            $this->redirect()->warning($form->getMessages());
             return;
         }
         if ($request->post('hodiny') > 0) {
-            // if (!User::getZaplaceno(true)) {
-                // $this->redirect()->danger('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
-            if ($data['n_max_pocet_hod'] > 0
+            if (!User::getZaplacenoPar()) {
+                $this->redirect()->danger('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
+            } elseif ($data['n_max_pocet_hod'] > 0
                 && (DBNabidka::getNabidkaLessons($request->post('id'), User::getParID())
                    + $request->post('hodiny')) > $data['n_max_pocet_hod']
             ) {

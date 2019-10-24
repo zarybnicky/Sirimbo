@@ -80,9 +80,9 @@ class Controller_Admin_Users extends Controller_Abstract
         if (!$request->post()) {
             return $this->displayForm($request);
         }
-        $f = $this->checkData($request, 'add');
-        if (is_object($f)) {
-            $this->redirect()->warning($f->getMessages());
+        $form = $this->checkData($request, 'add');
+        if (!$form->isValid()) {
+            $this->redirect()->warning($form->getMessages());
             return $this->displayForm($request);
         }
 
@@ -156,9 +156,9 @@ class Controller_Admin_Users extends Controller_Abstract
             $request->post('nationality', $data['u_nationality']);
             return $this->displayForm($request);
         }
-        $f = $this->checkData($request, 'edit');
-        if (is_object($f)) {
-            $this->redirect()->warning($f->getMessages());
+        $form = $this->checkData($request, 'edit');
+        if (!$form->isValid()) {
+            $this->redirect()->warning($form->getMessages());
             return $this->displayForm($request);
         }
 
@@ -450,7 +450,7 @@ class Controller_Admin_Users extends Controller_Abstract
         ]);
     }
 
-    private function checkData($request, $action = 'add')
+    private function checkData($request, $action = 'add'): Form
     {
         $narozeni = $this->date('narozeni')->getPost($request);
 
@@ -464,6 +464,6 @@ class Controller_Admin_Users extends Controller_Abstract
             $f->checkLogin($request->post('login'), 'Špatný formát přihlašovacího jména', 'login');
             $f->checkPassword($request->post('pass'), 'Špatný formát hesla', 'pass');
         }
-        return $f->isValid() ? true : $f;
+        return $f;
     }
 }

@@ -199,7 +199,7 @@ class Controller_Admin_Video extends Controller_Abstract
         ]);
     }
 
-    protected function checkData($request)
+    protected function checkData($request): Form
     {
         $form = new Form();
         $form->checkNotEmpty(

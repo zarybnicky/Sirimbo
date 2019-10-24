@@ -12,19 +12,20 @@ class User
         if ($login == "superadmin" && $pass == "9947a7bc1549a54e7299fe9a3975c8655430ade0") {
             User::loadUser(1, DBUser::getUserData(1));
             return true;
-        } elseif ($id = DBUser::checkUser($login, $pass)) {
-            $data = DBUser::getUserData($id);
-            if ($data['u_ban']) {
-                Helper::instance()->redirect('/error?id=ban');
-            }
-            if (!$data['u_confirmed']) {
-                Helper::instance()->redirect('/error?id=not_approved');
-            }
-            User::loadUser($data['u_id'], $data);
-            return true;
-        } else {
+        }
+        $id = DBUser::checkUser($login, $pass);
+        if (!$id) {
             return false;
         }
+        $data = DBUser::getUserData($id);
+        if ($data['u_ban']) {
+            Helper::instance()->redirect('/error?id=ban');
+        }
+        if (!$data['u_confirmed']) {
+            Helper::instance()->redirect('/error?id=not_approved');
+        }
+        User::loadUser($data['u_id'], $data);
+        return true;
     }
 
     public static function logout()
@@ -83,21 +84,21 @@ class User
         return true;
     }
 
-    public static function getPermissions($module = '')
+    public static function getPermissions($module)
     {
         if (!User::isLogged()) {
-            return $module ? P_NONE : [];
+            return P_NONE;
         }
         if (User::getUserID() == 1) {
-            return $module ? P_ADMIN : $_SESSION['permissions'];
+            return P_ADMIN;
         }
         if (User::getUserData()['u_group'] == 0) {
-            return $module ? P_NONE : $_SESSION['permissions'];
+            return P_NONE;
         }
-        if ($module && isset($_SESSION['permissions'][$module])) {
-            return $_SESSION['permissions'][$module];
+        if (!isset($_SESSION['permissions'][$module])) {
+            return P_NONE;
         }
-        return $_SESSION['permissions'];
+        return $_SESSION['permissions'][$module];
     }
 
     public static function getUserID()
@@ -135,14 +136,18 @@ class User
         return $_SESSION['skupina_data'];
     }
 
-    public static function getZaplaceno($par = false)
+    public static function getZaplaceno()
     {
-        $paidSelf = DBPlatby::hasPaidMemberFees($_SESSION['id']);
-        if ($par && $_SESSION['partner']) {
-            return $paidSelf && DBPlatby::hasPaidMemberFees($_SESSION['partner']);
-        } else {
-            return $paidSelf;
+        return DBPlatby::hasPaidMemberFees($_SESSION['id']);
+    }
+
+    public static function getZaplacenoPar()
+    {
+        $paid = DBPlatby::hasPaidMemberFees($_SESSION['id']);
+        if ($_SESSION['partner']) {
+            $paid = $paid && DBPlatby::hasPaidMemberFees($_SESSION['partner']);
         }
+        return $paid;
     }
 
     public static function getAgeGroup($year)

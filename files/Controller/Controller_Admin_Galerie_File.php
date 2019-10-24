@@ -28,7 +28,8 @@ class Controller_Admin_Galerie_File extends Controller_Abstract
             $this->displayForm($request, $id);
             return;
         }
-        if (is_object($form = $this->_checkData($request))) {
+        $form = $this->checkData($request);
+        if (!$form->isValid()) {
             $this->redirect()->warning($form->getMessages());
             $this->displayForm($request, $id);
             return;
@@ -209,7 +210,7 @@ class Controller_Admin_Galerie_File extends Controller_Abstract
         ]);
     }
 
-    private function _checkData($request)
+    private function checkData($request): Form
     {
         $form = new Form();
 
@@ -221,6 +222,6 @@ class Controller_Admin_Galerie_File extends Controller_Abstract
             'parent'
         );
 
-        return $form->isValid() ? [] : $form;
+        return $form;
     }
 }

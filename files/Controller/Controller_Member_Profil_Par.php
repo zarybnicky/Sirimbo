@@ -44,7 +44,7 @@ class Controller_Member_Profil_Par extends Controller_Abstract
             $request->post('lat-trida', $par['p_lat_trida']);
             $request->post('lat-body', $par['p_lat_body']);
             $request->post('lat-finale', $par['p_lat_finale']);
-            $this->render('files/View/Member/Profil/CoupleData.inc', [
+            return $this->render('files/View/Member/Profil/CoupleData.inc', [
                 'header' => 'Změna třídy a bodů',
                 'stt_trida' => $request->post('stt_trida') ?: '',
                 'stt_body' => $request->post('stt_body') ?: '',
@@ -53,11 +53,11 @@ class Controller_Member_Profil_Par extends Controller_Abstract
                 'lat_body' => $request->post('lat_body') ?: '',
                 'lat_finale' => $request->post('lat_finale') ?: ''
             ]);
-            return;
         }
-        if (is_object($f = $this->checkData($request))) {
-            $this->redirect()->setMessage($f->getMessages());
-            $this->render('files/View/Member/Profil/CoupleData.inc', [
+        $form = $this->checkData($request);
+        if (!$form->isValid()) {
+            $this->redirect()->warning($form->getMessages());
+            return $this->render('files/View/Member/Profil/CoupleData.inc', [
                 'header' => 'Změna třídy a bodů',
                 'stt_trida' => $request->post('stt_trida') ?: '',
                 'stt_body' => $request->post('stt_body') ?: '',
@@ -66,7 +66,6 @@ class Controller_Member_Profil_Par extends Controller_Abstract
                 'lat_body' => $request->post('lat_body') ?: '',
                 'lat_finale' => $request->post('lat_finale') ?: ''
             ]);
-            return;
         }
         $stt_amend = constant('self::AMEND_' . $request->post('stt-trida'));
         $stt_bonus = constant('self::BONUS_' . $request->post('stt-trida'));
@@ -230,6 +229,6 @@ class Controller_Member_Profil_Par extends Controller_Abstract
             'Špatný počet latinských finálí',
             'lat-finale'
         );
-        return $f->isValid() ? null : $f;
+        return $f;
     }
 }

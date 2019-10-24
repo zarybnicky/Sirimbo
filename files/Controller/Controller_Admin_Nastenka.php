@@ -74,9 +74,9 @@ class Controller_Admin_Nastenka extends Controller_Abstract
         if (!$request->post()) {
             return $this->renderForm($request);
         }
-        $f = $this->checkData($request);
-        if (is_object($f)) {
-            $this->redirect()->warning($f->getMessages());
+        $form = $this->checkData($request);
+        if (!$form->isValid()) {
+            $this->redirect()->warning($form->getMessages());
             return $this->renderForm($request);
         }
 
@@ -125,9 +125,9 @@ class Controller_Admin_Nastenka extends Controller_Abstract
             $request->post('lock', $data['up_lock']);
             return $this->renderForm($request);
         }
-        $f = $this->checkData($request);
-        if (is_object($f)) {
-            $this->redirect()->warning($f->getMessages());
+        $form = $this->checkData($request);
+        if (!$form->isValid()) {
+            $this->redirect()->warning($form->getMessages());
             return $this->renderForm($request);
         }
 
@@ -194,11 +194,11 @@ class Controller_Admin_Nastenka extends Controller_Abstract
         $this->redirect('/admin/nastenka');
     }
 
-    private function checkData($request)
+    private function checkData($request): Form
     {
         $f = new Form();
         $f->checkNotEmpty($request->post('nadpis'), 'Zadejte nadpis', 'nadpis');
         $f->checkNotEmpty($request->post('text'), 'Zadejte nějaký text', 'text');
-        return $f->isValid() ? true : $f;
+        return $f;
     }
 }

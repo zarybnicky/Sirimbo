@@ -163,7 +163,7 @@ class SMTP
 
     /**
      * The socket for the server connection.
-     * @var resource
+     * @var resource|null
      */
     protected $smtp_conn;
 
@@ -369,7 +369,7 @@ class SMTP
             $crypto_method
         );
         restore_error_handler();
-        return $crypto_ok;
+        return (bool) $crypto_ok;
     }
 
     /**

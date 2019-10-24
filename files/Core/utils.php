@@ -1,5 +1,6 @@
 <?php
-function formatTime($str, $forDisplay) {
+function formatTime($str, $forDisplay)
+{
     if ($forDisplay) {
         return substr($str, 0, 5); //15:00:00
     } else {
@@ -7,12 +8,14 @@ function formatTime($str, $forDisplay) {
     }
 }
 
-function formatDate($str) {
+function formatDate($str)
+{
     list($year, $month, $day) = explode('-', $str);
     return (int)$day . '. ' . (int)$month . '. ' . $year;
 }
 
-function formatTimestamp($str, $date_only = false) {
+function formatTimestamp($str, $date_only = false)
+{
     list($date, $time) = explode(' ', $str);
     if ($date_only) {
         return formatDate($date);
@@ -37,6 +40,9 @@ function rrmdir($dir)
         return false;
     }
     $objects = scandir($dir);
+    if ($objects === false) {
+        return false;
+    }
     foreach ($objects as $object) {
         if (in_array($object, ['.', '..'])) {
             continue;
@@ -49,11 +55,17 @@ function rrmdir($dir)
     }
     unset($objects);
     rmdir($dir);
+    return true;
 }
 
 function createThumbnail($file, $thumbFile)
 {
-    $filetype = image_type_to_mime_type(exif_imagetype($file));
+    $type = exif_imagetype($file);
+    if (!$type) {
+        unlink($file);
+        return false;
+    }
+    $filetype = image_type_to_mime_type($type);
     if (!$filetype || !array_key_exists($filetype, Settings::$imageType)) {
         unlink($file);
         return false;

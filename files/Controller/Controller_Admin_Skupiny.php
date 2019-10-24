@@ -31,13 +31,12 @@ class Controller_Admin_Skupiny extends Controller_Abstract
     public function add($request)
     {
         if (!$request->post()) {
-            $this->displayForm($request);
-            return;
+            return $this->displayForm($request);
         }
-        if (is_object($f = $this->checkPost($request))) {
-            $this->redirect()->warning($f->getMessages());
-            $this->displayForm($request);
-            return;
+        $form = $this->checkData($request);
+        if (!$form->isValid()) {
+            $this->redirect()->warning($form->getMessages());
+            return $this->displayForm($request);
         }
         DBSkupiny::insert(
             $request->post('name'),
@@ -65,14 +64,12 @@ class Controller_Admin_Skupiny extends Controller_Abstract
         }
 
         if (!$request->post()) {
-            $this->displayForm($request, $data);
-            return;
+            return $this->displayForm($request, $data);
         }
-
-        if (is_object($f = $this->checkPost($request))) {
-            $this->redirect()->warning($f->getMessages());
-            $this->displayForm($request, $data);
-            return;
+        $form = $this->checkData($request);
+        if (!$form->isValid()) {
+            $this->redirect()->warning($form->getMessages());
+            return $this->displayForm($request, $data);
         }
 
         DBSkupiny::update(
@@ -193,14 +190,13 @@ class Controller_Admin_Skupiny extends Controller_Abstract
         $group = DBSkupiny::getSingleWithGroups($id);
         return $group ? ['groups' => $group] : [];
     }
-    private function checkPost($request)
+
+    private function checkData($request): Form
     {
         $f = new Form();
-
         $f->checkNotEmpty($request->post('name'), 'Zadejte prosím nějaké jméno.');
         $f->checkNotEmpty($request->post('desc'), 'Zadejte prosím nějaký popis.');
         $f->checkRegexp($request->post('color'), '/#[0-9a-f]{6}/i', 'Zadejte prosím platnou barvu.');
-
-        return $f->isValid() ? true : $f;
+        return $f;
     }
 }

@@ -102,9 +102,9 @@ class Controller_Member_Profil extends Controller_Abstract
             return $this->renderPersonalForm($request);
         }
 
-        $f = $this->checkData($request, 'edit', $narozeni);
-        if (is_object($f)) {
-            $this->redirect()->warning($f->getMessages());
+        $form = $this->checkData($request, 'edit', $narozeni);
+        if (!$form->isValid()) {
+            $this->redirect()->warning($form->getMessages());
             return $this->renderPersonalForm($request);
         }
 
@@ -145,8 +145,9 @@ class Controller_Member_Profil extends Controller_Abstract
                 'header' => 'Změna hesla'
             ]);
         }
-        if (is_object($f = $this->checkData($request, 'heslo'))) {
-            $this->redirect()->warning($f->getMessages());
+        $form = $this->checkData($request, 'heslo');
+        if (!$form->isValid()) {
+            $this->redirect()->warning($form->getMessages());
             return $this->render('files/View/Member/Profil/NewPassword.inc', [
                 'header' => 'Změna hesla'
             ]);
@@ -158,7 +159,7 @@ class Controller_Member_Profil extends Controller_Abstract
         $this->redirect('/member/profil');
     }
 
-    private function checkData($request, $action, $narozeni = null)
+    private function checkData($request, $action, $narozeni = null): Form
     {
         $f = new Form();
         if ($action == 'edit') {
@@ -182,6 +183,6 @@ class Controller_Member_Profil extends Controller_Abstract
                 'newpass_check'
             );
         }
-        return $f->isValid() ? null : $f;
+        return $f;
     }
 }

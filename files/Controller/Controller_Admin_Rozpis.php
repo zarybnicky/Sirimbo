@@ -58,15 +58,13 @@ class Controller_Admin_Rozpis extends Controller_Abstract
     public function add($request)
     {
         if (!$request->post()) {
-            $this->displayForm($request);
-            return;
+            return $this->displayForm($request);
         }
 
         $form = $this->checkData($request);
-        if (is_object($form)) {
+        if (!$form->isValid()) {
             $this->redirect()->warning($form->getMessages());
-            $this->displayForm($request);
-            return;
+            return $this->displayForm($request);
         }
 
         Permissions::checkError('rozpis', P_OWNED, $request->post('trener'));
@@ -95,14 +93,13 @@ class Controller_Admin_Rozpis extends Controller_Abstract
         Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
 
         if (!$request->post()) {
-            $this->displayForm($request, $data);
+            return $this->displayForm($request, $data);
         }
 
         $form = $this->checkData($request);
-        if (is_object($form)) {
+        if (!$form->isValid()) {
             $this->redirect()->warning($form->getMessages());
-            $this->displayForm($request, $data);
-            return;
+            return $this->displayForm($request, $data);
         }
 
         $datum = $this->date('datum')->getPost($request);
@@ -176,14 +173,13 @@ class Controller_Admin_Rozpis extends Controller_Abstract
         ]);
     }
 
-    private function checkData($request)
+    private function checkData($request): Form
     {
         $datum = $this->date('datum')->getPost($request);
 
         $f = new Form();
         $f->checkNumeric($request->post('trener'), 'Neplatný trenér', 'trener');
         $f->checkDate((string) $datum, 'Neplatný formát data', 'datum');
-
-        return $f->isValid() ? true : $f;
+        return $f;
     }
 }

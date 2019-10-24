@@ -80,11 +80,7 @@ function errorHandler($severity, $message, $filepath, $line)
 
 register_shutdown_function('shutdownHandler');
 set_error_handler('errorHandler');
-
-define('DEBUG', '1');
-if (DEBUG) {
-    error_reporting(-1);
-}
+// error_reporting(-1);
 
 define('THUMBNAIL_MAX', 150);
 

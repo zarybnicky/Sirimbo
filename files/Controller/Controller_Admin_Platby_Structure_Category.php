@@ -75,9 +75,9 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         if (!$request->post()) {
             return $this->displayForm($request, 'add', 0);
         }
-        $s = $this->checkPost($request, 'add', 0);
-        if (is_object($s)) {
-            $this->redirect()->warning($s->getMessages());
+        $form = $this->checkData($request, 'add', 0);
+        if (!$form->isValid()) {
+            $this->redirect()->warning($form->getMessages());
             return $this->displayForm($request, 'add', 0);
         }
 
@@ -143,9 +143,9 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             $request->post('visible', $data['pc_visible']);
             return $this->displayForm($request, 'edit', $id);
         }
-        $s = $this->checkPost($request, 'edit', $id);
-        if (is_object($s)) {
-            $this->redirect()->warning($s->getMessages());
+        $form = $this->checkData($request, 'edit', $id);
+        if (!$form->isValid()) {
+            $this->redirect()->warning($form->getMessages());
             return $this->displayForm($request, 'edit', $id);
         }
         $dueDate = $this->date('dueDate')->getPost($request);
@@ -339,7 +339,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         ]);
     }
 
-    protected function checkPost($request, $action, $id)
+    protected function checkData($request, $action, $id): Form
     {
         $f = new Form();
         $dueDate = $this->date('dueDate')->getPost($request);
@@ -388,6 +388,6 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         $f->checkNumeric($request->post('symbol'), 'Zadejte prosím platný specifický symbol.');
         $f->checkRegexp($request->post('amount'), '/(\*)?([0-9]+)([.,][0-9]+)?/', 'Zadejte prosím platnou očekávanou částku.');
 
-        return $f->isValid() ? true : $f;
+        return $f;
     }
 }
