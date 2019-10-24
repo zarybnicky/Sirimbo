@@ -41,7 +41,7 @@ class PartnerRequestHelper
 </div>
 </form>
             <?php
-            $out .= Helper::instance()->notice(ob_get_contents());
+            $out .= (new NoticeHelper())->notice(ob_get_contents());
             ob_end_clean();
         }
         return $out;
@@ -62,7 +62,7 @@ class PartnerRequestHelper
         Uživatel <?= $item['u_jmeno'], ' ', $item['u_prijmeni'] ?> Vás žádá o partnerství.
     </span>
     <span style="text-align:right;float:right;margin-right:15px;">
-        <?= Helper::instance()->hidden('id', $item['pn_id']) ?>
+        <?= (new HiddenHelper())->hidden('id', $item['pn_id']) ?>
         <button type="submit" name="action" value="accept">Přijmout</button>
         <button type="submit" name="action" value="refuse">Odmítnout</button>
     </span>
@@ -70,7 +70,7 @@ class PartnerRequestHelper
 </div>
 </form>
             <?php
-            $out .= Helper::instance()->notice(ob_get_contents());
+            $out .= (new NoticeHelper())->notice(ob_get_contents());
             ob_end_clean();
         }
         return $out;

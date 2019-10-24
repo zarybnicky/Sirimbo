@@ -26,7 +26,7 @@ class Permissions
         if (User::isLogged()) {
             throw new AuthorizationException("Nemáte dostatečnou autorizaci pro tuto akci!");
         }
-        Helper::instance()->redirect(
+        (new RedirectHelper())->redirect(
             '/login?return=' . static::$request->server('REQUEST_URI'),
             'Nemáte dostatečná oprávnění k zobrazení požadovaného obsahu'
         );

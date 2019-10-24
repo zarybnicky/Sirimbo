@@ -54,7 +54,7 @@ try {
             && $request->getURI() !== 'member/profil/edit'
             && $request->getURI() !== 'logout'
         ) {
-            Helper::instance()->redirect(
+            (new RedirectHelper())->redirect(
                 '/member/profil/edit',
                 'Prosím vyplňte požadované údaje.',
                 true
@@ -64,11 +64,11 @@ try {
         $request->post('pass', User::crypt($request->post('pass')));
 
         if (!User::login($request->post('login'), $request->post('pass'))) {
-            Helper::instance()->redirect('/login', 'Špatné jméno nebo heslo!');
+            (new RedirectHelper())->redirect('/login', 'Špatné jméno nebo heslo!');
         } elseif ($request->get('return')) {
-            Helper::instance()->redirect($request->get('return'));
+            (new RedirectHelper())->redirect($request->get('return'));
         } else {
-            Helper::instance()->redirect('/member/home');
+            (new RedirectHelper())->redirect('/member/home');
         }
     }
 
@@ -81,7 +81,7 @@ try {
         . $e->getTraceAsString()
     );
     ob_clean();
-    Helper::instance()->redirect('/error?id=' . $e->getErrorFile());
+    (new RedirectHelper())->redirect('/error?id=' . $e->getErrorFile());
 } catch (Exception $e) {
     Log::write(
         $e->getMessage()
@@ -89,5 +89,5 @@ try {
         . $e->getTraceAsString()
     );
     ob_clean();
-    Helper::instance()->redirect('/error?id=' . (new ViewException(''))->getErrorFile());
+    (new RedirectHelper())->redirect('/error?id=' . (new ViewException(''))->getErrorFile());
 }

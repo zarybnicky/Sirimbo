@@ -1,7 +1,7 @@
 <div class="container">
   <form enctype="multipart/form-data" action="" method="post">
     <div class="form-group">
-      <?= $this->upload('files') ?>
+      <?= (new UploadHelper())->upload('files') ?>
     </div>
     <div class="form-group">
       <label for="dir">Složka</label>
