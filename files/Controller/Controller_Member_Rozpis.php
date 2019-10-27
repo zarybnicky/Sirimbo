@@ -33,7 +33,7 @@ class Controller_Member_Rozpis extends Controller_Abstract
                                 && !$rozpis['r_lock']
                                 && !$item['ri_lock']
                                 && ((Permissions::check('rozpis', P_MEMBER)
-                                     && User::getParID() == $item['ri_partner'])
+                                     && Session::getParID() == $item['ri_partner'])
                                     || Permissions::check('rozpis', P_OWNED, $rozpis['r_trener']))
                             )
                         ];
@@ -89,16 +89,16 @@ class Controller_Member_Rozpis extends Controller_Abstract
             return;
         }
         if ($request->post('action') == 'signup') {
-            if (!User::getZaplacenoPar()) {
+            if (!Session::getZaplacenoPar()) {
                 $this->redirect()->warning('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
             } elseif ($lesson['ri_partner']) {
                 $this->redirect()->warning('Lekce už je obsazená');
             } else {
-                DBRozpis::rozpisSignUp($request->post('ri_id'), User::getParID());
+                DBRozpis::rozpisSignUp($request->post('ri_id'), Session::getParID());
             }
         } elseif ($request->post('action') == 'signout') {
             if ($lesson['ri_partner'] == 0) {
-            } elseif (User::getParID() != $lesson['ri_partner']
+            } elseif (Session::getParID() != $lesson['ri_partner']
                       && !Permissions::check('rozpis', P_OWNED, $data['n_trener'])
             ) {
                 $this->redirect()->warning('Nedostatečná oprávnění!');

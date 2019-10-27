@@ -8,11 +8,11 @@ class Controller_Member_Profil extends Controller_Abstract
 
     public function view($request)
     {
-        $data = User::getUserData();
-        $s = User::getSkupinaData();
+        $data = Session::getUserData();
+        $s = Session::getSkupinaData();
 
         $groupsOut = [];
-        $groups = DBSkupiny::getSingleWithCategories(User::getSkupina());
+        $groups = DBSkupiny::getSingleWithCategories(Session::getSkupina());
         foreach ($groups as $row) {
             if (!$row['pc_visible']) {
                 continue;
@@ -39,19 +39,19 @@ class Controller_Member_Profil extends Controller_Abstract
                     'validFor' => formatDate($row['pc_valid_from']) . ' - ' . formatDate($row['pc_valid_to']),
                 ];
             },
-            DBPlatby::getPaymentHistory(User::getUserID())
+            DBPlatby::getPaymentHistory(Session::getUserID())
         );
 
         $this->render('files/View/Member/Profil/Overview.inc', [
             'header' => $data['u_jmeno'] . ' ' . $data['u_prijmeni'],
-            'ageGroup' => User::getAgeGroup(explode('-', $data['u_narozeni'])[0]),
-            'coupleData' => User::getCoupleData(),
+            'ageGroup' => Session::getAgeGroup(explode('-', $data['u_narozeni'])[0]),
+            'coupleData' => Session::getCoupleData(),
             'skupina' => (
                 $this->colorbox($s['s_color_rgb'], $s['s_name']) .
                 '&nbsp;' . $s['s_name']
             ),
-            'varSymbol' => User::varSymbol(User::getUserID()),
-            'hasPaid' => User::getZaplaceno(),
+            'varSymbol' => User::varSymbol(Session::getUserID()),
+            'hasPaid' => Session::getZaplaceno(),
             'platby' => $platby,
             'platbyGroups' => $groupsOut,
         ]);
@@ -81,7 +81,7 @@ class Controller_Member_Profil extends Controller_Abstract
 
     public function edit($request)
     {
-        $data = DBUser::getUserData(User::getUserID());
+        $data = DBUser::getUserData(Session::getUserID());
         $narozeni = $this->date('narozeni')->getPost($request);
 
         if (!$request->post()) {
@@ -109,7 +109,7 @@ class Controller_Member_Profil extends Controller_Abstract
         }
 
         DBUser::setUserData(
-            User::getUserID(),
+            Session::getUserID(),
             $request->post('jmeno'),
             $request->post('prijmeni'),
             $request->post('pohlavi'),
@@ -153,7 +153,7 @@ class Controller_Member_Profil extends Controller_Abstract
             ]);
         }
         DBUser::setPassword(
-            User::getUserID(),
+            Session::getUserID(),
             User::crypt($request->post('newpass'))
         );
         $this->redirect('/member/profil');
@@ -171,7 +171,7 @@ class Controller_Member_Profil extends Controller_Abstract
             $f->checkPassword($request->post('newpass'), 'Neplatný formát hesla', 'newpass');
             $f->checkBool(
                 DBUser::checkUser(
-                    User::getUserData()['u_login'],
+                    Session::getUserData()['u_login'],
                     User::crypt($request->post('oldpass'))
                 ),
                 'Staré heslo je špatně',

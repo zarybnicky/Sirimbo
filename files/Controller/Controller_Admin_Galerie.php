@@ -150,7 +150,7 @@ class Controller_Admin_Galerie extends Controller_Abstract
                 getCanonicalName($parent),
                 getCanonicalName($file),
                 $name,
-                User::getUserID()
+                Session::getUserID()
             );
         }
         $this->redirect()->info(

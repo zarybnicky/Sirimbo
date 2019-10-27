@@ -81,7 +81,7 @@ class Controller_Admin_Nastenka extends Controller_Abstract
         }
 
         $id = DBNastenka::addNastenka(
-            User::getUserID(),
+            Session::getUserID(),
             $request->post('nadpis'),
             $request->post('text'),
             $request->post('lock') ? 1 : 0

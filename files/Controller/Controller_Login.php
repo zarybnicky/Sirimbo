@@ -1,8 +1,9 @@
 <?php
 class Controller_Login extends Controller_Abstract
 {
-    public function view($request) {
-        if (User::isLogged()) {
+    public function view($request)
+    {
+        if (Session::isLogged()) {
             $uri = $request->get('return') ? $request->get('return') : '/member/home';
             $this->redirect($uri);
         }

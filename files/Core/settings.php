@@ -78,10 +78,6 @@ function errorHandler($severity, $message, $filepath, $line)
     return true;
 }
 
-register_shutdown_function('shutdownHandler');
-set_error_handler('errorHandler');
-// error_reporting(-1);
-
 define('THUMBNAIL_MAX', 150);
 
 define('P_NONE', 1);

@@ -98,7 +98,7 @@ class Controller_Registrace extends Controller_Abstract
             return;
         }
 
-        User::register(
+        Session::register(
             strtolower($request->post('username')),
             $request->post('pass'),
             $request->post('jmeno'),

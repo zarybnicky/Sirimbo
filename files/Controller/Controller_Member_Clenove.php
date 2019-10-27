@@ -84,16 +84,17 @@ class Controller_Member_Clenove extends Controller_Abstract
                 $index = 0;
                 $currentID = $item['s_id'];
                 $currentKey = count($skupiny);
-                $skupiny[$currentKey] = [];
-                $skupiny[$currentKey]['info'] = [
-                    'header' => new Tag(
-                        'big',
-                        [],
-                        $this->colorbox($item['s_color_rgb'], $item['s_description'])->render(),
-                        '&nbsp;&nbsp;' . $item['s_name']
-                    )
+                $skupiny[$currentKey] = [
+                    'info' => [
+                        'header' => new Tag(
+                            'big',
+                            [],
+                            $this->colorbox($item['s_color_rgb'], $item['s_description'])->render(),
+                            '&nbsp;&nbsp;' . $item['s_name']
+                        )
+                    ],
+                    'users' => []
                 ];
-                $skupiny[$currentKey]['users'] = [];
             }
             $skupiny[$currentKey]['users'][] = [
                 'index' => ++$index . '.',

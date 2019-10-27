@@ -151,7 +151,7 @@ class Controller_Admin_Galerie_File extends Controller_Abstract
             $parts = explode(DIRECTORY_SEPARATOR, $path);
             $name = array_pop($parts);
 
-            DBGalerie::addFoto($parent['gd_id'], $path, $name, User::getUserID());
+            DBGalerie::addFoto($parent['gd_id'], $path, $name, Session::getUserID());
         }
         if ($failCount > 0) {
             $this->redirect()->warning(

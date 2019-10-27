@@ -26,7 +26,9 @@ session_start();
 session_regenerate_id();
 
 require 'vendor/autoload.php';
-require 'files/Core/settings.php';
+register_shutdown_function('shutdownHandler');
+set_error_handler('errorHandler');
+// error_reporting(-1);
 
 $request = new Request(
     $_SERVER['REQUEST_URI'],
@@ -49,7 +51,7 @@ Permissions::setRequest($request);
 
 try {
     if ($request->session('login') !== null) {
-        User::loadUser($request->session('id'));
+        Session::loadUser($request->session('id'));
         if ($request->session('invalid_data') === '1'
             && $request->getURI() !== 'member/profil/edit'
             && $request->getURI() !== 'logout'
@@ -63,7 +65,7 @@ try {
     } elseif ($request->post('login') && $request->post('pass')) {
         $request->post('pass', User::crypt($request->post('pass')));
 
-        if (!User::login($request->post('login'), $request->post('pass'))) {
+        if (!Session::login($request->post('login'), $request->post('pass'))) {
             (new RedirectHelper())->redirect('/login', 'Špatné jméno nebo heslo!');
         } elseif ($request->get('return')) {
             (new RedirectHelper())->redirect($request->get('return'));

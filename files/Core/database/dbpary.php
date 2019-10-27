@@ -210,7 +210,7 @@ class DBPary extends Database
     {
         list($id) = self::escape($id);
 
-        if (User::getUserPohlavi() == "m") {
+        if (Session::getUserPohlavi() == "m") {
             $res = self::query(
                 "SELECT pn_id, u_id, u_jmeno, u_prijmeni, u_pohlavi
                 FROM pary_navrh LEFT JOIN users ON pn_partnerka=u_id

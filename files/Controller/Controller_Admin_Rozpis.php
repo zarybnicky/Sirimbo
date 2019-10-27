@@ -10,7 +10,7 @@ class Controller_Admin_Rozpis extends Controller_Abstract
     {
         $data = Permissions::check('rozpis', P_ADMIN)
             ? DBRozpis::getRozpis(true)
-            : DBRozpis::getRozpisyByTrener(User::getUserID(), true);
+            : DBRozpis::getRozpisyByTrener(Session::getUserID(), true);
 
         if ($request->post('action') == 'save') {
             foreach ($data as $item) {
@@ -158,7 +158,7 @@ class Controller_Admin_Rozpis extends Controller_Abstract
         $isAdmin = Permissions::check('rozpis', P_ADMIN);
         $treneri = $isAdmin
                  ? DBUser::getUsersByPermission('rozpis', P_OWNED)
-                 : [DBUser::getUserData(User::getUserID())];
+                 : [DBUser::getUserData(Session::getUserID())];
 
         $this->render('files/View/Admin/Rozpis/Form.inc', [
             'header' => 'Správa rozpisů',

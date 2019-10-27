@@ -23,7 +23,7 @@ class Controller_Admin_Aktuality extends Controller_Abstract
             },
             Permissions::check('aktuality', P_ADMIN)
             ? DBAktuality::getAktuality(1)
-            : DBAktuality::getAktuality(1, User::getUserID())
+            : DBAktuality::getAktuality(1, Session::getUserID())
         );
         $this->render('files/View/Admin/Aktuality/Overview.inc', [
             'header' => 'Správa aktualit',
@@ -46,7 +46,7 @@ class Controller_Admin_Aktuality extends Controller_Abstract
         }
 
         $id = DBAktuality::addAktualita(
-            User::getUserID(),
+            Session::getUserID(),
             1,
             $request->post('name'),
             $request->post('text'),

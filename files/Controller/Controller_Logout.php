@@ -3,7 +3,7 @@ class Controller_Logout extends Controller_Abstract
 {
     public function view($request)
     {
-        User::logout();
+        Session::logout();
         $this->redirect('/');
     }
 }

@@ -19,7 +19,7 @@ class Controller_Member_Profil_Par extends Controller_Abstract
 
     public function view($request)
     {
-        $latest = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
+        $latest = DBPary::getLatestPartner(Session::getUserID(), Session::getUserPohlavi());
         $this->render('files/View/Member/Profil/CoupleOverview.inc', [
             'header' => 'Profil',
             'havePartner' => !empty($latest) && $latest['u_id'],
@@ -37,7 +37,7 @@ class Controller_Member_Profil_Par extends Controller_Abstract
     public function body($request)
     {
         if (!$request->post()) {
-            $par = DBPary::getSinglePar(User::getParID());
+            $par = DBPary::getSinglePar(Session::getParID());
             $request->post('stt-trida', $par['p_stt_trida']);
             $request->post('stt-body', $par['p_stt_body']);
             $request->post('stt-finale', $par['p_stt_finale']);
@@ -82,7 +82,7 @@ class Controller_Member_Profil_Par extends Controller_Abstract
             + $lat_bonus;
 
         DBPary::editTridaBody(
-            User::getParID(),
+            Session::getParID(),
             $request->post('stt-trida'),
             $request->post('stt-body'),
             $request->post('stt-finale'),
@@ -96,14 +96,14 @@ class Controller_Member_Profil_Par extends Controller_Abstract
 
     public function partner($request)
     {
-        $latest = DBPary::getLatestPartner(User::getUserID(), User::getUserPohlavi());
+        $latest = DBPary::getLatestPartner(Session::getUserID(), Session::getUserPohlavi());
         $havePartner = !empty($latest) && $latest['u_id'];
 
         if ($request->post()) {
             if (!$request->post("partner") ||
                 ($request->post('action') == 'dumpthem' && $havePartner)
             ) {
-                DBPary::noPartner(User::getUserID());
+                DBPary::noPartner(Session::getUserID());
                 DBPary::noPartner($latest['u_id']);
                 $this->redirect('/member/profil');
             }
@@ -112,17 +112,17 @@ class Controller_Member_Profil_Par extends Controller_Abstract
             ) {
                 $this->redirect('/member/profil');
             }
-            if (User::getUserPohlavi() == "m") {
+            if (Session::getUserPohlavi() == "m") {
                 DBPary::newPartnerRequest(
-                    User::getUserID(),
-                    User::getUserID(),
+                    Session::getUserID(),
+                    Session::getUserID(),
                     $request->post("partner")
                 );
             } else {
                 DBPary::newPartnerRequest(
-                    User::getUserID(),
+                    Session::getUserID(),
                     $request->post("partner"),
-                    User::getUserID()
+                    Session::getUserID()
                 );
             }
             $this->redirect()->info('Žádost o partnerství odeslána');
@@ -135,7 +135,7 @@ class Controller_Member_Profil_Par extends Controller_Abstract
             'havePartner' => $havePartner,
             'partnerID' => $latest['u_id'],
             'partnerFullName' => $latest['u_jmeno'] . ' ' . $latest['u_prijmeni'],
-            'users' => (User::getUserPohlavi() == "m")
+            'users' => (Session::getUserPohlavi() == "m")
                         ? DBUser::getUsersByPohlavi("f")
                         : DBUser::getUsersByPohlavi("m")
         ]);
@@ -149,7 +149,7 @@ class Controller_Member_Profil_Par extends Controller_Abstract
         switch ($request->post('action')) {
             case 'accept':
             case 'refuse':
-                $requests = DBPary::getPartnerRequestsForMe(User::getUserID());
+                $requests = DBPary::getPartnerRequestsForMe(Session::getUserID());
                 foreach ($requests as $req) {
                     if ($req['pn_id'] != $request->post('id')) {
                         continue;
@@ -167,7 +167,7 @@ class Controller_Member_Profil_Par extends Controller_Abstract
                 break;
 
             case 'cancel':
-                $requests = DBPary::getPartnerRequestsByMe(User::getUserID());
+                $requests = DBPary::getPartnerRequestsByMe(Session::getUserID());
                 foreach ($requests as $req) {
                     if ($req['pn_id'] != $request->post('id')) {
                         continue;

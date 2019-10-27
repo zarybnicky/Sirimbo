@@ -1,209 +1,540 @@
 <?php
 class User
 {
-    public static function login($login, $pass)
+    public static function fromArray(array $x): User
     {
-        if (Database::isDatabaseError()) {
-            User::logout();
-            return false;
-        }
-        $login = strtolower($login);
-
-        if ($login == "superadmin" && $pass == "9947a7bc1549a54e7299fe9a3975c8655430ade0") {
-            User::loadUser(1, DBUser::getUserData(1));
-            return true;
-        }
-        $id = DBUser::checkUser($login, $pass);
-        if (!$id) {
-            return false;
-        }
-        $data = DBUser::getUserData($id);
-        if ($data['u_ban']) {
-            (new RedirectHelper())->redirect('/error?id=ban');
-        }
-        if (!$data['u_confirmed']) {
-            (new RedirectHelper())->redirect('/error?id=not_approved');
-        }
-        User::loadUser($data['u_id'], $data);
-        return true;
+        $user = new self();
+        $user->setId($x['u_id']);
+        $user->setLogin($x['u_login']);
+        $user->setPassword($x['u_pass']);
+        $user->setName($x['u_jmeno']);
+        $user->setSurname($x['u_prijmeni']);
+        $user->setGender($x['u_pohlavi']);
+        $user->setEmail($x['u_email']);
+        $user->setPhone($x['u_telefon']);
+        $user->setBirthDate($x['u_narozeni']);
+        $user->setNotes($x['u_poznamky']);
+        $user->setUpdatedAt($x['u_timestamp']);
+        $user->setPaymentGroup($x['u_group']);
+        $user->setTrainingGroup($x['u_skupina']);
+        $user->setDancer($x['u_dancer']);
+        $user->setBanned($x['u_ban']);
+        $user->setLocked($x['u_lock']);
+        $user->setConfirmed($x['u_confirmed']);
+        $user->setSystem($x['u_system']);
+        $user->setStreet($x['u_street']);
+        $user->setConscriptionNumber($x['u_conscription_number']);
+        $user->setOrientationNumber($x['u_orientation_number']);
+        $user->setDistrict($x['u_district']);
+        $user->setCity($x['u_city']);
+        $user->setPostalCode($x['u_postal_code']);
+        $user->setNationality($x['u_nationality']);
+        $user->setMemberSince($x['u_member_since']);
+        $user->setMemberUntil($x['u_member_until']);
+        $user->setCreatedAt($x['u_created_at']);
+        $user->setTeacher($x['u_teacher']);
+        $user->setGdprSignedAt($x['u_gdpr_signed_at']);
+        return $user;
     }
 
-    public static function logout()
+    public function toArray(): array
     {
-        session_unset();
-    }
-
-    public static function loadUser($id, $data = [])
-    {
-        if (Database::isDatabaseError()) {
-            User::logout();
-            return false;
-        }
-        if (empty($data)) {
-            $data = DBUser::getUserData($id);
-        }
-
-        $par = DBPary::getLatestPartner($data['u_id'], $data['u_pohlavi']);
-
-        foreach (array_keys(Settings::$permissions) as $key) {
-            if ($data['u_group'] == 0) {
-                $_SESSION['permissions'][$key] = P_NONE;
-            } else {
-                $_SESSION['permissions'][$key] = $data['pe_' . $key];
-            }
-        }
-
-        if (!preg_match("/^[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i", $data['u_email'])
-            || !preg_match("/^((\+|00)\d{3})?( ?\d{3}){3}$/", $data['u_telefon'])
-            || !preg_match(
-                "/^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/",
-                $data['u_narozeni']
-            )
-        ) {
-            $_SESSION['invalid_data'] = 1;
-        } else {
-            $_SESSION['invalid_data'] = 0;
-        }
-        $_SESSION['login'] = 1;
-        $_SESSION['user_data'] = $data;
-        $_SESSION['couple_data'] = $par;
-        $_SESSION['id'] = $data['u_id'];
-        $_SESSION['jmeno'] = $data['u_jmeno'];
-        $_SESSION['prijmeni'] = $data['u_prijmeni'];
-        $_SESSION['pohlavi'] = $data['u_pohlavi'];
-        $_SESSION['skupina'] = $data['u_skupina'];
-        $_SESSION['skupina_data'] = [
-            's_id '=> $data['s_id'],
-            's_color_rgb' => $data['s_color_rgb'],
-            's_name' => $data['s_name'],
-            's_description' => $data['s_description']
+        return [
+            'u_id' => $this->getId(),
+            'u_login' => $this->getLogin(),
+            'u_pass' => $this->getPassword(),
+            'u_jmeno' => $this->getName(),
+            'u_prijmeni' => $this->getSurname(),
+            'u_pohlavi' => $this->getGender(),
+            'u_email' => $this->getEmail(),
+            'u_telefon' => $this->getPhone(),
+            'u_narozeni' => $this->getBirthDate(),
+            'u_poznamky' => $this->getNotes(),
+            'u_timestamp' => $this->getCreatedAt(),
+            'u_group' => $this->getPaymentGroup(),
+            'u_skupina' => $this->getTrainingGroup(),
+            'u_dancer' => $this->getDancer(),
+            'u_ban' => $this->getBanned(),
+            'u_lock' => $this->getLocked(),
+            'u_confirmed' => $this->getConfirmed(),
+            'u_system' => $this->getSystem(),
+            'u_street' => $this->getStreet(),
+            'u_conscription_number' => $this->getConscriptionNumber(),
+            'u_orientation_number' => $this->getOrientationNumber(),
+            'u_district' => $this->getDistrict(),
+            'u_city' => $this->getCity(),
+            'u_postal_code' => $this->getPostalCode(),
+            'u_nationality' => $this->getNationality(),
+            'u_member_since' => $this->getMemberSince(),
+            'u_member_until' => $this->getMemberUntil(),
+            'u_created_at' => $this->getCreatedAt(),
+            'u_teacher' => $this->getTeacher(),
+            'u_gdpr_signed_at' => $this->getGdprSignedAt(),
         ];
-        $_SESSION['par'] = $par['p_id'];
-        $_SESSION['partner'] = $par['u_id'];
-
-        return true;
     }
 
-    public static function getPermissions($module)
+    public function isValid()
     {
-        if (!User::isLogged()) {
-            return P_NONE;
-        }
-        if (User::getUserID() == 1) {
-            return P_ADMIN;
-        }
-        if (User::getUserData()['u_group'] == 0) {
-            return P_NONE;
-        }
-        if (!isset($_SESSION['permissions'][$module])) {
-            return P_NONE;
-        }
-        return $_SESSION['permissions'][$module];
+        return preg_match(
+                "/^[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i",
+                $this->getEmail()
+            ) && preg_match(
+                "/^((\+|00)\d{3})?( ?\d{3}){3}$/",
+                $this->getTelefon()
+            ) && preg_match(
+                "/^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/",
+                $this->getBirthDate()
+            );
     }
 
-    public static function getUserID()
+    /**
+     * @var int
+     */
+    protected $id;
+
+    public function getId(): int
     {
-        return User::isLogged() ? $_SESSION['id'] : 0;
+        return $this->id;
     }
 
-    public static function getPartnerID()
+    public function setId(int $id)
     {
-        return $_SESSION['partner'];
+        $this->id = $id;
     }
 
-    public static function getUserData()
+    /**
+     * @var string
+     */
+    protected $login;
+
+    public function getLogin(): string
     {
-        return $_SESSION['user_data'];
+        return $this->login;
     }
 
-    public static function getCoupleData()
+    public function setLogin(string $login)
     {
-        return $_SESSION['couple_data'];
+        $this->login = $login;
     }
 
-    public static function getUserPohlavi()
+    /**
+     * @var string
+     */
+    protected $password;
+
+    public function getPassword(): string
     {
-        return $_SESSION['pohlavi'];
+        return $this->password;
     }
 
-    public static function getSkupina()
+    public function setPassword(string $password)
     {
-        return $_SESSION['skupina'];
+        $this->password = $password;
     }
 
-    public static function getSkupinaData()
+    /**
+     * @var string
+     */
+    protected $name;
+
+    public function getName(): string
     {
-        return $_SESSION['skupina_data'];
+        return $this->name;
     }
 
-    public static function getZaplaceno()
+    public function setName(string $name)
     {
-        return DBPlatby::hasPaidMemberFees($_SESSION['id']);
+        $this->name = $name;
     }
 
-    public static function getZaplacenoPar()
+    /**
+     * @var string
+     */
+    protected $surname;
+
+    public function getSurname(): string
     {
-        $paid = DBPlatby::hasPaidMemberFees($_SESSION['id']);
-        if ($_SESSION['partner']) {
-            $paid = $paid && DBPlatby::hasPaidMemberFees($_SESSION['partner']);
-        }
-        return $paid;
+        return $this->surname;
     }
 
-    public static function getAgeGroup($year)
+    public function setSurname(string $surname)
     {
-        $diff = date('Y') - $year;
-        if ($diff < 8) {
-            return 'Do 8 let';
-        } elseif ($diff < 10) {
-            return 'Děti I';
-        } elseif (10 <= $diff && $diff < 12) {
-            return 'Děti II';
-        } elseif (12 <= $diff && $diff < 14) {
-            return 'Junioři I';
-        } elseif (14 <= $diff && $diff < 16) {
-            return 'Junioři II';
-        } elseif (16 <= $diff && $diff < 19) {
-            return 'Mládež';
-        } elseif (19 <= $diff && $diff < 21) {
-            return 'Do 21 let';
-        } elseif (21 <= $diff && $diff < 35) {
-            return 'Dospělí';
-        } elseif (35 <= $diff && $diff < 45) {
-            return 'Senioři I';
-        } elseif (45 <= $diff && $diff < 55) {
-            return 'Senioři II';
-        } elseif (55 <= $diff && $diff < 65) {
-            return 'Senioři III';
-        } elseif (65 <= $diff) {
-            return 'Senioři IV';
-        }
+        $this->surname = $surname;
     }
 
-    public static function getParID()
+    /**
+     * @var string
+     */
+    protected $gender;
+
+    public function getGender(): string
     {
-        return $_SESSION['par'];
+        return $this->gender;
     }
 
-    public static function isLogged()
+    public function setGender(string $gender)
     {
-        return isset($_SESSION['login']) && $_SESSION['login'] === 1;
+        $this->gender = $gender;
     }
 
-    public static function register(
-        $login, $pass, $name, $surname, $pohlavi, $email, $telefon, $narozeni,
-        $poznamky, $street, $popisne, $orientacni, $district, $city, $postal,
-        $nationality, $skupina, $dancer
-    ) {
-        DBUser::addUser(
-            $login, User::crypt($pass), $name, $surname, $pohlavi, $email,
-            $telefon, $narozeni, $poznamky, $street, $popisne, $orientacni,
-            $district, $city, $postal, $nationality,
-            '0', $skupina, '0', '0', '0', '0', $dancer ? '1' : '0', '0'
-        );
+    /**
+     * @var string
+     */
+    protected $email;
 
-        Mailer::newUserNotice(DEFAULT_ADMIN_MAIL, $login);
-        Mailer::newUserNotice('hyzam@tkolymp.cz', $login);
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email)
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * @var string
+     */
+    protected $phone;
+
+    public function getPhone(): string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(string $phone)
+    {
+        $this->phone = $phone;
+    }
+
+    /**
+     * @var string
+     */
+    protected $birthDate;
+
+    public function getBirthDate(): string
+    {
+        return $this->birthDate;
+    }
+
+    public function setBirthDate(string $birthDate)
+    {
+        $this->birthDate = $birthDate;
+    }
+
+    /**
+     * @var string
+     */
+    protected $notes;
+
+    public function getNotes(): string
+    {
+        return $this->notes;
+    }
+
+    public function setNotes(string $notes)
+    {
+        $this->notes = $notes;
+    }
+
+    /**
+     * @var string
+     */
+    protected $updatedAt;
+
+    public function getUpdatedAt(): string
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(string $updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+    }
+
+    /**
+     * @var string
+     */
+    protected $paymentGroup;
+
+    public function getPaymentGroup(): string
+    {
+        return $this->paymentGroup;
+    }
+
+    public function setPaymentGroup(string $paymentGroup)
+    {
+        $this->paymentGroup = $paymentGroup;
+    }
+
+    /**
+     * @var string
+     */
+    protected $trainingGroup;
+
+    public function getTrainingGroup(): string
+    {
+        return $this->trainingGroup;
+    }
+
+    public function setTrainingGroup(string $trainingGroup)
+    {
+        $this->trainingGroup = $trainingGroup;
+    }
+
+    /**
+     * @var string
+     */
+    protected $dancer;
+
+    public function getDancer(): string
+    {
+        return $this->dancer;
+    }
+
+    public function setDancer(string $dancer)
+    {
+        $this->dancer = $dancer;
+    }
+
+    /**
+     * @var string
+     */
+    protected $banned;
+
+    public function getBanned(): string
+    {
+        return $this->banned;
+    }
+
+    public function setBanned(string $banned)
+    {
+        $this->banned = $banned;
+    }
+
+    /**
+     * @var string
+     */
+    protected $locked;
+
+    public function getLocked(): string
+    {
+        return $this->locked;
+    }
+
+    public function setLocked(string $locked)
+    {
+        $this->locked = $locked;
+    }
+
+    /**
+     * @var string
+     */
+    protected $confirmed;
+
+    public function getConfirmed(): string
+    {
+        return $this->confirmed;
+    }
+
+    public function setConfirmed(string $confirmed)
+    {
+        $this->confirmed = $confirmed;
+    }
+
+    /**
+     * @var string
+     */
+    protected $system;
+
+    public function getSystem(): string
+    {
+        return $this->system;
+    }
+
+    public function setSystem(string $system)
+    {
+        $this->system = $system;
+    }
+
+    /**
+     * @var string
+     */
+    protected $street;
+
+    public function getStreet(): string
+    {
+        return $this->street;
+    }
+
+    public function setStreet(string $street)
+    {
+        $this->street = $street;
+    }
+
+    /**
+     * @var string
+     */
+    protected $conscriptionNumber;
+
+    public function getConscriptionNumber(): string
+    {
+        return $this->conscriptionNumber;
+    }
+
+    public function setConscriptionNumber(string $conscriptionNumber)
+    {
+        $this->conscriptionNumber = $conscriptionNumber;
+    }
+
+    /**
+     * @var string
+     */
+    protected $orientationNumber;
+
+    public function getOrientationNumber(): string
+    {
+        return $this->orientationNumber;
+    }
+
+    public function setOrientationNumber(string $orientationNumber)
+    {
+        $this->orientationNumber = $orientationNumber;
+    }
+
+    /**
+     * @var string
+     */
+    protected $district;
+
+    public function getDistrict(): string
+    {
+        return $this->district;
+    }
+
+    public function setDistrict(string $district)
+    {
+        $this->district = $district;
+    }
+
+    /**
+     * @var string
+     */
+    protected $city;
+
+    public function getCity(): string
+    {
+        return $this->city;
+    }
+
+    public function setCity(string $city)
+    {
+        $this->city = $city;
+    }
+
+    /**
+     * @var string
+     */
+    protected $postalCode;
+
+    public function getPostalCode(): string
+    {
+        return $this->postalCode;
+    }
+
+    public function setPostalCode(string $postalCode)
+    {
+        $this->postalCode = $postalCode;
+    }
+
+    /**
+     * @var string
+     */
+    protected $nationality;
+
+    public function getNationality(): string
+    {
+        return $this->nationality;
+    }
+
+    public function setNationality(string $nationality)
+    {
+        $this->nationality = $nationality;
+    }
+
+    /**
+     * @var string
+     */
+    protected $memberSince;
+
+    public function getMemberSince(): string
+    {
+        return $this->memberSince;
+    }
+
+    public function setMemberSince(string $memberSince)
+    {
+        $this->memberSince = $memberSince;
+    }
+
+    /**
+     * @var string
+     */
+    protected $memberUntil;
+
+    public function getMemberUntil(): string
+    {
+        return $this->memberUntil;
+    }
+
+    public function setMemberUntil(string $memberUntil)
+    {
+        $this->memberUntil = $memberUntil;
+    }
+
+    /**
+     * @var string
+     */
+    protected $createdAt;
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(string $createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * @var string
+     */
+    protected $teacher;
+
+    public function getTeacher(): string
+    {
+        return $this->teacher;
+    }
+
+    public function setTeacher(string $teacher)
+    {
+        $this->teacher = $teacher;
+    }
+
+    /**
+     * @var string
+     */
+    protected $gdprSignedAt;
+
+    public function getGdprSignedAt(): string
+    {
+        return $this->gdprSignedAt;
+    }
+
+    public function setGdprSignedAt(string $gdprSignedAt)
+    {
+        $this->gdprSignedAt = $gdprSignedAt;
     }
 
     public static function crypt($passwd)
@@ -216,71 +547,4 @@ class User
     {
         return str_pad($id, 6, '0', STR_PAD_LEFT);
     }
-
-    public static function generateMsmtCsv()
-    {
-        $out = implode(';', [
-            'JMENO',
-            'DALSI_JMENA',
-            'PRIJMENI',
-            'DATUM_NAROZENI',
-
-            'NAZEV_OBCE',
-            'NAZEV_CASTI_OBCE',
-            'NAZEV_ULICE',
-            'CISLO_POPISNE',
-            'CISLO_ORIENTACNI',
-            'PSC',
-
-            'STRECHA',
-            'SVAZ',
-            'KLUB',
-            'ODDIL',
-
-            'DRUH_SPORTU',
-            'SPORTOVEC',
-            'TRENER',
-            'CLENSTVI_OD',
-            'CLENSTVI_DO',
-            'OBCANSTVI',
-            'EXT_ID'
-        ]);
-
-        $platby = DBPlatby::getOldestPayment();
-        foreach (DBUser::getUsers() as $u) {
-            if ($u['u_ban'] || $u['u_temporary'] || !$u['u_confirmed'] || $u['u_system']) {
-                continue;
-            }
-            $out .= '
-' . implode(';', [
-                $u['u_jmeno'],
-                '',
-                $u['u_prijmeni'],
-                csvDate($u['u_narozeni']),
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '66',
-                $u['u_dancer'] ? '1' : '0',
-                $u['u_teacher'] ? '1' : '0',
-                csvDate($platby[$u['u_id']]),
-                '',
-                '',
-                ''
-            ]);
-        }
-        return $out;
-    }
-}
-
-function csvDate($x)
-{
-    return implode('.', array_reverse(explode('-', $x)));
 }

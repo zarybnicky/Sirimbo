@@ -26,16 +26,16 @@ class Controller_Member_Akce extends Controller_Abstract
             if (!$form->isValid()) {
                 $this->redirect()->warning($form->getMessages());
             } elseif ($request->post('action') == 'signup') {
-                $date = explode('-', User::getUserData()['u_narozeni']);
+                $date = explode('-', Session::getUserData()['u_narozeni']);
 
                 DBAkce::signUp(
-                    User::getUserID(),
+                    Session::getUserID(),
                     $request->post('id'),
                     $date[0]
                 );
             } elseif ($request->post('action') == 'signout') {
                 DBAkce::signOut(
-                    User::getUserID(),
+                    Session::getUserID(),
                     $request->post('id')
                 );
             }
@@ -82,7 +82,7 @@ class Controller_Member_Akce extends Controller_Abstract
             'items' => $items
         ];
         $out['signIn'] = $out['showForm']
-                       ? !DBAkce::isUserSignedUp($out['id'], User::getUserID())
+                       ? !DBAkce::isUserSignedUp($out['id'], Session::getUserID())
                        : '';
         return $out;
     }

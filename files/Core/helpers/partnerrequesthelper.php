@@ -5,7 +5,7 @@ class PartnerRequestHelper
 
     public function partnerRequest($id = null)
     {
-        $this->_id = $id !== null ? $id : User::getUserID();
+        $this->_id = $id !== null ? $id : Session::getUserID();
         return $this;
     }
 

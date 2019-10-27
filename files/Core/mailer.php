@@ -1,7 +1,4 @@
 <?php
-require 'phpmailer.php';
-require 'smtp.php';
-
 class Mailer
 {
     private static function _mail($to, $subject, $message, $from, $headers)

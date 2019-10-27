@@ -35,7 +35,7 @@ class Controller_Admin_Dokumenty extends Controller_Abstract
                 $request->post('name'),
                 $fileName,
                 $request->post('kategorie'),
-                User::getUserID()
+                Session::getUserID()
             );
             $this->redirect()->success('Soubor byl nahrán úspěšně');
             $this->redirect('/admin/dokumenty');
@@ -44,7 +44,7 @@ class Controller_Admin_Dokumenty extends Controller_Abstract
 
         $data = Permissions::check('dokumenty', P_ADMIN)
             ? DBDokumenty::getDokumenty()
-            : DBDokumenty::getDokumentyByAuthor(User::getUserID());
+            : DBDokumenty::getDokumentyByAuthor(Session::getUserID());
 
         $data = array_map(
             function ($item) {
