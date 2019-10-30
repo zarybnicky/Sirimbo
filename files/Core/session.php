@@ -39,41 +39,26 @@ class Session
             self::logout();
             return false;
         }
-        $data = DBUser::getUserData($id);
-        $par = DBPary::getLatestPartner($data['u_id'], $data['u_pohlavi']);
+        $user = DBUser::getUser($id);
+        $par = DBPary::getLatestPartner($user->getId(), $user->getGender());
 
         foreach (array_keys(Settings::$permissions) as $key) {
-            if ($data['u_group'] == 0) {
+            if ($user->getPaymentGroup() == 0) {
                 $_SESSION['permissions'][$key] = P_NONE;
             } else {
-                $_SESSION['permissions'][$key] = $data['pe_' . $key];
+                $_SESSION['permissions'][$key] = $user['pe_' . $key];
             }
         }
 
-        if (!preg_match("/^[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i", $data['u_email'])
-            || !preg_match("/^((\+|00)\d{3})?( ?\d{3}){3}$/", $data['u_telefon'])
-            || !preg_match(
-                "/^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/",
-                $data['u_narozeni']
-            )
-        ) {
-            $_SESSION['invalid_data'] = 1;
-        } else {
-            $_SESSION['invalid_data'] = 0;
-        }
+        $_SESSION['invalid_data'] = $user->isValid() ? 0 : 1;
         $_SESSION['login'] = 1;
-        $_SESSION['user_data'] = $data;
+        $_SESSION['user'] = $user;
         $_SESSION['couple_data'] = $par;
-        $_SESSION['id'] = $data['u_id'];
-        $_SESSION['jmeno'] = $data['u_jmeno'];
-        $_SESSION['prijmeni'] = $data['u_prijmeni'];
-        $_SESSION['pohlavi'] = $data['u_pohlavi'];
-        $_SESSION['skupina'] = $data['u_skupina'];
         $_SESSION['skupina_data'] = [
-            's_id '=> $data['s_id'],
-            's_color_rgb' => $data['s_color_rgb'],
-            's_name' => $data['s_name'],
-            's_description' => $data['s_description']
+            's_id '=> $user['s_id'],
+            's_color_rgb' => $user['s_color_rgb'],
+            's_name' => $user['s_name'],
+            's_description' => $user['s_description']
         ];
         $_SESSION['par'] = $par['p_id'];
         $_SESSION['partner'] = $par['u_id'];
@@ -100,7 +85,7 @@ class Session
 
     public static function getUserID()
     {
-        return self::isLogged() ? $_SESSION['id'] : 0;
+        return self::isLogged() ? $_SESSION['user']->getId() : 0;
     }
 
     public static function getPartnerID()
@@ -110,7 +95,7 @@ class Session
 
     public static function getUserData()
     {
-        return $_SESSION['user_data'];
+        return $_SESSION['user'];
     }
 
     public static function getCoupleData()
@@ -120,12 +105,12 @@ class Session
 
     public static function getUserPohlavi()
     {
-        return $_SESSION['pohlavi'];
+        return $_SESSION['user']->getGender();
     }
 
     public static function getSkupina()
     {
-        return $_SESSION['skupina'];
+        return $_SESSION['user']->getTrainingGroup();
     }
 
     public static function getSkupinaData()
@@ -135,14 +120,14 @@ class Session
 
     public static function getZaplaceno()
     {
-        return DBPlatby::hasPaidMemberFees($_SESSION['id']);
+        return DBPlatby::hasPaidMemberFees(self::getUserId());
     }
 
     public static function getZaplacenoPar()
     {
-        $paid = DBPlatby::hasPaidMemberFees($_SESSION['id']);
+        $paid = DBPlatby::hasPaidMemberFees(self::getUserId());
         if ($_SESSION['partner']) {
-            $paid = $paid && DBPlatby::hasPaidMemberFees($_SESSION['partner']);
+            $paid = $paid && DBPlatby::hasPaidMemberFees(self::getPartnerId());
         }
         return $paid;
     }

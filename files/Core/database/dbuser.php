@@ -125,6 +125,21 @@ class DBUser extends Database implements Pagable
         return self::getSingleRow($res);
     }
 
+    public static function getUser(int $id): ?User
+    {
+        $res = self::query(
+            "SELECT users.*, skupiny.*, permissions.* FROM users
+                LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
+                LEFT JOIN permissions ON u_group=pe_id
+             WHERE u_id='?'",
+            $id
+        );
+        if (!$res) {
+            return null;
+        }
+        return User::fromArray(self::getSingleRow($res));
+    }
+
     public static function getUserByFullName($jmeno, $prijmeni)
     {
         $res = self::query(

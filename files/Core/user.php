@@ -76,15 +76,15 @@ class User
     public function isValid()
     {
         return preg_match(
-                "/^[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i",
-                $this->getEmail()
-            ) && preg_match(
-                "/^((\+|00)\d{3})?( ?\d{3}){3}$/",
-                $this->getTelefon()
-            ) && preg_match(
-                "/^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/",
-                $this->getBirthDate()
-            );
+            "/^[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i",
+            $this->getEmail()
+        ) && preg_match(
+            "/^((\+|00)\d{3})?( ?\d{3}){3}$/",
+            $this->getPhone()
+        ) && preg_match(
+            "/^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/",
+            $this->getBirthDate()
+        );
     }
 
     /**
@@ -160,6 +160,11 @@ class User
     public function setSurname(string $surname)
     {
         $this->surname = $surname;
+    }
+
+    public function getFullName()
+    {
+        return $this->getSurname() . ', ' . $this->getName();
     }
 
     /**
@@ -253,106 +258,106 @@ class User
     }
 
     /**
-     * @var string
+     * @var int
      */
-    protected $paymentGroup;
+    protected $paymentGroup = 0;
 
-    public function getPaymentGroup(): string
+    public function getPaymentGroup(): int
     {
         return $this->paymentGroup;
     }
 
-    public function setPaymentGroup(string $paymentGroup)
+    public function setPaymentGroup(int $paymentGroup)
     {
         $this->paymentGroup = $paymentGroup;
     }
 
     /**
-     * @var string
+     * @var int
      */
     protected $trainingGroup;
 
-    public function getTrainingGroup(): string
+    public function getTrainingGroup(): int
     {
         return $this->trainingGroup;
     }
 
-    public function setTrainingGroup(string $trainingGroup)
+    public function setTrainingGroup(int $trainingGroup)
     {
         $this->trainingGroup = $trainingGroup;
     }
 
     /**
-     * @var string
+     * @var bool
      */
     protected $dancer;
 
-    public function getDancer(): string
+    public function getDancer(): bool
     {
         return $this->dancer;
     }
 
-    public function setDancer(string $dancer)
+    public function setDancer(bool $dancer)
     {
         $this->dancer = $dancer;
     }
 
     /**
-     * @var string
+     * @var bool
      */
     protected $banned;
 
-    public function getBanned(): string
+    public function getBanned(): bool
     {
         return $this->banned;
     }
 
-    public function setBanned(string $banned)
+    public function setBanned(bool $banned)
     {
         $this->banned = $banned;
     }
 
     /**
-     * @var string
+     * @var bool
      */
     protected $locked;
 
-    public function getLocked(): string
+    public function getLocked(): bool
     {
         return $this->locked;
     }
 
-    public function setLocked(string $locked)
+    public function setLocked(bool $locked)
     {
         $this->locked = $locked;
     }
 
     /**
-     * @var string
+     * @var bool
      */
     protected $confirmed;
 
-    public function getConfirmed(): string
+    public function getConfirmed(): bool
     {
         return $this->confirmed;
     }
 
-    public function setConfirmed(string $confirmed)
+    public function setConfirmed(bool $confirmed)
     {
         $this->confirmed = $confirmed;
     }
 
     /**
-     * @var string
+     * @var bool
      */
     protected $system;
 
-    public function getSystem(): string
+    public function getSystem(): bool
     {
         return $this->system;
     }
 
-    public function setSystem(string $system)
+    public function setSystem(bool $system)
     {
         $this->system = $system;
     }
@@ -508,16 +513,16 @@ class User
     }
 
     /**
-     * @var string
+     * @var bool
      */
     protected $teacher;
 
-    public function getTeacher(): string
+    public function getTeacher(): bool
     {
         return $this->teacher;
     }
 
-    public function setTeacher(string $teacher)
+    public function setTeacher(bool $teacher)
     {
         $this->teacher = $teacher;
     }

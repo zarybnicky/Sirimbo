@@ -16,9 +16,9 @@ class Controller_Member_Clenove extends Controller_Abstract
         }
         $this->render('files/View/Member/Clenove/Single.inc', [
             'header' => 'Přehled členů',
-            'fullName' => $data['u_prijmeni'] . ', ' . $data['u_jmeno'],
-            'email' => $data['u_email'],
-            'telefon' => $data['u_telefon'],
+            'fullName' => $data->getFullName(),
+            'email' => $data->getEmail(),
+            'telefon' => $data->getPhone(),
             'returnURI' => $request->getReferer(),
             'uri' => $request->getLiteralURI()
         ]);
