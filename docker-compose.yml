@@ -12,29 +12,42 @@ services:
       MYSQL_USER: olymp
       MYSQL_PASSWORD: admin
     volumes:
-      - ./mysql-init:/docker-entrypoint-initdb.d
-      - ./mysql-data:/var/lib/mysql
-      - ./conf/my.cnf:/etc/my.cnf
+      - ./docker/mysql-init:/docker-entrypoint-initdb.d
+      - ./docker/mysql-data:/var/lib/mysql
+      - ./docker/conf/my.cnf:/etc/my.cnf
 
   phpfpm:
     build:
-      context: ./php-fpm
+      context: ./docker/php-fpm
       dockerfile: Dockerfile
     links:
       - mysqldb
     volumes:
-      - ..:/app
+      - .:/app
     tty: true
+
+  api:
+    build:
+      context: ./docker/api
+      dockerfile: Dockerfile
+    links:
+      - mysqldb
+    ports:
+      - 3002:3000
+    volumes:
+      - ./olymp-api:/local
+      - stack_cache:/root/.stack
 
   nginx:
     image: bitnami/nginx:latest
     depends_on:
       - phpfpm
+      - api
     ports:
       - 3000:3000
     volumes:
-      - ..:/app
-      - ./conf/vhost.conf:/opt/bitnami/nginx/conf/server_blocks/olymp.conf
+      - .:/app
+      - ./docker/conf/vhost.conf:/opt/bitnami/nginx/conf/server_blocks/olymp.conf
     tty: true
 
   phpmyadmin:
@@ -46,3 +59,6 @@ services:
       - "PMA_ABSOLUTE_URI=http://localhost:3001/"
     ports:
       - 3001:80
+
+volumes:
+  stack_cache:
