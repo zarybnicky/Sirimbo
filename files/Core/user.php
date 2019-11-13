@@ -15,7 +15,7 @@ class User
         $user->setBirthDate($x['u_narozeni']);
         $user->setNotes($x['u_poznamky']);
         $user->setUpdatedAt($x['u_timestamp']);
-        $user->setPaymentGroup($x['u_group']);
+        $user->setPermissionGroup($x['u_group']);
         $user->setTrainingGroup($x['u_skupina']);
         $user->setDancer($x['u_dancer']);
         $user->setBanned($x['u_ban']);
@@ -51,7 +51,7 @@ class User
             'u_narozeni' => $this->getBirthDate(),
             'u_poznamky' => $this->getNotes(),
             'u_timestamp' => $this->getCreatedAt(),
-            'u_group' => $this->getPaymentGroup(),
+            'u_group' => $this->getPermissionGroup(),
             'u_skupina' => $this->getTrainingGroup(),
             'u_dancer' => $this->getDancer(),
             'u_ban' => $this->getBanned(),
@@ -227,6 +227,11 @@ class User
         $this->birthDate = $birthDate;
     }
 
+    public function getBirthYear(): string
+    {
+        return explode('-', $this->getBirthDate())[0];
+    }
+
     /**
      * @var string
      */
@@ -260,16 +265,16 @@ class User
     /**
      * @var int
      */
-    protected $paymentGroup = 0;
+    protected $permissionGroup = 0;
 
-    public function getPaymentGroup(): int
+    public function getPermissionGroup(): int
     {
-        return $this->paymentGroup;
+        return $this->permissionGroup;
     }
 
-    public function setPaymentGroup(int $paymentGroup)
+    public function setPermissionGroup(int $permissionGroup)
     {
-        $this->paymentGroup = $paymentGroup;
+        $this->permissionGroup = $permissionGroup;
     }
 
     /**

@@ -26,12 +26,10 @@ class Controller_Member_Akce extends Controller_Abstract
             if (!$form->isValid()) {
                 $this->redirect()->warning($form->getMessages());
             } elseif ($request->post('action') == 'signup') {
-                $date = explode('-', Session::getUserData()['u_narozeni']);
-
                 DBAkce::signUp(
                     Session::getUserID(),
                     $request->post('id'),
-                    $date[0]
+                    Session::getUserData()->getBirthYear()
                 );
             } elseif ($request->post('action') == 'signout') {
                 DBAkce::signOut(

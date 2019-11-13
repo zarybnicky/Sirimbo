@@ -43,8 +43,8 @@ class Controller_Member_Profil extends Controller_Abstract
         );
 
         $this->render('files/View/Member/Profil/Overview.inc', [
-            'header' => $data['u_jmeno'] . ' ' . $data['u_prijmeni'],
-            'ageGroup' => Session::getAgeGroup(explode('-', $data['u_narozeni'])[0]),
+            'header' => $data->getFullName(),
+            'ageGroup' => Session::getAgeGroup($data->getBirthYear()),
             'coupleData' => Session::getCoupleData(),
             'skupina' => (
                 $this->colorbox($s['s_color_rgb'], $s['s_name']) .
@@ -81,24 +81,24 @@ class Controller_Member_Profil extends Controller_Abstract
 
     public function edit($request)
     {
-        $data = DBUser::getUserData(Session::getUserID());
+        $data = Session::getUserData();
         $narozeni = $this->date('narozeni')->getPost($request);
 
         if (!$request->post()) {
-            $request->post('jmeno', $data['u_jmeno']);
-            $request->post('prijmeni', $data['u_prijmeni']);
-            $request->post('pohlavi', $data['u_pohlavi']);
-            $request->post('narozeni', $data['u_narozeni']);
-            $request->post('email', $data['u_email']);
-            $request->post('telefon', $data['u_telefon']);
-            $request->post('street', $data['u_street']);
-            $request->post('popisne', $data['u_conscription_number']);
-            $request->post('orientacni', $data['u_orientation_number']);
-            $request->post('city', $data['u_city']);
-            $request->post('district', $data['u_district']);
-            $request->post('postal', $data['u_postal_code']);
-            $request->post('nationality', $data['u_nationality']);
-            $request->post('dancer', $data['u_dancer']);
+            $request->post('jmeno', $data->getName());
+            $request->post('prijmeni', $data->getSurname());
+            $request->post('pohlavi', $data->getGender());
+            $request->post('narozeni', $data->getBirthDate());
+            $request->post('email', $data->getEmail());
+            $request->post('telefon', $data->getPhone());
+            $request->post('street', $data->getStreet());
+            $request->post('popisne', $data->getConscriptionNumber());
+            $request->post('orientacni', $data->getOrientationNumber());
+            $request->post('city', $data->getCity());
+            $request->post('district', $data->getDistrict());
+            $request->post('postal', $data->getCity());
+            $request->post('nationality', $data->getNationality());
+            $request->post('dancer', $data->getDancer());
             return $this->renderPersonalForm($request);
         }
 
@@ -116,7 +116,7 @@ class Controller_Member_Profil extends Controller_Abstract
             $request->post('email'),
             $request->post('telefon'),
             (string) $narozeni,
-            $data['u_poznamky'],
+            $data->getNotes(),
             $request->post('street'),
             $request->post('popisne'),
             $request->post('orientacni'),
@@ -124,16 +124,16 @@ class Controller_Member_Profil extends Controller_Abstract
             $request->post('city'),
             $request->post('postal'),
             $request->post('nationality'),
-            $data['u_group'],
-            $data['u_skupina'],
-            $data['u_lock'],
-            $data['u_ban'],
-            $data['u_system'],
+            $data->getPermissionGroup(),
+            $data->getTrainingGroup(),
+            $data->getLocked(),
+            $data->getBanned(),
+            $data->getSystem(),
             $request->post('dancer') ? '1' : '0',
-            $data['u_teacher'],
-            $data['u_member_since'],
-            $data['u_member_until'],
-            $data['u_gdpr_signed_at']
+            $data->getTeacher(),
+            $data->getMemberSince(),
+            $data->getMemberUntil(),
+            $data->getGdprSignedAt()
         );
         $this->redirect('/member/profil');
     }
@@ -171,7 +171,7 @@ class Controller_Member_Profil extends Controller_Abstract
             $f->checkPassword($request->post('newpass'), 'Neplatný formát hesla', 'newpass');
             $f->checkBool(
                 DBUser::checkUser(
-                    Session::getUserData()['u_login'],
+                    Session::getUserData()->getLogin(),
                     User::crypt($request->post('oldpass'))
                 ),
                 'Staré heslo je špatně',

@@ -40,26 +40,24 @@ class Session
             return false;
         }
         $user = DBUser::getUser($id);
+        $skupina = DBSkupiny::getSingle($user->getTrainingGroup());
+        $permissions = DBPermissions::getSingleGroup($user->getPermissionGroup());
         $par = DBPary::getLatestPartner($user->getId(), $user->getGender());
 
         foreach (array_keys(Settings::$permissions) as $key) {
-            if ($user->getPaymentGroup() == 0) {
+            if ($user->getPermissionGroup() == 0) {
                 $_SESSION['permissions'][$key] = P_NONE;
             } else {
-                $_SESSION['permissions'][$key] = $user['pe_' . $key];
+                $_SESSION['permissions'][$key] = $permissions['pe_' . $key];
             }
         }
 
         $_SESSION['invalid_data'] = $user->isValid() ? 0 : 1;
         $_SESSION['login'] = 1;
+        $_SESSION['id'] = $user->getId();
         $_SESSION['user'] = $user;
         $_SESSION['couple_data'] = $par;
-        $_SESSION['skupina_data'] = [
-            's_id '=> $user['s_id'],
-            's_color_rgb' => $user['s_color_rgb'],
-            's_name' => $user['s_name'],
-            's_description' => $user['s_description']
-        ];
+        $_SESSION['skupina_data'] = $skupina;
         $_SESSION['par'] = $par['p_id'];
         $_SESSION['partner'] = $par['u_id'];
 
@@ -74,7 +72,7 @@ class Session
         if (self::getUserID() == 1) {
             return P_ADMIN;
         }
-        if (self::getUserData()['u_group'] == 0) {
+        if (self::getUserData()->getPermissionGroup() == 0) {
             return P_NONE;
         }
         if (!isset($_SESSION['permissions'][$module])) {
@@ -93,7 +91,7 @@ class Session
         return $_SESSION['partner'];
     }
 
-    public static function getUserData()
+    public static function getUserData(): User
     {
         return $_SESSION['user'];
     }

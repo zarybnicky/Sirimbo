@@ -9,13 +9,11 @@ class LoginHelper
     public function render()
     {
         if (Session::isLogged()) {
-            $user = Session::getUserData();
-            $name = $user['u_jmeno'] . ' ' . $user['u_prijmeni'];
+            $name = Session::getUserData()->getFullName();
             return "<li class=\"userbox nav-item nav-link\"><a href=\"/member/profil\"><i class=\"fas fa-user\"></i> $name</a></li>";
         } else {
-            $template = 'files/View/Login.inc';
             $r = new Renderer();
-            return $r->render($template);
+            return $r->render('files/View/Login.inc');
         }
     }
 

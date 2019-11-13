@@ -13,10 +13,12 @@
             <table style="margin:0 auto;">
                 <tr>
                     <td>Jméno</td>
+                    <td>Skupiny</td>
                 </tr>
                 <?php foreach ($this->data['items'] as $item) : ?>
                     <tr>
                         <td><?= $item['u_jmeno'] . ' ' . $item['u_prijmeni'] ?></td>
+                        <td><?= $item['s_name'] ?></td>
                     </tr>
                 <?php endforeach ?>
             </table>
