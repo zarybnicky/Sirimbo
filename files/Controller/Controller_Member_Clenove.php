@@ -11,7 +11,7 @@ class Controller_Member_Clenove extends Controller_Abstract
         if (!($id = $request->getId())) {
             $this->redirect('/member/clenove/structure');
         }
-        if (!($data = DBUser::getUserData($id))) {
+        if (!($data = DBUser::getUser($id))) {
             $this->redirect('/member/clenove/structure');
         }
         $this->render('files/View/Member/Clenove/Single.inc', [

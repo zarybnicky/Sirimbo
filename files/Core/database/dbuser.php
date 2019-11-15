@@ -97,20 +97,7 @@ class DBUser extends Database implements Pagable
         return $row["u_id"];
     }
 
-    public static function getUserDataByNameEmail($login, $email)
-    {
-        $res = self::query(
-            "SELECT * FROM users WHERE LOWER(u_login)='?' AND LOWER(u_email)='?'",
-            strtolower($login),
-            strtolower($email)
-        );
-        if (!$res) {
-            return false;
-        }
-        return self::getSingleRow($res);
-    }
-
-    public static function getUserData($id)
+    public static function getUserData($id): ?array
     {
         $res = self::query(
             "SELECT users.*, skupiny.*, permissions.* FROM users
@@ -120,9 +107,22 @@ class DBUser extends Database implements Pagable
             $id
         );
         if (!$res) {
-            return false;
+            return null;
         }
         return self::getSingleRow($res);
+    }
+
+    public static function getUserByNameEmail($login, $email): ?User
+    {
+        $res = self::query(
+            "SELECT * FROM users WHERE LOWER(u_login)='?' AND LOWER(u_email)='?'",
+            strtolower($login),
+            strtolower($email)
+        );
+        if (!$res) {
+            return null;
+        }
+        return User::fromArray(self::getSingleRow($res));
     }
 
     public static function getUser(int $id): ?User
@@ -138,21 +138,6 @@ class DBUser extends Database implements Pagable
             return null;
         }
         return User::fromArray(self::getSingleRow($res));
-    }
-
-    public static function getUserByFullName($jmeno, $prijmeni)
-    {
-        $res = self::query(
-            "SELECT * FROM users
-            WHERE u_jmeno LIKE '?' AND u_prijmeni LIKE '?'
-            ORDER BY u_id",
-            $jmeno,
-            $prijmeni
-        );
-        if (!$res) {
-            return false;
-        }
-        return self::getSingleRow($res);
     }
 
     public static function confirmUser($id, $group, $skupina = '1')

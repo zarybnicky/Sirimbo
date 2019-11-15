@@ -33,7 +33,7 @@ class Session
         session_unset();
     }
 
-    public static function loadUser($id)
+    public static function loadUser($id): bool
     {
         if (Database::isDatabaseError()) {
             self::logout();
@@ -64,7 +64,7 @@ class Session
         return true;
     }
 
-    public static function getPermissions($module)
+    public static function getPermissions($module): int
     {
         if (!self::isLogged()) {
             return P_NONE;
@@ -130,7 +130,7 @@ class Session
         return $paid;
     }
 
-    public static function getAgeGroup($year)
+    public static function getAgeGroup($year): string
     {
         $diff = date('Y') - $year;
         if ($diff < 8) {
@@ -165,7 +165,7 @@ class Session
         return $_SESSION['par'];
     }
 
-    public static function isLogged()
+    public static function isLogged(): bool
     {
         return isset($_SESSION['login']) && $_SESSION['login'] === 1;
     }
@@ -174,7 +174,7 @@ class Session
         $login, $pass, $name, $surname, $pohlavi, $email, $telefon, $narozeni,
         $poznamky, $street, $popisne, $orientacni, $district, $city, $postal,
         $nationality, $skupina, $dancer
-    ) {
+    ): void {
         DBUser::addUser(
             $login, User::crypt($pass), $name, $surname, $pohlavi, $email,
             $telefon, $narozeni, $poznamky, $street, $popisne, $orientacni,
@@ -186,7 +186,7 @@ class Session
         Mailer::newUserNotice('hyzam@tkolymp.cz', $login);
     }
 
-    public static function generateMsmtCsv()
+    public static function generateMsmtCsv(): string
     {
         $out = implode(';', [
             'JMENO',

@@ -10,38 +10,38 @@ class Controller_Admin_Users extends Controller_Abstract
     {
         Permissions::checkError('users', P_ADMIN);
         if ($request->post('action') == 'save') {
-            foreach ($request->post('save') as $user_id) {
-                $user = DBUser::getUserData($user_id);
-                if (((bool) $request->post($user_id . '-system')) !== ((bool) $user['u_system'])
-                    || ((bool) $request->post($user_id . '-ban')) !== ((bool) $user['u_ban'])
-                    || ($request->post($user_id . '-skupina') != $user['u_skupina'])
+            foreach ($request->post('save') as $userId) {
+                $user = DBUser::getUser($userId);
+                if (((bool) $request->post($userId . '-system')) !== ((bool) $user->getSystem())
+                    || ((bool) $request->post($userId . '-ban')) !== ((bool) $user->getBanned())
+                    || ($request->post($userId . '-skupina') != $user->getPermissionGroup())
                 ) {
                     DBUser::setUserData(
-                        $user_id,
-                        $user['u_jmeno'],
-                        $user['u_prijmeni'],
-                        $user['u_pohlavi'],
-                        $user['u_email'],
-                        $user['u_telefon'],
-                        $user['u_narozeni'],
-                        $user['u_poznamky'],
-                        $user['u_street'],
-                        $user['u_conscription_number'],
-                        $user['u_orientation_number'],
-                        $user['u_district'],
-                        $user['u_city'],
-                        $user['u_postal_code'],
-                        $user['u_nationality'],
-                        $user['u_group'],
-                        $request->post($user_id . '-skupina'),
-                        $user['u_lock'] ? '1' : '0',
-                        $request->post($user_id . '-ban') ? '1' : '0',
-                        $request->post($user_id . '-system') ? '1' : '0',
-                        $user['u_dancer'],
-                        $user['u_teacher'],
-                        $user['u_member_since'],
-                        $user['u_member_until'],
-                        $user['u_gdpr_signed_at']
+                        $userId,
+                        $user->getName(),
+                        $user->getSurname(),
+                        $user->getGender(),
+                        $user->getEmail(),
+                        $user->getPhone(),
+                        $user->getBirthDate(),
+                        $user->getNotes(),
+                        $user->getStreet(),
+                        $user->getConscriptionNumber(),
+                        $user->getOrientationNumber(),
+                        $user->getDistrict(),
+                        $user->getCity(),
+                        $user->getPostalCode(),
+                        $user->getNationality(),
+                        $user->getTrainingGroup(),
+                        $request->post($userId . '-skupina'),
+                        $user->getLocked() ? '1' : '0',
+                        $request->post($userId . '-ban') ? '1' : '0',
+                        $request->post($userId . '-system') ? '1' : '0',
+                        $user->getDancer(),
+                        $user->getTeacher(),
+                        $user->getMemberSince(),
+                        $user->getMemberUntil(),
+                        $user->getGdprSignedAt()
                     );
                 }
             }
@@ -198,14 +198,14 @@ class Controller_Admin_Users extends Controller_Abstract
         Permissions::checkError('users', P_ADMIN);
         if ($request->post('confirm')) {
             $id = $request->post('confirm');
-            $data = DBUser::getUserData($id);
+            $data = DBUser::getUser($id);
 
             DBUser::confirmUser(
                 $id,
                 $request->post($id . '-group'),
                 $request->post($id . '-skupina')
             );
-            Mailer::registrationConfirmNotice($data['u_email'], $data['u_login']);
+            Mailer::registrationConfirmNotice($data->getEmail(), $data->getLogin());
             $this->redirect('/admin/users/unconfirmed');
         }
 

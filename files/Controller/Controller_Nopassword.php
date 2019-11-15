@@ -10,7 +10,7 @@ class Controller_Nopassword extends Controller_Abstract
             return;
         }
 
-        $data = DBUser::getUserDataByNameEmail(
+        $data = DBUser::getUserByNameEmail(
             strtolower($request->post('name')),
             $request->post('email')
         );
@@ -24,14 +24,14 @@ class Controller_Nopassword extends Controller_Abstract
         $password = substr(str_shuffle(str_repeat($base, 5)), 0, 8);
         $passwordCrypt = User::crypt($password);
 
-        DBUser::setPassword($data['u_id'], $passwordCrypt);
+        DBUser::setPassword($data->getId(), $passwordCrypt);
 
-        if (!DBUser::checkUser($data['u_login'], $passwordCrypt)) {
+        if (!DBUser::checkUser($data->getLogin(), $passwordCrypt)) {
             $this->redirect()->danger('Nepodařilo se změnit heslo, prosím kontaktujte administrátora.');
             $this->redirect('/nopassword');
         }
 
-        Mailer::newPassword($data['u_email'], $password);
+        Mailer::newPassword($data->getEmail(), $password);
 
         $this->redirect()->success('Heslo bylo úspěšně změněno, za chvíli byste jej měli obdržet v e-mailu');
         $this->redirect('/');

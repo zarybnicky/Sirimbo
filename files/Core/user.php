@@ -473,31 +473,31 @@ class User
     }
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $memberSince;
 
-    public function getMemberSince(): string
+    public function getMemberSince(): ?string
     {
         return $this->memberSince;
     }
 
-    public function setMemberSince(string $memberSince)
+    public function setMemberSince(?string $memberSince)
     {
         $this->memberSince = $memberSince;
     }
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $memberUntil;
 
-    public function getMemberUntil(): string
+    public function getMemberUntil(): ?string
     {
         return $this->memberUntil;
     }
 
-    public function setMemberUntil(string $memberUntil)
+    public function setMemberUntil(?string $memberUntil)
     {
         $this->memberUntil = $memberUntil;
     }
@@ -533,16 +533,16 @@ class User
     }
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $gdprSignedAt;
 
-    public function getGdprSignedAt(): string
+    public function getGdprSignedAt(): ?string
     {
         return $this->gdprSignedAt;
     }
 
-    public function setGdprSignedAt(string $gdprSignedAt)
+    public function setGdprSignedAt(?string $gdprSignedAt)
     {
         $this->gdprSignedAt = $gdprSignedAt;
     }
