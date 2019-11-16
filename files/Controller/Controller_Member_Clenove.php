@@ -12,7 +12,7 @@ class Controller_Member_Clenove extends Controller_Abstract
             $this->redirect('/member/clenove/structure');
         }
         if (!($data = DBUser::getUser($id))) {
-            $this->redirect('/member/clenove/structure');
+            return $this->redirect('/member/clenove/structure');
         }
         $this->render('files/View/Member/Clenove/Single.inc', [
             'header' => 'Přehled členů',

@@ -1,8 +1,11 @@
 <?php
 class Form
 {
+    /** @var bool */
     private $_valid;
+    /** @var array */
     private $_messages;
+    /** @var array */
     private $_fields;
 
     const REGEXP_DATE = '/^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/i';
@@ -29,8 +32,7 @@ class Form
     public function checkDate($i, $message, $name = '') {
         if (preg_match(Form::REGEXP_DATE, $i)) {
             list($year, $month, $day) = explode('-', $i);
-            if (
-                !($day == 31 && ($month == 4 || $month == 6 || $month == 9 || $month == 11)
+            if (!($day == 31 && ($month == 4 || $month == 6 || $month == 9 || $month == 11)
                 || $day >= 30 && $month == 2
                 || $month == 2 && $day == 29 && !($year % 4 == 0 && ($year % 100 != 0 || $year % 400 == 0))
                 )

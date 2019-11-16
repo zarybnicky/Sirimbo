@@ -55,7 +55,7 @@ class DBPlatbyItem extends Database
         if ($filter) {
             $filter = array_combine(array_keys($filter), self::escapeArray(array_values($filter)));
             $where = [];
-            foreach ($filter as $key => $value) {
+            foreach ($filter ? $filter : [] as $key => $value) {
                 if (!is_array($value)) {
                     $where[] = "$key = '$value'";
                 } else {

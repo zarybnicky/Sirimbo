@@ -8,7 +8,7 @@ class Controller_Member extends Controller_Abstract
 
     public function view($request)
     {
-        $pager = new Paging('DBNastenka');
+        $pager = new Paging(new DBNastenka());
         $pager->setCurrentPage($request->get('p'));
         $pager->setItemsPerPage($request->get('c'));
         $pager->setDefaultItemsPerPage(10);

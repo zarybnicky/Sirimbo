@@ -162,10 +162,13 @@ class Controller_Admin_Rozpis_Detail extends Controller_Abstract
                     }
                 );
 
-                $lastEnd = DateTime::createFromFormat('H:i', '00:00');
+                $lastEnd = new DateTime('00:00');
                 foreach ($items as &$item) {
                     $start = DateTime::createFromFormat('H:i:s', $item['ri_od']);
                     $end = DateTime::createFromFormat('H:i:s', $item['ri_do']);
+                    if (!$start || !$end) {
+                        break;
+                    }
                     $length = $start->diff($end);
 
                     if ($lastEnd > $start) {
@@ -193,6 +196,9 @@ class Controller_Admin_Rozpis_Detail extends Controller_Abstract
 
                 $start = DateTime::createFromFormat('H:i', $request->post('add_multi_od'));
                 $length = new DateInterval('PT' . $request->post('add_multi_len') . 'M');
+                if (!$start) {
+                    break;
+                }
                 $end = clone $start;
                 $end->add($length);
 

@@ -102,6 +102,7 @@ class Controller_Fotogalerie extends Controller_Abstract
                 $tip = $newTip;
             } elseif ($dir['gd_level'] < $level) {
                 for ($i = 0; $i < ($level - $dir['gd_level']); $i++) {
+                    /** @var Tag */
                     $tip = array_pop($stack);
                 }
             }

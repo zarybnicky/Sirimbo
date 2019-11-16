@@ -80,21 +80,24 @@ function createThumbnail($file, $thumbFile)
         $nHeight = round($height * $scale);
     }
 
-    $fn_suffix = Settings::$imageSuffix[$filetype];
-    $fn_read = 'imageCreateFrom' . $fn_suffix;
-    $fn_write = 'image' . $fn_suffix;
-
+    /** @var callable */
+    $fn_read = 'imageCreateFrom' . Settings::$imageSuffix[$filetype];
     if (!($source = $fn_read($file))) {
         return false;
     }
-    $thumbnail = imageCreateTruecolor($nWidth, $nHeight);
-    imageCopyResized(
+    $thumbnail = imagecreatetruecolor($nWidth, $nHeight);
+    if (!$thumbnail) {
+        return false;
+    }
+    imagecopyresized(
         $thumbnail, $source,
         0, 0, 0, 0,
         $nWidth, $nHeight, $width, $height
     );
+    /** @var callable */
+    $fn_write = 'image' . Settings::$imageSuffix[$filetype];
     $fn_write($thumbnail, $thumbFile);
-    imageDestroy($thumbnail);
+    imagedestroy($thumbnail);
     return true;
 }
 
@@ -110,17 +113,13 @@ function checkGetThumbnail($original)
     return createThumbnail($original, $thumbnail);
 }
 
-function sanitizePathname($name)
+function sanitizePathname(string $name)
 {
-    return strtolower(
-        preg_replace(
-            '/[^a-z0-9\._-]+/i', '-',
-            preg_replace(
-                '([^\w\s\d\-_~,;:\[\]\(\]]|[\.]{2,})', '',
-                $name
-            )
-        )
-    );
+    /** @var string */
+    $x = preg_replace('([^\w\s\d\-_~,;:\[\]\(\]]|[\.]{2,})', '', $name);
+    /** @var string */
+    $x = preg_replace('/[^a-z0-9\._-]+/i', '-', $x);
+    return strtolower($x);
 }
 
 function getCanonicalName($file)

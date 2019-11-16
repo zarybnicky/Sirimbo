@@ -85,7 +85,7 @@ class DBVideo extends Database implements Pagable
     public static function getYtId($uri)
     {
         $split = preg_split("/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/", $uri);
-        $query = isset($split[1]) ? $split[1] : $uri;
+        $query = ($split && isset($split[1])) ? $split[1] : $uri;
         $query = preg_split("/[^0-9a-z_\-]/i", $query);
         return $query[0];
     }

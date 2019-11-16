@@ -21,7 +21,9 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
                 continue;
             }
             $this->processCsv($fileInfo->getPathname());
-            unlink($fileInfo->getRealPath());
+            if ($path = $fileInfo->getRealPath()) {
+                unlink($path);
+            }
             $this->redirect()->success('Soubor ' . $fileInfo->getFilename() . ' byl zpracován.');
         }
 

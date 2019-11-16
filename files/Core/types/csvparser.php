@@ -16,7 +16,8 @@ class CSVParser implements Iterator
         else
             throw new ViewException("Given file $file is not readable");
 
-        $text = $this->_file->current();
+        /** @var string */
+        $text = $file->current();
         $this->_encoding = mb_detect_encoding($text, 'UTF-8,ISO-8859-2,ISO-8859-1,cp1250');
 
         if ($this->_encoding === false)

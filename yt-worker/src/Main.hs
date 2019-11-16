@@ -94,10 +94,11 @@ liftMysql f = runSqlPool f =<< getPool
 
 main :: IO ()
 main = do
-  lgr <- newLogger Debug stdout
-  mgr <- liftIO $ newManager tlsManagerSettings
-  cred <- getApplicationDefault mgr
-  env <- newEnvWith cred lgr mgr <&> (envScopes .~ youTubeReadOnlyScope)
+  -- lgr <- newLogger Debug stdout
+  -- mgr <- liftIO $ newManager tlsManagerSettings
+  -- cred <- getApplicationDefault mgr
+  -- env <- newEnvWith cred lgr mgr <&> (envScopes .~ youTubeReadOnlyScope)
+  let env = undefined
 
   configFile <- fromMaybe "config.yaml" <$> lookupEnv "CONFIG"
   putStrLn $ "Reading config from: " <> configFile
@@ -106,9 +107,11 @@ main = do
   let connectInfo =
         mkMySQLConnectInfo dbHost (BC.pack dbUser) (BC.pack dbPassword) (BC.pack dbDatabase)
 
-  runResourceT . runStdoutLoggingT . withMySQLPool connectInfo 1 $ \pool -> flip runReaderT (AppEnv env pool) $ do
-    checkNewVideos
-    checkPlaylistMappings
+  runResourceT . runStdoutLoggingT . withMySQLPool connectInfo 1 $
+    \pool -> flip runReaderT (AppEnv env pool) $ do
+      liftMysql (printMigration migrateAll)
+    --   checkNewVideos
+    --   checkPlaylistMappings
 
 checkNewVideos :: (MonadMysql m, MonadGoogle AppScope m) => m ()
 checkNewVideos = do

@@ -60,7 +60,7 @@ class Controller_Admin_Video extends Controller_Abstract
 
     public function orphan($request)
     {
-        $pager = new Paging('DBVideo', 'orphan');
+        $pager = new Paging(new DBVideo(), 'orphan');
         $pager->setItemsPerPage($request->get('c'));
         $pager->setCurrentPage($request->get('p'));
         $data = array_map(

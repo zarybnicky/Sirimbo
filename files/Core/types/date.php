@@ -36,6 +36,7 @@ class Date
         foreach ($this->separators as $sep) {
             if (strpos($s, $sep) === false)
                 continue;
+            /** @var array */
             $pieces = explode($sep, $s);
             if (count($pieces) != 3)
                 unset($pieces);

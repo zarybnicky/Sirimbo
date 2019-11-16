@@ -24,6 +24,7 @@ class Database
             $array = explode("%%%%%", $escape);
         }
         if ($escaped) {
+            /** @var int $key */
             foreach ($escaped as $key => $value) {
                 array_splice($array, $key, 0, [$value]);
             }
@@ -39,10 +40,11 @@ class Database
     protected static function getConnection()
     {
         if (self::$connection == null) {
-            self::$connection = new mysqli(DB_SERVER, DB_USER, DB_PASS, DB_DATABASE)
-                or static::databaseError(true);
-            self::$connection->set_charset("utf8")
-                or static::databaseError(true);
+            self::$connection = new mysqli(DB_SERVER, DB_USER, DB_PASS, DB_DATABASE);
+            if (self::$connection->error) {
+                static::databaseError(true);
+            }
+            self::$connection->set_charset("utf8");
         }
         return self::$connection;
     }

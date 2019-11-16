@@ -11,6 +11,9 @@ class Log
     public static function write($message)
     {
         $logfile = fopen(LOG, 'a+');
+        if (!$logfile) {
+            return;
+        }
         fwrite(
             $logfile,
             date(DATE_RFC822) . " - "

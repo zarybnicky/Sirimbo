@@ -340,7 +340,7 @@ class Controller_Admin_Users extends Controller_Abstract
                            ? $request->get('status')
                            : 'all';
 
-        $pager = new Paging('DBUser', $options);
+        $pager = new Paging(new DBUser(), $options);
         $pager->setCurrentPage($request->get('p'));
         $pager->setItemsPerPage($request->get('c'));
 
