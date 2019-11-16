@@ -35,11 +35,10 @@ class Session
 
     public static function loadUser($id): bool
     {
-        if (Database::isDatabaseError()) {
+        if (Database::isDatabaseError() || !($user = DBUser::getUser($id))) {
             self::logout();
             return false;
         }
-        $user = DBUser::getUser($id);
         $skupina = DBSkupiny::getSingle($user->getTrainingGroup());
         $permissions = DBPermissions::getSingleGroup($user->getPermissionGroup());
         $par = DBPary::getLatestPartner($user->getId(), $user->getGender());

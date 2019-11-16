@@ -1,7 +1,7 @@
 <?php
 class DBUser extends Database implements Pagable
 {
-    public static function getPage($offset, $count, $options = null)
+    public function getPage($offset, $count, $options = null)
     {
         $q = "SELECT users.*, skupiny.* FROM users
             LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id WHERE 1=1";
@@ -41,7 +41,7 @@ class DBUser extends Database implements Pagable
         return self::getArray($res);
     }
 
-    public static function getCount($options = null)
+    public function getCount($options = null)
     {
         if (!isset($options['status'])) {
             $options['status'] = 'all';

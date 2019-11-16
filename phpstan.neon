@@ -1,0 +1,4 @@
+parameters:
+  excludes_analyse:
+    - %rootDir%/../../../files/Core/phpmailer.php
+    - %rootDir%/../../../files/Core/smtp.php

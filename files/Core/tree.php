@@ -62,6 +62,7 @@ class Tree
     {
         $stack = [$this];
         while ($stack) {
+            /** @var Tree|null */
             $current = array_pop($stack);
             if ($current instanceof Tree) {
                 $current->update($fn);

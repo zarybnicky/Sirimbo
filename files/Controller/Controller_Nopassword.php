@@ -17,7 +17,7 @@ class Controller_Nopassword extends Controller_Abstract
 
         if (!$data) {
             $this->redirect()->warning('Špatná kombinace uživatelského jména a emailu.');
-            $this->redirect('/nopassword');
+            return $this->redirect('/nopassword');
         }
 
         $base = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

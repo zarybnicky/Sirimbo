@@ -11,12 +11,12 @@ class DBNastenka extends Database implements Pagable
         return self::getArray($res);
     }
 
-    public static function getPage($offset, $count, $options = null)
+    public function getPage($offset, $count, $options = null)
     {
         return self::getNastenka($offset, $count);
     }
 
-    public static function getCount($options = null)
+    public function getCount($options = null)
     {
         $res = self::query("SELECT COUNT(*) FROM upozorneni");
         $res = self::getSingleRow($res);

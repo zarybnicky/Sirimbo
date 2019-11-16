@@ -12,6 +12,9 @@ class Controller_Admin_Users extends Controller_Abstract
         if ($request->post('action') == 'save') {
             foreach ($request->post('save') as $userId) {
                 $user = DBUser::getUser($userId);
+                if (!$user) {
+                    continue;
+                }
                 if (((bool) $request->post($userId . '-system')) !== ((bool) $user->getSystem())
                     || ((bool) $request->post($userId . '-ban')) !== ((bool) $user->getBanned())
                     || ($request->post($userId . '-skupina') != $user->getPermissionGroup())
@@ -196,10 +199,9 @@ class Controller_Admin_Users extends Controller_Abstract
     public function unconfirmed($request)
     {
         Permissions::checkError('users', P_ADMIN);
-        if ($request->post('confirm')) {
-            $id = $request->post('confirm');
-            $data = DBUser::getUser($id);
-
+        if (($id = $request->post('confirm')) &&
+            ($data = DBUser::getUser($id))
+        ) {
             DBUser::confirmUser(
                 $id,
                 $request->post($id . '-group'),

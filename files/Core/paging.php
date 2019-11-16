@@ -13,14 +13,13 @@ class Paging
     private $_totalItems;
     private $_pagesInRange;
     private $_valid = false;
+
+    /** @var Pagable */
     private $_source;
     private $_sourceOpts;
 
-    public function __construct($source, $options = null)
+    public function __construct(Pagable $source, $options = null)
     {
-        if (!in_array('Pagable', class_implements($source))) {
-            throw new ViewException('Database does not implement interface Pageable');
-        }
         $this->_source = $source;
         $this->_sourceOpts = $options;
         $this->_totalItems = call_user_func([$source, 'getCount'], $options);

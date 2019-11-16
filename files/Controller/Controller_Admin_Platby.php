@@ -14,16 +14,16 @@ class Controller_Admin_Platby extends Controller_Abstract
     protected function recognizeHeaders($headers, &$specific, &$variable, &$date, &$amount)
     {
         foreach (array_keys($headers) as $key) {
-            if (mb_stripos($key, 'specif') !== false) {
+            if (mb_stripos((string) $key, 'specif') !== false) {
                 $specific = $key;
             }
-            if (mb_stripos($key, 'variab') !== false) {
+            if (mb_stripos((string) $key, 'variab') !== false) {
                 $variable = $key;
             }
-            if (mb_stripos($key, 'datum') !== false) {
+            if (mb_stripos((string) $key, 'datum') !== false) {
                 $date = $key;
             }
-            if (mb_stripos($key, 'částka') !== false) {
+            if (mb_stripos((string) $key, 'částka') !== false) {
                 $amount = $key;
             }
         }

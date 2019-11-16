@@ -10,7 +10,7 @@ class DBAkce extends Database implements Pagable
         return self::getArray($res);
     }
 
-    public static function getPage($offset, $count, $options = '')
+    public function getPage($offset, $count, $options = '')
     {
         list($offset, $count, $options) = self::escape($offset, $count, $options);
 
@@ -21,7 +21,7 @@ class DBAkce extends Database implements Pagable
         return self::getArray($res);
     }
 
-    public static function getCount($options = null)
+    public function getCount($options = null)
     {
         $res = self::query("SELECT COUNT(*) FROM akce");
         if (!$res) {

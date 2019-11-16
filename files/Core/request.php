@@ -136,12 +136,14 @@ class Request
             }
         }
         $this->id = isset($id) ? $id : null;
-        $this->action = isset($action)
-                      ? $action
-                      : (!empty($this->uriPartsLiteral)
-                         ? $this->uriPartsLiteral[count($this->uriPartsLiteral) - 1]
-                         : null);
-        $this->action = str_replace('-', '_', $this->action);
+        $this->action = str_replace(
+            '-',
+            '_',
+            isset($action) ? $action :
+            (!empty($this->uriPartsLiteral)
+             ? $this->uriPartsLiteral[count($this->uriPartsLiteral) - 1]
+             : '')
+        );
     }
 
     public function getURI()

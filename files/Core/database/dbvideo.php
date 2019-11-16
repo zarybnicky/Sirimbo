@@ -1,7 +1,7 @@
 <?php
 class DBVideo extends Database implements Pagable
 {
-    public static function getPage($offset, $count, $options = null)
+    public function getPage($offset, $count, $options = null)
     {
         switch ($options) {
             case 'orphan':
@@ -20,7 +20,7 @@ class DBVideo extends Database implements Pagable
         return self::getArray($res);
     }
 
-    public static function getCount($options = null)
+    public function getCount($options = null)
     {
         switch ($options) {
             case 'orphan':

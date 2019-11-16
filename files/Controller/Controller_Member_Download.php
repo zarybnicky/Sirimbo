@@ -14,15 +14,14 @@ class Controller_Member_Download extends Controller_Abstract
 
         $data = DBDokumenty::getSingleDokument($request->get('id'));
         $path = $data['d_path'];
-        if (!is_file($path)) {
+        if (!is_file($path) || !($file = fopen($path, 'rb'))) {
             $this->redirect()->warning('Soubor nebyl nalezen.');
-            $this->redirect('/member/dokumenty');
+            return $this->redirect('/member/dokumenty');
         }
 
         header('Pragma: no-cache');
         header('Content-Type: application/octet-stream');
         header('Content-Disposition: inline; filename="' . $data['d_filename'] . '"');
-        $file = fopen($path, 'rb');
         fpassthru($file);
         fclose($file);
     }
