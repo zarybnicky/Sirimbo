@@ -18,18 +18,20 @@ if (!isset($_COOKIE['off_mode'])) {
 }
 //end OFF switch*/
 
-ini_set('session.use_trans_sid', 0);
-ini_set('session.use_only_cookies', 1);
+require 'vendor/autoload.php';
 
 ob_start();
+ini_set('session.use_trans_sid', 0);
+ini_set('session.use_only_cookies', 1);
+ini_set('session.cookie_lifetime', 0);
+ini_set('session.cookie_httponly', 1);
+ini_set('session.serialize_handler', 'php_serialize');
+session_set_save_handler(new DbSessionHandler(), true);
 session_start();
-session_regenerate_id();
 
-require 'vendor/autoload.php';
 register_shutdown_function('shutdownHandler');
 set_error_handler('errorHandler');
-// error_reporting(-1);
-
+error_reporting(-1);
 $request = new Request(
     $_SERVER['REQUEST_URI'],
     $_SERVER['REQUEST_METHOD'],

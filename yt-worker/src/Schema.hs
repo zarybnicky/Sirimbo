@@ -323,11 +323,10 @@ AnnouncementGroup sql=upozorneni_skupiny
   deriving Show
 
 Session
-  sid Text sql=ss_id sqltype=VARCHAR(128)
+  Id Text sql=ss_id sqltype=VARCHAR(128)
   data Text sql=ss_data sqltype=JSON
-  ss_updated_at UTCTime sql=ss_updated_at sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
+  updatedAt UTCTime sql=ss_updated_at sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   lifetime Int sql=ss_lifetime
-  Primary sid
 
 User sql=users
   Id sql=u_id
@@ -392,10 +391,4 @@ VideoSource sql=video_source
   createdAt UTCTime sql=vs_created_at
   lastCheckedAt UTCTime Maybe sql=vs_last_checked sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   deriving Show
-
-Session
-  Id sql=ss_id
-  data Text sql=ss_data sqltype=JSON
-  ss_updated_at UTCTime sql=ss_updated_at sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
-  lifetime Int sql=ss_lifetime
 |]

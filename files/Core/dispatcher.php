@@ -33,7 +33,7 @@ class Dispatcher
         }
 
         $action = $request->getAction();
-        if (method_exists($controller, $action)) {
+        if (method_exists($controller, $action) && !in_array($action, ['login'])) {
             $controller->$action($request);
         } else {
             $controller->view($request);
