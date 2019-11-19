@@ -9,7 +9,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Olymp.Log
+module Olymp.Effect.Log
   ( Log(..)
   , WithLog
   , logDebug
@@ -35,7 +35,7 @@ import Prelude hiding (log)
 data Log (m :: Type -> Type) (a :: Type) where
     Log :: Msg Severity -> Log m ()
 
-$(makeSem 'Log)
+$(makeSem ''Log)
 
 type WithLog r = (Member Log r, HasCallStack)
 

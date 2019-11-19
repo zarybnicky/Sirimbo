@@ -45,6 +45,8 @@ class DbSessionHandler extends Database implements SessionHandlerInterface
 
     public function destroy($sessionId)
     {
+        setcookie(session_name(), null, -1, '/');
+
         list($id) = self::escape($sessionId);
         return !!self::query("DELETE FROM session WHERE ss_id='$id'");
     }

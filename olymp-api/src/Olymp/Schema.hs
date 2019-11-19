@@ -8,10 +8,12 @@
 {-# LANGUAGE TemplateHaskell            #-}
 {-# LANGUAGE TypeFamilies               #-}
 
-module Schema
+module Olymp.Schema
   ( migrateAll
+  , PersistEntity(..)
   , EntityField(..)
   , Unique(..)
+  , Key(..)
 
   , EventId
   , Event(..)
@@ -326,7 +328,7 @@ AnnouncementGroup sql=upozorneni_skupiny
 
 Session
   Id Text sql=ss_id sqltype=VARCHAR(128)
-  data Text sql=ss_data sqltype=JSON
+  data ByteString sql=ss_data sqltype=BLOB
   updatedAt UTCTime sql=ss_updated_at sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   lifetime Int sql=ss_lifetime
 

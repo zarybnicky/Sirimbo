@@ -22,28 +22,42 @@ library
   hs-source-dirs:      src
   ghc-options:        -fplugin=Polysemy.Plugin
   exposed-modules:     Olymp
+                       Olymp.Auth
                        Olymp.Cli
-                       Olymp.Log
+                       Olymp.Effect.Database
+                       Olymp.Effect.Error
+                       Olymp.Effect.Log
+                       Olymp.Effect.Session
+                       Olymp.Effect.User
+                       Olymp.Schema
 
   build-depends:       base >=4.7 && <5
                      , aeson
+                     , bytestring
                      , co-log
                      , co-log-core
                      , containers
+                     , cookie
                      , errors
                      , ginger
+                     , monad-logger
                      , mtl
                      , optparse-applicative
                      , optparse-generic
                      , persistent
-                     , persistent-mysql
+                     , persistent-mysql-haskell
+                     , persistent-template
                      , polysemy
                      , polysemy-plugin
+                     , resource-pool
                      , servant
                      , servant-server
                      , text
+                     , time
+                     , transformers
                      , wai
                      , warp
+                     , yaml
 
 executable server
   import: shared

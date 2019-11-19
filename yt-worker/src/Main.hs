@@ -59,6 +59,13 @@ import System.Info (os)
 import System.Process (rawSystem)
 
 import Schema
+  ( EntityField(..)
+  , VideoList(..)
+  , VideoSource(..)
+  , migrateAll
+  , videoUri
+  )
+import qualified Schema (Video(Video))
 
 type AppScope = '[ "https://www.googleapis.com/auth/youtube.readonly"]
 type MonadMysql m = (MonadUnliftIO m, MonadLogger m, HasPool m)

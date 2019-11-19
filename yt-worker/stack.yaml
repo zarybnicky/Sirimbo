@@ -6,6 +6,8 @@ packages:
 docker:
   enable: true
   stack-exe: download
+  mount:
+    - /tmp:/tmp
 
 extra-deps:
 - git: https://github.com/brendanhay/gogol

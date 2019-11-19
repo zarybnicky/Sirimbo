@@ -1,0 +1,4 @@
+dbHost: mysqldb
+dbUser: olymp
+dbPassword: admin
+dbDatabase: olymp

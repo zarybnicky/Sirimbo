@@ -30,7 +30,7 @@ class Session
 
     public static function logout()
     {
-        session_unset();
+        session_destroy();
     }
 
     public static function loadUser($id): bool
