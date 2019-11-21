@@ -134,10 +134,10 @@ class DBUser extends Database implements Pagable
              WHERE u_id='?'",
             $id
         );
-        if (!$res) {
+        if (!$res || !($row = self::getSingleRow($res))) {
             return null;
         }
-        return User::fromArray(self::getSingleRow($res));
+        return User::fromArray($row);
     }
 
     public static function confirmUser($id, $group, $skupina = '1')

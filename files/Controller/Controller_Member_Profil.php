@@ -11,26 +11,10 @@ class Controller_Member_Profil extends Controller_Abstract
         $data = Session::getUserData();
         $s = Session::getSkupinaData();
 
-        $groupsOut = [];
-        $groups = DBSkupiny::getSingleWithCategories(Session::getSkupina());
-        foreach ($groups as $row) {
-            if (!$row['pc_visible']) {
-                continue;
-            }
-            $groupsOut[] = [
-                'name' => $row['pc_name'],
-                'type' => $row['pg_type'] ? 'Členské příspěvky' : 'Ostatní platby',
-                'symbol' => $row['pc_symbol'],
-                'amount' => ($row['pc_use_base'] ? ($row['pc_amount'] * $row['pg_base']) : $row['pc_amount']) . ' Kč',
-                'dueDate' => (new Date($row['pc_date_due']))->getDate(Date::FORMAT_SIMPLIFIED),
-                'validRange' => ((new Date($row['pc_valid_from']))->getDate(Date::FORMAT_SIMPLIFIED) .
-                    ((new Date($row['pc_valid_to']))->isValid() ?
-                        (' - ' . (new Date($row['pc_valid_to']))->getDate(Date::FORMAT_SIMPLIFIED)) : ''))
-            ];
-        }
-
-        $platby = array_map(
-            function ($row) {
+        $paymentsPaid = [];
+        $paymentHistory = array_map(
+            function ($row) use (&$paymentsPaid) {
+                $paymentsPaid[$row['pc_id']] = '';
                 return [
                     'type' => $row['pc_name'],
                     'varSymbol' => $row['pc_symbol'],
@@ -42,6 +26,24 @@ class Controller_Member_Profil extends Controller_Abstract
             DBPlatby::getPaymentHistory(Session::getUserID())
         );
 
+        $paymentsWanted = [];
+        $groups = DBSkupiny::getSingleWithCategories(Session::getSkupina());
+        foreach ($groups as $row) {
+            if (!$row['pc_visible'] || isset($paymentsPaid[$row['pc_id']])) {
+                continue;
+            }
+            $paymentsWanted[] = [
+                'name' => $row['pc_name'],
+                'type' => $row['pg_type'] ? 'Členské příspěvky' : 'Ostatní platby',
+                'symbol' => $row['pc_symbol'],
+                'amount' => ($row['pc_use_base'] ? ($row['pc_amount'] * $row['pg_base']) : $row['pc_amount']) . ' Kč',
+                'dueDate' => (new Date($row['pc_date_due']))->getDate(Date::FORMAT_SIMPLIFIED),
+                'validRange' => ((new Date($row['pc_valid_from']))->getDate(Date::FORMAT_SIMPLIFIED) .
+                    ((new Date($row['pc_valid_to']))->isValid() ?
+                        (' - ' . (new Date($row['pc_valid_to']))->getDate(Date::FORMAT_SIMPLIFIED)) : ''))
+            ];
+        }
+
         $this->render('files/View/Member/Profil/Overview.inc', [
             'header' => $data->getFullName(),
             'ageGroup' => Session::getAgeGroup($data->getBirthYear()),
@@ -52,8 +54,8 @@ class Controller_Member_Profil extends Controller_Abstract
             ),
             'varSymbol' => User::varSymbol(Session::getUserID()),
             'hasPaid' => Session::getZaplaceno(),
-            'platby' => $platby,
-            'platbyGroups' => $groupsOut,
+            'paymentHistory' => $paymentHistory,
+            'paymentsWanted' => $paymentsWanted,
         ]);
     }
 
