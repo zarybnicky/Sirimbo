@@ -9,7 +9,6 @@ class Request
     protected $getParams;
     protected $postParams;
     protected $fileParams;
-    protected $sessionParams;
 
     protected $defaultPath;
     protected $rawUriParts;
@@ -27,8 +26,7 @@ class Request
         $cookieParams,
         $getParams,
         $postParams,
-        $fileParams,
-        $sessionParams
+        $fileParams
     ) {
         $this->setURI($uri);
         $this->method = $method;
@@ -38,7 +36,6 @@ class Request
         $this->getParams = $getParams;
         $this->postParams = $postParams;
         $this->fileParams = $fileParams;
-        $this->sessionParams = $sessionParams;
     }
 
     protected function phpGlobal(&$array, $field, $value)
@@ -82,14 +79,6 @@ class Request
     public function files($field = null, $value = null)
     {
         return $this->phpGlobal($this->fileParams, $field, $value);
-    }
-
-    public function session($field = null, $value = null)
-    {
-        if ($value !== null) {
-            $_SESSION[$field] = $value;
-        }
-        return $this->phpGlobal($this->sessionParams, $field, $value);
     }
 
     public function setDefault($defaultPath)

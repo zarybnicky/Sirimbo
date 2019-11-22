@@ -81,6 +81,17 @@ class Controller_Member_Profil extends Controller_Abstract
         ]);
     }
 
+    public function gdpr($request)
+    {
+        if ($request->post('action') !== 'gdpr') {
+            return $this->render('files/View/Member/Profil/Gdpr.inc', [
+                'header' => 'Souhlas se zpracováním osobních údajů',
+            ]);
+        }
+        DBUser::markGdprSigned(Session::getUserId());
+        $this->redirect('/member/home');
+    }
+
     public function edit($request)
     {
         $data = Session::getUserData();
@@ -98,7 +109,7 @@ class Controller_Member_Profil extends Controller_Abstract
             $request->post('orientacni', $data->getOrientationNumber());
             $request->post('city', $data->getCity());
             $request->post('district', $data->getDistrict());
-            $request->post('postal', $data->getCity());
+            $request->post('postal', $data->getPostalCode());
             $request->post('nationality', $data->getNationality());
             $request->post('dancer', $data->getDancer());
             return $this->renderPersonalForm($request);

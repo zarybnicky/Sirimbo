@@ -75,16 +75,15 @@ class User
 
     public function isValid()
     {
-        return preg_match(
-            "/^[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i",
-            $this->getEmail()
-        ) && preg_match(
-            "/^((\+|00)\d{3})?( ?\d{3}){3}$/",
-            $this->getPhone()
-        ) && preg_match(
-            "/^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/",
-            $this->getBirthDate()
-        );
+        $email = "/^[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i";
+        $phone = "/^((\+|00)\d{3})?( ?\d{3}){3}$/";
+        $birthDate = "/^((?:19|20)\d\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/";
+        return preg_match($email, $this->getEmail())
+            && preg_match($phone, $this->getPhone())
+            && preg_match($birthDate, $this->getBirthDate())
+            && is_numeric($this->getNationality())
+            && $this->getCity()
+            && is_numeric(str_replace(' ', '', $this->getPostalCode()));
     }
 
     /**

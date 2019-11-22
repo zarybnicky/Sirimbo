@@ -40,8 +40,7 @@ $request = new Request(
     $_COOKIE,
     $_GET,
     $_POST,
-    $_FILES,
-    $_SESSION
+    $_FILES
 );
 $_SERVER = $_COOKIE = $_GET = $_POST = $_FILES = array();
 $request->setDefault('home');
@@ -52,17 +51,16 @@ Log::setRequest($request);
 Permissions::setRequest($request);
 
 try {
-    if ($request->session('login') !== null) {
-        Session::loadUser($request->session('id'));
-        if ($request->session('invalid_data') === '1'
-            && $request->getURI() !== 'member/profil/edit'
-            && $request->getURI() !== 'logout'
-        ) {
-            (new RedirectHelper())->redirect(
-                '/member/profil/edit',
-                'Prosím vyplňte požadované údaje.',
-                true
-            );
+    if (isset($_SESSION['login']) && $_SESSION['login'] !== null) {
+        Session::loadUser($_SESSION['id']);
+        if ($_SESSION['gdpr']) {
+            if (!in_array($request->getURI(), ['member/profil/gdpr', 'logout'])) {
+                return (new RedirectHelper())->redirect('/member/profil/gdpr');
+            }
+        } elseif ($_SESSION['invalid']) {
+            if (!in_array($request->getURI(), ['member/profil/edit', 'logout'])) {
+                return (new RedirectHelper())->redirect('/member/profil/edit', 'Prosím vyplňte požadované údaje.');
+            }
         }
     } elseif ($request->post('login') && $request->post('pass')) {
         $request->post('pass', User::crypt($request->post('pass')));

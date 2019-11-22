@@ -150,6 +150,12 @@ class DBUser extends Database implements Pagable
         );
     }
 
+    public static function markGdprSigned($id)
+    {
+        self::query("UPDATE users SET u_gdpr_signed_at=NOW() WHERE u_id='?'", $id);
+        return true;
+    }
+
     public static function setPassword($id, $passwd)
     {
         self::query("UPDATE users SET u_pass='?' WHERE u_id='?'", $passwd, $id);
@@ -187,7 +193,7 @@ class DBUser extends Database implements Pagable
             "u_street,u_conscription_number,u_orientation_number,u_district,u_city,u_postal_code,u_nationality," .
             "u_group,u_skupina,u_lock,u_ban,u_confirmed,u_system,u_dancer,u_teacher,u_member_since,u_member_until," .
             "u_gdpr_signed_at) VALUES " .
-            "('?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?',YEAR(CURDATE()),NULL,CURDATE())",
+            "('?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?',CURDATE(),NULL,CURDATE())",
             $login, $pass, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $narozeni, $poznamky,
             $street, $popisne, $orientacni, $district, $city, $postal, $nationality,
             $group, $skupina, $lock, $ban, $confirmed, $system, $dancer, $trener

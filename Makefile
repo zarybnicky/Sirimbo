@@ -16,4 +16,10 @@ upload:
 upload-beta:
 	rsync -azP files/ olymp.z:/var/www/html-beta/files
 
+check: vendor/bin/phpstan
+	vendor/bin/phpstan analyse --level max files
+
+vendor/bin/phpstan:
+	composer install
+
 .PHONY: upload upload-beta style-watch

@@ -21,7 +21,7 @@ class Log
             . "\tMessage: $message\n"
             . "\tGET: " . json_encode(static::$request->get()) . "\n"
             . "\tPOST: " . json_encode(static::$request->post()) . "\n"
-            . "\tSESSION: " . json_encode(static::$request->session()) . "\n\n"
+            . "\tSESSION: " . json_encode($_SESSION) . "\n\n"
         );
         fclose($logfile);
     }

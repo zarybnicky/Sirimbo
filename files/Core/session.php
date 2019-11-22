@@ -51,7 +51,8 @@ class Session
             }
         }
 
-        $_SESSION['invalid_data'] = $user->isValid() ? 0 : 1;
+        $_SESSION['invalid'] = !$user->isValid();
+        $_SESSION['gdpr'] = !$user->getGdprSignedAt() || $user->getGdprSignedAt() === '0000-00-00 00:00:00';
         $_SESSION['login'] = 1;
         $_SESSION['id'] = $user->getId();
         $_SESSION['user'] = $user;
