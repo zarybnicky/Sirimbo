@@ -119,10 +119,10 @@ class DBUser extends Database implements Pagable
             strtolower($login),
             strtolower($email)
         );
-        if (!$res) {
+        if (!$res || !($row = self::getSingleRow($res))) {
             return null;
         }
-        return User::fromArray(self::getSingleRow($res));
+        return User::fromArray($row);
     }
 
     public static function getUser(int $id): ?User

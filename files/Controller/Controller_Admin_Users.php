@@ -40,8 +40,8 @@ class Controller_Admin_Users extends Controller_Abstract
                         $user->getLocked() ? '1' : '0',
                         $request->post($userId . '-ban') ? '1' : '0',
                         $request->post($userId . '-system') ? '1' : '0',
-                        $user->getDancer(),
-                        $user->getTeacher(),
+                        $user->getDancer() ? '1' : '0',
+                        $user->getTeacher() ? '1' : '0',
                         $user->getMemberSince(),
                         $user->getMemberUntil(),
                         $user->getGdprSignedAt()
