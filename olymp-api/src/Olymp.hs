@@ -11,9 +11,9 @@
 {-# LANGUAGE TypeOperators #-}
 
 module Olymp
-  ( makeApplication
+  ( makeServer
   , parseArgs
-  , Warp.run
+  , runServer
   ) where
 
 import Control.Monad.Except (ExceptT(..))
@@ -29,7 +29,7 @@ import Database.Persist.Sql ()
 import Database.Persist.MySQL (SqlBackend, createMySQLPool, mkMySQLConnectInfo)
 import GHC.Generics (Generic)
 import Network.Wai (Application)
-import qualified Network.Wai.Handler.Warp as Warp
+import Network.Wai.Handler.Warp (run)
 import Olymp.Auth (PhpAuth, PhpAuthHandler, phpAuthHandler)
 import Olymp.Cli (Args(..), parseArgs)
 import Olymp.Effect.Database (Database, runDatabasePool)
@@ -53,8 +53,13 @@ data AppConfig = AppConfig
   , dbDatabase :: String
   } deriving (Show, Generic, FromJSON)
 
-makeApplication :: Args -> IO (Int, Application)
-makeApplication args = do
+runServer :: IO ()
+runServer = do
+  args <- parseArgs
+  run (port args) =<< makeServer
+
+makeServer :: IO Application
+makeServer = do
   configFile <- fromMaybe "config.yaml" <$> lookupEnv "CONFIG"
   putStrLn $ "Reading config from: " <> configFile
   AppConfig{..} <- decodeFileThrow configFile
@@ -62,7 +67,7 @@ makeApplication args = do
         mkMySQLConnectInfo dbHost (BC.pack dbUser) (BC.pack dbPassword) (BC.pack dbDatabase)
 
   pool <- runStdoutLoggingT $ createMySQLPool connectInfo 5
-  pure (port args, appServer (interpretServer pool))
+  pure $ appServer (interpretServer pool)
   where
     appServer :: (forall a. Sem AppStack a -> Handler a) -> Application
     appServer runner =

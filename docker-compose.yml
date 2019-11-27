@@ -26,18 +26,6 @@ services:
       - .:/app
     tty: true
 
-  api:
-    build:
-      context: ./docker/api
-      dockerfile: Dockerfile
-    links:
-      - mysqldb
-    ports:
-      - 3002:3000
-    volumes:
-      - ./olymp-api:/local
-      - stack_cache:/root/.stack
-
   nginx:
     image: bitnami/nginx:latest
     depends_on:

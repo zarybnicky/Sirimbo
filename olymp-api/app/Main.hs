@@ -1,6 +1,6 @@
 module Main where
 
-import Olymp (makeApplication, parseArgs, run)
+import Olymp (runServer)
 
 main :: IO ()
-main = uncurry run =<< makeApplication =<< parseArgs
+main = runServer
