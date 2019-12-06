@@ -77,7 +77,7 @@ class Controller_Admin_Aktuality extends Controller_Abstract
 
         $date = DateTime::createFromFormat('j. n. Y H:i', $request->post('createdAt'));
         if (!$request->post() || $date === false) {
-            if ($date === false) {
+            if ($request->post() && $date === false) {
                 $this->redirect()->danger('Špatný formát data "Publikováno" (D. M. RRRR HH:SS)');
             }
             return $this->render('files/View/Admin/Aktuality/Form.inc', [

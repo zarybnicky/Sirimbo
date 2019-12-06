@@ -180,6 +180,13 @@ class Controller_Member_Profil extends Controller_Abstract
             $f->checkInArray($request->post('pohlavi'), ['m', 'f'], 'Neplatné pohlaví', 'pohlavi');
             $f->checkEmail($request->post('email'), 'Neplatný formát emailu', 'email');
             $f->checkPhone($request->post('telefon'), 'Neplatný formát telefoního čísla', 'telefon');
+            $f->checkNumeric($request->post('nationality'), 'Neplatný formát národnosti', 'nationality');
+            $f->checkNotEmpty($request->post('city'), 'Zadejte město bydliště', 'city');
+            $f->checkNumeric(
+                str_replace(' ', '', $request->post('postal')),
+                'Zadejte číselné PSČ',
+                'postal'
+            );
         } elseif ($action == 'heslo') {
             $f->checkPassword($request->post('newpass'), 'Neplatný formát hesla', 'newpass');
             $f->checkBool(

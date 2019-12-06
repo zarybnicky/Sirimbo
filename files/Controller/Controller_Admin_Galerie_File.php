@@ -155,7 +155,7 @@ class Controller_Admin_Galerie_File extends Controller_Abstract
         }
         if ($failCount > 0) {
             $this->redirect()->warning(
-                'Počet neůspěšně zpracovaných souborů: ' . $failCount
+                'Počet neúspěšně zpracovaných souborů: ' . $failCount
             );
         }
         if (count($files) > $failCount) {
