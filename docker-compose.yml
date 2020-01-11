@@ -30,7 +30,6 @@ services:
     image: bitnami/nginx:latest
     depends_on:
       - phpfpm
-      - api
     ports:
       - 3000:3000
     volumes:

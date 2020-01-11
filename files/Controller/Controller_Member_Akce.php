@@ -79,9 +79,8 @@ class Controller_Member_Akce extends Controller_Abstract
             'dokumenty' => $dokumenty,
             'items' => $items
         ];
-        $out['signIn'] = $out['showForm']
-                       ? !DBAkce::isUserSignedUp($out['id'], Session::getUserID())
-                       : '';
+        $out['signOut'] = $out['showForm'] && DBAkce::isUserSignedUp($out['id'], Session::getUserID());
+        $out['signIn'] = $out['showForm'] && !$out['signOut'] && $out['volno'] > 0;
         return $out;
     }
 

@@ -12,7 +12,7 @@
                        'value' => $this->text('name', $this->name)
                    ], [
                        'desc' => 'Barva',
-                       'value' => $this->colorSelect('color', $this->color)
+                       'value' => (new ColorSelectHelper())->colorSelect('color', $this->color)
                    ], [
                        'desc' => 'Popis',
                        'value' => '<textarea rows="15" cols="50" name="desc">' . $this->popis . '</textarea>'

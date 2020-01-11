@@ -31,7 +31,7 @@
     <div class="col-md-6">
       <h2>O klubu</h2>
       <p>
-        <b>TK Olymp Olomouc</b> je tradiční taneční klub zabývající se výchovou
+        <b>TK Olymp</b> je tradiční taneční klub zabývající se výchovou
         standardních a&nbsp;latinskoamerických tanečníků. V&nbsp;novém tisíciletí
         patří mezi&nbsp;nejúspěšnější české kluby. Naše páry pravidelně sbírají
         úspěchy v&nbsp;České republice i&nbsp;na&nbsp;mezinárodním poli.

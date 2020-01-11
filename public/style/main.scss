@@ -72,7 +72,7 @@ table.nocolor td, table.nocolor th { border: none; background: none; }
 }
 
 .bg-red {
-    background-color: $red;
+    background-color: $light-red;
 }
 $navbar-padding-x: 0;
 $navbar-padding-y: 0;
@@ -81,6 +81,9 @@ $navbar-padding-y: 0;
     padding: 0;
     max-width: 100%;
     flex-wrap: wrap !important;
+}
+.navbar.navbar-dark .navbar-nav .nav-link {
+    color: rgba(255, 255, 255, .8);
 }
 @include media-breakpoint-down(md) {
     .navbar .container {

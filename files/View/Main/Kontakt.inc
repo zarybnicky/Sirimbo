@@ -6,7 +6,7 @@
      table.k b {color:#333;}
     </style>
     <table class="k">
-        <tr><td><h2>Taneční klub Olymp Olomouc</h2></td></tr>
+        <tr><td><h2>Taneční klub Olymp</h2></td></tr>
         <tr>
             <td class="r">sídlo:</td>
             <td>Jiráskova 25, 77900, Olomouc</td>

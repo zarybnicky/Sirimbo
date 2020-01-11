@@ -23,7 +23,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="stylesheet" type="text/css" href="/style.css" />
     <title>
-      <?= isset($this->header) ? "{$this->header} | TK Olymp Olomouc" : 'TK Olymp Olomouc' ?>
+      <?= isset($this->header) ? "{$this->header} | TK Olymp" : 'TK Olymp' ?>
     </title>
   </head>
   <body>
@@ -33,7 +33,7 @@
       <div class="container">
         <div class="container">
           <h1 class="navbar-brand my-0 ml-lg-2 mx-3">
-            <a href="/"><img alt="" src="/style/logo-wide-white.png" /></a>
+            <a href="/"><img alt="" src="/style/new-logo-oneline.png" /></a>
           </h1>
           <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target=".navbars">
             <span class="navbar-toggler-icon"></span>
@@ -93,7 +93,7 @@
             <div>
               <a class="no-a" href="https://www.facebook.com/tkolymp"
                  target="_blank">
-                <img alt="Facebook, stránka Taneční klub Olymp Olomouc"
+                <img alt="Facebook, stránka Taneční klub Olymp"
                      src="/style/fb-logo.png" />
               </a>
             </div>
@@ -101,7 +101,7 @@
               design a realizace:
               <a href="mailto:jakub@zarybnicky.com">Jakub Zárybnický</a>
               <br>
-              © 2018 TK Olymp Olomouc
+              © 2018 TK Olymp
             </div>
           </div>
           <div class="col">

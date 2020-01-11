@@ -2885,9 +2885,11 @@ table.nocolor td, table.nocolor th { border: none; background: none; }
 
 .dropdown-no-arrow::after { display: none !important; }
 
-.bg-red { background-color: #c90029; }
+.bg-red { background-color: #e80b30; }
 
 .navbar.navbar-dark > .container { margin: 0; padding: 0; max-width: 100%; flex-wrap: wrap !important; }
+
+.navbar.navbar-dark .navbar-nav .nav-link { color: rgba(255, 255, 255, 0.8); }
 
 @media (max-width: 991.98px) { .navbar .container { padding: 0; }
   .navbar .container .container { max-height: max-content; } }

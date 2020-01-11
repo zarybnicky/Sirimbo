@@ -78,6 +78,7 @@ class Controller_Member_Profil extends Controller_Abstract
             'postal' => $request->post('postal'),
             'nationality' => $request->post('nationality'),
             'dancer' => $request->post('dancer'),
+            'returnURI' => $request->getReferer() ?: '/member/home',
         ]);
     }
 
