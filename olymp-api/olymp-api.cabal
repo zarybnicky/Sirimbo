@@ -39,7 +39,9 @@ library
                      , containers
                      , cookie
                      , errors
+                     , generic-lens
                      , ginger
+                     , lens
                      , monad-logger
                      , mtl
                      , optparse-applicative

@@ -106,11 +106,23 @@ let
     rev = "c069d76376f8ab32ea782694e0b7bdecbc971ab7";
     sha256 = "0gcyr535gd6vk14ma6v0448vhq72pvcky8ww7wxbffrj8g6knq4g";
   };
+  invariant = pkgs.fetchFromGitHub {
+    owner = "nfrisby";
+    repo = "invariant-functors";
+    rev = "28234d2797af24274f86e31f6320f9f523a43054";
+    sha256 = "0i3wbpqvmnvwdj7d4s9cx6nkasfjbcrn7if6gc2w3a6dhz5wkf82";
+  };
   servant = pkgs.fetchFromGitHub {
     owner = "haskell-servant";
     repo = "servant";
     rev = "5285011233575354ded4df2a022af4b2ad24cf6b";
     sha256 = "0xk3czk3jhqjxhy0g8r2248m8yxgvmqhgn955k92z0h7p02lfs89";
+  };
+  lens = pkgs.fetchFromGitHub {
+    owner = "ekmett";
+    repo = "lens";
+    rev = "eb255ec6c1e5c4f0012ab56268b43a3059d60a16";
+    sha256 = "1h2kh9yx65n3vha05gp178ygzsb5ghi3smg91kzzhacf7l5s28i8";
   };
   co-log-orig = pkgs.fetchFromGitHub {
     owner = "kowainik";
@@ -151,5 +163,7 @@ in with pkgs.haskell.lib; pkgs.haskellPackages.extend (self: super: {
     editedCabalFile = null;
   });
   dec = self.callCabal2nix "dec" "${vec}/dec" {};
+  lens = self.callCabal2nix "lens" lens {};
+  invariant = doJailbreak (self.callCabal2nix "invariant" invariant {});
   http-api-data = doJailbreak (dontCheck (self.callCabal2nix "http-api-data" http-api-data {}));
 })
