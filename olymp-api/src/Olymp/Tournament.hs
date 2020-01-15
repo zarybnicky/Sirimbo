@@ -1,4 +1,7 @@
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE KindSignatures #-}
+{-# LANGUAGE StandaloneDeriving #-}
+{-# LANGUAGE UndecidableInstances #-}
 
 module Olymp.Tournament
   ( Ruleset(..)
@@ -15,6 +18,7 @@ module Olymp.Tournament
 import Data.Foldable (foldl')
 import Data.List.NonEmpty (NonEmpty(..), nonEmpty)
 import qualified Data.List.NonEmpty as NE
+import Data.Map.Strict (Map)
 import GHC.Generics (Generic)
 
 data Ruleset
@@ -34,41 +38,45 @@ data TournamentResult p = TournamentResult
   , total :: Int
   } deriving (Show, Generic)
 
-data Tournament p r = Tournament
-  { winnersBracket :: TournamentNode p r
-  , losersBracket :: Maybe (TournamentNode p r)
+data Tournament id p = Tournament
+  { winnersBracket :: TournamentNode id p []
+  , losersBracket :: Maybe (TournamentNode id p [])
   } deriving (Show, Generic)
 
-data TournamentNode p r
-  = SeedNode p
-  | SeedWaitingNode
-  | DuelWaitingNode [TournamentNode p r]
-  | DuelReadyNode [p] [TournamentNode p r]
-  | DuelFinishedNode [p] r [TournamentNode p r]
-  deriving (Show, Generic)
+data TournamentNode id p (f :: * -> *)
+  = SeedNode id p
+  | SeedWaitingNode id
+  | DuelWaitingNode id (f (TournamentNode id p f))
+  | DuelReadyNode id [p] (f (TournamentNode id p f))
+  | DuelFinishedNode id [p] (DuelResult p) (f (TournamentNode id p f))
 
-newtype DuelResult p = DuelVictor p
-  deriving (Show, Generic)
+deriving instance (Show id, Show p, Show (f (TournamentNode id p f))) => Show (TournamentNode id p f)
+deriving instance Generic (TournamentNode id p f)
 
-createTournamentList :: Ruleset -> [p] -> Maybe (Tournament p (DuelResult p))
+data DuelResult p = DuelResult
+  { score :: Map p Int
+  , victor :: Maybe p
+  } deriving (Show, Generic)
+
+createTournamentList :: Ruleset -> [p] -> Maybe (Tournament id p)
 createTournamentList r ps = createTournament r <$> nonEmpty ps
 
-createTournament :: Ruleset -> NonEmpty p -> Tournament p (DuelResult p)
+createTournament :: Ruleset -> NonEmpty p -> Tournament id p
 createTournament SingleElimination players = Tournament wb lb
   where
     n = length players
     wb = fillPlayers players (makeBracket n)
     lb = if n > 2 then Just $ makeBracket (n - 2) else Nothing
 
-makeBracket :: Int -> TournamentNode p r
+makeBracket :: Int -> TournamentNode id p []
 makeBracket n
   | n == 1 = SeedWaitingNode
   | otherwise = DuelWaitingNode [makeBracket (n `div` 2 + n `mod` 2), makeBracket (n `div` 2)]
 
-fillPlayers :: NonEmpty p -> TournamentNode p r -> TournamentNode p r
+fillPlayers :: NonEmpty p -> TournamentNode id p [] -> TournamentNode id p []
 fillPlayers ps = either id snd . fillSeeds ps
 
-fillSeeds :: NonEmpty p -> TournamentNode p r -> Either (TournamentNode p r) (NonEmpty p, TournamentNode p r)
+fillSeeds :: NonEmpty p -> TournamentNode id p [] -> Either (TournamentNode id p []) (NonEmpty p, TournamentNode id p [])
 fillSeeds ps node = case node of
   SeedWaitingNode -> case nonEmpty (NE.tail ps) of
     Nothing -> Left (SeedNode (NE.head ps))
@@ -88,3 +96,8 @@ fillSeeds ps node = case node of
       Just ps'' -> case fillSeeds ps'' c of
         Left c' -> (Nothing, acc ++ [c'])
         Right (ps''', c') -> (Just ps''', acc ++ [c'])
+
+-- upcoming battles
+-- in-progress battles (victor == Nothing)
+-- get battle by ID (ID == path to node? 1=left, 2=right)
+-- update score
