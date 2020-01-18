@@ -124,6 +124,12 @@ let
     rev = "eb255ec6c1e5c4f0012ab56268b43a3059d60a16";
     sha256 = "1h2kh9yx65n3vha05gp178ygzsb5ghi3smg91kzzhacf7l5s28i8";
   };
+  recursion-schemes = pkgs.fetchFromGitHub {
+    owner = "ekmett";
+    repo = "recursion-schemes";
+    rev = "4e06bd8f4b93ec0e6f6bbfed20e018bdbbc4d78c";
+    sha256 = "137qgfsc0h2y5jgwg068x6b19cp7jsxwix5ihb7vwicr6pfa633s";
+  };
   co-log-orig = pkgs.fetchFromGitHub {
     owner = "kowainik";
     repo = "co-log";
@@ -164,6 +170,7 @@ in with pkgs.haskell.lib; pkgs.haskellPackages.extend (self: super: {
   });
   dec = self.callCabal2nix "dec" "${vec}/dec" {};
   lens = self.callCabal2nix "lens" lens {};
+  recursion-schemes = self.callCabal2nix "recursion-schemes" recursion-schemes {};
   invariant = doJailbreak (self.callCabal2nix "invariant" invariant {});
   http-api-data = doJailbreak (dontCheck (self.callCabal2nix "http-api-data" http-api-data {}));
 })

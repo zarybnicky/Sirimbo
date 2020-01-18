@@ -51,12 +51,14 @@ library
                      , persistent-template
                      , polysemy
                      , polysemy-plugin
+                     , recursion-schemes
                      , resource-pool
                      , servant
                      , servant-server
                      , text
                      , time
                      , transformers
+                     , transformers-compat
                      , wai
                      , warp
                      , yaml
