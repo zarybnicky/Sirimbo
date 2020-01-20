@@ -10,6 +10,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
@@ -22,10 +23,13 @@ module Main
   , loadPlaylistsForChannel
   , checkNewVideos
   , checkPlaylistMappings
+  , listVideosForChannel
+  , getVideosForPlaylist
+  , migrateAll
   ) where
 
 import Control.Lens
-import Control.Monad (forM)
+import Control.Monad (forM, foldM)
 import Control.Monad.Catch (MonadCatch)
 import Control.Monad.Except
 import Control.Monad.IO.Unlift (MonadUnliftIO)
@@ -37,7 +41,10 @@ import Data.Aeson (FromJSON)
 import qualified Data.ByteString.Char8 as BC
 import Data.IORef (newIORef, modifyIORef', readIORef)
 import Data.List (find)
+import Data.Map (Map)
+import qualified Data.Map as M
 import Data.Maybe (catMaybes, fromMaybe)
+import Data.Proxy (Proxy(Proxy))
 import Data.Set (Set)
 import qualified Data.Set as S
 import Data.Text (Text)
@@ -101,11 +108,10 @@ liftMysql f = runSqlPool f =<< getPool
 
 main :: IO ()
 main = do
-  -- lgr <- newLogger Debug stdout
-  -- mgr <- liftIO $ newManager tlsManagerSettings
-  -- cred <- getApplicationDefault mgr
-  -- env <- newEnvWith cred lgr mgr <&> (envScopes .~ youTubeReadOnlyScope)
-  let env = undefined
+  lgr <- newLogger Network.Google.Info stdout
+  mgr <- liftIO $ newManager tlsManagerSettings
+  cred <- getApplicationDefault mgr
+  env <- newEnvWith cred lgr mgr <&> (envScopes .~ youTubeReadOnlyScope)
 
   configFile <- fromMaybe "config.yaml" <$> lookupEnv "CONFIG"
   putStrLn $ "Reading config from: " <> configFile
@@ -116,9 +122,14 @@ main = do
 
   runResourceT . runStdoutLoggingT . withMySQLPool connectInfo 1 $
     \pool -> flip runReaderT (AppEnv env pool) $ do
-      liftMysql (printMigration migrateAll)
-    --   checkNewVideos
-    --   checkPlaylistMappings
+      checkNewVideos
+      checkPlaylistMappings
+      -- m <- listVideosForChannel channelId
+      -- forM_ m $ \(pl, plis) -> do
+      --   liftIO . print $ pl ^. plsTitle . _Just
+      --   forM_ plis $ \v -> do
+      --     liftIO . print $ v ^. plisTitle . _Just
+      --     liftIO . print $ v ^. plisDescription . _Just
 
 checkNewVideos :: (MonadMysql m, MonadGoogle AppScope m) => m ()
 checkNewVideos = do
@@ -128,27 +139,39 @@ checkNewVideos = do
 
 checkPlaylistMappings :: (MonadMysql m, MonadGoogle AppScope m) => m ()
 checkPlaylistMappings = do
-  channels <- liftMysql $ selectList [] []
-  forM_ (videoSourceUrl . entityVal <$> channels) $ \chanId -> do
-    lists <- loadPlaylistsForChannel chanId
-    forM lists (`mapVideosToPlaylists` Nothing)
+  chans <- fmap (videoSourceUrl . entityVal) <$> liftMysql (selectList [] [])
+  forM_ chans $ \chan -> do
+    lists <- loadPlaylistsForChannel chan
+    forM_ lists $ \list -> do
+      vids <- mapVideosToPlaylists list Nothing
+      forM_ vids $ \(vidIds, listUrl) ->
+        liftMysql $ updateWhere [VideoUri <-. vidIds] [VideoPlaylistId =. Just listUrl]
 
-mapVideosToPlaylists :: (MonadGoogle AppScope m, MonadMysql m) => Schema.VideoList -> Maybe Text -> m ()
-mapVideosToPlaylists dbList pageToken = do
+listVideosForChannel :: MonadGoogle AppScope m => Text -> m (Map Text (PlayListSnippet, [PlayListItemSnippet]))
+listVideosForChannel chId = do
+  playlists <- getPlaylistsForChannel chId Nothing
+  foldM getPlaylist M.empty playlists
+  where
+    getPlaylist m playlist = case playlist ^. plSnippet of
+      Nothing -> pure m
+      Just snippet -> do
+        let pid = playlist ^. plId . _Just
+        vids <- getVideosForPlaylist pid Nothing
+        pure $ M.insert pid (snippet, vids) m
+
+mapVideosToPlaylists :: MonadGoogle AppScope m => Schema.VideoList -> Maybe Text -> m [([Text], Text)]
+mapVideosToPlaylists dbList = withPaging $ \pageToken -> do
   vs <- send $ playListItemsList "snippet"
     & plilPlayListId ?~ videoListUrl dbList
     & plilPageToken .~ pageToken
     & plilMaxResults .~ 20
   let ids = vs ^.. plilrItems . each . pliSnippet . _Just . plisResourceId . _Just . riVideoId . _Just
-  liftMysql $ updateWhere [VideoUri <-. ids] [VideoPlaylistId =. Just (videoListUrl dbList)]
-
-  case vs ^. plilrNextPageToken of
-    Nothing -> pure ()
-    Just token -> mapVideosToPlaylists dbList (Just token)
+  tell [(ids, videoListUrl dbList)]
+  pure (vs ^. plilrNextPageToken)
 
 loadPlaylistsForChannel :: (MonadMysql m, MonadGoogle AppScope m) => Text -> m [Schema.VideoList]
 loadPlaylistsForChannel chanId = do
-  playlists <- fmap snd . runWriterT $ getPlaylistsForChannel chanId Nothing
+  playlists <- getPlaylistsForChannel chanId Nothing
 
   dbPlaylists :: [Entity Schema.VideoList] <- liftMysql $ selectList [] []
 
@@ -177,19 +200,13 @@ loadPlaylistsForChannel chanId = do
   liftIO $ readIORef x
 
 getPlaylistsForChannel ::
-     (MonadWriter [PlayList] m, MonadGoogle AppScope m)
-  => Text
-  -> Maybe Text
-  -> m ()
-getPlaylistsForChannel chanId pageToken = do
+     MonadGoogle AppScope m => Text -> Maybe Text -> m [PlayList]
+getPlaylistsForChannel chanId = withPaging $ \pageToken -> do
   lists <- send $ playListsList "snippet,contentDetails"
     & pllChannelId ?~ chanId
     & pllPageToken .~ pageToken
   tell (lists ^. pllrItems)
-  case lists ^. pllrNextPageToken of
-    Nothing -> pure ()
-    Just token -> getPlaylistsForChannel chanId (Just token)
-
+  pure (lists ^. pllrNextPageToken)
 
 loadUploads :: (MonadMysql m, MonadGoogle AppScope m) => [(Key VideoSource, Text)] -> m [Schema.Video]
 loadUploads uploadIds = do
@@ -205,13 +222,13 @@ loadUploads uploadIds = do
   liftIO $ readIORef x
 
 loadNewVideosFromPlaylist ::
-     (MonadWriter [Schema.Video] m, MonadGoogle AppScope m)
+     MonadGoogle AppScope m
   => Set Text
   -> Text
   -> Maybe Text
-  -> m ()
-loadNewVideosFromPlaylist currentVids playlist pageToken = do
-  nextPage <- runExceptT $ do
+  -> m [Schema.Video]
+loadNewVideosFromPlaylist currentVids playlist =
+  withPaging $ \pageToken -> fmap hush . runExceptT $ do
     vs <- send $ playListItemsList "snippet"
       & plilPlayListId ?~ playlist
       & plilPageToken .~ pageToken
@@ -225,11 +242,22 @@ loadNewVideosFromPlaylist currentVids playlist pageToken = do
       if vidId `S.member` currentVids
         then throwError ("Found an existing video, exiting" :: Text)
         else tell [Schema.Video vidId vidTitle vidChannel vidDesc Nothing now now]
-
     pure (vs ^. plilrNextPageToken)
-  case nextPage ^? _Right . _Just of
-    Nothing -> pure ()
-    Just token -> loadNewVideosFromPlaylist currentVids playlist (Just token)
+  where
+    hush = either (const Nothing) id
+
+getVideosForPlaylist ::
+     MonadGoogle AppScope m
+  => Text
+  -> Maybe Text
+  -> m [PlayListItemSnippet]
+getVideosForPlaylist playlistId = withPaging $ \pageToken -> do
+  vs <- send $ playListItemsList "snippet"
+    & plilPlayListId ?~ playlistId
+    & plilPageToken .~ pageToken
+    & plilMaxResults .~ 20
+  tell (vs ^.. plilrItems . each . pliSnippet . _Just)
+  pure (vs ^. plilrNextPageToken)
 
 loadChannels :: (MonadMysql m, MonadGoogle AppScope m) => m [(Key VideoSource, Text)]
 loadChannels = do
@@ -260,22 +288,31 @@ fillInChannel realTitle realDesc Entity{..} =
 -- printMigrations :: IO ()
 -- printMigrations = runMysql $ printMigration migrateAll
 
+withPaging :: (Monad m, Monoid a) => (Maybe t -> WriterT a m (Maybe t)) -> Maybe t -> m a
+withPaging f = fmap snd . runWriterT . go
+  where
+    go t = do
+      r <- f t
+      case r of
+        Nothing -> pure ()
+        Just t' -> go (Just t')
+
 getYTToken ::
-     AllowScopes (s :: [Symbol])
-  => OAuthClient
-  -> Logger
-  -> proxy s
+     ClientId
+  -> GSecret
   -> IO (Maybe RefreshToken)
-getYTToken c lgr p = do
+getYTToken cid secret = do
+  let c = OAuthClient cid secret
+  lgr <- newLogger Debug stdout
   mgr <- newManager tlsManagerSettings
-  code <- redirectPrompt c p
+  code <- redirectPrompt @AppScope c
   auth <- exchange (FromClient c code) lgr mgr
   pure (_tokenRefresh (_token auth))
 
-redirectPrompt :: AllowScopes (s :: [Symbol]) => OAuthClient -> proxy s -> IO (OAuthCode s)
-redirectPrompt c p = do
-  let url = formURL c p
-  T.putStrLn $ "Opening URL " `T.append` url
+redirectPrompt :: forall s. AllowScopes (s :: [Symbol]) => OAuthClient -> IO (OAuthCode s)
+redirectPrompt c = do
+  let url = formURL c (Proxy @s)
+  T.putStrLn $ "Opening URL " <> url
   _ <- case os of
     "darwin" -> rawSystem "open"     [T.unpack url]
     "linux"  -> rawSystem "xdg-open" [T.unpack url]
