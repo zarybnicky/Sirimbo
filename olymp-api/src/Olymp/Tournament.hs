@@ -172,7 +172,7 @@ withTree ::
   -> Map id (TournamentNodeF id id)
   -> id
   -> Map id (TournamentNodeF id id)
-withTree f m = either (const M.empty) listify . fmap f . treeify m
+withTree f m = either (const M.empty) (listify . f) . treeify m
 
 withTournament ::
      Ord id

@@ -10,7 +10,8 @@
     "moduleResolution": "node",
     "outFile": "bundle.js",
     "module": "amd",
-    "jsx": "react"
+    "jsx": "react",
+    "lib": ["dom", "ES6"]
   },
   "include": [
     "./**/*.ts",

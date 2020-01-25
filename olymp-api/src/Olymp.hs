@@ -18,8 +18,9 @@ module Olymp
   , runServer
   ) where
 
+import Control.Concurrent (forkIO, threadDelay)
 import Control.Lens
-import Control.Monad.Except (ExceptT(..), forever, liftIO)
+import Control.Monad.Except (ExceptT(..), runExceptT, forever, liftIO)
 import Control.Monad.Trans.Reader (runReaderT)
 import Control.Monad.Logger (runStdoutLoggingT)
 import Data.Aeson (FromJSON, ToJSON, encode, eitherDecode')
@@ -57,6 +58,7 @@ import Polysemy.Error (Error, runError)
 import Polysemy.Resource (Resource, finally, resourceToIO)
 import Servant
 import Servant.API.WebSocket (WebSocket)
+import Servant.Server.Internal.Handler (runHandler')
 import System.Environment (lookupEnv)
 
 data AppConfig = AppConfig
@@ -97,7 +99,17 @@ makeServer = do
       Right tt' -> pure tt'
   ref <- newIORef (withTournament propagateWinners t)
   ref' <- newIORef M.empty
-  pure $ appServer (interpretServer ref ref' pool)
+  let runner :: forall a. Sem AppStack a -> Handler a
+      runner = interpretServer ref ref' pool
+
+  let saveState = runExceptT $ runHandler' $ runner $ do
+        liftIO $ threadDelay 1000000
+        state <- T.pack . BCL.unpack . encode <$> atomicGet @(Tournament NodeId)
+        _ <- query $ repsert (ParameterKey "tournament") (Parameter state)
+        pure ()
+  _ <- forkIO (forever saveState)
+
+  pure $ appServer runner
   where
     appServer :: (forall a. Sem AppStack a -> Handler a) -> Application
     appServer runner =
@@ -243,12 +255,9 @@ tournamentAdminSocket _ c = withSocketLoop c $ \msg -> case msg of
 
 broadcastState :: Sem AppStack ()
 broadcastState = do
-  state <- atomicGet @(Tournament NodeId)
+  msg <- encode . StateMsg <$> atomicGet @(Tournament NodeId)
   conns <- atomicGet @(Map Int Connection)
-  let msg = encode (StateMsg state)
   liftIO $ mapM_ (`sendTextData` msg) conns
-  let dbState = T.pack . BCL.unpack $ encode state
-  _ <- query $ repsert (ParameterKey "tournament") (Parameter dbState)
   pure ()
 
 tshow :: Show a => a -> Text

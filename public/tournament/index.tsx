@@ -18,15 +18,16 @@ export class TournamentClient extends React.Component<null, ClientState> {
         pastVotes: {},
     };
     socket: WebSocket = null as unknown as WebSocket;
-    timeout: number | undefined;
+    timeout: NodeJS.Timeout | undefined;
 
     componentDidMount() {
         this.socket = this.connect();
     }
     connect = () => {
-        clearTimeout(this.timeout);
+        this.timeout && clearTimeout(this.timeout);
         this.timeout = undefined;
         this.socket = new WebSocket('wss://api.tkolymp.cz/tournament/ws');
+        // this.socket = new WebSocket('ws://localhost:4000/tournament/ws');
         this.socket.onmessage = e => {
             const msg = JSON.parse(e.data);
             if (msg['tag'] === 'StateMsg') {
@@ -46,6 +47,12 @@ export class TournamentClient extends React.Component<null, ClientState> {
 
     render() {
         const t = this.state.tournament;
+        const names: { [key: string]: string } = {
+            2: 'Semifinále #1',
+            5: 'Semifinále #2',
+            8: 'Bitva o třetí místo',
+            1: 'Finále',
+        };
         return <div>
             <nav className="navbar navbar-dark fixed-top pl-0"
                 style={{ backgroundColor: '#e80b30' }}>
@@ -58,12 +65,12 @@ export class TournamentClient extends React.Component<null, ClientState> {
                 </div>
             </nav>
             <main className='container' style={{ marginTop: '80px' }}>
-                {[2, 5, 8, 1].map((k, i) => <div className="mb-2">
-                    <div className="text-muted">Battle #{i + 1}</div>
+                {[2, 5, 8, 1].map(k => <div className="mb-2">
+                    <div className="text-muted">{names[k]}</div>
                     <UserBattleComponent
                         socket={this.socket} tournament={t} battle={t.nodes[k]}
                     ></UserBattleComponent>
-                    {t.userFocus !== k ? null :
+                    {(t.nodes[k] || {}).tag !== 'DuelFinishedNode' ? null :
                         <VoteComponent
                             socket={this.socket} tournament={t} battle={t.nodes[k]}
                         ></VoteComponent>}
@@ -118,27 +125,20 @@ export class VoteComponent extends React.Component<{
         const t = this.props.tournament;
         const pastVote = localStorage.getItem((n.contents as any)[0]) || null; //left|right|null
         const enabled = n.tag === 'DuelFinishedNode' && n.contents[1].victor === null;
-        let message = null;
+        if (!enabled && !pastVote) {
+            return null;
+        }
         let l = null, r = null;
         if (n.tag === 'DuelWaitingNode') {
             l = n.contents[1] !== null ? t.tournamentPlayers[n.contents[1]] : null
             r = n.contents[2] !== null ? t.tournamentPlayers[n.contents[2]] : null;
-            message = <h3 className="text-center">
-                Prosím počkejte, hlasování ještě nebylo zahájeno.
-            </h3>;
         } else if (n.tag === 'DuelFinishedNode') {
             const res = n.contents[1];
             l = t.tournamentPlayers[res.leftPlayer] || {};
             r = t.tournamentPlayers[res.rightPlayer] || {};
-            if (n.contents[1].victor !== null) {
-                message = <h3 className="text-center">
-                    Hlasování již bylo uzavřeno.
-                </h3>;
-            }
         }
         return <div>
             <div className="row m-2 mb-5">
-                <div className="col-12">{message}</div>
                 <div className="col-10 col-md-8 mt-2 mb-2">
                     <button
                         disabled={!enabled}
@@ -146,8 +146,8 @@ export class VoteComponent extends React.Component<{
                         className={'btn btn-block text-left ' +
                             (pastVote === 'left' ? 'btn-primary' : 'btn-outline-primary')}
                     >
-                        {pastVote === 'left' ? '✓ ' : ''}
                         {l ? l.shortName : '?'}
+                        {pastVote === 'left' ? ' ✓' : ''}
                     </button>
                 </div>
                 <div className="col-10 col-md-8 offset-2 offset-md-4">

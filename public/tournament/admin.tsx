@@ -16,15 +16,16 @@ export class TournamentAdmin extends React.Component<null, AdminState> {
         },
     };
     socket: WebSocket = null as unknown as WebSocket;
-    timeout: number | undefined = undefined;
+    timeout: NodeJS.Timeout | undefined = undefined;
 
     componentDidMount() {
         this.socket = this.connect();
     }
     connect = () => {
-        clearTimeout(this.timeout);
+        this.timeout && clearTimeout(this.timeout);
         this.timeout = undefined;
         this.socket = new WebSocket('wss://api.tkolymp.cz/tournament/admin/ws');
+        // this.socket = new WebSocket('ws://localhost:4000/tournament/admin/ws');
         this.socket.onmessage = e => {
             const msg = JSON.parse(e.data);
             if (msg['tag'] === 'StateMsg') {
@@ -50,40 +51,36 @@ export class TournamentAdmin extends React.Component<null, AdminState> {
             tag: 'CloseVoting', contents: parseInt(k, 10),
         }));
     }
-    focus = (k: string) => {
-        this.socket.send(JSON.stringify({
-            tag: 'UserFocusNode', contents: parseInt(k, 10),
-        }));
-    }
     reset = () => {
         this.socket.send(JSON.stringify({ tag: 'ResetState' }));
     }
+    names: { [key: string]: string } = {
+        2: 'Semifinále #1',
+        5: 'Semifinále #2',
+        8: 'Bitva o třetí místo',
+        1: 'Finále',
+    };
 
-    renderBattle = (t: Tournament, i: number, k: string) => {
+    renderBattle = (t: Tournament, k: string) => {
         const n = t.nodes[k];
         if (!n) return null;
         const open = () => this.open(k);
         const close = () => this.close(k);
-        const focus = () => this.focus(k);
 
         return <div key={k} className="row mb-2">
-            <div className="col-1 d-flex align-items-center justify-content-end">#{i}</div>
-            <div className="col-7">
+            <div className="col-12 col-md-2 d-block d-md-flex align-items-center justify-content-end">{this.names[k]}</div>
+            <div className="col-12 col-md-7">
                 <BattleComponent
                     socket={this.socket} tournament={t} battle={n}
                 ></BattleComponent>
             </div>
-            <div className="col-4">
+            <div className="col-12 col-md-3 text-right">
                 {n.tag === 'DuelWaitingNode'
                     ? <button onClick={open}
                         className="btn btn-sm btn-primary">Spustit hlasování</button> : null}
                 {n.tag === 'DuelFinishedNode' && n.contents[1].victor === null
                     ? <button onClick={close}
                         className="btn btn-sm btn-primary">Ukončit hlasování</button> : null}
-                {(t.userFocus || 0).toString() === k.toString()
-                    ? 'Aktuální'
-                    : <button onClick={focus}
-                        className="btn btn-sm btn-primary">Nastavit jako aktuální</button>}
             </div>
         </div>;
     }
@@ -98,7 +95,7 @@ export class TournamentAdmin extends React.Component<null, AdminState> {
         return <main className='container'>
             <button className="btn btn-danger" onClick={this.reset}>Restartovat turnaj</button>
             <h3>Duely</h3>
-            {[2, 5, 8, 1].map((k, i) => this.renderBattle(t, i, k.toString()))}
+            {[2, 5, 8, 1].map(k => this.renderBattle(t, k.toString()))}
             <h3>Páry</h3>
             {Object.keys(t.tournamentPlayers).map(k => this.renderPlayer(t, k))}
         </main>;

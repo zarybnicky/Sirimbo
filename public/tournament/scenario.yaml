@@ -1,0 +1,19 @@
+config:
+  target: "wss://api.tkolymp.cz/tournament/ws"
+  phases:
+    - duration: 20
+      arrivalRate: 20
+  ws:
+    rejectUnauthorized: false
+scenarios:
+  - engine: "ws"
+    flow:
+      - send:
+          - 2
+          - 1
+          - 0
+      - think: 1
+      - send:
+          - 5
+          - 0
+          - 1
