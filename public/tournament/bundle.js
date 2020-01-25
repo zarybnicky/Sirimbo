@@ -421,11 +421,11 @@ define("index", ["require", "exports", "react"], function (require, exports, Rea
         render() {
             const t = this.state.tournament;
             return React.createElement("div", null,
-                React.createElement("nav", { className: "navbar navbar-dark fixed-top", style: { backgroundColor: '#e80b30' } },
-                    React.createElement("div", { className: "container" },
+                React.createElement("nav", { className: "navbar navbar-dark fixed-top pl-0", style: { backgroundColor: '#e80b30' } },
+                    React.createElement("div", { className: "container pl-0" },
                         React.createElement("a", { className: "navbar-brand m-0", style: { lineHeight: '45px' } },
                             React.createElement("img", { src: "https://tkolymp.cz/style/new-logo-oneline.png", style: { height: '45px' }, className: "d-inline-block align-top" }),
-                            "Tane\u010Dn\u00ED bitva o Olomouc"))),
+                            "Bitva o Olomouc"))),
                 React.createElement("main", { className: 'container', style: { marginTop: '80px' } }, [2, 5, 8, 1].map((k, i) => React.createElement("div", { className: "mb-2" },
                     React.createElement("div", { className: "text-muted" },
                         "Battle #",
@@ -501,12 +501,12 @@ define("index", ["require", "exports", "react"], function (require, exports, Rea
             return React.createElement("div", null,
                 React.createElement("div", { className: "row m-2 mb-5" },
                     React.createElement("div", { className: "col-12" }, message),
-                    React.createElement("div", { className: "col-8 mt-2 mb-2" },
+                    React.createElement("div", { className: "col-10 col-md-8 mt-2 mb-2" },
                         React.createElement("button", { disabled: !enabled, onClick: this.voteLeft, className: 'btn btn-block text-left ' +
                                 (pastVote === 'left' ? 'btn-primary' : 'btn-outline-primary') },
                             pastVote === 'left' ? '✓ ' : '',
                             l ? l.shortName : '?')),
-                    React.createElement("div", { className: "col-8 offset-4" },
+                    React.createElement("div", { className: "col-10 col-md-8 offset-2 offset-md-4" },
                         React.createElement("button", { disabled: !enabled, onClick: this.voteRight, className: 'btn btn-block text-right ' +
                                 (pastVote === 'right' ? 'btn-primary' : 'btn-outline-primary') },
                             pastVote === 'right' ? '✓ ' : '',

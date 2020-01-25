@@ -47,13 +47,13 @@ export class TournamentClient extends React.Component<null, ClientState> {
     render() {
         const t = this.state.tournament;
         return <div>
-            <nav className="navbar navbar-dark fixed-top"
+            <nav className="navbar navbar-dark fixed-top pl-0"
                 style={{ backgroundColor: '#e80b30' }}>
-                <div className="container">
+                <div className="container pl-0">
                     <a className="navbar-brand m-0" style={{ lineHeight: '45px' }}>
                         <img src="https://tkolymp.cz/style/new-logo-oneline.png"
                             style={{ height: '45px' }} className="d-inline-block align-top" />
-                        Taneční bitva o Olomouc
+                        Bitva o Olomouc
                     </a>
                 </div>
             </nav>
@@ -139,7 +139,7 @@ export class VoteComponent extends React.Component<{
         return <div>
             <div className="row m-2 mb-5">
                 <div className="col-12">{message}</div>
-                <div className="col-8 mt-2 mb-2">
+                <div className="col-10 col-md-8 mt-2 mb-2">
                     <button
                         disabled={!enabled}
                         onClick={this.voteLeft}
@@ -150,7 +150,7 @@ export class VoteComponent extends React.Component<{
                         {l ? l.shortName : '?'}
                     </button>
                 </div>
-                <div className="col-8 offset-4">
+                <div className="col-10 col-md-8 offset-2 offset-md-4">
                     <button
                         disabled={!enabled}
                         onClick={this.voteRight}
