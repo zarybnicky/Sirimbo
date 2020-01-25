@@ -22,7 +22,7 @@ class DbSessionHandler extends Database implements SessionHandlerInterface
 
     public function write($sessionId, $data)
     {
-        setcookie(session_name(), $sessionId, time() + 86400, '/');
+        setcookie(session_name(), $sessionId, time() + 86400, '/', 'tkolymp.cz');
 
         $data = json_encode(unserialize($data), JSON_FORCE_OBJECT);
         list($id, $data) = self::escape($sessionId, $data);

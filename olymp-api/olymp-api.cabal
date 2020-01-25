@@ -30,6 +30,7 @@ library
                        Olymp.Effect.Session
                        Olymp.Effect.User
                        Olymp.Schema
+                       Olymp.Tournament
 
   build-depends:       base >=4.7 && <5
                      , aeson
@@ -55,12 +56,14 @@ library
                      , resource-pool
                      , servant
                      , servant-server
+                     , servant-websockets
                      , text
                      , time
                      , transformers
                      , transformers-compat
                      , wai
                      , warp
+                     , websockets
                      , yaml
 
 executable server

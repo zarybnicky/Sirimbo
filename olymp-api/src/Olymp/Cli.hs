@@ -13,7 +13,7 @@ parseArgs :: IO Args
 parseArgs = getRecord "Server"
 
 data Args = Args
-  { port :: Int
+  { port :: Maybe Int
   } deriving (Generic, Show)
 
 instance ParseRecord Args where

@@ -118,6 +118,12 @@ let
     rev = "5285011233575354ded4df2a022af4b2ad24cf6b";
     sha256 = "0xk3czk3jhqjxhy0g8r2248m8yxgvmqhgn955k92z0h7p02lfs89";
   };
+  servant-websockets = pkgs.fetchFromGitHub {
+    owner = "moesenle";
+    repo = "servant-websockets";
+    rev = "a6b8b9f1d9d76e31b0f5de1ce6f79222fc1a7002";
+    sha256 = "0mirn2z549f4kmqisidhpix4bh5dh9z01j2vnf3klbh057g9dcwk";
+  };
   lens = pkgs.fetchFromGitHub {
     owner = "ekmett";
     repo = "lens";
@@ -144,7 +150,7 @@ let
     sed -i -e '92,120d' $out/co-log/co-log.cabal
   '';
 in with pkgs.haskell.lib; pkgs.haskellPackages.extend (self: super: {
-  olymp-api = self.callCabal2nix "olymp-api" (builtins.filterSource cleanSource ./.) {};
+  olymp-api = dontHaddock (self.callCabal2nix "olymp-api" (builtins.filterSource cleanSource ./.) {});
   polysemy = self.callCabal2nix "polysemy" polysemy {};
   polysemy-plugin = self.callCabal2nix "polysemy" "${polysemy}/polysemy-plugin" {};
   type-errors = self.callCabal2nix "type-errors" type-errors {};
@@ -164,6 +170,7 @@ in with pkgs.haskell.lib; pkgs.haskellPackages.extend (self: super: {
   co-log-core = self.callCabal2nix "co-log-core" "${co-log}/co-log-core" {};
   servant = self.callCabal2nix "servant" "${servant}/servant" {};
   servant-server = self.callCabal2nix "servant-server" "${servant}/servant-server" {};
+  servant-websockets = self.callCabal2nix "servant-websockets" servant-websockets {};
   singleton-bool = overrideCabal (self.callCabal2nix "singleton-bool" singleton-bool {}) (drv: drv // {
     revision = null;
     editedCabalFile = null;

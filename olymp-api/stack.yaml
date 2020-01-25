@@ -3,6 +3,10 @@ resolver: lts-14.12
 packages:
 - .
 
+extra-deps:
+- servant-websockets-2.0.0
+- polysemy-1.2.3.0
+
 docker:
   enable: true
   stack-exe: download

@@ -26,10 +26,20 @@ services:
       - .:/app
     tty: true
 
+  dockerhost:
+    build:
+      context: ./docker/proxy
+    cap_add: [ 'NET_ADMIN', 'NET_RAW' ]
+    mem_limit: 4M
+    restart: on-failure
+    ports:
+      - 4001:4000
+
   nginx:
     image: bitnami/nginx:latest
     depends_on:
       - phpfpm
+      - dockerhost
     ports:
       - 3000:3000
     volumes:
