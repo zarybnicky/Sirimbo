@@ -29,8 +29,6 @@ library
                        Olymp.Effect.Log
                        Olymp.Effect.Session
                        Olymp.Effect.User
-                       Olymp.Schema
-                       Olymp.Tournament
 
   build-depends:       base >=4.7 && <5
                      , aeson
@@ -45,6 +43,8 @@ library
                      , lens
                      , monad-logger
                      , mtl
+                     , olymp-schema
+                     , olymp-tournament
                      , optparse-applicative
                      , optparse-generic
                      , persistent

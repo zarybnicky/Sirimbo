@@ -1,4 +1,3 @@
-{-# OPTIONS_GHC -fplugin=Polysemy.Plugin #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveFoldable #-}
@@ -44,6 +43,7 @@ module Olymp.Tournament
   ) where
 
 import Control.Applicative ((<|>))
+import Control.Monad.Trans.State.Strict (State, runState, evalState, gets, put)
 import Data.Aeson (FromJSON, FromJSONKey, ToJSON, ToJSONKey)
 import Data.Foldable (for_)
 import Data.Functor.Classes (Eq1(..), Show1(..))
@@ -55,9 +55,6 @@ import qualified Data.List.NonEmpty as NE
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as M
 import GHC.Generics (Generic, Generic1)
-import Polysemy (Member, Sem, run, reinterpret)
-import Polysemy.Input
-import Polysemy.State
 
 -- data Ruleset
 --   = SingleElimination
@@ -202,19 +199,19 @@ treeify m root =
   fmap embed . traverse (treeify m) =<< maybe (Left root) Right (M.lookup root m)
 
 createTournament :: Map PlayerId Player -> Tournament NodeId
-createTournament playerMap = run . runListInputForever (1:|[2..]) $ do
+createTournament playerMap = flip evalState (infiniteStream $ 1:|[2..]) $ do
   let keys = M.keys playerMap
   let n = length keys
-  wb <- runInputList keys (fillSeeds =<< makeBracket n)
+  wb <- flip evalState keys . fillSeeds <$> makeBracket n
   lb <- if n > 2 then Just <$> makeBracket (n - 2) else pure Nothing
   let nodes' = listify wb <> maybe M.empty listify lb
   pure $ Tournament nodes' (nodeId $ unfix wb) (nodeId . unfix <$> lb) Nothing Nothing playerMap
 
-makeBracket :: Member (Input id) r => Int -> Sem r (Fix (TournamentNodeF id))
+makeBracket :: Int -> State (Stream id) (Fix (TournamentNodeF id))
 makeBracket n
-  | n == 1 = Fix . SeedWaitingNode <$> input
+  | n == 1 = Fix . SeedWaitingNode <$> headStream
   | otherwise = do
-      self <- input
+      self <- headStream
       l <- makeBracket (n `div` 2 + n `mod` 2)
       r <- makeBracket (n `div` 2)
       pure (Fix $ DuelWaitingNode self Nothing Nothing l r)
@@ -223,14 +220,13 @@ fillPlayers ::
      [PlayerId]
   -> Fix (TournamentNodeF id)
   -> ([PlayerId], Fix (TournamentNodeF id))
-fillPlayers keys = run . runInputList' keys . fillSeeds
+fillPlayers keys = (\(a, b) -> (b, a)) . flip runState keys . fillSeeds
 
 fillSeeds ::
-     Member (Input (Maybe PlayerId)) r
-  => Fix (TournamentNodeF id)
-  -> Sem r (Fix (TournamentNodeF id))
+     Fix (TournamentNodeF id)
+  -> State [PlayerId] (Fix (TournamentNodeF id))
 fillSeeds (Fix node) = Fix <$> case node of
-  SeedWaitingNode nid -> input >>= \case
+  SeedWaitingNode nid -> headState >>= \case
     Nothing -> pure node
     Just p -> pure (SeedNode nid p)
   DuelWaitingNode nid lp rp l r -> DuelWaitingNode nid lp rp <$> fillSeeds l <*> fillSeeds r
@@ -283,6 +279,19 @@ getLoser (Fix node) = case node of
 -- update score
 
 
+headState :: State [a] (Maybe a)
+headState = do
+  s <- gets uncons
+  for_ s (put . snd)
+  pure $ fmap fst s
+
+headStream :: State (Stream a) a
+headStream = do
+  (s, ss) <- gets takeStream
+  put ss
+  pure s
+
+
 data Stream a = MkStream (NonEmpty a) (NonEmpty a)
 
 infiniteStream :: NonEmpty a -> Stream a
@@ -292,17 +301,3 @@ takeStream :: Stream a -> (a, Stream a)
 takeStream (MkStream (a:|as) b) = case NE.nonEmpty as of
   Nothing -> (a, MkStream b b)
   Just as' -> (a, MkStream as' b)
-
-runListInputForever :: NonEmpty i -> Sem (Input i ': r) a -> Sem r a
-runListInputForever is = fmap snd . runState (infiniteStream is) . reinterpret (\case
-  Input -> do
-    (s, ss) <- gets takeStream
-    put ss
-    pure s)
-
-runInputList' :: [i] -> Sem (Input (Maybe i) ': r) a -> Sem r ([i], a)
-runInputList' is = runState is . reinterpret (\case
-  Input -> do
-    s <- gets uncons
-    for_ s (put . snd)
-    pure $ fmap fst s)

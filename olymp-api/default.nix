@@ -38,6 +38,8 @@ let
     sed -i -e '92,120d' $out/co-log/co-log.cabal
   '';
 in with pkgs.haskell.lib; pkgs.haskellPackages.extend (self: super: {
+  olymp-tournament = self.callCabal2nix "olymp-tournament" (builtins.filterSource cleanSource ./olymp-tournament) {};
+  olymp-schema = self.callCabal2nix "olymp-schema" (builtins.filterSource cleanSource ./olymp-schema) {};
   olymp-api = dontHaddock (self.callCabal2nix "olymp-api" (builtins.filterSource cleanSource ./.) {});
   polysemy = self.callCabal2nix "polysemy" polysemy {};
   polysemy-plugin = self.callCabal2nix "polysemy" "${polysemy}/polysemy-plugin" {};
