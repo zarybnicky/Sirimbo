@@ -17,7 +17,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
 
             DBPlatbyCategory::insert(
                 $data['pc_name'],
-                'NULL',
+                $data['pc_symbol'] . '00',
                 $data['pc_amount'],
                 $data['pc_date_due'],
                 $data['pc_valid_from'],
@@ -67,7 +67,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
     protected function getDuplicateCategoryButton($id)
     {
         return $this->submit('<img title="Duplikovat" alt="Duplikovat" src="/style/icon-files-o.png" />')
-            ->data('category_duplicate', $id)->cls('a');
+            ->data('category_duplicate', $id)->cls('btn btn-link btn-sm');
     }
 
     public function add($request)
