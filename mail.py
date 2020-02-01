@@ -11,7 +11,7 @@ pwd = os.environ['MAIL_PASS']
 text = """\
 Vážení členové,
 
-dovolujeme si Vás upozornit, že na webu tkolymp.cz v sekci Nástěnka byly zveřejněny platební informace k platbě členských příspěvků s termínem 8. 10. 2019. Prosíme Vás o dodržení termínu a upozorňujeme na navýšení členského příspěvku při platbě po termínu o 500 Kč.
+dovolujeme si Vás upozornit, že na webu tkolymp.cz v sekci Nástěnka byly zveřejněny platební informace k platbě členských příspěvků s termínem 21. 2. 2020. Prosíme Vás o dodržení termínu a upozorňujeme na navýšení členského příspěvku při platbě po termínu o 500 Kč.
 
 Jakékoliv další informace k platbám členských příspěvků Vám poskytne Mgr. Lucie Benýšková, lucie.benyskova@tkolymp.cz, 777 154 730.
 
@@ -21,7 +21,7 @@ Miroslav Hýža, předseda TK
 with open('hakka-email.html', 'r') as f:
     html = f.read()
 
-with open('users.csv', 'r') as f:
+with open('emails.txt', 'r') as f:
     emails = f.read().split('\n')
     print("Emails %d" % len(emails))
 

@@ -1,0 +1,110 @@
+{
+    "nodes": {
+        "10": {
+            "contents": [10, 2],
+            "tag": "SeedNode"
+        },
+        "9": {
+            "contents": [9, 0],
+            "tag": "SeedNode"
+        },
+        "6": {
+            "contents": [6, 2],
+            "tag": "SeedNode"
+        },
+        "3": {
+            "contents": [3, 0],
+            "tag": "SeedNode"
+        },
+        "8": {
+            "contents": [
+                8,
+                {
+                    "leftScore": 55,
+                    "leftPlayer": 0,
+                    "rightScore": 48,
+                    "victor": 0,
+                    "rightPlayer": 2
+                },
+                9,
+                10
+            ],
+            "tag": "DuelFinishedNode"
+        },
+        "5": {
+            "contents": [
+                5,
+                {
+                    "leftScore": 32,
+                    "leftPlayer": 2,
+                    "rightScore": 60,
+                    "victor": 3,
+                    "rightPlayer": 3
+                },
+                6,
+                7
+            ],
+            "tag": "DuelFinishedNode"
+        },
+        "2": {
+            "contents": [
+                2,
+                {
+                    "leftScore": 36,
+                    "leftPlayer": 0,
+                    "rightScore": 57,
+                    "victor": 1,
+                    "rightPlayer": 1
+                },
+                3,
+                4
+            ],
+            "tag": "DuelFinishedNode"
+        },
+        "4": {
+            "contents": [4, 1],
+            "tag": "SeedNode"
+        },
+        "1": {
+            "contents": [
+                1,
+                {
+                    "leftScore": 40,
+                    "leftPlayer": 1,
+                    "rightScore": 71,
+                    "victor": 3,
+                    "rightPlayer": 3
+                },
+                2,
+                5
+            ],
+            "tag": "DuelFinishedNode"
+        },
+        "7": {
+            "contents": [7, 3],
+            "tag": "SeedNode"
+        }
+    },
+    "dashboardFocus": null,
+    "userFocus": 2,
+    "losersRoot": 8,
+    "tournamentPlayers": {
+        "3": {
+            "longName": "Vilém Šír a Hana-Anna Šišková",
+            "shortName": "Vilém a Hana"
+        },
+        "2": {
+            "longName": "Daniel Borůvka a Barbora Borůvková",
+            "shortName": "Daniel a Barbora"
+        },
+        "1": {
+            "longName": "Roman Pecha a Anna Banková",
+            "shortName": "Roman a Anna"
+        },
+        "0": {
+            "longName": "Tomáš Opichal a Monika Maňásková",
+            "shortName": "Tomáš a Monika"
+        }
+    },
+    "winnersRoot": 1
+}
