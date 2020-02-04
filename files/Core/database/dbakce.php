@@ -50,10 +50,8 @@ class DBAkce extends Database implements Pagable
     public static function getWithItemCount()
     {
         $res = self::query(
-            'SELECT *, COUNT(ai_id_rodic) as a_obsazeno
-             FROM akce
-             LEFT JOIN akce_item ON a_id=ai_id_rodic
-             GROUP BY ai_id_rodic ORDER BY a_od DESC'
+            'SELECT *, (SELECT COUNT(*) FROM akce_item WHERE a_id=ai_id_rodic) as a_obsazeno
+             FROM akce ORDER BY a_od DESC'
         );
         return self::getArray($res);
     }
