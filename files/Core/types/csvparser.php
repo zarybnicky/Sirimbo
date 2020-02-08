@@ -10,20 +10,22 @@ class CSVParser implements Iterator
     private $_encoding = 'UTF-8';
     private $_recode = false;
 
-    public function __construct(SplFileObject $file, $readHeaders = true) {
-        if ($file->isReadable())
-            $this->_file = $file;
-        else
+    public function __construct(SplFileObject $file, $readHeaders = true)
+    {
+        if (!$file->isReadable()) {
             throw new ViewException("Given file $file is not readable");
+        }
+        $this->_file = $file;
 
         /** @var string */
         $text = $file->current();
-        $this->_encoding = mb_detect_encoding($text, 'UTF-8,ISO-8859-2,ISO-8859-1,cp1250');
+        $this->_encoding = mb_detect_encoding($text, 'UTF-8, ISO-8859-2, ISO-8859-1', true);
 
-        if ($this->_encoding === false)
-            $this->_encoding = 'UTF-8';
-        if ($this->_encoding != 'UTF-8')
+        if ($this->_encoding === false) {
+            $this->_recode = 'cp1250';
+        } elseif ($this->_encoding != 'UTF-8') {
             $this->_recode = true;
+        }
 
         $this->_file->setFlags(SplFileObject::DROP_NEW_LINE);
         $this->_file->rewind();
@@ -68,10 +70,12 @@ class CSVParser implements Iterator
             $this->_file->current();
             $this->next();
         }
-        if ($this->_recode)
-            $parsed = mb_convert_encoding($this->_file->current(), 'UTF-8', $this->_encoding);
-        else
-            $parsed = $this->_file->current();
+        $parsed = $parsed = $this->_file->current();
+        if ($this->_recode === 'cp1250') {
+            $parsed = iconv('windows-1250', 'UTF-8', $parsed);
+        } elseif ($this->_recode) {
+            $parsed = mb_convert_encoding($parsed, 'UTF-8', $this->_encoding);
+        }
 
         $parsed = str_getcsv($parsed, $this->_delimiter, $this->_enclosure, $this->_escape);
 

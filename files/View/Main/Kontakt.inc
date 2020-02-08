@@ -61,7 +61,7 @@
         </tr>
         <tr>
             <td class="r">email:</td>
-            <td>lucishek(zavinac)seznam.cz</td>
+            <td>lucie.benyskova(zavinac)tkolymp.cz</td>
         </tr>
         <tr><td>&nbsp;</td><td></td></tr>
         <tr><td><h3>Dozorčí rada</h3></td></tr>
