@@ -123,11 +123,12 @@ class Session
 
     public static function getZaplacenoPar()
     {
-        $paid = DBPlatby::hasPaidMemberFees(self::getUserId());
-        if ($_SESSION['partner']) {
-            $paid = $paid && DBPlatby::hasPaidMemberFees(self::getPartnerId());
-        }
-        return $paid;
+        return true;
+        // $paid = DBPlatby::hasPaidMemberFees(self::getUserId());
+        // if ($_SESSION['partner']) {
+        //     $paid = $paid && DBPlatby::hasPaidMemberFees(self::getPartnerId());
+        // }
+        // return $paid;
     }
 
     public static function getAgeGroup($year): string
