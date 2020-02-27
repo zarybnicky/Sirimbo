@@ -125,6 +125,10 @@
                       . '&nbsp;' . $item['popis']);
     }?>
   </div>
+  <div class="mb-2">
+      Uživatel vytvořen: <?= $this->createdAt ?><br>
+      Uživatel souhlasil s GDPR: <?= $this->gdprSignedAt ?>
+  </div>
   <div class="form-group">
     <?= $this->hidden('returnURI', $this->returnURI) ?>
     <a class="btn btn-outline-primary" href="<?= $this->returnURI ?>">Zpět</a>

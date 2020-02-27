@@ -157,6 +157,8 @@ class Controller_Admin_Users extends Controller_Abstract
             $request->post('city', $data['u_city']);
             $request->post('postal', $data['u_postal_code']);
             $request->post('nationality', $data['u_nationality']);
+            $request->post('createdAt', $data['u_created_at']);
+            $request->post('gdprSignedAt', $data['u_gdpr_signed_at']);
             return $this->displayForm($request);
         }
         $form = $this->checkData($request, 'edit');
@@ -448,7 +450,9 @@ class Controller_Admin_Users extends Controller_Abstract
             'group' => $request->post('group') ?: '',
             'skupina' => $request->post('skupina') ?: '',
             'dancer' => $request->post('dancer') ?: '',
-            'teacher' => $request->post('teacher') ?: ''
+            'teacher' => $request->post('teacher') ?: '',
+            'createdAt' => $request->post('createdAt') ?: '',
+            'gdprSignedAt' => $request->post('gdprSignedAt') ?: ''
         ]);
     }
 
