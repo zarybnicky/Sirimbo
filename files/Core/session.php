@@ -216,7 +216,8 @@ class Session
             'EXT_ID'
         ]);
 
-        $platby = DBPlatby::getOldestPayment();
+        $oldest = DBPlatby::getOldestPayment();
+        $newest = DBPlatby::getNewestPayment();
         foreach (DBUser::getUsers() as $u) {
             if ($u['u_ban'] || $u['u_temporary'] || !$u['u_confirmed'] || $u['u_system']) {
                 continue;
@@ -227,12 +228,12 @@ class Session
                 '',
                 $u['u_prijmeni'],
                 csvDate($u['u_narozeni']),
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
+                $u['u_city'],
+                $u['u_district'],
+                $u['u_street'],
+                $u['u_conscription_number'],
+                $u['u_orientation_number'],
+                str_replace(' ', '', $u['u_postal_code']),
                 '',
                 '',
                 '',
@@ -240,9 +241,9 @@ class Session
                 '66',
                 $u['u_dancer'] ? '1' : '0',
                 $u['u_teacher'] ? '1' : '0',
-                csvDate($platby[$u['u_id']]),
-                '',
-                '',
+                isset($oldest[$u['u_id']]) ? csvDate($oldest[$u['u_id']]) : '',
+                isset($newest[$u['u_id']]) ? csvDate($newest[$u['u_id']]) : '',
+                $u['u_nationality'],
                 ''
             ]);
         }

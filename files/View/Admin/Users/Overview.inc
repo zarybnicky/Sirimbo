@@ -54,6 +54,7 @@
     <a href="/admin/users/duplicate" class="btn btn-outline-primary">Duplicitní uživatelé</a>
     <a href="/admin/users/unconfirmed" class="btn btn-outline-primary">Nepotvrzení uživatelé</a>
     <a href="/admin/users/statistiky" class="btn btn-outline-primary">Statistiky</a>
+    <a href="/admin/users/getMsmtCsv" class="btn btn-outline-primary">MŠMT export</a>
     <?php if ($this->view == 'status'): ?>
       <button class="btn btn-primary" name="action" value="save">Uložit změny</button>
     <?php endif ?>

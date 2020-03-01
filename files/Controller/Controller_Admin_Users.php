@@ -198,6 +198,14 @@ class Controller_Admin_Users extends Controller_Abstract
         $this->redirect($request->post('returnURI') ?: '/admin/users');
     }
 
+    public function getMsmtCsv($request)
+    {
+        header('Pragma: no-cache');
+        header('Content-Type: text/csv');
+        header('Content-Disposition: inline; filename="olymp-msmt-export.csv');
+        echo Session::generateMsmtCsv();
+    }
+
     public function unconfirmed($request)
     {
         Permissions::checkError('users', P_ADMIN);
