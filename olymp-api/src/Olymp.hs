@@ -1,10 +1,13 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE GADTs #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE ScopedTypeVariables #-}
@@ -19,45 +22,41 @@ module Olymp
   ) where
 
 import Control.Concurrent (forkIO, threadDelay)
-import Control.Lens
-import Control.Monad.Except (ExceptT(..), runExceptT, forever, liftIO)
+import Control.Monad.Except (runExceptT, forever, liftIO)
 import Control.Monad.Trans.Reader (runReaderT)
 import Control.Monad.Logger (runStdoutLoggingT)
-import Data.Aeson (FromJSON, ToJSON, encode, eitherDecode')
+import Data.Aeson (FromJSON, Value(Array), encode, eitherDecode')
+import Data.Aeson.QQ (aesonQQ)
 import qualified Data.ByteString.Char8 as BC
 import qualified Data.ByteString.Lazy.Char8 as BCL
-import Data.Generics.Product (field)
-import Data.IORef (IORef, newIORef)
-import Data.Map (Map)
+import Data.IORef (newIORef)
 import qualified Data.Map as M
 import Data.Maybe (fromMaybe)
-import Data.Pool (Pool, withResource)
+import Data.Pool (withResource)
 import Data.Proxy (Proxy(..))
 import Data.Text (Text)
 import qualified Data.Text as T
 import Data.Yaml (decodeFileThrow)
 import Database.Persist.Sql (get, repsert)
-import Database.Persist.MySQL (SqlBackend, createMySQLPool, mkMySQLConnectInfo)
+import Database.Persist.MySQL (createMySQLPool, mkMySQLConnectInfo)
 import GHC.Generics (Generic)
 import Network.Wai (Application)
 import Network.Wai.Handler.Warp (run)
-import Network.WebSockets (Connection, forkPingThread, receiveData, sendTextData)
+-- import Network.Wai.Middleware.Cors
 import Olymp.Auth (PhpAuth, PhpAuthHandler, phpAuthHandler)
 import Olymp.Cli (Args(..), parseArgs)
-import Olymp.Effect.Database (Database, runDatabasePool, query)
-import Olymp.Effect.Error (AppError, runAppErrorToError)
-import Olymp.Effect.Log (WithLog, Log, logInfo, logError, runLogToStdout)
-import Olymp.Effect.User (UserEff, runUserEffPersistent)
-import Olymp.Effect.Session (SessionEff, runSessionEffPersistent)
+import Olymp.Effect.Database (query)
+import Olymp.Effect.Log (WithLog, logInfo)
+import Olymp.Monad (AppStack, interpretServer)
 import Olymp.Schema (User(..), Key(ParameterKey), Parameter(..))
 import Olymp.Tournament
-import Polysemy (Embed, Sem, runM)
-import Polysemy.AtomicState
-  (AtomicState, runAtomicStateIORef, atomicGet, atomicPut, atomicState', atomicModify')
-import Polysemy.Error (Error, runError)
-import Polysemy.Resource (Resource, finally, resourceToIO)
+import Olymp.Tournament.API
+import Polysemy (Sem)
+import Polysemy.AtomicState (atomicGet)
+import Polysemy.Error (throw)
 import Servant
 import Servant.API.WebSocket (WebSocket)
+-- import Servant.Multipart (MultipartData, MultipartForm, Tmp)
 import Servant.Server.Internal.Handler (runHandler')
 import System.Environment (lookupEnv)
 
@@ -72,16 +71,6 @@ runServer :: IO ()
 runServer = do
   args <- parseArgs
   run (fromMaybe 4000 (port args)) =<< makeServer
-
-initialTournament :: Tournament NodeId
-initialTournament = (createTournament ps) { userFocus = Just 2 }
-  where
-    ps = M.fromList
-      [ (0 :: PlayerId, Player "Dan a Barča" "Daniel a Barbora Borůvkovi")
-      , (1, Player "Tomáš a Monika" "Tomáš Opichal a Monika Maňásková")
-      , (2, Player "Roman a Anička" "Roman Pecha a Anna Banková")
-      , (3, Player "Vilda a Hanka" "Vilém Šír a Hana-Anna Šišková")
-      ]
 
 makeServer :: IO Application
 makeServer = do
@@ -103,7 +92,7 @@ makeServer = do
       runner = interpretServer ref ref' pool
 
   let saveState = runExceptT $ runHandler' $ runner $ do
-        liftIO $ threadDelay 1000000
+        liftIO $ threadDelay 100000000
         state <- T.pack . BCL.unpack . encode <$> atomicGet @(Tournament NodeId)
         _ <- query $ repsert (ParameterKey "tournament") (Parameter state)
         pure ()
@@ -113,6 +102,10 @@ makeServer = do
   where
     appServer :: (forall a. Sem AppStack a -> Handler a) -> Application
     appServer runner =
+      -- cors (const $ Just simpleCorsResourcePolicy
+      --       { corsRequestHeaders = ["Content-Type"]
+      --       , corsMethods = "PUT" : simpleMethods
+      --       }) $
       serveWithContext (Proxy @OlympApi) (phpAuthHandler runner :. EmptyContext) $
       hoistServerWithContext
         (Proxy @OlympApi)
@@ -120,145 +113,260 @@ makeServer = do
         runner
         server
 
-type AppStack
-   = '[ UserEff
-      , SessionEff
-      , AppError
-      , Error ServerError
-      , AtomicState (Map Int Connection)
-      , AtomicState (Tournament NodeId)
-      , Database SqlBackend
-      , Resource
-      , Log
-      , Embed IO
-      ]
-
-interpretServer ::
-     IORef (Tournament NodeId)
-  -> IORef (Map Int Connection)
-  -> Pool SqlBackend
-  -> Sem AppStack a
-  -> Handler a
-interpretServer ref ref' pool =
-  Handler . ExceptT . runM .
-  runLogToStdout .
-  resourceToIO .
-  runDatabasePool pool .
-  runAtomicStateIORef ref .
-  runAtomicStateIORef ref' .
-  runError @ServerError .
-  runAppErrorToError .
-  runSessionEffPersistent .
-  runUserEffPersistent
-
 type OlympApi
-  = PhpAuth :> "whoami" :> Get '[PlainText] Text
-  :<|> "tournament" :> "ws" :> WebSocket
-  :<|> PhpAuth :> "tournament" :> "admin" :> "ws" :> WebSocket
+  = "api" :> "whoami" :> PhpAuth :> Get '[PlainText, JSON] Text
+  :<|> "api" :> "tournament" :> "ws" :> WebSocket
+  :<|> "api" :> "tournament" :> PhpAuth :> "admin" :> "ws" :> WebSocket
+  -- :<|> "api" :> "editor" :> EditorApi
+  :<|> "wp" :> "v2" :> WordpressApi
 
 server :: ServerT OlympApi (Sem AppStack)
-server = whoAmI :<|> tournamentSocket :<|> tournamentAdminSocket
+server
+  = whoAmI
+  :<|> tournamentSocket
+  :<|> tournamentAdminSocket
+  -- :<|> editorServer
+  :<|> wordpressServer
 
 whoAmI :: WithLog r => User -> Sem r Text
 whoAmI u = do
   logInfo (userName u)
   pure (userName u <> " " <> userSurname u)
 
-data TournamentUser =
-  Vote NodeId Int Int
-  deriving (Eq, Show, Generic, FromJSON, ToJSON)
+type WordpressApi
+  = "types" :> Get '[JSON] (M.Map String Value)
+  :<|> "types" :> Capture "type" String :> Get '[JSON] Value
+  :<|> "pages" :> Capture "page" Int :> Get '[JSON] Value
+  :<|> "pages" :> Capture "page" Int :> "autosaves" :> Get '[JSON] [Value]
+  :<|> "themes" :> Get '[JSON] Value
+  :<|> "taxonomies" :> Get '[JSON] Value
+  :<|> "users" :> Get '[JSON] Value
+  :<|> "users" :> "me" :> Get '[JSON] Value
+  :<|> "blocks" :> Get '[JSON] [Value]
+  :<|> "blocks" :> Verb 'OPTIONS 200 '[JSON] (Headers '[Header "Allow" String] ())
+  :<|> "media" :> Verb 'OPTIONS 200 '[JSON] (Headers '[Header "Allow" String] ())
 
-data TournamentBroadcast
-  = StateMsg (Tournament NodeId)
-  | ResetAll
-  deriving (Eq, Show, Generic, FromJSON, ToJSON)
+wordpressServer :: ServerT WordpressApi (Sem AppStack)
+wordpressServer
+  = pure demoTypes
+  :<|> (\typ -> maybe (throw err404) pure (M.lookup typ demoTypes))
+  :<|> (\_page -> pure demoPost)
+  :<|> (\_page -> pure [])
+  :<|> pure demoThemes
+  :<|> pure demoTaxonomies
+  :<|> pure (Array $ pure demoUser)
+  :<|> pure demoUser
+  :<|> pure []
+  :<|> pure (addHeader "GET,POST,PUT,DELETE" ())
+  :<|> pure (addHeader "GET,POST,PUT,DELETE" ())
 
-data TournamentAdmin
-  = UpdatePlayer PlayerId Player
-  | OpenVoting NodeId
-  | CloseVoting NodeId
-  | FocusNode (Maybe NodeId)
-  | UserFocusNode (Maybe NodeId)
-  | ResetScore NodeId
-  | ResetState
-  deriving (Eq, Show, Generic, FromJSON, ToJSON)
+demoUser :: Value
+demoUser = [aesonQQ|{
+  "id": 1,
+  "name": "Human Made",
+  "url": "",
+  "description": "",
+  "link": "https://demo.wp-api.org/author/humanmade/",
+  "slug": "humanmade",
+  "avatar_urls": {
+    "24": "https://secure.gravatar.com/avatar/83888eb8aea456e4322577f96b4dbaab?s=24&d=mm&r=g",
+    "48": "https://secure.gravatar.com/avatar/83888eb8aea456e4322577f96b4dbaab?s=48&d=mm&r=g",
+    "96": "https://secure.gravatar.com/avatar/83888eb8aea456e4322577f96b4dbaab?s=96&d=mm&r=g"
+  },
+  "meta": [],
+  "_links": {
+    "self": [{ "href": "https://demo.wp-api.org/wp-json/wp/v2/users/1" }],
+    "collection": [{ "href": "https://demo.wp-api.org/wp-json/wp/v2/users" }]
+  }
+}|]
 
--- persistent entities
--- player CRUD
+demoTaxonomies :: Value
+demoTaxonomies = [aesonQQ|{
+  "category": {
+    "name": "Categories",
+    "slug": "category",
+    "description": "",
+    "types": ["post"],
+    "visibility": { "show_ui": false },
+    "hierarchical": true,
+    "rest_base": "categories",
+    "_links": {
+      "collection": [{ "href": "https://demo.wp-api.org/wp-json/wp/v2/taxonomies" }],
+      "wp:items": [{ "href": "https://demo.wp-api.org/wp-json/wp/v2/categories" }],
+      "curies": [{
+        "name": "wp",
+        "href": "https://api.w.org/{rel}",
+        "templated": true
+      }]
+    }
+  },
+  "post_tag": {
+    "name": "Tags",
+    "slug": "post_tag",
+    "description": "",
+    "types": ["post"],
+    "visibility": { "show_ui": false },
+    "hierarchical": false,
+    "rest_base": "tags",
+    "_links": {
+      "collection": [{ "href": "https://demo.wp-api.org/wp-json/wp/v2/taxonomies" }],
+      "wp:items": [{ "href": "https://demo.wp-api.org/wp-json/wp/v2/tags" } ],
+      "curies": [{
+        "name": "wp",
+        "href": "https://api.w.org/{rel}",
+        "templated": true
+      }]
+    }
+  }
+}|]
 
-withSocketLoop :: FromJSON a => Connection -> (a -> Sem AppStack ()) -> Sem AppStack ()
-withSocketLoop c f = do
-  welcomeMsg <- encode . StateMsg <$> atomicGet
-  liftIO $ forkPingThread c 10 >> sendTextData c welcomeMsg
-  k <- atomicState' (\m -> let k = 1 + foldr max 0 (M.keys m) in (M.insert k c m, k))
-  flip finally (atomicModify' $ M.delete k) $ forever $
-    eitherDecode' <$> liftIO (receiveData c) >>= either (logError . T.pack) f
+demoThemes :: Value
+demoThemes = [aesonQQ|[{
+  "theme_supports": {
+    "formats": [
+      "standard",
+      "aside",
+      "image",
+      "video",
+      "quote",
+      "link",
+      "gallery",
+      "audio"
+    ],
+    "post-thumbnails": true,
+    "responsive-embeds": false
+  }
+}]|]
 
-updateNode ::
-     NodeId
-  -> (TournamentNodeF NodeId NodeId -> Maybe (TournamentNodeF NodeId NodeId))
-  -> Text
-  -> Sem AppStack ()
-updateNode nid f msg = do
-  mErr <- atomicState' @(Tournament NodeId) $ \t ->
-    case M.lookup nid (nodes t) of
-      Nothing -> (t, Just $ "Unknown node in " <> msg)
-      Just n -> case f n of
-        Nothing -> (t, Just $ "Node not ready for " <> msg)
-        Just new -> (t & field @"nodes" . ix nid .~ new, Nothing)
-  case mErr of
-    Nothing -> broadcastState
-    Just err -> logError err
+demoPost :: Value
+demoPost = [aesonQQ|{
+  "id": 1,
+  "guid": "...",
+  "status": "auto-draft",
+  "type": "page",
+  "title": "Test",
+  "content": { "raw": "" }
+}|]
 
-tournamentSocket :: Connection -> Sem AppStack ()
-tournamentSocket c = withSocketLoop c $ \msg -> case msg of
-  Vote nid left right ->
-    updateNode nid (setScore (+ left) (+ right)) (tshow msg)
+demoTypes :: M.Map String Value
+demoTypes = M.fromList
+  [ ("post", typePost)
+  , ("page", typePage)
+  , ("attachment", typeAttachment)
+  , ("wb_block", typeBlock)
+  ]
 
-tournamentAdminSocket :: User -> Connection -> Sem AppStack ()
-tournamentAdminSocket _ c = withSocketLoop c $ \msg -> case msg of
-  UpdatePlayer pid p -> do
-    atomicModify' @(Tournament NodeId) (field @"tournamentPlayers" %~ M.insert pid p)
-    broadcastState
-  FocusNode nid -> do
-    atomicModify' @(Tournament NodeId) (field @"dashboardFocus" .~ nid)
-    broadcastState
-  UserFocusNode n -> do
-    atomicModify' @(Tournament NodeId) (field @"userFocus" .~ n)
-    broadcastState
-  OpenVoting nid -> updateNode nid openVoting (tshow msg)
-  ResetScore nid -> updateNode nid (setScore (const 0) (const 0)) (tshow msg)
-  ResetState -> do
-    state <- atomicGet @(Tournament NodeId)
-    let initial = withTournament propagateWinners initialTournament
-    atomicPut @(Tournament NodeId) initial { tournamentPlayers = tournamentPlayers state }
-    conns <- atomicGet @(Map Int Connection)
-    liftIO $ mapM_ (`sendTextData` encode ResetAll) conns
-    broadcastState
-  CloseVoting nid -> do
-    mErr <- atomicState' @(Tournament NodeId) $ \t ->
-      case M.lookup nid (nodes t) of
-        Nothing -> (t, Just $ "Unknown node in " <> tshow msg)
-        Just n -> case closeVoting n of
-          Nothing -> (t, Just $ "Node not ready for " <> tshow msg)
-          Just closed ->
-            let nodes' = nodes t & ix nid .~ closed
-                loser = either (const 0) id $ fromMaybe 0 . getLoser <$> treeify nodes' (nodeId closed)
-                lb = maybe M.empty
-                      (withTree (propagateWinners . snd . fillPlayers [loser]) nodes')
-                      (losersRoot t)
-                wb = withTree propagateWinners nodes' (winnersRoot t)
-            in (t & field @"nodes" .~ wb <> lb, Nothing)
-    case mErr of
-      Nothing -> broadcastState
-      Just err -> logError err
+typeBlock :: Value
+typeBlock = [aesonQQ|{
+  "labels": { "singular_name": "Block" },
+  "description": "",
+  "hierarchical": false,
+  "viewable": false,
+  "name": "Blocks",
+  "slug": "wp_block",
+  "supports": { "title": true, "editor": true },
+  "taxonomies": [],
+  "rest_base": "blocks",
+  "_links": {
+    "collection": [{ "href": "https://demo.wp-api.org/wp-json/wp/v2/types" } ],
+    "wp:items": [{ "href": "https://demo.wp-api.org/wp-json/wp/v2/blocks" }],
+    "curies": [{
+      "name": "wp",
+      "href": "https://api.w.org/{rel}",
+      "templated": true
+    }]
+  },
+  "headers": []
+}|]
 
-broadcastState :: Sem AppStack ()
-broadcastState = do
-  msg <- encode . StateMsg <$> atomicGet @(Tournament NodeId)
-  conns <- atomicGet @(Map Int Connection)
-  liftIO $ mapM_ (`sendTextData` msg) conns
-  pure ()
+typeAttachment :: Value
+typeAttachment = [aesonQQ|{
+  "labels": { "singular_name": "Attachment" },
+  "description": "",
+  "hierarchical": false,
+  "viewable": true,
+  "name": "Media",
+  "slug": "attachment",
+  "supports": {
+    "title": true,
+    "author": true,
+    "comments": true
+  },
+  "taxonomies": [],
+  "rest_base": "media",
+  "_links": {
+    "collection": [{ "href": "https://demo.wp-api.org/wp-json/wp/v2/types" } ],
+    "wp:items": [{ "href": "https://demo.wp-api.org/wp-json/wp/v2/media" }],
+    "curies": [{
+      "name": "wp",
+      "href": "https://api.w.org/{rel}",
+      "templated": true
+    }]
+  }
+}|]
 
-tshow :: Show a => a -> Text
-tshow = T.pack . show
+typePage :: Value
+typePage = [aesonQQ|{
+  "labels": { "singular_name": "Page" },
+  "description": "",
+  "hierarchical": true,
+  "viewable": true,
+  "name": "Pages",
+  "slug": "page",
+  "supports": {
+    "author": false,
+    "comments": false,
+    "custom-fields": false,
+    "discussion": false,
+    "editor": true,
+    "excerpt": true,
+    "page-attributes": false,
+    "revisions": false,
+    "thumbnail": false,
+    "title": false
+  },
+  "taxonomies": [],
+  "rest_base": "pages",
+  "_links": {
+    "collection": [{ "href": "https://demo.wp-api.org/wp-json/wp/v2/types" } ],
+    "wp:items": [{ "href": "https://demo.wp-api.org/wp-json/wp/v2/pages" }],
+    "curies": [{
+      "name": "wp",
+      "href": "https://api.w.org/{rel}",
+      "templated": true
+    }]
+  }
+}|]
+
+typePost :: Value
+typePost = [aesonQQ|{
+  "labels": { "singular_name": "Post" },
+  "description": "",
+  "hierarchical": false,
+  "viewable": true,
+  "name": "Posts",
+  "slug": "post",
+  "supports": {
+    "author": false,
+    "comments": false,
+    "custom-fields": true,
+    "editor": true,
+    "excerpt": false,
+    "page-attributes": false,
+    "revisions": false,
+    "thumbnail": false,
+    "title": true,
+    "post-formats": true
+  },
+  "taxonomies": ["category", "post_tag"],
+  "rest_base": "posts",
+  "_links": {
+    "collection": [{ "href": "https://demo.wp-api.org/wp-json/wp/v2/types" } ],
+    "wp:items": [{ "href": "https://demo.wp-api.org/wp-json/wp/v2/posts" }],
+    "curies": [{
+      "name": "wp",
+      "href": "https://api.w.org/{rel}",
+      "templated": true
+    }]
+  }
+}|]

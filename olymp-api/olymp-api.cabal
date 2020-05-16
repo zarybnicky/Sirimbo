@@ -32,6 +32,7 @@ library
 
   build-depends:       base >=4.7 && <5
                      , aeson
+                     , aeson-qq
                      , bytestring
                      , co-log
                      , co-log-core
@@ -55,6 +56,7 @@ library
                      , recursion-schemes
                      , resource-pool
                      , servant
+                     , servant-multipart
                      , servant-server
                      , servant-websockets
                      , text
@@ -62,6 +64,7 @@ library
                      , transformers
                      , transformers-compat
                      , wai
+                     , wai-cors
                      , warp
                      , websockets
                      , yaml

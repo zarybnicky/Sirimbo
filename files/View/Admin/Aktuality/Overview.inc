@@ -7,7 +7,6 @@
              ->column('buttons', '')
              ->column('links', 'Upravit')
              ->column('name', 'Jméno')
-             ->column('category', 'Kategorie')
              ->column('added', 'Přidán dne') ?>
     </form>
 </div>
