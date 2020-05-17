@@ -1,0 +1,38 @@
+{
+    "niv": {
+        "branch": "master",
+        "description": "Easy dependency management for Nix projects",
+        "homepage": "https://github.com/nmattia/niv",
+        "owner": "nmattia",
+        "repo": "niv",
+        "rev": "f73bf8d584148677b01859677a63191c31911eae",
+        "sha256": "0jlmrx633jvqrqlyhlzpvdrnim128gc81q5psz2lpp2af8p8q9qs",
+        "type": "tarball",
+        "url": "https://github.com/nmattia/niv/archive/f73bf8d584148677b01859677a63191c31911eae.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "nixpkgs": {
+        "branch": "nixos-19.09",
+        "description": "A read-only mirror of NixOS/nixpkgs tracking the released channels. Send issues and PRs to",
+        "homepage": "https://github.com/NixOS/nixpkgs",
+        "owner": "NixOS",
+        "repo": "nixpkgs-channels",
+        "rev": "d858110e35b652a02e11deabe7fba2fc28f10945",
+        "sha256": "1b7sdy9nhk97s9wbn40yij67hmln3d8030mlkx9rwi0wgg90irc1",
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs-channels/archive/d858110e35b652a02e11deabe7fba2fc28f10945.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "yarn2nix": {
+        "branch": "master",
+        "description": "Generate nix expressions from a yarn.lock file [maintainer=???]",
+        "homepage": "",
+        "owner": "nix-community",
+        "repo": "yarn2nix",
+        "rev": "70666fc41fd64ade724aedf1d279d36567a6fd4c",
+        "sha256": "1wfbag8mimxbwdx2g3y807fvjkym73rq97lv4c4gk716nx8lpbcr",
+        "type": "tarball",
+        "url": "https://github.com/nix-community/yarn2nix/archive/70666fc41fd64ade724aedf1d279d36567a6fd4c.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    }
+}

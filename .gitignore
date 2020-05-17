@@ -1,10 +1,4 @@
 config.php
-public/galerie/*
-!public/galerie/.gitignore
-upload/*
-!upload/.gitignore
-log/*
-!log/.gitignore
 *~
 [#]*[#]
 .direnv/
@@ -14,6 +8,5 @@ dist-newstyle/
 node_modules/
 package-lock.json
 .stack-work/
-
-/vendor/
+vendor/
 cabal.project.local
