@@ -1,9 +1,6 @@
 {
   "name": "zarybnicky/tkolymp.cz",
   "type": "project",
-  "require": {
-    "phpstan/phpstan": "^0.11.16"
-  },
   "autoload": {
     "files": [
       "config.php",
