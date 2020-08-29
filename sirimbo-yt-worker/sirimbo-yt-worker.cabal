@@ -1,5 +1,5 @@
 cabal-version:       2.0
-name:                yt-worker
+name:                sirimbo-yt-worker
 version:             0.1.0.0
 license:             BSD3
 author:              Jakub Zárybnický
@@ -37,6 +37,7 @@ executable yt-worker
                      , persistent-template
                      , process
                      , resourcet
+                     , sirimbo-schema
                      , split
                      , text
                      , time

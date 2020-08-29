@@ -65,14 +65,14 @@ import System.IO (stdout)
 import System.Info (os)
 import System.Process (rawSystem)
 
-import Schema
+import Olymp.Schema
   ( EntityField(..)
   , VideoList(..)
   , VideoSource(..)
   , migrateAll
   , videoUri
   )
-import qualified Schema (Video(Video))
+import qualified Olymp.Schema as Schema
 
 type AppScope = '[ "https://www.googleapis.com/auth/youtube.readonly"]
 type MonadMysql m = (MonadUnliftIO m, MonadLogger m, HasPool m)

@@ -1,5 +1,5 @@
 cabal-version:  2.2
-name:           olymp-schema
+name:           sirimbo-tournament
 version:        0.1.0.0
 author:         Jakub Zárybnický
 maintainer:     jakub@zarybnicky.com
@@ -20,13 +20,16 @@ common shared
 library
   import: shared
   hs-source-dirs:      .
-  exposed-modules:     Olymp.Schema
+  exposed-modules:     Olymp.Tournament
 
   build-depends:       base >=4.7 && <5
                      , aeson
                      , bytestring
+                     , containers
                      , lens
-                     , persistent
-                     , persistent-template
+                     , recursion-schemes
+                     , sirimbo-schema
                      , text
                      , time
+                     , transformers
+                     , transformers-compat

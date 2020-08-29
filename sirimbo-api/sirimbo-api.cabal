@@ -1,5 +1,5 @@
 cabal-version:  2.2
-name:           olymp-api
+name:           sirimbo-api
 version:        0.1.0.0
 author:         Jakub Zárybnický
 maintainer:     jakub@zarybnicky.com
@@ -44,8 +44,8 @@ library
                      , lens
                      , monad-logger
                      , mtl
-                     , olymp-schema
-                     , olymp-tournament
+                     , sirimbo-schema
+                     , sirimbo-tournament
                      , optparse-applicative
                      , optparse-generic
                      , persistent
@@ -79,4 +79,4 @@ executable server
                       -O2
 
   build-depends:       base >=4.7 && <5
-                     , olymp-api
+                     , sirimbo-api

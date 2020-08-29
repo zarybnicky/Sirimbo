@@ -1,4 +1,16 @@
 {
+    "co-log": {
+        "branch": "master",
+        "description": "📓 Flexible and configurable modern #Haskell logging framework",
+        "homepage": "https://kowainik.github.io/projects/co-log",
+        "owner": "kowainik",
+        "repo": "co-log",
+        "rev": "45d5dd6c33f722628a0f9c10e4297f5e11ede20f",
+        "sha256": "117ilsxbc36f03nb67ljq75j8rhlsmh66272073g0pyiic9pczyr",
+        "type": "tarball",
+        "url": "https://github.com/kowainik/co-log/archive/45d5dd6c33f722628a0f9c10e4297f5e11ede20f.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "niv": {
         "branch": "master",
         "description": "Easy dependency management for Nix projects",
@@ -12,15 +24,39 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs": {
-        "branch": "nixos-19.09",
+        "branch": "nixos-20.03",
         "description": "A read-only mirror of NixOS/nixpkgs tracking the released channels. Send issues and PRs to",
         "homepage": "https://github.com/NixOS/nixpkgs",
         "owner": "NixOS",
         "repo": "nixpkgs-channels",
-        "rev": "d858110e35b652a02e11deabe7fba2fc28f10945",
-        "sha256": "1b7sdy9nhk97s9wbn40yij67hmln3d8030mlkx9rwi0wgg90irc1",
+        "rev": "2739290bb0c9ca7b77d0e641e608337198dcffdb",
+        "sha256": "1h14cqmgxg6lm8gynvvkz3p7xxw9ilblp1jkrn5l3rbqbvyxf9n0",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs-channels/archive/d858110e35b652a02e11deabe7fba2fc28f10945.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs-channels/archive/2739290bb0c9ca7b77d0e641e608337198dcffdb.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "servant-websockets": {
+        "branch": "master",
+        "description": null,
+        "homepage": null,
+        "owner": "moesenle",
+        "repo": "servant-websockets",
+        "rev": "a6b8b9f1d9d76e31b0f5de1ce6f79222fc1a7002",
+        "sha256": "0mirn2z549f4kmqisidhpix4bh5dh9z01j2vnf3klbh057g9dcwk",
+        "type": "tarball",
+        "url": "https://github.com/moesenle/servant-websockets/archive/a6b8b9f1d9d76e31b0f5de1ce6f79222fc1a7002.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "typerep-map": {
+        "branch": "master",
+        "description": "⚡️Efficient implementation of Map with types as keys",
+        "homepage": "https://kowainik.github.io/projects/typerep-map",
+        "owner": "kowainik",
+        "repo": "typerep-map",
+        "rev": "22af85834199e41ec7edefe48a6f45dc3abde751",
+        "sha256": "139kaakvjbr63j1745rpg6br321s2by0qf0xbiaysf4qnknswyzk",
+        "type": "tarball",
+        "url": "https://github.com/kowainik/typerep-map/archive/22af85834199e41ec7edefe48a6f45dc3abde751.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "yarn2nix": {
