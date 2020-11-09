@@ -29,6 +29,8 @@ library
                        Olymp.Effect.Log
                        Olymp.Effect.Session
                        Olymp.Effect.User
+                       Olymp.Monad
+                       Olymp.Tournament.API
 
   build-depends:       base >=4.7 && <5
                      , aeson
@@ -49,7 +51,7 @@ library
                      , optparse-applicative
                      , optparse-generic
                      , persistent
-                     , persistent-mysql-haskell
+                     , persistent-mysql
                      , persistent-template
                      , polysemy
                      , polysemy-plugin

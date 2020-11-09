@@ -134,7 +134,6 @@ broadcastState = do
   msg <- encode . StateMsg <$> atomicGet @(Tournament NodeId)
   conns <- atomicGet @(Map Int Connection)
   liftIO $ mapM_ (`sendTextData` msg) conns
-  pure ()
 
 tshow :: Show a => a -> Text
 tshow = T.pack . show

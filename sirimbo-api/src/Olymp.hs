@@ -27,20 +27,17 @@ import Control.Monad.Trans.Reader (runReaderT)
 import Control.Monad.Logger (runStdoutLoggingT)
 import Data.Aeson (FromJSON, Value(Array), encode, eitherDecode')
 import Data.Aeson.QQ (aesonQQ)
-import qualified Data.ByteString.Char8 as BC
 import qualified Data.ByteString.Lazy.Char8 as BCL
 import Data.IORef (newIORef)
 import qualified Data.Map as M
 import Data.Maybe (fromMaybe)
 import Data.Pool (withResource)
-import Data.Proxy (Proxy(..))
 import Data.Text (Text)
 import qualified Data.Text as T
 import Data.Yaml (decodeFileThrow)
 import Database.Persist.Sql (get, repsert)
-import Database.Persist.MySQL (createMySQLPool, mkMySQLConnectInfo)
+import Database.Persist.MySQL (ConnectInfo(..), createMySQLPool, defaultConnectInfo)
 import GHC.Generics (Generic)
-import Network.Wai (Application)
 import Network.Wai.Handler.Warp (run)
 -- import Network.Wai.Middleware.Cors
 import Olymp.Auth (PhpAuth, PhpAuthHandler, phpAuthHandler)
@@ -57,7 +54,6 @@ import Polysemy.Error (throw)
 import Servant
 import Servant.API.WebSocket (WebSocket)
 -- import Servant.Multipart (MultipartData, MultipartForm, Tmp)
-import Servant.Server.Internal.Handler (runHandler')
 import System.Environment (lookupEnv)
 
 data AppConfig = AppConfig
@@ -77,8 +73,12 @@ makeServer = do
   configFile <- fromMaybe "config.yaml" <$> lookupEnv "CONFIG"
   putStrLn $ "Reading config from: " <> configFile
   AppConfig{..} <- decodeFileThrow configFile
-  let connectInfo =
-        mkMySQLConnectInfo dbHost (BC.pack dbUser) (BC.pack dbPassword) (BC.pack dbDatabase)
+  let connectInfo = defaultConnectInfo
+        { connectHost = dbHost
+        , connectUser = dbUser
+        , connectPassword = dbPassword
+        , connectDatabase = dbDatabase
+        }
   pool <- runStdoutLoggingT $ createMySQLPool connectInfo 5
 
   t <- withResource pool (runReaderT (get $ ParameterKey "tournament")) >>= \case

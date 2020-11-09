@@ -203,7 +203,7 @@ class Controller_Admin_Users extends Controller_Abstract
         header('Pragma: no-cache');
         header('Content-Type: text/csv');
         header('Content-Disposition: inline; filename="olymp-msmt-export.csv');
-        echo Session::generateMsmtCsv();
+        echo chr(239) . chr(187) . chr(191) . Session::generateMsmtCsv();
     }
 
     public function unconfirmed($request)

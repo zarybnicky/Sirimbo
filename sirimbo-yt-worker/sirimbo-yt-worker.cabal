@@ -33,7 +33,7 @@ executable yt-worker
                      , monad-logger
                      , mtl
                      , persistent
-                     , persistent-mysql-haskell
+                     , persistent-mysql
                      , persistent-template
                      , process
                      , resourcet
@@ -45,5 +45,3 @@ executable yt-worker
                      , unliftio-core
                      , unordered-containers
                      , yaml
-
-  other-modules:       Schema

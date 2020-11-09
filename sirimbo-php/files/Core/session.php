@@ -222,6 +222,15 @@ class Session
             if ($u['u_ban'] || $u['u_temporary'] || !$u['u_confirmed'] || $u['u_system']) {
                 continue;
             }
+            // skupina - ne Host/VIP
+            if (in_array($u['u_skupina'], ['9', '10', '13'])) {
+                continue;
+            }
+            // od 1.9.2019
+            if (new DateTime($newest[$u['u_id']]) < new DateTime('2019-09-01')) {
+                continue;
+            }
+
             $out .= '
 ' . implode(';', [
                 $u['u_jmeno'],

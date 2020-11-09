@@ -29,7 +29,6 @@ module Main
   ) where
 
 import Control.Lens
-import Control.Monad (forM, foldM)
 import Control.Monad.Catch (MonadCatch)
 import Control.Monad.Except
 import Control.Monad.IO.Unlift (MonadUnliftIO)
@@ -38,7 +37,6 @@ import Control.Monad.Reader
 import Control.Monad.Trans.Resource (ResourceT, MonadResource)
 import Control.Monad.Writer
 import Data.Aeson (FromJSON)
-import qualified Data.ByteString.Char8 as BC
 import Data.IORef (newIORef, modifyIORef', readIORef)
 import Data.List (find)
 import Data.Map (Map)
@@ -116,9 +114,12 @@ main = do
   configFile <- fromMaybe "config.yaml" <$> lookupEnv "CONFIG"
   putStrLn $ "Reading config from: " <> configFile
   AppConfig{..} <- decodeFileThrow configFile
-
-  let connectInfo =
-        mkMySQLConnectInfo dbHost (BC.pack dbUser) (BC.pack dbPassword) (BC.pack dbDatabase)
+  let connectInfo = defaultConnectInfo
+        { connectHost = dbHost
+        , connectUser = dbUser
+        , connectPassword = dbPassword
+        , connectDatabase = dbDatabase
+        }
 
   runResourceT . runStdoutLoggingT . withMySQLPool connectInfo 1 $
     \pool -> flip runReaderT (AppEnv env pool) $ do

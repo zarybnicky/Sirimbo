@@ -1,0 +1,78 @@
+{
+  "nodes": {
+    "co-log-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1604681804,
+        "narHash": "sha256-z+4YbnFdHTytk3ChMvEZHSY+LWwy7ZYVx2/W79V4FpM=",
+        "owner": "kowainik",
+        "repo": "co-log",
+        "rev": "d3b7ac3cf98e301f0a2ee23d289ed3381e66f4ec",
+        "type": "github"
+      },
+      "original": {
+        "owner": "kowainik",
+        "ref": "main",
+        "repo": "co-log",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1603918233,
+        "narHash": "sha256-kc3v+TMNjJRiV9/HinAx7qsWI2wGPHToGnCeOYmahLI=",
+        "path": "/nix/store/h3qd1vw6cfppz75jf49fa3d73c0sgw06-source",
+        "rev": "edb26126d98bc696f4f3e206583faa65d3d6e818",
+        "type": "path"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      }
+    },
+    "root": {
+      "inputs": {
+        "co-log-src": "co-log-src",
+        "nixpkgs": "nixpkgs",
+        "servant-websockets": "servant-websockets",
+        "typerep-map": "typerep-map"
+      }
+    },
+    "servant-websockets": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1568537524,
+        "narHash": "sha256-k7OW3ikALjqHs1vIAH6CrcBFerywRR1xncQlUr6wOVY=",
+        "owner": "moesenle",
+        "repo": "servant-websockets",
+        "rev": "a6b8b9f1d9d76e31b0f5de1ce6f79222fc1a7002",
+        "type": "github"
+      },
+      "original": {
+        "owner": "moesenle",
+        "ref": "master",
+        "repo": "servant-websockets",
+        "type": "github"
+      }
+    },
+    "typerep-map": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1604683429,
+        "narHash": "sha256-MbKkoGB4CY9bEbyRGdb6ED6y3+6y2iymY98hY3D6OwU=",
+        "owner": "kowainik",
+        "repo": "typerep-map",
+        "rev": "3d0473e5fc0b96fd4eb1ffdc6438b3c0a23c3bc9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "kowainik",
+        "ref": "main",
+        "repo": "typerep-map",
+        "type": "github"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
