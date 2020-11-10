@@ -139,7 +139,7 @@
               User = cfg.user;
               Group = cfg.group;
               Restart = "always";
-              ExecStart = "${self.sirimbo-api}/bin/server";
+              ExecStart = "${self.packages.x86_64-linux.sirimbo-api}/bin/server";
             };
           };
         };
