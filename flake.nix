@@ -2,17 +2,17 @@
   inputs.co-log-src = { flake = false; url = github:kowainik/co-log/main; };
   inputs.typerep-map = { flake = false; url = github:kowainik/typerep-map/main; };
   inputs.servant-websockets = { flake = false; url = github:moesenle/servant-websockets/master; };
+  inputs.gitignore = { url = github:hercules-ci/gitignore.nix/master; flake = false; };
 
-  outputs = { self, nixpkgs, co-log-src, typerep-map, servant-websockets }: let
-    lib = nixpkgs.lib;
-    pkgs = import nixpkgs { system = "x86_64-linux"; };
+  outputs = { self, nixpkgs, gitignore, co-log-src, typerep-map, servant-websockets }: let
+    inherit (nixpkgs.lib) composeExtensions flip genAttrs;
+    inherit (import gitignore { inherit (nixpkgs) lib; }) gitignoreSource;
 
-    cleanSource = name: type: let
-      baseName = baseNameOf (toString name);
-    in lib.cleanSourceFilter name type && !(
-      (type == "directory" && (lib.elem baseName [ ".stack-work" "dist" ".git"])) ||
-      lib.any (lib.flip lib.hasSuffix baseName) [ ".hi" ".ipynb" ".nix" ".sock" ".yaml" ".yml" ]
-    );
+    pkgs = import nixpkgs {
+      system = "x86_64-linux";
+      overlays = [ self.overlay ];
+    };
+    src = gitignoreSource ./.;
 
     co-log = pkgs.runCommand "co-log-source" {} ''
       mkdir -p $out
@@ -33,22 +33,21 @@
       "sirimbo-tournament"
       "sirimbo-yt-worker"
     ];
-    hsPackages = pkgs.haskellPackages.override (old: {
-      overrides = pkgs.lib.composeExtensions (old.overrides or (_: _: {})) (
-        hself: hsuper: builtins.listToAttrs (map (x: {
-          name = x;
-          value = hself.callCabal2nix x (builtins.path {
-            filter = cleanSource;
-            path = ./. + "/${x}";
-          }) {};
-        }) hsPackagesSrc) // hsOverrides hself
-      );
-    });
 
   in {
-    packages.x86_64-linux = pkgs.lib.attrsets.genAttrs hsPackagesSrc (x: builtins.getAttr x hsPackages);
-    devShell.x86_64-linux = hsPackages.shellFor {
-      packages = p: map (x: builtins.getAttr x p) hsPackagesSrc;
+    overlay = final: prev: {
+      sirimbo-tournament-frontend = src + "/sirimbo-tournament/public";
+      haskellPackages = prev.haskellPackages.override (old: {
+        overrides = composeExtensions (old.overrides or (_: _: {})) (hself: hsuper:
+          genAttrs (map (x: hself.callCabal2nix x (src + "/${x}")) hsPackagesSrc)
+          // hsOverrides hself
+        );
+      });
+    };
+
+    packages.x86_64-linux = genAttrs hsPackagesSrc (x: builtins.getAttr x pkgs.haskellPackages);
+    devShell.x86_64-linux = pkgs.haskellPackages.shellFor {
+      packages = p: map (flip builtins.getAttr p) hsPackagesSrc;
       buildInputs = [
         pkgs.yarn
         pkgs.php73Packages.phpstan

@@ -17,6 +17,23 @@
         "type": "github"
       }
     },
+    "gitignore": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1594969032,
+        "narHash": "sha256-nbZfz02QoVe1yYK7EtCV7wMi4VdHzZEoPg20ZSDo9to=",
+        "owner": "hercules-ci",
+        "repo": "gitignore.nix",
+        "rev": "c4662e662462e7bf3c2a968483478a665d00e717",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "ref": "master",
+        "repo": "gitignore.nix",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1603918233,
@@ -33,6 +50,7 @@
     "root": {
       "inputs": {
         "co-log-src": "co-log-src",
+        "gitignore": "gitignore",
         "nixpkgs": "nixpkgs",
         "servant-websockets": "servant-websockets",
         "typerep-map": "typerep-map"
