@@ -82,19 +82,19 @@
             example = 3000;
           };
           dbHost = lib.mkOption {
-            type = lib.types.string;
+            type = lib.types.str;
             description = "${pkgName} DB host";
           };
           dbUser = lib.mkOption {
-            type = lib.types.string;
+            type = lib.types.str;
             description = "${pkgName} DB user";
           };
           dbPassword = lib.mkOption {
-            type = lib.types.string;
+            type = lib.types.str;
             description = "${pkgName} DB password";
           };
           dbDatabase = lib.mkOption {
-            type = lib.types.string;
+            type = lib.types.str;
             description = "${pkgName} DB database";
           };
         };
