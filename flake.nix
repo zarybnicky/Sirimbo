@@ -39,7 +39,7 @@
       sirimbo-tournament-frontend = src + "/sirimbo-tournament/public";
       haskellPackages = prev.haskellPackages.override (old: {
         overrides = composeExtensions (old.overrides or (_: _: {})) (hself: hsuper:
-          genAttrs (map (x: hself.callCabal2nix x (src + "/${x}")) hsPackagesSrc)
+          (genAttrs (x: hself.callCabal2nix x (src + "/${x}") {}) hsPackagesSrc)
           // hsOverrides hself
         );
       });
