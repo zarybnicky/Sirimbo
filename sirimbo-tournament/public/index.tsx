@@ -65,7 +65,7 @@ export class TournamentClient extends React.Component<null, ClientState> {
                 </div>
             </nav>
             <main className='container' style={{ marginTop: '80px' }}>
-                {[2, 5, 8, 1].map(k => <div className="mb-2">
+                {[2, 5, 8, 1].map(k => <div key={k} className="mb-2">
                     <div className="text-muted">{names[k]}</div>
                     <UserBattleComponent
                         socket={this.socket} tournament={t} battle={t.nodes[k]}
