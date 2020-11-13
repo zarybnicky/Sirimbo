@@ -16,7 +16,7 @@ export class TournamentAdmin extends React.Component<null, AdminState> {
         },
     };
     socket: WebSocket = null as unknown as WebSocket;
-    timeout: NodeJS.Timeout | undefined = undefined;
+    timeout: number | undefined = undefined;
 
     componentDidMount() {
         this.socket = this.connect();

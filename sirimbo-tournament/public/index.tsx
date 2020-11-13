@@ -18,7 +18,7 @@ export class TournamentClient extends React.Component<null, ClientState> {
         pastVotes: {},
     };
     socket: WebSocket = null as unknown as WebSocket;
-    timeout: NodeJS.Timeout | undefined;
+    timeout: number | undefined;
 
     componentDidMount() {
         this.socket = this.connect();

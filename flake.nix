@@ -36,21 +36,37 @@
 
   in {
     overlay = final: prev: {
-      sirimbo-tournament-frontend = src + "/sirimbo-tournament/public";
       haskellPackages = prev.haskellPackages.override (old: {
         overrides = composeExtensions (old.overrides or (_: _: {})) (hself: hsuper:
           (genAttrs hsPackagesSrc (x: hself.callCabal2nix x (src + "/${x}") {}))
           // hsOverrides hself
         );
       });
+      sirimbo-tournament-frontend = final.stdenv.mkDerivation {
+        name = "sirimbo-tournament-frontend";
+        inherit src;
+        phases = "unpackPhase buildPhase";
+        buildPhase = ''
+          cd sirimbo-tournament/public
+          ${final.nodePackages.typescript}/bin/tsc
+          ${final.sass}/bin/sass index.scss:index.css
+          mkdir -p $out
+          cp admin.html almond.js bundle.js{,.map} index.css{,.map} index.html react* $out/
+        '';
+      };
     };
 
-    packages.x86_64-linux = genAttrs hsPackagesSrc (x: builtins.getAttr x pkgs.haskellPackages);
+    packages.x86_64-linux = {
+      inherit (pkgs) sirimbo-tournament-frontend;
+    } // genAttrs hsPackagesSrc (x: builtins.getAttr x pkgs.haskellPackages);
+
     devShell.x86_64-linux = pkgs.haskellPackages.shellFor {
       packages = p: map (flip builtins.getAttr p) hsPackagesSrc;
       buildInputs = [
         pkgs.yarn
         pkgs.php73Packages.phpstan
+        pkgs.nodePackages.typescript
+        pkgs.sass
       ];
     };
 

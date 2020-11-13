@@ -10,6 +10,11 @@
 
 # production
 /build
+bundle.js
+bundle.js.map
+index.css
+index.css.map
+.sass-cache/
 
 # misc
 .DS_Store
