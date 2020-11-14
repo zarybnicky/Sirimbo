@@ -49,9 +49,9 @@
         buildPhase = ''
           cd sirimbo-tournament/public
           ${final.nodePackages.typescript}/bin/tsc
-          ${final.sass}/bin/sass index.scss:index.css
+          # $ {final.sass}/bin/sass index.scss:index.css
           mkdir -p $out
-          cp admin.html almond.js bundle.js{,.map} index.css{,.map} index.html react* $out/
+          cp admin.html almond.js bundle.js{,.map} index.css index.html react* $out/
         '';
       };
     };
