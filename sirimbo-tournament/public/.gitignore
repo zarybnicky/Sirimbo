@@ -10,8 +10,6 @@
 
 # production
 /build
-bundle.js
-bundle.js.map
 index.css.map
 .sass-cache/
 
