@@ -143,6 +143,7 @@
             wantedBy = [ "multi-user.target" ];
             after = [ "network-online.target" ];
             environment = {
+              PORT = toString cfg.port;
               CONFIG = pkgs.writeText "config.yaml" ''
                 dbHost: ${cfg.dbHost}
                 dbUser: ${cfg.dbUser}

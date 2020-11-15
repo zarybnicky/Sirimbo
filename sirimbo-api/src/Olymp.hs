@@ -17,7 +17,6 @@
 
 module Olymp
   ( makeServer
-  , parseArgs
   , runServer
   ) where
 
@@ -41,7 +40,7 @@ import GHC.Generics (Generic)
 import Network.Wai.Handler.Warp (run)
 -- import Network.Wai.Middleware.Cors
 import Olymp.Auth (PhpAuth, PhpAuthHandler, phpAuthHandler)
-import Olymp.Cli (Args(..), parseArgs)
+-- import Olymp.Cli (Args(..), parseArgs)
 import Olymp.Effect.Database (query)
 import Olymp.Effect.Log (WithLog, logInfo)
 import Olymp.Monad (AppStack, interpretServer)
@@ -55,6 +54,7 @@ import Servant
 import Servant.API.WebSocket (WebSocket)
 -- import Servant.Multipart (MultipartData, MultipartForm, Tmp)
 import System.Environment (lookupEnv)
+import Text.Read (readMaybe)
 
 data AppConfig = AppConfig
   { dbHost :: String
@@ -65,8 +65,8 @@ data AppConfig = AppConfig
 
 runServer :: IO ()
 runServer = do
-  args <- parseArgs
-  run (fromMaybe 4000 (port args)) =<< makeServer
+  port <- fromMaybe 4000 . (readMaybe =<<) <$> lookupEnv "PORT"
+  run port =<< makeServer
 
 makeServer :: IO Application
 makeServer = do
