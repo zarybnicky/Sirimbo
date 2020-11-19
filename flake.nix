@@ -2,17 +2,16 @@
   inputs.co-log-src = { flake = false; url = github:kowainik/co-log/main; };
   inputs.typerep-map = { flake = false; url = github:kowainik/typerep-map/main; };
   inputs.servant-websockets = { flake = false; url = github:moesenle/servant-websockets/master; };
-  inputs.gitignore = { url = github:hercules-ci/gitignore.nix/master; flake = false; };
 
-  outputs = { self, nixpkgs, gitignore, co-log-src, typerep-map, servant-websockets }: let
-    inherit (nixpkgs.lib) composeExtensions flip genAttrs;
-    inherit (import gitignore { inherit (nixpkgs) lib; }) gitignoreSource;
+  outputs = { self, nixpkgs, co-log-src, typerep-map, servant-websockets }: let
+    inherit (nixpkgs.lib) composeExtensions flip mapAttrs mapAttrsToList;
+    inherit (pkgs.nix-gitignore) gitignoreSourcePure;
 
     pkgs = import nixpkgs {
       system = "x86_64-linux";
       overlays = [ self.overlay ];
     };
-    src = gitignoreSource ./.;
+    getSrc = dir: gitignoreSourcePure [./.gitignore] dir;
 
     co-log = pkgs.runCommand "co-log-source" {} ''
       mkdir -p $out
@@ -27,27 +26,25 @@
       servant-websockets = self.callCabal2nix "servant-websockets" servant-websockets {};
     };
 
-    hsPackagesSrc = [
-      "sirimbo-api"
-      "sirimbo-schema"
-      "sirimbo-tournament"
-      "sirimbo-yt-worker"
-    ];
+    hsPackagesSrc = {
+      "sirimbo-api" = getSrc ./sirimbo-api;
+      "sirimbo-schema" = getSrc ./sirimbo-schema;
+      "sirimbo-tournament" = getSrc ./sirimbo-tournament;
+      "sirimbo-yt-worker" = getSrc ./sirimbo-yt-worker;
+    };
 
   in {
     overlay = final: prev: {
       haskellPackages = prev.haskellPackages.override (old: {
         overrides = composeExtensions (old.overrides or (_: _: {})) (hself: hsuper:
-          (genAttrs hsPackagesSrc (x: hself.callCabal2nix x (src + "/${x}") {}))
-          // hsOverrides hself
+          (mapAttrs (name: src: hself.callCabal2nix name src {}) hsPackagesSrc) // hsOverrides hself
         );
       });
       sirimbo-tournament-frontend = final.stdenv.mkDerivation {
         name = "sirimbo-tournament-frontend";
-        inherit src;
+        src = getSrc ./sirimbo-tournament/public;
         phases = "unpackPhase buildPhase";
         buildPhase = ''
-          cd sirimbo-tournament/public
           ${final.nodePackages.typescript}/bin/tsc
           # $ {final.sass}/bin/sass index.scss:index.css
           mkdir -p $out
@@ -58,10 +55,10 @@
 
     packages.x86_64-linux = {
       inherit (pkgs) sirimbo-tournament-frontend;
-    } // genAttrs hsPackagesSrc (x: builtins.getAttr x pkgs.haskellPackages);
+    } // mapAttrs (x: _: builtins.getAttr x pkgs.haskellPackages) hsPackagesSrc;
 
     devShell.x86_64-linux = pkgs.haskellPackages.shellFor {
-      packages = p: map (flip builtins.getAttr p) hsPackagesSrc;
+      packages = p: mapAttrsToList (name: _: builtins.getAttr name p) hsPackagesSrc;
       buildInputs = [
         pkgs.yarn
         pkgs.php73Packages.phpstan
