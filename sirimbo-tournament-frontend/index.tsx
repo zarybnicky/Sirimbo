@@ -26,8 +26,8 @@ export class TournamentClient extends React.Component<null, ClientState> {
     connect = () => {
         this.timeout && clearTimeout(this.timeout);
         this.timeout = undefined;
-        this.socket = new WebSocket('wss://api.tkolymp.cz/tournament/ws');
-        // this.socket = new WebSocket('ws://localhost:4000/tournament/ws');
+        this.socket = new WebSocket('wss://api.tkolymp.cz/api/tournament/ws');
+        // this.socket = new WebSocket('ws://localhost:4000/api/tournament/ws');
         this.socket.onmessage = e => {
             const msg = JSON.parse(e.data);
             if (msg['tag'] === 'StateMsg') {

@@ -1,5 +1,5 @@
 config:
-  target: "wss://api.tkolymp.cz/tournament/ws"
+  target: "wss://api.tkolymp.cz/api/tournament/ws"
   phases:
     - duration: 20
       arrivalRate: 20

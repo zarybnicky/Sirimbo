@@ -24,8 +24,8 @@ export class TournamentAdmin extends React.Component<null, AdminState> {
     connect = () => {
         this.timeout && clearTimeout(this.timeout);
         this.timeout = undefined;
-        this.socket = new WebSocket('wss://api.tkolymp.cz/tournament/admin/ws');
-        // this.socket = new WebSocket('ws://localhost:4000/tournament/admin/ws');
+        this.socket = new WebSocket('wss://api.tkolymp.cz/api/tournament/admin/ws');
+        // this.socket = new WebSocket('ws://localhost:4000/api/tournament/admin/ws');
         this.socket.onmessage = e => {
             const msg = JSON.parse(e.data);
             if (msg['tag'] === 'StateMsg') {
