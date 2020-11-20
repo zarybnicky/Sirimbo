@@ -10,3 +10,9 @@ package-lock.json
 .stack-work/
 vendor/
 cabal.project.local
+/build
+bundle.js
+bundle.js.map
+index.css
+index.css.map
+.sass-cache/

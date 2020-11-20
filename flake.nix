@@ -42,7 +42,7 @@
       });
       sirimbo-tournament-frontend = final.stdenv.mkDerivation {
         name = "sirimbo-tournament-frontend";
-        src = getSrc ./sirimbo-tournament/public;
+        src = getSrc ./sirimbo-tournament-frontend;
         phases = "unpackPhase buildPhase";
         buildPhase = ''
           ${final.nodePackages.typescript}/bin/tsc
