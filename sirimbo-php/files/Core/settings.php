@@ -1,15 +1,10 @@
 <?php
 define('ROOT', $_SERVER['DOCUMENT_ROOT']);
 define('FILES', ROOT . DIRECTORY_SEPARATOR . 'files');
-define('GALERIE', ROOT . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'galerie');
-define('GALERIE_THUMBS', GALERIE . DIRECTORY_SEPARATOR . 'thumbnails');
 define('CORE', FILES . DIRECTORY_SEPARATOR . 'Core');
 define('SETTINGS', CORE . DIRECTORY_SEPARATOR . 'settings');
 define('ERROR', FILES . DIRECTORY_SEPARATOR . 'Error');
 define('TEMPLATE', 'files' . DIRECTORY_SEPARATOR . 'Template.inc');
-
-define('LOG', ROOT . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'error.log');
-define('DEBUG_LOG', ROOT . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'debug.log');
 
 mb_internal_encoding('UTF-8');
 

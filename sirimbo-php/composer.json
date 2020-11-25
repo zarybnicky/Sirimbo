@@ -1,13 +1,8 @@
 {
   "name": "zarybnicky/tkolymp.cz",
   "type": "project",
+  "repositories": [{"packagist.org": false}],
   "autoload": {
-    "files": [
-      "config.php",
-      "files/Core/settings.php",
-      "files/Core/utils.php",
-      "files/Core/debug.php"
-    ],
     "classmap": [
       "files/Core/",
       "files/Core/database/",

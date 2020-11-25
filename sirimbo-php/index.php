@@ -19,6 +19,9 @@ if (!isset($_COOKIE['off_mode'])) {
 //end OFF switch*/
 
 require 'vendor/autoload.php';
+require 'config.php';
+require 'files/Core/settings.php';
+require 'files/Core/utils.php';
 
 ob_start();
 ini_set('session.use_trans_sid', 0);
@@ -26,8 +29,6 @@ ini_set('session.use_only_cookies', 1);
 ini_set('session.cookie_lifetime', 0);
 ini_set('session.cookie_httponly', 1);
 ini_set('session.serialize_handler', 'php_serialize');
-session_set_save_handler(new DbSessionHandler(), true);
-session_start();
 
 register_shutdown_function('shutdownHandler');
 set_error_handler('errorHandler');
@@ -42,13 +43,16 @@ $request = new Request(
     $_POST,
     $_FILES
 );
-$_SERVER = $_COOKIE = $_GET = $_POST = $_FILES = array();
+$_COOKIE = $_GET = $_POST = $_FILES = array();
 $request->setDefault('home');
 $request->setReferer($request->server('HTTP_REFERER'));
 
 Database::setRequest($request);
 Log::setRequest($request);
 Permissions::setRequest($request);
+
+session_set_save_handler(new DbSessionHandler(), true);
+session_start();
 
 try {
     if (isset($_SESSION['login']) && $_SESSION['login'] !== null) {

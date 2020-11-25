@@ -1,5 +1,22 @@
 {
   "nodes": {
+    "bootstrap": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1606289356,
+        "narHash": "sha256-eZpXNUsFOaimdoH5ssCXv3abmUeLolvdRI+F8PWAKCg=",
+        "owner": "twbs",
+        "repo": "bootstrap",
+        "rev": "81ac002a02430869035e68a35aa722cf69cbb885",
+        "type": "github"
+      },
+      "original": {
+        "owner": "twbs",
+        "ref": "main",
+        "repo": "bootstrap",
+        "type": "github"
+      }
+    },
     "co-log-src": {
       "flake": false,
       "locked": {
@@ -32,6 +49,7 @@
     },
     "root": {
       "inputs": {
+        "bootstrap": "bootstrap",
         "co-log-src": "co-log-src",
         "nixpkgs": "nixpkgs",
         "servant-websockets": "servant-websockets",

@@ -10,7 +10,7 @@ class Log
 
     public static function write($message)
     {
-        $logfile = fopen(LOG, 'a+');
+        $logfile = fopen(LOGS . "/error.log", 'a+');
         if (!$logfile) {
             return;
         }

@@ -17,7 +17,7 @@ class Controller_Admin_Dokumenty extends Controller_Abstract
                 $fileName
             );
 
-            $path = 'upload/' . time() . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
+            $path = UPLOADS . '/' . time() . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
 
             if (!$request->post('name')) {
                 $request->post('name', $fileName);

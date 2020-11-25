@@ -95,11 +95,11 @@ class Database
 
     protected static function databaseError($onConnection = false)
     {
-        Log::write('MySQL Error: ' . self::$connection->errno . ': ' . self::$connection->error);
+        $msg = 'MySQL Error: ' . self::$connection->errno . ': ' . self::$connection->error;
         if ($onConnection) {
-            throw new DatabaseConnectionException('Nastala chyba při pokusu o připojení k databázi.');
+            throw new DatabaseConnectionException($msg);
         } else {
-            throw new DatabaseException('Nastala chyba v dotazu na databázi.');
+            throw new DatabaseException($msg);
         }
     }
 
