@@ -1,0 +1,12 @@
+cradle:
+  cabal:
+    - path: ./sirimbo-api/app
+      component: sirimbo-api:exe:server
+    - path: ./sirimbo-api/src
+      component: sirimbo-api:lib:sirimbo-api
+    - path: ./sirimbo-schema
+      component: sirimbo-schema
+    - path: ./sirimbo-tournament
+      component: sirimbo-tournament
+    - path: ./sirimbo-yt-worker
+      component: sirimbo-yt-worker

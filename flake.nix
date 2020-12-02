@@ -1,10 +1,9 @@
 {
   inputs.co-log-src = { flake = false; url = github:kowainik/co-log/main; };
   inputs.typerep-map = { flake = false; url = github:kowainik/typerep-map/main; };
-  inputs.servant-websockets = { flake = false; url = github:moesenle/servant-websockets/master; };
   inputs.bootstrap = { flake = false; url = github:twbs/bootstrap/main; };
 
-  outputs = { self, nixpkgs, co-log-src, typerep-map, servant-websockets, bootstrap }: let
+  outputs = { self, nixpkgs, co-log-src, typerep-map, bootstrap }: let
     inherit (nixpkgs.lib) composeExtensions flip mapAttrs mapAttrsToList;
     inherit (pkgs.nix-gitignore) gitignoreSourcePure gitignoreSource;
 
@@ -12,6 +11,7 @@
       system = "x86_64-linux";
       overlays = [ self.overlay ];
     };
+    hsPkgs = pkgs.haskell.packages.ghc884;
     getSrc = dir: gitignoreSourcePure [./.gitignore] dir;
 
     co-log = pkgs.runCommand "co-log-source" {} ''
@@ -24,7 +24,6 @@
       typerep-map = doJailbreak (dontCheck (self.callCabal2nix "typerep-map" typerep-map {}));
       co-log = doJailbreak (dontCheck (self.callCabal2nix "co-log" "${co-log}/co-log" {}));
       co-log-core = self.callCabal2nix "co-log-core" "${co-log}/co-log-core" {};
-      servant-websockets = self.callCabal2nix "servant-websockets" servant-websockets {};
     };
 
     hsPackagesSrc = {
@@ -36,11 +35,11 @@
 
   in {
     overlay = final: prev: {
-      haskellPackages = prev.haskellPackages.override (old: {
-        overrides = composeExtensions (old.overrides or (_: _: {})) (hself: hsuper:
+      haskell = prev.haskell // {
+        packageOverrides = composeExtensions (prev.haskell.packageOverrides or (_: _: {})) (hself: hsuper:
           (mapAttrs (name: src: hself.callCabal2nix name src {}) hsPackagesSrc) // hsOverrides hself
         );
-      });
+      };
       sirimbo-tournament-frontend = final.stdenv.mkDerivation {
         name = "sirimbo-tournament-frontend";
         src = getSrc ./sirimbo-tournament-frontend;
@@ -70,11 +69,13 @@
 
     packages.x86_64-linux = {
       inherit (pkgs) sirimbo-tournament-frontend sirimbo-php;
-    } // mapAttrs (x: _: builtins.getAttr x pkgs.haskellPackages) hsPackagesSrc;
+    } // mapAttrs (x: _: builtins.getAttr x hsPkgs) hsPackagesSrc;
 
-    devShell.x86_64-linux = pkgs.haskellPackages.shellFor {
+    devShell.x86_64-linux = hsPkgs.shellFor {
       packages = p: mapAttrsToList (name: _: builtins.getAttr name p) hsPackagesSrc;
       buildInputs = [
+        hsPkgs.cabal-install
+        hsPkgs.haskell-language-server
         pkgs.yarn
         pkgs.php73Packages.phpstan
         pkgs.nodePackages.typescript

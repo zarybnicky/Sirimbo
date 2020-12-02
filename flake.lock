@@ -36,10 +36,10 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1603918233,
-        "narHash": "sha256-kc3v+TMNjJRiV9/HinAx7qsWI2wGPHToGnCeOYmahLI=",
-        "path": "/nix/store/h3qd1vw6cfppz75jf49fa3d73c0sgw06-source",
-        "rev": "edb26126d98bc696f4f3e206583faa65d3d6e818",
+        "lastModified": 1606086654,
+        "narHash": "sha256-VFl+3eGIMqNp7cyOMJ6TjM/+UcsLKtodKoYexrlTJMI=",
+        "path": "/nix/store/assj1w3bnwxfl98bd04f873p2zh66zil-source",
+        "rev": "19db3e5ea2777daa874563b5986288151f502e27",
         "type": "path"
       },
       "original": {
@@ -52,25 +52,7 @@
         "bootstrap": "bootstrap",
         "co-log-src": "co-log-src",
         "nixpkgs": "nixpkgs",
-        "servant-websockets": "servant-websockets",
         "typerep-map": "typerep-map"
-      }
-    },
-    "servant-websockets": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1568537524,
-        "narHash": "sha256-k7OW3ikALjqHs1vIAH6CrcBFerywRR1xncQlUr6wOVY=",
-        "owner": "moesenle",
-        "repo": "servant-websockets",
-        "rev": "a6b8b9f1d9d76e31b0f5de1ce6f79222fc1a7002",
-        "type": "github"
-      },
-      "original": {
-        "owner": "moesenle",
-        "ref": "master",
-        "repo": "servant-websockets",
-        "type": "github"
       }
     },
     "typerep-map": {
