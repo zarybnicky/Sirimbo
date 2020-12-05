@@ -4,9 +4,10 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE PolyKinds #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeOperators #-}
 
 module Olymp.Effect.User
@@ -15,17 +16,17 @@ module Olymp.Effect.User
   , runUserEffPersistent
   ) where
 
-import Data.Kind (Type)
+import Control.Effect (Eff, SimpleInterpreterFor, interpretSimple, send)
 import Database.Persist (Key, get)
 import Olymp.Effect.Database (WithDbFor, query)
 import Olymp.Schema (User)
-import Polysemy (Sem, interpret, makeSem)
 
-data UserEff (m :: Type -> Type) (a :: Type) where
+data UserEff m a where
     GetUserById :: Key User -> UserEff m (Maybe User)
 
-$(makeSem ''UserEff)
+getUserById :: Eff UserEff m => Key User -> m (Maybe User)
+getUserById = send . GetUserById
 
-runUserEffPersistent :: WithDbFor User db r => Sem (UserEff ': r) a -> Sem r a
-runUserEffPersistent = interpret $ \case
-  GetUserById uid -> query (get uid)
+runUserEffPersistent :: forall db m. WithDbFor User db m => SimpleInterpreterFor UserEff m
+runUserEffPersistent = interpretSimple $ \case
+  GetUserById uid -> query @db (get uid)

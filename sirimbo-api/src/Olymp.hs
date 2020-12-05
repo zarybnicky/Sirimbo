@@ -43,18 +43,18 @@ import Olymp.Auth (PhpAuth, PhpAuthHandler, phpAuthHandler)
 -- import Olymp.Cli (Args(..), parseArgs)
 import Olymp.Effect.Database (query)
 import Olymp.Effect.Log (WithLog, logInfo)
-import Olymp.Monad (AppStack, interpretServer)
+import Olymp.Monad (AppC, interpretServer)
 import Olymp.Schema (User(..), Key(ParameterKey), Parameter(..))
 import Olymp.Tournament
 import Olymp.Tournament.API
-import Polysemy (Sem)
-import Polysemy.AtomicState (atomicGet)
-import Polysemy.Error (throw)
 import Servant
 import Servant.API.WebSocket (WebSocket)
 -- import Servant.Multipart (MultipartData, MultipartForm, Tmp)
 import System.Environment (lookupEnv)
 import Text.Read (readMaybe)
+import Control.Effect.AtomicState (atomicGet)
+import Database.Persist.MySQL (SqlBackend)
+import Control.Effect.Error (throw)
 
 data AppConfig = AppConfig
   { dbHost :: String
@@ -88,19 +88,19 @@ makeServer = do
       Right tt' -> pure tt'
   ref <- newIORef (withTournament propagateWinners t)
   ref' <- newIORef M.empty
-  let runner :: forall a. Sem AppStack a -> Handler a
+  let runner :: forall a. AppC a -> Handler a
       runner = interpretServer ref ref' pool
 
   let saveState = runExceptT $ runHandler' $ runner $ do
         liftIO $ threadDelay 100000000
         state <- T.pack . BCL.unpack . encode <$> atomicGet @(Tournament NodeId)
-        _ <- query $ repsert (ParameterKey "tournament") (Parameter state)
+        _ <- query @SqlBackend $ repsert (ParameterKey "tournament") (Parameter state)
         pure ()
   _ <- forkIO (forever saveState)
 
   pure $ appServer runner
   where
-    appServer :: (forall a. Sem AppStack a -> Handler a) -> Application
+    appServer :: (forall a. AppC a -> Handler a) -> Application
     appServer runner =
       -- cors (const $ Just simpleCorsResourcePolicy
       --       { corsRequestHeaders = ["Content-Type"]
@@ -120,7 +120,7 @@ type OlympApi
   -- :<|> "api" :> "editor" :> EditorApi
   :<|> "wp" :> "v2" :> WordpressApi
 
-server :: ServerT OlympApi (Sem AppStack)
+server :: ServerT OlympApi AppC
 server
   = whoAmI
   :<|> tournamentSocket
@@ -128,7 +128,7 @@ server
   -- :<|> editorServer
   :<|> wordpressServer
 
-whoAmI :: WithLog r => User -> Sem r Text
+whoAmI :: WithLog m => User -> m Text
 whoAmI u = do
   logInfo (userName u)
   pure (userName u <> " " <> userSurname u)
@@ -146,7 +146,7 @@ type WordpressApi
   :<|> "blocks" :> Verb 'OPTIONS 200 '[JSON] (Headers '[Header "Allow" String] ())
   :<|> "media" :> Verb 'OPTIONS 200 '[JSON] (Headers '[Header "Allow" String] ())
 
-wordpressServer :: ServerT WordpressApi (Sem AppStack)
+wordpressServer :: ServerT WordpressApi AppC
 wordpressServer
   = pure demoTypes
   :<|> (\typ -> maybe (throw err404) pure (M.lookup typ demoTypes))

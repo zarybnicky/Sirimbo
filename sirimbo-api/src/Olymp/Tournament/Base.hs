@@ -15,7 +15,7 @@
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Olymp.Tournament
+module Olymp.Tournament.Base
   ( Tournament(..)
   , TournamentNodeF(..)
   , TournamentResult(..)

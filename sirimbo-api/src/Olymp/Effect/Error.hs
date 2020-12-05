@@ -6,7 +6,6 @@
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeOperators #-}
 
 module Olymp.Effect.Error
@@ -16,9 +15,9 @@ module Olymp.Effect.Error
   , runAppErrorToError
   ) where
 
+import Control.Effect
+import Control.Effect.Error (Error, throw)
 import Data.Kind (Type)
-import Polysemy (Member, Sem, interpret, makeSem)
-import Polysemy.Error (Error, throw)
 import Servant.Server.Internal.ServerError (ServerError, err401, err403)
 
 data AuthError
@@ -28,10 +27,11 @@ data AuthError
 data AppError (m :: Type -> Type) (a :: Type) where
     ThrowAuth :: AuthError -> AppError m a
 
-$(makeSem ''AppError)
+throwAuth :: Eff AppError m => AuthError -> m a
+throwAuth = send . ThrowAuth
 
-runAppErrorToError :: Member (Error ServerError) r => Sem (AppError ': r) a -> Sem r a
-runAppErrorToError = interpret $ \case
+runAppErrorToError :: Eff (Error ServerError) m => SimpleInterpreterFor AppError m
+runAppErrorToError = interpretSimple $ \case
   ThrowAuth e -> case e of
     ErrNotLoggedIn -> throw err401
     ErrMissingPermission -> throw err403

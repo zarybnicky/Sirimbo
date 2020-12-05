@@ -14,9 +14,8 @@
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Main
-  ( main
-  , redirectPrompt
+module Sirimbo.YouTube.Worker
+  ( redirectPrompt
   , getYTToken
   , loadChannels
   , loadUploads

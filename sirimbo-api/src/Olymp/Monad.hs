@@ -1,8 +1,12 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE GADTs #-}
+{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeApplications #-}
 
 module Olymp.Monad
-  ( AppStack
+  ( AppC
+  , AppStack
   , interpretServer
   ) where
 
@@ -18,11 +22,13 @@ import Olymp.Effect.Log (Log, runLogToStdout)
 import Olymp.Effect.User (UserEff, runUserEffPersistent)
 import Olymp.Effect.Session (SessionEff, runSessionEffPersistent)
 import Olymp.Tournament (Tournament, NodeId)
-import Polysemy (Embed, Sem, runM)
-import Polysemy.AtomicState (AtomicState, runAtomicStateIORef)
-import Polysemy.Error (Error, runError)
-import Polysemy.Resource (Resource, resourceToIO)
+import Control.Effect (InterpretSimpleC, runM)
+import Control.Effect.AtomicState (AtomicState, runAtomicStateIORefSimple)
+import Control.Effect.Bracket (BracketToIOC, Bracket, bracketToIO)
+import Control.Effect.Embed (Embed)
+import Control.Effect.Error (ErrorC, Error, runError)
 import Servant (Handler(..), ServerError)
+import Control.Effect.Embed (RunMC)
 
 type AppStack
    = '[ UserEff
@@ -32,25 +38,37 @@ type AppStack
       , AtomicState (Map Int Connection)
       , AtomicState (Tournament NodeId)
       , Database SqlBackend
-      , Resource
+      , Bracket
       , Log
       , Embed IO
       ]
 
+type AppC = InterpretSimpleC UserEff
+  (InterpretSimpleC SessionEff
+   (InterpretSimpleC AppError
+    (ErrorC ServerError
+     (InterpretSimpleC (AtomicState (Map Int Connection))
+      (InterpretSimpleC (AtomicState (Tournament NodeId))
+       (InterpretSimpleC (Database SqlBackend)
+        (BracketToIOC
+         (InterpretSimpleC Log
+          (RunMC IO)))))))))
+
 interpretServer ::
-     IORef (Tournament NodeId)
+  IORef (Tournament NodeId)
   -> IORef (Map Int Connection)
   -> Pool SqlBackend
-  -> Sem AppStack a
+  -> AppC a
   -> Handler a
-interpretServer ref ref' pool =
-  Handler . ExceptT . runM .
-  runLogToStdout .
-  resourceToIO .
-  runDatabasePool pool .
-  runAtomicStateIORef ref .
-  runAtomicStateIORef ref' .
-  runError @ServerError .
-  runAppErrorToError .
-  runSessionEffPersistent .
-  runUserEffPersistent
+interpretServer ref ref' pool f =
+  Handler $ ExceptT $
+  runM @IO $
+  runLogToStdout $
+  bracketToIO $
+  runDatabasePool pool $
+  runAtomicStateIORefSimple ref $
+  runAtomicStateIORefSimple ref' $
+  runError @ServerError $
+  runAppErrorToError $
+  runSessionEffPersistent @SqlBackend $
+  runUserEffPersistent @SqlBackend f

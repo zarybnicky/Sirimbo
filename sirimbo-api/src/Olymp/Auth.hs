@@ -14,6 +14,7 @@ module Olymp.Auth
   , phpAuthHandler
   ) where
 
+import Control.Effect (Effs)
 import Data.Aeson (FromJSON(..), decodeStrict', withObject, (.:))
 import Data.Text.Encoding (decodeUtf8)
 import Database.Persist.Sql (toSqlKey)
@@ -22,7 +23,6 @@ import Olymp.Effect.Error (AppError, AuthError(..), throwAuth)
 import Olymp.Effect.Session (SessionEff, getSessionById, deleteSession)
 import Olymp.Effect.User (UserEff, getUserById)
 import Olymp.Schema (Key(..), Session(..), SessionId, User, UserId)
-import Polysemy (Members, Sem)
 import Servant (AuthProtect, Handler)
 import Servant.Server.Experimental.Auth (AuthHandler, AuthServerData, mkAuthHandler)
 import Web.Cookie (parseCookies)
@@ -40,8 +40,8 @@ instance FromJSON SessionUserId where
     SessionUserId . toSqlKey <$> o .: "id"
 
 phpAuthHandler ::
-     forall r. Members '[ AppError, UserEff, SessionEff] r
-  => (forall a. Sem r a -> Handler a)
+     forall m. Effs '[ AppError, UserEff, SessionEff] m
+  => (forall a. m a -> Handler a)
   -> PhpAuthHandler
 phpAuthHandler runner = mkAuthHandler $ \req -> runner $ do
   cookie <- maybeErr . lookup "cookie" $ requestHeaders req
@@ -51,9 +51,9 @@ phpAuthHandler runner = mkAuthHandler $ \req -> runner $ do
   uid <- maybeDelete sid . decodeStrict' $ sessionData sess
   maybeDelete sid =<< getUserById (unSessionUserId uid)
   where
-    maybeErr :: Maybe a -> Sem r a
+    maybeErr :: Maybe a -> m a
     maybeErr = maybe (throwAuth ErrNotLoggedIn) pure
-    maybeDelete :: SessionId -> Maybe a -> Sem r a
+    maybeDelete :: SessionId -> Maybe a -> m a
     maybeDelete sid = flip maybe pure $ do
       deleteSession sid
       throwAuth ErrNotLoggedIn

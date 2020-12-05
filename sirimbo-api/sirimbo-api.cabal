@@ -20,7 +20,6 @@ common shared
 library
   import: shared
   hs-source-dirs:      src
-  ghc-options:        -fplugin=Polysemy.Plugin
   exposed-modules:     Olymp
                        Olymp.Auth
                        Olymp.Cli
@@ -31,6 +30,7 @@ library
                        Olymp.Effect.User
                        Olymp.Monad
                        Olymp.Tournament.API
+                       Olymp.Tournament.Base
 
   build-depends:       base >=4.7 && <5
                      , aeson
@@ -38,33 +38,43 @@ library
                      , bytestring
                      , co-log
                      , co-log-core
+                     , conduit
                      , containers
                      , cookie
+                     , directory
                      , errors
+                     , exceptions
+                     , filepath
                      , generic-lens
                      , ginger
+                     , gogol
+                     , gogol-core
+                     , gogol-youtube
+                     , in-other-words
                      , lens
                      , monad-logger
                      , mtl
                      , sirimbo-schema
-                     , sirimbo-tournament
                      , optparse-applicative
                      , optparse-generic
                      , persistent
                      , persistent-mysql
                      , persistent-template
-                     , polysemy
-                     , polysemy-plugin
+                     , process
                      , recursion-schemes
                      , resource-pool
+                     , resourcet
                      , servant
                      , servant-multipart
                      , servant-server
                      , servant-websockets
+                     , split
                      , text
                      , time
                      , transformers
                      , transformers-compat
+                     , unliftio-core
+                     , unordered-containers
                      , wai
                      , wai-cors
                      , warp
