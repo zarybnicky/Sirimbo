@@ -25,12 +25,14 @@ library
                        Olymp.Cli
                        Olymp.Effect.Database
                        Olymp.Effect.Error
+                       Olymp.Effect.Google
                        Olymp.Effect.Log
                        Olymp.Effect.Session
                        Olymp.Effect.User
                        Olymp.Monad
                        Olymp.Tournament.API
                        Olymp.Tournament.Base
+                       Olymp.YouTube.Worker
 
   build-depends:       base >=4.7 && <5
                      , aeson
@@ -38,7 +40,6 @@ library
                      , bytestring
                      , co-log
                      , co-log-core
-                     , conduit
                      , containers
                      , cookie
                      , directory
@@ -68,12 +69,10 @@ library
                      , servant-multipart
                      , servant-server
                      , servant-websockets
-                     , split
                      , text
                      , time
                      , transformers
                      , transformers-compat
-                     , unliftio-core
                      , unordered-containers
                      , wai
                      , wai-cors

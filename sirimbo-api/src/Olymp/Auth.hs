@@ -35,6 +35,7 @@ type instance AuthServerData PhpAuth = User
 newtype SessionUserId = SessionUserId
   { unSessionUserId :: UserId
   } deriving (Show)
+
 instance FromJSON SessionUserId where
   parseJSON = withObject "Session" $ \o ->
     SessionUserId . toSqlKey <$> o .: "id"

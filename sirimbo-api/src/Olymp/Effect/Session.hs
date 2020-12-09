@@ -19,7 +19,7 @@ module Olymp.Effect.Session
 
 import Control.Effect (Eff, SimpleInterpreterFor, interpretSimple, send)
 import Database.Persist (delete, get)
-import Olymp.Effect.Database (WithDbFor, query)
+import Olymp.Effect.Database (Database, query)
 import Olymp.Schema (Session, SessionId)
 
 data SessionEff m a where
@@ -32,7 +32,7 @@ getSessionById = send . GetSessionById
 deleteSession :: Eff SessionEff m => SessionId -> m ()
 deleteSession = send . DeleteSession
 
-runSessionEffPersistent :: forall db m. WithDbFor Session db m => SimpleInterpreterFor SessionEff m
+runSessionEffPersistent :: Eff Database m => SimpleInterpreterFor SessionEff m
 runSessionEffPersistent = interpretSimple $ \case
-  GetSessionById sid -> query @db (get sid)
-  DeleteSession sid -> query @db (delete sid)
+  GetSessionById sid -> query (get sid)
+  DeleteSession sid -> query (delete sid)

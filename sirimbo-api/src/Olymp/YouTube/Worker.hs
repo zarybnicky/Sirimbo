@@ -14,7 +14,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Sirimbo.YouTube.Worker
+module Olymp.YouTube.Worker
   ( redirectPrompt
   , getYTToken
   , loadChannels
@@ -24,17 +24,18 @@ module Sirimbo.YouTube.Worker
   , checkPlaylistMappings
   , listVideosForChannel
   , getVideosForPlaylist
-  , migrateAll
+  , main
   ) where
 
 import Control.Lens
-import Control.Monad.Catch (MonadCatch)
-import Control.Monad.Except
-import Control.Monad.IO.Unlift (MonadUnliftIO)
-import Control.Monad.Logger (MonadLogger, runStdoutLoggingT)
-import Control.Monad.Reader
-import Control.Monad.Trans.Resource (ResourceT, MonadResource)
-import Control.Monad.Writer
+import Control.Effect (Threaders, Carrier, Eff, Effs, Embed, embed)
+import Control.Effect.Bracket (bracketToIO)
+import Control.Effect.Embed (embedToMonadIO, runM)
+import Control.Effect.Error (ErrorThreads, throw, runThrow)
+import Control.Effect.Writer (WriterThreads, TellC, runTell, tell)
+import Control.Monad (void, forM_, foldM, forM)
+import Control.Monad.Logger (runStdoutLoggingT)
+import Control.Monad.Trans.Resource (runResourceT)
 import Data.Aeson (FromJSON)
 import Data.IORef (newIORef, modifyIORef', readIORef)
 import Data.List (find)
@@ -50,48 +51,23 @@ import qualified Data.Text.IO as T
 import Data.Time (getCurrentTime)
 import Data.Yaml (decodeFileThrow)
 import Database.Persist
-import Database.Persist.MySQL
+  ((<-.), (=.), (==.), Entity(..), Key, Update(..), count, insertMany, insert, selectList, update, updateWhere)
+import Database.Persist.MySQL (ConnectInfo(..), createMySQLPool, defaultConnectInfo)
 import GHC.Generics (Generic)
-import GHC.TypeLits (Symbol)
-import Network.Google
+import Network.Google (LogLevel(Debug, Info), envScopes, newEnvWith, tlsManagerSettings, newManager, newLogger)
 import Network.Google.Auth
 import Network.Google.YouTube
+import Olymp.Effect.Database (Database, query, runDatabasePool)
+import Olymp.Effect.Google (GoogleEff, googleToResourceTIO, sendG)
+import Olymp.Schema (EntityField(..), VideoList(..), VideoSource(..), videoUri)
+import qualified Olymp.Schema as Schema
 import System.Environment (lookupEnv)
 import System.Exit (exitFailure)
 import System.IO (stdout)
 import System.Info (os)
 import System.Process (rawSystem)
 
-import Olymp.Schema
-  ( EntityField(..)
-  , VideoList(..)
-  , VideoSource(..)
-  , migrateAll
-  , videoUri
-  )
-import qualified Olymp.Schema as Schema
-
 type AppScope = '[ "https://www.googleapis.com/auth/youtube.readonly"]
-type MonadMysql m = (MonadUnliftIO m, MonadLogger m, HasPool m)
-
-data AppEnv = AppEnv
-  { _env :: Env AppScope
-  , _pool :: ConnectionPool
-  }
-
-class HasPool m where
-  getPool :: m ConnectionPool
-
-instance Monad m => HasPool (ReaderT AppEnv m) where
-  getPool = asks _pool
-
-instance HasEnv AppScope AppEnv where
-  environment = lens _env (\x p -> x { _env = p })
-instance {-# OVERLAPPING #-} (Monad m, MonadIO m, MonadCatch m, MonadResource m) => MonadGoogle AppScope (ReaderT AppEnv m) where
-  liftGoogle f = asks _env >>= flip runGoogle f
-
-instance MonadGoogle s m => MonadGoogle s (ResourceT m) where
-  liftGoogle = lift . liftGoogle
 
 data AppConfig = AppConfig
   { dbHost :: String
@@ -100,13 +76,10 @@ data AppConfig = AppConfig
   , dbDatabase :: String
   } deriving (Show, Generic, FromJSON)
 
-liftMysql :: (MonadUnliftIO m, HasPool m) => ReaderT SqlBackend m a -> m a
-liftMysql f = runSqlPool f =<< getPool
-
 main :: IO ()
 main = do
   lgr <- newLogger Network.Google.Info stdout
-  mgr <- liftIO $ newManager tlsManagerSettings
+  mgr <- newManager tlsManagerSettings
   cred <- getApplicationDefault mgr
   env <- newEnvWith cred lgr mgr <&> (envScopes .~ youTubeReadOnlyScope)
 
@@ -119,49 +92,56 @@ main = do
         , connectPassword = dbPassword
         , connectDatabase = dbDatabase
         }
+  pool <- runStdoutLoggingT $ createMySQLPool connectInfo 5
+  runResourceT . runM . embedToMonadIO . bracketToIO . runDatabasePool pool . googleToResourceTIO env $ do
+    checkNewVideos
+    checkPlaylistMappings
+    -- m <- listVideosForChannel channelId
+    -- forM_ m $ \(pl, plis) -> do
+    --   liftIO . print $ pl ^. plsTitle . _Just
+    --   forM_ plis $ \v -> do
+    --     liftIO . print $ v ^. plisTitle . _Just
+    --     liftIO . print $ v ^. plisDescription . _Just
 
-  runResourceT . runStdoutLoggingT . withMySQLPool connectInfo 1 $
-    \pool -> flip runReaderT (AppEnv env pool) $ do
-      checkNewVideos
-      checkPlaylistMappings
-      -- m <- listVideosForChannel channelId
-      -- forM_ m $ \(pl, plis) -> do
-      --   liftIO . print $ pl ^. plsTitle . _Just
-      --   forM_ plis $ \v -> do
-      --     liftIO . print $ v ^. plisTitle . _Just
-      --     liftIO . print $ v ^. plisDescription . _Just
-
-checkNewVideos :: (MonadMysql m, MonadGoogle AppScope m) => m ()
+checkNewVideos
+  :: (Effs '[GoogleEff AppScope, Database, Embed IO] m, Threaders '[ErrorThreads, WriterThreads] m p)
+  => m ()
 checkNewVideos = do
   chs <- loadChannels
   newVids <- loadUploads chs
-  void . liftMysql $ insertMany newVids
+  void . query $ insertMany newVids
 
-checkPlaylistMappings :: (MonadMysql m, MonadGoogle AppScope m) => m ()
+checkPlaylistMappings
+  :: (Effs '[Database, GoogleEff AppScope, Embed IO] m, Threaders '[WriterThreads] m p)
+  => m ()
 checkPlaylistMappings = do
-  chans <- fmap (videoSourceUrl . entityVal) <$> liftMysql (selectList [] [])
+  chans <- fmap (videoSourceUrl . entityVal) <$> query (selectList [] [])
   forM_ chans $ \chan -> do
     lists <- loadPlaylistsForChannel chan
     forM_ lists $ \list -> do
       vids <- mapVideosToPlaylists list Nothing
       forM_ vids $ \(vidIds, listUrl) ->
-        liftMysql $ updateWhere [VideoUri <-. vidIds] [VideoPlaylistId =. Just listUrl]
+        query $ updateWhere [VideoUri <-. vidIds] [VideoPlaylistId =. Just listUrl]
 
-listVideosForChannel :: MonadGoogle AppScope m => Text -> m (Map Text (PlayListSnippet, [PlayListItemSnippet]))
+listVideosForChannel
+  :: (Eff (GoogleEff AppScope) m, Threaders '[ErrorThreads, WriterThreads] m p)
+  => Text -> m (Map Text (PlayListSnippet, [PlayListItemSnippet]))
 listVideosForChannel chId = do
   playlists <- getPlaylistsForChannel chId Nothing
-  foldM getPlaylist M.empty playlists
-  where
-    getPlaylist m playlist = case playlist ^. plSnippet of
+  foldM
+    (\m playlist -> case playlist ^. plSnippet of
       Nothing -> pure m
       Just snippet -> do
         let pid = playlist ^. plId . _Just
         vids <- getVideosForPlaylist pid Nothing
-        pure $ M.insert pid (snippet, vids) m
+        pure $ M.insert pid (snippet, vids) m)
+    M.empty playlists
 
-mapVideosToPlaylists :: MonadGoogle AppScope m => Schema.VideoList -> Maybe Text -> m [([Text], Text)]
+mapVideosToPlaylists
+  :: (Effs '[GoogleEff AppScope] m, Threaders '[WriterThreads] m p)
+  => Schema.VideoList -> Maybe Text -> m [([Text], Text)]
 mapVideosToPlaylists dbList = withPaging $ \pageToken -> do
-  vs <- send $ playListItemsList "snippet"
+  vs <- sendG @AppScope $ playListItemsList "snippet"
     & plilPlayListId ?~ videoListUrl dbList
     & plilPageToken .~ pageToken
     & plilMaxResults .~ 20
@@ -169,101 +149,106 @@ mapVideosToPlaylists dbList = withPaging $ \pageToken -> do
   tell [(ids, videoListUrl dbList)]
   pure (vs ^. plilrNextPageToken)
 
-loadPlaylistsForChannel :: (MonadMysql m, MonadGoogle AppScope m) => Text -> m [Schema.VideoList]
+loadPlaylistsForChannel
+  :: (Effs '[Database, Embed IO, GoogleEff AppScope] m, Threaders '[WriterThreads] m p)
+  => Text -> m [Schema.VideoList]
 loadPlaylistsForChannel chanId = do
   playlists <- getPlaylistsForChannel chanId Nothing
 
-  dbPlaylists :: [Entity Schema.VideoList] <- liftMysql $ selectList [] []
+  dbPlaylists :: [Entity Schema.VideoList] <- query $ selectList [] []
 
-  x <- liftIO $ newIORef []
+  x <- embed $ newIORef []
   forM_ playlists $ \p -> do
     let plId_ = p ^. plId . _Just
     let plcd = p ^. plContentDetails
     let plCount = maybe 0 fromIntegral $ maybe Nothing (^. plcdItemCount) plcd :: Int
     case find ((== p ^. plId) . Just . videoListUrl . entityVal) dbPlaylists of
       Nothing -> do
-        now <- liftIO getCurrentTime
+        now <- embed getCurrentTime
         let plTitle = p ^. plSnippet . _Just . plsTitle . _Just
         let plDesc = p ^. plSnippet . _Just . plsDescription . _Just
         let dbList = VideoList plId_ plTitle plDesc plCount now (Just now)
-        _ <- liftMysql $ insert dbList
-        liftIO $ modifyIORef' x (dbList:)
+        _ <- query $ insert dbList
+        embed $ modifyIORef' x (dbList:)
 
       Just dbList ->
         if videoListItemCount (entityVal dbList) /= plCount
-          then liftIO $ modifyIORef' x (entityVal dbList:)
+          then embed $ modifyIORef' x (entityVal dbList:)
           else do
-            cnt <- liftMysql $ count [VideoPlaylistId ==. Just plId_]
+            cnt <- query $ count [VideoPlaylistId ==. Just plId_]
             if cnt /= plCount
-              then liftIO $ modifyIORef' x (entityVal dbList:)
+              then embed $ modifyIORef' x (entityVal dbList:)
               else pure ()
-  liftIO $ readIORef x
+  embed $ readIORef x
 
-getPlaylistsForChannel ::
-     MonadGoogle AppScope m => Text -> Maybe Text -> m [PlayList]
+getPlaylistsForChannel
+  :: (Eff (GoogleEff AppScope) m, Threaders '[WriterThreads] m p)
+  => Text -> Maybe Text -> m [PlayList]
 getPlaylistsForChannel chanId = withPaging $ \pageToken -> do
-  lists <- send $ playListsList "snippet,contentDetails"
+  lists <- sendG @AppScope $ playListsList "snippet,contentDetails"
     & pllChannelId ?~ chanId
     & pllPageToken .~ pageToken
   tell (lists ^. pllrItems)
   pure (lists ^. pllrNextPageToken)
 
-loadUploads :: (MonadMysql m, MonadGoogle AppScope m) => [(Key VideoSource, Text)] -> m [Schema.Video]
+loadUploads
+  :: (Effs '[Embed IO, GoogleEff AppScope, Database] m, Threaders '[ErrorThreads, WriterThreads] m p)
+  => [(Key VideoSource, Text)] -> m [Schema.Video]
 loadUploads uploadIds = do
-  videos :: [Entity Schema.Video] <- liftMysql $ selectList [] []
+  videos :: [Entity Schema.Video] <- query $ selectList [] []
   let videoSet = S.fromList $ videoUri . entityVal <$> videos
 
-  x <- liftIO $ newIORef []
+  x <- embed $ newIORef []
   forM_ uploadIds $ \(ch, playlist) -> do
-    items <- fmap snd . runWriterT $ loadNewVideosFromPlaylist videoSet playlist Nothing
-    liftIO $ modifyIORef' x (items ++)
-    now <- liftIO getCurrentTime
-    liftMysql $ update ch [VideoSourceLastCheckedAt =. Just now]
-  liftIO $ readIORef x
+    items <- fmap snd . runTell @[Video] $ loadNewVideosFromPlaylist videoSet playlist Nothing
+    embed $ modifyIORef' x (items ++)
+    now <- embed getCurrentTime
+    query $ update ch [VideoSourceLastCheckedAt =. Just now]
+  embed $ readIORef x
 
 loadNewVideosFromPlaylist ::
-     MonadGoogle AppScope m
+     (Effs '[GoogleEff AppScope, Embed IO] m, Threaders '[ErrorThreads, WriterThreads] m p)
   => Set Text
   -> Text
   -> Maybe Text
   -> m [Schema.Video]
 loadNewVideosFromPlaylist currentVids playlist =
-  withPaging $ \pageToken -> fmap hush . runExceptT $ do
-    vs <- send $ playListItemsList "snippet"
+  withPaging $ \pageToken -> fmap hush . runThrow @Text $ do
+    vs <- sendG @AppScope $ playListItemsList "snippet"
       & plilPlayListId ?~ playlist
       & plilPageToken .~ pageToken
       & plilMaxResults .~ 20
     forM_ (vs ^.. plilrItems . each . pliSnippet . _Just) $ \v -> do
-      now <- liftIO getCurrentTime
+      now <- embed getCurrentTime
       let vidId = v ^. plisResourceId . _Just . riVideoId . _Just
       let vidTitle = v ^. plisTitle . _Just
       let vidDesc = v ^. plisDescription . _Just
       let vidChannel = v ^. plisChannelTitle . _Just
       if vidId `S.member` currentVids
-        then throwError ("Found an existing video, exiting" :: Text)
+        then throw ("Found an existing video, exiting" :: Text)
         else tell [Schema.Video vidId vidTitle vidChannel vidDesc Nothing now now]
     pure (vs ^. plilrNextPageToken)
   where
     hush = either (const Nothing) id
 
 getVideosForPlaylist ::
-     MonadGoogle AppScope m
+     (Eff (GoogleEff AppScope) m, Threaders '[WriterThreads] m p)
   => Text
   -> Maybe Text
   -> m [PlayListItemSnippet]
 getVideosForPlaylist playlistId = withPaging $ \pageToken -> do
-  vs <- send $ playListItemsList "snippet"
+  vs <- sendG @AppScope $ playListItemsList "snippet"
     & plilPlayListId ?~ playlistId
     & plilPageToken .~ pageToken
     & plilMaxResults .~ 20
   tell (vs ^.. plilrItems . each . pliSnippet . _Just)
   pure (vs ^. plilrNextPageToken)
 
-loadChannels :: (MonadMysql m, MonadGoogle AppScope m) => m [(Key VideoSource, Text)]
+loadChannels :: Effs '[GoogleEff AppScope, Database] m => m [(Key VideoSource, Text)]
 loadChannels = do
-  channels <- liftMysql $ selectList [] []
+  channels <- query $ selectList [] []
   let chanIds = T.intercalate "," $ videoSourceUrl . entityVal <$> channels
-  resp <- send $ channelsList "contentDetails,snippet" & cId ?~ chanIds
+  resp <- sendG @AppScope $ channelsList "contentDetails,snippet" & cId ?~ chanIds
   fmap catMaybes . forM (resp ^. clrItems) $ \x ->
     case find ((== x ^. chaId) . Just . videoSourceUrl . entityVal) channels of
       Nothing -> pure Nothing
@@ -272,7 +257,7 @@ loadChannels = do
         let chDesc = x ^. chaSnippet . _Just . csDescription
         case fillInChannel chTitle chDesc dbChan of
           Nothing -> pure ()
-          Just (key, updates) -> liftMysql $ update key updates
+          Just (key, updates) -> query $ update key updates
         pure $ Just (entityKey dbChan, x ^. chaContentDetails . _Just . ccdRelatedPlayLists . _Just . ccdrplUploads . _Just)
 
 fillInChannel ::
@@ -288,8 +273,8 @@ fillInChannel realTitle realDesc Entity{..} =
 -- printMigrations :: IO ()
 -- printMigrations = runMysql $ printMigration migrateAll
 
-withPaging :: (Monad m, Monoid a) => (Maybe t -> WriterT a m (Maybe t)) -> Maybe t -> m a
-withPaging f = fmap snd . runWriterT . go
+withPaging :: (Carrier m, Monoid b, Threaders '[WriterThreads] m p) => (Maybe a -> TellC b m (Maybe a)) -> Maybe a -> m b
+withPaging f = fmap fst . runTell . go
   where
     go t = do
       r <- f t
@@ -309,7 +294,7 @@ getYTToken cid secret = do
   auth <- exchange (FromClient c code) lgr mgr
   pure (_tokenRefresh (_token auth))
 
-redirectPrompt :: forall s. AllowScopes (s :: [Symbol]) => OAuthClient -> IO (OAuthCode s)
+redirectPrompt :: forall s. AllowScopes s => OAuthClient -> IO (OAuthCode s)
 redirectPrompt c = do
   let url = formURL c (Proxy @s)
   T.putStrLn $ "Opening URL " <> url

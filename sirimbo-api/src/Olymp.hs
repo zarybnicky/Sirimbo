@@ -21,6 +21,9 @@ module Olymp
   ) where
 
 import Control.Concurrent (forkIO, threadDelay)
+import Control.Effect (Effs)
+import Control.Effect.AtomicState (atomicGet)
+import Control.Effect.Error (throw)
 import Control.Monad.Except (runExceptT, forever, liftIO)
 import Control.Monad.Trans.Reader (runReaderT)
 import Control.Monad.Logger (runStdoutLoggingT)
@@ -43,18 +46,16 @@ import Olymp.Auth (PhpAuth, PhpAuthHandler, phpAuthHandler)
 -- import Olymp.Cli (Args(..), parseArgs)
 import Olymp.Effect.Database (query)
 import Olymp.Effect.Log (WithLog, logInfo)
-import Olymp.Monad (AppC, interpretServer)
+import Olymp.Monad (interpretServer, AppC, AppStack)
 import Olymp.Schema (User(..), Key(ParameterKey), Parameter(..))
-import Olymp.Tournament
-import Olymp.Tournament.API
+import Olymp.Tournament.API (initialTournament, tournamentSocket, tournamentAdminSocket)
+import Olymp.Tournament.Base (Tournament, NodeId, withTournament, propagateWinners)
+import Olymp.YouTube.Worker (main)
 import Servant
 import Servant.API.WebSocket (WebSocket)
 -- import Servant.Multipart (MultipartData, MultipartForm, Tmp)
 import System.Environment (lookupEnv)
 import Text.Read (readMaybe)
-import Control.Effect.AtomicState (atomicGet)
-import Database.Persist.MySQL (SqlBackend)
-import Control.Effect.Error (throw)
 
 data AppConfig = AppConfig
   { dbHost :: String
@@ -94,12 +95,13 @@ makeServer = do
   let saveState = runExceptT $ runHandler' $ runner $ do
         liftIO $ threadDelay 100000000
         state <- T.pack . BCL.unpack . encode <$> atomicGet @(Tournament NodeId)
-        _ <- query @SqlBackend $ repsert (ParameterKey "tournament") (Parameter state)
+        _ <- query $ repsert (ParameterKey "tournament") (Parameter state)
         pure ()
   _ <- forkIO (forever saveState)
 
   pure $ appServer runner
   where
+
     appServer :: (forall a. AppC a -> Handler a) -> Application
     appServer runner =
       -- cors (const $ Just simpleCorsResourcePolicy
@@ -146,7 +148,7 @@ type WordpressApi
   :<|> "blocks" :> Verb 'OPTIONS 200 '[JSON] (Headers '[Header "Allow" String] ())
   :<|> "media" :> Verb 'OPTIONS 200 '[JSON] (Headers '[Header "Allow" String] ())
 
-wordpressServer :: ServerT WordpressApi AppC
+wordpressServer :: Effs AppStack m => ServerT WordpressApi m
 wordpressServer
   = pure demoTypes
   :<|> (\typ -> maybe (throw err404) pure (M.lookup typ demoTypes))

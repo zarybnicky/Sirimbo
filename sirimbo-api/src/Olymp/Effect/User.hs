@@ -18,7 +18,7 @@ module Olymp.Effect.User
 
 import Control.Effect (Eff, SimpleInterpreterFor, interpretSimple, send)
 import Database.Persist (Key, get)
-import Olymp.Effect.Database (WithDbFor, query)
+import Olymp.Effect.Database (Database, query)
 import Olymp.Schema (User)
 
 data UserEff m a where
@@ -27,6 +27,6 @@ data UserEff m a where
 getUserById :: Eff UserEff m => Key User -> m (Maybe User)
 getUserById = send . GetUserById
 
-runUserEffPersistent :: forall db m. WithDbFor User db m => SimpleInterpreterFor UserEff m
+runUserEffPersistent :: Eff Database m => SimpleInterpreterFor UserEff m
 runUserEffPersistent = interpretSimple $ \case
-  GetUserById uid -> query @db (get uid)
+  GetUserById uid -> query (get uid)

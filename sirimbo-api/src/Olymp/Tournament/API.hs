@@ -10,12 +10,11 @@ module Olymp.Tournament.API
   , initialTournament
   ) where
 
-import Control.Effect (Effs)
-import Control.Effect.AtomicState (atomicGet, atomicModify', atomicPut, atomicState')
-import Control.Effect.Bracket (finally)
+import Control.Effect (Effs, Embed, embed)
+import Control.Effect.AtomicState (AtomicState, atomicGet, atomicModify', atomicPut, atomicState')
+import Control.Effect.Bracket (Bracket, finally)
 import Control.Lens
 import Control.Monad (forever)
-import Control.Monad.IO.Class (MonadIO, liftIO)
 import Data.Aeson (FromJSON, ToJSON, encode, eitherDecode')
 import Data.Generics.Product (field)
 import Data.Map (Map)
@@ -25,11 +24,9 @@ import Data.Text (Text)
 import qualified Data.Text as T
 import GHC.Generics (Generic)
 import Network.WebSockets (Connection, forkPingThread, receiveData, sendTextData)
-import Olymp.Effect.Log (logError)
-import Olymp.Monad (AppStack)
+import Olymp.Effect.Log (Log, logError)
 import Olymp.Schema (User)
 import Olymp.Tournament.Base
-import Control.Effect.Embed (embed)
 
 data TournamentUser =
   Vote NodeId Int Int
@@ -53,6 +50,14 @@ data TournamentAdmin
 -- persistent entities
 -- player CRUD
 
+type TourneyEffs
+  = '[ AtomicState (Tournament NodeId)
+     , AtomicState (Map Int Connection)
+     , Bracket
+     , Log
+     , Embed IO
+     ]
+
 initialTournament :: Tournament NodeId
 initialTournament = (createTournament ps) { userFocus = Just 2 }
   where
@@ -63,16 +68,16 @@ initialTournament = (createTournament ps) { userFocus = Just 2 }
       , (3, Player "Vilda a Hanka" "Vilém Šír a Hana-Anna Šišková")
       ]
 
-withSocketLoop :: (MonadIO m, Effs AppStack m) => FromJSON a => Connection -> (a -> m ()) -> m ()
+withSocketLoop :: Effs TourneyEffs m => FromJSON a => Connection -> (a -> m ()) -> m ()
 withSocketLoop c f = do
   welcomeMsg <- encode . StateMsg <$> atomicGet
-  liftIO $ forkPingThread c 10 >> sendTextData c welcomeMsg
+  embed $ forkPingThread c 10 >> sendTextData c welcomeMsg
   k <- atomicState' @(Map Int Connection) (\m -> let k = 1 + foldr max 0 (M.keys m) in (M.insert k c m, k))
   flip finally (atomicModify' @(Map Int Connection) $ M.delete k) $ forever $
-    eitherDecode' <$> liftIO (receiveData c) >>= either (logError . T.pack) f
+    eitherDecode' <$> embed (receiveData c) >>= either (logError . T.pack) f
 
 updateNode ::
-     Effs AppStack m
+     Effs TourneyEffs m
   => NodeId
   -> (TournamentNodeF NodeId NodeId -> Maybe (TournamentNodeF NodeId NodeId))
   -> Text
@@ -88,12 +93,12 @@ updateNode nid f msg = do
     Nothing -> broadcastState
     Just err -> logError err
 
-tournamentSocket :: (MonadIO m, Effs AppStack m) => Connection -> m ()
+tournamentSocket :: Effs TourneyEffs m => Connection -> m ()
 tournamentSocket c = withSocketLoop c $ \msg -> case msg of
   Vote nid left right ->
     updateNode nid (setScore (+ left) (+ right)) (tshow msg)
 
-tournamentAdminSocket :: (MonadIO m, Effs AppStack m) => User -> Connection -> m ()
+tournamentAdminSocket :: Effs TourneyEffs m => User -> Connection -> m ()
 tournamentAdminSocket _ c = withSocketLoop c $ \msg -> case msg of
   UpdatePlayer pid p -> do
     atomicModify' @(Tournament NodeId) (field @"tournamentPlayers" %~ M.insert pid p)
@@ -131,7 +136,7 @@ tournamentAdminSocket _ c = withSocketLoop c $ \msg -> case msg of
       Nothing -> broadcastState
       Just err -> logError err
 
-broadcastState :: Effs AppStack m => m ()
+broadcastState :: Effs TourneyEffs m => m ()
 broadcastState = do
   msg <- encode . StateMsg <$> atomicGet @(Tournament NodeId)
   conns <- atomicGet @(Map Int Connection)
