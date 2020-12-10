@@ -6,7 +6,7 @@
   inputs.bootstrap = { flake = false; url = github:twbs/bootstrap/main; };
 
   outputs = { self, nixpkgs, co-log-src, in-other-words, typerep-map, higgledy, bootstrap }: let
-    inherit (nixpkgs.lib) composeExtensions flip mapAttrs mapAttrsToList;
+    inherit (nixpkgs.lib) flip mapAttrs mapAttrsToList;
     inherit (pkgs.nix-gitignore) gitignoreSourcePure gitignoreSource;
 
     pkgs = import nixpkgs {
@@ -22,25 +22,26 @@
       cp -rL ${co-log-src}/{co-log,co-log-core} $out
     '';
 
-    hsOverrides = self: with pkgs.haskell.lib; {
-      typerep-map = doJailbreak (dontCheck (self.callCabal2nix "typerep-map" typerep-map {}));
-      co-log = doJailbreak (dontCheck (self.callCabal2nix "co-log" "${co-log}/co-log" {}));
-      co-log-core = self.callCabal2nix "co-log-core" "${co-log}/co-log-core" {};
-      in-other-words = self.callCabal2nix "in-other-words" in-other-words {};
-      higgledy = self.callCabal2nix "higgledy" higgledy {};
-    };
-
-    hsPackagesSrc = {
-      "sirimbo-api" = getSrc ./sirimbo-api;
-      "sirimbo-schema" = getSrc ./sirimbo-schema;
-    };
-
   in {
-    overlay = final: prev: {
+    overlay = final: prev: let
+      inherit (prev.haskell.lib) doJailbreak dontCheck justStaticExecutables
+        generateOptparseApplicativeCompletion;
+    in {
       haskell = prev.haskell // {
-        packageOverrides = composeExtensions (prev.haskell.packageOverrides or (_: _: {})) (hself: hsuper:
-          (mapAttrs (name: src: hself.callCabal2nix name src {}) hsPackagesSrc) // hsOverrides hself
-        );
+        packageOverrides = prev.lib.composeExtensions (prev.haskell.packageOverrides or (_: _: {})) (hself: hsuper: {
+          typerep-map = doJailbreak (dontCheck (hself.callCabal2nix "typerep-map" typerep-map {}));
+          co-log = doJailbreak (dontCheck (hself.callCabal2nix "co-log" "${co-log}/co-log" {}));
+          co-log-core = hself.callCabal2nix "co-log-core" "${co-log}/co-log-core" {};
+          in-other-words = hself.callCabal2nix "in-other-words" in-other-words {};
+          higgledy = hself.callCabal2nix "higgledy" higgledy {};
+
+          sirimbo-schema = hself.callCabal2nix "sirimbo-schema" (getSrc ./sirimbo-schema) {};
+          sirimbo-api = generateOptparseApplicativeCompletion "olymp" (
+            justStaticExecutables (
+              hself.callCabal2nix "sirimbo-api" (getSrc ./sirimbo-api) {}
+            )
+          );
+        });
       };
       sirimbo-tournament-frontend = final.stdenv.mkDerivation {
         name = "sirimbo-tournament-frontend";
@@ -71,11 +72,12 @@
 
     packages.x86_64-linux = {
       inherit (pkgs) sirimbo-tournament-frontend sirimbo-php;
-    } // mapAttrs (x: _: builtins.getAttr x hsPkgs) hsPackagesSrc;
+      inherit (hsPkgs) sirimbo-api sirimbo-schema;
+    };
 
     devShell.x86_64-linux = hsPkgs.shellFor {
       withHoogle = true;
-      packages = p: mapAttrsToList (name: _: builtins.getAttr name p) hsPackagesSrc;
+      packages = p: [ p.sirimbo-api p.sirimbo-schema ];
       buildInputs = [
         hsPkgs.cabal-install
         hsPkgs.haskell-language-server
