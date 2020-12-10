@@ -4,8 +4,7 @@
 {-# LANGUAGE TypeApplications #-}
 
 module Olymp
-  ( makeServer
-  , runServer
+  ( runServer
   ) where
 
 import Control.Concurrent (forkIO, threadDelay)
@@ -44,10 +43,7 @@ import Servant (Handler(..))
 import System.IO (stdout)
 
 runServer :: IO ()
-runServer = print =<< parseCli
-
-makeServer :: IO ()
-makeServer = do
+runServer = do
   (config, command) <- parseCli
   case command of
     Server port -> do
@@ -85,12 +81,13 @@ makeServer = do
 makePool :: Config -> IO (Pool SqlBackend)
 makePool config = runStdoutLoggingT $ createMySQLPool connectInfo 5
   where
-    connectInfo = defaultConnectInfo
-      { connectHost = dbHost config
-      , connectUser = dbUser config
-      , connectPassword = dbPassword config
-      , connectDatabase = dbDatabase config
-      }
+    connectInfo =
+      maybe id (\p x -> x { connectPassword = p }) (dbPassword config) $
+      defaultConnectInfo
+        { connectHost = dbHost config
+        , connectUser = dbUser config
+        , connectDatabase = dbDatabase config
+        }
 
 saveTournamentState :: Effs '[AtomicState (Tournament NodeId), Database, Embed IO] m => m ()
 saveTournamentState = do

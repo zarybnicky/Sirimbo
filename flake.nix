@@ -13,7 +13,8 @@
       system = "x86_64-linux";
       overlays = [ self.overlay ];
     };
-    hsPkgs = pkgs.haskell.packages.ghc884;
+    compiler = "ghc884";
+    hsPkgs = pkgs.haskell.packages.${compiler};
     getSrc = dir: gitignoreSourcePure [./.gitignore] dir;
 
     co-log = pkgs.runCommand "co-log-source" {} ''
@@ -43,6 +44,7 @@
           );
         });
       };
+      inherit (final.haskell.packages.${compiler}) sirimbo-api;
       sirimbo-tournament-frontend = final.stdenv.mkDerivation {
         name = "sirimbo-tournament-frontend";
         src = getSrc ./sirimbo-tournament-frontend;
@@ -97,7 +99,7 @@
           boot.isContainer = true;
           system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
           networking.useDHCP = false;
-          networking.firewall.allowedTCPPorts = [ 80 ];
+          networking.firewall.allowedTCPPorts = [ 80 3000 3306 ];
           services.mysql = {
             enable = true;
             package = pkgs.mariadb;
@@ -111,10 +113,16 @@
             dbHost = "localhost";
             dbUser = "olymp";
             dbDatabase = "olymp";
+            dbPassword = null;
             php = {
               enable = true;
               domain = "olymp-test";
               stateDir = "/var/lib/olymp";
+              withApi = "http://localhost:3000";
+            };
+            api = {
+              enable = true;
+              port = 3000;
             };
           };
         })
@@ -166,12 +174,17 @@
             type = lib.types.str;
             description = "${pkgName} state directory";
           };
+          withApi = lib.mkOption {
+            type = lib.types.str;
+            description = "${pkgName} API address to passthru";
+          };
         };
 
         api = {
           enable = lib.mkEnableOption "${pkgName}";
-          domain = lib.mkOption {
-            type = lib.types.str;
+          vhost = lib.mkOption {
+            type = lib.types.nullOr lib.types.str;
+            default = null;
             description = "${pkgName} Nginx vhost domain";
             example = "api.tkolymp.cz";
           };
@@ -187,9 +200,8 @@
         };
       };
 
-      config =
-        lib.recursiveUpdate (lib.mkIf (cfg.php.enable or cfg.api.enable) {
-
+      config = lib.mkMerge [
+        (lib.mkIf (cfg.php.enable or cfg.api.enable) {
           users.users.${cfg.user} = {
             name = cfg.user;
             group = cfg.group;
@@ -210,14 +222,35 @@
             recommendedProxySettings = true;
           };
 
-        }) (lib.recursiveUpdate (lib.mkIf cfg.php.enable {
+          environment.systemPackages = let
+            config = pkgs.writeText "config.yaml" ''
+              dbHost: ${cfg.dbHost}
+              dbUser: ${cfg.dbUser}
+              dbDatabase: ${cfg.dbDatabase}
+              ${if cfg.dbPassword != null then "dbPassword: ${cfg.dbPassword}" else ""}
+            '';
+          in [
+            (pkgs.runCommand "olymp" { buildInputs = [ pkgs.makeWrapper ]; } ''
+              mkdir $out
+              ln -s ${pkgs.sirimbo-api}/* $out
+              rm $out/bin
+              mkdir $out/bin
+              makeWrapper ${pkgs.sirimbo-api}/bin/olymp $out/bin/olymp --set CONFIG "${config}"
+            '')
+          ];
+        })
 
+        (lib.mkIf cfg.php.enable {
           services.nginx = {
             virtualHosts.${cfg.php.domain} = {
               serverAliases = ["www.${cfg.php.domain}"];
               locations."/galerie".root = "${cfg.php.stateDir}/gallery";
               locations."/".index = "index.php index.html index.htm";
               locations."/".extraConfig = "try_files /public/$uri /index.php?$args;";
+              locations."/api" = {
+                proxyPass = cfg.php.withApi;
+                proxyWebsockets = true;
+              };
               locations."~ \.php$".extraConfig = ''
                 fastcgi_split_path_info ^(.+\.php)(/.+)$;
                 fastcgi_pass unix:${config.services.phpfpm.pools.${cfg.php.domain}.socket};
@@ -235,6 +268,7 @@
                     <?php
                     openlog('${cfg.php.domain}', LOG_ODELAY, LOG_USER);
 
+                    define('COOKIE_DOMAIN', '${cfg.php.domain}');
                     define('DB_SERVER', '${cfg.dbHost}');
                     define('DB_DATABASE', '${cfg.dbDatabase}');
                     define('DB_USER', '${cfg.dbUser}');
@@ -279,16 +313,18 @@
               mbstring session json
             ]);
           };
+        })
 
-        }) (lib.recursiveUpdate (lib.mkIf cfg.api.enable {
-
+        (lib.mkIf (cfg.api.vhost != null) {
           services.nginx = {
-            virtualHosts.${cfg.domain}.locations."/" = {
-              proxyPass = "http://localhost:${toString cfg.port}";
+            virtualHosts.${cfg.api.vhost}.locations."/" = {
+              proxyPass = "http://localhost:${toString cfg.api.port}";
               proxyWebsockets = true;
             };
           };
+        })
 
+        (lib.mkIf cfg.api.enable {
           systemd.services.olymp-api-migrate = {
             description = "${pkgName} Migrations";
             wantedBy = [ "multi-user.target" ];
@@ -298,7 +334,8 @@
               User = cfg.user;
               Group = cfg.group;
               Type = "oneshot";
-              ExecStart = "true";
+              ExecStart = "${pkgs.coreutils}/bin/true";
+              RemainAfterExit = "true";
               # ExecStart = "${self.packages.x86_64-linux.sirimbo-api}/bin/olymp migrate --execute";
             };
           };
@@ -316,16 +353,17 @@
               User = cfg.user;
               Group = cfg.group;
               Restart = "always";
-              ExecStart = "${self.packages.x86_64-linux.sirimbo-api}/bin/olymp server --port ${cfg.port}";
+              ExecStart = "${pkgs.sirimbo-api}/bin/olymp server --port ${toString cfg.api.port}";
             };
           };
-        }) (lib.mkIf cfg.yt-worker.enable {
+        })
 
+        (lib.mkIf cfg.yt-worker.enable {
           systemd.services.olymp-yt-worker = {
             description = "Olymp YouTube worker service";
             serviceConfig = {
               Type = "simple";
-              ExecStart = "${self.packagex.x86_64-linux.sirimbo-api}/bin/olymp check-youtube";
+              ExecStart = "${pkgs.sirimbo-api}/bin/olymp check-youtube";
             };
           };
           systemd.timers.olymp-yt-worker = {
@@ -337,8 +375,8 @@
               OnUnitActiveSec = "70min";
             };
           };
-
-        })));
-      };
+        })
+      ];
+    };
   };
 }

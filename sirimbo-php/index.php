@@ -43,7 +43,6 @@ $request = new Request(
     $_POST,
     $_FILES
 );
-$_COOKIE = $_GET = $_POST = $_FILES = array();
 $request->setDefault('home');
 $request->setReferer($request->server('HTTP_REFERER'));
 

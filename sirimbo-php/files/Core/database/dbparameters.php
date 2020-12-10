@@ -14,6 +14,7 @@ class DBParameters extends Database
     public static function get($name)
     {
         $res = self::query("SELECT pa_value FROM parameters where pa_name='?'", $name);
-        return self::getSingleRow($res)['pa_value'];
+        $res = self::getSingleRow($res);
+        return $res ? $res['pa_value'] : $res;
     }
 }

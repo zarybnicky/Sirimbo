@@ -1,6 +1,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PolyKinds #-}
 {-# LANGUAGE RankNTypes #-}
@@ -17,7 +18,7 @@ import Control.Lens
 import Data.Generic.HKD
 import Data.List (intercalate)
 import Data.Validation (Validation(..), validate)
-import Data.Yaml (FromJSON, decodeFileThrow)
+import Data.Yaml (decodeFileThrow, FromJSON, decodeFileEither)
 import GHC.Generics
 import Options.Applicative hiding (Success, Failure)
 import System.Environment (lookupEnv)
@@ -37,15 +38,22 @@ parseCli = do
   cfgFile <- case mCfgFile' <|> mCfgFile of
     Nothing -> do
       putStrLn "No config specified, trying config.yaml"
-      decodeFileThrow "config.yaml"
+      decodeFileEither "config.yaml" >>= \case
+        Left _ -> do
+          putStrLn "Failed, not using a config file"
+          pure mempty
+        Right x -> pure x
     Just file -> do
       putStrLn $ "Reading config from: " <> file
       decodeFileThrow file
-  case validateOptions label (cfgFile <> cfgEnv <> cfgArgs) of
+  case validateOptions label (defaults <> cfgFile <> cfgEnv <> cfgArgs) of
     Success cfg -> pure (runIdentity (construct cfg), cmd)
     Failure errs -> do
       putStrLn ("Missing config options: " <> intercalate ", " errs)
       exitFailure
+
+defaults :: HKD Config Maybe
+defaults = build @Config Nothing Nothing (Just Nothing) Nothing
 
 decodeEnv :: IO (Maybe FilePath, HKD Config Maybe)
 decodeEnv = (,)
@@ -53,7 +61,7 @@ decodeEnv = (,)
   <*> (build @Config
     <$> lookupEnv "DB_HOST"
     <*> lookupEnv "DB_USER"
-    <*> lookupEnv "DB_PASSWORD"
+    <*> (Just <$> lookupEnv "DB_PASSWORD")
     <*> lookupEnv "DB_DATABASE")
 
 argsParser :: ParserInfo (Maybe FilePath, HKD Config Maybe, Command)
@@ -64,7 +72,7 @@ argsParser = info (args <**> helper) fullDesc
     config = build @Config
       <$> optional (strOption (long "db-host" <> metavar "HOST"))
       <*> optional (strOption (long "db-user" <> metavar "USER"))
-      <*> optional (strOption (long "db-password" <> metavar "PASSWORD"))
+      <*> optional (Just <$> strOption (long "db-password" <> metavar "PASSWORD"))
       <*> optional (strOption (long "db-database" <> metavar "DATABASE"))
     commands = subparser $ mconcat
       [ command "server"
@@ -77,7 +85,7 @@ argsParser = info (args <**> helper) fullDesc
 data Config = Config
   { dbHost :: String
   , dbUser :: String
-  , dbPassword :: String
+  , dbPassword :: Maybe String
   , dbDatabase :: String
   } deriving (Show, Generic)
 instance FromJSON (HKD Config Maybe)
