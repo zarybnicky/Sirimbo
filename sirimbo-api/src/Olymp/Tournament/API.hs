@@ -23,7 +23,8 @@ import Data.Maybe (fromMaybe)
 import Data.Text (Text)
 import qualified Data.Text as T
 import GHC.Generics (Generic)
-import Network.WebSockets (Connection, forkPingThread, receiveData, sendTextData)
+import Network.WebSockets (Connection, receiveData, sendTextData)
+import Network.WebSockets.Connection (pingThread)
 import Olymp.Effect.Log (Log, logError)
 import Olymp.Schema (User)
 import Olymp.Tournament.Base
@@ -71,10 +72,12 @@ initialTournament = (createTournament ps) { userFocus = Just 2 }
 withSocketLoop :: Effs TourneyEffs m => FromJSON a => Connection -> (a -> m ()) -> m ()
 withSocketLoop c f = do
   welcomeMsg <- encode . StateMsg <$> atomicGet
-  embed $ forkPingThread c 10 >> sendTextData c welcomeMsg
+  embed $ do
+    pingThread c 10 (pure ())
+    sendTextData c welcomeMsg
   k <- atomicState' @(Map Int Connection) (\m -> let k = 1 + foldr max 0 (M.keys m) in (M.insert k c m, k))
   flip finally (atomicModify' @(Map Int Connection) $ M.delete k) $ forever $
-    eitherDecode' <$> embed (receiveData c) >>= either (logError . T.pack) f
+    embed (receiveData c) >>= either (logError . T.pack) f . eitherDecode'
 
 updateNode ::
      Effs TourneyEffs m
@@ -89,9 +92,7 @@ updateNode nid f msg = do
       Just n -> case f n of
         Nothing -> (t, Just $ "Node not ready for " <> msg)
         Just new -> (t & field @"nodes" . ix nid .~ new, Nothing)
-  case mErr of
-    Nothing -> broadcastState
-    Just err -> logError err
+  maybe broadcastState logError mErr
 
 tournamentSocket :: Effs TourneyEffs m => Connection -> m ()
 tournamentSocket c = withSocketLoop c $ \msg -> case msg of
@@ -132,9 +133,7 @@ tournamentAdminSocket _ c = withSocketLoop c $ \msg -> case msg of
                       (losersRoot t)
                 wb = withTree propagateWinners nodes' (winnersRoot t)
             in (t & field @"nodes" .~ wb <> lb, Nothing)
-    case mErr of
-      Nothing -> broadcastState
-      Just err -> logError err
+    maybe broadcastState logError mErr
 
 broadcastState :: Effs TourneyEffs m => m ()
 broadcastState = do

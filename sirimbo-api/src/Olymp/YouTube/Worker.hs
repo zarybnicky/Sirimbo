@@ -1,17 +1,10 @@
-{-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE DeriveAnyClass #-}
-{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GADTs #-}
-{-# LANGUAGE KindSignatures #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeApplications #-}
-{-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module Olymp.YouTube.Worker
@@ -140,7 +133,7 @@ loadPlaylistsForChannel chanId = do
   forM_ playlists $ \p -> do
     let plId_ = p ^. plId . _Just
     let plcd = p ^. plContentDetails
-    let plCount = maybe 0 fromIntegral $ maybe Nothing (^. plcdItemCount) plcd :: Int
+    let plCount = maybe (0 :: Int) fromIntegral $ plcd >>= (^. plcdItemCount)
     case find ((== p ^. plId) . Just . videoListUrl . entityVal) dbPlaylists of
       Nothing -> do
         now <- embed getCurrentTime

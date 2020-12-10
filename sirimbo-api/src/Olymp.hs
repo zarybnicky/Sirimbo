@@ -1,19 +1,7 @@
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE DeriveAnyClass #-}
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE DerivingStrategies #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE GADTs #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE QuasiQuotes #-}
-{-# LANGUAGE RankNTypes #-}
-{-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeApplications #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE TypeOperators #-}
 
 module Olymp
   ( makeServer
@@ -34,11 +22,9 @@ import Data.Aeson (encode, eitherDecode')
 import qualified Data.ByteString.Lazy.Char8 as BCL
 import Data.IORef (newIORef)
 import qualified Data.Map as M
-import Data.Maybe (fromMaybe)
-import Data.Monoid (Last(getLast))
 import Data.Pool (Pool, withResource)
 import qualified Data.Text as T
-import Database.Persist.Sql (get, repsert)
+import Database.Persist.Sql (SqlBackend, get, repsert, printMigration, runMigration)
 import Database.Persist.MySQL (ConnectInfo(..), createMySQLPool, defaultConnectInfo)
 import Network.Google (LogLevel(Info), envScopes, newEnvWith, tlsManagerSettings, newManager, newLogger)
 import Network.Google.Auth (getApplicationDefault)
@@ -48,7 +34,7 @@ import Network.Wai.Handler.Warp (run)
 import Olymp.Cli (Command(..), Config(..), parseCli)
 import Olymp.Effect.Database (Database, query, runDatabasePool)
 import Olymp.Effect.Google (googleToResourceTIO)
-import Olymp.Schema (Key(ParameterKey), Parameter(..))
+import Olymp.Schema (migrateAll, Key(ParameterKey), Parameter(..))
 import Olymp.Server (olympServer, interpretServer)
 import Olymp.Tournament.API (initialTournament)
 import Olymp.Tournament.Base (Tournament, NodeId, withTournament, propagateWinners)
@@ -56,7 +42,6 @@ import Olymp.YouTube.Worker (youtubeWorker)
 import Servant (Handler(..))
 -- import Servant.Multipart (MultipartData, MultipartForm, Tmp)
 import System.IO (stdout)
-import Database.Persist.Sql (SqlBackend)
 
 runServer :: IO ()
 runServer = print =<< parseCli
@@ -65,7 +50,7 @@ makeServer :: IO ()
 makeServer = do
   (config, command) <- parseCli
   case command of
-    Server -> do
+    Server port -> do
       pool <- makePool config
       t <- withResource pool (runReaderT (get $ ParameterKey "tournament")) >>= \case
         Nothing -> pure initialTournament
@@ -79,8 +64,8 @@ makeServer = do
       _ <- forkIO . forever . runM . runDatabasePool pool . runAtomicStateIORefSimple ref $
         saveTournamentState
 
-      let port' = fromMaybe 3000 $ getLast (port config)
-      run port' $ olympServer (Handler . ExceptT . interpretServer ref ref' pool)
+      putStrLn ("Starting server on port " <> show port)
+      run port $ olympServer (Handler . ExceptT . interpretServer ref ref' pool)
 
     CheckYouTube -> do
       lgr <- newLogger Network.Google.Info stdout
@@ -91,6 +76,13 @@ makeServer = do
 
       runResourceT . runM . embedToMonadIO . bracketToIO . runDatabasePool pool . googleToResourceTIO env $
         youtubeWorker
+
+    Migrate realExecute -> do
+      pool <- makePool config
+      runM . runDatabasePool pool $
+        if realExecute
+        then query $ runMigration migrateAll
+        else query $ printMigration migrateAll
 
 makePool :: Config -> IO (Pool SqlBackend)
 makePool config = runStdoutLoggingT $ createMySQLPool connectInfo 5
