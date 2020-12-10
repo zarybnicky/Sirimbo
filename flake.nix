@@ -280,7 +280,7 @@
             ]);
           };
 
-        }) (lib.recursiveUpdate (lib.mkIf cfg.php.enable {
+        }) (lib.recursiveUpdate (lib.mkIf cfg.api.enable {
 
           services.nginx = {
             virtualHosts.${cfg.domain}.locations."/" = {
@@ -289,24 +289,34 @@
             };
           };
 
+          systemd.services.olymp-api-migrate = {
+            description = "${pkgName} Migrations";
+            wantedBy = [ "multi-user.target" ];
+            after = [ "network-online.target" "mysql.service" ];
+            requires = [ "mysql.service" ];
+            serviceConfig = {
+              User = cfg.user;
+              Group = cfg.group;
+              Type = "oneshot";
+              ExecStart = "true";
+              # ExecStart = "${self.packages.x86_64-linux.sirimbo-api}/bin/olymp migrate --execute";
+            };
+          };
+
           systemd.services.olymp-api = {
             description = "${pkgName} Webserver";
             wantedBy = [ "multi-user.target" ];
             after = [ "network-online.target" ];
-            environment = {
-              PORT = toString cfg.port;
-              CONFIG = pkgs.writeText "config.yaml" ''
-                dbHost: ${cfg.dbHost}
-                dbUser: ${cfg.dbUser}
-                dbPassword: ${cfg.dbPassword}
-                dbDatabase: ${cfg.dbDatabase}
-              '';
-            };
+            requires = [ "olymp-api-migrate.service" ];
+            environment.DB_HOST = cfg.dbHost;
+            environment.DB_USER = cfg.dbUser;
+            environment.DB_PASSWORD = cfg.dbPassword;
+            environment.DB_DATABASE = cfg.dbDatabase;
             serviceConfig = {
               User = cfg.user;
               Group = cfg.group;
               Restart = "always";
-              ExecStart = "${self.packages.x86_64-linux.sirimbo-api}/bin/olymp";
+              ExecStart = "${self.packages.x86_64-linux.sirimbo-api}/bin/olymp server --port ${cfg.port}";
             };
           };
         }) (lib.mkIf cfg.yt-worker.enable {

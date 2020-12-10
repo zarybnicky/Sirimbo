@@ -79,10 +79,8 @@ makeServer = do
 
     Migrate realExecute -> do
       pool <- makePool config
-      runM . runDatabasePool pool $
-        if realExecute
-        then query $ runMigration migrateAll
-        else query $ printMigration migrateAll
+      runM . runDatabasePool pool . query $
+        if realExecute then runMigration migrateAll else printMigration migrateAll
 
 makePool :: Config -> IO (Pool SqlBackend)
 makePool config = runStdoutLoggingT $ createMySQLPool connectInfo 5
