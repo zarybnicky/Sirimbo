@@ -34,6 +34,23 @@
         "type": "github"
       }
     },
+    "higgledy": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1607607088,
+        "narHash": "sha256-MbxXGp6o7i7n9I+dTpBXiCwB/oToqTl1vzNdH8esAkE=",
+        "owner": "zarybnicky",
+        "repo": "higgledy",
+        "rev": "d9773bfffbcc7ff623cb889915dddbd81211e4d5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "zarybnicky",
+        "ref": "master",
+        "repo": "higgledy",
+        "type": "github"
+      }
+    },
     "in-other-words": {
       "flake": false,
       "locked": {
@@ -68,6 +85,7 @@
       "inputs": {
         "bootstrap": "bootstrap",
         "co-log-src": "co-log-src",
+        "higgledy": "higgledy",
         "in-other-words": "in-other-words",
         "nixpkgs": "nixpkgs",
         "typerep-map": "typerep-map"

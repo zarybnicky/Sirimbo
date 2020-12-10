@@ -2,9 +2,10 @@
   inputs.co-log-src = { flake = false; url = github:kowainik/co-log/main; };
   inputs.in-other-words = { flake = false; url = github:KingoftheHomeless/in-other-words/master; };
   inputs.typerep-map = { flake = false; url = github:kowainik/typerep-map/main; };
+  inputs.higgledy = { flake = false; url = github:zarybnicky/higgledy/master; };
   inputs.bootstrap = { flake = false; url = github:twbs/bootstrap/main; };
 
-  outputs = { self, nixpkgs, co-log-src, in-other-words, typerep-map, bootstrap }: let
+  outputs = { self, nixpkgs, co-log-src, in-other-words, typerep-map, higgledy, bootstrap }: let
     inherit (nixpkgs.lib) composeExtensions flip mapAttrs mapAttrsToList;
     inherit (pkgs.nix-gitignore) gitignoreSourcePure gitignoreSource;
 
@@ -26,6 +27,7 @@
       co-log = doJailbreak (dontCheck (self.callCabal2nix "co-log" "${co-log}/co-log" {}));
       co-log-core = self.callCabal2nix "co-log-core" "${co-log}/co-log-core" {};
       in-other-words = self.callCabal2nix "in-other-words" in-other-words {};
+      higgledy = self.callCabal2nix "higgledy" higgledy {};
     };
 
     hsPackagesSrc = {
@@ -72,6 +74,7 @@
     } // mapAttrs (x: _: builtins.getAttr x hsPkgs) hsPackagesSrc;
 
     devShell.x86_64-linux = hsPkgs.shellFor {
+      withHoogle = true;
       packages = p: mapAttrsToList (name: _: builtins.getAttr name p) hsPackagesSrc;
       buildInputs = [
         hsPkgs.cabal-install
@@ -301,7 +304,7 @@
               User = cfg.user;
               Group = cfg.group;
               Restart = "always";
-              ExecStart = "${self.packages.x86_64-linux.sirimbo-api}/bin/server";
+              ExecStart = "${self.packages.x86_64-linux.sirimbo-api}/bin/olymp";
             };
           };
         }) (lib.mkIf cfg.yt-worker.enable {
@@ -310,7 +313,7 @@
             description = "Olymp YouTube worker service";
             serviceConfig = {
               Type = "simple";
-              ExecStart = "${self.packagex.x86_64-linux.sirimbo-api}/bin/server --check-yt";
+              ExecStart = "${self.packagex.x86_64-linux.sirimbo-api}/bin/olymp check-youtube";
             };
           };
           systemd.timers.olymp-yt-worker = {

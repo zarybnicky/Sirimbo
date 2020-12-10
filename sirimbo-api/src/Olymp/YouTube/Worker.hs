@@ -15,7 +15,9 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module Olymp.YouTube.Worker
-  ( redirectPrompt
+  ( WorkerScope
+  , youtubeWorker
+  , redirectPrompt
   , getYTToken
   , loadChannels
   , loadUploads
@@ -23,25 +25,21 @@ module Olymp.YouTube.Worker
   , checkNewVideos
   , checkPlaylistMappings
   , listVideosForChannel
+  , printVideosForChannel
   , getVideosForPlaylist
-  , main
   ) where
 
+import Control.Concurrent (threadDelay)
 import Control.Lens
 import Control.Effect (Threaders, Carrier, Eff, Effs, Embed, embed)
-import Control.Effect.Bracket (bracketToIO)
-import Control.Effect.Embed (embedToMonadIO, runM)
 import Control.Effect.Error (ErrorThreads, throw, runThrow)
 import Control.Effect.Writer (WriterThreads, TellC, runTell, tell)
 import Control.Monad (void, forM_, foldM, forM)
-import Control.Monad.Logger (runStdoutLoggingT)
-import Control.Monad.Trans.Resource (runResourceT)
-import Data.Aeson (FromJSON)
 import Data.IORef (newIORef, modifyIORef', readIORef)
 import Data.List (find)
 import Data.Map (Map)
 import qualified Data.Map as M
-import Data.Maybe (catMaybes, fromMaybe)
+import Data.Maybe (catMaybes)
 import Data.Proxy (Proxy(Proxy))
 import Data.Set (Set)
 import qualified Data.Set as S
@@ -49,62 +47,43 @@ import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.IO as T
 import Data.Time (getCurrentTime)
-import Data.Yaml (decodeFileThrow)
 import Database.Persist
   ((<-.), (=.), (==.), Entity(..), Key, Update(..), count, insertMany, insert, selectList, update, updateWhere)
-import Database.Persist.MySQL (ConnectInfo(..), createMySQLPool, defaultConnectInfo)
-import GHC.Generics (Generic)
-import Network.Google (LogLevel(Debug, Info), envScopes, newEnvWith, tlsManagerSettings, newManager, newLogger)
+import Network.Google (LogLevel(Debug), tlsManagerSettings, newManager, newLogger)
 import Network.Google.Auth
 import Network.Google.YouTube
-import Olymp.Effect.Database (Database, query, runDatabasePool)
-import Olymp.Effect.Google (GoogleEff, googleToResourceTIO, sendG)
+import Olymp.Effect.Database (Database, query)
+import Olymp.Effect.Google (GoogleEff, sendG)
 import Olymp.Schema (EntityField(..), VideoList(..), VideoSource(..), videoUri)
 import qualified Olymp.Schema as Schema
-import System.Environment (lookupEnv)
 import System.Exit (exitFailure)
 import System.IO (stdout)
 import System.Info (os)
 import System.Process (rawSystem)
 
-type AppScope = '[ "https://www.googleapis.com/auth/youtube.readonly"]
+type WorkerScope = '[ "https://www.googleapis.com/auth/youtube.readonly"]
 
-data AppConfig = AppConfig
-  { dbHost :: String
-  , dbUser :: String
-  , dbPassword :: String
-  , dbDatabase :: String
-  } deriving (Show, Generic, FromJSON)
+youtubeWorker
+  :: (Effs '[GoogleEff WorkerScope, Database, Embed IO] m, Threaders '[ErrorThreads, WriterThreads] m p)
+  => m ()
+youtubeWorker = do
+  embed $ threadDelay 100000000
+  checkNewVideos
+  checkPlaylistMappings
 
-main :: IO ()
-main = do
-  lgr <- newLogger Network.Google.Info stdout
-  mgr <- newManager tlsManagerSettings
-  cred <- getApplicationDefault mgr
-  env <- newEnvWith cred lgr mgr <&> (envScopes .~ youTubeReadOnlyScope)
-
-  configFile <- fromMaybe "config.yaml" <$> lookupEnv "CONFIG"
-  putStrLn $ "Reading config from: " <> configFile
-  AppConfig{..} <- decodeFileThrow configFile
-  let connectInfo = defaultConnectInfo
-        { connectHost = dbHost
-        , connectUser = dbUser
-        , connectPassword = dbPassword
-        , connectDatabase = dbDatabase
-        }
-  pool <- runStdoutLoggingT $ createMySQLPool connectInfo 5
-  runResourceT . runM . embedToMonadIO . bracketToIO . runDatabasePool pool . googleToResourceTIO env $ do
-    checkNewVideos
-    checkPlaylistMappings
-    -- m <- listVideosForChannel channelId
-    -- forM_ m $ \(pl, plis) -> do
-    --   liftIO . print $ pl ^. plsTitle . _Just
-    --   forM_ plis $ \v -> do
-    --     liftIO . print $ v ^. plisTitle . _Just
-    --     liftIO . print $ v ^. plisDescription . _Just
+printVideosForChannel
+  :: (Effs '[GoogleEff WorkerScope, Embed IO] m, Threaders '[ErrorThreads, WriterThreads] m p)
+  => Text -> m ()
+printVideosForChannel channelId = do
+  m <- listVideosForChannel channelId
+  forM_ m $ \(pl, plis) -> do
+    embed . print $ pl ^. plsTitle . _Just
+    forM_ plis $ \v -> do
+      embed . print $ v ^. plisTitle . _Just
+      embed . print $ v ^. plisDescription . _Just
 
 checkNewVideos
-  :: (Effs '[GoogleEff AppScope, Database, Embed IO] m, Threaders '[ErrorThreads, WriterThreads] m p)
+  :: (Effs '[GoogleEff WorkerScope, Database, Embed IO] m, Threaders '[ErrorThreads, WriterThreads] m p)
   => m ()
 checkNewVideos = do
   chs <- loadChannels
@@ -112,7 +91,7 @@ checkNewVideos = do
   void . query $ insertMany newVids
 
 checkPlaylistMappings
-  :: (Effs '[Database, GoogleEff AppScope, Embed IO] m, Threaders '[WriterThreads] m p)
+  :: (Effs '[Database, GoogleEff WorkerScope, Embed IO] m, Threaders '[WriterThreads] m p)
   => m ()
 checkPlaylistMappings = do
   chans <- fmap (videoSourceUrl . entityVal) <$> query (selectList [] [])
@@ -124,7 +103,7 @@ checkPlaylistMappings = do
         query $ updateWhere [VideoUri <-. vidIds] [VideoPlaylistId =. Just listUrl]
 
 listVideosForChannel
-  :: (Eff (GoogleEff AppScope) m, Threaders '[ErrorThreads, WriterThreads] m p)
+  :: (Eff (GoogleEff WorkerScope) m, Threaders '[ErrorThreads, WriterThreads] m p)
   => Text -> m (Map Text (PlayListSnippet, [PlayListItemSnippet]))
 listVideosForChannel chId = do
   playlists <- getPlaylistsForChannel chId Nothing
@@ -138,10 +117,10 @@ listVideosForChannel chId = do
     M.empty playlists
 
 mapVideosToPlaylists
-  :: (Effs '[GoogleEff AppScope] m, Threaders '[WriterThreads] m p)
+  :: (Effs '[GoogleEff WorkerScope] m, Threaders '[WriterThreads] m p)
   => Schema.VideoList -> Maybe Text -> m [([Text], Text)]
 mapVideosToPlaylists dbList = withPaging $ \pageToken -> do
-  vs <- sendG @AppScope $ playListItemsList "snippet"
+  vs <- sendG @WorkerScope $ playListItemsList "snippet"
     & plilPlayListId ?~ videoListUrl dbList
     & plilPageToken .~ pageToken
     & plilMaxResults .~ 20
@@ -150,7 +129,7 @@ mapVideosToPlaylists dbList = withPaging $ \pageToken -> do
   pure (vs ^. plilrNextPageToken)
 
 loadPlaylistsForChannel
-  :: (Effs '[Database, Embed IO, GoogleEff AppScope] m, Threaders '[WriterThreads] m p)
+  :: (Effs '[Database, Embed IO, GoogleEff WorkerScope] m, Threaders '[WriterThreads] m p)
   => Text -> m [Schema.VideoList]
 loadPlaylistsForChannel chanId = do
   playlists <- getPlaylistsForChannel chanId Nothing
@@ -182,17 +161,17 @@ loadPlaylistsForChannel chanId = do
   embed $ readIORef x
 
 getPlaylistsForChannel
-  :: (Eff (GoogleEff AppScope) m, Threaders '[WriterThreads] m p)
+  :: (Eff (GoogleEff WorkerScope) m, Threaders '[WriterThreads] m p)
   => Text -> Maybe Text -> m [PlayList]
 getPlaylistsForChannel chanId = withPaging $ \pageToken -> do
-  lists <- sendG @AppScope $ playListsList "snippet,contentDetails"
+  lists <- sendG @WorkerScope $ playListsList "snippet,contentDetails"
     & pllChannelId ?~ chanId
     & pllPageToken .~ pageToken
   tell (lists ^. pllrItems)
   pure (lists ^. pllrNextPageToken)
 
 loadUploads
-  :: (Effs '[Embed IO, GoogleEff AppScope, Database] m, Threaders '[ErrorThreads, WriterThreads] m p)
+  :: (Effs '[Embed IO, GoogleEff WorkerScope, Database] m, Threaders '[ErrorThreads, WriterThreads] m p)
   => [(Key VideoSource, Text)] -> m [Schema.Video]
 loadUploads uploadIds = do
   videos :: [Entity Schema.Video] <- query $ selectList [] []
@@ -207,14 +186,14 @@ loadUploads uploadIds = do
   embed $ readIORef x
 
 loadNewVideosFromPlaylist ::
-     (Effs '[GoogleEff AppScope, Embed IO] m, Threaders '[ErrorThreads, WriterThreads] m p)
+     (Effs '[GoogleEff WorkerScope, Embed IO] m, Threaders '[ErrorThreads, WriterThreads] m p)
   => Set Text
   -> Text
   -> Maybe Text
   -> m [Schema.Video]
 loadNewVideosFromPlaylist currentVids playlist =
   withPaging $ \pageToken -> fmap hush . runThrow @Text $ do
-    vs <- sendG @AppScope $ playListItemsList "snippet"
+    vs <- sendG @WorkerScope $ playListItemsList "snippet"
       & plilPlayListId ?~ playlist
       & plilPageToken .~ pageToken
       & plilMaxResults .~ 20
@@ -232,23 +211,23 @@ loadNewVideosFromPlaylist currentVids playlist =
     hush = either (const Nothing) id
 
 getVideosForPlaylist ::
-     (Eff (GoogleEff AppScope) m, Threaders '[WriterThreads] m p)
+     (Eff (GoogleEff WorkerScope) m, Threaders '[WriterThreads] m p)
   => Text
   -> Maybe Text
   -> m [PlayListItemSnippet]
 getVideosForPlaylist playlistId = withPaging $ \pageToken -> do
-  vs <- sendG @AppScope $ playListItemsList "snippet"
+  vs <- sendG @WorkerScope $ playListItemsList "snippet"
     & plilPlayListId ?~ playlistId
     & plilPageToken .~ pageToken
     & plilMaxResults .~ 20
   tell (vs ^.. plilrItems . each . pliSnippet . _Just)
   pure (vs ^. plilrNextPageToken)
 
-loadChannels :: Effs '[GoogleEff AppScope, Database] m => m [(Key VideoSource, Text)]
+loadChannels :: Effs '[GoogleEff WorkerScope, Database] m => m [(Key VideoSource, Text)]
 loadChannels = do
   channels <- query $ selectList [] []
   let chanIds = T.intercalate "," $ videoSourceUrl . entityVal <$> channels
-  resp <- sendG @AppScope $ channelsList "contentDetails,snippet" & cId ?~ chanIds
+  resp <- sendG @WorkerScope $ channelsList "contentDetails,snippet" & cId ?~ chanIds
   fmap catMaybes . forM (resp ^. clrItems) $ \x ->
     case find ((== x ^. chaId) . Just . videoSourceUrl . entityVal) channels of
       Nothing -> pure Nothing
@@ -270,9 +249,6 @@ fillInChannel realTitle realDesc Entity{..} =
     (Just _, Just _) -> Nothing
     _ -> Just (entityKey, [VideoSourceTitle =. realTitle, VideoSourceDescription =. realDesc])
 
--- printMigrations :: IO ()
--- printMigrations = runMysql $ printMigration migrateAll
-
 withPaging :: (Carrier m, Monoid b, Threaders '[WriterThreads] m p) => (Maybe a -> TellC b m (Maybe a)) -> Maybe a -> m b
 withPaging f = fmap fst . runTell . go
   where
@@ -290,7 +266,7 @@ getYTToken cid secret = do
   let c = OAuthClient cid secret
   lgr <- newLogger Debug stdout
   mgr <- newManager tlsManagerSettings
-  code <- redirectPrompt @AppScope c
+  code <- redirectPrompt @WorkerScope c
   auth <- exchange (FromClient c code) lgr mgr
   pure (_tokenRefresh (_token auth))
 

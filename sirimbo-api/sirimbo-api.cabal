@@ -29,14 +29,16 @@ library
                        Olymp.Effect.Log
                        Olymp.Effect.Session
                        Olymp.Effect.User
-                       Olymp.Monad
+                       Olymp.Server
                        Olymp.Tournament.API
                        Olymp.Tournament.Base
+                       Olymp.WordPress
                        Olymp.YouTube.Worker
 
   build-depends:       base >=4.7 && <5
                      , aeson
                      , aeson-qq
+                     , barbies
                      , bytestring
                      , co-log
                      , co-log-core
@@ -51,13 +53,13 @@ library
                      , gogol
                      , gogol-core
                      , gogol-youtube
+                     , higgledy
                      , in-other-words
                      , lens
                      , monad-logger
                      , mtl
                      , sirimbo-schema
                      , optparse-applicative
-                     , optparse-generic
                      , persistent
                      , persistent-mysql
                      , persistent-template
@@ -74,13 +76,14 @@ library
                      , transformers
                      , transformers-compat
                      , unordered-containers
+                     , validation
                      , wai
                      , wai-cors
                      , warp
                      , websockets
                      , yaml
 
-executable server
+executable olymp
   import: shared
   main-is:             Main.hs
   hs-source-dirs:      app
