@@ -3,7 +3,7 @@
   inputs.in-other-words = { flake = false; url = github:KingoftheHomeless/in-other-words/master; };
   inputs.typerep-map = { flake = false; url = github:kowainik/typerep-map/main; };
   inputs.higgledy = { flake = false; url = github:zarybnicky/higgledy/master; };
-  inputs.bootstrap = { flake = false; url = github:twbs/bootstrap/main; };
+  inputs.bootstrap = { flake = false; url = github:twbs/bootstrap/v4.5.3; };
 
   outputs = { self, nixpkgs, co-log-src, in-other-words, typerep-map, higgledy, bootstrap }: let
     inherit (nixpkgs.lib) flip mapAttrs mapAttrsToList;
@@ -63,7 +63,7 @@
         buildPhase = ''
           mkdir -p $out/public $out/bootstrap
           cp -r index.php files composer.json $out
-          cp -r public/{favicon.ico,images,robots.txt,scripts,style{,.css},webfonts} $out/public
+          cp -r public/{favicon.ico,images,robots.txt,scripts,style,webfonts} $out/public
           cp -r ${bootstrap}/* $out/bootstrap/
           cd $out
           ${final.sass}/bin/sass -t compact public/style/main.scss:$out/public/style.css

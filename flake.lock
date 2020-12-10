@@ -3,16 +3,16 @@
     "bootstrap": {
       "flake": false,
       "locked": {
-        "lastModified": 1606289356,
-        "narHash": "sha256-eZpXNUsFOaimdoH5ssCXv3abmUeLolvdRI+F8PWAKCg=",
+        "lastModified": 1602603510,
+        "narHash": "sha256-wYp5bUPoeTaxa7yCYPpBjuvjrAu1ZIXj6HgZHGMZloY=",
         "owner": "twbs",
         "repo": "bootstrap",
-        "rev": "81ac002a02430869035e68a35aa722cf69cbb885",
+        "rev": "a716fb03f965dc0846df479e14388b1b4b93d7ce",
         "type": "github"
       },
       "original": {
         "owner": "twbs",
-        "ref": "main",
+        "ref": "v4.5.3",
         "repo": "bootstrap",
         "type": "github"
       }
