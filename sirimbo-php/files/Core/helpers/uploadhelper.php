@@ -70,9 +70,8 @@ class UploadHelper
 
             case UPLOAD_ERR_INI_SIZE:
             case UPLOAD_ERR_FORM_SIZE:
-                $errorMessage = 'Soubor "' . $data['name'] . '" byl příliš velký, '
-                    . 'největši povolená velikost souboru je '
-                    . ini_get('upload_max_filesize') . 'B';
+                $errorMessage = "Soubor '{$data['name']}' byl příliš velký, "
+                    . 'maximální velikost souboru je ' . ini_get('upload_max_filesize') . 'B';
                 $this->_invalidFiles[] = array_merge($data, ['error_message' => $errorMessage]);
                 break;
 
@@ -84,9 +83,8 @@ class UploadHelper
             case UPLOAD_ERR_CANT_WRITE:
             case UPLOAD_ERR_EXTENSION:
             case UPLOAD_ERR_NO_TMP_DIR:
-                $errorMessage = 'Došlo k chybě při ukládání souboru (kód: '
-                    . $error . '), kontaktujte prosím administrátora.';
-                Log::write($errorMessage);
+                $errorMessage = "Došlo k chybě při ukládání souboru (kód: $error), kontaktujte prosím administrátora.";
+                fwrite(STDERR, "Failed to save file: " . var_export($data, true));
                 $this->_invalidFiles[] = array_merge($data, ['error_message' => $errorMessage]);
                 break;
         }

@@ -35,9 +35,9 @@ function shutdownHandler()
              . (isset($v['class']) ? $v['class'] . '->' : '')
              . $v['function'] . '(' . implode(', ', $v['args']) . ')';
     }
-    Log::write($msg);
+    fwrite(STDERR, $_SERVER['REQUEST_URI'] . ": \n" . $msg);
     if (strpos('error', $_SERVER['REQUEST_URI']) !== false) {
-        Log::write("Recursive error message!");
+        fwrite(STDERR, "Recursive error!");
         die('Fatal error: Rekurzivní smyčka přesměrování!');
     }
     header('Location: /error?id=script_fatal');
@@ -64,9 +64,9 @@ function errorHandler($severity, $message, $filepath, $line)
               . (isset($v['class']) ? $v['class'] . '->' : '')
               . $v['function'] . '(' . implode(', ', $v['args']) . ')';
     }
-    Log::write($msg);
+    fwrite(STDERR, $_SERVER['REQUEST_URI'] . ": \n" . $msg);
     if (isset($_SERVER['REQUEST_URI']) && strpos('error', $_SERVER['REQUEST_URI']) !== false) {
-        Log::write("Recursive error message!");
+        fwrite(STDERR, "Recursive error!");
         die('Fatal error: Rekurzivní smyčka přesměrování!');
     }
     header('Location: /error?id=script_fatal');

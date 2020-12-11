@@ -3,19 +3,14 @@ class Renderer
 {
     use HelperTrait;
 
-    protected $cache;
-    protected $vars;
-
-    public function __construct()
-    {
-        $this->vars = [];
-        $this->cache = [];
-    }
+    protected $template = [];
+    protected $cache = [];
+    protected $vars = [];
 
     public function __get($key)
     {
         if (!isset($this->vars[$key])) {
-            Log::write('Variable "' . $key . '" is not set!');
+            fwrite(STDERR, "Could not find file '$file' to render");
             return null;
         }
         return $this->vars[$key];
@@ -33,18 +28,21 @@ class Renderer
 
     public function render($name, array $vars = [])
     {
+        $file = ROOT . DIRECTORY_SEPARATOR . $name;
+        array_push($this->template, $file);
+
         array_push($this->cache, $this->vars);
         $this->vars = $vars;
-        $file = ROOT . DIRECTORY_SEPARATOR . $name;
 
         if (!file_exists($file)) {
-            Log::write('Could not find file "' . $file . '"');
+            fwrite(STDERR, "Could not find file $file to render");
             throw new NotFoundRightException("Soubor nebyl nalezen!");
         }
         ob_start();
         include $file;
 
         $this->vars = array_pop($this->cache);
+        array_pop($this->template);
 
         return ob_get_clean();
     }

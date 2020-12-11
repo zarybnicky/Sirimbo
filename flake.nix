@@ -114,10 +114,10 @@
             dbUser = "olymp";
             dbDatabase = "olymp";
             dbPassword = null;
+            stateDir = "/var/lib/olymp";
             php = {
               enable = true;
               domain = "olymp-test";
-              stateDir = "/var/lib/olymp";
               withApi = "http://localhost:3000";
             };
             api = {
@@ -161,7 +161,10 @@
           default = "olymp";
           description = "${pkgName} group";
         };
-
+        stateDir = lib.mkOption {
+          type = lib.types.str;
+          description = "${pkgName} state directory";
+        };
 
         php = {
           enable = lib.mkEnableOption "${pkgName}";
@@ -169,10 +172,6 @@
             type = lib.types.str;
             description = "${pkgName} Nginx vhost domain";
             example = "tkolymp.cz";
-          };
-          stateDir = lib.mkOption {
-            type = lib.types.str;
-            description = "${pkgName} state directory";
           };
           withApi = lib.mkOption {
             type = lib.types.str;
@@ -244,7 +243,7 @@
           services.nginx = {
             virtualHosts.${cfg.php.domain} = {
               serverAliases = ["www.${cfg.php.domain}"];
-              locations."/galerie".root = "${cfg.php.stateDir}/gallery";
+              locations."/galerie".root = "${cfg.stateDir}/gallery";
               locations."/".index = "index.php index.html index.htm";
               locations."/".extraConfig = "try_files /public/$uri /index.php?$args;";
               locations."/api" = {
@@ -274,10 +273,10 @@
                     define('DB_USER', '${cfg.dbUser}');
                     define('DB_PASS', ${if cfg.dbPassword == null then "NULL" else "'${cfg.dbPassword}'"});
 
-                    define('LOGS', '${cfg.php.stateDir}/logs');
-                    define('GALERIE', '${cfg.php.stateDir}/gallery');
-                    define('GALERIE_THUMBS', '${cfg.php.stateDir}/gallery/thumbnails');
-                    define('UPLOADS', '${cfg.php.stateDir}/uploads');
+                    define('LOGS', '${cfg.stateDir}/logs');
+                    define('GALERIE', '${cfg.stateDir}/gallery');
+                    define('GALERIE_THUMBS', '${cfg.stateDir}/gallery/thumbnails');
+                    define('UPLOADS', '${cfg.stateDir}/uploads');
                     foreach ([LOGS, GALERIE, GALERIE_THUMBS, UPLOADS] as \$path) {
                       if (!is_readable(\$path)) {
                         mkdir(\$path, 0777, true);

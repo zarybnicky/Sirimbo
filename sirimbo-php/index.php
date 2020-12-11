@@ -47,7 +47,6 @@ $request->setDefault('home');
 $request->setReferer($request->server('HTTP_REFERER'));
 
 Database::setRequest($request);
-Log::setRequest($request);
 Permissions::setRequest($request);
 
 session_set_save_handler(new DbSessionHandler(), true);
@@ -79,19 +78,28 @@ try {
 
     $d = new Dispatcher();
     $d->dispatch($request);
+} catch (AuthorizationException $e) {
+    ob_clean();
+    (new RedirectHelper())->redirect('/error?id=' . $e->getErrorFile());
 } catch (ViewException $e) {
-    Log::write(
-        $e->getMessage()
+    fwrite(
+        STDERR,
+        $_SERVER('REQUEST_URI') . ": {$e->getMessage()}\n"
         . '(' . $e->getFile() . ':' . $e->getLine() . ")\n"
         . $e->getTraceAsString()
+        . "\tPOST: " . json_encode(static::$request->post()) . "\n"
+        . "\tSESSION: " . json_encode($_SESSION) . "\n"
     );
     ob_clean();
     (new RedirectHelper())->redirect('/error?id=' . $e->getErrorFile());
 } catch (Exception $e) {
-    Log::write(
-        $e->getMessage()
-        . ' (' . $e->getFile() . ':' . $e->getLine() . ")\n"
+    fwrite(
+        STDERR,
+        $_SERVER('REQUEST_URI') . ": {$e->getMessage()}\n"
+        . '(' . $e->getFile() . ':' . $e->getLine() . ")\n"
         . $e->getTraceAsString()
+        . "\tPOST: " . json_encode(static::$request->post()) . "\n"
+        . "\tSESSION: " . json_encode($_SESSION) . "\n"
     );
     ob_clean();
     (new RedirectHelper())->redirect('/error?id=' . (new ViewException(''))->getErrorFile());

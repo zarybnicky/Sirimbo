@@ -43,10 +43,7 @@ class Uploader
         foreach ($this->_files as $key => $file) {
             $allowed = false;
             foreach ($this->_allowedTypes as $extension) {
-                if (
-                    strripos($file[1], $extension)
-                    !== (strlen($file[1]) - strlen($extension))
-                ) {
+                if (strripos($file[1], $extension) !== (strlen($file[1]) - strlen($extension))) {
                     continue;
                 }
                 $allowed = true;
@@ -76,22 +73,34 @@ class Uploader
             $file[1] = $clean;
         }
     }
-    public function getFiles() {
+
+    public function getFiles()
+    {
         return $this->_files;
     }
-    public function getRefusedFiles() {
+
+    public function getRefusedFiles()
+    {
         return $this->_refusedFiles;
     }
-    public function getSavedFiles() {
+
+    public function getSavedFiles()
+    {
         return $this->_savedFiles;
     }
-    public function hasFiles() {
+
+    public function hasFiles()
+    {
         return !empty($this->_files);
     }
-    public function hasRefusedFiles() {
+
+    public function hasRefusedFiles()
+    {
         return !empty($this->_refusedFiles);
     }
-    public function save($sanitizeNames = true, $removeDisallowed = true) {
+
+    public function save($sanitizeNames = true, $removeDisallowed = true)
+    {
         if ($sanitizeNames) {
             $this->sanitizeFilenames();
         }
@@ -101,12 +110,11 @@ class Uploader
         if (!file_exists($this->_outputDir)) {
             $success = mkdir($this->_outputDir, 0777, true);
             if (!$success) {
-                Log::write("Could not create directory '{$this->_outputDir}'");
+                fwrite(STDERR, "Failed to create directory '{$this->_outputDir}', trying to write to ./tmp");
                 if (!(file_exists('./tmp') && !mkdir('./tmp'))) {
                     return false;
                 }
                 $this->_outputDir = './tmp';
-                Log::write('Saving to "./tmp"!');
             }
         }
         foreach ($this->_files as $file) {
