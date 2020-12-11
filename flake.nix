@@ -204,7 +204,7 @@
           users.users.${cfg.user} = {
             name = cfg.user;
             group = cfg.group;
-            home = cfg.php.stateDir;
+            home = cfg.stateDir;
             description = pkgName;
             createHome = true;
             useDefaultShell = true;
