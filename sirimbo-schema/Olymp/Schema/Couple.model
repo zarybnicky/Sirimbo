@@ -1,0 +1,22 @@
+Couple sql=pary
+  Id sql=p_id
+  partnerLeader UserId sql=p_id_partner
+  partnerFollower UserId sql=p_id_partnerka default=0
+  standardClass Text sql=p_stt_trida default='Z' sqltype=enum('Z','H','D','C','B','A','M')
+  standardPoints Int sql=p_stt_body default=0 "sqltype=SMALLINT(5) UNSIGNED"
+  standardFinals Int sql=p_stt_finale default=0 "sqltype=TINYINT(1) UNSIGNED"
+  latinClass Text sql=p_lat_trida default='Z' sqltype=enum('Z','H','D','C','B','A','M')
+  latinPoints Int sql=p_lat_body default=0 "sqltype=SMALLINT(5) UNSIGNED"
+  latinFinals Int sql=p_lat_finale default=0 "sqltype=TINYINT(1) UNSIGNED"
+  score Int sql=p_hodnoceni default=0 "sqltype=MEDIUMINT(8) UNSIGNED"
+  archived Text sql=p_archiv sqltype=enum('0','1') default='0'
+  createdAt UTCTime sql=p_timestamp_add sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
+  archivedAt UTCTime sql=p_timestamp_archive sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
+  deriving Show
+
+CoupleOffer sql=pary_navrh
+  Id sql=pn_id
+  createdBy UserId sql=pn_navrhl
+  partnerLeader UserId sql=pn_partner
+  partnerFollower UserId sql=pn_partnerka
+  deriving Show

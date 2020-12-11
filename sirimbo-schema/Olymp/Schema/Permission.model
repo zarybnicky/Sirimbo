@@ -1,0 +1,22 @@
+Permission sql=permissions
+  Id sql=pe_id
+  name Text sql=pe_name
+  description Text sql=pe_description
+  levelAkce Int sql=pe_akce sqltype=INT(2)
+  levelAktuality Int sql=pe_aktuality sqltype=INT(2)
+  levelAnkety Int sql=pe_ankety sqltype=INT(2)
+  levelDokumenty Int sql=pe_dokumenty sqltype=INT(2)
+  levelGalerie Int sql=pe_galerie sqltype=INT(2)
+  levelInzerce Int sql=pe_inzerce sqltype=INT(2)
+  levelKonzole Int sql=pe_konzole sqltype=INT(2)
+  levelNabidka Int sql=pe_nabidka sqltype=INT(2)
+  levelNastenka Int sql=pe_nastenka sqltype=INT(2)
+  levelNovinky Int sql=pe_novinky sqltype=INT(2)
+  levelPary Int sql=pe_pary sqltype=INT(2)
+  levelPlatby Int sql=pe_platby sqltype=INT(2)
+  levelPermissions Int sql=pe_permissions sqltype=INT(2)
+  levelRozpis Int sql=pe_rozpis sqltype=INT(2)
+  levelSkupiny Int sql=pe_skupiny sqltype=INT(2)
+  levelUsers Int sql=pe_users sqltype=INT(2)
+  levelMain Int sql=pe_main sqltype=INT(2)
+  deriving Show

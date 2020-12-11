@@ -17,6 +17,7 @@ import Control.Effect.AtomicState (AtomicState, runAtomicStateIORefSimple)
 import Control.Effect.Bracket (bracketToIO, BracketToIOC, Bracket)
 import Control.Effect.Embed (Embed, RunMC)
 import Control.Effect.Error (ErrorC, Error, runError)
+import Data.Csv (Only)
 import Data.IORef (IORef)
 import Data.Map (Map)
 import Data.Pool (Pool)
@@ -35,6 +36,7 @@ import Olymp.Tournament.API (tournamentSocket, tournamentAdminSocket)
 import Olymp.WordPress (WordpressApi, wordpressServer)
 import Servant
 import Servant.API.WebSocket (WebSocket)
+import Servant.CSV.Cassava (CSV', HasHeader(NoHeader), DefaultOpts)
 
 type AppStack
    = '[ UserEff
@@ -64,6 +66,7 @@ olympServer runner =
 
 type OlympApi
   = "api" :> "whoami" :> PhpAuth :> Get '[PlainText, JSON] Text
+  :<|> "api" :> "export-emails" :> PhpAuth :> Get '[CSV' 'NoHeader DefaultOpts] [Only Text]
   :<|> "api" :> "tournament" :> "ws" :> WebSocket
   :<|> "api" :> "tournament" :> PhpAuth :> "admin" :> "ws" :> WebSocket
   -- :<|> "api" :> "editor" :> EditorApi
@@ -72,6 +75,7 @@ type OlympApi
 server :: Effs AppStack m => ServerT OlympApi m
 server
   = whoAmI
+  :<|> exportEmails
   :<|> tournamentSocket
   :<|> tournamentAdminSocket
   :<|> wordpressServer
@@ -81,6 +85,8 @@ whoAmI u = do
   logInfo (userName u)
   pure (userName u <> " " <> userSurname u)
 
+exportEmails :: WithLog m => User -> m [Only Text]
+exportEmails _ = pure []
 
 type AppC = InterpretSimpleC UserEff
   (InterpretSimpleC SessionEff

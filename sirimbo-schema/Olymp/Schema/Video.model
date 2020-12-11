@@ -1,0 +1,29 @@
+Video sql=video
+  Id sql=v_id
+  uri Text sql=v_uri
+  title Text sql=v_title
+  author Text sql=v_author
+  description Text sql=v_description
+  playlistId Text Maybe sql=v_playlist
+  createdAt UTCTime sql=v_created_at
+  updatedAt UTCTime sql=v_updated_at sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
+  deriving Show
+
+VideoList sql=video_list
+  Id sql=vl_id
+  url Text sql=vl_url
+  title Text sql=vl_title
+  description Text sql=vl_description
+  itemCount Int sql=vl_count
+  createdAt UTCTime sql=vl_created_at
+  lastCheckedAt UTCTime Maybe sql=vl_last_checked sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
+  deriving Show
+
+VideoSource sql=video_source
+  Id sql=vs_id
+  url Text sql=vs_url
+  title Text Maybe sql=vs_title default=NULL
+  description Text Maybe sql=vs_description default=NULL
+  createdAt UTCTime sql=vs_created_at
+  lastCheckedAt UTCTime Maybe sql=vs_last_checked sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
+  deriving Show

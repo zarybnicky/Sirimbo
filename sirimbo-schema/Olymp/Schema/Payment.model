@@ -1,0 +1,45 @@
+PaymentCategory sql=platby_category
+  Id sql=pc_id
+  name Text sql=pc_name
+  symbol Int sql=pc_symbol sqltype=INT(11)
+  amount Double sql=pc_amount sqltype=DECIMAL(10,2)
+  dueDate Day sql=pc_date_due
+  validFrom Day sql=pc_valid_from
+  validTo Day sql=pc_valid_to
+  useBase Text sql=pc_use_base sqltype=enum('0','1') default='0'
+  usePrefix Text sql=pc_use_prefix sqltype=enum('0','1') default='0'
+  archived Text sql=pc_archive sqltype=enum('0','1') default='0'
+  visible Text sql=pc_visible sqltype=enum('0','1') default='1'
+  deriving Show
+
+PaymentCategoryGroup sql=platby_category_group
+  Id sql=pcg_id
+  group PaymentGroupId sql=pcg_id_group
+  category PaymentCategoryId sql=pcg_id_category
+  UniquePaymentCategoryGroup group category sql=pcg_id_group
+  deriving Show
+
+PaymentGroupUserGroup sql=platby_group_skupina
+  Id sql=pgs_id
+  userGroup UserGroupId sql=pgs_id_skupina
+  paymentGroup PaymentGroupId sql=pgs_id_group
+  UniquePaymentGroupUserGroup userGroup paymentGroup sql='pgs_id_skupina'
+  deriving Show
+
+PaymentItem sql=platby_item
+  Id sql=pi_id
+  user UserId sql=pi_id_user
+  category PaymentCategoryId sql=pi_id_category
+  raw PaymentRawId Maybe sql=pi_id_raw default=NULL
+  amount Double sql=pi_amount sqltype=DECIMAL(10,2)
+  date Day sql=pi_date
+  prefix Int sql=pi_prefix default=2000 sqltype=INT(4)
+  UniquePaymentItem raw sql=pi_id_raw !force
+  deriving Show
+
+PaymentRaw sql=platby_raw
+  Id sql=pr_id
+  raw ByteString sql=pr_raw
+  hash Text sql=pr_hash sqltype=VARCHAR(32)
+  sorted Text sql=pr_sorted sqltype=enum('0','1') default='0'
+  discarded Text sql=pr_discarded sqltype=enum('0','1') default='0'
