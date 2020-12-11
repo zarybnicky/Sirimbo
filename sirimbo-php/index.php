@@ -72,7 +72,7 @@ try {
     (new RedirectHelper())->redirect('/error?id=' . $e->getErrorFile());
 } catch (ViewException $e) {
     fwrite(
-        STDERR,
+        fopen('php://stderr', 'w'),
         $_SERVER('REQUEST_URI') . ": {$e->getMessage()}\n"
         . '(' . $e->getFile() . ':' . $e->getLine() . ")\n"
         . $e->getTraceAsString()
@@ -83,7 +83,7 @@ try {
     (new RedirectHelper())->redirect('/error?id=' . $e->getErrorFile());
 } catch (Exception $e) {
     fwrite(
-        STDERR,
+        fopen('php://stderr', 'w'),
         $_SERVER('REQUEST_URI') . ": {$e->getMessage()}\n"
         . '(' . $e->getFile() . ':' . $e->getLine() . ")\n"
         . $e->getTraceAsString()

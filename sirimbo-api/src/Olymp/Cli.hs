@@ -76,7 +76,9 @@ argsParser = info (args <**> helper) fullDesc
       <*> optional (strOption (long "db-database" <> metavar "DATABASE"))
     commands = subparser $ mconcat
       [ command "server"
-        (info (Server <$> (option auto (long "port" <> metavar "PORT") <|> pure 3000)) mempty)
+        (info (Server
+               <$> (option auto (long "port" <> metavar "PORT") <|> pure 3000)
+               <*> (option auto (long "proxy" <> metavar "PORT") <|> pure 3010)) mempty)
       , command "check-youtube" (info (pure CheckYouTube) mempty)
       , command "migrate"
         (info (Migrate <$> (flag' True (long "execute") <|> flag' False (long "dry-run"))) mempty)
@@ -91,7 +93,7 @@ data Config = Config
 instance FromJSON (HKD Config Maybe)
 
 data Command
-  = Server Int
+  = Server Int Int
   | CheckYouTube
   | Migrate Bool
   deriving (Show, Generic)

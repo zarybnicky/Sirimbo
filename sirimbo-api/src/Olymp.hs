@@ -25,6 +25,7 @@ import Data.Pool (Pool, withResource)
 import qualified Data.Text as T
 import Database.Persist.Sql (SqlBackend, get, repsert, printMigration, runMigration)
 import Database.Persist.MySQL (ConnectInfo(..), createMySQLPool, defaultConnectInfo)
+import Network.HTTP.Client (defaultManagerSettings)
 import Network.Google (LogLevel(Info), envScopes, newEnvWith, tlsManagerSettings, newManager, newLogger)
 import Network.Google.Auth (getApplicationDefault)
 import Network.Google.YouTube (youTubeReadOnlyScope)
@@ -46,22 +47,23 @@ runServer :: IO ()
 runServer = do
   (config, command) <- parseCli
   case command of
-    Server port -> do
+    Server port proxy -> do
       pool <- makePool config
-      t <- withResource pool (runReaderT (get $ ParameterKey "tournament")) >>= \case
+      t <- withResource pool (runReaderT . get $ ParameterKey "tournament") >>= \case
         Nothing -> pure initialTournament
         Just (Parameter tt) -> case eitherDecode' (BCL.pack $ T.unpack tt) of
           Left err -> putStrLn err >> pure initialTournament
           Right tt' -> pure tt'
 
+      mgr <- newManager defaultManagerSettings
       ref <- newIORef (withTournament propagateWinners t)
       ref' <- newIORef M.empty
 
       _ <- forkIO . forever . runM . runDatabasePool pool . runAtomicStateIORefSimple ref $
         saveTournamentState
 
-      putStrLn ("Starting server on port " <> show port)
-      run port $ olympServer (Handler . ExceptT . interpretServer ref ref' pool)
+      putStrLn ("Starting server on port " <> show port <> " with proxy on port " <> show proxy)
+      run port $ olympServer proxy mgr (Handler . ExceptT . interpretServer ref ref' pool)
 
     CheckYouTube -> do
       lgr <- newLogger Network.Google.Info stdout

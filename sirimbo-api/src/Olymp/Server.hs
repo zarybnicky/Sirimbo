@@ -23,6 +23,8 @@ import Data.Map (Map)
 import Data.Pool (Pool)
 import Data.Text (Text)
 import Database.Persist.MySQL (SqlBackend)
+import Network.HTTP.Client (Manager)
+import Network.HTTP.ReverseProxy (ProxyDest(..), WaiProxyResponse(..), waiProxyTo, defaultOnExc)
 import Network.WebSockets (Connection)
 import Olymp.Auth (PhpAuth, PhpAuthHandler, phpAuthHandler)
 import Olymp.Effect.Database (Database, runDatabasePool)
@@ -51,18 +53,18 @@ type AppStack
       , Embed IO
       ]
 
-olympServer :: Effs AppStack m => (forall a. m a -> Handler a) -> Application
-olympServer runner =
+olympServer :: Effs AppStack m => Int -> Manager -> (forall a. m a -> Handler a) -> Application
+olympServer proxyPort manager runner =
   -- cors (const $ Just simpleCorsResourcePolicy
   --       { corsRequestHeaders = ["Content-Type"]
   --       , corsMethods = "PUT" : simpleMethods
-  --       }) $
-  serveWithContext (Proxy @OlympApi) (phpAuthHandler runner :. EmptyContext) $
-  hoistServerWithContext
-    (Proxy @OlympApi)
-    (Proxy @'[PhpAuthHandler])
-    runner
-    server
+  --       })
+  serveWithContext (Proxy @(OlympApi :<|> Raw)) (phpAuthHandler runner :. EmptyContext) $
+   api :<|> (Tagged phpProxy)
+  where
+    api = hoistServerWithContext (Proxy @OlympApi) (Proxy @'[PhpAuthHandler]) runner server
+    phpProxy = waiProxyTo forwardRequest defaultOnExc manager
+    forwardRequest _ = pure $ WPRProxyDest (ProxyDest "127.0.0.1" proxyPort)
 
 type OlympApi
   = "api" :> "whoami" :> PhpAuth :> Get '[PlainText, JSON] Text

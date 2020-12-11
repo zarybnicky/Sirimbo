@@ -1,8 +1,9 @@
 <?php
 class Dispatcher
 {
-    public function getController($url)
+    public function getController($request)
     {
+        $url = $request->getLiteralURI();
         $parts = array_map('ucfirst', explode('/', $url));
         array_unshift($parts, 'Controller');
 
@@ -19,12 +20,12 @@ class Dispatcher
         if (!class_exists($class)) {
             throw new NotFoundRightException('Class "' . $class . '" not found');
         }
-        return new $class();
+        return new $class($request);
     }
 
     public function dispatch($request)
     {
-        $controller = $this->getController($request->getLiteralURI());
+        $controller = $this->getController($request);
 
         if (!($controller instanceof Controller_Interface)) {
             throw new NotFoundRightException(

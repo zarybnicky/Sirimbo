@@ -3,6 +3,13 @@ abstract class Controller_Abstract implements Controller_Interface
 {
     use HelperTrait;
 
+    private $request;
+
+    public function __construct($request)
+    {
+        $this->request = $request;
+    }
+
     abstract public function view($request);
 
     public function render($filename, array $vars = [], $standalone = false)
@@ -18,6 +25,7 @@ abstract class Controller_Abstract implements Controller_Interface
         echo $renderer->render(TEMPLATE, [
             'navbar' => $this->getNavbar(),
             'content' => $content,
+            'request' => $this->request,
             'meta' => isset($vars['meta']) ? $vars['meta'] : [],
             'header' => isset($vars['header']) ? $vars['header'] : null,
             'subheader' => isset($vars['subheader']) ? $vars['subheader'] : null,

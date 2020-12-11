@@ -110,20 +110,14 @@
             }];
           };
           services.olymp = {
+            enable = true;
             dbHost = "localhost";
             dbUser = "olymp";
             dbDatabase = "olymp";
-            dbPassword = null;
             stateDir = "/var/lib/olymp";
-            php = {
-              enable = true;
-              domain = "olymp-test";
-              withApi = "http://localhost:3000";
-            };
-            api = {
-              enable = true;
-              port = 3000;
-            };
+            domain = "olymp-test";
+            internalPort = 3000;
+            proxyPort = 3010;
           };
         })
       ];
@@ -134,6 +128,25 @@
       pkgName = "tkolymp.cz";
     in {
       options.services.olymp = {
+        enable = lib.mkEnableOption "${pkgName}";
+        yt-worker.enable = lib.mkEnableOption "${pkgName}";
+
+        domain = lib.mkOption {
+          type = lib.types.str;
+          description = "${pkgName} Nginx vhost domain";
+          example = "tkolymp.cz";
+        };
+        internalPort = lib.mkOption {
+          type = lib.types.int;
+          description = "${pkgName} internal port";
+          example = 3000;
+        };
+        proxyPort = lib.mkOption {
+          type = lib.types.int;
+          description = "${pkgName} internal PHP port";
+          example = 3001;
+        };
+
         dbHost = lib.mkOption {
           type = lib.types.str;
           description = "${pkgName} DB host";
@@ -151,6 +164,7 @@
           type = lib.types.str;
           description = "${pkgName} DB database";
         };
+
         user = lib.mkOption {
           type = lib.types.str;
           default = "olymp";
@@ -165,42 +179,50 @@
           type = lib.types.str;
           description = "${pkgName} state directory";
         };
-
-        php = {
-          enable = lib.mkEnableOption "${pkgName}";
-          domain = lib.mkOption {
-            type = lib.types.str;
-            description = "${pkgName} Nginx vhost domain";
-            example = "tkolymp.cz";
-          };
-          withApi = lib.mkOption {
-            type = lib.types.str;
-            description = "${pkgName} API address to passthru";
-          };
-        };
-
-        api = {
-          enable = lib.mkEnableOption "${pkgName}";
-          vhost = lib.mkOption {
-            type = lib.types.nullOr lib.types.str;
-            default = null;
-            description = "${pkgName} Nginx vhost domain";
-            example = "api.tkolymp.cz";
-          };
-          port = lib.mkOption {
-            type = lib.types.int;
-            description = "${pkgName} internal port";
-            example = 3000;
-          };
-        };
-
-        yt-worker = {
-          enable = lib.mkEnableOption "${pkgName}";
-        };
       };
 
-      config = lib.mkMerge [
-        (lib.mkIf (cfg.php.enable or cfg.api.enable) {
+      config = let
+        cfgFile = pkgs.writeText "config.yaml" ''
+          dbHost: ${cfg.dbHost}
+          dbUser: ${cfg.dbUser}
+          dbDatabase: ${cfg.dbDatabase}
+          ${if cfg.dbPassword != null then "dbPassword: ${cfg.dbPassword}" else ""}
+          proxyPort: ${toString cfg.proxyPort}
+        '';
+        phpRoot = pkgs.symlinkJoin {
+          name = "sirimbo-php-dist";
+          paths = [
+            pkgs.sirimbo-php
+            (pkgs.runCommand "sirimbo-php-config" {} ''
+              mkdir -p $out
+              cat > $out/config.php <<EOS
+              <?php
+              openlog('${cfg.domain}', LOG_ODELAY, LOG_USER);
+
+              define('COOKIE_DOMAIN', '${cfg.domain}');
+              define('DB_SERVER', '${cfg.dbHost}');
+              define('DB_DATABASE', '${cfg.dbDatabase}');
+              define('DB_USER', '${cfg.dbUser}');
+              define('DB_PASS', ${if cfg.dbPassword == null then "NULL" else "'${cfg.dbPassword}'"});
+
+              define('GALERIE', '${cfg.stateDir}/gallery');
+              define('GALERIE_THUMBS', '${cfg.stateDir}/gallery/thumbnails');
+              define('UPLOADS', '${cfg.stateDir}/uploads');
+              foreach ([GALERIE, GALERIE_THUMBS, UPLOADS] as \$path) {
+                if (!is_readable(\$path)) {
+                  mkdir(\$path, 0777, true);
+                }
+              }
+              define('NABOR', '0');
+              date_default_timezone_set('Europe/Paris');
+              define('DEFAULT_FROM_MAIL', 'TK Olymp.cz <noreply@tkolymp.cz>');
+              define('DEFAULT_ADMIN_MAIL', 'tkolymp@tkolymp.cz');
+              EOS
+            '')
+          ];
+        };
+      in lib.mkMerge [
+        (lib.mkIf cfg.enable {
           users.users.${cfg.user} = {
             name = cfg.user;
             group = cfg.group;
@@ -213,87 +235,51 @@
           users.groups.${cfg.user} = {
             name = cfg.group;
           };
+
+          environment.systemPackages = [
+            (pkgs.runCommand "olymp" { buildInputs = [ pkgs.makeWrapper ]; } ''
+              mkdir $out
+              ln -s ${pkgs.sirimbo-api}/* $out
+              rm $out/bin
+              mkdir $out/bin
+              makeWrapper ${pkgs.sirimbo-api}/bin/olymp $out/bin/olymp --set CONFIG "${cfgFile}"
+            '')
+          ];
+
           services.nginx = {
             enable = true;
             enableReload = true;
             recommendedGzipSettings = true;
             recommendedOptimisation = true;
             recommendedProxySettings = true;
-          };
-
-          environment.systemPackages = let
-            config = pkgs.writeText "config.yaml" ''
-              dbHost: ${cfg.dbHost}
-              dbUser: ${cfg.dbUser}
-              dbDatabase: ${cfg.dbDatabase}
-              ${if cfg.dbPassword != null then "dbPassword: ${cfg.dbPassword}" else ""}
-            '';
-          in [
-            (pkgs.runCommand "olymp" { buildInputs = [ pkgs.makeWrapper ]; } ''
-              mkdir $out
-              ln -s ${pkgs.sirimbo-api}/* $out
-              rm $out/bin
-              mkdir $out/bin
-              makeWrapper ${pkgs.sirimbo-api}/bin/olymp $out/bin/olymp --set CONFIG "${config}"
-            '')
-          ];
-        })
-
-        (lib.mkIf cfg.php.enable {
-          services.nginx = {
-            virtualHosts.${cfg.php.domain} = {
-              serverAliases = ["www.${cfg.php.domain}"];
-              locations."/galerie".root = "${cfg.stateDir}/gallery";
-              locations."/".index = "index.php index.html index.htm";
-              locations."/".extraConfig = "try_files /public/$uri /index.php?$args;";
-              locations."/api" = {
-                proxyPass = cfg.php.withApi;
-                proxyWebsockets = true;
+            virtualHosts.${"fpm." + cfg.domain} = {
+              root = phpRoot;
+              listen = [{ addr = "127.0.0.1"; port = cfg.proxyPort; }];
+              locations."/" = {
+                index = "index.php";
+                extraConfig = "try_files /public/$uri /index.php?$args;";
               };
               locations."~ \.php$".extraConfig = ''
                 fastcgi_split_path_info ^(.+\.php)(/.+)$;
-                fastcgi_pass unix:${config.services.phpfpm.pools.${cfg.php.domain}.socket};
+                fastcgi_pass unix:${config.services.phpfpm.pools.${cfg.domain}.socket};
                 fastcgi_index index.php;
                 include ${pkgs.nginx}/conf/fastcgi_params;
                 include ${pkgs.nginx}/conf/fastcgi.conf;
               '';
-              root = pkgs.symlinkJoin {
-                name = "sirimbo-php-dist";
-                paths = [
-                  pkgs.sirimbo-php
-                  (pkgs.runCommand "sirimbo-php-config" {} ''
-                    mkdir -p $out
-                    cat > $out/config.php <<EOS
-                    <?php
-                    openlog('${cfg.php.domain}', LOG_ODELAY, LOG_USER);
-
-                    define('COOKIE_DOMAIN', '${cfg.php.domain}');
-                    define('DB_SERVER', '${cfg.dbHost}');
-                    define('DB_DATABASE', '${cfg.dbDatabase}');
-                    define('DB_USER', '${cfg.dbUser}');
-                    define('DB_PASS', ${if cfg.dbPassword == null then "NULL" else "'${cfg.dbPassword}'"});
-
-                    define('LOGS', '${cfg.stateDir}/logs');
-                    define('GALERIE', '${cfg.stateDir}/gallery');
-                    define('GALERIE_THUMBS', '${cfg.stateDir}/gallery/thumbnails');
-                    define('UPLOADS', '${cfg.stateDir}/uploads');
-                    foreach ([LOGS, GALERIE, GALERIE_THUMBS, UPLOADS] as \$path) {
-                      if (!is_readable(\$path)) {
-                        mkdir(\$path, 0777, true);
-                      }
-                    }
-                    define('NABOR', '0');
-                    date_default_timezone_set('Europe/Paris');
-                    define('DEFAULT_FROM_MAIL', 'TK Olymp.cz <noreply@tkolymp.cz>');
-                    define('DEFAULT_ADMIN_MAIL', 'tkolymp@tkolymp.cz');
-                    EOS
-                  '')
-                ];
+            };
+            virtualHosts.${cfg.domain} = {
+              root = phpRoot;
+              serverAliases = ["www.${cfg.domain}"];
+              locations."/galerie".root = "${cfg.stateDir}/gallery";
+              locations."/".extraConfig = "try_files /public/$uri @proxy;";
+              locations."@proxy" = {
+                proxyPass = "http://localhost:${toString cfg.internalPort}";
+                proxyWebsockets = true;
               };
             };
           };
 
-          services.phpfpm.pools.${cfg.php.domain} = {
+          services.phpfpm.pools.${cfg.domain} = {
             user = cfg.user;
             settings = {
               "listen.owner" = config.services.nginx.user;
@@ -312,18 +298,7 @@
               mbstring session json
             ]);
           };
-        })
 
-        (lib.mkIf (cfg.api.vhost != null) {
-          services.nginx = {
-            virtualHosts.${cfg.api.vhost}.locations."/" = {
-              proxyPass = "http://localhost:${toString cfg.api.port}";
-              proxyWebsockets = true;
-            };
-          };
-        })
-
-        (lib.mkIf cfg.api.enable {
           systemd.services.olymp-api-migrate = {
             description = "${pkgName} Migrations";
             wantedBy = [ "multi-user.target" ];
@@ -344,15 +319,12 @@
             wantedBy = [ "multi-user.target" ];
             after = [ "network-online.target" ];
             requires = [ "olymp-api-migrate.service" ];
-            environment.DB_HOST = cfg.dbHost;
-            environment.DB_USER = cfg.dbUser;
-            environment.DB_PASSWORD = cfg.dbPassword;
-            environment.DB_DATABASE = cfg.dbDatabase;
+            environment.CONFIG = cfgFile;
             serviceConfig = {
               User = cfg.user;
               Group = cfg.group;
               Restart = "always";
-              ExecStart = "${pkgs.sirimbo-api}/bin/olymp server --port ${toString cfg.api.port}";
+              ExecStart = "${pkgs.sirimbo-api}/bin/olymp server --port ${toString cfg.internalPort}";
             };
           };
         })
@@ -360,6 +332,7 @@
         (lib.mkIf cfg.yt-worker.enable {
           systemd.services.olymp-yt-worker = {
             description = "Olymp YouTube worker service";
+            environment.CONFIG = cfgFile;
             serviceConfig = {
               Type = "simple";
               ExecStart = "${pkgs.sirimbo-api}/bin/olymp check-youtube";
@@ -375,6 +348,7 @@
             };
           };
         })
+
       ];
     };
   };

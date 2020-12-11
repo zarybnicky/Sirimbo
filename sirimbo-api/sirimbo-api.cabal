@@ -55,6 +55,8 @@ library
                      , gogol-core
                      , gogol-youtube
                      , higgledy
+                     , http-client
+                     , http-reverse-proxy
                      , in-other-words
                      , lens
                      , monad-logger

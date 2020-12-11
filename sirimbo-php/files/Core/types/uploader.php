@@ -110,7 +110,7 @@ class Uploader
         if (!file_exists($this->_outputDir)) {
             $success = mkdir($this->_outputDir, 0777, true);
             if (!$success) {
-                fwrite(STDERR, "Failed to create directory '{$this->_outputDir}', trying to write to ./tmp");
+                fwrite(fopen('php://stderr', 'w'), "Failed to create directory '{$this->_outputDir}', trying to write to ./tmp");
                 if (!(file_exists('./tmp') && !mkdir('./tmp'))) {
                     return false;
                 }

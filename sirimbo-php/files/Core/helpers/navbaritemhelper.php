@@ -2,10 +2,12 @@
 class NavbarItemHelper
 {
     protected $item;
+    protected $url;
 
-    public function navbarItem($item)
+    public function navbarItem($url, $item)
     {
         $this->item = $item;
+        $this->url = $url;
         return $this;
     }
 
@@ -19,8 +21,8 @@ class NavbarItemHelper
         if (isset($item[3]) && $item[3] && !Permissions::check($item[3][0], $item[3][1])) {
             return '';
         }
-        $active = $item[1] === ('/' . Database::$request->getURI())
-            || (strlen($item[1]) > 1 && strpos('/' . Database::$request->getURI(), $item[1]) === 0);
+        $active = $item[1] === ('/' . $this->url)
+            || (strlen($item[1]) > 1 && strpos('/' . $this->url, $item[1]) === 0);
         $active = $active ? ' active' : '';
 
         if (!isset($item[2]) || empty($item[2])) {

@@ -42,7 +42,7 @@
             <div class="flex-column" style="flex-grow:1">
               <ul class="navbar-nav">
                 <?php foreach ($this->navbar[0] as $item) {
-                    echo $this->navbarItem($item);
+                    echo $this->navbarItem($this->request->getURI(), $item);
                 } ?>
                 <div class="w-100"></div>
                 <?= $this->login() ?>
@@ -57,7 +57,7 @@
                 <div class="flex-column" style="flex-grow:1">
                   <ul class="navbar-nav">
                     <?php foreach ($this->navbar[1] as $item) {
-                        echo $this->navbarItem($item);
+                        echo $this->navbarItem($this->request->getURI(), $item);
                     } ?>
                   </ul>
                 </div>
