@@ -3,9 +3,9 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
 {
     const TEMP_DIR = './upload/csv/';
 
-    public function __construct()
+    public function __construct($request)
     {
-        parent::__construct();
+        parent::__construct($request);
         Permissions::checkError('platby', P_OWNED);
     }
 

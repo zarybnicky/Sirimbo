@@ -1,8 +1,9 @@
 <?php
 class Controller_Admin extends Controller_Abstract
 {
-    public function __construct()
+    public function __construct($request)
     {
+        parent::__construct($request);
         Permissions::checkError('nastenka', P_OWNED);
     }
 

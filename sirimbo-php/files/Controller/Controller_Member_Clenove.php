@@ -1,8 +1,9 @@
 <?php
 class Controller_Member_Clenove extends Controller_Abstract
 {
-    public function __construct()
+    public function __construct($request)
     {
+        parent::__construct($request);
         Permissions::checkError('users', P_VIEW);
     }
 

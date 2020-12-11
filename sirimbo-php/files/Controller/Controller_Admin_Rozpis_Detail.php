@@ -1,8 +1,9 @@
 <?php
 class Controller_Admin_Rozpis_Detail extends Controller_Abstract
 {
-    public function __construct()
+    public function __construct($request)
     {
+        parent::__construct($request);
         Permissions::checkError('rozpis', P_OWNED);
     }
 

@@ -1,8 +1,9 @@
 <?php
 class Controller_Admin_Akce_Detail extends Controller_Abstract
 {
-    public function __construct()
+    public function __construct($request)
     {
+        parent::__construct($request);
         Permissions::checkError('akce', P_OWNED);
     }
 

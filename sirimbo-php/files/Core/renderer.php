@@ -10,7 +10,7 @@ class Renderer
     public function __get($key)
     {
         if (!isset($this->vars[$key])) {
-            fwrite(fopen('php://stderr', 'w'), "Could not find file '$file' to render");
+            fwrite(fopen('php://stderr', 'w'), "Could not find variable '$key' in template\n");
             return null;
         }
         return $this->vars[$key];
@@ -35,7 +35,7 @@ class Renderer
         $this->vars = $vars;
 
         if (!file_exists($file)) {
-            fwrite(fopen('php://stderr', 'w'), "Could not find file $file to render");
+            fwrite(fopen('php://stderr', 'w'), "Could not find file $file to render\n");
             throw new NotFoundRightException("Soubor nebyl nalezen!");
         }
         ob_start();

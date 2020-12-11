@@ -1,8 +1,9 @@
 <?php
 class Controller_Member extends Controller_Abstract
 {
-    public function __construct()
+    public function __construct($request)
     {
+        parent::__construct($request);
         Permissions::checkError('nastenka', P_VIEW);
     }
 

@@ -1,9 +1,9 @@
 <?php
 class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
 {
-    public function __construct()
+    public function __construct($request)
     {
-        parent::__construct();
+        parent::__construct($request);
         Permissions::checkError('platby', P_OWNED);
     }
 
