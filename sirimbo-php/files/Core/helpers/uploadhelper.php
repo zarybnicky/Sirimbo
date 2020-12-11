@@ -29,7 +29,7 @@ class UploadHelper
 
     public function loadFromPost($request)
     {
-        $files = $request->files($this->_name);
+        $files = $_FILES[$this->_name];
         if (!$files) {
             $this->_files = [];
             return $this;

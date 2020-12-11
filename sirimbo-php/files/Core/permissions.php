@@ -1,13 +1,6 @@
 <?php
 class Permissions
 {
-    protected static $request;
-
-    public static function setRequest($request)
-    {
-        static::$request = $request;
-    }
-
     public static function check($module, $level, $owner = null)
     {
         $l = Session::getPermissions($module);
@@ -27,7 +20,7 @@ class Permissions
             throw new AuthorizationException("Nemáte dostatečnou autorizaci pro tuto akci!");
         }
         (new RedirectHelper())->redirect(
-            '/login?return=' . static::$request->server('REQUEST_URI'),
+            '/login?return=' . $_SERVER['REQUEST_URI'],
             'Nemáte dostatečná oprávnění k zobrazení požadovaného obsahu'
         );
     }

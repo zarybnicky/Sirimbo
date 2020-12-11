@@ -3,12 +3,8 @@ class Request
 {
     protected $uri;
     protected $method;
-    protected $headers;
-    protected $serverParams;
-    protected $cookieParams;
     protected $getParams;
     protected $postParams;
-    protected $fileParams;
 
     protected $defaultPath;
     protected $rawUriParts;
@@ -21,21 +17,13 @@ class Request
     public function __construct(
         $uri,
         $method,
-        $headers,
-        $serverParams,
-        $cookieParams,
         $getParams,
-        $postParams,
-        $fileParams
+        $postParams
     ) {
         $this->setURI($uri);
         $this->method = $method;
-        $this->headers = $headers;
-        $this->serverParams = $serverParams;
-        $this->cookieParams = $cookieParams;
         $this->getParams = $getParams;
         $this->postParams = $postParams;
-        $this->fileParams = $fileParams;
     }
 
     protected function phpGlobal(&$array, $field, $value)
@@ -56,16 +44,6 @@ class Request
         }
     }
 
-    public function server($field = null, $value = null)
-    {
-        return $this->phpGlobal($this->serverParams, $field, $value);
-    }
-
-    public function cookie($field = null, $value = null)
-    {
-        return $this->phpGlobal($this->cookieParams, $field, $value);
-    }
-
     public function get($field = null, $value = null)
     {
         return $this->phpGlobal($this->getParams, $field, $value);
@@ -74,11 +52,6 @@ class Request
     public function post($field = null, $value = null)
     {
         return $this->phpGlobal($this->postParams, $field, $value);
-    }
-
-    public function files($field = null, $value = null)
-    {
-        return $this->phpGlobal($this->fileParams, $field, $value);
     }
 
     public function setDefault($defaultPath)

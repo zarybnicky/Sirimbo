@@ -8,9 +8,9 @@ class Controller_Admin_Dokumenty extends Controller_Abstract
 
     public function view($request)
     {
-        if ($request->post('action') == 'upload' && $request->files()) {
-            $fileUpload = $request->files('file')['tmp_name'];
-            $fileName = $request->files('file')['name'];
+        if ($request->post('action') == 'upload' && !empty($_FILES)) {
+            $fileUpload = $_FILES['file']['tmp_name'];
+            $fileName = $_FILES['file']['name'];
             $fileName = str_replace(
                 ['#', '$', '%', '&', '^', '*', '?'],
                 ['No.', 'Dolar', 'Procento', 'And', ''],

@@ -33,21 +33,10 @@ ini_set('session.serialize_handler', 'php_serialize');
 register_shutdown_function('shutdownHandler');
 set_error_handler('errorHandler');
 error_reporting(-1);
-$request = new Request(
-    $_SERVER['REQUEST_URI'],
-    $_SERVER['REQUEST_METHOD'],
-    getallheaders(),
-    $_SERVER,
-    $_COOKIE,
-    $_GET,
-    $_POST,
-    $_FILES
-);
-$request->setDefault('home');
-$request->setReferer($request->server('HTTP_REFERER'));
 
-Database::setRequest($request);
-Permissions::setRequest($request);
+$request = new Request($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD'], $_GET, $_POST);
+$request->setDefault('home');
+$request->setReferer($_SERVER['HTTP_REFERER']);
 
 session_set_save_handler(new DbSessionHandler(), true);
 session_start();

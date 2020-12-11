@@ -2,12 +2,6 @@
 class Database
 {
     protected static $connection;
-    public static $request;
-
-    public static function setRequest($request)
-    {
-        static::$request = $request;
-    }
 
     protected static function escapeArray($array)
     {
@@ -105,10 +99,6 @@ class Database
 
     public static function isDatabaseError()
     {
-        return (
-            static::$request->get('file') == 'error' &&
-            static::$request->get('id') &&
-            stripos(static::$request->get('id'), 'database') !== null
-        );
+        return ($_GET['file'] ?? '') == 'error' && stripos($_GET['id'] ?? '', 'database') !== null;
     }
 }
