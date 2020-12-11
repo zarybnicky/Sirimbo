@@ -23,8 +23,6 @@ class ColorSelectHelper
                 'value' => $this->value
             ]
         );
-        $widget->addStylesheet(['src' => '/style/spectrum.css']);
-        $widget->addScript(['src' => '/scripts/spectrum.js']);
         $widget->addScript(
             [],
             <<<EOS

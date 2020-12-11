@@ -327,7 +327,8 @@ $navbar-padding-y: 0;
 @import "../../bootstrap/scss/print";
 
 // Libraries
-@import 'polyfill.object-fit.css';
-@import 'leaflet.css';
-@import 'select2.min.css';
-@import 'select2-bootstrap.css';
+@import 'polyfill.object-fit';
+@import 'leaflet';
+@import 'select2.min';
+@import 'select2-bootstrap';
+@import 'spectrum';
