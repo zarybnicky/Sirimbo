@@ -270,7 +270,8 @@
             virtualHosts.${cfg.domain} = {
               root = phpRoot;
               serverAliases = ["www.${cfg.domain}"];
-              locations."/galerie".root = "${cfg.stateDir}/gallery";
+              locations."/gallery".root = cfg.stateDir;
+              locations."/galerie".extraConfig = "rewrite ^/blog(/.*)$ $1 last;";
               locations."/".extraConfig = "try_files /public/$uri @proxy;";
               locations."@proxy" = {
                 proxyPass = "http://localhost:${toString cfg.internalPort}";
@@ -317,8 +318,8 @@
           systemd.services.olymp-api = {
             description = "${pkgName} Webserver";
             wantedBy = [ "multi-user.target" ];
-            after = [ "network-online.target" ];
-            requires = [ "olymp-api-migrate.service" ];
+            after = [ "network-online.target" "mysql.service" ];
+            requires = [ "olymp-api-migrate.service" "mysql.service" ];
             environment.CONFIG = cfgFile;
             serviceConfig = {
               User = cfg.user;
