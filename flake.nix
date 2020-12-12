@@ -271,7 +271,8 @@
               root = phpRoot;
               serverAliases = ["www.${cfg.domain}"];
               locations."/gallery".root = cfg.stateDir;
-              locations."/galerie".extraConfig = "rewrite ^/blog(/.*)$ $1 last;";
+              locations."/galerie".root = cfg.stateDir;
+              locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
               locations."/".extraConfig = "try_files /public/$uri @proxy;";
               locations."@proxy" = {
                 proxyPass = "http://localhost:${toString cfg.internalPort}";
