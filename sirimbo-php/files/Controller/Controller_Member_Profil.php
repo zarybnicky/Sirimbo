@@ -147,7 +147,7 @@ class Controller_Member_Profil extends Controller_Abstract
             $request->post('dancer') ? '1' : '0',
             $data->getTeacher() ? '1' : '0',
             $data->getMemberSince(),
-            $data->getMemberUntil() ? $data->getMemberUntil() : null,
+            $data->getMemberUntil(),
             $data->getGdprSignedAt()
         );
         $this->redirect('/member/profil');
