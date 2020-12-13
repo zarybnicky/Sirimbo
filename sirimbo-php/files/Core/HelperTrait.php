@@ -6,11 +6,6 @@ trait HelperTrait
         return call_user_func_array([new CheckboxHelper(), 'checkbox'], func_get_args());
     }
 
-    public function colorbox()
-    {
-        return call_user_func_array([new ColorboxHelper(), 'colorbox'], func_get_args());
-    }
-
     public function date()
     {
         return call_user_func_array([new DateHelper(), 'date'], func_get_args());

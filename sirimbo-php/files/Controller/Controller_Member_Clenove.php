@@ -39,9 +39,8 @@ class Controller_Member_Clenove extends Controller_Abstract
                     'header' => new Tag(
                         'h3',
                         [],
-                        $this->colorbox($item['s_color_rgb'], $item['s_description'])->render(),
-                        '&nbsp;&nbsp;',
-                        $item['s_name']
+                        new Colorbox($item['s_color_rgb'], $item['s_description'])
+                        . '&nbsp;&nbsp;' . $item['s_name']
                     ),
                     'description' => $item['s_description'],
                     'userCount' => 0
@@ -90,7 +89,7 @@ class Controller_Member_Clenove extends Controller_Abstract
                         'header' => new Tag(
                             'big',
                             [],
-                            $this->colorbox($item['s_color_rgb'], $item['s_description'])->render(),
+                            new Colorbox($item['s_color_rgb'], $item['s_description'])->render(),
                             '&nbsp;&nbsp;' . $item['s_name']
                         )
                     ],

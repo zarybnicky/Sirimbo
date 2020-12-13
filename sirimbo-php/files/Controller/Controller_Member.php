@@ -26,12 +26,7 @@ class Controller_Member extends Controller_Abstract
         $data = array_map(
             function ($item) {
                 $skupiny = array_map(
-                    function ($skupina) {
-                        return (string) $this->colorbox(
-                            $skupina['ups_color'],
-                            $skupina['ups_popis']
-                        );
-                    },
+                    fn($skupina) => new Colorbox($skupina['ups_color'], $skupina['ups_popis']),
                     DBNastenka::getNastenkaSkupiny($item['up_id'])
                 );
                 return [

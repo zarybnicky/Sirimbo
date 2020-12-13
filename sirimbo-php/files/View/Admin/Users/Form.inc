@@ -121,7 +121,7 @@
     foreach ($this->skupiny as $item) {
         echo $this->radio('skupina', $item['id'])
                  ->set($this->skupina == $item['id'])
-                 ->label($this->colorbox($item['color'], $item['popis'])
+                 ->label(new Colorbox($item['color'], $item['popis'])
                       . '&nbsp;' . $item['popis']);
     }?>
   </div>

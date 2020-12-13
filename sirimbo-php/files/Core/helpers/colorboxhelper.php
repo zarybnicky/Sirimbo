@@ -4,7 +4,7 @@ class ColorboxHelper
     protected $color;
     protected $description;
 
-    public function colorbox($color, $description)
+    public function __construct($color, $description)
     {
         $this->color = $color;
         $this->description = $description;

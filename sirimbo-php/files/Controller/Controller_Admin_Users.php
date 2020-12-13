@@ -271,7 +271,7 @@ class Controller_Admin_Users extends Controller_Abstract
                 return [
                     'id' => $item['u_id'],
                     'buttons' => new RemoveLinkHelper('/admin/users/remove/' . $item['u_id']),
-                    'fullName' => $this->colorbox($item['s_color_rgb'], $item['s_description'])
+                    'fullName' => new Colorbox($item['s_color_rgb'], $item['s_description'])
                         . '&nbsp;' . $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
                     'email' => $item['u_email'],
                     'telefon' => $item['u_telefon'],
@@ -375,7 +375,7 @@ class Controller_Admin_Users extends Controller_Abstract
                     'varSymbol' => User::varSymbol($item['u_id']),
                     'fullName' => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
                     'birthDate' => formatDate($item['u_narozeni']),
-                    'colorBox' => $this->colorbox($item['s_color_rgb'], $item['s_description'])
+                    'colorBox' => new Colorbox($item['s_color_rgb'], $item['s_description'])
                                         ->render(),
                     'groupInfo' => $groupOptions[$item['u_group']]
                 ];

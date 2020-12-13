@@ -94,7 +94,7 @@
     foreach ($this->skupiny as $item) {
         $s->option(
             $item['id'],
-            $this->colorbox($item['color'], $item['popis']) . '&nbsp;' . $item['popis']
+            new Colorbox($item['color'], $item['popis']) . '&nbsp;' . $item['popis']
         );
     }
     echo $s;

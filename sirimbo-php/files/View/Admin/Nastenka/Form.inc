@@ -22,7 +22,7 @@
           echo '<div class="form-check">';
           echo $this->checkbox('sk-' . $item['s_id'], '1')
                    ->set($this->skupinySelected[$item['s_id']])
-                   ->label($this->colorbox($item['s_color_rgb'], $item['s_description'])
+                   ->label(new Colorbox($item['s_color_rgb'], $item['s_description'])
                         . '&nbsp;' . $item['s_name']);
           echo '</div>';
       }

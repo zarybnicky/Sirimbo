@@ -16,8 +16,7 @@ class Controller_Admin_Skupiny extends Controller_Abstract
                         new EditLinkHelper('/admin/skupiny/edit/' . $item['s_id'])
                         . new RemoveLinkHelper('/admin/skupiny/remove/' . $item['s_id'])
                     ),
-                    'colorBox' => $this->colorbox($item['s_color_rgb'], $item['s_description'])
-                                       ->render(),
+                    'colorBox' => new Colorbox($item['s_color_rgb'], $item['s_description']),
                     'name' => $item['s_name']
                 ];
             },

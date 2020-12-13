@@ -241,7 +241,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
                     'buttons' => $this->checkbox('skupiny[]', $item['s_id'])
                                       ->set(isset($skupinySelected[$item['s_id']]))
                                       ->render(),
-                    'name' => $this->colorbox($item['s_color_rgb'], $item['s_description'])
+                    'name' => new Colorbox($item['s_color_rgb'], $item['s_description'])
                     . '&nbsp;' . $item['s_name']
                 ];
             },

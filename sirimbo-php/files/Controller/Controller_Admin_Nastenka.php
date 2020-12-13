@@ -33,7 +33,7 @@ class Controller_Admin_Nastenka extends Controller_Abstract
                     'groups' => array_reduce(
                         DBNastenka::getNastenkaSkupiny($item['up_id']),
                         function ($carry, $item) {
-                            return $carry . $this->colorbox($item['ups_color'], $item['ups_popis']);
+                            return $carry . new Colorbox($item['ups_color'], $item['ups_popis']);
                         },
                         ''
                     )

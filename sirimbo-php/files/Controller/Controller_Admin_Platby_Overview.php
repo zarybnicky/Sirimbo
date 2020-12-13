@@ -24,7 +24,7 @@ class Controller_Admin_Platby_Overview extends Controller_Admin_Platby
                         'header' => new Tag(
                             'big',
                             [],
-                            $this->colorbox($item['s_color_rgb'], $item['s_description'])->render(),
+                            new Colorbox($item['s_color_rgb'], $item['s_description']) .
                             '&nbsp;&nbsp;' . $item['s_name']
                         )
                     ],
