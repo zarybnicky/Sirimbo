@@ -1,3 +1,4 @@
+{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
@@ -16,7 +17,7 @@ module Olymp.Auth
 import Control.Effect (Effs)
 import Data.Aeson (FromJSON(..), decodeStrict', withObject, (.:))
 import Data.Text.Encoding (decodeUtf8)
-import Database.Persist.Sql (toSqlKey)
+import Database.Persist.Sql (Entity, toSqlKey)
 import Network.Wai (Request, requestHeaders)
 import Olymp.Effect.Error (AppError, AuthError(..), throwAuth)
 import Olymp.Effect.Session (SessionEff, getSessionById, deleteSession)
@@ -27,9 +28,9 @@ import Servant.Server.Experimental.Auth (AuthHandler, AuthServerData, mkAuthHand
 import Web.Cookie (parseCookies)
 
 type PhpAuth = AuthProtect "php-session"
-type PhpAuthHandler = AuthHandler Request User
+type PhpAuthHandler = AuthHandler Request (SessionId, Entity User)
 
-type instance AuthServerData PhpAuth = User
+type instance AuthServerData PhpAuth = (SessionId, Entity User)
 
 newtype SessionUserId = SessionUserId
   { unSessionUserId :: UserId
@@ -49,7 +50,7 @@ phpAuthHandler runner = mkAuthHandler $ \req -> runner $ do
   let sid = SessionKey (decodeUtf8 sid')
   sess <- maybeErr =<< getSessionById sid
   uid <- maybeDelete sid . decodeStrict' $ sessionData sess
-  maybeDelete sid =<< getUserById (unSessionUserId uid)
+  maybeDelete sid =<< fmap (sid, ) <$> getUserById (unSessionUserId uid)
   where
     maybeErr :: Maybe a -> m a
     maybeErr = maybe (throwAuth ErrNotLoggedIn) pure

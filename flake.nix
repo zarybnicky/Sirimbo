@@ -199,7 +199,6 @@
               <?php
               openlog('${cfg.domain}', LOG_ODELAY, LOG_USER);
 
-              define('COOKIE_DOMAIN', '${cfg.domain}');
               define('DB_SERVER', '${cfg.dbHost}');
               define('DB_DATABASE', '${cfg.dbDatabase}');
               define('DB_USER', '${cfg.dbUser}');

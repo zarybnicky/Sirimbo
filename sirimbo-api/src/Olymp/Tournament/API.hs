@@ -22,11 +22,12 @@ import qualified Data.Map as M
 import Data.Maybe (fromMaybe)
 import Data.Text (Text)
 import qualified Data.Text as T
+import Database.Persist.Sql (Entity)
 import GHC.Generics (Generic)
 import Network.WebSockets (Connection, receiveData, sendTextData)
 import Network.WebSockets.Connection (pingThread)
 import Olymp.Effect.Log (Log, logError)
-import Olymp.Schema (User)
+import Olymp.Schema (SessionId, User)
 import Olymp.Tournament.Base
 
 data TournamentUser =
@@ -99,7 +100,7 @@ tournamentSocket c = withSocketLoop c $ \msg -> case msg of
   Vote nid left right ->
     updateNode nid (setScore (+ left) (+ right)) (tshow msg)
 
-tournamentAdminSocket :: Effs TourneyEffs m => User -> Connection -> m ()
+tournamentAdminSocket :: Effs TourneyEffs m => (SessionId, Entity User) -> Connection -> m ()
 tournamentAdminSocket _ c = withSocketLoop c $ \msg -> case msg of
   UpdatePlayer pid p -> do
     atomicModify' @(Tournament NodeId) (field @"tournamentPlayers" %~ M.insert pid p)

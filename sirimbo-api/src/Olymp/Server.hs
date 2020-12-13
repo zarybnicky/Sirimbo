@@ -1,3 +1,4 @@
+{-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RankNTypes #-}
@@ -22,7 +23,7 @@ import Data.IORef (IORef)
 import Data.Map (Map)
 import Data.Pool (Pool)
 import Data.Text (Text)
-import Database.Persist.MySQL (SqlBackend)
+import Database.Persist.MySQL (entityVal, Entity, SqlBackend)
 import Network.HTTP.Client (Manager)
 import Network.HTTP.ReverseProxy (ProxyDest(..), WaiProxyResponse(..), waiProxyTo, defaultOnExc)
 import Network.WebSockets (Connection)
@@ -31,14 +32,16 @@ import Olymp.Effect.Database (Database, runDatabasePool)
 import Olymp.Effect.Error (AppError, runAppErrorToError)
 import Olymp.Effect.Log (Log, WithLog, logInfo, runLogToStdout)
 import Olymp.Effect.User (UserEff, runUserEffPersistent)
-import Olymp.Effect.Session (SessionEff, runSessionEffPersistent)
-import Olymp.Schema (User(..))
+import Olymp.Effect.Session (deleteSession, SessionEff, runSessionEffPersistent)
+import Olymp.Schema (SessionId, User(..))
 import Olymp.Tournament.Base (Tournament, NodeId)
 import Olymp.Tournament.API (tournamentSocket, tournamentAdminSocket)
 import Olymp.WordPress (WordpressApi, wordpressServer)
 import Servant
 import Servant.API.WebSocket (WebSocket)
 import Servant.CSV.Cassava (CSV', HasHeader(NoHeader), DefaultOpts)
+import Web.Cookie (defaultSetCookie, SetCookie(..))
+import Data.Time (Day(ModifiedJulianDay), UTCTime(..))
 
 type AppStack
    = '[ UserEff
@@ -67,11 +70,12 @@ olympServer proxyPort manager runner =
     forwardRequest _ = pure $ WPRProxyDest (ProxyDest "127.0.0.1" proxyPort)
 
 type OlympApi
-  = "api" :> "whoami" :> PhpAuth :> Get '[PlainText, JSON] Text
-  :<|> "api" :> "export-emails" :> PhpAuth :> Get '[CSV' 'NoHeader DefaultOpts] [Only Text]
+  = PhpAuth :> "api" :> "whoami" :> Get '[PlainText, JSON] Text
+  :<|> PhpAuth :> "api" :> "export-emails" :> Get '[CSV' 'NoHeader DefaultOpts] [Only Text]
   :<|> "api" :> "tournament" :> "ws" :> WebSocket
-  :<|> "api" :> "tournament" :> PhpAuth :> "admin" :> "ws" :> WebSocket
-  -- :<|> "api" :> "editor" :> EditorApi
+  :<|> PhpAuth :> "api" :> "tournament" :> "admin" :> "ws" :> WebSocket
+  :<|> PhpAuth :> "logout" :> Verb 'GET 303 '[JSON]
+    (Headers '[Header "Set-Cookie" SetCookie, Header "Location" String] NoContent)
   :<|> "wp" :> "v2" :> WordpressApi
 
 server :: Effs AppStack m => ServerT OlympApi m
@@ -80,14 +84,31 @@ server
   :<|> exportEmails
   :<|> tournamentSocket
   :<|> tournamentAdminSocket
+  :<|> logout
   :<|> wordpressServer
 
-whoAmI :: WithLog m => User -> m Text
-whoAmI u = do
+logout
+  :: Effs '[SessionEff] m
+  => (SessionId, Entity User)
+  -> m (Headers '[Header "Set-Cookie" SetCookie, Header "Location" String] NoContent)
+logout (sid, _) = do
+  deleteSession sid
+  pure $ addHeader sessionCookie (addHeader "/" NoContent)
+  where
+    sessionCookie = defaultSetCookie
+      { setCookieName = "PHPSESSID"
+      , setCookieValue = ""
+      , setCookiePath = Just "/"
+      , setCookieExpires = Just (UTCTime (ModifiedJulianDay 50000) 0)
+      }
+
+whoAmI :: WithLog m => (SessionId, Entity User) -> m Text
+whoAmI (_, eu) = do
+  let u = entityVal eu
   logInfo (userName u)
   pure (userName u <> " " <> userSurname u)
 
-exportEmails :: WithLog m => User -> m [Only Text]
+exportEmails :: WithLog m => (SessionId, Entity User) -> m [Only Text]
 exportEmails _ = pure []
 
 type AppC = InterpretSimpleC UserEff

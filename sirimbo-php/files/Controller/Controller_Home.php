@@ -5,39 +5,29 @@ class Controller_Home extends Controller_Abstract
     {
         $articles = DBAktuality::getAktuality(1);
 
-        $highlights = array_map(
-            function ($val) {
-                return [
-                    'uri'  => '/aktualne/' . $val['at_id'],
-                    'name' => $val['at_jmeno'],
-                    'date' => formatDate($val['at_timestamp']),
-                    'description' => $val['at_preview'],
-                    'title_photo_uri' => (
-                        $val['at_foto_main']
-                        ? '/galerie/' . $val['gf_path']
-                        : ''
-                    )
-                ];
-            },
-            array_slice($articles, 0, 3)
-        );
+        $highlights = array_map(fn($val) => [
+            'uri'  => '/aktualne/' . $val['at_id'],
+            'name' => $val['at_jmeno'],
+            'date' => formatDate($val['at_timestamp']),
+            'description' => $val['at_preview'],
+            'title_photo_uri' => (
+                $val['at_foto_main']
+                ? '/galerie/' . $val['gf_path']
+                : ''
+            )
+        ], array_slice($articles, 0, 3));
 
-        $moreArticles = array_map(
-            function ($val) {
-                return [
-                    'uri'  => '/aktualne/' . $val['at_id'],
-                    'name' => $val['at_jmeno'],
-                    'date' => formatDate($val['at_timestamp']),
-                    'description' => $val['at_preview'],
-                    'title_photo_uri' => (
-                        $val['at_foto_main']
-                        ? '/galerie/' . $val['gf_path']
-                        : ''
-                    )
-                ];
-            },
-            array_slice($articles, 3, 2)
-        );
+        $moreArticles = array_map(fn($val) => [
+            'uri'  => '/aktualne/' . $val['at_id'],
+            'name' => $val['at_jmeno'],
+            'date' => formatDate($val['at_timestamp']),
+            'description' => $val['at_preview'],
+            'title_photo_uri' => (
+                $val['at_foto_main']
+                ? '/galerie/' . $val['gf_path']
+                : ''
+            )
+        ], array_slice($articles, 3, 2));
 
         $videos = array_map(
             function ($id) {
