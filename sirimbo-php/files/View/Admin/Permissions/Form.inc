@@ -3,13 +3,13 @@
     <div class="form-group row">
       <label for="name" class="col-sm-2 col-form-label">Jméno</label>
       <div class="col-sm-10">
-        <?= $this->text('name', $this->name)->cls('form-control') ?>
+        <?= (new \TextHelper('name', $this->name))->cls('form-control') ?>
       </div>
     </div>
     <div class="form-group row">
       <label for="description" class="col-sm-2 col-form-label">Popis</label>
       <div class="col-sm-10">
-        <?= $this->text('description', $this->description)->size(35)->cls('form-control') ?>
+        <?= (new \TextHelper('description', $this->description))->size(35)->cls('form-control') ?>
       </div>
     </div>
     <?php foreach ($this->settings as $item): ?>

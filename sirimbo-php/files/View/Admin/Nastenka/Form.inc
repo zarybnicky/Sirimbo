@@ -2,7 +2,7 @@
   <form action="" method="POST">
     <div class="form-group">
       <label for="nadpis">Nadpis</label>
-      <?= $this->text('nadpis', $this->nadpis) ?>
+      <?= new \TextHelper('nadpis', $this->nadpis) ?>
     </div>
     <div class="form-group">
       <label for="text">Text</label>

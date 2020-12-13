@@ -10,7 +10,7 @@
             'recogValue' => $this->recognized['date']['value']
         ], [
             'desc' => 'Částka (Kč):',
-            'value' => $this->text('amount', $this->guess['amount']),
+            'value' => new \TextHelper('amount', $this->guess['amount']),
             'recogColumn' => $this->recognized['amount']['column'],
             'recogValue' => $this->recognized['amount']['value']
         ], [
@@ -25,7 +25,7 @@
             'recogValue' => $this->recognized['specific']['value']
         ], [
             'desc' => 'Prefix (rok):',
-            'value' => $this->text('prefix', $this->guess['prefix']),
+            'value' => new \TextHelper('prefix', $this->guess['prefix']),
             'recogColumn' => '',
             'recogValue' => $this->recognized['prefix']['value']
         ]

@@ -7,11 +7,11 @@
     </div>
     <div class="form-group">
       <label for="pocet_hod">Počet hodin</label>
-      <?= $this->text('pocet_hod', $this->pocet_hod) ?>
+      <?= new \TextHelper('pocet_hod', $this->pocet_hod) ?>
     </div>
     <div class="form-group">
       <label for="max_pocet_hod">Max. počet hodin/pár</label>
-      <?= $this->text('max_pocet_hod', $this->max_pocet_hod) ?>
+      <?= new \TextHelper('max_pocet_hod', $this->max_pocet_hod) ?>
       <small class="form-text text-muted">"0" = neomezeně</small>
     </div>
     <div class="form-group">

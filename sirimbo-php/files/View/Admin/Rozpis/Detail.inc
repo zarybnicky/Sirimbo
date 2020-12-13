@@ -17,16 +17,16 @@
         ?>
           <tr>
             <td><?= $userselect->name($item['id'] . '-partner')->set($item['partner']) ?></td>
-            <td><?= $this->text($item['id'] . '-od', $item['timeFrom'])->size(5) ?></td>
-            <td><?= $this->text($item['id'] . '-do', $item['timeTo'])->size(5) ?></td>
+            <td><?= (new \TextHelper($item['id'] . '-od', $item['timeFrom']))->size(5) ?></td>
+            <td><?= (new \TextHelper($item['id'] . '-do', $item['timeTo']))->size(5) ?></td>
             <td><?= $this->submit('Odstranit')->data('remove', $item['id']) ?></td>
             <td><?= $this->checkbox($item['id'] . '-lock', 'lock')->set($item['lock']) ?></td>
           </tr>
         <?php endforeach ?>
         <tr>
           <td><?= $userselect->name('add_partner')->set(null) ?></td>
-          <td><?= $this->text('add_od', '')->size(5) ?>
-          <td><?= $this->text('add_do', '')->size(5) ?>
+          <td><?= (new \TextHelper('add_od', ''))->size(5) ?>
+          <td><?= (new \TextHelper('add_do', ''))->size(5) ?>
           <td><?= $this->submit('Přidat')->data('action', 'add') ?></td>
           <td><?= $this->checkbox('add_lock', 'lock') ?>
         </tr>
@@ -38,9 +38,9 @@
       <?= $this->submit('Opravit přesahy')->data('action', 'overlap') ?>
       <br />
       <?= $this->submit('Přidat více')->data('action', 'add_multiple') ?>
-      <?= $this->text('add_multi_num', '')->size(2) ?> hodin po
-      <?= $this->text('add_multi_len', '')->size(3) ?> minutách od
-      <?= $this->text('add_multi_od', '')->size(5) ?> hodin
+      <?= (new \TextHelper('add_multi_num', ''))->size(2) ?> hodin po
+      <?= (new \TextHelper('add_multi_len', ''))->size(3) ?> minutách od
+      <?= (new \TextHelper('add_multi_od', ''))->size(5) ?> hodin
     </div>
   </form>
   <br/>

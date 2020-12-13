@@ -2,11 +2,11 @@
   <form action="" method="POST">
     <div class="form-group">
       <label for="jmeno">Název akce</label>
-      <?= $this->text('jmeno', $this->jmeno)->placeholder('Název akce') ?>
+      <?= (new \TextHelper('jmeno', $this->jmeno))->placeholder('Název akce') ?>
     </div>
     <div class="form-group">
       <label for="kde">Název akce</label>
-      <?= $this->text('kde', $this->kde)->placeholder('Místo akce') ?>
+      <?= (new \TextHelper('kde', $this->kde))->placeholder('Místo akce') ?>
     </div>
     <div class="form-group">
       <label for="info">Další info</label>
@@ -23,7 +23,7 @@
     </div>
     <div class="form-group">
       <label for="kapacita">Kapacita (*)</label>
-      <?= $this->text('kapacita', $this->kapacita) ?>
+      <?= new \TextHelper('kapacita', $this->kapacita) ?>
     </div>
     <div class="form-check">
       <?= $this->checkbox('visible', 'visible')->label('Zviditelnit')->set($this->visible) ?>

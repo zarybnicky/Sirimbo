@@ -103,8 +103,7 @@ class Controller_Admin_Galerie_File extends Controller_Abstract
 
     private function _processUpload($parent, $request)
     {
-        $uploadHelper = new UploadHelper();
-        $uploadHelper->upload('files');
+        $uploadHelper = new \UploadHelper('files');
         $uploadHelper->loadFromPost($request);
 
         if (!$uploadHelper->hasValidFiles() && $uploadHelper->hasFiles()) {

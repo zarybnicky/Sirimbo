@@ -16,13 +16,13 @@
             )
         ], [
             'desc' => 'Jméno:',
-            'value' => $this->text('name', $this->name)
+            'value' => new \TextHelper('name', $this->name)
         ], [
             'desc' => 'Popis: ',
             'value' => '<textarea class="form-control" rows="10" cols="50" name="description">' . $this->description . '</textarea>'
         ], [
             'desc' => 'Násobitel částky: ',
-            'value' => $this->text('base', $this->base)
+            'value' => new \TextHelper('base', $this->base)
         ]
     ]))
     ->showHeader(false)

@@ -2,14 +2,14 @@
   <div class="form-row mb-2">
     <div class="form-group col-12 col-md-6">
       <label for="username">Přihlašovací jméno</label>
-      <?= $this->text('login', $this->login)->readonly($this->action == 'edit') ?>
+      <?= (new \TextHelper('login', $this->login))->readonly($this->action == 'edit') ?>
       <small class="form-text text-muted">
         Pouze písmena bez diakritiky, číslice a podtržítka, 3 - 20 znaků
       </small>
     </div>
     <div class="form-group col-12 col-md-6">
       <label for="pass">Heslo</label>
-      <?= $this->text('pass', $this->pass)->disabled($this->action == 'edit') ?>
+      <?= (new \TextHelper('pass', $this->pass))->disabled($this->action == 'edit') ?>
       <small class="form-text text-muted">
         Pouze písmena bez diakritiky, číslice a podtržítka, 6 - 32 znaků
       </small>
@@ -19,11 +19,11 @@
   <div class="form-row mb-2">
     <div class="form-group col-12 col-md-6">
       <label for="jmeno">Jméno</label>
-      <?= $this->text('jmeno', $this->jmeno) ?>
+      <?= new \TextHelper('jmeno', $this->jmeno) ?>
     </div>
     <div class="form-group col-12 col-md-6">
       <label for="prijmeni">Příjmení</label>
-      <?= $this->text('prijmeni', $this->prijmeni) ?>
+      <?= new \TextHelper('prijmeni', $this->prijmeni) ?>
     </div>
   </div>
 
@@ -41,11 +41,11 @@
   <div class="form-row mb-2">
     <div class="form-group col-12 col-md-6">
       <label for="email">E-mail</label>
-      <?= $this->text('email', $this->email) ?>
+      <?= new \TextHelper('email', $this->email) ?>
     </div>
     <div class="form-group col-12 col-md-6">
       <label for="telefon">Telefon</label>
-      <?= $this->text('telefon', $this->telefon) ?>
+      <?= new \TextHelper('telefon', $this->telefon) ?>
     </div>
   </div>
 
@@ -53,29 +53,29 @@
   <div class="form-row mb-2">
     <div class="form-group mb-2 col-12 col-md-6">
       <label for="street">Ulice</label>
-      <?= $this->text('street', $this->street) ?>
+      <?= new \TextHelper('street', $this->street) ?>
     </div>
     <div class="form-group col-6 col-md-3">
       <label for="popisne">Č. popisné</label>
-      <?= $this->text('popisne', $this->popisne) ?>
+      <?= new \TextHelper('popisne', $this->popisne) ?>
     </div>
     <div class="form-group col-6 col-md-3">
       <label for="orientacni">Č. orientační</label>
-      <?= $this->text('orientacni', $this->orientacni) ?>
+      <?= new \TextHelper('orientacni', $this->orientacni) ?>
     </div>
 
     <div class="form-group mb-2 col-12 col-md-6">
       <label for="city">Město</label>
-      <?= $this->text('city', $this->city) ?>
+      <?= new \TextHelper('city', $this->city) ?>
     </div>
     <div class="form-group col-12 col-md-6">
       <label for="district">Část města</label>
-      <?= $this->text('district', $this->district) ?>
+      <?= new \TextHelper('district', $this->district) ?>
     </div>
 
     <div class="form-group col-12 col-md-6">
       <label for="postal">PSČ</label>
-      <?= $this->text('postal', $this->postal) ?>
+      <?= new \TextHelper('postal', $this->postal) ?>
     </div>
   </div>
 

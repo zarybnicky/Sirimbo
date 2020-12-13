@@ -2,7 +2,7 @@
   <form action="" method="post">
     <div class="form-group">
       <label for="name">Název</label>
-      <?= $this->text('name', $this->name) ?>
+      <?= new \TextHelper('name', $this->name) ?>
     </div>
     <div class="form-group">
       <label for="parent">Nadsložka</label>

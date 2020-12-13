@@ -6,7 +6,7 @@
     </div>
     <div class="form-group">
       <label for="kde">Místo</label>
-      <?= $this->text('kde', $this->kde) ?>
+      <?= new \TextHelper('kde', $this->kde) ?>
     </div>
     <div class="form-group">
       <label for="datum">Datum</label>

@@ -3,7 +3,7 @@ class RenderHelper
 {
     public function __construct($filename, array $vars = [], $standalone = false)
     {
-        $renderer = new Renderer();
+        $renderer = new \Renderer();
         $content = $renderer->render($filename, $vars);
 
         if ($standalone) {

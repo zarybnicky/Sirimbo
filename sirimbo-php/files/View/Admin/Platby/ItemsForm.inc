@@ -9,7 +9,7 @@ $form = [
         'value' => $this->date('date', $this->date)
     ], [
         'desc' => 'Částka (Kč):',
-        'value' => $this->text('amount', $this->amount)
+        'value' => new \TextHelper('amount', $this->amount)
     ], [
         'desc' => 'Uživatel: ',
         'value' => $this->select('variable')
@@ -22,7 +22,7 @@ $form = [
                         ->set($this->specific)
     ], [
         'desc' => 'Prefix (rok):',
-        'value' => $this->text('prefix', $this->prefix)
+        'value' => new \TextHelper('prefix', $this->prefix)
     ]
 ];
 $formTable = (new TableHelper($form))

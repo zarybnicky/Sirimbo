@@ -10,7 +10,7 @@
     <?php if (isset($this->createdAt)) : ?>
       <div class="form-group">
         <label for="createdAt">Publikováno</label>
-        <?= $this->text('createdAt', $this->createdAt) ?>
+        <?= new \TextHelper('createdAt', $this->createdAt) ?>
       </div>
     <?php endif ?>
     <div class="form-group">

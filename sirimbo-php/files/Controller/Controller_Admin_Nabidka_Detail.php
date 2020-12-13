@@ -28,13 +28,13 @@ class Controller_Admin_Nabidka_Detail extends Controller_Abstract
 
             $items = array_map(fn($item) => [
                 'user' => $userSelect->set($item['ni_partner'])->name($item['ni_id'] . '-partner'),
-                'lessonCount' => $this->text($item['ni_id'] . '-hodiny', $item['ni_pocet_hod'])->size(1),
+                'lessonCount' => (new \TextHelper($item['ni_id'] . '-hodiny', $item['ni_pocet_hod']))->size(1),
                 'removeButton' => $this->submit('Odstranit')->name('remove')->value($item['ni_id'])
             ], $items);
             $items[] = [
                 'user' => (string) $userSelect->set(null)
                                               ->name('add_partner'),
-                'lessonCount' => $this->text('add_hodiny', '')->size('1'),
+                'lessonCount' => (new \TextHelper('add_hodiny', ''))->size('1'),
                 'removeButton' => $this->submit('Přidat')
             ];
 

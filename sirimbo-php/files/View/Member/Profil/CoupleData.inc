@@ -12,11 +12,11 @@
       </tr>
       <tr>
         <td>Body:</td>
-        <td><?= $this->text('stt-body', $this->stt_body) ?></td>
+        <td><?= new \TextHelper('stt-body', $this->stt_body) ?></td>
       </tr>
       <tr>
         <td>Finále:</td>
-        <td><?= $this->text('stt-finale', $this->stt_finale) ?></td>
+        <td><?= new \TextHelper('stt-finale', $this->stt_finale) ?></td>
       </tr>
       <tr><td colspan="2">Latina:</td></tr>
       <tr>
@@ -27,11 +27,11 @@
       </tr>
       <tr>
         <td>Body:</td>
-        <td><?= $this->text('lat-body', $this->lat_body) ?></td>
+        <td><?= new \TextHelper('lat-body', $this->lat_body) ?></td>
       </tr>
       <tr>
         <td>Finále:</td>
-        <td><?= $this->text('lat-finale', $this->lat_finale) ?></td>
+        <td><?= new \TextHelper('lat-finale', $this->lat_finale) ?></td>
       </tr>
     </table>
     <?= $this->submit('Změnit třídu a body') ?>

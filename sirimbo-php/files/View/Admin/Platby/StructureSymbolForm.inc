@@ -6,13 +6,13 @@
 <?= (new TableHelper([
     [
         'desc' => 'Jméno:',
-        'value' => $this->text('name', $this->name)
+        'value' => new \TextHelper('name', $this->name)
     ], [
         'desc' => 'Specifický symbol:',
-        'value' => $this->text('symbol', $this->symbol)
+        'value' => new \TextHelper('symbol', $this->symbol)
     ], [
         'desc' => 'Očekávaná částka:',
-        'value' => $this->text('amount', $this->amount)
+        'value' => new \TextHelper('amount', $this->amount)
     ], [
         'desc' => 'Splatnost:',
         'value' => $this->date('dueDate', $this->dueDate)

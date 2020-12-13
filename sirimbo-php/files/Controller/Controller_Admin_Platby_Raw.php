@@ -14,7 +14,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
         if ($request->post() && $request->post('action') == 'upload') {
             $this->processUpload($request);
         }
-        $workDir = new DirectoryIterator(self::TEMP_DIR);
+        $workDir = new \DirectoryIterator(self::TEMP_DIR);
         $workDir->rewind();
         foreach ($workDir as $fileInfo) {
             if (!$fileInfo->isFile()) {
@@ -72,12 +72,12 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
     }
     private function getParser($path)
     {
-        $fileinfo = new SplFileInfo($path);
+        $fileinfo = new \SplFileInfo($path);
         if (!$fileinfo->isReadable()) {
             $this->redirect()->danger('Soubor ' . str_replace(self::TEMP_DIR, '', $path) . ' není přístupný.');
             $this->redirect('/admin/platby/raw');
         }
-        $parser = new CSVParser($fileinfo->openFile('r'));
+        $parser = new \CSVParser($fileinfo->openFile('r'));
         $parser->associative(true);
         return $parser;
     }
@@ -108,7 +108,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
             $serialized = serialize($array);
             $hash = md5($serialized);
 
-            $item = new PlatbyItem();
+            $item = new \PlatbyItem();
             $item->init($array[$specific], $array[$variable], $array[$date], $array[$amount]);
             $item->processWithSymbolLookup($userLookup, $categoryLookup);
 
@@ -131,8 +131,8 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
 
     private function processUpload($request)
     {
-        $upload = new UploadHelper();
-        $upload->upload('in')->loadFromPost($request);
+        $upload = new \UploadHelper('in');
+        $upload->loadFromPost($request);
 
         $validFiles = $upload->hasValidFiles();
         if ($upload->hasInvalidFiles()) {

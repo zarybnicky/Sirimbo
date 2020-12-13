@@ -62,7 +62,7 @@
 
 <?php
 if (!$this->data) {
-    echo $this->notice('Žádní takoví uživatelé');
+    echo new \NoticeHelper('Žádní takoví uživatelé');
     echo '</div>';
     return;
 }

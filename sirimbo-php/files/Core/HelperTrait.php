@@ -30,9 +30,4 @@ trait HelperTrait
     {
         return new SubmitHelper(...$args);
     }
-
-    public function text(...$args)
-    {
-        return new TextHelper(...$args);
-    }
 }

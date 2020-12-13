@@ -31,7 +31,7 @@
               </table>
               <div style="text-align:center;padding:10px 0 5px">
                 <?php if ($item['canAdd']) : ?>
-                  <?= $this->text('hodiny', '')->placeholder('Počet hodin')->cls('form-control d-inline w-auto') ?>
+                  <?= (new \TextHelper('hodiny', ''))->placeholder('Počet hodin')->cls('form-control d-inline w-auto') ?>
                   <?= new \HiddenHelper('id', $item['id']) ?>
                   <?= $this->submit('Přidat') ?>
                 <?php endif ?>
