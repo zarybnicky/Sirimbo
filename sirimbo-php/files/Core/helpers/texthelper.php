@@ -75,6 +75,6 @@ class TextHelper
 
     public function __toString()
     {
-        return $this->render();
+        return new \RenderHelper();
     }
 }

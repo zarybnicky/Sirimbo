@@ -1,6 +1,6 @@
 <div class="container full">
     <form action="" method="POST">
-        <?= $this->render('files/View/Member/Akce/Header.inc', $this->data) ?>
+        <?= new \RenderHelper('files/View/Member/Akce/Header.inc', $this->data) ?>
         <?= (new TableHelper($this->documents))
                  ->column('name', 'Jméno<br/>souboru')
                  ->column('category', 'Kategorie')

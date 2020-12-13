@@ -42,7 +42,7 @@ class Controller_Admin_Nastenka extends Controller_Abstract
             $data
         );
 
-        $this->render('files/View/Admin/Nastenka/Overview.inc', [
+        new \RenderHelper('files/View/Admin/Nastenka/Overview.inc', [
             'header' => 'Správa nástěnky',
             'showButtonsCol' => $showButtonsCol,
             'data' => $data,
@@ -57,7 +57,7 @@ class Controller_Admin_Nastenka extends Controller_Abstract
         foreach ($skupiny as $item) {
             $skupinySelected[$item['s_id']] = $request->post('sk-' . $item['s_id']);
         }
-        $this->render('files/View/Admin/Nastenka/Form.inc', [
+        new \RenderHelper('files/View/Admin/Nastenka/Form.inc', [
             'header' => 'Správa nástěnky',
             'subheader' => ($request->getAction() === 'add') ? 'Přidat příspěvek' : 'Upravit příspěvek',
             'action' => $request->getAction(),
@@ -182,13 +182,12 @@ class Controller_Admin_Nastenka extends Controller_Abstract
         Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
 
         if (!$request->post() || $request->post('action') != 'confirm') {
-            $this->render('files/View/Admin/RemovePrompt.inc', [
+            return new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
                 'header' => 'Správa nástěnky',
                 'prompt' => 'Opravdu chcete odstranit příspěvek:',
                 'returnURI' => $request->getReferer() ?: '/admin/nastenka',
                 'data' => [['id' => $data['up_id'], 'text' => $data['up_nadpis']]]
             ]);
-            return;
         }
 
         DBNastenka::removeNastenka($id);

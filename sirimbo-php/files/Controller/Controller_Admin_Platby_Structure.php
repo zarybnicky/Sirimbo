@@ -9,7 +9,7 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
 
     public function view($request)
     {
-        $this->render('files/View/Admin/Platby/StructureOverview.inc', [
+        new \RenderHelper('files/View/Admin/Platby/StructureOverview.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Struktura plateb',
             'data' => $this->getCategories(),

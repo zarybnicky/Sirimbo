@@ -21,7 +21,7 @@ class Controller_Admin_Permissions extends Controller_Abstract
             },
             DBPermissions::getGroups()
         );
-        $this->render('files/View/Admin/Permissions/Overview.inc', [
+        new \RenderHelper('files/View/Admin/Permissions/Overview.inc', [
             'header' => 'Správa oprávnění',
             'data' => $data
         ]);
@@ -30,14 +30,12 @@ class Controller_Admin_Permissions extends Controller_Abstract
     public function add($request)
     {
         if (!$request->post()) {
-            $this->renderForm($request);
-            return;
+            return $this->renderForm($request);
         }
         $form = $this->checkData($request);
         if (!$form->isValid()) {
             $this->redirect()->warning($form->getMessages());
-            $this->renderForm($request);
-            return;
+            return $this->renderForm($request);
         }
 
         $permissions = [];
@@ -65,14 +63,12 @@ class Controller_Admin_Permissions extends Controller_Abstract
         }
 
         if (!$request->post()) {
-            $this->renderForm($request, $data);
-            return;
+            return $this->renderForm($request, $data);
         }
         $form = $this->checkData($request);
         if (!$form->isValid()) {
             $this->redirect()->warning($form->getMessages());
-            $this->renderForm($request, $data);
-            return;
+            return $this->renderForm($request, $data);
         }
 
         $permissions = [];
@@ -103,7 +99,7 @@ class Controller_Admin_Permissions extends Controller_Abstract
         }
 
         $item = DBPermissions::getSingleGroup($id);
-        $this->render('files/View/Admin/RemovePrompt.inc', [
+        new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa oprávnění',
             'prompt' =>
                 new NoticeHelper('Uživatelům z této skupiny bude nutné přiřadit jinou skupinu!')
@@ -143,7 +139,7 @@ class Controller_Admin_Permissions extends Controller_Abstract
             Settings::$permissions
         );
 
-        $this->render('files/View/Admin/Permissions/Form.inc', [
+        new \RenderHelper('files/View/Admin/Permissions/Form.inc', [
             'header' => 'Správa oprávnění',
             'subheader' => (
                 ($data === null)

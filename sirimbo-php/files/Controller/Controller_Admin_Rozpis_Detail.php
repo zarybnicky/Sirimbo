@@ -107,7 +107,7 @@ class Controller_Admin_Rozpis_Detail extends Controller_Abstract
             $nabidka['items'] = $nabidka_items;
         }
 
-        $this->render('files/View/Admin/Rozpis/Detail.inc', [
+        new \RenderHelper('files/View/Admin/Rozpis/Detail.inc', [
             'header' => 'Správa rozpisů',
             'data' => $data,
             'users' => $users,

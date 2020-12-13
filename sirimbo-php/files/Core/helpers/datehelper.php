@@ -103,7 +103,7 @@ class DateHelper
 
     public function __toString()
     {
-        return $this->render();
+        return new \RenderHelper();
     }
 
     public function render()

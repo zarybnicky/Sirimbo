@@ -20,7 +20,7 @@ class Controller_Member_Profil_Par extends Controller_Abstract
     public function view($request)
     {
         $latest = DBPary::getLatestPartner(Session::getUserID(), Session::getUserPohlavi());
-        $this->render('files/View/Member/Profil/CoupleOverview.inc', [
+        new \RenderHelper('files/View/Member/Profil/CoupleOverview.inc', [
             'header' => 'Profil',
             'havePartner' => !empty($latest) && $latest['u_id'],
             'partnerFullName' => $latest['u_jmeno'] . ' ' . $latest['u_prijmeni'],
@@ -44,7 +44,7 @@ class Controller_Member_Profil_Par extends Controller_Abstract
             $request->post('lat-trida', $par['p_lat_trida']);
             $request->post('lat-body', $par['p_lat_body']);
             $request->post('lat-finale', $par['p_lat_finale']);
-            return $this->render('files/View/Member/Profil/CoupleData.inc', [
+            return new \RenderHelper('files/View/Member/Profil/CoupleData.inc', [
                 'header' => 'Změna třídy a bodů',
                 'stt_trida' => $request->post('stt_trida') ?: '',
                 'stt_body' => $request->post('stt_body') ?: '',
@@ -57,7 +57,7 @@ class Controller_Member_Profil_Par extends Controller_Abstract
         $form = $this->checkData($request);
         if (!$form->isValid()) {
             $this->redirect()->warning($form->getMessages());
-            return $this->render('files/View/Member/Profil/CoupleData.inc', [
+            return new \RenderHelper('files/View/Member/Profil/CoupleData.inc', [
                 'header' => 'Změna třídy a bodů',
                 'stt_trida' => $request->post('stt_trida') ?: '',
                 'stt_body' => $request->post('stt_body') ?: '',
@@ -130,7 +130,7 @@ class Controller_Member_Profil_Par extends Controller_Abstract
         }
 
         $request->post('partner', $havePartner ? $latest['u_id'] : '0');
-        $this->render('files/View/Member/Profil/PartnerOverview.inc', [
+        new \RenderHelper('files/View/Member/Profil/PartnerOverview.inc', [
             'header' => 'Profil',
             'havePartner' => $havePartner,
             'partnerID' => $latest['u_id'],

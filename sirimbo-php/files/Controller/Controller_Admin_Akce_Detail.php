@@ -77,7 +77,7 @@ class Controller_Admin_Akce_Detail extends Controller_Abstract
             'removeButton' => $this->submit('Přidat')->data('add', 'add')
         ];
 
-        $this->render('files/View/Admin/Akce/Detail.inc', [
+        new \RenderHelper('files/View/Admin/Akce/Detail.inc', [
             'header' => 'Správa akcí',
             'data' => $data,
             'items' => $items

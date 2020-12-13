@@ -16,7 +16,7 @@ class Controller_Member_Dokumenty extends Controller_Abstract
             $dokumenty = DBDokumenty::getDokumenty();
         }
 
-        $this->render('files/View/Member/Dokumenty.inc', [
+        new \RenderHelper('files/View/Member/Dokumenty.inc', [
             'header' => 'Dokumenty',
             'kat' => $request->get('kat') ?: '',
             'data' => array_map(

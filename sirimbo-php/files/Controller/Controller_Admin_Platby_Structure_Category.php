@@ -35,7 +35,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             }
         }
 
-        $this->render('files/View/Admin/Platby/StructureSymbolOverview.inc', [
+        new \RenderHelper('files/View/Admin/Platby/StructureSymbolOverview.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Specifické symboly',
             'data' => $this->getCategories(false),
@@ -235,8 +235,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                 DBPlatbyItem::remove($data['pi_id']);
             }
             $this->redirect()->info("Spojení s $groupCount kategoriemi a s $itemCount platbami bylo odstraněno");
-            $this->redirect('/admin/platby/structure/category/remove/' . $id);
-            return;
+            return $this->redirect('/admin/platby/structure/category/remove/' . $id);
         } elseif ($request->post('action') == 'archive') {
             DBPlatbyCategory::update(
                 $id,
@@ -252,8 +251,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                 $data['pc_visible']
             );
             $this->redirect()->info('Specifický symbol "' . $data['pc_symbol'] . '" byl archivován');
-            $this->redirect('/admin/platby/structure/category');
-            return;
+            return $this->redirect('/admin/platby/structure/category');
         }
         if (((!$request->post() || $request->post('action') == 'confirm')
             && ($f = $this->getLinkedObjects($id)))
@@ -272,7 +270,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                     )
                 );
             }
-            $this->render('files/View/Admin/Platby/StructureSymbolRemove.inc', [
+            return new \RenderHelper('files/View/Admin/Platby/StructureSymbolRemove.inc', [
                 'header' => 'Správa plateb',
                 'subheader' => 'Specifické symboly_',
                 'id' => $id,
@@ -280,7 +278,6 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                 'returnURI' => $request->getReferer(),
                 'uri' => $request->getLiteralURI()
             ]);
-            return;
         }
         DBPlatbyCategory::delete($id);
         $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/category');
@@ -319,7 +316,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             DBPlatbyGroup::getGroups()
         );
 
-        $this->render('files/View/Admin/Platby/StructureSymbolForm.inc', [
+        new \RenderHelper('files/View/Admin/Platby/StructureSymbolForm.inc', [
             'header' => 'Správa plateb',
             'subheader' => ($action == 'add' ? 'Přidat' : 'Upravit') . ' specifický symbol',
             'id' => $id,

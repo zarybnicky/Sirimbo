@@ -4,10 +4,9 @@ class Controller_Nopassword extends Controller_Abstract
     public function view($request)
     {
         if (!in_array($request->post('action'), ['gen_pass', 'enter'])) {
-            $this->render('files/View/Main/Nopassword.inc', [
+            return new \RenderHelper('files/View/Main/Nopassword.inc', [
                 'header' => 'Zapomenuté heslo'
             ]);
-            return;
         }
 
         $data = DBUser::getUserByNameEmail(

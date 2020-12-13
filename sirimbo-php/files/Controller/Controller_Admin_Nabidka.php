@@ -53,7 +53,7 @@ class Controller_Admin_Nabidka extends Controller_Abstract
             },
             $data
         );
-        $this->render('files/View/Admin/Nabidka/Overview.inc', [
+        new \RenderHelper('files/View/Admin/Nabidka/Overview.inc', [
             'header' => 'Správa nabídky',
             'data' => $data
         ]);
@@ -62,14 +62,12 @@ class Controller_Admin_Nabidka extends Controller_Abstract
     public function add($request)
     {
         if (!$request->post()) {
-            $this->displayForm($request);
-            return;
+            return $this->displayForm($request);
         }
         $form = $this->checkData($request);
         if (!$form->isValid()) {
             $this->redirect()->warning($form->getMessages());
-            $this->displayForm($request);
-            return;
+            return $this->displayForm($request);
         }
 
         Permissions::checkError('nabidka', P_OWNED, $request->post('trener'));
@@ -111,14 +109,12 @@ class Controller_Admin_Nabidka extends Controller_Abstract
         Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
 
         if (!$request->post()) {
-            $this->displayForm($request, $data);
-            return;
+            return $this->displayForm($request, $data);
         }
         $form = $this->checkData($request);
         if (!$form->isValid()) {
             $this->redirect()->warning($form->getMessages());
-            $this->displayForm($request, $data);
-            return;
+            return $this->displayForm($request, $data);
         }
 
         $od = $this->date('od')->getPost($request);
@@ -208,7 +204,7 @@ class Controller_Admin_Nabidka extends Controller_Abstract
         } else {
             $treneri = [DBUser::getUserData(Session::getUserID())];
         }
-        $this->render('files/View/Admin/Nabidka/Form.inc', [
+        new \RenderHelper('files/View/Admin/Nabidka/Form.inc', [
             'header' => 'Správa nabídky',
             'subheader' => $request->getAction() == 'add' ? 'Přidat nabídku' : 'Upravit nabídku',
             'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit',
@@ -223,7 +219,6 @@ class Controller_Admin_Nabidka extends Controller_Abstract
             'visible' => $request->post('visible') ?: ($data ? $data['n_visible'] : false),
             'lock' => $request->post('lock') ?: ($data ? $data['n_lock'] : '')
         ]);
-        return;
     }
 
     private function checkData($request): Form

@@ -16,11 +16,10 @@ class Controller_Member extends Controller_Abstract
         $data = $pager->getItems();
 
         if (empty($data)) {
-            $this->render('files/View/Empty.inc', [
+            return new \RenderHelper('files/View/Empty.inc', [
                 'header' => 'Upozornění',
                 'notice' => 'Žádná upozornění nejsou k dispozici'
             ]);
-            return;
         }
 
         $data = array_map(
@@ -42,7 +41,7 @@ class Controller_Member extends Controller_Abstract
             $data
         );
 
-        $this->render('files/View/Member/Nastenka.inc', [
+        new \RenderHelper('files/View/Member/Nastenka.inc', [
             'header' => 'Upozornění',
             'data' => $data,
             'navigation' => $pager->getNavigation($request->get())

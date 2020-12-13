@@ -32,7 +32,7 @@ class Controller_Admin_Galerie extends Controller_Abstract
             $data
         );
 
-        $this->render('files/View/Admin/Galerie/Overview.inc', [
+        new \RenderHelper('files/View/Admin/Galerie/Overview.inc', [
             'header' => 'Správa fotogalerie',
             'data' => $data
         ]);

@@ -13,7 +13,7 @@ class Controller_Aktualne extends Controller_Abstract
         $photo = DBGalerie::getSingleFoto($data['at_foto_main']);
         $photo_uri = $photo ? $photo['gf_path'] : '';
 
-        $this->render(
+        new \RenderHelper(
             'files/View/Main/Aktuality/Single.inc',
             [
                 'id' => $data['at_id'],
@@ -52,16 +52,15 @@ class Controller_Aktualne extends Controller_Abstract
         $data = DBAktuality::getAktuality($type);
 
         if (!$data) {
-            $this->render('files/View/Empty.inc', [
+            return new \RenderHelper('files/View/Empty.inc', [
                 'header' => $nadpis,
                 'notice' => 'Žádné články nejsou k dispozici.'
             ]);
-            return;
         }
         $data = array_map(
-            function($item) {
+            function ($item) {
                 $photo = DBGalerie::getSingleFoto($item['at_foto_main']);
-                $photo_uri = $photo ? $photo['gf_path'] : '';
+                $photo_uri = $photo['gf_path'] ?? '';
 
                 return [
                     'id'        => $item['at_id'],
@@ -75,7 +74,7 @@ class Controller_Aktualne extends Controller_Abstract
             },
             $data
         );
-        $this->render('files/View/Main/Aktuality/Overview.inc', [
+        new \RenderHelper('files/View/Main/Aktuality/Overview.inc', [
             'header' => $nadpis,
             'data' => $data
         ]);

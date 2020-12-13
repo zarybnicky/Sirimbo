@@ -32,7 +32,7 @@ class Controller_Video extends Controller_Abstract
             DBVideoList::getAll()
         );
         $playlists[] = ['id' => 'other', 'title' => 'Nezařazená videa'];
-        $this->render('files/View/Main/Video.inc', [
+        new \RenderHelper('files/View/Main/Video.inc', [
             'header' => 'Video',
             'subheader' => $playlist,
             'videos' => $videos,

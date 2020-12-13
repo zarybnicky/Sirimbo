@@ -37,7 +37,7 @@ class Controller_Admin_Akce extends Controller_Abstract
             DBAkce::getWithItemCount()
         );
 
-        $this->render('files/View/Admin/Akce/Overview.inc', [
+        new \RenderHelper('files/View/Admin/Akce/Overview.inc', [
             'header' => 'Správa akcí',
             'data' => $data
         ]);
@@ -129,12 +129,11 @@ class Controller_Admin_Akce extends Controller_Abstract
         if ($request->post('action') == 'confirm') {
             DBAkce::removeAkce($id);
             $this->redirect()->success('Akce odebrány');
-            $this->redirect('/admin/akce');
-            return;
+            return $this->redirect('/admin/akce');
         }
 
         $item = DBAkce::getSingleAkce($id);
-        $this->render('files/View/Admin/RemovePrompt.inc', [
+        new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa akcí',
             'prompt' => 'Opravdu chcete odstranit akce:',
             'returnURI' => $request->getReferer() ?: '/admin/akce',
@@ -163,7 +162,7 @@ class Controller_Admin_Akce extends Controller_Abstract
             $dokumenty = [];
         }
 
-        $this->render('files/View/Admin/Akce/Form.inc', [
+        new \RenderHelper('files/View/Admin/Akce/Form.inc', [
             'header' => 'Správa akcí',
             'subheader' => $request->getAction() == 'add' ? 'Přidat akci' : 'Upravit akci',
             'dokumenty' => $dokumenty,

@@ -1,4 +1,4 @@
-<?= $this->render('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri]) ?>
+<?= new \RenderHelper('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri]) ?>
 
 <div class="container">
     <a href="/admin/platby/structure/group/add">Přidat kategorii</a>&nbsp;

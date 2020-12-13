@@ -46,7 +46,7 @@ class Controller_Home extends Controller_Abstract
             ])
         );
 
-        $this->render('files/View/Main/Home.inc', [
+        new \RenderHelper('files/View/Main/Home.inc', [
             'highlights' => $highlights,
             'moreArticles' => $moreArticles,
             'videos' => $videos

@@ -26,14 +26,12 @@ class Controller_Admin_Galerie_File extends Controller_Abstract
         if (!$request->post()) {
             $request->post('name', $data['gf_name']);
             $request->post('parent', $data['gf_id_rodic']);
-            $this->displayForm($request, $id);
-            return;
+            return $this->displayForm($request, $id);
         }
         $form = $this->checkData($request);
         if (!$form->isValid()) {
             $this->redirect()->warning($form->getMessages());
-            $this->displayForm($request, $id);
-            return;
+            return $this->displayForm($request, $id);
         }
 
         $parent = DBGalerie::getSingleDir($request->post('parent'));
@@ -79,7 +77,7 @@ class Controller_Admin_Galerie_File extends Controller_Abstract
         }
 
         $item = DBGalerie::getSingleFoto($id);
-        $this->render('files/View/Admin/RemovePrompt.inc', [
+        new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa galerie',
             'prompt' => 'Opravdu chcete odstranit fotografie:',
             'returnURI' => $request->getReferer() ?: '/admin/galerie',
@@ -90,8 +88,7 @@ class Controller_Admin_Galerie_File extends Controller_Abstract
     public function upload($request)
     {
         if (!$request->post()) {
-            $this->displayUpload($request);
-            return;
+            return $this->displayUpload($request);
         }
         $parentId = $request->post('dir');
         if (!is_numeric($parentId) || $parentId < 0) {
@@ -177,13 +174,12 @@ class Controller_Admin_Galerie_File extends Controller_Abstract
             },
             DBGalerie::getDirs(true, true)
         );
-        $this->render('files/View/Admin/Galerie/Upload.inc', [
+        return new \RenderHelper('files/View/Admin/Galerie/Upload.inc', [
             'header' => 'Správa fotogalerie',
             'subheader' => 'Upload',
             'dirs' => $dirs,
             'dir' => $request->get('dir') ?: '0'
         ]);
-        return;
     }
 
     private function displayForm($request, $id)
@@ -200,7 +196,7 @@ class Controller_Admin_Galerie_File extends Controller_Abstract
             $dirs
         );
 
-        $this->render('files/View/Admin/Galerie/FormFile.inc', [
+        new \RenderHelper('files/View/Admin/Galerie/FormFile.inc', [
             'header' => 'Správa fotogalerie',
             'subheader' => 'Upravit soubor',
             'id' => $id,

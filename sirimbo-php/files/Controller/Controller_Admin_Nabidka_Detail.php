@@ -38,7 +38,7 @@ class Controller_Admin_Nabidka_Detail extends Controller_Abstract
                 'removeButton' => $this->submit('Přidat')
             ];
 
-            $this->render('files/View/Admin/Nabidka/Detail.inc', [
+            return new \RenderHelper('files/View/Admin/Nabidka/Detail.inc', [
                 'header' => 'Správa nabídky',
                 'nabidka' => [
                     'id' => $data['n_id'],
@@ -60,7 +60,6 @@ class Controller_Admin_Nabidka_Detail extends Controller_Abstract
                 'items' => $items,
                 'backlink' => $request->getReferer()
             ]);
-            return;
         }
 
         if ($request->post("remove") > 0) {

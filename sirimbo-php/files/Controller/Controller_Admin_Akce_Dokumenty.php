@@ -84,7 +84,7 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Abstract
             'category' => $this->submit('Přidat')->data('add', 'add'),
             'removeButton' => ''
         ];
-        $this->render('files/View/Admin/Akce/Dokumenty.inc', [
+        new \RenderHelper('files/View/Admin/Akce/Dokumenty.inc', [
             'header' => 'Správa akcí',
             'data' => $akce,
             'documents' => $documents

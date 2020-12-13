@@ -9,7 +9,7 @@ class Controller_Admin_Video_Source extends Controller_Abstract
 
     public function view($request)
     {
-        $this->render('files/View/Admin/VideoSource/Overview.inc', [
+        new \RenderHelper('files/View/Admin/VideoSource/Overview.inc', [
             'header' => 'Správa zdrojů videa',
             'data' => array_map(
                 function ($item) {
@@ -31,15 +31,13 @@ class Controller_Admin_Video_Source extends Controller_Abstract
     public function add($request)
     {
         if (!$request->post()) {
-            $this->displayForm($request);
-            return;
+            return $this->displayForm($request);
         }
 
         $form = $this->checkData($request);
         if (!$form->isValid()) {
             $this->redirect()->warning($form->getMessages());
-            $this->displayForm($request);
-            return;
+            return $this->displayForm($request);
         }
 
         DBVideoSource::add($request->post('uri'));
@@ -56,15 +54,13 @@ class Controller_Admin_Video_Source extends Controller_Abstract
         }
 
         if (!$request->post()) {
-            $this->displayForm($request, $data);
-            return;
+            return $this->displayForm($request, $data);
         }
 
         $form = $this->checkData($request);
         if (!$form->isValid()) {
             $this->redirect()->warning($form->getMessages());
-            $this->displayForm($request, $data);
-            return;
+            return $this->displayForm($request, $data);
         }
 
         DBVideoSource::edit(
@@ -90,7 +86,7 @@ class Controller_Admin_Video_Source extends Controller_Abstract
         }
 
         $item = DBVideo::getSingle($request->getId());
-        $this->render('files/View/Admin/RemovePrompt.inc', [
+        new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa videí',
             'prompt' => 'Opravdu chcete odstranit zdroj:',
             'returnURI' => $request->getReferer() ?: '/admin/video/source',
@@ -100,7 +96,7 @@ class Controller_Admin_Video_Source extends Controller_Abstract
 
     protected function displayForm($request, $data = [])
     {
-        $this->render('files/View/Admin/VideoSource/Form.inc', [
+        new \RenderHelper('files/View/Admin/VideoSource/Form.inc', [
             'header' => 'Správa zdrojů videa',
             'subheader' => $request->getAction() == 'add' ? 'Přidat zdroj' : 'Upravit zdroj',
             'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit',

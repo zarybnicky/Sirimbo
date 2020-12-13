@@ -43,7 +43,7 @@ class Controller_Admin_Pary extends Controller_Abstract
             DBPary::getActivePary()
         );
 
-        $this->render('files/View/Admin/Pary/Overview.inc', [
+        new \RenderHelper('files/View/Admin/Pary/Overview.inc', [
             'header' => 'Správa párů',
             'data' => $data,
             'usersMen' => DBUser::getUsersByPohlavi('m'),
@@ -63,7 +63,7 @@ class Controller_Admin_Pary extends Controller_Abstract
         }
 
         if (!$request->post()) {
-            return $this->render('files/View/Admin/Pary/Form.inc', [
+            return new \RenderHelper('files/View/Admin/Pary/Form.inc', [
                 'header' => 'Správa párů',
                 'subheader' => 'Změna třídy a bodů',
                 'fullName' => (

@@ -15,7 +15,7 @@ class Controller_Member_Clenove extends Controller_Abstract
         if (!($data = DBUser::getUser($id))) {
             return $this->redirect('/member/clenove/structure');
         }
-        $this->render('files/View/Member/Clenove/Single.inc', [
+        new \RenderHelper('files/View/Member/Clenove/Single.inc', [
             'header' => 'Přehled členů',
             'fullName' => $data->getFullName(),
             'email' => $data->getEmail(),
@@ -48,7 +48,7 @@ class Controller_Member_Clenove extends Controller_Abstract
             }
             $skupiny[$currentKey]['userCount']++;
         }
-        $this->render('files/View/Member/Clenove/SkupinyList.inc', [
+        new \RenderHelper('files/View/Member/Clenove/SkupinyList.inc', [
             'header' => 'Přehled členů',
             'data' => $skupiny,
             'uri' => $request->getLiteralURI()
@@ -64,7 +64,7 @@ class Controller_Member_Clenove extends Controller_Abstract
             },
             DBUser::getActiveUsers()
         );
-        $this->render('files/View/Member/Clenove/UserList.inc', [
+        new \RenderHelper('files/View/Member/Clenove/UserList.inc', [
             'header' => 'Přehled členů',
             'data' => $data,
             'uri' => $request->getLiteralURI()
@@ -121,7 +121,7 @@ class Controller_Member_Clenove extends Controller_Abstract
             }
         }
 
-        $this->render('files/View/Member/Clenove/Structure.inc', [
+        new \RenderHelper('files/View/Member/Clenove/Structure.inc', [
             'header' => 'Přehled členů',
             'columns' => $columns,
             'uri' => $request->getLiteralURI()

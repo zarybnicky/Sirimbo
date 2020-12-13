@@ -61,7 +61,7 @@ class Controller_Admin_Platby_Overview extends Controller_Admin_Platby
             }
         }
 
-        $this->render('files/View/Admin/Platby/Statistics.inc', [
+        new \RenderHelper('files/View/Admin/Platby/Statistics.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Členové podle skupin',
             'columns' => $columns,

@@ -61,14 +61,13 @@ class Controller_Member_Nabidka extends Controller_Abstract
         );
 
         if (empty($data)) {
-            $this->render('files/View/Empty.inc', [
+            return new \RenderHelper('files/View/Empty.inc', [
                 'header' => 'Nabídka tréninků',
                 'notice' => 'Žádná nabídka k dispozici'
             ]);
-            return;
         }
 
-        $this->render('files/View/Member/Nabidka/Overview.inc', [
+        new \RenderHelper('files/View/Member/Nabidka/Overview.inc', [
             'header' => 'Nabídka tréninků',
             'data' => $data
         ]);
@@ -92,8 +91,7 @@ class Controller_Member_Nabidka extends Controller_Abstract
         $data = DBNabidka::getSingleNabidka($request->post('id'));
         $form = $this->checkData($request, $data);
         if (!$form->isValid()) {
-            $this->redirect()->warning($form->getMessages());
-            return;
+            return $this->redirect()->warning($form->getMessages());
         }
         if ($request->post('hodiny') > 0) {
             if (!Session::getZaplacenoPar()) {

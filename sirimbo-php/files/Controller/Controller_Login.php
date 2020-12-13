@@ -7,6 +7,6 @@ class Controller_Login extends Controller_Abstract
             $uri = $request->get('return') ? $request->get('return') : '/member/home';
             $this->redirect($uri);
         }
-        $this->render('files/View/Main/Login.inc');
+        new \RenderHelper('files/View/Main/Login.inc');
     }
 }

@@ -26,7 +26,7 @@ class Controller_Admin_Aktuality extends Controller_Abstract
             ? DBAktuality::getAktuality(1)
             : DBAktuality::getAktuality(1, Session::getUserID())
         );
-        $this->render('files/View/Admin/Aktuality/Overview.inc', [
+        new \RenderHelper('files/View/Admin/Aktuality/Overview.inc', [
             'header' => 'Správa aktualit',
             'data' => $data,
         ]);
@@ -35,7 +35,7 @@ class Controller_Admin_Aktuality extends Controller_Abstract
     public function add($request)
     {
         if (!$request->post()) {
-            $this->render('files/View/Admin/Aktuality/Form.inc', [
+            return new \RenderHelper('files/View/Admin/Aktuality/Form.inc', [
                 'header' => 'Správa aktualit',
                 'subheader' => 'Přidat článek',
                 'action' => $request->getAction(),
@@ -43,7 +43,6 @@ class Controller_Admin_Aktuality extends Controller_Abstract
                 'summary' => '',
                 'text' => ''
             ]);
-            return;
         }
 
         $id = DBAktuality::addAktualita(
@@ -81,7 +80,7 @@ class Controller_Admin_Aktuality extends Controller_Abstract
             if ($request->post() && $date === false) {
                 $this->redirect()->danger('Špatný formát data "Publikováno" (D. M. RRRR HH:SS)');
             }
-            return $this->render('files/View/Admin/Aktuality/Form.inc', [
+            return new \RenderHelper('files/View/Admin/Aktuality/Form.inc', [
                 'header' => 'Správa aktualit',
                 'subheader' => 'Upravit článek',
                 'action' => $request->getAction(),
@@ -121,7 +120,7 @@ class Controller_Admin_Aktuality extends Controller_Abstract
         }
 
         $item = DBAktuality::getSingleAktualita($id);
-        $this->render('files/View/Admin/RemovePrompt.inc', [
+        new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa aktualit',
             'prompt' => 'Opravdu chcete odstranit články:',
             'returnURI' => $request->getReferer() ?: '/admin/aktuality',

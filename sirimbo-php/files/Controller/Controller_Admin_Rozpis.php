@@ -50,7 +50,7 @@ class Controller_Admin_Rozpis extends Controller_Abstract
             $data
         );
 
-        $this->render('files/View/Admin/Rozpis/Overview.inc', [
+        new \RenderHelper('files/View/Admin/Rozpis/Overview.inc', [
             'header' => 'Správa rozpisů',
             'data' => $data
         ]);
@@ -161,7 +161,7 @@ class Controller_Admin_Rozpis extends Controller_Abstract
                  ? DBUser::getUsersByPermission('rozpis', P_OWNED)
                  : [DBUser::getUserData(Session::getUserID())];
 
-        $this->render('files/View/Admin/Rozpis/Form.inc', [
+        new \RenderHelper('files/View/Admin/Rozpis/Form.inc', [
             'header' => 'Správa rozpisů',
             'subheader' => ($data === null ? 'Přidat' : 'Upravit') . ' rozpis',
             'action' => $request->getAction(),

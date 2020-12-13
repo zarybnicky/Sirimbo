@@ -15,11 +15,10 @@ class Controller_Fotogalerie extends Controller_Abstract
         $photos = DBGalerie::getFotky($id);
 
         if (empty($photos)) {
-            $this->render('files/View/Empty.inc', [
+            return new \RenderHelper('files/View/Empty.inc', [
                 'nadpis' => $dir['gd_name'],
                 'notice' => 'Žádné fotky k dispozici.'
             ]);
-            return;
         }
 
         $photos = array_map(
@@ -33,7 +32,7 @@ class Controller_Fotogalerie extends Controller_Abstract
             $photos
         );
 
-        $this->render(
+        new \RenderHelper(
             'files/View/Main/Fotogalerie/Overview.inc',
             [
                 'nadpis' => $dir['gd_name'],
@@ -65,7 +64,7 @@ class Controller_Fotogalerie extends Controller_Abstract
         $hasPrev = isset($parent_dir[$current - 1]);
         $hasNext = isset($parent_dir[$current + 1]);
 
-        $this->render(
+        new \RenderHelper(
             'files/View/Main/Fotogalerie/Single.inc',
             [
                 'id'        => $id,
@@ -83,7 +82,7 @@ class Controller_Fotogalerie extends Controller_Abstract
     public function sidemenu($request)
     {
         if (!($dirs = DBGalerie::getDirs(true, true))) {
-            return;
+            return '';
         }
 
         $root = $tip = new Tag('ul', ['class' => 'fotoroot']);

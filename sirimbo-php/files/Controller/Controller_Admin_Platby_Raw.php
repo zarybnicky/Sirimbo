@@ -27,7 +27,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
             $this->redirect()->success('Soubor ' . $fileInfo->getFilename() . ' byl zpracován.');
         }
 
-        $this->render('files/View/Admin/Platby/RawUpload.inc', [
+        new \RenderHelper('files/View/Admin/Platby/RawUpload.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Import plateb',
             'uri' => $request->getLiteralURI()
@@ -63,7 +63,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
                 'amount' => $this->radio('amount', $name)->set($name == $amount)
             ];
         }
-        $this->render('files/View/Admin/Platby/RawColumnSelect.inc', [
+        new \RenderHelper('files/View/Admin/Platby/RawColumnSelect.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Import plateb',
             'data' => $data,
@@ -136,11 +136,9 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
 
         $validFiles = $upload->hasValidFiles();
         if ($upload->hasInvalidFiles()) {
-            $this->redirect()->warning($upload->getErrorMessages());
-            return;
+            return $this->redirect()->warning($upload->getErrorMessages());
         } elseif ($upload->hasEmptyFiles() && empty($validFiles)) {
-            $this->redirect()->info('Vyberte prosím nějaký soubor (prázdné soubory jsou automaticky odmítnuty).');
-            return;
+            return $this->redirect()->info('Vyberte prosím nějaký soubor (prázdné soubory jsou automaticky odmítnuty).');
         }
         $uploader = $upload->getFilledUploader();
         $uploader->setOutputDir(self::TEMP_DIR);

@@ -31,7 +31,7 @@ class Controller_Admin_Video extends Controller_Abstract
                 },
                 DBVideo::getByPlaylist($request->getId())
             );
-            $this->render('files/View/Admin/Video/Overview.inc', [
+            new \RenderHelper('files/View/Admin/Video/Overview.inc', [
                 'header' => 'Správa videí',
                 'data' => $data,
                 'action' => 'playlist',
@@ -50,7 +50,7 @@ class Controller_Admin_Video extends Controller_Abstract
                 },
                 DBVideoList::getAll()
             );
-            $this->render('files/View/Admin/Video/Overview.inc', [
+            new \RenderHelper('files/View/Admin/Video/Overview.inc', [
                 'header' => 'Správa videí',
                 'data' => $data,
                 'action' => 'playlist',
@@ -79,7 +79,7 @@ class Controller_Admin_Video extends Controller_Abstract
             },
             $pager->getItems()
         );
-        $this->render('files/View/Admin/Video/Overview.inc', [
+        new \RenderHelper('files/View/Admin/Video/Overview.inc', [
             'header' => 'Správa videí',
             'data' => $data,
             'action' => 'orphan',
@@ -97,7 +97,7 @@ class Controller_Admin_Video extends Controller_Abstract
             $this->redirect('/admin/video/title');
         }
         $select = $this->select()->optionsAssoc(DBVideo::getAll(), 'v_id', 'v_title');
-        $this->render('files/View/Admin/Video/Title.inc', [
+        new \RenderHelper('files/View/Admin/Video/Title.inc', [
             'header' => 'Správa videí',
             'video1' => $select->name('video1')->set(DBParameters::get('title_video1')),
             'video2' => $select->name('video2')->set(DBParameters::get('title_video2')),
@@ -109,15 +109,13 @@ class Controller_Admin_Video extends Controller_Abstract
     public function add($request)
     {
         if (!$request->post()) {
-            $this->displayForm($request);
-            return;
+            return $this->displayForm($request);
         }
 
         $form = $this->checkData($request);
         if (!$form->isValid()) {
             $this->redirect()->warning($form->getMessages());
-            $this->displayForm($request);
-            return;
+            return $this->displayForm($request);
         }
 
         DBVideo::add(
@@ -141,15 +139,13 @@ class Controller_Admin_Video extends Controller_Abstract
         }
 
         if (!$request->post()) {
-            $this->displayForm($request, $data);
-            return;
+            return $this->displayForm($request, $data);
         }
 
         $form = $this->checkData($request);
         if (!$form->isValid()) {
             $this->redirect()->warning($form->getMessages());
-            $this->displayForm($request, $data);
-            return;
+            return $this->displayForm($request, $data);
         }
 
         DBVideo::edit(
@@ -177,7 +173,7 @@ class Controller_Admin_Video extends Controller_Abstract
         }
 
         $item = DBVideo::getSingle($request->getId());
-        $this->render('files/View/Admin/RemovePrompt.inc', [
+        new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa videí',
             'prompt' => 'Opravdu chcete odstranit video:',
             'returnURI' => $request->getReferer() ?: '/admin/video',
@@ -187,7 +183,7 @@ class Controller_Admin_Video extends Controller_Abstract
 
     protected function displayForm($request, $data = [])
     {
-        $this->render('files/View/Admin/Video/Form.inc', [
+        new \RenderHelper('files/View/Admin/Video/Form.inc', [
             'header' => 'Správa videí',
             'subheader' => $request->getAction() == 'add' ? 'Přidat video' : 'Upravit video',
             'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit',

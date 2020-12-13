@@ -67,7 +67,7 @@ class Controller_Admin_Users extends Controller_Abstract
         }
 
         $item = DBUser::getUserData($id);
-        $this->render('files/View/Admin/RemovePrompt.inc', [
+        new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa uživatelů',
             'prompt' => 'Opravdu chcete odstranit uživatele:',
             'returnURI' => $request->getReferer() ?: '/admin/users',
@@ -224,11 +224,10 @@ class Controller_Admin_Users extends Controller_Abstract
 
         $users = DBUser::getNewUsers();
         if (empty($users)) {
-            $this->render('files/View/Empty.inc', [
+            return new \RenderHelper('files/View/Empty.inc', [
                 'header' => 'Správa uživatelů',
                 'notice' => 'Žádní nepotvrzení uživatelé nejsou v databázi.'
             ]);
-            return;
         }
         $groups = DBPermissions::getGroups();
         $s_group = $this->select()->optionsAssoc($groups, 'pe_id', 'pe_name')->set(3);
@@ -256,7 +255,7 @@ class Controller_Admin_Users extends Controller_Abstract
             $users
         );
 
-        $this->render('files/View/Admin/Users/Unconfirmed.inc', [
+        new \RenderHelper('files/View/Admin/Users/Unconfirmed.inc', [
             'header' => 'Správa uživatelů',
             'subheader' => 'Nepotvrzení uživatelé',
             'data' => $users
@@ -281,7 +280,7 @@ class Controller_Admin_Users extends Controller_Abstract
             },
             DBUser::getDuplicateUsers()
         );
-        $this->render('files/View/Admin/Users/Duplicate.inc', [
+        new \RenderHelper('files/View/Admin/Users/Duplicate.inc', [
             'header' => 'Správa uživatelů',
             'subheader' => 'Duplicitní uživatelé',
             'data' => $users
@@ -307,7 +306,7 @@ class Controller_Admin_Users extends Controller_Abstract
             ['group' => 'Aktivní uživatelé', 'count' => count($active)]
         );
 
-        $this->render('files/View/Admin/Users/Statistiky.inc', [
+        new \RenderHelper('files/View/Admin/Users/Statistiky.inc', [
             'header' => 'Správa uživatelů',
             'subheader' => 'Statistiky',
             'data' => $data
@@ -394,7 +393,7 @@ class Controller_Admin_Users extends Controller_Abstract
             $pager->getItems()
         );
 
-        $this->render('files/View/Admin/Users/Overview.inc', [
+        new \RenderHelper('files/View/Admin/Users/Overview.inc', [
             'header' => 'Správa uživatelů',
             'groupOptions' => $groupOptions,
             'skupinyOptions' => $skupinyOptions,
@@ -408,7 +407,6 @@ class Controller_Admin_Users extends Controller_Abstract
             'group' => $request->get('group') ?: '',
             'sort' => $request->get('sort') ?: ''
         ]);
-        return;
     }
 
     private function displayForm($request)
@@ -429,7 +427,7 @@ class Controller_Admin_Users extends Controller_Abstract
             },
             DBSkupiny::get()
         );
-        $this->render('files/View/Admin/Users/Form.inc', [
+        new \RenderHelper('files/View/Admin/Users/Form.inc', [
             'header' => 'Správa uživatelů',
             'subheader' => ($request->getAction() == 'add' ? 'Přidat' : 'Upravit') . ' uživatele',
             'action' => $request->getAction(),

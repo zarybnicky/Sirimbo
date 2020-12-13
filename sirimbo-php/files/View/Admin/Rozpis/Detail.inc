@@ -2,7 +2,7 @@
   <form action="" method="POST">
     <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
     <div class="r_wrapper">
-      <?= $this->render('files/View/Member/Rozpis/Header.inc', $this->data) ?>
+      <?= new \RenderHelper('files/View/Member/Rozpis/Header.inc', $this->data) ?>
       <table>
         <tr>
           <td>Tanečník</td>
@@ -54,7 +54,7 @@
     <?= $this->submit('Vybrat nabídku') ?>
     <?php if ($this->nabidka) : ?>
       <div class="n_wrapper">
-        <?= $this->render('files/View/Member/Nabidka/Header.inc', $this->nabidka) ?>
+        <?= new \RenderHelper('files/View/Member/Nabidka/Header.inc', $this->nabidka) ?>
         <table>
           <tr>
             <td>Tanečník</td>

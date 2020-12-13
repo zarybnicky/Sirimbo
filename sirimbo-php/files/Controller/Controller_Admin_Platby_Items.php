@@ -37,7 +37,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             $data
         );
 
-        $this->render('files/View/Admin/Platby/ItemsOverview.inc', [
+        new \RenderHelper('files/View/Admin/Platby/ItemsOverview.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Jednotlivé platby',
             'users' => DBUser::getUsers(),
@@ -53,12 +53,10 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
     public function add($request)
     {
         if (!$request->post()) {
-            $this->displayForm(0, $request);
-            return;
+            return $this->displayForm(0, $request);
         } elseif (!is_object($item = $this->getFromPost($request))) {
             $this->redirect()->warning($item);
-            $this->displayForm(0, $request);
-            return;
+            return $this->displayForm(0, $request);
         }
         DBPlatbyItem::insert(
             $item->variable,
@@ -87,12 +85,10 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             $request->post('variable', $data['pi_id_user']);
             $request->post('specific', $data['pi_id_category']);
             $request->post('prefix', $data['pi_prefix']);
-            $this->displayForm($id, $request);
-            return;
+            return $this->displayForm($id, $request);
         } elseif (!is_object($item = $this->getFromPost($request, $id))) {
             $this->redirect()->warning($item);
-            $this->displayForm($id, $request);
-            return;
+            return $this->displayForm($id, $request);
         }
         DBPlatbyItem::update(
             $id,
@@ -127,7 +123,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             $this->redirect('/admin/platby/items');
         }
         $item = DBPlatbyItem::getSingle($id, true);
-        $this->render('files/View/Admin/RemovePrompt.inc', [
+        new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa plateb',
             'prompt' => 'Opravdu chcete odstranit platbu:',
             'returnURI' => $request->getReferer() ?: '/admin/platby/items',
@@ -153,7 +149,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         }
         $users = $this->getUsers();
         $categories = $this->getCategories();
-        $this->render('files/View/Admin/Platby/ItemsForm.inc', [
+        new \RenderHelper('files/View/Admin/Platby/ItemsForm.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Jednotlivé platby',
             'action' => $request->getAction(),

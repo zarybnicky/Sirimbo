@@ -14,7 +14,7 @@ class Controller_Registrace extends Controller_Abstract
                 },
                 DBSkupiny::get()
             );
-            $this->render('files/View/Main/Registrace.inc', [
+            return new \RenderHelper('files/View/Main/Registrace.inc', [
                 'header' => 'Registrace',
                 'skupiny' => $skupiny,
                 'username' => '',
@@ -37,7 +37,6 @@ class Controller_Registrace extends Controller_Abstract
                 'skupina' => '0',
                 'other' => ''
             ]);
-            return;
         }
 
         $narozeni = (string) $this->date('narozeni')->getPost($request);
@@ -72,7 +71,7 @@ class Controller_Registrace extends Controller_Abstract
             );
 
             $this->redirect()->warning($f->getMessages());
-            $this->render('files/View/Main/Registrace.inc', [
+            return new \RenderHelper('files/View/Main/Registrace.inc', [
                 'header' => 'Registrace',
                 'skupiny' => $skupiny,
                 'username' => $request->post('username') ?: '',
@@ -95,7 +94,6 @@ class Controller_Registrace extends Controller_Abstract
                 'skupina' => $request->post('skupina') ?: '',
                 'other' => $request->post('other') ?: ''
             ]);
-            return;
         }
 
         Session::register(

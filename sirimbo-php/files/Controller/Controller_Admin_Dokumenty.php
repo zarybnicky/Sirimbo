@@ -26,8 +26,7 @@ class Controller_Admin_Dokumenty extends Controller_Abstract
 
             if (!move_uploaded_file($fileUpload, $path)) {
                 $this->redirect()->danger('Nepodařilo se soubor nahrát.');
-                $this->redirect('/admin/dokumenty');
-                return;
+                return $this->redirect('/admin/dokumenty');
             }
 
             chmod($path, 0666);
@@ -39,29 +38,23 @@ class Controller_Admin_Dokumenty extends Controller_Abstract
                 Session::getUserID()
             );
             $this->redirect()->success('Soubor byl nahrán úspěšně');
-            $this->redirect('/admin/dokumenty');
-            return;
+            return $this->redirect('/admin/dokumenty');
         }
 
         $data = Permissions::check('dokumenty', P_ADMIN)
             ? DBDokumenty::getDokumenty()
             : DBDokumenty::getDokumentyByAuthor(Session::getUserID());
 
-        $data = array_map(
-            function ($item) {
-                return [
-                    'buttons' => new EditLinkHelper('/admin/dokumenty/edit/' . $item['d_id'])
-                        . '&nbsp;&nbsp;'
-                        . new RemoveLinkHelper('/admin/dokumenty/remove/' . $item['d_id']),
-                    'link' => '<a href="/member/download?id=' . $item['d_id'] . '">' . $item['d_name'] . '</a>',
-                    'name' => $item['d_filename'],
-                    'category' => Settings::$documentTypes[$item['d_kategorie']],
-                    'by' => $item['u_jmeno'] . ' ' . $item['u_prijmeni']
-                ];
-            },
-            $data
-        );
-        $this->render('files/View/Admin/Dokumenty/Overview.inc', [
+        $data = array_map(fn($item) => [
+            'buttons' => new EditLinkHelper('/admin/dokumenty/edit/' . $item['d_id'])
+            . '&nbsp;&nbsp;'
+            . new RemoveLinkHelper('/admin/dokumenty/remove/' . $item['d_id']),
+            'link' => '<a href="/member/download?id=' . $item['d_id'] . '">' . $item['d_name'] . '</a>',
+            'name' => $item['d_filename'],
+            'category' => Settings::$documentTypes[$item['d_kategorie']],
+            'by' => $item['u_jmeno'] . ' ' . $item['u_prijmeni']
+        ], $data);
+        new \RenderHelper('files/View/Admin/Dokumenty/Overview.inc', [
             'header' => 'Správa dokumentů',
             'data' => $data,
         ]);
@@ -84,7 +77,7 @@ class Controller_Admin_Dokumenty extends Controller_Abstract
             $this->redirect()->success('Dokument upraven');
             $this->redirect('/admin/dokumenty');
         }
-        $this->render('files/View/Admin/Dokumenty/Form.inc', [
+        new \RenderHelper('files/View/Admin/Dokumenty/Form.inc', [
             'header' => 'Správa dokumentů',
             'name' => $data['d_name']
         ]);
@@ -107,7 +100,7 @@ class Controller_Admin_Dokumenty extends Controller_Abstract
             $this->redirect('/admin/dokumenty');
         }
 
-        $this->render('files/View/Admin/RemovePrompt.inc', [
+        new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa dokumentů',
             'prompt' => 'Opravdu chcete odstranit dokument:',
             'returnURI' => $request->getReferer() ?: '/admin/dokumenty',

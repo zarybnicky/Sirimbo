@@ -15,7 +15,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Abstract
             $this->redirect('/admin/galerie');
         }
 
-        $this->render('files/View/Admin/Galerie/DisplayDirectory.inc', [
+        new \RenderHelper('files/View/Admin/Galerie/DisplayDirectory.inc', [
             'header' => 'Správa fotogalerie',
             'id' => $id,
             'files' => array_map(
@@ -130,7 +130,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Abstract
         }
 
         $item = DBGalerie::getSingleDir($id);
-        $this->render('files/View/Admin/RemovePrompt.inc', [
+        new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa galerie',
             'prompt' => 'Opravdu chcete odstranit složky se všemi podsložkami a fotkami:',
             'returnURI' => $request->getReferer() ?: '/admin/galerie',
@@ -151,7 +151,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Abstract
             DBGalerie::getDirs(true, true)
         );
 
-        $this->render('files/View/Admin/Galerie/FormDirectory.inc', [
+        return new \RenderHelper('files/View/Admin/Galerie/FormDirectory.inc', [
             'header' => 'Správa fotogalerie',
             'subheader' => ($action == 'add' ? 'Přidat' : 'Upravit') . ' složku',
             'dirs' => $dirs,
@@ -160,7 +160,6 @@ class Controller_Admin_Galerie_Directory extends Controller_Abstract
             'parent' => $request->post('parent') ?: '',
             'hidden' => $request->post('hidden') ?: ''
         ]);
-        return;
     }
 
     protected function checkData($request)

@@ -14,11 +14,10 @@ class Controller_Member_Akce extends Controller_Abstract
                 $this->redirect()->warning('Neexistuje žádná taková akce');
                 $this->redirect('/member/akce');
             }
-            $this->render('files/View/Member/Akce/Single.inc', [
+            return new \RenderHelper('files/View/Member/Akce/Single.inc', [
                 'header' => 'Klubové akce',
                 'data' => $this->_getRenderData($data)
             ]);
-            return;
         }
         if ($request->post('id')
             && ($data = DBAkce::getSingleAkce($request->post('id')))
@@ -41,16 +40,15 @@ class Controller_Member_Akce extends Controller_Abstract
         }
         $akce = DBAkce::getAkce(true);
         if (empty($akce)) {
-            $this->render('files/View/Empty.inc', [
+            return new \RenderHelper('files/View/Empty.inc', [
                 'header' => 'Klubové akce',
                 'notice' => 'Žádné akce nejsou k dispozici.'
             ]);
-            return;
         }
         foreach ($akce as &$data) {
             $data = $this->_getRenderData($data);
         }
-        $this->render('files/View/Member/Akce/Overview.inc', [
+        new \RenderHelper('files/View/Member/Akce/Overview.inc', [
             'header' => 'Klubové akce',
             'akce' => $akce
         ]);

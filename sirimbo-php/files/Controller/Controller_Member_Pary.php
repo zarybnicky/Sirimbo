@@ -11,11 +11,10 @@ class Controller_Member_Pary extends Controller_Abstract
     {
         $data = DBPary::getActiveParyByHodnoceni();
         if (empty($data)) {
-            $this->render('files/View/Empty.inc', [
+            return new \RenderHelper('files/View/Empty.inc', [
                 'header' => 'Žebříček párů',
                 'notice' => 'Žádné páry nejsou v databázi'
             ]);
-            return;
         }
         $data = array_map(
             function ($item) {
@@ -31,7 +30,7 @@ class Controller_Member_Pary extends Controller_Abstract
             $data
         );
 
-        $this->render('files/View/Member/Pary/Overview.inc', [
+        new \RenderHelper('files/View/Member/Pary/Overview.inc', [
             'header' => 'Žebříček párů',
             'data' => $data
         ]);

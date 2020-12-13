@@ -9,7 +9,7 @@ class Controller_Admin extends Controller_Abstract
 
     public function view($request)
     {
-        $this->render('files/View/Admin/Home.inc', [
+        new \RenderHelper('files/View/Admin/Home.inc', [
             'header' => 'Administrace'
         ]);
     }

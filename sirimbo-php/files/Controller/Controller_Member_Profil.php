@@ -45,7 +45,7 @@ class Controller_Member_Profil extends Controller_Abstract
             ];
         }
 
-        $this->render('files/View/Member/Profil/Overview.inc', [
+        new \RenderHelper('files/View/Member/Profil/Overview.inc', [
             'header' => $data->getFullName(),
             'ageGroup' => Session::getAgeGroup($data->getBirthYear()),
             'coupleData' => Session::getCoupleData(),
@@ -61,7 +61,7 @@ class Controller_Member_Profil extends Controller_Abstract
 
     public function renderPersonalForm($request)
     {
-        $this->render('files/View/Member/Profil/PersonalData.inc', [
+        new \RenderHelper('files/View/Member/Profil/PersonalData.inc', [
             'header' => 'Osobní údaje',
             'lock' => $request->post('lock'),
             'jmeno' => $request->post('jmeno'),
@@ -85,7 +85,7 @@ class Controller_Member_Profil extends Controller_Abstract
     public function gdpr($request)
     {
         if ($request->post('action') !== 'gdpr') {
-            return $this->render('files/View/Member/Profil/Gdpr.inc', [
+            return new \RenderHelper('files/View/Member/Profil/Gdpr.inc', [
                 'header' => 'Souhlas se zpracováním osobních údajů',
             ]);
         }
@@ -155,14 +155,14 @@ class Controller_Member_Profil extends Controller_Abstract
     public function heslo($request)
     {
         if (!$request->post()) {
-            return $this->render('files/View/Member/Profil/NewPassword.inc', [
+            return new \RenderHelper('files/View/Member/Profil/NewPassword.inc', [
                 'header' => 'Změna hesla'
             ]);
         }
         $form = $this->checkData($request, 'heslo');
         if (!$form->isValid()) {
             $this->redirect()->warning($form->getMessages());
-            return $this->render('files/View/Member/Profil/NewPassword.inc', [
+            return new \RenderHelper('files/View/Member/Profil/NewPassword.inc', [
                 'header' => 'Změna hesla'
             ]);
         }

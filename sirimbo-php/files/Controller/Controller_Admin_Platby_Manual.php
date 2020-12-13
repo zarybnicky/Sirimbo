@@ -97,7 +97,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
         }
         $raw = $new;
 
-        $this->render('files/View/Admin/Platby/ManualForm.inc', [
+        new \RenderHelper('files/View/Admin/Platby/ManualForm.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Ruční třídění plateb</span> (zbývá ' . $remainingCount . ')',
             'id' => $id,
@@ -142,18 +142,15 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
     {
         $id = $request->post('id');
         if (!$id || !($current = DBPlatbyRaw::getSingle($id))) {
-            $this->redirect()->warning('Zadaná platba neexistuje.');
-            return;
+            return $this->redirect()->warning('Zadaná platba neexistuje.');
         } elseif ($current['pr_sorted'] && ($item = DBPlatbyItem::getSingleByRawId($id))) {
-            $this->redirect()->info('Zadaná platba už byla zařazená.');
-            return;
+            return $this->redirect()->info('Zadaná platba už byla zařazená.');
         }
 
         switch ($request->post('action')) {
             case 'confirm':
                 if (!is_object($item = $this->getFromPost($request))) {
-                    $this->redirect()->warning($item);
-                    return;
+                    return $this->redirect()->warning($item);
                 }
                 DBPlatbyRaw::update(
                     $id,

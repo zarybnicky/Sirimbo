@@ -60,12 +60,12 @@ class Controller_Member_Rozpis extends Controller_Abstract
         );
 
         if ($data) {
-            $this->render('files/View/Member/Rozpis/Overview.inc', [
+            new \RenderHelper('files/View/Member/Rozpis/Overview.inc', [
                 'header' => 'Rozpis tréninků',
                 'data' => $data
             ]);
         } else {
-            $this->render('files/View/Empty.inc', [
+            new \RenderHelper('files/View/Empty.inc', [
                 'header' => 'Rozpis tréninků',
                 'notice' => 'Žádné aktuální rozpisy nejsou k dispozici.'
             ]);
@@ -86,8 +86,7 @@ class Controller_Member_Rozpis extends Controller_Abstract
         $lesson = DBRozpis::getRozpisItemLesson($request->post('ri_id'));
         $form = $this->checkData($request, $data, $request->post('action'));
         if (!$form->isValid()) {
-            $this->redirect()->warning($form->getMessages());
-            return;
+            return $this->redirect()->warning($form->getMessages());
         }
         if ($request->post('action') == 'signup') {
             if (!Session::getZaplacenoPar()) {

@@ -9,7 +9,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
 
     public function view($request)
     {
-        $this->render('files/View/Admin/Platby/StructureGroupOverview.inc', [
+        new \RenderHelper('files/View/Admin/Platby/StructureGroupOverview.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Kategorie plateb',
             'data' => $this->getGroups(),
@@ -155,8 +155,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
                 'Spojení s ' . $skupinaCount . ' skupinami a s '
                 . $categoryCount . ' kategoriemi bylo odstraněno'
             );
-            $this->redirect('/admin/platby/structure/group/remove/' . $id);
-            return;
+            return $this->redirect('/admin/platby/structure/group/remove/' . $id);
         }
         if (((!$request->post() || $request->post('action') == 'confirm')
             && ($f = $this->getLinkedObjects($id))) || !$request->post()
@@ -171,7 +170,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
                     )
                 );
             }
-            $this->render('files/View/Admin/Platby/StructureGroupRemove.inc', [
+            return new \RenderHelper('files/View/Admin/Platby/StructureGroupRemove.inc', [
                 'header' => 'Správa plateb',
                 'subheader' => 'Kategorie plateb',
                 'id' => $id,
@@ -179,7 +178,6 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
                 'returnURI' => $request->getReferer(),
                 'uri' => $request->getLiteralURI()
             ]);
-            return;
         }
         DBPlatbyGroup::delete($id);
         $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/group');
@@ -246,7 +244,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
             DBSkupiny::get()
         );
 
-        $this->render('files/View/Admin/Platby/StructureGroupForm.inc', [
+        new \RenderHelper('files/View/Admin/Platby/StructureGroupForm.inc', [
             'header' => 'Správa plateb',
             'subheader' => $action == 'add' ? 'Přidat kategorii' : 'Upravit kategorii',
             'id' => $id,

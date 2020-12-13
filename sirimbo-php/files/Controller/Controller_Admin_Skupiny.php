@@ -22,7 +22,7 @@ class Controller_Admin_Skupiny extends Controller_Abstract
             },
             DBSkupiny::get()
         );
-        $this->render('files/View/Admin/Skupiny/Overview.inc', [
+        new \RenderHelper('files/View/Admin/Skupiny/Overview.inc', [
             'header' => 'Správa skupin',
             'data' => $data
         ]);
@@ -117,8 +117,7 @@ class Controller_Admin_Skupiny extends Controller_Abstract
             }
 
             $this->redirect()->info('Spojení s ' . $groupCount . ' kategoriemi byla odstraněna.');
-            $this->redirect('/admin/skupiny/remove/' . $id);
-            return;
+            return $this->redirect('/admin/skupiny/remove/' . $id);
         }
         if (($f = $this->getLinkedSkupinaObjects($id)) || !$request->post()) {
             if (isset($f) && $f) {
@@ -131,13 +130,12 @@ class Controller_Admin_Skupiny extends Controller_Abstract
                     )
                 );
             }
-            $this->render('files/View/Admin/RemovePrompt.inc', [
+            return new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
                 'header' => 'Správa skupin',
                 'prompt' => 'Opravdu chcete odstranit skupinu?',
                 'returnURI' => $request->getReferer() ?: '/admin/skupiny',
                 'data' => [['id' => $data['s_id'], 'text' => $data['s_name']]]
             ]);
-            return;
         }
         DBSkupiny::delete($id);
         $this->redirect('/admin/skupiny');
@@ -172,7 +170,7 @@ class Controller_Admin_Skupiny extends Controller_Abstract
         );
 
         $action = $request->getAction();
-        $this->render('files/View/Admin/Skupiny/Form.inc', [
+        new \RenderHelper('files/View/Admin/Skupiny/Form.inc', [
             'header' => 'Správa skupin',
             'subheader' => $action == 'add' ? 'Přidat skupinu' : 'Upravit skupinu',
             'id' => $id,
