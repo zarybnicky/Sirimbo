@@ -73,7 +73,7 @@ try {
 } catch (ViewException $e) {
     fwrite(
         fopen('php://stderr', 'w'),
-        $_SERVER('REQUEST_URI') . ": {$e->getMessage()}\n"
+        $_SERVER['REQUEST_URI'] . ": {$e->getMessage()}\n"
         . '(' . $e->getFile() . ':' . $e->getLine() . ")\n"
         . $e->getTraceAsString()
         . "\tPOST: " . json_encode(static::$request->post()) . "\n"
@@ -84,7 +84,7 @@ try {
 } catch (Exception $e) {
     fwrite(
         fopen('php://stderr', 'w'),
-        $_SERVER('REQUEST_URI') . ": {$e->getMessage()}\n"
+        $_SERVER['REQUEST_URI'] . ": {$e->getMessage()}\n"
         . '(' . $e->getFile() . ':' . $e->getLine() . ")\n"
         . $e->getTraceAsString()
         . "\tPOST: " . json_encode(static::$request->post()) . "\n"
