@@ -4,7 +4,7 @@ class NavbarItemHelper
     protected $item;
     protected $url;
 
-    public function navbarItem($url, $item)
+    public function __construct($url, $item)
     {
         $this->item = $item;
         $this->url = $url;

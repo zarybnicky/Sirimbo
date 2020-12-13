@@ -1,4 +1,5 @@
 <?php
+namespace Olymp;
 
 class Router
 {
@@ -73,7 +74,7 @@ class Router
      * @param string $path   The request path, most likely from some URL rewrite ?r=
      * @return mixed The router output
      */
-    public function dispatch(string $method, string $path): mixed
+    public function dispatch(string $method, string $path)
     {
         foreach ($this->routes[$method] ?? [] as $regex => $callback) {
             $len = strlen($regex);
@@ -90,7 +91,7 @@ class Router
                     return $this->call($callback, $params);
                 } catch (HttpRequestException $ex) {
                     return $this->call($this->error, [$method, $path, $ex->getCode(), $ex]);
-                } catch (Exception $ex) {
+                } catch (\Exception $ex) {
                     return $this->call($this->error, [$method, $path, 500, $ex]);
                 }
             }
@@ -99,7 +100,7 @@ class Router
         return $this->call($this->error, [$method, $path, 404, new HttpRequestException('No route found')]);
     }
 
-    private function call(callable $callable, array $params = [])
+    private function call($callable, array $params = [])
     {
         if (is_string($callable)) {
             if ($callable[0] == '@') {
@@ -129,6 +130,6 @@ class Router
     }
 }
 
-class HttpRequestException extends Exception
+class HttpRequestException extends \Exception
 {
 }

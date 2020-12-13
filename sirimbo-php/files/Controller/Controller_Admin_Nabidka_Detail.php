@@ -24,8 +24,7 @@ class Controller_Admin_Nabidka_Detail extends Controller_Abstract
         $users = DBPary::getPartners();
 
         if (!$request->post()) {
-            $userSelect = $this->userSelect()
-                               ->users($users)
+            $userSelect = (new UserSelectHelper($users))
                                ->type('par')
                                ->idVar('p_id');
 

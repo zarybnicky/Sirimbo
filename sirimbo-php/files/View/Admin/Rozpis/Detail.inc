@@ -12,7 +12,7 @@
           <td>Zámek</td>
         </tr>
         <?php
-        $userselect = $this->userSelect()->idVar('p_id')->type('par')->users($this->users);
+        $userselect = (new UserSelectHelper($this->users))->idVar('p_id')->type('par');
         foreach ($this->items as $item) :
         ?>
           <tr>

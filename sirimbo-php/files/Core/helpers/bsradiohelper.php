@@ -7,7 +7,7 @@ class BsRadioHelper
     protected $readonly;
     protected $label;
 
-    public function bsRadio($name, $value = null)
+    public function __construct($name, $value = null)
     {
         if ($value === null) {
             $value = $name;

@@ -9,23 +9,18 @@ class UserSelectHelper
     private $_type;
     private $_selected;
 
-    public function userSelect($name = null)
-    {
-        $this->_defaultValues();
-        if ($name !== null) {
-            return $this->name($name);
-        }
-        return $this;
-    }
-
-    private function _defaultValues()
+    public function __construct($users, $name = null)
     {
         $this->_name = "user";
         $this->_idIndex = "u_id";
         $this->_jmeno = "u_jmeno";
         $this->_prijmeni = "u_prijmeni";
-        $this->_users = [];
         $this->_type = 'user';
+        $this->_users = $users;
+        if ($name !== null) {
+            return $this->name = $name;
+        }
+        return $this;
     }
 
     public function name($name)

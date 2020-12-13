@@ -2,9 +2,7 @@
   <form action="" method="POST">
     <div class="form-group">
       <label for="trener">Trenér</label>
-      <?= $this->userSelect('trener')
-             ->set($this->trener)
-             ->users($this->treneri) ?>
+      <?= (new UserSelectHelper($this->treneri, 'trener'))->set($this->trener) ?>
     </div>
     <div class="form-group">
       <label for="kde">Místo</label>

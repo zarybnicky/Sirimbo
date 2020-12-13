@@ -1,5 +1,5 @@
 <div class="container">
-  <?= $this->partnerRequest()->getAll() ?>
+  <?= (new PartnerRequestHelper())->getAll() ?>
   <div class="mb-2">
     <a class="btn btn-outline-primary" href="/member/profil/edit">Upravit osobní údaje</a>
     <a class="btn btn-outline-primary" href="/member/profil/heslo">Změnit heslo</a>

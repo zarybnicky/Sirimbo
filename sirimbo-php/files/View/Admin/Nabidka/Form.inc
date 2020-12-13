@@ -3,9 +3,7 @@
     <button type="submit" style="display:none;">Enter</button>
     <div class="form-group">
       <label for="trewner">Trenér</label>
-      <?= $this->userSelect('trener')
-             ->users($this->users)
-             ->set($this->trener) ?>
+      <?= (new UserSelectHelper($this->users, 'trener'))->set($this->trener) ?>
     </div>
     <div class="form-group">
       <label for="pocet_hod">Počet hodin</label>

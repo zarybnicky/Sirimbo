@@ -62,7 +62,7 @@
         phases = "unpackPhase buildPhase";
         buildPhase = ''
           mkdir -p $out/public $out/bootstrap
-          cp -r index.php files composer.json $out
+          cp -r index.php files src composer.json $out
           cp -r public/{favicon.ico,images,robots.txt,scripts,style,webfonts} $out/public
           cp -r ${bootstrap}/* $out/bootstrap/
           cd $out

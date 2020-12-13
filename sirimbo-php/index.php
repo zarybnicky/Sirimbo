@@ -65,8 +65,19 @@ try {
         }
     }
 
-    $d = new Dispatcher();
-    $d->dispatch($request);
+    $router = new \Olymp\Router(function ($method, $path, $code, $ex) use ($request) {
+        if ($ex->getMessage() === 'No route found') {
+            $d = new Dispatcher();
+            $d->dispatch($request);
+        } else {
+            throw $ex;
+        }
+    }, 'Olymp.Controller');
+    new \Olymp\Controller\Admin\Repl();
+    // $router->get('/articles/([0-9]+)/comments/delete/([0-9]+)', 'Controller_News::delete');
+    $router->get('/admin/konzole', '@Admin.Repl::get');
+    $router->post('/admin/konzole', '@Admin.Repl::post');
+    $router->dispatchGlobal();
 } catch (AuthorizationException $e) {
     ob_clean();
     (new RedirectHelper())->redirect('/error?id=' . $e->getErrorFile());

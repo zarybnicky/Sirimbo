@@ -11,8 +11,8 @@
            ->column('hodnoceni', 'Body') ?>
     <br/>
     <h2>Nový pár</h2>
-    Partner: <?= $this->userSelect('add_partner')->users($this->usersMen) ?><br/>
-    Partnerka: <?= $this->userSelect('add_partnerka')->users($this->usersWomen) ?><br/>
+    Partner: <?= new UserSelectHelper($this->usersMen, 'add_partner') ?><br/>
+    Partnerka: <?= new UserSelectHelper($this->usersWomen, 'add_partnerka') ?><br/>
     <?= $this->submit('Nový pár')->data('action', 'add') ?>
     <button class="btn btn-outline-primary" name="action" value="fix_unpaired">Opravit nespárované uživatele</button>
   </form>

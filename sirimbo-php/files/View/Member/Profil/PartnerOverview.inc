@@ -1,6 +1,6 @@
 <div class="container">
     <?php
-    echo $this->partnerRequest()->getAll();
+    echo (new PartnerRequestHelper())->getAll();
     if ($this->havePartner) {
         echo "Právě tančím s: ", $this->partnerFullName;
     } else {
@@ -8,9 +8,7 @@
     }
     ?>
     <form method="POST" action="">
-        <?= $this->userSelect()
-                 ->name('partner')
-                 ->users($this->users) ?>
+        <?= new UserSelectHelper($this->users, 'partner') ?>
         <?= $this->submit('Požádat o partnerství')->data('action', 'confirm') ?>
         <?php if ($this->havePartner) : ?>
             <?= $this->submit('Rozejít se')->data('action', 'dumpthem') ?>

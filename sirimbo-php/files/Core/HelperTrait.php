@@ -1,11 +1,6 @@
 <?php
 trait HelperTrait
 {
-    public function bsRadio()
-    {
-        return call_user_func_array([new BsRadioHelper(), 'bsRadio'], func_get_args());
-    }
-
     public function checkbox()
     {
         return call_user_func_array([new CheckboxHelper(), 'checkbox'], func_get_args());
@@ -41,19 +36,9 @@ trait HelperTrait
         return call_user_func_array([new LoginHelper(), 'login'], func_get_args());
     }
 
-    public function navbarItem()
-    {
-        return call_user_func_array([new NavbarItemHelper(), 'navbarItem'], func_get_args());
-    }
-
     public function notice()
     {
         return call_user_func_array([new NoticeHelper(), 'notice'], func_get_args());
-    }
-
-    public function partnerRequest()
-    {
-        return call_user_func_array([new PartnerRequestHelper(), 'partnerRequest'], func_get_args());
     }
 
     public function person()
@@ -94,10 +79,5 @@ trait HelperTrait
     public function text()
     {
         return call_user_func_array([new TextHelper(), 'text'], func_get_args());
-    }
-
-    public function userSelect()
-    {
-        return call_user_func_array([new UserSelectHelper(), 'userSelect'], func_get_args());
     }
 }

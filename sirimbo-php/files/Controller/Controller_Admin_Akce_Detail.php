@@ -62,7 +62,7 @@ class Controller_Admin_Akce_Detail extends Controller_Abstract
             'info' => nl2br($akce['a_info'])
         ];
 
-        $userSelect = $this->userSelect()->users(DBUser::getActiveUsers());
+        $userSelect = new UserSelectHelper(DBUser::getActiveUsers());
         $items = array_map(
             function ($item) use ($userSelect) {
                 return [

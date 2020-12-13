@@ -129,7 +129,7 @@ class Controller_Admin_Permissions extends Controller_Abstract
                     'items' => array_map(
                         function ($key, $levelName) use ($name, $item, $value) {
                             return isset($item[$key])
-                                ? $this->bsRadio($name, $key)
+                                ? (new BsRadioHelper($name, $key))
                                        ->set($key == $value)
                                        ->label($levelName)
                                 : '';
