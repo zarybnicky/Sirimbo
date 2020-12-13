@@ -1,6 +1,15 @@
 <?php
 class User
 {
+    public function __serialize()
+    {
+        return $this->toArray();
+    }
+    public function __unserialize(array $x)
+    {
+        return self::fromArray($x);
+    }
+
     public static function fromArray(array $x): User
     {
         $user = new self();
