@@ -60,7 +60,7 @@ class Controller_Member_Clenove extends Controller_Abstract
         $index = 0;
         $data = array_map(
             function ($item) use (&$index) {
-                return ['index' => ++$index . '.', 'fullName' => $this->person($item)];
+                return ['index' => ++$index . '.', 'fullName' => new PersonHelper($item)];
             },
             DBUser::getActiveUsers()
         );
@@ -89,8 +89,8 @@ class Controller_Member_Clenove extends Controller_Abstract
                         'header' => new Tag(
                             'big',
                             [],
-                            new Colorbox($item['s_color_rgb'], $item['s_description'])->render(),
-                            '&nbsp;&nbsp;' . $item['s_name']
+                            new Colorbox($item['s_color_rgb'], $item['s_description'])
+                            . '&nbsp;&nbsp;' . $item['s_name']
                         )
                     ],
                     'users' => []
@@ -98,7 +98,7 @@ class Controller_Member_Clenove extends Controller_Abstract
             }
             $skupiny[$currentKey]['users'][] = [
                 'index' => ++$index . '.',
-                'fullName' => $this->person($item),
+                'fullName' => new PersonHelper($item),
                 'hasPaid' => new Tag(
                     'span',
                     ['style' => 'font-weight:bold;color:' . ($item['pi_id'] ? 'green' : 'red')],

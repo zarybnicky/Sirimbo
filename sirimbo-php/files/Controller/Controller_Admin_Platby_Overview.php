@@ -33,7 +33,7 @@ class Controller_Admin_Platby_Overview extends Controller_Admin_Platby
             }
             $skupiny[$currentKey]['users'][] = [
                 'index' => ++$index . '.',
-                'fullName' => $this->person($item)->render(),
+                'fullName' => new PersonHelper($item),
                 'hasPaid' => new Tag(
                     'span',
                     ['style' => 'font-weight:bold;color:' . ($item['pi_id'] ? 'green' : 'red')],

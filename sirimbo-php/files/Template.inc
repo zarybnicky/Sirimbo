@@ -45,7 +45,7 @@
                     echo new NavbarItemHelper($this->request->getURI(), $item);
                 } ?>
                 <div class="w-100"></div>
-                <?= $this->login() ?>
+                <?= new LoginHelper() ?>
               </ul>
             </div>
           </div>

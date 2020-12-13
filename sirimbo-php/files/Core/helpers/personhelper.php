@@ -5,7 +5,7 @@ class PersonHelper
     protected $name;
     protected $nameR;
 
-    public function person($user)
+    public function __construct($user)
     {
         $this->id = $user['u_id'];
         $this->name = $user['u_jmeno'] . ' ' . $user['u_prijmeni'];

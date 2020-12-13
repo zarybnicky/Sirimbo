@@ -16,19 +16,9 @@ trait HelperTrait
         return call_user_func_array([new HiddenHelper(), 'hidden'], func_get_args());
     }
 
-    public function login()
-    {
-        return call_user_func_array([new LoginHelper(), 'login'], func_get_args());
-    }
-
     public function notice()
     {
         return call_user_func_array([new NoticeHelper(), 'notice'], func_get_args());
-    }
-
-    public function person()
-    {
-        return call_user_func_array([new PersonHelper(), 'person'], func_get_args());
     }
 
     public function radio()

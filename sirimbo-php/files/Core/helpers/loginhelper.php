@@ -1,11 +1,6 @@
 <?php
 class LoginHelper
 {
-    public function login()
-    {
-        return $this;
-    }
-
     public function render()
     {
         if (Session::isLogged()) {
