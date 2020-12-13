@@ -36,7 +36,7 @@ error_reporting(-1);
 
 $request = new Request($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD'], $_GET, $_POST);
 $request->setDefault('home');
-$request->setReferer($_SERVER['HTTP_REFERER']);
+$request->setReferer($_SERVER['HTTP_REFERER'] ?? getallheaders()['Referer']);
 
 session_set_save_handler(new DbSessionHandler(), true);
 session_start();
