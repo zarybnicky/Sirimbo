@@ -76,7 +76,7 @@ try {
         $_SERVER['REQUEST_URI'] . ": {$e->getMessage()}\n"
         . '(' . $e->getFile() . ':' . $e->getLine() . ")\n"
         . $e->getTraceAsString()
-        . "\tPOST: " . json_encode(static::$request->post()) . "\n"
+        . "\tPOST: " . json_encode($_POST) . "\n"
         . "\tSESSION: " . json_encode($_SESSION) . "\n"
     );
     ob_clean();
@@ -87,7 +87,7 @@ try {
         $_SERVER['REQUEST_URI'] . ": {$e->getMessage()}\n"
         . '(' . $e->getFile() . ':' . $e->getLine() . ")\n"
         . $e->getTraceAsString()
-        . "\tPOST: " . json_encode(static::$request->post()) . "\n"
+        . "\tPOST: " . json_encode($_POST) . "\n"
         . "\tSESSION: " . json_encode($_SESSION) . "\n"
     );
     ob_clean();
