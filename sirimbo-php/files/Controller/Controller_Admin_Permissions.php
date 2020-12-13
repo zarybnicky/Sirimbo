@@ -106,7 +106,7 @@ class Controller_Admin_Permissions extends Controller_Abstract
         $this->render('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa oprávnění',
             'prompt' =>
-                $this->notice('Uživatelům z této skupiny bude nutné přiřadit jinou skupinu!')
+                new NoticeHelper('Uživatelům z této skupiny bude nutné přiřadit jinou skupinu!')
                 . 'Opravdu chcete odstranit uživatelskou úroveň:',
             'returnURI' => $request->getReferer() ?: '/admin/permissions',
             'data' => [['id' => $item['pe_id'], 'text' => $item['pe_name']]]

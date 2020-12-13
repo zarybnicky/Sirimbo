@@ -6,8 +6,6 @@ use \Tag;
 
 class Repl
 {
-    use \HelperTrait;
-
     public static function get()
     {
         Permissions::checkError('konzole', P_OWNED);
@@ -20,7 +18,7 @@ class Repl
                 ['name' => 'code', 'rows' => 10, 'cols' => 10],
                 $_POST['code'] ?: ''
             ),
-            $this->submit('Zpracovat')->render()
+            new SubmitHelper('Zpracovat'),
         );
     }
 
@@ -30,11 +28,11 @@ class Repl
         if ($_POST['code']) {
             $r = eval(stripslashes($_POST['code']));
             if ($r === false) {
-                echo $this->notice('Kód obsahuje syntaktickou chybu');
+                echo new NoticeHelper('Kód obsahuje syntaktickou chybu');
             } elseif (!empty($r)) {
-                echo $this->notice(dump($r));
+                echo new NoticeHelper(dump($r));
             } else {
-                echo $this->notice('Success!');
+                echo new NoticeHelper('Success!');
             }
         }
         static::get();

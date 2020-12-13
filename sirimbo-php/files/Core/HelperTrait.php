@@ -16,11 +16,6 @@ trait HelperTrait
         return new HiddenHelper(...$args);
     }
 
-    public function notice(...$args)
-    {
-        return new NoticeHelper(...$args);
-    }
-
     public function radio(...$args)
     {
         return new RadioHelper(...$args);

@@ -1,7 +1,7 @@
 <div class="container">
   <?php
   if (!count($this->files)) {
-      echo $this->notice('Žádné fotky');
+      echo new NoticeHelper('Žádné fotky');
       return;
   }
   ?>

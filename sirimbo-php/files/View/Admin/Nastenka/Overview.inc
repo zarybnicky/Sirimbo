@@ -3,7 +3,7 @@
     <a href="/admin/nastenka/add" class="btn btn-primary">Přidat</a>
 <?php
 if (empty($this->data)) {
-    echo $this->notice('Žádné příspěvky na nástěnkce');
+    echo new NoticeHelper('Žádné příspěvky na nástěnkce');
     return;
 }
 $tbl = (new TableHelper($this->data))->style('width:100%');

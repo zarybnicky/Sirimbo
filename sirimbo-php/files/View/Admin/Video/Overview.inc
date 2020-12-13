@@ -25,7 +25,7 @@
              ->column('uri', 'ID videa', null)
              ->column('created', 'Přidáno', null, 'width:100px') ?>
     <?php else : ?>
-      <?= $this->notice('Žádná videa') ?>
+      <?= new NoticeHelper('Žádná videa') ?>
     <?php endif ?>
   </form>
   <div style="text-align:center"><?= $this->navigation ?></div>

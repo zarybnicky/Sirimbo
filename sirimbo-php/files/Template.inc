@@ -80,7 +80,7 @@
     <?php endif ?>
 
     <?php foreach ($this->redirect()->getMessages() as list($text, $type)) : ?>
-      <div class="container"><?= $this->notice($text, $type) ?></div>
+      <div class="container"><?= new NoticeHelper($text, $type) ?></div>
     <?php endforeach ?>
 
     <?= $this->content ?>
