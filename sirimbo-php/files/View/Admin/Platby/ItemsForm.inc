@@ -15,13 +15,11 @@ $form = [
         'value' => $this->select('variable')
                         ->options($this->users)
                         ->set($this->variable)
-                        ->render()
     ], [
         'desc' => 'Specifický symbol:',
         'value' => $this->select('specific')
                         ->options($this->categories)
                         ->set($this->specific)
-                        ->render()
     ], [
         'desc' => 'Prefix (rok):',
         'value' => $this->text('prefix', $this->prefix)

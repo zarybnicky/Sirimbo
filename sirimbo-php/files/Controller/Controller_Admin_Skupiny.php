@@ -16,7 +16,7 @@ class Controller_Admin_Skupiny extends Controller_Abstract
                         new EditLinkHelper('/admin/skupiny/edit/' . $item['s_id'])
                         . new RemoveLinkHelper('/admin/skupiny/remove/' . $item['s_id'])
                     ),
-                    'colorBox' => new Colorbox($item['s_color_rgb'], $item['s_description']),
+                    'colorBox' => new ColorboxHelper($item['s_color_rgb'], $item['s_description']),
                     'name' => $item['s_name']
                 ];
             },
@@ -160,8 +160,7 @@ class Controller_Admin_Skupiny extends Controller_Abstract
             function ($item) use ($groupsSelected) {
                 return [
                     'buttons' => $this->checkbox('group[]', $item['pg_id'])
-                                      ->set(isset($groupsSelected[$item['pg_id']]))
-                                      ->render(),
+                                      ->set(isset($groupsSelected[$item['pg_id']])),
                     'type' => ($item['pg_type'] == '1'
                                ? 'Členské příspěvky'
                                : 'Běžné platby'),

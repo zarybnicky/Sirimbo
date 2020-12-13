@@ -246,8 +246,8 @@ class Controller_Admin_Users extends Controller_Abstract
                         '&nbsp;' .
                         new RemoveLinkHelper('/admin/users/remove/' . $item['u_id'])
                     ),
-                    'group' => $s_group->name($item['u_id'] . '-group')->render(),
-                    'skupina' => $s_skupina->name($item['u_id'] . '-skupina')->set($item['u_skupina'])->render(),
+                    'group' => $s_group->name($item['u_id'] . '-group'),
+                    'skupina' => $s_skupina->name($item['u_id'] . '-skupina')->set($item['u_skupina']),
                     'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
                     'narozeni' => formatDate($item['u_narozeni']),
                     'poznamky' => $item['u_poznamky']
@@ -271,7 +271,7 @@ class Controller_Admin_Users extends Controller_Abstract
                 return [
                     'id' => $item['u_id'],
                     'buttons' => new RemoveLinkHelper('/admin/users/remove/' . $item['u_id']),
-                    'fullName' => new Colorbox($item['s_color_rgb'], $item['s_description'])
+                    'fullName' => new ColorboxHelper($item['s_color_rgb'], $item['s_description'])
                         . '&nbsp;' . $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
                     'email' => $item['u_email'],
                     'telefon' => $item['u_telefon'],
@@ -375,8 +375,7 @@ class Controller_Admin_Users extends Controller_Abstract
                     'varSymbol' => User::varSymbol($item['u_id']),
                     'fullName' => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
                     'birthDate' => formatDate($item['u_narozeni']),
-                    'colorBox' => new Colorbox($item['s_color_rgb'], $item['s_description'])
-                                        ->render(),
+                    'colorBox' => new ColorboxHelper($item['s_color_rgb'], $item['s_description']),
                     'groupInfo' => $groupOptions[$item['u_group']]
                 ];
                 if ($action == 'status') {
@@ -386,9 +385,9 @@ class Controller_Admin_Users extends Controller_Abstract
                                         ->set($item['u_skupina'])
                     );
                     $out['system'] = $this->checkbox($item['u_id'] . '-system', '1')
-                                          ->set($item['u_system'])->render();
+                                          ->set($item['u_system']);
                     $out['ban'] = $this->checkbox($item['u_id'] . '-ban', '1')
-                                       ->set($item['u_ban'])->render();
+                                       ->set($item['u_ban']);
                 }
                 return $out;
             },

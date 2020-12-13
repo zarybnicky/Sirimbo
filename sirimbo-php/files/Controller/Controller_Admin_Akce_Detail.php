@@ -66,9 +66,7 @@ class Controller_Admin_Akce_Detail extends Controller_Abstract
         $items = array_map(
             function ($item) use ($userSelect) {
                 return [
-                    'name' => $userSelect->name($item['ai_id'] . '-user')
-                                         ->set($item['ai_user'])
-                                         ->render(),
+                    'name' => $userSelect->name($item['ai_id'] . '-user')->set($item['ai_user']),
                     'removeButton' => $this->submit('Odstranit')->data('remove', $item['ai_id'])
                 ];
             },

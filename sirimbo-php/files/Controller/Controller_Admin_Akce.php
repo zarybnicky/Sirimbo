@@ -25,8 +25,7 @@ class Controller_Admin_Akce extends Controller_Abstract
                     ),
                     'userCount' => $item['a_obsazeno'] . '/' . $item['a_kapacita'],
                     'visible' => $this->checkbox($item['a_id'], '1')
-                                      ->set($item['a_visible'])
-                                      ->render(),
+                                      ->set($item['a_visible']),
                     'links' => (
                         '<a href="/admin/akce/edit/' . $item['a_id'] . '">obecné</a>, '
                         . '<a href="/admin/akce/detail/' . $item['a_id'] . '">účastníci</a>, '

@@ -212,8 +212,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
             function ($item) use ($categoriesSelected, $data) {
                 return [
                     'buttons' => $this->checkbox('category[]', $item['pc_id'])
-                                      ->set(isset($categoriesSelected[$item['pc_id']]))
-                                      ->render(),
+                                      ->set(isset($categoriesSelected[$item['pc_id']])),
                     'name' => $item['pc_name'],
                     'specific' => $item['pc_symbol'],
                     'amount' => ((float) $item['pc_amount'] * (float) $data['pg_base']),
@@ -239,9 +238,8 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
             function ($item) use ($skupinySelected) {
                 return [
                     'buttons' => $this->checkbox('skupiny[]', $item['s_id'])
-                                      ->set(isset($skupinySelected[$item['s_id']]))
-                                      ->render(),
-                    'name' => new Colorbox($item['s_color_rgb'], $item['s_description'])
+                                      ->set(isset($skupinySelected[$item['s_id']])),
+                    'name' => new ColorboxHelper($item['s_color_rgb'], $item['s_description'])
                     . '&nbsp;' . $item['s_name']
                 ];
             },

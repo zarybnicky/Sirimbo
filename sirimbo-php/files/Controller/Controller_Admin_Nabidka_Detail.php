@@ -24,36 +24,18 @@ class Controller_Admin_Nabidka_Detail extends Controller_Abstract
         $users = DBPary::getPartners();
 
         if (!$request->post()) {
-            $userSelect = (new UserSelectHelper($users))
-                               ->type('par')
-                               ->idVar('p_id');
+            $userSelect = (new UserSelectHelper($users))->type('par')->idVar('p_id');
 
-            $items = array_map(
-                function ($item) use ($userSelect) {
-                    return [
-                        'user' =>
-                        (string) $userSelect->set($item['ni_partner'])
-                                            ->name($item['ni_id'] . '-partner'),
-                        'lessonCount' => (
-                            $this->text(
-                                $item['ni_id'] . '-hodiny',
-                                $item['ni_pocet_hod']
-                            )->size(1)
-                            ->render()
-                        ),
-                        'removeButton' => $this->submit('Odstranit')
-                                               ->name('remove')
-                                               ->value($item['ni_id'])
-                                               ->render()
-                    ];
-                },
-                $items
-            );
+            $items = array_map(fn($item) => [
+                'user' => $userSelect->set($item['ni_partner'])->name($item['ni_id'] . '-partner'),
+                'lessonCount' => $this->text($item['ni_id'] . '-hodiny', $item['ni_pocet_hod'])->size(1),
+                'removeButton' => $this->submit('Odstranit')->name('remove')->value($item['ni_id'])
+            ], $items);
             $items[] = [
                 'user' => (string) $userSelect->set(null)
                                               ->name('add_partner'),
                 'lessonCount' => $this->text('add_hodiny', '')->size('1'),
-                'removeButton' => $this->submit('Přidat')->render()
+                'removeButton' => $this->submit('Přidat')
             ];
 
             $this->render('files/View/Admin/Nabidka/Detail.inc', [

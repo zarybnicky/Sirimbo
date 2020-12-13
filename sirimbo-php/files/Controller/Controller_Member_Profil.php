@@ -50,7 +50,7 @@ class Controller_Member_Profil extends Controller_Abstract
             'ageGroup' => Session::getAgeGroup($data->getBirthYear()),
             'coupleData' => Session::getCoupleData(),
             'skupina' => (
-                new Colorbox($s['s_color_rgb'], $s['s_name']) . '&nbsp;' . $s['s_name']
+                new ColorboxHelper($s['s_color_rgb'], $s['s_name']) . '&nbsp;' . $s['s_name']
             ),
             'varSymbol' => User::varSymbol(Session::getUserID()),
             'hasPaid' => Session::getZaplaceno(),

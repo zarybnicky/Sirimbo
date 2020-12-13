@@ -99,10 +99,10 @@ class Controller_Admin_Video extends Controller_Abstract
         $select = $this->select()->optionsAssoc(DBVideo::getAll(), 'v_id', 'v_title');
         $this->render('files/View/Admin/Video/Title.inc', [
             'header' => 'Správa videí',
-            'video1' => $select->name('video1')->set(DBParameters::get('title_video1'))->render(),
-            'video2' => $select->name('video2')->set(DBParameters::get('title_video2'))->render(),
-            'video3' => $select->name('video3')->set(DBParameters::get('title_video3'))->render(),
-            'video4' => $select->name('video4')->set(DBParameters::get('title_video4'))->render()
+            'video1' => $select->name('video1')->set(DBParameters::get('title_video1')),
+            'video2' => $select->name('video2')->set(DBParameters::get('title_video2')),
+            'video3' => $select->name('video3')->set(DBParameters::get('title_video3')),
+            'video4' => $select->name('video4')->set(DBParameters::get('title_video4'))
         ]);
     }
 

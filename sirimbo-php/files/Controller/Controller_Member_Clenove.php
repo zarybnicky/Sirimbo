@@ -39,7 +39,7 @@ class Controller_Member_Clenove extends Controller_Abstract
                     'header' => new Tag(
                         'h3',
                         [],
-                        new Colorbox($item['s_color_rgb'], $item['s_description'])
+                        new ColorboxHelper($item['s_color_rgb'], $item['s_description'])
                         . '&nbsp;&nbsp;' . $item['s_name']
                     ),
                     'description' => $item['s_description'],
@@ -89,7 +89,7 @@ class Controller_Member_Clenove extends Controller_Abstract
                         'header' => new Tag(
                             'big',
                             [],
-                            new Colorbox($item['s_color_rgb'], $item['s_description'])
+                            new ColorboxHelper($item['s_color_rgb'], $item['s_description'])
                             . '&nbsp;&nbsp;' . $item['s_name']
                         )
                     ],

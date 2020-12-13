@@ -15,19 +15,19 @@
         'value' => $this->text('amount', $this->amount)
     ], [
         'desc' => 'Splatnost:',
-        'value' => $this->date('dueDate', $this->dueDate)->render()
+        'value' => $this->date('dueDate', $this->dueDate)
     ], [
         'desc' => 'Platnost:',
         'value' => $this->date('validRange', $this->validRange)->range()
     ], [
         'desc' => 'Povolit prefix roku?:',
-        'value' => $this->checkbox('usePrefix', '1')->set($this->usePrefix)->render()
+        'value' => $this->checkbox('usePrefix', '1')->set($this->usePrefix)
     ], [
         'desc' => 'Archivovat?:',
-        'value' => $this->checkbox('archive', '1')->set($this->archive)->render()
+        'value' => $this->checkbox('archive', '1')->set($this->archive)
     ], [
         'desc' => 'Viditelný:',
-        'value' => $this->checkbox('visible', '1')->set($this->visible)->render()
+        'value' => $this->checkbox('visible', '1')->set($this->visible)
     ]
 ]))
 ->showHeader(false)

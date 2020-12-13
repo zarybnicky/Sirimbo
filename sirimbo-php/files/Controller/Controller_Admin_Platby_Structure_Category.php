@@ -310,8 +310,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             function ($item) use ($groupsSelected) {
                 return [
                     'buttons' => $this->checkbox('group[]', $item['pg_id'])
-                                      ->set(isset($groupsSelected[$item['pg_id']]))
-                                      ->render(),
+                                      ->set(isset($groupsSelected[$item['pg_id']])),
                     'type' => ($item['pg_type'] == '1' ? 'Členské příspěvky' : 'Běžné platby'),
                     'name' => $item['pg_name'],
                     'base' => $item['pg_base']
