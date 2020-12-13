@@ -1,9 +1,11 @@
 <?php
-class Controller_Error extends Controller_Abstract
+namespace Olymp\Controller;
+
+class Error
 {
-    public function view($request)
+    public static function get()
     {
-        $array = explode('_', $request->get('id'));
+        $array = explode('_', $_GET['id']);
         array_walk($array, function (&$str) {
             $str = ucfirst($str);
         });
@@ -17,7 +19,7 @@ class Controller_Error extends Controller_Abstract
         } else {
             $notice = "Chybová stránka s daným ID nebyla nalezena";
         }
-        $this->redirect()->danger($notice);
-        $this->render('files/View/Empty.inc', ['header' => 'Chyba']);
+        (new \RedirectHelper())->danger($notice);
+        new \RenderHelper('files/View/Empty.inc', ['header' => 'Chyba']);
     }
 }

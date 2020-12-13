@@ -75,6 +75,7 @@ try {
     }, 'Olymp.Controller');
     new \Olymp\Controller\Admin\Repl();
     // $router->get('/articles/([0-9]+)/comments/delete/([0-9]+)', 'Controller_News::delete');
+    $router->get('/error', '@Error::get');
     $router->get('/admin/konzole', '@Admin.Repl::get');
     $router->post('/admin/konzole', '@Admin.Repl::post');
     $router->dispatchGlobal();

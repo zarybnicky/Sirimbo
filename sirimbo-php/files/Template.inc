@@ -42,7 +42,7 @@
             <div class="flex-column" style="flex-grow:1">
               <ul class="navbar-nav">
                 <?php foreach ($this->navbar[0] as $item) {
-                    echo new NavbarItemHelper($this->request->getURI(), $item);
+                    echo new NavbarItemHelper($this->currentUri, $item);
                 } ?>
                 <div class="w-100"></div>
                 <?= new LoginHelper() ?>
@@ -57,7 +57,7 @@
                 <div class="flex-column" style="flex-grow:1">
                   <ul class="navbar-nav">
                     <?php foreach ($this->navbar[1] as $item) {
-                        echo new NavbarItemHelper($this->request->getURI(), $item);
+                        echo new NavbarItemHelper($this->currentUri, $item);
                     } ?>
                   </ul>
                 </div>

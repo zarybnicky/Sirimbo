@@ -1,11 +1,7 @@
 <?php
-abstract class Controller_Abstract implements Controller_Interface
+class RenderHelper
 {
-    use HelperTrait;
-
-    abstract public function view($request);
-
-    public function render($filename, array $vars = [], $standalone = false)
+    public function __construct($filename, array $vars = [], $standalone = false)
     {
         $renderer = new Renderer();
         $content = $renderer->render($filename, $vars);
@@ -14,6 +10,7 @@ abstract class Controller_Abstract implements Controller_Interface
             echo $content;
             return;
         }
+        $pos = strpos($_SERVER['REQUEST_URI'], '?');
         $uri = '/' . trim(
             substr(
                 $pos !== false ? substr($_SERVER['REQUEST_URI'], 0, $pos) : $_SERVER['REQUEST_URI'],
