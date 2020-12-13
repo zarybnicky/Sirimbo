@@ -2,11 +2,7 @@
 
 <div class="container full">
 <form action="" method="post">
-<?= $this->table()
-    ->showHeader(false)
-    ->column('desc', '', 'r')
-    ->column('value', 'Hodnota')
-    ->data([
+<?= (new TableHelper([
         [
             'desc' => 'Typ:',
             'value' => (
@@ -28,10 +24,13 @@
             'desc' => 'Násobitel částky: ',
             'value' => $this->text('base', $this->base)
         ]
-    ]) ?>
+    ]))
+    ->showHeader(false)
+    ->column('desc', '', 'r')
+    ->column('value', 'Hodnota') ?>
     <br>
     <h3>Specifické symboly</h3>
-    <?= $this->table()
+    <?= (new TableHelper($this->category))
              ->column('buttons', '')
              ->column('name', 'Jméno')
              ->column('specific', 'Specifický<br/>symbol')
@@ -40,14 +39,12 @@
              ->column('validDate', 'Platnost')
              ->column('usePrefix', 'Používá<br/>prefix roku')
              ->column('useBase', 'Používá<br/>násobitel částky')
-             ->column('archive', 'Je neaktivní')
-             ->data($this->category) ?>
+             ->column('archive', 'Je neaktivní') ?>
     <br/>
     <h3>Skupiny</h3>
-    <?= $this->table()
+    <?= (new TableHelper($this->skupiny))
              ->column('buttons', '')
-             ->column('name', 'Jméno')
-             ->data($this->skupiny) ?>
+             ->column('name', 'Jméno') ?>
     <br/>
     <?= $this->hidden('returnURI', $this->returnURI) ?>
     <?= $this->submit('Uložit')->data('action', 'confirm') ?>

@@ -2,10 +2,9 @@
 
 <div class="container">
     <a href="/admin/platby/structure/group/add">Přidat kategorii</a>&nbsp;
-    <?= $this->table()
+    <?= (new TableHelper($this->data))
              ->style('width:100%')
              ->column('buttons', '', '', 'width:50px')
              ->column('name', 'Název')
-             ->column('type', 'Typ platby')
-             ->data($this->data) ?>
+             ->column('type', 'Typ platby') ?>
 </div>

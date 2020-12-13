@@ -66,9 +66,8 @@ if (!$this->data) {
     echo '</div>';
     return;
 }
-$table = $this->table()
+$table = (new TableHelper($this->data))
     ->style('width:100%')
-    ->data($this->data)
     ->column('checkBox', '')
     ->column('index', '')
     ->column('fullName', 'Jméno');

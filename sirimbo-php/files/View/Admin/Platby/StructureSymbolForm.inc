@@ -3,11 +3,7 @@
 <div class="container">
 <form action="" method="post">
 
-<?= $this->table()
-->showHeader(false)
-->column('desc', '', 'r')
-->column('value', 'Hodnota')
-->data([
+<?= (new TableHelper([
     [
         'desc' => 'Jméno:',
         'value' => $this->text('name', $this->name)
@@ -33,18 +29,18 @@
         'desc' => 'Viditelný:',
         'value' => $this->checkbox('visible', '1')->set($this->visible)->render()
     ]
-])
-->render() ?>
+]))
+->showHeader(false)
+->column('desc', '', 'r')
+->column('value', 'Hodnota') ?>
     <?= $this->hidden('returnURI', $this->returnURI) ?>
     <br/>
     <h3>Kategorie</h3>
-    <?= $this->table()
+    <?= (new TableHelper($this->groups))
              ->column('buttons', '')
              ->column('name', 'Jméno')
              ->column('type', 'Typ')
-             ->column('base', 'Násobitel částky')
-             ->data($this->groups)
-             ->render() ?>
+             ->column('base', 'Násobitel částky') ?>
     <br>
     <?= $this->submit('Uložit') ?>
     <a class="btn btn-outline-primary" href="<?= $this->returnURI ?>">Zpět</a><br/>

@@ -30,12 +30,11 @@
             'recogValue' => $this->recognized['prefix']['value']
         ]
     ];
-    $formTable = $this->table()
+    $formTable = (new TableHelper($form))
                       ->column('desc', '', 'r')
                       ->column('value', 'Hodnota')
                       ->column('recogColumn', 'Rozpoznáno:<br/>sloupec')
-                      ->column('recogValue', 'Rozpoznáno:<br/>hodnota')
-                      ->data($form);
+                      ->column('recogValue', 'Rozpoznáno:<br/>hodnota');
     ?>
     <form action="" method="post">
         <?= $formTable ?>
@@ -46,10 +45,9 @@
     </form>
     <br/>
     <h3>Data z banky</h3>
-    <?= $this->table()
+    <?= (new TableHelper($this->raw))
               ->style('width:100%')
               ->showHeader(false)
               ->column('column', '', 'r', 'padding-right:5px')
-              ->column('value', '', '', 'min-width:150px;padding-left:5px')
-              ->data($this->raw) ?>
+              ->column('value', '', '', 'min-width:150px;padding-left:5px') ?>
 </div>

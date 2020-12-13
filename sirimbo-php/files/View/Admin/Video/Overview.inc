@@ -17,15 +17,14 @@
   </ul>
   <a class="btn btn-primary" href="/admin/video/add">Nové video</a>
   <form action="" method="post">
-    <?php if ($this->data): ?>
-      <?= $this->table()
+    <?php if ($this->data) : ?>
+      <?= (new TableHelper($this->data))
              ->style('width:100%')
-             ->data($this->data)
              ->column('buttons', '', null, 'width:55px')
              ->column('title', 'Jméno')
              ->column('uri', 'ID videa', null)
              ->column('created', 'Přidáno', null, 'width:100px') ?>
-    <?php else: ?>
+    <?php else : ?>
       <?= $this->notice('Žádná videa') ?>
     <?php endif ?>
   </form>

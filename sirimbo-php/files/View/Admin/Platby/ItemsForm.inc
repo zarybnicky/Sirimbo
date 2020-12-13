@@ -27,10 +27,9 @@ $form = [
         'value' => $this->text('prefix', $this->prefix)
     ]
 ];
-$formTable = $this->table()
+$formTable = (new TableHelper($form))
     ->column('desc', '', 'r')
-    ->column('value', 'Hodnota')
-    ->data($form);
+    ->column('value', 'Hodnota');
 ?>
 <form action="" method="post">
     <?= $formTable ?>
@@ -42,12 +41,11 @@ $formTable = $this->table()
 <?php
 if (!empty($this->raw)) {
     echo '<h3>Data z banky</h3>';
-    echo $this->table()
+    echo (new TableHelper($this->raw))
         ->style('width:100%')
         ->showHeader(false)
         ->column('column', '', 'r', 'padding-right:5px')
-        ->column('value', '', '', 'min-width:150px;padding-left:5px')
-        ->data($this->raw);
+        ->column('value', '', '', 'min-width:150px;padding-left:5px');
 }
 ?>
 </div>

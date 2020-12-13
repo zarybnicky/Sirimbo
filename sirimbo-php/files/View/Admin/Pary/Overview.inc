@@ -1,8 +1,7 @@
 <div class="container">
   <form action="" method="POST">
-    <?= $this->table()
+    <?= (new TableHelper($this->data))
            ->style('width:100%')
-           ->data($this->data)
            ->column('buttons', '')
            ->column('fullNameMan', 'Partner')
            ->column('fullNameWoman', 'Partnerka')

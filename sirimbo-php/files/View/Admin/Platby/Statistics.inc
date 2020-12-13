@@ -5,9 +5,8 @@
     <?php foreach ($this->columns as $col) : ?>
       <div class="col-12 col-md-6">
         <?php foreach ($col as $skupina) : ?>
-          <?= $this->table()
+          <?= (new TableHelper($skupina['users']))
                  ->style("width:100%;margin-bottom:.5rem")
-                 ->data($skupina['users'])
                  ->column('index', '', 'r', 'width:40px')
                  ->column('fullName', $skupina['info']['header'])
                  ->column('hasPaid', 'Zaplaceno?', '', 'width:40px')

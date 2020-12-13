@@ -5,41 +5,37 @@
 <a href="/admin/platby/structure/group/add">kategorii</a>
 <a href="/admin/platby/structure/category/add">specifický symbol</a>
 
-<?= $this->table()
+<?= (new TableHelper($this->data))
     ->style('width:100%')
     ->column('buttons', '', '', 'width:50px')
-    ->column('name', 'Název')
-    ->data($this->data) ?>
+    ->column('name', 'Název') ?>
 
 <?php
 if (!empty($this->orphanGroupSkupina)) {
     echo '<br/>';
     echo '<h3>Kategorie plateb bez přiřazené uživatelské skupiny</h3>';
-    echo $this->table()
+    echo (new TableHelper($this->orphanGroupSkupina))
         ->style('width:50%')
         ->column('buttons', '', '', 'width:50px')
-        ->column('name', 'Název')
-        ->data($this->orphanGroupSkupina);
+        ->column('name', 'Název');
 }
 
 if (!empty($this->orphanGroupCategory)) {
     echo '<br/>';
     echo '<h3>Kategorie plateb bez přiřazených specifických symbolů</h3>';
-    echo $this->table()
+    echo (new TableHelper($this->orphanGroupCategory))
         ->style('width:50%')
         ->column('buttons', '', '', 'width:50px')
-        ->column('name', 'Název')
-        ->data($this->orphanGroupCategory);
+        ->column('name', 'Název');
 }
 
 if (!empty($this->orphanCategory)) {
     echo '<br/>';
     echo '<h3>Specifické symboly bez přiřazené kategorie</h3>';
-    echo $this->table()
+    echo (new TableHelper($this->orphanCategory))
         ->style('width:50%')
         ->column('buttons', '', '', 'width:50px')
-        ->column('name', 'Název')
-        ->data($this->orphanCategory);
+        ->column('name', 'Název');
 }
 ?>
 </div>

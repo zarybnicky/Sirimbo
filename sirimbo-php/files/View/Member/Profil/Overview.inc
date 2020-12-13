@@ -37,8 +37,7 @@
 
   <?php if (!empty($this->paymentsWanted)) : ?>
     <h3 class="mt-2">K zaplacení</h3>
-    <?= $this->table()
-           ->data($this->paymentsWanted)
+    <?= (new TableHelper($this->paymentsWanted))
            ->column('name', 'Jméno')
            ->column('type', 'Typ platby')
            ->column('symbol', 'Spec. symbol', '', 'width:75px')
@@ -49,8 +48,7 @@
 
   <?php if (!empty($this->paymentHistory)) : ?>
     <h3 class="mt-2">Historie plateb</h3>
-    <?= $this->table()
-           ->data($this->paymentHistory)
+    <?= (new TableHelper($this->paymentHistory))
            ->column('type', 'Typ')
            ->column('varSymbol', 'Spec. symbol')
            ->column('amount', 'Částka')

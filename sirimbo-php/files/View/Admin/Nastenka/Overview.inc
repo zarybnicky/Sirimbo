@@ -6,7 +6,7 @@ if (empty($this->data)) {
     echo $this->notice('Žádné příspěvky na nástěnkce');
     return;
 }
-$tbl = $this->table()->style('width:100%')->data($this->data);
+$tbl = (new TableHelper($this->data))->style('width:100%');
 if ($this->showButtonsCol) {
     $tbl->column('buttons', '');
 }

@@ -3,10 +3,9 @@
     <a class="btn btn-outline-primary" href="/admin/galerie/file/upload">Přidat fotky</a>
     <a class="btn btn-outline-primary" href="/admin/galerie/directory/add">Přidat složku</a>
     <button class="btn btn-outline-primary" name="action" value="save">Uložit změny</button>
-    <?= $this->table()
+    <?= (new TableHelper($this->data))
            ->column('buttons', '')
            ->column('name', 'Název')
-           ->column('hidden', 'Skrytá')
-           ->data($this->data) ?>
+           ->column('hidden', 'Skrytá') ?>
   </form>
 </div>

@@ -1,9 +1,8 @@
 <div class="container">
   <form action="" method="POST">
     <a href="/admin/permissions/add" class="btn btn-primary">Přidat</a>
-    <?= $this->table()
+    <?= (new TableHelper($this->data))
            ->style('width:100%')
-           ->data($this->data)
            ->column('buttons', '')
            ->column('name', 'Jméno')
            ->column('description', 'Popis') ?>

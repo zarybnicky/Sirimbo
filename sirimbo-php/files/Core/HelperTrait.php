@@ -71,11 +71,6 @@ trait HelperTrait
         return call_user_func_array([new SubmitHelper(), 'submit'], func_get_args());
     }
 
-    public function table()
-    {
-        return call_user_func_array([new TableHelper(), 'table'], func_get_args());
-    }
-
     public function text()
     {
         return call_user_func_array([new TextHelper(), 'text'], func_get_args());

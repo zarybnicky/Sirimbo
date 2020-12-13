@@ -8,20 +8,15 @@ class TableHelper
     private $_style;
     private $_showHeader;
 
-    public function table()
-    {
-        $this->_defaultValues();
-        return $this;
-    }
-
-    private function _defaultValues()
+    public function table($data)
     {
         $this->_name = '';
-        $this->_data = [];
+        $this->_data = $data;
         $this->_columns = [];
         $this->_index = 0;
         $this->_style = '';
         $this->_showHeader = true;
+        return $this;
     }
 
     public function name($n)

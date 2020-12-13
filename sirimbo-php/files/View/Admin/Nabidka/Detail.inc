@@ -3,8 +3,7 @@
     <button type="submit" name="action" value="add" style="display:none;">Enter</button>
     <div class="n_wrapper">
       <?= $this->render('files/View/Member/Nabidka/Header.inc', $this->nabidka) ?>
-      <?= $this->table()
-             ->data($this->items)
+      <?= (new TableHelper($this->items))
              ->column('user', 'Tanečník')
              ->column('lessonCount', 'Počet hodin')
              ->column('removeButton', '');

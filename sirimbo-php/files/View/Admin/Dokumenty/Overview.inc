@@ -1,7 +1,6 @@
 <div class="container">
   <form action="/admin/dokumenty" method="POST">
-    <?= $this->table()
-           ->data($this->data)
+    <?= (new TableHelper($this->data))
            ->column('buttons', '')
            ->column('link', 'Jméno souboru')
            ->column('name', 'Soubor')
