@@ -8,7 +8,7 @@ class TableHelper
     private $_style;
     private $_showHeader;
 
-    public function table($data)
+    public function __construct($data)
     {
         $this->_name = '';
         $this->_data = $data;

@@ -1,7 +1,7 @@
 <?php
 class RedirectHelper
 {
-    public function redirect($link = null, $message = null, $type = 'info')
+    public function __construct($link = null, $message = null, $type = 'info')
     {
         if ($message) {
             $this->setMessage($message, $type);

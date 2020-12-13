@@ -8,7 +8,7 @@ class RadioHelper
     protected $label;
     protected $cls;
 
-    public function radio($name, $value = null)
+    public function __construct($name, $value = null)
     {
         if ($value === null) {
             $value = $name;

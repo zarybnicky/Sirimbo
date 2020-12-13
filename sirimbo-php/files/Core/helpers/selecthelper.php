@@ -6,7 +6,7 @@ class SelectHelper
     protected $options;
     protected $cls;
 
-    public function select($name = null)
+    public function __construct($name = null)
     {
         $this->name = $name ?: '';
         $this->value = null;

@@ -4,7 +4,7 @@ class HiddenHelper
     protected $name;
     protected $value;
 
-    public function hidden($name, $value = null)
+    public function __construct($name, $value = null)
     {
         if ($value === null) {
             $value = $name;

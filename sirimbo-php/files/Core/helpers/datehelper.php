@@ -8,7 +8,7 @@ class DateHelper
     protected $useRange;
     protected $cls;
 
-    public function date($name, $value = null)
+    public function __construct($name, $value = null)
     {
         $this->date = null;
         $this->name = $name;

@@ -7,7 +7,7 @@ class UploadHelper
     private $_emptyFiles;
     private $_hasFiles;
 
-    public function upload($name = null)
+    public function __construct($name = null)
     {
         $this->_name = null;
         $this->_files = [];
@@ -16,7 +16,7 @@ class UploadHelper
         $this->_hasFiles = false;
 
         if ($name !== null) {
-            $this->name($name);
+            $this->name = $name;
         }
         return $this;
     }

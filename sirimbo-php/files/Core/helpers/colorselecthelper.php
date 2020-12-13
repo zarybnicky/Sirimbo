@@ -4,7 +4,7 @@ class ColorSelectHelper
     protected $field;
     protected $value;
 
-    public function colorSelect($field, $value = null)
+    public function __construct($field, $value = null)
     {
         $this->field = $field;
         $this->value = $value ?: null;

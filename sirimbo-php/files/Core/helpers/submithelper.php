@@ -7,7 +7,7 @@ class SubmitHelper
     protected $style;
     protected $cls;
 
-    public function submit($text)
+    public function __construct($text)
     {
         $this->text = $text;
         $this->name = null;

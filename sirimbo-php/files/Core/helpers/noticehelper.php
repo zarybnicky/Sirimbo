@@ -4,7 +4,7 @@ class NoticeHelper
     protected $type;
     protected $text;
 
-    public function notice($text, $type = 'info')
+    public function __construct($text, $type = 'info')
     {
         $this->type = $type;
         $this->text = $text;

@@ -1,48 +1,48 @@
 <?php
 trait HelperTrait
 {
-    public function checkbox()
+    public function checkbox(...$args)
     {
-        return call_user_func_array([new CheckboxHelper(), 'checkbox'], func_get_args());
+        return new CheckboxHelper(...$args);
     }
 
-    public function date()
+    public function date(...$args)
     {
-        return call_user_func_array([new DateHelper(), 'date'], func_get_args());
+        return new DateHelper(...$args);
     }
 
-    public function hidden()
+    public function hidden(...$args)
     {
-        return call_user_func_array([new HiddenHelper(), 'hidden'], func_get_args());
+        return new HiddenHelper(...$args);
     }
 
-    public function notice()
+    public function notice(...$args)
     {
-        return call_user_func_array([new NoticeHelper(), 'notice'], func_get_args());
+        return new NoticeHelper(...$args);
     }
 
-    public function radio()
+    public function radio(...$args)
     {
-        return call_user_func_array([new RadioHelper(), 'radio'], func_get_args());
+        return new RadioHelper(...$args);
     }
 
-    public function redirect()
+    public function redirect(...$args)
     {
-        return call_user_func_array([new RedirectHelper(), 'redirect'], func_get_args());
+        return new RedirectHelper(...$args);
     }
 
-    public function select()
+    public function select(...$args)
     {
-        return call_user_func_array([new SelectHelper(), 'select'], func_get_args());
+        return new SelectHelper(...$args);
     }
 
-    public function submit()
+    public function submit(...$args)
     {
-        return call_user_func_array([new SubmitHelper(), 'submit'], func_get_args());
+        return new SubmitHelper(...$args);
     }
 
-    public function text()
+    public function text(...$args)
     {
-        return call_user_func_array([new TextHelper(), 'text'], func_get_args());
+        return new TextHelper(...$args);
     }
 }

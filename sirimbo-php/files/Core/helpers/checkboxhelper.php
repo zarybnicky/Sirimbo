@@ -9,7 +9,7 @@ class CheckboxHelper
     protected $labelCls;
     protected $cls;
 
-    public function checkbox($name, $value = null)
+    public function __costruct($name, $value = null)
     {
         if ($value === null) {
             $value = $name;

@@ -9,7 +9,7 @@ class TextHelper
     protected $readonly;
     protected $disabled;
 
-    public function text($name, $value = null)
+    public function __construct($name, $value = null)
     {
         if ($value === null) {
             $value = $name;
