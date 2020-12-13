@@ -29,7 +29,7 @@ import Network.HTTP.Client (defaultManagerSettings)
 import Network.Google (LogLevel(Info), envScopes, newEnvWith, tlsManagerSettings, newManager, newLogger)
 import Network.Google.Auth (getApplicationDefault)
 import Network.Google.YouTube (youTubeReadOnlyScope)
-import Network.Wai.Handler.Warp (runSettings, defaultSettings, setHost, setPort)
+import Network.Wai.Handler.Warp (run)
 -- import Network.Wai.Middleware.Cors
 import Olymp.Cli (Command(..), Config(..), parseCli)
 import Olymp.Effect.Database (Database, query, runDatabasePool)
@@ -62,10 +62,8 @@ runServer = do
       _ <- forkIO . forever . runM . runDatabasePool pool . runAtomicStateIORefSimple ref $
         saveTournamentState
 
-      let settings = setHost "*" $ setPort port defaultSettings
-
       putStrLn ("Starting server on port " <> show port <> " with proxy on port " <> show proxy)
-      runSettings settings $ olympServer proxy mgr (Handler . ExceptT . interpretServer ref ref' pool)
+      run port $ olympServer proxy mgr (Handler . ExceptT . interpretServer ref ref' pool)
 
     CheckYouTube -> do
       lgr <- newLogger Network.Google.Info stdout

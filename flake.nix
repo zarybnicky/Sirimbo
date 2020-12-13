@@ -274,7 +274,7 @@
               locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
               locations."/".extraConfig = "try_files /public/$uri @proxy;";
               locations."@proxy" = {
-                proxyPass = "http://localhost:${toString cfg.internalPort}";
+                proxyPass = "http://127.0.0.1:${toString cfg.internalPort}";
                 proxyWebsockets = true;
               };
             };
