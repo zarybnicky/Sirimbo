@@ -33,7 +33,7 @@
 ->showHeader(false)
 ->column('desc', '', 'r')
 ->column('value', 'Hodnota') ?>
-    <?= $this->hidden('returnURI', $this->returnURI) ?>
+    <?= new \HiddenHelper('returnURI', $this->returnURI) ?>
     <br/>
     <h3>Kategorie</h3>
     <?= (new TableHelper($this->groups))

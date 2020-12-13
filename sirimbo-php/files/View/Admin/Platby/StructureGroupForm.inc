@@ -46,7 +46,7 @@
              ->column('buttons', '')
              ->column('name', 'Jméno') ?>
     <br/>
-    <?= $this->hidden('returnURI', $this->returnURI) ?>
+    <?= new \HiddenHelper('returnURI', $this->returnURI) ?>
     <?= $this->submit('Uložit')->data('action', 'confirm') ?>
     <a class="btn btn-outline-primary" href="<?= $this->returnURI ?>">Zpět</a><br/>
 </form>

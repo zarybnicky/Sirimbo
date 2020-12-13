@@ -4,7 +4,7 @@
       <div class="col-12 col-lg-6 pb-2 text-center">
         <form action="" method="post">
           <?= new \RenderHelper('files/View/Member/Akce/Header.inc', $item) ?>
-          <?= $this->hidden('id', $item['id']) ?>
+          <?= new \HiddenHelper('id', $item['id']) ?>
           <?php if ($item['signOut']) : ?>
             <?= $this->submit('Odhlásit se')->cls('btn btn-outline-primary btn-sm')->data('action', 'signout') ?>
           <?php endif ?>

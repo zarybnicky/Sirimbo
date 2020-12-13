@@ -62,7 +62,7 @@ class PartnerRequestHelper
         Uživatel <?= $item['u_jmeno'], ' ', $item['u_prijmeni'] ?> Vás žádá o partnerství.
     </span>
     <span style="text-align:right;float:right;margin-right:15px;">
-        <?= (new HiddenHelper())->hidden('id', $item['pn_id']) ?>
+        <?= new HiddenHelper('id', $item['pn_id']) ?>
         <button type="submit" name="action" value="accept">Přijmout</button>
         <button type="submit" name="action" value="refuse">Odmítnout</button>
     </span>

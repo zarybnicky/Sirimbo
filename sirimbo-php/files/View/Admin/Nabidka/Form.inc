@@ -30,7 +30,7 @@
       <?= $this->checkbox('lock')->label('Uzamknout')->set($this->lock) ?>
     </div>
     <div class="form-group">
-      <?= $this->hidden('returnURI', $this->returnURI) ?>
+      <?= new \HiddenHelper('returnURI', $this->returnURI) ?>
       <?= $this->submit($this->action) ?>
       <a class="btn btn-outline-primary" href="<?= $this->returnURI ?>">Zpět</a>
     </div>

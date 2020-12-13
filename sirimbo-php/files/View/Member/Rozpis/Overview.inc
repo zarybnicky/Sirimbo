@@ -16,7 +16,7 @@
                         <?= $lesson['timeFrom'] ?>-<?= $lesson['timeTo'] ?>
                       </span>
                       <?= $lesson['fullName'] ?>
-                      <?= $this->hidden('ri_id', $lesson['id']) ?>
+                      <?= new \HiddenHelper('ri_id', $lesson['id']) ?>
                       <?php if ($lesson['canReserve']): ?>
                         <?= $this->submit('+')->cls('py-0 btn btn-outline-primary btn-sm')->data('action', 'signup') ?>
                       <?php elseif ($lesson['canCancel']): ?>

@@ -130,7 +130,7 @@
       Uživatel souhlasil s GDPR: <?= $this->gdprSignedAt ?>
   </div>
   <div class="form-group">
-    <?= $this->hidden('returnURI', $this->returnURI) ?>
+    <?= new \HiddenHelper('returnURI', $this->returnURI) ?>
     <a class="btn btn-outline-primary" href="<?= $this->returnURI ?>">Zpět</a>
     <?= $this->submit($this->action == 'add' ? 'Přidat' : 'Upravit') ?>
   </div>

@@ -38,7 +38,7 @@
     ?>
     <form action="" method="post">
         <?= $formTable ?>
-        <?= $this->hidden('id', $this->id) ?>
+        <?= new \HiddenHelper('id', $this->id) ?>
         <?= $this->submit('Uložit')->data('action', 'confirm') ?>&nbsp;
         <?= $this->submit('Odstranit')->data('action', 'discard') ?>&nbsp;
         <?= $this->submit('Přeskočit')->data('action', 'skip') ?>

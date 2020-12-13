@@ -379,7 +379,7 @@ class Controller_Admin_Users extends Controller_Abstract
                 ];
                 if ($action == 'status') {
                     $out['skupina'] = (
-                        $this->hidden('save[]', $item['u_id'])
+                        new \HiddenHelper('save[]', $item['u_id'])
                         . $skupinySelect->name($item['u_id'] . '-skupina')
                                         ->set($item['u_skupina'])
                     );

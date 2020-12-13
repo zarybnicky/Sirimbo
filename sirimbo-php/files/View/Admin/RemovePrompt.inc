@@ -3,7 +3,7 @@
         <?= $this->prompt ?><br/><br/>
         <?php foreach ($this->data as $row) : ?>
             <?= $row['text']?>
-            <?= $this->hidden('data[]', $row['id']) ?>
+            <?= new \HiddenHelper('data[]', $row['id']) ?>
             <br />
         <?php endforeach ?>
         <br/>

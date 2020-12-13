@@ -31,7 +31,7 @@ $formTable = (new TableHelper($form))
 ?>
 <form action="" method="post">
     <?= $formTable ?>
-    <?= $this->hidden('returnURI', $this->returnURI) ?>
+    <?= new \HiddenHelper('returnURI', $this->returnURI) ?>
     <button class="btn btn-primary" name="action" value="confirm">Uložit</button>
     <a class="btn btn-outline-primary" href="<?= $this->returnURI ?>">Zpět</a>
 </form>
