@@ -84,17 +84,13 @@ class DBUser extends Database implements Pagable
         if (!$res) {
             return false;
         }
-        return self::getSingleRow($res)["u_id"];
+        return self::getSingleRow($res)["u_id"] ?? false;
     }
 
     public static function getUserID($login)
     {
         $res = self::query("SELECT u_id FROM users WHERE u_login='?'", $login);
-        if (!$res) {
-            return false;
-        }
-        $row = self::getSingleRow($res);
-        return $row["u_id"];
+        return self::getSingleRow($res)["u_id"] ?? false;
     }
 
     public static function getUserData($id): ?array
@@ -106,9 +102,6 @@ class DBUser extends Database implements Pagable
              WHERE u_id='?'",
             $id
         );
-        if (!$res) {
-            return null;
-        }
         return self::getSingleRow($res);
     }
 
