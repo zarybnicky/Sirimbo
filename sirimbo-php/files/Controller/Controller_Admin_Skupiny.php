@@ -13,8 +13,8 @@ class Controller_Admin_Skupiny extends Controller_Abstract
             function ($item) {
                 return [
                     'buttons' => (
-                        $this->editLink('/admin/skupiny/edit/' . $item['s_id'])
-                        . $this->removeLink('/admin/skupiny/remove/' . $item['s_id'])
+                        new EditLinkHelper('/admin/skupiny/edit/' . $item['s_id'])
+                        . new RemoveLinkHelper('/admin/skupiny/remove/' . $item['s_id'])
                     ),
                     'colorBox' => $this->colorbox($item['s_color_rgb'], $item['s_description'])
                                        ->render(),

@@ -244,7 +244,7 @@ class Controller_Admin_Users extends Controller_Abstract
                     'buttons' => (
                         '<button class="a" name="confirm" value="' . $item['u_id'] . '">&#10003;</button>' .
                         '&nbsp;' .
-                        $this->removeLink('/admin/users/remove/' . $item['u_id'])
+                        new RemoveLinkHelper('/admin/users/remove/' . $item['u_id'])
                     ),
                     'group' => $s_group->name($item['u_id'] . '-group')->render(),
                     'skupina' => $s_skupina->name($item['u_id'] . '-skupina')->set($item['u_skupina'])->render(),
@@ -270,7 +270,7 @@ class Controller_Admin_Users extends Controller_Abstract
             function ($item) {
                 return [
                     'id' => $item['u_id'],
-                    'buttons' => $this->removeLink('/admin/users/remove/' . $item['u_id']),
+                    'buttons' => new RemoveLinkHelper('/admin/users/remove/' . $item['u_id']),
                     'fullName' => $this->colorbox($item['s_color_rgb'], $item['s_description'])
                         . '&nbsp;' . $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
                     'email' => $item['u_email'],
@@ -368,8 +368,8 @@ class Controller_Admin_Users extends Controller_Abstract
             function ($item) use ($action, $groupOptions, &$i, $skupinySelect) {
                 $out = [
                     'checkBox' => (
-                        $this->editLink('/admin/users/edit/' . $item['u_id']) . '&nbsp;' .
-                        $this->removeLink('/admin/users/remove/' . $item['u_id'])
+                        new EditLinkHelper('/admin/users/edit/' . $item['u_id']) . '&nbsp;' .
+                        new RemoveLinkHelper('/admin/users/remove/' . $item['u_id'])
                     ),
                     'index' => ++$i . '. ',
                     'varSymbol' => User::varSymbol($item['u_id']),

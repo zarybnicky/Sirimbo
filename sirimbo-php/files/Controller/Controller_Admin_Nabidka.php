@@ -42,8 +42,8 @@ class Controller_Admin_Nabidka extends Controller_Abstract
                          ? ' - ' . formatDate($item['n_do'])
                          : '')
                     ),
-                    'buttons' => $this->duplicateLink('/admin/nabidka/duplicate/' . $item['n_id'])
-                        . '&nbsp;' . $this->removeLink('/admin/nabidka/remove/' . $item['n_id']),
+                    'buttons' => new DuplicateLinkHelper('/admin/nabidka/duplicate/' . $item['n_id'])
+                        . '&nbsp;' . new RemoveLinkHelper('/admin/nabidka/remove/' . $item['n_id']),
                     'links' => (
                         '<a href="/admin/nabidka/edit/' . $item['n_id'] . '">obecné</a>, ' .
                         '<a href="/admin/nabidka/detail/' . $item['n_id'] . '">tréninky</a>'

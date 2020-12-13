@@ -16,16 +16,6 @@ trait HelperTrait
         return call_user_func_array([new DateHelper(), 'date'], func_get_args());
     }
 
-    public function duplicateLink()
-    {
-        return call_user_func_array([new DuplicateLinkHelper(), 'duplicateLink'], func_get_args());
-    }
-
-    public function editLink()
-    {
-        return call_user_func_array([new EditLinkHelper(), 'editLink'], func_get_args());
-    }
-
     public function hidden()
     {
         return call_user_func_array([new HiddenHelper(), 'hidden'], func_get_args());
@@ -54,11 +44,6 @@ trait HelperTrait
     public function redirect()
     {
         return call_user_func_array([new RedirectHelper(), 'redirect'], func_get_args());
-    }
-
-    public function removeLink()
-    {
-        return call_user_func_array([new RemoveLinkHelper(), 'removeLink'], func_get_args());
     }
 
     public function select()

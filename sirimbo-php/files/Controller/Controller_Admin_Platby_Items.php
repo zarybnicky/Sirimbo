@@ -25,9 +25,9 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         $data = array_map(
             function ($item) {
                 return [
-                    'buttons' => $this->editLink('/admin/platby/items/edit/' . $item['pi_id'])
+                    'buttons' => new EditLinkHelper('/admin/platby/items/edit/' . $item['pi_id'])
                         . '&nbsp;&nbsp;'
-                        . $this->removeLink('/admin/platby/items/remove/' . $item['pi_id']),
+                        . new RemoveLinkHelper('/admin/platby/items/remove/' . $item['pi_id']),
                     'fullName' => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
                     'category' => $item['pc_name'],
                     'date' => (new Date($item['pi_date']))->getDate(Date::FORMAT_SIMPLE_SPACED),

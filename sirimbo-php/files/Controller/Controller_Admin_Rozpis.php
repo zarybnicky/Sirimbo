@@ -39,8 +39,8 @@ class Controller_Admin_Rozpis extends Controller_Abstract
                     'kde' => $item['r_kde'],
                     'visible' =>
                         (string) $this->checkbox($item['r_id'], '1')->set($item['r_visible']),
-                    'buttons' => $this->duplicateLink('/admin/rozpis/duplicate/' . $item['r_id'])
-                        . '&nbsp;' . $this->removeLink('/admin/rozpis/remove/' . $item['r_id']),
+                    'buttons' => new DuplicateLinkHelper('/admin/rozpis/duplicate/' . $item['r_id'])
+                        . '&nbsp;' . new RemoveLinkHelper('/admin/rozpis/remove/' . $item['r_id']),
                     'links' => (
                         '<a href="/admin/rozpis/edit/' . $item['r_id'] . '">obecné</a>, ' .
                         '<a href="/admin/rozpis/detail/' . $item['r_id'] . '">tréninky</a>'

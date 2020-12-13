@@ -19,7 +19,7 @@ class Controller_Admin_Aktuality extends Controller_Abstract
                         '<a href="/admin/aktuality/edit/' . $id . '">obecné</a>, ' .
                         '<a href="/admin/aktuality/foto/' . $id . '">galerie</a>'
                     ),
-                    'buttons' => $this->removeLink('/admin/aktuality/remove/' . $id)
+                    'buttons' => new RemoveLinkHelper('/admin/aktuality/remove/' . $id)
                 ];
             },
             Permissions::check('aktuality', P_ADMIN)

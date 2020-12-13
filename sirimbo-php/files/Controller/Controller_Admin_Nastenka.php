@@ -21,9 +21,9 @@ class Controller_Admin_Nastenka extends Controller_Abstract
                 $buttons = '';
                 if ($canEdit) {
                     $showButtonsCol = true;
-                    $buttons = $this->editLink('/admin/nastenka/edit/' . $item['up_id'])
+                    $buttons = new EditLinkHelper('/admin/nastenka/edit/' . $item['up_id'])
                         . '&nbsp;&nbsp;'
-                        . $this->removeLink('/admin/nastenka/remove/' . $item['up_id']);
+                        . new RemoveLinkHelper('/admin/nastenka/remove/' . $item['up_id']);
                 }
                 return [
                     'buttons' => $buttons,

@@ -32,7 +32,7 @@ class Controller_Admin_Akce extends Controller_Abstract
                         . '<a href="/admin/akce/detail/' . $item['a_id'] . '">účastníci</a>, '
                         . '<a href="/admin/akce/dokumenty/' . $item['a_id'] . '">dokumenty</a>'
                     ),
-                    'buttons' => $this->removeLink('/admin/akce/remove/' . $item['a_id'])
+                    'buttons' => new RemoveLinkHelper('/admin/akce/remove/' . $item['a_id'])
                 ];
             },
             DBAkce::getWithItemCount()

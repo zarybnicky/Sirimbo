@@ -12,9 +12,9 @@ class Controller_Admin_Permissions extends Controller_Abstract
         $data = array_map(
             function ($item) {
                 return [
-                    'buttons' => $this->editLink('/admin/permissions/edit/' . $item['pe_id'])
+                    'buttons' => new EditLinkHelper('/admin/permissions/edit/' . $item['pe_id'])
                         . '&nbsp;&nbsp;'
-                        . $this->removeLink('/admin/permissions/remove/' . $item['pe_id']),
+                        . new RemoveLinkHelper('/admin/permissions/remove/' . $item['pe_id']),
                     'name' => $item['pe_name'],
                     'description' => $item['pe_description']
                 ];

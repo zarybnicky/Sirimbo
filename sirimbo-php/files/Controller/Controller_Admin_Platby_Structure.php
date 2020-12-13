@@ -33,8 +33,8 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
                             $item[1]['pg_name']
                         ),
                         'buttons' => (
-                            $this->editLink($prefix . '/edit/' . $item[1]['pg_id']) .
-                            $this->removeLink($prefix . '/remove/' . $item[1]['pg_id'])
+                            new EditLinkHelper($prefix . '/edit/' . $item[1]['pg_id']) .
+                            new RemoveLinkHelper($prefix . '/remove/' . $item[1]['pg_id'])
                         )
                     ];
                 } else {
@@ -42,8 +42,8 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
                     return [
                         'name' => '&nbsp;- ' . $item[1]['pc_name'] . ' (' . $item[1]['pc_symbol'] . ')',
                         'buttons' => (
-                            $this->editLink($prefix . '/edit/' . $item[1]['pc_id'])
-                            . $this->removeLink($prefix . '/remove/' . $item[1]['pc_id'])
+                            new EditLinkHelper($prefix . '/edit/' . $item[1]['pc_id'])
+                            . new RemoveLinkHelper($prefix . '/remove/' . $item[1]['pc_id'])
                         )
                     ];
                 }
@@ -60,8 +60,8 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
                 return [
                     'name' => $item['pg_name'],
                     'buttons' => (
-                        $this->editLink($prefix .'/edit/' . $item['pg_id'])
-                        . $this->removeLink($prefix . '/remove/' . $item['pg_id'])
+                        new EditLinkHelper($prefix .'/edit/' . $item['pg_id'])
+                        . new RemoveLinkHelper($prefix . '/remove/' . $item['pg_id'])
                     )
                 ];
             },
@@ -77,8 +77,8 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
                 return [
                     'name' => $item['pg_name'],
                     'buttons' => (
-                        $this->editLink($prefix .'/edit/' . $item['pg_id'])
-                        . $this->removeLink($prefix . '/remove/' . $item['pg_id'])
+                        new EditLinkHelper($prefix .'/edit/' . $item['pg_id'])
+                        . new RemoveLinkHelper($prefix . '/remove/' . $item['pg_id'])
                     )
                 ];
             },
@@ -93,8 +93,8 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
                 return [
                     'name' => $item['pc_name'],
                     'buttons' => (
-                        $this->editLink($prefix . '/edit/' . $item['pc_id'])
-                        . $this->removeLink($prefix . '/remove/' . $item['pc_id'])
+                        new EditLinkHelper($prefix . '/edit/' . $item['pc_id'])
+                        . new RemoveLinkHelper($prefix . '/remove/' . $item['pc_id'])
                     )
                 ];
             },

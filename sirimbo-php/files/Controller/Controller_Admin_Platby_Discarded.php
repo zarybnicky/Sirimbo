@@ -105,8 +105,8 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
             $row['edit'] = new Tag(
                 'div',
                 ['style' => 'width:51px'],
-                (string) $this->editLink('/admin/platby/manual/' . $rawData['pr_id']),
-                (string) $this->removeLink('/admin/platby/discarded/remove/' . $rawData['pr_id'])
+                (string) new EditLinkHelper('/admin/platby/manual/' . $rawData['pr_id']),
+                (string) new RemoveLinkHelper('/admin/platby/discarded/remove/' . $rawData['pr_id'])
             );
             $result[] = $row;
         }

@@ -21,9 +21,9 @@ class Controller_Admin_Video extends Controller_Abstract
                     $parts = explode('?', $item['v_uri']);
                     $uri = array_shift($parts);
                     return [
-                        'buttons' => $this->editLink('/admin/video/edit/' . $item['v_id'])
+                        'buttons' => new EditLinkHelper('/admin/video/edit/' . $item['v_id'])
                             . '&nbsp;'
-                            . $this->removeLink('/admin/video/remove/' . $item['v_id']),
+                            . new RemoveLinkHelper('/admin/video/remove/' . $item['v_id']),
                         'title' => $item['v_title'],
                         'uri' => $uri,
                         'created' => formatTimestamp($item['v_created_at'], true)
@@ -42,7 +42,7 @@ class Controller_Admin_Video extends Controller_Abstract
             $data = array_map(
                 function ($item) {
                     return [
-                        'buttons' => $this->editLink('/admin/video/playlist/' . $item['vl_id']),
+                        'buttons' => new EditLinkHelper('/admin/video/playlist/' . $item['vl_id']),
                         'title' => $item['vl_title'],
                         'uri' => $item['vl_url'],
                         'created' => formatTimestamp($item['vl_created_at'], true)
@@ -69,9 +69,9 @@ class Controller_Admin_Video extends Controller_Abstract
                 $parts = explode('?', $item['v_uri']);
                 $uri = array_shift($parts);
                 return [
-                    'buttons' => $this->editLink('/admin/video/edit/' . $item['v_id'])
+                    'buttons' => new EditLinkHelper('/admin/video/edit/' . $item['v_id'])
                         . '&nbsp;'
-                        . $this->removeLink('/admin/video/remove/' . $item['v_id']),
+                        . new RemoveLinkHelper('/admin/video/remove/' . $item['v_id']),
                     'title' => $item['v_title'],
                     'uri' => $uri,
                     'created' => formatTimestamp($item['v_created_at'], true)

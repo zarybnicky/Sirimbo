@@ -4,7 +4,7 @@ class DuplicateLinkHelper
     protected $link;
     protected $button;
 
-    public function duplicateLink($link, $button = false)
+    public function __construct($link, $button = false)
     {
         $this->link = $link;
         $this->button = $button;

@@ -21,9 +21,9 @@ class Controller_Admin_Galerie extends Controller_Abstract
             function ($item) {
                 return [
                     'buttons' => (
-                        $this->editLink('/admin/galerie/directory/edit/' . $item['gd_id']) . '&nbsp;' .
-                        $this->duplicateLink('/admin/galerie/directory/' . $item['gd_id']) . '&nbsp;' .
-                        $this->removeLink('/admin/galerie/directory/remove/' . $item['gd_id'])
+                        new EditLinkHelper('/admin/galerie/directory/edit/' . $item['gd_id']) . '&nbsp;' .
+                        new DuplicateLinkHelper('/admin/galerie/directory/' . $item['gd_id']) . '&nbsp;' .
+                        new RemoveLinkHelper('/admin/galerie/directory/remove/' . $item['gd_id'])
                     ),
                     'name' => str_repeat('&nbsp;->', $item['gd_level'] - 1) . ' ' . $item['gd_name'],
                     'hidden' => (string) $this->checkbox($item['gd_id'], '1') ->set($item['gd_hidden'])

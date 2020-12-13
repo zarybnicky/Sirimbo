@@ -14,9 +14,9 @@ class Controller_Admin_Video_Source extends Controller_Abstract
             'data' => array_map(
                 function ($item) {
                     return [
-                        'buttons' => $this->editLink('/admin/video/source/edit/' . $item['vs_id'])
+                        'buttons' => new EditLinkHelper('/admin/video/source/edit/' . $item['vs_id'])
                         . '&nbsp;'
-                        . $this->removeLink('/admin/video/source/remove/' . $item['vs_id']),
+                        . new RemoveLinkHelper('/admin/video/source/remove/' . $item['vs_id']),
                         'url' => $item['vs_url'],
                         'title' => $item['vs_title'],
                         'created' => formatTimestamp($item['vs_created_at'], true),

@@ -50,9 +50,9 @@ class Controller_Admin_Dokumenty extends Controller_Abstract
         $data = array_map(
             function ($item) {
                 return [
-                    'buttons' => $this->editLink('/admin/dokumenty/edit/' . $item['d_id'])
+                    'buttons' => new EditLinkHelper('/admin/dokumenty/edit/' . $item['d_id'])
                         . '&nbsp;&nbsp;'
-                        . $this->removeLink('/admin/dokumenty/remove/' . $item['d_id']),
+                        . new RemoveLinkHelper('/admin/dokumenty/remove/' . $item['d_id']),
                     'link' => '<a href="/member/download?id=' . $item['d_id'] . '">' . $item['d_name'] . '</a>',
                     'name' => $item['d_filename'],
                     'category' => Settings::$documentTypes[$item['d_kategorie']],

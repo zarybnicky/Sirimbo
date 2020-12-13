@@ -4,7 +4,7 @@ class RemoveLinkHelper
     protected $link;
     protected $button;
 
-    public function removeLink($link, $button = false)
+    public function __construct($link, $button = false)
     {
         $this->link = $link;
         $this->button = $button;

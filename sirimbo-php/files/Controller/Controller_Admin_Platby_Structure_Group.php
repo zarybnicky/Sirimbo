@@ -25,8 +25,8 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
                     'name' => $item['pg_name'],
                     'type' => $item['pg_type'] ? 'Členské příspěvky' : 'Běžné platby',
                     'buttons' => (
-                        $this->editLink('/admin/platby/structure/group/edit/' . $item['pg_id'])
-                        . $this->removeLink('/admin/platby/structure/group/remove/' . $item['pg_id'])
+                        new EditLinkHelper('/admin/platby/structure/group/edit/' . $item['pg_id'])
+                        . new RemoveLinkHelper('/admin/platby/structure/group/remove/' . $item['pg_id'])
                     )
                 ];
             },

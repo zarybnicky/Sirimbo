@@ -13,8 +13,8 @@
           <img alt="<?= $item['id'] ?>" src="<?= $item['thumbnailURI']?>" />
         </div>
         <div class="foto_desc">
-          <?= $this->editLink('/admin/galerie/file/edit/' . $item['id']) ?>
-          <?= $this->removeLink('/admin/galerie/file/remove/' . $item['id']) ?>
+          <?= new EditLinkHelper('/admin/galerie/file/edit/' . $item['id']) ?>
+          <?= new RemoveLinkHelper('/admin/galerie/file/remove/' . $item['id']) ?>
           <?= $item['name'] ?>
         </div>
       </div>
