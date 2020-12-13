@@ -71,8 +71,8 @@ try {
     ob_clean();
     (new RedirectHelper())->redirect('/error?id=' . $e->getErrorFile());
 } catch (ViewException $e) {
-    fwrite(
-        fopen('php://stderr', 'w'),
+    syslog(
+        LOG_ERR,
         $_SERVER['REQUEST_URI'] . ": {$e->getMessage()}\n"
         . '(' . $e->getFile() . ':' . $e->getLine() . ")\n"
         . $e->getTraceAsString()
@@ -82,8 +82,8 @@ try {
     ob_clean();
     (new RedirectHelper())->redirect('/error?id=' . $e->getErrorFile());
 } catch (Exception $e) {
-    fwrite(
-        fopen('php://stderr', 'w'),
+    syslog(
+        LOG_ERR,
         $_SERVER['REQUEST_URI'] . ": {$e->getMessage()}\n"
         . '(' . $e->getFile() . ':' . $e->getLine() . ")\n"
         . $e->getTraceAsString()

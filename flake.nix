@@ -284,13 +284,6 @@
             user = cfg.user;
             settings = {
               "listen.owner" = config.services.nginx.user;
-              "pm" = "dynamic";
-              "pm.max_children" = 50;
-              "pm.max_requests" = 500;
-              "pm.start_servers" = 2;
-              "pm.min_spare_servers" = 2;
-              "pm.max_spare_servers" = 5;
-              "php_admin_value[error_log]" = "/dev/stderr";
               "php_admin_flag[log_errors]" = true;
               "catch_workers_output" = true;
             };
