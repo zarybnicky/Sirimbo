@@ -19,7 +19,7 @@
     </div>
     <div class="form-group">
       <a class="btn btn-outline-primary" href="/admin/galerie">Zpět</a>
-      <?= $this->submit($this->action == 'add' ? 'Přidat' : 'Upravit') ?>
+      <?= new \SubmitHelper($this->action == 'add' ? 'Přidat' : 'Upravit') ?>
     </div>
   </form>
 </div>

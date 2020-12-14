@@ -126,7 +126,7 @@ class Controller_Admin_Skupiny extends Controller_Abstract
                     . new Tag(
                         'form',
                         ['action' => '', 'mthod' => 'post'],
-                        $this->submit('Odstranit spojení?')->data('action', 'unlink')
+                        (new \SubmitHelper('Odstranit spojení?'))->data('action', 'unlink')
                     )
                 );
             }
@@ -146,12 +146,7 @@ class Controller_Admin_Skupiny extends Controller_Abstract
         $id = $request->getId() ?: '0';
 
         $groupsSelected = array_flip(
-            array_map(
-                function ($item) {
-                    return $item['pg_id'];
-                },
-                DBSkupiny::getSingleWithGroups($id)
-            )
+            array_map(fn($item) => $item['pg_id'], DBSkupiny::getSingleWithGroups($id))
         );
 
         $groups = array_map(

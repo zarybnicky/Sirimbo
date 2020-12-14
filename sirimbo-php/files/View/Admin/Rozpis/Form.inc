@@ -19,7 +19,7 @@
       <?= $this->checkbox('lock')->label('Uzamknout')->set($this->lock) ?>
     </div>
     <div class="form-group">
-      <?= $this->submit($this->action == 'add' ? 'Přidat' : 'Upravit') ?>
+      <?= new \SubmitHelper($this->action == 'add' ? 'Přidat' : 'Upravit') ?>
       <a class="btn btn-outline-primary" href="/admin/rozpis">Zpět</a>
     </div>
   </form>

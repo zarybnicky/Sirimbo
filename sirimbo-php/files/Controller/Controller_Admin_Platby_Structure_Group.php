@@ -166,7 +166,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
                     . new Tag(
                         'form',
                         ['action' => '', 'method' => 'post'],
-                        (string) $this->submit('Odstranit spojení?')->data('action', 'unlink')
+                        (new \SubmitHelper('Odstranit spojení?'))->data('action', 'unlink')
                     )
                 );
             }

@@ -39,9 +39,9 @@
     <form action="" method="post">
         <?= $formTable ?>
         <?= new \HiddenHelper('id', $this->id) ?>
-        <?= $this->submit('Uložit')->data('action', 'confirm') ?>&nbsp;
-        <?= $this->submit('Odstranit')->data('action', 'discard') ?>&nbsp;
-        <?= $this->submit('Přeskočit')->data('action', 'skip') ?>
+        <?= (new \SubmitHelper('Uložit'))->data('action', 'confirm') ?>&nbsp;
+        <?= (new \SubmitHelper('Odstranit'))->data('action', 'discard') ?>&nbsp;
+        <?= (new \SubmitHelper('Přeskočit'))->data('action', 'skip') ?>
     </form>
     <br/>
     <h3>Data z banky</h3>

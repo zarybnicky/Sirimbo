@@ -6,7 +6,7 @@
              ->option('none', '------ vyberte složku ------')
              ->options($this->dirs) ?>
     </div>
-    <div class="form-group"><?= $this->submit('Zobrazit') ?></div>
+    <div class="form-group"><?= new \SubmitHelper('Zobrazit') ?></div>
   </form>
 
   <form action="" method="post">
@@ -24,7 +24,7 @@
       </div>
     <?php endforeach ?>
     <div class="form-group" style="clear:both">
-      <?= $this->submit('Potvrdit') ?>
+      <?= new \SubmitHelper('Potvrdit') ?>
       <a class="btn btn-outline-primary" href="/admin/aktuality">Zpět</a>
     </div>
   </form>

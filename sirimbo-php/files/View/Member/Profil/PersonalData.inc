@@ -76,6 +76,6 @@
   <div class="form-group mb-2">
     <?= new \HiddenHelper('returnURI', $this->returnURI) ?>
     <a class="btn btn-outline-primary" href="/member/profil">Zpět</a>
-    <?= $this->submit('Upravit') ?>
+    <?= new \SubmitHelper('Upravit') ?>
   </div>
 </form>

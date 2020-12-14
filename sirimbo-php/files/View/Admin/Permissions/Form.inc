@@ -23,7 +23,7 @@
     <div class="form-group row">
       <div class="col-sm-2"></div>
       <div class="col-sm-10">
-        <?= $this->submit($this->action == 'add' ? 'Přidat' : 'Upravit') ?>
+        <?= new \SubmitHelper($this->action == 'add' ? 'Přidat' : 'Upravit') ?>
         <a class="btn btn-outline-primary" href="/admin/permissions">Zpět</a>
       </div>
     </div>

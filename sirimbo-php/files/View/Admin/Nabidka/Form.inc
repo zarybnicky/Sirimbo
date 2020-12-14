@@ -31,7 +31,7 @@
     </div>
     <div class="form-group">
       <?= new \HiddenHelper('returnURI', $this->returnURI) ?>
-      <?= $this->submit($this->action) ?>
+      <?= new \SubmitHelper($this->action) ?>
       <a class="btn btn-outline-primary" href="<?= $this->returnURI ?>">Zpět</a>
     </div>
   </form>

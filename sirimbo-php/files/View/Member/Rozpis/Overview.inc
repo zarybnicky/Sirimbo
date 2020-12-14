@@ -18,9 +18,9 @@
                       <?= $lesson['fullName'] ?>
                       <?= new \HiddenHelper('ri_id', $lesson['id']) ?>
                       <?php if ($lesson['canReserve']): ?>
-                        <?= $this->submit('+')->cls('py-0 btn btn-outline-primary btn-sm')->data('action', 'signup') ?>
+                        <?= (new \SubmitHelper('+'))->cls('py-0 btn btn-outline-primary btn-sm')->data('action', 'signup') ?>
                       <?php elseif ($lesson['canCancel']): ?>
-                        <?= $this->submit('&times;')->cls('py-0 btn btn-outline-primary btn-sm')->data('action', 'signout') ?>
+                        <?= (new \SubmitHelper('&times;'))->cls('py-0 btn btn-outline-primary btn-sm')->data('action', 'signout') ?>
                       <?php endif ?>
                     </form>
                   </td>

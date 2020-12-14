@@ -25,7 +25,7 @@
            ->column('base', 'Násobitel částky') ?>
 
     <div class="form-group">
-      <?= $this->submit('Uložit') ?>
+      <?= new \SubmitHelper('Uložit') ?>
       <a class="btn btn-outline-primary" href="/admin/skupiny">Zpět</a>
     </div>
   </form>

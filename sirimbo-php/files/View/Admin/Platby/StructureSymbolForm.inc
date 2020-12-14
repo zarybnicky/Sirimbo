@@ -42,7 +42,7 @@
              ->column('type', 'Typ')
              ->column('base', 'Násobitel částky') ?>
     <br>
-    <?= $this->submit('Uložit') ?>
+    <?= new \SubmitHelper('Uložit') ?>
     <a class="btn btn-outline-primary" href="<?= $this->returnURI ?>">Zpět</a><br/>
 </form>
 </div>

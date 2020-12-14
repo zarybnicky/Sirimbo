@@ -14,7 +14,7 @@
         <td><input type="password" name="newpass_confirm" /></td>
       </tr>
       <tr>
-        <td><?= $this->submit('Změnit heslo') ?></td>
+        <td><?= new \SubmitHelper('Změnit heslo') ?></td>
         <td>Pouze písmena bez diakritiky, číslice a podtržítka, 6 - 32 znaků</td>
       </tr>
     </table>

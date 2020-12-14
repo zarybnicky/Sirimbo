@@ -28,10 +28,8 @@
     </script>
     <div class="form-group">
       <a class="btn btn-outline-primary" href="/admin/aktuality">Zpět</a>
-      <?= $this->submit('Přidat fotky')->data('action', 'foto') ?>
-      <?= $this->submit(
-          ($this->action == 'add') ? 'Přeskočit a uložit' : 'Upravit'
-      )->data('action', 'save') ?>
+      <?= (new \SubmitHelper('Přidat fotky'))->data('action', 'foto') ?>
+      <?= (new \SubmitHelper(($this->action == 'add') ? 'Přeskočit a uložit' : 'Upravit'))->data('action', 'save') ?>
     </div>
   </form>
 </div>

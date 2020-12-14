@@ -16,7 +16,7 @@
       <?= new \TextHelper('desc', $this->desc ?: '') ?>
     </div>
     <div class="form-group">
-      <?= $this->submit($this->action) ?>
+      <?= new \SubmitHelper($this->action) ?>
       <a class="btn btn-outline-primary" href="/admin/video/source">Zpět</a>
     </div>
   </form>

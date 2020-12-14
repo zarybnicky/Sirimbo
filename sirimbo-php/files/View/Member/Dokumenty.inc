@@ -8,7 +8,7 @@
                ->option('3', 'Tábory')
                ->option('0', 'Ostatní');
       ?>
-      <?= $this->submit('Zobrazit') ?>
+      <?= new \SubmitHelper('Zobrazit') ?>
     </form>
 
   <table>

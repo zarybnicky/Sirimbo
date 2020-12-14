@@ -19,7 +19,7 @@
             <td><?= $userselect->name($item['id'] . '-partner')->set($item['partner']) ?></td>
             <td><?= (new \TextHelper($item['id'] . '-od', $item['timeFrom']))->size(5) ?></td>
             <td><?= (new \TextHelper($item['id'] . '-do', $item['timeTo']))->size(5) ?></td>
-            <td><?= $this->submit('Odstranit')->data('remove', $item['id']) ?></td>
+            <td><?= (new \SubmitHelper('Odstranit'))->data('remove', $item['id']) ?></td>
             <td><?= $this->checkbox($item['id'] . '-lock', 'lock')->set($item['lock']) ?></td>
           </tr>
         <?php endforeach ?>
@@ -27,17 +27,17 @@
           <td><?= $userselect->name('add_partner')->set(null) ?></td>
           <td><?= (new \TextHelper('add_od', ''))->size(5) ?>
           <td><?= (new \TextHelper('add_do', ''))->size(5) ?>
-          <td><?= $this->submit('Přidat')->data('action', 'add') ?></td>
+          <td><?= (new \SubmitHelper('Přidat'))->data('action', 'add') ?></td>
           <td><?= $this->checkbox('add_lock', 'lock') ?>
         </tr>
       </table>
     </div>
     <div>
       <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
-      <?= $this->submit('Uložit')->data('action', 'submit') ?>
-      <?= $this->submit('Opravit přesahy')->data('action', 'overlap') ?>
+      <?= (new \SubmitHelper('Uložit'))->data('action', 'submit') ?>
+      <?= (new \SubmitHelper('Opravit přesahy'))->data('action', 'overlap') ?>
       <br />
-      <?= $this->submit('Přidat více')->data('action', 'add_multiple') ?>
+      <?= (new \SubmitHelper('Přidat více'))->data('action', 'add_multiple') ?>
       <?= (new \TextHelper('add_multi_num', ''))->size(2) ?> hodin po
       <?= (new \TextHelper('add_multi_len', ''))->size(3) ?> minutách od
       <?= (new \TextHelper('add_multi_od', ''))->size(5) ?> hodin
@@ -51,7 +51,7 @@
              ->option('', '--')
              ->options($this->nabidky);
     ?>
-    <?= $this->submit('Vybrat nabídku') ?>
+    <?= new \SubmitHelper('Vybrat nabídku') ?>
     <?php if ($this->nabidka) : ?>
       <div class="n_wrapper">
         <?= new \RenderHelper('files/View/Member/Nabidka/Header.inc', $this->nabidka) ?>

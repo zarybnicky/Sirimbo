@@ -36,7 +36,7 @@
     </div>
     <div class="form-group">
       <?= new \HiddenHelper('returnURI', $this->returnURI) ?>
-      <?= $this->submit($this->action == 'add' ? 'Přidat' : 'Upravit') ?>
+      <?= new \SubmitHelper($this->action == 'add' ? 'Přidat' : 'Upravit') ?>
       <a class="btn btn-outline-primary" href="<?= $this->returnURI ?>">Zpět</a>
     </div>
   </form>

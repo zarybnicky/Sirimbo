@@ -35,7 +35,7 @@
                 <td><a href="/admin/platby/items/add" class="btn btn-primary">
                   Nová platba
                 </a></td>
-                <td><?= $this->submit('Odeslat') ?></td>
+                <td><?= new \SubmitHelper('Odeslat') ?></td>
             </tr>
         </table>
     </form>

@@ -27,7 +27,7 @@
       </select>
     </div>
     <div class="form-group">
-      <?= $this->submit('Nahrát')->data('action', 'upload') ?>
+      <?= (new \SubmitHelper('Nahrát'))->data('action', 'upload') ?>
     </div>
   </form>
 </div>

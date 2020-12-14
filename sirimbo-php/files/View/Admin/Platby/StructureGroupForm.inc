@@ -2,7 +2,7 @@
 
 <div class="container full">
 <form action="" method="post">
-<?= (new TableHelper([
+<?= (new \TableHelper([
         [
             'desc' => 'Typ:',
             'value' => (
@@ -30,7 +30,7 @@
     ->column('value', 'Hodnota') ?>
     <br>
     <h3>Specifické symboly</h3>
-    <?= (new TableHelper($this->category))
+    <?= (new \TableHelper($this->category))
              ->column('buttons', '')
              ->column('name', 'Jméno')
              ->column('specific', 'Specifický<br/>symbol')
@@ -42,12 +42,12 @@
              ->column('archive', 'Je neaktivní') ?>
     <br/>
     <h3>Skupiny</h3>
-    <?= (new TableHelper($this->skupiny))
+    <?= (new \TableHelper($this->skupiny))
              ->column('buttons', '')
              ->column('name', 'Jméno') ?>
     <br/>
     <?= new \HiddenHelper('returnURI', $this->returnURI) ?>
-    <?= $this->submit('Uložit')->data('action', 'confirm') ?>
+    <?= (new \SubmitHelper('Uložit'))->data('action', 'confirm') ?>
     <a class="btn btn-outline-primary" href="<?= $this->returnURI ?>">Zpět</a><br/>
 </form>
 </div>

@@ -56,16 +56,11 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Abstract
             'canEdit' => Permissions::check('akce', P_OWNED)
         ];
 
-        $documents = array_map(
-            function($item) {
-                return [
-                    'name' => $item['d_name'],
-                    'category' => Settings::$documentTypes[$item['d_kategorie']],
-                    'removeButton' => $this->submit('Odstranit')->data('remove', $item['d_id'])
-                ];
-            },
-            DBDokumenty::getMultipleById($documents)
-        );
+        $documents = array_map(fn($item) => [
+            'name' => $item['d_name'],
+            'category' => Settings::$documentTypes[$item['d_kategorie']],
+            'removeButton' => (new \SubmitHelper('Odstranit'))->data('remove', $item['d_id'])
+        ], DBDokumenty::getMultipleById($documents));
 
         $allDocuments = [];
         foreach ([2, 3, 0] as $category) {
@@ -81,7 +76,7 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Abstract
                                ->options($allDocuments);
         $documents[] = [
             'name' => (string) $documentSelect,
-            'category' => $this->submit('Přidat')->data('add', 'add'),
+            'category' => (new \SubmitHelper('Přidat'))->data('add', 'add'),
             'removeButton' => ''
         ];
         new \RenderHelper('files/View/Admin/Akce/Dokumenty.inc', [

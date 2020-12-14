@@ -33,7 +33,7 @@
       <?= new \TextHelper('lat-finale', $this->lat_finale) ?>
     </div>
     <div class="form-group">
-      <?= $this->submit('Upravit')->data('action', 'edit_confirm') ?>
+      <?= (new \SubmitHelper('Upravit'))->data('action', 'edit_confirm') ?>
       <a class="btn btn-outline-primary" href="/admin/pary">Zpět</a>
     </div>
 </div>

@@ -24,7 +24,7 @@
       <?= new \TextHelper('playlist', $this->playlist) ?>
     </div>
     <div class="form-group">
-      <?= $this->submit($this->action) ?>
+      <?= new \SubmitHelper($this->action) ?>
       <a class="btn btn-outline-primary" href="/admin/video">Zpět</a>
     </div>
   </form>

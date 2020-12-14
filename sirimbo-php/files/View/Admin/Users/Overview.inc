@@ -44,7 +44,7 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2"><?= $this->submit('Filtrovat') ?></td>
+                <td colspan="2"><?= new \SubmitHelper('Filtrovat') ?></td>
             </tr>
         </table>
     </form>

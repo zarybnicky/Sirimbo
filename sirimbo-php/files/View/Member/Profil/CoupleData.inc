@@ -34,7 +34,7 @@
         <td><?= new \TextHelper('lat-finale', $this->lat_finale) ?></td>
       </tr>
     </table>
-    <?= $this->submit('Změnit třídu a body') ?>
+    <?= new \SubmitHelper('Změnit třídu a body') ?>
     <a class="btn btn-outline-primary" href="/member/profil/par">Zpět</a>
   </form>
 </div>

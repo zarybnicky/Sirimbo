@@ -66,7 +66,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
 
     protected function getDuplicateCategoryButton($id)
     {
-        return $this->submit('<img title="Duplikovat" alt="Duplikovat" src="/style/icon-files-o.png" />')
+        return (new \SubmitHelper('<img title="Duplikovat" alt="Duplikovat" src="/style/icon-files-o.png" />'))
             ->data('category_duplicate', $id)->cls('btn btn-link btn-sm');
     }
 
@@ -264,9 +264,9 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                         'form',
                         ['action' => '', 'method' => 'post'],
                         (!$data['pc_archive']
-                         ? ($this->submit('Archivovat?')->data('action', 'archive') . ' nebo ')
+                         ? ((new \SubmitHelper('Archivovat?'))->data('action', 'archive') . ' nebo ')
                          : ''),
-                        (string) $this->submit('Odstranit všechna spojení se skupinami a kategoriemi a přesunout ovlivněné platby do nezařazených?')->data('action', 'unlink')
+                         (new \SubmitHelper('Odstranit všechna spojení se skupinami a kategoriemi a přesunout ovlivněné platby do nezařazených?'))->data('action', 'unlink')
                     )
                 );
             }

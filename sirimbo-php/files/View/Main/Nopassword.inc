@@ -13,7 +13,7 @@
           <input class="form-control" name="email" placeholder="Email" />
         </div>
         <div class="form-group">
-          <?= $this->submit('Získat nové heslo')->data('action', 'gen_pass') ?>
+          <?= (new \SubmitHelper('Získat nové heslo'))->data('action', 'gen_pass') ?>
         </div>
       </div>
     </div>

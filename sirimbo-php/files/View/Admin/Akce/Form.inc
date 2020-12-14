@@ -32,7 +32,7 @@
       <?= $this->checkbox('lock')->label('Uzamknout')->set($this->lock) ?>
     </div>
     <div class="form-group">
-      <?= $this->submit($this->action) ?>
+      <?= new \SubmitHelper($this->action) ?>
       <a class="btn btn-outline-primary" href="/admin/akce">Zpět</a>
     </div>
   </form>

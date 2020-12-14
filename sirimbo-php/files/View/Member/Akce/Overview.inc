@@ -6,10 +6,10 @@
           <?= new \RenderHelper('files/View/Member/Akce/Header.inc', $item) ?>
           <?= new \HiddenHelper('id', $item['id']) ?>
           <?php if ($item['signOut']) : ?>
-            <?= $this->submit('Odhlásit se')->cls('btn btn-outline-primary btn-sm')->data('action', 'signout') ?>
+            <?= (new \SubmitHelper('Odhlásit se'))->cls('btn btn-outline-primary btn-sm')->data('action', 'signout') ?>
           <?php endif ?>
           <?php if ($item['signIn']) : ?>
-            <?= $this->submit('Přihlásit se')->cls('btn btn-outline-primary btn-sm')->data('action', 'signup') ?>
+            <?= (new \SubmitHelper('Přihlásit se'))->cls('btn btn-outline-primary btn-sm')->data('action', 'signup') ?>
           <?php endif ?>
           <a href="/member/akce/<?= $item['id'] ?>" class="btn btn-outline-primary btn-sm">
             Zobrazit přihlášené

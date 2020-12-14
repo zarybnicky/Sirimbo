@@ -20,6 +20,6 @@
     údaje.
   </p>
 
-  <?= $this->submit('Souhlasím')->data('action', 'gdpr') ?>
+  <?= (new \SubmitHelper('Souhlasím'))->data('action', 'gdpr') ?>
   <a class="btn btn-outline-primary" href="/logout">Odhlásit se</a>
 </form>

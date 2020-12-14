@@ -9,7 +9,7 @@
              ->column('removeButton', '');
       ?>
     </div>
-    <?= $this->submit('Uložit') ?>
+    <?= new \SubmitHelper('Uložit') ?>
     <a class="btn btn-outline-primary" href="/admin/nabidka">Zpět</a>
   </form>
 </div>

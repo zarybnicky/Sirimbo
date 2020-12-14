@@ -22,7 +22,7 @@
                     </td>
                     <td>
                       <?php if ($row['canDelete']) : ?>
-                        <?= $this->submit('&times')->cls('py-0 btn btn-outline-primary btn-sm')
+                        <?= (new \SubmitHelper('&times'))->cls('py-0 btn btn-outline-primary btn-sm')
                                ->data('un_id', $row['deleteTicket']) ?>
                       <?php endif ?>
                     </td>
@@ -33,7 +33,7 @@
                 <?php if ($item['canAdd']) : ?>
                   <?= (new \TextHelper('hodiny', ''))->placeholder('Počet hodin')->cls('form-control d-inline w-auto') ?>
                   <?= new \HiddenHelper('id', $item['id']) ?>
-                  <?= $this->submit('Přidat') ?>
+                  <?= new \SubmitHelper('Přidat') ?>
                 <?php endif ?>
               </div>
             </div>

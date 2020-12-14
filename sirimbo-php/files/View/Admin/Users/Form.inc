@@ -132,6 +132,6 @@
   <div class="form-group">
     <?= new \HiddenHelper('returnURI', $this->returnURI) ?>
     <a class="btn btn-outline-primary" href="<?= $this->returnURI ?>">Zpět</a>
-    <?= $this->submit($this->action == 'add' ? 'Přidat' : 'Upravit') ?>
+    <?= new \SubmitHelper($this->action == 'add' ? 'Přidat' : 'Upravit') ?>
   </div>
 </form>

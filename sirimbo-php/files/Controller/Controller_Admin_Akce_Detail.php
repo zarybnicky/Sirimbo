@@ -67,14 +67,14 @@ class Controller_Admin_Akce_Detail extends Controller_Abstract
             function ($item) use ($userSelect) {
                 return [
                     'name' => $userSelect->name($item['ai_id'] . '-user')->set($item['ai_user']),
-                    'removeButton' => $this->submit('Odstranit')->data('remove', $item['ai_id'])
+                    'removeButton' => (new \SubmitHelper('Odstranit'))->data('remove', $item['ai_id'])
                 ];
             },
             DBAkce::getAkceItems($id)
         );
         $items[] = [
             'name' => $userSelect->name('add-user')->set(0),
-            'removeButton' => $this->submit('Přidat')->data('add', 'add')
+            'removeButton' => (new \SubmitHelper('Přidat'))->data('add', 'add')
         ];
 
         new \RenderHelper('files/View/Admin/Akce/Detail.inc', [

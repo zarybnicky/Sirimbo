@@ -147,5 +147,5 @@
     údaje.
   </p>
 
-  <?= $this->submit('Registrovat se')->data('action', 'register') ?>
+  <?= (new \SubmitHelper('Registrovat se'))->data('action', 'register') ?>
 </form>
