@@ -2,7 +2,7 @@
   <form action="" method="POST">
     <button type="submit" name="action" value="add" style="display:none;">Enter</button>
     <div class="n_wrapper">
-      <?php new \RenderHelper('files/View/Member/Nabidka/Header.inc', $this->nabidka) ?>
+      <?php new \RenderHelper('files/View/Member/Nabidka/Header.inc', $this->nabidka, true) ?>
       <?= (new \TableHelper($this->items))
              ->column('user', 'Tanečník')
              ->column('lessonCount', 'Počet hodin')

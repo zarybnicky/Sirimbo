@@ -4,7 +4,7 @@
       <div class="col-12 col-md-6 col-lg-4 pb-2">
         <div class="widget">
           <div class="widget-title center">
-            <?php new \RenderHelper('files/View/Member/Rozpis/Header.inc', $item) ?>
+            <?php new \RenderHelper('files/View/Member/Rozpis/Header.inc', $item, true) ?>
           </div>
           <div class="widget-content">
             <table class="nocolor mx-auto">

@@ -1,4 +1,4 @@
-<?php new \RenderHelper('files/View/Member/Clenove/Navigation.inc', ['uri' => $this->uri]) ?>
+<?php new \RenderHelper('files/View/Member/Clenove/Navigation.inc', ['uri' => $this->uri], true) ?>
 
 <div class="container">
   <div class="row flex-wrap">

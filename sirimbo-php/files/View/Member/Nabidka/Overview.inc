@@ -5,7 +5,7 @@
         <form action="" method="post">
           <div class="widget">
             <div class="widget-title center">
-              <?php new \RenderHelper('files/View/Member/Nabidka/Header.inc', $item) ?>
+              <?php new \RenderHelper('files/View/Member/Nabidka/Header.inc', $item, true) ?>
             </div>
             <div class="widget-content">
               <table class="nocolor" style="width:100%">
