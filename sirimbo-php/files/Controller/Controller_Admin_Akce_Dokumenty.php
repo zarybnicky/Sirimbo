@@ -70,10 +70,7 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Abstract
                     $item['d_name'];
             }
         }
-        $documentSelect = $this->select()
-                               ->name('add-id')
-                               ->option('', '----------')
-                               ->options($allDocuments);
+        $documentSelect = new \SelectHelper('add-id', array_merge(['' => '---'], $allDocuments));
         $documents[] = [
             'name' => (string) $documentSelect,
             'category' => (new \SubmitHelper('Přidat'))->data('add', 'add'),

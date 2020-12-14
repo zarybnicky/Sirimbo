@@ -20,14 +20,4 @@ trait HelperTrait
     {
         return new RedirectHelper(...$args);
     }
-
-    public function select(...$args)
-    {
-        return new SelectHelper(...$args);
-    }
-
-    public function submit(...$args)
-    {
-        return new SubmitHelper(...$args);
-    }
 }

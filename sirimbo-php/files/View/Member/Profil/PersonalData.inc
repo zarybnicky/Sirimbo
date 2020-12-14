@@ -64,9 +64,7 @@
 
   <div class="form-group mb-2">
     <label for="nationality">Národnost</label>
-    <?= $this->select('nationality')
-           ->options(Countries::$countries)
-           ->set($this->nationality) ?>
+    <?= new \SelectHelper('nationality', Countries::$countries, $this->nationality) ?>
   </div>
 
   <div class="form-check mb-2 pl-0">

@@ -1,10 +1,7 @@
 <div class="container">
   <form class="form-inline" action="" method="get">
     <div class="form-group">
-      <?= $this->select('dir')
-             ->set($this->dir ?: 'none')
-             ->option('none', '------ vyberte složku ------')
-             ->options($this->dirs) ?>
+      <?= new \SelectHelper('dir', array_merge(['none' => '------ vyberte složku ------'], $this->dirs), $this->dir ?: 'none') ?>
     </div>
     <div class="form-group"><?= new \SubmitHelper('Zobrazit') ?></div>
   </form>

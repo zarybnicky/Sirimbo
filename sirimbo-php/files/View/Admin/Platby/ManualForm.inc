@@ -15,12 +15,12 @@
             'recogValue' => $this->recognized['amount']['value']
         ], [
             'desc' => 'Uživatel: ',
-            'value' => $this->select('variable')->options($this->users)->set($this->guess['variable']),
+            'value' => new \SelectHelper('variable', $this->users, $this->guess['variable']),
             'recogColumn' => $this->recognized['variable']['column'],
             'recogValue' => $this->recognized['variable']['value']
         ], [
             'desc' => 'Kategorie:',
-            'value' => $this->select('specific')->options($this->categories)->set($this->guess['specific']),
+            'value' => new \SelectHelper('specific', $this->categories, $this->guess['specific']),
             'recogColumn' => $this->recognized['specific']['column'],
             'recogValue' => $this->recognized['specific']['value']
         ], [

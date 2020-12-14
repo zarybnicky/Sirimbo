@@ -5,42 +5,31 @@
             <tr>
                 <td>Uživatelé:</td>
                 <td>
-                    <?= $this->select('status')
-                             ->set($this->status ?: 'all')
-                             ->options($this->statusOptions) ?>
+                    <?= new \SelectHelper('status', $this->statusOptions, $this->status ?: 'all') ?>
                 </td>
             </tr>
             <tr>
                 <td>Skupina:</td>
                 <td>
-                    <?= $this->select('skupina')
-                             ->set($this->skupina ?: 'all')
-                             ->options($this->skupinyOptions) ?>
+                    <?= new \SelectHelper('skupina', $this->skupinyOptions, $this->skupina ?: 'all') ?>
                 </td>
             </tr>
             <tr>
                 <td>Oprávnění:</td>
                 <td>
-                    <?= $this->select('group')
-                             ->set($this->group ?: 'all')
-                             ->options($this->groupOptions) ?>
+                    <?= new \SelectHelper('group', $this->groupOptions, $this->group ?: 'all') ?>
                 </td>
             </tr>
             <tr>
                 <td>Řadit podle:</td>
                 <td>
-                    <?= $this->select('sort')
-                             ->set($this->sort ?: 'prijmeni')
-                             ->options($this->sortOptions) ?>
+                    <?= new \SelectHelper('sort', $this->sortOptions, $this->sort ?: 'prijmeni') ?>
                 </td>
             </tr>
             <tr>
                 <td>Zobrazení:</td>
                 <td>
-                    <?= $this->select('view')
-                             ->set($this->view ?: 'info')
-                             ->option('info', 'informace')
-                             ->option('status', 'status uživatele') ?>
+                    <?= new \SelectHelper('view', ['info' => 'informace', 'status' => 'status uživatele'], $this->view ?: 'info') ?>
                 </td>
             </tr>
             <tr>

@@ -82,15 +82,13 @@
 
   <div class="form-group mb-2">
     <label for="nationality">Národnost</label>
-    <?= $this->select('nationality')
-           ->options(Countries::$countries)
-           ->set($this->nationality) ?>
+    <?= new \SelectHelper('nationality', Countries::$countries, $this->nationality) ?>
   </div>
 
   <div class="form-group mb-2">
     <label for="skupina">Tréninková skupina</label>
     <?php
-    $s = $this->select('skupina')->set($this->skupina ?: '3');
+    $s = new \SelectHelper('skupina', [], $this->skupina ?: '3');
     foreach ($this->skupiny as $item) {
         $s->option(
             $item['id'],

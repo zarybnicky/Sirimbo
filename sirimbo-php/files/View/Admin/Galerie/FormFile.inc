@@ -7,9 +7,7 @@
     <div class="form-group">
       <label for="parent">Nadsložka</label>
       <?php
-      $s = $this->select('parent')
-               ->set($this->parent)
-               ->option('0', '--');
+      $s = new \SelectHelper('parent', ['0' => '---'], $this->parent);
       foreach ($this->dirs as $item) {
           $s->option($item['id'], $item['text']);
       }

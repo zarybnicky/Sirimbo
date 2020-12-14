@@ -96,7 +96,7 @@ class Controller_Admin_Video extends Controller_Abstract
             DBParameters::set('title_video4', $request->post('video4'));
             $this->redirect('/admin/video/title');
         }
-        $select = $this->select()->optionsAssoc(DBVideo::getAll(), 'v_id', 'v_title');
+        $select = (new \SelectHelper())->optionsAssoc(DBVideo::getAll(), 'v_id', 'v_title');
         new \RenderHelper('files/View/Admin/Video/Title.inc', [
             'header' => 'Správa videí',
             'video1' => $select->name('video1')->set(DBParameters::get('title_video1')),

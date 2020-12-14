@@ -1,7 +1,6 @@
 <div class="container">
     <form action="" method="GET">
-      <?= $this->select('kat')
-               ->set($this->kat)
+      <?= (new \SelectHelper('kat', [], $this->kat))
                ->option('', '---VŠE---')
                ->option('1', 'Schůze, rady')
                ->option('2', 'Soutěže')

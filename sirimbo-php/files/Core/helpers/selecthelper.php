@@ -6,11 +6,11 @@ class SelectHelper
     protected $options;
     protected $cls;
 
-    public function __construct($name = null)
+    public function __construct($name = null, $options = [], $value = null)
     {
         $this->name = $name ?: '';
-        $this->value = null;
-        $this->options = [];
+        $this->options = $options;
+        $this->value = $value;
         $this->cls = 'form-control select2';
 
         return $this;

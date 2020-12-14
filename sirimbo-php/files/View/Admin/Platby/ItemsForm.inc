@@ -12,14 +12,10 @@ $form = [
         'value' => new \TextHelper('amount', $this->amount)
     ], [
         'desc' => 'Uživatel: ',
-        'value' => $this->select('variable')
-                        ->options($this->users)
-                        ->set($this->variable)
+        'value' => new \SelectHelper('variable', $this->users, $this->variable)
     ], [
         'desc' => 'Specifický symbol:',
-        'value' => $this->select('specific')
-                        ->options($this->categories)
-                        ->set($this->specific)
+        'value' => new \SelectHelper('specific', $this->categories, $this->specific)
     ], [
         'desc' => 'Prefix (rok):',
         'value' => new \TextHelper('prefix', $this->prefix)

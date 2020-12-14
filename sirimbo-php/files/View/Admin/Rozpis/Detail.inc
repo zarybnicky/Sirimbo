@@ -46,11 +46,7 @@
   <br/>
   <h2>Nabídky</h2>
   <form action="" method="get">
-    <?= $this->select('n')
-             ->set($this->selected_nabidka)
-             ->option('', '--')
-             ->options($this->nabidky);
-    ?>
+    <?= new \SelectHelper('n', array_merge(['' => '---'], $this->nabidky), $this->selected_nabidka) ?>
     <?= new \SubmitHelper('Vybrat nabídku') ?>
     <?php if ($this->nabidka) : ?>
       <div class="n_wrapper">

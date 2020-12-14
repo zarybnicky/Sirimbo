@@ -6,8 +6,7 @@
       <tr><td colspan="2">Standard:</td></tr>
       <tr>
         <td>Třída:</td>
-        <td><?= $this->select('stt-trida')
-                  ->set($this->stt_trida)
+        <td><?= (new \SelectHelper('stt-trida', [], $this->stt_trida)
                   ->options(['Z', 'H', 'D', 'C', 'B', 'A', 'M'], true, true) ?></td>
       </tr>
       <tr>
@@ -21,8 +20,7 @@
       <tr><td colspan="2">Latina:</td></tr>
       <tr>
         <td>Třída:</td>
-        <td><?= $this->select('lat-trida')
-                  ->set($this->lat_trida)
+        <td><?= (new \SelectHelper('lat-trida', [], $this->lat_trida)
                   ->options(['Z', 'H', 'D', 'C', 'B', 'A', 'M'], true, true) ?></td>
       </tr>
       <tr>

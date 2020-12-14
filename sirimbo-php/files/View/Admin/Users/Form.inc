@@ -81,9 +81,7 @@
 
   <div class="form-group mb-2">
     <label for="nationality">Národnost</label>
-    <?= $this->select('nationality')
-           ->options(Countries::$countries)
-           ->set($this->nationality) ?>
+    <?= new \SelectHelper('nationality', Countries::$countries, $this->nationality) ?>
   </div>
 
   <div class="form-group mb-2">
@@ -108,7 +106,7 @@
   <div class="form-group mb-2">
     <label for="group">Oprávnění</label>
     <?php
-    $s = $this->select('group')->set($this->group);
+    $s = new \SelectHelper('group', [], $this->group);
     foreach ($this->groups as $item) {
         $s->option($item['id'], $item['name']);
     }

@@ -4,8 +4,7 @@
     <h4>Standard</h4>
     <div class="form-group">
       <label for="stt-trida">Třída</label>
-      <?= $this->select('stt-trida')
-             ->set($this->stt_trida)
+      <?= (new \SelectHelper('stt-trida', [], $this->stt_trida))
              ->options(['Z', 'H', 'D', 'C', 'B', 'A', 'M'], true, true) ?>
     </div>
     <div class="form-group">
@@ -20,8 +19,7 @@
     <h4>Latina</h4>
     <div class="form-group">
       <label for="lat-trida">Třída</label>
-      <?= $this->select('lat-trida')
-             ->set($this->lat_trida)
+      <?= (new \SelectHelper('lat-trida', [], $this->lat_trida))
              ->options(['Z', 'H', 'D', 'C', 'B', 'A', 'M'], true, true) ?>
     </div>
     <div class="form-group">

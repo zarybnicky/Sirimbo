@@ -6,7 +6,7 @@
     <div class="form-group">
       <label for="dir">Složka</label>
       <?php
-      $s = $this->select('dir')->set($this->dir);
+      $s = new \SelectHelper('dir', [], $this->dir);
       foreach ($this->dirs as $item) {
           $s->option($item['id'], $item['text']);
       }

@@ -8,9 +8,7 @@
                 <td>uživatel</td>
                 <td>
                     <?php
-                    $s = $this->select('user')
-                              ->set($this->user ?: 'all')
-                              ->option('all', '---');
+                    $s = new \SelectHelper('user', ['all' => '---'], $this->user ?: 'all');
                     foreach ($this->users as $user) {
                         $s->option($user['u_id'], $user['u_prijmeni'] . ', ' . $user['u_jmeno']);
                     }
@@ -21,10 +19,7 @@
             <tr>
                 <td>spec. symbol</td>
                 <td>
-                    <?= $this->select('category')
-                             ->set($this->category ?: 'all')
-                             ->option('all', '---')
-                             ->options($this->categories) ?>
+                    <?= new \SelectHelper('category', array_merge(['all' => '---'], $this->categories), $this->category ?: 'all') ?>
                 </td>
             </tr>
             <tr>

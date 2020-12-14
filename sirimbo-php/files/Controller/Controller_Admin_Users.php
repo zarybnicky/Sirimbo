@@ -230,11 +230,10 @@ class Controller_Admin_Users extends Controller_Abstract
             ]);
         }
         $groups = DBPermissions::getGroups();
-        $s_group = $this->select()->optionsAssoc($groups, 'pe_id', 'pe_name')->set(3);
+        $s_group = (new \SelectHelper())->optionsAssoc($groups, 'pe_id', 'pe_name')->set(3);
 
         $skupiny = DBSkupiny::get();
-        $s_skupina = new SelectHelper();
-        $s_skupina->select()->optionsAssoc($skupiny, 's_id', 's_name');
+        $s_skupina = (new SelectHelper())->optionsAssoc($skupiny, 's_id', 's_name');
 
         $users = array_map(
             function ($item) use ($s_group, $s_skupina) {
@@ -245,8 +244,8 @@ class Controller_Admin_Users extends Controller_Abstract
                         '&nbsp;' .
                         new RemoveLinkHelper('/admin/users/remove/' . $item['u_id'])
                     ),
-                    'group' => $s_group->name($item['u_id'] . '-group'),
-                    'skupina' => $s_skupina->name($item['u_id'] . '-skupina')->set($item['u_skupina']),
+                    'group' => (string) $s_group->name($item['u_id'] . '-group'),
+                    'skupina' => (string) $s_skupina->name($item['u_id'] . '-skupina')->set($item['u_skupina']),
                     'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
                     'narozeni' => formatDate($item['u_narozeni']),
                     'poznamky' => $item['u_poznamky']
@@ -358,7 +357,7 @@ class Controller_Admin_Users extends Controller_Abstract
 
         $action = $request->get('view') ?: 'info';
         if ($action == 'status') {
-            $skupinySelect = $this->select()->options($skupinyOptions);
+            $skupinySelect = new \SelectHelper(null, $skupinyOptions);
         } else {
             $skupinySelect = null;
         }
