@@ -2,7 +2,7 @@
   <form action="" method="POST">
     <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
     <div class="r_wrapper">
-      <?= new \RenderHelper('files/View/Member/Rozpis/Header.inc', $this->data) ?>
+      <?php new \RenderHelper('files/View/Member/Rozpis/Header.inc', $this->data) ?>
       <table>
         <tr>
           <td>Tanečník</td>
@@ -12,7 +12,7 @@
           <td>Zámek</td>
         </tr>
         <?php
-        $userselect = (new UserSelectHelper($this->users))->idVar('p_id')->type('par');
+        $userselect = (new \UserSelectHelper($this->users))->idVar('p_id')->type('par');
         foreach ($this->items as $item) :
         ?>
           <tr>
@@ -50,7 +50,7 @@
     <?= new \SubmitHelper('Vybrat nabídku') ?>
     <?php if ($this->nabidka) : ?>
       <div class="n_wrapper">
-        <?= new \RenderHelper('files/View/Member/Nabidka/Header.inc', $this->nabidka) ?>
+        <?php new \RenderHelper('files/View/Member/Nabidka/Header.inc', $this->nabidka) ?>
         <table>
           <tr>
             <td>Tanečník</td>

@@ -1,4 +1,4 @@
-<?= new \RenderHelper('files/View/Member/Clenove/Navigation.inc', ['uri' => $this->uri]) ?>
+<?php new \RenderHelper('files/View/Member/Clenove/Navigation.inc', ['uri' => $this->uri]) ?>
 
 <div class="container">
   <h2><?= $this->fullName ?></h2>

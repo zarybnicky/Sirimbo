@@ -1,7 +1,7 @@
 <div class="container full">
     <form action="" method="POST">
-        <?= new \RenderHelper('files/View/Member/Akce/Header.inc', $this->data) ?>
-        <?= (new TableHelper($this->documents))
+        <?php new \RenderHelper('files/View/Member/Akce/Header.inc', $this->data) ?>
+        <?= (new \TableHelper($this->documents))
                  ->column('name', 'Jméno<br/>souboru')
                  ->column('category', 'Kategorie')
                  ->column('removeButton', '') ?>

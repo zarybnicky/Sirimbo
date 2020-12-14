@@ -1,4 +1,4 @@
-<?= new \RenderHelper('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri])?>
+<?php new \RenderHelper('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri])?>
 
 <div class="container">
     <form action="" method="post">

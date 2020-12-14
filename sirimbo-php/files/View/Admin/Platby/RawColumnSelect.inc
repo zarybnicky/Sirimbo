@@ -1,4 +1,4 @@
-<?= new \RenderHelper('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri]) ?>
+<?php new \RenderHelper('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri]) ?>
 
 <h3>Určení požadovaných sloupců</h3>
 <div class="container">

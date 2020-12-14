@@ -3,7 +3,7 @@
   "type": "project",
   "repositories": [{"packagist.org": false}],
   "autoload": {
-    "psr-4": { "Olymp\\": "src/" },
+    "psr-4": { "Olymp\\": "files/" },
     "classmap": [
       "files/Core/",
       "files/Core/database/",
