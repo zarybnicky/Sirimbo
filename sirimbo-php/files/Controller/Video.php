@@ -1,14 +1,17 @@
 <?php
-class Controller_Video extends Controller_Abstract
+namespace Olymp\Controller;
+
+class Video
 {
-    public function view($request)
+    public static function get()
     {
-        if ($request->get('playlist') == 'other') {
+        $playlist = $_GET['playlist'] ?? null;
+        if ($playlist == 'other') {
             $videos = DBVideo::getOrphan();
             $playlist = 'Nezařazená videa';
-        } elseif ($request->get('playlist')) {
-            $videos = DBVideo::getByPlaylist($request->get('playlist'));
-            $playlist = DBVideoList::getSingle($request->get('playlist'))['vl_title'];
+        } elseif ($playlist) {
+            $videos = DBVideo::getByPlaylist($playlist);
+            $playlist = DBVideoList::getSingle($playlist)['vl_title'];
         } else {
             $videos = [];
             $playlist = null;
@@ -36,7 +39,7 @@ class Controller_Video extends Controller_Abstract
             'header' => 'Video',
             'subheader' => $playlist,
             'videos' => $videos,
-            'playlist' => $request->get('playlist'),
+            'playlist' => $playlist,
             'playlists' => $playlists
         ]);
     }

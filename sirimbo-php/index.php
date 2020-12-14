@@ -65,19 +65,7 @@ try {
         }
     }
 
-    $router = new \Olymp\Router(function ($method, $path, $code, $ex) use ($request) {
-        if ($ex->getMessage() === 'No route found') {
-            $d = new Dispatcher();
-            $d->dispatch($request);
-        } else {
-            throw $ex;
-        }
-    }, 'Olymp.Controller');
-    new \Olymp\Controller\Admin\Repl();
-    // $router->get('/articles/([0-9]+)/comments/delete/([0-9]+)', 'Controller_News::delete');
-    $router->get('/error', '@Error::get');
-    $router->get('/admin/konzole', '@Admin.Repl::get');
-    $router->post('/admin/konzole', '@Admin.Repl::post');
+    $router = makeRouter($request);
     $router->dispatchGlobal();
 } catch (AuthorizationException $e) {
     ob_clean();
@@ -104,4 +92,23 @@ try {
     );
     ob_clean();
     new RedirectHelper('/error?id=' . (new ViewException(''))->getErrorFile());
+}
+
+function makeRouter($request)
+{
+    $router = new \Olymp\Router(function ($method, $path, $code, $ex) use ($request) {
+        if ($ex->getMessage() === 'No route found') {
+            $d = new Dispatcher();
+            $d->dispatch($request);
+        } else {
+            throw $ex;
+        }
+    }, 'Olymp.Controller');
+    // $router->get('/articles/([0-9]+)/comments/delete/([0-9]+)', 'Controller_News::delete');
+    $router->get('/error', '@Error::get');
+    $router->get('/video', '@Video::get');
+    $router->get('/admin/konzole', '@Admin.Repl::get');
+    $router->post('/admin/konzole', '@Admin.Repl::post');
+
+    return $router;
 }
