@@ -29,9 +29,7 @@ function formatRange($from, $to)
 {
     $from = new Date($from);
     $to = new Date($to);
-    return $from->getDate(Date::FORMAT_SIMPLIFIED)
-        . ' - '
-        . $to->getDate(Date::FORMAT_SIMPLIFIED);
+    return $from->getHumanDate() . ' - '  . $to->getHumanDate();
 }
 
 function rrmdir($dir)

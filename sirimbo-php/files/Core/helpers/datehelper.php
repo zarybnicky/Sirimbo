@@ -112,13 +112,11 @@ class DateHelper
                 $to = new Date();
             }
             if ($from->isValid() || $from->isValid()) {
-                $val = $from->getDate(Date::FORMAT_SIMPLIFIED)
-                    . ' - '
-                    . $to->getDate(Date::FORMAT_SIMPLIFIED);
+                $val = $from->getHumanDate() . ' - ' . $to->getHumanDate();
             }
         }
         if (!$val) {
-            $val = $this->date ? $this->date->getDate(Date::FORMAT_SIMPLIFIED) : '';
+            $val = $this->date ? $this->date->getHumanDate() : '';
         }
         return (string) new Tag(
             'input',

@@ -25,7 +25,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
                         . new RemoveLinkHelper('/admin/platby/items/remove/' . $item['pi_id']),
                     'fullName' => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
                     'category' => $item['pc_name'],
-                    'date' => (new Date($item['pi_date']))->getDate(Date::FORMAT_SIMPLE_SPACED),
+                    'date' => (new Date($item['pi_date']))->getHumanDate(),
                     'amount' => $item['pi_amount'] . ' Kč'
                 ];
             },

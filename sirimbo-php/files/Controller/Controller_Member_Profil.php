@@ -33,10 +33,10 @@ class Controller_Member_Profil extends Controller_Abstract
                 'type' => $row['pg_type'] ? 'Členské příspěvky' : 'Ostatní platby',
                 'symbol' => $row['pc_symbol'],
                 'amount' => ($row['pc_use_base'] ? ($row['pc_amount'] * $row['pg_base']) : $row['pc_amount']) . ' Kč',
-                'dueDate' => (new Date($row['pc_date_due']))->getDate(Date::FORMAT_SIMPLIFIED),
-                'validRange' => ((new Date($row['pc_valid_from']))->getDate(Date::FORMAT_SIMPLIFIED) .
+                'dueDate' => (new Date($row['pc_date_due']))->getHumanDate(),
+                'validRange' => ((new Date($row['pc_valid_from']))->getHumanDate() .
                     ((new Date($row['pc_valid_to']))->isValid() ?
-                        (' - ' . (new Date($row['pc_valid_to']))->getDate(Date::FORMAT_SIMPLIFIED)) : ''))
+                        (' - ' . (new Date($row['pc_valid_to']))->getHumanDate()) : ''))
             ];
         }
 

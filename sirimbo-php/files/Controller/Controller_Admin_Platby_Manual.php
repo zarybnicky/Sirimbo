@@ -71,7 +71,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
         } else {
             $recognized['date'] = [
                 'column' => $date,
-                'value' => (new Date($item->date))->getDate(Date::FORMAT_SIMPLIFIED)
+                'value' => (new Date($item->date))->getHumanDate()
             ];
         }
 
@@ -101,7 +101,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
             'guess' => [
                 'specific' => $item->categoryId,
                 'variable' => $item->variable,
-                'date' => (new Date($item->date))->getDate(Date::FORMAT_SIMPLIFIED),
+                'date' => (new Date($item->date))->getHumanDate(),
                 'amount' => $item->amount,
                 'prefix' => $item->prefix
             ],

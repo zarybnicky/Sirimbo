@@ -211,7 +211,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
                     'name' => $item['pc_name'],
                     'specific' => $item['pc_symbol'],
                     'amount' => ((float) $item['pc_amount'] * (float) $data['pg_base']),
-                    'dueDate' => (new Date($item['pc_date_due']))->getDate(Date::FORMAT_SIMPLE_SPACED),
+                    'dueDate' => (new Date($item['pc_date_due']))->getHumanDate(),
                     'validDate' => formatRange($item['pc_valid_from'], $item['pc_valid_to']),
                     'usePrefix' => '&nbsp;' . ($item['pc_use_prefix'] ? '&#10003;' : '&#10799;'),
                     'useBase' => '&nbsp;' . ($item['pc_use_base'] ? '&#10003;' : '&#10799;'),
