@@ -79,9 +79,9 @@ class Controller_Member_Akce
         return $out;
     }
 
-    private function checkData($request, $data, $action): Form
+    private function checkData($request, $data, $action): \Form
     {
-        $f = new Form();
+        $f = new \Form();
         $f->checkBool(!$data['a_lock'], 'Tato akce je zamčená', '');
         $f->checkInArray($action, ['signup', 'signout'], 'Špatná akce', '');
         $f->checkNumeric($request->post('id'), 'Špatné ID', '');

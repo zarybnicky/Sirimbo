@@ -197,9 +197,9 @@ class Controller_Admin_Video
         ]);
     }
 
-    protected function checkData($request): Form
+    protected function checkData($request): \Form
     {
-        $form = new Form();
+        $form = new \Form();
         $form->checkNotEmpty(
             $request->post('uri'),
             'Zadejce prosím ID videa',

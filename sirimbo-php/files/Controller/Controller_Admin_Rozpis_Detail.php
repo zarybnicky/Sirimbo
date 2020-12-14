@@ -218,9 +218,9 @@ class Controller_Admin_Rozpis_Detail
         return $items;
     }
 
-    protected function checkAdd($request): Form
+    protected function checkAdd($request): \Form
     {
-        $f = new Form();
+        $f = new \Form();
         $f->checkNumeric(
             $request->post('add_partner'),
             'Neplatný partner u přidávané lekce',
@@ -239,9 +239,9 @@ class Controller_Admin_Rozpis_Detail
         return $f;
     }
 
-    protected function checkAddMultiple($request): Form
+    protected function checkAddMultiple($request): \Form
     {
-        $f = new Form();
+        $f = new \Form();
         $f->checkNumeric(
             $request->post('add_multi_num'),
             'Neplatný počet přidávaných hodin',

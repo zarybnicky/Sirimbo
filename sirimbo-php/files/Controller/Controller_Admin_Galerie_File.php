@@ -203,9 +203,9 @@ class Controller_Admin_Galerie_File
         ]);
     }
 
-    private function checkData($request): Form
+    private function checkData($request): \Form
     {
-        $form = new Form();
+        $form = new \Form();
 
         $form->checkNotEmpty($request->post('name'), 'Zadejte prosím nějaký popis', 'name');
         $form->checkBool(

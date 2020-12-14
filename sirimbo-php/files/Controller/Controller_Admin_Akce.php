@@ -198,12 +198,12 @@ class Controller_Admin_Akce
         }
     }
 
-    private function checkData($request): Form
+    private function checkData($request): \Form
     {
         $od = new \Date($_POST['od'] ?? null);
         $do = new \Date($_POST['do'] ?? null);
 
-        $form = new Form();
+        $form = new \Form();
         $form->checkDate((string) $od, 'Špatný formát data ("Od")', 'od');
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $form->checkDate((string) $do, 'Špatný formát data ("Do")', 'do');

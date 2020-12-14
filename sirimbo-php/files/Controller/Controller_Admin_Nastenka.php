@@ -192,9 +192,9 @@ class Controller_Admin_Nastenka
         new \RedirectHelper('/admin/nastenka');
     }
 
-    private function checkData($request): Form
+    private function checkData($request): \Form
     {
-        $f = new Form();
+        $f = new \Form();
         $f->checkNotEmpty($request->post('nadpis'), 'Zadejte nadpis', 'nadpis');
         $f->checkNotEmpty($request->post('text'), 'Zadejte nějaký text', 'text');
         return $f;

@@ -107,7 +107,7 @@ class Controller_Admin_Video_Source
 
     protected function checkData($request)
     {
-        $form = new Form();
+        $form = new \Form();
         $form->checkNotEmpty(
             $request->post('uri'),
             'Zadejce prosím ID kanálu',

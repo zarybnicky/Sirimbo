@@ -68,9 +68,9 @@ class Controller_Member_Nabidka
         ]);
     }
 
-    private function checkData($request, $data): Form
+    private function checkData($request, $data): \Form
     {
-        $f = new Form();
+        $f = new \Form();
         $f->checkBool(!$data['n_lock'], 'Tato nabídka je uzamčená', '');
         if ($request->post('hodiny')) {
             $f->checkNumeric($request->post('hodiny'), 'Špatný počet hodin', 'hodiny');

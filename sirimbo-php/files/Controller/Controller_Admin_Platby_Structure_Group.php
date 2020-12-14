@@ -255,9 +255,9 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
         ]);
     }
 
-    protected function checkData($request): Form
+    protected function checkData($request): \Form
     {
-        $f = new Form();
+        $f = new \Form();
         $f->checkInArray($request->post('type'), ['0', '1'], 'Neplatný typ kategorie');
         $f->checkNotEmpty($request->post('name'), 'Zadejte nějaký název platby');
         $f->checkNumeric($request->post('base'), 'Násobitel musí být zadán pouze čisly');

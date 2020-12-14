@@ -67,9 +67,9 @@ class Controller_Member_Rozpis
         }
     }
 
-    protected function checkData($request, $data, $action = 'signup'): Form
+    protected function checkData($request, $data, $action = 'signup'): \Form
     {
-        $f = new Form();
+        $f = new \Form();
         $f->checkBool(!$data['r_lock'], 'Tento rozpis je uzamčený', '');
         $f->checkInArray($action, ['signup', 'signout'], 'Špatná akce', '');
         return $f;

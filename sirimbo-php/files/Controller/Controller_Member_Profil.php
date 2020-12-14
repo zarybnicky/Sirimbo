@@ -56,21 +56,21 @@ class Controller_Member_Profil
     {
         new \RenderHelper('files/View/Member/Profil/PersonalData.inc', [
             'header' => 'Osobní údaje',
-            'lock' => $request->post('lock'),
-            'jmeno' => $request->post('jmeno'),
-            'prijmeni' => $request->post('prijmeni'),
-            'pohlavi' => $request->post('pohlavi'),
-            'email' => $request->post('email'),
-            'telefon' => $request->post('telefon'),
-            'narozeni' => $request->post('narozeni'),
-            'street' => $request->post('street'),
-            'popisne' => $request->post('popisne'),
-            'orientacni' => $request->post('orientacni'),
-            'city' => $request->post('city'),
-            'district' => $request->post('district'),
-            'postal' => $request->post('postal'),
-            'nationality' => $request->post('nationality'),
-            'dancer' => $request->post('dancer'),
+            'lock' => $_POST['lock'] ?? null,
+            'jmeno' => $_POST['jmeno'] ?? null,
+            'prijmeni' => $_POST['prijmeni'] ?? null,
+            'pohlavi' => $_POST['pohlavi'] ?? null,
+            'email' => $_POST['email'] ?? null,
+            'telefon' => $_POST['telefon'] ?? null,
+            'narozeni' => $_POST['narozeni'] ?? null,
+            'street' => $_POST['street'] ?? null,
+            'popisne' => $_POST['popisne'] ?? null,
+            'orientacni' => $_POST['orientacni'] ?? null,
+            'city' => $_POST['city'] ?? null,
+            'district' => $_POST['district'] ?? null,
+            'postal' => $_POST['postal'] ?? null,
+            'nationality' => $_POST['nationality'] ?? null,
+            'dancer' => $_POST['dancer'] ?? null,
             'returnURI' => $request->getReferer() ?: '/member',
         ]);
     }
@@ -78,7 +78,7 @@ class Controller_Member_Profil
     public function gdpr($request)
     {
         \Permissions::checkError('nastenka', P_VIEW);
-        if ($request->post('action') !== 'gdpr') {
+        if ($_POST['action'] ?? null !== 'gdpr') {
             return new \RenderHelper('files/View/Member/Profil/Gdpr.inc', [
                 'header' => 'Souhlas se zpracováním osobních údajů',
             ]);
@@ -119,26 +119,26 @@ class Controller_Member_Profil
 
         \DBUser::setUserData(
             \Session::getUserID(),
-            $request->post('jmeno'),
-            $request->post('prijmeni'),
-            $request->post('pohlavi'),
-            $request->post('email'),
-            $request->post('telefon'),
+            $_POST['jmeno'] ?? null,
+            $_POST['prijmeni'] ?? null,
+            $_POST['pohlavi'] ?? null,
+            $_POST['email'] ?? null,
+            $_POST['telefon'] ?? null,
             (string) $narozeni,
             $data->getNotes(),
-            $request->post('street'),
-            $request->post('popisne'),
-            $request->post('orientacni'),
-            $request->post('district'),
-            $request->post('city'),
-            $request->post('postal'),
-            $request->post('nationality'),
+            $_POST['street'] ?? null,
+            $_POST['popisne'] ?? null,
+            $_POST['orientacni'] ?? null,
+            $_POST['district'] ?? null,
+            $_POST['city'] ?? null,
+            $_POST['postal'] ?? null,
+            $_POST['nationality'] ?? null,
             $data->getPermissionGroup(),
             $data->getTrainingGroup(),
             $data->getLocked() ? '1' : '0',
             $data->getBanned() ? '1' : '0',
             $data->getSystem() ? '1' : '0',
-            $request->post('dancer') ? '1' : '0',
+            $_POST['dancer'] ?? null ? '1' : '0',
             $data->getTeacher() ? '1' : '0',
             $data->getMemberSince(),
             $data->getMemberUntil(),
@@ -164,38 +164,38 @@ class Controller_Member_Profil
         }
         \DBUser::setPassword(
             \Session::getUserID(),
-            \User::crypt($request->post('newpass'))
+            \User::crypt($_POST['newpass'] ?? null)
         );
         new \RedirectHelper('/member/profil');
     }
 
-    private function checkData($request, $action, $narozeni = null): Form
+    private function checkData($request, $action, $narozeni = null): \Form
     {
-        $f = new Form();
+        $f = new \Form();
         if ($action == 'edit') {
             $f->checkDate((string) $narozeni, 'Neplatné datum narození', 'narozeni');
-            $f->checkInArray($request->post('pohlavi'), ['m', 'f'], 'Neplatné pohlaví', 'pohlavi');
-            $f->checkEmail($request->post('email'), 'Neplatný formát emailu', 'email');
-            $f->checkPhone($request->post('telefon'), 'Neplatný formát telefoního čísla', 'telefon');
-            $f->checkNumeric($request->post('nationality'), 'Neplatný formát národnosti', 'nationality');
-            $f->checkNotEmpty($request->post('city'), 'Zadejte město bydliště', 'city');
+            $f->checkInArray($_POST['pohlavi'] ?? null, ['m', 'f'], 'Neplatné pohlaví', 'pohlavi');
+            $f->checkEmail($_POST['email'] ?? null, 'Neplatný formát emailu', 'email');
+            $f->checkPhone($_POST['telefon'] ?? null, 'Neplatný formát telefoního čísla', 'telefon');
+            $f->checkNumeric($_POST['nationality'] ?? null, 'Neplatný formát národnosti', 'nationality');
+            $f->checkNotEmpty($_POST['city'] ?? null, 'Zadejte město bydliště', 'city');
             $f->checkNumeric(
-                str_replace(' ', '', $request->post('postal')),
+                str_replace(' ', '', $_POST['postal'] ?? null),
                 'Zadejte číselné PSČ',
                 'postal'
             );
         } elseif ($action == 'heslo') {
-            $f->checkPassword($request->post('newpass'), 'Neplatný formát hesla', 'newpass');
+            $f->checkPassword($_POST['newpass'] ?? null, 'Neplatný formát hesla', 'newpass');
             $f->checkBool(
                 \DBUser::checkUser(
                     \Session::getUserData()->getLogin(),
-                    \User::crypt($request->post('oldpass'))
+                    \User::crypt($_POST['oldpass'] ?? null)
                 ),
                 'Staré heslo je špatně',
                 'oldpass'
             );
             $f->checkBool(
-                $request->post('newpass') == $request->post('newpass_confirm'),
+                $_POST['newpass'] == $_POST['newpass_confirm'],
                 'Nová hesla se neshodují',
                 'newpass_check'
             );

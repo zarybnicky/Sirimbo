@@ -151,9 +151,9 @@ class Controller_Admin_Permissions
         ]);
     }
 
-    private function checkData($request): Form
+    private function checkData($request): \Form
     {
-        $f = new Form();
+        $f = new \Form();
         foreach (Settings::$permissions as $name => $item) {
             $f->checkArrayKey(
                 $request->post($name), $item,

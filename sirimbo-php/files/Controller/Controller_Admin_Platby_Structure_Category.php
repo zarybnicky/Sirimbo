@@ -331,9 +331,9 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         ]);
     }
 
-    protected function checkData($request, $action, $id): Form
+    protected function checkData($request, $action, $id): \Form
     {
-        $f = new Form();
+        $f = new \Form();
         $dueDate = new \Date($_POST['dueDate'] ?? null);
         if ($dueDate->getYear() == '0000') {
             $dueDate = str_replace('0000', '2000', (string) $dueDate);

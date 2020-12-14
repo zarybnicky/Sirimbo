@@ -188,7 +188,7 @@ class Controller_Member_Profil_Par
 
     private function checkData($request)
     {
-        $f = new Form();
+        $f = new \Form();
         $f->checkInArray(
             $request->post('stt-trida'),
             ['Z', 'H', 'D', 'C', 'B', 'A', 'M'],

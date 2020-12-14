@@ -169,11 +169,11 @@ class Controller_Admin_Rozpis
         ]);
     }
 
-    private function checkData($request): Form
+    private function checkData($request): \Form
     {
         $datum = new \Date($_POST['datum'] ?? null);
 
-        $f = new Form();
+        $f = new \Form();
         $f->checkNumeric($request->post('trener'), 'Neplatný trenér', 'trener');
         $f->checkDate((string) $datum, 'Neplatný formát data', 'datum');
         return $f;

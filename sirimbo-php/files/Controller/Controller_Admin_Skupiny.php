@@ -178,9 +178,9 @@ class Controller_Admin_Skupiny
         return $group ? ['groups' => $group] : [];
     }
 
-    private function checkData($request): Form
+    private function checkData($request): \Form
     {
-        $f = new Form();
+        $f = new \Form();
         $f->checkNotEmpty($request->post('name'), 'Zadejte prosím nějaké jméno.');
         $f->checkNotEmpty($request->post('desc'), 'Zadejte prosím nějaký popis.');
         $f->checkRegexp($request->post('color'), '/#[0-9a-f]{6}/i', 'Zadejte prosím platnou barvu.');

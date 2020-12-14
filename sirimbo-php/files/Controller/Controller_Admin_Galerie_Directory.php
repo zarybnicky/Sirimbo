@@ -162,7 +162,7 @@ class Controller_Admin_Galerie_Directory
 
     protected function checkData($request)
     {
-        $form = new Form();
+        $form = new \Form();
         $form->checkNotEmpty(
             $request->post('name'),
             'Název složky nesmí být prázdný',

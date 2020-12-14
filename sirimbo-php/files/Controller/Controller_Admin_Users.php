@@ -453,11 +453,11 @@ class Controller_Admin_Users
         ]);
     }
 
-    private function checkData($request, $action = 'add'): Form
+    private function checkData($request, $action = 'add'): \Form
     {
         $narozeni = new \Date($_POST['narozeni'] ?? null);
 
-        $f = new Form();
+        $f = new \Form();
         $f->checkDate($narozeni, 'Neplatné datum narození', 'narozeni');
         $f->checkInArray($request->post('pohlavi'), ['m', 'f'], 'Neplatné pohlaví', 'pohlavi');
         $f->checkEmail($request->post('email'), 'Neplatný formát emailu', 'email');
