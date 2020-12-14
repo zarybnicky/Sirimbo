@@ -18,7 +18,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         } elseif (stripos($request->get('category'), 'group_') !== false) {
             $filter['pg_id'] = substr($request->get('category'), 6);
         }
-        $date = $this->date('date')->range()->getPostRange($request);
+        $date = \DateHelper::getPostRange('date');
 
         $data = DBPlatbyItem::get(true, $filter, ['pi_date DESC'], $date);
 

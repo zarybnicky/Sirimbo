@@ -72,8 +72,8 @@ class Controller_Admin_Nabidka extends Controller_Abstract
 
         Permissions::checkError('nabidka', P_OWNED, $request->post('trener'));
 
-        $od = $this->date('od')->getPost($request);
-        $do = $this->date('do')->getPost($request);
+        $od = new Date($_POST['od'] ?? null);
+        $do = new Date($_POST['do'] ?? null);
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
         }
@@ -117,8 +117,8 @@ class Controller_Admin_Nabidka extends Controller_Abstract
             return $this->displayForm($request, $data);
         }
 
-        $od = $this->date('od')->getPost($request);
-        $do = $this->date('do')->getPost($request);
+        $od = new Date($_POST['od'] ?? null);
+        $do = new Date($_POST['do'] ?? null);
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
         }
@@ -223,8 +223,8 @@ class Controller_Admin_Nabidka extends Controller_Abstract
 
     private function checkData($request): Form
     {
-        $od = $this->date('od')->getPost($request);
-        $do = $this->date('do')->getPost($request);
+        $od = new Date($_POST['od'] ?? null);
+        $do = new Date($_POST['do'] ?? null);
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
         }

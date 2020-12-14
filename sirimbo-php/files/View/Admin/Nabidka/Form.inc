@@ -16,11 +16,11 @@
     </div>
     <div class="form-group">
       <label for="od">Od</label>
-      <?= $this->date('od', $this->od) ?>
+      <?= new \DateHelper('od', $this->od) ?>
     </div>
     <div class="form-group">
       <label for="do">Do</label>
-      <?= $this->date('do', $this->do) ?>
+      <?= new \DateHelper('do', $this->do) ?>
       <small class="form-text text-muted">(pokud je prázdné, počítá se jako "Od")</small>
     </div>
     <div class="form-check">

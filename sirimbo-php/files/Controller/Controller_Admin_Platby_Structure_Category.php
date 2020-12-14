@@ -81,7 +81,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             return $this->displayForm($request, 'add', 0);
         }
 
-        $validRange = $this->date('validRange')->getPostRange($request);
+        $validRange = \DateHelper::getPostRange('validRange');
         $validFrom = $validRange['from'];
         $validTo = $validRange['to'];
         if (!$validTo->isValid()) {
@@ -101,7 +101,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             $request->post('name'),
             $request->post('symbol'),
             $amount,
-            (string) $this->date('dueDate')->getPost($request),
+            (string) new Date($_POST['dueDate'] ?? null),
             (string) $validFrom,
             (string) $validTo,
             $use_base,
@@ -148,9 +148,8 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             new \MessageHelper('warning', $form->getMessages());
             return $this->displayForm($request, 'edit', $id);
         }
-        $dueDate = $this->date('dueDate')->getPost($request);
 
-        $validRange = $this->date('validRange')->range()->getPostRange($request);
+        $validRange = \DateHelper::getPostRange('validRange');
         $validFrom = $validRange['from'];
         $validTo = $validRange['to'];
         if (!$validTo->isValid()) {
@@ -174,7 +173,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             $request->post('name'),
             $request->post('symbol'),
             $amount,
-            (string) $dueDate,
+            (string) new Date($_POST['dueDate'] ?? null),
             (string) $validFrom,
             (string) $validTo,
             $use_base,
@@ -337,13 +336,13 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
     protected function checkData($request, $action, $id): Form
     {
         $f = new Form();
-        $dueDate = $this->date('dueDate')->getPost($request);
+        $dueDate = new Date($_POST['dueDate'] ?? null);
         if ($dueDate->getYear() == '0000') {
             $dueDate = str_replace('0000', '2000', (string) $dueDate);
         }
         $f->checkDate($dueDate, 'Datum splatnosti není platné.');
 
-        $validRange = $this->date('validRange')->range()->getPostRange($request);
+        $validRange = \DateHelper::getPostRange('validRange');
         if ($validRange['from']->getYear() == '0000') {
             $f->checkDate(
                 str_replace('0000', '2000', (string) $validRange['from']),

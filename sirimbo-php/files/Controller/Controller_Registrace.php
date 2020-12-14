@@ -39,7 +39,7 @@ class Controller_Registrace extends Controller_Abstract
             ]);
         }
 
-        $narozeni = (string) $this->date('narozeni')->getPost($request);
+        $narozeni = (string) new Date($_POST['narozeni'] ?? null);
         $poznamkyMap = [
             'parent' => 'Rodič tanečníka: ' . $request->post('dancer-name'),
             'dancer' => 'Tanečník/tanečnice',

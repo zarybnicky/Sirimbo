@@ -10,7 +10,7 @@
     </div>
     <div class="form-group">
       <label for="datum">Datum</label>
-      <?= $this->date('datum', $this->datum) ?>
+      <?= new \DateHelper('datum', $this->datum) ?>
     </div>
     <div class="form-check">
       <?= new \CheckboxHelper('visible', 'visible', $this->visible, 'Zviditelnit') ?>

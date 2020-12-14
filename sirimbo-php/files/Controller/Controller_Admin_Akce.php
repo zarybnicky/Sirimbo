@@ -54,8 +54,8 @@ class Controller_Admin_Akce extends Controller_Abstract
             return $this->displayForm($request);
         }
 
-        $od = $this->date('od')->getPost($request);
-        $do = $this->date('do')->getPost($request);
+        $od = new Date($_POST['od'] ?? null);
+        $do = new Date($_POST['do'] ?? null);
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
         }
@@ -96,8 +96,8 @@ class Controller_Admin_Akce extends Controller_Abstract
             return $this->displayForm($request, $data);
         }
 
-        $od = $this->date('od')->getPost($request);
-        $do = $this->date('do')->getPost($request);
+        $od = new Date($_POST['od'] ?? null);
+        $do = new Date($_POST['do'] ?? null);
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
         }
@@ -202,8 +202,8 @@ class Controller_Admin_Akce extends Controller_Abstract
 
     private function checkData($request): Form
     {
-        $od = $this->date('od')->getPost($request);
-        $do = $this->date('do')->getPost($request);
+        $od = new Date($_POST['od'] ?? null);
+        $do = new Date($_POST['do'] ?? null);
 
         $form = new Form();
         $form->checkDate((string) $od, 'Špatný formát data ("Od")', 'od');

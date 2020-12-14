@@ -24,7 +24,7 @@
             </tr>
             <tr>
                 <td>datum</td>
-                <td><?= $this->date('date', $this->date)->range() ?></td>
+                <td><?= (new \DateHelper('date', $this->date))->range() ?></td>
             </tr>
             <tr>
                 <td><a href="/admin/platby/items/add" class="btn btn-primary">

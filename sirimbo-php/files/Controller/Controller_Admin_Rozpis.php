@@ -68,12 +68,11 @@ class Controller_Admin_Rozpis extends Controller_Abstract
         }
 
         Permissions::checkError('rozpis', P_OWNED, $request->post('trener'));
-        $datum = $this->date('datum')->getPost($request);
 
         DBRozpis::addRozpis(
             $request->post('trener'),
             $request->post('kde'),
-            (string) $datum,
+            (string) new Date($_POST['datum'] ?? null),
             $request->post('visible') ? '1' : '0',
             $request->post('lock') ? '1' : '0'
         );
@@ -102,13 +101,11 @@ class Controller_Admin_Rozpis extends Controller_Abstract
             return $this->displayForm($request, $data);
         }
 
-        $datum = $this->date('datum')->getPost($request);
-
         DBRozpis::editRozpis(
             $id,
             $request->post('trener'),
             $request->post('kde'),
-            (string) $datum,
+            (string) new Date($_POST['datum'] ?? null),
             $request->post('visible') ? '1' : '0',
             $request->post('lock') ? '1' : '0'
         );
@@ -175,7 +172,7 @@ class Controller_Admin_Rozpis extends Controller_Abstract
 
     private function checkData($request): Form
     {
-        $datum = $this->date('datum')->getPost($request);
+        $datum = new Date($_POST['datum')->getPost($request);
 
         $f = new Form();
         $f->checkNumeric($request->post('trener'), 'Neplatný trenér', 'trener');

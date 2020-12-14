@@ -80,25 +80,25 @@ class DateHelper
         return $this;
     }
 
-    public function getPostRange($request)
+    public static function getPostRange($name)
     {
-        if (!$request->post($this->name)) {
+        if (!$_POST[$name]) {
             return ['from' => new Date(), 'to' => new Date()];
         }
-        if (strpos($request->post($this->name), ' - ')) {
-            $pieces = explode(' - ', $request->post($this->name));
+        if (strpos($_POST[$name], ' - ')) {
+            $pieces = explode(' - ', $_POST[$name]);
             $from = new Date($pieces[0]);
             $to = new Date($pieces[1]);
         }
         if (!isset($from) || !isset($to) || (!$from->isValid() && !$to->isValid())) {
-            return ['from' => $this->getPost($request), 'to' => new Date()];
+            return ['from' => static::getPost($name), 'to' => new Date()];
         }
         return ['from' => $from, 'to' => $to];
     }
 
-    public function getPost($request)
+    public static function getPost($name)
     {
-        return new Date($request->post($this->name));
+        return new Date($_POST[$name] ?? null);
     }
 
     public function __toString()

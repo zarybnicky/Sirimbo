@@ -13,7 +13,7 @@
   <div class="form-row mb-2">
     <div class="form-group col-12 col-md-6">
       <label for="narozeni">Datum narození</label>
-      <?= $this->date('narozeni', $this->narozeni) ?>
+      <?= new \DateHelper('narozeni', $this->narozeni) ?>
     </div>
     <div class="form-group col-12 col-md-6 pt-4">
       <?= (new \RadioHelper('pohlavi', 'm', $this->pohlavi == 'm'))->label('Muž')->inline() ?>

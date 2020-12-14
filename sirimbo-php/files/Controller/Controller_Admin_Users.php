@@ -98,7 +98,7 @@ class Controller_Admin_Users extends Controller_Abstract
             $request->post('pohlavi'),
             $request->post('email'),
             $request->post('telefon'),
-            (string) $this->date('narozeni')->getPost($request),
+            (string) new Date($_POST['narozeni'] ?? null),
             $request->post('poznamky'),
             $request->post('street'),
             $request->post('popisne'),
@@ -168,7 +168,6 @@ class Controller_Admin_Users extends Controller_Abstract
             return $this->displayForm($request);
         }
 
-        $narozeni = $this->date('narozeni')->getPost($request);
         DBUser::setUserData(
             $id,
             $request->post('jmeno'),
@@ -176,7 +175,7 @@ class Controller_Admin_Users extends Controller_Abstract
             $request->post('pohlavi'),
             $request->post('email'),
             $request->post('telefon'),
-            (string) $narozeni,
+            (string) new Date($_POST['narozeni'] ?? null),
             $request->post('poznamky'),
             $request->post('street'),
             $request->post('popisne'),
@@ -461,7 +460,7 @@ class Controller_Admin_Users extends Controller_Abstract
 
     private function checkData($request, $action = 'add'): Form
     {
-        $narozeni = $this->date('narozeni')->getPost($request);
+        $narozeni = new Date($_POST['narozeni'] ?? null);
 
         $f = new Form();
         $f->checkDate($narozeni, 'Neplatné datum narození', 'narozeni');

@@ -15,10 +15,10 @@
         'value' => new \TextHelper('amount', $this->amount)
     ], [
         'desc' => 'Splatnost:',
-        'value' => $this->date('dueDate', $this->dueDate)
+        'value' => new \DateHelper('dueDate', $this->dueDate)
     ], [
         'desc' => 'Platnost:',
-        'value' => $this->date('validRange', $this->validRange)->range()
+        'value' => (new \DateHelper('validRange', $this->validRange))->range()
     ], [
         'desc' => 'Povolit prefix roku?:',
         'value' => new \CheckboxHelper('usePrefix', '1', $this->usePrefix)

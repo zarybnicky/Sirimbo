@@ -1,8 +1,6 @@
 <?php
 class Renderer
 {
-    use HelperTrait;
-
     protected $template = [];
     protected $cache = [];
     protected $vars = [];

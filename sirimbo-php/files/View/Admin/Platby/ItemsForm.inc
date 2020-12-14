@@ -6,7 +6,7 @@ echo '<h3>', ($this->action == 'add' ? 'Přidat platbu' : 'Upravit platbu'), '</
 $form = [
     [
         'desc' => 'Datum:',
-        'value' => $this->date('date', $this->date)
+        'value' => new \DateHelper('date', $this->date)
     ], [
         'desc' => 'Částka (Kč):',
         'value' => new \TextHelper('amount', $this->amount)

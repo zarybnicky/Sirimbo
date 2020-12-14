@@ -5,7 +5,7 @@
     $form = [
         [
             'desc' => 'Datum:',
-            'value' => $this->date('date', $this->guess['date']),
+            'value' => new \DateHelper('date', $this->guess['date']),
             'recogColumn' => $this->recognized['date']['column'],
             'recogValue' => $this->recognized['date']['value']
         ], [

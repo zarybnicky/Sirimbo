@@ -96,7 +96,7 @@ class Controller_Member_Profil extends Controller_Abstract
     public function edit($request)
     {
         $data = Session::getUserData();
-        $narozeni = $this->date('narozeni')->getPost($request);
+        $narozeni = new Date($_POST['narozeni'] ?? null);
 
         if (!$request->post()) {
             $request->post('jmeno', $data->getName());
