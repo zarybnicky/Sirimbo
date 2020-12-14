@@ -73,7 +73,7 @@ class Controller_Member_Profil
             'postal' => $request->post('postal'),
             'nationality' => $request->post('nationality'),
             'dancer' => $request->post('dancer'),
-            'returnURI' => $request->getReferer() ?: '/member/home',
+            'returnURI' => $request->getReferer() ?: '/member',
         ]);
     }
 
@@ -86,7 +86,7 @@ class Controller_Member_Profil
             ]);
         }
         DBUser::markGdprSigned(Session::getUserId());
-        new \RedirectHelper('/member/home');
+        new \RedirectHelper('/member');
     }
 
     public function edit($request)

@@ -34,7 +34,7 @@ class Renderer
 
         if (!file_exists($file)) {
             syslog(LOG_WARNING, "Could not find file $file to render\n");
-            throw new NotFoundRightException("Soubor nebyl nalezen!");
+            throw new NotFoundException("Soubor nebyl nalezen!");
         }
         ob_start();
         include $file;

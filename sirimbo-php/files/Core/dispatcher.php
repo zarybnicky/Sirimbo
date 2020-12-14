@@ -12,13 +12,9 @@ class Dispatcher
         while (!class_exists($class)) {
             array_pop($parts);
             if (empty($parts)) {
-                $class = 'Controller_Home';
-                break;
+                throw new NotFoundException("Got 404 for $url");
             }
             $class = implode('_', $parts);
-        }
-        if (!class_exists($class)) {
-            throw new NotFoundRightException('Class "' . $class . '" not found');
         }
         return new $class($request);
     }

@@ -7,11 +7,11 @@ class Video
     {
         $playlist = $_GET['playlist'] ?? null;
         if ($playlist == 'other') {
-            $videos = DBVideo::getOrphan();
+            $videos = \DBVideo::getOrphan();
             $playlist = 'Nezařazená videa';
         } elseif ($playlist) {
-            $videos = DBVideo::getByPlaylist($playlist);
-            $playlist = DBVideoList::getSingle($playlist)['vl_title'];
+            $videos = \DBVideo::getByPlaylist($playlist);
+            $playlist = \DBVideoList::getSingle($playlist)['vl_title'];
         } else {
             $videos = [];
             $playlist = null;
@@ -32,7 +32,7 @@ class Video
             function ($item) {
                 return ['id' => $item['vl_id'], 'title' => $item['vl_title']];
             },
-            DBVideoList::getAll()
+            \DBVideoList::getAll()
         );
         $playlists[] = ['id' => 'other', 'title' => 'Nezařazená videa'];
         new \RenderHelper('files/View/Main/Video.inc', [

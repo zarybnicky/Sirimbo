@@ -302,7 +302,7 @@
             settings = {
               "listen.owner" = config.services.nginx.user;
               "pm" = "dynamic";
-              "pm.max_children" = 10;
+              "pm.max_children" = 50;
               "pm.max_requests" = 500;
               "pm.start_servers" = 3;
               "pm.min_spare_servers" = 2;

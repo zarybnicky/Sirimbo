@@ -34,18 +34,18 @@ class RenderHelper
     {
         $menu = [[
             ['Klub', '/', [
-                ['Kluboví trenéři', '/oklubu/treneri/klubovi'],
-                ['Externí trenéři', '/oklubu/treneri/externi'],
+                ['Kluboví trenéři', '/oklubu/klubovi-treneri'],
+                ['Externí trenéři', '/oklubu/externi-treneri'],
                 ['Kde trénujeme', '/oklubu/saly'],
             ]],
-            ['Aktuality', '/aktualne/clanky'],
+            ['Aktuality', '/aktualne'],
             ['Videa', '/video'],
             ['Fotogalerie', '/fotogalerie'],
             ['Kontakt', '/kontakt'],
         ]];
         if (Permissions::check('nastenka', P_VIEW)) {
             $menu[] = [
-                ['Nástěnka', '/member/home', []],
+                ['Nástěnka', '/member', []],
                 ['Rozpis', '/member/rozpis', []],
                 ['Nabídka', '/member/nabidka', []],
                 ['Akce', '/member/akce', []],

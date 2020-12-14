@@ -148,7 +148,7 @@
 <div class="container news">
   <div class="row" style="margin-top:3.5rem;margin-bottom:3.5rem">
     <div class="col-md-6">
-      <h3><a href="/aktualne/clanky">Aktuálně</a></h3>
+      <h3><a href="/aktualne">Aktuálně</a></h3>
       <div class="row">
         <?php foreach ($this->moreArticles as $item): ?>
           <div class="col-12 col-md-6 pb-2">

@@ -1,7 +1,9 @@
 <?php
-class Controller_Kontakt
+namespace Olymp\Controller;
+
+class Kontakt
 {
-    public function view($request)
+    public static function get()
     {
         new \RenderHelper('files/View/Main/Kontakt.inc', [
             'header' => 'Kontakt'

@@ -1,22 +1,26 @@
 <?php
-class Controller_Oklubu_Treneri
-{
-    public function view($request)
-    {
-        new \RedirectHelper('/oklubu/klubovi');
-    }
+namespace Olymp\Controller;
 
-    public function klubovi($request)
+class Oklubu
+{
+    public static function klubovi()
     {
         new \RenderHelper('files/View/Main/OKlubu/TreneriInt.inc', [
             'header' => 'Kluboví trenéři'
         ]);
     }
 
-    public function externi($request)
+    public static function externi()
     {
         new \RenderHelper('files/View/Main/OKlubu/TreneriExt.inc', [
             'header' => 'Externí trenéři'
+        ]);
+    }
+
+    public static function saly()
+    {
+        new \RenderHelper('files/View/Main/OKlubu/Saly.inc', [
+            'header' => 'Kde trénujeme'
         ]);
     }
 }

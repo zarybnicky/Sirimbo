@@ -61,7 +61,7 @@ try {
         } elseif ($request->get('return')) {
             new RedirectHelper($request->get('return'));
         } else {
-            new RedirectHelper('/member/home');
+            new RedirectHelper('/member');
         }
     }
 
@@ -69,6 +69,10 @@ try {
     $router->dispatchGlobal();
 } catch (AuthorizationException $e) {
     ob_clean();
+    new RedirectHelper('/error?id=' . $e->getErrorFile());
+} catch (NotFoundException $e) {
+    ob_clean();
+    syslog(LOG_ERR, $_SERVER['REQUEST_URI'] . ": {$e->getMessage()}");
     new RedirectHelper('/error?id=' . $e->getErrorFile());
 } catch (ViewException $e) {
     syslog(
@@ -83,7 +87,7 @@ try {
     new RedirectHelper('/error?id=' . $e->getErrorFile());
 } catch (Exception $e) {
     syslog(
-        LOG_ERR,
+        LOG_WARN,
         $_SERVER['REQUEST_URI'] . ": {$e->getMessage()}\n"
         . '(' . $e->getFile() . ':' . $e->getLine() . ")\n"
         . $e->getTraceAsString()
@@ -105,8 +109,20 @@ function makeRouter($request)
         }
     }, 'Olymp.Controller');
     // $router->get('/articles/([0-9]+)/comments/delete/([0-9]+)', 'Controller_News::delete');
+    $router->get('/', '@Home::get');
+    $router->get('/home', '@Home::get');
     $router->get('/error', '@Error::get');
     $router->get('/video', '@Video::get');
+    $router->get('/kontakt', '@Kontakt::get');
+    $router->get('/aktualne', '@Aktualne::list');
+    $router->get('/aktualne/([0-9]+)', '@Aktualne::single');
+    $router->get('/oklubu/klubovi-treneri', '@Oklubu::klubovi');
+    $router->get('/oklubu/externi-treneri', '@Oklubu::externi');
+    $router->get('/oklubu/saly', '@Oklubu::saly');
+    $router->get('/nopassword', '@Nopassword::get');
+    $router->post('/nopassword', '@Nopassword::post');
+    $router->get('/member', '@Member::get');
+    $router->get('/member/home', '@Member::get');
     $router->get('/admin/konzole', '@Admin.Repl::get');
     $router->post('/admin/konzole', '@Admin.Repl::post');
 
