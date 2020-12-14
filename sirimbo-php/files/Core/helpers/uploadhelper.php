@@ -146,7 +146,7 @@ class UploadHelper
         return $messages;
     }
 
-    public function render()
+    public function __toString()
     {
         if ($this->_name === null) {
             return '';
@@ -155,10 +155,5 @@ class UploadHelper
             'input',
             ['name' => $this->_name . '[]', 'class' => 'form-control-file', 'multiple' => true, 'type' => 'file']
         );
-    }
-
-    public function __toString()
-    {
-        return new \RenderHelper();
     }
 }

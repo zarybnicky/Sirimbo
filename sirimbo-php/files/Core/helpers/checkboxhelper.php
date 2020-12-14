@@ -51,7 +51,7 @@ class CheckboxHelper
         return $this;
     }
 
-    public function render()
+    public function __toString()
     {
         $checkbox = new Tag(
             'input',
@@ -68,10 +68,5 @@ class CheckboxHelper
             . $checkbox
             . ($this->label ? "<label class='form-check-label'>{$this->label}</label>" : '')
             . "</div>";
-    }
-
-    public function __toString()
-    {
-        return new \RenderHelper();
     }
 }

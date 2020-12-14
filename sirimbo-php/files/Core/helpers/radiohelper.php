@@ -50,7 +50,7 @@ class RadioHelper
         return $this;
     }
 
-    public function render()
+    public function __toString()
     {
         $radio = new Tag(
             'input',
@@ -67,10 +67,5 @@ class RadioHelper
             . $radio
             . ($this->label ? "<label class='form-check-label'>{$this->label}</label>" : '')
             . "</div>";
-    }
-
-    public function __toString()
-    {
-        return new \RenderHelper();
     }
 }

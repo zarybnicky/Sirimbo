@@ -78,11 +78,6 @@ class TableHelper
 
     public function __toString()
     {
-        return new \RenderHelper();
-    }
-
-    public function render()
-    {
         if ($this->_data === null && $this->_columns === null) {
             return '';
         }

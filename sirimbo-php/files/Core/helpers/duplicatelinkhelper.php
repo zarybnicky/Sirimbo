@@ -11,7 +11,7 @@ class DuplicateLinkHelper
         return $this;
     }
 
-    public function render()
+    public function __toString()
     {
         if ($this->button) {
             return "<button style='padding:0' name='action' value='{$this->link}'>" .
@@ -21,10 +21,5 @@ class DuplicateLinkHelper
         return "<a href='{$this->link}' title='Duplikovat'>" .
             "<img alt='Duplikovat' src='/style/icon-files-o.png' />" .
             "</a>";
-    }
-
-    public function __toString()
-    {
-        return new \RenderHelper();
     }
 }

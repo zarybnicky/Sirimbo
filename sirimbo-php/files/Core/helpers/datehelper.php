@@ -103,11 +103,6 @@ class DateHelper
 
     public function __toString()
     {
-        return new \RenderHelper();
-    }
-
-    public function render()
-    {
         $val = null;
 
         if ($this->useRange) {

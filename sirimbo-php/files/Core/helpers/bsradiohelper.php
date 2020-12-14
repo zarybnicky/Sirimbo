@@ -42,7 +42,7 @@ class BsRadioHelper
         return $this;
     }
 
-    public function render()
+    public function __toString()
     {
         $radio = new Tag(
             'input',
@@ -59,10 +59,5 @@ class BsRadioHelper
             return (string) $radio;
         }
         return "<div class='form-check'><label class='form-check-label'>$radio {$this->label}</label></div>";
-    }
-
-    public function __toString()
-    {
-        return new \RenderHelper();
     }
 }

@@ -11,17 +11,12 @@ class NoticeHelper
         return $this;
     }
 
-    public function render()
+    public function __toString()
     {
         if (!$this->text) {
             return '';
         }
         return '<div class="alert alert-' . $this->type . '" role="alert">'
             . $this->text . '</div>';
-    }
-
-    public function __toString()
-    {
-        return new \RenderHelper();
     }
 }

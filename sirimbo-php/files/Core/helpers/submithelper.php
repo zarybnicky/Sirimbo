@@ -42,17 +42,12 @@ class SubmitHelper
         return $this;
     }
 
-    public function render()
+    public function __toString()
     {
         return (string) new Tag(
             'button',
             ['name' => $this->name, 'value' => $this->value, 'class' => $this->cls],
             $this->text
         );
-    }
-
-    public function __toString()
-    {
-        return new \RenderHelper();
     }
 }

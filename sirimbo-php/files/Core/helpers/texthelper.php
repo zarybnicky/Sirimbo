@@ -56,7 +56,7 @@ class TextHelper
         return $this;
     }
 
-    public function render()
+    public function __toString()
     {
         return (string) new Tag(
             'input',
@@ -71,10 +71,5 @@ class TextHelper
                 'disabled' => $this->disabled
             ]
         );
-    }
-
-    public function __toString()
-    {
-        return new \RenderHelper();
     }
 }

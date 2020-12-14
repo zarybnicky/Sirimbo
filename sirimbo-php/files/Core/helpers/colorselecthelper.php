@@ -12,7 +12,7 @@ class ColorSelectHelper
         return $this;
     }
 
-    public function render()
+    public function __toString()
     {
         $widget = new Tag(
             'input',
@@ -35,10 +35,5 @@ $('#color-{$this->field}').spectrum({
 EOS
         );
         return (string) $widget;
-    }
-
-    public function __toString()
-    {
-        return new \RenderHelper();
     }
 }

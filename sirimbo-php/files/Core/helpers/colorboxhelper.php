@@ -12,7 +12,7 @@ class ColorboxHelper
         return $this;
     }
 
-    public function render()
+    public function __toString()
     {
         return (string) new Tag(
             'div',
@@ -22,10 +22,5 @@ class ColorboxHelper
                 'style' => 'background-color:' . $this->color
             ]
         );
-    }
-
-    public function __toString()
-    {
-        return new \RenderHelper();
     }
 }

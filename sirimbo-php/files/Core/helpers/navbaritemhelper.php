@@ -11,7 +11,7 @@ class NavbarItemHelper
         return $this;
     }
 
-    public function render()
+    public function __toString()
     {
         $item = $this->item;
 
@@ -39,10 +39,5 @@ class NavbarItemHelper
         }
         $x .= '</div>';
         return '<li class="nav-item' . $active . ' dropdown">' . $x . '</li>';
-    }
-
-    public function __toString()
-    {
-        return new \RenderHelper();
     }
 }

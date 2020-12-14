@@ -16,16 +16,11 @@ class HiddenHelper
         return $this;
     }
 
-    public function render()
+    public function __toString()
     {
         return (string) new Tag(
             'input',
             ['type' => 'hidden', 'name' => $this->name, 'value' => $this->value]
         );
-    }
-
-    public function __toString()
-    {
-        return new \RenderHelper();
     }
 }

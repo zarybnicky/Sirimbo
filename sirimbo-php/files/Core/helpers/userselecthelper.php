@@ -69,7 +69,7 @@ class UserSelectHelper
         return $this;
     }
 
-    public function render()
+    public function __toString()
     {
         $name = 'userselect' . rand(0, 1024);
         $selected = $this->_selected !== null ? $this->_selected : '';
@@ -96,10 +96,5 @@ class UserSelectHelper
         $out .= '</div>';
 
         return $out;
-    }
-
-    public function __toString()
-    {
-        return new \RenderHelper();
     }
 }

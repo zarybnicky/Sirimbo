@@ -1,7 +1,7 @@
 <?php
 class LoginHelper
 {
-    public function render()
+    public function __toString()
     {
         if (Session::isLogged()) {
             $name = Session::getUserData()->getFullName();
@@ -10,10 +10,5 @@ class LoginHelper
             $r = new Renderer();
             return $r->render('files/View/Login.inc');
         }
-    }
-
-    public function __toString()
-    {
-        return new \RenderHelper();
     }
 }

@@ -11,7 +11,7 @@ class EditLinkHelper
         return $this;
     }
 
-    public function render()
+    public function __toString()
     {
         if ($this->button) {
             return "<button class='a' name='action' value='{$this->link}'>" .
@@ -21,10 +21,5 @@ class EditLinkHelper
         return "<a href='{$this->link}' title='Upravit'>" .
             "<img alt='Upravit' src='/style/icon-pencil.png' />" .
             "</a>";
-    }
-
-    public function __toString()
-    {
-        return new \RenderHelper();
     }
 }

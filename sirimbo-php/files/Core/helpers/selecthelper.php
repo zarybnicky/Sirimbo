@@ -78,7 +78,7 @@ class SelectHelper
         return $this;
     }
 
-    public function render()
+    public function __toString()
     {
         $selected = $this->value;
         $options = array_map(
@@ -101,10 +101,5 @@ class SelectHelper
             ['name' => $this->name, 'class' => $this->cls],
             $options
         );
-    }
-
-    public function __toString()
-    {
-        return new \RenderHelper();
     }
 }

@@ -13,7 +13,7 @@ class PersonHelper
         return $this;
     }
 
-    public function render()
+    public function __toString()
     {
         return (string) new Tag(
             'a',
@@ -28,10 +28,5 @@ class PersonHelper
             ),
             '&nbsp;' . $this->nameR
         );
-    }
-
-    public function __toString()
-    {
-        return new \RenderHelper();
     }
 }
