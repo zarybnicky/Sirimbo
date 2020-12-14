@@ -11,11 +11,6 @@ trait HelperTrait
         return new DateHelper(...$args);
     }
 
-    public function radio(...$args)
-    {
-        return new RadioHelper(...$args);
-    }
-
     public function redirect(...$args)
     {
         return new RedirectHelper(...$args);

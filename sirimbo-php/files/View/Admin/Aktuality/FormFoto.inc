@@ -13,9 +13,7 @@
           <img alt="<?= $item['id'] ?>" src="<?= $item['src'] ?>" />
         </div>
         <div class="foto_desc">
-          <?= $this->radio('foto', $item['id'])
-                 ->set($item['id'] == $this->checked)
-                 ->label($item['name']) ?>
+          <?= (new \RadioHelper('foto', $item['id'], $item['id'] == $this->checked))->label($item['name']) ?>
           <br/><br/>
         </div>
       </div>

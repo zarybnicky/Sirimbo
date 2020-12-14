@@ -57,10 +57,10 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
         foreach ($parser->headers() as $name) {
             $data[] = [
                 'column' => $name,
-                'specific' => $this->radio('specific', $name)->set($name == $specific),
-                'variable' => $this->radio('variable', $name)->set($name == $variable),
-                'date' => $this->radio('date', $name)->set($name == $date),
-                'amount' => $this->radio('amount', $name)->set($name == $amount)
+                'specific' => new \RadioHelper('specific', $name, $name == $specific),
+                'variable' => new \RadioHelper('variable', $name, $name == $variable),
+                'date' => new \RadioHelper('date', $name, $name == $date),
+                'amount' => new \RadioHelper('amount', $name, $name == $amount)
             ];
         }
         new \RenderHelper('files/View/Admin/Platby/RawColumnSelect.inc', [

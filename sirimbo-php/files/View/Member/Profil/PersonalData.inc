@@ -16,8 +16,8 @@
       <?= $this->date('narozeni', $this->narozeni) ?>
     </div>
     <div class="form-group col-12 col-md-6 pt-4">
-      <?= $this->radio('pohlavi', 'm')->set($this->pohlavi == 'm')->label('Muž')->inline() ?>
-      <?= $this->radio('pohlavi', 'f')->set($this->pohlavi == 'f')->label('Žena')->inline() ?>
+      <?= (new \RadioHelper('pohlavi', 'm', $this->pohlavi == 'm'))->label('Muž')->inline() ?>
+      <?= (new \RadioHelper('pohlavi', 'f', $this->pohlavi == 'f'))->label('Žena')->inline() ?>
     </div>
   </div>
 

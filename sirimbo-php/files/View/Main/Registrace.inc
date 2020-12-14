@@ -34,8 +34,8 @@
       <?= $this->date('narozeni', $this->narozeni) ?>
     </div>
     <div class="form-group col-12 col-md-6 pt-4">
-      <?= $this->radio('pohlavi', 'm')->set($this->pohlavi == 'm')->label('Muž')->inline() ?>
-      <?= $this->radio('pohlavi', 'f')->set($this->pohlavi == 'f')->label('Žena')->inline() ?>
+      <?= (new \RadioHelper('pohlavi', 'm', $this->pohlavi == 'm'))->label('Muž')->inline() ?>
+      <?= (new \RadioHelper('pohlavi', 'f', $this->pohlavi == 'f'))->label('Žena')->inline() ?>
     </div>
   </div>
 
@@ -102,15 +102,13 @@
   <div class="form-group mb-2">
     <label for="poznamky">Vztah ke klubu</label>
     <div class="form-inline">
-      <?= $this->radio('poznamky', 'dancer')
-             ->set($this->poznamky == 'dancer')
-             ->label('Tanečník/tanečníce') ?>
+      <?= (new \RadioHelper('poznamky', 'dancer', $this->poznamky == 'dancer'))->label('Tanečník/tanečníce') ?>
     </div>
     <div class="form-inline">
       <?php $i = (new \TextHelper('dancer-name', $this->dancerName))
                      ->placeholder('jméno tanečníka')
                      ->cls('form-control ml-2') ?>
-      <?= $this->radio('poznamky', 'parent')
+      <?= (new \RadioHelper('poznamky', 'parent'))
              ->set($this->poznamky == 'parent')
              ->label('Rodič tanečníka: ' . $i) ?>
     </div>
@@ -118,9 +116,7 @@
       <?php $i = (new \TextHelper('other', $this->other))
                      ->placeholder('vztah ke klubu')
                      ->cls('form-control ml-2') ?>
-      <?= $this->radio('poznamky', 'other')
-             ->set($this->poznamky == 'other')
-             ->label('Jiný ' . $i) ?>
+      <?= (new \RadioHelper('poznamky', 'other', $this->poznamky == 'other'))->label('Jiný ' . $i) ?>
     </div>
   </div>
 

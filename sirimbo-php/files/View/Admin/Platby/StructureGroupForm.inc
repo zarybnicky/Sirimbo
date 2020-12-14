@@ -6,13 +6,9 @@
         [
             'desc' => 'Typ:',
             'value' => (
-                $this->radio('type', '0')
-                     ->set($this->type == '0')
-                     ->label('Běžné platby')
+                (new \RadioHelper('type', '0', $this->type == '0')) ->label('Běžné platby')
                 . '<br/>' .
-                $this->radio('type', '1')
-                     ->set($this->type == '1')
-                     ->label('Členské příspěvky')
+                (new \RadioHelper('type', '1', $this->type == '1'))->label('Členské příspěvky')
             )
         ], [
             'desc' => 'Jméno:',

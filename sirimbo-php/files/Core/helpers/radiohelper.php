@@ -8,7 +8,7 @@ class RadioHelper
     protected $label;
     protected $cls;
 
-    public function __construct($name, $value = null)
+    public function __construct($name, $value = null, $state = false)
     {
         if ($value === null) {
             $value = $name;
@@ -17,7 +17,7 @@ class RadioHelper
         $this->name = $name;
         $this->value = $value;
 
-        $this->state = false;
+        $this->state = $state;
         $this->readonly = false;
 
         $this->label = null;

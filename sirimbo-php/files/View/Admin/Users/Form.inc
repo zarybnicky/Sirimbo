@@ -33,8 +33,8 @@
       <?= $this->date('narozeni', $this->narozeni) ?>
     </div>
     <div class="form-group col-12 col-md-6 pt-4">
-      <?= $this->radio('pohlavi', 'm')->set($this->pohlavi == 'm')->label('Muž')->inline() ?>
-      <?= $this->radio('pohlavi', 'f')->set($this->pohlavi == 'f')->label('Žena')->inline() ?>
+      <?= (new \RadioHelper('pohlavi', 'm', $this->pohlavi == 'm'))->label('Muž')->inline() ?>
+      <?= (new \RadioHelper('pohlavi', 'f', $this->pohlavi == 'f'))->label('Žena')->inline() ?>
     </div>
   </div>
 
@@ -117,10 +117,8 @@
     <div style="font-weight:bold">Skupina</div>
     <?php
     foreach ($this->skupiny as $item) {
-        echo $this->radio('skupina', $item['id'])
-                 ->set($this->skupina == $item['id'])
-                 ->label(new ColorboxHelper($item['color'], $item['popis'])
-                      . '&nbsp;' . $item['popis']);
+        echo (new \RadioHelper('skupina', $item['id'], $this->skupina == $item['id']))
+                 ->label(new ColorboxHelper($item['color'], $item['popis']) . '&nbsp;' . $item['popis']);
     }?>
   </div>
   <div class="mb-2">
