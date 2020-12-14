@@ -35,7 +35,7 @@ class Controller_Admin_Skupiny extends Controller_Abstract
         }
         $form = $this->checkData($request);
         if (!$form->isValid()) {
-            $this->redirect()->warning($form->getMessages());
+            new \MessageHelper('warning', $form->getMessages());
             return $this->displayForm($request);
         }
         DBSkupiny::insert(
@@ -49,18 +49,18 @@ class Controller_Admin_Skupiny extends Controller_Abstract
             DBSkupiny::addChild($insertId, $item);
         }
 
-        $this->redirect('/admin/skupiny');
+        new \RedirectHelper('/admin/skupiny');
     }
 
     public function edit($request)
     {
         if (!$id = $request->getId()) {
-            $this->redirect()->warning('Skupina s takovým ID neexistuje');
-            $this->redirect('/admin/skupiny');
+            new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
+            new \RedirectHelper('/admin/skupiny');
         }
         if (!$data = DBSkupiny::getSingle($id)) {
-            $this->redirect()->warning('Skupina s takovým ID neexistuje');
-            $this->redirect('/admin/skupiny');
+            new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
+            new \RedirectHelper('/admin/skupiny');
         }
 
         if (!$request->post()) {
@@ -68,7 +68,7 @@ class Controller_Admin_Skupiny extends Controller_Abstract
         }
         $form = $this->checkData($request);
         if (!$form->isValid()) {
-            $this->redirect()->warning($form->getMessages());
+            new \MessageHelper('warning', $form->getMessages());
             return $this->displayForm($request, $data);
         }
 
@@ -93,18 +93,18 @@ class Controller_Admin_Skupiny extends Controller_Abstract
             DBSkupiny::addChild($id, $added);
         }
 
-        $this->redirect('/admin/skupiny');
+        new \RedirectHelper('/admin/skupiny');
     }
 
     public function remove($request)
     {
         if (!$id = $request->getId()) {
-            $this->redirect()->warning('Skupina s takovým ID neexistuje');
-            $this->redirect('/admin/skupiny');
+            new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
+            new \RedirectHelper('/admin/skupiny');
         }
         if (!$data = DBSkupiny::getSingle($id)) {
-            $this->redirect()->warning('Skupina s takovým ID neexistuje');
-            $this->redirect('/admin/skupiny');
+            new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
+            new \RedirectHelper('/admin/skupiny');
         }
 
         if ($request->post('action') == 'unlink') {
@@ -116,12 +116,12 @@ class Controller_Admin_Skupiny extends Controller_Abstract
                 ++$groupCount;
             }
 
-            $this->redirect()->info('Spojení s ' . $groupCount . ' kategoriemi byla odstraněna.');
-            return $this->redirect('/admin/skupiny/remove/' . $id);
+            new \MessageHelper('info', 'Spojení s ' . $groupCount . ' kategoriemi byla odstraněna.');
+            return new \RedirectHelper('/admin/skupiny/remove/' . $id);
         }
         if (($f = $this->getLinkedSkupinaObjects($id)) || !$request->post()) {
             if (isset($f) && $f) {
-                $this->redirect()->info(
+                new \MessageHelper('info', 
                     'Nemůžu odstranit skupinu s připojenými kategoriemi! '
                     . new Tag(
                         'form',
@@ -138,7 +138,7 @@ class Controller_Admin_Skupiny extends Controller_Abstract
             ]);
         }
         DBSkupiny::delete($id);
-        $this->redirect('/admin/skupiny');
+        new \RedirectHelper('/admin/skupiny');
     }
 
     private function displayForm($request, $data = null)
@@ -152,11 +152,8 @@ class Controller_Admin_Skupiny extends Controller_Abstract
         $groups = array_map(
             function ($item) use ($groupsSelected) {
                 return [
-                    'buttons' => $this->checkbox('group[]', $item['pg_id'])
-                                      ->set(isset($groupsSelected[$item['pg_id']])),
-                    'type' => ($item['pg_type'] == '1'
-                               ? 'Členské příspěvky'
-                               : 'Běžné platby'),
+                    'buttons' => new \CheckboxHelper('group[]', $item['pg_id'], isset($groupsSelected[$item['pg_id']])),
+                    'type' => $item['pg_type'] == '1' ? 'Členské příspěvky' : 'Běžné platby',
                     'name' => $item['pg_name'],
                     'base' => $item['pg_base']
                 ];

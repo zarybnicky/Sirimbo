@@ -10,12 +10,12 @@ class Controller_Admin_Rozpis_Detail extends Controller_Abstract
     public function view($request)
     {
         if (!$id = $request->getId()) {
-            $this->redirect()->warning('Rozpis s takovým ID neexistuje');
-            $this->redirect('/admin/rozpis');
+            new \MessageHelper('warning', 'Rozpis s takovým ID neexistuje');
+            new \RedirectHelper('/admin/rozpis');
         }
         if (!$data = DBRozpis::getSingleRozpis($id)) {
-            $this->redirect()->warning('Rozpis s takovým ID neexistuje');
-            $this->redirect('/admin/rozpis');
+            new \MessageHelper('warning', 'Rozpis s takovým ID neexistuje');
+            new \RedirectHelper('/admin/rozpis');
         }
 
         Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
@@ -27,7 +27,7 @@ class Controller_Admin_Rozpis_Detail extends Controller_Abstract
             if ($items) {
                 DBRozpis::editRozpisItemMultiple($items);
             }
-            $this->redirect('/' . $request->getURI());
+            new \RedirectHelper('/' . $request->getURI());
         }
 
         $users = DBPary::getPartners();
@@ -136,7 +136,7 @@ class Controller_Admin_Rozpis_Detail extends Controller_Abstract
         if ($request->post('add_od') && $request->post('add_do')) {
             $form = $this->checkAdd($request);
             if (!$form->isValid()) {
-                $this->redirect()->warning($form->getMessages());
+                new \MessageHelper('warning', $form->getMessages());
             } else {
                 $newId = DBRozpis::addRozpisItem(
                     $id,
@@ -191,7 +191,7 @@ class Controller_Admin_Rozpis_Detail extends Controller_Abstract
             case 'add_multiple':
                 $form = $this->checkAddMultiple($request);
                 if (!$form->isValid()) {
-                    $this->redirect()->warning($form->getMessages());
+                    new \MessageHelper('warning', $form->getMessages());
                     break;
                 }
 

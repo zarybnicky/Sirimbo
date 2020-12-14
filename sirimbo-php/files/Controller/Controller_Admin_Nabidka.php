@@ -29,7 +29,7 @@ class Controller_Admin_Nabidka extends Controller_Abstract
                     $item['n_lock']
                 );
             }
-            $this->redirect('/admin/nabidka');
+            new \RedirectHelper('/admin/nabidka');
         }
 
         $data = array_map(
@@ -48,7 +48,7 @@ class Controller_Admin_Nabidka extends Controller_Abstract
                         '<a href="/admin/nabidka/edit/' . $item['n_id'] . '">obecné</a>, ' .
                         '<a href="/admin/nabidka/detail/' . $item['n_id'] . '">tréninky</a>'
                     ),
-                    'visible' => (string) $this->checkbox($item['n_id'], '1')->set($item['n_visible'])
+                    'visible' => new \CheckboxHelper($item['n_id'], '1', $item['n_visible'])
                 ];
             },
             $data
@@ -66,7 +66,7 @@ class Controller_Admin_Nabidka extends Controller_Abstract
         }
         $form = $this->checkData($request);
         if (!$form->isValid()) {
-            $this->redirect()->warning($form->getMessages());
+            new \MessageHelper('warning', $form->getMessages());
             return $this->displayForm($request);
         }
 
@@ -92,19 +92,19 @@ class Controller_Admin_Nabidka extends Controller_Abstract
             $request->post('lock') ? 1 : 0
         );
 
-        $this->redirect()->success('Nabídka přidána');
-        $this->redirect($request->post('returnURI') ?: '/admin/nabidka');
+        new \MessageHelper('success', 'Nabídka přidána');
+        new \RedirectHelper($request->post('returnURI') ?: '/admin/nabidka');
     }
 
     public function edit($request)
     {
         if (!$id = $request->getId()) {
-            $this->redirect()->warning('Nabídka s takovým ID neexistuje');
-            $this->redirect($request->post('returnURI') ?: '/admin/nabidka');
+            new \MessageHelper('warning', 'Nabídka s takovým ID neexistuje');
+            new \RedirectHelper($request->post('returnURI') ?: '/admin/nabidka');
         }
         if (!$data = DBNabidka::getSingleNabidka($id)) {
-            $this->redirect()->warning('Nabídka s takovým ID neexistuje');
-            $this->redirect($request->post('returnURI') ?: '/admin/nabidka');
+            new \MessageHelper('warning', 'Nabídka s takovým ID neexistuje');
+            new \RedirectHelper($request->post('returnURI') ?: '/admin/nabidka');
         }
         Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
 
@@ -113,7 +113,7 @@ class Controller_Admin_Nabidka extends Controller_Abstract
         }
         $form = $this->checkData($request);
         if (!$form->isValid()) {
-            $this->redirect()->warning($form->getMessages());
+            new \MessageHelper('warning', $form->getMessages());
             return $this->displayForm($request, $data);
         }
 
@@ -127,7 +127,7 @@ class Controller_Admin_Nabidka extends Controller_Abstract
         $pocet_hod = $request->post('pocet_hod');
         if ($pocet_hod < $items) {
             $pocet_hod = $items;
-            $this->redirect()->warning(
+            new \MessageHelper('warning', 
                 'Obsazených hodin už je víc než jste zadali, ' .
                 'nelze už dál snížit počet hodin'
             );
@@ -136,7 +136,7 @@ class Controller_Admin_Nabidka extends Controller_Abstract
         $max_lessons_old = DBNabidka::getNabidkaMaxItems($id);
         if ($max_lessons < $max_lessons_old && $max_lessons != 0) {
             $max_lessons = $max_lessons_old;
-            $this->redirect()->warning(
+            new \MessageHelper('warning', 
                 'Zadaný maximální počet hodin/pár je méně než už je zarezervováno, ' .
                 'nelze už dál snížit maximální počet hodin'
             );
@@ -156,8 +156,8 @@ class Controller_Admin_Nabidka extends Controller_Abstract
             $request->post('lock') ? '1' : '0'
         );
 
-        $this->redirect()->success('Nabídka úspěšně upravena');
-        $this->redirect($request->post('returnURI') ?: '/admin/nabidka');
+        new \MessageHelper('success', 'Nabídka úspěšně upravena');
+        new \RedirectHelper($request->post('returnURI') ?: '/admin/nabidka');
     }
 
     public function duplicate($request)
@@ -182,7 +182,7 @@ class Controller_Admin_Nabidka extends Controller_Abstract
                 $item['ni_pocet_hod']
             );
         }
-        $this->redirect('/admin/nabidka');
+        new \RedirectHelper('/admin/nabidka');
     }
 
     public function remove($request)
@@ -193,7 +193,7 @@ class Controller_Admin_Nabidka extends Controller_Abstract
             throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
         }
         DBNabidka::removeNabidka($id);
-        $this->redirect('/admin/nabidka');
+        new \RedirectHelper('/admin/nabidka');
     }
 
     protected function displayForm($request, $data = null)

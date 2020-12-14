@@ -57,7 +57,7 @@
                 <div class="flex-column" style="flex-grow:1">
                   <ul class="navbar-nav">
                     <?php foreach ($this->navbar[1] as $item) {
-                        echo new NavbarItemHelper($this->currentUri, $item);
+                        echo new \NavbarItemHelper($this->currentUri, $item);
                     } ?>
                   </ul>
                 </div>
@@ -79,8 +79,8 @@
       </div>
     <?php endif ?>
 
-    <?php foreach ($this->redirect()->getMessages() as list($text, $type)) : ?>
-      <div class="container"><?= new NoticeHelper($text, $type) ?></div>
+    <?php foreach (\MessageHelper::getMessages() as list($text, $type)) : ?>
+      <div class="container"><?= new \NoticeHelper($text, $type) ?></div>
     <?php endforeach ?>
 
     <?= $this->content ?>

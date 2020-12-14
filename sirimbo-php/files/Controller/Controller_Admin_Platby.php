@@ -9,7 +9,7 @@ class Controller_Admin_Platby extends Controller_Abstract
 
     public function view($request)
     {
-        $this->redirect('/admin/platby/overview');
+        new \RedirectHelper('/admin/platby/overview');
     }
 
     protected function recognizeHeaders($headers, &$specific, &$variable, &$date, &$amount)

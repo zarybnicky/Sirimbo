@@ -20,10 +20,10 @@
       <?php
       foreach ($this->skupiny as $item) {
           echo '<div class="form-check">';
-          echo $this->checkbox('sk-' . $item['s_id'], '1')
-                   ->set($this->skupinySelected[$item['s_id']])
-                   ->label(new ColorboxHelper($item['s_color_rgb'], $item['s_description'])
-                        . '&nbsp;' . $item['s_name']);
+          echo new \CheckboxHelper(
+              'sk-' . $item['s_id'], '1', $this->skupinySelected[$item['s_id']],
+              new ColorboxHelper($item['s_color_rgb'], $item['s_description']) . '&nbsp;' . $item['s_name']
+          );
           echo '</div>';
       }
       ?>
@@ -31,7 +31,7 @@
     <br>
     <div class="form-group">
       <div class="form-check">
-        <?= $this->checkbox('lock')->label('Uzamknout')->set($this->lock) ?>
+        <?= new \CheckboxHelper('lock', 'lock', $this->lock, 'Uzamknout') ?>
       </div>
     </div>
     <div class="form-group">

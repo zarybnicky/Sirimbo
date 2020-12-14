@@ -42,7 +42,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
         }
         $form = $this->checkData($request);
         if (!$form->isValid()) {
-            $this->redirect()->warning($form->getMessages());
+            new \MessageHelper('warning', $form->getMessages());
             return $this->displayForm($request, 'add', 0);
         }
         DBPlatbyGroup::insert(
@@ -60,18 +60,18 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
             DBSkupiny::addChild($item, $insertId);
         }
 
-        $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/group');
+        new \RedirectHelper($request->post('returnURI') ?: '/admin/platby/structure/group');
     }
 
     public function edit($request)
     {
         if (!$id = $request->getId()) {
-            $this->redirect()->warning('Kategorie s takovým ID neexistuje');
-            $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/group');
+            new \MessageHelper('warning', 'Kategorie s takovým ID neexistuje');
+            new \RedirectHelper($request->post('returnURI') ?: '/admin/platby/structure/group');
         }
         if (!$data = DBPlatbyGroup::getSingle($id)) {
-            $this->redirect()->warning('Kategorie s takovým ID neexistuje');
-            $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/group');
+            new \MessageHelper('warning', 'Kategorie s takovým ID neexistuje');
+            new \RedirectHelper($request->post('returnURI') ?: '/admin/platby/structure/group');
         }
 
         if (!$request->post()) {
@@ -83,7 +83,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
         }
         $form = $this->checkData($request);
         if (!$form->isValid()) {
-            $this->redirect()->warning($form->getMessages());
+            new \MessageHelper('warning', $form->getMessages());
             return $this->displayForm($request, 'edit', $id);
         }
 
@@ -123,18 +123,18 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
             DBSkupiny::addChild($added, $id);
         }
 
-        $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/group');
+        new \RedirectHelper($request->post('returnURI') ?: '/admin/platby/structure/group');
     }
 
     public function remove($request)
     {
         if (!$id = $request->getId()) {
-            $this->redirect()->warning('Kategorie s takovým ID neexistuje');
-            $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/group');
+            new \MessageHelper('warning', 'Kategorie s takovým ID neexistuje');
+            new \RedirectHelper($request->post('returnURI') ?: '/admin/platby/structure/group');
         }
         if (!$data = DBPlatbyGroup::getSingle($id)) {
-            $this->redirect()->warning('Kategorie s takovým ID neexistuje');
-            $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/group');
+            new \MessageHelper('warning', 'Kategorie s takovým ID neexistuje');
+            new \RedirectHelper($request->post('returnURI') ?: '/admin/platby/structure/group');
         }
 
         if ($request->post('action') == 'unlink') {
@@ -151,17 +151,17 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
                 DBSkupiny::removeChild($data['s_id'], $id);
                 ++$skupinaCount;
             }
-            $this->redirect()->info(
+            new \MessageHelper('info', 
                 'Spojení s ' . $skupinaCount . ' skupinami a s '
                 . $categoryCount . ' kategoriemi bylo odstraněno'
             );
-            return $this->redirect('/admin/platby/structure/group/remove/' . $id);
+            return new \RedirectHelper('/admin/platby/structure/group/remove/' . $id);
         }
         if (((!$request->post() || $request->post('action') == 'confirm')
             && ($f = $this->getLinkedObjects($id))) || !$request->post()
         ) {
             if (isset($f) && $f) {
-                $this->redirect()->info(
+                new \MessageHelper('info', 
                     'Nelze odstranit kategorii s připojenými skupinami nebo specifickými symboly! '
                     . new Tag(
                         'form',
@@ -180,7 +180,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
             ]);
         }
         DBPlatbyGroup::delete($id);
-        $this->redirect($request->post('returnURI') ?: '/admin/platby/structure/group');
+        new \RedirectHelper($request->post('returnURI') ?: '/admin/platby/structure/group');
     }
 
     private function getLinkedObjects($id)
@@ -209,8 +209,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
         $categories = array_map(
             function ($item) use ($categoriesSelected, $data) {
                 return [
-                    'buttons' => $this->checkbox('category[]', $item['pc_id'])
-                                      ->set(isset($categoriesSelected[$item['pc_id']])),
+                    'buttons' => new \CheckboxHelper('category[]', $item['pc_id'], isset($categoriesSelected[$item['pc_id']])),
                     'name' => $item['pc_name'],
                     'specific' => $item['pc_symbol'],
                     'amount' => ((float) $item['pc_amount'] * (float) $data['pg_base']),
@@ -235,10 +234,8 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
         $skupiny = array_map(
             function ($item) use ($skupinySelected) {
                 return [
-                    'buttons' => $this->checkbox('skupiny[]', $item['s_id'])
-                                      ->set(isset($skupinySelected[$item['s_id']])),
-                    'name' => new ColorboxHelper($item['s_color_rgb'], $item['s_description'])
-                    . '&nbsp;' . $item['s_name']
+                    'buttons' => new \CheckboxHelper('skupiny[]', $item['s_id'], isset($skupinySelected[$item['s_id']])),
+                    'name' => new ColorboxHelper($item['s_color_rgb'], $item['s_description']) . '&nbsp;' . $item['s_name']
                 ];
             },
             DBSkupiny::get()

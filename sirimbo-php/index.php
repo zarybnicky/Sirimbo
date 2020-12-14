@@ -46,22 +46,22 @@ try {
         Session::loadUser($_SESSION['id']);
         if ($_SESSION['gdpr']) {
             if (!in_array($request->getURI(), ['member/profil/gdpr', 'logout'])) {
-                return (new RedirectHelper())->redirect('/member/profil/gdpr');
+                return new RedirectHelper('/member/profil/gdpr');
             }
         } elseif ($_SESSION['invalid']) {
             if (!in_array($request->getURI(), ['member/profil/edit', 'logout'])) {
-                return (new RedirectHelper())->redirect('/member/profil/edit', 'Prosím vyplňte požadované údaje.');
+                return new RedirectHelper('/member/profil/edit', 'Prosím vyplňte požadované údaje.');
             }
         }
     } elseif ($request->post('login') && $request->post('pass')) {
         $request->post('pass', User::crypt($request->post('pass')));
 
         if (!Session::login($request->post('login'), $request->post('pass'))) {
-            (new RedirectHelper())->redirect('/login', 'Špatné jméno nebo heslo!');
+            new RedirectHelper('/login', 'Špatné jméno nebo heslo!');
         } elseif ($request->get('return')) {
-            (new RedirectHelper())->redirect($request->get('return'));
+            new RedirectHelper($request->get('return'));
         } else {
-            (new RedirectHelper())->redirect('/member/home');
+            new RedirectHelper('/member/home');
         }
     }
 
@@ -81,7 +81,7 @@ try {
     $router->dispatchGlobal();
 } catch (AuthorizationException $e) {
     ob_clean();
-    (new RedirectHelper())->redirect('/error?id=' . $e->getErrorFile());
+    new RedirectHelper('/error?id=' . $e->getErrorFile());
 } catch (ViewException $e) {
     syslog(
         LOG_ERR,
@@ -92,7 +92,7 @@ try {
         . "\tSESSION: " . json_encode($_SESSION) . "\n"
     );
     ob_clean();
-    (new RedirectHelper())->redirect('/error?id=' . $e->getErrorFile());
+    new RedirectHelper('/error?id=' . $e->getErrorFile());
 } catch (Exception $e) {
     syslog(
         LOG_ERR,
@@ -103,5 +103,5 @@ try {
         . "\tSESSION: " . json_encode($_SESSION) . "\n"
     );
     ob_clean();
-    (new RedirectHelper())->redirect('/error?id=' . (new ViewException(''))->getErrorFile());
+    new RedirectHelper('/error?id=' . (new ViewException(''))->getErrorFile());
 }

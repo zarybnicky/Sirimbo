@@ -26,7 +26,7 @@ class Controller_Admin_Galerie extends Controller_Abstract
                         new RemoveLinkHelper('/admin/galerie/directory/remove/' . $item['gd_id'])
                     ),
                     'name' => str_repeat('&nbsp;->', $item['gd_level'] - 1) . ' ' . $item['gd_name'],
-                    'hidden' => (string) $this->checkbox($item['gd_id'], '1') ->set($item['gd_hidden'])
+                    'hidden' => new \CheckboxHelper($item['gd_id'], '1', $item['gd_hidden'])
                 ];
             },
             $data
@@ -154,14 +154,14 @@ class Controller_Admin_Galerie extends Controller_Abstract
                 Session::getUserID()
             );
         }
-        $this->redirect()->info(
+        new \MessageHelper('info', 
             'Složek přidáno: ' . count($fsDirs) . '<br>' .
             'Souborů přidáno: ' . count($fsFiles) . '<br>' .
             '<br>' .
             'Složek odebráno: ' . count($dbDirs) . '<br>' .
             'Souborů odebráno: ' . count($dbFiles)
         );
-        $this->redirect('/admin/galerie');
+        new \RedirectHelper('/admin/galerie');
     }
 
     private function _recursiveDirs($dir_name, &$out_dirs, &$out_files)

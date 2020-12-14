@@ -13,10 +13,10 @@
       <?= $this->date('datum', $this->datum) ?>
     </div>
     <div class="form-check">
-      <?= $this->checkbox('visible', 'visible')->label('Zviditelnit')->set($this->visible) ?>
+      <?= new \CheckboxHelper('visible', 'visible', $this->visible, 'Zviditelnit') ?>
     </div>
     <div class="form-check">
-      <?= $this->checkbox('lock')->label('Uzamknout')->set($this->lock) ?>
+      <?= new \CheckboxHelper('lock', 'lock', $this->lock, 'Uzamknout') ?>
     </div>
     <div class="form-group">
       <?= new \SubmitHelper($this->action == 'add' ? 'Přidat' : 'Upravit') ?>

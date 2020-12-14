@@ -91,18 +91,18 @@ class Controller_Member_Nabidka extends Controller_Abstract
         $data = DBNabidka::getSingleNabidka($request->post('id'));
         $form = $this->checkData($request, $data);
         if (!$form->isValid()) {
-            return $this->redirect()->warning($form->getMessages());
+            return new \MessageHelper('warning', $form->getMessages());
         }
         if ($request->post('hodiny') > 0) {
             if (!Session::getZaplacenoPar()) {
-                $this->redirect()->danger('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
+                new \MessageHelper('danger', 'Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
             } elseif ($data['n_max_pocet_hod'] > 0
                 && (DBNabidka::getNabidkaLessons($request->post('id'), Session::getParID())
                    + $request->post('hodiny')) > $data['n_max_pocet_hod']
             ) {
-                $this->redirect()->danger('Maximální počet hodin na pár je ' . $data['n_max_pocet_hod'] . '!');
+                new \MessageHelper('danger', 'Maximální počet hodin na pár je ' . $data['n_max_pocet_hod'] . '!');
             } elseif (($data['n_pocet_hod'] - DBNabidka::getNabidkaItemLessons($request->post('id'))) < $request->post('hodiny')) {
-                $this->redirect()->danger('Tolik volných hodin tu není');
+                new \MessageHelper('danger', 'Tolik volných hodin tu není');
             } else {
                 DBNabidka::addNabidkaItemLessons(Session::getParID(), $request->post('id'), $request->post('hodiny'));
                 $request->post('hodiny', null);
@@ -111,9 +111,9 @@ class Controller_Member_Nabidka extends Controller_Abstract
             list($u_id, $n_id) = explode('-', $request->post('un_id'));
 
             if (!DBNabidka::getNabidkaLessons($n_id, $u_id)) {
-                $this->redirect()->danger('Neplatný požadavek!');
+                new \MessageHelper('danger', 'Neplatný požadavek!');
             } elseif ($u_id != Session::getParID() && !Permissions::check('nabidka', P_OWNED, $data['n_trener'])) {
-                $this->redirect()->danger('Nedostatečná oprávnění!');
+                new \MessageHelper('danger', 'Nedostatečná oprávnění!');
             } else {
                 DBNabidka::removeNabidkaItem($n_id, $u_id);
             }

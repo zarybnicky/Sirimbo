@@ -36,12 +36,12 @@ class Controller_Admin_Video_Source extends Controller_Abstract
 
         $form = $this->checkData($request);
         if (!$form->isValid()) {
-            $this->redirect()->warning($form->getMessages());
+            new \MessageHelper('warning', $form->getMessages());
             return $this->displayForm($request);
         }
 
         DBVideoSource::add($request->post('uri'));
-        $this->redirect('/admin/video/source');
+        new \RedirectHelper('/admin/video/source');
     }
 
     public function edit($request)
@@ -49,8 +49,8 @@ class Controller_Admin_Video_Source extends Controller_Abstract
         $id = $request->getId();
         $data = DBVideoSource::getSingle($id);
         if (!$id || !$data) {
-            $this->redirect()->warning('Článek s takovým ID neexistuje');
-            $this->redirect('/admin/video/source');
+            new \MessageHelper('warning', 'Článek s takovým ID neexistuje');
+            new \RedirectHelper('/admin/video/source');
         }
 
         if (!$request->post()) {
@@ -59,7 +59,7 @@ class Controller_Admin_Video_Source extends Controller_Abstract
 
         $form = $this->checkData($request);
         if (!$form->isValid()) {
-            $this->redirect()->warning($form->getMessages());
+            new \MessageHelper('warning', $form->getMessages());
             return $this->displayForm($request, $data);
         }
 
@@ -70,19 +70,19 @@ class Controller_Admin_Video_Source extends Controller_Abstract
             $request->post('desc')
         );
 
-        $this->redirect('/admin/video/source');
+        new \RedirectHelper('/admin/video/source');
     }
 
     public function remove($request)
     {
         if (!$request->getId()) {
-            $this->redirect('/admin/video/source');
+            new \RedirectHelper('/admin/video/source');
         }
 
         if ($request->post('action') == 'confirm') {
             DBVideoSource::remove($request->getId());
-            $this->redirect()->info('Video odebráno');
-            $this->redirect('/admin/video/source');
+            new \MessageHelper('info', 'Video odebráno');
+            new \RedirectHelper('/admin/video/source');
         }
 
         $item = DBVideo::getSingle($request->getId());

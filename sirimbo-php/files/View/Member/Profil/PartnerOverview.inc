@@ -1,6 +1,6 @@
 <div class="container">
     <?php
-    echo (new PartnerRequestHelper())->getAll();
+    echo new PartnerRequestHelper();
     if ($this->havePartner) {
         echo "Právě tančím s: ", $this->partnerFullName;
     } else {

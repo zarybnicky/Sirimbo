@@ -70,7 +70,7 @@ class Controller_Registrace extends Controller_Abstract
                 DBSkupiny::get()
             );
 
-            $this->redirect()->warning($f->getMessages());
+            new \MessageHelper('warning', $f->getMessages());
             return new \RenderHelper('files/View/Main/Registrace.inc', [
                 'header' => 'Registrace',
                 'skupiny' => $skupiny,
@@ -116,11 +116,11 @@ class Controller_Registrace extends Controller_Abstract
             $request->post('skupina'),
             $request->post('poznamky') === 'dancer'
         );
-        $this->redirect()->success(
+        new \MessageHelper('success', 
             '<h4 class="alert-heading">Registrace úspěšně proběhla.</h4>' .
             '<p>Během několika dnů vám na email příjde potvrzení vašeho účtu, ' .
             'které vyřizuje administrátor ručně.<p>'
         );
-        $this->redirect('/');
+        new \RedirectHelper('/');
     }
 }

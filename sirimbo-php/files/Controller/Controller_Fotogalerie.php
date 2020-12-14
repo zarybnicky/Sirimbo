@@ -8,8 +8,8 @@ class Controller_Fotogalerie extends Controller_Abstract
             $id = 0;
             $dir = ['gd_name' => ''];
         } elseif (!($dir = DBGalerie::getSingleDir($id))) {
-            $this->redirect()->warning('Taková složka neexistuje');
-            $this->redirect('/fotogalerie');
+            new \MessageHelper('warning', 'Taková složka neexistuje');
+            new \RedirectHelper('/fotogalerie');
         }
 
         $photos = DBGalerie::getFotky($id);
@@ -45,12 +45,12 @@ class Controller_Fotogalerie extends Controller_Abstract
     public function foto($request)
     {
         if (!$id = $request->getID()) {
-            $this->redirect()->warning('Taková fotka neexistuje');
-            $this->redirect('/fotogalerie');
+            new \MessageHelper('warning', 'Taková fotka neexistuje');
+            new \RedirectHelper('/fotogalerie');
         }
         if (!$data = DBGalerie::getSingleFoto($id)) {
-            $this->redirect()->warning('Taková fotka neexistuje');
-            $this->redirect('/fotogalerie');
+            new \MessageHelper('warning', 'Taková fotka neexistuje');
+            new \RedirectHelper('/fotogalerie');
         }
 
         $parent_dir = DBGalerie::getFotky($data['gf_id_rodic']);

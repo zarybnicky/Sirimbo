@@ -10,14 +10,14 @@ class Controller_Member_Download extends Controller_Abstract
     public function view($request)
     {
         if (!$request->get('id')) {
-            $this->redirect('/member/dokumenty');
+            new \RedirectHelper('/member/dokumenty');
         }
 
         $data = DBDokumenty::getSingleDokument($request->get('id'));
         $path = $data['d_path'];
         if (!is_file($path) || !($file = fopen($path, 'rb'))) {
-            $this->redirect()->warning('Soubor nebyl nalezen.');
-            return $this->redirect('/member/dokumenty');
+            new \MessageHelper('warning', 'Soubor nebyl nalezen.');
+            return new \RedirectHelper('/member/dokumenty');
         }
 
         header('Pragma: no-cache');

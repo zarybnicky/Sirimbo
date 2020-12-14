@@ -14,7 +14,7 @@ class Controller_Admin_Pary extends Controller_Abstract
                 if ($request->post("add_partner")) {
                     DBPary::newCouple($request->post("add_partner"), $request->post("add_partnerka"));
                 }
-                $this->redirect('/admin/pary');
+                new \RedirectHelper('/admin/pary');
                 break;
 
             case 'fix_unpaired':
@@ -22,8 +22,8 @@ class Controller_Admin_Pary extends Controller_Abstract
                 foreach ($xs as $x) {
                     DBPary::noPartner($x['u_id']);
                 }
-                $this->redirect()->info(count($xs) . ' chybných záznamů opraveno');
-                $this->redirect('/admin/pary');
+                new \MessageHelper('info', count($xs) . ' chybných záznamů opraveno');
+                new \RedirectHelper('/admin/pary');
                 break;
         }
 
@@ -54,12 +54,12 @@ class Controller_Admin_Pary extends Controller_Abstract
     public function edit($request)
     {
         if (!$id = $request->getId()) {
-            $this->redirect()->warning('Pár s takovým ID neexistuje');
-            $this->redirect('/admin/pary');
+            new \MessageHelper('warning', 'Pár s takovým ID neexistuje');
+            new \RedirectHelper('/admin/pary');
         }
         if (!$data = DBPary::getSinglePar($id)) {
-            $this->redirect()->warning('Pár s takovým ID neexistuje');
-            $this->redirect('/admin/pary');
+            new \MessageHelper('warning', 'Pár s takovým ID neexistuje');
+            new \RedirectHelper('/admin/pary');
         }
 
         if (!$request->post()) {
@@ -105,8 +105,8 @@ class Controller_Admin_Pary extends Controller_Abstract
             $lat_finale,
             $hodnoceni
         );
-        $this->redirect()->success('Třída a body změněny');
-        $this->redirect('/admin/pary');
+        new \MessageHelper('success', 'Třída a body změněny');
+        new \RedirectHelper('/admin/pary');
     }
 
     public function remove($request)
@@ -115,7 +115,7 @@ class Controller_Admin_Pary extends Controller_Abstract
         if ($id) {
             DBPary::removeCouple($id);
         }
-        $this->redirect()->success('Pár odstraněn');
-        $this->redirect('/admin/pary');
+        new \MessageHelper('success', 'Pár odstraněn');
+        new \RedirectHelper('/admin/pary');
     }
 }

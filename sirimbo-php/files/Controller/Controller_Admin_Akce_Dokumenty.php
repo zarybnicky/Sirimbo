@@ -10,12 +10,12 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Abstract
     public function view($request)
     {
         if (!$id = $request->getId()) {
-            $this->redirect()->warning('Akce s takovým ID neexistuje');
-            $this->redirect('/admin/akce');
+            new \MessageHelper('warning', 'Akce s takovým ID neexistuje');
+            new \RedirectHelper('/admin/akce');
         }
         if (!$akce = DBAkce::getSingleAkce($id)) {
-            $this->redirect()->warning('Akce s takovým ID neexistuje');
-            $this->redirect('/admin/akce');
+            new \MessageHelper('warning', 'Akce s takovým ID neexistuje');
+            new \RedirectHelper('/admin/akce');
         }
         $documents = array_filter(explode(',', $akce["a_dokumenty"]));
 
@@ -39,7 +39,7 @@ class Controller_Admin_Akce_Dokumenty extends Controller_Abstract
                     $akce["a_lock"], $akce['a_visible']
                 );
             }
-            $this->redirect('/admin/akce/dokumenty/' . $id);
+            new \RedirectHelper('/admin/akce/dokumenty/' . $id);
         }
 
         $booked = count(DBAkce::getAkceItems($id));

@@ -18,14 +18,14 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
         $id = $request->getId();
         if ($id && ($data = DBPlatbyRaw::getSingle($id))) {
             if ($data['pr_sorted']) {
-                $this->redirect()->info('Platba už byla zařazena do systému');
-                $this->redirect('/admin/platby/discarded');
+                new \MessageHelper('info', 'Platba už byla zařazena do systému');
+                new \RedirectHelper('/admin/platby/discarded');
             }
             $raw = unserialize($data['pr_raw']);
         } else {
             if ($remainingCount == 0) {
-                $this->redirect()->info('Nezbývají už žádné nezatříděné platby');
-                $this->redirect('/admin/platby');
+                new \MessageHelper('info', 'Nezbývají už žádné nezatříděné platby');
+                new \RedirectHelper('/admin/platby');
             }
             $id = $remaining[0]['pr_id'];
             $raw = unserialize($remaining[0]['pr_raw']);
@@ -142,15 +142,15 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
     {
         $id = $request->post('id');
         if (!$id || !($current = DBPlatbyRaw::getSingle($id))) {
-            return $this->redirect()->warning('Zadaná platba neexistuje.');
+            return new \MessageHelper('warning', 'Zadaná platba neexistuje.');
         } elseif ($current['pr_sorted'] && ($item = DBPlatbyItem::getSingleByRawId($id))) {
-            return $this->redirect()->info('Zadaná platba už byla zařazená.');
+            return new \MessageHelper('info', 'Zadaná platba už byla zařazená.');
         }
 
         switch ($request->post('action')) {
             case 'confirm':
                 if (!is_object($item = $this->getFromPost($request))) {
-                    return $this->redirect()->warning($item);
+                    return new \MessageHelper('warning', $item);
                 }
                 DBPlatbyRaw::update(
                     $id,
@@ -184,10 +184,10 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
                 break;
 
             default:
-                $this->redirect()->danger('Neplatná POST akce.');
+                new \MessageHelper('danger', 'Neplatná POST akce.');
                 break;
         }
 
-        $this->redirect('/admin/platby/manual');
+        new \RedirectHelper('/admin/platby/manual');
     }
 }

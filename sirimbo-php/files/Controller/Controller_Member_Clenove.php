@@ -10,10 +10,10 @@ class Controller_Member_Clenove extends Controller_Abstract
     public function view($request)
     {
         if (!($id = $request->getId())) {
-            $this->redirect('/member/clenove/structure');
+            new \RedirectHelper('/member/clenove/structure');
         }
         if (!($data = DBUser::getUser($id))) {
-            return $this->redirect('/member/clenove/structure');
+            return new \RedirectHelper('/member/clenove/structure');
         }
         new \RenderHelper('files/View/Member/Clenove/Single.inc', [
             'header' => 'Přehled členů',

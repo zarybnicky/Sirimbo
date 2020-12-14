@@ -3,7 +3,7 @@ class Controller_Oklubu_Treneri extends Controller_Abstract
 {
     public function view($request)
     {
-        $this->redirect('/oklubu/klubovi');
+        new \RedirectHelper('/oklubu/klubovi');
     }
 
     public function klubovi($request)

@@ -15,7 +15,7 @@
       ?>
     </div>
     <div class="form-check">
-      <?= $this->checkbox('hidden', '1')->label('Skrýt')->set($this->hidden) ?>
+      <?= new \CheckboxHelper('hidden', '1', $this->hidden, 'Skrýt') ?>
     </div>
     <div class="form-group">
       <a class="btn btn-outline-primary" href="/admin/galerie">Zpět</a>

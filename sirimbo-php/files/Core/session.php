@@ -19,10 +19,10 @@ class Session
         }
         $data = DBUser::getUserData($id);
         if ($data['u_ban']) {
-            (new RedirectHelper())->redirect('/error?id=ban');
+            new RedirectHelper('/error?id=ban');
         }
         if (!$data['u_confirmed']) {
-            (new RedirectHelper())->redirect('/error?id=not_approved');
+            new RedirectHelper('/error?id=not_approved');
         }
         self::loadUser($data['u_id']);
         return true;

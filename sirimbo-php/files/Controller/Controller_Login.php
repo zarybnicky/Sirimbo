@@ -5,7 +5,7 @@ class Controller_Login extends Controller_Abstract
     {
         if (Session::isLogged()) {
             $uri = $request->get('return') ? $request->get('return') : '/member/home';
-            $this->redirect($uri);
+            new \RedirectHelper($uri);
         }
         new \RenderHelper('files/View/Main/Login.inc');
     }

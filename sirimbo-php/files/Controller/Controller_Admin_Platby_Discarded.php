@@ -11,8 +11,8 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
     {
         $data = DBPlatbyRaw::getDiscarded();
         if (count($data) == 0) {
-            $this->redirect()->info('V databázi nejsou žádné vyřazené platby.');
-            $this->redirect('/admin/platby');
+            new \MessageHelper('info', 'V databázi nejsou žádné vyřazené platby.');
+            new \RedirectHelper('/admin/platby');
         }
         if ($request->get('list')) {
             $this->_getTable($request, $data, $result, $columns, $header);
@@ -39,13 +39,13 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
     {
         $id = $request->getId();
         if (!$id && !DBPlatbyRaw::getSingle($id)) {
-            $this->redirect()->info('Platba se zadaným ID neexistuje.');
-            $this->redirect($request->getReferer());
+            new \MessageHelper('info', 'Platba se zadaným ID neexistuje.');
+            new \RedirectHelper($request->getReferer());
         }
 
         DBPlatbyRaw::delete($id);
-        $this->redirect()->success('Platba byla odstraněna.');
-        $this->redirect($request->getReferer());
+        new \MessageHelper('success', 'Platba byla odstraněna.');
+        new \RedirectHelper($request->getReferer());
     }
 
     private function _getTable($request, $data, &$result, &$columns, &$header)

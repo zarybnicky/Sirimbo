@@ -19,7 +19,7 @@ class Permissions
         if (Session::isLogged()) {
             throw new AuthorizationException("Nemáte dostatečnou autorizaci pro tuto akci!");
         }
-        (new RedirectHelper())->redirect(
+        new RedirectHelper(
             '/login?return=' . $_SERVER['REQUEST_URI'],
             'Nemáte dostatečná oprávnění k zobrazení požadovaného obsahu'
         );

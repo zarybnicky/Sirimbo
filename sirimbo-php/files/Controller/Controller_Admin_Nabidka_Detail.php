@@ -10,12 +10,12 @@ class Controller_Admin_Nabidka_Detail extends Controller_Abstract
     public function view($request)
     {
         if (!$id = $request->getId()) {
-            $this->redirect()->warning('Nabídka s takovým ID neexistuje');
-            $this->redirect('/admin/nabidka');
+            new \MessageHelper('warning', 'Nabídka s takovým ID neexistuje');
+            new \RedirectHelper('/admin/nabidka');
         }
         if (!$data = DBNabidka::getSingleNabidka($id)) {
-            $this->redirect()->warning('Nabídka s takovým ID neexistuje');
-            $this->redirect('/admin/nabidka');
+            new \MessageHelper('warning', 'Nabídka s takovým ID neexistuje');
+            new \RedirectHelper('/admin/nabidka');
         }
         Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
 
@@ -130,6 +130,6 @@ class Controller_Admin_Nabidka_Detail extends Controller_Abstract
             );
             $data = DBNabidka::getSingleNabidka($id);
         }
-        $this->redirect('/admin/nabidka/detail/' . $id);
+        new \RedirectHelper('/admin/nabidka/detail/' . $id);
     }
 }

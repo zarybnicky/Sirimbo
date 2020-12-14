@@ -9,7 +9,7 @@ class Controller_Admin_Video extends Controller_Abstract
 
     public function view($request)
     {
-        $this->redirect('/admin/video/orphan');
+        new \RedirectHelper('/admin/video/orphan');
     }
 
     public function playlist($request)
@@ -94,7 +94,7 @@ class Controller_Admin_Video extends Controller_Abstract
             DBParameters::set('title_video2', $request->post('video2'));
             DBParameters::set('title_video3', $request->post('video3'));
             DBParameters::set('title_video4', $request->post('video4'));
-            $this->redirect('/admin/video/title');
+            new \RedirectHelper('/admin/video/title');
         }
         $select = (new \SelectHelper())->optionsAssoc(DBVideo::getAll(), 'v_id', 'v_title');
         new \RenderHelper('files/View/Admin/Video/Title.inc', [
@@ -114,7 +114,7 @@ class Controller_Admin_Video extends Controller_Abstract
 
         $form = $this->checkData($request);
         if (!$form->isValid()) {
-            $this->redirect()->warning($form->getMessages());
+            new \MessageHelper('warning', $form->getMessages());
             return $this->displayForm($request);
         }
 
@@ -126,7 +126,7 @@ class Controller_Admin_Video extends Controller_Abstract
             $request->post('playlist') ?: null
         );
 
-        $this->redirect('/admin/video');
+        new \RedirectHelper('/admin/video');
     }
 
     public function edit($request)
@@ -134,8 +134,8 @@ class Controller_Admin_Video extends Controller_Abstract
         $id = $request->getId();
         $data = DBVideo::getSingle($id);
         if (!$id || !$data) {
-            $this->redirect()->warning('Článek s takovým ID neexistuje');
-            $this->redirect('/admin/aktuality');
+            new \MessageHelper('warning', 'Článek s takovým ID neexistuje');
+            new \RedirectHelper('/admin/aktuality');
         }
 
         if (!$request->post()) {
@@ -144,7 +144,7 @@ class Controller_Admin_Video extends Controller_Abstract
 
         $form = $this->checkData($request);
         if (!$form->isValid()) {
-            $this->redirect()->warning($form->getMessages());
+            new \MessageHelper('warning', $form->getMessages());
             return $this->displayForm($request, $data);
         }
 
@@ -157,19 +157,19 @@ class Controller_Admin_Video extends Controller_Abstract
             $request->post('playlist') ?: null
         );
 
-        $this->redirect('/admin/video');
+        new \RedirectHelper('/admin/video');
     }
 
     public function remove($request)
     {
         if (!$request->getId()) {
-            $this->redirect('/admin/video');
+            new \RedirectHelper('/admin/video');
         }
 
         if ($request->post('action') == 'confirm') {
             DBVideo::remove($request->getId());
-            $this->redirect()->info('Video odebráno');
-            $this->redirect('/admin/video');
+            new \MessageHelper('info', 'Video odebráno');
+            new \RedirectHelper('/admin/video');
         }
 
         $item = DBVideo::getSingle($request->getId());

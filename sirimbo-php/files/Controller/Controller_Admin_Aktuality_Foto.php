@@ -11,21 +11,21 @@ class Controller_Admin_Aktuality_Foto extends Controller_Abstract
     {
         $id = $request->getId();
         if (!($article = DBAktuality::getSingleAktualita($id))) {
-            $this->redirect()->warning('Takový článek neexistuje');
-            $this->redirect('/admin/aktuality');
+            new \MessageHelper('warning', 'Takový článek neexistuje');
+            new \RedirectHelper('/admin/aktuality');
         }
         if (!$request->post('foto')) {
             if ($request->get('dir') === null) {
                 if ($article['at_foto']) {
-                    $this->redirect('/admin/aktuality/foto/' . $id . '?dir=' . $article['at_foto']);
+                    new \RedirectHelper('/admin/aktuality/foto/' . $id . '?dir=' . $article['at_foto']);
                 } else {
                     $request->get('dir', 0);
                 }
             }
 
             if (!DBGalerie::getSingleDir($request->get('dir'))) {
-                $this->redirect()->warning('Taková složka neexistuje');
-                return $this->redirect('/admin/aktuality/foto/' . $id . '?dir=0');
+                new \MessageHelper('warning', 'Taková složka neexistuje');
+                return new \RedirectHelper('/admin/aktuality/foto/' . $id . '?dir=0');
             }
 
             $photos = array_map(fn($item) => [
@@ -62,6 +62,6 @@ class Controller_Admin_Aktuality_Foto extends Controller_Abstract
             $request->post('foto'),
             $article['at_timestamp_add']
         );
-        $this->redirect('/admin/aktuality');
+        new \RedirectHelper('/admin/aktuality');
     }
 }

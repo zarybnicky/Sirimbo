@@ -68,7 +68,7 @@
   </div>
 
   <div class="form-check mb-2 pl-0">
-    <?= $this->checkbox('dancer', 'dancer')->label('Aktivní tanečník?')->set($this->dancer) ?>
+    <?= new \CheckboxHelper('dancer', 'dancer', $this->dancer, 'Aktivní tanečník?') ?>
   </div>
 
   <div class="form-group mb-2">

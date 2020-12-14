@@ -11,7 +11,7 @@ class Controller_Admin_Akce extends Controller_Abstract
     {
         if ($request->post('action') == 'save') {
             $this->processSave($request);
-            $this->redirect('/admin/akce');
+            new \RedirectHelper('/admin/akce');
         }
 
         $data = array_map(
@@ -24,8 +24,7 @@ class Controller_Admin_Akce extends Controller_Abstract
                            ? ' - ' . formatDate($item['a_do']) : '')
                     ),
                     'userCount' => $item['a_obsazeno'] . '/' . $item['a_kapacita'],
-                    'visible' => $this->checkbox($item['a_id'], '1')
-                                      ->set($item['a_visible']),
+                    'visible' => new \CheckboxHelper($item['a_id'], '1', $item['a_visible']),
                     'links' => (
                         '<a href="/admin/akce/edit/' . $item['a_id'] . '">obecné</a>, '
                         . '<a href="/admin/akce/detail/' . $item['a_id'] . '">účastníci</a>, '
@@ -51,7 +50,7 @@ class Controller_Admin_Akce extends Controller_Abstract
 
         $form = $this->checkData($request);
         if (!$form->isValid()) {
-            $this->redirect()->warning($form->getMessages());
+            new \MessageHelper('warning', $form->getMessages());
             return $this->displayForm($request);
         }
 
@@ -72,19 +71,19 @@ class Controller_Admin_Akce extends Controller_Abstract
             $request->post('visible') ? '1' : '0'
         );
 
-        $this->redirect()->success('Akce přidána');
-        $this->redirect('/admin/akce');
+        new \MessageHelper('success', 'Akce přidána');
+        new \RedirectHelper('/admin/akce');
     }
 
     public function edit($request)
     {
         if (!($id = $request->getID())) {
-            $this->redirect()->warning('Akce s takovým ID neexistuje');
-            $this->redirect('/admin/akce');
+            new \MessageHelper('warning', 'Akce s takovým ID neexistuje');
+            new \RedirectHelper('/admin/akce');
         }
         if (!($data = DBAkce::getSingleAkce($id))) {
-            $this->redirect()->warning('Akce s takovým ID neexistuje');
-            $this->redirect('/admin/akce');
+            new \MessageHelper('warning', 'Akce s takovým ID neexistuje');
+            new \RedirectHelper('/admin/akce');
         }
 
         if (!$request->post()) {
@@ -93,7 +92,7 @@ class Controller_Admin_Akce extends Controller_Abstract
 
         $form = $this->checkData($request);
         if (!$form->isValid()) {
-            $this->redirect()->warning($form->getMessages());
+            new \MessageHelper('warning', $form->getMessages());
             return $this->displayForm($request, $data);
         }
 
@@ -116,20 +115,20 @@ class Controller_Admin_Akce extends Controller_Abstract
             $request->post('visible') ? '1' : '0'
         );
 
-        $this->redirect()->success('Akce upravena');
-        $this->redirect('/admin/akce');
+        new \MessageHelper('success', 'Akce upravena');
+        new \RedirectHelper('/admin/akce');
     }
 
     public function remove($request)
     {
         if (!$request->getId()) {
-            $this->redirect('/admin/akce');
+            new \RedirectHelper('/admin/akce');
         }
         $id = $request->getId();
         if ($request->post('action') == 'confirm') {
             DBAkce::removeAkce($id);
-            $this->redirect()->success('Akce odebrány');
-            return $this->redirect('/admin/akce');
+            new \MessageHelper('success', 'Akce odebrány');
+            return new \RedirectHelper('/admin/akce');
         }
 
         $item = DBAkce::getSingleAkce($id);

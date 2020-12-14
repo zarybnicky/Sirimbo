@@ -11,8 +11,8 @@ class Controller_Member_Akce extends Controller_Abstract
     {
         if ($id = $request->getId()) {
             if (!($data = DBAkce::getSingleAkce($id, true))) {
-                $this->redirect()->warning('Neexistuje žádná taková akce');
-                $this->redirect('/member/akce');
+                new \MessageHelper('warning', 'Neexistuje žádná taková akce');
+                new \RedirectHelper('/member/akce');
             }
             return new \RenderHelper('files/View/Member/Akce/Single.inc', [
                 'header' => 'Klubové akce',
@@ -24,7 +24,7 @@ class Controller_Member_Akce extends Controller_Abstract
         ) {
             $form = $this->checkData($request, $data, $request->post('action'));
             if (!$form->isValid()) {
-                $this->redirect()->warning($form->getMessages());
+                new \MessageHelper('warning', $form->getMessages());
             } elseif ($request->post('action') == 'signup') {
                 DBAkce::signUp(
                     Session::getUserID(),

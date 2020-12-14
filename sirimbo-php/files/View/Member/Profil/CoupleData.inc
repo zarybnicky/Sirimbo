@@ -1,5 +1,5 @@
 <div class="container">
-  <?= (new PartnerRequestHelper())->getAll() ?>
+  <?= new PartnerRequestHelper() ?>
 
   <form action="" method="post">
     <table>

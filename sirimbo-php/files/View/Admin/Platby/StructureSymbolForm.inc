@@ -21,13 +21,13 @@
         'value' => $this->date('validRange', $this->validRange)->range()
     ], [
         'desc' => 'Povolit prefix roku?:',
-        'value' => $this->checkbox('usePrefix', '1')->set($this->usePrefix)
+        'value' => new \CheckboxHelper('usePrefix', '1', $this->usePrefix)
     ], [
         'desc' => 'Archivovat?:',
-        'value' => $this->checkbox('archive', '1')->set($this->archive)
+        'value' => new \CheckboxHelper('archive', '1', $this->archive)
     ], [
         'desc' => 'Viditelný:',
-        'value' => $this->checkbox('visible', '1')->set($this->visible)
+        'value' => new \CheckboxHelper('visible', '1', $this->visible)
     ]
 ]))
 ->showHeader(false)

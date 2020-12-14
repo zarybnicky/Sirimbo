@@ -4,10 +4,10 @@ class Controller_Aktualne extends Controller_Abstract
     public function view($request)
     {
         if (!($id = $request->getID())) {
-            $this->redirect('/aktualne/posledni');
+            new \RedirectHelper('/aktualne/posledni');
         }
         if (!($data = DBAktuality::getSingleAktualita($id))) {
-            $this->redirect('/aktualne/posledni');
+            new \RedirectHelper('/aktualne/posledni');
         }
 
         $photo = DBGalerie::getSingleFoto($data['at_foto_main']);

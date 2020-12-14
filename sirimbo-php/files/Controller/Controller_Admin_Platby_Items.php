@@ -55,7 +55,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         if (!$request->post()) {
             return $this->displayForm(0, $request);
         } elseif (!is_object($item = $this->getFromPost($request))) {
-            $this->redirect()->warning($item);
+            new \MessageHelper('warning', $item);
             return $this->displayForm(0, $request);
         }
         DBPlatbyItem::insert(
@@ -66,18 +66,18 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             $item->date,
             $item->prefix
         );
-        $this->redirect('/admin/platby/items');
+        new \RedirectHelper('/admin/platby/items');
     }
 
     public function edit($request)
     {
         if (!$id = $request->getId()) {
-            $this->redirect()->warning('Platba s takovým ID neexistuje');
-            $this->redirect('/admin/platby/items');
+            new \MessageHelper('warning', 'Platba s takovým ID neexistuje');
+            new \RedirectHelper('/admin/platby/items');
         }
         if (!$data = DBPlatbyItem::getSingle($id)) {
-            $this->redirect()->warning('Platba s takovým ID neexistuje');
-            $this->redirect('/admin/platby/items');
+            new \MessageHelper('warning', 'Platba s takovým ID neexistuje');
+            new \RedirectHelper('/admin/platby/items');
         }
         if (!$request->post()) {
             $request->post('date', $data['pi_date']);
@@ -87,7 +87,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             $request->post('prefix', $data['pi_prefix']);
             return $this->displayForm($id, $request);
         } elseif (!is_object($item = $this->getFromPost($request, $id))) {
-            $this->redirect()->warning($item);
+            new \MessageHelper('warning', $item);
             return $this->displayForm($id, $request);
         }
         DBPlatbyItem::update(
@@ -98,13 +98,13 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             $item->date,
             $item->prefix
         );
-        $this->redirect('/admin/platby/items');
+        new \RedirectHelper('/admin/platby/items');
     }
 
     public function remove($request)
     {
         if (!$request->getId()) {
-            $this->redirect('/admin/platby/items');
+            new \RedirectHelper('/admin/platby/items');
         }
         $id = $request->getId();
         if ($request->post('action') == 'confirm') {
@@ -120,7 +120,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
                     '1'
                 );
             }
-            $this->redirect('/admin/platby/items');
+            new \RedirectHelper('/admin/platby/items');
         }
         $item = DBPlatbyItem::getSingle($id, true);
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [

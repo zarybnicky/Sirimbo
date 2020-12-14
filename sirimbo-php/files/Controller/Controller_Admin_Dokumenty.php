@@ -25,8 +25,8 @@ class Controller_Admin_Dokumenty extends Controller_Abstract
             }
 
             if (!move_uploaded_file($fileUpload, $path)) {
-                $this->redirect()->danger('Nepodařilo se soubor nahrát.');
-                return $this->redirect('/admin/dokumenty');
+                new \MessageHelper('danger', 'Nepodařilo se soubor nahrát.');
+                return new \RedirectHelper('/admin/dokumenty');
             }
 
             chmod($path, 0666);
@@ -37,8 +37,8 @@ class Controller_Admin_Dokumenty extends Controller_Abstract
                 $request->post('kategorie'),
                 Session::getUserID()
             );
-            $this->redirect()->success('Soubor byl nahrán úspěšně');
-            return $this->redirect('/admin/dokumenty');
+            new \MessageHelper('success', 'Soubor byl nahrán úspěšně');
+            return new \RedirectHelper('/admin/dokumenty');
         }
 
         $data = Permissions::check('dokumenty', P_ADMIN)
@@ -63,19 +63,19 @@ class Controller_Admin_Dokumenty extends Controller_Abstract
     public function edit($request)
     {
         if (!$id = $request->getId()) {
-            $this->redirect()->warning('Dokument s takovým ID neexistuje');
-            $this->redirect('/admin/dokumenty');
+            new \MessageHelper('warning', 'Dokument s takovým ID neexistuje');
+            new \RedirectHelper('/admin/dokumenty');
         }
         if (!$data = DBDokumenty::getSingleDokument($id)) {
-            $this->redirect()->warning('Dokument s takovým ID neexistuje');
-            $this->redirect('/admin/dokumenty');
+            new \MessageHelper('warning', 'Dokument s takovým ID neexistuje');
+            new \RedirectHelper('/admin/dokumenty');
         }
         Permissions::checkError('dokumenty', P_OWNED, $data['d_kdo']);
 
         if ($request->post('newname')) {
             DBDokumenty::editDokument($id, $request->post('newname'));
-            $this->redirect()->success('Dokument upraven');
-            $this->redirect('/admin/dokumenty');
+            new \MessageHelper('success', 'Dokument upraven');
+            new \RedirectHelper('/admin/dokumenty');
         }
         new \RenderHelper('files/View/Admin/Dokumenty/Form.inc', [
             'header' => 'Správa dokumentů',
@@ -86,7 +86,7 @@ class Controller_Admin_Dokumenty extends Controller_Abstract
     public function remove($request)
     {
         if (!$request->getId()) {
-            $this->redirect('/admin/dokumenty');
+            new \RedirectHelper('/admin/dokumenty');
         }
         $id = $request->getId();
 
@@ -97,7 +97,7 @@ class Controller_Admin_Dokumenty extends Controller_Abstract
             }
             unlink($data['d_path']);
             DBDokumenty::removeDokument($id);
-            $this->redirect('/admin/dokumenty');
+            new \RedirectHelper('/admin/dokumenty');
         }
 
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [

@@ -20,7 +20,7 @@
             <td><?= (new \TextHelper($item['id'] . '-od', $item['timeFrom']))->size(5) ?></td>
             <td><?= (new \TextHelper($item['id'] . '-do', $item['timeTo']))->size(5) ?></td>
             <td><?= (new \SubmitHelper('Odstranit'))->data('remove', $item['id']) ?></td>
-            <td><?= $this->checkbox($item['id'] . '-lock', 'lock')->set($item['lock']) ?></td>
+            <td><?= new \CheckboxHelper($item['id'] . '-lock', 'lock', $item['lock']) ?></td>
           </tr>
         <?php endforeach ?>
         <tr>
@@ -28,7 +28,7 @@
           <td><?= (new \TextHelper('add_od', ''))->size(5) ?>
           <td><?= (new \TextHelper('add_do', ''))->size(5) ?>
           <td><?= (new \SubmitHelper('Přidat'))->data('action', 'add') ?></td>
-          <td><?= $this->checkbox('add_lock', 'lock') ?>
+          <td><?= new \CheckboxHelper('add_lock', 'lock') ?>
         </tr>
       </table>
     </div>

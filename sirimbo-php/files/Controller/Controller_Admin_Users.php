@@ -57,13 +57,13 @@ class Controller_Admin_Users extends Controller_Abstract
     {
         Permissions::checkError('users', P_ADMIN);
         if (!$request->getId()) {
-            $this->redirect($request->post('returnURI') ?: '/admin/users');
+            new \RedirectHelper($request->post('returnURI') ?: '/admin/users');
         }
         $id = $request->getId();
 
         if ($request->post('action') == 'confirm') {
             DBUser::removeUser($id);
-            $this->redirect($request->post('returnURI') ?: '/admin/users');
+            new \RedirectHelper($request->post('returnURI') ?: '/admin/users');
         }
 
         $item = DBUser::getUserData($id);
@@ -86,7 +86,7 @@ class Controller_Admin_Users extends Controller_Abstract
         }
         $form = $this->checkData($request, 'add');
         if (!$form->isValid()) {
-            $this->redirect()->warning($form->getMessages());
+            new \MessageHelper('warning', $form->getMessages());
             return $this->displayForm($request);
         }
 
@@ -116,23 +116,23 @@ class Controller_Admin_Users extends Controller_Abstract
             $request->post('teacher') ? '1' : '0',
             $request->post('dancer') ? '1' : '0'
         );
-        $this->redirect($request->post('returnURI') ?: '/admin/users');
+        new \RedirectHelper($request->post('returnURI') ?: '/admin/users');
     }
 
     public function edit($request)
     {
         Permissions::checkError('users', P_ADMIN);
         if (!$id = $request->getId()) {
-            $this->redirect()->warning('Uživatel s takovým ID neexistuje');
-            $this->redirect($request->post('returnURI') ?: '/admin/users');
+            new \MessageHelper('warning', 'Uživatel s takovým ID neexistuje');
+            new \RedirectHelper($request->post('returnURI') ?: '/admin/users');
         }
         if (!$data = DBUser::getUserData($id)) {
-            $this->redirect()->warning('Uživatel s takovým ID neexistuje');
-            $this->redirect($request->post('returnURI') ?: '/admin/users');
+            new \MessageHelper('warning', 'Uživatel s takovým ID neexistuje');
+            new \RedirectHelper($request->post('returnURI') ?: '/admin/users');
         }
         if (!$data['u_confirmed']) {
-            $this->redirect()->warning('Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
-            $this->redirect($request->post('returnURI') ?: '/admin/users');
+            new \MessageHelper('warning', 'Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
+            new \RedirectHelper($request->post('returnURI') ?: '/admin/users');
         }
 
         if (!$request->post()) {
@@ -164,7 +164,7 @@ class Controller_Admin_Users extends Controller_Abstract
         }
         $form = $this->checkData($request, 'edit');
         if (!$form->isValid()) {
-            $this->redirect()->warning($form->getMessages());
+            new \MessageHelper('warning', $form->getMessages());
             return $this->displayForm($request);
         }
 
@@ -196,7 +196,7 @@ class Controller_Admin_Users extends Controller_Abstract
             $data['u_member_until'],
             $data['u_gdpr_signed_at']
         );
-        $this->redirect($request->post('returnURI') ?: '/admin/users');
+        new \RedirectHelper($request->post('returnURI') ?: '/admin/users');
     }
 
     public function getMsmtCsv($request)
@@ -219,7 +219,7 @@ class Controller_Admin_Users extends Controller_Abstract
                 $request->post($id . '-skupina')
             );
             Mailer::registrationConfirmNotice($data->getEmail(), $data->getLogin());
-            $this->redirect('/admin/users/unconfirmed');
+            new \RedirectHelper('/admin/users/unconfirmed');
         }
 
         $users = DBUser::getNewUsers();
@@ -382,10 +382,8 @@ class Controller_Admin_Users extends Controller_Abstract
                         . $skupinySelect->name($item['u_id'] . '-skupina')
                                         ->set($item['u_skupina'])
                     );
-                    $out['system'] = $this->checkbox($item['u_id'] . '-system', '1')
-                                          ->set($item['u_system']);
-                    $out['ban'] = $this->checkbox($item['u_id'] . '-ban', '1')
-                                       ->set($item['u_ban']);
+                    $out['system'] = new \CheckboxHelper($item['u_id'] . '-system', '1', $item['u_system']);
+                    $out['ban'] = new \CheckboxHelper($item['u_id'] . '-ban', '1', $item['u_ban']);
                 }
                 return $out;
             },

@@ -46,6 +46,7 @@ class PartnerRequestHelper
         }
         return $out;
     }
+
     public function getRequestsForMe()
     {
         $data = DBPary::getPartnerRequestsForMe($this->_id);
@@ -75,8 +76,9 @@ class PartnerRequestHelper
         }
         return $out;
     }
-    public function getAll()
+
+    public function __toString()
     {
-        return ($this->getRequestsByMe() . $this->getRequestsForMe());
+        return $this->getRequestsByMe() . $this->getRequestsForMe();
     }
 }

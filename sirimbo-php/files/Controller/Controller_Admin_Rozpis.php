@@ -28,7 +28,7 @@ class Controller_Admin_Rozpis extends Controller_Abstract
                     $item['r_lock'] ? '1' : '0'
                 );
             }
-            $this->redirect('/admin/rozpis');
+            new \RedirectHelper('/admin/rozpis');
         }
 
         $data = array_map(
@@ -37,8 +37,7 @@ class Controller_Admin_Rozpis extends Controller_Abstract
                     'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
                     'datum' => formatDate($item['r_datum']),
                     'kde' => $item['r_kde'],
-                    'visible' =>
-                        (string) $this->checkbox($item['r_id'], '1')->set($item['r_visible']),
+                    'visible' => new \CheckboxHelper($item['r_id'], '1', $item['r_visible']),
                     'buttons' => new DuplicateLinkHelper('/admin/rozpis/duplicate/' . $item['r_id'])
                         . '&nbsp;' . new RemoveLinkHelper('/admin/rozpis/remove/' . $item['r_id']),
                     'links' => (
@@ -64,7 +63,7 @@ class Controller_Admin_Rozpis extends Controller_Abstract
 
         $form = $this->checkData($request);
         if (!$form->isValid()) {
-            $this->redirect()->warning($form->getMessages());
+            new \MessageHelper('warning', $form->getMessages());
             return $this->displayForm($request);
         }
 
@@ -78,18 +77,18 @@ class Controller_Admin_Rozpis extends Controller_Abstract
             $request->post('visible') ? '1' : '0',
             $request->post('lock') ? '1' : '0'
         );
-        $this->redirect('/admin/rozpis');
+        new \RedirectHelper('/admin/rozpis');
     }
 
     public function edit($request)
     {
         if (!$id = $request->getId()) {
-            $this->redirect()->warning('Rozpis s takovým ID neexistuje');
-            $this->redirect('/admin/rozpis');
+            new \MessageHelper('warning', 'Rozpis s takovým ID neexistuje');
+            new \RedirectHelper('/admin/rozpis');
         }
         if (!$data = DBRozpis::getSingleRozpis($id)) {
-            $this->redirect()->warning('Rozpis s takovým ID neexistuje');
-            $this->redirect('/admin/rozpis');
+            new \MessageHelper('warning', 'Rozpis s takovým ID neexistuje');
+            new \RedirectHelper('/admin/rozpis');
         }
         Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
 
@@ -99,7 +98,7 @@ class Controller_Admin_Rozpis extends Controller_Abstract
 
         $form = $this->checkData($request);
         if (!$form->isValid()) {
-            $this->redirect()->warning($form->getMessages());
+            new \MessageHelper('warning', $form->getMessages());
             return $this->displayForm($request, $data);
         }
 
@@ -114,7 +113,7 @@ class Controller_Admin_Rozpis extends Controller_Abstract
             $request->post('lock') ? '1' : '0'
         );
 
-        $this->redirect('/admin/rozpis');
+        new \RedirectHelper('/admin/rozpis');
     }
 
     public function duplicate($request)
@@ -139,7 +138,7 @@ class Controller_Admin_Rozpis extends Controller_Abstract
                 $item['ri_lock']
             );
         }
-        $this->redirect('/admin/rozpis');
+        new \RedirectHelper('/admin/rozpis');
     }
 
     public function remove($request)
@@ -151,7 +150,7 @@ class Controller_Admin_Rozpis extends Controller_Abstract
             throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
         }
         DBRozpis::removeRozpis($id);
-        $this->redirect('/admin/rozpis');
+        new \RedirectHelper('/admin/rozpis');
     }
 
     protected function displayForm($request, $data = null)

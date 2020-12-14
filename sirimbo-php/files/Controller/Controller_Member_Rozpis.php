@@ -11,7 +11,7 @@ class Controller_Member_Rozpis extends Controller_Abstract
     {
         if ($request->post()) {
             $this->processPost($request);
-            $this->redirect('/member/rozpis');
+            new \RedirectHelper('/member/rozpis');
         }
 
         $data = array_map(
@@ -86,13 +86,13 @@ class Controller_Member_Rozpis extends Controller_Abstract
         $lesson = DBRozpis::getRozpisItemLesson($request->post('ri_id'));
         $form = $this->checkData($request, $data, $request->post('action'));
         if (!$form->isValid()) {
-            return $this->redirect()->warning($form->getMessages());
+            return new \MessageHelper('warning', $form->getMessages());
         }
         if ($request->post('action') == 'signup') {
             if (!Session::getZaplacenoPar()) {
-                $this->redirect()->warning('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
+                new \MessageHelper('warning', 'Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
             } elseif ($lesson['ri_partner']) {
-                $this->redirect()->warning('Lekce už je obsazená');
+                new \MessageHelper('warning', 'Lekce už je obsazená');
             } else {
                 DBRozpis::rozpisSignUp($request->post('ri_id'), Session::getParID());
             }
@@ -101,7 +101,7 @@ class Controller_Member_Rozpis extends Controller_Abstract
             } elseif (Session::getParID() != $lesson['ri_partner']
                       && !Permissions::check('rozpis', P_OWNED, $data['n_trener'])
             ) {
-                $this->redirect()->warning('Nedostatečná oprávnění!');
+                new \MessageHelper('warning', 'Nedostatečná oprávnění!');
             } else {
                 DBRozpis::rozpisSignOut($request->post('ri_id'));
             }

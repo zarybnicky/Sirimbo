@@ -89,19 +89,19 @@
     <textarea class="form-control" name="poznamky" rows="15"><?= $this->poznamky ?></textarea>
   </div>
   <div class="form-check mb-2">
-    <?= $this->checkbox('dancer', 'dancer')->label('Aktivní tanečník')->set($this->dancer) ?>
+    <?= new \CheckboxHelper('dancer', 'dancer', $this->dancer, 'Aktivní tanečník') ?>
   </div>
   <div class="form-check mb-2">
-    <?= $this->checkbox('teacher', 'teacher')->label('Trenér')->set($this->teacher) ?>
+    <?= new \CheckboxHelper('teacher', 'teacher', $this->teacher, 'Trenér') ?>
   </div>
   <div class="form-check mb-2">
-    <?= $this->checkbox('lock', 'lock')->label('Uzamknout')->set($this->lock) ?>
+    <?= new \CheckboxHelper('lock', 'lock', $this->lock, 'Uzamknout') ?>
   </div>
   <div class="form-check mb-2">
-    <?= $this->checkbox('ban', 'ban')->label('Ban')->set($this->ban) ?>
+    <?= new \CheckboxHelper('ban', 'ban', $this->ban, 'Ban') ?>
   </div>
   <div class="form-check mb-2">
-    <?= $this->checkbox('system', 'system')->label('Systémový uživatel')->set($this->system) ?>
+    <?= new \CheckboxHelper('system', 'system', $this->system, 'Systémový uživatel') ?>
   </div>
   <div class="form-group mb-2">
     <label for="group">Oprávnění</label>

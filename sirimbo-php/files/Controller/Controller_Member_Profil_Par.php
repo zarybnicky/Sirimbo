@@ -56,7 +56,7 @@ class Controller_Member_Profil_Par extends Controller_Abstract
         }
         $form = $this->checkData($request);
         if (!$form->isValid()) {
-            $this->redirect()->warning($form->getMessages());
+            new \MessageHelper('warning', $form->getMessages());
             return new \RenderHelper('files/View/Member/Profil/CoupleData.inc', [
                 'header' => 'Změna třídy a bodů',
                 'stt_trida' => $request->post('stt_trida') ?: '',
@@ -91,7 +91,7 @@ class Controller_Member_Profil_Par extends Controller_Abstract
             $request->post('lat-finale'),
             $hodnoceni
         );
-        $this->redirect("/member/profil");
+        new \RedirectHelper("/member/profil");
     }
 
     public function partner($request)
@@ -105,12 +105,12 @@ class Controller_Member_Profil_Par extends Controller_Abstract
             ) {
                 DBPary::noPartner(Session::getUserID());
                 DBPary::noPartner($latest['u_id']);
-                $this->redirect('/member/profil');
+                new \RedirectHelper('/member/profil');
             }
             if ($request->post('partner') == $latest['u_id'] ||
                 (!$request->post('partner') && $latest['u_id'] == '0')
             ) {
-                $this->redirect('/member/profil');
+                new \RedirectHelper('/member/profil');
             }
             if (Session::getUserPohlavi() == "m") {
                 DBPary::newPartnerRequest(
@@ -125,8 +125,8 @@ class Controller_Member_Profil_Par extends Controller_Abstract
                     Session::getUserID()
                 );
             }
-            $this->redirect()->info('Žádost o partnerství odeslána');
-            $this->redirect('/member/profil');
+            new \MessageHelper('info', 'Žádost o partnerství odeslána');
+            new \RedirectHelper('/member/profil');
         }
 
         $request->post('partner', $havePartner ? $latest['u_id'] : '0');
@@ -144,7 +144,7 @@ class Controller_Member_Profil_Par extends Controller_Abstract
     public function zadost($request)
     {
         if (!$request->post('action')) {
-            $this->redirect('/member/profil');
+            new \RedirectHelper('/member/profil');
         }
         switch ($request->post('action')) {
             case 'accept':
@@ -157,12 +157,12 @@ class Controller_Member_Profil_Par extends Controller_Abstract
 
                     if ($request->post('action') == 'accept') {
                         DBPary::acceptPartnerRequest($request->post('id'));
-                        $this->redirect()->success('žádost přijata');
+                        new \MessageHelper('success', 'žádost přijata');
                     } else {
                         DBPary::deletePartnerRequest($request->post('id'));
-                        $this->redirect()->info('žádost zamitnuta');
+                        new \MessageHelper('info', 'žádost zamitnuta');
                     }
-                    $this->redirect('/member/profil');
+                    new \RedirectHelper('/member/profil');
                 }
                 break;
 
@@ -173,17 +173,17 @@ class Controller_Member_Profil_Par extends Controller_Abstract
                         continue;
                     }
                     DBPary::deletePartnerRequest($request->post('id'));
-                    $this->redirect()->info('žádost zrušena');
-                    $this->redirect('/member/profil');
+                    new \MessageHelper('info', 'žádost zrušena');
+                    new \RedirectHelper('/member/profil');
                 }
                 break;
 
             default:
-                $this->redirect('/member/profil');
+                new \RedirectHelper('/member/profil');
                 break;
         }
-        $this->redirect()->warning('Žádná taková žádost tu není');
-        $this->redirect('/member/profil');
+        new \MessageHelper('warning', 'Žádná taková žádost tu není');
+        new \RedirectHelper('/member/profil');
     }
 
     private function checkData($request)

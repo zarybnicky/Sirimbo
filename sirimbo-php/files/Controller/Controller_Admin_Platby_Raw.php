@@ -24,7 +24,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
             if ($path = $fileInfo->getRealPath()) {
                 unlink($path);
             }
-            $this->redirect()->success('Soubor ' . $fileInfo->getFilename() . ' byl zpracován.');
+            new \MessageHelper('success', 'Soubor ' . $fileInfo->getFilename() . ' byl zpracován.');
         }
 
         new \RenderHelper('files/View/Admin/Platby/RawUpload.inc', [
@@ -47,8 +47,8 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
                     'amount' => $request->post('amount')
                 ]
             );
-            $this->redirect()->success('Soubor ' . $request->get('path') . ' byl zpracován.');
-            $this->redirect('/admin/platby/raw');
+            new \MessageHelper('success', 'Soubor ' . $request->get('path') . ' byl zpracován.');
+            new \RedirectHelper('/admin/platby/raw');
         }
         $parser = $this->getParser($path);
         $this->recognizeHeaders(array_flip($parser->headers()), $specific, $variable, $date, $amount);
@@ -74,8 +74,8 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
     {
         $fileinfo = new \SplFileInfo($path);
         if (!$fileinfo->isReadable()) {
-            $this->redirect()->danger('Soubor ' . str_replace(self::TEMP_DIR, '', $path) . ' není přístupný.');
-            $this->redirect('/admin/platby/raw');
+            new \MessageHelper('danger', 'Soubor ' . str_replace(self::TEMP_DIR, '', $path) . ' není přístupný.');
+            new \RedirectHelper('/admin/platby/raw');
         }
         $parser = new \CSVParser($fileinfo->openFile('r'));
         $parser->associative(true);
@@ -95,8 +95,8 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
             $amount = $columns['amount'];
         }
         if (!$this->checkHeaders($headers, $specific, $variable, $date, $amount)) {
-            $this->redirect()->info('Skript nemohl rozpoznat sloupce nutné pro zařazení plateb, je potřeba udělat to ručně. (soubor: ' . $path . ')');
-            $this->redirect('/admin/platby/raw/select_columns?path=' . str_replace(self::TEMP_DIR, '', $path));
+            new \MessageHelper('info', 'Skript nemohl rozpoznat sloupce nutné pro zařazení plateb, je potřeba udělat to ručně. (soubor: ' . $path . ')');
+            new \RedirectHelper('/admin/platby/raw/select_columns?path=' . str_replace(self::TEMP_DIR, '', $path));
         }
         $userLookup = $this->getUserLookup(false);
         $categoryLookup = $this->getCategoryLookup(true, true, false);
@@ -136,20 +136,20 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
 
         $validFiles = $upload->hasValidFiles();
         if ($upload->hasInvalidFiles()) {
-            return $this->redirect()->warning($upload->getErrorMessages());
+            return new \MessageHelper('warning', $upload->getErrorMessages());
         } elseif ($upload->hasEmptyFiles() && empty($validFiles)) {
-            return $this->redirect()->info('Vyberte prosím nějaký soubor (prázdné soubory jsou automaticky odmítnuty).');
+            return new \MessageHelper('info', 'Vyberte prosím nějaký soubor (prázdné soubory jsou automaticky odmítnuty).');
         }
         $uploader = $upload->getFilledUploader();
         $uploader->setOutputDir(self::TEMP_DIR);
         $uploader->addAllowedType('csv');
         $uploader->save();
         if ($uploader->hasRefusedFiles()) {
-            $this->redirect()->warning('Nahrávané soubory musí být typu CSV.');
+            new \MessageHelper('warning', 'Nahrávané soubory musí být typu CSV.');
         }
         foreach ($uploader->getSavedFiles() as $path) {
             $this->processCsv($path);
-            $this->redirect()->success('Soubor ' . str_replace(self::TEMP_DIR, '', $path) . ' byl zpracován.');
+            new \MessageHelper('success', 'Soubor ' . str_replace(self::TEMP_DIR, '', $path) . ' byl zpracován.');
         }
     }
 }

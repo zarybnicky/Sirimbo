@@ -9,7 +9,7 @@ class CheckboxHelper
     protected $labelCls;
     protected $cls;
 
-    public function __costruct($name, $value = null)
+    public function __costruct($name, $value = null, $state = false, $label = null)
     {
         if ($value === null) {
             $value = $name;
@@ -18,10 +18,10 @@ class CheckboxHelper
         $this->name = $name;
         $this->value = $value;
 
-        $this->state = false;
+        $this->state = $state;
         $this->readonly = false;
 
-        $this->label = null;
+        $this->label = $label;
         $this->cls = 'form-check';
 
         return $this;

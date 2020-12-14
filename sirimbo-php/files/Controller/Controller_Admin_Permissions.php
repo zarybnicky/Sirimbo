@@ -34,7 +34,7 @@ class Controller_Admin_Permissions extends Controller_Abstract
         }
         $form = $this->checkData($request);
         if (!$form->isValid()) {
-            $this->redirect()->warning($form->getMessages());
+            new \MessageHelper('warning', $form->getMessages());
             return $this->renderForm($request);
         }
 
@@ -48,18 +48,18 @@ class Controller_Admin_Permissions extends Controller_Abstract
             $permissions
         );
 
-        $this->redirect($request->post('returnURI') ?: '/admin/permissions');
+        new \RedirectHelper($request->post('returnURI') ?: '/admin/permissions');
     }
 
     public function edit($request)
     {
         if (!$id = $request->getId()) {
-            $this->redirect()->warning('Skupina s takovým ID neexistuje');
-            $this->redirect($request->post('returnURI') ?: '/admin/permissions');
+            new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
+            new \RedirectHelper($request->post('returnURI') ?: '/admin/permissions');
         }
         if (!$data = DBPermissions::getSingleGroup($id)) {
-            $this->redirect()->warning('Skupina s takovým ID neexistuje');
-            $this->redirect($request->post('returnURI') ?: '/admin/permissions');
+            new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
+            new \RedirectHelper($request->post('returnURI') ?: '/admin/permissions');
         }
 
         if (!$request->post()) {
@@ -67,7 +67,7 @@ class Controller_Admin_Permissions extends Controller_Abstract
         }
         $form = $this->checkData($request);
         if (!$form->isValid()) {
-            $this->redirect()->warning($form->getMessages());
+            new \MessageHelper('warning', $form->getMessages());
             return $this->renderForm($request, $data);
         }
 
@@ -82,20 +82,20 @@ class Controller_Admin_Permissions extends Controller_Abstract
             $permissions
         );
 
-        $this->redirect($request->post('returnURI') ?: '/admin/permissions');
+        new \RedirectHelper($request->post('returnURI') ?: '/admin/permissions');
     }
 
     public function remove($request)
     {
         if (!$request->getId()) {
-            $this->redirect('/admin/permissions');
+            new \RedirectHelper('/admin/permissions');
         }
         $id = $request->getId();
 
         if ($request->post('action') == 'confirm') {
             DBPermissions::removeGroup($id);
-            $this->redirect()->info('Úroveň odebrána. Nezapomeňte přiřadit uživatelům z této skupiny jinou skupinu!');
-            $this->redirect('/admin/permissions');
+            new \MessageHelper('info', 'Úroveň odebrána. Nezapomeňte přiřadit uživatelům z této skupiny jinou skupinu!');
+            new \RedirectHelper('/admin/permissions');
         }
 
         $item = DBPermissions::getSingleGroup($id);

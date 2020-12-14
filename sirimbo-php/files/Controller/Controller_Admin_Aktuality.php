@@ -56,21 +56,21 @@ class Controller_Admin_Aktuality extends Controller_Abstract
         );
 
         if ($request->post('action') == 'save') {
-            $this->redirect('/admin/aktuality');
+            new \RedirectHelper('/admin/aktuality');
         } else {
-            $this->redirect('/admin/aktuality/foto/' . $id . '?notify=true');
+            new \RedirectHelper('/admin/aktuality/foto/' . $id . '?notify=true');
         }
     }
 
     public function edit($request)
     {
         if (!$id = $request->getId()) {
-            $this->redirect()->warning('Článek s takovým ID neexistuje');
-            $this->redirect('/admin/aktuality');
+            new \MessageHelper('warning', 'Článek s takovým ID neexistuje');
+            new \RedirectHelper('/admin/aktuality');
         }
         if (!$data = DBAktuality::getSingleAktualita($id)) {
-            $this->redirect()->warning('Článek s takovým ID neexistuje');
-            $this->redirect('/admin/aktuality');
+            new \MessageHelper('warning', 'Článek s takovým ID neexistuje');
+            new \RedirectHelper('/admin/aktuality');
         }
 
         Permissions::checkError('aktuality', P_OWNED, $data['at_kdo']);
@@ -78,7 +78,7 @@ class Controller_Admin_Aktuality extends Controller_Abstract
         $date = DateTime::createFromFormat('j. n. Y H:i', $request->post('createdAt'));
         if (!$request->post() || $date === false) {
             if ($request->post() && $date === false) {
-                $this->redirect()->danger('Špatný formát data "Publikováno" (D. M. RRRR HH:SS)');
+                new \MessageHelper('danger', 'Špatný formát data "Publikováno" (D. M. RRRR HH:SS)');
             }
             return new \RenderHelper('files/View/Admin/Aktuality/Form.inc', [
                 'header' => 'Správa aktualit',
@@ -101,13 +101,13 @@ class Controller_Admin_Aktuality extends Controller_Abstract
             $data['at_foto_main'],
             $date->format('Y-m-d H:i:s')
         );
-        $this->redirect('/admin/aktuality');
+        new \RedirectHelper('/admin/aktuality');
     }
 
     public function remove($request)
     {
         if (!$request->getId()) {
-            $this->redirect('/admin/aktuality');
+            new \RedirectHelper('/admin/aktuality');
         }
         $id = $request->getId();
         if ($request->post('action') == 'confirm') {
@@ -116,7 +116,7 @@ class Controller_Admin_Aktuality extends Controller_Abstract
                 throw new AuthorizationException('Máte nedostatečnou autorizaci pro tuto akci!');
             }
             DBAktuality::removeAktualita($id);
-            $this->redirect('/admin/aktuality');
+            new \RedirectHelper('/admin/aktuality');
         }
 
         $item = DBAktuality::getSingleAktualita($id);

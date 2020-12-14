@@ -90,7 +90,7 @@ class Controller_Member_Profil extends Controller_Abstract
             ]);
         }
         DBUser::markGdprSigned(Session::getUserId());
-        $this->redirect('/member/home');
+        new \RedirectHelper('/member/home');
     }
 
     public function edit($request)
@@ -118,7 +118,7 @@ class Controller_Member_Profil extends Controller_Abstract
 
         $form = $this->checkData($request, 'edit', $narozeni);
         if (!$form->isValid()) {
-            $this->redirect()->warning($form->getMessages());
+            new \MessageHelper('warning', $form->getMessages());
             return $this->renderPersonalForm($request);
         }
 
@@ -149,7 +149,7 @@ class Controller_Member_Profil extends Controller_Abstract
             $data->getMemberUntil(),
             $data->getGdprSignedAt()
         );
-        $this->redirect('/member/profil');
+        new \RedirectHelper('/member/profil');
     }
 
     public function heslo($request)
@@ -161,7 +161,7 @@ class Controller_Member_Profil extends Controller_Abstract
         }
         $form = $this->checkData($request, 'heslo');
         if (!$form->isValid()) {
-            $this->redirect()->warning($form->getMessages());
+            new \MessageHelper('warning', $form->getMessages());
             return new \RenderHelper('files/View/Member/Profil/NewPassword.inc', [
                 'header' => 'Změna hesla'
             ]);
@@ -170,7 +170,7 @@ class Controller_Member_Profil extends Controller_Abstract
             Session::getUserID(),
             User::crypt($request->post('newpass'))
         );
-        $this->redirect('/member/profil');
+        new \RedirectHelper('/member/profil');
     }
 
     private function checkData($request, $action, $narozeni = null): Form

@@ -11,8 +11,8 @@ class Controller_Admin_Galerie_Directory extends Controller_Abstract
     {
         $id = $request->getId();
         if (!DBGalerie::getSingleDir($id)) {
-            $this->redirect()->warning('Složka s takovým ID neexistuje');
-            $this->redirect('/admin/galerie');
+            new \MessageHelper('warning', 'Složka s takovým ID neexistuje');
+            new \RedirectHelper('/admin/galerie');
         }
 
         new \RenderHelper('files/View/Admin/Galerie/DisplayDirectory.inc', [
@@ -38,7 +38,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Abstract
         }
         $form = $this->checkData($request);
         if (!$form->isValid()) {
-            $this->redirect()->warning($form->getMessages());
+            new \MessageHelper('warning', $form->getMessages());
             return $this->displayForm($request, 'add');
         }
         $parent = DBGalerie::getSingleDir($request->post('parent'));
@@ -53,19 +53,19 @@ class Controller_Admin_Galerie_Directory extends Controller_Abstract
             $request->post('hidden') ? '1' : '0',
             $dirPath
         );
-        $this->redirect('/admin/galerie');
+        new \RedirectHelper('/admin/galerie');
     }
 
     public function edit($request)
     {
         $id = $request->getId();
         if (!$id) {
-            $this->redirect()->warning('Není možné upravit hlavní složku');
-            $this->redirect('/admin/galerie');
+            new \MessageHelper('warning', 'Není možné upravit hlavní složku');
+            new \RedirectHelper('/admin/galerie');
         }
         if (!($data = DBGalerie::getSingleDir($id))) {
-            $this->redirect()->warning('Taková složka neexistuje');
-            $this->redirect('/admin/galerie');
+            new \MessageHelper('warning', 'Taková složka neexistuje');
+            new \RedirectHelper('/admin/galerie');
         }
         if (!$request->post()) {
             $request->post('name', $data['gd_name']);
@@ -75,7 +75,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Abstract
         }
         $form = $this->checkData($request);
         if (!$form->isValid()) {
-            $this->redirect()->warning($form->getMessages());
+            new \MessageHelper('warning', $form->getMessages());
             return $this->displayForm($request, 'edit');
         }
         $parent = DBGalerie::getSingleDir($request->post('parent'));
@@ -86,8 +86,8 @@ class Controller_Admin_Galerie_Directory extends Controller_Abstract
 
         if ($data['gd_path'] != $newPath) {
             if (file_exists(GALERIE . DIRECTORY_SEPARATOR . $newPath)) {
-                $this->redirect()->danger('V dané nadsložce už existuje složka se stejným názvem.');
-                $this->redirect('/admin/galerie/directory/edit/' . $id);
+                new \MessageHelper('danger', 'V dané nadsložce už existuje složka se stejným názvem.');
+                new \RedirectHelper('/admin/galerie/directory/edit/' . $id);
             }
             rename(
                 GALERIE . DIRECTORY_SEPARATOR . $data['gd_path'],
@@ -109,13 +109,13 @@ class Controller_Admin_Galerie_Directory extends Controller_Abstract
             $request->post('hidden') ? '1' : '0',
             $data['gd_path']
         );
-        $this->redirect('/admin/galerie');
+        new \RedirectHelper('/admin/galerie');
     }
 
     public function remove($request)
     {
         if (!$request->getId()) {
-            $this->redirect('/admin/galerie');
+            new \RedirectHelper('/admin/galerie');
         }
         $id = $request->getId();
 
@@ -126,7 +126,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Abstract
                 rrmdir(GALERIE . DIRECTORY_SEPARATOR . $data['gd_path']);
                 rrmdir(GALERIE_THUMBS . DIRECTORY_SEPARATOR . $data['gd_path']);
             }
-            $this->redirect('/admin/galerie');
+            new \RedirectHelper('/admin/galerie');
         }
 
         $item = DBGalerie::getSingleDir($id);
