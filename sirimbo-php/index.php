@@ -121,6 +121,8 @@ function makeRouter($request)
     $router->get('/oklubu/saly', '@Oklubu::saly');
     $router->get('/nopassword', '@Nopassword::get');
     $router->post('/nopassword', '@Nopassword::post');
+    $router->get('/registrace', '@Registrace::get');
+    $router->post('/registrace', '@Registrace::post');
     $router->get('/member', '@Member::get');
     $router->get('/member/home', '@Member::get');
     $router->get('/admin/konzole', '@Admin.Repl::get');
