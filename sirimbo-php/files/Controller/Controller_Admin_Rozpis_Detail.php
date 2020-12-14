@@ -1,14 +1,9 @@
 <?php
 class Controller_Admin_Rozpis_Detail extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('rozpis', P_OWNED);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('rozpis', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Rozpis s takovým ID neexistuje');
             new \RedirectHelper('/admin/rozpis');

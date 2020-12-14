@@ -1,14 +1,9 @@
 <?php
 class Controller_Admin_Aktuality_Foto extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('aktuality', P_OWNED);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('aktuality', P_OWNED);
         $id = $request->getId();
         if (!($article = DBAktuality::getSingleAktualita($id))) {
             new \MessageHelper('warning', 'Takový článek neexistuje');

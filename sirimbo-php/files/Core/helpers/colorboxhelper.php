@@ -8,8 +8,6 @@ class ColorboxHelper
     {
         $this->color = $color;
         $this->description = $description;
-
-        return $this;
     }
 
     public function __toString()

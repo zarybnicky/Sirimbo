@@ -1,12 +1,6 @@
 <?php
 class Controller_Admin_Users extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('users', P_OWNED);
-    }
-
     public function view($request)
     {
         Permissions::checkError('users', P_ADMIN);
@@ -200,6 +194,7 @@ class Controller_Admin_Users extends Controller_Abstract
 
     public function getMsmtCsv($request)
     {
+        Permissions::checkError('users', P_OWNED);
         header('Pragma: no-cache');
         header('Content-Type: text/csv');
         header('Content-Disposition: inline; filename="olymp-msmt-export.csv');

@@ -22,8 +22,6 @@ class RadioHelper
 
         $this->label = null;
         $this->cls = 'form-check';
-
-        return $this;
     }
 
     public function set($val)

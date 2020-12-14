@@ -1,14 +1,9 @@
 <?php
 class Controller_Admin_Skupiny extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('skupiny', P_OWNED);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('skupiny', P_OWNED);
         $data = array_map(
             function ($item) {
                 return [
@@ -30,6 +25,7 @@ class Controller_Admin_Skupiny extends Controller_Abstract
 
     public function add($request)
     {
+        Permissions::checkError('skupiny', P_OWNED);
         if (!$request->post()) {
             return $this->displayForm($request);
         }
@@ -54,6 +50,7 @@ class Controller_Admin_Skupiny extends Controller_Abstract
 
     public function edit($request)
     {
+        Permissions::checkError('skupiny', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
             new \RedirectHelper('/admin/skupiny');
@@ -98,6 +95,7 @@ class Controller_Admin_Skupiny extends Controller_Abstract
 
     public function remove($request)
     {
+        Permissions::checkError('skupiny', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
             new \RedirectHelper('/admin/skupiny');
@@ -121,7 +119,7 @@ class Controller_Admin_Skupiny extends Controller_Abstract
         }
         if (($f = $this->getLinkedSkupinaObjects($id)) || !$request->post()) {
             if (isset($f) && $f) {
-                new \MessageHelper('info', 
+                new \MessageHelper('info',
                     'Nemůžu odstranit skupinu s připojenými kategoriemi! '
                     . new Tag(
                         'form',

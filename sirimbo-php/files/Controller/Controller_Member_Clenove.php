@@ -1,14 +1,9 @@
 <?php
 class Controller_Member_Clenove extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('users', P_VIEW);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('users', P_VIEW);
         if (!($id = $request->getId())) {
             new \RedirectHelper('/member/clenove/structure');
         }
@@ -27,6 +22,7 @@ class Controller_Member_Clenove extends Controller_Abstract
 
     public function skupiny($request)
     {
+        Permissions::checkError('users', P_VIEW);
         $currentID = -1;
         $currentKey = 0;
         $data = DBUser::getUsersWithSkupinaPlatby();
@@ -57,6 +53,7 @@ class Controller_Member_Clenove extends Controller_Abstract
 
     public function seznam($request)
     {
+        Permissions::checkError('users', P_VIEW);
         $index = 0;
         $data = array_map(
             function ($item) use (&$index) {
@@ -73,6 +70,7 @@ class Controller_Member_Clenove extends Controller_Abstract
 
     public function structure($request)
     {
+        Permissions::checkError('users', P_VIEW);
         $data = DBUser::getUsersWithSkupinaPlatby();
         $skupiny = [];
         $index = 0;

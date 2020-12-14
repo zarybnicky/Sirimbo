@@ -1,14 +1,9 @@
 <?php
 class Controller_Member_Rozpis extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('rozpis', P_VIEW);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('rozpis', P_VIEW);
         if ($request->post()) {
             $this->processPost($request);
             new \RedirectHelper('/member/rozpis');

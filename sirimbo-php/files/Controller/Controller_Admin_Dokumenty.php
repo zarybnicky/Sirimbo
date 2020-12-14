@@ -1,14 +1,9 @@
 <?php
 class Controller_Admin_Dokumenty extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('dokumenty', P_OWNED);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('dokumenty', P_OWNED);
         if ($request->post('action') == 'upload' && !empty($_FILES)) {
             $fileUpload = $_FILES['file']['tmp_name'];
             $fileName = $_FILES['file']['name'];
@@ -62,6 +57,7 @@ class Controller_Admin_Dokumenty extends Controller_Abstract
 
     public function edit($request)
     {
+        Permissions::checkError('dokumenty', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Dokument s takovým ID neexistuje');
             new \RedirectHelper('/admin/dokumenty');
@@ -85,6 +81,7 @@ class Controller_Admin_Dokumenty extends Controller_Abstract
 
     public function remove($request)
     {
+        Permissions::checkError('dokumenty', P_OWNED);
         if (!$request->getId()) {
             new \RedirectHelper('/admin/dokumenty');
         }

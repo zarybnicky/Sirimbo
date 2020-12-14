@@ -1,14 +1,9 @@
 <?php
 class Controller_Admin_Pary extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('pary', P_OWNED);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('pary', P_OWNED);
         switch ($request->post("action")) {
             case 'add':
                 if ($request->post("add_partner")) {
@@ -53,6 +48,7 @@ class Controller_Admin_Pary extends Controller_Abstract
 
     public function edit($request)
     {
+        Permissions::checkError('pary', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Pár s takovým ID neexistuje');
             new \RedirectHelper('/admin/pary');
@@ -111,6 +107,7 @@ class Controller_Admin_Pary extends Controller_Abstract
 
     public function remove($request)
     {
+        Permissions::checkError('pary', P_OWNED);
         $id = $request->getId();
         if ($id) {
             DBPary::removeCouple($id);

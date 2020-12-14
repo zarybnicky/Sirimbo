@@ -1,14 +1,9 @@
 <?php
 class Controller_Admin_Nabidka_Detail extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('nabidka', P_OWNED);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('nabidka', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Nabídka s takovým ID neexistuje');
             new \RedirectHelper('/admin/nabidka');

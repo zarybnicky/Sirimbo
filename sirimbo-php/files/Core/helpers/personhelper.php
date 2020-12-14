@@ -10,7 +10,6 @@ class PersonHelper
         $this->id = $user['u_id'];
         $this->name = $user['u_jmeno'] . ' ' . $user['u_prijmeni'];
         $this->nameR = $user['u_prijmeni'] . ', ' . $user['u_jmeno'];
-        return $this;
     }
 
     public function __toString()

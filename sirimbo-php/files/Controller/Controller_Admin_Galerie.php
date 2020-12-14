@@ -1,14 +1,9 @@
 <?php
 class Controller_Admin_Galerie extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('galerie', P_OWNED);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('galerie', P_OWNED);
         if ($request->post('action') == 'save') {
             $this->_processSave($request);
         }
@@ -154,7 +149,7 @@ class Controller_Admin_Galerie extends Controller_Abstract
                 Session::getUserID()
             );
         }
-        new \MessageHelper('info', 
+        new \MessageHelper('info',
             'Složek přidáno: ' . count($fsDirs) . '<br>' .
             'Souborů přidáno: ' . count($fsFiles) . '<br>' .
             '<br>' .

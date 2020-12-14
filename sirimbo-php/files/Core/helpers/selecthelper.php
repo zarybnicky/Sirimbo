@@ -12,8 +12,6 @@ class SelectHelper
         $this->options = $options;
         $this->value = $value;
         $this->cls = 'form-control select2';
-
-        return $this;
     }
 
     public function name($name)

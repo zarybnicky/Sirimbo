@@ -1,7 +1,7 @@
 <?php
 class UploadHelper
 {
-    private $_name;
+    private ?string $_name;
     private $_files;
     private $_invalidFiles;
     private $_emptyFiles;
@@ -16,9 +16,8 @@ class UploadHelper
         $this->_hasFiles = false;
 
         if ($name !== null) {
-            $this->name = $name;
+            $this->_name = $name;
         }
-        return $this;
     }
 
     public function name($name)

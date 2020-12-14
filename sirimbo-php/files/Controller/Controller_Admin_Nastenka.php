@@ -1,14 +1,9 @@
 <?php
 class Controller_Admin_Nastenka extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('nastenka', P_OWNED);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('nastenka', P_OWNED);
         $pager = new Paging(new DBNastenka());
         $pager->setCurrentPage($request->get('p'));
         $pager->setItemsPerPage($request->get('c'));
@@ -72,6 +67,7 @@ class Controller_Admin_Nastenka extends Controller_Abstract
 
     public function add($request)
     {
+        Permissions::checkError('nastenka', P_OWNED);
         if (!$request->post()) {
             return $this->renderForm($request);
         }
@@ -106,6 +102,7 @@ class Controller_Admin_Nastenka extends Controller_Abstract
 
     public function edit($request)
     {
+        Permissions::checkError('nastenka', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Nástěnka s takovým ID neexistuje');
             new \RedirectHelper($request->post('returnURI') ?: '/admin/nastenka');
@@ -171,6 +168,7 @@ class Controller_Admin_Nastenka extends Controller_Abstract
 
     public function remove($request)
     {
+        Permissions::checkError('nastenka', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Příspěvek s takovým ID neexistuje');
             new \RedirectHelper($request->post('returnURI') ?: '/admin/nastenka');

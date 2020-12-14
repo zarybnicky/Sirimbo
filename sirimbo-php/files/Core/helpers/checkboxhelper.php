@@ -9,7 +9,7 @@ class CheckboxHelper
     protected $labelCls;
     protected $cls;
 
-    public function __costruct($name, $value = null, $state = false, $label = null)
+    public function __construct($name, $value = null, $state = false, $label = null)
     {
         if ($value === null) {
             $value = $name;
@@ -23,8 +23,6 @@ class CheckboxHelper
 
         $this->label = $label;
         $this->cls = 'form-check';
-
-        return $this;
     }
 
     public function set($val)

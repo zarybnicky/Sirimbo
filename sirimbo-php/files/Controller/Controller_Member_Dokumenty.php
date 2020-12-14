@@ -1,14 +1,9 @@
 <?php
 class Controller_Member_Dokumenty extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('dokumenty', P_VIEW);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('dokumenty', P_VIEW);
         $kat = $request->get('kat');
         if (ctype_digit($kat)) {
             $dokumenty = DBDokumenty::getDokumentyByKategorie($kat);

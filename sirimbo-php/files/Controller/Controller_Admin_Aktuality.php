@@ -1,14 +1,9 @@
 <?php
 class Controller_Admin_Aktuality extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('aktuality', P_OWNED);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('aktuality', P_OWNED);
         $data = array_map(
             function ($item) {
                 $id = $item['at_id'];
@@ -34,6 +29,7 @@ class Controller_Admin_Aktuality extends Controller_Abstract
 
     public function add($request)
     {
+        Permissions::checkError('aktuality', P_OWNED);
         if (!$request->post()) {
             return new \RenderHelper('files/View/Admin/Aktuality/Form.inc', [
                 'header' => 'Správa aktualit',
@@ -64,6 +60,7 @@ class Controller_Admin_Aktuality extends Controller_Abstract
 
     public function edit($request)
     {
+        Permissions::checkError('aktuality', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Článek s takovým ID neexistuje');
             new \RedirectHelper('/admin/aktuality');
@@ -106,6 +103,7 @@ class Controller_Admin_Aktuality extends Controller_Abstract
 
     public function remove($request)
     {
+        Permissions::checkError('aktuality', P_OWNED);
         if (!$request->getId()) {
             new \RedirectHelper('/admin/aktuality');
         }

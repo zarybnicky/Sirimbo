@@ -10,6 +10,5 @@ class RedirectHelper
             header('Location: ' . $link);
             exit;
         }
-        return $this;
     }
 }

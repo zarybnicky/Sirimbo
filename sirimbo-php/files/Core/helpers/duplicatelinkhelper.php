@@ -8,7 +8,6 @@ class DuplicateLinkHelper
     {
         $this->link = $link;
         $this->button = $button;
-        return $this;
     }
 
     public function __toString()

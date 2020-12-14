@@ -1,8 +1,10 @@
 parameters:
   excludes_analyse:
-    - %rootDir%/../../../files/Core/phpmailer.php
-    - %rootDir%/../../../files/Core/smtp.php
+    - files/Core/phpmailer.php
+    - files/Core/smtp.php
   earlyTerminatingMethodCalls:
     RedirectHelper:
       - redirect
   inferPrivatePropertyTypeFromConstructor: true
+  bootstrapFiles:
+    - phpstan-constants.php

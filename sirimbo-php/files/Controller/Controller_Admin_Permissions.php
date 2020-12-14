@@ -1,14 +1,9 @@
 <?php
 class Controller_Admin_Permissions extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('permissions', P_ADMIN);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('permissions', P_ADMIN);
         $data = array_map(
             function ($item) {
                 return [
@@ -29,6 +24,7 @@ class Controller_Admin_Permissions extends Controller_Abstract
 
     public function add($request)
     {
+        Permissions::checkError('permissions', P_ADMIN);
         if (!$request->post()) {
             return $this->renderForm($request);
         }
@@ -53,6 +49,7 @@ class Controller_Admin_Permissions extends Controller_Abstract
 
     public function edit($request)
     {
+        Permissions::checkError('permissions', P_ADMIN);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
             new \RedirectHelper($request->post('returnURI') ?: '/admin/permissions');
@@ -87,6 +84,7 @@ class Controller_Admin_Permissions extends Controller_Abstract
 
     public function remove($request)
     {
+        Permissions::checkError('permissions', P_ADMIN);
         if (!$request->getId()) {
             new \RedirectHelper('/admin/permissions');
         }

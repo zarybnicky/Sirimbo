@@ -1,14 +1,9 @@
 <?php
 class Controller_Admin_Platby extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('platby', P_OWNED);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('platby', P_OWNED);
         new \RedirectHelper('/admin/platby/overview');
     }
 

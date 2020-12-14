@@ -156,7 +156,7 @@ class Session
             return 'Senioři II';
         } elseif (55 <= $diff && $diff < 65) {
             return 'Senioři III';
-        } elseif (65 <= $diff) {
+        } else {
             return 'Senioři IV';
         }
     }

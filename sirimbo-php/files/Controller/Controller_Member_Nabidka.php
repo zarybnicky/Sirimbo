@@ -1,14 +1,9 @@
 <?php
 class Controller_Member_Nabidka extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('nabidka', P_VIEW);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('nabidka', P_VIEW);
         $this->processPost($request);
 
         $data = array_map(

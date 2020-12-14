@@ -1,14 +1,9 @@
 <?php
 class Controller_Admin_Platby_Items extends Controller_Admin_Platby
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('platby', P_OWNED);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('platby', P_OWNED);
         $filter = [];
         if ($request->get('user') && is_numeric($request->get('user'))) {
             $filter['u_id'] = $request->get('user');
@@ -52,6 +47,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
 
     public function add($request)
     {
+        Permissions::checkError('platby', P_OWNED);
         if (!$request->post()) {
             return $this->displayForm(0, $request);
         } elseif (!is_object($item = $this->getFromPost($request))) {
@@ -71,6 +67,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
 
     public function edit($request)
     {
+        Permissions::checkError('platby', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Platba s takovým ID neexistuje');
             new \RedirectHelper('/admin/platby/items');
@@ -103,6 +100,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
 
     public function remove($request)
     {
+        Permissions::checkError('platby', P_OWNED);
         if (!$request->getId()) {
             new \RedirectHelper('/admin/platby/items');
         }

@@ -1,14 +1,9 @@
 <?php
 class Controller_Member_Akce extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('akce', P_VIEW);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('akce', P_VIEW);
         if ($id = $request->getId()) {
             if (!($data = DBAkce::getSingleAkce($id, true))) {
                 new \MessageHelper('warning', 'Neexistuje žádná taková akce');
@@ -53,6 +48,7 @@ class Controller_Member_Akce extends Controller_Abstract
             'akce' => $akce
         ]);
     }
+
     private function _getRenderData($data)
     {
         $items = DBAkce::getAkceItems($data['a_id']);

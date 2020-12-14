@@ -1,14 +1,9 @@
 <?php
 class Controller_Admin_Nabidka extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('nabidka', P_OWNED);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('nabidka', P_OWNED);
         $data = Permissions::check('nabidka', P_ADMIN)
             ? DBNabidka::getNabidka(true)
             : DBNabidka::getNabidkyByTrener(Session::getUserID(), true);
@@ -61,6 +56,7 @@ class Controller_Admin_Nabidka extends Controller_Abstract
 
     public function add($request)
     {
+        Permissions::checkError('nabidka', P_OWNED);
         if (!$request->post()) {
             return $this->displayForm($request);
         }
@@ -98,6 +94,7 @@ class Controller_Admin_Nabidka extends Controller_Abstract
 
     public function edit($request)
     {
+        Permissions::checkError('nabidka', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Nabídka s takovým ID neexistuje');
             new \RedirectHelper($request->post('returnURI') ?: '/admin/nabidka');
@@ -162,6 +159,7 @@ class Controller_Admin_Nabidka extends Controller_Abstract
 
     public function duplicate($request)
     {
+        Permissions::checkError('nabidka', P_OWNED);
         $oldId = $request->getId();
         $data = DBNabidka::getSingleNabidka($oldId);
         $items = DBNabidka::getNabidkaItem($oldId);
@@ -187,6 +185,7 @@ class Controller_Admin_Nabidka extends Controller_Abstract
 
     public function remove($request)
     {
+        Permissions::checkError('nabidka', P_OWNED);
         $id = $request->getId();
         $data = DBNabidka::getSingleNabidka($id);
         if (!Permissions::check('nabidka', P_OWNED, $data['n_trener'])) {

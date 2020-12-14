@@ -1,14 +1,9 @@
 <?php
 class Controller_Member_Profil extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('nastenka', P_VIEW);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('nastenka', P_VIEW);
         $data = Session::getUserData();
         $s = Session::getSkupinaData();
 
@@ -84,6 +79,7 @@ class Controller_Member_Profil extends Controller_Abstract
 
     public function gdpr($request)
     {
+        Permissions::checkError('nastenka', P_VIEW);
         if ($request->post('action') !== 'gdpr') {
             return new \RenderHelper('files/View/Member/Profil/Gdpr.inc', [
                 'header' => 'Souhlas se zpracováním osobních údajů',
@@ -95,6 +91,7 @@ class Controller_Member_Profil extends Controller_Abstract
 
     public function edit($request)
     {
+        Permissions::checkError('nastenka', P_VIEW);
         $data = Session::getUserData();
         $narozeni = new Date($_POST['narozeni'] ?? null);
 
@@ -154,6 +151,7 @@ class Controller_Member_Profil extends Controller_Abstract
 
     public function heslo($request)
     {
+        Permissions::checkError('nastenka', P_VIEW);
         if (!$request->post()) {
             return new \RenderHelper('files/View/Member/Profil/NewPassword.inc', [
                 'header' => 'Změna hesla'

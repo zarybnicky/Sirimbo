@@ -12,8 +12,6 @@ class HiddenHelper
 
         $this->name = $name;
         $this->value = $value;
-
-        return $this;
     }
 
     public function __toString()

@@ -21,8 +21,6 @@ class DateHelper
             $this->date = $from;
             $this->dateTo = $to;
         }
-
-        return $this;
     }
 
     protected function createDate($date)

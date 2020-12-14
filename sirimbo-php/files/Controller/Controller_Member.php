@@ -1,14 +1,9 @@
 <?php
 class Controller_Member extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('nastenka', P_VIEW);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('nastenka', P_VIEW);
         $pager = new Paging(new DBNastenka());
         $pager->setCurrentPage($request->get('p'));
         $pager->setItemsPerPage($request->get('c'));

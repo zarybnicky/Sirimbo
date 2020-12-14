@@ -8,7 +8,6 @@ class RemoveLinkHelper
     {
         $this->link = $link;
         $this->button = $button;
-        return $this;
     }
 
     public function __toString()

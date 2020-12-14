@@ -1,14 +1,9 @@
 <?php
 class Controller_Admin_Galerie_Directory extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('galerie', P_OWNED);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('galerie', P_OWNED);
         $id = $request->getId();
         if (!DBGalerie::getSingleDir($id)) {
             new \MessageHelper('warning', 'Složka s takovým ID neexistuje');
@@ -33,6 +28,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Abstract
 
     public function add($request)
     {
+        Permissions::checkError('galerie', P_OWNED);
         if (!$request->post()) {
             return $this->displayForm($request, 'add');
         }
@@ -58,6 +54,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Abstract
 
     public function edit($request)
     {
+        Permissions::checkError('galerie', P_OWNED);
         $id = $request->getId();
         if (!$id) {
             new \MessageHelper('warning', 'Není možné upravit hlavní složku');
@@ -114,6 +111,7 @@ class Controller_Admin_Galerie_Directory extends Controller_Abstract
 
     public function remove($request)
     {
+        Permissions::checkError('galerie', P_OWNED);
         if (!$request->getId()) {
             new \RedirectHelper('/admin/galerie');
         }

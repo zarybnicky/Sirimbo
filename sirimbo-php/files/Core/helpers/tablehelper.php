@@ -16,7 +16,6 @@ class TableHelper
         $this->_index = 0;
         $this->_style = '';
         $this->_showHeader = true;
-        return $this;
     }
 
     public function name($n)
@@ -42,7 +41,7 @@ class TableHelper
     public function columns($columns, $overwrite = false)
     {
         if ($overwrite) {
-            $this->_columns = null;
+            $this->_columns = [];
         }
         if (!is_array($columns)) {
             return $this;

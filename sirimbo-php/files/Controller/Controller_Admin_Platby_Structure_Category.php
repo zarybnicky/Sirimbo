@@ -1,14 +1,9 @@
 <?php
 class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('platby', P_OWNED);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('platby', P_OWNED);
         if ($id = $request->post('category_duplicate')) {
             if (!($data = DBPlatbyCategory::getSingle($id))) {
                 new \MessageHelper('warning', 'Takový specifický symbol neexistuje.');
@@ -72,6 +67,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
 
     public function add($request)
     {
+        Permissions::checkError('platby', P_OWNED);
         if (!$request->post()) {
             return $this->displayForm($request, 'add', 0);
         }
@@ -120,6 +116,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
 
     public function edit($request)
     {
+        Permissions::checkError('platby', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Kategorie s takovým ID neexistuje');
             new \RedirectHelper($request->post('returnURI') ?: '/admin/platby/structure/category');
@@ -204,6 +201,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
 
     public function remove($request)
     {
+        Permissions::checkError('platby', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Specifický symbol s takovým ID neexistuje');
             new \RedirectHelper($request->post('returnURI') ?: '/admin/platby/structure/category');
@@ -257,7 +255,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             || !$request->post()
         ) {
             if (isset($f) && $f) {
-                new \MessageHelper('info', 
+                new \MessageHelper('info',
                     'Nemůžu odstranit specifický symbol s připojenými kategoriemi nebo položkami! '
                     . new Tag(
                         'form',

@@ -1,14 +1,9 @@
 <?php
 class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('platby', P_OWNED);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('platby', P_OWNED);
         new \RenderHelper('files/View/Admin/Platby/StructureOverview.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Struktura plateb',

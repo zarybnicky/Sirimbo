@@ -1,14 +1,9 @@
 <?php
 class Controller_Member_Pary extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('pary', P_VIEW);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('pary', P_VIEW);
         $data = DBPary::getActiveParyByHodnoceni();
         if (empty($data)) {
             return new \RenderHelper('files/View/Empty.inc', [

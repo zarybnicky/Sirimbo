@@ -1,12 +1,6 @@
 <?php
 class Controller_Admin_Galerie_File extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('galerie', P_OWNED);
-    }
-
     public function view($request)
     {
         new \RedirectHelper('/admin/galerie');
@@ -14,6 +8,7 @@ class Controller_Admin_Galerie_File extends Controller_Abstract
 
     public function edit($request)
     {
+        Permissions::checkError('galerie', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Takový soubor neexistuje!');
             new \RedirectHelper($request->getReferer());
@@ -63,6 +58,7 @@ class Controller_Admin_Galerie_File extends Controller_Abstract
 
     public function remove($request)
     {
+        Permissions::checkError('galerie', P_OWNED);
         if (!$request->getId()) {
             new \RedirectHelper('/admin/galerie');
         }
@@ -87,6 +83,7 @@ class Controller_Admin_Galerie_File extends Controller_Abstract
 
     public function upload($request)
     {
+        Permissions::checkError('galerie', P_OWNED);
         if (!$request->post()) {
             return $this->displayUpload($request);
         }
@@ -118,7 +115,7 @@ class Controller_Admin_Galerie_File extends Controller_Abstract
         $uploader->setOutputDir(GALERIE . DIRECTORY_SEPARATOR . $parent['gd_path']);
         $uploader->save(true, true);
         if ($uploader->hasRefusedFiles()) {
-            new \MessageHelper('warning', 
+            new \MessageHelper('warning',
                 'Počet zamítnutých souborů: ' . count($uploader->getRefusedFiles())
             );
         }
@@ -151,7 +148,7 @@ class Controller_Admin_Galerie_File extends Controller_Abstract
             DBGalerie::addFoto($parent['gd_id'], $path, $name, Session::getUserID());
         }
         if ($failCount > 0) {
-            new \MessageHelper('warning', 
+            new \MessageHelper('warning',
                 'Počet neúspěšně zpracovaných souborů: ' . $failCount
             );
         }

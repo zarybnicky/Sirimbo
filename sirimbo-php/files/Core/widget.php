@@ -67,7 +67,7 @@ class Widget extends Tree
 
     public function renderToString()
     {
-        $result = [new \RenderHelper()];
+        $result = [$this->render()];
         $pre = [];
         $post = [];
         $this->traverse(

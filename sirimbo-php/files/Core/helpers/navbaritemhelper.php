@@ -8,7 +8,6 @@ class NavbarItemHelper
     {
         $this->item = $item;
         $this->url = $url;
-        return $this;
     }
 
     public function __toString()

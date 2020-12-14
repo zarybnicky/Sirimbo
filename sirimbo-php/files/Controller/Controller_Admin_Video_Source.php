@@ -1,14 +1,9 @@
 <?php
 class Controller_Admin_Video_Source extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('aktuality', P_OWNED);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('aktuality', P_OWNED);
         new \RenderHelper('files/View/Admin/VideoSource/Overview.inc', [
             'header' => 'Správa zdrojů videa',
             'data' => array_map(
@@ -30,6 +25,7 @@ class Controller_Admin_Video_Source extends Controller_Abstract
 
     public function add($request)
     {
+        Permissions::checkError('aktuality', P_OWNED);
         if (!$request->post()) {
             return $this->displayForm($request);
         }
@@ -46,6 +42,7 @@ class Controller_Admin_Video_Source extends Controller_Abstract
 
     public function edit($request)
     {
+        Permissions::checkError('aktuality', P_OWNED);
         $id = $request->getId();
         $data = DBVideoSource::getSingle($id);
         if (!$id || !$data) {
@@ -75,6 +72,7 @@ class Controller_Admin_Video_Source extends Controller_Abstract
 
     public function remove($request)
     {
+        Permissions::checkError('aktuality', P_OWNED);
         if (!$request->getId()) {
             new \RedirectHelper('/admin/video/source');
         }

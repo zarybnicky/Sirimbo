@@ -18,9 +18,8 @@ class UserSelectHelper
         $this->_type = 'user';
         $this->_users = $users;
         if ($name !== null) {
-            return $this->name = $name;
+            $this->_name = $name;
         }
-        return $this;
     }
 
     public function name($name)

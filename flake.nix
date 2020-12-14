@@ -28,6 +28,23 @@
       inherit (prev.haskell.lib) doJailbreak dontCheck justStaticExecutables
         generateOptparseApplicativeCompletion;
     in {
+      phpstan = final.stdenv.mkDerivation {
+        pname = "phpstan";
+        version = "0.12.59";
+        src = final.fetchurl {
+          url = "https://github.com/phpstan/phpstan/releases/download/0.12.59/phpstan.phar";
+          sha256 = "0lp25d9b7w8lk4ffrd17mjw93i234qnfpwz42k8lww1lrk5abnfa";
+        };
+        phases = [ "installPhase" ];
+        nativeBuildInputs = [ final.makeWrapper ];
+        installPhase = ''
+          mkdir -p $out/bin
+          install -D $src $out/libexec/phpstan/phpstan.phar
+          makeWrapper ${final.php74}/bin/php $out/bin/phpstan \
+          --add-flags "$out/libexec/phpstan/phpstan.phar"
+        '';
+      };
+
       haskell = prev.haskell // {
         packageOverrides = prev.lib.composeExtensions (prev.haskell.packageOverrides or (_: _: {})) (hself: hsuper: {
           typerep-map = doJailbreak (dontCheck (hself.callCabal2nix "typerep-map" typerep-map {}));
@@ -84,7 +101,7 @@
         hsPkgs.cabal-install
         hsPkgs.haskell-language-server
         pkgs.yarn
-        pkgs.php73Packages.phpstan
+        pkgs.phpstan
         pkgs.nodePackages.typescript
         pkgs.sass
       ];

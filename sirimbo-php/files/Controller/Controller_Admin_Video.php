@@ -1,19 +1,15 @@
 <?php
 class Controller_Admin_Video extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('aktuality', P_OWNED);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('aktuality', P_OWNED);
         new \RedirectHelper('/admin/video/orphan');
     }
 
     public function playlist($request)
     {
+        Permissions::checkError('aktuality', P_OWNED);
         if ($request->getId()) {
             $list = DBVideoList::getSingle($request->getId());
             $data = array_map(
@@ -61,6 +57,7 @@ class Controller_Admin_Video extends Controller_Abstract
 
     public function orphan($request)
     {
+        Permissions::checkError('aktuality', P_OWNED);
         $pager = new Paging(new DBVideo(), 'orphan');
         $pager->setItemsPerPage($request->get('c'));
         $pager->setCurrentPage($request->get('p'));
@@ -89,6 +86,7 @@ class Controller_Admin_Video extends Controller_Abstract
 
     public function title($request)
     {
+        Permissions::checkError('aktuality', P_OWNED);
         if ($request->post('video1')) {
             DBParameters::set('title_video1', $request->post('video1'));
             DBParameters::set('title_video2', $request->post('video2'));
@@ -108,6 +106,7 @@ class Controller_Admin_Video extends Controller_Abstract
 
     public function add($request)
     {
+        Permissions::checkError('aktuality', P_OWNED);
         if (!$request->post()) {
             return $this->displayForm($request);
         }
@@ -131,6 +130,7 @@ class Controller_Admin_Video extends Controller_Abstract
 
     public function edit($request)
     {
+        Permissions::checkError('aktuality', P_OWNED);
         $id = $request->getId();
         $data = DBVideo::getSingle($id);
         if (!$id || !$data) {
@@ -162,6 +162,7 @@ class Controller_Admin_Video extends Controller_Abstract
 
     public function remove($request)
     {
+        Permissions::checkError('aktuality', P_OWNED);
         if (!$request->getId()) {
             new \RedirectHelper('/admin/video');
         }

@@ -8,8 +8,6 @@ class ColorSelectHelper
     {
         $this->field = $field;
         $this->value = $value ?: null;
-
-        return $this;
     }
 
     public function __toString()

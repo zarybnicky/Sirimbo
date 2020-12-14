@@ -1,14 +1,9 @@
 <?php
 class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('platby', P_OWNED);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('platby', P_OWNED);
         new \RenderHelper('files/View/Admin/Platby/StructureGroupOverview.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Kategorie plateb',
@@ -36,6 +31,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
 
     public function add($request)
     {
+        Permissions::checkError('platby', P_OWNED);
         if (!$request->post()) {
             $request->post('base', 1);
             return $this->displayForm($request, 'add', 0);
@@ -65,6 +61,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
 
     public function edit($request)
     {
+        Permissions::checkError('platby', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Kategorie s takovým ID neexistuje');
             new \RedirectHelper($request->post('returnURI') ?: '/admin/platby/structure/group');
@@ -128,6 +125,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
 
     public function remove($request)
     {
+        Permissions::checkError('platby', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Kategorie s takovým ID neexistuje');
             new \RedirectHelper($request->post('returnURI') ?: '/admin/platby/structure/group');

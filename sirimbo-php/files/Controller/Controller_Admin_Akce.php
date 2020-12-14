@@ -1,14 +1,9 @@
 <?php
 class Controller_Admin_Akce extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('akce', P_OWNED);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('akce', P_OWNED);
         if ($request->post('action') == 'save') {
             $this->processSave($request);
             new \RedirectHelper('/admin/akce');
@@ -44,6 +39,7 @@ class Controller_Admin_Akce extends Controller_Abstract
 
     public function add($request)
     {
+        Permissions::checkError('akce', P_OWNED);
         if (!$request->post()) {
             return $this->displayForm($request);
         }
@@ -77,6 +73,7 @@ class Controller_Admin_Akce extends Controller_Abstract
 
     public function edit($request)
     {
+        Permissions::checkError('akce', P_OWNED);
         if (!($id = $request->getID())) {
             new \MessageHelper('warning', 'Akce s takovým ID neexistuje');
             new \RedirectHelper('/admin/akce');
@@ -121,6 +118,7 @@ class Controller_Admin_Akce extends Controller_Abstract
 
     public function remove($request)
     {
+        Permissions::checkError('akce', P_OWNED);
         if (!$request->getId()) {
             new \RedirectHelper('/admin/akce');
         }

@@ -22,8 +22,6 @@ class TextHelper
         $this->placeholder = null;
         $this->readonly = false;
         $this->disabled = false;
-
-        return $this;
     }
 
     public function size($size)

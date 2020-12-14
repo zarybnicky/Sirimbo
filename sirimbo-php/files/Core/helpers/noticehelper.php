@@ -8,7 +8,6 @@ class NoticeHelper
     {
         $this->type = $type;
         $this->text = $text;
-        return $this;
     }
 
     public function __toString()

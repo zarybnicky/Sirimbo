@@ -74,17 +74,13 @@ class Date
                 return $this->sqlFormat;
             case Date::FORMAT_SIMPLE:
                 return $this->day . '.' . $this->month . '.' . $this->year;
-                break;
             case Date::FORMAT_SIMPLE_SPACED:
                 return $this->day . '. ' . $this->month . '. ' . $this->year;
-                break;
             case Date::FORMAT_SIMPLIFIED:
                 return ((int) $this->day) . '. ' .
                        ((int) $this->month) . '. ' . $this->year;
-                break;
             case Date::FORMAT_SLASHED:
                 return $this->day . '/' . $this->month . '/' . $this->year;
-                break;
             default:
                 return '';
         }

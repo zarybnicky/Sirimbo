@@ -3,14 +3,9 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
 {
     const TEMP_DIR = './upload/csv/';
 
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('platby', P_OWNED);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('platby', P_OWNED);
         if ($request->post() && $request->post('action') == 'upload') {
             $this->processUpload($request);
         }
@@ -35,6 +30,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
     }
     public function select_columns($request)
     {
+        Permissions::checkError('platby', P_OWNED);
         $path = self::TEMP_DIR . str_replace('../', '', $request->get('path'));
 
         if ($request->post()) {

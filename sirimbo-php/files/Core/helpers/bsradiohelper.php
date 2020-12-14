@@ -20,8 +20,6 @@ class BsRadioHelper
         $this->readonly = false;
 
         $this->label = null;
-
-        return $this;
     }
 
     public function set($val)

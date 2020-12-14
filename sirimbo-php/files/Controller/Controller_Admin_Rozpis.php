@@ -1,14 +1,9 @@
 <?php
 class Controller_Admin_Rozpis extends Controller_Abstract
 {
-    public function __construct($request)
-    {
-        parent::__construct($request);
-        Permissions::checkError('rozpis', P_OWNED);
-    }
-
     public function view($request)
     {
+        Permissions::checkError('rozpis', P_OWNED);
         $data = Permissions::check('rozpis', P_ADMIN)
             ? DBRozpis::getRozpis(true)
             : DBRozpis::getRozpisyByTrener(Session::getUserID(), true);
@@ -57,6 +52,7 @@ class Controller_Admin_Rozpis extends Controller_Abstract
 
     public function add($request)
     {
+        Permissions::checkError('rozpis', P_OWNED);
         if (!$request->post()) {
             return $this->displayForm($request);
         }
@@ -81,6 +77,7 @@ class Controller_Admin_Rozpis extends Controller_Abstract
 
     public function edit($request)
     {
+        Permissions::checkError('rozpis', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Rozpis s takovým ID neexistuje');
             new \RedirectHelper('/admin/rozpis');
@@ -115,6 +112,7 @@ class Controller_Admin_Rozpis extends Controller_Abstract
 
     public function duplicate($request)
     {
+        Permissions::checkError('rozpis', P_OWNED);
         $oldId = $request->getId();
         $data = DBRozpis::getSingleRozpis($oldId);
         $items = DBRozpis::getRozpisItem($oldId);
@@ -140,6 +138,7 @@ class Controller_Admin_Rozpis extends Controller_Abstract
 
     public function remove($request)
     {
+        Permissions::checkError('rozpis', P_OWNED);
         $id = $request->getId();
         $trener = DBRozpis::getRozpisTrener($id);
 

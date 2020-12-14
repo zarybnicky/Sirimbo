@@ -14,7 +14,7 @@ class SubmitHelper
         $this->value = null;
         $this->style = null;
         $this->cls = 'btn btn-primary';
-        return $this;
+
     }
 
     public function name($name)
