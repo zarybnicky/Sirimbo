@@ -1,5 +1,5 @@
 <?php
-class Controller_Member_Clenove extends Controller_Abstract
+class Controller_Member_Clenove
 {
     public function view($request)
     {

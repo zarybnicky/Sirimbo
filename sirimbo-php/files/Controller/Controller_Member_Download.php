@@ -1,5 +1,5 @@
 <?php
-class Controller_Member_Download extends Controller_Abstract
+class Controller_Member_Download
 {
     public function view($request)
     {

@@ -1,5 +1,5 @@
 <?php
-class Controller_Admin_Users extends Controller_Abstract
+class Controller_Admin_Users
 {
     public function view($request)
     {

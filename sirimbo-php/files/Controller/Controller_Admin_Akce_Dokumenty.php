@@ -1,5 +1,5 @@
 <?php
-class Controller_Admin_Akce_Dokumenty extends Controller_Abstract
+class Controller_Admin_Akce_Dokumenty
 {
     public function view($request)
     {

@@ -1,5 +1,5 @@
 <?php
-class Controller_Admin_Pary extends Controller_Abstract
+class Controller_Admin_Pary
 {
     public function view($request)
     {

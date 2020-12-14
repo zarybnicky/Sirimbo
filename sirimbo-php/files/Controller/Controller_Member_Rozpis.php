@@ -1,5 +1,5 @@
 <?php
-class Controller_Member_Rozpis extends Controller_Abstract
+class Controller_Member_Rozpis
 {
     public function view($request)
     {

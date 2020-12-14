@@ -1,5 +1,5 @@
 <?php
-class Controller_Admin_Galerie_File extends Controller_Abstract
+class Controller_Admin_Galerie_File
 {
     public function view($request)
     {

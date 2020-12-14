@@ -1,5 +1,5 @@
 <?php
-class Controller_Admin_Permissions extends Controller_Abstract
+class Controller_Admin_Permissions
 {
     public function view($request)
     {

@@ -1,5 +1,5 @@
 <?php
-class Controller_Kontakt extends Controller_Abstract
+class Controller_Kontakt
 {
     public function view($request)
     {

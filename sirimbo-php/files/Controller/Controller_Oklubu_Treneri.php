@@ -1,5 +1,5 @@
 <?php
-class Controller_Oklubu_Treneri extends Controller_Abstract
+class Controller_Oklubu_Treneri
 {
     public function view($request)
     {

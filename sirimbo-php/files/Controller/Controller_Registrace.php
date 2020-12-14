@@ -1,5 +1,5 @@
 <?php
-class Controller_Registrace extends Controller_Abstract
+class Controller_Registrace
 {
     public function view($request)
     {

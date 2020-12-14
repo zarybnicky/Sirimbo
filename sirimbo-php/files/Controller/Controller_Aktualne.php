@@ -1,5 +1,5 @@
 <?php
-class Controller_Aktualne extends Controller_Abstract
+class Controller_Aktualne
 {
     public function view($request)
     {

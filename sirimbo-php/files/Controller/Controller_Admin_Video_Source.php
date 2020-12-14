@@ -1,5 +1,5 @@
 <?php
-class Controller_Admin_Video_Source extends Controller_Abstract
+class Controller_Admin_Video_Source
 {
     public function view($request)
     {

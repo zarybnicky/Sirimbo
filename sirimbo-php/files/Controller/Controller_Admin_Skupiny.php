@@ -1,5 +1,5 @@
 <?php
-class Controller_Admin_Skupiny extends Controller_Abstract
+class Controller_Admin_Skupiny
 {
     public function view($request)
     {

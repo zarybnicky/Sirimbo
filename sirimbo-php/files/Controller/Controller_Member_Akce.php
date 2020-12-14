@@ -1,5 +1,5 @@
 <?php
-class Controller_Member_Akce extends Controller_Abstract
+class Controller_Member_Akce
 {
     public function view($request)
     {

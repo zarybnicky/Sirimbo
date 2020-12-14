@@ -1,5 +1,5 @@
 <?php
-class Controller_Admin_Nastenka extends Controller_Abstract
+class Controller_Admin_Nastenka
 {
     public function view($request)
     {

@@ -26,13 +26,6 @@ class Dispatcher
     public function dispatch($request)
     {
         $controller = $this->getController($request);
-
-        if (!($controller instanceof Controller_Interface)) {
-            throw new NotFoundRightException(
-                'Class "' . $controller . '" is not an instance of Controller_Interface'
-            );
-        }
-
         $action = $request->getAction();
         if (method_exists($controller, $action) && !in_array($action, ['login'])) {
             $controller->$action($request);

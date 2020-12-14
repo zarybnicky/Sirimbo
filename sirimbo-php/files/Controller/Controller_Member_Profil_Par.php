@@ -1,5 +1,5 @@
 _<?php
-class Controller_Member_Profil_Par extends Controller_Abstract
+class Controller_Member_Profil_Par
 {
     const AMEND_Z = 0.2;
     const AMEND_H = 0.5;

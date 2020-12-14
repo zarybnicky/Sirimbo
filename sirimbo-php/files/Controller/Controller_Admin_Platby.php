@@ -1,5 +1,5 @@
 <?php
-class Controller_Admin_Platby extends Controller_Abstract
+class Controller_Admin_Platby
 {
     public function view($request)
     {

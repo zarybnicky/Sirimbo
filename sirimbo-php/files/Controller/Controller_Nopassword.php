@@ -1,5 +1,5 @@
 <?php
-class Controller_Nopassword extends Controller_Abstract
+class Controller_Nopassword
 {
     public function view($request)
     {

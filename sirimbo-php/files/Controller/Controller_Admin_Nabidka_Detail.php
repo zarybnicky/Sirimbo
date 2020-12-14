@@ -1,5 +1,5 @@
 <?php
-class Controller_Admin_Nabidka_Detail extends Controller_Abstract
+class Controller_Admin_Nabidka_Detail
 {
     public function view($request)
     {

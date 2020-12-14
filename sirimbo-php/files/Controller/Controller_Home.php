@@ -1,5 +1,5 @@
 <?php
-class Controller_Home extends Controller_Abstract
+class Controller_Home
 {
     public function view($request)
     {
