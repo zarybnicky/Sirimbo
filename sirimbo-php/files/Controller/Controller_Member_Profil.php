@@ -56,21 +56,21 @@ class Controller_Member_Profil
     {
         new \RenderHelper('files/View/Member/Profil/PersonalData.inc', [
             'header' => 'Osobní údaje',
-            'lock' => $_POST['lock'] ?? null,
-            'jmeno' => $_POST['jmeno'] ?? null,
-            'prijmeni' => $_POST['prijmeni'] ?? null,
-            'pohlavi' => $_POST['pohlavi'] ?? null,
-            'email' => $_POST['email'] ?? null,
-            'telefon' => $_POST['telefon'] ?? null,
-            'narozeni' => $_POST['narozeni'] ?? null,
-            'street' => $_POST['street'] ?? null,
-            'popisne' => $_POST['popisne'] ?? null,
-            'orientacni' => $_POST['orientacni'] ?? null,
-            'city' => $_POST['city'] ?? null,
-            'district' => $_POST['district'] ?? null,
-            'postal' => $_POST['postal'] ?? null,
-            'nationality' => $_POST['nationality'] ?? null,
-            'dancer' => $_POST['dancer'] ?? null,
+            'lock' => $_POST['lock'],
+            'jmeno' => $_POST['jmeno'],
+            'prijmeni' => $_POST['prijmeni'],
+            'pohlavi' => $_POST['pohlavi'],
+            'email' => $_POST['email'],
+            'telefon' => $_POST['telefon'],
+            'narozeni' => $_POST['narozeni'],
+            'street' => $_POST['street'],
+            'popisne' => $_POST['popisne'],
+            'orientacni' => $_POST['orientacni'],
+            'city' => $_POST['city'],
+            'district' => $_POST['district'],
+            'postal' => $_POST['postal'],
+            'nationality' => $_POST['nationality'],
+            'dancer' => $_POST['dancer'],
             'returnURI' => $request->getReferer() ?: '/member',
         ]);
     }
@@ -78,7 +78,7 @@ class Controller_Member_Profil
     public function gdpr($request)
     {
         \Permissions::checkError('nastenka', P_VIEW);
-        if ($_POST['action'] ?? null !== 'gdpr') {
+        if ($_POST['action'] !== 'gdpr') {
             return new \RenderHelper('files/View/Member/Profil/Gdpr.inc', [
                 'header' => 'Souhlas se zpracováním osobních údajů',
             ]);
@@ -91,23 +91,23 @@ class Controller_Member_Profil
     {
         \Permissions::checkError('nastenka', P_VIEW);
         $data = \Session::getUserData();
-        $narozeni = new \Date($_POST['narozeni'] ?? null);
+        $narozeni = new \Date($_POST['narozeni']);
 
-        if (!$request->post()) {
-            $request->post('jmeno', $data->getName());
-            $request->post('prijmeni', $data->getSurname());
-            $request->post('pohlavi', $data->getGender());
-            $request->post('narozeni', $data->getBirthDate());
-            $request->post('email', $data->getEmail());
-            $request->post('telefon', $data->getPhone());
-            $request->post('street', $data->getStreet());
-            $request->post('popisne', $data->getConscriptionNumber());
-            $request->post('orientacni', $data->getOrientationNumber());
-            $request->post('city', $data->getCity());
-            $request->post('district', $data->getDistrict());
-            $request->post('postal', $data->getPostalCode());
-            $request->post('nationality', $data->getNationality());
-            $request->post('dancer', $data->getDancer());
+        if (!$_POST) {
+            $_POST['jmeno'] = $data->getName();
+            $_POST['prijmeni'] = $data->getSurname();
+            $_POST['pohlavi'] = $data->getGender();
+            $_POST['narozeni'] = $data->getBirthDate();
+            $_POST['email'] = $data->getEmail();
+            $_POST['telefon'] = $data->getPhone();
+            $_POST['street'] = $data->getStreet();
+            $_POST['popisne'] = $data->getConscriptionNumber();
+            $_POST['orientacni'] = $data->getOrientationNumber();
+            $_POST['city'] = $data->getCity();
+            $_POST['district'] = $data->getDistrict();
+            $_POST['postal'] = $data->getPostalCode();
+            $_POST['nationality'] = $data->getNationality();
+            $_POST['dancer'] = $data->getDancer();
             return $this->renderPersonalForm($request);
         }
 
@@ -119,26 +119,26 @@ class Controller_Member_Profil
 
         \DBUser::setUserData(
             \Session::getUserID(),
-            $_POST['jmeno'] ?? null,
-            $_POST['prijmeni'] ?? null,
-            $_POST['pohlavi'] ?? null,
-            $_POST['email'] ?? null,
-            $_POST['telefon'] ?? null,
+            $_POST['jmeno'],
+            $_POST['prijmeni'],
+            $_POST['pohlavi'],
+            $_POST['email'],
+            $_POST['telefon'],
             (string) $narozeni,
             $data->getNotes(),
-            $_POST['street'] ?? null,
-            $_POST['popisne'] ?? null,
-            $_POST['orientacni'] ?? null,
-            $_POST['district'] ?? null,
-            $_POST['city'] ?? null,
-            $_POST['postal'] ?? null,
-            $_POST['nationality'] ?? null,
+            $_POST['street'],
+            $_POST['popisne'],
+            $_POST['orientacni'],
+            $_POST['district'],
+            $_POST['city'],
+            $_POST['postal'],
+            $_POST['nationality'],
             $data->getPermissionGroup(),
             $data->getTrainingGroup(),
             $data->getLocked() ? '1' : '0',
             $data->getBanned() ? '1' : '0',
             $data->getSystem() ? '1' : '0',
-            $_POST['dancer'] ?? null ? '1' : '0',
+            $_POST['dancer'] ? '1' : '0',
             $data->getTeacher() ? '1' : '0',
             $data->getMemberSince(),
             $data->getMemberUntil(),
@@ -150,7 +150,7 @@ class Controller_Member_Profil
     public function heslo($request)
     {
         \Permissions::checkError('nastenka', P_VIEW);
-        if (!$request->post()) {
+        if (!$_POST) {
             return new \RenderHelper('files/View/Member/Profil/NewPassword.inc', [
                 'header' => 'Změna hesla'
             ]);
@@ -164,7 +164,7 @@ class Controller_Member_Profil
         }
         \DBUser::setPassword(
             \Session::getUserID(),
-            \User::crypt($_POST['newpass'] ?? null)
+            \User::crypt($_POST['newpass'])
         );
         new \RedirectHelper('/member/profil');
     }
@@ -174,22 +174,22 @@ class Controller_Member_Profil
         $f = new \Form();
         if ($action == 'edit') {
             $f->checkDate((string) $narozeni, 'Neplatné datum narození', 'narozeni');
-            $f->checkInArray($_POST['pohlavi'] ?? null, ['m', 'f'], 'Neplatné pohlaví', 'pohlavi');
-            $f->checkEmail($_POST['email'] ?? null, 'Neplatný formát emailu', 'email');
-            $f->checkPhone($_POST['telefon'] ?? null, 'Neplatný formát telefoního čísla', 'telefon');
-            $f->checkNumeric($_POST['nationality'] ?? null, 'Neplatný formát národnosti', 'nationality');
-            $f->checkNotEmpty($_POST['city'] ?? null, 'Zadejte město bydliště', 'city');
+            $f->checkInArray($_POST['pohlavi'], ['m', 'f'], 'Neplatné pohlaví', 'pohlavi');
+            $f->checkEmail($_POST['email'], 'Neplatný formát emailu', 'email');
+            $f->checkPhone($_POST['telefon'], 'Neplatný formát telefoního čísla', 'telefon');
+            $f->checkNumeric($_POST['nationality'], 'Neplatný formát národnosti', 'nationality');
+            $f->checkNotEmpty($_POST['city'], 'Zadejte město bydliště', 'city');
             $f->checkNumeric(
-                str_replace(' ', '', $_POST['postal'] ?? null),
+                str_replace(' ', '', $_POST['postal']),
                 'Zadejte číselné PSČ',
                 'postal'
             );
         } elseif ($action == 'heslo') {
-            $f->checkPassword($_POST['newpass'] ?? null, 'Neplatný formát hesla', 'newpass');
+            $f->checkPassword($_POST['newpass'], 'Neplatný formát hesla', 'newpass');
             $f->checkBool(
                 \DBUser::checkUser(
                     \Session::getUserData()->getLogin(),
-                    \User::crypt($_POST['oldpass'] ?? null)
+                    \User::crypt($_POST['oldpass'])
                 ),
                 'Staré heslo je špatně',
                 'oldpass'

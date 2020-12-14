@@ -4,10 +4,10 @@ class Controller_Admin_Galerie
     public function view($request)
     {
         \Permissions::checkError('galerie', P_OWNED);
-        if ($request->post('action') == 'save') {
+        if ($_POST['action'] == 'save') {
             $this->_processSave($request);
         }
-        if ($request->post('action') == 'scan') {
+        if ($_POST['action'] == 'scan') {
             $this->_scan();
         }
 
@@ -184,7 +184,7 @@ class Controller_Admin_Galerie
     {
         $items = \DBGalerie::getDirs();
         foreach ($items as $item) {
-            if ((bool) $request->post($item['gd_id']) === (bool) $item['gd_hidden']) {
+            if ((bool) $_POST[$item['gd_id']] === (bool) $item['gd_hidden']) {
                 continue;
             }
             \DBGalerie::editDir(
@@ -192,7 +192,7 @@ class Controller_Admin_Galerie
                 $item['gd_name'],
                 $item['gd_id_rodic'],
                 $item['gd_level'],
-                $request->post($item['gd_id']) ? '1' : '0',
+                $_POST[$item['gd_id']] ? '1' : '0',
                 $item['gd_path']
             );
         }

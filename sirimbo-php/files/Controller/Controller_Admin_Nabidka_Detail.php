@@ -18,7 +18,7 @@ class Controller_Admin_Nabidka_Detail
         $obsazeno = \DBNabidka::getNabidkaItemLessons($id);
         $users = DBPary::getPartners();
 
-        if (!$request->post()) {
+        if (!$_POST) {
             $userSelect = (new UserSelectHelper($users))->type('par')->idVar('p_id');
 
             $items = array_map(fn($item) => [
@@ -57,11 +57,8 @@ class Controller_Admin_Nabidka_Detail
             ]);
         }
 
-        if ($request->post("remove") > 0) {
-            \DBNabidka::removeNabidkaItem(
-                $id,
-                $request->post($request->post("remove") . "-partner")
-            );
+        if ($_POST["remove"] > 0) {
+            \DBNabidka::removeNabidkaItem($id, $_POST[$_POST["remove"] . "-partner"]);
             $items = \DBNabidka::getNabidkaItem($id);
             $obsazeno = \DBNabidka::getNabidkaItemLessons($id);
         }
@@ -70,9 +67,9 @@ class Controller_Admin_Nabidka_Detail
 
         foreach ($items as $item) {
             $partner = $item["ni_partner"];
-            $partnerNew = $request->post($item["ni_id"] . "-partner");
+            $partnerNew = $_POST[$item["ni_id"] . "-partner"];
             $count = $item['ni_pocet_hod'];
-            $countNew = $request->post($item["ni_id"] . "-hodiny");
+            $countNew = $_POST[$item["ni_id"] . "-hodiny"];
 
             if ($partner != $partnerNew || $count != $countNew) {
                 if (0 < $maxLessons && $maxLessons < $countNew) {
@@ -88,25 +85,20 @@ class Controller_Admin_Nabidka_Detail
         $items = \DBNabidka::getNabidkaItem($id);
         $obsazeno = \DBNabidka::getNabidkaItemLessons($id);
 
-        if (is_numeric($request->post("add_hodiny")) &&
-            is_numeric($request->post("add_partner")) &&
-            $request->post('add_partner')
+        if (is_numeric($_POST["add_hodiny"]) &&
+            is_numeric($_POST["add_partner"]) &&
+            $_POST['add_partner']
         ) {
-            $partner = $request->post('add_partner');
-            $count = $request->post("add_hodiny");
-            $request->post('add_partner', null);
-            $request->post('add_hodiny', null);
+            $partner = $_POST['add_partner'];
+            $count = $_POST["add_hodiny"];
+            unset($_POST['add_partner']);
+            unset($_POST['add_hodiny']);
 
             if (0 < $maxLessons && $maxLessons < $count) {
                 $count = $maxLessons;
             }
 
-            \DBNabidka::addNabidkaItemLessons(
-                $request->post("add_partner"),
-                $id,
-                $count
-            );
-
+            \DBNabidka::addNabidkaItemLessons($_POST["add_partner"], $id, $count);
             $items = \DBNabidka::getNabidkaItem($id);
             $obsazeno = \DBNabidka::getNabidkaItemLessons($id);
         }

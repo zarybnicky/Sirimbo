@@ -4,7 +4,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
     public function view($request)
     {
         \Permissions::checkError('platby', P_OWNED);
-        if ($request->post()) {
+        if ($_POST) {
             $this->processPost($request);
         }
         $remaining = \DBPlatbyRaw::getUnsorted();
@@ -135,14 +135,14 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
 
     private function processPost($request)
     {
-        $id = $request->post('id');
+        $id = $_POST['id'];
         if (!$id || !($current = \DBPlatbyRaw::getSingle($id))) {
             return new \MessageHelper('warning', 'Zadaná platba neexistuje.');
         } elseif ($current['pr_sorted'] && ($item = \DBPlatbyItem::getSingleByRawId($id))) {
             return new \MessageHelper('info', 'Zadaná platba už byla zařazená.');
         }
 
-        switch ($request->post('action')) {
+        switch ($_POST['action']) {
             case 'confirm':
                 if (!is_object($item = $this->getFromPost($request))) {
                     return new \MessageHelper('warning', $item);

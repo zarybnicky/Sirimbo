@@ -14,16 +14,16 @@ class Controller_Admin_Akce_Dokumenty
         }
         $documents = array_filter(explode(',', $akce["a_dokumenty"]));
 
-        if ($request->post()) {
+        if ($_POST) {
             $changed = false;
-            if ($request->post("remove") !== null) {
-                unset($documents[array_search($request->post('remove'), $documents)]);
+            if ($_POST["remove"] !== null) {
+                unset($documents[array_search($_POST['remove'], $documents)]);
                 $documents = array_values($documents);
                 $changed = true;
             }
-            if ($request->post("add-id") && \DBDokumenty::getSingleDokument($request->post("add-id"))) {
-                $documents[] = $request->post("add-id");
-                $request->post('add-id', 0);
+            if ($_POST["add-id"] && \DBDokumenty::getSingleDokument($_POST["add-id"])) {
+                $documents[] = $_POST["add-id"];
+                $_POST['add-id'] = 0;
                 $changed = true;
             }
             if ($changed) {

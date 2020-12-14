@@ -59,8 +59,8 @@ class Controller_Admin_Video
     {
         \Permissions::checkError('aktuality', P_OWNED);
         $pager = new \Paging(new \DBVideo(), 'orphan');
-        $pager->setItemsPerPage($request->get('c'));
-        $pager->setCurrentPage($request->get('p'));
+        $pager->setItemsPerPage($_GET['c']);
+        $pager->setCurrentPage($_GET['p']);
         $data = array_map(
             function ($item) {
                 $parts = explode('?', $item['v_uri']);
@@ -80,18 +80,18 @@ class Controller_Admin_Video
             'header' => 'Správa videí',
             'data' => $data,
             'action' => 'orphan',
-            'navigation' => $pager->getNavigation($request->get())
+            'navigation' => $pager->getNavigation()
         ]);
     }
 
     public function title($request)
     {
         \Permissions::checkError('aktuality', P_OWNED);
-        if ($request->post('video1')) {
-            \DBParameters::set('title_video1', $request->post('video1'));
-            \DBParameters::set('title_video2', $request->post('video2'));
-            \DBParameters::set('title_video3', $request->post('video3'));
-            \DBParameters::set('title_video4', $request->post('video4'));
+        if ($_POST['video1']) {
+            \DBParameters::set('title_video1', $_POST['video1']);
+            \DBParameters::set('title_video2', $_POST['video2']);
+            \DBParameters::set('title_video3', $_POST['video3']);
+            \DBParameters::set('title_video4', $_POST['video4']);
             new \RedirectHelper('/admin/video/title');
         }
         $select = (new \SelectHelper())->optionsAssoc(\DBVideo::getAll(), 'v_id', 'v_title');
@@ -107,7 +107,7 @@ class Controller_Admin_Video
     public function add($request)
     {
         \Permissions::checkError('aktuality', P_OWNED);
-        if (!$request->post()) {
+        if (!$_POST) {
             return $this->displayForm($request);
         }
 
@@ -118,11 +118,11 @@ class Controller_Admin_Video
         }
 
         \DBVideo::add(
-            $request->post('uri'),
-            $request->post('title'),
-            $request->post('author'),
-            $request->post('desc'),
-            $request->post('playlist') ?: null
+            $_POST['uri'],
+            $_POST['title'],
+            $_POST['author'],
+            $_POST['desc'],
+            $_POST['playlist'] ?: null
         );
 
         new \RedirectHelper('/admin/video');
@@ -138,7 +138,7 @@ class Controller_Admin_Video
             new \RedirectHelper('/admin/aktuality');
         }
 
-        if (!$request->post()) {
+        if (!$_POST) {
             return $this->displayForm($request, $data);
         }
 
@@ -150,11 +150,11 @@ class Controller_Admin_Video
 
         \DBVideo::edit(
             $id,
-            $request->post('uri'),
-            $request->post('title'),
-            $request->post('author'),
-            $request->post('desc'),
-            $request->post('playlist') ?: null
+            $_POST['uri'],
+            $_POST['title'],
+            $_POST['author'],
+            $_POST['desc'],
+            $_POST['playlist'] ?: null
         );
 
         new \RedirectHelper('/admin/video');
@@ -167,7 +167,7 @@ class Controller_Admin_Video
             new \RedirectHelper('/admin/video');
         }
 
-        if ($request->post('action') == 'confirm') {
+        if ($_POST['action'] == 'confirm') {
             \DBVideo::remove($request->getId());
             new \MessageHelper('info', 'Video odebráno');
             new \RedirectHelper('/admin/video');
@@ -189,11 +189,11 @@ class Controller_Admin_Video
             'subheader' => $request->getAction() == 'add' ? 'Přidat video' : 'Upravit video',
             'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit',
             'id' => $data ? $data['v_id'] : null,
-            'uri' => $request->post('uri') ?: ($data ? $data['v_uri'] : ''),
-            'title' => $request->post('title') ?: ($data ? $data['v_title'] : ''),
-            'author' => $request->post('author') ?: ($data ? $data['v_author'] : ''),
-            'desc' => $request->post('desc') ?: ($data ? $data['v_description'] : ''),
-            'playlist' => $request->post('playlist') ?: ($data ? ($data['v_playlist'] ?: '') : '')
+            'uri' => $_POST['uri'] ?: ($data ? $data['v_uri'] : ''),
+            'title' => $_POST['title'] ?: ($data ? $data['v_title'] : ''),
+            'author' => $_POST['author'] ?: ($data ? $data['v_author'] : ''),
+            'desc' => $_POST['desc'] ?: ($data ? $data['v_description'] : ''),
+            'playlist' => $_POST['playlist'] ?: ($data ? ($data['v_playlist'] ?: '') : '')
         ]);
     }
 
@@ -201,7 +201,7 @@ class Controller_Admin_Video
     {
         $form = new \Form();
         $form->checkNotEmpty(
-            $request->post('uri'),
+            $_POST['uri'],
             'Zadejce prosím ID videa',
             'uri'
         );

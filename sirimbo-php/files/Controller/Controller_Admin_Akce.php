@@ -4,7 +4,7 @@ class Controller_Admin_Akce
     public function view($request)
     {
         \Permissions::checkError('akce', P_OWNED);
-        if ($request->post('action') == 'save') {
+        if ($_POST['action'] == 'save') {
             $this->processSave($request);
             new \RedirectHelper('/admin/akce');
         }
@@ -40,7 +40,7 @@ class Controller_Admin_Akce
     public function add($request)
     {
         \Permissions::checkError('akce', P_OWNED);
-        if (!$request->post()) {
+        if (!$_POST) {
             return $this->displayForm($request);
         }
 
@@ -56,15 +56,15 @@ class Controller_Admin_Akce
             $do = $od;
         }
         \DBAkce::addAkce(
-            $request->post('jmeno'),
-            $request->post('kde'),
-            $request->post('info'),
+            $_POST['jmeno'],
+            $_POST['kde'],
+            $_POST['info'],
             (string) $od,
             (string) $do,
-            $request->post('kapacita'),
+            $_POST['kapacita'],
             '',
-            ($request->post('lock') == 'lock') ? 1 : 0,
-            $request->post('visible') ? '1' : '0'
+            ($_POST['lock'] == 'lock') ? 1 : 0,
+            $_POST['visible'] ? '1' : '0'
         );
 
         new \MessageHelper('success', 'Akce přidána');
@@ -83,7 +83,7 @@ class Controller_Admin_Akce
             new \RedirectHelper('/admin/akce');
         }
 
-        if (!$request->post()) {
+        if (!$_POST) {
             return $this->displayForm($request, $data);
         }
 
@@ -101,15 +101,15 @@ class Controller_Admin_Akce
 
         \DBAkce::editAkce(
             $id,
-            $request->post('jmeno'),
-            $request->post('kde'),
-            $request->post('info'),
+            $_POST['jmeno'],
+            $_POST['kde'],
+            $_POST['info'],
             (string) $od,
             (string) $do,
-            $request->post('kapacita'),
+            $_POST['kapacita'],
             $data['a_dokumenty'],
-            ($request->post('lock') == 'lock') ? 1 : 0,
-            $request->post('visible') ? '1' : '0'
+            ($_POST['lock'] == 'lock') ? 1 : 0,
+            $_POST['visible'] ? '1' : '0'
         );
 
         new \MessageHelper('success', 'Akce upravena');
@@ -123,7 +123,7 @@ class Controller_Admin_Akce
             new \RedirectHelper('/admin/akce');
         }
         $id = $request->getId();
-        if ($request->post('action') == 'confirm') {
+        if ($_POST['action'] == 'confirm') {
             \DBAkce::removeAkce($id);
             new \MessageHelper('success', 'Akce odebrány');
             return new \RedirectHelper('/admin/akce');
@@ -165,14 +165,14 @@ class Controller_Admin_Akce
             'dokumenty' => $dokumenty,
             'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit',
             'id' => $data ? $data['a_id'] : null,
-            'jmeno' => $request->post('jmeno') ?: ($data ? $data['a_jmeno'] : ''),
-            'kde' => $request->post('kde') ?: ($data ? $data['a_kde'] : ''),
-            'info' => $request->post('info') ?: ($data ? $data['a_info'] : ''),
-            'od' => $request->post('od') ?: ($data ? $data['a_od'] : ''),
-            'do' => $request->post('do') ?: ($data ? $data['a_do'] : ''),
-            'kapacita' => $request->post('kapacita') ?: ($data ? $data['a_kapacita'] : ''),
-            'lock' => $request->post('lock') ?: ($data ? $data['a_lock'] : ''),
-            'visible' => $request->post('visible') ?: ($data ? $data['a_visible'] : '')
+            'jmeno' => $_POST['jmeno'] ?: ($data ? $data['a_jmeno'] : ''),
+            'kde' => $_POST['kde'] ?: ($data ? $data['a_kde'] : ''),
+            'info' => $_POST['info'] ?: ($data ? $data['a_info'] : ''),
+            'od' => $_POST['od'] ?: ($data ? $data['a_od'] : ''),
+            'do' => $_POST['do'] ?: ($data ? $data['a_do'] : ''),
+            'kapacita' => $_POST['kapacita'] ?: ($data ? $data['a_kapacita'] : ''),
+            'lock' => $_POST['lock'] ?: ($data ? $data['a_lock'] : ''),
+            'visible' => $_POST['visible'] ?: ($data ? $data['a_visible'] : '')
         ]);
     }
 
@@ -180,7 +180,7 @@ class Controller_Admin_Akce
     {
         $items = \DBAkce::getAkce();
         foreach ($items as $item) {
-            if ((bool) $request->post($item['a_id']) === (bool) $item['a_visible']) {
+            if ((bool) $_POST[$item['a_id']] === (bool) $item['a_visible']) {
                 continue;
             }
             \DBAkce::editAkce(
@@ -193,7 +193,7 @@ class Controller_Admin_Akce
                 $item['a_kapacita'],
                 $item['a_dokumenty'],
                 $item['a_lock'],
-                $request->post($item['a_id']) ? '1' : '0'
+                $_POST[$item['a_id']] ? '1' : '0'
             );
         }
     }
@@ -208,7 +208,7 @@ class Controller_Admin_Akce
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $form->checkDate((string) $do, 'Špatný formát data ("Do")', 'do');
         }
-        $form->checkNumeric($request->post('kapacita'), 'Kapacita musí být zadána číselně', 'kapacita');
+        $form->checkNumeric($_POST['kapacita'], 'Kapacita musí být zadána číselně', 'kapacita');
 
         return $form;
     }

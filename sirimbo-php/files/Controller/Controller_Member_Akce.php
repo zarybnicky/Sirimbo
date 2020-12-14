@@ -14,22 +14,22 @@ class Controller_Member_Akce
                 'data' => $this->_getRenderData($data)
             ]);
         }
-        if ($request->post('id')
-            && ($data = \DBAkce::getSingleAkce($request->post('id')))
+        if ($_POST['id']
+            && ($data = \DBAkce::getSingleAkce($_POST['id']))
         ) {
-            $form = $this->checkData($request, $data, $request->post('action'));
+            $form = $this->checkData($request, $data, $_POST['action']);
             if (!$form->isValid()) {
                 new \MessageHelper('warning', $form->getMessages());
-            } elseif ($request->post('action') == 'signup') {
+            } elseif ($_POST['action'] == 'signup') {
                 \DBAkce::signUp(
                     Session::getUserID(),
-                    $request->post('id'),
+                    $_POST['id'],
                     Session::getUserData()->getBirthYear()
                 );
-            } elseif ($request->post('action') == 'signout') {
+            } elseif ($_POST['action'] == 'signout') {
                 \DBAkce::signOut(
                     Session::getUserID(),
-                    $request->post('id')
+                    $_POST['id']
                 );
             }
         }
@@ -84,7 +84,7 @@ class Controller_Member_Akce
         $f = new \Form();
         $f->checkBool(!$data['a_lock'], 'Tato akce je zamčená', '');
         $f->checkInArray($action, ['signup', 'signout'], 'Špatná akce', '');
-        $f->checkNumeric($request->post('id'), 'Špatné ID', '');
+        $f->checkNumeric($_POST['id'], 'Špatné ID', '');
         return $f;
     }
 }

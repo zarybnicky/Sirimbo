@@ -4,11 +4,11 @@ class Controller_Member_Download
     public function view($request)
     {
         \Permissions::checkError('dokumenty', P_VIEW);
-        if (!$request->get('id')) {
+        if (!$_GET['id']) {
             new \RedirectHelper('/member/dokumenty');
         }
 
-        $data = \DBDokumenty::getSingleDokument($request->get('id'));
+        $data = \DBDokumenty::getSingleDokument($_GET['id']);
         $path = $data['d_path'];
         if (!is_file($path) || !($file = fopen($path, 'rb'))) {
             new \MessageHelper('warning', 'Soubor nebyl nalezen.');

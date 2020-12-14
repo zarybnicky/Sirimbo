@@ -72,38 +72,38 @@ class Controller_Member_Nabidka
     {
         $f = new \Form();
         $f->checkBool(!$data['n_lock'], 'Tato nabídka je uzamčená', '');
-        if ($request->post('hodiny')) {
-            $f->checkNumeric($request->post('hodiny'), 'Špatný počet hodin', 'hodiny');
+        if ($_POST['hodiny']) {
+            $f->checkNumeric($_POST['hodiny'], 'Špatný počet hodin', 'hodiny');
         }
         return $f;
     }
 
     private function processPost($request)
     {
-        if (!$request->post()) {
+        if (!$_POST) {
             return;
         }
-        $data = \DBNabidka::getSingleNabidka($request->post('id'));
+        $data = \DBNabidka::getSingleNabidka($_POST['id']);
         $form = $this->checkData($request, $data);
         if (!$form->isValid()) {
             return new \MessageHelper('warning', $form->getMessages());
         }
-        if ($request->post('hodiny') > 0) {
+        if ($_POST['hodiny'] > 0) {
             if (!Session::getZaplacenoPar()) {
                 new \MessageHelper('danger', 'Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
             } elseif ($data['n_max_pocet_hod'] > 0
-                && (\DBNabidka::getNabidkaLessons($request->post('id'), Session::getParID())
-                   + $request->post('hodiny')) > $data['n_max_pocet_hod']
+                && (\DBNabidka::getNabidkaLessons($_POST['id'], Session::getParID())
+                   + $_POST['hodiny']) > $data['n_max_pocet_hod']
             ) {
                 new \MessageHelper('danger', 'Maximální počet hodin na pár je ' . $data['n_max_pocet_hod'] . '!');
-            } elseif (($data['n_pocet_hod'] - \DBNabidka::getNabidkaItemLessons($request->post('id'))) < $request->post('hodiny')) {
+            } elseif (($data['n_pocet_hod'] - \DBNabidka::getNabidkaItemLessons($_POST['id'])) < $_POST['hodiny']) {
                 new \MessageHelper('danger', 'Tolik volných hodin tu není');
             } else {
-                \DBNabidka::addNabidkaItemLessons(Session::getParID(), $request->post('id'), $request->post('hodiny'));
-                $request->post('hodiny', null);
+                \DBNabidka::addNabidkaItemLessons(Session::getParID(), $_POST['id'], $_POST['hodiny']);
+                $_POST['hodiny'] = null;
             }
-        } elseif ($request->post('un_id') !== null) {
-            list($u_id, $n_id) = explode('-', $request->post('un_id'));
+        } elseif ($_POST['un_id'] !== null) {
+            list($u_id, $n_id) = explode('-', $_POST['un_id']);
 
             if (!\DBNabidka::getNabidkaLessons($n_id, $u_id)) {
                 new \MessageHelper('danger', 'Neplatný požadavek!');

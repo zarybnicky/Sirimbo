@@ -29,7 +29,7 @@ class Controller_Admin_Galerie_Directory
     public function add($request)
     {
         \Permissions::checkError('galerie', P_OWNED);
-        if (!$request->post()) {
+        if (!$_POST) {
             return $this->displayForm($request, 'add');
         }
         $form = $this->checkData($request);
@@ -37,16 +37,16 @@ class Controller_Admin_Galerie_Directory
             new \MessageHelper('warning', $form->getMessages());
             return $this->displayForm($request, 'add');
         }
-        $parent = \DBGalerie::getSingleDir($request->post('parent'));
+        $parent = \DBGalerie::getSingleDir($_POST['parent']);
         $dirPath = $parent['gd_path'] . DIRECTORY_SEPARATOR
-                 . sanitizePathname($request->post('name'));
+                 . sanitizePathname($_POST['name']);
         mkdir($dirPath, 0777, true);
 
         \DBGalerie::addDir(
-            $request->post('name'),
+            $_POST['name'],
             $parent['gd_id'],
             $parent['gd_level'] + 1,
-            $request->post('hidden') ? '1' : '0',
+            $_POST['hidden'] ? '1' : '0',
             $dirPath
         );
         new \RedirectHelper('/admin/galerie');
@@ -64,10 +64,10 @@ class Controller_Admin_Galerie_Directory
             new \MessageHelper('warning', 'Taková složka neexistuje');
             new \RedirectHelper('/admin/galerie');
         }
-        if (!$request->post()) {
-            $request->post('name', $data['gd_name']);
-            $request->post('parent', $data['gd_id_rodic']);
-            $request->post('hidden', $data['gd_hidden'] ? '1' : '0');
+        if (!$_POST) {
+            $_POST['name'] = $data['gd_name'];
+            $_POST['parent'] = $data['gd_id_rodic'];
+            $_POST['hidden'] = $data['gd_hidden'] ? '1' : '0';
             return $this->displayForm($request, 'edit');
         }
         $form = $this->checkData($request);
@@ -75,10 +75,10 @@ class Controller_Admin_Galerie_Directory
             new \MessageHelper('warning', $form->getMessages());
             return $this->displayForm($request, 'edit');
         }
-        $parent = \DBGalerie::getSingleDir($request->post('parent'));
+        $parent = \DBGalerie::getSingleDir($_POST['parent']);
         $newPath = $parent['gd_path'] . DIRECTORY_SEPARATOR
                  . sanitizePathname(
-                     getCanonicalName($request->post('name'))
+                     getCanonicalName($_POST['name'])
                  );
 
         if ($data['gd_path'] != $newPath) {
@@ -100,10 +100,10 @@ class Controller_Admin_Galerie_Directory
 
         \DBGalerie::editDir(
             $id,
-            $request->post('name'),
+            $_POST['name'],
             $parent['gd_id'],
             $parent['gd_level'] + 1,
-            $request->post('hidden') ? '1' : '0',
+            $_POST['hidden'] ? '1' : '0',
             $data['gd_path']
         );
         new \RedirectHelper('/admin/galerie');
@@ -117,7 +117,7 @@ class Controller_Admin_Galerie_Directory
         }
         $id = $request->getId();
 
-        if ($request->post('action') == 'confirm') {
+        if ($_POST['action'] == 'confirm') {
             $data = \DBGalerie::getSingleDir($id);
             \DBGalerie::removeDir($id);
             if ($data['gd_path']) {
@@ -154,9 +154,9 @@ class Controller_Admin_Galerie_Directory
             'subheader' => ($action == 'add' ? 'Přidat' : 'Upravit') . ' složku',
             'dirs' => $dirs,
             'action' => $action,
-            'name' => $request->post('name') ?: '',
-            'parent' => $request->post('parent') ?: '',
-            'hidden' => $request->post('hidden') ?: ''
+            'name' => $_POST['name'] ?: '',
+            'parent' => $_POST['parent'] ?: '',
+            'hidden' => $_POST['hidden'] ?: ''
         ]);
     }
 
@@ -164,14 +164,14 @@ class Controller_Admin_Galerie_Directory
     {
         $form = new \Form();
         $form->checkNotEmpty(
-            $request->post('name'),
+            $_POST['name'],
             'Název složky nesmí být prázdný',
             'name'
         );
         $form->checkBool(
-            $request->post('parent') >= 0
-            && is_numeric($request->post('parent'))
-            && \DBGalerie::getSingleDir($request->post('parent')),
+            $_POST['parent'] >= 0
+            && is_numeric($_POST['parent'])
+            && \DBGalerie::getSingleDir($_POST['parent']),
             'Zadaná nadsložka není platná',
             'parent'
         );

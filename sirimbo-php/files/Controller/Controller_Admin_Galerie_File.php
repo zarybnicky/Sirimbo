@@ -18,9 +18,9 @@ class Controller_Admin_Galerie_File
             new \RedirectHelper($request->getReferer());
         }
 
-        if (!$request->post()) {
-            $request->post('name', $data['gf_name']);
-            $request->post('parent', $data['gf_id_rodic']);
+        if (!$_POST) {
+            $_POST['name'] = $data['gf_name'];
+            $_POST['parent'] = $data['gf_id_rodic'];
             return $this->displayForm($request, $id);
         }
         $form = $this->checkData($request);
@@ -29,10 +29,10 @@ class Controller_Admin_Galerie_File
             return $this->displayForm($request, $id);
         }
 
-        $parent = \DBGalerie::getSingleDir($request->post('parent'));
+        $parent = \DBGalerie::getSingleDir($_POST['parent']);
         $newPath = sanitizePathname(
             getCanonicalName(
-                $parent['gd_path'] . DIRECTORY_SEPARATOR . $request->post('name')
+                $parent['gd_path'] . DIRECTORY_SEPARATOR . $_POST['name']
             )
         );
 
@@ -52,8 +52,8 @@ class Controller_Admin_Galerie_File
             $data['gf_path'] = $newPath;
         }
 
-        \DBGalerie::editFoto($id, $data['gf_path'], $request->post('parent'), $request->post('name'));
-        new \RedirectHelper('/admin/galerie/directory/' . $request->post('parent'));
+        \DBGalerie::editFoto($id, $data['gf_path'], $_POST['parent'], $_POST['name']);
+        new \RedirectHelper('/admin/galerie/directory/' . $_POST['parent']);
     }
 
     public function remove($request)
@@ -64,7 +64,7 @@ class Controller_Admin_Galerie_File
         }
         $id = $request->getId();
 
-        if ($request->post('action') == 'confirm') {
+        if ($_POST['action'] == 'confirm') {
             $item = \DBGalerie::getSingleFoto($id);
             \DBGalerie::removeFoto($id);
             unlink(GALERIE . DIRECTORY_SEPARATOR . $item['gf_path']);
@@ -84,10 +84,10 @@ class Controller_Admin_Galerie_File
     public function upload($request)
     {
         \Permissions::checkError('galerie', P_OWNED);
-        if (!$request->post()) {
+        if (!$_POST) {
             return $this->displayUpload($request);
         }
-        $parentId = $request->post('dir');
+        $parentId = $_POST['dir'];
         if (!is_numeric($parentId) || $parentId < 0) {
             $parentId = 0;
         }
@@ -174,7 +174,7 @@ class Controller_Admin_Galerie_File
             'header' => 'Správa fotogalerie',
             'subheader' => 'Upload',
             'dirs' => $dirs,
-            'dir' => $request->get('dir') ?: '0'
+            'dir' => $_GET['dir'] ?: '0'
         ]);
     }
 
@@ -198,8 +198,8 @@ class Controller_Admin_Galerie_File
             'id' => $id,
             'dirs' => $dirs,
             'returnURI' => $request->getReferer(),
-            'parent' => $request->post('parent'),
-            'name' => $request->post('name')
+            'parent' => $_POST['parent'],
+            'name' => $_POST['name']
         ]);
     }
 
@@ -207,10 +207,10 @@ class Controller_Admin_Galerie_File
     {
         $form = new \Form();
 
-        $form->checkNotEmpty($request->post('name'), 'Zadejte prosím nějaký popis', 'name');
+        $form->checkNotEmpty($_POST['name'], 'Zadejte prosím nějaký popis', 'name');
         $form->checkBool(
-            $request->post('parent') >= 0 && is_numeric($request->post('parent'))
-            && \DBGalerie::getSingleDir($request->post('parent')),
+            $_POST['parent'] >= 0 && is_numeric($_POST['parent'])
+            && \DBGalerie::getSingleDir($_POST['parent']),
             'Zadaná nadsložka není platná',
             'parent'
         );

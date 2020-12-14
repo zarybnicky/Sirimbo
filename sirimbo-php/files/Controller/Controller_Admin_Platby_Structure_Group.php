@@ -32,8 +32,8 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
     public function add($request)
     {
         \Permissions::checkError('platby', P_OWNED);
-        if (!$request->post()) {
-            $request->post('base', 1);
+        if (!$_POST) {
+            $_POST['base'] = 1;
             return $this->displayForm($request, 'add', 0);
         }
         $form = $this->checkData($request);
@@ -42,21 +42,21 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
             return $this->displayForm($request, 'add', 0);
         }
         \DBPlatbyGroup::insert(
-            $request->post('type'),
-            $request->post('name'),
-            $request->post('description'),
-            $request->post('base')
+            $_POST['type'],
+            $_POST['name'],
+            $_POST['description'],
+            $_POST['base']
         );
         $insertId = \DBPlatbyGroup::getInsertId();
 
-        foreach ($request->post('category') ?: [] as $item) {
+        foreach ($_POST['category'] ?: [] as $item) {
             \DBPlatbyGroup::addChild($insertId, $item);
         }
-        foreach ($request->post('skupiny') ?: [] as $item) {
+        foreach ($_POST['skupiny'] ?: [] as $item) {
             \DBSkupiny::addChild($item, $insertId);
         }
 
-        new \RedirectHelper($request->post('returnURI') ?: '/admin/platby/structure/group');
+        new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/group');
     }
 
     public function edit($request)
@@ -64,18 +64,18 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
         \Permissions::checkError('platby', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Kategorie s takovým ID neexistuje');
-            new \RedirectHelper($request->post('returnURI') ?: '/admin/platby/structure/group');
+            new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/group');
         }
         if (!$data = \DBPlatbyGroup::getSingle($id)) {
             new \MessageHelper('warning', 'Kategorie s takovým ID neexistuje');
-            new \RedirectHelper($request->post('returnURI') ?: '/admin/platby/structure/group');
+            new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/group');
         }
 
-        if (!$request->post()) {
-            $request->post('type', $data['pg_type']);
-            $request->post('name', $data['pg_name']);
-            $request->post('description', $data['pg_description']);
-            $request->post('base', $data['pg_base']);
+        if (!$_POST) {
+            $_POST['type'] = $data['pg_type'];
+            $_POST['name'] = $data['pg_name'];
+            $_POST['description'] = $data['pg_description'];
+            $_POST['base'] = $data['pg_base'];
             return $this->displayForm($request, 'edit', $id);
         }
         $form = $this->checkData($request);
@@ -86,10 +86,10 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
 
         \DBPlatbyGroup::update(
             $id,
-            $request->post('type'),
-            $request->post('name'),
-            $request->post('description'),
-            $request->post('base')
+            $_POST['type'],
+            $_POST['name'],
+            $_POST['description'],
+            $_POST['base']
         );
 
         $categoryOld = array_map(
@@ -98,7 +98,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
             },
             \DBPlatbyGroup::getSingleWithCategories($id)
         );
-        $categoryNew = $request->post('category') ?: [];
+        $categoryNew = $_POST['category'] ?: [];
         foreach (array_diff($categoryOld, $categoryNew) as $removed) {
             \DBPlatbyGroup::removeChild($id, $removed);
         }
@@ -112,7 +112,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
             },
             \DBPlatbyGroup::getSingleWithSkupiny($id)
         );
-        $skupinyNew = $request->post('skupiny') ?: [];
+        $skupinyNew = $_POST['skupiny'] ?: [];
         foreach (array_diff($skupinyOld, $skupinyNew) as $removed) {
             \DBSkupiny::removeChild($removed, $id);
         }
@@ -120,7 +120,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
             \DBSkupiny::addChild($added, $id);
         }
 
-        new \RedirectHelper($request->post('returnURI') ?: '/admin/platby/structure/group');
+        new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/group');
     }
 
     public function remove($request)
@@ -128,14 +128,14 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
         \Permissions::checkError('platby', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Kategorie s takovým ID neexistuje');
-            new \RedirectHelper($request->post('returnURI') ?: '/admin/platby/structure/group');
+            new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/group');
         }
         if (!$data = \DBPlatbyGroup::getSingle($id)) {
             new \MessageHelper('warning', 'Kategorie s takovým ID neexistuje');
-            new \RedirectHelper($request->post('returnURI') ?: '/admin/platby/structure/group');
+            new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/group');
         }
 
-        if ($request->post('action') == 'unlink') {
+        if ($_POST['action'] == 'unlink') {
             $f = $this->getLinkedObjects($id);
 
             $categoryCount = 0;
@@ -155,8 +155,8 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
             );
             return new \RedirectHelper('/admin/platby/structure/group/remove/' . $id);
         }
-        if (((!$request->post() || $request->post('action') == 'confirm')
-            && ($f = $this->getLinkedObjects($id))) || !$request->post()
+        if (((!$_POST || $_POST['action'] == 'confirm')
+            && ($f = $this->getLinkedObjects($id))) || !$_POST
         ) {
             if (isset($f) && $f) {
                 new \MessageHelper('info', 
@@ -178,7 +178,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
             ]);
         }
         \DBPlatbyGroup::delete($id);
-        new \RedirectHelper($request->post('returnURI') ?: '/admin/platby/structure/group');
+        new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/group');
     }
 
     private function getLinkedObjects($id)
@@ -247,10 +247,10 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
             'category' => $categories,
             'skupiny' => $skupiny,
             'returnURI' => $request->getReferer(),
-            'name' => $request->post('name') ?: '',
-            'type' => $request->post('type') ?: '',
-            'description' => $request->post('description') ?: '',
-            'base' => $request->post('base') ?: '',
+            'name' => $_POST['name'] ?: '',
+            'type' => $_POST['type'] ?: '',
+            'description' => $_POST['description'] ?: '',
+            'base' => $_POST['base'] ?: '',
             'uri' => $request->getLiteralURI()
         ]);
     }
@@ -258,9 +258,9 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
     protected function checkData($request): \Form
     {
         $f = new \Form();
-        $f->checkInArray($request->post('type'), ['0', '1'], 'Neplatný typ kategorie');
-        $f->checkNotEmpty($request->post('name'), 'Zadejte nějaký název platby');
-        $f->checkNumeric($request->post('base'), 'Násobitel musí být zadán pouze čisly');
+        $f->checkInArray($_POST['type'], ['0', '1'], 'Neplatný typ kategorie');
+        $f->checkNotEmpty($_POST['name'], 'Zadejte nějaký název platby');
+        $f->checkNumeric($_POST['base'], 'Násobitel musí být zadán pouze čisly');
         return $f;
     }
 }

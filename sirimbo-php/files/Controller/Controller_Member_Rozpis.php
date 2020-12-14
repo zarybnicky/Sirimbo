@@ -4,7 +4,7 @@ class Controller_Member_Rozpis
     public function view($request)
     {
         \Permissions::checkError('rozpis', P_VIEW);
-        if ($request->post()) {
+        if ($_POST) {
             $this->processPost($request);
             new \RedirectHelper('/member/rozpis');
         }
@@ -77,28 +77,28 @@ class Controller_Member_Rozpis
 
     protected function processPost($request)
     {
-        $data = \DBRozpis::getSingleRozpis($request->post('ri_id'));
-        $lesson = \DBRozpis::getRozpisItemLesson($request->post('ri_id'));
-        $form = $this->checkData($request, $data, $request->post('action'));
+        $data = \DBRozpis::getSingleRozpis($_POST['ri_id']);
+        $lesson = \DBRozpis::getRozpisItemLesson($_POST['ri_id']);
+        $form = $this->checkData($request, $data, $_POST['action']);
         if (!$form->isValid()) {
             return new \MessageHelper('warning', $form->getMessages());
         }
-        if ($request->post('action') == 'signup') {
+        if ($_POST['action'] == 'signup') {
             if (!Session::getZaplacenoPar()) {
                 new \MessageHelper('warning', 'Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
             } elseif ($lesson['ri_partner']) {
                 new \MessageHelper('warning', 'Lekce už je obsazená');
             } else {
-                \DBRozpis::rozpisSignUp($request->post('ri_id'), Session::getParID());
+                \DBRozpis::rozpisSignUp($_POST['ri_id'], Session::getParID());
             }
-        } elseif ($request->post('action') == 'signout') {
+        } elseif ($_POST['action'] == 'signout') {
             if ($lesson['ri_partner'] == 0) {
             } elseif (Session::getParID() != $lesson['ri_partner']
                       && !\Permissions::check('rozpis', P_OWNED, $data['n_trener'])
             ) {
                 new \MessageHelper('warning', 'Nedostatečná oprávnění!');
             } else {
-                \DBRozpis::rozpisSignOut($request->post('ri_id'));
+                \DBRozpis::rozpisSignOut($_POST['ri_id']);
             }
         }
     }

@@ -30,7 +30,7 @@ class Controller_Admin_Aktuality
     public function add($request)
     {
         \Permissions::checkError('aktuality', P_OWNED);
-        if (!$request->post()) {
+        if (!$_POST) {
             return new \RenderHelper('files/View/Admin/Aktuality/Form.inc', [
                 'header' => 'Správa aktualit',
                 'subheader' => 'Přidat článek',
@@ -44,14 +44,14 @@ class Controller_Admin_Aktuality
         $id = DBAktuality::addAktualita(
             Session::getUserID(),
             1,
-            $request->post('name'),
-            $request->post('text'),
-            $request->post('summary'),
+            $_POST['name'],
+            $_POST['text'],
+            $_POST['summary'],
             '0',
             '0'
         );
 
-        if ($request->post('action') == 'save') {
+        if ($_POST['action'] == 'save') {
             new \RedirectHelper('/admin/aktuality');
         } else {
             new \RedirectHelper('/admin/aktuality/foto/' . $id . '?notify=true');
@@ -72,28 +72,28 @@ class Controller_Admin_Aktuality
 
         \Permissions::checkError('aktuality', P_OWNED, $data['at_kdo']);
 
-        $date = DateTime::createFromFormat('j. n. Y H:i', $request->post('createdAt'));
-        if (!$request->post() || $date === false) {
-            if ($request->post() && $date === false) {
+        $date = DateTime::createFromFormat('j. n. Y H:i', $_POST['createdAt']);
+        if (!$_POST || $date === false) {
+            if ($_POST && $date === false) {
                 new \MessageHelper('danger', 'Špatný formát data "Publikováno" (D. M. RRRR HH:SS)');
             }
             return new \RenderHelper('files/View/Admin/Aktuality/Form.inc', [
                 'header' => 'Správa aktualit',
                 'subheader' => 'Upravit článek',
                 'action' => $request->getAction(),
-                'name' => $request->post('name') ?: $data['at_jmeno'],
-                'summary' => $request->post('summary') ?: $data['at_preview'],
-                'text' => $request->post('text') ?: $data['at_text'],
-                'createdAt' => $request->post('createdAt') ?: formatTimestamp($data['at_timestamp_add']),
+                'name' => $_POST['name'] ?: $data['at_jmeno'],
+                'summary' => $_POST['summary'] ?: $data['at_preview'],
+                'text' => $_POST['text'] ?: $data['at_text'],
+                'createdAt' => $_POST['createdAt'] ?: formatTimestamp($data['at_timestamp_add']),
             ]);
         }
 
         DBAktuality::editAktualita(
             $id,
             1,
-            $request->post('name'),
-            $request->post('text'),
-            $request->post('summary'),
+            $_POST['name'],
+            $_POST['text'],
+            $_POST['summary'],
             $data['at_foto'],
             $data['at_foto_main'],
             $date->format('Y-m-d H:i:s')
@@ -108,7 +108,7 @@ class Controller_Admin_Aktuality
             new \RedirectHelper('/admin/aktuality');
         }
         $id = $request->getId();
-        if ($request->post('action') == 'confirm') {
+        if ($_POST['action'] == 'confirm') {
             $data = DBAktuality::getSingleAktualita($id);
             if (!\Permissions::check('aktuality', P_OWNED, $data['at_kdo'])) {
                 throw new AuthorizationException('Máte nedostatečnou autorizaci pro tuto akci!');

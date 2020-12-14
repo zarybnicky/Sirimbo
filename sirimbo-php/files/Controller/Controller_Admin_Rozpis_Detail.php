@@ -17,7 +17,7 @@ class Controller_Admin_Rozpis_Detail
 
         $items = \DBRozpis::getRozpisItem($id);
 
-        if ($request->post()) {
+        if ($_POST) {
             $items = $this->processPost($request, $id, $data, $items);
             if ($items) {
                 \DBRozpis::editRozpisItemMultiple($items);
@@ -68,7 +68,7 @@ class Controller_Admin_Rozpis_Detail
                 ')';
         }
 
-        if ($request->get('n') && ($nabidka = \DBNabidka::getSingleNabidka($request->get('n')))) {
+        if ($_GET['n'] && ($nabidka = \DBNabidka::getSingleNabidka($_GET['n']))) {
             $nabidka_items = array_map(
                 function ($item) {
                     return [
@@ -76,7 +76,7 @@ class Controller_Admin_Rozpis_Detail
                         'lessonCount' => $item['ni_pocet_hod']
                     ];
                 },
-                \DBNabidka::getNabidkaItem($request->get('n'))
+                \DBNabidka::getNabidkaItem($_GET['n'])
             );
 
             $obsazeno = array_reduce(
@@ -107,7 +107,7 @@ class Controller_Admin_Rozpis_Detail
             'data' => $data,
             'users' => $users,
             'items' => $items,
-            'selected_nabidka' => $request->get('n') ?: '',
+            'selected_nabidka' => $_GET['n'] ?: '',
             'nabidky' => $nabidky_select,
             'nabidka' => isset($nabidka) ? $nabidka : []
         ]);
@@ -115,38 +115,38 @@ class Controller_Admin_Rozpis_Detail
 
     protected function processPost($request, $id, $data, $items)
     {
-        if ($request->post('remove') > 0) {
-            \DBRozpis::removeRozpisItem($request->post('remove'));
+        if ($_POST['remove'] > 0) {
+            \DBRozpis::removeRozpisItem($_POST['remove']);
             $items = \DBRozpis::getRozpisItem($id);
         }
         //Update all
         foreach ($items as &$item) {
-            $item['ri_partner'] = $request->post($item['ri_id'] . '-partner');
-            $item['ri_od'] = formatTime($request->post($item['ri_id'] . '-od'), 0);
-            $item['ri_do'] = formatTime($request->post($item['ri_id'] . '-do'), 0);
-            $item['ri_lock'] = $request->post($item['ri_id'] . '-lock') ? 1 : 0;
+            $item['ri_partner'] = $_POST[$item['ri_id'] . '-partner'];
+            $item['ri_od'] = formatTime($_POST[$item['ri_id'] . '-od'], 0);
+            $item['ri_do'] = formatTime($_POST[$item['ri_id'] . '-do'], 0);
+            $item['ri_lock'] = $_POST[$item['ri_id'] . '-lock'] ? 1 : 0;
         }
 
         //Try to add a new item
-        if ($request->post('add_od') && $request->post('add_do')) {
+        if ($_POST['add_od'] && $_POST['add_do']) {
             $form = $this->checkAdd($request);
             if (!$form->isValid()) {
                 new \MessageHelper('warning', $form->getMessages());
             } else {
                 $newId = \DBRozpis::addRozpisItem(
                     $id,
-                    $request->post('add_partner'),
-                    formatTime($request->post('add_od'), 0),
-                    formatTime($request->post('add_do'), 0),
-                    (int) (bool) $request->post('add_lock')
+                    $_POST['add_partner'],
+                    formatTime($_POST['add_od'], 0),
+                    formatTime($_POST['add_do'], 0),
+                    (int) (bool) $_POST['add_lock']
                 );
                 $items[] = \DBRozpis::getRozpisItemLesson($newId);
 
-                $request->post('add_partner', null);
+                unset($_POST['add_partner']);
             }
         }
 
-        switch ($request->post('action')) {
+        switch ($_POST['action']) {
             case 'overlap':
                 //Sort by begin time
                 usort(
@@ -190,15 +190,15 @@ class Controller_Admin_Rozpis_Detail
                     break;
                 }
 
-                $start = DateTime::createFromFormat('H:i', $request->post('add_multi_od'));
-                $length = new DateInterval('PT' . $request->post('add_multi_len') . 'M');
+                $start = DateTime::createFromFormat('H:i', $_POST['add_multi_od']);
+                $length = new DateInterval('PT' . $_POST['add_multi_len'] . 'M');
                 if (!$start) {
                     break;
                 }
                 $end = clone $start;
                 $end->add($length);
 
-                for ($i = 0; $i < $request->post('add_multi_num'); $i++) {
+                for ($i = 0; $i < $_POST['add_multi_num']; $i++) {
                     $newId = \DBRozpis::addRozpisItem(
                         $id,
                         '0',
@@ -222,17 +222,17 @@ class Controller_Admin_Rozpis_Detail
     {
         $f = new \Form();
         $f->checkNumeric(
-            $request->post('add_partner'),
+            $_POST['add_partner'],
             'Neplatný partner u přidávané lekce',
             'add_partner'
         );
         $f->checkTime(
-            $request->post('add_od'),
+            $_POST['add_od'],
             'Neplatný formát času "od" u přidávané lekce',
             'add_od'
         );
         $f->checkTime(
-            $request->post('add_do'),
+            $_POST['add_do'],
             'Neplatný formát času "do" u přidávané lekce',
             'add_do'
         );
@@ -243,17 +243,17 @@ class Controller_Admin_Rozpis_Detail
     {
         $f = new \Form();
         $f->checkNumeric(
-            $request->post('add_multi_num'),
+            $_POST['add_multi_num'],
             'Neplatný počet přidávaných hodin',
             'add_multi_num'
         );
         $f->checkNumeric(
-            $request->post('add_multi_len'),
+            $_POST['add_multi_len'],
             'Neplatná délka přidávaných hodin',
             'add_multi_len'
         );
         $f->checkTime(
-            $request->post('add_multi_od'),
+            $_POST['add_multi_od'],
             'Neplatný formát času "od" u přidávaných hodin',
             'add_multi_od'
         );

@@ -4,7 +4,7 @@ class Controller_Admin_Dokumenty
     public function view($request)
     {
         \Permissions::checkError('dokumenty', P_OWNED);
-        if ($request->post('action') == 'upload' && !empty($_FILES)) {
+        if ($_POST['action'] == 'upload' && !empty($_FILES)) {
             $fileUpload = $_FILES['file']['tmp_name'];
             $fileName = $_FILES['file']['name'];
             $fileName = str_replace(
@@ -15,8 +15,8 @@ class Controller_Admin_Dokumenty
 
             $path = UPLOADS . '/' . time() . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
 
-            if (!$request->post('name')) {
-                $request->post('name', $fileName);
+            if (!$_POST['name']) {
+                $_POST['name'] = $fileName;
             }
 
             if (!move_uploaded_file($fileUpload, $path)) {
@@ -27,9 +27,9 @@ class Controller_Admin_Dokumenty
             chmod($path, 0666);
             \DBDokumenty::addDokument(
                 $path,
-                $request->post('name'),
+                $_POST['name'],
                 $fileName,
-                $request->post('kategorie'),
+                $_POST['kategorie'],
                 Session::getUserID()
             );
             new \MessageHelper('success', 'Soubor byl nahrán úspěšně');
@@ -68,8 +68,8 @@ class Controller_Admin_Dokumenty
         }
         \Permissions::checkError('dokumenty', P_OWNED, $data['d_kdo']);
 
-        if ($request->post('newname')) {
-            \DBDokumenty::editDokument($id, $request->post('newname'));
+        if ($_POST['newname']) {
+            \DBDokumenty::editDokument($id, $_POST['newname']);
             new \MessageHelper('success', 'Dokument upraven');
             new \RedirectHelper('/admin/dokumenty');
         }
@@ -87,7 +87,7 @@ class Controller_Admin_Dokumenty
         }
         $id = $request->getId();
 
-        if ($request->post('action') == 'confirm') {
+        if ($_POST['action'] == 'confirm') {
             $data = \DBDokumenty::getSingleDokument($id);
             if (!\Permissions::check('dokumenty', P_OWNED, $data['d_kdo'])) {
                 throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");

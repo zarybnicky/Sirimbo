@@ -26,7 +26,7 @@ class Controller_Admin_Skupiny
     public function add($request)
     {
         \Permissions::checkError('skupiny', P_OWNED);
-        if (!$request->post()) {
+        if (!$_POST) {
             return $this->displayForm($request);
         }
         $form = $this->checkData($request);
@@ -35,13 +35,13 @@ class Controller_Admin_Skupiny
             return $this->displayForm($request);
         }
         \DBSkupiny::insert(
-            $request->post('name'),
-            $request->post('color'),
-            $request->post('desc')
+            $_POST['name'],
+            $_POST['color'],
+            $_POST['desc']
         );
         $insertId = \DBSkupiny::getInsertId();
 
-        foreach ($request->post('group') ?: [] as $item) {
+        foreach ($_POST['group'] ?: [] as $item) {
             \DBSkupiny::addChild($insertId, $item);
         }
 
@@ -60,7 +60,7 @@ class Controller_Admin_Skupiny
             new \RedirectHelper('/admin/skupiny');
         }
 
-        if (!$request->post()) {
+        if (!$_POST) {
             return $this->displayForm($request, $data);
         }
         $form = $this->checkData($request);
@@ -71,9 +71,9 @@ class Controller_Admin_Skupiny
 
         \DBSkupiny::update(
             $id,
-            $request->post('name'),
-            $request->post('color'),
-            $request->post('desc')
+            $_POST['name'],
+            $_POST['color'],
+            $_POST['desc']
         );
 
         $groupsOld = array_map(
@@ -82,7 +82,7 @@ class Controller_Admin_Skupiny
             },
             \DBSkupiny::getSingleWithGroups($id)
         );
-        $groupsNew = $request->post('group') ?: [];
+        $groupsNew = $_POST['group'] ?: [];
         foreach (array_diff($groupsOld, $groupsNew) as $removed) {
             \DBSkupiny::removeChild($id, $removed);
         }
@@ -105,7 +105,7 @@ class Controller_Admin_Skupiny
             new \RedirectHelper('/admin/skupiny');
         }
 
-        if ($request->post('action') == 'unlink') {
+        if ($_POST['action'] == 'unlink') {
             $f = $this->getLinkedSkupinaObjects($id);
 
             $groupCount = 0;
@@ -117,7 +117,7 @@ class Controller_Admin_Skupiny
             new \MessageHelper('info', 'Spojení s ' . $groupCount . ' kategoriemi byla odstraněna.');
             return new \RedirectHelper('/admin/skupiny/remove/' . $id);
         }
-        if (($f = $this->getLinkedSkupinaObjects($id)) || !$request->post()) {
+        if (($f = $this->getLinkedSkupinaObjects($id)) || !$_POST) {
             if (isset($f) && $f) {
                 new \MessageHelper('info',
                     'Nemůžu odstranit skupinu s připojenými kategoriemi! '
@@ -164,9 +164,9 @@ class Controller_Admin_Skupiny
             'header' => 'Správa skupin',
             'subheader' => $action == 'add' ? 'Přidat skupinu' : 'Upravit skupinu',
             'id' => $id,
-            'name' => $request->post('name') ?: ($data ? $data['s_name'] : ''),
-            'color' => $request->post('color') ?: ($data ? $data['s_color_rgb'] : ''),
-            'popis' => $request->post('popis') ?: ($data ? $data['s_description'] : ''),
+            'name' => $_POST['name'] ?: ($data ? $data['s_name'] : ''),
+            'color' => $_POST['color'] ?: ($data ? $data['s_color_rgb'] : ''),
+            'popis' => $_POST['popis'] ?: ($data ? $data['s_description'] : ''),
             'action' => $action,
             'groups' => $groups
         ]);
@@ -181,9 +181,9 @@ class Controller_Admin_Skupiny
     private function checkData($request): \Form
     {
         $f = new \Form();
-        $f->checkNotEmpty($request->post('name'), 'Zadejte prosím nějaké jméno.');
-        $f->checkNotEmpty($request->post('desc'), 'Zadejte prosím nějaký popis.');
-        $f->checkRegexp($request->post('color'), '/#[0-9a-f]{6}/i', 'Zadejte prosím platnou barvu.');
+        $f->checkNotEmpty($_POST['name'], 'Zadejte prosím nějaké jméno.');
+        $f->checkNotEmpty($_POST['desc'], 'Zadejte prosím nějaký popis.');
+        $f->checkRegexp($_POST['color'], '/#[0-9a-f]{6}/i', 'Zadejte prosím platnou barvu.');
         return $f;
     }
 }

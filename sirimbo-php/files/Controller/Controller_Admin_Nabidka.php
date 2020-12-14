@@ -8,9 +8,9 @@ class Controller_Admin_Nabidka
             ? \DBNabidka::getNabidka(true)
             : \DBNabidka::getNabidkyByTrener(Session::getUserID(), true);
 
-        if ($request->post('action') == 'save') {
+        if ($_POST['action'] == 'save') {
             foreach ($data as $item) {
-                if ((bool) $request->post($item['n_id']) == (bool) $item['n_visible']) {
+                if ((bool) $_POST[$item['n_id']] == (bool) $item['n_visible']) {
                     continue;
                 }
                 \DBNabidka::editNabidka(
@@ -20,7 +20,7 @@ class Controller_Admin_Nabidka
                     $item['n_max_pocet_hod'],
                     $item['n_od'],
                     $item['n_do'],
-                    $request->post($item['n_id']) ? '1' : '0',
+                    $_POST[$item['n_id']] ? '1' : '0',
                     $item['n_lock']
                 );
             }
@@ -57,7 +57,7 @@ class Controller_Admin_Nabidka
     public function add($request)
     {
         \Permissions::checkError('nabidka', P_OWNED);
-        if (!$request->post()) {
+        if (!$_POST) {
             return $this->displayForm($request);
         }
         $form = $this->checkData($request);
@@ -66,7 +66,7 @@ class Controller_Admin_Nabidka
             return $this->displayForm($request);
         }
 
-        \Permissions::checkError('nabidka', P_OWNED, $request->post('trener'));
+        \Permissions::checkError('nabidka', P_OWNED, $_POST['trener']);
 
         $od = new \Date($_POST['od'] ?? null);
         $do = new \Date($_POST['do'] ?? null);
@@ -74,22 +74,22 @@ class Controller_Admin_Nabidka
             $do = $od;
         }
 
-        if (!is_numeric($request->post('max_pocet_hod'))) {
-            $request->post('max_pocet_hod', 0);
+        if (!is_numeric($_POST['max_pocet_hod'])) {
+            $_POST['max_pocet_hod'] = 0;
         }
 
         \DBNabidka::addNabidka(
-            $request->post('trener'),
-            $request->post('pocet_hod'),
-            $request->post('max_pocet_hod'),
+            $_POST['trener'],
+            $_POST['pocet_hod'],
+            $_POST['max_pocet_hod'],
             (string) $od,
             (string) $do,
-            $request->post('visible') ? '1' : '0',
-            $request->post('lock') ? 1 : 0
+            $_POST['visible'] ? '1' : '0',
+            $_POST['lock'] ? 1 : 0
         );
 
         new \MessageHelper('success', 'Nabídka přidána');
-        new \RedirectHelper($request->post('returnURI') ?: '/admin/nabidka');
+        new \RedirectHelper($_POST['returnURI'] ?: '/admin/nabidka');
     }
 
     public function edit($request)
@@ -97,15 +97,15 @@ class Controller_Admin_Nabidka
         \Permissions::checkError('nabidka', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Nabídka s takovým ID neexistuje');
-            new \RedirectHelper($request->post('returnURI') ?: '/admin/nabidka');
+            new \RedirectHelper($_POST['returnURI'] ?: '/admin/nabidka');
         }
         if (!$data = \DBNabidka::getSingleNabidka($id)) {
             new \MessageHelper('warning', 'Nabídka s takovým ID neexistuje');
-            new \RedirectHelper($request->post('returnURI') ?: '/admin/nabidka');
+            new \RedirectHelper($_POST['returnURI'] ?: '/admin/nabidka');
         }
         \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
 
-        if (!$request->post()) {
+        if (!$_POST) {
             return $this->displayForm($request, $data);
         }
         $form = $this->checkData($request);
@@ -121,7 +121,7 @@ class Controller_Admin_Nabidka
         }
 
         $items = \DBNabidka::getNabidkaItemLessons($id);
-        $pocet_hod = $request->post('pocet_hod');
+        $pocet_hod = $_POST['pocet_hod'];
         if ($pocet_hod < $items) {
             $pocet_hod = $items;
             new \MessageHelper('warning', 
@@ -129,7 +129,7 @@ class Controller_Admin_Nabidka
                 'nelze už dál snížit počet hodin'
             );
         }
-        $max_lessons = $request->post('max_pocet_hod');
+        $max_lessons = $_POST['max_pocet_hod'];
         $max_lessons_old = \DBNabidka::getNabidkaMaxItems($id);
         if ($max_lessons < $max_lessons_old && $max_lessons != 0) {
             $max_lessons = $max_lessons_old;
@@ -144,17 +144,17 @@ class Controller_Admin_Nabidka
 
         \DBNabidka::editNabidka(
             $id,
-            $request->post('trener'),
+            $_POST['trener'],
             $pocet_hod,
             $max_lessons,
             (string) $od,
             (string) $do,
-            $request->post('visible') ? '1' : '0',
-            $request->post('lock') ? '1' : '0'
+            $_POST['visible'] ? '1' : '0',
+            $_POST['lock'] ? '1' : '0'
         );
 
         new \MessageHelper('success', 'Nabídka úspěšně upravena');
-        new \RedirectHelper($request->post('returnURI') ?: '/admin/nabidka');
+        new \RedirectHelper($_POST['returnURI'] ?: '/admin/nabidka');
     }
 
     public function duplicate($request)
@@ -210,13 +210,13 @@ class Controller_Admin_Nabidka
             'returnURI' => $request->getReferer(),
             'users' => $treneri,
             'id' => $data ? $data['n_id'] : null,
-            'trener' => $request->post('trener') ?: ($data ? $data['n_trener'] : ''),
-            'pocet_hod' => $request->post('pocet_hod') ?: ($data ? $data['n_pocet_hod'] : ''),
-            'max_pocet_hod' => $request->post('max_pocet_hod') ?: ($data ? $data['n_max_pocet_hod'] : ''),
-            'od' => $request->post('od') ?: ($data ? $data['n_od'] : ''),
-            'do' => $request->post('do') ?: ($data ? $data['n_do'] : ''),
-            'visible' => $request->post('visible') ?: ($data ? $data['n_visible'] : false),
-            'lock' => $request->post('lock') ?: ($data ? $data['n_lock'] : '')
+            'trener' => $_POST['trener'] ?: ($data ? $data['n_trener'] : ''),
+            'pocet_hod' => $_POST['pocet_hod'] ?: ($data ? $data['n_pocet_hod'] : ''),
+            'max_pocet_hod' => $_POST['max_pocet_hod'] ?: ($data ? $data['n_max_pocet_hod'] : ''),
+            'od' => $_POST['od'] ?: ($data ? $data['n_od'] : ''),
+            'do' => $_POST['do'] ?: ($data ? $data['n_do'] : ''),
+            'visible' => $_POST['visible'] ?: ($data ? $data['n_visible'] : false),
+            'lock' => $_POST['lock'] ?: ($data ? $data['n_lock'] : '')
         ]);
     }
 
@@ -229,8 +229,8 @@ class Controller_Admin_Nabidka
         }
 
         $f = new Form();
-        $f->checkNumeric($request->post('trener'), 'ID trenéra musí být číselné', 'trener');
-        $f->checkNumeric($request->post('pocet_hod'), 'Počet hodin prosím zadejte čísly', 'pocet_hod');
+        $f->checkNumeric($_POST['trener'], 'ID trenéra musí být číselné', 'trener');
+        $f->checkNumeric($_POST['pocet_hod'], 'Počet hodin prosím zadejte čísly', 'pocet_hod');
         $f->checkDate((string) $od, 'Zadejte prosím platné datum ("Od")', 'od');
         if ($do->isValid()) {
             $f->checkDate((string) $do, 'Zadejte prosím platné datum ("Do")', 'do');

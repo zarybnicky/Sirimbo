@@ -6,7 +6,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
     public function view($request)
     {
         \Permissions::checkError('platby', P_OWNED);
-        if ($request->post() && $request->post('action') == 'upload') {
+        if ($_POST && $_POST['action'] == 'upload') {
             $this->processUpload($request);
         }
         $workDir = new \DirectoryIterator(self::TEMP_DIR);
@@ -31,19 +31,19 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
     public function select_columns($request)
     {
         \Permissions::checkError('platby', P_OWNED);
-        $path = self::TEMP_DIR . str_replace('../', '', $request->get('path'));
+        $path = self::TEMP_DIR . str_replace('../', '', $_GET['path']);
 
-        if ($request->post()) {
+        if ($_POST) {
             $this->processCsv(
                 $path,
                 [
-                    'specific' => $request->post('specific'),
-                    'variable' => $request->post('variable'),
-                    'date' => $request->post('date'),
-                    'amount' => $request->post('amount')
+                    'specific' => $_POST['specific'],
+                    'variable' => $_POST['variable'],
+                    'date' => $_POST['date'],
+                    'amount' => $_POST['amount']
                 ]
             );
-            new \MessageHelper('success', 'Soubor ' . $request->get('path') . ' byl zpracován.');
+            new \MessageHelper('success', 'Soubor ' . $_GET['path'] . ' byl zpracován.');
             new \RedirectHelper('/admin/platby/raw');
         }
         $parser = $this->getParser($path);

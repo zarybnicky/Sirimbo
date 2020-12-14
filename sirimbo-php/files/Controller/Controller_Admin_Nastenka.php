@@ -5,8 +5,8 @@ class Controller_Admin_Nastenka
     {
         \Permissions::checkError('nastenka', P_OWNED);
         $pager = new \Paging(new \DBNastenka());
-        $pager->setCurrentPage($request->get('p'));
-        $pager->setItemsPerPage($request->get('c'));
+        $pager->setCurrentPage($_GET['p']);
+        $pager->setItemsPerPage($_GET['c']);
         $data = $pager->getItems();
 
         $showButtonsCol = false;
@@ -41,7 +41,7 @@ class Controller_Admin_Nastenka
             'header' => 'Správa nástěnky',
             'showButtonsCol' => $showButtonsCol,
             'data' => $data,
-            'navigation' => $pager->getNavigation($request->get())
+            'navigation' => $pager->getNavigation()
         ]);
     }
 
@@ -50,7 +50,7 @@ class Controller_Admin_Nastenka
         $skupiny = \DBSkupiny::get();
         $skupinySelected = [];
         foreach ($skupiny as $item) {
-            $skupinySelected[$item['s_id']] = $request->post('sk-' . $item['s_id']);
+            $skupinySelected[$item['s_id']] = $_POST['sk-' . $item['s_id']];
         }
         new \RenderHelper('files/View/Admin/Nastenka/Form.inc', [
             'header' => 'Správa nástěnky',
@@ -59,16 +59,16 @@ class Controller_Admin_Nastenka
             'returnURI' => $request->getReferer() ?: '/admin/nastenka',
             'skupiny' => $skupiny,
             'skupinySelected' => $skupinySelected,
-            'nadpis' => $request->post('nadpis') ?: '',
-            'text' => $request->post('text') ?: '',
-            'lock' => $request->post('lock') ?: ''
+            'nadpis' => $_POST['nadpis'] ?: '',
+            'text' => $_POST['text'] ?: '',
+            'lock' => $_POST['lock'] ?: ''
         ]);
     }
 
     public function add($request)
     {
         \Permissions::checkError('nastenka', P_OWNED);
-        if (!$request->post()) {
+        if (!$_POST) {
             return $this->renderForm($request);
         }
         $form = $this->checkData($request);
@@ -79,14 +79,14 @@ class Controller_Admin_Nastenka
 
         $id = \DBNastenka::addNastenka(
             Session::getUserID(),
-            $request->post('nadpis'),
-            $request->post('text'),
-            $request->post('lock') ? 1 : 0
+            $_POST['nadpis'],
+            $_POST['text'],
+            $_POST['lock'] ? 1 : 0
         );
 
         $skupiny = \DBSkupiny::get();
         foreach ($skupiny as $skupina) {
-            if (!$request->post('sk-' . $skupina['s_id'])) {
+            if (!$_POST['sk-' . $skupina['s_id']]) {
                 continue;
             }
             \DBNastenka::addNastenkaSkupina(
@@ -97,7 +97,7 @@ class Controller_Admin_Nastenka
             );
         }
 
-        new \RedirectHelper($request->post('returnURI'));
+        new \RedirectHelper($_POST['returnURI']);
     }
 
     public function edit($request)
@@ -105,22 +105,22 @@ class Controller_Admin_Nastenka
         \Permissions::checkError('nastenka', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Nástěnka s takovým ID neexistuje');
-            new \RedirectHelper($request->post('returnURI') ?: '/admin/nastenka');
+            new \RedirectHelper($_POST['returnURI'] ?: '/admin/nastenka');
         }
         if (!$data = \DBNastenka::getSingleNastenka($id)) {
             new \MessageHelper('warning', 'Nástěnka s takovým ID neexistuje');
-            new \RedirectHelper($request->post('returnURI') ?: '/admin/nastenka');
+            new \RedirectHelper($_POST['returnURI'] ?: '/admin/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
 
-        if (!$request->post()) {
-            $request->post('id', $id);
-            $request->post('nadpis', $data['up_nadpis']);
-            $request->post('text', $data['up_text']);
+        if (!$_POST) {
+            $_POST['id'] = $id;
+            $_POST['nadpis'] = $data['up_nadpis'];
+            $_POST['text'] = $data['up_text'];
             foreach (\DBNastenka::getNastenkaSkupiny($id) as $skupina) {
-                $request->post('sk-' . $skupina['ups_id_skupina'], 1);
+                $_POST['sk-' . $skupina['ups_id_skupina']] = 1;
             }
-            $request->post('lock', $data['up_lock']);
+            $_POST['lock'] = $data['up_lock'];
             return $this->renderForm($request);
         }
         $form = $this->checkData($request);
@@ -136,7 +136,7 @@ class Controller_Admin_Nastenka
 
         $skupiny_new = [];
         foreach (\DBSkupiny::get() as $item) {
-            if ($request->post('sk-' . $item['s_id'])) {
+            if ($_POST['sk-' . $item['s_id']]) {
                 $skupiny_new[$item['s_id']] = $item;
             }
         }
@@ -158,12 +158,12 @@ class Controller_Admin_Nastenka
 
         \DBNastenka::editNastenka(
             $id,
-            $request->post('nadpis'),
-            $request->post('text'),
-            ($request->post('lock') == 'lock') ? 1 : 0
+            $_POST['nadpis'],
+            $_POST['text'],
+            ($_POST['lock'] == 'lock') ? 1 : 0
         );
 
-        new \RedirectHelper($request->post('returnURI'));
+        new \RedirectHelper($_POST['returnURI']);
     }
 
     public function remove($request)
@@ -171,15 +171,15 @@ class Controller_Admin_Nastenka
         \Permissions::checkError('nastenka', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Příspěvek s takovým ID neexistuje');
-            new \RedirectHelper($request->post('returnURI') ?: '/admin/nastenka');
+            new \RedirectHelper($_POST['returnURI'] ?: '/admin/nastenka');
         }
         if (!$data = \DBNastenka::getSingleNastenka($id)) {
             new \MessageHelper('warning', 'Příspěvek s takovým ID neexistuje');
-            new \RedirectHelper($request->post('returnURI') ?: '/admin/nastenka');
+            new \RedirectHelper($_POST['returnURI'] ?: '/admin/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
 
-        if (!$request->post() || $request->post('action') != 'confirm') {
+        if (!$_POST || $_POST['action'] != 'confirm') {
             return new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
                 'header' => 'Správa nástěnky',
                 'prompt' => 'Opravdu chcete odstranit příspěvek:',
@@ -195,8 +195,8 @@ class Controller_Admin_Nastenka
     private function checkData($request): \Form
     {
         $f = new \Form();
-        $f->checkNotEmpty($request->post('nadpis'), 'Zadejte nadpis', 'nadpis');
-        $f->checkNotEmpty($request->post('text'), 'Zadejte nějaký text', 'text');
+        $f->checkNotEmpty($_POST['nadpis'], 'Zadejte nadpis', 'nadpis');
+        $f->checkNotEmpty($_POST['text'], 'Zadejte nějaký text', 'text');
         return $f;
     }
 }

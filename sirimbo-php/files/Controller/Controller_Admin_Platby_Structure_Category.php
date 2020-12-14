@@ -4,7 +4,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
     public function view($request)
     {
         \Permissions::checkError('platby', P_OWNED);
-        if ($id = $request->post('category_duplicate')) {
+        if ($id = $_POST['category_duplicate']) {
             if (!($data = \DBPlatbyCategory::getSingle($id))) {
                 new \MessageHelper('warning', 'Takový specifický symbol neexistuje.');
                 new \RedirectHelper('/admin/platby/structure/category');
@@ -68,7 +68,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
     public function add($request)
     {
         \Permissions::checkError('platby', P_OWNED);
-        if (!$request->post()) {
+        if (!$_POST) {
             return $this->displayForm($request, 'add', 0);
         }
         $form = $this->checkData($request, 'add', 0);
@@ -86,7 +86,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             $validFrom = $validTo;
         }
 
-        $amount = $request->post('amount');
+        $amount = $_POST['amount'];
         $use_base = '0';
         if (strpos($amount, '*') !== false) {
             $use_base = '1';
@@ -94,24 +94,24 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         }
 
         \DBPlatbyCategory::insert(
-            $request->post('name'),
-            $request->post('symbol'),
+            $_POST['name'],
+            $_POST['symbol'],
             $amount,
             (string) new \Date($_POST['dueDate'] ?? null),
             (string) $validFrom,
             (string) $validTo,
             $use_base,
-            $request->post('usePrefix') ? '1' : '0',
-            $request->post('archive') ? '1' : '0',
-            $request->post('visible') ? '1' : '0'
+            $_POST['usePrefix'] ? '1' : '0',
+            $_POST['archive'] ? '1' : '0',
+            $_POST['visible'] ? '1' : '0'
         );
         $insertId = \DBPlatbyCategory::getInsertId();
 
-        foreach ($request->post('group') ?: [] as $item) {
+        foreach ($_POST['group'] ?: [] as $item) {
             \DBPlatbyGroup::addChild($item, $insertId);
         }
 
-        new \RedirectHelper($request->post('returnURI') ?: '/admin/platby/structure/category');
+        new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/category');
     }
 
     public function edit($request)
@@ -119,25 +119,25 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         \Permissions::checkError('platby', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Kategorie s takovým ID neexistuje');
-            new \RedirectHelper($request->post('returnURI') ?: '/admin/platby/structure/category');
+            new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/category');
         }
         if (!$data = \DBPlatbyCategory::getSingle($id)) {
             new \MessageHelper('warning', 'Kategorie s takovým ID neexistuje');
-            new \RedirectHelper($request->post('returnURI') ?: '/admin/platby/structure/category');
+            new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/category');
         }
 
-        if (!$request->post()) {
+        if (!$_POST) {
             if ($data['pc_use_base']) {
                 $data['pc_amount'] = '*' . $data['pc_amount'];
             }
-            $request->post('name', $data['pc_name']);
-            $request->post('symbol', $data['pc_symbol']);
-            $request->post('amount', $data['pc_amount']);
-            $request->post('dueDate', $data['pc_date_due']);
-            $request->post('validRange', $data['pc_valid_from'] . ' - ' . $data['pc_valid_to']);
-            $request->post('usePrefix', $data['pc_use_prefix']);
-            $request->post('archive', $data['pc_archive']);
-            $request->post('visible', $data['pc_visible']);
+            $_POST['name'] = $data['pc_name'];
+            $_POST['symbol'] = $data['pc_symbol'];
+            $_POST['amount'] = $data['pc_amount'];
+            $_POST['dueDate'] = $data['pc_date_due'];
+            $_POST['validRange'] = $data['pc_valid_from'] . ' - ' . $data['pc_valid_to'];
+            $_POST['usePrefix'] = $data['pc_use_prefix'];
+            $_POST['archive'] = $data['pc_archive'];
+            $_POST['visible'] = $data['pc_visible'];
             return $this->displayForm($request, 'edit', $id);
         }
         $form = $this->checkData($request, 'edit', $id);
@@ -155,20 +155,20 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             $validFrom = $validTo;
         }
 
-        $amount = $request->post('amount');
+        $amount = $_POST['amount'];
         $use_base = '0';
         if (strpos($amount, '*') !== false) {
             $use_base = '1';
             $amount = str_replace('*', '', $amount);
         }
-        $use_prefix = $request->post('usePrefix') ? '1' : '0';
-        $archive = $request->post('archive') ? '1' : '0';
-        $visible = $request->post('visible') ? '1' : '0';
+        $use_prefix = $_POST['usePrefix'] ? '1' : '0';
+        $archive = $_POST['archive'] ? '1' : '0';
+        $visible = $_POST['visible'] ? '1' : '0';
 
         \DBPlatbyCategory::update(
             $id,
-            $request->post('name'),
-            $request->post('symbol'),
+            $_POST['name'],
+            $_POST['symbol'],
             $amount,
             (string) new \Date($_POST['dueDate'] ?? null),
             (string) $validFrom,
@@ -185,7 +185,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             },
             \DBPlatbyCategory::getSingleWithGroups($id)
         );
-        $groupsNew = $request->post('group') ?: [];
+        $groupsNew = $_POST['group'] ?: [];
         foreach (array_diff($groupsOld, $groupsNew) as $removed) {
             \DBPlatbyGroup::removeChild($removed, $id);
         }
@@ -193,10 +193,10 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             \DBPlatbyGroup::addChild($added, $id);
         }
 
-        if ($request->get('group')) {
-            new \RedirectHelper('/admin/platby/structure/group/edit/' . $request->get('group'));
+        if ($_GET['group']) {
+            new \RedirectHelper('/admin/platby/structure/group/edit/' . $_GET['group']);
         }
-        new \RedirectHelper($request->post('returnURI') ?: '/admin/platby/structure/category');
+        new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/category');
     }
 
     public function remove($request)
@@ -204,14 +204,14 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         \Permissions::checkError('platby', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Specifický symbol s takovým ID neexistuje');
-            new \RedirectHelper($request->post('returnURI') ?: '/admin/platby/structure/category');
+            new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/category');
         }
         if (!$data = \DBPlatbyCategory::getSingle($id)) {
             new \MessageHelper('warning', 'Specifický symbol s takovým ID neexistuje');
-            new \RedirectHelper($request->post('returnURI') ?: '/admin/platby/structure/category');
+            new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/category');
         }
 
-        if ($request->post('action') == 'unlink') {
+        if ($_POST['action'] == 'unlink') {
             $f = $this->getLinkedObjects($id);
 
             $groupCount = count($f['groups']);
@@ -233,7 +233,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             }
             new \MessageHelper('info', "Spojení s $groupCount kategoriemi a s $itemCount platbami bylo odstraněno");
             return new \RedirectHelper('/admin/platby/structure/category/remove/' . $id);
-        } elseif ($request->post('action') == 'archive') {
+        } elseif ($_POST['action'] == 'archive') {
             \DBPlatbyCategory::update(
                 $id,
                 $data['pc_name'],
@@ -250,9 +250,9 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             new \MessageHelper('info', 'Specifický symbol "' . $data['pc_symbol'] . '" byl archivován');
             return new \RedirectHelper('/admin/platby/structure/category');
         }
-        if (((!$request->post() || $request->post('action') == 'confirm')
+        if (((!$_POST || $_POST['action'] == 'confirm')
             && ($f = $this->getLinkedObjects($id)))
-            || !$request->post()
+            || !$_POST
         ) {
             if (isset($f) && $f) {
                 new \MessageHelper('info',
@@ -277,7 +277,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             ]);
         }
         \DBPlatbyCategory::delete($id);
-        new \RedirectHelper($request->post('returnURI') ?: '/admin/platby/structure/category');
+        new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/category');
     }
 
     protected function getLinkedObjects($id)
@@ -319,14 +319,14 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             'action' => $action,
             'groups' => $groups,
             'returnURI' => $request->getReferer(),
-            'name' => $request->post('name') ?: '',
-            'symbol' => $request->post('symbol') ?: '',
-            'amount' => $request->post('amount') ?: '',
-            'dueDate' => $request->post('dueDate') ?: '',
-            'validRange' => $request->post('validRange') ?: '',
-            'usePrefix' => $request->post('usePrefix') ?: '',
-            'archive' => $request->post('archive') ?: '',
-            'visible' => $request->post('visible') ?: '',
+            'name' => $_POST['name'] ?: '',
+            'symbol' => $_POST['symbol'] ?: '',
+            'amount' => $_POST['amount'] ?: '',
+            'dueDate' => $_POST['dueDate'] ?: '',
+            'validRange' => $_POST['validRange'] ?: '',
+            'usePrefix' => $_POST['usePrefix'] ?: '',
+            'archive' => $_POST['archive'] ?: '',
+            'visible' => $_POST['visible'] ?: '',
             'uri' => $request->getLiteralURI()
         ]);
     }
@@ -369,16 +369,16 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                 );
             }
         }
-        if (!$request->post('archive')) {
+        if (!$_POST['archive']) {
             $f->checkBool(
-                !($active = \DBPlatbyCategory::checkActiveSymbol($request->post('symbol')))
+                !($active = \DBPlatbyCategory::checkActiveSymbol($_POST['symbol']))
                 || ($action == 'edit' ? $active['pc_id'] == $id : false),
-                $active ? ('Už existuje aktivní specifický symbol se symbolem ' . $request->post('symbol') . ' (' . $active['pc_name'] . ')') : '', ''
+                $active ? ('Už existuje aktivní specifický symbol se symbolem ' . $_POST['symbol'] . ' (' . $active['pc_name'] . ')') : '', ''
             );
         }
-        $f->checkNotEmpty($request->post('name'), 'Zadejte prosím nějaké jméno.');
-        $f->checkNumeric($request->post('symbol'), 'Zadejte prosím platný specifický symbol.');
-        $f->checkRegexp($request->post('amount'), '/(\*)?([0-9]+)([.,][0-9]+)?/', 'Zadejte prosím platnou očekávanou částku.');
+        $f->checkNotEmpty($_POST['name'], 'Zadejte prosím nějaké jméno.');
+        $f->checkNumeric($_POST['symbol'], 'Zadejte prosím platný specifický symbol.');
+        $f->checkRegexp($_POST['amount'], '/(\*)?([0-9]+)([.,][0-9]+)?/', 'Zadejte prosím platnou očekávanou částku.');
 
         return $f;
     }

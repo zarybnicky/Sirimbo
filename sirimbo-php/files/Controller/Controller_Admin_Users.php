@@ -4,15 +4,15 @@ class Controller_Admin_Users
     public function view($request)
     {
         \Permissions::checkError('users', P_ADMIN);
-        if ($request->post('action') == 'save') {
-            foreach ($request->post('save') as $userId) {
+        if ($_POST['action'] == 'save') {
+            foreach ($_POST['save'] as $userId) {
                 $user = \DBUser::getUser($userId);
                 if (!$user) {
                     continue;
                 }
-                if (((bool) $request->post($userId . '-system')) !== ((bool) $user->getSystem())
-                    || ((bool) $request->post($userId . '-ban')) !== ((bool) $user->getBanned())
-                    || ($request->post($userId . '-skupina') != $user->getPermissionGroup())
+                if (((bool) $_POST[$userId . '-system']) !== ((bool) $user->getSystem())
+                    || ((bool) $_POST[$userId . '-ban']) !== ((bool) $user->getBanned())
+                    || ($_POST[$userId . '-skupina'] != $user->getPermissionGroup())
                 ) {
                     \DBUser::setUserData(
                         $userId,
@@ -31,10 +31,10 @@ class Controller_Admin_Users
                         $user->getPostalCode(),
                         $user->getNationality(),
                         $user->getTrainingGroup(),
-                        $request->post($userId . '-skupina'),
+                        $_POST[$userId . '-skupina'],
                         $user->getLocked() ? '1' : '0',
-                        $request->post($userId . '-ban') ? '1' : '0',
-                        $request->post($userId . '-system') ? '1' : '0',
+                        $_POST[$userId . '-ban'] ? '1' : '0',
+                        $_POST[$userId . '-system'] ? '1' : '0',
                         $user->getDancer() ? '1' : '0',
                         $user->getTeacher() ? '1' : '0',
                         $user->getMemberSince(),
@@ -51,13 +51,13 @@ class Controller_Admin_Users
     {
         \Permissions::checkError('users', P_ADMIN);
         if (!$request->getId()) {
-            new \RedirectHelper($request->post('returnURI') ?: '/admin/users');
+            new \RedirectHelper($_POST['returnURI'] ?: '/admin/users');
         }
         $id = $request->getId();
 
-        if ($request->post('action') == 'confirm') {
+        if ($_POST['action'] == 'confirm') {
             \DBUser::removeUser($id);
-            new \RedirectHelper($request->post('returnURI') ?: '/admin/users');
+            new \RedirectHelper($_POST['returnURI'] ?: '/admin/users');
         }
 
         $item = \DBUser::getUserData($id);
@@ -75,7 +75,7 @@ class Controller_Admin_Users
     public function add($request)
     {
         \Permissions::checkError('users', P_ADMIN);
-        if (!$request->post()) {
+        if (!$_POST) {
             return $this->displayForm($request);
         }
         $form = $this->checkData($request, 'add');
@@ -85,32 +85,32 @@ class Controller_Admin_Users
         }
 
         \DBUser::addUser(
-            strtolower($request->post('login')),
-            User::crypt($request->post('pass')),
-            $request->post('jmeno'),
-            $request->post('prijmeni'),
-            $request->post('pohlavi'),
-            $request->post('email'),
-            $request->post('telefon'),
+            strtolower($_POST['login']),
+            User::crypt($_POST['pass']),
+            $_POST['jmeno'],
+            $_POST['prijmeni'],
+            $_POST['pohlavi'],
+            $_POST['email'],
+            $_POST['telefon'],
             (string) new \Date($_POST['narozeni'] ?? null),
-            $request->post('poznamky'),
-            $request->post('street'),
-            $request->post('popisne'),
-            $request->post('orientacni'),
-            $request->post('district'),
-            $request->post('city'),
-            $request->post('postal'),
-            $request->post('nationality'),
-            $request->post('group'),
-            $request->post('skupina'),
-            $request->post('lock') ? '1' : '0',
-            $request->post('ban') ? '1' : '0',
+            $_POST['poznamky'],
+            $_POST['street'],
+            $_POST['popisne'],
+            $_POST['orientacni'],
+            $_POST['district'],
+            $_POST['city'],
+            $_POST['postal'],
+            $_POST['nationality'],
+            $_POST['group'],
+            $_POST['skupina'],
+            $_POST['lock'] ? '1' : '0',
+            $_POST['ban'] ? '1' : '0',
             '1',
-            $request->post('system') ? '1' : '0',
-            $request->post('teacher') ? '1' : '0',
-            $request->post('dancer') ? '1' : '0'
+            $_POST['system'] ? '1' : '0',
+            $_POST['teacher'] ? '1' : '0',
+            $_POST['dancer'] ? '1' : '0'
         );
-        new \RedirectHelper($request->post('returnURI') ?: '/admin/users');
+        new \RedirectHelper($_POST['returnURI'] ?: '/admin/users');
     }
 
     public function edit($request)
@@ -118,42 +118,42 @@ class Controller_Admin_Users
         \Permissions::checkError('users', P_ADMIN);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Uživatel s takovým ID neexistuje');
-            new \RedirectHelper($request->post('returnURI') ?: '/admin/users');
+            new \RedirectHelper($_POST['returnURI'] ?: '/admin/users');
         }
         if (!$data = \DBUser::getUserData($id)) {
             new \MessageHelper('warning', 'Uživatel s takovým ID neexistuje');
-            new \RedirectHelper($request->post('returnURI') ?: '/admin/users');
+            new \RedirectHelper($_POST['returnURI'] ?: '/admin/users');
         }
         if (!$data['u_confirmed']) {
             new \MessageHelper('warning', 'Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
-            new \RedirectHelper($request->post('returnURI') ?: '/admin/users');
+            new \RedirectHelper($_POST['returnURI'] ?: '/admin/users');
         }
 
-        if (!$request->post()) {
-            $request->post('login', $data['u_login']);
-            $request->post('group', $data['u_group']);
-            $request->post('ban', $data['u_ban']);
-            $request->post('lock', $data['u_lock']);
-            $request->post('system', $data['u_system']);
-            $request->post('dancer', $data['u_dancer']);
-            $request->post('teacher', $data['u_teacher']);
-            $request->post('jmeno', $data['u_jmeno']);
-            $request->post('prijmeni', $data['u_prijmeni']);
-            $request->post('pohlavi', $data['u_pohlavi']);
-            $request->post('email', $data['u_email']);
-            $request->post('telefon', $data['u_telefon']);
-            $request->post('narozeni', $data['u_narozeni']);
-            $request->post('skupina', $data['u_skupina']);
-            $request->post('poznamky', $data['u_poznamky']);
-            $request->post('street', $data['u_street']);
-            $request->post('popisne', $data['u_conscription_number']);
-            $request->post('orientacni', $data['u_orientation_number']);
-            $request->post('district', $data['u_district']);
-            $request->post('city', $data['u_city']);
-            $request->post('postal', $data['u_postal_code']);
-            $request->post('nationality', $data['u_nationality']);
-            $request->post('createdAt', $data['u_created_at']);
-            $request->post('gdprSignedAt', $data['u_gdpr_signed_at']);
+        if (!$_POST) {
+            $_POST['login'] = $data['u_login'];
+            $_POST['group'] = $data['u_group'];
+            $_POST['ban'] = $data['u_ban'];
+            $_POST['lock'] = $data['u_lock'];
+            $_POST['system'] = $data['u_system'];
+            $_POST['dancer'] = $data['u_dancer'];
+            $_POST['teacher'] = $data['u_teacher'];
+            $_POST['jmeno'] = $data['u_jmeno'];
+            $_POST['prijmeni'] = $data['u_prijmeni'];
+            $_POST['pohlavi'] = $data['u_pohlavi'];
+            $_POST['email'] = $data['u_email'];
+            $_POST['telefon'] = $data['u_telefon'];
+            $_POST['narozeni'] = $data['u_narozeni'];
+            $_POST['skupina'] = $data['u_skupina'];
+            $_POST['poznamky'] = $data['u_poznamky'];
+            $_POST['street'] = $data['u_street'];
+            $_POST['popisne'] = $data['u_conscription_number'];
+            $_POST['orientacni'] = $data['u_orientation_number'];
+            $_POST['district'] = $data['u_district'];
+            $_POST['city'] = $data['u_city'];
+            $_POST['postal'] = $data['u_postal_code'];
+            $_POST['nationality'] = $data['u_nationality'];
+            $_POST['createdAt'] = $data['u_created_at'];
+            $_POST['gdprSignedAt'] = $data['u_gdpr_signed_at'];
             return $this->displayForm($request);
         }
         $form = $this->checkData($request, 'edit');
@@ -164,32 +164,32 @@ class Controller_Admin_Users
 
         \DBUser::setUserData(
             $id,
-            $request->post('jmeno'),
-            $request->post('prijmeni'),
-            $request->post('pohlavi'),
-            $request->post('email'),
-            $request->post('telefon'),
+            $_POST['jmeno'],
+            $_POST['prijmeni'],
+            $_POST['pohlavi'],
+            $_POST['email'],
+            $_POST['telefon'],
             (string) new \Date($_POST['narozeni'] ?? null),
-            $request->post('poznamky'),
-            $request->post('street'),
-            $request->post('popisne'),
-            $request->post('orientacni'),
-            $request->post('district'),
-            $request->post('city'),
-            $request->post('postal'),
-            $request->post('nationality'),
-            $request->post('group'),
-            $request->post('skupina'),
-            $request->post('lock') ? 1 : 0,
-            $request->post('ban') ? 1 : 0,
-            $request->post('system') ? 1 : 0,
-            $request->post('dancer') ? 1 : 0,
-            $request->post('teacher') ? 1 : 0,
+            $_POST['poznamky'],
+            $_POST['street'],
+            $_POST['popisne'],
+            $_POST['orientacni'],
+            $_POST['district'],
+            $_POST['city'],
+            $_POST['postal'],
+            $_POST['nationality'],
+            $_POST['group'],
+            $_POST['skupina'],
+            $_POST['lock'] ? 1 : 0,
+            $_POST['ban'] ? 1 : 0,
+            $_POST['system'] ? 1 : 0,
+            $_POST['dancer'] ? 1 : 0,
+            $_POST['teacher'] ? 1 : 0,
             $data['u_member_since'],
             $data['u_member_until'],
             $data['u_gdpr_signed_at']
         );
-        new \RedirectHelper($request->post('returnURI') ?: '/admin/users');
+        new \RedirectHelper($_POST['returnURI'] ?: '/admin/users');
     }
 
     public function getMsmtCsv($request)
@@ -204,13 +204,13 @@ class Controller_Admin_Users
     public function unconfirmed($request)
     {
         \Permissions::checkError('users', P_ADMIN);
-        if (($id = $request->post('confirm')) &&
+        if (($id = $_POST['confirm']) &&
             ($data = \DBUser::getUser($id))
         ) {
             \DBUser::confirmUser(
                 $id,
-                $request->post($id . '-group'),
-                $request->post($id . '-skupina')
+                $_POST[$id . '-group'],
+                $_POST[$id . '-skupina']
             );
             Mailer::registrationConfirmNotice($data->getEmail(), $data->getLogin());
             new \RedirectHelper('/admin/users/unconfirmed');
@@ -330,26 +330,26 @@ class Controller_Admin_Users
             'ban' => 'zabanovaní'
         ];
 
-        $options['group'] = in_array($request->get('group'), array_keys($groupOptions))
-                          ? $request->get('group')
+        $options['group'] = in_array($_GET['group'], array_keys($groupOptions))
+                          ? $_GET['group']
                           : 'all';
-        $options['skupina'] = in_array($request->get('skupina'), array_keys($skupinyOptions))
-                            ? $request->get('skupina')
+        $options['skupina'] = in_array($_GET['skupina'], array_keys($skupinyOptions))
+                            ? $_GET['skupina']
                             : 'all';
-        $options['sort'] = in_array($request->get('sort'), array_keys($sortOptions))
-                         ? $request->get('sort')
+        $options['sort'] = in_array($_GET['sort'], array_keys($sortOptions))
+                         ? $_GET['sort']
                          : 'prijmeni';
-        $options['status'] = in_array($request->get('status'), array_keys($statusOptions))
-                           ? $request->get('status')
+        $options['status'] = in_array($_GET['status'], array_keys($statusOptions))
+                           ? $_GET['status']
                            : 'all';
 
         $pager = new \Paging(new \DBUser(), $options);
-        $pager->setCurrentPage($request->get('p'));
-        $pager->setItemsPerPage($request->get('c'));
+        $pager->setCurrentPage($_GET['p']);
+        $pager->setItemsPerPage($_GET['c']);
 
         $i = $pager->getItemsPerPage() * ($pager->getCurrentPage() - 1);
 
-        $action = $request->get('view') ?: 'info';
+        $action = $_GET['view'] ?: 'info';
         if ($action == 'status') {
             $skupinySelect = new \SelectHelper(null, $skupinyOptions);
         } else {
@@ -391,12 +391,12 @@ class Controller_Admin_Users
             'sortOptions' => $sortOptions,
             'statusOptions' => $statusOptions,
             'data' => $data,
-            'navigation' => $pager->getNavigation($request->get()),
+            'navigation' => $pager->getNavigation(),
             'view' => $action,
-            'status' => $request->get('status') ?: '',
-            'skupina' => $request->get('skupina') ?: '',
-            'group' => $request->get('group') ?: '',
-            'sort' => $request->get('sort') ?: ''
+            'status' => $_GET['status'] ?: '',
+            'skupina' => $_GET['skupina'] ?: '',
+            'group' => $_GET['group'] ?: '',
+            'sort' => $_GET['sort'] ?: ''
         ]);
     }
 
@@ -422,34 +422,34 @@ class Controller_Admin_Users
             'header' => 'Správa uživatelů',
             'subheader' => ($request->getAction() == 'add' ? 'Přidat' : 'Upravit') . ' uživatele',
             'action' => $request->getAction(),
-            'returnURI' => $request->post('returnURI') ?: ($request->getReferer() ?: '/admin/users'),
+            'returnURI' => $_POST['returnURI'] ?: ($request->getReferer() ?: '/admin/users'),
             'groups' => $groups,
             'skupiny' => $skupiny,
-            'login' => $request->post('login') ?: '',
-            'pass' => $request->post('pass') ?: '',
-            'jmeno' => $request->post('jmeno') ?: '',
-            'prijmeni' => $request->post('prijmeni') ?: '',
-            'pohlavi' => $request->post('pohlavi') ?: '',
-            'email' => $request->post('email') ?: '',
-            'telefon' => $request->post('telefon') ?: '',
-            'narozeni' => $request->post('narozeni') ?: '',
-            'poznamky' => $request->post('poznamky') ?: '',
-            'street' => $request->post('street') ?: '',
-            'popisne' => $request->post('popisne') ?: '',
-            'orientacni' => $request->post('orientacni') ?: '',
-            'district' => $request->post('district') ?: '',
-            'city' => $request->post('city') ?: '',
-            'postal' => $request->post('postal') ?: '',
-            'nationality' => $request->post('nationality') ?: '',
-            'lock' => $request->post('lock') ?: '',
-            'ban' => $request->post('ban') ?: '',
-            'system' => $request->post('system') ?: '',
-            'group' => $request->post('group') ?: '',
-            'skupina' => $request->post('skupina') ?: '',
-            'dancer' => $request->post('dancer') ?: '',
-            'teacher' => $request->post('teacher') ?: '',
-            'createdAt' => $request->post('createdAt') ?: '',
-            'gdprSignedAt' => $request->post('gdprSignedAt') ?: ''
+            'login' => $_POST['login'] ?: '',
+            'pass' => $_POST['pass'] ?: '',
+            'jmeno' => $_POST['jmeno'] ?: '',
+            'prijmeni' => $_POST['prijmeni'] ?: '',
+            'pohlavi' => $_POST['pohlavi'] ?: '',
+            'email' => $_POST['email'] ?: '',
+            'telefon' => $_POST['telefon'] ?: '',
+            'narozeni' => $_POST['narozeni'] ?: '',
+            'poznamky' => $_POST['poznamky'] ?: '',
+            'street' => $_POST['street'] ?: '',
+            'popisne' => $_POST['popisne'] ?: '',
+            'orientacni' => $_POST['orientacni'] ?: '',
+            'district' => $_POST['district'] ?: '',
+            'city' => $_POST['city'] ?: '',
+            'postal' => $_POST['postal'] ?: '',
+            'nationality' => $_POST['nationality'] ?: '',
+            'lock' => $_POST['lock'] ?: '',
+            'ban' => $_POST['ban'] ?: '',
+            'system' => $_POST['system'] ?: '',
+            'group' => $_POST['group'] ?: '',
+            'skupina' => $_POST['skupina'] ?: '',
+            'dancer' => $_POST['dancer'] ?: '',
+            'teacher' => $_POST['teacher'] ?: '',
+            'createdAt' => $_POST['createdAt'] ?: '',
+            'gdprSignedAt' => $_POST['gdprSignedAt'] ?: ''
         ]);
     }
 
@@ -459,13 +459,13 @@ class Controller_Admin_Users
 
         $f = new \Form();
         $f->checkDate($narozeni, 'Neplatné datum narození', 'narozeni');
-        $f->checkInArray($request->post('pohlavi'), ['m', 'f'], 'Neplatné pohlaví', 'pohlavi');
-        $f->checkEmail($request->post('email'), 'Neplatný formát emailu', 'email');
-        $f->checkPhone($request->post('telefon'), 'Neplatný formát telefoního čísla', 'telefon');
+        $f->checkInArray($_POST['pohlavi'], ['m', 'f'], 'Neplatné pohlaví', 'pohlavi');
+        $f->checkEmail($_POST['email'], 'Neplatný formát emailu', 'email');
+        $f->checkPhone($_POST['telefon'], 'Neplatný formát telefoního čísla', 'telefon');
 
         if ($action == 'add') {
-            $f->checkLogin($request->post('login'), 'Špatný formát přihlašovacího jména', 'login');
-            $f->checkPassword($request->post('pass'), 'Špatný formát hesla', 'pass');
+            $f->checkLogin($_POST['login'], 'Špatný formát přihlašovacího jména', 'login');
+            $f->checkPassword($_POST['pass'], 'Špatný formát hesla', 'pass');
         }
         return $f;
     }

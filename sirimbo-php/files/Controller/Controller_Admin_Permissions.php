@@ -25,7 +25,7 @@ class Controller_Admin_Permissions
     public function add($request)
     {
         \Permissions::checkError('permissions', P_ADMIN);
-        if (!$request->post()) {
+        if (!$_POST) {
             return $this->renderForm($request);
         }
         $form = $this->checkData($request);
@@ -36,15 +36,15 @@ class Controller_Admin_Permissions
 
         $permissions = [];
         foreach (array_keys(Settings::$permissions) as $name) {
-            $permissions[$name] = $request->post($name);
+            $permissions[$name] = $_POST[$name];
         }
         DB\Permissions::addGroup(
-            $request->post('name'),
-            $request->post('description'),
+            $_POST['name'],
+            $_POST['description'],
             $permissions
         );
 
-        new \RedirectHelper($request->post('returnURI') ?: '/admin/permissions');
+        new \RedirectHelper($_POST['returnURI'] ?: '/admin/permissions');
     }
 
     public function edit($request)
@@ -52,14 +52,14 @@ class Controller_Admin_Permissions
         \Permissions::checkError('permissions', P_ADMIN);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
-            new \RedirectHelper($request->post('returnURI') ?: '/admin/permissions');
+            new \RedirectHelper($_POST['returnURI'] ?: '/admin/permissions');
         }
         if (!$data = DB\Permissions::getSingleGroup($id)) {
             new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
-            new \RedirectHelper($request->post('returnURI') ?: '/admin/permissions');
+            new \RedirectHelper($_POST['returnURI'] ?: '/admin/permissions');
         }
 
-        if (!$request->post()) {
+        if (!$_POST) {
             return $this->renderForm($request, $data);
         }
         $form = $this->checkData($request);
@@ -70,16 +70,16 @@ class Controller_Admin_Permissions
 
         $permissions = [];
         foreach (array_keys(Settings::$permissions) as $name) {
-            $permissions[$name] = $request->post($name);
+            $permissions[$name] = $_POST[$name];
         }
         DB\Permissions::editGroup(
             $id,
-            $request->post('name'),
-            $request->post('description'),
+            $_POST['name'],
+            $_POST['description'],
             $permissions
         );
 
-        new \RedirectHelper($request->post('returnURI') ?: '/admin/permissions');
+        new \RedirectHelper($_POST['returnURI'] ?: '/admin/permissions');
     }
 
     public function remove($request)
@@ -90,7 +90,7 @@ class Controller_Admin_Permissions
         }
         $id = $request->getId();
 
-        if ($request->post('action') == 'confirm') {
+        if ($_POST['action'] == 'confirm') {
             DB\Permissions::removeGroup($id);
             new \MessageHelper('info', 'Úroveň odebrána. Nezapomeňte přiřadit uživatelům z této skupiny jinou skupinu!');
             new \RedirectHelper('/admin/permissions');
@@ -109,14 +109,14 @@ class Controller_Admin_Permissions
 
     protected function renderForm($request, $data = null)
     {
-        if (!$request->post()) {
+        if (!$_POST) {
             foreach (Settings::$permissions as $name => $item) {
-                $request->post($name, $data['pe_' . $name]);
+                $_POST[$name] = $data['pe_' . $name];
             }
         }
         $settings = array_map(
             function ($name, $item) use ($request, $data) {
-                $value = $request->post($name) ?: ($data ? $data['pe_' . $name] : $item['default']);
+                $value = $_POST[$name] ?: ($data ? $data['pe_' . $name] : $item['default']);
                 return [
                     'name' => $item['name'],
                     'value' => $value,
@@ -145,8 +145,8 @@ class Controller_Admin_Permissions
                 : 'Upravit uživatelskou skupinu'
             ),
             'action' => $request->getAction(),
-            'name' => $request->post('name') ?: ($data ? $data['pe_name'] : ''),
-            'description' => $request->post('description') ?: ($data ? $data['pe_description'] : ''),
+            'name' => $_POST['name'] ?: ($data ? $data['pe_name'] : ''),
+            'description' => $_POST['description'] ?: ($data ? $data['pe_description'] : ''),
             'settings' => $settings
         ]);
     }
@@ -156,7 +156,7 @@ class Controller_Admin_Permissions
         $f = new \Form();
         foreach (Settings::$permissions as $name => $item) {
             $f->checkArrayKey(
-                $request->post($name), $item,
+                $_POST[$name], $item,
                 'Neplatná hodnota práva "' . $name . '"', $name
             );
         }

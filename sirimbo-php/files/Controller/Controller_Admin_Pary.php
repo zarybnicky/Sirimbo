@@ -4,10 +4,10 @@ class Controller_Admin_Pary
     public function view($request)
     {
         \Permissions::checkError('pary', P_OWNED);
-        switch ($request->post("action")) {
+        switch ($_POST["action"]) {
             case 'add':
-                if ($request->post("add_partner")) {
-                    DBPary::newCouple($request->post("add_partner"), $request->post("add_partnerka"));
+                if ($_POST["add_partner"]) {
+                    DBPary::newCouple($_POST["add_partner"], $_POST["add_partnerka"]);
                 }
                 new \RedirectHelper('/admin/pary');
                 break;
@@ -58,7 +58,7 @@ class Controller_Admin_Pary
             new \RedirectHelper('/admin/pary');
         }
 
-        if (!$request->post()) {
+        if (!$_POST) {
             return new \RenderHelper('files/View/Admin/Pary/Form.inc', [
                 'header' => 'Správa párů',
                 'subheader' => 'Změna třídy a bodů',
@@ -74,29 +74,29 @@ class Controller_Admin_Pary
                 'lat_finale' => $data['p_lat_finale']
             ]);
         }
-        $stt_body = intval($request->post('stt-body'));
+        $stt_body = intval($_POST['stt-body']);
         $stt_body_capped = max($stt_body, 200);
-        $stt_finale = intval($request->post('stt-finale'));
-        $lat_body = intval($request->post('lat-body'));
+        $stt_finale = intval($_POST['stt-finale']);
+        $lat_body = intval($_POST['lat-body']);
         $lat_body_capped = max($lat_body, 200);
-        $lat_finale = intval($request->post('lat-finale'));
+        $lat_finale = intval($_POST['lat-finale']);
 
-        $stt_amend = constant('Controller_Member_Profil_Par::AMEND_' . $request->post('stt-trida'));
-        $lat_amend = constant('Controller_Member_Profil_Par::AMEND_' . $request->post('lat-trida'));
+        $stt_amend = constant('Controller_Member_Profil_Par::AMEND_' . $_POST['stt-trida']);
+        $lat_amend = constant('Controller_Member_Profil_Par::AMEND_' . $_POST['lat-trida']);
         $stt_base = ($stt_body_capped + 40 * $stt_finale) * $stt_amend;
         $lat_base = ($lat_body_capped + 40 * $lat_finale) * $lat_amend;
 
-        $stt_bonus = constant('Controller_Member_Profil_Par::BONUS_' . $request->post('stt-trida'));
-        $lat_bonus = constant('Controller_Member_Profil_Par::BONUS_' . $request->post('lat-trida'));
+        $stt_bonus = constant('Controller_Member_Profil_Par::BONUS_' . $_POST['stt-trida']);
+        $lat_bonus = constant('Controller_Member_Profil_Par::BONUS_' . $_POST['lat-trida']);
 
         $hodnoceni = $stt_base + $lat_base + $stt_bonus + $lat_bonus;
 
         DBPary::editTridaBody(
             $data['p_id'],
-            $request->post('stt-trida'),
+            $_POST['stt-trida'],
             $stt_body,
             $stt_finale,
-            $request->post('lat-trida'),
+            $_POST['lat-trida'],
             $lat_body,
             $lat_finale,
             $hodnoceni

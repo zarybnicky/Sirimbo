@@ -5,13 +5,13 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
     {
         \Permissions::checkError('platby', P_OWNED);
         $filter = [];
-        if ($request->get('user') && is_numeric($request->get('user'))) {
-            $filter['u_id'] = $request->get('user');
+        if ($_GET['user'] && is_numeric($_GET['user'])) {
+            $filter['u_id'] = $_GET['user'];
         }
-        if ($request->get('category') && is_numeric($request->get('category'))) {
-            $filter['pc_id'] = $request->get('category');
-        } elseif (stripos($request->get('category'), 'group_') !== false) {
-            $filter['pg_id'] = substr($request->get('category'), 6);
+        if ($_GET['category'] && is_numeric($_GET['category'])) {
+            $filter['pc_id'] = $_GET['category'];
+        } elseif (stripos($_GET['category'], 'group_') !== false) {
+            $filter['pg_id'] = substr($_GET['category'], 6);
         }
         $date = \DateHelper::getPostRange('date');
 
@@ -39,16 +39,16 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             'categories' => $this->getCategories(),
             'data' => $data,
             'uri' => $request->getLiteralURI(),
-            'user' => $request->get('user') ?: '',
-            'category' => $request->get('category') ?: '',
-            'date' => $request->get('date') ?: ''
+            'user' => $_GET['user'] ?: '',
+            'category' => $_GET['category'] ?: '',
+            'date' => $_GET['date'] ?: ''
         ]);
     }
 
     public function add($request)
     {
         \Permissions::checkError('platby', P_OWNED);
-        if (!$request->post()) {
+        if (!$_POST) {
             return $this->displayForm(0, $request);
         } elseif (!is_object($item = $this->getFromPost($request))) {
             new \MessageHelper('warning', $item);
@@ -76,12 +76,12 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             new \MessageHelper('warning', 'Platba s takovým ID neexistuje');
             new \RedirectHelper('/admin/platby/items');
         }
-        if (!$request->post()) {
-            $request->post('date', $data['pi_date']);
-            $request->post('amount', $data['pi_amount']);
-            $request->post('variable', $data['pi_id_user']);
-            $request->post('specific', $data['pi_id_category']);
-            $request->post('prefix', $data['pi_prefix']);
+        if (!$_POST) {
+            $_POST['date'] = $data['pi_date'];
+            $_POST['amount'] = $data['pi_amount'];
+            $_POST['variable'] = $data['pi_id_user'];
+            $_POST['specific'] = $data['pi_id_category'];
+            $_POST['prefix'] = $data['pi_prefix'];
             return $this->displayForm($id, $request);
         } elseif (!is_object($item = $this->getFromPost($request, $id))) {
             new \MessageHelper('warning', $item);
@@ -105,7 +105,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             new \RedirectHelper('/admin/platby/items');
         }
         $id = $request->getId();
-        if ($request->post('action') == 'confirm') {
+        if ($_POST['action'] == 'confirm') {
             $item = \DBPlatbyItem::getSingle($id);
             $itemRaw = \DBPlatbyRaw::getSingle($item['pi_id_raw']);
             \DBPlatbyItem::remove($id);
@@ -156,11 +156,11 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             'raw' => $raw,
             'users' => $users,
             'categories' => $categories,
-            'date' => $request->post('date') ?: '',
-            'amount' => $request->post('amount') ?: '',
-            'variable' => $request->post('variable') ?: '',
-            'specific' => $request->post('specific') ?: '',
-            'prefix' => $request->post('prefix') ?: '',
+            'date' => $_POST['date'] ?: '',
+            'amount' => $_POST['amount'] ?: '',
+            'variable' => $_POST['variable'] ?: '',
+            'specific' => $_POST['specific'] ?: '',
+            'prefix' => $_POST['prefix'] ?: '',
             'uri' => $request->getLiteralURI()
         ]);
     }

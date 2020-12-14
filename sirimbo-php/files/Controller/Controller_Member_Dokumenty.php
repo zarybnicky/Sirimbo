@@ -4,7 +4,7 @@ class Controller_Member_Dokumenty
     public function view($request)
     {
         \Permissions::checkError('dokumenty', P_VIEW);
-        $kat = $request->get('kat');
+        $kat = $_GET['kat'];
         if (ctype_digit($kat)) {
             $dokumenty = \DBDokumenty::getDokumentyByKategorie($kat);
         } else {
@@ -13,7 +13,7 @@ class Controller_Member_Dokumenty
 
         new \RenderHelper('files/View/Member/Dokumenty.inc', [
             'header' => 'Dokumenty',
-            'kat' => $request->get('kat') ?: '',
+            'kat' => $_GET['kat'] ?: '',
             'data' => array_map(
                 function ($item) {
                     return [

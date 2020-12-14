@@ -53,13 +53,13 @@ try {
                 return new RedirectHelper('/member/profil/edit', 'Prosím vyplňte požadované údaje.');
             }
         }
-    } elseif ($request->post('login') && $request->post('pass')) {
-        $request->post('pass', User::crypt($request->post('pass')));
+    } elseif ($_POST['login'] && $_POST['pass']) {
+        $_POST['pass'] = User::crypt($_POST['pass']);
 
-        if (!Session::login($request->post('login'), $request->post('pass'))) {
+        if (!Session::login($_POST['login'], $_POST['pass'])) {
             new RedirectHelper('/login', 'Špatné jméno nebo heslo!');
-        } elseif ($request->get('return')) {
-            new RedirectHelper($request->get('return'));
+        } elseif ($_GET['return']) {
+            new RedirectHelper($_GET['return']);
         } else {
             new RedirectHelper('/member');
         }

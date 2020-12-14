@@ -9,16 +9,16 @@ class Controller_Admin_Aktuality_Foto
             new \MessageHelper('warning', 'Takový článek neexistuje');
             new \RedirectHelper('/admin/aktuality');
         }
-        if (!$request->post('foto')) {
-            if ($request->get('dir') === null) {
+        if (!$_POST['foto']) {
+            if ($_GET['dir'] === null) {
                 if ($article['at_foto']) {
                     new \RedirectHelper('/admin/aktuality/foto/' . $id . '?dir=' . $article['at_foto']);
                 } else {
-                    $request->get('dir', 0);
+                    $_GET['dir'] = 0;
                 }
             }
 
-            if (!\DBGalerie::getSingleDir($request->get('dir'))) {
+            if (!\DBGalerie::getSingleDir($_GET['dir'])) {
                 new \MessageHelper('warning', 'Taková složka neexistuje');
                 return new \RedirectHelper('/admin/aktuality/foto/' . $id . '?dir=0');
             }
@@ -27,7 +27,7 @@ class Controller_Admin_Aktuality_Foto
                 'id' => $item['gf_id'],
                 'name' => $item['gf_name'],
                 'src' => '/galerie/thumbnails/' . $item['gf_path']
-            ], \DBGalerie::getFotky($request->get('dir')));
+            ], \DBGalerie::getFotky($_GET['dir']));
 
             $dirs = \DBGalerie::getDirs(true, true);
             $dirs_out = [];
@@ -38,13 +38,13 @@ class Controller_Admin_Aktuality_Foto
             return new \RenderHelper('files/View/Admin/Aktuality/FormFoto.inc', [
                 'header' => 'Správa článků',
                 'photos' => $photos,
-                'dir' => $request->get('dir') ?: '',
+                'dir' => $_GET['dir'] ?: '',
                 'dirs' => $dirs_out,
                 'checked' => $article['at_foto_main']
             ]);
         }
-        if ($request->get('dir') === null) {
-            $request->get('dir', 0);
+        if ($_GET['dir'] === null) {
+            $_GET['dir'] = 0;
         }
 
         DBAktuality::editAktualita(
@@ -53,8 +53,8 @@ class Controller_Admin_Aktuality_Foto
             $article['at_jmeno'],
             $article['at_text'],
             $article['at_preview'],
-            $request->get('dir'),
-            $request->post('foto'),
+            $_GET['dir'],
+            $_POST['foto'],
             $article['at_timestamp_add']
         );
         new \RedirectHelper('/admin/aktuality');

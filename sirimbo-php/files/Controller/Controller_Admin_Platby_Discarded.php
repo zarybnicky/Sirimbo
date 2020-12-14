@@ -9,7 +9,7 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
             new \MessageHelper('info', 'V databázi nejsou žádné vyřazené platby.');
             new \RedirectHelper('/admin/platby');
         }
-        if ($request->get('list')) {
+        if ($_GET['list']) {
             $this->_getTable($request, $data, $result, $columns, $header);
             new \RenderHelper('files/View/Admin/Platby/DiscardedTable.inc', [
                 'header' => 'Správa plateb',
@@ -46,18 +46,18 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
 
     private function _getTable($request, $data, &$result, &$columns, &$header)
     {
-        if ($request->get('list') == 'date') {
+        if ($_GET['list'] == 'date') {
             $header =
-                ($request->get('year') == 'none'
+                ($_GET['year'] == 'none'
                 ? 'nezařazené podle data'
-                : ($request->get('month')
-                  ? ($request->get('year') . '/' . $request->get('month'))
-                  : $request->get('year')));
-        } elseif ($request->get('list') == 'amount') {
+                : ($_GET['month']
+                  ? ($_GET['year'] . '/' . $_GET['month'])
+                  : $_GET['year']));
+        } elseif ($_GET['list'] == 'amount') {
             $header =
-                ($request->get('amount') == 'none'
+                ($_GET['amount'] == 'none'
                 ? 'nezařazené podle částky'
-                : ($request->get('amount') . ' Kč'));
+                : ($_GET['amount'] . ' Kč'));
         } else {
             $header = 'všechny';
         }
@@ -70,24 +70,24 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
                 $this->recognizeHeaders($row, $specific, $variable, $date, $amount);
             }
 
-            if ($request->get('list') == 'date') {
+            if ($_GET['list'] == 'date') {
                 if (isset($row[$date]) && $row[$date]) {
-                    if ($request->get('year') == 'none') {
+                    if ($_GET['year'] == 'none') {
                         continue;
                     }
                     $currentDate = new \Date($row[$date]);
-                    if ($currentDate->getYear() != $request->get('year')
-                        || ($request->get('month') && $currentDate->getMonth() != $request->get('month'))
+                    if ($currentDate->getYear() != $_GET['year']
+                        || ($_GET['month'] && $currentDate->getMonth() != $_GET['month'])
                     ) {
                         continue;
                     }
-                } elseif ($request->get('year') !== 'none') {
+                } elseif ($_GET['year'] !== 'none') {
                     continue;
                 }
             } elseif (
-                $request->get('list') == 'amount'
-                && ((!isset($row[$amount]) ^ $request->get('amount') == 'none')
-                || $request->get('amount') != (int) $row[$amount])
+                $_GET['list'] == 'amount'
+                && ((!isset($row[$amount]) ^ $_GET['amount'] == 'none')
+                || $_GET['amount'] != (int) $row[$amount])
             ) {
                 continue;
             }

@@ -101,12 +101,12 @@ class Controller_Admin_Platby
         $item = new PlatbyItem();
         $item->init(
             null,
-            $request->post('variable'),
-            $request->post('date'),
-            $request->post('amount'),
-            $request->post('prefix'),
+            $_POST['variable'],
+            $_POST['date'],
+            $_POST['amount'],
+            $_POST['prefix'],
             $id,
-            $request->post('specific')
+            $_POST['specific']
         );
         $item->processWithSymbolLookup(
             $this->getUserLookup(false),

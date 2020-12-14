@@ -26,7 +26,7 @@ class Controller_Admin_Video_Source
     public function add($request)
     {
         \Permissions::checkError('aktuality', P_OWNED);
-        if (!$request->post()) {
+        if (!$_POST) {
             return $this->displayForm($request);
         }
 
@@ -36,7 +36,7 @@ class Controller_Admin_Video_Source
             return $this->displayForm($request);
         }
 
-        \DBVideoSource::add($request->post('uri'));
+        \DBVideoSource::add($_POST['uri']);
         new \RedirectHelper('/admin/video/source');
     }
 
@@ -50,7 +50,7 @@ class Controller_Admin_Video_Source
             new \RedirectHelper('/admin/video/source');
         }
 
-        if (!$request->post()) {
+        if (!$_POST) {
             return $this->displayForm($request, $data);
         }
 
@@ -62,9 +62,9 @@ class Controller_Admin_Video_Source
 
         \DBVideoSource::edit(
             $id,
-            $request->post('uri'),
-            $request->post('title'),
-            $request->post('desc')
+            $_POST['uri'],
+            $_POST['title'],
+            $_POST['desc']
         );
 
         new \RedirectHelper('/admin/video/source');
@@ -77,7 +77,7 @@ class Controller_Admin_Video_Source
             new \RedirectHelper('/admin/video/source');
         }
 
-        if ($request->post('action') == 'confirm') {
+        if ($_POST['action'] == 'confirm') {
             \DBVideoSource::remove($request->getId());
             new \MessageHelper('info', 'Video odebráno');
             new \RedirectHelper('/admin/video/source');
@@ -99,9 +99,9 @@ class Controller_Admin_Video_Source
             'subheader' => $request->getAction() == 'add' ? 'Přidat zdroj' : 'Upravit zdroj',
             'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit',
             'id' => $data ? $data['vs_id'] : null,
-            'uri' => $request->post('uri') ?: ($data ? $data['vs_url'] : ''),
-            'title' => $request->post('title') ?: ($data ? $data['vs_title'] : ''),
-            'desc' => $request->post('desc') ?: ($data ? $data['vs_description'] : '')
+            'uri' => $_POST['uri'] ?: ($data ? $data['vs_url'] : ''),
+            'title' => $_POST['title'] ?: ($data ? $data['vs_title'] : ''),
+            'desc' => $_POST['desc'] ?: ($data ? $data['vs_description'] : '')
         ]);
     }
 
@@ -109,7 +109,7 @@ class Controller_Admin_Video_Source
     {
         $form = new \Form();
         $form->checkNotEmpty(
-            $request->post('uri'),
+            $_POST['uri'],
             'Zadejce prosím ID kanálu',
             'uri'
         );

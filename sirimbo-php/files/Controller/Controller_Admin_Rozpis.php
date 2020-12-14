@@ -8,10 +8,10 @@ class Controller_Admin_Rozpis
             ? \DBRozpis::getRozpis(true)
             : \DBRozpis::getRozpisyByTrener(Session::getUserID(), true);
 
-        if ($request->post('action') == 'save') {
+        if ($_POST['action'] == 'save') {
             foreach ($data as $item) {
                 $id = $item['r_id'];
-                if ((bool) $request->post($id) == (bool) $item['r_visible']) {
+                if ((bool) $_POST[$id] == (bool) $item['r_visible']) {
                     continue;
                 }
                 \DBRozpis::editRozpis(
@@ -19,7 +19,7 @@ class Controller_Admin_Rozpis
                     $item['r_trener'],
                     $item['r_kde'],
                     $item['r_datum'],
-                    $request->post($id) ? '1' : '0',
+                    $_POST[$id] ? '1' : '0',
                     $item['r_lock'] ? '1' : '0'
                 );
             }
@@ -53,7 +53,7 @@ class Controller_Admin_Rozpis
     public function add($request)
     {
         \Permissions::checkError('rozpis', P_OWNED);
-        if (!$request->post()) {
+        if (!$_POST) {
             return $this->displayForm($request);
         }
 
@@ -63,14 +63,14 @@ class Controller_Admin_Rozpis
             return $this->displayForm($request);
         }
 
-        \Permissions::checkError('rozpis', P_OWNED, $request->post('trener'));
+        \Permissions::checkError('rozpis', P_OWNED, $_POST['trener']);
 
         \DBRozpis::addRozpis(
-            $request->post('trener'),
-            $request->post('kde'),
+            $_POST['trener'],
+            $_POST['kde'],
             (string) new \Date($_POST['datum'] ?? null),
-            $request->post('visible') ? '1' : '0',
-            $request->post('lock') ? '1' : '0'
+            $_POST['visible'] ? '1' : '0',
+            $_POST['lock'] ? '1' : '0'
         );
         new \RedirectHelper('/admin/rozpis');
     }
@@ -88,7 +88,7 @@ class Controller_Admin_Rozpis
         }
         \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
 
-        if (!$request->post()) {
+        if (!$_POST) {
             return $this->displayForm($request, $data);
         }
 
@@ -100,11 +100,11 @@ class Controller_Admin_Rozpis
 
         \DBRozpis::editRozpis(
             $id,
-            $request->post('trener'),
-            $request->post('kde'),
+            $_POST['trener'],
+            $_POST['kde'],
             (string) new \Date($_POST['datum'] ?? null),
-            $request->post('visible') ? '1' : '0',
-            $request->post('lock') ? '1' : '0'
+            $_POST['visible'] ? '1' : '0',
+            $_POST['lock'] ? '1' : '0'
         );
 
         new \RedirectHelper('/admin/rozpis');
@@ -161,11 +161,11 @@ class Controller_Admin_Rozpis
             'subheader' => ($data === null ? 'Přidat' : 'Upravit') . ' rozpis',
             'action' => $request->getAction(),
             'treneri' => $treneri,
-            'trener' => $request->post('trener') ?: ($data ? $data['r_trener'] : ''),
-            'kde' => $request->post('kde') ?: ($data ? $data['r_kde'] : ''),
-            'datum' => $request->post('datum') ?: ($data ? $data['r_datum'] : ''),
-            'visible' => $request->post('visible') ?: ($data ? $data['r_visible'] : ''),
-            'lock' => $request->post('lock') ?: ($data ? $data['r_lock'] : '')
+            'trener' => $_POST['trener'] ?? ($data ? $data['r_trener'] : ''),
+            'kde' => $_POST['kde'] ?? ($data ? $data['r_kde'] : ''),
+            'datum' => $_POST['datum'] ?? ($data ? $data['r_datum'] : ''),
+            'visible' => $_POST['visible'] ?? ($data ? $data['r_visible'] : ''),
+            'lock' => $_POST['lock'] ?? ($data ? $data['r_lock'] : '')
         ]);
     }
 
@@ -174,7 +174,7 @@ class Controller_Admin_Rozpis
         $datum = new \Date($_POST['datum'] ?? null);
 
         $f = new \Form();
-        $f->checkNumeric($request->post('trener'), 'Neplatný trenér', 'trener');
+        $f->checkNumeric($_POST['trener'], 'Neplatný trenér', 'trener');
         $f->checkDate((string) $datum, 'Neplatný formát data', 'datum');
         return $f;
     }

@@ -13,13 +13,13 @@ class Controller_Admin_Akce_Detail
             new \RedirectHelper('/admin/akce');
         }
 
-        if ($request->post()) {
-            if ($request->post("remove") > 0) {
-                \DBAkce::removeAkceItem($request->post("remove"));
+        if ($_POST) {
+            if ($_POST["remove"] > 0) {
+                \DBAkce::removeAkceItem($_POST["remove"]);
             }
 
             foreach (\DBAkce::getAkceItems($id) as $item) {
-                $user = $request->post($item["ai_id"] . '-user');
+                $user = $_POST[$item["ai_id"] . '-user'];
 
                 if (!$user) {
                     \DBAkce::removeAkceItem($item['ai_id']);
@@ -30,13 +30,13 @@ class Controller_Admin_Akce_Detail
                 }
             }
 
-            if (is_numeric($request->post("add-user")) && $request->post('add-user') > 0) {
-                $user = $request->post("add-user");
+            if (is_numeric($_POST["add-user"]) && $_POST['add-user'] > 0) {
+                $user = $_POST["add-user"];
                 $data = \DBUser::getUserData($user);
                 list($year) = explode('-', $data['u_narozeni']);
 
                 \DBAkce::addAkceItem($id, $user, $year);
-                $request->post('add-user', 0);
+                $_POST['add-user'] = 0;
             }
             new \RedirectHelper('/admin/akce/detail/' . $id);
         }

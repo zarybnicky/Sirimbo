@@ -128,7 +128,7 @@ class Paging
         ];
     }
 
-    public function getLink($get, $i, $label, $perPage = null)
+    public function getLink($i, $label, $perPage = null)
     {
         if (!$this->_valid) {
             return false;
@@ -139,20 +139,20 @@ class Paging
 
         $p = $this->_currentPageField ?: 'p';
         $c = $this->_itemsPerPageField ?: 'c';
-        $url = http_build_query(array_merge($get, [$c => $perPage, $p => $i]));
+        $url = http_build_query(array_merge($_GET, [$c => $perPage, $p => $i]));
         return "<a href=\"?$url\">$label</a>";
     }
 
-    public function getNavigation($get)
+    public function getNavigation()
     {
         if ($this->_pageCount <= 1) {
-            return $this->getCountSetting($get);
+            return $this->getCountSetting();
         }
 
         $out = '';
         if ($this->getCurrentPage() != 1) {
-            $out .= $this->getLink($get, 1, '&lt;&lt;') . '&nbsp;';
-            $out .= $this->getLink($get, $this->_previousPage, '&lt;');
+            $out .= $this->getLink(1, '&lt;&lt;') . '&nbsp;';
+            $out .= $this->getLink($this->_previousPage, '&lt;');
         } else {
             $out .= '<span style="padding:0 2px;">&lt;&lt;</span>&nbsp;';
             $out .= '<span style="padding:0 2px;">&lt;</span>';
@@ -169,7 +169,7 @@ class Paging
         foreach ($pages as $i) {
             $out .= '<div style="text-align:center;width:3ex;display:inline-block;*display:inline;">';
             if ($i != $this->getCurrentPage()) {
-                $out .= $this->getLink($get, $i, $i);
+                $out .= $this->getLink($i, $i);
             } else {
                 $out .= $i;
             }
@@ -177,16 +177,16 @@ class Paging
         }
         $out .= '&nbsp;';
         if ($this->getCurrentPage() != $this->_pageCount) {
-            $out .= $this->getLink($get, $this->_nextPage, '&gt;') . '&nbsp;';
-            $out .= $this->getLink($get, $this->_pageCount, '&gt;&gt;');
+            $out .= $this->getLink($this->_nextPage, '&gt;') . '&nbsp;';
+            $out .= $this->getLink($this->_pageCount, '&gt;&gt;');
         } else {
             $out .= '<span style="padding:0 2px;">&gt;</span>&nbsp;';
             $out .= '<span style="padding:0 2px;">&gt;&gt;</span>';
         }
-        return $out . '<br/>' . $this->getCountSetting($get);
+        return $out . '<br/>' . $this->getCountSetting();
     }
 
-    public function getCountSetting($get)
+    public function getCountSetting()
     {
         if ($this->_totalItems <= 5) {
             return '';
@@ -197,7 +197,7 @@ class Paging
         if ($this->_itemsPerPage === $this->_totalItems) {
             $out .= '<span style="padding:0 2px;">vše</span>';
         } else {
-            $out .= $this->getLink($get, 1, 'vše', $this->_totalItems);
+            $out .= $this->getLink(1, 'vše', $this->_totalItems);
         }
 
         foreach ($options as $option) {
@@ -209,7 +209,7 @@ class Paging
                 $out .= '&nbsp;|&nbsp;<span style="padding:0 2px;">' . $option . '</span>';
             } else {
                 $i = floor($this->_itemsPerPage * ($this->_currentPage - 1) / $option) + 1;
-                $out .= '&nbsp;|&nbsp;' . $this->getLink($get, $i, $option, $option);
+                $out .= '&nbsp;|&nbsp;' . $this->getLink($i, $option, $option);
             }
         }
         $out .= ' položek na stránku';
