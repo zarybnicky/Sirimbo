@@ -142,13 +142,14 @@ class DBAkce extends Database implements Pagable
     {
         $res = self::query(
             "SELECT ai_id FROM akce_item WHERE ai_id_rodic='?' AND ai_user='?'",
-            $a_id, $u_id
+            $a_id,
+            $u_id
         );
         if (!$res) {
             return false;
         } else {
             $row = self::getSingleRow($res);
-            return (bool)$row["ai_id"];
+            return (bool) $row["ai_id"] ?? false;
         }
     }
 }
