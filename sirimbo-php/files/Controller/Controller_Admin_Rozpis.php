@@ -172,7 +172,7 @@ class Controller_Admin_Rozpis extends Controller_Abstract
 
     private function checkData($request): Form
     {
-        $datum = new Date($_POST['datum')->getPost($request);
+        $datum = new Date($_POST['datum'] ?? null);
 
         $f = new Form();
         $f->checkNumeric($request->post('trener'), 'Neplatný trenér', 'trener');
