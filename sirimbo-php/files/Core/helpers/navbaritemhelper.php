@@ -17,7 +17,7 @@ class NavbarItemHelper
         if (!is_array($item)) {
             return "<div class='$item'></div>";
         }
-        if (isset($item[3]) && $item[3] && !Permissions::check($item[3][0], $item[3][1])) {
+        if (isset($item[3]) && $item[3] && !\Permissions::check($item[3][0], $item[3][1])) {
             return '';
         }
         $active = $item[1] === ('/' . $this->url)
@@ -31,7 +31,7 @@ class NavbarItemHelper
         $x = '<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">' . $item[0] . '</a>';
         $x .= '<div class="dropdown-menu">';
         foreach ($item[2] as $sub) {
-            if (isset($sub[3]) && $sub[3] && !Permissions::check($sub[3][0], $sub[3][1])) {
+            if (isset($sub[3]) && $sub[3] && !\Permissions::check($sub[3][0], $sub[3][1])) {
                 continue;
             }
             $x .= '<a class="dropdown-item" href="' . $sub[1] . '">' . $sub[0] . '</a>';

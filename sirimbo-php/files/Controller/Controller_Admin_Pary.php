@@ -3,7 +3,7 @@ class Controller_Admin_Pary
 {
     public function view($request)
     {
-        Permissions::checkError('pary', P_OWNED);
+        \Permissions::checkError('pary', P_OWNED);
         switch ($request->post("action")) {
             case 'add':
                 if ($request->post("add_partner")) {
@@ -41,14 +41,14 @@ class Controller_Admin_Pary
         new \RenderHelper('files/View/Admin/Pary/Overview.inc', [
             'header' => 'Správa párů',
             'data' => $data,
-            'usersMen' => DBUser::getUsersByPohlavi('m'),
-            'usersWomen' => DBUser::getUsersByPohlavi('f')
+            'usersMen' => \DBUser::getUsersByPohlavi('m'),
+            'usersWomen' => \DBUser::getUsersByPohlavi('f')
         ]);
     }
 
     public function edit($request)
     {
-        Permissions::checkError('pary', P_OWNED);
+        \Permissions::checkError('pary', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Pár s takovým ID neexistuje');
             new \RedirectHelper('/admin/pary');
@@ -107,7 +107,7 @@ class Controller_Admin_Pary
 
     public function remove($request)
     {
-        Permissions::checkError('pary', P_OWNED);
+        \Permissions::checkError('pary', P_OWNED);
         $id = $request->getId();
         if ($id) {
             DBPary::removeCouple($id);

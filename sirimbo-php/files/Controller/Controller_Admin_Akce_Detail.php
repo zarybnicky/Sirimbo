@@ -3,39 +3,39 @@ class Controller_Admin_Akce_Detail
 {
     public function view($request)
     {
-        Permissions::checkError('akce', P_OWNED);
+        \Permissions::checkError('akce', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Akce s takovým ID neexistuje');
             new \RedirectHelper('/admin/akce');
         }
-        if (!$akce = DBAkce::getSingleAkce($id)) {
+        if (!$akce = \DBAkce::getSingleAkce($id)) {
             new \MessageHelper('warning', 'Akce s takovým ID neexistuje');
             new \RedirectHelper('/admin/akce');
         }
 
         if ($request->post()) {
             if ($request->post("remove") > 0) {
-                DBAkce::removeAkceItem($request->post("remove"));
+                \DBAkce::removeAkceItem($request->post("remove"));
             }
 
-            foreach (DBAkce::getAkceItems($id) as $item) {
+            foreach (\DBAkce::getAkceItems($id) as $item) {
                 $user = $request->post($item["ai_id"] . '-user');
 
                 if (!$user) {
-                    DBAkce::removeAkceItem($item['ai_id']);
+                    \DBAkce::removeAkceItem($item['ai_id']);
                 } elseif ($user != $item["ai_user"]) {
-                    $data = DBUser::getUserData($user);
+                    $data = \DBUser::getUserData($user);
                     list($year) = explode('-', $data['u_narozeni']);
-                    DBAkce::editAkceItem($item["ai_id"], $user, $year);
+                    \DBAkce::editAkceItem($item["ai_id"], $user, $year);
                 }
             }
 
             if (is_numeric($request->post("add-user")) && $request->post('add-user') > 0) {
                 $user = $request->post("add-user");
-                $data = DBUser::getUserData($user);
+                $data = \DBUser::getUserData($user);
                 list($year) = explode('-', $data['u_narozeni']);
 
-                DBAkce::addAkceItem($id, $user, $year);
+                \DBAkce::addAkceItem($id, $user, $year);
                 $request->post('add-user', 0);
             }
             new \RedirectHelper('/admin/akce/detail/' . $id);
@@ -50,14 +50,14 @@ class Controller_Admin_Akce_Detail
                 ? ' - ' . formatDate($akce['a_do'])
                 : ''),
             'kapacita' => $akce['a_kapacita'],
-            'volno' => $akce['a_kapacita'] - count(DBAkce::getAkceItems($id)),
-            'showForm' => Permissions::check('akce', P_MEMBER)
+            'volno' => $akce['a_kapacita'] - count(\DBAkce::getAkceItems($id)),
+            'showForm' => \Permissions::check('akce', P_MEMBER)
                 && !$akce['a_lock'],
-            'canEdit' => Permissions::check('akce', P_OWNED),
+            'canEdit' => \Permissions::check('akce', P_OWNED),
             'info' => nl2br($akce['a_info'])
         ];
 
-        $userSelect = new UserSelectHelper(DBUser::getActiveUsers());
+        $userSelect = new UserSelectHelper(\DBUser::getActiveUsers());
         $items = array_map(
             function ($item) use ($userSelect) {
                 return [
@@ -65,7 +65,7 @@ class Controller_Admin_Akce_Detail
                     'removeButton' => (new \SubmitHelper('Odstranit'))->data('remove', $item['ai_id'])
                 ];
             },
-            DBAkce::getAkceItems($id)
+            \DBAkce::getAkceItems($id)
         );
         $items[] = [
             'name' => $userSelect->name('add-user')->set(0),

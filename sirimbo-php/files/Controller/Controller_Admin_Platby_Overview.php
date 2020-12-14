@@ -3,8 +3,8 @@ class Controller_Admin_Platby_Overview extends Controller_Admin_Platby
 {
     public function view($request)
     {
-        Permissions::checkError('platby', P_OWNED);
-        $data = DBUser::getUsersWithSkupinaPlatby();
+        \Permissions::checkError('platby', P_OWNED);
+        $data = \DBUser::getUsersWithSkupinaPlatby();
         $skupiny = [];
         $index = 0;
         $currentID = -1;

@@ -3,7 +3,7 @@ class Controller_Admin_Platby
 {
     public function view($request)
     {
-        Permissions::checkError('platby', P_OWNED);
+        \Permissions::checkError('platby', P_OWNED);
         new \RedirectHelper('/admin/platby/overview');
     }
 
@@ -36,7 +36,7 @@ class Controller_Admin_Platby
 
     protected function getCategoryList()
     {
-        $in = DBPlatbyGroup::getGroupsWithCategories();
+        $in = \DBPlatbyGroup::getGroupsWithCategories();
         $out = [];
         $group_id = 0;
         foreach ($in as $array) {
@@ -53,7 +53,7 @@ class Controller_Admin_Platby
 
     protected function getCategoryLookup($useSymbolKey, $unique, $includeGroups)
     {
-        $in = DBPlatbyGroup::getGroupsWithCategories();
+        $in = \DBPlatbyGroup::getGroupsWithCategories();
         $out = [];
         $group_id = 0;
         foreach ($in as $array) {
@@ -78,7 +78,7 @@ class Controller_Admin_Platby
 
     protected function getUserLookup($sort)
     {
-        $in = DBUser::getUsers();
+        $in = \DBUser::getUsers();
         if ($sort) {
             usort(
                 $in,

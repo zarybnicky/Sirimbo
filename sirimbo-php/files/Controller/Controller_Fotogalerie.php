@@ -7,12 +7,12 @@ class Controller_Fotogalerie
         if ($id === null) {
             $id = 0;
             $dir = ['gd_name' => ''];
-        } elseif (!($dir = DBGalerie::getSingleDir($id))) {
+        } elseif (!($dir = \DBGalerie::getSingleDir($id))) {
             new \MessageHelper('warning', 'Taková složka neexistuje');
             new \RedirectHelper('/fotogalerie');
         }
 
-        $photos = DBGalerie::getFotky($id);
+        $photos = \DBGalerie::getFotky($id);
 
         if (empty($photos)) {
             return new \RenderHelper('files/View/Empty.inc', [
@@ -48,12 +48,12 @@ class Controller_Fotogalerie
             new \MessageHelper('warning', 'Taková fotka neexistuje');
             new \RedirectHelper('/fotogalerie');
         }
-        if (!$data = DBGalerie::getSingleFoto($id)) {
+        if (!$data = \DBGalerie::getSingleFoto($id)) {
             new \MessageHelper('warning', 'Taková fotka neexistuje');
             new \RedirectHelper('/fotogalerie');
         }
 
-        $parent_dir = DBGalerie::getFotky($data['gf_id_rodic']);
+        $parent_dir = \DBGalerie::getFotky($data['gf_id_rodic']);
         $current = 0;
         foreach ($parent_dir as $key => $foto) {
             if ($foto['gf_id'] == $id) {
@@ -81,7 +81,7 @@ class Controller_Fotogalerie
 
     public function sidemenu($request)
     {
-        if (!($dirs = DBGalerie::getDirs(true, true))) {
+        if (!($dirs = \DBGalerie::getDirs(true, true))) {
             return '';
         }
 

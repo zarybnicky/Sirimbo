@@ -3,7 +3,7 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
 {
     public function view($request)
     {
-        Permissions::checkError('platby', P_OWNED);
+        \Permissions::checkError('platby', P_OWNED);
         new \RenderHelper('files/View/Admin/Platby/StructureOverview.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Struktura plateb',
@@ -60,7 +60,7 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
                     )
                 ];
             },
-            DBPlatbyGroup::getWithoutSkupina()
+            \DBPlatbyGroup::getWithoutSkupina()
         );
     }
 
@@ -77,7 +77,7 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
                     )
                 ];
             },
-            DBPlatbyGroup::getWithoutCategory()
+            \DBPlatbyGroup::getWithoutCategory()
         );
     }
     protected function getOrphanCategory()
@@ -93,7 +93,7 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
                     )
                 ];
             },
-            DBPlatbyCategory::getOrphan()
+            \DBPlatbyCategory::getOrphan()
         );
     }
 }

@@ -3,7 +3,7 @@ class Controller_Member_Pary
 {
     public function view($request)
     {
-        Permissions::checkError('pary', P_VIEW);
+        \Permissions::checkError('pary', P_VIEW);
         $data = DBPary::getActiveParyByHodnoceni();
         if (empty($data)) {
             return new \RenderHelper('files/View/Empty.inc', [

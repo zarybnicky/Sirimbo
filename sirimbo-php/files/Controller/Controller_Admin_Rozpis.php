@@ -3,10 +3,10 @@ class Controller_Admin_Rozpis
 {
     public function view($request)
     {
-        Permissions::checkError('rozpis', P_OWNED);
-        $data = Permissions::check('rozpis', P_ADMIN)
-            ? DBRozpis::getRozpis(true)
-            : DBRozpis::getRozpisyByTrener(Session::getUserID(), true);
+        \Permissions::checkError('rozpis', P_OWNED);
+        $data = \Permissions::check('rozpis', P_ADMIN)
+            ? \DBRozpis::getRozpis(true)
+            : \DBRozpis::getRozpisyByTrener(Session::getUserID(), true);
 
         if ($request->post('action') == 'save') {
             foreach ($data as $item) {
@@ -14,7 +14,7 @@ class Controller_Admin_Rozpis
                 if ((bool) $request->post($id) == (bool) $item['r_visible']) {
                     continue;
                 }
-                DBRozpis::editRozpis(
+                \DBRozpis::editRozpis(
                     $id,
                     $item['r_trener'],
                     $item['r_kde'],
@@ -52,7 +52,7 @@ class Controller_Admin_Rozpis
 
     public function add($request)
     {
-        Permissions::checkError('rozpis', P_OWNED);
+        \Permissions::checkError('rozpis', P_OWNED);
         if (!$request->post()) {
             return $this->displayForm($request);
         }
@@ -63,12 +63,12 @@ class Controller_Admin_Rozpis
             return $this->displayForm($request);
         }
 
-        Permissions::checkError('rozpis', P_OWNED, $request->post('trener'));
+        \Permissions::checkError('rozpis', P_OWNED, $request->post('trener'));
 
-        DBRozpis::addRozpis(
+        \DBRozpis::addRozpis(
             $request->post('trener'),
             $request->post('kde'),
-            (string) new Date($_POST['datum'] ?? null),
+            (string) new \Date($_POST['datum'] ?? null),
             $request->post('visible') ? '1' : '0',
             $request->post('lock') ? '1' : '0'
         );
@@ -77,16 +77,16 @@ class Controller_Admin_Rozpis
 
     public function edit($request)
     {
-        Permissions::checkError('rozpis', P_OWNED);
+        \Permissions::checkError('rozpis', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Rozpis s takovým ID neexistuje');
             new \RedirectHelper('/admin/rozpis');
         }
-        if (!$data = DBRozpis::getSingleRozpis($id)) {
+        if (!$data = \DBRozpis::getSingleRozpis($id)) {
             new \MessageHelper('warning', 'Rozpis s takovým ID neexistuje');
             new \RedirectHelper('/admin/rozpis');
         }
-        Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
+        \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
 
         if (!$request->post()) {
             return $this->displayForm($request, $data);
@@ -98,11 +98,11 @@ class Controller_Admin_Rozpis
             return $this->displayForm($request, $data);
         }
 
-        DBRozpis::editRozpis(
+        \DBRozpis::editRozpis(
             $id,
             $request->post('trener'),
             $request->post('kde'),
-            (string) new Date($_POST['datum'] ?? null),
+            (string) new \Date($_POST['datum'] ?? null),
             $request->post('visible') ? '1' : '0',
             $request->post('lock') ? '1' : '0'
         );
@@ -112,12 +112,12 @@ class Controller_Admin_Rozpis
 
     public function duplicate($request)
     {
-        Permissions::checkError('rozpis', P_OWNED);
+        \Permissions::checkError('rozpis', P_OWNED);
         $oldId = $request->getId();
-        $data = DBRozpis::getSingleRozpis($oldId);
-        $items = DBRozpis::getRozpisItem($oldId);
+        $data = \DBRozpis::getSingleRozpis($oldId);
+        $items = \DBRozpis::getRozpisItem($oldId);
 
-        $newId = DBRozpis::addRozpis(
+        $newId = \DBRozpis::addRozpis(
             $data['r_trener'],
             $data['r_kde'],
             $data['r_datum'],
@@ -125,7 +125,7 @@ class Controller_Admin_Rozpis
             $data['r_lock']
         );
         foreach ($items as $item) {
-            DBRozpis::addRozpisItem(
+            \DBRozpis::addRozpisItem(
                 $newId,
                 $item['ri_partner'],
                 $item['ri_od'],
@@ -138,23 +138,23 @@ class Controller_Admin_Rozpis
 
     public function remove($request)
     {
-        Permissions::checkError('rozpis', P_OWNED);
+        \Permissions::checkError('rozpis', P_OWNED);
         $id = $request->getId();
-        $trener = DBRozpis::getRozpisTrener($id);
+        $trener = \DBRozpis::getRozpisTrener($id);
 
-        if (!Permissions::check('rozpis', P_OWNED, $trener['u_id'])) {
+        if (!\Permissions::check('rozpis', P_OWNED, $trener['u_id'])) {
             throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
         }
-        DBRozpis::removeRozpis($id);
+        \DBRozpis::removeRozpis($id);
         new \RedirectHelper('/admin/rozpis');
     }
 
     protected function displayForm($request, $data = null)
     {
-        $isAdmin = Permissions::check('rozpis', P_ADMIN);
+        $isAdmin = \Permissions::check('rozpis', P_ADMIN);
         $treneri = $isAdmin
-                 ? DBUser::getUsersByPermission('rozpis', P_OWNED)
-                 : [DBUser::getUserData(Session::getUserID())];
+                 ? \DBUser::getUsersByPermission('rozpis', P_OWNED)
+                 : [\DBUser::getUserData(Session::getUserID())];
 
         new \RenderHelper('files/View/Admin/Rozpis/Form.inc', [
             'header' => 'Správa rozpisů',
@@ -171,7 +171,7 @@ class Controller_Admin_Rozpis
 
     private function checkData($request): Form
     {
-        $datum = new Date($_POST['datum'] ?? null);
+        $datum = new \Date($_POST['datum'] ?? null);
 
         $f = new Form();
         $f->checkNumeric($request->post('trener'), 'Neplatný trenér', 'trener');

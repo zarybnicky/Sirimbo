@@ -3,7 +3,7 @@ class Controller_Admin_Skupiny
 {
     public function view($request)
     {
-        Permissions::checkError('skupiny', P_OWNED);
+        \Permissions::checkError('skupiny', P_OWNED);
         $data = array_map(
             function ($item) {
                 return [
@@ -15,7 +15,7 @@ class Controller_Admin_Skupiny
                     'name' => $item['s_name']
                 ];
             },
-            DBSkupiny::get()
+            \DBSkupiny::get()
         );
         new \RenderHelper('files/View/Admin/Skupiny/Overview.inc', [
             'header' => 'Správa skupin',
@@ -25,7 +25,7 @@ class Controller_Admin_Skupiny
 
     public function add($request)
     {
-        Permissions::checkError('skupiny', P_OWNED);
+        \Permissions::checkError('skupiny', P_OWNED);
         if (!$request->post()) {
             return $this->displayForm($request);
         }
@@ -34,15 +34,15 @@ class Controller_Admin_Skupiny
             new \MessageHelper('warning', $form->getMessages());
             return $this->displayForm($request);
         }
-        DBSkupiny::insert(
+        \DBSkupiny::insert(
             $request->post('name'),
             $request->post('color'),
             $request->post('desc')
         );
-        $insertId = DBSkupiny::getInsertId();
+        $insertId = \DBSkupiny::getInsertId();
 
         foreach ($request->post('group') ?: [] as $item) {
-            DBSkupiny::addChild($insertId, $item);
+            \DBSkupiny::addChild($insertId, $item);
         }
 
         new \RedirectHelper('/admin/skupiny');
@@ -50,12 +50,12 @@ class Controller_Admin_Skupiny
 
     public function edit($request)
     {
-        Permissions::checkError('skupiny', P_OWNED);
+        \Permissions::checkError('skupiny', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
             new \RedirectHelper('/admin/skupiny');
         }
-        if (!$data = DBSkupiny::getSingle($id)) {
+        if (!$data = \DBSkupiny::getSingle($id)) {
             new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
             new \RedirectHelper('/admin/skupiny');
         }
@@ -69,7 +69,7 @@ class Controller_Admin_Skupiny
             return $this->displayForm($request, $data);
         }
 
-        DBSkupiny::update(
+        \DBSkupiny::update(
             $id,
             $request->post('name'),
             $request->post('color'),
@@ -80,14 +80,14 @@ class Controller_Admin_Skupiny
             function ($item) {
                 return $item['pg_id'];
             },
-            DBSkupiny::getSingleWithGroups($id)
+            \DBSkupiny::getSingleWithGroups($id)
         );
         $groupsNew = $request->post('group') ?: [];
         foreach (array_diff($groupsOld, $groupsNew) as $removed) {
-            DBSkupiny::removeChild($id, $removed);
+            \DBSkupiny::removeChild($id, $removed);
         }
         foreach (array_diff($groupsNew, $groupsOld) as $added) {
-            DBSkupiny::addChild($id, $added);
+            \DBSkupiny::addChild($id, $added);
         }
 
         new \RedirectHelper('/admin/skupiny');
@@ -95,12 +95,12 @@ class Controller_Admin_Skupiny
 
     public function remove($request)
     {
-        Permissions::checkError('skupiny', P_OWNED);
+        \Permissions::checkError('skupiny', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
             new \RedirectHelper('/admin/skupiny');
         }
-        if (!$data = DBSkupiny::getSingle($id)) {
+        if (!$data = \DBSkupiny::getSingle($id)) {
             new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
             new \RedirectHelper('/admin/skupiny');
         }
@@ -110,7 +110,7 @@ class Controller_Admin_Skupiny
 
             $groupCount = 0;
             foreach ($f['groups'] as $data) {
-                DBSkupiny::removeChild($id, $data['pg_id']);
+                \DBSkupiny::removeChild($id, $data['pg_id']);
                 ++$groupCount;
             }
 
@@ -135,7 +135,7 @@ class Controller_Admin_Skupiny
                 'data' => [['id' => $data['s_id'], 'text' => $data['s_name']]]
             ]);
         }
-        DBSkupiny::delete($id);
+        \DBSkupiny::delete($id);
         new \RedirectHelper('/admin/skupiny');
     }
 
@@ -144,7 +144,7 @@ class Controller_Admin_Skupiny
         $id = $request->getId() ?: '0';
 
         $groupsSelected = array_flip(
-            array_map(fn($item) => $item['pg_id'], DBSkupiny::getSingleWithGroups($id))
+            array_map(fn($item) => $item['pg_id'], \DBSkupiny::getSingleWithGroups($id))
         );
 
         $groups = array_map(
@@ -156,7 +156,7 @@ class Controller_Admin_Skupiny
                     'base' => $item['pg_base']
                 ];
             },
-            DBPlatbyGroup::getGroups()
+            \DBPlatbyGroup::getGroups()
         );
 
         $action = $request->getAction();
@@ -174,7 +174,7 @@ class Controller_Admin_Skupiny
 
     private function getLinkedSkupinaObjects($id)
     {
-        $group = DBSkupiny::getSingleWithGroups($id);
+        $group = \DBSkupiny::getSingleWithGroups($id);
         return $group ? ['groups' => $group] : [];
     }
 

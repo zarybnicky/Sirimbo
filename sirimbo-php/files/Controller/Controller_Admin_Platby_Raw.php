@@ -5,7 +5,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
 
     public function view($request)
     {
-        Permissions::checkError('platby', P_OWNED);
+        \Permissions::checkError('platby', P_OWNED);
         if ($request->post() && $request->post('action') == 'upload') {
             $this->processUpload($request);
         }
@@ -30,7 +30,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
     }
     public function select_columns($request)
     {
-        Permissions::checkError('platby', P_OWNED);
+        \Permissions::checkError('platby', P_OWNED);
         $path = self::TEMP_DIR . str_replace('../', '', $request->get('path'));
 
         if ($request->post()) {
@@ -109,14 +109,14 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
             $item->processWithSymbolLookup($userLookup, $categoryLookup);
 
             if (!$item->isValid) {
-                DBPlatbyRaw::insert($serialized, $hash, '0', '0', false);
+                \DBPlatbyRaw::insert($serialized, $hash, '0', '0', false);
                 continue;
             } else {
-                DBPlatbyRaw::insert($serialized, $hash, '1', '0', true);
-                DBPlatbyItem::insert(
+                \DBPlatbyRaw::insert($serialized, $hash, '1', '0', true);
+                \DBPlatbyItem::insert(
                     $item->variable,
                     $item->categoryId,
-                    DBPlatbyRaw::getInsertId(),
+                    \DBPlatbyRaw::getInsertId(),
                     $item->amount,
                     $item->date,
                     $item->prefix

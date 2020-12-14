@@ -43,7 +43,7 @@ EOS;
     public static function newUserNotice($to, $username, $total_users = -1)
     {
         if ($total_users == -1) {
-            $total_users = count(DBUser::getNewUsers());
+            $total_users = count(\DBUser::getNewUsers());
         }
 
         $subject = "TKOlymp.cz - nový uživatel ($username)";

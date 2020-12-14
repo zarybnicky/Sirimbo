@@ -3,15 +3,15 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
 {
     public function view($request)
     {
-        Permissions::checkError('platby', P_OWNED);
+        \Permissions::checkError('platby', P_OWNED);
         if ($request->post()) {
             $this->processPost($request);
         }
-        $remaining = DBPlatbyRaw::getUnsorted();
+        $remaining = \DBPlatbyRaw::getUnsorted();
         $remainingCount = count($remaining);
 
         $id = $request->getId();
-        if ($id && ($data = DBPlatbyRaw::getSingle($id))) {
+        if ($id && ($data = \DBPlatbyRaw::getSingle($id))) {
             if ($data['pr_sorted']) {
                 new \MessageHelper('info', 'Platba už byla zařazena do systému');
                 new \RedirectHelper('/admin/platby/discarded');
@@ -71,7 +71,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
         } else {
             $recognized['date'] = [
                 'column' => $date,
-                'value' => (new Date($item->date))->getHumanDate()
+                'value' => (new \Date($item->date))->getHumanDate()
             ];
         }
 
@@ -101,7 +101,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
             'guess' => [
                 'specific' => $item->categoryId,
                 'variable' => $item->variable,
-                'date' => (new Date($item->date))->getHumanDate(),
+                'date' => (new \Date($item->date))->getHumanDate(),
                 'amount' => $item->amount,
                 'prefix' => $item->prefix
             ],
@@ -136,9 +136,9 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
     private function processPost($request)
     {
         $id = $request->post('id');
-        if (!$id || !($current = DBPlatbyRaw::getSingle($id))) {
+        if (!$id || !($current = \DBPlatbyRaw::getSingle($id))) {
             return new \MessageHelper('warning', 'Zadaná platba neexistuje.');
-        } elseif ($current['pr_sorted'] && ($item = DBPlatbyItem::getSingleByRawId($id))) {
+        } elseif ($current['pr_sorted'] && ($item = \DBPlatbyItem::getSingleByRawId($id))) {
             return new \MessageHelper('info', 'Zadaná platba už byla zařazená.');
         }
 
@@ -147,14 +147,14 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
                 if (!is_object($item = $this->getFromPost($request))) {
                     return new \MessageHelper('warning', $item);
                 }
-                DBPlatbyRaw::update(
+                \DBPlatbyRaw::update(
                     $id,
                     $current['pr_raw'],
                     $current['pr_hash'],
                     '1',
                     '0'
                 );
-                DBPlatbyItem::insert(
+                \DBPlatbyItem::insert(
                     $item->variable,
                     $item->categoryId,
                     $id,
@@ -165,7 +165,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
                 break;
 
             case 'discard':
-                DBPlatbyRaw::update(
+                \DBPlatbyRaw::update(
                     $id,
                     $current['pr_raw'],
                     $current['pr_hash'],
@@ -175,7 +175,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
                 break;
 
             case 'skip':
-                DBPlatbyRaw::skip($id);
+                \DBPlatbyRaw::skip($id);
                 break;
 
             default:

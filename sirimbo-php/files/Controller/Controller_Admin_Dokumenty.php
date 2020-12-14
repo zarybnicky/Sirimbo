@@ -3,7 +3,7 @@ class Controller_Admin_Dokumenty
 {
     public function view($request)
     {
-        Permissions::checkError('dokumenty', P_OWNED);
+        \Permissions::checkError('dokumenty', P_OWNED);
         if ($request->post('action') == 'upload' && !empty($_FILES)) {
             $fileUpload = $_FILES['file']['tmp_name'];
             $fileName = $_FILES['file']['name'];
@@ -25,7 +25,7 @@ class Controller_Admin_Dokumenty
             }
 
             chmod($path, 0666);
-            DBDokumenty::addDokument(
+            \DBDokumenty::addDokument(
                 $path,
                 $request->post('name'),
                 $fileName,
@@ -36,9 +36,9 @@ class Controller_Admin_Dokumenty
             return new \RedirectHelper('/admin/dokumenty');
         }
 
-        $data = Permissions::check('dokumenty', P_ADMIN)
-            ? DBDokumenty::getDokumenty()
-            : DBDokumenty::getDokumentyByAuthor(Session::getUserID());
+        $data = \Permissions::check('dokumenty', P_ADMIN)
+            ? \DBDokumenty::getDokumenty()
+            : \DBDokumenty::getDokumentyByAuthor(Session::getUserID());
 
         $data = array_map(fn($item) => [
             'buttons' => new EditLinkHelper('/admin/dokumenty/edit/' . $item['d_id'])
@@ -57,19 +57,19 @@ class Controller_Admin_Dokumenty
 
     public function edit($request)
     {
-        Permissions::checkError('dokumenty', P_OWNED);
+        \Permissions::checkError('dokumenty', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Dokument s takovým ID neexistuje');
             new \RedirectHelper('/admin/dokumenty');
         }
-        if (!$data = DBDokumenty::getSingleDokument($id)) {
+        if (!$data = \DBDokumenty::getSingleDokument($id)) {
             new \MessageHelper('warning', 'Dokument s takovým ID neexistuje');
             new \RedirectHelper('/admin/dokumenty');
         }
-        Permissions::checkError('dokumenty', P_OWNED, $data['d_kdo']);
+        \Permissions::checkError('dokumenty', P_OWNED, $data['d_kdo']);
 
         if ($request->post('newname')) {
-            DBDokumenty::editDokument($id, $request->post('newname'));
+            \DBDokumenty::editDokument($id, $request->post('newname'));
             new \MessageHelper('success', 'Dokument upraven');
             new \RedirectHelper('/admin/dokumenty');
         }
@@ -81,19 +81,19 @@ class Controller_Admin_Dokumenty
 
     public function remove($request)
     {
-        Permissions::checkError('dokumenty', P_OWNED);
+        \Permissions::checkError('dokumenty', P_OWNED);
         if (!$request->getId()) {
             new \RedirectHelper('/admin/dokumenty');
         }
         $id = $request->getId();
 
         if ($request->post('action') == 'confirm') {
-            $data = DBDokumenty::getSingleDokument($id);
-            if (!Permissions::check('dokumenty', P_OWNED, $data['d_kdo'])) {
+            $data = \DBDokumenty::getSingleDokument($id);
+            if (!\Permissions::check('dokumenty', P_OWNED, $data['d_kdo'])) {
                 throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
             }
             unlink($data['d_path']);
-            DBDokumenty::removeDokument($id);
+            \DBDokumenty::removeDokument($id);
             new \RedirectHelper('/admin/dokumenty');
         }
 
@@ -103,7 +103,7 @@ class Controller_Admin_Dokumenty
             'returnURI' => $request->getReferer() ?: '/admin/dokumenty',
             'data' => [[
                 'id' => $id,
-                'text' => DBDokumenty::getDokumentName($id)
+                'text' => \DBDokumenty::getDokumentName($id)
             ]]
         ]);
     }

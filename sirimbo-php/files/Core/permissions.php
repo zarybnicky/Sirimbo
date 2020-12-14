@@ -12,7 +12,7 @@ class Permissions
 
     public static function checkError($module, $level, $owner = null)
     {
-        if (Permissions::check($module, $level, $owner)) {
+        if (\Permissions::check($module, $level, $owner)) {
             return true;
         }
 

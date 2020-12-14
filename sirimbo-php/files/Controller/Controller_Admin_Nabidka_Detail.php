@@ -3,19 +3,19 @@ class Controller_Admin_Nabidka_Detail
 {
     public function view($request)
     {
-        Permissions::checkError('nabidka', P_OWNED);
+        \Permissions::checkError('nabidka', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Nabídka s takovým ID neexistuje');
             new \RedirectHelper('/admin/nabidka');
         }
-        if (!$data = DBNabidka::getSingleNabidka($id)) {
+        if (!$data = \DBNabidka::getSingleNabidka($id)) {
             new \MessageHelper('warning', 'Nabídka s takovým ID neexistuje');
             new \RedirectHelper('/admin/nabidka');
         }
-        Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
+        \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
 
-        $items = DBNabidka::getNabidkaItem($id);
-        $obsazeno = DBNabidka::getNabidkaItemLessons($id);
+        $items = \DBNabidka::getNabidkaItem($id);
+        $obsazeno = \DBNabidka::getNabidkaItemLessons($id);
         $users = DBPary::getPartners();
 
         if (!$request->post()) {
@@ -58,12 +58,12 @@ class Controller_Admin_Nabidka_Detail
         }
 
         if ($request->post("remove") > 0) {
-            DBNabidka::removeNabidkaItem(
+            \DBNabidka::removeNabidkaItem(
                 $id,
                 $request->post($request->post("remove") . "-partner")
             );
-            $items = DBNabidka::getNabidkaItem($id);
-            $obsazeno = DBNabidka::getNabidkaItemLessons($id);
+            $items = \DBNabidka::getNabidkaItem($id);
+            $obsazeno = \DBNabidka::getNabidkaItemLessons($id);
         }
 
         $maxLessons = $data['n_max_pocet_hodin'];
@@ -78,15 +78,15 @@ class Controller_Admin_Nabidka_Detail
                 if (0 < $maxLessons && $maxLessons < $countNew) {
                     $countNew = $maxLessons;
                 }
-                DBNabidka::editNabidkaItem(
+                \DBNabidka::editNabidkaItem(
                     $item["ni_id"],
                     $partnerNew,
                     $countNew
                 );
             }
         }
-        $items = DBNabidka::getNabidkaItem($id);
-        $obsazeno = DBNabidka::getNabidkaItemLessons($id);
+        $items = \DBNabidka::getNabidkaItem($id);
+        $obsazeno = \DBNabidka::getNabidkaItemLessons($id);
 
         if (is_numeric($request->post("add_hodiny")) &&
             is_numeric($request->post("add_partner")) &&
@@ -101,19 +101,19 @@ class Controller_Admin_Nabidka_Detail
                 $count = $maxLessons;
             }
 
-            DBNabidka::addNabidkaItemLessons(
+            \DBNabidka::addNabidkaItemLessons(
                 $request->post("add_partner"),
                 $id,
                 $count
             );
 
-            $items = DBNabidka::getNabidkaItem($id);
-            $obsazeno = DBNabidka::getNabidkaItemLessons($id);
+            $items = \DBNabidka::getNabidkaItem($id);
+            $obsazeno = \DBNabidka::getNabidkaItemLessons($id);
         }
 
         //-----Dorovnávání skutečného a nastaveného počtu hodin-----//
         if ($obsazeno > $data["n_pocet_hod"]) {
-            DBNabidka::editNabidka(
+            \DBNabidka::editNabidka(
                 $id,
                 $data["n_trener"],
                 $obsazeno,
@@ -123,7 +123,7 @@ class Controller_Admin_Nabidka_Detail
                 $data['n_visible'],
                 ($data["n_lock"]) ? 1 : 0
             );
-            $data = DBNabidka::getSingleNabidka($id);
+            $data = \DBNabidka::getSingleNabidka($id);
         }
         new \RedirectHelper('/admin/nabidka/detail/' . $id);
     }

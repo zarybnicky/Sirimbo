@@ -3,12 +3,12 @@ class Controller_Member_Dokumenty
 {
     public function view($request)
     {
-        Permissions::checkError('dokumenty', P_VIEW);
+        \Permissions::checkError('dokumenty', P_VIEW);
         $kat = $request->get('kat');
         if (ctype_digit($kat)) {
-            $dokumenty = DBDokumenty::getDokumentyByKategorie($kat);
+            $dokumenty = \DBDokumenty::getDokumentyByKategorie($kat);
         } else {
-            $dokumenty = DBDokumenty::getDokumenty();
+            $dokumenty = \DBDokumenty::getDokumenty();
         }
 
         new \RenderHelper('files/View/Member/Dokumenty.inc', [

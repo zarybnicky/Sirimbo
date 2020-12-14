@@ -3,10 +3,10 @@ class Controller_Admin_Users
 {
     public function view($request)
     {
-        Permissions::checkError('users', P_ADMIN);
+        \Permissions::checkError('users', P_ADMIN);
         if ($request->post('action') == 'save') {
             foreach ($request->post('save') as $userId) {
-                $user = DBUser::getUser($userId);
+                $user = \DBUser::getUser($userId);
                 if (!$user) {
                     continue;
                 }
@@ -14,7 +14,7 @@ class Controller_Admin_Users
                     || ((bool) $request->post($userId . '-ban')) !== ((bool) $user->getBanned())
                     || ($request->post($userId . '-skupina') != $user->getPermissionGroup())
                 ) {
-                    DBUser::setUserData(
+                    \DBUser::setUserData(
                         $userId,
                         $user->getName(),
                         $user->getSurname(),
@@ -49,18 +49,18 @@ class Controller_Admin_Users
 
     public function remove($request)
     {
-        Permissions::checkError('users', P_ADMIN);
+        \Permissions::checkError('users', P_ADMIN);
         if (!$request->getId()) {
             new \RedirectHelper($request->post('returnURI') ?: '/admin/users');
         }
         $id = $request->getId();
 
         if ($request->post('action') == 'confirm') {
-            DBUser::removeUser($id);
+            \DBUser::removeUser($id);
             new \RedirectHelper($request->post('returnURI') ?: '/admin/users');
         }
 
-        $item = DBUser::getUserData($id);
+        $item = \DBUser::getUserData($id);
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa uživatelů',
             'prompt' => 'Opravdu chcete odstranit uživatele:',
@@ -74,7 +74,7 @@ class Controller_Admin_Users
 
     public function add($request)
     {
-        Permissions::checkError('users', P_ADMIN);
+        \Permissions::checkError('users', P_ADMIN);
         if (!$request->post()) {
             return $this->displayForm($request);
         }
@@ -84,7 +84,7 @@ class Controller_Admin_Users
             return $this->displayForm($request);
         }
 
-        DBUser::addUser(
+        \DBUser::addUser(
             strtolower($request->post('login')),
             User::crypt($request->post('pass')),
             $request->post('jmeno'),
@@ -92,7 +92,7 @@ class Controller_Admin_Users
             $request->post('pohlavi'),
             $request->post('email'),
             $request->post('telefon'),
-            (string) new Date($_POST['narozeni'] ?? null),
+            (string) new \Date($_POST['narozeni'] ?? null),
             $request->post('poznamky'),
             $request->post('street'),
             $request->post('popisne'),
@@ -115,12 +115,12 @@ class Controller_Admin_Users
 
     public function edit($request)
     {
-        Permissions::checkError('users', P_ADMIN);
+        \Permissions::checkError('users', P_ADMIN);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Uživatel s takovým ID neexistuje');
             new \RedirectHelper($request->post('returnURI') ?: '/admin/users');
         }
-        if (!$data = DBUser::getUserData($id)) {
+        if (!$data = \DBUser::getUserData($id)) {
             new \MessageHelper('warning', 'Uživatel s takovým ID neexistuje');
             new \RedirectHelper($request->post('returnURI') ?: '/admin/users');
         }
@@ -162,14 +162,14 @@ class Controller_Admin_Users
             return $this->displayForm($request);
         }
 
-        DBUser::setUserData(
+        \DBUser::setUserData(
             $id,
             $request->post('jmeno'),
             $request->post('prijmeni'),
             $request->post('pohlavi'),
             $request->post('email'),
             $request->post('telefon'),
-            (string) new Date($_POST['narozeni'] ?? null),
+            (string) new \Date($_POST['narozeni'] ?? null),
             $request->post('poznamky'),
             $request->post('street'),
             $request->post('popisne'),
@@ -194,7 +194,7 @@ class Controller_Admin_Users
 
     public function getMsmtCsv($request)
     {
-        Permissions::checkError('users', P_OWNED);
+        \Permissions::checkError('users', P_OWNED);
         header('Pragma: no-cache');
         header('Content-Type: text/csv');
         header('Content-Disposition: inline; filename="olymp-msmt-export.csv');
@@ -203,11 +203,11 @@ class Controller_Admin_Users
 
     public function unconfirmed($request)
     {
-        Permissions::checkError('users', P_ADMIN);
+        \Permissions::checkError('users', P_ADMIN);
         if (($id = $request->post('confirm')) &&
-            ($data = DBUser::getUser($id))
+            ($data = \DBUser::getUser($id))
         ) {
-            DBUser::confirmUser(
+            \DBUser::confirmUser(
                 $id,
                 $request->post($id . '-group'),
                 $request->post($id . '-skupina')
@@ -216,17 +216,17 @@ class Controller_Admin_Users
             new \RedirectHelper('/admin/users/unconfirmed');
         }
 
-        $users = DBUser::getNewUsers();
+        $users = \DBUser::getNewUsers();
         if (empty($users)) {
             return new \RenderHelper('files/View/Empty.inc', [
                 'header' => 'Správa uživatelů',
                 'notice' => 'Žádní nepotvrzení uživatelé nejsou v databázi.'
             ]);
         }
-        $groups = DBPermissions::getGroups();
+        $groups = DB\Permissions::getGroups();
         $s_group = (new \SelectHelper())->optionsAssoc($groups, 'pe_id', 'pe_name')->set(3);
 
-        $skupiny = DBSkupiny::get();
+        $skupiny = \DBSkupiny::get();
         $s_skupina = (new SelectHelper())->optionsAssoc($skupiny, 's_id', 's_name');
 
         $users = array_map(
@@ -257,7 +257,7 @@ class Controller_Admin_Users
 
     public function duplicate($request)
     {
-        Permissions::checkError('users', P_ADMIN);
+        \Permissions::checkError('users', P_ADMIN);
         $users = array_map(
             function ($item) {
                 return [
@@ -271,7 +271,7 @@ class Controller_Admin_Users
                     'timestamp' => formatTimestamp($item['u_timestamp'])
                 ];
             },
-            DBUser::getDuplicateUsers()
+            \DBUser::getDuplicateUsers()
         );
         new \RenderHelper('files/View/Admin/Users/Duplicate.inc', [
             'header' => 'Správa uživatelů',
@@ -282,17 +282,17 @@ class Controller_Admin_Users
 
     public function statistiky($request)
     {
-        Permissions::checkError('users', P_ADMIN);
+        \Permissions::checkError('users', P_ADMIN);
 
         $data = array_map(
             function ($item) {
                 return ['group' => $item['pe_name'], 'count' => $item['count']];
             },
-            DBUser::getGroupCounts()
+            \DBUser::getGroupCounts()
         );
 
-        $all = DBUser::getUsers();
-        $active = DBUser::getActiveUsers();
+        $all = \DBUser::getUsers();
+        $active = \DBUser::getActiveUsers();
         array_unshift(
             $data,
             ['group' => 'Uživatelé v databázi', 'count' => count($all)],
@@ -309,12 +309,12 @@ class Controller_Admin_Users
     private function displayOverview($request)
     {
         $groupOptions = ['all' => 'všechna'];
-        foreach (DBPermissions::getGroups() as $row) {
+        foreach (DB\Permissions::getGroups() as $row) {
             $groupOptions[$row['pe_id']] = $row['pe_name'];
         }
 
         $skupinyOptions = ['all' => 'všechny'];
-        foreach (DBSkupiny::get() as $item) {
+        foreach (\DBSkupiny::get() as $item) {
             $skupinyOptions[$item['s_id']] = $item['s_name'];
         }
 
@@ -343,7 +343,7 @@ class Controller_Admin_Users
                            ? $request->get('status')
                            : 'all';
 
-        $pager = new Paging(new DBUser(), $options);
+        $pager = new \Paging(new \DBUser(), $options);
         $pager->setCurrentPage($request->get('p'));
         $pager->setItemsPerPage($request->get('c'));
 
@@ -406,7 +406,7 @@ class Controller_Admin_Users
             function ($item) {
                 return ['id' => $item['pe_id'], 'name' => $item['pe_name']];
             },
-            DBPermissions::getGroups()
+            DB\Permissions::getGroups()
         );
         $skupiny = array_map(
             function ($item) {
@@ -416,7 +416,7 @@ class Controller_Admin_Users
                     'popis' => $item['s_name']
                 ];
             },
-            DBSkupiny::get()
+            \DBSkupiny::get()
         );
         new \RenderHelper('files/View/Admin/Users/Form.inc', [
             'header' => 'Správa uživatelů',
@@ -455,7 +455,7 @@ class Controller_Admin_Users
 
     private function checkData($request, $action = 'add'): Form
     {
-        $narozeni = new Date($_POST['narozeni'] ?? null);
+        $narozeni = new \Date($_POST['narozeni'] ?? null);
 
         $f = new Form();
         $f->checkDate($narozeni, 'Neplatné datum narození', 'narozeni');

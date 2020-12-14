@@ -136,8 +136,8 @@ class Controller_Member_Profil_Par
             'partnerID' => $latest['u_id'],
             'partnerFullName' => $latest['u_jmeno'] . ' ' . $latest['u_prijmeni'],
             'users' => (Session::getUserPohlavi() == "m")
-                        ? DBUser::getUsersByPohlavi("f")
-                        : DBUser::getUsersByPohlavi("m")
+                        ? \DBUser::getUsersByPohlavi("f")
+                        : \DBUser::getUsersByPohlavi("m")
         ]);
     }
 

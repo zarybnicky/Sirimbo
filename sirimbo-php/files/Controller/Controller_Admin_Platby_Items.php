@@ -3,7 +3,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
 {
     public function view($request)
     {
-        Permissions::checkError('platby', P_OWNED);
+        \Permissions::checkError('platby', P_OWNED);
         $filter = [];
         if ($request->get('user') && is_numeric($request->get('user'))) {
             $filter['u_id'] = $request->get('user');
@@ -15,7 +15,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         }
         $date = \DateHelper::getPostRange('date');
 
-        $data = DBPlatbyItem::get(true, $filter, ['pi_date DESC'], $date);
+        $data = \DBPlatbyItem::get(true, $filter, ['pi_date DESC'], $date);
 
         $data = array_map(
             function ($item) {
@@ -25,7 +25,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
                         . new RemoveLinkHelper('/admin/platby/items/remove/' . $item['pi_id']),
                     'fullName' => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
                     'category' => $item['pc_name'],
-                    'date' => (new Date($item['pi_date']))->getHumanDate(),
+                    'date' => (new \Date($item['pi_date']))->getHumanDate(),
                     'amount' => $item['pi_amount'] . ' Kč'
                 ];
             },
@@ -35,7 +35,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         new \RenderHelper('files/View/Admin/Platby/ItemsOverview.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Jednotlivé platby',
-            'users' => DBUser::getUsers(),
+            'users' => \DBUser::getUsers(),
             'categories' => $this->getCategories(),
             'data' => $data,
             'uri' => $request->getLiteralURI(),
@@ -47,14 +47,14 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
 
     public function add($request)
     {
-        Permissions::checkError('platby', P_OWNED);
+        \Permissions::checkError('platby', P_OWNED);
         if (!$request->post()) {
             return $this->displayForm(0, $request);
         } elseif (!is_object($item = $this->getFromPost($request))) {
             new \MessageHelper('warning', $item);
             return $this->displayForm(0, $request);
         }
-        DBPlatbyItem::insert(
+        \DBPlatbyItem::insert(
             $item->variable,
             $item->categoryId,
             null,
@@ -67,12 +67,12 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
 
     public function edit($request)
     {
-        Permissions::checkError('platby', P_OWNED);
+        \Permissions::checkError('platby', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Platba s takovým ID neexistuje');
             new \RedirectHelper('/admin/platby/items');
         }
-        if (!$data = DBPlatbyItem::getSingle($id)) {
+        if (!$data = \DBPlatbyItem::getSingle($id)) {
             new \MessageHelper('warning', 'Platba s takovým ID neexistuje');
             new \RedirectHelper('/admin/platby/items');
         }
@@ -87,7 +87,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             new \MessageHelper('warning', $item);
             return $this->displayForm($id, $request);
         }
-        DBPlatbyItem::update(
+        \DBPlatbyItem::update(
             $id,
             $item->variable,
             $item->categoryId,
@@ -100,17 +100,17 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
 
     public function remove($request)
     {
-        Permissions::checkError('platby', P_OWNED);
+        \Permissions::checkError('platby', P_OWNED);
         if (!$request->getId()) {
             new \RedirectHelper('/admin/platby/items');
         }
         $id = $request->getId();
         if ($request->post('action') == 'confirm') {
-            $item = DBPlatbyItem::getSingle($id);
-            $itemRaw = DBPlatbyRaw::getSingle($item['pi_id_raw']);
-            DBPlatbyItem::remove($id);
+            $item = \DBPlatbyItem::getSingle($id);
+            $itemRaw = \DBPlatbyRaw::getSingle($item['pi_id_raw']);
+            \DBPlatbyItem::remove($id);
             if ($item['pi_id_raw']) {
-                DBPlatbyRaw::update(
+                \DBPlatbyRaw::update(
                     $item['pi_id_raw'],
                     $itemRaw['pr_raw'],
                     $itemRaw['pr_hash'],
@@ -120,7 +120,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             }
             new \RedirectHelper('/admin/platby/items');
         }
-        $item = DBPlatbyItem::getSingle($id, true);
+        $item = \DBPlatbyItem::getSingle($id, true);
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa plateb',
             'prompt' => 'Opravdu chcete odstranit platbu:',
@@ -137,8 +137,8 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
     {
         $raw = [];
         if ($id &&
-            ($item = DBPlatbyItem::getSingle($id)) &&
-            ($data = DBPlatbyRaw::getSingle($item['pi_id_raw']))
+            ($item = \DBPlatbyItem::getSingle($id)) &&
+            ($data = \DBPlatbyRaw::getSingle($item['pi_id_raw']))
         ) {
             $data = unserialize($data['pr_raw']);
             foreach ($data as $key => $value) {

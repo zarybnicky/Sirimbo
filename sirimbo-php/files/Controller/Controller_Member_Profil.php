@@ -3,9 +3,9 @@ class Controller_Member_Profil
 {
     public function view($request)
     {
-        Permissions::checkError('nastenka', P_VIEW);
-        $data = Session::getUserData();
-        $s = Session::getSkupinaData();
+        \Permissions::checkError('nastenka', P_VIEW);
+        $data = \Session::getUserData();
+        $s = \Session::getSkupinaData();
 
         $paymentsPaid = [];
         $paymentHistory = array_map(
@@ -19,11 +19,11 @@ class Controller_Member_Profil
                     'validFor' => formatDate($row['pc_valid_from']) . ' - ' . formatDate($row['pc_valid_to']),
                 ];
             },
-            DBPlatby::getPaymentHistory(Session::getUserID())
+            \DBPlatby::getPaymentHistory(\Session::getUserID())
         );
 
         $paymentsWanted = [];
-        $groups = DBSkupiny::getSingleWithCategories(Session::getSkupina());
+        $groups = \DBSkupiny::getSingleWithCategories(\Session::getSkupina());
         foreach ($groups as $row) {
             if (!$row['pc_visible'] || isset($paymentsPaid[$row['pc_id']])) {
                 continue;
@@ -33,22 +33,20 @@ class Controller_Member_Profil
                 'type' => $row['pg_type'] ? 'Členské příspěvky' : 'Ostatní platby',
                 'symbol' => $row['pc_symbol'],
                 'amount' => ($row['pc_use_base'] ? ($row['pc_amount'] * $row['pg_base']) : $row['pc_amount']) . ' Kč',
-                'dueDate' => (new Date($row['pc_date_due']))->getHumanDate(),
-                'validRange' => ((new Date($row['pc_valid_from']))->getHumanDate() .
-                    ((new Date($row['pc_valid_to']))->isValid() ?
-                        (' - ' . (new Date($row['pc_valid_to']))->getHumanDate()) : ''))
+                'dueDate' => (new \Date($row['pc_date_due']))->getHumanDate(),
+                'validRange' => ((new \Date($row['pc_valid_from']))->getHumanDate() .
+                    ((new \Date($row['pc_valid_to']))->isValid() ?
+                        (' - ' . (new \Date($row['pc_valid_to']))->getHumanDate()) : ''))
             ];
         }
 
         new \RenderHelper('files/View/Member/Profil/Overview.inc', [
             'header' => $data->getFullName(),
-            'ageGroup' => Session::getAgeGroup($data->getBirthYear()),
-            'coupleData' => Session::getCoupleData(),
-            'skupina' => (
-                new ColorboxHelper($s['s_color_rgb'], $s['s_name']) . '&nbsp;' . $s['s_name']
-            ),
-            'varSymbol' => User::varSymbol(Session::getUserID()),
-            'hasPaid' => Session::getZaplaceno(),
+            'ageGroup' => \Session::getAgeGroup($data->getBirthYear()),
+            'coupleData' => \Session::getCoupleData(),
+            'skupina' => new \ColorboxHelper($s['s_color_rgb'], $s['s_name']) . '&nbsp;' . $s['s_name'],
+            'varSymbol' => \User::varSymbol(\Session::getUserID()),
+            'hasPaid' => \Session::getZaplaceno(),
             'paymentHistory' => $paymentHistory,
             'paymentsWanted' => $paymentsWanted,
         ]);
@@ -79,21 +77,21 @@ class Controller_Member_Profil
 
     public function gdpr($request)
     {
-        Permissions::checkError('nastenka', P_VIEW);
+        \Permissions::checkError('nastenka', P_VIEW);
         if ($request->post('action') !== 'gdpr') {
             return new \RenderHelper('files/View/Member/Profil/Gdpr.inc', [
                 'header' => 'Souhlas se zpracováním osobních údajů',
             ]);
         }
-        DBUser::markGdprSigned(Session::getUserId());
+        \DBUser::markGdprSigned(\Session::getUserId());
         new \RedirectHelper('/member');
     }
 
     public function edit($request)
     {
-        Permissions::checkError('nastenka', P_VIEW);
-        $data = Session::getUserData();
-        $narozeni = new Date($_POST['narozeni'] ?? null);
+        \Permissions::checkError('nastenka', P_VIEW);
+        $data = \Session::getUserData();
+        $narozeni = new \Date($_POST['narozeni'] ?? null);
 
         if (!$request->post()) {
             $request->post('jmeno', $data->getName());
@@ -119,8 +117,8 @@ class Controller_Member_Profil
             return $this->renderPersonalForm($request);
         }
 
-        DBUser::setUserData(
-            Session::getUserID(),
+        \DBUser::setUserData(
+            \Session::getUserID(),
             $request->post('jmeno'),
             $request->post('prijmeni'),
             $request->post('pohlavi'),
@@ -151,7 +149,7 @@ class Controller_Member_Profil
 
     public function heslo($request)
     {
-        Permissions::checkError('nastenka', P_VIEW);
+        \Permissions::checkError('nastenka', P_VIEW);
         if (!$request->post()) {
             return new \RenderHelper('files/View/Member/Profil/NewPassword.inc', [
                 'header' => 'Změna hesla'
@@ -164,9 +162,9 @@ class Controller_Member_Profil
                 'header' => 'Změna hesla'
             ]);
         }
-        DBUser::setPassword(
-            Session::getUserID(),
-            User::crypt($request->post('newpass'))
+        \DBUser::setPassword(
+            \Session::getUserID(),
+            \User::crypt($request->post('newpass'))
         );
         new \RedirectHelper('/member/profil');
     }
@@ -189,9 +187,9 @@ class Controller_Member_Profil
         } elseif ($action == 'heslo') {
             $f->checkPassword($request->post('newpass'), 'Neplatný formát hesla', 'newpass');
             $f->checkBool(
-                DBUser::checkUser(
-                    Session::getUserData()->getLogin(),
-                    User::crypt($request->post('oldpass'))
+                \DBUser::checkUser(
+                    \Session::getUserData()->getLogin(),
+                    \User::crypt($request->post('oldpass'))
                 ),
                 'Staré heslo je špatně',
                 'oldpass'

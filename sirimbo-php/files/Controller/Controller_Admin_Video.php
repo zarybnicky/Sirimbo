@@ -3,15 +3,15 @@ class Controller_Admin_Video
 {
     public function view($request)
     {
-        Permissions::checkError('aktuality', P_OWNED);
+        \Permissions::checkError('aktuality', P_OWNED);
         new \RedirectHelper('/admin/video/orphan');
     }
 
     public function playlist($request)
     {
-        Permissions::checkError('aktuality', P_OWNED);
+        \Permissions::checkError('aktuality', P_OWNED);
         if ($request->getId()) {
-            $list = DBVideoList::getSingle($request->getId());
+            $list = \DBVideoList::getSingle($request->getId());
             $data = array_map(
                 function ($item) {
                     $parts = explode('?', $item['v_uri']);
@@ -25,7 +25,7 @@ class Controller_Admin_Video
                         'created' => formatTimestamp($item['v_created_at'], true)
                     ];
                 },
-                DBVideo::getByPlaylist($request->getId())
+                \DBVideo::getByPlaylist($request->getId())
             );
             new \RenderHelper('files/View/Admin/Video/Overview.inc', [
                 'header' => 'Správa videí',
@@ -44,7 +44,7 @@ class Controller_Admin_Video
                         'created' => formatTimestamp($item['vl_created_at'], true)
                     ];
                 },
-                DBVideoList::getAll()
+                \DBVideoList::getAll()
             );
             new \RenderHelper('files/View/Admin/Video/Overview.inc', [
                 'header' => 'Správa videí',
@@ -57,8 +57,8 @@ class Controller_Admin_Video
 
     public function orphan($request)
     {
-        Permissions::checkError('aktuality', P_OWNED);
-        $pager = new Paging(new DBVideo(), 'orphan');
+        \Permissions::checkError('aktuality', P_OWNED);
+        $pager = new \Paging(new \DBVideo(), 'orphan');
         $pager->setItemsPerPage($request->get('c'));
         $pager->setCurrentPage($request->get('p'));
         $data = array_map(
@@ -86,27 +86,27 @@ class Controller_Admin_Video
 
     public function title($request)
     {
-        Permissions::checkError('aktuality', P_OWNED);
+        \Permissions::checkError('aktuality', P_OWNED);
         if ($request->post('video1')) {
-            DBParameters::set('title_video1', $request->post('video1'));
-            DBParameters::set('title_video2', $request->post('video2'));
-            DBParameters::set('title_video3', $request->post('video3'));
-            DBParameters::set('title_video4', $request->post('video4'));
+            \DBParameters::set('title_video1', $request->post('video1'));
+            \DBParameters::set('title_video2', $request->post('video2'));
+            \DBParameters::set('title_video3', $request->post('video3'));
+            \DBParameters::set('title_video4', $request->post('video4'));
             new \RedirectHelper('/admin/video/title');
         }
-        $select = (new \SelectHelper())->optionsAssoc(DBVideo::getAll(), 'v_id', 'v_title');
+        $select = (new \SelectHelper())->optionsAssoc(\DBVideo::getAll(), 'v_id', 'v_title');
         new \RenderHelper('files/View/Admin/Video/Title.inc', [
             'header' => 'Správa videí',
-            'video1' => $select->name('video1')->set(DBParameters::get('title_video1')),
-            'video2' => $select->name('video2')->set(DBParameters::get('title_video2')),
-            'video3' => $select->name('video3')->set(DBParameters::get('title_video3')),
-            'video4' => $select->name('video4')->set(DBParameters::get('title_video4'))
+            'video1' => $select->name('video1')->set(\DBParameters::get('title_video1')),
+            'video2' => $select->name('video2')->set(\DBParameters::get('title_video2')),
+            'video3' => $select->name('video3')->set(\DBParameters::get('title_video3')),
+            'video4' => $select->name('video4')->set(\DBParameters::get('title_video4'))
         ]);
     }
 
     public function add($request)
     {
-        Permissions::checkError('aktuality', P_OWNED);
+        \Permissions::checkError('aktuality', P_OWNED);
         if (!$request->post()) {
             return $this->displayForm($request);
         }
@@ -117,7 +117,7 @@ class Controller_Admin_Video
             return $this->displayForm($request);
         }
 
-        DBVideo::add(
+        \DBVideo::add(
             $request->post('uri'),
             $request->post('title'),
             $request->post('author'),
@@ -130,9 +130,9 @@ class Controller_Admin_Video
 
     public function edit($request)
     {
-        Permissions::checkError('aktuality', P_OWNED);
+        \Permissions::checkError('aktuality', P_OWNED);
         $id = $request->getId();
-        $data = DBVideo::getSingle($id);
+        $data = \DBVideo::getSingle($id);
         if (!$id || !$data) {
             new \MessageHelper('warning', 'Článek s takovým ID neexistuje');
             new \RedirectHelper('/admin/aktuality');
@@ -148,7 +148,7 @@ class Controller_Admin_Video
             return $this->displayForm($request, $data);
         }
 
-        DBVideo::edit(
+        \DBVideo::edit(
             $id,
             $request->post('uri'),
             $request->post('title'),
@@ -162,18 +162,18 @@ class Controller_Admin_Video
 
     public function remove($request)
     {
-        Permissions::checkError('aktuality', P_OWNED);
+        \Permissions::checkError('aktuality', P_OWNED);
         if (!$request->getId()) {
             new \RedirectHelper('/admin/video');
         }
 
         if ($request->post('action') == 'confirm') {
-            DBVideo::remove($request->getId());
+            \DBVideo::remove($request->getId());
             new \MessageHelper('info', 'Video odebráno');
             new \RedirectHelper('/admin/video');
         }
 
-        $item = DBVideo::getSingle($request->getId());
+        $item = \DBVideo::getSingle($request->getId());
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa videí',
             'prompt' => 'Opravdu chcete odstranit video:',

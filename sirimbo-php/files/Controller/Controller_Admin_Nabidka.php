@@ -3,17 +3,17 @@ class Controller_Admin_Nabidka
 {
     public function view($request)
     {
-        Permissions::checkError('nabidka', P_OWNED);
-        $data = Permissions::check('nabidka', P_ADMIN)
-            ? DBNabidka::getNabidka(true)
-            : DBNabidka::getNabidkyByTrener(Session::getUserID(), true);
+        \Permissions::checkError('nabidka', P_OWNED);
+        $data = \Permissions::check('nabidka', P_ADMIN)
+            ? \DBNabidka::getNabidka(true)
+            : \DBNabidka::getNabidkyByTrener(Session::getUserID(), true);
 
         if ($request->post('action') == 'save') {
             foreach ($data as $item) {
                 if ((bool) $request->post($item['n_id']) == (bool) $item['n_visible']) {
                     continue;
                 }
-                DBNabidka::editNabidka(
+                \DBNabidka::editNabidka(
                     $item['n_id'],
                     $item['n_trener'],
                     $item['n_pocet_hod'],
@@ -56,7 +56,7 @@ class Controller_Admin_Nabidka
 
     public function add($request)
     {
-        Permissions::checkError('nabidka', P_OWNED);
+        \Permissions::checkError('nabidka', P_OWNED);
         if (!$request->post()) {
             return $this->displayForm($request);
         }
@@ -66,10 +66,10 @@ class Controller_Admin_Nabidka
             return $this->displayForm($request);
         }
 
-        Permissions::checkError('nabidka', P_OWNED, $request->post('trener'));
+        \Permissions::checkError('nabidka', P_OWNED, $request->post('trener'));
 
-        $od = new Date($_POST['od'] ?? null);
-        $do = new Date($_POST['do'] ?? null);
+        $od = new \Date($_POST['od'] ?? null);
+        $do = new \Date($_POST['do'] ?? null);
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
         }
@@ -78,7 +78,7 @@ class Controller_Admin_Nabidka
             $request->post('max_pocet_hod', 0);
         }
 
-        DBNabidka::addNabidka(
+        \DBNabidka::addNabidka(
             $request->post('trener'),
             $request->post('pocet_hod'),
             $request->post('max_pocet_hod'),
@@ -94,16 +94,16 @@ class Controller_Admin_Nabidka
 
     public function edit($request)
     {
-        Permissions::checkError('nabidka', P_OWNED);
+        \Permissions::checkError('nabidka', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Nabídka s takovým ID neexistuje');
             new \RedirectHelper($request->post('returnURI') ?: '/admin/nabidka');
         }
-        if (!$data = DBNabidka::getSingleNabidka($id)) {
+        if (!$data = \DBNabidka::getSingleNabidka($id)) {
             new \MessageHelper('warning', 'Nabídka s takovým ID neexistuje');
             new \RedirectHelper($request->post('returnURI') ?: '/admin/nabidka');
         }
-        Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
+        \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
 
         if (!$request->post()) {
             return $this->displayForm($request, $data);
@@ -114,13 +114,13 @@ class Controller_Admin_Nabidka
             return $this->displayForm($request, $data);
         }
 
-        $od = new Date($_POST['od'] ?? null);
-        $do = new Date($_POST['do'] ?? null);
+        $od = new \Date($_POST['od'] ?? null);
+        $do = new \Date($_POST['do'] ?? null);
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
         }
 
-        $items = DBNabidka::getNabidkaItemLessons($id);
+        $items = \DBNabidka::getNabidkaItemLessons($id);
         $pocet_hod = $request->post('pocet_hod');
         if ($pocet_hod < $items) {
             $pocet_hod = $items;
@@ -130,7 +130,7 @@ class Controller_Admin_Nabidka
             );
         }
         $max_lessons = $request->post('max_pocet_hod');
-        $max_lessons_old = DBNabidka::getNabidkaMaxItems($id);
+        $max_lessons_old = \DBNabidka::getNabidkaMaxItems($id);
         if ($max_lessons < $max_lessons_old && $max_lessons != 0) {
             $max_lessons = $max_lessons_old;
             new \MessageHelper('warning', 
@@ -142,7 +142,7 @@ class Controller_Admin_Nabidka
             $max_lessons = 0;
         }
 
-        DBNabidka::editNabidka(
+        \DBNabidka::editNabidka(
             $id,
             $request->post('trener'),
             $pocet_hod,
@@ -159,12 +159,12 @@ class Controller_Admin_Nabidka
 
     public function duplicate($request)
     {
-        Permissions::checkError('nabidka', P_OWNED);
+        \Permissions::checkError('nabidka', P_OWNED);
         $oldId = $request->getId();
-        $data = DBNabidka::getSingleNabidka($oldId);
-        $items = DBNabidka::getNabidkaItem($oldId);
+        $data = \DBNabidka::getSingleNabidka($oldId);
+        $items = \DBNabidka::getNabidkaItem($oldId);
 
-        $newId = DBNabidka::addNabidka(
+        $newId = \DBNabidka::addNabidka(
             $data['n_trener'],
             $data['n_pocet_hod'],
             $data['n_max_pocet_hod'],
@@ -174,7 +174,7 @@ class Controller_Admin_Nabidka
             $data['n_lock']
         );
         foreach ($items as $item) {
-            DBNabidka::addNabidkaItemLessons(
+            \DBNabidka::addNabidkaItemLessons(
                 $item['ni_partner'],
                 $newId,
                 $item['ni_pocet_hod']
@@ -185,23 +185,23 @@ class Controller_Admin_Nabidka
 
     public function remove($request)
     {
-        Permissions::checkError('nabidka', P_OWNED);
+        \Permissions::checkError('nabidka', P_OWNED);
         $id = $request->getId();
-        $data = DBNabidka::getSingleNabidka($id);
-        if (!Permissions::check('nabidka', P_OWNED, $data['n_trener'])) {
+        $data = \DBNabidka::getSingleNabidka($id);
+        if (!\Permissions::check('nabidka', P_OWNED, $data['n_trener'])) {
             throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
         }
-        DBNabidka::removeNabidka($id);
+        \DBNabidka::removeNabidka($id);
         new \RedirectHelper('/admin/nabidka');
     }
 
     protected function displayForm($request, $data = null)
     {
-        $isAdmin = Permissions::check('nabidka', P_ADMIN);
+        $isAdmin = \Permissions::check('nabidka', P_ADMIN);
         if ($isAdmin) {
-            $treneri = DBUser::getUsersByPermission('nabidka', P_OWNED);
+            $treneri = \DBUser::getUsersByPermission('nabidka', P_OWNED);
         } else {
-            $treneri = [DBUser::getUserData(Session::getUserID())];
+            $treneri = [\DBUser::getUserData(Session::getUserID())];
         }
         new \RenderHelper('files/View/Admin/Nabidka/Form.inc', [
             'header' => 'Správa nabídky',
@@ -222,8 +222,8 @@ class Controller_Admin_Nabidka
 
     private function checkData($request): Form
     {
-        $od = new Date($_POST['od'] ?? null);
-        $do = new Date($_POST['do'] ?? null);
+        $od = new \Date($_POST['od'] ?? null);
+        $do = new \Date($_POST['do'] ?? null);
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
         }

@@ -3,7 +3,7 @@ class Session
 {
     public static function login($login, $pass)
     {
-        if (Database::isDatabaseError()) {
+        if (\Database::isDatabaseError()) {
             self::logout();
             return false;
         }
@@ -13,16 +13,16 @@ class Session
             self::loadUser(1);
             return true;
         }
-        $id = DBUser::checkUser($login, $pass);
+        $id = \DBUser::checkUser($login, $pass);
         if (!$id) {
             return false;
         }
-        $data = DBUser::getUserData($id);
+        $data = \DBUser::getUserData($id);
         if ($data['u_ban']) {
-            new RedirectHelper('/error?id=ban');
+            new \RedirectHelper('/error?id=ban');
         }
         if (!$data['u_confirmed']) {
-            new RedirectHelper('/error?id=not_approved');
+            new \RedirectHelper('/error?id=not_approved');
         }
         self::loadUser($data['u_id']);
         return true;
@@ -35,15 +35,15 @@ class Session
 
     public static function loadUser($id): bool
     {
-        if (Database::isDatabaseError() || !($user = DBUser::getUser($id))) {
+        if (\Database::isDatabaseError() || !($user = \DBUser::getUser($id))) {
             self::logout();
             return false;
         }
-        $skupina = DBSkupiny::getSingle($user->getTrainingGroup());
-        $permissions = DBPermissions::getSingleGroup($user->getPermissionGroup());
-        $par = DBPary::getLatestPartner($user->getId(), $user->getGender());
+        $skupina = \DBSkupiny::getSingle($user->getTrainingGroup());
+        $permissions = \DB\Permissions::getSingleGroup($user->getPermissionGroup());
+        $par = \DBPary::getLatestPartner($user->getId(), $user->getGender());
 
-        foreach (array_keys(Settings::$permissions) as $key) {
+        foreach (array_keys(\Settings::$permissions) as $key) {
             if ($user->getPermissionGroup() == 0) {
                 $_SESSION['permissions'][$key] = P_NONE;
             } else {
@@ -118,15 +118,15 @@ class Session
 
     public static function getZaplaceno()
     {
-        return DBPlatby::hasPaidMemberFees(self::getUserId());
+        return \DBPlatby::hasPaidMemberFees(self::getUserId());
     }
 
     public static function getZaplacenoPar()
     {
         return true;
-        // $paid = DBPlatby::hasPaidMemberFees(self::getUserId());
+        // $paid = \DBPlatby::hasPaidMemberFees(self::getUserId());
         // if ($_SESSION['partner']) {
-        //     $paid = $paid && DBPlatby::hasPaidMemberFees(self::getPartnerId());
+        //     $paid = $paid && \DBPlatby::hasPaidMemberFees(self::getPartnerId());
         // }
         // return $paid;
     }
@@ -176,15 +176,15 @@ class Session
         $poznamky, $street, $popisne, $orientacni, $district, $city, $postal,
         $nationality, $skupina, $dancer
     ): void {
-        DBUser::addUser(
+        \DBUser::addUser(
             $login, User::crypt($pass), $name, $surname, $pohlavi, $email,
             $telefon, $narozeni, $poznamky, $street, $popisne, $orientacni,
             $district, $city, $postal, $nationality,
             '0', $skupina, '0', '0', '0', '0', $dancer ? '1' : '0', '0'
         );
 
-        Mailer::newUserNotice(DEFAULT_ADMIN_MAIL, $login);
-        Mailer::newUserNotice('hyzam@tkolymp.cz', $login);
+        \Mailer::newUserNotice(DEFAULT_ADMIN_MAIL, $login);
+        \Mailer::newUserNotice('hyzam@tkolymp.cz', $login);
     }
 
     public static function generateMsmtCsv(): string
@@ -216,9 +216,9 @@ class Session
             'EXT_ID'
         ]);
 
-        $oldest = DBPlatby::getOldestPayment();
-        $newest = DBPlatby::getNewestPayment();
-        foreach (DBUser::getUsers() as $u) {
+        $oldest = \DBPlatby::getOldestPayment();
+        $newest = \DBPlatby::getNewestPayment();
+        foreach (\DBUser::getUsers() as $u) {
             if ($u['u_ban'] || $u['u_temporary'] || !$u['u_confirmed'] || $u['u_system']) {
                 continue;
             }
@@ -227,7 +227,7 @@ class Session
                 continue;
             }
             // od 1.9.2019
-            if (new DateTime($newest[$u['u_id']]) < new DateTime('2019-09-01')) {
+            if (new \DateTime($newest[$u['u_id']]) < new \DateTime('2019-09-01')) {
                 continue;
             }
 

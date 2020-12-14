@@ -27,8 +27,8 @@ function formatTimestamp($str, $date_only = false)
 
 function formatRange($from, $to)
 {
-    $from = new Date($from);
-    $to = new Date($to);
+    $from = new \Date($from);
+    $to = new \Date($to);
     return $from->getHumanDate() . ' - '  . $to->getHumanDate();
 }
 

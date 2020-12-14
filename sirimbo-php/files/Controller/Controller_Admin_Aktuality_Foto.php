@@ -3,7 +3,7 @@ class Controller_Admin_Aktuality_Foto
 {
     public function view($request)
     {
-        Permissions::checkError('aktuality', P_OWNED);
+        \Permissions::checkError('aktuality', P_OWNED);
         $id = $request->getId();
         if (!($article = DBAktuality::getSingleAktualita($id))) {
             new \MessageHelper('warning', 'Takový článek neexistuje');
@@ -18,7 +18,7 @@ class Controller_Admin_Aktuality_Foto
                 }
             }
 
-            if (!DBGalerie::getSingleDir($request->get('dir'))) {
+            if (!\DBGalerie::getSingleDir($request->get('dir'))) {
                 new \MessageHelper('warning', 'Taková složka neexistuje');
                 return new \RedirectHelper('/admin/aktuality/foto/' . $id . '?dir=0');
             }
@@ -27,9 +27,9 @@ class Controller_Admin_Aktuality_Foto
                 'id' => $item['gf_id'],
                 'name' => $item['gf_name'],
                 'src' => '/galerie/thumbnails/' . $item['gf_path']
-            ], DBGalerie::getFotky($request->get('dir')));
+            ], \DBGalerie::getFotky($request->get('dir')));
 
-            $dirs = DBGalerie::getDirs(true, true);
+            $dirs = \DBGalerie::getDirs(true, true);
             $dirs_out = [];
             foreach ($dirs as $item) {
                 $dirs_out[$item['gd_id']] = str_repeat("&nbsp;&nbsp;", $item['gd_level'] - 1) . $item['gd_name'];

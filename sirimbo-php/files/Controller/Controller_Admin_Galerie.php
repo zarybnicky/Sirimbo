@@ -3,7 +3,7 @@ class Controller_Admin_Galerie
 {
     public function view($request)
     {
-        Permissions::checkError('galerie', P_OWNED);
+        \Permissions::checkError('galerie', P_OWNED);
         if ($request->post('action') == 'save') {
             $this->_processSave($request);
         }
@@ -11,7 +11,7 @@ class Controller_Admin_Galerie
             $this->_scan();
         }
 
-        $data = DBGalerie::getDirs(true, true);
+        $data = \DBGalerie::getDirs(true, true);
         $data = array_map(
             function ($item) {
                 return [
@@ -35,8 +35,8 @@ class Controller_Admin_Galerie
 
     private function _scan()
     {
-        $dbInDirs = DBGalerie::getDirsWithParentPath();
-        $dbInFiles = DBGalerie::getFotkyWithParentPath();
+        $dbInDirs = \DBGalerie::getDirsWithParentPath();
+        $dbInFiles = \DBGalerie::getFotkyWithParentPath();
         $dbDirs = [];
         $dbFiles = [];
 
@@ -107,10 +107,10 @@ class Controller_Admin_Galerie
                 unset($dbDirs[$dir]);
                 continue;
             }
-            DBGalerie::removeDirByPath($dir);
+            \DBGalerie::removeDirByPath($dir);
         }
         foreach ($dbFiles as $file => $parent) {
-            DBGalerie::removeFotoByPath($file);
+            \DBGalerie::removeFotoByPath($file);
         }
 
         //Inserting new directories
@@ -129,7 +129,7 @@ class Controller_Admin_Galerie
             }
             unset($parts);
 
-            DBGalerie::addDirByPath(
+            \DBGalerie::addDirByPath(
                 $name,
                 getCanonicalName($parent),
                 $level,
@@ -142,7 +142,7 @@ class Controller_Admin_Galerie
             $parts = explode(DIRECTORY_SEPARATOR, $file);
             $name = array_pop($parts);
 
-            DBGalerie::addFotoByPath(
+            \DBGalerie::addFotoByPath(
                 getCanonicalName($parent),
                 getCanonicalName($file),
                 $name,
@@ -182,12 +182,12 @@ class Controller_Admin_Galerie
 
     private function _processSave($request)
     {
-        $items = DBGalerie::getDirs();
+        $items = \DBGalerie::getDirs();
         foreach ($items as $item) {
             if ((bool) $request->post($item['gd_id']) === (bool) $item['gd_hidden']) {
                 continue;
             }
-            DBGalerie::editDir(
+            \DBGalerie::editDir(
                 $item['gd_id'],
                 $item['gd_name'],
                 $item['gd_id_rodic'],

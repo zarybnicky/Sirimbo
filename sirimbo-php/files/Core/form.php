@@ -56,7 +56,7 @@ class Form
         return (
             $this->checkRegexp($i, Form::REGEXP_LOGIN, $message, $name)
             && $this->checkBool(
-                !DBUser::getUserID(strtolower($i)),
+                !\DBUser::getUserID(strtolower($i)),
                 'Toto přihlašovací jméno je obsazené.', $name
             )
         );

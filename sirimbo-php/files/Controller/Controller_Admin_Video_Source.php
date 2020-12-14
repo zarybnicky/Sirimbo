@@ -3,7 +3,7 @@ class Controller_Admin_Video_Source
 {
     public function view($request)
     {
-        Permissions::checkError('aktuality', P_OWNED);
+        \Permissions::checkError('aktuality', P_OWNED);
         new \RenderHelper('files/View/Admin/VideoSource/Overview.inc', [
             'header' => 'Správa zdrojů videa',
             'data' => array_map(
@@ -18,14 +18,14 @@ class Controller_Admin_Video_Source
                         'lastChecked' => $item['vs_last_checked'] ? formatTimestamp($item['vs_last_checked'], true) : ''
                     ];
                 },
-                DBVideoSource::getAll()
+                \DBVideoSource::getAll()
             )
         ]);
     }
 
     public function add($request)
     {
-        Permissions::checkError('aktuality', P_OWNED);
+        \Permissions::checkError('aktuality', P_OWNED);
         if (!$request->post()) {
             return $this->displayForm($request);
         }
@@ -36,15 +36,15 @@ class Controller_Admin_Video_Source
             return $this->displayForm($request);
         }
 
-        DBVideoSource::add($request->post('uri'));
+        \DBVideoSource::add($request->post('uri'));
         new \RedirectHelper('/admin/video/source');
     }
 
     public function edit($request)
     {
-        Permissions::checkError('aktuality', P_OWNED);
+        \Permissions::checkError('aktuality', P_OWNED);
         $id = $request->getId();
-        $data = DBVideoSource::getSingle($id);
+        $data = \DBVideoSource::getSingle($id);
         if (!$id || !$data) {
             new \MessageHelper('warning', 'Článek s takovým ID neexistuje');
             new \RedirectHelper('/admin/video/source');
@@ -60,7 +60,7 @@ class Controller_Admin_Video_Source
             return $this->displayForm($request, $data);
         }
 
-        DBVideoSource::edit(
+        \DBVideoSource::edit(
             $id,
             $request->post('uri'),
             $request->post('title'),
@@ -72,18 +72,18 @@ class Controller_Admin_Video_Source
 
     public function remove($request)
     {
-        Permissions::checkError('aktuality', P_OWNED);
+        \Permissions::checkError('aktuality', P_OWNED);
         if (!$request->getId()) {
             new \RedirectHelper('/admin/video/source');
         }
 
         if ($request->post('action') == 'confirm') {
-            DBVideoSource::remove($request->getId());
+            \DBVideoSource::remove($request->getId());
             new \MessageHelper('info', 'Video odebráno');
             new \RedirectHelper('/admin/video/source');
         }
 
-        $item = DBVideo::getSingle($request->getId());
+        $item = \DBVideo::getSingle($request->getId());
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa videí',
             'prompt' => 'Opravdu chcete odstranit zdroj:',

@@ -3,7 +3,7 @@ class Controller_Admin_Permissions
 {
     public function view($request)
     {
-        Permissions::checkError('permissions', P_ADMIN);
+        \Permissions::checkError('permissions', P_ADMIN);
         $data = array_map(
             function ($item) {
                 return [
@@ -14,7 +14,7 @@ class Controller_Admin_Permissions
                     'description' => $item['pe_description']
                 ];
             },
-            DBPermissions::getGroups()
+            DB\Permissions::getGroups()
         );
         new \RenderHelper('files/View/Admin/Permissions/Overview.inc', [
             'header' => 'Správa oprávnění',
@@ -24,7 +24,7 @@ class Controller_Admin_Permissions
 
     public function add($request)
     {
-        Permissions::checkError('permissions', P_ADMIN);
+        \Permissions::checkError('permissions', P_ADMIN);
         if (!$request->post()) {
             return $this->renderForm($request);
         }
@@ -38,7 +38,7 @@ class Controller_Admin_Permissions
         foreach (array_keys(Settings::$permissions) as $name) {
             $permissions[$name] = $request->post($name);
         }
-        DBPermissions::addGroup(
+        DB\Permissions::addGroup(
             $request->post('name'),
             $request->post('description'),
             $permissions
@@ -49,12 +49,12 @@ class Controller_Admin_Permissions
 
     public function edit($request)
     {
-        Permissions::checkError('permissions', P_ADMIN);
+        \Permissions::checkError('permissions', P_ADMIN);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
             new \RedirectHelper($request->post('returnURI') ?: '/admin/permissions');
         }
-        if (!$data = DBPermissions::getSingleGroup($id)) {
+        if (!$data = DB\Permissions::getSingleGroup($id)) {
             new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
             new \RedirectHelper($request->post('returnURI') ?: '/admin/permissions');
         }
@@ -72,7 +72,7 @@ class Controller_Admin_Permissions
         foreach (array_keys(Settings::$permissions) as $name) {
             $permissions[$name] = $request->post($name);
         }
-        DBPermissions::editGroup(
+        DB\Permissions::editGroup(
             $id,
             $request->post('name'),
             $request->post('description'),
@@ -84,19 +84,19 @@ class Controller_Admin_Permissions
 
     public function remove($request)
     {
-        Permissions::checkError('permissions', P_ADMIN);
+        \Permissions::checkError('permissions', P_ADMIN);
         if (!$request->getId()) {
             new \RedirectHelper('/admin/permissions');
         }
         $id = $request->getId();
 
         if ($request->post('action') == 'confirm') {
-            DBPermissions::removeGroup($id);
+            DB\Permissions::removeGroup($id);
             new \MessageHelper('info', 'Úroveň odebrána. Nezapomeňte přiřadit uživatelům z této skupiny jinou skupinu!');
             new \RedirectHelper('/admin/permissions');
         }
 
-        $item = DBPermissions::getSingleGroup($id);
+        $item = DB\Permissions::getSingleGroup($id);
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa oprávnění',
             'prompt' =>

@@ -43,7 +43,7 @@ class RenderHelper
             ['Fotogalerie', '/fotogalerie'],
             ['Kontakt', '/kontakt'],
         ]];
-        if (Permissions::check('nastenka', P_VIEW)) {
+        if (\Permissions::check('nastenka', P_VIEW)) {
             $menu[] = [
                 ['Nástěnka', '/member', []],
                 ['Rozpis', '/member/rozpis', []],

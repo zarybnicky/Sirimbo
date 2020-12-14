@@ -3,7 +3,7 @@ class Controller_Admin_Akce
 {
     public function view($request)
     {
-        Permissions::checkError('akce', P_OWNED);
+        \Permissions::checkError('akce', P_OWNED);
         if ($request->post('action') == 'save') {
             $this->processSave($request);
             new \RedirectHelper('/admin/akce');
@@ -28,7 +28,7 @@ class Controller_Admin_Akce
                     'buttons' => new RemoveLinkHelper('/admin/akce/remove/' . $item['a_id'])
                 ];
             },
-            DBAkce::getWithItemCount()
+            \DBAkce::getWithItemCount()
         );
 
         new \RenderHelper('files/View/Admin/Akce/Overview.inc', [
@@ -39,7 +39,7 @@ class Controller_Admin_Akce
 
     public function add($request)
     {
-        Permissions::checkError('akce', P_OWNED);
+        \Permissions::checkError('akce', P_OWNED);
         if (!$request->post()) {
             return $this->displayForm($request);
         }
@@ -50,12 +50,12 @@ class Controller_Admin_Akce
             return $this->displayForm($request);
         }
 
-        $od = new Date($_POST['od'] ?? null);
-        $do = new Date($_POST['do'] ?? null);
+        $od = new \Date($_POST['od'] ?? null);
+        $do = new \Date($_POST['do'] ?? null);
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
         }
-        DBAkce::addAkce(
+        \DBAkce::addAkce(
             $request->post('jmeno'),
             $request->post('kde'),
             $request->post('info'),
@@ -73,12 +73,12 @@ class Controller_Admin_Akce
 
     public function edit($request)
     {
-        Permissions::checkError('akce', P_OWNED);
+        \Permissions::checkError('akce', P_OWNED);
         if (!($id = $request->getID())) {
             new \MessageHelper('warning', 'Akce s takovým ID neexistuje');
             new \RedirectHelper('/admin/akce');
         }
-        if (!($data = DBAkce::getSingleAkce($id))) {
+        if (!($data = \DBAkce::getSingleAkce($id))) {
             new \MessageHelper('warning', 'Akce s takovým ID neexistuje');
             new \RedirectHelper('/admin/akce');
         }
@@ -93,13 +93,13 @@ class Controller_Admin_Akce
             return $this->displayForm($request, $data);
         }
 
-        $od = new Date($_POST['od'] ?? null);
-        $do = new Date($_POST['do'] ?? null);
+        $od = new \Date($_POST['od'] ?? null);
+        $do = new \Date($_POST['do'] ?? null);
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
         }
 
-        DBAkce::editAkce(
+        \DBAkce::editAkce(
             $id,
             $request->post('jmeno'),
             $request->post('kde'),
@@ -118,18 +118,18 @@ class Controller_Admin_Akce
 
     public function remove($request)
     {
-        Permissions::checkError('akce', P_OWNED);
+        \Permissions::checkError('akce', P_OWNED);
         if (!$request->getId()) {
             new \RedirectHelper('/admin/akce');
         }
         $id = $request->getId();
         if ($request->post('action') == 'confirm') {
-            DBAkce::removeAkce($id);
+            \DBAkce::removeAkce($id);
             new \MessageHelper('success', 'Akce odebrány');
             return new \RedirectHelper('/admin/akce');
         }
 
-        $item = DBAkce::getSingleAkce($id);
+        $item = \DBAkce::getSingleAkce($id);
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa akcí',
             'prompt' => 'Opravdu chcete odstranit akce:',
@@ -151,7 +151,7 @@ class Controller_Admin_Akce
                         'name' => $item['d_name']
                     ];
                 },
-                DBDokumenty::getMultipleById(
+                \DBDokumenty::getMultipleById(
                     array_filter(explode(',', $data['a_dokumenty']))
                 )
             );
@@ -178,12 +178,12 @@ class Controller_Admin_Akce
 
     private function processSave($request)
     {
-        $items = DBAkce::getAkce();
+        $items = \DBAkce::getAkce();
         foreach ($items as $item) {
             if ((bool) $request->post($item['a_id']) === (bool) $item['a_visible']) {
                 continue;
             }
-            DBAkce::editAkce(
+            \DBAkce::editAkce(
                 $item['a_id'],
                 $item['a_jmeno'],
                 $item['a_kde'],
@@ -200,8 +200,8 @@ class Controller_Admin_Akce
 
     private function checkData($request): Form
     {
-        $od = new Date($_POST['od'] ?? null);
-        $do = new Date($_POST['do'] ?? null);
+        $od = new \Date($_POST['od'] ?? null);
+        $do = new \Date($_POST['do'] ?? null);
 
         $form = new Form();
         $form->checkDate((string) $od, 'Špatný formát data ("Od")', 'od');

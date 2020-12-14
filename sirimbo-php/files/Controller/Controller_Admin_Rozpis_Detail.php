@@ -3,24 +3,24 @@ class Controller_Admin_Rozpis_Detail
 {
     public function view($request)
     {
-        Permissions::checkError('rozpis', P_OWNED);
+        \Permissions::checkError('rozpis', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Rozpis s takovým ID neexistuje');
             new \RedirectHelper('/admin/rozpis');
         }
-        if (!$data = DBRozpis::getSingleRozpis($id)) {
+        if (!$data = \DBRozpis::getSingleRozpis($id)) {
             new \MessageHelper('warning', 'Rozpis s takovým ID neexistuje');
             new \RedirectHelper('/admin/rozpis');
         }
 
-        Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
+        \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
 
-        $items = DBRozpis::getRozpisItem($id);
+        $items = \DBRozpis::getRozpisItem($id);
 
         if ($request->post()) {
             $items = $this->processPost($request, $id, $data, $items);
             if ($items) {
-                DBRozpis::editRozpisItemMultiple($items);
+                \DBRozpis::editRozpisItemMultiple($items);
             }
             new \RedirectHelper('/' . $request->getURI());
         }
@@ -44,10 +44,10 @@ class Controller_Admin_Rozpis_Detail
             'datum' => formatDate($data['r_datum']),
             'kde' => $data['r_kde'],
             'fullName' => $data['u_jmeno'] . ' ' . $data['u_prijmeni'],
-            'canEdit' => Permissions::check('nabidka', P_OWNED, $data['r_trener'])
+            'canEdit' => \Permissions::check('nabidka', P_OWNED, $data['r_trener'])
         ];
 
-        $nabidky = DBNabidka::getNabidka();
+        $nabidky = \DBNabidka::getNabidka();
         usort(
             $nabidky,
             function ($a, $b) {
@@ -68,7 +68,7 @@ class Controller_Admin_Rozpis_Detail
                 ')';
         }
 
-        if ($request->get('n') && ($nabidka = DBNabidka::getSingleNabidka($request->get('n')))) {
+        if ($request->get('n') && ($nabidka = \DBNabidka::getSingleNabidka($request->get('n')))) {
             $nabidka_items = array_map(
                 function ($item) {
                     return [
@@ -76,7 +76,7 @@ class Controller_Admin_Rozpis_Detail
                         'lessonCount' => $item['ni_pocet_hod']
                     ];
                 },
-                DBNabidka::getNabidkaItem($request->get('n'))
+                \DBNabidka::getNabidkaItem($request->get('n'))
             );
 
             $obsazeno = array_reduce(
@@ -116,8 +116,8 @@ class Controller_Admin_Rozpis_Detail
     protected function processPost($request, $id, $data, $items)
     {
         if ($request->post('remove') > 0) {
-            DBRozpis::removeRozpisItem($request->post('remove'));
-            $items = DBRozpis::getRozpisItem($id);
+            \DBRozpis::removeRozpisItem($request->post('remove'));
+            $items = \DBRozpis::getRozpisItem($id);
         }
         //Update all
         foreach ($items as &$item) {
@@ -133,14 +133,14 @@ class Controller_Admin_Rozpis_Detail
             if (!$form->isValid()) {
                 new \MessageHelper('warning', $form->getMessages());
             } else {
-                $newId = DBRozpis::addRozpisItem(
+                $newId = \DBRozpis::addRozpisItem(
                     $id,
                     $request->post('add_partner'),
                     formatTime($request->post('add_od'), 0),
                     formatTime($request->post('add_do'), 0),
                     (int) (bool) $request->post('add_lock')
                 );
-                $items[] = DBRozpis::getRozpisItemLesson($newId);
+                $items[] = \DBRozpis::getRozpisItemLesson($newId);
 
                 $request->post('add_partner', null);
             }
@@ -199,14 +199,14 @@ class Controller_Admin_Rozpis_Detail
                 $end->add($length);
 
                 for ($i = 0; $i < $request->post('add_multi_num'); $i++) {
-                    $newId = DBRozpis::addRozpisItem(
+                    $newId = \DBRozpis::addRozpisItem(
                         $id,
                         '0',
                         $start->format('H:i:s'),
                         $end->format('H:i:s'),
                         '0'
                     );
-                    $items[] = DBRozpis::getRozpisItemLesson($newId);
+                    $items[] = \DBRozpis::getRozpisItemLesson($newId);
 
                     $start = $end;
                     $end = clone $start;

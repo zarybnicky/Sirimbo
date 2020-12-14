@@ -3,8 +3,8 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
 {
     public function view($request)
     {
-        Permissions::checkError('platby', P_OWNED);
-        $data = DBPlatbyRaw::getDiscarded();
+        \Permissions::checkError('platby', P_OWNED);
+        $data = \DBPlatbyRaw::getDiscarded();
         if (count($data) == 0) {
             new \MessageHelper('info', 'V databázi nejsou žádné vyřazené platby.');
             new \RedirectHelper('/admin/platby');
@@ -32,14 +32,14 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
 
     public function remove($request)
     {
-        Permissions::checkError('platby', P_OWNED);
+        \Permissions::checkError('platby', P_OWNED);
         $id = $request->getId();
-        if (!$id && !DBPlatbyRaw::getSingle($id)) {
+        if (!$id && !\DBPlatbyRaw::getSingle($id)) {
             new \MessageHelper('info', 'Platba se zadaným ID neexistuje.');
             new \RedirectHelper($request->getReferer());
         }
 
-        DBPlatbyRaw::delete($id);
+        \DBPlatbyRaw::delete($id);
         new \MessageHelper('success', 'Platba byla odstraněna.');
         new \RedirectHelper($request->getReferer());
     }
@@ -75,7 +75,7 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
                     if ($request->get('year') == 'none') {
                         continue;
                     }
-                    $currentDate = new Date($row[$date]);
+                    $currentDate = new \Date($row[$date]);
                     if ($currentDate->getYear() != $request->get('year')
                         || ($request->get('month') && $currentDate->getMonth() != $request->get('month'))
                     ) {
@@ -138,7 +138,7 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
             }
 
             if (isset($row[$date]) && $row[$date]) {
-                $currentDate = new Date($row[$date]);
+                $currentDate = new \Date($row[$date]);
                 if (!isset($groupDate[$currentDate->getYear()])) {
                     $groupDate[$currentDate->getYear()] = ['name' => $currentDate->getYear(), 'months' => []];
                 }

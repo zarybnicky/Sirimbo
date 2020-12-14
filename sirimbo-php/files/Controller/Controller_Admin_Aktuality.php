@@ -3,7 +3,7 @@ class Controller_Admin_Aktuality
 {
     public function view($request)
     {
-        Permissions::checkError('aktuality', P_OWNED);
+        \Permissions::checkError('aktuality', P_OWNED);
         $data = array_map(
             function ($item) {
                 $id = $item['at_id'];
@@ -17,7 +17,7 @@ class Controller_Admin_Aktuality
                     'buttons' => new RemoveLinkHelper('/admin/aktuality/remove/' . $id)
                 ];
             },
-            Permissions::check('aktuality', P_ADMIN)
+            \Permissions::check('aktuality', P_ADMIN)
             ? DBAktuality::getAktuality(1)
             : DBAktuality::getAktuality(1, Session::getUserID())
         );
@@ -29,7 +29,7 @@ class Controller_Admin_Aktuality
 
     public function add($request)
     {
-        Permissions::checkError('aktuality', P_OWNED);
+        \Permissions::checkError('aktuality', P_OWNED);
         if (!$request->post()) {
             return new \RenderHelper('files/View/Admin/Aktuality/Form.inc', [
                 'header' => 'Správa aktualit',
@@ -60,7 +60,7 @@ class Controller_Admin_Aktuality
 
     public function edit($request)
     {
-        Permissions::checkError('aktuality', P_OWNED);
+        \Permissions::checkError('aktuality', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Článek s takovým ID neexistuje');
             new \RedirectHelper('/admin/aktuality');
@@ -70,7 +70,7 @@ class Controller_Admin_Aktuality
             new \RedirectHelper('/admin/aktuality');
         }
 
-        Permissions::checkError('aktuality', P_OWNED, $data['at_kdo']);
+        \Permissions::checkError('aktuality', P_OWNED, $data['at_kdo']);
 
         $date = DateTime::createFromFormat('j. n. Y H:i', $request->post('createdAt'));
         if (!$request->post() || $date === false) {
@@ -103,14 +103,14 @@ class Controller_Admin_Aktuality
 
     public function remove($request)
     {
-        Permissions::checkError('aktuality', P_OWNED);
+        \Permissions::checkError('aktuality', P_OWNED);
         if (!$request->getId()) {
             new \RedirectHelper('/admin/aktuality');
         }
         $id = $request->getId();
         if ($request->post('action') == 'confirm') {
             $data = DBAktuality::getSingleAktualita($id);
-            if (!Permissions::check('aktuality', P_OWNED, $data['at_kdo'])) {
+            if (!\Permissions::check('aktuality', P_OWNED, $data['at_kdo'])) {
                 throw new AuthorizationException('Máte nedostatečnou autorizaci pro tuto akci!');
             }
             DBAktuality::removeAktualita($id);

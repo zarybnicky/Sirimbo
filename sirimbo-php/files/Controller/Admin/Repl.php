@@ -1,19 +1,16 @@
 <?php
 namespace Olymp\Controller\Admin;
 
-use \Permissions;
-use \Tag;
-
 class Repl
 {
     public static function get()
     {
-        Permissions::checkError('konzole', P_OWNED);
-        echo new Tag(
+        \Permissions::checkError('konzole', P_OWNED);
+        echo new \Tag(
             'form',
             ['action' => '', 'method' => 'post'],
             'Kód:<br/>',
-            new Tag(
+            new \Tag(
                 'textarea',
                 ['name' => 'code', 'rows' => 10, 'cols' => 10],
                 $_POST['code'] ?: ''
@@ -24,7 +21,7 @@ class Repl
 
     public static function post()
     {
-        Permissions::checkError('konzole', P_OWNED);
+        \Permissions::checkError('konzole', P_OWNED);
         if ($_POST['code']) {
             $r = eval(stripslashes($_POST['code']));
             if ($r === false) {

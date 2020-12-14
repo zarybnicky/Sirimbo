@@ -35,7 +35,7 @@ class PlatbyItem
     public function processWithSymbolLookup($userLookup, $categoryLookup)
     {
         if (!$this->specific && $this->categoryId) {
-            $category = DBPlatbyCategory::getSingle($this->categoryId);
+            $category = \DBPlatbyCategory::getSingle($this->categoryId);
             $this->specific = $category ? $category['pc_symbol'] : null;
         } elseif ($this->specific && !$this->categoryId) {
             if (mb_strlen($this->specific) <= 4) {
