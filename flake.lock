@@ -54,11 +54,11 @@
     "in-other-words": {
       "flake": false,
       "locked": {
-        "lastModified": 1604162549,
-        "narHash": "sha256-doUm98sK7b6D++5Z/QTn9b1Tt96mn3OTDg3WzjAzseQ=",
+        "lastModified": 1607873537,
+        "narHash": "sha256-giK7MF3lR3KMVPkuBU5fTypDhy0aX7RuiXVfccQKtQE=",
         "owner": "KingoftheHomeless",
         "repo": "in-other-words",
-        "rev": "75c6eaa9fe62bb8b34286223e414580fdba2a1ee",
+        "rev": "f02427f1efda189ff802bc9f38e079ec674405dd",
         "type": "github"
       },
       "original": {
