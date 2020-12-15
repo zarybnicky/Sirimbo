@@ -163,6 +163,7 @@ function makeRouter()
 
     $router->get('/admin/konzole', '@Admin.Repl::get');
     $router->post('/admin/konzole', '@Admin.Repl::post');
+
     $router->get('/admin/akce', '@Admin.Akce::list');
     $router->post('/admin/akce', '@Admin.Akce::listPost');
     $router->get('/admin/akce/add', '@Admin.Akce::add');
@@ -175,6 +176,16 @@ function makeRouter()
     $router->post('/admin/akce/detail/([0-9]+)', '@Admin.Akce::detailPost');
     $router->get('/admin/akce/dokumenty/([0-9]+)', '@Admin.Akce::dokumenty');
     $router->post('/admin/akce/dokumenty/([0-9]+)', '@Admin.Akce::dokumentyPost');
+
+    $router->get('/admin/aktuality', '@Admin.Aktuality::list');
+    $router->get('/admin/aktuality/add', '@Admin.Aktuality::add');
+    $router->post('/admin/aktuality/add', '@Admin.Aktuality::addPost');
+    $router->get('/admin/aktuality/edit/([0-9]+)', '@Admin.Aktuality::edit');
+    $router->post('/admin/aktuality/edit/([0-9]+)', '@Admin.Aktuality::editPost');
+    $router->get('/admin/aktuality/remove/([0-9]+)', '@Admin.Aktuality::remove');
+    $router->post('/admin/aktuality/remove/([0-9]+)', '@Admin.Aktuality::removePost');
+    $router->get('/admin/aktuality/foto/([0-9]+)', '@Admin.Aktuality::foto');
+    $router->post('/admin/aktuality/foto/([0-9]+)', '@Admin.Aktuality::fotoPost');
 
     return $router;
 }
