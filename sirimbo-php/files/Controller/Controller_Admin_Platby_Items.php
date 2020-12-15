@@ -1,7 +1,7 @@
 <?php
 class Controller_Admin_Platby_Items extends Controller_Admin_Platby
 {
-    public function view($request)
+    public function view()
     {
         \Permissions::checkError('platby', P_OWNED);
         $filter = [];
@@ -43,14 +43,14 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         ]);
     }
 
-    public function add($request)
+    public function add()
     {
         \Permissions::checkError('platby', P_OWNED);
         if (!$_POST) {
-            return static::displayForm(0, $request);
+            return static::displayForm(0, 'add');
         } elseif (!is_object($item = static::getFromPost())) {
             new \MessageHelper('warning', $item);
-            return static::displayForm(0, $request);
+            return static::displayForm(0, 'add');
         }
         \DBPlatbyItem::insert(
             $item->variable,
@@ -80,10 +80,10 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             $_POST['variable'] = $data['pi_id_user'];
             $_POST['specific'] = $data['pi_id_category'];
             $_POST['prefix'] = $data['pi_prefix'];
-            return static::displayForm($id, $request);
+            return static::displayForm($id, 'edit');
         } elseif (!is_object($item = static::getFromPost($id))) {
             new \MessageHelper('warning', $item);
-            return static::displayForm($id, $request);
+            return static::displayForm($id, 'edit');
         }
         \DBPlatbyItem::update(
             $id,
@@ -131,7 +131,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         ]);
     }
 
-    private static function displayForm($id, $request)
+    private static function displayForm($id, $action)
     {
         $raw = [];
         if ($id &&
@@ -148,7 +148,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         new \RenderHelper('files/View/Admin/Platby/ItemsForm.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Jednotlivé platby',
-            'action' => $request->getAction(),
+            'action' => $action,
             'returnURI' => $_SERVER['HTTP_REFERER'],
             'id' => $id,
             'raw' => $raw,

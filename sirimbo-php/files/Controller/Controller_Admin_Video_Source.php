@@ -1,7 +1,7 @@
 <?php
 class Controller_Admin_Video_Source
 {
-    public function view($request)
+    public function view()
     {
         \Permissions::checkError('aktuality', P_OWNED);
         new \RenderHelper('files/View/Admin/VideoSource/Overview.inc', [
@@ -21,17 +21,17 @@ class Controller_Admin_Video_Source
         ]);
     }
 
-    public function add($request)
+    public function add()
     {
         \Permissions::checkError('aktuality', P_OWNED);
         if (!$_POST) {
-            return static::displayForm($request);
+            return static::displayForm('add');
         }
 
-        $form = static::checkData($request);
+        $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return static::displayForm($request);
+            return static::displayForm('add');
         }
 
         \DBVideoSource::add($_POST['uri']);
@@ -49,13 +49,13 @@ class Controller_Admin_Video_Source
         }
 
         if (!$_POST) {
-            return static::displayForm($request, $data);
+            return static::displayForm('edit', $data);
         }
 
-        $form = static::checkData($request);
+        $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return static::displayForm($request, $data);
+            return static::displayForm('edit', $data);
         }
 
         \DBVideoSource::edit($id, $_POST['uri'], $_POST['title'], $_POST['desc']);
@@ -85,12 +85,12 @@ class Controller_Admin_Video_Source
         ]);
     }
 
-    protected static function displayForm($request, $data = [])
+    protected static function displayForm($action, $data = [])
     {
         new \RenderHelper('files/View/Admin/VideoSource/Form.inc', [
             'header' => 'Správa zdrojů videa',
-            'subheader' => $request->getAction() == 'add' ? 'Přidat zdroj' : 'Upravit zdroj',
-            'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit',
+            'subheader' => $action == 'add' ? 'Přidat zdroj' : 'Upravit zdroj',
+            'action' => $action == 'add' ? 'Přidat' : 'Upravit',
             'id' => $data ? $data['vs_id'] : null,
             'uri' => $_POST['uri'] ?: ($data ? $data['vs_url'] : ''),
             'title' => $_POST['title'] ?: ($data ? $data['vs_title'] : ''),
@@ -98,7 +98,7 @@ class Controller_Admin_Video_Source
         ]);
     }
 
-    protected static function checkData($request)
+    protected static function checkData()
     {
         $form = new \Form();
         $form->checkNotEmpty($_POST['uri'], 'Zadejte prosím ID kanálu', 'uri');

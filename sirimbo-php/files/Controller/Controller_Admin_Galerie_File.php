@@ -1,7 +1,7 @@
 <?php
 class Controller_Admin_Galerie_File
 {
-    public function view($request)
+    public function view()
     {
         new \RedirectHelper('/admin/galerie');
     }
@@ -21,12 +21,12 @@ class Controller_Admin_Galerie_File
         if (!$_POST) {
             $_POST['name'] = $data['gf_name'];
             $_POST['parent'] = $data['gf_id_rodic'];
-            return static::displayForm($request, $id);
+            return static::displayForm($id);
         }
-        $form = static::checkData($request);
+        $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return static::displayForm($request, $id);
+            return static::displayForm($id);
         }
 
         $parent = \DBGalerie::getSingleDir($_POST['parent']);
@@ -81,11 +81,11 @@ class Controller_Admin_Galerie_File
         ]);
     }
 
-    public function upload($request)
+    public function upload()
     {
         \Permissions::checkError('galerie', P_OWNED);
         if (!$_POST) {
-            return static::displayUpload($request);
+            return static::displayUpload();
         }
         $parentId = $_POST['dir'];
         if (!is_numeric($parentId) || $parentId < 0) {
@@ -95,13 +95,13 @@ class Controller_Admin_Galerie_File
             new \MessageHelper('warning', 'Taková složka neexistuje');
             new \RedirectHelper('/admin/galerie/upload');
         }
-        static::_processUpload($parent, $request);
+        static::_processUpload($parent);
     }
 
-    private static function _processUpload($parent, $request)
+    private static function _processUpload($parent)
     {
         $uploadHelper = new \UploadHelper('files');
-        $uploadHelper->loadFromPost($request);
+        $uploadHelper->loadFromPost();
 
         if (!$uploadHelper->hasValidFiles() && $uploadHelper->hasFiles()) {
             new \MessageHelper('warning', $uploadHelper->getErrorMessages());
@@ -157,7 +157,7 @@ class Controller_Admin_Galerie_File
         }
     }
 
-    private static function displayUpload($request)
+    private static function displayUpload()
     {
         $dirs = array_map(
             fn($item) => [
@@ -174,7 +174,7 @@ class Controller_Admin_Galerie_File
         ]);
     }
 
-    private static function displayForm($request, $id)
+    private static function displayForm($id)
     {
         $dirs = \DBGalerie::getDirs(true, true);
         $dirs = array_map(
@@ -196,7 +196,7 @@ class Controller_Admin_Galerie_File
         ]);
     }
 
-    private static function checkData($request): \Form
+    private static function checkData(): \Form
     {
         $form = new \Form();
 

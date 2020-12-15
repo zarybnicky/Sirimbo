@@ -1,7 +1,7 @@
 <?php
 class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
 {
-    public function view($request)
+    public function view()
     {
         \Permissions::checkError('platby', P_OWNED);
         new \RenderHelper('files/View/Admin/Platby/StructureGroupOverview.inc', [
@@ -27,17 +27,17 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
         );
     }
 
-    public function add($request)
+    public function add()
     {
         \Permissions::checkError('platby', P_OWNED);
         if (!$_POST) {
             $_POST['base'] = 1;
-            return static::displayForm($request, 'add', 0);
+            return static::displayForm('add', 0);
         }
-        $form = static::checkData($request);
+        $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return static::displayForm($request, 'add', 0);
+            return static::displayForm('add', 0);
         }
         \DBPlatbyGroup::insert(
             $_POST['type'],
@@ -74,12 +74,12 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
             $_POST['name'] = $data['pg_name'];
             $_POST['description'] = $data['pg_description'];
             $_POST['base'] = $data['pg_base'];
-            return static::displayForm($request, 'edit', $id);
+            return static::displayForm('edit', $id);
         }
-        $form = static::checkData($request);
+        $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return static::displayForm($request, 'edit', $id);
+            return static::displayForm('edit', $id);
         }
 
         \DBPlatbyGroup::update(
@@ -187,7 +187,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
         }
     }
 
-    private static function displayForm($request, $action, $id = 0)
+    private static function displayForm($action, $id = 0)
     {
         $data = \DBPlatbyGroup::getSingle($id);
         $categoriesSelected = array_flip(
@@ -241,7 +241,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
         ]);
     }
 
-    protected static function checkData($request): \Form
+    protected static function checkData(): \Form
     {
         $f = new \Form();
         $f->checkInArray($_POST['type'], ['0', '1'], 'Neplatný typ kategorie');

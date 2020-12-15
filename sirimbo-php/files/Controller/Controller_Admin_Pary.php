@@ -1,7 +1,7 @@
 <?php
 class Controller_Admin_Pary
 {
-    public function view($request)
+    public function view()
     {
         \Permissions::checkError('pary', P_OWNED);
         switch ($_POST["action"]) {

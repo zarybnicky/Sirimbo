@@ -1,7 +1,7 @@
 <?php
 class Controller_Admin_Video
 {
-    public function view($request)
+    public function view()
     {
         \Permissions::checkError('aktuality', P_OWNED);
         new \RedirectHelper('/admin/video/orphan');
@@ -50,7 +50,7 @@ class Controller_Admin_Video
         }
     }
 
-    public function orphan($request)
+    public function orphan()
     {
         \Permissions::checkError('aktuality', P_OWNED);
         $pager = new \Paging(new \DBVideo(), 'orphan');
@@ -76,7 +76,7 @@ class Controller_Admin_Video
         ]);
     }
 
-    public function title($request)
+    public function title()
     {
         \Permissions::checkError('aktuality', P_OWNED);
         if ($_POST['video1']) {
@@ -96,7 +96,7 @@ class Controller_Admin_Video
         ]);
     }
 
-    public function add($request)
+    public function add()
     {
         \Permissions::checkError('aktuality', P_OWNED);
         if (!$_POST) {

@@ -1,11 +1,11 @@
 <?php
 class Controller_Admin_Galerie
 {
-    public function view($request)
+    public function view()
     {
         \Permissions::checkError('galerie', P_OWNED);
         if ($_POST['action'] == 'save') {
-            static::_processSave($request);
+            static::_processSave();
         }
         if ($_POST['action'] == 'scan') {
             static::_scan();
@@ -179,7 +179,7 @@ class Controller_Admin_Galerie
         }
     }
 
-    private static function _processSave($request)
+    private static function _processSave()
     {
         $items = \DBGalerie::getDirs();
         foreach ($items as $item) {

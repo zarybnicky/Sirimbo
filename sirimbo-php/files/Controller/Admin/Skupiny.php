@@ -1,7 +1,9 @@
 <?php
-class Controller_Admin_Skupiny
+namespace Olymp\Controller\Admin;
+
+class Skupiny
 {
-    public function view($request)
+    public static function list()
     {
         \Permissions::checkError('skupiny', P_OWNED);
         $data = array_map(
@@ -21,54 +23,53 @@ class Controller_Admin_Skupiny
         ]);
     }
 
-    public function add($request)
+    public static function add()
     {
         \Permissions::checkError('skupiny', P_OWNED);
-        if (!$_POST) {
-            return static::displayForm($request);
-        }
-        $form = static::checkData($request);
+        return static::displayForm(0, 'add');
+    }
+
+    public static function addPost()
+    {
+        \Permissions::checkError('skupiny', P_OWNED);
+        $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return static::displayForm($request);
+            return static::displayForm(0, 'add');
         }
         \DBSkupiny::insert($_POST['name'], $_POST['color'], $_POST['desc']);
         $insertId = \DBSkupiny::getInsertId();
-
         foreach ($_POST['group'] ?: [] as $item) {
             \DBSkupiny::addChild($insertId, $item);
         }
-
         new \RedirectHelper('/admin/skupiny');
     }
 
-    public function edit($request)
+    public static function edit($id)
     {
         \Permissions::checkError('skupiny', P_OWNED);
-        if (!$id = $request->getId()) {
-            new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
-            new \RedirectHelper('/admin/skupiny');
-        }
         if (!$data = \DBSkupiny::getSingle($id)) {
             new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
             new \RedirectHelper('/admin/skupiny');
         }
+        return static::displayForm($id, 'edit', $data);
+    }
 
-        if (!$_POST) {
-            return static::displayForm($request, $data);
+    public static function editPost($id)
+    {
+        \Permissions::checkError('skupiny', P_OWNED);
+        if (!$data = \DBSkupiny::getSingle($id)) {
+            new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
+            new \RedirectHelper('/admin/skupiny');
         }
-        $form = static::checkData($request);
+        $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return static::displayForm($request, $data);
+            return static::displayForm($id, 'edit', $data);
         }
-
         \DBSkupiny::update($id, $_POST['name'], $_POST['color'], $_POST['desc']);
 
-        $groupsOld = array_map(
-            fn($item) => $item['pg_id'],
-            \DBSkupiny::getSingleWithGroups($id)
-        );
+        $groupsOld = array_map(fn($item) => $item['pg_id'], \DBSkupiny::getSingleWithGroups($id));
         $groupsNew = $_POST['group'] ?: [];
         foreach (array_diff($groupsOld, $groupsNew) as $removed) {
             \DBSkupiny::removeChild($id, $removed);
@@ -76,60 +77,60 @@ class Controller_Admin_Skupiny
         foreach (array_diff($groupsNew, $groupsOld) as $added) {
             \DBSkupiny::addChild($id, $added);
         }
-
         new \RedirectHelper('/admin/skupiny');
     }
 
-    public function remove($request)
+    public static function remove($id)
     {
         \Permissions::checkError('skupiny', P_OWNED);
-        if (!$id = $request->getId()) {
-            new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
-            new \RedirectHelper('/admin/skupiny');
-        }
         if (!$data = \DBSkupiny::getSingle($id)) {
             new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
             new \RedirectHelper('/admin/skupiny');
         }
+        if (static::getLinkedSkupinaObjects($id)) {
+            new \MessageHelper(
+                'info',
+                'Nemůžu odstranit skupinu s připojenými kategoriemi! ' . new \Tag(
+                    'form',
+                    ['action' => '', 'mthod' => 'post'],
+                    (new \SubmitHelper('Odstranit spojení?'))->data('action', 'unlink')
+                )
+            );
+        }
+        return new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
+            'header' => 'Správa skupin',
+            'prompt' => 'Opravdu chcete odstranit skupinu?',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/skupiny',
+            'data' => [['id' => $data['s_id'], 'text' => $data['s_name']]]
+        ]);
+    }
 
+    public static function removePost($id)
+    {
+        \Permissions::checkError('skupiny', P_OWNED);
+        if (!$data = \DBSkupiny::getSingle($id)) {
+            new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
+            new \RedirectHelper('/admin/skupiny');
+        }
         if ($_POST['action'] == 'unlink') {
             $f = static::getLinkedSkupinaObjects($id);
-
             $groupCount = 0;
             foreach ($f['groups'] as $data) {
                 \DBSkupiny::removeChild($id, $data['pg_id']);
                 ++$groupCount;
             }
-
-            new \MessageHelper('info', 'Spojení s ' . $groupCount . ' kategoriemi byla odstraněna.');
+            new \MessageHelper('info', "Spojení s $groupCount kategoriemi byla odstraněna.");
             return new \RedirectHelper('/admin/skupiny/remove/' . $id);
         }
-        if (($f = static::getLinkedSkupinaObjects($id)) || !$_POST) {
-            if (isset($f) && $f) {
-                new \MessageHelper(
-                    'info',
-                    'Nemůžu odstranit skupinu s připojenými kategoriemi! ' . new Tag(
-                        'form',
-                        ['action' => '', 'mthod' => 'post'],
-                        (new \SubmitHelper('Odstranit spojení?'))->data('action', 'unlink')
-                    )
-                );
-            }
-            return new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
-                'header' => 'Správa skupin',
-                'prompt' => 'Opravdu chcete odstranit skupinu?',
-                'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/skupiny',
-                'data' => [['id' => $data['s_id'], 'text' => $data['s_name']]]
-            ]);
+        if (static::getLinkedSkupinaObjects($id)) {
+            return new \RedirectHelper('/admin/skupiny/remove/' . $id);
         }
         \DBSkupiny::delete($id);
         new \RedirectHelper('/admin/skupiny');
     }
 
-    private static function displayForm($request, $data = null)
+    private static function displayForm($id, $action, $data = null)
     {
-        $id = $request->getId() ?: '0';
-
         $groupsSelected = array_flip(
             array_map(fn($item) => $item['pg_id'], \DBSkupiny::getSingleWithGroups($id))
         );
@@ -144,7 +145,6 @@ class Controller_Admin_Skupiny
             \DBPlatbyGroup::getGroups()
         );
 
-        $action = $request->getAction();
         new \RenderHelper('files/View/Admin/Skupiny/Form.inc', [
             'header' => 'Správa skupin',
             'subheader' => $action == 'add' ? 'Přidat skupinu' : 'Upravit skupinu',
@@ -157,13 +157,13 @@ class Controller_Admin_Skupiny
         ]);
     }
 
-    private function getLinkedSkupinaObjects($id)
+    private static function getLinkedSkupinaObjects($id)
     {
         $group = \DBSkupiny::getSingleWithGroups($id);
         return $group ? ['groups' => $group] : [];
     }
 
-    private function checkData($request): \Form
+    private static function checkData(): \Form
     {
         $f = new \Form();
         $f->checkNotEmpty($_POST['name'], 'Zadejte prosím nějaké jméno.');

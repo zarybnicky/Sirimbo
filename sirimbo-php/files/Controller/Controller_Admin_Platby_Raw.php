@@ -3,11 +3,11 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
 {
     const TEMP_DIR = './upload/csv/';
 
-    public function view($request)
+    public function view()
     {
         \Permissions::checkError('platby', P_OWNED);
         if ($_POST && $_POST['action'] == 'upload') {
-            static::processUpload($request);
+            static::processUpload();
         }
         $workDir = new \DirectoryIterator(self::TEMP_DIR);
         $workDir->rewind();
@@ -29,7 +29,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
         ]);
     }
 
-    public function select_columns($request)
+    public function select_columns()
     {
         \Permissions::checkError('platby', P_OWNED);
         $path = self::TEMP_DIR . str_replace('../', '', $_GET['path']);
@@ -124,10 +124,10 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
         }
     }
 
-    private static function processUpload($request)
+    private static function processUpload()
     {
         $upload = new \UploadHelper('in');
-        $upload->loadFromPost($request);
+        $upload->loadFromPost();
 
         $validFiles = $upload->hasValidFiles();
         if ($upload->hasInvalidFiles()) {

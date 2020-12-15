@@ -1,7 +1,7 @@
 <?php
 class Controller_Admin_Nastenka
 {
-    public function view($request)
+    public function view()
     {
         \Permissions::checkError('nastenka', P_OWNED);
         $pager = new \Paging(new \DBNastenka());
@@ -43,7 +43,7 @@ class Controller_Admin_Nastenka
         ]);
     }
 
-    public static function renderForm($request)
+    public static function renderForm($action)
     {
         $skupiny = \DBSkupiny::get();
         $skupinySelected = [];
@@ -52,8 +52,8 @@ class Controller_Admin_Nastenka
         }
         new \RenderHelper('files/View/Admin/Nastenka/Form.inc', [
             'header' => 'Správa nástěnky',
-            'subheader' => ($request->getAction() === 'add') ? 'Přidat příspěvek' : 'Upravit příspěvek',
-            'action' => $request->getAction(),
+            'subheader' => ($action === 'add') ? 'Přidat příspěvek' : 'Upravit příspěvek',
+            'action' => $action,
             'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/nastenka',
             'skupiny' => $skupiny,
             'skupinySelected' => $skupinySelected,
@@ -63,16 +63,16 @@ class Controller_Admin_Nastenka
         ]);
     }
 
-    public function add($request)
+    public function add()
     {
         \Permissions::checkError('nastenka', P_OWNED);
         if (!$_POST) {
-            return static::renderForm($request);
+            return static::renderForm('add');
         }
-        $form = static::checkData($request);
+        $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return static::renderForm($request);
+            return static::renderForm('add');
         }
 
         $id = \DBNastenka::addNastenka(
@@ -119,12 +119,12 @@ class Controller_Admin_Nastenka
                 $_POST['sk-' . $skupina['ups_id_skupina']] = 1;
             }
             $_POST['lock'] = $data['up_lock'];
-            return static::renderForm($request);
+            return static::renderForm('edit');
         }
-        $form = static::checkData($request);
+        $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return static::renderForm($request);
+            return static::renderForm('edit');
         }
 
         $skupiny_old = [];
@@ -190,7 +190,7 @@ class Controller_Admin_Nastenka
         new \RedirectHelper('/admin/nastenka');
     }
 
-    private static function checkData($request): \Form
+    private static function checkData(): \Form
     {
         $f = new \Form();
         $f->checkNotEmpty($_POST['nadpis'], 'Zadejte nadpis', 'nadpis');

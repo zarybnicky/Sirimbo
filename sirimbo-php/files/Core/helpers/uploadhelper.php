@@ -26,7 +26,7 @@ class UploadHelper
         return $this;
     }
 
-    public function loadFromPost($request)
+    public function loadFromPost()
     {
         $files = $_FILES[$this->_name];
         if (!$files) {

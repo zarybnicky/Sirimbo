@@ -1,7 +1,7 @@
 <?php
 class Controller_Admin_Dokumenty
 {
-    public function view($request)
+    public function view()
     {
         \Permissions::checkError('dokumenty', P_OWNED);
         if ($_POST['action'] == 'upload' && !empty($_FILES)) {

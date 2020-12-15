@@ -1,7 +1,7 @@
 <?php
 class Controller_Admin_Users
 {
-    public function view($request)
+    public function view()
     {
         \Permissions::checkError('users', P_ADMIN);
         if ($_POST['action'] == 'save') {
@@ -44,7 +44,7 @@ class Controller_Admin_Users
                 }
             }
         }
-        static::displayOverview($request);
+        static::displayOverview();
     }
 
     public function remove($request)
@@ -72,16 +72,16 @@ class Controller_Admin_Users
         ]);
     }
 
-    public function add($request)
+    public function add()
     {
         \Permissions::checkError('users', P_ADMIN);
         if (!$_POST) {
-            return static::displayForm($request);
+            return static::displayForm('add');
         }
-        $form = static::checkData($request, 'add');
+        $form = static::checkData('add');
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return static::displayForm($request);
+            return static::displayForm('add');
         }
 
         \DBUser::addUser(
@@ -154,12 +154,12 @@ class Controller_Admin_Users
             $_POST['nationality'] = $data['u_nationality'];
             $_POST['createdAt'] = $data['u_created_at'];
             $_POST['gdprSignedAt'] = $data['u_gdpr_signed_at'];
-            return static::displayForm($request);
+            return static::displayForm('edit');
         }
-        $form = static::checkData($request, 'edit');
+        $form = static::checkData('edit');
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return static::displayForm($request);
+            return static::displayForm('edit');
         }
 
         \DBUser::setUserData(
@@ -192,7 +192,7 @@ class Controller_Admin_Users
         new \RedirectHelper($_POST['returnURI'] ?: '/admin/users');
     }
 
-    public function getMsmtCsv($request)
+    public function getMsmtCsv()
     {
         \Permissions::checkError('users', P_OWNED);
         header('Pragma: no-cache');
@@ -201,7 +201,7 @@ class Controller_Admin_Users
         echo chr(239) . chr(187) . chr(191) . \Session::generateMsmtCsv();
     }
 
-    public function unconfirmed($request)
+    public function unconfirmed()
     {
         \Permissions::checkError('users', P_ADMIN);
         if (($id = $_POST['confirm']) &&
@@ -253,7 +253,7 @@ class Controller_Admin_Users
         ]);
     }
 
-    public function duplicate($request)
+    public function duplicate()
     {
         \Permissions::checkError('users', P_ADMIN);
         $users = array_map(
@@ -276,7 +276,7 @@ class Controller_Admin_Users
         ]);
     }
 
-    public function statistiky($request)
+    public function statistiky()
     {
         \Permissions::checkError('users', P_ADMIN);
 
@@ -300,7 +300,7 @@ class Controller_Admin_Users
         ]);
     }
 
-    private static function displayOverview($request)
+    private static function displayOverview()
     {
         $groupOptions = ['all' => 'všechna'];
         foreach (\DBPermissions::getGroups() as $row) {
@@ -394,7 +394,7 @@ class Controller_Admin_Users
         ]);
     }
 
-    private static function displayForm($request)
+    private static function displayForm($action)
     {
         $groups = array_map(
             fn($item) => ['id' => $item['pe_id'], 'name' => $item['pe_name']],
@@ -410,8 +410,8 @@ class Controller_Admin_Users
         );
         new \RenderHelper('files/View/Admin/Users/Form.inc', [
             'header' => 'Správa uživatelů',
-            'subheader' => ($request->getAction() == 'add' ? 'Přidat' : 'Upravit') . ' uživatele',
-            'action' => $request->getAction(),
+            'subheader' => ($action == 'add' ? 'Přidat' : 'Upravit') . ' uživatele',
+            'action' => $action,
             'returnURI' => $_POST['returnURI'] ?: ($_SERVER['HTTP_REFERER'] ?: '/admin/users'),
             'groups' => $groups,
             'skupiny' => $skupiny,
@@ -443,7 +443,7 @@ class Controller_Admin_Users
         ]);
     }
 
-    private static function checkData($request, $action = 'add'): \Form
+    private static function checkData($action = 'add'): \Form
     {
         $narozeni = new \Date($_POST['narozeni'] ?? null);
 

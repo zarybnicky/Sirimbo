@@ -1,7 +1,9 @@
 <?php
-class Controller_Admin_Permissions
+namespace Olymp\Controller\Admin;
+
+class Permissions
 {
-    public function view($request)
+    public static function list()
     {
         \Permissions::checkError('permissions', P_ADMIN);
         $data = array_map(
@@ -20,80 +22,61 @@ class Controller_Admin_Permissions
         ]);
     }
 
-    public function add($request)
+    public static function add()
     {
         \Permissions::checkError('permissions', P_ADMIN);
-        if (!$_POST) {
-            return static::renderForm($request);
-        }
-        $form = static::checkData($request);
+        static::renderForm('add');
+    }
+
+    public static function addPost()
+    {
+        \Permissions::checkError('permissions', P_ADMIN);
+        $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return static::renderForm($request);
+            return static::renderForm('add');
         }
-
         $permissions = [];
         foreach (array_keys(\Settings::$permissions) as $name) {
             $permissions[$name] = $_POST[$name];
         }
-        \DBPermissions::addGroup(
-            $_POST['name'],
-            $_POST['description'],
-            $permissions
-        );
-
+        \DBPermissions::addGroup($_POST['name'], $_POST['description'], $permissions);
         new \RedirectHelper($_POST['returnURI'] ?: '/admin/permissions');
     }
 
-    public function edit($request)
+    public static function edit($id)
     {
         \Permissions::checkError('permissions', P_ADMIN);
-        if (!$id = $request->getId()) {
-            new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?: '/admin/permissions');
-        }
         if (!$data = \DBPermissions::getSingleGroup($id)) {
             new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
             new \RedirectHelper($_POST['returnURI'] ?: '/admin/permissions');
         }
+        return static::renderForm('edit', $data);
+    }
 
-        if (!$_POST) {
-            return static::renderForm($request, $data);
+    public static function editPost($id)
+    {
+        \Permissions::checkError('permissions', P_ADMIN);
+        if (!$data = \DBPermissions::getSingleGroup($id)) {
+            new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
+            new \RedirectHelper($_POST['returnURI'] ?: '/admin/permissions');
         }
-        $form = static::checkData($request);
+        $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return static::renderForm($request, $data);
+            return static::renderForm('edit', $data);
         }
-
         $permissions = [];
         foreach (array_keys(\Settings::$permissions) as $name) {
             $permissions[$name] = $_POST[$name];
         }
-        \DBPermissions::editGroup(
-            $id,
-            $_POST['name'],
-            $_POST['description'],
-            $permissions
-        );
-
+        \DBPermissions::editGroup($id, $_POST['name'], $_POST['description'], $permissions);
         new \RedirectHelper($_POST['returnURI'] ?: '/admin/permissions');
     }
 
-    public function remove($request)
+    public static function remove($id)
     {
         \Permissions::checkError('permissions', P_ADMIN);
-        if (!$request->getId()) {
-            new \RedirectHelper('/admin/permissions');
-        }
-        $id = $request->getId();
-
-        if ($_POST['action'] == 'confirm') {
-            \DBPermissions::removeGroup($id);
-            new \MessageHelper('info', 'Úroveň odebrána. Nezapomeňte přiřadit uživatelům z této skupiny jinou skupinu!');
-            new \RedirectHelper('/admin/permissions');
-        }
-
         $item = \DBPermissions::getSingleGroup($id);
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa oprávnění',
@@ -105,7 +88,15 @@ class Controller_Admin_Permissions
         ]);
     }
 
-    protected static function renderForm($request, $data = null)
+    public static function removePost($id)
+    {
+        \Permissions::checkError('permissions', P_ADMIN);
+        \DBPermissions::removeGroup($id);
+        new \MessageHelper('info', 'Úroveň odebrána. Nezapomeňte přiřadit uživatelům z této skupiny jinou skupinu!');
+        new \RedirectHelper('/admin/permissions');
+    }
+
+    protected static function renderForm($action, $data = null)
     {
         if (!$_POST) {
             foreach (\Settings::$permissions as $name => $item) {
@@ -114,7 +105,7 @@ class Controller_Admin_Permissions
         }
         $settings = array_map(
             function ($name, $item) use ($data) {
-                $value = $_POST[$name] ?: ($data ? $data['pe_' . $name] : $item['default']);
+                $value = $_POST[$name] ?? ($data ? $data['pe_' . $name] : $item['default']);
                 return [
                     'name' => $item['name'],
                     'value' => $value,
@@ -136,14 +127,14 @@ class Controller_Admin_Permissions
             'subheader' => (
                 ($data === null) ? 'Přidat uživatelskou skupinu' : 'Upravit uživatelskou skupinu'
             ),
-            'action' => $request->getAction(),
+            'action' => $action,
             'name' => $_POST['name'] ?: ($data ? $data['pe_name'] : ''),
             'description' => $_POST['description'] ?: ($data ? $data['pe_description'] : ''),
             'settings' => $settings
         ]);
     }
 
-    private static function checkData($request): \Form
+    private static function checkData(): \Form
     {
         $f = new \Form();
         foreach (\Settings::$permissions as $name => $item) {

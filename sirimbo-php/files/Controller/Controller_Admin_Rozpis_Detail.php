@@ -18,7 +18,7 @@ class Controller_Admin_Rozpis_Detail
         $items = \DBRozpis::getRozpisItem($id);
 
         if ($_POST) {
-            $items = static::processPost($request, $id, $data, $items);
+            $items = static::processPost($id, $data, $items);
             if ($items) {
                 \DBRozpis::editRozpisItemMultiple($items);
             }
@@ -107,7 +107,7 @@ class Controller_Admin_Rozpis_Detail
         ]);
     }
 
-    protected static function processPost($request, $id, $data, $items)
+    protected static function processPost($id, $data, $items)
     {
         if ($_POST['remove'] > 0) {
             \DBRozpis::removeRozpisItem($_POST['remove']);
@@ -123,7 +123,7 @@ class Controller_Admin_Rozpis_Detail
 
         //Try to add a new item
         if ($_POST['add_od'] && $_POST['add_do']) {
-            $form = static::checkAdd($request);
+            $form = static::checkAdd();
             if (!$form->isValid()) {
                 new \MessageHelper('warning', $form->getMessages());
             } else {
@@ -178,7 +178,7 @@ class Controller_Admin_Rozpis_Detail
                 break;
 
             case 'add_multiple':
-                $form = static::checkAddMultiple($request);
+                $form = static::checkAddMultiple();
                 if (!$form->isValid()) {
                     new \MessageHelper('warning', $form->getMessages());
                     break;
@@ -212,7 +212,7 @@ class Controller_Admin_Rozpis_Detail
         return $items;
     }
 
-    protected static function checkAdd($request): \Form
+    protected static function checkAdd(): \Form
     {
         $f = new \Form();
         $f->checkNumeric(
@@ -233,7 +233,7 @@ class Controller_Admin_Rozpis_Detail
         return $f;
     }
 
-    protected static function checkAddMultiple($request): \Form
+    protected static function checkAddMultiple(): \Form
     {
         $f = new \Form();
         $f->checkNumeric(

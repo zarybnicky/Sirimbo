@@ -24,7 +24,7 @@ $getItem = function ($name, $href) use ($isActive) {
 </style>
 <div class="container">
 <ul id="adminNavigation">
-    <li><?= $getItem('Přehled', 'platby/overview') ?></li>
+    <li><?= $getItem('Přehled', 'platby') ?></li>
     <li><?= $getItem('Hledání', 'platby/items') ?></li>
     <?php if (!$isActive('platby/structure/category') || !$isActive('platby/structure/group') || !$isActive('platby/structure')) : ?>
         <li><?= $getItem('Struktura', 'platby/structure') ?>:</li>

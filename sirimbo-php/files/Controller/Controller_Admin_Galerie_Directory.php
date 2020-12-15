@@ -24,16 +24,16 @@ class Controller_Admin_Galerie_Directory
         ]);
     }
 
-    public function add($request)
+    public function add()
     {
         \Permissions::checkError('galerie', P_OWNED);
         if (!$_POST) {
-            return static::displayForm($request, 'add');
+            return static::displayForm('add');
         }
-        $form = static::checkData($request);
+        $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return static::displayForm($request, 'add');
+            return static::displayForm('add');
         }
         $parent = \DBGalerie::getSingleDir($_POST['parent']);
         $dirPath = $parent['gd_path'] . DIRECTORY_SEPARATOR . sanitizePathname($_POST['name']);
@@ -65,12 +65,12 @@ class Controller_Admin_Galerie_Directory
             $_POST['name'] = $data['gd_name'];
             $_POST['parent'] = $data['gd_id_rodic'];
             $_POST['hidden'] = $data['gd_hidden'] ? '1' : '0';
-            return static::displayForm($request, 'edit');
+            return static::displayForm('edit');
         }
-        $form = static::checkData($request);
+        $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return static::displayForm($request, 'edit');
+            return static::displayForm('edit');
         }
         $parent = \DBGalerie::getSingleDir($_POST['parent']);
         $newPath = $parent['gd_path'] . DIRECTORY_SEPARATOR . sanitizePathname(getCanonicalName($_POST['name']));
@@ -130,7 +130,7 @@ class Controller_Admin_Galerie_Directory
         ]);
     }
 
-    private static function displayForm($request, $action)
+    private static function displayForm($action)
     {
         $dirs = array_map(
             fn($item) => [
@@ -151,7 +151,7 @@ class Controller_Admin_Galerie_Directory
         ]);
     }
 
-    protected function checkData($request)
+    protected function checkData( )
     {
         $form = new \Form();
         $form->checkNotEmpty($_POST['name'], 'Název složky nesmí být prázdný', 'name');

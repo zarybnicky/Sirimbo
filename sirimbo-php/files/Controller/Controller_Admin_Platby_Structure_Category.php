@@ -1,7 +1,7 @@
 <?php
 class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
 {
-    public function view($request)
+    public function view()
     {
         \Permissions::checkError('platby', P_OWNED);
         if ($id = $_POST['category_duplicate']) {
@@ -62,16 +62,16 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         );
     }
 
-    public function add($request)
+    public function add()
     {
         \Permissions::checkError('platby', P_OWNED);
         if (!$_POST) {
-            return static::displayForm($request, 'add', 0);
+            return static::displayForm('add', 0);
         }
-        $form = static::checkData($request, 'add', 0);
+        $form = static::checkData('add', 0);
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return static::displayForm($request, 'add', 0);
+            return static::displayForm('add', 0);
         }
 
         $validRange = \DateHelper::getPostRange('validRange');
@@ -135,12 +135,12 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             $_POST['usePrefix'] = $data['pc_use_prefix'];
             $_POST['archive'] = $data['pc_archive'];
             $_POST['visible'] = $data['pc_visible'];
-            return static::displayForm($request, 'edit', $id);
+            return static::displayForm('edit', $id);
         }
-        $form = static::checkData($request, 'edit', $id);
+        $form = static::checkData('edit', $id);
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return static::displayForm($request, 'edit', $id);
+            return static::displayForm('edit', $id);
         }
 
         $validRange = \DateHelper::getPostRange('validRange');
@@ -283,7 +283,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         return ($group || $items) ? ['groups' => $group, 'items' => $items] : [];
     }
 
-    protected static function displayForm($request, $action, $id = 0)
+    protected static function displayForm($action, $id = 0)
     {
         $groupsSelected = array_flip(
             array_map(
@@ -320,7 +320,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         ]);
     }
 
-    protected function checkData($request, $action, $id): \Form
+    protected function checkData($action, $id): \Form
     {
         $f = new \Form();
         $dueDate = new \Date($_POST['dueDate'] ?? null);

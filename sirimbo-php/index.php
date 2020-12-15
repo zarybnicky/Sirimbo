@@ -187,5 +187,21 @@ function makeRouter()
     $router->get('/admin/aktuality/foto/([0-9]+)', '@Admin.Aktuality::foto');
     $router->post('/admin/aktuality/foto/([0-9]+)', '@Admin.Aktuality::fotoPost');
 
+    $router->get('/admin/permissions', '@Admin.Permissions::list');
+    $router->get('/admin/permissions/add', '@Admin.Permissions::add');
+    $router->post('/admin/permissions/add', '@Admin.Permissions::addPost');
+    $router->get('/admin/permissions/edit/([0-9]+)', '@Admin.Permissions::edit');
+    $router->post('/admin/permissions/edit/([0-9]+)', '@Admin.Permissions::editPost');
+    $router->get('/admin/permissions/remove/([0-9]+)', '@Admin.Permissions::remove');
+    $router->post('/admin/permissions/remove/([0-9]+)', '@Admin.Permissions::removePost');
+
+    $router->get('/admin/skupiny', '@Admin.Skupiny::list');
+    $router->get('/admin/skupiny/add', '@Admin.Skupiny::add');
+    $router->post('/admin/skupiny/add', '@Admin.Skupiny::addPost');
+    $router->get('/admin/skupiny/edit/([0-9]+)', '@Admin.Skupiny::edit');
+    $router->post('/admin/skupiny/edit/([0-9]+)', '@Admin.Skupiny::editPost');
+    $router->get('/admin/skupiny/remove/([0-9]+)', '@Admin.Skupiny::remove');
+    $router->post('/admin/skupiny/remove/([0-9]+)', '@Admin.Skupiny::removePost');
+
     return $router;
 }

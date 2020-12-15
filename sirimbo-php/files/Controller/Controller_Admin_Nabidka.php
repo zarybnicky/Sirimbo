@@ -1,7 +1,7 @@
 <?php
 class Controller_Admin_Nabidka
 {
-    public function view($request)
+    public function view()
     {
         \Permissions::checkError('nabidka', P_OWNED);
         $data = \Permissions::check('nabidka', P_ADMIN)
@@ -52,16 +52,16 @@ class Controller_Admin_Nabidka
         ]);
     }
 
-    public function add($request)
+    public function add()
     {
         \Permissions::checkError('nabidka', P_OWNED);
         if (!$_POST) {
-            return static::displayForm($request);
+            return static::displayForm('add');
         }
-        $form = static::checkData($request);
+        $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return static::displayForm($request);
+            return static::displayForm('add');
         }
 
         \Permissions::checkError('nabidka', P_OWNED, $_POST['trener']);
@@ -104,12 +104,12 @@ class Controller_Admin_Nabidka
         \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
 
         if (!$_POST) {
-            return static::displayForm($request, $data);
+            return static::displayForm('edit', $data);
         }
-        $form = static::checkData($request);
+        $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return static::displayForm($request, $data);
+            return static::displayForm('edit', $data);
         }
 
         $od = new \Date($_POST['od'] ?? null);
@@ -195,7 +195,7 @@ class Controller_Admin_Nabidka
         new \RedirectHelper('/admin/nabidka');
     }
 
-    protected static function displayForm($request, $data = null)
+    protected static function displayForm($action, $data = null)
     {
         $isAdmin = \Permissions::check('nabidka', P_ADMIN);
         if ($isAdmin) {
@@ -205,8 +205,8 @@ class Controller_Admin_Nabidka
         }
         new \RenderHelper('files/View/Admin/Nabidka/Form.inc', [
             'header' => 'Správa nabídky',
-            'subheader' => $request->getAction() == 'add' ? 'Přidat nabídku' : 'Upravit nabídku',
-            'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit',
+            'subheader' => $action == 'add' ? 'Přidat nabídku' : 'Upravit nabídku',
+            'action' => $action == 'add' ? 'Přidat' : 'Upravit',
             'returnURI' => $_SERVER['HTTP_REFERER'],
             'users' => $treneri,
             'id' => $data ? $data['n_id'] : null,
@@ -220,7 +220,7 @@ class Controller_Admin_Nabidka
         ]);
     }
 
-    private static function checkData($request): Form
+    private static function checkData(): Form
     {
         $od = new \Date($_POST['od'] ?? null);
         $do = new \Date($_POST['do'] ?? null);

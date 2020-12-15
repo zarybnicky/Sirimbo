@@ -1,7 +1,7 @@
 <?php
 class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
 {
-    public function view($request)
+    public function view()
     {
         \Permissions::checkError('platby', P_OWNED);
         $data = \DBPlatbyRaw::getDiscarded();
@@ -10,7 +10,7 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
             new \RedirectHelper('/admin/platby');
         }
         if ($_GET['list']) {
-            static::_getTable($request, $data, $result, $columns, $header);
+            static::_getTable($data, $result, $columns, $header);
             new \RenderHelper('files/View/Admin/Platby/DiscardedTable.inc', [
                 'header' => 'Správa plateb',
                 'subheader' => 'Vyřazené platby (' . $header . ')',
@@ -44,7 +44,7 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
         new \RedirectHelper($_SERVER['HTTP_REFERER']);
     }
 
-    private static function _getTable($request, $data, &$result, &$columns, &$header)
+    private static function _getTable($data, &$result, &$columns, &$header)
     {
         if ($_GET['list'] == 'date') {
             $header =

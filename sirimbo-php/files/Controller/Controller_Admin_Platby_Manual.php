@@ -126,11 +126,10 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
 
     private static function getUsers()
     {
-        $users = parent::getUserLookup(true);
-        foreach ($users as &$array) {
-            $array = User::varSymbol($array['u_id']) . " - {$array['u_prijmeni']}, {$array['u_jmeno']}";
-        }
-        return $users;
+        return array_map(
+            fn($array) => User::varSymbol($array['u_id']) . " - {$array['u_prijmeni']}, {$array['u_jmeno']}",
+            parent::getUserLookup(true),
+        );
     }
 
     private static function processPost()
@@ -147,13 +146,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
                 if (!is_object($item = static::getFromPost())) {
                     return new \MessageHelper('warning', $item);
                 }
-                \DBPlatbyRaw::update(
-                    $id,
-                    $current['pr_raw'],
-                    $current['pr_hash'],
-                    '1',
-                    '0'
-                );
+                \DBPlatbyRaw::update($id, $current['pr_raw'], $current['pr_hash'], '1', '0');
                 \DBPlatbyItem::insert(
                     $item->variable,
                     $item->categoryId,
@@ -165,13 +158,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
                 break;
 
             case 'discard':
-                \DBPlatbyRaw::update(
-                    $id,
-                    $current['pr_raw'],
-                    $current['pr_hash'],
-                    '0',
-                    '1'
-                );
+                \DBPlatbyRaw::update($id, $current['pr_raw'], $current['pr_hash'], '0', '1');
                 break;
 
             case 'skip':

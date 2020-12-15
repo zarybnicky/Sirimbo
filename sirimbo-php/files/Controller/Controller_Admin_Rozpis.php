@@ -1,7 +1,7 @@
 <?php
 class Controller_Admin_Rozpis
 {
-    public function view($request)
+    public function view()
     {
         \Permissions::checkError('rozpis', P_OWNED);
         $data = \Permissions::check('rozpis', P_ADMIN)
@@ -48,17 +48,17 @@ class Controller_Admin_Rozpis
         ]);
     }
 
-    public function add($request)
+    public function add()
     {
         \Permissions::checkError('rozpis', P_OWNED);
         if (!$_POST) {
-            return static::displayForm($request);
+            return static::displayForm('add');
         }
 
-        $form = static::checkData($request);
+        $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return static::displayForm($request);
+            return static::displayForm('add');
         }
 
         \Permissions::checkError('rozpis', P_OWNED, $_POST['trener']);
@@ -87,13 +87,13 @@ class Controller_Admin_Rozpis
         \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
 
         if (!$_POST) {
-            return static::displayForm($request, $data);
+            return static::displayForm('edit', $data);
         }
 
-        $form = static::checkData($request);
+        $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return static::displayForm($request, $data);
+            return static::displayForm('edit', $data);
         }
 
         \DBRozpis::editRozpis(
@@ -147,7 +147,7 @@ class Controller_Admin_Rozpis
         new \RedirectHelper('/admin/rozpis');
     }
 
-    protected static function displayForm($request, $data = null)
+    protected static function displayForm($action, $data = null)
     {
         $isAdmin = \Permissions::check('rozpis', P_ADMIN);
         $treneri = $isAdmin
@@ -157,7 +157,7 @@ class Controller_Admin_Rozpis
         new \RenderHelper('files/View/Admin/Rozpis/Form.inc', [
             'header' => 'Správa rozpisů',
             'subheader' => ($data === null ? 'Přidat' : 'Upravit') . ' rozpis',
-            'action' => $request->getAction(),
+            'action' => $action,
             'treneri' => $treneri,
             'trener' => $_POST['trener'] ?? ($data ? $data['r_trener'] : ''),
             'kde' => $_POST['kde'] ?? ($data ? $data['r_kde'] : ''),
@@ -167,7 +167,7 @@ class Controller_Admin_Rozpis
         ]);
     }
 
-    private static function checkData($request): \Form
+    private static function checkData(): \Form
     {
         $datum = new \Date($_POST['datum'] ?? null);
 

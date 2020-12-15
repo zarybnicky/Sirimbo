@@ -1,7 +1,7 @@
 <?php
 class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
 {
-    public function view($request)
+    public function view()
     {
         \Permissions::checkError('platby', P_OWNED);
         new \RenderHelper('files/View/Admin/Platby/StructureOverview.inc', [

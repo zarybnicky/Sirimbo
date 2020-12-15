@@ -1,10 +1,66 @@
 <?php
 class Controller_Admin_Platby
 {
-    public function view($request)
+    public function overview()
     {
         \Permissions::checkError('platby', P_OWNED);
-        new \RedirectHelper('/admin/platby/overview');
+        $data = \DBUser::getUsersWithSkupinaPlatby();
+        $skupiny = [];
+        $index = 0;
+        $currentID = -1;
+        $currentKey = 0;
+        foreach ($data as $item) {
+            if ($item['s_id'] != $currentID) {
+                $index = 0;
+                $currentID = $item['s_id'];
+                $currentKey = count($skupiny);
+                $skupiny[$currentKey] = [
+                    'info' => [
+                        'header' => new Tag(
+                            'big',
+                            [],
+                            new ColorboxHelper($item['s_color_rgb'], $item['s_description']) .
+                            '&nbsp;&nbsp;' . $item['s_name']
+                        )
+                    ],
+                    'users' => []
+                ];
+            }
+            $skupiny[$currentKey]['users'][] = [
+                'index' => ++$index . '.',
+                'fullName' => new PersonHelper($item),
+                'hasPaid' => new Tag(
+                    'span',
+                    ['style' => 'font-weight:bold;color:' . ($item['pi_id'] ? 'green' : 'red')],
+                    $item['pi_id'] ? 'ANO' : 'NE'
+                ),
+                'amount' => $item['pi_amount'] == ($item['pc_amount'] * $item['pg_base'])
+                ? ('<span style="color:green">' . (int) $item['pi_amount'] . ' Kč</span>')
+                : ('<span style="font-weight:bold;color:red">'
+                   . (int) $item['pi_amount'] . ' Kč</span> ('
+                   . (int) ($item['pc_amount'] * $item['pg_base']) . ' Kč)')
+            ];
+        }
+
+        $columns = [[], []];
+        $leftCount = 0;
+        $rightCount = 0;
+        foreach ($skupiny as &$skupina) {
+            $skupina['info']['count'] = count($skupina['users']);
+            if ($rightCount >= $leftCount) {
+                $columns[0][] = $skupina;
+                $leftCount += ($skupina['info']['count']);
+            } else {
+                $columns[1][] = $skupina;
+                $rightCount += ($skupina['info']['count']);
+            }
+        }
+        new \RenderHelper('files/View/Admin/Platby/Statistics.inc', [
+            'header' => 'Správa plateb',
+            'subheader' => 'Členové podle skupin',
+            'columns' => $columns,
+            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
+        ]);
     }
 
     protected static function recognizeHeaders($headers, &$specific, &$variable, &$date, &$amount)
@@ -40,9 +96,7 @@ class Controller_Admin_Platby
         $out = [];
         $group_id = 0;
         foreach ($in as $array) {
-            if ($group_id != $array['pg_id']
-                && !isset($out['group_' . $array['pg_id']])
-            ) {
+            if ($group_id != $array['pg_id'] && !isset($out['group_' . $array['pg_id']])) {
                 $out[] = ['group_' . $array['pg_id'], $array];
                 $group_id = $array['pg_id'];
             }
@@ -59,10 +113,7 @@ class Controller_Admin_Platby
         foreach ($in as $array) {
             $key = (int) ($useSymbolKey ? $array['pc_symbol'] : $array['pc_id']);
 
-            if ($includeGroups
-                && $group_id != $array['pg_id']
-                && !isset($out['group_' . $array['pg_id']])
-            ) {
+            if ($includeGroups && $group_id != $array['pg_id'] && !isset($out['group_' . $array['pg_id']])) {
                 $out['group_' . $array['pg_id']] = $array;
                 $group_id = $array['pg_id'];
             }
