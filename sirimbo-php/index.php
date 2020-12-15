@@ -38,9 +38,6 @@ if (!isset($_SERVER['HTTP_REFERER'])) {
     $_SERVER['HTTP_REFERER'] = getallheaders()['Referer'] ?? null;
 }
 
-$request = new Request($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD'], $_GET, $_POST);
-$request->setDefault('home');
-
 session_set_save_handler(new DbSessionHandler(), true);
 session_start();
 
@@ -48,11 +45,11 @@ try {
     if (isset($_SESSION['login']) && $_SESSION['login'] !== null) {
         \Session::loadUser($_SESSION['id']);
         if ($_SESSION['gdpr']) {
-            if (!in_array($request->getURI(), ['member/profil/gdpr', 'logout'])) {
+            if (!in_array(explode('?', $_SERVER['REQUEST_URI'])[0], ['/member/profil/gdpr', '/logout'])) {
                 return new RedirectHelper('/member/profil/gdpr');
             }
         } elseif ($_SESSION['invalid']) {
-            if (!in_array($request->getURI(), ['member/profil/edit', 'logout'])) {
+            if (!in_array(explode('?', $_SERVER['REQUEST_URI'])[0], ['/member/profil/edit', '/logout'])) {
                 return new RedirectHelper('/member/profil/edit', 'Prosím vyplňte požadované údaje.');
             }
         }
@@ -68,7 +65,7 @@ try {
         }
     }
 
-    $router = makeRouter($request);
+    $router = makeRouter();
     $router->dispatchGlobal();
 } catch (AuthorizationException $e) {
     ob_clean();
@@ -101,10 +98,11 @@ try {
     new RedirectHelper('/error?id=' . (new ViewException(''))->getErrorFile());
 }
 
-function makeRouter($request)
+function makeRouter()
 {
-    $router = new \Olymp\Router(function ($method, $path, $code, $ex) use ($request) {
+    $router = new \Olymp\Router(function ($method, $path, $code, $ex) {
         if ($ex->getMessage() === 'No route found') {
+            $request = new Request($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD'], $_GET, $_POST);
             $d = new Dispatcher();
             $d->dispatch($request);
         } else {
@@ -144,6 +142,13 @@ function makeRouter($request)
     $router->post('/member/profil/par/partner', '@Member.ProfilPar::partnerPost');
     $router->post('/member/profil/par/zadost', '@Member.ProfilPar::zadost');
     $router->get('/member/profil/pary', '@Member.ProfilPar::pary');
+    $router->get('/member/dokumenty', '@Member::dokumenty');
+    $router->get('/member/download', '@Member::download');
+    $router->get('/member/clenove', '@Member.Clenove::structure');
+    $router->get('/member/clenove/structure', '@Member.Clenove::structure');
+    $router->get('/member/clenove/seznam', '@Member.Clenove::list');
+    $router->get('/member/clenove/skupiny', '@Member.Clenove::groups');
+    $router->get('/member/clenove/([0-9]+)', '@Member.Clenove::single');
 
     $router->get('/admin/konzole', '@Admin.Repl::get');
     $router->post('/admin/konzole', '@Admin.Repl::post');

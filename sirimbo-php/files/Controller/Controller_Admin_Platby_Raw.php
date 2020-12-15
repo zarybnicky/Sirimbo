@@ -25,7 +25,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
         new \RenderHelper('files/View/Admin/Platby/RawUpload.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Import plateb',
-            'uri' => $request->getLiteralURI()
+            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 
@@ -61,7 +61,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
             'header' => 'Správa plateb',
             'subheader' => 'Import plateb',
             'data' => $data,
-            'uri' => $request->getLiteralURI()
+            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 

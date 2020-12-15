@@ -16,7 +16,7 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
                 'subheader' => 'Vyřazené platby (' . $header . ')',
                 'data' => $result,
                 'columns' => $columns,
-                'uri' => $request->getLiteralURI()
+                'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
             ]);
         } else {
             static::_getList($data, $groupAmount, $groupDate);
@@ -25,7 +25,7 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
                 'subheader' => 'Vyřazené platby',
                 'groupByDate' => $groupDate,
                 'groupByAmount' => $groupAmount,
-                'uri' => $request->getLiteralURI()
+                'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
             ]);
         }
     }

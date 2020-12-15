@@ -24,7 +24,7 @@ $getItem = function ($name, $href) use ($isActive) {
 </style>
 <div class="container">
     <ul id="adminNavigation" class="small">
-        <li><?= $getItem('Členové podle skupin', 'clenove/structure') ?></li>
+        <li><?= $getItem('Členové podle skupin', 'clenove') ?></li>
         <li><?= $getItem('Členové abecedně', 'clenove/seznam') ?></li>
         <li><?= $getItem('Seznam skupin', 'clenove/skupiny') ?></li>
     </ul>

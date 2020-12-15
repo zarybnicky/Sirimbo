@@ -108,7 +108,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
             'users' => static::getUsers(),
             'categories' => static::getCategories(),
             'recognized' => $recognized,
-            'uri' => $request->getLiteralURI()
+            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 

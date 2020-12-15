@@ -36,7 +36,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             'users' => \DBUser::getUsers(),
             'categories' => static::getCategories(),
             'data' => $data,
-            'uri' => $request->getLiteralURI(),
+            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/'),
             'user' => $_GET['user'] ?: '',
             'category' => $_GET['category'] ?: '',
             'date' => $_GET['date'] ?: ''
@@ -159,7 +159,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             'variable' => $_POST['variable'] ?: '',
             'specific' => $_POST['specific'] ?: '',
             'prefix' => $_POST['prefix'] ?: '',
-            'uri' => $request->getLiteralURI()
+            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 

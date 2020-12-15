@@ -60,7 +60,7 @@ class Controller_Admin_Platby_Overview extends Controller_Admin_Platby
             'header' => 'Správa plateb',
             'subheader' => 'Členové podle skupin',
             'columns' => $columns,
-            'uri' => $request->getLiteralURI()
+            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 }

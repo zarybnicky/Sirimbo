@@ -3,7 +3,7 @@ class Dispatcher
 {
     public function getController($request)
     {
-        $url = $request->getLiteralURI();
+        $url = trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/');
         $parts = array_map('ucfirst', explode('/', $url));
         array_unshift($parts, 'Controller');
 

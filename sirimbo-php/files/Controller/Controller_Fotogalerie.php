@@ -25,7 +25,7 @@ class Controller_Fotogalerie
             fn($item) => [
                 'id' => $item['gf_id'],
                 'src' => '/galerie/thumbnails/' . $item['gf_path'],
-                'href' => '/' . $request->getURI() . '/foto/' . $item['gf_id']
+                'href' => explode('?', $_SERVER['REQUEST_URI'])[0] . '/foto/' . $item['gf_id']
             ],
             $photos
         );

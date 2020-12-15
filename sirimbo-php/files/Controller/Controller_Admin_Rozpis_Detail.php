@@ -22,7 +22,7 @@ class Controller_Admin_Rozpis_Detail
             if ($items) {
                 \DBRozpis::editRozpisItemMultiple($items);
             }
-            new \RedirectHelper('/' . $request->getURI());
+            new \RedirectHelper($_SERVER['REQUEST_URI']);
         }
 
         $users = DBPary::getPartners();

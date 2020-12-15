@@ -8,7 +8,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
             'header' => 'Správa plateb',
             'subheader' => 'Kategorie plateb',
             'data' => static::getGroups(),
-            'uri' => $request->getLiteralURI()
+            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 
@@ -168,7 +168,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
                 'id' => $id,
                 'name' => $data['pg_name'],
                 'returnURI' => $_SERVER['HTTP_REFERER'],
-                'uri' => $request->getLiteralURI()
+                'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
             ]);
         }
         \DBPlatbyGroup::delete($id);
@@ -237,7 +237,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
             'type' => $_POST['type'] ?: '',
             'description' => $_POST['description'] ?: '',
             'base' => $_POST['base'] ?: '',
-            'uri' => $request->getLiteralURI()
+            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 

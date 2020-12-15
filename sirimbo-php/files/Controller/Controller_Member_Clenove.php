@@ -1,14 +1,16 @@
 <?php
 class Controller_Member_Clenove
 {
+    
+
     public function view($request)
     {
         \Permissions::checkError('users', P_VIEW);
         if (!($id = $request->getId())) {
-            new \RedirectHelper('/member/clenove/structure');
+            new \RedirectHelper('/member/clenove');
         }
         if (!($data = \DBUser::getUser($id))) {
-            return new \RedirectHelper('/member/clenove/structure');
+            return new \RedirectHelper('/member/clenove');
         }
         new \RenderHelper('files/View/Member/Clenove/Single.inc', [
             'header' => 'Přehled členů',
@@ -16,11 +18,11 @@ class Controller_Member_Clenove
             'email' => $data->getEmail(),
             'telefon' => $data->getPhone(),
             'returnURI' => $_SERVER['HTTP_REFERER'],
-            'uri' => $request->getLiteralURI()
+            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 
-    public function skupiny($request)
+    public static function groups($request)
     {
         \Permissions::checkError('users', P_VIEW);
         $currentID = -1;
@@ -47,11 +49,11 @@ class Controller_Member_Clenove
         new \RenderHelper('files/View/Member/Clenove/SkupinyList.inc', [
             'header' => 'Přehled členů',
             'data' => $skupiny,
-            'uri' => $request->getLiteralURI()
+            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 
-    public function seznam($request)
+    public static function list($request)
     {
         \Permissions::checkError('users', P_VIEW);
         $index = 0;
@@ -64,7 +66,7 @@ class Controller_Member_Clenove
         new \RenderHelper('files/View/Member/Clenove/UserList.inc', [
             'header' => 'Přehled členů',
             'data' => $data,
-            'uri' => $request->getLiteralURI()
+            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 
@@ -122,7 +124,7 @@ class Controller_Member_Clenove
         new \RenderHelper('files/View/Member/Clenove/Structure.inc', [
             'header' => 'Přehled členů',
             'columns' => $columns,
-            'uri' => $request->getLiteralURI()
+            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 }

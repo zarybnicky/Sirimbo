@@ -11,7 +11,7 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
             'orphanGroupSkupina' => static::getOrphanGroupSkupina(),
             'orphanGroupCategory' => static::getOrphanGroupCategory(),
             'orphanCategory' => static::getOrphanCategory(),
-            'uri' => $request->getLiteralURI()
+            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 

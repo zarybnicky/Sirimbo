@@ -50,7 +50,7 @@ class RenderHelper
                 ['Nabídka', '/member/nabidka', []],
                 ['Akce', '/member/akce', []],
                 ['Dokumenty', '/member/dokumenty', []],
-                ['Členové', '/member/clenove/structure', []],
+                ['Členové', '/member/clenove', []],
                 ['Profil', '/member/profil', []],
                 'w-100',
                 ['Administrace', '/admin', [

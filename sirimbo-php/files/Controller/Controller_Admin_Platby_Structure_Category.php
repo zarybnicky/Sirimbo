@@ -35,7 +35,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             'subheader' => 'Specifické symboly',
             'data' => static::getCategories(false),
             'archived' => static::getCategories(true),
-            'uri' => $request->getLiteralURI()
+            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 
@@ -269,7 +269,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                 'id' => $id,
                 'name' => $data['pc_name'],
                 'returnURI' => $_SERVER['HTTP_REFERER'],
-                'uri' => $request->getLiteralURI()
+                'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
             ]);
         }
         \DBPlatbyCategory::delete($id);
@@ -316,7 +316,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             'usePrefix' => $_POST['usePrefix'] ?: '',
             'archive' => $_POST['archive'] ?: '',
             'visible' => $_POST['visible'] ?: '',
-            'uri' => $request->getLiteralURI()
+            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 
