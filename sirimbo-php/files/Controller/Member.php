@@ -42,7 +42,7 @@ class Member
         new \RenderHelper('files/View/Member/Nastenka.inc', [
             'header' => 'Upozornění',
             'data' => $data,
-            'navigation' => $pager->getNavigation($_GET)
+            'navigation' => $pager->getNavigation()
         ]);
     }
 }

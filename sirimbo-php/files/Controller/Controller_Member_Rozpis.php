@@ -28,7 +28,7 @@ class Controller_Member_Rozpis
                             && !$rozpis['r_lock']
                             && !$item['ri_lock']
                             && ((\Permissions::check('rozpis', P_MEMBER)
-                                && \\Session::getParID() == $item['ri_partner'])
+                                && \Session::getParID() == $item['ri_partner'])
                                || \Permissions::check('rozpis', P_OWNED, $rozpis['r_trener']))
                         )
                     ],

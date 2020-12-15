@@ -6,5 +6,6 @@ parameters:
     RedirectHelper:
       - redirect
   inferPrivatePropertyTypeFromConstructor: true
+  checkMissingIterableValueType: false
   bootstrapFiles:
     - phpstan-constants.php

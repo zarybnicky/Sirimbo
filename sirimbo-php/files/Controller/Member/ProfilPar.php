@@ -108,6 +108,7 @@ class ProfilPar
 
     public static function partnerPost()
     {
+        $latest = \DBPary::getLatestPartner(\Session::getUserID(), \Session::getUserPohlavi());
         $havePartner = !empty($latest) && $latest['u_id'];
         if (!$_POST["partner"] || ($_POST['action'] == 'dumpthem' && $havePartner)) {
             \DBPary::noPartner(\Session::getUserID());

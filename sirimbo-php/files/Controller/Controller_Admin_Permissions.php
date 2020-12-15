@@ -113,7 +113,7 @@ class Controller_Admin_Permissions
             }
         }
         $settings = array_map(
-            function ($name, $item) use ($request, $data) {
+            function ($name, $item) use ($data) {
                 $value = $_POST[$name] ?: ($data ? $data['pe_' . $name] : $item['default']);
                 return [
                     'name' => $item['name'],

@@ -13,18 +13,15 @@ class Controller_Admin_Video
         if ($request->getId()) {
             $list = \DBVideoList::getSingle($request->getId());
             $data = array_map(
-                function ($item) {
-                    $parts = explode('?', $item['v_uri']);
-                    $uri = array_shift($parts);
-                    return [
-                        'buttons' => new \EditLinkHelper('/admin/video/edit/' . $item['v_id'])
-                            . '&nbsp;'
-                            . new \RemoveLinkHelper('/admin/video/remove/' . $item['v_id']),
-                        'title' => $item['v_title'],
-                        'uri' => $uri,
-                        'created' => formatTimestamp($item['v_created_at'], true)
-                    ];
-                },
+                fn($item) => [
+                    'buttons' => (
+                        new \EditLinkHelper('/admin/video/edit/' . $item['v_id']) . '&nbsp;' .
+                        new \RemoveLinkHelper('/admin/video/remove/' . $item['v_id'])
+                    ),
+                    'title' => $item['v_title'],
+                    'uri' => explode('?', $item['v_uri'])[0],
+                    'created' => formatTimestamp($item['v_created_at'], true)
+                ],
                 \DBVideo::getByPlaylist($request->getId())
             );
             new \RenderHelper('files/View/Admin/Video/Overview.inc', [
@@ -60,18 +57,15 @@ class Controller_Admin_Video
         $pager->setItemsPerPage($_GET['c']);
         $pager->setCurrentPage($_GET['p']);
         $data = array_map(
-            function ($item) {
-                $parts = explode('?', $item['v_uri']);
-                $uri = array_shift($parts);
-                return [
-                    'buttons' => new \EditLinkHelper('/admin/video/edit/' . $item['v_id'])
-                        . '&nbsp;'
-                        . new \RemoveLinkHelper('/admin/video/remove/' . $item['v_id']),
-                    'title' => $item['v_title'],
-                    'uri' => $uri,
-                    'created' => formatTimestamp($item['v_created_at'], true)
-                ];
-            },
+            fn($item) => [
+                'buttons' => (
+                    new \EditLinkHelper('/admin/video/edit/' . $item['v_id']) . '&nbsp;' .
+                    new \RemoveLinkHelper('/admin/video/remove/' . $item['v_id'])
+                ),
+                'title' => $item['v_title'],
+                'uri' => explode('?', $item['v_uri'])[0],
+                'created' => formatTimestamp($item['v_created_at'], true)
+            ],
             $pager->getItems()
         );
         new \RenderHelper('files/View/Admin/Video/Overview.inc', [
@@ -109,7 +103,7 @@ class Controller_Admin_Video
             return static::displayForm('add');
         }
 
-        $form = static::checkData($request);
+        $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
             return static::displayForm('add');
@@ -140,7 +134,7 @@ class Controller_Admin_Video
             return static::displayForm('edit', $data);
         }
 
-        $form = static::checkData($request);
+        $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
             return static::displayForm('edit', $data);
@@ -184,8 +178,8 @@ class Controller_Admin_Video
     {
         new \RenderHelper('files/View/Admin/Video/Form.inc', [
             'header' => 'Správa videí',
-            'subheader' => $request->getAction() == 'add' ? 'Přidat video' : 'Upravit video',
-            'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit',
+            'subheader' => $action == 'add' ? 'Přidat video' : 'Upravit video',
+            'action' => $action == 'add' ? 'Přidat' : 'Upravit',
             'id' => $data ? $data['v_id'] : null,
             'uri' => $_POST['uri'] ?: ($data ? $data['v_uri'] : ''),
             'title' => $_POST['title'] ?: ($data ? $data['v_title'] : ''),
@@ -195,7 +189,7 @@ class Controller_Admin_Video
         ]);
     }
 
-    protected static function checkData($request): \Form
+    protected static function checkData(): \Form
     {
         $form = new \Form();
         $form->checkNotEmpty($_POST['uri'], 'Zadejce prosím ID videa', 'uri');

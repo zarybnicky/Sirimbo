@@ -1,11 +1,11 @@
 <?php
 class User
 {
-    public function __serialize()
+    public function __serialize(): array
     {
         return $this->toArray();
     }
-    public function __unserialize(array $x)
+    public function __unserialize(array $x): User
     {
         return self::fromArray($x);
     }
@@ -82,7 +82,7 @@ class User
         ];
     }
 
-    public function isValid()
+    public function isValid(): bool
     {
         $email = "/^[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i";
         $phone = "/^((\+|00)\d{3})?( ?\d{3}){3}$/";
@@ -105,7 +105,7 @@ class User
         return $this->id;
     }
 
-    public function setId(int $id)
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
@@ -120,7 +120,7 @@ class User
         return $this->login;
     }
 
-    public function setLogin(string $login)
+    public function setLogin(string $login): void
     {
         $this->login = $login;
     }
@@ -135,7 +135,7 @@ class User
         return $this->password;
     }
 
-    public function setPassword(string $password)
+    public function setPassword(string $password): void
     {
         $this->password = $password;
     }
@@ -150,7 +150,7 @@ class User
         return $this->name;
     }
 
-    public function setName(string $name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -165,12 +165,12 @@ class User
         return $this->surname;
     }
 
-    public function setSurname(string $surname)
+    public function setSurname(string $surname): void
     {
         $this->surname = $surname;
     }
 
-    public function getFullName()
+    public function getFullName(): string
     {
         return $this->getSurname() . ', ' . $this->getName();
     }
@@ -185,7 +185,7 @@ class User
         return $this->gender;
     }
 
-    public function setGender(string $gender)
+    public function setGender(string $gender): void
     {
         $this->gender = $gender;
     }
@@ -200,7 +200,7 @@ class User
         return $this->email;
     }
 
-    public function setEmail(string $email)
+    public function setEmail(string $email): void
     {
         $this->email = $email;
     }
@@ -215,7 +215,7 @@ class User
         return $this->phone;
     }
 
-    public function setPhone(string $phone)
+    public function setPhone(string $phone): void
     {
         $this->phone = $phone;
     }
@@ -230,7 +230,7 @@ class User
         return $this->birthDate;
     }
 
-    public function setBirthDate(string $birthDate)
+    public function setBirthDate(string $birthDate): void
     {
         $this->birthDate = $birthDate;
     }
@@ -250,7 +250,7 @@ class User
         return $this->notes;
     }
 
-    public function setNotes(string $notes)
+    public function setNotes(string $notes): void
     {
         $this->notes = $notes;
     }
@@ -265,7 +265,7 @@ class User
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(string $updatedAt)
+    public function setUpdatedAt(string $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
     }
@@ -280,7 +280,7 @@ class User
         return $this->permissionGroup;
     }
 
-    public function setPermissionGroup(int $permissionGroup)
+    public function setPermissionGroup(int $permissionGroup): void
     {
         $this->permissionGroup = $permissionGroup;
     }
@@ -295,7 +295,7 @@ class User
         return $this->trainingGroup;
     }
 
-    public function setTrainingGroup(int $trainingGroup)
+    public function setTrainingGroup(int $trainingGroup): void
     {
         $this->trainingGroup = $trainingGroup;
     }
@@ -310,7 +310,7 @@ class User
         return $this->dancer;
     }
 
-    public function setDancer(bool $dancer)
+    public function setDancer(bool $dancer): void
     {
         $this->dancer = $dancer;
     }
@@ -325,7 +325,7 @@ class User
         return $this->banned;
     }
 
-    public function setBanned(bool $banned)
+    public function setBanned(bool $banned): void
     {
         $this->banned = $banned;
     }
@@ -340,7 +340,7 @@ class User
         return $this->locked;
     }
 
-    public function setLocked(bool $locked)
+    public function setLocked(bool $locked): void
     {
         $this->locked = $locked;
     }
@@ -355,7 +355,7 @@ class User
         return $this->confirmed;
     }
 
-    public function setConfirmed(bool $confirmed)
+    public function setConfirmed(bool $confirmed): void
     {
         $this->confirmed = $confirmed;
     }
@@ -370,7 +370,7 @@ class User
         return $this->system;
     }
 
-    public function setSystem(bool $system)
+    public function setSystem(bool $system): void
     {
         $this->system = $system;
     }
@@ -385,7 +385,7 @@ class User
         return $this->street;
     }
 
-    public function setStreet(string $street)
+    public function setStreet(string $street): void
     {
         $this->street = $street;
     }
@@ -400,7 +400,7 @@ class User
         return $this->conscriptionNumber;
     }
 
-    public function setConscriptionNumber(string $conscriptionNumber)
+    public function setConscriptionNumber(string $conscriptionNumber): void
     {
         $this->conscriptionNumber = $conscriptionNumber;
     }
@@ -415,7 +415,7 @@ class User
         return $this->orientationNumber;
     }
 
-    public function setOrientationNumber(string $orientationNumber)
+    public function setOrientationNumber(string $orientationNumber): void
     {
         $this->orientationNumber = $orientationNumber;
     }
@@ -430,7 +430,7 @@ class User
         return $this->district;
     }
 
-    public function setDistrict(string $district)
+    public function setDistrict(string $district): void
     {
         $this->district = $district;
     }
@@ -445,7 +445,7 @@ class User
         return $this->city;
     }
 
-    public function setCity(string $city)
+    public function setCity(string $city): void
     {
         $this->city = $city;
     }
@@ -460,7 +460,7 @@ class User
         return $this->postalCode;
     }
 
-    public function setPostalCode(string $postalCode)
+    public function setPostalCode(string $postalCode): void
     {
         $this->postalCode = $postalCode;
     }
@@ -475,7 +475,7 @@ class User
         return $this->nationality;
     }
 
-    public function setNationality(string $nationality)
+    public function setNationality(string $nationality): void
     {
         $this->nationality = $nationality;
     }
@@ -490,7 +490,7 @@ class User
         return $this->memberSince;
     }
 
-    public function setMemberSince(?string $memberSince)
+    public function setMemberSince(?string $memberSince): void
     {
         $this->memberSince = $memberSince;
     }
@@ -505,7 +505,7 @@ class User
         return $this->memberUntil;
     }
 
-    public function setMemberUntil(?string $memberUntil)
+    public function setMemberUntil(?string $memberUntil): void
     {
         $this->memberUntil = $memberUntil;
     }
@@ -520,7 +520,7 @@ class User
         return $this->createdAt;
     }
 
-    public function setCreatedAt(string $createdAt)
+    public function setCreatedAt(string $createdAt): void
     {
         $this->createdAt = $createdAt;
     }
@@ -535,7 +535,7 @@ class User
         return $this->teacher;
     }
 
-    public function setTeacher(bool $teacher)
+    public function setTeacher(bool $teacher): void
     {
         $this->teacher = $teacher;
     }
@@ -550,18 +550,18 @@ class User
         return $this->gdprSignedAt;
     }
 
-    public function setGdprSignedAt(?string $gdprSignedAt)
+    public function setGdprSignedAt(?string $gdprSignedAt): void
     {
         $this->gdprSignedAt = $gdprSignedAt;
     }
 
-    public static function crypt($passwd)
+    public static function crypt(string $passwd): string
     {
         $fix = md5('######TK.-.OLYMP######');
         return sha1($fix . $passwd . $fix);
     }
 
-    public static function varSymbol($id)
+    public static function varSymbol(string $id): string
     {
         return str_pad($id, 6, '0', STR_PAD_LEFT);
     }

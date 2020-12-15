@@ -27,7 +27,7 @@ class Repl
             if ($r === false) {
                 echo new \NoticeHelper('Kód obsahuje syntaktickou chybu');
             } elseif (!empty($r)) {
-                echo new \NoticeHelper(dump($r));
+                echo new \NoticeHelper('<pre>' . var_export($r, true) . '</pre>');
             } else {
                 echo new \NoticeHelper('Success!');
             }
