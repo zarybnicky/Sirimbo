@@ -19,7 +19,7 @@ class PartnerRequestHelper
 
     public function getRequestsByMe()
     {
-        $data = DBPary::getPartnerRequestsByMe($this->_id);
+        $data = \DBPary::getPartnerRequestsByMe($this->_id);
         if (empty($data)) {
             return '';
         }
@@ -48,7 +48,7 @@ class PartnerRequestHelper
 
     public function getRequestsForMe()
     {
-        $data = DBPary::getPartnerRequestsForMe($this->_id);
+        $data = \DBPary::getPartnerRequestsForMe($this->_id);
         if (empty($data)) {
             return '';
         }

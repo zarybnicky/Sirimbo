@@ -102,7 +102,7 @@ function makeRouter()
 {
     $router = new \Olymp\Router(function ($method, $path, $code, $ex) {
         if ($ex->getMessage() === 'No route found') {
-            $request = new Request($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD'], $_GET, $_POST);
+            $request = new Request($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
             $d = new Dispatcher();
             $d->dispatch($request);
         } else {
@@ -120,7 +120,11 @@ function makeRouter()
     $router->get('/oklubu/klubovi-treneri', '@Oklubu::klubovi');
     $router->get('/oklubu/externi-treneri', '@Oklubu::externi');
     $router->get('/oklubu/saly', '@Oklubu::saly');
+    $router->get('/fotogalerie', '@Fotogalerie::root');
+    $router->get('/fotogalerie/([0-9]+)', '@Fotogalerie::directory');
+    $router->get('/fotogalerie/foto/([0-9]+)', '@Fotogalerie::single');
 
+    $router->get('/login', '@Member::login');
     $router->get('/nopassword', '@Nopassword::get');
     $router->post('/nopassword', '@Nopassword::post');
     $router->get('/registrace', '@Registrace::get');

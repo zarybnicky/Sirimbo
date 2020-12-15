@@ -72,7 +72,7 @@ class Controller_Admin_Akce
     public function edit($request)
     {
         \Permissions::checkError('akce', P_OWNED);
-        if (!($id = $request->getID())) {
+        if (!($id = $request->getId())) {
             new \MessageHelper('warning', 'Akce s takovým ID neexistuje');
             new \RedirectHelper('/admin/akce');
         }

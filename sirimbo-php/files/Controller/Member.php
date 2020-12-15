@@ -3,6 +3,15 @@ namespace Olymp\Controller;
 
 class Member
 {
+    public static function login()
+    {
+        if (\Session::isLogged()) {
+            $uri = $_GET['return'] ? $_GET['return'] : '/member';
+            new \RedirectHelper($uri);
+        }
+        new \RenderHelper('files/View/Main/Login.inc');
+    }
+
     public static function get()
     {
         \Permissions::checkError('nastenka', P_VIEW);

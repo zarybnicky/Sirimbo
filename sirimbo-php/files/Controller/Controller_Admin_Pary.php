@@ -7,15 +7,15 @@ class Controller_Admin_Pary
         switch ($_POST["action"]) {
             case 'add':
                 if ($_POST["add_partner"]) {
-                    DBPary::newCouple($_POST["add_partner"], $_POST["add_partnerka"]);
+                    \DBPary::newCouple($_POST["add_partner"], $_POST["add_partnerka"]);
                 }
                 new \RedirectHelper('/admin/pary');
                 break;
 
             case 'fix_unpaired':
-                $xs = DBPary::getUnpairedUsers();
+                $xs = \DBPary::getUnpairedUsers();
                 foreach ($xs as $x) {
-                    DBPary::noPartner($x['u_id']);
+                    \DBPary::noPartner($x['u_id']);
                 }
                 new \MessageHelper('info', count($xs) . ' chybných záznamů opraveno');
                 new \RedirectHelper('/admin/pary');
@@ -33,7 +33,7 @@ class Controller_Admin_Pary
                 'latina' => $item['p_lat_trida'] . ' ' . $item['p_lat_body'] . 'F' . $item['p_lat_finale'],
                 'hodnoceni' => $item['p_hodnoceni']
             ],
-            DBPary::getActivePary()
+            \DBPary::getActivePary()
         );
 
         new \RenderHelper('files/View/Admin/Pary/Overview.inc', [
@@ -51,7 +51,7 @@ class Controller_Admin_Pary
             new \MessageHelper('warning', 'Pár s takovým ID neexistuje');
             new \RedirectHelper('/admin/pary');
         }
-        if (!$data = DBPary::getSinglePar($id)) {
+        if (!$data = \DBPary::getSinglePar($id)) {
             new \MessageHelper('warning', 'Pár s takovým ID neexistuje');
             new \RedirectHelper('/admin/pary');
         }
@@ -89,7 +89,7 @@ class Controller_Admin_Pary
 
         $hodnoceni = $stt_base + $lat_base + $stt_bonus + $lat_bonus;
 
-        DBPary::editTridaBody(
+        \DBPary::editTridaBody(
             $data['p_id'],
             $_POST['stt-trida'],
             $stt_body,
@@ -108,7 +108,7 @@ class Controller_Admin_Pary
         \Permissions::checkError('pary', P_OWNED);
         $id = $request->getId();
         if ($id) {
-            DBPary::removeCouple($id);
+            \DBPary::removeCouple($id);
         }
         new \MessageHelper('success', 'Pár odstraněn');
         new \RedirectHelper('/admin/pary');

@@ -1,14 +1,9 @@
 <?php
 class Controller_Member_Clenove
 {
-    
-
-    public function view($request)
+    public static function single($id)
     {
         \Permissions::checkError('users', P_VIEW);
-        if (!($id = $request->getId())) {
-            new \RedirectHelper('/member/clenove');
-        }
         if (!($data = \DBUser::getUser($id))) {
             return new \RedirectHelper('/member/clenove');
         }
@@ -22,7 +17,7 @@ class Controller_Member_Clenove
         ]);
     }
 
-    public static function groups($request)
+    public static function groups()
     {
         \Permissions::checkError('users', P_VIEW);
         $currentID = -1;
@@ -53,7 +48,7 @@ class Controller_Member_Clenove
         ]);
     }
 
-    public static function list($request)
+    public static function list()
     {
         \Permissions::checkError('users', P_VIEW);
         $index = 0;
@@ -70,7 +65,7 @@ class Controller_Member_Clenove
         ]);
     }
 
-    public function structure($request)
+    public static function structure()
     {
         \Permissions::checkError('users', P_VIEW);
         $data = \DBUser::getUsersWithSkupinaPlatby();

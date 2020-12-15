@@ -25,7 +25,7 @@ class Controller_Admin_Rozpis_Detail
             new \RedirectHelper($_SERVER['REQUEST_URI']);
         }
 
-        $users = DBPary::getPartners();
+        $users = \DBPary::getPartners();
 
         $items = array_map(
             fn($item) => [

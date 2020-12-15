@@ -16,10 +16,10 @@ class Controller_Admin_Nabidka_Detail
 
         $items = \DBNabidka::getNabidkaItem($id);
         $obsazeno = \DBNabidka::getNabidkaItemLessons($id);
-        $users = DBPary::getPartners();
+        $users = \DBPary::getPartners();
 
         if (!$_POST) {
-            $userSelect = (new UserSelectHelper($users))->type('par')->idVar('p_id');
+            $userSelect = (new \UserSelectHelper($users))->type('par')->idVar('p_id');
 
             $items = array_map(fn($item) => [
                 'user' => $userSelect->set($item['ni_partner'])->name($item['ni_id'] . '-partner'),

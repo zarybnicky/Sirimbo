@@ -172,7 +172,7 @@ class ProfilPar
     public static function pary()
     {
         \Permissions::checkError('pary', P_VIEW);
-        $data = DBPary::getActiveParyByHodnoceni();
+        $data = \DBPary::getActiveParyByHodnoceni();
         if (empty($data)) {
             return new \RenderHelper('files/View/Empty.inc', [
                 'header' => 'Žebříček párů',

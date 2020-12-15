@@ -1,48 +1,44 @@
 <?php
-class Controller_Fotogalerie
+namespace Olymp\Controller;
+
+class Fotogalerie
 {
-    public function view($request)
+    public static function root($request)
     {
-        $id = $request->getID();
-        if ($id === null) {
-            $id = 0;
-            $dir = ['gd_name' => ''];
-        } elseif (!($dir = \DBGalerie::getSingleDir($id))) {
+        static::directory(0);
+    }
+
+    public static function directory($id)
+    {
+        if (!($dir = \DBGalerie::getSingleDir($id))) {
             new \MessageHelper('warning', 'Taková složka neexistuje');
             new \RedirectHelper('/fotogalerie');
         }
 
         $photos = \DBGalerie::getFotky($id);
-
-        if (empty($photos)) {
+        if (!$photos) {
             return new \RenderHelper('files/View/Empty.inc', [
                 'nadpis' => $dir['gd_name'],
                 'notice' => 'Žádné fotky k dispozici.'
             ]);
         }
 
-        $photos = array_map(
-            fn($item) => [
-                'id' => $item['gf_id'],
-                'src' => '/galerie/thumbnails/' . $item['gf_path'],
-                'href' => explode('?', $_SERVER['REQUEST_URI'])[0] . '/foto/' . $item['gf_id']
-            ],
-            $photos
-        );
-
         new \RenderHelper('files/View/Main/Fotogalerie/Overview.inc', [
             'nadpis' => $dir['gd_name'],
-            'photos' => $photos,
-            'sidemenu' => static::sidemenu($request)
+            'sidemenu' => static::sidemenu($id),
+            'photos' => array_map(
+                fn($item) => [
+                    'id' => $item['gf_id'],
+                    'src' => '/galerie/thumbnails/' . $item['gf_path'],
+                    'href' => explode('?', $_SERVER['REQUEST_URI'])[0] . '/foto/' . $item['gf_id']
+                ],
+                $photos
+            ),
         ]);
     }
 
-    public function foto($request)
+    public static function single($id)
     {
-        if (!$id = $request->getID()) {
-            new \MessageHelper('warning', 'Taková fotka neexistuje');
-            new \RedirectHelper('/fotogalerie');
-        }
         if (!$data = \DBGalerie::getSingleFoto($id)) {
             new \MessageHelper('warning', 'Taková fotka neexistuje');
             new \RedirectHelper('/fotogalerie');
@@ -67,17 +63,17 @@ class Controller_Fotogalerie
             'prevURI'   => $hasPrev ? $parent_dir[$current - 1]['gf_id'] : '',
             'nextURI'   => $hasNext ? $parent_dir[$current + 1]['gf_id'] : '',
             'returnURI' => '/fotogalerie' . ($data['gf_id_rodic'] > 0 ? ('/' . $data['gf_id_rodic']) : ''),
-            'sidemenu'  => static::sidemenu($request)
+            'sidemenu'  => static::sidemenu($data['gf_id_rodic'])
         ]);
     }
 
-    public static function sidemenu($request)
+    public static function sidemenu($dirId)
     {
         if (!($dirs = \DBGalerie::getDirs(true, true))) {
             return '';
         }
 
-        $root = $tip = new Tag('ul', ['class' => 'fotoroot']);
+        $root = $tip = new \Tag('ul', ['class' => 'fotoroot']);
         $stack = [];
         $level = 0;
 
@@ -88,25 +84,25 @@ class Controller_Fotogalerie
 
             if ($dir['gd_level'] > $level) {
                 $stack[] = $tip;
-                $newTip = new Tag('ul', ['class' => 'foto_list']);
+                $newTip = new \Tag('ul', ['class' => 'foto_list']);
                 $tip->add($newTip);
                 $tip = $newTip;
             } elseif ($dir['gd_level'] < $level) {
                 for ($i = 0; $i < ($level - $dir['gd_level']); $i++) {
-                    /** @var Tag */
+                    /** @var \Tag */
                     $tip = array_pop($stack);
                 }
             }
             $level = $dir['gd_level'];
 
             $tip->add(
-                new Tag(
+                new \Tag(
                     'li',
                     [],
-                    new Tag(
+                    new \Tag(
                         'a',
                         [
-                            'class' => ($dir['gd_id'] == $request->getID()) ? 'current' : '',
+                            'class' => ($dir['gd_id'] == $dirId) ? 'current' : '',
                             'href' => ($dir['gd_id'] == 0) ? '/fotogalerie' : "/fotogalerie/{$dir['gd_id']}"
                         ],
                         $dir['gd_name']
