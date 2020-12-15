@@ -6,7 +6,7 @@ class Controller_Admin_Nabidka
         \Permissions::checkError('nabidka', P_OWNED);
         $data = \Permissions::check('nabidka', P_ADMIN)
             ? \DBNabidka::getNabidka(true)
-            : \DBNabidka::getNabidkyByTrener(Session::getUserID(), true);
+            : \DBNabidka::getNabidkyByTrener(\Session::getUserID(), true);
 
         if ($_POST['action'] == 'save') {
             foreach ($data as $item) {
@@ -201,7 +201,7 @@ class Controller_Admin_Nabidka
         if ($isAdmin) {
             $treneri = \DBUser::getUsersByPermission('nabidka', P_OWNED);
         } else {
-            $treneri = [\DBUser::getUserData(Session::getUserID())];
+            $treneri = [\DBUser::getUserData(\Session::getUserID())];
         }
         new \RenderHelper('files/View/Admin/Nabidka/Form.inc', [
             'header' => 'Správa nabídky',

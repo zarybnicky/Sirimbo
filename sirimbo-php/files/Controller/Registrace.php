@@ -90,7 +90,7 @@ class Registrace
             ]);
         }
 
-        Session::register(
+        \Session::register(
             strtolower($_POST['username']),
             $_POST['pass'],
             $_POST['jmeno'],

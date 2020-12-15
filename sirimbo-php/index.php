@@ -43,7 +43,7 @@ session_start();
 
 try {
     if (isset($_SESSION['login']) && $_SESSION['login'] !== null) {
-        Session::loadUser($_SESSION['id']);
+        \Session::loadUser($_SESSION['id']);
         if ($_SESSION['gdpr']) {
             if (!in_array($request->getURI(), ['member/profil/gdpr', 'logout'])) {
                 return new RedirectHelper('/member/profil/gdpr');
@@ -56,7 +56,7 @@ try {
     } elseif ($_POST['login'] && $_POST['pass']) {
         $_POST['pass'] = User::crypt($_POST['pass']);
 
-        if (!Session::login($_POST['login'], $_POST['pass'])) {
+        if (!\Session::login($_POST['login'], $_POST['pass'])) {
             new RedirectHelper('/login', 'Špatné jméno nebo heslo!');
         } elseif ($_GET['return']) {
             new RedirectHelper($_GET['return']);

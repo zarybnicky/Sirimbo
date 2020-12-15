@@ -6,7 +6,7 @@ class Controller_Admin_Rozpis
         \Permissions::checkError('rozpis', P_OWNED);
         $data = \Permissions::check('rozpis', P_ADMIN)
             ? \DBRozpis::getRozpis(true)
-            : \DBRozpis::getRozpisyByTrener(Session::getUserID(), true);
+            : \DBRozpis::getRozpisyByTrener(\Session::getUserID(), true);
 
         if ($_POST['action'] == 'save') {
             foreach ($data as $item) {
@@ -152,7 +152,7 @@ class Controller_Admin_Rozpis
         $isAdmin = \Permissions::check('rozpis', P_ADMIN);
         $treneri = $isAdmin
                  ? \DBUser::getUsersByPermission('rozpis', P_OWNED)
-                 : [\DBUser::getUserData(Session::getUserID())];
+                 : [\DBUser::getUserData(\Session::getUserID())];
 
         new \RenderHelper('files/View/Admin/Rozpis/Form.inc', [
             'header' => 'Správa rozpisů',

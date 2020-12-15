@@ -19,9 +19,9 @@ class Controller_Member_Akce
             if (!$form->isValid()) {
                 new \MessageHelper('warning', $form->getMessages());
             } elseif ($_POST['action'] == 'signup') {
-                \DBAkce::signUp(Session::getUserID(), $_POST['id'], Session::getUserData()->getBirthYear());
+                \DBAkce::signUp(\Session::getUserID(), $_POST['id'], \Session::getUserData()->getBirthYear());
             } elseif ($_POST['action'] == 'signout') {
-                \DBAkce::signOut(Session::getUserID(), $_POST['id']);
+                \DBAkce::signOut(\Session::getUserID(), $_POST['id']);
             }
         }
         $akce = \DBAkce::getAkce(true);
@@ -62,7 +62,7 @@ class Controller_Member_Akce
             'dokumenty' => $dokumenty,
             'items' => $items
         ];
-        $out['signOut'] = $out['showForm'] && \DBAkce::isUserSignedUp($out['id'], Session::getUserID());
+        $out['signOut'] = $out['showForm'] && \DBAkce::isUserSignedUp($out['id'], \Session::getUserID());
         $out['signIn'] = $out['showForm'] && !$out['signOut'] && $out['volno'] > 0;
         return $out;
     }

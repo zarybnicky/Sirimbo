@@ -28,7 +28,7 @@ class Controller_Member_Rozpis
                             && !$rozpis['r_lock']
                             && !$item['ri_lock']
                             && ((\Permissions::check('rozpis', P_MEMBER)
-                                && \Session::getParID() == $item['ri_partner'])
+                                && \\Session::getParID() == $item['ri_partner'])
                                || \Permissions::check('rozpis', P_OWNED, $rozpis['r_trener']))
                         )
                     ],
@@ -80,16 +80,16 @@ class Controller_Member_Rozpis
             return new \MessageHelper('warning', $form->getMessages());
         }
         if ($_POST['action'] == 'signup') {
-            if (!Session::getZaplacenoPar()) {
+            if (!\Session::getZaplacenoPar()) {
                 new \MessageHelper('warning', 'Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
             } elseif ($lesson['ri_partner']) {
                 new \MessageHelper('warning', 'Lekce už je obsazená');
             } else {
-                \DBRozpis::rozpisSignUp($_POST['ri_id'], Session::getParID());
+                \DBRozpis::rozpisSignUp($_POST['ri_id'], \Session::getParID());
             }
         } elseif ($_POST['action'] == 'signout') {
             if ($lesson['ri_partner'] == 0) {
-            } elseif (Session::getParID() != $lesson['ri_partner']
+            } elseif (\Session::getParID() != $lesson['ri_partner']
                       && !\Permissions::check('rozpis', P_OWNED, $data['n_trener'])
             ) {
                 new \MessageHelper('warning', 'Nedostatečná oprávnění!');

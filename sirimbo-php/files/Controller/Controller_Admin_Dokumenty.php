@@ -30,7 +30,7 @@ class Controller_Admin_Dokumenty
                 $_POST['name'],
                 $fileName,
                 $_POST['kategorie'],
-                Session::getUserID()
+                \Session::getUserID()
             );
             new \MessageHelper('success', 'Soubor byl nahrán úspěšně');
             return new \RedirectHelper('/admin/dokumenty');
@@ -38,7 +38,7 @@ class Controller_Admin_Dokumenty
 
         $data = \Permissions::check('dokumenty', P_ADMIN)
             ? \DBDokumenty::getDokumenty()
-            : \DBDokumenty::getDokumentyByAuthor(Session::getUserID());
+            : \DBDokumenty::getDokumentyByAuthor(\Session::getUserID());
 
         $data = array_map(fn($item) => [
             'buttons' => new EditLinkHelper('/admin/dokumenty/edit/' . $item['d_id'])

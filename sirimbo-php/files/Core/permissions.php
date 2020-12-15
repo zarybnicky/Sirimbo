@@ -3,9 +3,9 @@ class Permissions
 {
     public static function check($module, $level, $owner = null)
     {
-        $l = Session::getPermissions($module);
+        $l = \Session::getPermissions($module);
         if ($l == P_OWNED && $level == P_OWNED && $owner != null) {
-            return Session::getUserID() == $owner;
+            return \Session::getUserID() == $owner;
         }
         return $l >= $level;
     }
@@ -16,7 +16,7 @@ class Permissions
             return true;
         }
 
-        if (Session::isLogged()) {
+        if (\Session::isLogged()) {
             throw new AuthorizationException("Nemáte dostatečnou autorizaci pro tuto akci!");
         }
         new RedirectHelper(

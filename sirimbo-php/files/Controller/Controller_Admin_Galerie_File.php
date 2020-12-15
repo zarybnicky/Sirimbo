@@ -146,7 +146,7 @@ class Controller_Admin_Galerie_File
             $parts = explode(DIRECTORY_SEPARATOR, $path);
             $name = array_pop($parts);
 
-            \DBGalerie::addFoto($parent['gd_id'], $path, $name, Session::getUserID());
+            \DBGalerie::addFoto($parent['gd_id'], $path, $name, \Session::getUserID());
         }
         if ($failCount > 0) {
             new \MessageHelper('warning', "Počet neúspěšně zpracovaných souborů: $failCount");

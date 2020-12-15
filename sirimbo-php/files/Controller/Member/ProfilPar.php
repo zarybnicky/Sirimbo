@@ -94,7 +94,7 @@ class ProfilPar
 
     public static function partnerGet()
     {
-        $latest = \DBPary::getLatestPartner(Session::getUserID(), Session::getUserPohlavi());
+        $latest = \DBPary::getLatestPartner(\Session::getUserID(), \Session::getUserPohlavi());
         $havePartner = !empty($latest) && $latest['u_id'];
         $_POST['partner'] = $havePartner ? $latest['u_id'] : '0';
         new \RenderHelper('files/View/Member/Profil/PartnerOverview.inc', [
@@ -120,7 +120,7 @@ class ProfilPar
         if (\Session::getUserPohlavi() == "m") {
             \DBPary::newPartnerRequest(\Session::getUserID(), \Session::getUserID(), $_POST["partner"]);
         } else {
-            \DBPary::newPartnerRequest(\Session::getUserID(), $_POST["partner"], Session::getUserID());
+            \DBPary::newPartnerRequest(\Session::getUserID(), $_POST["partner"], \Session::getUserID());
         }
         new \MessageHelper('info', 'Žádost o partnerství odeslána');
         new \RedirectHelper('/member/profil');

@@ -76,7 +76,7 @@ class Controller_Admin_Nastenka
         }
 
         $id = \DBNastenka::addNastenka(
-            Session::getUserID(),
+            \Session::getUserID(),
             $_POST['nadpis'],
             $_POST['text'],
             $_POST['lock'] ? 1 : 0

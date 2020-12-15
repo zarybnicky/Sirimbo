@@ -144,7 +144,7 @@ class Controller_Admin_Galerie
                 getCanonicalName($parent),
                 getCanonicalName($file),
                 $name,
-                Session::getUserID()
+                \Session::getUserID()
             );
         }
         new \MessageHelper(
