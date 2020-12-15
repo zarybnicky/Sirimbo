@@ -127,7 +127,9 @@ class DBAkce extends Database implements Pagable
     {
         self::query(
             "UPDATE akce_item SET ai_user='?',ai_rok_narozeni='?' WHERE ai_id='?'",
-            $u_id, $rok, $id
+            $u_id,
+            $rok,
+            $id,
         );
         return true;
     }
@@ -149,7 +151,7 @@ class DBAkce extends Database implements Pagable
             return false;
         } else {
             $row = self::getSingleRow($res);
-            return (bool) $row["ai_id"] ?? false;
+            return (bool) ($row["ai_id"] ?? false);
         }
     }
 }

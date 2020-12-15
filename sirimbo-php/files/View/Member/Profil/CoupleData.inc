@@ -33,6 +33,6 @@
       </tr>
     </table>
     <?= new \SubmitHelper('Změnit třídu a body') ?>
-    <a class="btn btn-outline-primary" href="/member/profil/par">Zpět</a>
+    <a class="btn btn-outline-primary" href="/member/profil">Zpět</a>
   </form>
 </div>

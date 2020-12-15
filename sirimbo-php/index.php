@@ -139,20 +139,6 @@ function makeRouter()
     $router->post('/member/nabidka', '@Member.Nabidka::post');
     $router->get('/member/rozpis', '@Member.Rozpis::get');
     $router->post('/member/rozpis', '@Member.Rozpis::post');
-    $router->get('/member/profil', '@Member.Profil::get');
-    $router->get('/member/profil/edit', '@Member.Profil::editGet');
-    $router->post('/member/profil/edit', '@Member.Profil::editPost');
-    $router->get('/member/profil/gdpr', '@Member.Profil::gdprGet');
-    $router->post('/member/profil/gdpr', '@Member.Profil::gdprPost');
-    $router->get('/member/profil/heslo', '@Member.Profil::hesloGet');
-    $router->post('/member/profil/heslo', '@Member.Profil::hesloPost');
-    $router->get('/member/profil/par', '@Member.ProfilPar::get');
-    $router->get('/member/profil/par/body', '@Member.ProfilPar::bodyGet');
-    $router->post('/member/profil/par/body', '@Member.ProfilPar::bodyPost');
-    $router->get('/member/profil/par/partner', '@Member.ProfilPar::partnerPost');
-    $router->post('/member/profil/par/partner', '@Member.ProfilPar::partnerPost');
-    $router->post('/member/profil/par/zadost', '@Member.ProfilPar::zadost');
-    $router->get('/member/profil/pary', '@Member.ProfilPar::pary');
     $router->get('/member/dokumenty', '@Member::dokumenty');
     $router->get('/member/download', '@Member::download');
     $router->get('/member/clenove', '@Member.Clenove::structure');
@@ -161,8 +147,26 @@ function makeRouter()
     $router->get('/member/clenove/skupiny', '@Member.Clenove::groups');
     $router->get('/member/clenove/([0-9]+)', '@Member.Clenove::single');
 
+    $router->get('/member/profil', '@Member.Profil::get');
+    $router->get('/member/profil/edit', '@Member.Profil::editGet');
+    $router->post('/member/profil/edit', '@Member.Profil::editPost');
+    $router->get('/member/profil/gdpr', '@Member.Profil::gdprGet');
+    $router->post('/member/profil/gdpr', '@Member.Profil::gdprPost');
+    $router->get('/member/profil/heslo', '@Member.Profil::hesloGet');
+    $router->post('/member/profil/heslo', '@Member.Profil::hesloPost');
+    $router->get('/member/profil/par/body', '@Member.ProfilPar::bodyGet');
+    $router->post('/member/profil/par/body', '@Member.ProfilPar::bodyPost');
+    $router->get('/member/profil/par/partner', '@Member.ProfilPar::partnerGet');
+    $router->post('/member/profil/par/partner', '@Member.ProfilPar::partnerPost');
+    $router->post('/member/profil/par/zadost', '@Member.ProfilPar::zadost');
+    $router->get('/member/profil/pary', '@Member.ProfilPar::pary');
+
     $router->get('/admin/konzole', '@Admin.Repl::get');
     $router->post('/admin/konzole', '@Admin.Repl::post');
+    $router->get('/admin/akce/detail/([0-9]+)', '@Admin.Akce::detailGet');
+    $router->post('/admin/akce/detail/([0-9]+)', '@Admin.Akce::detailPost');
+    $router->get('/admin/akce/dokumenty/([0-9]+)', '@Admin.Akce::dokumentyGet');
+    $router->post('/admin/akce/dokumenty/([0-9]+)', '@Admin.Akce::dokumentyPost');
 
     return $router;
 }

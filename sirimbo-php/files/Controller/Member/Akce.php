@@ -8,7 +8,7 @@ class Akce
         \Permissions::checkError('akce', P_VIEW);
         if (!($data = \DBAkce::getSingleAkce($id, true))) {
             new \MessageHelper('warning', 'Žádná taková akce neexistuje');
-            new \RedirectHelper('/member/akce');
+            return new \RedirectHelper('/member/akce');
         }
         return new \RenderHelper('files/View/Member/Akce/Single.inc', [
             'header' => 'Klubové akce',
@@ -19,9 +19,9 @@ class Akce
     public static function listPost()
     {
         \Permissions::checkError('akce', P_VIEW);
-        if (!$_POST['id'] || ($data = \DBAkce::getSingleAkce($_POST['id']))) {
+        if (!$_POST['id'] || !($data = \DBAkce::getSingleAkce($_POST['id']))) {
             new \MessageHelper('warning', 'Žádná taková akce neexistuje');
-            new \RedirectHelper('/member/akce');
+            return new \RedirectHelper('/member/akce');
         }
 
         $form = static::checkData($data, $_POST['action']);

@@ -22,13 +22,12 @@ class Controller_Admin_Nabidka_Detail
             $userSelect = (new \UserSelectHelper($users))->type('par')->idVar('p_id');
 
             $items = array_map(fn($item) => [
-                'user' => $userSelect->set($item['ni_partner'])->name($item['ni_id'] . '-partner'),
+                'user' => (string) $userSelect->set($item['ni_partner'])->name($item['ni_id'] . '-partner'),
                 'lessonCount' => (new \TextHelper($item['ni_id'] . '-hodiny', $item['ni_pocet_hod']))->size(1),
                 'removeButton' => (new \SubmitHelper('Odstranit'))->name('remove')->value($item['ni_id'])
             ], $items);
             $items[] = [
-                'user' => (string) $userSelect->set(null)
-                                              ->name('add_partner'),
+                'user' => (string) $userSelect->set(null) ->name('add_partner'),
                 'lessonCount' => (new \TextHelper('add_hodiny', ''))->size('1'),
                 'removeButton' => new \SubmitHelper('Přidat')
             ];

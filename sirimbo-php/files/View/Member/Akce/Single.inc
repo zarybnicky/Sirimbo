@@ -3,7 +3,7 @@
   $data = $this->data;
   unset($data['info']);
   unset($data['dokumenty']);
-  echo new \RenderHelper('files/View/Member/Akce/Header.inc', $data);
+  new \RenderHelper('files/View/Member/Akce/Header.inc', $data, true);
   ?>
 
   <div style="text-align:center;">

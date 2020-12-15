@@ -1,5 +1,5 @@
 <?php
-namespace Olymp\Controller;
+namespace Olymp\Controller\Member;
 
 class Profil
 {

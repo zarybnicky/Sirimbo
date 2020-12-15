@@ -19,23 +19,6 @@ class ProfilPar
     const BONUS_A = 2160; //400*AMEND_B + BONUS_B
     const BONUS_M = 3240; //400*AMEND_A + BONUS_A
 
-    public static function get()
-    {
-        $latest = \DBPary::getLatestPartner(\Session::getUserID(), \Session::getUserPohlavi());
-        new \RenderHelper('files/View/Member/Profil/CoupleOverview.inc', [
-            'header' => 'Profil',
-            'havePartner' => !empty($latest) && $latest['u_id'],
-            'partnerFullName' => $latest['u_jmeno'] . ' ' . $latest['u_prijmeni'],
-            'sttTrida' => $latest['p_stt_trida'],
-            'sttBody' => $latest['p_stt_body'],
-            'sttFinale' => $latest['p_stt_finale'],
-            'latTrida' => $latest['p_lat_trida'],
-            'latBody' => $latest['p_lat_body'],
-            'latFinale' => $latest['p_lat_finale'],
-            'hodnoceni' => $latest['p_hodnoceni']
-        ]);
-    }
-
     public static function bodyGet()
     {
         $par = \DBPary::getSinglePar(\Session::getParID());
@@ -110,7 +93,7 @@ class ProfilPar
     {
         $latest = \DBPary::getLatestPartner(\Session::getUserID(), \Session::getUserPohlavi());
         $havePartner = !empty($latest) && $latest['u_id'];
-        if (!$_POST["partner"] || ($_POST['action'] == 'dumpthem' && $havePartner)) {
+        if (!isset($_POST["partner"]) || ($_POST['action'] == 'dumpthem' && $havePartner)) {
             \DBPary::noPartner(\Session::getUserID());
             \DBPary::noPartner($latest['u_id']);
             new \RedirectHelper('/member/profil');

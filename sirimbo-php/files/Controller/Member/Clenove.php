@@ -1,5 +1,7 @@
 <?php
-class Controller_Member_Clenove
+namespace Olymp\Controller\Member;
+
+class Clenove
 {
     public static function single($id)
     {
@@ -29,10 +31,10 @@ class Controller_Member_Clenove
                 $currentID = $item['s_id'];
                 $currentKey = count($skupiny);
                 $skupiny[$currentKey] = [
-                    'header' => new Tag(
+                    'header' => new \Tag(
                         'h3',
                         [],
-                        new ColorboxHelper($item['s_color_rgb'], $item['s_description'])
+                        new \ColorboxHelper($item['s_color_rgb'], $item['s_description'])
                         . '&nbsp;&nbsp;' . $item['s_name']
                     ),
                     'description' => $item['s_description'],
@@ -54,7 +56,7 @@ class Controller_Member_Clenove
         $index = 0;
         $data = array_map(
             function ($item) use (&$index) {
-                return ['index' => ++$index . '.', 'fullName' => new PersonHelper($item)];
+                return ['index' => ++$index . '.', 'fullName' => new \PersonHelper($item)];
             },
             \DBUser::getActiveUsers()
         );
@@ -81,10 +83,10 @@ class Controller_Member_Clenove
                 $currentKey = count($skupiny);
                 $skupiny[$currentKey] = [
                     'info' => [
-                        'header' => new Tag(
+                        'header' => new \Tag(
                             'big',
                             [],
-                            new ColorboxHelper($item['s_color_rgb'], $item['s_description'])
+                            new \ColorboxHelper($item['s_color_rgb'], $item['s_description'])
                             . '&nbsp;&nbsp;' . $item['s_name']
                         )
                     ],
@@ -93,8 +95,8 @@ class Controller_Member_Clenove
             }
             $skupiny[$currentKey]['users'][] = [
                 'index' => ++$index . '.',
-                'fullName' => new PersonHelper($item),
-                'hasPaid' => new Tag(
+                'fullName' => new \PersonHelper($item),
+                'hasPaid' => new \Tag(
                     'span',
                     ['style' => 'font-weight:bold;color:' . ($item['pi_id'] ? 'green' : 'red')],
                     $item['pi_id'] ? 'ANO' : 'NE'

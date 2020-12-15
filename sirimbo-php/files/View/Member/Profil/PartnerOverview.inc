@@ -13,6 +13,6 @@
         <?php if ($this->havePartner) : ?>
             <?= (new \SubmitHelper('Rozejít se'))->data('action', 'dumpthem') ?>
         <?php endif ?>
-        <a class="btn btn-outline-primary" href="/member/profil/par">Zpět</a>
+        <a class="btn btn-outline-primary" href="/member/profil">Zpět</a>
     </form>
 </div>
