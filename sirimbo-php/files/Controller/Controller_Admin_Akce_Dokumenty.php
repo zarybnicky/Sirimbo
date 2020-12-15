@@ -53,7 +53,7 @@ class Controller_Admin_Akce_Dokumenty
 
         $documents = array_map(fn($item) => [
             'name' => $item['d_name'],
-            'category' => Settings::$documentTypes[$item['d_kategorie']],
+            'category' => \Settings::$documentTypes[$item['d_kategorie']],
             'removeButton' => (new \SubmitHelper('Odstranit'))->data('remove', $item['d_id'])
         ], \DBDokumenty::getMultipleById($documents));
 
@@ -61,7 +61,7 @@ class Controller_Admin_Akce_Dokumenty
         foreach ([2, 3, 0] as $category) {
             foreach (\DBDokumenty::getDokumentyByKategorie($category) as $item) {
                 $allDocuments[$item['d_id']] =
-                    Settings::$documentTypes[$item['d_kategorie']] . ' - ' .
+                    \Settings::$documentTypes[$item['d_kategorie']] . ' - ' .
                     $item['d_name'];
             }
         }

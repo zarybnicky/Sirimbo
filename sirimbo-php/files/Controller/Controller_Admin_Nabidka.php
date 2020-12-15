@@ -28,24 +28,22 @@ class Controller_Admin_Nabidka
         }
 
         $data = array_map(
-            function ($item) {
-                return [
-                    'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
-                    'date' => (
-                        formatDate($item['n_od']) .
-                        ($item['n_do'] != $item['n_od']
-                         ? ' - ' . formatDate($item['n_do'])
-                         : '')
-                    ),
-                    'buttons' => new DuplicateLinkHelper('/admin/nabidka/duplicate/' . $item['n_id'])
-                        . '&nbsp;' . new RemoveLinkHelper('/admin/nabidka/remove/' . $item['n_id']),
-                    'links' => (
-                        '<a href="/admin/nabidka/edit/' . $item['n_id'] . '">obecné</a>, ' .
-                        '<a href="/admin/nabidka/detail/' . $item['n_id'] . '">tréninky</a>'
-                    ),
-                    'visible' => new \CheckboxHelper($item['n_id'], '1', $item['n_visible'])
-                ];
-            },
+            fn($item) => [
+                'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
+                'date' => (
+                    formatDate($item['n_od']) .
+                    ($item['n_do'] != $item['n_od']
+                     ? ' - ' . formatDate($item['n_do'])
+                     : '')
+                ),
+                'buttons' => new \DuplicateLinkHelper('/admin/nabidka/duplicate/' . $item['n_id'])
+                . '&nbsp;' . new \RemoveLinkHelper('/admin/nabidka/remove/' . $item['n_id']),
+                'links' => (
+                    '<a href="/admin/nabidka/edit/' . $item['n_id'] . '">obecné</a>, ' .
+                    '<a href="/admin/nabidka/detail/' . $item['n_id'] . '">tréninky</a>'
+                ),
+                'visible' => new \CheckboxHelper($item['n_id'], '1', $item['n_visible'])
+            ],
             $data
         );
         new \RenderHelper('files/View/Admin/Nabidka/Overview.inc', [
@@ -58,12 +56,12 @@ class Controller_Admin_Nabidka
     {
         \Permissions::checkError('nabidka', P_OWNED);
         if (!$_POST) {
-            return $this->displayForm($request);
+            return static::displayForm($request);
         }
-        $form = $this->checkData($request);
+        $form = static::checkData($request);
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return $this->displayForm($request);
+            return static::displayForm($request);
         }
 
         \Permissions::checkError('nabidka', P_OWNED, $_POST['trener']);
@@ -106,12 +104,12 @@ class Controller_Admin_Nabidka
         \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
 
         if (!$_POST) {
-            return $this->displayForm($request, $data);
+            return static::displayForm($request, $data);
         }
-        $form = $this->checkData($request);
+        $form = static::checkData($request);
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return $this->displayForm($request, $data);
+            return static::displayForm($request, $data);
         }
 
         $od = new \Date($_POST['od'] ?? null);
@@ -124,7 +122,8 @@ class Controller_Admin_Nabidka
         $pocet_hod = $_POST['pocet_hod'];
         if ($pocet_hod < $items) {
             $pocet_hod = $items;
-            new \MessageHelper('warning', 
+            new \MessageHelper(
+                'warning',
                 'Obsazených hodin už je víc než jste zadali, ' .
                 'nelze už dál snížit počet hodin'
             );
@@ -133,7 +132,8 @@ class Controller_Admin_Nabidka
         $max_lessons_old = \DBNabidka::getNabidkaMaxItems($id);
         if ($max_lessons < $max_lessons_old && $max_lessons != 0) {
             $max_lessons = $max_lessons_old;
-            new \MessageHelper('warning', 
+            new \MessageHelper(
+                'warning',
                 'Zadaný maximální počet hodin/pár je méně než už je zarezervováno, ' .
                 'nelze už dál snížit maximální počet hodin'
             );
@@ -195,7 +195,7 @@ class Controller_Admin_Nabidka
         new \RedirectHelper('/admin/nabidka');
     }
 
-    protected function displayForm($request, $data = null)
+    protected static function displayForm($request, $data = null)
     {
         $isAdmin = \Permissions::check('nabidka', P_ADMIN);
         if ($isAdmin) {
@@ -220,7 +220,7 @@ class Controller_Admin_Nabidka
         ]);
     }
 
-    private function checkData($request): Form
+    private static function checkData($request): Form
     {
         $od = new \Date($_POST['od'] ?? null);
         $do = new \Date($_POST['do'] ?? null);

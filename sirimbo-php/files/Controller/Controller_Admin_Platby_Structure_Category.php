@@ -33,48 +33,45 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         new \RenderHelper('files/View/Admin/Platby/StructureSymbolOverview.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Specifické symboly',
-            'data' => $this->getCategories(false),
-            'archived' => $this->getCategories(true),
+            'data' => static::getCategories(false),
+            'archived' => static::getCategories(true),
             'uri' => $request->getLiteralURI()
         ]);
     }
 
-    protected function getCategories($archived = false)
+    protected static function getCategories($archived = false)
     {
         return array_map(
-            function ($item) {
-                return [
-                    'name' => $item['pc_name'],
-                    'symbol' => $item['pc_symbol'],
-                    'amount' => ($item['pc_amount'] . ($item['pc_use_base'] ? ' * ?' : '')) . ' Kč',
-                    'validDate' => formatRange($item['pc_valid_from'], $item['pc_valid_to']),
-                    'buttons' => (
-                        new EditLinkHelper('/admin/platby/structure/category/edit/' . $item['pc_id'])
-                        . '&nbsp;' . $this->getDuplicateCategoryButton($item['pc_id'])
-                        . '&nbsp;' . new RemoveLinkHelper('/admin/platby/structure/category/remove/' . $item['pc_id'])
+            fn($item) => [
+                'name' => $item['pc_name'],
+                'symbol' => $item['pc_symbol'],
+                'amount' => ($item['pc_amount'] . ($item['pc_use_base'] ? ' * ?' : '')) . ' Kč',
+                'validDate' => formatRange($item['pc_valid_from'], $item['pc_valid_to']),
+                'buttons' => (
+                    new \EditLinkHelper(
+                        '/admin/platby/structure/category/edit/' . $item['pc_id']
+                    ) . '&nbsp;' . (new \SubmitHelper(
+                        '<img title="Duplikovat" alt="Duplikovat" src="/style/icon-files-o.png" />'
+                    ))->data('category_duplicate', $item['pc_id'])->cls('btn btn-link btn-sm')
+                    . '&nbsp;' . new \RemoveLinkHelper(
+                        '/admin/platby/structure/category/remove/' . $item['pc_id']
                     )
-                ];
-            },
+                )
+            ],
             \DBPlatbyCategory::get($archived)
         );
-    }
-
-    protected function getDuplicateCategoryButton($id)
-    {
-        return (new \SubmitHelper('<img title="Duplikovat" alt="Duplikovat" src="/style/icon-files-o.png" />'))
-            ->data('category_duplicate', $id)->cls('btn btn-link btn-sm');
     }
 
     public function add($request)
     {
         \Permissions::checkError('platby', P_OWNED);
         if (!$_POST) {
-            return $this->displayForm($request, 'add', 0);
+            return static::displayForm($request, 'add', 0);
         }
-        $form = $this->checkData($request, 'add', 0);
+        $form = static::checkData($request, 'add', 0);
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return $this->displayForm($request, 'add', 0);
+            return static::displayForm($request, 'add', 0);
         }
 
         $validRange = \DateHelper::getPostRange('validRange');
@@ -138,12 +135,12 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             $_POST['usePrefix'] = $data['pc_use_prefix'];
             $_POST['archive'] = $data['pc_archive'];
             $_POST['visible'] = $data['pc_visible'];
-            return $this->displayForm($request, 'edit', $id);
+            return static::displayForm($request, 'edit', $id);
         }
-        $form = $this->checkData($request, 'edit', $id);
+        $form = static::checkData($request, 'edit', $id);
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return $this->displayForm($request, 'edit', $id);
+            return static::displayForm($request, 'edit', $id);
         }
 
         $validRange = \DateHelper::getPostRange('validRange');
@@ -180,9 +177,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         );
 
         $groupsOld = array_map(
-            function ($item) {
-                return $item['pg_id'];
-            },
+            fn($item) => $item['pg_id'],
             \DBPlatbyCategory::getSingleWithGroups($id)
         );
         $groupsNew = $_POST['group'] ?: [];
@@ -212,7 +207,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         }
 
         if ($_POST['action'] == 'unlink') {
-            $f = $this->getLinkedObjects($id);
+            $f = static::getLinkedObjects($id);
 
             $groupCount = count($f['groups']);
             foreach ($f['groups'] as $data) {
@@ -251,11 +246,12 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             return new \RedirectHelper('/admin/platby/structure/category');
         }
         if (((!$_POST || $_POST['action'] == 'confirm')
-            && ($f = $this->getLinkedObjects($id)))
+            && ($f = static::getLinkedObjects($id)))
             || !$_POST
         ) {
             if (isset($f) && $f) {
-                new \MessageHelper('info',
+                new \MessageHelper(
+                    'info',
                     'Nemůžu odstranit specifický symbol s připojenými kategoriemi nebo položkami! '
                     . new Tag(
                         'form',
@@ -280,35 +276,28 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
         new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/category');
     }
 
-    protected function getLinkedObjects($id)
+    protected static function getLinkedObjects($id)
     {
         $group = \DBPlatbyCategory::getSingleWithGroups($id);
         $items = \DBPlatbyItem::get(true, ['pc_id' => $id]);
-
-        return ($group || $items)
-            ? ['groups' => $group, 'items' => $items]
-            : [];
+        return ($group || $items) ? ['groups' => $group, 'items' => $items] : [];
     }
 
-    protected function displayForm($request, $action, $id = 0)
+    protected static function displayForm($request, $action, $id = 0)
     {
         $groupsSelected = array_flip(
             array_map(
-                function ($item) {
-                    return $item['pg_id'];
-                },
+                fn($item) => $item['pg_id'],
                 \DBPlatbyCategory::getSingleWithGroups($id)
             )
         );
         $groups = array_map(
-            function ($item) use ($groupsSelected) {
-                return [
-                    'buttons' => new \CheckboxHelper('group[]', $item['pg_id'], isset($groupsSelected[$item['pg_id']])),
-                    'type' => ($item['pg_type'] == '1' ? 'Členské příspěvky' : 'Běžné platby'),
-                    'name' => $item['pg_name'],
-                    'base' => $item['pg_base']
-                ];
-            },
+            fn($item) => [
+                'buttons' => new \CheckboxHelper('group[]', $item['pg_id'], isset($groupsSelected[$item['pg_id']])),
+                'type' => ($item['pg_type'] == '1' ? 'Členské příspěvky' : 'Běžné platby'),
+                'name' => $item['pg_name'],
+                'base' => $item['pg_base']
+            ],
             \DBPlatbyGroup::getGroups()
         );
 

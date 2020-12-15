@@ -14,9 +14,7 @@ class Aktualne
         }
         $data = array_map(
             function ($item) {
-                $photo = \DBGalerie::getSingleFoto($item['at_foto_main']);
-                $photo_uri = $photo['gf_path'] ?? '';
-
+                $photo_uri = \DBGalerie::getSingleFoto($item['at_foto_main'])['gf_path'] ?? '';
                 return [
                     'id'        => $item['at_id'],
                     'jmeno'     => $item['at_jmeno'],

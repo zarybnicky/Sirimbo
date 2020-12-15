@@ -29,9 +29,7 @@ class Video
             $videos
         );
         $playlists = array_map(
-            function ($item) {
-                return ['id' => $item['vl_id'], 'title' => $item['vl_title']];
-            },
+            fn($item) => ['id' => $item['vl_id'], 'title' => $item['vl_title']],
             \DBVideoList::getAll()
         );
         $playlists[] = ['id' => 'other', 'title' => 'Nezařazená videa'];

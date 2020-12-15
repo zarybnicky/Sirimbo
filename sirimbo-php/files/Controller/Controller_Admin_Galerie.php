@@ -5,25 +5,23 @@ class Controller_Admin_Galerie
     {
         \Permissions::checkError('galerie', P_OWNED);
         if ($_POST['action'] == 'save') {
-            $this->_processSave($request);
+            static::_processSave($request);
         }
         if ($_POST['action'] == 'scan') {
-            $this->_scan();
+            static::_scan();
         }
 
         $data = \DBGalerie::getDirs(true, true);
         $data = array_map(
-            function ($item) {
-                return [
-                    'buttons' => (
-                        new EditLinkHelper('/admin/galerie/directory/edit/' . $item['gd_id']) . '&nbsp;' .
-                        new DuplicateLinkHelper('/admin/galerie/directory/' . $item['gd_id']) . '&nbsp;' .
-                        new RemoveLinkHelper('/admin/galerie/directory/remove/' . $item['gd_id'])
-                    ),
-                    'name' => str_repeat('&nbsp;->', $item['gd_level'] - 1) . ' ' . $item['gd_name'],
-                    'hidden' => new \CheckboxHelper($item['gd_id'], '1', $item['gd_hidden'])
-                ];
-            },
+            fn($item) => [
+                'buttons' => (
+                    new \EditLinkHelper('/admin/galerie/directory/edit/' . $item['gd_id']) . '&nbsp;' .
+                    new \DuplicateLinkHelper('/admin/galerie/directory/' . $item['gd_id']) . '&nbsp;' .
+                    new \RemoveLinkHelper('/admin/galerie/directory/remove/' . $item['gd_id'])
+                ),
+                'name' => str_repeat('&nbsp;->', $item['gd_level'] - 1) . ' ' . $item['gd_name'],
+                'hidden' => new \CheckboxHelper($item['gd_id'], '1', $item['gd_hidden'])
+            ],
             $data
         );
 
@@ -33,7 +31,7 @@ class Controller_Admin_Galerie
         ]);
     }
 
-    private function _scan()
+    private static function _scan()
     {
         $dbInDirs = \DBGalerie::getDirsWithParentPath();
         $dbInFiles = \DBGalerie::getFotkyWithParentPath();
@@ -53,8 +51,8 @@ class Controller_Admin_Galerie
         $fsThumbnailDirs = [];
         $fsFiles = [];
         $fsThumbnails = [];
-        $this->_recursiveDirs(GALERIE, $fsDirs, $fsFiles);
-        $this->_recursiveDirs(GALERIE_THUMBS, $fsThumbnailDirs, $fsThumbnails);
+        static::_recursiveDirs(GALERIE, $fsDirs, $fsFiles);
+        static::_recursiveDirs(GALERIE_THUMBS, $fsThumbnailDirs, $fsThumbnails);
 
         //Redundant thumbnails
         foreach ($fsThumbnails as $file => $parent) {
@@ -149,7 +147,8 @@ class Controller_Admin_Galerie
                 Session::getUserID()
             );
         }
-        new \MessageHelper('info',
+        new \MessageHelper(
+            'info',
             'Složek přidáno: ' . count($fsDirs) . '<br>' .
             'Souborů přidáno: ' . count($fsFiles) . '<br>' .
             '<br>' .
@@ -159,7 +158,7 @@ class Controller_Admin_Galerie
         new \RedirectHelper('/admin/galerie');
     }
 
-    private function _recursiveDirs($dir_name, &$out_dirs, &$out_files)
+    private static function _recursiveDirs($dir_name, &$out_dirs, &$out_files)
     {
         $file_list = scandir($dir_name);
         if (!$file_list) {
@@ -173,14 +172,14 @@ class Controller_Admin_Galerie
             $file_list[$key] = $dir_name . DIRECTORY_SEPARATOR . $file;
             if (is_dir($file_list[$key])) {
                 $out_dirs[$file_list[$key]] = $dir_name;
-                $this->_recursiveDirs($file_list[$key], $out_dirs, $out_files);
+                static::_recursiveDirs($file_list[$key], $out_dirs, $out_files);
             } elseif (is_file($file_list[$key])) {
                 $out_files[$file_list[$key]] = $dir_name;
             }
         }
     }
 
-    private function _processSave($request)
+    private static function _processSave($request)
     {
         $items = \DBGalerie::getDirs();
         foreach ($items as $item) {

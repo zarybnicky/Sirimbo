@@ -10,7 +10,7 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
             new \RedirectHelper('/admin/platby');
         }
         if ($_GET['list']) {
-            $this->_getTable($request, $data, $result, $columns, $header);
+            static::_getTable($request, $data, $result, $columns, $header);
             new \RenderHelper('files/View/Admin/Platby/DiscardedTable.inc', [
                 'header' => 'Správa plateb',
                 'subheader' => 'Vyřazené platby (' . $header . ')',
@@ -19,7 +19,7 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
                 'uri' => $request->getLiteralURI()
             ]);
         } else {
-            $this->_getList($data, $groupAmount, $groupDate);
+            static::_getList($data, $groupAmount, $groupDate);
             new \RenderHelper('files/View/Admin/Platby/DiscardedList.inc', [
                 'header' => 'Správa plateb',
                 'subheader' => 'Vyřazené platby',
@@ -44,7 +44,7 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
         new \RedirectHelper($request->getReferer());
     }
 
-    private function _getTable($request, $data, &$result, &$columns, &$header)
+    private static function _getTable($request, $data, &$result, &$columns, &$header)
     {
         if ($_GET['list'] == 'date') {
             $header =
@@ -66,8 +66,8 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
         $columnsTemp = [];
         foreach ($data as $rawData) {
             $row = unserialize($rawData['pr_raw']);
-            if (!$this->checkHeaders(array_flip($row), $specific, $variable, $date, $amount)) {
-                $this->recognizeHeaders($row, $specific, $variable, $date, $amount);
+            if (!static::checkHeaders(array_flip($row), $specific, $variable, $date, $amount)) {
+                static::recognizeHeaders($row, $specific, $variable, $date, $amount);
             }
 
             if ($_GET['list'] == 'date') {
@@ -127,14 +127,14 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
         }
     }
 
-    private function _getList($data, &$groupAmount, &$groupDate)
+    private static function _getList($data, &$groupAmount, &$groupDate)
     {
         $groupDate = [];
         $groupAmount = [];
         foreach ($data as $row) {
             $row = unserialize($row['pr_raw']);
-            if (!$this->checkHeaders(array_flip($row), $specific, $variable, $date, $amount)) {
-                $this->recognizeHeaders($row, $specific, $variable, $date, $amount);
+            if (!static::checkHeaders(array_flip($row), $specific, $variable, $date, $amount)) {
+                static::recognizeHeaders($row, $specific, $variable, $date, $amount);
             }
 
             if (isset($row[$date]) && $row[$date]) {

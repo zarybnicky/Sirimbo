@@ -5,16 +5,14 @@ class Controller_Admin_Skupiny
     {
         \Permissions::checkError('skupiny', P_OWNED);
         $data = array_map(
-            function ($item) {
-                return [
-                    'buttons' => (
-                        new EditLinkHelper('/admin/skupiny/edit/' . $item['s_id'])
-                        . new RemoveLinkHelper('/admin/skupiny/remove/' . $item['s_id'])
-                    ),
-                    'colorBox' => new ColorboxHelper($item['s_color_rgb'], $item['s_description']),
-                    'name' => $item['s_name']
-                ];
-            },
+            fn($item) => [
+                'buttons' => (
+                    new \EditLinkHelper('/admin/skupiny/edit/' . $item['s_id']) .
+                    new \RemoveLinkHelper('/admin/skupiny/remove/' . $item['s_id'])
+                ),
+                'colorBox' => new \ColorboxHelper($item['s_color_rgb'], $item['s_description']),
+                'name' => $item['s_name']
+            ],
             \DBSkupiny::get()
         );
         new \RenderHelper('files/View/Admin/Skupiny/Overview.inc', [
@@ -27,18 +25,14 @@ class Controller_Admin_Skupiny
     {
         \Permissions::checkError('skupiny', P_OWNED);
         if (!$_POST) {
-            return $this->displayForm($request);
+            return static::displayForm($request);
         }
-        $form = $this->checkData($request);
+        $form = static::checkData($request);
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return $this->displayForm($request);
+            return static::displayForm($request);
         }
-        \DBSkupiny::insert(
-            $_POST['name'],
-            $_POST['color'],
-            $_POST['desc']
-        );
+        \DBSkupiny::insert($_POST['name'], $_POST['color'], $_POST['desc']);
         $insertId = \DBSkupiny::getInsertId();
 
         foreach ($_POST['group'] ?: [] as $item) {
@@ -61,25 +55,18 @@ class Controller_Admin_Skupiny
         }
 
         if (!$_POST) {
-            return $this->displayForm($request, $data);
+            return static::displayForm($request, $data);
         }
-        $form = $this->checkData($request);
+        $form = static::checkData($request);
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return $this->displayForm($request, $data);
+            return static::displayForm($request, $data);
         }
 
-        \DBSkupiny::update(
-            $id,
-            $_POST['name'],
-            $_POST['color'],
-            $_POST['desc']
-        );
+        \DBSkupiny::update($id, $_POST['name'], $_POST['color'], $_POST['desc']);
 
         $groupsOld = array_map(
-            function ($item) {
-                return $item['pg_id'];
-            },
+            fn($item) => $item['pg_id'],
             \DBSkupiny::getSingleWithGroups($id)
         );
         $groupsNew = $_POST['group'] ?: [];
@@ -106,7 +93,7 @@ class Controller_Admin_Skupiny
         }
 
         if ($_POST['action'] == 'unlink') {
-            $f = $this->getLinkedSkupinaObjects($id);
+            $f = static::getLinkedSkupinaObjects($id);
 
             $groupCount = 0;
             foreach ($f['groups'] as $data) {
@@ -117,11 +104,11 @@ class Controller_Admin_Skupiny
             new \MessageHelper('info', 'Spojení s ' . $groupCount . ' kategoriemi byla odstraněna.');
             return new \RedirectHelper('/admin/skupiny/remove/' . $id);
         }
-        if (($f = $this->getLinkedSkupinaObjects($id)) || !$_POST) {
+        if (($f = static::getLinkedSkupinaObjects($id)) || !$_POST) {
             if (isset($f) && $f) {
-                new \MessageHelper('info',
-                    'Nemůžu odstranit skupinu s připojenými kategoriemi! '
-                    . new Tag(
+                new \MessageHelper(
+                    'info',
+                    'Nemůžu odstranit skupinu s připojenými kategoriemi! ' . new Tag(
                         'form',
                         ['action' => '', 'mthod' => 'post'],
                         (new \SubmitHelper('Odstranit spojení?'))->data('action', 'unlink')
@@ -139,7 +126,7 @@ class Controller_Admin_Skupiny
         new \RedirectHelper('/admin/skupiny');
     }
 
-    private function displayForm($request, $data = null)
+    private static function displayForm($request, $data = null)
     {
         $id = $request->getId() ?: '0';
 
@@ -148,14 +135,12 @@ class Controller_Admin_Skupiny
         );
 
         $groups = array_map(
-            function ($item) use ($groupsSelected) {
-                return [
-                    'buttons' => new \CheckboxHelper('group[]', $item['pg_id'], isset($groupsSelected[$item['pg_id']])),
-                    'type' => $item['pg_type'] == '1' ? 'Členské příspěvky' : 'Běžné platby',
-                    'name' => $item['pg_name'],
-                    'base' => $item['pg_base']
-                ];
-            },
+            fn($item) => [
+                'buttons' => new \CheckboxHelper('group[]', $item['pg_id'], isset($groupsSelected[$item['pg_id']])),
+                'type' => $item['pg_type'] == '1' ? 'Členské příspěvky' : 'Běžné platby',
+                'name' => $item['pg_name'],
+                'base' => $item['pg_base']
+            ],
             \DBPlatbyGroup::getGroups()
         );
 

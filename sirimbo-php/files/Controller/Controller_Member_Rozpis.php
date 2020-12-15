@@ -5,35 +5,33 @@ class Controller_Member_Rozpis
     {
         \Permissions::checkError('rozpis', P_VIEW);
         if ($_POST) {
-            $this->processPost($request);
+            static::processPost($request);
             new \RedirectHelper('/member/rozpis');
         }
 
         $data = array_map(
             function ($rozpis) {
                 $items = array_map(
-                    function ($item) use ($rozpis) {
-                        return [
-                            'id' => $item['ri_id'],
-                            'fullName' => "{$item['u_jmeno']} {$item['u_prijmeni']}",
-                            'timeFrom' => formatTime($item['ri_od'], 1),
-                            'timeTo' => formatTime($item['ri_do'], 1),
-                            'canReserve' => (
-                                $item['ri_partner'] == 0
-                                && !$rozpis['r_lock']
-                                && !$item['ri_lock']
-                                && \Permissions::check('rozpis', P_MEMBER)
-                            ),
-                            'canCancel' => (
-                                $item['ri_partner'] != 0
-                                && !$rozpis['r_lock']
-                                && !$item['ri_lock']
-                                && ((\Permissions::check('rozpis', P_MEMBER)
-                                     && Session::getParID() == $item['ri_partner'])
-                                    || \Permissions::check('rozpis', P_OWNED, $rozpis['r_trener']))
-                            )
-                        ];
-                    },
+                    fn($item) => [
+                        'id' => $item['ri_id'],
+                        'fullName' => "{$item['u_jmeno']} {$item['u_prijmeni']}",
+                        'timeFrom' => formatTime($item['ri_od'], 1),
+                        'timeTo' => formatTime($item['ri_do'], 1),
+                        'canReserve' => (
+                            $item['ri_partner'] == 0
+                            && !$rozpis['r_lock']
+                            && !$item['ri_lock']
+                            && \Permissions::check('rozpis', P_MEMBER)
+                        ),
+                        'canCancel' => (
+                            $item['ri_partner'] != 0
+                            && !$rozpis['r_lock']
+                            && !$item['ri_lock']
+                            && ((\Permissions::check('rozpis', P_MEMBER)
+                                && \Session::getParID() == $item['ri_partner'])
+                               || \Permissions::check('rozpis', P_OWNED, $rozpis['r_trener']))
+                        )
+                    ],
                     \DBRozpis::getRozpisItem($rozpis['r_id'])
                 );
 
@@ -48,9 +46,7 @@ class Controller_Member_Rozpis
             },
             array_filter(
                 \DBRozpis::getRozpis(),
-                function ($item) {
-                    return $item['r_visible'] && (date('Y-m-d') <= $item['r_datum']);
-                }
+                fn($item) => $item['r_visible'] && (date('Y-m-d') <= $item['r_datum'])
             )
         );
 
@@ -67,7 +63,7 @@ class Controller_Member_Rozpis
         }
     }
 
-    protected function checkData($request, $data, $action = 'signup'): \Form
+    protected static function checkData($request, $data, $action = 'signup'): \Form
     {
         $f = new \Form();
         $f->checkBool(!$data['r_lock'], 'Tento rozpis je uzamčený', '');
@@ -75,11 +71,11 @@ class Controller_Member_Rozpis
         return $f;
     }
 
-    protected function processPost($request)
+    protected static function processPost($request)
     {
         $data = \DBRozpis::getSingleRozpis($_POST['ri_id']);
         $lesson = \DBRozpis::getRozpisItemLesson($_POST['ri_id']);
-        $form = $this->checkData($request, $data, $_POST['action']);
+        $form = static::checkData($request, $data, $_POST['action']);
         if (!$form->isValid()) {
             return new \MessageHelper('warning', $form->getMessages());
         }

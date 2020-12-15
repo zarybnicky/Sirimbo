@@ -7,17 +7,15 @@ class Controller_Admin_Video_Source
         new \RenderHelper('files/View/Admin/VideoSource/Overview.inc', [
             'header' => 'Správa zdrojů videa',
             'data' => array_map(
-                function ($item) {
-                    return [
-                        'buttons' => new EditLinkHelper('/admin/video/source/edit/' . $item['vs_id'])
-                        . '&nbsp;'
-                        . new RemoveLinkHelper('/admin/video/source/remove/' . $item['vs_id']),
-                        'url' => $item['vs_url'],
-                        'title' => $item['vs_title'],
-                        'created' => formatTimestamp($item['vs_created_at'], true),
-                        'lastChecked' => $item['vs_last_checked'] ? formatTimestamp($item['vs_last_checked'], true) : ''
-                    ];
-                },
+                fn($item) => [
+                    'buttons' => new \EditLinkHelper('/admin/video/source/edit/' . $item['vs_id'])
+                    . '&nbsp;'
+                    . new \RemoveLinkHelper('/admin/video/source/remove/' . $item['vs_id']),
+                    'url' => $item['vs_url'],
+                    'title' => $item['vs_title'],
+                    'created' => formatTimestamp($item['vs_created_at'], true),
+                    'lastChecked' => $item['vs_last_checked'] ? formatTimestamp($item['vs_last_checked'], true) : ''
+                ],
                 \DBVideoSource::getAll()
             )
         ]);
@@ -27,13 +25,13 @@ class Controller_Admin_Video_Source
     {
         \Permissions::checkError('aktuality', P_OWNED);
         if (!$_POST) {
-            return $this->displayForm($request);
+            return static::displayForm($request);
         }
 
-        $form = $this->checkData($request);
+        $form = static::checkData($request);
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return $this->displayForm($request);
+            return static::displayForm($request);
         }
 
         \DBVideoSource::add($_POST['uri']);
@@ -51,21 +49,16 @@ class Controller_Admin_Video_Source
         }
 
         if (!$_POST) {
-            return $this->displayForm($request, $data);
+            return static::displayForm($request, $data);
         }
 
-        $form = $this->checkData($request);
+        $form = static::checkData($request);
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return $this->displayForm($request, $data);
+            return static::displayForm($request, $data);
         }
 
-        \DBVideoSource::edit(
-            $id,
-            $_POST['uri'],
-            $_POST['title'],
-            $_POST['desc']
-        );
+        \DBVideoSource::edit($id, $_POST['uri'], $_POST['title'], $_POST['desc']);
 
         new \RedirectHelper('/admin/video/source');
     }
@@ -92,7 +85,7 @@ class Controller_Admin_Video_Source
         ]);
     }
 
-    protected function displayForm($request, $data = [])
+    protected static function displayForm($request, $data = [])
     {
         new \RenderHelper('files/View/Admin/VideoSource/Form.inc', [
             'header' => 'Správa zdrojů videa',
@@ -105,14 +98,10 @@ class Controller_Admin_Video_Source
         ]);
     }
 
-    protected function checkData($request)
+    protected static function checkData($request)
     {
         $form = new \Form();
-        $form->checkNotEmpty(
-            $_POST['uri'],
-            'Zadejce prosím ID kanálu',
-            'uri'
-        );
+        $form->checkNotEmpty($_POST['uri'], 'Zadejte prosím ID kanálu', 'uri');
         return $form;
     }
 }

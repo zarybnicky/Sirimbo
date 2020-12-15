@@ -27,20 +27,18 @@ class Controller_Admin_Rozpis
         }
 
         $data = array_map(
-            function ($item) {
-                return [
-                    'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
-                    'datum' => formatDate($item['r_datum']),
-                    'kde' => $item['r_kde'],
-                    'visible' => new \CheckboxHelper($item['r_id'], '1', $item['r_visible']),
-                    'buttons' => new DuplicateLinkHelper('/admin/rozpis/duplicate/' . $item['r_id'])
-                        . '&nbsp;' . new RemoveLinkHelper('/admin/rozpis/remove/' . $item['r_id']),
-                    'links' => (
-                        '<a href="/admin/rozpis/edit/' . $item['r_id'] . '">obecné</a>, ' .
-                        '<a href="/admin/rozpis/detail/' . $item['r_id'] . '">tréninky</a>'
-                    )
-                ];
-            },
+            fn($item) => [
+                'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
+                'datum' => formatDate($item['r_datum']),
+                'kde' => $item['r_kde'],
+                'visible' => new \CheckboxHelper($item['r_id'], '1', $item['r_visible']),
+                'buttons' => new \DuplicateLinkHelper('/admin/rozpis/duplicate/' . $item['r_id'])
+                . '&nbsp;' . new \RemoveLinkHelper('/admin/rozpis/remove/' . $item['r_id']),
+                'links' => (
+                    '<a href="/admin/rozpis/edit/' . $item['r_id'] . '">obecné</a>, ' .
+                    '<a href="/admin/rozpis/detail/' . $item['r_id'] . '">tréninky</a>'
+                )
+            ],
             $data
         );
 
@@ -54,13 +52,13 @@ class Controller_Admin_Rozpis
     {
         \Permissions::checkError('rozpis', P_OWNED);
         if (!$_POST) {
-            return $this->displayForm($request);
+            return static::displayForm($request);
         }
 
-        $form = $this->checkData($request);
+        $form = static::checkData($request);
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return $this->displayForm($request);
+            return static::displayForm($request);
         }
 
         \Permissions::checkError('rozpis', P_OWNED, $_POST['trener']);
@@ -89,13 +87,13 @@ class Controller_Admin_Rozpis
         \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
 
         if (!$_POST) {
-            return $this->displayForm($request, $data);
+            return static::displayForm($request, $data);
         }
 
-        $form = $this->checkData($request);
+        $form = static::checkData($request);
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return $this->displayForm($request, $data);
+            return static::displayForm($request, $data);
         }
 
         \DBRozpis::editRozpis(
@@ -149,7 +147,7 @@ class Controller_Admin_Rozpis
         new \RedirectHelper('/admin/rozpis');
     }
 
-    protected function displayForm($request, $data = null)
+    protected static function displayForm($request, $data = null)
     {
         $isAdmin = \Permissions::check('rozpis', P_ADMIN);
         $treneri = $isAdmin
@@ -169,7 +167,7 @@ class Controller_Admin_Rozpis
         ]);
     }
 
-    private function checkData($request): \Form
+    private static function checkData($request): \Form
     {
         $datum = new \Date($_POST['datum'] ?? null);
 

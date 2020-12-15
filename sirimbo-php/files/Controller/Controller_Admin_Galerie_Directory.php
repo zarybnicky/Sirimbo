@@ -14,13 +14,11 @@ class Controller_Admin_Galerie_Directory
             'header' => 'Správa fotogalerie',
             'id' => $id,
             'files' => array_map(
-                function ($item) {
-                    return [
-                        'id' => $item['gf_id'],
-                        'name' => $item['gf_name'],
-                        'thumbnailURI' => '/galerie/thumbnails/' . $item['gf_path']
-                    ];
-                },
+                fn($item) => [
+                    'id' => $item['gf_id'],
+                    'name' => $item['gf_name'],
+                    'thumbnailURI' => '/galerie/thumbnails/' . $item['gf_path']
+                ],
                 \DBGalerie::getFotky($id)
             )
         ]);
@@ -30,16 +28,15 @@ class Controller_Admin_Galerie_Directory
     {
         \Permissions::checkError('galerie', P_OWNED);
         if (!$_POST) {
-            return $this->displayForm($request, 'add');
+            return static::displayForm($request, 'add');
         }
-        $form = $this->checkData($request);
+        $form = static::checkData($request);
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return $this->displayForm($request, 'add');
+            return static::displayForm($request, 'add');
         }
         $parent = \DBGalerie::getSingleDir($_POST['parent']);
-        $dirPath = $parent['gd_path'] . DIRECTORY_SEPARATOR
-                 . sanitizePathname($_POST['name']);
+        $dirPath = $parent['gd_path'] . DIRECTORY_SEPARATOR . sanitizePathname($_POST['name']);
         mkdir($dirPath, 0777, true);
 
         \DBGalerie::addDir(
@@ -68,18 +65,15 @@ class Controller_Admin_Galerie_Directory
             $_POST['name'] = $data['gd_name'];
             $_POST['parent'] = $data['gd_id_rodic'];
             $_POST['hidden'] = $data['gd_hidden'] ? '1' : '0';
-            return $this->displayForm($request, 'edit');
+            return static::displayForm($request, 'edit');
         }
-        $form = $this->checkData($request);
+        $form = static::checkData($request);
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return $this->displayForm($request, 'edit');
+            return static::displayForm($request, 'edit');
         }
         $parent = \DBGalerie::getSingleDir($_POST['parent']);
-        $newPath = $parent['gd_path'] . DIRECTORY_SEPARATOR
-                 . sanitizePathname(
-                     getCanonicalName($_POST['name'])
-                 );
+        $newPath = $parent['gd_path'] . DIRECTORY_SEPARATOR . sanitizePathname(getCanonicalName($_POST['name']));
 
         if ($data['gd_path'] != $newPath) {
             if (file_exists(GALERIE . DIRECTORY_SEPARATOR . $newPath)) {
@@ -136,16 +130,13 @@ class Controller_Admin_Galerie_Directory
         ]);
     }
 
-    private function displayForm($request, $action)
+    private static function displayForm($request, $action)
     {
         $dirs = array_map(
-            function ($item) {
-                return [
-                    'id'    => $item['gd_id'],
-                    'text'  => str_repeat('&nbsp;&nbsp;', $item['gd_level'] - 1)
-                    . $item['gd_name']
-                ];
-            },
+            fn($item) => [
+                'id' => $item['gd_id'],
+                'text' => str_repeat('&nbsp;&nbsp;', $item['gd_level'] - 1) . $item['gd_name']
+            ],
             \DBGalerie::getDirs(true, true)
         );
 
@@ -163,11 +154,7 @@ class Controller_Admin_Galerie_Directory
     protected function checkData($request)
     {
         $form = new \Form();
-        $form->checkNotEmpty(
-            $_POST['name'],
-            'Název složky nesmí být prázdný',
-            'name'
-        );
+        $form->checkNotEmpty($_POST['name'], 'Název složky nesmí být prázdný', 'name');
         $form->checkBool(
             $_POST['parent'] >= 0
             && is_numeric($_POST['parent'])

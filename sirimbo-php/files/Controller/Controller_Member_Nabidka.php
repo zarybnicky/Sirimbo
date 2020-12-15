@@ -4,32 +4,28 @@ class Controller_Member_Nabidka
     public function view($request)
     {
         \Permissions::checkError('nabidka', P_VIEW);
-        $this->processPost($request);
+        static::processPost($request);
 
         $data = array_map(
             function ($data) {
                 $items = array_map(
-                    function ($item) use ($data) {
-                        return [
-                            'id' => $item['u_id'],
-                            'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
-                            'hourCount' => $item['ni_pocet_hod'],
-                            'canDelete' =>
-                                (!$data['n_lock']
-                                 && \Permissions::check('nabidka', P_MEMBER)
-                                 && ($item['p_id'] === Session::getParID()
-                                     || \Permissions::check('nabidka', P_OWNED, $data['n_trener']))),
-                            'deleteTicket' => $item['p_id'] . '-' . $data['n_id']
-                        ];
-                    },
+                    fn($item) => [
+                        'id' => $item['u_id'],
+                        'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
+                        'hourCount' => $item['ni_pocet_hod'],
+                        'canDelete' =>
+                        (!$data['n_lock']
+                         && \Permissions::check('nabidka', P_MEMBER)
+                         && ($item['p_id'] === Session::getParID()
+                            || \Permissions::check('nabidka', P_OWNED, $data['n_trener']))),
+                        'deleteTicket' => $item['p_id'] . '-' . $data['n_id']
+                    ],
                     \DBNabidka::getNabidkaItem($data['n_id'])
                 );
 
                 $obsazeno = array_reduce(
                     $items,
-                    function ($carry, $item) {
-                        return $carry + $item['hourCount'];
-                    },
+                    fn($carry, $item) => $carry + $item['hourCount'],
                     0
                 );
 
@@ -49,9 +45,7 @@ class Controller_Member_Nabidka
             },
             array_filter(
                 \DBNabidka::getNabidka(),
-                function ($item) {
-                    return $item['n_visible'];
-                }
+                fn($item) => $item['n_visible'],
             )
         );
 
@@ -68,7 +62,7 @@ class Controller_Member_Nabidka
         ]);
     }
 
-    private function checkData($request, $data): \Form
+    private static function checkData($request, $data): \Form
     {
         $f = new \Form();
         $f->checkBool(!$data['n_lock'], 'Tato nabídka je uzamčená', '');
@@ -78,13 +72,13 @@ class Controller_Member_Nabidka
         return $f;
     }
 
-    private function processPost($request)
+    private static function processPost($request)
     {
         if (!$_POST) {
             return;
         }
         $data = \DBNabidka::getSingleNabidka($_POST['id']);
-        $form = $this->checkData($request, $data);
+        $form = static::checkData($request, $data);
         if (!$form->isValid()) {
             return new \MessageHelper('warning', $form->getMessages());
         }

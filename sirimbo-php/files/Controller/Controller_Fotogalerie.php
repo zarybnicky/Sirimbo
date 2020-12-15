@@ -22,24 +22,19 @@ class Controller_Fotogalerie
         }
 
         $photos = array_map(
-            function ($item) use ($request) {
-                return [
-                    'id' => $item['gf_id'],
-                    'src' => '/galerie/thumbnails/' . $item['gf_path'],
-                    'href' => '/' . $request->getURI() . '/foto/' . $item['gf_id']
-                ];
-            },
+            fn($item) => [
+                'id' => $item['gf_id'],
+                'src' => '/galerie/thumbnails/' . $item['gf_path'],
+                'href' => '/' . $request->getURI() . '/foto/' . $item['gf_id']
+            ],
             $photos
         );
 
-        new \RenderHelper(
-            'files/View/Main/Fotogalerie/Overview.inc',
-            [
-                'nadpis' => $dir['gd_name'],
-                'photos' => $photos,
-                'sidemenu' => $this->sidemenu($request)
-            ]
-        );
+        new \RenderHelper('files/View/Main/Fotogalerie/Overview.inc', [
+            'nadpis' => $dir['gd_name'],
+            'photos' => $photos,
+            'sidemenu' => static::sidemenu($request)
+        ]);
     }
 
     public function foto($request)
@@ -64,22 +59,19 @@ class Controller_Fotogalerie
         $hasPrev = isset($parent_dir[$current - 1]);
         $hasNext = isset($parent_dir[$current + 1]);
 
-        new \RenderHelper(
-            'files/View/Main/Fotogalerie/Single.inc',
-            [
-                'id'        => $id,
-                'src'       => '/galerie/' . $data['gf_path'],
-                'hasPrev'   => $hasPrev,
-                'hasNext'   => $hasNext,
-                'prevURI'   => $hasPrev ? $parent_dir[$current - 1]['gf_id'] : '',
-                'nextURI'   => $hasNext ? $parent_dir[$current + 1]['gf_id'] : '',
-                'returnURI' => '/fotogalerie' . ($data['gf_id_rodic'] > 0 ? ('/' . $data['gf_id_rodic']) : ''),
-                'sidemenu'   => $this->sidemenu($request)
-            ]
-        );
+        new \RenderHelper('files/View/Main/Fotogalerie/Single.inc', [
+            'id'        => $id,
+            'src'       => '/galerie/' . $data['gf_path'],
+            'hasPrev'   => $hasPrev,
+            'hasNext'   => $hasNext,
+            'prevURI'   => $hasPrev ? $parent_dir[$current - 1]['gf_id'] : '',
+            'nextURI'   => $hasNext ? $parent_dir[$current + 1]['gf_id'] : '',
+            'returnURI' => '/fotogalerie' . ($data['gf_id_rodic'] > 0 ? ('/' . $data['gf_id_rodic']) : ''),
+            'sidemenu'  => static::sidemenu($request)
+        ]);
     }
 
-    public function sidemenu($request)
+    public static function sidemenu($request)
     {
         if (!($dirs = \DBGalerie::getDirs(true, true))) {
             return '';

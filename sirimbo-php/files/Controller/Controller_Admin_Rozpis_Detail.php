@@ -18,7 +18,7 @@ class Controller_Admin_Rozpis_Detail
         $items = \DBRozpis::getRozpisItem($id);
 
         if ($_POST) {
-            $items = $this->processPost($request, $id, $data, $items);
+            $items = static::processPost($request, $id, $data, $items);
             if ($items) {
                 \DBRozpis::editRozpisItemMultiple($items);
             }
@@ -28,15 +28,13 @@ class Controller_Admin_Rozpis_Detail
         $users = DBPary::getPartners();
 
         $items = array_map(
-            function ($item) {
-                return [
-                    'id' => $item['ri_id'],
-                    'partner' => $item['ri_partner'],
-                    'timeFrom' => formatTime($item['ri_od'], 1),
-                    'timeTo' => formatTime($item['ri_do'], 1),
-                    'lock' => (bool) $item['ri_lock']
-                ];
-            },
+            fn($item) => [
+                'id' => $item['ri_id'],
+                'partner' => $item['ri_partner'],
+                'timeFrom' => formatTime($item['ri_od'], 1),
+                'timeTo' => formatTime($item['ri_do'], 1),
+                'lock' => (bool) $item['ri_lock']
+            ],
             $items
         );
         $data = [
@@ -70,20 +68,16 @@ class Controller_Admin_Rozpis_Detail
 
         if ($_GET['n'] && ($nabidka = \DBNabidka::getSingleNabidka($_GET['n']))) {
             $nabidka_items = array_map(
-                function ($item) {
-                    return [
-                        'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
-                        'lessonCount' => $item['ni_pocet_hod']
-                    ];
-                },
+                fn($item) => [
+                    'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
+                    'lessonCount' => $item['ni_pocet_hod']
+                ],
                 \DBNabidka::getNabidkaItem($_GET['n'])
             );
 
             $obsazeno = array_reduce(
                 $nabidka_items,
-                function ($carry, $item) {
-                    return $carry + $item['lessonCount'];
-                },
+                fn($carry, $item) => $carry + $item['lessonCount'],
                 0
             );
 
@@ -113,7 +107,7 @@ class Controller_Admin_Rozpis_Detail
         ]);
     }
 
-    protected function processPost($request, $id, $data, $items)
+    protected static function processPost($request, $id, $data, $items)
     {
         if ($_POST['remove'] > 0) {
             \DBRozpis::removeRozpisItem($_POST['remove']);
@@ -129,7 +123,7 @@ class Controller_Admin_Rozpis_Detail
 
         //Try to add a new item
         if ($_POST['add_od'] && $_POST['add_do']) {
-            $form = $this->checkAdd($request);
+            $form = static::checkAdd($request);
             if (!$form->isValid()) {
                 new \MessageHelper('warning', $form->getMessages());
             } else {
@@ -184,7 +178,7 @@ class Controller_Admin_Rozpis_Detail
                 break;
 
             case 'add_multiple':
-                $form = $this->checkAddMultiple($request);
+                $form = static::checkAddMultiple($request);
                 if (!$form->isValid()) {
                     new \MessageHelper('warning', $form->getMessages());
                     break;
@@ -218,7 +212,7 @@ class Controller_Admin_Rozpis_Detail
         return $items;
     }
 
-    protected function checkAdd($request): \Form
+    protected static function checkAdd($request): \Form
     {
         $f = new \Form();
         $f->checkNumeric(
@@ -239,7 +233,7 @@ class Controller_Admin_Rozpis_Detail
         return $f;
     }
 
-    protected function checkAddMultiple($request): \Form
+    protected static function checkAddMultiple($request): \Form
     {
         $f = new \Form();
         $f->checkNumeric(

@@ -15,15 +15,13 @@ class Controller_Member_Dokumenty
             'header' => 'Dokumenty',
             'kat' => $_GET['kat'] ?: '',
             'data' => array_map(
-                function ($item) {
-                    return [
-                        'id' => $item['d_id'],
-                        'name' => $item['d_name'],
-                        'fileName' => $item['d_filename'],
-                        'kategorie' => Settings::$documentTypes[$item['d_kategorie']],
-                        'uploadedBy' => $item['u_jmeno'] . ' ' . $item['u_prijmeni']
-                    ];
-                },
+                fn($item) => [
+                    'id' => $item['d_id'],
+                    'name' => $item['d_name'],
+                    'fileName' => $item['d_filename'],
+                    'kategorie' => \Settings::$documentTypes[$item['d_kategorie']],
+                    'uploadedBy' => $item['u_jmeno'] . ' ' . $item['u_prijmeni']
+                ],
                 $dokumenty
             )
         ]);

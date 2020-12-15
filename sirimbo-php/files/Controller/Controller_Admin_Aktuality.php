@@ -5,18 +5,15 @@ class Controller_Admin_Aktuality
     {
         \Permissions::checkError('aktuality', P_OWNED);
         $data = array_map(
-            function ($item) {
-                $id = $item['at_id'];
-                return [
-                    'name' => $item['at_jmeno'],
-                    'added' => formatTimestamp($item['at_timestamp_add']),
-                    'links' => (
-                        '<a href="/admin/aktuality/edit/' . $id . '">obecné</a>, ' .
-                        '<a href="/admin/aktuality/foto/' . $id . '">galerie</a>'
-                    ),
-                    'buttons' => new RemoveLinkHelper('/admin/aktuality/remove/' . $id)
-                ];
-            },
+            fn($item) => [
+                'name' => $item['at_jmeno'],
+                'added' => formatTimestamp($item['at_timestamp_add']),
+                'links' => (
+                    '<a href="/admin/aktuality/edit/' . $item['at_id'] . '">obecné</a>, ' .
+                    '<a href="/admin/aktuality/foto/' . $item['at_id'] . '">galerie</a>'
+                ),
+                'buttons' => new RemoveLinkHelper('/admin/aktuality/remove/' . $item['at_id'])
+            ],
             \Permissions::check('aktuality', P_ADMIN)
             ? DBAktuality::getAktuality(1)
             : DBAktuality::getAktuality(1, Session::getUserID())

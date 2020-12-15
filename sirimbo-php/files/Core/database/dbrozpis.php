@@ -165,20 +165,13 @@ class DBRozpis extends Database
 
     public static function editRozpisItemMultiple($data)
     {
-        $ids = array_map(
-            function ($item) {
-                return $item['ri_id'];
-            },
-            $data
-        );
+        $ids = array_map(fn($item) => $item['ri_id'], $data);
 
         $data = array_map(
-            function ($item) {
-                return array_intersect_key(
-                    $item,
-                    array_flip(['ri_partner', 'ri_od', 'ri_do', 'ri_lock'])
-                );
-            },
+            fn($item) => array_intersect_key(
+                $item,
+                array_flip(['ri_partner', 'ri_od', 'ri_do', 'ri_lock'])
+            ),
             $data
         );
 

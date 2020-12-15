@@ -7,7 +7,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
     {
         \Permissions::checkError('platby', P_OWNED);
         if ($_POST && $_POST['action'] == 'upload') {
-            $this->processUpload($request);
+            static::processUpload($request);
         }
         $workDir = new \DirectoryIterator(self::TEMP_DIR);
         $workDir->rewind();
@@ -15,7 +15,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
             if (!$fileInfo->isFile()) {
                 continue;
             }
-            $this->processCsv($fileInfo->getPathname());
+            static::processCsv($fileInfo->getPathname());
             if ($path = $fileInfo->getRealPath()) {
                 unlink($path);
             }
@@ -28,26 +28,24 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
             'uri' => $request->getLiteralURI()
         ]);
     }
+
     public function select_columns($request)
     {
         \Permissions::checkError('platby', P_OWNED);
         $path = self::TEMP_DIR . str_replace('../', '', $_GET['path']);
 
         if ($_POST) {
-            $this->processCsv(
-                $path,
-                [
-                    'specific' => $_POST['specific'],
-                    'variable' => $_POST['variable'],
-                    'date' => $_POST['date'],
-                    'amount' => $_POST['amount']
-                ]
-            );
+            static::processCsv($path, [
+                'specific' => $_POST['specific'],
+                'variable' => $_POST['variable'],
+                'date' => $_POST['date'],
+                'amount' => $_POST['amount']
+            ]);
             new \MessageHelper('success', 'Soubor ' . $_GET['path'] . ' byl zpracován.');
             new \RedirectHelper('/admin/platby/raw');
         }
-        $parser = $this->getParser($path);
-        $this->recognizeHeaders(array_flip($parser->headers()), $specific, $variable, $date, $amount);
+        $parser = static::getParser($path);
+        static::recognizeHeaders(array_flip($parser->headers()), $specific, $variable, $date, $amount);
 
         $data = [];
         foreach ($parser->headers() as $name) {
@@ -66,7 +64,8 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
             'uri' => $request->getLiteralURI()
         ]);
     }
-    private function getParser($path)
+
+    private static function getParser($path)
     {
         $fileinfo = new \SplFileInfo($path);
         if (!$fileinfo->isReadable()) {
@@ -78,24 +77,24 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
         return $parser;
     }
 
-    private function processCsv($path, $columns = null)
+    private static function processCsv($path, $columns = null)
     {
-        $parser = $this->getParser($path);
+        $parser = static::getParser($path);
         $headers = $parser->headers();
         if ($columns === null) {
-            $this->recognizeHeaders(array_flip($headers), $specific, $variable, $date, $amount);
+            static::recognizeHeaders(array_flip($headers), $specific, $variable, $date, $amount);
         } else {
             $specific = $columns['specific'];
             $variable = $columns['variable'];
             $date = $columns['date'];
             $amount = $columns['amount'];
         }
-        if (!$this->checkHeaders($headers, $specific, $variable, $date, $amount)) {
+        if (!static::checkHeaders($headers, $specific, $variable, $date, $amount)) {
             new \MessageHelper('info', 'Skript nemohl rozpoznat sloupce nutné pro zařazení plateb, je potřeba udělat to ručně. (soubor: ' . $path . ')');
             new \RedirectHelper('/admin/platby/raw/select_columns?path=' . str_replace(self::TEMP_DIR, '', $path));
         }
-        $userLookup = $this->getUserLookup(false);
-        $categoryLookup = $this->getCategoryLookup(true, true, false);
+        $userLookup = static::getUserLookup(false);
+        $categoryLookup = static::getCategoryLookup(true, true, false);
 
         foreach ($parser as $array) {
             if (!$array) {
@@ -125,7 +124,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
         }
     }
 
-    private function processUpload($request)
+    private static function processUpload($request)
     {
         $upload = new \UploadHelper('in');
         $upload->loadFromPost($request);
@@ -144,7 +143,7 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
             new \MessageHelper('warning', 'Nahrávané soubory musí být typu CSV.');
         }
         foreach ($uploader->getSavedFiles() as $path) {
-            $this->processCsv($path);
+            static::processCsv($path);
             new \MessageHelper('success', 'Soubor ' . str_replace(self::TEMP_DIR, '', $path) . ' byl zpracován.');
         }
     }

@@ -125,6 +125,12 @@ function makeRouter($request)
     $router->post('/registrace', '@Registrace::post');
     $router->get('/member', '@Member::get');
     $router->get('/member/home', '@Member::get');
+    $router->get('/member/profil/par', '@Member.ProfilPar::get');
+    $router->get('/member/profil/par/body', '@Member.ProfilPar::bodyGet');
+    $router->post('/member/profil/par/body', '@Member.ProfilPar::bodyPost');
+    $router->get('/member/profil/par/partner', '@Member.ProfilPar::partnerPost');
+    $router->post('/member/profil/par/partner', '@Member.ProfilPar::partnerPost');
+    $router->post('/member/profil/par/zadost', '@Member.ProfilPar::zadost');
     $router->get('/admin/konzole', '@Admin.Repl::get');
     $router->post('/admin/konzole', '@Admin.Repl::post');
 

@@ -59,12 +59,10 @@ class Controller_Admin_Akce_Detail
 
         $userSelect = new UserSelectHelper(\DBUser::getActiveUsers());
         $items = array_map(
-            function ($item) use ($userSelect) {
-                return [
-                    'name' => $userSelect->name($item['ai_id'] . '-user')->set($item['ai_user']),
-                    'removeButton' => (new \SubmitHelper('Odstranit'))->data('remove', $item['ai_id'])
-                ];
-            },
+            fn($item) => [
+                'name' => $userSelect->name($item['ai_id'] . '-user')->set($item['ai_user']),
+                'removeButton' => (new \SubmitHelper('Odstranit'))->data('remove', $item['ai_id'])
+            ],
             \DBAkce::getAkceItems($id)
         );
         $items[] = [

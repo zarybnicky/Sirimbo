@@ -5,29 +5,27 @@ class Controller_Admin_Akce
     {
         \Permissions::checkError('akce', P_OWNED);
         if ($_POST['action'] == 'save') {
-            $this->processSave($request);
+            static::processSave($request);
             new \RedirectHelper('/admin/akce');
         }
 
         $data = array_map(
-            function ($item) {
-                return [
-                    'name' => $item['a_jmeno'],
-                    'date' => (
-                        formatDate($item['a_od'])
-                        . (($item['a_od'] != $item['a_do'])
-                           ? ' - ' . formatDate($item['a_do']) : '')
-                    ),
-                    'userCount' => $item['a_obsazeno'] . '/' . $item['a_kapacita'],
-                    'visible' => new \CheckboxHelper($item['a_id'], '1', $item['a_visible']),
-                    'links' => (
-                        '<a href="/admin/akce/edit/' . $item['a_id'] . '">obecné</a>, '
-                        . '<a href="/admin/akce/detail/' . $item['a_id'] . '">účastníci</a>, '
-                        . '<a href="/admin/akce/dokumenty/' . $item['a_id'] . '">dokumenty</a>'
-                    ),
-                    'buttons' => new RemoveLinkHelper('/admin/akce/remove/' . $item['a_id'])
-                ];
-            },
+            fn($item) => [
+                'name' => $item['a_jmeno'],
+                'date' => (
+                    formatDate($item['a_od'])
+                    . (($item['a_od'] != $item['a_do'])
+                       ? ' - ' . formatDate($item['a_do']) : '')
+                ),
+                'userCount' => $item['a_obsazeno'] . '/' . $item['a_kapacita'],
+                'visible' => new \CheckboxHelper($item['a_id'], '1', $item['a_visible']),
+                'links' => (
+                    '<a href="/admin/akce/edit/' . $item['a_id'] . '">obecné</a>, '
+                    . '<a href="/admin/akce/detail/' . $item['a_id'] . '">účastníci</a>, '
+                    . '<a href="/admin/akce/dokumenty/' . $item['a_id'] . '">dokumenty</a>'
+                ),
+                'buttons' => new RemoveLinkHelper('/admin/akce/remove/' . $item['a_id'])
+            ],
             \DBAkce::getWithItemCount()
         );
 
@@ -41,13 +39,13 @@ class Controller_Admin_Akce
     {
         \Permissions::checkError('akce', P_OWNED);
         if (!$_POST) {
-            return $this->displayForm($request);
+            return static::displayForm($request);
         }
 
-        $form = $this->checkData($request);
+        $form = static::checkData($request);
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return $this->displayForm($request);
+            return static::displayForm($request);
         }
 
         $od = new \Date($_POST['od'] ?? null);
@@ -84,13 +82,13 @@ class Controller_Admin_Akce
         }
 
         if (!$_POST) {
-            return $this->displayForm($request, $data);
+            return static::displayForm($request, $data);
         }
 
-        $form = $this->checkData($request);
+        $form = static::checkData($request);
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return $this->displayForm($request, $data);
+            return static::displayForm($request, $data);
         }
 
         $od = new \Date($_POST['od'] ?? null);
@@ -141,16 +139,11 @@ class Controller_Admin_Akce
         ]);
     }
 
-    private function displayForm($request, $data = [])
+    private static function displayForm($request, $data = [])
     {
         if ($data) {
             $dokumenty = array_map(
-                function ($item) {
-                    return [
-                        'id' => $item['d_id'],
-                        'name' => $item['d_name']
-                    ];
-                },
+                fn($item) => ['id' => $item['d_id'], 'name' => $item['d_name']],
                 \DBDokumenty::getMultipleById(
                     array_filter(explode(',', $data['a_dokumenty']))
                 )
@@ -176,7 +169,7 @@ class Controller_Admin_Akce
         ]);
     }
 
-    private function processSave($request)
+    private static function processSave($request)
     {
         $items = \DBAkce::getAkce();
         foreach ($items as $item) {
@@ -198,7 +191,7 @@ class Controller_Admin_Akce
         }
     }
 
-    private function checkData($request): \Form
+    private static function checkData($request): \Form
     {
         $od = new \Date($_POST['od'] ?? null);
         $do = new \Date($_POST['do'] ?? null);

@@ -40,7 +40,7 @@ class Session
             return false;
         }
         $skupina = \DBSkupiny::getSingle($user->getTrainingGroup());
-        $permissions = \DB\Permissions::getSingleGroup($user->getPermissionGroup());
+        $permissions = \DBPermissions::getSingleGroup($user->getPermissionGroup());
         $par = \DBPary::getLatestPartner($user->getId(), $user->getGender());
 
         foreach (array_keys(\Settings::$permissions) as $key) {

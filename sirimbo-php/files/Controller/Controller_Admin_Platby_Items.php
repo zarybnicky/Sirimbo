@@ -18,17 +18,15 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         $data = \DBPlatbyItem::get(true, $filter, ['pi_date DESC'], $date);
 
         $data = array_map(
-            function ($item) {
-                return [
-                    'buttons' => new EditLinkHelper('/admin/platby/items/edit/' . $item['pi_id'])
-                        . '&nbsp;&nbsp;'
-                        . new RemoveLinkHelper('/admin/platby/items/remove/' . $item['pi_id']),
-                    'fullName' => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
-                    'category' => $item['pc_name'],
-                    'date' => (new \Date($item['pi_date']))->getHumanDate(),
-                    'amount' => $item['pi_amount'] . ' Kč'
-                ];
-            },
+            fn($item) => [
+                'buttons' => new \EditLinkHelper('/admin/platby/items/edit/' . $item['pi_id'])
+                . '&nbsp;&nbsp;'
+                . new \RemoveLinkHelper('/admin/platby/items/remove/' . $item['pi_id']),
+                'fullName' => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
+                'category' => $item['pc_name'],
+                'date' => (new \Date($item['pi_date']))->getHumanDate(),
+                'amount' => $item['pi_amount'] . ' Kč'
+            ],
             $data
         );
 
@@ -36,7 +34,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             'header' => 'Správa plateb',
             'subheader' => 'Jednotlivé platby',
             'users' => \DBUser::getUsers(),
-            'categories' => $this->getCategories(),
+            'categories' => static::getCategories(),
             'data' => $data,
             'uri' => $request->getLiteralURI(),
             'user' => $_GET['user'] ?: '',
@@ -49,10 +47,10 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
     {
         \Permissions::checkError('platby', P_OWNED);
         if (!$_POST) {
-            return $this->displayForm(0, $request);
-        } elseif (!is_object($item = $this->getFromPost($request))) {
+            return static::displayForm(0, $request);
+        } elseif (!is_object($item = static::getFromPost())) {
             new \MessageHelper('warning', $item);
-            return $this->displayForm(0, $request);
+            return static::displayForm(0, $request);
         }
         \DBPlatbyItem::insert(
             $item->variable,
@@ -82,10 +80,10 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             $_POST['variable'] = $data['pi_id_user'];
             $_POST['specific'] = $data['pi_id_category'];
             $_POST['prefix'] = $data['pi_prefix'];
-            return $this->displayForm($id, $request);
-        } elseif (!is_object($item = $this->getFromPost($request, $id))) {
+            return static::displayForm($id, $request);
+        } elseif (!is_object($item = static::getFromPost($id))) {
             new \MessageHelper('warning', $item);
-            return $this->displayForm($id, $request);
+            return static::displayForm($id, $request);
         }
         \DBPlatbyItem::update(
             $id,
@@ -133,7 +131,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         ]);
     }
 
-    private function displayForm($id, $request)
+    private static function displayForm($id, $request)
     {
         $raw = [];
         if ($id &&
@@ -145,8 +143,8 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
                 $raw[] = ['column' => $key, 'value' => $value];
             }
         }
-        $users = $this->getUsers();
-        $categories = $this->getCategories();
+        $users = static::getUsers();
+        $categories = static::getCategories();
         new \RenderHelper('files/View/Admin/Platby/ItemsForm.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Jednotlivé platby',
@@ -165,9 +163,9 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         ]);
     }
 
-    private function getCategories()
+    private static function getCategories()
     {
-        $out = $this->getCategoryLookup(false, false, true);
+        $out = static::getCategoryLookup(false, false, true);
         foreach ($out as $key => &$array) {
             if (strpos($key, 'group_') !== false) {
                 $array = "{$array['pg_name']}:";
@@ -178,9 +176,9 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         return $out;
     }
 
-    private function getUsers()
+    private static function getUsers()
     {
-        $users = $this->getUserLookup(true);
+        $users = static::getUserLookup(true);
         foreach ($users as &$array) {
             $array = User::varSymbol($array['u_id']) . " - {$array['u_prijmeni']}, {$array['u_jmeno']}";
         }

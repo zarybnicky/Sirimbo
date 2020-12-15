@@ -23,18 +23,16 @@ class Controller_Admin_Pary
         }
 
         $data = array_map(
-            function ($item) {
-                return [
-                    'buttons' => new EditLinkHelper('/admin/pary/edit/' . $item['p_id'])
-                        . '&nbsp;&nbsp;'
-                        . new RemoveLinkHelper('/admin/pary/remove/' . $item['p_id']),
-                    'fullNameMan' => $item['guy_surname'] . ', ' . $item['guy_name'],
-                    'fullNameWoman' => $item['gal'] ? ($item['gal_surname'] . ', ' . $item['gal_name']) : '',
-                    'standard' => $item['p_stt_trida'] . ' ' . $item['p_stt_body'] . 'F' . $item['p_stt_finale'],
-                    'latina' => $item['p_lat_trida'] . ' ' . $item['p_lat_body'] . 'F' . $item['p_lat_finale'],
-                    'hodnoceni' => $item['p_hodnoceni']
-                ];
-            },
+            fn($item) => [
+                'buttons' => new EditLinkHelper('/admin/pary/edit/' . $item['p_id'])
+                . '&nbsp;&nbsp;'
+                . new RemoveLinkHelper('/admin/pary/remove/' . $item['p_id']),
+                'fullNameMan' => $item['guy_surname'] . ', ' . $item['guy_name'],
+                'fullNameWoman' => $item['gal'] ? ($item['gal_surname'] . ', ' . $item['gal_name']) : '',
+                'standard' => $item['p_stt_trida'] . ' ' . $item['p_stt_body'] . 'F' . $item['p_stt_finale'],
+                'latina' => $item['p_lat_trida'] . ' ' . $item['p_lat_body'] . 'F' . $item['p_lat_finale'],
+                'hodnoceni' => $item['p_hodnoceni']
+            ],
             DBPary::getActivePary()
         );
 

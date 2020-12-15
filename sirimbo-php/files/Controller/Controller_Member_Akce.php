@@ -11,26 +11,17 @@ class Controller_Member_Akce
             }
             return new \RenderHelper('files/View/Member/Akce/Single.inc', [
                 'header' => 'Klubové akce',
-                'data' => $this->_getRenderData($data)
+                'data' => static::_getRenderData($data)
             ]);
         }
-        if ($_POST['id']
-            && ($data = \DBAkce::getSingleAkce($_POST['id']))
-        ) {
-            $form = $this->checkData($request, $data, $_POST['action']);
+        if ($_POST['id'] && ($data = \DBAkce::getSingleAkce($_POST['id']))) {
+            $form = static::checkData($request, $data, $_POST['action']);
             if (!$form->isValid()) {
                 new \MessageHelper('warning', $form->getMessages());
             } elseif ($_POST['action'] == 'signup') {
-                \DBAkce::signUp(
-                    Session::getUserID(),
-                    $_POST['id'],
-                    Session::getUserData()->getBirthYear()
-                );
+                \DBAkce::signUp(Session::getUserID(), $_POST['id'], Session::getUserData()->getBirthYear());
             } elseif ($_POST['action'] == 'signout') {
-                \DBAkce::signOut(
-                    Session::getUserID(),
-                    $_POST['id']
-                );
+                \DBAkce::signOut(Session::getUserID(), $_POST['id']);
             }
         }
         $akce = \DBAkce::getAkce(true);
@@ -41,7 +32,7 @@ class Controller_Member_Akce
             ]);
         }
         foreach ($akce as &$data) {
-            $data = $this->_getRenderData($data);
+            $data = static::_getRenderData($data);
         }
         new \RenderHelper('files/View/Member/Akce/Overview.inc', [
             'header' => 'Klubové akce',
@@ -49,14 +40,11 @@ class Controller_Member_Akce
         ]);
     }
 
-    private function _getRenderData($data)
+    private static function _getRenderData($data)
     {
         $items = \DBAkce::getAkceItems($data['a_id']);
         $dokumenty = array_map(
-            function ($item) {
-                $dokument = \DBDokumenty::getSingleDokument($item);
-                return ['id' => $item, 'name' => $dokument['d_name']];
-            },
+            fn($item) => ['id' => $item, 'name' => \DBDokumenty::getSingleDokument($item)['d_name']],
             array_filter(explode(',', $data['a_dokumenty'])) ?: []
         );
 
@@ -79,7 +67,7 @@ class Controller_Member_Akce
         return $out;
     }
 
-    private function checkData($request, $data, $action): \Form
+    private static function checkData($request, $data, $action): \Form
     {
         $f = new \Form();
         $f->checkBool(!$data['a_lock'], 'Tato akce je zamčená', '');

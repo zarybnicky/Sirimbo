@@ -52,7 +52,7 @@ class Controller_Member_Profil
         ]);
     }
 
-    public function renderPersonalForm($request)
+    public static function renderPersonalForm($request)
     {
         new \RenderHelper('files/View/Member/Profil/PersonalData.inc', [
             'header' => 'Osobní údaje',
@@ -108,13 +108,13 @@ class Controller_Member_Profil
             $_POST['postal'] = $data->getPostalCode();
             $_POST['nationality'] = $data->getNationality();
             $_POST['dancer'] = $data->getDancer();
-            return $this->renderPersonalForm($request);
+            return static::renderPersonalForm($request);
         }
 
-        $form = $this->checkData($request, 'edit', $narozeni);
+        $form = static::checkData($request, 'edit', $narozeni);
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return $this->renderPersonalForm($request);
+            return static::renderPersonalForm($request);
         }
 
         \DBUser::setUserData(
@@ -155,7 +155,7 @@ class Controller_Member_Profil
                 'header' => 'Změna hesla'
             ]);
         }
-        $form = $this->checkData($request, 'heslo');
+        $form = static::checkData($request, 'heslo');
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
             return new \RenderHelper('files/View/Member/Profil/NewPassword.inc', [
@@ -169,7 +169,7 @@ class Controller_Member_Profil
         new \RedirectHelper('/member/profil');
     }
 
-    private function checkData($request, $action, $narozeni = null): \Form
+    private static function checkData($request, $action, $narozeni = null): \Form
     {
         $f = new \Form();
         if ($action == 'edit') {

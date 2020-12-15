@@ -5,7 +5,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
     {
         \Permissions::checkError('platby', P_OWNED);
         if ($_POST) {
-            $this->processPost($request);
+            static::processPost();
         }
         $remaining = \DBPlatbyRaw::getUnsorted();
         $remainingCount = count($remaining);
@@ -26,11 +26,11 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
             $raw = unserialize($remaining[0]['pr_raw']);
         }
 
-        $categoryLookup = $this->getCategoryLookup(true, true, false);
-        $userLookup = $this->getUserLookup(false);
+        $categoryLookup = static::getCategoryLookup(true, true, false);
+        $userLookup = static::getUserLookup(false);
 
-        $item = new PlatbyItem();
-        $this->recognizeHeaders($raw, $specific, $variable, $date, $amount);
+        $item = new \PlatbyItem();
+        static::recognizeHeaders($raw, $specific, $variable, $date, $amount);
         $raw[null] = null;
         $item->init($raw[$specific], $raw[$variable], $raw[$date], $raw[$amount]);
         $item->processWithSymbolLookup($userLookup, $categoryLookup);
@@ -105,8 +105,8 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
                 'amount' => $item->amount,
                 'prefix' => $item->prefix
             ],
-            'users' => $this->getUsers(),
-            'categories' => $this->getCategories(),
+            'users' => static::getUsers(),
+            'categories' => static::getCategories(),
             'recognized' => $recognized,
             'uri' => $request->getLiteralURI()
         ]);
@@ -124,7 +124,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
         return $res;
     }
 
-    private function getUsers()
+    private static function getUsers()
     {
         $users = parent::getUserLookup(true);
         foreach ($users as &$array) {
@@ -133,7 +133,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
         return $users;
     }
 
-    private function processPost($request)
+    private static function processPost()
     {
         $id = $_POST['id'];
         if (!$id || !($current = \DBPlatbyRaw::getSingle($id))) {
@@ -144,7 +144,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
 
         switch ($_POST['action']) {
             case 'confirm':
-                if (!is_object($item = $this->getFromPost($request))) {
+                if (!is_object($item = static::getFromPost())) {
                     return new \MessageHelper('warning', $item);
                 }
                 \DBPlatbyRaw::update(

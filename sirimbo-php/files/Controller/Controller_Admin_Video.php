@@ -17,9 +17,9 @@ class Controller_Admin_Video
                     $parts = explode('?', $item['v_uri']);
                     $uri = array_shift($parts);
                     return [
-                        'buttons' => new EditLinkHelper('/admin/video/edit/' . $item['v_id'])
+                        'buttons' => new \EditLinkHelper('/admin/video/edit/' . $item['v_id'])
                             . '&nbsp;'
-                            . new RemoveLinkHelper('/admin/video/remove/' . $item['v_id']),
+                            . new \RemoveLinkHelper('/admin/video/remove/' . $item['v_id']),
                         'title' => $item['v_title'],
                         'uri' => $uri,
                         'created' => formatTimestamp($item['v_created_at'], true)
@@ -36,14 +36,12 @@ class Controller_Admin_Video
             ]);
         } else {
             $data = array_map(
-                function ($item) {
-                    return [
-                        'buttons' => new EditLinkHelper('/admin/video/playlist/' . $item['vl_id']),
-                        'title' => $item['vl_title'],
-                        'uri' => $item['vl_url'],
-                        'created' => formatTimestamp($item['vl_created_at'], true)
-                    ];
-                },
+                fn($item) => [
+                    'buttons' => new \EditLinkHelper('/admin/video/playlist/' . $item['vl_id']),
+                    'title' => $item['vl_title'],
+                    'uri' => $item['vl_url'],
+                    'created' => formatTimestamp($item['vl_created_at'], true)
+                ],
                 \DBVideoList::getAll()
             );
             new \RenderHelper('files/View/Admin/Video/Overview.inc', [
@@ -66,9 +64,9 @@ class Controller_Admin_Video
                 $parts = explode('?', $item['v_uri']);
                 $uri = array_shift($parts);
                 return [
-                    'buttons' => new EditLinkHelper('/admin/video/edit/' . $item['v_id'])
+                    'buttons' => new \EditLinkHelper('/admin/video/edit/' . $item['v_id'])
                         . '&nbsp;'
-                        . new RemoveLinkHelper('/admin/video/remove/' . $item['v_id']),
+                        . new \RemoveLinkHelper('/admin/video/remove/' . $item['v_id']),
                     'title' => $item['v_title'],
                     'uri' => $uri,
                     'created' => formatTimestamp($item['v_created_at'], true)
@@ -108,13 +106,13 @@ class Controller_Admin_Video
     {
         \Permissions::checkError('aktuality', P_OWNED);
         if (!$_POST) {
-            return $this->displayForm($request);
+            return static::displayForm('add');
         }
 
-        $form = $this->checkData($request);
+        $form = static::checkData($request);
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return $this->displayForm($request);
+            return static::displayForm('add');
         }
 
         \DBVideo::add(
@@ -139,13 +137,13 @@ class Controller_Admin_Video
         }
 
         if (!$_POST) {
-            return $this->displayForm($request, $data);
+            return static::displayForm('edit', $data);
         }
 
-        $form = $this->checkData($request);
+        $form = static::checkData($request);
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return $this->displayForm($request, $data);
+            return static::displayForm('edit', $data);
         }
 
         \DBVideo::edit(
@@ -182,7 +180,7 @@ class Controller_Admin_Video
         ]);
     }
 
-    protected function displayForm($request, $data = [])
+    protected static function displayForm($action, $data = [])
     {
         new \RenderHelper('files/View/Admin/Video/Form.inc', [
             'header' => 'Správa videí',
@@ -197,14 +195,10 @@ class Controller_Admin_Video
         ]);
     }
 
-    protected function checkData($request): \Form
+    protected static function checkData($request): \Form
     {
         $form = new \Form();
-        $form->checkNotEmpty(
-            $_POST['uri'],
-            'Zadejce prosím ID videa',
-            'uri'
-        );
+        $form->checkNotEmpty($_POST['uri'], 'Zadejce prosím ID videa', 'uri');
         return $form;
     }
 }

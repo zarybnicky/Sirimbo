@@ -21,12 +21,12 @@ class Controller_Admin_Galerie_File
         if (!$_POST) {
             $_POST['name'] = $data['gf_name'];
             $_POST['parent'] = $data['gf_id_rodic'];
-            return $this->displayForm($request, $id);
+            return static::displayForm($request, $id);
         }
-        $form = $this->checkData($request);
+        $form = static::checkData($request);
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return $this->displayForm($request, $id);
+            return static::displayForm($request, $id);
         }
 
         $parent = \DBGalerie::getSingleDir($_POST['parent']);
@@ -85,7 +85,7 @@ class Controller_Admin_Galerie_File
     {
         \Permissions::checkError('galerie', P_OWNED);
         if (!$_POST) {
-            return $this->displayUpload($request);
+            return static::displayUpload($request);
         }
         $parentId = $_POST['dir'];
         if (!is_numeric($parentId) || $parentId < 0) {
@@ -95,10 +95,10 @@ class Controller_Admin_Galerie_File
             new \MessageHelper('warning', 'Taková složka neexistuje');
             new \RedirectHelper('/admin/galerie/upload');
         }
-        $this->_processUpload($parent, $request);
+        static::_processUpload($parent, $request);
     }
 
-    private function _processUpload($parent, $request)
+    private static function _processUpload($parent, $request)
     {
         $uploadHelper = new \UploadHelper('files');
         $uploadHelper->loadFromPost($request);
@@ -108,14 +108,15 @@ class Controller_Admin_Galerie_File
         }
 
         $uploader = $uploadHelper->getFilledUploader();
-        foreach (Settings::$imageType as $extension) {
+        foreach (\Settings::$imageType as $extension) {
             $uploader->addAllowedType($extension);
         }
 
         $uploader->setOutputDir(GALERIE . DIRECTORY_SEPARATOR . $parent['gd_path']);
         $uploader->save(true, true);
         if ($uploader->hasRefusedFiles()) {
-            new \MessageHelper('warning',
+            new \MessageHelper(
+                'warning',
                 'Počet zamítnutých souborů: ' . count($uploader->getRefusedFiles())
             );
         }
@@ -124,13 +125,13 @@ class Controller_Admin_Galerie_File
             new \MessageHelper('info', 'Žádné soubory nebyly nahrány!');
             new \RedirectHelper('/admin/galerie/upload');
         }
-        $this->_processUploadedFiles($parent, $uploader->getSavedFiles());
+        static::_processUploadedFiles($parent, $uploader->getSavedFiles());
 
         new \MessageHelper('info', 'Počet nahraných souborů: ' . count($uploader->getSavedFiles()));
         new \RedirectHelper('/admin/galerie');
     }
 
-    private function _processUploadedFiles($parent, $files)
+    private static function _processUploadedFiles($parent, $files)
     {
         $failCount = 0;
         foreach ($files as $path) {
@@ -148,9 +149,7 @@ class Controller_Admin_Galerie_File
             \DBGalerie::addFoto($parent['gd_id'], $path, $name, Session::getUserID());
         }
         if ($failCount > 0) {
-            new \MessageHelper('warning',
-                'Počet neúspěšně zpracovaných souborů: ' . $failCount
-            );
+            new \MessageHelper('warning', "Počet neúspěšně zpracovaných souborů: $failCount");
         }
         if (count($files) > $failCount) {
             new \MessageHelper('info', 'Fotky přidány');
@@ -158,16 +157,13 @@ class Controller_Admin_Galerie_File
         }
     }
 
-    private function displayUpload($request)
+    private static function displayUpload($request)
     {
         $dirs = array_map(
-            function ($item) {
-                return [
-                    'id'    => $item['gd_id'],
-                    'text'  => str_repeat('&nbsp;&nbsp;', $item['gd_level'] - 1)
-                    . $item['gd_name']
-                ];
-            },
+            fn($item) => [
+                'id' => $item['gd_id'],
+                'text' => str_repeat('&nbsp;&nbsp;', $item['gd_level'] - 1) . $item['gd_name']
+            ],
             \DBGalerie::getDirs(true, true)
         );
         return new \RenderHelper('files/View/Admin/Galerie/Upload.inc', [
@@ -178,17 +174,14 @@ class Controller_Admin_Galerie_File
         ]);
     }
 
-    private function displayForm($request, $id)
+    private static function displayForm($request, $id)
     {
         $dirs = \DBGalerie::getDirs(true, true);
         $dirs = array_map(
-            function ($item) {
-                return [
-                    'id'    => $item['gd_id'],
-                    'text'  => str_repeat('&nbsp;&nbsp;', $item['gd_level'] - 1)
-                    . $item['gd_name']
-                ];
-            },
+            fn($item) => [
+                'id' => $item['gd_id'],
+                'text' => str_repeat('&nbsp;&nbsp;', $item['gd_level'] - 1) . $item['gd_name']
+            ],
             $dirs
         );
 
@@ -203,7 +196,7 @@ class Controller_Admin_Galerie_File
         ]);
     }
 
-    private function checkData($request): \Form
+    private static function checkData($request): \Form
     {
         $form = new \Form();
 

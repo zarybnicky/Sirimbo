@@ -64,7 +64,7 @@ function createThumbnail($file, $thumbFile)
         return false;
     }
     $filetype = image_type_to_mime_type($type);
-    if (!$filetype || !array_key_exists($filetype, Settings::$imageType)) {
+    if (!$filetype || !array_key_exists($filetype, \Settings::$imageType)) {
         unlink($file);
         return false;
     }
@@ -79,7 +79,7 @@ function createThumbnail($file, $thumbFile)
     }
 
     /** @var callable */
-    $fn_read = 'imageCreateFrom' . Settings::$imageSuffix[$filetype];
+    $fn_read = 'imageCreateFrom' . \Settings::$imageSuffix[$filetype];
     if (!($source = $fn_read($file))) {
         return false;
     }
@@ -93,7 +93,7 @@ function createThumbnail($file, $thumbFile)
         $nWidth, $nHeight, $width, $height
     );
     /** @var callable */
-    $fn_write = 'image' . Settings::$imageSuffix[$filetype];
+    $fn_write = 'image' . \Settings::$imageSuffix[$filetype];
     $fn_write($thumbnail, $thumbFile);
     imagedestroy($thumbnail);
     return true;

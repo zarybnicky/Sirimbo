@@ -7,7 +7,7 @@ class Controller_Admin_Platby
         new \RedirectHelper('/admin/platby/overview');
     }
 
-    protected function recognizeHeaders($headers, &$specific, &$variable, &$date, &$amount)
+    protected static function recognizeHeaders($headers, &$specific, &$variable, &$date, &$amount)
     {
         foreach (array_keys($headers) as $key) {
             if (mb_stripos((string) $key, 'specif') !== false) {
@@ -25,7 +25,7 @@ class Controller_Admin_Platby
         }
     }
 
-    protected function checkHeaders($headers, &$specific, &$variable, &$date, &$amount)
+    protected static function checkHeaders($headers, &$specific, &$variable, &$date, &$amount)
     {
         $headers = array_flip($headers);
         return isset($headers[$specific])
@@ -34,7 +34,7 @@ class Controller_Admin_Platby
             && isset($headers[$amount]);
     }
 
-    protected function getCategoryList()
+    protected static function getCategoryList()
     {
         $in = \DBPlatbyGroup::getGroupsWithCategories();
         $out = [];
@@ -51,15 +51,13 @@ class Controller_Admin_Platby
         return $out;
     }
 
-    protected function getCategoryLookup($useSymbolKey, $unique, $includeGroups)
+    protected static function getCategoryLookup($useSymbolKey, $unique, $includeGroups)
     {
         $in = \DBPlatbyGroup::getGroupsWithCategories();
         $out = [];
         $group_id = 0;
         foreach ($in as $array) {
-            $key = (int) ($useSymbolKey
-                          ? $array['pc_symbol']
-                          : $array['pc_id']);
+            $key = (int) ($useSymbolKey ? $array['pc_symbol'] : $array['pc_id']);
 
             if ($includeGroups
                 && $group_id != $array['pg_id']
@@ -76,7 +74,7 @@ class Controller_Admin_Platby
         return $out;
     }
 
-    protected function getUserLookup($sort)
+    protected static function getUserLookup($sort)
     {
         $in = \DBUser::getUsers();
         if ($sort) {
@@ -96,9 +94,9 @@ class Controller_Admin_Platby
         return $out;
     }
 
-    protected function getFromPost($request, $id = null)
+    protected static function getFromPost($id = null)
     {
-        $item = new PlatbyItem();
+        $item = new \PlatbyItem();
         $item->init(
             null,
             $_POST['variable'],
@@ -108,10 +106,7 @@ class Controller_Admin_Platby
             $id,
             $_POST['specific']
         );
-        $item->processWithSymbolLookup(
-            $this->getUserLookup(false),
-            $this->getCategoryLookup(true, true, false)
-        );
+        $item->processWithSymbolLookup(static::getUserLookup(false), static::getCategoryLookup(true, true, false));
 
         $error = [];
         if (!$item->variable) {

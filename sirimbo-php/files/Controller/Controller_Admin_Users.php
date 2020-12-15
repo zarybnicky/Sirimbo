@@ -44,7 +44,7 @@ class Controller_Admin_Users
                 }
             }
         }
-        $this->displayOverview($request);
+        static::displayOverview($request);
     }
 
     public function remove($request)
@@ -76,12 +76,12 @@ class Controller_Admin_Users
     {
         \Permissions::checkError('users', P_ADMIN);
         if (!$_POST) {
-            return $this->displayForm($request);
+            return static::displayForm($request);
         }
-        $form = $this->checkData($request, 'add');
+        $form = static::checkData($request, 'add');
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return $this->displayForm($request);
+            return static::displayForm($request);
         }
 
         \DBUser::addUser(
@@ -154,12 +154,12 @@ class Controller_Admin_Users
             $_POST['nationality'] = $data['u_nationality'];
             $_POST['createdAt'] = $data['u_created_at'];
             $_POST['gdprSignedAt'] = $data['u_gdpr_signed_at'];
-            return $this->displayForm($request);
+            return static::displayForm($request);
         }
-        $form = $this->checkData($request, 'edit');
+        $form = static::checkData($request, 'edit');
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return $this->displayForm($request);
+            return static::displayForm($request);
         }
 
         \DBUser::setUserData(
@@ -223,28 +223,26 @@ class Controller_Admin_Users
                 'notice' => 'Žádní nepotvrzení uživatelé nejsou v databázi.'
             ]);
         }
-        $groups = DB\Permissions::getGroups();
+        $groups = \DBPermissions::getGroups();
         $s_group = (new \SelectHelper())->optionsAssoc($groups, 'pe_id', 'pe_name')->set(3);
 
         $skupiny = \DBSkupiny::get();
         $s_skupina = (new SelectHelper())->optionsAssoc($skupiny, 's_id', 's_name');
 
         $users = array_map(
-            function ($item) use ($s_group, $s_skupina) {
-                return [
-                    'id' => $item['u_id'],
-                    'buttons' => (
-                        '<button class="a" name="confirm" value="' . $item['u_id'] . '">&#10003;</button>' .
-                        '&nbsp;' .
-                        new RemoveLinkHelper('/admin/users/remove/' . $item['u_id'])
-                    ),
-                    'group' => (string) $s_group->name($item['u_id'] . '-group'),
-                    'skupina' => (string) $s_skupina->name($item['u_id'] . '-skupina')->set($item['u_skupina']),
-                    'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
-                    'narozeni' => formatDate($item['u_narozeni']),
-                    'poznamky' => $item['u_poznamky']
-                ];
-            },
+            fn($item) => [
+                'id' => $item['u_id'],
+                'buttons' => (
+                    '<button class="a" name="confirm" value="' . $item['u_id'] . '">&#10003;</button>' .
+                    '&nbsp;' .
+                    new \RemoveLinkHelper('/admin/users/remove/' . $item['u_id'])
+                ),
+                'group' => (string) $s_group->name($item['u_id'] . '-group'),
+                'skupina' => (string) $s_skupina->name($item['u_id'] . '-skupina')->set($item['u_skupina']),
+                'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
+                'narozeni' => formatDate($item['u_narozeni']),
+                'poznamky' => $item['u_poznamky']
+            ],
             $users
         );
 
@@ -259,18 +257,16 @@ class Controller_Admin_Users
     {
         \Permissions::checkError('users', P_ADMIN);
         $users = array_map(
-            function ($item) {
-                return [
-                    'id' => $item['u_id'],
-                    'buttons' => new RemoveLinkHelper('/admin/users/remove/' . $item['u_id']),
-                    'fullName' => new ColorboxHelper($item['s_color_rgb'], $item['s_description'])
-                        . '&nbsp;' . $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
-                    'email' => $item['u_email'],
-                    'telefon' => $item['u_telefon'],
-                    'narozeni' => formatDate($item['u_narozeni']),
-                    'timestamp' => formatTimestamp($item['u_timestamp'])
-                ];
-            },
+            fn($item) => [
+                'id' => $item['u_id'],
+                'buttons' => new \RemoveLinkHelper('/admin/users/remove/' . $item['u_id']),
+                'fullName' => new \ColorboxHelper($item['s_color_rgb'], $item['s_description'])
+                . '&nbsp;' . $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
+                'email' => $item['u_email'],
+                'telefon' => $item['u_telefon'],
+                'narozeni' => formatDate($item['u_narozeni']),
+                'timestamp' => formatTimestamp($item['u_timestamp'])
+            ],
             \DBUser::getDuplicateUsers()
         );
         new \RenderHelper('files/View/Admin/Users/Duplicate.inc', [
@@ -285,9 +281,7 @@ class Controller_Admin_Users
         \Permissions::checkError('users', P_ADMIN);
 
         $data = array_map(
-            function ($item) {
-                return ['group' => $item['pe_name'], 'count' => $item['count']];
-            },
+            fn($item) => ['group' => $item['pe_name'], 'count' => $item['count']],
             \DBUser::getGroupCounts()
         );
 
@@ -306,10 +300,10 @@ class Controller_Admin_Users
         ]);
     }
 
-    private function displayOverview($request)
+    private static function displayOverview($request)
     {
         $groupOptions = ['all' => 'všechna'];
-        foreach (DB\Permissions::getGroups() as $row) {
+        foreach (\DBPermissions::getGroups() as $row) {
             $groupOptions[$row['pe_id']] = $row['pe_name'];
         }
 
@@ -360,14 +354,14 @@ class Controller_Admin_Users
             function ($item) use ($action, $groupOptions, &$i, $skupinySelect) {
                 $out = [
                     'checkBox' => (
-                        new EditLinkHelper('/admin/users/edit/' . $item['u_id']) . '&nbsp;' .
-                        new RemoveLinkHelper('/admin/users/remove/' . $item['u_id'])
+                        new \EditLinkHelper('/admin/users/edit/' . $item['u_id']) . '&nbsp;' .
+                        new \RemoveLinkHelper('/admin/users/remove/' . $item['u_id'])
                     ),
                     'index' => ++$i . '. ',
                     'varSymbol' => User::varSymbol($item['u_id']),
                     'fullName' => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
                     'birthDate' => formatDate($item['u_narozeni']),
-                    'colorBox' => new ColorboxHelper($item['s_color_rgb'], $item['s_description']),
+                    'colorBox' => new \ColorboxHelper($item['s_color_rgb'], $item['s_description']),
                     'groupInfo' => $groupOptions[$item['u_group']]
                 ];
                 if ($action == 'status') {
@@ -400,22 +394,18 @@ class Controller_Admin_Users
         ]);
     }
 
-    private function displayForm($request)
+    private static function displayForm($request)
     {
         $groups = array_map(
-            function ($item) {
-                return ['id' => $item['pe_id'], 'name' => $item['pe_name']];
-            },
-            DB\Permissions::getGroups()
+            fn($item) => ['id' => $item['pe_id'], 'name' => $item['pe_name']],
+            \DBPermissions::getGroups()
         );
         $skupiny = array_map(
-            function ($item) {
-                return [
-                    'id' => $item['s_id'],
-                    'color' => $item['s_color_rgb'],
-                    'popis' => $item['s_name']
-                ];
-            },
+            fn($item) => [
+                'id' => $item['s_id'],
+                'color' => $item['s_color_rgb'],
+                'popis' => $item['s_name']
+            ],
             \DBSkupiny::get()
         );
         new \RenderHelper('files/View/Admin/Users/Form.inc', [
@@ -453,7 +443,7 @@ class Controller_Admin_Users
         ]);
     }
 
-    private function checkData($request, $action = 'add'): \Form
+    private static function checkData($request, $action = 'add'): \Form
     {
         $narozeni = new \Date($_POST['narozeni'] ?? null);
 

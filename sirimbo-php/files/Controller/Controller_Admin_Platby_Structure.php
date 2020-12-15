@@ -7,15 +7,15 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
         new \RenderHelper('files/View/Admin/Platby/StructureOverview.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Struktura plateb',
-            'data' => $this->getCategories(),
-            'orphanGroupSkupina' => $this->getOrphanGroupSkupina(),
-            'orphanGroupCategory' => $this->getOrphanGroupCategory(),
-            'orphanCategory' => $this->getOrphanCategory(),
+            'data' => static::getCategories(),
+            'orphanGroupSkupina' => static::getOrphanGroupSkupina(),
+            'orphanGroupCategory' => static::getOrphanGroupCategory(),
+            'orphanCategory' => static::getOrphanCategory(),
             'uri' => $request->getLiteralURI()
         ]);
     }
 
-    protected function getCategories()
+    protected static function getCategories()
     {
         return array_map(
             function ($item) {
@@ -28,8 +28,8 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
                             $item[1]['pg_name']
                         ),
                         'buttons' => (
-                            new EditLinkHelper($prefix . '/edit/' . $item[1]['pg_id']) .
-                            new RemoveLinkHelper($prefix . '/remove/' . $item[1]['pg_id'])
+                            new \EditLinkHelper($prefix . '/edit/' . $item[1]['pg_id']) .
+                            new \RemoveLinkHelper($prefix . '/remove/' . $item[1]['pg_id'])
                         )
                     ];
                 } else {
@@ -37,8 +37,8 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
                     return [
                         'name' => '&nbsp;- ' . $item[1]['pc_name'] . ' (' . $item[1]['pc_symbol'] . ')',
                         'buttons' => (
-                            new EditLinkHelper($prefix . '/edit/' . $item[1]['pc_id'])
-                            . new RemoveLinkHelper($prefix . '/remove/' . $item[1]['pc_id'])
+                            new \EditLinkHelper($prefix . '/edit/' . $item[1]['pc_id']) .
+                            new \RemoveLinkHelper($prefix . '/remove/' . $item[1]['pc_id'])
                         )
                     ];
                 }
@@ -47,52 +47,46 @@ class Controller_Admin_Platby_Structure extends Controller_Admin_Platby
         );
     }
 
-    protected function getOrphanGroupSkupina()
+    protected static function getOrphanGroupSkupina()
     {
         $prefix = '/admin/platby/structure/group';
         return array_map(
-            function ($item) use ($prefix) {
-                return [
-                    'name' => $item['pg_name'],
-                    'buttons' => (
-                        new EditLinkHelper($prefix .'/edit/' . $item['pg_id'])
-                        . new RemoveLinkHelper($prefix . '/remove/' . $item['pg_id'])
-                    )
-                ];
-            },
+            fn($item) => [
+                'name' => $item['pg_name'],
+                'buttons' => (
+                    new \EditLinkHelper($prefix .'/edit/' . $item['pg_id']) .
+                    new \RemoveLinkHelper($prefix . '/remove/' . $item['pg_id'])
+                )
+            ],
             \DBPlatbyGroup::getWithoutSkupina()
         );
     }
 
-    protected function getOrphanGroupCategory()
+    protected static function getOrphanGroupCategory()
     {
         $prefix = '/admin/platby/structure/group';
         return array_map(
-            function ($item) use ($prefix) {
-                return [
-                    'name' => $item['pg_name'],
-                    'buttons' => (
-                        new EditLinkHelper($prefix .'/edit/' . $item['pg_id'])
-                        . new RemoveLinkHelper($prefix . '/remove/' . $item['pg_id'])
-                    )
-                ];
-            },
+            fn($item) => [
+                'name' => $item['pg_name'],
+                'buttons' => (
+                    new EditLinkHelper($prefix .'/edit/' . $item['pg_id']) .
+                    new RemoveLinkHelper($prefix . '/remove/' . $item['pg_id'])
+                ),
+            ],
             \DBPlatbyGroup::getWithoutCategory()
         );
     }
-    protected function getOrphanCategory()
+    protected static function getOrphanCategory()
     {
         $prefix = '/admin/platby/structure/category';
         return array_map(
-            function ($item) use ($prefix) {
-                return [
-                    'name' => $item['pc_name'],
-                    'buttons' => (
-                        new EditLinkHelper($prefix . '/edit/' . $item['pc_id'])
-                        . new RemoveLinkHelper($prefix . '/remove/' . $item['pc_id'])
-                    )
-                ];
-            },
+            fn($item) => [
+                'name' => $item['pc_name'],
+                'buttons' => (
+                    new EditLinkHelper($prefix . '/edit/' . $item['pc_id'])
+                    . new RemoveLinkHelper($prefix . '/remove/' . $item['pc_id'])
+                )
+            ],
             \DBPlatbyCategory::getOrphan()
         );
     }

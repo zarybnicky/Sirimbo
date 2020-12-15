@@ -46,7 +46,7 @@ class Controller_Admin_Dokumenty
             . new RemoveLinkHelper('/admin/dokumenty/remove/' . $item['d_id']),
             'link' => '<a href="/member/download?id=' . $item['d_id'] . '">' . $item['d_name'] . '</a>',
             'name' => $item['d_filename'],
-            'category' => Settings::$documentTypes[$item['d_kategorie']],
+            'category' => \Settings::$documentTypes[$item['d_kategorie']],
             'by' => $item['u_jmeno'] . ' ' . $item['u_prijmeni']
         ], $data);
         new \RenderHelper('files/View/Admin/Dokumenty/Overview.inc', [

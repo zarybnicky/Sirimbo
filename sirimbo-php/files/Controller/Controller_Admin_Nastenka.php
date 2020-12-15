@@ -16,9 +16,9 @@ class Controller_Admin_Nastenka
                 $buttons = '';
                 if ($canEdit) {
                     $showButtonsCol = true;
-                    $buttons = new EditLinkHelper('/admin/nastenka/edit/' . $item['up_id'])
+                    $buttons = new \EditLinkHelper('/admin/nastenka/edit/' . $item['up_id'])
                         . '&nbsp;&nbsp;'
-                        . new RemoveLinkHelper('/admin/nastenka/remove/' . $item['up_id']);
+                        . new \RemoveLinkHelper('/admin/nastenka/remove/' . $item['up_id']);
                 }
                 return [
                     'buttons' => $buttons,
@@ -27,9 +27,7 @@ class Controller_Admin_Nastenka
                     'timestampAdd' => formatTimestamp($item['up_timestamp_add'], true),
                     'groups' => array_reduce(
                         \DBNastenka::getNastenkaSkupiny($item['up_id']),
-                        function ($carry, $item) {
-                            return $carry . new ColorboxHelper($item['ups_color'], $item['ups_popis']);
-                        },
+                        fn($carry, $item) => $carry . new ColorboxHelper($item['ups_color'], $item['ups_popis']),
                         ''
                     )
                 ];
@@ -45,7 +43,7 @@ class Controller_Admin_Nastenka
         ]);
     }
 
-    public function renderForm($request)
+    public static function renderForm($request)
     {
         $skupiny = \DBSkupiny::get();
         $skupinySelected = [];
@@ -69,12 +67,12 @@ class Controller_Admin_Nastenka
     {
         \Permissions::checkError('nastenka', P_OWNED);
         if (!$_POST) {
-            return $this->renderForm($request);
+            return static::renderForm($request);
         }
-        $form = $this->checkData($request);
+        $form = static::checkData($request);
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return $this->renderForm($request);
+            return static::renderForm($request);
         }
 
         $id = \DBNastenka::addNastenka(
@@ -121,12 +119,12 @@ class Controller_Admin_Nastenka
                 $_POST['sk-' . $skupina['ups_id_skupina']] = 1;
             }
             $_POST['lock'] = $data['up_lock'];
-            return $this->renderForm($request);
+            return static::renderForm($request);
         }
-        $form = $this->checkData($request);
+        $form = static::checkData($request);
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            return $this->renderForm($request);
+            return static::renderForm($request);
         }
 
         $skupiny_old = [];
@@ -192,7 +190,7 @@ class Controller_Admin_Nastenka
         new \RedirectHelper('/admin/nastenka');
     }
 
-    private function checkData($request): \Form
+    private static function checkData($request): \Form
     {
         $f = new \Form();
         $f->checkNotEmpty($_POST['nadpis'], 'Zadejte nadpis', 'nadpis');
