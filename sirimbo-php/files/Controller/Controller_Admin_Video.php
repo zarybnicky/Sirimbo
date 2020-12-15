@@ -169,7 +169,7 @@ class Controller_Admin_Video
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa videí',
             'prompt' => 'Opravdu chcete odstranit video:',
-            'returnURI' => $request->getReferer() ?: '/admin/video',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/video',
             'data' => [['id' => $item['v_id'], 'text' => $item['v_title']]]
         ]);
     }

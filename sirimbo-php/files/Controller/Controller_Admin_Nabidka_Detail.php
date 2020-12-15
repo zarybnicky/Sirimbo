@@ -53,7 +53,7 @@ class Controller_Admin_Nabidka_Detail
                 'obsazeno' => $obsazeno,
                 'users' => $users,
                 'items' => $items,
-                'backlink' => $request->getReferer()
+                'backlink' => $_SERVER['HTTP_REFERER']
             ]);
         }
 

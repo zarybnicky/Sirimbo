@@ -100,7 +100,7 @@ class Controller_Admin_Dokumenty
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa dokumentů',
             'prompt' => 'Opravdu chcete odstranit dokument:',
-            'returnURI' => $request->getReferer() ?: '/admin/dokumenty',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/dokumenty',
             'data' => [[
                 'id' => $id,
                 'text' => \DBDokumenty::getDokumentName($id)

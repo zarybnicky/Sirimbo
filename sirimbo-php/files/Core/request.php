@@ -12,7 +12,6 @@ class Request
 
     protected $action;
     protected $id;
-    protected $referer;
 
     public function __construct(
         $uri,
@@ -129,15 +128,5 @@ class Request
     public function getID()
     {
         return $this->id;
-    }
-
-    public function setReferer($referer)
-    {
-        $this->referer = $referer;
-    }
-
-    public function getReferer()
-    {
-        return $this->referer;
     }
 }

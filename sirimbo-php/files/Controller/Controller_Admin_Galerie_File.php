@@ -11,11 +11,11 @@ class Controller_Admin_Galerie_File
         \Permissions::checkError('galerie', P_OWNED);
         if (!$id = $request->getId()) {
             new \MessageHelper('warning', 'Takový soubor neexistuje!');
-            new \RedirectHelper($request->getReferer());
+            new \RedirectHelper($_SERVER['HTTP_REFERER']);
         }
         if (!$data = \DBGalerie::getSingleFoto($id)) {
             new \MessageHelper('warning', 'Takový soubor neexistuje!');
-            new \RedirectHelper($request->getReferer());
+            new \RedirectHelper($_SERVER['HTTP_REFERER']);
         }
 
         if (!$_POST) {
@@ -76,7 +76,7 @@ class Controller_Admin_Galerie_File
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa galerie',
             'prompt' => 'Opravdu chcete odstranit fotografie:',
-            'returnURI' => $request->getReferer() ?: '/admin/galerie',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/galerie',
             'data' => [['id' => $id, 'text' => $item['gf_name']]]
         ]);
     }
@@ -190,7 +190,7 @@ class Controller_Admin_Galerie_File
             'subheader' => 'Upravit soubor',
             'id' => $id,
             'dirs' => $dirs,
-            'returnURI' => $request->getReferer(),
+            'returnURI' => $_SERVER['HTTP_REFERER'],
             'parent' => $_POST['parent'],
             'name' => $_POST['name']
         ]);

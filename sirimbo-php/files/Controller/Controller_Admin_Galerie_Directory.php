@@ -125,7 +125,7 @@ class Controller_Admin_Galerie_Directory
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa galerie',
             'prompt' => 'Opravdu chcete odstranit složky se všemi podsložkami a fotkami:',
-            'returnURI' => $request->getReferer() ?: '/admin/galerie',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/galerie',
             'data' => [['id' => $item['gd_id'], 'text' => $item['gd_name']]]
         ]);
     }

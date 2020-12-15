@@ -100,7 +100,7 @@ class Controller_Admin_Permissions
             'prompt' =>
                 new \NoticeHelper('Uživatelům z této skupiny bude nutné přiřadit jinou skupinu!')
                 . 'Opravdu chcete odstranit uživatelskou úroveň:',
-            'returnURI' => $request->getReferer() ?: '/admin/permissions',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/permissions',
             'data' => [['id' => $item['pe_id'], 'text' => $item['pe_name']]]
         ]);
     }

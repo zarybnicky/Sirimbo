@@ -122,7 +122,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa plateb',
             'prompt' => 'Opravdu chcete odstranit platbu:',
-            'returnURI' => $request->getReferer() ?: '/admin/platby/items',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/platby/items',
             'data' => [[
                 'id' => $item['pi_id'],
                 'text' => $item['u_jmeno'] . ' ' . $item['u_prijmeni']
@@ -149,7 +149,7 @@ class Controller_Admin_Platby_Items extends Controller_Admin_Platby
             'header' => 'Správa plateb',
             'subheader' => 'Jednotlivé platby',
             'action' => $request->getAction(),
-            'returnURI' => $request->getReferer(),
+            'returnURI' => $_SERVER['HTTP_REFERER'],
             'id' => $id,
             'raw' => $raw,
             'users' => $users,

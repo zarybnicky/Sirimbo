@@ -118,7 +118,7 @@ class Controller_Admin_Skupiny
             return new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
                 'header' => 'Správa skupin',
                 'prompt' => 'Opravdu chcete odstranit skupinu?',
-                'returnURI' => $request->getReferer() ?: '/admin/skupiny',
+                'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/skupiny',
                 'data' => [['id' => $data['s_id'], 'text' => $data['s_name']]]
             ]);
         }

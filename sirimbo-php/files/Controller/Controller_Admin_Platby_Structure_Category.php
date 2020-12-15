@@ -268,7 +268,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
                 'subheader' => 'Specifické symboly_',
                 'id' => $id,
                 'name' => $data['pc_name'],
-                'returnURI' => $request->getReferer(),
+                'returnURI' => $_SERVER['HTTP_REFERER'],
                 'uri' => $request->getLiteralURI()
             ]);
         }
@@ -307,7 +307,7 @@ class Controller_Admin_Platby_Structure_Category extends Controller_Admin_Platby
             'id' => $id,
             'action' => $action,
             'groups' => $groups,
-            'returnURI' => $request->getReferer(),
+            'returnURI' => $_SERVER['HTTP_REFERER'],
             'name' => $_POST['name'] ?: '',
             'symbol' => $_POST['symbol'] ?: '',
             'amount' => $_POST['amount'] ?: '',

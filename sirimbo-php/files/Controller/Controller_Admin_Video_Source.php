@@ -80,7 +80,7 @@ class Controller_Admin_Video_Source
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa videí',
             'prompt' => 'Opravdu chcete odstranit zdroj:',
-            'returnURI' => $request->getReferer() ?: '/admin/video/source',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/video/source',
             'data' => [['id' => $item['vs_id'], 'text' => $item['vs_title']]]
         ]);
     }

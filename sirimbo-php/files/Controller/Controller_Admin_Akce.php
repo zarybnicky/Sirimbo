@@ -131,7 +131,7 @@ class Controller_Admin_Akce
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa akcí',
             'prompt' => 'Opravdu chcete odstranit akce:',
-            'returnURI' => $request->getReferer() ?: '/admin/akce',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/akce',
             'data' => [[
                 'id' => $item['a_id'],
                 'text' => $item['a_jmeno']

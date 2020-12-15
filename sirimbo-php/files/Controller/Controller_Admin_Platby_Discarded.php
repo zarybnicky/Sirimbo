@@ -36,12 +36,12 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
         $id = $request->getId();
         if (!$id && !\DBPlatbyRaw::getSingle($id)) {
             new \MessageHelper('info', 'Platba se zadaným ID neexistuje.');
-            new \RedirectHelper($request->getReferer());
+            new \RedirectHelper($_SERVER['HTTP_REFERER']);
         }
 
         \DBPlatbyRaw::delete($id);
         new \MessageHelper('success', 'Platba byla odstraněna.');
-        new \RedirectHelper($request->getReferer());
+        new \RedirectHelper($_SERVER['HTTP_REFERER']);
     }
 
     private static function _getTable($request, $data, &$result, &$columns, &$header)

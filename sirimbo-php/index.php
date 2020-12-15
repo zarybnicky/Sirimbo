@@ -34,9 +34,12 @@ register_shutdown_function('shutdownHandler');
 set_error_handler('errorHandler');
 error_reporting(-1);
 
+if (!isset($_SERVER['HTTP_REFERER'])) {
+    $_SERVER['HTTP_REFERER'] = getallheaders()['Referer'] ?? null;
+}
+
 $request = new Request($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD'], $_GET, $_POST);
 $request->setDefault('home');
-$request->setReferer($_SERVER['HTTP_REFERER'] ?? getallheaders()['Referer'] ?? null);
 
 session_set_save_handler(new DbSessionHandler(), true);
 session_start();
@@ -53,12 +56,12 @@ try {
                 return new RedirectHelper('/member/profil/edit', 'Prosím vyplňte požadované údaje.');
             }
         }
-    } elseif ($_POST['login'] && $_POST['pass']) {
+    } elseif (isset($_POST['login']) && isset($_POST['pass'])) {
         $_POST['pass'] = User::crypt($_POST['pass']);
 
         if (!\Session::login($_POST['login'], $_POST['pass'])) {
             new RedirectHelper('/login', 'Špatné jméno nebo heslo!');
-        } elseif ($_GET['return']) {
+        } elseif ($_GET['return'] ?? null) {
             new RedirectHelper($_GET['return']);
         } else {
             new RedirectHelper('/member');
@@ -108,7 +111,7 @@ function makeRouter($request)
             throw $ex;
         }
     }, 'Olymp.Controller');
-    // $router->get('/articles/([0-9]+)/comments/delete/([0-9]+)', 'Controller_News::delete');
+
     $router->get('/', '@Home::get');
     $router->get('/home', '@Home::get');
     $router->get('/error', '@Error::get');
@@ -119,18 +122,29 @@ function makeRouter($request)
     $router->get('/oklubu/klubovi-treneri', '@Oklubu::klubovi');
     $router->get('/oklubu/externi-treneri', '@Oklubu::externi');
     $router->get('/oklubu/saly', '@Oklubu::saly');
+
     $router->get('/nopassword', '@Nopassword::get');
     $router->post('/nopassword', '@Nopassword::post');
     $router->get('/registrace', '@Registrace::get');
     $router->post('/registrace', '@Registrace::post');
+
     $router->get('/member', '@Member::get');
     $router->get('/member/home', '@Member::get');
+    $router->get('/member/profil', '@Member.Profil::get');
+    $router->get('/member/profil/edit', '@Member.Profil::editGet');
+    $router->post('/member/profil/edit', '@Member.Profil::editPost');
+    $router->get('/member/profil/gdpr', '@Member.Profil::gdprGet');
+    $router->post('/member/profil/gdpr', '@Member.Profil::gdprPost');
+    $router->get('/member/profil/heslo', '@Member.Profil::hesloGet');
+    $router->post('/member/profil/heslo', '@Member.Profil::hesloPost');
     $router->get('/member/profil/par', '@Member.ProfilPar::get');
     $router->get('/member/profil/par/body', '@Member.ProfilPar::bodyGet');
     $router->post('/member/profil/par/body', '@Member.ProfilPar::bodyPost');
     $router->get('/member/profil/par/partner', '@Member.ProfilPar::partnerPost');
     $router->post('/member/profil/par/partner', '@Member.ProfilPar::partnerPost');
     $router->post('/member/profil/par/zadost', '@Member.ProfilPar::zadost');
+    $router->get('/member/profil/pary', '@Member.ProfilPar::pary');
+
     $router->get('/admin/konzole', '@Admin.Repl::get');
     $router->post('/admin/konzole', '@Admin.Repl::post');
 

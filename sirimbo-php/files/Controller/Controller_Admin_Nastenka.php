@@ -54,7 +54,7 @@ class Controller_Admin_Nastenka
             'header' => 'Správa nástěnky',
             'subheader' => ($request->getAction() === 'add') ? 'Přidat příspěvek' : 'Upravit příspěvek',
             'action' => $request->getAction(),
-            'returnURI' => $request->getReferer() ?: '/admin/nastenka',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/nastenka',
             'skupiny' => $skupiny,
             'skupinySelected' => $skupinySelected,
             'nadpis' => $_POST['nadpis'] ?: '',
@@ -181,7 +181,7 @@ class Controller_Admin_Nastenka
             return new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
                 'header' => 'Správa nástěnky',
                 'prompt' => 'Opravdu chcete odstranit příspěvek:',
-                'returnURI' => $request->getReferer() ?: '/admin/nastenka',
+                'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/nastenka',
                 'data' => [['id' => $data['up_id'], 'text' => $data['up_nadpis']]]
             ]);
         }

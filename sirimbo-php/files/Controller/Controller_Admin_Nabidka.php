@@ -207,7 +207,7 @@ class Controller_Admin_Nabidka
             'header' => 'Správa nabídky',
             'subheader' => $request->getAction() == 'add' ? 'Přidat nabídku' : 'Upravit nabídku',
             'action' => $request->getAction() == 'add' ? 'Přidat' : 'Upravit',
-            'returnURI' => $request->getReferer(),
+            'returnURI' => $_SERVER['HTTP_REFERER'],
             'users' => $treneri,
             'id' => $data ? $data['n_id'] : null,
             'trener' => $_POST['trener'] ?: ($data ? $data['n_trener'] : ''),

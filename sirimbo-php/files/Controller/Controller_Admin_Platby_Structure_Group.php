@@ -167,7 +167,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
                 'subheader' => 'Kategorie plateb',
                 'id' => $id,
                 'name' => $data['pg_name'],
-                'returnURI' => $request->getReferer(),
+                'returnURI' => $_SERVER['HTTP_REFERER'],
                 'uri' => $request->getLiteralURI()
             ]);
         }
@@ -232,7 +232,7 @@ class Controller_Admin_Platby_Structure_Group extends Controller_Admin_Platby
             'action' => $action,
             'category' => $categories,
             'skupiny' => $skupiny,
-            'returnURI' => $request->getReferer(),
+            'returnURI' => $_SERVER['HTTP_REFERER'],
             'name' => $_POST['name'] ?: '',
             'type' => $_POST['type'] ?: '',
             'description' => $_POST['description'] ?: '',

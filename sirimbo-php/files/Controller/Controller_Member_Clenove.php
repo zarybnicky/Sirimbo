@@ -15,7 +15,7 @@ class Controller_Member_Clenove
             'fullName' => $data->getFullName(),
             'email' => $data->getEmail(),
             'telefon' => $data->getPhone(),
-            'returnURI' => $request->getReferer(),
+            'returnURI' => $_SERVER['HTTP_REFERER'],
             'uri' => $request->getLiteralURI()
         ]);
     }

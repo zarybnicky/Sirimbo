@@ -64,7 +64,7 @@ class Controller_Admin_Users
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa uživatelů',
             'prompt' => 'Opravdu chcete odstranit uživatele:',
-            'returnURI' => $request->getReferer() ?: '/admin/users',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/users',
             'data' => [[
                 'id' => $item['u_id'],
                 'text' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'] . ' - ' . $item['u_login']
@@ -412,7 +412,7 @@ class Controller_Admin_Users
             'header' => 'Správa uživatelů',
             'subheader' => ($request->getAction() == 'add' ? 'Přidat' : 'Upravit') . ' uživatele',
             'action' => $request->getAction(),
-            'returnURI' => $_POST['returnURI'] ?: ($request->getReferer() ?: '/admin/users'),
+            'returnURI' => $_POST['returnURI'] ?: ($_SERVER['HTTP_REFERER'] ?: '/admin/users'),
             'groups' => $groups,
             'skupiny' => $skupiny,
             'login' => $_POST['login'] ?: '',
