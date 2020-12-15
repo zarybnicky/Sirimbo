@@ -35,7 +35,7 @@ class Akce
         new \RedirectHelper('/member/akce');
     }
 
-    public static function listGet()
+    public static function list()
     {
         \Permissions::checkError('akce', P_VIEW);
         $data = \DBAkce::getAkce(true);

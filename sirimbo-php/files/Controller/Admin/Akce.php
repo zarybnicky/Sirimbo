@@ -3,7 +3,163 @@ namespace Olymp\Controller\Admin;
 
 class Akce
 {
-    public static function detailGet($id)
+    public static function list()
+    {
+        \Permissions::checkError('akce', P_OWNED);
+        $data = array_map(
+            fn($item) => [
+                'name' => $item['a_jmeno'],
+                'date' => formatDate($item['a_od'])
+                . (($item['a_od'] != $item['a_do']) ? ' - ' . formatDate($item['a_do']) : ''),
+                'userCount' => $item['a_obsazeno'] . '/' . $item['a_kapacita'],
+                'visible' => new \CheckboxHelper($item['a_id'], '1', $item['a_visible']),
+                'links' => (
+                    '<a href="/admin/akce/edit/' . $item['a_id'] . '">obecné</a>, '
+                    . '<a href="/admin/akce/detail/' . $item['a_id'] . '">účastníci</a>, '
+                    . '<a href="/admin/akce/dokumenty/' . $item['a_id'] . '">dokumenty</a>'
+                ),
+                'buttons' => new \RemoveLinkHelper('/admin/akce/remove/' . $item['a_id'])
+            ],
+            \DBAkce::getWithItemCount()
+        );
+
+        new \RenderHelper('files/View/Admin/Akce/Overview.inc', [
+            'header' => 'Správa akcí',
+            'data' => $data
+        ]);
+    }
+
+    public static function listPost()
+    {
+        \Permissions::checkError('akce', P_OWNED);
+        $items = \DBAkce::getAkce();
+        foreach ($items as $item) {
+            if ((bool) $_POST[$item['a_id']] === (bool) $item['a_visible']) {
+                continue;
+            }
+            \DBAkce::editAkce(
+                $item['a_id'],
+                $item['a_jmeno'],
+                $item['a_kde'],
+                $item['a_info'],
+                $item['a_od'],
+                $item['a_do'],
+                $item['a_kapacita'],
+                $item['a_dokumenty'],
+                $item['a_lock'],
+                $_POST[$item['a_id']] ? '1' : '0'
+            );
+        }
+        new \RedirectHelper('/admin/akce');
+    }
+
+    public static function add()
+    {
+        \Permissions::checkError('akce', P_OWNED);
+        return static::displayForm('add');
+    }
+
+    public static function addPost()
+    {
+        \Permissions::checkError('akce', P_OWNED);
+        $form = static::checkData();
+        if (!$form->isValid()) {
+            new \MessageHelper('warning', $form->getMessages());
+            return static::displayForm('add');
+        }
+
+        $od = new \Date($_POST['od'] ?? null);
+        $do = new \Date($_POST['do'] ?? null);
+        if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
+            $do = $od;
+        }
+        \DBAkce::addAkce(
+            $_POST['jmeno'],
+            $_POST['kde'],
+            $_POST['info'],
+            (string) $od,
+            (string) $do,
+            $_POST['kapacita'],
+            '',
+            ($_POST['lock'] == 'lock') ? 1 : 0,
+            $_POST['visible'] ? '1' : '0'
+        );
+
+        new \MessageHelper('success', 'Akce přidána');
+        new \RedirectHelper('/admin/akce');
+    }
+
+    public static function edit($id)
+    {
+        \Permissions::checkError('akce', P_OWNED);
+        if (!($data = \DBAkce::getSingleAkce($id))) {
+            new \MessageHelper('warning', 'Akce s takovým ID neexistuje');
+            new \RedirectHelper('/admin/akce');
+        }
+        return static::displayForm('edit', $data);
+    }
+
+    public static function editPost($id)
+    {
+        \Permissions::checkError('akce', P_OWNED);
+        if (!($data = \DBAkce::getSingleAkce($id))) {
+            new \MessageHelper('warning', 'Akce s takovým ID neexistuje');
+            new \RedirectHelper('/admin/akce');
+        }
+
+        $form = static::checkData();
+        if (!$form->isValid()) {
+            new \MessageHelper('warning', $form->getMessages());
+            return static::displayForm('edit', $data);
+        }
+
+        $od = new \Date($_POST['od'] ?? null);
+        $do = new \Date($_POST['do'] ?? null);
+        if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
+            $do = $od;
+        }
+
+        \DBAkce::editAkce(
+            $id,
+            $_POST['jmeno'],
+            $_POST['kde'],
+            $_POST['info'],
+            (string) $od,
+            (string) $do,
+            $_POST['kapacita'],
+            $data['a_dokumenty'],
+            ($_POST['lock'] == 'lock') ? 1 : 0,
+            $_POST['visible'] ? '1' : '0'
+        );
+
+        new \MessageHelper('success', 'Akce upravena');
+        new \RedirectHelper('/admin/akce');
+    }
+
+    public static function remove($id)
+    {
+        \Permissions::checkError('akce', P_OWNED);
+        $item = \DBAkce::getSingleAkce($id);
+        new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
+            'header' => 'Správa akcí',
+            'prompt' => 'Opravdu chcete odstranit akce:',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/akce',
+            'data' => [[
+                'id' => $item['a_id'],
+                'text' => $item['a_jmeno']
+            ]]
+        ]);
+    }
+
+    public static function removePost($id)
+    {
+        \Permissions::checkError('akce', P_OWNED);
+        \DBAkce::removeAkce($id);
+        new \MessageHelper('success', 'Akce odebrány');
+        return new \RedirectHelper('/admin/akce');
+    }
+
+    public static function detail($id)
     {
         \Permissions::checkError('akce', P_OWNED);
         if (!$akce = \DBAkce::getSingleAkce($id)) {
@@ -81,7 +237,7 @@ class Akce
         new \RedirectHelper('/admin/akce/detail/' . $id);
     }
 
-    public static function dokumentyGet($id)
+    public static function dokumenty($id)
     {
         \Permissions::checkError('akce', P_OWNED);
         if (!($akce = \DBAkce::getSingleAkce($id))) {
@@ -168,5 +324,48 @@ class Akce
             );
         }
         new \RedirectHelper('/admin/akce/dokumenty/' . $id);
+    }
+
+    private static function displayForm($action, $data = [])
+    {
+        if ($data) {
+            $dokumenty = array_map(
+                fn($item) => ['id' => $item['d_id'], 'name' => $item['d_name']],
+                \DBDokumenty::getMultipleById(array_filter(explode(',', $data['a_dokumenty']))),
+            );
+        } else {
+            $dokumenty = [];
+        }
+
+        new \RenderHelper('files/View/Admin/Akce/Form.inc', [
+            'header' => 'Správa akcí',
+            'subheader' => $action == 'add' ? 'Přidat akci' : 'Upravit akci',
+            'dokumenty' => $dokumenty,
+            'action' => $action == 'add' ? 'Přidat' : 'Upravit',
+            'id' => $data ? $data['a_id'] : null,
+            'jmeno' => $_POST['jmeno'] ?: ($data ? $data['a_jmeno'] : ''),
+            'kde' => $_POST['kde'] ?: ($data ? $data['a_kde'] : ''),
+            'info' => $_POST['info'] ?: ($data ? $data['a_info'] : ''),
+            'od' => $_POST['od'] ?: ($data ? $data['a_od'] : ''),
+            'do' => $_POST['do'] ?: ($data ? $data['a_do'] : ''),
+            'kapacita' => $_POST['kapacita'] ?: ($data ? $data['a_kapacita'] : ''),
+            'lock' => $_POST['lock'] ?: ($data ? $data['a_lock'] : ''),
+            'visible' => $_POST['visible'] ?: ($data ? $data['a_visible'] : '')
+        ]);
+    }
+
+    private static function checkData(): \Form
+    {
+        $od = new \Date($_POST['od'] ?? null);
+        $do = new \Date($_POST['do'] ?? null);
+
+        $form = new \Form();
+        $form->checkDate((string) $od, 'Špatný formát data ("Od")', 'od');
+        if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
+            $form->checkDate((string) $do, 'Špatný formát data ("Do")', 'do');
+        }
+        $form->checkNumeric($_POST['kapacita'], 'Kapacita musí být zadána číselně', 'kapacita');
+
+        return $form;
     }
 }

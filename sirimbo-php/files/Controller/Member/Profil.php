@@ -79,7 +79,7 @@ class Profil
         ]);
     }
 
-    public static function gdprGet()
+    public static function gdpr()
     {
         \Permissions::checkError('nastenka', P_VIEW);
         return new \RenderHelper('files/View/Member/Profil/Gdpr.inc', [
@@ -94,7 +94,7 @@ class Profil
         new \RedirectHelper('/member');
     }
 
-    public static function editGet()
+    public static function edit()
     {
         \Permissions::checkError('nastenka', P_VIEW);
         $data = \Session::getUserData();
@@ -155,7 +155,7 @@ class Profil
         new \RedirectHelper('/member/profil');
     }
 
-    public static function hesloGet()
+    public static function heslo()
     {
         \Permissions::checkError('nastenka', P_VIEW);
         return new \RenderHelper('files/View/Member/Profil/NewPassword.inc', [

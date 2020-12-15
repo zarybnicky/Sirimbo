@@ -19,7 +19,7 @@ class ProfilPar
     const BONUS_A = 2160; //400*AMEND_B + BONUS_B
     const BONUS_M = 3240; //400*AMEND_A + BONUS_A
 
-    public static function bodyGet()
+    public static function body()
     {
         $par = \DBPary::getSinglePar(\Session::getParID());
         return new \RenderHelper('files/View/Member/Profil/CoupleData.inc', [
@@ -75,7 +75,7 @@ class ProfilPar
         new \RedirectHelper("/member/profil");
     }
 
-    public static function partnerGet()
+    public static function partner()
     {
         $latest = \DBPary::getLatestPartner(\Session::getUserID(), \Session::getUserPohlavi());
         $havePartner = !empty($latest) && $latest['u_id'];

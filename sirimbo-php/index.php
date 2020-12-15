@@ -132,7 +132,7 @@ function makeRouter()
 
     $router->get('/member', '@Member::get');
     $router->get('/member/home', '@Member::get');
-    $router->get('/member/akce', '@Member.Akce::listGet');
+    $router->get('/member/akce', '@Member.Akce::list');
     $router->post('/member/akce', '@Member.Akce::listPost');
     $router->get('/member/akce/([0-9]+)', '@Member.Akce::single');
     $router->get('/member/nabidka', '@Member.Nabidka::get');
@@ -148,24 +148,32 @@ function makeRouter()
     $router->get('/member/clenove/([0-9]+)', '@Member.Clenove::single');
 
     $router->get('/member/profil', '@Member.Profil::get');
-    $router->get('/member/profil/edit', '@Member.Profil::editGet');
+    $router->get('/member/profil/edit', '@Member.Profil::edit');
     $router->post('/member/profil/edit', '@Member.Profil::editPost');
-    $router->get('/member/profil/gdpr', '@Member.Profil::gdprGet');
+    $router->get('/member/profil/gdpr', '@Member.Profil::gdpr');
     $router->post('/member/profil/gdpr', '@Member.Profil::gdprPost');
-    $router->get('/member/profil/heslo', '@Member.Profil::hesloGet');
+    $router->get('/member/profil/heslo', '@Member.Profil::heslo');
     $router->post('/member/profil/heslo', '@Member.Profil::hesloPost');
-    $router->get('/member/profil/par/body', '@Member.ProfilPar::bodyGet');
+    $router->get('/member/profil/par/body', '@Member.ProfilPar::body');
     $router->post('/member/profil/par/body', '@Member.ProfilPar::bodyPost');
-    $router->get('/member/profil/par/partner', '@Member.ProfilPar::partnerGet');
+    $router->get('/member/profil/par/partner', '@Member.ProfilPar::partner');
     $router->post('/member/profil/par/partner', '@Member.ProfilPar::partnerPost');
     $router->post('/member/profil/par/zadost', '@Member.ProfilPar::zadost');
     $router->get('/member/profil/pary', '@Member.ProfilPar::pary');
 
     $router->get('/admin/konzole', '@Admin.Repl::get');
     $router->post('/admin/konzole', '@Admin.Repl::post');
-    $router->get('/admin/akce/detail/([0-9]+)', '@Admin.Akce::detailGet');
+    $router->get('/admin/akce', '@Admin.Akce::list');
+    $router->post('/admin/akce', '@Admin.Akce::listPost');
+    $router->get('/admin/akce/add', '@Admin.Akce::add');
+    $router->post('/admin/akce/add', '@Admin.Akce::addPost');
+    $router->get('/admin/akce/edit/([0-9]+)', '@Admin.Akce::edit');
+    $router->post('/admin/akce/edit/([0-9]+)', '@Admin.Akce::editPost');
+    $router->get('/admin/akce/remove/([0-9]+)', '@Admin.Akce::remove');
+    $router->post('/admin/akce/remove/([0-9]+)', '@Admin.Akce::removePost');
+    $router->get('/admin/akce/detail/([0-9]+)', '@Admin.Akce::detail');
     $router->post('/admin/akce/detail/([0-9]+)', '@Admin.Akce::detailPost');
-    $router->get('/admin/akce/dokumenty/([0-9]+)', '@Admin.Akce::dokumentyGet');
+    $router->get('/admin/akce/dokumenty/([0-9]+)', '@Admin.Akce::dokumenty');
     $router->post('/admin/akce/dokumenty/([0-9]+)', '@Admin.Akce::dokumentyPost');
 
     return $router;
