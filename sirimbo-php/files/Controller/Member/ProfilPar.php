@@ -1,5 +1,7 @@
-_<?php
-class Controller_Member_Profil_Par
+<?php
+namespace Olymp\Controller\Member;
+
+class ProfilPar
 {
     const AMEND_Z = 0.2;
     const AMEND_H = 0.5;
@@ -17,9 +19,9 @@ class Controller_Member_Profil_Par
     const BONUS_A = 2160; //400*AMEND_B + BONUS_B
     const BONUS_M = 3240; //400*AMEND_A + BONUS_A
 
-    public function view($request)
+    public static function get()
     {
-        $latest = DBPary::getLatestPartner(Session::getUserID(), Session::getUserPohlavi());
+        $latest = \DBPary::getLatestPartner(\Session::getUserID(), \Session::getUserPohlavi());
         new \RenderHelper('files/View/Member/Profil/CoupleOverview.inc', [
             'header' => 'Profil',
             'havePartner' => !empty($latest) && $latest['u_id'],
@@ -34,27 +36,23 @@ class Controller_Member_Profil_Par
         ]);
     }
 
-    public function body($request)
+    public static function bodyGet()
     {
-        if (!$_POST) {
-            $par = DBPary::getSinglePar(Session::getParID());
-            $_POST['stt-trida'] = $par['p_stt_trida'];
-            $_POST['stt-body'] = $par['p_stt_body'];
-            $_POST['stt-finale'] = $par['p_stt_finale'];
-            $_POST['lat-trida'] = $par['p_lat_trida'];
-            $_POST['lat-body'] = $par['p_lat_body'];
-            $_POST['lat-finale'] = $par['p_lat_finale'];
-            return new \RenderHelper('files/View/Member/Profil/CoupleData.inc', [
-                'header' => 'Změna třídy a bodů',
-                'stt_trida' => $_POST['stt_trida'] ?: '',
-                'stt_body' => $_POST['stt_body'] ?: '',
-                'stt_finale' => $_POST['stt_finale'] ?: '',
-                'lat_trida' => $_POST['lat_trida'] ?: '',
-                'lat_body' => $_POST['lat_body'] ?: '',
-                'lat_finale' => $_POST['lat_finale'] ?: ''
-            ]);
-        }
-        $form = $this->checkData($request);
+        $par = \DBPary::getSinglePar(\Session::getParID());
+        return new \RenderHelper('files/View/Member/Profil/CoupleData.inc', [
+            'header' => 'Změna třídy a bodů',
+            'stt_trida' => $par['p_stt_trida'],
+            'stt_body' => $par['p_stt_body'],
+            'stt_finale' => $par['p_stt_finale'],
+            'lat_trida' => $par['p_lat_trida'],
+            'lat_body' => $par['p_lat_body'],
+            'lat_finale' => $par['p_lat_finale']
+        ]);
+    }
+
+    public static function bodyPost()
+    {
+        $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
             return new \RenderHelper('files/View/Member/Profil/CoupleData.inc', [
@@ -81,8 +79,8 @@ class Controller_Member_Profil_Par
             + $stt_bonus
             + $lat_bonus;
 
-        DBPary::editTridaBody(
-            Session::getParID(),
+        \DBPary::editTridaBody(
+            \Session::getParID(),
             $_POST['stt-trida'],
             $_POST['stt-body'],
             $_POST['stt-finale'],
@@ -94,72 +92,56 @@ class Controller_Member_Profil_Par
         new \RedirectHelper("/member/profil");
     }
 
-    public function partner($request)
+    public static function partnerGet()
     {
-        $latest = DBPary::getLatestPartner(Session::getUserID(), Session::getUserPohlavi());
+        $latest = \DBPary::getLatestPartner(Session::getUserID(), Session::getUserPohlavi());
         $havePartner = !empty($latest) && $latest['u_id'];
-
-        if ($_POST) {
-            if (!$_POST["partner"] ||
-                ($_POST['action'] == 'dumpthem' && $havePartner)
-            ) {
-                DBPary::noPartner(Session::getUserID());
-                DBPary::noPartner($latest['u_id']);
-                new \RedirectHelper('/member/profil');
-            }
-            if ($_POST['partner'] == $latest['u_id'] ||
-                (!$_POST['partner'] && $latest['u_id'] == '0')
-            ) {
-                new \RedirectHelper('/member/profil');
-            }
-            if (Session::getUserPohlavi() == "m") {
-                DBPary::newPartnerRequest(
-                    Session::getUserID(),
-                    Session::getUserID(),
-                    $_POST["partner"]
-                );
-            } else {
-                DBPary::newPartnerRequest(
-                    Session::getUserID(),
-                    $_POST["partner"],
-                    Session::getUserID()
-                );
-            }
-            new \MessageHelper('info', 'Žádost o partnerství odeslána');
-            new \RedirectHelper('/member/profil');
-        }
-
         $_POST['partner'] = $havePartner ? $latest['u_id'] : '0';
         new \RenderHelper('files/View/Member/Profil/PartnerOverview.inc', [
             'header' => 'Profil',
             'havePartner' => $havePartner,
             'partnerID' => $latest['u_id'],
             'partnerFullName' => $latest['u_jmeno'] . ' ' . $latest['u_prijmeni'],
-            'users' => (Session::getUserPohlavi() == "m")
-                        ? \DBUser::getUsersByPohlavi("f")
-                        : \DBUser::getUsersByPohlavi("m")
+            'users' => \DBUser::getUsersByPohlavi((\Session::getUserPohlavi() == "m") ? "f" : "m")
         ]);
     }
 
-    public function zadost($request)
+    public static function partnerPost()
     {
-        if (!$_POST['action']) {
+        $havePartner = !empty($latest) && $latest['u_id'];
+        if (!$_POST["partner"] || ($_POST['action'] == 'dumpthem' && $havePartner)) {
+            \DBPary::noPartner(\Session::getUserID());
+            \DBPary::noPartner($latest['u_id']);
             new \RedirectHelper('/member/profil');
         }
+        if ($_POST['partner'] == $latest['u_id'] || (!$_POST['partner'] && $latest['u_id'] == '0')) {
+            new \RedirectHelper('/member/profil');
+        }
+        if (\Session::getUserPohlavi() == "m") {
+            \DBPary::newPartnerRequest(\Session::getUserID(), \Session::getUserID(), $_POST["partner"]);
+        } else {
+            \DBPary::newPartnerRequest(\Session::getUserID(), $_POST["partner"], Session::getUserID());
+        }
+        new \MessageHelper('info', 'Žádost o partnerství odeslána');
+        new \RedirectHelper('/member/profil');
+    }
+
+    public static function zadost()
+    {
         switch ($_POST['action']) {
             case 'accept':
             case 'refuse':
-                $requests = DBPary::getPartnerRequestsForMe(Session::getUserID());
+                $requests = \DBPary::getPartnerRequestsForMe(\Session::getUserID());
                 foreach ($requests as $req) {
                     if ($req['pn_id'] != $_POST['id']) {
                         continue;
                     }
 
                     if ($_POST['action'] == 'accept') {
-                        DBPary::acceptPartnerRequest($_POST['id']);
+                        \DBPary::acceptPartnerRequest($_POST['id']);
                         new \MessageHelper('success', 'žádost přijata');
                     } else {
-                        DBPary::deletePartnerRequest($_POST['id']);
+                        \DBPary::deletePartnerRequest($_POST['id']);
                         new \MessageHelper('info', 'žádost zamitnuta');
                     }
                     new \RedirectHelper('/member/profil');
@@ -167,12 +149,12 @@ class Controller_Member_Profil_Par
                 break;
 
             case 'cancel':
-                $requests = DBPary::getPartnerRequestsByMe(Session::getUserID());
+                $requests = \DBPary::getPartnerRequestsByMe(\Session::getUserID());
                 foreach ($requests as $req) {
                     if ($req['pn_id'] != $_POST['id']) {
                         continue;
                     }
-                    DBPary::deletePartnerRequest($_POST['id']);
+                    \DBPary::deletePartnerRequest($_POST['id']);
                     new \MessageHelper('info', 'žádost zrušena');
                     new \RedirectHelper('/member/profil');
                 }
@@ -186,7 +168,7 @@ class Controller_Member_Profil_Par
         new \RedirectHelper('/member/profil');
     }
 
-    private function checkData($request)
+    private static function checkData()
     {
         $f = new \Form();
         $f->checkInArray(
