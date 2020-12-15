@@ -1,42 +1,53 @@
 <?php
-class Controller_Member_Akce
+namespace Olymp\Controller\Member;
+
+class Akce
 {
-    public function view($request)
+    public static function single($id)
     {
         \Permissions::checkError('akce', P_VIEW);
-        if ($id = $request->getId()) {
-            if (!($data = \DBAkce::getSingleAkce($id, true))) {
-                new \MessageHelper('warning', 'Neexistuje žádná taková akce');
-                new \RedirectHelper('/member/akce');
-            }
-            return new \RenderHelper('files/View/Member/Akce/Single.inc', [
-                'header' => 'Klubové akce',
-                'data' => static::_getRenderData($data)
-            ]);
+        if (!($data = \DBAkce::getSingleAkce($id, true))) {
+            new \MessageHelper('warning', 'Žádná taková akce neexistuje');
+            new \RedirectHelper('/member/akce');
         }
-        if ($_POST['id'] && ($data = \DBAkce::getSingleAkce($_POST['id']))) {
-            $form = static::checkData($request, $data, $_POST['action']);
-            if (!$form->isValid()) {
-                new \MessageHelper('warning', $form->getMessages());
-            } elseif ($_POST['action'] == 'signup') {
-                \DBAkce::signUp(\Session::getUserID(), $_POST['id'], \Session::getUserData()->getBirthYear());
-            } elseif ($_POST['action'] == 'signout') {
-                \DBAkce::signOut(\Session::getUserID(), $_POST['id']);
-            }
+        return new \RenderHelper('files/View/Member/Akce/Single.inc', [
+            'header' => 'Klubové akce',
+            'data' => static::_getRenderData($data)
+        ]);
+    }
+
+    public static function listPost()
+    {
+        \Permissions::checkError('akce', P_VIEW);
+        if (!$_POST['id'] || ($data = \DBAkce::getSingleAkce($_POST['id']))) {
+            new \MessageHelper('warning', 'Žádná taková akce neexistuje');
+            new \RedirectHelper('/member/akce');
         }
-        $akce = \DBAkce::getAkce(true);
-        if (empty($akce)) {
+
+        $form = static::checkData($data, $_POST['action']);
+        if (!$form->isValid()) {
+            new \MessageHelper('warning', $form->getMessages());
+        } elseif ($_POST['action'] == 'signup') {
+            \DBAkce::signUp(\Session::getUserID(), $_POST['id'], \Session::getUserData()->getBirthYear());
+        } elseif ($_POST['action'] == 'signout') {
+            \DBAkce::signOut(\Session::getUserID(), $_POST['id']);
+        }
+        new \RedirectHelper('/member/akce');
+    }
+
+    public static function listGet()
+    {
+        \Permissions::checkError('akce', P_VIEW);
+        $data = \DBAkce::getAkce(true);
+        if (!$data) {
             return new \RenderHelper('files/View/Empty.inc', [
                 'header' => 'Klubové akce',
                 'notice' => 'Žádné akce nejsou k dispozici.'
             ]);
         }
-        foreach ($akce as &$data) {
-            $data = static::_getRenderData($data);
-        }
         new \RenderHelper('files/View/Member/Akce/Overview.inc', [
             'header' => 'Klubové akce',
-            'akce' => $akce
+            'akce' => array_map(fn($item) => static::_getRenderData($item), $data),
         ]);
     }
 
@@ -67,7 +78,7 @@ class Controller_Member_Akce
         return $out;
     }
 
-    private static function checkData($request, $data, $action): \Form
+    private static function checkData($data, $action): \Form
     {
         $f = new \Form();
         $f->checkBool(!$data['a_lock'], 'Tato akce je zamčená', '');

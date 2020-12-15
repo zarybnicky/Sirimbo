@@ -1,17 +1,19 @@
 <?php
-class Controller_Member_Rozpis
+namespace Olymp\Controller\Member;
+
+class Rozpis
 {
-    public function view($request)
+    public static function get()
     {
         \Permissions::checkError('rozpis', P_VIEW);
-        if ($_POST) {
-            static::processPost($request);
-            new \RedirectHelper('/member/rozpis');
-        }
-
         $data = array_map(
-            function ($rozpis) {
-                $items = array_map(
+            fn($rozpis) => [
+                'id' => $rozpis['r_id'],
+                'datum' => formatDate($rozpis['r_datum']),
+                'kde' => $rozpis['r_kde'],
+                'fullName' => $rozpis['u_jmeno'] . ' ' . $rozpis['u_prijmeni'],
+                'canEdit' => \Permissions::check('nabidka', P_OWNED, $rozpis['r_trener']),
+                'items' => array_map(
                     fn($item) => [
                         'id' => $item['ri_id'],
                         'fullName' => "{$item['u_jmeno']} {$item['u_prijmeni']}",
@@ -33,17 +35,8 @@ class Controller_Member_Rozpis
                         )
                     ],
                     \DBRozpis::getRozpisItem($rozpis['r_id'])
-                );
-
-                return [
-                    'id' => $rozpis['r_id'],
-                    'datum' => formatDate($rozpis['r_datum']),
-                    'kde' => $rozpis['r_kde'],
-                    'fullName' => $rozpis['u_jmeno'] . ' ' . $rozpis['u_prijmeni'],
-                    'items' => $items,
-                    'canEdit' => \Permissions::check('nabidka', P_OWNED, $rozpis['r_trener'])
-                ];
-            },
+                ),
+            ],
             array_filter(
                 \DBRozpis::getRozpis(),
                 fn($item) => $item['r_visible'] && (date('Y-m-d') <= $item['r_datum'])
@@ -63,19 +56,12 @@ class Controller_Member_Rozpis
         }
     }
 
-    protected static function checkData($request, $data, $action = 'signup'): \Form
+    public static function post()
     {
-        $f = new \Form();
-        $f->checkBool(!$data['r_lock'], 'Tento rozpis je uzamčený', '');
-        $f->checkInArray($action, ['signup', 'signout'], 'Špatná akce', '');
-        return $f;
-    }
-
-    protected static function processPost($request)
-    {
+        \Permissions::checkError('rozpis', P_VIEW);
         $data = \DBRozpis::getSingleRozpis($_POST['ri_id']);
         $lesson = \DBRozpis::getRozpisItemLesson($_POST['ri_id']);
-        $form = static::checkData($request, $data, $_POST['action']);
+        $form = static::checkData($data, $_POST['action']);
         if (!$form->isValid()) {
             return new \MessageHelper('warning', $form->getMessages());
         }
@@ -97,5 +83,14 @@ class Controller_Member_Rozpis
                 \DBRozpis::rozpisSignOut($_POST['ri_id']);
             }
         }
+        new \RedirectHelper('/member/rozpis');
+    }
+
+    protected static function checkData($data, $action = 'signup'): \Form
+    {
+        $f = new \Form();
+        $f->checkBool(!$data['r_lock'], 'Tento rozpis je uzamčený', '');
+        $f->checkInArray($action, ['signup', 'signout'], 'Špatná akce', '');
+        return $f;
     }
 }

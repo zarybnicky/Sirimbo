@@ -3,7 +3,7 @@ namespace Olymp\Controller;
 
 class Fotogalerie
 {
-    public static function root($request)
+    public static function root()
     {
         static::directory(0);
     }

@@ -1,11 +1,11 @@
 <?php
-class Controller_Member_Nabidka
+namespace Olymp\Controller\Member;
+
+class Nabidka
 {
-    public function view($request)
+    public static function get()
     {
         \Permissions::checkError('nabidka', P_VIEW);
-        static::processPost($request);
-
         $data = array_map(
             function ($data) {
                 $items = array_map(
@@ -43,10 +43,7 @@ class Controller_Member_Nabidka
                     'items' => $items
                 ];
             },
-            array_filter(
-                \DBNabidka::getNabidka(),
-                fn($item) => $item['n_visible'],
-            )
+            array_filter(\DBNabidka::getNabidka(), fn($item) => $item['n_visible']),
         );
 
         if (empty($data)) {
@@ -62,25 +59,14 @@ class Controller_Member_Nabidka
         ]);
     }
 
-    private static function checkData($request, $data): \Form
+    public static function post()
     {
-        $f = new \Form();
-        $f->checkBool(!$data['n_lock'], 'Tato nabídka je uzamčená', '');
-        if ($_POST['hodiny']) {
-            $f->checkNumeric($_POST['hodiny'], 'Špatný počet hodin', 'hodiny');
-        }
-        return $f;
-    }
-
-    private static function processPost($request)
-    {
-        if (!$_POST) {
-            return;
-        }
+        \Permissions::checkError('rozpis', P_VIEW);
         $data = \DBNabidka::getSingleNabidka($_POST['id']);
-        $form = static::checkData($request, $data);
+        $form = static::checkData($data);
         if (!$form->isValid()) {
-            return new \MessageHelper('warning', $form->getMessages());
+            new \MessageHelper('warning', $form->getMessages());
+            new \RedirectHelper('/member/nabidka');
         }
         if ($_POST['hodiny'] > 0) {
             if (!\Session::getZaplacenoPar()) {
@@ -107,5 +93,16 @@ class Controller_Member_Nabidka
                 \DBNabidka::removeNabidkaItem($n_id, $u_id);
             }
         }
+        new \RedirectHelper('/member/nabidka');
+    }
+
+    private static function checkData($data): \Form
+    {
+        $f = new \Form();
+        $f->checkBool(!$data['n_lock'], 'Tato nabídka je uzamčená', '');
+        if ($_POST['hodiny']) {
+            $f->checkNumeric($_POST['hodiny'], 'Špatný počet hodin', 'hodiny');
+        }
+        return $f;
     }
 }
