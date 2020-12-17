@@ -24,20 +24,21 @@ class Renderer
         return isset($this->vars[$key]);
     }
 
-    public function render($name, array $vars = [])
+    public function render($tplName, array $bindVars = [])
     {
-        $file = ROOT . DIRECTORY_SEPARATOR . $name;
-        array_push($this->template, $file);
+        $__file = ROOT . DIRECTORY_SEPARATOR . $tplName;
+        array_push($this->template, $__file);
 
         array_push($this->cache, $this->vars);
-        $this->vars = $vars;
+        $this->vars = $bindVars;
 
-        if (!file_exists($file)) {
-            syslog(LOG_WARNING, "Could not find file $file to render\n");
+        if (!file_exists($__file)) {
+            syslog(LOG_WARNING, "Could not find file $__file to render\n");
             throw new NotFoundException("Soubor nebyl nalezen!");
         }
         ob_start();
-        include $file;
+        extract($this->vars, EXTR_SKIP);
+        include $__file;
 
         $this->vars = array_pop($this->cache);
         array_pop($this->template);
