@@ -6,17 +6,11 @@ class Repl
     public static function get()
     {
         \Permissions::checkError('konzole', P_OWNED);
-        echo new \Tag(
-            'form',
-            ['action' => '', 'method' => 'post'],
-            'Kód:<br/>',
-            new \Tag(
-                'textarea',
-                ['name' => 'code', 'rows' => 10, 'cols' => 10],
-                $_POST['code'] ?: ''
-            ),
-            new \SubmitHelper('Zpracovat'),
-        );
+        echo '<form method="post">Kód:<br/>'
+            . '<textarea name=code rows=10 cols=10>'
+            . ($_POST['code'] ?? '')
+            . '</textarea>',
+            new \SubmitHelper('Zpracovat');
     }
 
     public static function post()

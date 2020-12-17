@@ -207,14 +207,11 @@ class PlatbyCategory
             new \MessageHelper(
                 'info',
                 'Nemůžu odstranit specifický symbol s připojenými kategoriemi nebo položkami! '
-                . new \Tag(
-                    'form',
-                    ['action' => '', 'method' => 'post'],
-                    (!$data['pc_archive']
-                     ? ((new \SubmitHelper('Archivovat?'))->data('action', 'archive') . ' nebo ')
-                     : ''),
-                    (new \SubmitHelper('Odstranit všechna spojení se skupinami a kategoriemi a přesunout ovlivněné platby do nezařazených?'))->data('action', 'unlink')
-                )
+                . '<form method="post">'
+                . (!$data['pc_archive']
+                   ? ((new \SubmitHelper('Archivovat?'))->data('action', 'archive') . ' nebo ')
+                   : '')
+                . (new \SubmitHelper('Odstranit všechna spojení se skupinami a kategoriemi a přesunout ovlivněné platby do nezařazených?'))->data('action', 'unlink')
             );
         }
         return new \RenderHelper('files/View/Admin/Platby/StructureSymbolRemove.inc', [

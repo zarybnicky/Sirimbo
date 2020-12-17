@@ -98,12 +98,11 @@ class PlatbyDiscarded
                     $columnsTemp[$key] = false;
                 }
             }
-            $row['edit'] = new \Tag(
-                'div',
-                ['style' => 'width:51px'],
-                \Buttons::edit('/admin/platby/manual/' . $rawData['pr_id']),
-                \Buttons::delete('/admin/platby/discarded/remove/' . $rawData['pr_id']),
-            );
+            $row['edit'] = '<div style="width:51px">'
+                . \Buttons::edit('/admin/platby/manual/' . $rawData['pr_id'])
+                . '&nbsp;'
+                . \Buttons::delete('/admin/platby/discarded/remove/' . $rawData['pr_id'])
+                . '</div>';
             $result[] = $row;
         }
         if (empty($columnsTemp)) {

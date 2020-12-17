@@ -1,37 +1,17 @@
 <?php
 class ColorSelectHelper
 {
-    protected $field;
+    protected $name;
     protected $value;
 
-    public function __construct($field, $value = null)
+    public function __construct($name, $value = null)
     {
-        $this->field = $field;
+        $this->name = $name;
         $this->value = $value ?: null;
     }
 
     public function __toString()
     {
-        $widget = new Tag(
-            'input',
-            [
-                'id' => 'color-' . $this->field,
-                'type' => 'color',
-                'name' => $this->field,
-                'value' => $this->value
-            ]
-        );
-        $widget->addScript(
-            [],
-            <<<EOS
-$('#color-{$this->field}').spectrum({
-  color:'{$this->value}',
-  showInput:true,
-  clickoutFiresChange:true,
-  preferredFormat:'hex6'
-});
-EOS
-        );
-        return (string) $widget;
+        return "<input type=color name='{$this->name}' value='{$this->value}'>";
     }
 }

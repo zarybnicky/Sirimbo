@@ -87,11 +87,9 @@ class Skupiny
         if (static::getLinkedSkupinaObjects($id)) {
             new \MessageHelper(
                 'info',
-                'Nemůžu odstranit skupinu s připojenými kategoriemi! ' . new \Tag(
-                    'form',
-                    ['action' => '', 'mthod' => 'post'],
-                    (new \SubmitHelper('Odstranit spojení?'))->data('action', 'unlink')
-                )
+                'Nemůžu odstranit skupinu s připojenými kategoriemi! <form method="post">'
+                . (new \SubmitHelper('Odstranit spojení?'))->data('action', 'unlink')
+                . "</form>"
             );
         }
         return new \RenderHelper('files/View/Admin/RemovePrompt.inc', [

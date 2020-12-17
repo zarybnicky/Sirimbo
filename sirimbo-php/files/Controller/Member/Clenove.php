@@ -31,12 +31,9 @@ class Clenove
                 $currentID = $item['s_id'];
                 $currentKey = count($skupiny);
                 $skupiny[$currentKey] = [
-                    'header' => new \Tag(
-                        'h3',
-                        [],
-                        new \ColorboxHelper($item['s_color_rgb'], $item['s_description'])
-                        . '&nbsp;&nbsp;' . $item['s_name']
-                    ),
+                    'header' => "<h3>"
+                    . new \ColorboxHelper($item['s_color_rgb'], $item['s_description'])
+                    . '&nbsp;&nbsp;' . $item['s_name'] . "</h3>",
                     'description' => $item['s_description'],
                     'userCount' => 0
                 ];
@@ -83,12 +80,9 @@ class Clenove
                 $currentKey = count($skupiny);
                 $skupiny[$currentKey] = [
                     'info' => [
-                        'header' => new \Tag(
-                            'big',
-                            [],
-                            new \ColorboxHelper($item['s_color_rgb'], $item['s_description'])
-                            . '&nbsp;&nbsp;' . $item['s_name']
-                        )
+                        'header' => "<big>"
+                        .  new \ColorboxHelper($item['s_color_rgb'], $item['s_description'])
+                        . '&nbsp;&nbsp;' . $item['s_name'] . "</big>"
                     ],
                     'users' => []
                 ];
@@ -96,11 +90,9 @@ class Clenove
             $skupiny[$currentKey]['users'][] = [
                 'index' => ++$index . '.',
                 'fullName' => new \PersonHelper($item),
-                'hasPaid' => new \Tag(
-                    'span',
-                    ['style' => 'font-weight:bold;color:' . ($item['pi_id'] ? 'green' : 'red')],
-                    $item['pi_id'] ? 'ANO' : 'NE'
-                )
+                'hasPaid' => '<span style="font-weight:bold;color:"'
+                . ($item['pi_id'] ? 'green' : 'red') . '">'
+                . ($item['pi_id'] ? 'ANO' : 'NE') . "</span>"
             ];
         }
 

@@ -95,20 +95,9 @@ class Fotogalerie
             }
             $level = $dir['gd_level'];
 
-            $tip->add(
-                new \Tag(
-                    'li',
-                    [],
-                    new \Tag(
-                        'a',
-                        [
-                            'class' => ($dir['gd_id'] == $dirId) ? 'current' : '',
-                            'href' => ($dir['gd_id'] == 0) ? '/fotogalerie' : "/fotogalerie/{$dir['gd_id']}"
-                        ],
-                        $dir['gd_name']
-                    )
-                )
-            );
+            $cls = ($dir['gd_id'] == $dirId) ? 'current' : '';
+            $href = ($dir['gd_id'] == 0) ? '/fotogalerie' : "/fotogalerie/{$dir['gd_id']}";
+            $tip->add("<li><a class='$cls' href='$href'>{$dir['gd_name']}</a></li>");
         }
 
         return (string) $root;

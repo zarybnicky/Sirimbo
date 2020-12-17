@@ -14,11 +14,7 @@ class Widget extends Tree
                 $children[] = $a;
             }
         );
-        parent::__construct(
-            get_called_class(),
-            $attributes,
-            $children
-        );
+        parent::__construct(get_called_class(), $attributes, $children);
     }
 
     public function get($name = null)
@@ -39,52 +35,14 @@ class Widget extends Tree
         $this->value = array_merge($this->value, $new);
     }
 
-    public function getStylesheets()
-    {
-        return $this->stylesheets;
-    }
-
-    public function getScripts()
-    {
-        return $this->scripts;
-    }
-
-    public function addStylesheet(array $attributes, $source = '')
-    {
-        $attributes = array_merge(['rel' => 'stylesheet'], $attributes);
-        $this->stylesheets[] = new Tag('style', $attributes, $source);
-    }
-
-    public function addScript(array $attributes, $source = '')
-    {
-        $this->scripts[] = new Tag('script', $attributes, $source);
-    }
-
     public function render()
     {
         return '';
     }
 
-    public function renderToString()
-    {
-        $result = [$this->render()];
-        $pre = [];
-        $post = [];
-        $this->traverse(
-            function ($val, $x) use (&$pre, &$post) {
-                if ($x instanceof self) {
-                    $pre[] = $x->getStylesheets();
-                    $post[] = $x->getScripts();
-                }
-                return $val;
-            }
-        );
-        return $this->renderChild(array_merge($pre, $result, $post));
-    }
-
     public function __toString()
     {
-        return $this->renderToString();
+        return $this->renderChild([$this->render()]);
     }
 
     protected function renderChild($element)

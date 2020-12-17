@@ -42,20 +42,15 @@ class BsRadioHelper
 
     public function __toString()
     {
-        $radio = new Tag(
-            'input',
-            [
-                'type' => 'radio',
-                'class' => 'form-check-input',
-                'name' => $this->name,
-                'value' => $this->value,
-                'checked' => $this->state,
-                'readonly' => $this->readonly
-            ]
-        );
+        $checked = $this->state ? 'checked="checked"' : '';
+        $readonly = $this->state ? 'readonly="readonly"' : '';
+        $radio = "<input type=radio class='form-check-input' name='{$this->name}'"
+            . " value='{$this->value}' $checked $readonly>";
         if (!$this->label) {
             return (string) $radio;
         }
-        return "<div class='form-check'><label class='form-check-label'>$radio {$this->label}</label></div>";
+        return "<div class='form-check'>"
+            . "<label class='form-check-label'>$radio{$this->label}</label>"
+            . "</div>";
     }
 }

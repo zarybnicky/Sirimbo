@@ -18,12 +18,9 @@ class Platby
                 $currentKey = count($skupiny);
                 $skupiny[$currentKey] = ['users' => []];
                 $skupiny[$currentKey]['info'] = [
-                    'header' => new \Tag(
-                        'big',
-                        [],
-                        new \ColorboxHelper($item['s_color_rgb'], $item['s_description']) .
-                        '&nbsp;&nbsp;' . $item['s_name']
-                    )
+                    'header' => "<big>"
+                    . new \ColorboxHelper($item['s_color_rgb'], $item['s_description'])
+                    . '&nbsp;&nbsp;' . $item['s_name'] . "</big>"
                 ];
             }
             $skupiny[$currentKey]['users'][] = [
