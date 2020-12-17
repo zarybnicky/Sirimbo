@@ -14,7 +14,7 @@ class Video
                 'buttons' => \Buttons::video($item['v_id']),
                 'title' => $item['v_title'],
                 'uri' => explode('?', $item['v_uri'])[0],
-                'created' => formatTimestamp($item['v_created_at'], true)
+                'created' => \Format::timestamp($item['v_created_at'], true)
             ],
             $pager->getItems()
         );
@@ -33,7 +33,7 @@ class Video
                 'buttons' => \Buttons::edit('/admin/video/playlist/' . $item['vl_id']),
                 'title' => $item['vl_title'],
                 'uri' => $item['vl_url'],
-                'created' => formatTimestamp($item['vl_created_at'], true)
+                'created' => \Format::timestamp($item['vl_created_at'], true)
             ],
             \DBVideoList::getAll()
         );
@@ -54,7 +54,7 @@ class Video
                 'buttons' => \Buttons::video($item['v_id']),
                 'title' => $item['v_title'],
                 'uri' => explode('?', $item['v_uri'])[0],
-                'created' => formatTimestamp($item['v_created_at'], true)
+                'created' => \Format::timestamp($item['v_created_at'], true)
             ],
             \DBVideo::getByPlaylist($id)
         );

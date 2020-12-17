@@ -16,7 +16,7 @@ class Nastenka
                 : '',
                 'header' => $item['up_nadpis'],
                 'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
-                'timestampAdd' => formatTimestamp($item['up_timestamp_add'], true),
+                'timestampAdd' => \Format::timestamp($item['up_timestamp_add'], true),
                 'groups' => implode('', array_map(
                     fn($item) => new \ColorboxHelper($item['ups_color'], $item['ups_popis']),
                     \DBNastenka::getNastenkaSkupiny($item['up_id']),

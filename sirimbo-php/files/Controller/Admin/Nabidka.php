@@ -13,9 +13,9 @@ class Nabidka
             fn($item) => [
                 'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
                 'date' => (
-                    formatDate($item['n_od']) .
+                    \Format::date($item['n_od']) .
                     ($item['n_do'] != $item['n_od']
-                     ? ' - ' . formatDate($item['n_do'])
+                     ? ' - ' . \Format::date($item['n_do'])
                      : '')
                 ),
                 'buttons' => \Buttons::duplicate('/admin/nabidka/duplicate/' . $item['n_id'])

@@ -63,8 +63,8 @@ class Akce
             'id' => $data['a_id'],
             'jmeno' => $data['a_jmeno'],
             'kde' => $data['a_kde'],
-            'datum' => formatDate($data['a_od']) .
-                (($data['a_od'] != $data['a_do']) ? ' - ' . formatDate($data['a_do']) : ''),
+            'datum' => \Format::date($data['a_od']) .
+                (($data['a_od'] != $data['a_do']) ? ' - ' . \Format::date($data['a_do']) : ''),
             'kapacita' => $data['a_kapacita'],
             'volno' => $data['a_kapacita'] - count($items),
             'showForm' => \Permissions::check('akce', P_MEMBER) && !$data['a_lock'],

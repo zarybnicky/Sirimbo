@@ -12,7 +12,7 @@ class Rozpis
         $data = array_map(
             fn($item) => [
                 'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
-                'datum' => formatDate($item['r_datum']),
+                'datum' => \Format::date($item['r_datum']),
                 'kde' => $item['r_kde'],
                 'visible' => new \CheckboxHelper($item['r_id'], '1', $item['r_visible']),
                 'buttons' => \Buttons::duplicate('/admin/rozpis/duplicate/' . $item['r_id'])

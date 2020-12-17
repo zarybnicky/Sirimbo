@@ -48,7 +48,7 @@
       </div>
       <div class="col">
         <b><?= $item['title'] ?></b><br>
-        <?= formatTimestamp($item['date'], true) ?>
+        <?= \Format::timestamp($item['date'], true) ?>
       </div>
     </a>
   <?php endforeach ?>

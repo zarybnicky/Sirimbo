@@ -33,9 +33,9 @@ class NabidkaDetail
                 'id' => $data['n_id'],
                 'fullName' => $data['u_jmeno'] . ' ' . $data['u_prijmeni'],
                 'datum' => (
-                    formatDate($data['n_od'])
+                    \Format::date($data['n_od'])
                     . ($data['n_od'] != $data['n_do']
-                       ? ' - ' . formatDate($data['n_do'])
+                       ? ' - ' . \Format::date($data['n_do'])
                        : '')
                 ),
                 'canEdit' => false,

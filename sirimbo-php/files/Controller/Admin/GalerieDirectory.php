@@ -39,7 +39,7 @@ class GalerieDirectory
             return static::displayForm('add');
         }
         $parent = \DBGalerie::getSingleDir($_POST['parent']);
-        $dirPath = $parent['gd_path'] . DIRECTORY_SEPARATOR . sanitizePathname($_POST['name']);
+        $dirPath = $parent['gd_path'] . DIRECTORY_SEPARATOR . Galerie::sanitizePathname($_POST['name']);
         mkdir($dirPath, 0777, true);
         \DBGalerie::addDir(
             $_POST['name'],
@@ -77,7 +77,9 @@ class GalerieDirectory
             return static::displayForm('edit');
         }
         $parent = \DBGalerie::getSingleDir($_POST['parent']);
-        $newPath = $parent['gd_path'] . DIRECTORY_SEPARATOR . sanitizePathname(getCanonicalName($_POST['name']));
+        $newPath = $parent['gd_path'] . DIRECTORY_SEPARATOR . Galerie::sanitizePathname(
+            Galerie::getCanonicalName($_POST['name'])
+        );
         if ($data['gd_path'] != $newPath) {
             if (file_exists(GALERIE . DIRECTORY_SEPARATOR . $newPath)) {
                 new \MessageHelper('danger', 'V dané nadsložce už existuje složka se stejným názvem.');
@@ -123,8 +125,8 @@ class GalerieDirectory
         $data = \DBGalerie::getSingleDir($id);
         \DBGalerie::removeDir($id);
         if ($data['gd_path']) {
-            rrmdir(GALERIE . DIRECTORY_SEPARATOR . $data['gd_path']);
-            rrmdir(GALERIE_THUMBS . DIRECTORY_SEPARATOR . $data['gd_path']);
+            Galerie::rrmdir(GALERIE . DIRECTORY_SEPARATOR . $data['gd_path']);
+            Galerie::rrmdir(GALERIE_THUMBS . DIRECTORY_SEPARATOR . $data['gd_path']);
         }
         new \RedirectHelper('/admin/galerie');
     }

@@ -9,7 +9,7 @@ class Aktuality
         $data = array_map(
             fn($item) => [
                 'name' => $item['at_jmeno'],
-                'added' => formatTimestamp($item['at_timestamp_add']),
+                'added' => \Format::timestamp($item['at_timestamp_add']),
                 'links' => (
                     '<a href="/admin/aktuality/edit/' . $item['at_id'] . '">obecné</a>, ' .
                     '<a href="/admin/aktuality/foto/' . $item['at_id'] . '">galerie</a>'
@@ -73,7 +73,7 @@ class Aktuality
             'name' => $data['at_jmeno'],
             'summary' => $data['at_preview'],
             'text' => $data['at_text'],
-            'createdAt' => formatTimestamp($data['at_timestamp_add']),
+            'createdAt' => \Format::timestamp($data['at_timestamp_add']),
         ]);
     }
 

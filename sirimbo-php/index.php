@@ -21,7 +21,6 @@ if (!isset($_COOKIE['off_mode'])) {
 require 'vendor/autoload.php';
 require 'config.php';
 require 'files/Core/settings.php';
-require 'files/Core/utils.php';
 
 ob_start();
 ini_set('session.use_trans_sid', 0);

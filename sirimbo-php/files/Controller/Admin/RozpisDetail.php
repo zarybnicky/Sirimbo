@@ -16,15 +16,15 @@ class RozpisDetail
             fn($item) => [
                 'id' => $item['ri_id'],
                 'partner' => $item['ri_partner'],
-                'timeFrom' => formatTime($item['ri_od'], 1),
-                'timeTo' => formatTime($item['ri_do'], 1),
+                'timeFrom' => \Format::time($item['ri_od'], 1),
+                'timeTo' => \Format::time($item['ri_do'], 1),
                 'lock' => (bool) $item['ri_lock']
             ],
             \DBRozpis::getRozpisItem($id),
         );
         $data = [
             'id' => $data['r_id'],
-            'datum' => formatDate($data['r_datum']),
+            'datum' => \Format::date($data['r_datum']),
             'kde' => $data['r_kde'],
             'fullName' => $data['u_jmeno'] . ' ' . $data['u_prijmeni'],
             'canEdit' => \Permissions::check('nabidka', P_OWNED, $data['r_trener'])
@@ -44,9 +44,9 @@ class RozpisDetail
         foreach ($nabidky as $item) {
             $nabidky_select[$item['n_id']] =
                 $item['u_prijmeni'] . ', ' . $item['u_jmeno'] .
-                ' (' . formatDate($item['n_od']) .
+                ' (' . \Format::date($item['n_od']) .
                 (($item['n_od'] != $item['n_do']) ?
-                 (' - ' . formatDate($item['n_do'])) :
+                 (' - ' . \Format::date($item['n_do'])) :
                  '') .
                 ')';
         }
@@ -67,8 +67,8 @@ class RozpisDetail
             $nabidka = [
                 'id' => $nabidka['n_id'],
                 'fullName' => $nabidka['u_jmeno'] . ' ' . $nabidka['u_prijmeni'],
-                'datum' => formatDate($nabidka['n_od'])
-                . ($nabidka['n_od'] != $nabidka['n_do'] ? ' - ' . formatDate($nabidka['n_do']) : ''),
+                'datum' => \Format::date($nabidka['n_od'])
+                . ($nabidka['n_od'] != $nabidka['n_do'] ? ' - ' . \Format::date($nabidka['n_do']) : ''),
                 'canEdit' => false,
                 'hourMax' => $nabidka['n_max_pocet_hod'],
                 'hourTotal' => $nabidka['n_pocet_hod'],
@@ -113,8 +113,8 @@ class RozpisDetail
         //Update all
         foreach ($items as &$item) {
             $item['ri_partner'] = $_POST[$item['ri_id'] . '-partner'];
-            $item['ri_od'] = formatTime($_POST[$item['ri_id'] . '-od'], 0);
-            $item['ri_do'] = formatTime($_POST[$item['ri_id'] . '-do'], 0);
+            $item['ri_od'] = \Format::time($_POST[$item['ri_id'] . '-od'], 0);
+            $item['ri_do'] = \Format::time($_POST[$item['ri_id'] . '-do'], 0);
             $item['ri_lock'] = $_POST[$item['ri_id'] . '-lock'] ? 1 : 0;
         }
 
@@ -127,8 +127,8 @@ class RozpisDetail
                 $newId = \DBRozpis::addRozpisItem(
                     $id,
                     $_POST['add_partner'],
-                    formatTime($_POST['add_od'], 0),
-                    formatTime($_POST['add_do'], 0),
+                    \Format::time($_POST['add_od'], 0),
+                    \Format::time($_POST['add_do'], 0),
                     (int) (bool) $_POST['add_lock']
                 );
                 $items[] = \DBRozpis::getRozpisItemLesson($newId);

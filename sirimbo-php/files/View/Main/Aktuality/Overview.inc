@@ -7,7 +7,7 @@
       <div class="col align-self-center">
         <h3><a href="/aktualne/<?= $row['id'] ?>"><?= $row['jmeno'] ?></a></h3>
         <small>
-          <?= formatTimestamp($row['timestamp'])?>
+          <?= \Format::timestamp($row['timestamp'])?>
           <?php if ($row['canEdit']) : ?>
             - <a href="/admin/aktuality/edit/<?= $row['id'] ?>">Upravit</a>
           <?php endif ?>

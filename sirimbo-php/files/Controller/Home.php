@@ -10,7 +10,7 @@ class Home
         $highlights = array_map(fn($val) => [
             'uri'  => '/aktualne/' . $val['at_id'],
             'name' => $val['at_jmeno'],
-            'date' => formatDate($val['at_timestamp']),
+            'date' => \Format::date($val['at_timestamp']),
             'description' => $val['at_preview'],
             'title_photo_uri' => $val['at_foto_main'] ? '/galerie/' . $val['gf_path'] : ''
         ], array_slice($articles, 0, 3));
@@ -18,7 +18,7 @@ class Home
         $moreArticles = array_map(fn($val) => [
             'uri'  => '/aktualne/' . $val['at_id'],
             'name' => $val['at_jmeno'],
-            'date' => formatDate($val['at_timestamp']),
+            'date' => \Format::date($val['at_timestamp']),
             'description' => $val['at_preview'],
             'title_photo_uri' => $val['at_foto_main'] ? '/galerie/' . $val['gf_path'] : ''
         ], array_slice($articles, 3, 2));

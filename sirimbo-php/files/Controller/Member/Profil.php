@@ -17,8 +17,8 @@ class Profil
                     'type' => $row['pc_name'],
                     'varSymbol' => $row['pc_symbol'],
                     'amount' => $row['pi_amount'],
-                    'paidOn' => formatDate($row['pi_date']),
-                    'validFor' => formatDate($row['pc_valid_from']) . ' - ' . formatDate($row['pc_valid_to']),
+                    'paidOn' => \Format::date($row['pi_date']),
+                    'validFor' => \Format::date($row['pc_valid_from']) . ' - ' . \Format::date($row['pc_valid_to']),
                 ];
             },
             \DBPlatby::getPaymentHistory(\Session::getUserID())

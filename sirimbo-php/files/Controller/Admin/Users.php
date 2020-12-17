@@ -56,7 +56,7 @@ class Users
                     'index' => ++$i . '. ',
                     'varSymbol' => \User::varSymbol($item['u_id']),
                     'fullName' => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
-                    'birthDate' => formatDate($item['u_narozeni']),
+                    'birthDate' => \Format::date($item['u_narozeni']),
                     'colorBox' => new \ColorboxHelper($item['s_color_rgb'], $item['s_description']),
                     'groupInfo' => $groupOptions[$item['u_group']]
                 ];
@@ -316,7 +316,7 @@ class Users
                 'group' => (string) $s_group->name($item['u_id'] . '-group'),
                 'skupina' => (string) $s_skupina->name($item['u_id'] . '-skupina')->set($item['u_skupina']),
                 'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
-                'narozeni' => formatDate($item['u_narozeni']),
+                'narozeni' => \Format::date($item['u_narozeni']),
                 'poznamky' => $item['u_poznamky']
             ],
             $users
@@ -352,8 +352,8 @@ class Users
                 . '&nbsp;' . $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
                 'email' => $item['u_email'],
                 'telefon' => $item['u_telefon'],
-                'narozeni' => formatDate($item['u_narozeni']),
-                'timestamp' => formatTimestamp($item['u_timestamp'])
+                'narozeni' => \Format::date($item['u_narozeni']),
+                'timestamp' => \Format::timestamp($item['u_timestamp'])
             ],
             \DBUser::getDuplicateUsers()
         );

@@ -28,8 +28,8 @@ class GalerieFile
             return static::displayForm($id);
         }
         $parent = \DBGalerie::getSingleDir($_POST['parent']);
-        $newPath = sanitizePathname(
-            getCanonicalName(
+        $newPath = Galerie::sanitizePathname(
+            Galerie::getCanonicalName(
                 $parent['gd_path'] . DIRECTORY_SEPARATOR . $_POST['name']
             )
         );
@@ -126,7 +126,7 @@ class GalerieFile
         }
         $failCount = 0;
         foreach ($uploader->getSavedFiles() as $path) {
-            if (!checkGetThumbnail($path)) {
+            if (!Galerie::checkGetThumbnail($path)) {
                 if (is_file($path)) {
                     unlink($path);
                 }

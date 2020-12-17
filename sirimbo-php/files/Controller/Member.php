@@ -41,7 +41,7 @@ class Member
                     'canEdit' => \Permissions::check('nastenka', P_OWNED, $item['up_kdo']),
                     'skupinyBoxes' => implode('', $skupiny),
                     'addedBy' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
-                    'addedTimestamp' => formatTimestamp($item['up_timestamp_add']),
+                    'addedTimestamp' => \Format::timestamp($item['up_timestamp_add']),
                     'text' => stripslashes($item['up_text'])
                 ];
             },

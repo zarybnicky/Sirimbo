@@ -32,8 +32,8 @@ class Nabidka
                 return [
                     'id' => $data['n_id'],
                     'fullName' => $data['u_jmeno'] . ' ' . $data['u_prijmeni'],
-                    'datum' => formatDate($data['n_od'])
-                    . ($data['n_od'] != $data['n_do'] ? ' - ' . formatDate($data['n_do']) : ''),
+                    'datum' => \Format::date($data['n_od'])
+                    . ($data['n_od'] != $data['n_do'] ? ' - ' . \Format::date($data['n_do']) : ''),
                     'canEdit' => \Permissions::check('nabidka', P_OWNED, $data['n_trener']),
                     'hourMax' => $data['n_max_pocet_hod'],
                     'hourTotal' => $data['n_pocet_hod'],

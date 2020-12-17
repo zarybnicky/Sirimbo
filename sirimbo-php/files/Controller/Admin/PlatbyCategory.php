@@ -49,7 +49,7 @@ class PlatbyCategory
                 'name' => $item['pc_name'],
                 'symbol' => $item['pc_symbol'],
                 'amount' => ($item['pc_amount'] . ($item['pc_use_base'] ? ' * ?' : '')) . ' Kč',
-                'validDate' => formatRange($item['pc_valid_from'], $item['pc_valid_to']),
+                'validDate' => \Format::range($item['pc_valid_from'], $item['pc_valid_to']),
                 'buttons' => implode('&nbsp;', [
                     \Buttons::edit('/admin/platby/structure/category/edit/' . $item['pc_id']),
                     (new \SubmitHelper(

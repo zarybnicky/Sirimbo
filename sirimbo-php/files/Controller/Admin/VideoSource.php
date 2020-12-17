@@ -13,9 +13,9 @@ class VideoSource
                     'buttons' => \Buttons::videoSource($item['vs_id']),
                     'url' => $item['vs_url'],
                     'title' => $item['vs_title'],
-                    'created' => formatTimestamp($item['vs_created_at'], true),
+                    'created' => \Format::timestamp($item['vs_created_at'], true),
                     'lastChecked' => $item['vs_last_checked']
-                    ? formatTimestamp($item['vs_last_checked'], true) : ''
+                    ? \Format::timestamp($item['vs_last_checked'], true) : ''
                 ],
                 \DBVideoSource::getAll()
             )

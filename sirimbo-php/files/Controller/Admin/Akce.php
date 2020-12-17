@@ -9,8 +9,8 @@ class Akce
         $data = array_map(
             fn($item) => [
                 'name' => $item['a_jmeno'],
-                'date' => formatDate($item['a_od'])
-                . (($item['a_od'] != $item['a_do']) ? ' - ' . formatDate($item['a_do']) : ''),
+                'date' => \Format::date($item['a_od'])
+                . (($item['a_od'] != $item['a_do']) ? ' - ' . \Format::date($item['a_do']) : ''),
                 'userCount' => $item['a_obsazeno'] . '/' . $item['a_kapacita'],
                 'visible' => new \CheckboxHelper($item['a_id'], '1', $item['a_visible']),
                 'links' => (
@@ -170,9 +170,9 @@ class Akce
             'id' => $akce['a_id'],
             'jmeno' => $akce['a_jmeno'],
             'kde' => $akce['a_kde'],
-            'datum' => formatDate($akce['a_od'])
+            'datum' => \Format::date($akce['a_od'])
                 . (($akce['a_od'] != $akce['a_do'])
-                ? ' - ' . formatDate($akce['a_do'])
+                ? ' - ' . \Format::date($akce['a_do'])
                 : ''),
             'kapacita' => $akce['a_kapacita'],
             'volno' => $akce['a_kapacita'] - count(\DBAkce::getAkceItems($id)),
@@ -250,9 +250,9 @@ class Akce
             'id' => $akce['a_id'],
             'jmeno' => $akce['a_jmeno'],
             'kde' => $akce['a_kde'],
-            'datum' => formatDate($akce['a_od'])
+            'datum' => \Format::date($akce['a_od'])
             . (($akce['a_od'] != $akce['a_do'])
-               ? ' - ' . formatDate($akce['a_do']) : ''),
+               ? ' - ' . \Format::date($akce['a_do']) : ''),
             'kapacita' => $akce['a_kapacita'],
             'volno' => $akce['a_kapacita'] - count(\DBAkce::getAkceItems($id)),
             'showForm' => \Permissions::check('akce', P_MEMBER) && !$akce['a_lock'],

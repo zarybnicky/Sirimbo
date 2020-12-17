@@ -1,6 +1,6 @@
 <div class="container article">
   <small>
-    <?= formatTimestamp($this->timestamp)?>
+    <?= \Format::timestamp($this->timestamp)?>
     <?php if ($this->canEdit) : ?>
       &nbsp;&nbsp;- <a href="/admin/aktuality/edit/<?= $this->id ?>">Upravit</a>
     <?php endif ?>

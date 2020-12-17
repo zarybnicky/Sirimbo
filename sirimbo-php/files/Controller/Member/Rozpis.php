@@ -9,7 +9,7 @@ class Rozpis
         $data = array_map(
             fn($rozpis) => [
                 'id' => $rozpis['r_id'],
-                'datum' => formatDate($rozpis['r_datum']),
+                'datum' => \Format::date($rozpis['r_datum']),
                 'kde' => $rozpis['r_kde'],
                 'fullName' => $rozpis['u_jmeno'] . ' ' . $rozpis['u_prijmeni'],
                 'canEdit' => \Permissions::check('nabidka', P_OWNED, $rozpis['r_trener']),
@@ -17,8 +17,8 @@ class Rozpis
                     fn($item) => [
                         'id' => $item['ri_id'],
                         'fullName' => "{$item['u_jmeno']} {$item['u_prijmeni']}",
-                        'timeFrom' => formatTime($item['ri_od'], 1),
-                        'timeTo' => formatTime($item['ri_do'], 1),
+                        'timeFrom' => \Format::time($item['ri_od'], 1),
+                        'timeTo' => \Format::time($item['ri_do'], 1),
                         'canReserve' => (
                             $item['ri_partner'] == 0
                             && !$rozpis['r_lock']

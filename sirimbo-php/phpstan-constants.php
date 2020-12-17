@@ -12,4 +12,3 @@ define('DEFAULT_FROM_MAIL', '');
 define('DEFAULT_ADMIN_MAIL', '');
 
 require 'files/Core/settings.php';
-require 'files/Core/utils.php';
