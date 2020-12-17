@@ -1,36 +1,35 @@
 <?php
-class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
+namespace Olymp\Controller\Admin;
+
+class PlatbyManual
 {
-    public function view($request)
+    public static function query()
     {
         \Permissions::checkError('platby', P_OWNED);
-        if ($_POST) {
-            static::processPost();
-        }
         $remaining = \DBPlatbyRaw::getUnsorted();
         $remainingCount = count($remaining);
+        if ($remainingCount == 0) {
+            new \MessageHelper('info', 'Nezbývají už žádné nezatříděné platby');
+            return new \RedirectHelper('/admin/platby');
+        }
+        return new \RedirectHelper('/admin/platby/discarded/' . $remaining[0]['pr_id']);
+    }
 
-        $id = $request->getId();
-        if ($id && ($data = \DBPlatbyRaw::getSingle($id))) {
-            if ($data['pr_sorted']) {
-                new \MessageHelper('info', 'Platba už byla zařazena do systému');
-                new \RedirectHelper('/admin/platby/discarded');
-            }
-            $raw = unserialize($data['pr_raw']);
-        } else {
-            if ($remainingCount == 0) {
-                new \MessageHelper('info', 'Nezbývají už žádné nezatříděné platby');
-                new \RedirectHelper('/admin/platby');
-            }
-            $id = $remaining[0]['pr_id'];
-            $raw = unserialize($remaining[0]['pr_raw']);
+    public static function get($id)
+    {
+        \Permissions::checkError('platby', P_OWNED);
+        $data = \DBPlatbyRaw::getSingle($id);
+        $raw = unserialize($data['pr_raw']);
+        if ($data['pr_sorted']) {
+            new \MessageHelper('info', 'Platba už byla zařazena do systému');
+            new \RedirectHelper('/admin/platby/discarded');
         }
 
-        $categoryLookup = static::getCategoryLookup(true, true, false);
-        $userLookup = static::getUserLookup(false);
+        $categoryLookup = Platby::getCategoryLookup(true, true, false);
+        $userLookup = Platby::getUserLookup(false);
 
         $item = new \PlatbyItem();
-        static::recognizeHeaders($raw, $specific, $variable, $date, $amount);
+        Platby::recognizeHeaders($raw, $specific, $variable, $date, $amount);
         $raw[null] = null;
         $item->init($raw[$specific], $raw[$variable], $raw[$date], $raw[$amount]);
         $item->processWithSymbolLookup($userLookup, $categoryLookup);
@@ -92,6 +91,7 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
         }
         $raw = $new;
 
+        $remainingCount = count(\DBPlatbyRaw::getUnsorted());
         new \RenderHelper('files/View/Admin/Platby/ManualForm.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Ruční třídění plateb</span> (zbývá ' . $remainingCount . ')',
@@ -112,9 +112,46 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
         ]);
     }
 
-    private function getCategories()
+    public static function post($id)
     {
-        $categories = parent::getCategoryLookup(false, false, true);
+        \Permissions::checkError('platby', P_OWNED);
+        if (!($data = \DBPlatbyRaw::getSingle($id))) {
+            return new \MessageHelper('warning', 'Zadaná platba neexistuje.');
+        }
+        if ($data['pr_sorted']) {
+            return new \MessageHelper('info', 'Zadaná platba už byla zařazená.');
+        }
+        switch ($_POST['action']) {
+            case 'confirm':
+                if (!is_object($item = Platby::getFromPost())) {
+                    return new \MessageHelper('warning', $item);
+                }
+                \DBPlatbyRaw::update($id, $data['pr_raw'], $data['pr_hash'], '1', '0');
+                \DBPlatbyItem::insert(
+                    $item->variable,
+                    $item->categoryId,
+                    $id,
+                    $item->amount,
+                    $item->date,
+                    $item->prefix
+                );
+                break;
+            case 'discard':
+                \DBPlatbyRaw::update($id, $data['pr_raw'], $data['pr_hash'], '0', '1');
+                break;
+            case 'skip':
+                \DBPlatbyRaw::skip($id);
+                break;
+            default:
+                new \MessageHelper('danger', 'Neplatná POST akce.');
+                break;
+        }
+        new \RedirectHelper('/admin/platby/manual');
+    }
+
+    private static function getCategories()
+    {
+        $categories = Platby::getCategoryLookup(false, false, true);
         $res = [];
         foreach ($categories as $key => $array) {
             if (strpos($key, 'group_') === false) {
@@ -127,49 +164,8 @@ class Controller_Admin_Platby_Manual extends Controller_Admin_Platby
     private static function getUsers()
     {
         return array_map(
-            fn($array) => User::varSymbol($array['u_id']) . " - {$array['u_prijmeni']}, {$array['u_jmeno']}",
-            parent::getUserLookup(true),
+            fn($array) => \User::varSymbol($array['u_id']) . " - {$array['u_prijmeni']}, {$array['u_jmeno']}",
+            Platby::getUserLookup(true),
         );
-    }
-
-    private static function processPost()
-    {
-        $id = $_POST['id'];
-        if (!$id || !($current = \DBPlatbyRaw::getSingle($id))) {
-            return new \MessageHelper('warning', 'Zadaná platba neexistuje.');
-        } elseif ($current['pr_sorted'] && ($item = \DBPlatbyItem::getSingleByRawId($id))) {
-            return new \MessageHelper('info', 'Zadaná platba už byla zařazená.');
-        }
-
-        switch ($_POST['action']) {
-            case 'confirm':
-                if (!is_object($item = static::getFromPost())) {
-                    return new \MessageHelper('warning', $item);
-                }
-                \DBPlatbyRaw::update($id, $current['pr_raw'], $current['pr_hash'], '1', '0');
-                \DBPlatbyItem::insert(
-                    $item->variable,
-                    $item->categoryId,
-                    $id,
-                    $item->amount,
-                    $item->date,
-                    $item->prefix
-                );
-                break;
-
-            case 'discard':
-                \DBPlatbyRaw::update($id, $current['pr_raw'], $current['pr_hash'], '0', '1');
-                break;
-
-            case 'skip':
-                \DBPlatbyRaw::skip($id);
-                break;
-
-            default:
-                new \MessageHelper('danger', 'Neplatná POST akce.');
-                break;
-        }
-
-        new \RedirectHelper('/admin/platby/manual');
     }
 }

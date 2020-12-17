@@ -100,15 +100,12 @@ try {
 
 function makeRouter()
 {
-    $router = new \Olymp\Router(function ($method, $path, $code, $ex) {
-        if ($ex->getMessage() === 'No route found') {
-            $request = new Request($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
-            $d = new Dispatcher();
-            $d->dispatch($request);
-        } else {
+    $router = new \Olymp\Router(
+        function ($method, $path, $code, $ex) {
             throw $ex;
-        }
-    }, 'Olymp.Controller');
+        },
+        'Olymp.Controller'
+    );
 
     $router->get('/', '@Home::get');
     $router->get('/home', '@Home::get');
@@ -187,6 +184,97 @@ function makeRouter()
     $router->get('/admin/aktuality/foto/([0-9]+)', '@Admin.Aktuality::foto');
     $router->post('/admin/aktuality/foto/([0-9]+)', '@Admin.Aktuality::fotoPost');
 
+    $router->get('/admin/video', '@Admin.Video::orphan');
+    $router->get('/admin/video/orphan', '@Admin.Video::orphan');
+    $router->get('/admin/video/title', '@Admin.Video::title');
+    $router->post('/admin/video/title', '@Admin.Video::titlePost');
+    $router->get('/admin/video/playlist', '@Admin.Video::playlistList');
+    $router->get('/admin/video/playlist/([0-9]+)', '@Admin.Video::playlist');
+    $router->get('/admin/video/add', '@Admin.Video::add');
+    $router->post('/admin/video/add', '@Admin.Video::addPost');
+    $router->get('/admin/video/edit/([0-9]+)', '@Admin.Video::edit');
+    $router->post('/admin/video/edit/([0-9]+)', '@Admin.Video::editPost');
+    $router->get('/admin/video/remove/([0-9]+)', '@Admin.Video::remove');
+    $router->post('/admin/video/remove/([0-9]+)', '@Admin.Video::removePost');
+
+    $router->get('/admin/video/source', '@Admin.VideoSource::list');
+    $router->get('/admin/video/source/add', '@Admin.VideoSource::add');
+    $router->post('/admin/video/source/add', '@Admin.VideoSource::addPost');
+    $router->get('/admin/video/source/edit/([0-9]+)', '@Admin.VideoSource::edit');
+    $router->post('/admin/video/source/edit/([0-9]+)', '@Admin.VideoSource::editPost');
+    $router->get('/admin/video/source/remove/([0-9]+)', '@Admin.VideoSource::remove');
+    $router->post('/admin/video/source/remove/([0-9]+)', '@Admin.VideoSource::removePost');
+
+    $router->get('/admin/nastenka', '@Admin.Nastenka::list');
+    $router->get('/admin/nastenka/add', '@Admin.Nastenka::add');
+    $router->post('/admin/nastenka/add', '@Admin.Nastenka::addPost');
+    $router->get('/admin/nastenka/edit/([0-9]+)', '@Admin.Nastenka::edit');
+    $router->post('/admin/nastenka/edit/([0-9]+)', '@Admin.Nastenka::editPost');
+    $router->get('/admin/nastenka/remove/([0-9]+)', '@Admin.Nastenka::remove');
+    $router->post('/admin/nastenka/remove/([0-9]+)', '@Admin.Nastenka::removePost');
+
+    $router->get('/admin/users', '@Admin.Users::list');
+    $router->post('/admin/users', '@Admin.Users::listPost');
+    $router->get('/admin/users/add', '@Admin.Users::add');
+    $router->post('/admin/users/add', '@Admin.Users::addPost');
+    $router->get('/admin/users/edit/([0-9]+)', '@Admin.Users::edit');
+    $router->post('/admin/users/edit/([0-9]+)', '@Admin.Users::editPost');
+    $router->get('/admin/users/remove/([0-9]+)', '@Admin.Users::remove');
+    $router->post('/admin/users/remove/([0-9]+)', '@Admin.Users::removePost');
+    $router->get('/admin/users/getMsmtCsv', '@Admin.Users::getMsmtCsv');
+    $router->get('/admin/users/unconfirmed', '@Admin.Users::unconfirmed');
+    $router->post('/admin/users/unconfirmed', '@Admin.Users::unconfirmedPost');
+    $router->get('/admin/users/duplicate', '@Admin.Users::duplicate');
+    $router->get('/admin/users/statistiky', '@Admin.Users::statistiky');
+
+    $router->get('/admin/galerie', '@Admin.Galerie::list');
+    $router->post('/admin/galerie', '@Admin.Galerie::listPost');
+    $router->get('/admin/galerie/file', '@Admin.GalerieFile::upload');
+    $router->post('/admin/galerie/file', '@Admin.GalerieFile::uploadPost');
+    $router->get('/admin/galerie/file/edit/([0-9]+)', '@Admin.GalerieFile::edit');
+    $router->post('/admin/galerie/file/edit/([0-9]+)', '@Admin.GalerieFile::editPost');
+    $router->get('/admin/galerie/file/remove/([0-9]+)', '@Admin.GalerieFile::remove');
+    $router->post('/admin/galerie/file/remove/([0-9]+)', '@Admin.GalerieFile::removePost');
+    $router->get('/admin/galerie/directory/([0-9]+)', '@Admin.GalerieDirectory::list');
+    $router->get('/admin/galerie/directory/edit/([0-9]+)', '@Admin.GalerieDirectory::edit');
+    $router->post('/admin/galerie/directory/edit/([0-9]+)', '@Admin.GalerieDirectory::editPost');
+    $router->get('/admin/galerie/directory/remove/([0-9]+)', '@Admin.GalerieDirectory::remove');
+    $router->post('/admin/galerie/directory/remove/([0-9]+)', '@Admin.GalerieDirectory::removePost');
+
+    $router->get('/admin/rozpis', '@Admin.Rozpis::list');
+    $router->post('/admin/rozpis', '@Admin.Rozpis::listPost');
+    $router->get('/admin/rozpis/add', '@Admin.Rozpis::add');
+    $router->post('/admin/rozpis/add', '@Admin.Rozpis::addPost');
+    $router->get('/admin/rozpis/duplicate/([0-9]+)', '@Admin.Rozpis::duplicate');
+    $router->get('/admin/rozpis/edit/([0-9]+)', '@Admin.Rozpis::edit');
+    $router->post('/admin/rozpis/edit/([0-9]+)', '@Admin.Rozpis::editPost');
+    $router->get('/admin/rozpis/remove/([0-9]+)', '@Admin.Rozpis::remove');
+    $router->get('/admin/rozpis/detail/([0-9]+)', '@Admin.RozpisDetail::detail');
+    $router->post('/admin/rozpis/detail/([0-9]+)', '@Admin.RozpisDetail::detailPost');
+
+    $router->get('/admin/nabidka', '@Admin.Nabidka::list');
+    $router->post('/admin/nabidka', '@Admin.Nabidka::listPost');
+    $router->get('/admin/nabidka/add', '@Admin.Nabidka::add');
+    $router->post('/admin/nabidka/add', '@Admin.Nabidka::addPost');
+    $router->get('/admin/nabidka/duplicate/([0-9]+)', '@Admin.Nabidka::duplicate');
+    $router->get('/admin/nabidka/edit/([0-9]+)', '@Admin.Nabidka::edit');
+    $router->post('/admin/nabidka/edit/([0-9]+)', '@Admin.Nabidka::editPost');
+    $router->get('/admin/nabidka/remove/([0-9]+)', '@Admin.Nabidka::remove');
+    $router->get('/admin/nabidka/detail/([0-9]+)', '@Admin.NabidkaDetail::detail');
+    $router->post('/admin/nabidka/detail/([0-9]+)', '@Admin.NabidkaDetail::detailPost');
+
+    $router->get('/admin/dokumenty', '@Admin.Dokumenty::list');
+    $router->post('/admin/dokumenty', '@Admin.Dokumenty::listPost');
+    $router->get('/admin/dokumenty/edit/([0-9]+)', '@Admin.Dokumenty::edit');
+    $router->post('/admin/dokumenty/edit/([0-9]+)', '@Admin.Dokumenty::editPost');
+    $router->get('/admin/dokumenty/remove/([0-9]+)', '@Admin.Dokumenty::remove');
+    $router->post('/admin/dokumenty/remove/([0-9]+)', '@Admin.Dokumenty::removePost');
+
+    $router->get('/admin/pary', '@Admin.Pary::list');
+    $router->post('/admin/pary', '@Admin.Pary::listPost');
+    $router->get('/admin/pary/edit/([0-9]+)', '@Admin.Pary::edit');
+    $router->post('/admin/pary/edit/([0-9]+)', '@Admin.Pary::editPost');
+
     $router->get('/admin/permissions', '@Admin.Permissions::list');
     $router->get('/admin/permissions/add', '@Admin.Permissions::add');
     $router->post('/admin/permissions/add', '@Admin.Permissions::addPost');
@@ -202,6 +290,43 @@ function makeRouter()
     $router->post('/admin/skupiny/edit/([0-9]+)', '@Admin.Skupiny::editPost');
     $router->get('/admin/skupiny/remove/([0-9]+)', '@Admin.Skupiny::remove');
     $router->post('/admin/skupiny/remove/([0-9]+)', '@Admin.Skupiny::removePost');
+
+    $router->get('/admin/platby', '@Admin.Platby::overview');
+    $router->get('/admin/platby/structure', '@Admin.Platby::structure');
+    $router->get('/admin/platby/raw', '@Admin.PlatbyRaw::get');
+    $router->post('/admin/platby/raw', '@Admin.PlatbyRaw::post');
+    $router->get('/admin/platby/raw/select_columna', '@Admin.PlatbyRaw::selectColumns');
+    $router->post('/admin/platby/raw/select_columna', '@Admin.PlatbyRaw::selectColumnsPost');
+    $router->get('/admin/platby/discarded', '@Admin.PlatbyDiscarded::view');
+    $router->get('/admin/platby/discarded/remove/([0-9]+)', '@Admin.PlatbyDiscarded::remove');
+    $router->get('/admin/platby/manual', '@Admin.PlatbyManual::query');
+    $router->get('/admin/platby/manual/([0-9]+)', '@Admin.PlatbyManual::get');
+    $router->post('/admin/platby/manual/([0-9]+)', '@Admin.PlatbyManual::post');
+
+    $router->get('/admin/platby/items', '@Admin.PlatbyItems::list');
+    $router->get('/admin/platby/items/add', '@Admin.PlatbyItems::add');
+    $router->post('/admin/platby/items/add', '@Admin.PlatbyItems::addPost');
+    $router->get('/admin/platby/items/edit/([0-9]+)', '@Admin.PlatbyItems::edit');
+    $router->post('/admin/platby/items/edit/([0-9]+)', '@Admin.PlatbyItems::editPost');
+    $router->get('/admin/platby/items/remove/([0-9]+)', '@Admin.PlatbyItems::remove');
+    $router->post('/admin/platby/items/remove/([0-9]+)', '@Admin.PlatbyItems::removePost');
+
+    $router->get('/admin/platby/structure/group', '@Admin.PlatbyGroup::list');
+    $router->get('/admin/platby/structure/group/add', '@Admin.PlatbyGroup::add');
+    $router->post('/admin/platby/structure/group/add', '@Admin.PlatbyGroup::addPost');
+    $router->get('/admin/platby/structure/group/edit/([0-9]+)', '@Admin.PlatbyGroup::edit');
+    $router->post('/admin/platby/structure/group/edit/([0-9]+)', '@Admin.PlatbyGroup::editPost');
+    $router->get('/admin/platby/structure/group/remove/([0-9]+)', '@Admin.PlatbyGroup::remove');
+    $router->post('/admin/platby/structure/group/remove/([0-9]+)', '@Admin.PlatbyGroup::removePost');
+
+    $router->get('/admin/platby/structure/category', '@Admin.PlatbyCategory::list');
+    $router->post('/admin/platby/structure/category', '@Admin.PlatbyCategory::listPost');
+    $router->get('/admin/platby/structure/category/add', '@Admin.PlatbyCategory::add');
+    $router->post('/admin/platby/structure/category/add', '@Admin.PlatbyCategory::addPost');
+    $router->get('/admin/platby/structure/category/edit/([0-9]+)', '@Admin.PlatbyCategory::edit');
+    $router->post('/admin/platby/structure/category/edit/([0-9]+)', '@Admin.PlatbyCategory::editPost');
+    $router->get('/admin/platby/structure/category/remove/([0-9]+)', '@Admin.PlatbyCategory::remove');
+    $router->post('/admin/platby/structure/category/remove/([0-9]+)', '@Admin.PlatbyCategory::removePost');
 
     return $router;
 }

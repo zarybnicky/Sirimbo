@@ -1,32 +1,17 @@
 <?php
-class Controller_Admin_Rozpis_Detail
+namespace Olymp\Controller\Admin;
+
+class RozpisDetail
 {
-    public function view($request)
+    public static function detail($id)
     {
         \Permissions::checkError('rozpis', P_OWNED);
-        if (!$id = $request->getId()) {
-            new \MessageHelper('warning', 'Rozpis s takovým ID neexistuje');
-            new \RedirectHelper('/admin/rozpis');
-        }
         if (!$data = \DBRozpis::getSingleRozpis($id)) {
             new \MessageHelper('warning', 'Rozpis s takovým ID neexistuje');
             new \RedirectHelper('/admin/rozpis');
         }
-
         \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
-
-        $items = \DBRozpis::getRozpisItem($id);
-
-        if ($_POST) {
-            $items = static::processPost($id, $data, $items);
-            if ($items) {
-                \DBRozpis::editRozpisItemMultiple($items);
-            }
-            new \RedirectHelper($_SERVER['REQUEST_URI']);
-        }
-
         $users = \DBPary::getPartners();
-
         $items = array_map(
             fn($item) => [
                 'id' => $item['ri_id'],
@@ -35,7 +20,7 @@ class Controller_Admin_Rozpis_Detail
                 'timeTo' => formatTime($item['ri_do'], 1),
                 'lock' => (bool) $item['ri_lock']
             ],
-            $items
+            \DBRozpis::getRozpisItem($id),
         );
         $data = [
             'id' => $data['r_id'],
@@ -74,13 +59,11 @@ class Controller_Admin_Rozpis_Detail
                 ],
                 \DBNabidka::getNabidkaItem($_GET['n'])
             );
-
             $obsazeno = array_reduce(
                 $nabidka_items,
                 fn($carry, $item) => $carry + $item['lessonCount'],
                 0
             );
-
             $nabidka = [
                 'id' => $nabidka['n_id'],
                 'fullName' => $nabidka['u_jmeno'] . ' ' . $nabidka['u_prijmeni'],
@@ -90,10 +73,9 @@ class Controller_Admin_Rozpis_Detail
                 'hourMax' => $nabidka['n_max_pocet_hod'],
                 'hourTotal' => $nabidka['n_pocet_hod'],
                 'hourReserved' => $obsazeno,
-                'hourFree' => $nabidka['n_pocet_hod'] - $obsazeno
+                'hourFree' => $nabidka['n_pocet_hod'] - $obsazeno,
+                'items' => $nabidka_items,
             ];
-
-            $nabidka['items'] = $nabidka_items;
         }
 
         new \RenderHelper('files/View/Admin/Rozpis/Detail.inc', [
@@ -105,6 +87,21 @@ class Controller_Admin_Rozpis_Detail
             'nabidky' => $nabidky_select,
             'nabidka' => isset($nabidka) ? $nabidka : []
         ]);
+    }
+
+    public static function detailPost($id)
+    {
+        \Permissions::checkError('rozpis', P_OWNED);
+        if (!$data = \DBRozpis::getSingleRozpis($id)) {
+            new \MessageHelper('warning', 'Rozpis s takovým ID neexistuje');
+            new \RedirectHelper('/admin/rozpis');
+        }
+        \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
+        $items = static::processPost($id, $data, \DBRozpis::getRozpisItem($id));
+        if ($items) {
+            \DBRozpis::editRozpisItemMultiple($items);
+        }
+        new \RedirectHelper($_SERVER['REQUEST_URI']);
     }
 
     protected static function processPost($id, $data, $items)
@@ -152,10 +149,10 @@ class Controller_Admin_Rozpis_Detail
                     }
                 );
 
-                $lastEnd = new DateTime('00:00');
+                $lastEnd = new \DateTime('00:00');
                 foreach ($items as &$item) {
-                    $start = DateTime::createFromFormat('H:i:s', $item['ri_od']);
-                    $end = DateTime::createFromFormat('H:i:s', $item['ri_do']);
+                    $start = \DateTime::createFromFormat('H:i:s', $item['ri_od']);
+                    $end = \DateTime::createFromFormat('H:i:s', $item['ri_do']);
                     if (!$start || !$end) {
                         break;
                     }
@@ -184,8 +181,8 @@ class Controller_Admin_Rozpis_Detail
                     break;
                 }
 
-                $start = DateTime::createFromFormat('H:i', $_POST['add_multi_od']);
-                $length = new DateInterval('PT' . $_POST['add_multi_len'] . 'M');
+                $start = \DateTime::createFromFormat('H:i', $_POST['add_multi_od']);
+                $length = new \DateInterval('PT' . $_POST['add_multi_len'] . 'M');
                 if (!$start) {
                     break;
                 }

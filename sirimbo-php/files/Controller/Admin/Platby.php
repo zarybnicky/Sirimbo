@@ -1,7 +1,9 @@
 <?php
-class Controller_Admin_Platby
+namespace Olymp\Controller\Admin;
+
+class Platby
 {
-    public function overview()
+    public static function overview()
     {
         \Permissions::checkError('platby', P_OWNED);
         $data = \DBUser::getUsersWithSkupinaPlatby();
@@ -14,22 +16,20 @@ class Controller_Admin_Platby
                 $index = 0;
                 $currentID = $item['s_id'];
                 $currentKey = count($skupiny);
-                $skupiny[$currentKey] = [
-                    'info' => [
-                        'header' => new Tag(
-                            'big',
-                            [],
-                            new ColorboxHelper($item['s_color_rgb'], $item['s_description']) .
-                            '&nbsp;&nbsp;' . $item['s_name']
-                        )
-                    ],
-                    'users' => []
+                $skupiny[$currentKey] = ['users' => []];
+                $skupiny[$currentKey]['info'] = [
+                    'header' => new \Tag(
+                        'big',
+                        [],
+                        new \ColorboxHelper($item['s_color_rgb'], $item['s_description']) .
+                        '&nbsp;&nbsp;' . $item['s_name']
+                    )
                 ];
             }
             $skupiny[$currentKey]['users'][] = [
                 'index' => ++$index . '.',
-                'fullName' => new PersonHelper($item),
-                'hasPaid' => new Tag(
+                'fullName' => new \PersonHelper($item),
+                'hasPaid' => new \Tag(
                     'span',
                     ['style' => 'font-weight:bold;color:' . ($item['pi_id'] ? 'green' : 'red')],
                     $item['pi_id'] ? 'ANO' : 'NE'
@@ -63,7 +63,58 @@ class Controller_Admin_Platby
         ]);
     }
 
-    protected static function recognizeHeaders($headers, &$specific, &$variable, &$date, &$amount)
+    public static function structure()
+    {
+        \Permissions::checkError('platby', P_OWNED);
+        new \RenderHelper('files/View/Admin/Platby/StructureOverview.inc', [
+            'header' => 'Správa plateb',
+            'subheader' => 'Struktura plateb',
+            'data' => array_map(
+                function ($item) {
+                    if (strpos($item[0], 'group_') !== false) {
+                        return [
+                            'name' => new \Tag(
+                                'span',
+                                ['class' => 'big', 'style' => 'text-decoration:underline'],
+                                $item[1]['pg_name']
+                            ),
+                            'buttons' => \Buttons::platbyGroup($item[1]['pg_id']),
+                        ];
+                    } else {
+                        return [
+                            'name' => '&nbsp;- ' . $item[1]['pc_name'] . ' (' . $item[1]['pc_symbol'] . ')',
+                            'buttons' => \Buttons::platbyCategory($item[1]['pc_id']),
+                        ];
+                    }
+                },
+                static::getCategoryList()
+            ),
+            'orphanGroupSkupina' => array_map(
+                fn($item) => [
+                    'name' => $item['pg_name'],
+                    'buttons' => \Buttons::platbyGroup($item['pg_id']),
+                ],
+                \DBPlatbyGroup::getWithoutSkupina()
+            ),
+            'orphanGroupCategory' => array_map(
+                fn($item) => [
+                    'name' => $item['pg_name'],
+                    'buttons' => \Buttons::platbyGroup($item['pg_id']),
+                ],
+                \DBPlatbyGroup::getWithoutCategory()
+            ),
+            'orphanCategory' => array_map(
+                fn($item) => [
+                    'name' => $item['pc_name'],
+                    'buttons' => \Buttons::platbyCategory($item['pc_id']),
+                ],
+                \DBPlatbyCategory::getOrphan()
+            ),
+            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
+        ]);
+    }
+
+    public static function recognizeHeaders($headers, &$specific, &$variable, &$date, &$amount)
     {
         foreach (array_keys($headers) as $key) {
             if (mb_stripos((string) $key, 'specif') !== false) {
@@ -81,7 +132,7 @@ class Controller_Admin_Platby
         }
     }
 
-    protected static function checkHeaders($headers, &$specific, &$variable, &$date, &$amount)
+    public static function checkHeaders($headers, &$specific, &$variable, &$date, &$amount)
     {
         $headers = array_flip($headers);
         return isset($headers[$specific])
@@ -90,7 +141,7 @@ class Controller_Admin_Platby
             && isset($headers[$amount]);
     }
 
-    protected static function getCategoryList()
+    public static function getCategoryList()
     {
         $in = \DBPlatbyGroup::getGroupsWithCategories();
         $out = [];
@@ -105,18 +156,17 @@ class Controller_Admin_Platby
         return $out;
     }
 
-    protected static function getCategoryLookup($useSymbolKey, $unique, $includeGroups)
+    public static function getCategoryLookup($useSymbolKey, $unique, $includeGroups)
     {
         $in = \DBPlatbyGroup::getGroupsWithCategories();
         $out = [];
         $group_id = 0;
         foreach ($in as $array) {
-            $key = (int) ($useSymbolKey ? $array['pc_symbol'] : $array['pc_id']);
-
             if ($includeGroups && $group_id != $array['pg_id'] && !isset($out['group_' . $array['pg_id']])) {
                 $out['group_' . $array['pg_id']] = $array;
                 $group_id = $array['pg_id'];
             }
+            $key = (int) ($useSymbolKey ? $array['pc_symbol'] : $array['pc_id']);
             if ($unique && isset($out[$key])) {
                 continue;
             }
@@ -125,7 +175,7 @@ class Controller_Admin_Platby
         return $out;
     }
 
-    protected static function getUserLookup($sort)
+    public static function getUserLookup($sort)
     {
         $in = \DBUser::getUsers();
         if ($sort) {
@@ -145,7 +195,7 @@ class Controller_Admin_Platby
         return $out;
     }
 
-    protected static function getFromPost($id = null)
+    public static function getFromPost($id = null)
     {
         $item = new \PlatbyItem();
         $item->init(
@@ -157,7 +207,10 @@ class Controller_Admin_Platby
             $id,
             $_POST['specific']
         );
-        $item->processWithSymbolLookup(static::getUserLookup(false), static::getCategoryLookup(true, true, false));
+        $item->processWithSymbolLookup(
+            static::getUserLookup(false),
+            static::getCategoryLookup(true, true, false)
+        );
 
         $error = [];
         if (!$item->variable) {

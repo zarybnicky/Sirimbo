@@ -8,10 +8,7 @@ class Skupiny
         \Permissions::checkError('skupiny', P_OWNED);
         $data = array_map(
             fn($item) => [
-                'buttons' => (
-                    new \EditLinkHelper('/admin/skupiny/edit/' . $item['s_id']) .
-                    new \RemoveLinkHelper('/admin/skupiny/remove/' . $item['s_id'])
-                ),
+                'buttons' => \Buttons::skupiny($item['s_id']),
                 'colorBox' => new \ColorboxHelper($item['s_color_rgb'], $item['s_description']),
                 'name' => $item['s_name']
             ],

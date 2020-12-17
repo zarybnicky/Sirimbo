@@ -1,39 +1,22 @@
 <?php
-class Controller_Admin_Rozpis
+namespace Olymp\Controller\Admin;
+
+class Rozpis
 {
-    public function view()
+    public static function list()
     {
         \Permissions::checkError('rozpis', P_OWNED);
         $data = \Permissions::check('rozpis', P_ADMIN)
             ? \DBRozpis::getRozpis(true)
             : \DBRozpis::getRozpisyByTrener(\Session::getUserID(), true);
-
-        if ($_POST['action'] == 'save') {
-            foreach ($data as $item) {
-                $id = $item['r_id'];
-                if ((bool) $_POST[$id] == (bool) $item['r_visible']) {
-                    continue;
-                }
-                \DBRozpis::editRozpis(
-                    $id,
-                    $item['r_trener'],
-                    $item['r_kde'],
-                    $item['r_datum'],
-                    $_POST[$id] ? '1' : '0',
-                    $item['r_lock'] ? '1' : '0'
-                );
-            }
-            new \RedirectHelper('/admin/rozpis');
-        }
-
         $data = array_map(
             fn($item) => [
                 'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
                 'datum' => formatDate($item['r_datum']),
                 'kde' => $item['r_kde'],
                 'visible' => new \CheckboxHelper($item['r_id'], '1', $item['r_visible']),
-                'buttons' => new \DuplicateLinkHelper('/admin/rozpis/duplicate/' . $item['r_id'])
-                . '&nbsp;' . new \RemoveLinkHelper('/admin/rozpis/remove/' . $item['r_id']),
+                'buttons' => \Buttons::duplicate('/admin/rozpis/duplicate/' . $item['r_id'])
+                . '&nbsp;' . \Buttons::delete('/admin/rozpis/remove/' . $item['r_id']),
                 'links' => (
                     '<a href="/admin/rozpis/edit/' . $item['r_id'] . '">obecné</a>, ' .
                     '<a href="/admin/rozpis/detail/' . $item['r_id'] . '">tréninky</a>'
@@ -41,28 +24,51 @@ class Controller_Admin_Rozpis
             ],
             $data
         );
-
         new \RenderHelper('files/View/Admin/Rozpis/Overview.inc', [
             'header' => 'Správa rozpisů',
             'data' => $data
         ]);
     }
 
-    public function add()
+    public static function listPost()
     {
         \Permissions::checkError('rozpis', P_OWNED);
-        if (!$_POST) {
-            return static::displayForm('add');
-        }
+        $data = \Permissions::check('rozpis', P_ADMIN)
+            ? \DBRozpis::getRozpis(true)
+            : \DBRozpis::getRozpisyByTrener(\Session::getUserID(), true);
 
+        foreach ($data as $item) {
+            $id = $item['r_id'];
+            if ((bool) $_POST[$id] == (bool) $item['r_visible']) {
+                continue;
+            }
+            \DBRozpis::editRozpis(
+                $id,
+                $item['r_trener'],
+                $item['r_kde'],
+                $item['r_datum'],
+                $_POST[$id] ? '1' : '0',
+                $item['r_lock'] ? '1' : '0'
+            );
+        }
+        new \RedirectHelper('/admin/rozpis');
+    }
+
+    public static function add()
+    {
+        \Permissions::checkError('rozpis', P_OWNED);
+        return static::displayForm('add');
+    }
+
+    public static function addPost()
+    {
+        \Permissions::checkError('rozpis', P_OWNED);
         $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
             return static::displayForm('add');
         }
-
         \Permissions::checkError('rozpis', P_OWNED, $_POST['trener']);
-
         \DBRozpis::addRozpis(
             $_POST['trener'],
             $_POST['kde'],
@@ -73,29 +79,30 @@ class Controller_Admin_Rozpis
         new \RedirectHelper('/admin/rozpis');
     }
 
-    public function edit($request)
+    public static function edit($id)
     {
         \Permissions::checkError('rozpis', P_OWNED);
-        if (!$id = $request->getId()) {
-            new \MessageHelper('warning', 'Rozpis s takovým ID neexistuje');
-            new \RedirectHelper('/admin/rozpis');
-        }
         if (!$data = \DBRozpis::getSingleRozpis($id)) {
             new \MessageHelper('warning', 'Rozpis s takovým ID neexistuje');
             new \RedirectHelper('/admin/rozpis');
         }
         \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
+        return static::displayForm('edit', $data);
+    }
 
-        if (!$_POST) {
-            return static::displayForm('edit', $data);
+    public static function editPost($id)
+    {
+        \Permissions::checkError('rozpis', P_OWNED);
+        if (!$data = \DBRozpis::getSingleRozpis($id)) {
+            new \MessageHelper('warning', 'Rozpis s takovým ID neexistuje');
+            new \RedirectHelper('/admin/rozpis');
         }
-
+        \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
         $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
             return static::displayForm('edit', $data);
         }
-
         \DBRozpis::editRozpis(
             $id,
             $_POST['trener'],
@@ -104,17 +111,14 @@ class Controller_Admin_Rozpis
             $_POST['visible'] ? '1' : '0',
             $_POST['lock'] ? '1' : '0'
         );
-
         new \RedirectHelper('/admin/rozpis');
     }
 
-    public function duplicate($request)
+    public static function duplicate($id)
     {
         \Permissions::checkError('rozpis', P_OWNED);
-        $oldId = $request->getId();
-        $data = \DBRozpis::getSingleRozpis($oldId);
-        $items = \DBRozpis::getRozpisItem($oldId);
-
+        $data = \DBRozpis::getSingleRozpis($id);
+        $items = \DBRozpis::getRozpisItem($id);
         $newId = \DBRozpis::addRozpis(
             $data['r_trener'],
             $data['r_kde'],
@@ -134,14 +138,12 @@ class Controller_Admin_Rozpis
         new \RedirectHelper('/admin/rozpis');
     }
 
-    public function remove($request)
+    public static function remove($id)
     {
         \Permissions::checkError('rozpis', P_OWNED);
-        $id = $request->getId();
         $trener = \DBRozpis::getRozpisTrener($id);
-
         if (!\Permissions::check('rozpis', P_OWNED, $trener['u_id'])) {
-            throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
+            throw new \AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
         }
         \DBRozpis::removeRozpis($id);
         new \RedirectHelper('/admin/rozpis');

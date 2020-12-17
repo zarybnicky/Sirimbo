@@ -1,32 +1,14 @@
 <?php
-class Controller_Admin_Nabidka
+namespace Olymp\Controller\Admin;
+
+class Nabidka
 {
-    public function view()
+    public static function list()
     {
         \Permissions::checkError('nabidka', P_OWNED);
         $data = \Permissions::check('nabidka', P_ADMIN)
             ? \DBNabidka::getNabidka(true)
             : \DBNabidka::getNabidkyByTrener(\Session::getUserID(), true);
-
-        if ($_POST['action'] == 'save') {
-            foreach ($data as $item) {
-                if ((bool) $_POST[$item['n_id']] == (bool) $item['n_visible']) {
-                    continue;
-                }
-                \DBNabidka::editNabidka(
-                    $item['n_id'],
-                    $item['n_trener'],
-                    $item['n_pocet_hod'],
-                    $item['n_max_pocet_hod'],
-                    $item['n_od'],
-                    $item['n_do'],
-                    $_POST[$item['n_id']] ? '1' : '0',
-                    $item['n_lock']
-                );
-            }
-            new \RedirectHelper('/admin/nabidka');
-        }
-
         $data = array_map(
             fn($item) => [
                 'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
@@ -36,8 +18,8 @@ class Controller_Admin_Nabidka
                      ? ' - ' . formatDate($item['n_do'])
                      : '')
                 ),
-                'buttons' => new \DuplicateLinkHelper('/admin/nabidka/duplicate/' . $item['n_id'])
-                . '&nbsp;' . new \RemoveLinkHelper('/admin/nabidka/remove/' . $item['n_id']),
+                'buttons' => \Buttons::duplicate('/admin/nabidka/duplicate/' . $item['n_id'])
+                . '&nbsp;' . \Buttons::delete('/admin/nabidka/remove/' . $item['n_id']),
                 'links' => (
                     '<a href="/admin/nabidka/edit/' . $item['n_id'] . '">obecné</a>, ' .
                     '<a href="/admin/nabidka/detail/' . $item['n_id'] . '">tréninky</a>'
@@ -52,18 +34,44 @@ class Controller_Admin_Nabidka
         ]);
     }
 
-    public function add()
+    public static function listPost()
     {
         \Permissions::checkError('nabidka', P_OWNED);
-        if (!$_POST) {
-            return static::displayForm('add');
+        $data = \Permissions::check('nabidka', P_ADMIN)
+            ? \DBNabidka::getNabidka(true)
+            : \DBNabidka::getNabidkyByTrener(\Session::getUserID(), true);
+        foreach ($data as $item) {
+            if ((bool) $_POST[$item['n_id']] == (bool) $item['n_visible']) {
+                continue;
+            }
+            \DBNabidka::editNabidka(
+                $item['n_id'],
+                $item['n_trener'],
+                $item['n_pocet_hod'],
+                $item['n_max_pocet_hod'],
+                $item['n_od'],
+                $item['n_do'],
+                $_POST[$item['n_id']] ? '1' : '0',
+                $item['n_lock']
+            );
         }
+        new \RedirectHelper('/admin/nabidka');
+    }
+
+    public static function add()
+    {
+        \Permissions::checkError('nabidka', P_OWNED);
+        return static::displayForm('add');
+    }
+
+    public static function addPost()
+    {
+        \Permissions::checkError('nabidka', P_OWNED);
         $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
             return static::displayForm('add');
         }
-
         \Permissions::checkError('nabidka', P_OWNED, $_POST['trener']);
 
         $od = new \Date($_POST['od'] ?? null);
@@ -71,11 +79,9 @@ class Controller_Admin_Nabidka
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
         }
-
         if (!is_numeric($_POST['max_pocet_hod'])) {
             $_POST['max_pocet_hod'] = 0;
         }
-
         \DBNabidka::addNabidka(
             $_POST['trener'],
             $_POST['pocet_hod'],
@@ -85,39 +91,39 @@ class Controller_Admin_Nabidka
             $_POST['visible'] ? '1' : '0',
             $_POST['lock'] ? 1 : 0
         );
-
         new \MessageHelper('success', 'Nabídka přidána');
         new \RedirectHelper($_POST['returnURI'] ?: '/admin/nabidka');
     }
 
-    public function edit($request)
+    public static function edit($id)
     {
         \Permissions::checkError('nabidka', P_OWNED);
-        if (!$id = $request->getId()) {
-            new \MessageHelper('warning', 'Nabídka s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?: '/admin/nabidka');
-        }
         if (!$data = \DBNabidka::getSingleNabidka($id)) {
             new \MessageHelper('warning', 'Nabídka s takovým ID neexistuje');
             new \RedirectHelper($_POST['returnURI'] ?: '/admin/nabidka');
         }
         \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
+        return static::displayForm('edit', $data);
+    }
 
-        if (!$_POST) {
-            return static::displayForm('edit', $data);
+    public static function editPost($id)
+    {
+        \Permissions::checkError('nabidka', P_OWNED);
+        if (!$data = \DBNabidka::getSingleNabidka($id)) {
+            new \MessageHelper('warning', 'Nabídka s takovým ID neexistuje');
+            new \RedirectHelper($_POST['returnURI'] ?: '/admin/nabidka');
         }
+        \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
         $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
             return static::displayForm('edit', $data);
         }
-
         $od = new \Date($_POST['od'] ?? null);
         $do = new \Date($_POST['do'] ?? null);
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
         }
-
         $items = \DBNabidka::getNabidkaItemLessons($id);
         $pocet_hod = $_POST['pocet_hod'];
         if ($pocet_hod < $items) {
@@ -141,7 +147,6 @@ class Controller_Admin_Nabidka
         if (!is_numeric($max_lessons)) {
             $max_lessons = 0;
         }
-
         \DBNabidka::editNabidka(
             $id,
             $_POST['trener'],
@@ -152,18 +157,15 @@ class Controller_Admin_Nabidka
             $_POST['visible'] ? '1' : '0',
             $_POST['lock'] ? '1' : '0'
         );
-
         new \MessageHelper('success', 'Nabídka úspěšně upravena');
         new \RedirectHelper($_POST['returnURI'] ?: '/admin/nabidka');
     }
 
-    public function duplicate($request)
+    public static function duplicate($id)
     {
         \Permissions::checkError('nabidka', P_OWNED);
-        $oldId = $request->getId();
-        $data = \DBNabidka::getSingleNabidka($oldId);
-        $items = \DBNabidka::getNabidkaItem($oldId);
-
+        $data = \DBNabidka::getSingleNabidka($id);
+        $items = \DBNabidka::getNabidkaItem($id);
         $newId = \DBNabidka::addNabidka(
             $data['n_trener'],
             $data['n_pocet_hod'],
@@ -183,13 +185,12 @@ class Controller_Admin_Nabidka
         new \RedirectHelper('/admin/nabidka');
     }
 
-    public function remove($request)
+    public static function remove($id)
     {
         \Permissions::checkError('nabidka', P_OWNED);
-        $id = $request->getId();
         $data = \DBNabidka::getSingleNabidka($id);
         if (!\Permissions::check('nabidka', P_OWNED, $data['n_trener'])) {
-            throw new AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
+            throw new \AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
         }
         \DBNabidka::removeNabidka($id);
         new \RedirectHelper('/admin/nabidka');
@@ -220,7 +221,7 @@ class Controller_Admin_Nabidka
         ]);
     }
 
-    private static function checkData(): Form
+    private static function checkData(): \Form
     {
         $od = new \Date($_POST['od'] ?? null);
         $do = new \Date($_POST['do'] ?? null);
@@ -228,7 +229,7 @@ class Controller_Admin_Nabidka
             $do = $od;
         }
 
-        $f = new Form();
+        $f = new \Form();
         $f->checkNumeric($_POST['trener'], 'ID trenéra musí být číselné', 'trener');
         $f->checkNumeric($_POST['pocet_hod'], 'Počet hodin prosím zadejte čísly', 'pocet_hod');
         $f->checkDate((string) $od, 'Zadejte prosím platné datum ("Od")', 'od');

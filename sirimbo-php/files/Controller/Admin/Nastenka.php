@@ -1,74 +1,46 @@
 <?php
-class Controller_Admin_Nastenka
+namespace Olymp\Controller\Admin;
+
+class Nastenka
 {
-    public function view()
+    public static function list()
     {
         \Permissions::checkError('nastenka', P_OWNED);
         $pager = new \Paging(new \DBNastenka());
         $pager->setCurrentPage($_GET['p']);
         $pager->setItemsPerPage($_GET['c']);
-        $data = $pager->getItems();
-
-        $showButtonsCol = false;
         $data = array_map(
-            function ($item) use (&$showButtonsCol) {
-                $canEdit = \Permissions::check('nastenka', P_OWNED, $item['up_kdo']);
-                $buttons = '';
-                if ($canEdit) {
-                    $showButtonsCol = true;
-                    $buttons = new \EditLinkHelper('/admin/nastenka/edit/' . $item['up_id'])
-                        . '&nbsp;&nbsp;'
-                        . new \RemoveLinkHelper('/admin/nastenka/remove/' . $item['up_id']);
-                }
-                return [
-                    'buttons' => $buttons,
-                    'header' => $item['up_nadpis'],
-                    'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
-                    'timestampAdd' => formatTimestamp($item['up_timestamp_add'], true),
-                    'groups' => array_reduce(
-                        \DBNastenka::getNastenkaSkupiny($item['up_id']),
-                        fn($carry, $item) => $carry . new ColorboxHelper($item['ups_color'], $item['ups_popis']),
-                        ''
-                    )
-                ];
-            },
-            $data
+            fn($item) => [
+                'buttons' => \Permissions::check('nastenka', P_OWNED, $item['up_kdo'])
+                ? \Buttons::nastenka($item['up_id'])
+                : '',
+                'header' => $item['up_nadpis'],
+                'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
+                'timestampAdd' => formatTimestamp($item['up_timestamp_add'], true),
+                'groups' => implode('', array_map(
+                    fn($item) => new \ColorboxHelper($item['ups_color'], $item['ups_popis']),
+                    \DBNastenka::getNastenkaSkupiny($item['up_id']),
+                )),
+            ],
+            $pager->getItems(),
         );
-
         new \RenderHelper('files/View/Admin/Nastenka/Overview.inc', [
             'header' => 'Správa nástěnky',
-            'showButtonsCol' => $showButtonsCol,
+            'showButtonsCol' => !!array_filter(array_map(fn($x) => $x['buttons'], $data)),
             'data' => $data,
             'navigation' => $pager->getNavigation()
         ]);
     }
 
-    public static function renderForm($action)
-    {
-        $skupiny = \DBSkupiny::get();
-        $skupinySelected = [];
-        foreach ($skupiny as $item) {
-            $skupinySelected[$item['s_id']] = $_POST['sk-' . $item['s_id']];
-        }
-        new \RenderHelper('files/View/Admin/Nastenka/Form.inc', [
-            'header' => 'Správa nástěnky',
-            'subheader' => ($action === 'add') ? 'Přidat příspěvek' : 'Upravit příspěvek',
-            'action' => $action,
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/nastenka',
-            'skupiny' => $skupiny,
-            'skupinySelected' => $skupinySelected,
-            'nadpis' => $_POST['nadpis'] ?: '',
-            'text' => $_POST['text'] ?: '',
-            'lock' => $_POST['lock'] ?: ''
-        ]);
-    }
-
-    public function add()
+    public static function add()
     {
         \Permissions::checkError('nastenka', P_OWNED);
-        if (!$_POST) {
-            return static::renderForm('add');
-        }
+        return static::renderForm('add');
+    }
+
+    public static function addPost()
+    {
+        \Permissions::checkError('nastenka', P_OWNED);
         $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
@@ -98,29 +70,32 @@ class Controller_Admin_Nastenka
         new \RedirectHelper($_POST['returnURI']);
     }
 
-    public function edit($request)
+    public static function edit($id)
     {
         \Permissions::checkError('nastenka', P_OWNED);
-        if (!$id = $request->getId()) {
-            new \MessageHelper('warning', 'Nástěnka s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?: '/admin/nastenka');
-        }
         if (!$data = \DBNastenka::getSingleNastenka($id)) {
             new \MessageHelper('warning', 'Nástěnka s takovým ID neexistuje');
             new \RedirectHelper($_POST['returnURI'] ?: '/admin/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
-
-        if (!$_POST) {
-            $_POST['id'] = $id;
-            $_POST['nadpis'] = $data['up_nadpis'];
-            $_POST['text'] = $data['up_text'];
-            foreach (\DBNastenka::getNastenkaSkupiny($id) as $skupina) {
-                $_POST['sk-' . $skupina['ups_id_skupina']] = 1;
-            }
-            $_POST['lock'] = $data['up_lock'];
-            return static::renderForm('edit');
+        $_POST['id'] = $id;
+        $_POST['nadpis'] = $data['up_nadpis'];
+        $_POST['text'] = $data['up_text'];
+        foreach (\DBNastenka::getNastenkaSkupiny($id) as $skupina) {
+            $_POST['sk-' . $skupina['ups_id_skupina']] = 1;
         }
+        $_POST['lock'] = $data['up_lock'];
+        return static::renderForm('edit');
+    }
+
+    public static function editPost($id)
+    {
+        \Permissions::checkError('nastenka', P_OWNED);
+        if (!$data = \DBNastenka::getSingleNastenka($id)) {
+            new \MessageHelper('warning', 'Nástěnka s takovým ID neexistuje');
+            new \RedirectHelper($_POST['returnURI'] ?: '/admin/nastenka');
+        }
+        \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
         $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
@@ -131,7 +106,6 @@ class Controller_Admin_Nastenka
         foreach (\DBNastenka::getNastenkaSkupiny($id) as $skupina) {
             $skupiny_old[$skupina['ups_id_skupina']] = $skupina['ups_id'];
         }
-
         $skupiny_new = [];
         foreach (\DBSkupiny::get() as $item) {
             if ($_POST['sk-' . $item['s_id']]) {
@@ -153,41 +127,56 @@ class Controller_Admin_Nastenka
                 $skupinaData['s_description']
             );
         }
-
-        \DBNastenka::editNastenka(
-            $id,
-            $_POST['nadpis'],
-            $_POST['text'],
-            ($_POST['lock'] == 'lock') ? 1 : 0
-        );
-
+        \DBNastenka::editNastenka($id, $_POST['nadpis'], $_POST['text'], ($_POST['lock'] == 'lock') ? 1 : 0);
         new \RedirectHelper($_POST['returnURI']);
     }
 
-    public function remove($request)
+    public static function remove($id)
     {
         \Permissions::checkError('nastenka', P_OWNED);
-        if (!$id = $request->getId()) {
-            new \MessageHelper('warning', 'Příspěvek s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?: '/admin/nastenka');
-        }
         if (!$data = \DBNastenka::getSingleNastenka($id)) {
             new \MessageHelper('warning', 'Příspěvek s takovým ID neexistuje');
             new \RedirectHelper($_POST['returnURI'] ?: '/admin/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
+        return new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
+            'header' => 'Správa nástěnky',
+            'prompt' => 'Opravdu chcete odstranit příspěvek:',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/nastenka',
+            'data' => [['id' => $data['up_id'], 'text' => $data['up_nadpis']]]
+        ]);
+    }
 
-        if (!$_POST || $_POST['action'] != 'confirm') {
-            return new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
-                'header' => 'Správa nástěnky',
-                'prompt' => 'Opravdu chcete odstranit příspěvek:',
-                'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/nastenka',
-                'data' => [['id' => $data['up_id'], 'text' => $data['up_nadpis']]]
-            ]);
+    public static function removePost($id)
+    {
+        \Permissions::checkError('nastenka', P_OWNED);
+        if (!$data = \DBNastenka::getSingleNastenka($id)) {
+            new \MessageHelper('warning', 'Příspěvek s takovým ID neexistuje');
+            new \RedirectHelper($_POST['returnURI'] ?: '/admin/nastenka');
         }
-
+        \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
         \DBNastenka::removeNastenka($id);
         new \RedirectHelper('/admin/nastenka');
+    }
+
+    public static function renderForm($action)
+    {
+        $skupiny = \DBSkupiny::get();
+        $skupinySelected = [];
+        foreach ($skupiny as $item) {
+            $skupinySelected[$item['s_id']] = $_POST['sk-' . $item['s_id']];
+        }
+        new \RenderHelper('files/View/Admin/Nastenka/Form.inc', [
+            'header' => 'Správa nástěnky',
+            'subheader' => ($action === 'add') ? 'Přidat příspěvek' : 'Upravit příspěvek',
+            'action' => $action,
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/nastenka',
+            'skupiny' => $skupiny,
+            'skupinySelected' => $skupinySelected,
+            'nadpis' => $_POST['nadpis'] ?: '',
+            'text' => $_POST['text'] ?: '',
+            'lock' => $_POST['lock'] ?: ''
+        ]);
     }
 
     private static function checkData(): \Form

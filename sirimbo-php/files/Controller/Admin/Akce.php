@@ -18,7 +18,7 @@ class Akce
                     . '<a href="/admin/akce/detail/' . $item['a_id'] . '">účastníci</a>, '
                     . '<a href="/admin/akce/dokumenty/' . $item['a_id'] . '">dokumenty</a>'
                 ),
-                'buttons' => new \RemoveLinkHelper('/admin/akce/remove/' . $item['a_id'])
+                'buttons' => \Buttons::delete('/admin/akce/remove/' . $item['a_id'])
             ],
             \DBAkce::getWithItemCount()
         );

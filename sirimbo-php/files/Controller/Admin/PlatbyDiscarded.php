@@ -1,7 +1,9 @@
 <?php
-class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
+namespace Olymp\Controller\Admin;
+
+class PlatbyDiscarded
 {
-    public function view()
+    public static function view()
     {
         \Permissions::checkError('platby', P_OWNED);
         $data = \DBPlatbyRaw::getDiscarded();
@@ -30,15 +32,13 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
         }
     }
 
-    public function remove($request)
+    public static function remove($id)
     {
         \Permissions::checkError('platby', P_OWNED);
-        $id = $request->getId();
-        if (!$id && !\DBPlatbyRaw::getSingle($id)) {
+        if (!\DBPlatbyRaw::getSingle($id)) {
             new \MessageHelper('info', 'Platba se zadaným ID neexistuje.');
             new \RedirectHelper($_SERVER['HTTP_REFERER']);
         }
-
         \DBPlatbyRaw::delete($id);
         new \MessageHelper('success', 'Platba byla odstraněna.');
         new \RedirectHelper($_SERVER['HTTP_REFERER']);
@@ -66,8 +66,8 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
         $columnsTemp = [];
         foreach ($data as $rawData) {
             $row = unserialize($rawData['pr_raw']);
-            if (!static::checkHeaders(array_flip($row), $specific, $variable, $date, $amount)) {
-                static::recognizeHeaders($row, $specific, $variable, $date, $amount);
+            if (!Platby::checkHeaders(array_flip($row), $specific, $variable, $date, $amount)) {
+                Platby::recognizeHeaders($row, $specific, $variable, $date, $amount);
             }
 
             if ($_GET['list'] == 'date') {
@@ -98,11 +98,11 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
                     $columnsTemp[$key] = false;
                 }
             }
-            $row['edit'] = new Tag(
+            $row['edit'] = new \Tag(
                 'div',
                 ['style' => 'width:51px'],
-                (string) new EditLinkHelper('/admin/platby/manual/' . $rawData['pr_id']),
-                (string) new RemoveLinkHelper('/admin/platby/discarded/remove/' . $rawData['pr_id'])
+                \Buttons::edit('/admin/platby/manual/' . $rawData['pr_id']),
+                \Buttons::delete('/admin/platby/discarded/remove/' . $rawData['pr_id']),
             );
             $result[] = $row;
         }
@@ -133,8 +133,8 @@ class Controller_Admin_Platby_Discarded extends Controller_Admin_Platby
         $groupAmount = [];
         foreach ($data as $row) {
             $row = unserialize($row['pr_raw']);
-            if (!static::checkHeaders(array_flip($row), $specific, $variable, $date, $amount)) {
-                static::recognizeHeaders($row, $specific, $variable, $date, $amount);
+            if (!Platby::checkHeaders(array_flip($row), $specific, $variable, $date, $amount)) {
+                Platby::recognizeHeaders($row, $specific, $variable, $date, $amount);
             }
 
             if (isset($row[$date]) && $row[$date]) {

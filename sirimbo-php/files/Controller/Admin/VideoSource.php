@@ -1,88 +1,89 @@
 <?php
-class Controller_Admin_Video_Source
+namespace Olymp\Controller\Admin;
+
+class VideoSource
 {
-    public function view()
+    public static function list()
     {
         \Permissions::checkError('aktuality', P_OWNED);
         new \RenderHelper('files/View/Admin/VideoSource/Overview.inc', [
             'header' => 'Správa zdrojů videa',
             'data' => array_map(
                 fn($item) => [
-                    'buttons' => new \EditLinkHelper('/admin/video/source/edit/' . $item['vs_id'])
-                    . '&nbsp;'
-                    . new \RemoveLinkHelper('/admin/video/source/remove/' . $item['vs_id']),
+                    'buttons' => \Buttons::videoSource($item['vs_id']),
                     'url' => $item['vs_url'],
                     'title' => $item['vs_title'],
                     'created' => formatTimestamp($item['vs_created_at'], true),
-                    'lastChecked' => $item['vs_last_checked'] ? formatTimestamp($item['vs_last_checked'], true) : ''
+                    'lastChecked' => $item['vs_last_checked']
+                    ? formatTimestamp($item['vs_last_checked'], true) : ''
                 ],
                 \DBVideoSource::getAll()
             )
         ]);
     }
 
-    public function add()
+    public static function add()
     {
         \Permissions::checkError('aktuality', P_OWNED);
-        if (!$_POST) {
-            return static::displayForm('add');
-        }
+        return static::displayForm('add');
+    }
 
+    public static function addPost()
+    {
+        \Permissions::checkError('aktuality', P_OWNED);
         $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
             return static::displayForm('add');
         }
-
         \DBVideoSource::add($_POST['uri']);
         new \RedirectHelper('/admin/video/source');
     }
 
-    public function edit($request)
+    public static function edit($id)
     {
         \Permissions::checkError('aktuality', P_OWNED);
-        $id = $request->getId();
-        $data = \DBVideoSource::getSingle($id);
-        if (!$id || !$data) {
+        if (!$data = \DBVideoSource::getSingle($id)) {
             new \MessageHelper('warning', 'Článek s takovým ID neexistuje');
             new \RedirectHelper('/admin/video/source');
         }
+        return static::displayForm('edit', $data);
+    }
 
-        if (!$_POST) {
-            return static::displayForm('edit', $data);
+    public static function editPost($id)
+    {
+        \Permissions::checkError('aktuality', P_OWNED);
+        if (!$data = \DBVideoSource::getSingle($id)) {
+            new \MessageHelper('warning', 'Článek s takovým ID neexistuje');
+            new \RedirectHelper('/admin/video/source');
         }
-
         $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
             return static::displayForm('edit', $data);
         }
-
         \DBVideoSource::edit($id, $_POST['uri'], $_POST['title'], $_POST['desc']);
-
         new \RedirectHelper('/admin/video/source');
     }
 
-    public function remove($request)
+    public static function remove($id)
     {
         \Permissions::checkError('aktuality', P_OWNED);
-        if (!$request->getId()) {
-            new \RedirectHelper('/admin/video/source');
-        }
-
-        if ($_POST['action'] == 'confirm') {
-            \DBVideoSource::remove($request->getId());
-            new \MessageHelper('info', 'Video odebráno');
-            new \RedirectHelper('/admin/video/source');
-        }
-
-        $item = \DBVideo::getSingle($request->getId());
+        $item = \DBVideo::getSingle($id);
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa videí',
             'prompt' => 'Opravdu chcete odstranit zdroj:',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/video/source',
             'data' => [['id' => $item['vs_id'], 'text' => $item['vs_title']]]
         ]);
+    }
+
+    public static function removePost($id)
+    {
+        \Permissions::checkError('aktuality', P_OWNED);
+        \DBVideoSource::remove($id);
+        new \MessageHelper('info', 'Video odebráno');
+        new \RedirectHelper('/admin/video/source');
     }
 
     protected static function displayForm($action, $data = [])

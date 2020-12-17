@@ -14,7 +14,7 @@ class Aktuality
                     '<a href="/admin/aktuality/edit/' . $item['at_id'] . '">obecné</a>, ' .
                     '<a href="/admin/aktuality/foto/' . $item['at_id'] . '">galerie</a>'
                 ),
-                'buttons' => new \RemoveLinkHelper('/admin/aktuality/remove/' . $item['at_id'])
+                'buttons' => \Buttons::delete('/admin/aktuality/remove/' . $item['at_id'])
             ],
             \Permissions::check('aktuality', P_ADMIN)
             ? \DBAktuality::getAktuality(1)

@@ -13,8 +13,7 @@
           <img alt="<?= $item['id'] ?>" src="<?= $item['thumbnailURI']?>" />
         </div>
         <div class="foto_desc">
-          <?= new EditLinkHelper('/admin/galerie/file/edit/' . $item['id']) ?>
-          <?= new RemoveLinkHelper('/admin/galerie/file/remove/' . $item['id']) ?>
+          <?= \Buttons::galleryFoto($item['id']) ?>
           <?= $item['name'] ?>
         </div>
       </div>

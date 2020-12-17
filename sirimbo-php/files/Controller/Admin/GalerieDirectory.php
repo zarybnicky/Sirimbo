@@ -1,15 +1,15 @@
 <?php
-class Controller_Admin_Galerie_Directory
+namespace Olymp\Controller\Admin;
+
+class GalerieDirectory
 {
-    public function view($request)
+    public static function list($id)
     {
         \Permissions::checkError('galerie', P_OWNED);
-        $id = $request->getId();
         if (!\DBGalerie::getSingleDir($id)) {
             new \MessageHelper('warning', 'Složka s takovým ID neexistuje');
             new \RedirectHelper('/admin/galerie');
         }
-
         new \RenderHelper('files/View/Admin/Galerie/DisplayDirectory.inc', [
             'header' => 'Správa fotogalerie',
             'id' => $id,
@@ -24,12 +24,15 @@ class Controller_Admin_Galerie_Directory
         ]);
     }
 
-    public function add()
+    public static function add()
     {
         \Permissions::checkError('galerie', P_OWNED);
-        if (!$_POST) {
-            return static::displayForm('add');
-        }
+        return static::displayForm('add');
+    }
+
+    public static function addPost()
+    {
+        \Permissions::checkError('galerie', P_OWNED);
         $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
@@ -38,7 +41,6 @@ class Controller_Admin_Galerie_Directory
         $parent = \DBGalerie::getSingleDir($_POST['parent']);
         $dirPath = $parent['gd_path'] . DIRECTORY_SEPARATOR . sanitizePathname($_POST['name']);
         mkdir($dirPath, 0777, true);
-
         \DBGalerie::addDir(
             $_POST['name'],
             $parent['gd_id'],
@@ -49,23 +51,25 @@ class Controller_Admin_Galerie_Directory
         new \RedirectHelper('/admin/galerie');
     }
 
-    public function edit($request)
+    public static function edit($id)
     {
         \Permissions::checkError('galerie', P_OWNED);
-        $id = $request->getId();
-        if (!$id) {
-            new \MessageHelper('warning', 'Není možné upravit hlavní složku');
-            new \RedirectHelper('/admin/galerie');
-        }
         if (!($data = \DBGalerie::getSingleDir($id))) {
             new \MessageHelper('warning', 'Taková složka neexistuje');
             new \RedirectHelper('/admin/galerie');
         }
-        if (!$_POST) {
-            $_POST['name'] = $data['gd_name'];
-            $_POST['parent'] = $data['gd_id_rodic'];
-            $_POST['hidden'] = $data['gd_hidden'] ? '1' : '0';
-            return static::displayForm('edit');
+        $_POST['name'] = $data['gd_name'];
+        $_POST['parent'] = $data['gd_id_rodic'];
+        $_POST['hidden'] = $data['gd_hidden'] ? '1' : '0';
+        return static::displayForm('edit');
+    }
+
+    public static function editPost($id)
+    {
+        \Permissions::checkError('galerie', P_OWNED);
+        if (!($data = \DBGalerie::getSingleDir($id))) {
+            new \MessageHelper('warning', 'Taková složka neexistuje');
+            new \RedirectHelper('/admin/galerie');
         }
         $form = static::checkData();
         if (!$form->isValid()) {
@@ -74,7 +78,6 @@ class Controller_Admin_Galerie_Directory
         }
         $parent = \DBGalerie::getSingleDir($_POST['parent']);
         $newPath = $parent['gd_path'] . DIRECTORY_SEPARATOR . sanitizePathname(getCanonicalName($_POST['name']));
-
         if ($data['gd_path'] != $newPath) {
             if (file_exists(GALERIE . DIRECTORY_SEPARATOR . $newPath)) {
                 new \MessageHelper('danger', 'V dané nadsložce už existuje složka se stejným názvem.');
@@ -91,7 +94,6 @@ class Controller_Admin_Galerie_Directory
             \DBGalerie::editFotoReplacePath($id, $data['gd_path'], $newPath);
             $data['gd_path'] = $newPath;
         }
-
         \DBGalerie::editDir(
             $id,
             $_POST['name'],
@@ -103,24 +105,9 @@ class Controller_Admin_Galerie_Directory
         new \RedirectHelper('/admin/galerie');
     }
 
-    public function remove($request)
+    public static function remove($id)
     {
         \Permissions::checkError('galerie', P_OWNED);
-        if (!$request->getId()) {
-            new \RedirectHelper('/admin/galerie');
-        }
-        $id = $request->getId();
-
-        if ($_POST['action'] == 'confirm') {
-            $data = \DBGalerie::getSingleDir($id);
-            \DBGalerie::removeDir($id);
-            if ($data['gd_path']) {
-                rrmdir(GALERIE . DIRECTORY_SEPARATOR . $data['gd_path']);
-                rrmdir(GALERIE_THUMBS . DIRECTORY_SEPARATOR . $data['gd_path']);
-            }
-            new \RedirectHelper('/admin/galerie');
-        }
-
         $item = \DBGalerie::getSingleDir($id);
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa galerie',
@@ -128,6 +115,18 @@ class Controller_Admin_Galerie_Directory
             'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/galerie',
             'data' => [['id' => $item['gd_id'], 'text' => $item['gd_name']]]
         ]);
+    }
+
+    public static function removePost($id)
+    {
+        \Permissions::checkError('galerie', P_OWNED);
+        $data = \DBGalerie::getSingleDir($id);
+        \DBGalerie::removeDir($id);
+        if ($data['gd_path']) {
+            rrmdir(GALERIE . DIRECTORY_SEPARATOR . $data['gd_path']);
+            rrmdir(GALERIE_THUMBS . DIRECTORY_SEPARATOR . $data['gd_path']);
+        }
+        new \RedirectHelper('/admin/galerie');
     }
 
     private static function displayForm($action)
@@ -151,7 +150,7 @@ class Controller_Admin_Galerie_Directory
         ]);
     }
 
-    protected function checkData( )
+    protected static function checkData()
     {
         $form = new \Form();
         $form->checkNotEmpty($_POST['name'], 'Název složky nesmí být prázdný', 'name');

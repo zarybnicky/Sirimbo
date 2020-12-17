@@ -8,9 +8,7 @@ class Permissions
         \Permissions::checkError('permissions', P_ADMIN);
         $data = array_map(
             fn($item) => [
-                'buttons' => new \EditLinkHelper('/admin/permissions/edit/' . $item['pe_id'])
-                . '&nbsp;&nbsp;'
-                . new \RemoveLinkHelper('/admin/permissions/remove/' . $item['pe_id']),
+                'buttons' => \Buttons::permission($item['pe_id']),
                 'name' => $item['pe_name'],
                 'description' => $item['pe_description']
             ],

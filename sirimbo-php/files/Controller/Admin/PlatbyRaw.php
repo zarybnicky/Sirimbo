@@ -1,14 +1,13 @@
 <?php
-class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
+namespace Olymp\Controller\Admin;
+
+class PlatbyRaw
 {
     const TEMP_DIR = './upload/csv/';
 
-    public function view()
+    public static function get()
     {
         \Permissions::checkError('platby', P_OWNED);
-        if ($_POST && $_POST['action'] == 'upload') {
-            static::processUpload();
-        }
         $workDir = new \DirectoryIterator(self::TEMP_DIR);
         $workDir->rewind();
         foreach ($workDir as $fileInfo) {
@@ -21,7 +20,6 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
             }
             new \MessageHelper('success', 'Soubor ' . $fileInfo->getFilename() . ' byl zpracován.');
         }
-
         new \RenderHelper('files/View/Admin/Platby/RawUpload.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Import plateb',
@@ -29,40 +27,50 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
         ]);
     }
 
-    public function select_columns()
+    public static function post()
+    {
+        \Permissions::checkError('platby', P_OWNED);
+        static::processUpload();
+        new \RedirectHelper('/admin/platby/raw');
+    }
+
+    public static function selectColumns()
     {
         \Permissions::checkError('platby', P_OWNED);
         $path = self::TEMP_DIR . str_replace('../', '', $_GET['path']);
-
-        if ($_POST) {
-            static::processCsv($path, [
-                'specific' => $_POST['specific'],
-                'variable' => $_POST['variable'],
-                'date' => $_POST['date'],
-                'amount' => $_POST['amount']
-            ]);
-            new \MessageHelper('success', 'Soubor ' . $_GET['path'] . ' byl zpracován.');
-            new \RedirectHelper('/admin/platby/raw');
-        }
         $parser = static::getParser($path);
-        static::recognizeHeaders(array_flip($parser->headers()), $specific, $variable, $date, $amount);
+        Platby::recognizeHeaders(array_flip($parser->headers()), $specific, $variable, $date, $amount);
 
-        $data = [];
-        foreach ($parser->headers() as $name) {
-            $data[] = [
+        $data = array_map(
+            fn($name) => [
                 'column' => $name,
                 'specific' => new \RadioHelper('specific', $name, $name == $specific),
                 'variable' => new \RadioHelper('variable', $name, $name == $variable),
                 'date' => new \RadioHelper('date', $name, $name == $date),
                 'amount' => new \RadioHelper('amount', $name, $name == $amount)
-            ];
-        }
+            ],
+            $parser->headers()
+        );
         new \RenderHelper('files/View/Admin/Platby/RawColumnSelect.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Import plateb',
             'data' => $data,
             'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
+    }
+
+    public static function selectColumnsPost()
+    {
+        \Permissions::checkError('platby', P_OWNED);
+        $path = self::TEMP_DIR . str_replace('../', '', $_GET['path']);
+        static::processCsv($path, [
+            'specific' => $_POST['specific'],
+            'variable' => $_POST['variable'],
+            'date' => $_POST['date'],
+            'amount' => $_POST['amount']
+        ]);
+        new \MessageHelper('success', 'Soubor ' . $_GET['path'] . ' byl zpracován.');
+        new \RedirectHelper('/admin/platby/raw');
     }
 
     private static function getParser($path)
@@ -82,19 +90,19 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
         $parser = static::getParser($path);
         $headers = $parser->headers();
         if ($columns === null) {
-            static::recognizeHeaders(array_flip($headers), $specific, $variable, $date, $amount);
+            Platby::recognizeHeaders(array_flip($headers), $specific, $variable, $date, $amount);
         } else {
             $specific = $columns['specific'];
             $variable = $columns['variable'];
             $date = $columns['date'];
             $amount = $columns['amount'];
         }
-        if (!static::checkHeaders($headers, $specific, $variable, $date, $amount)) {
-            new \MessageHelper('info', 'Skript nemohl rozpoznat sloupce nutné pro zařazení plateb, je potřeba udělat to ručně. (soubor: ' . $path . ')');
+        if (!Platby::checkHeaders($headers, $specific, $variable, $date, $amount)) {
+            new \MessageHelper('info', "Skript nemohl rozpoznat sloupce nutné pro zařazení plateb, je potřeba udělat to ručně. (soubor: $path)");
             new \RedirectHelper('/admin/platby/raw/select_columns?path=' . str_replace(self::TEMP_DIR, '', $path));
         }
-        $userLookup = static::getUserLookup(false);
-        $categoryLookup = static::getCategoryLookup(true, true, false);
+        $userLookup = Platby::getUserLookup(false);
+        $categoryLookup = Platby::getCategoryLookup(true, true, false);
 
         foreach ($parser as $array) {
             if (!$array) {
@@ -110,17 +118,16 @@ class Controller_Admin_Platby_Raw extends Controller_Admin_Platby
             if (!$item->isValid) {
                 \DBPlatbyRaw::insert($serialized, $hash, '0', '0', false);
                 continue;
-            } else {
-                \DBPlatbyRaw::insert($serialized, $hash, '1', '0', true);
-                \DBPlatbyItem::insert(
-                    $item->variable,
-                    $item->categoryId,
-                    \DBPlatbyRaw::getInsertId(),
-                    $item->amount,
-                    $item->date,
-                    $item->prefix
-                );
             }
+            \DBPlatbyRaw::insert($serialized, $hash, '1', '0', true);
+            \DBPlatbyItem::insert(
+                $item->variable,
+                $item->categoryId,
+                \DBPlatbyRaw::getInsertId(),
+                $item->amount,
+                $item->date,
+                $item->prefix
+            );
         }
     }
 

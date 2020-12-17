@@ -1,7 +1,26 @@
 <?php
-class Controller_Admin_Galerie
+namespace Olymp\Controller\Admin;
+
+class Galerie
 {
-    public function view()
+    public static function list()
+    {
+        \Permissions::checkError('galerie', P_OWNED);
+        $data = array_map(
+            fn($item) => [
+                'buttons' => \Buttons::galleryDir($item['gd_id']),
+                'name' => str_repeat('&nbsp;->', $item['gd_level'] - 1) . ' ' . $item['gd_name'],
+                'hidden' => new \CheckboxHelper($item['gd_id'], '1', $item['gd_hidden'])
+            ],
+            \DBGalerie::getDirs(true, true),
+        );
+        new \RenderHelper('files/View/Admin/Galerie/Overview.inc', [
+            'header' => 'Správa fotogalerie',
+            'data' => $data
+        ]);
+    }
+
+    public static function listPost()
     {
         \Permissions::checkError('galerie', P_OWNED);
         if ($_POST['action'] == 'save') {
@@ -10,25 +29,7 @@ class Controller_Admin_Galerie
         if ($_POST['action'] == 'scan') {
             static::_scan();
         }
-
-        $data = \DBGalerie::getDirs(true, true);
-        $data = array_map(
-            fn($item) => [
-                'buttons' => (
-                    new \EditLinkHelper('/admin/galerie/directory/edit/' . $item['gd_id']) . '&nbsp;' .
-                    new \DuplicateLinkHelper('/admin/galerie/directory/' . $item['gd_id']) . '&nbsp;' .
-                    new \RemoveLinkHelper('/admin/galerie/directory/remove/' . $item['gd_id'])
-                ),
-                'name' => str_repeat('&nbsp;->', $item['gd_level'] - 1) . ' ' . $item['gd_name'],
-                'hidden' => new \CheckboxHelper($item['gd_id'], '1', $item['gd_hidden'])
-            ],
-            $data
-        );
-
-        new \RenderHelper('files/View/Admin/Galerie/Overview.inc', [
-            'header' => 'Správa fotogalerie',
-            'data' => $data
-        ]);
+        new \RedirectHelper('/admin/galerie');
     }
 
     private static function _scan()
