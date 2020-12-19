@@ -73,24 +73,29 @@
           cp admin.html almond.js bundle.js{,.map} index.css{,.map} index.html react* $out/
         '';
       };
-      sirimbo-php = final.stdenv.mkDerivation {
+      sirimbo-php = (pkgs.callPackage ./sirimbo-php/composer-project.nix {
+        php = pkgs.php74;
+      } (getSrc ./sirimbo-php)).overrideAttrs (oldAttrs: {
         name = "sirimbo-php";
-        src = getSrc ./sirimbo-php;
+        buildInputs = oldAttrs.buildInputs ++ [ pkgs.imagemagick ];
+        buildPhase = "composer validate";
+      });
+      sirimbo-php-assets = final.stdenv.mkDerivation {
+        name = "sirimbo-php-assets";
+        src = getSrc ./sirimbo-php-assets;
         phases = "unpackPhase buildPhase";
         buildPhase = ''
           mkdir -p $out/public $out/bootstrap
-          cp -r index.php files composer.json $out
-          cp -r public/{favicon.ico,images,robots.txt,scripts,style,webfonts} $out/public
+          cp -r $src/* $out/public
           cp -r ${bootstrap}/* $out/bootstrap/
           cd $out
           ${final.sass}/bin/sass -t compact public/style/main.scss:$out/public/style.css
-          ${final.php73Packages.composer}/bin/composer install -o
         '';
       };
     };
 
     packages.x86_64-linux = {
-      inherit (pkgs) sirimbo-tournament-frontend sirimbo-php;
+      inherit (pkgs) sirimbo-tournament-frontend sirimbo-php sirimbo-php-assets;
       inherit (hsPkgs) sirimbo-api sirimbo-schema;
     };
 
@@ -206,35 +211,37 @@
           ${if cfg.dbPassword != null then "dbPassword: ${cfg.dbPassword}" else ""}
           proxyPort: ${toString cfg.proxyPort}
         '';
+        configPhp = pkgs.runCommand "sirimbo-php-config" {} ''
+          mkdir -p $out
+          cat > $out/config.php <<EOS
+          <?php
+          openlog('${cfg.domain}', LOG_ODELAY, LOG_USER);
+
+          define('DB_SERVER', '${cfg.dbHost}');
+          define('DB_DATABASE', '${cfg.dbDatabase}');
+          define('DB_USER', '${cfg.dbUser}');
+          define('DB_PASS', ${if cfg.dbPassword == null then "NULL" else "'${cfg.dbPassword}'"});
+
+          define('GALERIE', '${cfg.stateDir}/gallery');
+          define('GALERIE_THUMBS', '${cfg.stateDir}/gallery/thumbnails');
+          define('UPLOADS', '${cfg.stateDir}/uploads');
+          foreach ([GALERIE, GALERIE_THUMBS, UPLOADS] as \$path) {
+            if (!is_readable(\$path)) {
+              mkdir(\$path, 0777, true);
+            }
+          }
+          define('NABOR', '0');
+          date_default_timezone_set('Europe/Paris');
+          define('DEFAULT_FROM_MAIL', 'TK Olymp.cz <noreply@tkolymp.cz>');
+          define('DEFAULT_ADMIN_MAIL', 'tkolymp@tkolymp.cz');
+          EOS
+        '';
         phpRoot = pkgs.symlinkJoin {
           name = "sirimbo-php-dist";
           paths = [
             pkgs.sirimbo-php
-            (pkgs.runCommand "sirimbo-php-config" {} ''
-              mkdir -p $out
-              cat > $out/config.php <<EOS
-              <?php
-              openlog('${cfg.domain}', LOG_ODELAY, LOG_USER);
-
-              define('DB_SERVER', '${cfg.dbHost}');
-              define('DB_DATABASE', '${cfg.dbDatabase}');
-              define('DB_USER', '${cfg.dbUser}');
-              define('DB_PASS', ${if cfg.dbPassword == null then "NULL" else "'${cfg.dbPassword}'"});
-
-              define('GALERIE', '${cfg.stateDir}/gallery');
-              define('GALERIE_THUMBS', '${cfg.stateDir}/gallery/thumbnails');
-              define('UPLOADS', '${cfg.stateDir}/uploads');
-              foreach ([GALERIE, GALERIE_THUMBS, UPLOADS] as \$path) {
-                if (!is_readable(\$path)) {
-                  mkdir(\$path, 0777, true);
-                }
-              }
-              define('NABOR', '0');
-              date_default_timezone_set('Europe/Paris');
-              define('DEFAULT_FROM_MAIL', 'TK Olymp.cz <noreply@tkolymp.cz>');
-              define('DEFAULT_ADMIN_MAIL', 'tkolymp@tkolymp.cz');
-              EOS
-            '')
+            pkgs.sirimbo-php-assets
+            configPhp
           ];
         };
       in lib.mkMerge [

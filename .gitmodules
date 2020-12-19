@@ -1,5 +1,5 @@
 [submodule "bootstrap"]
-	path = sirimbo-php/bootstrap
+	path = sirimbo-php-assets/bootstrap
 	url = https://github.com/twbs/bootstrap
 [submodule "gutenberg"]
 	path = sirimbo-app/gutenberg

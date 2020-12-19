@@ -1,15 +1,21 @@
 {
-  "name": "zarybnicky/tkolymp.cz",
-  "type": "project",
-  "repositories": [{"packagist.org": false}],
-  "autoload": {
-    "psr-4": { "Olymp\\": "files/" },
-    "classmap": [
-      "files/Core/",
-      "files/Core/database/",
-      "files/Core/helpers/",
-      "files/Core/types",
-      "files/Controller"
-    ]
-  }
+    "name": "zarybnicky/tkolymp.cz",
+    "description": "TKOlymp.cz",
+    "license": "proprietary",
+    "type": "project",
+    "repositories": [{"packagist.org": false}],
+    "autoload": {
+        "psr-4": { "Olymp\\": "files/" },
+        "classmap": [
+            "files/Core/",
+            "files/Core/database/",
+            "files/Core/helpers/",
+            "files/Core/types",
+            "files/Controller"
+        ]
+    },
+    "require": {
+        "stephank/composer-plugin-nixify": "^1.0",
+        "twig/twig": "^3.0"
+    }
 }
