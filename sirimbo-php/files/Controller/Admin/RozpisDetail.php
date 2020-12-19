@@ -83,7 +83,7 @@ class RozpisDetail
             'data' => $data,
             'users' => $users,
             'items' => $items,
-            'selected_nabidka' => $_GET['n'] ?: '',
+            'selected_nabidka' => $_GET['n'] ?? '',
             'nabidky' => $nabidky_select,
             'nabidka' => isset($nabidka) ? $nabidka : []
         ]);

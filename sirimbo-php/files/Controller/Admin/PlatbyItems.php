@@ -34,9 +34,9 @@ class PlatbyItems
             'categories' => static::getCategories(),
             'data' => $data,
             'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/'),
-            'user' => $_GET['user'] ?: '',
-            'category' => $_GET['category'] ?: '',
-            'date' => $_GET['date'] ?: ''
+            'user' => $_GET['user'] ?? '',
+            'category' => $_GET['category'] ?? '',
+            'date' => $_GET['date'] ?? ''
         ]);
     }
 
@@ -107,7 +107,7 @@ class PlatbyItems
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa plateb',
             'prompt' => 'Opravdu chcete odstranit platbu:',
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/platby/items',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/platby/items',
             'data' => [[
                 'id' => $item['pi_id'],
                 'text' => $item['u_jmeno'] . ' ' . $item['u_prijmeni']
@@ -155,11 +155,11 @@ class PlatbyItems
             'raw' => $raw,
             'users' => static::getUsers(),
             'categories' => static::getCategories(),
-            'date' => $_POST['date'] ?: '',
-            'amount' => $_POST['amount'] ?: '',
-            'variable' => $_POST['variable'] ?: '',
-            'specific' => $_POST['specific'] ?: '',
-            'prefix' => $_POST['prefix'] ?: '',
+            'date' => $_POST['date'] ?? '',
+            'amount' => $_POST['amount'] ?? '',
+            'variable' => $_POST['variable'] ?? '',
+            'specific' => $_POST['specific'] ?? '',
+            'prefix' => $_POST['prefix'] ?? '',
             'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }

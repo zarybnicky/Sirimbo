@@ -106,10 +106,10 @@ class PlatbyCategory
             $_POST['visible'] ? '1' : '0'
         );
         $insertId = \DBPlatbyCategory::getInsertId();
-        foreach ($_POST['group'] ?: [] as $item) {
+        foreach ($_POST['group'] ?? [] as $item) {
             \DBPlatbyGroup::addChild($item, $insertId);
         }
-        new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/category');
+        new \RedirectHelper($_POST['returnURI'] ?? '/admin/platby/structure/category');
     }
 
     public static function edit($id)
@@ -117,7 +117,7 @@ class PlatbyCategory
         \Permissions::checkError('platby', P_OWNED);
         if (!$data = \DBPlatbyCategory::getSingle($id)) {
             new \MessageHelper('warning', 'Kategorie s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/category');
+            new \RedirectHelper($_POST['returnURI'] ?? '/admin/platby/structure/category');
         }
         if ($data['pc_use_base']) {
             $data['pc_amount'] = '*' . $data['pc_amount'];
@@ -138,7 +138,7 @@ class PlatbyCategory
         \Permissions::checkError('platby', P_OWNED);
         if (!\DBPlatbyCategory::getSingle($id)) {
             new \MessageHelper('warning', 'Kategorie s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/category');
+            new \RedirectHelper($_POST['returnURI'] ?? '/admin/platby/structure/category');
         }
         $form = static::checkData('edit', $id);
         if (!$form->isValid()) {
@@ -183,7 +183,7 @@ class PlatbyCategory
             fn($item) => $item['pg_id'],
             \DBPlatbyCategory::getSingleWithGroups($id)
         );
-        $groupsNew = $_POST['group'] ?: [];
+        $groupsNew = $_POST['group'] ?? [];
         foreach (array_diff($groupsOld, $groupsNew) as $removed) {
             \DBPlatbyGroup::removeChild($removed, $id);
         }
@@ -193,7 +193,7 @@ class PlatbyCategory
         if ($_GET['group']) {
             new \RedirectHelper('/admin/platby/structure/group/edit/' . $_GET['group']);
         }
-        new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/category');
+        new \RedirectHelper($_POST['returnURI'] ?? '/admin/platby/structure/category');
     }
 
     public static function remove($id)
@@ -201,7 +201,7 @@ class PlatbyCategory
         \Permissions::checkError('platby', P_OWNED);
         if (!$data = \DBPlatbyCategory::getSingle($id)) {
             new \MessageHelper('warning', 'Specifický symbol s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/category');
+            new \RedirectHelper($_POST['returnURI'] ?? '/admin/platby/structure/category');
         }
         if (static::getLinkedObjects($id)) {
             new \MessageHelper(
@@ -229,7 +229,7 @@ class PlatbyCategory
         \Permissions::checkError('platby', P_OWNED);
         if (!$data = \DBPlatbyCategory::getSingle($id)) {
             new \MessageHelper('warning', 'Specifický symbol s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/category');
+            new \RedirectHelper($_POST['returnURI'] ?? '/admin/platby/structure/category');
         }
 
         $f = static::getLinkedObjects($id);
@@ -277,7 +277,7 @@ class PlatbyCategory
             return new \RedirectHelper('/admin/platby/structure/category/remove/' . $id);
         }
         \DBPlatbyCategory::delete($id);
-        new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/category');
+        new \RedirectHelper($_POST['returnURI'] ?? '/admin/platby/structure/category');
     }
 
     protected static function getLinkedObjects($id)
@@ -312,14 +312,14 @@ class PlatbyCategory
             'action' => $action,
             'groups' => $groups,
             'returnURI' => $_SERVER['HTTP_REFERER'],
-            'name' => $_POST['name'] ?: '',
-            'symbol' => $_POST['symbol'] ?: '',
-            'amount' => $_POST['amount'] ?: '',
-            'dueDate' => $_POST['dueDate'] ?: '',
-            'validRange' => $_POST['validRange'] ?: '',
-            'usePrefix' => $_POST['usePrefix'] ?: '',
-            'archive' => $_POST['archive'] ?: '',
-            'visible' => $_POST['visible'] ?: '',
+            'name' => $_POST['name'] ?? '',
+            'symbol' => $_POST['symbol'] ?? '',
+            'amount' => $_POST['amount'] ?? '',
+            'dueDate' => $_POST['dueDate'] ?? '',
+            'validRange' => $_POST['validRange'] ?? '',
+            'usePrefix' => $_POST['usePrefix'] ?? '',
+            'archive' => $_POST['archive'] ?? '',
+            'visible' => $_POST['visible'] ?? '',
             'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }

@@ -92,7 +92,7 @@ class Nabidka
             $_POST['lock'] ? 1 : 0
         );
         new \MessageHelper('success', 'Nabídka přidána');
-        new \RedirectHelper($_POST['returnURI'] ?: '/admin/nabidka');
+        new \RedirectHelper($_POST['returnURI'] ?? '/admin/nabidka');
     }
 
     public static function edit($id)
@@ -100,7 +100,7 @@ class Nabidka
         \Permissions::checkError('nabidka', P_OWNED);
         if (!$data = \DBNabidka::getSingleNabidka($id)) {
             new \MessageHelper('warning', 'Nabídka s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?: '/admin/nabidka');
+            new \RedirectHelper($_POST['returnURI'] ?? '/admin/nabidka');
         }
         \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
         return static::displayForm('edit', $data);
@@ -111,7 +111,7 @@ class Nabidka
         \Permissions::checkError('nabidka', P_OWNED);
         if (!$data = \DBNabidka::getSingleNabidka($id)) {
             new \MessageHelper('warning', 'Nabídka s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?: '/admin/nabidka');
+            new \RedirectHelper($_POST['returnURI'] ?? '/admin/nabidka');
         }
         \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
         $form = static::checkData();
@@ -158,7 +158,7 @@ class Nabidka
             $_POST['lock'] ? '1' : '0'
         );
         new \MessageHelper('success', 'Nabídka úspěšně upravena');
-        new \RedirectHelper($_POST['returnURI'] ?: '/admin/nabidka');
+        new \RedirectHelper($_POST['returnURI'] ?? '/admin/nabidka');
     }
 
     public static function duplicate($id)
@@ -196,7 +196,7 @@ class Nabidka
         new \RedirectHelper('/admin/nabidka');
     }
 
-    protected static function displayForm($action, $data = null)
+    protected static function displayForm($action, $data = [])
     {
         $isAdmin = \Permissions::check('nabidka', P_ADMIN);
         if ($isAdmin) {
@@ -210,14 +210,14 @@ class Nabidka
             'action' => $action == 'add' ? 'Přidat' : 'Upravit',
             'returnURI' => $_SERVER['HTTP_REFERER'],
             'users' => $treneri,
-            'id' => $data ? $data['n_id'] : null,
-            'trener' => $_POST['trener'] ?: ($data ? $data['n_trener'] : ''),
-            'pocet_hod' => $_POST['pocet_hod'] ?: ($data ? $data['n_pocet_hod'] : ''),
-            'max_pocet_hod' => $_POST['max_pocet_hod'] ?: ($data ? $data['n_max_pocet_hod'] : ''),
-            'od' => $_POST['od'] ?: ($data ? $data['n_od'] : ''),
-            'do' => $_POST['do'] ?: ($data ? $data['n_do'] : ''),
-            'visible' => $_POST['visible'] ?: ($data ? $data['n_visible'] : false),
-            'lock' => $_POST['lock'] ?: ($data ? $data['n_lock'] : '')
+            'id' => $data['n_id'] ?? null,
+            'trener' => $_POST['trener'] ?? $data['n_trener'] ?? '',
+            'pocet_hod' => $_POST['pocet_hod'] ?? $data['n_pocet_hod'] ?? '',
+            'max_pocet_hod' => $_POST['max_pocet_hod'] ?? $data['n_max_pocet_hod'] ?? '',
+            'od' => $_POST['od'] ?? $data['n_od'] ?? '',
+            'do' => $_POST['do'] ?? $data['n_do'] ?? '',
+            'visible' => $_POST['visible'] ?? $data['n_visible'] ?? false,
+            'lock' => $_POST['lock'] ?? $data['n_lock'] ?? ''
         ]);
     }
 

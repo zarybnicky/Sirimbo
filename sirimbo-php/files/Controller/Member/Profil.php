@@ -75,7 +75,7 @@ class Profil
             'postal' => $_POST['postal'],
             'nationality' => $_POST['nationality'],
             'dancer' => $_POST['dancer'],
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/member',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/member',
         ]);
     }
 

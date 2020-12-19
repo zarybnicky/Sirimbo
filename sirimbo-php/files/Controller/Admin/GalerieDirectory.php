@@ -114,7 +114,7 @@ class GalerieDirectory
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa galerie',
             'prompt' => 'Opravdu chcete odstranit složky se všemi podsložkami a fotkami:',
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/galerie',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/galerie',
             'data' => [['id' => $item['gd_id'], 'text' => $item['gd_name']]]
         ]);
     }
@@ -146,9 +146,9 @@ class GalerieDirectory
             'subheader' => ($action == 'add' ? 'Přidat' : 'Upravit') . ' složku',
             'dirs' => $dirs,
             'action' => $action,
-            'name' => $_POST['name'] ?: '',
-            'parent' => $_POST['parent'] ?: '',
-            'hidden' => $_POST['hidden'] ?: ''
+            'name' => $_POST['name'] ?? '',
+            'parent' => $_POST['parent'] ?? '',
+            'hidden' => $_POST['hidden'] ?? ''
         ]);
     }
 

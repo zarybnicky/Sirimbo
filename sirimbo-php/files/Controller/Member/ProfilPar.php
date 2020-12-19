@@ -40,12 +40,12 @@ class ProfilPar
             new \MessageHelper('warning', $form->getMessages());
             return new \RenderHelper('files/View/Member/Profil/CoupleData.inc', [
                 'header' => 'Změna třídy a bodů',
-                'stt_trida' => $_POST['stt_trida'] ?: '',
-                'stt_body' => $_POST['stt_body'] ?: '',
-                'stt_finale' => $_POST['stt_finale'] ?: '',
-                'lat_trida' => $_POST['lat_trida'] ?: '',
-                'lat_body' => $_POST['lat_body'] ?: '',
-                'lat_finale' => $_POST['lat_finale'] ?: ''
+                'stt_trida' => $_POST['stt_trida'] ?? '',
+                'stt_body' => $_POST['stt_body'] ?? '',
+                'stt_finale' => $_POST['stt_finale'] ?? '',
+                'lat_trida' => $_POST['lat_trida'] ?? '',
+                'lat_body' => $_POST['lat_body'] ?? '',
+                'lat_finale' => $_POST['lat_finale'] ?? ''
             ]);
         }
         $stt_amend = constant('self::AMEND_' . $_POST['stt-trida']);

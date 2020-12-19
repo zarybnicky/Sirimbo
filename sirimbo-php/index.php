@@ -86,7 +86,7 @@ try {
     new RedirectHelper('/error?id=' . $e->getErrorFile());
 } catch (Exception $e) {
     syslog(
-        LOG_WARN,
+        LOG_WARNING,
         $_SERVER['REQUEST_URI'] . ": {$e->getMessage()}\n"
         . '(' . $e->getFile() . ':' . $e->getLine() . ")\n"
         . $e->getTraceAsString()
@@ -119,6 +119,7 @@ function makeRouter()
     $router->get('/fotogalerie', '@Fotogalerie::root');
     $router->get('/fotogalerie/([0-9]+)', '@Fotogalerie::directory');
     $router->get('/fotogalerie/foto/([0-9]+)', '@Fotogalerie::single');
+    $router->get('/fotogalerie/([0-9]+)/foto/([0-9]+)', '@Fotogalerie::singleWithDir');
 
     $router->get('/login', '@Member::login');
     $router->get('/nopassword', '@Nopassword::get');

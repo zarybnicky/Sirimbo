@@ -10,8 +10,7 @@
             "files/Core/",
             "files/Core/database/",
             "files/Core/helpers/",
-            "files/Core/types",
-            "files/Controller"
+            "files/Core/types/"
         ]
     },
     "require": {

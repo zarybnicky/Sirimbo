@@ -36,7 +36,7 @@ class Skupiny
         }
         \DBSkupiny::insert($_POST['name'], $_POST['color'], $_POST['desc']);
         $insertId = \DBSkupiny::getInsertId();
-        foreach ($_POST['group'] ?: [] as $item) {
+        foreach ($_POST['group'] ?? [] as $item) {
             \DBSkupiny::addChild($insertId, $item);
         }
         new \RedirectHelper('/admin/skupiny');
@@ -67,7 +67,7 @@ class Skupiny
         \DBSkupiny::update($id, $_POST['name'], $_POST['color'], $_POST['desc']);
 
         $groupsOld = array_map(fn($item) => $item['pg_id'], \DBSkupiny::getSingleWithGroups($id));
-        $groupsNew = $_POST['group'] ?: [];
+        $groupsNew = $_POST['group'] ?? [];
         foreach (array_diff($groupsOld, $groupsNew) as $removed) {
             \DBSkupiny::removeChild($id, $removed);
         }
@@ -95,7 +95,7 @@ class Skupiny
         return new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa skupin',
             'prompt' => 'Opravdu chcete odstranit skupinu?',
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/skupiny',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/skupiny',
             'data' => [['id' => $data['s_id'], 'text' => $data['s_name']]]
         ]);
     }
@@ -124,7 +124,7 @@ class Skupiny
         new \RedirectHelper('/admin/skupiny');
     }
 
-    private static function displayForm($id, $action, $data = null)
+    private static function displayForm($id, $action, $data = [])
     {
         $groupsSelected = array_flip(
             array_map(fn($item) => $item['pg_id'], \DBSkupiny::getSingleWithGroups($id))
@@ -144,9 +144,9 @@ class Skupiny
             'header' => 'Správa skupin',
             'subheader' => $action == 'add' ? 'Přidat skupinu' : 'Upravit skupinu',
             'id' => $id,
-            'name' => $_POST['name'] ?: ($data ? $data['s_name'] : ''),
-            'color' => $_POST['color'] ?: ($data ? $data['s_color_rgb'] : ''),
-            'popis' => $_POST['popis'] ?: ($data ? $data['s_description'] : ''),
+            'name' => $_POST['name'] ?? $data['s_name'] ?? '',
+            'color' => $_POST['color'] ?? $data['s_color_rgb'] ?? '',
+            'popis' => $_POST['popis'] ?? $data['s_description'] ?? '',
             'action' => $action,
             'groups' => $groups
         ]);

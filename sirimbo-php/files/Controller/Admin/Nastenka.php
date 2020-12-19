@@ -75,7 +75,7 @@ class Nastenka
         \Permissions::checkError('nastenka', P_OWNED);
         if (!$data = \DBNastenka::getSingleNastenka($id)) {
             new \MessageHelper('warning', 'Nástěnka s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?: '/admin/nastenka');
+            new \RedirectHelper($_POST['returnURI'] ?? '/admin/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
         $_POST['id'] = $id;
@@ -93,7 +93,7 @@ class Nastenka
         \Permissions::checkError('nastenka', P_OWNED);
         if (!$data = \DBNastenka::getSingleNastenka($id)) {
             new \MessageHelper('warning', 'Nástěnka s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?: '/admin/nastenka');
+            new \RedirectHelper($_POST['returnURI'] ?? '/admin/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
         $form = static::checkData();
@@ -136,13 +136,13 @@ class Nastenka
         \Permissions::checkError('nastenka', P_OWNED);
         if (!$data = \DBNastenka::getSingleNastenka($id)) {
             new \MessageHelper('warning', 'Příspěvek s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?: '/admin/nastenka');
+            new \RedirectHelper($_POST['returnURI'] ?? '/admin/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
         return new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa nástěnky',
             'prompt' => 'Opravdu chcete odstranit příspěvek:',
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/nastenka',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/nastenka',
             'data' => [['id' => $data['up_id'], 'text' => $data['up_nadpis']]]
         ]);
     }
@@ -152,7 +152,7 @@ class Nastenka
         \Permissions::checkError('nastenka', P_OWNED);
         if (!$data = \DBNastenka::getSingleNastenka($id)) {
             new \MessageHelper('warning', 'Příspěvek s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?: '/admin/nastenka');
+            new \RedirectHelper($_POST['returnURI'] ?? '/admin/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
         \DBNastenka::removeNastenka($id);
@@ -170,12 +170,12 @@ class Nastenka
             'header' => 'Správa nástěnky',
             'subheader' => ($action === 'add') ? 'Přidat příspěvek' : 'Upravit příspěvek',
             'action' => $action,
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/nastenka',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/nastenka',
             'skupiny' => $skupiny,
             'skupinySelected' => $skupinySelected,
-            'nadpis' => $_POST['nadpis'] ?: '',
-            'text' => $_POST['text'] ?: '',
-            'lock' => $_POST['lock'] ?: ''
+            'nadpis' => $_POST['nadpis'] ?? '',
+            'text' => $_POST['text'] ?? '',
+            'lock' => $_POST['lock'] ?? ''
         ]);
     }
 

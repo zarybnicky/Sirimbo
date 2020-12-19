@@ -21,7 +21,8 @@ class Mailer
         $mail->Subject = $subject;
         $mail->Body = $message;
 
-        $mail->send();
+        syslog(LOG_WARNING, "$subject: $message");
+        // $mail->send();
     }
 
     public static function newPassword($to, $newpass)

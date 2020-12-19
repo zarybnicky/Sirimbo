@@ -40,7 +40,7 @@ class Tree
         return isset($this->children[$name]) ? $this->children[$name] : false;
     }
 
-    public function add(Tree $element)
+    public function add($element)
     {
         $this->children[] = $element;
     }

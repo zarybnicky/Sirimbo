@@ -59,7 +59,7 @@ class GalerieFile
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa galerie',
             'prompt' => 'Opravdu chcete odstranit fotografie:',
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/galerie',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/galerie',
             'data' => [['id' => $id, 'text' => $item['gf_name']]]
         ]);
     }
@@ -88,7 +88,7 @@ class GalerieFile
             'header' => 'Správa fotogalerie',
             'subheader' => 'Upload',
             'dirs' => $dirs,
-            'dir' => $_GET['dir'] ?: '0'
+            'dir' => $_GET['dir'] ?? '0'
         ]);
     }
 

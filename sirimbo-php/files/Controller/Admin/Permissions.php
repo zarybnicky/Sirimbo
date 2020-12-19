@@ -39,7 +39,7 @@ class Permissions
             $permissions[$name] = $_POST[$name];
         }
         \DBPermissions::addGroup($_POST['name'], $_POST['description'], $permissions);
-        new \RedirectHelper($_POST['returnURI'] ?: '/admin/permissions');
+        new \RedirectHelper($_POST['returnURI'] ?? '/admin/permissions');
     }
 
     public static function edit($id)
@@ -47,7 +47,7 @@ class Permissions
         \Permissions::checkError('permissions', P_ADMIN);
         if (!$data = \DBPermissions::getSingleGroup($id)) {
             new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?: '/admin/permissions');
+            new \RedirectHelper($_POST['returnURI'] ?? '/admin/permissions');
         }
         return static::renderForm('edit', $data);
     }
@@ -57,7 +57,7 @@ class Permissions
         \Permissions::checkError('permissions', P_ADMIN);
         if (!$data = \DBPermissions::getSingleGroup($id)) {
             new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?: '/admin/permissions');
+            new \RedirectHelper($_POST['returnURI'] ?? '/admin/permissions');
         }
         $form = static::checkData();
         if (!$form->isValid()) {
@@ -69,7 +69,7 @@ class Permissions
             $permissions[$name] = $_POST[$name];
         }
         \DBPermissions::editGroup($id, $_POST['name'], $_POST['description'], $permissions);
-        new \RedirectHelper($_POST['returnURI'] ?: '/admin/permissions');
+        new \RedirectHelper($_POST['returnURI'] ?? '/admin/permissions');
     }
 
     public static function remove($id)
@@ -81,7 +81,7 @@ class Permissions
             'prompt' =>
                 new \NoticeHelper('Uživatelům z této skupiny bude nutné přiřadit jinou skupinu!')
                 . 'Opravdu chcete odstranit uživatelskou úroveň:',
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/permissions',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/permissions',
             'data' => [['id' => $item['pe_id'], 'text' => $item['pe_name']]]
         ]);
     }
@@ -94,7 +94,7 @@ class Permissions
         new \RedirectHelper('/admin/permissions');
     }
 
-    protected static function renderForm($action, $data = null)
+    protected static function renderForm($action, $data = [])
     {
         if (!$_POST) {
             foreach (\Settings::$permissions as $name => $item) {
@@ -123,11 +123,11 @@ class Permissions
         new \RenderHelper('files/View/Admin/Permissions/Form.inc', [
             'header' => 'Správa oprávnění',
             'subheader' => (
-                ($data === null) ? 'Přidat uživatelskou skupinu' : 'Upravit uživatelskou skupinu'
+                !$data ? 'Přidat uživatelskou skupinu' : 'Upravit uživatelskou skupinu'
             ),
             'action' => $action,
-            'name' => $_POST['name'] ?: ($data ? $data['pe_name'] : ''),
-            'description' => $_POST['description'] ?: ($data ? $data['pe_description'] : ''),
+            'name' => $_POST['name'] ?? $data['pe_name'] ?? '',
+            'description' => $_POST['description'] ?? $data['pe_description'] ?? '',
             'settings' => $settings
         ]);
     }

@@ -56,7 +56,7 @@ class Akce
         $items = \DBAkce::getAkceItems($data['a_id']);
         $dokumenty = array_map(
             fn($item) => ['id' => $item, 'name' => \DBDokumenty::getSingleDokument($item)['d_name']],
-            array_filter(explode(',', $data['a_dokumenty'])) ?: []
+            array_filter(explode(',', $data['a_dokumenty'])) ?? []
         );
 
         $out = [

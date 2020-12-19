@@ -6,26 +6,6 @@ class Pary
     public static function list()
     {
         \Permissions::checkError('pary', P_OWNED);
-        switch ($_POST["action"]) {
-            case 'add':
-                if ($_POST["add_partner"]) {
-                    \DBPary::newCouple($_POST["add_partner"], $_POST["add_partnerka"]);
-                }
-                break;
-            case 'fix_unpaired':
-                $xs = \DBPary::getUnpairedUsers();
-                foreach ($xs as $x) {
-                    \DBPary::noPartner($x['u_id']);
-                }
-                new \MessageHelper('info', count($xs) . ' chybných záznamů opraveno');
-                break;
-        }
-        new \RedirectHelper('/admin/pary');
-    }
-
-    public static function listPost()
-    {
-        \Permissions::checkError('pary', P_OWNED);
         $data = array_map(
             fn($item) => [
                 'buttons' => \Buttons::pary($item['p_id']),
@@ -43,6 +23,26 @@ class Pary
             'usersMen' => \DBUser::getUsersByPohlavi('m'),
             'usersWomen' => \DBUser::getUsersByPohlavi('f')
         ]);
+    }
+
+    public static function listPost()
+    {
+        \Permissions::checkError('pary', P_OWNED);
+        switch ($_POST["action"]) {
+            case 'add':
+                if ($_POST["add_partner"]) {
+                    \DBPary::newCouple($_POST["add_partner"], $_POST["add_partnerka"]);
+                }
+                break;
+            case 'fix_unpaired':
+                $xs = \DBPary::getUnpairedUsers();
+                foreach ($xs as $x) {
+                    \DBPary::noPartner($x['u_id']);
+                }
+                new \MessageHelper('info', count($xs) . ' chybných záznamů opraveno');
+                break;
+        }
+        new \RedirectHelper('/admin/pary');
     }
 
     public static function edit($id)

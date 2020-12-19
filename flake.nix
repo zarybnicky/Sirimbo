@@ -73,12 +73,18 @@
           cp admin.html almond.js bundle.js{,.map} index.css{,.map} index.html react* $out/
         '';
       };
-      sirimbo-php = (pkgs.callPackage ./sirimbo-php/composer-project.nix {
-        php = pkgs.php74;
+      sirimbo-php = (final.callPackage ./sirimbo-php/composer-project.nix {
+        php = final.php74;
       } (getSrc ./sirimbo-php)).overrideAttrs (oldAttrs: {
         name = "sirimbo-php";
-        buildInputs = oldAttrs.buildInputs ++ [ pkgs.imagemagick ];
+        buildInputs = oldAttrs.buildInputs ++ [ final.imagemagick ];
         buildPhase = "composer validate";
+        installPhase = ''
+          runHook preInstall
+          mkdir -p $out
+          mv $PWD/* $out/
+          runHook postInstall
+        '';
       });
       sirimbo-php-assets = final.stdenv.mkDerivation {
         name = "sirimbo-php-assets";

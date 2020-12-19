@@ -4,7 +4,7 @@
     <a href="/admin/platby/structure/group/add">Přidat kategorii</a>&nbsp;
     <?= (new TableHelper($this->data))
              ->style('width:100%')
-             ->column('buttons', '', '', 'width:50px')
+             ->column('buttons', '', '', 'width:70px')
              ->column('name', 'Název')
              ->column('type', 'Typ platby') ?>
 </div>

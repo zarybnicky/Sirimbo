@@ -37,6 +37,11 @@ class Fotogalerie
         ]);
     }
 
+    public static function singleWithDir($dirId, $id)
+    {
+        return self::single($id);
+    }
+
     public static function single($id)
     {
         if (!$data = \DBGalerie::getSingleFoto($id)) {

@@ -44,13 +44,13 @@ class PlatbyGroup
         );
         $insertId = \DBPlatbyGroup::getInsertId();
 
-        foreach ($_POST['category'] ?: [] as $item) {
+        foreach ($_POST['category'] ?? [] as $item) {
             \DBPlatbyGroup::addChild($insertId, $item);
         }
-        foreach ($_POST['skupiny'] ?: [] as $item) {
+        foreach ($_POST['skupiny'] ?? [] as $item) {
             \DBSkupiny::addChild($item, $insertId);
         }
-        new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/group');
+        new \RedirectHelper($_POST['returnURI'] ?? '/admin/platby/structure/group');
     }
 
     public static function edit($id)
@@ -58,7 +58,7 @@ class PlatbyGroup
         \Permissions::checkError('platby', P_OWNED);
         if (!$data = \DBPlatbyGroup::getSingle($id)) {
             new \MessageHelper('warning', 'Kategorie s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/group');
+            new \RedirectHelper($_POST['returnURI'] ?? '/admin/platby/structure/group');
         }
         $_POST['type'] = $data['pg_type'];
         $_POST['name'] = $data['pg_name'];
@@ -72,7 +72,7 @@ class PlatbyGroup
         \Permissions::checkError('platby', P_OWNED);
         if (!\DBPlatbyGroup::getSingle($id)) {
             new \MessageHelper('warning', 'Kategorie s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/group');
+            new \RedirectHelper($_POST['returnURI'] ?? '/admin/platby/structure/group');
         }
         $form = static::checkData();
         if (!$form->isValid()) {
@@ -91,7 +91,7 @@ class PlatbyGroup
             fn($item) => $item['pc_id'],
             \DBPlatbyGroup::getSingleWithCategories($id)
         );
-        $categoryNew = $_POST['category'] ?: [];
+        $categoryNew = $_POST['category'] ?? [];
         foreach (array_diff($categoryOld, $categoryNew) as $removed) {
             \DBPlatbyGroup::removeChild($id, $removed);
         }
@@ -103,7 +103,7 @@ class PlatbyGroup
             fn($item) => $item['s_id'],
             \DBPlatbyGroup::getSingleWithSkupiny($id)
         );
-        $skupinyNew = $_POST['skupiny'] ?: [];
+        $skupinyNew = $_POST['skupiny'] ?? [];
         foreach (array_diff($skupinyOld, $skupinyNew) as $removed) {
             \DBSkupiny::removeChild($removed, $id);
         }
@@ -111,7 +111,7 @@ class PlatbyGroup
             \DBSkupiny::addChild($added, $id);
         }
 
-        new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/group');
+        new \RedirectHelper($_POST['returnURI'] ?? '/admin/platby/structure/group');
     }
 
     public static function remove($id)
@@ -119,7 +119,7 @@ class PlatbyGroup
         \Permissions::checkError('platby', P_OWNED);
         if (!$data = \DBPlatbyGroup::getSingle($id)) {
             new \MessageHelper('warning', 'Kategorie s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/group');
+            new \RedirectHelper($_POST['returnURI'] ?? '/admin/platby/structure/group');
         }
         if (static::getLinkedObjects($id)) {
             new \MessageHelper(
@@ -147,7 +147,7 @@ class PlatbyGroup
         \Permissions::checkError('platby', P_OWNED);
         if (!$data = \DBPlatbyGroup::getSingle($id)) {
             new \MessageHelper('warning', 'Kategorie s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/group');
+            new \RedirectHelper($_POST['returnURI'] ?? '/admin/platby/structure/group');
         }
 
         $f = static::getLinkedObjects($id);
@@ -173,7 +173,7 @@ class PlatbyGroup
             return new \RedirectHelper("/admin/platby/structure/group/remove/$id");
         }
         \DBPlatbyGroup::delete($id);
-        new \RedirectHelper($_POST['returnURI'] ?: '/admin/platby/structure/group');
+        new \RedirectHelper($_POST['returnURI'] ?? '/admin/platby/structure/group');
     }
 
     private static function getLinkedObjects($id)
@@ -234,10 +234,10 @@ class PlatbyGroup
             'category' => $categories,
             'skupiny' => $skupiny,
             'returnURI' => $_SERVER['HTTP_REFERER'],
-            'name' => $_POST['name'] ?: '',
-            'type' => $_POST['type'] ?: '',
-            'description' => $_POST['description'] ?: '',
-            'base' => $_POST['base'] ?: '',
+            'name' => $_POST['name'] ?? '',
+            'type' => $_POST['type'] ?? '',
+            'description' => $_POST['description'] ?? '',
+            'base' => $_POST['base'] ?? '',
             'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }

@@ -3,10 +3,13 @@ namespace Olymp\Controller\Admin;
 
 class PlatbyRaw
 {
-    const TEMP_DIR = './upload/csv/';
+    const TEMP_DIR = UPLOADS . '/csv/';
 
     public static function get()
     {
+        if (!is_dir(self::TEMP_DIR)) {
+            mkdir(self::TEMP_DIR, 0777, true);
+        }
         \Permissions::checkError('platby', P_OWNED);
         $workDir = new \DirectoryIterator(self::TEMP_DIR);
         $workDir->rewind();

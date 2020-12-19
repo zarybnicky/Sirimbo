@@ -143,7 +143,7 @@ class Akce
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa akcí',
             'prompt' => 'Opravdu chcete odstranit akce:',
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/akce',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/akce',
             'data' => [[
                 'id' => $item['a_id'],
                 'text' => $item['a_jmeno']
@@ -343,14 +343,14 @@ class Akce
             'dokumenty' => $dokumenty,
             'action' => $action == 'add' ? 'Přidat' : 'Upravit',
             'id' => $data ? $data['a_id'] : null,
-            'jmeno' => $_POST['jmeno'] ?: ($data ? $data['a_jmeno'] : ''),
-            'kde' => $_POST['kde'] ?: ($data ? $data['a_kde'] : ''),
-            'info' => $_POST['info'] ?: ($data ? $data['a_info'] : ''),
-            'od' => $_POST['od'] ?: ($data ? $data['a_od'] : ''),
-            'do' => $_POST['do'] ?: ($data ? $data['a_do'] : ''),
-            'kapacita' => $_POST['kapacita'] ?: ($data ? $data['a_kapacita'] : ''),
-            'lock' => $_POST['lock'] ?: ($data ? $data['a_lock'] : ''),
-            'visible' => $_POST['visible'] ?: ($data ? $data['a_visible'] : '')
+            'jmeno' => $_POST['jmeno'] ?? $data['a_jmeno'] ?? '',
+            'kde' => $_POST['kde'] ?? $data['a_kde'] ?? '',
+            'info' => $_POST['info'] ?? $data['a_info'] ?? '',
+            'od' => $_POST['od'] ?? $data['a_od'] ?? '',
+            'do' => $_POST['do'] ?? $data['a_do'] ?? '',
+            'kapacita' => $_POST['kapacita'] ?? $data['a_kapacita'] ?? '',
+            'lock' => $_POST['lock'] ?? $data['a_lock'] ?? '',
+            'visible' => $_POST['visible'] ?? $data['a_visible'] ?? ''
         ]);
     }
 

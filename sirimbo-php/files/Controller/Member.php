@@ -88,7 +88,7 @@ class Member
 
         new \RenderHelper('files/View/Member/Dokumenty.inc', [
             'header' => 'Dokumenty',
-            'kat' => $_GET['kat'] ?: '',
+            'kat' => $_GET['kat'] ?? '',
             'data' => array_map(
                 fn($item) => [
                     'id' => $item['d_id'],

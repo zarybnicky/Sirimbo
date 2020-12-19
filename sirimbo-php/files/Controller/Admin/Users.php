@@ -27,27 +27,33 @@ class Users
             'ban' => 'zabanovaní'
         ];
 
-        $options['group'] = in_array($_GET['group'], array_keys($groupOptions))
-                          ? $_GET['group']
-                          : 'all';
-        $options['skupina'] = in_array($_GET['skupina'], array_keys($skupinyOptions))
-                            ? $_GET['skupina']
-                            : 'all';
-        $options['sort'] = in_array($_GET['sort'], array_keys($sortOptions))
-                         ? $_GET['sort']
-                         : 'prijmeni';
-        $options['status'] = in_array($_GET['status'], array_keys($statusOptions))
-                           ? $_GET['status']
-                           : 'all';
+        $options['group'] = $_GET['group'] ?? 'all';
+        $options['skupina'] = $_GET['skupina'] ?? 'all';
+        $options['sort'] = $_GET['sort'] ?? 'prijmeni';
+        $options['status'] = $_GET['status'] ?? 'all';
+        if (!in_array($options['group'], array_keys($groupOptions))) {
+            $options['group'] = 'all';
+        }
+        if (!in_array($options['skupina'], array_keys($skupinyOptions))) {
+            $options['skupina'] = 'all';
+        }
+        if (!in_array($options['sort'], array_keys($sortOptions))) {
+            $options['sort'] = 'prijmeni';
+        }
+        if (!in_array($options['status'], array_keys($statusOptions))) {
+            $options['status'] = 'all';
+        }
 
         $pager = new \Paging(new \DBUser(), $options);
-        $pager->setCurrentPage($_GET['p']);
-        $pager->setItemsPerPage($_GET['c']);
+        $pager->setCurrentPage($_GET['p'] ?? null);
+        $pager->setItemsPerPage($_GET['c'] ?? null);
 
         $i = $pager->getItemsPerPage() * ($pager->getCurrentPage() - 1);
 
-        $action = $_GET['view'] ?: 'info';
-        $skupinySelect = $action == 'status' ? new \SelectHelper(null, $skupinyOptions) : null;
+        $action = $_GET['view'] ?? 'info';
+        $copySkupinyOptions = $skupinyOptions;
+        unset($copySkupinyOptions['all']);
+        $skupinySelect = $action == 'status' ? new \SelectHelper(null, $copySkupinyOptions) : null;
 
         $data = array_map(
             function ($item) use ($action, $groupOptions, &$i, $skupinySelect) {
@@ -83,10 +89,10 @@ class Users
             'data' => $data,
             'navigation' => $pager->getNavigation(),
             'view' => $action,
-            'status' => $_GET['status'] ?: '',
-            'skupina' => $_GET['skupina'] ?: '',
-            'group' => $_GET['group'] ?: '',
-            'sort' => $_GET['sort'] ?: ''
+            'status' => $_GET['status'] ?? '',
+            'skupina' => $_GET['skupina'] ?? '',
+            'group' => $_GET['group'] ?? '',
+            'sort' => $_GET['sort'] ?? ''
         ]);
     }
 
@@ -140,7 +146,7 @@ class Users
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa uživatelů',
             'prompt' => 'Opravdu chcete odstranit uživatele:',
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/users',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/users',
             'data' => [[
                 'id' => $item['u_id'],
                 'text' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'] . ' - ' . $item['u_login']
@@ -152,7 +158,7 @@ class Users
     {
         \Permissions::checkError('users', P_ADMIN);
         \DBUser::removeUser($id);
-        new \RedirectHelper($_POST['returnURI'] ?: '/admin/users');
+        new \RedirectHelper($_POST['returnURI'] ?? '/admin/users');
     }
 
     public static function add()
@@ -195,7 +201,7 @@ class Users
             $_POST['teacher'] ? '1' : '0',
             $_POST['dancer'] ? '1' : '0'
         );
-        new \RedirectHelper($_POST['returnURI'] ?: '/admin/users');
+        new \RedirectHelper($_POST['returnURI'] ?? '/admin/users');
     }
 
     public static function edit($id)
@@ -203,11 +209,11 @@ class Users
         \Permissions::checkError('users', P_ADMIN);
         if (!$data = \DBUser::getUserData($id)) {
             new \MessageHelper('warning', 'Uživatel s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?: '/admin/users');
+            new \RedirectHelper($_POST['returnURI'] ?? '/admin/users');
         }
         if (!$data['u_confirmed']) {
             new \MessageHelper('warning', 'Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
-            new \RedirectHelper($_POST['returnURI'] ?: '/admin/users');
+            new \RedirectHelper($_POST['returnURI'] ?? '/admin/users');
         }
         $_POST['login'] = $data['u_login'];
         $_POST['group'] = $data['u_group'];
@@ -241,11 +247,11 @@ class Users
         \Permissions::checkError('users', P_ADMIN);
         if (!$data = \DBUser::getUserData($id)) {
             new \MessageHelper('warning', 'Uživatel s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?: '/admin/users');
+            new \RedirectHelper($_POST['returnURI'] ?? '/admin/users');
         }
         if (!$data['u_confirmed']) {
             new \MessageHelper('warning', 'Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
-            new \RedirectHelper($_POST['returnURI'] ?: '/admin/users');
+            new \RedirectHelper($_POST['returnURI'] ?? '/admin/users');
         }
         $form = static::checkData('edit');
         if (!$form->isValid()) {
@@ -279,7 +285,7 @@ class Users
             $data['u_member_until'],
             $data['u_gdpr_signed_at']
         );
-        new \RedirectHelper($_POST['returnURI'] ?: '/admin/users');
+        new \RedirectHelper($_POST['returnURI'] ?? '/admin/users');
     }
 
     public static function getMsmtCsv()
@@ -334,7 +340,7 @@ class Users
         $id = $_POST['confirm'];
         if (!$data = \DBUser::getUser($id)) {
             new \MessageHelper('warning', 'Uživatel s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?: '/admin/users');
+            new \RedirectHelper($_POST['returnURI'] ?? '/admin/users');
         }
         \DBUser::confirmUser($id, $_POST[$id . '-group'], $_POST[$id . '-skupina']);
         \Mailer::registrationConfirmNotice($data->getEmail(), $data->getLogin());
@@ -389,7 +395,7 @@ class Users
             'header' => 'Správa uživatelů',
             'subheader' => ($action == 'add' ? 'Přidat' : 'Upravit') . ' uživatele',
             'action' => $action,
-            'returnURI' => $_POST['returnURI'] ?: ($_SERVER['HTTP_REFERER'] ?: '/admin/users'),
+            'returnURI' => $_POST['returnURI'] ?? ($_SERVER['HTTP_REFERER'] ?? '/admin/users'),
             'groups' => array_map(
                 fn($item) => [
                     'id' => $item['pe_id'],
@@ -405,31 +411,31 @@ class Users
                 ],
                 \DBSkupiny::get()
             ),
-            'login' => $_POST['login'] ?: '',
-            'pass' => $_POST['pass'] ?: '',
-            'jmeno' => $_POST['jmeno'] ?: '',
-            'prijmeni' => $_POST['prijmeni'] ?: '',
-            'pohlavi' => $_POST['pohlavi'] ?: '',
-            'email' => $_POST['email'] ?: '',
-            'telefon' => $_POST['telefon'] ?: '',
-            'narozeni' => $_POST['narozeni'] ?: '',
-            'poznamky' => $_POST['poznamky'] ?: '',
-            'street' => $_POST['street'] ?: '',
-            'popisne' => $_POST['popisne'] ?: '',
-            'orientacni' => $_POST['orientacni'] ?: '',
-            'district' => $_POST['district'] ?: '',
-            'city' => $_POST['city'] ?: '',
-            'postal' => $_POST['postal'] ?: '',
-            'nationality' => $_POST['nationality'] ?: '',
-            'lock' => $_POST['lock'] ?: '',
-            'ban' => $_POST['ban'] ?: '',
-            'system' => $_POST['system'] ?: '',
-            'group' => $_POST['group'] ?: '',
-            'skupina' => $_POST['skupina'] ?: '',
-            'dancer' => $_POST['dancer'] ?: '',
-            'teacher' => $_POST['teacher'] ?: '',
-            'createdAt' => $_POST['createdAt'] ?: '',
-            'gdprSignedAt' => $_POST['gdprSignedAt'] ?: ''
+            'login' => $_POST['login'] ?? '',
+            'pass' => $_POST['pass'] ?? '',
+            'jmeno' => $_POST['jmeno'] ?? '',
+            'prijmeni' => $_POST['prijmeni'] ?? '',
+            'pohlavi' => $_POST['pohlavi'] ?? '',
+            'email' => $_POST['email'] ?? '',
+            'telefon' => $_POST['telefon'] ?? '',
+            'narozeni' => $_POST['narozeni'] ?? '',
+            'poznamky' => $_POST['poznamky'] ?? '',
+            'street' => $_POST['street'] ?? '',
+            'popisne' => $_POST['popisne'] ?? '',
+            'orientacni' => $_POST['orientacni'] ?? '',
+            'district' => $_POST['district'] ?? '',
+            'city' => $_POST['city'] ?? '',
+            'postal' => $_POST['postal'] ?? '',
+            'nationality' => $_POST['nationality'] ?? '',
+            'lock' => $_POST['lock'] ?? '',
+            'ban' => $_POST['ban'] ?? '',
+            'system' => $_POST['system'] ?? '',
+            'group' => $_POST['group'] ?? '',
+            'skupina' => $_POST['skupina'] ?? '',
+            'dancer' => $_POST['dancer'] ?? '',
+            'teacher' => $_POST['teacher'] ?? '',
+            'createdAt' => $_POST['createdAt'] ?? '',
+            'gdprSignedAt' => $_POST['gdprSignedAt'] ?? ''
         ]);
     }
 

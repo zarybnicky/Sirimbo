@@ -73,7 +73,7 @@ class VideoSource
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa videí',
             'prompt' => 'Opravdu chcete odstranit zdroj:',
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/video/source',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/video/source',
             'data' => [['id' => $item['vs_id'], 'text' => $item['vs_title']]]
         ]);
     }
@@ -93,9 +93,9 @@ class VideoSource
             'subheader' => $action == 'add' ? 'Přidat zdroj' : 'Upravit zdroj',
             'action' => $action == 'add' ? 'Přidat' : 'Upravit',
             'id' => $data ? $data['vs_id'] : null,
-            'uri' => $_POST['uri'] ?: ($data ? $data['vs_url'] : ''),
-            'title' => $_POST['title'] ?: ($data ? $data['vs_title'] : ''),
-            'desc' => $_POST['desc'] ?: ($data ? $data['vs_description'] : '')
+            'uri' => $_POST['uri'] ?? $data['vs_url'] ?? '',
+            'title' => $_POST['title'] ?? $data['vs_title'] ?? '',
+            'desc' => $_POST['desc'] ?? $data['vs_description'] ?? '',
         ]);
     }
 

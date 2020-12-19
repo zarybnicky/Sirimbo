@@ -68,8 +68,8 @@ class Buttons
     public static function platbyItem($id)
     {
         return implode('&nbsp;', [
-            self::edit("/admin/platby/structure/items/edit/$id"),
-            self::delete("/admin/platby/structure/items/remove/$id"),
+            self::edit("/admin/platby/items/edit/$id"),
+            self::delete("/admin/platby/items/remove/$id"),
         ]);
     }
 

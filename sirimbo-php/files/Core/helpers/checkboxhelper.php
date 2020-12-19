@@ -18,7 +18,7 @@ class CheckboxHelper
         $this->name = $name;
         $this->value = $value;
 
-        $this->state = $state;
+        $this->state = (bool) $state;
         $this->readonly = false;
 
         $this->label = $label;

@@ -173,13 +173,13 @@ class DBUser extends Database implements Pagable
             "u_telefon='?',u_narozeni='?',u_poznamky='?',u_street='?',u_conscription_number='?'," .
             "u_orientation_number='?',u_district='?',u_city='?',u_postal_code='?'," .
             "u_nationality='?',u_group='?',u_skupina='?',u_lock='?',u_ban='?',u_system='?',u_dancer='?'," .
-            "u_teacher='?',u_member_since='?',u_member_until=" .
-            ($memberUntil ? "'$memberUntil'" : 'NULL') .
-            ",u_gdpr_signed_at='?' WHERE u_id='?'",
+            "u_teacher='?',u_member_since=" . ($memberSince ? "'$memberSince'" : 'NULL') .
+            ",u_member_until=" . ($memberUntil ? "'$memberUntil'" : 'NULL') .
+            ",u_gdpr_signed_at=" . ($gdprSignedAt ? "'$gdprSignedAt'" : 'NULL') .
+            " WHERE u_id='?'",
             $jmeno, $prijmeni, $pohlavi, $email, $telefon, $narozeni, $poznamky,
             $street, $popisne, $orientacni, $district, $city, $postal, $nationality,
-            $group, $skupina, $lock, $ban, $system, $dancer, $trener, $memberSince,
-            $gdprSignedAt, $id
+            $group, $skupina, $lock, $ban, $system, $dancer, $trener, $id
         );
         return true;
     }

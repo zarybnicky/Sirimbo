@@ -109,7 +109,7 @@ class Video
             $_POST['title'],
             $_POST['author'],
             $_POST['desc'],
-            $_POST['playlist'] ?: null
+            $_POST['playlist'] ?? null
         );
         new \RedirectHelper('/admin/video');
     }
@@ -142,7 +142,7 @@ class Video
             $_POST['title'],
             $_POST['author'],
             $_POST['desc'],
-            $_POST['playlist'] ?: null
+            $_POST['playlist'] ?? null
         );
         new \RedirectHelper('/admin/video');
     }
@@ -154,7 +154,7 @@ class Video
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa videí',
             'prompt' => 'Opravdu chcete odstranit video:',
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/video',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/video',
             'data' => [['id' => $item['v_id'], 'text' => $item['v_title']]]
         ]);
     }
@@ -174,11 +174,11 @@ class Video
             'subheader' => $action == 'add' ? 'Přidat video' : 'Upravit video',
             'action' => $action == 'add' ? 'Přidat' : 'Upravit',
             'id' => $data ? $data['v_id'] : null,
-            'uri' => $_POST['uri'] ?: ($data ? $data['v_uri'] : ''),
-            'title' => $_POST['title'] ?: ($data ? $data['v_title'] : ''),
-            'author' => $_POST['author'] ?: ($data ? $data['v_author'] : ''),
-            'desc' => $_POST['desc'] ?: ($data ? $data['v_description'] : ''),
-            'playlist' => $_POST['playlist'] ?: ($data ? ($data['v_playlist'] ?: '') : '')
+            'uri' => $_POST['uri'] ?? $data['v_uri'] ?? '',
+            'title' => $_POST['title'] ?? $data['v_title'] ?? '',
+            'author' => $_POST['author'] ?? $data['v_author'] ?? '',
+            'desc' => $_POST['desc'] ?? $data['v_description'] ?? '',
+            'playlist' => $_POST['playlist'] ?? $data['v_playlist'] ?? '',
         ]);
     }
 

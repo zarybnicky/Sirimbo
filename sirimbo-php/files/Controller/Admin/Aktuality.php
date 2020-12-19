@@ -118,7 +118,7 @@ class Aktuality
         new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa aktualit',
             'prompt' => 'Opravdu chcete odstranit články:',
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/aktuality',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/aktuality',
             'data' => [[
                 'id' => $item['at_id'],
                 'text' => $item['at_jmeno']
