@@ -8,7 +8,7 @@ class Nabidka
         \Permissions::checkError('nabidka', P_OWNED);
         $data = \Permissions::check('nabidka', P_ADMIN)
             ? \DBNabidka::getNabidka(true)
-            : \DBNabidka::getNabidkyByTrener(\Session::getUserID(), true);
+            : \DBNabidka::getNabidkyByTrener(\Session::getUser()->getId(), true);
         $data = array_map(
             fn($item) => [
                 'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
@@ -39,7 +39,7 @@ class Nabidka
         \Permissions::checkError('nabidka', P_OWNED);
         $data = \Permissions::check('nabidka', P_ADMIN)
             ? \DBNabidka::getNabidka(true)
-            : \DBNabidka::getNabidkyByTrener(\Session::getUserID(), true);
+            : \DBNabidka::getNabidkyByTrener(\Session::getUser()->getId(), true);
         foreach ($data as $item) {
             if ((bool) $_POST[$item['n_id']] == (bool) $item['n_visible']) {
                 continue;
@@ -202,7 +202,7 @@ class Nabidka
         if ($isAdmin) {
             $treneri = \DBUser::getUsersByPermission('nabidka', P_OWNED);
         } else {
-            $treneri = [\DBUser::getUserData(\Session::getUserID())];
+            $treneri = [\DBUser::getUserData(\Session::getUser()->getId())];
         }
         new \RenderHelper('files/View/Admin/Nabidka/Form.inc', [
             'header' => 'Správa nabídky',

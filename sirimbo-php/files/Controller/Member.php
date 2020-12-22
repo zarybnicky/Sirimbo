@@ -5,7 +5,7 @@ class Member
 {
     public static function login()
     {
-        if (\Session::isLogged()) {
+        if (\Session::getUser()) {
             $uri = $_GET['return'] ? $_GET['return'] : '/member';
             new \RedirectHelper($uri);
         }

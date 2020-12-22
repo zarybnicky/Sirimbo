@@ -18,7 +18,7 @@ class Aktuality
             ],
             \Permissions::check('aktuality', P_ADMIN)
             ? \DBAktuality::getAktuality(1)
-            : \DBAktuality::getAktuality(1, \Session::getUserID())
+            : \DBAktuality::getAktuality(1, \Session::getUser()->getId())
         );
         new \RenderHelper('files/View/Admin/Aktuality/Overview.inc', [
             'header' => 'Správa aktualit',
@@ -43,7 +43,7 @@ class Aktuality
     {
         \Permissions::checkError('aktuality', P_OWNED);
         $id = \DBAktuality::addAktualita(
-            \Session::getUserID(),
+            \Session::getUser()->getId(),
             1,
             $_POST['name'],
             $_POST['text'],

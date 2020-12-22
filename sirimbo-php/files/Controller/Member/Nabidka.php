@@ -6,8 +6,11 @@ class Nabidka
     public static function get()
     {
         \Permissions::checkError('nabidka', P_VIEW);
+        $user = \Session::getUser();
+        $par = \DBPary::getLatestPartner($user->getId(), $user->getGender());
+
         $data = array_map(
-            function ($data) {
+            function ($data) use ($par) {
                 $items = array_map(
                     fn($item) => [
                         'id' => $item['u_id'],
@@ -16,7 +19,7 @@ class Nabidka
                         'canDelete' =>
                         (!$data['n_lock']
                          && \Permissions::check('nabidka', P_MEMBER)
-                         && ($item['p_id'] === \Session::getParID()
+                         && ($item['p_id'] === $par['p_id']
                             || \Permissions::check('nabidka', P_OWNED, $data['n_trener']))),
                         'deleteTicket' => $item['p_id'] . '-' . $data['n_id']
                     ],
@@ -62,6 +65,8 @@ class Nabidka
     public static function post()
     {
         \Permissions::checkError('rozpis', P_VIEW);
+        $user = \Session::getUser();
+        $par = \DBPary::getLatestPartner($user->getId(), $user->getGender());
         $data = \DBNabidka::getSingleNabidka($_POST['id']);
         $form = static::checkData($data);
         if (!$form->isValid()) {
@@ -72,14 +77,14 @@ class Nabidka
             if (!\Session::getZaplacenoPar()) {
                 new \MessageHelper('danger', 'Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
             } elseif ($data['n_max_pocet_hod'] > 0
-                && (\DBNabidka::getNabidkaLessons($_POST['id'], \Session::getParID())
+                && (\DBNabidka::getNabidkaLessons($_POST['id'], $par['p_id'])
                    + $_POST['hodiny']) > $data['n_max_pocet_hod']
             ) {
                 new \MessageHelper('danger', 'Maximální počet hodin na pár je ' . $data['n_max_pocet_hod'] . '!');
             } elseif (($data['n_pocet_hod'] - \DBNabidka::getNabidkaItemLessons($_POST['id'])) < $_POST['hodiny']) {
                 new \MessageHelper('danger', 'Tolik volných hodin tu není');
             } else {
-                \DBNabidka::addNabidkaItemLessons(\Session::getParID(), $_POST['id'], $_POST['hodiny']);
+                \DBNabidka::addNabidkaItemLessons($par['p_id'], $_POST['id'], $_POST['hodiny']);
                 $_POST['hodiny'] = null;
             }
         } elseif ($_POST['un_id'] !== null) {
@@ -87,7 +92,7 @@ class Nabidka
 
             if (!\DBNabidka::getNabidkaLessons($n_id, $u_id)) {
                 new \MessageHelper('danger', 'Neplatný požadavek!');
-            } elseif ($u_id != \Session::getParID() && !\Permissions::check('nabidka', P_OWNED, $data['n_trener'])) {
+            } elseif ($u_id != $par['p_id'] && !\Permissions::check('nabidka', P_OWNED, $data['n_trener'])) {
                 new \MessageHelper('danger', 'Nedostatečná oprávnění!');
             } else {
                 \DBNabidka::removeNabidkaItem($n_id, $u_id);

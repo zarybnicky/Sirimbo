@@ -5,7 +5,7 @@ class PartnerRequestHelper
 
     public function __construct($id = null)
     {
-        $this->_id = $id !== null ? $id : \Session::getUserID();
+        $this->_id = $id !== null ? $id : \Session::getUser()->getId();
     }
 
     public function id($id = null)

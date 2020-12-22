@@ -16,7 +16,7 @@ class Dokumenty
             ],
             \Permissions::check('dokumenty', P_ADMIN)
             ? \DBDokumenty::getDokumenty()
-            : \DBDokumenty::getDokumentyByAuthor(\Session::getUserID())
+            : \DBDokumenty::getDokumentyByAuthor(\Session::getUser()->getId())
         );
         new \RenderHelper('files/View/Admin/Dokumenty/Overview.inc', [
             'header' => 'Správa dokumentů',
@@ -52,7 +52,7 @@ class Dokumenty
             $_POST['name'],
             $fileName,
             $_POST['kategorie'],
-            \Session::getUserID()
+            \Session::getUser()->getId()
         );
         new \MessageHelper('success', 'Soubor byl úspěšně nahrán');
         return new \RedirectHelper('/admin/dokumenty');

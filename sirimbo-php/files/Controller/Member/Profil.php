@@ -6,8 +6,8 @@ class Profil
     public static function get()
     {
         \Permissions::checkError('nastenka', P_VIEW);
-        $data = \Session::getUserData();
-        $s = \Session::getSkupinaData();
+        $user = \Session::getUser();
+        $s = \DBSkupiny::getSingle($user->getTrainingGroup());
 
         $paymentsPaid = [];
         $paymentHistory = array_map(
@@ -21,11 +21,11 @@ class Profil
                     'validFor' => \Format::date($row['pc_valid_from']) . ' - ' . \Format::date($row['pc_valid_to']),
                 ];
             },
-            \DBPlatby::getPaymentHistory(\Session::getUserID())
+            \DBPlatby::getPaymentHistory($user->getId())
         );
 
         $paymentsWanted = [];
-        $groups = \DBSkupiny::getSingleWithCategories(\Session::getSkupina());
+        $groups = \DBSkupiny::getSingleWithCategories($user->getTrainingGroup());
         foreach ($groups as $row) {
             if (!$row['pc_visible'] || isset($paymentsPaid[$row['pc_id']])) {
                 continue;
@@ -45,15 +45,45 @@ class Profil
         }
 
         new \RenderHelper('files/View/Member/Profil/Overview.inc', [
-            'header' => $data->getFullName(),
-            'ageGroup' => \Session::getAgeGroup($data->getBirthYear()),
-            'coupleData' => \Session::getCoupleData(),
+            'header' => $user->getFullName(),
+            'ageGroup' => self::getAgeGroup($user->getBirthYear()),
+            'coupleData' => \DBPary::getLatestPartner($user->getId(), $user->getGender()),
             'skupina' => new \ColorboxHelper($s['s_color_rgb'], $s['s_name']) . '&nbsp;' . $s['s_name'],
-            'varSymbol' => \User::varSymbol(\Session::getUserID()),
-            'hasPaid' => \Session::getZaplaceno(),
+            'varSymbol' => \User::varSymbol($user->getId()),
+            'hasPaid' => \DBPlatby::hasPaidMemberFees($user->getId()),
             'paymentHistory' => $paymentHistory,
             'paymentsWanted' => $paymentsWanted,
         ]);
+    }
+
+    public static function getAgeGroup($year): string
+    {
+        $diff = date('Y') - $year;
+        if ($diff < 8) {
+            return 'Do 8 let';
+        } elseif ($diff < 10) {
+            return 'Děti I';
+        } elseif (10 <= $diff && $diff < 12) {
+            return 'Děti II';
+        } elseif (12 <= $diff && $diff < 14) {
+            return 'Junioři I';
+        } elseif (14 <= $diff && $diff < 16) {
+            return 'Junioři II';
+        } elseif (16 <= $diff && $diff < 19) {
+            return 'Mládež';
+        } elseif (19 <= $diff && $diff < 21) {
+            return 'Do 21 let';
+        } elseif (21 <= $diff && $diff < 35) {
+            return 'Dospělí';
+        } elseif (35 <= $diff && $diff < 45) {
+            return 'Senioři I';
+        } elseif (45 <= $diff && $diff < 55) {
+            return 'Senioři II';
+        } elseif (55 <= $diff && $diff < 65) {
+            return 'Senioři III';
+        } else {
+            return 'Senioři IV';
+        }
     }
 
     public static function renderPersonalForm()
@@ -90,35 +120,35 @@ class Profil
     public static function gdprPost()
     {
         \Permissions::checkError('nastenka', P_VIEW);
-        \DBUser::markGdprSigned(\Session::getUserId());
+        \DBUser::markGdprSigned(\Session::getUser()->getId());
         new \RedirectHelper('/member');
     }
 
     public static function edit()
     {
         \Permissions::checkError('nastenka', P_VIEW);
-        $data = \Session::getUserData();
-        $_POST['jmeno'] = $data->getName();
-        $_POST['prijmeni'] = $data->getSurname();
-        $_POST['pohlavi'] = $data->getGender();
-        $_POST['narozeni'] = $data->getBirthDate();
-        $_POST['email'] = $data->getEmail();
-        $_POST['telefon'] = $data->getPhone();
-        $_POST['street'] = $data->getStreet();
-        $_POST['popisne'] = $data->getConscriptionNumber();
-        $_POST['orientacni'] = $data->getOrientationNumber();
-        $_POST['city'] = $data->getCity();
-        $_POST['district'] = $data->getDistrict();
-        $_POST['postal'] = $data->getPostalCode();
-        $_POST['nationality'] = $data->getNationality();
-        $_POST['dancer'] = $data->getDancer();
+        $user = \Session::getUser();
+        $_POST['jmeno'] = $user->getName();
+        $_POST['prijmeni'] = $user->getSurname();
+        $_POST['pohlavi'] = $user->getGender();
+        $_POST['narozeni'] = $user->getBirthDate();
+        $_POST['email'] = $user->getEmail();
+        $_POST['telefon'] = $user->getPhone();
+        $_POST['street'] = $user->getStreet();
+        $_POST['popisne'] = $user->getConscriptionNumber();
+        $_POST['orientacni'] = $user->getOrientationNumber();
+        $_POST['city'] = $user->getCity();
+        $_POST['district'] = $user->getDistrict();
+        $_POST['postal'] = $user->getPostalCode();
+        $_POST['nationality'] = $user->getNationality();
+        $_POST['dancer'] = $user->getDancer();
         return static::renderPersonalForm();
     }
 
     public static function editPost()
     {
         \Permissions::checkError('nastenka', P_VIEW);
-        $data = \Session::getUserData();
+        $user = \Session::getUser();
         $form = static::checkDataEdit();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
@@ -126,14 +156,14 @@ class Profil
         }
 
         \DBUser::setUserData(
-            \Session::getUserID(),
+            \Session::getUser()->getId(),
             $_POST['jmeno'],
             $_POST['prijmeni'],
             $_POST['pohlavi'],
             $_POST['email'],
             $_POST['telefon'],
             (string) new \Date($_POST['narozeni']),
-            $data->getNotes(),
+            $user->getNotes(),
             $_POST['street'],
             $_POST['popisne'],
             $_POST['orientacni'],
@@ -141,16 +171,16 @@ class Profil
             $_POST['city'],
             $_POST['postal'],
             $_POST['nationality'],
-            $data->getPermissionGroup(),
-            $data->getTrainingGroup(),
-            $data->getLocked() ? '1' : '0',
-            $data->getBanned() ? '1' : '0',
-            $data->getSystem() ? '1' : '0',
+            $user->getPermissionGroup(),
+            $user->getTrainingGroup(),
+            $user->getLocked() ? '1' : '0',
+            $user->getBanned() ? '1' : '0',
+            $user->getSystem() ? '1' : '0',
             $_POST['dancer'] ? '1' : '0',
-            $data->getTeacher() ? '1' : '0',
-            $data->getMemberSince(),
-            $data->getMemberUntil(),
-            $data->getGdprSignedAt()
+            $user->getTeacher() ? '1' : '0',
+            $user->getMemberSince(),
+            $user->getMemberUntil(),
+            $user->getGdprSignedAt()
         );
         new \RedirectHelper('/member/profil');
     }
@@ -173,7 +203,7 @@ class Profil
                 'header' => 'Změna hesla'
             ]);
         }
-        \DBUser::setPassword(\Session::getUserID(), \User::crypt($_POST['newpass']));
+        \DBUser::setPassword(\Session::getUser()->getId(), \User::crypt($_POST['newpass']));
         new \RedirectHelper('/member/profil');
     }
 
@@ -195,7 +225,7 @@ class Profil
         $f = new \Form();
         $f->checkPassword($_POST['newpass'], 'Neplatný formát hesla', 'newpass');
         $f->checkBool(
-            \DBUser::checkUser(\Session::getUserData()->getLogin(), \User::crypt($_POST['oldpass'])),
+            \DBUser::checkUser(\Session::getUser()->getLogin(), \User::crypt($_POST['oldpass'])),
             'Staré heslo je špatně',
             'oldpass'
         );

@@ -8,7 +8,7 @@ class Rozpis
         \Permissions::checkError('rozpis', P_OWNED);
         $data = \Permissions::check('rozpis', P_ADMIN)
             ? \DBRozpis::getRozpis(true)
-            : \DBRozpis::getRozpisyByTrener(\Session::getUserID(), true);
+            : \DBRozpis::getRozpisyByTrener(\Session::getUser()->getId(), true);
         $data = array_map(
             fn($item) => [
                 'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
@@ -35,7 +35,7 @@ class Rozpis
         \Permissions::checkError('rozpis', P_OWNED);
         $data = \Permissions::check('rozpis', P_ADMIN)
             ? \DBRozpis::getRozpis(true)
-            : \DBRozpis::getRozpisyByTrener(\Session::getUserID(), true);
+            : \DBRozpis::getRozpisyByTrener(\Session::getUser()->getId(), true);
 
         foreach ($data as $item) {
             $id = $item['r_id'];
@@ -153,8 +153,8 @@ class Rozpis
     {
         $isAdmin = \Permissions::check('rozpis', P_ADMIN);
         $treneri = $isAdmin
-                 ? \DBUser::getUsersByPermission('rozpis', P_OWNED)
-                 : [\DBUser::getUserData(\Session::getUserID())];
+            ? \DBUser::getUsersByPermission('rozpis', P_OWNED)
+            : [\DBUser::getUserData(\Session::getUser()->getId())];
 
         new \RenderHelper('files/View/Admin/Rozpis/Form.inc', [
             'header' => 'Správa rozpisů',

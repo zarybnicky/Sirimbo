@@ -145,7 +145,7 @@ class Galerie
                 self::getCanonicalName($parent),
                 self::getCanonicalName($file),
                 $name,
-                \Session::getUserID()
+                \Session::getUser()->getId()
             );
         }
         new \MessageHelper(

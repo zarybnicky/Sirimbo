@@ -48,7 +48,7 @@ class Nastenka
         }
 
         $id = \DBNastenka::addNastenka(
-            \Session::getUserID(),
+            \Session::getUser()->getId(),
             $_POST['nadpis'],
             $_POST['text'],
             $_POST['lock'] ? 1 : 0

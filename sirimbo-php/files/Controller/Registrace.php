@@ -90,9 +90,10 @@ class Registrace
             ]);
         }
 
-        \Session::register(
-            strtolower($_POST['username']),
-            $_POST['pass'],
+        $login = strtolower($_POST['username']);
+        \DBUser::addUser(
+            $login,
+            \User::crypt($_POST['pass']),
             $_POST['jmeno'],
             $_POST['prijmeni'],
             $_POST['pohlavi'],
@@ -107,9 +108,18 @@ class Registrace
             $_POST['city'],
             $_POST['postal'],
             $_POST['nationality'],
+            '0',
             $_POST['skupina'],
-            $_POST['poznamky'] === 'dancer'
+            '0',
+            '0',
+            '0',
+            '0',
+            ($_POST['poznamky'] === 'dancer') ? '1' : '0',
+            '0'
         );
+
+        \Mailer::newUserNotice(DEFAULT_ADMIN_MAIL, $login);
+        \Mailer::newUserNotice('hyzam@tkolymp.cz', $login);
         new \MessageHelper(
             'success',
             '<h4 class="alert-heading">Registrace úspěšně proběhla.</h4>' .

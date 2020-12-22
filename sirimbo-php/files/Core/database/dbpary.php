@@ -211,7 +211,7 @@ class DBPary extends Database
     {
         list($id) = self::escape($id);
 
-        if (\Session::getUserPohlavi() == "m") {
+        if (\Session::getUser()->getGender() == "m") {
             $res = self::query(
                 "SELECT pn_id, u_id, u_jmeno, u_prijmeni, u_pohlavi
                 FROM pary_navrh LEFT JOIN users ON pn_partnerka=u_id
@@ -233,7 +233,9 @@ class DBPary extends Database
             "INSERT INTO pary_navrh
             (pn_navrhl, pn_partner, pn_partnerka)
             VALUES (?, ?, ?)",
-            $navrhl, $partner, $partnerka
+            $navrhl,
+            $partner,
+            $partnerka
         );
     }
 

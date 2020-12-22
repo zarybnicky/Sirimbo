@@ -41,21 +41,19 @@ session_set_save_handler(new DbSessionHandler(), true);
 session_start();
 
 try {
-    if (isset($_SESSION['login']) && $_SESSION['login'] !== null) {
-        \Session::loadUser($_SESSION['id']);
-        if ($_SESSION['gdpr']) {
+    if ($_SESSION['id'] ?? null) {
+        $user = \Session::loadUser($_SESSION['id']);
+        if (!$user->getGdprSignedAt() || $user->getGdprSignedAt() === '0000-00-00 00:00:00') {
             if (!in_array(explode('?', $_SERVER['REQUEST_URI'])[0], ['/member/profil/gdpr', '/logout'])) {
                 return new RedirectHelper('/member/profil/gdpr');
             }
-        } elseif ($_SESSION['invalid']) {
+        } elseif (!$user->isValid()) {
             if (!in_array(explode('?', $_SERVER['REQUEST_URI'])[0], ['/member/profil/edit', '/logout'])) {
                 return new RedirectHelper('/member/profil/edit', 'Prosím vyplňte požadované údaje.');
             }
         }
-    } elseif (isset($_POST['login']) && isset($_POST['pass'])) {
-        $_POST['pass'] = User::crypt($_POST['pass']);
-
-        if (!\Session::login($_POST['login'], $_POST['pass'])) {
+    } elseif (isset($_POST['login']) || isset($_POST['pass'])) {
+        if (!\Session::login($_POST['login'], User::crypt($_POST['pass']))) {
             new RedirectHelper('/login', 'Špatné jméno nebo heslo!');
         } elseif ($_GET['return'] ?? null) {
             new RedirectHelper($_GET['return']);

@@ -6,6 +6,9 @@ class Rozpis
     public static function get()
     {
         \Permissions::checkError('rozpis', P_VIEW);
+        $user = \Session::getUser();
+        $par = \DBPary::getLatestPartner($user->getId(), $user->getGender());
+
         $data = array_map(
             fn($rozpis) => [
                 'id' => $rozpis['r_id'],
@@ -29,8 +32,7 @@ class Rozpis
                             $item['ri_partner'] != 0
                             && !$rozpis['r_lock']
                             && !$item['ri_lock']
-                            && ((\Permissions::check('rozpis', P_MEMBER)
-                                && \Session::getParID() == $item['ri_partner'])
+                            && ((\Permissions::check('rozpis', P_MEMBER) && $par['p_id'] == $item['ri_partner'])
                                || \Permissions::check('rozpis', P_OWNED, $rozpis['r_trener']))
                         )
                     ],
@@ -59,6 +61,9 @@ class Rozpis
     public static function post()
     {
         \Permissions::checkError('rozpis', P_VIEW);
+        $user = \Session::getUser();
+        $par = \DBPary::getLatestPartner($user->getId(), $user->getGender());
+
         $data = \DBRozpis::getSingleRozpis($_POST['ri_id']);
         $lesson = \DBRozpis::getRozpisItemLesson($_POST['ri_id']);
         $form = static::checkData($data, $_POST['action']);
@@ -71,11 +76,11 @@ class Rozpis
             } elseif ($lesson['ri_partner']) {
                 new \MessageHelper('warning', 'Lekce už je obsazená');
             } else {
-                \DBRozpis::rozpisSignUp($_POST['ri_id'], \Session::getParID());
+                \DBRozpis::rozpisSignUp($_POST['ri_id'], $par['p_id']);
             }
         } elseif ($_POST['action'] == 'signout') {
             if ($lesson['ri_partner'] == 0) {
-            } elseif (\Session::getParID() != $lesson['ri_partner']
+            } elseif ($par['p_id'] != $lesson['ri_partner']
                       && !\Permissions::check('rozpis', P_OWNED, $data['n_trener'])
             ) {
                 new \MessageHelper('warning', 'Nedostatečná oprávnění!');

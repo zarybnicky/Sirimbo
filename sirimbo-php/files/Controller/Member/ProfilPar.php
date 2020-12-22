@@ -21,7 +21,8 @@ class ProfilPar
 
     public static function body()
     {
-        $par = \DBPary::getSinglePar(\Session::getParID());
+        $user = \Session::getUser();
+        $par = \DBPary::getLatestPartner($user->getId(), $user->getGender());
         return new \RenderHelper('files/View/Member/Profil/CoupleData.inc', [
             'header' => 'Změna třídy a bodů',
             'stt_trida' => $par['p_stt_trida'],
@@ -35,6 +36,9 @@ class ProfilPar
 
     public static function bodyPost()
     {
+        $user = \Session::getUser();
+        $par = \DBPary::getLatestPartner($user->getId(), $user->getGender());
+
         $form = static::checkData();
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
@@ -63,7 +67,7 @@ class ProfilPar
             + $lat_bonus;
 
         \DBPary::editTridaBody(
-            \Session::getParID(),
+            $par['p_id'],
             $_POST['stt-trida'],
             $_POST['stt-body'],
             $_POST['stt-finale'],
@@ -77,34 +81,36 @@ class ProfilPar
 
     public static function partner()
     {
-        $latest = \DBPary::getLatestPartner(\Session::getUserID(), \Session::getUserPohlavi());
-        $havePartner = !empty($latest) && $latest['u_id'];
-        $_POST['partner'] = $havePartner ? $latest['u_id'] : '0';
+        $user = \Session::getUser();
+        $couple = \DBPary::getLatestPartner($user->getId(), $user->getGender());
+        $havePartner = !empty($couple) && $couple['u_id'];
+        $_POST['partner'] = $havePartner ? $couple['u_id'] : '0';
         new \RenderHelper('files/View/Member/Profil/PartnerOverview.inc', [
             'header' => 'Profil',
             'havePartner' => $havePartner,
-            'partnerID' => $latest['u_id'],
-            'partnerFullName' => $latest['u_jmeno'] . ' ' . $latest['u_prijmeni'],
-            'users' => \DBUser::getUsersByPohlavi((\Session::getUserPohlavi() == "m") ? "f" : "m")
+            'partnerID' => $couple['u_id'],
+            'partnerFullName' => $couple['u_jmeno'] . ' ' . $couple['u_prijmeni'],
+            'users' => \DBUser::getUsersByPohlavi(($user->getGender() == "m") ? "f" : "m")
         ]);
     }
 
     public static function partnerPost()
     {
-        $latest = \DBPary::getLatestPartner(\Session::getUserID(), \Session::getUserPohlavi());
-        $havePartner = !empty($latest) && $latest['u_id'];
+        $user = \Session::getUser();
+        $couple = \DBPary::getLatestPartner($user->getId(), $user->getGender());
+        $havePartner = !empty($couple) && $couple['u_id'];
         if (!isset($_POST["partner"]) || ($_POST['action'] == 'dumpthem' && $havePartner)) {
-            \DBPary::noPartner(\Session::getUserID());
-            \DBPary::noPartner($latest['u_id']);
+            \DBPary::noPartner($user->getId());
+            \DBPary::noPartner($couple['u_id']);
             new \RedirectHelper('/member/profil');
         }
-        if ($_POST['partner'] == $latest['u_id'] || (!$_POST['partner'] && $latest['u_id'] == '0')) {
+        if ($_POST['partner'] == $couple['u_id'] || (!$_POST['partner'] && $couple['u_id'] == '0')) {
             new \RedirectHelper('/member/profil');
         }
-        if (\Session::getUserPohlavi() == "m") {
-            \DBPary::newPartnerRequest(\Session::getUserID(), \Session::getUserID(), $_POST["partner"]);
+        if ($user->getGender() == "m") {
+            \DBPary::newPartnerRequest($user->getId(), $user->getId(), $_POST["partner"]);
         } else {
-            \DBPary::newPartnerRequest(\Session::getUserID(), $_POST["partner"], \Session::getUserID());
+            \DBPary::newPartnerRequest($user->getId(), $_POST["partner"], $user->getId());
         }
         new \MessageHelper('info', 'Žádost o partnerství odeslána');
         new \RedirectHelper('/member/profil');
@@ -115,7 +121,7 @@ class ProfilPar
         switch ($_POST['action']) {
             case 'accept':
             case 'refuse':
-                $requests = \DBPary::getPartnerRequestsForMe(\Session::getUserID());
+                $requests = \DBPary::getPartnerRequestsForMe(\Session::getUser()->getId());
                 foreach ($requests as $req) {
                     if ($req['pn_id'] != $_POST['id']) {
                         continue;
@@ -133,7 +139,7 @@ class ProfilPar
                 break;
 
             case 'cancel':
-                $requests = \DBPary::getPartnerRequestsByMe(\Session::getUserID());
+                $requests = \DBPary::getPartnerRequestsByMe(\Session::getUser()->getId());
                 foreach ($requests as $req) {
                     if ($req['pn_id'] != $_POST['id']) {
                         continue;
