@@ -7,7 +7,7 @@ class GalerieDirectory
     {
         \Permissions::checkError('galerie', P_OWNED);
         if (!\DBGalerie::getSingleDir($id)) {
-            new \MessageHelper('warning', 'Složka s takovým ID neexistuje');
+            \Message::warning('Složka s takovým ID neexistuje');
             \Redirect::to('/admin/galerie');
         }
         new \RenderHelper('files/View/Admin/Galerie/DisplayDirectory.inc', [
@@ -35,7 +35,7 @@ class GalerieDirectory
         \Permissions::checkError('galerie', P_OWNED);
         $form = static::checkData();
         if (!$form->isValid()) {
-            new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
             return static::displayForm('add');
         }
         $parent = \DBGalerie::getSingleDir($_POST['parent']);
@@ -55,7 +55,7 @@ class GalerieDirectory
     {
         \Permissions::checkError('galerie', P_OWNED);
         if (!($data = \DBGalerie::getSingleDir($id))) {
-            new \MessageHelper('warning', 'Taková složka neexistuje');
+            \Message::warning('Taková složka neexistuje');
             \Redirect::to('/admin/galerie');
         }
         $_POST['name'] = $data['gd_name'];
@@ -68,12 +68,12 @@ class GalerieDirectory
     {
         \Permissions::checkError('galerie', P_OWNED);
         if (!($data = \DBGalerie::getSingleDir($id))) {
-            new \MessageHelper('warning', 'Taková složka neexistuje');
+            \Message::warning('Taková složka neexistuje');
             \Redirect::to('/admin/galerie');
         }
         $form = static::checkData();
         if (!$form->isValid()) {
-            new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
             return static::displayForm('edit');
         }
         $parent = \DBGalerie::getSingleDir($_POST['parent']);
@@ -82,7 +82,7 @@ class GalerieDirectory
         );
         if ($data['gd_path'] != $newPath) {
             if (file_exists(GALERIE . DIRECTORY_SEPARATOR . $newPath)) {
-                new \MessageHelper('danger', 'V dané nadsložce už existuje složka se stejným názvem.');
+                \Message::danger('V dané nadsložce už existuje složka se stejným názvem.');
                 \Redirect::to('/admin/galerie/directory/edit/' . $id);
             }
             rename(

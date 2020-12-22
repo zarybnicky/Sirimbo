@@ -33,7 +33,7 @@ class PlatbyGroup
         \Permissions::checkError('platby', P_OWNED);
         $form = static::checkData();
         if (!$form->isValid()) {
-            new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
             return static::displayForm('add', 0);
         }
         \DBPlatbyGroup::insert(
@@ -57,7 +57,7 @@ class PlatbyGroup
     {
         \Permissions::checkError('platby', P_OWNED);
         if (!$data = \DBPlatbyGroup::getSingle($id)) {
-            new \MessageHelper('warning', 'Kategorie s takovým ID neexistuje');
+            \Message::warning('Kategorie s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/platby/structure/group');
         }
         $_POST['type'] = $data['pg_type'];
@@ -71,12 +71,12 @@ class PlatbyGroup
     {
         \Permissions::checkError('platby', P_OWNED);
         if (!\DBPlatbyGroup::getSingle($id)) {
-            new \MessageHelper('warning', 'Kategorie s takovým ID neexistuje');
+            \Message::warning('Kategorie s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/platby/structure/group');
         }
         $form = static::checkData();
         if (!$form->isValid()) {
-            new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
             return static::displayForm('edit', $id);
         }
         \DBPlatbyGroup::update(
@@ -118,12 +118,11 @@ class PlatbyGroup
     {
         \Permissions::checkError('platby', P_OWNED);
         if (!$data = \DBPlatbyGroup::getSingle($id)) {
-            new \MessageHelper('warning', 'Kategorie s takovým ID neexistuje');
+            \Message::warning('Kategorie s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/platby/structure/group');
         }
         if (static::getLinkedObjects($id)) {
-            new \MessageHelper(
-                'info',
+            \Message::info(
                 'Nelze odstranit kategorii s připojenými skupinami nebo specifickými symboly! '
                 . new \Tag(
                     'form',
@@ -146,7 +145,7 @@ class PlatbyGroup
     {
         \Permissions::checkError('platby', P_OWNED);
         if (!$data = \DBPlatbyGroup::getSingle($id)) {
-            new \MessageHelper('warning', 'Kategorie s takovým ID neexistuje');
+            \Message::warning('Kategorie s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/platby/structure/group');
         }
 
@@ -163,10 +162,7 @@ class PlatbyGroup
                 \DBSkupiny::removeChild($data['s_id'], $id);
                 ++$skupinaCount;
             }
-            new \MessageHelper(
-                'info',
-                "Spojení s $skupinaCount skupinami a s $categoryCount kategoriemi bylo odstraněno"
-            );
+            \Message::info("Spojení s $skupinaCount skupinami a s $categoryCount kategoriemi bylo odstraněno");
             \Redirect::to("/admin/platby/structure/group/remove/$id");
         }
         if ($f) {

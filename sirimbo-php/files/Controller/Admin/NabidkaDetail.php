@@ -7,7 +7,7 @@ class NabidkaDetail
     {
         \Permissions::checkError('nabidka', P_OWNED);
         if (!$data = \DBNabidka::getSingleNabidka($id)) {
-            new \MessageHelper('warning', 'Nabídka s takovým ID neexistuje');
+            \Message::warning('Nabídka s takovým ID neexistuje');
             \Redirect::to('/admin/nabidka');
         }
         \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
@@ -55,7 +55,7 @@ class NabidkaDetail
     {
         \Permissions::checkError('nabidka', P_OWNED);
         if (!$data = \DBNabidka::getSingleNabidka($id)) {
-            new \MessageHelper('warning', 'Nabídka s takovým ID neexistuje');
+            \Message::warning('Nabídka s takovým ID neexistuje');
             \Redirect::to('/admin/nabidka');
         }
         \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);

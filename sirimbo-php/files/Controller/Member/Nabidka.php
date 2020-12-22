@@ -70,19 +70,19 @@ class Nabidka
         $data = \DBNabidka::getSingleNabidka($_POST['id']);
         $form = static::checkData($data);
         if (!$form->isValid()) {
-            new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
             \Redirect::to('/member/nabidka');
         }
         if ($_POST['hodiny'] > 0) {
             if (!\Session::getZaplacenoPar()) {
-                new \MessageHelper('danger', 'Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
+                \Message::danger('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
             } elseif ($data['n_max_pocet_hod'] > 0
                 && (\DBNabidka::getNabidkaLessons($_POST['id'], $par['p_id'])
                    + $_POST['hodiny']) > $data['n_max_pocet_hod']
             ) {
-                new \MessageHelper('danger', 'Maximální počet hodin na pár je ' . $data['n_max_pocet_hod'] . '!');
+                \Message::danger('Maximální počet hodin na pár je ' . $data['n_max_pocet_hod'] . '!');
             } elseif (($data['n_pocet_hod'] - \DBNabidka::getNabidkaItemLessons($_POST['id'])) < $_POST['hodiny']) {
-                new \MessageHelper('danger', 'Tolik volných hodin tu není');
+                \Message::danger('Tolik volných hodin tu není');
             } else {
                 \DBNabidka::addNabidkaItemLessons($par['p_id'], $_POST['id'], $_POST['hodiny']);
                 $_POST['hodiny'] = null;
@@ -91,9 +91,9 @@ class Nabidka
             list($u_id, $n_id) = explode('-', $_POST['un_id']);
 
             if (!\DBNabidka::getNabidkaLessons($n_id, $u_id)) {
-                new \MessageHelper('danger', 'Neplatný požadavek!');
+                \Message::danger('Neplatný požadavek!');
             } elseif ($u_id != $par['p_id'] && !\Permissions::check('nabidka', P_OWNED, $data['n_trener'])) {
-                new \MessageHelper('danger', 'Nedostatečná oprávnění!');
+                \Message::danger('Nedostatečná oprávnění!');
             } else {
                 \DBNabidka::removeNabidkaItem($n_id, $u_id);
             }

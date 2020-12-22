@@ -65,7 +65,7 @@ class Rozpis
         \Permissions::checkError('rozpis', P_OWNED);
         $form = static::checkData();
         if (!$form->isValid()) {
-            new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
             return static::displayForm('add');
         }
         \Permissions::checkError('rozpis', P_OWNED, $_POST['trener']);
@@ -83,7 +83,7 @@ class Rozpis
     {
         \Permissions::checkError('rozpis', P_OWNED);
         if (!$data = \DBRozpis::getSingleRozpis($id)) {
-            new \MessageHelper('warning', 'Rozpis s takovým ID neexistuje');
+            \Message::warning('Rozpis s takovým ID neexistuje');
             \Redirect::to('/admin/rozpis');
         }
         \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
@@ -94,13 +94,13 @@ class Rozpis
     {
         \Permissions::checkError('rozpis', P_OWNED);
         if (!$data = \DBRozpis::getSingleRozpis($id)) {
-            new \MessageHelper('warning', 'Rozpis s takovým ID neexistuje');
+            \Message::warning('Rozpis s takovým ID neexistuje');
             \Redirect::to('/admin/rozpis');
         }
         \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
         $form = static::checkData();
         if (!$form->isValid()) {
-            new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
             return static::displayForm('edit', $data);
         }
         \DBRozpis::editRozpis(

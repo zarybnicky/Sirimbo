@@ -7,7 +7,7 @@ class Akce
     {
         \Permissions::checkError('akce', P_VIEW);
         if (!($data = \DBAkce::getSingleAkce($id, true))) {
-            new \MessageHelper('warning', 'Žádná taková akce neexistuje');
+            \Message::warning('Žádná taková akce neexistuje');
             \Redirect::to('/member/akce');
         }
         return new \RenderHelper('files/View/Member/Akce/Single.inc', [
@@ -20,13 +20,13 @@ class Akce
     {
         \Permissions::checkError('akce', P_VIEW);
         if (!$_POST['id'] || !($data = \DBAkce::getSingleAkce($_POST['id']))) {
-            new \MessageHelper('warning', 'Žádná taková akce neexistuje');
+            \Message::warning('Žádná taková akce neexistuje');
             \Redirect::to('/member/akce');
         }
 
         $form = static::checkData($data, $_POST['action']);
         if (!$form->isValid()) {
-            new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
         } elseif ($_POST['action'] == 'signup') {
             \DBAkce::signUp(\Session::getUser()->getId(), $_POST['id'], \Session::getUser()->getBirthYear());
         } elseif ($_POST['action'] == 'signout') {

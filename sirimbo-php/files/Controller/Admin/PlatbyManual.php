@@ -9,7 +9,7 @@ class PlatbyManual
         $remaining = \DBPlatbyRaw::getUnsorted();
         $remainingCount = count($remaining);
         if ($remainingCount == 0) {
-            new \MessageHelper('info', 'Nezbývají už žádné nezatříděné platby');
+            \Message::info('Nezbývají už žádné nezatříděné platby');
             \Redirect::to('/admin/platby');
         }
         \Redirect::to('/admin/platby/discarded/' . $remaining[0]['pr_id']);
@@ -21,7 +21,7 @@ class PlatbyManual
         $data = \DBPlatbyRaw::getSingle($id);
         $raw = unserialize($data['pr_raw']);
         if ($data['pr_sorted']) {
-            new \MessageHelper('info', 'Platba už byla zařazena do systému');
+            \Message::info('Platba už byla zařazena do systému');
             \Redirect::to('/admin/platby/discarded');
         }
 
@@ -116,15 +116,18 @@ class PlatbyManual
     {
         \Permissions::checkError('platby', P_OWNED);
         if (!($data = \DBPlatbyRaw::getSingle($id))) {
-            return new \MessageHelper('warning', 'Zadaná platba neexistuje.');
+            \Message::warning('Zadaná platba neexistuje.');
+            return;
         }
         if ($data['pr_sorted']) {
-            return new \MessageHelper('info', 'Zadaná platba už byla zařazená.');
+            \Message::info('Zadaná platba už byla zařazená.');
+            return;
         }
         switch ($_POST['action']) {
             case 'confirm':
                 if (!is_object($item = Platby::getFromPost())) {
-                    return new \MessageHelper('warning', $item);
+                    \Message::warning($item);
+                    return;
                 }
                 \DBPlatbyRaw::update($id, $data['pr_raw'], $data['pr_hash'], '1', '0');
                 \DBPlatbyItem::insert(
@@ -143,7 +146,7 @@ class PlatbyManual
                 \DBPlatbyRaw::skip($id);
                 break;
             default:
-                new \MessageHelper('danger', 'Neplatná POST akce.');
+                \Message::danger('Neplatná POST akce.');
                 break;
         }
         \Redirect::to('/admin/platby/manual');

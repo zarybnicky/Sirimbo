@@ -65,7 +65,7 @@ class Member
         $data = \DBDokumenty::getSingleDokument($_GET['id']);
         $path = $data['d_path'];
         if (!is_file($path) || !($file = fopen($path, 'rb'))) {
-            new \MessageHelper('warning', 'Soubor nebyl nalezen.');
+            \Message::warning('Soubor nebyl nalezen.');
             \Redirect::to('/member/dokumenty');
         }
 

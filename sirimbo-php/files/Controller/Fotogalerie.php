@@ -11,7 +11,7 @@ class Fotogalerie
     public static function directory($id)
     {
         if (!($dir = \DBGalerie::getSingleDir($id))) {
-            new \MessageHelper('warning', 'Taková složka neexistuje');
+            \Message::warning('Taková složka neexistuje');
             \Redirect::to('/fotogalerie');
         }
 
@@ -45,7 +45,7 @@ class Fotogalerie
     public static function single($id)
     {
         if (!$data = \DBGalerie::getSingleFoto($id)) {
-            new \MessageHelper('warning', 'Taková fotka neexistuje');
+            \Message::warning('Taková fotka neexistuje');
             \Redirect::to('/fotogalerie');
         }
 

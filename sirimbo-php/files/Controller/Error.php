@@ -19,7 +19,7 @@ class Error
         } else {
             $notice = "Chybová stránka s daným ID nebyla nalezena";
         }
-        new \MessageHelper('danger', $notice);
+        \Message::danger($notice);
         new \RenderHelper('files/View/Empty.inc', ['header' => 'Chyba']);
     }
 }

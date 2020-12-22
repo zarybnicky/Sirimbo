@@ -7,7 +7,7 @@ class RozpisDetail
     {
         \Permissions::checkError('rozpis', P_OWNED);
         if (!$data = \DBRozpis::getSingleRozpis($id)) {
-            new \MessageHelper('warning', 'Rozpis s takovým ID neexistuje');
+            \Message::warning('Rozpis s takovým ID neexistuje');
             \Redirect::to('/admin/rozpis');
         }
         \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
@@ -93,7 +93,7 @@ class RozpisDetail
     {
         \Permissions::checkError('rozpis', P_OWNED);
         if (!$data = \DBRozpis::getSingleRozpis($id)) {
-            new \MessageHelper('warning', 'Rozpis s takovým ID neexistuje');
+            \Message::warning('Rozpis s takovým ID neexistuje');
             \Redirect::to('/admin/rozpis');
         }
         \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
@@ -122,7 +122,7 @@ class RozpisDetail
         if ($_POST['add_od'] && $_POST['add_do']) {
             $form = static::checkAdd();
             if (!$form->isValid()) {
-                new \MessageHelper('warning', $form->getMessages());
+                \Message::warning($form->getMessages());
             } else {
                 $newId = \DBRozpis::addRozpisItem(
                     $id,
@@ -177,7 +177,7 @@ class RozpisDetail
             case 'add_multiple':
                 $form = static::checkAddMultiple();
                 if (!$form->isValid()) {
-                    new \MessageHelper('warning', $form->getMessages());
+                    \Message::warning($form->getMessages());
                     break;
                 }
 

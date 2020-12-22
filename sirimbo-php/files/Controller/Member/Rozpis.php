@@ -68,13 +68,14 @@ class Rozpis
         $lesson = \DBRozpis::getRozpisItemLesson($_POST['ri_id']);
         $form = static::checkData($data, $_POST['action']);
         if (!$form->isValid()) {
-            return new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
+            return;
         }
         if ($_POST['action'] == 'signup') {
             if (!\Session::getZaplacenoPar()) {
-                new \MessageHelper('warning', 'Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
+                \Message::warning('Buď vy nebo váš partner(ka) nemáte zaplacené členské příspěvky');
             } elseif ($lesson['ri_partner']) {
-                new \MessageHelper('warning', 'Lekce už je obsazená');
+                \Message::warning('Lekce už je obsazená');
             } else {
                 \DBRozpis::rozpisSignUp($_POST['ri_id'], $par['p_id']);
             }
@@ -83,7 +84,7 @@ class Rozpis
             } elseif ($par['p_id'] != $lesson['ri_partner']
                       && !\Permissions::check('rozpis', P_OWNED, $data['n_trener'])
             ) {
-                new \MessageHelper('warning', 'Nedostatečná oprávnění!');
+                \Message::warning('Nedostatečná oprávnění!');
             } else {
                 \DBRozpis::rozpisSignOut($_POST['ri_id']);
             }

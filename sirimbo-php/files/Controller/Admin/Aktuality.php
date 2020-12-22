@@ -62,7 +62,7 @@ class Aktuality
     {
         \Permissions::checkError('aktuality', P_OWNED);
         if (!$data = \DBAktuality::getSingleAktualita($id)) {
-            new \MessageHelper('warning', 'Článek s takovým ID neexistuje');
+            \Message::warning('Článek s takovým ID neexistuje');
             \Redirect::to('/admin/aktuality');
         }
         \Permissions::checkError('aktuality', P_OWNED, $data['at_kdo']);
@@ -81,13 +81,13 @@ class Aktuality
     {
         \Permissions::checkError('aktuality', P_OWNED);
         if (!$data = \DBAktuality::getSingleAktualita($id)) {
-            new \MessageHelper('warning', 'Článek s takovým ID neexistuje');
+            \Message::warning('Článek s takovým ID neexistuje');
             \Redirect::to('/admin/aktuality');
         }
         \Permissions::checkError('aktuality', P_OWNED, $data['at_kdo']);
 
         if (\DateTime::createFromFormat('j. n. Y H:i', $_POST['createdAt']) === false) {
-            new \MessageHelper('danger', 'Špatný formát data "Publikováno" (D. M. RRRR HH:SS)');
+            \Message::danger('Špatný formát data "Publikováno" (D. M. RRRR HH:SS)');
             return new \RenderHelper('files/View/Admin/Aktuality/Form.inc', [
                 'header' => 'Správa aktualit',
                 'subheader' => 'Upravit článek',
@@ -141,14 +141,14 @@ class Aktuality
     {
         \Permissions::checkError('aktuality', P_OWNED);
         if (!($article = \DBAktuality::getSingleAktualita($id))) {
-            new \MessageHelper('warning', 'Takový článek neexistuje');
+            \Message::warning('Takový článek neexistuje');
             \Redirect::to('/admin/aktuality');
         }
         if (!isset($_GET['dir']) && $article['at_foto']) {
             \Redirect::to('/admin/aktuality/foto/' . $id . '?dir=' . $article['at_foto']);
         }
         if (!\DBGalerie::getSingleDir($_GET['dir'] ?? 0)) {
-            new \MessageHelper('warning', 'Taková složka neexistuje');
+            \Message::warning('Taková složka neexistuje');
             \Redirect::to('/admin/aktuality/foto/' . $id . '?dir=0');
         }
         $photos = array_map(
@@ -177,7 +177,7 @@ class Aktuality
     {
         \Permissions::checkError('aktuality', P_OWNED);
         if (!($article = \DBAktuality::getSingleAktualita($id))) {
-            new \MessageHelper('warning', 'Takový článek neexistuje');
+            \Message::warning('Takový článek neexistuje');
             \Redirect::to('/admin/aktuality');
         }
         \DBAktuality::editAktualita(

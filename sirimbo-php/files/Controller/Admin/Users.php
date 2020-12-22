@@ -172,7 +172,7 @@ class Users
         \Permissions::checkError('users', P_ADMIN);
         $form = static::checkData('add');
         if (!$form->isValid()) {
-            new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
             return static::displayForm('add');
         }
         \DBUser::addUser(
@@ -208,11 +208,11 @@ class Users
     {
         \Permissions::checkError('users', P_ADMIN);
         if (!$data = \DBUser::getUserData($id)) {
-            new \MessageHelper('warning', 'Uživatel s takovým ID neexistuje');
+            \Message::warning('Uživatel s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/users');
         }
         if (!$data['u_confirmed']) {
-            new \MessageHelper('warning', 'Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
+            \Message::warning('Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
             \Redirect::to($_POST['returnURI'] ?? '/admin/users');
         }
         $_POST['login'] = $data['u_login'];
@@ -246,16 +246,16 @@ class Users
     {
         \Permissions::checkError('users', P_ADMIN);
         if (!$data = \DBUser::getUserData($id)) {
-            new \MessageHelper('warning', 'Uživatel s takovým ID neexistuje');
+            \Message::warning('Uživatel s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/users');
         }
         if (!$data['u_confirmed']) {
-            new \MessageHelper('warning', 'Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
+            \Message::warning('Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
             \Redirect::to($_POST['returnURI'] ?? '/admin/users');
         }
         $form = static::checkData('edit');
         if (!$form->isValid()) {
-            new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
             return static::displayForm('edit');
         }
         \DBUser::setUserData(
@@ -412,7 +412,7 @@ class Users
         \Permissions::checkError('users', P_ADMIN);
         $id = $_POST['confirm'];
         if (!$data = \DBUser::getUser($id)) {
-            new \MessageHelper('warning', 'Uživatel s takovým ID neexistuje');
+            \Message::warning('Uživatel s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/users');
         }
         \DBUser::confirmUser($id, $_POST[$id . '-group'], $_POST[$id . '-skupina']);

@@ -42,7 +42,7 @@ class Dokumenty
 
         $path = UPLOADS . '/' . time() . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
         if (!move_uploaded_file($fileUpload, $path)) {
-            new \MessageHelper('danger', 'Soubor se nepodařilo nahrát.');
+            \Message::danger('Soubor se nepodařilo nahrát.');
             \Redirect::to('/admin/dokumenty');
         }
 
@@ -54,7 +54,7 @@ class Dokumenty
             $_POST['kategorie'],
             \Session::getUser()->getId()
         );
-        new \MessageHelper('success', 'Soubor byl úspěšně nahrán');
+        \Message::success('Soubor byl úspěšně nahrán');
         \Redirect::to('/admin/dokumenty');
     }
 
@@ -62,7 +62,7 @@ class Dokumenty
     {
         \Permissions::checkError('dokumenty', P_OWNED);
         if (!$data = \DBDokumenty::getSingleDokument($id)) {
-            new \MessageHelper('warning', 'Dokument s takovým ID neexistuje');
+            \Message::warning('Dokument s takovým ID neexistuje');
             \Redirect::to('/admin/dokumenty');
         }
         \Permissions::checkError('dokumenty', P_OWNED, $data['d_kdo']);
@@ -76,12 +76,12 @@ class Dokumenty
     {
         \Permissions::checkError('dokumenty', P_OWNED);
         if (!$data = \DBDokumenty::getSingleDokument($id)) {
-            new \MessageHelper('warning', 'Dokument s takovým ID neexistuje');
+            \Message::warning('Dokument s takovým ID neexistuje');
             \Redirect::to('/admin/dokumenty');
         }
         \Permissions::checkError('dokumenty', P_OWNED, $data['d_kdo']);
         \DBDokumenty::editDokument($id, $_POST['newname']);
-        new \MessageHelper('success', 'Dokument upraven');
+        \Message::success('Dokument upraven');
         \Redirect::to('/admin/dokumenty');
     }
 

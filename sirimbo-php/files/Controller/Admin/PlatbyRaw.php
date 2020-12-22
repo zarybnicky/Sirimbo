@@ -21,7 +21,7 @@ class PlatbyRaw
             if ($path = $fileInfo->getRealPath()) {
                 unlink($path);
             }
-            new \MessageHelper('success', 'Soubor ' . $fileInfo->getFilename() . ' byl zpracován.');
+            \Message::success('Soubor ' . $fileInfo->getFilename() . ' byl zpracován.');
         }
         new \RenderHelper('files/View/Admin/Platby/RawUpload.inc', [
             'header' => 'Správa plateb',
@@ -72,7 +72,7 @@ class PlatbyRaw
             'date' => $_POST['date'],
             'amount' => $_POST['amount']
         ]);
-        new \MessageHelper('success', 'Soubor ' . $_GET['path'] . ' byl zpracován.');
+        \Message::success('Soubor ' . $_GET['path'] . ' byl zpracován.');
         \Redirect::to('/admin/platby/raw');
     }
 
@@ -80,7 +80,7 @@ class PlatbyRaw
     {
         $fileinfo = new \SplFileInfo($path);
         if (!$fileinfo->isReadable()) {
-            new \MessageHelper('danger', 'Soubor ' . str_replace(self::TEMP_DIR, '', $path) . ' není přístupný.');
+            \Message::danger('Soubor ' . str_replace(self::TEMP_DIR, '', $path) . ' není přístupný.');
             \Redirect::to('/admin/platby/raw');
         }
         $parser = new \CSVParser($fileinfo->openFile('r'));
@@ -101,7 +101,7 @@ class PlatbyRaw
             $amount = $columns['amount'];
         }
         if (!Platby::checkHeaders($headers, $specific, $variable, $date, $amount)) {
-            new \MessageHelper('info', "Skript nemohl rozpoznat sloupce nutné pro zařazení plateb, je potřeba udělat to ručně. (soubor: $path)");
+            \Message::info("Skript nemohl rozpoznat sloupce nutné pro zařazení plateb, je potřeba udělat to ručně. (soubor: $path)");
             \Redirect::to('/admin/platby/raw/select_columns?path=' . str_replace(self::TEMP_DIR, '', $path));
         }
         $userLookup = Platby::getUserLookup(false);
@@ -141,20 +141,22 @@ class PlatbyRaw
 
         $validFiles = $upload->hasValidFiles();
         if ($upload->hasInvalidFiles()) {
-            return new \MessageHelper('warning', $upload->getErrorMessages());
+            \Message::warning($upload->getErrorMessages());
+            return;
         } elseif ($upload->hasEmptyFiles() && empty($validFiles)) {
-            return new \MessageHelper('info', 'Vyberte prosím nějaký soubor (prázdné soubory jsou automaticky odmítnuty).');
+            \Message::info('Vyberte prosím nějaký soubor (prázdné soubory jsou automaticky odmítnuty).');
+            return;
         }
         $uploader = $upload->getFilledUploader();
         $uploader->setOutputDir(self::TEMP_DIR);
         $uploader->addAllowedType('csv');
         $uploader->save();
         if ($uploader->hasRefusedFiles()) {
-            new \MessageHelper('warning', 'Nahrávané soubory musí být typu CSV.');
+            \Message::warning('Nahrávané soubory musí být typu CSV.');
         }
         foreach ($uploader->getSavedFiles() as $path) {
             static::processCsv($path);
-            new \MessageHelper('success', 'Soubor ' . str_replace(self::TEMP_DIR, '', $path) . ' byl zpracován.');
+            \Message::success('Soubor ' . str_replace(self::TEMP_DIR, '', $path) . ' byl zpracován.');
         }
     }
 }

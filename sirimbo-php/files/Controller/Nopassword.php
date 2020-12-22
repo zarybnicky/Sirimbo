@@ -15,7 +15,7 @@ class Nopassword
         $data = \DBUser::getUserByNameEmail(strtolower($_POST['name'] ?? ''), $_POST['email'] ?? '');
 
         if (!$data) {
-            new \MessageHelper('warning', 'Špatná kombinace uživatelského jména a emailu.');
+            \Message::warning('Špatná kombinace uživatelského jména a emailu.');
             \Redirect::to('/nopassword');
         }
 
@@ -26,13 +26,13 @@ class Nopassword
         \DBUser::setPassword($data->getId(), $passwordCrypt);
 
         if (!\DBUser::checkUser($data->getLogin(), $passwordCrypt)) {
-            new \MessageHelper('danger', 'Nepodařilo se změnit heslo, prosím kontaktujte administrátora.');
+            \Message::danger('Nepodařilo se změnit heslo, prosím kontaktujte administrátora.');
             \Redirect::to('/nopassword');
         }
 
         \Mailer::newPassword($data->getEmail(), $password);
 
-        new \MessageHelper('success', 'Heslo bylo úspěšně změněno, za chvíli byste jej měli obdržet v e-mailu');
+        \Message::success('Heslo bylo úspěšně změněno, za chvíli byste jej měli obdržet v e-mailu');
         \Redirect::to('/');
     }
 }

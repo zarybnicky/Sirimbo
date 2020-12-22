@@ -39,7 +39,7 @@ class Pary
                 foreach ($xs as $x) {
                     \DBPary::noPartner($x['u_id']);
                 }
-                new \MessageHelper('info', count($xs) . ' chybných záznamů opraveno');
+                \Message::info(count($xs) . ' chybných záznamů opraveno');
                 break;
         }
         \Redirect::to('/admin/pary');
@@ -49,7 +49,7 @@ class Pary
     {
         \Permissions::checkError('pary', P_OWNED);
         if (!$data = \DBPary::getSinglePar($id)) {
-            new \MessageHelper('warning', 'Pár s takovým ID neexistuje');
+            \Message::warning('Pár s takovým ID neexistuje');
             \Redirect::to('/admin/pary');
         }
         return new \RenderHelper('files/View/Admin/Pary/Form.inc', [
@@ -72,7 +72,7 @@ class Pary
     {
         \Permissions::checkError('pary', P_OWNED);
         if (!$data = \DBPary::getSinglePar($id)) {
-            new \MessageHelper('warning', 'Pár s takovým ID neexistuje');
+            \Message::warning('Pár s takovým ID neexistuje');
             \Redirect::to('/admin/pary');
         }
 
@@ -101,7 +101,7 @@ class Pary
             $lat_finale,
             $stt_base + $lat_base + $stt_bonus + $lat_bonus,
         );
-        new \MessageHelper('success', 'Třída a body změněny');
+        \Message::success('Třída a body změněny');
         \Redirect::to('/admin/pary');
     }
 
@@ -109,7 +109,7 @@ class Pary
     {
         \Permissions::checkError('pary', P_OWNED);
         \DBPary::removeCouple($id);
-        new \MessageHelper('success', 'Pár odstraněn');
+        \Message::success('Pár odstraněn');
         \Redirect::to('/admin/pary');
     }
 }

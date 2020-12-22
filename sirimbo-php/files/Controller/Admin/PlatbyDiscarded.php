@@ -8,7 +8,7 @@ class PlatbyDiscarded
         \Permissions::checkError('platby', P_OWNED);
         $data = \DBPlatbyRaw::getDiscarded();
         if (count($data) == 0) {
-            new \MessageHelper('info', 'V databázi nejsou žádné vyřazené platby.');
+            \Message::info('V databázi nejsou žádné vyřazené platby.');
             \Redirect::to('/admin/platby');
         }
         if ($_GET['list']) {
@@ -36,11 +36,11 @@ class PlatbyDiscarded
     {
         \Permissions::checkError('platby', P_OWNED);
         if (!\DBPlatbyRaw::getSingle($id)) {
-            new \MessageHelper('info', 'Platba se zadaným ID neexistuje.');
+            \Message::info('Platba se zadaným ID neexistuje.');
             \Redirect::to($_SERVER['HTTP_REFERER']);
         }
         \DBPlatbyRaw::delete($id);
-        new \MessageHelper('success', 'Platba byla odstraněna.');
+        \Message::success('Platba byla odstraněna.');
         \Redirect::to($_SERVER['HTTP_REFERER']);
     }
 

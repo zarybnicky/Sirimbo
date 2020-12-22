@@ -148,8 +148,7 @@ class Galerie
                 \Session::getUser()->getId()
             );
         }
-        new \MessageHelper(
-            'info',
+        \Message::info(
             'Složek přidáno: ' . count($fsDirs) . '<br>' .
             'Souborů přidáno: ' . count($fsFiles) . '<br>' .
             '<br>' .

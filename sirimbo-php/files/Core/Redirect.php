@@ -1,11 +1,8 @@
 <?php
 class Redirect
 {
-    public static function to($link, $message = null, $type = null)
+    public static function to($link)
     {
-        if ($message) {
-            new \MessageHelper($type, $message);
-        }
         header('Location: ' . $link);
         exit;
     }

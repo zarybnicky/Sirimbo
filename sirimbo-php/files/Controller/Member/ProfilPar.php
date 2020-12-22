@@ -41,7 +41,7 @@ class ProfilPar
 
         $form = static::checkData();
         if (!$form->isValid()) {
-            new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
             return new \RenderHelper('files/View/Member/Profil/CoupleData.inc', [
                 'header' => 'Změna třídy a bodů',
                 'stt_trida' => $_POST['stt_trida'] ?? '',
@@ -112,7 +112,7 @@ class ProfilPar
         } else {
             \DBPary::newPartnerRequest($user->getId(), $_POST["partner"], $user->getId());
         }
-        new \MessageHelper('info', 'Žádost o partnerství odeslána');
+        \Message::info('Žádost o partnerství odeslána');
         \Redirect::to('/member/profil');
     }
 
@@ -129,10 +129,10 @@ class ProfilPar
 
                     if ($_POST['action'] == 'accept') {
                         \DBPary::acceptPartnerRequest($_POST['id']);
-                        new \MessageHelper('success', 'žádost přijata');
+                        \Message::success('žádost přijata');
                     } else {
                         \DBPary::deletePartnerRequest($_POST['id']);
-                        new \MessageHelper('info', 'žádost zamitnuta');
+                        \Message::info('žádost zamitnuta');
                     }
                     \Redirect::to('/member/profil');
                 }
@@ -145,7 +145,7 @@ class ProfilPar
                         continue;
                     }
                     \DBPary::deletePartnerRequest($_POST['id']);
-                    new \MessageHelper('info', 'žádost zrušena');
+                    \Message::info('žádost zrušena');
                     \Redirect::to('/member/profil');
                 }
                 break;
@@ -153,7 +153,7 @@ class ProfilPar
             default:
                 \Redirect::to('/member/profil');
         }
-        new \MessageHelper('warning', 'Žádná taková žádost tu není');
+        \Message::warning('Žádná taková žádost tu není');
         \Redirect::to('/member/profil');
     }
 

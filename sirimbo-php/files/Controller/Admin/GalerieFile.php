@@ -7,7 +7,7 @@ class GalerieFile
     {
         \Permissions::checkError('galerie', P_OWNED);
         if (!$data = \DBGalerie::getSingleFoto($id)) {
-            new \MessageHelper('warning', 'Takový soubor neexistuje!');
+            \Message::warning('Takový soubor neexistuje!');
             \Redirect::to($_SERVER['HTTP_REFERER']);
         }
         $_POST['name'] = $data['gf_name'];
@@ -19,12 +19,12 @@ class GalerieFile
     {
         \Permissions::checkError('galerie', P_OWNED);
         if (!$data = \DBGalerie::getSingleFoto($id)) {
-            new \MessageHelper('warning', 'Takový soubor neexistuje!');
+            \Message::warning('Takový soubor neexistuje!');
             \Redirect::to($_SERVER['HTTP_REFERER']);
         }
         $form = static::checkData();
         if (!$form->isValid()) {
-            new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
             return static::displayForm($id);
         }
         $parent = \DBGalerie::getSingleDir($_POST['parent']);
@@ -35,7 +35,7 @@ class GalerieFile
         );
         if ($data['gf_path'] != $newPath) {
             if (file_exists(GALERIE . DIRECTORY_SEPARATOR . $newPath)) {
-                new \MessageHelper('danger', 'V dané složce už existuje soubor se stejným názvem.');
+                \Message::danger('V dané složce už existuje soubor se stejným názvem.');
                 \Redirect::to('/admin/galerie/file/edit/' . $id);
             }
             rename(
@@ -100,13 +100,13 @@ class GalerieFile
             $parentId = 0;
         }
         if (!($parent = \DBGalerie::getSingleDir($parentId))) {
-            new \MessageHelper('warning', 'Taková složka neexistuje');
+            \Message::warning('Taková složka neexistuje');
             \Redirect::to('/admin/galerie/upload');
         }
         $uploadHelper = new \UploadHelper('files');
         $uploadHelper->loadFromPost();
         if (!$uploadHelper->hasValidFiles() && $uploadHelper->hasFiles()) {
-            new \MessageHelper('warning', $uploadHelper->getErrorMessages());
+            \Message::warning($uploadHelper->getErrorMessages());
         }
         $uploader = $uploadHelper->getFilledUploader();
         foreach (\Settings::$imageType as $extension) {
@@ -115,13 +115,10 @@ class GalerieFile
         $uploader->setOutputDir(GALERIE . DIRECTORY_SEPARATOR . $parent['gd_path']);
         $uploader->save(true, true);
         if ($uploader->hasRefusedFiles()) {
-            new \MessageHelper(
-                'warning',
-                'Počet zamítnutých souborů: ' . count($uploader->getRefusedFiles())
-            );
+            \Message::warning('Počet zamítnutých souborů: ' . count($uploader->getRefusedFiles()));
         }
         if (count($uploader->getSavedFiles()) == 0) {
-            new \MessageHelper('info', 'Žádné soubory nebyly nahrány!');
+            \Message::info('Žádné soubory nebyly nahrány!');
             \Redirect::to('/admin/galerie/upload');
         }
         $failCount = 0;
@@ -140,13 +137,13 @@ class GalerieFile
             \DBGalerie::addFoto($parent['gd_id'], $path, $name, \Session::getUser()->getId());
         }
         if ($failCount > 0) {
-            new \MessageHelper('warning', "Počet neúspěšně zpracovaných souborů: $failCount");
+            \Message::warning("Počet neúspěšně zpracovaných souborů: $failCount");
         }
         if (count($uploader->getSavedFiles()) > $failCount) {
-            new \MessageHelper('info', 'Fotky přidány');
+            \Message::info('Fotky přidány');
             \Redirect::to('/admin/galerie');
         }
-        new \MessageHelper('info', 'Počet nahraných souborů: ' . count($uploader->getSavedFiles()));
+        \Message::info('Počet nahraných souborů: ' . count($uploader->getSavedFiles()));
         \Redirect::to('/admin/galerie');
     }
 

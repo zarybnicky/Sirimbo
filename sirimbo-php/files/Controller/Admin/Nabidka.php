@@ -69,7 +69,7 @@ class Nabidka
         \Permissions::checkError('nabidka', P_OWNED);
         $form = static::checkData();
         if (!$form->isValid()) {
-            new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
             return static::displayForm('add');
         }
         \Permissions::checkError('nabidka', P_OWNED, $_POST['trener']);
@@ -91,7 +91,7 @@ class Nabidka
             $_POST['visible'] ? '1' : '0',
             $_POST['lock'] ? 1 : 0
         );
-        new \MessageHelper('success', 'Nabídka přidána');
+        \Message::success('Nabídka přidána');
         \Redirect::to($_POST['returnURI'] ?? '/admin/nabidka');
     }
 
@@ -99,7 +99,7 @@ class Nabidka
     {
         \Permissions::checkError('nabidka', P_OWNED);
         if (!$data = \DBNabidka::getSingleNabidka($id)) {
-            new \MessageHelper('warning', 'Nabídka s takovým ID neexistuje');
+            \Message::warning('Nabídka s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/nabidka');
         }
         \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
@@ -110,13 +110,13 @@ class Nabidka
     {
         \Permissions::checkError('nabidka', P_OWNED);
         if (!$data = \DBNabidka::getSingleNabidka($id)) {
-            new \MessageHelper('warning', 'Nabídka s takovým ID neexistuje');
+            \Message::warning('Nabídka s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/nabidka');
         }
         \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
         $form = static::checkData();
         if (!$form->isValid()) {
-            new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
             return static::displayForm('edit', $data);
         }
         $od = new \Date($_POST['od'] ?? null);
@@ -128,18 +128,13 @@ class Nabidka
         $pocet_hod = $_POST['pocet_hod'];
         if ($pocet_hod < $items) {
             $pocet_hod = $items;
-            new \MessageHelper(
-                'warning',
-                'Obsazených hodin už je víc než jste zadali, ' .
-                'nelze už dál snížit počet hodin'
-            );
+            \Message::warning('Obsazených hodin už je víc než jste zadali, nelze už dál snížit počet hodin');
         }
         $max_lessons = $_POST['max_pocet_hod'];
         $max_lessons_old = \DBNabidka::getNabidkaMaxItems($id);
         if ($max_lessons < $max_lessons_old && $max_lessons != 0) {
             $max_lessons = $max_lessons_old;
-            new \MessageHelper(
-                'warning',
+            \Message::warning(
                 'Zadaný maximální počet hodin/pár je méně než už je zarezervováno, ' .
                 'nelze už dál snížit maximální počet hodin'
             );
@@ -157,7 +152,7 @@ class Nabidka
             $_POST['visible'] ? '1' : '0',
             $_POST['lock'] ? '1' : '0'
         );
-        new \MessageHelper('success', 'Nabídka úspěšně upravena');
+        \Message::success('Nabídka úspěšně upravena');
         \Redirect::to($_POST['returnURI'] ?? '/admin/nabidka');
     }
 

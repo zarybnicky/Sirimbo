@@ -33,7 +33,7 @@ class VideoSource
         \Permissions::checkError('aktuality', P_OWNED);
         $form = static::checkData();
         if (!$form->isValid()) {
-            new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
             return static::displayForm('add');
         }
         \DBVideoSource::add($_POST['uri']);
@@ -44,7 +44,7 @@ class VideoSource
     {
         \Permissions::checkError('aktuality', P_OWNED);
         if (!$data = \DBVideoSource::getSingle($id)) {
-            new \MessageHelper('warning', 'Článek s takovým ID neexistuje');
+            \Message::warning('Článek s takovým ID neexistuje');
             \Redirect::to('/admin/video/source');
         }
         return static::displayForm('edit', $data);
@@ -54,12 +54,12 @@ class VideoSource
     {
         \Permissions::checkError('aktuality', P_OWNED);
         if (!$data = \DBVideoSource::getSingle($id)) {
-            new \MessageHelper('warning', 'Článek s takovým ID neexistuje');
+            \Message::warning('Článek s takovým ID neexistuje');
             \Redirect::to('/admin/video/source');
         }
         $form = static::checkData();
         if (!$form->isValid()) {
-            new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
             return static::displayForm('edit', $data);
         }
         \DBVideoSource::edit($id, $_POST['uri'], $_POST['title'], $_POST['desc']);
@@ -82,7 +82,7 @@ class VideoSource
     {
         \Permissions::checkError('aktuality', P_OWNED);
         \DBVideoSource::remove($id);
-        new \MessageHelper('info', 'Video odebráno');
+        \Message::info('Video odebráno');
         \Redirect::to('/admin/video/source');
     }
 

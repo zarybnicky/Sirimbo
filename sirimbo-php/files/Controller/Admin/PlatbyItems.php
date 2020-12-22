@@ -49,7 +49,7 @@ class PlatbyItems
     public static function addPost()
     {
         if (!is_object($item = Platby::getFromPost())) {
-            new \MessageHelper('warning', $item);
+            \Message::warning($item);
             return static::add();
         }
         \DBPlatbyItem::insert(
@@ -67,7 +67,7 @@ class PlatbyItems
     {
         \Permissions::checkError('platby', P_OWNED);
         if (!$data = \DBPlatbyItem::getSingle($id)) {
-            new \MessageHelper('warning', 'Platba s takovým ID neexistuje');
+            \Message::warning('Platba s takovým ID neexistuje');
             \Redirect::to('/admin/platby/items');
         }
         $_POST['date'] = $data['pi_date'];
@@ -82,11 +82,11 @@ class PlatbyItems
     {
         \Permissions::checkError('platby', P_OWNED);
         if (!\DBPlatbyItem::getSingle($id)) {
-            new \MessageHelper('warning', 'Platba s takovým ID neexistuje');
+            \Message::warning('Platba s takovým ID neexistuje');
             \Redirect::to('/admin/platby/items');
         }
         if (!is_object($item = Platby::getFromPost($id))) {
-            new \MessageHelper('warning', $item);
+            \Message::warning($item);
             return static::displayForm($id, 'edit');
         }
         \DBPlatbyItem::update(

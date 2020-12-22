@@ -31,7 +31,7 @@ class Skupiny
         \Permissions::checkError('skupiny', P_OWNED);
         $form = static::checkData();
         if (!$form->isValid()) {
-            new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
             return static::displayForm(0, 'add');
         }
         \DBSkupiny::insert($_POST['name'], $_POST['color'], $_POST['desc']);
@@ -46,7 +46,7 @@ class Skupiny
     {
         \Permissions::checkError('skupiny', P_OWNED);
         if (!$data = \DBSkupiny::getSingle($id)) {
-            new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
+            \Message::warning('Skupina s takovým ID neexistuje');
             \Redirect::to('/admin/skupiny');
         }
         return static::displayForm($id, 'edit', $data);
@@ -56,12 +56,12 @@ class Skupiny
     {
         \Permissions::checkError('skupiny', P_OWNED);
         if (!$data = \DBSkupiny::getSingle($id)) {
-            new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
+            \Message::warning('Skupina s takovým ID neexistuje');
             \Redirect::to('/admin/skupiny');
         }
         $form = static::checkData();
         if (!$form->isValid()) {
-            new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
             return static::displayForm($id, 'edit', $data);
         }
         \DBSkupiny::update($id, $_POST['name'], $_POST['color'], $_POST['desc']);
@@ -81,12 +81,11 @@ class Skupiny
     {
         \Permissions::checkError('skupiny', P_OWNED);
         if (!$data = \DBSkupiny::getSingle($id)) {
-            new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
+            \Message::warning('Skupina s takovým ID neexistuje');
             \Redirect::to('/admin/skupiny');
         }
         if (static::getLinkedSkupinaObjects($id)) {
-            new \MessageHelper(
-                'info',
+            \Message::info(
                 'Nemůžu odstranit skupinu s připojenými kategoriemi! <form method="post">'
                 . (new \SubmitHelper('Odstranit spojení?'))->data('action', 'unlink')
                 . "</form>"
@@ -104,7 +103,7 @@ class Skupiny
     {
         \Permissions::checkError('skupiny', P_OWNED);
         if (!$data = \DBSkupiny::getSingle($id)) {
-            new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
+            \Message::warning('Skupina s takovým ID neexistuje');
             \Redirect::to('/admin/skupiny');
         }
         if ($_POST['action'] == 'unlink') {
@@ -114,7 +113,7 @@ class Skupiny
                 \DBSkupiny::removeChild($id, $data['pg_id']);
                 ++$groupCount;
             }
-            new \MessageHelper('info', "Spojení s $groupCount kategoriemi byla odstraněna.");
+            \Message::info("Spojení s $groupCount kategoriemi byla odstraněna.");
             \Redirect::to('/admin/skupiny/remove/' . $id);
         }
         if (static::getLinkedSkupinaObjects($id)) {

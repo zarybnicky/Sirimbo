@@ -31,7 +31,7 @@ class Permissions
         \Permissions::checkError('permissions', P_ADMIN);
         $form = static::checkData();
         if (!$form->isValid()) {
-            new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
             return static::renderForm('add');
         }
         $permissions = [];
@@ -46,7 +46,7 @@ class Permissions
     {
         \Permissions::checkError('permissions', P_ADMIN);
         if (!$data = \DBPermissions::getSingleGroup($id)) {
-            new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
+            \Message::warning('Skupina s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/permissions');
         }
         return static::renderForm('edit', $data);
@@ -56,12 +56,12 @@ class Permissions
     {
         \Permissions::checkError('permissions', P_ADMIN);
         if (!$data = \DBPermissions::getSingleGroup($id)) {
-            new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
+            \Message::warning('Skupina s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/permissions');
         }
         $form = static::checkData();
         if (!$form->isValid()) {
-            new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
             return static::renderForm('edit', $data);
         }
         $permissions = [];
@@ -90,7 +90,7 @@ class Permissions
     {
         \Permissions::checkError('permissions', P_ADMIN);
         \DBPermissions::removeGroup($id);
-        new \MessageHelper('info', 'Úroveň odebrána. Nezapomeňte přiřadit uživatelům z této skupiny jinou skupinu!');
+        \Message::info('Úroveň odebrána. Nezapomeňte přiřadit uživatelům z této skupiny jinou skupinu!');
         \Redirect::to('/admin/permissions');
     }
 

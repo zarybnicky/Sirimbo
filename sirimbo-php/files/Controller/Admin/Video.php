@@ -101,7 +101,7 @@ class Video
         \Permissions::checkError('aktuality', P_OWNED);
         $form = static::checkData();
         if (!$form->isValid()) {
-            new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
             return static::displayForm('add');
         }
         \DBVideo::add(
@@ -118,7 +118,7 @@ class Video
     {
         \Permissions::checkError('aktuality', P_OWNED);
         if (!$data = \DBVideo::getSingle($id)) {
-            new \MessageHelper('warning', 'Článek s takovým ID neexistuje');
+            \Message::warning('Článek s takovým ID neexistuje');
             \Redirect::to('/admin/aktuality');
         }
         return static::displayForm('edit', $data);
@@ -128,12 +128,12 @@ class Video
     {
         \Permissions::checkError('aktuality', P_OWNED);
         if (!$data = \DBVideo::getSingle($id)) {
-            new \MessageHelper('warning', 'Článek s takovým ID neexistuje');
+            \Message::warning('Článek s takovým ID neexistuje');
             \Redirect::to('/admin/aktuality');
         }
         $form = static::checkData();
         if (!$form->isValid()) {
-            new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
             return static::displayForm('edit', $data);
         }
         \DBVideo::edit(
@@ -163,7 +163,7 @@ class Video
     {
         \Permissions::checkError('aktuality', P_OWNED);
         \DBVideo::remove($id);
-        new \MessageHelper('info', 'Video odebráno');
+        \Message::info('Video odebráno');
         \Redirect::to('/admin/video');
     }
 

@@ -151,7 +151,7 @@ class Profil
         $user = \Session::getUser();
         $form = static::checkDataEdit();
         if (!$form->isValid()) {
-            new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
             return static::renderPersonalForm();
         }
 
@@ -198,7 +198,7 @@ class Profil
         \Permissions::checkError('nastenka', P_VIEW);
         $form = static::checkDataHeslo();
         if (!$form->isValid()) {
-            new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
             return new \RenderHelper('files/View/Member/Profil/NewPassword.inc', [
                 'header' => 'Změna hesla'
             ]);

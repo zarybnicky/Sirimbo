@@ -43,7 +43,7 @@ class Nastenka
         \Permissions::checkError('nastenka', P_OWNED);
         $form = static::checkData();
         if (!$form->isValid()) {
-            new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
             return static::renderForm('add');
         }
 
@@ -74,7 +74,7 @@ class Nastenka
     {
         \Permissions::checkError('nastenka', P_OWNED);
         if (!$data = \DBNastenka::getSingleNastenka($id)) {
-            new \MessageHelper('warning', 'Nástěnka s takovým ID neexistuje');
+            \Message::warning('Nástěnka s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
@@ -92,13 +92,13 @@ class Nastenka
     {
         \Permissions::checkError('nastenka', P_OWNED);
         if (!$data = \DBNastenka::getSingleNastenka($id)) {
-            new \MessageHelper('warning', 'Nástěnka s takovým ID neexistuje');
+            \Message::warning('Nástěnka s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
         $form = static::checkData();
         if (!$form->isValid()) {
-            new \MessageHelper('warning', $form->getMessages());
+            \Message::warning($form->getMessages());
             return static::renderForm('edit');
         }
 
@@ -135,7 +135,7 @@ class Nastenka
     {
         \Permissions::checkError('nastenka', P_OWNED);
         if (!$data = \DBNastenka::getSingleNastenka($id)) {
-            new \MessageHelper('warning', 'Příspěvek s takovým ID neexistuje');
+            \Message::warning('Příspěvek s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
@@ -151,7 +151,7 @@ class Nastenka
     {
         \Permissions::checkError('nastenka', P_OWNED);
         if (!$data = \DBNastenka::getSingleNastenka($id)) {
-            new \MessageHelper('warning', 'Příspěvek s takovým ID neexistuje');
+            \Message::warning('Příspěvek s takovým ID neexistuje');
             \Redirect::to($_POST['returnURI'] ?? '/admin/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);

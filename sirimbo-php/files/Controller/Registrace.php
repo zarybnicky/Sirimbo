@@ -64,7 +64,7 @@ class Registrace
                 'popis' => $item['s_name']
             ], \DBSkupiny::get());
 
-            new \MessageHelper('warning', $f->getMessages());
+            \Message::warning($f->getMessages());
             return new \RenderHelper('files/View/Main/Registrace.inc', [
                 'header' => 'Registrace',
                 'skupiny' => $skupiny,
@@ -120,8 +120,7 @@ class Registrace
 
         \Mailer::newUserNotice(DEFAULT_ADMIN_MAIL, $login);
         \Mailer::newUserNotice('hyzam@tkolymp.cz', $login);
-        new \MessageHelper(
-            'success',
+        \Message::success(
             '<h4 class="alert-heading">Registrace úspěšně proběhla.</h4>' .
             '<p>Během několika dnů vám na email příjde potvrzení vašeho účtu, ' .
             'které vyřizuje administrátor ručně.<p>'
