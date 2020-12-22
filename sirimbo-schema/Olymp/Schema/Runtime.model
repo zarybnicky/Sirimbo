@@ -15,3 +15,4 @@ Session
   data ByteString sql=ss_data sqltype=BLOB
   updatedAt UTCTime sql=ss_updated_at sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   lifetime Int sql=ss_lifetime
+  deriving Show

@@ -122,8 +122,7 @@
     </div>
 
     <script type="text/javascript" src="/scripts/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" src="/scripts/popper.min.js"></script>
-    <script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/scripts/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/scripts/polyfill.object-fit.min.js"></script>
     <script type="text/javascript" src="/scripts/stickyfill.min.js"></script>
     <script type="text/javascript" src="/scripts/leaflet.js"></script>

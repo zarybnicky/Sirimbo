@@ -91,9 +91,9 @@
         src = getSrc ./sirimbo-php-assets;
         phases = "unpackPhase buildPhase";
         buildPhase = ''
-          mkdir -p $out/public $out/bootstrap
+          mkdir -p $out/public $out/public/style/bootstrap
           cp -r $src/* $out/public
-          cp -r ${bootstrap}/* $out/bootstrap/
+          cp -r ${bootstrap}/* $out/public/style/bootstrap/
           cd $out
           ${final.sass}/bin/sass -t compact public/style/main.scss:$out/public/style.css
         '';

@@ -14,16 +14,22 @@ module Olymp.Effect.Database
 
 import Control.Effect (Eff, Embed, SimpleInterpreterFor, embed, interpretSimple, liftBase, send)
 import Control.Effect.Bracket (bracket, bracketToIO)
-import Control.Monad.Trans.Reader (ReaderT, runReaderT)
+import Control.Monad.Trans.Class (lift)
+import Control.Monad.Trans.Reader (ReaderT, ask, runReaderT)
 import Data.Pool (Pool, takeResource, putResource)
-import Database.Persist.Sql (SqlBackend)
+import Database.Persist.Sql (SqlBackend(..))
 import Control.Effect.Mask (MonadMask)
 
 data Database m a where
   Query :: ReaderT SqlBackend IO a -> Database m a
 
 query :: Eff Database m => ReaderT SqlBackend IO a -> m a
-query = send . Query
+query q = send $ Query $ do
+  b <- ask
+  lift $ (connBegin b) (connPrepare b) Nothing
+  r <- q
+  lift $ (connCommit b) (connPrepare b)
+  pure r
 
 runDatabasePool :: (Eff (Embed IO) m, MonadMask m) => Pool SqlBackend -> SimpleInterpreterFor Database m
 runDatabasePool pool = interpretSimple $ \case

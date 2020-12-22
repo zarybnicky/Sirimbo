@@ -41,7 +41,7 @@ import Olymp.Tournament.Base (Tournament, NodeId, withTournament, propagateWinne
 import Olymp.YouTube.Worker (youtubeWorker)
 import Servant (Handler(..))
 -- import Servant.Multipart (MultipartData, MultipartForm, Tmp)
-import System.IO (stdout)
+import System.IO (hSetBuffering, BufferMode(LineBuffering), stdout)
 
 runServer :: IO ()
 runServer = do
@@ -61,6 +61,7 @@ runServer = do
 
       _ <- forkIO . forever . runM . runDatabasePool pool . runAtomicStateIORefSimple ref $
         saveTournamentState
+      hSetBuffering stdout LineBuffering
 
       putStrLn ("Starting server on port " <> show port <> " with proxy on port " <> show proxy)
       run port $ olympServer proxy mgr (Handler . ExceptT . interpretServer ref ref' pool)
