@@ -50,7 +50,7 @@ class Akce
                 $_POST[$item['a_id']] ? '1' : '0'
             );
         }
-        new \RedirectHelper('/admin/akce');
+        \Redirect::to('/admin/akce');
     }
 
     public static function add()
@@ -86,7 +86,7 @@ class Akce
         );
 
         new \MessageHelper('success', 'Akce přidána');
-        new \RedirectHelper('/admin/akce');
+        \Redirect::to('/admin/akce');
     }
 
     public static function edit($id)
@@ -94,7 +94,7 @@ class Akce
         \Permissions::checkError('akce', P_OWNED);
         if (!($data = \DBAkce::getSingleAkce($id))) {
             new \MessageHelper('warning', 'Akce s takovým ID neexistuje');
-            new \RedirectHelper('/admin/akce');
+            \Redirect::to('/admin/akce');
         }
         return static::displayForm('edit', $data);
     }
@@ -104,7 +104,7 @@ class Akce
         \Permissions::checkError('akce', P_OWNED);
         if (!($data = \DBAkce::getSingleAkce($id))) {
             new \MessageHelper('warning', 'Akce s takovým ID neexistuje');
-            new \RedirectHelper('/admin/akce');
+            \Redirect::to('/admin/akce');
         }
 
         $form = static::checkData();
@@ -133,7 +133,7 @@ class Akce
         );
 
         new \MessageHelper('success', 'Akce upravena');
-        new \RedirectHelper('/admin/akce');
+        \Redirect::to('/admin/akce');
     }
 
     public static function remove($id)
@@ -156,7 +156,7 @@ class Akce
         \Permissions::checkError('akce', P_OWNED);
         \DBAkce::removeAkce($id);
         new \MessageHelper('success', 'Akce odebrány');
-        return new \RedirectHelper('/admin/akce');
+        \Redirect::to('/admin/akce');
     }
 
     public static function detail($id)
@@ -164,7 +164,7 @@ class Akce
         \Permissions::checkError('akce', P_OWNED);
         if (!$akce = \DBAkce::getSingleAkce($id)) {
             new \MessageHelper('warning', 'Akce s takovým ID neexistuje');
-            new \RedirectHelper('/admin/akce');
+            \Redirect::to('/admin/akce');
         }
         $data = [
             'id' => $akce['a_id'],
@@ -207,7 +207,7 @@ class Akce
         \Permissions::checkError('akce', P_OWNED);
         if (!\DBAkce::getSingleAkce($id)) {
             new \MessageHelper('warning', 'Akce s takovým ID neexistuje');
-            new \RedirectHelper('/admin/akce');
+            \Redirect::to('/admin/akce');
         }
 
         if (isset($_POST["remove"])) {
@@ -234,7 +234,7 @@ class Akce
             \DBAkce::addAkceItem($id, $user, $year);
             $_POST['add-user'] = 0;
         }
-        new \RedirectHelper('/admin/akce/detail/' . $id);
+        \Redirect::to('/admin/akce/detail/' . $id);
     }
 
     public static function dokumenty($id)
@@ -242,7 +242,7 @@ class Akce
         \Permissions::checkError('akce', P_OWNED);
         if (!($akce = \DBAkce::getSingleAkce($id))) {
             new \MessageHelper('warning', 'Akce s takovým ID neexistuje');
-            new \RedirectHelper('/admin/akce');
+            \Redirect::to('/admin/akce');
         }
         $documents = array_filter(explode(',', $akce["a_dokumenty"]));
 
@@ -294,7 +294,7 @@ class Akce
         \Permissions::checkError('akce', P_OWNED);
         if (!($akce = \DBAkce::getSingleAkce($id))) {
             new \MessageHelper('warning', 'Akce s takovým ID neexistuje');
-            new \RedirectHelper('/admin/akce');
+            \Redirect::to('/admin/akce');
         }
         $documents = array_filter(explode(',', $akce["a_dokumenty"]));
 
@@ -323,7 +323,7 @@ class Akce
                 $akce['a_visible'],
             );
         }
-        new \RedirectHelper('/admin/akce/dokumenty/' . $id);
+        \Redirect::to('/admin/akce/dokumenty/' . $id);
     }
 
     private static function displayForm($action, $data = [])

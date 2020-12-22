@@ -10,9 +10,9 @@ class PlatbyManual
         $remainingCount = count($remaining);
         if ($remainingCount == 0) {
             new \MessageHelper('info', 'Nezbývají už žádné nezatříděné platby');
-            return new \RedirectHelper('/admin/platby');
+            \Redirect::to('/admin/platby');
         }
-        return new \RedirectHelper('/admin/platby/discarded/' . $remaining[0]['pr_id']);
+        \Redirect::to('/admin/platby/discarded/' . $remaining[0]['pr_id']);
     }
 
     public static function get($id)
@@ -22,7 +22,7 @@ class PlatbyManual
         $raw = unserialize($data['pr_raw']);
         if ($data['pr_sorted']) {
             new \MessageHelper('info', 'Platba už byla zařazena do systému');
-            new \RedirectHelper('/admin/platby/discarded');
+            \Redirect::to('/admin/platby/discarded');
         }
 
         $categoryLookup = Platby::getCategoryLookup(true, true, false);
@@ -146,7 +146,7 @@ class PlatbyManual
                 new \MessageHelper('danger', 'Neplatná POST akce.');
                 break;
         }
-        new \RedirectHelper('/admin/platby/manual');
+        \Redirect::to('/admin/platby/manual');
     }
 
     private static function getCategories()

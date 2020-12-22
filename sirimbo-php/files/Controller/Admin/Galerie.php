@@ -29,7 +29,7 @@ class Galerie
         if ($_POST['action'] == 'scan') {
             static::_scan();
         }
-        new \RedirectHelper('/admin/galerie');
+        \Redirect::to('/admin/galerie');
     }
 
     private static function _scan()
@@ -156,7 +156,7 @@ class Galerie
             'Složek odebráno: ' . count($dbDirs) . '<br>' .
             'Souborů odebráno: ' . count($dbFiles)
         );
-        new \RedirectHelper('/admin/galerie');
+        \Redirect::to('/admin/galerie');
     }
 
     private static function _recursiveDirs($dir_name, &$out_dirs, &$out_files)

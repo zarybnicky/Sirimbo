@@ -7,7 +7,7 @@ class Member
     {
         if (\Session::getUser()) {
             $uri = $_GET['return'] ? $_GET['return'] : '/member';
-            new \RedirectHelper($uri);
+            \Redirect::to($uri);
         }
         new \RenderHelper('files/View/Main/Login.inc');
     }
@@ -59,14 +59,14 @@ class Member
     {
         \Permissions::checkError('dokumenty', P_VIEW);
         if (!$_GET['id']) {
-            new \RedirectHelper('/member/dokumenty');
+            \Redirect::to('/member/dokumenty');
         }
 
         $data = \DBDokumenty::getSingleDokument($_GET['id']);
         $path = $data['d_path'];
         if (!is_file($path) || !($file = fopen($path, 'rb'))) {
             new \MessageHelper('warning', 'Soubor nebyl nalezen.');
-            return new \RedirectHelper('/member/dokumenty');
+            \Redirect::to('/member/dokumenty');
         }
 
         header('Pragma: no-cache');

@@ -1,9 +1,6 @@
 <?php
 class Widget extends Tree
 {
-    protected $stylesheets = [];
-    protected $scripts = [];
-
     public function __construct(array $attributes = [])
     {
         $children = [];
@@ -28,11 +25,6 @@ class Widget extends Tree
     public function set($key, $value)
     {
         $this->value[$key] = $value;
-    }
-
-    public function setAttributes(array $new)
-    {
-        $this->value = array_merge($this->value, $new);
     }
 
     public function render()

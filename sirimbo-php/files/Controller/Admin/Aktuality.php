@@ -52,9 +52,9 @@ class Aktuality
             '0'
         );
         if ($_POST['action'] == 'save') {
-            new \RedirectHelper('/admin/aktuality');
+            \Redirect::to('/admin/aktuality');
         } else {
-            new \RedirectHelper("/admin/aktuality/foto/$id?notify=true");
+            \Redirect::to("/admin/aktuality/foto/$id?notify=true");
         }
     }
 
@@ -63,7 +63,7 @@ class Aktuality
         \Permissions::checkError('aktuality', P_OWNED);
         if (!$data = \DBAktuality::getSingleAktualita($id)) {
             new \MessageHelper('warning', 'Článek s takovým ID neexistuje');
-            new \RedirectHelper('/admin/aktuality');
+            \Redirect::to('/admin/aktuality');
         }
         \Permissions::checkError('aktuality', P_OWNED, $data['at_kdo']);
         return new \RenderHelper('files/View/Admin/Aktuality/Form.inc', [
@@ -82,7 +82,7 @@ class Aktuality
         \Permissions::checkError('aktuality', P_OWNED);
         if (!$data = \DBAktuality::getSingleAktualita($id)) {
             new \MessageHelper('warning', 'Článek s takovým ID neexistuje');
-            new \RedirectHelper('/admin/aktuality');
+            \Redirect::to('/admin/aktuality');
         }
         \Permissions::checkError('aktuality', P_OWNED, $data['at_kdo']);
 
@@ -108,7 +108,7 @@ class Aktuality
             $data['at_foto_main'],
             \DateTime::createFromFormat('j. n. Y H:i', $_POST['createdAt'])->format('Y-m-d H:i:s'),
         );
-        new \RedirectHelper('/admin/aktuality');
+        \Redirect::to('/admin/aktuality');
     }
 
     public static function remove($id)
@@ -134,7 +134,7 @@ class Aktuality
             throw new \AuthorizationException('Máte nedostatečnou autorizaci pro tuto akci!');
         }
         \DBAktuality::removeAktualita($id);
-        new \RedirectHelper('/admin/aktuality');
+        \Redirect::to('/admin/aktuality');
     }
 
     public static function foto($id)
@@ -142,14 +142,14 @@ class Aktuality
         \Permissions::checkError('aktuality', P_OWNED);
         if (!($article = \DBAktuality::getSingleAktualita($id))) {
             new \MessageHelper('warning', 'Takový článek neexistuje');
-            new \RedirectHelper('/admin/aktuality');
+            \Redirect::to('/admin/aktuality');
         }
         if (!isset($_GET['dir']) && $article['at_foto']) {
-            return new \RedirectHelper('/admin/aktuality/foto/' . $id . '?dir=' . $article['at_foto']);
+            \Redirect::to('/admin/aktuality/foto/' . $id . '?dir=' . $article['at_foto']);
         }
         if (!\DBGalerie::getSingleDir($_GET['dir'] ?? 0)) {
             new \MessageHelper('warning', 'Taková složka neexistuje');
-            return new \RedirectHelper('/admin/aktuality/foto/' . $id . '?dir=0');
+            \Redirect::to('/admin/aktuality/foto/' . $id . '?dir=0');
         }
         $photos = array_map(
             fn($item) => [
@@ -178,7 +178,7 @@ class Aktuality
         \Permissions::checkError('aktuality', P_OWNED);
         if (!($article = \DBAktuality::getSingleAktualita($id))) {
             new \MessageHelper('warning', 'Takový článek neexistuje');
-            new \RedirectHelper('/admin/aktuality');
+            \Redirect::to('/admin/aktuality');
         }
         \DBAktuality::editAktualita(
             $id,
@@ -190,6 +190,6 @@ class Aktuality
             $_POST['foto'],
             $article['at_timestamp_add']
         );
-        new \RedirectHelper('/admin/aktuality');
+        \Redirect::to('/admin/aktuality');
     }
 }

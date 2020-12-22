@@ -39,7 +39,7 @@ class Permissions
             $permissions[$name] = $_POST[$name];
         }
         \DBPermissions::addGroup($_POST['name'], $_POST['description'], $permissions);
-        new \RedirectHelper($_POST['returnURI'] ?? '/admin/permissions');
+        \Redirect::to($_POST['returnURI'] ?? '/admin/permissions');
     }
 
     public static function edit($id)
@@ -47,7 +47,7 @@ class Permissions
         \Permissions::checkError('permissions', P_ADMIN);
         if (!$data = \DBPermissions::getSingleGroup($id)) {
             new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?? '/admin/permissions');
+            \Redirect::to($_POST['returnURI'] ?? '/admin/permissions');
         }
         return static::renderForm('edit', $data);
     }
@@ -57,7 +57,7 @@ class Permissions
         \Permissions::checkError('permissions', P_ADMIN);
         if (!$data = \DBPermissions::getSingleGroup($id)) {
             new \MessageHelper('warning', 'Skupina s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?? '/admin/permissions');
+            \Redirect::to($_POST['returnURI'] ?? '/admin/permissions');
         }
         $form = static::checkData();
         if (!$form->isValid()) {
@@ -69,7 +69,7 @@ class Permissions
             $permissions[$name] = $_POST[$name];
         }
         \DBPermissions::editGroup($id, $_POST['name'], $_POST['description'], $permissions);
-        new \RedirectHelper($_POST['returnURI'] ?? '/admin/permissions');
+        \Redirect::to($_POST['returnURI'] ?? '/admin/permissions');
     }
 
     public static function remove($id)
@@ -91,7 +91,7 @@ class Permissions
         \Permissions::checkError('permissions', P_ADMIN);
         \DBPermissions::removeGroup($id);
         new \MessageHelper('info', 'Úroveň odebrána. Nezapomeňte přiřadit uživatelům z této skupiny jinou skupinu!');
-        new \RedirectHelper('/admin/permissions');
+        \Redirect::to('/admin/permissions');
     }
 
     protected static function renderForm($action, $data = [])

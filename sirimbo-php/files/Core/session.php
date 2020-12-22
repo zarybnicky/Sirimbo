@@ -20,10 +20,10 @@ class Session
         }
         $data = \DBUser::getUserData($id);
         if ($data['u_ban']) {
-            new \RedirectHelper('/error?id=ban');
+            \Redirect::to('/error?id=ban');
         }
         if (!$data['u_confirmed']) {
-            new \RedirectHelper('/error?id=not_approved');
+            \Redirect::to('/error?id=not_approved');
         }
         self::loadUser($data['u_id']);
         return true;
@@ -38,11 +38,11 @@ class Session
     {
         if (\Database::isDatabaseError()) {
             self::logout();
-            new RedirectHelper('/');
+            \Redirect::to('/');
         }
         if (!$user = \DBUser::getUser($id)) {
             self::logout();
-            new RedirectHelper('/');
+            \Redirect::to('/');
         }
 
         $_SESSION['id'] = $user->getId();

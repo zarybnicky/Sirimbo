@@ -7,7 +7,7 @@ class Clenove
     {
         \Permissions::checkError('users', P_VIEW);
         if (!($data = \DBUser::getUser($id))) {
-            return new \RedirectHelper('/member/clenove');
+            \Redirect::to('/member/clenove');
         }
         new \RenderHelper('files/View/Member/Clenove/Single.inc', [
             'header' => 'Přehled členů',

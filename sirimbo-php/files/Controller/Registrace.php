@@ -126,6 +126,6 @@ class Registrace
             '<p>Během několika dnů vám na email příjde potvrzení vašeho účtu, ' .
             'které vyřizuje administrátor ručně.<p>'
         );
-        new \RedirectHelper('/');
+        \Redirect::to('/');
     }
 }

@@ -67,7 +67,7 @@ class Nastenka
             );
         }
 
-        new \RedirectHelper($_POST['returnURI']);
+        \Redirect::to($_POST['returnURI']);
     }
 
     public static function edit($id)
@@ -75,7 +75,7 @@ class Nastenka
         \Permissions::checkError('nastenka', P_OWNED);
         if (!$data = \DBNastenka::getSingleNastenka($id)) {
             new \MessageHelper('warning', 'Nástěnka s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?? '/admin/nastenka');
+            \Redirect::to($_POST['returnURI'] ?? '/admin/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
         $_POST['id'] = $id;
@@ -93,7 +93,7 @@ class Nastenka
         \Permissions::checkError('nastenka', P_OWNED);
         if (!$data = \DBNastenka::getSingleNastenka($id)) {
             new \MessageHelper('warning', 'Nástěnka s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?? '/admin/nastenka');
+            \Redirect::to($_POST['returnURI'] ?? '/admin/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
         $form = static::checkData();
@@ -128,7 +128,7 @@ class Nastenka
             );
         }
         \DBNastenka::editNastenka($id, $_POST['nadpis'], $_POST['text'], ($_POST['lock'] == 'lock') ? 1 : 0);
-        new \RedirectHelper($_POST['returnURI']);
+        \Redirect::to($_POST['returnURI']);
     }
 
     public static function remove($id)
@@ -136,7 +136,7 @@ class Nastenka
         \Permissions::checkError('nastenka', P_OWNED);
         if (!$data = \DBNastenka::getSingleNastenka($id)) {
             new \MessageHelper('warning', 'Příspěvek s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?? '/admin/nastenka');
+            \Redirect::to($_POST['returnURI'] ?? '/admin/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
         return new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
@@ -152,11 +152,11 @@ class Nastenka
         \Permissions::checkError('nastenka', P_OWNED);
         if (!$data = \DBNastenka::getSingleNastenka($id)) {
             new \MessageHelper('warning', 'Příspěvek s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?? '/admin/nastenka');
+            \Redirect::to($_POST['returnURI'] ?? '/admin/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
         \DBNastenka::removeNastenka($id);
-        new \RedirectHelper('/admin/nastenka');
+        \Redirect::to('/admin/nastenka');
     }
 
     public static function renderForm($action)

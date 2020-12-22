@@ -55,7 +55,7 @@ class Nabidka
                 $item['n_lock']
             );
         }
-        new \RedirectHelper('/admin/nabidka');
+        \Redirect::to('/admin/nabidka');
     }
 
     public static function add()
@@ -92,7 +92,7 @@ class Nabidka
             $_POST['lock'] ? 1 : 0
         );
         new \MessageHelper('success', 'Nabídka přidána');
-        new \RedirectHelper($_POST['returnURI'] ?? '/admin/nabidka');
+        \Redirect::to($_POST['returnURI'] ?? '/admin/nabidka');
     }
 
     public static function edit($id)
@@ -100,7 +100,7 @@ class Nabidka
         \Permissions::checkError('nabidka', P_OWNED);
         if (!$data = \DBNabidka::getSingleNabidka($id)) {
             new \MessageHelper('warning', 'Nabídka s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?? '/admin/nabidka');
+            \Redirect::to($_POST['returnURI'] ?? '/admin/nabidka');
         }
         \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
         return static::displayForm('edit', $data);
@@ -111,7 +111,7 @@ class Nabidka
         \Permissions::checkError('nabidka', P_OWNED);
         if (!$data = \DBNabidka::getSingleNabidka($id)) {
             new \MessageHelper('warning', 'Nabídka s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?? '/admin/nabidka');
+            \Redirect::to($_POST['returnURI'] ?? '/admin/nabidka');
         }
         \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
         $form = static::checkData();
@@ -158,7 +158,7 @@ class Nabidka
             $_POST['lock'] ? '1' : '0'
         );
         new \MessageHelper('success', 'Nabídka úspěšně upravena');
-        new \RedirectHelper($_POST['returnURI'] ?? '/admin/nabidka');
+        \Redirect::to($_POST['returnURI'] ?? '/admin/nabidka');
     }
 
     public static function duplicate($id)
@@ -182,7 +182,7 @@ class Nabidka
                 $item['ni_pocet_hod']
             );
         }
-        new \RedirectHelper('/admin/nabidka');
+        \Redirect::to('/admin/nabidka');
     }
 
     public static function remove($id)
@@ -193,7 +193,7 @@ class Nabidka
             throw new \AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
         }
         \DBNabidka::removeNabidka($id);
-        new \RedirectHelper('/admin/nabidka');
+        \Redirect::to('/admin/nabidka');
     }
 
     protected static function displayForm($action, $data = [])

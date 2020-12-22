@@ -8,7 +8,7 @@ class NabidkaDetail
         \Permissions::checkError('nabidka', P_OWNED);
         if (!$data = \DBNabidka::getSingleNabidka($id)) {
             new \MessageHelper('warning', 'Nabídka s takovým ID neexistuje');
-            new \RedirectHelper('/admin/nabidka');
+            \Redirect::to('/admin/nabidka');
         }
         \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
 
@@ -56,7 +56,7 @@ class NabidkaDetail
         \Permissions::checkError('nabidka', P_OWNED);
         if (!$data = \DBNabidka::getSingleNabidka($id)) {
             new \MessageHelper('warning', 'Nabídka s takovým ID neexistuje');
-            new \RedirectHelper('/admin/nabidka');
+            \Redirect::to('/admin/nabidka');
         }
         \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
 
@@ -123,6 +123,6 @@ class NabidkaDetail
             );
             $data = \DBNabidka::getSingleNabidka($id);
         }
-        new \RedirectHelper('/admin/nabidka/detail/' . $id);
+        \Redirect::to('/admin/nabidka/detail/' . $id);
     }
 }

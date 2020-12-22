@@ -45,20 +45,20 @@ try {
         $user = \Session::loadUser($_SESSION['id']);
         if (!$user->getGdprSignedAt() || $user->getGdprSignedAt() === '0000-00-00 00:00:00') {
             if (!in_array(explode('?', $_SERVER['REQUEST_URI'])[0], ['/member/profil/gdpr', '/logout'])) {
-                return new RedirectHelper('/member/profil/gdpr');
+                \Redirect::to('/member/profil/gdpr');
             }
         } elseif (!$user->isValid()) {
             if (!in_array(explode('?', $_SERVER['REQUEST_URI'])[0], ['/member/profil/edit', '/logout'])) {
-                return new RedirectHelper('/member/profil/edit', 'Prosím vyplňte požadované údaje.');
+                \Redirect::to('/member/profil/edit', 'Prosím vyplňte požadované údaje.');
             }
         }
     } elseif (isset($_POST['login']) || isset($_POST['pass'])) {
         if (!\Session::login($_POST['login'], User::crypt($_POST['pass']))) {
-            new RedirectHelper('/login', 'Špatné jméno nebo heslo!');
+            \Redirect::to('/login', 'Špatné jméno nebo heslo!');
         } elseif ($_GET['return'] ?? null) {
-            new RedirectHelper($_GET['return']);
+            \Redirect::to($_GET['return']);
         } else {
-            new RedirectHelper('/member');
+            \Redirect::to('/member');
         }
     }
 
@@ -66,11 +66,11 @@ try {
     $router->dispatchGlobal();
 } catch (AuthorizationException $e) {
     ob_clean();
-    new RedirectHelper('/error?id=' . $e->getErrorFile());
+    \Redirect::to('/error?id=' . $e->getErrorFile());
 } catch (NotFoundException $e) {
     ob_clean();
     syslog(LOG_ERR, $_SERVER['REQUEST_URI'] . ": {$e->getMessage()}");
-    new RedirectHelper('/error?id=' . $e->getErrorFile());
+    \Redirect::to('/error?id=' . $e->getErrorFile());
 } catch (ViewException $e) {
     syslog(
         LOG_ERR,
@@ -81,7 +81,7 @@ try {
         . "\tSESSION: " . json_encode($_SESSION) . "\n"
     );
     ob_clean();
-    new RedirectHelper('/error?id=' . $e->getErrorFile());
+    \Redirect::to('/error?id=' . $e->getErrorFile());
 } catch (Exception $e) {
     syslog(
         LOG_WARNING,
@@ -92,7 +92,7 @@ try {
         . "\tSESSION: " . json_encode($_SESSION) . "\n"
     );
     ob_clean();
-    new RedirectHelper('/error?id=' . (new ViewException(''))->getErrorFile());
+    \Redirect::to('/error?id=' . (new ViewException(''))->getErrorFile());
 }
 
 function makeRouter()

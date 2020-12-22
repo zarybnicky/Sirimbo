@@ -8,7 +8,7 @@ class GalerieFile
         \Permissions::checkError('galerie', P_OWNED);
         if (!$data = \DBGalerie::getSingleFoto($id)) {
             new \MessageHelper('warning', 'Takový soubor neexistuje!');
-            new \RedirectHelper($_SERVER['HTTP_REFERER']);
+            \Redirect::to($_SERVER['HTTP_REFERER']);
         }
         $_POST['name'] = $data['gf_name'];
         $_POST['parent'] = $data['gf_id_rodic'];
@@ -20,7 +20,7 @@ class GalerieFile
         \Permissions::checkError('galerie', P_OWNED);
         if (!$data = \DBGalerie::getSingleFoto($id)) {
             new \MessageHelper('warning', 'Takový soubor neexistuje!');
-            new \RedirectHelper($_SERVER['HTTP_REFERER']);
+            \Redirect::to($_SERVER['HTTP_REFERER']);
         }
         $form = static::checkData();
         if (!$form->isValid()) {
@@ -36,7 +36,7 @@ class GalerieFile
         if ($data['gf_path'] != $newPath) {
             if (file_exists(GALERIE . DIRECTORY_SEPARATOR . $newPath)) {
                 new \MessageHelper('danger', 'V dané složce už existuje soubor se stejným názvem.');
-                new \RedirectHelper('/admin/galerie/file/edit/' . $id);
+                \Redirect::to('/admin/galerie/file/edit/' . $id);
             }
             rename(
                 GALERIE . DIRECTORY_SEPARATOR . $data['gd_path'],
@@ -49,7 +49,7 @@ class GalerieFile
             $data['gf_path'] = $newPath;
         }
         \DBGalerie::editFoto($id, $data['gf_path'], $_POST['parent'], $_POST['name']);
-        new \RedirectHelper('/admin/galerie/directory/' . $_POST['parent']);
+        \Redirect::to('/admin/galerie/directory/' . $_POST['parent']);
     }
 
     public static function remove($id)
@@ -71,7 +71,7 @@ class GalerieFile
         \DBGalerie::removeFoto($id);
         unlink(GALERIE . DIRECTORY_SEPARATOR . $item['gf_path']);
         unlink(GALERIE_THUMBS . DIRECTORY_SEPARATOR . $item['gf_path']);
-        new \RedirectHelper('/admin/galerie');
+        \Redirect::to('/admin/galerie');
     }
 
     public static function upload()
@@ -101,7 +101,7 @@ class GalerieFile
         }
         if (!($parent = \DBGalerie::getSingleDir($parentId))) {
             new \MessageHelper('warning', 'Taková složka neexistuje');
-            new \RedirectHelper('/admin/galerie/upload');
+            \Redirect::to('/admin/galerie/upload');
         }
         $uploadHelper = new \UploadHelper('files');
         $uploadHelper->loadFromPost();
@@ -122,7 +122,7 @@ class GalerieFile
         }
         if (count($uploader->getSavedFiles()) == 0) {
             new \MessageHelper('info', 'Žádné soubory nebyly nahrány!');
-            new \RedirectHelper('/admin/galerie/upload');
+            \Redirect::to('/admin/galerie/upload');
         }
         $failCount = 0;
         foreach ($uploader->getSavedFiles() as $path) {
@@ -144,10 +144,10 @@ class GalerieFile
         }
         if (count($uploader->getSavedFiles()) > $failCount) {
             new \MessageHelper('info', 'Fotky přidány');
-            new \RedirectHelper('/admin/galerie');
+            \Redirect::to('/admin/galerie');
         }
         new \MessageHelper('info', 'Počet nahraných souborů: ' . count($uploader->getSavedFiles()));
-        new \RedirectHelper('/admin/galerie');
+        \Redirect::to('/admin/galerie');
     }
 
     private static function displayForm($id)

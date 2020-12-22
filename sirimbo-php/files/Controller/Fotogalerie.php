@@ -12,7 +12,7 @@ class Fotogalerie
     {
         if (!($dir = \DBGalerie::getSingleDir($id))) {
             new \MessageHelper('warning', 'Taková složka neexistuje');
-            new \RedirectHelper('/fotogalerie');
+            \Redirect::to('/fotogalerie');
         }
 
         $photos = \DBGalerie::getFotky($id);
@@ -46,7 +46,7 @@ class Fotogalerie
     {
         if (!$data = \DBGalerie::getSingleFoto($id)) {
             new \MessageHelper('warning', 'Taková fotka neexistuje');
-            new \RedirectHelper('/fotogalerie');
+            \Redirect::to('/fotogalerie');
         }
 
         $parent_dir = \DBGalerie::getFotky($data['gf_id_rodic']);

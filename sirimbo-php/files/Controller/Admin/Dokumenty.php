@@ -28,7 +28,7 @@ class Dokumenty
     {
         \Permissions::checkError('dokumenty', P_OWNED);
         if (empty($_FILES)) {
-            return new \RedirectHelper('/admin/dokumenty');
+            \Redirect::to('/admin/dokumenty');
         }
         $fileUpload = $_FILES['file']['tmp_name'];
         $fileName = str_replace(
@@ -43,7 +43,7 @@ class Dokumenty
         $path = UPLOADS . '/' . time() . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
         if (!move_uploaded_file($fileUpload, $path)) {
             new \MessageHelper('danger', 'Soubor se nepodařilo nahrát.');
-            return new \RedirectHelper('/admin/dokumenty');
+            \Redirect::to('/admin/dokumenty');
         }
 
         chmod($path, 0666);
@@ -55,7 +55,7 @@ class Dokumenty
             \Session::getUser()->getId()
         );
         new \MessageHelper('success', 'Soubor byl úspěšně nahrán');
-        return new \RedirectHelper('/admin/dokumenty');
+        \Redirect::to('/admin/dokumenty');
     }
 
     public static function edit($id)
@@ -63,7 +63,7 @@ class Dokumenty
         \Permissions::checkError('dokumenty', P_OWNED);
         if (!$data = \DBDokumenty::getSingleDokument($id)) {
             new \MessageHelper('warning', 'Dokument s takovým ID neexistuje');
-            new \RedirectHelper('/admin/dokumenty');
+            \Redirect::to('/admin/dokumenty');
         }
         \Permissions::checkError('dokumenty', P_OWNED, $data['d_kdo']);
         new \RenderHelper('files/View/Admin/Dokumenty/Form.inc', [
@@ -77,12 +77,12 @@ class Dokumenty
         \Permissions::checkError('dokumenty', P_OWNED);
         if (!$data = \DBDokumenty::getSingleDokument($id)) {
             new \MessageHelper('warning', 'Dokument s takovým ID neexistuje');
-            new \RedirectHelper('/admin/dokumenty');
+            \Redirect::to('/admin/dokumenty');
         }
         \Permissions::checkError('dokumenty', P_OWNED, $data['d_kdo']);
         \DBDokumenty::editDokument($id, $_POST['newname']);
         new \MessageHelper('success', 'Dokument upraven');
-        new \RedirectHelper('/admin/dokumenty');
+        \Redirect::to('/admin/dokumenty');
     }
 
     public static function remove($id)
@@ -108,6 +108,6 @@ class Dokumenty
         }
         unlink($data['d_path']);
         \DBDokumenty::removeDokument($id);
-        new \RedirectHelper('/admin/dokumenty');
+        \Redirect::to('/admin/dokumenty');
     }
 }

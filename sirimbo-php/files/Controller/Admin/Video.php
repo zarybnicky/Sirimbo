@@ -74,7 +74,7 @@ class Video
         \DBParameters::set('title_video2', $_POST['video2']);
         \DBParameters::set('title_video3', $_POST['video3']);
         \DBParameters::set('title_video4', $_POST['video4']);
-        new \RedirectHelper('/admin/video/title');
+        \Redirect::to('/admin/video/title');
     }
 
     public static function titlePost()
@@ -111,7 +111,7 @@ class Video
             $_POST['desc'],
             $_POST['playlist'] ?? null
         );
-        new \RedirectHelper('/admin/video');
+        \Redirect::to('/admin/video');
     }
 
     public static function edit($id)
@@ -119,7 +119,7 @@ class Video
         \Permissions::checkError('aktuality', P_OWNED);
         if (!$data = \DBVideo::getSingle($id)) {
             new \MessageHelper('warning', 'Článek s takovým ID neexistuje');
-            new \RedirectHelper('/admin/aktuality');
+            \Redirect::to('/admin/aktuality');
         }
         return static::displayForm('edit', $data);
     }
@@ -129,7 +129,7 @@ class Video
         \Permissions::checkError('aktuality', P_OWNED);
         if (!$data = \DBVideo::getSingle($id)) {
             new \MessageHelper('warning', 'Článek s takovým ID neexistuje');
-            new \RedirectHelper('/admin/aktuality');
+            \Redirect::to('/admin/aktuality');
         }
         $form = static::checkData();
         if (!$form->isValid()) {
@@ -144,7 +144,7 @@ class Video
             $_POST['desc'],
             $_POST['playlist'] ?? null
         );
-        new \RedirectHelper('/admin/video');
+        \Redirect::to('/admin/video');
     }
 
     public static function remove($id)
@@ -164,7 +164,7 @@ class Video
         \Permissions::checkError('aktuality', P_OWNED);
         \DBVideo::remove($id);
         new \MessageHelper('info', 'Video odebráno');
-        new \RedirectHelper('/admin/video');
+        \Redirect::to('/admin/video');
     }
 
     protected static function displayForm($action, $data = [])

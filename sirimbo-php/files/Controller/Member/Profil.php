@@ -121,7 +121,7 @@ class Profil
     {
         \Permissions::checkError('nastenka', P_VIEW);
         \DBUser::markGdprSigned(\Session::getUser()->getId());
-        new \RedirectHelper('/member');
+        \Redirect::to('/member');
     }
 
     public static function edit()
@@ -182,7 +182,7 @@ class Profil
             $user->getMemberUntil(),
             $user->getGdprSignedAt()
         );
-        new \RedirectHelper('/member/profil');
+        \Redirect::to('/member/profil');
     }
 
     public static function heslo()
@@ -204,7 +204,7 @@ class Profil
             ]);
         }
         \DBUser::setPassword(\Session::getUser()->getId(), \User::crypt($_POST['newpass']));
-        new \RedirectHelper('/member/profil');
+        \Redirect::to('/member/profil');
     }
 
     private static function checkDataEdit(): \Form

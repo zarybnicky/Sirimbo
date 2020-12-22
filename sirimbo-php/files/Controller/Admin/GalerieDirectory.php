@@ -8,7 +8,7 @@ class GalerieDirectory
         \Permissions::checkError('galerie', P_OWNED);
         if (!\DBGalerie::getSingleDir($id)) {
             new \MessageHelper('warning', 'Složka s takovým ID neexistuje');
-            new \RedirectHelper('/admin/galerie');
+            \Redirect::to('/admin/galerie');
         }
         new \RenderHelper('files/View/Admin/Galerie/DisplayDirectory.inc', [
             'header' => 'Správa fotogalerie',
@@ -48,7 +48,7 @@ class GalerieDirectory
             $_POST['hidden'] ? '1' : '0',
             $dirPath
         );
-        new \RedirectHelper('/admin/galerie');
+        \Redirect::to('/admin/galerie');
     }
 
     public static function edit($id)
@@ -56,7 +56,7 @@ class GalerieDirectory
         \Permissions::checkError('galerie', P_OWNED);
         if (!($data = \DBGalerie::getSingleDir($id))) {
             new \MessageHelper('warning', 'Taková složka neexistuje');
-            new \RedirectHelper('/admin/galerie');
+            \Redirect::to('/admin/galerie');
         }
         $_POST['name'] = $data['gd_name'];
         $_POST['parent'] = $data['gd_id_rodic'];
@@ -69,7 +69,7 @@ class GalerieDirectory
         \Permissions::checkError('galerie', P_OWNED);
         if (!($data = \DBGalerie::getSingleDir($id))) {
             new \MessageHelper('warning', 'Taková složka neexistuje');
-            new \RedirectHelper('/admin/galerie');
+            \Redirect::to('/admin/galerie');
         }
         $form = static::checkData();
         if (!$form->isValid()) {
@@ -83,7 +83,7 @@ class GalerieDirectory
         if ($data['gd_path'] != $newPath) {
             if (file_exists(GALERIE . DIRECTORY_SEPARATOR . $newPath)) {
                 new \MessageHelper('danger', 'V dané nadsložce už existuje složka se stejným názvem.');
-                new \RedirectHelper('/admin/galerie/directory/edit/' . $id);
+                \Redirect::to('/admin/galerie/directory/edit/' . $id);
             }
             rename(
                 GALERIE . DIRECTORY_SEPARATOR . $data['gd_path'],
@@ -104,7 +104,7 @@ class GalerieDirectory
             $_POST['hidden'] ? '1' : '0',
             $data['gd_path']
         );
-        new \RedirectHelper('/admin/galerie');
+        \Redirect::to('/admin/galerie');
     }
 
     public static function remove($id)
@@ -128,7 +128,7 @@ class GalerieDirectory
             Galerie::rrmdir(GALERIE . DIRECTORY_SEPARATOR . $data['gd_path']);
             Galerie::rrmdir(GALERIE_THUMBS . DIRECTORY_SEPARATOR . $data['gd_path']);
         }
-        new \RedirectHelper('/admin/galerie');
+        \Redirect::to('/admin/galerie');
     }
 
     private static function displayForm($action)

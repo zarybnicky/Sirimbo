@@ -16,7 +16,7 @@ class Nopassword
 
         if (!$data) {
             new \MessageHelper('warning', 'Špatná kombinace uživatelského jména a emailu.');
-            return new \RedirectHelper('/nopassword');
+            \Redirect::to('/nopassword');
         }
 
         $base = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -27,12 +27,12 @@ class Nopassword
 
         if (!\DBUser::checkUser($data->getLogin(), $passwordCrypt)) {
             new \MessageHelper('danger', 'Nepodařilo se změnit heslo, prosím kontaktujte administrátora.');
-            new \RedirectHelper('/nopassword');
+            \Redirect::to('/nopassword');
         }
 
         \Mailer::newPassword($data->getEmail(), $password);
 
         new \MessageHelper('success', 'Heslo bylo úspěšně změněno, za chvíli byste jej měli obdržet v e-mailu');
-        new \RedirectHelper('/');
+        \Redirect::to('/');
     }
 }

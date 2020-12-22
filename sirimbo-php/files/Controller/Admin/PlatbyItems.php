@@ -60,7 +60,7 @@ class PlatbyItems
             $item->date,
             $item->prefix
         );
-        new \RedirectHelper('/admin/platby/items');
+        \Redirect::to('/admin/platby/items');
     }
 
     public static function edit($id)
@@ -68,7 +68,7 @@ class PlatbyItems
         \Permissions::checkError('platby', P_OWNED);
         if (!$data = \DBPlatbyItem::getSingle($id)) {
             new \MessageHelper('warning', 'Platba s takovým ID neexistuje');
-            new \RedirectHelper('/admin/platby/items');
+            \Redirect::to('/admin/platby/items');
         }
         $_POST['date'] = $data['pi_date'];
         $_POST['amount'] = $data['pi_amount'];
@@ -83,7 +83,7 @@ class PlatbyItems
         \Permissions::checkError('platby', P_OWNED);
         if (!\DBPlatbyItem::getSingle($id)) {
             new \MessageHelper('warning', 'Platba s takovým ID neexistuje');
-            new \RedirectHelper('/admin/platby/items');
+            \Redirect::to('/admin/platby/items');
         }
         if (!is_object($item = Platby::getFromPost($id))) {
             new \MessageHelper('warning', $item);
@@ -97,7 +97,7 @@ class PlatbyItems
             $item->date,
             $item->prefix
         );
-        new \RedirectHelper('/admin/platby/items');
+        \Redirect::to('/admin/platby/items');
     }
 
     public static function remove($id)
@@ -131,7 +131,7 @@ class PlatbyItems
                 '1'
             );
         }
-        new \RedirectHelper('/admin/platby/items');
+        \Redirect::to('/admin/platby/items');
     }
 
     private static function displayForm($id, $action)

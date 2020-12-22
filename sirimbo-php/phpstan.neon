@@ -3,8 +3,8 @@ parameters:
     - files/Core/phpmailer.php
     - files/Core/smtp.php
   earlyTerminatingMethodCalls:
-    RedirectHelper:
-      - redirect
+    Redirect:
+      - to
   inferPrivatePropertyTypeFromConstructor: true
   checkMissingIterableValueType: false
   bootstrapFiles:

@@ -8,7 +8,7 @@ class RozpisDetail
         \Permissions::checkError('rozpis', P_OWNED);
         if (!$data = \DBRozpis::getSingleRozpis($id)) {
             new \MessageHelper('warning', 'Rozpis s takovým ID neexistuje');
-            new \RedirectHelper('/admin/rozpis');
+            \Redirect::to('/admin/rozpis');
         }
         \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
         $users = \DBPary::getPartners();
@@ -94,14 +94,14 @@ class RozpisDetail
         \Permissions::checkError('rozpis', P_OWNED);
         if (!$data = \DBRozpis::getSingleRozpis($id)) {
             new \MessageHelper('warning', 'Rozpis s takovým ID neexistuje');
-            new \RedirectHelper('/admin/rozpis');
+            \Redirect::to('/admin/rozpis');
         }
         \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
         $items = static::processPost($id, $data, \DBRozpis::getRozpisItem($id));
         if ($items) {
             \DBRozpis::editRozpisItemMultiple($items);
         }
-        new \RedirectHelper($_SERVER['REQUEST_URI']);
+        \Redirect::to($_SERVER['REQUEST_URI']);
     }
 
     protected static function processPost($id, $data, $items)

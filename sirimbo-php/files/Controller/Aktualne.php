@@ -36,7 +36,7 @@ class Aktualne
     public static function single($id)
     {
         if (!($data = \DBAktuality::getSingleAktualita($id))) {
-            new \RedirectHelper('/aktualne');
+            \Redirect::to('/aktualne');
         }
 
         $photo = \DBGalerie::getSingleFoto($data['at_foto_main']);

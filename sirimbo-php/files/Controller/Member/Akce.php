@@ -8,7 +8,7 @@ class Akce
         \Permissions::checkError('akce', P_VIEW);
         if (!($data = \DBAkce::getSingleAkce($id, true))) {
             new \MessageHelper('warning', 'Žádná taková akce neexistuje');
-            return new \RedirectHelper('/member/akce');
+            \Redirect::to('/member/akce');
         }
         return new \RenderHelper('files/View/Member/Akce/Single.inc', [
             'header' => 'Klubové akce',
@@ -21,7 +21,7 @@ class Akce
         \Permissions::checkError('akce', P_VIEW);
         if (!$_POST['id'] || !($data = \DBAkce::getSingleAkce($_POST['id']))) {
             new \MessageHelper('warning', 'Žádná taková akce neexistuje');
-            return new \RedirectHelper('/member/akce');
+            \Redirect::to('/member/akce');
         }
 
         $form = static::checkData($data, $_POST['action']);
@@ -32,7 +32,7 @@ class Akce
         } elseif ($_POST['action'] == 'signout') {
             \DBAkce::signOut(\Session::getUser()->getId(), $_POST['id']);
         }
-        new \RedirectHelper('/member/akce');
+        \Redirect::to('/member/akce');
     }
 
     public static function list()

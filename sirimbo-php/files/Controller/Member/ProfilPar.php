@@ -76,7 +76,7 @@ class ProfilPar
             $_POST['lat-finale'],
             $hodnoceni
         );
-        new \RedirectHelper("/member/profil");
+        \Redirect::to("/member/profil");
     }
 
     public static function partner()
@@ -102,10 +102,10 @@ class ProfilPar
         if (!isset($_POST["partner"]) || ($_POST['action'] == 'dumpthem' && $havePartner)) {
             \DBPary::noPartner($user->getId());
             \DBPary::noPartner($couple['u_id']);
-            new \RedirectHelper('/member/profil');
+            \Redirect::to('/member/profil');
         }
         if ($_POST['partner'] == $couple['u_id'] || (!$_POST['partner'] && $couple['u_id'] == '0')) {
-            new \RedirectHelper('/member/profil');
+            \Redirect::to('/member/profil');
         }
         if ($user->getGender() == "m") {
             \DBPary::newPartnerRequest($user->getId(), $user->getId(), $_POST["partner"]);
@@ -113,7 +113,7 @@ class ProfilPar
             \DBPary::newPartnerRequest($user->getId(), $_POST["partner"], $user->getId());
         }
         new \MessageHelper('info', 'Žádost o partnerství odeslána');
-        new \RedirectHelper('/member/profil');
+        \Redirect::to('/member/profil');
     }
 
     public static function zadost()
@@ -134,7 +134,7 @@ class ProfilPar
                         \DBPary::deletePartnerRequest($_POST['id']);
                         new \MessageHelper('info', 'žádost zamitnuta');
                     }
-                    new \RedirectHelper('/member/profil');
+                    \Redirect::to('/member/profil');
                 }
                 break;
 
@@ -146,16 +146,15 @@ class ProfilPar
                     }
                     \DBPary::deletePartnerRequest($_POST['id']);
                     new \MessageHelper('info', 'žádost zrušena');
-                    new \RedirectHelper('/member/profil');
+                    \Redirect::to('/member/profil');
                 }
                 break;
 
             default:
-                new \RedirectHelper('/member/profil');
-                break;
+                \Redirect::to('/member/profil');
         }
         new \MessageHelper('warning', 'Žádná taková žádost tu není');
-        new \RedirectHelper('/member/profil');
+        \Redirect::to('/member/profil');
     }
 
     public static function pary()

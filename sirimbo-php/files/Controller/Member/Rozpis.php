@@ -88,7 +88,7 @@ class Rozpis
                 \DBRozpis::rozpisSignOut($_POST['ri_id']);
             }
         }
-        new \RedirectHelper('/member/rozpis');
+        \Redirect::to('/member/rozpis');
     }
 
     protected static function checkData($data, $action = 'signup'): \Form

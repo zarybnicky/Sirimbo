@@ -9,7 +9,7 @@ class PlatbyDiscarded
         $data = \DBPlatbyRaw::getDiscarded();
         if (count($data) == 0) {
             new \MessageHelper('info', 'V databázi nejsou žádné vyřazené platby.');
-            new \RedirectHelper('/admin/platby');
+            \Redirect::to('/admin/platby');
         }
         if ($_GET['list']) {
             static::_getTable($data, $result, $columns, $header);
@@ -37,11 +37,11 @@ class PlatbyDiscarded
         \Permissions::checkError('platby', P_OWNED);
         if (!\DBPlatbyRaw::getSingle($id)) {
             new \MessageHelper('info', 'Platba se zadaným ID neexistuje.');
-            new \RedirectHelper($_SERVER['HTTP_REFERER']);
+            \Redirect::to($_SERVER['HTTP_REFERER']);
         }
         \DBPlatbyRaw::delete($id);
         new \MessageHelper('success', 'Platba byla odstraněna.');
-        new \RedirectHelper($_SERVER['HTTP_REFERER']);
+        \Redirect::to($_SERVER['HTTP_REFERER']);
     }
 
     private static function _getTable($data, &$result, &$columns, &$header)

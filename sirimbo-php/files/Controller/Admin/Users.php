@@ -136,7 +136,7 @@ class Users
                 );
             }
         }
-        new \RedirectHelper('/admin/users');
+        \Redirect::to('/admin/users');
     }
 
     public static function remove($id)
@@ -158,7 +158,7 @@ class Users
     {
         \Permissions::checkError('users', P_ADMIN);
         \DBUser::removeUser($id);
-        new \RedirectHelper($_POST['returnURI'] ?? '/admin/users');
+        \Redirect::to($_POST['returnURI'] ?? '/admin/users');
     }
 
     public static function add()
@@ -201,7 +201,7 @@ class Users
             $_POST['teacher'] ? '1' : '0',
             $_POST['dancer'] ? '1' : '0'
         );
-        new \RedirectHelper($_POST['returnURI'] ?? '/admin/users');
+        \Redirect::to($_POST['returnURI'] ?? '/admin/users');
     }
 
     public static function edit($id)
@@ -209,11 +209,11 @@ class Users
         \Permissions::checkError('users', P_ADMIN);
         if (!$data = \DBUser::getUserData($id)) {
             new \MessageHelper('warning', 'Uživatel s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?? '/admin/users');
+            \Redirect::to($_POST['returnURI'] ?? '/admin/users');
         }
         if (!$data['u_confirmed']) {
             new \MessageHelper('warning', 'Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
-            new \RedirectHelper($_POST['returnURI'] ?? '/admin/users');
+            \Redirect::to($_POST['returnURI'] ?? '/admin/users');
         }
         $_POST['login'] = $data['u_login'];
         $_POST['group'] = $data['u_group'];
@@ -247,11 +247,11 @@ class Users
         \Permissions::checkError('users', P_ADMIN);
         if (!$data = \DBUser::getUserData($id)) {
             new \MessageHelper('warning', 'Uživatel s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?? '/admin/users');
+            \Redirect::to($_POST['returnURI'] ?? '/admin/users');
         }
         if (!$data['u_confirmed']) {
             new \MessageHelper('warning', 'Uživatel "' . $data['u_login'] . '" ještě není potvrzený');
-            new \RedirectHelper($_POST['returnURI'] ?? '/admin/users');
+            \Redirect::to($_POST['returnURI'] ?? '/admin/users');
         }
         $form = static::checkData('edit');
         if (!$form->isValid()) {
@@ -285,7 +285,7 @@ class Users
             $data['u_member_until'],
             $data['u_gdpr_signed_at']
         );
-        new \RedirectHelper($_POST['returnURI'] ?? '/admin/users');
+        \Redirect::to($_POST['returnURI'] ?? '/admin/users');
     }
 
     public static function getMsmtCsv()
@@ -413,11 +413,11 @@ class Users
         $id = $_POST['confirm'];
         if (!$data = \DBUser::getUser($id)) {
             new \MessageHelper('warning', 'Uživatel s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?? '/admin/users');
+            \Redirect::to($_POST['returnURI'] ?? '/admin/users');
         }
         \DBUser::confirmUser($id, $_POST[$id . '-group'], $_POST[$id . '-skupina']);
         \Mailer::registrationConfirmNotice($data->getEmail(), $data->getLogin());
-        new \RedirectHelper('/admin/users/unconfirmed');
+        \Redirect::to('/admin/users/unconfirmed');
     }
 
     public static function duplicate()

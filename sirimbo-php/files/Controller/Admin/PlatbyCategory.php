@@ -18,7 +18,7 @@ class PlatbyCategory
     public static function listPost()
     {
         if (!$id = $_POST['category_duplicate']) {
-            new \RedirectHelper('/admin/platby/structure/category');
+            \Redirect::to('/admin/platby/structure/category');
         }
         if (!($data = \DBPlatbyCategory::getSingle($id))) {
             new \MessageHelper('warning', 'Takový specifický symbol neexistuje.');
@@ -39,7 +39,7 @@ class PlatbyCategory
         foreach (\DBPlatbyCategory::getSingleWithGroups($id) as $group) {
             \DBPlatbyGroup::addChild($group['pg_id'], $insertId);
         }
-        new \RedirectHelper('/admin/platby/structure/category');
+        \Redirect::to('/admin/platby/structure/category');
     }
 
     protected static function getCategories($archived = false)
@@ -109,7 +109,7 @@ class PlatbyCategory
         foreach ($_POST['group'] ?? [] as $item) {
             \DBPlatbyGroup::addChild($item, $insertId);
         }
-        new \RedirectHelper($_POST['returnURI'] ?? '/admin/platby/structure/category');
+        \Redirect::to($_POST['returnURI'] ?? '/admin/platby/structure/category');
     }
 
     public static function edit($id)
@@ -117,7 +117,7 @@ class PlatbyCategory
         \Permissions::checkError('platby', P_OWNED);
         if (!$data = \DBPlatbyCategory::getSingle($id)) {
             new \MessageHelper('warning', 'Kategorie s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?? '/admin/platby/structure/category');
+            \Redirect::to($_POST['returnURI'] ?? '/admin/platby/structure/category');
         }
         if ($data['pc_use_base']) {
             $data['pc_amount'] = '*' . $data['pc_amount'];
@@ -138,7 +138,7 @@ class PlatbyCategory
         \Permissions::checkError('platby', P_OWNED);
         if (!\DBPlatbyCategory::getSingle($id)) {
             new \MessageHelper('warning', 'Kategorie s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?? '/admin/platby/structure/category');
+            \Redirect::to($_POST['returnURI'] ?? '/admin/platby/structure/category');
         }
         $form = static::checkData('edit', $id);
         if (!$form->isValid()) {
@@ -191,9 +191,9 @@ class PlatbyCategory
             \DBPlatbyGroup::addChild($added, $id);
         }
         if ($_GET['group']) {
-            new \RedirectHelper('/admin/platby/structure/group/edit/' . $_GET['group']);
+            \Redirect::to('/admin/platby/structure/group/edit/' . $_GET['group']);
         }
-        new \RedirectHelper($_POST['returnURI'] ?? '/admin/platby/structure/category');
+        \Redirect::to($_POST['returnURI'] ?? '/admin/platby/structure/category');
     }
 
     public static function remove($id)
@@ -201,7 +201,7 @@ class PlatbyCategory
         \Permissions::checkError('platby', P_OWNED);
         if (!$data = \DBPlatbyCategory::getSingle($id)) {
             new \MessageHelper('warning', 'Specifický symbol s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?? '/admin/platby/structure/category');
+            \Redirect::to($_POST['returnURI'] ?? '/admin/platby/structure/category');
         }
         if (static::getLinkedObjects($id)) {
             new \MessageHelper(
@@ -229,7 +229,7 @@ class PlatbyCategory
         \Permissions::checkError('platby', P_OWNED);
         if (!$data = \DBPlatbyCategory::getSingle($id)) {
             new \MessageHelper('warning', 'Specifický symbol s takovým ID neexistuje');
-            new \RedirectHelper($_POST['returnURI'] ?? '/admin/platby/structure/category');
+            \Redirect::to($_POST['returnURI'] ?? '/admin/platby/structure/category');
         }
 
         $f = static::getLinkedObjects($id);
@@ -255,7 +255,7 @@ class PlatbyCategory
                 'info',
                 "Spojení s $groupCount kategoriemi a s $itemCount platbami bylo odstraněno"
             );
-            return new \RedirectHelper('/admin/platby/structure/category/remove/' . $id);
+            \Redirect::to('/admin/platby/structure/category/remove/' . $id);
         } elseif ($_POST['action'] == 'archive') {
             \DBPlatbyCategory::update(
                 $id,
@@ -271,13 +271,13 @@ class PlatbyCategory
                 $data['pc_visible']
             );
             new \MessageHelper('info', 'Specifický symbol "' . $data['pc_symbol'] . '" byl archivován');
-            return new \RedirectHelper('/admin/platby/structure/category');
+            \Redirect::to('/admin/platby/structure/category');
         }
         if ($f) {
-            return new \RedirectHelper('/admin/platby/structure/category/remove/' . $id);
+            \Redirect::to('/admin/platby/structure/category/remove/' . $id);
         }
         \DBPlatbyCategory::delete($id);
-        new \RedirectHelper($_POST['returnURI'] ?? '/admin/platby/structure/category');
+        \Redirect::to($_POST['returnURI'] ?? '/admin/platby/structure/category');
     }
 
     protected static function getLinkedObjects($id)

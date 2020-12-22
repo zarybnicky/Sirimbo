@@ -51,7 +51,7 @@ class Rozpis
                 $item['r_lock'] ? '1' : '0'
             );
         }
-        new \RedirectHelper('/admin/rozpis');
+        \Redirect::to('/admin/rozpis');
     }
 
     public static function add()
@@ -76,7 +76,7 @@ class Rozpis
             $_POST['visible'] ? '1' : '0',
             $_POST['lock'] ? '1' : '0'
         );
-        new \RedirectHelper('/admin/rozpis');
+        \Redirect::to('/admin/rozpis');
     }
 
     public static function edit($id)
@@ -84,7 +84,7 @@ class Rozpis
         \Permissions::checkError('rozpis', P_OWNED);
         if (!$data = \DBRozpis::getSingleRozpis($id)) {
             new \MessageHelper('warning', 'Rozpis s takovým ID neexistuje');
-            new \RedirectHelper('/admin/rozpis');
+            \Redirect::to('/admin/rozpis');
         }
         \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
         return static::displayForm('edit', $data);
@@ -95,7 +95,7 @@ class Rozpis
         \Permissions::checkError('rozpis', P_OWNED);
         if (!$data = \DBRozpis::getSingleRozpis($id)) {
             new \MessageHelper('warning', 'Rozpis s takovým ID neexistuje');
-            new \RedirectHelper('/admin/rozpis');
+            \Redirect::to('/admin/rozpis');
         }
         \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
         $form = static::checkData();
@@ -111,7 +111,7 @@ class Rozpis
             $_POST['visible'] ? '1' : '0',
             $_POST['lock'] ? '1' : '0'
         );
-        new \RedirectHelper('/admin/rozpis');
+        \Redirect::to('/admin/rozpis');
     }
 
     public static function duplicate($id)
@@ -135,7 +135,7 @@ class Rozpis
                 $item['ri_lock']
             );
         }
-        new \RedirectHelper('/admin/rozpis');
+        \Redirect::to('/admin/rozpis');
     }
 
     public static function remove($id)
@@ -146,7 +146,7 @@ class Rozpis
             throw new \AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
         }
         \DBRozpis::removeRozpis($id);
-        new \RedirectHelper('/admin/rozpis');
+        \Redirect::to('/admin/rozpis');
     }
 
     protected static function displayForm($action, $data = null)

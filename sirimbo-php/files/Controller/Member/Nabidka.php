@@ -71,7 +71,7 @@ class Nabidka
         $form = static::checkData($data);
         if (!$form->isValid()) {
             new \MessageHelper('warning', $form->getMessages());
-            new \RedirectHelper('/member/nabidka');
+            \Redirect::to('/member/nabidka');
         }
         if ($_POST['hodiny'] > 0) {
             if (!\Session::getZaplacenoPar()) {
@@ -98,7 +98,7 @@ class Nabidka
                 \DBNabidka::removeNabidkaItem($n_id, $u_id);
             }
         }
-        new \RedirectHelper('/member/nabidka');
+        \Redirect::to('/member/nabidka');
     }
 
     private static function checkData($data): \Form
