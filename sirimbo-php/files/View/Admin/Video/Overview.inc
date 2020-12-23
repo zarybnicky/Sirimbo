@@ -1,11 +1,11 @@
 <div class="container">
   <ul class="nav nav-tabs">
     <li class="nav-item">
-      <a class="nav-link <?= $this->action == 'orphan' ? 'active' : '' ?>"
+      <a class="nav-link <?= $action == 'orphan' ? 'active' : '' ?>"
          style="color:#303C3C!important" href="/admin/video/orphan">Jednotlivá videa</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link <?= $this->action == 'playlist' ? 'active' : '' ?>"
+      <a class="nav-link <?= $action == 'playlist' ? 'active' : '' ?>"
          style="color:#303C3C!important" href="/admin/video/playlist">Playlisty</a>
     </li>
     <li class="nav-item">
@@ -17,8 +17,8 @@
   </ul>
   <a class="btn btn-primary" href="/admin/video/add">Nové video</a>
   <form action="" method="post">
-    <?php if ($this->data) : ?>
-      <?= (new TableHelper($this->data))
+    <?php if ($data) : ?>
+      <?= (new TableHelper($data))
              ->style('width:100%')
              ->column('buttons', '', null, 'width:55px')
              ->column('title', 'Jméno')
@@ -28,5 +28,5 @@
       <?= new NoticeHelper('Žádná videa') ?>
     <?php endif ?>
   </form>
-  <div style="text-align:center"><?= $this->navigation ?></div>
+  <div style="text-align:center"><?= $navigation ?></div>
 </div>

@@ -1,4 +1,4 @@
-<?php new \RenderHelper('files/View/Member/Clenove/Navigation.inc', ['uri' => $this->uri], true) ?>
+<?php new \RenderHelper('files/View/Member/Clenove/Navigation.inc', ['uri' => $uri], true) ?>
 <div class="container">
-  <?= (new TableHelper($this->data))->column('index', '', 'r')->column('fullName', 'Jméno') ?>
+  <?= (new TableHelper($data))->column('index', '', 'r')->column('fullName', 'Jméno') ?>
 </div>

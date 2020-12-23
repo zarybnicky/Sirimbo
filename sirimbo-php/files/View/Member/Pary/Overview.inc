@@ -9,7 +9,7 @@
       <th>Body</th>
     </tr>
 
-    <?php $i = 1; foreach ($this->data as $item): ?>
+    <?php $i = 1; foreach ($data as $item): ?>
       <tr>
         <td style="text-align:right;"><?= $i++ ?>. </td>
         <td><?= $item['partnerName'] ?></td>

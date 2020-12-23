@@ -41,7 +41,7 @@
 
 <div class="container">
 
-  <?php foreach ($this->videos as $item): ?>
+  <?php foreach ($videos as $item): ?>
     <a class="row video-item" href="<?= $item['uri'] ?>">
       <div class="col-sm-auto p-0 pb-2">
         <img src="<?= $item['thumbnail'] ?>" style="width:150px" />
@@ -53,9 +53,9 @@
     </a>
   <?php endforeach ?>
 
-  <?php if ($this->videos) : ?><h3>Seznamy videí</h3><?php endif ?>
-  <?php foreach ($this->playlists as $item): ?>
-    <div class="playlist <?= isset($this->playlist) && ($this->playlist == $item['id']) ? 'active' : '' ?>">
+  <?php if ($videos) : ?><h3>Seznamy videí</h3><?php endif ?>
+  <?php foreach ($playlists as $item): ?>
+    <div class="playlist <?= isset($playlist) && ($playlist == $item['id']) ? 'active' : '' ?>">
       <a href="/video?playlist=<?= $item['id'] ?>">
         <b><?= $item['title'] ?></b>
       </a>

@@ -1,4 +1,4 @@
-<?php new \RenderHelper('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri], true) ?>
+<?php new \RenderHelper('files/View/Admin/Platby/Navigation.inc', ['uri' => $uri], true) ?>
 
 <div class="container full">
 <form action="" method="post">
@@ -6,19 +6,19 @@
         [
             'desc' => 'Typ:',
             'value' => (
-                (new \RadioHelper('type', '0', $this->type == '0')) ->label('Běžné platby')
+                (new \RadioHelper('type', '0', $type == '0')) ->label('Běžné platby')
                 . '<br/>' .
-                (new \RadioHelper('type', '1', $this->type == '1'))->label('Členské příspěvky')
+                (new \RadioHelper('type', '1', $type == '1'))->label('Členské příspěvky')
             )
         ], [
             'desc' => 'Jméno:',
-            'value' => new \TextHelper('name', $this->name)
+            'value' => new \TextHelper('name', $name)
         ], [
             'desc' => 'Popis: ',
-            'value' => '<textarea class="form-control" rows="10" cols="50" name="description">' . $this->description . '</textarea>'
+            'value' => '<textarea class="form-control" rows="10" cols="50" name="description">' . $description . '</textarea>'
         ], [
             'desc' => 'Násobitel částky: ',
-            'value' => new \TextHelper('base', $this->base)
+            'value' => new \TextHelper('base', $base)
         ]
     ]))
     ->showHeader(false)
@@ -26,7 +26,7 @@
     ->column('value', 'Hodnota') ?>
     <br>
     <h3>Specifické symboly</h3>
-    <?= (new \TableHelper($this->category))
+    <?= (new \TableHelper($category))
              ->column('buttons', '')
              ->column('name', 'Jméno')
              ->column('specific', 'Specifický<br/>symbol')
@@ -38,12 +38,12 @@
              ->column('archive', 'Je neaktivní') ?>
     <br/>
     <h3>Skupiny</h3>
-    <?= (new \TableHelper($this->skupiny))
+    <?= (new \TableHelper($skupiny))
              ->column('buttons', '')
              ->column('name', 'Jméno') ?>
     <br/>
-    <?= new \HiddenHelper('returnURI', $this->returnURI) ?>
+    <?= new \HiddenHelper('returnURI', $returnURI) ?>
     <?= (new \SubmitHelper('Uložit'))->data('action', 'confirm') ?>
-    <a class="btn btn-outline-primary" href="<?= $this->returnURI ?>">Zpět</a><br/>
+    <a class="btn btn-outline-primary" href="<?= $returnURI ?>">Zpět</a><br/>
 </form>
 </div>

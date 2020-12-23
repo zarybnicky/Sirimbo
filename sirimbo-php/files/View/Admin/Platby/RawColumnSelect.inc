@@ -1,9 +1,9 @@
-<?php new \RenderHelper('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri], true) ?>
+<?php new \RenderHelper('files/View/Admin/Platby/Navigation.inc', ['uri' => $uri], true) ?>
 
 <h3>Určení požadovaných sloupců</h3>
 <div class="container">
   <form action="" method="post">
-<?= (new TableHelper($this->data))
+<?= (new TableHelper($data))
     ->style('width:100%')
     ->column('column', 'Název sloupce', '', 'text-align:right;')
     ->column('specific', 'Specifický<br/>symbol', 'center')

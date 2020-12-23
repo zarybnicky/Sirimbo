@@ -1,6 +1,6 @@
 <div class="container">
     <form action="" method="GET">
-      <?= (new \SelectHelper('kat', [], $this->kat))
+      <?= (new \SelectHelper('kat', [], $kat))
                ->option('', '---VŠE---')
                ->option('1', 'Schůze, rady')
                ->option('2', 'Soutěže')
@@ -17,7 +17,7 @@
       <th>Kategorie</th>
       <th>Uploadoval</th>
     </tr>
-    <?php foreach ($this->data as $item): ?>
+    <?php foreach ($data as $item): ?>
       <tr>
         <td><?= $item['name'] ?></td>
         <td><a href="/member/download?id=<?= $item['id'] ?>">

@@ -1,11 +1,11 @@
 <div class="trenink-header">
-  <div class="title"><?= $this->fullName ?></div>
-  <div class="date"><?= $this->datum ?></div>
-  <div><?= $this->kde ?></div>
+  <div class="title"><?= $fullName ?></div>
+  <div class="date"><?= $datum ?></div>
+  <div><?= $kde ?></div>
 
-  <?php if ($this->canEdit): ?>
+  <?php if ($canEdit): ?>
     Admin:
-    <a href="/admin/rozpis/edit/<?= $this->id ?>">obecné</a>
-    <a href="/admin/rozpis/detail/<?= $this->id ?>">tréninky</a>
+    <a href="/admin/rozpis/edit/<?= $id ?>">obecné</a>
+    <a href="/admin/rozpis/detail/<?= $id ?>">tréninky</a>
   <?php endif ?>
 </div>

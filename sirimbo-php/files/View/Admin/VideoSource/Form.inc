@@ -5,18 +5,18 @@
         ID kanálu (např. <code>https://www.youtube.com/channel/<b>UCopG139AfgpmaswNXmEwX2Q</b></code>)<br>
         Ostatní pole se později zjistí z YouTube, pokud zůstanou prázdná.
       </label>
-      <?= new \TextHelper('uri', $this->uri) ?>
+      <?= new \TextHelper('uri', $uri) ?>
     </div>
     <div class="form-group">
       <label for="title">Jméno</label>
-      <?= new \TextHelper('title', $this->title ?: '') ?>
+      <?= new \TextHelper('title', $title ?: '') ?>
     </div>
     <div class="form-group">
       <label for="desc">Popis</label>
-      <?= new \TextHelper('desc', $this->desc ?: '') ?>
+      <?= new \TextHelper('desc', $desc ?: '') ?>
     </div>
     <div class="form-group">
-      <?= new \SubmitHelper($this->action) ?>
+      <?= new \SubmitHelper($action) ?>
       <a class="btn btn-outline-primary" href="/admin/video/source">Zpět</a>
     </div>
   </form>

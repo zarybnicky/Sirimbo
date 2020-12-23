@@ -1,8 +1,8 @@
-<?php new \RenderHelper('files/View/Member/Clenove/Navigation.inc', ['uri' => $this->uri], true) ?>
+<?php new \RenderHelper('files/View/Member/Clenove/Navigation.inc', ['uri' => $uri], true) ?>
 
 <div class="container">
-  <h2><?= $this->fullName ?></h2>
-  E-mail: <?= $this->email ?><br/>
-  Telefon: <?= $this->telefon ?><br/>
-  <a class="btn btn-outline-primary" href="<?= $this->returnURI ?>">Zpět</a>
+  <h2><?= $fullName ?></h2>
+  E-mail: <?= $email ?><br/>
+  Telefon: <?= $telefon ?><br/>
+  <a class="btn btn-outline-primary" href="<?= $returnURI ?>">Zpět</a>
 </div>

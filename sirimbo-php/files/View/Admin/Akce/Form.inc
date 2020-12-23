@@ -2,37 +2,37 @@
   <form action="" method="POST">
     <div class="form-group">
       <label for="jmeno">Název akce</label>
-      <?= (new \TextHelper('jmeno', $this->jmeno))->placeholder('Název akce') ?>
+      <?= (new \TextHelper('jmeno', $jmeno))->placeholder('Název akce') ?>
     </div>
     <div class="form-group">
       <label for="kde">Název akce</label>
-      <?= (new \TextHelper('kde', $this->kde))->placeholder('Místo akce') ?>
+      <?= (new \TextHelper('kde', $kde))->placeholder('Místo akce') ?>
     </div>
     <div class="form-group">
       <label for="info">Další info</label>
-      <textarea class="form-control" name="info" rows="15"><?= $this->info ?></textarea>
+      <textarea class="form-control" name="info" rows="15"><?= $info ?></textarea>
     </div>
     <div class="form-group">
       <label for="od">Den začátku (*)</label>
-      <?= new \DateHelper('od', $this->od) ?>
+      <?= new \DateHelper('od', $od) ?>
     </div>
     <div class="form-group">
       <label for="od">Den konce (*)</label>
-      <?= new \DateHelper('do', $this->do) ?>
+      <?= new \DateHelper('do', $do) ?>
       <small class="form-text text-muted">(pokud je prázdné, počítá se jako "Od")</small>
     </div>
     <div class="form-group">
       <label for="kapacita">Kapacita (*)</label>
-      <?= new \TextHelper('kapacita', $this->kapacita) ?>
+      <?= new \TextHelper('kapacita', $kapacita) ?>
     </div>
     <div class="form-check">
-      <?= new \CheckboxHelper('visible', 'visible', $this->visible, 'Zviditelnit') ?>
+      <?= new \CheckboxHelper('visible', 'visible', $visible, 'Zviditelnit') ?>
     </div>
     <div class="form-check">
-      <?= new \CheckboxHelper('lock', 'lock', $this->lock, 'Uzamknout') ?>
+      <?= new \CheckboxHelper('lock', 'lock', $lock, 'Uzamknout') ?>
     </div>
     <div class="form-group">
-      <?= new \SubmitHelper($this->action) ?>
+      <?= new \SubmitHelper($action) ?>
       <a class="btn btn-outline-primary" href="/admin/akce">Zpět</a>
     </div>
   </form>

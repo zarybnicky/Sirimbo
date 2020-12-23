@@ -1,19 +1,19 @@
 <div class="container">
   <form class="form-inline" action="" method="get">
     <div class="form-group">
-      <?= new \SelectHelper('dir', array_merge(['none' => '------ vyberte složku ------'], $this->dirs), $this->dir ?: 'none') ?>
+      <?= new \SelectHelper('dir', array_merge(['none' => '------ vyberte složku ------'], $dirs), $dir ?: 'none') ?>
     </div>
     <div class="form-group"><?= new \SubmitHelper('Zobrazit') ?></div>
   </form>
 
   <form action="" method="post">
-    <?php foreach ($this->photos as $item): ?>
+    <?php foreach ($photos as $item): ?>
       <div class="foto_preview">
         <div class="foto_preview_in">
           <img alt="<?= $item['id'] ?>" src="<?= $item['src'] ?>" />
         </div>
         <div class="foto_desc">
-          <?= (new \RadioHelper('foto', $item['id'], $item['id'] == $this->checked))->label($item['name']) ?>
+          <?= (new \RadioHelper('foto', $item['id'], $item['id'] == $checked))->label($item['name']) ?>
           <br/><br/>
         </div>
       </div>

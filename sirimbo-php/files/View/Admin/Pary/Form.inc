@@ -1,34 +1,34 @@
 <div class="container">
   <form action="" method="POST">
-    <h3>Pár: <?= $this->fullName ?></h3>
+    <h3>Pár: <?= $fullName ?></h3>
     <h4>Standard</h4>
     <div class="form-group">
       <label for="stt-trida">Třída</label>
-      <?= (new \SelectHelper('stt-trida', [], $this->stt_trida))
+      <?= (new \SelectHelper('stt-trida', [], $stt_trida))
              ->options(['Z', 'H', 'D', 'C', 'B', 'A', 'M'], true, true) ?>
     </div>
     <div class="form-group">
       <label for="stt-body">Body</label>
-      <?= new \TextHelper('stt-body', $this->stt_body) ?>
+      <?= new \TextHelper('stt-body', $stt_body) ?>
     </div>
     <div class="form-group">
       <label for="stt-finale">Finále</label>
-      <?= new \TextHelper('stt-finale', $this->stt_finale) ?>
+      <?= new \TextHelper('stt-finale', $stt_finale) ?>
     </div>
 
     <h4>Latina</h4>
     <div class="form-group">
       <label for="lat-trida">Třída</label>
-      <?= (new \SelectHelper('lat-trida', [], $this->lat_trida))
+      <?= (new \SelectHelper('lat-trida', [], $lat_trida))
              ->options(['Z', 'H', 'D', 'C', 'B', 'A', 'M'], true, true) ?>
     </div>
     <div class="form-group">
       <label for="lat-body">Body</label>
-      <?= new \TextHelper('lat-body', $this->lat_body) ?>
+      <?= new \TextHelper('lat-body', $lat_body) ?>
     </div>
     <div class="form-group">
       <label for="lat-finale">Finále</label>
-      <?= new \TextHelper('lat-finale', $this->lat_finale) ?>
+      <?= new \TextHelper('lat-finale', $lat_finale) ?>
     </div>
     <div class="form-group">
       <?= (new \SubmitHelper('Upravit'))->data('action', 'edit_confirm') ?>

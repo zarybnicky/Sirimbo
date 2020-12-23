@@ -5,31 +5,31 @@
             <tr>
                 <td>Uživatelé:</td>
                 <td>
-                    <?= new \SelectHelper('status', $this->statusOptions, $this->status ?: 'all') ?>
+                    <?= new \SelectHelper('status', $statusOptions, $status ?: 'all') ?>
                 </td>
             </tr>
             <tr>
                 <td>Skupina:</td>
                 <td>
-                    <?= new \SelectHelper('skupina', $this->skupinyOptions, $this->skupina ?: 'all') ?>
+                    <?= new \SelectHelper('skupina', $skupinyOptions, $skupina ?: 'all') ?>
                 </td>
             </tr>
             <tr>
                 <td>Oprávnění:</td>
                 <td>
-                    <?= new \SelectHelper('group', $this->groupOptions, $this->group ?: 'all') ?>
+                    <?= new \SelectHelper('group', $groupOptions, $group ?: 'all') ?>
                 </td>
             </tr>
             <tr>
                 <td>Řadit podle:</td>
                 <td>
-                    <?= new \SelectHelper('sort', $this->sortOptions, $this->sort ?: 'prijmeni') ?>
+                    <?= new \SelectHelper('sort', $sortOptions, $sort ?: 'prijmeni') ?>
                 </td>
             </tr>
             <tr>
                 <td>Zobrazení:</td>
                 <td>
-                    <?= new \SelectHelper('view', ['info' => 'informace', 'status' => 'status uživatele'], $this->view ?: 'info') ?>
+                    <?= new \SelectHelper('view', ['info' => 'informace', 'status' => 'status uživatele'], $view ?: 'info') ?>
                 </td>
             </tr>
             <tr>
@@ -44,23 +44,23 @@
     <a href="/admin/users/unconfirmed" class="btn btn-outline-primary">Nepotvrzení uživatelé</a>
     <a href="/admin/users/statistiky" class="btn btn-outline-primary">Statistiky</a>
     <a href="/admin/users/getMsmtCsv" class="btn btn-outline-primary">MŠMT export</a>
-    <?php if ($this->view == 'status'): ?>
+    <?php if ($view == 'status'): ?>
       <button class="btn btn-primary" name="action" value="save">Uložit změny</button>
     <?php endif ?>
     <br>
 
 <?php
-if (!$this->data) {
+if (!$data) {
     echo new \NoticeHelper('Žádní takoví uživatelé');
     echo '</div>';
     return;
 }
-$table = (new TableHelper($this->data))
+$table = (new TableHelper($data))
     ->style('width:100%')
     ->column('checkBox', '')
     ->column('index', '')
     ->column('fullName', 'Jméno');
-if ($this->view == 'status') {
+if ($view == 'status') {
     $table->column('skupina', '')
         ->column('groupInfo', 'Oprávnění')
         ->column('system', 'Systémový<br/>uživatel', 'center')
@@ -74,5 +74,5 @@ if ($this->view == 'status') {
 echo $table;
 ?>
 </form>
-<div style="text-align:center"><?= $this->navigation ?></div>
+<div style="text-align:center"><?= $navigation ?></div>
 </div>

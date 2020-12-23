@@ -1,6 +1,6 @@
 <div class="container">
   <div class="center">
-    <?= (new TableHelper($this->data))
+    <?= (new TableHelper($data))
            ->style('margin:0 auto;')
            ->column('group', '', 'r')
            ->column('count', 'Počet', 'center big') ?>

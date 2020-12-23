@@ -1,5 +1,5 @@
 <div class="container">
-  <?php foreach ($this->data as $row) : ?>
+  <?php foreach ($data as $row) : ?>
     <div class="row mb-2">
       <div class="col-md-auto align-self-center">
         <img style="max-width:100%" src="<?= $row['title_photo_thumb_uri'] ?>" />

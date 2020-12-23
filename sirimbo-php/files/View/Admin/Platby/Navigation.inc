@@ -1,8 +1,5 @@
 <?php
-$uri = $this->uri;
-$isActive = function ($href) use ($uri) {
-    return strripos($uri, $href) !== (strlen($uri) - strlen($href));
-};
+$isActive = fn($href) => strripos($uri, $href) !== (strlen($uri) - strlen($href));
 $getItem = function ($name, $href) use ($isActive) {
     $href = 'admin/' . $href;
     if ($isActive($href)) {

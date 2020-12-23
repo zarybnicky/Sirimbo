@@ -1,8 +1,8 @@
-<?php new \RenderHelper('files/View/Member/Clenove/Navigation.inc', ['uri' => $this->uri], true) ?>
+<?php new \RenderHelper('files/View/Member/Clenove/Navigation.inc', ['uri' => $uri], true) ?>
 
 <div class="container">
   <div class="row flex-wrap">
-    <?php foreach ($this->columns as $col) : ?>
+    <?php foreach ($columns as $col) : ?>
       <div class="col-12 col-md-6">
         <?php foreach ($col as $skupina) : ?>
           <?= (new TableHelper($skupina['users']))

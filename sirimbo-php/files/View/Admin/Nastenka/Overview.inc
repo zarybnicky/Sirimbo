@@ -2,12 +2,12 @@
   <form action="" method="POST">
     <a href="/admin/nastenka/add" class="btn btn-primary">Přidat</a>
 <?php
-if (empty($this->data)) {
+if (empty($data)) {
     echo new NoticeHelper('Žádné příspěvky na nástěnkce');
     return;
 }
-$tbl = (new TableHelper($this->data))->style('width:100%');
-if ($this->showButtonsCol) {
+$tbl = (new TableHelper($data))->style('width:100%');
+if ($showButtonsCol) {
     $tbl->column('buttons', '');
 }
 echo $tbl->column('header', 'Nadpis')
@@ -16,5 +16,5 @@ echo $tbl->column('header', 'Nadpis')
         ->column('timestampAdd', 'Přidáno', '', 'min-width:83px;');
 ?>
   </form>
-  <div style="text-align:center;"><?= $this->navigation ?></div>
+  <div style="text-align:center;"><?= $navigation ?></div>
 </div>

@@ -1,6 +1,6 @@
 <div class="container">
   <div class="row flex-wrap flex-space-around">
-    <?php foreach ($this->akce as $item): ?>
+    <?php foreach ($akce as $item): ?>
       <div class="col-12 col-lg-6 pb-2 text-center">
         <form action="" method="post">
           <?php new \RenderHelper('files/View/Member/Akce/Header.inc', $item, true) ?>

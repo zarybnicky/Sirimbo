@@ -2,8 +2,8 @@
   <form action="" method="POST">
     <button type="submit" name="action" value="add" style="display:none;">Enter</button>
     <div class="n_wrapper">
-      <?php new \RenderHelper('files/View/Member/Nabidka/Header.inc', $this->nabidka, true) ?>
-      <?= (new \TableHelper($this->items))
+      <?php new \RenderHelper('files/View/Member/Nabidka/Header.inc', $nabidka, true) ?>
+      <?= (new \TableHelper($items))
              ->column('user', 'Tanečník')
              ->column('lessonCount', 'Počet hodin')
              ->column('removeButton', '');

@@ -1,6 +1,6 @@
 <div class="container">
   <form action="" method="POST">
-    <b><?= $this->name ?></b><br><br>
+    <b><?= $name ?></b><br><br>
     <div class="form-group">
       <?= (new \TextHelper('newname', ''))->placeholder('Nový název') ?>
     </div>

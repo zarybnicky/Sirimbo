@@ -1,13 +1,12 @@
 <div class="container">
   <?php
-  $data = $this->data;
   unset($data['info']);
   unset($data['dokumenty']);
   new \RenderHelper('files/View/Member/Akce/Header.inc', $data, true);
   ?>
 
   <div style="text-align:center;">
-    <?php if (empty($this->data['items'])) : ?>
+    <?php if (empty($data['items'])) : ?>
       Nikdo není přihlášený<br/>
     <?php else: ?>
       <table style="margin:0 auto;text-align:left">
@@ -16,7 +15,7 @@
           <th>Příjmení</th>
           <th>Skupiny</th>
         </tr>
-        <?php foreach ($this->data['items'] as $item) : ?>
+        <?php foreach ($data['items'] as $item) : ?>
           <tr>
             <td><?= $item['u_jmeno'] ?></td>
             <td><?= $item['u_prijmeni'] ?></td>

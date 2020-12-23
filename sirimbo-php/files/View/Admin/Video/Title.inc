@@ -14,8 +14,8 @@
     </li>
   </ul>
   <form action="" method="post">
-    <?= $this->video1 ?> <?= $this->video2 ?><br>
-    <?= $this->video3 ?> <?= $this->video4 ?><br>
+    <?= $video1 ?> <?= $video2 ?><br>
+    <?= $video3 ?> <?= $video4 ?><br>
     <?= new \SubmitHelper('Uložit') ?><br>
   </form>
 </div>

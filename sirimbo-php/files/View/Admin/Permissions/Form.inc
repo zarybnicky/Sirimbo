@@ -3,16 +3,16 @@
     <div class="form-group row">
       <label for="name" class="col-sm-2 col-form-label">Jméno</label>
       <div class="col-sm-10">
-        <?= (new \TextHelper('name', $this->name))->cls('form-control') ?>
+        <?= (new \TextHelper('name', $name))->cls('form-control') ?>
       </div>
     </div>
     <div class="form-group row">
       <label for="description" class="col-sm-2 col-form-label">Popis</label>
       <div class="col-sm-10">
-        <?= (new \TextHelper('description', $this->description))->size(35)->cls('form-control') ?>
+        <?= (new \TextHelper('description', $description))->size(35)->cls('form-control') ?>
       </div>
     </div>
-    <?php foreach ($this->settings as $item): ?>
+    <?php foreach ($settings as $item): ?>
       <div class="form-group row">
         <div class="col-sm-2"><?= $item['name'] ?></div>
         <?php foreach ($item['items'] as $level): ?>
@@ -23,7 +23,7 @@
     <div class="form-group row">
       <div class="col-sm-2"></div>
       <div class="col-sm-10">
-        <?= new \SubmitHelper($this->action == 'add' ? 'Přidat' : 'Upravit') ?>
+        <?= new \SubmitHelper($action == 'add' ? 'Přidat' : 'Upravit') ?>
         <a class="btn btn-outline-primary" href="/admin/permissions">Zpět</a>
       </div>
     </div>

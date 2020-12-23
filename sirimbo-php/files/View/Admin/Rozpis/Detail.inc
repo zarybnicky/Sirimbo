@@ -2,7 +2,7 @@
   <form action="" method="POST">
     <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
     <div class="r_wrapper">
-      <?php new \RenderHelper('files/View/Member/Rozpis/Header.inc', $this->data, true) ?>
+      <?php new \RenderHelper('files/View/Member/Rozpis/Header.inc', $data, true) ?>
       <table>
         <tr>
           <td>Tanečník</td>
@@ -12,8 +12,8 @@
           <td>Zámek</td>
         </tr>
         <?php
-        $userselect = (new \UserSelectHelper($this->users))->idVar('p_id')->type('par');
-        foreach ($this->items as $item) :
+        $userselect = (new \UserSelectHelper($users))->idVar('p_id')->type('par');
+        foreach ($items as $item) :
         ?>
           <tr>
             <td><?= $userselect->name($item['id'] . '-partner')->set($item['partner']) ?></td>
@@ -46,17 +46,17 @@
   <br/>
   <h2>Nabídky</h2>
   <form action="" method="get">
-    <?= new \SelectHelper('n', array_merge(['' => '---'], $this->nabidky), $this->selected_nabidka) ?>
+    <?= new \SelectHelper('n', array_merge(['' => '---'], $nabidky), $selected_nabidka) ?>
     <?= new \SubmitHelper('Vybrat nabídku') ?>
-    <?php if ($this->nabidka) : ?>
+    <?php if ($nabidka) : ?>
       <div class="n_wrapper">
-        <?php new \RenderHelper('files/View/Member/Nabidka/Header.inc', $this->nabidka, true) ?>
+        <?php new \RenderHelper('files/View/Member/Nabidka/Header.inc', $nabidka, true) ?>
         <table>
           <tr>
             <td>Tanečník</td>
             <td>Počet hodin</td>
           </tr>
-          <?php foreach ($this->nabidka['items'] as $item) : ?>
+          <?php foreach ($nabidka['items'] as $item) : ?>
             <tr>
               <td><?= $item['fullName'] ?></td>
               <td><?= $item['lessonCount'] ?></td>

@@ -15,8 +15,8 @@
   </ul>
   <a class="btn btn-primary" href="/admin/video/source/add">Nový zdroj</a>
   <form action="" method="post">
-    <?php if ($this->data) : ?>
-      <?= (new TableHelper($this->data))
+    <?php if ($data) : ?>
+      <?= (new TableHelper($data))
              ->style('width:100%')
              ->column('buttons', '', null, 'width:55px')
              ->column('title', 'Jméno')

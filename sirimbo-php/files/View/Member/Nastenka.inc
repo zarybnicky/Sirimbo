@@ -1,5 +1,5 @@
 <div class="container">
-  <?php foreach ($this->data as $item): ?>
+  <?php foreach ($data as $item): ?>
     <div>
       <div class="up_header">
         <div style="float:left;">
@@ -28,5 +28,5 @@
     </div>
     <hr/>
   <?php endforeach ?>
-  <div style="text-align:center;"><?= $this->navigation ?></div>
+  <div style="text-align:center;"><?= $navigation ?></div>
 </div>

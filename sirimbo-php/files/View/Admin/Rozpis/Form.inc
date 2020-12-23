@@ -2,24 +2,24 @@
   <form action="" method="POST">
     <div class="form-group">
       <label for="trener">Trenér</label>
-      <?= (new UserSelectHelper($this->treneri, 'trener'))->set($this->trener) ?>
+      <?= (new UserSelectHelper($treneri, 'trener'))->set($trener) ?>
     </div>
     <div class="form-group">
       <label for="kde">Místo</label>
-      <?= new \TextHelper('kde', $this->kde) ?>
+      <?= new \TextHelper('kde', $kde) ?>
     </div>
     <div class="form-group">
       <label for="datum">Datum</label>
-      <?= new \DateHelper('datum', $this->datum) ?>
+      <?= new \DateHelper('datum', $datum) ?>
     </div>
     <div class="form-check">
-      <?= new \CheckboxHelper('visible', 'visible', $this->visible, 'Zviditelnit') ?>
+      <?= new \CheckboxHelper('visible', 'visible', $visible, 'Zviditelnit') ?>
     </div>
     <div class="form-check">
-      <?= new \CheckboxHelper('lock', 'lock', $this->lock, 'Uzamknout') ?>
+      <?= new \CheckboxHelper('lock', 'lock', $lock, 'Uzamknout') ?>
     </div>
     <div class="form-group">
-      <?= new \SubmitHelper($this->action == 'add' ? 'Přidat' : 'Upravit') ?>
+      <?= new \SubmitHelper($action == 'add' ? 'Přidat' : 'Upravit') ?>
       <a class="btn btn-outline-primary" href="/admin/rozpis">Zpět</a>
     </div>
   </form>

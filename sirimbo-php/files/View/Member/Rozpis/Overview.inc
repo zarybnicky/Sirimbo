@@ -1,6 +1,6 @@
 <div class="container">
   <div class="row flex-wrap flex-space-around">
-    <?php foreach ($this->data as $item): ?>
+    <?php foreach ($data as $item): ?>
       <div class="col-12 col-md-6 col-lg-4 pb-2">
         <div class="widget">
           <div class="widget-title center">

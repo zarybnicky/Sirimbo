@@ -5,7 +5,7 @@
     <li data-target="#carousel" data-slide-to="2"></li>
   </ol>
   <div class="carousel-inner">
-    <?php $first = true; foreach ($this->highlights as $item): ?>
+    <?php $first = true; foreach ($highlights as $item): ?>
       <div class="carousel-item<?php if ($first) { echo " active"; $first = false; } ?>"
           style="background-image:linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.4)),url(<?= $item['title_photo_uri'] ?>)">
         <img src="<?= $item['title_photo_uri'] ?>" alt="First slide" />
@@ -150,7 +150,7 @@
     <div class="col-md-6">
       <h3><a href="/aktualne">Aktuálně</a></h3>
       <div class="row">
-        <?php foreach ($this->moreArticles as $item): ?>
+        <?php foreach ($moreArticles as $item): ?>
           <div class="col-12 col-md-6 pb-2">
             <div class="article-small card">
               <a class="card-img-top image" href="<?= $item['uri'] ?>">
@@ -174,7 +174,7 @@
     <div class="col-md-6">
       <h3><a href="/video">Videa ze soutěží</a></h3>
       <ul class="list-group">
-        <?php foreach ($this->videos as $x): ?>
+        <?php foreach ($videos as $x): ?>
           <li class="list-group-item">
             <a class="video row" href="<?= $x['link'] ?>">
               <div class="col-4"><img style="max-width:100%" alt="" src="<?= $x['image'] ?>"/></div>

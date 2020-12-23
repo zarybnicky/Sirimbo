@@ -1,7 +1,7 @@
 <div class="container">
     <form action="" method="POST">
-        <?php new \RenderHelper('files/View/Member/Akce/Header.inc', $this->data, true) ?>
-        <?= (new \TableHelper($this->items))
+        <?php new \RenderHelper('files/View/Member/Akce/Header.inc', $data, true) ?>
+        <?= (new \TableHelper($items))
                  ->column('name', 'Uživatel')
                  ->column('removeButton', '') ?>
         <?= new \SubmitHelper('Uložit') ?>

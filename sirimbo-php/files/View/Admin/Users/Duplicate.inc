@@ -1,6 +1,6 @@
 <div class="container">
   <form action="" method="POST">
-    <?= (new TableHelper($this->data))
+    <?= (new TableHelper($data))
            ->style('width:100%')
            ->column('buttons', '')
            ->column('fullName', 'Jméno')

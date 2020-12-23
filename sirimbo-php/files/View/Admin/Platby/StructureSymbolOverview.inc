@@ -1,9 +1,9 @@
-<?php new \RenderHelper('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri], true)?>
+<?php new \RenderHelper('files/View/Admin/Platby/Navigation.inc', ['uri' => $uri], true)?>
 
 <div class="container">
     <form action="" method="post">
         <a href="/admin/platby/structure/category/add">Přidat specifický symbol</a>
-        <?= (new TableHelper($this->data))
+        <?= (new TableHelper($data))
                  ->style('width:100%')
                  ->column('buttons', '', '', 'width:100px')
                  ->column('name', 'Název')
@@ -12,7 +12,7 @@
                  ->column('amount', 'Částka') ?>
         <br>
         <h2>Archivované symboly</h2>
-        <?= (new TableHelper($this->archived))
+        <?= (new TableHelper($archived))
                  ->style('width:100%')
                  ->column('buttons', '', '', 'width:100px')
                  ->column('name', 'Název')

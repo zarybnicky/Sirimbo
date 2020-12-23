@@ -1,4 +1,4 @@
-<?php new \RenderHelper('files/View/Admin/Platby/Navigation.inc', ['uri' => $this->uri], true) ?>
+<?php new \RenderHelper('files/View/Admin/Platby/Navigation.inc', ['uri' => $uri], true) ?>
 
 <div class="container full">
     <form action="" method="get">
@@ -8,8 +8,8 @@
                 <td>uživatel</td>
                 <td>
                     <?php
-                    $s = new \SelectHelper('user', ['all' => '---'], $this->user ?: 'all');
-                    foreach ($this->users as $user) {
+                    $s = new \SelectHelper('user', ['all' => '---'], $user ?: 'all');
+                    foreach ($users as $user) {
                         $s->option($user['u_id'], $user['u_prijmeni'] . ', ' . $user['u_jmeno']);
                     }
                     echo $s;
@@ -19,12 +19,12 @@
             <tr>
                 <td>spec. symbol</td>
                 <td>
-                    <?= new \SelectHelper('category', array_merge(['all' => '---'], $this->categories), $this->category ?: 'all') ?>
+                    <?= new \SelectHelper('category', array_merge(['all' => '---'], $categories), $category ?: 'all') ?>
                 </td>
             </tr>
             <tr>
                 <td>datum</td>
-                <td><?= (new \DateHelper('date', $this->date))->range() ?></td>
+                <td><?= (new \DateHelper('date', $date))->range() ?></td>
             </tr>
             <tr>
                 <td><a href="/admin/platby/items/add" class="btn btn-primary">
@@ -37,7 +37,7 @@
     <br/>
 
 <form action="" method="POST">
-  <?= (new TableHelper($this->data))
+  <?= (new TableHelper($data))
          ->style('width:100%')
          ->column('buttons', '')
          ->column('amount', 'Částka', 'r')

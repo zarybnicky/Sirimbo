@@ -1,29 +1,29 @@
 <div class="trenink-header">
-  <div class="title"><?= $this->fullName ?></div>
-  <div class="date"><?= $this->datum ?></div>
+  <div class="title"><?= $fullName ?></div>
+  <div class="date"><?= $datum ?></div>
 
-  <?php if ($this->hourMax > 0) : ?>
+  <?php if ($hourMax > 0) : ?>
     <div>
       <span class="little">Maximálně hodin/pár:</span>
-      <span class="nadpis"><?= $this->hourMax ?></span>
+      <span class="nadpis"><?= $hourMax ?></span>
     </div>
   <?php endif ?>
   <div>
     <span class="little">Celkem hodin: </span>
-    <span class="nadpis"><?= $this->hourTotal ?></span>
+    <span class="nadpis"><?= $hourTotal ?></span>
   </div>
   <div>
     <span class="little">Obsazených hodin: </span>
-    <span class="nadpis"><?= $this->hourReserved ?></span>
+    <span class="nadpis"><?= $hourReserved ?></span>
   </div>
   <div>
     <span class="little">Volných hodin: </span>
-    <span class="nadpis"><?= $this->hourFree ?></span>
+    <span class="nadpis"><?= $hourFree ?></span>
   </div>
 
-  <?php if ($this->canEdit) : ?>
+  <?php if ($canEdit) : ?>
     Admin:
-    <a href="/admin/nabidka/edit/<?= $this->id ?>">obecné</a>,
-    <a href="/admin/nabidka/detail/<?= $this->id ?>">tréninky</a>
+    <a href="/admin/nabidka/edit/<?= $id ?>">obecné</a>,
+    <a href="/admin/nabidka/detail/<?= $id ?>">tréninky</a>
   <?php endif ?>
 </div>

@@ -2,7 +2,7 @@
     <form action="" method="POST">
         <a href="/admin/akce/add" class="btn btn-primary">Přidat</a>
         <button class="btn btn-primary" name="action" value="save">Uložit změny</button>
-        <?= (new TableHelper($this->data))
+        <?= (new TableHelper($data))
                ->style('width:100%')
                ->column('buttons', '')
                ->column('links', 'Upravit')

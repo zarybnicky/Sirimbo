@@ -1,20 +1,20 @@
 <div class="container article">
   <small>
-    <?= \Format::timestamp($this->timestamp)?>
-    <?php if ($this->canEdit) : ?>
-      &nbsp;&nbsp;- <a href="/admin/aktuality/edit/<?= $this->id ?>">Upravit</a>
+    <?= \Format::timestamp($timestamp)?>
+    <?php if ($canEdit) : ?>
+      &nbsp;&nbsp;- <a href="/admin/aktuality/edit/<?= $id ?>">Upravit</a>
     <?php endif ?>
   </small><br>
 
-  <h3><?= $this->description ?></h3>
+  <h3><?= $description ?></h3>
 
   <div class="row">
     <div class="col-md-10 col-lg-7 text-justify">
-      <img style="display:block;max-width:100%" alt="" src="<?= $this->title_photo_uri ?>" />
+      <img style="display:block;max-width:100%" alt="" src="<?= $title_photo_uri ?>" />
 
-      <?= $this->text ?>
+      <?= $text ?>
 
-      <div class="fb-comments" data-href="http://tkolymp.cz/aktualne/<?= $this->id ?>"></div>
+      <div class="fb-comments" data-href="http://tkolymp.cz/aktualne/<?= $id ?>"></div>
     </div>
   </div>
 </div>

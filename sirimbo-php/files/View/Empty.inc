@@ -1,5 +1,5 @@
-<?php if (isset($this->notice)) : ?>
+<?php if (isset($notice)) : ?>
   <div class="container">
-    <?= new NoticeHelper($this->notice) ?>
+    <?= new NoticeHelper($notice) ?>
   </div>
 <?php endif ?>

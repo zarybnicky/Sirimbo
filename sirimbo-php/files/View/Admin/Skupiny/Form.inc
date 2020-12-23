@@ -3,13 +3,13 @@
     <?= (new TableHelper([
         [
             'desc' => 'Jméno',
-            'value' => new \TextHelper('name', $this->name)
+            'value' => new \TextHelper('name', $name)
         ], [
             'desc' => 'Barva',
-            'value' => new \ColorSelectHelper('color', $this->color)
+            'value' => new \ColorSelectHelper('color', $color)
         ], [
             'desc' => 'Popis',
-            'value' => '<textarea rows="15" cols="50" name="desc">' . $this->popis . '</textarea>'
+            'value' => '<textarea rows="15" cols="50" name="desc">' . $popis . '</textarea>'
         ]
     ]))
        ->style('width:100%')
@@ -18,7 +18,7 @@
        ->column('value', '') ?>
     <br>
     <h2>Kategorie plateb</h2>
-    <?= (new \TableHelper($this->groups))
+    <?= (new \TableHelper($groups))
            ->column('buttons', '', '', 'width:90px')
            ->column('type', 'Typ')
            ->column('name', 'Jméno')
