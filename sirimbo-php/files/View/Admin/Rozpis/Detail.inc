@@ -46,7 +46,7 @@
   <br/>
   <h2>Nabídky</h2>
   <form action="" method="get">
-    <?= new \SelectHelper('n', array_merge(['' => '---'], $nabidky), $selected_nabidka) ?>
+    <?= new \SelectHelper('n', ['' => '---'] + $nabidky, $selected_nabidka) ?>
     <?= new \SubmitHelper('Vybrat nabídku') ?>
     <?php if ($nabidka) : ?>
       <div class="n_wrapper">

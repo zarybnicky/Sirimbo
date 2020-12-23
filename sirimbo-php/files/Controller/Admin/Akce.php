@@ -276,7 +276,7 @@ class Akce
                     $item['d_name'];
             }
         }
-        $documentSelect = new \SelectHelper('add-id', array_merge(['' => '---'], $allDocuments));
+        $documentSelect = new \SelectHelper('add-id', ['' => '---'] + $allDocuments);
         $documents[] = [
             'name' => (string) $documentSelect,
             'category' => (new \SubmitHelper('Přidat'))->data('add', 'add'),

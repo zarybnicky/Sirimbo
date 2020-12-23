@@ -83,6 +83,7 @@ class Member
         \Render::page('files/View/Member/Dokumenty.inc', [
             'header' => 'Dokumenty',
             'kat' => $kat,
+            'categories' => ['' => '---VŠE---'] + Admin\Dokumenty::$types,
             'data' => array_map(
                 fn($item) => [
                     'id' => $item['d_id'],

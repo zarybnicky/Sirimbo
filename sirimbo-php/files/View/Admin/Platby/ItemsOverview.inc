@@ -19,7 +19,7 @@
             <tr>
                 <td>spec. symbol</td>
                 <td>
-                    <?= new \SelectHelper('category', array_merge(['all' => '---'], $categories), $category ?: 'all') ?>
+                    <?= new \SelectHelper('category', ['all' => '---'] + $categories, $category ?: 'all') ?>
                 </td>
             </tr>
             <tr>

@@ -1,12 +1,6 @@
 <div class="container">
     <form action="" method="GET">
-      <?= (new \SelectHelper('kat', [], $kat))
-               ->option('', '---VŠE---')
-               ->option('1', 'Schůze, rady')
-               ->option('2', 'Soutěže')
-               ->option('3', 'Tábory')
-               ->option('0', 'Ostatní');
-      ?>
+      <?= new \SelectHelper('kat', $categories, $kat) ?>
       <?= new \SubmitHelper('Zobrazit') ?>
     </form>
 

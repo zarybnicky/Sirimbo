@@ -1,7 +1,7 @@
 <div class="container">
   <form class="form-inline" action="" method="get">
     <div class="form-group">
-      <?= new \SelectHelper('dir', array_merge(['none' => '------ vyberte složku ------'], $dirs), $dir ?: 'none') ?>
+      <?= new \SelectHelper('dir', ['none' => '------ vyberte složku ------'] + $dirs, $dir ?: 'none') ?>
     </div>
     <div class="form-group"><?= new \SubmitHelper('Zobrazit') ?></div>
   </form>
