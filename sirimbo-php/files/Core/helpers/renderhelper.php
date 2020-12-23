@@ -3,13 +3,6 @@ class RenderHelper
 {
     public function __construct($filename, array $vars = [], $standalone = false)
     {
-        $renderer = new \Renderer();
-        $content = $renderer->render($filename, $vars);
-
-        if ($standalone) {
-            echo $content;
-            return;
-        }
         $pos = strpos($_SERVER['REQUEST_URI'], '?');
         $uri = '/' . trim(
             substr(
@@ -18,16 +11,27 @@ class RenderHelper
             ),
             '/'
         );
+        $globals = [
+            'currentUri' => $uri,
+            'currentUser' => \Session::getUser(),
+        ];
 
-        echo $renderer->render('files/Template.inc', [
+        $renderer = new \Renderer();
+        $content = $renderer->render($filename, array_merge($globals, $vars));
+
+        if ($standalone) {
+            echo $content;
+            return;
+        }
+
+        echo $renderer->render('files/Template.inc', array_merge($globals, [
             'navbar' => static::getNavbar(),
             'content' => $content,
-            'currentUri' => $uri,
-            'meta' => isset($vars['meta']) ? $vars['meta'] : [],
-            'header' => isset($vars['header']) ? $vars['header'] : null,
-            'subheader' => isset($vars['subheader']) ? $vars['subheader'] : null,
-            'html_title' => isset($vars['html_title']) ? $vars['html_title'] : ''
-        ]);
+            'meta' => $vars['meta'] ?? [],
+            'header' => $vars['header'] ?? null,
+            'subheader' => $vars['subheader'] ?? null,
+            'html_title' => $vars['html_title'] ?? '',
+        ]));
     }
 
     private static function getNavbar()

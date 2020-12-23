@@ -17,7 +17,6 @@ class PlatbyGroup
                 ],
                 \DBPlatbyGroup::getGroups()
             ),
-            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 
@@ -137,7 +136,6 @@ class PlatbyGroup
             'id' => $id,
             'name' => $data['pg_name'],
             'returnURI' => $_SERVER['HTTP_REFERER'],
-            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 
@@ -234,7 +232,6 @@ class PlatbyGroup
             'type' => $_POST['type'] ?? '',
             'description' => $_POST['description'] ?? '',
             'base' => $_POST['base'] ?? '',
-            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 

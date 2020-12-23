@@ -26,7 +26,6 @@ class PlatbyRaw
         new \RenderHelper('files/View/Admin/Platby/RawUpload.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Import plateb',
-            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 
@@ -58,7 +57,6 @@ class PlatbyRaw
             'header' => 'Správa plateb',
             'subheader' => 'Import plateb',
             'data' => $data,
-            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 

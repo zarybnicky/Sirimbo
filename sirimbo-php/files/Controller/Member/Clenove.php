@@ -15,7 +15,6 @@ class Clenove
             'email' => $data->getEmail(),
             'telefon' => $data->getPhone(),
             'returnURI' => $_SERVER['HTTP_REFERER'],
-            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 
@@ -43,7 +42,6 @@ class Clenove
         new \RenderHelper('files/View/Member/Clenove/SkupinyList.inc', [
             'header' => 'Přehled členů',
             'data' => $skupiny,
-            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 
@@ -60,7 +58,6 @@ class Clenove
         new \RenderHelper('files/View/Member/Clenove/UserList.inc', [
             'header' => 'Přehled členů',
             'data' => $data,
-            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 
@@ -113,7 +110,6 @@ class Clenove
         new \RenderHelper('files/View/Member/Clenove/Structure.inc', [
             'header' => 'Přehled členů',
             'columns' => $columns,
-            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 }

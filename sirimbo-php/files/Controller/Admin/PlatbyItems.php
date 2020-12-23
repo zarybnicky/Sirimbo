@@ -33,7 +33,6 @@ class PlatbyItems
             'users' => \DBUser::getUsers(),
             'categories' => static::getCategories(),
             'data' => $data,
-            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/'),
             'user' => $_GET['user'] ?? '',
             'category' => $_GET['category'] ?? '',
             'date' => $_GET['date'] ?? ''
@@ -160,7 +159,6 @@ class PlatbyItems
             'variable' => $_POST['variable'] ?? '',
             'specific' => $_POST['specific'] ?? '',
             'prefix' => $_POST['prefix'] ?? '',
-            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 

@@ -108,7 +108,6 @@ class PlatbyManual
             'users' => static::getUsers(),
             'categories' => static::getCategories(),
             'recognized' => $recognized,
-            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 

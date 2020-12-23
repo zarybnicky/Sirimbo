@@ -11,7 +11,6 @@ class PlatbyCategory
             'subheader' => 'Specifické symboly',
             'data' => static::getCategories(false),
             'archived' => static::getCategories(true),
-            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 
@@ -219,7 +218,6 @@ class PlatbyCategory
             'id' => $id,
             'name' => $data['pc_name'],
             'returnURI' => $_SERVER['HTTP_REFERER'],
-            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 
@@ -316,7 +314,6 @@ class PlatbyCategory
             'usePrefix' => $_POST['usePrefix'] ?? '',
             'archive' => $_POST['archive'] ?? '',
             'visible' => $_POST['visible'] ?? '',
-            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 

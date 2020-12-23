@@ -108,7 +108,7 @@ class Nastenka
         }
         $skupiny_new = [];
         foreach (\DBSkupiny::get() as $item) {
-            if ($_POST['sk-' . $item['s_id']]) {
+            if ($_POST['sk-' . $item['s_id']] ?? null) {
                 $skupiny_new[$item['s_id']] = $item;
             }
         }
@@ -164,7 +164,7 @@ class Nastenka
         $skupiny = \DBSkupiny::get();
         $skupinySelected = [];
         foreach ($skupiny as $item) {
-            $skupinySelected[$item['s_id']] = $_POST['sk-' . $item['s_id']];
+            $skupinySelected[$item['s_id']] = $_POST['sk-' . $item['s_id']] ?? null;
         }
         new \RenderHelper('files/View/Admin/Nastenka/Form.inc', [
             'header' => 'Správa nástěnky',

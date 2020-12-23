@@ -1,5 +1,5 @@
 <?php
-$isActive = fn ($href) => strripos($uri, $href) !== (strlen($uri) - strlen($href));
+$isActive = fn ($href) => strripos($currentUri, $href) !== (strlen($currentUri) - strlen($href));
 $getItem = function ($name, $href) use ($isActive) {
     $href = 'member/' . $href;
     if ($isActive($href)) {

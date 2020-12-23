@@ -56,7 +56,6 @@ class Platby
             'header' => 'Správa plateb',
             'subheader' => 'Členové podle skupin',
             'columns' => $columns,
-            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 
@@ -107,7 +106,6 @@ class Platby
                 ],
                 \DBPlatbyCategory::getOrphan()
             ),
-            'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
         ]);
     }
 

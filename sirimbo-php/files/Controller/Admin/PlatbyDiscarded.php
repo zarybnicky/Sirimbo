@@ -18,7 +18,6 @@ class PlatbyDiscarded
                 'subheader' => 'Vyřazené platby (' . $header . ')',
                 'data' => $result,
                 'columns' => $columns,
-                'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
             ]);
         } else {
             static::_getList($data, $groupAmount, $groupDate);
@@ -27,7 +26,6 @@ class PlatbyDiscarded
                 'subheader' => 'Vyřazené platby',
                 'groupByDate' => $groupDate,
                 'groupByAmount' => $groupAmount,
-                'uri' => trim(explode('?', $_SERVER['REQUEST_URI'])[0], '/')
             ]);
         }
     }

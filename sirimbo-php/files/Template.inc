@@ -15,15 +15,15 @@
     <meta name="google-site-verification" content="Hfe7zlgTDOIpJv4rKGQz2Xg8Aezb6sIO0aAxVhrml9w" />
     <meta name="norton-safeweb-site-verification"
           content="r44xj2vskhlgkyqcqm1hdgga2jdfj-idvyys0277y96s72k-tq0z-yyjdu7h3el6pi2gek0i4ykq3xgiguufrvuhj8nbj4n4miwjhvumhp35jfrafyynhj4ee8ctzpzh" />
-    <?php foreach ($this->meta as $meta) : ?>
-    <meta <?php foreach ($meta as $k => $v) { echo "$k=\"$v\""; } ?>/>
+    <?php foreach ($meta as $item) : ?>
+    <meta <?php foreach ($item as $k => $v) { echo "$k=\"$v\""; } ?>/>
     <?php endforeach ?>
     <meta property="fb:app_id" content="132983570203245"/>
 
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="stylesheet" type="text/css" href="/style.css" />
     <title>
-      <?= isset($this->header) ? "{$this->header} | TK Olymp" : 'TK Olymp' ?>
+      <?= !empty($header) ? "{$header} | TK Olymp" : 'TK Olymp' ?>
     </title>
   </head>
   <body>
@@ -41,23 +41,56 @@
           <div class="navbars collapse navbar-collapse ml-lg-0 ml-3">
             <div class="flex-column" style="flex-grow:1">
               <ul class="navbar-nav">
-                <?php foreach ($this->navbar[0] as $item) {
-                    echo new NavbarItemHelper($this->currentUri, $item);
+                <?php foreach ($navbar[0] as $item) {
+                    echo new NavbarItemHelper($currentUri, $item);
                 } ?>
                 <div class="w-100"></div>
-                <?= new LoginHelper() ?>
+                <?php if (!empty($currentUser)) : ?>
+                  <li class="userbox nav-item nav-link">
+                    <a href="/member/profil">
+                      <i class="fas fa-user"></i> <?= $currentUser->getFullName() ?>
+                    </a>
+                  </li>
+                <?php else : ?>
+                  <li class="nav-item dropdown">
+                    <a href="/login" class="nav-link dropdown-toggle dropdown-no-arrow text-white" data-toggle="dropdown">
+                      <i class="fas fa-user"></i> Přihlásit
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-right" role="menu" style="min-width:250px">
+                      <div class="col-lg-12 pt-2">
+                        <form action="/login" method="post" role="form">
+                          <div class="form-group pb-1">
+                            <input type="text" name="login" id="login" tabindex="1"
+                                   class="form-control" placeholder="Uživatelské jméno" autofocus autocomplete="username">
+                          </div>
+                          <div class="form-group pb-1">
+                            <input type="password" name="pass" id="pass" tabindex="2"
+                                   class="form-control" placeholder="Heslo" autocomplete="current-password">
+                          </div>
+                          <div class="form-group pb-2">
+                            <button type="submit" tabindex="3" class="btn btn-primary">
+                              Přihlásit se
+                            </button>
+                          </div>
+                          <a href="/registrace" tabindex="4">Registrovat se</a><br>
+                          <a href="/nopassword" tabindex="5">Zapomněli jste heslo?</a><br>
+                        </form>
+                      </div>
+                    </ul>
+                  </li>
+                <?php endif ?>
               </ul>
             </div>
           </div>
         </div>
-        <?php if (count($this->navbar) > 1) : ?>
+        <?php if (count($navbar) > 1) : ?>
           <div class="w-100" id="navbar-second">
             <div class="container">
               <div class="navbars collapse navbar-collapse ml-lg-0 ml-3">
                 <div class="flex-column" style="flex-grow:1">
                   <ul class="navbar-nav">
-                    <?php foreach ($this->navbar[1] as $item) {
-                        echo new \NavbarItemHelper($this->currentUri, $item);
+                    <?php foreach ($navbar[1] as $item) {
+                        echo new \NavbarItemHelper($currentUri, $item);
                     } ?>
                   </ul>
                 </div>
@@ -68,12 +101,12 @@
       </div>
     </nav>
 
-    <?php if (isset($this->header)) : ?>
+    <?php if (!empty($header)) : ?>
       <div class="header-section">
         <div class="container full">
-          <h1><?= $this->header ?></h1>
-          <?php if (isset($this->subheader)) : ?>
-            <h2><?= $this->subheader ?></h2>
+          <h1><?= $header ?></h1>
+          <?php if (!empty($subheader)) : ?>
+            <h2><?= $subheader ?></h2>
           <?php endif ?>
         </div>
       </div>
@@ -83,7 +116,7 @@
       <div class="container"><?= new \NoticeHelper($text, $type) ?></div>
     <?php endforeach ?>
 
-    <?= $this->content ?>
+    <?= $content ?>
 
     <br/>
     <div id="footer">
