@@ -262,7 +262,7 @@ class Akce
         $documents = array_map(
             fn($item) => [
                 'name' => $item['d_name'],
-                'category' => \Settings::$documentTypes[$item['d_kategorie']],
+                'category' => Dokumenty::$types[$item['d_kategorie']],
                 'removeButton' => (new \SubmitHelper('Odstranit'))->data('remove', $item['d_id'])
             ],
             \DBDokumenty::getMultipleById($documents)
@@ -272,7 +272,7 @@ class Akce
         foreach ([2, 3, 0] as $category) {
             foreach (\DBDokumenty::getDokumentyByKategorie($category) as $item) {
                 $allDocuments[$item['d_id']] =
-                    \Settings::$documentTypes[$item['d_kategorie']] . ' - ' .
+                    Dokumenty::$types[$item['d_kategorie']] . ' - ' .
                     $item['d_name'];
             }
         }

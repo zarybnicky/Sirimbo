@@ -222,6 +222,8 @@
           cat > $out/config.php <<EOS
           <?php
           openlog('${cfg.domain}', LOG_ODELAY, LOG_USER);
+          date_default_timezone_set('Europe/Paris');
+          mb_internal_encoding('UTF-8');
 
           define('DB_SERVER', '${cfg.dbHost}');
           define('DB_DATABASE', '${cfg.dbDatabase}');
@@ -237,7 +239,6 @@
             }
           }
           define('NABOR', '0');
-          date_default_timezone_set('Europe/Paris');
           define('DEFAULT_FROM_MAIL', 'TK Olymp.cz <noreply@tkolymp.cz>');
           define('DEFAULT_ADMIN_MAIL', 'tkolymp@tkolymp.cz');
           EOS

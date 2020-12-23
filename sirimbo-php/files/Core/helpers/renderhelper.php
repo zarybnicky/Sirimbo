@@ -19,7 +19,7 @@ class RenderHelper
             '/'
         );
 
-        echo $renderer->render(TEMPLATE, [
+        echo $renderer->render('files/Template.inc', [
             'navbar' => static::getNavbar(),
             'content' => $content,
             'currentUri' => $uri,

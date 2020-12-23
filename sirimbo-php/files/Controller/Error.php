@@ -10,7 +10,7 @@ class Error
             $str = ucfirst($str);
         });
         $id = implode('', $array);
-        $file = ERROR . DIRECTORY_SEPARATOR . $id . '.inc';
+        $file = "files/Error/$id.inc";
 
         if (file_exists($file)) {
             ob_start();

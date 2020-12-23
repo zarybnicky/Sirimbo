@@ -44,7 +44,10 @@ phpAuthHandler ::
      forall m. Effs '[ AppError, UserEff, SessionEff] m
   => (forall a. m a -> Handler a)
   -> PhpAuthHandler
-phpAuthHandler runner = mkAuthHandler $ \req -> runner $ do
+phpAuthHandler runner = mkAuthHandler $ runner . getUserByCookie
+
+getUserByCookie :: forall m. Effs '[ AppError, UserEff, SessionEff] m => Request -> m (SessionId, Entity User)
+getUserByCookie req = do
   cookie <- maybeErr . lookup "cookie" $ requestHeaders req
   sid' <- maybeErr . lookup "PHPSESSID" $ parseCookies cookie
   let sid = SessionKey (decodeUtf8 sid')

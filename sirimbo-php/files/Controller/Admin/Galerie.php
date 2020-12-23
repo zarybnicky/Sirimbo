@@ -245,12 +245,13 @@ class Galerie
             unlink($file);
             return false;
         }
+        $thumbnailMax = 150;
         list($width, $height) = getimagesize($file);
-        if ($width <= THUMBNAIL_MAX && $height <= THUMBNAIL_MAX) {
+        if ($width <= $thumbnailMax && $height <= $thumbnailMax) {
             $nWidth = $width;
             $nHeight = $height;
         } else {
-            $scale = ($width > $height) ? (THUMBNAIL_MAX / $width) : (THUMBNAIL_MAX / $height);
+            $scale = ($width > $height) ? ($thumbnailMax / $width) : ($thumbnailMax / $height);
             $nWidth = round($width * $scale);
             $nHeight = round($height * $scale);
         }

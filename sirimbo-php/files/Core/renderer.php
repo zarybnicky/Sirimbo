@@ -26,7 +26,7 @@ class Renderer
 
     public function render($tplName, array $bindVars = [])
     {
-        $__file = ROOT . DIRECTORY_SEPARATOR . $tplName;
+        $__file = $tplName;
         array_push($this->template, $__file);
 
         array_push($this->cache, $this->vars);

@@ -35,7 +35,7 @@ class Permissions
             return static::renderForm('add');
         }
         $permissions = [];
-        foreach (array_keys(\Settings::$permissions) as $name) {
+        foreach (array_keys(\Permissions::$permissions) as $name) {
             $permissions[$name] = $_POST[$name];
         }
         \DBPermissions::addGroup($_POST['name'], $_POST['description'], $permissions);
@@ -65,7 +65,7 @@ class Permissions
             return static::renderForm('edit', $data);
         }
         $permissions = [];
-        foreach (array_keys(\Settings::$permissions) as $name) {
+        foreach (array_keys(\Permissions::$permissions) as $name) {
             $permissions[$name] = $_POST[$name];
         }
         \DBPermissions::editGroup($id, $_POST['name'], $_POST['description'], $permissions);
@@ -97,7 +97,7 @@ class Permissions
     protected static function renderForm($action, $data = [])
     {
         if (!$_POST) {
-            foreach (\Settings::$permissions as $name => $item) {
+            foreach (\Permissions::$permissions as $name => $item) {
                 $_POST[$name] = $data['pe_' . $name];
             }
         }
@@ -111,13 +111,13 @@ class Permissions
                         fn($key, $levelName) => isset($item[$key])
                         ? (new \BsRadioHelper($name, $key))->set($key == $value)->label($levelName)
                         : '',
-                        array_keys(\Settings::$permissionLevels),
-                        \Settings::$permissionLevels
+                        [P_NONE, P_VIEW, P_MEMBER, P_OWNED, P_ADMIN],
+                        ['Bez přístupu', 'Zobrazit', 'Editovat', 'Admin (svoje)', 'Admin']
                     )
                 ];
             },
-            array_keys(\Settings::$permissions),
-            \Settings::$permissions
+            array_keys(\Permissions::$permissions),
+            \Permissions::$permissions
         );
 
         new \RenderHelper('files/View/Admin/Permissions/Form.inc', [
@@ -135,7 +135,7 @@ class Permissions
     private static function checkData(): \Form
     {
         $f = new \Form();
-        foreach (\Settings::$permissions as $name => $item) {
+        foreach (\Permissions::$permissions as $name => $item) {
             $f->checkArrayKey($_POST[$name], $item, "Neplatná hodnota práva $name", $name);
         }
         return $f;
