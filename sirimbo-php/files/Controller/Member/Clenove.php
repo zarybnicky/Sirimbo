@@ -31,7 +31,7 @@ class Clenove
                 $currentKey = count($skupiny);
                 $skupiny[$currentKey] = [
                     'header' => "<h3>"
-                    . new \ColorboxHelper($item['s_color_rgb'], $item['s_description'])
+                    . \Utils::colorbox($item['s_color_rgb'], $item['s_description'])
                     . '&nbsp;&nbsp;' . $item['s_name'] . "</h3>",
                     'description' => $item['s_description'],
                     'userCount' => 0
@@ -51,7 +51,7 @@ class Clenove
         $index = 0;
         $data = array_map(
             function ($item) use (&$index) {
-                return ['index' => ++$index . '.', 'fullName' => new \PersonHelper($item)];
+                return ['index' => ++$index . '.', 'fullName' => \Utils::person($item)];
             },
             \DBUser::getActiveUsers()
         );
@@ -78,7 +78,7 @@ class Clenove
                 $skupiny[$currentKey] = [
                     'info' => [
                         'header' => "<big>"
-                        .  new \ColorboxHelper($item['s_color_rgb'], $item['s_description'])
+                        .  \Utils::colorbox($item['s_color_rgb'], $item['s_description'])
                         . '&nbsp;&nbsp;' . $item['s_name'] . "</big>"
                     ],
                     'users' => []
@@ -86,7 +86,7 @@ class Clenove
             }
             $skupiny[$currentKey]['users'][] = [
                 'index' => ++$index . '.',
-                'fullName' => new \PersonHelper($item),
+                'fullName' => \Utils::person($item),
                 'hasPaid' => '<span style="font-weight:bold;color:"'
                 . ($item['pi_id'] ? 'green' : 'red') . '">'
                 . ($item['pi_id'] ? 'ANO' : 'NE') . "</span>"

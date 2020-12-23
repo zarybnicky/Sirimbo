@@ -3,10 +3,10 @@
     <?= (new TableHelper([
         [
             'desc' => 'Jméno',
-            'value' => new \TextHelper('name', $name)
+            'value' => \Utils::text('name', $name)
         ], [
             'desc' => 'Barva',
-            'value' => new \ColorSelectHelper('color', $color)
+            'value' => "<input type=color name='color' value='$color'>",
         ], [
             'desc' => 'Popis',
             'value' => '<textarea rows="15" cols="50" name="desc">' . $popis . '</textarea>'
@@ -25,7 +25,7 @@
            ->column('base', 'Násobitel částky') ?>
 
     <div class="form-group">
-      <?= new \SubmitHelper('Uložit') ?>
+      <?= \Utils::submit('Uložit') ?>
       <a class="btn btn-outline-primary" href="/admin/skupiny">Zpět</a>
     </div>
   </form>

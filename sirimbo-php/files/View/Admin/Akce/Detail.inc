@@ -4,7 +4,7 @@
         <?= (new \TableHelper($items))
                  ->column('name', 'Uživatel')
                  ->column('removeButton', '') ?>
-        <?= new \SubmitHelper('Uložit') ?>
+        <?= \Utils::submit('Uložit') ?>
         <a class="btn btn-outline-primary" href="/admin/permissions">Zpět</a>
     </form>
 </div>

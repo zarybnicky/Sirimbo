@@ -16,11 +16,11 @@
                         <?= $lesson['timeFrom'] ?>-<?= $lesson['timeTo'] ?>
                       </span>
                       <?= $lesson['fullName'] ?>
-                      <?= new \HiddenHelper('ri_id', $lesson['id']) ?>
+                      <?= \Utils::hidden('ri_id', $lesson['id']) ?>
                       <?php if ($lesson['canReserve']): ?>
-                        <?= (new \SubmitHelper('+'))->cls('py-0 btn btn-outline-primary btn-sm')->data('action', 'signup') ?>
+                        <?= \Utils::submit('+', 'action', 'signup', 'py-0 btn btn-outline-primary btn-sm') ?>
                       <?php elseif ($lesson['canCancel']): ?>
-                        <?= (new \SubmitHelper('&times;'))->cls('py-0 btn btn-outline-primary btn-sm')->data('action', 'signout') ?>
+                        <?= \Utils::submit('&times;', 'action', 'signout', 'py-0 btn btn-outline-primary btn-sm') ?>
                       <?php endif ?>
                     </form>
                   </td>

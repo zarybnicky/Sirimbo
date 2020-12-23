@@ -5,16 +5,10 @@
     </div>
     <div class="form-group">
       <label for="dir">Složka</label>
-      <?php
-      $s = new \SelectHelper('dir', [], $dir);
-      foreach ($dirs as $item) {
-          $s->option($item['id'], $item['text']);
-      }
-      echo $s;
-      ?>
+      <?= \Utils::selectAssoc('dir', $dirs, 'id', 'text', $dir) ?>
     </div>
     <div class="form-group">
-      <?= new \SubmitHelper('Nahrát na server') ?>
+      <?= \Utils::submit('Nahrát na server') ?>
       <a class="btn btn-outline-primary" href="/admin/galerie">Zpět</a>
     </div>
   </form>

@@ -24,7 +24,7 @@ class Nabidka
                     '<a href="/admin/nabidka/edit/' . $item['n_id'] . '">obecné</a>, ' .
                     '<a href="/admin/nabidka/detail/' . $item['n_id'] . '">tréninky</a>'
                 ),
-                'visible' => new \CheckboxHelper($item['n_id'], '1', $item['n_visible'])
+                'visible' => \Utils::checkbox($item['n_id'], '1', $item['n_visible'])
             ],
             $data
         );

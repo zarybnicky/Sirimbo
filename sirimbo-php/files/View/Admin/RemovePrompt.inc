@@ -3,11 +3,11 @@
         <?= $prompt ?><br/><br/>
         <?php foreach ($data as $row) : ?>
             <?= $row['text']?>
-            <?= new \HiddenHelper('data[]', $row['id']) ?>
+            <?= \Utils::hidden('data[]', $row['id']) ?>
             <br />
         <?php endforeach ?>
         <br/>
-        <?= (new \SubmitHelper('Odstranit'))->data('action', 'confirm') ?>
+        <?= \Utils::submit('Odstranit', 'action', 'confirm') ?>
         <a class="btn btn-outline-primary" href="<?= $returnURI ?>">Zpět</a>
     </form>
 </div>

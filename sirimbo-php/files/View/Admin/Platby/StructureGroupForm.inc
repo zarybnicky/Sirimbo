@@ -6,19 +6,19 @@
         [
             'desc' => 'Typ:',
             'value' => (
-                (new \RadioHelper('type', '0', $type == '0')) ->label('Běžné platby')
+                \Utils::radio('type', '0', $type == '0', 'Běžné platby')
                 . '<br/>' .
-                (new \RadioHelper('type', '1', $type == '1'))->label('Členské příspěvky')
+                \Utils::radio('type', '1', $type == '1', 'Členské příspěvky')
             )
         ], [
             'desc' => 'Jméno:',
-            'value' => new \TextHelper('name', $name)
+            'value' => \Utils::text('name', $name)
         ], [
             'desc' => 'Popis: ',
             'value' => '<textarea class="form-control" rows="10" cols="50" name="description">' . $description . '</textarea>'
         ], [
             'desc' => 'Násobitel částky: ',
-            'value' => new \TextHelper('base', $base)
+            'value' => \Utils::text('base', $base)
         ]
     ]))
     ->showHeader(false)
@@ -42,8 +42,8 @@
              ->column('buttons', '')
              ->column('name', 'Jméno') ?>
     <br/>
-    <?= new \HiddenHelper('returnURI', $returnURI) ?>
-    <?= (new \SubmitHelper('Uložit'))->data('action', 'confirm') ?>
+    <?= \Utils::hidden('returnURI', $returnURI) ?>
+    <?= \Utils::submit('Uložit', 'action', 'confirm') ?>
     <a class="btn btn-outline-primary" href="<?= $returnURI ?>">Zpět</a><br/>
 </form>
 </div>

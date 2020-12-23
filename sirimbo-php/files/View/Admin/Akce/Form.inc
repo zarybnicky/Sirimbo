@@ -2,11 +2,11 @@
   <form action="" method="POST">
     <div class="form-group">
       <label for="jmeno">Název akce</label>
-      <?= (new \TextHelper('jmeno', $jmeno))->placeholder('Název akce') ?>
+      <?= \Utils::text('jmeno', $jmeno, ['placeholder' => 'Název akce']) ?>
     </div>
     <div class="form-group">
       <label for="kde">Název akce</label>
-      <?= (new \TextHelper('kde', $kde))->placeholder('Místo akce') ?>
+      <?= \Utils::text('kde', $kde, ['placeholder' => 'Místo akce']) ?>
     </div>
     <div class="form-group">
       <label for="info">Další info</label>
@@ -23,16 +23,16 @@
     </div>
     <div class="form-group">
       <label for="kapacita">Kapacita (*)</label>
-      <?= new \TextHelper('kapacita', $kapacita) ?>
+      <?= \Utils::text('kapacita', $kapacita) ?>
     </div>
     <div class="form-check">
-      <?= new \CheckboxHelper('visible', 'visible', $visible, 'Zviditelnit') ?>
+      <?= \Utils::checkbox('visible', 'visible', $visible, 'Zviditelnit') ?>
     </div>
     <div class="form-check">
-      <?= new \CheckboxHelper('lock', 'lock', $lock, 'Uzamknout') ?>
+      <?= \Utils::checkbox('lock', 'lock', $lock, 'Uzamknout') ?>
     </div>
     <div class="form-group">
-      <?= new \SubmitHelper($action) ?>
+      <?= \Utils::submit($action) ?>
       <a class="btn btn-outline-primary" href="/admin/akce">Zpět</a>
     </div>
   </form>

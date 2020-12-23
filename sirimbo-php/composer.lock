@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7dfa553b8127f3b601a12cb720384950",
+    "content-hash": "4fbd0edd94d2c77ab32cd890a7dbca7a",
     "packages": [
         {
             "name": "stephank/composer-plugin-nixify",

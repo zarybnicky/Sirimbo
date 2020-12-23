@@ -6,20 +6,11 @@
         <table>
             <tr>
                 <td>uživatel</td>
-                <td>
-                    <?php
-                    $s = new \SelectHelper('user', ['all' => '---'], $user ?: 'all');
-                    foreach ($users as $user) {
-                        $s->option($user['u_id'], $user['u_prijmeni'] . ', ' . $user['u_jmeno']);
-                    }
-                    echo $s;
-                    ?>
-                </td>
+                <td><?= \Utils::selectAssoc('user', ['id' => 'all', 'text' => '---'] + $users, 'id', 'text', $user ?: 'all') ?></td>
             </tr>
             <tr>
                 <td>spec. symbol</td>
-                <td>
-                    <?= new \SelectHelper('category', ['all' => '---'] + $categories, $category ?: 'all') ?>
+                <td><?= \Utils::select('category', ['all' => '---'] + $categories, $category ?: 'all') ?></td>
                 </td>
             </tr>
             <tr>
@@ -30,7 +21,7 @@
                 <td><a href="/admin/platby/items/add" class="btn btn-primary">
                   Nová platba
                 </a></td>
-                <td><?= new \SubmitHelper('Odeslat') ?></td>
+                <td><?= \Utils::submit('Odeslat') ?></td>
             </tr>
         </table>
     </form>

@@ -12,7 +12,7 @@ class Akce
                 'date' => \Format::date($item['a_od'])
                 . (($item['a_od'] != $item['a_do']) ? ' - ' . \Format::date($item['a_do']) : ''),
                 'userCount' => $item['a_obsazeno'] . '/' . $item['a_kapacita'],
-                'visible' => new \CheckboxHelper($item['a_id'], '1', $item['a_visible']),
+                'visible' => \Utils::checkbox($item['a_id'], '1', $item['a_visible']),
                 'links' => (
                     '<a href="/admin/akce/edit/' . $item['a_id'] . '">obecné</a>, '
                     . '<a href="/admin/akce/detail/' . $item['a_id'] . '">účastníci</a>, '
@@ -182,17 +182,17 @@ class Akce
             'info' => nl2br($akce['a_info'])
         ];
 
-        $userSelect = new \UserSelectHelper(\DBUser::getActiveUsers());
+        $users = \DBUser::getActiveUsers();
         $items = array_map(
             fn($item) => [
-                'name' => (string) $userSelect->name($item['ai_id'] . '-user')->set($item['ai_user']),
-                'removeButton' => (new \SubmitHelper('Odstranit'))->data('remove', $item['ai_id'])
+                'name' => \Utils::userSelect($users, $item['ai_id'] . '-user', $item['ai_user']),
+                'removeButton' => \Utils::submit('Odstranit', 'remove', $item['ai_id'])
             ],
             \DBAkce::getAkceItems($id)
         );
         $items[] = [
-            'name' => (string) $userSelect->name('add-user')->set(0),
-            'removeButton' => (new \SubmitHelper('Přidat'))->data('add', 'add')
+            'name' => \Utils::userSelect($users, 'add-user', 0),
+            'removeButton' => \Utils::submit('Přidat', 'add', 'add')
         ];
 
         \Render::page('files/View/Admin/Akce/Detail.inc', [
@@ -263,7 +263,7 @@ class Akce
             fn($item) => [
                 'name' => $item['d_name'],
                 'category' => Dokumenty::$types[$item['d_kategorie']],
-                'removeButton' => (new \SubmitHelper('Odstranit'))->data('remove', $item['d_id'])
+                'removeButton' => \Utils::submit('Odstranit', 'remove', $item['d_id'])
             ],
             \DBDokumenty::getMultipleById($documents)
         );
@@ -276,10 +276,9 @@ class Akce
                     $item['d_name'];
             }
         }
-        $documentSelect = new \SelectHelper('add-id', ['' => '---'] + $allDocuments);
         $documents[] = [
-            'name' => (string) $documentSelect,
-            'category' => (new \SubmitHelper('Přidat'))->data('add', 'add'),
+            'name' => \Utils::select('add-id', ['' => '---'] + $allDocuments),
+            'category' => \Utils::submit('Přidat', 'add', 'add'),
             'removeButton' => ''
         ];
         \Render::page('files/View/Admin/Akce/Dokumenty.inc', [

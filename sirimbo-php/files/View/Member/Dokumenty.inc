@@ -1,7 +1,7 @@
 <div class="container">
     <form action="" method="GET">
-      <?= new \SelectHelper('kat', $categories, $kat) ?>
-      <?= new \SubmitHelper('Zobrazit') ?>
+      <?= \Utils::select('kat', $categories, $kat) ?>
+      <?= \Utils::submit('Zobrazit') ?>
     </form>
 
   <table>

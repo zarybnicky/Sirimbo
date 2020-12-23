@@ -7,8 +7,7 @@ class Registrace
     {
         $skupiny = array_map(fn($item) => [
             'id' => $item['s_id'],
-            'color' => $item['s_color_rgb'],
-            'popis' => $item['s_name']
+            'text' => \Utils::colorbox($item['s_color_rgb'], $item['s_name']) . '&nbsp;' . $item['s_name'],
         ], \DBSkupiny::get());
 
         \Render::page('files/View/Main/Registrace.inc', [
@@ -60,8 +59,7 @@ class Registrace
         if (!$f->isValid()) {
             $skupiny = array_map(fn($item) => [
                 'id' => $item['s_id'],
-                'color' => $item['s_color_rgb'],
-                'popis' => $item['s_name']
+                'text' => \Utils::colorbox($item['s_color_rgb'], $item['s_name']) . '&nbsp;' . $item['s_name'],
             ], \DBSkupiny::get());
 
             \Message::warning($f->getMessages());

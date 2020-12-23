@@ -16,16 +16,15 @@ class NabidkaDetail
         $obsazeno = \DBNabidka::getNabidkaItemLessons($id);
         $users = \DBPary::getPartners();
 
-        $userSelect = (new \UserSelectHelper($users))->type('par')->idVar('p_id');
         $items = array_map(fn($item) => [
-            'user' => (string) $userSelect->set($item['ni_partner'])->name($item['ni_id'] . '-partner'),
-            'lessonCount' => (new \TextHelper($item['ni_id'] . '-hodiny', $item['ni_pocet_hod']))->size(1),
-            'removeButton' => (new \SubmitHelper('Odstranit'))->name('remove')->value($item['ni_id'])
+            'user' => \Utils::userSelect($users, $item['ni_id'] . '-partner', $item['ni_partner'], 'p_id'),
+            'lessonCount' => \Utils::text($item['ni_id'] . '-hodiny', $item['ni_pocet_hod'], ['size' => 1]),
+            'removeButton' => \Utils::submit('Odstranit', 'remove', $item['ni_id'])
         ], $items);
         $items[] = [
-            'user' => (string) $userSelect->set(null) ->name('add_partner'),
-            'lessonCount' => (new \TextHelper('add_hodiny', ''))->size('1'),
-            'removeButton' => new \SubmitHelper('Přidat')
+            'user' => \Utils::userSelect($users, 'add_partner', null, 'p_id'),
+            'lessonCount' => \Utils::text('add_hodiny', '', ['size' => 1]),
+            'removeButton' => \Utils::submit('Přidat')
         ];
         \Render::page('files/View/Admin/Nabidka/Detail.inc', [
             'header' => 'Správa nabídky',

@@ -25,7 +25,7 @@
              ->column('uri', 'ID videa', null)
              ->column('created', 'Přidáno', null, 'width:100px') ?>
     <?php else : ?>
-      <?= new NoticeHelper('Žádná videa') ?>
+      <?= \Utils::notice('Žádná videa') ?>
     <?php endif ?>
   </form>
   <div style="text-align:center"><?= $navigation ?></div>

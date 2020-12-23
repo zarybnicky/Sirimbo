@@ -113,7 +113,7 @@
     <?php endif ?>
 
     <?php foreach (\Message::get() as list($text, $type)) : ?>
-      <div class="container"><?= new \NoticeHelper($text, $type) ?></div>
+      <div class="container"><?= \Utils::notice($text, $type) ?></div>
     <?php endforeach ?>
 
     <?= $content ?>

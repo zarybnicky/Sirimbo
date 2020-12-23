@@ -79,7 +79,7 @@ class Permissions
         \Render::page('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa oprávnění',
             'prompt' =>
-                new \NoticeHelper('Uživatelům z této skupiny bude nutné přiřadit jinou skupinu!')
+                \Utils::notice('Uživatelům z této skupiny bude nutné přiřadit jinou skupinu!')
                 . 'Opravdu chcete odstranit uživatelskou úroveň:',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/permissions',
             'data' => [['id' => $item['pe_id'], 'text' => $item['pe_name']]]
@@ -109,7 +109,7 @@ class Permissions
                     'value' => $value,
                     'items' => array_map(
                         fn($key, $levelName) => isset($item[$key])
-                        ? (new \BsRadioHelper($name, $key))->set($key == $value)->label($levelName)
+                        ? \Utils::radio($name, $key, $key == $value, $levelName)
                         : '',
                         [P_NONE, P_VIEW, P_MEMBER, P_OWNED, P_ADMIN],
                         ['Bez přístupu', 'Zobrazit', 'Editovat', 'Admin (svoje)', 'Admin']

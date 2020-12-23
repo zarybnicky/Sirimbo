@@ -48,7 +48,7 @@ class Profil
             'header' => $user->getFullName(),
             'ageGroup' => self::getAgeGroup($user->getBirthYear()),
             'coupleData' => \DBPary::getLatestPartner($user->getId(), $user->getGender()),
-            'skupina' => new \ColorboxHelper($s['s_color_rgb'], $s['s_name']) . '&nbsp;' . $s['s_name'],
+            'skupina' => \Utils::colorbox($s['s_color_rgb'], $s['s_name']) . '&nbsp;' . $s['s_name'],
             'varSymbol' => \User::varSymbol($user->getId()),
             'hasPaid' => \DBPlatby::hasPaidMemberFees($user->getId()),
             'paymentHistory' => $paymentHistory,

@@ -93,12 +93,10 @@ class TableHelper
     </thead>
     <?php endif ?>
     <tbody>
-        <?php foreach ($this->_data as $row): ++$this->_index; if (!$row) continue ?>
+        <?php foreach ($this->_data as $row): if (!$row) continue ?>
         <tr>
             <?php foreach ($this->_columns as $c): ?>
-            <td<?= $c[2] ?>>
-            <?= $row[$c[0]] == '{counter}' ? $this->_getCounter() : $row[$c[0]] ?>
-            </td>
+            <td<?= $c[2] ?>><?= $row[$c[0]] ?></td>
             <?php endforeach ?>
         </tr>
         <?php endforeach ?>

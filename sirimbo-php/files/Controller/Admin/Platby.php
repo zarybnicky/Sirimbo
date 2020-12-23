@@ -19,13 +19,13 @@ class Platby
                 $skupiny[$currentKey] = ['users' => []];
                 $skupiny[$currentKey]['info'] = [
                     'header' => "<big>"
-                    . new \ColorboxHelper($item['s_color_rgb'], $item['s_description'])
+                    . \Utils::colorbox($item['s_color_rgb'], $item['s_description'])
                     . '&nbsp;&nbsp;' . $item['s_name'] . "</big>"
                 ];
             }
             $skupiny[$currentKey]['users'][] = [
                 'index' => ++$index . '.',
-                'fullName' => new \PersonHelper($item),
+                'fullName' => \Utils::person($item),
                 'hasPaid' => new \Tag(
                     'span',
                     ['style' => 'font-weight:bold;color:' . ($item['pi_id'] ? 'green' : 'red')],

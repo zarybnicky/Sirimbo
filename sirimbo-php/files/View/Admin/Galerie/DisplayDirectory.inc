@@ -1,7 +1,7 @@
 <div class="container">
   <?php
   if (!count($files)) {
-      echo new NoticeHelper('Žádné fotky');
+      echo \Utils::notice('Žádné fotky');
       return;
   }
   ?>

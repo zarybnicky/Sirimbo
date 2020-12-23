@@ -10,7 +10,7 @@ class Galerie
             fn($item) => [
                 'buttons' => \Buttons::galleryDir($item['gd_id']),
                 'name' => str_repeat('&nbsp;->', $item['gd_level'] - 1) . ' ' . $item['gd_name'],
-                'hidden' => new \CheckboxHelper($item['gd_id'], '1', $item['gd_hidden'])
+                'hidden' => \Utils::checkbox($item['gd_id'], '1', $item['gd_hidden'])
             ],
             \DBGalerie::getDirs(true, true),
         );

@@ -6,13 +6,13 @@
 <?= (new TableHelper([
     [
         'desc' => 'Jméno:',
-        'value' => new \TextHelper('name', $name)
+        'value' => \Utils::text('name', $name)
     ], [
         'desc' => 'Specifický symbol:',
-        'value' => new \TextHelper('symbol', $symbol)
+        'value' => \Utils::text('symbol', $symbol)
     ], [
         'desc' => 'Očekávaná částka:',
-        'value' => new \TextHelper('amount', $amount)
+        'value' => \Utils::text('amount', $amount)
     ], [
         'desc' => 'Splatnost:',
         'value' => new \DateHelper('dueDate', $dueDate)
@@ -21,19 +21,19 @@
         'value' => (new \DateHelper('validRange', $validRange))->range()
     ], [
         'desc' => 'Povolit prefix roku?:',
-        'value' => new \CheckboxHelper('usePrefix', '1', $usePrefix)
+        'value' => \Utils::checkbox('usePrefix', '1', $usePrefix)
     ], [
         'desc' => 'Archivovat?:',
-        'value' => new \CheckboxHelper('archive', '1', $archive)
+        'value' => \Utils::checkbox('archive', '1', $archive)
     ], [
         'desc' => 'Viditelný:',
-        'value' => new \CheckboxHelper('visible', '1', $visible)
+        'value' => \Utils::checkbox('visible', '1', $visible)
     ]
 ]))
 ->showHeader(false)
 ->column('desc', '', 'r')
 ->column('value', 'Hodnota') ?>
-    <?= new \HiddenHelper('returnURI', $returnURI) ?>
+    <?= \Utils::hidden('returnURI', $returnURI) ?>
     <br/>
     <h3>Kategorie</h3>
     <?= (new TableHelper($groups))
@@ -42,7 +42,7 @@
              ->column('type', 'Typ')
              ->column('base', 'Násobitel částky') ?>
     <br>
-    <?= new \SubmitHelper('Uložit') ?>
+    <?= \Utils::submit('Uložit') ?>
     <a class="btn btn-outline-primary" href="<?= $returnURI ?>">Zpět</a><br/>
 </form>
 </div>

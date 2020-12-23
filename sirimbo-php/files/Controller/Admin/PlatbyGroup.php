@@ -126,7 +126,7 @@ class PlatbyGroup
                 . new \Tag(
                     'form',
                     ['action' => '', 'method' => 'post'],
-                    (new \SubmitHelper('Odstranit spojení?'))->data('action', 'unlink')
+                    \Utils::submit('Odstranit spojení?', 'action', 'unlink')
                 )
             );
         }
@@ -193,7 +193,7 @@ class PlatbyGroup
         );
         $categories = array_map(
             fn($item) => [
-                'buttons' => new \CheckboxHelper('category[]', $item['pc_id'], isset($categoriesSelected[$item['pc_id']])),
+                'buttons' => \Utils::checkbox('category[]', $item['pc_id'], isset($categoriesSelected[$item['pc_id']])),
                 'name' => $item['pc_name'],
                 'specific' => $item['pc_symbol'],
                 'amount' => ((float) $item['pc_amount'] * (float) $data['pg_base']),
@@ -214,8 +214,8 @@ class PlatbyGroup
         );
         $skupiny = array_map(
             fn($item) => [
-                'buttons' => new \CheckboxHelper('skupiny[]', $item['s_id'], isset($skupinySelected[$item['s_id']])),
-                'name' => new \ColorboxHelper($item['s_color_rgb'], $item['s_description']) . '&nbsp;' . $item['s_name']
+                'buttons' => \Utils::checkbox('skupiny[]', $item['s_id'], isset($skupinySelected[$item['s_id']])),
+                'name' => \Utils::colorbox($item['s_color_rgb'], $item['s_description']) . '&nbsp;' . $item['s_name']
             ],
             \DBSkupiny::get()
         );

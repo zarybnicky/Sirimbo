@@ -10,7 +10,7 @@ class Repl
             . '<textarea name=code rows=10 cols=10>'
             . ($_POST['code'] ?? '')
             . '</textarea>',
-            new \SubmitHelper('Zpracovat');
+            \Utils::submit('Zpracovat');
     }
 
     public static function post()
@@ -19,11 +19,11 @@ class Repl
         if ($_POST['code']) {
             $r = eval(stripslashes($_POST['code']));
             if ($r === false) {
-                echo new \NoticeHelper('Kód obsahuje syntaktickou chybu');
+                echo \Utils::notice('Kód obsahuje syntaktickou chybu');
             } elseif (!empty($r)) {
-                echo new \NoticeHelper('<pre>' . var_export($r, true) . '</pre>');
+                echo \Utils::notice('<pre>' . var_export($r, true) . '</pre>');
             } else {
-                echo new \NoticeHelper('Success!');
+                echo \Utils::notice('Success!');
             }
         }
         static::get();

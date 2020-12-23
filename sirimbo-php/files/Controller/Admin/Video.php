@@ -80,13 +80,13 @@ class Video
     public static function titlePost()
     {
         \Permissions::checkError('aktuality', P_OWNED);
-        $select = (new \SelectHelper())->optionsAssoc(\DBVideo::getAll(), 'v_id', 'v_title');
+        $videos = \DBVideo::getAll();
         \Render::page('files/View/Admin/Video/Title.inc', [
             'header' => 'Správa videí',
-            'video1' => (string) $select->name('video1')->set(\DBParameters::get('title_video1')),
-            'video2' => (string) $select->name('video2')->set(\DBParameters::get('title_video2')),
-            'video3' => (string) $select->name('video3')->set(\DBParameters::get('title_video3')),
-            'video4' => (string) $select->name('video4')->set(\DBParameters::get('title_video4'))
+            'video1' => \Utils::selectAssoc('video1', $videos, 'v_id', 'v_title', \DBParameters::get('title_video1')),
+            'video2' => \Utils::selectAssoc('video2', $videos, 'v_id', 'v_title', \DBParameters::get('title_video2')),
+            'video3' => \Utils::selectAssoc('video3', $videos, 'v_id', 'v_title', \DBParameters::get('title_video3')),
+            'video4' => \Utils::selectAssoc('video4', $videos, 'v_id', 'v_title', \DBParameters::get('title_video4')),
         ]);
     }
 

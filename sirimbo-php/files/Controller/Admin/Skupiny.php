@@ -9,7 +9,7 @@ class Skupiny
         $data = array_map(
             fn($item) => [
                 'buttons' => \Buttons::skupiny($item['s_id']),
-                'colorBox' => new \ColorboxHelper($item['s_color_rgb'], $item['s_description']),
+                'colorBox' => \Utils::colorbox($item['s_color_rgb'], $item['s_description']),
                 'name' => $item['s_name']
             ],
             \DBSkupiny::get()
@@ -87,7 +87,7 @@ class Skupiny
         if (static::getLinkedSkupinaObjects($id)) {
             \Message::info(
                 'Nemůžu odstranit skupinu s připojenými kategoriemi! <form method="post">'
-                . (new \SubmitHelper('Odstranit spojení?'))->data('action', 'unlink')
+                . \Utils::submit('Odstranit spojení?', 'action', 'unlink')
                 . "</form>"
             );
         }
@@ -131,7 +131,7 @@ class Skupiny
 
         $groups = array_map(
             fn($item) => [
-                'buttons' => new \CheckboxHelper('group[]', $item['pg_id'], isset($groupsSelected[$item['pg_id']])),
+                'buttons' => \Utils::checkbox('group[]', $item['pg_id'], isset($groupsSelected[$item['pg_id']])),
                 'type' => $item['pg_type'] == '1' ? 'Členské příspěvky' : 'Běžné platby',
                 'name' => $item['pg_name'],
                 'base' => $item['pg_base']

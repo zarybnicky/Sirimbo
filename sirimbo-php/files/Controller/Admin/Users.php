@@ -53,27 +53,25 @@ class Users
         $action = $_GET['view'] ?? 'info';
         $copySkupinyOptions = $skupinyOptions;
         unset($copySkupinyOptions['all']);
-        $skupinySelect = $action == 'status' ? new \SelectHelper(null, $copySkupinyOptions) : null;
 
         $data = array_map(
-            function ($item) use ($action, $groupOptions, &$i, $skupinySelect) {
+            function ($item) use ($action, $groupOptions, &$i, $copySkupinyOptions) {
                 $out = [
                     'checkBox' => \Buttons::user($item['u_id']),
                     'index' => ++$i . '. ',
                     'varSymbol' => \User::varSymbol($item['u_id']),
                     'fullName' => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
                     'birthDate' => \Format::date($item['u_narozeni']),
-                    'colorBox' => new \ColorboxHelper($item['s_color_rgb'], $item['s_description']),
+                    'colorBox' => \Utils::colorbox($item['s_color_rgb'], $item['s_description']),
                     'groupInfo' => $groupOptions[$item['u_group']]
                 ];
                 if ($action == 'status') {
                     $out['skupina'] = (
-                        new \HiddenHelper('save[]', $item['u_id'])
-                        . $skupinySelect->name($item['u_id'] . '-skupina')
-                                        ->set($item['u_skupina'])
+                        \Utils::hidden('save[]', $item['u_id'])
+                        . \Utils::select($item['u_id'] . '-skupina', $copySkupinyOptions, $item['u_skupina'])
                     );
-                    $out['system'] = new \CheckboxHelper($item['u_id'] . '-system', '1', $item['u_system']);
-                    $out['ban'] = new \CheckboxHelper($item['u_id'] . '-ban', '1', $item['u_ban']);
+                    $out['system'] = \Utils::checkbox($item['u_id'] . '-system', '1', $item['u_system']);
+                    $out['ban'] = \Utils::checkbox($item['u_id'] . '-ban', '1', $item['u_ban']);
                 }
                 return $out;
             },
@@ -382,9 +380,7 @@ class Users
             return;
         }
         $groups = \DBPermissions::getGroups();
-        $s_group = (new \SelectHelper())->optionsAssoc($groups, 'pe_id', 'pe_name')->set(3);
         $skupiny = \DBSkupiny::get();
-        $s_skupina = (new \SelectHelper())->optionsAssoc($skupiny, 's_id', 's_name');
         $users = array_map(
             fn($item) => [
                 'id' => $item['u_id'],
@@ -393,8 +389,8 @@ class Users
                     '&nbsp;' .
                     \Buttons::delete('/admin/users/remove/' . $item['u_id'])
                 ),
-                'group' => (string) $s_group->name($item['u_id'] . '-group'),
-                'skupina' => (string) $s_skupina->name($item['u_id'] . '-skupina')->set($item['u_skupina']),
+                'group' => \Utils::selectAssoc($item['u_id'] . '-group', $groups, 'pe_id', 'pe_name', 3),
+                'skupina' => \Utils::selectAssoc($item['u_id'] . '-skupina', $skupiny, 's_id', 's_name', $item['u_skupina']),
                 'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
                 'narozeni' => \Format::date($item['u_narozeni']),
                 'poznamky' => $item['u_poznamky']
@@ -428,7 +424,7 @@ class Users
             fn($item) => [
                 'id' => $item['u_id'],
                 'buttons' => \Buttons::delete('/admin/users/remove/' . $item['u_id']),
-                'fullName' => new \ColorboxHelper($item['s_color_rgb'], $item['s_description'])
+                'fullName' => \Utils::colorbox($item['s_color_rgb'], $item['s_description'])
                 . '&nbsp;' . $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
                 'email' => $item['u_email'],
                 'telefon' => $item['u_telefon'],

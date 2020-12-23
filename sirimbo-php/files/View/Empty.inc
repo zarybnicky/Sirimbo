@@ -1,5 +1,5 @@
 <?php if (isset($notice)) : ?>
   <div class="container">
-    <?= new NoticeHelper($notice) ?>
+    <?= \Utils::notice($notice) ?>
   </div>
 <?php endif ?>

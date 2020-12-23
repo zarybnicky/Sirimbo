@@ -32,7 +32,7 @@ class Member
         $data = array_map(
             function ($item) {
                 $skupiny = array_map(
-                    fn($skupina) => new \ColorboxHelper($skupina['ups_color'], $skupina['ups_popis']),
+                    fn($skupina) => \Utils::colorbox($skupina['ups_color'], $skupina['ups_popis']),
                     \DBNastenka::getNastenkaSkupiny($item['up_id'])
                 );
                 return [

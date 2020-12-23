@@ -5,35 +5,35 @@
             <tr>
                 <td>Uživatelé:</td>
                 <td>
-                    <?= new \SelectHelper('status', $statusOptions, $status ?: 'all') ?>
+                    <?= \Utils::select('status', $statusOptions, $status ?: 'all') ?>
                 </td>
             </tr>
             <tr>
                 <td>Skupina:</td>
                 <td>
-                    <?= new \SelectHelper('skupina', $skupinyOptions, $skupina ?: 'all') ?>
+                    <?= \Utils::select('skupina', $skupinyOptions, $skupina ?: 'all') ?>
                 </td>
             </tr>
             <tr>
                 <td>Oprávnění:</td>
                 <td>
-                    <?= new \SelectHelper('group', $groupOptions, $group ?: 'all') ?>
+                    <?= \Utils::select('group', $groupOptions, $group ?: 'all') ?>
                 </td>
             </tr>
             <tr>
                 <td>Řadit podle:</td>
                 <td>
-                    <?= new \SelectHelper('sort', $sortOptions, $sort ?: 'prijmeni') ?>
+                    <?= \Utils::select('sort', $sortOptions, $sort ?: 'prijmeni') ?>
                 </td>
             </tr>
             <tr>
                 <td>Zobrazení:</td>
                 <td>
-                    <?= new \SelectHelper('view', ['info' => 'informace', 'status' => 'status uživatele'], $view ?: 'info') ?>
+                    <?= \Utils::select('view', ['info' => 'informace', 'status' => 'status uživatele'], $view ?: 'info') ?>
                 </td>
             </tr>
             <tr>
-                <td colspan="2"><?= new \SubmitHelper('Filtrovat') ?></td>
+                <td colspan="2"><?= \Utils::submit('Filtrovat') ?></td>
             </tr>
         </table>
     </form>
@@ -51,7 +51,7 @@
 
 <?php
 if (!$data) {
-    echo new \NoticeHelper('Žádní takoví uživatelé');
+    echo \Utils::notice('Žádní takoví uživatelé');
     echo '</div>';
     return;
 }

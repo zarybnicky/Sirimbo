@@ -4,10 +4,10 @@
     <h3>Odstranit specifický symbol?</h3>
     <form action="" method="POST">
         Opravdu chcete odstranit specifický symbol "<?= $name ?>"?
-        <?= new \HiddenHelper('data[]', $id) ?>
-        <?= new \HiddenHelper('returnURI', $returnURI) ?>
+        <?= \Utils::hidden('data[]', $id) ?>
+        <?= \Utils::hidden('returnURI', $returnURI) ?>
         <br/>
-        <?= (new \SubmitHelper('Odstranit'))->data('action', 'confirm') ?>
+        <?= \Utils::submit('Odstranit', 'action', 'confirm') ?>
         <a class="btn btn-outline-primary" href="<?= $returnURI ?>">Zpět</a>
     </form>
 </div>

@@ -14,7 +14,7 @@ class Rozpis
                 'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
                 'datum' => \Format::date($item['r_datum']),
                 'kde' => $item['r_kde'],
-                'visible' => new \CheckboxHelper($item['r_id'], '1', $item['r_visible']),
+                'visible' => \Utils::checkbox($item['r_id'], '1', $item['r_visible']),
                 'buttons' => \Buttons::duplicate('/admin/rozpis/duplicate/' . $item['r_id'])
                 . '&nbsp;' . \Buttons::delete('/admin/rozpis/remove/' . $item['r_id']),
                 'links' => (

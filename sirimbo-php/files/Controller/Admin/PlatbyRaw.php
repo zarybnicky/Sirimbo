@@ -46,10 +46,10 @@ class PlatbyRaw
         $data = array_map(
             fn($name) => [
                 'column' => $name,
-                'specific' => new \RadioHelper('specific', $name, $name == $specific),
-                'variable' => new \RadioHelper('variable', $name, $name == $variable),
-                'date' => new \RadioHelper('date', $name, $name == $date),
-                'amount' => new \RadioHelper('amount', $name, $name == $amount)
+                'specific' => \Utils::radio('specific', $name, $name == $specific),
+                'variable' => \Utils::radio('variable', $name, $name == $variable),
+                'date' => \Utils::radio('date', $name, $name == $date),
+                'amount' => \Utils::radio('amount', $name, $name == $amount)
             ],
             $parser->headers()
         );

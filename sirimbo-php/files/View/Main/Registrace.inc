@@ -3,7 +3,7 @@
   <div class="form-row mb-2">
     <div class="form-group col-12 col-md-6">
       <label for="username">Přihlašovací jméno</label>
-      <?= new \TextHelper('username', $username) ?>
+      <?= \Utils::text('username', $username) ?>
       <small class="form-text text-muted">
         Pouze písmena bez diakritiky, číslice a podtržítka, 3 - 20 znaků
       </small>
@@ -20,11 +20,11 @@
   <div class="form-row mb-2">
     <div class="form-group col-12 col-md-6">
       <label for="jmeno">Jméno</label>
-      <?= new \TextHelper('jmeno', $jmeno) ?>
+      <?= \Utils::text('jmeno', $jmeno) ?>
     </div>
     <div class="form-group col-12 col-md-6">
       <label for="prijmeni">Příjmení</label>
-      <?= new \TextHelper('prijmeni', $prijmeni) ?>
+      <?= \Utils::text('prijmeni', $prijmeni) ?>
     </div>
   </div>
 
@@ -34,19 +34,19 @@
       <?= new \DateHelper('narozeni', $narozeni) ?>
     </div>
     <div class="form-group col-12 col-md-6 pt-4">
-      <?= (new \RadioHelper('pohlavi', 'm', $pohlavi == 'm'))->label('Muž')->inline() ?>
-      <?= (new \RadioHelper('pohlavi', 'f', $pohlavi == 'f'))->label('Žena')->inline() ?>
+      <?= \Utils::inlineRadio('pohlavi', 'm', $pohlavi == 'm', 'Muž') ?>
+      <?= \Utils::inlineRadio('pohlavi', 'f', $pohlavi == 'f', 'Žena') ?>
     </div>
   </div>
 
   <div class="form-row mb-2">
     <div class="form-group col-12 col-md-6">
       <label for="email">E-mail</label>
-      <?= new \TextHelper('email', $email) ?>
+      <?= \Utils::text('email', $email) ?>
     </div>
     <div class="form-group col-12 col-md-6">
       <label for="telefon">Telefon</label>
-      <?= new \TextHelper('telefon', $telefon) ?>
+      <?= \Utils::text('telefon', $telefon) ?>
     </div>
   </div>
 
@@ -54,69 +54,60 @@
   <div class="form-row mb-2">
     <div class="form-group mb-2 col-12 col-md-6">
       <label for="street">Ulice</label>
-      <?= new \TextHelper('street', $street) ?>
+      <?= \Utils::text('street', $street) ?>
     </div>
     <div class="form-group col-6 col-md-3">
       <label for="popisne">Č. popisné</label>
-      <?= new \TextHelper('popisne', $popisne) ?>
+      <?= \Utils::text('popisne', $popisne) ?>
     </div>
     <div class="form-group col-6 col-md-3">
       <label for="orientacni">Č. orientační</label>
-      <?= new \TextHelper('orientacni', $orientacni) ?>
+      <?= \Utils::text('orientacni', $orientacni) ?>
     </div>
 
     <div class="form-group mb-2 col-12 col-md-6">
       <label for="city">Město</label>
-      <?= new \TextHelper('city', $city) ?>
+      <?= \Utils::text('city', $city) ?>
     </div>
     <div class="form-group col-12 col-md-6">
       <label for="district">Část města</label>
-      <?= new \TextHelper('district', $district) ?>
+      <?= \Utils::text('district', $district) ?>
     </div>
 
     <div class="form-group col-12 col-md-6">
       <label for="postal">PSČ</label>
-      <?= new \TextHelper('postal', $postal) ?>
+      <?= \Utils::text('postal', $postal) ?>
     </div>
   </div>
 
   <div class="form-group mb-2">
     <label for="nationality">Národnost</label>
-    <?= new \SelectHelper('nationality', Countries::$countries, $nationality) ?>
+    <?= \Utils::select('nationality', Countries::$countries, $nationality) ?>
   </div>
 
   <div class="form-group mb-2">
     <label for="skupina">Tréninková skupina</label>
-    <?php
-    $s = new \SelectHelper('skupina', [], $skupina ?: '3');
-    foreach ($skupiny as $item) {
-        $s->option(
-            $item['id'],
-            new ColorboxHelper($item['color'], $item['popis']) . '&nbsp;' . $item['popis']
-        );
-    }
-    echo $s;
-    ?>
+    <?= \Utils::selectAssoc('skupina', $skupiny, 'id', 'text', $skupina ?: '3') ?>
   </div>
 
   <div class="form-group mb-2">
     <label for="poznamky">Vztah ke klubu</label>
     <div class="form-inline">
-      <?= (new \RadioHelper('poznamky', 'dancer', $poznamky == 'dancer'))->label('Tanečník/tanečníce') ?>
+      <?= \Utils::radio('poznamky', 'dancer', $poznamky == 'dancer', 'Tanečník/tanečníce') ?>
     </div>
     <div class="form-inline">
-      <?php $i = (new \TextHelper('dancer-name', $dancerName))
-                     ->placeholder('jméno tanečníka')
-                     ->cls('form-control ml-2') ?>
-      <?= (new \RadioHelper('poznamky', 'parent'))
-             ->set($poznamky == 'parent')
-             ->label('Rodič tanečníka: ' . $i) ?>
+      <?php $i = \Utils::text('dancer-name', $dancerName, [
+          'placeholder' => 'jméno tanečníka',
+          'cls' => 'form-control ml-2',
+      ]); ?>
+      <?= \Utils::radio('poznamky', 'parent', $poznamky == 'parent', 'Rodič tanečníka: ' . $i) ?>
     </div>
     <div class="form-inline">
-      <?php $i = (new \TextHelper('other', $other))
-                     ->placeholder('vztah ke klubu')
-                     ->cls('form-control ml-2') ?>
-      <?= (new \RadioHelper('poznamky', 'other', $poznamky == 'other'))->label('Jiný ' . $i) ?>
+      <?php $i = \Utils::text('other', $other, [
+          'placeholder' => 'vztah ke klubu',
+          'cls' => 'form-control ml-2',
+      ]) ?>
+      <?= \Utils::radio('poznamky', 'other', $poznamky == 'other', 'Jiný ' . $i) ?>
     </div>
   </div>
 
@@ -141,5 +132,5 @@
     údaje.
   </p>
 
-  <?= (new \SubmitHelper('Registrovat se'))->data('action', 'register') ?>
+  <?= \Utils::submit('Registrovat se', 'action', 'register') ?>
 </form>

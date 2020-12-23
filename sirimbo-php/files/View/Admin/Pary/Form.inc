@@ -4,34 +4,32 @@
     <h4>Standard</h4>
     <div class="form-group">
       <label for="stt-trida">Třída</label>
-      <?= (new \SelectHelper('stt-trida', [], $stt_trida))
-             ->options(['Z', 'H', 'D', 'C', 'B', 'A', 'M'], true, true) ?>
+      <?= \Utils::selectLiteral('stt-trida', ['Z', 'H', 'D', 'C', 'B', 'A', 'M'], $stt_trida) ?>
     </div>
     <div class="form-group">
       <label for="stt-body">Body</label>
-      <?= new \TextHelper('stt-body', $stt_body) ?>
+      <?= \Utils::text('stt-body', $stt_body) ?>
     </div>
     <div class="form-group">
       <label for="stt-finale">Finále</label>
-      <?= new \TextHelper('stt-finale', $stt_finale) ?>
+      <?= \Utils::text('stt-finale', $stt_finale) ?>
     </div>
 
     <h4>Latina</h4>
     <div class="form-group">
       <label for="lat-trida">Třída</label>
-      <?= (new \SelectHelper('lat-trida', [], $lat_trida))
-             ->options(['Z', 'H', 'D', 'C', 'B', 'A', 'M'], true, true) ?>
+      <?= \Utils::selectLiteral('lat-trida', ['Z', 'H', 'D', 'C', 'B', 'A', 'M'], $lat_trida) ?>
     </div>
     <div class="form-group">
       <label for="lat-body">Body</label>
-      <?= new \TextHelper('lat-body', $lat_body) ?>
+      <?= \Utils::text('lat-body', $lat_body) ?>
     </div>
     <div class="form-group">
       <label for="lat-finale">Finále</label>
-      <?= new \TextHelper('lat-finale', $lat_finale) ?>
+      <?= \Utils::text('lat-finale', $lat_finale) ?>
     </div>
     <div class="form-group">
-      <?= (new \SubmitHelper('Upravit'))->data('action', 'edit_confirm') ?>
+      <?= \Utils::submit('Upravit', 'action', 'edit_confirm') ?>
       <a class="btn btn-outline-primary" href="/admin/pary">Zpět</a>
     </div>
 </div>

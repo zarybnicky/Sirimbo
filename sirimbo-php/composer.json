@@ -16,5 +16,10 @@
     "require": {
         "stephank/composer-plugin-nixify": "^1.0",
         "twig/twig": "^3.0"
+    },
+    "require-dev": {
+    },
+    "extra": {
+        "generate-default-nix": false
     }
 }

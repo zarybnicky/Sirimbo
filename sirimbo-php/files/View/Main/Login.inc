@@ -9,7 +9,7 @@
           <input class="form-control" name="pass" placeholder="Heslo" type="password" />
         </div>
         <div class="form-group pb-2">
-          <?= (new \SubmitHelper('Přihlásit se'))->data('action', 'login') ?>
+          <?= \Utils::submit('Přihlásit se', 'action', 'login') ?>
         </div>
         <a href="/registrace">Registrovat se</a><br>
         <a href="/nopassword">Zapomněli jste heslo?</a>

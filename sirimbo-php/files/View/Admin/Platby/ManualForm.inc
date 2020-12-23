@@ -10,22 +10,22 @@
             'recogValue' => $recognized['date']['value']
         ], [
             'desc' => 'Částka (Kč):',
-            'value' => new \TextHelper('amount', $guess['amount']),
+            'value' => \Utils::text('amount', $guess['amount']),
             'recogColumn' => $recognized['amount']['column'],
             'recogValue' => $recognized['amount']['value']
         ], [
             'desc' => 'Uživatel: ',
-            'value' => new \SelectHelper('variable', $users, $guess['variable']),
+            'value' => \Utils::select('variable', $users, $guess['variable']),
             'recogColumn' => $recognized['variable']['column'],
             'recogValue' => $recognized['variable']['value']
         ], [
             'desc' => 'Kategorie:',
-            'value' => new \SelectHelper('specific', $categories, $guess['specific']),
+            'value' => \Utils::select('specific', $categories, $guess['specific']),
             'recogColumn' => $recognized['specific']['column'],
             'recogValue' => $recognized['specific']['value']
         ], [
             'desc' => 'Prefix (rok):',
-            'value' => new \TextHelper('prefix', $guess['prefix']),
+            'value' => \Utils::text('prefix', $guess['prefix']),
             'recogColumn' => '',
             'recogValue' => $recognized['prefix']['value']
         ]
@@ -38,10 +38,10 @@
     ?>
     <form action="" method="post">
         <?= $formTable ?>
-        <?= new \HiddenHelper('id', $id) ?>
-        <?= (new \SubmitHelper('Uložit'))->data('action', 'confirm') ?>&nbsp;
-        <?= (new \SubmitHelper('Odstranit'))->data('action', 'discard') ?>&nbsp;
-        <?= (new \SubmitHelper('Přeskočit'))->data('action', 'skip') ?>
+        <?= \Utils::hidden('id', $id) ?>
+        <?= \Utils::submit('Uložit', 'action', 'confirm') ?>&nbsp;
+        <?= \Utils::submit('Odstranit', 'action', 'discard') ?>&nbsp;
+        <?= \Utils::submit('Přeskočit', 'action', 'skip') ?>
     </form>
     <br/>
     <h3>Data z banky</h3>

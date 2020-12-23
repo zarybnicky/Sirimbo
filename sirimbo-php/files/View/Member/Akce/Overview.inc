@@ -4,12 +4,12 @@
       <div class="col-12 col-lg-6 pb-2 text-center">
         <form action="" method="post">
           <?php \Render::fragment('files/View/Member/Akce/Header.inc', $item) ?>
-          <?= new \HiddenHelper('id', $item['id']) ?>
+          <?= \Utils::hidden('id', $item['id']) ?>
           <?php if ($item['signOut']) : ?>
-            <?= (new \SubmitHelper('Odhlásit se'))->cls('btn btn-outline-primary btn-sm')->data('action', 'signout') ?>
+            <?= \Utils::submit('Odhlásit se', 'action', 'signout', 'btn btn-outline-primary btn-sm') ?>
           <?php endif ?>
           <?php if ($item['signIn']) : ?>
-            <?= (new \SubmitHelper('Přihlásit se'))->cls('btn btn-outline-primary btn-sm')->data('action', 'signup') ?>
+            <?= \Utils::submit('Přihlásit se', 'action', 'signup', 'btn btn-outline-primary btn-sm') ?>
           <?php endif ?>
           <a href="/member/akce/<?= $item['id'] ?>" class="btn btn-outline-primary btn-sm">
             Zobrazit přihlášené

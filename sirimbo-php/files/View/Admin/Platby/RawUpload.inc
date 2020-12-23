@@ -4,6 +4,6 @@
     <h3>Upload souboru CSV</h3>
     <form action="" method="POST" enctype="multipart/form-data">
         <?= new \UploadHelper('in') ?>
-        <?= (new \SubmitHelper('Nahrát'))->data('action', 'upload') ?>
+        <?= \Utils::submit('Nahrát', 'action', 'upload') ?>
     </form>
 </div>

@@ -51,9 +51,12 @@ class PlatbyCategory
                 'validDate' => \Format::range($item['pc_valid_from'], $item['pc_valid_to']),
                 'buttons' => implode('&nbsp;', [
                     \Buttons::edit('/admin/platby/structure/category/edit/' . $item['pc_id']),
-                    (new \SubmitHelper(
-                        '<img title="Duplikovat" alt="Duplikovat" src="/style/icon-files-o.png" />'
-                    ))->data('category_duplicate', $item['pc_id'])->cls('btn btn-link btn-sm'),
+                    \Utils::submit(
+                        '<img title="Duplikovat" alt="Duplikovat" src="/style/icon-files-o.png" />',
+                        'category_duplicate',
+                        $item['pc_id'],
+                        'btn btn-link btn-sm'
+                    ),
                     \Buttons::delete('/admin/platby/structure/category/remove/' . $item['pc_id']),
                 ]),
             ],
@@ -207,9 +210,9 @@ class PlatbyCategory
                 'Nemůžu odstranit specifický symbol s připojenými kategoriemi nebo položkami! '
                 . '<form method="post">'
                 . (!$data['pc_archive']
-                   ? ((new \SubmitHelper('Archivovat?'))->data('action', 'archive') . ' nebo ')
+                   ? (\Utils::submit('Archivovat?', 'action', 'archive') . ' nebo ')
                    : '')
-                . (new \SubmitHelper('Odstranit všechna spojení se skupinami a kategoriemi a přesunout ovlivněné platby do nezařazených?'))->data('action', 'unlink')
+                . \Utils::submit('Odstranit všechna spojení se skupinami a kategoriemi a přesunout ovlivněné platby do nezařazených?', 'action', 'unlink')
             );
         }
         \Render::page('files/View/Admin/Platby/StructureSymbolRemove.inc', [
@@ -291,7 +294,7 @@ class PlatbyCategory
         );
         $groups = array_map(
             fn($item) => [
-                'buttons' => new \CheckboxHelper('group[]', $item['pg_id'], isset($groupsSelected[$item['pg_id']])),
+                'buttons' => \Utils::checkbox('group[]', $item['pg_id'], isset($groupsSelected[$item['pg_id']])),
                 'type' => ($item['pg_type'] == '1' ? 'Členské příspěvky' : 'Běžné platby'),
                 'name' => $item['pg_name'],
                 'base' => $item['pg_base']

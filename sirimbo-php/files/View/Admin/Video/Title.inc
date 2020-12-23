@@ -16,6 +16,6 @@
   <form action="" method="post">
     <?= $video1 ?> <?= $video2 ?><br>
     <?= $video3 ?> <?= $video4 ?><br>
-    <?= new \SubmitHelper('Uložit') ?><br>
+    <?= \Utils::submit('Uložit') ?><br>
   </form>
 </div>

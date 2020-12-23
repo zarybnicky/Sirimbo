@@ -1,6 +1,6 @@
 <div class="container">
     <?php
-    echo new PartnerRequestHelper();
+    echo \Utils::partnerRequest();
     if ($havePartner) {
         echo "Právě tančím s: ", $partnerFullName;
     } else {
@@ -8,10 +8,10 @@
     }
     ?>
     <form method="POST" action="">
-        <?= new UserSelectHelper($users, 'partner') ?>
-        <?= (new \SubmitHelper('Požádat o partnerství'))->data('action', 'confirm') ?>
+        <?= \Utils::userSelect($users, 'partner') ?>
+        <?= \Utils::submit('Požádat o partnerství', 'action', 'confirm') ?>
         <?php if ($havePartner) : ?>
-            <?= (new \SubmitHelper('Rozejít se'))->data('action', 'dumpthem') ?>
+            <?= \Utils::submit('Rozejít se', 'action', 'dumpthem') ?>
         <?php endif ?>
         <a class="btn btn-outline-primary" href="/member/profil">Zpět</a>
     </form>

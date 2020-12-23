@@ -9,3 +9,11 @@ parameters:
   checkMissingIterableValueType: false
   bootstrapFiles:
     - phpstan-constants.php
+  fileExtensions:
+    - php
+    - inc
+  ignoreErrors:
+    - message: '#Variable \$[a-zA-Z0-9\\_]+ might not be defined.#'
+      paths: [files/View, files/Template.inc]
+    - message: '#Undefined variable: \$[a-zA-Z0-9\\_]+.#'
+      paths: [files/View]

@@ -30,7 +30,10 @@ class PlatbyItems
         \Render::page('files/View/Admin/Platby/ItemsOverview.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Jednotlivé platby',
-            'users' => \DBUser::getUsers(),
+            'users' => array_map(fn($x) => [
+                'id' => $x['u_id'],
+                'name' => "{$x['u_prijmeni']}, {$x['u_jmeno']}"
+            ], \DBUser::getUsers()),
             'categories' => static::getCategories(),
             'data' => $data,
             'user' => $_GET['user'] ?? '',

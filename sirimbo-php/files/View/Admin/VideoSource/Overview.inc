@@ -24,7 +24,7 @@
              ->column('created', 'Přidáno', null, 'width:100px')
              ->column('lastChecked', 'Poslední kontrola', null, 'width:100px') ?>
     <?php else : ?>
-      <?= new NoticeHelper('Žádné zdroje') ?>
+      <?= \Utils::notice('Žádné zdroje') ?>
     <?php endif ?>
   </form>
 </div>

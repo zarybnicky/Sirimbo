@@ -12,7 +12,7 @@
   <form action="" method="post" enctype="multipart/form-data">
     <div class="form-group">
       <label for="name">Název</label>
-      <?= (new \TextHelper('name', ''))->placeholder('Název') ?>
+      <?= \Utils::text('name', '', ['placeholder' => 'Název']) ?>
     </div>
     <div class="form-group">
       <input type="file" class="form-control-file" name="file">
@@ -27,7 +27,7 @@
       </select>
     </div>
     <div class="form-group">
-      <?= (new \SubmitHelper('Nahrát'))->data('action', 'upload') ?>
+      <?= \Utils::submit('Nahrát', 'action', 'upload') ?>
     </div>
   </form>
 </div>

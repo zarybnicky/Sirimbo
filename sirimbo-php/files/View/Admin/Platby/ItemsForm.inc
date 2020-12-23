@@ -9,16 +9,16 @@ $form = [
         'value' => new \DateHelper('date', $date)
     ], [
         'desc' => 'Částka (Kč):',
-        'value' => new \TextHelper('amount', $amount)
+        'value' => \Utils::text('amount', $amount)
     ], [
         'desc' => 'Uživatel: ',
-        'value' => new \SelectHelper('variable', $users, $variable)
+        'value' => \Utils::select('variable', $users, $variable)
     ], [
         'desc' => 'Specifický symbol:',
-        'value' => new \SelectHelper('specific', $categories, $specific)
+        'value' => \Utils::select('specific', $categories, $specific)
     ], [
         'desc' => 'Prefix (rok):',
-        'value' => new \TextHelper('prefix', $prefix)
+        'value' => \Utils::text('prefix', $prefix)
     ]
 ];
 $formTable = (new TableHelper($form))
@@ -27,7 +27,7 @@ $formTable = (new TableHelper($form))
 ?>
 <form action="" method="post">
     <?= $formTable ?>
-    <?= new \HiddenHelper('returnURI', $returnURI) ?>
+    <?= \Utils::hidden('returnURI', $returnURI) ?>
     <button class="btn btn-primary" name="action" value="confirm">Uložit</button>
     <a class="btn btn-outline-primary" href="<?= $returnURI ?>">Zpět</a>
 </form>
