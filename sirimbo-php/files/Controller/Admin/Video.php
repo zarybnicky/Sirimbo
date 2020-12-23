@@ -18,7 +18,7 @@ class Video
             ],
             $pager->getItems()
         );
-        new \RenderHelper('files/View/Admin/Video/Overview.inc', [
+        \Render::page('files/View/Admin/Video/Overview.inc', [
             'header' => 'Správa videí',
             'data' => $data,
             'action' => 'orphan',
@@ -37,7 +37,7 @@ class Video
             ],
             \DBVideoList::getAll()
         );
-        new \RenderHelper('files/View/Admin/Video/Overview.inc', [
+        \Render::page('files/View/Admin/Video/Overview.inc', [
             'header' => 'Správa videí',
             'data' => $data,
             'action' => 'playlist',
@@ -58,7 +58,7 @@ class Video
             ],
             \DBVideo::getByPlaylist($id)
         );
-        new \RenderHelper('files/View/Admin/Video/Overview.inc', [
+        \Render::page('files/View/Admin/Video/Overview.inc', [
             'header' => 'Správa videí',
             'data' => $data,
             'action' => 'playlist',
@@ -81,7 +81,7 @@ class Video
     {
         \Permissions::checkError('aktuality', P_OWNED);
         $select = (new \SelectHelper())->optionsAssoc(\DBVideo::getAll(), 'v_id', 'v_title');
-        new \RenderHelper('files/View/Admin/Video/Title.inc', [
+        \Render::page('files/View/Admin/Video/Title.inc', [
             'header' => 'Správa videí',
             'video1' => (string) $select->name('video1')->set(\DBParameters::get('title_video1')),
             'video2' => (string) $select->name('video2')->set(\DBParameters::get('title_video2')),
@@ -151,7 +151,7 @@ class Video
     {
         \Permissions::checkError('aktuality', P_OWNED);
         $item = \DBVideo::getSingle($id);
-        new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
+        \Render::page('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa videí',
             'prompt' => 'Opravdu chcete odstranit video:',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/video',
@@ -169,7 +169,7 @@ class Video
 
     protected static function displayForm($action, $data = [])
     {
-        new \RenderHelper('files/View/Admin/Video/Form.inc', [
+        \Render::page('files/View/Admin/Video/Form.inc', [
             'header' => 'Správa videí',
             'subheader' => $action == 'add' ? 'Přidat video' : 'Upravit video',
             'action' => $action == 'add' ? 'Přidat' : 'Upravit',

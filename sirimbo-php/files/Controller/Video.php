@@ -33,7 +33,7 @@ class Video
             \DBVideoList::getAll()
         );
         $playlists[] = ['id' => 'other', 'title' => 'Nezařazená videa'];
-        new \RenderHelper('files/View/Main/Video.inc', [
+        \Render::page('files/View/Main/Video.inc', [
             'header' => 'Video',
             'subheader' => $playlist,
             'videos' => $videos,

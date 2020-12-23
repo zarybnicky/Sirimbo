@@ -14,7 +14,7 @@ class Galerie
             ],
             \DBGalerie::getDirs(true, true),
         );
-        new \RenderHelper('files/View/Admin/Galerie/Overview.inc', [
+        \Render::page('files/View/Admin/Galerie/Overview.inc', [
             'header' => 'Správa fotogalerie',
             'data' => $data
         ]);

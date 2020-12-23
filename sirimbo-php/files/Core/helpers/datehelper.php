@@ -80,7 +80,7 @@ class DateHelper
 
     public static function getPostRange($name)
     {
-        if (!$_POST[$name]) {
+        if (empty($_POST[$name])) {
             return ['from' => new \Date(), 'to' => new \Date()];
         }
         if (strpos($_POST[$name], ' - ')) {

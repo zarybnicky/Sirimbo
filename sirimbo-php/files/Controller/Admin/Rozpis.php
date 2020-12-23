@@ -24,7 +24,7 @@ class Rozpis
             ],
             $data
         );
-        new \RenderHelper('files/View/Admin/Rozpis/Overview.inc', [
+        \Render::page('files/View/Admin/Rozpis/Overview.inc', [
             'header' => 'Správa rozpisů',
             'data' => $data
         ]);
@@ -156,7 +156,7 @@ class Rozpis
             ? \DBUser::getUsersByPermission('rozpis', P_OWNED)
             : [\DBUser::getUserData(\Session::getUser()->getId())];
 
-        new \RenderHelper('files/View/Admin/Rozpis/Form.inc', [
+        \Render::page('files/View/Admin/Rozpis/Form.inc', [
             'header' => 'Správa rozpisů',
             'subheader' => ($data === null ? 'Přidat' : 'Upravit') . ' rozpis',
             'action' => $action,

@@ -56,7 +56,7 @@ class GalerieFile
     {
         \Permissions::checkError('galerie', P_OWNED);
         $item = \DBGalerie::getSingleFoto($id);
-        new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
+        \Render::page('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa galerie',
             'prompt' => 'Opravdu chcete odstranit fotografie:',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/galerie',
@@ -84,7 +84,7 @@ class GalerieFile
             ],
             \DBGalerie::getDirs(true, true)
         );
-        return new \RenderHelper('files/View/Admin/Galerie/Upload.inc', [
+        \Render::page('files/View/Admin/Galerie/Upload.inc', [
             'header' => 'Správa fotogalerie',
             'subheader' => 'Upload',
             'dirs' => $dirs,
@@ -156,7 +156,7 @@ class GalerieFile
             ],
             \DBGalerie::getDirs(true, true)
         );
-        new \RenderHelper('files/View/Admin/Galerie/FormFile.inc', [
+        \Render::page('files/View/Admin/Galerie/FormFile.inc', [
             'header' => 'Správa fotogalerie',
             'subheader' => 'Upravit soubor',
             'id' => $id,

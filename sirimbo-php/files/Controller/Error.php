@@ -20,6 +20,6 @@ class Error
             $notice = "Chybová stránka s daným ID nebyla nalezena";
         }
         \Message::danger($notice);
-        new \RenderHelper('files/View/Empty.inc', ['header' => 'Chyba']);
+        \Render::page('files/View/Empty.inc', ['header' => 'Chyba']);
     }
 }

@@ -10,7 +10,7 @@ class GalerieDirectory
             \Message::warning('Složka s takovým ID neexistuje');
             \Redirect::to('/admin/galerie');
         }
-        new \RenderHelper('files/View/Admin/Galerie/DisplayDirectory.inc', [
+        \Render::page('files/View/Admin/Galerie/DisplayDirectory.inc', [
             'header' => 'Správa fotogalerie',
             'id' => $id,
             'files' => array_map(
@@ -111,7 +111,7 @@ class GalerieDirectory
     {
         \Permissions::checkError('galerie', P_OWNED);
         $item = \DBGalerie::getSingleDir($id);
-        new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
+        \Render::page('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa galerie',
             'prompt' => 'Opravdu chcete odstranit složky se všemi podsložkami a fotkami:',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/galerie',
@@ -141,7 +141,7 @@ class GalerieDirectory
             \DBGalerie::getDirs(true, true)
         );
 
-        return new \RenderHelper('files/View/Admin/Galerie/FormDirectory.inc', [
+        \Render::page('files/View/Admin/Galerie/FormDirectory.inc', [
             'header' => 'Správa fotogalerie',
             'subheader' => ($action == 'add' ? 'Přidat' : 'Upravit') . ' složku',
             'dirs' => $dirs,

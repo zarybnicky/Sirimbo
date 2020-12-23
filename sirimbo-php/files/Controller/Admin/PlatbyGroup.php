@@ -6,7 +6,7 @@ class PlatbyGroup
     public static function list()
     {
         \Permissions::checkError('platby', P_OWNED);
-        new \RenderHelper('files/View/Admin/Platby/StructureGroupOverview.inc', [
+        \Render::page('files/View/Admin/Platby/StructureGroupOverview.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Kategorie plateb',
             'data' => array_map(
@@ -130,7 +130,7 @@ class PlatbyGroup
                 )
             );
         }
-        return new \RenderHelper('files/View/Admin/Platby/StructureGroupRemove.inc', [
+        \Render::page('files/View/Admin/Platby/StructureGroupRemove.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Kategorie plateb',
             'id' => $id,
@@ -220,7 +220,7 @@ class PlatbyGroup
             \DBSkupiny::get()
         );
 
-        new \RenderHelper('files/View/Admin/Platby/StructureGroupForm.inc', [
+        \Render::page('files/View/Admin/Platby/StructureGroupForm.inc', [
             'header' => 'Správa plateb',
             'subheader' => $action == 'add' ? 'Přidat kategorii' : 'Upravit kategorii',
             'id' => $id,

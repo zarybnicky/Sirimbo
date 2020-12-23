@@ -5,7 +5,7 @@ class Kontakt
 {
     public static function get()
     {
-        new \RenderHelper('files/View/Main/Kontakt.inc', [
+        \Render::page('files/View/Main/Kontakt.inc', [
             'header' => 'Kontakt'
         ]);
     }

@@ -92,7 +92,7 @@ class PlatbyManual
         $raw = $new;
 
         $remainingCount = count(\DBPlatbyRaw::getUnsorted());
-        new \RenderHelper('files/View/Admin/Platby/ManualForm.inc', [
+        \Render::page('files/View/Admin/Platby/ManualForm.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Ruční třídění plateb</span> (zbývá ' . $remainingCount . ')',
             'id' => $id,

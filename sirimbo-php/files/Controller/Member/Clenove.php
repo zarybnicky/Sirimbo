@@ -9,7 +9,7 @@ class Clenove
         if (!($data = \DBUser::getUser($id))) {
             \Redirect::to('/member/clenove');
         }
-        new \RenderHelper('files/View/Member/Clenove/Single.inc', [
+        \Render::page('files/View/Member/Clenove/Single.inc', [
             'header' => 'Přehled členů',
             'fullName' => $data->getFullName(),
             'email' => $data->getEmail(),
@@ -39,7 +39,7 @@ class Clenove
             }
             $skupiny[$currentKey]['userCount']++;
         }
-        new \RenderHelper('files/View/Member/Clenove/SkupinyList.inc', [
+        \Render::page('files/View/Member/Clenove/SkupinyList.inc', [
             'header' => 'Přehled členů',
             'data' => $skupiny,
         ]);
@@ -55,7 +55,7 @@ class Clenove
             },
             \DBUser::getActiveUsers()
         );
-        new \RenderHelper('files/View/Member/Clenove/UserList.inc', [
+        \Render::page('files/View/Member/Clenove/UserList.inc', [
             'header' => 'Přehled členů',
             'data' => $data,
         ]);
@@ -107,7 +107,7 @@ class Clenove
             }
         }
 
-        new \RenderHelper('files/View/Member/Clenove/Structure.inc', [
+        \Render::page('files/View/Member/Clenove/Structure.inc', [
             'header' => 'Přehled členů',
             'columns' => $columns,
         ]);

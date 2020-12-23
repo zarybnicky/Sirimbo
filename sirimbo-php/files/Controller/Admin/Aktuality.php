@@ -20,7 +20,7 @@ class Aktuality
             ? \DBAktuality::getAktuality(1)
             : \DBAktuality::getAktuality(1, \Session::getUser()->getId())
         );
-        new \RenderHelper('files/View/Admin/Aktuality/Overview.inc', [
+        \Render::page('files/View/Admin/Aktuality/Overview.inc', [
             'header' => 'Správa aktualit',
             'data' => $data,
         ]);
@@ -29,7 +29,7 @@ class Aktuality
     public static function add()
     {
         \Permissions::checkError('aktuality', P_OWNED);
-        return new \RenderHelper('files/View/Admin/Aktuality/Form.inc', [
+        \Render::page('files/View/Admin/Aktuality/Form.inc', [
             'header' => 'Správa aktualit',
             'subheader' => 'Přidat článek',
             'action' => 'add',
@@ -66,7 +66,7 @@ class Aktuality
             \Redirect::to('/admin/aktuality');
         }
         \Permissions::checkError('aktuality', P_OWNED, $data['at_kdo']);
-        return new \RenderHelper('files/View/Admin/Aktuality/Form.inc', [
+        \Render::page('files/View/Admin/Aktuality/Form.inc', [
             'header' => 'Správa aktualit',
             'subheader' => 'Upravit článek',
             'action' => 'edit',
@@ -88,7 +88,7 @@ class Aktuality
 
         if (\DateTime::createFromFormat('j. n. Y H:i', $_POST['createdAt']) === false) {
             \Message::danger('Špatný formát data "Publikováno" (D. M. RRRR HH:SS)');
-            return new \RenderHelper('files/View/Admin/Aktuality/Form.inc', [
+            \Render::page('files/View/Admin/Aktuality/Form.inc', [
                 'header' => 'Správa aktualit',
                 'subheader' => 'Upravit článek',
                 'action' => 'edit',
@@ -97,6 +97,7 @@ class Aktuality
                 'text' => $_POST['text'],
                 'createdAt' => $_POST['createdAt'],
             ]);
+            return;
         }
         \DBAktuality::editAktualita(
             $id,
@@ -115,7 +116,7 @@ class Aktuality
     {
         \Permissions::checkError('aktuality', P_OWNED);
         $item = \DBAktuality::getSingleAktualita($id);
-        new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
+        \Render::page('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa aktualit',
             'prompt' => 'Opravdu chcete odstranit články:',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/aktuality',
@@ -164,7 +165,7 @@ class Aktuality
             $dirs[$item['gd_id']] = str_repeat("&nbsp;&nbsp;", $item['gd_level'] - 1) . $item['gd_name'];
         }
 
-        return new \RenderHelper('files/View/Admin/Aktuality/FormFoto.inc', [
+        \Render::page('files/View/Admin/Aktuality/FormFoto.inc', [
             'header' => 'Správa článků',
             'photos' => $photos,
             'dir' => $_GET['dir'] ?? 0,

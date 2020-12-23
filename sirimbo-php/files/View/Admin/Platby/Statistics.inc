@@ -1,4 +1,4 @@
-<?php new \RenderHelper('files/View/Admin/Platby/Navigation.inc', [], true) ?>
+<?php \Render::fragment('files/View/Admin/Platby/Navigation.inc') ?>
 
 <div class="container">
   <div class="row flex-wrap">

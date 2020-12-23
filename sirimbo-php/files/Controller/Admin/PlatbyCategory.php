@@ -6,7 +6,7 @@ class PlatbyCategory
     public static function list()
     {
         \Permissions::checkError('platby', P_OWNED);
-        new \RenderHelper('files/View/Admin/Platby/StructureSymbolOverview.inc', [
+        \Render::page('files/View/Admin/Platby/StructureSymbolOverview.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Specifické symboly',
             'data' => static::getCategories(false),
@@ -212,7 +212,7 @@ class PlatbyCategory
                 . (new \SubmitHelper('Odstranit všechna spojení se skupinami a kategoriemi a přesunout ovlivněné platby do nezařazených?'))->data('action', 'unlink')
             );
         }
-        return new \RenderHelper('files/View/Admin/Platby/StructureSymbolRemove.inc', [
+        \Render::page('files/View/Admin/Platby/StructureSymbolRemove.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Specifické symboly',
             'id' => $id,
@@ -299,7 +299,7 @@ class PlatbyCategory
             \DBPlatbyGroup::getGroups()
         );
 
-        new \RenderHelper('files/View/Admin/Platby/StructureSymbolForm.inc', [
+        \Render::page('files/View/Admin/Platby/StructureSymbolForm.inc', [
             'header' => 'Správa plateb',
             'subheader' => ($action == 'add' ? 'Přidat' : 'Upravit') . ' specifický symbol',
             'id' => $id,

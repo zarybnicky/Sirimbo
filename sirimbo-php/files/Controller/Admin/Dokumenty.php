@@ -25,7 +25,7 @@ class Dokumenty
             ? \DBDokumenty::getDokumenty()
             : \DBDokumenty::getDokumentyByAuthor(\Session::getUser()->getId())
         );
-        new \RenderHelper('files/View/Admin/Dokumenty/Overview.inc', [
+        \Render::page('files/View/Admin/Dokumenty/Overview.inc', [
             'header' => 'Správa dokumentů',
             'data' => $data,
         ]);
@@ -73,7 +73,7 @@ class Dokumenty
             \Redirect::to('/admin/dokumenty');
         }
         \Permissions::checkError('dokumenty', P_OWNED, $data['d_kdo']);
-        new \RenderHelper('files/View/Admin/Dokumenty/Form.inc', [
+        \Render::page('files/View/Admin/Dokumenty/Form.inc', [
             'header' => 'Správa dokumentů',
             'name' => $data['d_name']
         ]);
@@ -95,7 +95,7 @@ class Dokumenty
     public static function remove($id)
     {
         \Permissions::checkError('dokumenty', P_OWNED);
-        new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
+        \Render::page('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa dokumentů',
             'prompt' => 'Opravdu chcete odstranit dokument:',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/dokumenty',

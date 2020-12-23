@@ -10,7 +10,7 @@ class Akce
             \Message::warning('Žádná taková akce neexistuje');
             \Redirect::to('/member/akce');
         }
-        return new \RenderHelper('files/View/Member/Akce/Single.inc', [
+        \Render::page('files/View/Member/Akce/Single.inc', [
             'header' => 'Klubové akce',
             'data' => static::_getRenderData($data)
         ]);
@@ -40,15 +40,16 @@ class Akce
         \Permissions::checkError('akce', P_VIEW);
         $data = \DBAkce::getAkce(true);
         if (!$data) {
-            return new \RenderHelper('files/View/Empty.inc', [
+            \Render::page('files/View/Empty.inc', [
                 'header' => 'Klubové akce',
                 'notice' => 'Žádné akce nejsou k dispozici.'
             ]);
+        } else {
+            \Render::page('files/View/Member/Akce/Overview.inc', [
+                'header' => 'Klubové akce',
+                'akce' => array_map(fn($item) => static::_getRenderData($item), $data),
+            ]);
         }
-        new \RenderHelper('files/View/Member/Akce/Overview.inc', [
-            'header' => 'Klubové akce',
-            'akce' => array_map(fn($item) => static::_getRenderData($item), $data),
-        ]);
     }
 
     private static function _getRenderData($data)

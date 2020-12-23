@@ -6,7 +6,7 @@ class VideoSource
     public static function list()
     {
         \Permissions::checkError('aktuality', P_OWNED);
-        new \RenderHelper('files/View/Admin/VideoSource/Overview.inc', [
+        \Render::page('files/View/Admin/VideoSource/Overview.inc', [
             'header' => 'Správa zdrojů videa',
             'data' => array_map(
                 fn($item) => [
@@ -70,7 +70,7 @@ class VideoSource
     {
         \Permissions::checkError('aktuality', P_OWNED);
         $item = \DBVideo::getSingle($id);
-        new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
+        \Render::page('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa videí',
             'prompt' => 'Opravdu chcete odstranit zdroj:',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/video/source',
@@ -88,7 +88,7 @@ class VideoSource
 
     protected static function displayForm($action, $data = [])
     {
-        new \RenderHelper('files/View/Admin/VideoSource/Form.inc', [
+        \Render::page('files/View/Admin/VideoSource/Form.inc', [
             'header' => 'Správa zdrojů videa',
             'subheader' => $action == 'add' ? 'Přidat zdroj' : 'Upravit zdroj',
             'action' => $action == 'add' ? 'Přidat' : 'Upravit',

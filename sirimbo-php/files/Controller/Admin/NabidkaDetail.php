@@ -27,7 +27,7 @@ class NabidkaDetail
             'lessonCount' => (new \TextHelper('add_hodiny', ''))->size('1'),
             'removeButton' => new \SubmitHelper('Přidat')
         ];
-        return new \RenderHelper('files/View/Admin/Nabidka/Detail.inc', [
+        \Render::page('files/View/Admin/Nabidka/Detail.inc', [
             'header' => 'Správa nabídky',
             'nabidka' => [
                 'id' => $data['n_id'],

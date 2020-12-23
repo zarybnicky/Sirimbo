@@ -80,7 +80,7 @@ class Users
             $pager->getItems()
         );
 
-        new \RenderHelper('files/View/Admin/Users/Overview.inc', [
+        \Render::page('files/View/Admin/Users/Overview.inc', [
             'header' => 'Správa uživatelů',
             'groupOptions' => $groupOptions,
             'skupinyOptions' => $skupinyOptions,
@@ -143,7 +143,7 @@ class Users
     {
         \Permissions::checkError('users', P_ADMIN);
         $item = \DBUser::getUserData($id);
-        new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
+        \Render::page('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa uživatelů',
             'prompt' => 'Opravdu chcete odstranit uživatele:',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/users',
@@ -375,10 +375,11 @@ class Users
         \Permissions::checkError('users', P_ADMIN);
         $users = \DBUser::getNewUsers();
         if (empty($users)) {
-            return new \RenderHelper('files/View/Empty.inc', [
+            \Render::page('files/View/Empty.inc', [
                 'header' => 'Správa uživatelů',
                 'notice' => 'Žádní nepotvrzení uživatelé nejsou v databázi.'
             ]);
+            return;
         }
         $groups = \DBPermissions::getGroups();
         $s_group = (new \SelectHelper())->optionsAssoc($groups, 'pe_id', 'pe_name')->set(3);
@@ -400,7 +401,7 @@ class Users
             ],
             $users
         );
-        new \RenderHelper('files/View/Admin/Users/Unconfirmed.inc', [
+        \Render::page('files/View/Admin/Users/Unconfirmed.inc', [
             'header' => 'Správa uživatelů',
             'subheader' => 'Nepotvrzení uživatelé',
             'data' => $users
@@ -436,7 +437,7 @@ class Users
             ],
             \DBUser::getDuplicateUsers()
         );
-        new \RenderHelper('files/View/Admin/Users/Duplicate.inc', [
+        \Render::page('files/View/Admin/Users/Duplicate.inc', [
             'header' => 'Správa uživatelů',
             'subheader' => 'Duplicitní uživatelé',
             'data' => $users
@@ -446,7 +447,7 @@ class Users
     public static function statistiky()
     {
         \Permissions::checkError('users', P_ADMIN);
-        new \RenderHelper('files/View/Admin/Users/Statistiky.inc', [
+        \Render::page('files/View/Admin/Users/Statistiky.inc', [
             'header' => 'Správa uživatelů',
             'subheader' => 'Statistiky',
             'data' => array_merge(
@@ -464,7 +465,7 @@ class Users
 
     private static function displayForm($action)
     {
-        new \RenderHelper('files/View/Admin/Users/Form.inc', [
+        \Render::page('files/View/Admin/Users/Form.inc', [
             'header' => 'Správa uživatelů',
             'subheader' => ($action == 'add' ? 'Přidat' : 'Upravit') . ' uživatele',
             'action' => $action,

@@ -1,4 +1,4 @@
-<?php new \RenderHelper('files/View/Admin/Platby/Navigation.inc', [], true) ?>
+<?php \Render::fragment('files/View/Admin/Platby/Navigation.inc') ?>
 
 <div class="container">
   <a style="display:block;margin-bottom:8px;" href="?list=all">Všechny platby</a>

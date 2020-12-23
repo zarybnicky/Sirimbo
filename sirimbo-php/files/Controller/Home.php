@@ -40,7 +40,7 @@ class Home
             ])
         );
 
-        new \RenderHelper('files/View/Main/Home.inc', [
+        \Render::page('files/View/Main/Home.inc', [
             'highlights' => $highlights,
             'moreArticles' => $moreArticles,
             'videos' => $videos

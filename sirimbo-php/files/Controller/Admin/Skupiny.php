@@ -14,7 +14,7 @@ class Skupiny
             ],
             \DBSkupiny::get()
         );
-        new \RenderHelper('files/View/Admin/Skupiny/Overview.inc', [
+        \Render::page('files/View/Admin/Skupiny/Overview.inc', [
             'header' => 'Správa skupin',
             'data' => $data
         ]);
@@ -91,7 +91,7 @@ class Skupiny
                 . "</form>"
             );
         }
-        return new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
+        \Render::page('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa skupin',
             'prompt' => 'Opravdu chcete odstranit skupinu?',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/skupiny',
@@ -139,7 +139,7 @@ class Skupiny
             \DBPlatbyGroup::getGroups()
         );
 
-        new \RenderHelper('files/View/Admin/Skupiny/Form.inc', [
+        \Render::page('files/View/Admin/Skupiny/Form.inc', [
             'header' => 'Správa skupin',
             'subheader' => $action == 'add' ? 'Přidat skupinu' : 'Upravit skupinu',
             'id' => $id,

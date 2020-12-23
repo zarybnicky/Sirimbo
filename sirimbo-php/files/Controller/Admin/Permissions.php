@@ -14,7 +14,7 @@ class Permissions
             ],
             \DBPermissions::getGroups()
         );
-        new \RenderHelper('files/View/Admin/Permissions/Overview.inc', [
+        \Render::page('files/View/Admin/Permissions/Overview.inc', [
             'header' => 'Správa oprávnění',
             'data' => $data
         ]);
@@ -76,7 +76,7 @@ class Permissions
     {
         \Permissions::checkError('permissions', P_ADMIN);
         $item = \DBPermissions::getSingleGroup($id);
-        new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
+        \Render::page('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa oprávnění',
             'prompt' =>
                 new \NoticeHelper('Uživatelům z této skupiny bude nutné přiřadit jinou skupinu!')
@@ -120,7 +120,7 @@ class Permissions
             \Permissions::$permissions
         );
 
-        new \RenderHelper('files/View/Admin/Permissions/Form.inc', [
+        \Render::page('files/View/Admin/Permissions/Form.inc', [
             'header' => 'Správa oprávnění',
             'subheader' => (
                 !$data ? 'Přidat uživatelskou skupinu' : 'Upravit uživatelskou skupinu'

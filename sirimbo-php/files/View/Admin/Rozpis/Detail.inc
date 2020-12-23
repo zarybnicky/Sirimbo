@@ -2,7 +2,7 @@
   <form action="" method="POST">
     <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
     <div class="r_wrapper">
-      <?php new \RenderHelper('files/View/Member/Rozpis/Header.inc', $data, true) ?>
+      <?php \Render::fragment('files/View/Member/Rozpis/Header.inc', $data) ?>
       <table>
         <tr>
           <td>Tanečník</td>
@@ -50,7 +50,7 @@
     <?= new \SubmitHelper('Vybrat nabídku') ?>
     <?php if ($nabidka) : ?>
       <div class="n_wrapper">
-        <?php new \RenderHelper('files/View/Member/Nabidka/Header.inc', $nabidka, true) ?>
+        <?php \Render::fragment('files/View/Member/Nabidka/Header.inc', $nabidka) ?>
         <table>
           <tr>
             <td>Tanečník</td>

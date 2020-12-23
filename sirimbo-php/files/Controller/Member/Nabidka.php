@@ -50,13 +50,14 @@ class Nabidka
         );
 
         if (empty($data)) {
-            return new \RenderHelper('files/View/Empty.inc', [
+            \Render::page('files/View/Empty.inc', [
                 'header' => 'Nabídka tréninků',
                 'notice' => 'Žádná nabídka k dispozici'
             ]);
+            return;
         }
 
-        new \RenderHelper('files/View/Member/Nabidka/Overview.inc', [
+        \Render::page('files/View/Member/Nabidka/Overview.inc', [
             'header' => 'Nabídka tréninků',
             'data' => $data
         ]);

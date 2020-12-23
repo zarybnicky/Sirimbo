@@ -23,7 +23,7 @@ class PlatbyRaw
             }
             \Message::success('Soubor ' . $fileInfo->getFilename() . ' byl zpracován.');
         }
-        new \RenderHelper('files/View/Admin/Platby/RawUpload.inc', [
+        \Render::page('files/View/Admin/Platby/RawUpload.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Import plateb',
         ]);
@@ -53,7 +53,7 @@ class PlatbyRaw
             ],
             $parser->headers()
         );
-        new \RenderHelper('files/View/Admin/Platby/RawColumnSelect.inc', [
+        \Render::page('files/View/Admin/Platby/RawColumnSelect.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Import plateb',
             'data' => $data,

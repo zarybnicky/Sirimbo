@@ -1,4 +1,4 @@
-<?php new \RenderHelper('files/View/Admin/Platby/Navigation.inc', [], true) ?>
+<?php \Render::fragment('files/View/Admin/Platby/Navigation.inc') ?>
 
 <div class="container">
     <h3>Upload souboru CSV</h3>

@@ -1,4 +1,4 @@
-<?php new \RenderHelper('files/View/Admin/Platby/Navigation.inc', ['uri' => $uri], true) ?>
+<?php Render::fragment('files/View/Admin/Platby/Navigation.inc') ?>
 
 <div class="container">
     <a href="/admin/platby/structure/group/add">Přidat kategorii</a>&nbsp;

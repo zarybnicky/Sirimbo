@@ -1,4 +1,4 @@
-<?php new \RenderHelper('files/View/Admin/Platby/Navigation.inc', ['uri' => $uri], true) ?>
+<?php \Render::fragment('files/View/Admin/Platby/Navigation.inc') ?>
 
 <div class="container">
     <h3>Odstranit kategorii?</h3>

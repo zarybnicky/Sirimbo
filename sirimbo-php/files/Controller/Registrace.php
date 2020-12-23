@@ -11,7 +11,7 @@ class Registrace
             'popis' => $item['s_name']
         ], \DBSkupiny::get());
 
-        return new \RenderHelper('files/View/Main/Registrace.inc', [
+        \Render::page('files/View/Main/Registrace.inc', [
             'header' => 'Registrace',
             'skupiny' => $skupiny,
             'username' => '',
@@ -65,7 +65,7 @@ class Registrace
             ], \DBSkupiny::get());
 
             \Message::warning($f->getMessages());
-            return new \RenderHelper('files/View/Main/Registrace.inc', [
+            \Render::page('files/View/Main/Registrace.inc', [
                 'header' => 'Registrace',
                 'skupiny' => $skupiny,
                 'username' => $_POST['username'] ?? '',
@@ -88,6 +88,7 @@ class Registrace
                 'skupina' => $_POST['skupina'] ?? '',
                 'other' => $_POST['other'] ?? ''
             ]);
+            return;
         }
 
         $login = strtolower($_POST['username']);

@@ -11,9 +11,9 @@ class PlatbyDiscarded
             \Message::info('V databázi nejsou žádné vyřazené platby.');
             \Redirect::to('/admin/platby');
         }
-        if ($_GET['list']) {
+        if (isset($_GET['list'])) {
             static::_getTable($data, $result, $columns, $header);
-            new \RenderHelper('files/View/Admin/Platby/DiscardedTable.inc', [
+            \Render::page('files/View/Admin/Platby/DiscardedTable.inc', [
                 'header' => 'Správa plateb',
                 'subheader' => 'Vyřazené platby (' . $header . ')',
                 'data' => $result,
@@ -21,7 +21,7 @@ class PlatbyDiscarded
             ]);
         } else {
             static::_getList($data, $groupAmount, $groupDate);
-            new \RenderHelper('files/View/Admin/Platby/DiscardedList.inc', [
+            \Render::page('files/View/Admin/Platby/DiscardedList.inc', [
                 'header' => 'Správa plateb',
                 'subheader' => 'Vyřazené platby',
                 'groupByDate' => $groupDate,

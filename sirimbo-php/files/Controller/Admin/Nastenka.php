@@ -24,7 +24,7 @@ class Nastenka
             ],
             $pager->getItems(),
         );
-        new \RenderHelper('files/View/Admin/Nastenka/Overview.inc', [
+        \Render::page('files/View/Admin/Nastenka/Overview.inc', [
             'header' => 'Správa nástěnky',
             'showButtonsCol' => !!array_filter(array_map(fn($x) => $x['buttons'], $data)),
             'data' => $data,
@@ -139,7 +139,7 @@ class Nastenka
             \Redirect::to($_POST['returnURI'] ?? '/admin/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
-        return new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
+        \Render::page('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa nástěnky',
             'prompt' => 'Opravdu chcete odstranit příspěvek:',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/nastenka',
@@ -166,7 +166,7 @@ class Nastenka
         foreach ($skupiny as $item) {
             $skupinySelected[$item['s_id']] = $_POST['sk-' . $item['s_id']] ?? null;
         }
-        new \RenderHelper('files/View/Admin/Nastenka/Form.inc', [
+        \Render::page('files/View/Admin/Nastenka/Form.inc', [
             'header' => 'Správa nástěnky',
             'subheader' => ($action === 'add') ? 'Přidat příspěvek' : 'Upravit příspěvek',
             'action' => $action,

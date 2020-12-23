@@ -46,12 +46,12 @@ class Rozpis
         );
 
         if ($data) {
-            new \RenderHelper('files/View/Member/Rozpis/Overview.inc', [
+            \Render::page('files/View/Member/Rozpis/Overview.inc', [
                 'header' => 'Rozpis tréninků',
                 'data' => $data
             ]);
         } else {
-            new \RenderHelper('files/View/Empty.inc', [
+            \Render::page('files/View/Empty.inc', [
                 'header' => 'Rozpis tréninků',
                 'notice' => 'Žádné aktuální rozpisy nejsou k dispozici.'
             ]);

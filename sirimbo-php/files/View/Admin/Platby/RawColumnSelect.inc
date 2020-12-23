@@ -1,4 +1,4 @@
-<?php new \RenderHelper('files/View/Admin/Platby/Navigation.inc', [], true) ?>
+<?php \Render::fragment('files/View/Admin/Platby/Navigation.inc') ?>
 
 <h3>Určení požadovaných sloupců</h3>
 <div class="container">

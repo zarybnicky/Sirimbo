@@ -1,7 +1,7 @@
 <?php
-class RenderHelper
+class Render
 {
-    public function __construct($filename, array $vars = [], $standalone = false)
+    public static function getGlobals(): array
     {
         $pos = strpos($_SERVER['REQUEST_URI'], '?');
         $uri = '/' . trim(
@@ -11,20 +11,22 @@ class RenderHelper
             ),
             '/'
         );
-        $globals = [
+        return [
             'currentUri' => $uri,
             'currentUser' => \Session::getUser(),
         ];
+    }
 
-        $renderer = new \Renderer();
-        $content = $renderer->render($filename, array_merge($globals, $vars));
+    public static function fragment(string $file, array $vars = []): void
+    {
+        echo self::renderString($file, array_merge(self::getGlobals(), $vars));
+    }
 
-        if ($standalone) {
-            echo $content;
-            return;
-        }
-
-        echo $renderer->render('files/Template.inc', array_merge($globals, [
+    public static function page(string $file, array $vars = []): void
+    {
+        $globals = self::getGlobals();
+        $content = self::renderString($file, array_merge($globals, $vars));
+        echo self::renderString('files/Template.inc', array_merge($globals, [
             'navbar' => static::getNavbar(),
             'content' => $content,
             'meta' => $vars['meta'] ?? [],
@@ -34,7 +36,19 @@ class RenderHelper
         ]));
     }
 
-    private static function getNavbar()
+    private static function renderString(string $__file, array $__vars = []): string
+    {
+        if (!file_exists($__file)) {
+            syslog(LOG_WARNING, "Could not find file $__file to render\n");
+            throw new NotFoundException("Soubor nebyl nalezen!");
+        }
+        ob_start();
+        extract($__vars, EXTR_SKIP);
+        include $__file;
+        return ob_get_clean();
+    }
+
+    private static function getNavbar(): array
     {
         $menu = [[
             ['Klub', '/', [

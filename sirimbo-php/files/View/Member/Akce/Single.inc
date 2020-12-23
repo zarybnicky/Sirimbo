@@ -2,7 +2,7 @@
   <?php
   unset($data['info']);
   unset($data['dokumenty']);
-  new \RenderHelper('files/View/Member/Akce/Header.inc', $data, true);
+  \Render::fragment('files/View/Member/Akce/Header.inc', $data);
   ?>
 
   <div style="text-align:center;">

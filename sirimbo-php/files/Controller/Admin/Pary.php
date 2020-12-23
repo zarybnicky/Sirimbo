@@ -17,7 +17,7 @@ class Pary
             ],
             \DBPary::getActivePary()
         );
-        new \RenderHelper('files/View/Admin/Pary/Overview.inc', [
+        \Render::page('files/View/Admin/Pary/Overview.inc', [
             'header' => 'Správa párů',
             'data' => $data,
             'usersMen' => \DBUser::getUsersByPohlavi('m'),
@@ -52,7 +52,7 @@ class Pary
             \Message::warning('Pár s takovým ID neexistuje');
             \Redirect::to('/admin/pary');
         }
-        return new \RenderHelper('files/View/Admin/Pary/Form.inc', [
+        \Render::page('files/View/Admin/Pary/Form.inc', [
             'header' => 'Správa párů',
             'subheader' => 'Změna třídy a bodů',
             'fullName' => (

@@ -17,13 +17,14 @@ class Fotogalerie
 
         $photos = \DBGalerie::getFotky($id);
         if (!$photos) {
-            return new \RenderHelper('files/View/Empty.inc', [
+            \Render::page('files/View/Empty.inc', [
                 'nadpis' => $dir['gd_name'],
                 'notice' => 'Žádné fotky k dispozici.'
             ]);
+            return;
         }
 
-        new \RenderHelper('files/View/Main/Fotogalerie/Overview.inc', [
+        \Render::page('files/View/Main/Fotogalerie/Overview.inc', [
             'nadpis' => $dir['gd_name'],
             'sidemenu' => static::sidemenu($id),
             'photos' => array_map(
@@ -60,7 +61,7 @@ class Fotogalerie
         $hasPrev = isset($parent_dir[$current - 1]);
         $hasNext = isset($parent_dir[$current + 1]);
 
-        new \RenderHelper('files/View/Main/Fotogalerie/Single.inc', [
+        \Render::page('files/View/Main/Fotogalerie/Single.inc', [
             'id'        => $id,
             'src'       => '/galerie/' . $data['gf_path'],
             'hasPrev'   => $hasPrev,

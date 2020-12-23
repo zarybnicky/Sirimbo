@@ -1,4 +1,4 @@
-<?php new \RenderHelper('files/View/Member/Clenove/Navigation.inc', [], true) ?>
+<?php \Render::fragment('files/View/Member/Clenove/Navigation.inc') ?>
 
 <div class="container">
   <div class="row flex-wrap">

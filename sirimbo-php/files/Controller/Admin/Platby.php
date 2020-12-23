@@ -52,7 +52,7 @@ class Platby
                 $rightCount += ($skupina['info']['count']);
             }
         }
-        new \RenderHelper('files/View/Admin/Platby/Statistics.inc', [
+        \Render::page('files/View/Admin/Platby/Statistics.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Členové podle skupin',
             'columns' => $columns,
@@ -62,7 +62,7 @@ class Platby
     public static function structure()
     {
         \Permissions::checkError('platby', P_OWNED);
-        new \RenderHelper('files/View/Admin/Platby/StructureOverview.inc', [
+        \Render::page('files/View/Admin/Platby/StructureOverview.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Struktura plateb',
             'data' => array_map(

@@ -44,7 +44,7 @@ class Profil
             ];
         }
 
-        new \RenderHelper('files/View/Member/Profil/Overview.inc', [
+        \Render::page('files/View/Member/Profil/Overview.inc', [
             'header' => $user->getFullName(),
             'ageGroup' => self::getAgeGroup($user->getBirthYear()),
             'coupleData' => \DBPary::getLatestPartner($user->getId(), $user->getGender()),
@@ -88,7 +88,7 @@ class Profil
 
     public static function renderPersonalForm()
     {
-        new \RenderHelper('files/View/Member/Profil/PersonalData.inc', [
+        \Render::page('files/View/Member/Profil/PersonalData.inc', [
             'header' => 'Osobní údaje',
             'lock' => $_POST['lock'],
             'jmeno' => $_POST['jmeno'],
@@ -112,7 +112,7 @@ class Profil
     public static function gdpr()
     {
         \Permissions::checkError('nastenka', P_VIEW);
-        return new \RenderHelper('files/View/Member/Profil/Gdpr.inc', [
+        \Render::page('files/View/Member/Profil/Gdpr.inc', [
             'header' => 'Souhlas se zpracováním osobních údajů',
         ]);
     }
@@ -188,7 +188,7 @@ class Profil
     public static function heslo()
     {
         \Permissions::checkError('nastenka', P_VIEW);
-        return new \RenderHelper('files/View/Member/Profil/NewPassword.inc', [
+        \Render::page('files/View/Member/Profil/NewPassword.inc', [
             'header' => 'Změna hesla'
         ]);
     }
@@ -199,9 +199,10 @@ class Profil
         $form = static::checkDataHeslo();
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
-            return new \RenderHelper('files/View/Member/Profil/NewPassword.inc', [
+            \Render::page('files/View/Member/Profil/NewPassword.inc', [
                 'header' => 'Změna hesla'
             ]);
+            return;
         }
         \DBUser::setPassword(\Session::getUser()->getId(), \User::crypt($_POST['newpass']));
         \Redirect::to('/member/profil');

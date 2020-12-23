@@ -23,7 +23,7 @@ class ProfilPar
     {
         $user = \Session::getUser();
         $par = \DBPary::getLatestPartner($user->getId(), $user->getGender());
-        return new \RenderHelper('files/View/Member/Profil/CoupleData.inc', [
+        \Render::page('files/View/Member/Profil/CoupleData.inc', [
             'header' => 'Změna třídy a bodů',
             'stt_trida' => $par['p_stt_trida'],
             'stt_body' => $par['p_stt_body'],
@@ -42,7 +42,7 @@ class ProfilPar
         $form = static::checkData();
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
-            return new \RenderHelper('files/View/Member/Profil/CoupleData.inc', [
+            \Render::page('files/View/Member/Profil/CoupleData.inc', [
                 'header' => 'Změna třídy a bodů',
                 'stt_trida' => $_POST['stt_trida'] ?? '',
                 'stt_body' => $_POST['stt_body'] ?? '',
@@ -51,6 +51,7 @@ class ProfilPar
                 'lat_body' => $_POST['lat_body'] ?? '',
                 'lat_finale' => $_POST['lat_finale'] ?? ''
             ]);
+            return;
         }
         $stt_amend = constant('self::AMEND_' . $_POST['stt-trida']);
         $stt_bonus = constant('self::BONUS_' . $_POST['stt-trida']);
@@ -85,7 +86,7 @@ class ProfilPar
         $couple = \DBPary::getLatestPartner($user->getId(), $user->getGender());
         $havePartner = !empty($couple) && $couple['u_id'];
         $_POST['partner'] = $havePartner ? $couple['u_id'] : '0';
-        new \RenderHelper('files/View/Member/Profil/PartnerOverview.inc', [
+        \Render::page('files/View/Member/Profil/PartnerOverview.inc', [
             'header' => 'Profil',
             'havePartner' => $havePartner,
             'partnerID' => $couple['u_id'],
@@ -162,13 +163,14 @@ class ProfilPar
         \Permissions::checkError('pary', P_VIEW);
         $data = \DBPary::getActiveParyByHodnoceni();
         if (empty($data)) {
-            return new \RenderHelper('files/View/Empty.inc', [
+            \Render::page('files/View/Empty.inc', [
                 'header' => 'Žebříček párů',
                 'notice' => 'Žádné páry nejsou v databázi'
             ]);
+            return;
         }
 
-        new \RenderHelper('files/View/Member/Pary/Overview.inc', [
+        \Render::page('files/View/Member/Pary/Overview.inc', [
             'header' => 'Žebříček párů',
             'data' => array_map(
                 fn($item) => [

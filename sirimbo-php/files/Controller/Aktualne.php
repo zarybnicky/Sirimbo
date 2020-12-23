@@ -7,10 +7,11 @@ class Aktualne
     {
         $data = \DBAktuality::getAktuality();
         if (!$data) {
-            return new \RenderHelper('files/View/Empty.inc', [
+            \Render::page('files/View/Empty.inc', [
                 'header' => "Články",
                 'notice' => 'Žádné články nejsou k dispozici.'
             ]);
+            return;
         }
         $data = array_map(
             function ($item) {
@@ -27,7 +28,7 @@ class Aktualne
             },
             $data
         );
-        new \RenderHelper('files/View/Main/Aktuality/Overview.inc', [
+        \Render::page('files/View/Main/Aktuality/Overview.inc', [
             'header' => "Články",
             'data' => $data
         ]);
@@ -42,7 +43,7 @@ class Aktualne
         $photo = \DBGalerie::getSingleFoto($data['at_foto_main']);
         $photo_uri = $photo ? $photo['gf_path'] : '';
 
-        new \RenderHelper(
+        \Render::page(
             'files/View/Main/Aktuality/Single.inc',
             [
                 'id' => $data['at_id'],

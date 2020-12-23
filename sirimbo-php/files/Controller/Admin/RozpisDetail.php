@@ -78,7 +78,7 @@ class RozpisDetail
             ];
         }
 
-        new \RenderHelper('files/View/Admin/Rozpis/Detail.inc', [
+        \Render::page('files/View/Admin/Rozpis/Detail.inc', [
             'header' => 'Správa rozpisů',
             'data' => $data,
             'users' => $users,

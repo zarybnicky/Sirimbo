@@ -1,6 +1,6 @@
 <div class="container">
     <form action="" method="POST">
-        <?php new \RenderHelper('files/View/Member/Akce/Header.inc', $data, true) ?>
+        <?php \Render::fragment('files/View/Member/Akce/Header.inc', $data) ?>
         <?= (new \TableHelper($items))
                  ->column('name', 'Uživatel')
                  ->column('removeButton', '') ?>

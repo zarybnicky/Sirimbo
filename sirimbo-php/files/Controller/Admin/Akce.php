@@ -23,7 +23,7 @@ class Akce
             \DBAkce::getWithItemCount()
         );
 
-        new \RenderHelper('files/View/Admin/Akce/Overview.inc', [
+        \Render::page('files/View/Admin/Akce/Overview.inc', [
             'header' => 'Správa akcí',
             'data' => $data
         ]);
@@ -140,7 +140,7 @@ class Akce
     {
         \Permissions::checkError('akce', P_OWNED);
         $item = \DBAkce::getSingleAkce($id);
-        new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
+        \Render::page('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa akcí',
             'prompt' => 'Opravdu chcete odstranit akce:',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/akce',
@@ -195,7 +195,7 @@ class Akce
             'removeButton' => (new \SubmitHelper('Přidat'))->data('add', 'add')
         ];
 
-        new \RenderHelper('files/View/Admin/Akce/Detail.inc', [
+        \Render::page('files/View/Admin/Akce/Detail.inc', [
             'header' => 'Správa akcí',
             'data' => $data,
             'items' => $items
@@ -282,7 +282,7 @@ class Akce
             'category' => (new \SubmitHelper('Přidat'))->data('add', 'add'),
             'removeButton' => ''
         ];
-        new \RenderHelper('files/View/Admin/Akce/Dokumenty.inc', [
+        \Render::page('files/View/Admin/Akce/Dokumenty.inc', [
             'header' => 'Správa akcí',
             'data' => $akce,
             'documents' => $documents
@@ -337,7 +337,7 @@ class Akce
             $dokumenty = [];
         }
 
-        new \RenderHelper('files/View/Admin/Akce/Form.inc', [
+        \Render::page('files/View/Admin/Akce/Form.inc', [
             'header' => 'Správa akcí',
             'subheader' => $action == 'add' ? 'Přidat akci' : 'Upravit akci',
             'dokumenty' => $dokumenty,

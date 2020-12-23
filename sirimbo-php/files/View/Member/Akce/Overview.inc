@@ -3,7 +3,7 @@
     <?php foreach ($akce as $item): ?>
       <div class="col-12 col-lg-6 pb-2 text-center">
         <form action="" method="post">
-          <?php new \RenderHelper('files/View/Member/Akce/Header.inc', $item, true) ?>
+          <?php \Render::fragment('files/View/Member/Akce/Header.inc', $item) ?>
           <?= new \HiddenHelper('id', $item['id']) ?>
           <?php if ($item['signOut']) : ?>
             <?= (new \SubmitHelper('Odhlásit se'))->cls('btn btn-outline-primary btn-sm')->data('action', 'signout') ?>

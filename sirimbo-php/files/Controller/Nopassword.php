@@ -5,7 +5,7 @@ class Nopassword
 {
     public static function get()
     {
-        return new \RenderHelper('files/View/Main/Nopassword.inc', [
+        \Render::page('files/View/Main/Nopassword.inc', [
             'header' => 'Zapomenuté heslo'
         ]);
     }

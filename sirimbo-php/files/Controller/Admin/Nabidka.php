@@ -28,7 +28,7 @@ class Nabidka
             ],
             $data
         );
-        new \RenderHelper('files/View/Admin/Nabidka/Overview.inc', [
+        \Render::page('files/View/Admin/Nabidka/Overview.inc', [
             'header' => 'Správa nabídky',
             'data' => $data
         ]);
@@ -199,7 +199,7 @@ class Nabidka
         } else {
             $treneri = [\DBUser::getUserData(\Session::getUser()->getId())];
         }
-        new \RenderHelper('files/View/Admin/Nabidka/Form.inc', [
+        \Render::page('files/View/Admin/Nabidka/Form.inc', [
             'header' => 'Správa nabídky',
             'subheader' => $action == 'add' ? 'Přidat nabídku' : 'Upravit nabídku',
             'action' => $action == 'add' ? 'Přidat' : 'Upravit',

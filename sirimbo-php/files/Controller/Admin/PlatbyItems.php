@@ -27,7 +27,7 @@ class PlatbyItems
             \DBPlatbyItem::get(true, $filter, ['pi_date DESC'], \DateHelper::getPostRange('date')),
         );
 
-        new \RenderHelper('files/View/Admin/Platby/ItemsOverview.inc', [
+        \Render::page('files/View/Admin/Platby/ItemsOverview.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Jednotlivé platby',
             'users' => \DBUser::getUsers(),
@@ -103,7 +103,7 @@ class PlatbyItems
     {
         \Permissions::checkError('platby', P_OWNED);
         $item = \DBPlatbyItem::getSingle($id, true);
-        new \RenderHelper('files/View/Admin/RemovePrompt.inc', [
+        \Render::page('files/View/Admin/RemovePrompt.inc', [
             'header' => 'Správa plateb',
             'prompt' => 'Opravdu chcete odstranit platbu:',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/platby/items',
@@ -145,7 +145,7 @@ class PlatbyItems
                 $raw[] = ['column' => $key, 'value' => $value];
             }
         }
-        new \RenderHelper('files/View/Admin/Platby/ItemsForm.inc', [
+        \Render::page('files/View/Admin/Platby/ItemsForm.inc', [
             'header' => 'Správa plateb',
             'subheader' => 'Jednotlivé platby',
             'action' => $action,

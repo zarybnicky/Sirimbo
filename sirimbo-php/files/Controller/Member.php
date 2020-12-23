@@ -6,10 +6,9 @@ class Member
     public static function login()
     {
         if (\Session::getUser()) {
-            $uri = $_GET['return'] ? $_GET['return'] : '/member';
-            \Redirect::to($uri);
+            \Redirect::to($_GET['return'] ?? '/member');
         }
-        new \RenderHelper('files/View/Main/Login.inc');
+        \Render::page('files/View/Main/Login.inc');
     }
 
     public static function get()
@@ -23,10 +22,11 @@ class Member
         $data = $pager->getItems();
 
         if (empty($data)) {
-            return new \RenderHelper('files/View/Empty.inc', [
+            \Render::page('files/View/Empty.inc', [
                 'header' => 'Upozornění',
                 'notice' => 'Žádná upozornění nejsou k dispozici'
             ]);
+            return;
         }
 
         $data = array_map(
@@ -48,7 +48,7 @@ class Member
             $data
         );
 
-        new \RenderHelper('files/View/Member/Nastenka.inc', [
+        \Render::page('files/View/Member/Nastenka.inc', [
             'header' => 'Upozornění',
             'data' => $data,
             'navigation' => $pager->getNavigation()
@@ -80,7 +80,7 @@ class Member
     {
         \Permissions::checkError('dokumenty', P_VIEW);
         $kat = $_GET['kat'] ?? '';
-        new \RenderHelper('files/View/Member/Dokumenty.inc', [
+        \Render::page('files/View/Member/Dokumenty.inc', [
             'header' => 'Dokumenty',
             'kat' => $kat,
             'data' => array_map(
