@@ -59,8 +59,8 @@ runServer = do
       ref <- newIORef (withTournament propagateWinners t)
       ref' <- newIORef M.empty
 
-      _ <- forkIO . forever . runM . runDatabasePool pool . runAtomicStateIORefSimple ref $
-        saveTournamentState
+      -- _ <- forkIO . forever . runM . runDatabasePool pool . runAtomicStateIORefSimple ref $
+      --   saveTournamentState
       hSetBuffering stdout LineBuffering
 
       putStrLn ("Starting server on port " <> show port <> " with proxy on port " <> show proxy)
