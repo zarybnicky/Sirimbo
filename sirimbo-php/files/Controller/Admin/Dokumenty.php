@@ -95,7 +95,7 @@ class Dokumenty
     public static function remove($id)
     {
         \Permissions::checkError('dokumenty', P_OWNED);
-        \Render::page('files/View/Admin/RemovePrompt.inc', [
+        \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa dokumentů',
             'prompt' => 'Opravdu chcete odstranit dokument:',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/dokumenty',

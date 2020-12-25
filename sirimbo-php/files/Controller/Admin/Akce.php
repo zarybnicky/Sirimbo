@@ -140,7 +140,7 @@ class Akce
     {
         \Permissions::checkError('akce', P_OWNED);
         $item = \DBAkce::getSingleAkce($id);
-        \Render::page('files/View/Admin/RemovePrompt.inc', [
+        \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa akcí',
             'prompt' => 'Opravdu chcete odstranit akce:',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/akce',

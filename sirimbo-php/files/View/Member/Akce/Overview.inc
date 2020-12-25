@@ -4,7 +4,7 @@
       <div class="col-12 col-lg-6 pb-2 text-center">
         <form action="" method="post">
           <?php \Render::fragment('files/View/Member/Akce/Header.inc', $item) ?>
-          <?= \Utils::hidden('id', $item['id']) ?>
+          <input type='hidden' name='id' value='<?= $item['id'] ?>'>
           <?php if ($item['signOut']) : ?>
             <?= \Utils::submit('Odhlásit se', 'action', 'signout', 'btn btn-outline-primary btn-sm') ?>
           <?php endif ?>

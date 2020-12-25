@@ -72,7 +72,7 @@
   </div>
 
   <div class="form-group mb-2">
-    <?= \Utils::hidden('returnURI', $returnURI) ?>
+    <input type='hidden' name='returnURI' value='<?= $returnURI ?>'>
     <a class="btn btn-outline-primary" href="/member/profil">Zpět</a>
     <?= \Utils::submit('Upravit') ?>
   </div>

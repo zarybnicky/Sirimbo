@@ -67,7 +67,7 @@ class Users
                 ];
                 if ($action == 'status') {
                     $out['skupina'] = (
-                        \Utils::hidden('save[]', $item['u_id'])
+                        "<input type='hidden' name='save[]' value='{$item['u_id']}'>"
                         . \Utils::select($item['u_id'] . '-skupina', $copySkupinyOptions, $item['u_skupina'])
                     );
                     $out['system'] = \Utils::checkbox($item['u_id'] . '-system', '1', $item['u_system']);
@@ -141,7 +141,7 @@ class Users
     {
         \Permissions::checkError('users', P_ADMIN);
         $item = \DBUser::getUserData($id);
-        \Render::page('files/View/Admin/RemovePrompt.inc', [
+        \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa uživatelů',
             'prompt' => 'Opravdu chcete odstranit uživatele:',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/users',

@@ -111,7 +111,7 @@ class GalerieDirectory
     {
         \Permissions::checkError('galerie', P_OWNED);
         $item = \DBGalerie::getSingleDir($id);
-        \Render::page('files/View/Admin/RemovePrompt.inc', [
+        \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa galerie',
             'prompt' => 'Opravdu chcete odstranit složky se všemi podsložkami a fotkami:',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/galerie',

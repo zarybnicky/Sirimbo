@@ -30,15 +30,14 @@
             'recogValue' => $recognized['prefix']['value']
         ]
     ];
-    $formTable = (new TableHelper($form))
-                      ->column('desc', '', 'r')
-                      ->column('value', 'Hodnota')
-                      ->column('recogColumn', 'Rozpoznáno:<br/>sloupec')
-                      ->column('recogValue', 'Rozpoznáno:<br/>hodnota');
     ?>
     <form action="" method="post">
-        <?= $formTable ?>
-        <?= \Utils::hidden('id', $id) ?>
+        <?= (new TableHelper($form))
+              ->column('desc', '', 'r')
+              ->column('value', 'Hodnota')
+              ->column('recogColumn', 'Rozpoznáno:<br/>sloupec')
+              ->column('recogValue', 'Rozpoznáno:<br/>hodnota') ?>
+        <input type='hidden' name='id' value='<?= $id ?>'>
         <?= \Utils::submit('Uložit', 'action', 'confirm') ?>&nbsp;
         <?= \Utils::submit('Odstranit', 'action', 'discard') ?>&nbsp;
         <?= \Utils::submit('Přeskočit', 'action', 'skip') ?>

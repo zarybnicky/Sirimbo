@@ -1,8 +1,8 @@
 <?php \Render::fragment('files/View/Admin/Platby/Navigation.inc') ?>
 
 <div class="container">
+<h3><?= $action == 'add' ? 'Přidat platbu' : 'Upravit platbu' ?></h3>
 <?php
-echo '<h3>', ($action == 'add' ? 'Přidat platbu' : 'Upravit platbu'), '</h3>';
 $form = [
     [
         'desc' => 'Datum:',
@@ -21,25 +21,22 @@ $form = [
         'value' => \Utils::text('prefix', $prefix)
     ]
 ];
-$formTable = (new TableHelper($form))
-    ->column('desc', '', 'r')
-    ->column('value', 'Hodnota');
 ?>
 <form action="" method="post">
-    <?= $formTable ?>
-    <?= \Utils::hidden('returnURI', $returnURI) ?>
+    <?= (new TableHelper($form))
+          ->column('desc', '', 'r')
+          ->column('value', 'Hodnota') ?>
+    <input type='hidden' name='returnURI' value='<?= $returnURI ?>'>
     <button class="btn btn-primary" name="action" value="confirm">Uložit</button>
     <a class="btn btn-outline-primary" href="<?= $returnURI ?>">Zpět</a>
 </form>
 <br/>
-<?php
-if (!empty($raw)) {
-    echo '<h3>Data z banky</h3>';
-    echo (new TableHelper($raw))
+<?php if (!empty($raw)) : ?>
+  <h3>Data z banky</h3>
+  <?= (new TableHelper($raw))
         ->style('width:100%')
         ->showHeader(false)
         ->column('column', '', 'r', 'padding-right:5px')
-        ->column('value', '', '', 'min-width:150px;padding-left:5px');
-}
-?>
+        ->column('value', '', '', 'min-width:150px;padding-left:5px') ?>
+<?php endif ?>
 </div>

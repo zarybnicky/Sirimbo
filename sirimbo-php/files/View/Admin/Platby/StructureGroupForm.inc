@@ -42,7 +42,7 @@
              ->column('buttons', '')
              ->column('name', 'Jméno') ?>
     <br/>
-    <?= \Utils::hidden('returnURI', $returnURI) ?>
+    <input type='hidden' name='returnURI' value='<?= $returnURI ?>'>
     <?= \Utils::submit('Uložit', 'action', 'confirm') ?>
     <a class="btn btn-outline-primary" href="<?= $returnURI ?>">Zpět</a><br/>
 </form>

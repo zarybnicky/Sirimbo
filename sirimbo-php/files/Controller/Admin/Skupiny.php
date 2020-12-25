@@ -91,7 +91,7 @@ class Skupiny
                 . "</form>"
             );
         }
-        \Render::page('files/View/Admin/RemovePrompt.inc', [
+        \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa skupin',
             'prompt' => 'Opravdu chcete odstranit skupinu?',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/skupiny',

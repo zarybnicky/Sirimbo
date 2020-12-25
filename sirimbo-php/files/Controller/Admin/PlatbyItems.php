@@ -106,7 +106,7 @@ class PlatbyItems
     {
         \Permissions::checkError('platby', P_OWNED);
         $item = \DBPlatbyItem::getSingle($id, true);
-        \Render::page('files/View/Admin/RemovePrompt.inc', [
+        \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa plateb',
             'prompt' => 'Opravdu chcete odstranit platbu:',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/platby/items',

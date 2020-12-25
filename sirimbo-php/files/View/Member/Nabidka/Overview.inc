@@ -31,7 +31,7 @@
               <div style="text-align:center;padding:10px 0 5px">
                 <?php if ($item['canAdd']) : ?>
                   <?= \Utils::text('hodiny', '', ['placeholder' => 'Počet hodin', 'cls' => 'form-control d-inline w-auto']) ?>
-                  <?= \Utils::hidden('id', $item['id']) ?>
+                  <input type='hidden' name='id' value='<?= $item['id'] ?>'>
                   <?= \Utils::submit('Přidat') ?>
                 <?php endif ?>
               </div>

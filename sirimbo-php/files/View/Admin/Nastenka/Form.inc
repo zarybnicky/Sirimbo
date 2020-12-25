@@ -17,18 +17,16 @@
     </div>
     <div class="form-group">
       <label>Skupiny</label>
-      <?php
-      foreach ($skupiny as $item) {
-          echo '<div class="form-check">';
-          echo \Utils::checkbox(
-              'sk-' . $item['s_id'],
-              '1',
-              $skupinySelected[$item['s_id']],
-              \Utils::colorbox($item['s_color_rgb'], $item['s_description']) . '&nbsp;' . $item['s_name']
-          );
-          echo '</div>';
-      }
-      ?>
+      <?php foreach ($skupiny as $item) : ?>
+        <div class="form-check">
+          <?= \Utils::checkbox(
+            'sk-' . $item['s_id'],
+            '1',
+            $skupinySelected[$item['s_id']],
+            \Utils::colorbox($item['s_color_rgb'], $item['s_description']) . '&nbsp;' . $item['s_name']
+          ) ?>
+        </div>
+      <?php endforeach ?>
     </div>
     <br>
     <div class="form-group">
@@ -37,7 +35,7 @@
       </div>
     </div>
     <div class="form-group">
-      <?= \Utils::hidden('returnURI', $returnURI) ?>
+      <input type='hidden' name='returnURI' value='<?= $returnURI ?>'>
       <?= \Utils::submit($action == 'add' ? 'Přidat' : 'Upravit') ?>
       <a class="btn btn-outline-primary" href="<?= $returnURI ?>">Zpět</a>
     </div>

@@ -56,7 +56,7 @@ class GalerieFile
     {
         \Permissions::checkError('galerie', P_OWNED);
         $item = \DBGalerie::getSingleFoto($id);
-        \Render::page('files/View/Admin/RemovePrompt.inc', [
+        \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa galerie',
             'prompt' => 'Opravdu chcete odstranit fotografie:',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/galerie',

@@ -16,7 +16,7 @@
                         <?= $lesson['timeFrom'] ?>-<?= $lesson['timeTo'] ?>
                       </span>
                       <?= $lesson['fullName'] ?>
-                      <?= \Utils::hidden('ri_id', $lesson['id']) ?>
+                      <input type='hidden' name='ri_id' value='<?= $lesson['id'] ?>'>
                       <?php if ($lesson['canReserve']): ?>
                         <?= \Utils::submit('+', 'action', 'signup', 'py-0 btn btn-outline-primary btn-sm') ?>
                       <?php elseif ($lesson['canCancel']): ?>

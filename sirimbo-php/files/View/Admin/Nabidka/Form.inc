@@ -30,7 +30,7 @@
       <?= \Utils::checkbox('lock', 'lock', $lock, 'Uzamknout') ?>
     </div>
     <div class="form-group">
-      <?= \Utils::hidden('returnURI', $returnURI) ?>
+      <input type='hidden' name='returnURI' value='<?= $returnURI ?>'>
       <?= \Utils::submit($action) ?>
       <a class="btn btn-outline-primary" href="<?= $returnURI ?>">Zpět</a>
     </div>

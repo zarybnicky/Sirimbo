@@ -70,7 +70,7 @@ class VideoSource
     {
         \Permissions::checkError('aktuality', P_OWNED);
         $item = \DBVideo::getSingle($id);
-        \Render::page('files/View/Admin/RemovePrompt.inc', [
+        \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa videí',
             'prompt' => 'Opravdu chcete odstranit zdroj:',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/video/source',

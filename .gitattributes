@@ -1,5 +1,7 @@
 * annex.largefiles=nothing
 * text=auto
+* !filter
+assets/**/* filter=annex
 
 *.jpg binary
 *.png binary

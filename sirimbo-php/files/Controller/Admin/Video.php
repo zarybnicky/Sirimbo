@@ -151,7 +151,7 @@ class Video
     {
         \Permissions::checkError('aktuality', P_OWNED);
         $item = \DBVideo::getSingle($id);
-        \Render::page('files/View/Admin/RemovePrompt.inc', [
+        \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa videí',
             'prompt' => 'Opravdu chcete odstranit video:',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/video',

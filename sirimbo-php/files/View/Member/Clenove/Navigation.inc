@@ -1,8 +1,7 @@
 <?php
-$isActive = fn ($href) => strripos($currentUri, $href) !== (strlen($currentUri) - strlen($href));
-$getItem = function ($name, $href) use ($isActive) {
+$getItem = function ($name, $href) use ($currentUri) {
     $href = 'member/' . $href;
-    if ($isActive($href)) {
+    if (strripos($currentUri, $href) !== (strlen($currentUri) - strlen($href))) {
         return '<a href="/' . $href . '">' . $name . '</a>';
     } else {
         return $name;

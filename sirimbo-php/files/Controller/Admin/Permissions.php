@@ -76,7 +76,7 @@ class Permissions
     {
         \Permissions::checkError('permissions', P_ADMIN);
         $item = \DBPermissions::getSingleGroup($id);
-        \Render::page('files/View/Admin/RemovePrompt.inc', [
+        \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa oprávnění',
             'prompt' =>
                 \Utils::notice('Uživatelům z této skupiny bude nutné přiřadit jinou skupinu!')

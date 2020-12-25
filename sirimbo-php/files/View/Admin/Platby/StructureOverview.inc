@@ -10,32 +10,30 @@
     ->column('buttons', '', '', 'width:70px')
     ->column('name', 'Název') ?>
 
-<?php
-if (!empty($orphanGroupSkupina)) {
-    echo '<br/>';
-    echo '<h3>Kategorie plateb bez přiřazené uživatelské skupiny</h3>';
-    echo (new TableHelper($orphanGroupSkupina))
+<?php if (!empty($orphanGroupSkupina)) : ?>
+  <br/>
+  <h3>Kategorie plateb bez přiřazené uživatelské skupiny</h3>
+  <?= (new TableHelper($orphanGroupSkupina))
         ->style('width:50%')
         ->column('buttons', '', '', 'width:70px')
-        ->column('name', 'Název');
-}
+        ->column('name', 'Název') ?>
+<?php endif ?>
 
-if (!empty($orphanGroupCategory)) {
-    echo '<br/>';
-    echo '<h3>Kategorie plateb bez přiřazených specifických symbolů</h3>';
-    echo (new TableHelper($orphanGroupCategory))
+<?php if (!empty($orphanGroupCategory)) : ?>
+    <br/>
+    <h3>Kategorie plateb bez přiřazených specifických symbolů</h3>
+    <?= (new TableHelper($orphanGroupCategory))
         ->style('width:50%')
         ->column('buttons', '', '', 'width:70px')
-        ->column('name', 'Název');
-}
+        ->column('name', 'Název') ?>
+<?php endif ?>
 
-if (!empty($orphanCategory)) {
-    echo '<br/>';
-    echo '<h3>Specifické symboly bez přiřazené kategorie</h3>';
-    echo (new TableHelper($orphanCategory))
+<?php if (!empty($orphanCategory)) : ?>
+    <br/>
+    <h3>Specifické symboly bez přiřazené kategorie</h3>
+    <?= (new TableHelper($orphanCategory))
         ->style('width:50%')
         ->column('buttons', '', '', 'width:70px')
-        ->column('name', 'Název');
-}
-?>
+        ->column('name', 'Název') ?>
+<?php endif ?>
 </div>

@@ -139,7 +139,7 @@ class Nastenka
             \Redirect::to($_POST['returnURI'] ?? '/admin/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
-        \Render::page('files/View/Admin/RemovePrompt.inc', [
+        \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa nástěnky',
             'prompt' => 'Opravdu chcete odstranit příspěvek:',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/nastenka',

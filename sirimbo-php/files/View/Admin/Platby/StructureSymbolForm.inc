@@ -33,7 +33,7 @@
 ->showHeader(false)
 ->column('desc', '', 'r')
 ->column('value', 'Hodnota') ?>
-    <?= \Utils::hidden('returnURI', $returnURI) ?>
+    <input type='hidden' name='returnURI' value='<?= $returnURI ?>'>
     <br/>
     <h3>Kategorie</h3>
     <?= (new TableHelper($groups))

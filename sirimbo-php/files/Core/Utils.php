@@ -3,19 +3,7 @@ class Utils
 {
     public static function submit(string $text, ?string $name = null, ?string $value = null, string $cls = 'btn btn-primary'): string
     {
-        return (string) new Tag('button', [
-            'name' => $name,
-            'value' => $value,
-            'class' => $cls,
-        ], $text);
-    }
-
-    public static function hidden(string $name, ?string $value = null): string
-    {
-        if (!$value) {
-            $value = $name;
-        }
-        return "<input type='hidden' name='$name' value='$value'>";
+        return "<button name=\"$name\" value=\"$value\" class=\"$cls\">$text</button>";
     }
 
     public static function person(array $user): string
@@ -191,7 +179,7 @@ class Utils
         Uživatel <?= $item['u_jmeno'], ' ', $item['u_prijmeni'] ?> Vás žádá o partnerství.
     </span>
     <span style="text-align:right;float:right;margin-right:15px;">
-        <?= \Utils::hidden('id', $item['pn_id']) ?>
+        <input type='hidden' name='id' value='<?= $item['pn_id'] ?>'>
         <button type="submit" name="action" value="accept">Přijmout</button>
         <button type="submit" name="action" value="refuse">Odmítnout</button>
     </span>

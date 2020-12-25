@@ -109,20 +109,21 @@
   </div>
   <div class="form-group mb-2">
     <div style="font-weight:bold">Skupina</div>
-    <?php
-    foreach ($skupiny as $item) {
-        echo \Utils::radio(
-            'skupina', $item['id'], $skupina == $item['id'],
-            \Utils::colorbox($item['color'], $item['popis']) . '&nbsp;' . $item['popis']
-        );
-    }?>
+    <?php foreach ($skupiny as $item) : ?>
+      <?= \Utils::radio(
+          'skupina',
+          $item['id'],
+          $skupina == $item['id'],
+        \Utils::colorbox($item['color'], $item['popis']) . '&nbsp;' . $item['popis']
+      ) ?>
+    <?php endforeach ?>
   </div>
   <div class="mb-2">
       Uživatel vytvořen: <?= $createdAt ?><br>
       Uživatel souhlasil s GDPR: <?= $gdprSignedAt ?>
   </div>
   <div class="form-group">
-    <?= \Utils::hidden('returnURI', $returnURI) ?>
+    <input type='hidden' name='returnURI' value='<?= $returnURI ?>'>
     <a class="btn btn-outline-primary" href="<?= $returnURI ?>">Zpět</a>
     <?= \Utils::submit($action == 'add' ? 'Přidat' : 'Upravit') ?>
   </div>

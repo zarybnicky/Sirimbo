@@ -4,8 +4,8 @@
     <h3>Odstranit kategorii?</h3>
     <form action="" method="POST">
         Opravdu chcete odstranit kategorii plateb "<?= $name ?>"?
-        <?= \Utils::hidden('data[]', $id) ?>
-        <?= \Utils::hidden('returnURI', $returnURI) ?>
+        <input type='hidden' name='data[]' value='<?= $id ?>'>
+        <input type='hidden' name='returnURI' value='<?= $returnURI ?>'>
         <br/>
         <?= \Utils::submit('Odstranit', 'action', 'confirm') ?>
         <a class="btn btn-outline-primary" href="<?= $returnURI ?>">Zpět</a>

@@ -116,7 +116,7 @@ class Aktuality
     {
         \Permissions::checkError('aktuality', P_OWNED);
         $item = \DBAktuality::getSingleAktualita($id);
-        \Render::page('files/View/Admin/RemovePrompt.inc', [
+        \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa aktualit',
             'prompt' => 'Opravdu chcete odstranit články:',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/aktuality',
