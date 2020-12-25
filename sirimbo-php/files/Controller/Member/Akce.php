@@ -40,7 +40,7 @@ class Akce
         \Permissions::checkError('akce', P_VIEW);
         $data = \DBAkce::getAkce(true);
         if (!$data) {
-            \Render::page('files/View/Empty.inc', [
+            \Render::twig('Empty.twig', [
                 'header' => 'Klubové akce',
                 'notice' => 'Žádné akce nejsou k dispozici.'
             ]);

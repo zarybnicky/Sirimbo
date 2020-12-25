@@ -105,7 +105,7 @@ class GalerieFile
         }
         $uploadHelper = new \UploadHelper('files');
         $uploadHelper->loadFromPost();
-        if (!$uploadHelper->hasValidFiles() && $uploadHelper->hasFiles()) {
+        if ($uploadHelper->getErrorMessages()) {
             \Message::warning($uploadHelper->getErrorMessages());
         }
         $uploader = $uploadHelper->getFilledUploader();
@@ -113,7 +113,7 @@ class GalerieFile
             $uploader->addAllowedType($extension);
         }
         $uploader->setOutputDir(GALERIE . DIRECTORY_SEPARATOR . $parent['gd_path']);
-        $uploader->save(true, true);
+        $uploader->save();
         if ($uploader->hasRefusedFiles()) {
             \Message::warning('Počet zamítnutých souborů: ' . count($uploader->getRefusedFiles()));
         }

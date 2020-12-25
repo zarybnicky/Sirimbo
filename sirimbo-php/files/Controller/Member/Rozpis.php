@@ -51,7 +51,7 @@ class Rozpis
                 'data' => $data
             ]);
         } else {
-            \Render::page('files/View/Empty.inc', [
+            \Render::twig('Empty.twig', [
                 'header' => 'Rozpis tréninků',
                 'notice' => 'Žádné aktuální rozpisy nejsou k dispozici.'
             ]);

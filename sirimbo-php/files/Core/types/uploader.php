@@ -54,24 +54,6 @@ class Uploader
                 unset($this->_files[$key]);
             }
         }
-        return count($this->_refusedFiles);
-    }
-
-    public function sanitizeFilenames()
-    {
-        foreach ($this->_files as &$file) {
-            $strip = [
-                '~', '`', '!', '@', '#', '$', '%', '^', '&', '*',
-                '(', ')', '_', '=', '+', '[', '{', ']', '}', '\\',
-                '|', ';', ':', '\"', '\'', '&#8216;', '&#8217;',
-                '&#8220;', '&#8221;', '&#8211;', '&#8212;',
-                'â€”', 'â€“', ',', '<', '>', '/', '?'
-            ];
-            $clean = trim(str_replace($strip, '', strip_tags($file[1])));
-            $clean = preg_replace(['/\s+/', '/\.\./'], ['-', '.'], $clean);
-
-            $file[1] = $clean;
-        }
     }
 
     public function getFiles()
@@ -89,24 +71,14 @@ class Uploader
         return $this->_savedFiles;
     }
 
-    public function hasFiles()
-    {
-        return !empty($this->_files);
-    }
-
     public function hasRefusedFiles()
     {
         return !empty($this->_refusedFiles);
     }
 
-    public function save($sanitizeNames = true, $removeDisallowed = true)
+    public function save()
     {
-        if ($sanitizeNames) {
-            $this->sanitizeFilenames();
-        }
-        if ($removeDisallowed) {
-            $this->removeDisallowedFiles();
-        }
+        $this->removeDisallowedFiles();
         if (!file_exists($this->_outputDir)) {
             $success = mkdir($this->_outputDir, 0777, true);
             if (!$success) {
@@ -118,6 +90,16 @@ class Uploader
             }
         }
         foreach ($this->_files as $file) {
+            $strip = [
+                '~', '`', '!', '@', '#', '$', '%', '^', '&', '*',
+                '(', ')', '_', '=', '+', '[', '{', ']', '}', '\\',
+                '|', ';', ':', '\"', '\'', '&#8216;', '&#8217;',
+                '&#8220;', '&#8221;', '&#8211;', '&#8212;',
+                'â€”', 'â€“', ',', '<', '>', '/', '?'
+            ];
+            $clean = trim(str_replace($strip, '', strip_tags($file[1])));
+            $file[1] = preg_replace(['/\s+/', '/\.\./'], ['-', '.'], $clean);
+
             $path = $this->_outputDir . DIRECTORY_SEPARATOR . $file[1];
             move_uploaded_file($file[0], $path);
             chmod($path, 0666);

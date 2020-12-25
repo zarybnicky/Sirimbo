@@ -7,7 +7,7 @@ class Aktualne
     {
         $data = \DBAktuality::getAktuality();
         if (!$data) {
-            \Render::page('files/View/Empty.inc', [
+            \Render::twig('Empty.twig', [
                 'header' => "Články",
                 'notice' => 'Žádné články nejsou k dispozici.'
             ]);

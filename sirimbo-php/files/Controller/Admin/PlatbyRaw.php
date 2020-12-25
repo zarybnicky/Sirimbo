@@ -137,12 +137,8 @@ class PlatbyRaw
         $upload = new \UploadHelper('in');
         $upload->loadFromPost();
 
-        $validFiles = $upload->hasValidFiles();
-        if ($upload->hasInvalidFiles()) {
+        if ($upload->getErrorMessages()) {
             \Message::warning($upload->getErrorMessages());
-            return;
-        } elseif ($upload->hasEmptyFiles() && empty($validFiles)) {
-            \Message::info('Vyberte prosím nějaký soubor (prázdné soubory jsou automaticky odmítnuty).');
             return;
         }
         $uploader = $upload->getFilledUploader();

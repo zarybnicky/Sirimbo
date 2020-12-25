@@ -118,9 +118,6 @@ class DateHelper
         if (!$val) {
             $val = $this->date ? $this->date->getHumanDate() : '';
         }
-        return (string) new Tag(
-            'input',
-            ['type' => 'text', 'name' => $this->name, 'value' => $val, 'class' => $this->cls]
-        );
+        return "<input type=\"text\" name=\"{$this->name}\" value=\"$val\" class=\"{$this->cls}\">";
     }
 }

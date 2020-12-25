@@ -123,11 +123,8 @@ class PlatbyGroup
         if (static::getLinkedObjects($id)) {
             \Message::info(
                 'Nelze odstranit kategorii s připojenými skupinami nebo specifickými symboly! '
-                . new \Tag(
-                    'form',
-                    ['action' => '', 'method' => 'post'],
-                    \Utils::submit('Odstranit spojení?', 'action', 'unlink')
-                )
+                . '<form method=post>' . \Utils::submit('Odstranit spojení?', 'action', 'unlink')
+                . '</form>'
             );
         }
         \Render::page('files/View/Admin/Platby/StructureGroupRemove.inc', [

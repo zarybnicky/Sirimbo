@@ -17,7 +17,7 @@ class Message
         if (!isset($_SESSION['REDIRECT_MESSAGE'])) {
             $_SESSION['REDIRECT_MESSAGE'] = [];
         }
-        $_SESSION['REDIRECT_MESSAGE'][] = [$message, $type];
+        $_SESSION['REDIRECT_MESSAGE'][] = ['text' => $message, 'type' => $type];
     }
 
     public static function info(string $msg): void

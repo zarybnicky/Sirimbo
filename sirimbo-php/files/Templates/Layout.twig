@@ -2,7 +2,7 @@
 <html prefix="og:http://ogp.me/ns" lang="cs">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <meta name="keywords" content="taneční klub, tk, olymp, olomouc, tk olymp, sportovní tanec" />
     <meta name="wot-verification" content="ec0cf41ab42dae52d3d4"/>
@@ -15,16 +15,14 @@
     <meta name="google-site-verification" content="Hfe7zlgTDOIpJv4rKGQz2Xg8Aezb6sIO0aAxVhrml9w" />
     <meta name="norton-safeweb-site-verification"
           content="r44xj2vskhlgkyqcqm1hdgga2jdfj-idvyys0277y96s72k-tq0z-yyjdu7h3el6pi2gek0i4ykq3xgiguufrvuhj8nbj4n4miwjhvumhp35jfrafyynhj4ee8ctzpzh" />
-    <?php foreach ($meta as $item) : ?>
-    <meta <?php foreach ($item as $k => $v) { echo "$k=\"$v\""; } ?>/>
-    <?php endforeach ?>
+    {% for item in meta %}
+      <meta {% for k, v in meta %} {{ k }}="{{ v }}"{% endfor %} />
+    {% endfor %}
     <meta property="fb:app_id" content="132983570203245"/>
 
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="stylesheet" type="text/css" href="/style.css" />
-    <title>
-      <?= !empty($header) ? "{$header} | TK Olymp" : 'TK Olymp' ?>
-    </title>
+    <title>{% if header %}{{ header }} | {% endif %}TK Olymp</title>
   </head>
   <body>
     <div id="fb-root"></div>
@@ -41,17 +39,17 @@
           <div class="navbars collapse navbar-collapse ml-lg-0 ml-3">
             <div class="flex-column" style="flex-grow:1">
               <ul class="navbar-nav">
-                <?php foreach ($navbar[0] as $item) {
-                    echo \Utils::navbarItem($currentUri, $item);
-                } ?>
+                {% for item in navbar[0] %}
+                  {{ navbarItem(currentUri, item) }}
+                {% endfor %}
                 <div class="w-100"></div>
-                <?php if (!empty($currentUser)) : ?>
+                {% if currentUser %}
                   <li class="userbox nav-item nav-link">
                     <a href="/member/profil">
-                      <i class="fas fa-user"></i> <?= $currentUser->getFullName() ?>
+                      <i class="fas fa-user"></i> {{ currentUser.fullName }}
                     </a>
                   </li>
-                <?php else : ?>
+                {% else %}
                   <li class="nav-item dropdown">
                     <a href="/login" class="nav-link dropdown-toggle dropdown-no-arrow text-white" data-toggle="dropdown">
                       <i class="fas fa-user"></i> Přihlásit
@@ -78,45 +76,45 @@
                       </div>
                     </ul>
                   </li>
-                <?php endif ?>
+                {% endif %}
               </ul>
             </div>
           </div>
         </div>
-        <?php if (count($navbar) > 1) : ?>
+        {% if navbar[1] %}
           <div class="w-100" id="navbar-second">
             <div class="container">
               <div class="navbars collapse navbar-collapse ml-lg-0 ml-3">
                 <div class="flex-column" style="flex-grow:1">
                   <ul class="navbar-nav">
-                    <?php foreach ($navbar[1] as $item) {
-                        echo \Utils::navbarItem($currentUri, $item);
-                    } ?>
+                    {% for item in navbar[1] %}
+                      {{ navbarItem(currentUri, item) }}
+                    {% endfor %}
                   </ul>
                 </div>
               </div>
             </div>
           </div>
-        <?php endif ?>
+        {% endif %}
       </div>
     </nav>
 
-    <?php if (!empty($header)) : ?>
+    {% if header %}
       <div class="header-section">
         <div class="container full">
-          <h1><?= $header ?></h1>
-          <?php if (!empty($subheader)) : ?>
-            <h2><?= $subheader ?></h2>
-          <?php endif ?>
+          <h1>{{ header }}</h1>
+          {% if subheader %}
+            <h2>{{ subheader }}</h2>
+          {% endif %}
         </div>
       </div>
-    <?php endif ?>
+    {% endif %}
 
-    <?php foreach (\Message::get() as $item) : ?>
-      <div class="container"><?= \Utils::notice($item['text'], $item['type']) ?></div>
-    <?php endforeach ?>
+    {% for msg in getMessages() %}
+      <div class="container">{{ notice(msg.text, msg.type) }}</div>
+    {% endfor %}
 
-    <?= $content ?>
+    {% block content %}{% endblock %}
 
     <br/>
     <div id="footer">

@@ -108,12 +108,14 @@ function makeRouter()
     $router->get('/home', '@Home::get');
     $router->get('/error', '@Error::get');
     $router->get('/video', '@Video::get');
-    $router->get('/kontakt', '@Kontakt::get');
+
+    $router->get('/kontakt', '@StaticContent::kontakt');
+    $router->get('/oklubu/klubovi-treneri', '@StaticContent::klubovi');
+    $router->get('/oklubu/externi-treneri', '@StaticContent::externi');
+    $router->get('/oklubu/saly', '@StaticContent::saly');
+
     $router->get('/aktualne', '@Aktualne::list');
     $router->get('/aktualne/([0-9]+)', '@Aktualne::single');
-    $router->get('/oklubu/klubovi-treneri', '@Oklubu::klubovi');
-    $router->get('/oklubu/externi-treneri', '@Oklubu::externi');
-    $router->get('/oklubu/saly', '@Oklubu::saly');
     $router->get('/fotogalerie', '@Fotogalerie::root');
     $router->get('/fotogalerie/([0-9]+)', '@Fotogalerie::directory');
     $router->get('/fotogalerie/foto/([0-9]+)', '@Fotogalerie::single');

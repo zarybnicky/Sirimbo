@@ -1,6 +1,17 @@
 <?php
 class Render
 {
+    public static function twig(string $file, array $vars = []): void
+    {
+        $twig = new \Twig\Environment(
+            new \Twig\Loader\FilesystemLoader('files/Templates'),
+            ['cache' => CACHE, 'debug' => true],
+        );
+        $twig->addExtension(new \Twig\Extension\DebugExtension());
+        $twig->addExtension(new RenderTwigExtension());
+        echo $twig->render($file, array_merge(self::getGlobals(), $vars));
+    }
+
     public static function getGlobals(): array
     {
         $pos = strpos($_SERVER['REQUEST_URI'], '?');
@@ -14,6 +25,7 @@ class Render
         return [
             'currentUri' => $uri,
             'currentUser' => \Session::getUser(),
+            'navbar' => static::getNavbar(),
         ];
     }
 
@@ -27,7 +39,6 @@ class Render
         $globals = self::getGlobals();
         $content = self::renderString($file, array_merge($globals, $vars));
         echo self::renderString('files/Template.inc', array_merge($globals, [
-            'navbar' => static::getNavbar(),
             'content' => $content,
             'meta' => $vars['meta'] ?? [],
             'header' => $vars['header'] ?? null,

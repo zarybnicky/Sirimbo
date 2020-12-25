@@ -22,7 +22,7 @@ class Member
         $data = $pager->getItems();
 
         if (empty($data)) {
-            \Render::page('files/View/Empty.inc', [
+            \Render::twig('Empty.twig', [
                 'header' => 'Upozornění',
                 'notice' => 'Žádná upozornění nejsou k dispozici'
             ]);

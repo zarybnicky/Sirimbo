@@ -7,6 +7,7 @@ define('DB_PASS', '');
 define('GALERIE', '');
 define('GALERIE_THUMBS', '');
 define('UPLOADS', '');
+define('CACHE', '');
 define('NABOR', '');
 define('DEFAULT_FROM_MAIL', '');
 define('DEFAULT_ADMIN_MAIL', '');

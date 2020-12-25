@@ -373,7 +373,7 @@ class Users
         \Permissions::checkError('users', P_ADMIN);
         $users = \DBUser::getNewUsers();
         if (empty($users)) {
-            \Render::page('files/View/Empty.inc', [
+            \Render::twig('Empty.twig', [
                 'header' => 'Správa uživatelů',
                 'notice' => 'Žádní nepotvrzení uživatelé nejsou v databázi.'
             ]);

@@ -1,8 +1,15 @@
 <?php
 namespace Olymp\Controller;
 
-class Oklubu
+class StaticContent
 {
+    public static function kontakt()
+    {
+        \Render::page('files/View/Main/Kontakt.inc', [
+            'header' => 'Kontakt'
+        ]);
+    }
+
     public static function klubovi()
     {
         \Render::page('files/View/Main/OKlubu/TreneriInt.inc', [

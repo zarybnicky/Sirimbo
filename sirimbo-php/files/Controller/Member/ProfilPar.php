@@ -163,7 +163,7 @@ class ProfilPar
         \Permissions::checkError('pary', P_VIEW);
         $data = \DBPary::getActiveParyByHodnoceni();
         if (empty($data)) {
-            \Render::page('files/View/Empty.inc', [
+            \Render::twig('Empty.twig', [
                 'header' => 'Žebříček párů',
                 'notice' => 'Žádné páry nejsou v databázi'
             ]);

@@ -17,7 +17,7 @@ class Fotogalerie
 
         $photos = \DBGalerie::getFotky($id);
         if (!$photos) {
-            \Render::page('files/View/Empty.inc', [
+            \Render::twig('Empty.twig', [
                 'nadpis' => $dir['gd_name'],
                 'notice' => 'Žádné fotky k dispozici.'
             ]);

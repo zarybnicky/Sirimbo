@@ -18,6 +18,7 @@
         "twig/twig": "^3.0"
     },
     "require-dev": {
+        "sserbin/twig-linter": "@dev"
     },
     "extra": {
         "generate-default-nix": false

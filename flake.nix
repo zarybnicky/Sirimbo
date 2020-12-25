@@ -233,7 +233,8 @@
           define('GALERIE', '${cfg.stateDir}/gallery');
           define('GALERIE_THUMBS', '${cfg.stateDir}/gallery/thumbnails');
           define('UPLOADS', '${cfg.stateDir}/uploads');
-          foreach ([GALERIE, GALERIE_THUMBS, UPLOADS] as \$path) {
+          define('CACHE', '${cfg.stateDir}/cache');
+          foreach ([GALERIE, GALERIE_THUMBS, UPLOADS, CACHE] as \$path) {
             if (!is_readable(\$path)) {
               mkdir(\$path, 0777, true);
             }

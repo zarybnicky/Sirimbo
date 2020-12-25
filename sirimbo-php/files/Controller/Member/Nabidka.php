@@ -50,7 +50,7 @@ class Nabidka
         );
 
         if (empty($data)) {
-            \Render::page('files/View/Empty.inc', [
+            \Render::twig('Empty.twig', [
                 'header' => 'Nabídka tréninků',
                 'notice' => 'Žádná nabídka k dispozici'
             ]);
