@@ -18,7 +18,7 @@ class Nastenka
                 'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
                 'timestampAdd' => \Format::timestamp($item['up_timestamp_add'], true),
                 'groups' => implode('', array_map(
-                    fn($item) => \Utils::colorbox($item['ups_color'], $item['ups_popis']),
+                    fn($x) => "<div class=\"box\" title=\"{$x['ups_popis']}\" style=\"background-color:{$x['ups_color']}\"></div>",
                     \DBNastenka::getNastenkaSkupiny($item['up_id']),
                 )),
             ],

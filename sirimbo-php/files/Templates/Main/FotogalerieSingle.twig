@@ -1,0 +1,34 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-4 pt-3">{{ sidemenu | raw }}</div>
+    <div class="col-8">
+      <div style="text-align:center;">
+        {% if hasPrev %}
+          <a href="{{ prevURI }}">&lt;&lt;</a>
+        {% else %}
+          &lt;&lt;
+        {% endif %}
+
+        &nbsp;&bull;&nbsp;
+        <a href="{{ returnURI }}">Zpět</a>
+        &nbsp;&bull;&nbsp;
+
+        {% if hasNext %}
+          <a href="{{ nextURI }}">&gt;&gt;</a>
+        {% else %}
+          &gt;&gt;
+        {% endif %}
+      </div>
+
+      <a href="{{ returnURI }}">
+        <div class="foto_full">
+          <img alt="{{ id }}" src="{{ src }}" style="max-width:100%"/>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

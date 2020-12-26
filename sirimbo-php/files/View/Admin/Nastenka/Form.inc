@@ -20,10 +20,11 @@
       <?php foreach ($skupiny as $item) : ?>
         <div class="form-check">
           <?= \Utils::checkbox(
-            'sk-' . $item['s_id'],
-            '1',
-            $skupinySelected[$item['s_id']],
-            \Utils::colorbox($item['s_color_rgb'], $item['s_description']) . '&nbsp;' . $item['s_name']
+              'sk-' . $item['s_id'],
+              '1',
+              $skupinySelected[$item['s_id']],
+              "<div class=\"box\" title=\"{$item['s_description']}\" style=\"background-color:{$item['s_color_rgb']}\"></div>"
+              . '&nbsp;' . $item['s_name']
           ) ?>
         </div>
       <?php endforeach ?>

@@ -44,7 +44,7 @@
                 <?php foreach ($navbar[0] as $item) {
                     echo \Utils::navbarItem($currentUri, $item);
                 } ?>
-                <div class="w-100"></div>
+                <li class="w-100"></li>
                 <?php if (!empty($currentUser)) : ?>
                   <li class="userbox nav-item nav-link">
                     <a href="/member/profil">
@@ -57,8 +57,8 @@
                       <i class="fas fa-user"></i> Přihlásit
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right" role="menu" style="min-width:250px">
-                      <div class="col-lg-12 pt-2">
-                        <form action="/login" method="post" role="form">
+                      <li class="col-lg-12 pt-2">
+                        <form id="login" action="/login" method="post">
                           <div class="form-group pb-1">
                             <input type="text" name="login" id="login" tabindex="1"
                                    class="form-control" placeholder="Uživatelské jméno" autofocus autocomplete="username">
@@ -68,14 +68,15 @@
                                    class="form-control" placeholder="Heslo" autocomplete="current-password">
                           </div>
                           <div class="form-group pb-2">
-                            <button type="submit" tabindex="3" class="btn btn-primary">
+                            <input type="hidden" name="action" value="login" />
+                            <button form="login" type="submit" tabindex="3" class="btn btn-primary">
                               Přihlásit se
                             </button>
                           </div>
                           <a href="/registrace" tabindex="4">Registrovat se</a><br>
                           <a href="/nopassword" tabindex="5">Zapomněli jste heslo?</a><br>
                         </form>
-                      </div>
+                      </li>
                     </ul>
                   </li>
                 <?php endif ?>

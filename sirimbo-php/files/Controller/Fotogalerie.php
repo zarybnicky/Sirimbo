@@ -24,7 +24,7 @@ class Fotogalerie
             return;
         }
 
-        \Render::page('files/View/Main/Fotogalerie/Overview.inc', [
+        \Render::twig('Main/FotogalerieOverview.twig', [
             'nadpis' => $dir['gd_name'],
             'sidemenu' => static::sidemenu($id),
             'photos' => array_map(
@@ -61,7 +61,7 @@ class Fotogalerie
         $hasPrev = isset($parent_dir[$current - 1]);
         $hasNext = isset($parent_dir[$current + 1]);
 
-        \Render::page('files/View/Main/Fotogalerie/Single.inc', [
+        \Render::twig('Main/FotogalerieSingle.twig', [
             'id'        => $id,
             'src'       => '/galerie/' . $data['gf_path'],
             'hasPrev'   => $hasPrev,
@@ -84,7 +84,7 @@ class Fotogalerie
         $level = 0;
 
         foreach ($dirs as $dir) {
-            if ($dir['gd_hidden'] == '1') {
+            if ($dir['gd_level'] == 1 || $dir['gd_hidden'] == '1') {
                 continue;
             }
 

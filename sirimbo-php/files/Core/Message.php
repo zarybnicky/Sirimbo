@@ -12,35 +12,41 @@ class Message
         return $message;
     }
 
-    public static function setMessage(string $type, string $message): void
+    public static function setMessage(string $type, $message): void
     {
         if (!isset($_SESSION['REDIRECT_MESSAGE'])) {
             $_SESSION['REDIRECT_MESSAGE'] = [];
         }
-        $_SESSION['REDIRECT_MESSAGE'][] = ['text' => $message, 'type' => $type];
+        if (is_array($message)) {
+            foreach ($message as $item) {
+                $_SESSION['REDIRECT_MESSAGE'][] = ['text' => $item, 'type' => $type];
+            }
+        } else {
+            $_SESSION['REDIRECT_MESSAGE'][] = ['text' => $message, 'type' => $type];
+        }
     }
 
-    public static function info(string $msg): void
+    public static function info($msg): void
     {
         self::setMessage('info', $msg);
     }
-    public static function warning(string $msg): void
+    public static function warning($msg): void
     {
         self::setMessage('warning', $msg);
     }
-    public static function danger(string $msg): void
+    public static function danger($msg): void
     {
         self::setMessage('danger', $msg);
     }
-    public static function success(string $msg): void
+    public static function success($msg): void
     {
         self::setMessage('success', $msg);
     }
-    public static function primary(string $msg): void
+    public static function primary($msg): void
     {
         self::setMessage('primary', $msg);
     }
-    public static function secondary(string $msg): void
+    public static function secondary($msg): void
     {
         self::setMessage('secondary', $msg);
     }

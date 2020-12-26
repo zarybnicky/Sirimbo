@@ -5,28 +5,28 @@ class StaticContent
 {
     public static function kontakt()
     {
-        \Render::page('files/View/Main/Kontakt.inc', [
+        \Render::twig('Main/Kontakt.twig', [
             'header' => 'Kontakt'
         ]);
     }
 
     public static function klubovi()
     {
-        \Render::page('files/View/Main/OKlubu/TreneriInt.inc', [
+        \Render::twig('Main/TreneriInterni.twig', [
             'header' => 'Kluboví trenéři'
         ]);
     }
 
     public static function externi()
     {
-        \Render::page('files/View/Main/OKlubu/TreneriExt.inc', [
+        \Render::twig('Main/TreneriExterni.twig', [
             'header' => 'Externí trenéři'
         ]);
     }
 
     public static function saly()
     {
-        \Render::page('files/View/Main/OKlubu/Saly.inc', [
+        \Render::twig('Main/Saly.twig', [
             'header' => 'Kde trénujeme'
         ]);
     }

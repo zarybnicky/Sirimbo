@@ -52,7 +52,7 @@ try {
                 \Redirect::to('/member/profil/edit', 'Prosím vyplňte požadované údaje.');
             }
         }
-    } elseif (isset($_POST['login']) || isset($_POST['pass'])) {
+    } elseif (($_POST['action'] ?? '') == 'login') {
         if (!\Session::login($_POST['login'], User::crypt($_POST['pass']))) {
             \Redirect::to('/login', 'Špatné jméno nebo heslo!');
         } elseif ($_GET['return'] ?? null) {

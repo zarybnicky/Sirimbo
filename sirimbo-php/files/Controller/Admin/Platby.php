@@ -19,7 +19,7 @@ class Platby
                 $skupiny[$currentKey] = ['users' => []];
                 $skupiny[$currentKey]['info'] = [
                     'header' => "<big>"
-                    . \Utils::colorbox($item['s_color_rgb'], $item['s_description'])
+                    . "<div class=\"box\" title=\"{$item['s_description']}\" style=\"background-color:{$item['s_color_rgb']}\"></div>"
                     . '&nbsp;&nbsp;' . $item['s_name'] . "</big>"
                 ];
             }

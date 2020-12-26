@@ -1,16 +1,19 @@
-<form class="container" action="" method="POST">
+{% extends "Layout.twig" %}
+
+{% block content %}
+<form id="register" class="container" method="POST">
 
   <div class="form-row mb-2">
     <div class="form-group col-12 col-md-6">
       <label for="username">Přihlašovací jméno</label>
-      <?= \Utils::text('username', $username) ?>
+      {{ text('username', username) }}
       <small class="form-text text-muted">
         Pouze písmena bez diakritiky, číslice a podtržítka, 3 - 20 znaků
       </small>
     </div>
     <div class="form-group col-12 col-md-6">
       <label for="pass">Heslo</label>
-      <input class="form-control" type="password" name="pass" value="<?= $pass ?>"/>
+      <input class="form-control" type="password" name="pass" value="{{ pass }}"/>
       <small class="form-text text-muted">
         Pouze písmena bez diakritiky, číslice a podtržítka, 6 - 32 znaků
       </small>
@@ -20,33 +23,33 @@
   <div class="form-row mb-2">
     <div class="form-group col-12 col-md-6">
       <label for="jmeno">Jméno</label>
-      <?= \Utils::text('jmeno', $jmeno) ?>
+      {{ text('jmeno', jmeno) }}
     </div>
     <div class="form-group col-12 col-md-6">
       <label for="prijmeni">Příjmení</label>
-      <?= \Utils::text('prijmeni', $prijmeni) ?>
+      {{ text('prijmeni', prijmeni) }}
     </div>
   </div>
 
   <div class="form-row mb-2">
     <div class="form-group col-12 col-md-6">
       <label for="narozeni">Datum narození</label>
-      <?= new \DateHelper('narozeni', $narozeni) ?>
+      {{ date('narozeni', narozeni) }}
     </div>
     <div class="form-group col-12 col-md-6 pt-4">
-      <?= \Utils::inlineRadio('pohlavi', 'm', $pohlavi == 'm', 'Muž') ?>
-      <?= \Utils::inlineRadio('pohlavi', 'f', $pohlavi == 'f', 'Žena') ?>
+      {{ inlineRadio('pohlavi', 'm', pohlavi == 'm', 'Muž') }}
+      {{ inlineRadio('pohlavi', 'f', pohlavi == 'f', 'Žena') }}
     </div>
   </div>
 
   <div class="form-row mb-2">
     <div class="form-group col-12 col-md-6">
       <label for="email">E-mail</label>
-      <?= \Utils::text('email', $email) ?>
+      {{ text('email', email) }}
     </div>
     <div class="form-group col-12 col-md-6">
       <label for="telefon">Telefon</label>
-      <?= \Utils::text('telefon', $telefon) ?>
+      {{ text('telefon', telefon) }}
     </div>
   </div>
 
@@ -54,60 +57,64 @@
   <div class="form-row mb-2">
     <div class="form-group mb-2 col-12 col-md-6">
       <label for="street">Ulice</label>
-      <?= \Utils::text('street', $street) ?>
+      {{ text('street', street) }}
     </div>
     <div class="form-group col-6 col-md-3">
       <label for="popisne">Č. popisné</label>
-      <?= \Utils::text('popisne', $popisne) ?>
+      {{ text('popisne', popisne) }}
     </div>
     <div class="form-group col-6 col-md-3">
       <label for="orientacni">Č. orientační</label>
-      <?= \Utils::text('orientacni', $orientacni) ?>
+      {{ text('orientacni', orientacni) }}
     </div>
 
     <div class="form-group mb-2 col-12 col-md-6">
       <label for="city">Město</label>
-      <?= \Utils::text('city', $city) ?>
+      {{ text('city', city) }}
     </div>
     <div class="form-group col-12 col-md-6">
       <label for="district">Část města</label>
-      <?= \Utils::text('district', $district) ?>
+      {{ text('district', district) }}
     </div>
 
     <div class="form-group col-12 col-md-6">
       <label for="postal">PSČ</label>
-      <?= \Utils::text('postal', $postal) ?>
+      {{ text('postal', postal) }}
     </div>
   </div>
 
   <div class="form-group mb-2">
     <label for="nationality">Národnost</label>
-    <?= \Utils::select('nationality', Countries::$countries, $nationality) ?>
+    {{ select('nationality', countries, nationality) }}
   </div>
 
   <div class="form-group mb-2">
     <label for="skupina">Tréninková skupina</label>
-    <?= \Utils::selectAssoc('skupina', $skupiny, 'id', 'text', $skupina ?: '3') ?>
+    {{ selectAssoc('skupina', skupiny, 'id', 'text', skupina ? skupina : '3') }}
   </div>
 
   <div class="form-group mb-2">
     <label for="poznamky">Vztah ke klubu</label>
     <div class="form-inline">
-      <?= \Utils::radio('poznamky', 'dancer', $poznamky == 'dancer', 'Tanečník/tanečníce') ?>
+      {{ radio('poznamky', 'dancer', poznamky == 'dancer', 'Tanečník/tanečníce') }}
     </div>
     <div class="form-inline">
-      <?php $i = \Utils::text('dancer-name', $dancerName, [
-          'placeholder' => 'jméno tanečníka',
-          'cls' => 'form-control ml-2',
-      ]); ?>
-      <?= \Utils::radio('poznamky', 'parent', $poznamky == 'parent', 'Rodič tanečníka: ' . $i) ?>
+      <div class="form-check">
+        <input type=radio class='form-check-input' name='poznamky' value='parent' {{ (poznamky == 'parent') ? 'checked' : '' }} />
+        <label class="form-check-label">
+          Rodič tanečníka:
+          <input type="text" name="dancer-name"  value="{{ dancerName }}" placeholder="jméno tanečníka" class="form-control ml-2" />
+        </label>
+      </div>
     </div>
     <div class="form-inline">
-      <?php $i = \Utils::text('other', $other, [
-          'placeholder' => 'vztah ke klubu',
-          'cls' => 'form-control ml-2',
-      ]) ?>
-      <?= \Utils::radio('poznamky', 'other', $poznamky == 'other', 'Jiný ' . $i) ?>
+      <div class="form-check">
+        <input type=radio class='form-check-input' name='poznamky' value='other' {{ (poznamky == 'other') ? 'checked' : '' }} />
+        <label class="form-check-label">
+          Jiný
+          <input type="text" name="other"  value="{{ other }}" placeholder="vztah ke klubu" class="form-control ml-2" />
+        </label>
+      </div>
     </div>
   </div>
 
@@ -132,5 +139,6 @@
     údaje.
   </p>
 
-  <?= \Utils::submit('Registrovat se', 'action', 'register') ?>
+  <button form="register" name="action" value="register" class="btn btn-primary">Registrovat se</button>
 </form>
+{% endblock %}

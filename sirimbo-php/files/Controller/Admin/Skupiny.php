@@ -9,7 +9,7 @@ class Skupiny
         $data = array_map(
             fn($item) => [
                 'buttons' => \Buttons::skupiny($item['s_id']),
-                'colorBox' => \Utils::colorbox($item['s_color_rgb'], $item['s_description']),
+                'colorBox' => "<div class=\"box\" title=\"{$item['s_description']}\" style=\"background-color:{$item['s_color_rgb']}\"></div>",
                 'name' => $item['s_name']
             ],
             \DBSkupiny::get()

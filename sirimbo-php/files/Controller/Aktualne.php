@@ -28,7 +28,7 @@ class Aktualne
             },
             $data
         );
-        \Render::page('files/View/Main/Aktuality/Overview.inc', [
+        \Render::twig('Main/AktualityOverview.twig', [
             'header' => "Články",
             'data' => $data
         ]);
@@ -43,27 +43,24 @@ class Aktualne
         $photo = \DBGalerie::getSingleFoto($data['at_foto_main']);
         $photo_uri = $photo ? $photo['gf_path'] : '';
 
-        \Render::page(
-            'files/View/Main/Aktuality/Single.inc',
-            [
-                'id' => $data['at_id'],
-                'jmeno' => $data['at_jmeno'],
-                'timestamp' => $data['at_timestamp_add'],
-                'canEdit' => \Permissions::check('aktuality', P_OWNED, $data['at_kdo']),
-                'description' => $data['at_preview'],
-                'text' => $data['at_text'],
-                'title_photo_uri' => '/galerie/' . $photo_uri,
-                'title_photo_thumb_uri' => '/galerie/thumbnails/' . $photo_uri,
-                'meta' => [
-                    ['property' => 'og:title', 'content' => $data['at_jmeno']],
-                    ['property' => 'og:type', 'content' => 'article'],
-                    ['property' => 'og:url', 'content' => 'http://tkolymp.cz/aktualne/' . $data['at_id']],
-                    ['property' => 'og:image', 'content' => 'http://tkolymp.cz/galerie/thumbnails/' . $photo_uri],
-                    ['property' => 'og:site_name', 'TK Olymp'],
-                    ['property' => 'og:description', $data['at_preview']]
-                ],
-                'header' => $data['at_jmeno']
-            ]
-        );
+        \Render::twig('Main/AktualitySingle.twig', [
+            'id' => $data['at_id'],
+            'jmeno' => $data['at_jmeno'],
+            'timestamp' => $data['at_timestamp_add'],
+            'canEdit' => \Permissions::check('aktuality', P_OWNED, $data['at_kdo']),
+            'description' => $data['at_preview'],
+            'text' => $data['at_text'],
+            'title_photo_uri' => '/galerie/' . $photo_uri,
+            'title_photo_thumb_uri' => '/galerie/thumbnails/' . $photo_uri,
+            'meta' => [
+                ['property' => 'og:title', 'content' => $data['at_jmeno']],
+                ['property' => 'og:type', 'content' => 'article'],
+                ['property' => 'og:url', 'content' => 'http://tkolymp.cz/aktualne/' . $data['at_id']],
+                ['property' => 'og:image', 'content' => 'http://tkolymp.cz/galerie/thumbnails/' . $photo_uri],
+                ['property' => 'og:site_name', 'TK Olymp'],
+                ['property' => 'og:description', $data['at_preview']]
+            ],
+            'header' => $data['at_jmeno']
+        ]);
     }
 }

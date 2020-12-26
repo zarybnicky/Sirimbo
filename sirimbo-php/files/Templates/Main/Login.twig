@@ -1,3 +1,6 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
 <div class="container">
   <form action="" method="post">
     <div class="row justify-content-center m-3">
@@ -9,7 +12,7 @@
           <input class="form-control" name="pass" placeholder="Heslo" type="password" />
         </div>
         <div class="form-group pb-2">
-          <?= \Utils::submit('Přihlásit se', 'action', 'login') ?>
+          <button name="action" value="login" class="btn btn-primary">Přihlásit se</button>
         </div>
         <a href="/registrace">Registrovat se</a><br>
         <a href="/nopassword">Zapomněli jste heslo?</a>
@@ -17,3 +20,4 @@
     </div>
   </form>
 </div>
+{% endblock %}

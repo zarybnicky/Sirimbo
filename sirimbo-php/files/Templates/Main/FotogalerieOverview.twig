@@ -1,0 +1,19 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-4 pt-3">{{ sidemenu | raw }}</div>
+    <div class="col-8">
+      <h2>{{ nadpis }}</h2>
+      {% for item in photos %}
+        <a href="{{ item.href }}" class="foto_preview no-a">
+          <div class="foto_preview_in">
+            <img alt="{{ item.id }}" src="{{ item.src }}" />
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

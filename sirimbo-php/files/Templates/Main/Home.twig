@@ -1,3 +1,6 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
 <div id="carousel" class="carousel slide" data-ride="carousel">
   <ol class="carousel-indicators">
     <li data-target="#carousel" data-slide-to="0" class="active"></li>
@@ -5,16 +8,16 @@
     <li data-target="#carousel" data-slide-to="2"></li>
   </ol>
   <div class="carousel-inner">
-    <?php $first = true; foreach ($highlights as $item): ?>
-      <div class="carousel-item<?php if ($first) { echo " active"; $first = false; } ?>"
-          style="background-image:linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.4)),url(<?= $item['title_photo_uri'] ?>)">
-        <img src="<?= $item['title_photo_uri'] ?>" alt="First slide" />
+    {% for item in highlights %}
+      <div class="carousel-item {% if loop.first %}active{% endif %}"
+          style="background-image:linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.4)),url({{ item.title_photo_uri }})">
+        <img src="{{ item.title_photo_uri }}" alt="First slide" />
         <div class="carousel-caption">
-          <a href="<?= $item['uri'] ?>"><h3><?= $item['name'] ?></h3></a>
-          <p class="d-none d-md-block"><?= $item['description'] ?></p>
+          <a href="{{ item.uri }}"><h3>{{ item.name }}</h3></a>
+          <p class="d-none d-md-block">{{ item.description }}</p>
         </div>
       </div>
-    <?php endforeach ?>
+    {% endfor %}
   </div>
   <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -150,38 +153,38 @@
     <div class="col-md-6">
       <h3><a href="/aktualne">Aktuálně</a></h3>
       <div class="row">
-        <?php foreach ($moreArticles as $item): ?>
+        {% for item in moreArticles %}
           <div class="col-12 col-md-6 pb-2">
             <div class="article-small card">
-              <a class="card-img-top image" href="<?= $item['uri'] ?>">
-                <img alt="" src="<?= $item['title_photo_uri'] ?>" />
+              <a class="card-img-top image" href="{{ item.uri }}">
+                <img alt="" src="{{ item.title_photo_uri }}" />
               </a>
               <div class="card-body">
                 <h4 class="card-title">
-                  <a href="<?= $item['uri'] ?>"><?= $item['name'] ?></a>
+                  <a href="{{ item.uri }}">{{ item.name }}</a>
                 </h4>
-                <p class="card-text"><?= $item['description'] ?></p>
+                <p class="card-text">{{ item.description }}</p>
                 <div style="text-align:right;font-size:85%;">
-                  <a href="<?= $item['uri'] ?>">více zde &raquo;</a>
+                  <a href="{{ item.uri }}">více zde &raquo;</a>
                 </div>
               </div>
             </div>
           </div>
-        <?php endforeach ?>
+        {% endfor %}
       </div>
     </div>
 
     <div class="col-md-6">
       <h3><a href="/video">Videa ze soutěží</a></h3>
       <ul class="list-group">
-        <?php foreach ($videos as $x): ?>
+        {% for x in videos %}
           <li class="list-group-item">
-            <a class="video row" href="<?= $x['link'] ?>">
-              <div class="col-4"><img style="max-width:100%" alt="" src="<?= $x['image'] ?>"/></div>
-              <div class="col-8"><h5><?= $x['title'] ?></h5></div>
+            <a class="video row" href="{{ x.link }}">
+              <div class="col-4"><img style="max-width:100%" alt="" src="{{ x.image }}"/></div>
+              <div class="col-8"><h5>{{ x.title }}</h5></div>
             </a>
           </li>
-        <?php endforeach ?>
+        {% endfor %}
       </ul>
     </div>
   </div>
@@ -215,3 +218,4 @@
     </div>
   </div>
 </div>
+{% endblock %}

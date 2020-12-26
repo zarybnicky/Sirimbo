@@ -48,7 +48,8 @@ class Profil
             'header' => $user->getFullName(),
             'ageGroup' => self::getAgeGroup($user->getBirthYear()),
             'coupleData' => \DBPary::getLatestPartner($user->getId(), $user->getGender()),
-            'skupina' => \Utils::colorbox($s['s_color_rgb'], $s['s_name']) . '&nbsp;' . $s['s_name'],
+            'skupina' =>
+            "<div class=\"box\" title=\"{$s['s_description']}\" style=\"background-color:{$s['s_color_rgb']}\"></div>" . '&nbsp;' . $s['s_name'],
             'varSymbol' => \User::varSymbol($user->getId()),
             'hasPaid' => \DBPlatby::hasPaidMemberFees($user->getId()),
             'paymentHistory' => $paymentHistory,

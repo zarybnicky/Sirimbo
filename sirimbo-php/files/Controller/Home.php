@@ -40,7 +40,7 @@ class Home
             ])
         );
 
-        \Render::page('files/View/Main/Home.inc', [
+        \Render::twig('Main/Home.twig', [
             'highlights' => $highlights,
             'moreArticles' => $moreArticles,
             'videos' => $videos

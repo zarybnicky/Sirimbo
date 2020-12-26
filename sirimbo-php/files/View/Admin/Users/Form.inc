@@ -114,7 +114,8 @@
           'skupina',
           $item['id'],
           $skupina == $item['id'],
-        \Utils::colorbox($item['color'], $item['popis']) . '&nbsp;' . $item['popis']
+          "<div class=\"box\" title=\"{$item['popis']}\" style=\"background-color:{$item['color']}\"></div>"
+          . '&nbsp;' . $item['popis']
       ) ?>
     <?php endforeach ?>
   </div>

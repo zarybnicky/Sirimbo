@@ -14,11 +14,6 @@ class Utils
             . "{$user['u_prijmeni']}, {$user['u_jmeno']}</a>";
     }
 
-    public static function colorbox(string $color, string $description): string
-    {
-        return "<div class=\"box\" title=\"$description\" style=\"background-color:$color\"></div>";
-    }
-
     public static function notice(string $text, string $type = "info"): string
     {
         if (!$text) {
@@ -27,7 +22,7 @@ class Utils
         return "<div class=\"alert alert-$type\" role=\"alert\">$text</div>";
     }
 
-    public static function text(string $name, ?string $value = null, array $options = []): string
+    public static function text(string $name, $value = null, array $options = []): string
     {
         if ($value === null) {
             $value = $name;
@@ -47,7 +42,7 @@ class Utils
         );
     }
 
-    public static function checkbox(string $name, ?string $value = null, bool $state = false, ?string $label = null): string
+    public static function checkbox(string $name, ?string $value = null, $state = false, ?string $label = null): string
     {
         if ($value === null) {
             $value = $name;
@@ -61,7 +56,7 @@ class Utils
             . "</div>";
     }
 
-    public static function radio(string $name, ?string $value = null, bool $state = false, ?string $label = null): string
+    public static function radio(string $name, ?string $value = null, $state = false, ?string $label = null): string
     {
         if ($value === null) {
             $value = $name;
@@ -75,7 +70,7 @@ class Utils
             . "</div>";
     }
 
-    public static function inlineRadio(string $name, ?string $value = null, bool $state = false, ?string $label = null): string
+    public static function inlineRadio(string $name, ?string $value = null, $state = false, ?string $label = null): string
     {
         if ($value === null) {
             $value = $name;
@@ -117,24 +112,24 @@ class Utils
     public static function selectAssoc(string $name, array $data, string $key, string $value, $set = null): string
     {
         $options = array_map(
-            fn($x) => "<option value=\"{$x[$value]}\""
-            . ((string) $set === (string) $x[$value] ? " selected" : '')
-            . ">{$x[$key]}</option>",
+            fn($x) => "<option value=\"{$x[$key]}\""
+            . ((string) $set === (string) $x[$key] ? " selected" : '')
+            . ">{$x[$value]}</option>",
             $data,
         );
-        return "<select name=\"$name\">" . implode($options) . "</select>";
+        return "<select class=\"form-control select2\" name=\"$name\">" . implode($options) . "</select>";
     }
 
     public static function select(string $name, array $data, $set = null): string
     {
         $options = array_map(
-            fn($k, $v) => "<option value=\"$v\""
-            . ((string) $set === (string) $v ? " selected" : '')
-            . ">$k</option>",
+            fn($k, $v) => "<option value=\"$k\""
+            . ((string) $set === (string) $k ? " selected" : '')
+            . ">$v</option>",
             array_keys($data),
             array_values($data),
         );
-        return "<select name=\"$name\">" . implode($options) . "</select>";
+        return "<select class=\"form-control select2\" name=\"$name\">" . implode($options) . "</select>";
     }
 
     public static function selectLiteral(string $name, array $data, $set = null): string
@@ -219,5 +214,12 @@ class Utils
         }
         $x .= '</div>';
         return '<li class="nav-item' . $active . ' dropdown">' . $x . '</li>';
+    }
+
+    public static function date($name, $date, $cls = 'form-control'): string
+    {
+        $dateObj = new \Date($date);
+        $val = $dateObj->isValid() ? $dateObj->getHumanDate() : $date;
+        return "<input type=\"text\" name=\"$name\" value=\"$val\" class=\"$cls\">";
     }
 }

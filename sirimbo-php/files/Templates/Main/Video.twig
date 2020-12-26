@@ -1,3 +1,6 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
 <style>
  .playlist {
      padding: .3rem .5rem;
@@ -41,26 +44,26 @@
 
 <div class="container">
 
-  <?php foreach ($videos as $item): ?>
-    <a class="row video-item" href="<?= $item['uri'] ?>">
+  {% for item in videos %}
+    <a class="row video-item" href="{{ item.uri }}">
       <div class="col-sm-auto p-0 pb-2">
-        <img src="<?= $item['thumbnail'] ?>" style="width:150px" />
+        <img src="{{ item.thumbnail }}" style="width:150px" />
       </div>
       <div class="col">
-        <b><?= $item['title'] ?></b><br>
-        <?= \Format::timestamp($item['date'], true) ?>
+        <b>{{ item.title }}</b><br>
+        {{ timestamp(item.date, true) }}
       </div>
     </a>
-  <?php endforeach ?>
+  {% endfor %}
 
-  <?php if ($videos) : ?><h3>Seznamy videí</h3><?php endif ?>
-  <?php foreach ($playlists as $item): ?>
-    <div class="playlist <?= isset($playlist) && ($playlist == $item['id']) ? 'active' : '' ?>">
-      <a href="/video?playlist=<?= $item['id'] ?>">
-        <b><?= $item['title'] ?></b>
+  {% if videos %}<h3>Seznamy videí</h3>{% endif %}
+  {% for item in playlists %}
+    <div class="playlist {{ (playlist == item.id) ? 'active' : '' }}">
+      <a href="/video?playlist={{ item.id }}">
+        <b>{{ item.title }}</b>
       </a>
     </div>
-  <?php endforeach ?>
+  {% endfor %}
 
 </div>
 <div id="video-popup" style="display:none"></div>
@@ -81,3 +84,4 @@
      });
  })();
 </script>
+{% endblock %}

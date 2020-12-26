@@ -62,7 +62,7 @@ class Users
                     'varSymbol' => \User::varSymbol($item['u_id']),
                     'fullName' => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
                     'birthDate' => \Format::date($item['u_narozeni']),
-                    'colorBox' => \Utils::colorbox($item['s_color_rgb'], $item['s_description']),
+                    'colorBox' => "<div class=\"box\" title=\"{$item['s_description']}\" style=\"background-color:{$item['s_color_rgb']}\"></div>",
                     'groupInfo' => $groupOptions[$item['u_group']]
                 ];
                 if ($action == 'status') {
@@ -424,7 +424,7 @@ class Users
             fn($item) => [
                 'id' => $item['u_id'],
                 'buttons' => \Buttons::delete('/admin/users/remove/' . $item['u_id']),
-                'fullName' => \Utils::colorbox($item['s_color_rgb'], $item['s_description'])
+                'fullName' => "<div class=\"box\" title=\"{$item['s_description']}\" style=\"background-color:{$item['s_color_rgb']}\"></div>"
                 . '&nbsp;' . $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
                 'email' => $item['u_email'],
                 'telefon' => $item['u_telefon'],

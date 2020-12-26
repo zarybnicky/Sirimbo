@@ -212,7 +212,7 @@ class PlatbyGroup
         $skupiny = array_map(
             fn($item) => [
                 'buttons' => \Utils::checkbox('skupiny[]', $item['s_id'], isset($skupinySelected[$item['s_id']])),
-                'name' => \Utils::colorbox($item['s_color_rgb'], $item['s_description']) . '&nbsp;' . $item['s_name']
+                'name' => "<div class=\"box\" title=\"{$item['s_description']}\" style=\"background-color:{$item['s_color_rgb']}\"></div>&nbsp;" . $item['s_name']
             ],
             \DBSkupiny::get()
         );

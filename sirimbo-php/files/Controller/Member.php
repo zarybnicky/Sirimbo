@@ -8,7 +8,7 @@ class Member
         if (\Session::getUser()) {
             \Redirect::to($_GET['return'] ?? '/member');
         }
-        \Render::page('files/View/Main/Login.inc');
+        \Render::twig('Main/Login.twig');
     }
 
     public static function get()
@@ -32,7 +32,7 @@ class Member
         $data = array_map(
             function ($item) {
                 $skupiny = array_map(
-                    fn($skupina) => \Utils::colorbox($skupina['ups_color'], $skupina['ups_popis']),
+                    fn($x) => "<div class=\"box\" title=\"{$x['ups_popis']}\" style=\"background-color:{$x['ups_color']}\"></div>",
                     \DBNastenka::getNastenkaSkupiny($item['up_id'])
                 );
                 return [

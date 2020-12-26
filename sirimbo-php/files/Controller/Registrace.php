@@ -7,12 +7,13 @@ class Registrace
     {
         $skupiny = array_map(fn($item) => [
             'id' => $item['s_id'],
-            'text' => \Utils::colorbox($item['s_color_rgb'], $item['s_name']) . '&nbsp;' . $item['s_name'],
+            'text' => $item['s_name'],
         ], \DBSkupiny::get());
 
-        \Render::page('files/View/Main/Registrace.inc', [
+        \Render::twig('Main/Registrace.twig', [
             'header' => 'Registrace',
             'skupiny' => $skupiny,
+            'countries' => \Countries::$countries,
             'username' => '',
             'pass' => '',
             'jmeno' => '',
@@ -59,12 +60,13 @@ class Registrace
         if (!$f->isValid()) {
             $skupiny = array_map(fn($item) => [
                 'id' => $item['s_id'],
-                'text' => \Utils::colorbox($item['s_color_rgb'], $item['s_name']) . '&nbsp;' . $item['s_name'],
+                'text' => "<div class=\"box\" title=\"{$item['s_description']}\" style=\"background-color:{$item['s_color_rgb']}\"></div>" . '&nbsp;' . $item['s_name'],
             ], \DBSkupiny::get());
 
             \Message::warning($f->getMessages());
-            \Render::page('files/View/Main/Registrace.inc', [
+            \Render::twig('Main/Registrace.twig', [
                 'header' => 'Registrace',
+                'countries' => \Countries::$countries,
                 'skupiny' => $skupiny,
                 'username' => $_POST['username'] ?? '',
                 'pass' => $_POST['pass'] ?? '',

@@ -31,7 +31,7 @@ class Clenove
                 $currentKey = count($skupiny);
                 $skupiny[$currentKey] = [
                     'header' => "<h3>"
-                    . \Utils::colorbox($item['s_color_rgb'], $item['s_description'])
+                    . "<div class=\"box\" title=\"{$item['s_description']}\" style=\"background-color:{$item['s_color_rgb']}\"></div>"
                     . '&nbsp;&nbsp;' . $item['s_name'] . "</h3>",
                     'description' => $item['s_description'],
                     'userCount' => 0
@@ -78,7 +78,7 @@ class Clenove
                 $skupiny[$currentKey] = [
                     'info' => [
                         'header' => "<big>"
-                        .  \Utils::colorbox($item['s_color_rgb'], $item['s_description'])
+                        . "<div class=\"box\" title=\"{$item['s_description']}\" style=\"background-color:{$item['s_color_rgb']}\"></div>"
                         . '&nbsp;&nbsp;' . $item['s_name'] . "</big>"
                     ],
                     'users' => []
