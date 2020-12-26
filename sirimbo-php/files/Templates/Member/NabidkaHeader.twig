@@ -1,0 +1,29 @@
+<div class="trenink-header">
+  <div class="title">{{ item.fullName }}</div>
+  <div class="date">{{ item.datum }}</div>
+
+  {% if item.hourMax > 0 %}
+    <div>
+      <span class="little">Maximálně hodin/pár:</span>
+      <span class="nadpis">{{ item.hourMax }}</span>
+    </div>
+  {% endif %}
+  <div>
+    <span class="little">Celkem hodin: </span>
+    <span class="nadpis">{{ item.hourTotal }}</span>
+  </div>
+  <div>
+    <span class="little">Obsazených hodin: </span>
+    <span class="nadpis">{{ item.hourReserved }}</span>
+  </div>
+  <div>
+    <span class="little">Volných hodin: </span>
+    <span class="nadpis">{{ item.hourFree }}</span>
+  </div>
+
+  {% if item.canEdit %}
+    Admin:
+    <a href="/admin/nabidka/edit/{{ item.id }}">obecné</a>,
+    <a href="/admin/nabidka/detail/{{ item.id }}">tréninky</a>
+  {% endif %}
+</div>

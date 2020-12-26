@@ -1,0 +1,28 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+<div class="container">
+  {% include 'Member/AkceHeader.twig' with {'item': data} %}
+  <div style="text-align:center;">
+    {% if not data.items %}
+      Nikdo není přihlášený<br/>
+    {% else %}
+      <table style="margin:0 auto;text-align:left">
+        <tr>
+          <th>Jméno</th>
+          <th>Příjmení</th>
+          <th>Skupiny</th>
+        </tr>
+        {% for item in data.items %}
+          <tr>
+            <td>{{ item.u_jmeno }}</td>
+            <td>{{ item.u_prijmeni }}</td>
+            <td>{{ item.s_name }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% endif %}
+    <a class="btn btn-outline-primary" href="/member/akce">Zpět</a>
+  </div>
+</div>
+{% endblock %}

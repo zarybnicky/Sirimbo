@@ -46,7 +46,7 @@ class Rozpis
         );
 
         if ($data) {
-            \Render::page('files/View/Member/Rozpis/Overview.inc', [
+            \Render::twig('Member/RozpisOverview.twig', [
                 'header' => 'Rozpis tréninků',
                 'data' => $data
             ]);

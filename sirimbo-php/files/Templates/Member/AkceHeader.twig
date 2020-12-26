@@ -1,0 +1,31 @@
+<div class="trenink-header">
+    <div class="title">{{ item.jmeno }}</div>
+    <div class="date">{{ item.datum }}</div>
+    <div class="emph">{{ item.kde }}</div>
+    <div>
+      <span class="big">Kapacita: </span> {{ item.kapacita }}
+      <br/>
+      <span class="big">Volných míst: </span> {{ item.volno }}
+    </div>
+    {% if item.canEdit %}
+      <span class="big">Admin: </span>
+      <a href="/admin/akce/edit/{{ item.id }}">obecné</a>
+      <a href="/admin/akce/detail/{{ item.id }}">účastníci</a>
+      <a href="/admin/akce/dokumenty/{{ item.id }}">dokumenty</a>
+    {% endif %}
+    {% if item.info %}
+      <div style="text-align:left;">
+        <span class="big">Další informace: </span>
+        <br/>{{ item.info }}
+      </div>
+    {% endif %}
+    {% if item.dokumenty %}
+      <br/>
+      <div style="text-align:left;">
+        <span class="big">Dokumenty: </span><br/>
+        {% for row in item.dokumenty %}
+          <a href="/member/download?id={{ item.row['id'] }}">{{ item.row['name'] }}</a>
+        {% endfor %}
+      </div>
+    {% endif %}
+</div>

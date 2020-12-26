@@ -1,0 +1,11 @@
+<div class="trenink-header">
+  <div class="title">{{ item.fullName }}</div>
+  <div class="date">{{ item.datum }}</div>
+  <div>{{ item.kde }}</div>
+
+  {% if item.canEdit %}
+    Admin:
+    <a href="/admin/rozpis/edit/{{ item.id }}">obecné</a>
+    <a href="/admin/rozpis/detail/{{ item.id }}">tréninky</a>
+  {% endif %}
+</div>

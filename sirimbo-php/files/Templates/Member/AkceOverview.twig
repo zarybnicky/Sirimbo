@@ -1,0 +1,25 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+<div class="container">
+  <div class="row flex-wrap flex-space-around">
+    {% for item in akce %}
+      <div class="col-12 col-lg-6 pb-2 text-center">
+        <form action="" method="post">
+          {% include 'Member/AkceHeader.twig' with {'item': item} %}
+          <input type='hidden' name='id' value='{{ item.id }}' />
+          {% if item.signOut %}
+            {{ submit('Odhlásit se', 'action', 'signout', 'btn btn-outline-primary btn-sm') }}
+          {% endif %}
+          {% if item.signIn %}
+            {{ submit('Přihlásit se', 'action', 'signup', 'btn btn-outline-primary btn-sm') }}
+          {% endif %}
+          <a href="/member/akce/{{ item.id }}" class="btn btn-outline-primary btn-sm">
+            Zobrazit přihlášené
+          </a>
+        </form>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

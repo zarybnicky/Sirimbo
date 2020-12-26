@@ -1,0 +1,45 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+<div class="container">
+  <div class="row flex-wrap flex-space-around">
+    {% for item in data %}
+      <div class="col-12 col-md-6 col-lg-4 pb-2">
+        <form action="" method="post">
+          <div class="widget">
+            <div class="widget-title center">
+              {% include 'Member/NabidkaHeader.twig' with {'item': item} %}
+            </div>
+            <div class="widget-content">
+              <table class="nocolor" style="width:100%">
+                {% for row in item.items %}
+                  <tr>
+                    <td>{{ row.fullName }}</td>
+                    <td>
+                      {{ row.hourCount }}
+                      {{ (row.hourCount == 1) ? 'hodina' :
+                           ((row.hourCount > 1 and row.hourCount < 4) ? 'hodiny' : 'hodin') }}
+                    </td>
+                    <td>
+                      {% if row.canDelete %}
+                        {{ submit('&times', 'un_id', row.deleteTicket, 'py-0 btn btn-outline-primary btn-sm') }}
+                      {% endif %}
+                    </td>
+                  </tr>
+                {% endfor %}
+              </table>
+              <div style="text-align:center;padding:10px 0 5px">
+                {% if item.canAdd %}
+                  {{ text('hodiny', '', {'placeholder':'Počet hodin', 'cls':'form-control d-inline w-auto'}) }}
+                  <input type='hidden' name='id' value='{{ item.id }}'>
+                  {{ submit('Přidat') }}
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

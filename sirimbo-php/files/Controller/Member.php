@@ -30,25 +30,19 @@ class Member
         }
 
         $data = array_map(
-            function ($item) {
-                $skupiny = array_map(
-                    fn($x) => "<div class=\"box\" title=\"{$x['ups_popis']}\" style=\"background-color:{$x['ups_color']}\"></div>",
-                    \DBNastenka::getNastenkaSkupiny($item['up_id'])
-                );
-                return [
-                    'id' => $item['up_id'],
-                    'nadpis' => $item['up_nadpis'],
-                    'canEdit' => \Permissions::check('nastenka', P_OWNED, $item['up_kdo']),
-                    'skupinyBoxes' => implode('', $skupiny),
-                    'addedBy' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
-                    'addedTimestamp' => \Format::timestamp($item['up_timestamp_add']),
-                    'text' => stripslashes($item['up_text'])
-                ];
-            },
+            fn($item) => [
+                'id' => $item['up_id'],
+                'nadpis' => $item['up_nadpis'],
+                'canEdit' => \Permissions::check('nastenka', P_OWNED, $item['up_kdo']),
+                'skupinyBoxes' => \DBNastenka::getNastenkaSkupiny($item['up_id']),
+                'addedBy' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
+                'addedTimestamp' => \Format::timestamp($item['up_timestamp_add']),
+                'text' => stripslashes($item['up_text'])
+            ],
             $data
         );
 
-        \Render::page('files/View/Member/Nastenka.inc', [
+        \Render::twig('Member/Nastenka.twig', [
             'header' => 'Upozornění',
             'data' => $data,
             'navigation' => $pager->getNavigation()
@@ -80,7 +74,7 @@ class Member
     {
         \Permissions::checkError('dokumenty', P_VIEW);
         $kat = $_GET['kat'] ?? '';
-        \Render::page('files/View/Member/Dokumenty.inc', [
+        \Render::twig('Member/Dokumenty.twig', [
             'header' => 'Dokumenty',
             'kat' => $kat,
             'categories' => ['' => '---VŠE---'] + Admin\Dokumenty::$types,

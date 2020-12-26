@@ -170,7 +170,7 @@ class ProfilPar
             return;
         }
 
-        \Render::page('files/View/Member/Pary/Overview.inc', [
+        \Render::twig('Member/Pary.twig', [
             'header' => 'Žebříček párů',
             'data' => array_map(
                 fn($item) => [

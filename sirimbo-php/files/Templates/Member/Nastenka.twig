@@ -1,0 +1,38 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+<div class="container">
+  {% for item in data %}
+    <div>
+      <div class="up_header">
+        <div style="float:left;">
+          <span class="nadpis">{{ item.nadpis }}</span>
+          {% if item.canEdit %}
+            &nbsp;-&nbsp;<a href="/admin/nastenka/edit/{{ item.id }}">Editovat</a>
+          {% endif %}
+          {% if item.skupinyBoxes %}
+          <div style="padding:2px 0;"><div style="float:left;" class="little">skupiny:&nbsp;</div>
+            {% for box in item.skupinyBoxes %}
+              <div class="box" title="{{ box.ups_popis }}" style="background-color:{{ box.ups_color }}"></div>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+        <div style="float:right;text-align:right;">
+          <div>
+            <span class="little">přidal: </span>{{ item.addedBy }}
+            <br/>
+            <span class="little">přidáno: </span>{{ item.addedTimestamp }}
+          </div>
+        </div>
+        <div style="clear:both;"></div>
+      </div>
+      <div style="padding-top:8px;">
+        {{ item.text | raw }}
+      </div>
+    </div>
+    <hr/>
+  {% endfor %}
+  <div style="text-align:center;">{{ navigation | raw }}</div>
+</div>
+{% endblock %}

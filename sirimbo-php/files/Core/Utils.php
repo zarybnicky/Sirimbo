@@ -86,25 +86,24 @@ class Utils
 
     public static function userSelect(array $data, string $name = 'user', $set = null, string $index = 'u_id'): string
     {
-        $name = 'userselect' . rand(0, 1024);
-        $out = '<div class="' . $name . '">' . "\n";
-        $out .= '<select class="form-control select2" name="' . $name . '">' . "\n";
+        $out = "<div class=\"$name\">\n";
+        $out .= "<select class=\"form-control select2\" name=\"$name\">\n";
         if (!$set) {
-            $out .= '<option value="0" selected="selected">--- žádný ---</option>' . "\n";
+            $out .= "<option value=\"0\" selected=\"selected\">--- žádný ---</option>\n";
         } else {
-            $out .= '<option value="0">--- žádný ---</option>' . "\n";
+            $out .= "<option value=\"0\">--- žádný ---</option>\n";
         }
         foreach ($data as $user) {
             $id = $user[$index];
-            $out .= '<option value="' . $id;
+            $out .= "<option value=\"$id";
             $out .= $id == $set ? '" selected="selected">' : '">';
             $out .= $user['u_prijmeni'] . ', ' . $user['u_jmeno'];
             if (isset($user['u_narozeni'])) {
                 $out .= ', ' . explode('-', $user['u_narozeni'])[0];
             }
-            $out .= '</option>' . "\n";
+            $out .= "</option>\n";
         }
-        $out .= '</select>' . "\n";
+        $out .= "</select>\n";
         $out .= '</div>';
         return $out;
     }

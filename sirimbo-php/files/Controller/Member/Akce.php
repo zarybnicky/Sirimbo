@@ -10,9 +10,12 @@ class Akce
             \Message::warning('Žádná taková akce neexistuje');
             \Redirect::to('/member/akce');
         }
-        \Render::page('files/View/Member/Akce/Single.inc', [
+        $data = static::_getRenderData($data);
+        unset($data['info']);
+        unset($data['dokumenty']);
+        \Render::twig('Member/AkceSingle.twig', [
             'header' => 'Klubové akce',
-            'data' => static::_getRenderData($data)
+            'data' => $data,
         ]);
     }
 
@@ -45,7 +48,7 @@ class Akce
                 'notice' => 'Žádné akce nejsou k dispozici.'
             ]);
         } else {
-            \Render::page('files/View/Member/Akce/Overview.inc', [
+            \Render::twig('Member/AkceOverview.twig', [
                 'header' => 'Klubové akce',
                 'akce' => array_map(fn($item) => static::_getRenderData($item), $data),
             ]);
