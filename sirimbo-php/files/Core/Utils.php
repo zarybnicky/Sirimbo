@@ -221,4 +221,9 @@ class Utils
         $val = $dateObj->isValid() ? $dateObj->getHumanDate() : $date;
         return "<input type=\"text\" name=\"$name\" value=\"$val\" class=\"$cls\">";
     }
+
+    public static function table($data, $columns, $style = ''): string
+    {
+        return (string) new \TableHelper($data, $columns, $style);
+    }
 }

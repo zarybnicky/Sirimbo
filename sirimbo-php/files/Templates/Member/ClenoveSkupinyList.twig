@@ -1,0 +1,25 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+  {{ include('Member/ClenoveNavigation.twig') }}
+  <div class="container">
+    <table>
+      <thead>
+        <tr>
+          <th>Název</th>
+          <th>Počet členů</th>
+          <th>Popis</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in data %}
+          <tr>
+            <td>{{ row.header | raw }}</td>
+            <td>{{ row.userCount }}</td>
+            <td>{{ row.description }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

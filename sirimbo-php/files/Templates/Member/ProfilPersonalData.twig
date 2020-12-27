@@ -1,34 +1,37 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
 <form class="container" action="" method="POST">
   <div class="form-row mb-2">
     <div class="form-group col-12 col-md-6">
       <label for="jmeno">Jméno</label>
-      <?= \Utils::text('jmeno', $jmeno) ?>
+      {{ text('jmeno', jmeno) }}
     </div>
     <div class="form-group col-12 col-md-6">
       <label for="prijmeni">Příjmení</label>
-      <?= \Utils::text('prijmeni', $prijmeni) ?>
+      {{ text('prijmeni', prijmeni) }}
     </div>
   </div>
 
   <div class="form-row mb-2">
     <div class="form-group col-12 col-md-6">
       <label for="narozeni">Datum narození</label>
-      <?= new \DateHelper('narozeni', $narozeni) ?>
+      {{ date('narozeni', narozeni) }}
     </div>
     <div class="form-group col-12 col-md-6 pt-4">
-      <?= \Utils::inlineRadio('pohlavi', 'm', $pohlavi == 'm', 'Muž') ?>
-      <?= \Utils::inlineRadio('pohlavi', 'f', $pohlavi == 'f', 'Žena') ?>
+      {{ inlineRadio('pohlavi', 'm', pohlavi == 'm', 'Muž') }}
+      {{ inlineRadio('pohlavi', 'f', pohlavi == 'f', 'Žena') }}
     </div>
   </div>
 
   <div class="form-row mb-2">
     <div class="form-group col-12 col-md-6">
       <label for="email">E-mail</label>
-      <?= \Utils::text('email', $email) ?>
+      {{ text('email', email) }}
     </div>
     <div class="form-group col-12 col-md-6">
       <label for="telefon">Telefon</label>
-      <?= \Utils::text('telefon', $telefon) ?>
+      {{ text('telefon', telefon) }}
     </div>
   </div>
 
@@ -36,44 +39,45 @@
   <div class="form-row mb-2">
     <div class="form-group mb-2 col-12 col-md-6">
       <label for="street">Ulice</label>
-      <?= \Utils::text('street', $street) ?>
+      {{ text('street', street) }}
     </div>
     <div class="form-group col-6 col-md-3">
       <label for="popisne">Č. popisné</label>
-      <?= \Utils::text('popisne', $popisne) ?>
+      {{ text('popisne', popisne) }}
     </div>
     <div class="form-group col-6 col-md-3">
       <label for="orientacni">Č. orientační</label>
-      <?= \Utils::text('orientacni', $orientacni) ?>
+      {{ text('orientacni', orientacni) }}
     </div>
 
     <div class="form-group mb-2 col-12 col-md-6">
       <label for="city">Město</label>
-      <?= \Utils::text('city', $city) ?>
+      {{ text('city', city) }}
     </div>
     <div class="form-group col-12 col-md-6">
       <label for="district">Část města</label>
-      <?= \Utils::text('district', $district) ?>
+      {{ text('district', district) }}
     </div>
 
     <div class="form-group col-12 col-md-6">
       <label for="postal">PSČ</label>
-      <?= \Utils::text('postal', $postal) ?>
+      {{ text('postal', postal) }}
     </div>
   </div>
 
   <div class="form-group mb-2">
     <label for="nationality">Národnost</label>
-    <?= \Utils::select('nationality', Countries::$countries, $nationality) ?>
+    {{ select('nationality', countries, nationality) }}
   </div>
 
   <div class="form-check mb-2 pl-0">
-    <?= \Utils::checkbox('dancer', 'dancer', $dancer, 'Aktivní tanečník?') ?>
+    {{ checkbox('dancer', 'dancer', dancer, 'Aktivní tanečník?') }}
   </div>
 
   <div class="form-group mb-2">
-    <input type='hidden' name='returnURI' value='<?= $returnURI ?>'>
+    <input type='hidden' name='returnURI' value='{{ returnURI }}'>
     <a class="btn btn-outline-primary" href="/member/profil">Zpět</a>
     <button class="btn btn-primary">Upravit</button>
   </div>
 </form>
+{% endblock %}

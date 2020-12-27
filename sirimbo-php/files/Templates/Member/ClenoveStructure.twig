@@ -1,0 +1,20 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+  {{ include('Member/ClenoveNavigation.twig') }}
+  <div class="container">
+    <div class="row flex-wrap">
+      {% for col in columns %}
+        <div class="col-12 col-md-6">
+          {% for skupina in col %}
+            {{ table(skupina.users, [
+            ['index', '', ' class="r" style="width:40px"'],
+            ['fullName', skupina.info.header, ''],
+            ['hasPaid', 'Zaplaceno?', ' style="width:40px"'],
+            ], ' style="width:100%;margin-bottom: .5rem"') }}
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

@@ -8,13 +8,13 @@ class TableHelper
     private $_style;
     private $_showHeader;
 
-    public function __construct($data)
+    public function __construct($data, $columns = [], $style = '')
     {
         $this->_name = '';
         $this->_data = $data;
-        $this->_columns = [];
+        $this->_columns = $columns;
         $this->_index = 0;
-        $this->_style = '';
+        $this->_style = $style;
         $this->_showHeader = true;
     }
 

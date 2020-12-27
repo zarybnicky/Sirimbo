@@ -15,7 +15,7 @@ class PlatbyDiscarded
             static::_getTable($data, $result, $columns, $header);
             \Render::page('files/View/Admin/Platby/DiscardedTable.inc', [
                 'header' => 'Správa plateb',
-                'subheader' => 'Vyřazené platby (' . $header . ')',
+                'subheader' => "Vyřazené platby ($header)",
                 'data' => $result,
                 'columns' => $columns,
             ]);

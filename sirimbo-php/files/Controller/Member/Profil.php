@@ -44,7 +44,7 @@ class Profil
             ];
         }
 
-        \Render::page('files/View/Member/Profil/Overview.inc', [
+        \Render::twig('Member/ProfilOverview.twig', [
             'header' => $user->getFullName(),
             'ageGroup' => self::getAgeGroup($user->getBirthYear()),
             'coupleData' => \DBPary::getLatestPartner($user->getId(), $user->getGender()),
@@ -89,8 +89,9 @@ class Profil
 
     public static function renderPersonalForm()
     {
-        \Render::page('files/View/Member/Profil/PersonalData.inc', [
+        \Render::twig('Member/ProfilPersonalData.twig', [
             'header' => 'Osobní údaje',
+            'countries' => \Countries::$countries,
             'lock' => $_POST['lock'],
             'jmeno' => $_POST['jmeno'],
             'prijmeni' => $_POST['prijmeni'],
@@ -113,7 +114,7 @@ class Profil
     public static function gdpr()
     {
         \Permissions::checkError('nastenka', P_VIEW);
-        \Render::page('files/View/Member/Profil/Gdpr.inc', [
+        \Render::twig('Member/ProfilGdpr.twig', [
             'header' => 'Souhlas se zpracováním osobních údajů',
         ]);
     }
@@ -189,7 +190,7 @@ class Profil
     public static function heslo()
     {
         \Permissions::checkError('nastenka', P_VIEW);
-        \Render::page('files/View/Member/Profil/NewPassword.inc', [
+        \Render::twig('Member/ProfilNewPassword.twig', [
             'header' => 'Změna hesla'
         ]);
     }
@@ -200,7 +201,7 @@ class Profil
         $form = static::checkDataHeslo();
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
-            \Render::page('files/View/Member/Profil/NewPassword.inc', [
+            \Render::twig('Member/ProfilNewPassword.twig', [
                 'header' => 'Změna hesla'
             ]);
             return;

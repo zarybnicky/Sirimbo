@@ -9,11 +9,9 @@ class Clenove
         if (!($data = \DBUser::getUser($id))) {
             \Redirect::to('/member/clenove');
         }
-        \Render::page('files/View/Member/Clenove/Single.inc', [
+        \Render::twig('Member/ClenoveSingle.twig', [
             'header' => 'Přehled členů',
-            'fullName' => $data->getFullName(),
-            'email' => $data->getEmail(),
-            'telefon' => $data->getPhone(),
+            'user' => $data,
             'returnURI' => $_SERVER['HTTP_REFERER'],
         ]);
     }
@@ -30,16 +28,16 @@ class Clenove
                 $currentID = $item['s_id'];
                 $currentKey = count($skupiny);
                 $skupiny[$currentKey] = [
-                    'header' => "<h3>"
-                    . "<div class=\"box\" title=\"{$item['s_description']}\" style=\"background-color:{$item['s_color_rgb']}\"></div>"
-                    . '&nbsp;&nbsp;' . $item['s_name'] . "</h3>",
+                    'header' =>
+                    "<div class=\"box\" title=\"{$item['s_description']}\" style=\"background-color:{$item['s_color_rgb']}\"></div>"
+                    . '&nbsp;&nbsp;' . $item['s_name'],
                     'description' => $item['s_description'],
                     'userCount' => 0
                 ];
             }
             $skupiny[$currentKey]['userCount']++;
         }
-        \Render::page('files/View/Member/Clenove/SkupinyList.inc', [
+        \Render::twig('Member/ClenoveSkupinyList.twig', [
             'header' => 'Přehled členů',
             'data' => $skupiny,
         ]);
@@ -55,7 +53,7 @@ class Clenove
             },
             \DBUser::getActiveUsers()
         );
-        \Render::page('files/View/Member/Clenove/UserList.inc', [
+        \Render::twig('Member/ClenoveUserList.twig', [
             'header' => 'Přehled členů',
             'data' => $data,
         ]);
@@ -107,7 +105,7 @@ class Clenove
             }
         }
 
-        \Render::page('files/View/Member/Clenove/Structure.inc', [
+        \Render::twig('Member/ClenoveStructure.twig', [
             'header' => 'Přehled členů',
             'columns' => $columns,
         ]);

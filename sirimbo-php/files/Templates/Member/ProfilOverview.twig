@@ -1,0 +1,64 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+  <div class="container">
+    {{ partnerRequest() }}
+    <div class="mb-2">
+      <a class="btn btn-outline-primary" href="/member/profil/edit">Upravit osobní údaje</a>
+      <a class="btn btn-outline-primary" href="/member/profil/heslo">Změnit heslo</a>
+      <a class="btn btn-outline-primary" href="/member/profil/par/partner">Změnit partnera</a>
+      {% if coupleData.u_id %}
+        <a class="btn btn-outline-primary" href="/member/profil/par/body">Změnit třídu a body</a>
+      {% endif %}
+      <a class="btn btn-outline-primary" href="/logout">Odhlásit se</a>
+    </div>
+
+  <div class="mb-2">
+    Tréninková skupina: {{ skupina }}<br>
+    Věková kategorie: {{ ageGroup }}
+  </div>
+
+  {% if coupleData.u_id %}
+    <h3>Pár</h3>
+    <div class="mb-2">
+      Partner(ka): {{ coupleData.u_jmeno }} {{ coupleData.u_prijmeni }}<br>
+      Standardní tance:
+      {{ coupleData.p_stt_trida }} {{ coupleData.p_stt_body }}, {{ coupleData.p_stt_finale }}F
+      <br>
+      Latinsko-americké tance:
+      {{ coupleData.p_lat_trida }} {{ coupleData.p_lat_body }}, {{ coupleData.p_lat_finale }}F
+    </div>
+  {% endif %}
+
+  <h3>Platby</h3>
+  <div class="mb-2">
+    Variabilní symbol: {{ varSymbol }}<br>
+    Členské příspěvky: {{ hasPaid ? 'zaplaceno' : 'nezaplaceno' }}<br>
+    Č.ú.: 1806875329/0800
+  </div>
+
+  {% if paymentsWanted %}
+    <h3 class="mt-2">K zaplacení</h3>
+    {{ table(paymentsWanted, [
+    ['name', 'Jméno', ''],
+    ['type', 'Typ platby', ''],
+    ['symbol', 'Spec. symbol', ' style="width:75px"'],
+    ['amount', 'Částka', ''],
+    ['dueDate', 'Splatnost', ''],
+    ['validRange', 'Platnost', ''],
+    ]) }}
+  {% endif %}
+
+  {% if paymentHistory %}
+    <h3 class="mt-2">Historie plateb</h3>
+    {{ table(paymentHistory, [
+    ['type', 'Typ platby', ''],
+    ['varSymbol', 'Spec. symbol', ' style="width:75px"'],
+    ['amount', 'Částka', ''],
+    ['paidOn', 'Placeno', ''],
+    ['validFor', 'Platí do', ''],
+    ]) }}
+  {% endif %}
+
+</div>
+{% endblock %}

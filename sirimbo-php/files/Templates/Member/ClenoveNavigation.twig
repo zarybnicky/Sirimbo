@@ -1,0 +1,26 @@
+{% macro menuItem(name, uri, currentUri) %}
+  {% if currentUri == uri %}
+    {{ name }}
+  {% else %}
+    <a href="{{ uri }}">{{ name }}</a>
+  {% endif %}
+{% endmacro %}
+
+<style>
+ #adminNavigation li {
+   display:inline;
+   font-size: 110%;
+   padding: 0 5px;
+   font-weight:bold;
+ }
+ #adminNavigation li a {
+   font-weight:normal;
+ }
+</style>
+<div class="container">
+    <ul id="adminNavigation" class="small">
+        <li>{{ _self.menuItem('Členové podle skupin', '/member/clenove', currentUri) }}</li>
+        <li>{{ _self.menuItem('Členové abecedně', '/member/clenove/seznam', currentUri) }}</li>
+        <li>{{ _self.menuItem('Seznam skupin', '/member/clenove/skupiny', currentUri) }}</li>
+    </ul>
+</div>

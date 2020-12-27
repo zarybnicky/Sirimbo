@@ -1,0 +1,8 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+  {{ include('Member/ClenoveNavigation.twig') }}
+  <div class="container">
+    {{ table(data, [['index', '', ' class="r"'], ['fullName', 'Jméno', '']]) }}
+  </div>
+{% endblock %}
