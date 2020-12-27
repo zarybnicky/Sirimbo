@@ -32,7 +32,7 @@
       <?= \Utils::checkbox('lock', 'lock', $lock, 'Uzamknout') ?>
     </div>
     <div class="form-group">
-      <?= \Utils::submit($action) ?>
+      <button class="btn btn-primary"><?= $action ?></button>
       <a class="btn btn-outline-primary" href="/admin/akce">Zpět</a>
     </div>
   </form>

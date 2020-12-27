@@ -23,7 +23,7 @@
     <div class="form-group row">
       <div class="col-sm-2"></div>
       <div class="col-sm-10">
-        <?= \Utils::submit($action == 'add' ? 'Přidat' : 'Upravit') ?>
+        <button class="btn btn-primary"><?= $action ?></button>
         <a class="btn btn-outline-primary" href="/admin/permissions">Zpět</a>
       </div>
     </div>

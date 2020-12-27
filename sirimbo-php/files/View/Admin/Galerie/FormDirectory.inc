@@ -13,7 +13,7 @@
     </div>
     <div class="form-group">
       <a class="btn btn-outline-primary" href="/admin/galerie">Zpět</a>
-      <?= \Utils::submit($action == 'add' ? 'Přidat' : 'Upravit') ?>
+      <button class="btn btn-primary"><?= $action ?></button>
     </div>
   </form>
 </div>

@@ -16,6 +16,6 @@
   <form action="" method="post">
     <?= $video1 ?> <?= $video2 ?><br>
     <?= $video3 ?> <?= $video4 ?><br>
-    <?= \Utils::submit('Uložit') ?><br>
+    <button class="btn btn-primary">Uložit</button><br>
   </form>
 </div>

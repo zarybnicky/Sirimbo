@@ -10,7 +10,7 @@
     </div>
     <div class="form-group">
       <a class="btn btn-outline-primary" href="<?= $returnURI ?>">Zpět</a>
-      <?= \Utils::submit('Upravit') ?>
+      <button class="btn btn-primary">Upravit</button>
     </div>
   </form>
 </div>

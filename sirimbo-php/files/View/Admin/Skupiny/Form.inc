@@ -25,7 +25,7 @@
            ->column('base', 'Násobitel částky') ?>
 
     <div class="form-group">
-      <?= \Utils::submit('Uložit') ?>
+      <button class="btn btn-primary">Uložit</button>
       <a class="btn btn-outline-primary" href="/admin/skupiny">Zpět</a>
     </div>
   </form>

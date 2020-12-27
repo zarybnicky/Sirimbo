@@ -1,10 +1,10 @@
 <div class="container">
-    <form action="" method="POST">
-        <?php \Render::fragment('files/View/Member/Akce/Header.inc', $data) ?>
-        <?= (new \TableHelper($items))
-                 ->column('name', 'Uživatel')
-                 ->column('removeButton', '') ?>
-        <?= \Utils::submit('Uložit') ?>
-        <a class="btn btn-outline-primary" href="/admin/permissions">Zpět</a>
-    </form>
+  <form action="" method="POST">
+    <?php \Render::fragment('files/View/Member/Akce/Header.inc', $data) ?>
+    <?= (new \TableHelper($items))
+                ->column('name', 'Uživatel')
+               ->column('removeButton', '') ?>
+    <button class="btn btn-primary">Uložit</button>
+    <a class="btn btn-outline-primary" href="/admin/permissions">Zpět</a>
+  </form>
 </div>

@@ -37,7 +37,7 @@
     </div>
     <div class="form-group">
       <input type='hidden' name='returnURI' value='<?= $returnURI ?>'>
-      <?= \Utils::submit($action == 'add' ? 'Přidat' : 'Upravit') ?>
+      <button class="btn btn-primary"><?= $action ?></button>
       <a class="btn btn-outline-primary" href="<?= $returnURI ?>">Zpět</a>
     </div>
   </form>

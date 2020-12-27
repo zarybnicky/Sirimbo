@@ -33,7 +33,7 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2"><?= \Utils::submit('Filtrovat') ?></td>
+              <td colspan="2"><button class="btn btn-primary">Filtrovat</button></td>
             </tr>
         </table>
     </form>

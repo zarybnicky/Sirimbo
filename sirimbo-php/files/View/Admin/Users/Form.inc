@@ -126,6 +126,6 @@
   <div class="form-group">
     <input type='hidden' name='returnURI' value='<?= $returnURI ?>'>
     <a class="btn btn-outline-primary" href="<?= $returnURI ?>">Zpět</a>
-    <?= \Utils::submit($action == 'add' ? 'Přidat' : 'Upravit') ?>
+    <button class="btn btn-primary"><?= $action == 'add' ? 'Přidat' : 'Upravit' ?></button>
   </div>
 </form>

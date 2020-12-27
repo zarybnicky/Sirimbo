@@ -120,11 +120,10 @@ class Permissions
             \Permissions::$permissions
         );
 
+        $action = !$data ? 'Přidat' : 'Upravit';
         \Render::page('files/View/Admin/Permissions/Form.inc', [
             'header' => 'Správa oprávnění',
-            'subheader' => (
-                !$data ? 'Přidat uživatelskou skupinu' : 'Upravit uživatelskou skupinu'
-            ),
+            'subheader' => "$action uživatelskou skupinu",
             'action' => $action,
             'name' => $_POST['name'] ?? $data['pe_name'] ?? '',
             'description' => $_POST['description'] ?? $data['pe_description'] ?? '',

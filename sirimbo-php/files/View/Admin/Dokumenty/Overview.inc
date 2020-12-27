@@ -27,7 +27,7 @@
       </select>
     </div>
     <div class="form-group">
-      <?= \Utils::submit('Nahrát', 'action', 'upload') ?>
+      <button name="action" value="upload" class="btn btn-primary">Nahrát</button>
     </div>
   </form>
 </div>

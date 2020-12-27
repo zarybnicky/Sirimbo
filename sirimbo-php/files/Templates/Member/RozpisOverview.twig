@@ -21,9 +21,9 @@
                       {{ lesson.fullName }}
                       <input type='hidden' name='ri_id' value='{{ lesson.id }}'>
                       {% if lesson.canReserve %}
-                        {{ submit('+', 'action', 'signup', 'py-0 btn btn-outline-primary btn-sm') }}
+                        <button name="action" value="signup" class="py-0 btn btn-outline-primary btn-sm">+</button>
                       {% elseif lesson.canCancel %}
-                        {{ submit('&times;', 'action', 'signout', 'py-0 btn btn-outline-primary btn-sm') }}
+                        <button name="action" value="signout" class="py-0 btn btn-outline-primary btn-sm">&times;</button>
                       {% endif %}
                     </form>
                   </td>

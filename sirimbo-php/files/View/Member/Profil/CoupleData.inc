@@ -30,7 +30,7 @@
         <td><?= \Utils::text('lat-finale', $lat_finale) ?></td>
       </tr>
     </table>
-    <?= \Utils::submit('Změnit třídu a body') ?>
+    <button class="btn btn-primary">Změnit třídu a body</button>
     <a class="btn btn-outline-primary" href="/member/profil">Zpět</a>
   </form>
 </div>

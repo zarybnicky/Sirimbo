@@ -21,7 +21,7 @@
                 <td><a href="/admin/platby/items/add" class="btn btn-primary">
                   Nová platba
                 </a></td>
-                <td><?= \Utils::submit('Odeslat') ?></td>
+                <td><button class="btn btn-primary">Odeslat</button></td>
             </tr>
         </table>
     </form>

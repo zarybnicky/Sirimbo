@@ -28,8 +28,10 @@
     </script>
     <div class="form-group">
       <a class="btn btn-outline-primary" href="/admin/aktuality">Zpět</a>
-      <?= \Utils::submit('Přidat fotky', 'action', 'foto') ?>
-      <?= \Utils::submit(($action == 'add') ? 'Přeskočit a uložit' : 'Upravit', 'action', 'save') ?>
+      <button name="action" value="foto" class="btn btn-primary">Přidat fotky</button>
+      <button name="action" value="save" class="btn btn-primary">
+        <?= $action == 'add' ? 'Přeskočit a uložit' : 'Upravit' ?>
+      </button>
     </div>
   </form>
 </div>

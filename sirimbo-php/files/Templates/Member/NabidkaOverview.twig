@@ -22,7 +22,7 @@
                     </td>
                     <td>
                       {% if row.canDelete %}
-                        {{ submit('&times', 'un_id', row.deleteTicket, 'py-0 btn btn-outline-primary btn-sm') }}
+                        <button name="un_id" value="{{ row.deleteTicket }}" class="py-0 btn btn-outline-primary btn-sm">&times;</button>
                       {% endif %}
                     </td>
                   </tr>
@@ -31,8 +31,8 @@
               <div style="text-align:center;padding:10px 0 5px">
                 {% if item.canAdd %}
                   {{ text('hodiny', '', {'placeholder':'Počet hodin', 'cls':'form-control d-inline w-auto'}) }}
-                  <input type='hidden' name='id' value='{{ item.id }}'>
-                  {{ submit('Přidat') }}
+                  <input type='hidden' name='id' value='{{ item.id }}'/>
+                  <button class="btn btn-primary">Přidat</button>
                 {% endif %}
               </div>
             </div>

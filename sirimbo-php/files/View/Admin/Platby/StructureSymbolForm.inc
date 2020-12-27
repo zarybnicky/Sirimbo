@@ -42,7 +42,7 @@
              ->column('type', 'Typ')
              ->column('base', 'Násobitel částky') ?>
     <br>
-    <?= \Utils::submit('Uložit') ?>
+    <button class="btn btn-primary">Uložit</button>
     <a class="btn btn-outline-primary" href="<?= $returnURI ?>">Zpět</a><br/>
 </form>
 </div>

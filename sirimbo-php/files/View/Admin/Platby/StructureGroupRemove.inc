@@ -7,7 +7,7 @@
         <input type='hidden' name='data[]' value='<?= $id ?>'>
         <input type='hidden' name='returnURI' value='<?= $returnURI ?>'>
         <br/>
-        <?= \Utils::submit('Odstranit', 'action', 'confirm') ?>
+        <button name="action" value="confirm" class="btn btn-primary">Odstranit</button>
         <a class="btn btn-outline-primary" href="<?= $returnURI ?>">Zpět</a>
     </form>
 </div>

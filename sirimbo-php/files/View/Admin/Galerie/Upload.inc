@@ -8,7 +8,7 @@
       <?= \Utils::selectAssoc('dir', $dirs, 'id', 'text', $dir) ?>
     </div>
     <div class="form-group">
-      <?= \Utils::submit('Nahrát na server') ?>
+      <button class="btn btn-primary">Nahrát na server</button>
       <a class="btn btn-outline-primary" href="/admin/galerie">Zpět</a>
     </div>
   </form>

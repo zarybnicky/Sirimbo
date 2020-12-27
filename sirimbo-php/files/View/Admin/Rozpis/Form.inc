@@ -19,7 +19,7 @@
       <?= \Utils::checkbox('lock', 'lock', $lock, 'Uzamknout') ?>
     </div>
     <div class="form-group">
-      <?= \Utils::submit($action == 'add' ? 'Přidat' : 'Upravit') ?>
+      <button class="btn btn-primary"><?= $action ?></button>
       <a class="btn btn-outline-primary" href="/admin/rozpis">Zpět</a>
     </div>
   </form>

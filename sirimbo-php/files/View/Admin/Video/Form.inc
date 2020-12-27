@@ -24,7 +24,7 @@
       <?= \Utils::text('playlist', $playlist) ?>
     </div>
     <div class="form-group">
-      <?= \Utils::submit($action) ?>
+      <button class="btn btn-primary"><?= $action ?></button>
       <a class="btn btn-outline-primary" href="/admin/video">Zpět</a>
     </div>
   </form>

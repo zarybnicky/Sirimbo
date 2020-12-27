@@ -8,7 +8,6 @@ class RenderTwigExtension extends \Twig\Extension\AbstractExtension
             new \Twig\TwigFunction('date', '\\Utils::date', ['is_safe' => ['html']]),
             new \Twig\TwigFunction('radio', '\\Utils::radio', ['is_safe' => ['html']]),
             new \Twig\TwigFunction('notice', '\\Utils::notice', ['is_safe' => ['html']]),
-            new \Twig\TwigFunction('submit', '\\Utils::submit', ['is_safe' => ['html']]),
             new \Twig\TwigFunction('select', '\\Utils::select', ['is_safe' => ['html']]),
             new \Twig\TwigFunction('navbarItem', '\\Utils::navbarItem', ['is_safe' => ['html']]),
             new \Twig\TwigFunction('selectAssoc', '\\Utils::selectAssoc', ['is_safe' => ['html']]),

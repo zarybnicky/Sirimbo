@@ -29,7 +29,7 @@
       <?= \Utils::text('lat-finale', $lat_finale) ?>
     </div>
     <div class="form-group">
-      <?= \Utils::submit('Upravit', 'action', 'edit_confirm') ?>
+      <button name="action" value="edit_confirm" class="btn btn-primary">Upravit</button>
       <a class="btn btn-outline-primary" href="/admin/pary">Zpět</a>
     </div>
 </div>

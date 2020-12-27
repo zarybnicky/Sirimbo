@@ -140,10 +140,10 @@ class GalerieDirectory
             ],
             \DBGalerie::getDirs(true, true)
         );
-
+        $action = $action == 'add' ? 'Přidat' : 'Upravit';
         \Render::page('files/View/Admin/Galerie/FormDirectory.inc', [
             'header' => 'Správa fotogalerie',
-            'subheader' => ($action == 'add' ? 'Přidat' : 'Upravit') . ' složku',
+            'subheader' => "$action složku",
             'dirs' => $dirs,
             'action' => $action,
             'name' => $_POST['name'] ?? '',

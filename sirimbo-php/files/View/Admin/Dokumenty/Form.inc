@@ -6,7 +6,7 @@
     </div>
     <div class="form-group">
       <a class="btn btn-outline-primary" href="/admin/aktuality">Zpět</a>
-      <?= \Utils::submit('Upravit', 'action', 'edit_confirm') ?>
+      <button name="action" value="edit_confirm" class="btn btn-primary">Upravit</button>
     </div>
   </form>
 </div>

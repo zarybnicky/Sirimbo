@@ -9,10 +9,10 @@
           {% include 'Member/AkceHeader.twig' with {'item': item} %}
           <input type='hidden' name='id' value='{{ item.id }}' />
           {% if item.signOut %}
-            {{ submit('Odhlásit se', 'action', 'signout', 'btn btn-outline-primary btn-sm') }}
+            <button name="action" value="signout" class="btn btn-outline-primary btn-sm">Odhlásit se</button>
           {% endif %}
           {% if item.signIn %}
-            {{ submit('Přihlásit se', 'action', 'signup', 'btn btn-outline-primary btn-sm') }}
+            <button name="action" value="signup" class="btn btn-outline-primary btn-sm">Přihlásit se</button>
           {% endif %}
           <a href="/member/akce/{{ item.id }}" class="btn btn-outline-primary btn-sm">
             Zobrazit přihlášené

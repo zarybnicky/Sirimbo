@@ -166,9 +166,10 @@ class Nastenka
         foreach ($skupiny as $item) {
             $skupinySelected[$item['s_id']] = $_POST['sk-' . $item['s_id']] ?? null;
         }
+        $action = $action == 'add' ? 'Přidat' : 'Upravit';
         \Render::page('files/View/Admin/Nastenka/Form.inc', [
             'header' => 'Správa nástěnky',
-            'subheader' => ($action === 'add') ? 'Přidat příspěvek' : 'Upravit příspěvek',
+            'subheader' => "$action příspěvek",
             'action' => $action,
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/nastenka',
             'skupiny' => $skupiny,

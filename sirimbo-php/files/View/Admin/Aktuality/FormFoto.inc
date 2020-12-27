@@ -3,7 +3,7 @@
     <div class="form-group">
       <?= \Utils::select('dir', ['none' => '------ vyberte složku ------'] + $dirs, $dir ?: 'none') ?>
     </div>
-    <div class="form-group"><?= \Utils::submit('Zobrazit') ?></div>
+    <div class="form-group"><button class="btn btn-primary">Zobrazit</button></div>
   </form>
 
   <form action="" method="post">
@@ -19,7 +19,7 @@
       </div>
     <?php endforeach ?>
     <div class="form-group" style="clear:both">
-      <?= \Utils::submit('Potvrdit') ?>
+      <button class="btn btn-primary">Potvrdit</button>
       <a class="btn btn-outline-primary" href="/admin/aktuality">Zpět</a>
     </div>
   </form>

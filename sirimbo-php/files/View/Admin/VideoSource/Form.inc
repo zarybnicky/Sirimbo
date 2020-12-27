@@ -16,7 +16,7 @@
       <?= \Utils::text('desc', $desc ?: '') ?>
     </div>
     <div class="form-group">
-      <?= \Utils::submit($action) ?>
+      <button class="btn btn-primary"><?= $action ?></button>
       <a class="btn btn-outline-primary" href="/admin/video/source">Zpět</a>
     </div>
   </form>

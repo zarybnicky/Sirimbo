@@ -38,9 +38,9 @@
               ->column('recogColumn', 'Rozpoznáno:<br/>sloupec')
               ->column('recogValue', 'Rozpoznáno:<br/>hodnota') ?>
         <input type='hidden' name='id' value='<?= $id ?>'>
-        <?= \Utils::submit('Uložit', 'action', 'confirm') ?>&nbsp;
-        <?= \Utils::submit('Odstranit', 'action', 'discard') ?>&nbsp;
-        <?= \Utils::submit('Přeskočit', 'action', 'skip') ?>
+        <button name="action" value="confirm" class="btn btn-primary">Uložit</button>&nbsp;
+        <button name="action" value="discard" class="btn btn-primary">Odstranit</button>&nbsp;
+        <button name="action" value="skip" class="btn btn-primary">Přeskočit</button>
     </form>
     <br/>
     <h3>Data z banky</h3>

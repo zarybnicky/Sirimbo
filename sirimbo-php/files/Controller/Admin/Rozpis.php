@@ -156,9 +156,10 @@ class Rozpis
             ? \DBUser::getUsersByPermission('rozpis', P_OWNED)
             : [\DBUser::getUserData(\Session::getUser()->getId())];
 
+        $action = $data === null ? 'Přidat' : 'Upravit';
         \Render::page('files/View/Admin/Rozpis/Form.inc', [
             'header' => 'Správa rozpisů',
-            'subheader' => ($data === null ? 'Přidat' : 'Upravit') . ' rozpis',
+            'subheader' => "$action rozpis",
             'action' => $action,
             'treneri' => $treneri,
             'trener' => $_POST['trener'] ?? ($data ? $data['r_trener'] : ''),

@@ -14,7 +14,7 @@
         <td><input type="password" name="newpass_confirm" /></td>
       </tr>
       <tr>
-        <td><?= \Utils::submit('Změnit heslo') ?></td>
+        <td><button class="btn btn-primary">Změnit heslo</button></td>
         <td>Pouze písmena bez diakritiky, číslice a podtržítka, 6 - 32 znaků</td>
       </tr>
     </table>

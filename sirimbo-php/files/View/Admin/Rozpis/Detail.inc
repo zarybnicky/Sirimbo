@@ -16,7 +16,7 @@
             <td><?= \Utils::userSelect($users, $item['id'] . '-partner', $item['partner'], 'p_id') ?></td>
             <td><?= \Utils::text($item['id'] . '-od', $item['timeFrom'], ['size' => 5]) ?></td>
             <td><?= \Utils::text($item['id'] . '-do', $item['timeTo'], ['size' => 5]) ?></td>
-            <td><?= \Utils::submit('Odstranit', 'remove', $item['id']) ?></td>
+            <td><button name="remove" value="<?= $item['id'] ?>" class="btn btn-primary">Odstranit</button></td>
             <td><?= \Utils::checkbox($item['id'] . '-lock', 'lock', $item['lock']) ?></td>
           </tr>
         <?php endforeach ?>
@@ -24,17 +24,17 @@
           <td><?= \Utils::userSelect($users, 'add_partner', null, 'p_id') ?></td>
           <td><?= \Utils::text('add_od', '', ['size' => 5]) ?>
           <td><?= \Utils::text('add_do', '', ['size' => 5]) ?>
-          <td><?= \Utils::submit('Přidat', 'action', 'add') ?></td>
+          <td><button name="action" value="add" class="btn btn-primary">Přidat</button></td>
           <td><?= \Utils::checkbox('add_lock', 'lock') ?>
         </tr>
       </table>
     </div>
     <div>
       <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
-      <?= \Utils::submit('Uložit', 'action', 'submit') ?>
-      <?= \Utils::submit('Opravit přesahy', 'action', 'overlap') ?>
+      <button name="action" value="submit" class="btn btn-primary">Uložit</button>
+      <button name="action" value="overlap" class="btn btn-primary">Opravit přesahy</button>
       <br />
-      <?= \Utils::submit('Přidat více', 'action', 'add_multiple') ?>
+      <button name="action" value="add_multiple" class="btn btn-primary">Přidat více</button>
       <?= \Utils::text('add_multi_num', '', ['size' => 2]) ?> hodin po
       <?= \Utils::text('add_multi_len', '', ['size' => 3]) ?> minutách od
       <?= \Utils::text('add_multi_od', '', ['size' => 5]) ?> hodin
@@ -44,7 +44,7 @@
   <h2>Nabídky</h2>
   <form action="" method="get">
     <?= \Utils::select('n', ['' => '---'] + $nabidky, $selected_nabidka) ?>
-    <?= \Utils::submit('Vybrat nabídku') ?>
+    <button class="btn btn-primary">Vybrat nabídku</button>
     <?php if ($nabidka) : ?>
       <div class="n_wrapper">
         <?php \Render::fragment('files/View/Member/Nabidka/Header.inc', $nabidka) ?>
