@@ -1,0 +1,13 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+  {% include 'Admin/PlatbyNavigation.twig' %}
+  <div class="container">
+    <a href="/admin/platby/structure/group/add">Přidat kategorii</a>
+    {{ table(data, [
+        ['buttons', '', ' style="width:70px"'],
+        ['name', 'Název'],
+        ['type', 'Typ platby'],
+    ], ' style="width:100%"') }}
+  </div>
+{% endblock %}

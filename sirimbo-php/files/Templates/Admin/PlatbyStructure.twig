@@ -1,0 +1,42 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+  {% include 'Admin/PlatbyNavigation.twig' %}
+
+  <div class="container">
+    <span class="big">Přidat: </span>
+    <a href="/admin/platby/structure/group/add">kategorii</a>
+    <a href="/admin/platby/structure/category/add">specifický symbol</a>
+    {{ table(data, [
+        ['buttons', '', ' style="width:70px"'],
+        ['name', 'Název'],
+    ], ' style="width:100%"') }}
+
+    {% if orphanGroupSkupina %}
+      <br/>
+      <h3>Kategorie plateb bez přiřazené uživatelské skupiny</h3>
+      {{ table(orphanGroupSkupina, [
+          ['buttons', '', ' style="width:70px"'],
+          ['name', 'Název'],
+      ], ' style="width:50%"') }}
+    {% endif %}
+
+    {% if orphanGroupCategory %}
+      <br/>
+      <h3>Kategorie plateb bez přiřazených specifických symbolů</h3>
+      {{ table(orphanGroupCategory, [
+          ['buttons', '', ' style="width:70px"'],
+          ['name', 'Název'],
+      ], ' style="width:50%"') }}
+    {% endif %}
+
+    {% if orphanCategory %}
+      <br/>
+      <h3>Specifické symboly bez přiřazené kategorie</h3>
+      {{ table(orphanCategory, [
+          ['buttons', '', ' style="width:70px"'],
+          ['name', 'Název'],
+      ], ' style="width:50%"') }}
+    {% endif %}
+</div>
+{% endblock %}

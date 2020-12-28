@@ -1,0 +1,30 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+<div class="container">
+  <form action="" method="POST">
+    <div class="form-group">
+      <label for="trener">Trenér</label>
+      {{ userSelect(treneri, 'trener', trener) }}
+    </div>
+    <div class="form-group">
+      <label for="kde">Místo</label>
+      {{ text('kde', kde) }}
+    </div>
+    <div class="form-group">
+      <label for="datum">Datum</label>
+      {{ date('datum', datum) }}
+    </div>
+    <div class="form-check">
+      {{ checkbox('visible', 'visible', visible, 'Zviditelnit') }}
+    </div>
+    <div class="form-check">
+      {{ checkbox('lock', 'lock', lock, 'Uzamknout') }}
+    </div>
+    <div class="form-group">
+      <button class="btn btn-primary">{{ action }}</button>
+      <a class="btn btn-outline-primary" href="/admin/rozpis">Zpět</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

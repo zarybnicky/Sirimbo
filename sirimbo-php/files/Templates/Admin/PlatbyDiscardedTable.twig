@@ -1,0 +1,8 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+  {% include 'Admin/PlatbyNavigation.twig' %}
+  <div class="container">
+    {{ table(data, columns) }}
+  </div>
+{% endblock %}

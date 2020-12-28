@@ -1,0 +1,18 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+  {% include 'Admin/PlatbyNavigation.twig' %}
+  <h3>Určení požadovaných sloupců</h3>
+  <div class="container">
+    <form action="" method="post">
+      {{ table(data, [
+          ['column', 'Název sloupce', ' style="text-align:right"'],
+          ['specific', 'Specifický<br/>symbol', ' class="center"'],
+          ['variable', 'Variabilní<br/>symbol', ' class="center"'],
+          ['date', 'Datum platby', ' class="center"'],
+          ['amount', 'Částka', ' class="center"'],
+      ], ' style="width:100%"') }}
+      <button name="action" value="confirm">Odeslat</button>
+    </form>
+  </div>
+{% endblock %}

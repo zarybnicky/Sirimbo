@@ -219,6 +219,11 @@ class Utils
         return "<input type=\"text\" name=\"$name\" value=\"$val\" class=\"$cls\">";
     }
 
+    public static function dateRange($name, $date, $cls = 'form-control'): string
+    {
+        return (string) (new \DateHelper($name, $date))->cls($cls)->range();
+    }
+
     public static function table($data, $columns, $style = ''): string
     {
         return (string) new \TableHelper($data, $columns, $style);

@@ -1,0 +1,16 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+<div class="container">
+  <form action="" method="POST">
+    {{ table(data, [
+        ['buttons', ''],
+        ['fullName', 'Jméno'],
+        ['email', 'Email'],
+        ['telefon', 'Telefon'],
+        ['narozeni', 'Datum<br/>narození'],
+        ['timestamp', 'Poslední<br/>úprava'],
+    ], ' style="width:100%"') }}
+  </form>
+</div>
+{% endblock %}

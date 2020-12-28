@@ -27,14 +27,14 @@ class PlatbyItems
             \DBPlatbyItem::get(true, $filter, ['pi_date DESC'], \DateHelper::getPostRange('date')),
         );
 
-        \Render::page('files/View/Admin/Platby/ItemsOverview.inc', [
+        \Render::twig('Admin/PlatbyItems.twig', [
             'header' => 'Správa plateb',
             'subheader' => 'Jednotlivé platby',
-            'users' => array_map(fn($x) => [
+            'users' => [['id' => 'all', 'text' => '---']] + array_map(fn($x) => [
                 'id' => $x['u_id'],
                 'name' => "{$x['u_prijmeni']}, {$x['u_jmeno']}"
             ], \DBUser::getUsers()),
-            'categories' => static::getCategories(),
+            'categories' => ['all' => '---'] + static::getCategories(),
             'data' => $data,
             'user' => $_GET['user'] ?? '',
             'category' => $_GET['category'] ?? '',
@@ -148,7 +148,7 @@ class PlatbyItems
                 $raw[] = ['column' => $key, 'value' => $value];
             }
         }
-        \Render::page('files/View/Admin/Platby/ItemsForm.inc', [
+        \Render::twig('Admin/PlatbyItemsForm.twig', [
             'header' => 'Správa plateb',
             'subheader' => 'Jednotlivé platby',
             'action' => $action,

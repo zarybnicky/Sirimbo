@@ -57,7 +57,7 @@ class Nabidka
             return;
         }
 
-        \Render::twig('Member/NabidkaOverview.twig', [
+        \Render::twig('Member/Nabidka.twig', [
             'header' => 'Nabídka tréninků',
             'data' => $data
         ]);

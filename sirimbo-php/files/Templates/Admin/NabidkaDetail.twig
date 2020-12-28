@@ -1,0 +1,19 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+<div class="container">
+  <form action="" method="POST">
+    <button type="submit" name="action" value="add" style="display:none;">Enter</button>
+    <div class="n_wrapper">
+      {% include 'Member/NabidkaHeader.twig' with {'item': nabidka} %}
+      {{ table(items, [
+          ['user', 'Tanečník', ''],
+          ['lessonCount', 'Počet hodin', ''],
+          ['removeButton', '', ''],
+      ]) }}
+    </div>
+    <button class="btn btn-primary">Uložit</button>
+    <a class="btn btn-outline-primary" href="/admin/nabidka">Zpět</a>
+  </form>
+</div>
+{% endblock %}

@@ -23,7 +23,7 @@ class Akce
             \DBAkce::getWithItemCount()
         );
 
-        \Render::page('files/View/Admin/Akce/Overview.inc', [
+        \Render::twig('Admin/Akce.twig', [
             'header' => 'Správa akcí',
             'data' => $data
         ]);
@@ -195,7 +195,7 @@ class Akce
             'removeButton' => \Utils::submit('Přidat', 'add', 'add')
         ];
 
-        \Render::page('files/View/Admin/Akce/Detail.inc', [
+        \Render::twig('Admin/AkceDetail.twig', [
             'header' => 'Správa akcí',
             'data' => $data,
             'items' => $items
@@ -281,7 +281,7 @@ class Akce
             'category' => \Utils::submit('Přidat', 'add', 'add'),
             'removeButton' => ''
         ];
-        \Render::page('files/View/Admin/Akce/Dokumenty.inc', [
+        \Render::twig('Admin/AkceDokumenty.twig', [
             'header' => 'Správa akcí',
             'data' => $akce,
             'documents' => $documents
@@ -336,7 +336,7 @@ class Akce
             $dokumenty = [];
         }
 
-        \Render::page('files/View/Admin/Akce/Form.inc', [
+        \Render::twig('Admin/AkceForm.twig', [
             'header' => 'Správa akcí',
             'subheader' => $action == 'add' ? 'Přidat akci' : 'Upravit akci',
             'dokumenty' => $dokumenty,

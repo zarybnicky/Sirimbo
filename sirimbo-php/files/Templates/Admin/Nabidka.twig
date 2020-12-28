@@ -1,0 +1,18 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+<div class="container">
+  <form action="" method="POST">
+    <a href="/admin/nabidka/add" class="btn btn-primary">Nová nabídka</a>
+    <button class="btn btn-outline-primary" name="action" value="save">Uložit změny</button>
+    {{ table(data, [
+        ['buttons', '', ''],
+        ['links', 'Upravit', ''],
+        ['fullName', 'Trenér', ''],
+        ['date', 'Datum', ''],
+        ['visible', 'Viditelný', ''],
+    ], ' style="width:100%"') }}
+  </form>
+</div>
+{% endblock %}
+

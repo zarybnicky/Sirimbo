@@ -24,7 +24,7 @@ class Rozpis
             ],
             $data
         );
-        \Render::page('files/View/Admin/Rozpis/Overview.inc', [
+        \Render::twig('Admin/Rozpis.twig', [
             'header' => 'Správa rozpisů',
             'data' => $data
         ]);
@@ -157,7 +157,7 @@ class Rozpis
             : [\DBUser::getUserData(\Session::getUser()->getId())];
 
         $action = $data === null ? 'Přidat' : 'Upravit';
-        \Render::page('files/View/Admin/Rozpis/Form.inc', [
+        \Render::twig('Admin/RozpisForm.twig', [
             'header' => 'Správa rozpisů',
             'subheader' => "$action rozpis",
             'action' => $action,

@@ -121,12 +121,4 @@ class Buttons
             self::delete("/admin/galerie/directory/remove/$id"),
         ]);
     }
-
-    public static function galleryFoto($id)
-    {
-        return implode('&nbsp;', [
-            self::edit("/admin/galerie/file/edit/$id"),
-            self::delete("/admin/galerie/file/remove/$id"),
-        ]);
-    }
 }

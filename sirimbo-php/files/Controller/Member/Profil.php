@@ -44,7 +44,7 @@ class Profil
             ];
         }
 
-        \Render::twig('Member/ProfilOverview.twig', [
+        \Render::twig('Member/Profil.twig', [
             'header' => $user->getFullName(),
             'ageGroup' => self::getAgeGroup($user->getBirthYear()),
             'coupleData' => \DBPary::getLatestPartner($user->getId(), $user->getGender()),

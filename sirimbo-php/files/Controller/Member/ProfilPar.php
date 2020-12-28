@@ -23,7 +23,7 @@ class ProfilPar
     {
         $user = \Session::getUser();
         $par = \DBPary::getLatestPartner($user->getId(), $user->getGender());
-        \Render::page('files/View/Member/Profil/CoupleData.inc', [
+        \Render::twig('Member/ProfilCoupleData.twig', [
             'header' => 'Změna třídy a bodů',
             'stt_trida' => $par['p_stt_trida'],
             'stt_body' => $par['p_stt_body'],
@@ -42,7 +42,7 @@ class ProfilPar
         $form = static::checkData();
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
-            \Render::page('files/View/Member/Profil/CoupleData.inc', [
+            \Render::twig('Member/ProfilCoupleData.twig', [
                 'header' => 'Změna třídy a bodů',
                 'stt_trida' => $_POST['stt_trida'] ?? '',
                 'stt_body' => $_POST['stt_body'] ?? '',
@@ -86,7 +86,7 @@ class ProfilPar
         $couple = \DBPary::getLatestPartner($user->getId(), $user->getGender());
         $havePartner = !empty($couple) && $couple['u_id'];
         $_POST['partner'] = $havePartner ? $couple['u_id'] : '0';
-        \Render::page('files/View/Member/Profil/PartnerOverview.inc', [
+        \Render::twig('Member/ProfilPartner.twig', [
             'header' => 'Profil',
             'havePartner' => $havePartner,
             'partnerID' => $couple['u_id'],

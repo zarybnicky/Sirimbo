@@ -1,0 +1,43 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+<div class="container">
+  <form action="" method="POST">
+    <div class="form-group">
+      <label for="jmeno">Název akce</label>
+      {{ text('jmeno', jmeno, {'placeholder': 'Název akce'}) }}
+    </div>
+    <div class="form-group">
+      <label for="kde">Název akce</label>
+      {{ text('kde', kde, {'placeholder': 'Místo akce'}) }}
+    </div>
+    <div class="form-group">
+      <label for="info">Další info</label>
+      <textarea class="form-control" name="info" rows="15">{{ info }}</textarea>
+    </div>
+    <div class="form-group">
+      <label for="od">Den začátku (*)</label>
+      {{ date('od', od) }}
+    </div>
+    <div class="form-group">
+      <label for="od">Den konce (*)</label>
+      {{ date('do', do) }}
+      <small class="form-text text-muted">(pokud je prázdné, počítá se jako "Od")</small>
+    </div>
+    <div class="form-group">
+      <label for="kapacita">Kapacita (*)</label>
+      {{ text('kapacita', kapacita) }}
+    </div>
+    <div class="form-check">
+      {{ checkbox('visible', 'visible', visible, 'Zviditelnit') }}
+    </div>
+    <div class="form-check">
+      {{ checkbox('lock', 'lock', lock, 'Uzamknout') }}
+    </div>
+    <div class="form-group">
+      <button class="btn btn-primary">{{ action }}</button>
+      <a class="btn btn-outline-primary" href="/admin/akce">Zpět</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

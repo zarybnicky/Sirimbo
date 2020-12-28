@@ -13,7 +13,7 @@ class PlatbyDiscarded
         }
         if (isset($_GET['list'])) {
             static::_getTable($data, $result, $columns, $header);
-            \Render::page('files/View/Admin/Platby/DiscardedTable.inc', [
+            \Render::twig('Admin/PlatbyDiscardedTable.twig', [
                 'header' => 'Správa plateb',
                 'subheader' => "Vyřazené platby ($header)",
                 'data' => $result,
@@ -21,7 +21,7 @@ class PlatbyDiscarded
             ]);
         } else {
             static::_getList($data, $groupAmount, $groupDate);
-            \Render::page('files/View/Admin/Platby/DiscardedList.inc', [
+            \Render::twig('Admin/PlatbyDiscardedList.twig', [
                 'header' => 'Správa plateb',
                 'subheader' => 'Vyřazené platby',
                 'groupByDate' => $groupDate,

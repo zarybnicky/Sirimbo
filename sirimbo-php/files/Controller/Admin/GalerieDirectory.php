@@ -10,7 +10,7 @@ class GalerieDirectory
             \Message::warning('Složka s takovým ID neexistuje');
             \Redirect::to('/admin/galerie');
         }
-        \Render::page('files/View/Admin/Galerie/DisplayDirectory.inc', [
+        \Render::twig('Admin/GalerieDirectory.twig', [
             'header' => 'Správa fotogalerie',
             'id' => $id,
             'files' => array_map(
@@ -141,10 +141,10 @@ class GalerieDirectory
             \DBGalerie::getDirs(true, true)
         );
         $action = $action == 'add' ? 'Přidat' : 'Upravit';
-        \Render::page('files/View/Admin/Galerie/FormDirectory.inc', [
+        \Render::twig('Admin/GalerieFormDirectory.twig', [
             'header' => 'Správa fotogalerie',
             'subheader' => "$action složku",
-            'dirs' => $dirs,
+            'dirs' => ['id' => '0', 'text' => '---'] + $dirs,
             'action' => $action,
             'name' => $_POST['name'] ?? '',
             'parent' => $_POST['parent'] ?? '',

@@ -1,0 +1,17 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+{% include 'Admin/PlatbyNavigation.twig' %}
+
+<div class="container">
+    <h3>Odstranit specifický symbol?</h3>
+    <form action="" method="POST">
+        Opravdu chcete odstranit specifický symbol "{{ name }}"?
+        <input type='hidden' name='data[]' value='{{ id }}'>
+        <input type='hidden' name='returnURI' value='{{ returnURI }}'>
+        <br/>
+        <button name="action" value="confirm" class="btn btn-primary">Odstranit</button>
+        <a class="btn btn-outline-primary" href="{{ returnURI }}">Zpět</a>
+    </form>
+</div>
+{% endblock %}

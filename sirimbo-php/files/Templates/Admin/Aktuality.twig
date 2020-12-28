@@ -1,0 +1,15 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+  <div class="container">
+    <form action="" method="POST">
+      <a href="/admin/aktuality/add" class="btn btn-primary">Nový článek</a>
+      {{ table(data, [
+          ['buttons', '', ''],
+          ['links', 'Upravit', ''],
+          ['name', 'Jméno', ''],
+          ['added', 'Přidán dne', '']
+      ]) }}
+    </form>
+  </div>
+{% endblock %}

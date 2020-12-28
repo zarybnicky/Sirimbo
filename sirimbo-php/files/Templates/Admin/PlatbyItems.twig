@@ -1,0 +1,39 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+  {% include 'Admin/PlatbyNavigation.twig' %}
+  <div class="container full">
+    <form action="" method="get">
+      <span class="big">Omezit výběr:</span>
+      <table>
+        <tr>
+          <td>uživatel</td>
+          <td>{{ selectAssoc('user', users, 'id', 'text', user ? user : 'all') }}</td>
+        </tr>
+        <tr>
+          <td>spec. symbol</td>
+          <td>{{ select('category', categories, category ? category : 'all') }}</td>
+          </td>
+        </tr>
+        <tr>
+          <td>datum</td>
+          <td>{{ dateRange('date', date) }}</td>
+        </tr>
+        <tr>
+          <td><a href="/admin/platby/items/add" class="btn btn-primary">Nová platba</a></td>
+          <td><button class="btn btn-primary">Odeslat</button></td>
+        </tr>
+      </table>
+    </form>
+    <br/>
+    <form action="" method="POST">
+      {{ table(data, [
+          ['buttons', ''],
+          ['amount', 'Částka', ' class="r"'],
+          ['date', 'Datum'],
+          ['fullName', 'Uživatel'],
+          ['category', 'Kategorie'],
+      ], ' style="width:100%"') }}
+    </form>
+</div>
+{% endblock %}

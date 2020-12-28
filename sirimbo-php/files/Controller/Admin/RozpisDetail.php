@@ -78,13 +78,13 @@ class RozpisDetail
             ];
         }
 
-        \Render::page('files/View/Admin/Rozpis/Detail.inc', [
+        \Render::twig('Admin/RozpisDetail.twig', [
             'header' => 'Správa rozpisů',
             'data' => $data,
             'users' => $users,
             'items' => $items,
             'selected_nabidka' => $_GET['n'] ?? '',
-            'nabidky' => $nabidky_select,
+            'nabidky' => ['' => '---'] + $nabidky_select,
             'nabidka' => isset($nabidka) ? $nabidka : []
         ]);
     }

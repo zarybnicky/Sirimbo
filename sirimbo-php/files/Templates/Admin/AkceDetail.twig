@@ -1,0 +1,15 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+<div class="container">
+  <form action="" method="POST">
+    {% include 'Member/AkceHeader.twig' with {'item': data} %}
+    {{ table(items, [
+        ['name', 'Uživatel', ''],
+        ['removeButton', '', '']
+    ]) }}
+    <button class="btn btn-primary">Uložit</button>
+    <a class="btn btn-outline-primary" href="/admin/permissions">Zpět</a>
+  </form>
+</div>
+{% endblock %}

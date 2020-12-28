@@ -46,7 +46,7 @@ class Rozpis
         );
 
         if ($data) {
-            \Render::twig('Member/RozpisOverview.twig', [
+            \Render::twig('Member/Rozpis.twig', [
                 'header' => 'Rozpis tréninků',
                 'data' => $data
             ]);

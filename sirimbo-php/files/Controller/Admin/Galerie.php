@@ -14,7 +14,7 @@ class Galerie
             ],
             \DBGalerie::getDirs(true, true),
         );
-        \Render::page('files/View/Admin/Galerie/Overview.inc', [
+        \Render::twig('Admin/Galerie.twig', [
             'header' => 'Správa fotogalerie',
             'data' => $data
         ]);

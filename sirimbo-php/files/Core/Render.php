@@ -29,36 +29,6 @@ class Render
         ];
     }
 
-    public static function fragment(string $file, array $vars = []): void
-    {
-        echo self::renderString($file, array_merge(self::getGlobals(), $vars));
-    }
-
-    public static function page(string $file, array $vars = []): void
-    {
-        $globals = self::getGlobals();
-        $content = self::renderString($file, array_merge($globals, $vars));
-        echo self::renderString('files/Template.inc', array_merge($globals, [
-            'content' => $content,
-            'meta' => $vars['meta'] ?? [],
-            'header' => $vars['header'] ?? null,
-            'subheader' => $vars['subheader'] ?? null,
-            'html_title' => $vars['html_title'] ?? '',
-        ]));
-    }
-
-    private static function renderString(string $__file, array $__vars = []): string
-    {
-        if (!file_exists($__file)) {
-            syslog(LOG_WARNING, "Could not find file $__file to render\n");
-            throw new NotFoundException("Soubor nebyl nalezen!");
-        }
-        ob_start();
-        extract($__vars, EXTR_SKIP);
-        include $__file;
-        return ob_get_clean();
-    }
-
     private static function getNavbar(): array
     {
         $menu = [[

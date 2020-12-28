@@ -48,7 +48,7 @@ class Akce
                 'notice' => 'Žádné akce nejsou k dispozici.'
             ]);
         } else {
-            \Render::twig('Member/AkceOverview.twig', [
+            \Render::twig('Member/Akce.twig', [
                 'header' => 'Klubové akce',
                 'akce' => array_map(fn($item) => static::_getRenderData($item), $data),
             ]);

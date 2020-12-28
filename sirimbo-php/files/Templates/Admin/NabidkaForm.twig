@@ -1,0 +1,42 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+<div class="container">
+  <form action="" method="POST">
+    <button type="submit" style="display:none;">Enter</button>
+    <div class="form-group">
+      <label for="trewner">Trenér</label>
+      {{ userSelect(users, 'trener', trener) }}
+    </div>
+    <div class="form-group">
+      <label for="pocet_hod">Počet hodin</label>
+      {{ text('pocet_hod', pocet_hod) }}
+    </div>
+    <div class="form-group">
+      <label for="max_pocet_hod">Max. počet hodin/pár</label>
+      {{ text('max_pocet_hod', max_pocet_hod) }}
+      <small class="form-text text-muted">"0" = neomezeně</small>
+    </div>
+    <div class="form-group">
+      <label for="od">Od</label>
+      {{ date('od', od) }}
+    </div>
+    <div class="form-group">
+      <label for="do">Do</label>
+      {{ date('do', do) }}
+      <small class="form-text text-muted">(pokud je prázdné, počítá se jako "Od")</small>
+    </div>
+    <div class="form-check">
+      {{ checkbox('visible', 'visible', visible, 'Zviditelnit') }}
+    </div>
+    <div class="form-check">
+      {{ checkbox('lock', 'lock', lock, 'Uzamknout') }}
+    </div>
+    <div class="form-group">
+      <input type='hidden' name='returnURI' value='{{ returnURI }}'>
+      <button class="btn btn-primary">{{ action }}</button>
+      <a class="btn btn-outline-primary" href="{{ returnURI }}">Zpět</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

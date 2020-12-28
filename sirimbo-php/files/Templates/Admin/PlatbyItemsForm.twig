@@ -1,0 +1,47 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+  {% include 'Admin/PlatbyNavigation.twig' %}
+  <div class="container">
+    <h3>{{ action == 'add' ? 'Přidat platbu' : 'Upravit platbu' }}</h3>
+    <form action="" method="post">
+      <table>
+        <tr>
+          <td></td>
+          <td>Hodnota</td>
+        </tr>
+        <tr>
+          <td class="r">Datum:</td>
+          <td>{{ date('date', date) }}</td>
+        </tr>
+        <tr>
+          <td class="r">Částka (Kč):</td>
+          <td>{{ text('amount', amount) }}</td>
+        </tr>
+        <tr>
+          <td class="r">Uživatel:</td>
+          <td>{{ select('variable', users, variable) }}</td>
+        </tr>
+        <tr>
+          <td class="r">Specifický symbol:</td>
+          <td>{{ select('specific', categories, specific) }}</td>
+        </tr>
+        <tr>
+          <td class="r">Prefix (rok):</td>
+          <td>text('prefix', prefix)</td>
+        </tr>
+      </table>
+      <input type='hidden' name='returnURI' value='{{ returnURI }}'>
+      <button class="btn btn-primary" name="action" value="confirm">Uložit</button>
+      <a class="btn btn-outline-primary" href="{{ returnURI }}">Zpět</a>
+    </form>
+    <br/>
+    {% if raw %}
+      <h3>Data z banky</h3>
+      {{ table(data, [
+          ['column', '', ' class="r" style="padding-right:5px"'],
+          ['value', '', ' style="min-width:150px;padding-left:5px"'],
+      ], ' style="width:100%"') }}
+    {% endif %}
+  </div>
+{% endblock %}

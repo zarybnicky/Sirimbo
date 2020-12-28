@@ -1,0 +1,60 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+{% include 'Admin/PlatbyNavigation.twig' %}
+
+<div class="container full">
+  <form action="" method="post">
+    <table>
+      <tr>
+        <th></th>
+        <th>Hodnota</th>
+      </tr>
+      <tr>
+        <td>Typ:</td>
+        <td>
+          {{ radio('type', '0', type == '0', 'Běžné platby') }}
+          {{ radio('type', '1', type == '1', 'Členské příspěvky') }}
+        </td>
+      </tr>
+      <tr>
+        <td>Jméno:</td>
+        <td>{{ text('name', name) }}</td>
+      </tr>
+      <tr>
+        <td>Popis:</td>
+        <td>
+          <textarea class="form-control" rows="10" cols="50" name="description">{{ description }}</textarea>
+        </td>
+      </tr>
+      <tr>
+        <td>Násobitel částky:</td>
+        <td>{{ text('base', base) }}</td>
+      </tr>
+    </table>
+    <br>
+    <h3>Specifické symboly</h3>
+    {{ table(category, [
+        ['buttons', ''],
+        ['name', 'Jméno'],
+        ['specific', 'Specifický<br/>symbol'],
+        ['amount', 'Očekávaná<br/>částka'],
+        ['dueDate', 'Splatnost'],
+        ['validDate', 'Platnost'],
+        ['usePrefix', 'Používá<br/>prefix roku'],
+        ['useBase', 'Používá<br/>násobitel částky'],
+        ['archive', 'Je neaktivní'],
+    ]) }}
+    <br/>
+    <h3>Skupiny</h3>
+    {{ table(skupiny, [
+        ['buttons', ''],
+        ['name', 'Jméno'],
+    ]) }}
+    <br/>
+    <input type='hidden' name='returnURI' value='{{ returnURI }}'>
+    <button name="action" value="confirm" class="btn btn-primary">Uložit</button>&nbsp;
+    <a class="btn btn-outline-primary" href="{{ returnURI }}">Zpět</a><br/>
+</form>
+</div>
+{% endblock %}

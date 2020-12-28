@@ -1,0 +1,33 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+  {% include 'Admin/PlatbyNavigation.twig' %}
+  <div class="container">
+    <a style="display:block;margin-bottom:8px;" href="?list=all">Všechny platby</a>
+    {% if groupByDate %}
+      <span class="big">Platby podle rozpoznaného data:</span>
+      <ul style="list-style:disc outside;">
+        {% for yearValue, year in groupByDate %}
+          {% set href = '?list=date&year=' ~ yearValue %}
+          <li style="margin-left:1em"><a href="{{ href }}">{{ year.name }}</a></li>
+          {% if year.months %}
+            <ul style="list-style:disc outside;margin-left:1em;">
+              {% for monthValue, month in year.months %}
+                <li style="margin-left:1em"><a href="{{ href }}&month={{ monthValue }}">{{ month }}</a></li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endfor %}
+      </ul>
+      <br/>
+    {% endif %}
+    {% if groupByAmount %}
+      <span class="big">Platby podle rozpoznané částky:</span>
+      <ul style="list-style:disc outside;">
+        {% for value, name in groupByAmount %}
+          <li style="margin-left:1em"><a href="?list=amount&amount={{ value }}">{{ name }}</a></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+{% endblock %}

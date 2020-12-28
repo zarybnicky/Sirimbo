@@ -18,7 +18,7 @@ class Video
             ],
             $pager->getItems()
         );
-        \Render::page('files/View/Admin/Video/Overview.inc', [
+        \Render::twig('Admin/Video.twig', [
             'header' => 'Správa videí',
             'data' => $data,
             'action' => 'orphan',
@@ -37,7 +37,7 @@ class Video
             ],
             \DBVideoList::getAll()
         );
-        \Render::page('files/View/Admin/Video/Overview.inc', [
+        \Render::twig('Admin/Video.twig', [
             'header' => 'Správa videí',
             'data' => $data,
             'action' => 'playlist',
@@ -58,7 +58,7 @@ class Video
             ],
             \DBVideo::getByPlaylist($id)
         );
-        \Render::page('files/View/Admin/Video/Overview.inc', [
+        \Render::twig('Admin/Video.twig', [
             'header' => 'Správa videí',
             'data' => $data,
             'action' => 'playlist',
@@ -81,7 +81,7 @@ class Video
     {
         \Permissions::checkError('aktuality', P_OWNED);
         $videos = \DBVideo::getAll();
-        \Render::page('files/View/Admin/Video/Title.inc', [
+        \Render::twig('Admin/VideoTitle.twig', [
             'header' => 'Správa videí',
             'video1' => \Utils::selectAssoc('video1', $videos, 'v_id', 'v_title', \DBParameters::get('title_video1')),
             'video2' => \Utils::selectAssoc('video2', $videos, 'v_id', 'v_title', \DBParameters::get('title_video2')),
@@ -169,7 +169,7 @@ class Video
 
     protected static function displayForm($action, $data = [])
     {
-        \Render::page('files/View/Admin/Video/Form.inc', [
+        \Render::twig('Admin/VideoForm.twig', [
             'header' => 'Správa videí',
             'subheader' => $action == 'add' ? 'Přidat video' : 'Upravit video',
             'action' => $action == 'add' ? 'Přidat' : 'Upravit',

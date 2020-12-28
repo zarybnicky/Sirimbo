@@ -78,7 +78,7 @@ class Users
             $pager->getItems()
         );
 
-        \Render::page('files/View/Admin/Users/Overview.inc', [
+        \Render::twig('Admin/Users.twig', [
             'header' => 'Správa uživatelů',
             'groupOptions' => $groupOptions,
             'skupinyOptions' => $skupinyOptions,
@@ -397,7 +397,7 @@ class Users
             ],
             $users
         );
-        \Render::page('files/View/Admin/Users/Unconfirmed.inc', [
+        \Render::twig('Admin/UsersUnconfirmed.twig', [
             'header' => 'Správa uživatelů',
             'subheader' => 'Nepotvrzení uživatelé',
             'data' => $users
@@ -433,7 +433,7 @@ class Users
             ],
             \DBUser::getDuplicateUsers()
         );
-        \Render::page('files/View/Admin/Users/Duplicate.inc', [
+        \Render::twig('Admin/UsersDuplicate.twig', [
             'header' => 'Správa uživatelů',
             'subheader' => 'Duplicitní uživatelé',
             'data' => $users
@@ -443,7 +443,7 @@ class Users
     public static function statistiky()
     {
         \Permissions::checkError('users', P_ADMIN);
-        \Render::page('files/View/Admin/Users/Statistiky.inc', [
+        \Render::twig('Admin/UsersStatistics.twig', [
             'header' => 'Správa uživatelů',
             'subheader' => 'Statistiky',
             'data' => array_merge(
@@ -461,11 +461,12 @@ class Users
 
     private static function displayForm($action)
     {
-        \Render::page('files/View/Admin/Users/Form.inc', [
+        \Render::twig('Admin/UsersForm.twig', [
             'header' => 'Správa uživatelů',
             'subheader' => ($action == 'add' ? 'Přidat' : 'Upravit') . ' uživatele',
             'action' => $action,
             'returnURI' => $_POST['returnURI'] ?? ($_SERVER['HTTP_REFERER'] ?? '/admin/users'),
+            'countries' => \Countries::$countries,
             'groups' => array_map(
                 fn($item) => [
                     'id' => $item['pe_id'],

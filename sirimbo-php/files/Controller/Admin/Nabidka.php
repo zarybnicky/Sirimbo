@@ -28,7 +28,7 @@ class Nabidka
             ],
             $data
         );
-        \Render::page('files/View/Admin/Nabidka/Overview.inc', [
+        \Render::twig('Admin/Nabidka.twig', [
             'header' => 'Správa nabídky',
             'data' => $data
         ]);
@@ -199,7 +199,7 @@ class Nabidka
         } else {
             $treneri = [\DBUser::getUserData(\Session::getUser()->getId())];
         }
-        \Render::page('files/View/Admin/Nabidka/Form.inc', [
+        \Render::twig('Admin/NabidkaForm.twig', [
             'header' => 'Správa nabídky',
             'subheader' => $action == 'add' ? 'Přidat nabídku' : 'Upravit nabídku',
             'action' => $action == 'add' ? 'Přidat' : 'Upravit',

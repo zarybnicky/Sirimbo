@@ -1,0 +1,25 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+<div class="container">
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link" style="color:#303C3C!important" href="/admin/video/orphan">Jednotlivá videa</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" style="color:#303C3C!important" href="/admin/video/playlist">Playlisty</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" style="color:#303C3C!important" href="/admin/video/source">Zdroje</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" style="color:#303C3C!important" href="/admin/video/title">Titulní stránka</a>
+    </li>
+  </ul>
+  <form action="" method="post">
+    {{ video1 }} {{ video2 }}<br>
+    {{ video3 }} {{ video4 }}<br>
+    <button class="btn btn-primary">Uložit</button><br>
+  </form>
+</div>
+{% endblock %}

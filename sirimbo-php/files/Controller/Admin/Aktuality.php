@@ -20,7 +20,7 @@ class Aktuality
             ? \DBAktuality::getAktuality(1)
             : \DBAktuality::getAktuality(1, \Session::getUser()->getId())
         );
-        \Render::page('files/View/Admin/Aktuality/Overview.inc', [
+        \Render::twig('Admin/Aktuality.twig', [
             'header' => 'Správa aktualit',
             'data' => $data,
         ]);
@@ -29,7 +29,7 @@ class Aktuality
     public static function add()
     {
         \Permissions::checkError('aktuality', P_OWNED);
-        \Render::page('files/View/Admin/Aktuality/Form.inc', [
+        \Render::twig('Admin/AktualityForm.twig', [
             'header' => 'Správa aktualit',
             'subheader' => 'Přidat článek',
             'action' => 'add',
@@ -66,7 +66,7 @@ class Aktuality
             \Redirect::to('/admin/aktuality');
         }
         \Permissions::checkError('aktuality', P_OWNED, $data['at_kdo']);
-        \Render::page('files/View/Admin/Aktuality/Form.inc', [
+        \Render::twig('Admin/AktualityForm.twig', [
             'header' => 'Správa aktualit',
             'subheader' => 'Upravit článek',
             'action' => 'edit',
@@ -88,7 +88,7 @@ class Aktuality
 
         if (\DateTime::createFromFormat('j. n. Y H:i', $_POST['createdAt']) === false) {
             \Message::danger('Špatný formát data "Publikováno" (D. M. RRRR HH:SS)');
-            \Render::page('files/View/Admin/Aktuality/Form.inc', [
+            \Render::twig('Admin/AktualityForm.twig', [
                 'header' => 'Správa aktualit',
                 'subheader' => 'Upravit článek',
                 'action' => 'edit',
@@ -165,11 +165,11 @@ class Aktuality
             $dirs[$item['gd_id']] = str_repeat("&nbsp;&nbsp;", $item['gd_level'] - 1) . $item['gd_name'];
         }
 
-        \Render::page('files/View/Admin/Aktuality/FormFoto.inc', [
+        \Render::twig('Admin/AktualityFormFoto.twig', [
             'header' => 'Správa článků',
             'photos' => $photos,
             'dir' => $_GET['dir'] ?? 0,
-            'dirs' => $dirs,
+            'dirs' => ['none' => '------ vyberte složku ------'] + $dirs,
             'checked' => $article['at_foto_main']
         ]);
     }

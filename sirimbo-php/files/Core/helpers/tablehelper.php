@@ -96,7 +96,7 @@ class TableHelper
         <?php foreach ($this->_data as $row): if (!$row) continue ?>
         <tr>
             <?php foreach ($this->_columns as $c): ?>
-            <td<?= $c[2] ?>><?= $row[$c[0]] ?></td>
+            <td<?= $c[2] ?? '' ?>><?= $row[$c[0]] ?></td>
             <?php endforeach ?>
         </tr>
         <?php endforeach ?>

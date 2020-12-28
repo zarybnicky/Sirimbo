@@ -1,0 +1,72 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+<div class="container">
+  <form action="" method="POST">
+    <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
+    <div class="r_wrapper">
+      {% include 'Member/RozpisHeader.twig' with {'item': data} %}
+      <table>
+        <tr>
+          <td>Tanečník</td>
+          <td>Od</td>
+          <td>Do</td>
+          <td></td>
+          <td>Zámek</td>
+        </tr>
+        {% for item in items %}
+          <tr>
+            <td>{{ userSelect(users, item.id ~ '-partner', item.partner, 'p_id') }}</td>
+            <td>{{ text(item.id ~ '-od', item.timeFrom, {'size': 5}) }}</td>
+            <td>{{ text(item.id ~ '-do', item.timeTo, {'size': 5}) }}</td>
+            <td><button name="remove" value="{{ item.id }}" class="btn btn-primary">Odstranit</button></td>
+            <td>{{ checkbox(item.id ~ '-lock', 'lock', item.lock) }}</td>
+          </tr>
+        {% endfor %}
+        <tr>
+          <td>{{ userSelect(users, 'add_partner', null, 'p_id') }}</td>
+          <td>{{ text('add_od', '', {'size': 5}) }}
+          <td>{{ text('add_do', '', {'size': 5}) }}
+          <td><button name="action" value="add" class="btn btn-primary">Přidat</button></td>
+          <td>{{ checkbox('add_lock', 'lock') }}
+        </tr>
+      </table>
+    </div>
+    <div>
+      <button type="submit" name="action" value="enter" style="display:none;">Enter</button>
+      <button name="action" value="submit" class="btn btn-primary">Uložit</button>
+      <button name="action" value="overlap" class="btn btn-primary">Opravit přesahy</button>
+      <br />
+      <button name="action" value="add_multiple" class="btn btn-primary">Přidat více</button>
+      {{ text('add_multi_num', '', {'size': 2}) }} hodin po
+      {{ text('add_multi_len', '', {'size': 3}) }} minutách od
+      {{ text('add_multi_od', '', {'size': 5}) }} hodin
+    </div>
+  </form>
+  <br/>
+  <h2>Nabídky</h2>
+  <form action="" method="get">
+    {{ select('n', nabidky, selected_nabidka) }}
+    <button class="btn btn-primary">Vybrat nabídku</button>
+    {% if nabidka %}
+      <div class="n_wrapper">
+        {% include 'Member/NabidkaHeader.twig' with {'item': nabidka} %}
+        <table>
+          <tr>
+            <td>Tanečník</td>
+            <td>Počet hodin</td>
+          </tr>
+          {% for item in nabidka.items %}
+            <tr>
+              <td>{{ item.fullName }}</td>
+              <td>{{ item.lessonCount }}</td>
+            </tr>
+          {% endfor %}
+        </table>
+      </div>
+    {% endif %}
+  </form>
+  <br/>
+  <a class="btn btn-outline-primary" href="/admin/rozpis">Zpět</a>
+</div>
+{% endblock %}

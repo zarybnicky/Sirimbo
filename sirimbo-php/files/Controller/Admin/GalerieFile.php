@@ -84,7 +84,7 @@ class GalerieFile
             ],
             \DBGalerie::getDirs(true, true)
         );
-        \Render::page('files/View/Admin/Galerie/Upload.inc', [
+        \Render::twig('Admin/GalerieUpload.twig', [
             'header' => 'Správa fotogalerie',
             'subheader' => 'Upload',
             'dirs' => $dirs,
@@ -156,11 +156,11 @@ class GalerieFile
             ],
             \DBGalerie::getDirs(true, true)
         );
-        \Render::page('files/View/Admin/Galerie/FormFile.inc', [
+        \Render::twig('Admin/GalerieFormFile.twig', [
             'header' => 'Správa fotogalerie',
             'subheader' => 'Upravit soubor',
             'id' => $id,
-            'dirs' => $dirs,
+            'dirs' => ['id' => '0', 'text' => '---'] + $dirs,
             'returnURI' => $_SERVER['HTTP_REFERER'],
             'parent' => $_POST['parent'],
             'name' => $_POST['name']

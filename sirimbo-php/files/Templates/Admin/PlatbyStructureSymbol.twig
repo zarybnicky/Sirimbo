@@ -1,0 +1,27 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+  {% include 'Admin/PlatbyNavigation.twig' %}
+  <div class="container">
+    <form action="" method="post">
+      <a href="/admin/platby/structure/category/add">Přidat specifický symbol</a>
+      {{ table(data, [
+          ['buttons', '', ' style="width:100px"'],
+          ['name', 'Název'],
+          ['symbol', 'Specifický symbol'],
+          ['validDate', 'Platí pro období'],
+          ['amount', 'Částka'],
+      ], ' style="width:100%"') }}
+      <br>
+      <h2>Archivované symboly</h2>
+      {{ table(archived, [
+          ['buttons', '', ' style="width:100px"'],
+          ['name', 'Název'],
+          ['symbol', 'Specifický symbol'],
+          ['validDate', 'Platí pro období'],
+          ['amount', 'Částka'],
+      ], ' style="width:100%"') }}
+    </form>
+  </div>
+{% endblock %}
+

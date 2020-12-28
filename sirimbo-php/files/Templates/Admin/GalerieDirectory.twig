@@ -1,0 +1,27 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+  <div class="container">
+    {% if not files %}
+      {{ notice('Žádné fotky') }}
+    {% else %}
+      <form action="" method="POST">
+        <a class="btn btn-primary" href="/admin/galerie/file/upload?dir={{ id }}">Přidat fotky</a><br>
+        {% for item in files %}
+          <div class="foto_preview">
+            <div class="foto_preview_in">
+              <img alt="{{ item.id }}" src="{{ item.thumbnailURI }}" />
+            </div>
+            <div class="foto_desc">
+              <a href='/admin/galerie/file/edit/{{ item.id }}' title='Upravit'>
+                <img alt='Upravit' src='/style/icon-pencil.png' />
+              </a>&nbsp;<a href='/admin/galerie/file/remove/{{ item.id }}' title='Odstranit'>
+                <img alt='Odstranit' src='/style/icon-trash-o.png' />
+              </a>&nbsp;{{ item.name }}
+            </div>
+          </div>
+        {% endfor %}
+      </form>
+    {% endif %}
+  </div>
+{% endblock %}

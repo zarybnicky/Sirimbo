@@ -26,7 +26,7 @@ class NabidkaDetail
             'lessonCount' => \Utils::text('add_hodiny', '', ['size' => 1]),
             'removeButton' => \Utils::submit('Přidat')
         ];
-        \Render::page('files/View/Admin/Nabidka/Detail.inc', [
+        \Render::twig('Admin/NabidkaDetail.twig', [
             'header' => 'Správa nabídky',
             'nabidka' => [
                 'id' => $data['n_id'],

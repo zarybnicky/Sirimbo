@@ -1,0 +1,57 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+  {% include 'Admin/PlatbyNavigation.twig' %}
+  <div class="container">
+    <form action="" method="post">
+      <table>
+        <tr>
+          <th></th>
+          <th>Hodnota</th>
+          <th>Rozpoznáno:<br/>sloupec</th>
+          <th>Rozpoznáno:<br/>hodnota</th>
+        </tr>
+        <tr>
+          <td class="r">Datum:</td>
+          <td>{{ date('date', guess.date) }}</td>
+          <td>{{ recognized.date.column }}</td>
+          <td>{{ recognized.date.value }}</td>
+        </tr>
+        <tr>
+          <td class="r">Částka (Kč):</td>
+          <td>{{ text('amount', guess.amount) }}</td>
+          <td>{{ recognized.amount.column }}</td>
+          <td>{{ recognized.amount.value }}</td>
+        </tr>
+        <tr>
+          <td class="r">Uživatel:</td>
+          <td>{{ select('variable', users, guess.variable) }}</td>
+          <td>{{ recognized.variable.column }}</td>
+          <td>{{ recognized.variable.value }}</td>
+        </tr>
+        <tr>
+          <td class="r">Kategorie:</td>
+          <td>{{ select('specific', categories, guess.specific) }}</td>
+          <td>{{ recognized.specific.column }}</td>
+          <td>{{ recognized.specific.value }}</td>
+        </tr>
+        <tr>
+          <td class="r">Prefix (rok):</td>
+          <td>{{ text('prefix', guess.prefix) }}</td>
+          <td></td>
+          <td>{{ recognized.prefix.value }}</td>
+        </tr>
+      </table>
+      <input type='hidden' name='id' value='{{ id }}'>
+      <button name="action" value="confirm" class="btn btn-primary">Uložit</button>&nbsp;
+      <button name="action" value="discard" class="btn btn-primary">Odstranit</button>&nbsp;
+      <button name="action" value="skip" class="btn btn-primary">Přeskočit</button>
+    </form>
+    <br/>
+    <h3>Data z banky</h3>
+    {{ table(raw, [
+        ['column', '', ' class="r" style="padding-right:5px"'],
+        ['value', '', ' style="min-width:150px;padding-left:5px"'],
+    ], ' style="width:100%"') }}
+  </div>
+{% endblock %}
