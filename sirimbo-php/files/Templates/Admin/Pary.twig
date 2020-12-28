@@ -1,0 +1,24 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+<div class="container">
+  <form action="" method="POST">
+    {{ table(data, [
+        ['buttons', '', ' style="width:90px"'],
+        ['fullNameMan', 'Partner', ''],
+        ['fullNameWoman', 'Partnerka', ''],
+        ['standard', 'Standard', ''],
+        ['latina', 'Latina', ''],
+        ['hodnoceni', 'Body', '']
+    ]) }}
+    <br/>
+    <h2>Nový pár</h2>
+    Partner: {{ userSelect(usersMen, 'add_partner') }}<br/>
+    Partnerka: {{ userSelect(usersWomen, 'add_partnerka') }}<br/>
+    <button name="action" value="add" class="btn btn-primary">Nový pár</button>
+    <button class="btn btn-outline-primary" name="action" value="fix_unpaired">
+      Opravit nespárované uživatele
+    </button>
+  </form>
+</div>
+{% endblock %}

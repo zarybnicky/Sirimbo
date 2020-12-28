@@ -1,3 +1,6 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
 <div class="container">
   <form action="" method="post">
     <div class="form-group">
@@ -5,19 +8,20 @@
         ID kanálu (např. <code>https://www.youtube.com/channel/<b>UCopG139AfgpmaswNXmEwX2Q</b></code>)<br>
         Ostatní pole se později zjistí z YouTube, pokud zůstanou prázdná.
       </label>
-      <?= \Utils::text('uri', $uri) ?>
+      {{ text('uri', uri) }}
     </div>
     <div class="form-group">
       <label for="title">Jméno</label>
-      <?= \Utils::text('title', $title ?: '') ?>
+      {{ text('title', title ? title : '') }}
     </div>
     <div class="form-group">
       <label for="desc">Popis</label>
-      <?= \Utils::text('desc', $desc ?: '') ?>
+      {{ text('desc', desc ? desc : '') }}
     </div>
     <div class="form-group">
-      <button class="btn btn-primary"><?= $action ?></button>
+      <button class="btn btn-primary">{{ action }}</button>
       <a class="btn btn-outline-primary" href="/admin/video/source">Zpět</a>
     </div>
   </form>
 </div>
+{% endblock %}

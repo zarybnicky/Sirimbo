@@ -6,7 +6,7 @@ class VideoSource
     public static function list()
     {
         \Permissions::checkError('aktuality', P_OWNED);
-        \Render::page('files/View/Admin/VideoSource/Overview.inc', [
+        \Render::twig('Admin/VideoSource.twig', [
             'header' => 'Správa zdrojů videa',
             'data' => array_map(
                 fn($item) => [
@@ -88,7 +88,7 @@ class VideoSource
 
     protected static function displayForm($action, $data = [])
     {
-        \Render::page('files/View/Admin/VideoSource/Form.inc', [
+        \Render::twig('Admin/VideoSourceForm.twig', [
             'header' => 'Správa zdrojů videa',
             'subheader' => $action == 'add' ? 'Přidat zdroj' : 'Upravit zdroj',
             'action' => $action == 'add' ? 'Přidat' : 'Upravit',

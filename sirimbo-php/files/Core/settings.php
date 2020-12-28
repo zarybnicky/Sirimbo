@@ -29,7 +29,7 @@ function shutdownHandler()
     if (!$error = error_get_last()) {
         return;
     }
-    errorHandler($error['type'], $error['message'], $error['file'], $error['line']);
+    return errorHandler($error['type'], $error['message'], $error['file'], $error['line']);
 }
 
 define('P_NONE', 1);

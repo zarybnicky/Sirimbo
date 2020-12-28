@@ -274,6 +274,7 @@ function makeRouter()
     $router->post('/admin/pary', '@Admin.Pary::listPost');
     $router->get('/admin/pary/edit/([0-9]+)', '@Admin.Pary::edit');
     $router->post('/admin/pary/edit/([0-9]+)', '@Admin.Pary::editPost');
+    $router->get('/admin/pary/remove/([0-9]+)', '@Admin.Pary::remove');
 
     $router->get('/admin/permissions', '@Admin.Permissions::list');
     $router->get('/admin/permissions/add', '@Admin.Permissions::add');

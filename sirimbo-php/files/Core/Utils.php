@@ -47,9 +47,8 @@ class Utils
         if ($value === null) {
             $value = $name;
         }
-        $cls = 'form-check';
         $checked = $state ? 'checked="checked"' : '';
-        return "<div class='$cls'>"
+        return "<div class='form-group form-check'>"
             . "<input type=checkbox class='form-check-input' name='{$name}'"
             . " value='$value' $checked>"
             . ($label ? "<label class='form-check-label'>{$label}</label>" : '')
@@ -61,9 +60,8 @@ class Utils
         if ($value === null) {
             $value = $name;
         }
-        $cls = 'form-check';
         $checked = $state ? 'checked="checked"' : '';
-        return "<div class='$cls'>"
+        return "<div class='form-group form-check'>"
             . "<input type=radio class='form-check-input' name='{$name}'"
             . " value='$value' $checked>"
             . ($label ? "<label class='form-check-label'>{$label}</label>" : '')
@@ -75,12 +73,11 @@ class Utils
         if ($value === null) {
             $value = $name;
         }
-        $cls = 'form-check form-check-inline';
         $checked = $state ? 'checked="checked"' : '';
-        return "<div class='{$cls}'>"
-            . "<input type=radio class='form-check-input' name='{$name}'"
-            . " value='{$value}' $checked>"
-            . ($label ? "<label class='form-check-label'>{$label}</label>" : '')
+        return "<div class='form-check form-check-inline'>"
+            . "<input type=radio class='form-check-input' name='$name'"
+            . " value='$value' $checked>"
+            . ($label ? "<label class='form-check-label'>$label</label>" : '')
             . "</div>";
     }
 

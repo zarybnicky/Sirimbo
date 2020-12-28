@@ -14,7 +14,7 @@ class Skupiny
             ],
             \DBSkupiny::get()
         );
-        \Render::page('files/View/Admin/Skupiny/Overview.inc', [
+        \Render::twig('Admin/Skupiny.twig', [
             'header' => 'Správa skupin',
             'data' => $data
         ]);
@@ -139,7 +139,7 @@ class Skupiny
             \DBPlatbyGroup::getGroups()
         );
 
-        \Render::page('files/View/Admin/Skupiny/Form.inc', [
+        \Render::twig('Admin/SkupinyForm.twig', [
             'header' => 'Správa skupin',
             'subheader' => $action == 'add' ? 'Přidat skupinu' : 'Upravit skupinu',
             'id' => $id,

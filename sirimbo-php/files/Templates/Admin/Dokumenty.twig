@@ -1,18 +1,22 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
 <div class="container">
   <form action="/admin/dokumenty" method="POST">
-    <?= (new TableHelper($data))
-           ->column('buttons', '', 'center', 'width:70px')
-           ->column('link', 'Jméno souboru')
-           ->column('name', 'Soubor')
-           ->column('category', 'Kategorie')
-           ->column('by', 'Nahrál') ?>
+    {{ table(data, [
+        ['buttons', '', ' style="width:70px"'],
+        ['link', 'Jméno souboru', ''],
+        ['name', 'Soubor', ''],
+        ['category', 'Kategorie', ''],
+        ['by', 'Nahrál', '']
+    ]) }}
   </form>
   <hr />
   <h2>Upload</h2>
   <form action="" method="post" enctype="multipart/form-data">
     <div class="form-group">
       <label for="name">Název</label>
-      <?= \Utils::text('name', '', ['placeholder' => 'Název']) ?>
+      {{ text('name', '', {'placeholder': 'Název'}) }}
     </div>
     <div class="form-group">
       <input type="file" class="form-control-file" name="file">
@@ -31,3 +35,4 @@
     </div>
   </form>
 </div>
+{% endblock %}

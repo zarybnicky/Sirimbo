@@ -1,0 +1,28 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+<div class="container">
+  <form action="" method="POST">
+    <a href="/admin/nastenka/add" class="btn btn-primary">Přidat</a>
+    {% if not data %}
+      {{ notice('Žádné příspěvky na nástěnkce') }}
+    {% elseif showButtonsCol %}
+      {{ table(data, [
+          ['buttons', '', ' style="width:90px"'],
+          ['header', 'Nadpis', ''],
+          ['groups', 'Skupiny', ''],
+          ['fullName', 'Přidal', ''],
+          ['timestampAdd', 'Přidáno', ' style="min-width:83px"']
+      ]) }}
+    {% else %}
+      {{ table(data, [
+          ['header', 'Nadpis', ''],
+          ['groups', 'Skupiny', ''],
+          ['fullName', 'Přidal', ''],
+          ['timestampAdd', 'Přidáno', ' style="min-width:83px"']
+      ]) }}
+    {% endif %}
+  </form>
+  <div style="text-align:center;">{{ navigation }}</div>
+</div>
+{% endblock %}

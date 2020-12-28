@@ -25,7 +25,7 @@ class Dokumenty
             ? \DBDokumenty::getDokumenty()
             : \DBDokumenty::getDokumentyByAuthor(\Session::getUser()->getId())
         );
-        \Render::page('files/View/Admin/Dokumenty/Overview.inc', [
+        \Render::twig('Admin/Dokumenty.twig', [
             'header' => 'Správa dokumentů',
             'data' => $data,
         ]);
@@ -73,7 +73,7 @@ class Dokumenty
             \Redirect::to('/admin/dokumenty');
         }
         \Permissions::checkError('dokumenty', P_OWNED, $data['d_kdo']);
-        \Render::page('files/View/Admin/Dokumenty/Form.inc', [
+        \Render::twig('Admin/DokumentyForm.twig', [
             'header' => 'Správa dokumentů',
             'name' => $data['d_name']
         ]);

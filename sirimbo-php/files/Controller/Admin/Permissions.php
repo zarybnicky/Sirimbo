@@ -14,7 +14,7 @@ class Permissions
             ],
             \DBPermissions::getGroups()
         );
-        \Render::page('files/View/Admin/Permissions/Overview.inc', [
+        \Render::twig('Admin/Permissions.twig', [
             'header' => 'Správa oprávnění',
             'data' => $data
         ]);
@@ -96,38 +96,26 @@ class Permissions
 
     protected static function renderForm($action, $data = [])
     {
-        if (!$_POST) {
-            foreach (\Permissions::$permissions as $name => $item) {
-                $_POST[$name] = $data['pe_' . $name];
-            }
-        }
-        $settings = array_map(
-            function ($name, $item) use ($data) {
-                $value = $_POST[$name] ?? ($data ? $data['pe_' . $name] : $item['default']);
-                return [
-                    'name' => $item['name'],
-                    'value' => $value,
-                    'items' => array_map(
-                        fn($key, $levelName) => isset($item[$key])
-                        ? \Utils::radio($name, $key, $key == $value, $levelName)
-                        : '',
-                        [P_NONE, P_VIEW, P_MEMBER, P_OWNED, P_ADMIN],
-                        ['Bez přístupu', 'Zobrazit', 'Editovat', 'Admin (svoje)', 'Admin']
-                    )
-                ];
-            },
-            array_keys(\Permissions::$permissions),
-            \Permissions::$permissions
-        );
-
         $action = !$data ? 'Přidat' : 'Upravit';
-        \Render::page('files/View/Admin/Permissions/Form.inc', [
+        \Render::twig('Admin/PermissionsForm.twig', [
             'header' => 'Správa oprávnění',
             'subheader' => "$action uživatelskou skupinu",
             'action' => $action,
             'name' => $_POST['name'] ?? $data['pe_name'] ?? '',
             'description' => $_POST['description'] ?? $data['pe_description'] ?? '',
-            'settings' => $settings
+            'permissions' => \Permissions::$permissions,
+            'data' => array_merge(...array_map(
+                fn($name, $item) => [$name => $_POST[$name] ?? ($data ? $data['pe_' . $name] : $item['default'])],
+                array_keys(\Permissions::$permissions),
+                \Permissions::$permissions,
+            )),
+            'options' => [
+                P_NONE => 'Bez přístupu',
+                P_VIEW => 'Zobrazit',
+                P_MEMBER => 'Editovat',
+                P_OWNED => 'Admin (svoje)',
+                P_ADMIN => 'Admin'
+            ],
         ]);
     }
 

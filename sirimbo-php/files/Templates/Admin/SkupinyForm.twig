@@ -1,0 +1,34 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+  <div class="container">
+    <form action="" method="POST">
+      <table style="width:100%">
+        <tr>
+          <td class="r">Jméno</td>
+          <td>{{ text('name', name) }}</td>
+        </tr>
+        <tr>
+          <td class="r">Barva</td>
+          <td><input type=color name='color' value='{{ color }}'/></td>
+        </tr>
+        <tr>
+          <td class="r">Popis</td>
+          <td><textarea rows="15" cols="50" name="desc">{{ popis }}</textarea></td>
+        </tr>
+      </table>
+      <br/>
+      <h2>Kategorie plateb</h2>
+      {{ table(groups, [
+          ['buttons', '', ''],
+          ['type', 'Typ', ''],
+          ['name', 'Jméno', ''],
+          ['base', 'Násobitel částky', '']
+      ]) }}
+      <div class="form-group">
+        <button class="btn btn-primary">Uložit</button>
+        <a class="btn btn-outline-primary" href="/admin/skupiny">Zpět</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

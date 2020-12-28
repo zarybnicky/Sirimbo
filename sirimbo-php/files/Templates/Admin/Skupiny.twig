@@ -1,0 +1,12 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+  <div class="container">
+    <a class="btn btn-primary" href="/admin/skupiny/add">Přidat skupinu</a>
+    {{ table(data, [
+        ['buttons', '', ' style="width:70px"'],
+        ['colorBox', 'Barvy', ' class="center" style="width:45px"'],
+        ['name', 'Název', ''],
+    ], ' style="width:100%"') }}
+  </div>
+{% endblock %}

@@ -1,8 +1,11 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
 <div class="container">
   <form action="" method="POST">
-    <b><?= $name ?></b><br><br>
+    <b>{{ name }}</b><br><br>
     <div class="form-group">
-      <?= \Utils::text('newname', '', ['placeholder' => 'Nový název']) ?>
+      {{ text('newname', '', {'placeholder': 'Nový název'}) }}
     </div>
     <div class="form-group">
       <a class="btn btn-outline-primary" href="/admin/aktuality">Zpět</a>
@@ -10,3 +13,4 @@
     </div>
   </form>
 </div>
+{% endblock %}

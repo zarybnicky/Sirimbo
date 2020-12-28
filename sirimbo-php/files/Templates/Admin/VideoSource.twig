@@ -1,3 +1,6 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
 <div class="container">
   <ul class="nav nav-tabs">
     <li class="nav-item">
@@ -15,16 +18,17 @@
   </ul>
   <a class="btn btn-primary" href="/admin/video/source/add">Nový zdroj</a>
   <form action="" method="post">
-    <?php if ($data) : ?>
-      <?= (new TableHelper($data))
-             ->style('width:100%')
-             ->column('buttons', '', null, 'width:55px')
-             ->column('title', 'Jméno')
-             ->column('url', 'ID kanálu', null)
-             ->column('created', 'Přidáno', null, 'width:100px')
-             ->column('lastChecked', 'Poslední kontrola', null, 'width:100px') ?>
-    <?php else : ?>
-      <?= \Utils::notice('Žádné zdroje') ?>
-    <?php endif ?>
+    {% if data %}
+      {{ table(data, [
+          ['buttons', '', ' style="width:55px"'],
+          ['title', 'Jméno', ''],
+          ['url', 'ID kanálu', ''],
+          ['created', 'Přidáno', ' style="width:100px"'],
+          ['lastChecked', 'Poslední kontrola', ' style="width:100px"'],
+      ], ' style="width:100%"') }}
+    {% else %}
+      {{ notice('Žádné zdroje') }}
+    {% endif %}
   </form>
 </div>
+{% endblock %}

@@ -24,7 +24,7 @@ class Nastenka
             ],
             $pager->getItems(),
         );
-        \Render::page('files/View/Admin/Nastenka/Overview.inc', [
+        \Render::twig('Admin/Nastenka.twig', [
             'header' => 'Správa nástěnky',
             'showButtonsCol' => !!array_filter(array_map(fn($x) => $x['buttons'], $data)),
             'data' => $data,
@@ -167,7 +167,7 @@ class Nastenka
             $skupinySelected[$item['s_id']] = $_POST['sk-' . $item['s_id']] ?? null;
         }
         $action = $action == 'add' ? 'Přidat' : 'Upravit';
-        \Render::page('files/View/Admin/Nastenka/Form.inc', [
+        \Render::twig('Admin/NastenkaForm.twig', [
             'header' => 'Správa nástěnky',
             'subheader' => "$action příspěvek",
             'action' => $action,
