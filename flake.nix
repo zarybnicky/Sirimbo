@@ -85,6 +85,12 @@
           mv $PWD/* $out/
           runHook postInstall
         '';
+        doCheck = true;
+        checkPhase = ''
+          ! ${pkgs.ag}/bin/ag '\\[A-Z]|<\?|\$[^(]' files/Templates
+          ${pkgs.php}/bin/php -f vendor/bin/twig-linter -- lint files/Templates
+          ${pkgs.phpstan}/bin/phpstan analyse --level 5 files/
+        '';
       });
       sirimbo-php-assets = final.stdenv.mkDerivation {
         name = "sirimbo-php-assets";
@@ -266,6 +272,7 @@
           users.groups.${cfg.user} = {
             name = cfg.group;
           };
+          systemd.tmpfiles.rules = [ "d ${cfg.stateDir} 0755 ${cfg.user} ${cfg.user} -" ];
 
           environment.systemPackages = [
             (pkgs.runCommand "olymp" { buildInputs = [ pkgs.makeWrapper ]; } ''
@@ -323,11 +330,12 @@
               "pm.min_spare_servers" = 2;
               "pm.max_spare_servers" = 4;
               "php_admin_flag[log_errors]" = true;
+              "php_admin_value[memory_limit]" = "512M";
               "catch_workers_output" = true;
             };
             phpPackage = pkgs.php.withExtensions ({ all, ... }: with all; [
               curl imagick opcache pdo_mysql pdo mysqlnd mysqli openssl posix
-              mbstring session json ctype
+              mbstring session json ctype exif gd
             ]);
           };
 
