@@ -81,6 +81,6 @@ $(function() {
   $(".select2").select2({
     theme: 'bootstrap',
     placeholder: $(this).data('placeholder'),
-    width: 'auto'
+    width: 'resolve'
   });
 });

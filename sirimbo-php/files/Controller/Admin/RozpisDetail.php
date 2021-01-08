@@ -36,7 +36,7 @@ class RozpisDetail
             function ($a, $b) {
                 $a1 = $a['n_od'] . $a['u_prijmeni'] . $a['u_jmeno'];
                 $b1 = $b['n_od'] . $b['u_prijmeni'] . $b['u_jmeno'];
-                return $a1 < $b1 ? -1 : ($a1 > $b1 ? 1 : 0);
+                return $a1 < $b1 ? 1 : ($a1 > $b1 ? -1 : 0);
             }
         );
 

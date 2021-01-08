@@ -16,15 +16,21 @@ class PlatbyItems
             $filter['pg_id'] = substr($_GET['category'], 6);
         }
 
+        $date = new \DateHelper('date', $_GET['date']);
         $data = array_map(
             fn($item) => [
                 'buttons' => \Buttons::platbyItem($item['pi_id']),
-                'fullName' => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
+                'fullName' => "{$item['u_prijmeni']}, {$item['u_jmeno']}",
                 'category' => $item['pc_name'],
                 'date' => (new \Date($item['pi_date']))->getHumanDate(),
                 'amount' => $item['pi_amount'] . ' Kč'
             ],
-            \DBPlatbyItem::get(true, $filter, ['pi_date DESC'], \DateHelper::getPostRange('date')),
+            \DBPlatbyItem::get(
+                true,
+                $filter,
+                ['pi_date DESC'],
+                ['from' => $date->getFromDate(), 'to' => $date->getToDate()]
+            ),
         );
 
         \Render::twig('Admin/PlatbyItems.twig', [

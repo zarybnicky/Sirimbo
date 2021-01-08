@@ -31,10 +31,10 @@ class DateHelper
         if (!is_string($date)) {
             return [null, null];
         }
-        if (strpos($date, ' - ')) {
-            $pieces = explode(' - ', $date);
-            $from = new \Date($pieces[0]);
-            $to = new \Date($pieces[1]);
+        if (strpos($date, '-')) {
+            $pieces = explode('-', $date);
+            $from = new \Date(trim($pieces[0]));
+            $to = new \Date(trim($pieces[1]));
             return [$from->isValid() ? $from : null, $to->isValid() ? $to : null];
         } else {
             $date = new \Date($date);
@@ -66,6 +66,16 @@ class DateHelper
         return $this;
     }
 
+    public function getFromDate()
+    {
+        return $this->date;
+    }
+
+    public function getToDate()
+    {
+        return $this->dateTo;
+    }
+
     public function range($b = true)
     {
         $this->useRange = (bool) $b;
@@ -83,10 +93,10 @@ class DateHelper
         if (empty($_POST[$name])) {
             return ['from' => new \Date(), 'to' => new \Date()];
         }
-        if (strpos($_POST[$name], ' - ')) {
-            $pieces = explode(' - ', $_POST[$name]);
-            $from = new \Date($pieces[0]);
-            $to = new \Date($pieces[1]);
+        if (strpos($_POST[$name], '-')) {
+            $pieces = explode('-', $_POST[$name]);
+            $from = new \Date(trim($pieces[0]));
+            $to = new \Date(trim($pieces[1]));
         }
         if (!isset($from) || !isset($to) || (!$from->isValid() && !$to->isValid())) {
             return ['from' => static::getPost($name), 'to' => new \Date()];

@@ -32,11 +32,13 @@
                     </span>
                   </td>
                   <td style="width:200px">
-                    {% if user.paidAmount == user.setAmount %}
+                    {% if not user.hasPaid %}
+                      <span style="text-decoration:line-through">{{ user.setAmount }} Kč</span>
+                    {% elseif user.paidAmount == user.setAmount %}
                       <span style="color:green">{{ user.paidAmount }} Kč</span>
                     {% else %}
                       <span style="font-weight:bold;color:red">{{ user.paidAmount }} Kč</span>
-                      ({{ user.setAmount }} Kč)
+                      <span style="text-decoration:line-through">({{ user.setAmount }} Kč)</span>
                     {% endif %}
                   </td>
                 </tr>
