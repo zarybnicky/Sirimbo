@@ -229,12 +229,14 @@ function makeRouter()
 
     $router->get('/admin/galerie', '@Admin.Galerie::list');
     $router->post('/admin/galerie', '@Admin.Galerie::listPost');
-    $router->get('/admin/galerie/file', '@Admin.GalerieFile::upload');
-    $router->post('/admin/galerie/file', '@Admin.GalerieFile::uploadPost');
+    $router->get('/admin/galerie/file/upload', '@Admin.GalerieFile::upload');
+    $router->post('/admin/galerie/file/upload', '@Admin.GalerieFile::uploadPost');
     $router->get('/admin/galerie/file/edit/([0-9]+)', '@Admin.GalerieFile::edit');
     $router->post('/admin/galerie/file/edit/([0-9]+)', '@Admin.GalerieFile::editPost');
     $router->get('/admin/galerie/file/remove/([0-9]+)', '@Admin.GalerieFile::remove');
     $router->post('/admin/galerie/file/remove/([0-9]+)', '@Admin.GalerieFile::removePost');
+    $router->get('/admin/galerie/directory/add', '@Admin.GalerieDirectory::add');
+    $router->post('/admin/galerie/directory/add', '@Admin.GalerieDirectory::addPost');
     $router->get('/admin/galerie/directory/([0-9]+)', '@Admin.GalerieDirectory::list');
     $router->get('/admin/galerie/directory/edit/([0-9]+)', '@Admin.GalerieDirectory::edit');
     $router->post('/admin/galerie/directory/edit/([0-9]+)', '@Admin.GalerieDirectory::editPost');

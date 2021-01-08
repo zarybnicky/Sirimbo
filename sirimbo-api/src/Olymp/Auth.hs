@@ -11,20 +11,24 @@
 module Olymp.Auth
   ( PhpAuth
   , PhpAuthHandler
+  , SessionId
+  , Entity(..)
+  , User(..)
   , phpAuthHandler
   ) where
 
 import Control.Effect (Effs)
 import Data.Aeson (FromJSON(..), decodeStrict', withObject, (.:))
 import Data.Text.Encoding (decodeUtf8)
-import Database.Persist.Sql (Entity, toSqlKey)
+import Database.Persist.Sql (Entity(..), toSqlKey)
 import Network.Wai (Request, requestHeaders)
 import Olymp.Effect.Error (AppError, AuthError(..), throwAuth)
 import Olymp.Effect.Session (SessionEff, getSessionById, deleteSession)
 import Olymp.Effect.User (UserEff, getUserById)
-import Olymp.Schema (Key(..), Session(..), SessionId, User, UserId)
+import Olymp.Schema (Key(..), Session(..), SessionId, User(..), UserId)
 import Servant (AuthProtect, Handler)
-import Servant.Server.Experimental.Auth (AuthHandler, AuthServerData, mkAuthHandler)
+import Servant.Server.Experimental.Auth
+  (AuthHandler, AuthServerData, mkAuthHandler)
 import Web.Cookie (parseCookies)
 
 type PhpAuth = AuthProtect "php-session"

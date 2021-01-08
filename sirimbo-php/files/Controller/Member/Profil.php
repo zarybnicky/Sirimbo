@@ -9,21 +9,8 @@ class Profil
         $user = \Session::getUser();
         $s = \DBSkupiny::getSingle($user->getTrainingGroup());
 
-        $paymentsPaid = [];
-        $paymentHistory = array_map(
-            function ($row) use (&$paymentsPaid) {
-                $paymentsPaid[$row['pc_id']] = '';
-                return [
-                    'type' => $row['pc_name'],
-                    'varSymbol' => $row['pc_symbol'],
-                    'amount' => $row['pi_amount'],
-                    'paidOn' => \Format::date($row['pi_date']),
-                    'validFor' => \Format::date($row['pc_valid_from']) . ' - ' . \Format::date($row['pc_valid_to']),
-                ];
-            },
-            \DBPlatby::getPaymentHistory($user->getId())
-        );
-
+        $history = \DBPlatby::getPaymentHistory($user->getId());
+        $paymentsPaid = array_flip(array_map(fn($x) => $x['pc_id'], $history));
         $paymentsWanted = [];
         $groups = \DBSkupiny::getSingleWithCategories($user->getTrainingGroup());
         foreach ($groups as $row) {
@@ -46,13 +33,28 @@ class Profil
 
         \Render::twig('Member/Profil.twig', [
             'header' => $user->getFullName(),
+            'user' => $user,
             'ageGroup' => self::getAgeGroup($user->getBirthYear()),
             'coupleData' => \DBPary::getLatestPartner($user->getId(), $user->getGender()),
-            'skupina' =>
-            "<div class=\"box\" title=\"{$s['s_description']}\" style=\"background-color:{$s['s_color_rgb']}\"></div>" . '&nbsp;' . $s['s_name'],
+            'skupina' => [
+                'name' => $s['s_name'],
+                'color' => $s['s_color_rgb'],
+                'description' => $s['s_description'],
+            ],
             'varSymbol' => \User::varSymbol($user->getId()),
             'hasPaid' => \DBPlatby::hasPaidMemberFees($user->getId()),
-            'paymentHistory' => $paymentHistory,
+            'paymentHistory' =>  array_map(
+                fn($row) => [
+                    'id' => $row['pc_id'],
+                    'name' => $row['pc_name'],
+                    'varSymbol' => $row['pc_symbol'],
+                    'amount' => $row['pi_amount'],
+                    'paidOn' => \Format::date($row['pi_date']),
+                    'validFor' => \Format::date($row['pc_valid_from'])
+                    . ' - ' . \Format::date($row['pc_valid_to']),
+                ],
+                $history,
+            ),
             'paymentsWanted' => $paymentsWanted,
         ]);
     }

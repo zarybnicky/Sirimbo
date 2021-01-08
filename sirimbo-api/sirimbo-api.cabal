@@ -21,6 +21,7 @@ library
   import: shared
   hs-source-dirs:      src
   exposed-modules:     Olymp
+                       Olymp.API.Payment
                        Olymp.Auth
                        Olymp.Cli
                        Olymp.Effect.Database
@@ -39,6 +40,7 @@ library
                      , aeson
                      , aeson-qq
                      , barbies
+                     , binary
                      , bytestring
                      , cassava
                      , co-log
@@ -58,6 +60,7 @@ library
                      , http-client
                      , http-reverse-proxy
                      , in-other-words
+                     , JuicyPixels
                      , lens
                      , monad-logger
                      , mtl
@@ -67,11 +70,14 @@ library
                      , persistent-mysql
                      , persistent-template
                      , process
+                     , qrcode-core
+                     , qrcode-juicypixels
                      , recursion-schemes
                      , resource-pool
                      , resourcet
                      , servant
                      , servant-cassava
+                     , servant-JuicyPixels
                      , servant-multipart
                      , servant-server
                      , servant-websockets

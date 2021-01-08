@@ -1,5 +1,6 @@
-{-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
@@ -27,6 +28,7 @@ import Database.Persist.MySQL (entityVal, Entity, SqlBackend)
 import Network.HTTP.Client (Manager)
 import Network.HTTP.ReverseProxy (ProxyDest(..), WaiProxyResponse(..), waiProxyTo, defaultOnExc)
 import Network.WebSockets (Connection)
+import Olymp.API.Payment (QrPaymentAPI, qrPaymentAPI)
 import Olymp.Auth (PhpAuth, PhpAuthHandler, phpAuthHandler)
 import Olymp.Effect.Database (Database, runDatabasePool)
 import Olymp.Effect.Error (AppError, runAppErrorToError)
@@ -56,7 +58,7 @@ type AppStack
       , Embed IO
       ]
 
-olympServer :: Effs AppStack m => Int -> Manager -> (forall a. m a -> Handler a) -> Application
+olympServer :: (Effs AppStack m) => Int -> Manager -> (forall a. m a -> Handler a) -> Application
 olympServer proxyPort manager runner =
   -- cors (const $ Just simpleCorsResourcePolicy
   --       { corsRequestHeaders = ["Content-Type"]
@@ -72,6 +74,7 @@ olympServer proxyPort manager runner =
 type OlympApi
   = PhpAuth :> "api" :> "whoami" :> Get '[PlainText, JSON] Text
   :<|> PhpAuth :> "api" :> "export-emails" :> Get '[CSV' 'NoHeader DefaultOpts] [Only Text]
+  :<|> QrPaymentAPI
   :<|> "api" :> "tournament" :> "ws" :> WebSocket
   :<|> PhpAuth :> "api" :> "tournament" :> "admin" :> "ws" :> WebSocket
   :<|> PhpAuth :> "logout" :> Verb 'GET 303 '[JSON]
@@ -82,6 +85,7 @@ server :: Effs AppStack m => ServerT OlympApi m
 server
   = whoAmI
   :<|> exportEmails
+  :<|> qrPaymentAPI
   :<|> tournamentSocket
   :<|> tournamentAdminSocket
   :<|> logout

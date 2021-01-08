@@ -97,7 +97,7 @@ class Router
             }
         }
 
-        return $this->call($this->error, [$method, $path, 404, new HttpRequestException('No route found')]);
+        return $this->call($this->error, [$method, $path, 404, new \NotFoundException('No route found')]);
     }
 
     private function call($callable, array $params = [])
