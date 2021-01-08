@@ -13,6 +13,6 @@
       </div>
     {% endif %}
   </div>
-  <div class="date">{{ item.datum }}</div>
+  <div class="date">{{ item.date|date('j. n. Y') }}</div>
   <div>{{ item.kde }}</div>
 </div>

@@ -50,7 +50,8 @@ class DBPlatby extends Database
         return self::getArray(self::query(
             "SELECT * FROM platby_item
                 INNER JOIN platby_category ON pi_id_category=pc_id
-             WHERE pi_id_user='?'",
+             WHERE pi_id_user='?'
+             ORDER BY pi_date DESC",
             $uid
         ));
     }

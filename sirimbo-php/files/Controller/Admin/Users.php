@@ -57,7 +57,7 @@ class Users
                 'user' => \User::fromArray($item),
                 'checkBox' => \Buttons::user($item['u_id']),
                 'varSymbol' => \User::varSymbol($item['u_id']),
-                'birthDate' => \Format::date($item['u_narozeni']),
+                'birthDate' => $item['u_narozeni'],
                 'skupina' => [
                     'id' => $item['s_id'],
                     'description' => $item['s_description'],

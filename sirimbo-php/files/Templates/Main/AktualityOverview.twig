@@ -10,7 +10,7 @@
       <div class="col align-self-center">
         <h3><a href="/aktualne/{{ row['id'] }}">{{ row['jmeno'] }}</a></h3>
         <small>
-          {{ timestamp(row.timestamp) }}
+          {{ row.timestamp|timestamp }}
           {% if row.canEdit %}
             - <a href="/admin/aktuality/edit/{{ row.id }}">Upravit</a>
           {% endif %}

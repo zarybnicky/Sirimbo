@@ -45,8 +45,7 @@ class Render
         if (\Permissions::check('nastenka', P_VIEW)) {
             $menu[] = [
                 ['Nástěnka', '/member', []],
-                ['Rozpis', '/member/rozpis', []],
-                ['Nabídka', '/member/nabidka', []],
+                ['Tréninky', '/member/treninky', []],
                 ['Akce', '/member/akce', []],
                 ['Dokumenty', '/member/dokumenty', []],
                 ['Členové', '/member/clenove', []],

@@ -7,31 +7,20 @@
       <a class="btn btn-outline-primary" href="/member/profil/edit">Upravit osobní údaje</a>
       <a class="btn btn-outline-primary" href="/member/profil/heslo">Změnit heslo</a>
       <a class="btn btn-outline-primary" href="/member/profil/par/partner">Změnit partnera</a>
-      {% if coupleData.u_id %}
-        <a class="btn btn-outline-primary" href="/member/profil/par/body">Změnit třídu a body</a>
-      {% endif %}
       <a class="btn btn-outline-primary" href="/logout">Odhlásit se</a>
     </div>
 
   <div class="mb-2">
+    {% if coupleData.u_id %}
+      {% if user.gender == 'm' %}Partnerka:{% else %}Partner:{% endif %}
+      {{ coupleData.u_jmeno }} {{ coupleData.u_prijmeni }}<br>
+    {% endif %}
     Tréninková skupina:
     <div class="box" title="{{ skupina.description }}" style="background-color:{{ skupina.color }}"></div>
     &nbsp;{{ skupina.name }}<br>
     Věková kategorie: {{ ageGroup }}<br>
-    Členské příspěvky: {{ hasPaid ? 'zaplaceno' : 'nezaplaceno' }}
+    Členské příspěvky: {{ hasPaid ? 'zaplaceno' : 'nezaplaceno' }}<br>
   </div>
-
-  {% if coupleData.u_id %}
-    <h3>Pár</h3>
-    <div class="mb-2">
-      Partner(ka): {{ coupleData.u_jmeno }} {{ coupleData.u_prijmeni }}<br>
-      Standardní tance:
-      {{ coupleData.p_stt_trida }} {{ coupleData.p_stt_body }}, {{ coupleData.p_stt_finale }}F
-      <br>
-      Latinsko-americké tance:
-      {{ coupleData.p_lat_trida }} {{ coupleData.p_lat_body }}, {{ coupleData.p_lat_finale }}F
-    </div>
-  {% endif %}
 
   {% if paymentsWanted %}
     <h3 class="mt-2">K zaplacení</h3>
@@ -59,26 +48,26 @@
           </div>
         </div>
       </div>
-      <div class="card" style="max-width: 600px">
+      <div class="card mb-1" style="max-width: 600px">
         <div class="card-body p-2">
-          <div class="row">
-            <div class="col-12 col-md-8 h5 mb-0">{{ item.name }}</div>
-            <div class="col-12 col-md-4 text-right">do {{ item.dueDate }}</div>
+          <div class="row no-gutters justify-content-between">
+            <div class="col-12 col-md-auto h5 mb-0">{{ item.name }}</div>
+            <div class="col-auto">do {{ item.dueDate|date('j. n. Y') }}</div>
           </div>
-          <div class="row">
-            <div class="col-12 col-md-8">{{ item.amount }} Kč</div>
-            <div class="col-12 col-md-4 text-right">č.ú. 1806875329/0800</div>
+          <div class="row no-gutters">
+            <div class="col-12 col-md-6">{{ item.amount }} Kč</div>
+            <div class="col-6 col-md-3">SS: {{ item.symbol }}</div>
+            <div class="col-6 col-md-3 text-right">VS: {{ varSymbol }}</div>
           </div>
-          <div class="row">
-            <div class="col-12 col-md-6">
+          <div class="row no-gutters justify-content-between">
+            <div class="col-12 order-2 order-md-1 col-md-auto">
               <button type="button" class="btn btn-link p-0" data-toggle="modal"
                       data-target="#qrModal-{{ item.id }}">
                 <img width="16" alt="QR platba" src="/style/icon-qr-code.png" style="vertical-align:text-top" />
                 QR platba
               </button>
             </div>
-            <div class="col-12 col-md-3">VS: {{ varSymbol }}</div>
-            <div class="col-12 col-md-3 text-right">SS: {{ item.symbol }}</div>
+            <div class="col-12 order-1 order-md-2 col-md-auto">č.ú. 1806875329/0800</div>
           </div>
         </div>
       </div>
@@ -87,13 +76,27 @@
 
   {% if paymentHistory %}
     <h3 class="mt-2">Historie plateb</h3>
-    {{ table(paymentHistory, [
-        ['name', 'Název'],
-        ['varSymbol', 'Spec. symbol'],
-        ['amount', 'Částka'],
-        ['paidOn', 'Placeno'],
-        ['validFor', 'Platí do'],
-    ], ' style="width:100%"') }}
+    {% for item in paymentHistory %}
+      <div class="card mb-1" style="max-width: 600px">
+        <div class="card-body p-2">
+          <div class="row no-gutters justify-content-between">
+            <div class="col-12 col-md-auto h5 mb-0">{{ item.name }}</div>
+            <div class="col-auto">placeno {{ item.paidOn|date('j. n. Y') }}</div>
+          </div>
+          <div class="row no-gutters">
+            <div class="col-12 col-md-6">{{ item.amount }} Kč</div>
+            <div class="col-6 col-md-3">SS: {{ item.symbol }}</div>
+            <div class="col-6 col-md-3 text-right">VS: {{ varSymbol }}</div>
+          </div>
+          <div class="row no-gutters justify-content-between">
+            <div class="col-12 order-2 order-md-1 col-md-auto">
+              {{ item.validFrom|date('j. n. Y') }} - {{ item.validUntil|date('j. n. Y') }}
+            </div>
+            <div class="col-12 order-1 order-md-2 col-md-auto">č.ú. 1806875329/0800</div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
   {% endif %}
 </div>
 {% endblock %}

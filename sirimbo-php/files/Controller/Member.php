@@ -35,8 +35,8 @@ class Member
                 'nadpis' => $item['up_nadpis'],
                 'canEdit' => \Permissions::check('nastenka', P_OWNED, $item['up_kdo']),
                 'skupinyBoxes' => \DBNastenka::getNastenkaSkupiny($item['up_id']),
-                'addedBy' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
-                'addedTimestamp' => \Format::timestamp($item['up_timestamp_add']),
+                'addedBy' => "{$item['u_jmeno']} {$item['u_prijmeni']}",
+                'addedTimestamp' => $item['up_timestamp_add'],
                 'text' => stripslashes($item['up_text'])
             ],
             $data

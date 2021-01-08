@@ -84,7 +84,7 @@
                        style="background-color:{{ row.skupina.color }}"></div>
                 </td>
                 <td>{{ row.groupInfo }}</td>
-                <td>{{ row.birthDate }}</td>
+                <td>{{ row.birthDate|date('j. n. Y') }}</td>
                 <td>{{ row.varSymbol }}</td>
               {% endif %}
             </tr>

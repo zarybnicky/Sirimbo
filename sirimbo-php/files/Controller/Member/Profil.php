@@ -21,13 +21,8 @@ class Profil
                 'name' => $row['pc_name'],
                 'type' => $row['pg_type'] ? 'Členské příspěvky' : 'Ostatní platby',
                 'symbol' => $row['pc_symbol'],
-                'amount' => ($row['pc_use_base'] ? ($row['pc_amount'] * $row['pg_base']) : $row['pc_amount']),
-                'dueDate' => (new \Date($row['pc_date_due']))->getHumanDate(),
-                'validRange' => (
-                    (new \Date($row['pc_valid_from']))->getHumanDate() .
-                    ((new \Date($row['pc_valid_to']))->isValid() ?
-                     (' - ' . (new \Date($row['pc_valid_to']))->getHumanDate()) : '')
-                )
+                'amount' => $row['pc_amount'] * ($row['pc_use_base'] ? $row['pg_base'] : 1),
+                'dueDate' => $row['pc_date_due'],
             ];
         }
 
@@ -47,11 +42,11 @@ class Profil
                 fn($row) => [
                     'id' => $row['pc_id'],
                     'name' => $row['pc_name'],
-                    'varSymbol' => $row['pc_symbol'],
+                    'symbol' => $row['pc_symbol'],
                     'amount' => $row['pi_amount'],
-                    'paidOn' => \Format::date($row['pi_date']),
-                    'validFor' => \Format::date($row['pc_valid_from'])
-                    . ' - ' . \Format::date($row['pc_valid_to']),
+                    'paidOn' => $row['pi_date'],
+                    'validFrom' => $row['pc_valid_from'],
+                    'validUntil' => $row['pc_valid_to'],
                 ],
                 $history,
             ),

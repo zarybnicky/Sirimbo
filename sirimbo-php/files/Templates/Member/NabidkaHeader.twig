@@ -13,7 +13,12 @@
       </div>
     {% endif %}
   </div>
-  <div class="date">{{ item.datum }}</div>
+  <div class="date">
+    {{ item.date|date('j. n. Y') }}
+    {% if item.dateEnd and item.date != item.dateEnd %}
+      - {{ item.dateEnd|date('j. n. Y') }}
+    {% endif %}
+  </div>
 
   {% if item.hourMax > 0 %}
     <div>
@@ -22,15 +27,9 @@
     </div>
   {% endif %}
   <div>
-    <span class="little">Celkem hodin: </span>
-    <span class="nadpis">{{ item.hourTotal }}</span>
-  </div>
-  <div>
-    <span class="little">Obsazených hodin: </span>
-    <span class="nadpis">{{ item.hourReserved }}</span>
-  </div>
-  <div>
     <span class="little">Volných hodin: </span>
-    <span class="nadpis">{{ item.hourFree }}</span>
+    <span class="nadpis">
+      {{ item.hourTotal - item.hourReserved }} z {{ item.hourTotal }} celkem
+    </span>
   </div>
 </div>

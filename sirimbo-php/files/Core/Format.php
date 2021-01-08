@@ -1,13 +1,9 @@
 <?php
 class Format
 {
-    public static function time($str, $forDisplay)
+    public static function time($str)
     {
-        if ($forDisplay) {
-            return substr($str, 0, 5); //15:00:00
-        } else {
-            return $str . ':00';
-        }
+        return substr($str, 0, 5); //15:00:00
     }
 
     public static function date($str)
@@ -23,7 +19,7 @@ class Format
             return self::date($date);
         }
         $date = self::date($date);
-        $time = self::time($time, 1);
+        $time = self::time($time);
         return $date . ' ' . $time;
     }
 

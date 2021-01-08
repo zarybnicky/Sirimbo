@@ -17,8 +17,8 @@
         {% for item in items %}
           <tr>
             <td>{{ userSelect(users, item.id ~ '-partner', item.partner, 'p_id') }}</td>
-            <td>{{ text(item.id ~ '-od', item.timeFrom, {'size': 5}) }}</td>
-            <td>{{ text(item.id ~ '-do', item.timeTo, {'size': 5}) }}</td>
+            <td>{{ text(item.id ~ '-od', item.timeFrom|time, {'size': 5}) }}</td>
+            <td>{{ text(item.id ~ '-do', item.timeTo|time, {'size': 5}) }}</td>
             <td><button name="remove" value="{{ item.id }}" class="btn btn-primary">Odstranit</button></td>
             <td>{{ checkbox(item.id ~ '-lock', 'lock', item.lock) }}</td>
           </tr>

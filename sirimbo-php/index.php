@@ -132,10 +132,8 @@ function makeRouter()
     $router->get('/member/akce', '@Member.Akce::list');
     $router->post('/member/akce', '@Member.Akce::listPost');
     $router->get('/member/akce/([0-9]+)', '@Member.Akce::single');
-    $router->get('/member/nabidka', '@Member.Nabidka::get');
-    $router->post('/member/nabidka', '@Member.Nabidka::post');
-    $router->get('/member/rozpis', '@Member.Rozpis::get');
-    $router->post('/member/rozpis', '@Member.Rozpis::post');
+    $router->get('/member/treninky', '@Member.Schedule::get');
+    $router->post('/member/treninky', '@Member.Schedule::post');
     $router->get('/member/dokumenty', '@Member::dokumenty');
     $router->get('/member/download', '@Member::download');
     $router->get('/member/clenove', '@Member.Clenove::structure');

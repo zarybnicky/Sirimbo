@@ -51,7 +51,7 @@
       </div>
       <div class="col">
         <b>{{ item.title }}</b><br>
-        {{ timestamp(item.date, true) }}
+        {{ item.date|timestamp(true) }}
       </div>
     </a>
   {% endfor %}

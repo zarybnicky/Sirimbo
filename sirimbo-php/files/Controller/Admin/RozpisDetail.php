@@ -16,15 +16,15 @@ class RozpisDetail
             fn($item) => [
                 'id' => $item['ri_id'],
                 'partner' => $item['ri_partner'],
-                'timeFrom' => \Format::time($item['ri_od'], 1),
-                'timeTo' => \Format::time($item['ri_do'], 1),
+                'timeFrom' => $item['ri_od'],
+                'timeTo' => $item['ri_do'],
                 'lock' => (bool) $item['ri_lock']
             ],
             \DBRozpis::getRozpisItem($id),
         );
         $data = [
             'id' => $data['r_id'],
-            'datum' => \Format::date($data['r_datum']),
+            'date' => $data['r_datum'],
             'kde' => $data['r_kde'],
             'fullName' => $data['u_jmeno'] . ' ' . $data['u_prijmeni'],
             'canEdit' => \Permissions::check('nabidka', P_OWNED, $data['r_trener'])
@@ -47,33 +47,27 @@ class RozpisDetail
                 (($item['n_od'] != $item['n_do']) ?
                  (' - ' . \Format::date($item['n_do'])) :
                  '') .
-                ' - ' . $item['u_jmeno'] . ' ' . $item['u_prijmeni'];
+                " - {$item['u_jmeno']} {$item['u_prijmeni']}";
         }
 
         if (isset($_GET['n']) && ($nabidka = \DBNabidka::getSingleNabidka($_GET['n']))) {
-            $nabidka_items = array_map(
+            $n_items = array_map(
                 fn($item) => [
                     'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
                     'lessonCount' => $item['ni_pocet_hod']
                 ],
                 \DBNabidka::getNabidkaItem($_GET['n'])
             );
-            $obsazeno = array_reduce(
-                $nabidka_items,
-                fn($carry, $item) => $carry + $item['lessonCount'],
-                0
-            );
             $nabidka = [
                 'id' => $nabidka['n_id'],
                 'fullName' => $nabidka['u_jmeno'] . ' ' . $nabidka['u_prijmeni'],
-                'datum' => \Format::date($nabidka['n_od'])
-                . ($nabidka['n_od'] != $nabidka['n_do'] ? ' - ' . \Format::date($nabidka['n_do']) : ''),
+                'date' => $nabidka['n_od'],
+                'dateEnd' => $nabidka['n_do'],
                 'canEdit' => false,
                 'hourMax' => $nabidka['n_max_pocet_hod'],
                 'hourTotal' => $nabidka['n_pocet_hod'],
-                'hourReserved' => $obsazeno,
-                'hourFree' => $nabidka['n_pocet_hod'] - $obsazeno,
-                'items' => $nabidka_items,
+                'hourReserved' => array_reduce($n_items, fn($c, $x) => $c + $x['lessonCount'], 0),
+                'items' => $n_items,
             ];
         }
 
@@ -112,8 +106,8 @@ class RozpisDetail
         //Update all
         foreach ($items as &$item) {
             $item['ri_partner'] = $_POST[$item['ri_id'] . '-partner'];
-            $item['ri_od'] = \Format::time($_POST[$item['ri_id'] . '-od'], 0);
-            $item['ri_do'] = \Format::time($_POST[$item['ri_id'] . '-do'], 0);
+            $item['ri_od'] = $_POST[$item['ri_id'] . '-od'] . ':00';
+            $item['ri_do'] = $_POST[$item['ri_id'] . '-do'] . ':00';
             $item['ri_lock'] = ($_POST[$item['ri_id'] . '-lock'] ?? '') ? 1 : 0;
         }
 
@@ -126,8 +120,8 @@ class RozpisDetail
                 $newId = \DBRozpis::addRozpisItem(
                     $id,
                     $_POST['add_partner'],
-                    \Format::time($_POST['add_od'], 0),
-                    \Format::time($_POST['add_do'], 0),
+                    $_POST['add_od'] . ':00',
+                    $_POST['add_do'] . ':00',
                     (int) (bool) $_POST['add_lock']
                 );
                 $items[] = \DBRozpis::getRozpisItemLesson($newId);
