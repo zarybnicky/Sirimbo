@@ -10,26 +10,20 @@
             {% include 'Member/RozpisHeader.twig' with {'item': item} %}
           </div>
           <div class="widget-content">
-            <table class="nocolor mx-auto">
-              {% for lesson in item.items %}
-                <tr>
-                  <td>
-                    <form action="" method="post">
-                      <span class="pr-1">
-                        {{ lesson.timeFrom }}-{{ lesson.timeTo }}
-                      </span>
-                      {{ lesson.fullName }}
-                      <input type='hidden' name='ri_id' value='{{ lesson.id }}'>
-                      {% if lesson.canReserve %}
-                        <button name="action" value="signup" class="py-0 btn btn-outline-primary btn-sm">+</button>
-                      {% elseif lesson.canCancel %}
-                        <button name="action" value="signout" class="py-0 btn btn-outline-primary btn-sm">&times;</button>
-                      {% endif %}
-                    </form>
-                  </td>
-                </tr>
-              {% endfor %}
-            </table>
+            {% for lesson in item.items %}
+              <form class="row mx-auto mb-1 no-gutters" action="" method="post">
+                <input type='hidden' name='ri_id' value='{{ lesson.id }}'>
+                <div class="col-4">{{ lesson.timeFrom }}-{{ lesson.timeTo }}</div>
+                <div class="col-8">
+                  {{ lesson.fullName }}
+                  {% if lesson.canReserve %}
+                    <button name="action" value="signup" class="py-0 btn btn-outline-primary btn-sm">+</button>
+                  {% elseif lesson.canCancel %}
+                    <button name="action" value="signout" class="py-0 btn btn-outline-primary btn-sm">&times;</button>
+                  {% endif %}
+                </div>
+              </form>
+            {% endfor %}
           </div>
         </div>
       </div>

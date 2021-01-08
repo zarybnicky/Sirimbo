@@ -32,7 +32,7 @@ class PlatbyItems
             'subheader' => 'Jednotlivé platby',
             'users' => [['id' => 'all', 'text' => '---']] + array_map(fn($x) => [
                 'id' => $x['u_id'],
-                'name' => "{$x['u_prijmeni']}, {$x['u_jmeno']}"
+                'text' => "{$x['u_prijmeni']}, {$x['u_jmeno']}"
             ], \DBUser::getUsers()),
             'categories' => ['all' => '---'] + static::getCategories(),
             'data' => $data,
@@ -143,8 +143,7 @@ class PlatbyItems
             ($item = \DBPlatbyItem::getSingle($id)) &&
             ($data = \DBPlatbyRaw::getSingle($item['pi_id_raw']))
         ) {
-            $data = unserialize($data['pr_raw']);
-            foreach ($data as $key => $value) {
+            foreach (unserialize($data['pr_raw']) as $key => $value) {
                 $raw[] = ['column' => $key, 'value' => $value];
             }
         }
@@ -155,7 +154,10 @@ class PlatbyItems
             'returnURI' => $_SERVER['HTTP_REFERER'],
             'id' => $id,
             'raw' => $raw,
-            'users' => static::getUsers(),
+            'users' => array_map(
+                fn($x) => \User::varSymbol($x['u_id']) . " - {$x['u_prijmeni']}, {$x['u_jmeno']}",
+                Platby::getUserLookup(true),
+            ),
             'categories' => static::getCategories(),
             'date' => $_POST['date'] ?? '',
             'amount' => $_POST['amount'] ?? '',
@@ -176,14 +178,5 @@ class PlatbyItems
             }
         }
         return $out;
-    }
-
-    private static function getUsers()
-    {
-        $users = Platby::getUserLookup(true);
-        foreach ($users as &$array) {
-            $array = \User::varSymbol($array['u_id']) . " - {$array['u_prijmeni']}, {$array['u_jmeno']}";
-        }
-        return $users;
     }
 }

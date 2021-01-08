@@ -1,5 +1,18 @@
 <div class="trenink-header">
-  <div class="title">{{ item.fullName }}</div>
+  <div class="title">
+    {{ item.fullName }}
+    {% if item.canEdit %}
+      <div class="btn-group">
+        <button type="button" class="btn btn-xs pt-0" data-toggle="dropdown">
+          <img alt="Upravit" width="16" src="/style/icon-gear.png" />
+        </button>
+        <div class="dropdown-menu dropdown-menu-right">
+          <a class="dropdown-item" href="/admin/nabidka/edit/{{ item.id }}">Upravit</a>,
+          <a class="dropdown-item" href="/admin/nabidka/detail/{{ item.id }}">Upravit rezervace</a>
+        </div>
+      </div>
+    {% endif %}
+  </div>
   <div class="date">{{ item.datum }}</div>
 
   {% if item.hourMax > 0 %}
@@ -20,10 +33,4 @@
     <span class="little">Volných hodin: </span>
     <span class="nadpis">{{ item.hourFree }}</span>
   </div>
-
-  {% if item.canEdit %}
-    Admin:
-    <a href="/admin/nabidka/edit/{{ item.id }}">obecné</a>,
-    <a href="/admin/nabidka/detail/{{ item.id }}">tréninky</a>
-  {% endif %}
 </div>

@@ -5,43 +5,45 @@
   <div class="container">
     <h3>{{ action == 'add' ? 'Přidat platbu' : 'Upravit platbu' }}</h3>
     <form action="" method="post">
-      <table>
-        <tr>
-          <td></td>
-          <td>Hodnota</td>
-        </tr>
-        <tr>
-          <td class="r">Datum:</td>
-          <td>{{ date('date', date) }}</td>
-        </tr>
-        <tr>
-          <td class="r">Částka (Kč):</td>
-          <td>{{ text('amount', amount) }}</td>
-        </tr>
-        <tr>
-          <td class="r">Uživatel:</td>
-          <td>{{ select('variable', users, variable) }}</td>
-        </tr>
-        <tr>
-          <td class="r">Specifický symbol:</td>
-          <td>{{ select('specific', categories, specific) }}</td>
-        </tr>
-        <tr>
-          <td class="r">Prefix (rok):</td>
-          <td>text('prefix', prefix)</td>
-        </tr>
-      </table>
-      <input type='hidden' name='returnURI' value='{{ returnURI }}'>
-      <button class="btn btn-primary" name="action" value="confirm">Uložit</button>
-      <a class="btn btn-outline-primary" href="{{ returnURI }}">Zpět</a>
+      <div class="form-group row">
+        <label for="date" class="col-sm-2 col-form-label">Datum:</label>
+        <div class="col-sm-10">{{ date('date', date) }}</div>
+      </div>
+      <div class="form-group row">
+        <label for="amount" class="col-sm-2 col-form-label">Částka (Kč):</label>
+        <div class="col-sm-10">{{ text('amount', amount) }}</div>
+      </div>
+      <div class="form-group row">
+        <label for="variable" class="col-sm-2 col-form-label">Uživatel:</label>
+        <div class="col-sm-10">{{ select('variable', users, variable) }}</div>
+      </div>
+      <div class="form-group row">
+        <label for="specific" class="col-sm-2 col-form-label">Specifický symbol:</label>
+        <div class="col-sm-10">{{ select('specific', categories, specific) }}</div>
+      </div>
+      <div class="form-group row">
+        <label for="prefix" class="col-sm-2 col-form-label">Prefix (rok):</label>
+        <div class="col-sm-10">{{ text('prefix', prefix) }}</div>
+      </div>
+      <div class="row">
+        <div class="offset-sm-2 col-sm-10">
+          <input type='hidden' name='returnURI' value='{{ returnURI }}'>
+          <button class="btn btn-primary" name="action" value="confirm">Uložit</button>
+          <a class="btn btn-outline-primary" href="{{ returnURI }}">Zpět</a>
+        </div>
+      </div>
     </form>
     <br/>
     {% if raw %}
       <h3>Data z banky</h3>
-      {{ table(data, [
-          ['column', '', ' class="r" style="padding-right:5px"'],
-          ['value', '', ' style="min-width:150px;padding-left:5px"'],
-      ], ' style="width:100%"') }}
+      <table>
+        {% for row in raw %}
+          <tr style="width:100%">
+            <td class="r" style="padding-right:5px">{{ row.column }}</td>
+            <td style="min-width:150px;padding-left:5px">{{ row.value }}</td>
+          </tr>
+        {% endfor %}
+      </table>
     {% endif %}
   </div>
 {% endblock %}

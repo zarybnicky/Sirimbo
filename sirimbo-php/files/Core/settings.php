@@ -10,11 +10,9 @@ function errorHandler($severity, $message, $filepath, $line)
         if ($k <= 0) {
             continue;
         }
-        $args = array_map(fn($x) => var_export($x, true), $v['args']);
         $msg .= "\n#$k "
             . ($v['file'] ?? 'unknown') . '(' . ($v['line'] ?? 'unknown') . '): '
-              . (isset($v['class']) ? $v['class'] . '->' : '')
-              . $v['function'] . '(' . implode(', ', $args) . ')';
+            . (isset($v['class']) ? $v['class'] . '->' : '') . $v['function'];
     }
     syslog(LOG_ERR, $_SERVER['REQUEST_URI'] . ": \n$msg");
     if (isset($_SERVER['REQUEST_URI']) && strpos('error', $_SERVER['REQUEST_URI']) !== false) {
@@ -44,13 +42,15 @@ class Settings
         'image/pjpeg' => 'jpg',
         'image/jpeg' => 'jpg',
         'image/gif' => 'gif',
-        'image/x-png' => 'png'
+        'image/x-png' => 'png',
+        'image/png' => 'png',
     ];
 
     public static $imageSuffix = [
         'image/pjpeg' => 'JPEG',
         'image/jpeg' => 'JPEG',
         'image/gif' => 'GIF',
-        'image/x-png' => 'PNG'
+        'image/x-png' => 'PNG',
+        'image/png' => 'PNG',
     ];
 }

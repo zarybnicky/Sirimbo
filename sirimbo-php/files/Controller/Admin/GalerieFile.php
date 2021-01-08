@@ -101,7 +101,7 @@ class GalerieFile
         }
         if (!($parent = \DBGalerie::getSingleDir($parentId))) {
             \Message::warning('Taková složka neexistuje');
-            \Redirect::to('/admin/galerie/upload');
+            \Redirect::to('/admin/galerie/file/upload');
         }
         $uploadHelper = new \UploadHelper('files');
         $uploadHelper->loadFromPost();
@@ -119,7 +119,7 @@ class GalerieFile
         }
         if (count($uploader->getSavedFiles()) == 0) {
             \Message::info('Žádné soubory nebyly nahrány!');
-            \Redirect::to('/admin/galerie/upload');
+            \Redirect::to('/admin/galerie/file/upload');
         }
         $failCount = 0;
         foreach ($uploader->getSavedFiles() as $path) {

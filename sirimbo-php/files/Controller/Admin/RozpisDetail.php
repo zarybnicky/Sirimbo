@@ -34,8 +34,8 @@ class RozpisDetail
         usort(
             $nabidky,
             function ($a, $b) {
-                $a1 = $a['u_prijmeni'] . $a['u_jmeno'] . $a['n_od'];
-                $b1 = $b['u_prijmeni'] . $b['u_jmeno'] . $b['n_od'];
+                $a1 = $a['n_od'] . $a['u_prijmeni'] . $a['u_jmeno'];
+                $b1 = $b['n_od'] . $b['u_prijmeni'] . $b['u_jmeno'];
                 return $a1 < $b1 ? -1 : ($a1 > $b1 ? 1 : 0);
             }
         );
@@ -43,15 +43,14 @@ class RozpisDetail
         $nabidky_select = [];
         foreach ($nabidky as $item) {
             $nabidky_select[$item['n_id']] =
-                $item['u_prijmeni'] . ', ' . $item['u_jmeno'] .
-                ' (' . \Format::date($item['n_od']) .
+                \Format::date($item['n_od']) .
                 (($item['n_od'] != $item['n_do']) ?
                  (' - ' . \Format::date($item['n_do'])) :
                  '') .
-                ')';
+                ' - ' . $item['u_jmeno'] . ' ' . $item['u_prijmeni'];
         }
 
-        if ($_GET['n'] && ($nabidka = \DBNabidka::getSingleNabidka($_GET['n']))) {
+        if (isset($_GET['n']) && ($nabidka = \DBNabidka::getSingleNabidka($_GET['n']))) {
             $nabidka_items = array_map(
                 fn($item) => [
                     'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
@@ -115,7 +114,7 @@ class RozpisDetail
             $item['ri_partner'] = $_POST[$item['ri_id'] . '-partner'];
             $item['ri_od'] = \Format::time($_POST[$item['ri_id'] . '-od'], 0);
             $item['ri_do'] = \Format::time($_POST[$item['ri_id'] . '-do'], 0);
-            $item['ri_lock'] = $_POST[$item['ri_id'] . '-lock'] ? 1 : 0;
+            $item['ri_lock'] = ($_POST[$item['ri_id'] . '-lock'] ?? '') ? 1 : 0;
         }
 
         //Try to add a new item
@@ -132,7 +131,6 @@ class RozpisDetail
                     (int) (bool) $_POST['add_lock']
                 );
                 $items[] = \DBRozpis::getRozpisItemLesson($newId);
-
                 unset($_POST['add_partner']);
             }
         }

@@ -21,7 +21,7 @@ class Profil
                 'name' => $row['pc_name'],
                 'type' => $row['pg_type'] ? 'Členské příspěvky' : 'Ostatní platby',
                 'symbol' => $row['pc_symbol'],
-                'amount' => ($row['pc_use_base'] ? ($row['pc_amount'] * $row['pg_base']) : $row['pc_amount']) . ' Kč',
+                'amount' => ($row['pc_use_base'] ? ($row['pc_amount'] * $row['pg_base']) : $row['pc_amount']),
                 'dueDate' => (new \Date($row['pc_date_due']))->getHumanDate(),
                 'validRange' => (
                     (new \Date($row['pc_valid_from']))->getHumanDate() .

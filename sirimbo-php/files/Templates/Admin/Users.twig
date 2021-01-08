@@ -43,28 +43,55 @@
 
       {% if not data %}
         {{ notice('Žádní takoví uživatelé') }}
-      {% elseif view == 'status' %}
-        {{ table(data, [
-            ['checkBox', ''],
-            ['index', ''],
-            ['fullName', 'Jméno'],
-            ['skupina', ''],
-            ['groupInfo', 'Oprávnění'],
-            ['system', 'Systémový<br/>uživatel', ' class="center"'],
-            ['ban', 'Ban', ' class="center"'],
-        ], ' style="width:100%"') }}
       {% else %}
-        {{ table(data, [
-            ['checkBox', ''],
-            ['index', ''],
-            ['fullName', 'Jméno'],
-            ['colorBox', ''],
-            ['groupInfo', 'Oprávnění'],
-            ['birthDate', 'Datum<br/>narození'],
-            ['varSymbol', 'Variabilní<br/>symbol'],
-        ], ' style="width:100%"') }}
+        <table style="width:100%">
+          <tr>
+            <th></th>
+            <th></th>
+            <th>Jméno</th>
+            {% if view == 'status' %}
+              <th></th>
+              <th>Oprávnění</th>
+              <th>Systémový<br/>uživatel</th>
+              <th>Ban</th>
+            {% else %}
+              <th></th>
+              <th>Oprávnění</th>
+              <th>Datum<br>narození</th>
+              <th>Variabilní<br>symbol</th>
+            {% endif %}
+          </tr>
+          {% for row in data %}
+            <tr>
+              <td>{{ row.checkBox | raw }}</td>
+              <td>{{ startIndex + loop.index }}.</td>
+              <td>{{ row.user.fullName }}</td>
+              {% if view == 'status' %}
+                <td>
+                  <input type='hidden' name='save[]' value='{{ row.user.id }}'>
+                  {{ select(row.user.id ~ '-skupina', onlySkupinyOptions, row.skupina.id) }}
+                </td>
+                <td>{{ row.groupInfo }}</td>
+                <td class="text-center">
+                  {{ checkbox(row.user.id ~ '-system', '1', row.user.system) }}
+                </td>
+                <td class="text-center">
+                  {{ checkbox(row.user.id ~ '-ban', '+', row.user.ban) }}
+                </td>
+              {% else %}
+                <td>
+                  <div class="box" title="{{ row.skupina.description }}"
+                       style="background-color:{{ row.skupina.color }}"></div>
+                </td>
+                <td>{{ row.groupInfo }}</td>
+                <td>{{ row.birthDate }}</td>
+                <td>{{ row.varSymbol }}</td>
+              {% endif %}
+            </tr>
+          {% endfor %}
+        </table>
       {% endif %}
     </form>
-    <div style="text-align:center">{{ navigation }}</div>
+    <div style="text-align:center">{{ navigation | raw }}</div>
   </div>
 {% endblock %}

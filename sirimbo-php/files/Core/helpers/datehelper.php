@@ -101,8 +101,6 @@ class DateHelper
 
     public function __toString()
     {
-        $val = null;
-
         if ($this->useRange) {
             if ($this->date && $this->dateTo) {
                 $from = $this->date;
@@ -111,13 +109,14 @@ class DateHelper
                 $from = new \Date();
                 $to = new \Date();
             }
+            $val = '';
             if ($from->isValid() || $from->isValid()) {
                 $val = $from->getHumanDate() . ' - ' . $to->getHumanDate();
             }
+            return "<input type=\"text\" name=\"{$this->name}\" value=\"$val\" class=\"{$this->cls}\">";
+        } else {
+            $val = $this->date ? $this->date->getDate() : '';
+            return "<input type=\"date\" name=\"{$this->name}\" value=\"$val\" class=\"{$this->cls}\">";
         }
-        if (!$val) {
-            $val = $this->date ? $this->date->getHumanDate() : '';
-        }
-        return "<input type=\"text\" name=\"{$this->name}\" value=\"$val\" class=\"{$this->cls}\">";
     }
 }

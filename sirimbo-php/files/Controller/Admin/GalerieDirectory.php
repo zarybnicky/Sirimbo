@@ -144,7 +144,7 @@ class GalerieDirectory
         \Render::twig('Admin/GalerieFormDirectory.twig', [
             'header' => 'Správa fotogalerie',
             'subheader' => "$action složku",
-            'dirs' => ['id' => '0', 'text' => '---'] + $dirs,
+            'dirs' => [['id' => '0', 'text' => '---']] + $dirs,
             'action' => $action,
             'name' => $_POST['name'] ?? '',
             'parent' => $_POST['parent'] ?? '',

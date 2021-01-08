@@ -8,11 +8,11 @@
       {% include 'Member/RozpisHeader.twig' with {'item': data} %}
       <table>
         <tr>
-          <td>Tanečník</td>
-          <td>Od</td>
-          <td>Do</td>
-          <td></td>
-          <td>Zámek</td>
+          <th>Tanečník</th>
+          <th>Od</th>
+          <th>Do</th>
+          <th></th>
+          <th>Zámek</th>
         </tr>
         {% for item in items %}
           <tr>
@@ -37,35 +37,37 @@
       <button name="action" value="submit" class="btn btn-primary">Uložit</button>
       <button name="action" value="overlap" class="btn btn-primary">Opravit přesahy</button>
       <br />
-      <button name="action" value="add_multiple" class="btn btn-primary">Přidat více</button>
-      {{ text('add_multi_num', '', {'size': 2}) }} hodin po
-      {{ text('add_multi_len', '', {'size': 3}) }} minutách od
-      {{ text('add_multi_od', '', {'size': 5}) }} hodin
+      <div class="form-inline mt-2">
+        <button name="action" value="add_multiple" class="mr-1 btn btn-primary">Přidat více</button>
+        {{ text('add_multi_num', '', {'size': 2}) }} <span class="p-2">hodin po</span>
+        {{ text('add_multi_len', '', {'size': 3}) }} <span class="p-2">minutách od</span>
+        {{ text('add_multi_od', '', {'size': 5}) }} <span class="p-2">hodin</span>
+      </div>
     </div>
   </form>
   <br/>
   <h2>Nabídky</h2>
-  <form action="" method="get">
+  <form action="" method="get" class="form-inline">
     {{ select('n', nabidky, selected_nabidka) }}
-    <button class="btn btn-primary">Vybrat nabídku</button>
-    {% if nabidka %}
-      <div class="n_wrapper">
-        {% include 'Member/NabidkaHeader.twig' with {'item': nabidka} %}
-        <table>
-          <tr>
-            <td>Tanečník</td>
-            <td>Počet hodin</td>
-          </tr>
-          {% for item in nabidka.items %}
-            <tr>
-              <td>{{ item.fullName }}</td>
-              <td>{{ item.lessonCount }}</td>
-            </tr>
-          {% endfor %}
-        </table>
-      </div>
-    {% endif %}
+    <button class="ml-2 btn btn-primary">Vybrat nabídku</button>
   </form>
+  {% if nabidka %}
+    <div class="n_wrapper">
+      {% include 'Member/NabidkaHeader.twig' with {'item': nabidka} %}
+      <table style="margin:1rem auto 0">
+        <tr>
+          <th>Tanečník</th>
+          <th>Počet hodin</th>
+        </tr>
+        {% for item in nabidka.items %}
+          <tr>
+            <td>{{ item.fullName }}</td>
+            <td>{{ item.lessonCount }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+  {% endif %}
   <br/>
   <a class="btn btn-outline-primary" href="/admin/rozpis">Zpět</a>
 </div>

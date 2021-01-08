@@ -4,38 +4,52 @@
 <div class="container">
   <form action="" method="POST">
     <button type="submit" style="display:none;">Enter</button>
-    <div class="form-group">
-      <label for="trewner">Trenér</label>
-      {{ userSelect(users, 'trener', trener) }}
+    <div class="form-group row">
+      <label for="trener" class="col-sm-2 col-form-label">Trenér:</label>
+      <div class="col-sm-10">
+        {{ userSelect(users, 'trener', trener) }}
+      </div>
     </div>
-    <div class="form-group">
-      <label for="pocet_hod">Počet hodin</label>
-      {{ text('pocet_hod', pocet_hod) }}
+    <div class="form-group row">
+      <label for="pocet_hod" class="col-sm-2 col-form-label">Počet hodin:</label>
+      <div class="col-sm-10">
+        {{ text('pocet_hod', pocet_hod) }}
+      </div>
     </div>
-    <div class="form-group">
-      <label for="max_pocet_hod">Max. počet hodin/pár</label>
-      {{ text('max_pocet_hod', max_pocet_hod) }}
-      <small class="form-text text-muted">"0" = neomezeně</small>
+    <div class="form-group row">
+      <label for="max_pocet_hod" class="col-sm-2 col-form-label">Max. počet hodin/pár:</label>
+      <div class="col-sm-10">
+        {{ text('max_pocet_hod', max_pocet_hod) }}
+        <small class="form-text text-muted">"0" = neomezeně</small>
+      </div>
     </div>
-    <div class="form-group">
-      <label for="od">Od</label>
-      {{ date('od', od) }}
+    <div class="form-group row">
+      <label for="od" class="col-sm-2 col-form-label">Od:</label>
+      <div class="col-sm-10">
+        {{ date('od', od) }}
+      </div>
     </div>
-    <div class="form-group">
-      <label for="do">Do</label>
-      {{ date('do', do) }}
-      <small class="form-text text-muted">(pokud je prázdné, počítá se jako "Od")</small>
+    <div class="form-group row">
+      <label for="do" class="col-sm-2 col-form-label">Do:</label>
+      <div class="col-sm-10">
+        {{ date('do', do) }}
+        <small class="form-text text-muted">(pokud je prázdné, počítá se jako "Od")</small>
+      </div>
     </div>
-    <div class="form-check">
-      {{ checkbox('visible', 'visible', visible, 'Zviditelnit') }}
-    </div>
-    <div class="form-check">
-      {{ checkbox('lock', 'lock', lock, 'Uzamknout') }}
-    </div>
-    <div class="form-group">
-      <input type='hidden' name='returnURI' value='{{ returnURI }}'>
-      <button class="btn btn-primary">{{ action }}</button>
-      <a class="btn btn-outline-primary" href="{{ returnURI }}">Zpět</a>
+    <div class="row">
+      <div class="offset-sm-2 col-sm-10">
+        <div class="form-check">
+          {{ checkbox('visible', 'visible', visible, 'Zviditelnit') }}
+        </div>
+        <div class="form-check">
+          {{ checkbox('lock', 'lock', lock, 'Uzamknout') }}
+        </div>
+        <div class="form-group">
+          <input type='hidden' name='returnURI' value='{{ returnURI }}'>
+          <button class="btn btn-primary">{{ action }}</button>
+          <a class="btn btn-outline-primary" href="{{ returnURI }}">Zpět</a>
+        </div>
+      </div>
     </div>
   </form>
 </div>

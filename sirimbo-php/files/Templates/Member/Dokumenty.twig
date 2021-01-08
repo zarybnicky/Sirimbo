@@ -1,27 +1,27 @@
 {% extends "Layout.twig" %}
 
 {% block content %}
-<div class="container">
-    <form method="GET">
-      {{ select('kat', categories, kat) }}
+  <div class="container">
+    <form class="form-inline mb-2" method="GET">
+      {{ select('kat', categories, kat, 'form-control') }}
       <button class="btn btn-primary">Zobrazit</button>
     </form>
 
-  <table>
-    <tr>
-      <th>Jméno souboru</th>
-      <th>Soubor</th>
-      <th>Kategorie</th>
-      <th>Uploadoval</th>
-    </tr>
-    {% for item in data %}
+    <table>
       <tr>
-        <td>{{ item.name }}</td>
-        <td><a href="/member/download?id={{ item.id }}">{{ item.fileName }}</a></td>
-        <td>{{ item.kategorie }}</td>
-        <td>{{ itemuploadedBy }}</td>
+        <th>Jméno souboru</th>
+        <th>Soubor</th>
+        <th>Kategorie</th>
+        <th>Přidal</th>
       </tr>
-    {% endfor %}
-  </table>
-</div>
+      {% for item in data %}
+        <tr>
+          <td>{{ item.name }}</td>
+          <td><a href="/member/download?id={{ item.id }}">{{ item.fileName }}</a></td>
+          <td>{{ item.kategorie }}</td>
+          <td>{{ item.uploadedBy }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
 {% endblock %}

@@ -48,33 +48,23 @@ class Users
         $pager->setCurrentPage($_GET['p'] ?? null);
         $pager->setItemsPerPage($_GET['c'] ?? null);
 
-        $i = $pager->getItemsPerPage() * ($pager->getCurrentPage() - 1);
-
         $action = $_GET['view'] ?? 'info';
         $copySkupinyOptions = $skupinyOptions;
         unset($copySkupinyOptions['all']);
 
         $data = array_map(
-            function ($item) use ($action, $groupOptions, &$i, $copySkupinyOptions) {
-                $out = [
-                    'checkBox' => \Buttons::user($item['u_id']),
-                    'index' => ++$i . '. ',
-                    'varSymbol' => \User::varSymbol($item['u_id']),
-                    'fullName' => $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
-                    'birthDate' => \Format::date($item['u_narozeni']),
-                    'colorBox' => "<div class=\"box\" title=\"{$item['s_description']}\" style=\"background-color:{$item['s_color_rgb']}\"></div>",
-                    'groupInfo' => $groupOptions[$item['u_group']]
-                ];
-                if ($action == 'status') {
-                    $out['skupina'] = (
-                        "<input type='hidden' name='save[]' value='{$item['u_id']}'>"
-                        . \Utils::select($item['u_id'] . '-skupina', $copySkupinyOptions, $item['u_skupina'])
-                    );
-                    $out['system'] = \Utils::checkbox($item['u_id'] . '-system', '1', $item['u_system']);
-                    $out['ban'] = \Utils::checkbox($item['u_id'] . '-ban', '1', $item['u_ban']);
-                }
-                return $out;
-            },
+            fn($item) => [
+                'user' => \User::fromArray($item),
+                'checkBox' => \Buttons::user($item['u_id']),
+                'varSymbol' => \User::varSymbol($item['u_id']),
+                'birthDate' => \Format::date($item['u_narozeni']),
+                'skupina' => [
+                    'id' => $item['s_id'],
+                    'description' => $item['s_description'],
+                    'color' => $item['s_color_rgb'],
+                ],
+                'groupInfo' => $groupOptions[$item['u_group']] ?? '',
+            ],
             $pager->getItems()
         );
 
@@ -82,8 +72,10 @@ class Users
             'header' => 'Správa uživatelů',
             'groupOptions' => $groupOptions,
             'skupinyOptions' => $skupinyOptions,
+            'onlySkupinyOptions' => $copySkupinyOptions,
             'sortOptions' => $sortOptions,
             'statusOptions' => $statusOptions,
+            'startIndex' => $pager->getItemsPerPage() * ($pager->getCurrentPage() - 1),
             'data' => $data,
             'navigation' => $pager->getNavigation(),
             'view' => $action,
@@ -147,7 +139,7 @@ class Users
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/users',
             'data' => [[
                 'id' => $item['u_id'],
-                'text' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'] . ' - ' . $item['u_login']
+                'text' => "{$item['u_jmeno']} {$item['u_prijmeni']} ({$item['u_login']})",
             ]]
         ]);
     }

@@ -57,7 +57,7 @@ class UploadHelper
             case UPLOAD_ERR_EXTENSION:
             case UPLOAD_ERR_NO_TMP_DIR:
                 $errorMessage = "Došlo k chybě při ukládání souboru (kód: {$data['error']}), kontaktujte prosím administrátora.";
-                syslog(LOG_ERR, "Failed to save file: " . var_export($data, true) . "\n");
+                syslog(LOG_ERR, "Failed to save file: " . print_r($data, true) . "\n");
                 $this->invalidFiles[] = array_merge($data, ['error_message' => $errorMessage]);
                 break;
         }

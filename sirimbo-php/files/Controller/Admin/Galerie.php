@@ -183,7 +183,7 @@ class Galerie
     {
         $items = \DBGalerie::getDirs();
         foreach ($items as $item) {
-            if ((bool) $_POST[$item['gd_id']] === (bool) $item['gd_hidden']) {
+            if ((bool) ($_POST[$item['gd_id']] ?? false) === (bool) $item['gd_hidden']) {
                 continue;
             }
             \DBGalerie::editDir(

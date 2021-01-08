@@ -5,7 +5,7 @@ class DBAkce extends Database implements Pagable
     {
         $res = self::query(
             'SELECT * FROM akce'
-            . ($onlyVisible ? " WHERE a_visible='1'" : '') . ' ORDER BY a_od'
+            . ($onlyVisible ? " WHERE a_visible='1'" : '') . ' ORDER BY a_do DESC, a_od DESC'
         );
         return self::getArray($res);
     }

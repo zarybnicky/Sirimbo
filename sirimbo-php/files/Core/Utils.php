@@ -9,7 +9,7 @@ class Utils
     public static function person(array $user): string
     {
         return "<a href=\"/member/clenove/{$user['u_id']}\">"
-            . '<img src="/style/person-small.png" style="margin-bottom:-2px" src="'
+            . '<img src="/style/person-small.png" style="margin-bottom:-2px" alt="'
             . "{$user['u_jmeno']} {$user['u_prijmeni']}\">&nbsp;"
             . "{$user['u_prijmeni']}, {$user['u_jmeno']}</a>";
     }
@@ -105,7 +105,7 @@ class Utils
         return $out;
     }
 
-    public static function selectAssoc(string $name, array $data, string $key, string $value, $set = null): string
+    public static function selectAssoc(string $name, array $data, string $key, string $value, $set = null, $cls = "form-control select2"): string
     {
         $options = array_map(
             fn($x) => "<option value=\"{$x[$key]}\""
@@ -113,10 +113,10 @@ class Utils
             . ">{$x[$value]}</option>",
             $data,
         );
-        return "<select class=\"form-control select2\" name=\"$name\">" . implode($options) . "</select>";
+        return "<select class=\"$cls\" name=\"$name\">" . implode($options) . "</select>";
     }
 
-    public static function select(string $name, array $data, $set = null): string
+    public static function select(string $name, array $data, $set = null, $cls = "form-control select2"): string
     {
         $options = array_map(
             fn($k, $v) => "<option value=\"$k\""
@@ -125,10 +125,10 @@ class Utils
             array_keys($data),
             array_values($data),
         );
-        return "<select class=\"form-control select2\" name=\"$name\">" . implode($options) . "</select>";
+        return "<select class=\"$cls\" name=\"$name\">" . implode($options) . "</select>";
     }
 
-    public static function selectLiteral(string $name, array $data, $set = null): string
+    public static function selectLiteral(string $name, array $data, $set = null, $cls = "form-control select2"): string
     {
         $options = array_map(
             fn($x) => "<option value=\"$x\""
@@ -136,7 +136,7 @@ class Utils
             . ">$x</option>",
             $data,
         );
-        return "<select name=\"$name\">" . implode($options) . "</select>";
+        return "<select class=\"$cls\" name=\"$name\">" . implode($options) . "</select>";
     }
 
     public static function partnerRequest(): string
@@ -214,9 +214,7 @@ class Utils
 
     public static function date($name, $date, $cls = 'form-control'): string
     {
-        $dateObj = new \Date($date);
-        $val = $dateObj->isValid() ? $dateObj->getHumanDate() : $date;
-        return "<input type=\"text\" name=\"$name\" value=\"$val\" class=\"$cls\">";
+        return (string) (new \DateHelper($name, $date))->cls($cls);
     }
 
     public static function dateRange($name, $date, $cls = 'form-control'): string

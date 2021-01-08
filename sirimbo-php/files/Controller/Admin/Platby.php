@@ -8,34 +8,24 @@ class Platby
         \Permissions::checkError('platby', P_OWNED);
         $data = \DBUser::getUsersWithSkupinaPlatby();
         $skupiny = [];
-        $index = 0;
         $currentID = -1;
         $currentKey = 0;
         foreach ($data as $item) {
             if ($item['s_id'] != $currentID) {
-                $index = 0;
                 $currentID = $item['s_id'];
                 $currentKey = count($skupiny);
-                $skupiny[$currentKey] = ['users' => []];
-                $skupiny[$currentKey]['info'] = [
-                    'header' => "<big>"
-                    . "<div class=\"box\" title=\"{$item['s_description']}\" style=\"background-color:{$item['s_color_rgb']}\"></div>"
-                    . '&nbsp;&nbsp;' . $item['s_name'] . "</big>"
+                $skupiny[$currentKey] = [
+                    'users' => [],
+                    'description' => $item['s_description'],
+                    'color' => $item['s_color_rgb'],
+                    'name' => $item['s_name'],
                 ];
             }
             $skupiny[$currentKey]['users'][] = [
-                'index' => ++$index . '.',
-                'fullName' => \Utils::person($item),
-                'hasPaid' => new \Tag(
-                    'span',
-                    ['style' => 'font-weight:bold;color:' . ($item['pi_id'] ? 'green' : 'red')],
-                    $item['pi_id'] ? 'ANO' : 'NE'
-                ),
-                'amount' => $item['pi_amount'] == ($item['pc_amount'] * $item['pg_base'])
-                ? ('<span style="color:green">' . (int) $item['pi_amount'] . ' Kč</span>')
-                : ('<span style="font-weight:bold;color:red">'
-                   . (int) $item['pi_amount'] . ' Kč</span> ('
-                   . (int) ($item['pc_amount'] * $item['pg_base']) . ' Kč)')
+                'user' => \User::fromArray($item),
+                'hasPaid' => (bool) $item['pi_id'],
+                'paidAmount' => $item['pi_amount'],
+                'setAmount' => $item['pc_amount'] * $item['pg_base'],
             ];
         }
 
@@ -46,10 +36,10 @@ class Platby
             $skupina['info']['count'] = count($skupina['users']);
             if ($rightCount >= $leftCount) {
                 $columns[0][] = $skupina;
-                $leftCount += ($skupina['info']['count']);
+                $leftCount += $skupina['info']['count'];
             } else {
                 $columns[1][] = $skupina;
-                $rightCount += ($skupina['info']['count']);
+                $rightCount += $skupina['info']['count'];
             }
         }
         \Render::twig('Admin/PlatbyStatistics.twig', [
@@ -66,23 +56,15 @@ class Platby
             'header' => 'Správa plateb',
             'subheader' => 'Struktura plateb',
             'data' => array_map(
-                function ($item) {
-                    if (strpos($item[0], 'group_') !== false) {
-                        return [
-                            'name' => new \Tag(
-                                'span',
-                                ['class' => 'big', 'style' => 'text-decoration:underline'],
-                                $item[1]['pg_name']
-                            ),
-                            'buttons' => \Buttons::platbyGroup($item[1]['pg_id']),
-                        ];
-                    } else {
-                        return [
-                            'name' => '&nbsp;- ' . $item[1]['pc_name'] . ' (' . $item[1]['pc_symbol'] . ')',
-                            'buttons' => \Buttons::platbyCategory($item[1]['pc_id']),
-                        ];
-                    }
-                },
+                fn($item) => (strpos($item[0], 'group_') !== false)
+                ? [
+                    'name' => "<span class=\"big\" style=\"text-decoration:underline\">{$item[1]['pg_name']}</span>",
+                    'buttons' => \Buttons::platbyGroup($item[1]['pg_id']),
+                ]
+                : [
+                    'name' => "&nbsp;- {$item[1]['pc_name']} ({$item[1]['pc_symbol']})",
+                    'buttons' => \Buttons::platbyCategory($item[1]['pc_id']),
+                ],
                 static::getCategoryList()
             ),
             'orphanGroupSkupina' => array_map(

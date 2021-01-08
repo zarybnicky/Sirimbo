@@ -34,7 +34,7 @@ class Akce
         \Permissions::checkError('akce', P_OWNED);
         $items = \DBAkce::getAkce();
         foreach ($items as $item) {
-            if ((bool) $_POST[$item['a_id']] === (bool) $item['a_visible']) {
+            if (!isset($_POST[$item['a_id']]) || (bool) $_POST[$item['a_id']] === (bool) $item['a_visible']) {
                 continue;
             }
             \DBAkce::editAkce(
@@ -128,7 +128,7 @@ class Akce
             (string) $do,
             $_POST['kapacita'],
             $data['a_dokumenty'],
-            ($_POST['lock'] == 'lock') ? 1 : 0,
+            (($_POST['lock'] ?? '') == 'lock') ? 1 : 0,
             $_POST['visible'] ? '1' : '0'
         );
 

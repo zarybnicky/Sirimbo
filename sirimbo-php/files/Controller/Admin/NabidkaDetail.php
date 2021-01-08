@@ -62,7 +62,7 @@ class NabidkaDetail
         $items = \DBNabidka::getNabidkaItem($id);
         $obsazeno = \DBNabidka::getNabidkaItemLessons($id);
 
-        if ($_POST["remove"] > 0) {
+        if (($_POST["remove"] ?? 0) > 0) {
             \DBNabidka::removeNabidkaItem($id, $_POST[$_POST["remove"] . "-partner"]);
             $items = \DBNabidka::getNabidkaItem($id);
             $obsazeno = \DBNabidka::getNabidkaItemLessons($id);
@@ -90,15 +90,12 @@ class NabidkaDetail
         $items = \DBNabidka::getNabidkaItem($id);
         $obsazeno = \DBNabidka::getNabidkaItemLessons($id);
 
-        if (is_numeric($_POST["add_hodiny"]) &&
-            is_numeric($_POST["add_partner"]) &&
+        if (is_numeric($_POST["add_hodiny"] ?? null) &&
+            is_numeric($_POST["add_partner"] ?? null) &&
             $_POST['add_partner']
         ) {
             $partner = $_POST['add_partner'];
             $count = $_POST["add_hodiny"];
-            unset($_POST['add_partner']);
-            unset($_POST['add_hodiny']);
-
             if (0 < $maxLessons && $maxLessons < $count) {
                 $count = $maxLessons;
             }
@@ -106,6 +103,8 @@ class NabidkaDetail
             \DBNabidka::addNabidkaItemLessons($_POST["add_partner"], $id, $count);
             $items = \DBNabidka::getNabidkaItem($id);
             $obsazeno = \DBNabidka::getNabidkaItemLessons($id);
+            unset($_POST['add_partner']);
+            unset($_POST['add_hodiny']);
         }
 
         //-----Dorovnávání skutečného a nastaveného počtu hodin-----//

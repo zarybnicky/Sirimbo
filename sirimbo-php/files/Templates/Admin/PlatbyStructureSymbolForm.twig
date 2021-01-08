@@ -4,56 +4,66 @@
   {% include 'Admin/PlatbyNavigation.twig' %}
   <div class="container">
     <form action="" method="post">
-      <table>
-        <tr>
-          <th></th>
-          <th>Hodnota</th>
-        </tr>
-        <tr>
-          <td>Jméno:</td>
-          <td>{{ text('name', name) }}</td>
-        </tr>
-        <td>
-          <td>Specifický symbol:</td>
-          <td>{{ text('symbol', symbol) }}</td>
-        </td>
-        <tr>
-          <td>Očekávaná částka:</td>
-          <td>{{ text('amount', amount) }}</td>
-        </tr>
-        <tr>
-          <td>Splatnost:</td>
-          <td>{{ date('dueDate', dueDate) }}</td>
-        </tr>
-        <tr>
-          <td>Platnost:</td>
-          <td>{{ dateRange('validRange', validRange) }}</td>
-        </tr>
-        <tr>
-          <td>Povolit prefix roku?:</td>
-          <td>{{ checkbox('usePrefix', '1', usePrefix) }}</td>
-        </tr>
-        <tr>
-          <td>Archivovat?:</td>
-          <td>checkbox('archive', '1', archive)</td>
-        </tr>
-        <tr>
-          <td>Viditelný:</td>
-          <td>{{ checkbox('visible', '1', visible) }}</td>
-        </tr>
-      </table>
-    <input type='hidden' name='returnURI' value='{{ returnURI }}'>
-    <br/>
-    <h3>Kategorie</h3>
-    {{ table(groups, [
-        ['buttons', ''],
-        ['name', 'Jméno'],
+      <div class="form-group row">
+        <label for="name" class="col-sm-2 col-form-label">Jméno:</label>
+        <div class="col-sm-10">
+          {{ text('name', name) }}
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="symbol" class="col-sm-2 col-form-label">Specifický symbol:</label>
+        <div class="col-sm-10">
+          {{ text('symbol', symbol) }}
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="amount" class="col-sm-2 col-form-label">Očekávaná částka:</label>
+        <div class="col-sm-10">
+          {{ text('amount', amount) }}
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="dueDate" class="col-sm-2 col-form-label">Splatnost:</label>
+        <div class="col-sm-10">
+          {{ date('dueDate', dueDate) }}
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="validRange" class="col-sm-2 col-form-label">Platnost:</label>
+        <div class="col-sm-10">
+          {{ dateRange('validRange', validRange) }}
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="usePrefix" class="col-sm-2 col-form-label">Povolit prefix roku?:</label>
+        <div class="col-sm-10">
+          {{ checkbox('usePrefix', '1', usePrefix) }}
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="archive" class="col-sm-2 col-form-label">Archivovat?:</label>
+        <div class="col-sm-10">
+          {{ checkbox('archive', '1', archive) }}
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="visible" class="col-sm-2 col-form-label">Viditelný:</label>
+        <div class="col-sm-10">
+          {{ checkbox('visible', '1', visible) }}
+        </div>
+      </div>
+      <br/>
+      <h3>Kategorie</h3>
+      {{ table(groups, [
+          ['buttons', ''],
+          ['name', 'Jméno'],
         ['type', 'Typ'],
-        ['base', 'Násobitel částky'],
-    ], ' style="width:100%"') }}
-    <br>
-    <button class="btn btn-primary">Uložit</button>
-    <a class="btn btn-outline-primary" href="{{ returnURI }}">Zpět</a><br/>
-</form>
-</div>
+          ['base', 'Násobitel částky'],
+      ], ' style="width:100%"') }}
+
+      <input type='hidden' name='returnURI' value='{{ returnURI }}'>
+      <button class="btn btn-primary">Uložit</button>
+      <a class="btn btn-outline-primary" href="{{ returnURI }}">Zpět</a><br/>
+    </form>
+  </div>
 {% endblock %}

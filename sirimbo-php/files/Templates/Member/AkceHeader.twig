@@ -1,31 +1,34 @@
 <div class="trenink-header">
-    <div class="title">{{ item.jmeno }}</div>
-    <div class="date">{{ item.datum }}</div>
-    <div class="emph">{{ item.kde }}</div>
-    <div>
-      <span class="big">Kapacita: </span> {{ item.kapacita }}
-      <br/>
-      <span class="big">Volných míst: </span> {{ item.volno }}
-    </div>
+  <div class="title">
+    {{ item.jmeno }}
     {% if item.canEdit %}
-      <span class="big">Admin: </span>
-      <a href="/admin/akce/edit/{{ item.id }}">obecné</a>
-      <a href="/admin/akce/detail/{{ item.id }}">účastníci</a>
-      <a href="/admin/akce/dokumenty/{{ item.id }}">dokumenty</a>
-    {% endif %}
-    {% if item.info %}
-      <div style="text-align:left;">
-        <span class="big">Další informace: </span>
-        <br/>{{ item.info }}
+      <div class="btn-group">
+        <button type="button" class="btn btn-xs pt-0" data-toggle="dropdown">
+          <img alt="Upravit" width="16" src="/style/icon-gear.png" />
+        </button>
+        <div class="dropdown-menu dropdown-menu-right">
+          <a class="dropdown-item" href="/admin/akce/edit/{{ item.id }}">Upravit</a>
+          <a class="dropdown-item" href="/admin/akce/detail/{{ item.id }}">Upravit účastníky</a>
+          <a class="dropdown-item" href="/admin/akce/dokumenty/{{ item.id }}">Upravit dokumenty</a>
+        </div>
       </div>
     {% endif %}
-    {% if item.dokumenty %}
-      <br/>
-      <div style="text-align:left;">
-        <span class="big">Dokumenty: </span><br/>
+  </div>
+  <div class="date">{{ item.datum }}</div>
+  <div class="emph">{{ item.kde }}</div>
+  <div><span class="big">Kapacita: </span> {{ item.kapacita }}</div>
+  <div><span class="big">Volných míst: </span> {{ item.volno }}</div>
+  {% if item.info %}
+    <div class="text-left mb-2">{{ item.info | raw }}</div>
+  {% endif %}
+  {% if item.dokumenty %}
+    <div class="text-left mb-2">
+      <span class="big">Dokumenty: </span>
+      <ul>
         {% for row in item.dokumenty %}
-          <a href="/member/download?id={{ item.row['id'] }}">{{ item.row['name'] }}</a>
+          <li><a href="/member/download?id={{ row.id }}">{{ row.name }}</a></li>
         {% endfor %}
-      </div>
-    {% endif %}
+      </ul>
+    </div>
+  {% endif %}
 </div>

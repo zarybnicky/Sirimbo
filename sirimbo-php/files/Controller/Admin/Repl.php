@@ -21,7 +21,7 @@ class Repl
             if ($r === false) {
                 echo \Utils::notice('Kód obsahuje syntaktickou chybu');
             } elseif (!empty($r)) {
-                echo \Utils::notice('<pre>' . var_export($r, true) . '</pre>');
+                echo \Utils::notice('<pre>' . print_r($r, true) . '</pre>');
             } else {
                 echo \Utils::notice('Success!');
             }
