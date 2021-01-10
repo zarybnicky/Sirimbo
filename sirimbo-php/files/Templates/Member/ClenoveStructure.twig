@@ -7,11 +7,30 @@
       {% for col in columns %}
         <div class="col-12 col-md-6">
           {% for skupina in col %}
-            {{ table(skupina.users, [
-            ['index', '', ' class="r" style="width:40px"'],
-            ['fullName', skupina.info.header, ''],
-            ['hasPaid', 'Zaplaceno?', ' style="width:40px"'],
-            ], ' style="width:100%;margin-bottom: .5rem"') }}
+            <table style="width:100%;margin-bottom: .5rem">
+              <tr>
+                <th></th>
+                <th>
+                  <big><div class="box" title="{{ skupina.description }}"
+                            style="background-color:{{ skupina.color }}"></div>
+                    &nbsp;&nbsp;{{ skupina.name }}</big> ({{ skupina.count }})
+                </th>
+                <th>Zaplaceno?</th>
+              </tr>
+              {% for row in skupina.users %}
+                <tr>
+                  <td class="r" style="width:40px">{{ loop.index }}.</td>
+                  <td>
+                    <a href="/member/clenove/{{ row.u_id }}">{{ row.u_prijmeni }}, {{ row.u_jmeno }}</a>
+                  </td>
+                  <td style="width:40px">
+                    <span style="font-weight:bold;color:{{ row.pi_id ? 'green' : 'red' }}">
+                      {{ row.pi_id ? 'ANO' : 'NE' }}
+                    </span>
+                  </td>
+                </tr>
+              {% endfor %}
+            </table>
           {% endfor %}
         </div>
       {% endfor %}

@@ -1,0 +1,25 @@
+{% extends "Layout.twig" %}
+
+{% block content %}
+<div class="container">
+  {% for row in data %}
+    <div class="row mb-2">
+      <div class="col-md-auto align-self-center">
+        <img style="max-width:100%" src="/galerie/thumbnails/{{ row.photo_uri }}" />
+      </div>
+      <div class="col align-self-center">
+        <h3><a href="/aktualne/{{ row.at_id }}">{{ row.at_jmeno }}</a></h3>
+        <small>
+          {{ row.at_timestamp_add | date('j. n. Y H:i') }}
+          {% if row.canEdit %}
+            - <a href="/admin/aktuality/edit/{{ row.at_id }}">Upravit</a>
+          {% endif %}
+        </small><br>
+        <p>{{ row.at_preview | raw }}</p>
+      </div>
+    </div>
+  {% else %}
+    <div class="alert alert-info">Žádné články k dispozici</div>
+  {% endfor %}
+</div>
+{% endblock %}

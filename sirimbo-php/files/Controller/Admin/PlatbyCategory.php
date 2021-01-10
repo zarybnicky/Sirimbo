@@ -9,8 +9,8 @@ class PlatbyCategory
         \Render::twig('Admin/PlatbyStructureSymbol.twig', [
             'header' => 'Správa plateb',
             'subheader' => 'Specifické symboly',
-            'data' => static::getCategories(false),
-            'archived' => static::getCategories(true),
+            'data' => \DBPlatbyCategory::get(false),
+            'archived' => \DBPlatbyCategory::get(true),
         ]);
     }
 
@@ -39,29 +39,6 @@ class PlatbyCategory
             \DBPlatbyGroup::addChild($group['pg_id'], $insertId);
         }
         \Redirect::to('/admin/platby/structure/category');
-    }
-
-    protected static function getCategories($archived = false)
-    {
-        return array_map(
-            fn($item) => [
-                'name' => $item['pc_name'],
-                'symbol' => $item['pc_symbol'],
-                'amount' => ($item['pc_amount'] . ($item['pc_use_base'] ? ' * ?' : '')) . ' Kč',
-                'validDate' => \Format::range($item['pc_valid_from'], $item['pc_valid_to']),
-                'buttons' => implode('&nbsp;', [
-                    \Buttons::edit('/admin/platby/structure/category/edit/' . $item['pc_id']),
-                    \Utils::submit(
-                        '<img title="Duplikovat" alt="Duplikovat" src="/style/icon-files-o.png" />',
-                        'category_duplicate',
-                        $item['pc_id'],
-                        'btn btn-link btn-sm'
-                    ),
-                    \Buttons::delete('/admin/platby/structure/category/remove/' . $item['pc_id']),
-                ]),
-            ],
-            \DBPlatbyCategory::get($archived)
-        );
     }
 
     public static function add()
@@ -181,10 +158,7 @@ class PlatbyCategory
             $visible
         );
 
-        $groupsOld = array_map(
-            fn($item) => $item['pg_id'],
-            \DBPlatbyCategory::getSingleWithGroups($id)
-        );
+        $groupsOld = array_column(\DBPlatbyCategory::getSingleWithGroups($id), 'pg_id');
         $groupsNew = $_POST['group'] ?? [];
         foreach (array_diff($groupsOld, $groupsNew) as $removed) {
             \DBPlatbyGroup::removeChild($removed, $id);
@@ -210,9 +184,11 @@ class PlatbyCategory
                 'Nemůžu odstranit specifický symbol s připojenými kategoriemi nebo položkami! '
                 . '<form method="post">'
                 . (!$data['pc_archive']
-                   ? (\Utils::submit('Archivovat?', 'action', 'archive') . ' nebo ')
+                   ? '<button class="btn btn-primary" name="action" value="archive">Archivovat?</button> nebo '
                    : '')
-                . \Utils::submit('Odstranit všechna spojení se skupinami a kategoriemi a přesunout ovlivněné platby do nezařazených?', 'action', 'unlink')
+                . '<button class="btn btn-primary" name="action" value="unlink">'
+                . 'Odstranit všechna spojení se skupinami a kategoriemi a přesunout ovlivněné platby do nezařazených?'
+                . '</button>'
             );
         }
         \Render::twig('Admin/PlatbyStructureSymbolRemove.twig', [
@@ -286,28 +262,13 @@ class PlatbyCategory
 
     protected static function displayForm($action, $id = 0)
     {
-        $groupsSelected = array_flip(
-            array_map(
-                fn($item) => $item['pg_id'],
-                \DBPlatbyCategory::getSingleWithGroups($id)
-            )
-        );
-        $groups = array_map(
-            fn($item) => [
-                'buttons' => \Utils::checkbox('group[]', $item['pg_id'], isset($groupsSelected[$item['pg_id']])),
-                'type' => ($item['pg_type'] == '1' ? 'Členské příspěvky' : 'Běžné platby'),
-                'name' => $item['pg_name'],
-                'base' => $item['pg_base']
-            ],
-            \DBPlatbyGroup::getGroups()
-        );
-
         \Render::twig('Admin/PlatbyStructureSymbolForm.twig', [
             'header' => 'Správa plateb',
             'subheader' => ($action == 'add' ? 'Přidat' : 'Upravit') . ' specifický symbol',
             'id' => $id,
             'action' => $action,
-            'groups' => $groups,
+            'groups' => \DBPlatbyGroup::getGroups(),
+            'groupsSelected' => array_flip(array_column(\DBPlatbyCategory::getSingleWithGroups($id), 'pg_id')),
             'returnURI' => $_SERVER['HTTP_REFERER'],
             'name' => $_POST['name'] ?? '',
             'symbol' => $_POST['symbol'] ?? '',

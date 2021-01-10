@@ -5,14 +5,35 @@
   <form action="" method="POST">
     <a href="/admin/rozpis/add" class="btn btn-primary">Nový rozpis</a>
     <button class="btn btn-outline-primary" name="action" value="save">Uložit změny</button>
-    {{ table(data, [
-        ['buttons', ''],
-        ['links', 'Upravit'],
-        ['fullName', 'Trenér'],
-        ['datum', 'Datum'],
-        ['kde', 'Místo'],
-        ['visible', 'Viditelný'],
-    ], ' style="width:100%"') }}
+    <table>
+      <tr>
+        <th>Trenér</th>
+        <th>Datum</th>
+        <th>Místo</th>
+        <th>Viditelný</th>
+      </tr>
+      {% for row in data %}
+        <tr>
+          <td>
+            <div class="btn-group">
+              <button type="button" class="btn btn-xs pt-0" data-toggle="dropdown">
+                <img alt="Upravit" width="14" src="/style/icon-gear.png" />
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="/admin/rozpis/edit/{{ row.id }}">Upravit</a>
+                <a class="dropdown-item" href="/admin/rozpis/detail/{{ row.id }}">Upravit lekce</a>
+                <a class="dropdown-item" href="/admin/rozpis/duplicate/{{ row.id }}">Duplikovat</a>
+                <a class="dropdown-item" href="/admin/rozpis/remove/{{ row.id }}">Odstranit</a>
+              </div>
+            </div>
+            {{ row.fullName }}
+          </td>
+          <td>{{ row.date | date('j. n. Y') }}</td>
+          <td>{{ row.kde }}</td>
+          <td>{{ checkbox(row.id, '1', row.visible) }}</td>
+        </tr>
+      {% endfor %}
+    </table>
   </form>
 </div>
 {% endblock %}

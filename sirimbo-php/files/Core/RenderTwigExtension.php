@@ -5,22 +5,11 @@ use \Twig\TwigFunction;
 
 class RenderTwigExtension extends \Twig\Extension\AbstractExtension
 {
-    public function getFilters()
-    {
-        return [
-            new TwigFilter('time', '\\Format::time'),
-            new TwigFilter('timestamp', '\\Format::timestamp'),
-        ];
-    }
-
     public function getFunctions()
     {
         return [
             new TwigFunction('text', '\\Utils::text', ['is_safe' => ['html']]),
-            new TwigFunction('date', '\\Utils::date', ['is_safe' => ['html']]),
             new TwigFunction('radio', '\\Utils::radio', ['is_safe' => ['html']]),
-            new TwigFunction('table', '\\Utils::table', ['is_safe' => ['html']]),
-            new TwigFunction('notice', '\\Utils::notice', ['is_safe' => ['html']]),
             new TwigFunction('select', '\\Utils::select', ['is_safe' => ['html']]),
             new TwigFunction('checkbox', '\\Utils::checkbox', ['is_safe' => ['html']]),
             new TwigFunction('dateRange', '\\Utils::dateRange', ['is_safe' => ['html']]),

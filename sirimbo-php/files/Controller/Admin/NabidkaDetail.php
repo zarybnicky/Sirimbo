@@ -11,32 +11,20 @@ class NabidkaDetail
             \Redirect::to('/admin/nabidka');
         }
         \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
-
-        $users = \DBPary::getPartners();
- 
-        $items = array_map(fn($item) => [
-            'user' => \Utils::userSelect($users, $item['ni_id'] . '-partner', $item['ni_partner'], 'p_id'),
-            'lessonCount' => \Utils::text($item['ni_id'] . '-hodiny', $item['ni_pocet_hod'], ['size' => 1]),
-            'removeButton' => \Utils::submit('Odstranit', 'remove', $item['ni_id'])
-        ], \DBNabidka::getNabidkaItem($id));
-        $items[] = [
-            'user' => \Utils::userSelect($users, 'add_partner', null, 'p_id'),
-            'lessonCount' => \Utils::text('add_hodiny', '', ['size' => 1]),
-            'removeButton' => \Utils::submit('Přidat')
-        ];
+        $items = \DBNabidka::getNabidkaItem($id);
         \Render::twig('Admin/NabidkaDetail.twig', [
             'header' => 'Správa nabídky',
             'nabidka' => [
                 'id' => $data['n_id'],
-                'fullName' => $data['u_jmeno'] . ' ' . $data['u_prijmeni'],
+                'fullName' => "{$data['u_jmeno']} {$data['u_prijmeni']}",
                 'date' => $data['n_od'],
                 'dateEnd' => $data['n_do'],
                 'hourMax' => $data['n_max_pocet_hod'],
                 'hourTotal' => $data['n_pocet_hod'],
                 'hourReserved' => \DBNabidka::getNabidkaItemLessons($id),
-                'canEdit' => false,
+                'canEdit' => true,
             ],
-            'users' => $users,
+            'users' => \DBPary::getPartners(array_column($items, 'p_id')),
             'items' => $items,
             'backlink' => $_SERVER['HTTP_REFERER']
         ]);
@@ -75,7 +63,6 @@ class NabidkaDetail
                 \DBNabidka::editNabidkaItem($item["ni_id"], $partnerNew, $countNew);
             }
         }
-        $items = \DBNabidka::getNabidkaItem($id);
         $obsazeno = \DBNabidka::getNabidkaItemLessons($id);
 
         if (is_numeric($_POST["add_hodiny"] ?? null) &&
@@ -89,10 +76,7 @@ class NabidkaDetail
             }
 
             \DBNabidka::addNabidkaItemLessons($_POST["add_partner"], $id, $count);
-            $items = \DBNabidka::getNabidkaItem($id);
             $obsazeno = \DBNabidka::getNabidkaItemLessons($id);
-            unset($_POST['add_partner']);
-            unset($_POST['add_hodiny']);
         }
 
         //-----Dorovnávání skutečného a nastaveného počtu hodin-----//
@@ -107,7 +91,6 @@ class NabidkaDetail
                 $data['n_visible'],
                 ($data["n_lock"]) ? 1 : 0
             );
-            $data = \DBNabidka::getSingleNabidka($id);
         }
         \Redirect::to('/admin/nabidka/detail/' . $id);
     }

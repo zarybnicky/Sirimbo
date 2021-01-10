@@ -8,7 +8,7 @@
       <table>
         <tr>
           <td>uživatel</td>
-          <td>{{ selectAssoc('user', users, 'id', 'text', user ? user : 'all') }}</td>
+          <td>{{ userSelect(users, 'user', user ? user : 'all') }}</td>
         </tr>
         <tr>
           <td>spec. symbol</td>
@@ -27,13 +27,41 @@
     </form>
     <br/>
     <form action="" method="POST">
-      {{ table(data, [
-          ['buttons', ''],
-          ['amount', 'Částka', ' class="r"'],
-          ['date', 'Datum'],
-          ['fullName', 'Uživatel'],
-          ['category', 'Kategorie'],
-      ], ' style="width:100%"') }}
+      <table class="w-100">
+        <tr>
+          <th>Částka</th>
+          <th>Datum</th>
+          <th>Uživatel</th>
+          <th>Kategorie</th>
+        </tr>
+        {% for row in data %}
+          <tr>
+            <td>
+              <div class="btn-group">
+                <button type="button" class="btn btn-xs pt-0" data-toggle="dropdown">
+                  <img alt="Upravit" width="14" src="/style/icon-gear.png" />
+                </button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="/admin/platby/items/edit/{{ row.pi_id }}">Upravit</a>
+                  <a class="dropdown-item" href="/admin/platby/items/remove/{{ row.pi_id }}">Odstranit</a>
+                </div>
+              </div>
+              {{ row.pi_amount }} Kč
+            </td>
+            <td>{{ row.pi_date | date('j. n. Y') }}</td>
+            <td>
+              <a href="/admin/platby/items?user={{ row.u_id }}">
+                {{ row.u_jmeno }} {{ row.u_prijmeni }}
+              </a>
+            </td>
+            <td>
+              <a href="/admin/platby/items?category={{ row.pc_id }}">
+                {{ row.pc_name }}
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
     </form>
 </div>
 {% endblock %}

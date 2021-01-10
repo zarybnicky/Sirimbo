@@ -3,15 +3,22 @@
 {% block content %}
 <div class="container">
   <form action="" method="POST">
-    {{ table(data, [
-        ['buttons', '', ' style="width:90px"'],
-        ['fullNameMan', 'Partner', ''],
-        ['fullNameWoman', 'Partnerka', ''],
-        ['standard', 'Standard', ''],
-        ['latina', 'Latina', ''],
-        ['hodnoceni', 'Body', '']
-    ]) }}
+    {% for row in data %}
+      <div>
+        <div class="btn-group">
+          <button type="button" class="btn btn-xs pt-0" data-toggle="dropdown">
+            <img alt="Upravit" width="14" src="/style/icon-gear.png" />
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="/admin/pary/remove/{{ row.p_id }}">Odstranit</a>
+          </div>
+        </div>
+        {{ row.man_surname }}, {{ row.man_name }}
+        {% if row.woman %}- {{ row.woman_surname }}, {{ row.woman_name }}{% endif %}
+      </div>
+    {% endfor %}
     <br/>
+
     <h2>Nový pár</h2>
     Partner: {{ userSelect(usersMen, 'add_partner') }}<br/>
     Partnerka: {{ userSelect(usersWomen, 'add_partnerka') }}<br/>

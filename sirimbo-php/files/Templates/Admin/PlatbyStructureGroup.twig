@@ -3,11 +3,20 @@
 {% block content %}
   {% include 'Admin/PlatbyNavigation.twig' %}
   <div class="container">
-    <a href="/admin/platby/structure/group/add">Přidat kategorii</a>
-    {{ table(data, [
-        ['buttons', '', ' style="width:70px"'],
-        ['name', 'Název'],
-        ['type', 'Typ platby'],
-    ], ' style="width:100%"') }}
+    <a class="btn btn-primary" href="/admin/platby/structure/group/add">Přidat kategorii</a>
+    {% for row in data %}
+      <div class="pt-1">
+        <div class="btn-group">
+          <button type="button" class="btn btn-xs pt-0" data-toggle="dropdown">
+            <img alt="Upravit" width="14" src="/style/icon-gear.png" />
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="/admin/platby/structure/group/edit/{{ row.pg_id }}">Upravit</a>
+            <a class="dropdown-item" href="/admin/platby/structure/group/remove/{{ row.pg_id }}">Odstranit</a>
+          </div>
+        </div>
+        {{ row.pg_name }} ({{ row.pg_type ? 'Členské příspěvky' : 'Běžné platby' }})
+      </div>
+    {% endfor %}
   </div>
 {% endblock %}

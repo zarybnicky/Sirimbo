@@ -11,17 +11,10 @@ class RozpisDetail
             \Redirect::to('/admin/rozpis');
         }
         \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
-        $users = \DBPary::getPartners();
-        $items = array_map(
-            fn($item) => [
-                'id' => $item['ri_id'],
-                'partner' => $item['ri_partner'],
-                'timeFrom' => $item['ri_od'],
-                'timeTo' => $item['ri_do'],
-                'lock' => (bool) $item['ri_lock']
-            ],
-            \DBRozpis::getRozpisItem($id),
-        );
+        $items = \DBRozpis::getRozpisItem($id);
+        $currentCouples = array_column($items, 'p_id');
+        $users = \DBPary::getPartners($currentCouples);
+
         $data = [
             'id' => $data['r_id'],
             'date' => $data['r_datum'],
@@ -43,10 +36,9 @@ class RozpisDetail
         $nabidky_select = [];
         foreach ($nabidky as $item) {
             $nabidky_select[$item['n_id']] =
-                \Format::date($item['n_od']) .
+                date('j. n. Y', strtotime($item['n_od'])) .
                 (($item['n_od'] != $item['n_do']) ?
-                 (' - ' . \Format::date($item['n_do'])) :
-                 '') .
+                 (' - ' . date('j. n. Y', strtotime($item['n_do']))) : '') .
                 " - {$item['u_jmeno']} {$item['u_prijmeni']}";
         }
 
@@ -99,7 +91,7 @@ class RozpisDetail
 
     protected static function processPost($id, $data, $items)
     {
-        if ($_POST['remove'] > 0) {
+        if (($_POST['remove'] ?? null) > 0) {
             \DBRozpis::removeRozpisItem($_POST['remove']);
             $items = \DBRozpis::getRozpisItem($id);
         }

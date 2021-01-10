@@ -14,17 +14,11 @@ class DBDokumenty extends Database
 
     public static function getMultipleById($ids)
     {
-        list($ids) = self::escape($ids);
-        if (empty($ids)) {
-            return [];
-        }
-
-        $query = 'SELECT *
-            FROM dokumenty
+        $res = self::query(
+            'SELECT * FROM dokumenty
             LEFT JOIN users ON d_kdo=u_id
-            WHERE d_id IN (\'' . implode('\',\'', $ids) . '\')';
-
-        $res = self::query($query);
+            WHERE d_id IN (\'' . implode('\',\'', array_filter($ids)) . '\')'
+        );
         return self::getArray($res);
     }
 

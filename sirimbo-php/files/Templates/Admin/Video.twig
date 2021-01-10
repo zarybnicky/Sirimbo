@@ -20,18 +20,41 @@
   </ul>
   <a class="btn btn-primary" href="/admin/video/add">Nové video</a>
   <form action="" method="post">
-    {% if data %}
-      {{ table(data, [
-          ['buttons', '', ' style="width:55px"'],
-          ['title', 'Jméno'],
-          ['uri', 'ID videa'],
-          ['created', 'Přidáno', ' style="width:100px"'],
-      ], ' style="width:100%"') }}
+    {% if not data %}
+      <div class="alert alert-info">Žádná videa</div>
     {% else %}
-      {{ notice('Žádná videa') }}
+      <table style="width:100%">
+        <tr>
+          <th>Jméno</th>
+          <th>ID videa</th>
+          <th>Přidáno</th>
+        </tr>
+        {% for row in data %}
+          <tr>
+            <td>
+              {% if row.type == 'video' %}
+                <div class="btn-group">
+                  <button type="button" class="btn btn-xs pt-0" data-toggle="dropdown">
+                    <img alt="Upravit" width="14" src="/style/icon-gear.png" />
+                  </button>
+                  <div class="dropdown-menu">
+                    <a class="dropdown-item" href="/admin/video/edit/{{ row.id }}">Upravit</a>
+                    <a class="dropdown-item" href="/admin/video/remove/{{ row.id }}">Odstranit</a>
+                  </div>
+                </div>
+                {{ row.title }}
+              {% else %}
+                <a href="/admin/video/playlist/{{ row.id }}">{{ row.title }}</a>
+              {% endif %}
+            </td>
+            <td>{{ row.uri }}</td>
+            <td style="width:100px">{{ row.created | timestamp(true) }}</td>
+          </tr>
+        {% endfor %}
+      </table>
     {% endif %}
   </form>
-  <div style="text-align:center">{{ navigation | raw }}</div>
+  <div class="text-center">{{ navigation | raw }}</div>
 </div>
 {% endblock %}
 

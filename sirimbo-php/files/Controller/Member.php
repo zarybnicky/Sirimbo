@@ -14,38 +14,25 @@ class Member
     public static function get()
     {
         \Permissions::checkError('nastenka', P_VIEW);
-
         $pager = new \Paging(new \DBNastenka());
         $pager->setCurrentPage($_GET['p'] ?? null);
         $pager->setItemsPerPage($_GET['c'] ?? null);
         $pager->setDefaultItemsPerPage(10);
-        $data = $pager->getItems();
-
-        if (empty($data)) {
-            \Render::twig('Empty.twig', [
-                'header' => 'Upozornění',
-                'notice' => 'Žádná upozornění nejsou k dispozici'
-            ]);
-            return;
-        }
-
-        $data = array_map(
-            fn($item) => [
-                'id' => $item['up_id'],
-                'nadpis' => $item['up_nadpis'],
-                'canEdit' => \Permissions::check('nastenka', P_OWNED, $item['up_kdo']),
-                'skupinyBoxes' => \DBNastenka::getNastenkaSkupiny($item['up_id']),
-                'addedBy' => "{$item['u_jmeno']} {$item['u_prijmeni']}",
-                'addedTimestamp' => $item['up_timestamp_add'],
-                'text' => stripslashes($item['up_text'])
-            ],
-            $data
-        );
-
         \Render::twig('Member/Nastenka.twig', [
             'header' => 'Upozornění',
-            'data' => $data,
-            'navigation' => $pager->getNavigation()
+            'navigation' => $pager->getNavigation(),
+            'data' => array_map(
+                fn($item) => [
+                    'id' => $item['up_id'],
+                    'nadpis' => $item['up_nadpis'],
+                    'canEdit' => \Permissions::check('nastenka', P_OWNED, $item['up_kdo']),
+                    'skupinyBoxes' => \DBNastenka::getNastenkaSkupiny($item['up_id']),
+                    'addedBy' => "{$item['u_jmeno']} {$item['u_prijmeni']}",
+                    'addedTimestamp' => $item['up_timestamp_add'],
+                    'text' => stripslashes($item['up_text'])
+                ],
+                $pager->getItems(),
+            ),
         ]);
     }
 

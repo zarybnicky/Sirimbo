@@ -3,7 +3,6 @@
 {% block content %}
 <div class="container">
   <form action="" method="POST">
-    <button type="submit" style="display:none;">Enter</button>
     <div class="form-group row">
       <label for="trener" class="col-sm-2 col-form-label">Trenér:</label>
       <div class="col-sm-10">
@@ -13,26 +12,26 @@
     <div class="form-group row">
       <label for="pocet_hod" class="col-sm-2 col-form-label">Počet hodin:</label>
       <div class="col-sm-10">
-        {{ text('pocet_hod', pocet_hod) }}
+        <input class="form-control" type="text" name="pocet_hod" value="{{ pocet_hod }}" />
       </div>
     </div>
     <div class="form-group row">
       <label for="max_pocet_hod" class="col-sm-2 col-form-label">Max. počet hodin/pár:</label>
       <div class="col-sm-10">
-        {{ text('max_pocet_hod', max_pocet_hod) }}
+        <input class="form-control" type="text" name="max_pocet_hod" value="{{ max_pocet_hod }}" />
         <small class="form-text text-muted">"0" = neomezeně</small>
       </div>
     </div>
     <div class="form-group row">
       <label for="od" class="col-sm-2 col-form-label">Od:</label>
       <div class="col-sm-10">
-        {{ date('od', od) }}
+        <input class="form-control" type="date" name="od" value="{{ od }}" />
       </div>
     </div>
     <div class="form-group row">
       <label for="do" class="col-sm-2 col-form-label">Do:</label>
       <div class="col-sm-10">
-        {{ date('do', do) }}
+        <input class="form-control" type="date" name="do" value="{{ do }}" />
         <small class="form-text text-muted">(pokud je prázdné, počítá se jako "Od")</small>
       </div>
     </div>

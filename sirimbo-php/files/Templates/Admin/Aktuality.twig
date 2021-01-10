@@ -4,12 +4,30 @@
   <div class="container">
     <form action="" method="POST">
       <a href="/admin/aktuality/add" class="btn btn-primary">Nový článek</a>
-      {{ table(data, [
-          ['buttons', '', ''],
-          ['links', 'Upravit', ''],
-          ['name', 'Jméno', ''],
-          ['added', 'Přidán dne', '']
-      ]) }}
+      <table>
+        <tr>
+          <th>Jméno</th>
+          <th>Přidáno</th>
+        </tr>
+        {% for row in data %}
+          <tr>
+            <td>
+              <div class="btn-group">
+                <button type="button" class="btn btn-xs pt-0" data-toggle="dropdown">
+                  <img alt="Upravit" width="14" src="/style/icon-gear.png" />
+                </button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="/admin/aktuality/edit/{{ row.at_id }}">Upravit</a>
+                  <a class="dropdown-item" href="/admin/aktuality/foto/{{ row.at_id }}">Upravit fotky</a>
+                  <a class="dropdown-item" href="/admin/aktuality/remove/{{ row.at_id }}">Odstranit</a>
+                </div>
+              </div>
+              {{ row.at_jmeno }}
+            </td>
+            <td>{{ row.at_timestamp_add | date('j. n. Y H:i') }}</td>
+          </tr>
+        {% endfor %}
+      </table>
     </form>
   </div>
 {% endblock %}

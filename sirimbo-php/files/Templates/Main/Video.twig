@@ -51,19 +51,22 @@
       </div>
       <div class="col">
         <b>{{ item.title }}</b><br>
-        {{ item.date|timestamp(true) }}
+        {{ item.date | date('j. n. Y') }}
       </div>
     </a>
   {% endfor %}
 
   {% if videos %}<h3>Seznamy videí</h3>{% endif %}
   {% for item in playlists %}
-    <div class="playlist {{ (playlist == item.id) ? 'active' : '' }}">
-      <a href="/video?playlist={{ item.id }}">
-        <b>{{ item.title }}</b>
+    <div class="playlist {{ (playlist == item.vl_id) ? 'active' : '' }}">
+      <a href="/video?playlist={{ item.vl_id }}">
+        <b>{{ item.vl_title }}</b>
       </a>
     </div>
   {% endfor %}
+  <div class="playlist {{ playlist == 'other' ? 'active' : '' }}">
+    <a href="/video?playlist=other"><b>Nezařazená videa</b></a>
+  </div>
 
 </div>
 <div id="video-popup" style="display:none"></div>

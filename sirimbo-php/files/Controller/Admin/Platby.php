@@ -55,39 +55,10 @@ class Platby
         \Render::twig('Admin/PlatbyStructure.twig', [
             'header' => 'Správa plateb',
             'subheader' => 'Struktura plateb',
-            'data' => array_map(
-                fn($item) => (strpos($item[0], 'group_') !== false)
-                ? [
-                    'name' => "<span class=\"big\" style=\"text-decoration:underline\">{$item[1]['pg_name']}</span>",
-                    'buttons' => \Buttons::platbyGroup($item[1]['pg_id']),
-                ]
-                : [
-                    'name' => "&nbsp;- {$item[1]['pc_name']} ({$item[1]['pc_symbol']})",
-                    'buttons' => \Buttons::platbyCategory($item[1]['pc_id']),
-                ],
-                static::getCategoryList()
-            ),
-            'orphanGroupSkupina' => array_map(
-                fn($item) => [
-                    'name' => $item['pg_name'],
-                    'buttons' => \Buttons::platbyGroup($item['pg_id']),
-                ],
-                \DBPlatbyGroup::getWithoutSkupina()
-            ),
-            'orphanGroupCategory' => array_map(
-                fn($item) => [
-                    'name' => $item['pg_name'],
-                    'buttons' => \Buttons::platbyGroup($item['pg_id']),
-                ],
-                \DBPlatbyGroup::getWithoutCategory()
-            ),
-            'orphanCategory' => array_map(
-                fn($item) => [
-                    'name' => $item['pc_name'],
-                    'buttons' => \Buttons::platbyCategory($item['pc_id']),
-                ],
-                \DBPlatbyCategory::getOrphan()
-            ),
+            'data' => \DBPlatbyGroup::getGroupsWithCategories(),
+            'orphanGroupSkupina' => \DBPlatbyGroup::getWithoutSkupina(),
+            'orphanGroupCategory' => \DBPlatbyGroup::getWithoutCategory(),
+            'orphanCategory' => \DBPlatbyCategory::getOrphan(),
         ]);
     }
 
@@ -118,36 +89,19 @@ class Platby
             && isset($headers[$amount]);
     }
 
-    public static function getCategoryList()
-    {
-        $in = \DBPlatbyGroup::getGroupsWithCategories();
-        $out = [];
-        $group_id = 0;
-        foreach ($in as $array) {
-            if ($group_id != $array['pg_id'] && !isset($out['group_' . $array['pg_id']])) {
-                $out[] = ['group_' . $array['pg_id'], $array];
-                $group_id = $array['pg_id'];
-            }
-            $out[] = [$array['pc_id'], $array];
-        }
-        return $out;
-    }
-
     public static function getCategoryLookup($useSymbolKey, $unique, $includeGroups)
     {
-        $in = \DBPlatbyGroup::getGroupsWithCategories();
         $out = [];
         $group_id = 0;
-        foreach ($in as $array) {
+        foreach (\DBPlatbyGroup::getGroupsWithCategories() as $array) {
             if ($includeGroups && $group_id != $array['pg_id'] && !isset($out['group_' . $array['pg_id']])) {
                 $out['group_' . $array['pg_id']] = $array;
                 $group_id = $array['pg_id'];
             }
             $key = (int) ($useSymbolKey ? $array['pc_symbol'] : $array['pc_id']);
-            if ($unique && isset($out[$key])) {
-                continue;
+            if (!$unique || !isset($out[$key])) {
+                $out[$key] = $array;
             }
-            $out[$key] = $array;
         }
         return $out;
     }

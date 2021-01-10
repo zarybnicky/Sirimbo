@@ -16,32 +16,18 @@ class PlatbyItems
             $filter['pg_id'] = substr($_GET['category'], 6);
         }
 
-        $date = new \DateHelper('date', $_GET['date']);
-        $data = array_map(
-            fn($item) => [
-                'buttons' => \Buttons::platbyItem($item['pi_id']),
-                'fullName' => "{$item['u_prijmeni']}, {$item['u_jmeno']}",
-                'category' => $item['pc_name'],
-                'date' => (new \Date($item['pi_date']))->getHumanDate(),
-                'amount' => $item['pi_amount'] . ' Kč'
-            ],
-            \DBPlatbyItem::get(
+        $date = new \DateHelper('date', $_GET['date'] ?? null);
+        \Render::twig('Admin/PlatbyItems.twig', [
+            'header' => 'Správa plateb',
+            'subheader' => 'Jednotlivé platby',
+            'users' => [['u_id' => 'all', 'u_prijmeni' => '---', 'u_jmeno' => '']] + \DBUser::getUsers(),
+            'categories' => ['all' => '---'] + static::getCategories(),
+            'data' => \DBPlatbyItem::get(
                 true,
                 $filter,
                 ['pi_date DESC'],
                 ['from' => $date->getFromDate(), 'to' => $date->getToDate()]
             ),
-        );
-
-        \Render::twig('Admin/PlatbyItems.twig', [
-            'header' => 'Správa plateb',
-            'subheader' => 'Jednotlivé platby',
-            'users' => [['id' => 'all', 'text' => '---']] + array_map(fn($x) => [
-                'id' => $x['u_id'],
-                'text' => "{$x['u_prijmeni']}, {$x['u_jmeno']}"
-            ], \DBUser::getUsers()),
-            'categories' => ['all' => '---'] + static::getCategories(),
-            'data' => $data,
             'user' => $_GET['user'] ?? '',
             'category' => $_GET['category'] ?? '',
             'date' => $_GET['date'] ?? ''
@@ -161,7 +147,10 @@ class PlatbyItems
             'id' => $id,
             'raw' => $raw,
             'users' => array_map(
-                fn($x) => \User::varSymbol($x['u_id']) . " - {$x['u_prijmeni']}, {$x['u_jmeno']}",
+                function ($x) {
+                    $u = \User::fromArray($x);
+                    return "{$u->getVarSymbol()} - {$x['u_prijmeni']}, {$x['u_jmeno']}";
+                },
                 Platby::getUserLookup(true),
             ),
             'categories' => static::getCategories(),

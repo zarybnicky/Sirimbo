@@ -8,14 +8,14 @@
         <div class="widget">
 
           {% if item.type == 'schedule' %}
-            <div class="widget-title center">
+            <div class="widget-title text-center">
               {% include 'Member/RozpisHeader.twig' with {'item': item} %}
             </div>
             <div class="widget-content">
               {% for lesson in item.items %}
                 <form class="row mx-auto mb-1 no-gutters" action="" method="post">
                   <input type='hidden' name='ri_id' value='{{ lesson.id }}'>
-                  <div class="col-4">{{ lesson.timeFrom|time }}-{{ lesson.timeTo|time }}</div>
+                  <div class="col-4">{{ lesson.timeFrom | date('H:i') }}-{{ lesson.timeTo | date('H:i') }}</div>
                   <div class="col-8">
                     {{ lesson.fullName }}
                     {% if lesson.canReserve %}
@@ -29,7 +29,7 @@
             </div>
 
           {% elseif item.type == 'reservation' %}
-            <div class="widget-title center">
+            <div class="widget-title text-center">
               {% include 'Member/NabidkaHeader.twig' with {'item': item} %}
             </div>
             <form class="widget-content" action="" method="post">
@@ -53,8 +53,8 @@
                 {% endfor %}
               </table>
               {% if item.canAdd %}
-                <div style="text-align:center;padding:10px 0 5px">
-                  {{ text('hodiny', '', {'placeholder':'Počet hodin', 'cls':'form-control d-inline w-auto'}) }}
+                <div class="form-inline text-center" style="padding:10px 0 5px">
+                  <input class="w-auto form-control" type="text" placeholder="Počet hodin" name="hodiny" />
                   <button class="btn btn-primary">Rezervovat</button>
                 </div>
               {% endif %}
@@ -63,6 +63,8 @@
 
         </div>
       </div>
+    {% else %}
+      <div class="alert alert-info">Žádné termíny tréninků nejsou vypsané.</div>
     {% endfor %}
   </div>
 </div>

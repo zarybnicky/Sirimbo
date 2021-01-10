@@ -5,13 +5,24 @@
   <h3>Určení požadovaných sloupců</h3>
   <div class="container">
     <form action="" method="post">
-      {{ table(data, [
-          ['column', 'Název sloupce', ' style="text-align:right"'],
-          ['specific', 'Specifický<br/>symbol', ' class="center"'],
-          ['variable', 'Variabilní<br/>symbol', ' class="center"'],
-          ['date', 'Datum platby', ' class="center"'],
-          ['amount', 'Částka', ' class="center"'],
-      ], ' style="width:100%"') }}
+      <table class="text-center">
+        <tr>
+          <td>Sloupec</td>
+          <td>Specifický<br>symbol</td>
+          <td>Variabilní<br>symbol</td>
+          <td>Datum platby</td>
+          <td>Částka</td>
+        </tr>
+        {% for row in data %}
+          <tr>
+            <td class="text-right">{{ row }}</td>
+            <td>{{ radio('specific', name, name == recognized.specific) }}</td>
+            <td>{{ radio('variable', name, name == recognized.variable) }}</td>
+            <td>{{ radio('date', name, name == recognized.date) }}</td>
+            <td>{{ radio('amount', name, name == recognized.amount) }}</td>
+          </tr>
+        {% endfor %}
+      </table>
       <button name="action" value="confirm">Odeslat</button>
     </form>
   </div>

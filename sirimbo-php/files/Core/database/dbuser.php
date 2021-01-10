@@ -200,24 +200,24 @@ class DBUser extends Database implements Pagable
             $street, $popisne, $orientacni, $district, $city, $postal, $nationality,
             $group, $skupina, $lock, $ban, $confirmed, $system, $dancer, $trener
         );
-        $uid = self::getInsertId();
-        self::query("INSERT INTO pary (p_id_partner, p_id_partnerka) VALUES ('$uid', '0')");
+        self::query(
+            "INSERT INTO pary (p_id_partner, p_id_partnerka) VALUES ('?', '0')",
+            self::getInsertId(),
+        );
         return true;
     }
 
     public static function removeUser($id)
     {
-        list($id) = self::escape($id);
-
-        self::query("DELETE FROM users WHERE u_id='$id'");
-        self::query("DELETE FROM rozpis WHERE r_trener='$id'");
-        self::query("DELETE FROM rozpis_item WHERE ri_partner='$id'");
-        self::query("DELETE FROM nabidka WHERE n_trener='$id'");
-        self::query("DELETE FROM nabidka_item WHERE ni_partner='$id'");
-        self::query("DELETE FROM akce_item WHERE ai_user='$id'");
+        self::query("DELETE FROM users WHERE u_id='?'", $id);
+        self::query("DELETE FROM rozpis WHERE r_trener='?'", $id);
+        self::query("DELETE FROM rozpis_item WHERE ri_partner='?'", $id);
+        self::query("DELETE FROM nabidka WHERE n_trener='?'", $id);
+        self::query("DELETE FROM nabidka_item WHERE ni_partner='?'", $id);
+        self::query("DELETE FROM akce_item WHERE ai_user='?'", $id);
 
         DBPary::noPartner($id);
-        self::query("DELETE FROM pary WHERE p_id_partner='$id' AND p_archiv='0'");
+        self::query("DELETE FROM pary WHERE p_id_partner='?' AND p_archiv='0'", $id);
 
         return true;
     }
@@ -235,12 +235,11 @@ class DBUser extends Database implements Pagable
 
     public static function getUsersByPohlavi($pohlavi)
     {
-        list($pohlavi) = self::escape($pohlavi);
-
         $res = self::query(
             "SELECT * FROM users
                 LEFT JOIN skupiny ON users.u_skupina=skupiny.s_id
-            WHERE u_pohlavi='$pohlavi' ORDER BY u_prijmeni"
+            WHERE u_pohlavi='?' ORDER BY u_prijmeni",
+            $pohlavi
         );
         return self::getArray($res);
     }
@@ -276,13 +275,13 @@ class DBUser extends Database implements Pagable
 
     public static function getUsersByPermission($module, $permission)
     {
-        list($module, $permission) = self::escape($module, $permission);
         $res = self::query(
             "SELECT users.*, skupiny.* FROM users
                 LEFT JOIN permissions ON u_group=pe_id
                 LEFT JOIN skupiny ON u_skupina=s_id
-            WHERE pe_$module >= '$permission'
-            ORDER BY u_prijmeni"
+            WHERE pe_$module >= '?'
+            ORDER BY u_prijmeni",
+            $permission,
         );
         return self::getArray($res);
     }
@@ -325,7 +324,7 @@ class DBUser extends Database implements Pagable
         $res = self::query(
             "SELECT u1.*,skupiny.* FROM users u1
                 LEFT JOIN skupiny ON u1.u_skupina=skupiny.s_id
-            WHERE u_banconfirmed='0' ORDER BY u_prijmeni"
+            WHERE u_confirmed='0' ORDER BY u_prijmeni"
         );
         return self::getArray($res);
     }
@@ -344,8 +343,9 @@ class DBUser extends Database implements Pagable
     public static function getGroupCounts()
     {
         $res = self::query(
-            "SELECT u_group,count(*) as count,permissions.*
-            FROM users LEFT JOIN permissions ON u_group=pe_id group by u_group"
+            "SELECT u_group, count(*) as count, permissions.*
+            FROM permissions LEFT JOIN users ON u_group=pe_id
+            GROUP BY u_group ORDER BY count DESC"
         );
         return self::getArray($res);
     }

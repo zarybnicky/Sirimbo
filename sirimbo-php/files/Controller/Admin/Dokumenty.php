@@ -6,28 +6,19 @@ class Dokumenty
     public static $types = [
         '1' => 'Schůze, rady',
         '2' => 'Soutěže',
-        '3' => 'Tábory',
+        '3' => 'Soustředění',
         '0' => 'Ostatní',
     ];
 
     public static function list()
     {
         \Permissions::checkError('dokumenty', P_OWNED);
-        $data = array_map(
-            fn($item) => [
-                'buttons' => \Buttons::document($item['d_id']),
-                'link' => '<a href="/member/download?id=' . $item['d_id'] . '">' . $item['d_name'] . '</a>',
-                'name' => $item['d_filename'],
-                'category' => self::$types[$item['d_kategorie']],
-                'by' => $item['u_jmeno'] . ' ' . $item['u_prijmeni']
-            ],
-            \Permissions::check('dokumenty', P_ADMIN)
-            ? \DBDokumenty::getDokumenty()
-            : \DBDokumenty::getDokumentyByAuthor(\Session::getUser()->getId())
-        );
         \Render::twig('Admin/Dokumenty.twig', [
             'header' => 'Správa dokumentů',
-            'data' => $data,
+            'types' => self::$types,
+            'data' => \Permissions::check('dokumenty', P_ADMIN)
+            ? \DBDokumenty::getDokumenty()
+            : \DBDokumenty::getDokumentyByAuthor(\Session::getUser()->getId()),
         ]);
     }
 

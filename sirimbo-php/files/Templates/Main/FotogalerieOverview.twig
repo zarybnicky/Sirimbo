@@ -12,6 +12,8 @@
             <img alt="{{ item.id }}" src="{{ item.src }}" />
           </div>
         </a>
+      {% else %}
+        <div class="alert alert-info">Žádné fotky ve složce</div>
       {% endfor %}
     </div>
   </div>

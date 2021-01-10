@@ -14,7 +14,10 @@
       <tbody>
         {% for row in data %}
           <tr>
-            <td>{{ row.header | raw }}</td>
+            <td>
+              <div class="box" title="{{ row.description }}" style="background-color:{{ row.color }}">
+              </div>&nbsp;&nbsp;{{ row.name }}
+            </td>
             <td>{{ row.userCount }}</td>
             <td>{{ row.description }}</td>
           </tr>

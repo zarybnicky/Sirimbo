@@ -41,7 +41,7 @@
                   'am': item.amount,
                   'msg': user.fullName ~ ': ' ~ item.name,
                   'ss': item.symbol,
-                  'vs': varSymbol,
+                  'vs': user.varSymbol,
               } %}
               <img alt="" src="/api/qr-payment.png?{{ params | url_encode }}" />
             </div>
@@ -57,7 +57,7 @@
           <div class="row no-gutters">
             <div class="col-12 col-md-6">{{ item.amount }} Kč</div>
             <div class="col-6 col-md-3">SS: {{ item.symbol }}</div>
-            <div class="col-6 col-md-3 text-right">VS: {{ varSymbol }}</div>
+            <div class="col-6 col-md-3 text-right">VS: {{ user.varSymbol }}</div>
           </div>
           <div class="row no-gutters justify-content-between">
             <div class="col-12 order-2 order-md-1 col-md-auto">
@@ -86,7 +86,7 @@
           <div class="row no-gutters">
             <div class="col-12 col-md-6">{{ item.amount }} Kč</div>
             <div class="col-6 col-md-3">SS: {{ item.symbol }}</div>
-            <div class="col-6 col-md-3 text-right">VS: {{ varSymbol }}</div>
+            <div class="col-6 col-md-3 text-right">VS: {{ user.varSymbol }}</div>
           </div>
           <div class="row no-gutters justify-content-between">
             <div class="col-12 order-2 order-md-1 col-md-auto">

@@ -5,7 +5,7 @@ class DBVideo extends Database implements Pagable
     {
         switch ($options) {
             case 'orphan':
-                $filter = 'v_playlist IS NULL OR v_playlist="" ORDER BY v_created_at';
+                $filter = 'v_playlist IS NULL OR v_playlist="" ORDER BY v_created_at DESC';
                 break;
             case 'playlist':
                 $filter = 'v_playlist IS NOT NULL AND v_playlist<>"" ORDER BY v_playlist DESC';
@@ -63,7 +63,7 @@ class DBVideo extends Database implements Pagable
     {
         $res = self::query(
             "SELECT v_id, v_uri, v_title, v_author, v_description, v_playlist, v_created_at, v_updated_at
-            FROM video_list LEFT JOIN video ON vl_url=v_playlist
+            FROM video LEFT JOIN video_list ON vl_url=v_playlist
             WHERE vl_id='?'
             ORDER BY v_created_at DESC",
             $id

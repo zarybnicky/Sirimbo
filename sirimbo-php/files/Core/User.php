@@ -561,8 +561,8 @@ class User
         return sha1($fix . $passwd . $fix);
     }
 
-    public static function varSymbol(string $id): string
+    public function getVarSymbol(): string
     {
-        return str_pad($id, 6, '0', STR_PAD_LEFT);
+        return str_pad((string) $this->id, 6, '0', STR_PAD_LEFT);
     }
 }

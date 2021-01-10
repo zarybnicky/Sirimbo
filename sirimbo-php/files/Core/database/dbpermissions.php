@@ -9,9 +9,7 @@ class DBPermissions extends Database
 
     public static function getSingleGroup($id)
     {
-        list($id) = self::escape($id);
-
-        $res = self::query("SELECT * FROM permissions WHERE pe_id='$id'");
+        $res = self::query("SELECT * FROM permissions WHERE pe_id='?'", $id);
         return self::getSingleRow($res);
     }
 
@@ -28,11 +26,11 @@ class DBPermissions extends Database
         }
 
         $q = "INSERT INTO permissions (pe_name,pe_description";
-        foreach ($permissions as $key => $item) {
+        foreach (array_keys($permissions) as $key) {
             $q .= ',pe_' . $key;
         }
         $q .= ") VALUES ('$name','$description'";
-        foreach ($permissions as $key => $value) {
+        foreach ($permissions as $value) {
             $q .= ",'$value'";
         }
         $q .= ')';
@@ -65,9 +63,7 @@ class DBPermissions extends Database
 
     public static function removeGroup($id)
     {
-        list($id) = self::escape($id);
-
-        self::query("DELETE FROM permissions WHERE pe_id='$id'");
+        self::query("DELETE FROM permissions WHERE pe_id='?'", $id);
         return true;
     }
 }

@@ -11,11 +11,12 @@ class Akce
             \Redirect::to('/member/akce');
         }
         $data = static::_getRenderData($data);
-        unset($data['info']);
+        unset($data['a_info']);
         unset($data['dokumenty']);
         \Render::twig('Member/AkceSingle.twig', [
             'header' => 'Klubové akce',
             'data' => $data,
+            'items' => \DBAkce::getAkceItems($id),
         ]);
     }
 
@@ -41,45 +42,27 @@ class Akce
     public static function list()
     {
         \Permissions::checkError('akce', P_VIEW);
-        $data = \DBAkce::getAkce(true);
-        if (!$data) {
-            \Render::twig('Empty.twig', [
-                'header' => 'Klubové akce',
-                'notice' => 'Žádné akce nejsou k dispozici.'
-            ]);
-        } else {
-            \Render::twig('Member/Akce.twig', [
-                'header' => 'Klubové akce',
-                'akce' => array_map(fn($item) => static::_getRenderData($item), $data),
-            ]);
-        }
+        \Render::twig('Member/Akce.twig', [
+            'header' => 'Klubové akce',
+            'akce' => array_map(
+                fn($item) => static::_getRenderData($item),
+                \DBAkce::getAkce(true)
+            ),
+        ]);
     }
 
     private static function _getRenderData($data)
     {
         $items = \DBAkce::getAkceItems($data['a_id']);
-        $dokumenty = array_map(
-            fn($item) => ['id' => $item, 'name' => \DBDokumenty::getSingleDokument($item)['d_name']],
-            array_filter(explode(',', $data['a_dokumenty'])) ?? []
-        );
-
-        $out = [
-            'id' => $data['a_id'],
-            'jmeno' => $data['a_jmeno'],
-            'kde' => $data['a_kde'],
-            'datum' => \Format::date($data['a_od']) .
-                (($data['a_od'] != $data['a_do']) ? ' - ' . \Format::date($data['a_do']) : ''),
-            'kapacita' => $data['a_kapacita'],
-            'volno' => $data['a_kapacita'] - count($items),
-            'showForm' => \Permissions::check('akce', P_MEMBER) && !$data['a_lock'],
-            'canEdit' => \Permissions::check('akce', P_OWNED),
-            'info' => nl2br($data['a_info']),
-            'dokumenty' => $dokumenty,
-            'items' => $items
+        $showForm = \Permissions::check('akce', P_MEMBER) && !$data['a_lock'];
+        $signedUp = \DBAkce::isUserSignedUp($data['a_id'], \Session::getUser()->getId());
+        return $data + [
+            'reserved' => count($items),
+            'canEdit' => \Permissions::check('akce', P_OWNED, $data['a_id']),
+            'signOut' => $showForm && $signedUp,
+            'signIn' => $showForm && !$signedUp && $data['a_kapacita'] > count($items),
+            'dokumenty' => \DBDokumenty::getMultipleById(explode(',', $data['a_dokumenty'])),
         ];
-        $out['signOut'] = $out['showForm'] && \DBAkce::isUserSignedUp($out['id'], \Session::getUser()->getId());
-        $out['signIn'] = $out['showForm'] && !$out['signOut'] && $out['volno'] > 0;
-        return $out;
     }
 
     private static function checkData($data, $action): \Form

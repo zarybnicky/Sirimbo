@@ -17,8 +17,10 @@
     </li>
   </ul>
   <form action="" method="post">
-    {{ video1 }} {{ video2 }}<br>
-    {{ video3 }} {{ video4 }}<br>
+    {{ selectAssoc('video1', videos, 'v_id', 'v_title', video1) }}
+    {{ selectAssoc('video2', videos, 'v_id', 'v_title', video2) }}<br>
+    {{ selectAssoc('video3', videos, 'v_id', 'v_title', video3) }}
+    {{ selectAssoc('video4', videos, 'v_id', 'v_title', video4) }}<br>
     <button class="btn btn-primary">Uložit</button><br>
   </form>
 </div>

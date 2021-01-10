@@ -19,67 +19,6 @@ class ProfilPar
     const BONUS_A = 2160; //400*AMEND_B + BONUS_B
     const BONUS_M = 3240; //400*AMEND_A + BONUS_A
 
-    public static function body()
-    {
-        $user = \Session::getUser();
-        $par = \DBPary::getLatestPartner($user->getId(), $user->getGender());
-        \Render::twig('Member/ProfilCoupleData.twig', [
-            'header' => 'Změna třídy a bodů',
-            'stt_trida' => $par['p_stt_trida'],
-            'stt_body' => $par['p_stt_body'],
-            'stt_finale' => $par['p_stt_finale'],
-            'lat_trida' => $par['p_lat_trida'],
-            'lat_body' => $par['p_lat_body'],
-            'lat_finale' => $par['p_lat_finale']
-        ]);
-    }
-
-    public static function bodyPost()
-    {
-        $user = \Session::getUser();
-        $par = \DBPary::getLatestPartner($user->getId(), $user->getGender());
-
-        $form = static::checkData();
-        if (!$form->isValid()) {
-            \Message::warning($form->getMessages());
-            \Render::twig('Member/ProfilCoupleData.twig', [
-                'header' => 'Změna třídy a bodů',
-                'stt_trida' => $_POST['stt_trida'] ?? '',
-                'stt_body' => $_POST['stt_body'] ?? '',
-                'stt_finale' => $_POST['stt_finale'] ?? '',
-                'lat_trida' => $_POST['lat_trida'] ?? '',
-                'lat_body' => $_POST['lat_body'] ?? '',
-                'lat_finale' => $_POST['lat_finale'] ?? ''
-            ]);
-            return;
-        }
-        $stt_amend = constant('self::AMEND_' . $_POST['stt-trida']);
-        $stt_bonus = constant('self::BONUS_' . $_POST['stt-trida']);
-        $lat_amend = constant('self::AMEND_' . $_POST['lat-trida']);
-        $lat_bonus = constant('self::BONUS_' . $_POST['lat-trida']);
-
-        $stt_body_capped = $_POST['stt-body'] > 200 ? 200 : $_POST['stt-body'];
-        $lat_body_capped = $_POST['lat-body'] > 200 ? 200 : $_POST['lat-body'];
-
-        $hodnoceni
-            = ($stt_body_capped + 40 * $_POST['stt-finale']) * $stt_amend
-            + ($lat_body_capped + 40 * $_POST['lat-finale']) * $lat_amend
-            + $stt_bonus
-            + $lat_bonus;
-
-        \DBPary::editTridaBody(
-            $par['p_id'],
-            $_POST['stt-trida'],
-            $_POST['stt-body'],
-            $_POST['stt-finale'],
-            $_POST['lat-trida'],
-            $_POST['lat-body'],
-            $_POST['lat-finale'],
-            $hodnoceni
-        );
-        \Redirect::to("/member/profil");
-    }
-
     public static function partner()
     {
         $user = \Session::getUser();
@@ -156,34 +95,6 @@ class ProfilPar
         }
         \Message::warning('Žádná taková žádost tu není');
         \Redirect::to('/member/profil');
-    }
-
-    public static function pary()
-    {
-        \Permissions::checkError('pary', P_VIEW);
-        $data = \DBPary::getActiveParyByHodnoceni();
-        if (empty($data)) {
-            \Render::twig('Empty.twig', [
-                'header' => 'Žebříček párů',
-                'notice' => 'Žádné páry nejsou v databázi'
-            ]);
-            return;
-        }
-
-        \Render::twig('Member/Pary.twig', [
-            'header' => 'Žebříček párů',
-            'data' => array_map(
-                fn($item) => [
-                    'id' => $item['p_id'],
-                    'partnerName' => $item['guy_name'] . ' ' . $item['guy_surname'],
-                    'partnerkaName' => $item['gal_name'] . ' ' . $item['gal_surname'],
-                    'latina' => $item['p_stt_trida'] . ' ' . $item['p_stt_body'] . 'F' . $item['p_stt_finale'],
-                    'standard' => $item['p_lat_trida'] . ' ' . $item['p_lat_body'] . 'F' . $item['p_lat_finale'],
-                    'hodnoceni' => $item['p_hodnoceni']
-                ],
-                $data
-            ),
-        ]);
     }
 
     private static function checkData()

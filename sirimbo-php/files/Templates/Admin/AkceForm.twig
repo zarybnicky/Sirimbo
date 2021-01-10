@@ -6,13 +6,13 @@
     <div class="form-group row">
       <label for="jmeno" class="col-sm-2 col-form-label">Název akce</label>
       <div class="col-sm-10">
-        {{ text('jmeno', jmeno, {'placeholder': 'Název akce'}) }}
+        <input class="form-control" type="text" placeholder="Název akce" name="jmeno" value="{{ jmeno }}" />
       </div>
     </div>
     <div class="form-group row">
       <label for="kde" class="col-sm-2 col-form-label">Název akce</label>
       <div class="col-sm-10">
-        {{ text('kde', kde, {'placeholder': 'Místo akce'}) }}
+        <input class="form-control" type="text" placeholder="Místo akce" name="kde" value="{{ kde }}" />
       </div>
     </div>
     <div class="form-group row">
@@ -24,20 +24,20 @@
     <div class="form-group row">
       <label for="od" class="col-sm-2 col-form-label">Začátek (*)</label>
       <div class="col-sm-10">
-        {{ date('od', od) }}
+        <input class="form-control" type="date" name="od" value="{{ od }}" />
       </div>
     </div>
     <div class="form-group row">
       <label for="od" class="col-sm-2 col-form-label">Konec (*)</label>
       <div class="col-sm-10">
-        {{ date('do', do) }}
+        <input class="form-control" type="date" name="do" value="{{ do }}" />
         <small class="form-text text-muted">(pokud je prázdné, počítá se jako "Od")</small>
       </div>
     </div>
     <div class="form-group row">
       <label for="kapacita" class="col-sm-2 col-form-label">Kapacita (*)</label>
       <div class="col-sm-10">
-        {{ text('kapacita', kapacita) }}
+        <input class="form-control" type="text" name="kapacita" value="{{ kapacita }}" />
       </div>
     </div>
     <div class="row">

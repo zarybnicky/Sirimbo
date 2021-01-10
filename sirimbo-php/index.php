@@ -149,12 +149,9 @@ function makeRouter()
     $router->post('/member/profil/gdpr', '@Member.Profil::gdprPost');
     $router->get('/member/profil/heslo', '@Member.Profil::heslo');
     $router->post('/member/profil/heslo', '@Member.Profil::hesloPost');
-    $router->get('/member/profil/par/body', '@Member.ProfilPar::body');
-    $router->post('/member/profil/par/body', '@Member.ProfilPar::bodyPost');
     $router->get('/member/profil/par/partner', '@Member.ProfilPar::partner');
     $router->post('/member/profil/par/partner', '@Member.ProfilPar::partnerPost');
     $router->post('/member/profil/par/zadost', '@Member.ProfilPar::zadost');
-    $router->get('/member/profil/pary', '@Member.ProfilPar::pary');
 
     $router->get('/admin/konzole', '@Admin.Repl::get');
     $router->post('/admin/konzole', '@Admin.Repl::post');

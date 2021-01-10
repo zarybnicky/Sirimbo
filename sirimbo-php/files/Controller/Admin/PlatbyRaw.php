@@ -42,21 +42,16 @@ class PlatbyRaw
         $path = self::TEMP_DIR . str_replace('../', '', $_GET['path']);
         $parser = static::getParser($path);
         Platby::recognizeHeaders(array_flip($parser->headers()), $specific, $variable, $date, $amount);
-
-        $data = array_map(
-            fn($name) => [
-                'column' => $name,
-                'specific' => \Utils::radio('specific', $name, $name == $specific),
-                'variable' => \Utils::radio('variable', $name, $name == $variable),
-                'date' => \Utils::radio('date', $name, $name == $date),
-                'amount' => \Utils::radio('amount', $name, $name == $amount)
-            ],
-            $parser->headers()
-        );
         \Render::twig('Admin/PlatbyRawColumnSelect.twig', [
             'header' => 'Správa plateb',
             'subheader' => 'Import plateb',
-            'data' => $data,
+            'data' => $parser->headers(),
+            'recognized' => [
+                'specific' => $specific,
+                'variable' => $variable,
+                'date' => $date,
+                'amount' => $amount,
+            ],
         ]);
     }
 

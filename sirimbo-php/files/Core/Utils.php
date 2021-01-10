@@ -1,45 +1,18 @@
 <?php
 class Utils
 {
-    public static function submit(string $text, ?string $name = null, ?string $value = null, string $cls = 'btn btn-primary'): string
-    {
-        return "<button name=\"$name\" value=\"$value\" class=\"$cls\">$text</button>";
-    }
-
-    public static function person(array $user): string
-    {
-        return "<a href=\"/member/clenove/{$user['u_id']}\">"
-            . '<img src="/style/person-small.png" style="margin-bottom:-2px" alt="'
-            . "{$user['u_jmeno']} {$user['u_prijmeni']}\">&nbsp;"
-            . "{$user['u_prijmeni']}, {$user['u_jmeno']}</a>";
-    }
-
-    public static function notice(string $text, string $type = "info"): string
-    {
-        if (!$text) {
-            return '';
-        }
-        return "<div class=\"alert alert-$type\" role=\"alert\">$text</div>";
-    }
-
     public static function text(string $name, $value = null, array $options = []): string
     {
         if ($value === null) {
             $value = $name;
         }
-        return (string) new Tag(
-            'input',
-            [
-                'type' => 'text',
-                'name' => $name,
-                'value' => $value,
-                'class' => $options['cls'] ?? 'form-control',
-                'size' => $options['size'] ?? null,
-                'placeholder' => $options['placeholder'] ?? null,
-                'readonly' => $options['readonly'] ?? false,
-                'disabled' => $options['disabled'] ?? false,
-            ]
-        );
+        $cls = $options['cls'] ?? 'form-control';
+        $size = isset($options['size']) ? " size=\"{$options['size']}\"" : '';
+        $placeholder = isset($options['placeholder']) ? " placeholder=\"{$options['placeholder']}\"" : '';
+        $readonly = isset($options['readonly']) ? " readonly" : '';
+        $disabled = isset($options['disabled']) ? " disabled" : '';
+        return "<input type=\"text\" name=\"$name\" value=\"$value\""
+            . " class=\"$cls\" $size $placeholder $readonly $disabled />";
     }
 
     public static function checkbox(string $name, ?string $value = null, $state = false, ?string $label = null): string
@@ -158,7 +131,7 @@ class Utils
 </div>
 </form>
             <?php
-            $out .= \Utils::notice(ob_get_contents());
+            $out .= '<div class="alert alert-info">' . ob_get_contents() . '</div>';
             ob_end_clean();
         }
         foreach (\DBPary::getPartnerRequestsForMe(\Session::getUser()->getId()) as $item) {
@@ -178,7 +151,7 @@ class Utils
 </div>
 </form>
             <?php
-            $out .= \Utils::notice(ob_get_contents());
+            $out .= '<div class="alert alert-info">' . ob_get_contents() . '</div>';
             ob_end_clean();
         }
         return $out;
@@ -212,18 +185,8 @@ class Utils
         return '<li class="nav-item' . $active . ' dropdown">' . $x . '</li>';
     }
 
-    public static function date($name, $date, $cls = 'form-control'): string
-    {
-        return (string) (new \DateHelper($name, $date))->cls($cls);
-    }
-
     public static function dateRange($name, $date, $cls = 'form-control'): string
     {
         return (string) (new \DateHelper($name, $date))->cls($cls)->range();
-    }
-
-    public static function table($data, $columns, $style = ''): string
-    {
-        return (string) new \TableHelper($data, $columns, $style);
     }
 }

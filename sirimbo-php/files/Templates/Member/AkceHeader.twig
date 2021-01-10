@@ -1,32 +1,35 @@
 <div class="trenink-header">
   <div class="title">
-    {{ item.jmeno }}
+    {{ item.a_jmeno }}
     {% if item.canEdit %}
       <div class="btn-group">
         <button type="button" class="btn btn-xs pt-0" data-toggle="dropdown">
           <img alt="Upravit" width="16" src="/style/icon-gear.png" />
         </button>
         <div class="dropdown-menu dropdown-menu-right">
-          <a class="dropdown-item" href="/admin/akce/edit/{{ item.id }}">Upravit</a>
-          <a class="dropdown-item" href="/admin/akce/detail/{{ item.id }}">Upravit účastníky</a>
-          <a class="dropdown-item" href="/admin/akce/dokumenty/{{ item.id }}">Upravit dokumenty</a>
+          <a class="dropdown-item" href="/admin/akce/edit/{{ item.a_id }}">Upravit</a>
+          <a class="dropdown-item" href="/admin/akce/detail/{{ item.a_id }}">Upravit účastníky</a>
+          <a class="dropdown-item" href="/admin/akce/dokumenty/{{ item.a_id }}">Upravit dokumenty</a>
         </div>
       </div>
     {% endif %}
   </div>
-  <div class="date">{{ item.datum }}</div>
-  <div class="emph">{{ item.kde }}</div>
-  <div><span class="big">Kapacita: </span> {{ item.kapacita }}</div>
-  <div><span class="big">Volných míst: </span> {{ item.volno }}</div>
-  {% if item.info %}
-    <div class="text-left mb-2">{{ item.info | raw }}</div>
+  <div class="date">
+    {{ item.a_od | date('j. n. Y') }}
+    {% if item.a_od != item.a_do %}{{ item.a_do | date('j. n. Y') }}{% endif %}
+  </div>
+  <div class="emph">{{ item.a_kde }}</div>
+  <div><span class="big">Kapacita: </span> {{ item.a_kapacita }}</div>
+  <div><span class="big">Volných míst: </span> {{ item.a_kapacita - item.reserved }}</div>
+  {% if item.a_info %}
+    <div class="text-left mb-2">{{ item.a_info | raw | nl2br }}</div>
   {% endif %}
   {% if item.dokumenty %}
     <div class="text-left mb-2">
       <span class="big">Dokumenty: </span>
       <ul>
         {% for row in item.dokumenty %}
-          <li><a href="/member/download?id={{ row.id }}">{{ row.name }}</a></li>
+          <li><a href="/member/download?id={{ row.d_id }}">{{ row.d_name }}</a></li>
         {% endfor %}
       </ul>
     </div>

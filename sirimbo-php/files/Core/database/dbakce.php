@@ -12,11 +12,10 @@ class DBAkce extends Database implements Pagable
 
     public function getPage($offset, $count, $options = '')
     {
-        list($offset, $count, $options) = self::escape($offset, $count, $options);
-
         $res = self::query(
-            "SELECT * FROM akce " .
-            ($options ? $options : '') . " LIMIT $offset,$count"
+            "SELECT * FROM akce $options LIMIT ?,?",
+            $offset,
+            $count
         );
         return self::getArray($res);
     }
@@ -24,27 +23,17 @@ class DBAkce extends Database implements Pagable
     public function getCount($options = null)
     {
         $res = self::query("SELECT COUNT(*) FROM akce");
-        if (!$res) {
-            return false;
-        } else {
-            $row = self::getSingleRow($res);
-            return $row['COUNT(*)'];
-        }
+        return $res ? self::getSingleRow($res)['COUNT(*)'] : false;
     }
 
     public static function getSingleAkce($id, $onlyVisible = false)
     {
-        list($id) = self::escape($id);
-
         $res = self::query(
-            "SELECT * FROM akce WHERE a_id='$id'" .
-            ($onlyVisible ? " AND a_visible='1'" : '') . ' ORDER BY a_od'
+            "SELECT * FROM akce WHERE a_id='?'" .
+            ($onlyVisible ? " AND a_visible='1'" : '') . ' ORDER BY a_od',
+            $id
         );
-        if (!$res) {
-            return false;
-        } else {
-            return self::getSingleRow($res);
-        }
+        return $res ? self::getSingleRow($res) : false;
     }
 
     public static function getWithItemCount()
@@ -75,7 +64,15 @@ class DBAkce extends Database implements Pagable
             "INSERT INTO akce" .
             " (a_jmeno,a_kde,a_info,a_od,a_do,a_kapacita,a_dokumenty,a_lock,a_visible)" .
             " VALUES ('?','?','?','?','?','?','?','?','?')",
-            $jmeno, $kde, $info, $od, $do, $kapacita, $dokumenty, $lock, $visible
+            $jmeno,
+            $kde,
+            $info,
+            $od,
+            $do,
+            $kapacita,
+            $dokumenty,
+            $lock,
+            $visible,
         );
         return self::getInsertId();
     }
@@ -85,7 +82,16 @@ class DBAkce extends Database implements Pagable
         self::query(
             "UPDATE akce SET a_jmeno='?',a_kde='?',a_info='?',a_od='?',a_do='?'," .
             "a_kapacita='?',a_dokumenty='?',a_lock='?',a_visible='?' WHERE a_id='?'",
-            $jmeno, $kde, $info, $od, $do, $kapacita, $dokumenty, $lock, $visible, $id
+            $jmeno,
+            $kde,
+            $info,
+            $od,
+            $do,
+            $kapacita,
+            $dokumenty,
+            $lock,
+            $visible,
+            $id,
         );
         return true;
     }
@@ -102,7 +108,9 @@ class DBAkce extends Database implements Pagable
         self::query(
             "INSERT INTO akce_item (ai_id_rodic,ai_user,ai_rok_narozeni)" .
             " VALUES ('?','?','?')",
-            $pid, $uid, $rok_narozeni
+            $pid,
+            $uid,
+            $rok_narozeni
         );
         return true;
     }
@@ -118,7 +126,9 @@ class DBAkce extends Database implements Pagable
         self::query(
             "INSERT INTO akce_item (ai_id_rodic,ai_user,ai_rok_narozeni)" .
             " VALUES ('?','?','?')",
-            $p_id, $u_id, $rok
+            $p_id,
+            $u_id,
+            $rok,
         );
         return true;
     }

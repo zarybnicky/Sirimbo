@@ -52,22 +52,6 @@ class Users
         $copySkupinyOptions = $skupinyOptions;
         unset($copySkupinyOptions['all']);
 
-        $data = array_map(
-            fn($item) => [
-                'user' => \User::fromArray($item),
-                'checkBox' => \Buttons::user($item['u_id']),
-                'varSymbol' => \User::varSymbol($item['u_id']),
-                'birthDate' => $item['u_narozeni'],
-                'skupina' => [
-                    'id' => $item['s_id'],
-                    'description' => $item['s_description'],
-                    'color' => $item['s_color_rgb'],
-                ],
-                'groupInfo' => $groupOptions[$item['u_group']] ?? '',
-            ],
-            $pager->getItems()
-        );
-
         \Render::twig('Admin/Users.twig', [
             'header' => 'Správa uživatelů',
             'groupOptions' => $groupOptions,
@@ -76,13 +60,24 @@ class Users
             'sortOptions' => $sortOptions,
             'statusOptions' => $statusOptions,
             'startIndex' => $pager->getItemsPerPage() * ($pager->getCurrentPage() - 1),
-            'data' => $data,
             'navigation' => $pager->getNavigation(),
             'view' => $action,
             'status' => $_GET['status'] ?? '',
             'skupina' => $_GET['skupina'] ?? '',
             'group' => $_GET['group'] ?? '',
-            'sort' => $_GET['sort'] ?? ''
+            'sort' => $_GET['sort'] ?? '',
+            'data' => array_map(
+                fn($item) => [
+                    'user' => \User::fromArray($item),
+                    'skupina' => [
+                        'id' => $item['s_id'],
+                        'description' => $item['s_description'],
+                        'color' => $item['s_color_rgb'],
+                    ],
+                    'groupInfo' => $groupOptions[$item['u_group']] ?? '',
+                ],
+                $pager->getItems(),
+            ),
         ]);
     }
 
@@ -363,36 +358,12 @@ class Users
     public static function unconfirmed()
     {
         \Permissions::checkError('users', P_ADMIN);
-        $users = \DBUser::getNewUsers();
-        if (empty($users)) {
-            \Render::twig('Empty.twig', [
-                'header' => 'Správa uživatelů',
-                'notice' => 'Žádní nepotvrzení uživatelé nejsou v databázi.'
-            ]);
-            return;
-        }
-        $groups = \DBPermissions::getGroups();
-        $skupiny = \DBSkupiny::get();
-        $users = array_map(
-            fn($item) => [
-                'id' => $item['u_id'],
-                'buttons' => (
-                    '<button class="a" name="confirm" value="' . $item['u_id'] . '">&#10003;</button>' .
-                    '&nbsp;' .
-                    \Buttons::delete('/admin/users/remove/' . $item['u_id'])
-                ),
-                'group' => \Utils::selectAssoc($item['u_id'] . '-group', $groups, 'pe_id', 'pe_name', 3),
-                'skupina' => \Utils::selectAssoc($item['u_id'] . '-skupina', $skupiny, 's_id', 's_name', $item['u_skupina']),
-                'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
-                'narozeni' => \Format::date($item['u_narozeni']),
-                'poznamky' => $item['u_poznamky']
-            ],
-            $users
-        );
         \Render::twig('Admin/UsersUnconfirmed.twig', [
             'header' => 'Správa uživatelů',
             'subheader' => 'Nepotvrzení uživatelé',
-            'data' => $users
+            'groups' => \DBPermissions::getGroups(),
+            'skupiny' => \DBSkupiny::get(),
+            'data' => \DBUser::getNewUsers(),
         ]);
     }
 
@@ -412,23 +383,10 @@ class Users
     public static function duplicate()
     {
         \Permissions::checkError('users', P_ADMIN);
-        $users = array_map(
-            fn($item) => [
-                'id' => $item['u_id'],
-                'buttons' => \Buttons::delete('/admin/users/remove/' . $item['u_id']),
-                'fullName' => "<div class=\"box\" title=\"{$item['s_description']}\" style=\"background-color:{$item['s_color_rgb']}\"></div>"
-                . '&nbsp;' . $item['u_prijmeni'] . ', ' . $item['u_jmeno'],
-                'email' => $item['u_email'],
-                'telefon' => $item['u_telefon'],
-                'narozeni' => \Format::date($item['u_narozeni']),
-                'timestamp' => \Format::timestamp($item['u_timestamp'])
-            ],
-            \DBUser::getDuplicateUsers()
-        );
         \Render::twig('Admin/UsersDuplicate.twig', [
             'header' => 'Správa uživatelů',
             'subheader' => 'Duplicitní uživatelé',
-            'data' => $users
+            'data' => \DBUser::getDuplicateUsers()
         ]);
     }
 
@@ -438,16 +396,9 @@ class Users
         \Render::twig('Admin/UsersStatistics.twig', [
             'header' => 'Správa uživatelů',
             'subheader' => 'Statistiky',
-            'data' => array_merge(
-                [
-                    ['group' => 'Uživatelé v databázi', 'count' => count(\DBUser::getUsers())],
-                    ['group' => 'Aktivní uživatelé', 'count' => count(\DBUser::getActiveUsers())],
-                ],
-                array_map(
-                    fn($item) => ['group' => $item['pe_name'], 'count' => $item['count']],
-                    \DBUser::getGroupCounts()
-                ),
-            ),
+            'total' => count(\DBUser::getUsers()),
+            'active' => count(\DBUser::getActiveUsers()),
+            'groups' => \DBUser::getGroupCounts(),
         ]);
     }
 

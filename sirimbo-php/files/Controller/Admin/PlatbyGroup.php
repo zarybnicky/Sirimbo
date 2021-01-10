@@ -9,14 +9,7 @@ class PlatbyGroup
         \Render::twig('Admin/PlatbyStructureGroup.twig', [
             'header' => 'Správa plateb',
             'subheader' => 'Kategorie plateb',
-            'data' => array_map(
-                fn($item) => [
-                    'name' => $item['pg_name'],
-                    'type' => $item['pg_type'] ? 'Členské příspěvky' : 'Běžné platby',
-                    'buttons' => \Buttons::platbyGroup($item['pg_id']),
-                ],
-                \DBPlatbyGroup::getGroups()
-            ),
+            'data' => \DBPlatbyGroup::getGroups(),
         ]);
     }
 
@@ -86,10 +79,7 @@ class PlatbyGroup
             $_POST['base']
         );
 
-        $categoryOld = array_map(
-            fn($item) => $item['pc_id'],
-            \DBPlatbyGroup::getSingleWithCategories($id)
-        );
+        $categoryOld = array_column(\DBPlatbyGroup::getSingleWithCategories($id), 'pc_id');
         $categoryNew = $_POST['category'] ?? [];
         foreach (array_diff($categoryOld, $categoryNew) as $removed) {
             \DBPlatbyGroup::removeChild($id, $removed);
@@ -98,10 +88,7 @@ class PlatbyGroup
             \DBPlatbyGroup::addChild($id, $added);
         }
 
-        $skupinyOld = array_map(
-            fn($item) => $item['s_id'],
-            \DBPlatbyGroup::getSingleWithSkupiny($id)
-        );
+        $skupinyOld = array_column(\DBPlatbyGroup::getSingleWithSkupiny($id), 's_id');
         $skupinyNew = $_POST['skupiny'] ?? [];
         foreach (array_diff($skupinyOld, $skupinyNew) as $removed) {
             \DBSkupiny::removeChild($removed, $id);
@@ -123,7 +110,8 @@ class PlatbyGroup
         if (static::getLinkedObjects($id)) {
             \Message::info(
                 'Nelze odstranit kategorii s připojenými skupinami nebo specifickými symboly! '
-                . '<form method=post>' . \Utils::submit('Odstranit spojení?', 'action', 'unlink')
+                . '<form method=post>'
+                . '<button class="btn btn-primary" name="action" value="unlink">Odstranit spojení?</button>'
                 . '</form>'
             );
         }
@@ -181,49 +169,16 @@ class PlatbyGroup
 
     private static function displayForm($action, $id = 0)
     {
-        $data = \DBPlatbyGroup::getSingle($id);
-        $categoriesSelected = array_flip(
-            array_map(
-                fn($item) => $item['pc_id'],
-                \DBPlatbyGroup::getSingleWithCategories($id)
-            )
-        );
-        $categories = array_map(
-            fn($item) => [
-                'buttons' => \Utils::checkbox('category[]', $item['pc_id'], isset($categoriesSelected[$item['pc_id']])),
-                'name' => $item['pc_name'],
-                'specific' => $item['pc_symbol'],
-                'amount' => ((float) $item['pc_amount'] * (float) $data['pg_base']),
-                'dueDate' => (new \Date($item['pc_date_due']))->getHumanDate(),
-                'validDate' => \Format::range($item['pc_valid_from'], $item['pc_valid_to']),
-                'usePrefix' => '&nbsp;' . ($item['pc_use_prefix'] ? '&#10003;' : '&#10799;'),
-                'useBase' => '&nbsp;' . ($item['pc_use_base'] ? '&#10003;' : '&#10799;'),
-                'archive' => '&nbsp;' . ($item['pc_archive'] ? '&#10003;' : '&#10799;')
-            ],
-            \DBPlatbyCategory::get(false)
-        );
-
-        $skupinySelected = array_flip(
-            array_map(
-                fn($item) => $item['s_id'],
-                \DBPlatbyGroup::getSingleWithSkupiny($id)
-            )
-        );
-        $skupiny = array_map(
-            fn($item) => [
-                'buttons' => \Utils::checkbox('skupiny[]', $item['s_id'], isset($skupinySelected[$item['s_id']])),
-                'name' => "<div class=\"box\" title=\"{$item['s_description']}\" style=\"background-color:{$item['s_color_rgb']}\"></div>&nbsp;" . $item['s_name']
-            ],
-            \DBSkupiny::get()
-        );
-
         \Render::twig('Admin/PlatbyStructureGroupForm.twig', [
             'header' => 'Správa plateb',
             'subheader' => $action == 'add' ? 'Přidat kategorii' : 'Upravit kategorii',
             'id' => $id,
             'action' => $action,
-            'category' => $categories,
-            'skupiny' => $skupiny,
+            'data' => \DBPlatbyGroup::getSingle($id),
+            'skupiny' => \DBSkupiny::get(),
+            'category' => \DBPlatbyCategory::get(false),
+            'skupinySelected' => array_column(\DBPlatbyGroup::getSingleWithSkupiny($id), 's_id', 's_id'),
+            'categoriesSelected' => array_column(\DBPlatbyGroup::getSingleWithCategories($id), 'pc_id', 'pc_id'),
             'returnURI' => $_SERVER['HTTP_REFERER'],
             'name' => $_POST['name'] ?? '',
             'type' => $_POST['type'] ?? '',

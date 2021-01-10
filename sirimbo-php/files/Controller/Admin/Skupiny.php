@@ -6,17 +6,9 @@ class Skupiny
     public static function list()
     {
         \Permissions::checkError('skupiny', P_OWNED);
-        $data = array_map(
-            fn($item) => [
-                'buttons' => \Buttons::skupiny($item['s_id']),
-                'colorBox' => "<div class=\"box\" title=\"{$item['s_description']}\" style=\"background-color:{$item['s_color_rgb']}\"></div>",
-                'name' => $item['s_name']
-            ],
-            \DBSkupiny::get()
-        );
         \Render::twig('Admin/Skupiny.twig', [
             'header' => 'Správa skupin',
-            'data' => $data
+            'data' => \DBSkupiny::get()
         ]);
     }
 
@@ -66,7 +58,7 @@ class Skupiny
         }
         \DBSkupiny::update($id, $_POST['name'], $_POST['color'], $_POST['desc']);
 
-        $groupsOld = array_map(fn($item) => $item['pg_id'], \DBSkupiny::getSingleWithGroups($id));
+        $groupsOld = array_column(\DBSkupiny::getSingleWithGroups($id), 'pg_id');
         $groupsNew = $_POST['group'] ?? [];
         foreach (array_diff($groupsOld, $groupsNew) as $removed) {
             \DBSkupiny::removeChild($id, $removed);
@@ -87,8 +79,8 @@ class Skupiny
         if (static::getLinkedSkupinaObjects($id)) {
             \Message::info(
                 'Nemůžu odstranit skupinu s připojenými kategoriemi! <form method="post">'
-                . \Utils::submit('Odstranit spojení?', 'action', 'unlink')
-                . "</form>"
+                . '<button class="btn btn-primary" name="action" value="unlink">Odstranit spojení?</button>'
+                . '</form>'
             );
         }
         \Render::twig('RemovePrompt.twig', [
@@ -125,20 +117,6 @@ class Skupiny
 
     private static function displayForm($id, $action, $data = [])
     {
-        $groupsSelected = array_flip(
-            array_map(fn($item) => $item['pg_id'], \DBSkupiny::getSingleWithGroups($id))
-        );
-
-        $groups = array_map(
-            fn($item) => [
-                'buttons' => \Utils::checkbox('group[]', $item['pg_id'], isset($groupsSelected[$item['pg_id']])),
-                'type' => $item['pg_type'] == '1' ? 'Členské příspěvky' : 'Běžné platby',
-                'name' => $item['pg_name'],
-                'base' => $item['pg_base']
-            ],
-            \DBPlatbyGroup::getGroups()
-        );
-
         \Render::twig('Admin/SkupinyForm.twig', [
             'header' => 'Správa skupin',
             'subheader' => $action == 'add' ? 'Přidat skupinu' : 'Upravit skupinu',
@@ -147,7 +125,8 @@ class Skupiny
             'color' => $_POST['color'] ?? $data['s_color_rgb'] ?? '',
             'popis' => $_POST['popis'] ?? $data['s_description'] ?? '',
             'action' => $action,
-            'groups' => $groups
+            'groups' => \DBPlatbyGroup::getGroups(),
+            'groupsSelected' => array_flip(array_column(\DBSkupiny::getSingleWithGroups($id), 'pg_id')),
         ]);
     }
 

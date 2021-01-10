@@ -3,6 +3,12 @@
 {% block content %}
   {{ include('Member/ClenoveNavigation.twig') }}
   <div class="container">
-    {{ table(data, [['index', '', ' class="r"'], ['fullName', 'Jméno', '']]) }}
+    <ol>
+      {% for row in data %}
+        <li>
+          <a href="/member/clenove/{{ row.u_id }}">{{ row.u_prijmeni }}, {{ row.u_jmeno }}</a>
+        </li>
+      {% endfor %}
+    </ol>
   </div>
 {% endblock %}

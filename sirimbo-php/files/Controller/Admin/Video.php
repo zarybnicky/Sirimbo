@@ -7,41 +7,42 @@ class Video
     {
         \Permissions::checkError('aktuality', P_OWNED);
         $pager = new \Paging(new \DBVideo(), 'orphan');
-        $pager->setItemsPerPage($_GET['c']);
-        $pager->setCurrentPage($_GET['p']);
-        $data = array_map(
-            fn($item) => [
-                'buttons' => \Buttons::video($item['v_id']),
-                'title' => $item['v_title'],
-                'uri' => explode('?', $item['v_uri'])[0],
-                'created' => \Format::timestamp($item['v_created_at'], true)
-            ],
-            $pager->getItems()
-        );
+        $pager->setItemsPerPage($_GET['c'] ?? null);
+        $pager->setCurrentPage($_GET['p'] ?? null);
         \Render::twig('Admin/Video.twig', [
             'header' => 'Správa videí',
-            'data' => $data,
             'action' => 'orphan',
-            'navigation' => $pager->getNavigation()
+            'navigation' => $pager->getNavigation(),
+            'data' => array_map(
+                fn($item) => [
+                    'type' => 'video',
+                    'id' => $item['v_id'],
+                    'title' => $item['v_title'],
+                    'uri' => explode('?', $item['v_uri'])[0],
+                    'created' => $item['v_created_at'],
+                ],
+                $pager->getItems()
+            ),
         ]);
     }
 
     public static function playlistList()
     {
-        $data = array_map(
-            fn($item) => [
-                'buttons' => \Buttons::edit('/admin/video/playlist/' . $item['vl_id']),
-                'title' => $item['vl_title'],
-                'uri' => $item['vl_url'],
-                'created' => \Format::timestamp($item['vl_created_at'], true)
-            ],
-            \DBVideoList::getAll()
-        );
+        \Permissions::checkError('aktuality', P_OWNED);
         \Render::twig('Admin/Video.twig', [
             'header' => 'Správa videí',
-            'data' => $data,
             'action' => 'playlist',
-            'navigation' => ''
+            'navigation' => '',
+            'data' => array_map(
+                fn($item) => [
+                    'type' => 'playlist',
+                    'id' => $item['vl_id'],
+                    'title' => $item['vl_title'],
+                    'uri' => $item['vl_url'],
+                    'created' => $item['vl_created_at'],
+                ],
+                \DBVideoList::getAll()
+            ),
         ]);
     }
 
@@ -49,25 +50,38 @@ class Video
     {
         \Permissions::checkError('aktuality', P_OWNED);
         $list = \DBVideoList::getSingle($id);
-        $data = array_map(
-            fn($item) => [
-                'buttons' => \Buttons::video($item['v_id']),
-                'title' => $item['v_title'],
-                'uri' => explode('?', $item['v_uri'])[0],
-                'created' => \Format::timestamp($item['v_created_at'], true)
-            ],
-            \DBVideo::getByPlaylist($id)
-        );
         \Render::twig('Admin/Video.twig', [
             'header' => 'Správa videí',
-            'data' => $data,
-            'action' => 'playlist',
             'subheader' => $list['vl_title'],
-            'navigation' => ''
+            'action' => 'playlist',
+            'navigation' => '',
+            'data' => array_map(
+                fn($item) => [
+                    'type' => 'video',
+                    'id' => $item['v_id'],
+                    'title' => $item['v_title'],
+                    'uri' => explode('?', $item['v_uri'])[0],
+                    'created' => $item['v_created_at'],
+                ],
+                \DBVideo::getByPlaylist($id)
+            ),
         ]);
     }
 
     public static function title()
+    {
+        \Permissions::checkError('aktuality', P_OWNED);
+        \Render::twig('Admin/VideoTitle.twig', [
+            'header' => 'Správa videí',
+            'videos' => \DBVideo::getAll(),
+            'video1' => \DBParameters::get('title_video1'),
+            'video2' => \DBParameters::get('title_video2'),
+            'video3' => \DBParameters::get('title_video3'),
+            'video4' => \DBParameters::get('title_video4'),
+        ]);
+    }
+
+    public static function titlePost()
     {
         \Permissions::checkError('aktuality', P_OWNED);
         \DBParameters::set('title_video1', $_POST['video1']);
@@ -75,19 +89,6 @@ class Video
         \DBParameters::set('title_video3', $_POST['video3']);
         \DBParameters::set('title_video4', $_POST['video4']);
         \Redirect::to('/admin/video/title');
-    }
-
-    public static function titlePost()
-    {
-        \Permissions::checkError('aktuality', P_OWNED);
-        $videos = \DBVideo::getAll();
-        \Render::twig('Admin/VideoTitle.twig', [
-            'header' => 'Správa videí',
-            'video1' => \Utils::selectAssoc('video1', $videos, 'v_id', 'v_title', \DBParameters::get('title_video1')),
-            'video2' => \Utils::selectAssoc('video2', $videos, 'v_id', 'v_title', \DBParameters::get('title_video2')),
-            'video3' => \Utils::selectAssoc('video3', $videos, 'v_id', 'v_title', \DBParameters::get('title_video3')),
-            'video4' => \Utils::selectAssoc('video4', $videos, 'v_id', 'v_title', \DBParameters::get('title_video4')),
-        ]);
     }
 
     public static function add()

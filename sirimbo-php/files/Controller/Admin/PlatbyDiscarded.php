@@ -46,16 +46,10 @@ class PlatbyDiscarded
     {
         if ($_GET['list'] == 'date') {
             $header =
-                ($_GET['year'] == 'none'
-                ? 'nezařazené podle data'
-                : ($_GET['month']
-                  ? ($_GET['year'] . '/' . $_GET['month'])
-                  : $_GET['year']));
+                $_GET['year'] == 'none' ? 'nezařazené podle data'
+                : ($_GET['month'] ? "{$_GET['year']}/{$_GET['month']}" : $_GET['year']);
         } elseif ($_GET['list'] == 'amount') {
-            $header =
-                ($_GET['amount'] == 'none'
-                ? 'nezařazené podle částky'
-                : ($_GET['amount'] . ' Kč'));
+            $header = $_GET['amount'] == 'none' ? 'nezařazené podle částky' : "{$_GET['amount']} Kč";
         } else {
             $header = 'všechny';
         }
@@ -82,10 +76,9 @@ class PlatbyDiscarded
                 } elseif ($_GET['year'] !== 'none') {
                     continue;
                 }
-            } elseif (
-                $_GET['list'] == 'amount'
-                && ((!isset($row[$amount]) ^ $_GET['amount'] == 'none')
-                || $_GET['amount'] != (int) $row[$amount])
+            } elseif ($_GET['list'] == 'amount'
+                      && ((!isset($row[$amount]) ^ $_GET['amount'] == 'none')
+                         || $_GET['amount'] != (int) $row[$amount])
             ) {
                 continue;
             }
@@ -96,31 +89,18 @@ class PlatbyDiscarded
                     $columnsTemp[$key] = false;
                 }
             }
-            $row['edit'] = '<div style="width:51px">'
-                . \Buttons::edit('/admin/platby/manual/' . $rawData['pr_id'])
-                . '&nbsp;'
-                . \Buttons::delete('/admin/platby/discarded/remove/' . $rawData['pr_id'])
-                . '</div>';
+            $row['id'] = $rawData['pr_id'];
             $result[] = $row;
         }
-        if (empty($columnsTemp)) {
-            return;
-        } else {
-            foreach ($result as &$row) {
-                foreach ($columnsTemp as $key => $value) {
-                    if (!isset($row[$key])) {
-                        $row[$key] = '';
-                    }
+        foreach ($result as &$row) {
+            foreach ($columnsTemp as $key => $value) {
+                if (!isset($row[$key])) {
+                    $row[$key] = '';
                 }
             }
         }
-
-        $columns = [['edit', 'Zařadit']];
-        foreach ($columnsTemp as $key => $value) {
-            if (!$value) {
-                continue;
-            }
-            $columns[] = [$key, $key];
+        foreach (array_filter($columnsTemp) as $key => $value) {
+            $columns[] = $key;
         }
     }
 

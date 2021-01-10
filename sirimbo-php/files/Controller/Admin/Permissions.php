@@ -6,17 +6,9 @@ class Permissions
     public static function list()
     {
         \Permissions::checkError('permissions', P_ADMIN);
-        $data = array_map(
-            fn($item) => [
-                'buttons' => \Buttons::permission($item['pe_id']),
-                'name' => $item['pe_name'],
-                'description' => $item['pe_description']
-            ],
-            \DBPermissions::getGroups()
-        );
         \Render::twig('Admin/Permissions.twig', [
             'header' => 'Správa oprávnění',
-            'data' => $data
+            'data' => \DBPermissions::getGroups()
         ]);
     }
 
@@ -79,7 +71,7 @@ class Permissions
         \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa oprávnění',
             'prompt' =>
-                \Utils::notice('Uživatelům z této skupiny bude nutné přiřadit jinou skupinu!')
+                '<div class="alert alert-info">Uživatelům z této skupiny bude nutné přiřadit jinou skupinu!</div>'
                 . 'Opravdu chcete odstranit uživatelskou úroveň:',
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/permissions',
             'data' => [['id' => $item['pe_id'], 'text' => $item['pe_name']]]

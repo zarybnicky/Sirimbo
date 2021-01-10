@@ -8,17 +8,7 @@ class VideoSource
         \Permissions::checkError('aktuality', P_OWNED);
         \Render::twig('Admin/VideoSource.twig', [
             'header' => 'Správa zdrojů videa',
-            'data' => array_map(
-                fn($item) => [
-                    'buttons' => \Buttons::videoSource($item['vs_id']),
-                    'url' => $item['vs_url'],
-                    'title' => $item['vs_title'],
-                    'created' => \Format::timestamp($item['vs_created_at'], true),
-                    'lastChecked' => $item['vs_last_checked']
-                    ? \Format::timestamp($item['vs_last_checked'], true) : ''
-                ],
-                \DBVideoSource::getAll()
-            )
+            'data' => \DBVideoSource::getAll(),
         ]);
     }
 
@@ -69,7 +59,7 @@ class VideoSource
     public static function remove($id)
     {
         \Permissions::checkError('aktuality', P_OWNED);
-        $item = \DBVideo::getSingle($id);
+        $item = \DBVideoSource::getSingle($id);
         \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa videí',
             'prompt' => 'Opravdu chcete odstranit zdroj:',

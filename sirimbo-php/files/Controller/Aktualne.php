@@ -5,32 +5,15 @@ class Aktualne
 {
     public static function list()
     {
-        $data = \DBAktuality::getAktuality();
-        if (!$data) {
-            \Render::twig('Empty.twig', [
-                'header' => "Články",
-                'notice' => 'Žádné články nejsou k dispozici.'
-            ]);
-            return;
-        }
-        $data = array_map(
-            function ($item) {
-                $photo_uri = \DBGalerie::getSingleFoto($item['at_foto_main'])['gf_path'] ?? '';
-                return [
-                    'id'        => $item['at_id'],
-                    'jmeno'     => $item['at_jmeno'],
-                    'timestamp' => $item['at_timestamp_add'],
-                    'canEdit'   => \Permissions::check('aktuality', P_OWNED, $item['at_kdo']),
-                    'preview'   => $item['at_preview'],
-                    'title_photo_uri' => '/galerie/' . $photo_uri,
-                    'title_photo_thumb_uri' => '/galerie/thumbnails/' . $photo_uri
-                ];
-            },
-            $data
-        );
-        \Render::twig('Main/AktualityOverview.twig', [
+        \Render::twig('Main/Aktuality.twig', [
             'header' => "Články",
-            'data' => $data
+            'data' => array_map(
+                fn($item) => $item + [
+                    'canEdit' => \Permissions::check('aktuality', P_OWNED, $item['at_kdo']),
+                    'photo_uri' => \DBGalerie::getSingleFoto($item['at_foto_main'])['gf_path'] ?? '',
+                ],
+                \DBAktuality::getAktuality()
+            ),
         ]);
     }
 

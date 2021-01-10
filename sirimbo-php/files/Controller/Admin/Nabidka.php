@@ -6,31 +6,11 @@ class Nabidka
     public static function list()
     {
         \Permissions::checkError('nabidka', P_OWNED);
-        $data = \Permissions::check('nabidka', P_ADMIN)
-            ? \DBNabidka::getNabidka(true)
-            : \DBNabidka::getNabidkyByTrener(\Session::getUser()->getId(), true);
-        $data = array_map(
-            fn($item) => [
-                'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
-                'date' => (
-                    \Format::date($item['n_od']) .
-                    ($item['n_do'] != $item['n_od']
-                     ? ' - ' . \Format::date($item['n_do'])
-                     : '')
-                ),
-                'buttons' => \Buttons::duplicate('/admin/nabidka/duplicate/' . $item['n_id'])
-                . '&nbsp;' . \Buttons::delete('/admin/nabidka/remove/' . $item['n_id']),
-                'links' => (
-                    '<a href="/admin/nabidka/edit/' . $item['n_id'] . '">obecné</a>, ' .
-                    '<a href="/admin/nabidka/detail/' . $item['n_id'] . '">tréninky</a>'
-                ),
-                'visible' => \Utils::checkbox($item['n_id'], '1', $item['n_visible'])
-            ],
-            $data
-        );
         \Render::twig('Admin/Nabidka.twig', [
             'header' => 'Správa nabídky',
-            'data' => $data
+            'data' => \Permissions::check('nabidka', P_ADMIN)
+            ? \DBNabidka::getNabidka(true)
+            : \DBNabidka::getNabidkyByTrener(\Session::getUser()->getId(), true),
         ]);
     }
 
@@ -100,7 +80,7 @@ class Nabidka
         \Permissions::checkError('nabidka', P_OWNED);
         if (!$data = \DBNabidka::getSingleNabidka($id)) {
             \Message::warning('Nabídka s takovým ID neexistuje');
-            \Redirect::to($_POST['returnURI'] ?? '/admin/nabidka');
+            \Redirect::to('/admin/nabidka');
         }
         \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
         return static::displayForm('edit', $data);

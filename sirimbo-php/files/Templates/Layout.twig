@@ -105,14 +105,16 @@
         <div class="container full">
           <h1>{{ header }}</h1>
           {% if subheader %}
-            <h2>{{ subheader }}</h2>
+            <h2>{{ subheader | raw }}</h2>
           {% endif %}
         </div>
       </div>
     {% endif %}
 
     {% for msg in getMessages() %}
-      <div class="container">{{ notice(msg.text, msg.type) }}</div>
+      <div class="container">
+        <div class="alert alert-{{ msg.type }}">{{ msg.type }}</div>
+      </div>
     {% endfor %}
 
     {% block content %}{% endblock %}
@@ -120,8 +122,8 @@
     <br/>
     <div id="footer">
       <div class="container">
-        <div class="row" style="text-align:center">
-          <div class="col" style="display:flex;flex-direction:column;justify-content:space-around;">
+        <div class="row text-center">
+          <div class="col d-flex" style="flex-direction:column;justify-content:space-around;">
             <div>
               <a class="no-a" href="https://www.facebook.com/tkolymp"
                  target="_blank">

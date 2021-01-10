@@ -5,13 +5,36 @@
   <form action="" method="POST">
     <a href="/admin/nabidka/add" class="btn btn-primary">Nová nabídka</a>
     <button class="btn btn-outline-primary" name="action" value="save">Uložit změny</button>
-    {{ table(data, [
-        ['buttons', '', ''],
-        ['links', 'Upravit', ''],
-        ['fullName', 'Trenér', ''],
-        ['date', 'Datum', ''],
-        ['visible', 'Viditelný', ''],
-    ], ' style="width:100%"') }}
+    <table>
+      <tr>
+        <th>Trenér</th>
+        <th>Datum</th>
+        <th>Viditelný</th>
+      </tr>
+      {% for row in data %}
+        <tr>
+          <td>
+            <div class="btn-group">
+              <button type="button" class="btn btn-xs pt-0" data-toggle="dropdown">
+                <img alt="Upravit" width="14" src="/style/icon-gear.png" />
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="/admin/nabidka/edit/{{ row.n_id }}">Upravit</a>
+                <a class="dropdown-item" href="/admin/nabidka/detail/{{ row.n_id }}">Upravit rezervace</a>
+                <a class="dropdown-item" href="/admin/nabidka/duplicate/{{ row.n_id }}">Duplikovat</a>
+                <a class="dropdown-item" href="/admin/nabidka/remove/{{ row.n_id }}">Odstranit</a>
+              </div>
+            </div>
+            {{ row.u_jmeno }} {{ u_prijmeni }}
+          </td>
+          <td>
+            {{ row.n_od | date('j. n. Y') }}
+            {% if row.n_od != row.n_do %} - {{ row.n_do | date('j. n. Y') }}{% endif %}
+          </td>
+          <td>{{ checkbox(row.n_id, '1', row.n_visible) }}</td>
+        </tr>
+      {% endfor %}
+    </table>
   </form>
 </div>
 {% endblock %}

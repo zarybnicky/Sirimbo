@@ -16,14 +16,6 @@ class Fotogalerie
         }
 
         $photos = \DBGalerie::getFotky($id);
-        if (!$photos) {
-            \Render::twig('Empty.twig', [
-                'nadpis' => $dir['gd_name'],
-                'notice' => 'Žádné fotky k dispozici.'
-            ]);
-            return;
-        }
-
         \Render::twig('Main/FotogalerieOverview.twig', [
             'nadpis' => $dir['gd_name'],
             'sidemenu' => static::sidemenu($id),

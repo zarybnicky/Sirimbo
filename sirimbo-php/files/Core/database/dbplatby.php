@@ -3,7 +3,6 @@ class DBPlatby extends Database
 {
     public static function checkConflicts($sid)
     {
-        list($sid) = self::escape($sid);
         $res = self::query(
             "SELECT skupiny.*,platby_group.*,platby_category.*
             FROM platby_category_group pcg
@@ -15,18 +14,18 @@ class DBPlatby extends Database
                     SELECT pcg_id FROM platby_category_group
                         INNER JOIN platby_group_skupina ON pcg_id_group=pgs_id_group
                         LEFT JOIN platby_category ON pc_id=pcg_id_category
-                    WHERE pgs_id_skupina='$sid' AND pc_symbol IS NOT NULL
+                    WHERE pgs_id_skupina='?' AND pc_symbol IS NOT NULL
                     GROUP BY pc_symbol
                     HAVING COUNT(*) > 1
                 ) dupl
-            WHERE pcg.pcg_id=dupl.pcg_id"
+            WHERE pcg.pcg_id=dupl.pcg_id",
+            $sid,
         );
         return self::getArray($res);
     }
 
     public static function hasPaidMemberFees($uid)
     {
-        list($uid) = self::escape($uid);
         $res = self::query(
             "SELECT COUNT(*) FROM platby_item
                 INNER JOIN platby_category ON pc_id=pi_id_category
@@ -37,10 +36,11 @@ class DBPlatby extends Database
                 INNER JOIN users ON pi_id_user=u_id
             WHERE
                 pg_type='1' AND
-                u_id='$uid' AND
+                u_id='?' AND
                 u_skupina=s_id AND
                 CURDATE() >= pc_valid_from AND
-                CURDATE() <= pc_valid_to"
+                CURDATE() <= pc_valid_to",
+            $uid,
         );
         return self::getSingleRow($res)['COUNT(*)'];
     }
@@ -52,27 +52,19 @@ class DBPlatby extends Database
                 INNER JOIN platby_category ON pi_id_category=pc_id
              WHERE pi_id_user='?'
              ORDER BY pi_date DESC",
-            $uid
+            $uid,
         ));
     }
 
     public static function getOldestPayment()
     {
         $res = self::query("SELECT pi_id_user, MIN(pi_date) AS pi_date FROM platby_item GROUP BY pi_id_user");
-        $out = [];
-        foreach (self::getArray($res) as $row) {
-            $out[$row['pi_id_user']] = $row['pi_date'];
-        }
-        return $out;
+        return array_column(self::getArray($res), 'pi_date', 'pi_id_user');
     }
 
     public static function getNewestPayment()
     {
         $res = self::query("SELECT pi_id_user, MAX(pi_date) AS pi_date FROM platby_item GROUP BY pi_id_user");
-        $out = [];
-        foreach (self::getArray($res) as $row) {
-            $out[$row['pi_id_user']] = $row['pi_date'];
-        }
-        return $out;
+        return array_column(self::getArray($res), 'pi_date', 'pi_id_user');
     }
 }

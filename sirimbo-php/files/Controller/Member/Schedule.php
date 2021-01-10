@@ -89,18 +89,10 @@ class Schedule
             $d = $b['date'] . $b['id'];
             return ($c > $d ? 1 : ($c < $d ? -1 : 0));
         });
-
-        if ($data) {
-            \Render::twig('Member/Schedule.twig', [
-                'header' => 'Tréninky',
-                'data' => $data
-            ]);
-        } else {
-            \Render::twig('Empty.twig', [
-                'header' => 'Tréninky',
-                'notice' => 'Žádné termíny tréninků nejsou vypsané.'
-            ]);
-        }
+        \Render::twig('Member/Schedule.twig', [
+            'header' => 'Tréninky',
+            'data' => $data
+        ]);
     }
 
     public static function post()
@@ -128,7 +120,7 @@ class Schedule
             } elseif ($_POST['action'] == 'signout') {
                 if ($lesson['ri_partner'] == 0) {
                 } elseif ($par['p_id'] != $lesson['ri_partner']
-                          && !\Permissions::check('rozpis', P_OWNED, $data['n_trener'])
+                          && !\Permissions::check('rozpis', P_OWNED, $data['r_trener'])
                 ) {
                     \Message::warning('Nedostatečná oprávnění!');
                 } else {

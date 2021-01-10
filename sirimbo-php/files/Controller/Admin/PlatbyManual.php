@@ -38,76 +38,47 @@ class PlatbyManual
 
         if ($variable === null) {
             $recognized['variable'] = $emptyItem;
-        } elseif ($item->variable) {
-            $recognized['variable'] = [
-                'column' => $variable,
-                'value' => $userLookup[$item->variable]['u_jmeno'] . ' '
-                    . $userLookup[$item->variable]['u_prijmeni']
-            ];
         } else {
             $recognized['variable'] = [
                 'column' => $variable,
-                'value' => '&nbsp;--- (není v DB: id ' . $raw[$variable] . ')'
+                'value' => $item->variable
+                ? "{$userLookup[$item->variable]['u_jmeno']} {$userLookup[$item->variable]['u_prijmeni']}"
+                : "&nbsp;--- (není v DB: id {$raw[$variable]})",
             ];
         }
 
         if ($specific === null) {
             $recognized['specific'] = $emptyItem;
-        } elseif ($item->specific && $item->categoryId) {
-            $recognized['specific'] = [
-                'column' => $specific,
-                'value' => $item->specific
-            ];
         } else {
             $recognized['specific'] = [
                 'column' => $specific,
-                'value' => '&nbsp;--- (není v DB: symbol ' . $raw[$specific] . ')'
+                'value' => $item->specific && $item->categoryId
+                ? $item->specific
+                : "&nbsp;--- (není v DB: symbol {$raw[$specific]})",
             ];
         }
 
-        if ($date === null) {
-            $recognized['date'] = $emptyItem;
-        } else {
-            $recognized['date'] = [
-                'column' => $date,
-                'value' => (new \Date($item->date))->getHumanDate()
-            ];
-        }
-
-        if ($amount === null) {
-            $recognized['amount'] = $emptyItem;
-        } else {
-            $recognized['amount'] = ['column' => $amount, 'value' => $raw[$amount]];
-        }
-
-        $recognized['prefix'] = [
-            'column' => '&nbsp;---',
-            'value' => ($item->prefix ? $item->prefix : '&nbsp;---')
-        ];
-
-        $new = [];
-        foreach ($raw as $key => &$value) {
-            $new[] = ['column' => $key, 'value' => $value];
-        }
-        $raw = $new;
+        $recognized['date'] = $date === null ? $emptyItem : ['column' => $date, 'value' => $item->date];
+        $recognized['amount'] = $amount === null ? $emptyItem : ['column' => $amount, 'value' => $raw[$amount]];
+        $recognized['prefix'] = ['column' => '&nbsp;---', 'value' => ($item->prefix ? $item->prefix : '&nbsp;---')];
 
         $remainingCount = count(\DBPlatbyRaw::getUnsorted());
         \Render::twig('Admin/PlatbyManualForm.twig', [
             'header' => 'Správa plateb',
-            'subheader' => 'Ruční třídění plateb</span> (zbývá ' . $remainingCount . ')',
+            'subheader' => "Ruční třídění plateb</span> (zbývá {$remainingCount})",
             'id' => $id,
             'remainingTotal' => $remainingCount,
             'raw' => $raw,
             'guess' => [
                 'specific' => $item->categoryId,
                 'variable' => $item->variable,
-                'date' => (new \Date($item->date))->getHumanDate(),
+                'date' => $item->date,
                 'amount' => $item->amount,
                 'prefix' => $item->prefix
             ],
+            'recognized' => $recognized,
             'users' => static::getUsers(),
             'categories' => static::getCategories(),
-            'recognized' => $recognized,
         ]);
     }
 
@@ -166,7 +137,10 @@ class PlatbyManual
     private static function getUsers()
     {
         return array_map(
-            fn($array) => \User::varSymbol($array['u_id']) . " - {$array['u_prijmeni']}, {$array['u_jmeno']}",
+            function ($x) {
+                $u = \User::fromArray($x);
+                return "{$u->getVarSymbol()} - {$x['u_prijmeni']}, {$x['u_jmeno']}";
+            },
             Platby::getUserLookup(true),
         );
     }

@@ -2,26 +2,19 @@
 
 {% block content %}
   <div class="container">
-    {% if not files %}
-      {{ notice('Žádné fotky') }}
-    {% else %}
-      <form action="" method="POST">
-        <a class="btn btn-primary" href="/admin/galerie/file/upload?dir={{ id }}">Přidat fotky</a><br>
+    <form action="" method="POST">
+      <a class="btn btn-primary" href="/admin/galerie/file/upload?dir={{ id }}">Přidat fotky</a><br>
+        <div class="mt-2 d-flex flex-wrap justify-content-center">
         {% for item in files %}
-          <div class="foto_preview">
-            <div class="foto_preview_in">
-              <img alt="{{ item.id }}" src="{{ item.thumbnailURI }}" />
-            </div>
-            <div class="foto_desc">
-              <a href='/admin/galerie/file/edit/{{ item.id }}' title='Upravit'>
-                <img alt='Upravit' src='/style/icon-pencil.png' />
-              </a>&nbsp;<a href='/admin/galerie/file/remove/{{ item.id }}' title='Odstranit'>
-                <img alt='Odstranit' src='/style/icon-trash-o.png' />
-              </a>&nbsp;{{ item.name }}
-            </div>
-          </div>
+          <a href="/admin/galerie/file/edit/{{ item.id }}"
+             style="min-width:150px;min-height:150px"
+             class="d-flex align-items-center justify-content-center">
+            <img alt="{{ item.id }}" src="{{ item.thumbnailURI }}" />
+          </a>
+        {% else %}
+          <div class="alert alert-info">Žádné fotky</div>
         {% endfor %}
-      </form>
-    {% endif %}
+      </div>
+    </form>
   </div>
 {% endblock %}

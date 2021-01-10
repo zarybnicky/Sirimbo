@@ -77,18 +77,17 @@ class GalerieFile
     public static function upload()
     {
         \Permissions::checkError('galerie', P_OWNED);
-        $dirs = array_map(
-            fn($item) => [
-                'id' => $item['gd_id'],
-                'text' => str_repeat('&nbsp;&nbsp;', $item['gd_level'] - 1) . $item['gd_name']
-            ],
-            \DBGalerie::getDirs(true, true)
-        );
         \Render::twig('Admin/GalerieUpload.twig', [
             'header' => 'Správa fotogalerie',
             'subheader' => 'Upload',
-            'dirs' => $dirs,
-            'dir' => $_GET['dir'] ?? '0'
+            'dir' => $_GET['dir'] ?? '0',
+            'dirs' => array_map(
+                fn($item) => [
+                    'id' => $item['gd_id'],
+                    'text' => str_repeat('&nbsp;&nbsp;', $item['gd_level'] - 1) . $item['gd_name']
+                ],
+                \DBGalerie::getDirs(true, true)
+            ),
         ]);
     }
 
@@ -149,21 +148,20 @@ class GalerieFile
 
     private static function displayForm($id)
     {
-        $dirs = array_map(
-            fn($item) => [
-                'id' => $item['gd_id'],
-                'text' => str_repeat('&nbsp;&nbsp;', $item['gd_level'] - 1) . $item['gd_name']
-            ],
-            \DBGalerie::getDirs(true, true)
-        );
         \Render::twig('Admin/GalerieFormFile.twig', [
             'header' => 'Správa fotogalerie',
             'subheader' => 'Upravit soubor',
             'id' => $id,
-            'dirs' => ['id' => '0', 'text' => '---'] + $dirs,
             'returnURI' => $_SERVER['HTTP_REFERER'],
             'parent' => $_POST['parent'],
-            'name' => $_POST['name']
+            'name' => $_POST['name'],
+            'dirs' => [['id' => '0', 'text' => '---']] + array_map(
+                fn($item) => [
+                    'id' => $item['gd_id'],
+                    'text' => str_repeat('&nbsp;&nbsp;', $item['gd_level'] - 1) . $item['gd_name']
+                ],
+                \DBGalerie::getDirs(true, true)
+            ),
         ]);
     }
 

@@ -6,23 +6,12 @@ class Aktuality
     public static function list()
     {
         \Permissions::checkError('aktuality', P_OWNED);
-        $data = array_map(
-            fn($item) => [
-                'name' => $item['at_jmeno'],
-                'added' => \Format::timestamp($item['at_timestamp_add']),
-                'links' => (
-                    '<a href="/admin/aktuality/edit/' . $item['at_id'] . '">obecné</a>, ' .
-                    '<a href="/admin/aktuality/foto/' . $item['at_id'] . '">galerie</a>'
-                ),
-                'buttons' => \Buttons::delete('/admin/aktuality/remove/' . $item['at_id'])
-            ],
-            \Permissions::check('aktuality', P_ADMIN)
-            ? \DBAktuality::getAktuality(1)
-            : \DBAktuality::getAktuality(1, \Session::getUser()->getId())
-        );
         \Render::twig('Admin/Aktuality.twig', [
             'header' => 'Správa aktualit',
-            'data' => $data,
+            'data' => \DBAktuality::getAktuality(
+                1,
+                \Permissions::check('aktuality', P_ADMIN) ? null : \Session::getUser()->getId()
+            ),
         ]);
     }
 
@@ -73,7 +62,7 @@ class Aktuality
             'name' => $data['at_jmeno'],
             'summary' => $data['at_preview'],
             'text' => $data['at_text'],
-            'createdAt' => \Format::timestamp($data['at_timestamp_add']),
+            'createdAt' => $data['at_timestamp_add'],
         ]);
     }
 

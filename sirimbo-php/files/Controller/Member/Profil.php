@@ -10,7 +10,7 @@ class Profil
         $s = \DBSkupiny::getSingle($user->getTrainingGroup());
 
         $history = \DBPlatby::getPaymentHistory($user->getId());
-        $paymentsPaid = array_flip(array_map(fn($x) => $x['pc_id'], $history));
+        $paymentsPaid = array_flip(array_column($history, 'pc_id'));
         $paymentsWanted = [];
         $groups = \DBSkupiny::getSingleWithCategories($user->getTrainingGroup());
         foreach ($groups as $row) {
@@ -36,9 +36,8 @@ class Profil
                 'color' => $s['s_color_rgb'],
                 'description' => $s['s_description'],
             ],
-            'varSymbol' => \User::varSymbol($user->getId()),
             'hasPaid' => \DBPlatby::hasPaidMemberFees($user->getId()),
-            'paymentHistory' =>  array_map(
+            'paymentHistory' => array_map(
                 fn($row) => [
                     'id' => $row['pc_id'],
                     'name' => $row['pc_name'],

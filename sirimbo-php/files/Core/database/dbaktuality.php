@@ -3,8 +3,6 @@ class DBAktuality extends Database
 {
     public static function getAktuality($kat = 0, $kdo = 0)
     {
-        list($kat) = self::escape($kat);
-
         $res = self::query(
             "SELECT *
             FROM aktuality
@@ -34,7 +32,13 @@ class DBAktuality extends Database
         self::query(
             "INSERT INTO aktuality (at_kdo,at_kat,at_jmeno,at_text,at_preview,at_foto,at_foto_main,at_timestamp_add)
             VALUES ('?','?','?','?','?','?','?',NOW())",
-            $kdo, $kat, $jmeno, $text, $preview, $foto, $foto_main
+            $kdo,
+            $kat,
+            $jmeno,
+            $text,
+            $preview,
+            $foto,
+            $foto_main,
         );
         return self::getInsertId();
     }
@@ -45,7 +49,14 @@ class DBAktuality extends Database
             "UPDATE aktuality
             SET at_kat='?',at_jmeno='?',at_text='?',at_preview='?',at_foto='?',at_foto_main='?',at_timestamp_add='?'
             WHERE at_id='?'",
-            $kat, $jmeno, $text, $preview, $foto, $foto_main, $createdAt, $id
+            $kat,
+            $jmeno,
+            $text,
+            $preview,
+            $foto,
+            $foto_main,
+            $createdAt,
+            $id,
         );
     }
 

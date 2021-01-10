@@ -5,14 +5,16 @@
   <div class="form-row mb-2">
     <div class="form-group col-12 col-md-6">
       <label for="username">Přihlašovací jméno</label>
-      {{ text('login', login, {'readonly': action == 'edit'}) }}
+      <input class="form-control" type="text" {{ action == 'edit' ? readonly : '' }}
+             name="login" value="{{ login }}" />
       <small class="form-text text-muted">
         Pouze písmena bez diakritiky, číslice a podtržítka, 3 - 20 znaků
       </small>
     </div>
     <div class="form-group col-12 col-md-6">
       <label for="pass">Heslo</label>
-      {{ text('pass', pass, {'disabled': action == 'edit'}) }}
+      <input class="form-control" type="text" {{ action == 'edit' ? readonly : '' }}
+             name="pass" value="{{ pass }}" />
       <small class="form-text text-muted">
         Pouze písmena bez diakritiky, číslice a podtržítka, 6 - 32 znaků
       </small>
@@ -22,18 +24,18 @@
   <div class="form-row mb-2">
     <div class="form-group col-12 col-md-6">
       <label for="jmeno">Jméno</label>
-      {{ text('jmeno', jmeno) }}
+      <input class="form-control" type="text" name="jmeno" value="{{ jmeno }}" />
     </div>
     <div class="form-group col-12 col-md-6">
       <label for="prijmeni">Příjmení</label>
-      {{ text('prijmeni', prijmeni) }}
+      <input class="form-control" type="text" name="prijmeni" value="{{ prijmeni }}" />
     </div>
   </div>
 
   <div class="form-row mb-2">
     <div class="form-group col-12 col-md-6">
       <label for="narozeni">Datum narození</label>
-      {{ date('narozeni', narozeni) }}
+      <input class="form-control" type="date" name="narozeni" value="{{ narozeni }}" />
     </div>
     <div class="form-group col-12 col-md-6 pt-4">
       {{ inlineRadio('pohlavi', 'm', pohlavi == 'm', 'Muž') }}
@@ -44,11 +46,11 @@
   <div class="form-row mb-2">
     <div class="form-group col-12 col-md-6">
       <label for="email">E-mail</label>
-      {{ text('email', email) }}
+      <input class="form-control" type="text" name="email" value="{{ email }}" />
     </div>
     <div class="form-group col-12 col-md-6">
       <label for="telefon">Telefon</label>
-      {{ text('telefon', telefon) }}
+      <input class="form-control" type="text" name="telefon" value="{{ telefon }}" />
     </div>
   </div>
 
@@ -56,29 +58,29 @@
   <div class="form-row mb-2">
     <div class="form-group mb-2 col-12 col-md-6">
       <label for="street">Ulice</label>
-      {{ text('street', street) }}
+      <input class="form-control" type="text" name="street" value="{{ street }}" />
     </div>
     <div class="form-group col-6 col-md-3">
       <label for="popisne">Č. popisné</label>
-      {{ text('popisne', popisne) }}
+      <input class="form-control" type="text" name="popisne" value="{{ popisne }}" />
     </div>
     <div class="form-group col-6 col-md-3">
       <label for="orientacni">Č. orientační</label>
-      {{ text('orientacni', orientacni) }}
+      <input class="form-control" type="text" name="orientacni" value="{{ orientacni }}" />
     </div>
 
     <div class="form-group mb-2 col-12 col-md-6">
       <label for="city">Město</label>
-      {{ text('city', city) }}
+      <input class="form-control" type="text" name="city" value="{{ city }}" />
     </div>
     <div class="form-group col-12 col-md-6">
       <label for="district">Část města</label>
-      {{ text('district', district) }}
+      <input class="form-control" type="text" name="district" value="{{ district }}" />
     </div>
 
     <div class="form-group col-12 col-md-6">
       <label for="postal">PSČ</label>
-      {{ text('postal', postal) }}
+      <input class="form-control" type="text" name="postal" value="{{ postal }}" />
     </div>
   </div>
 

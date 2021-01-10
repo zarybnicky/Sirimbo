@@ -13,12 +13,12 @@ class DBNabidka extends Database
 
     public static function getNabidkyByTrener($trener, $desc = false)
     {
-        list($trener) = self::escape($trener);
         $res = self::query(
             "SELECT u_id,u_jmeno,u_prijmeni,nabidka.*
             FROM nabidka LEFT JOIN users ON n_trener=u_id
-            WHERE n_trener='$trener'
-            ORDER BY n_od" . ($desc ? ' DESC' : '')
+            WHERE n_trener='?'
+            ORDER BY n_od" . ($desc ? ' DESC' : ''),
+            $trener
         );
         return self::getArray($res);
     }
@@ -56,18 +56,22 @@ class DBNabidka extends Database
             "UPDATE nabidka
             SET n_trener='?',n_pocet_hod='?',n_max_pocet_hod='?',n_od='?',n_do='?',n_visible='?',n_lock='?'
             WHERE n_id='?'",
-            $trener, $pocet_hod, $max_hod, $od, $do, $visible, $lock, $id
+            $trener,
+            $pocet_hod,
+            $max_hod,
+            $od,
+            $do,
+            $visible,
+            $lock,
+            $id
         );
         return true;
     }
 
     public static function removeNabidka($id)
     {
-        list($id) = self::escape($id);
-
-        self::query("DELETE FROM nabidka WHERE n_id='$id'");
-        self::query("DELETE FROM nabidka_item WHERE ni_id_rodic='$id'");
-
+        self::query("DELETE FROM nabidka WHERE n_id='?'", $id);
+        self::query("DELETE FROM nabidka_item WHERE ni_id_rodic='?'", $id);
         return true;
     }
 
@@ -116,7 +120,8 @@ class DBNabidka extends Database
     {
         $res = self::query(
             "SELECT ni_pocet_hod FROM nabidka_item WHERE ni_id_rodic='?' AND ni_partner='?'",
-            $parent_id, $u_id
+            $parent_id,
+            $u_id
         );
         if (!$res) {
             return false;
@@ -131,21 +136,22 @@ class DBNabidka extends Database
         self::query(
             "INSERT INTO nabidka_item (ni_partner,ni_id_rodic,ni_pocet_hod)" .
             " VALUES ('?','?','?') ON DUPLICATE KEY UPDATE ni_pocet_hod=ni_pocet_hod+'?'",
-            $user_id, $parent_id, $pocet_hod, $pocet_hod
+            $user_id,
+            $parent_id,
+            $pocet_hod,
+            $pocet_hod
         );
         return true;
     }
 
     public static function editNabidkaItem($id, $partner, $pocet_hod)
     {
-        list($id, $partner, $pocet_hod) = self::escape($id, $partner, $pocet_hod);
-
         $res = self::query(
-        "SELECT ni_id,ni_id_rodic FROM nabidka_item
-        WHERE ni_partner='$partner' AND
-            ni_id_rodic=(SELECT ni_id_rodic FROM nabidka_item WHERE ni_id='$id')");
-            //Hledá konfliktní nabidku
-
+            "SELECT ni_id,ni_id_rodic FROM nabidka_item
+            WHERE ni_partner='?' AND ni_id_rodic=(SELECT ni_id_rodic FROM nabidka_item WHERE ni_id='?')",
+            $partner,
+            $id,
+        );
         if (!$res) {
             return false;
         } else {
@@ -156,9 +162,13 @@ class DBNabidka extends Database
             self::addNabidkaItemLessons($partner, $row['ni_id_rodic'], $pocet_hod);
         } else {
             self::query(
-            "UPDATE nabidka_item
-            SET ni_partner='$partner',ni_pocet_hod='$pocet_hod'
-            WHERE ni_id='$id'");
+                "UPDATE nabidka_item
+                SET ni_partner='?',ni_pocet_hod='?'
+                WHERE ni_id='?'",
+                $partner,
+                $pocet_hod,
+                $id,
+            );
         }
 
         return true;
@@ -168,7 +178,8 @@ class DBNabidka extends Database
     {
         self::query(
             "DELETE FROM nabidka_item WHERE ni_id_rodic='?' AND ni_partner='?'",
-            $parent_id, $u_id
+            $parent_id,
+            $u_id
         );
         return true;
     }

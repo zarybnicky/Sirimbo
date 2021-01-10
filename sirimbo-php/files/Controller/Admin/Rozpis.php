@@ -6,27 +6,20 @@ class Rozpis
     public static function list()
     {
         \Permissions::checkError('rozpis', P_OWNED);
-        $data = \Permissions::check('rozpis', P_ADMIN)
-            ? \DBRozpis::getRozpis(true)
-            : \DBRozpis::getRozpisyByTrener(\Session::getUser()->getId(), true);
-        $data = array_map(
-            fn($item) => [
-                'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
-                'datum' => \Format::date($item['r_datum']),
-                'kde' => $item['r_kde'],
-                'visible' => \Utils::checkbox($item['r_id'], '1', $item['r_visible']),
-                'buttons' => \Buttons::duplicate('/admin/rozpis/duplicate/' . $item['r_id'])
-                . '&nbsp;' . \Buttons::delete('/admin/rozpis/remove/' . $item['r_id']),
-                'links' => (
-                    '<a href="/admin/rozpis/edit/' . $item['r_id'] . '">obecné</a>, ' .
-                    '<a href="/admin/rozpis/detail/' . $item['r_id'] . '">tréninky</a>'
-                )
-            ],
-            $data
-        );
         \Render::twig('Admin/Rozpis.twig', [
             'header' => 'Správa rozpisů',
-            'data' => $data
+            'data' => array_map(
+                fn($item) => [
+                    'id' => $item['r_id'],
+                    'fullName' => "{$item['u_jmeno']} {$item['u_prijmeni']}",
+                    'date' => $item['r_datum'],
+                    'kde' => $item['r_kde'],
+                    'visible' => $item['r_visible'],
+                ],
+                \Permissions::check('rozpis', P_ADMIN)
+                ? \DBRozpis::getRozpis(true)
+                : \DBRozpis::getRozpisyByTrener(\Session::getUser()->getId(), true)
+            )
         ]);
     }
 

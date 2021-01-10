@@ -15,7 +15,6 @@ class DateHelper
         $this->post = true;
         $this->useRange = false;
         $this->cls = 'form-control';
-
         if ($value) {
             list($from, $to) = $this->createDate($value);
             $this->date = $from;
@@ -31,7 +30,7 @@ class DateHelper
         if (!is_string($date)) {
             return [null, null];
         }
-        if (strpos($date, '-')) {
+        if (strpos($date, '-') && strpos($date, '-') === strrpos($date, '-')) {
             $pieces = explode('-', $date);
             $from = new \Date(trim($pieces[0]));
             $to = new \Date(trim($pieces[1]));
@@ -93,20 +92,15 @@ class DateHelper
         if (empty($_POST[$name])) {
             return ['from' => new \Date(), 'to' => new \Date()];
         }
-        if (strpos($_POST[$name], '-')) {
+        if (strpos($_POST[$name], '-') && strpos($_POST[$name], '-') === strrpos($_POST[$name], '-')) {
             $pieces = explode('-', $_POST[$name]);
             $from = new \Date(trim($pieces[0]));
             $to = new \Date(trim($pieces[1]));
         }
         if (!isset($from) || !isset($to) || (!$from->isValid() && !$to->isValid())) {
-            return ['from' => static::getPost($name), 'to' => new \Date()];
+            return ['from' => new \Date($_POST[$name] ?? null), 'to' => new \Date()];
         }
         return ['from' => $from, 'to' => $to];
-    }
-
-    public static function getPost($name)
-    {
-        return new \Date($_POST[$name] ?? null);
     }
 
     public function __toString()

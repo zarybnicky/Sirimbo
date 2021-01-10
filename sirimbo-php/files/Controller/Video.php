@@ -16,29 +16,23 @@ class Video
             $videos = [];
             $playlist = null;
         }
-        $videos = array_map(
-            function ($item) {
-                list($id, $query) = array_merge(explode('?', $item['v_uri']), ['']);
-                return [
-                    'title' => $item['v_title'],
-                    'date' => $item['v_created_at'],
-                    'uri' => "//www.youtube.com/embed/$id?$query&amp;autoplay=1",
-                    'thumbnail' => "https://i3.ytimg.com/vi/$id/mqdefault.jpg"
-                ];
-            },
-            $videos
-        );
-        $playlists = array_map(
-            fn($item) => ['id' => $item['vl_id'], 'title' => $item['vl_title']],
-            \DBVideoList::getAll()
-        );
-        $playlists[] = ['id' => 'other', 'title' => 'Nezařazená videa'];
         \Render::twig('Main/Video.twig', [
             'header' => 'Video',
             'subheader' => $playlist,
-            'videos' => $videos,
             'playlist' => $playlist,
-            'playlists' => $playlists
+            'videos' => array_map(
+                function ($item) {
+                    list($id, $query) = array_merge(explode('?', $item['v_uri']), ['']);
+                    return [
+                        'title' => $item['v_title'],
+                        'date' => $item['v_created_at'],
+                        'uri' => "//www.youtube.com/embed/$id?$query&amp;autoplay=1",
+                        'thumbnail' => "https://i3.ytimg.com/vi/$id/mqdefault.jpg"
+                    ];
+                },
+                $videos
+            ),
+            'playlists' => \DBVideoList::getAll(),
         ]);
     }
 }

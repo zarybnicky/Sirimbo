@@ -1,14 +1,13 @@
 {% extends "Layout.twig" %}
 
 {% block content %}
-<div class="container">
-  <div class="center">
-    {{ table(data, [
-        ['group', '', ' class="r"'],
-        ['count', 'Počet', ' class="center big"'],
-    ], ' style="margin:0 auto"') }}
+  <div class="container">
+    <div>Uživatelé v databázi: <span class="big">{{ total }}</span></div>
+    <div>Aktivní uživatelé: <span class="big">{{ active }}</span></div>
+    {% for row in groups %}
+      <div>{{ row.pe_name }}: <span class="big">{{ row.count }}</span></div>
+    {% endfor %}
     <br/>
     <a class="btn btn-outline-primary" href="/admin/users">Zpět</a>
   </div>
-</div>
 {% endblock %}

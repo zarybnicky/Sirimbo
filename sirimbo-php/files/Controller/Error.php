@@ -14,6 +14,6 @@ class Error
         } else {
             \Message::danger("Chybová stránka s daným ID nebyla nalezena");
         }
-        \Render::twig('Empty.twig', ['header' => 'Chyba']);
+        \Render::twig('Layout.twig', ['header' => 'Chyba']);
     }
 }

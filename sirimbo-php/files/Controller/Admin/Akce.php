@@ -6,26 +6,9 @@ class Akce
     public static function list()
     {
         \Permissions::checkError('akce', P_OWNED);
-        $data = array_map(
-            fn($item) => [
-                'name' => $item['a_jmeno'],
-                'date' => \Format::date($item['a_od'])
-                . (($item['a_od'] != $item['a_do']) ? ' - ' . \Format::date($item['a_do']) : ''),
-                'userCount' => $item['a_obsazeno'] . '/' . $item['a_kapacita'],
-                'visible' => \Utils::checkbox($item['a_id'], '1', $item['a_visible']),
-                'links' => (
-                    '<a href="/admin/akce/edit/' . $item['a_id'] . '">obecné</a>, '
-                    . '<a href="/admin/akce/detail/' . $item['a_id'] . '">účastníci</a>, '
-                    . '<a href="/admin/akce/dokumenty/' . $item['a_id'] . '">dokumenty</a>'
-                ),
-                'buttons' => \Buttons::delete('/admin/akce/remove/' . $item['a_id'])
-            ],
-            \DBAkce::getWithItemCount()
-        );
-
         \Render::twig('Admin/Akce.twig', [
             'header' => 'Správa akcí',
-            'data' => $data
+            'data' => \DBAkce::getWithItemCount(),
         ]);
     }
 
@@ -162,43 +145,20 @@ class Akce
     public static function detail($id)
     {
         \Permissions::checkError('akce', P_OWNED);
-        if (!$akce = \DBAkce::getSingleAkce($id)) {
+        if (!$data = \DBAkce::getSingleAkce($id)) {
             \Message::warning('Akce s takovým ID neexistuje');
             \Redirect::to('/admin/akce');
         }
-        $data = [
-            'id' => $akce['a_id'],
-            'jmeno' => $akce['a_jmeno'],
-            'kde' => $akce['a_kde'],
-            'datum' => \Format::date($akce['a_od'])
-                . (($akce['a_od'] != $akce['a_do'])
-                ? ' - ' . \Format::date($akce['a_do'])
-                : ''),
-            'kapacita' => $akce['a_kapacita'],
-            'volno' => $akce['a_kapacita'] - count(\DBAkce::getAkceItems($id)),
-            'showForm' => \Permissions::check('akce', P_MEMBER)
-                && !$akce['a_lock'],
-            'canEdit' => \Permissions::check('akce', P_OWNED),
-            'info' => nl2br($akce['a_info'])
-        ];
-
-        $users = \DBUser::getActiveUsers();
-        $items = array_map(
-            fn($item) => [
-                'name' => \Utils::userSelect($users, $item['ai_id'] . '-user', $item['ai_user']),
-                'removeButton' => \Utils::submit('Odstranit', 'remove', $item['ai_id'])
-            ],
-            \DBAkce::getAkceItems($id)
-        );
-        $items[] = [
-            'name' => \Utils::userSelect($users, 'add-user', 0),
-            'removeButton' => \Utils::submit('Přidat', 'add', 'add')
-        ];
+        unset($data['a_info']);
 
         \Render::twig('Admin/AkceDetail.twig', [
             'header' => 'Správa akcí',
-            'data' => $data,
-            'items' => $items
+            'data' => $data + [
+                'reserved' => count(\DBAkce::getAkceItems($id)),
+                'canEdit' => \Permissions::check('akce', P_OWNED, $id),
+            ],
+            'users' => \DBUser::getActiveUsers(),
+            'items' => \DBAkce::getAkceItems($id),
         ]);
     }
 
@@ -240,34 +200,11 @@ class Akce
     public static function dokumenty($id)
     {
         \Permissions::checkError('akce', P_OWNED);
-        if (!($akce = \DBAkce::getSingleAkce($id))) {
+        if (!$data = \DBAkce::getSingleAkce($id)) {
             \Message::warning('Akce s takovým ID neexistuje');
             \Redirect::to('/admin/akce');
         }
-        $documents = array_filter(explode(',', $akce["a_dokumenty"]));
-
-        $akce = [
-            'id' => $akce['a_id'],
-            'jmeno' => $akce['a_jmeno'],
-            'kde' => $akce['a_kde'],
-            'datum' => \Format::date($akce['a_od'])
-            . (($akce['a_od'] != $akce['a_do'])
-               ? ' - ' . \Format::date($akce['a_do']) : ''),
-            'kapacita' => $akce['a_kapacita'],
-            'volno' => $akce['a_kapacita'] - count(\DBAkce::getAkceItems($id)),
-            'showForm' => \Permissions::check('akce', P_MEMBER) && !$akce['a_lock'],
-            'canEdit' => \Permissions::check('akce', P_OWNED)
-        ];
-
-        $documents = array_map(
-            fn($item) => [
-                'name' => $item['d_name'],
-                'category' => Dokumenty::$types[$item['d_kategorie']],
-                'removeButton' => \Utils::submit('Odstranit', 'remove', $item['d_id'])
-            ],
-            \DBDokumenty::getMultipleById($documents)
-        );
-
+        unset($data['a_info']);
         $allDocuments = [];
         foreach ([2, 3, 0] as $category) {
             foreach (\DBDokumenty::getDokumentyByKategorie($category) as $item) {
@@ -276,26 +213,26 @@ class Akce
                     $item['d_name'];
             }
         }
-        $documents[] = [
-            'name' => \Utils::select('add-id', ['' => '---'] + $allDocuments),
-            'category' => \Utils::submit('Přidat', 'add', 'add'),
-            'removeButton' => ''
-        ];
         \Render::twig('Admin/AkceDokumenty.twig', [
             'header' => 'Správa akcí',
-            'data' => $akce,
-            'documents' => $documents
+            'data' => $data + [
+                'reserved' => count(\DBAkce::getAkceItems($id)),
+                'canEdit' => \Permissions::check('akce', P_OWNED, $id),
+            ],
+            'documents' => \DBDokumenty::getMultipleById(explode(',', $data["a_dokumenty"])),
+            'documentSelect' => ['' => '---'] + $allDocuments,
+            'documentTypes' => Dokumenty::$types,
         ]);
     }
 
     public static function dokumentyPost($id)
     {
         \Permissions::checkError('akce', P_OWNED);
-        if (!($akce = \DBAkce::getSingleAkce($id))) {
+        if (!$akce = \DBAkce::getSingleAkce($id)) {
             \Message::warning('Akce s takovým ID neexistuje');
             \Redirect::to('/admin/akce');
         }
-        $documents = array_filter(explode(',', $akce["a_dokumenty"]));
+        $documents = explode(',', $akce["a_dokumenty"]);
 
         $changed = false;
         if (isset($_POST["remove"])) {
@@ -317,7 +254,7 @@ class Akce
                 $akce["a_od"],
                 $akce["a_do"],
                 $akce["a_kapacita"],
-                implode(',', $documents),
+                implode(',', array_filter($documents)),
                 $akce["a_lock"],
                 $akce['a_visible'],
             );
@@ -327,19 +264,10 @@ class Akce
 
     private static function displayForm($action, $data = [])
     {
-        if ($data) {
-            $dokumenty = array_map(
-                fn($item) => ['id' => $item['d_id'], 'name' => $item['d_name']],
-                \DBDokumenty::getMultipleById(array_filter(explode(',', $data['a_dokumenty']))),
-            );
-        } else {
-            $dokumenty = [];
-        }
-
         \Render::twig('Admin/AkceForm.twig', [
             'header' => 'Správa akcí',
             'subheader' => $action == 'add' ? 'Přidat akci' : 'Upravit akci',
-            'dokumenty' => $dokumenty,
+            'dokumenty' => $data ? \DBDokumenty::getMultipleById(explode(',', $data['a_dokumenty'])) : [],
             'action' => $action == 'add' ? 'Přidat' : 'Upravit',
             'id' => $data ? $data['a_id'] : null,
             'jmeno' => $_POST['jmeno'] ?? $data['a_jmeno'] ?? '',

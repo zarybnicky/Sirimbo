@@ -26,11 +26,6 @@ class Database
         return $array;
     }
 
-    protected static function escape($string)
-    {
-        return self::escapeArray(func_get_args());
-    }
-
     protected static function getConnection()
     {
         if (self::$connection == null) {

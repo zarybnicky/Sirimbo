@@ -15,7 +15,7 @@
       <div class="form-group row">
         <label for="createdAt" class="col-sm-2 col-form-label">Publikováno</label>
         <div class="col-sm-10">
-          {{ text('createdAt', createdAt) }}
+          <input class="form-control" type="text" name="createdAt" value="{{ createdAt | date('j. n. Y H:i') }}" />
         </div>
       </div>
     {% endif %}

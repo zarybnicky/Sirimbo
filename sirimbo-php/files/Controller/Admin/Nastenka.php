@@ -9,26 +9,16 @@ class Nastenka
         $pager = new \Paging(new \DBNastenka());
         $pager->setCurrentPage($_GET['p']);
         $pager->setItemsPerPage($_GET['c']);
-        $data = array_map(
-            fn($item) => [
-                'buttons' => \Permissions::check('nastenka', P_OWNED, $item['up_kdo'])
-                ? \Buttons::nastenka($item['up_id'])
-                : '',
-                'header' => $item['up_nadpis'],
-                'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
-                'timestampAdd' => \Format::timestamp($item['up_timestamp_add'], true),
-                'groups' => implode('', array_map(
-                    fn($x) => "<div class=\"box\" title=\"{$x['ups_popis']}\" style=\"background-color:{$x['ups_color']}\"></div>",
-                    \DBNastenka::getNastenkaSkupiny($item['up_id']),
-                )),
-            ],
-            $pager->getItems(),
-        );
         \Render::twig('Admin/Nastenka.twig', [
             'header' => 'Správa nástěnky',
-            'showButtonsCol' => !!array_filter(array_map(fn($x) => $x['buttons'], $data)),
-            'data' => $data,
-            'navigation' => $pager->getNavigation()
+            'navigation' => $pager->getNavigation(),
+            'data' => array_map(
+                fn($item) => $item + [
+                    'canEdit' => \Permissions::check('nastenka', P_OWNED, $item['up_kdo']),
+                    'groups' => \DBNastenka::getNastenkaSkupiny($item['up_id']),
+                ],
+                $pager->getItems(),
+            ),
         ]);
     }
 

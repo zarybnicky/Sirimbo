@@ -5,14 +5,9 @@ class Registrace
 {
     public static function get()
     {
-        $skupiny = array_map(fn($item) => [
-            'id' => $item['s_id'],
-            'text' => $item['s_name'],
-        ], \DBSkupiny::get());
-
         \Render::twig('Main/Registrace.twig', [
             'header' => 'Registrace',
-            'skupiny' => $skupiny,
+            'skupiny' => \DBSkupiny::get(),
             'countries' => \Countries::$countries,
             'username' => '',
             'pass' => '',
@@ -58,16 +53,11 @@ class Registrace
         $f->checkNotEmpty($_POST['nationality'], 'Vyplňte vaši národnost', 'nationality');
 
         if (!$f->isValid()) {
-            $skupiny = array_map(fn($item) => [
-                'id' => $item['s_id'],
-                'text' => "<div class=\"box\" title=\"{$item['s_description']}\" style=\"background-color:{$item['s_color_rgb']}\"></div>" . '&nbsp;' . $item['s_name'],
-            ], \DBSkupiny::get());
-
             \Message::warning($f->getMessages());
             \Render::twig('Main/Registrace.twig', [
                 'header' => 'Registrace',
                 'countries' => \Countries::$countries,
-                'skupiny' => $skupiny,
+                'skupiny' => \DBSkupiny::get(),
                 'username' => $_POST['username'] ?? '',
                 'pass' => $_POST['pass'] ?? '',
                 'jmeno' => $_POST['jmeno'] ?? '',

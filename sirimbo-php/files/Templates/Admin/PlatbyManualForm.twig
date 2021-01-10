@@ -13,13 +13,13 @@
         </tr>
         <tr>
           <td class="r">Datum:</td>
-          <td>{{ date('date', guess.date) }}</td>
+          <td><input class="form-control" type="date" name="date" value="{{ guess.date }}" /></td>
           <td>{{ recognized.date.column }}</td>
-          <td>{{ recognized.date.value }}</td>
+          <td>{{ recognized.date.value | date('j. n. Y') }}</td>
         </tr>
         <tr>
           <td class="r">Částka (Kč):</td>
-          <td>{{ text('amount', guess.amount) }}</td>
+          <td><input class="form-control" type="text" name="amount" value="{{ guess.amount }}" />
           <td>{{ recognized.amount.column }}</td>
           <td>{{ recognized.amount.value }}</td>
         </tr>
@@ -37,7 +37,7 @@
         </tr>
         <tr>
           <td class="r">Prefix (rok):</td>
-          <td>{{ text('prefix', guess.prefix) }}</td>
+          <td><input class="form-control" type="text" name="prefix" value="{{ guess.prefix }}" />
           <td></td>
           <td>{{ recognized.prefix.value }}</td>
         </tr>
@@ -49,9 +49,13 @@
     </form>
     <br/>
     <h3>Data z banky</h3>
-    {{ table(raw, [
-        ['column', '', ' class="r" style="padding-right:5px"'],
-        ['value', '', ' style="min-width:150px;padding-left:5px"'],
-    ], ' style="width:100%"') }}
+    <table style="width:100%">
+      {% for key, value in raw %}
+        <tr>
+          <td class="r" style="padding-right:5px">{{ key }}</td>
+          <td style="min-width:150px;padding-left:5px">{{ value }}</td>
+        </tr>
+      {% endfor %}
+    </table>
   </div>
 {% endblock %}
