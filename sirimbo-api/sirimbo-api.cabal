@@ -16,7 +16,8 @@ common shared
                       -Wredundant-constraints
                       -Wmonomorphism-restriction
                       -fwarn-tabs
-
+                      -fwrite-ide-info
+                      -hiedir=.hie
 library
   import: shared
   hs-source-dirs:      src

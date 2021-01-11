@@ -113,7 +113,7 @@
 
     {% for msg in getMessages() %}
       <div class="container">
-        <div class="alert alert-{{ msg.type }}">{{ msg.text }}</div>
+        <div class="alert alert-{{ msg.type }}">{{ msg.text | raw }}</div>
       </div>
     {% endfor %}
 

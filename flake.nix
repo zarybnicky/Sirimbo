@@ -26,7 +26,7 @@
   in {
     overlay = final: prev: let
       inherit (prev.haskell.lib) doJailbreak dontCheck justStaticExecutables
-        generateOptparseApplicativeCompletion;
+        generateOptparseApplicativeCompletion unmarkBroken;
     in {
       phpstan = final.stdenv.mkDerivation {
         pname = "phpstan";
@@ -52,6 +52,8 @@
           co-log-core = hself.callCabal2nix "co-log-core" "${co-log}/co-log-core" {};
           in-other-words = hself.callCabal2nix "in-other-words" in-other-words {};
           higgledy = hself.callCabal2nix "higgledy" higgledy {};
+          stan = unmarkBroken hsuper.stan;
+          microaeson = unmarkBroken (doJailbreak hsuper.microaeson);
 
           sirimbo-schema = hself.callCabal2nix "sirimbo-schema" (getSrc ./sirimbo-schema) {};
           sirimbo-api = generateOptparseApplicativeCompletion "olymp" (
@@ -117,6 +119,7 @@
       buildInputs = [
         hsPkgs.cabal-install
         hsPkgs.haskell-language-server
+        hsPkgs.stan
         pkgs.yarn
         pkgs.phpstan
         pkgs.nodePackages.typescript
