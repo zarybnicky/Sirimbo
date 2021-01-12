@@ -72,7 +72,7 @@ try {
     ob_clean();
     syslog(LOG_ERR, "{$_SERVER['REQUEST_URI']}: {$e->getMessage()}");
     http_response_code(404);
-    \Render::twig('Error.twig', ['errorCode' => 'not-found']);
+    \Render::twig('Error.twig', ['errorCode' => 'not_found']);
 } catch (ViewException $e) {
     syslog(
         LOG_ERR,

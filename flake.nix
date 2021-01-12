@@ -301,6 +301,7 @@
                 extraConfig = "try_files /public/$uri /index.php?$args;";
               };
               locations."~ \.php$".extraConfig = ''
+                try_files $uri /index.php?$args;
                 fastcgi_split_path_info ^(.+\.php)(/.+)$;
                 fastcgi_pass unix:${config.services.phpfpm.pools.${cfg.domain}.socket};
                 fastcgi_index index.php;
