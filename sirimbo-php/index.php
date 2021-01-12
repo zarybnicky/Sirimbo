@@ -66,16 +66,13 @@ try {
     $router->dispatchGlobal();
 } catch (AuthorizationException $e) {
     ob_clean();
-    \Redirect::to('/error?id=' . $e->getErrorFile());
+    http_response_code(403);
+    \Render::twig('Error.twig', ['errorCode' => 'authorization']);
 } catch (NotFoundException $e) {
     ob_clean();
-    syslog(LOG_ERR, $_SERVER['REQUEST_URI'] . ": {$e->getMessage()}");
+    syslog(LOG_ERR, "{$_SERVER['REQUEST_URI']}: {$e->getMessage()}");
     http_response_code(404);
-    \Message::danger(
-        "<b>Stránka nenalezena.</b><br><br>Pokud si myslíte, " .
-        "že tu něco má být a není, kontaktujte prosím administrátora."
-    );
-    \Render::twig('Layout.twig', ['header' => 'Chyba']);
+    \Render::twig('Error.twig', ['errorCode' => 'not-found']);
 } catch (ViewException $e) {
     syslog(
         LOG_ERR,
