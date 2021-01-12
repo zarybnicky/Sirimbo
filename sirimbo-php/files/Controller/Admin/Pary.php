@@ -7,7 +7,6 @@ class Pary
     {
         \Permissions::checkError('pary', P_OWNED);
         \Render::twig('Admin/Pary.twig', [
-            'header' => 'Správa párů',
             'data' => \DBPary::getActivePary(),
             'usersMen' => \DBUser::getUsersByPohlavi('m'),
             'usersWomen' => \DBUser::getUsersByPohlavi('f')

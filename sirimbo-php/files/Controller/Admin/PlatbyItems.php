@@ -18,8 +18,6 @@ class PlatbyItems
 
         $date = new \DateHelper('date', $_GET['date'] ?? null);
         \Render::twig('Admin/PlatbyItems.twig', [
-            'header' => 'Správa plateb',
-            'subheader' => 'Jednotlivé platby',
             'users' => [['u_id' => 'all', 'u_prijmeni' => '---', 'u_jmeno' => '']] + \DBUser::getUsers(),
             'categories' => ['all' => '---'] + static::getCategories(),
             'data' => \DBPlatbyItem::get(
@@ -140,8 +138,6 @@ class PlatbyItems
             }
         }
         \Render::twig('Admin/PlatbyItemsForm.twig', [
-            'header' => 'Správa plateb',
-            'subheader' => 'Jednotlivé platby',
             'action' => $action,
             'returnURI' => $_SERVER['HTTP_REFERER'],
             'id' => $id,

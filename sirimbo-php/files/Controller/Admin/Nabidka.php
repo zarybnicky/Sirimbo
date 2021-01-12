@@ -7,7 +7,6 @@ class Nabidka
     {
         \Permissions::checkError('nabidka', P_OWNED);
         \Render::twig('Admin/Nabidka.twig', [
-            'header' => 'Správa nabídky',
             'data' => \Permissions::check('nabidka', P_ADMIN)
             ? \DBNabidka::getNabidka(true)
             : \DBNabidka::getNabidkyByTrener(\Session::getUser()->getId(), true),
@@ -151,11 +150,7 @@ class Nabidka
             $data['n_lock']
         );
         foreach ($items as $item) {
-            \DBNabidka::addNabidkaItemLessons(
-                $item['ni_partner'],
-                $newId,
-                $item['ni_pocet_hod']
-            );
+            \DBNabidka::addNabidkaItemLessons($item['ni_partner'], $newId, $item['ni_pocet_hod']);
         }
         \Redirect::to('/admin/nabidka');
     }
@@ -173,18 +168,12 @@ class Nabidka
 
     protected static function displayForm($action, $data = [])
     {
-        $isAdmin = \Permissions::check('nabidka', P_ADMIN);
-        if ($isAdmin) {
-            $treneri = \DBUser::getUsersByPermission('nabidka', P_OWNED);
-        } else {
-            $treneri = [\DBUser::getUserData(\Session::getUser()->getId())];
-        }
         \Render::twig('Admin/NabidkaForm.twig', [
-            'header' => 'Správa nabídky',
-            'subheader' => $action == 'add' ? 'Přidat nabídku' : 'Upravit nabídku',
-            'action' => $action == 'add' ? 'Přidat' : 'Upravit',
+            'action' => $action,
             'returnURI' => $_SERVER['HTTP_REFERER'],
-            'users' => $treneri,
+            'users' => \Permissions::check('nabidka', P_ADMIN)
+            ? \DBUser::getUsersByPermission('nabidka', P_OWNED)
+            : [\DBUser::getUserData(\Session::getUser()->getId())],
             'id' => $data['n_id'] ?? null,
             'trener' => $_POST['trener'] ?? $data['n_trener'] ?? '',
             'pocet_hod' => $_POST['pocet_hod'] ?? $data['n_pocet_hod'] ?? '',

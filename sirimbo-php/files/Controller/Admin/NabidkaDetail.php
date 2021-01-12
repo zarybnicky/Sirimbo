@@ -13,7 +13,6 @@ class NabidkaDetail
         \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
         $items = \DBNabidka::getNabidkaItem($id);
         \Render::twig('Admin/NabidkaDetail.twig', [
-            'header' => 'Správa nabídky',
             'nabidka' => [
                 'id' => $data['n_id'],
                 'fullName' => "{$data['u_jmeno']} {$data['u_prijmeni']}",

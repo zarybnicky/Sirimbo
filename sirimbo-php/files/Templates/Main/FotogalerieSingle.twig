@@ -1,12 +1,14 @@
 {% extends "Layout.twig" %}
 
+{% block title %}{{ dir.gd_name }}{% endblock %}
+
 {% block content %}
 <div class="container">
   <div class="row">
     <div class="col-4 pt-3">{{ sidemenu | raw }}</div>
     <div class="col-8">
       <div class="text-center">
-        {% if hasPrev %}
+        {% if prevURI %}
           <a href="{{ prevURI }}">&lt;&lt;</a>
         {% else %}
           &lt;&lt;
@@ -16,7 +18,7 @@
         <a href="{{ returnURI }}">Zpět</a>
         &nbsp;&bull;&nbsp;
 
-        {% if hasNext %}
+        {% if nextURI %}
           <a href="{{ nextURI }}">&gt;&gt;</a>
         {% else %}
           &gt;&gt;

@@ -10,7 +10,6 @@ class Nastenka
         $pager->setCurrentPage($_GET['p']);
         $pager->setItemsPerPage($_GET['c']);
         \Render::twig('Admin/Nastenka.twig', [
-            'header' => 'Správa nástěnky',
             'navigation' => $pager->getNavigation(),
             'data' => array_map(
                 fn($item) => $item + [
@@ -156,10 +155,7 @@ class Nastenka
         foreach ($skupiny as $item) {
             $skupinySelected[$item['s_id']] = $_POST['sk-' . $item['s_id']] ?? null;
         }
-        $action = $action == 'add' ? 'Přidat' : 'Upravit';
         \Render::twig('Admin/NastenkaForm.twig', [
-            'header' => 'Správa nástěnky',
-            'subheader' => "$action příspěvek",
             'action' => $action,
             'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/nastenka',
             'skupiny' => $skupiny,

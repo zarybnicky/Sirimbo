@@ -1,5 +1,8 @@
 {% extends "Layout.twig" %}
 
+{% block title %}Správa plateb{% endblock %}
+{% block subheader %}<h2>{{ action ? 'Přidat' : 'Upravit' }} specifický symbol</h2>{% endblock %}
+
 {% block content %}
   {% include 'Admin/PlatbyNavigation.twig' %}
   <div class="container">
@@ -54,7 +57,7 @@
       {% endfor %}
 
       <input type='hidden' name='returnURI' value='{{ returnURI }}'>
-      <button class="btn btn-primary">Uložit</button>
+      <button class="btn btn-primary">{{ action == 'add' ? 'Přidat' : 'Upravit' }}</button>
       <a class="btn btn-outline-primary" href="{{ returnURI }}">Zpět</a><br/>
     </form>
   </div>

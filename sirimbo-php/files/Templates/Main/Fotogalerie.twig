@@ -1,15 +1,16 @@
 {% extends "Layout.twig" %}
 
+{% block title %}{{ dir.gd_name }}{% endblock %}
+
 {% block content %}
 <div class="container">
   <div class="row">
     <div class="col-4 pt-3">{{ sidemenu | raw }}</div>
     <div class="col-8">
-      <h2>{{ nadpis }}</h2>
       {% for item in photos %}
-        <a href="{{ item.href }}" class="foto_preview no-a">
+        <a href="/fotogalerie/{{ dir.gd_id }}/foto/{{ item.gf_id }}" class="foto_preview no-a">
           <div class="foto_preview_in">
-            <img alt="{{ item.id }}" src="{{ item.src }}" />
+            <img alt="{{ item.gf_id }}" src="/galerie/thumbnails/{{ item.gf_path }}" />
           </div>
         </a>
       {% else %}

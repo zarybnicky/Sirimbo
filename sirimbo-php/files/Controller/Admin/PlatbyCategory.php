@@ -7,8 +7,6 @@ class PlatbyCategory
     {
         \Permissions::checkError('platby', P_OWNED);
         \Render::twig('Admin/PlatbyStructureSymbol.twig', [
-            'header' => 'Správa plateb',
-            'subheader' => 'Specifické symboly',
             'data' => \DBPlatbyCategory::get(false),
             'archived' => \DBPlatbyCategory::get(true),
         ]);
@@ -192,8 +190,6 @@ class PlatbyCategory
             );
         }
         \Render::twig('Admin/PlatbyStructureSymbolRemove.twig', [
-            'header' => 'Správa plateb',
-            'subheader' => 'Specifické symboly',
             'id' => $id,
             'name' => $data['pc_name'],
             'returnURI' => $_SERVER['HTTP_REFERER'],
@@ -263,8 +259,6 @@ class PlatbyCategory
     protected static function displayForm($action, $id = 0)
     {
         \Render::twig('Admin/PlatbyStructureSymbolForm.twig', [
-            'header' => 'Správa plateb',
-            'subheader' => ($action == 'add' ? 'Přidat' : 'Upravit') . ' specifický symbol',
             'id' => $id,
             'action' => $action,
             'groups' => \DBPlatbyGroup::getGroups(),

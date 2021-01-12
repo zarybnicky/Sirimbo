@@ -14,7 +14,6 @@ class Dokumenty
     {
         \Permissions::checkError('dokumenty', P_OWNED);
         \Render::twig('Admin/Dokumenty.twig', [
-            'header' => 'Správa dokumentů',
             'types' => self::$types,
             'data' => \Permissions::check('dokumenty', P_ADMIN)
             ? \DBDokumenty::getDokumenty()
@@ -65,7 +64,6 @@ class Dokumenty
         }
         \Permissions::checkError('dokumenty', P_OWNED, $data['d_kdo']);
         \Render::twig('Admin/DokumentyForm.twig', [
-            'header' => 'Správa dokumentů',
             'name' => $data['d_name']
         ]);
     }

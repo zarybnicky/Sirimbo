@@ -11,7 +11,6 @@ class GalerieDirectory
             \Redirect::to('/admin/galerie');
         }
         \Render::twig('Admin/GalerieDirectory.twig', [
-            'header' => 'Správa fotogalerie',
             'id' => $id,
             'files' => array_map(
                 fn($item) => [
@@ -140,10 +139,7 @@ class GalerieDirectory
             ],
             \DBGalerie::getDirs(true, true)
         );
-        $action = $action == 'add' ? 'Přidat' : 'Upravit';
         \Render::twig('Admin/GalerieFormDirectory.twig', [
-            'header' => 'Správa fotogalerie',
-            'subheader' => "$action složku",
             'dirs' => [['id' => '0', 'text' => '---']] + $dirs,
             'action' => $action,
             'name' => $_POST['name'] ?? '',

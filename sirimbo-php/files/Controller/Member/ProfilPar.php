@@ -26,7 +26,6 @@ class ProfilPar
         $havePartner = !empty($couple) && $couple['u_id'];
         $_POST['partner'] = $havePartner ? $couple['u_id'] : '0';
         \Render::twig('Member/ProfilPartner.twig', [
-            'header' => 'Profil',
             'havePartner' => $havePartner,
             'partnerID' => $couple['u_id'],
             'partnerFullName' => $couple['u_jmeno'] . ' ' . $couple['u_prijmeni'],

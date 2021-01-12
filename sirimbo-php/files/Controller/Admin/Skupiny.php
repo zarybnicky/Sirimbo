@@ -6,10 +6,7 @@ class Skupiny
     public static function list()
     {
         \Permissions::checkError('skupiny', P_OWNED);
-        \Render::twig('Admin/Skupiny.twig', [
-            'header' => 'Správa skupin',
-            'data' => \DBSkupiny::get()
-        ]);
+        \Render::twig('Admin/Skupiny.twig', ['data' => \DBSkupiny::get()]);
     }
 
     public static function add()
@@ -118,8 +115,6 @@ class Skupiny
     private static function displayForm($id, $action, $data = [])
     {
         \Render::twig('Admin/SkupinyForm.twig', [
-            'header' => 'Správa skupin',
-            'subheader' => $action == 'add' ? 'Přidat skupinu' : 'Upravit skupinu',
             'id' => $id,
             'name' => $_POST['name'] ?? $data['s_name'] ?? '',
             'color' => $_POST['color'] ?? $data['s_color_rgb'] ?? '',

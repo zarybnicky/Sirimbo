@@ -53,7 +53,6 @@ class Users
         unset($copySkupinyOptions['all']);
 
         \Render::twig('Admin/Users.twig', [
-            'header' => 'Správa uživatelů',
             'groupOptions' => $groupOptions,
             'skupinyOptions' => $skupinyOptions,
             'onlySkupinyOptions' => $copySkupinyOptions,
@@ -359,8 +358,6 @@ class Users
     {
         \Permissions::checkError('users', P_ADMIN);
         \Render::twig('Admin/UsersUnconfirmed.twig', [
-            'header' => 'Správa uživatelů',
-            'subheader' => 'Nepotvrzení uživatelé',
             'groups' => \DBPermissions::getGroups(),
             'skupiny' => \DBSkupiny::get(),
             'data' => \DBUser::getNewUsers(),
@@ -384,9 +381,7 @@ class Users
     {
         \Permissions::checkError('users', P_ADMIN);
         \Render::twig('Admin/UsersDuplicate.twig', [
-            'header' => 'Správa uživatelů',
-            'subheader' => 'Duplicitní uživatelé',
-            'data' => \DBUser::getDuplicateUsers()
+            'data' => \DBUser::getDuplicateUsers(),
         ]);
     }
 
@@ -394,8 +389,6 @@ class Users
     {
         \Permissions::checkError('users', P_ADMIN);
         \Render::twig('Admin/UsersStatistics.twig', [
-            'header' => 'Správa uživatelů',
-            'subheader' => 'Statistiky',
             'total' => count(\DBUser::getUsers()),
             'active' => count(\DBUser::getActiveUsers()),
             'groups' => \DBUser::getGroupCounts(),
@@ -405,26 +398,11 @@ class Users
     private static function displayForm($action)
     {
         \Render::twig('Admin/UsersForm.twig', [
-            'header' => 'Správa uživatelů',
-            'subheader' => ($action == 'add' ? 'Přidat' : 'Upravit') . ' uživatele',
             'action' => $action,
             'returnURI' => $_POST['returnURI'] ?? ($_SERVER['HTTP_REFERER'] ?? '/admin/users'),
             'countries' => \Countries::$countries,
-            'groups' => array_map(
-                fn($item) => [
-                    'id' => $item['pe_id'],
-                    'name' => $item['pe_name']
-                ],
-                \DBPermissions::getGroups()
-            ),
-            'skupiny' => array_map(
-                fn($item) => [
-                    'id' => $item['s_id'],
-                    'color' => $item['s_color_rgb'],
-                    'popis' => $item['s_name']
-                ],
-                \DBSkupiny::get()
-            ),
+            'groups' => \DBPermissions::getGroups(),
+            'skupiny' => \DBSkupiny::get(),
             'login' => $_POST['login'] ?? '',
             'pass' => $_POST['pass'] ?? '',
             'jmeno' => $_POST['jmeno'] ?? '',

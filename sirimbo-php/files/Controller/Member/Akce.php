@@ -14,7 +14,6 @@ class Akce
         unset($data['a_info']);
         unset($data['dokumenty']);
         \Render::twig('Member/AkceSingle.twig', [
-            'header' => 'Klubové akce',
             'data' => $data,
             'items' => \DBAkce::getAkceItems($id),
         ]);
@@ -43,7 +42,6 @@ class Akce
     {
         \Permissions::checkError('akce', P_VIEW);
         \Render::twig('Member/Akce.twig', [
-            'header' => 'Klubové akce',
             'akce' => array_map(
                 fn($item) => static::_getRenderData($item),
                 \DBAkce::getAkce(true)

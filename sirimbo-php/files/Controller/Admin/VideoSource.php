@@ -7,7 +7,6 @@ class VideoSource
     {
         \Permissions::checkError('aktuality', P_OWNED);
         \Render::twig('Admin/VideoSource.twig', [
-            'header' => 'Správa zdrojů videa',
             'data' => \DBVideoSource::getAll(),
         ]);
     }
@@ -79,9 +78,7 @@ class VideoSource
     protected static function displayForm($action, $data = [])
     {
         \Render::twig('Admin/VideoSourceForm.twig', [
-            'header' => 'Správa zdrojů videa',
-            'subheader' => $action == 'add' ? 'Přidat zdroj' : 'Upravit zdroj',
-            'action' => $action == 'add' ? 'Přidat' : 'Upravit',
+            'action' => $action,
             'id' => $data ? $data['vs_id'] : null,
             'uri' => $_POST['uri'] ?? $data['vs_url'] ?? '',
             'title' => $_POST['title'] ?? $data['vs_title'] ?? '',

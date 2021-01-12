@@ -6,10 +6,7 @@ class Akce
     public static function list()
     {
         \Permissions::checkError('akce', P_OWNED);
-        \Render::twig('Admin/Akce.twig', [
-            'header' => 'Správa akcí',
-            'data' => \DBAkce::getWithItemCount(),
-        ]);
+        \Render::twig('Admin/Akce.twig', ['data' => \DBAkce::getWithItemCount()]);
     }
 
     public static function listPost()
@@ -152,7 +149,6 @@ class Akce
         unset($data['a_info']);
 
         \Render::twig('Admin/AkceDetail.twig', [
-            'header' => 'Správa akcí',
             'data' => $data + [
                 'reserved' => count(\DBAkce::getAkceItems($id)),
                 'canEdit' => \Permissions::check('akce', P_OWNED, $id),
@@ -214,7 +210,6 @@ class Akce
             }
         }
         \Render::twig('Admin/AkceDokumenty.twig', [
-            'header' => 'Správa akcí',
             'data' => $data + [
                 'reserved' => count(\DBAkce::getAkceItems($id)),
                 'canEdit' => \Permissions::check('akce', P_OWNED, $id),
@@ -265,10 +260,8 @@ class Akce
     private static function displayForm($action, $data = [])
     {
         \Render::twig('Admin/AkceForm.twig', [
-            'header' => 'Správa akcí',
-            'subheader' => $action == 'add' ? 'Přidat akci' : 'Upravit akci',
             'dokumenty' => $data ? \DBDokumenty::getMultipleById(explode(',', $data['a_dokumenty'])) : [],
-            'action' => $action == 'add' ? 'Přidat' : 'Upravit',
+            'action' => $action,
             'id' => $data ? $data['a_id'] : null,
             'jmeno' => $_POST['jmeno'] ?? $data['a_jmeno'] ?? '',
             'kde' => $_POST['kde'] ?? $data['a_kde'] ?? '',

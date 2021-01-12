@@ -1,5 +1,8 @@
 {% extends "Layout.twig" %}
 
+{% block title %}Správa plateb{% endblock %}
+{% block subheader %}<h2>Struktura plateb</h2>{% endblock %}
+
 {% macro paymentCategory(id) %}
   <div class="btn-group">
     <button type="button" class="btn btn-xs pt-0" data-toggle="dropdown">

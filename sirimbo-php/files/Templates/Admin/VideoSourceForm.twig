@@ -1,5 +1,8 @@
 {% extends "Layout.twig" %}
 
+{% block title %}Správa zdrojů videa{% endblock %}
+{% block subheader %}<h2>{{ action == 'add' ? 'Přidat' : 'Upravit' }} zdroj</h2>{% endblock %}
+
 {% block content %}
 <div class="container">
   <form action="" method="post">
@@ -19,7 +22,7 @@
       <input class="form-control" type="text" name="desc" value="{{ desc }}" />
     </div>
     <div class="form-group">
-      <button class="btn btn-primary">{{ action }}</button>
+      <button class="btn btn-primary">{{ action == 'add' ? 'Přidat' : 'Upravit' }}</button>
       <a class="btn btn-outline-primary" href="/admin/video/source">Zpět</a>
     </div>
   </form>

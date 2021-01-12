@@ -7,7 +7,6 @@ class Aktuality
     {
         \Permissions::checkError('aktuality', P_OWNED);
         \Render::twig('Admin/Aktuality.twig', [
-            'header' => 'Správa aktualit',
             'data' => \DBAktuality::getAktuality(
                 1,
                 \Permissions::check('aktuality', P_ADMIN) ? null : \Session::getUser()->getId()
@@ -19,8 +18,6 @@ class Aktuality
     {
         \Permissions::checkError('aktuality', P_OWNED);
         \Render::twig('Admin/AktualityForm.twig', [
-            'header' => 'Správa aktualit',
-            'subheader' => 'Přidat článek',
             'action' => 'add',
             'name' => '',
             'summary' => '',
@@ -56,8 +53,6 @@ class Aktuality
         }
         \Permissions::checkError('aktuality', P_OWNED, $data['at_kdo']);
         \Render::twig('Admin/AktualityForm.twig', [
-            'header' => 'Správa aktualit',
-            'subheader' => 'Upravit článek',
             'action' => 'edit',
             'name' => $data['at_jmeno'],
             'summary' => $data['at_preview'],
@@ -78,8 +73,6 @@ class Aktuality
         if (\DateTime::createFromFormat('j. n. Y H:i', $_POST['createdAt']) === false) {
             \Message::danger('Špatný formát data "Publikováno" (D. M. RRRR HH:SS)');
             \Render::twig('Admin/AktualityForm.twig', [
-                'header' => 'Správa aktualit',
-                'subheader' => 'Upravit článek',
                 'action' => 'edit',
                 'name' => $_POST['name'],
                 'summary' => $_POST['summary'],
@@ -141,25 +134,17 @@ class Aktuality
             \Message::warning('Taková složka neexistuje');
             \Redirect::to('/admin/aktuality/foto/' . $id . '?dir=0');
         }
-        $photos = array_map(
-            fn($item) => [
-                'id' => $item['gf_id'],
-                'name' => $item['gf_name'],
-                'src' => '/galerie/thumbnails/' . $item['gf_path']
-            ],
-            \DBGalerie::getFotky($_GET['dir'] ?? 0)
-        );
-        $dirs = [];
-        foreach (\DBGalerie::getDirs(true, true) as $item) {
-            $dirs[$item['gd_id']] = str_repeat("&nbsp;&nbsp;", $item['gd_level'] - 1) . $item['gd_name'];
-        }
-
         \Render::twig('Admin/AktualityFormFoto.twig', [
-            'header' => 'Správa článků',
-            'photos' => $photos,
+            'checked' => $article['at_foto_main'],
+            'photos' => \DBGalerie::getFotky($_GET['dir'] ?? 0),
             'dir' => $_GET['dir'] ?? 0,
-            'dirs' => ['none' => '------ vyberte složku ------'] + $dirs,
-            'checked' => $article['at_foto_main']
+            'dirs' => ['none' => '------ vyberte složku ------'] + array_map(
+                fn($item) => [
+                    'id' => $item['gd_id'],
+                    'text' => str_repeat('&nbsp;&nbsp;', $item['gd_level'] - 1) . $item['gd_name']
+                ],
+                \DBGalerie::getDirs(true, true)
+            ),
         ]);
     }
 

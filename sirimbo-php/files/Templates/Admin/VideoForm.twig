@@ -1,5 +1,8 @@
 {% extends "Layout.twig" %}
 
+{% block title %}Správa videí{% endblock %}
+{% block subheader %}<h2>{{ action == 'add' ? 'Přidat' : 'Upravit' }} oprávnění</h2>{% endblock %}
+
 {% block content %}
 <div class="container">
   <form action="" method="post">
@@ -27,7 +30,7 @@
       <input class="form-control" type="text" name="playlist" value="{{ playlist }}" />
     </div>
     <div class="form-group">
-      <button class="btn btn-primary">{{ action }}</button>
+      <button class="btn btn-primary">{{ action == 'add' ? 'Přidat' : 'Upravit' }}</button>
       <a class="btn btn-outline-primary" href="/admin/video">Zpět</a>
     </div>
   </form>

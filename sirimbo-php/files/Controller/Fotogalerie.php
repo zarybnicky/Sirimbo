@@ -10,23 +10,14 @@ class Fotogalerie
 
     public static function directory($id)
     {
-        if (!($dir = \DBGalerie::getSingleDir($id))) {
+        if (!$dir = \DBGalerie::getSingleDir($id)) {
             \Message::warning('Taková složka neexistuje');
             \Redirect::to('/fotogalerie');
         }
-
-        $photos = \DBGalerie::getFotky($id);
-        \Render::twig('Main/FotogalerieOverview.twig', [
-            'nadpis' => $dir['gd_name'],
+        \Render::twig('Main/Fotogalerie.twig', [
+            'dir' => $dir,
             'sidemenu' => static::sidemenu($id),
-            'photos' => array_map(
-                fn($item) => [
-                    'id' => $item['gf_id'],
-                    'src' => '/galerie/thumbnails/' . $item['gf_path'],
-                    'href' => explode('?', $_SERVER['REQUEST_URI'])[0] . '/foto/' . $item['gf_id']
-                ],
-                $photos
-            ),
+            'photos' => \DBGalerie::getFotky($id),
         ]);
     }
 
@@ -52,22 +43,20 @@ class Fotogalerie
         }
         $hasPrev = isset($parent_dir[$current - 1]);
         $hasNext = isset($parent_dir[$current + 1]);
-
         \Render::twig('Main/FotogalerieSingle.twig', [
-            'id'        => $id,
-            'src'       => '/galerie/' . $data['gf_path'],
-            'hasPrev'   => $hasPrev,
-            'hasNext'   => $hasNext,
-            'prevURI'   => $hasPrev ? $parent_dir[$current - 1]['gf_id'] : '',
-            'nextURI'   => $hasNext ? $parent_dir[$current + 1]['gf_id'] : '',
+            'dir' => \DBGalerie::getSingleDir($id),
+            'id' => $id,
+            'src' => '/galerie/' . $data['gf_path'],
+            'prevURI' => $hasPrev ? $parent_dir[$current - 1]['gf_id'] : '',
+            'nextURI' => $hasNext ? $parent_dir[$current + 1]['gf_id'] : '',
             'returnURI' => '/fotogalerie' . ($data['gf_id_rodic'] > 0 ? ('/' . $data['gf_id_rodic']) : ''),
-            'sidemenu'  => static::sidemenu($data['gf_id_rodic'])
+            'sidemenu' => static::sidemenu($data['gf_id_rodic'])
         ]);
     }
 
     public static function sidemenu($dirId)
     {
-        if (!($dirs = \DBGalerie::getDirs(true, true))) {
+        if (!$dirs = \DBGalerie::getDirs(true, true)) {
             return '';
         }
 

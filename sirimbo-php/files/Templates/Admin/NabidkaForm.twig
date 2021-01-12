@@ -1,5 +1,8 @@
 {% extends "Layout.twig" %}
 
+{% block title %}Správa nabídky{% endblock %}
+{% block subheader %}<h2>{{ action == 'add' ? 'Přidat' : 'Upravit' }} nabídku</h2>{% endblock %}
+
 {% block content %}
 <div class="container">
   <form action="" method="POST">
@@ -45,7 +48,7 @@
         </div>
         <div class="form-group">
           <input type='hidden' name='returnURI' value='{{ returnURI }}'>
-          <button class="btn btn-primary">{{ action }}</button>
+          <button class="btn btn-primary">{{ action == 'add' ? 'Přidat' : 'Upravit' }}</button>
           <a class="btn btn-outline-primary" href="{{ returnURI }}">Zpět</a>
         </div>
       </div>

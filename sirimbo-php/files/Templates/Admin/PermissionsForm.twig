@@ -1,5 +1,8 @@
 {% extends "Layout.twig" %}
 
+{% block title %}Správa oprávnění{% endblock %}
+{% block subheader %}<h2>{{ action == 'add' ? 'Přidat' : 'Upravit' }} oprávnění</h2>{% endblock %}
+
 {% block content %}
 <div class="container full">
   <form action="" method="POST">
@@ -35,7 +38,7 @@
     </table>
     <div class="form-group row">
       <div class="offset-sm-2 col-sm-10">
-        <button class="btn btn-primary">{{ action }}</button>
+        <button class="btn btn-primary">{{ action == 'add' ? 'Přidat' : 'Upravit' }}</button>
         <a class="btn btn-outline-primary" href="/admin/permissions">Zpět</a>
       </div>
     </div>

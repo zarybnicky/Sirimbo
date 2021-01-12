@@ -27,7 +27,6 @@ class Profil
         }
 
         \Render::twig('Member/Profil.twig', [
-            'header' => $user->getFullName(),
             'user' => $user,
             'ageGroup' => self::getAgeGroup($user->getBirthYear()),
             'coupleData' => \DBPary::getLatestPartner($user->getId(), $user->getGender()),
@@ -86,7 +85,6 @@ class Profil
     public static function renderPersonalForm()
     {
         \Render::twig('Member/ProfilPersonalData.twig', [
-            'header' => 'Osobní údaje',
             'countries' => \Countries::$countries,
             'lock' => $_POST['lock'],
             'jmeno' => $_POST['jmeno'],
@@ -110,9 +108,7 @@ class Profil
     public static function gdpr()
     {
         \Permissions::checkError('nastenka', P_VIEW);
-        \Render::twig('Member/ProfilGdpr.twig', [
-            'header' => 'Souhlas se zpracováním osobních údajů',
-        ]);
+        \Render::twig('Member/ProfilGdpr.twig');
     }
 
     public static function gdprPost()
@@ -186,9 +182,7 @@ class Profil
     public static function heslo()
     {
         \Permissions::checkError('nastenka', P_VIEW);
-        \Render::twig('Member/ProfilNewPassword.twig', [
-            'header' => 'Změna hesla'
-        ]);
+        \Render::twig('Member/ProfilNewPassword.twig');
     }
 
     public static function hesloPost()
@@ -197,9 +191,7 @@ class Profil
         $form = static::checkDataHeslo();
         if (!$form->isValid()) {
             \Message::warning($form->getMessages());
-            \Render::twig('Member/ProfilNewPassword.twig', [
-                'header' => 'Změna hesla'
-            ]);
+            \Render::twig('Member/ProfilNewPassword.twig');
             return;
         }
         \DBUser::setPassword(\Session::getUser()->getId(), \User::crypt($_POST['newpass']));

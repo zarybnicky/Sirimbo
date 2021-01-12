@@ -1,5 +1,8 @@
 {% extends "Layout.twig" %}
 
+{% block title %}Správa akcí{% endblock %}
+{% block subheader %}<h2>{{ action == 'add' ? 'Přidat' : 'Upravit' }} akci</h2>{% endblock %}
+
 {% block content %}
 <div class="container">
   <form action="" method="POST">
@@ -49,7 +52,7 @@
           {{ checkbox('lock', 'lock', lock, 'Uzamknout') }}
         </div>
         <div class="form-group">
-          <button class="btn btn-primary">{{ action }}</button>
+          <button class="btn btn-primary">{{ action == 'add' ? 'Přidat' : 'Upravit' }}</button>
           <a class="btn btn-outline-primary" href="/admin/akce">Zpět</a>
         </div>
       </div>

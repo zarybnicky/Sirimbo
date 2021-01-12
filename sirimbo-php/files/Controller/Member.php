@@ -19,7 +19,6 @@ class Member
         $pager->setItemsPerPage($_GET['c'] ?? null);
         $pager->setDefaultItemsPerPage(10);
         \Render::twig('Member/Nastenka.twig', [
-            'header' => 'Upozornění',
             'navigation' => $pager->getNavigation(),
             'data' => array_map(
                 fn($item) => [
@@ -66,7 +65,6 @@ class Member
             Admin\Dokumenty::$types
         );
         \Render::twig('Member/Dokumenty.twig', [
-            'header' => 'Dokumenty',
             'kat' => $kat,
             'categories' => $categories,
             'data' => array_map(

@@ -7,8 +7,6 @@ class PlatbyGroup
     {
         \Permissions::checkError('platby', P_OWNED);
         \Render::twig('Admin/PlatbyStructureGroup.twig', [
-            'header' => 'Správa plateb',
-            'subheader' => 'Kategorie plateb',
             'data' => \DBPlatbyGroup::getGroups(),
         ]);
     }
@@ -116,8 +114,6 @@ class PlatbyGroup
             );
         }
         \Render::twig('Admin/PlatbyStructureGroupRemove.twig', [
-            'header' => 'Správa plateb',
-            'subheader' => 'Kategorie plateb',
             'id' => $id,
             'name' => $data['pg_name'],
             'returnURI' => $_SERVER['HTTP_REFERER'],
@@ -170,8 +166,6 @@ class PlatbyGroup
     private static function displayForm($action, $id = 0)
     {
         \Render::twig('Admin/PlatbyStructureGroupForm.twig', [
-            'header' => 'Správa plateb',
-            'subheader' => $action == 'add' ? 'Přidat kategorii' : 'Upravit kategorii',
             'id' => $id,
             'action' => $action,
             'data' => \DBPlatbyGroup::getSingle($id),

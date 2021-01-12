@@ -6,10 +6,7 @@ class Galerie
     public static function list()
     {
         \Permissions::checkError('galerie', P_OWNED);
-        \Render::twig('Admin/Galerie.twig', [
-            'header' => 'Správa fotogalerie',
-            'data' => \DBGalerie::getDirs(true, true),
-        ]);
+        \Render::twig('Admin/Galerie.twig', ['data' => \DBGalerie::getDirs(true, true)]);
     }
 
     public static function listPost()

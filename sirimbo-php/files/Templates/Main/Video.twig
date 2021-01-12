@@ -1,5 +1,8 @@
 {% extends "Layout.twig" %}
 
+{% block title %}Video{% endblock %}
+{% block subheader %}<h2>{{ playlist }}</h2>{% endblock %}
+
 {% block content %}
 <style>
  .playlist {
@@ -58,7 +61,7 @@
 
   {% if videos %}<h3>Seznamy videí</h3>{% endif %}
   {% for item in playlists %}
-    <div class="playlist {{ (playlist == item.vl_id) ? 'active' : '' }}">
+    <div class="playlist {{ playlist == item.vl_id ? 'active' : '' }}">
       <a href="/video?playlist={{ item.vl_id }}">
         <b>{{ item.vl_title }}</b>
       </a>

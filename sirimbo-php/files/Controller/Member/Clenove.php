@@ -10,7 +10,6 @@ class Clenove
             \Redirect::to('/member/clenove');
         }
         \Render::twig('Member/ClenoveSingle.twig', [
-            'header' => 'Přehled členů',
             'user' => $data,
             'returnURI' => $_SERVER['HTTP_REFERER'],
         ]);
@@ -21,9 +20,8 @@ class Clenove
         \Permissions::checkError('users', P_VIEW);
         $currentID = -1;
         $currentKey = 0;
-        $data = \DBUser::getUsersWithSkupinaPlatby();
         $skupiny = [];
-        foreach ($data as $item) {
+        foreach (\DBUser::getUsersWithSkupinaPlatby() as $item) {
             if ($item['s_id'] != $currentID) {
                 $currentID = $item['s_id'];
                 $currentKey = count($skupiny);
@@ -36,19 +34,13 @@ class Clenove
             }
             $skupiny[$currentKey]['userCount']++;
         }
-        \Render::twig('Member/ClenoveSkupinyList.twig', [
-            'header' => 'Přehled členů',
-            'data' => $skupiny,
-        ]);
+        \Render::twig('Member/ClenoveSkupinyList.twig', ['data' => $skupiny]);
     }
 
     public static function list()
     {
         \Permissions::checkError('users', P_VIEW);
-        \Render::twig('Member/ClenoveUserList.twig', [
-            'header' => 'Přehled členů',
-            'data' => \DBUser::getActiveUsers(),
-        ]);
+        \Render::twig('Member/ClenoveUserList.twig', ['data' => \DBUser::getActiveUsers()]);
     }
 
     public static function structure()
@@ -93,10 +85,6 @@ class Clenove
                 $rightCount += $skupina['count'];
             }
         }
-
-        \Render::twig('Member/ClenoveStructure.twig', [
-            'header' => 'Přehled členů',
-            'columns' => $columns,
-        ]);
+        \Render::twig('Member/ClenoveStructure.twig', ['columns' => $columns]);
     }
 }

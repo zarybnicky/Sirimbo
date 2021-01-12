@@ -89,10 +89,7 @@ class Schedule
             $d = $b['date'] . $b['id'];
             return ($c > $d ? 1 : ($c < $d ? -1 : 0));
         });
-        \Render::twig('Member/Schedule.twig', [
-            'header' => 'Tréninky',
-            'data' => $data
-        ]);
+        \Render::twig('Member/Schedule.twig', ['data' => $data]);
     }
 
     public static function post()

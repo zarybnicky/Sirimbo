@@ -7,7 +7,6 @@ class Permissions
     {
         \Permissions::checkError('permissions', P_ADMIN);
         \Render::twig('Admin/Permissions.twig', [
-            'header' => 'Správa oprávnění',
             'data' => \DBPermissions::getGroups()
         ]);
     }
@@ -88,11 +87,8 @@ class Permissions
 
     protected static function renderForm($action, $data = [])
     {
-        $action = !$data ? 'Přidat' : 'Upravit';
         \Render::twig('Admin/PermissionsForm.twig', [
-            'header' => 'Správa oprávnění',
-            'subheader' => "$action uživatelskou skupinu",
-            'action' => $action,
+            'action' => $data ? 'edit' : 'add',
             'name' => $_POST['name'] ?? $data['pe_name'] ?? '',
             'description' => $_POST['description'] ?? $data['pe_description'] ?? '',
             'permissions' => \Permissions::$permissions,

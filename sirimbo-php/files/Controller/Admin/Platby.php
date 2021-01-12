@@ -42,19 +42,13 @@ class Platby
                 $rightCount += $skupina['info']['count'];
             }
         }
-        \Render::twig('Admin/PlatbyStatistics.twig', [
-            'header' => 'Správa plateb',
-            'subheader' => 'Členové podle skupin',
-            'columns' => $columns,
-        ]);
+        \Render::twig('Admin/PlatbyStatistics.twig', ['columns' => $columns]);
     }
 
     public static function structure()
     {
         \Permissions::checkError('platby', P_OWNED);
         \Render::twig('Admin/PlatbyStructure.twig', [
-            'header' => 'Správa plateb',
-            'subheader' => 'Struktura plateb',
             'data' => \DBPlatbyGroup::getGroupsWithCategories(),
             'orphanGroupSkupina' => \DBPlatbyGroup::getWithoutSkupina(),
             'orphanGroupCategory' => \DBPlatbyGroup::getWithoutCategory(),

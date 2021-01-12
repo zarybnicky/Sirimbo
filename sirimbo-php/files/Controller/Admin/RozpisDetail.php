@@ -64,7 +64,6 @@ class RozpisDetail
         }
 
         \Render::twig('Admin/RozpisDetail.twig', [
-            'header' => 'Správa rozpisů',
             'data' => $data,
             'users' => $users,
             'items' => $items,

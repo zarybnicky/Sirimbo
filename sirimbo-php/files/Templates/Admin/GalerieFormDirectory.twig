@@ -1,5 +1,8 @@
 {% extends "Layout.twig" %}
 
+{% block title %}Správa fotogalerie{% endblock %}
+{% block subheader %}<h2>{{ action == 'add' ? 'Přidat' : 'Upravit' }} složku</h2>{% endblock %}
+
 {% block content %}
 <div class="container">
   <form action="" method="post">
@@ -16,7 +19,7 @@
     </div>
     <div class="form-group">
       <a class="btn btn-outline-primary" href="/admin/galerie">Zpět</a>
-      <button class="btn btn-primary">{{ action }}</button>
+      <button class="btn btn-primary">{{ action == 'add' ? 'Přidat' : 'Upravit' }}</button>
     </div>
   </form>
 </div>

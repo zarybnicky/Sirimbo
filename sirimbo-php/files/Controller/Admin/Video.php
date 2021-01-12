@@ -10,7 +10,6 @@ class Video
         $pager->setItemsPerPage($_GET['c'] ?? null);
         $pager->setCurrentPage($_GET['p'] ?? null);
         \Render::twig('Admin/Video.twig', [
-            'header' => 'Správa videí',
             'action' => 'orphan',
             'navigation' => $pager->getNavigation(),
             'data' => array_map(
@@ -30,7 +29,6 @@ class Video
     {
         \Permissions::checkError('aktuality', P_OWNED);
         \Render::twig('Admin/Video.twig', [
-            'header' => 'Správa videí',
             'action' => 'playlist',
             'navigation' => '',
             'data' => array_map(
@@ -51,8 +49,7 @@ class Video
         \Permissions::checkError('aktuality', P_OWNED);
         $list = \DBVideoList::getSingle($id);
         \Render::twig('Admin/Video.twig', [
-            'header' => 'Správa videí',
-            'subheader' => $list['vl_title'],
+            'playlist' => $list['vl_title'],
             'action' => 'playlist',
             'navigation' => '',
             'data' => array_map(
@@ -72,7 +69,6 @@ class Video
     {
         \Permissions::checkError('aktuality', P_OWNED);
         \Render::twig('Admin/VideoTitle.twig', [
-            'header' => 'Správa videí',
             'videos' => \DBVideo::getAll(),
             'video1' => \DBParameters::get('title_video1'),
             'video2' => \DBParameters::get('title_video2'),
@@ -171,9 +167,7 @@ class Video
     protected static function displayForm($action, $data = [])
     {
         \Render::twig('Admin/VideoForm.twig', [
-            'header' => 'Správa videí',
-            'subheader' => $action == 'add' ? 'Přidat video' : 'Upravit video',
-            'action' => $action == 'add' ? 'Přidat' : 'Upravit',
+            'action' => $action,
             'id' => $data ? $data['v_id'] : null,
             'uri' => $_POST['uri'] ?? $data['v_uri'] ?? '',
             'title' => $_POST['title'] ?? $data['v_title'] ?? '',

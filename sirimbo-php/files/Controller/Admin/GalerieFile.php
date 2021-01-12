@@ -78,8 +78,6 @@ class GalerieFile
     {
         \Permissions::checkError('galerie', P_OWNED);
         \Render::twig('Admin/GalerieUpload.twig', [
-            'header' => 'Správa fotogalerie',
-            'subheader' => 'Upload',
             'dir' => $_GET['dir'] ?? '0',
             'dirs' => array_map(
                 fn($item) => [
@@ -149,8 +147,6 @@ class GalerieFile
     private static function displayForm($id)
     {
         \Render::twig('Admin/GalerieFormFile.twig', [
-            'header' => 'Správa fotogalerie',
-            'subheader' => 'Upravit soubor',
             'id' => $id,
             'returnURI' => $_SERVER['HTTP_REFERER'],
             'parent' => $_POST['parent'],

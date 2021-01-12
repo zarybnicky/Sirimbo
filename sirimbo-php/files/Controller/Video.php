@@ -17,8 +17,6 @@ class Video
             $playlist = null;
         }
         \Render::twig('Main/Video.twig', [
-            'header' => 'Video',
-            'subheader' => $playlist,
             'playlist' => $playlist,
             'videos' => array_map(
                 function ($item) {

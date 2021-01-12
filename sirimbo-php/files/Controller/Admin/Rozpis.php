@@ -7,7 +7,6 @@ class Rozpis
     {
         \Permissions::checkError('rozpis', P_OWNED);
         \Render::twig('Admin/Rozpis.twig', [
-            'header' => 'Správa rozpisů',
             'data' => array_map(
                 fn($item) => [
                     'id' => $item['r_id'],
@@ -144,17 +143,11 @@ class Rozpis
 
     protected static function displayForm($action, $data = null)
     {
-        $isAdmin = \Permissions::check('rozpis', P_ADMIN);
-        $treneri = $isAdmin
-            ? \DBUser::getUsersByPermission('rozpis', P_OWNED)
-            : [\DBUser::getUserData(\Session::getUser()->getId())];
-
-        $action = $data === null ? 'Přidat' : 'Upravit';
         \Render::twig('Admin/RozpisForm.twig', [
-            'header' => 'Správa rozpisů',
-            'subheader' => "$action rozpis",
-            'action' => $action,
-            'treneri' => $treneri,
+            'action' => $data ? 'edit' : 'add',
+            'treneri' => \Permissions::check('rozpis', P_ADMIN)
+            ? \DBUser::getUsersByPermission('rozpis', P_OWNED)
+            : [\DBUser::getUserData(\Session::getUser()->getId())],
             'trener' => $_POST['trener'] ?? ($data ? $data['r_trener'] : ''),
             'kde' => $_POST['kde'] ?? ($data ? $data['r_kde'] : ''),
             'datum' => $_POST['datum'] ?? ($data ? $data['r_datum'] : ''),

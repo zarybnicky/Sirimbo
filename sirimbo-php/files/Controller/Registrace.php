@@ -6,7 +6,6 @@ class Registrace
     public static function get()
     {
         \Render::twig('Main/Registrace.twig', [
-            'header' => 'Registrace',
             'skupiny' => \DBSkupiny::get(),
             'countries' => \Countries::$countries,
             'username' => '',
@@ -55,7 +54,6 @@ class Registrace
         if (!$f->isValid()) {
             \Message::warning($f->getMessages());
             \Render::twig('Main/Registrace.twig', [
-                'header' => 'Registrace',
                 'countries' => \Countries::$countries,
                 'skupiny' => \DBSkupiny::get(),
                 'username' => $_POST['username'] ?? '',

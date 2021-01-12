@@ -1,5 +1,8 @@
 {% extends "Layout.twig" %}
 
+{% block title %}Správa článků{% endblock %}
+{% block subheader %}<h2>{{ action == 'add' ? 'Přidat' : 'Upravit' }} článek</h2>{% endblock %}
+
 {% block content %}
 <div class="container">
   <form action="" method="POST">
@@ -40,7 +43,7 @@
             <button name="action" value="foto" class="btn btn-primary">Přidat fotky</button>
             <button name="action" value="save" class="btn btn-primary">Přeskočit a uložit</button>
           {% else %}
-            <button name="action" value="save" class="btn btn-primary">Uložit</button>
+            <button name="action" value="save" class="btn btn-primary">Upravit</button>
           {% endif %}
         </div>
       </div>

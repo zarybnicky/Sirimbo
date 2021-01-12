@@ -5,9 +5,7 @@ class Nopassword
 {
     public static function get()
     {
-        \Render::twig('Main/NoPassword.twig', [
-            'header' => 'Zapomenuté heslo'
-        ]);
+        \Render::twig('Main/NoPassword.twig');
     }
 
     public static function post()
