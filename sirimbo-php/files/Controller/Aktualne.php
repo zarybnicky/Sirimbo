@@ -40,8 +40,8 @@ class Aktualne
                 ['property' => 'og:type', 'content' => 'article'],
                 ['property' => 'og:url', 'content' => 'http://tkolymp.cz/aktualne/' . $data['at_id']],
                 ['property' => 'og:image', 'content' => 'http://tkolymp.cz/galerie/thumbnails/' . $photo_uri],
-                ['property' => 'og:site_name', 'TK Olymp'],
-                ['property' => 'og:description', $data['at_preview']]
+                ['property' => 'og:site_name', 'content' => 'TK Olymp'],
+                ['property' => 'og:description', 'content' => $data['at_preview']]
             ],
             'header' => $data['at_jmeno']
         ]);
