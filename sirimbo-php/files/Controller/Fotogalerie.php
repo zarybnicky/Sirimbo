@@ -44,7 +44,7 @@ class Fotogalerie
         $hasPrev = isset($parent_dir[$current - 1]);
         $hasNext = isset($parent_dir[$current + 1]);
         \Render::twig('Main/FotogalerieSingle.twig', [
-            'dir' => \DBGalerie::getSingleDir($id),
+            'dir' => \DBGalerie::getSingleDir($data['gf_id_rodic']),
             'id' => $id,
             'src' => '/galerie/' . $data['gf_path'],
             'prevURI' => $hasPrev ? $parent_dir[$current - 1]['gf_id'] : '',
