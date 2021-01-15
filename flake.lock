@@ -20,17 +20,34 @@
     "co-log-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1604681804,
-        "narHash": "sha256-z+4YbnFdHTytk3ChMvEZHSY+LWwy7ZYVx2/W79V4FpM=",
+        "lastModified": 1605366789,
+        "narHash": "sha256-oygb1r+NVAbeweB8X4BvfMCuKAaSMqfhoQWXitGG3F4=",
         "owner": "kowainik",
         "repo": "co-log",
-        "rev": "d3b7ac3cf98e301f0a2ee23d289ed3381e66f4ec",
+        "rev": "38ebc84de3e937cf3f94570485a064837d537b18",
         "type": "github"
       },
       "original": {
         "owner": "kowainik",
         "ref": "main",
         "repo": "co-log",
+        "type": "github"
+      }
+    },
+    "gogol": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1591344750,
+        "narHash": "sha256-DSTUwOmOHtfHCvEfFrnFKra/wqCoZ4rQoEsDTAjK8/4=",
+        "owner": "brendanhay",
+        "repo": "gogol",
+        "rev": "d7c7d71fc985cd96fb5f05173da6c607da362b74",
+        "type": "github"
+      },
+      "original": {
+        "owner": "brendanhay",
+        "ref": "develop",
+        "repo": "gogol",
         "type": "github"
       }
     },
@@ -54,11 +71,11 @@
     "in-other-words": {
       "flake": false,
       "locked": {
-        "lastModified": 1607873537,
-        "narHash": "sha256-giK7MF3lR3KMVPkuBU5fTypDhy0aX7RuiXVfccQKtQE=",
+        "lastModified": 1610614790,
+        "narHash": "sha256-OHyYWzzIwpZvUyEo/ESTUucY7pg9HnjXfJAJOSDlDAw=",
         "owner": "KingoftheHomeless",
         "repo": "in-other-words",
-        "rev": "f02427f1efda189ff802bc9f38e079ec674405dd",
+        "rev": "1fc2372891c8356fe5d51fbccc202bfcbaae1dec",
         "type": "github"
       },
       "original": {
@@ -70,21 +87,25 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1606086654,
-        "narHash": "sha256-VFl+3eGIMqNp7cyOMJ6TjM/+UcsLKtodKoYexrlTJMI=",
-        "path": "/nix/store/assj1w3bnwxfl98bd04f873p2zh66zil-source",
-        "rev": "19db3e5ea2777daa874563b5986288151f502e27",
-        "type": "path"
+        "lastModified": 1610719054,
+        "narHash": "sha256-5GJCRLNMflVyYaKUlDgemCiqhw/hRXNJFzUXJ2garp4=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "17631db07caeb9cfb6acefd6a91cdd995b5b3f3f",
+        "type": "github"
       },
       "original": {
-        "id": "nixpkgs",
-        "type": "indirect"
+        "owner": "NixOS",
+        "ref": "master",
+        "repo": "nixpkgs",
+        "type": "github"
       }
     },
     "root": {
       "inputs": {
         "bootstrap": "bootstrap",
         "co-log-src": "co-log-src",
+        "gogol": "gogol",
         "higgledy": "higgledy",
         "in-other-words": "in-other-words",
         "nixpkgs": "nixpkgs",

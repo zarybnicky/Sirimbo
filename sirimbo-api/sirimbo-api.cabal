@@ -48,6 +48,7 @@ library
                      , co-log-core
                      , containers
                      , cookie
+                     , data-fix
                      , directory
                      , errors
                      , exceptions

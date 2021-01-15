@@ -1,7 +1,7 @@
 cradle:
   cabal:
     - path: ./sirimbo-api/app
-      component: sirimbo-api:exe:server
+      component: sirimbo-api:exe:olymp
     - path: ./sirimbo-api/src
       component: sirimbo-api:lib:sirimbo-api
     - path: ./sirimbo-schema
@@ -10,3 +10,5 @@ cradle:
       component: sirimbo-tournament
     - path: ./sirimbo-yt-worker
       component: sirimbo-yt-worker
+    - path: ./servant-ts
+      component: servant-ts

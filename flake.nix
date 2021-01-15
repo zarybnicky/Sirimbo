@@ -3,9 +3,11 @@
   inputs.in-other-words = { flake = false; url = github:KingoftheHomeless/in-other-words/master; };
   inputs.typerep-map = { flake = false; url = github:kowainik/typerep-map/main; };
   inputs.higgledy = { flake = false; url = github:zarybnicky/higgledy/master; };
+  inputs.gogol = { flake = false; url = github:brendanhay/gogol/develop; };
   inputs.bootstrap = { flake = false; url = github:twbs/bootstrap/v4.5.3; };
+  inputs.nixpkgs.url = github:NixOS/nixpkgs/master;
 
-  outputs = { self, nixpkgs, co-log-src, in-other-words, typerep-map, higgledy, bootstrap }: let
+  outputs = { self, nixpkgs, co-log-src, in-other-words, gogol, typerep-map, higgledy, bootstrap }: let
     inherit (nixpkgs.lib) flip mapAttrs mapAttrsToList;
     inherit (pkgs.nix-gitignore) gitignoreSourcePure gitignoreSource;
 
@@ -50,11 +52,20 @@
           typerep-map = doJailbreak (dontCheck (hself.callCabal2nix "typerep-map" typerep-map {}));
           co-log = doJailbreak (dontCheck (hself.callCabal2nix "co-log" "${co-log}/co-log" {}));
           co-log-core = hself.callCabal2nix "co-log-core" "${co-log}/co-log-core" {};
+          gogol-core = hself.callCabal2nix "gogol-core" "${gogol}/core" {};
+          gogol-youtube = hself.callCabal2nix "gogol-youtube" "${gogol}/gogol-youtube" {};
           in-other-words = hself.callCabal2nix "in-other-words" in-other-words {};
-          higgledy = hself.callCabal2nix "higgledy" higgledy {};
+          higgledy = doJailbreak (hself.callCabal2nix "higgledy" higgledy {});
           stan = unmarkBroken hsuper.stan;
+          chronos = unmarkBroken hsuper.chronos;
+          servant-cassava = unmarkBroken (doJailbreak hsuper.servant-cassava);
+          servant-docs = unmarkBroken hsuper.servant-docs;
+          servant-JuicyPixels = unmarkBroken hsuper.servant-JuicyPixels;
+          servant-multipart = unmarkBroken hsuper.servant-multipart;
+          universe-base = unmarkBroken (doJailbreak hsuper.universe-base);
           microaeson = unmarkBroken (doJailbreak hsuper.microaeson);
 
+          servant-ts = hself.callCabal2nix "servant-ts" (getSrc ./servant-ts) {};
           sirimbo-schema = hself.callCabal2nix "sirimbo-schema" (getSrc ./sirimbo-schema) {};
           sirimbo-api = generateOptparseApplicativeCompletion "olymp" (
             justStaticExecutables (
