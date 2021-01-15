@@ -194,11 +194,11 @@ class Nabidka
         }
 
         $f = new \Form();
-        $f->checkNumeric($_POST['trener'], 'ID trenéra musí být číselné', 'trener');
-        $f->checkNumeric($_POST['pocet_hod'], 'Počet hodin prosím zadejte čísly', 'pocet_hod');
-        $f->checkDate((string) $od, 'Zadejte prosím platné datum ("Od")', 'od');
+        $f->checkNumeric($_POST['trener'], 'ID trenéra musí být číselné');
+        $f->checkNumeric($_POST['pocet_hod'], 'Počet hodin prosím zadejte čísly');
+        $f->checkDate((string) $od, 'Zadejte prosím platné datum ("Od")');
         if ($do->isValid()) {
-            $f->checkDate((string) $do, 'Zadejte prosím platné datum ("Do")', 'do');
+            $f->checkDate((string) $do, 'Zadejte prosím platné datum ("Do")');
         }
 
         return $f;

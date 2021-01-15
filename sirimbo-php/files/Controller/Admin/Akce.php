@@ -280,11 +280,11 @@ class Akce
         $do = new \Date($_POST['do'] ?? null);
 
         $form = new \Form();
-        $form->checkDate((string) $od, 'Špatný formát data ("Od")', 'od');
+        $form->checkDate((string) $od, 'Špatný formát data ("Od")');
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
-            $form->checkDate((string) $do, 'Špatný formát data ("Do")', 'do');
+            $form->checkDate((string) $do, 'Špatný formát data ("Do")');
         }
-        $form->checkNumeric($_POST['kapacita'], 'Kapacita musí být zadána číselně', 'kapacita');
+        $form->checkNumeric($_POST['kapacita'], 'Kapacita musí být zadána číselně');
 
         return $form;
     }

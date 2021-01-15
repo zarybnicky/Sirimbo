@@ -111,7 +111,7 @@ class Permissions
     {
         $f = new \Form();
         foreach (\Permissions::$permissions as $name => $item) {
-            $f->checkArrayKey($_POST[$name], $item, "Neplatná hodnota práva $name", $name);
+            $f->checkArrayKey($_POST[$name], $item, "Neplatná hodnota práva $name");
         }
         return $f;
     }

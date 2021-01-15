@@ -180,7 +180,7 @@ class Video
     protected static function checkData(): \Form
     {
         $form = new \Form();
-        $form->checkNotEmpty($_POST['uri'], 'Zadejce prosím ID videa', 'uri');
+        $form->checkNotEmpty($_POST['uri'], 'Zadejce prosím ID videa');
         return $form;
     }
 }

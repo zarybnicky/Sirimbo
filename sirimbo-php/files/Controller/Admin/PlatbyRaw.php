@@ -29,7 +29,7 @@ class PlatbyRaw
     public static function post()
     {
         \Permissions::checkError('platby', P_OWNED);
-        $uploader = new Uploader($_FILES['in'], self::TEMP_DIR, ['csv']);
+        $uploader = new \Uploader($_FILES['in'], self::TEMP_DIR, ['csv']);
         if ($uploader->getUploadErrors()) {
             \Message::warning($uploader->getUploadErrors());
             return;

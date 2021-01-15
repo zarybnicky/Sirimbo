@@ -28,9 +28,9 @@ class PlatbyManual
         $categoryLookup = Platby::getCategoryLookup(true, true, false);
         $userLookup = Platby::getUserLookup(false);
 
-        $item = new \PlatbyItem($raw, $specific, $variable, $date, $amount);
+        Platby::recognizeHeaders($raw, $specific, $variable, $date, $amount);
         $raw[null] = null;
-        $item->init($raw[$specific], $raw[$variable], $raw[$date], $raw[$amount]);
+        $item = new \PlatbyItem($raw[$specific], $raw[$variable], $raw[$date], $raw[$amount]);
         $item->processWithSymbolLookup($userLookup, $categoryLookup);
 
         $emptyItem = ['column' => '&nbsp;---', 'value' => '&nbsp;---'];

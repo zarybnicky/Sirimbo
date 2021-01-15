@@ -169,8 +169,8 @@ class Nastenka
     private static function checkData(): \Form
     {
         $f = new \Form();
-        $f->checkNotEmpty($_POST['nadpis'], 'Zadejte nadpis', 'nadpis');
-        $f->checkNotEmpty($_POST['text'], 'Zadejte nějaký text', 'text');
+        $f->checkNotEmpty($_POST['nadpis'], 'Zadejte nadpis');
+        $f->checkNotEmpty($_POST['text'], 'Zadejte nějaký text');
         return $f;
     }
 }

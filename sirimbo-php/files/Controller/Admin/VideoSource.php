@@ -89,7 +89,7 @@ class VideoSource
     protected static function checkData()
     {
         $form = new \Form();
-        $form->checkNotEmpty($_POST['uri'], 'Zadejte prosím ID kanálu', 'uri');
+        $form->checkNotEmpty($_POST['uri'], 'Zadejte prosím ID kanálu');
         return $form;
     }
 }

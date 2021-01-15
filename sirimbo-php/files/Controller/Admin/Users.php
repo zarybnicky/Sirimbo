@@ -436,14 +436,14 @@ class Users
         $narozeni = new \Date($_POST['narozeni'] ?? null);
 
         $f = new \Form();
-        $f->checkDate($narozeni, 'Neplatné datum narození', 'narozeni');
-        $f->checkInArray($_POST['pohlavi'], ['m', 'f'], 'Neplatné pohlaví', 'pohlavi');
-        $f->checkEmail($_POST['email'], 'Neplatný formát emailu', 'email');
-        $f->checkPhone($_POST['telefon'], 'Neplatný formát telefoního čísla', 'telefon');
+        $f->checkDate($narozeni, 'Neplatné datum narození');
+        $f->checkInArray($_POST['pohlavi'], ['m', 'f'], 'Neplatné pohlaví');
+        $f->checkEmail($_POST['email'], 'Neplatný formát emailu');
+        $f->checkPhone($_POST['telefon'], 'Neplatný formát telefoního čísla');
 
         if ($action == 'add') {
-            $f->checkLogin($_POST['login'], 'Špatný formát přihlašovacího jména', 'login');
-            $f->checkPassword($_POST['pass'], 'Špatný formát hesla', 'pass');
+            $f->checkLogin($_POST['login'], 'Špatný formát přihlašovacího jména');
+            $f->checkPassword($_POST['pass'], 'Špatný formát hesla');
         }
         return $f;
     }

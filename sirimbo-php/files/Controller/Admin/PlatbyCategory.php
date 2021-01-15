@@ -317,7 +317,7 @@ class PlatbyCategory
             $f->checkBool(
                 !($active = \DBPlatbyCategory::checkActiveSymbol($_POST['symbol']))
                 || ($action == 'edit' ? $active['pc_id'] == $id : false),
-                $active ? ('Už existuje aktivní specifický symbol se symbolem ' . $_POST['symbol'] . ' (' . $active['pc_name'] . ')') : '', ''
+                $active ? ('Už existuje aktivní specifický symbol se symbolem ' . $_POST['symbol'] . ' (' . $active['pc_name'] . ')') : ''
             );
         }
         $f->checkNotEmpty($_POST['name'], 'Zadejte prosím nějaké jméno.');

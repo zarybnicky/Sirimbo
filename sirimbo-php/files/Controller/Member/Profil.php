@@ -201,30 +201,25 @@ class Profil
     private static function checkDataEdit(): \Form
     {
         $f = new \Form();
-        $f->checkDate((string) new \Date($_POST['narozeni']), 'Neplatné datum narození', 'narozeni');
-        $f->checkInArray($_POST['pohlavi'], ['m', 'f'], 'Neplatné pohlaví', 'pohlavi');
-        $f->checkEmail($_POST['email'], 'Neplatný formát emailu', 'email');
-        $f->checkPhone($_POST['telefon'], 'Neplatný formát telefoního čísla', 'telefon');
-        $f->checkNumeric($_POST['nationality'], 'Neplatný formát národnosti', 'nationality');
-        $f->checkNotEmpty($_POST['city'], 'Zadejte město bydliště', 'city');
-        $f->checkNumeric(str_replace(' ', '', $_POST['postal']), 'Zadejte číselné PSČ', 'postal');
+        $f->checkDate((string) new \Date($_POST['narozeni']), 'Neplatné datum narození');
+        $f->checkInArray($_POST['pohlavi'], ['m', 'f'], 'Neplatné pohlaví');
+        $f->checkEmail($_POST['email'], 'Neplatný formát emailu');
+        $f->checkPhone($_POST['telefon'], 'Neplatný formát telefoního čísla');
+        $f->checkNumeric($_POST['nationality'], 'Neplatný formát národnosti');
+        $f->checkNotEmpty($_POST['city'], 'Zadejte město bydliště');
+        $f->checkNumeric(str_replace(' ', '', $_POST['postal']), 'Zadejte číselné PSČ');
         return $f;
     }
 
     private static function checkDataHeslo(): \Form
     {
         $f = new \Form();
-        $f->checkPassword($_POST['newpass'], 'Neplatný formát hesla', 'newpass');
+        $f->checkPassword($_POST['newpass'], 'Neplatný formát hesla');
         $f->checkBool(
             \DBUser::checkUser(\Session::getUser()->getLogin(), \User::crypt($_POST['oldpass'])),
             'Staré heslo je špatně',
-            'oldpass'
         );
-        $f->checkBool(
-            $_POST['newpass'] == $_POST['newpass_confirm'],
-            'Nová hesla se neshodují',
-            'newpass_check'
-        );
+        $f->checkBool($_POST['newpass'] == $_POST['newpass_confirm'], 'Nová hesla se neshodují');
         return $f;
     }
 }

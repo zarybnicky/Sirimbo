@@ -26,7 +26,8 @@ class Form
                 return;
             }
         }
-        $this->_error($message);
+        $this->valid = false;
+        $this->messages[] = $message;
     }
 
     public function checkTime($i, $message)

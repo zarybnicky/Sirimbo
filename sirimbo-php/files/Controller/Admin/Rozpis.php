@@ -161,8 +161,8 @@ class Rozpis
         $datum = new \Date($_POST['datum'] ?? null);
 
         $f = new \Form();
-        $f->checkNumeric($_POST['trener'], 'Neplatný trenér', 'trener');
-        $f->checkDate((string) $datum, 'Neplatný formát data', 'datum');
+        $f->checkNumeric($_POST['trener'], 'Neplatný trenér');
+        $f->checkDate((string) $datum, 'Neplatný formát data');
         return $f;
     }
 }

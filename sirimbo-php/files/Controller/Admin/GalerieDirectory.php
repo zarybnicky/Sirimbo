@@ -151,13 +151,12 @@ class GalerieDirectory
     protected static function checkData()
     {
         $form = new \Form();
-        $form->checkNotEmpty($_POST['name'], 'Název složky nesmí být prázdný', 'name');
+        $form->checkNotEmpty($_POST['name'], 'Název složky nesmí být prázdný');
         $form->checkBool(
             $_POST['parent'] >= 0
             && is_numeric($_POST['parent'])
             && \DBGalerie::getSingleDir($_POST['parent']),
             'Zadaná nadsložka není platná',
-            'parent'
         );
         return $form;
     }

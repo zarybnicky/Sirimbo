@@ -128,9 +128,9 @@ class Schedule
             $nId = $_POST['n_id'];
             $data = \DBNabidka::getSingleNabidka($nId);
             $form = new \Form();
-            $form->checkBool(!$data['n_lock'], 'Tato nabídka je uzamčená', '');
+            $form->checkBool(!$data['n_lock'], 'Tato nabídka je uzamčená');
             if ($_POST['hodiny'] ?? null) {
-                $form->checkNumeric($_POST['hodiny'], 'Špatný počet hodin', 'hodiny');
+                $form->checkNumeric($_POST['hodiny'], 'Špatný počet hodin');
             }
             if (!$form->isValid()) {
                 \Message::warning($form->getMessages());
@@ -166,8 +166,8 @@ class Schedule
     protected static function checkData($data, $action = 'signup'): \Form
     {
         $f = new \Form();
-        $f->checkBool(!$data['r_lock'], 'Tento rozpis je uzamčený', '');
-        $f->checkInArray($action, ['signup', 'signout'], 'Špatná akce', '');
+        $f->checkBool(!$data['r_lock'], 'Tento rozpis je uzamčený');
+        $f->checkInArray($action, ['signup', 'signout'], 'Špatná akce');
         return $f;
     }
 }

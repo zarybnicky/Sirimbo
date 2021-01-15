@@ -195,42 +195,18 @@ class RozpisDetail
     protected static function checkAdd(): \Form
     {
         $f = new \Form();
-        $f->checkNumeric(
-            $_POST['add_partner'],
-            'Neplatný partner u přidávané lekce',
-            'add_partner'
-        );
-        $f->checkTime(
-            $_POST['add_od'],
-            'Neplatný formát času "od" u přidávané lekce',
-            'add_od'
-        );
-        $f->checkTime(
-            $_POST['add_do'],
-            'Neplatný formát času "do" u přidávané lekce',
-            'add_do'
-        );
+        $f->checkNumeric($_POST['add_partner'], 'Neplatný partner u přidávané lekce');
+        $f->checkTime($_POST['add_od'], 'Neplatný formát času "od" u přidávané lekce');
+        $f->checkTime($_POST['add_do'], 'Neplatný formát času "do" u přidávané lekce');
         return $f;
     }
 
     protected static function checkAddMultiple(): \Form
     {
         $f = new \Form();
-        $f->checkNumeric(
-            $_POST['add_multi_num'],
-            'Neplatný počet přidávaných hodin',
-            'add_multi_num'
-        );
-        $f->checkNumeric(
-            $_POST['add_multi_len'],
-            'Neplatná délka přidávaných hodin',
-            'add_multi_len'
-        );
-        $f->checkTime(
-            $_POST['add_multi_od'],
-            'Neplatný formát času "od" u přidávaných hodin',
-            'add_multi_od'
-        );
+        $f->checkNumeric($_POST['add_multi_num'], 'Neplatný počet přidávaných hodin');
+        $f->checkNumeric($_POST['add_multi_len'], 'Neplatná délka přidávaných hodin');
+        $f->checkTime($_POST['add_multi_od'], 'Neplatný formát času "od" u přidávaných hodin');
         return $f;
     }
 }

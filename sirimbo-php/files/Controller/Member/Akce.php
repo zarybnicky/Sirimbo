@@ -66,9 +66,9 @@ class Akce
     private static function checkData($data, $action): \Form
     {
         $f = new \Form();
-        $f->checkBool(!$data['a_lock'], 'Tato akce je zamčená', '');
-        $f->checkInArray($action, ['signup', 'signout'], 'Špatná akce', '');
-        $f->checkNumeric($_POST['id'], 'Špatné ID', '');
+        $f->checkBool(!$data['a_lock'], 'Tato akce je zamčená');
+        $f->checkInArray($action, ['signup', 'signout'], 'Špatná akce');
+        $f->checkNumeric($_POST['id'], 'Špatné ID');
         return $f;
     }
 }

@@ -41,15 +41,15 @@ class Registrace
         $poznamky = $poznamkyMap[$_POST['poznamky'] ?? null] ?? null;
 
         $f = new \Form();
-        $f->checkLogin($_POST['username'], 'Špatný formát přihlašovacího jména', 'username');
-        $f->checkPassword($_POST['pass'], 'Špatný formát hesla', 'pass');
-        $f->checkEmail($_POST['email'], 'Neplatný formát emailu', 'email');
-        $f->checkPhone($_POST['telefon'], 'Neplatný formát telefoního čísla', 'telefon');
-        $f->checkDate($narozeni, 'Neplatné datum narození', 'narozeni');
-        $f->checkNotEmpty($_POST['orientacni'], 'Vyplňte číslo orientační bydliště', 'orientacni');
-        $f->checkNotEmpty($_POST['city'], 'Vyplňte město bydliště', 'city');
-        $f->checkNotEmpty($_POST['postal'], 'Vyplňte PSČ bydliště', 'postal');
-        $f->checkNotEmpty($_POST['nationality'], 'Vyplňte vaši národnost', 'nationality');
+        $f->checkLogin($_POST['username'], 'Špatný formát přihlašovacího jména');
+        $f->checkPassword($_POST['pass'], 'Špatný formát hesla');
+        $f->checkEmail($_POST['email'], 'Neplatný formát emailu');
+        $f->checkPhone($_POST['telefon'], 'Neplatný formát telefoního čísla');
+        $f->checkDate($narozeni, 'Neplatné datum narození');
+        $f->checkNotEmpty($_POST['orientacni'], 'Vyplňte číslo orientační bydliště');
+        $f->checkNotEmpty($_POST['city'], 'Vyplňte město bydliště');
+        $f->checkNotEmpty($_POST['postal'], 'Vyplňte PSČ bydliště');
+        $f->checkNotEmpty($_POST['nationality'], 'Vyplňte vaši národnost');
 
         if (!$f->isValid()) {
             \Message::warning($f->getMessages());
