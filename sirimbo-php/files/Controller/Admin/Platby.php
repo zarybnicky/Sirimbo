@@ -122,8 +122,7 @@ class Platby
 
     public static function getFromPost($id = null)
     {
-        $item = new \PlatbyItem();
-        $item->init(
+        $item = new \PlatbyItem(
             null,
             $_POST['variable'],
             $_POST['date'],

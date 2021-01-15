@@ -29,15 +29,26 @@ class PlatbyRaw
     public static function post()
     {
         \Permissions::checkError('platby', P_OWNED);
-        static::processUpload();
+        $uploader = new Uploader($_FILES['in'], self::TEMP_DIR, ['csv']);
+        if ($uploader->getUploadErrors()) {
+            \Message::warning($uploader->getUploadErrors());
+            return;
+        }
+        list($saved, $refused) = $uploader->save();
+        if ($refused) {
+            \Message::warning('Nahrávané soubory musí být typu CSV.');
+        }
+        foreach ($saved as $path) {
+            static::processCsv($path);
+            \Message::success('Soubor ' . str_replace(self::TEMP_DIR, '', $path) . ' byl zpracován.');
+        }
         \Redirect::to('/admin/platby/raw');
     }
 
     public static function selectColumns()
     {
         \Permissions::checkError('platby', P_OWNED);
-        $path = self::TEMP_DIR . str_replace('../', '', $_GET['path']);
-        $parser = static::getParser($path);
+        $parser = static::getParser(self::TEMP_DIR . str_replace('../', '', $_GET['path']));
         Platby::recognizeHeaders(array_flip($parser->headers()), $specific, $variable, $date, $amount);
         \Render::twig('Admin/PlatbyRawColumnSelect.twig', [
             'data' => $parser->headers(),
@@ -53,12 +64,11 @@ class PlatbyRaw
     public static function selectColumnsPost()
     {
         \Permissions::checkError('platby', P_OWNED);
-        $path = self::TEMP_DIR . str_replace('../', '', $_GET['path']);
-        static::processCsv($path, [
+        static::processCsv(self::TEMP_DIR . str_replace('../', '', $_GET['path']), [
             'specific' => $_POST['specific'],
             'variable' => $_POST['variable'],
             'date' => $_POST['date'],
-            'amount' => $_POST['amount']
+            'amount' => $_POST['amount'],
         ]);
         \Message::success('Soubor ' . $_GET['path'] . ' byl zpracován.');
         \Redirect::to('/admin/platby/raw');
@@ -102,8 +112,7 @@ class PlatbyRaw
             $serialized = serialize($array);
             $hash = md5($serialized);
 
-            $item = new \PlatbyItem();
-            $item->init($array[$specific], $array[$variable], $array[$date], $array[$amount]);
+            $item = new \PlatbyItem($array[$specific], $array[$variable], $array[$date], $array[$amount]);
             $item->processWithSymbolLookup($userLookup, $categoryLookup);
 
             if (!$item->isValid) {
@@ -119,28 +128,6 @@ class PlatbyRaw
                 $item->date,
                 $item->prefix
             );
-        }
-    }
-
-    private static function processUpload()
-    {
-        $upload = new \UploadHelper('in');
-        $upload->loadFromPost();
-
-        if ($upload->getErrorMessages()) {
-            \Message::warning($upload->getErrorMessages());
-            return;
-        }
-        $uploader = $upload->getFilledUploader();
-        $uploader->setOutputDir(self::TEMP_DIR);
-        $uploader->addAllowedType('csv');
-        $uploader->save();
-        if ($uploader->hasRefusedFiles()) {
-            \Message::warning('Nahrávané soubory musí být typu CSV.');
-        }
-        foreach ($uploader->getSavedFiles() as $path) {
-            static::processCsv($path);
-            \Message::success('Soubor ' . str_replace(self::TEMP_DIR, '', $path) . ' byl zpracován.');
         }
     }
 }

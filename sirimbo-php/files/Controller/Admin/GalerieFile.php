@@ -100,26 +100,23 @@ class GalerieFile
             \Message::warning('Taková složka neexistuje');
             \Redirect::to('/admin/galerie/file/upload');
         }
-        $uploadHelper = new \UploadHelper('files');
-        $uploadHelper->loadFromPost();
-        if ($uploadHelper->getErrorMessages()) {
-            \Message::warning($uploadHelper->getErrorMessages());
+
+        $outputDir = GALERIE . DIRECTORY_SEPARATOR . $parent['gd_path'];
+        $uploader = new \Uploader($_FILES['files'], $outputDir, \Settings::$imageType);
+        if ($uploader->getUploadErrors()) {
+            \Message::warning($uploader->getUploadErrors());
         }
-        $uploader = $uploadHelper->getFilledUploader();
-        foreach (\Settings::$imageType as $extension) {
-            $uploader->addAllowedType($extension);
+        list($saved, $refused) = $uploader->save();
+
+        if ($refused) {
+            \Message::warning('Počet zamítnutých souborů: ' . count($refused));
         }
-        $uploader->setOutputDir(GALERIE . DIRECTORY_SEPARATOR . $parent['gd_path']);
-        $uploader->save();
-        if ($uploader->hasRefusedFiles()) {
-            \Message::warning('Počet zamítnutých souborů: ' . count($uploader->getRefusedFiles()));
-        }
-        if (count($uploader->getSavedFiles()) == 0) {
+        if (!$saved) {
             \Message::info('Žádné soubory nebyly nahrány!');
             \Redirect::to('/admin/galerie/file/upload');
         }
         $failCount = 0;
-        foreach ($uploader->getSavedFiles() as $path) {
+        foreach ($saved as $path) {
             if (!Galerie::checkGetThumbnail($path)) {
                 if (is_file($path)) {
                     unlink($path);
@@ -164,12 +161,11 @@ class GalerieFile
     private static function checkData(): \Form
     {
         $form = new \Form();
-        $form->checkNotEmpty($_POST['name'], 'Zadejte prosím nějaký popis', 'name');
+        $form->checkNotEmpty($_POST['name'], 'Zadejte prosím nějaký popis');
         $form->checkBool(
             $_POST['parent'] >= 0 && is_numeric($_POST['parent'])
             && \DBGalerie::getSingleDir($_POST['parent']),
             'Zadaná nadsložka není platná',
-            'parent'
         );
         return $form;
     }

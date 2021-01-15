@@ -10,18 +10,7 @@ class PlatbyItem
     public $categoryId;
     public $isValid = false;
 
-    public function __construct()
-    {
-    }
-
-    public function init($specific, $variable, $date, $amount, $prefix = null, $id = null, $categoryId = null)
-    {
-        $this->_initFormatted($specific, $variable, $date, $amount, $prefix, $id, $categoryId);
-        $this->isValid = false;
-        return $this;
-    }
-
-    private function _initFormatted($specific, $variable, $date, $amount, $prefix, $id, $categoryId)
+    public function __construct($specific, $variable, $date, $amount, $prefix = null, $id = null, $categoryId = null)
     {
         $this->specific = (int) $specific;
         $this->variable = (int) $variable;
@@ -36,7 +25,7 @@ class PlatbyItem
     {
         if (!$this->specific && $this->categoryId) {
             $category = \DBPlatbyCategory::getSingle($this->categoryId);
-            $this->specific = $category ? $category['pc_symbol'] : null;
+            $this->specific = $category['pc_symbol'] ?? null;
         } elseif ($this->specific && !$this->categoryId) {
             if (mb_strlen($this->specific) <= 4) {
                 if (isset($categoryLookup[$this->specific])) {
