@@ -12,7 +12,7 @@ class RozpisDetail
         }
         \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
         $items = \DBRozpis::getRozpisItem($id);
-_        $users = \DBPary::getPartners(array_column($items, 'p_id'));
+        $users = \DBPary::getPartners(array_column($items, 'p_id'));
 
         $data = $data + [
             'canEdit' => \Permissions::check('nabidka', P_OWNED, $data['r_trener'])
