@@ -7,19 +7,19 @@ class Home
     {
         $articles = \DBAktuality::getAktuality(1);
 
-        $highlights = array_map(fn($val) => [
+        $highlights = array_for(array_slice($articles, 0, 3), fn($val) => [
             'uri'  => '/aktualne/' . $val['at_id'],
             'name' => $val['at_jmeno'],
             'description' => $val['at_preview'],
             'title_photo_uri' => $val['at_foto_main'] ? '/galerie/' . $val['gf_path'] : ''
-        ], array_slice($articles, 0, 3));
+        ]);
 
-        $moreArticles = array_map(fn($val) => [
+        $moreArticles = array_for(array_slice($articles, 3, 2), fn($val) => [
             'uri'  => '/aktualne/' . $val['at_id'],
             'name' => $val['at_jmeno'],
             'description' => $val['at_preview'],
             'title_photo_uri' => $val['at_foto_main'] ? '/galerie/' . $val['gf_path'] : ''
-        ], array_slice($articles, 3, 2));
+        ]);
 
         $videos = array_map(
             function ($id) {

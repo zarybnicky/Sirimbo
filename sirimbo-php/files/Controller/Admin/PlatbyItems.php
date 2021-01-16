@@ -142,13 +142,10 @@ class PlatbyItems
             'returnURI' => $_SERVER['HTTP_REFERER'],
             'id' => $id,
             'raw' => $raw,
-            'users' => array_map(
-                function ($x) {
-                    $u = \User::fromArray($x);
-                    return "{$u->getVarSymbol()} - {$x['u_prijmeni']}, {$x['u_jmeno']}";
-                },
-                Platby::getUserLookup(true),
-            ),
+            'users' => array_for(Platby::getUserLookup(true), function ($x) {
+                $u = \User::fromArray($x);
+                return "{$u->getVarSymbol()} - {$x['u_prijmeni']}, {$x['u_jmeno']}";
+            }),
             'categories' => static::getCategories(),
             'date' => $_POST['date'] ?? '',
             'amount' => $_POST['amount'] ?? '',

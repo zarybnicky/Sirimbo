@@ -13,13 +13,7 @@ class NabidkaDetail
         \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
         $items = \DBNabidka::getNabidkaItem($id);
         \Render::twig('Admin/NabidkaDetail.twig', [
-            'nabidka' => [
-                'id' => $data['n_id'],
-                'fullName' => "{$data['u_jmeno']} {$data['u_prijmeni']}",
-                'date' => $data['n_od'],
-                'dateEnd' => $data['n_do'],
-                'hourMax' => $data['n_max_pocet_hod'],
-                'hourTotal' => $data['n_pocet_hod'],
+            'nabidka' => $data + [
                 'hourReserved' => \DBNabidka::getNabidkaItemLessons($id),
                 'canEdit' => true,
             ],

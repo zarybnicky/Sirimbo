@@ -80,12 +80,11 @@ class Utils
 
     public static function selectAssoc(string $name, array $data, string $key, string $value, $set = null, $cls = "form-control select2"): string
     {
-        $options = array_map(
-            fn($x) => "<option value=\"{$x[$key]}\""
+        $options = array_for($data, fn($x) => (
+            "<option value=\"{$x[$key]}\""
             . ((string) $set === (string) $x[$key] ? " selected" : '')
-            . ">{$x[$value]}</option>",
-            $data,
-        );
+            . ">{$x[$value]}</option>"
+        ));
         return "<select class=\"$cls\" name=\"$name\">" . implode($options) . "</select>";
     }
 
@@ -103,12 +102,11 @@ class Utils
 
     public static function selectLiteral(string $name, array $data, $set = null, $cls = "form-control select2"): string
     {
-        $options = array_map(
-            fn($x) => "<option value=\"$x\""
+        $options = array_for($data, fn($x) => (
+            "<option value=\"$x\""
             . ((string) $set === (string) $x ? " selected" : '')
-            . ">$x</option>",
-            $data,
-        );
+            . ">$x</option>"
+        ));
         return "<select class=\"$cls\" name=\"$name\">" . implode($options) . "</select>";
     }
 

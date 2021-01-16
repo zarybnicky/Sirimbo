@@ -51,7 +51,7 @@
               {% endif %}
             </td>
             <td>{{ row.uri }}</td>
-            <td style="width:100px">{{ row.created | timestamp(true) }}</td>
+            <td style="width:100px">{{ row.created | date('j. n. Y H:i') }}</td>
           </tr>
         {% endfor %}
       </table>

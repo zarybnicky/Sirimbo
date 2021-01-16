@@ -1,35 +1,35 @@
 <div class="trenink-header">
   <div class="title">
-    {{ item.fullName }}
+    {{ item.u_jmeno }} {{ item.u_prijmeni }}
     {% if item.canEdit %}
       <div class="btn-group">
         <button type="button" class="btn btn-xs pt-0" data-toggle="dropdown">
           <img alt="Upravit" width="16" src="/style/icon-gear.png" />
         </button>
         <div class="dropdown-menu dropdown-menu-right">
-          <a class="dropdown-item" href="/admin/nabidka/edit/{{ item.id }}">Upravit</a>,
-          <a class="dropdown-item" href="/admin/nabidka/detail/{{ item.id }}">Upravit rezervace</a>
+          <a class="dropdown-item" href="/admin/nabidka/edit/{{ item.n_id }}">Upravit</a>,
+          <a class="dropdown-item" href="/admin/nabidka/detail/{{ item.n_id }}">Upravit rezervace</a>
         </div>
       </div>
     {% endif %}
   </div>
   <div class="date">
-    {{ item.date|date('j. n. Y') }}
-    {% if item.dateEnd and item.date != item.dateEnd %}
-      - {{ item.dateEnd|date('j. n. Y') }}
+    {{ item.n_od | date('j. n. Y') }}
+    {% if item.n_do and item.n_od != item.n_do %}
+      - {{ item.n_do | date('j. n. Y') }}
     {% endif %}
   </div>
 
-  {% if item.hourMax > 0 %}
+  {% if item.n_max_pocet_hod > 0 %}
     <div>
       <span class="little">Maximálně hodin/pár:</span>
-      <span class="nadpis">{{ item.hourMax }}</span>
+      <span class="nadpis">{{ item.n_max_pocet_hod }}</span>
     </div>
   {% endif %}
   <div>
     <span class="little">Volných hodin: </span>
     <span class="nadpis">
-      {{ item.hourTotal - item.hourReserved }} z {{ item.hourTotal }} nabízených
+      {{ item.n_pocet_hod - item.hourReserved }} z {{ item.n_pocet_hod }} nabízených
     </span>
   </div>
 </div>

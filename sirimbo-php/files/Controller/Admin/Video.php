@@ -12,16 +12,13 @@ class Video
         \Render::twig('Admin/Video.twig', [
             'action' => 'orphan',
             'navigation' => $pager->getNavigation(),
-            'data' => array_map(
-                fn($item) => [
-                    'type' => 'video',
-                    'id' => $item['v_id'],
-                    'title' => $item['v_title'],
-                    'uri' => explode('?', $item['v_uri'])[0],
-                    'created' => $item['v_created_at'],
-                ],
-                $pager->getItems()
-            ),
+            'data' => array_for($pager->getItems(), fn($item) => [
+                'type' => 'video',
+                'id' => $item['v_id'],
+                'title' => $item['v_title'],
+                'uri' => explode('?', $item['v_uri'])[0],
+                'created' => $item['v_created_at'],
+            ]),
         ]);
     }
 
@@ -31,16 +28,13 @@ class Video
         \Render::twig('Admin/Video.twig', [
             'action' => 'playlist',
             'navigation' => '',
-            'data' => array_map(
-                fn($item) => [
-                    'type' => 'playlist',
-                    'id' => $item['vl_id'],
-                    'title' => $item['vl_title'],
-                    'uri' => $item['vl_url'],
-                    'created' => $item['vl_created_at'],
-                ],
-                \DBVideoList::getAll()
-            ),
+            'data' => array_for(\DBVideoList::getAll(), fn($item) => [
+                'type' => 'playlist',
+                'id' => $item['vl_id'],
+                'title' => $item['vl_title'],
+                'uri' => $item['vl_url'],
+                'created' => $item['vl_created_at'],
+            ]),
         ]);
     }
 
@@ -52,16 +46,13 @@ class Video
             'playlist' => $list['vl_title'],
             'action' => 'playlist',
             'navigation' => '',
-            'data' => array_map(
-                fn($item) => [
-                    'type' => 'video',
-                    'id' => $item['v_id'],
-                    'title' => $item['v_title'],
-                    'uri' => explode('?', $item['v_uri'])[0],
-                    'created' => $item['v_created_at'],
-                ],
-                \DBVideo::getByPlaylist($id)
-            ),
+            'data' => array_for(\DBVideo::getByPlaylist($id), fn($item) => [
+                'type' => 'video',
+                'id' => $item['v_id'],
+                'title' => $item['v_title'],
+                'uri' => explode('?', $item['v_uri'])[0],
+                'created' => $item['v_created_at'],
+            ]),
         ]);
     }
 

@@ -16,10 +16,10 @@
             <div class="widget-content">
               {% for lesson in item.items %}
                 <form class="row mx-auto mb-1 no-gutters" action="" method="post">
-                  <input type='hidden' name='ri_id' value='{{ lesson.id }}'>
-                  <div class="col-4">{{ lesson.timeFrom | date('H:i') }}-{{ lesson.timeTo | date('H:i') }}</div>
+                  <input type='hidden' name='ri_id' value='{{ lesson.ri_id }}'>
+                  <div class="col-4">{{ lesson.ri_od | date('H:i') }}-{{ lesson.ri_do | date('H:i') }}</div>
                   <div class="col-8">
-                    {{ lesson.fullName }}
+                    {{ lesson.u_jmeno }} {{ lesson.u_prijmeni }}
                     {% if lesson.canReserve %}
                       <button name="action" value="signup" class="py-0 btn btn-outline-primary btn-sm">+</button>
                     {% elseif lesson.canCancel %}
@@ -35,19 +35,19 @@
               {% include 'Member/NabidkaHeader.twig' with {'item': item} %}
             </div>
             <form class="widget-content" action="" method="post">
-              <input type='hidden' name='n_id' value='{{ item.id }}'>
+              <input type='hidden' name='n_id' value='{{ item.ni_id }}'>
               <table class="nocolor" style="width:100%">
                 {% for row in item.items %}
                   <tr>
                     <td>
-                      {{ row.hourCount }}
-                      {{ (row.hourCount == 1) ? 'hodina' :
-                           ((row.hourCount > 1 and row.hourCount < 4) ? 'hodiny' : 'hodin') }}
+                      {{ row.ni_pocet_hod }}
+                      {{ (row.ni_pocet_hod == 1) ? 'hodina' :
+                           ((row.ni_pocet_hod > 1 and row.ni_pocet_hod < 4) ? 'hodiny' : 'hodin') }}
                     </td>
-                    <td>{{ row.fullName }}</td>
+                    <td>{{ row.u_jmeno }} {{ row.u_prijmeni }}</td>
                     <td>
                       {% if row.canDelete %}
-                        <button name="p_id" value="{{ row.coupleId }}"
+                        <button name="p_id" value="{{ row.p_id }}"
                                 class="py-0 btn btn-outline-primary btn-sm">&times;</button>
                       {% endif %}
                     </td>

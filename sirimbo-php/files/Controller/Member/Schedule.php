@@ -10,78 +10,47 @@ class Schedule
         $user = \Session::getUser();
         $par = \DBPary::getLatestPartner($user->getId(), $user->getGender());
 
-        $schedules = array_map(
-            fn($data) => [
-                'type' => 'schedule',
-                'id' => $data['r_id'],
-                'date' => $data['r_datum'],
-                'kde' => $data['r_kde'],
-                'fullName' => "{$data['u_jmeno']} {$data['u_prijmeni']}",
-                'canEdit' => \Permissions::check('nabidka', P_OWNED, $data['r_trener']),
-                'items' => array_map(
-                    fn($item) => [
-                        'id' => $item['ri_id'],
-                        'fullName' => "{$item['u_jmeno']} {$item['u_prijmeni']}",
-                        'timeFrom' => $item['ri_od'],
-                        'timeTo' => $item['ri_do'],
-                        'canReserve' => (
-                            $item['ri_partner'] == 0
-                            && !$data['r_lock']
-                            && !$item['ri_lock']
-                            && \Permissions::check('rozpis', P_MEMBER)
-                        ),
-                        'canCancel' => (
-                            $item['ri_partner'] != 0
-                            && !$data['r_lock']
-                            && !$item['ri_lock']
-                            && ((\Permissions::check('rozpis', P_MEMBER) && $par['p_id'] == $item['ri_partner'])
-                               || \Permissions::check('rozpis', P_OWNED, $data['r_trener']))
-                        )
-                    ],
-                    \DBRozpis::getRozpisItem($data['r_id'])
-                ),
-            ],
-            array_filter(
-                \DBRozpis::getRozpis(),
-                fn($item) => $item['r_visible'] && date('Y-m-d') <= $item['r_datum']
-            )
-        );
+        $today = date('Y-m-d');
+        $schedules = array_filter(\DBRozpis::getRozpis(), fn($x) => $x['r_visible'] && $today <= $x['r_datum']);
+        $reservations = array_filter(\DBNabidka::getNabidka(), fn($x) => $x['n_visible'] && $today <= $x['n_do']);
 
-        $reservations = array_map(
-            function ($data) use ($par) {
-                $items = array_map(
-                    fn($item) => [
-                        'id' => $data['u_id'],
-                        'coupleId' => $item['p_id'],
-                        'fullName' => "{$item['u_jmeno']} {$item['u_prijmeni']}",
-                        'hourCount' => $item['ni_pocet_hod'],
-                        'canDelete' =>
-                        (!$data['n_lock']
-                         && \Permissions::check('nabidka', P_MEMBER)
-                         && ($item['p_id'] === $par['p_id']
-                            || \Permissions::check('nabidka', P_OWNED, $data['n_trener']))),
-                    ],
-                    \DBNabidka::getNabidkaItem($data['n_id'])
-                );
-                return [
-                    'type' => 'reservation',
-                    'id' => $data['n_id'],
-                    'fullName' => "{$data['u_jmeno']} {$data['u_prijmeni']}",
-                    'date' => $data['n_od'],
-                    'dateEnd' => $data['n_do'],
-                    'canEdit' => \Permissions::check('nabidka', P_OWNED, $data['n_trener']),
-                    'hourMax' => $data['n_max_pocet_hod'],
-                    'hourTotal' => $data['n_pocet_hod'],
-                    'hourReserved' => array_reduce($items, fn($c, $x) => $c + $x['hourCount'], 0),
-                    'canAdd' => !$data['n_lock'] && \Permissions::check('nabidka', P_MEMBER),
-                    'items' => $items
-                ];
-            },
-            array_filter(
-                \DBNabidka::getNabidka(),
-                fn($item) => $item['n_visible'] && date('Y-m-d') <= $item['n_do']
-            ),
-        );
+        $schedules = array_for($schedules, fn($data) => $data + [
+            'type' => 'schedule',
+            'canEdit' => \Permissions::check('nabidka', P_OWNED, $data['r_trener']),
+            'items' => array_for(\DBRozpis::getRozpisItem($data['r_id']), fn($item) => $item + [
+                'canReserve' => (
+                    $item['ri_partner'] == 0
+                    && !$data['r_lock']
+                    && !$item['ri_lock']
+                    && \Permissions::check('rozpis', P_MEMBER)
+                ),
+                'canCancel' => (
+                    $item['ri_partner'] != 0
+                    && !$data['r_lock']
+                    && !$item['ri_lock']
+                    && ((\Permissions::check('rozpis', P_MEMBER) && $par['p_id'] == $item['ri_partner'])
+                       || \Permissions::check('rozpis', P_OWNED, $data['r_trener']))
+                )
+            ]),
+        ]);
+
+        $reservations = array_for($reservations, function ($data) use ($par) {
+            $items = array_for(\DBNabidka::getNabidkaItem($data['n_id']), fn($item) => $item + [
+                'canDelete' => (
+                    !$data['n_lock']
+                    && \Permissions::check('nabidka', P_MEMBER)
+                    && ($item['p_id'] === $par['p_id']
+                       || \Permissions::check('nabidka', P_OWNED, $data['n_trener']))
+                ),
+            ]);
+            return $data + [
+                'type' => 'reservation',
+                'canAdd' => !$data['n_lock'] && \Permissions::check('nabidka', P_MEMBER),
+                'canEdit' => \Permissions::check('nabidka', P_OWNED, $data['n_trener']),
+                'hourReserved' => array_sum(array_column($items, 'ni_pocet_hod')),
+                'items' => $items
+            ];
+        });
 
         $data = $schedules + $reservations;
         usort($data, function ($a, $b) {

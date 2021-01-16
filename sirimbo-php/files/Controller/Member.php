@@ -20,18 +20,15 @@ class Member
         $pager->setDefaultItemsPerPage(10);
         \Render::twig('Member/Nastenka.twig', [
             'navigation' => $pager->getNavigation(),
-            'data' => array_map(
-                fn($item) => [
-                    'id' => $item['up_id'],
-                    'nadpis' => $item['up_nadpis'],
-                    'canEdit' => \Permissions::check('nastenka', P_OWNED, $item['up_kdo']),
-                    'skupinyBoxes' => \DBNastenka::getNastenkaSkupiny($item['up_id']),
-                    'addedBy' => "{$item['u_jmeno']} {$item['u_prijmeni']}",
-                    'addedTimestamp' => $item['up_timestamp_add'],
-                    'text' => stripslashes($item['up_text'])
-                ],
-                $pager->getItems(),
-            ),
+            'data' => array_for($pager->getItems(), fn($item) => [
+                'id' => $item['up_id'],
+                'nadpis' => $item['up_nadpis'],
+                'canEdit' => \Permissions::check('nastenka', P_OWNED, $item['up_kdo']),
+                'skupinyBoxes' => \DBNastenka::getNastenkaSkupiny($item['up_id']),
+                'addedBy' => "{$item['u_jmeno']} {$item['u_prijmeni']}",
+                'addedTimestamp' => $item['up_timestamp_add'],
+                'text' => stripslashes($item['up_text'])
+            ]),
         ]);
     }
 

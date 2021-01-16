@@ -80,12 +80,8 @@ class Tree
         $children = '';
         foreach ($this->getChildren() as $child) {
             $children .= "\n" . implode(
-                "\n", array_map(
-                    function ($x) {
-                        return '  ' . $x;
-                    },
-                    explode("\n", (string) $child)
-                )
+                "\n",
+                array_map(fn($x) => "  $x", explode("\n", (string) $child)),
             );
         }
         return "{$this->name} (" . gettype($this->value) . ")$children";

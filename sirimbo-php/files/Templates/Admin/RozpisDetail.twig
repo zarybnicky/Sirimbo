@@ -18,8 +18,8 @@
         {% for item in items %}
           <tr>
             <td>{{ userSelect(users, item.ri_id ~ '-partner', item.ri_partner, 'p_id') }}</td>
-            <td>{{ text(item.ri_id ~ '-od', item.ri_od | time, {'size': 5}) }}</td>
-            <td>{{ text(item.ri_id ~ '-do', item.ri_do | time, {'size': 5}) }}</td>
+            <td>{{ text(item.ri_id ~ '-od', item.ri_od | date('H:i'), {'size': 5}) }}</td>
+            <td>{{ text(item.ri_id ~ '-do', item.ri_do | date('H:i'), {'size': 5}) }}</td>
             <td><button name="remove" value="{{ item.ri_id }}" class="btn btn-primary">Odstranit</button></td>
             <td>{{ checkbox(item.ri_id ~ '-lock', 'lock', item.ri_lock) }}</td>
           </tr>
@@ -62,8 +62,8 @@
         </tr>
         {% for item in nabidka.items %}
           <tr>
-            <td>{{ item.fullName }}</td>
-            <td>{{ item.lessonCount }}</td>
+            <td>{{ item.u_jmeno }} {{ item.u_prijmeni }}</td>
+            <td>{{ item.ni_pocet_hod }}</td>
           </tr>
         {% endfor %}
       </table>

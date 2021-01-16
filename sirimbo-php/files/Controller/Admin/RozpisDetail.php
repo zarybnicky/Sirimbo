@@ -12,14 +12,9 @@ class RozpisDetail
         }
         \Permissions::checkError('rozpis', P_OWNED, $data['r_trener']);
         $items = \DBRozpis::getRozpisItem($id);
-        $currentCouples = array_column($items, 'p_id');
-        $users = \DBPary::getPartners($currentCouples);
+_        $users = \DBPary::getPartners(array_column($items, 'p_id'));
 
-        $data = [
-            'id' => $data['r_id'],
-            'date' => $data['r_datum'],
-            'kde' => $data['r_kde'],
-            'fullName' => $data['u_jmeno'] . ' ' . $data['u_prijmeni'],
+        $data = $data + [
             'canEdit' => \Permissions::check('nabidka', P_OWNED, $data['r_trener'])
         ];
 
@@ -43,23 +38,11 @@ class RozpisDetail
         }
 
         if (isset($_GET['n']) && ($nabidka = \DBNabidka::getSingleNabidka($_GET['n']))) {
-            $n_items = array_map(
-                fn($item) => [
-                    'fullName' => $item['u_jmeno'] . ' ' . $item['u_prijmeni'],
-                    'lessonCount' => $item['ni_pocet_hod']
-                ],
-                \DBNabidka::getNabidkaItem($_GET['n'])
-            );
-            $nabidka = [
-                'id' => $nabidka['n_id'],
-                'fullName' => $nabidka['u_jmeno'] . ' ' . $nabidka['u_prijmeni'],
-                'date' => $nabidka['n_od'],
-                'dateEnd' => $nabidka['n_do'],
-                'canEdit' => false,
-                'hourMax' => $nabidka['n_max_pocet_hod'],
-                'hourTotal' => $nabidka['n_pocet_hod'],
-                'hourReserved' => array_reduce($n_items, fn($c, $x) => $c + $x['lessonCount'], 0),
+            $n_items = \DBNabidka::getNabidkaItem($_GET['n']);
+            $nabidka = $nabidka + [
+                'hourReserved' => array_sum(array_column($n_items, 'ni_pocet_hod')),
                 'items' => $n_items,
+                'canEdit' => true,
             ];
         }
 

@@ -79,13 +79,10 @@ class GalerieFile
         \Permissions::checkError('galerie', P_OWNED);
         \Render::twig('Admin/GalerieUpload.twig', [
             'dir' => $_GET['dir'] ?? '0',
-            'dirs' => array_map(
-                fn($item) => [
-                    'id' => $item['gd_id'],
-                    'text' => str_repeat('&nbsp;&nbsp;', $item['gd_level'] - 1) . $item['gd_name']
-                ],
-                \DBGalerie::getDirs(true, true)
-            ),
+            'dirs' => array_for(\DBGalerie::getDirs(true, true), fn($item) => [
+                'id' => $item['gd_id'],
+                'text' => str_repeat('&nbsp;&nbsp;', $item['gd_level'] - 1) . $item['gd_name']
+            ]),
         ]);
     }
 

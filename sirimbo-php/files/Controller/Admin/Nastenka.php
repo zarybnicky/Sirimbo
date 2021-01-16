@@ -11,13 +11,10 @@ class Nastenka
         $pager->setItemsPerPage($_GET['c']);
         \Render::twig('Admin/Nastenka.twig', [
             'navigation' => $pager->getNavigation(),
-            'data' => array_map(
-                fn($item) => $item + [
-                    'canEdit' => \Permissions::check('nastenka', P_OWNED, $item['up_kdo']),
-                    'groups' => \DBNastenka::getNastenkaSkupiny($item['up_id']),
-                ],
-                $pager->getItems(),
-            ),
+            'data' => array_for($pager->getItems(), fn($item) => $item + [
+                'canEdit' => \Permissions::check('nastenka', P_OWNED, $item['up_kdo']),
+                'groups' => \DBNastenka::getNastenkaSkupiny($item['up_id']),
+            ]),
         ]);
     }
 

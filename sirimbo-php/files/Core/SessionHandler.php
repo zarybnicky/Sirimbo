@@ -23,15 +23,16 @@ class DbSessionHandler extends Database implements SessionHandlerInterface
     public function write($sessionId, $data)
     {
         setcookie(session_name(), $sessionId, time() + 86400, '/');
-
         $data = json_encode(unserialize($data), JSON_FORCE_OBJECT);
         return !!self::query(
             "INSERT INTO session
              (ss_id, ss_data, ss_lifetime) VALUES
-             ('?', '$data', 86400)
+             ('?', '?', 86400)
              ON DUPLICATE KEY UPDATE
-             ss_data='$data', ss_updated_at=NOW()",
+             ss_data='?', ss_updated_at=NOW()",
             $sessionId,
+            $data,
+            $data,
         );
     }
 

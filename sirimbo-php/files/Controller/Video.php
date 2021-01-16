@@ -18,18 +18,15 @@ class Video
         }
         \Render::twig('Main/Video.twig', [
             'playlist' => $playlist,
-            'videos' => array_map(
-                function ($item) {
-                    list($id, $query) = array_merge(explode('?', $item['v_uri']), ['']);
-                    return [
-                        'title' => $item['v_title'],
-                        'date' => $item['v_created_at'],
-                        'uri' => "//www.youtube.com/embed/$id?$query&amp;autoplay=1",
-                        'thumbnail' => "https://i3.ytimg.com/vi/$id/mqdefault.jpg"
-                    ];
-                },
-                $videos
-            ),
+            'videos' => array_for($videos, function ($item) {
+                list($id, $query) = array_merge(explode('?', $item['v_uri']), ['']);
+                return [
+                    'title' => $item['v_title'],
+                    'date' => $item['v_created_at'],
+                    'uri' => "//www.youtube.com/embed/$id?$query&amp;autoplay=1",
+                    'thumbnail' => "https://i3.ytimg.com/vi/$id/mqdefault.jpg"
+                ];
+            }),
             'playlists' => \DBVideoList::getAll(),
         ]);
     }

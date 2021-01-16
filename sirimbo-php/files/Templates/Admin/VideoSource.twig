@@ -45,8 +45,8 @@
               {{ row.vs_title }}
             </td>
             <td>{{ row.vs_url }}</td>
-            <td style="width:100px">{{ row.vs_created_at | timestamp(true) }}</td>
-            <td style="width:100px">{{ row.vs_last_checked ? (row.vs_last_checked | timestamp(true)) : '' }}</td>
+            <td style="width:100px">{{ row.vs_created_at | date('j. n. Y H:i') }}</td>
+            <td style="width:100px">{{ row.vs_last_checked ? (row.vs_last_checked | date('j. n. Y H:i')) : '' }}</td>
           </tr>
         {% endfor %}
       </table>

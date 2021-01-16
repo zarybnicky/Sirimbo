@@ -65,18 +65,15 @@ class Users
             'skupina' => $_GET['skupina'] ?? '',
             'group' => $_GET['group'] ?? '',
             'sort' => $_GET['sort'] ?? '',
-            'data' => array_map(
-                fn($item) => [
-                    'user' => \User::fromArray($item),
-                    'skupina' => [
-                        'id' => $item['s_id'],
-                        'description' => $item['s_description'],
-                        'color' => $item['s_color_rgb'],
-                    ],
-                    'groupInfo' => $groupOptions[$item['u_group']] ?? '',
+            'data' => array_for($pager->getItems(), fn($item) => [
+                'user' => \User::fromArray($item),
+                'skupina' => [
+                    'id' => $item['s_id'],
+                    'description' => $item['s_description'],
+                    'color' => $item['s_color_rgb'],
                 ],
-                $pager->getItems(),
-            ),
+                'groupInfo' => $groupOptions[$item['u_group']] ?? '',
+            ]),
         ]);
     }
 

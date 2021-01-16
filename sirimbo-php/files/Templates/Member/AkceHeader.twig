@@ -19,8 +19,10 @@
     {% if item.a_od != item.a_do %}{{ item.a_do | date('j. n. Y') }}{% endif %}
   </div>
   <div class="emph">{{ item.a_kde }}</div>
-  <div><span class="big">Kapacita: </span> {{ item.a_kapacita }}</div>
-  <div><span class="big">Volných míst: </span> {{ item.a_kapacita - item.reserved }}</div>
+  <div>
+    <span class="big">Volných míst: </span>
+    {{ item.a_kapacita - item.reserved }} / {{ item.a_kapacita }}
+  </div>
   {% if item.a_info %}
     <div class="text-left mb-2">{{ item.a_info | raw | nl2br }}</div>
   {% endif %}
