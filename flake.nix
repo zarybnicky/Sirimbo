@@ -65,7 +65,6 @@
           universe-base = unmarkBroken (doJailbreak hsuper.universe-base);
           microaeson = unmarkBroken (doJailbreak hsuper.microaeson);
 
-          servant-ts = hself.callCabal2nix "servant-ts" (getSrc ./servant-ts) {};
           sirimbo-schema = hself.callCabal2nix "sirimbo-schema" (getSrc ./sirimbo-schema) {};
           sirimbo-api = generateOptparseApplicativeCompletion "olymp" (
             justStaticExecutables (

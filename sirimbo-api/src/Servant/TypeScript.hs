@@ -1,33 +1,101 @@
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE PolyKinds #-}
+{-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Typescript
-  ( TSIntermediate (..),
-    TSPrimitive (..),
-    TSComposite (..),
-    TypescriptType (..),
-    ForeignType (..),
-    IsForeignType (..),
-  )
-where
+module Servant.TypeScript (FilterAPI, apiToTypeScript) where
 
-import Data.Proxy (Proxy (..))
+import Control.Lens ((^.))
+import Data.Maybe (mapMaybe)
+import Data.Proxy (Proxy (Proxy))
 import Data.Tagged (Tagged)
 import Data.Text (Text)
 import qualified Data.Text as T
 import GHC.Generics
+import Servant.API
+import Servant.API.WebSocket (WebSocket)
+import Servant.Foreign
+import Servant.JuicyPixels (PNG)
+import Control.Monad ((<=<))
+import Data.Aeson (Value)
+
+type family FilterAPI api where
+  FilterAPI (Stream method status framing ct a) = EmptyAPI
+  FilterAPI (StreamBody' mods framing ct a :> b) = EmptyAPI
+  FilterAPI (Verb method statusCode '[PNG] a) = EmptyAPI
+  FilterAPI (Verb 'OPTIONS statusCode types a) = EmptyAPI
+  FilterAPI (Verb method statusCode content (Headers _ a)) = Verb method statusCode content a
+  FilterAPI (reqBody '[PNG] a :> b) = EmptyAPI
+  FilterAPI WebSocket = EmptyAPI
+  FilterAPI (a :<|> b) = FilterAPI a :<|> FilterAPI b
+  FilterAPI ((a :: k) :> b) = a :> FilterAPI b
+  FilterAPI a = a
+
+instance (HasForeign l t sub) => HasForeign l t (AuthProtect sym :> sub) where
+  type Foreign t (AuthProtect sym :> sub) = Foreign t sub
+  foreignFor l _ _ req = foreignFor l Proxy (Proxy @sub) req
+
+apiToTypeScript ::
+  ( HasForeign LangTs TSIntermediate api,
+    GenerateList TSIntermediate (Foreign TSIntermediate api)
+  ) =>
+  Proxy api ->
+  Text
+apiToTypeScript p = T.unlines $ mconcat
+  [ printTSFunction <$> reqs,
+    [],
+    mapMaybe (declaration . toForeignType <=< _reqReturnType) reqs
+  ]
+  where reqs = listFromAPI (Proxy @LangTs) Proxy p
+
+data LangTs
+
+instance TypescriptType a => HasForeignType LangTs TSIntermediate a where
+  typeFor _ _ _ = toTSIntermediate (Proxy @a)
+
+printTSFunction :: Req TSIntermediate -> Text
+printTSFunction req =
+  T.concat
+    [ "function ",
+      camelCase (req ^. reqFuncName),
+      "(",
+      T.intercalate "," $ mapMaybe segmentToArg (req ^. reqUrl . path),
+      "): ",
+      case req ^. reqReturnType of
+        Nothing -> "void"
+        Just ret -> "Promise<" <> (refName . toForeignType) ret <> ">",
+      " {\n  return fetch(`/",
+      T.intercalate "/" (segmentToCapture <$> req ^. reqUrl . path),
+      "`).then(x => x.json());\n}"
+    ]
+  where
+    segmentToCapture seg = case unSegment seg of
+      Cap (Arg (PathSegment n) _) -> "${" <> n <> "}"
+      Static (PathSegment ps) -> ps
+    segmentToArg seg = case unSegment seg of
+      Cap (Arg (PathSegment n) t) -> Just (n <> ": " <> refName (toForeignType t))
+      _ -> Nothing
+
+
+{- TypeScript definitions -}
+
 
 data TSIntermediate
   = TSPrimitiveType TSPrimitive
   | TSCompositeType TSComposite
 
-data TSPrimitive = TSNumber | TSString | TSBoolean | TSVoid
+data TSPrimitive = TSNumber | TSString | TSBoolean | TSVoid | TSObject
   deriving (Eq, Show)
 
 data TSComposite
@@ -51,8 +119,8 @@ instance (Datatype d, GenericTSFields f, GenericTSFields s) => GenericTSIntermed
 instance (Datatype d, GenericTSIntermediate f, Selector s) => GenericTSIntermediate (D1 d (C1 c (S1 s f))) where
   genericToTS d = TSCompositeType $ TSRecord (T.pack $ datatypeName d) (toTSFields . unM1 . unM1 $ d)
 
-instance Datatype d => GenericTSIntermediate (D1 d (C1 c U1)) where
-  genericToTS d = TSPrimitiveType TSVoid
+instance GenericTSIntermediate (D1 d (C1 c U1)) where
+  genericToTS _ = TSPrimitiveType TSVoid
 
 instance (Datatype d, GenericTSUnion s, GenericTSUnion f) => GenericTSIntermediate (D1 d (s :+: f)) where
   genericToTS d = TSCompositeType $ TSUnion (T.pack $ datatypeName d) (toTSUnion $ unM1 d)
@@ -105,6 +173,9 @@ instance TypescriptType Float where
 instance TypescriptType Bool where
   toTSIntermediate _ = TSPrimitiveType TSBoolean
 
+instance TypescriptType Value where
+  toTSIntermediate _ = TSPrimitiveType TSObject
+
 instance TypescriptType () where
   toTSIntermediate _ = TSPrimitiveType TSVoid
 
@@ -137,7 +208,9 @@ instance IsForeignType TSComposite where
       ns = T.intercalate " | " $ refName . toForeignType <$> types
 
 instance IsForeignType TSPrimitive where
-  toForeignType TSString = ForeignType "string" Nothing
-  toForeignType TSNumber = ForeignType "number" Nothing
-  toForeignType TSBoolean = ForeignType "boolean" Nothing
-  toForeignType TSVoid = ForeignType "void" Nothing
+  toForeignType = \case
+    TSString -> ForeignType "string" Nothing
+    TSNumber -> ForeignType "number" Nothing
+    TSBoolean -> ForeignType "boolean" Nothing
+    TSVoid -> ForeignType "void" Nothing
+    TSObject -> ForeignType "object" Nothing

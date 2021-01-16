@@ -1,48 +1,52 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE TypeOperators #-}
 
 module Olymp.WordPress
-  ( WordpressApi
-  , wordpressServer
-  ) where
+  ( WordpressApi,
+    wordpressServer,
+  )
+where
 
 import Control.Effect (Effs)
 import Control.Effect.Error (Throw, throw)
-import Data.Aeson (Value(Array))
+import Data.Aeson (Value (Array, Object))
 import Data.Aeson.QQ (aesonQQ)
-import qualified Data.Map as M
+import qualified Data.HashMap.Strict as HM
+import Data.Text (Text)
 import Servant
 
-type WordpressApi
-  = "types" :> Get '[JSON] (M.Map String Value)
-  :<|> "types" :> Capture "type" String :> Get '[JSON] Value
-  :<|> "pages" :> Capture "page" Int :> Get '[JSON] Value
-  :<|> "pages" :> Capture "page" Int :> "autosaves" :> Get '[JSON] [Value]
-  :<|> "themes" :> Get '[JSON] Value
-  :<|> "taxonomies" :> Get '[JSON] Value
-  :<|> "users" :> Get '[JSON] Value
-  :<|> "users" :> "me" :> Get '[JSON] Value
-  :<|> "blocks" :> Get '[JSON] [Value]
-  :<|> "blocks" :> Verb 'OPTIONS 200 '[JSON] (Headers '[Header "Allow" String] ())
-  :<|> "media" :> Verb 'OPTIONS 200 '[JSON] (Headers '[Header "Allow" String] ())
+type WordpressApi =
+  "types" :> Get '[JSON] Value
+    :<|> "types" :> Capture "type" Text :> Get '[JSON] Value
+    :<|> "pages" :> Capture "page" Int :> Get '[JSON] Value
+    :<|> "pages" :> Capture "page" Int :> "autosaves" :> Get '[JSON] [Value]
+    :<|> "themes" :> Get '[JSON] Value
+    :<|> "taxonomies" :> Get '[JSON] Value
+    :<|> "users" :> Get '[JSON] Value
+    :<|> "users" :> "me" :> Get '[JSON] Value
+    :<|> "blocks" :> Get '[JSON] [Value]
+    :<|> "blocks" :> Verb 'OPTIONS 200 '[JSON] (Headers '[Header "Allow" String] ())
+    :<|> "media" :> Verb 'OPTIONS 200 '[JSON] (Headers '[Header "Allow" String] ())
 
 wordpressServer :: Effs '[Throw ServerError] m => ServerT WordpressApi m
-wordpressServer
-  = pure demoTypes
-  :<|> (\typ -> maybe (throw err404) pure (M.lookup typ demoTypes))
-  :<|> (\_page -> pure demoPost)
-  :<|> (\_page -> pure [])
-  :<|> pure demoThemes
-  :<|> pure demoTaxonomies
-  :<|> pure (Array $ pure demoUser)
-  :<|> pure demoUser
-  :<|> pure []
-  :<|> pure (addHeader "GET,POST,PUT,DELETE" ())
-  :<|> pure (addHeader "GET,POST,PUT,DELETE" ())
+wordpressServer =
+  pure (Object demoTypes)
+    :<|> (\typ -> maybe (throw err404) pure (HM.lookup typ demoTypes))
+    :<|> (\_page -> pure demoPost)
+    :<|> (\_page -> pure [])
+    :<|> pure demoThemes
+    :<|> pure demoTaxonomies
+    :<|> pure (Array $ pure demoUser)
+    :<|> pure demoUser
+    :<|> pure []
+    :<|> pure (addHeader "GET,POST,PUT,DELETE" ())
+    :<|> pure (addHeader "GET,POST,PUT,DELETE" ())
 
 demoUser :: Value
-demoUser = [aesonQQ|{
+demoUser =
+  [aesonQQ|{
   "id": 1,
   "name": "Human Made",
   "url": "",
@@ -62,7 +66,8 @@ demoUser = [aesonQQ|{
 }|]
 
 demoTaxonomies :: Value
-demoTaxonomies = [aesonQQ|{
+demoTaxonomies =
+  [aesonQQ|{
   "category": {
     "name": "Categories",
     "slug": "category",
@@ -102,7 +107,8 @@ demoTaxonomies = [aesonQQ|{
 }|]
 
 demoThemes :: Value
-demoThemes = [aesonQQ|[{
+demoThemes =
+  [aesonQQ|[{
   "theme_supports": {
     "formats": [
       "standard",
@@ -120,7 +126,8 @@ demoThemes = [aesonQQ|[{
 }]|]
 
 demoPost :: Value
-demoPost = [aesonQQ|{
+demoPost =
+  [aesonQQ|{
   "id": 1,
   "guid": "...",
   "status": "auto-draft",
@@ -129,16 +136,18 @@ demoPost = [aesonQQ|{
   "content": { "raw": "" }
 }|]
 
-demoTypes :: M.Map String Value
-demoTypes = M.fromList
-  [ ("post", typePost)
-  , ("page", typePage)
-  , ("attachment", typeAttachment)
-  , ("wb_block", typeBlock)
-  ]
+demoTypes :: HM.HashMap Text Value
+demoTypes =
+  HM.fromList
+    [ ("post", typePost),
+      ("page", typePage),
+      ("attachment", typeAttachment),
+      ("wb_block", typeBlock)
+    ]
 
 typeBlock :: Value
-typeBlock = [aesonQQ|{
+typeBlock =
+  [aesonQQ|{
   "labels": { "singular_name": "Block" },
   "description": "",
   "hierarchical": false,
@@ -161,7 +170,8 @@ typeBlock = [aesonQQ|{
 }|]
 
 typeAttachment :: Value
-typeAttachment = [aesonQQ|{
+typeAttachment =
+  [aesonQQ|{
   "labels": { "singular_name": "Attachment" },
   "description": "",
   "hierarchical": false,
@@ -187,7 +197,8 @@ typeAttachment = [aesonQQ|{
 }|]
 
 typePage :: Value
-typePage = [aesonQQ|{
+typePage =
+  [aesonQQ|{
   "labels": { "singular_name": "Page" },
   "description": "",
   "hierarchical": true,
@@ -220,7 +231,8 @@ typePage = [aesonQQ|{
 }|]
 
 typePost :: Value
-typePost = [aesonQQ|{
+typePost =
+  [aesonQQ|{
   "labels": { "singular_name": "Post" },
   "description": "",
   "hierarchical": false,

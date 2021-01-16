@@ -36,6 +36,7 @@ library
                        Olymp.Tournament.Base
                        Olymp.WordPress
                        Olymp.YouTube.Worker
+                       Servant.TypeScript
 
   build-depends:       base >=4.7 && <5
                      , aeson
@@ -79,16 +80,20 @@ library
                      , resourcet
                      , servant
                      , servant-cassava
+                     , servant-flatten
+                     , servant-foreign
                      , servant-JuicyPixels
                      , servant-multipart
                      , servant-server
                      , servant-websockets
+                     , tagged
                      , text
                      , time
                      , transformers
                      , transformers-compat
                      , unordered-containers
                      , validation
+                     , vector
                      , wai
                      , wai-cors
                      , warp
@@ -98,6 +103,18 @@ library
 executable olymp
   import: shared
   main-is:             Main.hs
+  hs-source-dirs:      app
+  ghc-options:        -threaded
+                      -rtsopts
+                      -with-rtsopts=-N
+                      -O2
+
+  build-depends:       base >=4.7 && <5
+                     , sirimbo-api
+
+executable gen-ts
+  import: shared
+  main-is:             MainTs.hs
   hs-source-dirs:      app
   ghc-options:        -threaded
                       -rtsopts
