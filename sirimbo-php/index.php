@@ -130,16 +130,18 @@ function makeRouter()
     $router->post('/registrace', '@Registrace::post');
 
     $router->get('/member', '@Member::get');
-    $router->get('/member/home', '@Member::get');
+    $router->redirect('/member/home', '/member');
     $router->get('/member/akce', '@Member.Akce::list');
     $router->post('/member/akce', '@Member.Akce::listPost');
     $router->get('/member/akce/([0-9]+)', '@Member.Akce::single');
+    $router->redirect('/member/rozpis', '/member/treninky');
+    $router->redirect('/member/nabidka', '/member/treninky');
     $router->get('/member/treninky', '@Member.Schedule::get');
     $router->post('/member/treninky', '@Member.Schedule::post');
     $router->get('/member/dokumenty', '@Member::dokumenty');
     $router->get('/member/download', '@Member::download');
     $router->get('/member/clenove', '@Member.Clenove::structure');
-    $router->get('/member/clenove/structure', '@Member.Clenove::structure');
+    $router->redirect('/member/clenove/structure', '/member/clenove');
     $router->get('/member/clenove/seznam', '@Member.Clenove::list');
     $router->get('/member/clenove/skupiny', '@Member.Clenove::groups');
     $router->get('/member/clenove/([0-9]+)', '@Member.Clenove::single');

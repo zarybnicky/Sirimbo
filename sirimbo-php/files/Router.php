@@ -46,34 +46,28 @@ class Router
     public function get(string $regex, string $handler)
     {
         $this->addRoute('GET', $regex, $handler);
-        return $this;
     }
 
     public function post(string $regex, string $handler)
     {
         $this->addRoute('POST', $regex, $handler);
-        return $this;
     }
 
     public function put(string $regex, string $handler)
     {
         $this->addRoute('PUT', $regex, $handler);
-        return $this;
     }
 
     public function delete(string $regex, string $handler)
     {
         $this->addRoute('DELETE', $regex, $handler);
-        return $this;
     }
 
-    /**
-     * Dispatches the router
-     *
-     * @param string $method The HTTP method, most likely from $_SERVER['REQUEST_METHOD']
-     * @param string $path   The request path, most likely from some URL rewrite ?r=
-     * @return mixed The router output
-     */
+    public function redirect(string $regex, string $target)
+    {
+        $this->addRoute('GET', $regex, fn() => header("Location: $target"));
+    }
+
     public function dispatch(string $method, string $path)
     {
         foreach ($this->routes[$method] ?? [] as $regex => $callback) {

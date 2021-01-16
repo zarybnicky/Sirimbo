@@ -32,10 +32,10 @@
     in {
       phpstan = final.stdenv.mkDerivation {
         pname = "phpstan";
-        version = "0.12.59";
+        version = "0.12.67";
         src = final.fetchurl {
-          url = "https://github.com/phpstan/phpstan/releases/download/0.12.59/phpstan.phar";
-          sha256 = "0lp25d9b7w8lk4ffrd17mjw93i234qnfpwz42k8lww1lrk5abnfa";
+          url = "https://github.com/phpstan/phpstan/releases/download/0.12.67/phpstan.phar";
+          sha256 = "/c+ci/Ok08Qr4bFRiE8e0wSPNo3/k7LbW/KJOkcUTDw=";
         };
         phases = [ "installPhase" ];
         nativeBuildInputs = [ final.makeWrapper ];
