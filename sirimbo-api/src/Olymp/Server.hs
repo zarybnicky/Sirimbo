@@ -1,11 +1,15 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeOperators #-}
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module Olymp.Server
   ( AppStack,
@@ -16,11 +20,13 @@ module Olymp.Server
   )
 where
 
-import Control.Effect (runComposition, CompositionC, Effs, InterpretSimpleC, runM)
+import Control.Effect (CompositionC, Effs, InterpretSimpleC, runComposition, runM)
 import Control.Effect.AtomicState (AtomicState, runAtomicStateIORefSimple)
 import Control.Effect.Bracket (Bracket, BracketToIOC, bracketToIO)
 import Control.Effect.Embed (Embed, RunMC)
 import Control.Effect.Error (Error, ErrorC, runError)
+import Data.Aeson (ToJSON)
+import Data.Csv (Only (..))
 import Data.IORef (IORef)
 import Data.Map (Map)
 import Data.Pool (Pool)
@@ -43,12 +49,11 @@ import Olymp.Tournament.API (tournamentAdminSocket, tournamentSocket)
 import Olymp.Tournament.Base (NodeId, Tournament)
 import Olymp.WordPress (WordpressApi, wordpressServer)
 import Servant
+import Servant.API.Flatten (Flat)
 import Servant.API.WebSocket (WebSocket)
 import Servant.CSV.Cassava (CSV', DefaultOpts, HasHeader (NoHeader))
-import Web.Cookie (SetCookie (..), defaultSetCookie)
 import Servant.TypeScript (FilterAPI, apiToTypeScript)
-import Servant.API.Flatten (Flat)
-
+import Web.Cookie (SetCookie (..), defaultSetCookie)
 
 type AppStack =
   '[ UserEff,
@@ -62,6 +67,8 @@ type AppStack =
      Log,
      Embed IO
    ]
+
+deriving newtype instance ToJSON a => ToJSON (Only a)
 
 olympServer :: (Effs AppStack m) => Int -> Manager -> (forall a. m a -> Handler a) -> Application
 olympServer proxyPort manager runner =
@@ -81,7 +88,7 @@ generateTs = T.putStrLn (apiToTypeScript (Proxy @(FilterAPI (Flat OlympApi))))
 
 type OlympApi =
   PhpAuth :> "api" :> "whoami" :> Get '[PlainText, JSON] Text
-    :<|> PhpAuth :> "api" :> "export-emails" :> Get '[JSON, CSV' 'NoHeader DefaultOpts] [[Text]]
+    :<|> PhpAuth :> "api" :> "export-emails" :> Get '[JSON, CSV' 'NoHeader DefaultOpts] [Only Text]
     :<|> QrPaymentAPI
     :<|> "api" :> "tournament" :> "ws" :> WebSocket
     :<|> PhpAuth :> "api" :> "tournament" :> "admin" :> "ws" :> WebSocket
@@ -125,20 +132,21 @@ whoAmI (_, eu) = do
   logInfo (userName u)
   pure (userName u <> " " <> userSurname u)
 
-exportEmails :: WithLog m => (SessionId, Entity User) -> m [[Text]]
+exportEmails :: WithLog m => (SessionId, Entity User) -> m [Only Text]
 exportEmails _ = pure mempty
 
-type AppC = CompositionC
- '[ InterpretSimpleC UserEff,
-    InterpretSimpleC SessionEff,
-    InterpretSimpleC AppError,
-    ErrorC ServerError,
-    InterpretSimpleC (AtomicState (Map Int Connection)),
-    InterpretSimpleC (AtomicState (Tournament NodeId)),
-    InterpretSimpleC Database,
-    InterpretSimpleC Log,
-    BracketToIOC
-  ]
+type AppC =
+  CompositionC
+    '[ InterpretSimpleC UserEff,
+       InterpretSimpleC SessionEff,
+       InterpretSimpleC AppError,
+       ErrorC ServerError,
+       InterpretSimpleC (AtomicState (Map Int Connection)),
+       InterpretSimpleC (AtomicState (Tournament NodeId)),
+       InterpretSimpleC Database,
+       InterpretSimpleC Log,
+       BracketToIOC
+     ]
 
 interpretServer ::
   IORef (Tournament NodeId) ->
@@ -157,4 +165,4 @@ interpretServer ref ref' pool f =
                 runAppErrorToError $
                   runSessionEffPersistent $
                     runUserEffPersistent $
-                    runComposition f
+                      runComposition f
