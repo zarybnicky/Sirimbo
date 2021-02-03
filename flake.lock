@@ -34,6 +34,23 @@
         "type": "github"
       }
     },
+    "generic-lens": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1611593235,
+        "narHash": "sha256-gLhfvqLUwt9R/QxVjP8IwEQiFtSh2OvYESA5hJ41n5M=",
+        "owner": "kcsongor",
+        "repo": "generic-lens",
+        "rev": "a9a6fc3fe9c9a9cc79d31448db118413d9ca885e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "kcsongor",
+        "ref": "2.1.0.0",
+        "repo": "generic-lens",
+        "type": "github"
+      }
+    },
     "gogol": {
       "flake": false,
       "locked": {
@@ -54,15 +71,15 @@
     "higgledy": {
       "flake": false,
       "locked": {
-        "lastModified": 1607607088,
-        "narHash": "sha256-MbxXGp6o7i7n9I+dTpBXiCwB/oToqTl1vzNdH8esAkE=",
-        "owner": "zarybnicky",
+        "lastModified": 1612260928,
+        "narHash": "sha256-Aeh+eQ14VCas3WFgwt9kLcNozCh3CNyttwZYHBTVgqo=",
+        "owner": "i-am-tom",
         "repo": "higgledy",
-        "rev": "d9773bfffbcc7ff623cb889915dddbd81211e4d5",
+        "rev": "74848cfe2af6f2021d92fc19e182973122d547e9",
         "type": "github"
       },
       "original": {
-        "owner": "zarybnicky",
+        "owner": "i-am-tom",
         "ref": "master",
         "repo": "higgledy",
         "type": "github"
@@ -105,6 +122,7 @@
       "inputs": {
         "bootstrap": "bootstrap",
         "co-log-src": "co-log-src",
+        "generic-lens": "generic-lens",
         "gogol": "gogol",
         "higgledy": "higgledy",
         "in-other-words": "in-other-words",

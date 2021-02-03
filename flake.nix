@@ -2,12 +2,13 @@
   inputs.co-log-src = { flake = false; url = github:kowainik/co-log/main; };
   inputs.in-other-words = { flake = false; url = github:KingoftheHomeless/in-other-words/master; };
   inputs.typerep-map = { flake = false; url = github:kowainik/typerep-map/main; };
-  inputs.higgledy = { flake = false; url = github:zarybnicky/higgledy/master; };
+  inputs.generic-lens = { flake = false; url = github:kcsongor/generic-lens/2.1.0.0; };
+  inputs.higgledy = { flake = false; url = github:i-am-tom/higgledy/master; };
   inputs.gogol = { flake = false; url = github:brendanhay/gogol/develop; };
   inputs.bootstrap = { flake = false; url = github:twbs/bootstrap/v4.5.3; };
   inputs.nixpkgs.url = github:NixOS/nixpkgs/master;
 
-  outputs = { self, nixpkgs, co-log-src, in-other-words, gogol, typerep-map, higgledy, bootstrap }: let
+  outputs = inputs@{ self, nixpkgs, ... }: let
     inherit (nixpkgs.lib) flip mapAttrs mapAttrsToList;
     inherit (pkgs.nix-gitignore) gitignoreSourcePure gitignoreSource;
 
@@ -22,7 +23,7 @@
     co-log = pkgs.runCommand "co-log-source" {} ''
       mkdir -p $out
       cd $out
-      cp -rL ${co-log-src}/{co-log,co-log-core} $out
+      cp -rL ${inputs.co-log-src}/{co-log,co-log-core} $out
     '';
 
   in {
@@ -49,13 +50,15 @@
 
       haskell = prev.haskell // {
         packageOverrides = prev.lib.composeExtensions (prev.haskell.packageOverrides or (_: _: {})) (hself: hsuper: {
-          typerep-map = doJailbreak (dontCheck (hself.callCabal2nix "typerep-map" typerep-map {}));
+          typerep-map = doJailbreak (dontCheck (hself.callCabal2nix "typerep-map" inputs.typerep-map {}));
           co-log = doJailbreak (dontCheck (hself.callCabal2nix "co-log" "${co-log}/co-log" {}));
           co-log-core = hself.callCabal2nix "co-log-core" "${co-log}/co-log-core" {};
-          gogol-core = hself.callCabal2nix "gogol-core" "${gogol}/core" {};
-          gogol-youtube = hself.callCabal2nix "gogol-youtube" "${gogol}/gogol-youtube" {};
-          in-other-words = hself.callCabal2nix "in-other-words" in-other-words {};
-          higgledy = doJailbreak (hself.callCabal2nix "higgledy" higgledy {});
+          gogol-core = hself.callCabal2nix "gogol-core" "${inputs.gogol}/core" {};
+          gogol-youtube = hself.callCabal2nix "gogol-youtube" "${inputs.gogol}/gogol-youtube" {};
+          in-other-words = hself.callCabal2nix "in-other-words" inputs.in-other-words {};
+          generic-lens = hself.callCabal2nix "generic-lens" "${inputs.generic-lens}/generic-lens" {};
+          generic-lens-core = hself.callCabal2nix "generic-lens-core" "${inputs.generic-lens}/generic-lens-core" {};
+          higgledy = doJailbreak (hself.callCabal2nix "higgledy" inputs.higgledy {});
           stan = unmarkBroken hsuper.stan;
           chronos = unmarkBroken hsuper.chronos;
           servant-cassava = unmarkBroken (doJailbreak hsuper.servant-cassava);
@@ -111,7 +114,7 @@
         buildPhase = ''
           mkdir -p $out/public $out/public/style/bootstrap
           cp -r $src/* $out/public
-          cp -r ${bootstrap}/* $out/public/style/bootstrap/
+          cp -r ${inputs.bootstrap}/* $out/public/style/bootstrap/
           cd $out
           ${final.sass}/bin/sass -t compact public/style/main.scss:$out/public/style.css
         '';
