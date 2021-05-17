@@ -1,4 +1,4 @@
-Permission sql=permissions
+Permission sql=permissions json
   Id sql=pe_id
   name Text sql=pe_name
   description Text sql=pe_description
@@ -19,4 +19,3 @@ Permission sql=permissions
   levelSkupiny Int sql=pe_skupiny sqltype=INT(2)
   levelUsers Int sql=pe_users sqltype=INT(2)
   levelMain Int sql=pe_main sqltype=INT(2)
-  deriving Show

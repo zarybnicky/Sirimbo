@@ -1,4 +1,4 @@
-Schedule sql=rozpis
+Schedule sql=rozpis json
   Id sql=r_id
   trainer UserId sql=r_trener
   location Text sql=r_kde
@@ -6,13 +6,11 @@ Schedule sql=rozpis
   visible Text sql=r_visible sqltype=enum('0','1') default='0'
   lock Text sql=r_lock sqltype=enum('0','1') default='0'
   updatedAt UTCTime sql=r_timestamp sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
-  deriving Show
 
-ScheduleItem sql=rozpis_item
+ScheduleItem sql=rozpis_item json
   Id sql=ri_id
   parent ScheduleId sql=ri_id_rodic
   partner UserId sql=ri_partner default=0
   from TimeOfDay sql=ri_od
   to TimeOfDay sql=ri_do
   lock Text sql=ri_lock sqltype=enum('0','1') default='0'
-  deriving Show

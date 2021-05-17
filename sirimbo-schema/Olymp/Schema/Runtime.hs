@@ -1,10 +1,13 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE TemplateHaskell #-}
@@ -22,18 +25,12 @@ module Olymp.Schema.Runtime
   , UpdateLog(..)
   ) where
 
-import Control.Monad.IO.Class (liftIO)
-import Data.ByteString (ByteString)
+import Data.Aeson (Value)
 import Data.Text (Text)
 import Data.Time (UTCTime)
 import Database.Persist (Key, EntityField)
-import Database.Persist.Quasi (lowerCaseSettings)
-import Database.Persist.TH (mkPersist, persistFileWith, share, sqlSettings)
+import Olymp.Schema.Orphans ()
 import Olymp.Schema.User (UserId)
-import System.Directory (doesDirectoryExist)
+import Olymp.Schema.Utils (mkPersist', persistSchema)
 
-share [mkPersist sqlSettings] $(do
-  prefix <- liftIO (doesDirectoryExist "sirimbo-schema") >>= \case
-    True -> pure "sirimbo-schema/Olymp/Schema"
-    False -> pure "Olymp/Schema"
-  persistFileWith lowerCaseSettings (prefix <> "/Runtime.model"))
+mkPersist' $(persistSchema "Runtime.model")

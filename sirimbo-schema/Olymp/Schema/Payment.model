@@ -1,4 +1,4 @@
-PaymentCategory sql=platby_category
+PaymentCategory sql=platby_category json
   Id sql=pc_id
   name Text sql=pc_name
   symbol Int sql=pc_symbol sqltype=INT(11)
@@ -10,23 +10,20 @@ PaymentCategory sql=platby_category
   usePrefix Text sql=pc_use_prefix sqltype=enum('0','1') default='0'
   archived Text sql=pc_archive sqltype=enum('0','1') default='0'
   visible Text sql=pc_visible sqltype=enum('0','1') default='1'
-  deriving Show
 
-PaymentCategoryGroup sql=platby_category_group
+PaymentCategoryGroup sql=platby_category_group json
   Id sql=pcg_id
   group PaymentGroupId sql=pcg_id_group
   category PaymentCategoryId sql=pcg_id_category
   UniquePaymentCategoryGroup group category sql=pcg_id_group
-  deriving Show
 
-PaymentGroupUserGroup sql=platby_group_skupina
+PaymentGroupUserGroup sql=platby_group_skupina json
   Id sql=pgs_id
   userGroup UserGroupId sql=pgs_id_skupina
   paymentGroup PaymentGroupId sql=pgs_id_group
   UniquePaymentGroupUserGroup userGroup paymentGroup sql='pgs_id_skupina'
-  deriving Show
 
-PaymentItem sql=platby_item
+PaymentItem sql=platby_item json
   Id sql=pi_id
   user UserId sql=pi_id_user
   category PaymentCategoryId sql=pi_id_category
@@ -35,11 +32,10 @@ PaymentItem sql=platby_item
   date Day sql=pi_date
   prefix Int sql=pi_prefix default=2000 sqltype=INT(4)
   UniquePaymentItem raw sql=pi_id_raw !force
-  deriving Show
 
-PaymentRaw sql=platby_raw
+PaymentRaw sql=platby_raw json
   Id sql=pr_id
-  raw ByteString sql=pr_raw
+  raw Value sql=pr_raw sqltype=BLOB
   hash Text sql=pr_hash sqltype=VARCHAR(32)
   sorted Text sql=pr_sorted sqltype=enum('0','1') default='0'
   discarded Text sql=pr_discarded sqltype=enum('0','1') default='0'

@@ -1,7 +1,6 @@
-PaymentGroup sql=platby_group
+PaymentGroup sql=platby_group json
   Id sql=pg_id
   type Text sql=pg_type sqltype=enum('0','1') default=0
   name Text sql=pg_name
   description Text sql=pg_description
   base Int sql=pg_base default=0 sqltype=INT(11)
-  deriving Show

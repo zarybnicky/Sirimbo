@@ -1,17 +1,15 @@
-PhotoDirectory sql=galerie_dir
+PhotoDirectory sql=galerie_dir json
   Id sql=gd_id
   parent PhotoDirectoryId sql=gd_id_rodic
   name Text sql=gd_name
   level Int sql=gd_level default=1 sqltype=SMALLINT(6)
   path Text sql=gd_path
   hidden Text sql=gd_hidden sqltype=enum('0','1') default='0'
-  deriving Show
 
-Photo sql=galerie_foto
+Photo sql=galerie_foto json
   Id sql=gf_id
   parent PhotoDirectoryId sql=gf_id_rodic
   name Text sql=gf_name
   path Text sql=gf_path
   createdBy UserId sql=gf_kdo
   updatedAt UTCTime sql=gf_timestamp sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
-  deriving Show

@@ -48,28 +48,10 @@
   </form>
   <br/>
   <h2>Nabídky</h2>
-  <form action="" method="get" class="form-inline">
-    {{ select('n', nabidky, selected_nabidka) }}
-    <button class="ml-2 btn btn-primary">Vybrat nabídku</button>
-  </form>
-  {% if nabidka %}
-    <div class="n_wrapper">
-      {% include 'Member/NabidkaHeader.twig' with {'item': nabidka} %}
-      <table style="margin:1rem auto 0">
-        <tr>
-          <th>Tanečník</th>
-          <th>Počet hodin</th>
-        </tr>
-        {% for item in nabidka.items %}
-          <tr>
-            <td>{{ item.u_jmeno }} {{ item.u_prijmeni }}</td>
-            <td>{{ item.ni_pocet_hod }}</td>
-          </tr>
-        {% endfor %}
-      </table>
-    </div>
-  {% endif %}
-  <br/>
+  <script id="reservation-options" type="application/json">
+   {{ nabidky | json_encode | raw }}
+  </script>
+  <div id="reservation-select"></div>
   <a class="btn btn-outline-primary" href="/admin/rozpis">Zpět</a>
 </div>
 {% endblock %}

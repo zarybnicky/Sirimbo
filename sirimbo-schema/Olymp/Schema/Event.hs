@@ -1,4 +1,5 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GADTs #-}
@@ -26,6 +27,7 @@ import Data.Time (Day, UTCTime)
 import Database.Persist (Key, EntityField)
 import Database.Persist.Quasi (lowerCaseSettings)
 import Database.Persist.TH (mkPersist, persistFileWith, share, sqlSettings)
+import GHC.Generics (Generic)
 import Olymp.Schema.User (UserId)
 import System.Directory (doesDirectoryExist)
 

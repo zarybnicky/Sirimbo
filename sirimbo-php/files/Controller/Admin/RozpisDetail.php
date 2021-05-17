@@ -28,15 +28,6 @@ class RozpisDetail
             }
         );
 
-        $nabidky_select = [];
-        foreach ($nabidky as $item) {
-            $nabidky_select[$item['n_id']] =
-                date('j. n. Y', strtotime($item['n_od'])) .
-                (($item['n_od'] != $item['n_do']) ?
-                 (' - ' . date('j. n. Y', strtotime($item['n_do']))) : '') .
-                " - {$item['u_jmeno']} {$item['u_prijmeni']}";
-        }
-
         if (isset($_GET['n']) && ($nabidka = \DBNabidka::getSingleNabidka($_GET['n']))) {
             $n_items = \DBNabidka::getNabidkaItem($_GET['n']);
             $nabidka = $nabidka + [
@@ -50,9 +41,15 @@ class RozpisDetail
             'data' => $data,
             'users' => $users,
             'items' => $items,
-            'selected_nabidka' => $_GET['n'] ?? '',
-            'nabidky' => ['' => '---'] + $nabidky_select,
-            'nabidka' => isset($nabidka) ? $nabidka : []
+            'nabidky' => array_for($nabidky, fn($item) => [
+                'key' => $item['n_id'],
+                'value' => (
+                    date('j. n. Y', strtotime($item['n_od'])) .
+                    (($item['n_od'] != $item['n_do']) ?
+                     (' - ' . date('j. n. Y', strtotime($item['n_do']))) : '') .
+                    " - {$item['u_jmeno']} {$item['u_prijmeni']}"
+                ),
+            ]),
         ]);
     }
 

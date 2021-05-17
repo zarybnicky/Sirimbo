@@ -1,4 +1,4 @@
-Couple sql=pary
+Couple sql=pary json
   Id sql=p_id
   partnerLeader UserId sql=p_id_partner
   partnerFollower UserId sql=p_id_partnerka default=0
@@ -12,11 +12,9 @@ Couple sql=pary
   archived Text sql=p_archiv sqltype=enum('0','1') default='0'
   createdAt UTCTime sql=p_timestamp_add sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   archivedAt UTCTime sql=p_timestamp_archive sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
-  deriving Show
 
-CoupleOffer sql=pary_navrh
+CoupleOffer sql=pary_navrh json
   Id sql=pn_id
   createdBy UserId sql=pn_navrhl
   partnerLeader UserId sql=pn_partner
   partnerFollower UserId sql=pn_partnerka
-  deriving Show

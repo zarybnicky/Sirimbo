@@ -3,6 +3,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE KindSignatures #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
@@ -24,7 +25,7 @@ import Control.Effect (CompositionC, Effs, InterpretSimpleC, runComposition, run
 import Control.Effect.AtomicState (AtomicState, runAtomicStateIORefSimple)
 import Control.Effect.Bracket (Bracket, BracketToIOC, bracketToIO)
 import Control.Effect.Embed (Embed, RunMC)
-import Control.Effect.Error (Error, ErrorC, runError)
+import Control.Effect.Error (Error, ErrorC, runError, throw)
 import Data.Aeson (ToJSON)
 import Data.Csv (Only (..))
 import Data.IORef (IORef)
@@ -33,18 +34,18 @@ import Data.Pool (Pool)
 import Data.Text (Text)
 import qualified Data.Text.IO as T
 import Data.Time (Day (ModifiedJulianDay), UTCTime (..))
-import Database.Persist.MySQL (Entity, SqlBackend, entityVal)
+import Database.Persist.MySQL (Entity, PersistStoreRead (get), SqlBackend, entityVal, selectList)
 import Network.HTTP.Client (Manager)
 import Network.HTTP.ReverseProxy (ProxyDest (..), WaiProxyResponse (..), defaultOnExc, waiProxyTo)
 import Network.WebSockets (Connection)
 import Olymp.API.Payment (QrPaymentAPI, qrPaymentAPI)
 import Olymp.Auth (PhpAuth, PhpAuthHandler, phpAuthHandler)
-import Olymp.Effect.Database (Database, runDatabasePool)
+import Olymp.Effect.Database (Database, query, runDatabasePool)
 import Olymp.Effect.Error (AppError, runAppErrorToError)
 import Olymp.Effect.Log (Log, WithLog, logInfo, runLogToStdout)
 import Olymp.Effect.Session (SessionEff, deleteSession, runSessionEffPersistent)
 import Olymp.Effect.User (UserEff, runUserEffPersistent)
-import Olymp.Schema (SessionId, User (..))
+import Olymp.Schema (EntityField (ReservationItemParent), Reservation, ReservationId, ReservationItem (reservationItemPartner), SessionId, User (..))
 import Olymp.Tournament.API (tournamentAdminSocket, tournamentSocket)
 import Olymp.Tournament.Base (NodeId, Tournament)
 import Olymp.WordPress (WordpressApi, wordpressServer)
@@ -89,6 +90,7 @@ generateTs = T.putStrLn (apiToTypeScript (Proxy @(FilterAPI (Flat OlympApi))))
 type OlympApi =
   PhpAuth :> "api" :> "whoami" :> Get '[PlainText, JSON] Text
     :<|> PhpAuth :> "api" :> "export-emails" :> Get '[JSON, CSV' 'NoHeader DefaultOpts] [Only Text]
+    :<|> PhpAuth :> "api" :> "reservation" :> Capture "id" ReservationId :> Get '[JSON] (User, Reservation, [ReservationItem])
     :<|> QrPaymentAPI
     :<|> "api" :> "tournament" :> "ws" :> WebSocket
     :<|> PhpAuth :> "api" :> "tournament" :> "admin" :> "ws" :> WebSocket
@@ -104,11 +106,27 @@ server :: Effs AppStack m => ServerT OlympApi m
 server =
   whoAmI
     :<|> exportEmails
+    :<|> getReservation
     :<|> qrPaymentAPI
     :<|> tournamentSocket
     :<|> tournamentAdminSocket
     :<|> logout
     :<|> wordpressServer
+
+getReservation :: Effs '[Error ServerError, Database] m => (SessionId, Entity User) -> ReservationId -> m (User, Reservation, [ReservationItem])
+getReservation _ k = do
+  res <- query $
+    get k >>= \case
+      Nothing -> pure Nothing
+      Just r -> pure $ Just (undefined, r, [])
+-- get (reservationTrainer r) >>= \case
+--   Nothing -> pure Nothing
+--   Just u -> do
+--     ri <- selectList [ReservationItemParent _] []
+--     pure $ Just (entityVal <$> u, r, entityVal <$> ri)
+  case res of
+    Nothing -> throw err404
+    Just r -> pure r
 
 logout ::
   Effs '[SessionEff] m =>

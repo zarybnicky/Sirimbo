@@ -1,4 +1,4 @@
-Event sql=akce
+Event sql=akce json
   Id sql=a_id
   name Text sql=a_jmeno
   location Text sql=a_kde
@@ -10,11 +10,9 @@ Event sql=akce
   updatedAt UTCTime sql=a_timestamp sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   lock Text sql=a_lock sqltype=enum('0','1') default='0'
   visible Text sql=a_visible sqltype=enum('0','1') default='0'
-  deriving Show
 
-EventItem sql=akce_item
+EventItem sql=akce_item json
   Id sql=ai_id
   parent EventId sql=ai_id_rodic
   user UserId sql=ai_user
   birthYear Int sql=ai_rok_narozeni sqltype=SMALLINT(4)
-  deriving Show

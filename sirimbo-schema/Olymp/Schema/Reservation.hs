@@ -1,4 +1,6 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GADTs #-}
@@ -21,17 +23,10 @@ module Olymp.Schema.Reservation
   , ReservationItem(..)
   ) where
 
-import Control.Monad.IO.Class (liftIO)
 import Data.Text (Text)
 import Data.Time (Day, UTCTime)
 import Database.Persist (Key, Unique, EntityField)
-import Database.Persist.Quasi (lowerCaseSettings)
-import Database.Persist.TH (mkPersist, persistFileWith, share, sqlSettings)
 import Olymp.Schema.User (UserId)
-import System.Directory (doesDirectoryExist)
+import Olymp.Schema.Utils (mkPersist', persistSchema)
 
-share [mkPersist sqlSettings] $(do
-  prefix <- liftIO (doesDirectoryExist "sirimbo-schema") >>= \case
-    True -> pure "sirimbo-schema/Olymp/Schema"
-    False -> pure "Olymp/Schema"
-  persistFileWith lowerCaseSettings (prefix <> "/Reservation.model"))
+mkPersist' $(persistSchema "Reservation.model")

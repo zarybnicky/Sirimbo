@@ -1,4 +1,5 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GADTs #-}
@@ -18,18 +19,11 @@ module Olymp.Schema.Article
   , Article(..)
   ) where
 
-import Control.Monad.IO.Class (liftIO)
 import Data.Text (Text)
 import Data.Time (UTCTime)
 import Database.Persist (Key, EntityField)
-import Database.Persist.Quasi (lowerCaseSettings)
-import Database.Persist.TH (mkPersist, persistFileWith, share, sqlSettings)
 import Olymp.Schema.Photo (PhotoId)
 import Olymp.Schema.User (UserId)
-import System.Directory (doesDirectoryExist)
+import Olymp.Schema.Utils (mkPersist', persistSchema)
 
-share [mkPersist sqlSettings] $(do
-  prefix <- liftIO (doesDirectoryExist "sirimbo-schema") >>= \case
-    True -> pure "sirimbo-schema/Olymp/Schema"
-    False -> pure "Olymp/Schema"
-  persistFileWith lowerCaseSettings (prefix <> "/Article.model"))
+mkPersist' $(persistSchema "Article.model")

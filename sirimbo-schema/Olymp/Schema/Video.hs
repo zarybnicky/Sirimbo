@@ -1,4 +1,6 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GADTs #-}
@@ -28,6 +30,7 @@ import Data.Time (UTCTime)
 import Database.Persist (Key, EntityField)
 import Database.Persist.Quasi (lowerCaseSettings)
 import Database.Persist.TH (mkPersist, persistFileWith, share, sqlSettings)
+import GHC.Generics (Generic)
 import System.Directory (doesDirectoryExist)
 
 share [mkPersist sqlSettings] $(do

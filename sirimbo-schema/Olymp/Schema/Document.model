@@ -1,4 +1,4 @@
-Document sql=dokumenty
+Document sql=dokumenty json
   Id sql=d_id
   path Text sql=d_path
   name Text sql=d_name
@@ -7,4 +7,3 @@ Document sql=dokumenty
   createdBy UserId sql=d_kdo
   updatedAt UTCTime sql=d_timestamp sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   UniqueDocument path sql=d_path
-  deriving Show

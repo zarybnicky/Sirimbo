@@ -1,18 +1,15 @@
-UpdateLog sql=novinky
+UpdateLog sql=novinky json
   Id sql=no_id
   createdBy UserId sql=no_id_user
   text Text sql=no_text
   createdAt UTCTime sql=no_timestamp sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
-  deriving Show
 
-Parameter sql=parameters
+Parameter sql=parameters json
   Id Text sql=pa_name sqltype=VARCHAR(40)
   value Text sql=pa_value
-  deriving Show
 
-Session
+Session json
   Id Text sql=ss_id sqltype=VARCHAR(128)
-  data ByteString sql=ss_data sqltype=BLOB
+  contents Value sql=ss_data sqltype=BLOB
   updatedAt UTCTime sql=ss_updated_at sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   lifetime Int sql=ss_lifetime
-  deriving Show

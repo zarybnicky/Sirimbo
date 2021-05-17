@@ -1,4 +1,4 @@
-Article sql=aktuality
+Article sql=aktuality json
   Id sql=at_id
   createdBy UserId sql=at_kdo
   category Text sql=at_kat
@@ -9,4 +9,3 @@ Article sql=aktuality
   titlePhoto PhotoId sql=at_foto_main
   updatedAt UTCTime sql=at_timestamp sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   createdAt UTCTime sql=at_timestamp_add sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
-  deriving Show

@@ -1,4 +1,5 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GADTs #-}
@@ -28,14 +29,16 @@ module Olymp.Schema.Payment
   ) where
 
 import Control.Monad.IO.Class (liftIO)
-import Data.ByteString (ByteString)
+import Data.Aeson (Value)
 import Data.Text (Text)
 import Data.Time (Day)
 import Database.Persist (Key, Unique, EntityField)
 import Database.Persist.Quasi (lowerCaseSettings)
 import Database.Persist.TH (mkPersist, persistFileWith, share, sqlSettings)
+import GHC.Generics (Generic)
 import Olymp.Schema.PaymentGroup (PaymentGroupId)
 import Olymp.Schema.User (UserGroupId, UserId)
+import Olymp.Schema.Orphans ()
 import System.Directory (doesDirectoryExist)
 
 share [mkPersist sqlSettings] $(do

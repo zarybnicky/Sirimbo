@@ -26,7 +26,6 @@ library
                        Olymp.Schema.Couple
                        Olymp.Schema.Document
                        Olymp.Schema.Event
-                       Olymp.Schema.Migrate
                        Olymp.Schema.Payment
                        Olymp.Schema.PaymentGroup
                        Olymp.Schema.Permission
@@ -37,6 +36,10 @@ library
                        Olymp.Schema.User
                        Olymp.Schema.Video
 
+                       Olymp.Schema.Migrate
+                       Olymp.Schema.Orphans
+                       Olymp.Schema.Utils
+
   build-depends:       base >=4.7 && <5
                      , aeson
                      , bytestring
@@ -44,5 +47,6 @@ library
                      , lens
                      , persistent
                      , persistent-template
+                     , template-haskell
                      , text
                      , time
