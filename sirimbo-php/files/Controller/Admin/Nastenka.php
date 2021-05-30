@@ -7,8 +7,8 @@ class Nastenka
     {
         \Permissions::checkError('nastenka', P_OWNED);
         $pager = new \Paging(new \DBNastenka());
-        $pager->setCurrentPage($_GET['p']);
-        $pager->setItemsPerPage($_GET['c']);
+        $pager->setCurrentPage($_GET['p'] ?: null);
+        $pager->setItemsPerPage($_GET['c'] ?: null);
         \Render::twig('Admin/Nastenka.twig', [
             'navigation' => $pager->getNavigation(),
             'data' => array_map(
@@ -64,7 +64,7 @@ class Nastenka
         \Permissions::checkError('nastenka', P_OWNED);
         if (!$data = \DBNastenka::getSingleNastenka($id)) {
             \Message::warning('Nástěnka s takovým ID neexistuje');
-            \Redirect::to($_POST['returnURI'] ?? '/admin/nastenka');
+            \Redirect::to($_POST['returnURI'] ?: '/admin/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
         $_POST['id'] = $id;
@@ -82,7 +82,7 @@ class Nastenka
         \Permissions::checkError('nastenka', P_OWNED);
         if (!$data = \DBNastenka::getSingleNastenka($id)) {
             \Message::warning('Nástěnka s takovým ID neexistuje');
-            \Redirect::to($_POST['returnURI'] ?? '/admin/nastenka');
+            \Redirect::to($_POST['returnURI'] ?: '/admin/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
         $form = static::checkData();
@@ -97,7 +97,7 @@ class Nastenka
         }
         $skupiny_new = [];
         foreach (\DBSkupiny::get() as $item) {
-            if ($_POST['sk-' . $item['s_id']] ?? null) {
+            if ($_POST['sk-' . $item['s_id']] ?: null) {
                 $skupiny_new[$item['s_id']] = $item;
             }
         }
@@ -116,7 +116,7 @@ class Nastenka
                 $skupinaData['s_description']
             );
         }
-        \DBNastenka::editNastenka($id, $_POST['nadpis'], $_POST['text'], ($_POST['lock'] == 'lock') ? 1 : 0);
+        \DBNastenka::editNastenka($id, $_POST['nadpis'], $_POST['text'], (($_POST['lock'] ?: '') == 'lock') ? 1 : 0);
         \Redirect::to($_POST['returnURI']);
     }
 
@@ -125,13 +125,13 @@ class Nastenka
         \Permissions::checkError('nastenka', P_OWNED);
         if (!$data = \DBNastenka::getSingleNastenka($id)) {
             \Message::warning('Příspěvek s takovým ID neexistuje');
-            \Redirect::to($_POST['returnURI'] ?? '/admin/nastenka');
+            \Redirect::to($_POST['returnURI'] ?: '/admin/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
         \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa nástěnky',
             'prompt' => 'Opravdu chcete odstranit příspěvek:',
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/nastenka',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/nastenka',
             'data' => [['id' => $data['up_id'], 'text' => $data['up_nadpis']]]
         ]);
     }
@@ -141,7 +141,7 @@ class Nastenka
         \Permissions::checkError('nastenka', P_OWNED);
         if (!$data = \DBNastenka::getSingleNastenka($id)) {
             \Message::warning('Příspěvek s takovým ID neexistuje');
-            \Redirect::to($_POST['returnURI'] ?? '/admin/nastenka');
+            \Redirect::to($_POST['returnURI'] ?: '/admin/nastenka');
         }
         \Permissions::checkError('nastenka', P_OWNED, $data['up_kdo']);
         \DBNastenka::removeNastenka($id);
@@ -153,16 +153,16 @@ class Nastenka
         $skupiny = \DBSkupiny::get();
         $skupinySelected = [];
         foreach ($skupiny as $item) {
-            $skupinySelected[$item['s_id']] = $_POST['sk-' . $item['s_id']] ?? null;
+            $skupinySelected[$item['s_id']] = $_POST['sk-' . $item['s_id']] ?: null;
         }
         \Render::twig('Admin/NastenkaForm.twig', [
             'action' => $action,
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/nastenka',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/nastenka',
             'skupiny' => $skupiny,
             'skupinySelected' => $skupinySelected,
-            'nadpis' => $_POST['nadpis'] ?? '',
-            'text' => $_POST['text'] ?? '',
-            'lock' => $_POST['lock'] ?? ''
+            'nadpis' => $_POST['nadpis'] ?: '',
+            'text' => $_POST['text'] ?: '',
+            'lock' => $_POST['lock'] ?: ''
         ]);
     }
 
