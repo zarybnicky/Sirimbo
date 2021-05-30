@@ -302,6 +302,7 @@
               };
               locations."~ \.php$".extraConfig = ''
                 try_files $uri /index.php?$args;
+                client_max_body_size 20M;
                 fastcgi_split_path_info ^(.+\.php)(/.+)$;
                 fastcgi_pass unix:${config.services.phpfpm.pools.${cfg.domain}.socket};
                 fastcgi_index index.php;
@@ -333,9 +334,11 @@
               "pm.start_servers" = 3;
               "pm.min_spare_servers" = 2;
               "pm.max_spare_servers" = 4;
+              "catch_workers_output" = true;
               "php_admin_flag[log_errors]" = true;
               "php_admin_value[memory_limit]" = "512M";
-              "catch_workers_output" = true;
+              "php_admin_value[upload_max_filesize]" = "40M";
+              "php_admin_value[post_max_size]" = "40M";
             };
             phpPackage = pkgs.php.withExtensions ({ all, ... }: with all; [
               curl imagick opcache pdo_mysql pdo mysqlnd mysqli openssl posix
