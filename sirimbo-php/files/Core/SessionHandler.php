@@ -25,6 +25,7 @@ class DbSessionHandler extends Database implements SessionHandlerInterface
         setcookie(session_name(), $sessionId, time() + 86400, '/');
 
         $data = json_encode(unserialize($data), JSON_FORCE_OBJECT);
+        list($data) = self::escapeArray([$data]);
         return !!self::query(
             "INSERT INTO session
              (ss_id, ss_data, ss_lifetime) VALUES
