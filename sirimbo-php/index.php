@@ -19,6 +19,9 @@ if (!isset($_COOKIE['off_mode'])) {
 //end OFF switch*/
 
 require 'vendor/autoload.php';
+
+Sentry\init(['dsn' => 'https://943ee3e7e7044524b2ee8413a957e14f@o775093.ingest.sentry.io/5796825' ]);
+
 require 'config.php';
 require 'files/Core/settings.php';
 
@@ -76,6 +79,7 @@ try {
     http_response_code(404);
     \Render::twig('Error.twig', ['errorCode' => 'not_found']);
 } catch (ViewException $e) {
+    \Sentry\captureException($e);
     syslog(
         LOG_ERR,
         $_SERVER['REQUEST_URI'] . ": {$e->getMessage()}\n"
@@ -87,6 +91,7 @@ try {
     ob_clean();
     \Redirect::to('/error?id=' . $e->getErrorFile());
 } catch (Exception $e) {
+    \Sentry\captureException($e);
     syslog(
         LOG_WARNING,
         $_SERVER['REQUEST_URI'] . ": {$e->getMessage()}\n"
