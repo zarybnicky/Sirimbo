@@ -54,6 +54,7 @@
           higgledy = hself.callCabal2nix "higgledy" higgledy {};
           stan = unmarkBroken hsuper.stan;
           microaeson = unmarkBroken (doJailbreak hsuper.microaeson);
+          servant-JuicyPixels = unmarkBroken hsuper.servant-JuicyPixels;
 
           sirimbo-schema = hself.callCabal2nix "sirimbo-schema" (getSrc ./sirimbo-schema) {};
           sirimbo-api = generateOptparseApplicativeCompletion "olymp" (
