@@ -48,8 +48,8 @@ class Akce
             return static::displayForm('add');
         }
 
-        $od = new \Date($_POST['od'] ?: null);
-        $do = new \Date($_POST['do'] ?: null);
+        $od = new \Date($_POST['od'] ?? null);
+        $do = new \Date($_POST['do'] ?? null);
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
         }
@@ -93,8 +93,8 @@ class Akce
             return static::displayForm('edit', $data);
         }
 
-        $od = new \Date($_POST['od'] ?: null);
-        $do = new \Date($_POST['do'] ?: null);
+        $od = new \Date($_POST['od'] ?? null);
+        $do = new \Date($_POST['do'] ?? null);
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
         }
@@ -108,8 +108,8 @@ class Akce
             (string) $do,
             $_POST['kapacita'],
             $data['a_dokumenty'],
-            (($_POST['lock'] ?: '') == 'lock') ? 1 : 0,
-            ($_POST['visible'] ?: '') ? '1' : '0'
+            (($_POST['lock'] ?? '') == 'lock') ? 1 : 0,
+            ($_POST['visible'] ?? '') ? '1' : '0'
         );
 
         \Message::success('Akce upravena');
@@ -123,7 +123,7 @@ class Akce
         \Render::twig('RemovePrompt.twig', [
             'header' => 'Správa akcí',
             'prompt' => 'Opravdu chcete odstranit akce:',
-            'returnURI' => $_SERVER['HTTP_REFERER'] ?: '/admin/akce',
+            'returnURI' => $_SERVER['HTTP_REFERER'] ?? '/admin/akce',
             'data' => [[
                 'id' => $item['a_id'],
                 'text' => $item['a_jmeno']
@@ -263,21 +263,21 @@ class Akce
             'dokumenty' => $data ? \DBDokumenty::getMultipleById(explode(',', $data['a_dokumenty'])) : [],
             'action' => $action,
             'id' => $data ? $data['a_id'] : null,
-            'jmeno' => $_POST['jmeno'] ?: $data['a_jmeno'] ?: '',
-            'kde' => $_POST['kde'] ?: $data['a_kde'] ?: '',
-            'info' => $_POST['info'] ?: $data['a_info'] ?: '',
-            'od' => $_POST['od'] ?: $data['a_od'] ?: '',
-            'do' => $_POST['do'] ?: $data['a_do'] ?: '',
-            'kapacita' => $_POST['kapacita'] ?: $data['a_kapacita'] ?: '',
-            'lock' => $_POST['lock'] ?: $data['a_lock'] ?: '',
-            'visible' => $_POST['visible'] ?: $data['a_visible'] ?: ''
+            'jmeno' => $_POST['jmeno'] ?? $data['a_jmeno'] ?? '',
+            'kde' => $_POST['kde'] ?? $data['a_kde'] ?? '',
+            'info' => $_POST['info'] ?? $data['a_info'] ?? '',
+            'od' => $_POST['od'] ?? $data['a_od'] ?? '',
+            'do' => $_POST['do'] ?? $data['a_do'] ?? '',
+            'kapacita' => $_POST['kapacita'] ?? $data['a_kapacita'] ?? '',
+            'lock' => $_POST['lock'] ?? $data['a_lock'] ?? '',
+            'visible' => $_POST['visible'] ?? $data['a_visible'] ?? ''
         ]);
     }
 
     private static function checkData(): \Form
     {
-        $od = new \Date($_POST['od'] ?: null);
-        $do = new \Date($_POST['do'] ?: null);
+        $od = new \Date($_POST['od'] ?? null);
+        $do = new \Date($_POST['do'] ?? null);
 
         $form = new \Form();
         $form->checkDate((string) $od, 'Špatný formát data ("Od")', 'od');
