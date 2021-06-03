@@ -16,6 +16,7 @@ import Control.Effect.Bracket (Bracket, finally)
 import Control.Lens
 import Control.Monad (forever)
 import Data.Aeson (FromJSON, ToJSON, encode, eitherDecode')
+import Data.Either (fromRight)
 import Data.Generics.Product (field)
 import Data.Map (Map)
 import qualified Data.Map as M
@@ -128,7 +129,7 @@ tournamentAdminSocket _ c = withSocketLoop c $ \msg -> case msg of
           Nothing -> (t, Just $ "Node not ready for " <> tshow msg)
           Just closed ->
             let nodes' = nodes t & ix nid .~ closed
-                loser = either (const 0) id $ fromMaybe 0 . getLoser <$> treeify nodes' (nodeId closed)
+                loser = fromRight 0 $ fromMaybe 0 . getLoser <$> treeify nodes' (nodeId closed)
                 lb = maybe M.empty
                       (withTree (propagateWinners . snd . fillPlayers [loser]) nodes')
                       (losersRoot t)

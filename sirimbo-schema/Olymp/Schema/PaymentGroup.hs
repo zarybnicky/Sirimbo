@@ -1,4 +1,6 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE LambdaCase #-}
@@ -20,10 +22,10 @@ import Control.Monad.IO.Class (liftIO)
 import Data.Text (Text)
 import Database.Persist (Key, EntityField)
 import Database.Persist.Quasi (lowerCaseSettings)
-import Database.Persist.TH (mkPersist, persistFileWith, share, sqlSettings)
+import Database.Persist.TH (mkPersist, persistFileWith, sqlSettings)
 import System.Directory (doesDirectoryExist)
 
-share [mkPersist sqlSettings] $(do
+mkPersist sqlSettings $(do
   prefix <- liftIO (doesDirectoryExist "sirimbo-schema") >>= \case
     True -> pure "sirimbo-schema/Olymp/Schema"
     False -> pure "Olymp/Schema"

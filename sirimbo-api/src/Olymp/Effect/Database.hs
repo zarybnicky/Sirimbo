@@ -26,9 +26,9 @@ data Database m a where
 query :: Eff Database m => ReaderT SqlBackend IO a -> m a
 query q = send $ Query $ do
   b <- ask
-  lift $ (connBegin b) (connPrepare b) Nothing
+  lift $ connBegin b (connPrepare b) Nothing
   r <- q
-  lift $ (connCommit b) (connPrepare b)
+  lift $ connCommit b (connPrepare b)
   pure r
 
 runDatabasePool :: (Eff (Embed IO) m, MonadMask m) => Pool SqlBackend -> SimpleInterpreterFor Database m

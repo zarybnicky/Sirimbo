@@ -65,7 +65,7 @@ olympServer proxyPort manager runner =
   --       , corsMethods = "PUT" : simpleMethods
   --       })
   serveWithContext (Proxy @(OlympApi :<|> Raw)) (phpAuthHandler runner :. EmptyContext) $
-   api :<|> (Tagged phpProxy)
+   api :<|> Tagged phpProxy
   where
     api = hoistServerWithContext (Proxy @OlympApi) (Proxy @'[PhpAuthHandler]) runner server
     phpProxy = waiProxyTo forwardRequest defaultOnExc manager

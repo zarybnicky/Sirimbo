@@ -28,6 +28,7 @@ import Control.Effect (Threaders, Carrier, Eff, Effs, Embed, embed)
 import Control.Effect.Error (ErrorThreads, throw, runThrow)
 import Control.Effect.Writer (WriterThreads, TellC, runTell, tell)
 import Control.Monad (void, forM_, foldM, forM)
+import Data.Either (fromRight)
 import Data.IORef (newIORef, modifyIORef', readIORef)
 import Data.List (find)
 import Data.Map (Map)
@@ -185,7 +186,7 @@ loadNewVideosFromPlaylist ::
   -> Maybe Text
   -> m [Schema.Video]
 loadNewVideosFromPlaylist currentVids playlist =
-  withPaging $ \pageToken -> fmap hush . runThrow @Text $ do
+  withPaging $ \pageToken -> fmap (fromRight Nothing) . runThrow @Text $ do
     vs <- sendG @WorkerScope $ playListItemsList "snippet"
       & plilPlayListId ?~ playlist
       & plilPageToken .~ pageToken
@@ -200,8 +201,6 @@ loadNewVideosFromPlaylist currentVids playlist =
         then throw ("Found an existing video, exiting" :: Text)
         else tell [Schema.Video vidId vidTitle vidChannel vidDesc Nothing now now]
     pure (vs ^. plilrNextPageToken)
-  where
-    hush = either (const Nothing) id
 
 getVideosForPlaylist ::
      (Eff (GoogleEff WorkerScope) m, Threaders '[WriterThreads] m p)

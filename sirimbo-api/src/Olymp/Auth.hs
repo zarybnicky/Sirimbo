@@ -57,7 +57,7 @@ getUserByCookie req = do
   let sid = SessionKey (decodeUtf8 sid')
   sess <- maybeErr =<< getSessionById sid
   uid <- maybeDelete sid . decodeStrict' $ sessionData sess
-  maybeDelete sid =<< fmap (sid, ) <$> getUserById (unSessionUserId uid)
+  maybeDelete sid . fmap (sid, ) =<< getUserById (unSessionUserId uid)
   where
     maybeErr :: Maybe a -> m a
     maybeErr = maybe (throwAuth ErrNotLoggedIn) pure

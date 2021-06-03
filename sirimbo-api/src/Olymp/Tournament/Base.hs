@@ -35,12 +35,13 @@ module Olymp.Tournament.Base
   , withTree
   , withTournament
   , Fix
-  , unfix
+  , unFix
   ) where
 
 import Control.Applicative ((<|>))
 import Control.Monad.Trans.State.Strict (State, runState, evalState, gets, put)
 import Data.Aeson (FromJSON, FromJSONKey, ToJSON, ToJSONKey)
+import Data.Fix (Fix(Fix), unFix)
 import Data.Foldable (for_)
 import Data.Functor.Classes (Eq1(..), Show1(..))
 import Data.Functor.Classes.Generic (liftEqDefault, liftShowsPrecDefault)
@@ -201,7 +202,7 @@ createTournament playerMap = flip evalState (infiniteStream $ 1:|[2..]) $ do
   wb <- flip evalState keys . fillSeeds <$> makeBracket n
   lb <- if n > 2 then Just <$> makeBracket (n - 2) else pure Nothing
   let nodes' = listify wb <> maybe M.empty listify lb
-  pure $ Tournament nodes' (nodeId $ unfix wb) (nodeId . unfix <$> lb) Nothing Nothing playerMap
+  pure $ Tournament nodes' (nodeId $ unFix wb) (nodeId . unFix <$> lb) Nothing Nothing playerMap
 
 makeBracket :: Int -> State (Stream id) (Fix (TournamentNodeF id))
 makeBracket n
