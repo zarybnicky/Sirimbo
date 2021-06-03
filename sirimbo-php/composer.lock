@@ -53,55 +53,6 @@
             "time": "2020-10-02T12:38:20+00:00"
         },
         {
-            "name": "composer/package-versions-deprecated",
-            "version": "1.11.99.2",
-            "dist": {
-                "type": "zip",
-                "url": "https://nexus.inuits.io/repository/composer/composer/package-versions-deprecated/1.11.99.2/composer-package-versions-deprecated-1.11.99.2.zip",
-                "reference": "c6522afe5540d5fc46675043d3ed5a45a740b27c",
-                "shasum": ""
-            },
-            "require": {
-                "composer-plugin-api": "^1.1.0 || ^2.0",
-                "php": "^7 || ^8"
-            },
-            "replace": {
-                "ocramius/package-versions": "1.11.99"
-            },
-            "require-dev": {
-                "composer/composer": "^1.9.3 || ^2.0@dev",
-                "ext-zip": "^1.13",
-                "phpunit/phpunit": "^6.5 || ^7"
-            },
-            "type": "composer-plugin",
-            "extra": {
-                "class": "PackageVersions\\Installer",
-                "branch-alias": {
-                    "dev-master": "1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "PackageVersions\\": "src/PackageVersions"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Marco Pivetta",
-                    "email": "ocramius@gmail.com"
-                },
-                {
-                    "name": "Jordi Boggiano",
-                    "email": "j.boggiano@seld.be"
-                }
-            ],
-            "description": "Composer plugin that provides efficient querying for installed package versions (no runtime IO)",
-            "time": "2021-05-24T07:46:03+00:00"
-        },
-        {
             "name": "guzzlehttp/promises",
             "version": "1.4.1",
             "dist": {
@@ -257,19 +208,23 @@
         },
         {
             "name": "jean85/pretty-package-versions",
-            "version": "1.6.0",
+            "version": "2.0.4",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.inuits.io/repository/composer/jean85/pretty-package-versions/1.6.0/jean85-pretty-package-versions-1.6.0.zip",
-                "reference": "1e0104b46f045868f11942aea058cd7186d6c303",
+                "url": "https://nexus.inuits.io/repository/composer/jean85/pretty-package-versions/2.0.4/jean85-pretty-package-versions-2.0.4.zip",
+                "reference": "694492c653c518456af2805f04eec445b997ed1f",
                 "shasum": ""
             },
             "require": {
-                "composer/package-versions-deprecated": "^1.8.0",
-                "php": "^7.0|^8.0"
+                "composer-runtime-api": "^2.0.0",
+                "php": "^7.1|^8.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6.0|^8.5|^9.2"
+                "friendsofphp/php-cs-fixer": "^2.17",
+                "jean85/composer-provided-replaced-stub-package": "^1.0",
+                "phpstan/phpstan": "^0.12.66",
+                "phpunit/phpunit": "^7.5|^8.5|^9.4",
+                "vimeo/psalm": "^4.3"
             },
             "type": "library",
             "extra": {
@@ -291,14 +246,14 @@
                     "email": "alessandro.lai85@gmail.com"
                 }
             ],
-            "description": "A wrapper for ocramius/package-versions to get pretty versions strings",
+            "description": "A library to get pretty versions strings of installed dependencies",
             "keywords": [
                 "composer",
                 "package",
                 "release",
                 "versions"
             ],
-            "time": "2021-02-04T16:20:16+00:00"
+            "time": "2021-05-26T08:46:42+00:00"
         },
         {
             "name": "php-http/client-common",
@@ -1634,11 +1589,57 @@
     ],
     "packages-dev": [
         {
-            "name": "sserbin/twig-linter",
-            "version": "dev-master",
+            "name": "ocramius/package-versions",
+            "version": "1.11.0",
             "dist": {
                 "type": "zip",
-                "url": "https://nexus.inuits.io/repository/composer/sserbin/twig-linter/dev-master/sserbin-twig-linter-dev-master.zip",
+                "url": "https://nexus.inuits.io/repository/composer/ocramius/package-versions/1.11.0/ocramius-package-versions-1.11.0.zip",
+                "reference": "f51ff2b2b49baaa302d6bf71880e4d8b5acd7015",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^2.0.0",
+                "composer-runtime-api": "^2.0.0",
+                "php": "^7.4.7"
+            },
+            "require-dev": {
+                "composer/composer": "^2.0.0@dev",
+                "doctrine/coding-standard": "^8.1.0",
+                "ext-zip": "^1.15.0",
+                "infection/infection": "^0.16.4",
+                "phpunit/phpunit": "^9.1.5",
+                "vimeo/psalm": "^3.12.2"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "PackageVersions\\Installer",
+                "branch-alias": {
+                    "dev-master": "1.99.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PackageVersions\\": "src/PackageVersions"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com"
+                }
+            ],
+            "description": "Composer plugin that provides efficient querying for installed package versions (no runtime IO)",
+            "time": "2020-08-21T12:16:47+00:00"
+        },
+        {
+            "name": "sserbin/twig-linter",
+            "version": "2.1.0",
+            "dist": {
+                "type": "zip",
+                "url": "https://nexus.inuits.io/repository/composer/sserbin/twig-linter/2.1.0/sserbin-twig-linter-2.1.0.zip",
                 "reference": "7908885969d1110065fffddf4524ba56c96e1bc5",
                 "shasum": ""
             },
@@ -1982,5 +1983,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.0.0"
 }
