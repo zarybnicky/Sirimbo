@@ -3,7 +3,7 @@
     "description": "TKOlymp.cz",
     "license": "proprietary",
     "type": "project",
-    "repositories": [{"packagist.org": false}],
+    "repositories": [],
     "autoload": {
         "psr-4": { "Olymp\\": "files/" },
         "classmap": [
