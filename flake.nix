@@ -1,11 +1,9 @@
 {
-  inputs.co-log-src = { flake = false; url = github:kowainik/co-log/main; };
-  inputs.in-other-words = { flake = false; url = github:KingoftheHomeless/in-other-words/master; };
-  inputs.typerep-map = { flake = false; url = github:kowainik/typerep-map/main; };
   inputs.higgledy = { flake = false; url = github:zarybnicky/higgledy/master; };
   inputs.bootstrap = { flake = false; url = github:twbs/bootstrap/v4.5.3; };
+  inputs.gogol = { flake = false; url = github:brendanhay/gogol/develop; };
 
-  outputs = { self, nixpkgs, co-log-src, in-other-words, typerep-map, higgledy, bootstrap }: let
+  outputs = { self, nixpkgs, higgledy, bootstrap, gogol }: let
     inherit (nixpkgs.lib) flip mapAttrs mapAttrsToList;
     inherit (pkgs.nix-gitignore) gitignoreSourcePure gitignoreSource;
 
@@ -16,13 +14,6 @@
     compiler = "ghc884";
     hsPkgs = pkgs.haskell.packages.${compiler};
     getSrc = dir: gitignoreSourcePure [./.gitignore] dir;
-
-    co-log = pkgs.runCommand "co-log-source" {} ''
-      mkdir -p $out
-      cd $out
-      cp -rL ${co-log-src}/{co-log,co-log-core} $out
-    '';
-
   in {
     overlay = final: prev: let
       inherit (prev.haskell.lib) doJailbreak dontCheck justStaticExecutables
@@ -47,14 +38,11 @@
 
       haskell = prev.haskell // {
         packageOverrides = prev.lib.composeExtensions (prev.haskell.packageOverrides or (_: _: {})) (hself: hsuper: {
-          typerep-map = doJailbreak (dontCheck (hself.callCabal2nix "typerep-map" typerep-map {}));
-          co-log = doJailbreak (dontCheck (hself.callCabal2nix "co-log" "${co-log}/co-log" {}));
-          co-log-core = hself.callCabal2nix "co-log-core" "${co-log}/co-log-core" {};
-          in-other-words = hself.callCabal2nix "in-other-words" in-other-words {};
-          higgledy = hself.callCabal2nix "higgledy" higgledy {};
-          stan = unmarkBroken hsuper.stan;
-          microaeson = unmarkBroken (doJailbreak hsuper.microaeson);
+          higgledy = doJailbreak (hself.callCabal2nix "higgledy" higgledy {});
           servant-JuicyPixels = unmarkBroken hsuper.servant-JuicyPixels;
+          gogol-core = hself.callCabal2nix "gogol-core" "${gogol}/core" {};
+          gogol = hself.callCabal2nix "gogol" "${gogol}/gogol" {};
+          gogol-youtube = hself.callCabal2nix "gogol-youtube" "${gogol}/gogol-youtube" {};
 
           sirimbo-schema = hself.callCabal2nix "sirimbo-schema" (getSrc ./sirimbo-schema) {};
           sirimbo-api = generateOptparseApplicativeCompletion "olymp" (
