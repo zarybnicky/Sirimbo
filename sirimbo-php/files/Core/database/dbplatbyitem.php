@@ -7,7 +7,7 @@ class DBPlatbyItem extends Database
             "INSERT INTO platby_item
                 (pi_id_user,pi_id_category,pi_id_raw,pi_amount,pi_date,pi_prefix)
             VALUES
-                ('?','?'," . ($rid !== '' ? "'$rid'" : "NULL") . ",'?','','?')
+                ('?','?'," . ($rid !== '' ? "'$rid'" : "NULL") . ",'?','?','?')
             ON DUPLICATE KEY UPDATE
                 pi_id_user=VALUES(pi_id_user),
                 pi_id_category=VALUES(pi_id_category),

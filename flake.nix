@@ -11,7 +11,7 @@
       system = "x86_64-linux";
       overlays = [ self.overlay ];
     };
-    compiler = "ghc884";
+    compiler = "ghc8104";
     hsPkgs = pkgs.haskell.packages.${compiler};
     getSrc = dir: gitignoreSourcePure [./.gitignore] dir;
   in {
@@ -39,7 +39,7 @@
       haskell = prev.haskell // {
         packageOverrides = prev.lib.composeExtensions (prev.haskell.packageOverrides or (_: _: {})) (hself: hsuper: {
           higgledy = doJailbreak (hself.callCabal2nix "higgledy" higgledy {});
-          servant-JuicyPixels = unmarkBroken hsuper.servant-JuicyPixels;
+          servant-JuicyPixels = doJailbreak (unmarkBroken hsuper.servant-JuicyPixels);
           gogol-core = hself.callCabal2nix "gogol-core" "${gogol}/core" {};
           gogol = hself.callCabal2nix "gogol" "${gogol}/gogol" {};
           gogol-youtube = hself.callCabal2nix "gogol-youtube" "${gogol}/gogol-youtube" {};

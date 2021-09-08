@@ -99,11 +99,12 @@ class DBPary extends Database
 
     public static function getPartners($currentCouples = [])
     {
+        $couples = $currentCouples
+            ? (" OR p_id IN (" . implode(',', array_filter($currentCouples)) . ")")
+            : '';
         $res = self::query(
             "SELECT * FROM pary LEFT JOIN users ON p_id_partner=u_id
-            WHERE p_archiv='0' OR p_id IN ("
-            . implode(',', array_filter($currentCouples))
-            . ") ORDER BY u_prijmeni"
+            WHERE p_archiv='0' $couples ORDER BY u_prijmeni"
         );
         return self::getArray($res);
     }

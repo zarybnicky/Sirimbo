@@ -30,7 +30,7 @@ services:
     build:
       context: ./docker/proxy
     cap_add: [ 'NET_ADMIN', 'NET_RAW' ]
-    mem_limit: 4M
+    mem_limit: 6M
     restart: on-failure
     ports:
       - 4001:4000

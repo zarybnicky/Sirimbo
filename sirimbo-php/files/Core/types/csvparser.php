@@ -2,7 +2,7 @@
 class CSVParser implements Iterator
 {
     private $_file = null;
-    private $_delimiter = ';';
+    private $_delimiter = ',';
     private $_enclosure = '"';
     private $_escape = '\\';
     private $_associative = false;
@@ -19,7 +19,7 @@ class CSVParser implements Iterator
 
         /** @var string */
         $text = $file->current();
-        $this->_encoding = mb_detect_encoding($text, 'UTF-8, ISO-8859-2, ISO-8859-1', true);
+        $this->_encoding = mb_detect_encoding($text, 'UTF-16LE, UTF-8, ISO-8859-2, ISO-8859-1', true);
 
         if ($this->_encoding === false) {
             $this->_recode = 'cp1250';
