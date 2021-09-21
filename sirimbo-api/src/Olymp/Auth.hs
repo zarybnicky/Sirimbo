@@ -1,11 +1,12 @@
-{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TupleSections #-}
 {-# LANGUAGE TypeFamilies #-}
 
 module Olymp.Auth
@@ -18,8 +19,8 @@ module Olymp.Auth
   ) where
 
 import Control.Effect (Effs)
-import Data.Aeson (FromJSON(..), decodeStrict', withObject, (.:))
-import Data.Text.Encoding (decodeUtf8)
+import Data.Aeson (FromJSON(..), fromJSON, withObject, (.:), Result(..))
+import qualified Data.ByteString.Char8 as BS
 import Database.Persist.Sql (Entity(..), toSqlKey)
 import Network.Wai (Request, requestHeaders)
 import Olymp.Effect.Error (AppError, AuthError(..), throwAuth)
@@ -53,14 +54,17 @@ phpAuthHandler runner = mkAuthHandler $ runner . getUserByCookie
 getUserByCookie :: forall m. Effs '[ AppError, UserEff, SessionEff] m => Request -> m (SessionId, Entity User)
 getUserByCookie req = do
   cookie <- maybeErr . lookup "cookie" $ requestHeaders req
-  sid' <- maybeErr . lookup "PHPSESSID" $ parseCookies cookie
-  let sid = SessionKey (decodeUtf8 sid')
+  sid <- fmap (SessionKey . BS.unpack) . maybeErr . lookup "PHPSESSID" $ parseCookies cookie
   sess <- maybeErr =<< getSessionById sid
-  uid <- maybeDelete sid . decodeStrict' $ sessionData sess
+  uid <- maybeDelete sid . resultToMaybe . fromJSON $ sessionContents sess
   maybeDelete sid . fmap (sid, ) =<< getUserById (unSessionUserId uid)
   where
     maybeErr :: Maybe a -> m a
     maybeErr = maybe (throwAuth ErrNotLoggedIn) pure
+    resultToMaybe :: Result a -> Maybe a
+    resultToMaybe = \case
+      Error _ -> Nothing
+      Success a -> Just a
     maybeDelete :: SessionId -> Maybe a -> m a
     maybeDelete sid = flip maybe pure $ do
       deleteSession sid

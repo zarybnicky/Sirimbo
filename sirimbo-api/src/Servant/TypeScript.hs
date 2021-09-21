@@ -21,6 +21,8 @@ import Control.Lens ((^.))
 import Control.Monad ((<=<))
 import Data.Aeson (Value)
 import Data.Char (toUpper)
+import Data.Int (Int64)
+import Data.Time (Day, UTCTime)
 import Data.Maybe (mapMaybe)
 import Data.Proxy (Proxy (Proxy))
 import Data.Tagged (Tagged)
@@ -172,8 +174,17 @@ instance TypescriptType Text where
 instance TypescriptType Int where
   toTSIntermediate _ = TSNumber
 
+instance TypescriptType Int64 where
+  toTSIntermediate _ = TSNumber
+
 instance TypescriptType Double where
   toTSIntermediate _ = TSNumber
+
+instance TypescriptType Day where
+  toTSIntermediate _ = TSString
+
+instance TypescriptType UTCTime where
+  toTSIntermediate _ = TSString
 
 instance TypescriptType Float where
   toTSIntermediate _ = TSNumber

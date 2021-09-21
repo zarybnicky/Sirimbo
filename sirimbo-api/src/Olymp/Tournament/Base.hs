@@ -117,7 +117,7 @@ openVoting :: TournamentNodeF id f -> Maybe (TournamentNodeF id f)
 openVoting = \case
   DuelWaitingNode n (Just left) (Just right) l r ->
     Just $ DuelFinishedNode n (DuelResult left right 0 0 Nothing) l r
-  DuelFinishedNode n res@DuelResult{..} l r ->
+  DuelFinishedNode n res l r ->
     let newRes = res { victor = Nothing }
     in Just $ DuelFinishedNode n newRes l r
   _ -> Nothing
