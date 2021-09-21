@@ -17,7 +17,7 @@ import System.Directory (doesDirectoryExist, getDirectoryContents)
 
 mkMigrate "migrateAll" $(do
   prefix <- liftIO (doesDirectoryExist "sirimbo-schema") >>= \case
-    True -> pure "sirimbo-schema/Olymp/Schema"
-    False -> pure "Olymp/Schema"
-  files <- liftIO (getDirectoryContents prefix)
-  persistManyFileWith lowerCaseSettings $ ((prefix <> "/") <>) <$> filter (".model" `isSuffixOf`) files)
+    True -> pure "sirimbo-schema/Olymp/Schema/"
+    False -> pure "Olymp/Schema/"
+  files <- liftIO (filter (".model" `isSuffixOf`) <$> getDirectoryContents prefix)
+  persistManyFileWith lowerCaseSettings $ (prefix <>) <$> files)
