@@ -12,8 +12,7 @@ class Akce
     public static function listPost()
     {
         \Permissions::checkError('akce', P_OWNED);
-        $items = \DBAkce::getAkce();
-        foreach ($items as $item) {
+        foreach (\DBAkce::getAkce() as $item) {
             if (!isset($_POST[$item['a_id']]) || (bool) $_POST[$item['a_id']] === (bool) $item['a_visible']) {
                 continue;
             }
@@ -109,7 +108,7 @@ class Akce
             $_POST['kapacita'],
             $data['a_dokumenty'],
             (($_POST['lock'] ?? '') == 'lock') ? 1 : 0,
-            $_POST['visible'] ? '1' : '0'
+            ($_POST['visible'] ?? '') ? '1' : '0'
         );
 
         \Message::success('Akce upravena');

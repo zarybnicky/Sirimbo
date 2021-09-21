@@ -1,14 +1,9 @@
 {
-  inputs.co-log-src = { flake = false; url = github:kowainik/co-log/main; };
-  inputs.in-other-words = { flake = false; url = github:KingoftheHomeless/in-other-words/master; };
-  inputs.typerep-map = { flake = false; url = github:kowainik/typerep-map/main; };
-  inputs.generic-lens = { flake = false; url = github:kcsongor/generic-lens/2.1.0.0; };
-  inputs.higgledy = { flake = false; url = github:i-am-tom/higgledy/master; };
-  inputs.gogol = { flake = false; url = github:brendanhay/gogol/develop; };
+  inputs.higgledy = { flake = false; url = github:zarybnicky/higgledy/master; };
   inputs.bootstrap = { flake = false; url = github:twbs/bootstrap/v4.5.3; };
-  inputs.nixpkgs.url = github:NixOS/nixpkgs/master;
+  inputs.gogol = { flake = false; url = github:brendanhay/gogol/develop; };
 
-  outputs = inputs@{ self, nixpkgs, ... }: let
+  outputs = { self, nixpkgs, higgledy, bootstrap, gogol }: let
     inherit (nixpkgs.lib) flip mapAttrs mapAttrsToList;
     inherit (pkgs.nix-gitignore) gitignoreSourcePure gitignoreSource;
 
@@ -16,16 +11,9 @@
       system = "x86_64-linux";
       overlays = [ self.overlay ];
     };
-    compiler = "ghc884";
+    compiler = "ghc8104";
     hsPkgs = pkgs.haskell.packages.${compiler};
     getSrc = dir: gitignoreSourcePure [./.gitignore] dir;
-
-    co-log = pkgs.runCommand "co-log-source" {} ''
-      mkdir -p $out
-      cd $out
-      cp -rL ${inputs.co-log-src}/{co-log,co-log-core} $out
-    '';
-
   in {
     overlay = final: prev: let
       inherit (prev.haskell.lib) doJailbreak dontCheck justStaticExecutables
@@ -50,23 +38,11 @@
 
       haskell = prev.haskell // {
         packageOverrides = prev.lib.composeExtensions (prev.haskell.packageOverrides or (_: _: {})) (hself: hsuper: {
-          typerep-map = doJailbreak (dontCheck (hself.callCabal2nix "typerep-map" inputs.typerep-map {}));
-          co-log = doJailbreak (dontCheck (hself.callCabal2nix "co-log" "${co-log}/co-log" {}));
-          co-log-core = hself.callCabal2nix "co-log-core" "${co-log}/co-log-core" {};
-          gogol-core = hself.callCabal2nix "gogol-core" "${inputs.gogol}/core" {};
-          gogol-youtube = hself.callCabal2nix "gogol-youtube" "${inputs.gogol}/gogol-youtube" {};
-          in-other-words = hself.callCabal2nix "in-other-words" inputs.in-other-words {};
-          generic-lens = hself.callCabal2nix "generic-lens" "${inputs.generic-lens}/generic-lens" {};
-          generic-lens-core = hself.callCabal2nix "generic-lens-core" "${inputs.generic-lens}/generic-lens-core" {};
-          higgledy = doJailbreak (hself.callCabal2nix "higgledy" inputs.higgledy {});
-          stan = unmarkBroken hsuper.stan;
-          chronos = unmarkBroken hsuper.chronos;
-          servant-cassava = unmarkBroken (doJailbreak hsuper.servant-cassava);
-          servant-docs = unmarkBroken hsuper.servant-docs;
-          servant-JuicyPixels = unmarkBroken hsuper.servant-JuicyPixels;
-          servant-multipart = unmarkBroken hsuper.servant-multipart;
-          universe-base = unmarkBroken (doJailbreak hsuper.universe-base);
-          microaeson = unmarkBroken (doJailbreak hsuper.microaeson);
+          higgledy = doJailbreak (hself.callCabal2nix "higgledy" higgledy {});
+          servant-JuicyPixels = doJailbreak (unmarkBroken hsuper.servant-JuicyPixels);
+          gogol-core = hself.callCabal2nix "gogol-core" "${gogol}/core" {};
+          gogol = hself.callCabal2nix "gogol" "${gogol}/gogol" {};
+          gogol-youtube = hself.callCabal2nix "gogol-youtube" "${gogol}/gogol-youtube" {};
 
           sirimbo-schema = hself.callCabal2nix "sirimbo-schema" (getSrc ./sirimbo-schema) {};
           sirimbo-api = generateOptparseApplicativeCompletion "olymp" (
@@ -114,7 +90,7 @@
         buildPhase = ''
           mkdir -p $out/public $out/public/style/bootstrap
           cp -r $src/* $out/public
-          cp -r ${inputs.bootstrap}/* $out/public/style/bootstrap/
+          cp -r ${bootstrap}/* $out/public/style/bootstrap/
           cd $out
           ${final.sass}/bin/sass -t compact public/style/main.scss:$out/public/style.css
         '';
@@ -315,6 +291,7 @@
               };
               locations."~ \.php$".extraConfig = ''
                 try_files $uri /index.php?$args;
+                client_max_body_size 20M;
                 fastcgi_split_path_info ^(.+\.php)(/.+)$;
                 fastcgi_pass unix:${config.services.phpfpm.pools.${cfg.domain}.socket};
                 fastcgi_index index.php;
@@ -346,13 +323,15 @@
               "pm.start_servers" = 3;
               "pm.min_spare_servers" = 2;
               "pm.max_spare_servers" = 4;
+              "catch_workers_output" = true;
               "php_admin_flag[log_errors]" = true;
               "php_admin_value[memory_limit]" = "512M";
-              "catch_workers_output" = true;
+              "php_admin_value[upload_max_filesize]" = "40M";
+              "php_admin_value[post_max_size]" = "40M";
             };
             phpPackage = pkgs.php.withExtensions ({ all, ... }: with all; [
               curl imagick opcache pdo_mysql pdo mysqlnd mysqli openssl posix
-              mbstring session json ctype exif gd
+              mbstring session json ctype exif gd zlib
             ]);
           };
 

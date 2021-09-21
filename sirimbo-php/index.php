@@ -19,6 +19,12 @@ if (!isset($_COOKIE['off_mode'])) {
 //end OFF switch*/
 
 require 'vendor/autoload.php';
+
+Sentry\init([
+    'dsn' => 'https://943ee3e7e7044524b2ee8413a957e14f@o775093.ingest.sentry.io/5796825',
+    'traces_sample_rate' => 0.5,
+]);
+
 require 'config.php';
 require 'files/Core/settings.php';
 
@@ -49,12 +55,14 @@ try {
             }
         } elseif (!$user->isValid()) {
             if (!in_array(explode('?', $_SERVER['REQUEST_URI'])[0], ['/member/profil/edit', '/logout'])) {
-                \Redirect::to('/member/profil/edit', 'Prosím vyplňte požadované údaje.');
+                \Message::warning('Prosím vyplňte požadované údaje.');
+                \Redirect::to('/member/profil/edit');
             }
         }
     } elseif (($_POST['action'] ?? '') == 'login') {
         if (!\Session::login($_POST['login'], User::crypt($_POST['pass']))) {
-            \Redirect::to('/login', 'Špatné jméno nebo heslo!');
+            \Message::danger('Špatné jméno nebo heslo!');
+            \Redirect::to('/login');
         } elseif ($_GET['return'] ?? null) {
             \Redirect::to($_GET['return']);
         } else {
@@ -74,6 +82,7 @@ try {
     http_response_code(404);
     \Render::twig('Error.twig', ['errorCode' => 'not_found']);
 } catch (ViewException $e) {
+    \Sentry\captureException($e);
     syslog(
         LOG_ERR,
         $_SERVER['REQUEST_URI'] . ": {$e->getMessage()}\n"
@@ -85,6 +94,7 @@ try {
     ob_clean();
     \Redirect::to('/error?id=' . $e->getErrorFile());
 } catch (Exception $e) {
+    \Sentry\captureException($e);
     syslog(
         LOG_WARNING,
         $_SERVER['REQUEST_URI'] . ": {$e->getMessage()}\n"
@@ -96,6 +106,7 @@ try {
     ob_clean();
     \Redirect::to('/error?id=' . (new ViewException(''))->getErrorFile());
 }
+\Sentry\captureLastError();
 
 function makeRouter()
 {

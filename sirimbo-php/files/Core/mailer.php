@@ -8,21 +8,19 @@ class Mailer
         $mail->isSMTP();
         $mail->Host = 'mail.zarybnicky.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'jakub@zarybnicky.com';
+        $mail->Username = 'root@tkolymp.cz';
         $mail->Password = '***REMOVED***';
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
         $mail->CharSet = 'utf-8';
 
-        $mail->setFrom('noreply@tkolymp.cz', 'TK Olymp.cz');
+        $mail->setFrom('root@tkolymp.cz', 'TK Olymp.cz');
         foreach (is_array($to) ? $to : [$to] as $addr) {
             $mail->addAddress($addr, '');
         }
         $mail->Subject = $subject;
         $mail->Body = $message;
-
-        syslog(LOG_WARNING, "$subject: $message");
-        // $mail->send();
+        $mail->send();
     }
 
     public static function newPassword($to, $newpass)
@@ -49,9 +47,9 @@ EOS;
 
         $subject = "TKOlymp.cz - nový uživatel ($username)";
         $message = "Na TKOlymp.cz se registroval uživatel $username a čeká na potvrzení registrace.\n";
-        if ($total_users > 0)
+        if ($total_users > 0) {
             $message .= "Celkem nepotvrzených uživatelů: $total_users";
-
+        }
         Mailer::_mail($to, $subject, $message, DEFAULT_FROM_MAIL, "");
     }
 

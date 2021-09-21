@@ -81,19 +81,18 @@ class DBUser extends Database implements Pagable
     {
         $res = self::query("SELECT * FROM users WHERE
             LOWER(u_login)='?' AND u_pass='?'", strtolower($login), $pass);
-        if (!$res) {
+        if (!$res || !($data = self::getSingleRow($res))) {
             return false;
         }
-        return self::getSingleRow($res)["u_id"];
+        return $data["u_id"];
     }
 
     public static function getUserID($login)
     {
         $res = self::query("SELECT u_id FROM users WHERE u_login='?'", $login);
-        if (!$res) {
+        if (!$res || !($row = self::getSingleRow($res))) {
             return false;
         }
-        $row = self::getSingleRow($res);
         return $row["u_id"];
     }
 

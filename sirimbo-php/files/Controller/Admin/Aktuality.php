@@ -138,7 +138,10 @@ class Aktuality
             'checked' => $article['at_foto_main'],
             'photos' => \DBGalerie::getFotky($_GET['dir'] ?? 0),
             'dir' => $_GET['dir'] ?? 0,
-            'dirs' => ['none' => '------ vyberte složku ------'] + array_map(
+            'dirs' => [[
+                'id' => 'none',
+                'text' => '------ vyberte složku ------'
+            ]] + array_map(
                 fn($item) => [
                     'id' => $item['gd_id'],
                     'text' => str_repeat('&nbsp;&nbsp;', $item['gd_level'] - 1) . $item['gd_name']

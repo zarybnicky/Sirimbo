@@ -7,8 +7,8 @@ class Nastenka
     {
         \Permissions::checkError('nastenka', P_OWNED);
         $pager = new \Paging(new \DBNastenka());
-        $pager->setCurrentPage($_GET['p']);
-        $pager->setItemsPerPage($_GET['c']);
+        $pager->setCurrentPage($_GET['p'] ?? null);
+        $pager->setItemsPerPage($_GET['c'] ?? null);
         \Render::twig('Admin/Nastenka.twig', [
             'navigation' => $pager->getNavigation(),
             'data' => array_for($pager->getItems(), fn($item) => $item + [
@@ -113,7 +113,7 @@ class Nastenka
                 $skupinaData['s_description']
             );
         }
-        \DBNastenka::editNastenka($id, $_POST['nadpis'], $_POST['text'], ($_POST['lock'] == 'lock') ? 1 : 0);
+        \DBNastenka::editNastenka($id, $_POST['nadpis'], $_POST['text'], (($_POST['lock'] ?? '') == 'lock') ? 1 : 0);
         \Redirect::to($_POST['returnURI']);
     }
 

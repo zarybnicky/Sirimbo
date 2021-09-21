@@ -17,48 +17,14 @@
         "type": "github"
       }
     },
-    "co-log-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1605366789,
-        "narHash": "sha256-oygb1r+NVAbeweB8X4BvfMCuKAaSMqfhoQWXitGG3F4=",
-        "owner": "kowainik",
-        "repo": "co-log",
-        "rev": "38ebc84de3e937cf3f94570485a064837d537b18",
-        "type": "github"
-      },
-      "original": {
-        "owner": "kowainik",
-        "ref": "main",
-        "repo": "co-log",
-        "type": "github"
-      }
-    },
-    "generic-lens": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1611593235,
-        "narHash": "sha256-gLhfvqLUwt9R/QxVjP8IwEQiFtSh2OvYESA5hJ41n5M=",
-        "owner": "kcsongor",
-        "repo": "generic-lens",
-        "rev": "a9a6fc3fe9c9a9cc79d31448db118413d9ca885e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "kcsongor",
-        "ref": "2.1.0.0",
-        "repo": "generic-lens",
-        "type": "github"
-      }
-    },
     "gogol": {
       "flake": false,
       "locked": {
-        "lastModified": 1591344750,
-        "narHash": "sha256-DSTUwOmOHtfHCvEfFrnFKra/wqCoZ4rQoEsDTAjK8/4=",
+        "lastModified": 1615881825,
+        "narHash": "sha256-l/wML5GilN815SzJQr1CDgfywG2Cyn8wn3EFShOILH4=",
         "owner": "brendanhay",
         "repo": "gogol",
-        "rev": "d7c7d71fc985cd96fb5f05173da6c607da362b74",
+        "rev": "797a2672b4652a1764d61a313939a2050ff0ed7f",
         "type": "github"
       },
       "original": {
@@ -71,80 +37,39 @@
     "higgledy": {
       "flake": false,
       "locked": {
-        "lastModified": 1612260928,
-        "narHash": "sha256-Aeh+eQ14VCas3WFgwt9kLcNozCh3CNyttwZYHBTVgqo=",
-        "owner": "i-am-tom",
+        "lastModified": 1607607088,
+        "narHash": "sha256-MbxXGp6o7i7n9I+dTpBXiCwB/oToqTl1vzNdH8esAkE=",
+        "owner": "zarybnicky",
         "repo": "higgledy",
-        "rev": "74848cfe2af6f2021d92fc19e182973122d547e9",
+        "rev": "d9773bfffbcc7ff623cb889915dddbd81211e4d5",
         "type": "github"
       },
       "original": {
-        "owner": "i-am-tom",
+        "owner": "zarybnicky",
         "ref": "master",
         "repo": "higgledy",
-        "type": "github"
-      }
-    },
-    "in-other-words": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1610614790,
-        "narHash": "sha256-OHyYWzzIwpZvUyEo/ESTUucY7pg9HnjXfJAJOSDlDAw=",
-        "owner": "KingoftheHomeless",
-        "repo": "in-other-words",
-        "rev": "1fc2372891c8356fe5d51fbccc202bfcbaae1dec",
-        "type": "github"
-      },
-      "original": {
-        "owner": "KingoftheHomeless",
-        "ref": "master",
-        "repo": "in-other-words",
         "type": "github"
       }
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1610719054,
-        "narHash": "sha256-5GJCRLNMflVyYaKUlDgemCiqhw/hRXNJFzUXJ2garp4=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "17631db07caeb9cfb6acefd6a91cdd995b5b3f3f",
-        "type": "github"
+        "lastModified": 1622638491,
+        "narHash": "sha256-M8CZbmarXUodyd1JOrqmYtc1oSpU4z0tO5WENpHXbWg=",
+        "path": "/nix/store/s7y5vs6irl3ghlk3xyxxcgjds0r8p5b8-source",
+        "rev": "5285a51c2e0b62c11211ee07692c3a2226f1a4b1",
+        "type": "path"
       },
       "original": {
-        "owner": "NixOS",
-        "ref": "master",
-        "repo": "nixpkgs",
-        "type": "github"
+        "id": "nixpkgs",
+        "type": "indirect"
       }
     },
     "root": {
       "inputs": {
         "bootstrap": "bootstrap",
-        "co-log-src": "co-log-src",
-        "generic-lens": "generic-lens",
         "gogol": "gogol",
         "higgledy": "higgledy",
-        "in-other-words": "in-other-words",
-        "nixpkgs": "nixpkgs",
-        "typerep-map": "typerep-map"
-      }
-    },
-    "typerep-map": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1604683429,
-        "narHash": "sha256-MbKkoGB4CY9bEbyRGdb6ED6y3+6y2iymY98hY3D6OwU=",
-        "owner": "kowainik",
-        "repo": "typerep-map",
-        "rev": "3d0473e5fc0b96fd4eb1ffdc6438b3c0a23c3bc9",
-        "type": "github"
-      },
-      "original": {
-        "owner": "kowainik",
-        "ref": "main",
-        "repo": "typerep-map",
-        "type": "github"
+        "nixpkgs": "nixpkgs"
       }
     }
   },
