@@ -3,9 +3,9 @@
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE TypeOperators #-}
 
-module Olymp.WordPress
-  ( WordpressApi,
-    wordpressServer,
+module Olymp.API.WordPress
+  ( WordPressAPI,
+    wordPressAPI,
   )
 where
 
@@ -17,7 +17,7 @@ import qualified Data.HashMap.Strict as HM
 import Data.Text (Text)
 import Servant
 
-type WordpressApi =
+type WordPressAPI =
   "types" :> Get '[JSON] Value
     :<|> "types" :> Capture "type" Text :> Get '[JSON] Value
     :<|> "pages" :> Capture "page" Int :> Get '[JSON] Value
@@ -30,8 +30,8 @@ type WordpressApi =
     :<|> "blocks" :> Verb 'OPTIONS 200 '[JSON] (Headers '[Header "Allow" String] ())
     :<|> "media" :> Verb 'OPTIONS 200 '[JSON] (Headers '[Header "Allow" String] ())
 
-wordpressServer :: Effs '[Throw ServerError] m => ServerT WordpressApi m
-wordpressServer =
+wordPressAPI :: Effs '[Throw ServerError] m => ServerT WordPressAPI m
+wordPressAPI =
   pure (Object demoTypes)
     :<|> (\typ -> maybe (throw err404) pure (HM.lookup typ demoTypes))
     :<|> (\_page -> pure demoPost)

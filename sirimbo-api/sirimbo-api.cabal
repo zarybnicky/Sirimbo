@@ -22,9 +22,15 @@ library
   import: shared
   hs-source-dirs:      src
   exposed-modules:     Olymp
+                       Olymp.API
+                       Olymp.API.Auth
                        Olymp.API.Payment
+                       Olymp.API.Reservation
+                       Olymp.API.User
+                       Olymp.API.WordPress
                        Olymp.Auth
                        Olymp.Cli
+                       Olymp.Effect
                        Olymp.Effect.Database
                        Olymp.Effect.Error
                        Olymp.Effect.Google
@@ -34,7 +40,6 @@ library
                        Olymp.Server
                        Olymp.Tournament.API
                        Olymp.Tournament.Base
-                       Olymp.WordPress
                        Olymp.YouTube.Worker
                        Servant.TypeScript
 

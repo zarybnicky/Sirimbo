@@ -35,7 +35,7 @@ import Control.Effect.Error (Throw, throw)
 
 
 type QrPaymentAPI
-  = "api" :> "qr-payment.png"
+  = "qr-payment.png"
   :> QueryParam "acc" (Tagged (Proxy "ACC") Text)
   :> QueryParam "am" (Tagged (Proxy "AM") Text)
   :> QueryParam "msg" (Tagged (Proxy "MSG") Text)
