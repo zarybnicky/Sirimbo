@@ -1,8 +1,4 @@
 $(function() {
-  objectFit.polyfill({
-    selector: '.highlights-image img',
-    fittype: 'cover'
-  });
   Stickyfill.add($('.sticky-top'));
 
   function maxHeight(element) {

@@ -2,14 +2,16 @@ const path = require("path");
 const fs = require("fs");
 const webpack  = require('webpack');
 const CopyPlugin = require("copy-webpack-plugin");
-const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   mode: 'development',
   entry: './src/index.ts',
   output: {
       filename: 'main.js',
+      path: path.resolve(__dirname, 'dist'),
       publicPath: '/',
+      assetModuleFilename: 'assets/[name][ext][query]',
   },
   resolve: {
     extensions: ['.js', '.ts', '.tsx', '.json']
@@ -19,7 +21,7 @@ module.exports = {
     contentBase: './',
   },
   plugins: [
-      new ExtractCssChunks(),
+      new MiniCssExtractPlugin({ filename: 'main.css' }),
       new CopyPlugin({ patterns: [{ from: "static" }] }),
       new webpack.ProvidePlugin({
           $: 'jquery',
@@ -36,25 +38,11 @@ module.exports = {
       {
           test: /\.(scss)$/,
           use: [
-              ExtractCssChunks.loader,
+              MiniCssExtractPlugin.loader,
               'css-loader',
               'postcss-loader',
-              'sass-loader'
+              'sass-loader',
           ],
-      },
-      {
-          test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-          type: 'asset/resource',
-          generator: {
-              filename: 'fonts/[name][ext][query]',
-          },
-      },
-      {
-          test: /\.(jpe?g|png|gif|svg)$/i,
-          type: 'asset/resource',
-          generator: {
-              filename: 'icons/[name][ext][query]',
-          },
       },
     ],
   }
