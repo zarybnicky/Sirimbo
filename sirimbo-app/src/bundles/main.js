@@ -1,6 +1,4 @@
 $(function() {
-  Stickyfill.add($('.sticky-top'));
-
   function maxHeight(element) {
     var height = 0;
     $(element).each(function() {
