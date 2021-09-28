@@ -34,7 +34,7 @@ import Data.Pool (Pool)
 import Data.Text (Text)
 import qualified Data.Text.IO as T
 import Data.Time (Day (ModifiedJulianDay), UTCTime (..))
-import Database.Persist.MySQL (Entity, PersistStoreRead (get), SqlBackend, entityVal)
+import Database.Persist.MySQL (Entity, PersistStoreRead (get), SqlBackend, entityVal, selectList, (==.))
 import Network.HTTP.Client (Manager)
 import Network.HTTP.ReverseProxy (ProxyDest (..), WaiProxyResponse (..), defaultOnExc, waiProxyTo)
 import Network.WebSockets (Connection)
@@ -45,7 +45,7 @@ import Olymp.Effect.Error (AppError, runAppErrorToError)
 import Olymp.Effect.Log (Log, WithLog, logInfo, runLogToStdout)
 import Olymp.Effect.Session (SessionEff, deleteSession, runSessionEffPersistent)
 import Olymp.Effect.User (UserEff, runUserEffPersistent)
-import Olymp.Schema (Reservation, ReservationId, ReservationItem, SessionId, User (..))
+import Olymp.Schema (Reservation, ReservationId, ReservationItem, SessionId, User (..), reservationTrainer, EntityField (ReservationItemParent))
 import Olymp.Tournament.API (tournamentAdminSocket, tournamentSocket)
 import Olymp.Tournament.Base (NodeId, Tournament)
 import Olymp.WordPress (WordpressApi, wordpressServer)
@@ -115,18 +115,10 @@ server =
 
 getReservation :: Effs '[Error ServerError, Database] m => (SessionId, Entity User) -> ReservationId -> m (User, Reservation, [ReservationItem])
 getReservation _ k = do
-  res <- query $
-    get k >>= \case
-      Nothing -> pure Nothing
-      Just r -> pure $ Just (undefined, r, [])
--- get (reservationTrainer r) >>= \case
---   Nothing -> pure Nothing
---   Just u -> do
---     ri <- selectList [ReservationItemParent _] []
---     pure $ Just (entityVal <$> u, r, entityVal <$> ri)
-  case res of
-    Nothing -> throw err404
-    Just r -> pure r
+  reservation <- maybe (throw err404) pure =<< query (get k)
+  trainer <- maybe (throw err404) pure =<< query (get $ reservationTrainer reservation)
+  items <- query $ selectList [ReservationItemParent ==. k] []
+  pure (trainer, reservation, entityVal <$> items)
 
 logout ::
   Effs '[SessionEff] m =>

@@ -44,7 +44,7 @@ export class ReservationSelect extends React.Component<{}, {
             <select className='team-selection' value={this.state.id || 'none'} onChange={this.handleOnChange} >
                 <option value='none'> --vyberte nabídku-- </option>
                 {this.state.options.map(x =>
-                    <option value={x.key} key={x.value}> {x.value} </option>
+                    <option value={x.key} key={x.key}> {x.value} </option>
                 )}
             </select>
             {this.state.data && <div>
@@ -65,11 +65,10 @@ export class ReservationSelect extends React.Component<{}, {
                         {this.state.data.n_od}
                         {this.state.data.n_do && this.state.data.n_od != this.state.data.n_do && this.state.data.n_do}
                     </div>
-                    {
-                        this.state.data.n_max_pocet_hod > 0 && <div>
-                            <span className="little"> Maximálně hodin/ pár: </span>
-                            <span className="nadpis" > {this.state.data.n_max_pocet_hod} </span>
-                        </div>}
+                    {this.state.data.n_max_pocet_hod > 0 && <div>
+                        <span className="little"> Maximálně hodin/ pár: </span>
+                        <span className="nadpis" > {this.state.data.n_max_pocet_hod} </span>
+                    </div>}
                     <div>
                         <span className="little" > Volných hodin: </span>
                         <span className="nadpis">
@@ -80,11 +79,10 @@ export class ReservationSelect extends React.Component<{}, {
                 </div>
                 <table style={{ margin: '1rem auto 0' }}>
                     <tr><th>Tanečník </th><th>Počet hodin</th></tr>
-                    {
-                        this.state.data.items.map(item => <tr>
-                            <td>{item.u_jmeno} {item.u_prijmeni}</td>
-                            <td> {item.ni_pocet_hod} </td>
-                        </tr>)}
+                    {this.state.data.items.map(item => <tr>
+                        <td>{item.u_jmeno} {item.u_prijmeni}</td>
+                        <td> {item.ni_pocet_hod} </td>
+                    </tr>)}
                 </table>
             </div>}
         </div>
