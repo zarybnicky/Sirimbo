@@ -56,6 +56,7 @@ class Database
             }
             $query = $q . $query;
         }
+        syslog(LOG_ERR, str_replace(["\n", "\r"], '', $query));
         $res = static::getConnection()->query($query);
         if (!$res) {
             static::databaseError();

@@ -1,22 +1,5 @@
 {
   "nodes": {
-    "bootstrap": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1602603510,
-        "narHash": "sha256-wYp5bUPoeTaxa7yCYPpBjuvjrAu1ZIXj6HgZHGMZloY=",
-        "owner": "twbs",
-        "repo": "bootstrap",
-        "rev": "a716fb03f965dc0846df479e14388b1b4b93d7ce",
-        "type": "github"
-      },
-      "original": {
-        "owner": "twbs",
-        "ref": "v4.5.3",
-        "repo": "bootstrap",
-        "type": "github"
-      }
-    },
     "gogol": {
       "flake": false,
       "locked": {
@@ -66,7 +49,6 @@
     },
     "root": {
       "inputs": {
-        "bootstrap": "bootstrap",
         "gogol": "gogol",
         "higgledy": "higgledy",
         "nixpkgs": "nixpkgs"

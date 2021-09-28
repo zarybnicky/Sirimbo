@@ -1,6 +1,6 @@
-$fa-font-path: '/webfonts';
-@import 'fontawesome/fontawesome';
-@import 'fontawesome/solid';
+$fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
+@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import '~@fortawesome/fontawesome-free/scss/solid';
 
 $blackish:  #1e1e1e;
 $red:       #c90029;
@@ -16,10 +16,10 @@ $link-color: $red;
 $link-hover-color: $light-red;
 $link-hover-decoration: none;
 
-@import './bootstrap/scss/functions';
-@import './bootstrap/scss/variables';
-@import './bootstrap/scss/mixins';
-@import './bootstrap/scss/utilities';
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+@import '~bootstrap/scss/utilities';
 
 table { border-collapse: separate; border-spacing: 1px; }
 th, td { padding: 3px; vertical-align: middle; }
@@ -137,7 +137,7 @@ $navbar-padding-y: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: url("/images/play_white.png") no-repeat center/35%;
+    background: url("../images/play_white.png") no-repeat center/35%;
 }
 
 /* Small article box */
@@ -156,7 +156,7 @@ $navbar-padding-y: 0;
 /* Gallery classes */
 .foto_list {
     list-style-position: inside;
-    list-style-image: url('/style/directory.png');
+    list-style-image: url('../style/directory.png');
 }
 .foto_full {
     display:block;
@@ -221,7 +221,7 @@ $navbar-padding-y: 0;
 .header-section {
     padding: 10px 0 25px 0;
     margin-bottom: 10px;
-    background: #fff3f2 url("/style/header-section.png") no-repeat 50% 10%;
+    background: #fff3f2 url("../style/header-section.png") no-repeat 50% 10%;
 }
 
 .courses {
@@ -281,39 +281,38 @@ $navbar-padding-y: 0;
     max-width: 50vw;
 }
 
-@import "./bootstrap/scss/root";
-@import "./bootstrap/scss/reboot";
-@import "./bootstrap/scss/type";
-@import "./bootstrap/scss/images";
-@import "./bootstrap/scss/code";
-@import "./bootstrap/scss/grid";
-@import "./bootstrap/scss/tables";
-@import "./bootstrap/scss/forms";
-@import "./bootstrap/scss/buttons";
-@import "./bootstrap/scss/transitions";
-@import "./bootstrap/scss/dropdown";
-@import "./bootstrap/scss/button-group";
-@import "./bootstrap/scss/input-group";
-@import "./bootstrap/scss/custom-forms";
-@import "./bootstrap/scss/nav";
-@import "./bootstrap/scss/navbar";
-@import "./bootstrap/scss/card";
-@import "./bootstrap/scss/breadcrumb";
-@import "./bootstrap/scss/pagination";
-@import "./bootstrap/scss/badge";
-@import "./bootstrap/scss/jumbotron";
-@import "./bootstrap/scss/alert";
-@import "./bootstrap/scss/progress";
-@import "./bootstrap/scss/media";
-@import "./bootstrap/scss/list-group";
-@import "./bootstrap/scss/close";
-@import "./bootstrap/scss/toasts";
-@import "./bootstrap/scss/modal";
-@import "./bootstrap/scss/tooltip";
-@import "./bootstrap/scss/popover";
-@import "./bootstrap/scss/carousel";
-@import "./bootstrap/scss/spinners";
-@import "./bootstrap/scss/print";
+@import "~bootstrap/scss/root";
+@import "~bootstrap/scss/reboot";
+@import "~bootstrap/scss/type";
+@import "~bootstrap/scss/images";
+@import "~bootstrap/scss/containers";
+@import "~bootstrap/scss/grid";
+@import "~bootstrap/scss/tables";
+@import "~bootstrap/scss/forms";
+@import "~bootstrap/scss/buttons";
+@import "~bootstrap/scss/transitions";
+@import "~bootstrap/scss/dropdown";
+@import "~bootstrap/scss/button-group";
+@import "~bootstrap/scss/nav";
+@import "~bootstrap/scss/navbar";
+@import "~bootstrap/scss/card";
+@import "~bootstrap/scss/accordion";
+@import "~bootstrap/scss/breadcrumb";
+@import "~bootstrap/scss/pagination";
+@import "~bootstrap/scss/badge";
+@import "~bootstrap/scss/alert";
+@import "~bootstrap/scss/progress";
+@import "~bootstrap/scss/list-group";
+@import "~bootstrap/scss/close";
+@import "~bootstrap/scss/toasts";
+@import "~bootstrap/scss/modal";
+@import "~bootstrap/scss/tooltip";
+@import "~bootstrap/scss/popover";
+@import "~bootstrap/scss/carousel";
+@import "~bootstrap/scss/spinners";
+@import "~bootstrap/scss/placeholders";
+
+@import "~bootstrap/scss/helpers";
 
 // Libraries
 @import 'polyfill.object-fit';

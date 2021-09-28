@@ -1,9 +1,8 @@
 {
   inputs.higgledy = { flake = false; url = github:zarybnicky/higgledy/master; };
-  inputs.bootstrap = { flake = false; url = github:twbs/bootstrap/v4.5.3; };
   inputs.gogol = { flake = false; url = github:brendanhay/gogol/develop; };
 
-  outputs = { self, nixpkgs, higgledy, bootstrap, gogol }: let
+  outputs = { self, nixpkgs, higgledy, gogol }: let
     inherit (nixpkgs.lib) flip mapAttrs mapAttrsToList;
     inherit (pkgs.nix-gitignore) gitignoreSourcePure gitignoreSource;
 
@@ -83,22 +82,41 @@
           ${pkgs.phpstan}/bin/phpstan analyse --level 5 files/
         '';
       });
-      sirimbo-php-assets = final.stdenv.mkDerivation {
-        name = "sirimbo-php-assets";
-        src = getSrc ./sirimbo-php-assets;
-        phases = "unpackPhase buildPhase";
+      sirimbo-app = final.yarn2nix-moretea.mkYarnPackage {
+        name = "sirimbo-app";
+        src = getSrc ./sirimbo-app;
+        packageJSON = ./sirimbo-app/package.json;
+        yarnLock = ./sirimbo-app/yarn.lock;
+        # yarnNix = ./sirimbo-php-scripts/yarn.nix;
+        # doCheck = true;
+        # checkPhase = "yarn test --coverage --ci";
         buildPhase = ''
-          mkdir -p $out/public $out/public/style/bootstrap
-          cp -r $src/* $out/public
-          cp -r ${bootstrap}/* $out/public/style/bootstrap/
-          cd $out
-          ${final.sass}/bin/sass -t compact public/style/main.scss:$out/public/style.css
+          yarn --offline run build
+          sed -i '1,3d' deps/Sirimbo/dist/main.css
         '';
+        distPhase = "true";
+        installPhase = ''
+          mkdir -p $out/public
+          cp -Lr deps/Sirimbo/dist/* $out/public/
+        '';
+
+        extraBuildInputs = [ final.libsass ];
+        yarnPreBuild = "export npm_config_nodedir=${final.nodejs}";
+        pkgConfig = {
+          node-sass = {
+            nativeBuildInputs = [ ];
+            buildInputs = [ final.libsass final.pkg-config final.python3 ];
+            postInstall = ''
+              LIBSASS_EXT=auto yarn --offline run build
+              rm build/config.gypi
+            '';
+          };
+        };
       };
     };
 
     packages.x86_64-linux = {
-      inherit (pkgs) sirimbo-tournament-frontend sirimbo-php sirimbo-php-assets;
+      inherit (pkgs) sirimbo-tournament-frontend sirimbo-php sirimbo-app;
       inherit (hsPkgs) sirimbo-api sirimbo-schema;
     };
 
@@ -113,6 +131,7 @@
         pkgs.phpstan
         pkgs.nodePackages.typescript
         pkgs.sass
+        pkgs.yarn2nix
       ];
     };
 
@@ -246,7 +265,7 @@
           name = "sirimbo-php-dist";
           paths = [
             pkgs.sirimbo-php
-            pkgs.sirimbo-php-assets
+            pkgs.sirimbo-app
             configPhp
           ];
         };

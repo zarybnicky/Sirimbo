@@ -1,4 +1,3 @@
-var masonry;
 $(function() {
   objectFit.polyfill({
     selector: '.highlights-image img',
@@ -9,7 +8,7 @@ $(function() {
   function maxHeight(element) {
     var height = 0;
     $(element).each(function() {
-      if($(this).height() > height) {
+      if ($(this).height() > height) {
         height = $(this).height();
       }
     });
@@ -18,7 +17,7 @@ $(function() {
   function minHeight(element) {
     var height = -1;
     $(element).each(function() {
-      if($(this).height() < height || height == -1) {
+      if ($(this).height() < height || height == -1) {
         height = $(this).height();
       }
     });
@@ -37,12 +36,12 @@ $(function() {
         $(this).find(".desc")
           .css("opacity", "0")
           .css("display", "block")
-          .animate({ "opacity" : "1" });
+          .animate({ "opacity": "1" });
       },
       "duration": 250
     });
   }, function() {
-    var height = minHeight($(this).siblings() .find(".highlights-info"));
+    var height = minHeight($(this).siblings().find(".highlights-info"));
     $(this).find(".highlights-info").animate({
       "height": height
     }, {
