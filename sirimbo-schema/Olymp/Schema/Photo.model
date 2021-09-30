@@ -1,4 +1,4 @@
-PhotoDirectory sql=galerie_dir json
+PhotoDirectory sql=galerie_dir
   Id sql=gd_id
   parent PhotoDirectoryId sql=gd_id_rodic
   name Text sql=gd_name
@@ -6,7 +6,7 @@ PhotoDirectory sql=galerie_dir json
   path Text sql=gd_path
   hidden Text sql=gd_hidden sqltype=enum('0','1') default='0'
 
-Photo sql=galerie_foto json
+Photo sql=galerie_foto
   Id sql=gf_id
   parent PhotoDirectoryId sql=gf_id_rodic
   name Text sql=gf_name

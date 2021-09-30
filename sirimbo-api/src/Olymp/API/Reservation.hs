@@ -20,7 +20,7 @@ import Data.Aeson (ToJSON)
 import Data.Bifunctor (bimap)
 import Data.OpenApi (ToSchema)
 import Data.Text (Text)
-import Database.Esqueleto (InnerJoin(..), select, from, on, where_, (^.), (++.), (==.), val, unValue)
+import Database.Esqueleto (InnerJoin(..), select, from, on, where_, (^.), concat_, (==.), val, unValue)
 import Database.Persist.Sql (Entity (..), get)
 import GHC.Generics (Generic)
 import Olymp.Auth (PhpAuth)
@@ -45,8 +45,9 @@ getReservation :: Effs '[Error ServerError, Database] m => (SessionId, Entity Us
 getReservation _ k = do
   reservation <- maybe (throw err404) pure =<< query (get k)
   trainer <- maybe (throw err404) pure =<< query (get $ reservationTrainer reservation)
-  items <- query $ select $ from $ \(ri `InnerJoin` u) -> do
-    on (ri ^. ReservationItemPartner ==. u ^. UserId)
+  items <- query $ select $ from $ \(ri `InnerJoin` c `InnerJoin` u) -> do
+    on (ri ^. ReservationItemPartner ==. c ^. CoupleId)
+    on (c ^. CouplePartnerLeader ==. u ^. UserId)
     where_ (ri ^. ReservationItemParent ==. val k)
-    pure ((u ^. UserName) ++. (u ^. UserSurname), ri ^. ReservationItemNumberLessons)
+    pure (concat_ [u ^. UserName, val " ", u ^. UserSurname], ri ^. ReservationItemNumberLessons)
   pure $ ReservationResponse trainer reservation (bimap unValue unValue <$> items)

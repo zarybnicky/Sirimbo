@@ -1,4 +1,4 @@
-Event sql=akce json
+Event sql=akce
   Id sql=a_id
   name Text sql=a_jmeno
   location Text sql=a_kde
@@ -11,7 +11,7 @@ Event sql=akce json
   lock Text sql=a_lock sqltype=enum('0','1') default='0'
   visible Text sql=a_visible sqltype=enum('0','1') default='0'
 
-EventItem sql=akce_item json
+EventItem sql=akce_item
   Id sql=ai_id
   parent EventId sql=ai_id_rodic
   user UserId sql=ai_user

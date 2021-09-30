@@ -1,4 +1,4 @@
-Permission sql=permissions json
+Permission sql=permissions
   Id sql=pe_id
   name Text sql=pe_name
   description Text sql=pe_description

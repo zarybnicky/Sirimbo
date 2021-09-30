@@ -1,4 +1,4 @@
-Announcement sql=upozorneni json
+Announcement sql=upozorneni
   Id sql=up_id
   createdBy UserId sql=up_kdo
   title Text sql=up_nadpis
@@ -8,7 +8,7 @@ Announcement sql=upozorneni json
   updatedAt UTCTime sql=up_timestamp sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   createdAt UTCTime sql=up_timestamp_add sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
 
-AnnouncementGroup sql=upozorneni_skupiny json
+AnnouncementGroup sql=upozorneni_skupiny
   Id sql=ups_id
   parent AnnouncementId sql=ups_id_rodic
   userGroup UserGroupId sql=ups_id_skupina

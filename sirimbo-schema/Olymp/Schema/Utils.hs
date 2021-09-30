@@ -14,18 +14,18 @@ module Olymp.Schema.Utils
 where
 
 import Control.Monad.IO.Class (liftIO)
+import Data.Aeson (FromJSON, Object, ToJSON, Value)
 import Data.List (isSuffixOf)
-import Data.OpenApi (NamedSchema (..), ToSchema (..), ToParamSchema (..), declareSchema)
+import Data.OpenApi (NamedSchema (..), ToParamSchema (..), ToSchema (..), declareSchema)
 import Data.Proxy (Proxy (..))
-import Database.Persist (EntityDef, Key, BackendKey)
+import Data.Typeable (Typeable)
+import Database.Persist (BackendKey, EntityDef, Key)
 import Database.Persist.Quasi (lowerCaseSettings)
+import Database.Persist.Sql (SqlBackend)
 import Database.Persist.TH (mkPersist, mpsDeriveInstances, persistFileWith, persistManyFileWith, sqlSettings)
 import GHC.Generics (Generic)
 import Language.Haskell.TH (Dec, Exp, Q)
 import System.Directory (doesDirectoryExist, getDirectoryContents)
-import Database.Persist.Sql (SqlBackend)
-import Data.Aeson (Value, Object)
-import Data.Typeable (Typeable)
 
 instance ToSchema (BackendKey SqlBackend) where
   declareNamedSchema _ = do
@@ -46,7 +46,7 @@ instance ToSchema Value where
     pure $ NamedSchema Nothing schema
 
 mkPersist' :: [EntityDef] -> Q [Dec]
-mkPersist' = mkPersist sqlSettings {mpsDeriveInstances = [''Show, ''Eq, ''Generic, ''ToSchema]}
+mkPersist' = mkPersist sqlSettings {mpsDeriveInstances = [''Show, ''Eq, ''Generic, ''FromJSON, ''ToJSON, ''ToSchema]}
 
 persistSchema :: FilePath -> Q Exp
 persistSchema path = do

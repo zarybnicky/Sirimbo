@@ -1,11 +1,11 @@
-UserGroup sql=skupiny json
+UserGroup sql=skupiny
   Id sql=s_id
   name Text sql=s_name
   description Text sql=s_description
   colorRgb Text sql=s_color_rgb sqltype=VARCHAR(7)
   colorText Text sql=s_color_text sqltype=VARCHAR(20)
 
-User sql=users json
+User sql=users
   Id sql=u_id
   login Text sql=u_login sqltype=CHAR(20)
   password Text sql=u_pass

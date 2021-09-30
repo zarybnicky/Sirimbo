@@ -1,4 +1,4 @@
-Document sql=dokumenty json
+Document sql=dokumenty
   Id sql=d_id
   path Text sql=d_path
   name Text sql=d_name

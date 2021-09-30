@@ -1,4 +1,4 @@
-Reservation sql=nabidka json
+Reservation sql=nabidka
   Id sql=n_id
   trainer UserId sql=n_trener
   numberLessons Int sql=n_pocet_hod default=1 sqltype=SMALLINT(3)
@@ -9,10 +9,10 @@ Reservation sql=nabidka json
   lock Text sql=n_lock sqltype=enum('0','1') default='0'
   updatedAt UTCTime sql=n_timestamp sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
 
-ReservationItem sql=nabidka_item json
+ReservationItem sql=nabidka_item
   Id sql=ni_id
   parent ReservationId sql=ni_id_rodic
-  partner UserId sql=ni_partner
+  partner CoupleId sql=ni_partner
   numberLessons Int sql=ni_pocet_hod default=1 sqltype=SMALLINT(3)
   lock Text sql=ni_lock sqltype=enum('0','1') default='0'
   UniqueReservationItem parent partner sql=ni_id_rodic

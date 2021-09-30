@@ -1,4 +1,4 @@
-Article sql=aktuality json
+Article sql=aktuality
   Id sql=at_id
   createdBy UserId sql=at_kdo
   category Text sql=at_kat

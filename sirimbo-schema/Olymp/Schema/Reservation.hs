@@ -26,6 +26,7 @@ module Olymp.Schema.Reservation
 import Data.Text (Text)
 import Data.Time (Day, UTCTime)
 import Database.Persist (Key, Unique, EntityField)
+import Olymp.Schema.Couple (CoupleId)
 import Olymp.Schema.User (UserId)
 import Olymp.Schema.Utils (mkPersist', persistSchema)
 

@@ -1,4 +1,4 @@
-PaymentGroup sql=platby_group json
+PaymentGroup sql=platby_group
   Id sql=pg_id
   type Text sql=pg_type sqltype=enum('0','1') default=0
   name Text sql=pg_name
