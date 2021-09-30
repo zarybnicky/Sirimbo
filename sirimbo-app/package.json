@@ -5,10 +5,12 @@
     "scripts": {
         "build": "webpack --config ./webpack.config.js",
         "lint": "eslint \"**/*.{js,ts}\"",
-        "start": "webpack serve --open"
+        "start": "webpack serve --open",
+        "generate-schema": "npx openapi-typescript http://olymp-test/swagger.json --output src/schema.ts"
     },
     "dependencies": {
         "bootstrap": "^4.6.0",
+        "date-fns": "^2.24.0",
         "jquery": "^3.6.0",
         "lit": "^2.0.0",
         "lit-html": "2.0.0",

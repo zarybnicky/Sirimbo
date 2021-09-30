@@ -1,4 +1,6 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
@@ -14,21 +16,37 @@ where
 
 import Control.Effect (Effs)
 import Control.Effect.Error (Error, throw)
-import Database.Persist.Sql (Entity(..), get, selectList, (==.))
+import Data.Aeson (ToJSON)
+import Data.Bifunctor (bimap)
+import Data.OpenApi (ToSchema)
+import Data.Text (Text)
+import Database.Esqueleto (InnerJoin(..), select, from, on, where_, (^.), (++.), (==.), val, unValue)
+import Database.Persist.Sql (Entity (..), get)
+import GHC.Generics (Generic)
 import Olymp.Auth (PhpAuth)
 import Olymp.Effect.Database (Database, query)
-import Olymp.Schema (EntityField (..), Reservation (..), ReservationId, ReservationItem, SessionId, User)
+import Olymp.Schema (EntityField (..), Reservation (..), ReservationId, SessionId, User)
 import Servant
 
 type ReservationAPI =
-  PhpAuth :> "reservation" :> Capture "id" ReservationId :> Get '[JSON] (User, Reservation, [ReservationItem])
+  PhpAuth :> "reservation" :> Capture "id" ReservationId :> Get '[JSON] ReservationResponse
+
+data ReservationResponse = ReservationResponse
+  { trainer :: User,
+    reservation :: Reservation,
+    items :: [(Text, Int)]
+  }
+  deriving (Generic, ToJSON, ToSchema)
 
 reservationAPI :: Effs '[Error ServerError, Database] m => ServerT ReservationAPI m
 reservationAPI = getReservation
 
-getReservation :: Effs '[Error ServerError, Database] m => (SessionId, Entity User) -> ReservationId -> m (User, Reservation, [ReservationItem])
+getReservation :: Effs '[Error ServerError, Database] m => (SessionId, Entity User) -> ReservationId -> m ReservationResponse
 getReservation _ k = do
   reservation <- maybe (throw err404) pure =<< query (get k)
   trainer <- maybe (throw err404) pure =<< query (get $ reservationTrainer reservation)
-  items <- query $ selectList [ReservationItemParent ==. k] []
-  pure (trainer, reservation, entityVal <$> items)
+  items <- query $ select $ from $ \(ri `InnerJoin` u) -> do
+    on (ri ^. ReservationItemPartner ==. u ^. UserId)
+    where_ (ri ^. ReservationItemParent ==. val k)
+    pure ((u ^. UserName) ++. (u ^. UserSurname), ri ^. ReservationItemNumberLessons)
+  pure $ ReservationResponse trainer reservation (bimap unValue unValue <$> items)

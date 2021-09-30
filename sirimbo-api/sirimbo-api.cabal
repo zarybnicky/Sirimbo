@@ -57,6 +57,7 @@ library
                      , data-fix
                      , directory
                      , errors
+                     , esqueleto
                      , exceptions
                      , filepath
                      , generic-lens
@@ -73,6 +74,7 @@ library
                      , monad-logger
                      , mtl
                      , sirimbo-schema
+                     , openapi3
                      , optparse-applicative
                      , persistent
                      , persistent-mysql
@@ -89,6 +91,8 @@ library
                      , servant-foreign
                      , servant-JuicyPixels
                      , servant-multipart
+                     , servant-openapi3
+                     , servant-swagger-ui
                      , servant-server
                      , servant-websockets
                      , tagged

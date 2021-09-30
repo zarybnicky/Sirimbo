@@ -17,23 +17,6 @@
         "type": "github"
       }
     },
-    "higgledy": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1607607088,
-        "narHash": "sha256-MbxXGp6o7i7n9I+dTpBXiCwB/oToqTl1vzNdH8esAkE=",
-        "owner": "zarybnicky",
-        "repo": "higgledy",
-        "rev": "d9773bfffbcc7ff623cb889915dddbd81211e4d5",
-        "type": "github"
-      },
-      "original": {
-        "owner": "zarybnicky",
-        "ref": "master",
-        "repo": "higgledy",
-        "type": "github"
-      }
-    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1622638491,
@@ -50,7 +33,6 @@
     "root": {
       "inputs": {
         "gogol": "gogol",
-        "higgledy": "higgledy",
         "nixpkgs": "nixpkgs"
       }
     }

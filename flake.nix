@@ -1,8 +1,7 @@
 {
-  inputs.higgledy = { flake = false; url = github:zarybnicky/higgledy/master; };
   inputs.gogol = { flake = false; url = github:brendanhay/gogol/develop; };
 
-  outputs = { self, nixpkgs, higgledy, gogol }: let
+  outputs = { self, nixpkgs, gogol }: let
     inherit (nixpkgs.lib) flip mapAttrs mapAttrsToList;
     inherit (pkgs.nix-gitignore) gitignoreSourcePure gitignoreSource;
 
@@ -37,8 +36,8 @@
 
       haskell = prev.haskell // {
         packageOverrides = prev.lib.composeExtensions (prev.haskell.packageOverrides or (_: _: {})) (hself: hsuper: {
-          higgledy = doJailbreak (hself.callCabal2nix "higgledy" higgledy {});
           servant-JuicyPixels = doJailbreak (unmarkBroken hsuper.servant-JuicyPixels);
+          higgledy = doJailbreak (unmarkBroken hsuper.higgledy);
           gogol-core = hself.callCabal2nix "gogol-core" "${gogol}/core" {};
           gogol = hself.callCabal2nix "gogol" "${gogol}/gogol" {};
           gogol-youtube = hself.callCabal2nix "gogol-youtube" "${gogol}/gogol-youtube" {};
