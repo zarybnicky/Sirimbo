@@ -15,8 +15,7 @@
     {% endif %}
   </div>
   <div class="date">
-    {{ item.a_od | date('j. n. Y') }}
-    {% if item.a_od != item.a_do %}{{ item.a_do | date('j. n. Y') }}{% endif %}
+    <date-range year="1" from="{{ item.a_od }}" to="{{ item.a_do }}"></date-range>
   </div>
   <div class="emph">{{ item.a_kde }}</div>
   <div>

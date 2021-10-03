@@ -31,7 +31,7 @@
               {{ row.pc_name }}
             </td>
             <td>{{ row.pc_symbol }}</td>
-            <td>{{ row.pc_valid_from | date('j. n. Y') }} - {{ row.pc_valid_to | date('j. n. Y') }}</td>
+            <td><date-range year="1" from="{{ row.pc_valid_from }}" to="{{ row.pc_valid_to }}"></date-range></td>
             <td>{{ row.pc_amount ~ (row.pc_use_base ? ' * ?' : '') }} Kč</td>
           </tr>
         {% endfor %}
@@ -62,7 +62,7 @@
               {{ row.pc_name }}
             </td>
             <td>{{ row.pc_symbol }}</td>
-            <td>{{ row.pc_valid_from | date('j. n. Y') }} - {{ row.pc_valid_to | date('j. n. Y') }}</td>
+            <td><date-range year="1" from="{{ row.pc_valid_from }}" to="{{ row.pc_valid_to }}"></date-range></td>
             <td>{{ row.pc_amount ~ (row.pc_use_base ? ' * ?' : '') }} Kč</td>
           </tr>
         {% endfor %}
