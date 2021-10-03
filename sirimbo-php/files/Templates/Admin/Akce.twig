@@ -6,7 +6,6 @@
   <div class="container">
     <form action="" method="POST">
       <a href="/admin/akce/add" class="btn btn-primary">Přidat</a>
-      <button class="btn btn-primary" name="action" value="save">Uložit změny</button>
       <table>
         <tr>
           <th>Jméno</th>
@@ -35,7 +34,10 @@
               {% if row.a_od != row.a_do %} - {{ row.a_do | date('j. n. Y') }}{% endif %}
             </td>
             <td>{{ row.a_obsazeno }}/{{ row.a_kapacita }}</td>
-            <td>{{ checkbox(row.a_id, '1', row.a_visible) }}</td>
+            <td>
+              <event-checkbox name="{{ row.a_id }}" initialValue="{{ row.a_visible }}">
+              </event-checkbox>
+            </td>
           </tr>
         {% endfor %}
       </table>

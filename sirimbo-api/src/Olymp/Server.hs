@@ -17,7 +17,6 @@ module Olymp.Server
     OlympAPI,
     interpretServer,
     olympServer,
-    generateTs,
   )
 where
 
@@ -34,7 +33,6 @@ import Servant
 import Servant.API.Flatten (Flat)
 import Servant.OpenApi (HasOpenApi(..))
 import Servant.Swagger.UI (SwaggerSchemaUI, swaggerSchemaUIServer)
-import Servant.TypeScript (FilterAPI, apiToTypeScript)
 import Data.Text (Text)
 import Codec.Picture (Image)
 import Data.Typeable (Typeable)
@@ -70,6 +68,3 @@ olympServer proxyPort manager runner =
     api = hoistServerWithContext (Proxy @OlympAPI) (Proxy @'[PhpAuthHandler]) runner olympAPI
     phpProxy = waiProxyTo forwardRequest defaultOnExc manager
     forwardRequest _ = pure $ WPRProxyDest (ProxyDest "127.0.0.1" proxyPort)
-
-generateTs :: IO ()
-generateTs = T.putStrLn (apiToTypeScript (Proxy @(FilterAPI (Flat OlympAPI))))

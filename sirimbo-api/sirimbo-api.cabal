@@ -24,6 +24,7 @@ library
   exposed-modules:     Olymp
                        Olymp.API
                        Olymp.API.Auth
+                       Olymp.API.Event
                        Olymp.API.Payment
                        Olymp.API.Reservation
                        Olymp.API.User
@@ -41,7 +42,6 @@ library
                        Olymp.Tournament.API
                        Olymp.Tournament.Base
                        Olymp.YouTube.Worker
-                       Servant.TypeScript
 
   build-depends:       base >=4.7 && <5
                      , aeson
@@ -112,18 +112,6 @@ library
 executable olymp
   import: shared
   main-is:             Main.hs
-  hs-source-dirs:      app
-  ghc-options:        -threaded
-                      -rtsopts
-                      -with-rtsopts=-N
-                      -O2
-
-  build-depends:       base >=4.7 && <5
-                     , sirimbo-api
-
-executable gen-ts
-  import: shared
-  main-is:             MainTs.hs
   hs-source-dirs:      app
   ghc-options:        -threaded
                       -rtsopts

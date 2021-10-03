@@ -36,7 +36,7 @@ import Olymp.Cli (Command (..), Config (..), parseCli)
 import Olymp.Effect.Database (Database, query, runDatabasePool)
 import Olymp.Effect.Google (googleToResourceTIO)
 import Olymp.Schema (Key (ParameterKey), Parameter (..), migrateAll)
-import Olymp.Server (generateTs, interpretServer, olympServer)
+import Olymp.Server (interpretServer, olympServer)
 import Olymp.Tournament.API (initialTournament)
 import Olymp.Tournament.Base (NodeId, Tournament, propagateWinners, withTournament)
 import Olymp.YouTube.Worker (youtubeWorker)
@@ -67,7 +67,6 @@ runServer = do
 
       putStrLn ("Starting server on port " <> show port <> " with proxy on port " <> show proxy)
       run port $ olympServer proxy mgr (Handler . ExceptT . interpretServer ref ref' pool)
-    GenerateTS -> generateTs
     CheckYouTube -> do
       lgr <- newLogger Network.Google.Info stdout
       mgr <- newManager tlsManagerSettings

@@ -9,29 +9,6 @@ class Akce
         \Render::twig('Admin/Akce.twig', ['data' => \DBAkce::getWithItemCount()]);
     }
 
-    public static function listPost()
-    {
-        \Permissions::checkError('akce', P_OWNED);
-        foreach (\DBAkce::getAkce() as $item) {
-            if (!isset($_POST[$item['a_id']]) || (bool) $_POST[$item['a_id']] === (bool) $item['a_visible']) {
-                continue;
-            }
-            \DBAkce::editAkce(
-                $item['a_id'],
-                $item['a_jmeno'],
-                $item['a_kde'],
-                $item['a_info'],
-                $item['a_od'],
-                $item['a_do'],
-                $item['a_kapacita'],
-                $item['a_dokumenty'],
-                $item['a_lock'],
-                $_POST[$item['a_id']] ? '1' : '0'
-            );
-        }
-        \Redirect::to('/admin/akce');
-    }
-
     public static function add()
     {
         \Permissions::checkError('akce', P_OWNED);

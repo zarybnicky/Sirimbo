@@ -91,7 +91,6 @@ argsParser = info (args <**> helper) fullDesc
                   mempty
               ),
             command "check-youtube" (info (pure CheckYouTube) mempty),
-            command "generate-ts" (info (pure GenerateTS) mempty),
             command
               "migrate"
               (info (Migrate <$> (flag' True (long "execute") <|> flag' False (long "dry-run"))) mempty)
@@ -110,6 +109,5 @@ instance FromJSON (HKD Config Maybe)
 data Command
   = Server Int Int
   | CheckYouTube
-  | GenerateTS
   | Migrate Bool
   deriving (Show, Generic)
