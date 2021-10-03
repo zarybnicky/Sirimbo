@@ -6,7 +6,6 @@
 <div class="container">
   <form action="" method="POST">
     <a href="/admin/nabidka/add" class="btn btn-primary">Nová nabídka</a>
-    <button class="btn btn-outline-primary" name="action" value="save">Uložit změny</button>
     <table>
       <tr>
         <th>Trenér</th>
@@ -33,7 +32,10 @@
             {{ row.n_od | date('j. n. Y') }}
             {% if row.n_od != row.n_do %} - {{ row.n_do | date('j. n. Y') }}{% endif %}
           </td>
-          <td>{{ checkbox(row.n_id, '1', row.n_visible) }}</td>
+          <td>
+              <reservation-checkbox name="{{ row.n_id }}" initialValue="{{ row.n_visible }}">
+              </reservation-checkbox>
+          </td>
         </tr>
       {% endfor %}
     </table>

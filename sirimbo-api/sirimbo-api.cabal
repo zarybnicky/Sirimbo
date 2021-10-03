@@ -27,6 +27,7 @@ library
                        Olymp.API.Event
                        Olymp.API.Payment
                        Olymp.API.Reservation
+                       Olymp.API.Schedule
                        Olymp.API.User
                        Olymp.API.WordPress
                        Olymp.Auth
@@ -42,6 +43,7 @@ library
                        Olymp.Tournament.API
                        Olymp.Tournament.Base
                        Olymp.YouTube.Worker
+                       Olymp.Prelude
 
   build-depends:       base >=4.7 && <5
                      , aeson

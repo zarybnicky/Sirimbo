@@ -1,12 +1,11 @@
 {% extends "Layout.twig" %}
 
-{% block title %}Správa plateb{% endblock %}
+{% block title %}Správa rozpisů{% endblock %}
 
 {% block content %}
 <div class="container">
   <form action="" method="POST">
     <a href="/admin/rozpis/add" class="btn btn-primary">Nový rozpis</a>
-    <button class="btn btn-outline-primary" name="action" value="save">Uložit změny</button>
     <table>
       <tr>
         <th>Trenér</th>
@@ -32,7 +31,10 @@
           </td>
           <td>{{ row.date | date('j. n. Y') }}</td>
           <td>{{ row.kde }}</td>
-          <td>{{ checkbox(row.id, '1', row.visible) }}</td>
+          <td>
+              <schedule-checkbox name="{{ row.id }}" initialValue="{{ row.visible }}">
+              </schedule-checkbox>
+          </td>
         </tr>
       {% endfor %}
     </table>

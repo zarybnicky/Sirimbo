@@ -14,22 +14,13 @@ module Olymp.API.Reservation
   )
 where
 
-import Control.Effect (Effs)
-import Control.Effect.Error (Error, throw)
-import Data.Aeson (ToJSON)
-import Data.Bifunctor (bimap)
-import Data.OpenApi (ToSchema)
-import Data.Text (Text)
 import Database.Esqueleto (InnerJoin(..), select, from, on, where_, (^.), concat_, (==.), val, unValue)
-import Database.Persist.Sql (Entity (..), get)
-import GHC.Generics (Generic)
-import Olymp.Auth (PhpAuth)
-import Olymp.Effect.Database (Database, query)
-import Olymp.Schema (EntityField (..), Reservation (..), ReservationId, SessionId, User)
-import Servant
+import Olymp.Prelude
+import Olymp.Schema (Reservation(..), ReservationId)
 
 type ReservationAPI =
-  PhpAuth :> "reservation" :> Capture "id" ReservationId :> Get '[JSON] ReservationResponse
+  PhpAuth :> "reservation" :> Capture "id" ReservationId :> Get '[JSON] ReservationResponse :<|>
+  PhpAuth :> "reservation" :> Capture "id" ReservationId :> "toggle-visible" :> Get '[JSON] Bool
 
 data ReservationResponse = ReservationResponse
   { trainer :: User,
@@ -39,7 +30,7 @@ data ReservationResponse = ReservationResponse
   deriving (Generic, ToJSON, ToSchema)
 
 reservationAPI :: Effs '[Error ServerError, Database] m => ServerT ReservationAPI m
-reservationAPI = getReservation
+reservationAPI = getReservation :<|> toggleVisible
 
 getReservation :: Effs '[Error ServerError, Database] m => (SessionId, Entity User) -> ReservationId -> m ReservationResponse
 getReservation _ k = do
@@ -51,3 +42,10 @@ getReservation _ k = do
     where_ (ri ^. ReservationItemParent ==. val k)
     pure (concat_ [u ^. UserName, val " ", u ^. UserSurname], ri ^. ReservationItemNumberLessons)
   pure $ ReservationResponse trainer reservation (bimap unValue unValue <$> items)
+
+toggleVisible :: Effs '[Error ServerError, Database] m => (SessionId, Entity User) -> ReservationId -> m Bool
+toggleVisible _ k = do
+  reservation <- maybe (throw err404) pure =<< query (get k)
+  let notVisible = boolToText . not . textToBool $ reservationVisible reservation
+  newReservation <- query $ updateGet k [ReservationVisible =. notVisible]
+  pure . textToBool $ reservationVisible newReservation
