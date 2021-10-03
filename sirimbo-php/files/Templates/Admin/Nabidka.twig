@@ -33,8 +33,8 @@
             {% if row.n_od != row.n_do %} - {{ row.n_do | date('j. n. Y') }}{% endif %}
           </td>
           <td>
-              <reservation-checkbox name="{{ row.n_id }}" initialValue="{{ row.n_visible }}">
-              </reservation-checkbox>
+              <visibility-checkbox type="reservation" name="{{ row.n_id }}" initialValue="{{ row.n_visible }}">
+              </visibility-checkbox>
           </td>
         </tr>
       {% endfor %}

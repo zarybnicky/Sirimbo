@@ -26,6 +26,7 @@ library
                        Olymp.API.Auth
                        Olymp.API.Event
                        Olymp.API.Payment
+                       Olymp.API.Photo
                        Olymp.API.Reservation
                        Olymp.API.Schedule
                        Olymp.API.User

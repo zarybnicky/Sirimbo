@@ -32,8 +32,8 @@
           <td>{{ row.date | date('j. n. Y') }}</td>
           <td>{{ row.kde }}</td>
           <td>
-              <schedule-checkbox name="{{ row.id }}" initialValue="{{ row.visible }}">
-              </schedule-checkbox>
+              <visibility-checkbox type="schedule" name="{{ row.id }}" initialValue="{{ row.visible }}">
+              </visibility-checkbox>
           </td>
         </tr>
       {% endfor %}

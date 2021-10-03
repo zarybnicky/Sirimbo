@@ -7,7 +7,6 @@
     <form method="POST">
       <a class="btn btn-outline-primary" href="/admin/galerie/file/upload">Přidat fotky</a>
       <a class="btn btn-outline-primary" href="/admin/galerie/directory/add">Přidat složku</a>
-      <button class="btn btn-outline-primary" name="action" value="save">Uložit změny</button>
       <table>
         <tr>
           <th>Složka</th>
@@ -31,7 +30,10 @@
               {% endfor %}
               {{ row.gd_name }}
             </td>
-            <td>{{ checkbox(row.gd_id, '1', row.gd_hidden) }}</td>
+            <td>
+              <visibility-checkbox type="photo/directory" name="{{ row.gd_id }}" initialValue="{{ row.gd_hidden }}">
+              </visibility-checkbox>
+            </td>
           </tr>
         {% endfor %}
       </table>

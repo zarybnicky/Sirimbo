@@ -1,0 +1,31 @@
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE ViewPatterns #-}
+
+module Olymp.API.Photo
+  ( PhotoAPI,
+    photoAPI,
+  )
+where
+
+import Olymp.Prelude
+import Olymp.Schema (PhotoDirectory (..), PhotoDirectoryId)
+
+type PhotoAPI =
+  PhpAuth :> "photo" :> "directory" :> Capture "id" PhotoDirectoryId :> "toggle-visible" :> Get '[JSON] Bool
+
+photoAPI :: Effs '[Error ServerError, Database] m => ServerT PhotoAPI m
+photoAPI = toggleVisible
+
+toggleVisible :: Effs '[Error ServerError, Database] m => (SessionId, Entity User) -> PhotoDirectoryId -> m Bool
+toggleVisible _ k = do
+  photo <- maybe (throw err404) pure =<< query (get k)
+  let notVisible = boolToText . not . textToBool $ photoDirectoryHidden photo
+  newPhoto <- query $ updateGet k [PhotoDirectoryHidden =. notVisible]
+  pure . textToBool $ photoDirectoryHidden newPhoto

@@ -35,8 +35,8 @@
             </td>
             <td>{{ row.a_obsazeno }}/{{ row.a_kapacita }}</td>
             <td>
-              <event-checkbox name="{{ row.a_id }}" initialValue="{{ row.a_visible }}">
-              </event-checkbox>
+              <visibility-checkbox type="event" name="{{ row.a_id }}" initialValue="{{ row.a_visible }}">
+              </visibility-checkbox>
             </td>
           </tr>
         {% endfor %}

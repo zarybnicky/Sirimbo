@@ -10,6 +10,7 @@ where
 import Control.Effect (Effs)
 import Olymp.API.Auth (AuthAPI, authAPI)
 import Olymp.API.Event (EventAPI, eventAPI)
+import Olymp.API.Photo (PhotoAPI, photoAPI)
 import Olymp.API.Schedule (ScheduleAPI, scheduleAPI)
 import Olymp.API.User (UserAPI, userAPI)
 import Olymp.API.Reservation (ReservationAPI, reservationAPI)
@@ -26,6 +27,7 @@ type OlympAPI =
     :<|> "api" :> UserAPI
     :<|> "api" :> ReservationAPI
     :<|> "api" :> EventAPI
+    :<|> "api" :> PhotoAPI
     :<|> "api" :> ScheduleAPI
     :<|> "api" :> QrPaymentAPI
     :<|> "api" :> "tournament" :> "ws" :> WebSocket
@@ -38,6 +40,7 @@ olympAPI =
     :<|> userAPI
     :<|> reservationAPI
     :<|> eventAPI
+    :<|> photoAPI
     :<|> scheduleAPI
     :<|> qrPaymentAPI
     :<|> tournamentSocket

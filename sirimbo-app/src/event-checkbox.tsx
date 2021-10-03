@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form';
 const text2bool = (x: string) => x === '0' ? false : !!x;
 
 interface CheckboxProps {
-    type: 'event-checkbox' | 'schedule-checkbox' | '';
+    type: 'event' | 'schedule' | 'reservation';
     name: string;
     initialValue: string;
 }
@@ -14,7 +14,7 @@ interface CheckboxProps {
 export function VisibilityCheckbox({ type, name, initialValue }: CheckboxProps) {
     const [checked, setChecked] = useState(text2bool(initialValue));
     const toggle = async () => {
-        const res = await fetch(`/api/${type.replace('-checkbox', '')}/${name}/toggle-visible`);
+        const res = await fetch(`/api/${type}/${name}/toggle-visible`);
         setChecked(await res.json() as boolean);
     };
     return <Form.Check name={name} checked={checked} onChange={toggle} />
@@ -22,12 +22,10 @@ export function VisibilityCheckbox({ type, name, initialValue }: CheckboxProps) 
 class VisibilityCheckboxElement extends HTMLElement {
     connectedCallback() {
         ReactDOM.render(<VisibilityCheckbox
-            type={this.tagName as any}
-            name={this.getAttribute('name') || ''}
+            type={this.getAttribute('type') as CheckboxProps['type']}
+            name={this.getAttribute('name') as string}
             initialValue={this.getAttribute('initialValue') || '0'}
         />, this);
     }
 }
-customElements.define('event-checkbox', VisibilityCheckboxElement);
-customElements.define('schedule-checkbox', VisibilityCheckboxElement);
-customElements.define('reservation-checkbox-checkbox', VisibilityCheckboxElement);
+customElements.define('visibility-checkbox', VisibilityCheckboxElement);
