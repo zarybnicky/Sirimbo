@@ -30,8 +30,7 @@
               {{ row.a_jmeno }}
             </td>
             <td>
-              {{ row.a_od | date('j. n. Y') }}
-              {% if row.a_od != row.a_do %} - {{ row.a_do | date('j. n. Y') }}{% endif %}
+              <date-range from="{{ row.a_od }}" to="{{ row.a_do }}"></date-range>
             </td>
             <td>{{ row.a_obsazeno }}/{{ row.a_kapacita }}</td>
             <td>

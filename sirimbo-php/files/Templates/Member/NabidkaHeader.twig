@@ -14,10 +14,7 @@
     {% endif %}
   </div>
   <div class="date">
-    {{ item.n_od | date('j. n. Y') }}
-    {% if item.n_do and item.n_od != item.n_do %}
-      - {{ item.n_do | date('j. n. Y') }}
-    {% endif %}
+    <date-range from="{{ item.n_od }}" to="{{ item.n_do }}"></date-range>
   </div>
 
   {% if item.n_max_pocet_hod > 0 %}

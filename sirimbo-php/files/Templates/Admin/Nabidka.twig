@@ -29,8 +29,7 @@
             {{ row.u_jmeno }} {{ row.u_prijmeni }}
           </td>
           <td>
-            {{ row.n_od | date('j. n. Y') }}
-            {% if row.n_od != row.n_do %} - {{ row.n_do | date('j. n. Y') }}{% endif %}
+            <date-range from="{{ row.n_od }}" to="{{ row.n_do }}"></date-range>
           </td>
           <td>
               <visibility-checkbox type="reservation" name="{{ row.n_id }}" initialValue="{{ row.n_visible }}">

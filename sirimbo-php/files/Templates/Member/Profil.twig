@@ -92,7 +92,7 @@
           </div>
           <div class="row no-gutters justify-content-between">
             <div class="col-12 order-2 order-md-1 col-md-auto">
-              {{ item.validFrom|date('j. n. Y') }} - {{ item.validUntil|date('j. n. Y') }}
+              <date-range from="{{ item.validFrom }}" to="{{ item.validUntil }}"></date-range>
             </div>
             <div class="col-12 order-1 order-md-2 col-md-auto">č.ú. 1806875329/0800</div>
           </div>
