@@ -1,0 +1,10 @@
+.openapi-generator-ignore
+apis/DefaultApi.ts
+apis/index.ts
+index.ts
+models/PhotoDirectory.ts
+models/Reservation.ts
+models/ReservationResponse.ts
+models/User.ts
+models/index.ts
+runtime.ts

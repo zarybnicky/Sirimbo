@@ -18,10 +18,17 @@ import Olymp.Prelude
 import Olymp.Schema (PhotoDirectory (..), PhotoDirectoryId)
 
 type PhotoAPI =
-  PhpAuth :> "photo" :> "directory" :> Capture "id" PhotoDirectoryId :> "toggle-visible" :> Get '[JSON] Bool
+  PhpAuth :> "photo" :> "directory" :> Capture "id" PhotoDirectoryId
+    :> "toggle-visible"
+    :> OpId "toggleVisiblePhotoDirectory"
+    :> Get '[JSON] Bool
+  :<|> "photo"
+    :> "directory"
+    :> OpId "getPhotoDirectories"
+    :> Get '[JSON] [PhotoDirectory]
 
 photoAPI :: Effs '[Error ServerError, Database] m => ServerT PhotoAPI m
-photoAPI = toggleVisible
+photoAPI = toggleVisible :<|> getAll
 
 toggleVisible :: Effs '[Error ServerError, Database] m => (SessionId, Entity User) -> PhotoDirectoryId -> m Bool
 toggleVisible _ k = do
@@ -29,3 +36,6 @@ toggleVisible _ k = do
   let notVisible = boolToText . not . textToBool $ photoDirectoryHidden photo
   newPhoto <- query $ updateGet k [PhotoDirectoryHidden =. notVisible]
   pure . textToBool $ photoDirectoryHidden newPhoto
+
+getAll :: Effs '[Database] m => m [PhotoDirectory]
+getAll = fmap entityVal <$> query (selectList [] [])

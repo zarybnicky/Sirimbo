@@ -6,7 +6,7 @@
         "build": "webpack --config ./webpack.config.js",
         "lint": "eslint \"**/*.{js,ts}\"",
         "start": "webpack serve --open",
-        "generate-schema": "npx openapi-typescript http://olymp-test/swagger.json --output src/schema.ts"
+        "generate-schema": "npx openapi-typescript-codegen --input http://olymp-test/swagger.json --output src/schema/"
     },
     "dependencies": {
         "bootstrap": "^4.6.0",

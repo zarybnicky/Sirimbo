@@ -14,13 +14,18 @@ module Olymp.API.Reservation
   )
 where
 
-import Database.Esqueleto (InnerJoin(..), select, from, on, where_, (^.), concat_, (==.), val, unValue)
+import Database.Esqueleto (InnerJoin (..), concat_, from, on, select, unValue, val, where_, (==.), (^.))
 import Olymp.Prelude
-import Olymp.Schema (Reservation(..), ReservationId)
+import Olymp.Schema (Reservation (..), ReservationId)
 
 type ReservationAPI =
-  PhpAuth :> "reservation" :> Capture "id" ReservationId :> Get '[JSON] ReservationResponse :<|>
-  PhpAuth :> "reservation" :> Capture "id" ReservationId :> "toggle-visible" :> Get '[JSON] Bool
+  PhpAuth :> Capture "id" ReservationId
+    :> OpId "getReservation"
+    :> Get '[JSON] ReservationResponse
+    :<|> PhpAuth :> Capture "id" ReservationId
+      :> OpId "toggleVisibleReservation"
+      :> "toggle-visible"
+      :> Get '[JSON] Bool
 
 data ReservationResponse = ReservationResponse
   { trainer :: User,
@@ -36,11 +41,13 @@ getReservation :: Effs '[Error ServerError, Database] m => (SessionId, Entity Us
 getReservation _ k = do
   reservation <- maybe (throw err404) pure =<< query (get k)
   trainer <- maybe (throw err404) pure =<< query (get $ reservationTrainer reservation)
-  items <- query $ select $ from $ \(ri `InnerJoin` c `InnerJoin` u) -> do
-    on (ri ^. ReservationItemPartner ==. c ^. CoupleId)
-    on (c ^. CouplePartnerLeader ==. u ^. UserId)
-    where_ (ri ^. ReservationItemParent ==. val k)
-    pure (concat_ [u ^. UserName, val " ", u ^. UserSurname], ri ^. ReservationItemNumberLessons)
+  items <- query $
+    select $
+      from $ \(ri `InnerJoin` c `InnerJoin` u) -> do
+        on (ri ^. ReservationItemPartner ==. c ^. CoupleId)
+        on (c ^. CouplePartnerLeader ==. u ^. UserId)
+        where_ (ri ^. ReservationItemParent ==. val k)
+        pure (concat_ [u ^. UserName, val " ", u ^. UserSurname], ri ^. ReservationItemNumberLessons)
   pure $ ReservationResponse trainer reservation (bimap unValue unValue <$> items)
 
 toggleVisible :: Effs '[Error ServerError, Database] m => (SessionId, Entity User) -> ReservationId -> m Bool

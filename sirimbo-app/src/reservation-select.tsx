@@ -1,10 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { useEffect, useState } from 'react';
-import { components } from './schema';
+import { DefaultApi, ReservationResponse } from './schema';
 import { format } from 'date-fns';
-
-type ReservationResponse = components['schemas']['ReservationResponse'];
 
 const ReservationView = ({ trainer, reservation, items }: ReservationResponse) => {
     const header = <div className="trenink-header">
@@ -72,8 +70,7 @@ export function ReservationSelect() {
             return;
         }
         setId(event.target.value);
-        const res = await fetch(`/api/reservation/${event.target.value}`);
-        setCurrent(await res.json() as ReservationResponse);
+        setCurrent(await new DefaultApi().getReservation({ id: parseInt(event.target.value, 10) }));
     }
 
     return <div>
