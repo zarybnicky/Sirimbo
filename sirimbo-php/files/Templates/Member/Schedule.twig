@@ -17,15 +17,21 @@
               {% for lesson in item.items %}
                 <form class="row mx-auto mb-1 no-gutters" action="" method="post">
                   <input type='hidden' name='ri_id' value='{{ lesson.ri_id }}'>
-                  <div class="col-4">{{ lesson.ri_od | date('H:i') }}-{{ lesson.ri_do | date('H:i') }}</div>
-                  <div class="col-8">
-                    {{ lesson.u_jmeno }} {{ lesson.u_prijmeni }}
-                    {% if lesson.canReserve %}
-                      <button name="action" value="signup" class="py-0 btn btn-outline-primary btn-sm">+</button>
-                    {% elseif lesson.canCancel %}
-                      <button name="action" value="signout" class="py-0 btn btn-outline-primary btn-sm">&times;</button>
-                    {% endif %}
+                  <div class="col-4 text-center">
+                    {{ lesson.ri_od | date('H:i') }}-{{ lesson.ri_do | date('H:i') }}
                   </div>
+                  {% if lesson.canReserve %}
+                    <div class="col-auto flex-grow-1">
+                      <button name="action" value="signup" class="py-0 btn btn-outline-primary btn-sm">+</button>
+                    </div>
+                  {% else %}
+                    <div class="col-auto flex-grow-1">{{ lesson.u_jmeno }} {{ lesson.u_prijmeni }}</div>
+                    {% if lesson.canCancel %}
+                      <div class="col-2">
+                        <button name="action" value="signout" class="py-0 btn btn-outline-primary btn-sm">&times;</button>
+                      </div>
+                    {% endif %}
+                  {% endif %}
                 </form>
               {% endfor %}
             </div>
@@ -36,20 +42,18 @@
             </div>
             <form class="widget-content" action="" method="post">
               <input type='hidden' name='n_id' value='{{ item.ni_id }}'>
-              <table class="nocolor" style="width:100%">
-                {% for row in item.items %}
-                  <tr>
-                    <td>{{ row.ni_pocet_hod }}x</td>
-                    <td>{{ row.u_jmeno }} {{ row.u_prijmeni }}</td>
-                    <td>
-                      {% if row.canDelete %}
-                        <button name="p_id" value="{{ row.p_id }}"
-                                class="py-0 btn btn-outline-primary btn-sm">&times;</button>
-                      {% endif %}
-                    </td>
-                  </tr>
-                {% endfor %}
-              </table>
+              {% for row in item.items %}
+                <div class="row mx-auto mb-1 no-gutters">
+                  <div class="col-2 text-right pr-1">{{ row.ni_pocet_hod }}x</div>
+                  <div class="col-auto flex-grow-1">{{ row.u_jmeno }} {{ row.u_prijmeni }}</div>
+                  {% if row.canDelete %}
+                    <div class="col-2">
+                      <button name="p_id" value="{{ row.p_id }}"
+                              class="pl-2 py-0 btn btn-outline-primary btn-sm">&times;</button>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endfor %}
               {% if item.canAdd %}
                 <div class="form-inline text-center" style="padding:10px 0 5px">
                   <input class="w-auto form-control" type="text" placeholder="Počet hodin" name="hodiny" />
