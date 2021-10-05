@@ -75,7 +75,7 @@ class DBNabidka extends Database
         return true;
     }
 
-    public static function getNabidkaItem($parent_id)
+    public static function getReservationItems($parent_id)
     {
         $res = self::query(
             "SELECT p_id,u_id,u_jmeno,u_prijmeni,nabidka_item.*
@@ -88,7 +88,7 @@ class DBNabidka extends Database
         return self::getArray($res);
     }
 
-    public static function getNabidkaItemLessons($id)
+    public static function getReservationLessons($id)
     {
         $res = self::query(
             "SELECT SUM(ni_pocet_hod) FROM nabidka_item WHERE ni_id_rodic='?'",

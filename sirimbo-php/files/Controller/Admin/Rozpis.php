@@ -16,8 +16,8 @@ class Rozpis
                     'visible' => $item['r_visible'],
                 ],
                 \Permissions::check('rozpis', P_ADMIN)
-                ? \DBRozpis::getRozpis(true)
-                : \DBRozpis::getRozpisyByTrener(\Session::getUser()->getId(), true)
+                ? \DBRozpis::getSchedules(true)
+                : \DBRozpis::getSchedulesByTrainer(\Session::getUser()->getId(), true)
             )
         ]);
     }
@@ -26,15 +26,15 @@ class Rozpis
     {
         \Permissions::checkError('rozpis', P_OWNED);
         $data = \Permissions::check('rozpis', P_ADMIN)
-            ? \DBRozpis::getRozpis(true)
-            : \DBRozpis::getRozpisyByTrener(\Session::getUser()->getId(), true);
+            ? \DBRozpis::getSchedules(true)
+            : \DBRozpis::getSchedulesByTrainer(\Session::getUser()->getId(), true);
 
         foreach ($data as $item) {
             $id = $item['r_id'];
             if ((bool) $_POST[$id] == (bool) $item['r_visible']) {
                 continue;
             }
-            \DBRozpis::editRozpis(
+            \DBRozpis::editSchedule(
                 $id,
                 $item['r_trener'],
                 $item['r_kde'],
@@ -61,7 +61,7 @@ class Rozpis
             return static::displayForm('add');
         }
         \Permissions::checkError('rozpis', P_OWNED, $_POST['trener']);
-        \DBRozpis::addRozpis(
+        \DBRozpis::addSchedule(
             $_POST['trener'],
             $_POST['kde'],
             (string) new \Date($_POST['datum'] ?? null),
@@ -74,7 +74,7 @@ class Rozpis
     public static function edit($id)
     {
         \Permissions::checkError('rozpis', P_OWNED);
-        if (!$data = \DBRozpis::getSingleRozpis($id)) {
+        if (!$data = \DBRozpis::getSchedule($id)) {
             \Message::warning('Rozpis s takovým ID neexistuje');
             \Redirect::to('/admin/rozpis');
         }
@@ -85,7 +85,7 @@ class Rozpis
     public static function editPost($id)
     {
         \Permissions::checkError('rozpis', P_OWNED);
-        if (!$data = \DBRozpis::getSingleRozpis($id)) {
+        if (!$data = \DBRozpis::getSchedule($id)) {
             \Message::warning('Rozpis s takovým ID neexistuje');
             \Redirect::to('/admin/rozpis');
         }
@@ -95,7 +95,7 @@ class Rozpis
             \Message::warning($form->getMessages());
             return static::displayForm('edit', $data);
         }
-        \DBRozpis::editRozpis(
+        \DBRozpis::editSchedule(
             $id,
             $_POST['trener'],
             $_POST['kde'],
@@ -109,9 +109,9 @@ class Rozpis
     public static function duplicate($id)
     {
         \Permissions::checkError('rozpis', P_OWNED);
-        $data = \DBRozpis::getSingleRozpis($id);
-        $items = \DBRozpis::getRozpisItem($id);
-        $newId = \DBRozpis::addRozpis(
+        $data = \DBRozpis::getSchedule($id);
+        $items = \DBRozpis::getLessons($id);
+        $newId = \DBRozpis::addSchedule(
             $data['r_trener'],
             $data['r_kde'],
             $data['r_datum'],
@@ -119,7 +119,7 @@ class Rozpis
             $data['r_lock']
         );
         foreach ($items as $item) {
-            \DBRozpis::addRozpisItem(
+            \DBRozpis::addLesson(
                 $newId,
                 $item['ri_partner'],
                 $item['ri_od'],
@@ -133,11 +133,11 @@ class Rozpis
     public static function remove($id)
     {
         \Permissions::checkError('rozpis', P_OWNED);
-        $trener = \DBRozpis::getRozpisTrener($id);
+        $trener = \DBRozpis::getScheduleTrainer($id);
         if (!\Permissions::check('rozpis', P_OWNED, $trener['u_id'])) {
             throw new \AuthorizationException("Máte nedostatečnou autorizaci pro tuto akci!");
         }
-        \DBRozpis::removeRozpis($id);
+        \DBRozpis::deleteSchedule($id);
         \Redirect::to('/admin/rozpis');
     }
 

@@ -11,10 +11,10 @@ class NabidkaDetail
             \Redirect::to('/admin/nabidka');
         }
         \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
-        $items = \DBNabidka::getNabidkaItem($id);
+        $items = \DBNabidka::getReservationItems($id);
         \Render::twig('Admin/NabidkaDetail.twig', [
             'nabidka' => $data + [
-                'hourReserved' => \DBNabidka::getNabidkaItemLessons($id),
+                'hourReserved' => \DBNabidka::getReservationLessons($id),
                 'canEdit' => true,
             ],
             'users' => \DBPary::getPartners(array_column($items, 'p_id')),
@@ -32,13 +32,13 @@ class NabidkaDetail
         }
         \Permissions::checkError('nabidka', P_OWNED, $data['n_trener']);
 
-        $items = \DBNabidka::getNabidkaItem($id);
-        $obsazeno = \DBNabidka::getNabidkaItemLessons($id);
+        $items = \DBNabidka::getReservationItems($id);
+        $obsazeno = \DBNabidka::getReservationLessons($id);
 
         if (($_POST["remove"] ?? 0) > 0) {
             \DBNabidka::removeNabidkaItem($id, $_POST[$_POST["remove"] . "-partner"]);
-            $items = \DBNabidka::getNabidkaItem($id);
-            $obsazeno = \DBNabidka::getNabidkaItemLessons($id);
+            $items = \DBNabidka::getReservationItems($id);
+            $obsazeno = \DBNabidka::getReservationLessons($id);
         }
 
         $maxLessons = $data['n_max_pocet_hodin'];
@@ -56,7 +56,7 @@ class NabidkaDetail
                 \DBNabidka::editNabidkaItem($item["ni_id"], $partnerNew, $countNew);
             }
         }
-        $obsazeno = \DBNabidka::getNabidkaItemLessons($id);
+        $obsazeno = \DBNabidka::getReservationLessons($id);
 
         if (is_numeric($_POST["add_hodiny"] ?? null) &&
             is_numeric($_POST["add_partner"] ?? null) &&
@@ -69,7 +69,7 @@ class NabidkaDetail
             }
 
             \DBNabidka::addNabidkaItemLessons($_POST["add_partner"], $id, $count);
-            $obsazeno = \DBNabidka::getNabidkaItemLessons($id);
+            $obsazeno = \DBNabidka::getReservationLessons($id);
         }
 
         //-----Dorovnávání skutečného a nastaveného počtu hodin-----//

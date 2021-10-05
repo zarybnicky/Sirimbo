@@ -11,7 +11,7 @@ class Schedule
         $par = \DBPary::getLatestPartner($user->getId(), $user->getGender());
 
         $today = date('Y-m-d');
-        $schedules = array_filter(\DBRozpis::getRozpis(), fn($x) => $x['r_visible'] && $today <= $x['r_datum']);
+        $schedules = array_filter(\DBRozpis::getSchedules(), fn($x) => $x['r_visible'] && $today <= $x['r_datum']);
         $reservations = array_filter(\DBNabidka::getNabidka(), fn($x) => $x['n_visible'] && $today <= $x['n_do']);
 
         $schedules = array_for($schedules, fn($data) => $data + [
@@ -19,7 +19,7 @@ class Schedule
             'date' => $data['r_datum'],
             'type' => 'schedule',
             'canEdit' => \Permissions::check('nabidka', P_OWNED, $data['r_trener']),
-            'items' => array_for(\DBRozpis::getRozpisItem($data['r_id']), fn($item) => $item + [
+            'items' => array_for(\DBRozpis::getLessons($data['r_id']), fn($item) => $item + [
                 'canReserve' => (
                     $item['ri_partner'] == 0
                     && !$data['r_lock']
@@ -37,7 +37,7 @@ class Schedule
         ]);
 
         $reservations = array_for($reservations, function ($data) use ($par) {
-            $items = array_for(\DBNabidka::getNabidkaItem($data['n_id']), fn($item) => $item + [
+            $items = array_for(\DBNabidka::getReservationItems($data['n_id']), fn($item) => $item + [
                 'canDelete' => (
                     !$data['n_lock']
                     && \Permissions::check('nabidka', P_MEMBER)
@@ -72,8 +72,8 @@ class Schedule
         $par = \DBPary::getLatestPartner($user->getId(), $user->getGender());
 
         if (isset($_POST['ri_id'])) {
-            $lesson = \DBRozpis::getRozpisItemLesson($_POST['ri_id']);
-            $data = \DBRozpis::getSingleRozpis($lesson['ri_id_rodic']);
+            $lesson = \DBRozpis::getLesson($_POST['ri_id']);
+            $data = \DBRozpis::getSchedule($lesson['ri_id_rodic']);
             $form = static::checkData($data, $_POST['action']);
             if (!$form->isValid()) {
                 \Message::warning($form->getMessages());
@@ -85,7 +85,7 @@ class Schedule
                 } elseif ($lesson['ri_partner']) {
                     \Message::warning('Lekce už je obsazená');
                 } else {
-                    \DBRozpis::rozpisSignUp($_POST['ri_id'], $par['p_id']);
+                    \DBRozpis::reserveLesson($_POST['ri_id'], $par['p_id']);
                 }
             } elseif ($_POST['action'] == 'signout') {
                 if ($lesson['ri_partner'] == 0) {
@@ -94,7 +94,7 @@ class Schedule
                 ) {
                     \Message::warning('Nedostatečná oprávnění!');
                 } else {
-                    \DBRozpis::rozpisSignOut($_POST['ri_id']);
+                    \DBRozpis::cancelLesson($_POST['ri_id']);
                 }
             }
         } elseif (isset($_POST['n_id'])) {
@@ -116,7 +116,7 @@ class Schedule
                           (\DBNabidka::getNabidkaLessons($nId, $par['p_id']) + $_POST['hodiny']) > $data['n_max_pocet_hod']
                 ) {
                     \Message::danger('Maximální počet hodin na pár je ' . $data['n_max_pocet_hod'] . '!');
-                } elseif (($data['n_pocet_hod'] - \DBNabidka::getNabidkaItemLessons($nId)) < $_POST['hodiny']) {
+                } elseif (($data['n_pocet_hod'] - \DBNabidka::getReservationLessons($nId)) < $_POST['hodiny']) {
                     \Message::danger('Tolik volných hodin tu není');
                 } else {
                     \DBNabidka::addNabidkaItemLessons($par['p_id'], $nId, $_POST['hodiny']);

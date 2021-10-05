@@ -103,7 +103,7 @@ class Nabidka
         if (!$do->isValid() || strcmp((string) $od, (string) $do) > 0) {
             $do = $od;
         }
-        $items = \DBNabidka::getNabidkaItemLessons($id);
+        $items = \DBNabidka::getReservationLessons($id);
         $pocet_hod = $_POST['pocet_hod'];
         if ($pocet_hod < $items) {
             $pocet_hod = $items;
@@ -139,7 +139,7 @@ class Nabidka
     {
         \Permissions::checkError('nabidka', P_OWNED);
         $data = \DBNabidka::getSingleNabidka($id);
-        $items = \DBNabidka::getNabidkaItem($id);
+        $items = \DBNabidka::getReservationItems($id);
         $newId = \DBNabidka::addNabidka(
             $data['n_trener'],
             $data['n_pocet_hod'],

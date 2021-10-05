@@ -24,7 +24,7 @@ class Users
         $statusOptions = [
             'all' => 'všichni',
             'system' => 'systémoví',
-            'ban' => 'zabanovaní'
+            'ban' => 'zablokovaní'
         ];
 
         $options['group'] = $_GET['group'] ?? 'all';
