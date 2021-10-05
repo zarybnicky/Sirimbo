@@ -16,6 +16,7 @@ class Schedule
 
         $schedules = array_for($schedules, fn($data) => $data + [
             'id' => $data['r_id'],
+            'date' => $data['r_datum'],
             'type' => 'schedule',
             'canEdit' => \Permissions::check('nabidka', P_OWNED, $data['r_trener']),
             'items' => array_for(\DBRozpis::getRozpisItem($data['r_id']), fn($item) => $item + [
@@ -46,6 +47,7 @@ class Schedule
             ]);
             return $data + [
                 'id' => $data['n_id'],
+                'date' => $data['n_od'],
                 'type' => 'reservation',
                 'canAdd' => !$data['n_lock'] && \Permissions::check('nabidka', P_MEMBER),
                 'canEdit' => \Permissions::check('nabidka', P_OWNED, $data['n_trener']),

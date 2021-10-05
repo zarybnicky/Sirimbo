@@ -39,11 +39,7 @@
               <table class="nocolor" style="width:100%">
                 {% for row in item.items %}
                   <tr>
-                    <td>
-                      {{ row.ni_pocet_hod }}
-                      {{ (row.ni_pocet_hod == 1) ? 'hodina' :
-                           ((row.ni_pocet_hod > 1 and row.ni_pocet_hod < 4) ? 'hodiny' : 'hodin') }}
-                    </td>
+                    <td>{{ row.ni_pocet_hod }}x</td>
                     <td>{{ row.u_jmeno }} {{ row.u_prijmeni }}</td>
                     <td>
                       {% if row.canDelete %}
