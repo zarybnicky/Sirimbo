@@ -15,6 +15,7 @@ class Schedule
         $reservations = array_filter(\DBNabidka::getNabidka(), fn($x) => $x['n_visible'] && $today <= $x['n_do']);
 
         $schedules = array_for($schedules, fn($data) => $data + [
+            'id' => $data['r_id'],
             'type' => 'schedule',
             'canEdit' => \Permissions::check('nabidka', P_OWNED, $data['r_trener']),
             'items' => array_for(\DBRozpis::getRozpisItem($data['r_id']), fn($item) => $item + [
@@ -44,6 +45,7 @@ class Schedule
                 ),
             ]);
             return $data + [
+                'id' => $data['n_id'],
                 'type' => 'reservation',
                 'canAdd' => !$data['n_lock'] && \Permissions::check('nabidka', P_MEMBER),
                 'canEdit' => \Permissions::check('nabidka', P_OWNED, $data['n_trener']),
