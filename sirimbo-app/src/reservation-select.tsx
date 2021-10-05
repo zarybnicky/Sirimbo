@@ -31,7 +31,7 @@ const ReservationView = ({ trainer, reservation, items }: ReservationResponse) =
         <div>
             <span className="little">Volných hodin:</span>
             <span className="nadpis">
-                {reservation.reservationNumberLessons - items.reduce((x, y) => x + y[1], 0)}
+                {reservation.reservationNumberLessons - items.reduce((x, y) => x + y.count, 0)}
                 {" z "}
                 {reservation.reservationNumberLessons} nabízených
             </span>
