@@ -27,10 +27,16 @@ type ReservationAPI =
       :> "toggle-visible"
       :> Get '[JSON] Bool
 
+data ReservationItemResponse = ReservationItemResponse
+  { person :: Text,
+    count :: Int
+  }
+  deriving (Generic, ToJSON, ToSchema)
+
 data ReservationResponse = ReservationResponse
   { trainer :: User,
     reservation :: Reservation,
-    items :: [(Text, Int)]
+    items :: [ReservationItemResponse]
   }
   deriving (Generic, ToJSON, ToSchema)
 
@@ -48,9 +54,14 @@ getReservation _ k = do
         on (c ^. CouplePartnerLeader ==. u ^. UserId)
         where_ (ri ^. ReservationItemParent ==. val k)
         pure (concat_ [u ^. UserName, val " ", u ^. UserSurname], ri ^. ReservationItemNumberLessons)
-  pure $ ReservationResponse trainer reservation (bimap unValue unValue <$> items)
+  let items' = uncurry ReservationItemResponse . bimap unValue unValue <$> items
+  pure $ ReservationResponse trainer reservation items'
 
-toggleVisible :: Effs '[Error ServerError, Database] m => (SessionId, Entity User) -> ReservationId -> m Bool
+toggleVisible ::
+  Effs '[Error ServerError, Database] m =>
+  (SessionId, Entity User) ->
+  ReservationId ->
+  m Bool
 toggleVisible _ k = do
   reservation <- maybe (throw err404) pure =<< query (get k)
   let notVisible = boolToText . not . textToBool $ reservationVisible reservation

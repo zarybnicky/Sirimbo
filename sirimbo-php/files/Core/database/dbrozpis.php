@@ -204,7 +204,7 @@ class DBRozpis extends Database
 
     public static function removeRozpisItem($id)
     {
-        self::query("DELETE FROM rozpis_item WHERE ri_id='$id'", $id);
+        self::query("DELETE FROM rozpis_item WHERE ri_id='?'", $id);
         return true;
     }
 }

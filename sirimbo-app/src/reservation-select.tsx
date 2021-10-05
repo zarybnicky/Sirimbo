@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { useEffect, useState } from 'react';
-import { DefaultApi, ReservationResponse } from './schema';
+import { Service, ReservationResponse } from './schema';
 import { format } from 'date-fns';
 
 const ReservationView = ({ trainer, reservation, items }: ReservationResponse) => {
@@ -42,7 +42,7 @@ const ReservationView = ({ trainer, reservation, items }: ReservationResponse) =
             <tr><th>Tanečník</th><th>Počet hodin</th></tr>
         </thead>
         <tbody>
-            {items.map(item => <tr><td>{item[0]}</td><td>{item[1]}</td></tr>)}
+            {items.map(item => <tr><td>{item.person}</td><td>{item.count}</td></tr>)}
         </tbody>
     </table>;
 
@@ -70,7 +70,7 @@ export function ReservationSelect() {
             return;
         }
         setId(event.target.value);
-        setCurrent(await new DefaultApi().getReservation({ id: parseInt(event.target.value, 10) }));
+        setCurrent(await Service.getReservation(parseInt(event.target.value, 10)));
     }
 
     return <div>

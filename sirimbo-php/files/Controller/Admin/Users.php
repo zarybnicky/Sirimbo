@@ -437,6 +437,7 @@ class Users
         $f->checkInArray($_POST['pohlavi'], ['m', 'f'], 'Neplatné pohlaví');
         $f->checkEmail($_POST['email'], 'Neplatný formát emailu');
         $f->checkPhone($_POST['telefon'], 'Neplatný formát telefoního čísla');
+        $f->checkNotEmpty($_POST['skupina'], 'Zaškrtněte některou skupinu');
 
         if ($action == 'add') {
             $f->checkLogin($_POST['login'], 'Špatný formát přihlašovacího jména');
