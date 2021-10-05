@@ -18,16 +18,18 @@
         {% for item in items %}
           <tr>
             <td>{{ userSelect(users, item.ri_id ~ '-partner', item.ri_partner, 'p_id') }}</td>
-            <td>{{ text(item.ri_id ~ '-od', item.ri_od | date('H:i'), {'size': 5}) }}</td>
-            <td>{{ text(item.ri_id ~ '-do', item.ri_do | date('H:i'), {'size': 5}) }}</td>
+            <td><input class="form-control" type="time" size="5"
+                       name="{{ item.ri_id }}-od" value="{{ item.ri_od | date('H:i') }}" /></td>
+            <td><input class="form-control" type="time" size="5"
+                       name="{{ item.ri_id }}-do" value="{{ item.ri_do | date('H:i') }}" /></td>
             <td><button name="remove" value="{{ item.ri_id }}" class="btn btn-primary">Odstranit</button></td>
             <td>{{ checkbox(item.ri_id ~ '-lock', 'lock', item.ri_lock) }}</td>
           </tr>
         {% endfor %}
         <tr>
           <td>{{ userSelect(users, 'add_partner', null, 'p_id') }}</td>
-          <td><input class="form-control" type="text" size="5" name="add_od" /></td>
-          <td><input class="form-control" type="text" size="5" name="add_do" /></td>
+          <td><input class="form-control" type="time" size="5" name="add_od" /></td>
+          <td><input class="form-control" type="time" size="5" name="add_do" /></td>
           <td><button name="action" value="add" class="btn btn-primary">Přidat</button></td>
           <td>{{ checkbox('add_lock', 'lock') }}
         </tr>
@@ -40,9 +42,12 @@
       <br />
       <div class="form-inline mt-2">
         <button name="action" value="add_multiple" class="mr-1 btn btn-primary">Přidat více</button>
-        {{ text('add_multi_num', '', {'size': 2}) }} <span class="p-2">hodin po</span>
-        {{ text('add_multi_len', '', {'size': 3}) }} <span class="p-2">minutách od</span>
-        {{ text('add_multi_od', '', {'size': 5}) }} <span class="p-2">hodin</span>
+        <input type="text" class="form-control" name="add_multi_num" size="2" />
+        <span class="p-2">hodin po</span>
+        <input type="text" class="form-control" name="add_multi_len" size="3" />
+        <span class="p-2">minutách od</span>
+        <input type="time" class="form-control" name="add_multi_od" size="5" />
+        <span class="p-2">hodin</span>
       </div>
     </div>
   </form>
