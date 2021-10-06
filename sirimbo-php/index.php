@@ -229,6 +229,7 @@ function makeRouter()
     $router->post('/admin/users/add', '@Admin.Users::addPost');
     $router->get('/admin/users/edit/([0-9]+)', '@Admin.Users::edit');
     $router->post('/admin/users/edit/([0-9]+)', '@Admin.Users::editPost');
+    $router->get('/admin/users/sign-as/([0-9]+)', '@Admin.Users::signAs');
     $router->get('/admin/users/remove/([0-9]+)', '@Admin.Users::remove');
     $router->post('/admin/users/remove/([0-9]+)', '@Admin.Users::removePost');
     $router->get('/admin/users/getMsmtCsv', '@Admin.Users::getMsmtCsv');

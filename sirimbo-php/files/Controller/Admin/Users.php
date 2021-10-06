@@ -269,6 +269,17 @@ class Users
         \Redirect::to($_POST['returnURI'] ?? '/admin/users');
     }
 
+    public static function signAs($id)
+    {
+        \Permissions::checkError('users', P_ADMIN);
+        if (!\DBUser::getUserData($id)) {
+            \Message::warning('Uživatel s takovým ID neexistuje');
+            \Redirect::to($_POST['returnURI'] ?? '/admin/users');
+        }
+        \Session::loadUser($id);
+        \Redirect::to('/');
+    }
+
     public static function getMsmtCsv()
     {
         \Permissions::checkError('users', P_OWNED);
