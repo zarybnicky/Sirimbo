@@ -33,7 +33,7 @@ class Database
             if (self::$connection->error) {
                 static::databaseError(true);
             }
-            self::$connection->set_charset("utf8");
+            self::$connection->set_charset("utf8mb4");
         }
         return self::$connection;
     }
