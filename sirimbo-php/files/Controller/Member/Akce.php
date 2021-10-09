@@ -10,11 +10,17 @@ class Akce
             \Message::warning('Žádná taková akce neexistuje');
             \Redirect::to('/member/akce');
         }
-        $data = static::_getRenderData($data);
+        $itemCount = count(\DBAkce::getAkceItems($data['a_id']));
+        $showForm = \Permissions::check('akce', P_MEMBER) && !$data['a_lock'];
+        $signedUp = \DBAkce::isUserSignedUp($data['a_id'], \Session::getUser()->getId());
         unset($data['a_info']);
-        unset($data['dokumenty']);
         \Render::twig('Member/AkceSingle.twig', [
-            'data' => $data,
+            'data' => $data + [
+                'reserved' => $itemCount,
+                'canEdit' => \Permissions::check('akce', P_OWNED, $data['a_id']),
+                'signOut' => $showForm && $signedUp,
+                'signIn' => $showForm && !$signedUp && $data['a_kapacita'] > $itemCount,
+            ],
             'items' => \DBAkce::getAkceItems($id),
         ]);
     }
@@ -42,25 +48,19 @@ class Akce
     {
         \Permissions::checkError('akce', P_VIEW);
         \Render::twig('Member/Akce.twig', [
-            'akce' => array_map(
-                fn($item) => static::_getRenderData($item),
-                \DBAkce::getAkce(true)
-            ),
+            'akce' => array_for(\DBAkce::getAkce(true), function ($data) {
+                $itemCount = count(\DBAkce::getAkceItems($data['a_id']));
+                $showForm = \Permissions::check('akce', P_MEMBER) && !$data['a_lock'];
+                $signedUp = \DBAkce::isUserSignedUp($data['a_id'], \Session::getUser()->getId());
+                return $data + [
+                    'reserved' => $itemCount,
+                    'canEdit' => \Permissions::check('akce', P_OWNED, $data['a_id']),
+                    'signOut' => $showForm && $signedUp,
+                    'signIn' => $showForm && !$signedUp && $data['a_kapacita'] > $itemCount,
+                    'dokumenty' => \DBDokumenty::getMultipleById(explode(',', $data['a_dokumenty'])),
+                ];
+            }),
         ]);
-    }
-
-    private static function _getRenderData($data)
-    {
-        $items = \DBAkce::getAkceItems($data['a_id']);
-        $showForm = \Permissions::check('akce', P_MEMBER) && !$data['a_lock'];
-        $signedUp = \DBAkce::isUserSignedUp($data['a_id'], \Session::getUser()->getId());
-        return $data + [
-            'reserved' => count($items),
-            'canEdit' => \Permissions::check('akce', P_OWNED, $data['a_id']),
-            'signOut' => $showForm && $signedUp,
-            'signIn' => $showForm && !$signedUp && $data['a_kapacita'] > count($items),
-            'dokumenty' => \DBDokumenty::getMultipleById(explode(',', $data['a_dokumenty'])),
-        ];
     }
 
     private static function checkData($data, $action): \Form

@@ -191,7 +191,6 @@ class Paging
         if ($this->_totalItems <= 5) {
             return '';
         }
-        $options = [5, 10, 20, 50];
 
         $out = 'zobrazit ';
         if ($this->_itemsPerPage === $this->_totalItems) {
@@ -200,11 +199,10 @@ class Paging
             $out .= $this->getLink(1, 'vše', $this->_totalItems);
         }
 
-        foreach ($options as $option) {
+        foreach ([5, 10, 20, 50] as $option) {
             if ($option > $this->_totalItems) {
                 continue;
             }
-
             if ($this->_itemsPerPage == $option) {
                 $out .= '&nbsp;|&nbsp;<span style="padding:0 2px;">' . $option . '</span>';
             } else {
@@ -216,14 +214,16 @@ class Paging
         return $out;
     }
 
-    public function getCurrentPage() {
+    public function getCurrentPage()
+    {
         if (!$this->_valid) {
             return false;
         }
         return $this->_currentPage;
     }
 
-    public function getItemsPerPage() {
+    public function getItemsPerPage()
+    {
         if (!$this->_valid) {
             return false;
         }

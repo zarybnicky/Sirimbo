@@ -4,7 +4,7 @@ namespace Olymp\Controller\Admin;
 class Dokumenty
 {
     public static $types = [
-        '1' => 'Schůze, rady',
+        '1' => "Schůze,\u{00A0}rady",
         '2' => 'Soutěže',
         '3' => 'Soustředění',
         '0' => 'Ostatní',

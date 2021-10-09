@@ -4,7 +4,6 @@ class DateHelper
     protected $date;
     protected $dateTo;
     protected $name;
-    protected $post;
     protected $useRange;
     protected $cls;
 
@@ -12,7 +11,6 @@ class DateHelper
     {
         $this->date = null;
         $this->name = $name;
-        $this->post = true;
         $this->useRange = false;
         $this->cls = 'form-control';
         if ($value) {
@@ -39,30 +37,6 @@ class DateHelper
             $date = new \Date($date);
             return [$date->isValid() ? $date : null, null];
         }
-    }
-
-    public function name($name)
-    {
-        $this->name = $name;
-        return $this;
-    }
-
-    public function set($d)
-    {
-        $this->date = $this->createDate($d);
-        return $this;
-    }
-
-    public function setFromDate($d)
-    {
-        $this->date = $this->createDate($d);
-        return $this;
-    }
-
-    public function setToDate($d)
-    {
-        $this->dateTo = $this->createDate($d);
-        return $this;
     }
 
     public function getFromDate()

@@ -3,22 +3,6 @@ namespace Olymp\Controller\Member;
 
 class ProfilPar
 {
-    const AMEND_Z = 0.2;
-    const AMEND_H = 0.5;
-    const AMEND_D = 1.0;
-    const AMEND_C = 1.6;
-    const AMEND_B = 2.1;
-    const AMEND_A = 2.7;
-    const AMEND_M = 3.4;
-
-    const BONUS_Z = 0;
-    const BONUS_H = 80;   //400*AMEND_Z + BONUS_Z
-    const BONUS_D = 280;  //400*AMEND_H + BONUS_H
-    const BONUS_C = 680;  //400*AMEND_D + BONUS_D
-    const BONUS_B = 1320; //400*AMEND_C + BONUS_C
-    const BONUS_A = 2160; //400*AMEND_B + BONUS_B
-    const BONUS_M = 3240; //400*AMEND_A + BONUS_A
-
     public static function partner()
     {
         $user = \Session::getUser();

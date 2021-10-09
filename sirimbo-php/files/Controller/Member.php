@@ -25,7 +25,7 @@ class Member
                 'nadpis' => $item['up_nadpis'],
                 'canEdit' => \Permissions::check('nastenka', P_OWNED, $item['up_kdo']),
                 'skupinyBoxes' => \DBNastenka::getNastenkaSkupiny($item['up_id']),
-                'addedBy' => "{$item['u_jmeno']} {$item['u_prijmeni']}",
+                'addedBy' => "{$item['u_jmeno']}\u{00A0}{$item['u_prijmeni']}",
                 'addedTimestamp' => $item['up_timestamp_add'],
                 'text' => stripslashes($item['up_text'])
             ]),
@@ -57,19 +57,15 @@ class Member
     {
         \Permissions::checkError('dokumenty', P_VIEW);
         $kat = $_GET['kat'] ?? '';
-        $categories = ['' => '--- vše ---'] + array_map(
-            fn($x) => str_replace(' ', "\u{00A0}", $x),
-            Admin\Dokumenty::$types
-        );
         \Render::twig('Member/Dokumenty.twig', [
             'kat' => $kat,
-            'categories' => $categories,
+            'categories' => ['' => '--- vše ---'] + Admin\Dokumenty::$types,
             'data' => array_map(
                 fn($item) => [
                     'id' => $item['d_id'],
                     'name' => $item['d_name'],
                     'fileName' => $item['d_filename'],
-                    'kategorie' => $categories[$item['d_kategorie']],
+                    'kategorie' => Admin\Dokumenty::$types[$item['d_kategorie']],
                     'uploadedBy' => "{$item['u_jmeno']}\u{00A0}{$item['u_prijmeni']}",
                 ],
                 ctype_digit($kat)
