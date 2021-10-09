@@ -19,8 +19,7 @@ class DBNastenka extends Database implements Pagable
     public function getCount($options = null)
     {
         $res = self::query("SELECT COUNT(*) FROM upozorneni");
-        $res = self::getSingleRow($res);
-        return $res['COUNT(*)'];
+        return self::getSingleRow($res)['COUNT(*)'];
     }
 
     public static function getNastenkaSkupiny($id)
@@ -37,7 +36,10 @@ class DBNastenka extends Database implements Pagable
         self::query(
             "INSERT INTO upozorneni_skupiny (ups_id_rodic,ups_id_skupina,ups_color,ups_popis)
             VALUES ('?','?','?','?')",
-            $rodic, $skupina, $color, $popis
+            $rodic,
+            $skupina,
+            $color,
+            $popis
         );
     }
 
@@ -54,9 +56,8 @@ class DBNastenka extends Database implements Pagable
         );
         if (!$res) {
             return false;
-        } else {
-            return self::getSingleRow($res);
         }
+        return self::getSingleRow($res);
     }
 
     public static function addNastenka($userid, $nadpis, $text, $lock)
