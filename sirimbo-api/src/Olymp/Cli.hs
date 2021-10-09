@@ -8,8 +8,7 @@
 {-# LANGUAGE TypeApplications #-}
 
 module Olymp.Cli
-  ( Command (..),
-    Config (..),
+  ( Config (..),
     parseCli,
   )
 where
@@ -19,8 +18,9 @@ import Control.Lens
 import Data.Generic.HKD
 import Data.List (intercalate)
 import Data.Validation (Validation (..), validate)
-import Data.Yaml (FromJSON, decodeFileEither, decodeFileThrow)
-import GHC.Generics
+import Data.Yaml (decodeFileEither, decodeFileThrow)
+import Olymp.Cli.Config (Config (..))
+import Olymp.Server (runMigrate, runServer, runCheckYouTube)
 import Options.Applicative hiding (Failure, Success)
 import System.Environment (lookupEnv)
 import System.Exit (exitFailure)
@@ -32,7 +32,7 @@ validateOptions ::
   Validation [String] (b Identity)
 validateOptions errs = bsequence' . bzipWith (\(Const e) -> validate [e] id) errs
 
-parseCli :: IO (Config, Command)
+parseCli :: IO (Config, Config -> IO ())
 parseCli = do
   (mCfgFile, cfgEnv) <- decodeEnv
   (mCfgFile', cfgArgs, cmd) <- execParser argsParser
@@ -67,7 +67,7 @@ decodeEnv =
             <*> lookupEnv "DB_DATABASE"
         )
 
-argsParser :: ParserInfo (Maybe FilePath, HKD Config Maybe, Command)
+argsParser :: ParserInfo (Maybe FilePath, HKD Config Maybe, Config -> IO ())
 argsParser = info (args <**> helper) fullDesc
   where
     args = (,,) <$> configFile <*> config <*> commands
@@ -84,30 +84,14 @@ argsParser = info (args <**> helper) fullDesc
           [ command
               "server"
               ( info
-                  ( Server
+                  ( runServer
                       <$> (option auto (long "port" <> metavar "PORT") <|> pure 3000)
                       <*> (option auto (long "proxy" <> metavar "PORT") <|> pure 3010)
                   )
                   mempty
               ),
-            command "check-youtube" (info (pure CheckYouTube) mempty),
+            command "check-youtube" (info (pure runCheckYouTube) mempty),
             command
               "migrate"
-              (info (Migrate <$> (flag' True (long "execute") <|> flag' False (long "dry-run"))) mempty)
+              (info (runMigrate <$> (flag' True (long "execute") <|> flag' False (long "dry-run"))) mempty)
           ]
-
-data Config = Config
-  { dbHost :: String,
-    dbUser :: String,
-    dbPassword :: Maybe String,
-    dbDatabase :: String
-  }
-  deriving (Show, Generic)
-
-instance FromJSON (HKD Config Maybe)
-
-data Command
-  = Server Int Int
-  | CheckYouTube
-  | Migrate Bool
-  deriving (Show, Generic)

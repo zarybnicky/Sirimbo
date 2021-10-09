@@ -11,38 +11,128 @@
 {-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeOperators #-}
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module Olymp.Server
   ( AppStack,
     OlympAPI,
     interpretServer,
     olympServer,
+    runServer,
+    runMigrate,
+    runCheckYouTube,
+    saveTournamentState,
   )
 where
 
-import Control.Effect (Effs)
-import Data.Csv (Only)
-import Data.OpenApi (OpenApi, ToSchema(..), ToParamSchema, binarySchema, NamedSchema(..))
-import qualified Data.Text.IO as T
-import Network.HTTP.Client (Manager)
-import Network.HTTP.ReverseProxy (ProxyDest (..), WaiProxyResponse (..), defaultOnExc, waiProxyTo)
-import Olymp.Auth (PhpAuthHandler, phpAuthHandler, PhpAuth)
-import Olymp.API (OlympAPI, olympAPI)
-import Olymp.Effect (AppStack, interpretServer)
-import Servant
-import Servant.API.Flatten (Flat)
-import Servant.OpenApi (HasOpenApi(..))
-import Servant.Swagger.UI (SwaggerSchemaUI, swaggerSchemaUIServer)
-import Data.Text (Text)
-import Codec.Picture (Image)
-import Data.Typeable (Typeable)
-import Servant.API.WebSocket (WebSocket)
+-- import Servant.Multipart (MultipartData, MultipartForm, Tmp)
+-- import Network.Wai.Middleware.Cors
 
-type SwaggerAPI = "swagger.json" :> Get '[JSON] OpenApi
+import Codec.Picture (Image)
+import Control.Concurrent (threadDelay)
+import Control.Effect (Effs, Embed, embed, runM)
+import Control.Effect.AtomicState (AtomicState, atomicGet)
+import Control.Effect.Bracket (bracketToIO)
+import Control.Effect.Embed (embedToMonadIO)
+import Control.Lens
+import Control.Monad.Except (ExceptT (..), void)
+import Control.Monad.Logger (runStdoutLoggingT)
+import Control.Monad.Trans.Reader (runReaderT)
+import Control.Monad.Trans.Resource (runResourceT)
+import Data.Aeson (eitherDecode', encode)
+import qualified Data.ByteString.Lazy.Char8 as BCL
+import Data.Csv (Only)
+import Data.IORef (newIORef)
+import qualified Data.Map as M
+import Data.OpenApi (NamedSchema (..), OpenApi, ToParamSchema, ToSchema (..), binarySchema)
+import Data.Pool (Pool, withResource)
+import qualified Data.Text as T
+import Data.Typeable (Typeable)
+import Database.Persist.MySQL (ConnectInfo (..), SqlBackend, createMySQLPool, defaultConnectInfo, get, printMigration, runMigration)
+import Database.Persist.Sql (repsert)
+import Network.Google (LogLevel (Info), envScopes, newEnvWith, newLogger, newManager, tlsManagerSettings)
+import Network.Google.Auth (getApplicationDefault)
+import Network.Google.YouTube (youTubeReadOnlyScope)
+import Network.HTTP.Client (Manager, defaultManagerSettings)
+import Network.HTTP.ReverseProxy (ProxyDest (..), WaiProxyResponse (..), defaultOnExc, waiProxyTo)
+import qualified Network.Wai.Handler.Warp as Warp
+import Olymp.API (OlympAPI, olympAPI)
+import Olymp.Auth (PhpAuth, PhpAuthHandler, phpAuthHandler)
+import Olymp.Cli.Config (Config (..))
+import Olymp.Effect (AppStack, interpretServer)
+import Olymp.Effect.Database (Database, query, runDatabasePool)
+import Olymp.Effect.Google (googleToResourceTIO)
+import Olymp.Schema (Key (ParameterKey), Parameter (..), migrateAll)
+import Olymp.Tournament.API (initialTournament)
+import Olymp.Tournament.Base (NodeId, Tournament, propagateWinners, withTournament)
+import Olymp.YouTube.Worker (youtubeWorker)
+import Servant
+import Servant.API.WebSocket (WebSocket)
+import Servant.OpenApi (HasOpenApi (..))
+import Servant.Swagger.UI (SwaggerSchemaUI, swaggerSchemaUIServer)
+import System.IO (BufferMode (LineBuffering), hSetBuffering, stdout)
+
+runCheckYouTube :: Config -> IO ()
+runCheckYouTube config = do
+  lgr <- newLogger Network.Google.Info stdout
+  mgr <- newManager tlsManagerSettings
+  cred <- getApplicationDefault mgr
+  env <- newEnvWith cred lgr mgr <&> (envScopes .~ youTubeReadOnlyScope)
+  pool <- makePool config
+
+  runResourceT . runM . embedToMonadIO . bracketToIO . runDatabasePool pool . googleToResourceTIO env $
+    youtubeWorker
+
+saveTournamentState :: Effs '[AtomicState (Tournament NodeId), Database, Embed IO] m => m ()
+saveTournamentState = do
+  embed $ threadDelay 100000000
+  state <- T.pack . BCL.unpack . encode <$> atomicGet @(Tournament NodeId)
+  void . query $ repsert (ParameterKey "tournament") (Parameter state)
+
+runMigrate :: Bool -> Config -> IO ()
+runMigrate realExecute config = do
+  pool <- makePool config
+  runM . runDatabasePool pool . query $
+    if realExecute then runMigration migrateAll else printMigration migrateAll
+
+runServer :: Int -> Int -> Config -> IO ()
+runServer port proxy config = do
+  pool <- makePool config
+  t <-
+    withResource pool (runReaderT . get $ ParameterKey "tournament") >>= \case
+      Nothing -> pure initialTournament
+      Just (Parameter tt) -> case eitherDecode' (BCL.pack $ T.unpack tt) of
+        Left err -> putStrLn err >> pure initialTournament
+        Right tt' -> pure tt'
+
+  mgr <- newManager defaultManagerSettings
+  ref <- newIORef (withTournament propagateWinners t)
+  ref' <- newIORef M.empty
+
+  -- _ <- forkIO . forever . runM . runDatabasePool pool . runAtomicStateIORefSimple ref $
+  --   saveTournamentState
+  hSetBuffering stdout LineBuffering
+
+  putStrLn ("Starting server on port " <> show port <> " with proxy on port " <> show proxy)
+  Warp.run port $ olympServer proxy mgr (Handler . ExceptT . interpretServer ref ref' pool)
+
+makePool :: Config -> IO (Pool SqlBackend)
+makePool config = runStdoutLoggingT $ createMySQLPool connectInfo 5
+  where
+    connectInfo =
+      maybe id (\p x -> x {connectPassword = p}) (dbPassword config) $
+        defaultConnectInfo
+          { connectHost = dbHost config,
+            connectUser = dbUser config,
+            connectDatabase = dbDatabase config
+          }
 
 instance HasOpenApi a => HasOpenApi (PhpAuth :> a) where
   toOpenApi _ = toOpenApi @a Proxy
-instance ToParamSchema (Tagged a Text)
+
+instance ToParamSchema f => ToParamSchema (Tagged a f)
+
+instance (Typeable a, ToSchema f) => ToSchema (Tagged a f)
 
 instance ToSchema a => ToSchema (Only a) where
   declareNamedSchema _ = declareNamedSchema (Proxy @a)

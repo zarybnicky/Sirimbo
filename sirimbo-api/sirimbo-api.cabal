@@ -21,8 +21,7 @@ common shared
 library
   import: shared
   hs-source-dirs:      src
-  exposed-modules:     Olymp
-                       Olymp.API
+  exposed-modules:     Olymp.API
                        Olymp.API.Auth
                        Olymp.API.Event
                        Olymp.API.Payment
@@ -33,6 +32,7 @@ library
                        Olymp.API.WordPress
                        Olymp.Auth
                        Olymp.Cli
+                       Olymp.Cli.Config
                        Olymp.Effect
                        Olymp.Effect.Database
                        Olymp.Effect.Error

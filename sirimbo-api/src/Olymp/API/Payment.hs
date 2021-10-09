@@ -7,20 +7,15 @@
 {-# LANGUAGE ViewPatterns #-}
 
 module Olymp.API.Payment
-  ( QrPaymentAPI
-  , qrPaymentAPI
-  , attr
-  , toIban
-  , mkImage
-  , mkSpayd
-  , checksum
+  ( PaymentAPI
+  , paymentAPI
   ) where
 
 import Codec.Picture (Image, Pixel8)
 import Codec.QRCode
 import Codec.QRCode.JuicyPixels (toImage)
 import Control.Applicative ((<|>), liftA2)
-import Control.Effect (Embed, embed, Eff)
+import Control.Effect (Eff, Effs)
 import Data.Bifunctor (Bifunctor(first))
 import Data.Binary.Builder (Builder, fromLazyByteString, toLazyByteString)
 import qualified Data.ByteString.Lazy.Char8 as BC
@@ -33,6 +28,10 @@ import Servant
 import Servant.JuicyPixels (PNG)
 import Control.Effect.Error (Throw, throw)
 
+type PaymentAPI = QrPaymentAPI
+
+paymentAPI :: Effs '[Throw ServerError] m => ServerT PaymentAPI m
+paymentAPI = qrPaymentAPI
 
 type QrPaymentAPI
   = "qr-payment.png"
@@ -44,10 +43,9 @@ type QrPaymentAPI
   :> QueryParam "ks" (Tagged (Proxy "X-KS") Text)
   :> Get '[PNG] (Image Pixel8)
 
-qrPaymentAPI :: (Eff (Throw ServerError) m, Eff (Embed IO) m) => ServerT QrPaymentAPI m
+qrPaymentAPI :: Eff (Throw ServerError) m => ServerT QrPaymentAPI m
 qrPaymentAPI (attr . toIban -> acc) (attr -> am) (attr -> msg) (attr -> ss) (attr -> vs) (attr -> ks) = do
   let spayd = mkSpayd [acc, am, msg, ss, vs, ks]
-  embed $ print spayd
   maybe (throw err404 { errBody = "Invalid QR payment" }) pure (mkImage spayd)
 
 mkSpayd :: [Builder] -> Text
@@ -85,11 +83,11 @@ toIban (Just (Tagged t)) =
 checksum :: String -> String -> Either String Int
 checksum country bban =
    (98-) . divide 97 <$>
-      mapM intFromAlphaNum bban +++
-      mapM intFromAlpha country +++ pure [(100, 0)]
-
-(+++) :: (Applicative f) => f [a] -> f [a] -> f [a]
-(+++) = liftA2 (++)
+      traverse intFromAlphaNum bban +++
+      traverse intFromAlpha country +++ pure [(100, 0)]
+  where
+    (+++) :: Applicative f => f [a] -> f [a] -> f [a]
+    (+++) = liftA2 (++)
 
 divide :: Int -> [(Int,Int)] -> Int
 divide divisor = foldl (\r (base,x) -> mod (base*r+x) divisor) 0

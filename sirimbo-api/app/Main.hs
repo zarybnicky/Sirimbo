@@ -1,6 +1,9 @@
 module Main where
 
-import Olymp (runServer)
+import Olymp.Cli (parseCli)
 
 main :: IO ()
-main = runServer
+main = do
+  (config, command) <- parseCli
+  command config
+

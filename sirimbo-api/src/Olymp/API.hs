@@ -14,7 +14,7 @@ import Olymp.API.Photo (PhotoAPI, photoAPI)
 import Olymp.API.Schedule (ScheduleAPI, scheduleAPI)
 import Olymp.API.User (UserAPI, userAPI)
 import Olymp.API.Reservation (ReservationAPI, reservationAPI)
-import Olymp.API.Payment (QrPaymentAPI, qrPaymentAPI)
+import Olymp.API.Payment (PaymentAPI, paymentAPI)
 import Olymp.API.WordPress (WordPressAPI, wordPressAPI)
 import Olymp.Auth (PhpAuth)
 import Olymp.Effect (AppStack)
@@ -29,7 +29,7 @@ type OlympAPI =
     :<|> "api" :> EventAPI
     :<|> "api" :> PhotoAPI
     :<|> "api" :> ScheduleAPI
-    :<|> "api" :> QrPaymentAPI
+    :<|> "api" :> PaymentAPI
     :<|> "api" :> "tournament" :> "ws" :> WebSocket
     :<|> "api" :> "admin" :> "ws" :> PhpAuth :> WebSocket
     :<|> "wp" :> "v2" :> WordPressAPI
@@ -42,7 +42,7 @@ olympAPI =
     :<|> eventAPI
     :<|> photoAPI
     :<|> scheduleAPI
-    :<|> qrPaymentAPI
+    :<|> paymentAPI
     :<|> tournamentSocket
     :<|> tournamentAdminSocket
     :<|> wordPressAPI
