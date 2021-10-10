@@ -45,4 +45,4 @@ class DateElement extends HTMLElement {
         />, this);
     }
 }
-customElements.define('date', DateElement);
+customElements.define('single-date', DateElement);

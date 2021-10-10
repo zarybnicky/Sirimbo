@@ -17,10 +17,9 @@ where
 
 import Data.Int (Int64)
 import qualified Data.Map as M
-import Data.Maybe (fromMaybe)
-import Database.Esqueleto (LeftOuterJoin (..), from, limit, offset, on, select, (==.), (^.))
+import Data.Maybe (fromMaybe, maybeToList, listToMaybe)
+import Database.Esqueleto (InnerJoin (..), LeftOuterJoin (..), from, just, limit, offset, on, select, (==.), (?.), (^.), orderBy, desc, where_, val, SqlExpr, SqlQuery)
 import Database.Persist.Sql (Key, SqlBackend, count)
-import qualified Database.Persist.Sql as Persistent
 import Olymp.Prelude
 import Olymp.Schema (Announcement (..), AnnouncementGroup (..), AnnouncementId)
 
@@ -46,13 +45,23 @@ instance ToJSON a => ToJSON (PagedResponse a)
 instance ToSchema a => ToSchema (PagedResponse a)
 
 data AnnouncementResponse = AnnouncementResponse
-  { announcement :: Announcement,
+  { announcementId :: AnnouncementId,
+    announcement :: Announcement,
+    user :: User,
     groups :: [AnnouncementGroup]
   }
   deriving (Generic, ToJSON, ToSchema)
 
 announcementAPI :: Effs '[Error ServerError, Database] m => ServerT AnnouncementAPI m
 announcementAPI = getAnnouncements :<|> getAnnouncement
+
+announcementQuery :: SqlQuery ((SqlExpr (Entity Announcement), SqlExpr (Entity User)), SqlExpr (Maybe (Entity AnnouncementGroup)))
+announcementQuery =
+  from $ \(ann `InnerJoin` u `LeftOuterJoin` group) -> do
+    on (ann ^. AnnouncementCreatedBy ==. u ^. UserId)
+    on (just (ann ^. AnnouncementId) ==. group ?. AnnouncementGroupParent)
+    orderBy [desc (ann ^. AnnouncementCreatedAt)]
+    pure ((ann, u), group)
 
 getAnnouncements ::
   Effs '[Error ServerError, Database] m =>
@@ -61,15 +70,14 @@ getAnnouncements ::
   Maybe Int64 ->
   m (PagedResponse [AnnouncementResponse])
 getAnnouncements _ mOffset mLimit = do
+  xs <- fmap groupData . query $
+    select $ do
+      r <- announcementQuery
+      limit (fromMaybe 10 mLimit)
+      offset (fromMaybe 0 mOffset)
+      return r
   total <- query $ count @SqlBackend @IO @Announcement []
-  notGrouped <- query $
-    select $
-      from $ \(ann `LeftOuterJoin` group) -> do
-        on (ann ^. AnnouncementId ==. group ^. AnnouncementGroupParent)
-        limit (fromMaybe 10 mLimit)
-        offset (fromMaybe 0 mOffset)
-        return (ann, group)
-  pure $ PagedResponse (uncurry AnnouncementResponse . bimap entityVal (fmap entityVal) <$> groupData notGrouped) total
+  pure $ PagedResponse (mapData <$> xs) total
 
 getAnnouncement ::
   Effs '[Error ServerError, Database] m =>
@@ -77,13 +85,19 @@ getAnnouncement ::
   AnnouncementId ->
   m AnnouncementResponse
 getAnnouncement _ k = do
-  announcement <- maybe (throw err404) pure =<< query (get k)
-  groups <- query $ selectList [AnnouncementGroupParent Persistent.==. k] []
-  pure $ AnnouncementResponse announcement (entityVal <$> groups)
+  xs <- fmap groupData . query $
+    select $ do
+      ((ann, u), group) <- announcementQuery
+      where_ (ann ^. AnnouncementId ==. val k)
+      return ((ann, u), group)
+  maybe (throw err404) (pure . mapData) $ listToMaybe xs
 
-groupData :: (Ord (Key a)) => [(Entity a, b)] -> [(Entity a, [b])]
+mapData :: (Entity Announcement, Entity User, [Entity AnnouncementGroup]) -> AnnouncementResponse
+mapData (a, u, gs) = AnnouncementResponse (entityKey a) (entityVal a) (entityVal u) (entityVal <$> gs)
+
+groupData :: (Ord (Key a)) => [((Entity a, c), Maybe b)] -> [(Entity a, c, [b])]
 groupData res =
-  M.elems $ foldr (\(a, b) -> M.insertWith mergeData (entityKey a) (a, [b])) M.empty res
+  reverse . M.elems $ foldr (\((a, c), b) -> M.insertWith mergeData (entityKey a) (a, c, maybeToList b)) M.empty res
 
-mergeData :: (a, [b]) -> (a, [b]) -> (a, [b])
-mergeData (a, b) (_, b') = (a, b ++ b')
+mergeData :: (a, c, [b]) -> (a, c, [b]) -> (a, c, [b])
+mergeData (a, c, b) (_, _, b') = (a, c, b ++ b')

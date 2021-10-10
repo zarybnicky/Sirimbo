@@ -4,47 +4,6 @@
 
 {% block content %}
   <div class="container">
-    {% for item in data %}
-      <div>
-        <div class="up_header">
-          <div style="float:left;">
-            <span class="nadpis">{{ item.nadpis }}</span>
-            {% if item.canEdit %}
-              <div class="btn-group">
-                <button type="button" class="btn btn-xs pt-0" data-toggle="dropdown">
-                  <img alt="Upravit" width="14" src="/style/icon-gear.png" />
-                </button>
-                <div class="dropdown-menu">
-                  <a class="dropdown-item" href="/admin/nastenka/edit/{{ item.id }}">Upravit</a>
-                  <a class="dropdown-item" href="/admin/nastenka/remove/{{ item.id }}">Odstranit</a>
-                </div>
-              </div>
-            {% endif %}
-            {% if item.skupinyBoxes %}
-              <div style="padding:2px 0;"><div style="float:left;" class="little">skupiny:&nbsp;</div>
-                {% for box in item.skupinyBoxes %}
-                  <div class="box" title="{{ box.ups_popis }}" style="background-color:{{ box.ups_color }}"></div>
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
-          <div style="float:right;text-align:right;">
-            <div>
-              <span class="little">přidal: </span>{{ item.addedBy }}
-              <br/>
-              <span class="little">přidáno: </span>{{ item.addedTimestamp | date('j. n. Y H:i') }}
-            </div>
-          </div>
-          <div style="clear:both;"></div>
-        </div>
-        <div style="padding-top:8px;">
-          {{ item.text | raw }}
-        </div>
-      </div>
-      <hr/>
-    {% else %}
-      <div class="alert alert-info">Žádná upozornění na nástěnce</div>
-    {% endfor %}
-  <div class="text-center">{{ navigation | raw }}</div>
-</div>
+    <announcement-list></announcement-list>
+  </div>
 {% endblock %}
