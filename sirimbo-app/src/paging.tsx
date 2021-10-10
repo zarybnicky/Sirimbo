@@ -23,26 +23,22 @@ export function Announcements() {
 
     return <React.Fragment>
         {data.map(({ announcement: a, announcementId: aid, user: u, groups: gs }) => <React.Fragment>
-            <div key={aid} className="up_header">
-                <div style={{ float: 'left' }}>
-                    <span className="nadpis">{a.announcementTitle}</span>
-                    {gs.length <= 0 ? null : <div style={{ padding: '2px 0' }}>
-                        <div style={{ float: 'left' }} className="little">skupiny:&nbsp;</div>
-                        {gs.map((g) =>
-                            <div className="box"
-                                key={g.announcementGroupColor}
-                                title="{g.announcementGroupTitle}"
-                                style={{ backgroundColor: g.announcementGroupColor }}
-                            ></div>
-                        )}
-                    </div>}
+            <div key={aid} className="row">
+                <div className="col h3">{a.announcementTitle}</div>
+                <div className="col-12 col-md-4 text-right h6">
+                    {u.userName} {u.userSurname}{', '}
+                    <DateEl date={a.announcementCreatedAt} />
                 </div>
-                <div style={{ float: 'right', textAlign: 'right' }}>
-                    <span className="little">přidal: </span>{u.userName} {u.userSurname}
-                    <br />
-                    <span className="little">přidáno: </span><DateEl date={a.announcementCreatedAt} />
-                </div>
-                <div style={{ clear: 'both' }}></div>
+                {gs.length <= 0 ? null : <div className="col-12">
+                    <span className="little">skupiny:&nbsp;</span>
+                    {gs.map((g) =>
+                        <div className="box"
+                            key={g.announcementGroupColor}
+                            title="{g.announcementGroupTitle}"
+                            style={{ backgroundColor: g.announcementGroupColor }}
+                        ></div>
+                    )}
+                </div>}
             </div>
             <div style={{ paddingTop: '8px' }} dangerouslySetInnerHTML={{ __html: a.announcementText }}></div>
             <hr />
