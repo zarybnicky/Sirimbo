@@ -57,7 +57,25 @@ export class Service {
     ): Promise<any> {
         const result = await __request({
             method: 'GET',
-            path: `/api/${id}/toggle-visible`,
+            path: `/api/reservation/${id}/toggle-visible`,
+            errors: {
+                404: `id not found`,
+            },
+        });
+        return result.body;
+    }
+
+    /**
+     * @param id
+     * @returns any
+     * @throws ApiError
+     */
+    public static async getAnnouncement(
+        id: number,
+    ): Promise<any> {
+        const result = await __request({
+            method: 'GET',
+            path: `/api/announcement/${id}`,
             errors: {
                 404: `id not found`,
             },
@@ -114,24 +132,6 @@ export class Service {
     }
 
     /**
-     * @param id
-     * @returns any
-     * @throws ApiError
-     */
-    public static async getReservation(
-        id: number,
-    ): Promise<any> {
-        const result = await __request({
-            method: 'GET',
-            path: `/api/${id}`,
-            errors: {
-                404: `id not found`,
-            },
-        });
-        return result.body;
-    }
-
-    /**
      * @param page
      * @returns any
      * @throws ApiError
@@ -157,6 +157,24 @@ export class Service {
         const result = await __request({
             method: 'GET',
             path: `/wp/v2/themes`,
+        });
+        return result.body;
+    }
+
+    /**
+     * @param id
+     * @returns any
+     * @throws ApiError
+     */
+    public static async getReservation(
+        id: number,
+    ): Promise<any> {
+        const result = await __request({
+            method: 'GET',
+            path: `/api/reservation/${id}`,
+            errors: {
+                404: `id not found`,
+            },
         });
         return result.body;
     }
@@ -327,6 +345,30 @@ export class Service {
         const result = await __request({
             method: 'GET',
             path: `/wp/v2/users/me`,
+        });
+        return result.body;
+    }
+
+    /**
+     * @param offset
+     * @param limit
+     * @returns any
+     * @throws ApiError
+     */
+    public static async getAnnouncements(
+        offset?: number,
+        limit?: number,
+    ): Promise<any> {
+        const result = await __request({
+            method: 'GET',
+            path: `/api/announcement`,
+            query: {
+                'offset': offset,
+                'limit': limit,
+            },
+            errors: {
+                400: `Invalid limit or offset`,
+            },
         });
         return result.body;
     }

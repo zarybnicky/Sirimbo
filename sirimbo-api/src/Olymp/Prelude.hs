@@ -1,13 +1,13 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE KindSignatures #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
 
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE TypeFamilies #-}
 module Olymp.Prelude
   ( module X,
     module Olymp.Prelude,
@@ -29,7 +29,7 @@ import GHC.TypeLits as X (KnownSymbol, Symbol, symbolVal)
 import Olymp.Auth as X (PhpAuth)
 import Olymp.Effect.Database as X (Database, query)
 import Olymp.Schema as X (EntityField (..), SessionId, User)
-import Servant as X (Capture, Get, JSON, Post, ServerError, ServerT, err404, (:<|>) (..), (:>), HasServer(..))
+import Servant as X (Capture, Get, HasServer (..), JSON, Post, QueryParam, ServerError, ServerT, err404, (:<|>) (..), (:>))
 import Servant.OpenApi (HasOpenApi (..))
 
 textToBool :: Text -> Bool

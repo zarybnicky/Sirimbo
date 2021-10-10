@@ -76,6 +76,7 @@ library
                      , JuicyPixels
                      , lens
                      , monad-logger
+                     , monoidal-containers
                      , mtl
                      , sirimbo-schema
                      , openapi3

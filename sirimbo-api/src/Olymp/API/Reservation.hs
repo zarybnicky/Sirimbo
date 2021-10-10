@@ -19,10 +19,10 @@ import Olymp.Prelude
 import Olymp.Schema (Reservation (..), ReservationId)
 
 type ReservationAPI =
-  PhpAuth :> Capture "id" ReservationId
+  PhpAuth :> "reservation" :> Capture "id" ReservationId
     :> OpId "getReservation"
     :> Get '[JSON] ReservationResponse
-    :<|> PhpAuth :> Capture "id" ReservationId
+    :<|> PhpAuth :> "reservation" :> Capture "id" ReservationId
       :> OpId "toggleVisibleReservation"
       :> "toggle-visible"
       :> Get '[JSON] Bool
