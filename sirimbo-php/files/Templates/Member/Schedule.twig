@@ -41,7 +41,7 @@
               {% include 'Member/NabidkaHeader.twig' with {'item': item} %}
             </div>
             <form class="widget-content" action="" method="post">
-              <input type='hidden' name='n_id' value='{{ item.ni_id }}'>
+              <input type='hidden' name='n_id' value='{{ item.n_id }}'>
               {% for row in item.items %}
                 <div class="row mx-auto mb-1 no-gutters">
                   <div class="col-2 text-right pr-1">{{ row.ni_pocet_hod }}x</div>
