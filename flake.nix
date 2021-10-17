@@ -409,6 +409,7 @@
             wantedBy = [ "multi-user.target" ];
             after = [ "network-online.target" "postgresql.service" ];
             requires = [ "postgresql.service" ];
+            path = [ pkgs.postgresql ];
             environment.HASURA_GRAPHQL_DATABASE_URL = "postgres:///olymp";
             environment.HASURA_GRAPHQL_ADMIN_SECRET = "superadmin";
             environment.HASURA_GRAPHQL_ENABLE_TELEMETRY = "false";
