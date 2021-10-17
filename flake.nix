@@ -1,11 +1,16 @@
 {
   inputs.gogol = { flake = false; url = github:brendanhay/gogol/develop; };
+  inputs.unstable.url = github:NixOS/nixpkgs/master;
 
-  outputs = { self, nixpkgs, gogol }: let
+  outputs = { self, nixpkgs, unstable, gogol }: let
     inherit (nixpkgs.lib) flip mapAttrs mapAttrsToList;
     inherit (pkgs.nix-gitignore) gitignoreSourcePure gitignoreSource;
 
     pkgs = import nixpkgs {
+      system = "x86_64-linux";
+      overlays = [ self.overlay ];
+    };
+    unstablePkgs = import unstable {
       system = "x86_64-linux";
       overlays = [ self.overlay ];
     };
@@ -17,6 +22,10 @@
       inherit (prev.haskell.lib) doJailbreak dontCheck justStaticExecutables
         generateOptparseApplicativeCompletion unmarkBroken;
     in {
+      hasura-graphql-engine = prev.hasura-graphql-engine.overrideAttrs (oldAttrs: {
+        VERSION = prev.hasura-graphql-engine.version;
+      });
+
       phpstan = final.stdenv.mkDerivation {
         pname = "phpstan";
         version = "0.12.67";
@@ -31,6 +40,29 @@
           install -D $src $out/libexec/phpstan/phpstan.phar
           makeWrapper ${final.php74}/bin/php $out/bin/phpstan \
           --add-flags "$out/libexec/phpstan/phpstan.phar"
+        '';
+      };
+
+      mysql_fdw = final.stdenv.mkDerivation rec {
+        name = "mysql_fdw-${version}";
+        version = "2.4";
+        buildInputs = [ final.postgresql final.libmysqlclient ];
+        src = final.fetchFromGitHub {
+          owner  = "EnterpriseDB";
+          repo   = "mysql_fdw";
+          rev = "c4677792b86e2944833282aa6e0463350a2638f8" ;
+          sha256 = "R+mCnFjNgWRMWQ5Qqg4alkBThVtqmKLcVhxHk7vm2T4=";
+        };
+        buildPhase = ''
+          sed -i 's,^PG_CPPFLAGS +=.*,PG_CPPFLAGS += -D _MYSQL_LIBNAME=\\"${final.libmysqlclient}/lib/mysql/libmysqlclient$(DLSUFFIX)\\",' Makefile
+          make USE_PGXS=1
+        '';
+        installPhase = ''
+          mkdir -p $out/{lib,share/postgresql/extension}
+          ls
+          cp *.so      $out/lib
+          cp *.sql     $out/share/postgresql/extension
+          cp *.control $out/share/postgresql/extension
         '';
       };
 
@@ -115,7 +147,7 @@
     };
 
     packages.x86_64-linux = {
-      inherit (pkgs) sirimbo-tournament-frontend sirimbo-php sirimbo-app;
+      inherit (pkgs) sirimbo-tournament-frontend sirimbo-php sirimbo-app mysql_fdw;
       inherit (hsPkgs) sirimbo-api sirimbo-schema;
     };
 
@@ -131,6 +163,8 @@
         pkgs.nodePackages.typescript
         pkgs.sass
         pkgs.yarn2nix
+        unstablePkgs.hasura-cli
+        unstablePkgs.hasura-graphql-engine
       ];
     };
 
@@ -151,6 +185,18 @@
             ensureUsers = [{
               name = "olymp";
               ensurePermissions = { "olymp.*" = "ALL PRIVILEGES"; };
+            }];
+          };
+          services.postgresql = {
+            enable = true;
+            extraPlugins = [pkgs.mysql_fdw];
+            ensureDatabases = ["root" "olymp"];
+            ensureUsers = [{
+              name = "olymp";
+              ensurePermissions = {
+                "DATABASE olymp" = "ALL PRIVILEGES";
+                "ALL TABLES IN SCHEMA public" = "ALL";
+              };
             }];
           };
           services.olymp = {
@@ -324,6 +370,11 @@
               locations."/galerie".root = cfg.stateDir;
               locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
               locations."/".extraConfig = "try_files /public/$uri @proxy;";
+
+              locations."/graphql/" = {
+                proxyPass = "http://127.0.0.1:8080/";
+                proxyWebsockets = true;
+              };
               locations."@proxy" = {
                 proxyPass = "http://127.0.0.1:${toString cfg.internalPort}";
                 proxyWebsockets = true;
@@ -351,6 +402,23 @@
               curl imagick opcache pdo_mysql pdo mysqlnd mysqli openssl posix
               mbstring session json ctype exif gd zlib
             ]);
+          };
+
+          systemd.services.hasura = {
+            description = "Hasura";
+            wantedBy = [ "multi-user.target" ];
+            after = [ "network-online.target" "postgresql.service" ];
+            requires = [ "postgresql.service" ];
+            environment.HASURA_GRAPHQL_DATABASE_URL = "postgres:///olymp";
+            environment.HASURA_GRAPHQL_ADMIN_SECRET = "superadmin";
+            environment.HASURA_GRAPHQL_ENABLE_TELEMETRY = "false";
+            environment.SERVER_VERSION = "${unstablePkgs.hasura-graphql-engine.version}";
+            serviceConfig = {
+              User = cfg.user;
+              Group = cfg.group;
+              Type = "simple";
+              ExecStart = "${unstablePkgs.hasura-graphql-engine}/bin/graphql-engine serve";
+            };
           };
 
           systemd.services.olymp-api-migrate = {
