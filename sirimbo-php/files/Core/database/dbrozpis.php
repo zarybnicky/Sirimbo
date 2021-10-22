@@ -171,7 +171,8 @@ class DBRozpis extends Database
         foreach ($columns as $col_index => $col) {
             $s = $col . ' = CASE';
             foreach ($rows as $row_index => $row) {
-                $s .= ' WHEN ri_id="' . $ids[$row_index] . '" THEN "' . $row[$col_index] . '"';
+                $value = $row[$col_index] ? "'{$row[$col_index]}'" : 'NULL' ;
+                $s .= ' WHEN ri_id="' . $ids[$row_index] . '" THEN ' . $value  . '';
             }
             $s .= ' ELSE ' . $col . ' END';
             $columns_string[] = $s;
