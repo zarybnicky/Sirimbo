@@ -68,8 +68,8 @@ class RozpisDetail
         //Update all
         foreach ($items as &$item) {
             $item['ri_partner'] = $_POST[$item['ri_id'] . '-partner'];
-            $item['ri_od'] = $_POST[$item['ri_id'] . '-od'] . ':00';
-            $item['ri_do'] = $_POST[$item['ri_id'] . '-do'] . ':00';
+            $item['ri_od'] = trim($_POST[$item['ri_id'] . '-od']) . ':00';
+            $item['ri_do'] = trim($_POST[$item['ri_id'] . '-do']) . ':00';
             $item['ri_lock'] = ($_POST[$item['ri_id'] . '-lock'] ?? '') ? 1 : 0;
         }
 
@@ -82,8 +82,8 @@ class RozpisDetail
                 $newId = \DBRozpis::addLesson(
                     $id,
                     $_POST['add_partner'],
-                    $_POST['add_od'] . ':00',
-                    $_POST['add_do'] . ':00',
+                    trim($_POST['add_od']) . ':00',
+                    trim($_POST['add_do']) . ':00',
                     (int) (bool) $_POST['add_lock']
                 );
                 $items[] = \DBRozpis::getLesson($newId);

@@ -25,6 +25,7 @@ module Olymp.Schema.Schedule
 import Data.Text (Text)
 import Data.Time (Day, TimeOfDay, UTCTime)
 import Database.Persist (Key, EntityField)
+import Olymp.Schema.Couple (CoupleId)
 import Olymp.Schema.User (UserId)
 import Olymp.Schema.Utils (mkPersist', persistSchema)
 

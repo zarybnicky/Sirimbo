@@ -10,7 +10,7 @@ Schedule sql=rozpis
 ScheduleItem sql=rozpis_item
   Id sql=ri_id
   parent ScheduleId sql=ri_id_rodic
-  partner UserId sql=ri_partner default=0
+  partner CoupleId Maybe sql=ri_partner default=NULL
   from TimeOfDay sql=ri_od
   to TimeOfDay sql=ri_do
   lock Text sql=ri_lock sqltype=enum('0','1') default='0'
