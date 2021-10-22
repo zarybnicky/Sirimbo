@@ -47,7 +47,7 @@ class DBRozpis extends Database
         if (self::isLessonFree($rid)) {
             return false;
         }
-        self::query("UPDATE rozpis_item SET ri_partner='0' WHERE ri_id='?'", $rid);
+        self::query("UPDATE rozpis_item SET ri_partner=NULL WHERE ri_id='?'", $rid);
         return true;
     }
 
@@ -84,7 +84,7 @@ class DBRozpis extends Database
             return false;
         }
         $row = self::getSingleRow($res);
-        return !(bool)$row["ri_partner"];
+        return $row["ri_partner"] === null;
     }
 
     public static function getScheduleTrainer($id)

@@ -314,7 +314,7 @@ class Users
         $oldest = \DBPlatby::getOldestPayment();
         $newest = \DBPlatby::getNewestPayment();
         foreach (\DBUser::getUsers() as $u) {
-            if ($u['u_ban'] || $u['u_temporary'] || !$u['u_confirmed'] || $u['u_system']) {
+            if ($u['u_ban'] || !$u['u_confirmed'] || $u['u_system']) {
                 continue;
             }
             // skupina - ne Host/VIP
