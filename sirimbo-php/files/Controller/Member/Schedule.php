@@ -88,7 +88,7 @@ class Schedule
                     \DBRozpis::reserveLesson($_POST['ri_id'], $par['p_id']);
                 }
             } elseif ($_POST['action'] == 'signout') {
-                if ($lesson['ri_partner'] == 0) {
+                if ($lesson['ri_partner'] === null) {
                 } elseif ($par['p_id'] != $lesson['ri_partner']
                           && !\Permissions::check('rozpis', P_OWNED, $data['r_trener'])
                 ) {
