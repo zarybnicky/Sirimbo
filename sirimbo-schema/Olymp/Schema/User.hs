@@ -25,7 +25,7 @@ module Olymp.Schema.User
 import Data.Text (Text)
 import Data.Time (Day, UTCTime)
 import Database.Persist (Key, EntityField)
-import Olymp.Schema.PaymentGroup (PaymentGroupId)
+import Olymp.Schema.Permission (PermissionId)
 import Olymp.Schema.Utils (mkPersist', persistSchema)
 
 mkPersist' $(persistSchema "User.model")

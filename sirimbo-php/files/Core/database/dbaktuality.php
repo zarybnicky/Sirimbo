@@ -31,14 +31,13 @@ class DBAktuality extends Database
     {
         self::query(
             "INSERT INTO aktuality (at_kdo,at_kat,at_jmeno,at_text,at_preview,at_foto,at_foto_main,at_timestamp_add)
-            VALUES ('?','?','?','?','?','?','?',NOW())",
+            VALUES ('?','?','?','?','?','?'," . ($foto_main ? "'$foto_main'" : 'NULL') . ",NOW())",
             $kdo,
             $kat,
             $jmeno,
             $text,
             $preview,
             $foto,
-            $foto_main,
         );
         return self::getInsertId();
     }
@@ -47,14 +46,14 @@ class DBAktuality extends Database
     {
         self::query(
             "UPDATE aktuality
-            SET at_kat='?',at_jmeno='?',at_text='?',at_preview='?',at_foto='?',at_foto_main='?',at_timestamp_add='?'
+            SET at_kat='?',at_jmeno='?',at_text='?',at_preview='?',at_foto='?',at_foto_main="
+            . ($foto_main ? "'$foto_main'" : 'NULL') . ",at_timestamp_add='?'
             WHERE at_id='?'",
             $kat,
             $jmeno,
             $text,
             $preview,
             $foto,
-            $foto_main,
             $createdAt,
             $id,
         );

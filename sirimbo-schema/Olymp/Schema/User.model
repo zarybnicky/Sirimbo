@@ -18,7 +18,7 @@ User sql=users
   notes Text sql=u_poznamky default=''
   updatedAt UTCTime sql=u_timestamp sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   level Int sql=u_level default=0 sqltype=TINYINT(3)
-  paymentGroup PaymentGroupId sql=u_group
+  permission PermissionId sql=u_group
   userGroup UserGroupId sql=u_skupina default=1
   dancer Text sql=u_dancer sqltype=enum('0','1') default='0'
   ban Text sql=u_ban sqltype=enum('0','1') default='0'
