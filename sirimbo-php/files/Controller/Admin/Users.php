@@ -96,6 +96,7 @@ class Users
                     $user->getEmail(),
                     $user->getPhone(),
                     $user->getBirthDate(),
+                    $user->getBirthNumber(),
                     $user->getNotes(),
                     $user->getStreet(),
                     $user->getConscriptionNumber(),
@@ -165,6 +166,7 @@ class Users
             $_POST['email'],
             $_POST['telefon'],
             (string) new \Date($_POST['narozeni'] ?? null),
+            $_POST['rodnecislo'],
             $_POST['poznamky'],
             $_POST['street'],
             $_POST['popisne'],
@@ -209,6 +211,7 @@ class Users
         $_POST['email'] = $data['u_email'];
         $_POST['telefon'] = $data['u_telefon'];
         $_POST['narozeni'] = $data['u_narozeni'];
+        $_POST['rodnecislo'] = $data['u_rodne_cislo'];
         $_POST['skupina'] = $data['u_skupina'];
         $_POST['poznamky'] = $data['u_poznamky'];
         $_POST['street'] = $data['u_street'];
@@ -247,6 +250,7 @@ class Users
             $_POST['email'],
             $_POST['telefon'],
             (string) new \Date($_POST['narozeni'] ?? null),
+            $_POST['rodnecislo'],
             $_POST['poznamky'],
             $_POST['street'],
             $_POST['popisne'],
@@ -419,6 +423,7 @@ class Users
             'email' => $_POST['email'] ?? '',
             'telefon' => $_POST['telefon'] ?? '',
             'narozeni' => $_POST['narozeni'] ?? '',
+            'rodnecislo' => $_POST['rodnecislo'] ?? '',
             'poznamky' => $_POST['poznamky'] ?? '',
             'street' => $_POST['street'] ?? '',
             'popisne' => $_POST['popisne'] ?? '',

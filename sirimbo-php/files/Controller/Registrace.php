@@ -16,6 +16,7 @@ class Registrace
             'email' => '',
             'telefon' => '',
             'narozeni' => '',
+            'rodnecislo' => '',
             'poznamky' => '',
             'street' => '',
             'popisne' => '',
@@ -46,6 +47,7 @@ class Registrace
         $f->checkEmail($_POST['email'], 'Neplatný formát emailu');
         $f->checkPhone($_POST['telefon'], 'Neplatný formát telefoního čísla');
         $f->checkDate($narozeni, 'Neplatné datum narození');
+        $f->checkNotEmpty($_POST['rodnecislo'], 'Vyplňte rodné číslo');
         $f->checkNotEmpty($_POST['orientacni'], 'Vyplňte číslo orientační bydliště');
         $f->checkNotEmpty($_POST['city'], 'Vyplňte město bydliště');
         $f->checkNotEmpty($_POST['postal'], 'Vyplňte PSČ bydliště');
@@ -64,6 +66,7 @@ class Registrace
                 'email' => $_POST['email'] ?? '',
                 'telefon' => $_POST['telefon'] ?? '',
                 'narozeni' => $_POST['narozeni'] ?? '',
+                'rodnecislo' => $_POST['rodnecislo'] ?? '',
                 'poznamky' => $_POST['poznamky'] ?? '',
                 'street' => $_POST['street'] ?? '',
                 'popisne' => $_POST['popisne'] ?? '',
@@ -89,6 +92,7 @@ class Registrace
             $_POST['email'],
             $_POST['telefon'],
             $narozeni,
+            $_POST['rodnecislo'],
             $poznamky,
             $_POST['street'],
             $_POST['popisne'],

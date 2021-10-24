@@ -22,6 +22,7 @@ class User
         $user->setEmail($x['u_email']);
         $user->setPhone($x['u_telefon']);
         $user->setBirthDate($x['u_narozeni']);
+        $user->setBirthNumber($x['u_rodne_cislo']);
         $user->setNotes($x['u_poznamky']);
         $user->setUpdatedAt($x['u_timestamp']);
         $user->setPermissionGroup($x['u_group']);
@@ -58,6 +59,7 @@ class User
             'u_email' => $this->getEmail(),
             'u_telefon' => $this->getPhone(),
             'u_narozeni' => $this->getBirthDate(),
+            'u_rodne_cislo' => $this->getBirthNumber(),
             'u_poznamky' => $this->getNotes(),
             'u_timestamp' => $this->getCreatedAt(),
             'u_group' => $this->getPermissionGroup(),
@@ -238,6 +240,21 @@ class User
     public function getBirthYear(): string
     {
         return explode('-', $this->getBirthDate())[0];
+    }
+
+    /**
+     * @var string
+     */
+    protected $birthNumber;
+
+    public function getBirthNumber(): string
+    {
+        return $this->birthNumber;
+    }
+
+    public function setBirthNumber(string $birthNumber): void
+    {
+        $this->birthNumber = $birthNumber;
     }
 
     /**

@@ -90,6 +90,7 @@ class Profil
             'email' => $_POST['email'] ?? '',
             'telefon' => $_POST['telefon'] ?? '',
             'narozeni' => $_POST['narozeni'] ?? '',
+            'rodnecislo' => $_POST['rodnecislo'] ?? '',
             'street' => $_POST['street'] ?? '',
             'popisne' => $_POST['popisne'] ?? '',
             'orientacni' => $_POST['orientacni'] ?? '',
@@ -123,6 +124,7 @@ class Profil
         $_POST['prijmeni'] = $user->getSurname();
         $_POST['pohlavi'] = $user->getGender();
         $_POST['narozeni'] = $user->getBirthDate();
+        $_POST['rodnecislo'] = $user->getBirthNumber();
         $_POST['email'] = $user->getEmail();
         $_POST['telefon'] = $user->getPhone();
         $_POST['street'] = $user->getStreet();
@@ -154,6 +156,7 @@ class Profil
             $_POST['email'],
             $_POST['telefon'],
             (string) new \Date($_POST['narozeni']),
+            $_POST['rodnecislo'],
             $user->getNotes(),
             $_POST['street'],
             $_POST['popisne'],
@@ -199,6 +202,7 @@ class Profil
     {
         $f = new \Form();
         $f->checkDate((string) new \Date($_POST['narozeni']), 'Neplatné datum narození');
+        $f->checkNotTmpty($_POST['rodnecislo'], 'Neplatné rodné číslo');
         $f->checkInArray($_POST['pohlavi'], ['m', 'f'], 'Neplatné pohlaví');
         $f->checkEmail($_POST['email'], 'Neplatný formát emailu');
         $f->checkPhone($_POST['telefon'], 'Neplatný formát telefoního čísla');

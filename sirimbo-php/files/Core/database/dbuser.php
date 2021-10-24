@@ -162,21 +162,21 @@ class DBUser extends Database implements Pagable
     }
 
     public static function setUserData(
-        $id, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $narozeni, $poznamky,
+        $id, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $narozeni, $rodnecislo, $poznamky,
         $street, $popisne, $orientacni, $district, $city, $postal, $nationality,
         $group, $skupina, $lock, $ban, $system, $dancer, $trener, $memberSince,
         $memberUntil, $gdprSignedAt
     ) {
         self::query(
             "UPDATE users SET u_jmeno='?',u_prijmeni='?',u_pohlavi='?',u_email='?'," .
-            "u_telefon='?',u_narozeni='?',u_poznamky='?',u_street='?',u_conscription_number='?'," .
+            "u_telefon='?',u_narozeni='?',u_rodne_cislo='?', u_poznamky='?',u_street='?',u_conscription_number='?'," .
             "u_orientation_number='?',u_district='?',u_city='?',u_postal_code='?'," .
             "u_nationality='?',u_group='?',u_skupina='?',u_lock='?',u_ban='?',u_system='?',u_dancer='?'," .
             "u_teacher='?',u_member_since=" . ($memberSince ? "'$memberSince'" : 'NULL') .
             ",u_member_until=" . ($memberUntil ? "'$memberUntil'" : 'NULL') .
             ",u_gdpr_signed_at=" . ($gdprSignedAt ? "'$gdprSignedAt'" : 'NULL') .
             " WHERE u_id='?'",
-            $jmeno, $prijmeni, $pohlavi, $email, $telefon, $narozeni, $poznamky,
+            $jmeno, $prijmeni, $pohlavi, $email, $telefon, $narozeni, $rodnecislo, $poznamky,
             $street, $popisne, $orientacni, $district, $city, $postal, $nationality,
             $group, $skupina, $lock, $ban, $system, $dancer, $trener, $id
         );
@@ -184,18 +184,18 @@ class DBUser extends Database implements Pagable
     }
 
     public static function addUser(
-        $login, $pass, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $narozeni, $poznamky,
+        $login, $pass, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $narozeni, $rodnecislo, $poznamky,
         $street, $popisne, $orientacni, $district, $city, $postal, $nationality,
         $group, $skupina, $lock, $ban, $confirmed, $system, $dancer, $trener
     ) {
         self::query(
             "INSERT INTO users " .
-            "(u_login,u_pass,u_jmeno,u_prijmeni,u_pohlavi,u_email,u_telefon,u_narozeni,u_poznamky," .
+            "(u_login,u_pass,u_jmeno,u_prijmeni,u_pohlavi,u_email,u_telefon,u_narozeni,u_rodne_cislo,u_poznamky," .
             "u_street,u_conscription_number,u_orientation_number,u_district,u_city,u_postal_code,u_nationality," .
             "u_group,u_skupina,u_lock,u_ban,u_confirmed,u_system,u_dancer,u_teacher,u_member_since,u_member_until," .
             "u_gdpr_signed_at) VALUES " .
-            "('?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?',CURDATE(),NULL,CURDATE())",
-            $login, $pass, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $narozeni, $poznamky,
+            "('?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?',CURDATE(),NULL,CURDATE())",
+            $login, $pass, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $narozeni, $rodnecislo, $poznamky,
             $street, $popisne, $orientacni, $district, $city, $postal, $nationality,
             $group, $skupina, $lock, $ban, $confirmed, $system, $dancer, $trener
         );
