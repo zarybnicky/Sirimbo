@@ -15,6 +15,7 @@ User sql=users
   email Text sql=u_email
   phone Text sql=u_telefon sqltype=CHAR(17)
   birthDate Day sql=u_narozeni
+  birthNumber Text sql=u_rodne_cislo sqltype=CHAR(10)
   notes Text sql=u_poznamky default=''
   updatedAt UTCTime sql=u_timestamp sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   level Int sql=u_level default=0 sqltype=TINYINT(3)
