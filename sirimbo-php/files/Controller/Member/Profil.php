@@ -202,7 +202,7 @@ class Profil
     {
         $f = new \Form();
         $f->checkDate((string) new \Date($_POST['narozeni']), 'Neplatné datum narození');
-        $f->checkNotTmpty($_POST['rodnecislo'], 'Neplatné rodné číslo');
+        $f->checkNotEmpty($_POST['rodnecislo'], 'Neplatné rodné číslo');
         $f->checkInArray($_POST['pohlavi'], ['m', 'f'], 'Neplatné pohlaví');
         $f->checkEmail($_POST['email'], 'Neplatný formát emailu');
         $f->checkPhone($_POST['telefon'], 'Neplatný formát telefoního čísla');
