@@ -19,13 +19,14 @@ if (!isset($_COOKIE['off_mode'])) {
 //end OFF switch*/
 
 require 'vendor/autoload.php';
+require 'config.php';
 
 Sentry\init([
+    'environment' => SENTRY_ENV,
     'dsn' => 'https://943ee3e7e7044524b2ee8413a957e14f@o775093.ingest.sentry.io/5796825',
     'traces_sample_rate' => 0.5,
 ]);
 
-require 'config.php';
 require 'files/Core/settings.php';
 
 ob_start();

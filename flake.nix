@@ -287,6 +287,7 @@
           date_default_timezone_set('Europe/Paris');
           mb_internal_encoding('UTF-8');
 
+          define('SENTRY_ENV', '${cfg.domain}');
           define('DB_SERVER', '${cfg.dbHost}');
           define('DB_DATABASE', '${cfg.dbDatabase}');
           define('DB_USER', '${cfg.dbUser}');

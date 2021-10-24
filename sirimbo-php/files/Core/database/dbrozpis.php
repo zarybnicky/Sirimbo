@@ -135,16 +135,15 @@ class DBRozpis extends Database
 
     public static function addLesson($parent_id, $user_id, $od, $do, $lock)
     {
+        $user_id = $user_id ? "'$user_id'" : "NULL";
         self::query(
             "INSERT INTO rozpis_item (ri_id_rodic,ri_partner,ri_od,ri_do,ri_lock)" .
-            " VALUES ('?','?','?','?','?')" .
-            " ON DUPLICATE KEY UPDATE ri_partner='?',ri_do='?',ri_lock='?'",
+            " VALUES ('?',$user_id,'?','?','?')" .
+            " ON DUPLICATE KEY UPDATE ri_partner=$user_id,ri_do='?',ri_lock='?'",
             $parent_id,
-            $user_id,
             $od,
             $do,
             $lock,
-            $user_id,
             $do,
             $lock,
         );
