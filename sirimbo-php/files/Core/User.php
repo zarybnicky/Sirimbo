@@ -94,6 +94,7 @@ class User
             && preg_match($birthDate, $this->getBirthDate())
             && is_numeric($this->getNationality())
             && $this->getCity()
+            && $this->getBirthNumber()
             && is_numeric(str_replace(' ', '', $this->getPostalCode()));
     }
 
@@ -243,16 +244,16 @@ class User
     }
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $birthNumber;
 
-    public function getBirthNumber(): string
+    public function getBirthNumber(): ?string
     {
         return $this->birthNumber;
     }
 
-    public function setBirthNumber(string $birthNumber): void
+    public function setBirthNumber(?string $birthNumber): void
     {
         $this->birthNumber = $birthNumber;
     }
