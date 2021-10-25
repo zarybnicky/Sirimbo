@@ -45,7 +45,7 @@ class DBGalerie extends Database
 
         if ($sort) {
             $out = [];
-            self::_recursiveChildren($array, $out, 0, count($array));
+            self::_recursiveChildren($array, $out, 1, count($array));
             $array = $out;
         }
         return $array;
@@ -146,8 +146,9 @@ class DBGalerie extends Database
         return true;
     }
 
-    public static function addFotoByPath($dir, $path, $name, $kdo) {
-        $dir = $dir ? "(SELECT gd_id FROM galerie_dir gd2 WHERE gd2.gd_path='$dir')" : 0;
+    public static function addFotoByPath($dir, $path, $name, $kdo)
+    {
+        $dir = $dir ? "(SELECT gd_id FROM galerie_dir gd2 WHERE gd2.gd_path='$dir')" : 1;
         self::query(
             "INSERT INTO galerie_foto
             (gf_id_rodic,gf_path,gf_name,gf_kdo) VALUES
@@ -163,7 +164,7 @@ class DBGalerie extends Database
 
     public static function addDirByPath($name, $parent, $level, $path)
     {
-        $parent = $parent ? "(SELECT gd_id FROM galerie_dir gd2 WHERE gd2.gd_path='$parent')" : 0;
+        $parent = $parent ? "(SELECT gd_id FROM galerie_dir gd2 WHERE gd2.gd_path='$parent')" : 1;
         self::query(
             "INSERT INTO galerie_dir
             (gd_name, gd_id_rodic, gd_level, gd_path) VALUES
@@ -178,8 +179,9 @@ class DBGalerie extends Database
 
     public static function removeDirByPath($path)
     {
-        if (!$path)
+        if (!$path) {
             return;
+        }
         self::query(
             "DELETE FROM galerie_dir
             WHERE gd_id_rodic=(SELECT * FROM (SELECT gd_id FROM galerie_dir gd2 WHERE gd2.gd_path='?') as x)",
