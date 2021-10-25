@@ -78,7 +78,7 @@ class GalerieFile
     {
         \Permissions::checkError('galerie', P_OWNED);
         \Render::twig('Admin/GalerieUpload.twig', [
-            'dir' => $_GET['dir'] ?? '0',
+            'dir' => $_GET['dir'] ?? '1',
             'dirs' => array_for(\DBGalerie::getDirs(true, true), fn($item) => [
                 'id' => $item['gd_id'],
                 'text' => str_repeat('&nbsp;&nbsp;', $item['gd_level'] - 1) . $item['gd_name']
@@ -90,8 +90,8 @@ class GalerieFile
     {
         \Permissions::checkError('galerie', P_OWNED);
         $parentId = $_POST['dir'];
-        if (!is_numeric($parentId) || $parentId < 0) {
-            $parentId = 0;
+        if (!is_numeric($parentId) || $parentId < 1) {
+            $parentId = 1;
         }
         if (!($parent = \DBGalerie::getSingleDir($parentId))) {
             \Message::warning('Taková složka neexistuje');
@@ -145,7 +145,7 @@ class GalerieFile
             'returnURI' => $_SERVER['HTTP_REFERER'],
             'parent' => $_POST['parent'],
             'name' => $_POST['name'],
-            'dirs' => [['id' => '0', 'text' => '---']] + array_map(
+            'dirs' => [['id' => '1', 'text' => '---']] + array_map(
                 fn($item) => [
                     'id' => $item['gd_id'],
                     'text' => str_repeat('&nbsp;&nbsp;', $item['gd_level'] - 1) . $item['gd_name']
@@ -160,7 +160,7 @@ class GalerieFile
         $form = new \Form();
         $form->checkNotEmpty($_POST['name'], 'Zadejte prosím nějaký popis');
         $form->checkBool(
-            $_POST['parent'] >= 0 && is_numeric($_POST['parent'])
+            $_POST['parent'] > 0 && is_numeric($_POST['parent'])
             && \DBGalerie::getSingleDir($_POST['parent']),
             'Zadaná nadsložka není platná',
         );

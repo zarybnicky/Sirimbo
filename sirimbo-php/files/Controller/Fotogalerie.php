@@ -5,7 +5,7 @@ class Fotogalerie
 {
     public static function root()
     {
-        static::directory(0);
+        static::directory(1);
     }
 
     public static function directory($id)
@@ -34,7 +34,7 @@ class Fotogalerie
         }
 
         $parent_dir = \DBGalerie::getFotky($data['gf_id_rodic']);
-        $current = 0;
+        $current = 1;
         foreach ($parent_dir as $key => $foto) {
             if ($foto['gf_id'] == $id) {
                 $current = $key;
@@ -49,7 +49,7 @@ class Fotogalerie
             'src' => '/galerie/' . $data['gf_path'],
             'prevURI' => $hasPrev ? $parent_dir[$current - 1]['gf_id'] : '',
             'nextURI' => $hasNext ? $parent_dir[$current + 1]['gf_id'] : '',
-            'returnURI' => '/fotogalerie' . ($data['gf_id_rodic'] > 0 ? ('/' . $data['gf_id_rodic']) : ''),
+            'returnURI' => '/fotogalerie' . ($data['gf_id_rodic'] > 1 ? ('/' . $data['gf_id_rodic']) : ''),
             'sidemenu' => static::sidemenu($data['gf_id_rodic'])
         ]);
     }
@@ -62,7 +62,7 @@ class Fotogalerie
 
         $root = $tip = new \Tag('ul', ['class' => 'fotoroot']);
         $stack = [];
-        $level = 0;
+        $level = 1;
 
         foreach ($dirs as $dir) {
             if ($dir['gd_level'] == 1 || $dir['gd_hidden'] == '1') {
@@ -83,7 +83,7 @@ class Fotogalerie
             $level = $dir['gd_level'];
 
             $cls = ($dir['gd_id'] == $dirId) ? 'current' : '';
-            $href = ($dir['gd_id'] == 0) ? '/fotogalerie' : "/fotogalerie/{$dir['gd_id']}";
+            $href = ($dir['gd_id'] == 1) ? '/fotogalerie' : "/fotogalerie/{$dir['gd_id']}";
             $tip->add("<li><a class='$cls' href='$href'>{$dir['gd_name']}</a></li>");
         }
 

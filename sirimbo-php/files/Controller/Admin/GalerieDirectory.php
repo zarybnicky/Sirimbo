@@ -153,7 +153,7 @@ class GalerieDirectory
         $form = new \Form();
         $form->checkNotEmpty($_POST['name'], 'Název složky nesmí být prázdný');
         $form->checkBool(
-            $_POST['parent'] >= 0
+            $_POST['parent'] > 0
             && is_numeric($_POST['parent'])
             && \DBGalerie::getSingleDir($_POST['parent']),
             'Zadaná nadsložka není platná',
