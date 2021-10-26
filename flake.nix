@@ -393,6 +393,9 @@
             environment.HASURA_GRAPHQL_DATABASE_URL = "postgres:///olymp";
             environment.HASURA_GRAPHQL_ADMIN_SECRET = "superadmin";
             environment.HASURA_GRAPHQL_ENABLE_TELEMETRY = "false";
+            environment.HASURA_GRAPHQL_AUTH_HOOK = "http://localhost:${toString cfg.internalPort}/api/graphql-auth";
+            environment.HASURA_GRAPHQL_ENABLED_LOG_TYPES = "startup, http-log, webhook-log, websocket-log, query-log";
+            environment.HASURA_GRAPHQL_EXPERIMENTAL_FEATURES = "inherited_roles";
             environment.SERVER_VERSION = "${unstablePkgs.hasura-graphql-engine.version}";
             serviceConfig = {
               User = cfg.user;

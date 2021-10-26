@@ -26,7 +26,7 @@ import qualified Data.Text as T
 import Database.Persist.Sql as X (Entity (..), get, selectList, updateGet, (=.))
 import GHC.Generics as X (Generic)
 import GHC.TypeLits as X (KnownSymbol, Symbol, symbolVal)
-import Olymp.Auth as X (PhpAuth)
+import Olymp.Auth as X (PhpAuth, PhpMaybeAuth)
 import Olymp.Effect.Database as X (Database, query)
 import Olymp.Schema as X (EntityField (..), SessionId, User)
 import Servant as X (Capture, Get, HasServer (..), JSON, Post, QueryParam, ServerError, ServerT, err404, (:<|>) (..), (:>))

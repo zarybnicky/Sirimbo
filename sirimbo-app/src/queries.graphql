@@ -1,0 +1,29 @@
+query Rozpis($id: bigint!) {
+  rozpis_by_pk(r_id: $id) {
+    r_datum
+    r_id
+    r_kde
+    r_lock
+    r_timestamp
+    r_trener
+    r_visible
+    rozpis_items {
+      ri_od
+      ri_do
+      ri_id
+      ri_partner
+    }
+  }
+}
+
+mutation setRozpisVisible($id: bigint!, $visible: Boolean!) {
+  update_rozpis_by_pk(pk_columns: {r_id: $id}, _set: {r_visible: $visible}) {
+    r_visible
+    r_trener
+    r_timestamp
+    r_id
+    r_kde
+    r_lock
+    r_datum
+  }
+}

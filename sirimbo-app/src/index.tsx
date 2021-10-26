@@ -11,3 +11,4 @@ export * from './event-checkbox';
 export * from './reservation-select';
 export * from './date';
 export * from './paging';
+export * from './app';

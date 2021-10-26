@@ -58,7 +58,7 @@ import Network.HTTP.Client (Manager, defaultManagerSettings)
 import Network.HTTP.ReverseProxy (ProxyDest (..), WaiProxyResponse (..), defaultOnExc, waiProxyTo)
 import qualified Network.Wai.Handler.Warp as Warp
 import Olymp.API (OlympAPI, olympAPI)
-import Olymp.Auth (PhpAuth, PhpAuthHandler, phpAuthHandler)
+import Olymp.Auth (PhpAuth, PhpAuthHandler, phpAuthHandler, phpMaybeAuthHandler, PhpMaybeAuthHandler, PhpMaybeAuth)
 import Olymp.Cli.Config (Config (..))
 import Olymp.Effect (AppStack, interpretServer)
 import Olymp.Effect.Database (Database, query, runDatabasePool)
@@ -123,6 +123,9 @@ makePool config = runStdoutLoggingT $ createPostgresqlPool (BC.pack $ dbConnStri
 instance HasOpenApi a => HasOpenApi (PhpAuth :> a) where
   toOpenApi _ = toOpenApi @a Proxy
 
+instance HasOpenApi a => HasOpenApi (PhpMaybeAuth :> a) where
+  toOpenApi _ = toOpenApi @a Proxy
+
 instance ToParamSchema f => ToParamSchema (Tagged a f)
 
 instance (Typeable a, ToSchema f) => ToSchema (Tagged a f)
@@ -145,9 +148,9 @@ olympServer proxyPort manager runner =
   --       { corsRequestHeaders = ["Content-Type"]
   --       , corsMethods = "PUT" : simpleMethods
   --       })
-  serveWithContext (Proxy @(OlympAPI :<|> SwaggerSchemaUI "swagger-ui" "swagger.json" :<|> Raw)) (phpAuthHandler runner :. EmptyContext) $
+  serveWithContext (Proxy @(OlympAPI :<|> SwaggerSchemaUI "swagger-ui" "swagger.json" :<|> Raw)) (phpMaybeAuthHandler runner :. phpAuthHandler runner :. EmptyContext) $
     api :<|> swaggerSchemaUIServer swaggerAPI :<|> Tagged phpProxy
   where
-    api = hoistServerWithContext (Proxy @OlympAPI) (Proxy @'[PhpAuthHandler]) runner olympAPI
+    api = hoistServerWithContext (Proxy @OlympAPI) (Proxy @'[PhpMaybeAuthHandler, PhpAuthHandler]) runner olympAPI
     phpProxy = waiProxyTo forwardRequest defaultOnExc manager
     forwardRequest _ = pure $ WPRProxyDest (ProxyDest "127.0.0.1" proxyPort)

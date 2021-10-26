@@ -3,6 +3,7 @@ const fs = require("fs");
 const webpack  = require('webpack');
 const CopyPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { GraphQLCodegenWebpackPlugin } = require('graphql-codegen-webpack-plugin');
 
 module.exports = {
   mode: 'development',
@@ -29,22 +30,23 @@ module.exports = {
           'window.jQuery': 'jquery',
           Popper: ['popper.js', 'default'],
       }),
+      new GraphQLCodegenWebpackPlugin({ configPath: './codegen.yml' }),
   ],
   module: {
     rules: [
-      {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
-      },
-      {
-          test: /\.(scss)$/,
-          use: [
-              MiniCssExtractPlugin.loader,
-              'css-loader',
-              'postcss-loader',
-              'sass-loader',
-          ],
-      },
+        {
+            test: /\.tsx?$/,
+            use: 'ts-loader',
+        },
+        {
+            test: /\.(scss)$/,
+            use: [
+                MiniCssExtractPlugin.loader,
+                'css-loader',
+                'postcss-loader',
+                'sass-loader',
+            ],
+        },
     ],
   }
 };

@@ -19,3 +19,6 @@ index.css.map
 .tmp
 result
 .hie
+*.graphql.d.ts
+*.graphqls.d.ts
+.cache
