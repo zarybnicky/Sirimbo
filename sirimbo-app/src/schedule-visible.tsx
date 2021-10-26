@@ -4,24 +4,27 @@ import { ApolloProvider, useQuery, useMutation } from '@apollo/client';
 
 import Form from 'react-bootstrap/Form';
 import { RozpisDocument, SetRozpisVisibleDocument } from './queries';
-import { client } from './client';
+import { createClient } from './client';
 
 const ScheduleVisible = ({ id }: { id: number; }) => {
-    const { error, data, refetch } = useQuery(RozpisDocument, { variables: { id } });
+    const { loading, error, data, refetch } = useQuery(RozpisDocument, { variables: { id } });
     const [toggleVisible] = useMutation(SetRozpisVisibleDocument, { onCompleted: () => refetch() });
     const visible = data?.rozpis_by_pk?.r_visible || false;
     const toggle = () => toggleVisible({ variables: { id, visible: !visible } });
     if (error) {
         console.error(error);
     }
-    return <Form.Check name={id} checked={visible} onChange={toggle} />
+    if (loading) {
+        return null;
+    }
+    return <Form.Check name={id.toString()} checked={visible} onChange={toggle} />
 };
 
 class ScheduleVisibleElement extends HTMLElement {
     connectedCallback() {
         ReactDOM.render(
-            <ApolloProvider client={client}>
-                <ScheduleVisible id={parseInt(this.getAttribute('name'), 10)}></ScheduleVisible>
+            <ApolloProvider client={createClient()}>
+                <ScheduleVisible id={parseInt(this.getAttribute('name')!!, 10)}></ScheduleVisible>
             </ApolloProvider>,
             this
         );

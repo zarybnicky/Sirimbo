@@ -15,7 +15,9 @@
         "graphql": "^15.6.1",
         "jquery": "^3.6.0",
         "popper.js": "^1.16.1",
+        "ra-data-hasura": "^0.2.0",
         "react": "^17.0.2",
+        "react-admin": "^3.19.0",
         "react-bootstrap": "^1.6.4",
         "react-dom": "^17.0.2",
         "react-paginate": "^7.1.3"

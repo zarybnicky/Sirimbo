@@ -323,6 +323,7 @@
           services.nginx = {
             enable = true;
             enableReload = true;
+            recommendedTlsSettings = true;
             recommendedGzipSettings = true;
             recommendedOptimisation = true;
             recommendedProxySettings = true;
