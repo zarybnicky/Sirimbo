@@ -135,10 +135,10 @@ class DBNabidka extends Database
     {
         self::query(
             "INSERT INTO nabidka_item (ni_partner,ni_id_rodic,ni_pocet_hod)" .
-            " VALUES ('?','?','?') ON CONFLICT (ni_id_rodic, ni_partner) DO UPDATE SET ni_pocet_hod=EXCLUDED.ni_pocet_hod+'?'",
+            " VALUES ('?','?','?') ON CONFLICT (ni_id_rodic, ni_partner)" .
+            " DO UPDATE SET ni_pocet_hod=nabidka_item+EXCLUDED.ni_pocet_hod",
             $user_id,
             $parent_id,
-            $pocet_hod,
             $pocet_hod
         );
         return true;
