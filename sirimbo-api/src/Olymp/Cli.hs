@@ -54,17 +54,14 @@ parseCli = do
       exitFailure
 
 defaults :: HKD Config Maybe
-defaults = build @Config Nothing Nothing (Just Nothing) Nothing
+defaults = build @Config Nothing
 
 decodeEnv :: IO (Maybe FilePath, HKD Config Maybe)
 decodeEnv =
   (,)
     <$> lookupEnv "CONFIG"
     <*> ( build @Config
-            <$> lookupEnv "DB_HOST"
-            <*> lookupEnv "DB_USER"
-            <*> (Just <$> lookupEnv "DB_PASSWORD")
-            <*> lookupEnv "DB_DATABASE"
+            <$> lookupEnv "DB_CONN_STRING"
         )
 
 argsParser :: ParserInfo (Maybe FilePath, HKD Config Maybe, Config -> IO ())
@@ -74,10 +71,7 @@ argsParser = info (args <**> helper) fullDesc
     configFile = optional $ strOption @FilePath (long "config" <> short 'c' <> metavar "CONFIG_FILE")
     config =
       build @Config
-        <$> optional (strOption (long "db-host" <> metavar "HOST"))
-        <*> optional (strOption (long "db-user" <> metavar "USER"))
-        <*> optional (Just <$> strOption (long "db-password" <> metavar "PASSWORD"))
-        <*> optional (strOption (long "db-database" <> metavar "DATABASE"))
+        <$> optional (strOption (long "db-conn-string" <> metavar "DBCONN"))
     commands =
       subparser $
         mconcat

@@ -97,7 +97,7 @@ try {
 } catch (Exception $e) {
     \Sentry\captureException($e);
     syslog(
-        LOG_WARNING,
+        LOG_ERR,
         $_SERVER['REQUEST_URI'] . ": {$e->getMessage()}\n"
         . '(' . $e->getFile() . ':' . $e->getLine() . ")\n"
         . $e->getTraceAsString()

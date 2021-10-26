@@ -201,9 +201,7 @@
           };
           services.olymp = {
             enable = true;
-            dbHost = "localhost";
-            dbUser = "olymp";
-            dbDatabase = "olymp";
+            dbConnString = "dbname=olymp";
             stateDir = "/var/lib/olymp";
             domain = "olymp-test";
             internalPort = 3000;
@@ -237,22 +235,9 @@
           example = 3001;
         };
 
-        dbHost = lib.mkOption {
+        dbConnString = lib.mkOption {
           type = lib.types.str;
-          description = "${pkgName} DB host";
-        };
-        dbUser = lib.mkOption {
-          type = lib.types.str;
-          description = "${pkgName} DB user";
-        };
-        dbPassword = lib.mkOption {
-          type = lib.types.nullOr lib.types.str;
-          default = null;
-          description = "${pkgName} DB password";
-        };
-        dbDatabase = lib.mkOption {
-          type = lib.types.str;
-          description = "${pkgName} DB database";
+          description = "${pkgName} DB connection string";
         };
 
         user = lib.mkOption {
@@ -273,10 +258,7 @@
 
       config = let
         cfgFile = pkgs.writeText "config.yaml" ''
-          dbHost: ${cfg.dbHost}
-          dbUser: ${cfg.dbUser}
-          dbDatabase: ${cfg.dbDatabase}
-          ${if cfg.dbPassword != null then "dbPassword: ${cfg.dbPassword}" else ""}
+          dbConnString: "${cfg.dbConnString}"
           proxyPort: ${toString cfg.proxyPort}
         '';
         configPhp = pkgs.runCommand "sirimbo-php-config" {} ''
@@ -288,10 +270,7 @@
           mb_internal_encoding('UTF-8');
 
           define('SENTRY_ENV', '${cfg.domain}');
-          define('DB_SERVER', '${cfg.dbHost}');
-          define('DB_DATABASE', '${cfg.dbDatabase}');
-          define('DB_USER', '${cfg.dbUser}');
-          define('DB_PASS', ${if cfg.dbPassword == null then "NULL" else "'${cfg.dbPassword}'"});
+          define('DB_CONN_STRING', 'pgsql:${cfg.dbConnString}');
 
           define('GALERIE', '${cfg.stateDir}/gallery');
           define('GALERIE_THUMBS', '${cfg.stateDir}/gallery/thumbnails');
@@ -401,7 +380,7 @@
             };
             phpPackage = pkgs.php.withExtensions ({ all, ... }: with all; [
               curl imagick opcache pdo_mysql pdo mysqlnd mysqli openssl posix
-              mbstring session json ctype exif gd zlib
+              mbstring session json ctype exif gd zlib pdo_pgsql
             ]);
           };
 

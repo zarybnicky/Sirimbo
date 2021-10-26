@@ -40,6 +40,7 @@ import Control.Monad.Logger (runStdoutLoggingT)
 import Control.Monad.Trans.Reader (runReaderT)
 import Control.Monad.Trans.Resource (runResourceT)
 import Data.Aeson (eitherDecode', encode)
+import qualified Data.ByteString.Char8 as BC
 import qualified Data.ByteString.Lazy.Char8 as BCL
 import Data.Csv (Only)
 import Data.IORef (newIORef)
@@ -48,8 +49,8 @@ import Data.OpenApi (NamedSchema (..), OpenApi, ToParamSchema, ToSchema (..), bi
 import Data.Pool (Pool, withResource)
 import qualified Data.Text as T
 import Data.Typeable (Typeable)
-import Database.Persist.MySQL (ConnectInfo (..), SqlBackend, createMySQLPool, defaultConnectInfo, get, printMigration, runMigration)
-import Database.Persist.Sql (repsert)
+import Database.Persist.Postgresql (createPostgresqlPool)
+import Database.Persist.Sql (SqlBackend, repsert, get, printMigration, runMigration)
 import Network.Google (LogLevel (Info), envScopes, newEnvWith, newLogger, newManager, tlsManagerSettings)
 import Network.Google.Auth (getApplicationDefault)
 import Network.Google.YouTube (youTubeReadOnlyScope)
@@ -117,15 +118,7 @@ runServer port proxy config = do
   Warp.run port $ olympServer proxy mgr (Handler . ExceptT . interpretServer ref ref' pool)
 
 makePool :: Config -> IO (Pool SqlBackend)
-makePool config = runStdoutLoggingT $ createMySQLPool connectInfo 5
-  where
-    connectInfo =
-      maybe id (\p x -> x {connectPassword = p}) (dbPassword config) $
-        defaultConnectInfo
-          { connectHost = dbHost config,
-            connectUser = dbUser config,
-            connectDatabase = dbDatabase config
-          }
+makePool config = runStdoutLoggingT $ createPostgresqlPool (BC.pack $ dbConnString config) 5
 
 instance HasOpenApi a => HasOpenApi (PhpAuth :> a) where
   toOpenApi _ = toOpenApi @a Proxy

@@ -138,12 +138,9 @@ class DBRozpis extends Database
         $user_id = $user_id ? "'$user_id'" : "NULL";
         self::query(
             "INSERT INTO rozpis_item (ri_id_rodic,ri_partner,ri_od,ri_do,ri_lock)" .
-            " VALUES ('?',$user_id,'?','?','?')" .
-            " ON DUPLICATE KEY UPDATE ri_partner=$user_id,ri_do='?',ri_lock='?'",
+            " VALUES ('?',$user_id,'?','?','?')",
             $parent_id,
             $od,
-            $do,
-            $lock,
             $do,
             $lock,
         );
@@ -174,14 +171,14 @@ class DBRozpis extends Database
                 if ($col == 'ri_partner' && $value == "'0'") {
                     $value = 'NULL';
                 }
-                $s .= ' WHEN ri_id="' . $ids[$row_index] . '" THEN ' . $value  . '';
+                $s .= " WHEN ri_id='" . $ids[$row_index] . "' THEN " . $value;
             }
             $s .= ' ELSE ' . $col . ' END';
             $columns_string[] = $s;
         }
 
         $q .= implode(', ', $columns_string);
-        $q .= ' WHERE ri_id IN ("' . implode('","', $ids) . '")';
+        $q .= " WHERE ri_id IN ('" . implode("','", $ids) . "')";
 
         self::query($q);
 

@@ -14,6 +14,9 @@ class DBDokumenty extends Database
 
     public static function getMultipleById($ids)
     {
+        if (!array_filter($ids)) {
+            return [];
+        }
         $res = self::query(
             'SELECT * FROM dokumenty
             LEFT JOIN users ON d_kdo=u_id

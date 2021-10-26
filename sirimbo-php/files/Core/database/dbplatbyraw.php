@@ -7,9 +7,8 @@ class DBPlatbyRaw extends Database
             "INSERT INTO platby_raw
                 (pr_raw,pr_hash,pr_sorted,pr_discarded)
             VALUES ('?','?','?','?')
-            ON DUPLICATE KEY UPDATE pr_id=LAST_INSERT_ID(pr_id)" .
-            ($updateValues ? ",pr_sorted=VALUES(pr_sorted),
-                pr_discarded=VALUES(pr_discarded)" : ''),
+            ON CONFLICT (pr_hash) DO UPDATE SET pr_id=CURRVAL(pg_get_serial_sequence(platby_raw, pr_id))" .
+            ($updateValues ? ",pr_sorted=EXCLUDED.pr_sorted,pr_discarded=EXCLUDED.pr_discarded" : ''),
             $raw,
             $hash,
             $sorted,

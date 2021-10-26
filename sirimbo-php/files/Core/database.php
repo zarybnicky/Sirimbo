@@ -2,6 +2,13 @@
 class Database
 {
     protected static $connection;
+    protected static $tr = [
+        "\0" => "\\0",
+        "\x08" => "\\b",
+        "\x09" => "\\t",
+        "\x1a" => "\\z",
+        "'" => "''",
+    ];
 
     protected static function escapeArray($array)
     {
@@ -14,7 +21,7 @@ class Database
         }
         if ($array) {
             $escape = implode("%%%%%", $array);
-            $escape = static::getConnection()->real_escape_string($escape);
+            $escape = strtr($escape, self::$tr);
             $array = explode("%%%%%", $escape);
         }
         if ($escaped) {
@@ -29,13 +36,15 @@ class Database
     protected static function getConnection()
     {
         if (self::$connection == null) {
-            self::$connection = new mysqli(DB_SERVER, DB_USER, DB_PASS, DB_DATABASE);
-            if (self::$connection->error) {
-                static::databaseError(true);
-            }
-            self::$connection->set_charset("utf8mb4");
+            self::$connection = new PDO(DB_CONN_STRING, null, null, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
         }
         return self::$connection;
+    }
+
+    protected static function prepare($query)
+    {
+        syslog(LOG_ERR, str_replace(["\n", "\r"], '', $query));
+        return static::getConnection()->prepare($query);
     }
 
     protected static function query($query)
@@ -57,44 +66,21 @@ class Database
             $query = $q . $query;
         }
         syslog(LOG_ERR, str_replace(["\n", "\r"], '', $query));
-        $res = static::getConnection()->query($query);
-        if (!$res) {
-            static::databaseError();
-        }
-        return $res;
+        return static::getConnection()->query($query);
     }
 
     protected static function getSingleRow($resource)
     {
-        return $resource ? $resource->fetch_assoc() : false;
+        return $resource ? $resource->fetch(PDO::FETCH_ASSOC) : false;
     }
 
     protected static function getArray($resource)
     {
-        $result = [];
-        while ($row = $resource->fetch_assoc()) {
-            $result[] = $row;
-        }
-        return $result;
+        return $resource->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public static function getInsertId()
     {
-        return self::$connection->insert_id;
-    }
-
-    protected static function databaseError($onConnection = false)
-    {
-        $msg = 'MySQL Error: ' . self::$connection->errno . ': ' . self::$connection->error;
-        if ($onConnection) {
-            throw new DatabaseConnectionException($msg);
-        } else {
-            throw new DatabaseException($msg);
-        }
-    }
-
-    public static function isDatabaseError()
-    {
-        return ($_GET['file'] ?? '') == 'error' && stripos($_GET['id'] ?? '', 'database') !== null;
+        return self::$connection->lastInsertId();
     }
 }

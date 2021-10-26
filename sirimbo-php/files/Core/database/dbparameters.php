@@ -4,9 +4,8 @@ class DBParameters extends Database
     public static function set($name, $value)
     {
         self::query(
-            "INSERT INTO parameters (pa_name, pa_value) VALUES
-            ('?', '?') ON DUPLICATE KEY UPDATE pa_value='?'",
-            $name, $value, $value
+            "INSERT INTO parameters (pa_name, pa_value) VALUES ('?, '?) ON CONFLICT (pa_name) DO UPDATE SET pa_value=EXCLUDED.pa_value",
+            $name, $value
         );
         return true;
     }

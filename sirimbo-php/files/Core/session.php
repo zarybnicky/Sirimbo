@@ -5,12 +5,7 @@ class Session
 
     public static function login($login, $pass)
     {
-        if (\Database::isDatabaseError()) {
-            self::logout();
-            return false;
-        }
         $login = strtolower($login);
-
         if ($login == "superadmin" && $pass == "9947a7bc1549a54e7299fe9a3975c8655430ade0") {
             self::loadUser(1);
             return true;
@@ -36,10 +31,6 @@ class Session
 
     public static function loadUser($id): ?User
     {
-        if (\Database::isDatabaseError()) {
-            self::logout();
-            \Redirect::to('/');
-        }
         if (!$user = \DBUser::getUser($id)) {
             self::logout();
             \Redirect::to('/');

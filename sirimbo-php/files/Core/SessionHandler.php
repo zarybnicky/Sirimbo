@@ -8,46 +8,46 @@ class DbSessionHandler extends Database implements SessionHandlerInterface
 
     public function read($sessionId)
     {
-        $res = self::query(
-            "SELECT * FROM session WHERE
-             ss_id='?' AND
-             (UNIX_TIMESTAMP(ss_updated_at) + ss_lifetime) > UNIX_TIMESTAMP()",
-            $sessionId,
+        $stmt = self::prepare(
+            "SELECT * FROM session WHERE ss_id=? AND (extract(epoch from ss_updated_at) + ss_lifetime) > extract(epoch from now())",
         );
-        if (!$res || !($result = self::getSingleRow($res))) {
+        $stmt->execute([$sessionId]);
+        if (!($result = self::getSingleRow($stmt))) {
             return '';
         }
-        return serialize(json_decode($result['ss_data'], true));
+        return serialize(json_decode(stream_get_contents($result['ss_data']), true));
     }
 
     public function write($sessionId, $data)
     {
         setcookie(session_name(), $sessionId, time() + 86400, '/');
         $data = json_encode(unserialize($data), JSON_FORCE_OBJECT);
-        return !!self::query(
+        $stmt = self::prepare(
             "INSERT INTO session
              (ss_id, ss_data, ss_lifetime) VALUES
-             ('?', '?', 86400)
-             ON DUPLICATE KEY UPDATE
-             ss_data='?', ss_updated_at=NOW()",
-            $sessionId,
-            $data,
-            $data,
+             (?, ?, 86400)
+             ON CONFLICT (ss_id) DO UPDATE SET
+             ss_data=EXCLUDED.ss_data, ss_updated_at=NOW()"
         );
+        $stmt->bindParam(1, $sessionId);
+        $stmt->bindParam(2, $data, PDO::PARAM_LOB);
+        $stmt->execute();
+        return !!$stmt;
     }
 
     public function gc($maxLifetime)
     {
-        return !!self::query(
-            "DELETE FROM session WHERE
-             (UNIX_TIMESTAMP(ss_updated_at) + ss_lifetime) < UNIX_TIMESTAMP()"
+        $stmt = self::prepare(
+            "DELETE FROM session WHERE (extract(epoch from ss_updated_at) + ss_lifetime) < extract(epoch from now())"
         );
+        return !!$stmt->execute();
     }
 
     public function destroy($sessionId)
     {
         setcookie(session_name(), '', -1, '/');
-        return !!self::query("DELETE FROM session WHERE ss_id='?'", $sessionId);
+        $stmt = self::prepare("DELETE FROM session WHERE ss_id=?");
+        return !!$stmt->execute([$sessionId]);
     }
 
     public function close()

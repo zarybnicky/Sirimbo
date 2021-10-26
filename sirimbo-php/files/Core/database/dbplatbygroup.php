@@ -4,9 +4,9 @@ class DBPlatbyGroup extends Database
     public static function addChild($gid, $cid)
     {
         self::query(
-            "INSERT IGNORE INTO platby_category_group
-            (pcg_id_group,pcg_id_category) VALUES
-            ('?','?')",
+            "INSERT INTO platby_category_group
+            (pcg_id_group,pcg_id_category) VALUES ('?','?')
+            ON CONFLICT (pcg_id_group,pcg_id_category) DO NOTHING",
             $gid,
             $cid,
         );

@@ -26,6 +26,6 @@ scheduleAPI = toggleVisible
 toggleVisible :: Effs '[Error ServerError, Database] m => (SessionId, Entity User) -> ScheduleId -> m Bool
 toggleVisible _ k = do
   schedule <- maybe (throw err404) pure =<< query (get k)
-  let notVisible = boolToText . not . textToBool $ scheduleVisible schedule
+  let notVisible = not $ scheduleVisible schedule
   newSchedule <- query $ updateGet k [ScheduleVisible =. notVisible]
-  pure . textToBool $ scheduleVisible newSchedule
+  pure $ scheduleVisible newSchedule

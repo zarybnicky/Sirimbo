@@ -8,12 +8,12 @@ class DBPlatbyItem extends Database
                 (pi_id_user,pi_id_category,pi_id_raw,pi_amount,pi_date,pi_prefix)
             VALUES
                 ('?','?'," . ($rid !== '' ? "'$rid'" : "NULL") . ",'?','?','?')
-            ON DUPLICATE KEY UPDATE
-                pi_id_user=VALUES(pi_id_user),
-                pi_id_category=VALUES(pi_id_category),
-                pi_amount=VALUES(pi_amount),
-                pi_date=VALUES(pi_date),
-                pi_prefix=VALUES(pi_prefix)",
+            ON CONFLICT (pi_id_raw) DO UPDATE SET
+                pi_id_user=EXCLUDED.pi_id_user,
+                pi_id_category=EXCLUDED.pi_id_category,
+                pi_amount=EXCLUDED.pi_amount,
+                pi_date=EXCLUDED.pi_date,
+                pi_prefix=EXCLUDED.pi_prefix",
             $uid,
             $cid,
             $amount,
@@ -42,10 +42,10 @@ class DBPlatbyItem extends Database
         self::query("DELETE FROM platby_item WHERE pi_id='?'", $id);
     }
 
-    public static function get($joined = false, $filter = [], $sort = ['pi_date DESC'], $date = [])
+    public static function get($joined = false, $filter = [], $date = [])
     {
         $query
-            = 'SELECT * FROM platby_item'
+            = 'SELECT * FROM (SELECT DISTINCT ON (pi_id) * FROM platby_item'
             . ($joined ?
                ' LEFT JOIN users ON pi_id_user=u_id
                  LEFT JOIN platby_category ON pi_id_category=pc_id
@@ -76,11 +76,7 @@ class DBPlatbyItem extends Database
             }
         }
 
-        $query .= ' GROUP BY pi_id';
-
-        if (!empty($sort)) {
-            $query .= ' ORDER BY ' . implode(', ', $sort);
-        }
+        $query .= ') t ORDER BY t.pi_date DESC';
 
         $res = self::query($query);
         return self::getArray($res);

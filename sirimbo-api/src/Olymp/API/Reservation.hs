@@ -64,6 +64,6 @@ toggleVisible ::
   m Bool
 toggleVisible _ k = do
   reservation <- maybe (throw err404) pure =<< query (get k)
-  let notVisible = boolToText . not . textToBool $ reservationVisible reservation
+  let notVisible = not $ reservationVisible reservation
   newReservation <- query $ updateGet k [ReservationVisible =. notVisible]
-  pure . textToBool $ reservationVisible newReservation
+  pure $ reservationVisible newReservation

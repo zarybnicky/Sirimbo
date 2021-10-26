@@ -82,7 +82,7 @@ library
                      , openapi3
                      , optparse-applicative
                      , persistent
-                     , persistent-mysql
+                     , persistent-postgresql
                      , persistent-template
                      , process
                      , qrcode-core

@@ -150,14 +150,10 @@ class DBGalerie extends Database
     {
         $dir = $dir ? "(SELECT gd_id FROM galerie_dir gd2 WHERE gd2.gd_path='$dir')" : 1;
         self::query(
-            "INSERT INTO galerie_foto
-            (gf_id_rodic,gf_path,gf_name,gf_kdo) VALUES
-            ($dir,'?','?','?')
-            ON DUPLICATE KEY UPDATE gf_name='?'",
+            "INSERT INTO galerie_foto (gf_id_rodic,gf_path,gf_name,gf_kdo) VALUES ($dir,?,?,?)",
             $path,
             $name,
             $kdo,
-            $name,
         );
         return true;
     }
@@ -166,14 +162,10 @@ class DBGalerie extends Database
     {
         $parent = $parent ? "(SELECT gd_id FROM galerie_dir gd2 WHERE gd2.gd_path='$parent')" : 1;
         self::query(
-            "INSERT INTO galerie_dir
-            (gd_name, gd_id_rodic, gd_level, gd_path) VALUES
-            ('?', $parent, '?', '?')
-            ON DUPLICATE KEY UPDATE gd_name='?'",
+            "INSERT INTO galerie_dir (gd_name, gd_id_rodic, gd_level, gd_path) VALUES (?,$parent,?,?)",
             $name,
             $level,
             $path,
-            $name,
         );
     }
 

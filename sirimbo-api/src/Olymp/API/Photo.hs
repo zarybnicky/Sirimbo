@@ -33,9 +33,9 @@ photoAPI = toggleVisible :<|> getAll
 toggleVisible :: Effs '[Error ServerError, Database] m => (SessionId, Entity User) -> PhotoDirectoryId -> m Bool
 toggleVisible _ k = do
   photo <- maybe (throw err404) pure =<< query (get k)
-  let notVisible = boolToText . not . textToBool $ photoDirectoryHidden photo
+  let notVisible = not $ photoDirectoryHidden photo
   newPhoto <- query $ updateGet k [PhotoDirectoryHidden =. notVisible]
-  pure . textToBool $ photoDirectoryHidden newPhoto
+  pure $ photoDirectoryHidden newPhoto
 
 getAll :: Effs '[Database] m => m [PhotoDirectory]
 getAll = fmap entityVal <$> query (selectList [] [])

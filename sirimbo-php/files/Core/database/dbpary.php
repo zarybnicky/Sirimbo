@@ -44,14 +44,14 @@ class DBPary extends Database
     {
         if ($pohlavi == 'm') {
             $res = self::query(
-                'SELECT * FROM pary LEFT JOIN users ON p_id_partnerka=u_id ' .
-                'WHERE p_id_partner="?" AND p_archiv="0"',
+                "SELECT * FROM pary LEFT JOIN users ON p_id_partnerka=u_id " .
+                "WHERE p_id_partner='?' AND p_archiv='0'",
                 $partner
             );
         } else {
             $res = self::query(
-                'SELECT * FROM pary LEFT JOIN users ON p_id_partner=u_id ' .
-                'WHERE p_id_partnerka!="0" AND p_id_partnerka="?" AND p_archiv="0"',
+                "SELECT * FROM pary LEFT JOIN users ON p_id_partner=u_id " .
+                "WHERE p_id_partnerka!='0' AND p_id_partnerka='?' AND p_archiv='0'",
                 $partner
             );
         }
@@ -71,12 +71,12 @@ class DBPary extends Database
     public static function getUnpairedUsers()
     {
         $res = self::query(
-            'SELECT u_jmeno,u_prijmeni,u_id
+            "SELECT u_jmeno,u_prijmeni,u_id
             FROM users
             WHERE u_id NOT IN
             (SELECT u_id FROM users
                LEFT JOIN pary ON p_id_partnerka=u_id OR p_id_partner=u_id
-             WHERE p_archiv="0")'
+             WHERE p_archiv='0')"
         );
         return self::getArray($res);
     }

@@ -32,14 +32,6 @@ import Olymp.Schema as X (EntityField (..), SessionId, User)
 import Servant as X (Capture, Get, HasServer (..), JSON, Post, QueryParam, ServerError, ServerT, err404, (:<|>) (..), (:>))
 import Servant.OpenApi (HasOpenApi (..))
 
-textToBool :: Text -> Bool
-textToBool "0" = False
-textToBool _ = True
-
-boolToText :: Bool -> Text
-boolToText True = "1"
-boolToText False = "0"
-
 data OpId (a :: Symbol)
 
 instance (HasOpenApi a, KnownSymbol s) => HasOpenApi (OpId s :> a) where

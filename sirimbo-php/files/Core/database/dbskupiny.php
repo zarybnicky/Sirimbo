@@ -4,8 +4,9 @@ class DBSkupiny extends Database
     public static function addChild($sid, $gid)
     {
         self::query(
-            "INSERT IGNORE INTO platby_group_skupina
-            (pgs_id_skupina,pgs_id_group) VALUES ('?','?')",
+            "INSERT INTO platby_group_skupina
+            (pgs_id_skupina,pgs_id_group) VALUES ('?','?')
+            ON CONFLICT (pgs_id_skupina,pgs_id_group) DO NOTHING",
             $sid,
             $gid,
         );

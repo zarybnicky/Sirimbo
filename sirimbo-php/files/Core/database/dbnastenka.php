@@ -7,7 +7,7 @@ class DBNastenka extends Database implements Pagable
         "SELECT *
         FROM upozorneni
             LEFT JOIN users ON up_kdo=u_id
-        ORDER BY up_timestamp_add DESC" . (($offset !== null && $count !== null) ? " LIMIT $offset,$count" : ''));
+        ORDER BY up_timestamp_add DESC" . (($offset !== null && $count !== null) ? " LIMIT $count OFFSET $offset" : ''));
         return self::getArray($res);
     }
 
@@ -18,8 +18,8 @@ class DBNastenka extends Database implements Pagable
 
     public function getCount($options = null)
     {
-        $res = self::query("SELECT COUNT(*) FROM upozorneni");
-        return self::getSingleRow($res)['COUNT(*)'];
+        $res = self::query("SELECT COUNT(*) as count FROM upozorneni");
+        return self::getSingleRow($res)['count'];
     }
 
     public static function getNastenkaSkupiny($id)

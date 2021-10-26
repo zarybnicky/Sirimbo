@@ -14,7 +14,7 @@ where
 
 import Control.Effect (Eff)
 import Data.Time (Day (ModifiedJulianDay), UTCTime (..))
-import Database.Persist.MySQL (Entity)
+import Database.Persist.Sql (Entity)
 import Olymp.Auth (PhpAuth)
 import Olymp.Effect.Session (SessionEff, deleteSession)
 import Olymp.Schema (SessionId, User (..))

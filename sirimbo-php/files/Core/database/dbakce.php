@@ -13,17 +13,17 @@ class DBAkce extends Database implements Pagable
     public function getPage($offset, $count, $options = '')
     {
         $res = self::query(
-            "SELECT * FROM akce $options LIMIT ?,?",
-            $offset,
-            $count
+            "SELECT * FROM akce $options LIMIT ? OFFSET ?",
+            $count,
+            $offset
         );
         return self::getArray($res);
     }
 
     public function getCount($options = null)
     {
-        $res = self::query("SELECT COUNT(*) FROM akce");
-        return $res ? self::getSingleRow($res)['COUNT(*)'] : false;
+        $res = self::query("SELECT COUNT(*) as count FROM akce");
+        return $res ? self::getSingleRow($res)['count'] : false;
     }
 
     public static function getSingleAkce($id, $onlyVisible = false)

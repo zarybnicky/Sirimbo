@@ -23,7 +23,6 @@ class PlatbyItems
             'data' => \DBPlatbyItem::get(
                 true,
                 $filter,
-                ['pi_date DESC'],
                 ['from' => $date->getFromDate(), 'to' => $date->getToDate()]
             ),
             'user' => $_GET['user'] ?? '',
@@ -130,7 +129,7 @@ class PlatbyItems
     {
         $raw = [];
         if ($id &&
-            ($item = \DBPlatbyItem::getSingle($id)) &&
+            ($item = \DBPlatbyItem::getSingle($id)) && $item['pi_id_raw'] &&
             ($data = \DBPlatbyRaw::getSingle($item['pi_id_raw']))
         ) {
             foreach (unserialize($data['pr_raw']) as $key => $value) {

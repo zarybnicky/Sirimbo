@@ -5,8 +5,8 @@ Reservation sql=nabidka
   maximumPerPair Int sql=n_max_pocet_hod default=0 sqltype=INT(11)
   from Day sql=n_od
   to Day sql=n_do
-  visible Text sql=n_visible sqltype=enum('0','1') default='0'
-  lock Text sql=n_lock sqltype=enum('0','1') default='0'
+  visible Bool sql=n_visible default=0
+  lock Bool sql=n_lock default=0
   updatedAt UTCTime sql=n_timestamp sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
 
 ReservationItem sql=nabidka_item
@@ -14,5 +14,5 @@ ReservationItem sql=nabidka_item
   parent ReservationId sql=ni_id_rodic
   partner CoupleId sql=ni_partner
   numberLessons Int sql=ni_pocet_hod default=1 sqltype=SMALLINT(3)
-  lock Text sql=ni_lock sqltype=enum('0','1') default='0'
+  lock Bool sql=ni_lock default=0
   UniqueReservationItem parent partner sql=ni_id_rodic

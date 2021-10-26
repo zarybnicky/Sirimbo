@@ -9,7 +9,7 @@ Couple sql=pary
   latinPoints Int sql=p_lat_body default=0 "sqltype=SMALLINT(5) UNSIGNED"
   latinFinals Int sql=p_lat_finale default=0 "sqltype=TINYINT(1) UNSIGNED"
   score Int sql=p_hodnoceni default=0 "sqltype=MEDIUMINT(8) UNSIGNED"
-  archived Text sql=p_archiv sqltype=enum('0','1') default='0'
+  archived Bool sql=p_archiv default=0
   createdAt UTCTime sql=p_timestamp_add sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   archivedAt UTCTime sql=p_timestamp_archive sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
 

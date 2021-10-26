@@ -3,8 +3,8 @@ Schedule sql=rozpis
   trainer UserId sql=r_trener
   location Text sql=r_kde
   date Day sql=r_datum
-  visible Text sql=r_visible sqltype=enum('0','1') default='0'
-  lock Text sql=r_lock sqltype=enum('0','1') default='0'
+  visible Bool sql=r_visible default=0
+  lock Bool sql=r_lock default=0
   updatedAt UTCTime sql=r_timestamp sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
 
 ScheduleItem sql=rozpis_item
@@ -13,4 +13,4 @@ ScheduleItem sql=rozpis_item
   partner CoupleId Maybe sql=ri_partner default=NULL
   from TimeOfDay sql=ri_od
   to TimeOfDay sql=ri_do
-  lock Text sql=ri_lock sqltype=enum('0','1') default='0'
+  lock Bool sql=ri_lock default=0

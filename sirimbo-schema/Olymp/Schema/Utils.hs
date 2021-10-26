@@ -4,6 +4,7 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeApplications #-}
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module Olymp.Schema.Utils
   ( getPrefix,
@@ -37,7 +38,7 @@ instance {-# OVERLAPPABLE #-} Typeable a => ToSchema (Key a) where
     schema <- declareSchema (Proxy @Integer)
     pure $ NamedSchema (Just "Key") schema
 
-instance {-# OVERLAPPABLE #-} Typeable a => ToParamSchema (Key a) where
+instance {-# OVERLAPPABLE #-} ToParamSchema (Key a) where
   toParamSchema _ = toParamSchema (Proxy @Integer)
 
 instance ToSchema Value where

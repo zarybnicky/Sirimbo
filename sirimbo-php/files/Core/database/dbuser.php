@@ -36,7 +36,7 @@ class DBUser extends Database implements Pagable
                 $q .= ' ORDER BY u_prijmeni';
                 break;
         }
-        $q .= " LIMIT $offset,$count";
+        $q .= " LIMIT $count OFFSET $offset";
         $res = self::query($q);
         return self::getArray($res);
     }
@@ -47,7 +47,7 @@ class DBUser extends Database implements Pagable
             $options['status'] = 'all';
         }
 
-        $q = "SELECT COUNT(*) FROM users WHERE 1=1";
+        $q = "SELECT COUNT(*) as count FROM users WHERE 1=1";
 
         if (is_numeric($options['group'])) {
             $q .= " AND u_group='{$options['group']}'";
@@ -74,7 +74,7 @@ class DBUser extends Database implements Pagable
 
         $res = self::query($q);
         $res = self::getSingleRow($res);
-        return $res['COUNT(*)'];
+        return $res['count'];
     }
 
     public static function checkUser($login, $pass)
@@ -194,7 +194,7 @@ class DBUser extends Database implements Pagable
             "u_street,u_conscription_number,u_orientation_number,u_district,u_city,u_postal_code,u_nationality," .
             "u_group,u_skupina,u_lock,u_ban,u_confirmed,u_system,u_dancer,u_teacher,u_member_since,u_member_until," .
             "u_gdpr_signed_at) VALUES " .
-            "('?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?',CURDATE(),NULL,CURDATE())",
+            "('?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?',CURRENT_DATE,NULL,CURRENT_DATE)",
             $login, $pass, $jmeno, $prijmeni, $pohlavi, $email, $telefon, $narozeni, $rodnecislo, $poznamky,
             $street, $popisne, $orientacni, $district, $city, $postal, $nationality,
             $group, $skupina, $lock, $ban, $confirmed, $system, $dancer, $trener
@@ -246,29 +246,31 @@ class DBUser extends Database implements Pagable
     public static function getUsersWithSkupinaPlatby()
     {
         $res = self::query(
-            "SELECT *
-            FROM users
-                LEFT JOIN (
-                    SELECT * FROM platby_item
-                        JOIN platby_category ON pc_id=pi_id_category
-                    WHERE
+            "SELECT * FROM (
+               SELECT DISTINCT ON (u_id) * FROM users LEFT JOIN (
+                 SELECT * FROM platby_item
+                   JOIN platby_category ON pc_id=pi_id_category
+                   WHERE
                         (pc_use_prefix='0' AND
-                         CURDATE() >= pc_valid_from AND
-                         CURDATE() <= pc_valid_to)
+                         CURRENT_DATE >= pc_valid_from AND
+                         CURRENT_DATE <= pc_valid_to)
                         OR
-                        (pc_use_prefix='1' AND
-                         DATE_SUB(CURDATE(), INTERVAL (YEAR(CURDATE())) YEAR) <= pc_valid_from AND
-                         DATE_SUB(CURDATE(), INTERVAL (YEAR(CURDATE())) YEAR) >= pc_valid_to)
-                ) pi ON u_id=pi_id_user
-                JOIN skupiny on s_id=u_skupina
-                LEFT JOIN platby_group_skupina ON pgs_id_skupina=s_id
-                LEFT JOIN platby_category_group ON pcg_id_category=pc_id
-                LEFT JOIN platby_group ON pg_id=pgs_id_group AND ((pg_id=pcg_id_group AND pi_id IS NOT NULL) OR (pi_id IS NULL))
-            WHERE
-                u_confirmed='1' AND u_ban='0' AND u_system='0' AND ((pg_type='1' AND pi_id IS NOT NULL) OR (pi_id IS NULL AND (pg_type='1' OR pg_type IS NULL)))
-            GROUP BY u_id
-            ORDER BY s_id,u_prijmeni"
+                        (pc_use_prefix='1'
+
+                        )
+                  ) pi ON u_id=pi_id_user
+                  JOIN skupiny on s_id=u_skupina
+                  LEFT JOIN platby_group_skupina ON pgs_id_skupina=s_id
+                  LEFT JOIN platby_category_group ON pcg_id_category=pc_id
+                  LEFT JOIN platby_group ON pg_id=pgs_id_group AND ((pg_id=pcg_id_group AND pi_id IS NOT NULL) OR (pi_id IS NULL))
+              WHERE
+                  u_confirmed='1' AND u_ban='0' AND u_system='0' AND ((pg_type='1' AND pi_id IS NOT NULL) OR (pi_id IS NULL AND (pg_type='1' OR pg_type IS NULL)))
+              ORDER BY u_id
+            ) t ORDER BY t.s_id, t.u_prijmeni"
         );
+        // AND DATE_SUB(CURDATE(), INTERVAL (YEAR(CURDATE())) YEAR) <= pc_valid_from
+        // AND DATE_SUB(CURDATE(), INTERVAL (YEAR(CURDATE())) YEAR) >= pc_valid_to
+
         return self::getArray($res);
     }
 
@@ -342,9 +344,10 @@ class DBUser extends Database implements Pagable
     public static function getGroupCounts()
     {
         $res = self::query(
-            "SELECT u_group, count(*) as count, permissions.*
+            "SELECT u_group, count(*) as count, pe_name
             FROM permissions LEFT JOIN users ON u_group=pe_id
-            GROUP BY u_group ORDER BY count DESC"
+            GROUP BY u_group, pe_name
+            ORDER BY u_group, count DESC"
         );
         return self::getArray($res);
     }

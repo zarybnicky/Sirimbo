@@ -2,30 +2,30 @@ UserGroup sql=skupiny
   Id sql=s_id
   name Text sql=s_name
   description Text sql=s_description
-  colorRgb Text sql=s_color_rgb sqltype=VARCHAR(7)
-  colorText Text sql=s_color_text sqltype=VARCHAR(20)
+  colorRgb Text sql=s_color_rgb
+  colorText Text sql=s_color_text
 
 User sql=users
   Id sql=u_id
-  login Text sql=u_login sqltype=CHAR(20)
+  login Text sql=u_login
   password Text sql=u_pass
   name Text sql=u_jmeno
   surname Text sql=u_prijmeni
   gender Text sql=u_pohlavi
   email Text sql=u_email
-  phone Text sql=u_telefon sqltype=CHAR(17)
+  phone Text sql=u_telefon
   birthDate Day sql=u_narozeni
-  birthNumber Text Maybe sql=u_rodne_cislo sqltype=CHAR(10) default=NULL
+  birthNumber Text Maybe sql=u_rodne_cislo default=NULL
   notes Text sql=u_poznamky default=''
   updatedAt UTCTime sql=u_timestamp sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   level Int sql=u_level default=0 sqltype=TINYINT(3)
   permission PermissionId sql=u_group
   userGroup UserGroupId sql=u_skupina default=1
-  dancer Text sql=u_dancer sqltype=enum('0','1') default='0'
-  ban Text sql=u_ban sqltype=enum('0','1') default='0'
-  lock Text sql=u_lock sqltype=enum('0','1') default='0'
-  confirmed Text sql=u_confirmed sqltype=enum('0','1') default='0'
-  system Text sql=u_system sqltype=enum('0','1') default='0'
+  dancer Bool sql=u_dancer default=0
+  ban Bool sql=u_ban default=0
+  lock Bool sql=u_lock default=0
+  confirmed Bool sql=u_confirmed default=0
+  system Bool sql=u_system default=0
   street Text sql=u_street
   conscriptionNumber Text sql=u_conscription_number default=''
   orientationNumber Text sql=u_orientation_number default=''
@@ -36,5 +36,5 @@ User sql=users
   memberSince UTCTime Maybe sql=u_member_since
   memberUntil UTCTime Maybe sql=u_member_until default=NULL
   createdAt UTCTime sql=u_created_at sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
-  teacher Text sql=u_teacher sqltype=enum('0','1') default='0'
+  teacher Bool sql=u_teacher default=0
   gdprSignedAt UTCTime Maybe sql=u_gdpr_signed_at

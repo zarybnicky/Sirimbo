@@ -9,10 +9,7 @@ import Data.Yaml (FromJSON)
 import GHC.Generics (Generic)
 
 data Config = Config
-  { dbHost :: String,
-    dbUser :: String,
-    dbPassword :: Maybe String,
-    dbDatabase :: String
+  { dbConnString :: String
   }
   deriving (Show, Generic)
 

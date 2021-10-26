@@ -4,7 +4,7 @@ PhotoDirectory sql=galerie_dir
   name Text sql=gd_name
   level Int sql=gd_level default=1 sqltype=SMALLINT(6)
   path Text sql=gd_path
-  hidden Text sql=gd_hidden sqltype=enum('0','1') default='0'
+  hidden Bool sql=gd_hidden default=0
 
 Photo sql=galerie_foto
   Id sql=gf_id

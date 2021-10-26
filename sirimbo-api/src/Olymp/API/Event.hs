@@ -29,17 +29,9 @@ type EventAPI =
 eventAPI :: Effs '[Error ServerError, Database] m => ServerT EventAPI m
 eventAPI = toggleVisible
 
-textToBool :: Text -> Bool
-textToBool "0" = False
-textToBool _ = True
-
-boolToText :: Bool -> Text
-boolToText True = "1"
-boolToText False = "0"
-
 toggleVisible :: Effs '[Error ServerError, Database] m => (SessionId, Entity User) -> EventId -> m Bool
 toggleVisible _ k = do
   event <- maybe (throw err404) pure =<< query (get k)
-  let notVisible = boolToText . not . textToBool $ eventVisible event
+  let notVisible = not $ eventVisible event
   newEvent <- query $ updateGet k [EventVisible =. notVisible]
-  pure . textToBool $ eventVisible newEvent
+  pure $ eventVisible newEvent

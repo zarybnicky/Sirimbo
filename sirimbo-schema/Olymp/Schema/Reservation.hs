@@ -23,7 +23,6 @@ module Olymp.Schema.Reservation
   , ReservationItem(..)
   ) where
 
-import Data.Text (Text)
 import Data.Time (Day, UTCTime)
 import Database.Persist (Key, Unique, EntityField)
 import Olymp.Schema.Couple (CoupleId)

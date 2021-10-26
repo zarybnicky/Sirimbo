@@ -5,17 +5,17 @@ class DBVideo extends Database implements Pagable
     {
         switch ($options) {
             case 'orphan':
-                $filter = 'v_playlist IS NULL OR v_playlist="" ORDER BY v_created_at DESC';
+                $filter = "v_playlist IS NULL OR v_playlist='' ORDER BY v_created_at DESC";
                 break;
             case 'playlist':
-                $filter = 'v_playlist IS NOT NULL AND v_playlist<>"" ORDER BY v_playlist DESC';
+                $filter = "v_playlist IS NOT NULL AND v_playlist<>'' ORDER BY v_playlist DESC";
                 break;
             default:
                 $filter = '1=1 ORDER BY v_created_at';
                 break;
         }
         $res = self::query(
-            "SELECT * FROM video WHERE $filter LIMIT $offset,$count"
+            "SELECT * FROM video WHERE $filter LIMIT $count OFFSET $offset"
         );
         return self::getArray($res);
     }
@@ -24,46 +24,37 @@ class DBVideo extends Database implements Pagable
     {
         switch ($options) {
             case 'orphan':
-                $filter = 'v_playlist IS NULL OR v_playlist=""';
+                $filter = "v_playlist IS NULL OR v_playlist=''";
                 break;
             case 'playlist':
-                $filter = 'v_playlist IS NOT NULL AND v_playlist<>""';
+                $filter = "v_playlist IS NOT NULL AND v_playlist<>''";
                 break;
             default:
                 $filter = '1=1';
                 break;
         }
         $res = self::query(
-            "SELECT COUNT(*) FROM video WHERE $filter"
+            "SELECT COUNT(*) as count FROM video WHERE $filter"
         );
-        return self::getSingleRow($res)['COUNT(*)'];
+        return self::getSingleRow($res)['count'];
     }
 
     public static function getAll()
     {
-        $res = self::query(
-            'SELECT v_id, v_uri, v_title, v_author, v_description, v_playlist, v_created_at, v_updated_at
-            FROM video ORDER BY v_created_at DESC'
-        );
+        $res = self::query('SELECT * FROM video ORDER BY v_created_at DESC');
         return self::getArray($res);
     }
 
     public static function getOrphan()
     {
-        $res = self::query(
-            'SELECT v_id, v_uri, v_title, v_author, v_description, v_playlist, v_created_at, v_updated_at
-            FROM video
-            WHERE v_playlist IS NULL OR v_playlist=""
-            ORDER BY v_created_at DESC'
-        );
+        $res = self::query("SELECT * FROM video WHERE v_playlist IS NULL OR v_playlist='' ORDER BY v_created_at DESC");
         return self::getArray($res);
     }
 
     public static function getByPlaylist($id)
     {
         $res = self::query(
-            "SELECT v_id, v_uri, v_title, v_author, v_description, v_playlist, v_created_at, v_updated_at
-            FROM video LEFT JOIN video_list ON vl_url=v_playlist
+            "SELECT video.* FROM video LEFT JOIN video_list ON vl_url=v_playlist
             WHERE vl_id='?'
             ORDER BY v_created_at DESC",
             $id
@@ -73,12 +64,7 @@ class DBVideo extends Database implements Pagable
 
     public static function getSingle($id)
     {
-        $res = self::query(
-            "SELECT v_id, v_uri, v_title, v_author, v_description, v_playlist, v_created_at, v_updated_at
-            FROM video
-            WHERE v_id='?'",
-            $id
-        );
+        $res = self::query("SELECT * FROM video WHERE v_id='?'", $id);
         return self::getSingleRow($res);
     }
 

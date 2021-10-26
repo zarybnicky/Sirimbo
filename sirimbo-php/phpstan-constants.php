@@ -1,8 +1,5 @@
 <?php
-define('DB_SERVER', '');
-define('DB_DATABASE', '');
-define('DB_USER', '');
-define('DB_PASS', '');
+define('DB_CONN_STRING', '');
 
 define('GALERIE', '');
 define('GALERIE_THUMBS', '');
