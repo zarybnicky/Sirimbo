@@ -21,11 +21,13 @@
     overlay = final: prev: let
       inherit (prev.haskell.lib) doJailbreak dontCheck justStaticExecutables
         generateOptparseApplicativeCompletion unmarkBroken;
+
       graphql-engine-src = final.hasura-graphql-engine.src;
       pkgfetch = builtins.fetchurl {
         url = "https://github.com/vercel/pkg-fetch/releases/download/v3.1/node-v12.22.1-linuxstatic-x64";
         sha256 = "04dvvj8k2n254f3jfxnhzrbvr354vinfrbmagd3c5czkfd1c1gjg";
       };
+
       cli-ext-node-modules = (import ./nix/cli-ext-node-composition.nix {
         pkgs = final;
         nodejs = final.nodejs-14_x;
@@ -33,32 +35,38 @@
         src = "${graphql-engine-src}/cli-ext";
         postInstall = "mv $out/lib/node_modules/*/node_modules /tmp/_; rm -rf $out; mv /tmp/_ $out";
       };
-      console-assets-node-modules = (import ./nix/console-assets-node-composition.nix { 
-        pkgs = final;
-      }).package.override {
-        src = "${graphql-engine-src}/console";
-        preRebuild = ''
-          substituteInPlace node_modules/cypress/package.json \
-            --replace '"postinstall": "node index.js --exec install",' ""
-        '';
-        postInstall = "mv $out/lib/node_modules/*/*/node_modules /tmp/_; rm -rf $out; mv /tmp/_ $out";
-        buildInputs = [final.python2];
-      };
+
+      # console-assets-node-modules = (import ./nix/console-assets-node-composition.nix { 
+      #   pkgs = final;
+      # }).package.override {
+      #   src = "${graphql-engine-src}/console";
+      #   preRebuild = ''
+      #     substituteInPlace node_modules/cypress/package.json \
+      #       --replace '"postinstall": "node index.js --exec install",' ""
+      #   '';
+      #   postInstall = "mv $out/lib/node_modules/*/*/node_modules /tmp/_; rm -rf $out; mv /tmp/_ $out";
+      #   buildInputs = [final.python2];
+      # };
     in {
-      hasura-console-assets = final.stdenv.mkDerivation rec {
-        name = "hasura-console-assets-${graphql-engine-src.rev}";
-        src = "${graphql-engine-src}/console";
-        buildPhase = ''
-          source $stdenv/setup;
-          cp -a ${console-assets-node-modules} node_modules
-          substituteInPlace Makefile --replace \
-            'gsutil -m cp -r gs://$(BUCKET_NAME)/console/assets/common "$(DIST_PATH)"' \
-           'tar xzvf ${./nix/console-assets-common.tar.gz}'
-           HOME=$(pwd) make server-build
-        '';
-        installPhase = "mkdir -p $out; cp -a static/dist/common $out; cp -a static/dist/versioned $out";
-        buildInputs = [ final.nodejs-14_x ];
-      };
+
+      hasura-graphql-engine = prev.hasura-graphql-engine.overrideAttrs (oldAttrs: {
+        VERSION = prev.hasura-graphql-engine.version;
+      });
+
+      # hasura-console-assets = final.stdenv.mkDerivation rec {
+      #   name = "hasura-console-assets-${graphql-engine-src.rev}";
+      #   src = "${graphql-engine-src}/console";
+      #   buildPhase = ''
+      #     source $stdenv/setup;
+      #     cp -a ${console-assets-node-modules} node_modules
+      #     substituteInPlace Makefile --replace \
+      #       'gsutil -m cp -r gs://$(BUCKET_NAME)/console/assets/common "$(DIST_PATH)"' \
+      #      'tar xzvf ${./nix/console-assets-common.tar.gz}'
+      #      HOME=$(pwd) make server-build
+      #   '';
+      #   installPhase = "mkdir -p $out; cp -a static/dist/common $out; cp -a static/dist/versioned $out";
+      #   buildInputs = [ final.nodejs-14_x ];
+      # };
 
       hasura-cli-ext = final.stdenv.mkDerivation rec {
         name = "hasura-cli-ext-${graphql-engine-src.rev}";
@@ -88,14 +96,14 @@
         installPhase = ''
           mkdir -p $out/bin
           ln -s ${final.hasura-cli}/bin/hasura $out/bin/hasura
-          ln -s ${final.hasura-cli}/bin/hasura $out/bin/hasura-console
           wrapProgram $out/bin/hasura \
             --add-flags "--cli-ext-path" --add-flags "${final.hasura-cli-ext}/bin/cli-ext-hasura"
-          wrapProgram $out/bin/hasura-console \
-            --add-flags "console" \
-            --add-flags "--cli-ext-path" --add-flags "${final.hasura-cli-ext}/bin/cli-ext-hasura" \
-            --add-flags "--static-dir" --add-flags "${final.hasura-console-assets}"
         '';
+          # ln -s ${final.hasura-cli}/bin/hasura $out/bin/hasura-console
+          # wrapProgram $out/bin/hasura-console \
+          #   --add-flags "console" \
+          #   --add-flags "--cli-ext-path" --add-flags "${final.hasura-cli-ext}/bin/cli-ext-hasura" \
+          #   --add-flags "--static-dir" --add-flags "${final.hasura-console-assets}"
       };
 
       phpstan = final.callPackage ./nix/phpstan.nix {};
@@ -428,7 +436,6 @@
             environment.HASURA_GRAPHQL_AUTH_HOOK = "http://localhost:${toString cfg.internalPort}/api/graphql-auth";
             environment.HASURA_GRAPHQL_ENABLED_LOG_TYPES = "startup, http-log, webhook-log, websocket-log, query-log";
             environment.HASURA_GRAPHQL_EXPERIMENTAL_FEATURES = "inherited_roles";
-            environment.HASURA_GRAPHQL_CONSOLE_ASSETS_DIR = "${unstablePkgs.hasura-console-assets}";
             serviceConfig = {
               User = cfg.user;
               Group = cfg.group;
