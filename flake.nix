@@ -12,7 +12,7 @@
     };
     unstablePkgs = import unstable {
       system = "x86_64-linux";
-      overlays = [ self.overlay ];
+      # overlays = [ self.overlay ];
     };
     compiler = "ghc8104";
     hsPkgs = pkgs.haskell.packages.${compiler};
@@ -22,49 +22,13 @@
       inherit (prev.haskell.lib) doJailbreak dontCheck justStaticExecutables
         generateOptparseApplicativeCompletion unmarkBroken;
     in {
-      hasura-graphql-engine = prev.hasura-graphql-engine.overrideAttrs (oldAttrs: {
+      hasura-cli = unstablePkgs.hasura-cli;
+      hasura-graphql-engine = unstablePkgs.hasura-graphql-engine.overrideAttrs (oldAttrs: {
         VERSION = prev.hasura-graphql-engine.version;
       });
-
-      phpstan = final.stdenv.mkDerivation {
-        pname = "phpstan";
-        version = "0.12.67";
-        src = final.fetchurl {
-          url = "https://github.com/phpstan/phpstan/releases/download/0.12.67/phpstan.phar";
-          sha256 = "/c+ci/Ok08Qr4bFRiE8e0wSPNo3/k7LbW/KJOkcUTDw=";
-        };
-        phases = [ "installPhase" ];
-        nativeBuildInputs = [ final.makeWrapper ];
-        installPhase = ''
-          mkdir -p $out/bin
-          install -D $src $out/libexec/phpstan/phpstan.phar
-          makeWrapper ${final.php74}/bin/php $out/bin/phpstan \
-          --add-flags "$out/libexec/phpstan/phpstan.phar"
-        '';
-      };
-
-      mysql_fdw = final.stdenv.mkDerivation rec {
-        name = "mysql_fdw-${version}";
-        version = "2.4";
-        buildInputs = [ final.postgresql final.libmysqlclient ];
-        src = final.fetchFromGitHub {
-          owner  = "EnterpriseDB";
-          repo   = "mysql_fdw";
-          rev = "c4677792b86e2944833282aa6e0463350a2638f8" ;
-          sha256 = "R+mCnFjNgWRMWQ5Qqg4alkBThVtqmKLcVhxHk7vm2T4=";
-        };
-        buildPhase = ''
-          sed -i 's,^PG_CPPFLAGS +=.*,PG_CPPFLAGS += -D _MYSQL_LIBNAME=\\"${final.libmysqlclient}/lib/mysql/libmysqlclient$(DLSUFFIX)\\",' Makefile
-          make USE_PGXS=1
-        '';
-        installPhase = ''
-          mkdir -p $out/{lib,share/postgresql/extension}
-          ls
-          cp *.so      $out/lib
-          cp *.sql     $out/share/postgresql/extension
-          cp *.control $out/share/postgresql/extension
-        '';
-      };
+      hasura-cli-ext = final.callPackage ./nix/hasura-cli-ext.nix {};
+      hasura-cli-full = final.callPackage ./nix/hasura-cli-full.nix {};
+      phpstan = final.callPackage ./nix/phpstan.nix {};
 
       haskell = prev.haskell // {
         packageOverrides = prev.lib.composeExtensions (prev.haskell.packageOverrides or (_: _: {})) (hself: hsuper: {
@@ -147,7 +111,7 @@
     };
 
     packages.x86_64-linux = {
-      inherit (pkgs) sirimbo-tournament-frontend sirimbo-php sirimbo-app mysql_fdw;
+      inherit (pkgs) sirimbo-tournament-frontend sirimbo-php sirimbo-app;
       inherit (hsPkgs) sirimbo-api sirimbo-schema;
     };
 
@@ -163,8 +127,8 @@
         pkgs.nodePackages.typescript
         pkgs.sass
         pkgs.yarn2nix
-        unstablePkgs.hasura-cli
-        unstablePkgs.hasura-graphql-engine
+        pkgs.hasura-cli-full
+        pkgs.hasura-graphql-engine
       ];
     };
 
@@ -189,7 +153,6 @@
           };
           services.postgresql = {
             enable = true;
-            extraPlugins = [pkgs.mysql_fdw];
             ensureDatabases = ["root" "olymp"];
             ensureUsers = [{
               name = "olymp";
@@ -397,12 +360,12 @@
             environment.HASURA_GRAPHQL_AUTH_HOOK = "http://localhost:${toString cfg.internalPort}/api/graphql-auth";
             environment.HASURA_GRAPHQL_ENABLED_LOG_TYPES = "startup, http-log, webhook-log, websocket-log, query-log";
             environment.HASURA_GRAPHQL_EXPERIMENTAL_FEATURES = "inherited_roles";
-            environment.SERVER_VERSION = "${unstablePkgs.hasura-graphql-engine.version}";
+            environment.SERVER_VERSION = "${pkgs.hasura-graphql-engine.version}";
             serviceConfig = {
               User = cfg.user;
               Group = cfg.group;
               Type = "simple";
-              ExecStart = "${unstablePkgs.hasura-graphql-engine}/bin/graphql-engine serve";
+              ExecStart = "${pkgs.hasura-graphql-engine}/bin/graphql-engine serve";
             };
           };
 
