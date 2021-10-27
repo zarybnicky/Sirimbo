@@ -93,7 +93,6 @@
             --add-flags "--cli-ext-path" --add-flags "${final.hasura-cli-ext}/bin/cli-ext-hasura"
           wrapProgram $out/bin/hasura-console \
             --add-flags "console" \
-            --add-flags "${final.hasura-cli.src}" \
             --add-flags "--cli-ext-path" --add-flags "${final.hasura-cli-ext}/bin/cli-ext-hasura" \
             --add-flags "--static-dir" --add-flags "${final.hasura-console-assets}"
         '';
@@ -429,6 +428,7 @@
             environment.HASURA_GRAPHQL_AUTH_HOOK = "http://localhost:${toString cfg.internalPort}/api/graphql-auth";
             environment.HASURA_GRAPHQL_ENABLED_LOG_TYPES = "startup, http-log, webhook-log, websocket-log, query-log";
             environment.HASURA_GRAPHQL_EXPERIMENTAL_FEATURES = "inherited_roles";
+            environment.HASURA_GRAPHQL_CONSOLE_ASSETS_DIR = "${unstablePkgs.hasura-console-assets}";
             serviceConfig = {
               User = cfg.user;
               Group = cfg.group;
