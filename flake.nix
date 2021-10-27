@@ -12,7 +12,7 @@
     };
     unstablePkgs = import unstable {
       system = "x86_64-linux";
-      # overlays = [ self.overlay ];
+      overlays = [ self.overlay ];
     };
     compiler = "ghc8104";
     hsPkgs = pkgs.haskell.packages.${compiler};
@@ -21,13 +21,84 @@
     overlay = final: prev: let
       inherit (prev.haskell.lib) doJailbreak dontCheck justStaticExecutables
         generateOptparseApplicativeCompletion unmarkBroken;
+      graphql-engine-src = final.hasura-graphql-engine.src;
+      pkgfetch = builtins.fetchurl {
+        url = "https://github.com/vercel/pkg-fetch/releases/download/v3.1/node-v12.22.1-linuxstatic-x64";
+        sha256 = "04dvvj8k2n254f3jfxnhzrbvr354vinfrbmagd3c5czkfd1c1gjg";
+      };
+      cli-ext-node-modules = (import ./nix/cli-ext-node-composition.nix {
+        pkgs = final;
+        nodejs = final.nodejs-14_x;
+      }).package.override {
+        src = "${graphql-engine-src}/cli-ext";
+        postInstall = "mv $out/lib/node_modules/*/node_modules /tmp/_; rm -rf $out; mv /tmp/_ $out";
+      };
+      console-assets-node-modules = (import ./nix/console-assets-node-composition.nix { 
+        pkgs = final;
+      }).package.override {
+        src = "${graphql-engine-src}/console";
+        preRebuild = ''
+          substituteInPlace node_modules/cypress/package.json \
+            --replace '"postinstall": "node index.js --exec install",' ""
+        '';
+        postInstall = "mv $out/lib/node_modules/*/*/node_modules /tmp/_; rm -rf $out; mv /tmp/_ $out";
+        buildInputs = [final.python2];
+      };
     in {
-      hasura-cli = unstablePkgs.hasura-cli;
-      hasura-graphql-engine = unstablePkgs.hasura-graphql-engine.overrideAttrs (oldAttrs: {
-        VERSION = prev.hasura-graphql-engine.version;
-      });
-      hasura-cli-ext = final.callPackage ./nix/hasura-cli-ext.nix {};
-      hasura-cli-full = final.callPackage ./nix/hasura-cli-full.nix {};
+      hasura-console-assets = final.stdenv.mkDerivation rec {
+        name = "hasura-console-assets-${graphql-engine-src.rev}";
+        src = "${graphql-engine-src}/console";
+        buildPhase = ''
+          source $stdenv/setup;
+          cp -a ${console-assets-node-modules} node_modules
+          substituteInPlace Makefile --replace \
+            'gsutil -m cp -r gs://$(BUCKET_NAME)/console/assets/common "$(DIST_PATH)"' \
+           'tar xzvf ${./nix/console-assets-common.tar.gz}'
+           HOME=$(pwd) make server-build
+        '';
+        installPhase = "mkdir -p $out; cp -a static/dist/common $out; cp -a static/dist/versioned $out";
+        buildInputs = [ final.nodejs-14_x ];
+      };
+
+      hasura-cli-ext = final.stdenv.mkDerivation rec {
+        name = "hasura-cli-ext-${graphql-engine-src.rev}";
+        src = "${graphql-engine-src}/cli-ext";
+        buildInputs = [ final.nodejs-14_x ];
+        phases = ["unpackPhase" "buildPhase" "installPhase"];
+        buildPhase = ''
+          source $stdenv/setup;
+          mkdir -p .pkg-cache/v3.1
+          cp -a ${pkgfetch} .pkg-cache/v3.1/built-v12.22.1-linux-x64
+          chmod u+x .pkg-cache/v3.1/built-v12.22.1-linux-x64
+          cp -a ${cli-ext-node-modules} node_modules
+          substituteInPlace package.json \
+            --replace 'rm -rf src/shared && cp -r ../console/src/shared ./src/shared' \
+                      'rm -rf src/shared && cp -r ${graphql-engine-src}/console/src/shared ./src/shared' \
+            --replace 'node12-linux-x64,node12-macos-x64,node12-win-x64,node12-linux-arm64,node16-macos-arm64' \
+                      'node12-linux-x64'
+          HOME=$(pwd) npm run build
+        '';
+        installPhase = "mkdir $out; cp -a bin $out/bin";
+      };
+
+      hasura-cli-full = final.stdenv.mkDerivation rec {
+        name = final.hasura-cli.name;
+        buildInputs = [ final.makeWrapper final.hasura-cli ];
+        phases = ["installPhase"];
+        installPhase = ''
+          mkdir -p $out/bin
+          ln -s ${final.hasura-cli}/bin/hasura $out/bin/hasura
+          ln -s ${final.hasura-cli}/bin/hasura $out/bin/hasura-console
+          wrapProgram $out/bin/hasura \
+            --add-flags "--cli-ext-path" --add-flags "${final.hasura-cli-ext}/bin/cli-ext-hasura"
+          wrapProgram $out/bin/hasura-console \
+            --add-flags "console" \
+            --add-flags "${final.hasura-cli.src}" \
+            --add-flags "--cli-ext-path" --add-flags "${final.hasura-cli-ext}/bin/cli-ext-hasura" \
+            --add-flags "--static-dir" --add-flags "${final.hasura-console-assets}"
+        '';
+      };
+
       phpstan = final.callPackage ./nix/phpstan.nix {};
 
       haskell = prev.haskell // {
@@ -95,11 +166,11 @@
           cp -Lr deps/Sirimbo/dist/* $out/public/
         '';
 
-        extraBuildInputs = [ final.libsass ];
+        extraBuildInputs = [final.libsass];
         yarnPreBuild = "export npm_config_nodedir=${final.nodejs}";
         pkgConfig = {
           node-sass = {
-            nativeBuildInputs = [ ];
+            nativeBuildInputs = [];
             buildInputs = [ final.libsass final.pkg-config final.python3 ];
             postInstall = ''
               LIBSASS_EXT=auto yarn --offline run build
@@ -127,8 +198,8 @@
         pkgs.nodePackages.typescript
         pkgs.sass
         pkgs.yarn2nix
-        pkgs.hasura-cli-full
-        pkgs.hasura-graphql-engine
+        unstablePkgs.hasura-cli-full
+        unstablePkgs.hasura-graphql-engine
       ];
     };
 
@@ -224,6 +295,7 @@
           dbConnString: "${cfg.dbConnString}"
           proxyPort: ${toString cfg.proxyPort}
         '';
+
         configPhp = pkgs.runCommand "sirimbo-php-config" {} ''
           mkdir -p $out
           cat > $out/config.php <<EOS
@@ -249,13 +321,10 @@
           define('DEFAULT_ADMIN_MAIL', 'tkolymp@tkolymp.cz');
           EOS
         '';
+
         phpRoot = pkgs.symlinkJoin {
           name = "sirimbo-php-dist";
-          paths = [
-            pkgs.sirimbo-php
-            pkgs.sirimbo-app
-            configPhp
-          ];
+          paths = [pkgs.sirimbo-php pkgs.sirimbo-app configPhp];
         };
       in lib.mkMerge [
         (lib.mkIf cfg.enable {
@@ -274,7 +343,7 @@
           systemd.tmpfiles.rules = [ "d ${cfg.stateDir} 0755 ${cfg.user} ${cfg.user} -" ];
 
           environment.systemPackages = [
-            (pkgs.runCommand "olymp" { buildInputs = [ pkgs.makeWrapper ]; } ''
+            (pkgs.runCommand "olymp" { buildInputs = [pkgs.makeWrapper]; } ''
               mkdir $out
               ln -s ${pkgs.sirimbo-api}/* $out
               rm $out/bin
@@ -350,22 +419,21 @@
 
           systemd.services.hasura = {
             description = "Hasura";
-            wantedBy = [ "multi-user.target" ];
-            after = [ "network-online.target" "postgresql.service" ];
-            requires = [ "postgresql.service" ];
-            path = [ pkgs.postgresql ];
+            wantedBy = ["multi-user.target"];
+            after = ["network-online.target" "postgresql.service"];
+            requires = ["postgresql.service"];
+            path = [pkgs.postgresql];
             environment.HASURA_GRAPHQL_DATABASE_URL = "postgres:///olymp";
             environment.HASURA_GRAPHQL_ADMIN_SECRET = "superadmin";
             environment.HASURA_GRAPHQL_ENABLE_TELEMETRY = "false";
             environment.HASURA_GRAPHQL_AUTH_HOOK = "http://localhost:${toString cfg.internalPort}/api/graphql-auth";
-            # environment.HASURA_GRAPHQL_ENABLED_LOG_TYPES = "startup, http-log, webhook-log, websocket-log, query-log";
+            environment.HASURA_GRAPHQL_ENABLED_LOG_TYPES = "startup, http-log, webhook-log, websocket-log, query-log";
             environment.HASURA_GRAPHQL_EXPERIMENTAL_FEATURES = "inherited_roles";
-            # environment.SERVER_VERSION = "${pkgs.hasura-graphql-engine.version}";
             serviceConfig = {
               User = cfg.user;
               Group = cfg.group;
               Type = "simple";
-              ExecStart = "${pkgs.hasura-graphql-engine}/bin/graphql-engine serve";
+              ExecStart = "${unstablePkgs.hasura-graphql-engine}/bin/graphql-engine serve";
             };
           };
 
