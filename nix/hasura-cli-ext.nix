@@ -1,15 +1,22 @@
-{ pkgs, stdenv, nodejs-14_x, hasura-graphql-engine }:
+{ pkgs, stdenv, nodejs-14_x, hasura-graphql-engine, python2 }:
 
 let
+  graphql-engine-src = hasura-graphql-engine.src;
+
   pkgfetch = builtins.fetchurl {
     url = "https://github.com/vercel/pkg-fetch/releases/download/v3.1/node-v12.22.1-linuxstatic-x64";
     sha256 = "04dvvj8k2n254f3jfxnhzrbvr354vinfrbmagd3c5czkfd1c1gjg";
   };
-  cli-ext-node-modules = import ./cli-ext-node-composition.nix {
+
+  cli-ext-node-modules = (import ./cli-ext-node-composition.nix {
     inherit pkgs;
     nodejs = nodejs-14_x;
+  }).package.override {
+    src = "${graphql-engine-src}/cli-ext";
+    postInstall = ''
+      mv $out/lib/node_modules/*/node_modules /tmp/_; rm -rf $out; mv /tmp/_ $out
+    '';
   };
-  graphql-engine-src = hasura-graphql-engine.src;
 in
 stdenv.mkDerivation rec {
   name = "hasura-cli-ext-${graphql-engine-src.rev}";

@@ -1,0 +1,10 @@
+table:
+  name: platby_group_skupina
+  schema: public
+object_relationships:
+- name: platby_group
+  using:
+    foreign_key_constraint_on: pgs_id_group
+- name: skupiny
+  using:
+    foreign_key_constraint_on: pgs_id_skupina

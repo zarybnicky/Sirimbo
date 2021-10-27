@@ -3,7 +3,7 @@
 stdenv.mkDerivation {
   pname = "phpstan";
   version = "0.12.67";
-  src = lib.fetchurl {
+  src = builtins.fetchurl {
     url = "https://github.com/phpstan/phpstan/releases/download/0.12.67/phpstan.phar";
     sha256 = "/c+ci/Ok08Qr4bFRiE8e0wSPNo3/k7LbW/KJOkcUTDw=";
   };

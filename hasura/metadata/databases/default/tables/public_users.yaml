@@ -1,0 +1,132 @@
+table:
+  name: users
+  schema: public
+object_relationships:
+- name: permission
+  using:
+    foreign_key_constraint_on: u_group
+- name: skupiny
+  using:
+    foreign_key_constraint_on: u_skupina
+array_relationships:
+- name: akce_items
+  using:
+    foreign_key_constraint_on:
+      column: ai_user
+      table:
+        name: akce_item
+        schema: public
+- name: aktualities
+  using:
+    foreign_key_constraint_on:
+      column: at_kdo
+      table:
+        name: aktuality
+        schema: public
+- name: dokumenties
+  using:
+    foreign_key_constraint_on:
+      column: d_kdo
+      table:
+        name: dokumenty
+        schema: public
+- name: galerie_fotos
+  using:
+    foreign_key_constraint_on:
+      column: gf_kdo
+      table:
+        name: galerie_foto
+        schema: public
+- name: nabidkas
+  using:
+    foreign_key_constraint_on:
+      column: n_trener
+      table:
+        name: nabidka
+        schema: public
+- name: paries
+  using:
+    foreign_key_constraint_on:
+      column: p_id_partner
+      table:
+        name: pary
+        schema: public
+- name: paryNavrhsByPnPartner
+  using:
+    foreign_key_constraint_on:
+      column: pn_partner
+      table:
+        name: pary_navrh
+        schema: public
+- name: paryNavrhsByPnPartnerka
+  using:
+    foreign_key_constraint_on:
+      column: pn_partnerka
+      table:
+        name: pary_navrh
+        schema: public
+- name: pary_navrhs
+  using:
+    foreign_key_constraint_on:
+      column: pn_navrhl
+      table:
+        name: pary_navrh
+        schema: public
+- name: platby_items
+  using:
+    foreign_key_constraint_on:
+      column: pi_id_user
+      table:
+        name: platby_item
+        schema: public
+- name: rozpis
+  using:
+    foreign_key_constraint_on:
+      column: r_trener
+      table:
+        name: rozpis
+        schema: public
+- name: upozornenis
+  using:
+    foreign_key_constraint_on:
+      column: up_kdo
+      table:
+        name: upozorneni
+        schema: public
+select_permissions:
+- permission:
+    columns:
+    - u_id
+    - u_login
+    - u_pass
+    - u_jmeno
+    - u_prijmeni
+    - u_pohlavi
+    - u_email
+    - u_telefon
+    - u_narozeni
+    - u_rodne_cislo
+    - u_poznamky
+    - u_timestamp
+    - u_level
+    - u_group
+    - u_skupina
+    - u_dancer
+    - u_ban
+    - u_lock
+    - u_confirmed
+    - u_system
+    - u_street
+    - u_conscription_number
+    - u_orientation_number
+    - u_district
+    - u_city
+    - u_postal_code
+    - u_nationality
+    - u_member_since
+    - u_member_until
+    - u_created_at
+    - u_teacher
+    - u_gdpr_signed_at
+    filter: {}
+  role: member

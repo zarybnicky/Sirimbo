@@ -1,0 +1,39 @@
+table:
+  name: galerie_foto
+  schema: public
+object_relationships:
+- name: galerie_dir
+  using:
+    foreign_key_constraint_on: gf_id_rodic
+- name: user
+  using:
+    foreign_key_constraint_on: gf_kdo
+array_relationships:
+- name: aktualities
+  using:
+    foreign_key_constraint_on:
+      column: at_foto_main
+      table:
+        name: aktuality
+        schema: public
+select_permissions:
+- permission:
+    columns:
+    - gf_id
+    - gf_id_rodic
+    - gf_kdo
+    - gf_name
+    - gf_path
+    - gf_timestamp
+    filter: {}
+  role: anonymous
+- permission:
+    columns:
+    - gf_id
+    - gf_id_rodic
+    - gf_name
+    - gf_path
+    - gf_kdo
+    - gf_timestamp
+    filter: {}
+  role: member

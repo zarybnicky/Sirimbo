@@ -1,0 +1,14 @@
+table:
+  name: users_skupiny
+  schema: public
+select_permissions:
+- permission:
+    columns:
+    - us_id
+    - us_color
+    - us_platba_mesic
+    - us_platba_ctvrtrok
+    - us_platba_pulrok
+    - us_popis
+    filter: {}
+  role: member

@@ -1,0 +1,22 @@
+table:
+  name: pary_navrh
+  schema: public
+object_relationships:
+- name: user
+  using:
+    foreign_key_constraint_on: pn_navrhl
+- name: userByPnPartner
+  using:
+    foreign_key_constraint_on: pn_partner
+- name: userByPnPartnerka
+  using:
+    foreign_key_constraint_on: pn_partnerka
+select_permissions:
+- permission:
+    columns:
+    - pn_id
+    - pn_navrhl
+    - pn_partner
+    - pn_partnerka
+    filter: {}
+  role: member

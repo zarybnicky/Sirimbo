@@ -1,0 +1,10 @@
+table:
+  name: platby_category_group
+  schema: public
+object_relationships:
+- name: platby_category
+  using:
+    foreign_key_constraint_on: pcg_id_category
+- name: platby_group
+  using:
+    foreign_key_constraint_on: pcg_id_group

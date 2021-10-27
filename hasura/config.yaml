@@ -1,6 +1,7 @@
 version: 3
-endpoint: http://olymp-test:8080/graphql
+endpoint: http://olymp-test/graphql
 metadata_directory: metadata
+admin_secret: superadmin
 actions:
   kind: synchronous
-  handler_webhook_baseurl: http://olymp-test:8080
+  handler_webhook_baseurl: http://olymp-test

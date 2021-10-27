@@ -1,0 +1,16 @@
+table:
+  name: video
+  schema: public
+select_permissions:
+- permission:
+    columns:
+    - v_id
+    - v_uri
+    - v_title
+    - v_author
+    - v_description
+    - v_playlist
+    - v_created_at
+    - v_updated_at
+    filter: {}
+  role: member

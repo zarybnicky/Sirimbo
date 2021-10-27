@@ -1,0 +1,29 @@
+table:
+  name: nabidka
+  schema: public
+object_relationships:
+- name: user
+  using:
+    foreign_key_constraint_on: n_trener
+array_relationships:
+- name: nabidka_items
+  using:
+    foreign_key_constraint_on:
+      column: ni_id_rodic
+      table:
+        name: nabidka_item
+        schema: public
+select_permissions:
+- permission:
+    columns:
+    - n_id
+    - n_trener
+    - n_pocet_hod
+    - n_max_pocet_hod
+    - n_od
+    - n_do
+    - n_visible
+    - n_lock
+    - n_timestamp
+    filter: {}
+  role: member

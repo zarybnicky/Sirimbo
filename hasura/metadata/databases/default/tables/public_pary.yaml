@@ -1,0 +1,40 @@
+table:
+  name: pary
+  schema: public
+object_relationships:
+- name: user
+  using:
+    foreign_key_constraint_on: p_id_partner
+array_relationships:
+- name: nabidka_items
+  using:
+    foreign_key_constraint_on:
+      column: ni_partner
+      table:
+        name: nabidka_item
+        schema: public
+- name: rozpis_items
+  using:
+    foreign_key_constraint_on:
+      column: ri_partner
+      table:
+        name: rozpis_item
+        schema: public
+select_permissions:
+- permission:
+    columns:
+    - p_id
+    - p_id_partner
+    - p_id_partnerka
+    - p_stt_trida
+    - p_stt_body
+    - p_stt_finale
+    - p_lat_trida
+    - p_lat_body
+    - p_lat_finale
+    - p_hodnoceni
+    - p_archiv
+    - p_timestamp_add
+    - p_timestamp_archive
+    filter: {}
+  role: member

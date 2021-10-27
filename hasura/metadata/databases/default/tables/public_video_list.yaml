@@ -1,0 +1,27 @@
+table:
+  name: video_list
+  schema: public
+select_permissions:
+- permission:
+    allow_aggregations: true
+    columns:
+    - vl_id
+    - vl_url
+    - vl_title
+    - vl_description
+    - vl_count
+    - vl_created_at
+    - vl_last_checked
+    filter: {}
+  role: anonymous
+- permission:
+    columns:
+    - vl_count
+    - vl_id
+    - vl_description
+    - vl_title
+    - vl_url
+    - vl_created_at
+    - vl_last_checked
+    filter: {}
+  role: member
