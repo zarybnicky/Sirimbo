@@ -326,7 +326,7 @@ class Users
                 continue;
             }
             // od 1.9.2019
-            if (new \DateTime($newest[$u['u_id']]) < new \DateTime('2019-09-01')) {
+            if (isset($newest[$u['u_id']]) && new \DateTime($newest[$u['u_id']]) < new \DateTime('2019-09-01')) {
                 continue;
             }
 
