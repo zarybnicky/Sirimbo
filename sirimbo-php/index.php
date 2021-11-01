@@ -93,7 +93,7 @@ try {
         . "\tSESSION: " . json_encode($_SESSION) . "\n"
     );
     ob_clean();
-    \Redirect::to('/error?id=' . $e->getErrorFile());
+    \Render::twig('Error.twig', ['errorCode' => $e->getErrorFile()]);
 } catch (Exception $e) {
     \Sentry\captureException($e);
     syslog(
@@ -105,18 +105,13 @@ try {
         . "\tSESSION: " . json_encode($_SESSION) . "\n"
     );
     ob_clean();
-    \Redirect::to('/error?id=' . (new ViewException(''))->getErrorFile());
+    \Render::twig('Error.twig', ['errorCode' => (new ViewException(''))->getErrorFile()]);
 }
 \Sentry\captureLastError();
 
 function makeRouter()
 {
-    $router = new \Olymp\Router(
-        function ($method, $path, $code, $ex) {
-            throw $ex;
-        },
-        'Olymp.Controller'
-    );
+    $router = new \Olymp\Router('Olymp.Controller');
 
     $router->get('/', '@Home::get');
     $router->get('/home', '@Home::get');

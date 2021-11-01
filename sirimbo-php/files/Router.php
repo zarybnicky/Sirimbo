@@ -4,14 +4,12 @@ namespace Olymp;
 class Router
 {
     private array $routes;
-    private $error;
     private string $baseNamespace;
     private string $currentPrefix;
 
-    public function __construct(callable $error, string $baseNamespace = '')
+    public function __construct(string $baseNamespace = '')
     {
         $this->routes = [];
-        $this->error = $error;
         $this->baseNamespace = $baseNamespace == '' ? '' : $baseNamespace.'\\';
         $this->currentPrefix = '';
     }
@@ -81,17 +79,10 @@ class Router
             $regex = str_replace('@', '\\@', $regex);
             if (preg_match('@^' . $regex . '$@', $path, $params)) {
                 array_shift($params);
-                try {
-                    return $this->call($callback, $params);
-                } catch (HttpRequestException $ex) {
-                    return $this->call($this->error, [$method, $path, $ex->getCode(), $ex]);
-                } catch (\Exception $ex) {
-                    return $this->call($this->error, [$method, $path, 500, $ex]);
-                }
+                return $this->call($callback, $params);
             }
         }
-
-        return $this->call($this->error, [$method, $path, 404, new \NotFoundException('No route found')]);
+        throw new \NotFoundException('No route found');
     }
 
     private function call($callable, array $params = [])
@@ -122,8 +113,4 @@ class Router
             '/'
         ));
     }
-}
-
-class HttpRequestException extends \Exception
-{
 }
