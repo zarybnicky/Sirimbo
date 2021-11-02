@@ -6,6 +6,11 @@ fragment scheduleFields on rozpis {
   r_timestamp
   r_trener
   r_visible
+  user {
+    u_jmeno
+    u_prijmeni
+    u_id
+  }
 }
 fragment scheduleItemFields on rozpis {
   rozpis_items {
@@ -26,12 +31,24 @@ fragment reservationFields on nabidka {
   n_lock
   n_id
   n_do
+  user {
+    u_jmeno
+    u_prijmeni
+    u_id
+  }
 }
 fragment reservationItemFields on nabidka {
   nabidka_items {
     ni_lock
     ni_partner
     ni_pocet_hod
+    pary {
+      user {
+        u_id
+        u_jmeno
+        u_prijmeni
+      }
+    }
   }
 }
 
@@ -59,20 +76,56 @@ fragment eventItemFields on akce {
   }
 }
 
+fragment announcementFields on upozorneni {
+  up_id
+  up_kdo
+  up_lock
+  up_nadpis
+  up_text
+  up_timestamp
+  up_timestamp_add
+  user {
+    u_id
+    u_jmeno
+    u_prijmeni
+  }
+  upozorneni_skupinies {
+    skupiny {
+      s_name
+      s_description
+      s_color_text
+      s_color_rgb
+    }
+  }
+}
+
+query UpozorneniList($offset: Int, $limit: Int) {
+  upozorneni(limit: $limit, offset: $offset) {
+    ...announcementFields
+  }
+  upozorneni_aggregate {
+    aggregate {
+      count
+    }
+  }
+}
 query Rozpis($id: bigint!) {
   rozpis_by_pk(r_id: $id) {
     ...scheduleFields
     ...scheduleItemFields
   }
 }
-
+query NabidkaList($offset: Int, $limit: Int) {
+  nabidka(limit: $limit, offset: $offset) {
+    ...reservationFields
+  }
+}
 query Nabidka($id: bigint!) {
   nabidka_by_pk(n_id: $id) {
     ...reservationFields
     ...reservationItemFields
   }
 }
-
 query Akce($id: bigint!) {
   akce_by_pk(a_id: $id) {
     ...eventFields
@@ -85,13 +138,11 @@ mutation setRozpisVisible($id: bigint!, $visible: Boolean!) {
     ...scheduleFields
   }
 }
-
 mutation setNabidkaVisible($id: bigint!, $visible: Boolean!) {
   update_nabidka_by_pk(pk_columns: {n_id: $id}, _set: {n_visible: $visible}) {
     ...reservationFields
   }
 }
-
 mutation setAkceVisible($id: bigint!, $visible: Boolean!) {
   update_akce_by_pk(pk_columns: {a_id: $id}, _set: {a_visible: $visible}) {
     ...eventFields

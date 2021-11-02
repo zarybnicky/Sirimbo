@@ -5,7 +5,6 @@ class Database
     protected static $tr = [
         "\0" => "\\0",
         "\x08" => "\\b",
-        "\x09" => "\\t",
         "\x1a" => "\\z",
         "'" => "''",
     ];
