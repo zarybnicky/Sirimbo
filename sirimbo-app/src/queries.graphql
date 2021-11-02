@@ -1,29 +1,99 @@
+fragment scheduleFields on rozpis {
+  r_datum
+  r_id
+  r_kde
+  r_lock
+  r_timestamp
+  r_trener
+  r_visible
+}
+fragment scheduleItemFields on rozpis {
+  rozpis_items {
+    ri_od
+    ri_do
+    ri_id
+    ri_partner
+  }
+}
+
+fragment reservationFields on nabidka {
+  n_visible
+  n_trener
+  n_timestamp
+  n_pocet_hod
+  n_od
+  n_max_pocet_hod
+  n_lock
+  n_id
+  n_do
+}
+fragment reservationItemFields on nabidka {
+  nabidka_items {
+    ni_lock
+    ni_partner
+    ni_pocet_hod
+  }
+}
+
+fragment eventFields on akce {
+  a_do
+  a_id
+  a_info
+  a_dokumenty
+  a_jmeno
+  a_kapacita
+  a_kde
+  a_lock
+  a_od
+  a_timestamp
+  a_visible
+}
+fragment eventItemFields on akce {
+  akce_items {
+    user {
+      u_jmeno
+      u_prijmeni
+      u_id
+    }
+    ai_id
+  }
+}
+
 query Rozpis($id: bigint!) {
   rozpis_by_pk(r_id: $id) {
-    r_datum
-    r_id
-    r_kde
-    r_lock
-    r_timestamp
-    r_trener
-    r_visible
-    rozpis_items {
-      ri_od
-      ri_do
-      ri_id
-      ri_partner
-    }
+    ...scheduleFields
+    ...scheduleItemFields
+  }
+}
+
+query Nabidka($id: bigint!) {
+  nabidka_by_pk(n_id: $id) {
+    ...reservationFields
+    ...reservationItemFields
+  }
+}
+
+query Akce($id: bigint!) {
+  akce_by_pk(a_id: $id) {
+    ...eventFields
+    ...eventItemFields
   }
 }
 
 mutation setRozpisVisible($id: bigint!, $visible: Boolean!) {
   update_rozpis_by_pk(pk_columns: {r_id: $id}, _set: {r_visible: $visible}) {
-    r_visible
-    r_trener
-    r_timestamp
-    r_id
-    r_kde
-    r_lock
-    r_datum
+    ...scheduleFields
+  }
+}
+
+mutation setNabidkaVisible($id: bigint!, $visible: Boolean!) {
+  update_nabidka_by_pk(pk_columns: {n_id: $id}, _set: {n_visible: $visible}) {
+    ...reservationFields
+  }
+}
+
+mutation setAkceVisible($id: bigint!, $visible: Boolean!) {
+  update_akce_by_pk(pk_columns: {a_id: $id}, _set: {a_visible: $visible}) {
+    ...eventFields
   }
 }

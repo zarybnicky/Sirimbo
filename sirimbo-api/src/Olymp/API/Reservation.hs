@@ -22,10 +22,6 @@ type ReservationAPI =
   PhpAuth :> "reservation" :> Capture "id" ReservationId
     :> OpId "getReservation"
     :> Get '[JSON] ReservationResponse
-    :<|> PhpAuth :> "reservation" :> Capture "id" ReservationId
-      :> OpId "toggleVisibleReservation"
-      :> "toggle-visible"
-      :> Get '[JSON] Bool
 
 data ReservationItemResponse = ReservationItemResponse
   { person :: Text,
@@ -41,7 +37,7 @@ data ReservationResponse = ReservationResponse
   deriving (Generic, ToJSON, ToSchema)
 
 reservationAPI :: Effs '[Error ServerError, Database] m => ServerT ReservationAPI m
-reservationAPI = getReservation :<|> toggleVisible
+reservationAPI = getReservation
 
 getReservation :: Effs '[Error ServerError, Database] m => (SessionId, Entity User) -> ReservationId -> m ReservationResponse
 getReservation _ k = do
@@ -56,14 +52,3 @@ getReservation _ k = do
         pure (concat_ [u ^. UserName, val " ", u ^. UserSurname], ri ^. ReservationItemNumberLessons)
   let items' = uncurry ReservationItemResponse . bimap unValue unValue <$> items
   pure $ ReservationResponse trainer reservation items'
-
-toggleVisible ::
-  Effs '[Error ServerError, Database] m =>
-  (SessionId, Entity User) ->
-  ReservationId ->
-  m Bool
-toggleVisible _ k = do
-  reservation <- maybe (throw err404) pure =<< query (get k)
-  let notVisible = not $ reservationVisible reservation
-  newReservation <- query $ updateGet k [ReservationVisible =. notVisible]
-  pure $ reservationVisible newReservation

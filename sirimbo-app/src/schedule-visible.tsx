@@ -3,31 +3,71 @@ import * as ReactDOM from 'react-dom';
 import { ApolloProvider, useQuery, useMutation } from '@apollo/client';
 
 import Form from 'react-bootstrap/Form';
-import { RozpisDocument, SetRozpisVisibleDocument } from './queries';
+import * as queries from './queries';
 import { createClient } from './client';
 
-const ScheduleVisible = ({ id }: { id: number; }) => {
-    const { loading, error, data, refetch } = useQuery(RozpisDocument, { variables: { id } });
-    const [toggleVisible] = useMutation(SetRozpisVisibleDocument, { onCompleted: () => refetch() });
+interface Props {
+    id: number;
+}
+
+const ScheduleVisible = ({ id }: Props) => {
+    const { loading, error, data, refetch } = useQuery(queries.RozpisDocument, {
+        variables: { id },
+    });
+    const [toggleVisible] = useMutation(queries.SetRozpisVisibleDocument, {
+        onCompleted: () => refetch(),
+    });
     const visible = data?.rozpis_by_pk?.r_visible || false;
     const toggle = () => toggleVisible({ variables: { id, visible: !visible } });
     if (error) {
         console.error(error);
     }
-    if (loading) {
-        return null;
+    return loading ? null : <Form.Check name={id.toString()} checked={visible} onChange={toggle} />
+};
+
+const EventVisible = ({ id }: Props) => {
+    const { loading, error, data, refetch } = useQuery(queries.AkceDocument, {
+        variables: { id },
+    });
+    const [toggleVisible] = useMutation(queries.SetAkceVisibleDocument, {
+        onCompleted: () => refetch(),
+    });
+    const visible = data?.akce_by_pk?.a_visible || false;
+    const toggle = () => toggleVisible({ variables: { id, visible: !visible } });
+    if (error) {
+        console.error(error);
     }
-    return <Form.Check name={id.toString()} checked={visible} onChange={toggle} />
+    return loading ? null : <Form.Check name={id.toString()} checked={visible} onChange={toggle} />
+};
+
+const ReservationVisible = ({ id }: Props) => {
+    const { loading, error, data, refetch } = useQuery(queries.NabidkaDocument, {
+        variables: { id },
+    });
+    const [toggleVisible] = useMutation(queries.SetNabidkaVisibleDocument, {
+        onCompleted: () => refetch(),
+    });
+    const visible = data?.nabidka_by_pk?.n_visible || false;
+    const toggle = () => toggleVisible({ variables: { id, visible: !visible } });
+    if (error) {
+        console.error(error);
+    }
+    return loading ? null : <Form.Check name={id.toString()} checked={visible} onChange={toggle} />
 };
 
 class ScheduleVisibleElement extends HTMLElement {
     connectedCallback() {
+        const id = parseInt(this.getAttribute('name')!!, 10);
+        const type = this.getAttribute('type');
+        const component =
+            type === 'event' ? <EventVisible id={id}></EventVisible> :
+                type === 'schedule' ? <ScheduleVisible id={id}></ScheduleVisible> :
+                    type === 'reservation' ? <ReservationVisible id={id}></ReservationVisible>
+                        : null;
         ReactDOM.render(
-            <ApolloProvider client={createClient()}>
-                <ScheduleVisible id={parseInt(this.getAttribute('name')!!, 10)}></ScheduleVisible>
-            </ApolloProvider>,
+            <ApolloProvider client={createClient()}>{component}</ApolloProvider>,
             this
         );
     }
 }
-customElements.define('schedule-visible', ScheduleVisibleElement);
+customElements.define('visibility-checkbox', ScheduleVisibleElement);

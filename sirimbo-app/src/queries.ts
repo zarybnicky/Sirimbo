@@ -12097,7 +12097,7 @@ export type Users = {
   u_system: Scalars['Boolean'];
   u_teacher: Scalars['Boolean'];
   u_telefon: Scalars['String'];
-  u_timestamp?: Maybe<Scalars['timestamptz']>;
+  u_timestamp: Scalars['timestamptz'];
   /** An array relationship */
   upozornenis: Array<Upozorneni>;
   /** An aggregate relationship */
@@ -13964,12 +13964,50 @@ export type Video_Variance_Fields = {
   v_id?: Maybe<Scalars['Float']>;
 };
 
+export type ScheduleFieldsFragment = { __typename?: 'rozpis', r_datum: any, r_id: any, r_kde: string, r_lock: boolean, r_timestamp?: Maybe<any>, r_trener: any, r_visible: boolean };
+
+export type ScheduleItemFieldsFragment = { __typename?: 'rozpis', rozpis_items: Array<{ __typename?: 'rozpis_item', ri_od: any, ri_do: any, ri_id: any, ri_partner?: Maybe<any> }> };
+
+export type ReservationFieldsFragment = { __typename?: 'nabidka', n_visible: boolean, n_trener: any, n_timestamp?: Maybe<any>, n_pocet_hod: any, n_od: any, n_max_pocet_hod: any, n_lock: boolean, n_id: any, n_do: any };
+
+export type ReservationItemFieldsFragment = { __typename?: 'nabidka', nabidka_items: Array<{ __typename?: 'nabidka_item', ni_lock: boolean, ni_partner: any, ni_pocet_hod: any }> };
+
+export type EventFieldsFragment = { __typename?: 'akce', a_do: any, a_id: any, a_info: string, a_dokumenty: string, a_jmeno: string, a_kapacita: any, a_kde: string, a_lock: boolean, a_od: any, a_timestamp?: Maybe<any>, a_visible: boolean };
+
+export type EventItemFieldsFragment = { __typename?: 'akce', akce_items: Array<{ __typename?: 'akce_item', ai_id: any, user: { __typename?: 'users', u_jmeno: string, u_prijmeni: string, u_id: any } }> };
+
 export type RozpisQueryVariables = Exact<{
   id: Scalars['bigint'];
 }>;
 
 
-export type RozpisQuery = { __typename?: 'query_root', rozpis_by_pk?: Maybe<{ __typename?: 'rozpis', r_datum: any, r_id: any, r_kde: string, r_lock: boolean, r_timestamp?: Maybe<any>, r_trener: any, r_visible: boolean, rozpis_items: Array<{ __typename?: 'rozpis_item', ri_od: any, ri_do: any, ri_id: any, ri_partner?: Maybe<any> }> }> };
+export type RozpisQuery = { __typename?: 'query_root', rozpis_by_pk?: Maybe<(
+    { __typename?: 'rozpis' }
+    & ScheduleFieldsFragment
+    & ScheduleItemFieldsFragment
+  )> };
+
+export type NabidkaQueryVariables = Exact<{
+  id: Scalars['bigint'];
+}>;
+
+
+export type NabidkaQuery = { __typename?: 'query_root', nabidka_by_pk?: Maybe<(
+    { __typename?: 'nabidka' }
+    & ReservationFieldsFragment
+    & ReservationItemFieldsFragment
+  )> };
+
+export type AkceQueryVariables = Exact<{
+  id: Scalars['bigint'];
+}>;
+
+
+export type AkceQuery = { __typename?: 'query_root', akce_by_pk?: Maybe<(
+    { __typename?: 'akce' }
+    & EventFieldsFragment
+    & EventItemFieldsFragment
+  )> };
 
 export type SetRozpisVisibleMutationVariables = Exact<{
   id: Scalars['bigint'];
@@ -13977,8 +14015,42 @@ export type SetRozpisVisibleMutationVariables = Exact<{
 }>;
 
 
-export type SetRozpisVisibleMutation = { __typename?: 'mutation_root', update_rozpis_by_pk?: Maybe<{ __typename?: 'rozpis', r_visible: boolean, r_trener: any, r_timestamp?: Maybe<any>, r_id: any, r_kde: string, r_lock: boolean, r_datum: any }> };
+export type SetRozpisVisibleMutation = { __typename?: 'mutation_root', update_rozpis_by_pk?: Maybe<(
+    { __typename?: 'rozpis' }
+    & ScheduleFieldsFragment
+  )> };
+
+export type SetNabidkaVisibleMutationVariables = Exact<{
+  id: Scalars['bigint'];
+  visible: Scalars['Boolean'];
+}>;
 
 
-export const RozpisDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Rozpis"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"rozpis_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"r_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"r_datum"}},{"kind":"Field","name":{"kind":"Name","value":"r_id"}},{"kind":"Field","name":{"kind":"Name","value":"r_kde"}},{"kind":"Field","name":{"kind":"Name","value":"r_lock"}},{"kind":"Field","name":{"kind":"Name","value":"r_timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"r_trener"}},{"kind":"Field","name":{"kind":"Name","value":"r_visible"}},{"kind":"Field","name":{"kind":"Name","value":"rozpis_items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ri_od"}},{"kind":"Field","name":{"kind":"Name","value":"ri_do"}},{"kind":"Field","name":{"kind":"Name","value":"ri_id"}},{"kind":"Field","name":{"kind":"Name","value":"ri_partner"}}]}}]}}]}}]} as unknown as DocumentNode<RozpisQuery, RozpisQueryVariables>;
-export const SetRozpisVisibleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"setRozpisVisible"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"visible"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_rozpis_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"r_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"r_visible"},"value":{"kind":"Variable","name":{"kind":"Name","value":"visible"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"r_visible"}},{"kind":"Field","name":{"kind":"Name","value":"r_trener"}},{"kind":"Field","name":{"kind":"Name","value":"r_timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"r_id"}},{"kind":"Field","name":{"kind":"Name","value":"r_kde"}},{"kind":"Field","name":{"kind":"Name","value":"r_lock"}},{"kind":"Field","name":{"kind":"Name","value":"r_datum"}}]}}]}}]} as unknown as DocumentNode<SetRozpisVisibleMutation, SetRozpisVisibleMutationVariables>;
+export type SetNabidkaVisibleMutation = { __typename?: 'mutation_root', update_nabidka_by_pk?: Maybe<(
+    { __typename?: 'nabidka' }
+    & ReservationFieldsFragment
+  )> };
+
+export type SetAkceVisibleMutationVariables = Exact<{
+  id: Scalars['bigint'];
+  visible: Scalars['Boolean'];
+}>;
+
+
+export type SetAkceVisibleMutation = { __typename?: 'mutation_root', update_akce_by_pk?: Maybe<(
+    { __typename?: 'akce' }
+    & EventFieldsFragment
+  )> };
+
+export const ScheduleFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"scheduleFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"rozpis"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"r_datum"}},{"kind":"Field","name":{"kind":"Name","value":"r_id"}},{"kind":"Field","name":{"kind":"Name","value":"r_kde"}},{"kind":"Field","name":{"kind":"Name","value":"r_lock"}},{"kind":"Field","name":{"kind":"Name","value":"r_timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"r_trener"}},{"kind":"Field","name":{"kind":"Name","value":"r_visible"}}]}}]} as unknown as DocumentNode<ScheduleFieldsFragment, unknown>;
+export const ScheduleItemFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"scheduleItemFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"rozpis"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"rozpis_items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ri_od"}},{"kind":"Field","name":{"kind":"Name","value":"ri_do"}},{"kind":"Field","name":{"kind":"Name","value":"ri_id"}},{"kind":"Field","name":{"kind":"Name","value":"ri_partner"}}]}}]}}]} as unknown as DocumentNode<ScheduleItemFieldsFragment, unknown>;
+export const ReservationFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"reservationFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"nabidka"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"n_visible"}},{"kind":"Field","name":{"kind":"Name","value":"n_trener"}},{"kind":"Field","name":{"kind":"Name","value":"n_timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"n_pocet_hod"}},{"kind":"Field","name":{"kind":"Name","value":"n_od"}},{"kind":"Field","name":{"kind":"Name","value":"n_max_pocet_hod"}},{"kind":"Field","name":{"kind":"Name","value":"n_lock"}},{"kind":"Field","name":{"kind":"Name","value":"n_id"}},{"kind":"Field","name":{"kind":"Name","value":"n_do"}}]}}]} as unknown as DocumentNode<ReservationFieldsFragment, unknown>;
+export const ReservationItemFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"reservationItemFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"nabidka"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nabidka_items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ni_lock"}},{"kind":"Field","name":{"kind":"Name","value":"ni_partner"}},{"kind":"Field","name":{"kind":"Name","value":"ni_pocet_hod"}}]}}]}}]} as unknown as DocumentNode<ReservationItemFieldsFragment, unknown>;
+export const EventFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"eventFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"akce"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a_do"}},{"kind":"Field","name":{"kind":"Name","value":"a_id"}},{"kind":"Field","name":{"kind":"Name","value":"a_info"}},{"kind":"Field","name":{"kind":"Name","value":"a_dokumenty"}},{"kind":"Field","name":{"kind":"Name","value":"a_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"a_kapacita"}},{"kind":"Field","name":{"kind":"Name","value":"a_kde"}},{"kind":"Field","name":{"kind":"Name","value":"a_lock"}},{"kind":"Field","name":{"kind":"Name","value":"a_od"}},{"kind":"Field","name":{"kind":"Name","value":"a_timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"a_visible"}}]}}]} as unknown as DocumentNode<EventFieldsFragment, unknown>;
+export const EventItemFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"eventItemFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"akce"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"akce_items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"u_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"u_prijmeni"}},{"kind":"Field","name":{"kind":"Name","value":"u_id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"ai_id"}}]}}]}}]} as unknown as DocumentNode<EventItemFieldsFragment, unknown>;
+export const RozpisDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Rozpis"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"rozpis_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"r_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"scheduleFields"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"scheduleItemFields"}}]}}]}},...ScheduleFieldsFragmentDoc.definitions,...ScheduleItemFieldsFragmentDoc.definitions]} as unknown as DocumentNode<RozpisQuery, RozpisQueryVariables>;
+export const NabidkaDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Nabidka"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nabidka_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"n_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"reservationFields"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"reservationItemFields"}}]}}]}},...ReservationFieldsFragmentDoc.definitions,...ReservationItemFieldsFragmentDoc.definitions]} as unknown as DocumentNode<NabidkaQuery, NabidkaQueryVariables>;
+export const AkceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Akce"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"akce_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"a_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"eventFields"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"eventItemFields"}}]}}]}},...EventFieldsFragmentDoc.definitions,...EventItemFieldsFragmentDoc.definitions]} as unknown as DocumentNode<AkceQuery, AkceQueryVariables>;
+export const SetRozpisVisibleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"setRozpisVisible"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"visible"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_rozpis_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"r_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"r_visible"},"value":{"kind":"Variable","name":{"kind":"Name","value":"visible"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"scheduleFields"}}]}}]}},...ScheduleFieldsFragmentDoc.definitions]} as unknown as DocumentNode<SetRozpisVisibleMutation, SetRozpisVisibleMutationVariables>;
+export const SetNabidkaVisibleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"setNabidkaVisible"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"visible"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_nabidka_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"n_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"n_visible"},"value":{"kind":"Variable","name":{"kind":"Name","value":"visible"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"reservationFields"}}]}}]}},...ReservationFieldsFragmentDoc.definitions]} as unknown as DocumentNode<SetNabidkaVisibleMutation, SetNabidkaVisibleMutationVariables>;
+export const SetAkceVisibleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"setAkceVisible"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"visible"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_akce_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"a_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"a_visible"},"value":{"kind":"Variable","name":{"kind":"Name","value":"visible"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"eventFields"}}]}}]}},...EventFieldsFragmentDoc.definitions]} as unknown as DocumentNode<SetAkceVisibleMutation, SetAkceVisibleMutationVariables>;

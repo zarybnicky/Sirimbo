@@ -8,7 +8,6 @@ import './bundles/main';
 import './style/index.scss';
 
 export * from './schedule-visible';
-export * from './event-checkbox';
 export * from './reservation-select';
 export * from './date';
 export * from './paging';
