@@ -40,7 +40,6 @@
           gogol = hself.callCabal2nix "gogol" "${gogol}/gogol" {};
           gogol-youtube = hself.callCabal2nix "gogol-youtube" "${gogol}/gogol-youtube" {};
 
-          sirimbo-schema = hself.callCabal2nix "sirimbo-schema" (getSrc ./sirimbo-schema) {};
           sirimbo-api = generateOptparseApplicativeCompletion "olymp" (
             justStaticExecutables (
               hself.callCabal2nix "sirimbo-api" (getSrc ./sirimbo-api) {}
@@ -49,10 +48,6 @@
         });
       });
       inherit (final.haskell.packages.${compiler}) sirimbo-api;
-      sirimbo-tournament-frontend = final.callPackage ./nix/sirimbo-tournament-frontend.nix {
-        src = getSrc ./sirimbo-tournament-frontend;
-        typescript = final.nodePackages.typescript;
-      };
       sirimbo-app = final.callPackage ./nix/sirimbo-app.nix {
         src = getSrc ./sirimbo-app;
         packageJSON = ./sirimbo-app/package.json;
@@ -80,13 +75,13 @@
     };
 
     packages.x86_64-linux = {
-      inherit (pkgs) sirimbo-tournament-frontend sirimbo-php sirimbo-app;
-      inherit (hsPkgs) sirimbo-api sirimbo-schema;
+      inherit (pkgs) sirimbo-php sirimbo-app;
+      inherit (hsPkgs) sirimbo-api;
     };
 
     devShell.x86_64-linux = hsPkgs.shellFor {
       withHoogle = true;
-      packages = p: [ p.sirimbo-api p.sirimbo-schema ];
+      packages = p: [ p.sirimbo-api ];
       buildInputs = [
         hsPkgs.cabal-install
         hsPkgs.haskell-language-server

@@ -79,7 +79,6 @@ library
                      , monad-logger
                      , monoidal-containers
                      , mtl
-                     , sirimbo-schema
                      , optparse-applicative
                      , persistent
                      , persistent-postgresql
