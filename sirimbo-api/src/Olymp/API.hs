@@ -25,7 +25,6 @@ import Web.Cookie (SetCookie (..), defaultSetCookie)
 
 type OlympAPI =
   PhpMaybeAuth :> "api" :> "graphql-auth" :> Get '[JSON] A.Value
-    :<|> PhpAuth :> "whoami" :> Get '[PlainText, JSON] Text
     :<|> PhpAuth :> "logout" :> Verb 'GET 303 '[JSON] (Headers '[Header "Set-Cookie" SetCookie, Header "Location" String] NoContent)
     :<|> "api" :> PaymentAPI
     :<|> "api" :> "tournament" :> "ws" :> WebSocket
@@ -34,16 +33,10 @@ type OlympAPI =
 olympAPI :: Effs AppStack m => ServerT OlympAPI m
 olympAPI =
   graphqlAuth
-    :<|> whoAmI
     :<|> logout
     :<|> paymentAPI
     :<|> tournamentSocket
     :<|> tournamentAdminSocket
-
-whoAmI :: Applicative m => (SessionId, Entity User) -> m Text
-whoAmI (_, eu) = do
-  let u = entityVal eu
-  pure (userName u <> " " <> userSurname u)
 
 graphqlAuth :: Eff Database m => Maybe (SessionId, Entity User) -> m A.Value
 graphqlAuth = \case

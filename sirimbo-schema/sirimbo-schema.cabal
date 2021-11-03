@@ -36,7 +36,6 @@ library
                        Olymp.Schema.User
                        Olymp.Schema.Video
 
-                       Olymp.Schema.Migrate
                        Olymp.Schema.Orphans
                        Olymp.Schema.Utils
 

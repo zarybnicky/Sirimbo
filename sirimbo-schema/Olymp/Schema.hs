@@ -13,7 +13,6 @@ import Olymp.Schema.Article as X
 import Olymp.Schema.Couple as X
 import Olymp.Schema.Document as X
 import Olymp.Schema.Event as X
-import Olymp.Schema.Migrate as X
 import Olymp.Schema.Payment as X
 import Olymp.Schema.PaymentGroup as X
 import Olymp.Schema.Permission as X

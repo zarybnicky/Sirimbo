@@ -20,7 +20,7 @@ import Data.List (intercalate)
 import Data.Validation (Validation (..), validate)
 import Data.Yaml (decodeFileEither, decodeFileThrow)
 import Olymp.Cli.Config (Config (..))
-import Olymp.Server (runMigrate, runServer, runCheckYouTube)
+import Olymp.Server (runServer, runCheckYouTube)
 import Options.Applicative hiding (Failure, Success)
 import System.Environment (lookupEnv)
 import System.Exit (exitFailure)
@@ -84,8 +84,5 @@ argsParser = info (args <**> helper) fullDesc
                   )
                   mempty
               ),
-            command "check-youtube" (info (pure runCheckYouTube) mempty),
-            command
-              "migrate"
-              (info (runMigrate <$> (flag' True (long "execute") <|> flag' False (long "dry-run"))) mempty)
+            command "check-youtube" (info (pure runCheckYouTube) mempty)
           ]

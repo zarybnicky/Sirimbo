@@ -19,7 +19,6 @@ module Olymp.Server
     interpretServer,
     olympServer,
     runServer,
-    runMigrate,
     runCheckYouTube,
     saveTournamentState,
   )
@@ -50,7 +49,7 @@ import Data.Pool (Pool, withResource)
 import qualified Data.Text as T
 import Data.Typeable (Typeable)
 import Database.Persist.Postgresql (createPostgresqlPool)
-import Database.Persist.Sql (SqlBackend, repsert, get, printMigration, runMigration)
+import Database.Persist.Sql (SqlBackend, repsert, get)
 import Network.Google (LogLevel (Info), envScopes, newEnvWith, newLogger, newManager, tlsManagerSettings)
 import Network.Google.Auth (getApplicationDefault)
 import Network.Google.YouTube (youTubeReadOnlyScope)
@@ -63,7 +62,7 @@ import Olymp.Cli.Config (Config (..))
 import Olymp.Effect (AppStack, interpretServer)
 import Olymp.Effect.Database (Database, query, runDatabasePool)
 import Olymp.Effect.Google (googleToResourceTIO)
-import Olymp.Schema (Key (ParameterKey), Parameter (..), migrateAll)
+import Olymp.Schema (Key (ParameterKey), Parameter (..))
 import Olymp.Tournament.API (initialTournament)
 import Olymp.Tournament.Base (NodeId, Tournament, propagateWinners, withTournament)
 import Olymp.YouTube.Worker (youtubeWorker)
@@ -89,12 +88,6 @@ saveTournamentState = do
   embed $ threadDelay 100000000
   state <- T.pack . BCL.unpack . encode <$> atomicGet @(Tournament NodeId)
   void . query $ repsert (ParameterKey "tournament") (Parameter state)
-
-runMigrate :: Bool -> Config -> IO ()
-runMigrate realExecute config = do
-  pool <- makePool config
-  runM . runDatabasePool pool . query $
-    if realExecute then runMigration migrateAll else printMigration migrateAll
 
 runServer :: Int -> Int -> Config -> IO ()
 runServer port proxy config = do
