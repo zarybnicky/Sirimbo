@@ -4,40 +4,7 @@
 
 {% block content %}
   <div class="container">
-    <form method="POST">
-      <a class="btn btn-outline-primary" href="/admin/galerie/file/upload">Přidat fotky</a>
-      <a class="btn btn-outline-primary" href="/admin/galerie/directory/add">Přidat složku</a>
-      <table>
-        <tr>
-          <th>Složka</th>
-          <th>Skrytá</th>
-        </tr>
-        {% for row in data %}
-          <tr>
-            <td>
-              <div class="btn-group">
-                <button type="button" class="btn btn-xs pt-0" data-toggle="dropdown">
-                  <img alt="Upravit" width="14" src="/style/icon-gear.png" />
-                </button>
-                <div class="dropdown-menu">
-                  <a class="dropdown-item" href="/admin/galerie/directory/edit/{{ row.gd_id }}">Přejmenovat</a>
-                  <a class="dropdown-item" href="/admin/galerie/directory/{{ row.gd_id }}">Upravit fotky</a>
-                  <a class="dropdown-item" href="/admin/galerie/directory/remove/{{ row.gd_id }}">Odstranit</a>
-                </div>
-              </div>
-              {% for i in range(0, row.gd_level - 1) %}
-                {% if not loop.first %}&nbsp;->{% endif %}
-              {% endfor %}
-              {{ row.gd_name }}
-            </td>
-            <td>
-              <visibility-checkbox type="photo/directory" name="{{ row.gd_id }}" initialValue="{{ row.gd_hidden }}">
-              </visibility-checkbox>
-            </td>
-          </tr>
-        {% endfor %}
-      </table>
-    </form>
-</div>
+    <gallery-directory-list></gallery-directory-list>
+  </div>
 {% endblock %}
 

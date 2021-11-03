@@ -36,19 +36,13 @@ class DBGalerie extends Database
         }
     }
 
-    public static function getDirs($by_level = false, $sort = false)
+    public static function getDirs()
     {
-        $res = self::query(
-            'SELECT * FROM galerie_dir' . ($by_level ? ' ORDER BY gd_level' : '')
-        );
+        $res = self::query('SELECT * FROM galerie_dir ORDER BY gd_level');
         $array = self::getArray($res);
-
-        if ($sort) {
-            $out = [];
-            self::_recursiveChildren($array, $out, 1, count($array));
-            $array = $out;
-        }
-        return $array;
+        $out = [];
+        self::_recursiveChildren($array, $out, 1, count($array));
+        return $out;
     }
 
     public static function getDirsWithParentPath()

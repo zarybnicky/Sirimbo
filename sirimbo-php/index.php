@@ -235,7 +235,6 @@ function makeRouter()
     $router->get('/admin/users/statistiky', '@Admin.Users::statistiky');
 
     $router->get('/admin/galerie', '@Admin.Galerie::list');
-    $router->post('/admin/galerie', '@Admin.Galerie::listPost');
     $router->get('/admin/galerie/file/upload', '@Admin.GalerieFile::upload');
     $router->post('/admin/galerie/file/upload', '@Admin.GalerieFile::uploadPost');
     $router->get('/admin/galerie/file/edit/([0-9]+)', '@Admin.GalerieFile::edit');

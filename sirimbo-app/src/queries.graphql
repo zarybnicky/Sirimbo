@@ -1,3 +1,11 @@
+fragment galleryDirFields on galerie_dir {
+  gd_hidden
+  gd_id
+  gd_id_rodic
+  gd_level
+  gd_name
+  gd_path
+}
 fragment scheduleFields on rozpis {
   r_datum
   r_id
@@ -99,6 +107,16 @@ fragment announcementFields on upozorneni {
   }
 }
 
+query GalleryDirList($offset: Int, $limit: Int) {
+  galerie_dir(limit: $limit, offset: $offset, order_by: {gd_name: asc}) {
+    ...galleryDirFields
+  }
+  galerie_dir_aggregate {
+    aggregate {
+      count
+    }
+  }
+}
 query UpozorneniList($offset: Int, $limit: Int) {
   upozorneni(limit: $limit, offset: $offset, order_by: {up_timestamp_add: desc}) {
     ...announcementFields
@@ -146,5 +164,10 @@ mutation setNabidkaVisible($id: bigint!, $visible: Boolean!) {
 mutation setAkceVisible($id: bigint!, $visible: Boolean!) {
   update_akce_by_pk(pk_columns: {a_id: $id}, _set: {a_visible: $visible}) {
     ...eventFields
+  }
+}
+mutation setGalerieDirVisible($id: bigint!, $visible: Boolean!) {
+  update_galerie_dir_by_pk(pk_columns: {gd_id: $id}, _set: {gd_hidden: $visible}) {
+    ...galleryDirFields
   }
 }

@@ -56,7 +56,7 @@ class Fotogalerie
 
     public static function sidemenu($dirId)
     {
-        if (!$dirs = \DBGalerie::getDirs(true, true)) {
+        if (!$dirs = \DBGalerie::getDirs()) {
             return '';
         }
 

@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { useState } from 'react';
 import * as ReactDOM from 'react-dom';
-import ReactPaginate from 'react-paginate';
+import { useState } from 'react';
 import { DateEl } from './date';
 import * as queries from './queries';
 import { ApolloProvider, useQuery } from '@apollo/client';
 import { createClient } from './client';
+import { Pagination } from './pagination';
 
-export function Announcements() {
+export function AnnouncementList() {
     const [limit, setLimit] = useState(10);
     const [offset, setOffset] = useState(0);
-    const { loading, error, data } = useQuery(queries.UpozorneniListDocument, {
+    const { data } = useQuery(queries.UpozorneniListDocument, {
         variables: { limit, offset },
     });
     const setPage = (x: { selected: number; }) => setOffset(x.selected * limit);
@@ -38,38 +38,18 @@ export function Announcements() {
             <hr />
         </React.Fragment>)}
 
-        {(data?.upozorneni_aggregate?.aggregate?.count || 0) <= 0 ? null :
-            <div className="navigation">
-                <ReactPaginate
-                    previousLabel={'<'}
-                    nextLabel={'>'}
-                    breakLabel={'...'}
-                    pageCount={Math.ceil((data?.upozorneni_aggregate?.aggregate?.count || 0) / limit)}
-                    marginPagesDisplayed={2}
-                    pageRangeDisplayed={5}
-                    onPageChange={setPage}
-
-                    containerClassName="pagination"
-                    breakClassName="page-item"
-                    breakLinkClassName="page-link"
-                    pageClassName="page-item"
-                    previousClassName="page-item"
-                    nextClassName="page-item"
-                    pageLinkClassName="page-link"
-                    previousLinkClassName="page-link"
-                    nextLinkClassName="page-link"
-                    activeClassName="active"
-                />
-            </div>
-        }
-    </React.Fragment >;
+        <Pagination
+            total={data?.upozorneni_aggregate?.aggregate?.count || 0}
+            limit={limit} setPage={setPage}
+        ></Pagination>
+    </React.Fragment>;
 }
-class AnnouncementsElement extends HTMLElement {
+class AnnouncementListElement extends HTMLElement {
     connectedCallback() {
         ReactDOM.render(
-            <ApolloProvider client={createClient()}><Announcements /></ApolloProvider>,
+            <ApolloProvider client={createClient()}><AnnouncementList /></ApolloProvider>,
             this
         );
     }
 }
-customElements.define('announcement-list', AnnouncementsElement);
+customElements.define('announcement-list', AnnouncementListElement);

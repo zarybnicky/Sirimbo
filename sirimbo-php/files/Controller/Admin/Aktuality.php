@@ -146,7 +146,7 @@ class Aktuality
                     'id' => $item['gd_id'],
                     'text' => str_repeat('&nbsp;&nbsp;', $item['gd_level'] - 1) . $item['gd_name']
                 ],
-                \DBGalerie::getDirs(true, true)
+                \DBGalerie::getDirs()
             ),
         ]);
     }
