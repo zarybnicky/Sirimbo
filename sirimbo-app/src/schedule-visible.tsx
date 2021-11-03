@@ -25,21 +25,6 @@ const ScheduleVisible = ({ id }: Props) => {
     return loading ? null : <Form.Check name={id.toString()} checked={visible} onChange={toggle} />
 };
 
-const EventVisible = ({ id }: Props) => {
-    const { loading, error, data, refetch } = useQuery(queries.AkceDocument, {
-        variables: { id },
-    });
-    const [toggleVisible] = useMutation(queries.SetAkceVisibleDocument, {
-        onCompleted: () => refetch(),
-    });
-    const visible = data?.akce_by_pk?.a_visible || false;
-    const toggle = () => toggleVisible({ variables: { id, visible: !visible } });
-    if (error) {
-        console.error(error);
-    }
-    return loading ? null : <Form.Check name={id.toString()} checked={visible} onChange={toggle} />
-};
-
 const ReservationVisible = ({ id }: Props) => {
     const { loading, error, data, refetch } = useQuery(queries.NabidkaDocument, {
         variables: { id },
@@ -60,10 +45,9 @@ class ScheduleVisibleElement extends HTMLElement {
         const id = parseInt(this.getAttribute('name')!!, 10);
         const type = this.getAttribute('type');
         const component =
-            type === 'event' ? <EventVisible id={id}></EventVisible> :
-                type === 'schedule' ? <ScheduleVisible id={id}></ScheduleVisible> :
-                    type === 'reservation' ? <ReservationVisible id={id}></ReservationVisible>
-                        : null;
+            type === 'schedule' ? <ScheduleVisible id={id}></ScheduleVisible> :
+                type === 'reservation' ? <ReservationVisible id={id}></ReservationVisible>
+                    : null;
         ReactDOM.render(
             <ApolloProvider client={createClient()}>{component}</ApolloProvider>,
             this

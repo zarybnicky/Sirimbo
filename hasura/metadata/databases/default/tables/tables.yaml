@@ -1,7 +1,7 @@
 - "!include public_akce.yaml"
 - "!include public_akce_item.yaml"
 - "!include public_aktuality.yaml"
-- "!include public_aktuality_foto.yaml"
+- "!include public_aktuality_admin.yaml"
 - "!include public_dokumenty.yaml"
 - "!include public_galerie_dir.yaml"
 - "!include public_galerie_foto.yaml"

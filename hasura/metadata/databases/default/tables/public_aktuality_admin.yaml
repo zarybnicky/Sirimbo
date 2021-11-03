@@ -1,0 +1,63 @@
+table:
+  name: aktuality_admin
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - at_foto
+    - at_foto_main
+    - at_id
+    - at_jmeno
+    - at_kat
+    - at_preview
+    - at_text
+    - at_timestamp
+    - at_timestamp_add
+    set:
+      at_kdo: x-hasura-User-Id
+  role: member
+select_permissions:
+- permission:
+    columns:
+    - at_foto
+    - at_foto_main
+    - at_id
+    - at_kdo
+    - at_jmeno
+    - at_kat
+    - at_preview
+    - at_text
+    - at_timestamp
+    - at_timestamp_add
+    filter:
+      at_kdo:
+        _eq: X-Hasura-User-Id
+  role: member
+update_permissions:
+- permission:
+    check: {}
+    columns:
+    - at_foto
+    - at_foto_main
+    - at_id
+    - at_jmeno
+    - at_kat
+    - at_kdo
+    - at_preview
+    - at_text
+    - at_timestamp
+    - at_timestamp_add
+    filter:
+      at_kdo:
+        _eq: X-Hasura-User-Id
+    set:
+      at_kdo: x-hasura-User-Id
+  role: member
+delete_permissions:
+- permission:
+    filter:
+      at_kdo:
+        _eq: X-Hasura-User-Id
+  role: member
