@@ -15,6 +15,7 @@ module.exports = {
       assetModuleFilename: 'assets/[name][ext][query]',
   },
   resolve: {
+    symlinks: false,
     extensions: ['.js', '.ts', '.tsx', '.json']
   },
   devtool: "source-map",

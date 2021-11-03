@@ -22,13 +22,7 @@ library
   import: shared
   hs-source-dirs:      src
   exposed-modules:     Olymp.API
-                       Olymp.API.Announcement
-                       Olymp.API.Auth
                        Olymp.API.Payment
-                       Olymp.API.Photo
-                       Olymp.API.Reservation
-                       Olymp.API.User
-                       Olymp.API.WordPress
                        Olymp.Auth
                        Olymp.Cli
                        Olymp.Cli.Config
