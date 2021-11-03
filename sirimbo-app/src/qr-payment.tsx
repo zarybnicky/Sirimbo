@@ -35,7 +35,7 @@ class DateElement extends HTMLElement {
         const ks = this.getAttribute('ks') || '';
 
         const spayd = mkSpayd(acc, am, msg, ss, vs, ks);
-        ReactDOM.render(<QRCode value={spayd} level="M" size={384} />, this);
+        ReactDOM.render(<QRCode value={spayd} level="M" size={256} />, this);
     }
 }
 customElements.define('qr-payment', DateElement);
