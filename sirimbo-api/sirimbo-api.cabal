@@ -71,7 +71,6 @@ library
                      , monoidal-containers
                      , mtl
                      , sirimbo-schema
-                     , openapi3
                      , optparse-applicative
                      , persistent
                      , persistent-postgresql
@@ -88,8 +87,6 @@ library
                      , servant-foreign
                      , servant-JuicyPixels
                      , servant-multipart
-                     , servant-openapi3
-                     , servant-swagger-ui
                      , servant-server
                      , servant-websockets
                      , tagged
