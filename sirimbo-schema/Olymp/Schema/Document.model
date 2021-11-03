@@ -1,9 +1,0 @@
-Document sql=dokumenty
-  Id sql=d_id
-  path Text sql=d_path
-  name Text sql=d_name
-  filename Text sql=d_filename
-  category Text sql=d_kategorie sqltype=SMALLINT(3)
-  createdBy UserId sql=d_kdo
-  updatedAt UTCTime sql=d_timestamp sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
-  UniqueDocument path sql=d_path

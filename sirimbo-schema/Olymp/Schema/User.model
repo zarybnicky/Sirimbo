@@ -9,6 +9,7 @@ User sql=users
   Id sql=u_id
   login Text sql=u_login
   password Text sql=u_pass
+
   name Text sql=u_jmeno
   surname Text sql=u_prijmeni
   gender Text sql=u_pohlavi
@@ -17,24 +18,28 @@ User sql=users
   birthDate Day sql=u_narozeni
   birthNumber Text Maybe sql=u_rodne_cislo default=NULL
   notes Text sql=u_poznamky default=''
-  updatedAt UTCTime sql=u_timestamp sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
+
   level Int sql=u_level default=0 sqltype=TINYINT(3)
   permission PermissionId sql=u_group
   userGroup UserGroupId sql=u_skupina default=1
+
   dancer Bool sql=u_dancer default=0
   ban Bool sql=u_ban default=0
   lock Bool sql=u_lock default=0
   confirmed Bool sql=u_confirmed default=0
   system Bool sql=u_system default=0
-  street Text sql=u_street
-  conscriptionNumber Text sql=u_conscription_number default=''
-  orientationNumber Text sql=u_orientation_number default=''
-  district Text sql=u_district default=''
-  city Text sql=u_city
-  postalCode Text sql=u_postal_code
-  nationality Text sql=u_nationality
-  memberSince UTCTime Maybe sql=u_member_since
-  memberUntil UTCTime Maybe sql=u_member_until default=NULL
+
+  updatedAt UTCTime sql=u_timestamp sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
   createdAt UTCTime sql=u_created_at sqltype=TIMESTAMP default=CURRENT_TIMESTAMP
-  teacher Bool sql=u_teacher default=0
   gdprSignedAt UTCTime Maybe sql=u_gdpr_signed_at
+
+  street Text sql=u_street MigrationOnly
+  conscriptionNumber Text sql=u_conscription_number default='' MigrationOnly
+  orientationNumber Text sql=u_orientation_number default='' MigrationOnly
+  district Text sql=u_district default='' MigrationOnly
+  city Text sql=u_city MigrationOnly
+  postalCode Text sql=u_postal_code MigrationOnly
+  nationality Text sql=u_nationality MigrationOnly
+  memberSince UTCTime Maybe sql=u_member_since MigrationOnly
+  memberUntil UTCTime Maybe sql=u_member_until default=NULL MigrationOnly
+  teacher Bool sql=u_teacher default=0 MigrationOnly

@@ -1,6 +1,0 @@
-PaymentGroup sql=platby_group
-  Id sql=pg_id
-  type Int sql=pg_type default=0
-  name Text sql=pg_name
-  description Text sql=pg_description
-  base Int sql=pg_base default=0 sqltype=INT(11)

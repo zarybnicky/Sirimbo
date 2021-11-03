@@ -21,18 +21,8 @@ library
   import: shared
   hs-source-dirs:      .
   exposed-modules:     Olymp.Schema
-                       Olymp.Schema.Announcement
-                       Olymp.Schema.Article
-                       Olymp.Schema.Couple
-                       Olymp.Schema.Document
-                       Olymp.Schema.Event
-                       Olymp.Schema.Payment
-                       Olymp.Schema.PaymentGroup
                        Olymp.Schema.Permission
-                       Olymp.Schema.Photo
-                       Olymp.Schema.Reservation
                        Olymp.Schema.Runtime
-                       Olymp.Schema.Schedule
                        Olymp.Schema.User
                        Olymp.Schema.Video
 
