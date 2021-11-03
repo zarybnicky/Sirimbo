@@ -26,6 +26,7 @@ class Render
             'currentUri' => $uri,
             'currentUser' => \Session::getUser(),
             'navbar' => static::getNavbar(),
+            'frontendHash' => FRONTEND_HASH,
         ];
     }
 

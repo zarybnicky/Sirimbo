@@ -57,6 +57,7 @@ in {
       date_default_timezone_set('Europe/Paris');
       mb_internal_encoding('UTF-8');
 
+      define('FRONTEND_HASH', '${builtins.substring 11 32 "${pkgs.sirimbo-app}"}');
       define('SENTRY_ENV', '${cfg.domain}');
       define('DB_CONN_STRING', 'pgsql:${cfg.dbConnString}');
 
