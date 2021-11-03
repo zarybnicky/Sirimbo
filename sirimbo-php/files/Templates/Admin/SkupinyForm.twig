@@ -29,7 +29,7 @@
       {% for row in groups %}
         <div class='mb-2 form-group form-check'>
           <input type="checkbox" class="form-check-input" name="group[]"
-                 value={{ row.pg_id }}" {{ groupsSelected[row.pg_id] is defined ? ' checked' : '' }} />
+                 value="{{ row.pg_id }}" {{ groupsSelected[row.pg_id] is defined ? ' checked' : '' }} />
           <label class='form-check-label'>
             {{ row.pg_name }} ({{ row.pg_type ? 'Členské příspěvky' : 'Běžné platby' }})
           </label>

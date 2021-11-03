@@ -39,13 +39,6 @@
               </button>
             </div>
             <div class="modal-body d-flex align-items-center justify-content-center">
-              {% set params = {
-                  'acc': '1806875329/0800',
-                  'am': item.amount,
-                  'msg': user.fullName ~ ': ' ~ item.name,
-                  'ss': item.symbol,
-                  'vs': user.varSymbol,
-              } %}
               <qr-payment
                   acc="1806875329/0800"
                   am="{{ item.amount }}"
@@ -53,7 +46,6 @@
                   ss="{{ item.symbol }}"
                   vs="{{ user.varSymbol }}"
               ></qr-payment>
-              <img alt="" src="/api/qr-payment.png?{{ params | url_encode }}" />
             </div>
           </div>
         </div>

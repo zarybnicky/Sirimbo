@@ -31,7 +31,6 @@ library
                        Olymp.Schema.Utils
 
                        Olymp.API
-                       Olymp.API.Payment
                        Olymp.Auth
                        Olymp.Cli
                        Olymp.Cli.Config
@@ -50,11 +49,9 @@ library
 
   build-depends:       base >=4.7 && <5
                      , aeson
-                     , aeson-qq
                      , barbies
                      , binary
                      , bytestring
-                     , cassava
                      , co-log
                      , co-log-core
                      , containers
@@ -74,7 +71,6 @@ library
                      , http-client
                      , http-reverse-proxy
                      , in-other-words
-                     , JuicyPixels
                      , lens
                      , monad-logger
                      , monoidal-containers
@@ -84,16 +80,12 @@ library
                      , persistent-postgresql
                      , persistent-template
                      , process
-                     , qrcode-core
-                     , qrcode-juicypixels
                      , recursion-schemes
                      , resource-pool
                      , resourcet
                      , servant
-                     , servant-cassava
                      , servant-flatten
                      , servant-foreign
-                     , servant-JuicyPixels
                      , servant-multipart
                      , servant-server
                      , servant-websockets

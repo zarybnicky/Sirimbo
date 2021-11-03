@@ -6,8 +6,12 @@ import QRCode from 'qrcode.react';
 export function mkSpayd(
     acc: string, am: string, msg: string, ss: string, vs: string, ks: string,
 ) {
-    const [bank, num] = acc.split('/');
-    const [pref, acct] = num.split('-');
+    const [num, bank] = acc.split('/');
+    let [pref, acct] = num.split('-');
+    if (!acct) {
+        acct = pref;
+        pref = '';
+    }
     const bban = bank.padStart(4, '0') + pref.padStart(6, '0') + acct.padStart(10, '0');
     const iban = IBAN.fromBBAN('CZ', bban);
     return [
@@ -31,7 +35,7 @@ class DateElement extends HTMLElement {
         const ks = this.getAttribute('ks') || '';
 
         const spayd = mkSpayd(acc, am, msg, ss, vs, ks);
-        ReactDOM.render(<QRCode value={spayd} level="M" />, this);
+        ReactDOM.render(<QRCode value={spayd} level="M" size={384} />, this);
     }
 }
 customElements.define('qr-payment', DateElement);

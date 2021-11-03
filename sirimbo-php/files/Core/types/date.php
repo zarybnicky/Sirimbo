@@ -6,7 +6,7 @@ class Date
     protected $year;
     protected $month;
     protected $day;
-    protected $separators = ['-', '.' , '/'];
+    protected static $separators = ['-', '.' , '/'];
 
     public function __construct($s = null)
     {
@@ -20,20 +20,9 @@ class Date
         return $this->getDate();
     }
 
-    public function separator($s = null, $reset = false)
-    {
-        if ($s === null) {
-            return $this->separators;
-        }
-        if ($reset) {
-            $this->separators = [];
-        }
-        $this->separators[] = $s;
-    }
-
     public function setDate($s)
     {
-        foreach ($this->separators as $sep) {
+        foreach (self::$separators as $sep) {
             if (strpos($s, $sep) === false) {
                 continue;
             }

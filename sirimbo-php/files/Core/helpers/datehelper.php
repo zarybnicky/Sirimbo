@@ -7,35 +7,28 @@ class DateHelper
     protected $useRange;
     protected $cls;
 
-    public function __construct($name, $value = null)
+    public function __construct($name, $date = null)
     {
         $this->date = null;
         $this->name = $name;
         $this->useRange = false;
         $this->cls = 'form-control';
-        if ($value) {
-            list($from, $to) = $this->createDate($value);
-            $this->date = $from;
-            $this->dateTo = $to;
+        if (!$date) {
+            return;
         }
-    }
-
-    protected function createDate($date)
-    {
         if (is_a($date, 'Date')) {
-            return [$date, null];
+            $this->date = $date;
+            return;
         }
         if (!is_string($date)) {
-            return [null, null];
+            return;
         }
-        if (strpos($date, '-') && strpos($date, '-') === strrpos($date, '-')) {
-            $pieces = explode('-', $date);
-            $from = new \Date(trim($pieces[0]));
-            $to = new \Date(trim($pieces[1]));
-            return [$from->isValid() ? $from : null, $to->isValid() ? $to : null];
+        if (strpos($date, ' - ')) {
+            $pieces = explode(' - ', $date);
+            $this->date = new \Date(trim($pieces[0]));
+            $this->dateTo = new \Date(trim($pieces[1]));
         } else {
-            $date = new \Date($date);
-            return [$date->isValid() ? $date : null, null];
+            $this->date = new \Date($date);
         }
     }
 

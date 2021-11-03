@@ -13,7 +13,6 @@ import Control.Effect (Eff)
 import qualified Data.Aeson as A
 import Data.Time (Day (ModifiedJulianDay), UTCTime (..))
 import Database.Persist.Sql (fromSqlKey)
-import Olymp.API.Payment (PaymentAPI, paymentAPI)
 import Olymp.Effect (AppStack)
 import Olymp.Effect.Session (SessionEff, deleteSession)
 import Olymp.Prelude
@@ -26,7 +25,6 @@ import Web.Cookie (SetCookie (..), defaultSetCookie)
 type OlympAPI =
   PhpMaybeAuth :> "api" :> "graphql-auth" :> Get '[JSON] A.Value
     :<|> PhpAuth :> "logout" :> Verb 'GET 303 '[JSON] (Headers '[Header "Set-Cookie" SetCookie, Header "Location" String] NoContent)
-    :<|> "api" :> PaymentAPI
     :<|> "api" :> "tournament" :> "ws" :> WebSocket
     :<|> "api" :> "admin" :> "ws" :> PhpAuth :> WebSocket
 
@@ -34,7 +32,6 @@ olympAPI :: Effs AppStack m => ServerT OlympAPI m
 olympAPI =
   graphqlAuth
     :<|> logout
-    :<|> paymentAPI
     :<|> tournamentSocket
     :<|> tournamentAdminSocket
 
