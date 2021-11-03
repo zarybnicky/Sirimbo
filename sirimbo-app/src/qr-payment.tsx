@@ -27,14 +27,14 @@ export function mkSpayd(
 
 class DateElement extends HTMLElement {
     connectedCallback() {
-        const acc = this.getAttribute('acc') || '';
-        const am = this.getAttribute('am') || '';
-        const msg = this.getAttribute('msg') || '';
-        const ss = this.getAttribute('ss') || '';
-        const vs = this.getAttribute('vs') || '';
-        const ks = this.getAttribute('ks') || '';
-
-        const spayd = mkSpayd(acc, am, msg, ss, vs, ks);
+        const spayd = mkSpayd(
+            this.getAttribute('acc') || '',
+            this.getAttribute('am') || '',
+            this.getAttribute('msg') || '',
+            this.getAttribute('ss') || '',
+            this.getAttribute('vs') || '',
+            this.getAttribute('ks') || ''
+        );
         ReactDOM.render(<QRCode value={spayd} level="M" size={256} />, this);
     }
 }
