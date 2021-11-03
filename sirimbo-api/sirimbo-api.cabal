@@ -21,7 +21,16 @@ common shared
 library
   import: shared
   hs-source-dirs:      src
-  exposed-modules:     Olymp.API
+  exposed-modules:     Olymp.Schema
+                       Olymp.Schema.Permission
+                       Olymp.Schema.Runtime
+                       Olymp.Schema.User
+                       Olymp.Schema.Video
+
+                       Olymp.Schema.Orphans
+                       Olymp.Schema.Utils
+
+                       Olymp.API
                        Olymp.API.Payment
                        Olymp.Auth
                        Olymp.Cli
