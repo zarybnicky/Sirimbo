@@ -1163,6 +1163,11 @@
     "@types/react" "*"
     hoist-non-react-statics "^3.3.0"
 
+"@types/iban@^0.0.32":
+  version "0.0.32"
+  resolved "https://registry.yarnpkg.com/@types/iban/-/iban-0.0.32.tgz#0308cc330fe534d5b7015299feb32ab216e124d5"
+  integrity sha512-GhyJ+IVOC/eFfARnYd8wjL9dKvlQU+amhml0UxgSzTr/13V11op+nVVdkyqEipHYoqJZv4RHWLfkMmZrCgjjCA==
+
 "@types/invariant@^2.2.33":
   version "2.2.35"
   resolved "https://registry.yarnpkg.com/@types/invariant/-/invariant-2.2.35.tgz#cd3ebf581a6557452735688d8daba6cf0bd5a3be"
@@ -1219,6 +1224,13 @@
   version "15.7.4"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.4.tgz#fcf7205c25dff795ee79af1e30da2c9790808f11"
   integrity sha512-rZ5drC/jWjrArrS8BR6SIr4cWpW09RNTYt9AMZo3Jwwif+iacXAqgVjm0B0Bv/S1jhDXKHqRVNCbACkJ89RAnQ==
+
+"@types/qrcode.react@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@types/qrcode.react/-/qrcode.react-1.0.2.tgz#f892432cc41b5dac52e3ca8873b717c8bfea6002"
+  integrity sha512-I9Oq5Cjlkgy3Tw7krCnCXLw2/zMhizkTere49OOcta23tkvH0xBTP0yInimTh0gstLRtb8Ki9NZVujE5UI6ffQ==
+  dependencies:
+    "@types/react" "*"
 
 "@types/react-dom@^17.0.9":
   version "17.0.9"
@@ -4419,6 +4431,11 @@ hyphenate-style-name@^1.0.3:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/hyphenate-style-name/-/hyphenate-style-name-1.0.4.tgz#691879af8e220aea5750e8827db4ef62a54e361d"
   integrity sha512-ygGZLjmXfPHj+ZWh6LwbC37l43MhfztxetbFCoYTM2VjkIUpeHgSNn7QIyVFj7YQ1Wl9Cbw5sholVJPzWvC2MQ==
+
+iban@^0.0.14:
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/iban/-/iban-0.0.14.tgz#fd8a65ac50c8b770682634b20dc5c5c9feba5c24"
+  integrity sha512-+rocNKk+Ga9m8Lr9fTMWd+87JnsBrucm0ZsIx5ROOarZlaDLmd+FKdbtvb0XyoBw9GAFOYG2GuLqoNB16d+p3w==
 
 iconv-lite@0.4.24, iconv-lite@^0.4.24:
   version "0.4.24"

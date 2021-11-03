@@ -12,3 +12,4 @@ export * from './reservation-select';
 export * from './date';
 export * from './paging';
 export * from './admin';
+export * from './qr-payment';

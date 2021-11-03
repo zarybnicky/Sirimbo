@@ -99,6 +99,7 @@ library
                      , servant-websockets
                      , tagged
                      , text
+                     , template-haskell
                      , time
                      , transformers
                      , transformers-compat

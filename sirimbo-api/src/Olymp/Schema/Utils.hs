@@ -40,6 +40,6 @@ persistSchemas = do
 
 getPrefix :: Q FilePath
 getPrefix =
-  liftIO (doesDirectoryExist "sirimbo-schema") >>= \case
-    True -> pure "sirimbo-schema/Olymp/Schema/"
-    False -> pure "Olymp/Schema/"
+  liftIO (doesDirectoryExist "sirimbo-api") >>= \case
+    True -> pure "sirimbo-api/src/Olymp/Schema/"
+    False -> pure "src/Olymp/Schema/"
