@@ -100,7 +100,7 @@ fragment announcementFields on upozorneni {
 }
 
 query UpozorneniList($offset: Int, $limit: Int) {
-  upozorneni(limit: $limit, offset: $offset) {
+  upozorneni(limit: $limit, offset: $offset, order_by: {up_timestamp_add: desc}) {
     ...announcementFields
   }
   upozorneni_aggregate {
