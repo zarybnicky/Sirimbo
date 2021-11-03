@@ -22,30 +22,6 @@ class Rozpis
         ]);
     }
 
-    public static function listPost()
-    {
-        \Permissions::checkError('rozpis', P_OWNED);
-        $data = \Permissions::check('rozpis', P_ADMIN)
-            ? \DBRozpis::getSchedules(true)
-            : \DBRozpis::getSchedulesByTrainer(\Session::getUser()->getId(), true);
-
-        foreach ($data as $item) {
-            $id = $item['r_id'];
-            if ((bool) $_POST[$id] == (bool) $item['r_visible']) {
-                continue;
-            }
-            \DBRozpis::editSchedule(
-                $id,
-                $item['r_trener'],
-                $item['r_kde'],
-                $item['r_datum'],
-                $_POST[$id] ? '1' : '0',
-                $item['r_lock'] ? '1' : '0'
-            );
-        }
-        \Redirect::to('/admin/rozpis');
-    }
-
     public static function add()
     {
         \Permissions::checkError('rozpis', P_OWNED);

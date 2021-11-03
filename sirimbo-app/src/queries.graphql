@@ -144,6 +144,21 @@ query Nabidka($id: bigint!) {
     ...reservationItemFields
   }
 }
+query AkceList($offset: Int, $limit: Int) {
+  akce(limit: $limit, offset: $offset, order_by: {a_od: desc}) {
+    ...eventFields
+    akce_items_aggregate {
+      aggregate {
+        count
+      }
+    }
+  }
+  akce_aggregate {
+    aggregate {
+      count
+    }
+  }
+}
 query Akce($id: bigint!) {
   akce_by_pk(a_id: $id) {
     ...eventFields

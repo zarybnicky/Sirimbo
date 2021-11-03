@@ -13,30 +13,6 @@ class Nabidka
         ]);
     }
 
-    public static function listPost()
-    {
-        \Permissions::checkError('nabidka', P_OWNED);
-        $data = \Permissions::check('nabidka', P_ADMIN)
-            ? \DBNabidka::getNabidka(true)
-            : \DBNabidka::getNabidkyByTrener(\Session::getUser()->getId(), true);
-        foreach ($data as $item) {
-            if ((bool) $_POST[$item['n_id']] == (bool) $item['n_visible']) {
-                continue;
-            }
-            \DBNabidka::editNabidka(
-                $item['n_id'],
-                $item['n_trener'],
-                $item['n_pocet_hod'],
-                $item['n_max_pocet_hod'],
-                $item['n_od'],
-                $item['n_do'],
-                $_POST[$item['n_id']] ? '1' : '0',
-                $item['n_lock']
-            );
-        }
-        \Redirect::to('/admin/nabidka');
-    }
-
     public static function add()
     {
         \Permissions::checkError('nabidka', P_OWNED);

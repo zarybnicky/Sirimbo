@@ -168,7 +168,6 @@ function makeRouter()
     $router->post('/admin/konzole', '@Admin.Repl::post');
 
     $router->get('/admin/akce', '@Admin.Akce::list');
-    $router->post('/admin/akce', '@Admin.Akce::listPost');
     $router->get('/admin/akce/add', '@Admin.Akce::add');
     $router->post('/admin/akce/add', '@Admin.Akce::addPost');
     $router->get('/admin/akce/edit/([0-9]+)', '@Admin.Akce::edit');
@@ -250,7 +249,6 @@ function makeRouter()
     $router->post('/admin/galerie/directory/remove/([0-9]+)', '@Admin.GalerieDirectory::removePost');
 
     $router->get('/admin/rozpis', '@Admin.Rozpis::list');
-    $router->post('/admin/rozpis', '@Admin.Rozpis::listPost');
     $router->get('/admin/rozpis/add', '@Admin.Rozpis::add');
     $router->post('/admin/rozpis/add', '@Admin.Rozpis::addPost');
     $router->get('/admin/rozpis/duplicate/([0-9]+)', '@Admin.Rozpis::duplicate');
@@ -261,7 +259,6 @@ function makeRouter()
     $router->post('/admin/rozpis/detail/([0-9]+)', '@Admin.RozpisDetail::detailPost');
 
     $router->get('/admin/nabidka', '@Admin.Nabidka::list');
-    $router->post('/admin/nabidka', '@Admin.Nabidka::listPost');
     $router->get('/admin/nabidka/add', '@Admin.Nabidka::add');
     $router->post('/admin/nabidka/add', '@Admin.Nabidka::addPost');
     $router->get('/admin/nabidka/duplicate/([0-9]+)', '@Admin.Nabidka::duplicate');
