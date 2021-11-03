@@ -21,7 +21,7 @@
 
     overlay = final: prev: {
       hasura-graphql-engine = unstablePkgs.hasura-graphql-engine.overrideAttrs (oldAttrs: {
-        VERSION = prev.hasura-graphql-engine.version;
+        VERSION = unstablePkgs.hasura-graphql-engine.version;
       });
       hasura-cli = unstablePkgs.hasura-cli;
       hasura-cli-ext = final.callPackage ./nix/cli-ext.nix {};
