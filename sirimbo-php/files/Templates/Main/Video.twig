@@ -81,12 +81,12 @@
          return;
      }
 
-     jQuery('#video-popup').click(function () {
-         jQuery(this).empty().hide();
+     jquery('#video-popup').click(function () {
+         jquery(this).empty().hide();
      });
-     jQuery('.video-item').click(function (e) {
+     jquery('.video-item').click(function (e) {
          e.preventDefault();
-         jQuery('#video-popup').append('<div><iframe src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen></iframe></div>').show();
+         jquery('#video-popup').append('<div><iframe src="' + $(this).attr('href') + '" frameborder="0" allowfullscreen></iframe></div>').show();
      });
  })();
 </script>

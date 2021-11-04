@@ -167,7 +167,7 @@ class Paging
 
         $out .= '&nbsp;|';
         foreach ($pages as $i) {
-            $out .= '<div class="text-center" style="width:3ex;display:inline-block;*display:inline;">';
+            $out .= '<div class="text-center" style="width:3ex;display:inline-block;">';
             if ($i != $this->getCurrentPage()) {
                 $out .= $this->getLink($i, $i);
             } else {

@@ -2,18 +2,13 @@ schema: schema.json
   # - "http://olymp-test/graphql/v1/graphql":
   #     headers:
   #       X-Hasura-Admin-Secret: superadmin
-documents: src/queries.graphql
+documents:
+  - 'src/**/*.ts'
+  - 'src/**/*.tsx'
+  - '!src/graphql/graphql.ts'
+  - '!src/graphql/index.d.ts'
 generates:
-  src/queries.ts:
-    plugins:
-      - add:
-          content: |
-            /* eslint-disable */
-            // THIS FILE IS GENERATED, DO NOT EDIT!
-      - typescript
-      - typescript-operations
-      - typed-document-node
-    config:
-      preResolveTypes: true
-      scalars:
-        Void: void
+  src/graphql/:
+    preset: gql-tag-operations-preset
+    presetConfig:
+      augmentedModuleName: 'graphql-tag'

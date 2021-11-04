@@ -57,7 +57,7 @@ class Utils
     public static function userSelect(array $data, string $name = 'user', $set = null, string $index = 'u_id'): string
     {
         $out = "<div class=\"$name\">\n";
-        $out .= "<select class=\"form-control select2\" name=\"$name\">\n";
+        $out .= "<select class=\"form-control\" name=\"$name\">\n";
         if (!$set) {
             $out .= "<option value=\"0\" selected=\"selected\">--- žádný ---</option>\n";
         } else {
@@ -78,7 +78,7 @@ class Utils
         return $out;
     }
 
-    public static function selectAssoc(string $name, array $data, string $key, string $value, $set = null, $cls = "form-control select2"): string
+    public static function selectAssoc(string $name, array $data, string $key, string $value, $set = null, $cls = "form-control"): string
     {
         $options = array_for($data, fn($x) => (
             "<option value=\"{$x[$key]}\""
@@ -88,7 +88,7 @@ class Utils
         return "<select class=\"$cls\" name=\"$name\">" . implode($options) . "</select>";
     }
 
-    public static function select(string $name, array $data, $set = null, $cls = "form-control select2"): string
+    public static function select(string $name, array $data, $set = null, $cls = "form-control"): string
     {
         $options = array_map(
             fn($k, $v) => "<option value=\"$k\""
@@ -100,7 +100,7 @@ class Utils
         return "<select class=\"$cls\" name=\"$name\">" . implode($options) . "</select>";
     }
 
-    public static function selectLiteral(string $name, array $data, $set = null, $cls = "form-control select2"): string
+    public static function selectLiteral(string $name, array $data, $set = null, $cls = "form-control"): string
     {
         $options = array_for($data, fn($x) => (
             "<option value=\"$x\""

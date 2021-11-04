@@ -1,3 +1,5 @@
+const $ = require('jquery');
+
 $(function() {
   function maxHeight(element) {
     var height = 0;
@@ -70,10 +72,4 @@ $(function() {
     }).addTo(map);
     L.marker([49.59490, 17.26340]).addTo(map);
   }
-
-  $(".select2").select2({
-    theme: 'bootstrap',
-    placeholder: $(this).data('placeholder'),
-    width: 'resolve'
-  });
 });

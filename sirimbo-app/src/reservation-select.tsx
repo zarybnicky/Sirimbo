@@ -1,11 +1,13 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import * as queries from './queries';
 import { ApolloProvider, useQuery, useLazyQuery } from '@apollo/client';
 import { formatDateRange } from './date';
 import { createClient } from './client';
+import { gql } from 'graphql-tag';
+import { Nabidka } from './schedule-visible';
+import { NabidkaQuery } from './graphql/graphql';
 
-const ReservationView = (x: queries.NabidkaQuery['nabidka_by_pk']) => {
+const ReservationView = (x: NabidkaQuery['nabidka_by_pk']) => {
     const header = <div className="trenink-header">
         <div className="title">
             {x?.user?.u_jmeno} {x?.user?.u_prijmeni}
@@ -53,9 +55,16 @@ const ReservationView = (x: queries.NabidkaQuery['nabidka_by_pk']) => {
     </div>;
 }
 
+export const NabidkaList = gql(`
+query NabidkaList($offset: Int, $limit: Int) {
+  nabidka(limit: $limit, offset: $offset) {
+    ...reservationFields
+  }
+}`);
+
 export function ReservationSelect() {
-    const { data: reservations } = useQuery(queries.NabidkaListDocument);
-    const [loadReservation, { loading, error, data }] = useLazyQuery(queries.NabidkaDocument);
+    const { data: reservations } = useQuery(NabidkaList);
+    const [loadReservation, { loading, error, data }] = useLazyQuery(Nabidka);
     const onChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
         const id = parseInt(event.target.value, 10);
         if (id) {

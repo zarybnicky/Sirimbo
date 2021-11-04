@@ -1,6 +1,4 @@
 /* eslint-disable */
-// THIS FILE IS GENERATED, DO NOT EDIT!
-
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -24,7 +22,6 @@ export type Scalars = {
   time: any;
   timestamptz: any;
 };
-
 
 /** Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'. */
 export type Boolean_Comparison_Exp = {
@@ -184,7 +181,7 @@ export type Akce_Bool_Exp = {
 /** unique or primary key constraints on table "akce" */
 export enum Akce_Constraint {
   /** unique or primary key constraint */
-  Idx_23735Primary = 'idx_23735_primary'
+  Idx_24557Primary = 'idx_24557_primary'
 }
 
 /** input type for incrementing numeric columns in table "akce" */
@@ -307,7 +304,7 @@ export type Akce_Item_Bool_Exp = {
 /** unique or primary key constraints on table "akce_item" */
 export enum Akce_Item_Constraint {
   /** unique or primary key constraint */
-  Idx_23747Primary = 'idx_23747_primary'
+  Idx_24569Primary = 'idx_24569_primary'
 }
 
 /** input type for incrementing numeric columns in table "akce_item" */
@@ -751,6 +748,253 @@ export type Aktuality = {
   user: Users;
 };
 
+/** columns and relationships of "aktuality_admin" */
+export type Aktuality_Admin = {
+  __typename?: 'aktuality_admin';
+  at_foto?: Maybe<Scalars['bigint']>;
+  at_foto_main?: Maybe<Scalars['bigint']>;
+  at_id?: Maybe<Scalars['bigint']>;
+  at_jmeno?: Maybe<Scalars['String']>;
+  at_kat?: Maybe<Scalars['String']>;
+  at_kdo?: Maybe<Scalars['bigint']>;
+  at_preview?: Maybe<Scalars['String']>;
+  at_text?: Maybe<Scalars['String']>;
+  at_timestamp?: Maybe<Scalars['timestamptz']>;
+  at_timestamp_add?: Maybe<Scalars['timestamptz']>;
+};
+
+/** aggregated selection of "aktuality_admin" */
+export type Aktuality_Admin_Aggregate = {
+  __typename?: 'aktuality_admin_aggregate';
+  aggregate?: Maybe<Aktuality_Admin_Aggregate_Fields>;
+  nodes: Array<Aktuality_Admin>;
+};
+
+/** aggregate fields of "aktuality_admin" */
+export type Aktuality_Admin_Aggregate_Fields = {
+  __typename?: 'aktuality_admin_aggregate_fields';
+  avg?: Maybe<Aktuality_Admin_Avg_Fields>;
+  count: Scalars['Int'];
+  max?: Maybe<Aktuality_Admin_Max_Fields>;
+  min?: Maybe<Aktuality_Admin_Min_Fields>;
+  stddev?: Maybe<Aktuality_Admin_Stddev_Fields>;
+  stddev_pop?: Maybe<Aktuality_Admin_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Aktuality_Admin_Stddev_Samp_Fields>;
+  sum?: Maybe<Aktuality_Admin_Sum_Fields>;
+  var_pop?: Maybe<Aktuality_Admin_Var_Pop_Fields>;
+  var_samp?: Maybe<Aktuality_Admin_Var_Samp_Fields>;
+  variance?: Maybe<Aktuality_Admin_Variance_Fields>;
+};
+
+
+/** aggregate fields of "aktuality_admin" */
+export type Aktuality_Admin_Aggregate_FieldsCountArgs = {
+  columns?: Maybe<Array<Aktuality_Admin_Select_Column>>;
+  distinct?: Maybe<Scalars['Boolean']>;
+};
+
+/** aggregate avg on columns */
+export type Aktuality_Admin_Avg_Fields = {
+  __typename?: 'aktuality_admin_avg_fields';
+  at_foto?: Maybe<Scalars['Float']>;
+  at_foto_main?: Maybe<Scalars['Float']>;
+  at_id?: Maybe<Scalars['Float']>;
+  at_kdo?: Maybe<Scalars['Float']>;
+};
+
+/** Boolean expression to filter rows from the table "aktuality_admin". All fields are combined with a logical 'AND'. */
+export type Aktuality_Admin_Bool_Exp = {
+  _and?: Maybe<Array<Aktuality_Admin_Bool_Exp>>;
+  _not?: Maybe<Aktuality_Admin_Bool_Exp>;
+  _or?: Maybe<Array<Aktuality_Admin_Bool_Exp>>;
+  at_foto?: Maybe<Bigint_Comparison_Exp>;
+  at_foto_main?: Maybe<Bigint_Comparison_Exp>;
+  at_id?: Maybe<Bigint_Comparison_Exp>;
+  at_jmeno?: Maybe<String_Comparison_Exp>;
+  at_kat?: Maybe<String_Comparison_Exp>;
+  at_kdo?: Maybe<Bigint_Comparison_Exp>;
+  at_preview?: Maybe<String_Comparison_Exp>;
+  at_text?: Maybe<String_Comparison_Exp>;
+  at_timestamp?: Maybe<Timestamptz_Comparison_Exp>;
+  at_timestamp_add?: Maybe<Timestamptz_Comparison_Exp>;
+};
+
+/** input type for incrementing numeric columns in table "aktuality_admin" */
+export type Aktuality_Admin_Inc_Input = {
+  at_foto?: Maybe<Scalars['bigint']>;
+  at_foto_main?: Maybe<Scalars['bigint']>;
+  at_id?: Maybe<Scalars['bigint']>;
+  at_kdo?: Maybe<Scalars['bigint']>;
+};
+
+/** input type for inserting data into table "aktuality_admin" */
+export type Aktuality_Admin_Insert_Input = {
+  at_foto?: Maybe<Scalars['bigint']>;
+  at_foto_main?: Maybe<Scalars['bigint']>;
+  at_id?: Maybe<Scalars['bigint']>;
+  at_jmeno?: Maybe<Scalars['String']>;
+  at_kat?: Maybe<Scalars['String']>;
+  at_kdo?: Maybe<Scalars['bigint']>;
+  at_preview?: Maybe<Scalars['String']>;
+  at_text?: Maybe<Scalars['String']>;
+  at_timestamp?: Maybe<Scalars['timestamptz']>;
+  at_timestamp_add?: Maybe<Scalars['timestamptz']>;
+};
+
+/** aggregate max on columns */
+export type Aktuality_Admin_Max_Fields = {
+  __typename?: 'aktuality_admin_max_fields';
+  at_foto?: Maybe<Scalars['bigint']>;
+  at_foto_main?: Maybe<Scalars['bigint']>;
+  at_id?: Maybe<Scalars['bigint']>;
+  at_jmeno?: Maybe<Scalars['String']>;
+  at_kat?: Maybe<Scalars['String']>;
+  at_kdo?: Maybe<Scalars['bigint']>;
+  at_preview?: Maybe<Scalars['String']>;
+  at_text?: Maybe<Scalars['String']>;
+  at_timestamp?: Maybe<Scalars['timestamptz']>;
+  at_timestamp_add?: Maybe<Scalars['timestamptz']>;
+};
+
+/** aggregate min on columns */
+export type Aktuality_Admin_Min_Fields = {
+  __typename?: 'aktuality_admin_min_fields';
+  at_foto?: Maybe<Scalars['bigint']>;
+  at_foto_main?: Maybe<Scalars['bigint']>;
+  at_id?: Maybe<Scalars['bigint']>;
+  at_jmeno?: Maybe<Scalars['String']>;
+  at_kat?: Maybe<Scalars['String']>;
+  at_kdo?: Maybe<Scalars['bigint']>;
+  at_preview?: Maybe<Scalars['String']>;
+  at_text?: Maybe<Scalars['String']>;
+  at_timestamp?: Maybe<Scalars['timestamptz']>;
+  at_timestamp_add?: Maybe<Scalars['timestamptz']>;
+};
+
+/** response of any mutation on the table "aktuality_admin" */
+export type Aktuality_Admin_Mutation_Response = {
+  __typename?: 'aktuality_admin_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Aktuality_Admin>;
+};
+
+/** Ordering options when selecting data from "aktuality_admin". */
+export type Aktuality_Admin_Order_By = {
+  at_foto?: Maybe<Order_By>;
+  at_foto_main?: Maybe<Order_By>;
+  at_id?: Maybe<Order_By>;
+  at_jmeno?: Maybe<Order_By>;
+  at_kat?: Maybe<Order_By>;
+  at_kdo?: Maybe<Order_By>;
+  at_preview?: Maybe<Order_By>;
+  at_text?: Maybe<Order_By>;
+  at_timestamp?: Maybe<Order_By>;
+  at_timestamp_add?: Maybe<Order_By>;
+};
+
+/** select columns of table "aktuality_admin" */
+export enum Aktuality_Admin_Select_Column {
+  /** column name */
+  AtFoto = 'at_foto',
+  /** column name */
+  AtFotoMain = 'at_foto_main',
+  /** column name */
+  AtId = 'at_id',
+  /** column name */
+  AtJmeno = 'at_jmeno',
+  /** column name */
+  AtKat = 'at_kat',
+  /** column name */
+  AtKdo = 'at_kdo',
+  /** column name */
+  AtPreview = 'at_preview',
+  /** column name */
+  AtText = 'at_text',
+  /** column name */
+  AtTimestamp = 'at_timestamp',
+  /** column name */
+  AtTimestampAdd = 'at_timestamp_add'
+}
+
+/** input type for updating data in table "aktuality_admin" */
+export type Aktuality_Admin_Set_Input = {
+  at_foto?: Maybe<Scalars['bigint']>;
+  at_foto_main?: Maybe<Scalars['bigint']>;
+  at_id?: Maybe<Scalars['bigint']>;
+  at_jmeno?: Maybe<Scalars['String']>;
+  at_kat?: Maybe<Scalars['String']>;
+  at_kdo?: Maybe<Scalars['bigint']>;
+  at_preview?: Maybe<Scalars['String']>;
+  at_text?: Maybe<Scalars['String']>;
+  at_timestamp?: Maybe<Scalars['timestamptz']>;
+  at_timestamp_add?: Maybe<Scalars['timestamptz']>;
+};
+
+/** aggregate stddev on columns */
+export type Aktuality_Admin_Stddev_Fields = {
+  __typename?: 'aktuality_admin_stddev_fields';
+  at_foto?: Maybe<Scalars['Float']>;
+  at_foto_main?: Maybe<Scalars['Float']>;
+  at_id?: Maybe<Scalars['Float']>;
+  at_kdo?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Aktuality_Admin_Stddev_Pop_Fields = {
+  __typename?: 'aktuality_admin_stddev_pop_fields';
+  at_foto?: Maybe<Scalars['Float']>;
+  at_foto_main?: Maybe<Scalars['Float']>;
+  at_id?: Maybe<Scalars['Float']>;
+  at_kdo?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Aktuality_Admin_Stddev_Samp_Fields = {
+  __typename?: 'aktuality_admin_stddev_samp_fields';
+  at_foto?: Maybe<Scalars['Float']>;
+  at_foto_main?: Maybe<Scalars['Float']>;
+  at_id?: Maybe<Scalars['Float']>;
+  at_kdo?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate sum on columns */
+export type Aktuality_Admin_Sum_Fields = {
+  __typename?: 'aktuality_admin_sum_fields';
+  at_foto?: Maybe<Scalars['bigint']>;
+  at_foto_main?: Maybe<Scalars['bigint']>;
+  at_id?: Maybe<Scalars['bigint']>;
+  at_kdo?: Maybe<Scalars['bigint']>;
+};
+
+/** aggregate var_pop on columns */
+export type Aktuality_Admin_Var_Pop_Fields = {
+  __typename?: 'aktuality_admin_var_pop_fields';
+  at_foto?: Maybe<Scalars['Float']>;
+  at_foto_main?: Maybe<Scalars['Float']>;
+  at_id?: Maybe<Scalars['Float']>;
+  at_kdo?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate var_samp on columns */
+export type Aktuality_Admin_Var_Samp_Fields = {
+  __typename?: 'aktuality_admin_var_samp_fields';
+  at_foto?: Maybe<Scalars['Float']>;
+  at_foto_main?: Maybe<Scalars['Float']>;
+  at_id?: Maybe<Scalars['Float']>;
+  at_kdo?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate variance on columns */
+export type Aktuality_Admin_Variance_Fields = {
+  __typename?: 'aktuality_admin_variance_fields';
+  at_foto?: Maybe<Scalars['Float']>;
+  at_foto_main?: Maybe<Scalars['Float']>;
+  at_id?: Maybe<Scalars['Float']>;
+  at_kdo?: Maybe<Scalars['Float']>;
+};
+
 /** aggregated selection of "aktuality" */
 export type Aktuality_Aggregate = {
   __typename?: 'aktuality_aggregate';
@@ -842,222 +1086,8 @@ export type Aktuality_Bool_Exp = {
 /** unique or primary key constraints on table "aktuality" */
 export enum Aktuality_Constraint {
   /** unique or primary key constraint */
-  Idx_23753Primary = 'idx_23753_primary'
+  Idx_24575Primary = 'idx_24575_primary'
 }
-
-/** columns and relationships of "aktuality_foto" */
-export type Aktuality_Foto = {
-  __typename?: 'aktuality_foto';
-  af_id: Scalars['bigint'];
-  af_id_foto: Scalars['bigint'];
-  af_id_rodic: Scalars['bigint'];
-  af_path: Scalars['String'];
-};
-
-/** aggregated selection of "aktuality_foto" */
-export type Aktuality_Foto_Aggregate = {
-  __typename?: 'aktuality_foto_aggregate';
-  aggregate?: Maybe<Aktuality_Foto_Aggregate_Fields>;
-  nodes: Array<Aktuality_Foto>;
-};
-
-/** aggregate fields of "aktuality_foto" */
-export type Aktuality_Foto_Aggregate_Fields = {
-  __typename?: 'aktuality_foto_aggregate_fields';
-  avg?: Maybe<Aktuality_Foto_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Aktuality_Foto_Max_Fields>;
-  min?: Maybe<Aktuality_Foto_Min_Fields>;
-  stddev?: Maybe<Aktuality_Foto_Stddev_Fields>;
-  stddev_pop?: Maybe<Aktuality_Foto_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Aktuality_Foto_Stddev_Samp_Fields>;
-  sum?: Maybe<Aktuality_Foto_Sum_Fields>;
-  var_pop?: Maybe<Aktuality_Foto_Var_Pop_Fields>;
-  var_samp?: Maybe<Aktuality_Foto_Var_Samp_Fields>;
-  variance?: Maybe<Aktuality_Foto_Variance_Fields>;
-};
-
-
-/** aggregate fields of "aktuality_foto" */
-export type Aktuality_Foto_Aggregate_FieldsCountArgs = {
-  columns?: Maybe<Array<Aktuality_Foto_Select_Column>>;
-  distinct?: Maybe<Scalars['Boolean']>;
-};
-
-/** aggregate avg on columns */
-export type Aktuality_Foto_Avg_Fields = {
-  __typename?: 'aktuality_foto_avg_fields';
-  af_id?: Maybe<Scalars['Float']>;
-  af_id_foto?: Maybe<Scalars['Float']>;
-  af_id_rodic?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to filter rows from the table "aktuality_foto". All fields are combined with a logical 'AND'. */
-export type Aktuality_Foto_Bool_Exp = {
-  _and?: Maybe<Array<Aktuality_Foto_Bool_Exp>>;
-  _not?: Maybe<Aktuality_Foto_Bool_Exp>;
-  _or?: Maybe<Array<Aktuality_Foto_Bool_Exp>>;
-  af_id?: Maybe<Bigint_Comparison_Exp>;
-  af_id_foto?: Maybe<Bigint_Comparison_Exp>;
-  af_id_rodic?: Maybe<Bigint_Comparison_Exp>;
-  af_path?: Maybe<String_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "aktuality_foto" */
-export enum Aktuality_Foto_Constraint {
-  /** unique or primary key constraint */
-  Idx_23762Primary = 'idx_23762_primary'
-}
-
-/** input type for incrementing numeric columns in table "aktuality_foto" */
-export type Aktuality_Foto_Inc_Input = {
-  af_id?: Maybe<Scalars['bigint']>;
-  af_id_foto?: Maybe<Scalars['bigint']>;
-  af_id_rodic?: Maybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "aktuality_foto" */
-export type Aktuality_Foto_Insert_Input = {
-  af_id?: Maybe<Scalars['bigint']>;
-  af_id_foto?: Maybe<Scalars['bigint']>;
-  af_id_rodic?: Maybe<Scalars['bigint']>;
-  af_path?: Maybe<Scalars['String']>;
-};
-
-/** aggregate max on columns */
-export type Aktuality_Foto_Max_Fields = {
-  __typename?: 'aktuality_foto_max_fields';
-  af_id?: Maybe<Scalars['bigint']>;
-  af_id_foto?: Maybe<Scalars['bigint']>;
-  af_id_rodic?: Maybe<Scalars['bigint']>;
-  af_path?: Maybe<Scalars['String']>;
-};
-
-/** aggregate min on columns */
-export type Aktuality_Foto_Min_Fields = {
-  __typename?: 'aktuality_foto_min_fields';
-  af_id?: Maybe<Scalars['bigint']>;
-  af_id_foto?: Maybe<Scalars['bigint']>;
-  af_id_rodic?: Maybe<Scalars['bigint']>;
-  af_path?: Maybe<Scalars['String']>;
-};
-
-/** response of any mutation on the table "aktuality_foto" */
-export type Aktuality_Foto_Mutation_Response = {
-  __typename?: 'aktuality_foto_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Aktuality_Foto>;
-};
-
-/** on conflict condition type for table "aktuality_foto" */
-export type Aktuality_Foto_On_Conflict = {
-  constraint: Aktuality_Foto_Constraint;
-  update_columns?: Array<Aktuality_Foto_Update_Column>;
-  where?: Maybe<Aktuality_Foto_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "aktuality_foto". */
-export type Aktuality_Foto_Order_By = {
-  af_id?: Maybe<Order_By>;
-  af_id_foto?: Maybe<Order_By>;
-  af_id_rodic?: Maybe<Order_By>;
-  af_path?: Maybe<Order_By>;
-};
-
-/** primary key columns input for table: aktuality_foto */
-export type Aktuality_Foto_Pk_Columns_Input = {
-  af_id: Scalars['bigint'];
-};
-
-/** select columns of table "aktuality_foto" */
-export enum Aktuality_Foto_Select_Column {
-  /** column name */
-  AfId = 'af_id',
-  /** column name */
-  AfIdFoto = 'af_id_foto',
-  /** column name */
-  AfIdRodic = 'af_id_rodic',
-  /** column name */
-  AfPath = 'af_path'
-}
-
-/** input type for updating data in table "aktuality_foto" */
-export type Aktuality_Foto_Set_Input = {
-  af_id?: Maybe<Scalars['bigint']>;
-  af_id_foto?: Maybe<Scalars['bigint']>;
-  af_id_rodic?: Maybe<Scalars['bigint']>;
-  af_path?: Maybe<Scalars['String']>;
-};
-
-/** aggregate stddev on columns */
-export type Aktuality_Foto_Stddev_Fields = {
-  __typename?: 'aktuality_foto_stddev_fields';
-  af_id?: Maybe<Scalars['Float']>;
-  af_id_foto?: Maybe<Scalars['Float']>;
-  af_id_rodic?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Aktuality_Foto_Stddev_Pop_Fields = {
-  __typename?: 'aktuality_foto_stddev_pop_fields';
-  af_id?: Maybe<Scalars['Float']>;
-  af_id_foto?: Maybe<Scalars['Float']>;
-  af_id_rodic?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Aktuality_Foto_Stddev_Samp_Fields = {
-  __typename?: 'aktuality_foto_stddev_samp_fields';
-  af_id?: Maybe<Scalars['Float']>;
-  af_id_foto?: Maybe<Scalars['Float']>;
-  af_id_rodic?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate sum on columns */
-export type Aktuality_Foto_Sum_Fields = {
-  __typename?: 'aktuality_foto_sum_fields';
-  af_id?: Maybe<Scalars['bigint']>;
-  af_id_foto?: Maybe<Scalars['bigint']>;
-  af_id_rodic?: Maybe<Scalars['bigint']>;
-};
-
-/** update columns of table "aktuality_foto" */
-export enum Aktuality_Foto_Update_Column {
-  /** column name */
-  AfId = 'af_id',
-  /** column name */
-  AfIdFoto = 'af_id_foto',
-  /** column name */
-  AfIdRodic = 'af_id_rodic',
-  /** column name */
-  AfPath = 'af_path'
-}
-
-/** aggregate var_pop on columns */
-export type Aktuality_Foto_Var_Pop_Fields = {
-  __typename?: 'aktuality_foto_var_pop_fields';
-  af_id?: Maybe<Scalars['Float']>;
-  af_id_foto?: Maybe<Scalars['Float']>;
-  af_id_rodic?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Aktuality_Foto_Var_Samp_Fields = {
-  __typename?: 'aktuality_foto_var_samp_fields';
-  af_id?: Maybe<Scalars['Float']>;
-  af_id_foto?: Maybe<Scalars['Float']>;
-  af_id_rodic?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Aktuality_Foto_Variance_Fields = {
-  __typename?: 'aktuality_foto_variance_fields';
-  af_id?: Maybe<Scalars['Float']>;
-  af_id_foto?: Maybe<Scalars['Float']>;
-  af_id_rodic?: Maybe<Scalars['Float']>;
-};
 
 /** input type for incrementing numeric columns in table "aktuality" */
 export type Aktuality_Inc_Input = {
@@ -1359,7 +1389,6 @@ export type Aktuality_Variance_Order_By = {
   at_kdo?: Maybe<Order_By>;
 };
 
-
 /** Boolean expression to compare columns of type "bigint". All fields are combined with logical 'AND'. */
 export type Bigint_Comparison_Exp = {
   _eq?: Maybe<Scalars['bigint']>;
@@ -1372,7 +1401,6 @@ export type Bigint_Comparison_Exp = {
   _neq?: Maybe<Scalars['bigint']>;
   _nin?: Maybe<Array<Scalars['bigint']>>;
 };
-
 
 /** Boolean expression to compare columns of type "bpchar". All fields are combined with logical 'AND'. */
 export type Bpchar_Comparison_Exp = {
@@ -1407,7 +1435,6 @@ export type Bpchar_Comparison_Exp = {
   _similar?: Maybe<Scalars['bpchar']>;
 };
 
-
 /** Boolean expression to compare columns of type "bytea". All fields are combined with logical 'AND'. */
 export type Bytea_Comparison_Exp = {
   _eq?: Maybe<Scalars['bytea']>;
@@ -1420,7 +1447,6 @@ export type Bytea_Comparison_Exp = {
   _neq?: Maybe<Scalars['bytea']>;
   _nin?: Maybe<Array<Scalars['bytea']>>;
 };
-
 
 /** Boolean expression to compare columns of type "date". All fields are combined with logical 'AND'. */
 export type Date_Comparison_Exp = {
@@ -1534,9 +1560,9 @@ export type Dokumenty_Bool_Exp = {
 /** unique or primary key constraints on table "dokumenty" */
 export enum Dokumenty_Constraint {
   /** unique or primary key constraint */
-  Idx_23771DPath = 'idx_23771_d_path',
+  Idx_24593DPath = 'idx_24593_d_path',
   /** unique or primary key constraint */
-  Idx_23771Primary = 'idx_23771_primary'
+  Idx_24593Primary = 'idx_24593_primary'
 }
 
 /** input type for incrementing numeric columns in table "dokumenty" */
@@ -1879,7 +1905,7 @@ export type Galerie_Dir_Bool_Exp = {
 /** unique or primary key constraints on table "galerie_dir" */
 export enum Galerie_Dir_Constraint {
   /** unique or primary key constraint */
-  Idx_23780Primary = 'idx_23780_primary'
+  Idx_24602Primary = 'idx_24602_primary'
 }
 
 /** input type for incrementing numeric columns in table "galerie_dir" */
@@ -2182,7 +2208,7 @@ export type Galerie_Foto_Bool_Exp = {
 /** unique or primary key constraints on table "galerie_foto" */
 export enum Galerie_Foto_Constraint {
   /** unique or primary key constraint */
-  Idx_23791Primary = 'idx_23791_primary'
+  Idx_24613Primary = 'idx_24613_primary'
 }
 
 /** input type for incrementing numeric columns in table "galerie_foto" */
@@ -2448,12 +2474,10 @@ export type Mutation_Root = {
   delete_akce_item_by_pk?: Maybe<Akce_Item>;
   /** delete data from the table: "aktuality" */
   delete_aktuality?: Maybe<Aktuality_Mutation_Response>;
+  /** delete data from the table: "aktuality_admin" */
+  delete_aktuality_admin?: Maybe<Aktuality_Admin_Mutation_Response>;
   /** delete single row from the table: "aktuality" */
   delete_aktuality_by_pk?: Maybe<Aktuality>;
-  /** delete data from the table: "aktuality_foto" */
-  delete_aktuality_foto?: Maybe<Aktuality_Foto_Mutation_Response>;
-  /** delete single row from the table: "aktuality_foto" */
-  delete_aktuality_foto_by_pk?: Maybe<Aktuality_Foto>;
   /** delete data from the table: "dokumenty" */
   delete_dokumenty?: Maybe<Dokumenty_Mutation_Response>;
   /** delete single row from the table: "dokumenty" */
@@ -2568,10 +2592,10 @@ export type Mutation_Root = {
   insert_akce_one?: Maybe<Akce>;
   /** insert data into the table: "aktuality" */
   insert_aktuality?: Maybe<Aktuality_Mutation_Response>;
-  /** insert data into the table: "aktuality_foto" */
-  insert_aktuality_foto?: Maybe<Aktuality_Foto_Mutation_Response>;
-  /** insert a single row into the table: "aktuality_foto" */
-  insert_aktuality_foto_one?: Maybe<Aktuality_Foto>;
+  /** insert data into the table: "aktuality_admin" */
+  insert_aktuality_admin?: Maybe<Aktuality_Admin_Mutation_Response>;
+  /** insert a single row into the table: "aktuality_admin" */
+  insert_aktuality_admin_one?: Maybe<Aktuality_Admin>;
   /** insert a single row into the table: "aktuality" */
   insert_aktuality_one?: Maybe<Aktuality>;
   /** insert data into the table: "dokumenty" */
@@ -2688,12 +2712,10 @@ export type Mutation_Root = {
   update_akce_item_by_pk?: Maybe<Akce_Item>;
   /** update data of the table: "aktuality" */
   update_aktuality?: Maybe<Aktuality_Mutation_Response>;
+  /** update data of the table: "aktuality_admin" */
+  update_aktuality_admin?: Maybe<Aktuality_Admin_Mutation_Response>;
   /** update single row of the table: "aktuality" */
   update_aktuality_by_pk?: Maybe<Aktuality>;
-  /** update data of the table: "aktuality_foto" */
-  update_aktuality_foto?: Maybe<Aktuality_Foto_Mutation_Response>;
-  /** update single row of the table: "aktuality_foto" */
-  update_aktuality_foto_by_pk?: Maybe<Aktuality_Foto>;
   /** update data of the table: "dokumenty" */
   update_dokumenty?: Maybe<Dokumenty_Mutation_Response>;
   /** update single row of the table: "dokumenty" */
@@ -2832,20 +2854,14 @@ export type Mutation_RootDelete_AktualityArgs = {
 
 
 /** mutation root */
+export type Mutation_RootDelete_Aktuality_AdminArgs = {
+  where: Aktuality_Admin_Bool_Exp;
+};
+
+
+/** mutation root */
 export type Mutation_RootDelete_Aktuality_By_PkArgs = {
   at_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Aktuality_FotoArgs = {
-  where: Aktuality_Foto_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Aktuality_Foto_By_PkArgs = {
-  af_id: Scalars['bigint'];
 };
 
 
@@ -3197,16 +3213,14 @@ export type Mutation_RootInsert_AktualityArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsert_Aktuality_FotoArgs = {
-  objects: Array<Aktuality_Foto_Insert_Input>;
-  on_conflict?: Maybe<Aktuality_Foto_On_Conflict>;
+export type Mutation_RootInsert_Aktuality_AdminArgs = {
+  objects: Array<Aktuality_Admin_Insert_Input>;
 };
 
 
 /** mutation root */
-export type Mutation_RootInsert_Aktuality_Foto_OneArgs = {
-  object: Aktuality_Foto_Insert_Input;
-  on_conflict?: Maybe<Aktuality_Foto_On_Conflict>;
+export type Mutation_RootInsert_Aktuality_Admin_OneArgs = {
+  object: Aktuality_Admin_Insert_Input;
 };
 
 
@@ -3622,26 +3636,18 @@ export type Mutation_RootUpdate_AktualityArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdate_Aktuality_AdminArgs = {
+  _inc?: Maybe<Aktuality_Admin_Inc_Input>;
+  _set?: Maybe<Aktuality_Admin_Set_Input>;
+  where: Aktuality_Admin_Bool_Exp;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_Aktuality_By_PkArgs = {
   _inc?: Maybe<Aktuality_Inc_Input>;
   _set?: Maybe<Aktuality_Set_Input>;
   pk_columns: Aktuality_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Aktuality_FotoArgs = {
-  _inc?: Maybe<Aktuality_Foto_Inc_Input>;
-  _set?: Maybe<Aktuality_Foto_Set_Input>;
-  where: Aktuality_Foto_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Aktuality_Foto_By_PkArgs = {
-  _inc?: Maybe<Aktuality_Foto_Inc_Input>;
-  _set?: Maybe<Aktuality_Foto_Set_Input>;
-  pk_columns: Aktuality_Foto_Pk_Columns_Input;
 };
 
 
@@ -4188,7 +4194,7 @@ export type Nabidka_Bool_Exp = {
 /** unique or primary key constraints on table "nabidka" */
 export enum Nabidka_Constraint {
   /** unique or primary key constraint */
-  Idx_23800Primary = 'idx_23800_primary'
+  Idx_24622Primary = 'idx_24622_primary'
 }
 
 /** input type for incrementing numeric columns in table "nabidka" */
@@ -4314,9 +4320,9 @@ export type Nabidka_Item_Bool_Exp = {
 /** unique or primary key constraints on table "nabidka_item" */
 export enum Nabidka_Item_Constraint {
   /** unique or primary key constraint */
-  Idx_23810NiIdRodic = 'idx_23810_ni_id_rodic',
+  Idx_24632NiIdRodic = 'idx_24632_ni_id_rodic',
   /** unique or primary key constraint */
-  Idx_23810Primary = 'idx_23810_primary'
+  Idx_24632Primary = 'idx_24632_primary'
 }
 
 /** input type for incrementing numeric columns in table "nabidka_item" */
@@ -4825,7 +4831,6 @@ export type Nabidka_Variance_Order_By = {
   n_trener?: Maybe<Order_By>;
 };
 
-
 /** Boolean expression to compare columns of type "numeric". All fields are combined with logical 'AND'. */
 export type Numeric_Comparison_Exp = {
   _eq?: Maybe<Scalars['numeric']>;
@@ -4896,7 +4901,7 @@ export type Parameters_Bool_Exp = {
 /** unique or primary key constraints on table "parameters" */
 export enum Parameters_Constraint {
   /** unique or primary key constraint */
-  Idx_23816Primary = 'idx_23816_primary'
+  Idx_24638Primary = 'idx_24638_primary'
 }
 
 /** input type for inserting data into table "parameters" */
@@ -5135,7 +5140,7 @@ export type Pary_Bool_Exp = {
 /** unique or primary key constraints on table "pary" */
 export enum Pary_Constraint {
   /** unique or primary key constraint */
-  Idx_23824Primary = 'idx_23824_primary'
+  Idx_24646Primary = 'idx_24646_primary'
 }
 
 /** input type for incrementing numeric columns in table "pary" */
@@ -5328,7 +5333,7 @@ export type Pary_Navrh_Bool_Exp = {
 /** unique or primary key constraints on table "pary_navrh" */
 export enum Pary_Navrh_Constraint {
   /** unique or primary key constraint */
-  Idx_23840Primary = 'idx_23840_primary'
+  Idx_24662Primary = 'idx_24662_primary'
 }
 
 /** input type for incrementing numeric columns in table "pary_navrh" */
@@ -5601,7 +5606,6 @@ export type Pary_Order_By = {
   user?: Maybe<Users_Order_By>;
 };
 
-
 /** Boolean expression to compare columns of type "pary_p_lat_trida". All fields are combined with logical 'AND'. */
 export type Pary_P_Lat_Trida_Comparison_Exp = {
   _eq?: Maybe<Scalars['pary_p_lat_trida']>;
@@ -5614,7 +5618,6 @@ export type Pary_P_Lat_Trida_Comparison_Exp = {
   _neq?: Maybe<Scalars['pary_p_lat_trida']>;
   _nin?: Maybe<Array<Scalars['pary_p_lat_trida']>>;
 };
-
 
 /** Boolean expression to compare columns of type "pary_p_stt_trida". All fields are combined with logical 'AND'. */
 export type Pary_P_Stt_Trida_Comparison_Exp = {
@@ -5991,7 +5994,7 @@ export type Permissions_Bool_Exp = {
 /** unique or primary key constraints on table "permissions" */
 export enum Permissions_Constraint {
   /** unique or primary key constraint */
-  Idx_23846Primary = 'idx_23846_primary'
+  Idx_24668Primary = 'idx_24668_primary'
 }
 
 /** input type for incrementing numeric columns in table "permissions" */
@@ -6542,9 +6545,9 @@ export type Platby_Category_Bool_Exp = {
 /** unique or primary key constraints on table "platby_category" */
 export enum Platby_Category_Constraint {
   /** unique or primary key constraint */
-  Idx_23855PcSymbol = 'idx_23855_pc_symbol',
+  Idx_24677PcSymbol = 'idx_24677_pc_symbol',
   /** unique or primary key constraint */
-  Idx_23855Primary = 'idx_23855_primary'
+  Idx_24677Primary = 'idx_24677_primary'
 }
 
 /** columns and relationships of "platby_category_group" */
@@ -6641,9 +6644,9 @@ export type Platby_Category_Group_Bool_Exp = {
 /** unique or primary key constraints on table "platby_category_group" */
 export enum Platby_Category_Group_Constraint {
   /** unique or primary key constraint */
-  Idx_23868PcgIdGroup = 'idx_23868_pcg_id_group',
+  Idx_24690PcgIdGroup = 'idx_24690_pcg_id_group',
   /** unique or primary key constraint */
-  Idx_23868Primary = 'idx_23868_primary'
+  Idx_24690Primary = 'idx_24690_primary'
 }
 
 /** input type for incrementing numeric columns in table "platby_category_group" */
@@ -7183,7 +7186,7 @@ export type Platby_Group_Bool_Exp = {
 /** unique or primary key constraints on table "platby_group" */
 export enum Platby_Group_Constraint {
   /** unique or primary key constraint */
-  Idx_23874Primary = 'idx_23874_primary'
+  Idx_24696Primary = 'idx_24696_primary'
 }
 
 /** input type for incrementing numeric columns in table "platby_group" */
@@ -7380,11 +7383,11 @@ export type Platby_Group_Skupina_Bool_Exp = {
 /** unique or primary key constraints on table "platby_group_skupina" */
 export enum Platby_Group_Skupina_Constraint {
   /** unique or primary key constraint */
-  Idx_23885PgsIdSkupina = 'idx_23885_pgs_id_skupina',
+  Idx_24707PgsIdSkupina = 'idx_24707_pgs_id_skupina',
   /** unique or primary key constraint */
-  Idx_23885Primary = 'idx_23885_primary',
+  Idx_24707Primary = 'idx_24707_primary',
   /** unique or primary key constraint */
-  Idx_23886PgsIdSkupina = 'idx_23886_pgs_id_skupina'
+  Idx_24708PgsIdSkupina = 'idx_24708_pgs_id_skupina'
 }
 
 /** input type for incrementing numeric columns in table "platby_group_skupina" */
@@ -7776,9 +7779,9 @@ export type Platby_Item_Bool_Exp = {
 /** unique or primary key constraints on table "platby_item" */
 export enum Platby_Item_Constraint {
   /** unique or primary key constraint */
-  Idx_23891PiIdRaw = 'idx_23891_pi_id_raw',
+  Idx_24713PiIdRaw = 'idx_24713_pi_id_raw',
   /** unique or primary key constraint */
-  Idx_23891Primary = 'idx_23891_primary'
+  Idx_24713Primary = 'idx_24713_primary'
 }
 
 /** input type for incrementing numeric columns in table "platby_item" */
@@ -8166,9 +8169,9 @@ export type Platby_Raw_Bool_Exp = {
 /** unique or primary key constraints on table "platby_raw" */
 export enum Platby_Raw_Constraint {
   /** unique or primary key constraint */
-  Idx_23898PrHash = 'idx_23898_pr_hash',
+  Idx_24720PrHash = 'idx_24720_pr_hash',
   /** unique or primary key constraint */
-  Idx_23898Primary = 'idx_23898_primary'
+  Idx_24720Primary = 'idx_24720_primary'
 }
 
 /** input type for incrementing numeric columns in table "platby_raw" */
@@ -8333,16 +8336,14 @@ export type Query_Root = {
   akce_item_by_pk?: Maybe<Akce_Item>;
   /** fetch data from the table: "aktuality" */
   aktuality: Array<Aktuality>;
+  /** fetch data from the table: "aktuality_admin" */
+  aktuality_admin: Array<Aktuality_Admin>;
+  /** fetch aggregated fields from the table: "aktuality_admin" */
+  aktuality_admin_aggregate: Aktuality_Admin_Aggregate;
   /** fetch aggregated fields from the table: "aktuality" */
   aktuality_aggregate: Aktuality_Aggregate;
   /** fetch data from the table: "aktuality" using primary key columns */
   aktuality_by_pk?: Maybe<Aktuality>;
-  /** fetch data from the table: "aktuality_foto" */
-  aktuality_foto: Array<Aktuality_Foto>;
-  /** fetch aggregated fields from the table: "aktuality_foto" */
-  aktuality_foto_aggregate: Aktuality_Foto_Aggregate;
-  /** fetch data from the table: "aktuality_foto" using primary key columns */
-  aktuality_foto_by_pk?: Maybe<Aktuality_Foto>;
   /** fetch data from the table: "dokumenty" */
   dokumenty: Array<Dokumenty>;
   /** fetch aggregated fields from the table: "dokumenty" */
@@ -8557,6 +8558,24 @@ export type Query_RootAktualityArgs = {
 };
 
 
+export type Query_RootAktuality_AdminArgs = {
+  distinct_on?: Maybe<Array<Aktuality_Admin_Select_Column>>;
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  order_by?: Maybe<Array<Aktuality_Admin_Order_By>>;
+  where?: Maybe<Aktuality_Admin_Bool_Exp>;
+};
+
+
+export type Query_RootAktuality_Admin_AggregateArgs = {
+  distinct_on?: Maybe<Array<Aktuality_Admin_Select_Column>>;
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  order_by?: Maybe<Array<Aktuality_Admin_Order_By>>;
+  where?: Maybe<Aktuality_Admin_Bool_Exp>;
+};
+
+
 export type Query_RootAktuality_AggregateArgs = {
   distinct_on?: Maybe<Array<Aktuality_Select_Column>>;
   limit?: Maybe<Scalars['Int']>;
@@ -8568,29 +8587,6 @@ export type Query_RootAktuality_AggregateArgs = {
 
 export type Query_RootAktuality_By_PkArgs = {
   at_id: Scalars['bigint'];
-};
-
-
-export type Query_RootAktuality_FotoArgs = {
-  distinct_on?: Maybe<Array<Aktuality_Foto_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Aktuality_Foto_Order_By>>;
-  where?: Maybe<Aktuality_Foto_Bool_Exp>;
-};
-
-
-export type Query_RootAktuality_Foto_AggregateArgs = {
-  distinct_on?: Maybe<Array<Aktuality_Foto_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Aktuality_Foto_Order_By>>;
-  where?: Maybe<Aktuality_Foto_Bool_Exp>;
-};
-
-
-export type Query_RootAktuality_Foto_By_PkArgs = {
-  af_id: Scalars['bigint'];
 };
 
 
@@ -9313,7 +9309,7 @@ export type Rozpis_Bool_Exp = {
 /** unique or primary key constraints on table "rozpis" */
 export enum Rozpis_Constraint {
   /** unique or primary key constraint */
-  Idx_23909Primary = 'idx_23909_primary'
+  Idx_24731Primary = 'idx_24731_primary'
 }
 
 /** input type for incrementing numeric columns in table "rozpis" */
@@ -9435,7 +9431,7 @@ export type Rozpis_Item_Bool_Exp = {
 /** unique or primary key constraints on table "rozpis_item" */
 export enum Rozpis_Item_Constraint {
   /** unique or primary key constraint */
-  Idx_23920Primary = 'idx_23920_primary'
+  Idx_24742Primary = 'idx_24742_primary'
 }
 
 /** input type for incrementing numeric columns in table "rozpis_item" */
@@ -9943,7 +9939,7 @@ export type Session_Bool_Exp = {
 /** unique or primary key constraints on table "session" */
 export enum Session_Constraint {
   /** unique or primary key constraint */
-  Idx_23925Primary = 'idx_23925_primary'
+  Idx_24747Primary = 'idx_24747_primary'
 }
 
 /** input type for incrementing numeric columns in table "session" */
@@ -10214,7 +10210,7 @@ export type Skupiny_Bool_Exp = {
 /** unique or primary key constraints on table "skupiny" */
 export enum Skupiny_Constraint {
   /** unique or primary key constraint */
-  Idx_23934Primary = 'idx_23934_primary'
+  Idx_24756Primary = 'idx_24756_primary'
 }
 
 /** input type for incrementing numeric columns in table "skupiny" */
@@ -10373,7 +10369,6 @@ export type Skupiny_Variance_Fields = {
   s_id?: Maybe<Scalars['Float']>;
 };
 
-
 /** Boolean expression to compare columns of type "smallint". All fields are combined with logical 'AND'. */
 export type Smallint_Comparison_Exp = {
   _eq?: Maybe<Scalars['smallint']>;
@@ -10403,16 +10398,14 @@ export type Subscription_Root = {
   akce_item_by_pk?: Maybe<Akce_Item>;
   /** fetch data from the table: "aktuality" */
   aktuality: Array<Aktuality>;
+  /** fetch data from the table: "aktuality_admin" */
+  aktuality_admin: Array<Aktuality_Admin>;
+  /** fetch aggregated fields from the table: "aktuality_admin" */
+  aktuality_admin_aggregate: Aktuality_Admin_Aggregate;
   /** fetch aggregated fields from the table: "aktuality" */
   aktuality_aggregate: Aktuality_Aggregate;
   /** fetch data from the table: "aktuality" using primary key columns */
   aktuality_by_pk?: Maybe<Aktuality>;
-  /** fetch data from the table: "aktuality_foto" */
-  aktuality_foto: Array<Aktuality_Foto>;
-  /** fetch aggregated fields from the table: "aktuality_foto" */
-  aktuality_foto_aggregate: Aktuality_Foto_Aggregate;
-  /** fetch data from the table: "aktuality_foto" using primary key columns */
-  aktuality_foto_by_pk?: Maybe<Aktuality_Foto>;
   /** fetch data from the table: "dokumenty" */
   dokumenty: Array<Dokumenty>;
   /** fetch aggregated fields from the table: "dokumenty" */
@@ -10627,6 +10620,24 @@ export type Subscription_RootAktualityArgs = {
 };
 
 
+export type Subscription_RootAktuality_AdminArgs = {
+  distinct_on?: Maybe<Array<Aktuality_Admin_Select_Column>>;
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  order_by?: Maybe<Array<Aktuality_Admin_Order_By>>;
+  where?: Maybe<Aktuality_Admin_Bool_Exp>;
+};
+
+
+export type Subscription_RootAktuality_Admin_AggregateArgs = {
+  distinct_on?: Maybe<Array<Aktuality_Admin_Select_Column>>;
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  order_by?: Maybe<Array<Aktuality_Admin_Order_By>>;
+  where?: Maybe<Aktuality_Admin_Bool_Exp>;
+};
+
+
 export type Subscription_RootAktuality_AggregateArgs = {
   distinct_on?: Maybe<Array<Aktuality_Select_Column>>;
   limit?: Maybe<Scalars['Int']>;
@@ -10638,29 +10649,6 @@ export type Subscription_RootAktuality_AggregateArgs = {
 
 export type Subscription_RootAktuality_By_PkArgs = {
   at_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootAktuality_FotoArgs = {
-  distinct_on?: Maybe<Array<Aktuality_Foto_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Aktuality_Foto_Order_By>>;
-  where?: Maybe<Aktuality_Foto_Bool_Exp>;
-};
-
-
-export type Subscription_RootAktuality_Foto_AggregateArgs = {
-  distinct_on?: Maybe<Array<Aktuality_Foto_Select_Column>>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  order_by?: Maybe<Array<Aktuality_Foto_Order_By>>;
-  where?: Maybe<Aktuality_Foto_Bool_Exp>;
-};
-
-
-export type Subscription_RootAktuality_Foto_By_PkArgs = {
-  af_id: Scalars['bigint'];
 };
 
 
@@ -11261,7 +11249,6 @@ export type Subscription_RootVideo_Source_By_PkArgs = {
   vs_id: Scalars['bigint'];
 };
 
-
 /** Boolean expression to compare columns of type "time". All fields are combined with logical 'AND'. */
 export type Time_Comparison_Exp = {
   _eq?: Maybe<Scalars['time']>;
@@ -11274,7 +11261,6 @@ export type Time_Comparison_Exp = {
   _neq?: Maybe<Scalars['time']>;
   _nin?: Maybe<Array<Scalars['time']>>;
 };
-
 
 /** Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'. */
 export type Timestamptz_Comparison_Exp = {
@@ -11415,7 +11401,7 @@ export type Upozorneni_Bool_Exp = {
 /** unique or primary key constraints on table "upozorneni" */
 export enum Upozorneni_Constraint {
   /** unique or primary key constraint */
-  Idx_23943Primary = 'idx_23943_primary'
+  Idx_24765Primary = 'idx_24765_primary'
 }
 
 /** input type for incrementing numeric columns in table "upozorneni" */
@@ -11657,7 +11643,7 @@ export type Upozorneni_Skupiny_Bool_Exp = {
 /** unique or primary key constraints on table "upozorneni_skupiny" */
 export enum Upozorneni_Skupiny_Constraint {
   /** unique or primary key constraint */
-  Idx_23955Primary = 'idx_23955_primary'
+  Idx_24777Primary = 'idx_24777_primary'
 }
 
 /** input type for incrementing numeric columns in table "upozorneni_skupiny" */
@@ -12469,9 +12455,9 @@ export type Users_Bool_Exp = {
 /** unique or primary key constraints on table "users" */
 export enum Users_Constraint {
   /** unique or primary key constraint */
-  Idx_23964Primary = 'idx_23964_primary',
+  Idx_24786Primary = 'idx_24786_primary',
   /** unique or primary key constraint */
-  Idx_23964ULogin = 'idx_23964_u_login'
+  Idx_24786ULogin = 'idx_24786_u_login'
 }
 
 /** input type for incrementing numeric columns in table "users" */
@@ -12902,7 +12888,7 @@ export type Users_Skupiny_Bool_Exp = {
 /** unique or primary key constraints on table "users_skupiny" */
 export enum Users_Skupiny_Constraint {
   /** unique or primary key constraint */
-  Idx_23986Primary = 'idx_23986_primary'
+  Idx_24808Primary = 'idx_24808_primary'
 }
 
 /** input type for incrementing numeric columns in table "users_skupiny" */
@@ -13335,7 +13321,7 @@ export type Video_Bool_Exp = {
 /** unique or primary key constraints on table "video" */
 export enum Video_Constraint {
   /** unique or primary key constraint */
-  Idx_23999Primary = 'idx_23999_primary'
+  Idx_24821Primary = 'idx_24821_primary'
 }
 
 /** input type for incrementing numeric columns in table "video" */
@@ -13421,7 +13407,7 @@ export type Video_List_Bool_Exp = {
 /** unique or primary key constraints on table "video_list" */
 export enum Video_List_Constraint {
   /** unique or primary key constraint */
-  Idx_24009Primary = 'idx_24009_primary'
+  Idx_24831Primary = 'idx_24831_primary'
 }
 
 /** input type for incrementing numeric columns in table "video_list" */
@@ -13747,7 +13733,7 @@ export type Video_Source_Bool_Exp = {
 /** unique or primary key constraints on table "video_source" */
 export enum Video_Source_Constraint {
   /** unique or primary key constraint */
-  Idx_24019Primary = 'idx_24019_primary'
+  Idx_24841Primary = 'idx_24841_primary'
 }
 
 /** input type for incrementing numeric columns in table "video_source" */
@@ -13964,131 +13950,13 @@ export type Video_Variance_Fields = {
   v_id?: Maybe<Scalars['Float']>;
 };
 
-export type GalleryDirFieldsFragment = { __typename?: 'galerie_dir', gd_hidden: boolean, gd_id: any, gd_id_rodic: any, gd_level: any, gd_name: string, gd_path: string };
-
-export type ScheduleFieldsFragment = { __typename?: 'rozpis', r_datum: any, r_id: any, r_kde: string, r_lock: boolean, r_timestamp?: Maybe<any>, r_trener: any, r_visible: boolean, user: { __typename?: 'users', u_jmeno: string, u_prijmeni: string, u_id: any } };
-
-export type ScheduleItemFieldsFragment = { __typename?: 'rozpis', rozpis_items: Array<{ __typename?: 'rozpis_item', ri_od: any, ri_do: any, ri_id: any, ri_partner?: Maybe<any> }> };
-
-export type ReservationFieldsFragment = { __typename?: 'nabidka', n_visible: boolean, n_trener: any, n_timestamp?: Maybe<any>, n_pocet_hod: any, n_od: any, n_max_pocet_hod: any, n_lock: boolean, n_id: any, n_do: any, user: { __typename?: 'users', u_jmeno: string, u_prijmeni: string, u_id: any } };
-
-export type ReservationItemFieldsFragment = { __typename?: 'nabidka', nabidka_items: Array<{ __typename?: 'nabidka_item', ni_lock: boolean, ni_partner: any, ni_pocet_hod: any, pary: { __typename?: 'pary', user: { __typename?: 'users', u_id: any, u_jmeno: string, u_prijmeni: string } } }> };
-
-export type EventFieldsFragment = { __typename?: 'akce', a_do: any, a_id: any, a_info: string, a_dokumenty: string, a_jmeno: string, a_kapacita: any, a_kde: string, a_lock: boolean, a_od: any, a_timestamp?: Maybe<any>, a_visible: boolean };
-
-export type EventItemFieldsFragment = { __typename?: 'akce', akce_items: Array<{ __typename?: 'akce_item', ai_id: any, user: { __typename?: 'users', u_jmeno: string, u_prijmeni: string, u_id: any } }> };
-
-export type AnnouncementFieldsFragment = { __typename?: 'upozorneni', up_id: any, up_kdo: any, up_lock: boolean, up_nadpis: string, up_text: string, up_timestamp?: Maybe<any>, up_timestamp_add: any, user: { __typename?: 'users', u_id: any, u_jmeno: string, u_prijmeni: string }, upozorneni_skupinies: Array<{ __typename?: 'upozorneni_skupiny', skupiny: { __typename?: 'skupiny', s_name: string, s_description: string, s_color_text: string, s_color_rgb: string } }> };
-
 export type GalleryDirListQueryVariables = Exact<{
   offset?: Maybe<Scalars['Int']>;
   limit?: Maybe<Scalars['Int']>;
 }>;
 
 
-export type GalleryDirListQuery = { __typename?: 'query_root', galerie_dir: Array<(
-    { __typename?: 'galerie_dir' }
-    & GalleryDirFieldsFragment
-  )>, galerie_dir_aggregate: { __typename?: 'galerie_dir_aggregate', aggregate?: Maybe<{ __typename?: 'galerie_dir_aggregate_fields', count: number }> } };
-
-export type UpozorneniListQueryVariables = Exact<{
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
-}>;
-
-
-export type UpozorneniListQuery = { __typename?: 'query_root', upozorneni: Array<(
-    { __typename?: 'upozorneni' }
-    & AnnouncementFieldsFragment
-  )>, upozorneni_aggregate: { __typename?: 'upozorneni_aggregate', aggregate?: Maybe<{ __typename?: 'upozorneni_aggregate_fields', count: number }> } };
-
-export type RozpisQueryVariables = Exact<{
-  id: Scalars['bigint'];
-}>;
-
-
-export type RozpisQuery = { __typename?: 'query_root', rozpis_by_pk?: Maybe<(
-    { __typename?: 'rozpis' }
-    & ScheduleFieldsFragment
-    & ScheduleItemFieldsFragment
-  )> };
-
-export type NabidkaListQueryVariables = Exact<{
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
-}>;
-
-
-export type NabidkaListQuery = { __typename?: 'query_root', nabidka: Array<(
-    { __typename?: 'nabidka' }
-    & ReservationFieldsFragment
-  )> };
-
-export type NabidkaQueryVariables = Exact<{
-  id: Scalars['bigint'];
-}>;
-
-
-export type NabidkaQuery = { __typename?: 'query_root', nabidka_by_pk?: Maybe<(
-    { __typename?: 'nabidka' }
-    & ReservationFieldsFragment
-    & ReservationItemFieldsFragment
-  )> };
-
-export type AkceListQueryVariables = Exact<{
-  offset?: Maybe<Scalars['Int']>;
-  limit?: Maybe<Scalars['Int']>;
-}>;
-
-
-export type AkceListQuery = { __typename?: 'query_root', akce: Array<(
-    { __typename?: 'akce', akce_items_aggregate: { __typename?: 'akce_item_aggregate', aggregate?: Maybe<{ __typename?: 'akce_item_aggregate_fields', count: number }> } }
-    & EventFieldsFragment
-  )>, akce_aggregate: { __typename?: 'akce_aggregate', aggregate?: Maybe<{ __typename?: 'akce_aggregate_fields', count: number }> } };
-
-export type AkceQueryVariables = Exact<{
-  id: Scalars['bigint'];
-}>;
-
-
-export type AkceQuery = { __typename?: 'query_root', akce_by_pk?: Maybe<(
-    { __typename?: 'akce' }
-    & EventFieldsFragment
-    & EventItemFieldsFragment
-  )> };
-
-export type SetRozpisVisibleMutationVariables = Exact<{
-  id: Scalars['bigint'];
-  visible: Scalars['Boolean'];
-}>;
-
-
-export type SetRozpisVisibleMutation = { __typename?: 'mutation_root', update_rozpis_by_pk?: Maybe<(
-    { __typename?: 'rozpis' }
-    & ScheduleFieldsFragment
-  )> };
-
-export type SetNabidkaVisibleMutationVariables = Exact<{
-  id: Scalars['bigint'];
-  visible: Scalars['Boolean'];
-}>;
-
-
-export type SetNabidkaVisibleMutation = { __typename?: 'mutation_root', update_nabidka_by_pk?: Maybe<(
-    { __typename?: 'nabidka' }
-    & ReservationFieldsFragment
-  )> };
-
-export type SetAkceVisibleMutationVariables = Exact<{
-  id: Scalars['bigint'];
-  visible: Scalars['Boolean'];
-}>;
-
-
-export type SetAkceVisibleMutation = { __typename?: 'mutation_root', update_akce_by_pk?: Maybe<(
-    { __typename?: 'akce' }
-    & EventFieldsFragment
-  )> };
+export type GalleryDirListQuery = { __typename?: 'query_root', galerie_dir: Array<{ __typename?: 'galerie_dir', gd_hidden: boolean, gd_id: any, gd_id_rodic: any, gd_level: any, gd_name: string, gd_path: string }>, aggregate: { __typename?: 'galerie_dir_aggregate', aggregate?: { __typename?: 'galerie_dir_aggregate_fields', count: number } | null | undefined } };
 
 export type SetGalerieDirVisibleMutationVariables = Exact<{
   id: Scalars['bigint'];
@@ -14096,10 +13964,92 @@ export type SetGalerieDirVisibleMutationVariables = Exact<{
 }>;
 
 
-export type SetGalerieDirVisibleMutation = { __typename?: 'mutation_root', update_galerie_dir_by_pk?: Maybe<(
-    { __typename?: 'galerie_dir' }
-    & GalleryDirFieldsFragment
-  )> };
+export type SetGalerieDirVisibleMutation = { __typename?: 'mutation_root', update_galerie_dir_by_pk?: { __typename?: 'galerie_dir', gd_id: any } | null | undefined };
+
+export type GalleryDirFieldsFragment = { __typename?: 'galerie_dir', gd_hidden: boolean, gd_id: any, gd_id_rodic: any, gd_level: any, gd_name: string, gd_path: string };
+
+export type ScheduleFieldsFragment = { __typename?: 'rozpis', r_datum: any, r_id: any, r_kde: string, r_lock: boolean, r_timestamp?: any | null | undefined, r_trener: any, r_visible: boolean, user: { __typename?: 'users', u_jmeno: string, u_prijmeni: string, u_id: any } };
+
+export type ScheduleItemFieldsFragment = { __typename?: 'rozpis', rozpis_items: Array<{ __typename?: 'rozpis_item', ri_od: any, ri_do: any, ri_id: any, ri_partner?: any | null | undefined }> };
+
+export type ReservationFieldsFragment = { __typename?: 'nabidka', n_visible: boolean, n_trener: any, n_timestamp?: any | null | undefined, n_pocet_hod: any, n_od: any, n_max_pocet_hod: any, n_lock: boolean, n_id: any, n_do: any, user: { __typename?: 'users', u_jmeno: string, u_prijmeni: string, u_id: any } };
+
+export type ReservationItemFieldsFragment = { __typename?: 'nabidka', nabidka_items: Array<{ __typename?: 'nabidka_item', ni_lock: boolean, ni_partner: any, ni_pocet_hod: any, pary: { __typename?: 'pary', user: { __typename?: 'users', u_id: any, u_jmeno: string, u_prijmeni: string } } }> };
+
+export type EventFieldsFragment = { __typename?: 'akce', a_do: any, a_id: any, a_info: string, a_dokumenty: string, a_jmeno: string, a_kapacita: any, a_kde: string, a_lock: boolean, a_od: any, a_timestamp?: any | null | undefined, a_visible: boolean };
+
+export type EventItemFieldsFragment = { __typename?: 'akce', akce_items: Array<{ __typename?: 'akce_item', ai_id: any, user: { __typename?: 'users', u_jmeno: string, u_prijmeni: string, u_id: any } }> };
+
+export type AnnouncementFieldsFragment = { __typename?: 'upozorneni', up_id: any, up_kdo: any, up_lock: boolean, up_nadpis: string, up_text: string, up_timestamp?: any | null | undefined, up_timestamp_add: any, user: { __typename?: 'users', u_id: any, u_jmeno: string, u_prijmeni: string }, upozorneni_skupinies: Array<{ __typename?: 'upozorneni_skupiny', skupiny: { __typename?: 'skupiny', s_name: string, s_description: string, s_color_text: string, s_color_rgb: string } }> };
+
+export type UpozorneniListQueryVariables = Exact<{
+  offset?: Maybe<Scalars['Int']>;
+  limit?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type UpozorneniListQuery = { __typename?: 'query_root', upozorneni: Array<{ __typename?: 'upozorneni', up_id: any, up_kdo: any, up_lock: boolean, up_nadpis: string, up_text: string, up_timestamp?: any | null | undefined, up_timestamp_add: any, user: { __typename?: 'users', u_id: any, u_jmeno: string, u_prijmeni: string }, upozorneni_skupinies: Array<{ __typename?: 'upozorneni_skupiny', skupiny: { __typename?: 'skupiny', s_name: string, s_description: string, s_color_text: string, s_color_rgb: string } }> }>, aggregate: { __typename?: 'upozorneni_aggregate', aggregate?: { __typename?: 'upozorneni_aggregate_fields', count: number } | null | undefined } };
+
+export type ArticlesAdminListQueryVariables = Exact<{
+  offset?: Maybe<Scalars['Int']>;
+  limit?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type ArticlesAdminListQuery = { __typename?: 'query_root', aktuality: Array<{ __typename?: 'aktuality_admin', at_foto?: any | null | undefined, at_foto_main?: any | null | undefined, at_id?: any | null | undefined, at_jmeno?: string | null | undefined, at_kat?: string | null | undefined, at_kdo?: any | null | undefined, at_preview?: string | null | undefined, at_text?: string | null | undefined, at_timestamp_add?: any | null | undefined, at_timestamp?: any | null | undefined }>, aggregate: { __typename?: 'aktuality_admin_aggregate', aggregate?: { __typename?: 'aktuality_admin_aggregate_fields', count: number } | null | undefined } };
+
+export type NabidkaListQueryVariables = Exact<{
+  offset?: Maybe<Scalars['Int']>;
+  limit?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type NabidkaListQuery = { __typename?: 'query_root', nabidka: Array<{ __typename?: 'nabidka', n_visible: boolean, n_trener: any, n_timestamp?: any | null | undefined, n_pocet_hod: any, n_od: any, n_max_pocet_hod: any, n_lock: boolean, n_id: any, n_do: any, user: { __typename?: 'users', u_jmeno: string, u_prijmeni: string, u_id: any } }> };
+
+export type AkceListQueryVariables = Exact<{
+  offset?: Maybe<Scalars['Int']>;
+  limit?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type AkceListQuery = { __typename?: 'query_root', akce: Array<{ __typename?: 'akce', a_do: any, a_id: any, a_info: string, a_dokumenty: string, a_jmeno: string, a_kapacita: any, a_kde: string, a_lock: boolean, a_od: any, a_timestamp?: any | null | undefined, a_visible: boolean, aggregate: { __typename?: 'akce_item_aggregate', aggregate?: { __typename?: 'akce_item_aggregate_fields', count: number } | null | undefined } }>, aggregate: { __typename?: 'akce_aggregate', aggregate?: { __typename?: 'akce_aggregate_fields', count: number } | null | undefined } };
+
+export type AkceQueryVariables = Exact<{
+  id: Scalars['bigint'];
+}>;
+
+
+export type AkceQuery = { __typename?: 'query_root', akce_by_pk?: { __typename?: 'akce', a_do: any, a_id: any, a_info: string, a_dokumenty: string, a_jmeno: string, a_kapacita: any, a_kde: string, a_lock: boolean, a_od: any, a_timestamp?: any | null | undefined, a_visible: boolean, akce_items: Array<{ __typename?: 'akce_item', ai_id: any, user: { __typename?: 'users', u_jmeno: string, u_prijmeni: string, u_id: any } }> } | null | undefined };
+
+export type RozpisQueryVariables = Exact<{
+  id: Scalars['bigint'];
+}>;
+
+
+export type RozpisQuery = { __typename?: 'query_root', rozpis_by_pk?: { __typename?: 'rozpis', r_datum: any, r_id: any, r_kde: string, r_lock: boolean, r_timestamp?: any | null | undefined, r_trener: any, r_visible: boolean, user: { __typename?: 'users', u_jmeno: string, u_prijmeni: string, u_id: any }, rozpis_items: Array<{ __typename?: 'rozpis_item', ri_od: any, ri_do: any, ri_id: any, ri_partner?: any | null | undefined }> } | null | undefined };
+
+export type NabidkaQueryVariables = Exact<{
+  id: Scalars['bigint'];
+}>;
+
+
+export type NabidkaQuery = { __typename?: 'query_root', nabidka_by_pk?: { __typename?: 'nabidka', n_visible: boolean, n_trener: any, n_timestamp?: any | null | undefined, n_pocet_hod: any, n_od: any, n_max_pocet_hod: any, n_lock: boolean, n_id: any, n_do: any, user: { __typename?: 'users', u_jmeno: string, u_prijmeni: string, u_id: any }, nabidka_items: Array<{ __typename?: 'nabidka_item', ni_lock: boolean, ni_partner: any, ni_pocet_hod: any, pary: { __typename?: 'pary', user: { __typename?: 'users', u_id: any, u_jmeno: string, u_prijmeni: string } } }> } | null | undefined };
+
+export type SetRozpisVisibleMutationVariables = Exact<{
+  id: Scalars['bigint'];
+  visible: Scalars['Boolean'];
+}>;
+
+
+export type SetRozpisVisibleMutation = { __typename?: 'mutation_root', update_rozpis_by_pk?: { __typename?: 'rozpis', r_id: any } | null | undefined };
+
+export type SetNabidkaVisibleMutationVariables = Exact<{
+  id: Scalars['bigint'];
+  visible: Scalars['Boolean'];
+}>;
+
+
+export type SetNabidkaVisibleMutation = { __typename?: 'mutation_root', update_nabidka_by_pk?: { __typename?: 'nabidka', n_id: any } | null | undefined };
 
 export const GalleryDirFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"galleryDirFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"galerie_dir"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gd_hidden"}},{"kind":"Field","name":{"kind":"Name","value":"gd_id"}},{"kind":"Field","name":{"kind":"Name","value":"gd_id_rodic"}},{"kind":"Field","name":{"kind":"Name","value":"gd_level"}},{"kind":"Field","name":{"kind":"Name","value":"gd_name"}},{"kind":"Field","name":{"kind":"Name","value":"gd_path"}}]}}]} as unknown as DocumentNode<GalleryDirFieldsFragment, unknown>;
 export const ScheduleFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"scheduleFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"rozpis"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"r_datum"}},{"kind":"Field","name":{"kind":"Name","value":"r_id"}},{"kind":"Field","name":{"kind":"Name","value":"r_kde"}},{"kind":"Field","name":{"kind":"Name","value":"r_lock"}},{"kind":"Field","name":{"kind":"Name","value":"r_timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"r_trener"}},{"kind":"Field","name":{"kind":"Name","value":"r_visible"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"u_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"u_prijmeni"}},{"kind":"Field","name":{"kind":"Name","value":"u_id"}}]}}]}}]} as unknown as DocumentNode<ScheduleFieldsFragment, unknown>;
@@ -14107,16 +14057,16 @@ export const ScheduleItemFieldsFragmentDoc = {"kind":"Document","definitions":[{
 export const ReservationFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"reservationFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"nabidka"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"n_visible"}},{"kind":"Field","name":{"kind":"Name","value":"n_trener"}},{"kind":"Field","name":{"kind":"Name","value":"n_timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"n_pocet_hod"}},{"kind":"Field","name":{"kind":"Name","value":"n_od"}},{"kind":"Field","name":{"kind":"Name","value":"n_max_pocet_hod"}},{"kind":"Field","name":{"kind":"Name","value":"n_lock"}},{"kind":"Field","name":{"kind":"Name","value":"n_id"}},{"kind":"Field","name":{"kind":"Name","value":"n_do"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"u_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"u_prijmeni"}},{"kind":"Field","name":{"kind":"Name","value":"u_id"}}]}}]}}]} as unknown as DocumentNode<ReservationFieldsFragment, unknown>;
 export const ReservationItemFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"reservationItemFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"nabidka"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nabidka_items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ni_lock"}},{"kind":"Field","name":{"kind":"Name","value":"ni_partner"}},{"kind":"Field","name":{"kind":"Name","value":"ni_pocet_hod"}},{"kind":"Field","name":{"kind":"Name","value":"pary"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"u_id"}},{"kind":"Field","name":{"kind":"Name","value":"u_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"u_prijmeni"}}]}}]}}]}}]}}]} as unknown as DocumentNode<ReservationItemFieldsFragment, unknown>;
 export const EventFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"eventFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"akce"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a_do"}},{"kind":"Field","name":{"kind":"Name","value":"a_id"}},{"kind":"Field","name":{"kind":"Name","value":"a_info"}},{"kind":"Field","name":{"kind":"Name","value":"a_dokumenty"}},{"kind":"Field","name":{"kind":"Name","value":"a_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"a_kapacita"}},{"kind":"Field","name":{"kind":"Name","value":"a_kde"}},{"kind":"Field","name":{"kind":"Name","value":"a_lock"}},{"kind":"Field","name":{"kind":"Name","value":"a_od"}},{"kind":"Field","name":{"kind":"Name","value":"a_timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"a_visible"}}]}}]} as unknown as DocumentNode<EventFieldsFragment, unknown>;
-export const EventItemFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"eventItemFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"akce"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"akce_items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"u_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"u_prijmeni"}},{"kind":"Field","name":{"kind":"Name","value":"u_id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"ai_id"}}]}}]}}]} as unknown as DocumentNode<EventItemFieldsFragment, unknown>;
+export const EventItemFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"eventItemFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"akce"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"akce_items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ai_id"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"u_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"u_prijmeni"}},{"kind":"Field","name":{"kind":"Name","value":"u_id"}}]}}]}}]}}]} as unknown as DocumentNode<EventItemFieldsFragment, unknown>;
 export const AnnouncementFieldsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"announcementFields"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"upozorneni"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"up_id"}},{"kind":"Field","name":{"kind":"Name","value":"up_kdo"}},{"kind":"Field","name":{"kind":"Name","value":"up_lock"}},{"kind":"Field","name":{"kind":"Name","value":"up_nadpis"}},{"kind":"Field","name":{"kind":"Name","value":"up_text"}},{"kind":"Field","name":{"kind":"Name","value":"up_timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"up_timestamp_add"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"u_id"}},{"kind":"Field","name":{"kind":"Name","value":"u_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"u_prijmeni"}}]}},{"kind":"Field","name":{"kind":"Name","value":"upozorneni_skupinies"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"skupiny"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"s_name"}},{"kind":"Field","name":{"kind":"Name","value":"s_description"}},{"kind":"Field","name":{"kind":"Name","value":"s_color_text"}},{"kind":"Field","name":{"kind":"Name","value":"s_color_rgb"}}]}}]}}]}}]} as unknown as DocumentNode<AnnouncementFieldsFragment, unknown>;
-export const GalleryDirListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GalleryDirList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"galerie_dir"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"gd_name"},"value":{"kind":"EnumValue","value":"asc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"galleryDirFields"}}]}},{"kind":"Field","name":{"kind":"Name","value":"galerie_dir_aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}},...GalleryDirFieldsFragmentDoc.definitions]} as unknown as DocumentNode<GalleryDirListQuery, GalleryDirListQueryVariables>;
-export const UpozorneniListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"UpozorneniList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"upozorneni"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"up_timestamp_add"},"value":{"kind":"EnumValue","value":"desc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"announcementFields"}}]}},{"kind":"Field","name":{"kind":"Name","value":"upozorneni_aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}},...AnnouncementFieldsFragmentDoc.definitions]} as unknown as DocumentNode<UpozorneniListQuery, UpozorneniListQueryVariables>;
-export const RozpisDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Rozpis"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"rozpis_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"r_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"scheduleFields"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"scheduleItemFields"}}]}}]}},...ScheduleFieldsFragmentDoc.definitions,...ScheduleItemFieldsFragmentDoc.definitions]} as unknown as DocumentNode<RozpisQuery, RozpisQueryVariables>;
+export const GalleryDirListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GalleryDirList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"galerie_dir"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"gd_name"},"value":{"kind":"EnumValue","value":"asc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"galleryDirFields"}}]}},{"kind":"Field","alias":{"kind":"Name","value":"aggregate"},"name":{"kind":"Name","value":"galerie_dir_aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}},...GalleryDirFieldsFragmentDoc.definitions]} as unknown as DocumentNode<GalleryDirListQuery, GalleryDirListQueryVariables>;
+export const SetGalerieDirVisibleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"setGalerieDirVisible"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"visible"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_galerie_dir_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"gd_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"gd_hidden"},"value":{"kind":"Variable","name":{"kind":"Name","value":"visible"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gd_id"}}]}}]}}]} as unknown as DocumentNode<SetGalerieDirVisibleMutation, SetGalerieDirVisibleMutationVariables>;
+export const UpozorneniListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"UpozorneniList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"upozorneni"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"up_timestamp_add"},"value":{"kind":"EnumValue","value":"desc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"announcementFields"}}]}},{"kind":"Field","alias":{"kind":"Name","value":"aggregate"},"name":{"kind":"Name","value":"upozorneni_aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}},...AnnouncementFieldsFragmentDoc.definitions]} as unknown as DocumentNode<UpozorneniListQuery, UpozorneniListQueryVariables>;
+export const ArticlesAdminListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ArticlesAdminList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"aktuality"},"name":{"kind":"Name","value":"aktuality_admin"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"at_timestamp_add"},"value":{"kind":"EnumValue","value":"desc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"at_foto"}},{"kind":"Field","name":{"kind":"Name","value":"at_foto_main"}},{"kind":"Field","name":{"kind":"Name","value":"at_id"}},{"kind":"Field","name":{"kind":"Name","value":"at_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"at_kat"}},{"kind":"Field","name":{"kind":"Name","value":"at_kdo"}},{"kind":"Field","name":{"kind":"Name","value":"at_preview"}},{"kind":"Field","name":{"kind":"Name","value":"at_text"}},{"kind":"Field","name":{"kind":"Name","value":"at_timestamp_add"}},{"kind":"Field","name":{"kind":"Name","value":"at_timestamp"}}]}},{"kind":"Field","alias":{"kind":"Name","value":"aggregate"},"name":{"kind":"Name","value":"aktuality_admin_aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]} as unknown as DocumentNode<ArticlesAdminListQuery, ArticlesAdminListQueryVariables>;
 export const NabidkaListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"NabidkaList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nabidka"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"reservationFields"}}]}}]}},...ReservationFieldsFragmentDoc.definitions]} as unknown as DocumentNode<NabidkaListQuery, NabidkaListQueryVariables>;
-export const NabidkaDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Nabidka"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nabidka_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"n_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"reservationFields"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"reservationItemFields"}}]}}]}},...ReservationFieldsFragmentDoc.definitions,...ReservationItemFieldsFragmentDoc.definitions]} as unknown as DocumentNode<NabidkaQuery, NabidkaQueryVariables>;
-export const AkceListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AkceList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"akce"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"a_od"},"value":{"kind":"EnumValue","value":"desc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"eventFields"}},{"kind":"Field","name":{"kind":"Name","value":"akce_items_aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"akce_aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}},...EventFieldsFragmentDoc.definitions]} as unknown as DocumentNode<AkceListQuery, AkceListQueryVariables>;
+export const AkceListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AkceList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"akce"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"a_od"},"value":{"kind":"EnumValue","value":"desc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"eventFields"}},{"kind":"Field","alias":{"kind":"Name","value":"aggregate"},"name":{"kind":"Name","value":"akce_items_aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"aggregate"},"name":{"kind":"Name","value":"akce_aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}},...EventFieldsFragmentDoc.definitions]} as unknown as DocumentNode<AkceListQuery, AkceListQueryVariables>;
 export const AkceDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Akce"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"akce_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"a_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"eventFields"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"eventItemFields"}}]}}]}},...EventFieldsFragmentDoc.definitions,...EventItemFieldsFragmentDoc.definitions]} as unknown as DocumentNode<AkceQuery, AkceQueryVariables>;
-export const SetRozpisVisibleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"setRozpisVisible"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"visible"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_rozpis_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"r_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"r_visible"},"value":{"kind":"Variable","name":{"kind":"Name","value":"visible"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"scheduleFields"}}]}}]}},...ScheduleFieldsFragmentDoc.definitions]} as unknown as DocumentNode<SetRozpisVisibleMutation, SetRozpisVisibleMutationVariables>;
-export const SetNabidkaVisibleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"setNabidkaVisible"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"visible"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_nabidka_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"n_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"n_visible"},"value":{"kind":"Variable","name":{"kind":"Name","value":"visible"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"reservationFields"}}]}}]}},...ReservationFieldsFragmentDoc.definitions]} as unknown as DocumentNode<SetNabidkaVisibleMutation, SetNabidkaVisibleMutationVariables>;
-export const SetAkceVisibleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"setAkceVisible"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"visible"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_akce_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"a_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"a_visible"},"value":{"kind":"Variable","name":{"kind":"Name","value":"visible"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"eventFields"}}]}}]}},...EventFieldsFragmentDoc.definitions]} as unknown as DocumentNode<SetAkceVisibleMutation, SetAkceVisibleMutationVariables>;
-export const SetGalerieDirVisibleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"setGalerieDirVisible"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"visible"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_galerie_dir_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"gd_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"gd_hidden"},"value":{"kind":"Variable","name":{"kind":"Name","value":"visible"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"galleryDirFields"}}]}}]}},...GalleryDirFieldsFragmentDoc.definitions]} as unknown as DocumentNode<SetGalerieDirVisibleMutation, SetGalerieDirVisibleMutationVariables>;
+export const RozpisDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Rozpis"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"rozpis_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"r_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"scheduleFields"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"scheduleItemFields"}}]}}]}},...ScheduleFieldsFragmentDoc.definitions,...ScheduleItemFieldsFragmentDoc.definitions]} as unknown as DocumentNode<RozpisQuery, RozpisQueryVariables>;
+export const NabidkaDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Nabidka"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nabidka_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"n_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"reservationFields"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"reservationItemFields"}}]}}]}},...ReservationFieldsFragmentDoc.definitions,...ReservationItemFieldsFragmentDoc.definitions]} as unknown as DocumentNode<NabidkaQuery, NabidkaQueryVariables>;
+export const SetRozpisVisibleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"setRozpisVisible"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"visible"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_rozpis_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"r_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"r_visible"},"value":{"kind":"Variable","name":{"kind":"Name","value":"visible"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"r_id"}}]}}]}}]} as unknown as DocumentNode<SetRozpisVisibleMutation, SetRozpisVisibleMutationVariables>;
+export const SetNabidkaVisibleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"setNabidkaVisible"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"visible"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_nabidka_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"n_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"n_visible"},"value":{"kind":"Variable","name":{"kind":"Name","value":"visible"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"n_id"}}]}}]}}]} as unknown as DocumentNode<SetNabidkaVisibleMutation, SetNabidkaVisibleMutationVariables>;

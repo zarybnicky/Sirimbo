@@ -1,20 +1,55 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { ApolloProvider, useQuery, useMutation } from '@apollo/client';
+import { gql } from 'graphql-tag';
 
 import Form from 'react-bootstrap/Form';
-import * as queries from './queries';
 import { createClient } from './client';
 
 interface Props {
     id: number;
 }
 
+const Rozpis = gql(`
+  query Rozpis($id: bigint!) {
+    rozpis_by_pk(r_id: $id) {
+      ...scheduleFields
+      ...scheduleItemFields
+    }
+  }
+`);
+
+export const Nabidka = gql(`
+  query Nabidka($id: bigint!) {
+    nabidka_by_pk(n_id: $id) {
+      ...reservationFields
+      ...reservationItemFields
+    }
+  }
+`);
+
+const ToggleVisibleRozpis = gql(`
+  mutation setRozpisVisible($id: bigint!, $visible: Boolean!) {
+    update_rozpis_by_pk(pk_columns: {r_id: $id}, _set: {r_visible: $visible}) {
+      r_id
+    }
+  }
+`);
+
+const ToggleVisibleNabidka = gql(`
+  mutation setNabidkaVisible($id: bigint!, $visible: Boolean!) {
+    update_nabidka_by_pk(pk_columns: {n_id: $id}, _set: {n_visible: $visible}) {
+      n_id
+    }
+  }
+`);
+
+
 const ScheduleVisible = ({ id }: Props) => {
-    const { loading, error, data, refetch } = useQuery(queries.RozpisDocument, {
+    const { loading, error, data, refetch } = useQuery(Rozpis, {
         variables: { id },
     });
-    const [toggleVisible] = useMutation(queries.SetRozpisVisibleDocument, {
+    const [toggleVisible] = useMutation(ToggleVisibleRozpis, {
         onCompleted: () => refetch(),
     });
     const visible = data?.rozpis_by_pk?.r_visible || false;
@@ -26,10 +61,10 @@ const ScheduleVisible = ({ id }: Props) => {
 };
 
 const ReservationVisible = ({ id }: Props) => {
-    const { loading, error, data, refetch } = useQuery(queries.NabidkaDocument, {
+    const { loading, error, data, refetch } = useQuery(Nabidka, {
         variables: { id },
     });
-    const [toggleVisible] = useMutation(queries.SetNabidkaVisibleDocument, {
+    const [toggleVisible] = useMutation(ToggleVisibleNabidka, {
         onCompleted: () => refetch(),
     });
     const visible = data?.nabidka_by_pk?.n_visible || false;

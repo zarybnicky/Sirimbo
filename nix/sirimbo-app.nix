@@ -21,6 +21,7 @@ yarn2nix-moretea.mkYarnPackage {
   installPhase = ''
     mkdir -p $out/public
     cp -Lr deps/Sirimbo/dist/* $out/public/
+    cp -Lr deps/Sirimbo/static/* $out/public/
   '';
   extraBuildInputs = [libsass];
   yarnPreBuild = "export npm_config_nodedir=${nodejs}";

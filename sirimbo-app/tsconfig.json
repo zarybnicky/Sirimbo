@@ -10,6 +10,7 @@
     "downlevelIteration": true,
     "jsx": "react",
     "strict": true,
+    "isolatedModules": true,
     "esModuleInterop": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,

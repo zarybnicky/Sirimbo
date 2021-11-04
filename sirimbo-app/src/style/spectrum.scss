@@ -10,8 +10,6 @@ License: MIT
     top:0;
     left:0;
     display:inline-block;
-    *display: inline;
-    *zoom: 1;
     z-index: 2147483647;
     overflow: hidden;
 }
@@ -186,7 +184,6 @@ License: MIT
 /* Clearfix hack */
 .sp-cf:before, .sp-cf:after { content: ""; display: table; }
 .sp-cf:after { clear: both; }
-.sp-cf { *zoom: 1; }
 
 /* Mobile devices, make hue slider bigger so it is easier to slide */
 @media (max-device-width: 480px) {
@@ -334,8 +331,6 @@ License: MIT
     cursor:pointer;
     padding: 4px;
     display:inline-block;
-    *zoom: 1;
-    *display: inline;
     border: solid 1px #91765d;
     background: #eee;
     color: #333;
@@ -370,7 +365,6 @@ License: MIT
 
 .sp-palette
 {
-    *width: 220px;
     max-width: 220px;
 }
 .sp-palette .sp-thumb-el
