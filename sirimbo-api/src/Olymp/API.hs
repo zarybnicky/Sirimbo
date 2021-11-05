@@ -45,11 +45,6 @@ graphqlAuth = \case
       [ "X-Hasura-Role" A..= case fromSqlKey permGroupKey of
           0 -> "anonymous" :: String
           1 -> "admin"
-          4 -> "admin"
-          5 -> "admin"
-          6 -> "admin"
-          8 -> "admin"
-          9 -> "admin"
           _ -> "member",
         "X-Hasura-User-Id" A..= show (fromSqlKey (entityKey eUser)),
         "X-Hasura-Level-Akce" A..= show (maybe 1 permissionLevelAkce permGroup),

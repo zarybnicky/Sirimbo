@@ -45,9 +45,9 @@ query AkceList($offset: Int, $limit: Int) {
 }`);
 
 const ToggleVisible = gql(`
-  mutation setNabidkaVisible($id: bigint!, $visible: Boolean!) {
-    update_nabidka_by_pk(pk_columns: {n_id: $id}, _set: {n_visible: $visible}) {
-      n_id
+  mutation setAkceVisible($id: bigint!, $visible: Boolean!) {
+    update_akce_by_pk(pk_columns: {a_id: $id}, _set: {a_visible: $visible}) {
+      a_id
     }
   }
 `);

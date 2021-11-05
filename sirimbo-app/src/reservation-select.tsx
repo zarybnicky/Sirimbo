@@ -1,13 +1,13 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { ApolloProvider, useQuery, useLazyQuery } from '@apollo/client';
+import { useState } from 'react';
+import { ApolloProvider, useQuery } from '@apollo/client';
 import { formatDateRange } from './date';
 import { createClient } from './client';
 import { gql } from 'graphql-tag';
-import { Nabidka } from './schedule-visible';
-import { NabidkaQuery } from './graphql/graphql';
+import { NabidkaListQuery } from './graphql/graphql';
 
-const ReservationView = (x: NabidkaQuery['nabidka_by_pk']) => {
+const ReservationView = (x: NabidkaListQuery['nabidka'][0]) => {
     const header = <div className="trenink-header">
         <div className="title">
             {x?.user?.u_jmeno} {x?.user?.u_prijmeni}
@@ -89,22 +89,20 @@ query NabidkaList($offset: Int, $limit: Int) {
 
 export function ReservationSelect() {
     const { data: reservations } = useQuery(NabidkaList);
-    const [loadReservation, { loading, error, data }] = useLazyQuery(Nabidka);
+    const [reservation, setReservation] = useState<NabidkaListQuery['nabidka'][0] | undefined>(undefined);
     const onChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
         const id = parseInt(event.target.value, 10);
-        if (id) {
-            loadReservation({ variables: { id } });
-        }
+        setReservation(reservations?.nabidka?.find(x => x.n_id === id));
     };
 
     return <div>
-        <select className='team-selection' value={data?.nabidka_by_pk?.n_id || 'none'} onChange={onChange}>
+        <select className='team-selection' value={reservation?.n_id || 'none'} onChange={onChange}>
             <option value='none'> --vyberte nabídku-- </option>
             {(reservations?.nabidka || []).map(x => <option value={x.n_id} key={x.n_id}>
                 {`${formatDateRange(x.n_od, x.n_do)} - ${x.user.u_jmeno} ${x.user.u_prijmeni}`}
             </option>)}
         </select>
-        {data?.nabidka_by_pk ? ReservationView(data.nabidka_by_pk) : null}
+        {reservation ? ReservationView(reservation) : null}
     </div>;
 }
 

@@ -37,6 +37,7 @@ insert_permissions:
   role: member
 select_permissions:
 - permission:
+    allow_aggregations: true
     columns:
     - r_id
     - r_trener

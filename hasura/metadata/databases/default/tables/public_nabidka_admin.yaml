@@ -1,6 +1,26 @@
 table:
   name: nabidka_admin
   schema: public
+object_relationships:
+- name: user
+  using:
+    manual_configuration:
+      column_mapping:
+        n_trener: u_id
+      insertion_order: null
+      remote_table:
+        name: users
+        schema: public
+array_relationships:
+- name: nabidka_items
+  using:
+    manual_configuration:
+      column_mapping:
+        n_id: ni_id_rodic
+      insertion_order: null
+      remote_table:
+        name: nabidka_item
+        schema: public
 insert_permissions:
 - permission:
     backend_only: false
@@ -19,6 +39,7 @@ insert_permissions:
   role: member
 select_permissions:
 - permission:
+    allow_aggregations: true
     columns:
     - n_id
     - n_max_pocet_hod

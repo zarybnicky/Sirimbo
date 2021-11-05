@@ -40,8 +40,8 @@ query ScheduleAdminList($offset: Int, $limit: Int) {
 
 const ToggleVisibleRozpis = gql(`
   mutation setRozpisVisible($id: bigint!, $visible: Boolean!) {
-    update_rozpis_by_pk(pk_columns: {r_id: $id}, _set: {r_visible: $visible}) {
-      r_id
+    update_rozpis_admin(where: {r_id: {_eq: $id}}, _set: {r_visible: $visible}) {
+      affected_rows
     }
   }
 `);

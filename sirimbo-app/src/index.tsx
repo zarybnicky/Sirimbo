@@ -14,7 +14,7 @@ export * from './date';
 export * from './event-list';
 export * from './gallery-directory-list';
 export * from './schedule-list';
+export * from './reservation-list';
 export * from './pagination';
 export * from './qr-payment';
 export * from './reservation-select';
-export * from './schedule-visible';
