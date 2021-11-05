@@ -96,27 +96,3 @@ fragment eventItemFields on akce {
     }
   }
 }`;
-
-export const announcementFields = gql`
-fragment announcementFields on upozorneni {
-  up_id
-  up_kdo
-  up_lock
-  up_nadpis
-  up_text
-  up_timestamp
-  up_timestamp_add
-  user {
-    u_id
-    u_jmeno
-    u_prijmeni
-  }
-  upozorneni_skupinies {
-    skupiny {
-      s_name
-      s_description
-      s_color_text
-      s_color_rgb
-    }
-  }
-}`;

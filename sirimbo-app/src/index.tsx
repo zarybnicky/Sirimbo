@@ -6,7 +6,10 @@ import './bundles/main';
 
 import './style/index.scss';
 
+export * from './admin';
+
 export * from './announcement-list';
+export * from './articles-list';
 export * from './date';
 export * from './event-list';
 export * from './gallery-directory-list';

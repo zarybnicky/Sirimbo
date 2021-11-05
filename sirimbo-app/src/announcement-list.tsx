@@ -10,7 +10,26 @@ import { gql } from 'graphql-tag';
 export const UpozorneniList = gql(`
 query UpozorneniList($offset: Int, $limit: Int) {
   upozorneni(limit: $limit, offset: $offset, order_by: {up_timestamp_add: desc}) {
-    ...announcementFields
+    up_id
+    up_kdo
+    up_lock
+    up_nadpis
+    up_text
+    up_timestamp
+    up_timestamp_add
+    user {
+      u_id
+      u_jmeno
+      u_prijmeni
+    }
+    upozorneni_skupinies {
+      skupiny {
+        s_name
+        s_description
+        s_color_text
+        s_color_rgb
+      }
+    }
   }
   aggregate: upozorneni_aggregate {
     aggregate {
@@ -26,7 +45,7 @@ export function AnnouncementList() {
         variables: { limit, offset },
     });
     const setPage = (x: { selected: number; }) => setOffset(x.selected * limit);
-
+    console.log(data);
     return <React.Fragment>
         {!data?.upozorneni ? null : data.upozorneni.map((a) => <React.Fragment>
             <div className="row">

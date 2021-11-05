@@ -7,6 +7,7 @@ import { createClient } from './client';
 import { Pagination } from './pagination';
 import { DateRange } from './date';
 import { gql } from 'graphql-tag';
+import { Dropdown } from './dropdown';
 
 export const AkceList = gql(`
 query AkceList($offset: Int, $limit: Int) {
@@ -54,25 +55,22 @@ export function EventList() {
             </tr>
         </thead>
         <tbody>
-            {data!.akce.map((a) => <tr>
+            {data!.akce.map((a) => <tr key={a.a_id}>
                 <td>
-                    <div className="btn-group">
-                        <button type="button" className="btn btn-xs pt-0" data-toggle="dropdown">
-                            <img alt="Upravit" width="14" src="/style/icon-gear.png" />
-                        </button>
-                        <div className="dropdown-menu">
-                            <a className="dropdown-item" href={`/admin/akce/edit/${a.a_id}`}>Upravit</a>
-                            <a className="dropdown-item" href={`/admin/akce/detail/${a.a_id}`}>Upravit účastníky</a>
-                            <a className="dropdown-item" href={`/admin/akce/dokumenty/${a.a_id}`}>Upravit dokumenty</a>
-                            <a className="dropdown-item" href={`/admin/akce/remove/${a.a_id}`}>Odstranit</a>
-                        </div>
-                    </div>
+                    <Dropdown links={{
+                        [`/admin/akce/edit/${a.a_id}`]: "Upravit",
+                        [`/admin/akce/detail/${a.a_id}`]: "Upravit účastníky",
+                        [`/admin/akce/dokumenty/${a.a_id}`]: "Upravit dokumenty",
+                        [`/admin/akce/remove/${a.a_id}`]: "Odstranit",
+                    }} />
                     {a.a_jmeno}
                 </td>
                 <td><DateRange from={a.a_od} to={a.a_do} /></td>
                 <td>{a.aggregate!.aggregate!.count}/{a.a_kapacita}</td>
                 <td>
-                    <Form.Check checked={a.a_visible} onChange={() => toggleVisible({ variables: { id: a.a_id, visible: !a.a_visible } })} />
+                    <Form.Check checked={a.a_visible} onChange={() => toggleVisible({
+                        variables: { id: a.a_id, visible: !a.a_visible },
+                    })} />
                 </td>
             </tr>)}
         </tbody>

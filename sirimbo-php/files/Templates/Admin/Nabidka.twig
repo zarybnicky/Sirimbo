@@ -32,8 +32,7 @@
             <date-range from="{{ row.n_od }}" to="{{ row.n_do }}"></date-range>
           </td>
           <td>
-              <visibility-checkbox type="reservation" name="{{ row.n_id }}" initialValue="{{ row.n_visible }}">
-              </visibility-checkbox>
+              <visibility-checkbox type="reservation" name="{{ row.n_id }}"></visibility-checkbox>
           </td>
         </tr>
       {% endfor %}
