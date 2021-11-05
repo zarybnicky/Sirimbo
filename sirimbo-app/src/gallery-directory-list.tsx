@@ -11,7 +11,12 @@ import { } from './graphql/graphql';
 const GalleryDirList = gql(`
   query GalleryDirList($offset: Int, $limit: Int) {
     galerie_dir(limit: $limit, offset: $offset, order_by: {gd_name: asc}) {
-      ...galleryDirFields
+      gd_hidden
+      gd_id
+      gd_id_rodic
+      gd_level
+      gd_name
+      gd_path
     }
     aggregate: galerie_dir_aggregate {
       aggregate {

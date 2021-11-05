@@ -12,7 +12,25 @@ import { Dropdown } from './dropdown';
 export const AkceList = gql(`
 query AkceList($offset: Int, $limit: Int) {
   akce(limit: $limit, offset: $offset, order_by: {a_od: desc}) {
-    ...eventFields
+    a_do
+    a_id
+    a_info
+    a_dokumenty
+    a_jmeno
+    a_kapacita
+    a_kde
+    a_lock
+    a_od
+    a_timestamp
+    a_visible
+    akce_items {
+      ai_id
+      user {
+        u_jmeno
+        u_prijmeni
+        u_id
+      }
+    }
     aggregate: akce_items_aggregate {
       aggregate {
         count
@@ -66,7 +84,7 @@ export function EventList() {
                     {a.a_jmeno}
                 </td>
                 <td><DateRange from={a.a_od} to={a.a_do} /></td>
-                <td>{a.aggregate!.aggregate!.count}/{a.a_kapacita}</td>
+                <td>{a?.akce_items?.length || 0}/{a.a_kapacita}</td>
                 <td>
                     <Form.Check checked={a.a_visible} onChange={() => toggleVisible({
                         variables: { id: a.a_id, visible: !a.a_visible },

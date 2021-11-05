@@ -13,8 +13,24 @@ interface Props {
 const Rozpis = gql(`
   query Rozpis($id: bigint!) {
     rozpis_by_pk(r_id: $id) {
-      ...scheduleFields
-      ...scheduleItemFields
+      r_datum
+      r_id
+      r_kde
+      r_lock
+      r_timestamp
+      r_trener
+      r_visible
+      user {
+        u_jmeno
+        u_prijmeni
+        u_id
+      }
+      rozpis_items {
+        ri_od
+        ri_do
+        ri_id
+        ri_partner
+      }
     }
   }
 `);
@@ -22,8 +38,32 @@ const Rozpis = gql(`
 export const Nabidka = gql(`
   query Nabidka($id: bigint!) {
     nabidka_by_pk(n_id: $id) {
-      ...reservationFields
-      ...reservationItemFields
+      n_visible
+      n_trener
+      n_timestamp
+      n_pocet_hod
+      n_od
+      n_max_pocet_hod
+      n_lock
+      n_id
+      n_do
+      user {
+        u_jmeno
+        u_prijmeni
+        u_id
+      }
+      nabidka_items {
+        ni_lock
+        ni_partner
+        ni_pocet_hod
+        pary {
+          user {
+            u_id
+            u_jmeno
+            u_prijmeni
+          }
+        }
+      }
     }
   }
 `);

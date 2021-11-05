@@ -58,7 +58,32 @@ const ReservationView = (x: NabidkaQuery['nabidka_by_pk']) => {
 export const NabidkaList = gql(`
 query NabidkaList($offset: Int, $limit: Int) {
   nabidka(limit: $limit, offset: $offset) {
-    ...reservationFields
+    n_visible
+    n_trener
+    n_timestamp
+    n_pocet_hod
+    n_od
+    n_max_pocet_hod
+    n_lock
+    n_id
+    n_do
+    user {
+      u_jmeno
+      u_prijmeni
+      u_id
+    }
+    nabidka_items {
+      ni_lock
+      ni_partner
+      ni_pocet_hod
+      pary {
+        user {
+          u_id
+          u_jmeno
+          u_prijmeni
+        }
+      }
+    }
   }
 }`);
 
