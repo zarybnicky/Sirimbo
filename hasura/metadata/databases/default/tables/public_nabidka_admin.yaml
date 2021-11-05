@@ -1,0 +1,60 @@
+table:
+  name: nabidka_admin
+  schema: public
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - n_do
+    - n_id
+    - n_lock
+    - n_max_pocet_hod
+    - n_od
+    - n_pocet_hod
+    - n_timestamp
+    - n_visible
+    set:
+      n_trener: x-hasura-User-Id
+  role: member
+select_permissions:
+- permission:
+    columns:
+    - n_id
+    - n_max_pocet_hod
+    - n_trener
+    - n_lock
+    - n_visible
+    - n_do
+    - n_od
+    - n_pocet_hod
+    - n_timestamp
+    filter:
+      n_trener:
+        _eq: X-Hasura-User-Id
+  role: member
+update_permissions:
+- permission:
+    check: {}
+    columns:
+    - n_id
+    - n_max_pocet_hod
+    - n_trener
+    - n_lock
+    - n_visible
+    - n_do
+    - n_od
+    - n_pocet_hod
+    - n_timestamp
+    filter:
+      n_trener:
+        _eq: X-Hasura-User-Id
+    set:
+      n_trener: x-hasura-User-Id
+  role: member
+delete_permissions:
+- permission:
+    filter:
+      n_trener:
+        _eq: X-Hasura-User-Id
+  role: member

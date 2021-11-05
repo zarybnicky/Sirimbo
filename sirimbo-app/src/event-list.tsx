@@ -55,8 +55,13 @@ const ToggleVisible = gql(`
 export function EventList() {
     const [limit, setLimit] = useState(30);
     const [offset, setOffset] = useState(0);
+    const [total, setTotal] = useState(0);
     const { data, refetch } = useQuery(AkceList, {
         variables: { limit, offset },
+        onCompleted: (data) => {
+            const total = data.aggregate?.aggregate?.count;
+            total && setTotal(total);
+        },
     });
     const setPage = (x: { selected: number; }) => setOffset(x.selected * limit);
     const [toggleVisible] = useMutation(ToggleVisible, {
@@ -97,10 +102,7 @@ export function EventList() {
     return <React.Fragment>
         <a href="/admin/akce/add" className="btn btn-primary">Přidat</a>
         {list}
-        <Pagination
-            total={data?.aggregate?.aggregate?.count || 0}
-            limit={limit} setPage={setPage}
-        ></Pagination>
+        <Pagination {...{ total, limit, setPage }} />
     </React.Fragment>;
 }
 class EventListElement extends HTMLElement {

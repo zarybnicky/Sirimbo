@@ -13,6 +13,7 @@ export * from './articles-list';
 export * from './date';
 export * from './event-list';
 export * from './gallery-directory-list';
+export * from './schedule-list';
 export * from './pagination';
 export * from './qr-payment';
 export * from './reservation-select';

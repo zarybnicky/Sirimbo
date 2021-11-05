@@ -32,17 +32,19 @@ query ArticlesAdminList($offset: Int, $limit: Int) {
 export function ArticleAdminList() {
     const [limit, setLimit] = useState(30);
     const [offset, setOffset] = useState(0);
+    const [total, setTotal] = useState(0);
     const { data } = useQuery(ArticlesAdminQuery, {
         variables: { limit, offset },
+        onCompleted: (data) => {
+            const total = data.aggregate?.aggregate?.count;
+            total && setTotal(total);
+        },
     });
     const setPage = (x: { selected: number; }) => setOffset(x.selected * limit);
 
     const list = !data?.aktuality.length ? null : <table>
         <thead>
-            <tr>
-                <th>Jméno</th>
-                <th>Přidáno</th>
-            </tr>
+            <tr><th>Jméno</th><th>Přidáno</th></tr>
         </thead>
         <tbody>
             {data!.aktuality.map((a) => <tr key={a.at_id}>
@@ -62,7 +64,7 @@ export function ArticleAdminList() {
     return <React.Fragment>
         <a href="/admin/aktuality/add" className="btn btn-primary">Nový článek</a>
         {list}
-        <Pagination total={data?.aggregate?.aggregate?.count || 0} limit={limit} setPage={setPage}></Pagination>
+        <Pagination {...{ total, limit, setPage }} />
     </React.Fragment>;
 }
 class ArticleAdminListElement extends HTMLElement {

@@ -10,31 +10,6 @@ interface Props {
     id: number;
 }
 
-const Rozpis = gql(`
-  query Rozpis($id: bigint!) {
-    rozpis_by_pk(r_id: $id) {
-      r_datum
-      r_id
-      r_kde
-      r_lock
-      r_timestamp
-      r_trener
-      r_visible
-      user {
-        u_jmeno
-        u_prijmeni
-        u_id
-      }
-      rozpis_items {
-        ri_od
-        ri_do
-        ri_id
-        ri_partner
-      }
-    }
-  }
-`);
-
 export const Nabidka = gql(`
   query Nabidka($id: bigint!) {
     nabidka_by_pk(n_id: $id) {
@@ -68,14 +43,6 @@ export const Nabidka = gql(`
   }
 `);
 
-const ToggleVisibleRozpis = gql(`
-  mutation setRozpisVisible($id: bigint!, $visible: Boolean!) {
-    update_rozpis_by_pk(pk_columns: {r_id: $id}, _set: {r_visible: $visible}) {
-      r_id
-    }
-  }
-`);
-
 const ToggleVisibleNabidka = gql(`
   mutation setNabidkaVisible($id: bigint!, $visible: Boolean!) {
     update_nabidka_by_pk(pk_columns: {n_id: $id}, _set: {n_visible: $visible}) {
@@ -83,22 +50,6 @@ const ToggleVisibleNabidka = gql(`
     }
   }
 `);
-
-
-const ScheduleVisible = ({ id }: Props) => {
-    const { loading, error, data, refetch } = useQuery(Rozpis, {
-        variables: { id },
-    });
-    const [toggleVisible] = useMutation(ToggleVisibleRozpis, {
-        onCompleted: () => refetch(),
-    });
-    const visible = data?.rozpis_by_pk?.r_visible || false;
-    const toggle = () => toggleVisible({ variables: { id, visible: !visible } });
-    if (error) {
-        console.error(error);
-    }
-    return loading ? null : <Form.Check name={id.toString()} checked={visible} onChange={toggle} />
-};
 
 const ReservationVisible = ({ id }: Props) => {
     const { loading, error, data, refetch } = useQuery(Nabidka, {

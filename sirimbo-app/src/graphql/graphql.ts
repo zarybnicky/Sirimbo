@@ -2492,6 +2492,8 @@ export type Mutation_Root = {
   delete_galerie_foto_by_pk?: Maybe<Galerie_Foto>;
   /** delete data from the table: "nabidka" */
   delete_nabidka?: Maybe<Nabidka_Mutation_Response>;
+  /** delete data from the table: "nabidka_admin" */
+  delete_nabidka_admin?: Maybe<Nabidka_Admin_Mutation_Response>;
   /** delete single row from the table: "nabidka" */
   delete_nabidka_by_pk?: Maybe<Nabidka>;
   /** delete data from the table: "nabidka_item" */
@@ -2540,6 +2542,8 @@ export type Mutation_Root = {
   delete_platby_raw_by_pk?: Maybe<Platby_Raw>;
   /** delete data from the table: "rozpis" */
   delete_rozpis?: Maybe<Rozpis_Mutation_Response>;
+  /** delete data from the table: "rozpis_admin" */
+  delete_rozpis_admin?: Maybe<Rozpis_Admin_Mutation_Response>;
   /** delete single row from the table: "rozpis" */
   delete_rozpis_by_pk?: Maybe<Rozpis>;
   /** delete data from the table: "rozpis_item" */
@@ -2612,6 +2616,10 @@ export type Mutation_Root = {
   insert_galerie_foto_one?: Maybe<Galerie_Foto>;
   /** insert data into the table: "nabidka" */
   insert_nabidka?: Maybe<Nabidka_Mutation_Response>;
+  /** insert data into the table: "nabidka_admin" */
+  insert_nabidka_admin?: Maybe<Nabidka_Admin_Mutation_Response>;
+  /** insert a single row into the table: "nabidka_admin" */
+  insert_nabidka_admin_one?: Maybe<Nabidka_Admin>;
   /** insert data into the table: "nabidka_item" */
   insert_nabidka_item?: Maybe<Nabidka_Item_Mutation_Response>;
   /** insert a single row into the table: "nabidka_item" */
@@ -2660,6 +2668,10 @@ export type Mutation_Root = {
   insert_platby_raw_one?: Maybe<Platby_Raw>;
   /** insert data into the table: "rozpis" */
   insert_rozpis?: Maybe<Rozpis_Mutation_Response>;
+  /** insert data into the table: "rozpis_admin" */
+  insert_rozpis_admin?: Maybe<Rozpis_Admin_Mutation_Response>;
+  /** insert a single row into the table: "rozpis_admin" */
+  insert_rozpis_admin_one?: Maybe<Rozpis_Admin>;
   /** insert data into the table: "rozpis_item" */
   insert_rozpis_item?: Maybe<Rozpis_Item_Mutation_Response>;
   /** insert a single row into the table: "rozpis_item" */
@@ -2730,6 +2742,8 @@ export type Mutation_Root = {
   update_galerie_foto_by_pk?: Maybe<Galerie_Foto>;
   /** update data of the table: "nabidka" */
   update_nabidka?: Maybe<Nabidka_Mutation_Response>;
+  /** update data of the table: "nabidka_admin" */
+  update_nabidka_admin?: Maybe<Nabidka_Admin_Mutation_Response>;
   /** update single row of the table: "nabidka" */
   update_nabidka_by_pk?: Maybe<Nabidka>;
   /** update data of the table: "nabidka_item" */
@@ -2778,6 +2792,8 @@ export type Mutation_Root = {
   update_platby_raw_by_pk?: Maybe<Platby_Raw>;
   /** update data of the table: "rozpis" */
   update_rozpis?: Maybe<Rozpis_Mutation_Response>;
+  /** update data of the table: "rozpis_admin" */
+  update_rozpis_admin?: Maybe<Rozpis_Admin_Mutation_Response>;
   /** update single row of the table: "rozpis" */
   update_rozpis_by_pk?: Maybe<Rozpis>;
   /** update data of the table: "rozpis_item" */
@@ -2904,6 +2920,12 @@ export type Mutation_RootDelete_Galerie_Foto_By_PkArgs = {
 /** mutation root */
 export type Mutation_RootDelete_NabidkaArgs = {
   where: Nabidka_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Nabidka_AdminArgs = {
+  where: Nabidka_Admin_Bool_Exp;
 };
 
 
@@ -3048,6 +3070,12 @@ export type Mutation_RootDelete_Platby_Raw_By_PkArgs = {
 /** mutation root */
 export type Mutation_RootDelete_RozpisArgs = {
   where: Rozpis_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Rozpis_AdminArgs = {
+  where: Rozpis_Admin_Bool_Exp;
 };
 
 
@@ -3281,6 +3309,18 @@ export type Mutation_RootInsert_NabidkaArgs = {
 
 
 /** mutation root */
+export type Mutation_RootInsert_Nabidka_AdminArgs = {
+  objects: Array<Nabidka_Admin_Insert_Input>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Nabidka_Admin_OneArgs = {
+  object: Nabidka_Admin_Insert_Input;
+};
+
+
+/** mutation root */
 export type Mutation_RootInsert_Nabidka_ItemArgs = {
   objects: Array<Nabidka_Item_Insert_Input>;
   on_conflict?: Maybe<Nabidka_Item_On_Conflict>;
@@ -3445,6 +3485,18 @@ export type Mutation_RootInsert_Platby_Raw_OneArgs = {
 export type Mutation_RootInsert_RozpisArgs = {
   objects: Array<Rozpis_Insert_Input>;
   on_conflict?: Maybe<Rozpis_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Rozpis_AdminArgs = {
+  objects: Array<Rozpis_Admin_Insert_Input>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Rozpis_Admin_OneArgs = {
+  object: Rozpis_Admin_Insert_Input;
 };
 
 
@@ -3708,6 +3760,14 @@ export type Mutation_RootUpdate_NabidkaArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdate_Nabidka_AdminArgs = {
+  _inc?: Maybe<Nabidka_Admin_Inc_Input>;
+  _set?: Maybe<Nabidka_Admin_Set_Input>;
+  where: Nabidka_Admin_Bool_Exp;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_Nabidka_By_PkArgs = {
   _inc?: Maybe<Nabidka_Inc_Input>;
   _set?: Maybe<Nabidka_Set_Input>;
@@ -3894,6 +3954,14 @@ export type Mutation_RootUpdate_RozpisArgs = {
   _inc?: Maybe<Rozpis_Inc_Input>;
   _set?: Maybe<Rozpis_Set_Input>;
   where: Rozpis_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Rozpis_AdminArgs = {
+  _inc?: Maybe<Rozpis_Admin_Inc_Input>;
+  _set?: Maybe<Rozpis_Admin_Set_Input>;
+  where: Rozpis_Admin_Bool_Exp;
 };
 
 
@@ -4102,6 +4170,240 @@ export type NabidkaNabidka_Items_AggregateArgs = {
   offset?: Maybe<Scalars['Int']>;
   order_by?: Maybe<Array<Nabidka_Item_Order_By>>;
   where?: Maybe<Nabidka_Item_Bool_Exp>;
+};
+
+/** columns and relationships of "nabidka_admin" */
+export type Nabidka_Admin = {
+  __typename?: 'nabidka_admin';
+  n_do?: Maybe<Scalars['date']>;
+  n_id?: Maybe<Scalars['bigint']>;
+  n_lock?: Maybe<Scalars['Boolean']>;
+  n_max_pocet_hod?: Maybe<Scalars['bigint']>;
+  n_od?: Maybe<Scalars['date']>;
+  n_pocet_hod?: Maybe<Scalars['smallint']>;
+  n_timestamp?: Maybe<Scalars['timestamptz']>;
+  n_trener?: Maybe<Scalars['bigint']>;
+  n_visible?: Maybe<Scalars['Boolean']>;
+};
+
+/** aggregated selection of "nabidka_admin" */
+export type Nabidka_Admin_Aggregate = {
+  __typename?: 'nabidka_admin_aggregate';
+  aggregate?: Maybe<Nabidka_Admin_Aggregate_Fields>;
+  nodes: Array<Nabidka_Admin>;
+};
+
+/** aggregate fields of "nabidka_admin" */
+export type Nabidka_Admin_Aggregate_Fields = {
+  __typename?: 'nabidka_admin_aggregate_fields';
+  avg?: Maybe<Nabidka_Admin_Avg_Fields>;
+  count: Scalars['Int'];
+  max?: Maybe<Nabidka_Admin_Max_Fields>;
+  min?: Maybe<Nabidka_Admin_Min_Fields>;
+  stddev?: Maybe<Nabidka_Admin_Stddev_Fields>;
+  stddev_pop?: Maybe<Nabidka_Admin_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Nabidka_Admin_Stddev_Samp_Fields>;
+  sum?: Maybe<Nabidka_Admin_Sum_Fields>;
+  var_pop?: Maybe<Nabidka_Admin_Var_Pop_Fields>;
+  var_samp?: Maybe<Nabidka_Admin_Var_Samp_Fields>;
+  variance?: Maybe<Nabidka_Admin_Variance_Fields>;
+};
+
+
+/** aggregate fields of "nabidka_admin" */
+export type Nabidka_Admin_Aggregate_FieldsCountArgs = {
+  columns?: Maybe<Array<Nabidka_Admin_Select_Column>>;
+  distinct?: Maybe<Scalars['Boolean']>;
+};
+
+/** aggregate avg on columns */
+export type Nabidka_Admin_Avg_Fields = {
+  __typename?: 'nabidka_admin_avg_fields';
+  n_id?: Maybe<Scalars['Float']>;
+  n_max_pocet_hod?: Maybe<Scalars['Float']>;
+  n_pocet_hod?: Maybe<Scalars['Float']>;
+  n_trener?: Maybe<Scalars['Float']>;
+};
+
+/** Boolean expression to filter rows from the table "nabidka_admin". All fields are combined with a logical 'AND'. */
+export type Nabidka_Admin_Bool_Exp = {
+  _and?: Maybe<Array<Nabidka_Admin_Bool_Exp>>;
+  _not?: Maybe<Nabidka_Admin_Bool_Exp>;
+  _or?: Maybe<Array<Nabidka_Admin_Bool_Exp>>;
+  n_do?: Maybe<Date_Comparison_Exp>;
+  n_id?: Maybe<Bigint_Comparison_Exp>;
+  n_lock?: Maybe<Boolean_Comparison_Exp>;
+  n_max_pocet_hod?: Maybe<Bigint_Comparison_Exp>;
+  n_od?: Maybe<Date_Comparison_Exp>;
+  n_pocet_hod?: Maybe<Smallint_Comparison_Exp>;
+  n_timestamp?: Maybe<Timestamptz_Comparison_Exp>;
+  n_trener?: Maybe<Bigint_Comparison_Exp>;
+  n_visible?: Maybe<Boolean_Comparison_Exp>;
+};
+
+/** input type for incrementing numeric columns in table "nabidka_admin" */
+export type Nabidka_Admin_Inc_Input = {
+  n_id?: Maybe<Scalars['bigint']>;
+  n_max_pocet_hod?: Maybe<Scalars['bigint']>;
+  n_pocet_hod?: Maybe<Scalars['smallint']>;
+  n_trener?: Maybe<Scalars['bigint']>;
+};
+
+/** input type for inserting data into table "nabidka_admin" */
+export type Nabidka_Admin_Insert_Input = {
+  n_do?: Maybe<Scalars['date']>;
+  n_id?: Maybe<Scalars['bigint']>;
+  n_lock?: Maybe<Scalars['Boolean']>;
+  n_max_pocet_hod?: Maybe<Scalars['bigint']>;
+  n_od?: Maybe<Scalars['date']>;
+  n_pocet_hod?: Maybe<Scalars['smallint']>;
+  n_timestamp?: Maybe<Scalars['timestamptz']>;
+  n_trener?: Maybe<Scalars['bigint']>;
+  n_visible?: Maybe<Scalars['Boolean']>;
+};
+
+/** aggregate max on columns */
+export type Nabidka_Admin_Max_Fields = {
+  __typename?: 'nabidka_admin_max_fields';
+  n_do?: Maybe<Scalars['date']>;
+  n_id?: Maybe<Scalars['bigint']>;
+  n_max_pocet_hod?: Maybe<Scalars['bigint']>;
+  n_od?: Maybe<Scalars['date']>;
+  n_pocet_hod?: Maybe<Scalars['smallint']>;
+  n_timestamp?: Maybe<Scalars['timestamptz']>;
+  n_trener?: Maybe<Scalars['bigint']>;
+};
+
+/** aggregate min on columns */
+export type Nabidka_Admin_Min_Fields = {
+  __typename?: 'nabidka_admin_min_fields';
+  n_do?: Maybe<Scalars['date']>;
+  n_id?: Maybe<Scalars['bigint']>;
+  n_max_pocet_hod?: Maybe<Scalars['bigint']>;
+  n_od?: Maybe<Scalars['date']>;
+  n_pocet_hod?: Maybe<Scalars['smallint']>;
+  n_timestamp?: Maybe<Scalars['timestamptz']>;
+  n_trener?: Maybe<Scalars['bigint']>;
+};
+
+/** response of any mutation on the table "nabidka_admin" */
+export type Nabidka_Admin_Mutation_Response = {
+  __typename?: 'nabidka_admin_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Nabidka_Admin>;
+};
+
+/** Ordering options when selecting data from "nabidka_admin". */
+export type Nabidka_Admin_Order_By = {
+  n_do?: Maybe<Order_By>;
+  n_id?: Maybe<Order_By>;
+  n_lock?: Maybe<Order_By>;
+  n_max_pocet_hod?: Maybe<Order_By>;
+  n_od?: Maybe<Order_By>;
+  n_pocet_hod?: Maybe<Order_By>;
+  n_timestamp?: Maybe<Order_By>;
+  n_trener?: Maybe<Order_By>;
+  n_visible?: Maybe<Order_By>;
+};
+
+/** select columns of table "nabidka_admin" */
+export enum Nabidka_Admin_Select_Column {
+  /** column name */
+  NDo = 'n_do',
+  /** column name */
+  NId = 'n_id',
+  /** column name */
+  NLock = 'n_lock',
+  /** column name */
+  NMaxPocetHod = 'n_max_pocet_hod',
+  /** column name */
+  NOd = 'n_od',
+  /** column name */
+  NPocetHod = 'n_pocet_hod',
+  /** column name */
+  NTimestamp = 'n_timestamp',
+  /** column name */
+  NTrener = 'n_trener',
+  /** column name */
+  NVisible = 'n_visible'
+}
+
+/** input type for updating data in table "nabidka_admin" */
+export type Nabidka_Admin_Set_Input = {
+  n_do?: Maybe<Scalars['date']>;
+  n_id?: Maybe<Scalars['bigint']>;
+  n_lock?: Maybe<Scalars['Boolean']>;
+  n_max_pocet_hod?: Maybe<Scalars['bigint']>;
+  n_od?: Maybe<Scalars['date']>;
+  n_pocet_hod?: Maybe<Scalars['smallint']>;
+  n_timestamp?: Maybe<Scalars['timestamptz']>;
+  n_trener?: Maybe<Scalars['bigint']>;
+  n_visible?: Maybe<Scalars['Boolean']>;
+};
+
+/** aggregate stddev on columns */
+export type Nabidka_Admin_Stddev_Fields = {
+  __typename?: 'nabidka_admin_stddev_fields';
+  n_id?: Maybe<Scalars['Float']>;
+  n_max_pocet_hod?: Maybe<Scalars['Float']>;
+  n_pocet_hod?: Maybe<Scalars['Float']>;
+  n_trener?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Nabidka_Admin_Stddev_Pop_Fields = {
+  __typename?: 'nabidka_admin_stddev_pop_fields';
+  n_id?: Maybe<Scalars['Float']>;
+  n_max_pocet_hod?: Maybe<Scalars['Float']>;
+  n_pocet_hod?: Maybe<Scalars['Float']>;
+  n_trener?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Nabidka_Admin_Stddev_Samp_Fields = {
+  __typename?: 'nabidka_admin_stddev_samp_fields';
+  n_id?: Maybe<Scalars['Float']>;
+  n_max_pocet_hod?: Maybe<Scalars['Float']>;
+  n_pocet_hod?: Maybe<Scalars['Float']>;
+  n_trener?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate sum on columns */
+export type Nabidka_Admin_Sum_Fields = {
+  __typename?: 'nabidka_admin_sum_fields';
+  n_id?: Maybe<Scalars['bigint']>;
+  n_max_pocet_hod?: Maybe<Scalars['bigint']>;
+  n_pocet_hod?: Maybe<Scalars['smallint']>;
+  n_trener?: Maybe<Scalars['bigint']>;
+};
+
+/** aggregate var_pop on columns */
+export type Nabidka_Admin_Var_Pop_Fields = {
+  __typename?: 'nabidka_admin_var_pop_fields';
+  n_id?: Maybe<Scalars['Float']>;
+  n_max_pocet_hod?: Maybe<Scalars['Float']>;
+  n_pocet_hod?: Maybe<Scalars['Float']>;
+  n_trener?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate var_samp on columns */
+export type Nabidka_Admin_Var_Samp_Fields = {
+  __typename?: 'nabidka_admin_var_samp_fields';
+  n_id?: Maybe<Scalars['Float']>;
+  n_max_pocet_hod?: Maybe<Scalars['Float']>;
+  n_pocet_hod?: Maybe<Scalars['Float']>;
+  n_trener?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate variance on columns */
+export type Nabidka_Admin_Variance_Fields = {
+  __typename?: 'nabidka_admin_variance_fields';
+  n_id?: Maybe<Scalars['Float']>;
+  n_max_pocet_hod?: Maybe<Scalars['Float']>;
+  n_pocet_hod?: Maybe<Scalars['Float']>;
+  n_trener?: Maybe<Scalars['Float']>;
 };
 
 /** aggregated selection of "nabidka" */
@@ -8364,6 +8666,10 @@ export type Query_Root = {
   galerie_foto_by_pk?: Maybe<Galerie_Foto>;
   /** fetch data from the table: "nabidka" */
   nabidka: Array<Nabidka>;
+  /** fetch data from the table: "nabidka_admin" */
+  nabidka_admin: Array<Nabidka_Admin>;
+  /** fetch aggregated fields from the table: "nabidka_admin" */
+  nabidka_admin_aggregate: Nabidka_Admin_Aggregate;
   /** fetch aggregated fields from the table: "nabidka" */
   nabidka_aggregate: Nabidka_Aggregate;
   /** fetch data from the table: "nabidka" using primary key columns */
@@ -8436,6 +8742,10 @@ export type Query_Root = {
   platby_raw_by_pk?: Maybe<Platby_Raw>;
   /** An array relationship */
   rozpis: Array<Rozpis>;
+  /** fetch data from the table: "rozpis_admin" */
+  rozpis_admin: Array<Rozpis_Admin>;
+  /** fetch aggregated fields from the table: "rozpis_admin" */
+  rozpis_admin_aggregate: Rozpis_Admin_Aggregate;
   /** An aggregate relationship */
   rozpis_aggregate: Rozpis_Aggregate;
   /** fetch data from the table: "rozpis" using primary key columns */
@@ -8665,6 +8975,24 @@ export type Query_RootNabidkaArgs = {
   offset?: Maybe<Scalars['Int']>;
   order_by?: Maybe<Array<Nabidka_Order_By>>;
   where?: Maybe<Nabidka_Bool_Exp>;
+};
+
+
+export type Query_RootNabidka_AdminArgs = {
+  distinct_on?: Maybe<Array<Nabidka_Admin_Select_Column>>;
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  order_by?: Maybe<Array<Nabidka_Admin_Order_By>>;
+  where?: Maybe<Nabidka_Admin_Bool_Exp>;
+};
+
+
+export type Query_RootNabidka_Admin_AggregateArgs = {
+  distinct_on?: Maybe<Array<Nabidka_Admin_Select_Column>>;
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  order_by?: Maybe<Array<Nabidka_Admin_Order_By>>;
+  where?: Maybe<Nabidka_Admin_Bool_Exp>;
 };
 
 
@@ -8941,6 +9269,24 @@ export type Query_RootRozpisArgs = {
   offset?: Maybe<Scalars['Int']>;
   order_by?: Maybe<Array<Rozpis_Order_By>>;
   where?: Maybe<Rozpis_Bool_Exp>;
+};
+
+
+export type Query_RootRozpis_AdminArgs = {
+  distinct_on?: Maybe<Array<Rozpis_Admin_Select_Column>>;
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  order_by?: Maybe<Array<Rozpis_Admin_Order_By>>;
+  where?: Maybe<Rozpis_Admin_Bool_Exp>;
+};
+
+
+export type Query_RootRozpis_Admin_AggregateArgs = {
+  distinct_on?: Maybe<Array<Rozpis_Admin_Select_Column>>;
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  order_by?: Maybe<Array<Rozpis_Admin_Order_By>>;
+  where?: Maybe<Rozpis_Admin_Bool_Exp>;
 };
 
 
@@ -9223,6 +9569,236 @@ export type RozpisRozpis_Items_AggregateArgs = {
   offset?: Maybe<Scalars['Int']>;
   order_by?: Maybe<Array<Rozpis_Item_Order_By>>;
   where?: Maybe<Rozpis_Item_Bool_Exp>;
+};
+
+/** columns and relationships of "rozpis_admin" */
+export type Rozpis_Admin = {
+  __typename?: 'rozpis_admin';
+  r_datum?: Maybe<Scalars['date']>;
+  r_id?: Maybe<Scalars['bigint']>;
+  r_kde?: Maybe<Scalars['String']>;
+  r_lock?: Maybe<Scalars['Boolean']>;
+  r_timestamp?: Maybe<Scalars['timestamptz']>;
+  r_trener?: Maybe<Scalars['bigint']>;
+  r_visible?: Maybe<Scalars['Boolean']>;
+  /** An array relationship */
+  rozpis_items: Array<Rozpis_Item>;
+  /** An aggregate relationship */
+  rozpis_items_aggregate: Rozpis_Item_Aggregate;
+  /** An object relationship */
+  user?: Maybe<Users>;
+};
+
+
+/** columns and relationships of "rozpis_admin" */
+export type Rozpis_AdminRozpis_ItemsArgs = {
+  distinct_on?: Maybe<Array<Rozpis_Item_Select_Column>>;
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  order_by?: Maybe<Array<Rozpis_Item_Order_By>>;
+  where?: Maybe<Rozpis_Item_Bool_Exp>;
+};
+
+
+/** columns and relationships of "rozpis_admin" */
+export type Rozpis_AdminRozpis_Items_AggregateArgs = {
+  distinct_on?: Maybe<Array<Rozpis_Item_Select_Column>>;
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  order_by?: Maybe<Array<Rozpis_Item_Order_By>>;
+  where?: Maybe<Rozpis_Item_Bool_Exp>;
+};
+
+/** aggregated selection of "rozpis_admin" */
+export type Rozpis_Admin_Aggregate = {
+  __typename?: 'rozpis_admin_aggregate';
+  aggregate?: Maybe<Rozpis_Admin_Aggregate_Fields>;
+  nodes: Array<Rozpis_Admin>;
+};
+
+/** aggregate fields of "rozpis_admin" */
+export type Rozpis_Admin_Aggregate_Fields = {
+  __typename?: 'rozpis_admin_aggregate_fields';
+  avg?: Maybe<Rozpis_Admin_Avg_Fields>;
+  count: Scalars['Int'];
+  max?: Maybe<Rozpis_Admin_Max_Fields>;
+  min?: Maybe<Rozpis_Admin_Min_Fields>;
+  stddev?: Maybe<Rozpis_Admin_Stddev_Fields>;
+  stddev_pop?: Maybe<Rozpis_Admin_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Rozpis_Admin_Stddev_Samp_Fields>;
+  sum?: Maybe<Rozpis_Admin_Sum_Fields>;
+  var_pop?: Maybe<Rozpis_Admin_Var_Pop_Fields>;
+  var_samp?: Maybe<Rozpis_Admin_Var_Samp_Fields>;
+  variance?: Maybe<Rozpis_Admin_Variance_Fields>;
+};
+
+
+/** aggregate fields of "rozpis_admin" */
+export type Rozpis_Admin_Aggregate_FieldsCountArgs = {
+  columns?: Maybe<Array<Rozpis_Admin_Select_Column>>;
+  distinct?: Maybe<Scalars['Boolean']>;
+};
+
+/** aggregate avg on columns */
+export type Rozpis_Admin_Avg_Fields = {
+  __typename?: 'rozpis_admin_avg_fields';
+  r_id?: Maybe<Scalars['Float']>;
+  r_trener?: Maybe<Scalars['Float']>;
+};
+
+/** Boolean expression to filter rows from the table "rozpis_admin". All fields are combined with a logical 'AND'. */
+export type Rozpis_Admin_Bool_Exp = {
+  _and?: Maybe<Array<Rozpis_Admin_Bool_Exp>>;
+  _not?: Maybe<Rozpis_Admin_Bool_Exp>;
+  _or?: Maybe<Array<Rozpis_Admin_Bool_Exp>>;
+  r_datum?: Maybe<Date_Comparison_Exp>;
+  r_id?: Maybe<Bigint_Comparison_Exp>;
+  r_kde?: Maybe<String_Comparison_Exp>;
+  r_lock?: Maybe<Boolean_Comparison_Exp>;
+  r_timestamp?: Maybe<Timestamptz_Comparison_Exp>;
+  r_trener?: Maybe<Bigint_Comparison_Exp>;
+  r_visible?: Maybe<Boolean_Comparison_Exp>;
+  rozpis_items?: Maybe<Rozpis_Item_Bool_Exp>;
+  user?: Maybe<Users_Bool_Exp>;
+};
+
+/** input type for incrementing numeric columns in table "rozpis_admin" */
+export type Rozpis_Admin_Inc_Input = {
+  r_id?: Maybe<Scalars['bigint']>;
+  r_trener?: Maybe<Scalars['bigint']>;
+};
+
+/** input type for inserting data into table "rozpis_admin" */
+export type Rozpis_Admin_Insert_Input = {
+  r_datum?: Maybe<Scalars['date']>;
+  r_id?: Maybe<Scalars['bigint']>;
+  r_kde?: Maybe<Scalars['String']>;
+  r_lock?: Maybe<Scalars['Boolean']>;
+  r_timestamp?: Maybe<Scalars['timestamptz']>;
+  r_trener?: Maybe<Scalars['bigint']>;
+  r_visible?: Maybe<Scalars['Boolean']>;
+  rozpis_items?: Maybe<Rozpis_Item_Arr_Rel_Insert_Input>;
+  user?: Maybe<Users_Obj_Rel_Insert_Input>;
+};
+
+/** aggregate max on columns */
+export type Rozpis_Admin_Max_Fields = {
+  __typename?: 'rozpis_admin_max_fields';
+  r_datum?: Maybe<Scalars['date']>;
+  r_id?: Maybe<Scalars['bigint']>;
+  r_kde?: Maybe<Scalars['String']>;
+  r_timestamp?: Maybe<Scalars['timestamptz']>;
+  r_trener?: Maybe<Scalars['bigint']>;
+};
+
+/** aggregate min on columns */
+export type Rozpis_Admin_Min_Fields = {
+  __typename?: 'rozpis_admin_min_fields';
+  r_datum?: Maybe<Scalars['date']>;
+  r_id?: Maybe<Scalars['bigint']>;
+  r_kde?: Maybe<Scalars['String']>;
+  r_timestamp?: Maybe<Scalars['timestamptz']>;
+  r_trener?: Maybe<Scalars['bigint']>;
+};
+
+/** response of any mutation on the table "rozpis_admin" */
+export type Rozpis_Admin_Mutation_Response = {
+  __typename?: 'rozpis_admin_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Rozpis_Admin>;
+};
+
+/** Ordering options when selecting data from "rozpis_admin". */
+export type Rozpis_Admin_Order_By = {
+  r_datum?: Maybe<Order_By>;
+  r_id?: Maybe<Order_By>;
+  r_kde?: Maybe<Order_By>;
+  r_lock?: Maybe<Order_By>;
+  r_timestamp?: Maybe<Order_By>;
+  r_trener?: Maybe<Order_By>;
+  r_visible?: Maybe<Order_By>;
+  rozpis_items_aggregate?: Maybe<Rozpis_Item_Aggregate_Order_By>;
+  user?: Maybe<Users_Order_By>;
+};
+
+/** select columns of table "rozpis_admin" */
+export enum Rozpis_Admin_Select_Column {
+  /** column name */
+  RDatum = 'r_datum',
+  /** column name */
+  RId = 'r_id',
+  /** column name */
+  RKde = 'r_kde',
+  /** column name */
+  RLock = 'r_lock',
+  /** column name */
+  RTimestamp = 'r_timestamp',
+  /** column name */
+  RTrener = 'r_trener',
+  /** column name */
+  RVisible = 'r_visible'
+}
+
+/** input type for updating data in table "rozpis_admin" */
+export type Rozpis_Admin_Set_Input = {
+  r_datum?: Maybe<Scalars['date']>;
+  r_id?: Maybe<Scalars['bigint']>;
+  r_kde?: Maybe<Scalars['String']>;
+  r_lock?: Maybe<Scalars['Boolean']>;
+  r_timestamp?: Maybe<Scalars['timestamptz']>;
+  r_trener?: Maybe<Scalars['bigint']>;
+  r_visible?: Maybe<Scalars['Boolean']>;
+};
+
+/** aggregate stddev on columns */
+export type Rozpis_Admin_Stddev_Fields = {
+  __typename?: 'rozpis_admin_stddev_fields';
+  r_id?: Maybe<Scalars['Float']>;
+  r_trener?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Rozpis_Admin_Stddev_Pop_Fields = {
+  __typename?: 'rozpis_admin_stddev_pop_fields';
+  r_id?: Maybe<Scalars['Float']>;
+  r_trener?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Rozpis_Admin_Stddev_Samp_Fields = {
+  __typename?: 'rozpis_admin_stddev_samp_fields';
+  r_id?: Maybe<Scalars['Float']>;
+  r_trener?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate sum on columns */
+export type Rozpis_Admin_Sum_Fields = {
+  __typename?: 'rozpis_admin_sum_fields';
+  r_id?: Maybe<Scalars['bigint']>;
+  r_trener?: Maybe<Scalars['bigint']>;
+};
+
+/** aggregate var_pop on columns */
+export type Rozpis_Admin_Var_Pop_Fields = {
+  __typename?: 'rozpis_admin_var_pop_fields';
+  r_id?: Maybe<Scalars['Float']>;
+  r_trener?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate var_samp on columns */
+export type Rozpis_Admin_Var_Samp_Fields = {
+  __typename?: 'rozpis_admin_var_samp_fields';
+  r_id?: Maybe<Scalars['Float']>;
+  r_trener?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate variance on columns */
+export type Rozpis_Admin_Variance_Fields = {
+  __typename?: 'rozpis_admin_variance_fields';
+  r_id?: Maybe<Scalars['Float']>;
+  r_trener?: Maybe<Scalars['Float']>;
 };
 
 /** aggregated selection of "rozpis" */
@@ -10426,6 +11002,10 @@ export type Subscription_Root = {
   galerie_foto_by_pk?: Maybe<Galerie_Foto>;
   /** fetch data from the table: "nabidka" */
   nabidka: Array<Nabidka>;
+  /** fetch data from the table: "nabidka_admin" */
+  nabidka_admin: Array<Nabidka_Admin>;
+  /** fetch aggregated fields from the table: "nabidka_admin" */
+  nabidka_admin_aggregate: Nabidka_Admin_Aggregate;
   /** fetch aggregated fields from the table: "nabidka" */
   nabidka_aggregate: Nabidka_Aggregate;
   /** fetch data from the table: "nabidka" using primary key columns */
@@ -10498,6 +11078,10 @@ export type Subscription_Root = {
   platby_raw_by_pk?: Maybe<Platby_Raw>;
   /** An array relationship */
   rozpis: Array<Rozpis>;
+  /** fetch data from the table: "rozpis_admin" */
+  rozpis_admin: Array<Rozpis_Admin>;
+  /** fetch aggregated fields from the table: "rozpis_admin" */
+  rozpis_admin_aggregate: Rozpis_Admin_Aggregate;
   /** An aggregate relationship */
   rozpis_aggregate: Rozpis_Aggregate;
   /** fetch data from the table: "rozpis" using primary key columns */
@@ -10727,6 +11311,24 @@ export type Subscription_RootNabidkaArgs = {
   offset?: Maybe<Scalars['Int']>;
   order_by?: Maybe<Array<Nabidka_Order_By>>;
   where?: Maybe<Nabidka_Bool_Exp>;
+};
+
+
+export type Subscription_RootNabidka_AdminArgs = {
+  distinct_on?: Maybe<Array<Nabidka_Admin_Select_Column>>;
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  order_by?: Maybe<Array<Nabidka_Admin_Order_By>>;
+  where?: Maybe<Nabidka_Admin_Bool_Exp>;
+};
+
+
+export type Subscription_RootNabidka_Admin_AggregateArgs = {
+  distinct_on?: Maybe<Array<Nabidka_Admin_Select_Column>>;
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  order_by?: Maybe<Array<Nabidka_Admin_Order_By>>;
+  where?: Maybe<Nabidka_Admin_Bool_Exp>;
 };
 
 
@@ -11003,6 +11605,24 @@ export type Subscription_RootRozpisArgs = {
   offset?: Maybe<Scalars['Int']>;
   order_by?: Maybe<Array<Rozpis_Order_By>>;
   where?: Maybe<Rozpis_Bool_Exp>;
+};
+
+
+export type Subscription_RootRozpis_AdminArgs = {
+  distinct_on?: Maybe<Array<Rozpis_Admin_Select_Column>>;
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  order_by?: Maybe<Array<Rozpis_Admin_Order_By>>;
+  where?: Maybe<Rozpis_Admin_Bool_Exp>;
+};
+
+
+export type Subscription_RootRozpis_Admin_AggregateArgs = {
+  distinct_on?: Maybe<Array<Rozpis_Admin_Select_Column>>;
+  limit?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  order_by?: Maybe<Array<Rozpis_Admin_Order_By>>;
+  where?: Maybe<Rozpis_Admin_Bool_Exp>;
 };
 
 
@@ -14006,19 +14626,13 @@ export type NabidkaListQueryVariables = Exact<{
 
 export type NabidkaListQuery = { __typename?: 'query_root', nabidka: Array<{ __typename?: 'nabidka', n_visible: boolean, n_trener: any, n_timestamp?: any | null | undefined, n_pocet_hod: any, n_od: any, n_max_pocet_hod: any, n_lock: boolean, n_id: any, n_do: any, user: { __typename?: 'users', u_jmeno: string, u_prijmeni: string, u_id: any }, nabidka_items: Array<{ __typename?: 'nabidka_item', ni_lock: boolean, ni_partner: any, ni_pocet_hod: any, pary: { __typename?: 'pary', user: { __typename?: 'users', u_id: any, u_jmeno: string, u_prijmeni: string } } }> }> };
 
-export type RozpisQueryVariables = Exact<{
-  id: Scalars['bigint'];
+export type ScheduleAdminListQueryVariables = Exact<{
+  offset?: Maybe<Scalars['Int']>;
+  limit?: Maybe<Scalars['Int']>;
 }>;
 
 
-export type RozpisQuery = { __typename?: 'query_root', rozpis_by_pk?: { __typename?: 'rozpis', r_datum: any, r_id: any, r_kde: string, r_lock: boolean, r_timestamp?: any | null | undefined, r_trener: any, r_visible: boolean, user: { __typename?: 'users', u_jmeno: string, u_prijmeni: string, u_id: any }, rozpis_items: Array<{ __typename?: 'rozpis_item', ri_od: any, ri_do: any, ri_id: any, ri_partner?: any | null | undefined }> } | null | undefined };
-
-export type NabidkaQueryVariables = Exact<{
-  id: Scalars['bigint'];
-}>;
-
-
-export type NabidkaQuery = { __typename?: 'query_root', nabidka_by_pk?: { __typename?: 'nabidka', n_visible: boolean, n_trener: any, n_timestamp?: any | null | undefined, n_pocet_hod: any, n_od: any, n_max_pocet_hod: any, n_lock: boolean, n_id: any, n_do: any, user: { __typename?: 'users', u_jmeno: string, u_prijmeni: string, u_id: any }, nabidka_items: Array<{ __typename?: 'nabidka_item', ni_lock: boolean, ni_partner: any, ni_pocet_hod: any, pary: { __typename?: 'pary', user: { __typename?: 'users', u_id: any, u_jmeno: string, u_prijmeni: string } } }> } | null | undefined };
+export type ScheduleAdminListQuery = { __typename?: 'query_root', rozpis: Array<{ __typename?: 'rozpis_admin', r_datum?: any | null | undefined, r_id?: any | null | undefined, r_kde?: string | null | undefined, r_lock?: boolean | null | undefined, r_timestamp?: any | null | undefined, r_trener?: any | null | undefined, r_visible?: boolean | null | undefined, user?: { __typename?: 'users', u_jmeno: string, u_prijmeni: string, u_id: any } | null | undefined, rozpis_items: Array<{ __typename?: 'rozpis_item', ri_od: any, ri_do: any, ri_id: any, ri_partner?: any | null | undefined }> }>, aggregate: { __typename?: 'rozpis_admin_aggregate', aggregate?: { __typename?: 'rozpis_admin_aggregate_fields', count: number } | null | undefined } };
 
 export type SetRozpisVisibleMutationVariables = Exact<{
   id: Scalars['bigint'];
@@ -14028,6 +14642,13 @@ export type SetRozpisVisibleMutationVariables = Exact<{
 
 export type SetRozpisVisibleMutation = { __typename?: 'mutation_root', update_rozpis_by_pk?: { __typename?: 'rozpis', r_id: any } | null | undefined };
 
+export type NabidkaQueryVariables = Exact<{
+  id: Scalars['bigint'];
+}>;
+
+
+export type NabidkaQuery = { __typename?: 'query_root', nabidka_by_pk?: { __typename?: 'nabidka', n_visible: boolean, n_trener: any, n_timestamp?: any | null | undefined, n_pocet_hod: any, n_od: any, n_max_pocet_hod: any, n_lock: boolean, n_id: any, n_do: any, user: { __typename?: 'users', u_jmeno: string, u_prijmeni: string, u_id: any }, nabidka_items: Array<{ __typename?: 'nabidka_item', ni_lock: boolean, ni_partner: any, ni_pocet_hod: any, pary: { __typename?: 'pary', user: { __typename?: 'users', u_id: any, u_jmeno: string, u_prijmeni: string } } }> } | null | undefined };
+
 
 export const UpozorneniListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"UpozorneniList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"upozorneni"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"up_timestamp_add"},"value":{"kind":"EnumValue","value":"desc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"up_id"}},{"kind":"Field","name":{"kind":"Name","value":"up_kdo"}},{"kind":"Field","name":{"kind":"Name","value":"up_lock"}},{"kind":"Field","name":{"kind":"Name","value":"up_nadpis"}},{"kind":"Field","name":{"kind":"Name","value":"up_text"}},{"kind":"Field","name":{"kind":"Name","value":"up_timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"up_timestamp_add"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"u_id"}},{"kind":"Field","name":{"kind":"Name","value":"u_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"u_prijmeni"}}]}},{"kind":"Field","name":{"kind":"Name","value":"upozorneni_skupinies"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"skupiny"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"s_name"}},{"kind":"Field","name":{"kind":"Name","value":"s_description"}},{"kind":"Field","name":{"kind":"Name","value":"s_color_text"}},{"kind":"Field","name":{"kind":"Name","value":"s_color_rgb"}}]}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"aggregate"},"name":{"kind":"Name","value":"upozorneni_aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]} as unknown as DocumentNode<UpozorneniListQuery, UpozorneniListQueryVariables>;
 export const ArticlesAdminListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ArticlesAdminList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"aktuality"},"name":{"kind":"Name","value":"aktuality_admin"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"at_timestamp_add"},"value":{"kind":"EnumValue","value":"desc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"at_foto"}},{"kind":"Field","name":{"kind":"Name","value":"at_foto_main"}},{"kind":"Field","name":{"kind":"Name","value":"at_id"}},{"kind":"Field","name":{"kind":"Name","value":"at_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"at_kat"}},{"kind":"Field","name":{"kind":"Name","value":"at_kdo"}},{"kind":"Field","name":{"kind":"Name","value":"at_preview"}},{"kind":"Field","name":{"kind":"Name","value":"at_text"}},{"kind":"Field","name":{"kind":"Name","value":"at_timestamp_add"}},{"kind":"Field","name":{"kind":"Name","value":"at_timestamp"}}]}},{"kind":"Field","alias":{"kind":"Name","value":"aggregate"},"name":{"kind":"Name","value":"aktuality_admin_aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]} as unknown as DocumentNode<ArticlesAdminListQuery, ArticlesAdminListQueryVariables>;
@@ -14036,6 +14657,6 @@ export const SetNabidkaVisibleDocument = {"kind":"Document","definitions":[{"kin
 export const GalleryDirListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GalleryDirList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"galerie_dir"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"gd_name"},"value":{"kind":"EnumValue","value":"asc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gd_hidden"}},{"kind":"Field","name":{"kind":"Name","value":"gd_id"}},{"kind":"Field","name":{"kind":"Name","value":"gd_id_rodic"}},{"kind":"Field","name":{"kind":"Name","value":"gd_level"}},{"kind":"Field","name":{"kind":"Name","value":"gd_name"}},{"kind":"Field","name":{"kind":"Name","value":"gd_path"}}]}},{"kind":"Field","alias":{"kind":"Name","value":"aggregate"},"name":{"kind":"Name","value":"galerie_dir_aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]} as unknown as DocumentNode<GalleryDirListQuery, GalleryDirListQueryVariables>;
 export const SetGalerieDirVisibleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"setGalerieDirVisible"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"visible"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_galerie_dir_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"gd_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"gd_hidden"},"value":{"kind":"Variable","name":{"kind":"Name","value":"visible"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gd_id"}}]}}]}}]} as unknown as DocumentNode<SetGalerieDirVisibleMutation, SetGalerieDirVisibleMutationVariables>;
 export const NabidkaListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"NabidkaList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nabidka"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"n_visible"}},{"kind":"Field","name":{"kind":"Name","value":"n_trener"}},{"kind":"Field","name":{"kind":"Name","value":"n_timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"n_pocet_hod"}},{"kind":"Field","name":{"kind":"Name","value":"n_od"}},{"kind":"Field","name":{"kind":"Name","value":"n_max_pocet_hod"}},{"kind":"Field","name":{"kind":"Name","value":"n_lock"}},{"kind":"Field","name":{"kind":"Name","value":"n_id"}},{"kind":"Field","name":{"kind":"Name","value":"n_do"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"u_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"u_prijmeni"}},{"kind":"Field","name":{"kind":"Name","value":"u_id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"nabidka_items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ni_lock"}},{"kind":"Field","name":{"kind":"Name","value":"ni_partner"}},{"kind":"Field","name":{"kind":"Name","value":"ni_pocet_hod"}},{"kind":"Field","name":{"kind":"Name","value":"pary"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"u_id"}},{"kind":"Field","name":{"kind":"Name","value":"u_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"u_prijmeni"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<NabidkaListQuery, NabidkaListQueryVariables>;
-export const RozpisDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Rozpis"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"rozpis_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"r_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"r_datum"}},{"kind":"Field","name":{"kind":"Name","value":"r_id"}},{"kind":"Field","name":{"kind":"Name","value":"r_kde"}},{"kind":"Field","name":{"kind":"Name","value":"r_lock"}},{"kind":"Field","name":{"kind":"Name","value":"r_timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"r_trener"}},{"kind":"Field","name":{"kind":"Name","value":"r_visible"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"u_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"u_prijmeni"}},{"kind":"Field","name":{"kind":"Name","value":"u_id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"rozpis_items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ri_od"}},{"kind":"Field","name":{"kind":"Name","value":"ri_do"}},{"kind":"Field","name":{"kind":"Name","value":"ri_id"}},{"kind":"Field","name":{"kind":"Name","value":"ri_partner"}}]}}]}}]}}]} as unknown as DocumentNode<RozpisQuery, RozpisQueryVariables>;
-export const NabidkaDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Nabidka"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nabidka_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"n_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"n_visible"}},{"kind":"Field","name":{"kind":"Name","value":"n_trener"}},{"kind":"Field","name":{"kind":"Name","value":"n_timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"n_pocet_hod"}},{"kind":"Field","name":{"kind":"Name","value":"n_od"}},{"kind":"Field","name":{"kind":"Name","value":"n_max_pocet_hod"}},{"kind":"Field","name":{"kind":"Name","value":"n_lock"}},{"kind":"Field","name":{"kind":"Name","value":"n_id"}},{"kind":"Field","name":{"kind":"Name","value":"n_do"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"u_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"u_prijmeni"}},{"kind":"Field","name":{"kind":"Name","value":"u_id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"nabidka_items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ni_lock"}},{"kind":"Field","name":{"kind":"Name","value":"ni_partner"}},{"kind":"Field","name":{"kind":"Name","value":"ni_pocet_hod"}},{"kind":"Field","name":{"kind":"Name","value":"pary"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"u_id"}},{"kind":"Field","name":{"kind":"Name","value":"u_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"u_prijmeni"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<NabidkaQuery, NabidkaQueryVariables>;
+export const ScheduleAdminListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ScheduleAdminList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"rozpis"},"name":{"kind":"Name","value":"rozpis_admin"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"r_datum"},"value":{"kind":"EnumValue","value":"desc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"r_datum"}},{"kind":"Field","name":{"kind":"Name","value":"r_id"}},{"kind":"Field","name":{"kind":"Name","value":"r_kde"}},{"kind":"Field","name":{"kind":"Name","value":"r_lock"}},{"kind":"Field","name":{"kind":"Name","value":"r_timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"r_trener"}},{"kind":"Field","name":{"kind":"Name","value":"r_visible"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"u_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"u_prijmeni"}},{"kind":"Field","name":{"kind":"Name","value":"u_id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"rozpis_items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ri_od"}},{"kind":"Field","name":{"kind":"Name","value":"ri_do"}},{"kind":"Field","name":{"kind":"Name","value":"ri_id"}},{"kind":"Field","name":{"kind":"Name","value":"ri_partner"}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"aggregate"},"name":{"kind":"Name","value":"rozpis_admin_aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]} as unknown as DocumentNode<ScheduleAdminListQuery, ScheduleAdminListQueryVariables>;
 export const SetRozpisVisibleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"setRozpisVisible"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"visible"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_rozpis_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"r_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"r_visible"},"value":{"kind":"Variable","name":{"kind":"Name","value":"visible"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"r_id"}}]}}]}}]} as unknown as DocumentNode<SetRozpisVisibleMutation, SetRozpisVisibleMutationVariables>;
+export const NabidkaDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Nabidka"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nabidka_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"n_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"n_visible"}},{"kind":"Field","name":{"kind":"Name","value":"n_trener"}},{"kind":"Field","name":{"kind":"Name","value":"n_timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"n_pocet_hod"}},{"kind":"Field","name":{"kind":"Name","value":"n_od"}},{"kind":"Field","name":{"kind":"Name","value":"n_max_pocet_hod"}},{"kind":"Field","name":{"kind":"Name","value":"n_lock"}},{"kind":"Field","name":{"kind":"Name","value":"n_id"}},{"kind":"Field","name":{"kind":"Name","value":"n_do"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"u_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"u_prijmeni"}},{"kind":"Field","name":{"kind":"Name","value":"u_id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"nabidka_items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ni_lock"}},{"kind":"Field","name":{"kind":"Name","value":"ni_partner"}},{"kind":"Field","name":{"kind":"Name","value":"ni_pocet_hod"}},{"kind":"Field","name":{"kind":"Name","value":"pary"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"u_id"}},{"kind":"Field","name":{"kind":"Name","value":"u_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"u_prijmeni"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<NabidkaQuery, NabidkaQueryVariables>;

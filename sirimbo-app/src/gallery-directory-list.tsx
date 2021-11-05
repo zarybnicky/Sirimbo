@@ -6,7 +6,7 @@ import { ApolloProvider, useQuery, useMutation } from '@apollo/client';
 import { createClient } from './client';
 import { Pagination } from './pagination';
 import { gql } from 'graphql-tag';
-import { } from './graphql/graphql';
+import { Dropdown } from './dropdown';
 
 const GalleryDirList = gql(`
   query GalleryDirList($offset: Int, $limit: Int) {
@@ -64,8 +64,13 @@ function flatten<T>(root: Treeified<T>): T[] {
 export function GalleryDirectoryList() {
     const [limit, setLimit] = useState(30);
     const [offset, setOffset] = useState(0);
+    const [total, setTotal] = useState(0);
     const { data, refetch } = useQuery(GalleryDirList, {
         variables: { limit, offset },
+        onCompleted: (data) => {
+            const total = data.aggregate?.aggregate?.count;
+            total && setTotal(total);
+        },
     });
     const roots = listToTree((data?.galerie_dir || []).map(x => ({
         ...x,
@@ -82,18 +87,13 @@ export function GalleryDirectoryList() {
     const list = !dataSorted.length ? null : <table>
         <thead><tr><th>Složka</th><th>Skrytá</th></tr></thead>
         <tbody>
-            {dataSorted.map((a) => <tr>
-                <td key={a.gd_id}>
-                    <div className="btn-group">
-                        <button type="button" className="btn btn-xs pt-0" data-toggle="dropdown">
-                            <img alt="Upravit" width="14" src="/style/icon-gear.png" />
-                        </button>
-                        <div className="dropdown-menu">
-                            <a className="dropdown-item" href={`/admin/galerie/directory/edit/${a.gd_id}`}>Přejmenovat</a>
-                            <a className="dropdown-item" href={`/admin/galerie/directory/${a.gd_id}`}>Upravit fotky</a>
-                            <a className="dropdown-item" href={`/admin/galerie/directory/remove/${a.gd_id}`}>Odstranit</a>
-                        </div>
-                    </div>
+            {dataSorted.map((a) => <tr key={a.gd_id}>
+                <td>
+                    <Dropdown links={{
+                        [`/admin/galerie/directory/edit/${a.gd_id}`]: "Upravit",
+                        [`/admin/galerie/directory/${a.gd_id}`]: "Upravit fotky",
+                        [`/admin/galerie/directory/remove/${a.gd_id}`]: "Odstranit",
+                    }} />
                     {'→'.repeat(a.gd_level - 1)} {a.gd_name}
                 </td>
                 <td>
@@ -109,10 +109,7 @@ export function GalleryDirectoryList() {
         <a className="btn btn-outline-primary" href="/admin/galerie/file/upload">Přidat fotky</a>
         <a className="btn btn-outline-primary" href="/admin/galerie/directory/add">Přidat složku</a>
         {list}
-        <Pagination
-            total={data?.aggregate?.aggregate?.count || 0}
-            limit={limit} setPage={setPage}
-        ></Pagination>
+        <Pagination {...{ total, limit, setPage }} />
     </React.Fragment>;
 }
 class GalleryDirectoryListElement extends HTMLElement {
