@@ -45,7 +45,6 @@ export function AnnouncementList() {
         variables: { limit, offset },
     });
     const setPage = (x: { selected: number; }) => setOffset(x.selected * limit);
-    console.log(data);
     return <React.Fragment>
         {!data?.upozorneni ? null : data.upozorneni.map((a) => <React.Fragment>
             <div className="row">
