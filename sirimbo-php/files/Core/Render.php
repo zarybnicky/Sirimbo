@@ -66,7 +66,6 @@ class Render
                     ['Video', '/admin/video', [], ['aktuality', P_OWNED]],
                     ['Dokumenty', '/admin/dokumenty', [], ['dokumenty', P_OWNED]],
                     ['Oprávnění', '/admin/permissions', [], ['permissions', P_OWNED]],
-                    ['Stránky', '/admin/site', [], ['users', P_ADMIN]],
                 ], ['nastenka', P_OWNED]]
             ];
         }

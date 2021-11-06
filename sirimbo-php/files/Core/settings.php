@@ -4,7 +4,9 @@ function errorHandler($severity, $message, $filepath, $line)
     if ($severity & (E_STRICT | E_DEPRECATED | E_NOTICE)) {
         return false;
     }
-    ob_end_clean();
+    if (ob_get_level() > 0) {
+        ob_end_clean();
+    }
     $msg = "$severity: $message in $filepath: $line";
     foreach (debug_backtrace() as $k => $v) {
         if ($k <= 0) {

@@ -5,6 +5,7 @@ const sassPlugin = require("esbuild-sass-plugin").sassPlugin;
 
 esbuild.build({
     entryPoints: ["src/index.tsx"],
+    sourcemap: true,
     bundle: true,
     outfile: "dist/main.js",
     loader: {
