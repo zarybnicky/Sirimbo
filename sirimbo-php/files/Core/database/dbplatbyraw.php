@@ -14,7 +14,9 @@ class DBPlatbyRaw extends Database
             $discarded,
         );
         $res = self::query("SELECT pr_id FROM platby_raw WHERE pr_hash='?'", $hash);
-        return self::getArray($res)['pr_id'];
+        $res = self::getArray($res);
+        syslog(LOG_ERR, var_export($res, true) . '\n');
+        return $res['pr_id'];
     }
 
     public static function update($id, $raw, $hash, $sorted, $discarded)
