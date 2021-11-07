@@ -84,11 +84,11 @@ class PlatbyManual
         \Permissions::checkError('platby', P_OWNED);
         if (!($data = \DBPlatbyRaw::getSingle($id))) {
             \Message::warning('Zadaná platba neexistuje.');
-            return;
+            \Redirect::to('/admin/platby/manual');
         }
         if ($data['pr_sorted']) {
             \Message::info('Zadaná platba už byla zařazená.');
-            return;
+            \Redirect::to('/admin/platby/manual');
         }
         switch ($_POST['action']) {
             case 'confirm':

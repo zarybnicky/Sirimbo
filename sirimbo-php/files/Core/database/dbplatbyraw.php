@@ -22,7 +22,7 @@ class DBPlatbyRaw extends Database
         self::query(
             "UPDATE platby_raw
             SET pr_raw='?',pr_hash='?',pr_sorted='?',pr_discarded='?'
-            WHERE pr_id='$id'",
+            WHERE pr_id='?'",
             $raw,
             $hash,
             $sorted,

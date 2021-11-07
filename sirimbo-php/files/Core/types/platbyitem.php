@@ -47,14 +47,15 @@ class PlatbyItem
                 if (!$this->prefix) {
                     if (isset($categoryLookup[$specific]) && $categoryLookup[$specific]['pc_use_prefix'] && strlen($this->specific) >= 4) {
                         $this->prefix = substr($this->specific, 0, 4);
-                    } else {
-                        $this->prefix = $this->date ? (new Date($this->date))->getYear() : 0;
                     }
                 }
             }
         } else {
             $this->specific = null;
             $this->categoryId = null;
+        }
+        if (!$this->prefix) {
+            $this->prefix = $this->date ? (new Date($this->date))->getYear() : 0;
         }
         if ($this->variable && !isset($userLookup[$this->variable])) {
             $this->variable = null;

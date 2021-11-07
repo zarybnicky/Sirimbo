@@ -32,11 +32,11 @@ class PlatbyDiscarded
         \Permissions::checkError('platby', P_OWNED);
         if (!\DBPlatbyRaw::getSingle($id)) {
             \Message::info('Platba se zadaným ID neexistuje.');
-            \Redirect::to($_SERVER['HTTP_REFERER']);
+            \Redirect::to($_SERVER['HTTP_REFERER'] ?? '/admin/platby/manual');
         }
         \DBPlatbyRaw::delete($id);
         \Message::success('Platba byla odstraněna.');
-        \Redirect::to($_SERVER['HTTP_REFERER']);
+        \Redirect::to($_SERVER['HTTP_REFERER'] ?? '/admin/platby/manual');
     }
 
     private static function _getTable($data, &$result, &$columns, &$header)
