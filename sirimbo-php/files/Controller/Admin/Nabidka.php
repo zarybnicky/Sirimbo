@@ -122,8 +122,8 @@ class Nabidka
             $data['n_max_pocet_hod'],
             $data['n_od'],
             $data['n_do'],
-            $data['n_visible'],
-            $data['n_lock']
+            $data['n_visible'] ? '1' : '0',
+            $data['n_lock'] ? '1' : '0'
         );
         foreach ($items as $item) {
             \DBNabidka::addNabidkaItemLessons($item['ni_partner'], $newId, $item['ni_pocet_hod']);

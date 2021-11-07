@@ -27,10 +27,10 @@ class PlatbyCategory
             $data['pc_date_due'],
             $data['pc_valid_from'],
             $data['pc_valid_to'],
-            $data['pc_use_base'],
-            $data['pc_use_prefix'],
-            $data['pc_archive'],
-            $data['pc_visible']
+            $data['pc_use_base'] ? '1' : '0',
+            $data['pc_use_prefix'] ? '1' : '0',
+            $data['pc_archive'] ? '1' : '0',
+            $data['pc_visible'] ? '1' : '0'
         );
         $insertId = \DBPlatbyCategory::getInsertId();
         foreach (\DBPlatbyCategory::getSingleWithGroups($id) as $group) {

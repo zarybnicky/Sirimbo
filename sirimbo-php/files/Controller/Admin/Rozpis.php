@@ -91,8 +91,8 @@ class Rozpis
             $data['r_trener'],
             $data['r_kde'],
             $data['r_datum'],
-            $data['r_visible'],
-            $data['r_lock']
+            $data['r_visible'] ? '1' : '0',
+            $data['r_lock'] ? '1' : '0'
         );
         foreach ($items as $item) {
             \DBRozpis::addLesson(
@@ -100,7 +100,7 @@ class Rozpis
                 $item['ri_partner'],
                 $item['ri_od'],
                 $item['ri_do'],
-                $item['ri_lock']
+                $item['ri_lock'] ? '1' : '0'
             );
         }
         \Redirect::to('/admin/rozpis');
