@@ -31,9 +31,6 @@ class PlatbyItem
                 if (isset($categoryLookup[$this->specific])) {
                     $this->categoryId = $categoryLookup[$this->specific]['pc_id'];
                 }
-                if (!$this->prefix) {
-                    $this->prefix = $this->date ? (new Date($this->date))->getYear() : 0;
-                }
             } else {
                 $specific = $this->specific;
                 if (isset($categoryLookup[$specific])) {

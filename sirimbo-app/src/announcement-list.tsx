@@ -41,8 +41,13 @@ query UpozorneniList($offset: Int, $limit: Int) {
 export function AnnouncementList() {
     const [limit, setLimit] = useState(10);
     const [offset, setOffset] = useState(0);
+    const [total, setTotal] = useState(0);
     const { data } = useQuery(UpozorneniList, {
         variables: { limit, offset },
+        onCompleted: (data) => {
+            const total = data.aggregate?.aggregate?.count;
+            total && setTotal(total);
+        },
     });
     const setPage = (x: { selected: number; }) => setOffset(x.selected * limit);
     return <React.Fragment>
@@ -67,11 +72,7 @@ export function AnnouncementList() {
             <div style={{ paddingTop: '8px' }} dangerouslySetInnerHTML={{ __html: a.up_text }}></div>
             <hr />
         </React.Fragment>)}
-
-        <Pagination
-            total={data?.aggregate?.aggregate?.count || 0}
-            limit={limit} setPage={setPage}
-        ></Pagination>
+        <Pagination {...{ total, limit, setPage }} />
     </React.Fragment>;
 }
 class AnnouncementListElement extends HTMLElement {

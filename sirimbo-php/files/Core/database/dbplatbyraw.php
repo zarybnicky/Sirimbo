@@ -3,7 +3,7 @@ class DBPlatbyRaw extends Database
 {
     public static function insert($raw, $hash, $sorted, $discarded, $updateValues)
     {
-        $res = self::query(
+        self::query(
             "INSERT INTO platby_raw (pr_raw,pr_hash,pr_sorted,pr_discarded)
             VALUES ('?','?','?','?')
             ON CONFLICT (pr_hash) DO UPDATE SET pr_discarded=false, pr_sorted=EXCLUDED.pr_sorted
@@ -13,8 +13,8 @@ class DBPlatbyRaw extends Database
             $sorted,
             $discarded,
         );
-        $res = self::getArray($res);
-        return isset($res['pr_id']) ? $res['pr_id'] : null;
+        $res = self::query("SELECT pr_id FROM platby_raw WHERE ph_hash='?'", $hash);
+        return self::getArray($res)['pr_id'];
     }
 
     public static function update($id, $raw, $hash, $sorted, $discarded)

@@ -122,9 +122,6 @@ class PlatbyRaw
                 continue;
             }
             $id = \DBPlatbyRaw::insert($serialized, $hash, '1', '0', true);
-            if (!$id) {
-                continue;
-            }
             \DBPlatbyItem::insert(
                 $item->variable,
                 $item->categoryId,
