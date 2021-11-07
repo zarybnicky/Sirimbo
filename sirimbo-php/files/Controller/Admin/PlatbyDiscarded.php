@@ -54,7 +54,7 @@ class PlatbyDiscarded
         $result = [];
         $columnsTemp = [];
         foreach ($data as $rawData) {
-            $row = unserialize($rawData['pr_raw']);
+            $row = unserialize(stream_get_contents($rawData['pr_raw']));
             if (!Platby::checkHeaders(array_flip($row), $specific, $variable, $date, $amount)) {
                 Platby::recognizeHeaders($row, $specific, $variable, $date, $amount);
             }
@@ -106,7 +106,7 @@ class PlatbyDiscarded
         $groupDate = [];
         $groupAmount = [];
         foreach ($data as $row) {
-            $row = unserialize($row['pr_raw']);
+            $row = unserialize(stream_get_contents($row['pr_raw']));
             if (!Platby::checkHeaders(array_flip($row), $specific, $variable, $date, $amount)) {
                 Platby::recognizeHeaders($row, $specific, $variable, $date, $amount);
             }

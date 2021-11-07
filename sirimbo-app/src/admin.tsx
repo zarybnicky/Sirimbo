@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import buildHasuraProvider from 'ra-data-hasura';
 
 import { Provider } from 'react-redux';
-import { createHashHistory } from 'history';
+import { History, createHashHistory } from 'history';
 import { ConnectedRouter } from 'connected-react-router';
 import { Switch, Route } from 'react-router-dom';
 import { DataProvider, DataProviderContext, TranslationProvider, Resource, Notification } from 'react-admin';
@@ -28,13 +28,14 @@ const i18nProvider = polyglotI18nProvider(locale => {
      * } */
     return defaultMessages;
 });
-const history = createHashHistory();
 const theme = createTheme();
 
 export const AdminPanel = () => {
+    const [history, setHistory] = useState<History<unknown> | null>(null);
     const [dataProvider, setDataProvider] = useState<DataProvider | null>(null);
     useEffect(() => {
         (async () => {
+            setHistory(createHashHistory());
             const dataProvider = await buildHasuraProvider({
                 clientOptions: {
                     uri: '/graphql/v1/graphql',
@@ -53,7 +54,7 @@ export const AdminPanel = () => {
             });
         })()
     }, []);
-    if (!dataProvider) {
+    if (!dataProvider || !history) {
         return null;
     }
 

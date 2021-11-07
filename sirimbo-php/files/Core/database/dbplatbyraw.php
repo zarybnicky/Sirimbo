@@ -3,18 +3,18 @@ class DBPlatbyRaw extends Database
 {
     public static function insert($raw, $hash, $sorted, $discarded, $updateValues)
     {
-        self::query(
-            "INSERT INTO platby_raw
-                (pr_raw,pr_hash,pr_sorted,pr_discarded)
+        $res = self::query(
+            "INSERT INTO platby_raw (pr_raw,pr_hash,pr_sorted,pr_discarded)
             VALUES ('?','?','?','?')
-            ON CONFLICT (pr_hash) DO UPDATE SET pr_id=CURRVAL(pg_get_serial_sequence(platby_raw, pr_id))" .
-            ($updateValues ? ",pr_sorted=EXCLUDED.pr_sorted,pr_discarded=EXCLUDED.pr_discarded" : ''),
+            ON CONFLICT (pr_hash) DO UPDATE SET pr_discarded=false, pr_sorted=EXCLUDED.pr_sorted
+            RETURNING pr_id",
             $raw,
             $hash,
             $sorted,
             $discarded,
         );
-        return self::getInsertId();
+        $res = self::getArray($res);
+        return isset($res['pr_id']) ? $res['pr_id'] : null;
     }
 
     public static function update($id, $raw, $hash, $sorted, $discarded)
@@ -34,11 +34,10 @@ class DBPlatbyRaw extends Database
     public static function skip($id)
     {
         self::query(
-            "REPLACE INTO platby_raw
-            (pr_raw,pr_hash,pr_sorted,pr_discarded)
-            SELECT pr_raw,pr_hash,pr_sorted,pr_discarded
-            FROM platby_raw
-            WHERE pr_id='?'",
+            "WITH deletions AS (DELETE FROM platby_raw WHERE pr_id='?'
+               RETURNING pr_raw,pr_hash,pr_sorted,pr_discarded)
+            INSERT INTO platby_raw (pr_raw,pr_hash,pr_sorted,pr_discarded)
+               SELECT * from deletions",
             $id
         );
     }

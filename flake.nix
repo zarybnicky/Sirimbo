@@ -106,6 +106,7 @@
           system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
           networking.useDHCP = false;
           networking.firewall.allowedTCPPorts = [ 80 3000 3306 ];
+          environment.systemPackages = [ pkgs.file ];
           services.mysql = {
             enable = true;
             package = pkgs.mariadb;

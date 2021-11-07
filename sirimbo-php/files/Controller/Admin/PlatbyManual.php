@@ -12,17 +12,17 @@ class PlatbyManual
             \Message::info('Nezbývají už žádné nezatříděné platby');
             \Redirect::to('/admin/platby');
         }
-        \Redirect::to('/admin/platby/discarded/' . $remaining[0]['pr_id']);
+        \Redirect::to('/admin/platby/manual/' . $remaining[0]['pr_id']);
     }
 
     public static function get($id)
     {
         \Permissions::checkError('platby', P_OWNED);
         $data = \DBPlatbyRaw::getSingle($id);
-        $raw = unserialize($data['pr_raw']);
+        $raw = unserialize(stream_get_contents($data['pr_raw']));
         if ($data['pr_sorted']) {
             \Message::info('Platba už byla zařazena do systému');
-            \Redirect::to('/admin/platby/discarded');
+            \Redirect::to('/admin/platby/manual');
         }
 
         $categoryLookup = Platby::getCategoryLookup(true, true, false);
@@ -33,7 +33,7 @@ class PlatbyManual
         $item = new \PlatbyItem($raw[$specific], $raw[$variable], $raw[$date], $raw[$amount]);
         $item->processWithSymbolLookup($userLookup, $categoryLookup);
 
-        $emptyItem = ['column' => '&nbsp;---', 'value' => '&nbsp;---'];
+        $emptyItem = ['column' => '&nbsp;---', 'value' => null];
 
         if ($variable === null) {
             $recognized['variable'] = $emptyItem;
@@ -96,7 +96,7 @@ class PlatbyManual
                     \Message::warning($item);
                     return;
                 }
-                \DBPlatbyRaw::update($id, $data['pr_raw'], $data['pr_hash'], '1', '0');
+                \DBPlatbyRaw::update($id, stream_get_contents($data['pr_raw']), $data['pr_hash'], '1', '0');
                 \DBPlatbyItem::insert(
                     $item->variable,
                     $item->categoryId,
@@ -107,7 +107,7 @@ class PlatbyManual
                 );
                 break;
             case 'discard':
-                \DBPlatbyRaw::update($id, $data['pr_raw'], $data['pr_hash'], '0', '1');
+                \DBPlatbyRaw::update($id, stream_get_contents($data['pr_raw']), $data['pr_hash'], '0', '1');
                 break;
             case 'skip':
                 \DBPlatbyRaw::skip($id);

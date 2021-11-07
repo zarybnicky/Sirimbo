@@ -301,8 +301,8 @@ function makeRouter()
     $router->get('/admin/platby/structure', '@Admin.Platby::structure');
     $router->get('/admin/platby/raw', '@Admin.PlatbyRaw::get');
     $router->post('/admin/platby/raw', '@Admin.PlatbyRaw::post');
-    $router->get('/admin/platby/raw/select_columna', '@Admin.PlatbyRaw::selectColumns');
-    $router->post('/admin/platby/raw/select_columna', '@Admin.PlatbyRaw::selectColumnsPost');
+    $router->get('/admin/platby/raw/select_columns', '@Admin.PlatbyRaw::selectColumns');
+    $router->post('/admin/platby/raw/select_columns', '@Admin.PlatbyRaw::selectColumnsPost');
     $router->get('/admin/platby/discarded', '@Admin.PlatbyDiscarded::view');
     $router->get('/admin/platby/discarded/remove/([0-9]+)', '@Admin.PlatbyDiscarded::remove');
     $router->get('/admin/platby/manual', '@Admin.PlatbyManual::query');

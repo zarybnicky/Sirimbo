@@ -216,7 +216,7 @@ class PlatbyCategory
                 $raw = \DBPlatbyRaw::getSingle($data['pi_id_raw']);
                 \DBPlatbyRaw::update(
                     $raw['pr_id'],
-                    $raw['pr_raw'],
+                    stream_get_contents($raw['pr_raw']),
                     $raw['pr_hash'],
                     '0',
                     '0'

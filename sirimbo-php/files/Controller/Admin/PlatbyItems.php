@@ -116,7 +116,7 @@ class PlatbyItems
         if ($item['pi_id_raw']) {
             \DBPlatbyRaw::update(
                 $item['pi_id_raw'],
-                $itemRaw['pr_raw'],
+                stream_get_contents($itemRaw['pr_raw']),
                 $itemRaw['pr_hash'],
                 '0',
                 '1'
@@ -132,7 +132,7 @@ class PlatbyItems
             ($item = \DBPlatbyItem::getSingle($id)) && $item['pi_id_raw'] &&
             ($data = \DBPlatbyRaw::getSingle($item['pi_id_raw']))
         ) {
-            foreach (unserialize($data['pr_raw']) as $key => $value) {
+            foreach (unserialize(stream_get_contents($data['pr_raw'])) as $key => $value) {
                 $raw[] = ['column' => $key, 'value' => $value];
             }
         }

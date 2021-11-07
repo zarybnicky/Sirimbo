@@ -48,10 +48,10 @@ class PlatbyRaw
     public static function selectColumns()
     {
         \Permissions::checkError('platby', P_OWNED);
-        $parser = static::getParser(self::TEMP_DIR . str_replace('../', '', $_GET['path']));
-        Platby::recognizeHeaders(array_flip($parser->headers()), $specific, $variable, $date, $amount);
+        $headers = static::getParser(self::TEMP_DIR . str_replace('../', '', $_GET['path']))[0];
+        Platby::recognizeHeaders(array_flip($headers), $specific, $variable, $date, $amount);
         \Render::twig('Admin/PlatbyRawColumnSelect.twig', [
-            'data' => $parser->headers(),
+            'data' => $headers,
             'recognized' => [
                 'specific' => $specific,
                 'variable' => $variable,
@@ -81,15 +81,20 @@ class PlatbyRaw
             \Message::danger('Soubor ' . str_replace(self::TEMP_DIR, '', $path) . ' není přístupný.');
             \Redirect::to('/admin/platby/raw');
         }
-        $parser = new \CSVParser($fileinfo->openFile('r'));
-        $parser->associative(true);
-        return $parser;
+        $text = file_get_contents($path);
+        $text = mb_convert_encoding($text, 'UTF8', 'UTF-16LE');
+        $lines = preg_split("/\R/", $text);
+        $lines = array_map(fn($x) => str_getcsv($x, ';'), $lines);
+        $headers = array_shift($lines);
+        if ($lines[count($lines) - 1][0] == null) {
+            array_pop($lines);
+        }
+        return [$headers, array_map(fn($x) => array_combine($headers, $x), $lines)];
     }
 
     private static function processCsv($path, $columns = null)
     {
-        $parser = static::getParser($path);
-        $headers = $parser->headers();
+        [$headers, $lines] = static::getParser($path);
         if ($columns === null) {
             Platby::recognizeHeaders(array_flip($headers), $specific, $variable, $date, $amount);
         } else {
@@ -105,10 +110,7 @@ class PlatbyRaw
         $userLookup = Platby::getUserLookup(false);
         $categoryLookup = Platby::getCategoryLookup(true, true, false);
 
-        foreach ($parser as $array) {
-            if (!$array) {
-                continue;
-            }
+        foreach ($lines as $array) {
             $serialized = serialize($array);
             $hash = md5($serialized);
 
@@ -119,11 +121,14 @@ class PlatbyRaw
                 \DBPlatbyRaw::insert($serialized, $hash, '0', '0', false);
                 continue;
             }
-            \DBPlatbyRaw::insert($serialized, $hash, '1', '0', true);
+            $id = \DBPlatbyRaw::insert($serialized, $hash, '1', '0', true);
+            if (!$id) {
+                continue;
+            }
             \DBPlatbyItem::insert(
                 $item->variable,
                 $item->categoryId,
-                \DBPlatbyRaw::getInsertId(),
+                $id,
                 $item->amount,
                 $item->date,
                 $item->prefix

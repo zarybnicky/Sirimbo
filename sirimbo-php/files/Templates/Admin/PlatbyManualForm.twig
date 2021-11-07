@@ -18,7 +18,11 @@
           <td class="r">Datum:</td>
           <td><input class="form-control" type="date" name="date" value="{{ guess.date }}" /></td>
           <td>{{ recognized.date.column }}</td>
-          <td>{{ recognized.date.value | date('j. n. Y') }}</td>
+          {% if recognized.date.value %}
+            <td>{{ recognized.date.value | date('j. n. Y') }}</td>
+          {% else %}
+            <td> ---</td>
+          {% endif %}
         </tr>
         <tr>
           <td class="r">Částka (Kč):</td>
