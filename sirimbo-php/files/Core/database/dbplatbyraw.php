@@ -13,7 +13,7 @@ class DBPlatbyRaw extends Database
             $sorted,
             $discarded,
         );
-        $res = self::query("SELECT pr_id FROM platby_raw WHERE ph_hash='?'", $hash);
+        $res = self::query("SELECT pr_id FROM platby_raw WHERE pr_hash='?'", $hash);
         return self::getArray($res)['pr_id'];
     }
 
