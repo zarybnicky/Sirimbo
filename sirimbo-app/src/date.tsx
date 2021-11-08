@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { format } from 'date-fns';
+import format from 'date-fns/format';
 
 export function formatDateRange(from: string, to: string, noYear?: string) {
     const f = noYear !== undefined ? 'd. M.' : 'd. M. y';

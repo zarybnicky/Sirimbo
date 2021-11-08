@@ -133,6 +133,7 @@ function makeRouter()
     $router->get('/fotogalerie/([0-9]+)/foto/([0-9]+)', '@Fotogalerie::singleWithDir');
 
     $router->get('/login', '@Member::login');
+    $router->post('/login', '@Member::loginPost');
     $router->get('/nopassword', '@Nopassword::get');
     $router->post('/nopassword', '@Nopassword::post');
     $router->get('/registrace', '@Registrace::get');

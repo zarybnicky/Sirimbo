@@ -11,6 +11,14 @@ class Member
         \Render::twig('Main/Login.twig');
     }
 
+    public static function loginPost()
+    {
+        if (\Session::getUser()) {
+            \Redirect::to($_GET['return'] ?? '/member');
+        }
+        \Redirect::to('/');
+    }
+
     public static function get()
     {
         \Permissions::checkError('nastenka', P_VIEW);

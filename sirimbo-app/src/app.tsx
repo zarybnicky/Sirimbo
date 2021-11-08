@@ -27,43 +27,43 @@ const theme = createTheme({
 });
 
 export const App = () => {
-    const [dataProvider, setDataProvider] = useState<DataProvider | null>(null);
-    useEffect(() => {
-        (async () => {
-            /* const dataProvider = await buildHasuraProvider({
-             *     clientOptions: {
-             *         uri: '/graphql/v1/graphql',
-             *     },
-             * });
-             * setDataProvider({
-             *     getList: (res, params) => dataProvider("GET_LIST", res, params),
-             *     getOne: (res, params) => dataProvider("GET_ONE", res, params),
-             *     getMany: (res, params) => dataProvider("GET_MANY", res, params),
-             *     getManyReference: (res, params) => dataProvider("GET_MANY_REFERENCE", res, params),
-             *     update: (res, params) => dataProvider("UPDATE", res, params),
-             *     updateMany: (res, params) => dataProvider("UPDATE_MANY", res, params),
-             *     create: (res, params) => dataProvider("CREATE", res, params),
-             *     delete: (res, params) => dataProvider("DELETE", res, params),
-             *     deleteMany: (res, params) => dataProvider("DELETE_MANY", res, params),
-             * }); */
-        })()
-    }, []);
-    if (!dataProvider) {
-        return null;
-    }
+    /* const [dataProvider, setDataProvider] = useState<DataProvider | null>(null);
+     * useEffect(() => {
+     *     (async () => {
+     *         const dataProvider = await buildHasuraProvider({
+     *             clientOptions: {
+     *                 uri: '/graphql/v1/graphql',
+     *             },
+     *         });
+     *         setDataProvider({
+     *             getList: (res, params) => dataProvider("GET_LIST", res, params),
+     *             getOne: (res, params) => dataProvider("GET_ONE", res, params),
+     *             getMany: (res, params) => dataProvider("GET_MANY", res, params),
+     *             getManyReference: (res, params) => dataProvider("GET_MANY_REFERENCE", res, params),
+     *             update: (res, params) => dataProvider("UPDATE", res, params),
+     *             updateMany: (res, params) => dataProvider("UPDATE_MANY", res, params),
+     *             create: (res, params) => dataProvider("CREATE", res, params),
+     *             delete: (res, params) => dataProvider("DELETE", res, params),
+     *             deleteMany: (res, params) => dataProvider("DELETE_MANY", res, params),
+     *         });
+     *     })()
+     * }, []);
+     * if (!dataProvider) {
+     *     return null;
+     * } */
 
     const router = <Switch>
-        <Route exact path="/" component={() => <div>Test</div>} />
-        <Route exact path="/admin/upozorneni" render={(routeProps) =>
+        <Route exact path="/app" component={() => <div>Test</div>} />
+        <Route exact path="/app/admin/upozorneni" render={(routeProps) =>
             <ListGuesser hasCreate resource="upozorneni" basePath={routeProps.match.url} {...routeProps} />} />
-        <Route exact path="/admin/upozorneni/:id" render={(routeProps) =>
+        <Route exact path="/app/admin/upozorneni/:id" render={(routeProps) =>
             <EditGuesser hasShow resource="upozorneni" basePath={routeProps.match.url} id={routeProps.match.params.id} {...routeProps} />} />
-        <Route exact path="/admin/upozorneni/:id/show" render={(routeProps) =>
+        <Route exact path="/app/admin/upozorneni/:id/show" render={(routeProps) =>
             <ShowGuesser hasEdit resource="upozorneni" basePath={routeProps.match.url} id={routeProps.match.params.id} {...routeProps} />} />
     </Switch>;
 
     return <Provider store={createAppStore()}>
-        <DataProviderContext.Provider value={dataProvider}>
+        <DataProviderContext.Provider value={null as any}>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
                 <Resource name="upozorneni" intent="registration" />
