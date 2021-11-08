@@ -112,7 +112,8 @@ export function GalleryDirectoryList() {
         <Pagination {...{ total, limit, setPage }} />
     </React.Fragment>;
 }
-class GalleryDirectoryListElement extends HTMLElement {
+
+export class GalleryDirectoryListElement extends HTMLElement {
     connectedCallback() {
         ReactDOM.render(
             <ApolloProvider client={createClient()}><GalleryDirectoryList /></ApolloProvider>,
@@ -120,4 +121,3 @@ class GalleryDirectoryListElement extends HTMLElement {
         );
     }
 }
-customElements.define('gallery-directory-list', GalleryDirectoryListElement);

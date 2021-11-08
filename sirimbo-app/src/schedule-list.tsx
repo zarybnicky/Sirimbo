@@ -99,7 +99,8 @@ export function RozpisAdminList() {
         <Pagination {...{ total, limit, setPage }} />
     </React.Fragment>;
 }
-class RozpisAdminListElement extends HTMLElement {
+
+export class RozpisAdminListElement extends HTMLElement {
     connectedCallback() {
         ReactDOM.render(
             <ApolloProvider client={createClient()}><RozpisAdminList /></ApolloProvider>,
@@ -107,4 +108,3 @@ class RozpisAdminListElement extends HTMLElement {
         );
     }
 }
-customElements.define('rozpis-admin-list', RozpisAdminListElement);

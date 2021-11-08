@@ -105,7 +105,8 @@ export function EventList() {
         <Pagination {...{ total, limit, setPage }} />
     </React.Fragment>;
 }
-class EventListElement extends HTMLElement {
+
+export class EventListElement extends HTMLElement {
     connectedCallback() {
         ReactDOM.render(
             <ApolloProvider client={createClient()}><EventList /></ApolloProvider>,
@@ -113,4 +114,3 @@ class EventListElement extends HTMLElement {
         );
     }
 }
-customElements.define('event-list', EventListElement);

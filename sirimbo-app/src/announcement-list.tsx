@@ -75,7 +75,8 @@ export function AnnouncementList() {
         <Pagination {...{ total, limit, setPage }} />
     </React.Fragment>;
 }
-class AnnouncementListElement extends HTMLElement {
+
+export class AnnouncementListElement extends HTMLElement {
     connectedCallback() {
         ReactDOM.render(
             <ApolloProvider client={createClient()}><AnnouncementList /></ApolloProvider>,
@@ -83,4 +84,3 @@ class AnnouncementListElement extends HTMLElement {
         );
     }
 }
-customElements.define('announcement-list', AnnouncementListElement);

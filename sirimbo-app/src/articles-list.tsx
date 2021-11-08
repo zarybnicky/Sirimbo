@@ -67,7 +67,8 @@ export function ArticleAdminList() {
         <Pagination {...{ total, limit, setPage }} />
     </React.Fragment>;
 }
-class ArticleAdminListElement extends HTMLElement {
+
+export class ArticleAdminListElement extends HTMLElement {
     connectedCallback() {
         ReactDOM.render(
             <ApolloProvider client={createClient()}><ArticleAdminList /></ApolloProvider>,
@@ -75,4 +76,3 @@ class ArticleAdminListElement extends HTMLElement {
         );
     }
 }
-customElements.define('article-admin-list', ArticleAdminListElement);

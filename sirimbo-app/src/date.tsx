@@ -2,11 +2,6 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { format } from 'date-fns';
 
-interface DateRangeProps {
-    noYear?: string;
-    from: string;
-    to: string;
-}
 export function formatDateRange(from: string, to: string, noYear?: string) {
     const f = noYear !== undefined ? 'd. M.' : 'd. M. y';
     return (to && from != to)
@@ -14,10 +9,29 @@ export function formatDateRange(from: string, to: string, noYear?: string) {
         : format(new Date(from), f);
 }
 
+interface DateProps {
+    noYear?: string;
+    timestamp?: string;
+    date: string;
+}
+
+interface DateRangeProps {
+    noYear?: string;
+    from: string;
+    to: string;
+}
+
 export function DateRange({ noYear, from, to }: DateRangeProps) {
     return <span>{formatDateRange(from, to, noYear)}</span>;
 }
-class DateRangeElement extends HTMLElement {
+
+export function DateEl({ noYear, timestamp, date }: DateProps) {
+    const f = timestamp !== undefined ? 'd. M. y H:mm' :
+        noYear !== undefined ? 'd. M.' : 'd. M. y';
+    return <span>{format(new Date(date), f)}</span>;
+}
+
+export class DateRangeElement extends HTMLElement {
     connectedCallback() {
         ReactDOM.render(<DateRange
             noYear={this.getAttribute('noYear') || undefined}
@@ -26,19 +40,8 @@ class DateRangeElement extends HTMLElement {
         />, this);
     }
 }
-customElements.define('date-range', DateRangeElement);
 
-interface DateProps {
-    noYear?: string;
-    timestamp?: string;
-    date: string;
-}
-export function DateEl({ noYear, timestamp, date }: DateProps) {
-    const f = timestamp !== undefined ? 'd. M. y H:mm' :
-        noYear !== undefined ? 'd. M.' : 'd. M. y';
-    return <span>{format(new Date(date), f)}</span>;
-}
-class DateElement extends HTMLElement {
+export class DateElement extends HTMLElement {
     connectedCallback() {
         ReactDOM.render(<DateEl
             noYear={this.getAttribute('noYear') || undefined}
@@ -47,4 +50,4 @@ class DateElement extends HTMLElement {
         />, this);
     }
 }
-customElements.define('single-date', DateElement);
+

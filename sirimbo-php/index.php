@@ -114,6 +114,8 @@ function makeRouter()
     $router = new \Olymp\Router('Olymp.Controller');
 
     $router->get('/', '@Home::get');
+    $router->get('/app', '@StaticContent::app');
+    $router->get('/app/(.*)', '@StaticContent::app');
     $router->get('/home', '@Home::get');
     $router->get('/error', '@Error::get');
     $router->get('/video', '@Video::get');

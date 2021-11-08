@@ -106,7 +106,7 @@ export function ReservationSelect() {
     </div>;
 }
 
-class ReservationSelectElement extends HTMLElement {
+export class ReservationSelectElement extends HTMLElement {
     connectedCallback() {
         ReactDOM.render(
             <ApolloProvider client={createClient()}><ReservationSelect /></ApolloProvider>,
@@ -114,4 +114,3 @@ class ReservationSelectElement extends HTMLElement {
         );
     }
 }
-customElements.define('reservation-select', ReservationSelectElement);

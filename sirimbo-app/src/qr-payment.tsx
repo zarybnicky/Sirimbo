@@ -25,7 +25,7 @@ export function mkSpayd(
     ].join("*");
 }
 
-class DateElement extends HTMLElement {
+export class QRCodeElement extends HTMLElement {
     connectedCallback() {
         const spayd = mkSpayd(
             this.getAttribute('acc') || '',
@@ -38,4 +38,3 @@ class DateElement extends HTMLElement {
         ReactDOM.render(<QRCode value={spayd} level="M" size={256} />, this);
     }
 }
-customElements.define('qr-payment', DateElement);

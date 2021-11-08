@@ -105,7 +105,8 @@ export function ReservationAdminList() {
         <Pagination {...{ total, limit, setPage }} />
     </React.Fragment>;
 }
-class ReservationAdminListElement extends HTMLElement {
+
+export class ReservationAdminListElement extends HTMLElement {
     connectedCallback() {
         ReactDOM.render(
             <ApolloProvider client={createClient()}><ReservationAdminList /></ApolloProvider>,
@@ -113,4 +114,3 @@ class ReservationAdminListElement extends HTMLElement {
         );
     }
 }
-customElements.define('reservation-admin-list', ReservationAdminListElement);

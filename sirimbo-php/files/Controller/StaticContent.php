@@ -22,4 +22,9 @@ class StaticContent
     {
         \Render::twig('Main/Saly.twig');
     }
+
+    public static function app()
+    {
+        \Render::twig('Main/App.twig');
+    }
 }
