@@ -31,7 +31,6 @@ customElements.define('reservation-admin-list', ReservationAdminListElement);
 customElements.define('reservation-select', ReservationSelectElement);
 customElements.define('rozpis-admin-list', RozpisAdminListElement);
 
-console.log(document.getElementById('app-new'));
 if (document.getElementById('app-new')) {
-    ReactDOM.render(<App />, document.getElementById('app-new'));
+  ReactDOM.render(<App />, document.getElementById('app-new'));
 }
