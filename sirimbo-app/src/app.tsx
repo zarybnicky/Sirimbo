@@ -11,6 +11,10 @@ import {
 } from '@mui/material';
 
 import { ListGuesser, EditGuesser, ShowGuesser, Notification } from 'ra-ui-materialui';
+import { ReactEditorJS } from './editorjs';
+import EditorJS from '@editorjs/editorjs';
+
+import Blocks, { DataProp } from 'editorjs-blocks-react-renderer';
 
 const createAppStore = () => {
   const reducer = combineReducers({ admin: adminReducer, });
@@ -30,7 +34,23 @@ const theme = createTheme({
 
 const Home = () => <div>Home</div>
 const ArticleList = () => <div>ArticleList</div>
-const ArticleShow = () => <div>ArticleShow</div>
+const ArticleShow = () => {
+  const [blocks, setBlocks] = React.useState({ time: 0, version: '', blocks: [] } as DataProp);
+  const editorJS = React.useRef<EditorJS | null>(null)
+  const handleInitialize = React.useCallback((instance) => {
+    editorJS.current = instance
+  }, [])
+  const handleSave = React.useCallback(async () => {
+    if (editorJS.current) {
+      setBlocks(await editorJS.current.save() as DataProp);
+    }
+  }, [])
+  return <div>
+    <ReactEditorJS onInitialize={handleInitialize} defaultValue={blocks} />
+    <button onClick={handleSave}>Save</button>
+    <Blocks data={blocks} />
+  </div>
+};
 
 const DynamicRoute = () => {
   let location = useLocation();
@@ -81,7 +101,7 @@ const routes = <Switch>
   <Route><DynamicRoute /></Route>
 </Switch>;
 
-const Header = () => <AppBar position="static" color="secondary">
+const AppHeader = () => <AppBar position="static" color="secondary">
   <Toolbar>
     <Container maxWidth="lg" sx={{ display: `flex`, justifyContent: `space-between` }}>
       <Typography variant="h6" color="inherit">Admin</Typography>
@@ -122,7 +142,7 @@ export const App = () => {
         <BrowserRouter basename='/app'>
           <CssBaseline />
           <Resource name="upozorneni" intent="registration" />
-          <Header />
+          <AppHeader />
           {routes}
           <Notification />
         </BrowserRouter>
