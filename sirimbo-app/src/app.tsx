@@ -1,27 +1,38 @@
 import * as React from 'react';
-import { combineReducers, createStore } from 'redux';
+import { History, createBrowserHistory } from 'history';
+import { ConnectedRouter, routerMiddleware, connectRouter } from 'connected-react-router';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { Provider } from 'react-redux';
-import { BrowserRouter, Redirect, Switch, Route, useLocation } from 'react-router-dom';
-import { adminReducer, DataProviderContext, Resource } from 'ra-core';
+import createSagaMiddleware from 'redux-saga';
+import { all, fork } from 'redux-saga/effects';
+import { Redirect, Switch, Route, useLocation } from 'react-router-dom';
 
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { red } from "@mui/material/colors";
-import {
-  CssBaseline, AppBar, Container, Link, Toolbar, Typography,
-} from '@material-ui/core';
+import { ThemeProvider, makeStyles } from '@material-ui/styles';
+import { createTheme } from '@material-ui/core/styles';
+import { CssBaseline, AppBar, Container, Link, Toolbar, Typography } from '@material-ui/core';
 
+import { adminReducer, adminSaga, DataProvider, DataProviderContext, Resource } from 'ra-core';
 import { ListGuesser, EditGuesser, ShowGuesser, Notification } from 'ra-ui-materialui';
 
-const createAppStore = () => {
-  const reducer = combineReducers({ admin: adminReducer, });
-  const resettableAppReducer = (state: any, action: any) =>
-    reducer(action.type !== 'LOGOUT' ? state : undefined, action);
-  return createStore(resettableAppReducer);
+const createAppStore = (dataProvider: DataProvider, history: History) => {
+  const reducer = combineReducers({
+    admin: adminReducer,
+    router: connectRouter(history),
+  });
+  const saga = function* rootSaga() {
+    yield all([adminSaga(dataProvider, null)].map(fork));
+  };
+  const sagaMiddleware = createSagaMiddleware();
+  const store = createStore(reducer, applyMiddleware(sagaMiddleware, routerMiddleware(history)));
+  sagaMiddleware.run(saga);
+  return store;
 };
 
 const theme = createTheme({
   palette: {
-    primary: red,
+    primary: {
+      main: "#f60000",
+    },
     secondary: {
       main: '#000',
     },
@@ -83,51 +94,63 @@ const routes = <Switch>
   <Route><DynamicRoute /></Route>
 </Switch>;
 
-const AppHeader = () => <AppBar position="static" color="secondary">
-  <Toolbar>
-    <Container maxWidth="lg" sx={{ display: `flex`, justifyContent: `space-between` }}>
-      <Typography variant="h6" color="inherit">Admin</Typography>
-    </Container>
-  </Toolbar>
-</AppBar>;
+const useStyles = makeStyles((theme) => ({
+  navbar: {
+    justifyContent: 'space-between',
+    display: "flex",
+  },
+  logo: {
+    flexGrow: 1,
+    cursor: "pointer",
+  },
+  link: {
+    textDecoration: "none",
+    color: "white",
+    fontSize: "20px",
+    "&:hover": {
+      color: "yellow",
+      borderBottom: "1px solid white",
+    },
+  },
+}));
 
+const AppHeader = () => {
+  const classes = useStyles();
+  return <AppBar position="static" color="secondary">
+    <Toolbar>
+      <Container maxWidth="lg" className={classes.navbar}>
+        <Typography variant="h6" color="inherit">Admin</Typography>
+      </Container>
+    </Toolbar>
+  </AppBar>;
+};
 
+const history = createBrowserHistory({ basename: '/app' });
 export const App = () => {
-  /* const [dataProvider, setDataProvider] = useState<DataProvider | null>(null);
-   * useEffect(() => {
-   * (async () => {
-   *         const dataProvider = await buildHasuraProvider({
-      *             clientOptions: {
-   *                 uri: '/graphql/v1/graphql',
-      *             },
-   *         });
-    *         setDataProvider({
-   * getList: (res, params) => dataProvider("GET_LIST", res, params),
-   *             getOne: (res, params) => dataProvider("GET_ONE", res, params),
-   *             getMany: (res, params) => dataProvider("GET_MANY", res, params),
-   *             getManyReference: (res, params) => dataProvider("GET_MANY_REFERENCE", res, params),
-   *             update: (res, params) => dataProvider("UPDATE", res, params),
-   *             updateMany: (res, params) => dataProvider("UPDATE_MANY", res, params),
-   *             create: (res, params) => dataProvider("CREATE", res, params),
-   *             delete: (res, params) => dataProvider("DELETE", res, params),
-   *             deleteMany: (res, params) => dataProvider("DELETE_MANY", res, params),
-   *         });
-   *     })()
+  /* const [dataProvider, setDataProvider] = React.useState<DataProvider | null>(null);
+   * React.useEffect(() => {
+   *   (async () => {
+   *     setDataProvider(await buildHasuraProvider('/graphql', {}, {
+   *       primaryKey: {
+   *         'upozorneni': 'up_id',
+   *       },
+   *     }));
+   *   })();
    * }, []);
-    * if (!dataProvider) {
-   *     return null;
+   * if (!dataProvider) {
+   *   return null;
    * } */
 
-  return <Provider store={createAppStore()}>
+  return <Provider store={createAppStore({} as DataProvider, history)}>
     <DataProviderContext.Provider value={null as any}>
       <ThemeProvider theme={theme}>
-        <BrowserRouter basename='/app'>
+        <ConnectedRouter history={history}>
           <CssBaseline />
           <Resource name="upozorneni" intent="registration" />
           <AppHeader />
           {routes}
           <Notification />
-        </BrowserRouter>
+        </ConnectedRouter>
       </ThemeProvider>
     </DataProviderContext.Provider>
   </Provider>;
