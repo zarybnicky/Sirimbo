@@ -12,9 +12,8 @@ import {
 
 import { ListGuesser, EditGuesser, ShowGuesser, Notification } from 'ra-ui-materialui';
 import { ReactEditorJS } from './editorjs';
-import EditorJS from '@editorjs/editorjs';
-
-import Blocks, { DataProp } from 'editorjs-blocks-react-renderer';
+import EditorJS, { OutputData } from '@editorjs/editorjs';
+import edjsHTML from 'editorjs-html/src/app';
 
 const createAppStore = () => {
   const reducer = combineReducers({ admin: adminReducer, });
@@ -35,20 +34,30 @@ const theme = createTheme({
 const Home = () => <div>Home</div>
 const ArticleList = () => <div>ArticleList</div>
 const ArticleShow = () => {
-  const [blocks, setBlocks] = React.useState({ time: 0, version: '', blocks: [] } as DataProp);
+  const missingRef = React.useRef<HTMLDivElement | null>(null)
+  const outputRef = React.useRef<HTMLDivElement | null>(null)
   const editorJS = React.useRef<EditorJS | null>(null)
   const handleInitialize = React.useCallback((instance) => {
     editorJS.current = instance
   }, [])
   const handleSave = React.useCallback(async () => {
     if (editorJS.current) {
-      setBlocks(await editorJS.current.save() as DataProp);
+      const blocks = await editorJS.current.save();
+      const edjsParser = edjsHTML({});
+      if (missingRef.current && outputRef.current) {
+        missingRef.current.innerHTML = JSON.stringify(edjsParser.validate(blocks));
+        outputRef.current.innerHTML = edjsParser.parse(blocks).join('');;
+      }
     }
-  }, [])
+  }, []);
+
   return <div>
-    <ReactEditorJS onInitialize={handleInitialize} defaultValue={blocks} />
+    <ReactEditorJS onInitialize={handleInitialize} defaultValue={{ blocks: [] }} {...{
+      minHeight: 30
+    }} />
     <button onClick={handleSave}>Save</button>
-    <Blocks data={blocks} />
+    <div ref={missingRef} />
+    <div ref={outputRef} />
   </div>
 };
 

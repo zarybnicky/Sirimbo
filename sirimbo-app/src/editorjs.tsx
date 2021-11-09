@@ -14,62 +14,51 @@ import Delimiter from '@editorjs/delimiter';
 import SimpleImage from '@editorjs/simple-image';
 
 interface Props extends Omit<EditorConfig, 'data'> {
-  holder?: string
-  children?: JSX.Element | JSX.Element[]
   value?: EditorConfig['data']
   defaultValue?: EditorConfig['data']
 
   onInitialize?: (editorJS: EditorJS) => void
 }
 
-export { EditorJS };
+const defaultTools = {
+  paragraph: {
+    class: Paragraph,
+    inlineToolbar: true,
+  },
+  embed: Embed,
+  table: Table,
+  list: List,
+  warning: Warning,
+  linkTool: LinkTool,
+  image: Image,
+  header: Header,
+  quote: Quote,
+  delimiter: Delimiter,
+  simpleImage: SimpleImage,
+};
 
 export function ReactEditorJS({
-  holder,
   tools,
   defaultValue,
-  children,
   value,
   onInitialize,
   ...restProps
 }: Props) {
-  const memoizedHolder = React.useRef(
-    holder ?? `react-editor-js-${Date.now().toString(16)}`
-  )
-
   const editorJS = React.useRef<EditorJS | null>(null)
 
-  React.useEffect(() => {
-    const extendTools = {
-      // default tools
-      paragraph: {
-        class: Paragraph,
-        inlineToolbar: true,
-      },
-
-      embed: Embed,
-      table: Table,
-      list: List,
-      warning: Warning,
-      linkTool: LinkTool,
-      image: Image,
-      header: Header,
-      quote: Quote,
-      delimiter: Delimiter,
-      simpleImage: SimpleImage,
-
-      ...tools,
+  const holder = React.useCallback((node) => {
+    if (node === null) {
+      return;
     }
+    const extendTools = { ...defaultTools, ...tools };
 
     editorJS.current = new EditorJS({
       tools: extendTools,
-      holder: memoizedHolder.current,
+      holder: node,
       ...(defaultValue && { data: defaultValue }),
       ...restProps,
     })
-
     onInitialize?.(editorJS.current)
-
     return () => {
       editorJS.current?.destroy()
     }
@@ -81,5 +70,5 @@ export function ReactEditorJS({
     }
   }, [value])
 
-  return <React.Fragment>children</React.Fragment> || <div id={memoizedHolder.current} />
+  return <div ref={holder} />
 }
