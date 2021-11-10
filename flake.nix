@@ -86,6 +86,7 @@
         hsPkgs.cabal-install
         hsPkgs.haskell-language-server
         hsPkgs.stan
+        pkgs.entr
         pkgs.yarn
         pkgs.phpstan
         pkgs.nodePackages.typescript

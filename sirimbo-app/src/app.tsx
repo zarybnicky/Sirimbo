@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApolloProvider } from '@apollo/client';
 import { History, createBrowserHistory } from 'history';
 import { ConnectedRouter, routerMiddleware, connectRouter } from 'connected-react-router';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -7,12 +8,17 @@ import createSagaMiddleware from 'redux-saga';
 import { all, fork } from 'redux-saga/effects';
 import { Redirect, Switch, Route, useLocation } from 'react-router-dom';
 
-import { ThemeProvider, makeStyles } from '@material-ui/styles';
+import { ThemeProvider } from '@material-ui/styles';
 import { createTheme } from '@material-ui/core/styles';
-import { CssBaseline, AppBar, Container, Link, Toolbar, Typography } from '@material-ui/core';
+import { CssBaseline } from '@material-ui/core';
 
 import { adminReducer, adminSaga, DataProvider, DataProviderContext, Resource } from 'ra-core';
 import { ListGuesser, EditGuesser, ShowGuesser, Notification } from 'ra-ui-materialui';
+
+import { createClient } from './client';
+
+import { AppHeader, AppFooter, HomePage } from './components/Layout';
+import { PageEditor } from './pages/PageEditor';
 
 const createAppStore = (dataProvider: DataProvider, history: History) => {
   const reducer = combineReducers({
@@ -39,19 +45,26 @@ const theme = createTheme({
   },
 });
 
-const Home = () => <div>Home</div>
-const ArticleList = () => <div>ArticleList</div>
-const ArticleShow = () => {
-  return <div>ArticleShow</div>;
-};
-
 const DynamicRoute = () => {
   let location = useLocation();
   return <React.Fragment>location.pathname</React.Fragment>;
 }
 
 const routes = <Switch>
-  <Route exact path="/"><Home /></Route>
+  <Redirect exact from="/" to="/home" />
+  <Route exact path="/home"><HomePage /></Route>
+
+  <Redirect exact from="/aktualne" to="/news" />
+  <Redirect exact from="/aktualne/:id" to="/news/:id" />
+  <Route exact path="/news">
+    Article list
+  </Route>
+  <Route exact path="/news/:id">
+    Show article
+  </Route>
+  <Route exact path="/news/:id/edit">
+    <PageEditor />
+  </Route>
 
   {/* Klub: dynamic rendering
       - O nás
@@ -61,25 +74,14 @@ const routes = <Switch>
       - Galerie mistrů: foto – poháry (FOTKY – prolnout po  vteřinách) + popisek (fotka na banner)
       - "Chci tančit" - cílová stránka
     */}
-
   {/* Nabízíme
       - Tréninkové programy (Popis tanečního sportu a možnosti + odkaz na tréninkové skupiny)
       - Školní taneční kroužky (statický popis plus odkaz na www.olympdance.cz)
       - Vystoupení na akcích, poptávkový formulář
     */}
-
-  <Route exact path="/news"><ArticleList /></Route>
-  <Route exact path="/news/:id"><ArticleShow /></Route>
-
   {/* Galerie - foto, video */}
-
   {/* Akce - soutěže, soustředění s jednoduchým přihlašovacím systémem, plesy a akce s možnosti rezervace vstupenek */}
-
   {/* Kontakt - fakturační údaje, kontakty na jednotlivé činovníky, sekretáře, vedoucí poboček */}
-
-  <Redirect from="/home" to="/" />
-  <Redirect from="/aktualne" to="/news" />
-  <Redirect from="/aktualne/:id" to="/news/:id" />
 
   <Route exact path="/admin/upozorneni" render={(routeProps) =>
     <ListGuesser hasCreate resource="upozorneni"
@@ -94,38 +96,9 @@ const routes = <Switch>
   <Route><DynamicRoute /></Route>
 </Switch>;
 
-const useStyles = makeStyles((theme) => ({
-  navbar: {
-    justifyContent: 'space-between',
-    display: "flex",
-  },
-  logo: {
-    flexGrow: 1,
-    cursor: "pointer",
-  },
-  link: {
-    textDecoration: "none",
-    color: "white",
-    fontSize: "20px",
-    "&:hover": {
-      color: "yellow",
-      borderBottom: "1px solid white",
-    },
-  },
-}));
-
-const AppHeader = () => {
-  const classes = useStyles();
-  return <AppBar position="static" color="secondary">
-    <Toolbar>
-      <Container maxWidth="lg" className={classes.navbar}>
-        <Typography variant="h6" color="inherit">Admin</Typography>
-      </Container>
-    </Toolbar>
-  </AppBar>;
-};
-
 const history = createBrowserHistory({ basename: '/app' });
+const client = createClient();
+
 export const App = () => {
   /* const [dataProvider, setDataProvider] = React.useState<DataProvider | null>(null);
    * React.useEffect(() => {
@@ -144,13 +117,26 @@ export const App = () => {
   return <Provider store={createAppStore({} as DataProvider, history)}>
     <DataProviderContext.Provider value={null as any}>
       <ThemeProvider theme={theme}>
-        <ConnectedRouter history={history}>
-          <CssBaseline />
-          <Resource name="upozorneni" intent="registration" />
-          <AppHeader />
-          {routes}
-          <Notification />
-        </ConnectedRouter>
+        <ApolloProvider client={client}>
+          <ConnectedRouter history={history}>
+            <CssBaseline />
+            <Resource name="upozorneni" intent="registration" />
+            <AppHeader />
+            <React.Suspense fallback={
+              <div style={{
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "column",
+                justifyContent: "center",
+                height: "100vh",
+              }}>Načítám...</div>
+            }>
+              {routes}
+            </React.Suspense>
+            <AppFooter />
+            <Notification />
+          </ConnectedRouter>
+        </ApolloProvider>
       </ThemeProvider>
     </DataProviderContext.Provider>
   </Provider>;
