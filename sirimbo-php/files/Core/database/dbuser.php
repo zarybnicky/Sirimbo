@@ -247,29 +247,20 @@ class DBUser extends Database implements Pagable
     {
         $res = self::query(
             "SELECT * FROM (
-               SELECT DISTINCT ON (u_id) * FROM users LEFT JOIN (
-                 SELECT * FROM platby_item
+               SELECT DISTINCT ON (u_id) * FROM users
+                 JOIN skupiny on s_id=u_skupina
+                 LEFT JOIN platby_group_skupina ON pgs_id_skupina=s_id
+                 LEFT JOIN (SELECT * FROM platby_item
                    JOIN platby_category ON pc_id=pi_id_category
-                   WHERE
-                        (pc_use_prefix='0' AND
-                         CURRENT_DATE >= pc_valid_from AND
-                         CURRENT_DATE <= pc_valid_to)
-                        OR
-                        (pc_use_prefix='1'
-
-                        )
-                  ) pi ON u_id=pi_id_user
-                  JOIN skupiny on s_id=u_skupina
-                  LEFT JOIN platby_group_skupina ON pgs_id_skupina=s_id
-                  LEFT JOIN platby_category_group ON pcg_id_category=pc_id
-                  LEFT JOIN platby_group ON pg_id=pgs_id_group AND ((pg_id=pcg_id_group AND pi_id IS NOT NULL) OR (pi_id IS NULL))
-              WHERE
-                  u_confirmed='1' AND u_ban='0' AND u_system='0' AND ((pg_type='1' AND pi_id IS NOT NULL) OR (pi_id IS NULL AND (pg_type='1' OR pg_type IS NULL)))
-              ORDER BY u_id
-            ) t ORDER BY t.s_id, t.u_prijmeni"
+                   WHERE CURRENT_DATE >= pc_valid_from AND CURRENT_DATE <= pc_valid_to
+                 ) pi ON u_id=pi_id_user
+                 LEFT JOIN platby_category_group ON pcg_id_category=pc_id
+                 LEFT JOIN platby_group ON pg_id=pgs_id_group AND ((pg_id=pcg_id_group AND pi_id IS NOT NULL) OR (pi_id IS NULL))
+               WHERE
+                 u_confirmed='1' AND u_ban='0' AND u_system='0' AND ((pg_type='1' AND pi_id IS NOT NULL) OR (pi_id IS NULL AND (pg_type='1' OR pg_type IS NULL)))
+               ORDER BY u_id
+            ) tt ORDER BY tt.s_id, tt.u_prijmeni"
         );
-        // AND DATE_SUB(CURDATE(), INTERVAL (YEAR(CURDATE())) YEAR) <= pc_valid_from
-        // AND DATE_SUB(CURDATE(), INTERVAL (YEAR(CURDATE())) YEAR) >= pc_valid_to
 
         return self::getArray($res);
     }
