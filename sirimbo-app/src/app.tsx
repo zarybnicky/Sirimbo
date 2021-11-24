@@ -10,15 +10,15 @@ import { Redirect, Switch, Route, useLocation } from 'react-router-dom';
 
 import { ThemeProvider } from '@material-ui/styles';
 import { createTheme } from '@material-ui/core/styles';
-import { CssBaseline } from '@material-ui/core';
 
 import { adminReducer, adminSaga, DataProvider, DataProviderContext, Resource } from 'ra-core';
-import { ListGuesser, EditGuesser, ShowGuesser, Notification } from 'ra-ui-materialui';
+import { ListGuesser, EditGuesser, ShowGuesser } from 'ra-ui-materialui';
 
 import { createClient } from './client';
 
-import { AppHeader, AppFooter, HomePage } from './components/Layout';
+import { Layout } from './components/Layout';
 import { PageEditor } from './pages/PageEditor';
+import { HomePage } from './pages/HomePage';
 
 const createAppStore = (dataProvider: DataProvider, history: History) => {
   const reducer = combineReducers({
@@ -47,7 +47,7 @@ const theme = createTheme({
 
 const DynamicRoute = () => {
   let location = useLocation();
-  return <React.Fragment>location.pathname</React.Fragment>;
+  return <React.Fragment>{location.pathname}</React.Fragment>;
 }
 
 const routes = <Switch>
@@ -119,22 +119,8 @@ export const App = () => {
       <ThemeProvider theme={theme}>
         <ApolloProvider client={client}>
           <ConnectedRouter history={history}>
-            <CssBaseline />
             <Resource name="upozorneni" intent="registration" />
-            <AppHeader />
-            <React.Suspense fallback={
-              <div style={{
-                display: "flex",
-                alignItems: "center",
-                flexDirection: "column",
-                justifyContent: "center",
-                height: "100vh",
-              }}>Načítám...</div>
-            }>
-              {routes}
-            </React.Suspense>
-            <AppFooter />
-            <Notification />
+            <Layout>{routes}</Layout>
           </ConnectedRouter>
         </ApolloProvider>
       </ThemeProvider>
