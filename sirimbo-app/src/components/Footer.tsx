@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export const AppFooter = () => <div>
+export const Footer = () => <div>
   Kontakt
 
   Taneční klub Olymp Olomouc

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { HeroArticles } from './Hero';
-import { ServiceList } from './ServiceList';
-import { CallToAction } from '@material-ui/icons';
-import { HighlightList } from './HighlightsList';
-import { ArticleList } from './ArticleList';
-import { VideoList } from './VideoList';
+import { HeroArticles } from '../components/Hero';
+import { ServiceList } from '../components/ServiceList';
+import { CallToAction } from '../components/CallToAction';
+import { HighlightList } from '../components/HighlightsList';
+import { ArticleList } from '../components/ArticleList';
+import { VideoList } from '../components/VideoList';
 
 export const HomePage = () => <React.Fragment>
   <HeroArticles />

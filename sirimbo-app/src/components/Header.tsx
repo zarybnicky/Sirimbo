@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { gql } from 'graphql-tag';
 
 import { Button } from './Button';
+import { useAuth } from '../use-auth';
 
 interface HeaderProps {
   user?: {};
@@ -46,8 +47,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Header = ({ user, onLogin, onLogout, onCreateAccount }: HeaderProps) => {
+// export const Header = ({ user, onLogin, onLogout, onCreateAccount }: HeaderProps) => {
+export const Header = ({ }) => {
   const classes = useStyles();
+  const { user, signIn, signUp, signOut } = useAuth();
 
   return <AppBar position="static" color="secondary">
     <Toolbar>
@@ -72,10 +75,10 @@ export const Header = ({ user, onLogin, onLogout, onCreateAccount }: HeaderProps
         </div>
         <div>
           {user
-            ? <Button size="small" onClick={onLogout} label="Log out" />
+            ? <Button size="small" onClick={signOut} label="Log out" />
             : <React.Fragment>
-              <Button size="small" onClick={onLogin} label="Log in" />
-              <Button primary size="small" onClick={onCreateAccount} label="Sign up" />
+              <Button size="small" onClick={() => signIn('', '')} label="Log in" />
+              <Button primary size="small" onClick={() => signUp('', '')} label="Sign up" />
             </React.Fragment>
           }
           Icon

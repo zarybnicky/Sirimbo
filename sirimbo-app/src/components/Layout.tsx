@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { CssBaseline } from '@material-ui/core';
 import { Notification } from 'ra-ui-materialui';
-import { AppHeader } from './AppHeader';
-import { AppFooter } from './AppFooter';
+import { Header } from './Header';
+import { Footer } from './Footer';
 
 export const Layout = ({ children }: { children: React.ReactChild | React.ReactChildren; }) => <React.Fragment>
   <CssBaseline />
-  <AppHeader />
+  <Header />
   <React.Suspense fallback={
     <div style={{
       display: "flex",
@@ -18,6 +18,6 @@ export const Layout = ({ children }: { children: React.ReactChild | React.ReactC
   }>
     {children}
   </React.Suspense>
-  <AppFooter />
+  <Footer />
   <Notification />
 </React.Fragment>;
