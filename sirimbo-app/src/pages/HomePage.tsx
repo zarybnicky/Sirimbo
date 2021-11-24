@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { HeroArticles } from './Hero';
-import { ServicesList } from './ServicesList';
+import { ServiceList } from './ServiceList';
 import { CallToAction } from '@material-ui/icons';
 import { HighlightList } from './HighlightsList';
 import { ArticleList } from './ArticleList';
@@ -8,7 +8,7 @@ import { VideoList } from './VideoList';
 
 export const HomePage = () => <React.Fragment>
   <HeroArticles />
-  <ServicesList />
+  <ServiceList />
   <CallToAction />
   <HighlightList />
   <ArticleList />

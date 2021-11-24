@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Container, Paper, Button, Toolbar, Typography, Card, CardActionArea, CardMedia, CardContent, CardActions } from '@material-ui/core';
+import { Container, Paper } from '@material-ui/core';
 
 // Red/black separator + header text, spacing
-export const ServicesList = () => <Container maxWidth="lg">
+export const ServiceList = () => <Container maxWidth="lg">
   <Paper elevation={3}>
     Matýsek
     <h2>Přípravka tanečního sportu</h2>

@@ -9,12 +9,12 @@ import { all, fork } from 'redux-saga/effects';
 import { Redirect, Switch, Route, useLocation } from 'react-router-dom';
 
 import { ThemeProvider } from '@material-ui/styles';
-import { createTheme } from '@material-ui/core/styles';
 
 import { adminReducer, adminSaga, DataProvider, DataProviderContext, Resource } from 'ra-core';
 import { ListGuesser, EditGuesser, ShowGuesser } from 'ra-ui-materialui';
 
 import { createClient } from './client';
+import { theme } from './theme';
 
 import { Layout } from './components/Layout';
 import { PageEditor } from './pages/PageEditor';
@@ -33,17 +33,6 @@ const createAppStore = (dataProvider: DataProvider, history: History) => {
   sagaMiddleware.run(saga);
   return store;
 };
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#f60000",
-    },
-    secondary: {
-      main: '#000',
-    },
-  },
-});
 
 const DynamicRoute = () => {
   let location = useLocation();

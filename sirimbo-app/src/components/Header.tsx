@@ -4,6 +4,15 @@ import { AppBar, Container, Toolbar, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { gql } from 'graphql-tag';
 
+import { Button } from './Button';
+
+interface HeaderProps {
+  user?: {};
+  onLogin: () => void;
+  onLogout: () => void;
+  onCreateAccount: () => void;
+}
+
 export const SingleParameter = gql(`
 query SingleParameter($name: String!) {
   parameters_by_pk(pa_name: $name) {
@@ -37,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const AppHeader = () => {
+export const Header = ({ user, onLogin, onLogout, onCreateAccount }: HeaderProps) => {
   const classes = useStyles();
 
   return <AppBar position="static" color="secondary">
@@ -62,6 +71,13 @@ export const AppHeader = () => {
           FB YT LIn
         </div>
         <div>
+          {user
+            ? <Button size="small" onClick={onLogout} label="Log out" />
+            : <React.Fragment>
+              <Button size="small" onClick={onLogin} label="Log in" />
+              <Button primary size="small" onClick={onCreateAccount} label="Sign up" />
+            </React.Fragment>
+          }
           Icon
           <div>Přihlásit</div>
         </div>
