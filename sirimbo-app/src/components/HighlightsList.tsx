@@ -5,7 +5,7 @@ import { Paper } from '@material-ui/core';
 export const HighlightList = () => {
   const items = [{}, {}, {}, {}];
   return <React.Fragment>
-    {items.map((x, i) => <HighlightItem key={i} item={x} />)}
+    {items.map((x, i) => <HighlightItem key={i} item={{ i }} />)}
   </React.Fragment>;
 }
-const HighlightItem = (props: { item: {}; key: number; }) => <Paper>{props.key}</Paper>
+const HighlightItem = (props: { item: {}; }) => <Paper>{props.item.toString()}</Paper>

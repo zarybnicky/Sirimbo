@@ -11,12 +11,18 @@ export interface AuthContextType {
   confirmPasswordReset: (code: string, password: string) => Promise<void>;
 }
 
-const authContext = React.createContext(useMockAuth());
+const authContext = React.createContext<AuthContextType | undefined>(undefined);
 
-export const ProvideAuth = ({ children }: { children: React.ReactChild | React.ReactChildren }) =>
+export const ProvideAuth = ({ children }: { children: React.ReactChild | React.ReactChild[] }) =>
   <authContext.Provider value={useApiAuth()}>{children}</authContext.Provider>;
 
-export const useAuth = () => React.useContext(authContext);
+export const useAuth = () => {
+  const auth = React.useContext(authContext);
+  if (auth === undefined) {
+    throw new Error('You can only use `useAuth` from inside an AuthProvider');
+  }
+  return auth;
+}
 
 function useMockAuth(): AuthContextType {
   const [user, setUser] = React.useState<User | null>(null);

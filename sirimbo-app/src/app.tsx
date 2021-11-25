@@ -19,6 +19,7 @@ import { theme } from './theme';
 import { Layout } from './components/Layout';
 import { PageEditor } from './pages/PageEditor';
 import { HomePage } from './pages/HomePage';
+import { ProvideAuth } from './use-auth';
 
 const createAppStore = (dataProvider: DataProvider, history: History) => {
   const reducer = combineReducers({
@@ -108,8 +109,10 @@ export const App = () => {
       <ThemeProvider theme={theme}>
         <ApolloProvider client={client}>
           <ConnectedRouter history={history}>
-            <Resource name="upozorneni" intent="registration" />
-            <Layout>{routes}</Layout>
+            <ProvideAuth>
+              <Resource name="upozorneni" intent="registration" />
+              <Layout>{routes}</Layout>
+            </ProvideAuth>
           </ConnectedRouter>
         </ApolloProvider>
       </ThemeProvider>

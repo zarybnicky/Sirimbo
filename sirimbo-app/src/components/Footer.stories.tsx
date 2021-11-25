@@ -5,29 +5,23 @@ import { ThemeProvider } from '@material-ui/styles';
 import { ProvideAuth } from '../use-auth';
 import { theme } from '../theme';
 
-import template from './Header.png';
-import { Header } from './Header';
+import template from './Footer.png';
+import { Footer } from './Footer';
 
 export default {
-  title: 'Layout/Header',
-  component: Header,
-} as ComponentMeta<typeof Header>;
+  title: 'Layout/Footer',
+  component: Footer,
+} as ComponentMeta<typeof Footer>;
 
-const Template: ComponentStory<typeof Header> = (args) =>
+const Template: ComponentStory<typeof Footer> = (args) =>
   <ThemeProvider theme={theme}>
     <ProvideAuth>
       <MemoryRouter>
-        <Header {...args} />
+        <Footer {...args} />
       </MemoryRouter>
     </ProvideAuth>
   </ThemeProvider>;
 
-export const LoggedIn = Template.bind({});
-LoggedIn.args = {
-  user: {},
-};
-
-export const LoggedOut = Template.bind({});
-LoggedOut.args = {};
+export const Normal = Template.bind({});
 
 export const Image = () => <img src={template} />;
