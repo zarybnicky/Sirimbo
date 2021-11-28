@@ -19,20 +19,23 @@ module.exports = {
     '@storybook/addon-a11y'
   ],
   webpackFinal: async (config, { configType }) => {
-    config.module.rules.push({
-      test: /\.(png|woff|woff2|eot|ttf|svg)$/,
-      use: ['file-loader'],
-      include: path.resolve(__dirname, '../')
-    });
-    config.module.rules.push({
-      test: /\.scss$/,
-      use: ['style-loader', 'css-loader', 'resolve-url-loader', 'sass-loader'],
-      include: path.resolve(__dirname, '../'),
-    });
-    /* config.plugins.push(new MiniCssExtractPlugin({
-     *   filename: '[name]-[contenthash].css',
-     *   chunkFilename: '[id]-[contenthash].css',
-     * })); */
+    config.module.rules = [
+      ...config.module.rules.map(rule => {
+        if (/svg/.test(rule.test)) {
+          return { ...rule, exclude: /\.svg$/i }
+        }
+        return rule;
+      }),
+      {
+        test: /\.svg$/i,
+        use: ["@svgr/webpack"]
+      },
+      {
+        test: /\.scss$/,
+        use: ['style-loader', 'css-loader', 'resolve-url-loader', 'sass-loader'],
+        include: path.resolve(__dirname, '../'),
+      }
+    ];
     return config;
   },
 }

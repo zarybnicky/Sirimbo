@@ -1,8 +1,17 @@
 import * as React from 'react';
-import { Container, Grid, Typography } from '@material-ui/core';
+import { Container, Grid, IconButton, Paper, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import clsx from 'clsx';
+import { LatLngTuple } from 'leaflet';
+
+import InstagramIcon from '@material-ui/icons/Instagram';
+import FacebookIcon from '@material-ui/icons/Facebook';
+import YouTubeIcon from '@material-ui/icons/YouTube';
+
+import CstsLogo from '../../static/images/csts-logo.svg';
+import OlomoucLogo from '../../static/style/logo-olomouc.jpg';
+import KrajLogo from '../../static/style/logo-kraj.png';
 
 const useStyles = makeStyles((theme) => ({
   section: {
@@ -29,7 +38,26 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '1rem',
   },
   map: {
-    height: '300px'
+    height: '200px'
+  },
+  icon: {
+    padding: 0,
+    margin: '5px',
+  },
+  iconBox: {
+    textAlign: 'right',
+    margin: '1rem 0',
+  },
+  sponsorsBox: {
+    padding: '1rem',
+    textAlign: 'center',
+  },
+  sponsorsHead: {
+    color: theme.palette.primary.main,
+    fontSize: '1.2rem',
+    fontWeight: 900,
+    textAlign: 'left',
+    marginBottom: '1rem',
   }
 }));
 
@@ -67,16 +95,17 @@ const ContactText = () => {
 
 const Map = () => {
   const classes = useStyles();
-  const position = [51.505, -0.09]
+  const position = [49.58727525, 17.25661055] as LatLngTuple;
+  const holeckova = [49.57963, 17.2495939] as LatLngTuple;
+  const slovan = [49.59490, 17.26340] as LatLngTuple;
 
-  return <MapContainer className={classes.map} center={position} zoom={13} scrollWheelZoom={false}>
-    <TileLayer
-      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-    />
-    <Marker position={position}>
-      <Popup>
-        A pretty CSS3 popup. <br /> Easily customizable.
-      </Popup>
+  return <MapContainer className={classes.map} center={position} zoom={12} scrollWheelZoom={false}>
+    <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+    <Marker position={holeckova}>
+      <Popup>Taneční centrum při FZŠ Holečkova</Popup>
+    </Marker>
+    <Marker position={slovan}>
+      <Popup>Tělocvična Slovanského gymnázia</Popup>
     </Marker>
   </MapContainer>;
 };
@@ -91,9 +120,32 @@ export const Footer = () => {
         <Grid item xs>
           <Map />
 
-          Social
+          <div className={classes.iconBox}>
+            <IconButton href="https://www.facebook.com/tkolymp" className={classes.icon}>
+              <FacebookIcon color="primary" fontSize="large" />
+            </IconButton>
+            <IconButton href="https://www.instagram.com/tanecni_klub_olymp/?hl=cs" className={classes.icon}>
+              <InstagramIcon color="primary" fontSize="large" />
+            </IconButton>
+            <IconButton href="https://www.youtube.com/user/TheMamcro" className={classes.icon}>
+              <YouTubeIcon color="primary" fontSize="large" />
+            </IconButton>
+          </div>
 
-          Sponsors
+          <Paper className={classes.sponsorsBox}>
+            <Typography variant="h2" className={classes.sponsorsHead}>Podporují nás</Typography>
+            <Grid container spacing={3} alignItems="center">
+              <Grid item xs={4}>
+                <CstsLogo height="100" width="100" />
+              </Grid>
+              <Grid item xs={4}>
+                <img alt="Město Olomouc" style={{ width: '100%', height: 'auto' }} src={OlomoucLogo} />
+              </Grid>
+              <Grid item xs={4}>
+                <img alt="Olomoucký kraj" style={{ width: '100%', height: 'auto' }} src={KrajLogo} />
+              </Grid>
+            </Grid>
+          </Paper>
         </Grid>
       </Grid>
     </Container>
