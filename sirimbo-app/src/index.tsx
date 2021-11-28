@@ -4,10 +4,11 @@ import './bundles/spectrum';
 import './bundles/video.min';
 import './bundles/main';
 
+import 'leaflet/dist/leaflet.css';
 import './style/index.scss';
 
 import L from 'leaflet';
-delete L.Icon.Default.prototype._getIconUrl;
+delete (L.Icon.Default.prototype as unknown as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
   iconUrl: require('leaflet/dist/images/marker-icon.png'),
