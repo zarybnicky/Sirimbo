@@ -14,6 +14,7 @@ yarn2nix-moretea.mkYarnPackage {
   # doCheck = true;
   # checkPhase = "yarn test --coverage --ci";
   buildPhase = ''
+    find . -maxdepth 2
     yarn --offline run build
     sed -i '1,3d' deps/Sirimbo/dist/main.css
   '';

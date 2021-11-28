@@ -2,6 +2,10 @@ $fa-font-path: '@fortawesome/fontawesome-free/webfonts';
 @import '@fortawesome/fontawesome-free/scss/fontawesome';
 @import '@fortawesome/fontawesome-free/scss/solid';
 
+// Libraries
+@import '~leaflet/dist/leaflet';
+@import 'spectrum';
+
 $blackish:  #1e1e1e;
 $red:       #c90029;
 $light-red: #e80b30;
@@ -306,7 +310,3 @@ $navbar-padding-y: 0;
 @import "~bootstrap/scss/carousel";
 @import "~bootstrap/scss/spinners";
 @import "~bootstrap/scss/print";
-
-// Libraries
-@import 'leaflet';
-@import 'spectrum';

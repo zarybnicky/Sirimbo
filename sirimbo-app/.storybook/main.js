@@ -1,4 +1,10 @@
 module.exports = {
+  "core": {
+    "builder": 'webpack5',
+  },
+  reactOptions: {
+    fastRefresh: true,
+  },
   "stories": [
     "../src/**/*.stories.mdx",
     "../src/**/*.stories.@(js|jsx|ts|tsx)"
