@@ -1,5 +1,7 @@
 import { createTheme } from '@material-ui/core/styles';
 
+import './style/material-icons.css';
+
 export const theme = createTheme({
   typography: {
     fontFamily: `"Helvetica", "Arial", sans-serif`,

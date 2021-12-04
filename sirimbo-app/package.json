@@ -34,6 +34,7 @@
     "iban": "^0.0.14",
     "jquery": "^3.6.0",
     "leaflet": "^1.7.1",
+    "material-ui-popup-state": "^1.9.3",
     "popper.js": "^1.16.1",
     "qrcode.react": "^1.0.1",
     "ra-core": "^3.19.0",

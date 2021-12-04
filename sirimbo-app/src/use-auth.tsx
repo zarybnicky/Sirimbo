@@ -24,7 +24,7 @@ export const useAuth = () => {
   return auth;
 }
 
-function useMockAuth(): AuthContextType {
+export function useMockAuth(): AuthContextType {
   const [user, setUser] = React.useState<User | null>(null);
   return {
     user,
