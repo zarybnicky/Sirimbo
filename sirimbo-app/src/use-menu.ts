@@ -3,19 +3,19 @@ import { useQuery } from '@apollo/client';
 
 export const mockMenu: MenuType = [
   {
-    "type": "menu", "text": "Klub", "children": [
+    "type": "menu", "text": "Klub", "hrefRoot": "/o-nas", "children": [
       { "type": "link", "text": "O nás", "href": "/o-nas" },
-      { "type": "link", "text": "Trenéři", "href": "/treneri" },
-      { "type": "link", "text": "Tréninkové skupiny", "href": "/treninkove-skupiny" },
-      { "type": "link", "text": "Benefity členství", "href": "/clenstvi" },
-      { "type": "link", "text": "Galerie mistrů", "href": "/galerie-mistru" }
+      { "type": "link", "text": "Trenéři", "href": "/o-nas/treneri" },
+      { "type": "link", "text": "Tréninkové skupiny", "href": "/o-nas/treninkove-skupiny" },
+      { "type": "link", "text": "Benefity členství", "href": "/o-nas/clenstvi" },
+      { "type": "link", "text": "Galerie mistrů", "href": "/o-nas/galerie-mistru" }
     ]
   },
   {
-    "type": "menu", "text": "Nabízíme", "children": [
-      { "type": "link", "text": "Tréninkové programy", "href": "/treninkove-programy" },
-      { "type": "link", "text": "Školní taneční kroužky", "href": "/skolni-krouzky" },
-      { "type": "link", "text": "Vystoupení na akcích", "href": "/vystoupení" }
+    "type": "menu", "text": "Nabízíme", "hrefRoot": "/nabizime", "children": [
+      { "type": "link", "text": "Tréninkové programy", "href": "/nabizime/treninkove-programy" },
+      { "type": "link", "text": "Školní taneční kroužky", "href": "/nabizime/skolni-krouzky" },
+      { "type": "link", "text": "Vystoupení na akcích", "href": "/nabizime/vystoupení" }
     ]
   },
   { "type": "link", "text": "Aktuality", "href": "/news" },
@@ -28,6 +28,7 @@ export type MenuType = (MenuLink | SubmenuType)[];
 export interface SubmenuType {
   type: 'menu';
   text: string;
+  hrefRoot: string;
   children: MenuLink[];
 }
 export interface MenuLink {

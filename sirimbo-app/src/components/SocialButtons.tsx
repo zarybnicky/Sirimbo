@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { IconButton, useTheme } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { IconButton, makeStyles, useTheme } from '@material-ui/core';
 import InstagramIcon from '@material-ui/icons/Instagram';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import YouTubeIcon from '@material-ui/icons/YouTube';
@@ -29,7 +28,7 @@ export const SocialButtons = ({ variant = 'medium', ...props }: SocialButtonsPro
       <InstagramIcon htmlColor={theme.palette.primary.light} fontSize={variant} />
     </IconButton>
     <IconButton href="https://www.youtube.com/user/TheMamcro" className={classes.icon}>
-      <YouTubeIcon htmlColor="white" fontSize={variant} />
+      <YouTubeIcon htmlColor={theme.palette.grey[200]} fontSize={variant} />
     </IconButton>
   </div>
 }

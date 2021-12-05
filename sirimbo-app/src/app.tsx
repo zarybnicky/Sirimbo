@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { theme } from './theme';
 import { ApolloProvider } from '@apollo/client';
 import { History, createBrowserHistory } from 'history';
 import { ConnectedRouter, routerMiddleware, connectRouter } from 'connected-react-router';
@@ -14,7 +15,6 @@ import { adminReducer, adminSaga, DataProvider, DataProviderContext, Resource } 
 import { ListGuesser, EditGuesser, ShowGuesser } from 'ra-ui-materialui';
 
 import { createClient } from './client';
-import { theme } from './theme';
 
 import { Layout } from './components/Layout';
 import { PageEditor } from './pages/PageEditor';

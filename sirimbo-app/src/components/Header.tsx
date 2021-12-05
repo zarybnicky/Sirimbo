@@ -9,7 +9,7 @@ export const Header = ({ }) => {
   const theme = useTheme();
   const menu = useMenu();
   const auth = useAuth();
-  const isTabletOrDesktop = useMediaQuery<Theme>(theme.breakpoints.up('sm'));
+  const isTabletOrDesktop = useMediaQuery<Theme>(theme.breakpoints.up('md'));
   return isTabletOrDesktop
     ? <DesktopHeader {...{ menu, auth }} />
     : <MobileHeader {...{ menu, auth }} />;

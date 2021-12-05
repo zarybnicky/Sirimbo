@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Container, Grid, Paper, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Container, Grid, Paper, Typography, makeStyles } from '@material-ui/core';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import clsx from 'clsx';
 import { LatLngTuple } from 'leaflet';
@@ -103,7 +102,7 @@ const Map = () => {
   </MapContainer>;
 };
 
-export const Footer = () => {
+export const Footer = ({ }) => {
   const classes = useStyles();
 
   return <div className={classes.section}>

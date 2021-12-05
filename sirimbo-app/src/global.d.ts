@@ -4,7 +4,7 @@ declare module "*.png" {
 }
 
 declare module "*.svg" {
-  const value: JSX.Element;
+  const value: React.ElementType;
   export default value;
 }
 

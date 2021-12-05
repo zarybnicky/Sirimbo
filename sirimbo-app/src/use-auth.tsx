@@ -1,6 +1,8 @@
 import * as React from "react";
 
-type User = object;
+interface User {
+  name: string;
+}
 
 export interface AuthContextType {
   user: User | null;
@@ -29,12 +31,14 @@ export function useMockAuth(): AuthContextType {
   return {
     user,
     async signIn() {
-      setUser({});
-      return {};
+      const user = { name: 'Jakub Zárybnický' };
+      setUser(user);
+      return user;
     },
     async signUp() {
-      setUser({});
-      return {};
+      const user = { name: 'Jakub Zárybnický' };
+      setUser(user);
+      return user;
     },
     async signOut() {
       setUser(null);
@@ -68,13 +72,13 @@ function useApiAuth(): AuthContextType {
     user,
     async signIn(email: string, password: string) {
       // const response = await signInWithEmailAndPassword(email, password);
-      const response = { user: {} };
+      const response = { user: { name: "Jakub Zárybnický" } };
       setUser(response.user);
       return response.user;
     },
     async signUp(email: string, password: string) {
       // const response = await createUserWithEmailAndPassword(email, password);
-      const response = { user: {} };
+      const response = { user: { name: "Jakub Zárybnický" } };
       setUser(response.user);
       return response.user;
     },

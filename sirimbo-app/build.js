@@ -7,11 +7,11 @@ const alias = require('esbuild-plugin-alias');
 const svgrPlugin = require('esbuild-plugin-svgr');
 
 esbuild.build({
-    entryPoints: ["src/index.tsx"],
+    entryPoints: ["src/main.tsx", "src/index.tsx"],
     sourcemap: true,
     bundle: true,
     publicPath: '/',
-    outfile: "dist/main.js",
+    outdir: "dist/",
     loader: {
         '.eot': 'file',
         '.woff': 'file',
@@ -24,7 +24,12 @@ esbuild.build({
         global: 'window',
     },
   plugins: [
-    svgrPlugin(),
+    svgrPlugin({
+      svgoConfig: {
+        plugins: ['preset-default'],
+      },
+      svgo: true,
+    }),
     sassPlugin(),
     postCssPlugin({
       plugins: [autoprefixer],
