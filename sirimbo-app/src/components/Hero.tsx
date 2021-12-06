@@ -6,6 +6,7 @@ import Carousel from 'react-material-ui-carousel'
 const useStyles = makeStyles((theme) => ({
   indicator: {
     fill: theme.palette.grey[600],
+    marginBottom: '2rem',
   },
   activeIndicator: {
     fill: theme.palette.primary.main,
