@@ -1,25 +1,71 @@
 import * as React from 'react';
-import { Container, Button } from '@material-ui/core';
+import { Link } from 'react-router-dom';
+import { makeStyles, Typography } from '@material-ui/core';
 import Carousel from 'react-material-ui-carousel'
 
-export const HeroArticles = () => <Container maxWidth="lg">
-  <Carousel>{items.map((item, i) => <HeroItem key={i} item={item} />)}</Carousel>;
-</Container>;
-
-// https://www.npmjs.com/package/react-material-ui-carousel
-const items = [
-  {
-    name: "Random Name #1",
-    description: "Probably the most random thing you have ever seen!"
+const useStyles = makeStyles((theme) => ({
+  indicator: {
+    fill: theme.palette.grey[600],
   },
-  {
-    name: "Random Name #2",
-    description: "Hello World!"
-  }
-];
+  activeIndicator: {
+    fill: theme.palette.primary.main,
+  },
+  container: {
+    position: 'relative',
+    width: '100%',
+    overflow: 'hidden',
+    '& img': {
+      width: '100%',
+      height: '60vh',
+      maxHeight: '600px',
+      objectFit: 'cover',
+      transition: 'transform .3s',
+    },
+    '& .overlay:hover + img': {
+      transform: 'scale(1.1)',
+    },
+    '& .overlay': {
+      zIndex: 10,
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: 'linear-gradient(90deg, rgba(216,28,58,.8) 0%, rgba(0,0,0,0.8) 50%, rgba(216,28,58,.8) 100%)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      textDecoration: 'none',
+      color: 'white',
+      padding: '1rem',
+    },
+    '& .overlay:hover': {
+      textDecoration: 'underline',
+    }
+  },
+}));
 
-const HeroItem = (props: { item: { name: string; description: string; } }) => <div>
-  <h2>{props.item.name}</h2>
-  <p>{props.item.description}</p>
-  <Button className="CheckButton">Check it out!</Button>
-</div>;
+export const Hero = ({ }) => {
+  const classes = useStyles();
+
+  return <Carousel
+    timeout={400}
+    IndicatorIcon={<svg width="50" height="9" viewBox="5 0 50 9"><rect width="40" height="9" /></svg>}
+    indicatorIconButtonProps={{ className: classes.indicator }}
+    activeIndicatorIconButtonProps={{ className: classes.activeIndicator }}
+  >
+    {items.map((x, i) => (
+      <div key={i} className={classes.container}>
+        <Link className="overlay" to={x.href}>
+          <Typography variant="h5">{x.text}</Typography>
+        </Link>
+        <img src={x.img} alt={x.text} />
+      </div>
+    ))}
+  </Carousel>;
+}
+
+const items = [
+  { img: "https://picsum.photos/1600/900?random=1", href: "/o-nas", text: "Mistři České republiky v tanečním sportu 2019" },
+  { img: "https://picsum.photos/1600/900?random=2", href: "/o-nas", text: "Mistři České republiky v tanečním sportu 2020" },
+  { img: "https://picsum.photos/1600/900?random=3", href: "/o-nas", text: "Mistři České republiky v tanečním sportu 2021" },
+];
