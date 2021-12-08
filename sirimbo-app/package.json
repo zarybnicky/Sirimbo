@@ -54,7 +54,9 @@
     "react-router-dom": "^5.1.0",
     "redux": "^3.7.2 || ^4.0.3",
     "redux-saga": "^1.0.0",
-    "sass": "^1.44.0"
+    "sass": "^1.44.0",
+    "slate": "^0.72.0",
+    "slate-react": "^0.72.0"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",

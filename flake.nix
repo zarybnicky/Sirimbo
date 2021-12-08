@@ -67,7 +67,6 @@
         '';
         doCheck = true;
         checkPhase = ''
-          ! ${pkgs.ag}/bin/ag '\\[A-Z]|<\?|\$[^(]' files/Templates
           ${pkgs.php}/bin/php -f vendor/bin/twig-linter -- lint files/Templates
           ${pkgs.phpstan}/bin/phpstan analyse --level 5 files/
         '';

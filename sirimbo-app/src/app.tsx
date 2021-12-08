@@ -19,6 +19,7 @@ import { createClient } from './client';
 import { Layout } from './components/Layout';
 import { PageEditor } from './pages/PageEditor';
 import { HomePage } from './pages/HomePage';
+import { AboutPage } from './pages/AboutPage';
 import { ProvideAuth } from './use-auth';
 
 const createAppStore = (dataProvider: DataProvider, history: History) => {
@@ -43,6 +44,7 @@ const DynamicRoute = () => {
 const routes = <Switch>
   <Redirect exact from="/" to="/home" />
   <Route exact path="/home"><HomePage /></Route>
+  <Route exact path="/o-nas"><AboutPage /></Route>
 
   <Redirect exact from="/aktualne" to="/news" />
   <Redirect exact from="/aktualne/:id" to="/news/:id" />
@@ -55,23 +57,6 @@ const routes = <Switch>
   <Route exact path="/news/:id/edit">
     <PageEditor />
   </Route>
-
-  {/* Klub: dynamic rendering
-      - O nás
-      - Kde trénujeme - mapky, adresy, popis vstupu
-      - Tréninkové skupiny - dohromady kluboví, externí
-      - Benefity členství - slevy na soustředění, na oblečení, obuv, popis péče o členy
-      - Galerie mistrů: foto – poháry (FOTKY – prolnout po  vteřinách) + popisek (fotka na banner)
-      - "Chci tančit" - cílová stránka
-    */}
-  {/* Nabízíme
-      - Tréninkové programy (Popis tanečního sportu a možnosti + odkaz na tréninkové skupiny)
-      - Školní taneční kroužky (statický popis plus odkaz na www.olympdance.cz)
-      - Vystoupení na akcích, poptávkový formulář
-    */}
-  {/* Galerie - foto, video */}
-  {/* Akce - soutěže, soustředění s jednoduchým přihlašovacím systémem, plesy a akce s možnosti rezervace vstupenek */}
-  {/* Kontakt - fakturační údaje, kontakty na jednotlivé činovníky, sekretáře, vedoucí poboček */}
 
   <Route exact path="/admin/upozorneni" render={(routeProps) =>
     <ListGuesser hasCreate resource="upozorneni"
