@@ -1,52 +1,44 @@
 import * as React from 'react';
-import { Grid } from '@material-ui/core';
+import { Container, Grid } from '@material-ui/core';
 import { SlateReadonly } from '../components/SlateReadonly';
 
 import MirekDomca from '../../static/images/mirek-domca.png';
 
 export const AboutPage = ({ }) => {
-  return <Grid container>
-    <Grid item sm={12} md={4}>
-      <img src={MirekDomca} alt="Miroslav Hýža a Dominika Feglová" />
+  return <Container maxWidth="md">
+    <Grid container direction="row-reverse" justifyContent="center">
+      <Grid item sm={12} md={6}>
+        <SlateReadonly value={text} />
+      </Grid>
+      <Grid item sm={12} md={4}>
+        <img src={MirekDomca} alt="Miroslav Hýža a Dominika Feglová" />
+      </Grid>
     </Grid>
-    <Grid item sm={12} md={6}>
-      <SlateReadonly value={text} />
-    </Grid>
-  </Grid>;
+  </Container>;
 };
 
 const text = [
   {
-    type: 'heading-one',
+    type: 'heading-two',
     children: [
-      { text: 'OLYMP', primary: true },
-      { text: 'V TANEČNÍM SVĚTĚ', primary: true },
+      { text: 'OLYMP', primary: true, bold: true },
+      { text: ' V TANEČNÍM SVĚTĚ', bold: true },
     ]
   },
   {
     type: 'paragraph',
     children: [
-      { text: 'Jsme sportovním klubem, který se věnuje tanečnímu sportu', bold: true },
+      { text: 'Jsme tradičním klubem, který se věnuje tanečnímu sportu ', bold: true },
       { text: '- standardním a latinskoamerickým tancům. Více než třicet let se zabýváme se výchovou tanečních sportovců od dětí až po dospělé.' },
+      { text: 'Vytvořili jsme provázaný systém tréninkových programů pro začínající, výkonnostní i vrcholové sportovce.' },
+      { text: 'Využíváme nejmodernějších tréninkových metod a pravidelně je zdokonalujeme ve spolupráci s odborníky z Fakulty tělesné kultury Univerzity Palackého v Olomouci a mezinárodními trenéry' },
+      { text: ' World Dance Sport Organisation.', bold: true },
     ],
   },
   {
     type: 'paragraph',
     children: [
-      { text: 'Stále zdokonalujeme provázaný systém tréninkových programů pro začínající, výkonností i vrcholové sportovce.' },
-    ],
-  },
-  {
-    type: 'paragraph',
-    children: [
-      { text: 'Využíváme nejmodernějších tréninkových metod a pravidelně je posouváme ve spolupráci s odborníky z Falulty tělesné kultury Univerzity Palackého v Olomouci a mezinárodními trenéry' },
-      { text: 'World Dance Sport Organisation.', bold: true },
-    ],
-  },
-  {
-    type: 'paragraph',
-    children: [
-      { text: 'V rámci Českého svazu tanečního sportu jsme jedním z nejúspěšnějších klubů posledních let. Naši členové jsou pravidelně členy národního reprezentačního týmu. V Olomouckém kraji jsme jediným klubem tanečního sportu s označením Sportovní centrum mládeže MŠMT.' },
+      { text: 'V rámci Českého svazu tanečního sportu jsme jediným klubem z Olomouckého kraje se statutem Sportovní centrum mládeže MŠMT. Pravidelně dodáváme členy národnímu reprezentačnímu týmu a dlouhodobě patříme mezi nejlepší české kluby v práci s mládeží.' },
     ],
   },
   {

@@ -6,7 +6,7 @@ import { HighlightList } from '../components/HighlightsList';
 import { ArticleList } from '../components/ArticleList';
 import { VideoList } from '../components/VideoList';
 
-export const HomePage = () => <React.Fragment>
+export const HomePage = ({ }) => <React.Fragment>
   <Hero />
   <ServiceList />
   <CallToAction />

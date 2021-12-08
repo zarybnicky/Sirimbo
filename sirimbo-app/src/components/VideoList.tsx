@@ -39,8 +39,8 @@ export const VideoList = ({ }) => {
     <Typography gutterBottom variant="h4" component="h2">Videa</Typography>
     <Grid container spacing={3}>
       {items.map((x, i) => (
-        <Grid item sm={6}>
-          <Paper key={i} elevation={3}>
+        <Grid item sm={6} key={i}>
+          <Paper elevation={3}>
             <CardActionArea component={Link} to={x.href}>
               <Grid container>
                 <Grid item className={classes.img}>

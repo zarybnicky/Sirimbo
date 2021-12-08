@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Typography, useTheme } from '@material-ui/core';
 import { createEditor, Descendant } from 'slate';
 import { Slate, Editable, ReactEditor, withReact } from 'slate-react';
 
@@ -21,22 +22,27 @@ export const SlateReadonly = ({ value }: { value: Descendant[] }) => {
 const Element = ({ attributes, children, element }: any) => {
   switch (element.type) {
     case 'block-quote':
-      return <blockquote {...attributes}>{children}</blockquote>
+      return <blockquote {...attributes}>{children}</blockquote>;
     case 'bulleted-list':
-      return <ul {...attributes}>{children}</ul>
+      return <ul {...attributes}>{children}</ul>;
     case 'heading-one':
-      return <h1 {...attributes}>{children}</h1>
+      console.log(children);
+      return <Typography variant="h4" component="h1" style={{ marginBottom: '2rem' }} {...attributes}>{children}</Typography>;
     case 'heading-two':
-      return <h2 {...attributes}>{children}</h2>
+      return <Typography variant="h5" component="h2" style={{ marginBottom: '2rem' }} {...attributes}>{children}</Typography>;
     case 'list-item':
       return <li {...attributes}>{children}</li>
     case 'numbered-list':
       return <ol {...attributes}>{children}</ol>
     default:
-      return <p {...attributes}>{children}</p>
+      return <Typography variant="body1" style={{ marginBottom: '1rem' }} {...attributes}>{children}</Typography>
   }
 }
 const Leaf = ({ attributes, children, leaf }: any) => {
+  if (leaf.primary) {
+    const theme = useTheme();
+    children = <span style={{ color: theme.palette.primary.main }}>{children}</span>;
+  }
   if (leaf.bold) {
     children = <strong>{children}</strong>
   }

@@ -1,40 +1,4 @@
-* Homepage
-** Přípravky tanečního sportu
-První kroky do světa tanečního sportu pro děti od 5 do 10 let
-
-** Základy tanečního sportu
-Tréninkové programy pro mírně pokročilé tanečníky věkových skupin od 11 do 15 let</p>
-
-** Výkonnostní sport
-Tréninkové programy pro soutěžní tanečníky všech věkových skupin a výkonnostních stupňů</p>
-
-** Sportovní centrum mládeže a vrcholový sport
-Jediné Sportovní centrum MŠMT tanečního sportu v Olomouckém kraji. Tréninkový
-program pro vrcholové sportovce, reprezentanty ČR se špičkovými českými trenéry,
-speciální kondiční přípravou a moderními metodami sportovního tréninku.
-
 * Klub:
-** O nás
-OLYMP V TANEČNÍM SVĚTĚ
-
-Jsme sportovním klubem, který se věnuje tanečnímu sportu - standardním a
-latinskoamerickým tancům. Více než třicet let se zabýváme se výchovou tanečních
-sportovců od dětí až po dospělé.
-
-Stále zdokonalujeme provázaný systém tréninkových programů pro začínající,
-výkonností i vrcholové sportovce.
-
-Využíváme nejmodernějších tréninkových metod a pravidelně je posouváme ve
-spolupráci s odborníky z Falulty tělesné kultury Univerzity Palackého v Olomouci
-a mezinárodními trenéry World Dance Sport Organisation.
-
-V rámci Českého svazu tanečního sportu jsme jedním z nejúspěšnějších klubů
-posledních let. Naši členové jsou pravidelně členy národního reprezentačního
-týmu. V Olomouckém kraji jsme jediným klubem tanečního sportu s označením
-Sportovní centrum mládeže MŠMT.
-
-Působíme v Olomouci, Prostějově a Přerově.
-
 ** Kde trénujeme
 Mapky, adresy, popis vstupu
 
@@ -52,8 +16,7 @@ Západní 1, Prostějov - Krasice (vchod vedle podnikové prodejny Gala)
 
 ** Trenéři
 *** KLUBOVÍ TRENÉŘI
-
-*** Mgr. Miroslav Hýža
+**** Mgr. Miroslav Hýža
 - Předseda, šéftrenér TK Olymp
 - trenér mistrů ČR
 -  vicemistr ČR ve standardních tancích v hlavní kategorii 2018
@@ -61,7 +24,7 @@ Západní 1, Prostějov - Krasice (vchod vedle podnikové prodejny Gala)
 - finalista Akademického mistrovství Evropy 2016
 - držitel ocenění TOP 30 sportovních trenérů mládeže 2017
 
-*** Ing. Filip Karásek
+**** Ing. Filip Karásek
 - trenér a porotce II. třídy
 - 2x mistr ČR v latinsko-amerických tancích v kategorii profesionálů
 - 3x mistr ČR v latinsko-amerických tancích v hlavní kategorii
@@ -71,13 +34,13 @@ Západní 1, Prostějov - Krasice (vchod vedle podnikové prodejny Gala)
 - finalista GOC ve Stuttgartu kategorii profesionálů
 - semifinalista Světových her v Kolumbii
 
-*** Mgr. Marie Hýžová
+**** Mgr. Marie Hýžová
 - Trenér a porotce I. třídy
 - dlouholetá tanečnice mezinárodní třídy
 - zkušená trenérka dětských a juniorských přípravek
 - švadlena tanečního oblečení (řadu let šatí finalisty i medailisty mistrovství ČR)
 
-*** Mgr. Lucie Benýšková
+**** Mgr. Lucie Benýšková
 - absolventka kvalifikačního studia pro trenéry a porotce II. třídy
 - semifinalistka mistrovství ČR v hlavní kategorii (v deseti tancích a ve
   standardních tancích)
@@ -88,20 +51,20 @@ Západní 1, Prostějov - Krasice (vchod vedle podnikové prodejny Gala)
 - trenérka finalistů mistrovství ČR juniorů
 - absolventka Fakulty tělesné kultury na UP v Olomouci (obor: Tělesná výchova a sport)
 
-*** Mgr. Pavel Grepl
+**** Mgr. Pavel Grepl
 - absolvent kvalifikačního studia pro trenéry a porotce II. třídy
 - tanečník mezinárodní třídy
 - finalista Akademického mistrovství ČR ve standardních tancích
 - student Fakulty tělesné kultury na UP v Olomouci (obor: Trenérství a sport)
 - trenér atletiky III. třídy a plavání III. třídy
 
-*** Bc. Marie Hýžová ml.
+**** Bc. Marie Hýžová ml.
 - absolventka kvalifikačního studia pro trenéry a porotce II. třídy
 - finalistka mistrovství ČR v deseti tancích
 - semifinalistka mistrovství ČR ve standardních tancích
 - čtvrtfinalistka mistrovství ČR v latinskoamerických tancích
 
-*** Roman Pecha
+**** Roman Pecha
 - absolvent kvalifikačního studia pro trenéry a porotce II. třídy
 - tanečník mezinárodní třídy
 - finalista mistrovství ČR v hlavní kategorii (ve standardních tancích)
@@ -110,7 +73,7 @@ Západní 1, Prostějov - Krasice (vchod vedle podnikové prodejny Gala)
 - čtvrtfinalista mistrovství světa v kategorii mládež a U21 v deseti tancích
 - student MVŠO
 
-*** Hana Anna Šišková
+**** Hana Anna Šišková
 - absolventka kvalifikačního studia pro trenéry a porotce III. třídy
 - tanečnice mezinárodní třídy
 - 4x finalistka mistrovství ČR v kategorii U21 (titul vicemistr ČR
@@ -118,21 +81,20 @@ Západní 1, Prostějov - Krasice (vchod vedle podnikové prodejny Gala)
   titul druhý vicemistr ČR v latinskoamerických tancích)
 - studentka Fakulty tělesné kultury na UP v Olomouci (obor: Tělesná výchova a sport)
 
-*** Nela Šírová
+**** Nela Šírová
 - absolventka kvalifikačního studia pro trenéry a porotce III. třídy
 - tanečnice mezinárodní třídy
 - 3x finalistka mistrovství ČR juniorů a mládeže
 - studentka Lékařské fakulty na UP v Olomouci
 
-*** Matěj Očenášek
+**** Matěj Očenášek
 - absolvent kvalifikačního studia pro trenéry a porotce III. třídy
 - 2x finalista mistrovství ČR mládeže
 - 3x finalista mistrovství ČR v kategorii U21 (vicemistr ČR v deseti tancích)
 - student VUT FEKT
 
 *** EXTERNÍ TRENÉŘI
-
-*** Martin Odstrčil
+**** Martin Odstrčil
 - prezident DSP Kometa Brno
 - trenér finalistů mistrovství světa a medailistů mistrovství Evropy
 - trenér mistrů České republiky všech věkových kategorií
@@ -140,13 +102,13 @@ Západní 1, Prostějov - Krasice (vchod vedle podnikové prodejny Gala)
 - mistr ČR ve standardních tancích (2000)
 - trenér a porotce I. třídy
 
-*** Pavla Landsfeldová
+**** Pavla Landsfeldová
 - trenérka mistrů České republiky ve standardních tancích
 - finalistka mistrovství ČSSR ve standardních tancích
 - mistryně ČR ve standardních tancích v kategorii senior (1996)
 - trenérka a porotkyně I. třídy
 
-*** Ing. Jaroslav Kučera
+**** Ing. Jaroslav Kučera
 - předseda trenérské rady projektu Sportovně talentované mládeže ČSTS
 - trenér finalistů mistrovství světa a medailistů mistrovství Evropy
 - trenér mistrů České republiky všech věkových kategorií
