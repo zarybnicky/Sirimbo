@@ -152,8 +152,15 @@ export const DesktopHeader = ({ menu, auth }: { menu: MenuType; auth: AuthContex
         {auth.user ? (
           <PopupState variant="popover" popupId="demoMenu">
             {(popupState) => <React.Fragment>
-              <Button {...bindTrigger(popupState)} color="inherit" startIcon={<AccountCircle />}>
-                {auth.user?.name}
+              <Button
+                {...bindTrigger(popupState)}
+                color="inherit"
+                startIcon={<AccountCircle />}
+              >
+                <div style={{ display: 'flex', justifyContent: 'start', lineHeight: 1.3, flexDirection: 'column' }}>
+                  <span style={{ textDecoration: 'underline' }}>Přihlášen</span>
+                  <span style={{ textTransform: 'none' }}>{auth.user?.name}</span>
+                </div>
               </Button>
               <Menu
                 {...bindMenu(popupState)}
@@ -173,6 +180,7 @@ export const DesktopHeader = ({ menu, auth }: { menu: MenuType; auth: AuthContex
             component={NavLink} to="/login" color="inherit"
             onClick={() => auth.signIn('', '')}
             startIcon={<AccountCircle />}
+            style={{ textDecoration: 'underline' }}
           >
             Přihlásit
           </Button>
