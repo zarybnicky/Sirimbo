@@ -4,14 +4,14 @@ import {
   ListItem, ListItemText, makeStyles
 } from '@material-ui/core';
 import { NavLink } from 'react-router-dom';
+import { MenuType, SubmenuType } from '../use-menu';
+import { AuthContextType } from '../use-auth';
 
 import OlympLogo from '../../static/images/olymp-logo-oneline.svg';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuIcon from '@material-ui/icons/Menu';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-
-import { MenuType, SubmenuType } from '../use-menu';
 
 const useStyles = makeStyles((theme) => ({
   svg: {
@@ -52,7 +52,7 @@ const Submenu = ({ item: x, onClick }: { item: SubmenuType; onClick: React.Mouse
   </React.Fragment>;
 };
 
-export const MobileHeader = ({ menu }: { menu: MenuType }) => {
+export const MobileHeader = ({ menu }: { auth: AuthContextType; menu: MenuType }) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 

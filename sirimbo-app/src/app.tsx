@@ -12,15 +12,18 @@ import { Redirect, Switch, Route, useLocation } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/styles';
 
 import { adminReducer, adminSaga, DataProvider, DataProviderContext, Resource } from 'ra-core';
-import { ListGuesser, EditGuesser, ShowGuesser } from 'ra-ui-materialui';
+/* import { ListGuesser, EditGuesser, ShowGuesser } from 'ra-ui-materialui'; */
 
 import { createClient } from './client';
+import { ProvideAuth } from './use-auth';
 
 import { Layout } from './components/Layout';
 import { PageEditor } from './pages/PageEditor';
 import { HomePage } from './pages/HomePage';
 import { AboutPage } from './pages/AboutPage';
-import { ProvideAuth } from './use-auth';
+import { TrainersPage } from './pages/TrainersPage';
+import { NewsPage } from './pages/NewsPage';
+import { LocationsPage } from './pages/LocationsPage';
 
 const createAppStore = (dataProvider: DataProvider, history: History) => {
   const reducer = combineReducers({
@@ -43,30 +46,27 @@ const DynamicRoute = () => {
 
 const routes = <Switch>
   <Redirect exact from="/" to="/home" />
+
   <Route exact path="/home"><HomePage /></Route>
   <Route exact path="/o-nas"><AboutPage /></Route>
+  <Route exact path="/o-nas/treneri"><TrainersPage /></Route>
+  <Route exact path="/o-nas/kde-trenujeme"><LocationsPage /></Route>
 
+  <Route exact path="/news"><NewsPage /></Route>
   <Redirect exact from="/aktualne" to="/news" />
   <Redirect exact from="/aktualne/:id" to="/news/:id" />
-  <Route exact path="/news">
-    Article list
-  </Route>
-  <Route exact path="/news/:id">
-    Show article
-  </Route>
-  <Route exact path="/news/:id/edit">
-    <PageEditor />
-  </Route>
+  <Route exact path="/news/:id">Show article</Route>
+  <Route exact path="/news/:id/edit"><PageEditor /></Route>
 
-  <Route exact path="/admin/upozorneni" render={(routeProps) =>
-    <ListGuesser hasCreate resource="upozorneni"
+  {/* <Route exact path="/admin/upozorneni" render={(routeProps) =>
+      <ListGuesser hasCreate resource="upozorneni"
       basePath={routeProps.match.url} {...routeProps} />} />
-  <Route exact path="/admin/upozorneni/:id" render={(routeProps) =>
-    <EditGuesser hasShow resource="upozorneni"
+      <Route exact path="/admin/upozorneni/:id" render={(routeProps) =>
+      <EditGuesser hasShow resource="upozorneni"
       basePath={routeProps.match.url} id={routeProps.match.params.id} {...routeProps} />} />
-  <Route exact path="/admin/upozorneni/:id/show" render={(routeProps) =>
-    <ShowGuesser hasEdit resource="upozorneni"
-      basePath={routeProps.match.url} id={routeProps.match.params.id} {...routeProps} />} />
+      <Route exact path="/admin/upozorneni/:id/show" render={(routeProps) =>
+      <ShowGuesser hasEdit resource="upozorneni"
+      basePath={routeProps.match.url} id={routeProps.match.params.id} {...routeProps} />} /> */}
 
   <Route><DynamicRoute /></Route>
 </Switch>;

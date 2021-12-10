@@ -1,16 +1,40 @@
 import * as React from 'react';
+import { Container, Grid, Typography } from '@material-ui/core';
 import { Hero } from '../components/Hero';
-import { ServiceList } from '../components/ServiceList';
+import { ServiceCard } from '../components/ServiceCard';
 import { CallToAction } from '../components/CallToAction';
-import { HighlightList } from '../components/HighlightsList';
-import { ArticleList } from '../components/ArticleList';
-import { VideoList } from '../components/VideoList';
+import { ArticleCard } from '../components/ArticleCard';
+import { VideoCard } from '../components/VideoCard';
+import { useArticles, useServices, useVideos } from '../data';
 
-export const HomePage = ({ }) => <React.Fragment>
-  <Hero />
-  <ServiceList />
-  <CallToAction />
-  <HighlightList />
-  <ArticleList />
-  <VideoList />
-</React.Fragment>;
+export const HomePage = ({ }) => {
+  const articles = useArticles();
+  const videos = useVideos();
+  const services = useServices();
+
+  const serviceList = <Container maxWidth="lg">
+    {services.map((x, i) => <ServiceCard key={i} item={x} />)}
+  </Container>;
+
+  const videoList = <Container maxWidth="lg" style={{ margin: '3rem auto' }}>
+    <Typography gutterBottom variant="h4" component="h2">Videa</Typography>
+    <Grid container spacing={3}>
+      {videos.map((x, i) => <Grid item sm={6} key={i}><VideoCard item={x} /></Grid>)}
+    </Grid>
+  </Container>;
+
+  const articleList = <Container maxWidth="lg">
+    <Typography gutterBottom variant="h4" component="h2">Aktuálně</Typography>
+    <Grid container spacing={3}>
+      {articles.map((x, i) => <Grid item sm={6} md={3} key={i}><ArticleCard item={x} /></Grid>)}
+    </Grid>
+  </Container>;
+
+  return <React.Fragment>
+    <Hero />
+    {serviceList}
+    <CallToAction />
+    {articleList}
+    {videoList}
+  </React.Fragment>;
+}
