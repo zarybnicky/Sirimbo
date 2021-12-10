@@ -24,9 +24,8 @@ const Element = ({ attributes, children, element }: any) => {
     case 'block-quote':
       return <blockquote {...attributes}>{children}</blockquote>;
     case 'bulleted-list':
-      return <ul {...attributes}>{children}</ul>;
+      return <ul style={{ paddingBottom: '1.7rem' }} {...attributes}>{children.map((x: any) => <li>{x}</li>)}</ul>;
     case 'heading-one':
-      console.log(children);
       return <Typography variant="h4" component="h1" style={{ marginBottom: '2rem' }} {...attributes}>{children}</Typography>;
     case 'heading-two':
       return <Typography variant="h5" component="h2" style={{ marginBottom: '2rem' }} {...attributes}>{children}</Typography>;
@@ -39,8 +38,8 @@ const Element = ({ attributes, children, element }: any) => {
   }
 }
 const Leaf = ({ attributes, children, leaf }: any) => {
+  const theme = useTheme();
   if (leaf.primary) {
-    const theme = useTheme();
     children = <span style={{ color: theme.palette.primary.main }}>{children}</span>;
   }
   if (leaf.bold) {
@@ -55,5 +54,5 @@ const Leaf = ({ attributes, children, leaf }: any) => {
   if (leaf.underline) {
     children = <u>{children}</u>
   }
-  return <span {...attributes}>{children}</span>
+  return <span style={{ ...theme.typography.body1 }} {...attributes}>{children}</span>
 }

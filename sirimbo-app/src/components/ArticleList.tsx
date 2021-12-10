@@ -33,8 +33,8 @@ export const ArticleList = ({ }) => {
     <Typography gutterBottom variant="h4" component="h2">Aktuálně</Typography>
     <Grid container spacing={3}>
       {items.map((x, i) => (
-        <Grid item sm={6} md={3}>
-          <Card key={i} elevation={3}>
+        <Grid item sm={6} md={3} key={i}>
+          <Card elevation={3}>
             <CardActionArea component={Link} to={x.href}>
               <CardMedia component="img" height={240} image={x.img} title={x.header} />
               <CardContent>

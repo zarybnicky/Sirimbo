@@ -22,8 +22,12 @@ const useStyles = makeStyles((theme) => ({
       fontWeight: 'bold',
     },
     '& .map': {
-      marginTop: '1rem',
       height: '150px',
+      marginTop: '1rem'
+    },
+    '& .MuiTypography-body1': {
+      color: theme.palette.secondary.main,
+      display: 'block',
     },
   }
 }));
@@ -52,9 +56,12 @@ export const HallsPage = ({ }) => {
             <img src={x.img} alt={x.name} />
           </Grid>
           <Grid item xs={12} sm="auto" className="body">
-            <Typography variant="h5" component="h2" className="header">{x.name}</Typography>
+            <Typography variant="h5" component="h3" className="header">{x.name}</Typography>
             <Typography variant="body1">{x.address}</Typography>
             {x.href && <Typography variant="body1" component="a" href={x.href} target="_blank">{x.href}</Typography>}
+            <Typography variant="body1" component="a" href={x.mapHref} target="_blank">
+              Otevřít mapu
+            </Typography>
             <Map name={x.name} {...x.map} />
           </Grid>
         </Grid>
@@ -69,6 +76,7 @@ const items = [
     name: 'Taneční centrum při FZŠ Holečkova',
     address: 'Holečkova 10, 779 00, Olomouc (vchod brankou u zastávy Povel - škola)',
     href: 'https://www.zsholeckova.cz/',
+    mapHref: 'https://goo.gl/maps/swv3trZB2uvjcQfR6',
     map: {
       lat: 49.57963,
       lng: 17.2495939,
@@ -80,6 +88,7 @@ const items = [
     name: 'Tělocvična Slovanského gymnázia',
     address: 'Jiřího z Poděbrad 13, 779 00 Olomouc (vchod brankou z ulice U reálky)',
     href: 'https://www.sgo.cz/',
+    mapHref: 'https://goo.gl/maps/PgsEra8TnYV4V7KGA',
     map: {
       lat: 49.59490,
       lng: 17.26340,
@@ -91,6 +100,7 @@ const items = [
     name: 'T.J. Sokol Přerov',
     address: 'Brabansko 2, 750 02 Přerov',
     href: 'https://www.sokolprerov.cz/',
+    mapHref: 'https://goo.gl/maps/gP5cDBxJwgUS3hyz6',
     map: {
       lat: 49.4574331,
       lng: 17.4480036,
@@ -102,6 +112,7 @@ const items = [
     name: 'Taneční sál Gala',
     address: 'Západní 1, 796 04 Prostějov-Krasice (vchod vedle podnikové prodejny Gala)',
     href: null,
+    mapHref: 'https://goo.gl/maps/Jtv6mdoSgBEdsiTN7',
     map: {
       lat: 49.4681836,
       lng: 17.0837344,
