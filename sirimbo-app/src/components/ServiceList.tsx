@@ -36,7 +36,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-// Red/black separator + header text, spacing
 export const ServiceList = ({ }) => {
   const classes = useStyles();
   return <Container maxWidth="lg">
