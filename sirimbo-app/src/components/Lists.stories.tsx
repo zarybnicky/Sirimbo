@@ -3,9 +3,10 @@ import { ComponentStory, Meta } from '@storybook/react';
 import { Container, Grid, Typography } from '@material-ui/core';
 import { StoryTemplate } from '../test-utils'
 import { ArticleCard } from './ArticleCard';
-import { VideoCard } from './VideoCard';
+import { GalleryCard } from './GalleryCard';
 import { ServiceCard } from './ServiceCard';
-import { useArticles, useServices, useVideos } from '../data';
+import { VideoCard } from './VideoCard';
+import { useArticles, useGallery, useServices, useVideos } from '../data';
 
 export default {
   title: 'Components/Lists',
@@ -40,6 +41,18 @@ export const ServiceList: ComponentStory<React.ElementType> = () => {
   return <StoryTemplate>
     <Container maxWidth="lg">
       {items.map((x, i) => <ServiceCard key={i} item={x} />)}
+    </Container>
+  </StoryTemplate>;
+};
+
+export const GalleryList: ComponentStory<React.ElementType> = () => {
+  const items = useGallery();
+  return <StoryTemplate>
+    <Container maxWidth="lg" style={{ margin: '3rem auto' }}>
+      <Typography gutterBottom variant="h4" component="h2">Galeriy</Typography>
+      <Grid container spacing={3}>
+        {items.map((x, i) => <Grid item sm={6} md={3} key={i}><GalleryCard item={x} /></Grid>)}
+      </Grid>
     </Container>
   </StoryTemplate>;
 };

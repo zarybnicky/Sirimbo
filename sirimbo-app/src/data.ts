@@ -320,3 +320,30 @@ export const useExternalTrainers = () => [
     }],
   },
 ];
+
+export const useGallery = () => [
+  {
+    img: "https://picsum.photos/1600/900?random=1",
+    href: "/o-nas",
+    name: "Galerie Olomouc",
+    date: "20. 10. 2019",
+  },
+  {
+    img: "https://picsum.photos/1600/900?random=2",
+    href: "/o-nas",
+    name: "Galerie Olomouc",
+    date: "20. 10. 2019",
+  },
+  {
+    img: "https://picsum.photos/1600/900?random=3",
+    href: "/o-nas",
+    name: "Galerie Olomouc",
+    date: "20. 10. 2019",
+  },
+  {
+    img: "https://picsum.photos/1600/900?random=4",
+    href: "/o-nas",
+    name: "Galerie Olomouc",
+    date: "20. 10. 2019",
+  },
+];

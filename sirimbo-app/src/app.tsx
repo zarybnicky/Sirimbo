@@ -19,11 +19,11 @@ import { ProvideAuth } from './use-auth';
 
 import { Layout } from './components/Layout';
 import { PageEditor } from './pages/PageEditor';
-import { HomePage } from './pages/HomePage';
 import { AboutPage } from './pages/AboutPage';
-import { TrainersPage } from './pages/TrainersPage';
-import { NewsPage } from './pages/NewsPage';
+import { HomePage } from './pages/HomePage';
 import { LocationsPage } from './pages/LocationsPage';
+import { NewsPage } from './pages/NewsPage';
+import { TrainersPage } from './pages/TrainersPage';
 
 const createAppStore = (dataProvider: DataProvider, history: History) => {
   const reducer = combineReducers({
