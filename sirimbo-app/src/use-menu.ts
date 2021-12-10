@@ -19,10 +19,10 @@ export const mockMenu: MenuType = [
       { "type": "link", "text": "Vystoupení na akcích", "href": "/nabizime/vystoupení" }
     ]
   },
-  { "type": "link", "text": "Aktuality", "href": "/news" },
-  { "type": "link", "text": "Galerie", "href": "/gallery" },
-  { "type": "link", "text": "Akce", "href": "/events" },
-  { "type": "link", "text": "Kontakt", "href": "/contact" }
+  { "type": "link", "text": "Aktuality", "href": "/aktualne" },
+  { "type": "link", "text": "Galerie", "href": "/galerie" },
+  { "type": "link", "text": "Akce", "href": "/akce" },
+  { "type": "link", "text": "Kontakt", "href": "/kontakt" }
 ];
 
 export type MenuType = (MenuLink | SubmenuType)[];

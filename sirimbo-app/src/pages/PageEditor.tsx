@@ -13,7 +13,7 @@ import '@react-page/plugins-image/lib/index.css';
 
 export function PageEditor() {
   const [value, setValue] = React.useState<Value | null>(null);
-  return <div style={{ minHeight: '250px' }}>
+  return <div style={{ paddingBottom: '2rem', paddingTop: '2rem' }}>
     <Editor
       cellPlugins={cellPlugins}
       value={value}

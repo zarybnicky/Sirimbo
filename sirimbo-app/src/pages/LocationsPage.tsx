@@ -5,7 +5,7 @@ import { useLocations } from '../data';
 
 export const LocationsPage = ({ }) => {
   const items = useLocations();
-  return <Container maxWidth="md">
+  return <Container maxWidth="md" style={{ paddingBottom: '2rem', paddingTop: '2rem' }}>
     {items.map((x, i) => <LocationCard item={x} key={i} />)}
   </Container>;
 };

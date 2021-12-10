@@ -23,7 +23,7 @@ export const TrainersPage = ({ }) => {
         </Grid>
       ))}
     </Grid>;
-  return <Container maxWidth="lg">
+  return <Container maxWidth="lg" style={{ paddingBottom: '2rem', paddingTop: '2rem' }}>
     <Typography className={classes.section} variant="h4" component="h2">Kluboví trenéři</Typography>
     {renderList(internal)}
     <Typography className={classes.section} variant="h4" component="h2">Externí trenéři</Typography>

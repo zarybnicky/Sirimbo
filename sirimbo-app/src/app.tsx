@@ -24,6 +24,7 @@ import { HomePage } from './pages/HomePage';
 import { LocationsPage } from './pages/LocationsPage';
 import { NewsPage } from './pages/NewsPage';
 import { TrainersPage } from './pages/TrainersPage';
+import { GalleryPage } from './pages/GalleryPage';
 
 const createAppStore = (dataProvider: DataProvider, history: History) => {
   const reducer = combineReducers({
@@ -51,10 +52,20 @@ const routes = <Switch>
   <Route exact path="/o-nas"><AboutPage /></Route>
   <Route exact path="/o-nas/kde-trenujeme"><LocationsPage /></Route>
   <Route exact path="/o-nas/treneri"><TrainersPage /></Route>
+  {/* <Route exact path="/o-nas/treninkove-skupiny"><CohortsPage /></Route>
+      <Route exact path="/o-nas/clenstvi"><MembershipPage /></Route>
+      <Route exact path="/o-nas/galerie-mistru"><HallOfFamePage /></Route> */}
+
+  <Redirect exact from="/nabizime" to="/nabizime/treninkove-programy" />
+  {/* <Route exact path="/nabizime/treninkove-programy"><TrainingOfferPage /></Route>
+      <Route exact path="/nabizime/skolni-krouzky"><SchoolOfferPage /></Route>
+      <Route exact path="/nabizime/vystoupeni"><ShowOfferPage /></Route> */}
 
   <Route exact path="/aktualne"><NewsPage /></Route>
   <Route exact path="/aktualne/:id">Show article</Route>
   <Route exact path="/aktualne/:id/edit"><PageEditor /></Route>
+
+  <Route exact path="/galerie"><GalleryPage /></Route>
 
   {/* <Route exact path="/admin/upozorneni" render={(routeProps) =>
       <ListGuesser hasCreate resource="upozorneni"
