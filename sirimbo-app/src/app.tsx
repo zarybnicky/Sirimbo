@@ -49,14 +49,12 @@ const routes = <Switch>
 
   <Route exact path="/home"><HomePage /></Route>
   <Route exact path="/o-nas"><AboutPage /></Route>
-  <Route exact path="/o-nas/treneri"><TrainersPage /></Route>
   <Route exact path="/o-nas/kde-trenujeme"><LocationsPage /></Route>
+  <Route exact path="/o-nas/treneri"><TrainersPage /></Route>
 
-  <Route exact path="/news"><NewsPage /></Route>
-  <Redirect exact from="/aktualne" to="/news" />
-  <Redirect exact from="/aktualne/:id" to="/news/:id" />
-  <Route exact path="/news/:id">Show article</Route>
-  <Route exact path="/news/:id/edit"><PageEditor /></Route>
+  <Route exact path="/aktualne"><NewsPage /></Route>
+  <Route exact path="/aktualne/:id">Show article</Route>
+  <Route exact path="/aktualne/:id/edit"><PageEditor /></Route>
 
   {/* <Route exact path="/admin/upozorneni" render={(routeProps) =>
       <ListGuesser hasCreate resource="upozorneni"

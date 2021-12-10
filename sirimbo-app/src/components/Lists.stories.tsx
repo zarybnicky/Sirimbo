@@ -49,7 +49,7 @@ export const GalleryList: ComponentStory<React.ElementType> = () => {
   const items = useGallery();
   return <StoryTemplate>
     <Container maxWidth="lg" style={{ margin: '3rem auto' }}>
-      <Typography gutterBottom variant="h4" component="h2">Galeriy</Typography>
+      <Typography gutterBottom variant="h4" component="h2">Galerie</Typography>
       <Grid container spacing={3}>
         {items.map((x, i) => <Grid item sm={6} md={3} key={i}><GalleryCard item={x} /></Grid>)}
       </Grid>

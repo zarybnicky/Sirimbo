@@ -6,6 +6,7 @@ import { HomePage } from './HomePage';
 import { LocationsPage } from './LocationsPage';
 import { NewsPage } from './NewsPage';
 import { TrainersPage } from './TrainersPage';
+import { GalleryPage } from './GalleryPage';
 
 export default {
   title: 'Components/Pages',
@@ -34,4 +35,9 @@ export const News: ComponentStory<typeof NewsPage> = (args) =>
 export const Trainers: ComponentStory<typeof TrainersPage> = (args) =>
   <StoryTemplate>
     <TrainersPage {...args} />
+  </StoryTemplate>;
+
+export const Gallery: ComponentStory<typeof GalleryPage> = (args) =>
+  <StoryTemplate>
+    <GalleryPage {...args} />
   </StoryTemplate>;

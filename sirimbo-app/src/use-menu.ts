@@ -5,6 +5,7 @@ export const mockMenu: MenuType = [
   {
     "type": "menu", "text": "Klub", "hrefRoot": "/o-nas", "children": [
       { "type": "link", "text": "O nás", "href": "/o-nas" },
+      { "type": "link", "text": "Kde trénujeme", "href": "/o-nas/kde-trenujeme" },
       { "type": "link", "text": "Trenéři", "href": "/o-nas/treneri" },
       { "type": "link", "text": "Tréninkové skupiny", "href": "/o-nas/treninkove-skupiny" },
       { "type": "link", "text": "Benefity členství", "href": "/o-nas/clenstvi" },
