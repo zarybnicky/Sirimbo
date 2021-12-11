@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles, Typography } from '@material-ui/core';
 import Carousel from 'react-material-ui-carousel'
+import { useHeroData } from '../data';
 
 const useStyles = makeStyles((theme) => ({
   indicator: {
@@ -47,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const Hero = ({ }) => {
   const classes = useStyles();
+  const items = useHeroData();
 
   return <Carousel
     timeout={400}
@@ -64,9 +66,3 @@ export const Hero = ({ }) => {
     ))}
   </Carousel>;
 }
-
-const items = [
-  { img: "https://picsum.photos/1600/900?random=1", href: "/o-nas", text: "Mistři České republiky v tanečním sportu 2019" },
-  { img: "https://picsum.photos/1600/900?random=2", href: "/o-nas", text: "Mistři České republiky v tanečním sportu 2020" },
-  { img: "https://picsum.photos/1600/900?random=3", href: "/o-nas", text: "Mistři České republiky v tanečním sportu 2021" },
-];

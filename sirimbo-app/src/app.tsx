@@ -18,7 +18,7 @@ import { createClient } from './client';
 import { ProvideAuth } from './use-auth';
 
 import { Layout } from './components/Layout';
-import { PageEditor } from './pages/PageEditor';
+import { EditorPage } from './pages/EditorPage';
 import { AboutPage } from './pages/AboutPage';
 import { HomePage } from './pages/HomePage';
 import { LocationsPage } from './pages/LocationsPage';
@@ -63,7 +63,7 @@ const routes = <Switch>
 
   <Route exact path="/aktualne"><NewsPage /></Route>
   <Route exact path="/aktualne/:id">Show article</Route>
-  <Route exact path="/aktualne/:id/edit"><PageEditor /></Route>
+  <Route exact path="/aktualne/:id/edit"><EditorPage /></Route>
 
   <Route exact path="/galerie"><GalleryPage /></Route>
 

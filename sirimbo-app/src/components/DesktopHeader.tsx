@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
   },
   submenu: {
     '& .MuiMenu-paper': {
-      backgroundColor: alpha(theme.palette.common.white, .8),
+      backgroundColor: alpha(theme.palette.common.white, .9),
       borderRadius: 0,
     },
     '& .MuiListItem-button': {

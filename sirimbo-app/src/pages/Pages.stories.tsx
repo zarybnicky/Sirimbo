@@ -7,6 +7,7 @@ import { LocationsPage } from './LocationsPage';
 import { NewsPage } from './NewsPage';
 import { TrainersPage } from './TrainersPage';
 import { GalleryPage } from './GalleryPage';
+import { EditorPage } from './EditorPage';
 
 export default {
   title: 'Components/Pages',
@@ -40,4 +41,9 @@ export const Trainers: ComponentStory<typeof TrainersPage> = (args) =>
 export const Gallery: ComponentStory<typeof GalleryPage> = (args) =>
   <StoryTemplate>
     <GalleryPage {...args} />
+  </StoryTemplate>;
+
+export const Editor: ComponentStory<typeof EditorPage> = (args) =>
+  <StoryTemplate>
+    <EditorPage {...args} />
   </StoryTemplate>;

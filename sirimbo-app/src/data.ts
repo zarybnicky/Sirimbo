@@ -1,24 +1,50 @@
+function getPlaceholder(
+  width = 300,
+  height = 150,
+  text = `${width}×${height}`,
+  fontFamily = 'sans-serif',
+  fontWeight = 'bold',
+  fontSize = Math.floor(Math.min(width, height) * 0.2),
+  dy = fontSize * 0.35,
+  bgColor = '#ddd',
+  textColor = 'rgba(0,0,0,0.5)',
+  dataUri = true,
+  charset = 'UTF-8',
+) {
+  const str = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+    <rect fill="${bgColor}" width="${width}" height="${height}"/>
+    <text fill="${textColor}" font-family="${fontFamily}" font-size="${fontSize}" dy="${dy}" font-weight="${fontWeight}" x="50%" y="50%" text-anchor="middle">${text}</text>
+  </svg>`;
+  const cleaned = str.replace(/[\t\n\r]/gim, '').replace(/\s\s+/g, ' ').replace(/'/gim, '\\i');
+  if (dataUri) {
+    const encoded = encodeURIComponent(cleaned).replace(/\(/g, '%28').replace(/\)/g, '%29');
+    return `data:image/svg+xml;charset=${charset},${encoded}`;
+  }
+  return cleaned;
+}
+
+
 export const useVideos = () => [
   {
     href: "/o-nas",
-    img: "https://picsum.photos/360/240?random=1",
+    img: getPlaceholder(360, 240),
     name: "Přípravný kurz tanečního sportu",
   },
   {
     href: "/o-nas",
-    img: "https://picsum.photos/360/240?random=2",
-    name: "Přípravný kurz tanečního sportu",
-    preview: "Otevíráme kurz pro mládež a dospělé v Olomouci a Přerově"
-  },
-  {
-    href: "/o-nas",
-    img: "https://picsum.photos/360/240?random=3",
+    img: getPlaceholder(360, 240),
     name: "Přípravný kurz tanečního sportu",
     preview: "Otevíráme kurz pro mládež a dospělé v Olomouci a Přerově"
   },
   {
     href: "/o-nas",
-    img: "https://picsum.photos/360/240?random=4",
+    img: getPlaceholder(360, 240),
+    name: "Přípravný kurz tanečního sportu",
+    preview: "Otevíráme kurz pro mládež a dospělé v Olomouci a Přerově"
+  },
+  {
+    href: "/o-nas",
+    img: getPlaceholder(360, 240),
     name: "Přípravný kurz tanečního sportu",
     preview: "Otevíráme kurz pro mládež a dospělé v Olomouci a Přerově"
   },
@@ -27,25 +53,25 @@ export const useVideos = () => [
 export const useArticles = () => [
   {
     href: "/o-nas",
-    img: "https://picsum.photos/360/240?random=1",
+    img: getPlaceholder(360, 240),
     header: "Přípravný kurz tanečního sportu",
     preview: "Otevíráme kurz pro mládež a dospělé v Olomouci a Přerově"
   },
   {
     href: "/o-nas",
-    img: "https://picsum.photos/360/240?random=2",
+    img: getPlaceholder(360, 240),
     header: "Přípravný kurz tanečního sportu",
     preview: "Otevíráme kurz pro mládež a dospělé v Olomouci a Přerově"
   },
   {
     href: "/o-nas",
-    img: "https://picsum.photos/360/240?random=3",
+    img: getPlaceholder(360, 240),
     header: "Přípravný kurz tanečního sportu",
     preview: "Otevíráme kurz pro mládež a dospělé v Olomouci a Přerově"
   },
   {
     href: "/o-nas",
-    img: "https://picsum.photos/360/240?random=4",
+    img: getPlaceholder(360, 240),
     header: "Přípravný kurz tanečního sportu",
     preview: "Otevíráme kurz pro mládež a dospělé v Olomouci a Přerově"
   },
@@ -53,7 +79,7 @@ export const useArticles = () => [
 
 export const useLocations = () => [
   {
-    img: 'https://picsum.photos/360/240?random=1',
+    img: getPlaceholder(360, 240),
     name: 'Taneční centrum při FZŠ Holečkova',
     address: 'Holečkova 10, 779 00, Olomouc (vchod brankou u zastávy Povel - škola)',
     href: 'https://www.zsholeckova.cz/',
@@ -65,7 +91,7 @@ export const useLocations = () => [
     },
   },
   {
-    img: 'https://picsum.photos/360/240?random=2',
+    img: getPlaceholder(360, 240),
     name: 'Tělocvična Slovanského gymnázia',
     address: 'Jiřího z Poděbrad 13, 779 00 Olomouc (vchod brankou z ulice U reálky)',
     href: 'https://www.sgo.cz/',
@@ -77,7 +103,7 @@ export const useLocations = () => [
     },
   },
   {
-    img: 'https://picsum.photos/360/240?random=3',
+    img: getPlaceholder(360, 240),
     name: 'T.J. Sokol Přerov',
     address: 'Brabansko 2, 750 02 Přerov',
     href: 'https://www.sokolprerov.cz/',
@@ -89,7 +115,7 @@ export const useLocations = () => [
     },
   },
   {
-    img: 'https://picsum.photos/360/240?random=4',
+    img: getPlaceholder(360, 240),
     name: 'Taneční sál Gala',
     address: 'Západní 1, 796 04 Prostějov-Krasice (vchod vedle podnikové prodejny Gala)',
     href: null,
@@ -104,25 +130,25 @@ export const useLocations = () => [
 
 export const useServices = () => [
   {
-    img: "https://picsum.photos/300/100?random=1",
+    img: getPlaceholder(300, 100),
     href: null,
     header: "Přípravka tanečního sportu",
     text: "První kroky do světa tanečního sportu pro děti od 5 do 10 let. Všeobecná taneční průprava a základy tanečních kroků pro budoucí hvězdy."
   },
   {
-    img: "https://picsum.photos/300/100?random=2",
+    img: getPlaceholder(300, 100),
     href: null,
     header: "Základy tanečního sportu",
     text: "Tréninkové programy pro začínající a mírně pokročilé tanečníky ve věkových skupinách juniorů (12-15 let), mládež a dospělí (16+ let)."
   },
   {
-    img: "https://picsum.photos/300/100?random=3",
+    img: getPlaceholder(300, 100),
     href: null,
     header: "Výkonnostní sport",
     text: "Tréninkové programy pro soutěžní tanečníky ve všech věkových skupinách a výkonnostních třídách uzpůsobené podle potřeb v jednotlivých výkonnostních stupních."
   },
   {
-    img: "https://picsum.photos/300/100?random=4",
+    img: getPlaceholder(300, 100),
     href: null,
     header: "Sportovní centrum mládeže",
     text: "Tréninkový program pro vrcholové sportovce, reprezentanty ČR se špičkovými českými trenéry, speciální kondiční přípravou a moderními metodami sportovního tréninku. Jsme jediným klubem v Olomouckém kraji se statutem Sprtovního centra mládeže dle MŠMT."
@@ -131,7 +157,7 @@ export const useServices = () => [
 
 export const useInternalTrainers = () => [
   {
-    img: 'https://picsum.photos/360/240?random=3',
+    img: getPlaceholder(360, 240),
     name: 'Mgr. Miroslav Hýža',
     content: [{
       type: 'bulleted-list',
@@ -146,7 +172,7 @@ export const useInternalTrainers = () => [
     }],
   },
   {
-    img: 'https://picsum.photos/360/240?random=4',
+    img: getPlaceholder(360, 240),
     name: 'Ing. Filip Karásek',
     content: [{
       type: 'bulleted-list',
@@ -163,7 +189,7 @@ export const useInternalTrainers = () => [
     }],
   },
   {
-    img: 'https://picsum.photos/360/240?random=5',
+    img: getPlaceholder(360, 240),
     name: 'Mgr. Marie Hýžová',
     content: [{
       type: 'bulleted-list',
@@ -176,7 +202,7 @@ export const useInternalTrainers = () => [
     }],
   },
   {
-    img: 'https://picsum.photos/360/240?random=6',
+    img: getPlaceholder(360, 240),
     name: 'Mgr. Lucie Benýšková',
     content: [{
       type: 'bulleted-list',
@@ -192,7 +218,7 @@ export const useInternalTrainers = () => [
     }],
   },
   {
-    img: 'https://picsum.photos/360/240?random=7',
+    img: getPlaceholder(360, 240),
     name: 'Mgr. Pavel Grepl',
     content: [{
       type: 'bulleted-list',
@@ -206,7 +232,7 @@ export const useInternalTrainers = () => [
     }],
   },
   {
-    img: 'https://picsum.photos/360/240?random=8',
+    img: getPlaceholder(360, 240),
     name: 'Bc. Marie Hýžová ml.',
     content: [{
       type: 'bulleted-list',
@@ -219,7 +245,7 @@ export const useInternalTrainers = () => [
     }],
   },
   {
-    img: 'https://picsum.photos/360/240?random=9',
+    img: getPlaceholder(360, 240),
     name: 'Roman Pecha',
     content: [{
       type: 'bulleted-list',
@@ -235,7 +261,7 @@ export const useInternalTrainers = () => [
     }],
   },
   {
-    img: 'https://picsum.photos/360/240?random=10',
+    img: getPlaceholder(360, 240),
     name: 'Hana Anna Šišková',
     content: [{
       type: 'bulleted-list',
@@ -248,7 +274,7 @@ export const useInternalTrainers = () => [
     }],
   },
   {
-    img: 'https://picsum.photos/360/240?random=11',
+    img: getPlaceholder(360, 240),
     name: 'Nela Šírová',
     content: [{
       type: 'bulleted-list',
@@ -261,7 +287,7 @@ export const useInternalTrainers = () => [
     }],
   },
   {
-    img: 'https://picsum.photos/360/240?random=11',
+    img: getPlaceholder(360, 240),
     name: 'Matěj Očenášek',
     content: [{
       type: 'bulleted-list',
@@ -277,7 +303,7 @@ export const useInternalTrainers = () => [
 
 export const useExternalTrainers = () => [
   {
-    img: 'https://picsum.photos/360/240?random=12',
+    img: getPlaceholder(360, 240),
     name: 'Martin Odstrčil',
     content: [{
       type: 'bulleted-list',
@@ -292,7 +318,7 @@ export const useExternalTrainers = () => [
     }],
   },
   {
-    img: 'https://picsum.photos/360/240?random=13',
+    img: getPlaceholder(360, 240),
     name: 'Pavla Landsfeldová',
     content: [{
       type: 'bulleted-list',
@@ -305,7 +331,7 @@ export const useExternalTrainers = () => [
     }],
   },
   {
-    img: 'https://picsum.photos/360/240?random=14',
+    img: getPlaceholder(360, 240),
     name: 'Ing. Jaroslav Kučera',
     content: [{
       type: 'bulleted-list',
@@ -323,27 +349,45 @@ export const useExternalTrainers = () => [
 
 export const useGallery = () => [
   {
-    img: "https://picsum.photos/1600/900?random=1",
+    img: getPlaceholder(1600, 900),
     href: "/o-nas",
     name: "Galerie Olomouc",
     date: "20. 10. 2019",
   },
   {
-    img: "https://picsum.photos/1600/900?random=2",
+    img: getPlaceholder(1600, 900),
     href: "/o-nas",
     name: "Galerie Olomouc",
     date: "20. 10. 2019",
   },
   {
-    img: "https://picsum.photos/1600/900?random=3",
+    img: getPlaceholder(1600, 900),
     href: "/o-nas",
     name: "Galerie Olomouc",
     date: "20. 10. 2019",
   },
   {
-    img: "https://picsum.photos/1600/900?random=4",
+    img: getPlaceholder(1600, 900),
     href: "/o-nas",
     name: "Galerie Olomouc",
     date: "20. 10. 2019",
+  },
+];
+
+export const useHeroData = () => [
+  {
+    img: getPlaceholder(1600, 900),
+    href: "/o-nas",
+    text: "Mistři České republiky v tanečním sportu 2019",
+  },
+  {
+    img: getPlaceholder(1600, 900),
+    href: "/o-nas",
+    text: "Mistři České republiky v tanečním sportu 2020",
+  },
+  {
+    img: getPlaceholder(1600, 900),
+    href: "/o-nas",
+    text: "Mistři České republiky v tanečním sportu 2021",
   },
 ];
