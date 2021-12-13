@@ -11,15 +11,26 @@ in {
       description = "${pkgName} Nginx vhost domain";
       example = "tkolymp.cz";
     };
-    internalPort = lib.mkOption {
+
+    haskellPort = lib.mkOption {
       type = lib.types.int;
-      description = "${pkgName} internal port";
+      description = "${pkgName} internal Haskell port";
       example = 3000;
     };
-    proxyPort = lib.mkOption {
+    phpPort = lib.mkOption {
       type = lib.types.int;
       description = "${pkgName} internal PHP port";
       example = 3001;
+    };
+    jsPort = lib.mkOption {
+      type = lib.types.int;
+      description = "${pkgName} internal JS port";
+      example = 3002;
+    };
+    hasuraPort = lib.mkOption {
+      type = lib.types.int;
+      description = "${pkgName} internal Hasura port";
+      default = 8080;
     };
 
     dbConnString = lib.mkOption {
@@ -46,7 +57,7 @@ in {
   config = let
     cfgFile = pkgs.writeText "config.yaml" ''
       dbConnString: "${cfg.dbConnString}"
-      proxyPort: ${toString cfg.proxyPort}
+      proxyPort: ${toString cfg.phpPort}
     '';
 
     configPhp = pkgs.runCommand "sirimbo-php-config" {} ''
@@ -115,7 +126,7 @@ in {
         recommendedProxySettings = true;
         virtualHosts.${"fpm." + cfg.domain} = {
           root = phpRoot;
-          listen = [{ addr = "127.0.0.1"; port = cfg.proxyPort; }];
+          listen = [{ addr = "127.0.0.1"; port = cfg.phpPort; }];
           locations."/" = {
             index = "index.php";
             extraConfig = "try_files /public/$uri /index.php?$args;";
@@ -139,11 +150,15 @@ in {
           locations."/".extraConfig = "try_files /public/$uri @proxy;";
 
           locations."/graphql/" = {
-            proxyPass = "http://127.0.0.1:8080/";
+            proxyPass = "http://127.0.0.1:${toString cfg.hasuraPort}/";
+            proxyWebsockets = true;
+          };
+          locations."/backend/" = {
+            proxyPass = "http://127.0.0.1:${toString cfg.jsPort}/";
             proxyWebsockets = true;
           };
           locations."@proxy" = {
-            proxyPass = "http://127.0.0.1:${toString cfg.internalPort}";
+            proxyPass = "http://127.0.0.1:${toString cfg.haskellPort}";
             proxyWebsockets = true;
           };
         };
@@ -177,10 +192,11 @@ in {
         after = ["network-online.target" "postgresql.service"];
         requires = ["postgresql.service"];
         path = [pkgs.postgresql];
+        environment.HASURA_GRAPHQL_SERVER_PORT = toString cfg.hasuraPort;
         environment.HASURA_GRAPHQL_DATABASE_URL = "postgres:///olymp";
         environment.HASURA_GRAPHQL_ADMIN_SECRET = "superadmin";
         environment.HASURA_GRAPHQL_ENABLE_TELEMETRY = "false";
-        environment.HASURA_GRAPHQL_AUTH_HOOK = "http://localhost:${toString cfg.internalPort}/api/graphql-auth";
+        environment.HASURA_GRAPHQL_AUTH_HOOK = "http://localhost:${toString cfg.haskellPort}/api/graphql-auth";
         environment.HASURA_GRAPHQL_ENABLED_LOG_TYPES = "startup, http-log, webhook-log, websocket-log, query-log";
         environment.HASURA_GRAPHQL_EXPERIMENTAL_FEATURES = "inherited_roles";
         serviceConfig = {
@@ -189,6 +205,17 @@ in {
           Type = "simple";
           ExecStart = "${pkgs.hasura-graphql-engine}/bin/graphql-engine serve";
         };
+      };
+
+      systemd.services.sirimbo-backend = {
+        serviceConfig = {
+          ExecStart = "${pkgs.nodejs}/bin/node ${pkgs.sirimbo-backend}/bin/hafas-client-rpc";
+          Restart = "always";
+          RestartSec = "10s";
+        };
+        after = [ "network.target" ];
+        wantedBy = [ "multi-user.target" ];
+        environment.PORT = cfg.jsPort;
       };
 
       systemd.services.olymp-api-migrate = {
@@ -216,7 +243,7 @@ in {
           User = cfg.user;
           Group = cfg.group;
           Restart = "always";
-          ExecStart = "${pkgs.sirimbo-api}/bin/olymp server --port ${toString cfg.internalPort}";
+          ExecStart = "${pkgs.sirimbo-api}/bin/olymp server --port ${toString cfg.haskellPort}";
         };
       };
     })

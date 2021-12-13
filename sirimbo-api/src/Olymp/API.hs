@@ -38,30 +38,13 @@ olympAPI =
 graphqlAuth :: Eff Database m => Maybe (SessionId, Entity User) -> m A.Value
 graphqlAuth = \case
   Nothing -> pure $ A.object ["X-Hasura-Role" A..= ("anonymous" :: String)]
-  Just (_, eUser) -> do
-    let permGroupKey = userPermission (entityVal eUser)
-    permGroup <- query (get permGroupKey)
-    pure . A.object $
-      [ "X-Hasura-Role" A..= case fromSqlKey permGroupKey of
-          0 -> "anonymous" :: String
-          1 -> "admin"
-          _ -> "member",
-        "X-Hasura-User-Id" A..= show (fromSqlKey (entityKey eUser)),
-        "X-Hasura-Level-Akce" A..= show (maybe 1 permissionLevelAkce permGroup),
-        "X-Hasura-Level-Aktuality" A..= show (maybe 1 permissionLevelAktuality permGroup),
-        "X-Hasura-Level-Dokumenty" A..= show (maybe 1 permissionLevelDokumenty permGroup),
-        "X-Hasura-Level-Galerie" A..= show (maybe 1 permissionLevelGalerie permGroup),
-        "X-Hasura-Level-Konzole" A..= show (maybe 1 permissionLevelKonzole permGroup),
-        "X-Hasura-Level-Nabidka" A..= show (maybe 1 permissionLevelNabidka permGroup),
-        "X-Hasura-Level-Nastenka" A..= show (maybe 1 permissionLevelNastenka permGroup),
-        "X-Hasura-Level-Novinky" A..= show (maybe 1 permissionLevelNovinky permGroup),
-        "X-Hasura-Level-Pary" A..= show (maybe 1 permissionLevelPary permGroup),
-        "X-Hasura-Level-Platby" A..= show (maybe 1 permissionLevelPlatby permGroup),
-        "X-Hasura-Level-Permissions" A..= show (maybe 1 permissionLevelPermissions permGroup),
-        "X-Hasura-Level-Rozpis" A..= show (maybe 1 permissionLevelRozpis permGroup),
-        "X-Hasura-Level-Skupiny" A..= show (maybe 1 permissionLevelSkupiny permGroup),
-        "X-Hasura-Level-Users" A..= show (maybe 1 permissionLevelUsers permGroup)
-      ]
+  Just (_, eUser) -> pure . A.object $
+    [ "X-Hasura-Role" A..= case fromSqlKey $ userPermission (entityVal eUser) of
+        0 -> "anonymous" :: String
+        1 -> "admin"
+        _ -> "member",
+      "X-Hasura-User-Id" A..= show (fromSqlKey (entityKey eUser))
+    ]
 
 logout ::
   Eff SessionEff m =>

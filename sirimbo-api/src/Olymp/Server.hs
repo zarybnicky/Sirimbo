@@ -32,7 +32,7 @@ import Control.Effect (Effs, Embed, embed, runM)
 import Control.Effect.AtomicState (AtomicState, atomicGet)
 import Control.Effect.Bracket (bracketToIO)
 import Control.Effect.Embed (embedToMonadIO)
-import Control.Lens
+import Control.Lens ( (<&>), (.~) )
 import Control.Monad.Except (ExceptT (..), void)
 import Control.Monad.Logger (runStdoutLoggingT)
 import Control.Monad.Trans.Reader (runReaderT)

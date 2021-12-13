@@ -53,6 +53,11 @@
         packageJSON = ./sirimbo-app/package.json;
         yarnLock = ./sirimbo-app/yarn.lock;
       };
+      sirimbo-backend = final.callPackage ./nix/sirimbo-backend.nix {
+        src = getSrc ./backend;
+        packageJSON = ./backend/package.json;
+        yarnLock = ./backend/yarn.lock;
+      };
       sirimbo-php = (final.callPackage ./sirimbo-php/composer-project.nix {
         php = final.php74;
       } (getSrc ./sirimbo-php)).overrideAttrs (oldAttrs: {
@@ -132,8 +137,8 @@
             dbConnString = "dbname=olymp";
             stateDir = "/var/lib/olymp";
             domain = "olymp-test";
-            internalPort = 3000;
-            proxyPort = 3010;
+            haskellPort = 3000;
+            phpPort = 3010;
           };
         })
       ];

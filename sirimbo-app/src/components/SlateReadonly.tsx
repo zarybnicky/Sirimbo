@@ -54,5 +54,5 @@ const Leaf = ({ attributes, children, leaf }: any) => {
   if (leaf.underline) {
     children = <u>{children}</u>
   }
-  return <span style={{ ...theme.typography.body1 }} {...attributes}>{children}</span>
+  return <span style={{ fontFamily: theme.typography.body1.fontFamily }} {...attributes}>{children}</span>
 }

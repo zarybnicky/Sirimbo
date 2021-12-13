@@ -1,0 +1,9 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "repository": "https://github.com/zarybnicky/TKOlymp/",
+  "author": "Jakub Zárybnický",
+  "license": "MIT",
+  "private": true
+}
