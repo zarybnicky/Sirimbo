@@ -181,7 +181,7 @@ in {
           "php_admin_value[post_max_size]" = "40M";
         };
         phpPackage = pkgs.php.withExtensions ({ all, ... }: with all; [
-          curl imagick opcache pdo_mysql pdo mysqlnd mysqli openssl posix
+          curl imagick opcache pdo openssl posix
           mbstring session json ctype exif gd zlib pdo_pgsql
         ]);
       };
@@ -221,8 +221,8 @@ in {
       systemd.services.olymp-api-migrate = {
         description = "${pkgName} Migrations";
         wantedBy = [ "multi-user.target" ];
-        after = [ "network-online.target" "mysql.service" ];
-        requires = [ "mysql.service" ];
+        after = [ "network-online.target" "postgresql.service" ];
+        requires = [ "postgresql.service" ];
         serviceConfig = {
           User = cfg.user;
           Group = cfg.group;
@@ -236,8 +236,8 @@ in {
       systemd.services.olymp-api = {
         description = "${pkgName} Webserver";
         wantedBy = [ "multi-user.target" ];
-        after = [ "network-online.target" "mysql.service" ];
-        requires = [ "olymp-api-migrate.service" "mysql.service" ];
+        after = [ "network-online.target" "postgresql.service" ];
+        requires = [ "olymp-api-migrate.service" "postgresql.service" ];
         environment.CONFIG = cfgFile;
         serviceConfig = {
           User = cfg.user;

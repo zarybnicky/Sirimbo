@@ -112,15 +112,6 @@
           networking.useDHCP = false;
           networking.firewall.allowedTCPPorts = [ 80 3000 3306 ];
           environment.systemPackages = [ pkgs.file ];
-          services.mysql = {
-            enable = true;
-            package = pkgs.mariadb;
-            ensureDatabases = ["olymp"];
-            ensureUsers = [{
-              name = "olymp";
-              ensurePermissions = { "olymp.*" = "ALL PRIVILEGES"; };
-            }];
-          };
           services.postgresql = {
             enable = true;
             ensureDatabases = ["root" "olymp"];
