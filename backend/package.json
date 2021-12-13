@@ -1,9 +1,12 @@
 {
-  "name": "backend",
+  "name": "sirimbo-backend",
   "version": "1.0.0",
-  "main": "index.ts",
+  "main": "index.js",
   "repository": "https://github.com/zarybnicky/TKOlymp/",
   "author": "Jakub Zárybnický",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "bin": {
+    "sirimbo-backend": "./index.js"
+  }
 }

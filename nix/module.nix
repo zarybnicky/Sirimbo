@@ -209,13 +209,13 @@ in {
 
       systemd.services.sirimbo-backend = {
         serviceConfig = {
-          ExecStart = "${pkgs.nodejs}/bin/node ${pkgs.sirimbo-backend}/bin/hafas-client-rpc";
+          ExecStart = "${pkgs.nodejs}/bin/node ${pkgs.sirimbo-backend}/bin/sirimbo-backend";
           Restart = "always";
           RestartSec = "10s";
         };
         after = [ "network.target" ];
         wantedBy = [ "multi-user.target" ];
-        environment.PORT = cfg.jsPort;
+        environment.PORT = toString cfg.jsPort;
       };
 
       systemd.services.olymp-api-migrate = {

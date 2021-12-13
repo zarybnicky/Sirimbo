@@ -139,6 +139,8 @@
             domain = "olymp-test";
             haskellPort = 3000;
             phpPort = 3010;
+            hasuraPort = 8080;
+            jsPort = 3020;
           };
         })
       ];
