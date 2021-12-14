@@ -96,6 +96,7 @@
         hsPkgs.cabal-install
         hsPkgs.haskell-language-server
         hsPkgs.stan
+        hsPkgs.prune-juice
         pkgs.entr
         pkgs.graphile-migrate
         pkgs.yarn

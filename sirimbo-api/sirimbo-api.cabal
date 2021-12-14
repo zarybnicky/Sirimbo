@@ -49,7 +49,6 @@ library
   build-depends:       base >=4.7 && <5
                      , aeson
                      , barbies
-                     , binary
                      , bytestring
                      , co-log
                      , co-log-core
@@ -57,14 +56,8 @@ library
                      , cookie
                      , data-fix
                      , directory
-                     , errors
-                     , esqueleto
-                     , exceptions
-                     , filepath
                      , generic-lens
-                     , ginger
                      , gogol
-                     , gogol-core
                      , gogol-youtube
                      , higgledy
                      , http-client
@@ -72,7 +65,6 @@ library
                      , in-other-words
                      , lens
                      , monad-logger
-                     , monoidal-containers
                      , mtl
                      , optparse-applicative
                      , persistent
@@ -82,23 +74,15 @@ library
                      , recursion-schemes
                      , resource-pool
                      , resourcet
-                     , servant
-                     , servant-flatten
-                     , servant-foreign
-                     , servant-multipart
                      , servant-server
                      , servant-websockets
-                     , tagged
                      , text
                      , template-haskell
                      , time
                      , transformers
                      , transformers-compat
-                     , unordered-containers
                      , validation
-                     , vector
                      , wai
-                     , wai-cors
                      , warp
                      , websockets
                      , yaml
