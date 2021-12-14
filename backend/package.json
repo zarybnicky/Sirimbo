@@ -1,22 +1,42 @@
 {
   "name": "sirimbo-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/index.ts",
   "repository": "https://github.com/zarybnicky/TKOlymp/",
   "author": "Jakub Zárybnický",
   "license": "MIT",
   "private": true,
-  "bin": {
-    "sirimbo-backend": "./index.js"
+  "scripts": {
+    "build": "webpack --progress",
+    "start": "tsnd --respawn src/index.ts"
   },
   "dependencies": {
+    "@graphile/pg-pubsub": "^4.12.2",
+    "@tsconfig/node12": "^1.0.9",
+    "@types/body-parser": "^1.19.2",
+    "@types/compression": "^1.7.2",
     "@types/cookie-parser": "^1.4.2",
     "@types/express": "^4.17.13",
+    "@types/morgan": "^1.9.3",
     "@types/pg": "^8.6.1",
+    "body-parser": "^1.19.1",
+    "bufferutil": "^4.0.5",
+    "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "express": "^4.17.1",
+    "graphile-build": "^4.12.2",
+    "graphql": "^15.0.0",
+    "helmet": "^4.6.0",
+    "morgan": "^1.10.0",
     "pg": "^8.7.1",
+    "postgraphile": "^4.12.5",
+    "raw-loader": "^4.0.2",
+    "ts-loader": "^9.2.6",
+    "ts-node-dev": "^1.1.8",
     "typescript": "^4.5.4",
+    "utf-8-validate": "^5.0.7",
+    "webpack": "^5.65.0",
+    "webpack-cli": "^4.9.1",
     "zapatos": "^5.0.0"
   }
 }

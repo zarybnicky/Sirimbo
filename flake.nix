@@ -55,15 +55,29 @@
         yarnLock = "${migrate}/yarn.lock";
         buildPhase = "yarn --offline run prepack";
       };
+      sirimbo-backend = final.mkYarnPackage {
+        src = getSrc ./backend;
+        packageJSON = ./backend/package.json;
+        yarnLock = ./backend/yarn.lock;
+        buildPhase = ''
+          # Inline watch-fixtures.sql
+          sed -i \
+            -e '/readFile(WATCH_FIXTURES_PATH,/d' \
+            -e 's|const WATCH_FIXTURES_PATH.*|var watchSqlInner = require("!!raw-loader!../../res/watch-fixtures.sql").default;|' \
+            node_modules/graphile-build-pg/node8plus/plugins/PgIntrospectionPlugin.js
+          cat node_modules/graphile-build-pg/node8plus/plugins/PgIntrospectionPlugin.js
+          yarn --offline run build
+        '';
+        installPhase = ''
+          mkdir -p $out/bin
+          cp deps/sirimbo-backend/dist/bundle.js $out/bin/sirimbo-backend
+        '';
+        distPhase = "true";
+      };
       sirimbo-app = final.callPackage ./nix/sirimbo-app.nix {
         src = getSrc ./sirimbo-app;
         packageJSON = ./sirimbo-app/package.json;
         yarnLock = ./sirimbo-app/yarn.lock;
-      };
-      sirimbo-backend = final.callPackage ./nix/sirimbo-backend.nix {
-        src = getSrc ./backend;
-        packageJSON = ./backend/package.json;
-        yarnLock = ./backend/yarn.lock;
       };
       sirimbo-php = (final.callPackage ./sirimbo-php/composer-project.nix {
         php = final.php74;
