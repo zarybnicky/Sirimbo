@@ -1,8 +1,9 @@
 {
   inputs.gogol = { flake = false; url = github:brendanhay/gogol/develop; };
+  inputs.migrate = { flake = false; url = github:graphile/migrate/main; };
   inputs.unstable.url = github:NixOS/nixpkgs/master;
 
-  outputs = { self, nixpkgs, unstable, gogol }: let
+  outputs = { self, nixpkgs, unstable, gogol, migrate }: let
     inherit (nixpkgs.lib) flip mapAttrs mapAttrsToList;
     inherit (pkgs.nix-gitignore) gitignoreSourcePure gitignoreSource;
 
@@ -34,7 +35,6 @@
           generateOptparseApplicativeCompletion unmarkBroken;
       in {
         packageOverrides = prev.lib.composeExtensions (prev.haskell.packageOverrides or (_: _: {})) (hself: hsuper: {
-          servant-JuicyPixels = doJailbreak (unmarkBroken hsuper.servant-JuicyPixels);
           higgledy = doJailbreak (unmarkBroken hsuper.higgledy);
           gogol-core = hself.callCabal2nix "gogol-core" "${gogol}/core" {};
           gogol = hself.callCabal2nix "gogol" "${gogol}/gogol" {};
@@ -48,6 +48,13 @@
         });
       });
       inherit (final.haskell.packages.${compiler}) sirimbo-api;
+      graphile-migrate = final.mkYarnPackage {
+        name = "graphile-migrate";
+        src = migrate;
+        packageJSON = "${migrate}/package.json";
+        yarnLock = "${migrate}/yarn.lock";
+        buildPhase = "yarn --offline run prepack";
+      };
       sirimbo-app = final.callPackage ./nix/sirimbo-app.nix {
         src = getSrc ./sirimbo-app;
         packageJSON = ./sirimbo-app/package.json;
@@ -79,8 +86,7 @@
     };
 
     packages.x86_64-linux = {
-      inherit (pkgs) sirimbo-php sirimbo-app;
-      inherit (hsPkgs) sirimbo-api;
+      inherit (pkgs) sirimbo-php sirimbo-app sirimbo-backend graphile-migrate;
     };
 
     devShell.x86_64-linux = hsPkgs.shellFor {
@@ -91,6 +97,7 @@
         hsPkgs.haskell-language-server
         hsPkgs.stan
         pkgs.entr
+        pkgs.graphile-migrate
         pkgs.yarn
         pkgs.phpstan
         pkgs.nodePackages.typescript
@@ -128,7 +135,6 @@
             dbConnString = "dbname=olymp";
             stateDir = "/var/lib/olymp";
             domain = "olymp-test";
-            haskellPort = 3000;
             phpPort = 3010;
             hasuraPort = 8080;
             jsPort = 3020;

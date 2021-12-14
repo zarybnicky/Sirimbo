@@ -17,6 +17,23 @@
         "type": "github"
       }
     },
+    "migrate": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1637000941,
+        "narHash": "sha256-xugkSBPxr9cAI0LhA2ZATCngvD9UQHHUkKBQbhokgu0=",
+        "owner": "graphile",
+        "repo": "migrate",
+        "rev": "7478ffa4d7101f155e3f14d5be4e4f94bf60c7d6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "graphile",
+        "ref": "main",
+        "repo": "migrate",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1634252089,
@@ -33,6 +50,7 @@
     "root": {
       "inputs": {
         "gogol": "gogol",
+        "migrate": "migrate",
         "nixpkgs": "nixpkgs",
         "unstable": "unstable"
       }

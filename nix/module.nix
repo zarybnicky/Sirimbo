@@ -12,11 +12,6 @@ in {
       example = "tkolymp.cz";
     };
 
-    haskellPort = lib.mkOption {
-      type = lib.types.int;
-      description = "${pkgName} internal Haskell port";
-      example = 3000;
-    };
     phpPort = lib.mkOption {
       type = lib.types.int;
       description = "${pkgName} internal PHP port";
@@ -124,9 +119,26 @@ in {
         recommendedGzipSettings = true;
         recommendedOptimisation = true;
         recommendedProxySettings = true;
-        virtualHosts.${"fpm." + cfg.domain} = {
+        virtualHosts.${cfg.domain} = {
           root = phpRoot;
-          listen = [{ addr = "127.0.0.1"; port = cfg.phpPort; }];
+          serverAliases = ["www.${cfg.domain}"];
+          locations."/gallery".root = cfg.stateDir;
+          locations."/galerie".root = cfg.stateDir;
+          locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
+
+          locations."/graphql/" = {
+            proxyPass = "http://127.0.0.1:${toString cfg.hasuraPort}/";
+            proxyWebsockets = true;
+          };
+          locations."/graphql-auth" = {
+            proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
+            proxyWebsockets = true;
+          };
+          locations."/logout" = {
+            proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
+            proxyWebsockets = true;
+          };
+
           locations."/" = {
             index = "index.php";
             extraConfig = "try_files /public/$uri /index.php?$args;";
@@ -140,27 +152,6 @@ in {
             include ${pkgs.nginx}/conf/fastcgi_params;
             include ${pkgs.nginx}/conf/fastcgi.conf;
           '';
-        };
-        virtualHosts.${cfg.domain} = {
-          root = phpRoot;
-          serverAliases = ["www.${cfg.domain}"];
-          locations."/gallery".root = cfg.stateDir;
-          locations."/galerie".root = cfg.stateDir;
-          locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
-          locations."/".extraConfig = "try_files /public/$uri @proxy;";
-
-          locations."/graphql/" = {
-            proxyPass = "http://127.0.0.1:${toString cfg.hasuraPort}/";
-            proxyWebsockets = true;
-          };
-          locations."/backend/" = {
-            proxyPass = "http://127.0.0.1:${toString cfg.jsPort}/";
-            proxyWebsockets = true;
-          };
-          locations."@proxy" = {
-            proxyPass = "http://127.0.0.1:${toString cfg.haskellPort}";
-            proxyWebsockets = true;
-          };
         };
       };
 
@@ -196,9 +187,8 @@ in {
         environment.HASURA_GRAPHQL_DATABASE_URL = "postgres:///olymp";
         environment.HASURA_GRAPHQL_ADMIN_SECRET = "superadmin";
         environment.HASURA_GRAPHQL_ENABLE_TELEMETRY = "false";
-        environment.HASURA_GRAPHQL_AUTH_HOOK = "http://localhost:${toString cfg.haskellPort}/api/graphql-auth";
+        environment.HASURA_GRAPHQL_AUTH_HOOK = "http://localhost:${toString cfg.jsPort}/graphql-auth";
         environment.HASURA_GRAPHQL_ENABLED_LOG_TYPES = "startup, http-log, webhook-log, websocket-log, query-log";
-        environment.HASURA_GRAPHQL_EXPERIMENTAL_FEATURES = "inherited_roles";
         serviceConfig = {
           User = cfg.user;
           Group = cfg.group;
@@ -208,17 +198,21 @@ in {
       };
 
       systemd.services.sirimbo-backend = {
+        after = [ "network.target" ];
+        wantedBy = [ "multi-user.target" ];
+        environment.PGDATABASE = "olymp";
+        environment.PGHOST = "/run/postgresql";
+        environment.PORT = toString cfg.jsPort;
         serviceConfig = {
+          User = cfg.user;
+          Group = cfg.group;
           ExecStart = "${pkgs.nodejs}/bin/node ${pkgs.sirimbo-backend}/bin/sirimbo-backend";
           Restart = "always";
           RestartSec = "10s";
         };
-        after = [ "network.target" ];
-        wantedBy = [ "multi-user.target" ];
-        environment.PORT = toString cfg.jsPort;
       };
 
-      systemd.services.olymp-api-migrate = {
+      systemd.services.sirimbo-migrate = {
         description = "${pkgName} Migrations";
         wantedBy = [ "multi-user.target" ];
         after = [ "network-online.target" "postgresql.service" ];
@@ -230,20 +224,6 @@ in {
           ExecStart = "${pkgs.coreutils}/bin/true";
           RemainAfterExit = "true";
           # ExecStart = "${self.packages.x86_64-linux.sirimbo-api}/bin/olymp migrate --execute";
-        };
-      };
-
-      systemd.services.olymp-api = {
-        description = "${pkgName} Webserver";
-        wantedBy = [ "multi-user.target" ];
-        after = [ "network-online.target" "postgresql.service" ];
-        requires = [ "olymp-api-migrate.service" "postgresql.service" ];
-        environment.CONFIG = cfgFile;
-        serviceConfig = {
-          User = cfg.user;
-          Group = cfg.group;
-          Restart = "always";
-          ExecStart = "${pkgs.sirimbo-api}/bin/olymp server --port ${toString cfg.haskellPort}";
         };
       };
     })
