@@ -30,7 +30,6 @@ library
                        Olymp.Schema.Orphans
                        Olymp.Schema.Utils
 
-                       Olymp.API
                        Olymp.Auth
                        Olymp.Cli
                        Olymp.Cli.Config

@@ -24,15 +24,12 @@ module Olymp.Server
   )
 where
 
--- import Servant.Multipart (MultipartData, MultipartForm, Tmp)
--- import Network.Wai.Middleware.Cors
-
 import Control.Concurrent (threadDelay)
-import Control.Effect (Effs, Embed, embed, runM)
+import Control.Effect (Embed, embed, runM)
 import Control.Effect.AtomicState (AtomicState, atomicGet)
 import Control.Effect.Bracket (bracketToIO)
 import Control.Effect.Embed (embedToMonadIO)
-import Control.Lens ( (<&>), (.~) )
+import Control.Lens ((.~), (<&>))
 import Control.Monad.Except (ExceptT (..), void)
 import Control.Monad.Logger (runStdoutLoggingT)
 import Control.Monad.Trans.Reader (runReaderT)
@@ -45,25 +42,39 @@ import qualified Data.Map as M
 import Data.Pool (Pool, withResource)
 import qualified Data.Text as T
 import Database.Persist.Postgresql (createPostgresqlPool)
-import Database.Persist.Sql (SqlBackend, get, repsert)
+import Database.Persist.Sql (SqlBackend, repsert)
 import Network.Google (LogLevel (Info), envScopes, newEnvWith, newLogger, newManager, tlsManagerSettings)
 import Network.Google.Auth (getApplicationDefault)
 import Network.Google.YouTube (youTubeReadOnlyScope)
 import Network.HTTP.Client (Manager, defaultManagerSettings)
 import Network.HTTP.ReverseProxy (ProxyDest (..), WaiProxyResponse (..), defaultOnExc, waiProxyTo)
 import qualified Network.Wai.Handler.Warp as Warp
-import Olymp.API (OlympAPI, olympAPI)
 import Olymp.Auth (PhpAuthHandler, PhpMaybeAuthHandler, phpAuthHandler, phpMaybeAuthHandler)
 import Olymp.Cli.Config (Config (..))
 import Olymp.Effect (AppStack, interpretServer)
-import Olymp.Effect.Database (Database, query, runDatabasePool)
+import Olymp.Effect.Database (runDatabasePool)
 import Olymp.Effect.Google (googleToResourceTIO)
+import Olymp.Prelude
 import Olymp.Schema (Key (ParameterKey), Parameter (..))
-import Olymp.Tournament.API (initialTournament)
+import Olymp.Tournament.API
+  ( initialTournament,
+    tournamentAdminSocket,
+    tournamentSocket,
+  )
 import Olymp.Tournament.Base (NodeId, Tournament, propagateWinners, withTournament)
 import Olymp.YouTube.Worker (youtubeWorker)
 import Servant
+import Servant.API.WebSocket (WebSocket)
 import System.IO (BufferMode (LineBuffering), hSetBuffering, stdout)
+
+type OlympAPI =
+  "api" :> "tournament"
+    :> ( "ws" :> WebSocket
+           :<|> "admin" :> "ws" :> PhpAuth :> WebSocket
+       )
+
+olympAPI :: Effs AppStack m => ServerT OlympAPI m
+olympAPI = tournamentSocket :<|> tournamentAdminSocket
 
 runCheckYouTube :: Config -> IO ()
 runCheckYouTube config = do
