@@ -21,13 +21,6 @@
     nixosModule = ./nix/module.nix;
 
     overlay = final: prev: {
-      hasura-graphql-engine = unstablePkgs.hasura-graphql-engine.overrideAttrs (oldAttrs: {
-        VERSION = unstablePkgs.hasura-graphql-engine.version;
-      });
-      hasura-cli = unstablePkgs.hasura-cli;
-      hasura-cli-ext = final.callPackage ./nix/cli-ext.nix {};
-      hasura-cli-full = final.callPackage ./nix/cli-full.nix {};
-      hasura-console-assets = final.callPackage ./nix/console-assets.nix {};
       phpstan = final.callPackage ./nix/phpstan.nix {};
 
       haskell = prev.haskell // (let
@@ -39,7 +32,6 @@
           gogol-core = hself.callCabal2nix "gogol-core" "${gogol}/core" {};
           gogol = hself.callCabal2nix "gogol" "${gogol}/gogol" {};
           gogol-youtube = hself.callCabal2nix "gogol-youtube" "${gogol}/gogol-youtube" {};
-
           sirimbo-api = generateOptparseApplicativeCompletion "olymp" (
             justStaticExecutables (
               hself.callCabal2nix "sirimbo-api" (getSrc ./sirimbo-api) {}
@@ -47,7 +39,9 @@
           );
         });
       });
+
       inherit (final.haskell.packages.${compiler}) sirimbo-api;
+
       graphile-migrate = final.mkYarnPackage {
         name = "graphile-migrate";
         src = migrate;
@@ -55,6 +49,7 @@
         yarnLock = "${migrate}/yarn.lock";
         buildPhase = "yarn --offline run prepack";
       };
+
       sirimbo-backend = final.mkYarnPackage {
         src = getSrc ./backend;
         packageJSON = ./backend/package.json;
@@ -74,11 +69,13 @@
         '';
         distPhase = "true";
       };
+
       sirimbo-app = final.callPackage ./nix/sirimbo-app.nix {
         src = getSrc ./sirimbo-app;
         packageJSON = ./sirimbo-app/package.json;
         yarnLock = ./sirimbo-app/yarn.lock;
       };
+
       sirimbo-php = (final.callPackage ./sirimbo-php/composer-project.nix {
         php = final.php74;
       } (getSrc ./sirimbo-php)).overrideAttrs (oldAttrs: {
@@ -118,9 +115,11 @@
         pkgs.nodePackages.typescript
         pkgs.sass
         pkgs.yarn2nix
-        pkgs.hasura-cli-full
-        pkgs.hasura-graphql-engine
+        pkgs.postgresql
       ];
+      DATABASE_URL = "postgres://olymp@olymp-test/olymp";
+      SHADOW_DATABASE_URL = "postgres://olymp@olymp-test/olymp_shadow";
+      ROOT_DATABASE_URL = "postgres://postgres@olymp-test/postgres";
     };
 
     nixosConfigurations.container = nixpkgs.lib.nixosSystem {
@@ -132,11 +131,12 @@
           boot.isContainer = true;
           system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
           networking.useDHCP = false;
-          networking.firewall.allowedTCPPorts = [ 80 3000 3306 ];
+          networking.firewall.allowedTCPPorts = [ 80 3000 3306 5432 ];
           environment.systemPackages = [ pkgs.file ];
           services.postgresql = {
             enable = true;
-            ensureDatabases = ["root" "olymp"];
+            enableTCPIP = true;
+            ensureDatabases = ["olymp" "olymp_shadow"];
             ensureUsers = [{
               name = "olymp";
               ensurePermissions = {
@@ -144,6 +144,7 @@
                 "ALL TABLES IN SCHEMA public" = "ALL";
               };
             }];
+            authentication = "host all all all trust";
           };
           services.olymp = {
             enable = true;
@@ -151,7 +152,6 @@
             stateDir = "/var/lib/olymp";
             domain = "olymp-test";
             phpPort = 3010;
-            hasuraPort = 8080;
             jsPort = 3020;
           };
         })

@@ -1,5 +1,0 @@
--- Could not auto-generate a down migration.
--- Please write an appropriate down migration for the SQL below:
--- CREATE VIEW nabidka_admin AS
---   SELECT *
---     FROM nabidka;

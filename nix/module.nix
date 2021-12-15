@@ -22,11 +22,6 @@ in {
       description = "${pkgName} internal JS port";
       example = 3002;
     };
-    hasuraPort = lib.mkOption {
-      type = lib.types.int;
-      description = "${pkgName} internal Hasura port";
-      default = 8080;
-    };
 
     dbConnString = lib.mkOption {
       type = lib.types.str;
@@ -126,11 +121,11 @@ in {
           locations."/galerie".root = cfg.stateDir;
           locations."/galerie".extraConfig = "rewrite ^/galerie(/.*)$ /gallery/$1 last;";
 
-          locations."/graphql/" = {
-            proxyPass = "http://127.0.0.1:${toString cfg.hasuraPort}/";
+          locations."/graphql" = {
+            proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
             proxyWebsockets = true;
           };
-          locations."/graphql-auth" = {
+          locations."/graphiql" = {
             proxyPass = "http://127.0.0.1:${toString cfg.jsPort}";
             proxyWebsockets = true;
           };
@@ -175,26 +170,6 @@ in {
           curl imagick opcache pdo openssl posix
           mbstring session json ctype exif gd zlib pdo_pgsql
         ]);
-      };
-
-      systemd.services.hasura = {
-        description = "Hasura";
-        wantedBy = ["multi-user.target"];
-        after = ["network-online.target" "postgresql.service"];
-        requires = ["postgresql.service"];
-        path = [pkgs.postgresql];
-        environment.HASURA_GRAPHQL_SERVER_PORT = toString cfg.hasuraPort;
-        environment.HASURA_GRAPHQL_DATABASE_URL = "postgres:///olymp";
-        environment.HASURA_GRAPHQL_ADMIN_SECRET = "superadmin";
-        environment.HASURA_GRAPHQL_ENABLE_TELEMETRY = "false";
-        environment.HASURA_GRAPHQL_AUTH_HOOK = "http://localhost:${toString cfg.jsPort}/graphql-auth";
-        environment.HASURA_GRAPHQL_ENABLED_LOG_TYPES = "startup, http-log, webhook-log, websocket-log, query-log";
-        serviceConfig = {
-          User = cfg.user;
-          Group = cfg.group;
-          Type = "simple";
-          ExecStart = "${pkgs.hasura-graphql-engine}/bin/graphql-engine serve";
-        };
       };
 
       systemd.services.sirimbo-backend = {
