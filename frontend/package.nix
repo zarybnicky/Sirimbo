@@ -1,20 +1,19 @@
 { yarn2nix-moretea
+, nix-gitignore
 , libsass
 , nodejs
 , pkg-config
 , python3
-, src
-, packageJSON
-, yarnLock
 }:
 
 yarn2nix-moretea.mkYarnPackage {
-  inherit src packageJSON yarnLock;
+  src = nix-gitignore.gitignoreSourcePure [../.gitignore] ./.;
+  packageJSON = ./package.json;
+  yarnLock = ./yarn.lock;
   name = "sirimbo-frontend";
   # doCheck = true;
   # checkPhase = "yarn test --coverage --ci";
   buildPhase = ''
-    find . -maxdepth 2
     yarn --offline run build
     sed -i '1,3d' deps/Sirimbo/dist/main.css
   '';

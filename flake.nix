@@ -5,7 +5,6 @@
 
   outputs = { self, nixpkgs, unstable, gogol, migrate }: let
     inherit (nixpkgs.lib) flip mapAttrs mapAttrsToList;
-    inherit (pkgs.nix-gitignore) gitignoreSourcePure gitignoreSource;
 
     pkgs = import nixpkgs {
       system = "x86_64-linux";
@@ -16,12 +15,15 @@
     };
     compiler = "ghc8104";
     hsPkgs = pkgs.haskell.packages.${compiler};
-    getSrc = dir: gitignoreSourcePure [./.gitignore] dir;
   in {
     nixosModule = ./nix/module.nix;
 
     overlay = final: prev: {
       phpstan = final.callPackage ./nix/phpstan.nix {};
+      ncc = final.callPackage ./nix/ncc.nix {};
+      graphile-migrate = final.callPackage ./nix/graphile-migrate.nix { src = migrate; };
+      sirimbo-backend = final.callPackage ./backend/package.nix {};
+      sirimbo-frontend = final.callPackage ./frontend/package.nix {};
 
       haskell = prev.haskell // (let
         inherit (prev.haskell.lib) doJailbreak dontCheck justStaticExecutables
@@ -34,7 +36,9 @@
           gogol-youtube = hself.callCabal2nix "gogol-youtube" "${gogol}/gogol-youtube" {};
           sirimbo-api = generateOptparseApplicativeCompletion "olymp" (
             justStaticExecutables (
-              hself.callCabal2nix "sirimbo-api" (getSrc ./sirimbo-api) {}
+              hself.callCabal2nix "sirimbo-api" (
+                pkgs.nix-gitignore.gitignoreSourcePure [./.gitignore] ./sirimbo-api
+              ) {}
             )
           );
         });
@@ -42,48 +46,16 @@
 
       inherit (final.haskell.packages.${compiler}) sirimbo-api;
 
-      graphile-migrate = final.mkYarnPackage {
-        name = "graphile-migrate";
-        src = migrate;
-        packageJSON = "${migrate}/package.json";
-        yarnLock = "${migrate}/yarn.lock";
-        buildPhase = "yarn --offline run prepack";
-      };
-
       sirimbo-migrations = final.linkFarm "sirimbo-migrations" [
         { name = "migrations"; path = ./migrations; }
         { name = ".gmrc"; path = ./.gmrc; }
       ];
 
-      sirimbo-backend = final.mkYarnPackage {
-        src = getSrc ./backend;
-        packageJSON = ./backend/package.json;
-        yarnLock = ./backend/yarn.lock;
-        buildPhase = ''
-          # Inline watch-fixtures.sql
-          sed -i \
-            -e '/readFile(WATCH_FIXTURES_PATH,/d' \
-            -e 's|const WATCH_FIXTURES_PATH.*|var watchSqlInner = require("!!raw-loader!../../res/watch-fixtures.sql").default;|' \
-            node_modules/graphile-build-pg/node8plus/plugins/PgIntrospectionPlugin.js
-          cat node_modules/graphile-build-pg/node8plus/plugins/PgIntrospectionPlugin.js
-          yarn --offline run build
-        '';
-        installPhase = ''
-          mkdir -p $out/bin
-          cp deps/sirimbo-backend/dist/bundle.js $out/bin/sirimbo-backend
-        '';
-        distPhase = "true";
-      };
-
-      sirimbo-frontend = final.callPackage ./nix/sirimbo-frontend.nix {
-        src = getSrc ./frontend;
-        packageJSON = ./frontend/package.json;
-        yarnLock = ./frontend/yarn.lock;
-      };
-
       sirimbo-php = (final.callPackage ./sirimbo-php/composer-project.nix {
         php = final.php74;
-      } (getSrc ./sirimbo-php)).overrideAttrs (oldAttrs: {
+      } (
+        pkgs.nix-gitignore.gitignoreSourcePure [./.gitignore] ./sirimbo-php
+      )).overrideAttrs (oldAttrs: {
         name = "sirimbo-php";
         buildInputs = oldAttrs.buildInputs ++ [ final.imagemagick ];
         buildPhase = "composer validate";
@@ -102,7 +74,7 @@
     };
 
     packages.x86_64-linux = {
-      inherit (pkgs) sirimbo-php sirimbo-frontend sirimbo-backend graphile-migrate sirimbo-migrations;
+      inherit (pkgs) ncc sirimbo-php sirimbo-frontend sirimbo-backend graphile-migrate sirimbo-migrations;
     };
 
     devShell.x86_64-linux = hsPkgs.shellFor {
@@ -121,6 +93,7 @@
         pkgs.sass
         pkgs.yarn2nix
         pkgs.postgresql
+        pkgs.ncc
       ];
       DATABASE_URL = "postgres://olymp@olymp-test/olymp";
       SHADOW_DATABASE_URL = "postgres://olymp@olymp-test/olymp_shadow";
