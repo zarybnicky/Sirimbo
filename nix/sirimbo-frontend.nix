@@ -10,7 +10,7 @@
 
 yarn2nix-moretea.mkYarnPackage {
   inherit src packageJSON yarnLock;
-  name = "sirimbo-app";
+  name = "sirimbo-frontend";
   # doCheck = true;
   # checkPhase = "yarn test --coverage --ci";
   buildPhase = ''

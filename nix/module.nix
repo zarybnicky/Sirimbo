@@ -58,7 +58,7 @@ in {
       date_default_timezone_set('Europe/Paris');
       mb_internal_encoding('UTF-8');
 
-      define('FRONTEND_HASH', '${builtins.substring 11 32 "${pkgs.sirimbo-app}"}');
+      define('FRONTEND_HASH', '${builtins.substring 11 32 "${pkgs.sirimbo-frontend}"}');
       define('SENTRY_ENV', '${cfg.domain}');
       define('DB_CONN_STRING', 'pgsql:${cfg.dbConnString}');
 
@@ -79,7 +79,7 @@ in {
 
     phpRoot = pkgs.symlinkJoin {
       name = "sirimbo-php-dist";
-      paths = [pkgs.sirimbo-php pkgs.sirimbo-app configPhp];
+      paths = [pkgs.sirimbo-php pkgs.sirimbo-frontend configPhp];
     };
   in lib.mkMerge [
     (lib.mkIf cfg.enable {

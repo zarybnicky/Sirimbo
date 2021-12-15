@@ -75,10 +75,10 @@
         distPhase = "true";
       };
 
-      sirimbo-app = final.callPackage ./nix/sirimbo-app.nix {
-        src = getSrc ./sirimbo-app;
-        packageJSON = ./sirimbo-app/package.json;
-        yarnLock = ./sirimbo-app/yarn.lock;
+      sirimbo-frontend = final.callPackage ./nix/sirimbo-frontend.nix {
+        src = getSrc ./sirimbo-frontend;
+        packageJSON = ./sirimbo-frontend/package.json;
+        yarnLock = ./sirimbo-frontend/yarn.lock;
       };
 
       sirimbo-php = (final.callPackage ./sirimbo-php/composer-project.nix {
@@ -102,7 +102,7 @@
     };
 
     packages.x86_64-linux = {
-      inherit (pkgs) sirimbo-php sirimbo-app sirimbo-backend graphile-migrate sirimbo-migrations;
+      inherit (pkgs) sirimbo-php sirimbo-frontend sirimbo-backend graphile-migrate sirimbo-migrations;
     };
 
     devShell.x86_64-linux = hsPkgs.shellFor {
