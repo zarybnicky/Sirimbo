@@ -1,7 +1,5 @@
 schema: schema.json
-  # - "http://olymp-test/graphql/v1/graphql":
-  #     headers:
-  #       X-Hasura-Admin-Secret: superadmin
+  # - "http://olymp-test/graphql":
 documents:
   - 'src/**/*.ts'
   - 'src/**/*.tsx'

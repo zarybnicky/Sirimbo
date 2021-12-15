@@ -6,7 +6,7 @@
     "lint": "eslint \"**/*.{js,ts}\"",
     "build": "webpack --progress",
     "start": "webpack serve --open --progress",
-    "schema": "gq https://tkolymp.cz/graphql/v1/graphql -H 'X-Hasura-Admin-Secret: superadmin' --introspect --format json > schema.json",
+    "schema": "gq http://olymp-test/graphql -H 'Content-Type: application/json' --introspect --format json > schema.json",
     "generate": "graphql-codegen",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"

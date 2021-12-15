@@ -76,9 +76,9 @@
       };
 
       sirimbo-frontend = final.callPackage ./nix/sirimbo-frontend.nix {
-        src = getSrc ./sirimbo-frontend;
-        packageJSON = ./sirimbo-frontend/package.json;
-        yarnLock = ./sirimbo-frontend/yarn.lock;
+        src = getSrc ./frontend;
+        packageJSON = ./frontend/package.json;
+        yarnLock = ./frontend/yarn.lock;
       };
 
       sirimbo-php = (final.callPackage ./sirimbo-php/composer-project.nix {
