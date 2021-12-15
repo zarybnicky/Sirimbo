@@ -50,6 +50,11 @@
         buildPhase = "yarn --offline run prepack";
       };
 
+      sirimbo-migrations = final.linkFarm "sirimbo-migrations" [
+        { name = "migrations"; path = ./migrations; }
+        { name = ".gmrc"; path = ./.gmrc; }
+      ];
+
       sirimbo-backend = final.mkYarnPackage {
         src = getSrc ./backend;
         packageJSON = ./backend/package.json;
@@ -97,7 +102,7 @@
     };
 
     packages.x86_64-linux = {
-      inherit (pkgs) sirimbo-php sirimbo-app sirimbo-backend graphile-migrate;
+      inherit (pkgs) sirimbo-php sirimbo-app sirimbo-backend graphile-migrate sirimbo-migrations;
     };
 
     devShell.x86_64-linux = hsPkgs.shellFor {
