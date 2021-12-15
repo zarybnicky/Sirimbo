@@ -13,10 +13,7 @@ yarn2nix-moretea.mkYarnPackage {
   name = "sirimbo-frontend";
   # doCheck = true;
   # checkPhase = "yarn test --coverage --ci";
-  buildPhase = ''
-    yarn --offline run build
-    sed -i '1,3d' deps/Sirimbo/dist/main.css
-  '';
+  buildPhase = "yarn --offline run build";
   distPhase = "true";
   installPhase = ''
     mkdir -p $out/public

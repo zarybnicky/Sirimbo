@@ -3,6 +3,7 @@ const fs = require("fs");
 const webpack  = require('webpack');
 const CopyPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = {
@@ -35,7 +36,6 @@ module.exports = {
     }),
     new BundleAnalyzerPlugin({
       analyzerMode: 'static',
-      generateStatsFile: true,
       openAnalyzer: false,
     }),
   ],
@@ -64,5 +64,20 @@ module.exports = {
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
       },
     ],
-  }
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new CssMinimizerPlugin({
+        minimizerOptions: {
+          preset: [
+            "default",
+            {
+              discardComments: { removeAll: true },
+            },
+          ],
+        },
+      }),
+    ],
+  },
 };
