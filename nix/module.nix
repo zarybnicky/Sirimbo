@@ -97,16 +97,6 @@ in {
       };
       systemd.tmpfiles.rules = [ "d ${cfg.stateDir} 0755 ${cfg.user} ${cfg.user} -" ];
 
-      environment.systemPackages = [
-        (pkgs.runCommand "olymp" { buildInputs = [pkgs.makeWrapper]; } ''
-          mkdir $out
-          ln -s ${pkgs.sirimbo-api}/* $out
-          rm $out/bin
-          mkdir $out/bin
-          makeWrapper ${pkgs.sirimbo-api}/bin/olymp $out/bin/olymp --set CONFIG "${cfgFile}"
-        '')
-      ];
-
       services.nginx = {
         enable = true;
         enableReload = true;

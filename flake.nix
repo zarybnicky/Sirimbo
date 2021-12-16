@@ -24,6 +24,7 @@
       graphile-migrate = final.callPackage ./nix/graphile-migrate.nix { src = migrate; };
       sirimbo-backend = final.callPackage ./backend/package.nix {};
       sirimbo-frontend = final.callPackage ./frontend/package.nix {};
+      sirimbo-migrations = final.callPackage ./migrations/package.nix {};
 
       haskell = prev.haskell // (let
         inherit (prev.haskell.lib) doJailbreak dontCheck justStaticExecutables
@@ -46,10 +47,6 @@
 
       inherit (final.haskell.packages.${compiler}) sirimbo-api;
 
-      sirimbo-migrations = final.linkFarm "sirimbo-migrations" [
-        { name = "migrations"; path = ./migrations; }
-        { name = ".gmrc"; path = ./.gmrc; }
-      ];
 
       sirimbo-php = (final.callPackage ./sirimbo-php/composer-project.nix {
         php = final.php74;
