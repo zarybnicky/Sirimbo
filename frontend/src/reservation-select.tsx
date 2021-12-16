@@ -5,13 +5,13 @@ import { ApolloProvider, useQuery } from '@apollo/client';
 import { formatDateRange } from './date';
 import { createClient } from './client';
 import { gql } from 'graphql-tag';
-import { NabidkaListQuery } from './graphql/graphql';
+import { Nabidka } from './graphql/graphql';
 
-const ReservationView = (x: NabidkaListQuery['nabidka'][0]) => {
-    const header = <div className="trenink-header">
-        <div className="title">
-            {x?.user?.u_jmeno} {x?.user?.u_prijmeni}
-            {/* {this.state.data.canEdit && <div className="btn-group">
+const ReservationView = (x: Nabidka) => {
+  const header = <div className="trenink-header">
+    <div className="title">
+      {x?.userByNTrener?.uJmeno} {x?.userByNTrener?.uPrijmeni}
+      {/* {this.state.data.canEdit && <div className="btn-group">
                           <button type="button" className="btn btn-xs pt-0" data-toggle="dropdown" >
                           <img alt="Upravit" width="16" src="/style/icon-gear.png" />
                           </button>
@@ -20,97 +20,102 @@ const ReservationView = (x: NabidkaListQuery['nabidka'][0]) => {
                           <a className="dropdown-item" href="/admin/nabidka/detail/{{ this.state.id }}" > Upravit rezervace </a>
                           </div>
                           </div>} */}
-        </div>
-        <div className="date">{formatDateRange(x?.n_od, x?.n_do, '1')}</div>
-        {x?.n_max_pocet_hod > 0 && <div>
-            <span className="little"> Maximálně hodin/pár: </span>
-            <span className="nadpis">{x?.n_max_pocet_hod}</span>
-        </div>}
-        <div>
-            <span className="little">Volných hodin: </span>
-            <span className="nadpis">
-                {x?.n_pocet_hod - (x?.nabidka_items || []).reduce((x, y) => x + y.ni_pocet_hod, 0)}
-                {" z "}
-                {x?.n_pocet_hod} nabízených
-            </span>
-        </div>
-    </div>;
-    const content = <table className="nocolor" style={{ width: '100%' }}>
-        <thead>
-            <tr><th>Tanečník</th><th>Počet hodin</th></tr>
-        </thead>
-        <tbody>
-            {(x?.nabidka_items || []).map(item => <tr>
-                <td>{item.pary.user.u_jmeno} {item.pary.user.u_prijmeni}</td>
-                <td>{item.ni_pocet_hod}</td>
-            </tr>)}
-        </tbody>
-    </table>;
+    </div>
+    <div className="date">{formatDateRange(x?.nOd, x?.nDo, '1')}</div>
+    {x?.nMaxPocetHod > 0 && <div>
+      <span className="little"> Maximálně hodin/pár: </span>
+      <span className="nadpis">{x?.nMaxPocetHod}</span>
+    </div>}
+    <div>
+      <span className="little">Volných hodin: </span>
+      <span className="nadpis">
+        {x?.nPocetHod - (x.nabidkaItemsByNiIdRodic.nodes || []).reduce((x, y) => x + y.niPocetHod, 0)}
+        {" z "}
+        {x?.nPocetHod} nabízených
+      </span>
+    </div>
+  </div>;
+  const content = <table className="nocolor" style={{ width: '100%' }}>
+    <thead>
+      <tr><th>Tanečník</th><th>Počet hodin</th></tr>
+    </thead>
+    <tbody>
+      {(x.nabidkaItemsByNiIdRodic.nodes || []).map(item => <tr>
+        <td>{item.paryByNiPartner?.userByPIdPartner?.uJmeno} {item.paryByNiPartner?.userByPIdPartner?.uPrijmeni}</td>
+        <td>{item.niPocetHod}</td>
+      </tr>)}
+    </tbody>
+  </table>;
 
-    return <div className="col-12 col-md-6 col-lg-4 pb-2">
-        <div className="widget">
-            <div className="widget-title text-center">{header}</div>
-            <div className="widget-content">{content}</div>
-        </div>
-    </div>;
+  return <div className="col-12 col-md-6 col-lg-4 pb-2">
+    <div className="widget">
+      <div className="widget-title text-center">{header}</div>
+      <div className="widget-content">{content}</div>
+    </div>
+  </div>;
 }
 
 export const NabidkaList = gql(`
 query NabidkaList($offset: Int, $limit: Int) {
-  nabidka(limit: $limit, offset: $offset) {
-    n_visible
-    n_trener
-    n_timestamp
-    n_pocet_hod
-    n_od
-    n_max_pocet_hod
-    n_lock
-    n_id
-    n_do
-    user {
-      u_jmeno
-      u_prijmeni
-      u_id
-    }
-    nabidka_items {
-      ni_lock
-      ni_partner
-      ni_pocet_hod
-      pary {
-        user {
-          u_id
-          u_jmeno
-          u_prijmeni
+  allNabidkas(first: $limit, offset: $offset, orderBy: N_OD_DESC) {
+    nodes {
+      nDo
+      nId
+      nLock
+      nMaxPocetHod
+      nOd
+      nPocetHod
+      nTimestamp
+      nTrener
+      nVisible
+      nabidkaItemsByNiIdRodic {
+        nodes {
+          niPocetHod
+          niPartner
+          niLock
+          paryByNiPartner {
+            userByPIdPartner {
+              uJmeno
+              uPrijmeni
+              uId
+            }
+          }
         }
       }
+      userByNTrener {
+        uJmeno
+        uPrijmeni
+        uId
+      }
     }
+    totalCount
   }
 }`);
 
 export function ReservationSelect() {
-    const { data: reservations } = useQuery(NabidkaList);
-    const [reservation, setReservation] = useState<NabidkaListQuery['nabidka'][0] | undefined>(undefined);
-    const onChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const id = parseInt(event.target.value, 10);
-        setReservation(reservations?.nabidka?.find(x => x.n_id === id));
-    };
+  const { data: reservations } = useQuery(NabidkaList);
+  const [reservation, setReservation] = useState<Nabidka | undefined>();
+  const onChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const id = parseInt(event.target.value, 10);
+    setReservation(reservations?.allNabidkas?.nodes?.find(x => x.nId === id) as Nabidka);
+  };
 
-    return <div>
-        <select className='team-selection' value={reservation?.n_id || 'none'} onChange={onChange}>
-            <option value='none'> --vyberte nabídku-- </option>
-            {(reservations?.nabidka || []).map(x => <option value={x.n_id} key={x.n_id}>
-                {`${formatDateRange(x.n_od, x.n_do)} - ${x.user.u_jmeno} ${x.user.u_prijmeni}`}
-            </option>)}
-        </select>
-        {reservation ? ReservationView(reservation) : null}
-    </div>;
+  return <div>
+    <select className='team-selection' value={reservation?.nId || 'none'} onChange={onChange}>
+      <option value='none'> --vyberte nabídku-- </option>
+      {(reservations?.allNabidkas?.nodes || []).map(x => <option value={x.nId} key={x.nId}>
+        {`${formatDateRange(x.nOd, x.nDo)} - ${x.userByNTrener?.uJmeno} ${x.userByNTrener?.uPrijmeni}`}
+      </option>)}
+    </select>
+    {reservation ? ReservationView(reservation) : null}
+  </div>;
 }
 
 export class ReservationSelectElement extends HTMLElement {
-    connectedCallback() {
-        ReactDOM.render(
-            <ApolloProvider client={createClient()}><ReservationSelect /></ApolloProvider>,
-            this
-        );
-    }
+  connectedCallback() {
+    ReactDOM.render(
+      <ApolloProvider client={createClient()}><ReservationSelect /></ApolloProvider>,
+      this
+    );
+  }
 }

@@ -12,14596 +12,9353 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  bigint: any;
-  bpchar: any;
-  bytea: any;
-  date: any;
-  numeric: any;
-  pary_p_lat_trida: any;
-  pary_p_stt_trida: any;
-  smallint: any;
-  time: any;
-  timestamptz: any;
+  /** A floating point number that requires more precision than IEEE 754 binary 64 */
+  BigFloat: any;
+  /**
+   * A signed eight-byte integer. The upper big integer values are greater than the
+   * max value for a JavaScript number. Therefore all big integers will be output as
+   * strings and not numbers.
+   */
+  BigInt: any;
+  /** A location in a connection that can be used for resuming pagination. */
+  Cursor: any;
+  /** The day, does not include a time. */
+  Date: any;
+  /**
+   * A point in time as described by the [ISO
+   * 8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone.
+   */
+  Datetime: any;
+  /** The exact time of day, does not include the date. May or may not have a timezone offset. */
+  Time: any;
 };
 
-/** Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'. */
-export type Boolean_Comparison_Exp = {
-  _eq?: InputMaybe<Scalars['Boolean']>;
-  _gt?: InputMaybe<Scalars['Boolean']>;
-  _gte?: InputMaybe<Scalars['Boolean']>;
-  _in?: InputMaybe<Array<Scalars['Boolean']>>;
-  _is_null?: InputMaybe<Scalars['Boolean']>;
-  _lt?: InputMaybe<Scalars['Boolean']>;
-  _lte?: InputMaybe<Scalars['Boolean']>;
-  _neq?: InputMaybe<Scalars['Boolean']>;
-  _nin?: InputMaybe<Array<Scalars['Boolean']>>;
-};
-
-/** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
-export type Int_Comparison_Exp = {
-  _eq?: InputMaybe<Scalars['Int']>;
-  _gt?: InputMaybe<Scalars['Int']>;
-  _gte?: InputMaybe<Scalars['Int']>;
-  _in?: InputMaybe<Array<Scalars['Int']>>;
-  _is_null?: InputMaybe<Scalars['Boolean']>;
-  _lt?: InputMaybe<Scalars['Int']>;
-  _lte?: InputMaybe<Scalars['Int']>;
-  _neq?: InputMaybe<Scalars['Int']>;
-  _nin?: InputMaybe<Array<Scalars['Int']>>;
-};
-
-/** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
-export type String_Comparison_Exp = {
-  _eq?: InputMaybe<Scalars['String']>;
-  _gt?: InputMaybe<Scalars['String']>;
-  _gte?: InputMaybe<Scalars['String']>;
-  /** does the column match the given case-insensitive pattern */
-  _ilike?: InputMaybe<Scalars['String']>;
-  _in?: InputMaybe<Array<Scalars['String']>>;
-  /** does the column match the given POSIX regular expression, case insensitive */
-  _iregex?: InputMaybe<Scalars['String']>;
-  _is_null?: InputMaybe<Scalars['Boolean']>;
-  /** does the column match the given pattern */
-  _like?: InputMaybe<Scalars['String']>;
-  _lt?: InputMaybe<Scalars['String']>;
-  _lte?: InputMaybe<Scalars['String']>;
-  _neq?: InputMaybe<Scalars['String']>;
-  /** does the column NOT match the given case-insensitive pattern */
-  _nilike?: InputMaybe<Scalars['String']>;
-  _nin?: InputMaybe<Array<Scalars['String']>>;
-  /** does the column NOT match the given POSIX regular expression, case insensitive */
-  _niregex?: InputMaybe<Scalars['String']>;
-  /** does the column NOT match the given pattern */
-  _nlike?: InputMaybe<Scalars['String']>;
-  /** does the column NOT match the given POSIX regular expression, case sensitive */
-  _nregex?: InputMaybe<Scalars['String']>;
-  /** does the column NOT match the given SQL regular expression */
-  _nsimilar?: InputMaybe<Scalars['String']>;
-  /** does the column match the given POSIX regular expression, case sensitive */
-  _regex?: InputMaybe<Scalars['String']>;
-  /** does the column match the given SQL regular expression */
-  _similar?: InputMaybe<Scalars['String']>;
-};
-
-/** columns and relationships of "akce" */
-export type Akce = {
-  __typename?: 'akce';
-  a_do: Scalars['date'];
-  a_dokumenty: Scalars['String'];
-  a_id: Scalars['bigint'];
-  a_info: Scalars['String'];
-  a_jmeno: Scalars['String'];
-  a_kapacita: Scalars['bigint'];
-  a_kde: Scalars['String'];
-  a_lock: Scalars['Boolean'];
-  a_od: Scalars['date'];
-  a_timestamp?: Maybe<Scalars['timestamptz']>;
-  a_visible: Scalars['Boolean'];
-  /** An array relationship */
-  akce_items: Array<Akce_Item>;
-  /** An aggregate relationship */
-  akce_items_aggregate: Akce_Item_Aggregate;
+export type Akce = Node & {
+  __typename?: 'Akce';
+  aDo: Scalars['Date'];
+  aDokumenty: Scalars['String'];
+  aId: Scalars['BigInt'];
+  aInfo: Scalars['String'];
+  aJmeno: Scalars['String'];
+  aKapacita: Scalars['BigInt'];
+  aKde: Scalars['String'];
+  aLock: Scalars['Boolean'];
+  aOd: Scalars['Date'];
+  aTimestamp?: Maybe<Scalars['Datetime']>;
+  aVisible: Scalars['Boolean'];
+  /** Reads and enables pagination through a set of `AkceItem`. */
+  akceItemsByAiIdRodic: AkceItemsConnection;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
 };
 
 
-/** columns and relationships of "akce" */
-export type AkceAkce_ItemsArgs = {
-  distinct_on?: InputMaybe<Array<Akce_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
+export type AkceAkceItemsByAiIdRodicArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<AkceItemCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Akce_Item_Order_By>>;
-  where?: InputMaybe<Akce_Item_Bool_Exp>;
+  orderBy?: InputMaybe<Array<AkceItemsOrderBy>>;
 };
 
-
-/** columns and relationships of "akce" */
-export type AkceAkce_Items_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Akce_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Akce_Item_Order_By>>;
-  where?: InputMaybe<Akce_Item_Bool_Exp>;
+/** A condition to be used against `Akce` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type AkceCondition = {
+  /** Checks for equality with the object’s `aDo` field. */
+  aDo?: InputMaybe<Scalars['Date']>;
+  /** Checks for equality with the object’s `aDokumenty` field. */
+  aDokumenty?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `aId` field. */
+  aId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `aInfo` field. */
+  aInfo?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `aJmeno` field. */
+  aJmeno?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `aKapacita` field. */
+  aKapacita?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `aKde` field. */
+  aKde?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `aLock` field. */
+  aLock?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `aOd` field. */
+  aOd?: InputMaybe<Scalars['Date']>;
+  /** Checks for equality with the object’s `aTimestamp` field. */
+  aTimestamp?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `aVisible` field. */
+  aVisible?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** aggregated selection of "akce" */
-export type Akce_Aggregate = {
-  __typename?: 'akce_aggregate';
-  aggregate?: Maybe<Akce_Aggregate_Fields>;
+/** An input for mutations affecting `Akce` */
+export type AkceInput = {
+  aDo: Scalars['Date'];
+  aDokumenty: Scalars['String'];
+  aId?: InputMaybe<Scalars['BigInt']>;
+  aInfo: Scalars['String'];
+  aJmeno: Scalars['String'];
+  aKapacita?: InputMaybe<Scalars['BigInt']>;
+  aKde: Scalars['String'];
+  aLock?: InputMaybe<Scalars['Boolean']>;
+  aOd: Scalars['Date'];
+  aTimestamp?: InputMaybe<Scalars['Datetime']>;
+  aVisible?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type AkceItem = Node & {
+  __typename?: 'AkceItem';
+  aiId: Scalars['BigInt'];
+  aiIdRodic: Scalars['BigInt'];
+  aiRokNarozeni: Scalars['Int'];
+  aiUser: Scalars['BigInt'];
+  /** Reads a single `Akce` that is related to this `AkceItem`. */
+  akceByAiIdRodic?: Maybe<Akce>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  /** Reads a single `User` that is related to this `AkceItem`. */
+  userByAiUser?: Maybe<User>;
+};
+
+/**
+ * A condition to be used against `AkceItem` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type AkceItemCondition = {
+  /** Checks for equality with the object’s `aiId` field. */
+  aiId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `aiIdRodic` field. */
+  aiIdRodic?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `aiRokNarozeni` field. */
+  aiRokNarozeni?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `aiUser` field. */
+  aiUser?: InputMaybe<Scalars['BigInt']>;
+};
+
+/** An input for mutations affecting `AkceItem` */
+export type AkceItemInput = {
+  aiId?: InputMaybe<Scalars['BigInt']>;
+  aiIdRodic: Scalars['BigInt'];
+  aiRokNarozeni: Scalars['Int'];
+  aiUser: Scalars['BigInt'];
+};
+
+/** Represents an update to a `AkceItem`. Fields that are set will be updated. */
+export type AkceItemPatch = {
+  aiId?: InputMaybe<Scalars['BigInt']>;
+  aiIdRodic?: InputMaybe<Scalars['BigInt']>;
+  aiRokNarozeni?: InputMaybe<Scalars['Int']>;
+  aiUser?: InputMaybe<Scalars['BigInt']>;
+};
+
+/** A connection to a list of `AkceItem` values. */
+export type AkceItemsConnection = {
+  __typename?: 'AkceItemsConnection';
+  /** A list of edges which contains the `AkceItem` and cursor to aid in pagination. */
+  edges: Array<AkceItemsEdge>;
+  /** A list of `AkceItem` objects. */
+  nodes: Array<AkceItem>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AkceItem` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `AkceItem` edge in the connection. */
+export type AkceItemsEdge = {
+  __typename?: 'AkceItemsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `AkceItem` at the end of the edge. */
+  node: AkceItem;
+};
+
+/** Methods to use when ordering `AkceItem`. */
+export enum AkceItemsOrderBy {
+  AiIdAsc = 'AI_ID_ASC',
+  AiIdDesc = 'AI_ID_DESC',
+  AiIdRodicAsc = 'AI_ID_RODIC_ASC',
+  AiIdRodicDesc = 'AI_ID_RODIC_DESC',
+  AiRokNarozeniAsc = 'AI_ROK_NAROZENI_ASC',
+  AiRokNarozeniDesc = 'AI_ROK_NAROZENI_DESC',
+  AiUserAsc = 'AI_USER_ASC',
+  AiUserDesc = 'AI_USER_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** Represents an update to a `Akce`. Fields that are set will be updated. */
+export type AkcePatch = {
+  aDo?: InputMaybe<Scalars['Date']>;
+  aDokumenty?: InputMaybe<Scalars['String']>;
+  aId?: InputMaybe<Scalars['BigInt']>;
+  aInfo?: InputMaybe<Scalars['String']>;
+  aJmeno?: InputMaybe<Scalars['String']>;
+  aKapacita?: InputMaybe<Scalars['BigInt']>;
+  aKde?: InputMaybe<Scalars['String']>;
+  aLock?: InputMaybe<Scalars['Boolean']>;
+  aOd?: InputMaybe<Scalars['Date']>;
+  aTimestamp?: InputMaybe<Scalars['Datetime']>;
+  aVisible?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** A connection to a list of `Akce` values. */
+export type AkcesConnection = {
+  __typename?: 'AkcesConnection';
+  /** A list of edges which contains the `Akce` and cursor to aid in pagination. */
+  edges: Array<AkcesEdge>;
+  /** A list of `Akce` objects. */
   nodes: Array<Akce>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Akce` you could get from the connection. */
+  totalCount: Scalars['Int'];
 };
 
-/** aggregate fields of "akce" */
-export type Akce_Aggregate_Fields = {
-  __typename?: 'akce_aggregate_fields';
-  avg?: Maybe<Akce_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Akce_Max_Fields>;
-  min?: Maybe<Akce_Min_Fields>;
-  stddev?: Maybe<Akce_Stddev_Fields>;
-  stddev_pop?: Maybe<Akce_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Akce_Stddev_Samp_Fields>;
-  sum?: Maybe<Akce_Sum_Fields>;
-  var_pop?: Maybe<Akce_Var_Pop_Fields>;
-  var_samp?: Maybe<Akce_Var_Samp_Fields>;
-  variance?: Maybe<Akce_Variance_Fields>;
+/** A `Akce` edge in the connection. */
+export type AkcesEdge = {
+  __typename?: 'AkcesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Akce` at the end of the edge. */
+  node: Akce;
 };
 
-
-/** aggregate fields of "akce" */
-export type Akce_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Akce_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate avg on columns */
-export type Akce_Avg_Fields = {
-  __typename?: 'akce_avg_fields';
-  a_id?: Maybe<Scalars['Float']>;
-  a_kapacita?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to filter rows from the table "akce". All fields are combined with a logical 'AND'. */
-export type Akce_Bool_Exp = {
-  _and?: InputMaybe<Array<Akce_Bool_Exp>>;
-  _not?: InputMaybe<Akce_Bool_Exp>;
-  _or?: InputMaybe<Array<Akce_Bool_Exp>>;
-  a_do?: InputMaybe<Date_Comparison_Exp>;
-  a_dokumenty?: InputMaybe<String_Comparison_Exp>;
-  a_id?: InputMaybe<Bigint_Comparison_Exp>;
-  a_info?: InputMaybe<String_Comparison_Exp>;
-  a_jmeno?: InputMaybe<String_Comparison_Exp>;
-  a_kapacita?: InputMaybe<Bigint_Comparison_Exp>;
-  a_kde?: InputMaybe<String_Comparison_Exp>;
-  a_lock?: InputMaybe<Boolean_Comparison_Exp>;
-  a_od?: InputMaybe<Date_Comparison_Exp>;
-  a_timestamp?: InputMaybe<Timestamptz_Comparison_Exp>;
-  a_visible?: InputMaybe<Boolean_Comparison_Exp>;
-  akce_items?: InputMaybe<Akce_Item_Bool_Exp>;
-};
-
-/** unique or primary key constraints on table "akce" */
-export enum Akce_Constraint {
-  /** unique or primary key constraint */
-  Idx_24557Primary = 'idx_24557_primary'
+/** Methods to use when ordering `Akce`. */
+export enum AkcesOrderBy {
+  ADokumentyAsc = 'A_DOKUMENTY_ASC',
+  ADokumentyDesc = 'A_DOKUMENTY_DESC',
+  ADoAsc = 'A_DO_ASC',
+  ADoDesc = 'A_DO_DESC',
+  AIdAsc = 'A_ID_ASC',
+  AIdDesc = 'A_ID_DESC',
+  AInfoAsc = 'A_INFO_ASC',
+  AInfoDesc = 'A_INFO_DESC',
+  AJmenoAsc = 'A_JMENO_ASC',
+  AJmenoDesc = 'A_JMENO_DESC',
+  AKapacitaAsc = 'A_KAPACITA_ASC',
+  AKapacitaDesc = 'A_KAPACITA_DESC',
+  AKdeAsc = 'A_KDE_ASC',
+  AKdeDesc = 'A_KDE_DESC',
+  ALockAsc = 'A_LOCK_ASC',
+  ALockDesc = 'A_LOCK_DESC',
+  AOdAsc = 'A_OD_ASC',
+  AOdDesc = 'A_OD_DESC',
+  ATimestampAsc = 'A_TIMESTAMP_ASC',
+  ATimestampDesc = 'A_TIMESTAMP_DESC',
+  AVisibleAsc = 'A_VISIBLE_ASC',
+  AVisibleDesc = 'A_VISIBLE_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-/** input type for incrementing numeric columns in table "akce" */
-export type Akce_Inc_Input = {
-  a_id?: InputMaybe<Scalars['bigint']>;
-  a_kapacita?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "akce" */
-export type Akce_Insert_Input = {
-  a_do?: InputMaybe<Scalars['date']>;
-  a_dokumenty?: InputMaybe<Scalars['String']>;
-  a_id?: InputMaybe<Scalars['bigint']>;
-  a_info?: InputMaybe<Scalars['String']>;
-  a_jmeno?: InputMaybe<Scalars['String']>;
-  a_kapacita?: InputMaybe<Scalars['bigint']>;
-  a_kde?: InputMaybe<Scalars['String']>;
-  a_lock?: InputMaybe<Scalars['Boolean']>;
-  a_od?: InputMaybe<Scalars['date']>;
-  a_timestamp?: InputMaybe<Scalars['timestamptz']>;
-  a_visible?: InputMaybe<Scalars['Boolean']>;
-  akce_items?: InputMaybe<Akce_Item_Arr_Rel_Insert_Input>;
-};
-
-/** columns and relationships of "akce_item" */
-export type Akce_Item = {
-  __typename?: 'akce_item';
-  ai_id: Scalars['bigint'];
-  ai_id_rodic: Scalars['bigint'];
-  ai_rok_narozeni: Scalars['smallint'];
-  ai_user: Scalars['bigint'];
-  /** An object relationship */
-  akce: Akce;
-  /** An object relationship */
-  user: Users;
-};
-
-/** aggregated selection of "akce_item" */
-export type Akce_Item_Aggregate = {
-  __typename?: 'akce_item_aggregate';
-  aggregate?: Maybe<Akce_Item_Aggregate_Fields>;
-  nodes: Array<Akce_Item>;
-};
-
-/** aggregate fields of "akce_item" */
-export type Akce_Item_Aggregate_Fields = {
-  __typename?: 'akce_item_aggregate_fields';
-  avg?: Maybe<Akce_Item_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Akce_Item_Max_Fields>;
-  min?: Maybe<Akce_Item_Min_Fields>;
-  stddev?: Maybe<Akce_Item_Stddev_Fields>;
-  stddev_pop?: Maybe<Akce_Item_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Akce_Item_Stddev_Samp_Fields>;
-  sum?: Maybe<Akce_Item_Sum_Fields>;
-  var_pop?: Maybe<Akce_Item_Var_Pop_Fields>;
-  var_samp?: Maybe<Akce_Item_Var_Samp_Fields>;
-  variance?: Maybe<Akce_Item_Variance_Fields>;
-};
-
-
-/** aggregate fields of "akce_item" */
-export type Akce_Item_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Akce_Item_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** order by aggregate values of table "akce_item" */
-export type Akce_Item_Aggregate_Order_By = {
-  avg?: InputMaybe<Akce_Item_Avg_Order_By>;
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Akce_Item_Max_Order_By>;
-  min?: InputMaybe<Akce_Item_Min_Order_By>;
-  stddev?: InputMaybe<Akce_Item_Stddev_Order_By>;
-  stddev_pop?: InputMaybe<Akce_Item_Stddev_Pop_Order_By>;
-  stddev_samp?: InputMaybe<Akce_Item_Stddev_Samp_Order_By>;
-  sum?: InputMaybe<Akce_Item_Sum_Order_By>;
-  var_pop?: InputMaybe<Akce_Item_Var_Pop_Order_By>;
-  var_samp?: InputMaybe<Akce_Item_Var_Samp_Order_By>;
-  variance?: InputMaybe<Akce_Item_Variance_Order_By>;
-};
-
-/** input type for inserting array relation for remote table "akce_item" */
-export type Akce_Item_Arr_Rel_Insert_Input = {
-  data: Array<Akce_Item_Insert_Input>;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Akce_Item_On_Conflict>;
-};
-
-/** aggregate avg on columns */
-export type Akce_Item_Avg_Fields = {
-  __typename?: 'akce_item_avg_fields';
-  ai_id?: Maybe<Scalars['Float']>;
-  ai_id_rodic?: Maybe<Scalars['Float']>;
-  ai_rok_narozeni?: Maybe<Scalars['Float']>;
-  ai_user?: Maybe<Scalars['Float']>;
-};
-
-/** order by avg() on columns of table "akce_item" */
-export type Akce_Item_Avg_Order_By = {
-  ai_id?: InputMaybe<Order_By>;
-  ai_id_rodic?: InputMaybe<Order_By>;
-  ai_rok_narozeni?: InputMaybe<Order_By>;
-  ai_user?: InputMaybe<Order_By>;
-};
-
-/** Boolean expression to filter rows from the table "akce_item". All fields are combined with a logical 'AND'. */
-export type Akce_Item_Bool_Exp = {
-  _and?: InputMaybe<Array<Akce_Item_Bool_Exp>>;
-  _not?: InputMaybe<Akce_Item_Bool_Exp>;
-  _or?: InputMaybe<Array<Akce_Item_Bool_Exp>>;
-  ai_id?: InputMaybe<Bigint_Comparison_Exp>;
-  ai_id_rodic?: InputMaybe<Bigint_Comparison_Exp>;
-  ai_rok_narozeni?: InputMaybe<Smallint_Comparison_Exp>;
-  ai_user?: InputMaybe<Bigint_Comparison_Exp>;
-  akce?: InputMaybe<Akce_Bool_Exp>;
-  user?: InputMaybe<Users_Bool_Exp>;
-};
-
-/** unique or primary key constraints on table "akce_item" */
-export enum Akce_Item_Constraint {
-  /** unique or primary key constraint */
-  Idx_24569Primary = 'idx_24569_primary'
-}
-
-/** input type for incrementing numeric columns in table "akce_item" */
-export type Akce_Item_Inc_Input = {
-  ai_id?: InputMaybe<Scalars['bigint']>;
-  ai_id_rodic?: InputMaybe<Scalars['bigint']>;
-  ai_rok_narozeni?: InputMaybe<Scalars['smallint']>;
-  ai_user?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "akce_item" */
-export type Akce_Item_Insert_Input = {
-  ai_id?: InputMaybe<Scalars['bigint']>;
-  ai_id_rodic?: InputMaybe<Scalars['bigint']>;
-  ai_rok_narozeni?: InputMaybe<Scalars['smallint']>;
-  ai_user?: InputMaybe<Scalars['bigint']>;
-  akce?: InputMaybe<Akce_Obj_Rel_Insert_Input>;
-  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
-};
-
-/** aggregate max on columns */
-export type Akce_Item_Max_Fields = {
-  __typename?: 'akce_item_max_fields';
-  ai_id?: Maybe<Scalars['bigint']>;
-  ai_id_rodic?: Maybe<Scalars['bigint']>;
-  ai_rok_narozeni?: Maybe<Scalars['smallint']>;
-  ai_user?: Maybe<Scalars['bigint']>;
-};
-
-/** order by max() on columns of table "akce_item" */
-export type Akce_Item_Max_Order_By = {
-  ai_id?: InputMaybe<Order_By>;
-  ai_id_rodic?: InputMaybe<Order_By>;
-  ai_rok_narozeni?: InputMaybe<Order_By>;
-  ai_user?: InputMaybe<Order_By>;
-};
-
-/** aggregate min on columns */
-export type Akce_Item_Min_Fields = {
-  __typename?: 'akce_item_min_fields';
-  ai_id?: Maybe<Scalars['bigint']>;
-  ai_id_rodic?: Maybe<Scalars['bigint']>;
-  ai_rok_narozeni?: Maybe<Scalars['smallint']>;
-  ai_user?: Maybe<Scalars['bigint']>;
-};
-
-/** order by min() on columns of table "akce_item" */
-export type Akce_Item_Min_Order_By = {
-  ai_id?: InputMaybe<Order_By>;
-  ai_id_rodic?: InputMaybe<Order_By>;
-  ai_rok_narozeni?: InputMaybe<Order_By>;
-  ai_user?: InputMaybe<Order_By>;
-};
-
-/** response of any mutation on the table "akce_item" */
-export type Akce_Item_Mutation_Response = {
-  __typename?: 'akce_item_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Akce_Item>;
-};
-
-/** on conflict condition type for table "akce_item" */
-export type Akce_Item_On_Conflict = {
-  constraint: Akce_Item_Constraint;
-  update_columns?: Array<Akce_Item_Update_Column>;
-  where?: InputMaybe<Akce_Item_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "akce_item". */
-export type Akce_Item_Order_By = {
-  ai_id?: InputMaybe<Order_By>;
-  ai_id_rodic?: InputMaybe<Order_By>;
-  ai_rok_narozeni?: InputMaybe<Order_By>;
-  ai_user?: InputMaybe<Order_By>;
-  akce?: InputMaybe<Akce_Order_By>;
-  user?: InputMaybe<Users_Order_By>;
-};
-
-/** primary key columns input for table: akce_item */
-export type Akce_Item_Pk_Columns_Input = {
-  ai_id: Scalars['bigint'];
-};
-
-/** select columns of table "akce_item" */
-export enum Akce_Item_Select_Column {
-  /** column name */
-  AiId = 'ai_id',
-  /** column name */
-  AiIdRodic = 'ai_id_rodic',
-  /** column name */
-  AiRokNarozeni = 'ai_rok_narozeni',
-  /** column name */
-  AiUser = 'ai_user'
-}
-
-/** input type for updating data in table "akce_item" */
-export type Akce_Item_Set_Input = {
-  ai_id?: InputMaybe<Scalars['bigint']>;
-  ai_id_rodic?: InputMaybe<Scalars['bigint']>;
-  ai_rok_narozeni?: InputMaybe<Scalars['smallint']>;
-  ai_user?: InputMaybe<Scalars['bigint']>;
-};
-
-/** aggregate stddev on columns */
-export type Akce_Item_Stddev_Fields = {
-  __typename?: 'akce_item_stddev_fields';
-  ai_id?: Maybe<Scalars['Float']>;
-  ai_id_rodic?: Maybe<Scalars['Float']>;
-  ai_rok_narozeni?: Maybe<Scalars['Float']>;
-  ai_user?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev() on columns of table "akce_item" */
-export type Akce_Item_Stddev_Order_By = {
-  ai_id?: InputMaybe<Order_By>;
-  ai_id_rodic?: InputMaybe<Order_By>;
-  ai_rok_narozeni?: InputMaybe<Order_By>;
-  ai_user?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Akce_Item_Stddev_Pop_Fields = {
-  __typename?: 'akce_item_stddev_pop_fields';
-  ai_id?: Maybe<Scalars['Float']>;
-  ai_id_rodic?: Maybe<Scalars['Float']>;
-  ai_rok_narozeni?: Maybe<Scalars['Float']>;
-  ai_user?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_pop() on columns of table "akce_item" */
-export type Akce_Item_Stddev_Pop_Order_By = {
-  ai_id?: InputMaybe<Order_By>;
-  ai_id_rodic?: InputMaybe<Order_By>;
-  ai_rok_narozeni?: InputMaybe<Order_By>;
-  ai_user?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Akce_Item_Stddev_Samp_Fields = {
-  __typename?: 'akce_item_stddev_samp_fields';
-  ai_id?: Maybe<Scalars['Float']>;
-  ai_id_rodic?: Maybe<Scalars['Float']>;
-  ai_rok_narozeni?: Maybe<Scalars['Float']>;
-  ai_user?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_samp() on columns of table "akce_item" */
-export type Akce_Item_Stddev_Samp_Order_By = {
-  ai_id?: InputMaybe<Order_By>;
-  ai_id_rodic?: InputMaybe<Order_By>;
-  ai_rok_narozeni?: InputMaybe<Order_By>;
-  ai_user?: InputMaybe<Order_By>;
-};
-
-/** aggregate sum on columns */
-export type Akce_Item_Sum_Fields = {
-  __typename?: 'akce_item_sum_fields';
-  ai_id?: Maybe<Scalars['bigint']>;
-  ai_id_rodic?: Maybe<Scalars['bigint']>;
-  ai_rok_narozeni?: Maybe<Scalars['smallint']>;
-  ai_user?: Maybe<Scalars['bigint']>;
-};
-
-/** order by sum() on columns of table "akce_item" */
-export type Akce_Item_Sum_Order_By = {
-  ai_id?: InputMaybe<Order_By>;
-  ai_id_rodic?: InputMaybe<Order_By>;
-  ai_rok_narozeni?: InputMaybe<Order_By>;
-  ai_user?: InputMaybe<Order_By>;
-};
-
-/** update columns of table "akce_item" */
-export enum Akce_Item_Update_Column {
-  /** column name */
-  AiId = 'ai_id',
-  /** column name */
-  AiIdRodic = 'ai_id_rodic',
-  /** column name */
-  AiRokNarozeni = 'ai_rok_narozeni',
-  /** column name */
-  AiUser = 'ai_user'
-}
-
-/** aggregate var_pop on columns */
-export type Akce_Item_Var_Pop_Fields = {
-  __typename?: 'akce_item_var_pop_fields';
-  ai_id?: Maybe<Scalars['Float']>;
-  ai_id_rodic?: Maybe<Scalars['Float']>;
-  ai_rok_narozeni?: Maybe<Scalars['Float']>;
-  ai_user?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_pop() on columns of table "akce_item" */
-export type Akce_Item_Var_Pop_Order_By = {
-  ai_id?: InputMaybe<Order_By>;
-  ai_id_rodic?: InputMaybe<Order_By>;
-  ai_rok_narozeni?: InputMaybe<Order_By>;
-  ai_user?: InputMaybe<Order_By>;
-};
-
-/** aggregate var_samp on columns */
-export type Akce_Item_Var_Samp_Fields = {
-  __typename?: 'akce_item_var_samp_fields';
-  ai_id?: Maybe<Scalars['Float']>;
-  ai_id_rodic?: Maybe<Scalars['Float']>;
-  ai_rok_narozeni?: Maybe<Scalars['Float']>;
-  ai_user?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_samp() on columns of table "akce_item" */
-export type Akce_Item_Var_Samp_Order_By = {
-  ai_id?: InputMaybe<Order_By>;
-  ai_id_rodic?: InputMaybe<Order_By>;
-  ai_rok_narozeni?: InputMaybe<Order_By>;
-  ai_user?: InputMaybe<Order_By>;
-};
-
-/** aggregate variance on columns */
-export type Akce_Item_Variance_Fields = {
-  __typename?: 'akce_item_variance_fields';
-  ai_id?: Maybe<Scalars['Float']>;
-  ai_id_rodic?: Maybe<Scalars['Float']>;
-  ai_rok_narozeni?: Maybe<Scalars['Float']>;
-  ai_user?: Maybe<Scalars['Float']>;
-};
-
-/** order by variance() on columns of table "akce_item" */
-export type Akce_Item_Variance_Order_By = {
-  ai_id?: InputMaybe<Order_By>;
-  ai_id_rodic?: InputMaybe<Order_By>;
-  ai_rok_narozeni?: InputMaybe<Order_By>;
-  ai_user?: InputMaybe<Order_By>;
-};
-
-/** aggregate max on columns */
-export type Akce_Max_Fields = {
-  __typename?: 'akce_max_fields';
-  a_do?: Maybe<Scalars['date']>;
-  a_dokumenty?: Maybe<Scalars['String']>;
-  a_id?: Maybe<Scalars['bigint']>;
-  a_info?: Maybe<Scalars['String']>;
-  a_jmeno?: Maybe<Scalars['String']>;
-  a_kapacita?: Maybe<Scalars['bigint']>;
-  a_kde?: Maybe<Scalars['String']>;
-  a_od?: Maybe<Scalars['date']>;
-  a_timestamp?: Maybe<Scalars['timestamptz']>;
-};
-
-/** aggregate min on columns */
-export type Akce_Min_Fields = {
-  __typename?: 'akce_min_fields';
-  a_do?: Maybe<Scalars['date']>;
-  a_dokumenty?: Maybe<Scalars['String']>;
-  a_id?: Maybe<Scalars['bigint']>;
-  a_info?: Maybe<Scalars['String']>;
-  a_jmeno?: Maybe<Scalars['String']>;
-  a_kapacita?: Maybe<Scalars['bigint']>;
-  a_kde?: Maybe<Scalars['String']>;
-  a_od?: Maybe<Scalars['date']>;
-  a_timestamp?: Maybe<Scalars['timestamptz']>;
-};
-
-/** response of any mutation on the table "akce" */
-export type Akce_Mutation_Response = {
-  __typename?: 'akce_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Akce>;
-};
-
-/** input type for inserting object relation for remote table "akce" */
-export type Akce_Obj_Rel_Insert_Input = {
-  data: Akce_Insert_Input;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Akce_On_Conflict>;
-};
-
-/** on conflict condition type for table "akce" */
-export type Akce_On_Conflict = {
-  constraint: Akce_Constraint;
-  update_columns?: Array<Akce_Update_Column>;
-  where?: InputMaybe<Akce_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "akce". */
-export type Akce_Order_By = {
-  a_do?: InputMaybe<Order_By>;
-  a_dokumenty?: InputMaybe<Order_By>;
-  a_id?: InputMaybe<Order_By>;
-  a_info?: InputMaybe<Order_By>;
-  a_jmeno?: InputMaybe<Order_By>;
-  a_kapacita?: InputMaybe<Order_By>;
-  a_kde?: InputMaybe<Order_By>;
-  a_lock?: InputMaybe<Order_By>;
-  a_od?: InputMaybe<Order_By>;
-  a_timestamp?: InputMaybe<Order_By>;
-  a_visible?: InputMaybe<Order_By>;
-  akce_items_aggregate?: InputMaybe<Akce_Item_Aggregate_Order_By>;
-};
-
-/** primary key columns input for table: akce */
-export type Akce_Pk_Columns_Input = {
-  a_id: Scalars['bigint'];
-};
-
-/** select columns of table "akce" */
-export enum Akce_Select_Column {
-  /** column name */
-  ADo = 'a_do',
-  /** column name */
-  ADokumenty = 'a_dokumenty',
-  /** column name */
-  AId = 'a_id',
-  /** column name */
-  AInfo = 'a_info',
-  /** column name */
-  AJmeno = 'a_jmeno',
-  /** column name */
-  AKapacita = 'a_kapacita',
-  /** column name */
-  AKde = 'a_kde',
-  /** column name */
-  ALock = 'a_lock',
-  /** column name */
-  AOd = 'a_od',
-  /** column name */
-  ATimestamp = 'a_timestamp',
-  /** column name */
-  AVisible = 'a_visible'
-}
-
-/** input type for updating data in table "akce" */
-export type Akce_Set_Input = {
-  a_do?: InputMaybe<Scalars['date']>;
-  a_dokumenty?: InputMaybe<Scalars['String']>;
-  a_id?: InputMaybe<Scalars['bigint']>;
-  a_info?: InputMaybe<Scalars['String']>;
-  a_jmeno?: InputMaybe<Scalars['String']>;
-  a_kapacita?: InputMaybe<Scalars['bigint']>;
-  a_kde?: InputMaybe<Scalars['String']>;
-  a_lock?: InputMaybe<Scalars['Boolean']>;
-  a_od?: InputMaybe<Scalars['date']>;
-  a_timestamp?: InputMaybe<Scalars['timestamptz']>;
-  a_visible?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate stddev on columns */
-export type Akce_Stddev_Fields = {
-  __typename?: 'akce_stddev_fields';
-  a_id?: Maybe<Scalars['Float']>;
-  a_kapacita?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Akce_Stddev_Pop_Fields = {
-  __typename?: 'akce_stddev_pop_fields';
-  a_id?: Maybe<Scalars['Float']>;
-  a_kapacita?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Akce_Stddev_Samp_Fields = {
-  __typename?: 'akce_stddev_samp_fields';
-  a_id?: Maybe<Scalars['Float']>;
-  a_kapacita?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate sum on columns */
-export type Akce_Sum_Fields = {
-  __typename?: 'akce_sum_fields';
-  a_id?: Maybe<Scalars['bigint']>;
-  a_kapacita?: Maybe<Scalars['bigint']>;
-};
-
-/** update columns of table "akce" */
-export enum Akce_Update_Column {
-  /** column name */
-  ADo = 'a_do',
-  /** column name */
-  ADokumenty = 'a_dokumenty',
-  /** column name */
-  AId = 'a_id',
-  /** column name */
-  AInfo = 'a_info',
-  /** column name */
-  AJmeno = 'a_jmeno',
-  /** column name */
-  AKapacita = 'a_kapacita',
-  /** column name */
-  AKde = 'a_kde',
-  /** column name */
-  ALock = 'a_lock',
-  /** column name */
-  AOd = 'a_od',
-  /** column name */
-  ATimestamp = 'a_timestamp',
-  /** column name */
-  AVisible = 'a_visible'
-}
-
-/** aggregate var_pop on columns */
-export type Akce_Var_Pop_Fields = {
-  __typename?: 'akce_var_pop_fields';
-  a_id?: Maybe<Scalars['Float']>;
-  a_kapacita?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Akce_Var_Samp_Fields = {
-  __typename?: 'akce_var_samp_fields';
-  a_id?: Maybe<Scalars['Float']>;
-  a_kapacita?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Akce_Variance_Fields = {
-  __typename?: 'akce_variance_fields';
-  a_id?: Maybe<Scalars['Float']>;
-  a_kapacita?: Maybe<Scalars['Float']>;
-};
-
-/** columns and relationships of "aktuality" */
-export type Aktuality = {
-  __typename?: 'aktuality';
-  at_foto?: Maybe<Scalars['bigint']>;
-  at_foto_main?: Maybe<Scalars['bigint']>;
-  at_id: Scalars['bigint'];
-  at_jmeno: Scalars['String'];
-  at_kat: Scalars['String'];
-  at_kdo: Scalars['bigint'];
-  at_preview: Scalars['String'];
-  at_text: Scalars['String'];
-  at_timestamp?: Maybe<Scalars['timestamptz']>;
-  at_timestamp_add?: Maybe<Scalars['timestamptz']>;
-  /** An object relationship */
-  galerie_foto?: Maybe<Galerie_Foto>;
-  /** An object relationship */
-  user: Users;
-};
-
-/** columns and relationships of "aktuality_admin" */
-export type Aktuality_Admin = {
-  __typename?: 'aktuality_admin';
-  at_foto?: Maybe<Scalars['bigint']>;
-  at_foto_main?: Maybe<Scalars['bigint']>;
-  at_id?: Maybe<Scalars['bigint']>;
-  at_jmeno?: Maybe<Scalars['String']>;
-  at_kat?: Maybe<Scalars['String']>;
-  at_kdo?: Maybe<Scalars['bigint']>;
-  at_preview?: Maybe<Scalars['String']>;
-  at_text?: Maybe<Scalars['String']>;
-  at_timestamp?: Maybe<Scalars['timestamptz']>;
-  at_timestamp_add?: Maybe<Scalars['timestamptz']>;
-};
-
-/** aggregated selection of "aktuality_admin" */
-export type Aktuality_Admin_Aggregate = {
-  __typename?: 'aktuality_admin_aggregate';
-  aggregate?: Maybe<Aktuality_Admin_Aggregate_Fields>;
-  nodes: Array<Aktuality_Admin>;
-};
-
-/** aggregate fields of "aktuality_admin" */
-export type Aktuality_Admin_Aggregate_Fields = {
-  __typename?: 'aktuality_admin_aggregate_fields';
-  avg?: Maybe<Aktuality_Admin_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Aktuality_Admin_Max_Fields>;
-  min?: Maybe<Aktuality_Admin_Min_Fields>;
-  stddev?: Maybe<Aktuality_Admin_Stddev_Fields>;
-  stddev_pop?: Maybe<Aktuality_Admin_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Aktuality_Admin_Stddev_Samp_Fields>;
-  sum?: Maybe<Aktuality_Admin_Sum_Fields>;
-  var_pop?: Maybe<Aktuality_Admin_Var_Pop_Fields>;
-  var_samp?: Maybe<Aktuality_Admin_Var_Samp_Fields>;
-  variance?: Maybe<Aktuality_Admin_Variance_Fields>;
-};
-
-
-/** aggregate fields of "aktuality_admin" */
-export type Aktuality_Admin_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Aktuality_Admin_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate avg on columns */
-export type Aktuality_Admin_Avg_Fields = {
-  __typename?: 'aktuality_admin_avg_fields';
-  at_foto?: Maybe<Scalars['Float']>;
-  at_foto_main?: Maybe<Scalars['Float']>;
-  at_id?: Maybe<Scalars['Float']>;
-  at_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to filter rows from the table "aktuality_admin". All fields are combined with a logical 'AND'. */
-export type Aktuality_Admin_Bool_Exp = {
-  _and?: InputMaybe<Array<Aktuality_Admin_Bool_Exp>>;
-  _not?: InputMaybe<Aktuality_Admin_Bool_Exp>;
-  _or?: InputMaybe<Array<Aktuality_Admin_Bool_Exp>>;
-  at_foto?: InputMaybe<Bigint_Comparison_Exp>;
-  at_foto_main?: InputMaybe<Bigint_Comparison_Exp>;
-  at_id?: InputMaybe<Bigint_Comparison_Exp>;
-  at_jmeno?: InputMaybe<String_Comparison_Exp>;
-  at_kat?: InputMaybe<String_Comparison_Exp>;
-  at_kdo?: InputMaybe<Bigint_Comparison_Exp>;
-  at_preview?: InputMaybe<String_Comparison_Exp>;
-  at_text?: InputMaybe<String_Comparison_Exp>;
-  at_timestamp?: InputMaybe<Timestamptz_Comparison_Exp>;
-  at_timestamp_add?: InputMaybe<Timestamptz_Comparison_Exp>;
-};
-
-/** input type for incrementing numeric columns in table "aktuality_admin" */
-export type Aktuality_Admin_Inc_Input = {
-  at_foto?: InputMaybe<Scalars['bigint']>;
-  at_foto_main?: InputMaybe<Scalars['bigint']>;
-  at_id?: InputMaybe<Scalars['bigint']>;
-  at_kdo?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "aktuality_admin" */
-export type Aktuality_Admin_Insert_Input = {
-  at_foto?: InputMaybe<Scalars['bigint']>;
-  at_foto_main?: InputMaybe<Scalars['bigint']>;
-  at_id?: InputMaybe<Scalars['bigint']>;
-  at_jmeno?: InputMaybe<Scalars['String']>;
-  at_kat?: InputMaybe<Scalars['String']>;
-  at_kdo?: InputMaybe<Scalars['bigint']>;
-  at_preview?: InputMaybe<Scalars['String']>;
-  at_text?: InputMaybe<Scalars['String']>;
-  at_timestamp?: InputMaybe<Scalars['timestamptz']>;
-  at_timestamp_add?: InputMaybe<Scalars['timestamptz']>;
-};
-
-/** aggregate max on columns */
-export type Aktuality_Admin_Max_Fields = {
-  __typename?: 'aktuality_admin_max_fields';
-  at_foto?: Maybe<Scalars['bigint']>;
-  at_foto_main?: Maybe<Scalars['bigint']>;
-  at_id?: Maybe<Scalars['bigint']>;
-  at_jmeno?: Maybe<Scalars['String']>;
-  at_kat?: Maybe<Scalars['String']>;
-  at_kdo?: Maybe<Scalars['bigint']>;
-  at_preview?: Maybe<Scalars['String']>;
-  at_text?: Maybe<Scalars['String']>;
-  at_timestamp?: Maybe<Scalars['timestamptz']>;
-  at_timestamp_add?: Maybe<Scalars['timestamptz']>;
-};
-
-/** aggregate min on columns */
-export type Aktuality_Admin_Min_Fields = {
-  __typename?: 'aktuality_admin_min_fields';
-  at_foto?: Maybe<Scalars['bigint']>;
-  at_foto_main?: Maybe<Scalars['bigint']>;
-  at_id?: Maybe<Scalars['bigint']>;
-  at_jmeno?: Maybe<Scalars['String']>;
-  at_kat?: Maybe<Scalars['String']>;
-  at_kdo?: Maybe<Scalars['bigint']>;
-  at_preview?: Maybe<Scalars['String']>;
-  at_text?: Maybe<Scalars['String']>;
-  at_timestamp?: Maybe<Scalars['timestamptz']>;
-  at_timestamp_add?: Maybe<Scalars['timestamptz']>;
-};
-
-/** response of any mutation on the table "aktuality_admin" */
-export type Aktuality_Admin_Mutation_Response = {
-  __typename?: 'aktuality_admin_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Aktuality_Admin>;
-};
-
-/** Ordering options when selecting data from "aktuality_admin". */
-export type Aktuality_Admin_Order_By = {
-  at_foto?: InputMaybe<Order_By>;
-  at_foto_main?: InputMaybe<Order_By>;
-  at_id?: InputMaybe<Order_By>;
-  at_jmeno?: InputMaybe<Order_By>;
-  at_kat?: InputMaybe<Order_By>;
-  at_kdo?: InputMaybe<Order_By>;
-  at_preview?: InputMaybe<Order_By>;
-  at_text?: InputMaybe<Order_By>;
-  at_timestamp?: InputMaybe<Order_By>;
-  at_timestamp_add?: InputMaybe<Order_By>;
-};
-
-/** select columns of table "aktuality_admin" */
-export enum Aktuality_Admin_Select_Column {
-  /** column name */
-  AtFoto = 'at_foto',
-  /** column name */
-  AtFotoMain = 'at_foto_main',
-  /** column name */
-  AtId = 'at_id',
-  /** column name */
-  AtJmeno = 'at_jmeno',
-  /** column name */
-  AtKat = 'at_kat',
-  /** column name */
-  AtKdo = 'at_kdo',
-  /** column name */
-  AtPreview = 'at_preview',
-  /** column name */
-  AtText = 'at_text',
-  /** column name */
-  AtTimestamp = 'at_timestamp',
-  /** column name */
-  AtTimestampAdd = 'at_timestamp_add'
-}
-
-/** input type for updating data in table "aktuality_admin" */
-export type Aktuality_Admin_Set_Input = {
-  at_foto?: InputMaybe<Scalars['bigint']>;
-  at_foto_main?: InputMaybe<Scalars['bigint']>;
-  at_id?: InputMaybe<Scalars['bigint']>;
-  at_jmeno?: InputMaybe<Scalars['String']>;
-  at_kat?: InputMaybe<Scalars['String']>;
-  at_kdo?: InputMaybe<Scalars['bigint']>;
-  at_preview?: InputMaybe<Scalars['String']>;
-  at_text?: InputMaybe<Scalars['String']>;
-  at_timestamp?: InputMaybe<Scalars['timestamptz']>;
-  at_timestamp_add?: InputMaybe<Scalars['timestamptz']>;
-};
-
-/** aggregate stddev on columns */
-export type Aktuality_Admin_Stddev_Fields = {
-  __typename?: 'aktuality_admin_stddev_fields';
-  at_foto?: Maybe<Scalars['Float']>;
-  at_foto_main?: Maybe<Scalars['Float']>;
-  at_id?: Maybe<Scalars['Float']>;
-  at_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Aktuality_Admin_Stddev_Pop_Fields = {
-  __typename?: 'aktuality_admin_stddev_pop_fields';
-  at_foto?: Maybe<Scalars['Float']>;
-  at_foto_main?: Maybe<Scalars['Float']>;
-  at_id?: Maybe<Scalars['Float']>;
-  at_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Aktuality_Admin_Stddev_Samp_Fields = {
-  __typename?: 'aktuality_admin_stddev_samp_fields';
-  at_foto?: Maybe<Scalars['Float']>;
-  at_foto_main?: Maybe<Scalars['Float']>;
-  at_id?: Maybe<Scalars['Float']>;
-  at_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate sum on columns */
-export type Aktuality_Admin_Sum_Fields = {
-  __typename?: 'aktuality_admin_sum_fields';
-  at_foto?: Maybe<Scalars['bigint']>;
-  at_foto_main?: Maybe<Scalars['bigint']>;
-  at_id?: Maybe<Scalars['bigint']>;
-  at_kdo?: Maybe<Scalars['bigint']>;
-};
-
-/** aggregate var_pop on columns */
-export type Aktuality_Admin_Var_Pop_Fields = {
-  __typename?: 'aktuality_admin_var_pop_fields';
-  at_foto?: Maybe<Scalars['Float']>;
-  at_foto_main?: Maybe<Scalars['Float']>;
-  at_id?: Maybe<Scalars['Float']>;
-  at_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Aktuality_Admin_Var_Samp_Fields = {
-  __typename?: 'aktuality_admin_var_samp_fields';
-  at_foto?: Maybe<Scalars['Float']>;
-  at_foto_main?: Maybe<Scalars['Float']>;
-  at_id?: Maybe<Scalars['Float']>;
-  at_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Aktuality_Admin_Variance_Fields = {
-  __typename?: 'aktuality_admin_variance_fields';
-  at_foto?: Maybe<Scalars['Float']>;
-  at_foto_main?: Maybe<Scalars['Float']>;
-  at_id?: Maybe<Scalars['Float']>;
-  at_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** aggregated selection of "aktuality" */
-export type Aktuality_Aggregate = {
-  __typename?: 'aktuality_aggregate';
-  aggregate?: Maybe<Aktuality_Aggregate_Fields>;
+/** A connection to a list of `Aktuality` values. */
+export type AktualitiesConnection = {
+  __typename?: 'AktualitiesConnection';
+  /** A list of edges which contains the `Aktuality` and cursor to aid in pagination. */
+  edges: Array<AktualitiesEdge>;
+  /** A list of `Aktuality` objects. */
   nodes: Array<Aktuality>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Aktuality` you could get from the connection. */
+  totalCount: Scalars['Int'];
 };
 
-/** aggregate fields of "aktuality" */
-export type Aktuality_Aggregate_Fields = {
-  __typename?: 'aktuality_aggregate_fields';
-  avg?: Maybe<Aktuality_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Aktuality_Max_Fields>;
-  min?: Maybe<Aktuality_Min_Fields>;
-  stddev?: Maybe<Aktuality_Stddev_Fields>;
-  stddev_pop?: Maybe<Aktuality_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Aktuality_Stddev_Samp_Fields>;
-  sum?: Maybe<Aktuality_Sum_Fields>;
-  var_pop?: Maybe<Aktuality_Var_Pop_Fields>;
-  var_samp?: Maybe<Aktuality_Var_Samp_Fields>;
-  variance?: Maybe<Aktuality_Variance_Fields>;
+/** A `Aktuality` edge in the connection. */
+export type AktualitiesEdge = {
+  __typename?: 'AktualitiesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Aktuality` at the end of the edge. */
+  node: Aktuality;
 };
 
-
-/** aggregate fields of "aktuality" */
-export type Aktuality_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Aktuality_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** order by aggregate values of table "aktuality" */
-export type Aktuality_Aggregate_Order_By = {
-  avg?: InputMaybe<Aktuality_Avg_Order_By>;
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Aktuality_Max_Order_By>;
-  min?: InputMaybe<Aktuality_Min_Order_By>;
-  stddev?: InputMaybe<Aktuality_Stddev_Order_By>;
-  stddev_pop?: InputMaybe<Aktuality_Stddev_Pop_Order_By>;
-  stddev_samp?: InputMaybe<Aktuality_Stddev_Samp_Order_By>;
-  sum?: InputMaybe<Aktuality_Sum_Order_By>;
-  var_pop?: InputMaybe<Aktuality_Var_Pop_Order_By>;
-  var_samp?: InputMaybe<Aktuality_Var_Samp_Order_By>;
-  variance?: InputMaybe<Aktuality_Variance_Order_By>;
-};
-
-/** input type for inserting array relation for remote table "aktuality" */
-export type Aktuality_Arr_Rel_Insert_Input = {
-  data: Array<Aktuality_Insert_Input>;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Aktuality_On_Conflict>;
-};
-
-/** aggregate avg on columns */
-export type Aktuality_Avg_Fields = {
-  __typename?: 'aktuality_avg_fields';
-  at_foto?: Maybe<Scalars['Float']>;
-  at_foto_main?: Maybe<Scalars['Float']>;
-  at_id?: Maybe<Scalars['Float']>;
-  at_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by avg() on columns of table "aktuality" */
-export type Aktuality_Avg_Order_By = {
-  at_foto?: InputMaybe<Order_By>;
-  at_foto_main?: InputMaybe<Order_By>;
-  at_id?: InputMaybe<Order_By>;
-  at_kdo?: InputMaybe<Order_By>;
-};
-
-/** Boolean expression to filter rows from the table "aktuality". All fields are combined with a logical 'AND'. */
-export type Aktuality_Bool_Exp = {
-  _and?: InputMaybe<Array<Aktuality_Bool_Exp>>;
-  _not?: InputMaybe<Aktuality_Bool_Exp>;
-  _or?: InputMaybe<Array<Aktuality_Bool_Exp>>;
-  at_foto?: InputMaybe<Bigint_Comparison_Exp>;
-  at_foto_main?: InputMaybe<Bigint_Comparison_Exp>;
-  at_id?: InputMaybe<Bigint_Comparison_Exp>;
-  at_jmeno?: InputMaybe<String_Comparison_Exp>;
-  at_kat?: InputMaybe<String_Comparison_Exp>;
-  at_kdo?: InputMaybe<Bigint_Comparison_Exp>;
-  at_preview?: InputMaybe<String_Comparison_Exp>;
-  at_text?: InputMaybe<String_Comparison_Exp>;
-  at_timestamp?: InputMaybe<Timestamptz_Comparison_Exp>;
-  at_timestamp_add?: InputMaybe<Timestamptz_Comparison_Exp>;
-  galerie_foto?: InputMaybe<Galerie_Foto_Bool_Exp>;
-  user?: InputMaybe<Users_Bool_Exp>;
-};
-
-/** unique or primary key constraints on table "aktuality" */
-export enum Aktuality_Constraint {
-  /** unique or primary key constraint */
-  Idx_24575Primary = 'idx_24575_primary'
+/** Methods to use when ordering `Aktuality`. */
+export enum AktualitiesOrderBy {
+  AtFotoAsc = 'AT_FOTO_ASC',
+  AtFotoDesc = 'AT_FOTO_DESC',
+  AtFotoMainAsc = 'AT_FOTO_MAIN_ASC',
+  AtFotoMainDesc = 'AT_FOTO_MAIN_DESC',
+  AtIdAsc = 'AT_ID_ASC',
+  AtIdDesc = 'AT_ID_DESC',
+  AtJmenoAsc = 'AT_JMENO_ASC',
+  AtJmenoDesc = 'AT_JMENO_DESC',
+  AtKatAsc = 'AT_KAT_ASC',
+  AtKatDesc = 'AT_KAT_DESC',
+  AtKdoAsc = 'AT_KDO_ASC',
+  AtKdoDesc = 'AT_KDO_DESC',
+  AtPreviewAsc = 'AT_PREVIEW_ASC',
+  AtPreviewDesc = 'AT_PREVIEW_DESC',
+  AtTextAsc = 'AT_TEXT_ASC',
+  AtTextDesc = 'AT_TEXT_DESC',
+  AtTimestampAddAsc = 'AT_TIMESTAMP_ADD_ASC',
+  AtTimestampAddDesc = 'AT_TIMESTAMP_ADD_DESC',
+  AtTimestampAsc = 'AT_TIMESTAMP_ASC',
+  AtTimestampDesc = 'AT_TIMESTAMP_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-/** input type for incrementing numeric columns in table "aktuality" */
-export type Aktuality_Inc_Input = {
-  at_foto?: InputMaybe<Scalars['bigint']>;
-  at_foto_main?: InputMaybe<Scalars['bigint']>;
-  at_id?: InputMaybe<Scalars['bigint']>;
-  at_kdo?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "aktuality" */
-export type Aktuality_Insert_Input = {
-  at_foto?: InputMaybe<Scalars['bigint']>;
-  at_foto_main?: InputMaybe<Scalars['bigint']>;
-  at_id?: InputMaybe<Scalars['bigint']>;
-  at_jmeno?: InputMaybe<Scalars['String']>;
-  at_kat?: InputMaybe<Scalars['String']>;
-  at_kdo?: InputMaybe<Scalars['bigint']>;
-  at_preview?: InputMaybe<Scalars['String']>;
-  at_text?: InputMaybe<Scalars['String']>;
-  at_timestamp?: InputMaybe<Scalars['timestamptz']>;
-  at_timestamp_add?: InputMaybe<Scalars['timestamptz']>;
-  galerie_foto?: InputMaybe<Galerie_Foto_Obj_Rel_Insert_Input>;
-  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
-};
-
-/** aggregate max on columns */
-export type Aktuality_Max_Fields = {
-  __typename?: 'aktuality_max_fields';
-  at_foto?: Maybe<Scalars['bigint']>;
-  at_foto_main?: Maybe<Scalars['bigint']>;
-  at_id?: Maybe<Scalars['bigint']>;
-  at_jmeno?: Maybe<Scalars['String']>;
-  at_kat?: Maybe<Scalars['String']>;
-  at_kdo?: Maybe<Scalars['bigint']>;
-  at_preview?: Maybe<Scalars['String']>;
-  at_text?: Maybe<Scalars['String']>;
-  at_timestamp?: Maybe<Scalars['timestamptz']>;
-  at_timestamp_add?: Maybe<Scalars['timestamptz']>;
-};
-
-/** order by max() on columns of table "aktuality" */
-export type Aktuality_Max_Order_By = {
-  at_foto?: InputMaybe<Order_By>;
-  at_foto_main?: InputMaybe<Order_By>;
-  at_id?: InputMaybe<Order_By>;
-  at_jmeno?: InputMaybe<Order_By>;
-  at_kat?: InputMaybe<Order_By>;
-  at_kdo?: InputMaybe<Order_By>;
-  at_preview?: InputMaybe<Order_By>;
-  at_text?: InputMaybe<Order_By>;
-  at_timestamp?: InputMaybe<Order_By>;
-  at_timestamp_add?: InputMaybe<Order_By>;
-};
-
-/** aggregate min on columns */
-export type Aktuality_Min_Fields = {
-  __typename?: 'aktuality_min_fields';
-  at_foto?: Maybe<Scalars['bigint']>;
-  at_foto_main?: Maybe<Scalars['bigint']>;
-  at_id?: Maybe<Scalars['bigint']>;
-  at_jmeno?: Maybe<Scalars['String']>;
-  at_kat?: Maybe<Scalars['String']>;
-  at_kdo?: Maybe<Scalars['bigint']>;
-  at_preview?: Maybe<Scalars['String']>;
-  at_text?: Maybe<Scalars['String']>;
-  at_timestamp?: Maybe<Scalars['timestamptz']>;
-  at_timestamp_add?: Maybe<Scalars['timestamptz']>;
-};
-
-/** order by min() on columns of table "aktuality" */
-export type Aktuality_Min_Order_By = {
-  at_foto?: InputMaybe<Order_By>;
-  at_foto_main?: InputMaybe<Order_By>;
-  at_id?: InputMaybe<Order_By>;
-  at_jmeno?: InputMaybe<Order_By>;
-  at_kat?: InputMaybe<Order_By>;
-  at_kdo?: InputMaybe<Order_By>;
-  at_preview?: InputMaybe<Order_By>;
-  at_text?: InputMaybe<Order_By>;
-  at_timestamp?: InputMaybe<Order_By>;
-  at_timestamp_add?: InputMaybe<Order_By>;
-};
-
-/** response of any mutation on the table "aktuality" */
-export type Aktuality_Mutation_Response = {
-  __typename?: 'aktuality_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Aktuality>;
-};
-
-/** on conflict condition type for table "aktuality" */
-export type Aktuality_On_Conflict = {
-  constraint: Aktuality_Constraint;
-  update_columns?: Array<Aktuality_Update_Column>;
-  where?: InputMaybe<Aktuality_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "aktuality". */
-export type Aktuality_Order_By = {
-  at_foto?: InputMaybe<Order_By>;
-  at_foto_main?: InputMaybe<Order_By>;
-  at_id?: InputMaybe<Order_By>;
-  at_jmeno?: InputMaybe<Order_By>;
-  at_kat?: InputMaybe<Order_By>;
-  at_kdo?: InputMaybe<Order_By>;
-  at_preview?: InputMaybe<Order_By>;
-  at_text?: InputMaybe<Order_By>;
-  at_timestamp?: InputMaybe<Order_By>;
-  at_timestamp_add?: InputMaybe<Order_By>;
-  galerie_foto?: InputMaybe<Galerie_Foto_Order_By>;
-  user?: InputMaybe<Users_Order_By>;
-};
-
-/** primary key columns input for table: aktuality */
-export type Aktuality_Pk_Columns_Input = {
-  at_id: Scalars['bigint'];
-};
-
-/** select columns of table "aktuality" */
-export enum Aktuality_Select_Column {
-  /** column name */
-  AtFoto = 'at_foto',
-  /** column name */
-  AtFotoMain = 'at_foto_main',
-  /** column name */
-  AtId = 'at_id',
-  /** column name */
-  AtJmeno = 'at_jmeno',
-  /** column name */
-  AtKat = 'at_kat',
-  /** column name */
-  AtKdo = 'at_kdo',
-  /** column name */
-  AtPreview = 'at_preview',
-  /** column name */
-  AtText = 'at_text',
-  /** column name */
-  AtTimestamp = 'at_timestamp',
-  /** column name */
-  AtTimestampAdd = 'at_timestamp_add'
-}
-
-/** input type for updating data in table "aktuality" */
-export type Aktuality_Set_Input = {
-  at_foto?: InputMaybe<Scalars['bigint']>;
-  at_foto_main?: InputMaybe<Scalars['bigint']>;
-  at_id?: InputMaybe<Scalars['bigint']>;
-  at_jmeno?: InputMaybe<Scalars['String']>;
-  at_kat?: InputMaybe<Scalars['String']>;
-  at_kdo?: InputMaybe<Scalars['bigint']>;
-  at_preview?: InputMaybe<Scalars['String']>;
-  at_text?: InputMaybe<Scalars['String']>;
-  at_timestamp?: InputMaybe<Scalars['timestamptz']>;
-  at_timestamp_add?: InputMaybe<Scalars['timestamptz']>;
-};
-
-/** aggregate stddev on columns */
-export type Aktuality_Stddev_Fields = {
-  __typename?: 'aktuality_stddev_fields';
-  at_foto?: Maybe<Scalars['Float']>;
-  at_foto_main?: Maybe<Scalars['Float']>;
-  at_id?: Maybe<Scalars['Float']>;
-  at_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev() on columns of table "aktuality" */
-export type Aktuality_Stddev_Order_By = {
-  at_foto?: InputMaybe<Order_By>;
-  at_foto_main?: InputMaybe<Order_By>;
-  at_id?: InputMaybe<Order_By>;
-  at_kdo?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Aktuality_Stddev_Pop_Fields = {
-  __typename?: 'aktuality_stddev_pop_fields';
-  at_foto?: Maybe<Scalars['Float']>;
-  at_foto_main?: Maybe<Scalars['Float']>;
-  at_id?: Maybe<Scalars['Float']>;
-  at_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_pop() on columns of table "aktuality" */
-export type Aktuality_Stddev_Pop_Order_By = {
-  at_foto?: InputMaybe<Order_By>;
-  at_foto_main?: InputMaybe<Order_By>;
-  at_id?: InputMaybe<Order_By>;
-  at_kdo?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Aktuality_Stddev_Samp_Fields = {
-  __typename?: 'aktuality_stddev_samp_fields';
-  at_foto?: Maybe<Scalars['Float']>;
-  at_foto_main?: Maybe<Scalars['Float']>;
-  at_id?: Maybe<Scalars['Float']>;
-  at_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_samp() on columns of table "aktuality" */
-export type Aktuality_Stddev_Samp_Order_By = {
-  at_foto?: InputMaybe<Order_By>;
-  at_foto_main?: InputMaybe<Order_By>;
-  at_id?: InputMaybe<Order_By>;
-  at_kdo?: InputMaybe<Order_By>;
-};
-
-/** aggregate sum on columns */
-export type Aktuality_Sum_Fields = {
-  __typename?: 'aktuality_sum_fields';
-  at_foto?: Maybe<Scalars['bigint']>;
-  at_foto_main?: Maybe<Scalars['bigint']>;
-  at_id?: Maybe<Scalars['bigint']>;
-  at_kdo?: Maybe<Scalars['bigint']>;
-};
-
-/** order by sum() on columns of table "aktuality" */
-export type Aktuality_Sum_Order_By = {
-  at_foto?: InputMaybe<Order_By>;
-  at_foto_main?: InputMaybe<Order_By>;
-  at_id?: InputMaybe<Order_By>;
-  at_kdo?: InputMaybe<Order_By>;
-};
-
-/** update columns of table "aktuality" */
-export enum Aktuality_Update_Column {
-  /** column name */
-  AtFoto = 'at_foto',
-  /** column name */
-  AtFotoMain = 'at_foto_main',
-  /** column name */
-  AtId = 'at_id',
-  /** column name */
-  AtJmeno = 'at_jmeno',
-  /** column name */
-  AtKat = 'at_kat',
-  /** column name */
-  AtKdo = 'at_kdo',
-  /** column name */
-  AtPreview = 'at_preview',
-  /** column name */
-  AtText = 'at_text',
-  /** column name */
-  AtTimestamp = 'at_timestamp',
-  /** column name */
-  AtTimestampAdd = 'at_timestamp_add'
-}
-
-/** aggregate var_pop on columns */
-export type Aktuality_Var_Pop_Fields = {
-  __typename?: 'aktuality_var_pop_fields';
-  at_foto?: Maybe<Scalars['Float']>;
-  at_foto_main?: Maybe<Scalars['Float']>;
-  at_id?: Maybe<Scalars['Float']>;
-  at_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_pop() on columns of table "aktuality" */
-export type Aktuality_Var_Pop_Order_By = {
-  at_foto?: InputMaybe<Order_By>;
-  at_foto_main?: InputMaybe<Order_By>;
-  at_id?: InputMaybe<Order_By>;
-  at_kdo?: InputMaybe<Order_By>;
-};
-
-/** aggregate var_samp on columns */
-export type Aktuality_Var_Samp_Fields = {
-  __typename?: 'aktuality_var_samp_fields';
-  at_foto?: Maybe<Scalars['Float']>;
-  at_foto_main?: Maybe<Scalars['Float']>;
-  at_id?: Maybe<Scalars['Float']>;
-  at_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_samp() on columns of table "aktuality" */
-export type Aktuality_Var_Samp_Order_By = {
-  at_foto?: InputMaybe<Order_By>;
-  at_foto_main?: InputMaybe<Order_By>;
-  at_id?: InputMaybe<Order_By>;
-  at_kdo?: InputMaybe<Order_By>;
-};
-
-/** aggregate variance on columns */
-export type Aktuality_Variance_Fields = {
-  __typename?: 'aktuality_variance_fields';
-  at_foto?: Maybe<Scalars['Float']>;
-  at_foto_main?: Maybe<Scalars['Float']>;
-  at_id?: Maybe<Scalars['Float']>;
-  at_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by variance() on columns of table "aktuality" */
-export type Aktuality_Variance_Order_By = {
-  at_foto?: InputMaybe<Order_By>;
-  at_foto_main?: InputMaybe<Order_By>;
-  at_id?: InputMaybe<Order_By>;
-  at_kdo?: InputMaybe<Order_By>;
-};
-
-/** Boolean expression to compare columns of type "bigint". All fields are combined with logical 'AND'. */
-export type Bigint_Comparison_Exp = {
-  _eq?: InputMaybe<Scalars['bigint']>;
-  _gt?: InputMaybe<Scalars['bigint']>;
-  _gte?: InputMaybe<Scalars['bigint']>;
-  _in?: InputMaybe<Array<Scalars['bigint']>>;
-  _is_null?: InputMaybe<Scalars['Boolean']>;
-  _lt?: InputMaybe<Scalars['bigint']>;
-  _lte?: InputMaybe<Scalars['bigint']>;
-  _neq?: InputMaybe<Scalars['bigint']>;
-  _nin?: InputMaybe<Array<Scalars['bigint']>>;
-};
-
-/** Boolean expression to compare columns of type "bpchar". All fields are combined with logical 'AND'. */
-export type Bpchar_Comparison_Exp = {
-  _eq?: InputMaybe<Scalars['bpchar']>;
-  _gt?: InputMaybe<Scalars['bpchar']>;
-  _gte?: InputMaybe<Scalars['bpchar']>;
-  /** does the column match the given case-insensitive pattern */
-  _ilike?: InputMaybe<Scalars['bpchar']>;
-  _in?: InputMaybe<Array<Scalars['bpchar']>>;
-  /** does the column match the given POSIX regular expression, case insensitive */
-  _iregex?: InputMaybe<Scalars['bpchar']>;
-  _is_null?: InputMaybe<Scalars['Boolean']>;
-  /** does the column match the given pattern */
-  _like?: InputMaybe<Scalars['bpchar']>;
-  _lt?: InputMaybe<Scalars['bpchar']>;
-  _lte?: InputMaybe<Scalars['bpchar']>;
-  _neq?: InputMaybe<Scalars['bpchar']>;
-  /** does the column NOT match the given case-insensitive pattern */
-  _nilike?: InputMaybe<Scalars['bpchar']>;
-  _nin?: InputMaybe<Array<Scalars['bpchar']>>;
-  /** does the column NOT match the given POSIX regular expression, case insensitive */
-  _niregex?: InputMaybe<Scalars['bpchar']>;
-  /** does the column NOT match the given pattern */
-  _nlike?: InputMaybe<Scalars['bpchar']>;
-  /** does the column NOT match the given POSIX regular expression, case sensitive */
-  _nregex?: InputMaybe<Scalars['bpchar']>;
-  /** does the column NOT match the given SQL regular expression */
-  _nsimilar?: InputMaybe<Scalars['bpchar']>;
-  /** does the column match the given POSIX regular expression, case sensitive */
-  _regex?: InputMaybe<Scalars['bpchar']>;
-  /** does the column match the given SQL regular expression */
-  _similar?: InputMaybe<Scalars['bpchar']>;
-};
-
-/** Boolean expression to compare columns of type "bytea". All fields are combined with logical 'AND'. */
-export type Bytea_Comparison_Exp = {
-  _eq?: InputMaybe<Scalars['bytea']>;
-  _gt?: InputMaybe<Scalars['bytea']>;
-  _gte?: InputMaybe<Scalars['bytea']>;
-  _in?: InputMaybe<Array<Scalars['bytea']>>;
-  _is_null?: InputMaybe<Scalars['Boolean']>;
-  _lt?: InputMaybe<Scalars['bytea']>;
-  _lte?: InputMaybe<Scalars['bytea']>;
-  _neq?: InputMaybe<Scalars['bytea']>;
-  _nin?: InputMaybe<Array<Scalars['bytea']>>;
-};
-
-/** Boolean expression to compare columns of type "date". All fields are combined with logical 'AND'. */
-export type Date_Comparison_Exp = {
-  _eq?: InputMaybe<Scalars['date']>;
-  _gt?: InputMaybe<Scalars['date']>;
-  _gte?: InputMaybe<Scalars['date']>;
-  _in?: InputMaybe<Array<Scalars['date']>>;
-  _is_null?: InputMaybe<Scalars['Boolean']>;
-  _lt?: InputMaybe<Scalars['date']>;
-  _lte?: InputMaybe<Scalars['date']>;
-  _neq?: InputMaybe<Scalars['date']>;
-  _nin?: InputMaybe<Array<Scalars['date']>>;
-};
-
-/** columns and relationships of "dokumenty" */
-export type Dokumenty = {
-  __typename?: 'dokumenty';
-  d_filename: Scalars['String'];
-  d_id: Scalars['bigint'];
-  d_kategorie: Scalars['smallint'];
-  d_kdo: Scalars['bigint'];
-  d_name: Scalars['String'];
-  d_path: Scalars['String'];
-  d_timestamp?: Maybe<Scalars['timestamptz']>;
-  /** An object relationship */
-  user: Users;
-};
-
-/** aggregated selection of "dokumenty" */
-export type Dokumenty_Aggregate = {
-  __typename?: 'dokumenty_aggregate';
-  aggregate?: Maybe<Dokumenty_Aggregate_Fields>;
-  nodes: Array<Dokumenty>;
-};
-
-/** aggregate fields of "dokumenty" */
-export type Dokumenty_Aggregate_Fields = {
-  __typename?: 'dokumenty_aggregate_fields';
-  avg?: Maybe<Dokumenty_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Dokumenty_Max_Fields>;
-  min?: Maybe<Dokumenty_Min_Fields>;
-  stddev?: Maybe<Dokumenty_Stddev_Fields>;
-  stddev_pop?: Maybe<Dokumenty_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Dokumenty_Stddev_Samp_Fields>;
-  sum?: Maybe<Dokumenty_Sum_Fields>;
-  var_pop?: Maybe<Dokumenty_Var_Pop_Fields>;
-  var_samp?: Maybe<Dokumenty_Var_Samp_Fields>;
-  variance?: Maybe<Dokumenty_Variance_Fields>;
-};
-
-
-/** aggregate fields of "dokumenty" */
-export type Dokumenty_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Dokumenty_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** order by aggregate values of table "dokumenty" */
-export type Dokumenty_Aggregate_Order_By = {
-  avg?: InputMaybe<Dokumenty_Avg_Order_By>;
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Dokumenty_Max_Order_By>;
-  min?: InputMaybe<Dokumenty_Min_Order_By>;
-  stddev?: InputMaybe<Dokumenty_Stddev_Order_By>;
-  stddev_pop?: InputMaybe<Dokumenty_Stddev_Pop_Order_By>;
-  stddev_samp?: InputMaybe<Dokumenty_Stddev_Samp_Order_By>;
-  sum?: InputMaybe<Dokumenty_Sum_Order_By>;
-  var_pop?: InputMaybe<Dokumenty_Var_Pop_Order_By>;
-  var_samp?: InputMaybe<Dokumenty_Var_Samp_Order_By>;
-  variance?: InputMaybe<Dokumenty_Variance_Order_By>;
-};
-
-/** input type for inserting array relation for remote table "dokumenty" */
-export type Dokumenty_Arr_Rel_Insert_Input = {
-  data: Array<Dokumenty_Insert_Input>;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Dokumenty_On_Conflict>;
-};
-
-/** aggregate avg on columns */
-export type Dokumenty_Avg_Fields = {
-  __typename?: 'dokumenty_avg_fields';
-  d_id?: Maybe<Scalars['Float']>;
-  d_kategorie?: Maybe<Scalars['Float']>;
-  d_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by avg() on columns of table "dokumenty" */
-export type Dokumenty_Avg_Order_By = {
-  d_id?: InputMaybe<Order_By>;
-  d_kategorie?: InputMaybe<Order_By>;
-  d_kdo?: InputMaybe<Order_By>;
-};
-
-/** Boolean expression to filter rows from the table "dokumenty". All fields are combined with a logical 'AND'. */
-export type Dokumenty_Bool_Exp = {
-  _and?: InputMaybe<Array<Dokumenty_Bool_Exp>>;
-  _not?: InputMaybe<Dokumenty_Bool_Exp>;
-  _or?: InputMaybe<Array<Dokumenty_Bool_Exp>>;
-  d_filename?: InputMaybe<String_Comparison_Exp>;
-  d_id?: InputMaybe<Bigint_Comparison_Exp>;
-  d_kategorie?: InputMaybe<Smallint_Comparison_Exp>;
-  d_kdo?: InputMaybe<Bigint_Comparison_Exp>;
-  d_name?: InputMaybe<String_Comparison_Exp>;
-  d_path?: InputMaybe<String_Comparison_Exp>;
-  d_timestamp?: InputMaybe<Timestamptz_Comparison_Exp>;
-  user?: InputMaybe<Users_Bool_Exp>;
-};
-
-/** unique or primary key constraints on table "dokumenty" */
-export enum Dokumenty_Constraint {
-  /** unique or primary key constraint */
-  Idx_24593DPath = 'idx_24593_d_path',
-  /** unique or primary key constraint */
-  Idx_24593Primary = 'idx_24593_primary'
-}
-
-/** input type for incrementing numeric columns in table "dokumenty" */
-export type Dokumenty_Inc_Input = {
-  d_id?: InputMaybe<Scalars['bigint']>;
-  d_kategorie?: InputMaybe<Scalars['smallint']>;
-  d_kdo?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "dokumenty" */
-export type Dokumenty_Insert_Input = {
-  d_filename?: InputMaybe<Scalars['String']>;
-  d_id?: InputMaybe<Scalars['bigint']>;
-  d_kategorie?: InputMaybe<Scalars['smallint']>;
-  d_kdo?: InputMaybe<Scalars['bigint']>;
-  d_name?: InputMaybe<Scalars['String']>;
-  d_path?: InputMaybe<Scalars['String']>;
-  d_timestamp?: InputMaybe<Scalars['timestamptz']>;
-  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
-};
-
-/** aggregate max on columns */
-export type Dokumenty_Max_Fields = {
-  __typename?: 'dokumenty_max_fields';
-  d_filename?: Maybe<Scalars['String']>;
-  d_id?: Maybe<Scalars['bigint']>;
-  d_kategorie?: Maybe<Scalars['smallint']>;
-  d_kdo?: Maybe<Scalars['bigint']>;
-  d_name?: Maybe<Scalars['String']>;
-  d_path?: Maybe<Scalars['String']>;
-  d_timestamp?: Maybe<Scalars['timestamptz']>;
-};
-
-/** order by max() on columns of table "dokumenty" */
-export type Dokumenty_Max_Order_By = {
-  d_filename?: InputMaybe<Order_By>;
-  d_id?: InputMaybe<Order_By>;
-  d_kategorie?: InputMaybe<Order_By>;
-  d_kdo?: InputMaybe<Order_By>;
-  d_name?: InputMaybe<Order_By>;
-  d_path?: InputMaybe<Order_By>;
-  d_timestamp?: InputMaybe<Order_By>;
-};
-
-/** aggregate min on columns */
-export type Dokumenty_Min_Fields = {
-  __typename?: 'dokumenty_min_fields';
-  d_filename?: Maybe<Scalars['String']>;
-  d_id?: Maybe<Scalars['bigint']>;
-  d_kategorie?: Maybe<Scalars['smallint']>;
-  d_kdo?: Maybe<Scalars['bigint']>;
-  d_name?: Maybe<Scalars['String']>;
-  d_path?: Maybe<Scalars['String']>;
-  d_timestamp?: Maybe<Scalars['timestamptz']>;
-};
-
-/** order by min() on columns of table "dokumenty" */
-export type Dokumenty_Min_Order_By = {
-  d_filename?: InputMaybe<Order_By>;
-  d_id?: InputMaybe<Order_By>;
-  d_kategorie?: InputMaybe<Order_By>;
-  d_kdo?: InputMaybe<Order_By>;
-  d_name?: InputMaybe<Order_By>;
-  d_path?: InputMaybe<Order_By>;
-  d_timestamp?: InputMaybe<Order_By>;
-};
-
-/** response of any mutation on the table "dokumenty" */
-export type Dokumenty_Mutation_Response = {
-  __typename?: 'dokumenty_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Dokumenty>;
-};
-
-/** on conflict condition type for table "dokumenty" */
-export type Dokumenty_On_Conflict = {
-  constraint: Dokumenty_Constraint;
-  update_columns?: Array<Dokumenty_Update_Column>;
-  where?: InputMaybe<Dokumenty_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "dokumenty". */
-export type Dokumenty_Order_By = {
-  d_filename?: InputMaybe<Order_By>;
-  d_id?: InputMaybe<Order_By>;
-  d_kategorie?: InputMaybe<Order_By>;
-  d_kdo?: InputMaybe<Order_By>;
-  d_name?: InputMaybe<Order_By>;
-  d_path?: InputMaybe<Order_By>;
-  d_timestamp?: InputMaybe<Order_By>;
-  user?: InputMaybe<Users_Order_By>;
-};
-
-/** primary key columns input for table: dokumenty */
-export type Dokumenty_Pk_Columns_Input = {
-  d_id: Scalars['bigint'];
-};
-
-/** select columns of table "dokumenty" */
-export enum Dokumenty_Select_Column {
-  /** column name */
-  DFilename = 'd_filename',
-  /** column name */
-  DId = 'd_id',
-  /** column name */
-  DKategorie = 'd_kategorie',
-  /** column name */
-  DKdo = 'd_kdo',
-  /** column name */
-  DName = 'd_name',
-  /** column name */
-  DPath = 'd_path',
-  /** column name */
-  DTimestamp = 'd_timestamp'
-}
-
-/** input type for updating data in table "dokumenty" */
-export type Dokumenty_Set_Input = {
-  d_filename?: InputMaybe<Scalars['String']>;
-  d_id?: InputMaybe<Scalars['bigint']>;
-  d_kategorie?: InputMaybe<Scalars['smallint']>;
-  d_kdo?: InputMaybe<Scalars['bigint']>;
-  d_name?: InputMaybe<Scalars['String']>;
-  d_path?: InputMaybe<Scalars['String']>;
-  d_timestamp?: InputMaybe<Scalars['timestamptz']>;
-};
-
-/** aggregate stddev on columns */
-export type Dokumenty_Stddev_Fields = {
-  __typename?: 'dokumenty_stddev_fields';
-  d_id?: Maybe<Scalars['Float']>;
-  d_kategorie?: Maybe<Scalars['Float']>;
-  d_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev() on columns of table "dokumenty" */
-export type Dokumenty_Stddev_Order_By = {
-  d_id?: InputMaybe<Order_By>;
-  d_kategorie?: InputMaybe<Order_By>;
-  d_kdo?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Dokumenty_Stddev_Pop_Fields = {
-  __typename?: 'dokumenty_stddev_pop_fields';
-  d_id?: Maybe<Scalars['Float']>;
-  d_kategorie?: Maybe<Scalars['Float']>;
-  d_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_pop() on columns of table "dokumenty" */
-export type Dokumenty_Stddev_Pop_Order_By = {
-  d_id?: InputMaybe<Order_By>;
-  d_kategorie?: InputMaybe<Order_By>;
-  d_kdo?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Dokumenty_Stddev_Samp_Fields = {
-  __typename?: 'dokumenty_stddev_samp_fields';
-  d_id?: Maybe<Scalars['Float']>;
-  d_kategorie?: Maybe<Scalars['Float']>;
-  d_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_samp() on columns of table "dokumenty" */
-export type Dokumenty_Stddev_Samp_Order_By = {
-  d_id?: InputMaybe<Order_By>;
-  d_kategorie?: InputMaybe<Order_By>;
-  d_kdo?: InputMaybe<Order_By>;
-};
-
-/** aggregate sum on columns */
-export type Dokumenty_Sum_Fields = {
-  __typename?: 'dokumenty_sum_fields';
-  d_id?: Maybe<Scalars['bigint']>;
-  d_kategorie?: Maybe<Scalars['smallint']>;
-  d_kdo?: Maybe<Scalars['bigint']>;
-};
-
-/** order by sum() on columns of table "dokumenty" */
-export type Dokumenty_Sum_Order_By = {
-  d_id?: InputMaybe<Order_By>;
-  d_kategorie?: InputMaybe<Order_By>;
-  d_kdo?: InputMaybe<Order_By>;
-};
-
-/** update columns of table "dokumenty" */
-export enum Dokumenty_Update_Column {
-  /** column name */
-  DFilename = 'd_filename',
-  /** column name */
-  DId = 'd_id',
-  /** column name */
-  DKategorie = 'd_kategorie',
-  /** column name */
-  DKdo = 'd_kdo',
-  /** column name */
-  DName = 'd_name',
-  /** column name */
-  DPath = 'd_path',
-  /** column name */
-  DTimestamp = 'd_timestamp'
-}
-
-/** aggregate var_pop on columns */
-export type Dokumenty_Var_Pop_Fields = {
-  __typename?: 'dokumenty_var_pop_fields';
-  d_id?: Maybe<Scalars['Float']>;
-  d_kategorie?: Maybe<Scalars['Float']>;
-  d_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_pop() on columns of table "dokumenty" */
-export type Dokumenty_Var_Pop_Order_By = {
-  d_id?: InputMaybe<Order_By>;
-  d_kategorie?: InputMaybe<Order_By>;
-  d_kdo?: InputMaybe<Order_By>;
-};
-
-/** aggregate var_samp on columns */
-export type Dokumenty_Var_Samp_Fields = {
-  __typename?: 'dokumenty_var_samp_fields';
-  d_id?: Maybe<Scalars['Float']>;
-  d_kategorie?: Maybe<Scalars['Float']>;
-  d_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_samp() on columns of table "dokumenty" */
-export type Dokumenty_Var_Samp_Order_By = {
-  d_id?: InputMaybe<Order_By>;
-  d_kategorie?: InputMaybe<Order_By>;
-  d_kdo?: InputMaybe<Order_By>;
-};
-
-/** aggregate variance on columns */
-export type Dokumenty_Variance_Fields = {
-  __typename?: 'dokumenty_variance_fields';
-  d_id?: Maybe<Scalars['Float']>;
-  d_kategorie?: Maybe<Scalars['Float']>;
-  d_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by variance() on columns of table "dokumenty" */
-export type Dokumenty_Variance_Order_By = {
-  d_id?: InputMaybe<Order_By>;
-  d_kategorie?: InputMaybe<Order_By>;
-  d_kdo?: InputMaybe<Order_By>;
-};
-
-/** columns and relationships of "galerie_dir" */
-export type Galerie_Dir = {
-  __typename?: 'galerie_dir';
-  /** An array relationship */
-  galerie_fotos: Array<Galerie_Foto>;
-  /** An aggregate relationship */
-  galerie_fotos_aggregate: Galerie_Foto_Aggregate;
-  gd_hidden: Scalars['Boolean'];
-  gd_id: Scalars['bigint'];
-  gd_id_rodic: Scalars['bigint'];
-  gd_level: Scalars['smallint'];
-  gd_name: Scalars['String'];
-  gd_path: Scalars['String'];
-};
-
-
-/** columns and relationships of "galerie_dir" */
-export type Galerie_DirGalerie_FotosArgs = {
-  distinct_on?: InputMaybe<Array<Galerie_Foto_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Galerie_Foto_Order_By>>;
-  where?: InputMaybe<Galerie_Foto_Bool_Exp>;
-};
-
-
-/** columns and relationships of "galerie_dir" */
-export type Galerie_DirGalerie_Fotos_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Galerie_Foto_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Galerie_Foto_Order_By>>;
-  where?: InputMaybe<Galerie_Foto_Bool_Exp>;
-};
-
-/** aggregated selection of "galerie_dir" */
-export type Galerie_Dir_Aggregate = {
-  __typename?: 'galerie_dir_aggregate';
-  aggregate?: Maybe<Galerie_Dir_Aggregate_Fields>;
-  nodes: Array<Galerie_Dir>;
-};
-
-/** aggregate fields of "galerie_dir" */
-export type Galerie_Dir_Aggregate_Fields = {
-  __typename?: 'galerie_dir_aggregate_fields';
-  avg?: Maybe<Galerie_Dir_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Galerie_Dir_Max_Fields>;
-  min?: Maybe<Galerie_Dir_Min_Fields>;
-  stddev?: Maybe<Galerie_Dir_Stddev_Fields>;
-  stddev_pop?: Maybe<Galerie_Dir_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Galerie_Dir_Stddev_Samp_Fields>;
-  sum?: Maybe<Galerie_Dir_Sum_Fields>;
-  var_pop?: Maybe<Galerie_Dir_Var_Pop_Fields>;
-  var_samp?: Maybe<Galerie_Dir_Var_Samp_Fields>;
-  variance?: Maybe<Galerie_Dir_Variance_Fields>;
-};
-
-
-/** aggregate fields of "galerie_dir" */
-export type Galerie_Dir_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Galerie_Dir_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate avg on columns */
-export type Galerie_Dir_Avg_Fields = {
-  __typename?: 'galerie_dir_avg_fields';
-  gd_id?: Maybe<Scalars['Float']>;
-  gd_id_rodic?: Maybe<Scalars['Float']>;
-  gd_level?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to filter rows from the table "galerie_dir". All fields are combined with a logical 'AND'. */
-export type Galerie_Dir_Bool_Exp = {
-  _and?: InputMaybe<Array<Galerie_Dir_Bool_Exp>>;
-  _not?: InputMaybe<Galerie_Dir_Bool_Exp>;
-  _or?: InputMaybe<Array<Galerie_Dir_Bool_Exp>>;
-  galerie_fotos?: InputMaybe<Galerie_Foto_Bool_Exp>;
-  gd_hidden?: InputMaybe<Boolean_Comparison_Exp>;
-  gd_id?: InputMaybe<Bigint_Comparison_Exp>;
-  gd_id_rodic?: InputMaybe<Bigint_Comparison_Exp>;
-  gd_level?: InputMaybe<Smallint_Comparison_Exp>;
-  gd_name?: InputMaybe<String_Comparison_Exp>;
-  gd_path?: InputMaybe<String_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "galerie_dir" */
-export enum Galerie_Dir_Constraint {
-  /** unique or primary key constraint */
-  Idx_24602Primary = 'idx_24602_primary'
-}
-
-/** input type for incrementing numeric columns in table "galerie_dir" */
-export type Galerie_Dir_Inc_Input = {
-  gd_id?: InputMaybe<Scalars['bigint']>;
-  gd_id_rodic?: InputMaybe<Scalars['bigint']>;
-  gd_level?: InputMaybe<Scalars['smallint']>;
-};
-
-/** input type for inserting data into table "galerie_dir" */
-export type Galerie_Dir_Insert_Input = {
-  galerie_fotos?: InputMaybe<Galerie_Foto_Arr_Rel_Insert_Input>;
-  gd_hidden?: InputMaybe<Scalars['Boolean']>;
-  gd_id?: InputMaybe<Scalars['bigint']>;
-  gd_id_rodic?: InputMaybe<Scalars['bigint']>;
-  gd_level?: InputMaybe<Scalars['smallint']>;
-  gd_name?: InputMaybe<Scalars['String']>;
-  gd_path?: InputMaybe<Scalars['String']>;
-};
-
-/** aggregate max on columns */
-export type Galerie_Dir_Max_Fields = {
-  __typename?: 'galerie_dir_max_fields';
-  gd_id?: Maybe<Scalars['bigint']>;
-  gd_id_rodic?: Maybe<Scalars['bigint']>;
-  gd_level?: Maybe<Scalars['smallint']>;
-  gd_name?: Maybe<Scalars['String']>;
-  gd_path?: Maybe<Scalars['String']>;
-};
-
-/** aggregate min on columns */
-export type Galerie_Dir_Min_Fields = {
-  __typename?: 'galerie_dir_min_fields';
-  gd_id?: Maybe<Scalars['bigint']>;
-  gd_id_rodic?: Maybe<Scalars['bigint']>;
-  gd_level?: Maybe<Scalars['smallint']>;
-  gd_name?: Maybe<Scalars['String']>;
-  gd_path?: Maybe<Scalars['String']>;
-};
-
-/** response of any mutation on the table "galerie_dir" */
-export type Galerie_Dir_Mutation_Response = {
-  __typename?: 'galerie_dir_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Galerie_Dir>;
-};
-
-/** input type for inserting object relation for remote table "galerie_dir" */
-export type Galerie_Dir_Obj_Rel_Insert_Input = {
-  data: Galerie_Dir_Insert_Input;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Galerie_Dir_On_Conflict>;
-};
-
-/** on conflict condition type for table "galerie_dir" */
-export type Galerie_Dir_On_Conflict = {
-  constraint: Galerie_Dir_Constraint;
-  update_columns?: Array<Galerie_Dir_Update_Column>;
-  where?: InputMaybe<Galerie_Dir_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "galerie_dir". */
-export type Galerie_Dir_Order_By = {
-  galerie_fotos_aggregate?: InputMaybe<Galerie_Foto_Aggregate_Order_By>;
-  gd_hidden?: InputMaybe<Order_By>;
-  gd_id?: InputMaybe<Order_By>;
-  gd_id_rodic?: InputMaybe<Order_By>;
-  gd_level?: InputMaybe<Order_By>;
-  gd_name?: InputMaybe<Order_By>;
-  gd_path?: InputMaybe<Order_By>;
-};
-
-/** primary key columns input for table: galerie_dir */
-export type Galerie_Dir_Pk_Columns_Input = {
-  gd_id: Scalars['bigint'];
-};
-
-/** select columns of table "galerie_dir" */
-export enum Galerie_Dir_Select_Column {
-  /** column name */
-  GdHidden = 'gd_hidden',
-  /** column name */
-  GdId = 'gd_id',
-  /** column name */
-  GdIdRodic = 'gd_id_rodic',
-  /** column name */
-  GdLevel = 'gd_level',
-  /** column name */
-  GdName = 'gd_name',
-  /** column name */
-  GdPath = 'gd_path'
-}
-
-/** input type for updating data in table "galerie_dir" */
-export type Galerie_Dir_Set_Input = {
-  gd_hidden?: InputMaybe<Scalars['Boolean']>;
-  gd_id?: InputMaybe<Scalars['bigint']>;
-  gd_id_rodic?: InputMaybe<Scalars['bigint']>;
-  gd_level?: InputMaybe<Scalars['smallint']>;
-  gd_name?: InputMaybe<Scalars['String']>;
-  gd_path?: InputMaybe<Scalars['String']>;
-};
-
-/** aggregate stddev on columns */
-export type Galerie_Dir_Stddev_Fields = {
-  __typename?: 'galerie_dir_stddev_fields';
-  gd_id?: Maybe<Scalars['Float']>;
-  gd_id_rodic?: Maybe<Scalars['Float']>;
-  gd_level?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Galerie_Dir_Stddev_Pop_Fields = {
-  __typename?: 'galerie_dir_stddev_pop_fields';
-  gd_id?: Maybe<Scalars['Float']>;
-  gd_id_rodic?: Maybe<Scalars['Float']>;
-  gd_level?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Galerie_Dir_Stddev_Samp_Fields = {
-  __typename?: 'galerie_dir_stddev_samp_fields';
-  gd_id?: Maybe<Scalars['Float']>;
-  gd_id_rodic?: Maybe<Scalars['Float']>;
-  gd_level?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate sum on columns */
-export type Galerie_Dir_Sum_Fields = {
-  __typename?: 'galerie_dir_sum_fields';
-  gd_id?: Maybe<Scalars['bigint']>;
-  gd_id_rodic?: Maybe<Scalars['bigint']>;
-  gd_level?: Maybe<Scalars['smallint']>;
-};
-
-/** update columns of table "galerie_dir" */
-export enum Galerie_Dir_Update_Column {
-  /** column name */
-  GdHidden = 'gd_hidden',
-  /** column name */
-  GdId = 'gd_id',
-  /** column name */
-  GdIdRodic = 'gd_id_rodic',
-  /** column name */
-  GdLevel = 'gd_level',
-  /** column name */
-  GdName = 'gd_name',
-  /** column name */
-  GdPath = 'gd_path'
-}
-
-/** aggregate var_pop on columns */
-export type Galerie_Dir_Var_Pop_Fields = {
-  __typename?: 'galerie_dir_var_pop_fields';
-  gd_id?: Maybe<Scalars['Float']>;
-  gd_id_rodic?: Maybe<Scalars['Float']>;
-  gd_level?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Galerie_Dir_Var_Samp_Fields = {
-  __typename?: 'galerie_dir_var_samp_fields';
-  gd_id?: Maybe<Scalars['Float']>;
-  gd_id_rodic?: Maybe<Scalars['Float']>;
-  gd_level?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Galerie_Dir_Variance_Fields = {
-  __typename?: 'galerie_dir_variance_fields';
-  gd_id?: Maybe<Scalars['Float']>;
-  gd_id_rodic?: Maybe<Scalars['Float']>;
-  gd_level?: Maybe<Scalars['Float']>;
-};
-
-/** columns and relationships of "galerie_foto" */
-export type Galerie_Foto = {
-  __typename?: 'galerie_foto';
-  /** An array relationship */
-  aktualities: Array<Aktuality>;
-  /** An aggregate relationship */
-  aktualities_aggregate: Aktuality_Aggregate;
-  /** An object relationship */
-  galerie_dir: Galerie_Dir;
-  gf_id: Scalars['bigint'];
-  gf_id_rodic: Scalars['bigint'];
-  gf_kdo: Scalars['bigint'];
-  gf_name: Scalars['String'];
-  gf_path: Scalars['String'];
-  gf_timestamp?: Maybe<Scalars['timestamptz']>;
-  /** An object relationship */
-  user: Users;
-};
-
-
-/** columns and relationships of "galerie_foto" */
-export type Galerie_FotoAktualitiesArgs = {
-  distinct_on?: InputMaybe<Array<Aktuality_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Aktuality_Order_By>>;
-  where?: InputMaybe<Aktuality_Bool_Exp>;
-};
-
-
-/** columns and relationships of "galerie_foto" */
-export type Galerie_FotoAktualities_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Aktuality_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Aktuality_Order_By>>;
-  where?: InputMaybe<Aktuality_Bool_Exp>;
-};
-
-/** aggregated selection of "galerie_foto" */
-export type Galerie_Foto_Aggregate = {
-  __typename?: 'galerie_foto_aggregate';
-  aggregate?: Maybe<Galerie_Foto_Aggregate_Fields>;
-  nodes: Array<Galerie_Foto>;
-};
-
-/** aggregate fields of "galerie_foto" */
-export type Galerie_Foto_Aggregate_Fields = {
-  __typename?: 'galerie_foto_aggregate_fields';
-  avg?: Maybe<Galerie_Foto_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Galerie_Foto_Max_Fields>;
-  min?: Maybe<Galerie_Foto_Min_Fields>;
-  stddev?: Maybe<Galerie_Foto_Stddev_Fields>;
-  stddev_pop?: Maybe<Galerie_Foto_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Galerie_Foto_Stddev_Samp_Fields>;
-  sum?: Maybe<Galerie_Foto_Sum_Fields>;
-  var_pop?: Maybe<Galerie_Foto_Var_Pop_Fields>;
-  var_samp?: Maybe<Galerie_Foto_Var_Samp_Fields>;
-  variance?: Maybe<Galerie_Foto_Variance_Fields>;
-};
-
-
-/** aggregate fields of "galerie_foto" */
-export type Galerie_Foto_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Galerie_Foto_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** order by aggregate values of table "galerie_foto" */
-export type Galerie_Foto_Aggregate_Order_By = {
-  avg?: InputMaybe<Galerie_Foto_Avg_Order_By>;
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Galerie_Foto_Max_Order_By>;
-  min?: InputMaybe<Galerie_Foto_Min_Order_By>;
-  stddev?: InputMaybe<Galerie_Foto_Stddev_Order_By>;
-  stddev_pop?: InputMaybe<Galerie_Foto_Stddev_Pop_Order_By>;
-  stddev_samp?: InputMaybe<Galerie_Foto_Stddev_Samp_Order_By>;
-  sum?: InputMaybe<Galerie_Foto_Sum_Order_By>;
-  var_pop?: InputMaybe<Galerie_Foto_Var_Pop_Order_By>;
-  var_samp?: InputMaybe<Galerie_Foto_Var_Samp_Order_By>;
-  variance?: InputMaybe<Galerie_Foto_Variance_Order_By>;
-};
-
-/** input type for inserting array relation for remote table "galerie_foto" */
-export type Galerie_Foto_Arr_Rel_Insert_Input = {
-  data: Array<Galerie_Foto_Insert_Input>;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Galerie_Foto_On_Conflict>;
-};
-
-/** aggregate avg on columns */
-export type Galerie_Foto_Avg_Fields = {
-  __typename?: 'galerie_foto_avg_fields';
-  gf_id?: Maybe<Scalars['Float']>;
-  gf_id_rodic?: Maybe<Scalars['Float']>;
-  gf_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by avg() on columns of table "galerie_foto" */
-export type Galerie_Foto_Avg_Order_By = {
-  gf_id?: InputMaybe<Order_By>;
-  gf_id_rodic?: InputMaybe<Order_By>;
-  gf_kdo?: InputMaybe<Order_By>;
-};
-
-/** Boolean expression to filter rows from the table "galerie_foto". All fields are combined with a logical 'AND'. */
-export type Galerie_Foto_Bool_Exp = {
-  _and?: InputMaybe<Array<Galerie_Foto_Bool_Exp>>;
-  _not?: InputMaybe<Galerie_Foto_Bool_Exp>;
-  _or?: InputMaybe<Array<Galerie_Foto_Bool_Exp>>;
-  aktualities?: InputMaybe<Aktuality_Bool_Exp>;
-  galerie_dir?: InputMaybe<Galerie_Dir_Bool_Exp>;
-  gf_id?: InputMaybe<Bigint_Comparison_Exp>;
-  gf_id_rodic?: InputMaybe<Bigint_Comparison_Exp>;
-  gf_kdo?: InputMaybe<Bigint_Comparison_Exp>;
-  gf_name?: InputMaybe<String_Comparison_Exp>;
-  gf_path?: InputMaybe<String_Comparison_Exp>;
-  gf_timestamp?: InputMaybe<Timestamptz_Comparison_Exp>;
-  user?: InputMaybe<Users_Bool_Exp>;
-};
-
-/** unique or primary key constraints on table "galerie_foto" */
-export enum Galerie_Foto_Constraint {
-  /** unique or primary key constraint */
-  Idx_24613Primary = 'idx_24613_primary'
-}
-
-/** input type for incrementing numeric columns in table "galerie_foto" */
-export type Galerie_Foto_Inc_Input = {
-  gf_id?: InputMaybe<Scalars['bigint']>;
-  gf_id_rodic?: InputMaybe<Scalars['bigint']>;
-  gf_kdo?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "galerie_foto" */
-export type Galerie_Foto_Insert_Input = {
-  aktualities?: InputMaybe<Aktuality_Arr_Rel_Insert_Input>;
-  galerie_dir?: InputMaybe<Galerie_Dir_Obj_Rel_Insert_Input>;
-  gf_id?: InputMaybe<Scalars['bigint']>;
-  gf_id_rodic?: InputMaybe<Scalars['bigint']>;
-  gf_kdo?: InputMaybe<Scalars['bigint']>;
-  gf_name?: InputMaybe<Scalars['String']>;
-  gf_path?: InputMaybe<Scalars['String']>;
-  gf_timestamp?: InputMaybe<Scalars['timestamptz']>;
-  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
-};
-
-/** aggregate max on columns */
-export type Galerie_Foto_Max_Fields = {
-  __typename?: 'galerie_foto_max_fields';
-  gf_id?: Maybe<Scalars['bigint']>;
-  gf_id_rodic?: Maybe<Scalars['bigint']>;
-  gf_kdo?: Maybe<Scalars['bigint']>;
-  gf_name?: Maybe<Scalars['String']>;
-  gf_path?: Maybe<Scalars['String']>;
-  gf_timestamp?: Maybe<Scalars['timestamptz']>;
-};
-
-/** order by max() on columns of table "galerie_foto" */
-export type Galerie_Foto_Max_Order_By = {
-  gf_id?: InputMaybe<Order_By>;
-  gf_id_rodic?: InputMaybe<Order_By>;
-  gf_kdo?: InputMaybe<Order_By>;
-  gf_name?: InputMaybe<Order_By>;
-  gf_path?: InputMaybe<Order_By>;
-  gf_timestamp?: InputMaybe<Order_By>;
-};
-
-/** aggregate min on columns */
-export type Galerie_Foto_Min_Fields = {
-  __typename?: 'galerie_foto_min_fields';
-  gf_id?: Maybe<Scalars['bigint']>;
-  gf_id_rodic?: Maybe<Scalars['bigint']>;
-  gf_kdo?: Maybe<Scalars['bigint']>;
-  gf_name?: Maybe<Scalars['String']>;
-  gf_path?: Maybe<Scalars['String']>;
-  gf_timestamp?: Maybe<Scalars['timestamptz']>;
-};
-
-/** order by min() on columns of table "galerie_foto" */
-export type Galerie_Foto_Min_Order_By = {
-  gf_id?: InputMaybe<Order_By>;
-  gf_id_rodic?: InputMaybe<Order_By>;
-  gf_kdo?: InputMaybe<Order_By>;
-  gf_name?: InputMaybe<Order_By>;
-  gf_path?: InputMaybe<Order_By>;
-  gf_timestamp?: InputMaybe<Order_By>;
-};
-
-/** response of any mutation on the table "galerie_foto" */
-export type Galerie_Foto_Mutation_Response = {
-  __typename?: 'galerie_foto_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Galerie_Foto>;
-};
-
-/** input type for inserting object relation for remote table "galerie_foto" */
-export type Galerie_Foto_Obj_Rel_Insert_Input = {
-  data: Galerie_Foto_Insert_Input;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Galerie_Foto_On_Conflict>;
-};
-
-/** on conflict condition type for table "galerie_foto" */
-export type Galerie_Foto_On_Conflict = {
-  constraint: Galerie_Foto_Constraint;
-  update_columns?: Array<Galerie_Foto_Update_Column>;
-  where?: InputMaybe<Galerie_Foto_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "galerie_foto". */
-export type Galerie_Foto_Order_By = {
-  aktualities_aggregate?: InputMaybe<Aktuality_Aggregate_Order_By>;
-  galerie_dir?: InputMaybe<Galerie_Dir_Order_By>;
-  gf_id?: InputMaybe<Order_By>;
-  gf_id_rodic?: InputMaybe<Order_By>;
-  gf_kdo?: InputMaybe<Order_By>;
-  gf_name?: InputMaybe<Order_By>;
-  gf_path?: InputMaybe<Order_By>;
-  gf_timestamp?: InputMaybe<Order_By>;
-  user?: InputMaybe<Users_Order_By>;
-};
-
-/** primary key columns input for table: galerie_foto */
-export type Galerie_Foto_Pk_Columns_Input = {
-  gf_id: Scalars['bigint'];
-};
-
-/** select columns of table "galerie_foto" */
-export enum Galerie_Foto_Select_Column {
-  /** column name */
-  GfId = 'gf_id',
-  /** column name */
-  GfIdRodic = 'gf_id_rodic',
-  /** column name */
-  GfKdo = 'gf_kdo',
-  /** column name */
-  GfName = 'gf_name',
-  /** column name */
-  GfPath = 'gf_path',
-  /** column name */
-  GfTimestamp = 'gf_timestamp'
-}
-
-/** input type for updating data in table "galerie_foto" */
-export type Galerie_Foto_Set_Input = {
-  gf_id?: InputMaybe<Scalars['bigint']>;
-  gf_id_rodic?: InputMaybe<Scalars['bigint']>;
-  gf_kdo?: InputMaybe<Scalars['bigint']>;
-  gf_name?: InputMaybe<Scalars['String']>;
-  gf_path?: InputMaybe<Scalars['String']>;
-  gf_timestamp?: InputMaybe<Scalars['timestamptz']>;
-};
-
-/** aggregate stddev on columns */
-export type Galerie_Foto_Stddev_Fields = {
-  __typename?: 'galerie_foto_stddev_fields';
-  gf_id?: Maybe<Scalars['Float']>;
-  gf_id_rodic?: Maybe<Scalars['Float']>;
-  gf_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev() on columns of table "galerie_foto" */
-export type Galerie_Foto_Stddev_Order_By = {
-  gf_id?: InputMaybe<Order_By>;
-  gf_id_rodic?: InputMaybe<Order_By>;
-  gf_kdo?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Galerie_Foto_Stddev_Pop_Fields = {
-  __typename?: 'galerie_foto_stddev_pop_fields';
-  gf_id?: Maybe<Scalars['Float']>;
-  gf_id_rodic?: Maybe<Scalars['Float']>;
-  gf_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_pop() on columns of table "galerie_foto" */
-export type Galerie_Foto_Stddev_Pop_Order_By = {
-  gf_id?: InputMaybe<Order_By>;
-  gf_id_rodic?: InputMaybe<Order_By>;
-  gf_kdo?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Galerie_Foto_Stddev_Samp_Fields = {
-  __typename?: 'galerie_foto_stddev_samp_fields';
-  gf_id?: Maybe<Scalars['Float']>;
-  gf_id_rodic?: Maybe<Scalars['Float']>;
-  gf_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_samp() on columns of table "galerie_foto" */
-export type Galerie_Foto_Stddev_Samp_Order_By = {
-  gf_id?: InputMaybe<Order_By>;
-  gf_id_rodic?: InputMaybe<Order_By>;
-  gf_kdo?: InputMaybe<Order_By>;
-};
-
-/** aggregate sum on columns */
-export type Galerie_Foto_Sum_Fields = {
-  __typename?: 'galerie_foto_sum_fields';
-  gf_id?: Maybe<Scalars['bigint']>;
-  gf_id_rodic?: Maybe<Scalars['bigint']>;
-  gf_kdo?: Maybe<Scalars['bigint']>;
-};
-
-/** order by sum() on columns of table "galerie_foto" */
-export type Galerie_Foto_Sum_Order_By = {
-  gf_id?: InputMaybe<Order_By>;
-  gf_id_rodic?: InputMaybe<Order_By>;
-  gf_kdo?: InputMaybe<Order_By>;
-};
-
-/** update columns of table "galerie_foto" */
-export enum Galerie_Foto_Update_Column {
-  /** column name */
-  GfId = 'gf_id',
-  /** column name */
-  GfIdRodic = 'gf_id_rodic',
-  /** column name */
-  GfKdo = 'gf_kdo',
-  /** column name */
-  GfName = 'gf_name',
-  /** column name */
-  GfPath = 'gf_path',
-  /** column name */
-  GfTimestamp = 'gf_timestamp'
-}
-
-/** aggregate var_pop on columns */
-export type Galerie_Foto_Var_Pop_Fields = {
-  __typename?: 'galerie_foto_var_pop_fields';
-  gf_id?: Maybe<Scalars['Float']>;
-  gf_id_rodic?: Maybe<Scalars['Float']>;
-  gf_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_pop() on columns of table "galerie_foto" */
-export type Galerie_Foto_Var_Pop_Order_By = {
-  gf_id?: InputMaybe<Order_By>;
-  gf_id_rodic?: InputMaybe<Order_By>;
-  gf_kdo?: InputMaybe<Order_By>;
-};
-
-/** aggregate var_samp on columns */
-export type Galerie_Foto_Var_Samp_Fields = {
-  __typename?: 'galerie_foto_var_samp_fields';
-  gf_id?: Maybe<Scalars['Float']>;
-  gf_id_rodic?: Maybe<Scalars['Float']>;
-  gf_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_samp() on columns of table "galerie_foto" */
-export type Galerie_Foto_Var_Samp_Order_By = {
-  gf_id?: InputMaybe<Order_By>;
-  gf_id_rodic?: InputMaybe<Order_By>;
-  gf_kdo?: InputMaybe<Order_By>;
-};
-
-/** aggregate variance on columns */
-export type Galerie_Foto_Variance_Fields = {
-  __typename?: 'galerie_foto_variance_fields';
-  gf_id?: Maybe<Scalars['Float']>;
-  gf_id_rodic?: Maybe<Scalars['Float']>;
-  gf_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by variance() on columns of table "galerie_foto" */
-export type Galerie_Foto_Variance_Order_By = {
-  gf_id?: InputMaybe<Order_By>;
-  gf_id_rodic?: InputMaybe<Order_By>;
-  gf_kdo?: InputMaybe<Order_By>;
-};
-
-/** mutation root */
-export type Mutation_Root = {
-  __typename?: 'mutation_root';
-  /** delete data from the table: "akce" */
-  delete_akce?: Maybe<Akce_Mutation_Response>;
-  /** delete single row from the table: "akce" */
-  delete_akce_by_pk?: Maybe<Akce>;
-  /** delete data from the table: "akce_item" */
-  delete_akce_item?: Maybe<Akce_Item_Mutation_Response>;
-  /** delete single row from the table: "akce_item" */
-  delete_akce_item_by_pk?: Maybe<Akce_Item>;
-  /** delete data from the table: "aktuality" */
-  delete_aktuality?: Maybe<Aktuality_Mutation_Response>;
-  /** delete data from the table: "aktuality_admin" */
-  delete_aktuality_admin?: Maybe<Aktuality_Admin_Mutation_Response>;
-  /** delete single row from the table: "aktuality" */
-  delete_aktuality_by_pk?: Maybe<Aktuality>;
-  /** delete data from the table: "dokumenty" */
-  delete_dokumenty?: Maybe<Dokumenty_Mutation_Response>;
-  /** delete single row from the table: "dokumenty" */
-  delete_dokumenty_by_pk?: Maybe<Dokumenty>;
-  /** delete data from the table: "galerie_dir" */
-  delete_galerie_dir?: Maybe<Galerie_Dir_Mutation_Response>;
-  /** delete single row from the table: "galerie_dir" */
-  delete_galerie_dir_by_pk?: Maybe<Galerie_Dir>;
-  /** delete data from the table: "galerie_foto" */
-  delete_galerie_foto?: Maybe<Galerie_Foto_Mutation_Response>;
-  /** delete single row from the table: "galerie_foto" */
-  delete_galerie_foto_by_pk?: Maybe<Galerie_Foto>;
-  /** delete data from the table: "nabidka" */
-  delete_nabidka?: Maybe<Nabidka_Mutation_Response>;
-  /** delete data from the table: "nabidka_admin" */
-  delete_nabidka_admin?: Maybe<Nabidka_Admin_Mutation_Response>;
-  /** delete single row from the table: "nabidka" */
-  delete_nabidka_by_pk?: Maybe<Nabidka>;
-  /** delete data from the table: "nabidka_item" */
-  delete_nabidka_item?: Maybe<Nabidka_Item_Mutation_Response>;
-  /** delete single row from the table: "nabidka_item" */
-  delete_nabidka_item_by_pk?: Maybe<Nabidka_Item>;
-  /** delete data from the table: "parameters" */
-  delete_parameters?: Maybe<Parameters_Mutation_Response>;
-  /** delete single row from the table: "parameters" */
-  delete_parameters_by_pk?: Maybe<Parameters>;
-  /** delete data from the table: "pary" */
-  delete_pary?: Maybe<Pary_Mutation_Response>;
-  /** delete single row from the table: "pary" */
-  delete_pary_by_pk?: Maybe<Pary>;
-  /** delete data from the table: "pary_navrh" */
-  delete_pary_navrh?: Maybe<Pary_Navrh_Mutation_Response>;
-  /** delete single row from the table: "pary_navrh" */
-  delete_pary_navrh_by_pk?: Maybe<Pary_Navrh>;
-  /** delete data from the table: "permissions" */
-  delete_permissions?: Maybe<Permissions_Mutation_Response>;
-  /** delete single row from the table: "permissions" */
-  delete_permissions_by_pk?: Maybe<Permissions>;
-  /** delete data from the table: "platby_category" */
-  delete_platby_category?: Maybe<Platby_Category_Mutation_Response>;
-  /** delete single row from the table: "platby_category" */
-  delete_platby_category_by_pk?: Maybe<Platby_Category>;
-  /** delete data from the table: "platby_category_group" */
-  delete_platby_category_group?: Maybe<Platby_Category_Group_Mutation_Response>;
-  /** delete single row from the table: "platby_category_group" */
-  delete_platby_category_group_by_pk?: Maybe<Platby_Category_Group>;
-  /** delete data from the table: "platby_group" */
-  delete_platby_group?: Maybe<Platby_Group_Mutation_Response>;
-  /** delete single row from the table: "platby_group" */
-  delete_platby_group_by_pk?: Maybe<Platby_Group>;
-  /** delete data from the table: "platby_group_skupina" */
-  delete_platby_group_skupina?: Maybe<Platby_Group_Skupina_Mutation_Response>;
-  /** delete single row from the table: "platby_group_skupina" */
-  delete_platby_group_skupina_by_pk?: Maybe<Platby_Group_Skupina>;
-  /** delete data from the table: "platby_item" */
-  delete_platby_item?: Maybe<Platby_Item_Mutation_Response>;
-  /** delete single row from the table: "platby_item" */
-  delete_platby_item_by_pk?: Maybe<Platby_Item>;
-  /** delete data from the table: "platby_raw" */
-  delete_platby_raw?: Maybe<Platby_Raw_Mutation_Response>;
-  /** delete single row from the table: "platby_raw" */
-  delete_platby_raw_by_pk?: Maybe<Platby_Raw>;
-  /** delete data from the table: "rozpis" */
-  delete_rozpis?: Maybe<Rozpis_Mutation_Response>;
-  /** delete data from the table: "rozpis_admin" */
-  delete_rozpis_admin?: Maybe<Rozpis_Admin_Mutation_Response>;
-  /** delete single row from the table: "rozpis" */
-  delete_rozpis_by_pk?: Maybe<Rozpis>;
-  /** delete data from the table: "rozpis_item" */
-  delete_rozpis_item?: Maybe<Rozpis_Item_Mutation_Response>;
-  /** delete single row from the table: "rozpis_item" */
-  delete_rozpis_item_by_pk?: Maybe<Rozpis_Item>;
-  /** delete data from the table: "session" */
-  delete_session?: Maybe<Session_Mutation_Response>;
-  /** delete single row from the table: "session" */
-  delete_session_by_pk?: Maybe<Session>;
-  /** delete data from the table: "skupiny" */
-  delete_skupiny?: Maybe<Skupiny_Mutation_Response>;
-  /** delete single row from the table: "skupiny" */
-  delete_skupiny_by_pk?: Maybe<Skupiny>;
-  /** delete data from the table: "upozorneni" */
-  delete_upozorneni?: Maybe<Upozorneni_Mutation_Response>;
-  /** delete single row from the table: "upozorneni" */
-  delete_upozorneni_by_pk?: Maybe<Upozorneni>;
-  /** delete data from the table: "upozorneni_skupiny" */
-  delete_upozorneni_skupiny?: Maybe<Upozorneni_Skupiny_Mutation_Response>;
-  /** delete single row from the table: "upozorneni_skupiny" */
-  delete_upozorneni_skupiny_by_pk?: Maybe<Upozorneni_Skupiny>;
-  /** delete data from the table: "users" */
-  delete_users?: Maybe<Users_Mutation_Response>;
-  /** delete single row from the table: "users" */
-  delete_users_by_pk?: Maybe<Users>;
-  /** delete data from the table: "users_skupiny" */
-  delete_users_skupiny?: Maybe<Users_Skupiny_Mutation_Response>;
-  /** delete single row from the table: "users_skupiny" */
-  delete_users_skupiny_by_pk?: Maybe<Users_Skupiny>;
-  /** delete data from the table: "video" */
-  delete_video?: Maybe<Video_Mutation_Response>;
-  /** delete single row from the table: "video" */
-  delete_video_by_pk?: Maybe<Video>;
-  /** delete data from the table: "video_list" */
-  delete_video_list?: Maybe<Video_List_Mutation_Response>;
-  /** delete single row from the table: "video_list" */
-  delete_video_list_by_pk?: Maybe<Video_List>;
-  /** delete data from the table: "video_source" */
-  delete_video_source?: Maybe<Video_Source_Mutation_Response>;
-  /** delete single row from the table: "video_source" */
-  delete_video_source_by_pk?: Maybe<Video_Source>;
-  /** insert data into the table: "akce" */
-  insert_akce?: Maybe<Akce_Mutation_Response>;
-  /** insert data into the table: "akce_item" */
-  insert_akce_item?: Maybe<Akce_Item_Mutation_Response>;
-  /** insert a single row into the table: "akce_item" */
-  insert_akce_item_one?: Maybe<Akce_Item>;
-  /** insert a single row into the table: "akce" */
-  insert_akce_one?: Maybe<Akce>;
-  /** insert data into the table: "aktuality" */
-  insert_aktuality?: Maybe<Aktuality_Mutation_Response>;
-  /** insert data into the table: "aktuality_admin" */
-  insert_aktuality_admin?: Maybe<Aktuality_Admin_Mutation_Response>;
-  /** insert a single row into the table: "aktuality_admin" */
-  insert_aktuality_admin_one?: Maybe<Aktuality_Admin>;
-  /** insert a single row into the table: "aktuality" */
-  insert_aktuality_one?: Maybe<Aktuality>;
-  /** insert data into the table: "dokumenty" */
-  insert_dokumenty?: Maybe<Dokumenty_Mutation_Response>;
-  /** insert a single row into the table: "dokumenty" */
-  insert_dokumenty_one?: Maybe<Dokumenty>;
-  /** insert data into the table: "galerie_dir" */
-  insert_galerie_dir?: Maybe<Galerie_Dir_Mutation_Response>;
-  /** insert a single row into the table: "galerie_dir" */
-  insert_galerie_dir_one?: Maybe<Galerie_Dir>;
-  /** insert data into the table: "galerie_foto" */
-  insert_galerie_foto?: Maybe<Galerie_Foto_Mutation_Response>;
-  /** insert a single row into the table: "galerie_foto" */
-  insert_galerie_foto_one?: Maybe<Galerie_Foto>;
-  /** insert data into the table: "nabidka" */
-  insert_nabidka?: Maybe<Nabidka_Mutation_Response>;
-  /** insert data into the table: "nabidka_admin" */
-  insert_nabidka_admin?: Maybe<Nabidka_Admin_Mutation_Response>;
-  /** insert a single row into the table: "nabidka_admin" */
-  insert_nabidka_admin_one?: Maybe<Nabidka_Admin>;
-  /** insert data into the table: "nabidka_item" */
-  insert_nabidka_item?: Maybe<Nabidka_Item_Mutation_Response>;
-  /** insert a single row into the table: "nabidka_item" */
-  insert_nabidka_item_one?: Maybe<Nabidka_Item>;
-  /** insert a single row into the table: "nabidka" */
-  insert_nabidka_one?: Maybe<Nabidka>;
-  /** insert data into the table: "parameters" */
-  insert_parameters?: Maybe<Parameters_Mutation_Response>;
-  /** insert a single row into the table: "parameters" */
-  insert_parameters_one?: Maybe<Parameters>;
-  /** insert data into the table: "pary" */
-  insert_pary?: Maybe<Pary_Mutation_Response>;
-  /** insert data into the table: "pary_navrh" */
-  insert_pary_navrh?: Maybe<Pary_Navrh_Mutation_Response>;
-  /** insert a single row into the table: "pary_navrh" */
-  insert_pary_navrh_one?: Maybe<Pary_Navrh>;
-  /** insert a single row into the table: "pary" */
-  insert_pary_one?: Maybe<Pary>;
-  /** insert data into the table: "permissions" */
-  insert_permissions?: Maybe<Permissions_Mutation_Response>;
-  /** insert a single row into the table: "permissions" */
-  insert_permissions_one?: Maybe<Permissions>;
-  /** insert data into the table: "platby_category" */
-  insert_platby_category?: Maybe<Platby_Category_Mutation_Response>;
-  /** insert data into the table: "platby_category_group" */
-  insert_platby_category_group?: Maybe<Platby_Category_Group_Mutation_Response>;
-  /** insert a single row into the table: "platby_category_group" */
-  insert_platby_category_group_one?: Maybe<Platby_Category_Group>;
-  /** insert a single row into the table: "platby_category" */
-  insert_platby_category_one?: Maybe<Platby_Category>;
-  /** insert data into the table: "platby_group" */
-  insert_platby_group?: Maybe<Platby_Group_Mutation_Response>;
-  /** insert a single row into the table: "platby_group" */
-  insert_platby_group_one?: Maybe<Platby_Group>;
-  /** insert data into the table: "platby_group_skupina" */
-  insert_platby_group_skupina?: Maybe<Platby_Group_Skupina_Mutation_Response>;
-  /** insert a single row into the table: "platby_group_skupina" */
-  insert_platby_group_skupina_one?: Maybe<Platby_Group_Skupina>;
-  /** insert data into the table: "platby_item" */
-  insert_platby_item?: Maybe<Platby_Item_Mutation_Response>;
-  /** insert a single row into the table: "platby_item" */
-  insert_platby_item_one?: Maybe<Platby_Item>;
-  /** insert data into the table: "platby_raw" */
-  insert_platby_raw?: Maybe<Platby_Raw_Mutation_Response>;
-  /** insert a single row into the table: "platby_raw" */
-  insert_platby_raw_one?: Maybe<Platby_Raw>;
-  /** insert data into the table: "rozpis" */
-  insert_rozpis?: Maybe<Rozpis_Mutation_Response>;
-  /** insert data into the table: "rozpis_admin" */
-  insert_rozpis_admin?: Maybe<Rozpis_Admin_Mutation_Response>;
-  /** insert a single row into the table: "rozpis_admin" */
-  insert_rozpis_admin_one?: Maybe<Rozpis_Admin>;
-  /** insert data into the table: "rozpis_item" */
-  insert_rozpis_item?: Maybe<Rozpis_Item_Mutation_Response>;
-  /** insert a single row into the table: "rozpis_item" */
-  insert_rozpis_item_one?: Maybe<Rozpis_Item>;
-  /** insert a single row into the table: "rozpis" */
-  insert_rozpis_one?: Maybe<Rozpis>;
-  /** insert data into the table: "session" */
-  insert_session?: Maybe<Session_Mutation_Response>;
-  /** insert a single row into the table: "session" */
-  insert_session_one?: Maybe<Session>;
-  /** insert data into the table: "skupiny" */
-  insert_skupiny?: Maybe<Skupiny_Mutation_Response>;
-  /** insert a single row into the table: "skupiny" */
-  insert_skupiny_one?: Maybe<Skupiny>;
-  /** insert data into the table: "upozorneni" */
-  insert_upozorneni?: Maybe<Upozorneni_Mutation_Response>;
-  /** insert a single row into the table: "upozorneni" */
-  insert_upozorneni_one?: Maybe<Upozorneni>;
-  /** insert data into the table: "upozorneni_skupiny" */
-  insert_upozorneni_skupiny?: Maybe<Upozorneni_Skupiny_Mutation_Response>;
-  /** insert a single row into the table: "upozorneni_skupiny" */
-  insert_upozorneni_skupiny_one?: Maybe<Upozorneni_Skupiny>;
-  /** insert data into the table: "users" */
-  insert_users?: Maybe<Users_Mutation_Response>;
-  /** insert a single row into the table: "users" */
-  insert_users_one?: Maybe<Users>;
-  /** insert data into the table: "users_skupiny" */
-  insert_users_skupiny?: Maybe<Users_Skupiny_Mutation_Response>;
-  /** insert a single row into the table: "users_skupiny" */
-  insert_users_skupiny_one?: Maybe<Users_Skupiny>;
-  /** insert data into the table: "video" */
-  insert_video?: Maybe<Video_Mutation_Response>;
-  /** insert data into the table: "video_list" */
-  insert_video_list?: Maybe<Video_List_Mutation_Response>;
-  /** insert a single row into the table: "video_list" */
-  insert_video_list_one?: Maybe<Video_List>;
-  /** insert a single row into the table: "video" */
-  insert_video_one?: Maybe<Video>;
-  /** insert data into the table: "video_source" */
-  insert_video_source?: Maybe<Video_Source_Mutation_Response>;
-  /** insert a single row into the table: "video_source" */
-  insert_video_source_one?: Maybe<Video_Source>;
-  /** update data of the table: "akce" */
-  update_akce?: Maybe<Akce_Mutation_Response>;
-  /** update single row of the table: "akce" */
-  update_akce_by_pk?: Maybe<Akce>;
-  /** update data of the table: "akce_item" */
-  update_akce_item?: Maybe<Akce_Item_Mutation_Response>;
-  /** update single row of the table: "akce_item" */
-  update_akce_item_by_pk?: Maybe<Akce_Item>;
-  /** update data of the table: "aktuality" */
-  update_aktuality?: Maybe<Aktuality_Mutation_Response>;
-  /** update data of the table: "aktuality_admin" */
-  update_aktuality_admin?: Maybe<Aktuality_Admin_Mutation_Response>;
-  /** update single row of the table: "aktuality" */
-  update_aktuality_by_pk?: Maybe<Aktuality>;
-  /** update data of the table: "dokumenty" */
-  update_dokumenty?: Maybe<Dokumenty_Mutation_Response>;
-  /** update single row of the table: "dokumenty" */
-  update_dokumenty_by_pk?: Maybe<Dokumenty>;
-  /** update data of the table: "galerie_dir" */
-  update_galerie_dir?: Maybe<Galerie_Dir_Mutation_Response>;
-  /** update single row of the table: "galerie_dir" */
-  update_galerie_dir_by_pk?: Maybe<Galerie_Dir>;
-  /** update data of the table: "galerie_foto" */
-  update_galerie_foto?: Maybe<Galerie_Foto_Mutation_Response>;
-  /** update single row of the table: "galerie_foto" */
-  update_galerie_foto_by_pk?: Maybe<Galerie_Foto>;
-  /** update data of the table: "nabidka" */
-  update_nabidka?: Maybe<Nabidka_Mutation_Response>;
-  /** update data of the table: "nabidka_admin" */
-  update_nabidka_admin?: Maybe<Nabidka_Admin_Mutation_Response>;
-  /** update single row of the table: "nabidka" */
-  update_nabidka_by_pk?: Maybe<Nabidka>;
-  /** update data of the table: "nabidka_item" */
-  update_nabidka_item?: Maybe<Nabidka_Item_Mutation_Response>;
-  /** update single row of the table: "nabidka_item" */
-  update_nabidka_item_by_pk?: Maybe<Nabidka_Item>;
-  /** update data of the table: "parameters" */
-  update_parameters?: Maybe<Parameters_Mutation_Response>;
-  /** update single row of the table: "parameters" */
-  update_parameters_by_pk?: Maybe<Parameters>;
-  /** update data of the table: "pary" */
-  update_pary?: Maybe<Pary_Mutation_Response>;
-  /** update single row of the table: "pary" */
-  update_pary_by_pk?: Maybe<Pary>;
-  /** update data of the table: "pary_navrh" */
-  update_pary_navrh?: Maybe<Pary_Navrh_Mutation_Response>;
-  /** update single row of the table: "pary_navrh" */
-  update_pary_navrh_by_pk?: Maybe<Pary_Navrh>;
-  /** update data of the table: "permissions" */
-  update_permissions?: Maybe<Permissions_Mutation_Response>;
-  /** update single row of the table: "permissions" */
-  update_permissions_by_pk?: Maybe<Permissions>;
-  /** update data of the table: "platby_category" */
-  update_platby_category?: Maybe<Platby_Category_Mutation_Response>;
-  /** update single row of the table: "platby_category" */
-  update_platby_category_by_pk?: Maybe<Platby_Category>;
-  /** update data of the table: "platby_category_group" */
-  update_platby_category_group?: Maybe<Platby_Category_Group_Mutation_Response>;
-  /** update single row of the table: "platby_category_group" */
-  update_platby_category_group_by_pk?: Maybe<Platby_Category_Group>;
-  /** update data of the table: "platby_group" */
-  update_platby_group?: Maybe<Platby_Group_Mutation_Response>;
-  /** update single row of the table: "platby_group" */
-  update_platby_group_by_pk?: Maybe<Platby_Group>;
-  /** update data of the table: "platby_group_skupina" */
-  update_platby_group_skupina?: Maybe<Platby_Group_Skupina_Mutation_Response>;
-  /** update single row of the table: "platby_group_skupina" */
-  update_platby_group_skupina_by_pk?: Maybe<Platby_Group_Skupina>;
-  /** update data of the table: "platby_item" */
-  update_platby_item?: Maybe<Platby_Item_Mutation_Response>;
-  /** update single row of the table: "platby_item" */
-  update_platby_item_by_pk?: Maybe<Platby_Item>;
-  /** update data of the table: "platby_raw" */
-  update_platby_raw?: Maybe<Platby_Raw_Mutation_Response>;
-  /** update single row of the table: "platby_raw" */
-  update_platby_raw_by_pk?: Maybe<Platby_Raw>;
-  /** update data of the table: "rozpis" */
-  update_rozpis?: Maybe<Rozpis_Mutation_Response>;
-  /** update data of the table: "rozpis_admin" */
-  update_rozpis_admin?: Maybe<Rozpis_Admin_Mutation_Response>;
-  /** update single row of the table: "rozpis" */
-  update_rozpis_by_pk?: Maybe<Rozpis>;
-  /** update data of the table: "rozpis_item" */
-  update_rozpis_item?: Maybe<Rozpis_Item_Mutation_Response>;
-  /** update single row of the table: "rozpis_item" */
-  update_rozpis_item_by_pk?: Maybe<Rozpis_Item>;
-  /** update data of the table: "session" */
-  update_session?: Maybe<Session_Mutation_Response>;
-  /** update single row of the table: "session" */
-  update_session_by_pk?: Maybe<Session>;
-  /** update data of the table: "skupiny" */
-  update_skupiny?: Maybe<Skupiny_Mutation_Response>;
-  /** update single row of the table: "skupiny" */
-  update_skupiny_by_pk?: Maybe<Skupiny>;
-  /** update data of the table: "upozorneni" */
-  update_upozorneni?: Maybe<Upozorneni_Mutation_Response>;
-  /** update single row of the table: "upozorneni" */
-  update_upozorneni_by_pk?: Maybe<Upozorneni>;
-  /** update data of the table: "upozorneni_skupiny" */
-  update_upozorneni_skupiny?: Maybe<Upozorneni_Skupiny_Mutation_Response>;
-  /** update single row of the table: "upozorneni_skupiny" */
-  update_upozorneni_skupiny_by_pk?: Maybe<Upozorneni_Skupiny>;
-  /** update data of the table: "users" */
-  update_users?: Maybe<Users_Mutation_Response>;
-  /** update single row of the table: "users" */
-  update_users_by_pk?: Maybe<Users>;
-  /** update data of the table: "users_skupiny" */
-  update_users_skupiny?: Maybe<Users_Skupiny_Mutation_Response>;
-  /** update single row of the table: "users_skupiny" */
-  update_users_skupiny_by_pk?: Maybe<Users_Skupiny>;
-  /** update data of the table: "video" */
-  update_video?: Maybe<Video_Mutation_Response>;
-  /** update single row of the table: "video" */
-  update_video_by_pk?: Maybe<Video>;
-  /** update data of the table: "video_list" */
-  update_video_list?: Maybe<Video_List_Mutation_Response>;
-  /** update single row of the table: "video_list" */
-  update_video_list_by_pk?: Maybe<Video_List>;
-  /** update data of the table: "video_source" */
-  update_video_source?: Maybe<Video_Source_Mutation_Response>;
-  /** update single row of the table: "video_source" */
-  update_video_source_by_pk?: Maybe<Video_Source>;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_AkceArgs = {
-  where: Akce_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Akce_By_PkArgs = {
-  a_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Akce_ItemArgs = {
-  where: Akce_Item_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Akce_Item_By_PkArgs = {
-  ai_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_AktualityArgs = {
-  where: Aktuality_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Aktuality_AdminArgs = {
-  where: Aktuality_Admin_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Aktuality_By_PkArgs = {
-  at_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_DokumentyArgs = {
-  where: Dokumenty_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Dokumenty_By_PkArgs = {
-  d_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Galerie_DirArgs = {
-  where: Galerie_Dir_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Galerie_Dir_By_PkArgs = {
-  gd_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Galerie_FotoArgs = {
-  where: Galerie_Foto_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Galerie_Foto_By_PkArgs = {
-  gf_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_NabidkaArgs = {
-  where: Nabidka_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Nabidka_AdminArgs = {
-  where: Nabidka_Admin_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Nabidka_By_PkArgs = {
-  n_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Nabidka_ItemArgs = {
-  where: Nabidka_Item_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Nabidka_Item_By_PkArgs = {
-  ni_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_ParametersArgs = {
-  where: Parameters_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Parameters_By_PkArgs = {
-  pa_name: Scalars['String'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_ParyArgs = {
-  where: Pary_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Pary_By_PkArgs = {
-  p_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Pary_NavrhArgs = {
-  where: Pary_Navrh_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Pary_Navrh_By_PkArgs = {
-  pn_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_PermissionsArgs = {
-  where: Permissions_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Permissions_By_PkArgs = {
-  pe_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Platby_CategoryArgs = {
-  where: Platby_Category_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Platby_Category_By_PkArgs = {
-  pc_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Platby_Category_GroupArgs = {
-  where: Platby_Category_Group_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Platby_Category_Group_By_PkArgs = {
-  pcg_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Platby_GroupArgs = {
-  where: Platby_Group_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Platby_Group_By_PkArgs = {
-  pg_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Platby_Group_SkupinaArgs = {
-  where: Platby_Group_Skupina_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Platby_Group_Skupina_By_PkArgs = {
-  pgs_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Platby_ItemArgs = {
-  where: Platby_Item_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Platby_Item_By_PkArgs = {
-  pi_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Platby_RawArgs = {
-  where: Platby_Raw_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Platby_Raw_By_PkArgs = {
-  pr_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_RozpisArgs = {
-  where: Rozpis_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Rozpis_AdminArgs = {
-  where: Rozpis_Admin_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Rozpis_By_PkArgs = {
-  r_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Rozpis_ItemArgs = {
-  where: Rozpis_Item_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Rozpis_Item_By_PkArgs = {
-  ri_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_SessionArgs = {
-  where: Session_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Session_By_PkArgs = {
-  ss_id: Scalars['String'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_SkupinyArgs = {
-  where: Skupiny_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Skupiny_By_PkArgs = {
-  s_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_UpozorneniArgs = {
-  where: Upozorneni_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Upozorneni_By_PkArgs = {
-  up_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Upozorneni_SkupinyArgs = {
-  where: Upozorneni_Skupiny_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Upozorneni_Skupiny_By_PkArgs = {
-  ups_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_UsersArgs = {
-  where: Users_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Users_By_PkArgs = {
-  u_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Users_SkupinyArgs = {
-  where: Users_Skupiny_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Users_Skupiny_By_PkArgs = {
-  us_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_VideoArgs = {
-  where: Video_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Video_By_PkArgs = {
-  v_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Video_ListArgs = {
-  where: Video_List_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Video_List_By_PkArgs = {
-  vl_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Video_SourceArgs = {
-  where: Video_Source_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Video_Source_By_PkArgs = {
-  vs_id: Scalars['bigint'];
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_AkceArgs = {
-  objects: Array<Akce_Insert_Input>;
-  on_conflict?: InputMaybe<Akce_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Akce_ItemArgs = {
-  objects: Array<Akce_Item_Insert_Input>;
-  on_conflict?: InputMaybe<Akce_Item_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Akce_Item_OneArgs = {
-  object: Akce_Item_Insert_Input;
-  on_conflict?: InputMaybe<Akce_Item_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Akce_OneArgs = {
-  object: Akce_Insert_Input;
-  on_conflict?: InputMaybe<Akce_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_AktualityArgs = {
-  objects: Array<Aktuality_Insert_Input>;
-  on_conflict?: InputMaybe<Aktuality_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Aktuality_AdminArgs = {
-  objects: Array<Aktuality_Admin_Insert_Input>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Aktuality_Admin_OneArgs = {
-  object: Aktuality_Admin_Insert_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Aktuality_OneArgs = {
-  object: Aktuality_Insert_Input;
-  on_conflict?: InputMaybe<Aktuality_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_DokumentyArgs = {
-  objects: Array<Dokumenty_Insert_Input>;
-  on_conflict?: InputMaybe<Dokumenty_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Dokumenty_OneArgs = {
-  object: Dokumenty_Insert_Input;
-  on_conflict?: InputMaybe<Dokumenty_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Galerie_DirArgs = {
-  objects: Array<Galerie_Dir_Insert_Input>;
-  on_conflict?: InputMaybe<Galerie_Dir_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Galerie_Dir_OneArgs = {
-  object: Galerie_Dir_Insert_Input;
-  on_conflict?: InputMaybe<Galerie_Dir_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Galerie_FotoArgs = {
-  objects: Array<Galerie_Foto_Insert_Input>;
-  on_conflict?: InputMaybe<Galerie_Foto_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Galerie_Foto_OneArgs = {
-  object: Galerie_Foto_Insert_Input;
-  on_conflict?: InputMaybe<Galerie_Foto_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_NabidkaArgs = {
-  objects: Array<Nabidka_Insert_Input>;
-  on_conflict?: InputMaybe<Nabidka_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Nabidka_AdminArgs = {
-  objects: Array<Nabidka_Admin_Insert_Input>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Nabidka_Admin_OneArgs = {
-  object: Nabidka_Admin_Insert_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Nabidka_ItemArgs = {
-  objects: Array<Nabidka_Item_Insert_Input>;
-  on_conflict?: InputMaybe<Nabidka_Item_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Nabidka_Item_OneArgs = {
-  object: Nabidka_Item_Insert_Input;
-  on_conflict?: InputMaybe<Nabidka_Item_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Nabidka_OneArgs = {
-  object: Nabidka_Insert_Input;
-  on_conflict?: InputMaybe<Nabidka_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_ParametersArgs = {
-  objects: Array<Parameters_Insert_Input>;
-  on_conflict?: InputMaybe<Parameters_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Parameters_OneArgs = {
-  object: Parameters_Insert_Input;
-  on_conflict?: InputMaybe<Parameters_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_ParyArgs = {
-  objects: Array<Pary_Insert_Input>;
-  on_conflict?: InputMaybe<Pary_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Pary_NavrhArgs = {
-  objects: Array<Pary_Navrh_Insert_Input>;
-  on_conflict?: InputMaybe<Pary_Navrh_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Pary_Navrh_OneArgs = {
-  object: Pary_Navrh_Insert_Input;
-  on_conflict?: InputMaybe<Pary_Navrh_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Pary_OneArgs = {
-  object: Pary_Insert_Input;
-  on_conflict?: InputMaybe<Pary_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_PermissionsArgs = {
-  objects: Array<Permissions_Insert_Input>;
-  on_conflict?: InputMaybe<Permissions_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Permissions_OneArgs = {
-  object: Permissions_Insert_Input;
-  on_conflict?: InputMaybe<Permissions_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Platby_CategoryArgs = {
-  objects: Array<Platby_Category_Insert_Input>;
-  on_conflict?: InputMaybe<Platby_Category_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Platby_Category_GroupArgs = {
-  objects: Array<Platby_Category_Group_Insert_Input>;
-  on_conflict?: InputMaybe<Platby_Category_Group_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Platby_Category_Group_OneArgs = {
-  object: Platby_Category_Group_Insert_Input;
-  on_conflict?: InputMaybe<Platby_Category_Group_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Platby_Category_OneArgs = {
-  object: Platby_Category_Insert_Input;
-  on_conflict?: InputMaybe<Platby_Category_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Platby_GroupArgs = {
-  objects: Array<Platby_Group_Insert_Input>;
-  on_conflict?: InputMaybe<Platby_Group_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Platby_Group_OneArgs = {
-  object: Platby_Group_Insert_Input;
-  on_conflict?: InputMaybe<Platby_Group_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Platby_Group_SkupinaArgs = {
-  objects: Array<Platby_Group_Skupina_Insert_Input>;
-  on_conflict?: InputMaybe<Platby_Group_Skupina_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Platby_Group_Skupina_OneArgs = {
-  object: Platby_Group_Skupina_Insert_Input;
-  on_conflict?: InputMaybe<Platby_Group_Skupina_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Platby_ItemArgs = {
-  objects: Array<Platby_Item_Insert_Input>;
-  on_conflict?: InputMaybe<Platby_Item_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Platby_Item_OneArgs = {
-  object: Platby_Item_Insert_Input;
-  on_conflict?: InputMaybe<Platby_Item_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Platby_RawArgs = {
-  objects: Array<Platby_Raw_Insert_Input>;
-  on_conflict?: InputMaybe<Platby_Raw_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Platby_Raw_OneArgs = {
-  object: Platby_Raw_Insert_Input;
-  on_conflict?: InputMaybe<Platby_Raw_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_RozpisArgs = {
-  objects: Array<Rozpis_Insert_Input>;
-  on_conflict?: InputMaybe<Rozpis_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Rozpis_AdminArgs = {
-  objects: Array<Rozpis_Admin_Insert_Input>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Rozpis_Admin_OneArgs = {
-  object: Rozpis_Admin_Insert_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Rozpis_ItemArgs = {
-  objects: Array<Rozpis_Item_Insert_Input>;
-  on_conflict?: InputMaybe<Rozpis_Item_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Rozpis_Item_OneArgs = {
-  object: Rozpis_Item_Insert_Input;
-  on_conflict?: InputMaybe<Rozpis_Item_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Rozpis_OneArgs = {
-  object: Rozpis_Insert_Input;
-  on_conflict?: InputMaybe<Rozpis_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_SessionArgs = {
-  objects: Array<Session_Insert_Input>;
-  on_conflict?: InputMaybe<Session_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Session_OneArgs = {
-  object: Session_Insert_Input;
-  on_conflict?: InputMaybe<Session_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_SkupinyArgs = {
-  objects: Array<Skupiny_Insert_Input>;
-  on_conflict?: InputMaybe<Skupiny_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Skupiny_OneArgs = {
-  object: Skupiny_Insert_Input;
-  on_conflict?: InputMaybe<Skupiny_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_UpozorneniArgs = {
-  objects: Array<Upozorneni_Insert_Input>;
-  on_conflict?: InputMaybe<Upozorneni_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Upozorneni_OneArgs = {
-  object: Upozorneni_Insert_Input;
-  on_conflict?: InputMaybe<Upozorneni_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Upozorneni_SkupinyArgs = {
-  objects: Array<Upozorneni_Skupiny_Insert_Input>;
-  on_conflict?: InputMaybe<Upozorneni_Skupiny_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Upozorneni_Skupiny_OneArgs = {
-  object: Upozorneni_Skupiny_Insert_Input;
-  on_conflict?: InputMaybe<Upozorneni_Skupiny_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_UsersArgs = {
-  objects: Array<Users_Insert_Input>;
-  on_conflict?: InputMaybe<Users_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Users_OneArgs = {
-  object: Users_Insert_Input;
-  on_conflict?: InputMaybe<Users_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Users_SkupinyArgs = {
-  objects: Array<Users_Skupiny_Insert_Input>;
-  on_conflict?: InputMaybe<Users_Skupiny_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Users_Skupiny_OneArgs = {
-  object: Users_Skupiny_Insert_Input;
-  on_conflict?: InputMaybe<Users_Skupiny_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_VideoArgs = {
-  objects: Array<Video_Insert_Input>;
-  on_conflict?: InputMaybe<Video_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Video_ListArgs = {
-  objects: Array<Video_List_Insert_Input>;
-  on_conflict?: InputMaybe<Video_List_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Video_List_OneArgs = {
-  object: Video_List_Insert_Input;
-  on_conflict?: InputMaybe<Video_List_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Video_OneArgs = {
-  object: Video_Insert_Input;
-  on_conflict?: InputMaybe<Video_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Video_SourceArgs = {
-  objects: Array<Video_Source_Insert_Input>;
-  on_conflict?: InputMaybe<Video_Source_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Video_Source_OneArgs = {
-  object: Video_Source_Insert_Input;
-  on_conflict?: InputMaybe<Video_Source_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_AkceArgs = {
-  _inc?: InputMaybe<Akce_Inc_Input>;
-  _set?: InputMaybe<Akce_Set_Input>;
-  where: Akce_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Akce_By_PkArgs = {
-  _inc?: InputMaybe<Akce_Inc_Input>;
-  _set?: InputMaybe<Akce_Set_Input>;
-  pk_columns: Akce_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Akce_ItemArgs = {
-  _inc?: InputMaybe<Akce_Item_Inc_Input>;
-  _set?: InputMaybe<Akce_Item_Set_Input>;
-  where: Akce_Item_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Akce_Item_By_PkArgs = {
-  _inc?: InputMaybe<Akce_Item_Inc_Input>;
-  _set?: InputMaybe<Akce_Item_Set_Input>;
-  pk_columns: Akce_Item_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_AktualityArgs = {
-  _inc?: InputMaybe<Aktuality_Inc_Input>;
-  _set?: InputMaybe<Aktuality_Set_Input>;
-  where: Aktuality_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Aktuality_AdminArgs = {
-  _inc?: InputMaybe<Aktuality_Admin_Inc_Input>;
-  _set?: InputMaybe<Aktuality_Admin_Set_Input>;
-  where: Aktuality_Admin_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Aktuality_By_PkArgs = {
-  _inc?: InputMaybe<Aktuality_Inc_Input>;
-  _set?: InputMaybe<Aktuality_Set_Input>;
-  pk_columns: Aktuality_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_DokumentyArgs = {
-  _inc?: InputMaybe<Dokumenty_Inc_Input>;
-  _set?: InputMaybe<Dokumenty_Set_Input>;
-  where: Dokumenty_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Dokumenty_By_PkArgs = {
-  _inc?: InputMaybe<Dokumenty_Inc_Input>;
-  _set?: InputMaybe<Dokumenty_Set_Input>;
-  pk_columns: Dokumenty_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Galerie_DirArgs = {
-  _inc?: InputMaybe<Galerie_Dir_Inc_Input>;
-  _set?: InputMaybe<Galerie_Dir_Set_Input>;
-  where: Galerie_Dir_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Galerie_Dir_By_PkArgs = {
-  _inc?: InputMaybe<Galerie_Dir_Inc_Input>;
-  _set?: InputMaybe<Galerie_Dir_Set_Input>;
-  pk_columns: Galerie_Dir_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Galerie_FotoArgs = {
-  _inc?: InputMaybe<Galerie_Foto_Inc_Input>;
-  _set?: InputMaybe<Galerie_Foto_Set_Input>;
-  where: Galerie_Foto_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Galerie_Foto_By_PkArgs = {
-  _inc?: InputMaybe<Galerie_Foto_Inc_Input>;
-  _set?: InputMaybe<Galerie_Foto_Set_Input>;
-  pk_columns: Galerie_Foto_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_NabidkaArgs = {
-  _inc?: InputMaybe<Nabidka_Inc_Input>;
-  _set?: InputMaybe<Nabidka_Set_Input>;
-  where: Nabidka_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Nabidka_AdminArgs = {
-  _inc?: InputMaybe<Nabidka_Admin_Inc_Input>;
-  _set?: InputMaybe<Nabidka_Admin_Set_Input>;
-  where: Nabidka_Admin_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Nabidka_By_PkArgs = {
-  _inc?: InputMaybe<Nabidka_Inc_Input>;
-  _set?: InputMaybe<Nabidka_Set_Input>;
-  pk_columns: Nabidka_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Nabidka_ItemArgs = {
-  _inc?: InputMaybe<Nabidka_Item_Inc_Input>;
-  _set?: InputMaybe<Nabidka_Item_Set_Input>;
-  where: Nabidka_Item_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Nabidka_Item_By_PkArgs = {
-  _inc?: InputMaybe<Nabidka_Item_Inc_Input>;
-  _set?: InputMaybe<Nabidka_Item_Set_Input>;
-  pk_columns: Nabidka_Item_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_ParametersArgs = {
-  _set?: InputMaybe<Parameters_Set_Input>;
-  where: Parameters_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Parameters_By_PkArgs = {
-  _set?: InputMaybe<Parameters_Set_Input>;
-  pk_columns: Parameters_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_ParyArgs = {
-  _inc?: InputMaybe<Pary_Inc_Input>;
-  _set?: InputMaybe<Pary_Set_Input>;
-  where: Pary_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Pary_By_PkArgs = {
-  _inc?: InputMaybe<Pary_Inc_Input>;
-  _set?: InputMaybe<Pary_Set_Input>;
-  pk_columns: Pary_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Pary_NavrhArgs = {
-  _inc?: InputMaybe<Pary_Navrh_Inc_Input>;
-  _set?: InputMaybe<Pary_Navrh_Set_Input>;
-  where: Pary_Navrh_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Pary_Navrh_By_PkArgs = {
-  _inc?: InputMaybe<Pary_Navrh_Inc_Input>;
-  _set?: InputMaybe<Pary_Navrh_Set_Input>;
-  pk_columns: Pary_Navrh_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_PermissionsArgs = {
-  _inc?: InputMaybe<Permissions_Inc_Input>;
-  _set?: InputMaybe<Permissions_Set_Input>;
-  where: Permissions_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Permissions_By_PkArgs = {
-  _inc?: InputMaybe<Permissions_Inc_Input>;
-  _set?: InputMaybe<Permissions_Set_Input>;
-  pk_columns: Permissions_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Platby_CategoryArgs = {
-  _inc?: InputMaybe<Platby_Category_Inc_Input>;
-  _set?: InputMaybe<Platby_Category_Set_Input>;
-  where: Platby_Category_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Platby_Category_By_PkArgs = {
-  _inc?: InputMaybe<Platby_Category_Inc_Input>;
-  _set?: InputMaybe<Platby_Category_Set_Input>;
-  pk_columns: Platby_Category_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Platby_Category_GroupArgs = {
-  _inc?: InputMaybe<Platby_Category_Group_Inc_Input>;
-  _set?: InputMaybe<Platby_Category_Group_Set_Input>;
-  where: Platby_Category_Group_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Platby_Category_Group_By_PkArgs = {
-  _inc?: InputMaybe<Platby_Category_Group_Inc_Input>;
-  _set?: InputMaybe<Platby_Category_Group_Set_Input>;
-  pk_columns: Platby_Category_Group_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Platby_GroupArgs = {
-  _inc?: InputMaybe<Platby_Group_Inc_Input>;
-  _set?: InputMaybe<Platby_Group_Set_Input>;
-  where: Platby_Group_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Platby_Group_By_PkArgs = {
-  _inc?: InputMaybe<Platby_Group_Inc_Input>;
-  _set?: InputMaybe<Platby_Group_Set_Input>;
-  pk_columns: Platby_Group_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Platby_Group_SkupinaArgs = {
-  _inc?: InputMaybe<Platby_Group_Skupina_Inc_Input>;
-  _set?: InputMaybe<Platby_Group_Skupina_Set_Input>;
-  where: Platby_Group_Skupina_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Platby_Group_Skupina_By_PkArgs = {
-  _inc?: InputMaybe<Platby_Group_Skupina_Inc_Input>;
-  _set?: InputMaybe<Platby_Group_Skupina_Set_Input>;
-  pk_columns: Platby_Group_Skupina_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Platby_ItemArgs = {
-  _inc?: InputMaybe<Platby_Item_Inc_Input>;
-  _set?: InputMaybe<Platby_Item_Set_Input>;
-  where: Platby_Item_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Platby_Item_By_PkArgs = {
-  _inc?: InputMaybe<Platby_Item_Inc_Input>;
-  _set?: InputMaybe<Platby_Item_Set_Input>;
-  pk_columns: Platby_Item_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Platby_RawArgs = {
-  _inc?: InputMaybe<Platby_Raw_Inc_Input>;
-  _set?: InputMaybe<Platby_Raw_Set_Input>;
-  where: Platby_Raw_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Platby_Raw_By_PkArgs = {
-  _inc?: InputMaybe<Platby_Raw_Inc_Input>;
-  _set?: InputMaybe<Platby_Raw_Set_Input>;
-  pk_columns: Platby_Raw_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_RozpisArgs = {
-  _inc?: InputMaybe<Rozpis_Inc_Input>;
-  _set?: InputMaybe<Rozpis_Set_Input>;
-  where: Rozpis_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Rozpis_AdminArgs = {
-  _inc?: InputMaybe<Rozpis_Admin_Inc_Input>;
-  _set?: InputMaybe<Rozpis_Admin_Set_Input>;
-  where: Rozpis_Admin_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Rozpis_By_PkArgs = {
-  _inc?: InputMaybe<Rozpis_Inc_Input>;
-  _set?: InputMaybe<Rozpis_Set_Input>;
-  pk_columns: Rozpis_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Rozpis_ItemArgs = {
-  _inc?: InputMaybe<Rozpis_Item_Inc_Input>;
-  _set?: InputMaybe<Rozpis_Item_Set_Input>;
-  where: Rozpis_Item_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Rozpis_Item_By_PkArgs = {
-  _inc?: InputMaybe<Rozpis_Item_Inc_Input>;
-  _set?: InputMaybe<Rozpis_Item_Set_Input>;
-  pk_columns: Rozpis_Item_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_SessionArgs = {
-  _inc?: InputMaybe<Session_Inc_Input>;
-  _set?: InputMaybe<Session_Set_Input>;
-  where: Session_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Session_By_PkArgs = {
-  _inc?: InputMaybe<Session_Inc_Input>;
-  _set?: InputMaybe<Session_Set_Input>;
-  pk_columns: Session_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_SkupinyArgs = {
-  _inc?: InputMaybe<Skupiny_Inc_Input>;
-  _set?: InputMaybe<Skupiny_Set_Input>;
-  where: Skupiny_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Skupiny_By_PkArgs = {
-  _inc?: InputMaybe<Skupiny_Inc_Input>;
-  _set?: InputMaybe<Skupiny_Set_Input>;
-  pk_columns: Skupiny_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_UpozorneniArgs = {
-  _inc?: InputMaybe<Upozorneni_Inc_Input>;
-  _set?: InputMaybe<Upozorneni_Set_Input>;
-  where: Upozorneni_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Upozorneni_By_PkArgs = {
-  _inc?: InputMaybe<Upozorneni_Inc_Input>;
-  _set?: InputMaybe<Upozorneni_Set_Input>;
-  pk_columns: Upozorneni_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Upozorneni_SkupinyArgs = {
-  _inc?: InputMaybe<Upozorneni_Skupiny_Inc_Input>;
-  _set?: InputMaybe<Upozorneni_Skupiny_Set_Input>;
-  where: Upozorneni_Skupiny_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Upozorneni_Skupiny_By_PkArgs = {
-  _inc?: InputMaybe<Upozorneni_Skupiny_Inc_Input>;
-  _set?: InputMaybe<Upozorneni_Skupiny_Set_Input>;
-  pk_columns: Upozorneni_Skupiny_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_UsersArgs = {
-  _inc?: InputMaybe<Users_Inc_Input>;
-  _set?: InputMaybe<Users_Set_Input>;
-  where: Users_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Users_By_PkArgs = {
-  _inc?: InputMaybe<Users_Inc_Input>;
-  _set?: InputMaybe<Users_Set_Input>;
-  pk_columns: Users_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Users_SkupinyArgs = {
-  _inc?: InputMaybe<Users_Skupiny_Inc_Input>;
-  _set?: InputMaybe<Users_Skupiny_Set_Input>;
-  where: Users_Skupiny_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Users_Skupiny_By_PkArgs = {
-  _inc?: InputMaybe<Users_Skupiny_Inc_Input>;
-  _set?: InputMaybe<Users_Skupiny_Set_Input>;
-  pk_columns: Users_Skupiny_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_VideoArgs = {
-  _inc?: InputMaybe<Video_Inc_Input>;
-  _set?: InputMaybe<Video_Set_Input>;
-  where: Video_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Video_By_PkArgs = {
-  _inc?: InputMaybe<Video_Inc_Input>;
-  _set?: InputMaybe<Video_Set_Input>;
-  pk_columns: Video_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Video_ListArgs = {
-  _inc?: InputMaybe<Video_List_Inc_Input>;
-  _set?: InputMaybe<Video_List_Set_Input>;
-  where: Video_List_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Video_List_By_PkArgs = {
-  _inc?: InputMaybe<Video_List_Inc_Input>;
-  _set?: InputMaybe<Video_List_Set_Input>;
-  pk_columns: Video_List_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Video_SourceArgs = {
-  _inc?: InputMaybe<Video_Source_Inc_Input>;
-  _set?: InputMaybe<Video_Source_Set_Input>;
-  where: Video_Source_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Video_Source_By_PkArgs = {
-  _inc?: InputMaybe<Video_Source_Inc_Input>;
-  _set?: InputMaybe<Video_Source_Set_Input>;
-  pk_columns: Video_Source_Pk_Columns_Input;
-};
-
-/** columns and relationships of "nabidka" */
-export type Nabidka = {
-  __typename?: 'nabidka';
-  n_do: Scalars['date'];
-  n_id: Scalars['bigint'];
-  n_lock: Scalars['Boolean'];
-  n_max_pocet_hod: Scalars['bigint'];
-  n_od: Scalars['date'];
-  n_pocet_hod: Scalars['smallint'];
-  n_timestamp?: Maybe<Scalars['timestamptz']>;
-  n_trener: Scalars['bigint'];
-  n_visible: Scalars['Boolean'];
-  /** An array relationship */
-  nabidka_items: Array<Nabidka_Item>;
-  /** An aggregate relationship */
-  nabidka_items_aggregate: Nabidka_Item_Aggregate;
-  /** An object relationship */
-  user: Users;
-};
-
-
-/** columns and relationships of "nabidka" */
-export type NabidkaNabidka_ItemsArgs = {
-  distinct_on?: InputMaybe<Array<Nabidka_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Nabidka_Item_Order_By>>;
-  where?: InputMaybe<Nabidka_Item_Bool_Exp>;
-};
-
-
-/** columns and relationships of "nabidka" */
-export type NabidkaNabidka_Items_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Nabidka_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Nabidka_Item_Order_By>>;
-  where?: InputMaybe<Nabidka_Item_Bool_Exp>;
-};
-
-/** columns and relationships of "nabidka_admin" */
-export type Nabidka_Admin = {
-  __typename?: 'nabidka_admin';
-  n_do?: Maybe<Scalars['date']>;
-  n_id?: Maybe<Scalars['bigint']>;
-  n_lock?: Maybe<Scalars['Boolean']>;
-  n_max_pocet_hod?: Maybe<Scalars['bigint']>;
-  n_od?: Maybe<Scalars['date']>;
-  n_pocet_hod?: Maybe<Scalars['smallint']>;
-  n_timestamp?: Maybe<Scalars['timestamptz']>;
-  n_trener?: Maybe<Scalars['bigint']>;
-  n_visible?: Maybe<Scalars['Boolean']>;
-  /** An array relationship */
-  nabidka_items: Array<Nabidka_Item>;
-  /** An aggregate relationship */
-  nabidka_items_aggregate: Nabidka_Item_Aggregate;
-  /** An object relationship */
-  user?: Maybe<Users>;
-};
-
-
-/** columns and relationships of "nabidka_admin" */
-export type Nabidka_AdminNabidka_ItemsArgs = {
-  distinct_on?: InputMaybe<Array<Nabidka_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Nabidka_Item_Order_By>>;
-  where?: InputMaybe<Nabidka_Item_Bool_Exp>;
-};
-
-
-/** columns and relationships of "nabidka_admin" */
-export type Nabidka_AdminNabidka_Items_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Nabidka_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Nabidka_Item_Order_By>>;
-  where?: InputMaybe<Nabidka_Item_Bool_Exp>;
-};
-
-/** aggregated selection of "nabidka_admin" */
-export type Nabidka_Admin_Aggregate = {
-  __typename?: 'nabidka_admin_aggregate';
-  aggregate?: Maybe<Nabidka_Admin_Aggregate_Fields>;
-  nodes: Array<Nabidka_Admin>;
-};
-
-/** aggregate fields of "nabidka_admin" */
-export type Nabidka_Admin_Aggregate_Fields = {
-  __typename?: 'nabidka_admin_aggregate_fields';
-  avg?: Maybe<Nabidka_Admin_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Nabidka_Admin_Max_Fields>;
-  min?: Maybe<Nabidka_Admin_Min_Fields>;
-  stddev?: Maybe<Nabidka_Admin_Stddev_Fields>;
-  stddev_pop?: Maybe<Nabidka_Admin_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Nabidka_Admin_Stddev_Samp_Fields>;
-  sum?: Maybe<Nabidka_Admin_Sum_Fields>;
-  var_pop?: Maybe<Nabidka_Admin_Var_Pop_Fields>;
-  var_samp?: Maybe<Nabidka_Admin_Var_Samp_Fields>;
-  variance?: Maybe<Nabidka_Admin_Variance_Fields>;
-};
-
-
-/** aggregate fields of "nabidka_admin" */
-export type Nabidka_Admin_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Nabidka_Admin_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate avg on columns */
-export type Nabidka_Admin_Avg_Fields = {
-  __typename?: 'nabidka_admin_avg_fields';
-  n_id?: Maybe<Scalars['Float']>;
-  n_max_pocet_hod?: Maybe<Scalars['Float']>;
-  n_pocet_hod?: Maybe<Scalars['Float']>;
-  n_trener?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to filter rows from the table "nabidka_admin". All fields are combined with a logical 'AND'. */
-export type Nabidka_Admin_Bool_Exp = {
-  _and?: InputMaybe<Array<Nabidka_Admin_Bool_Exp>>;
-  _not?: InputMaybe<Nabidka_Admin_Bool_Exp>;
-  _or?: InputMaybe<Array<Nabidka_Admin_Bool_Exp>>;
-  n_do?: InputMaybe<Date_Comparison_Exp>;
-  n_id?: InputMaybe<Bigint_Comparison_Exp>;
-  n_lock?: InputMaybe<Boolean_Comparison_Exp>;
-  n_max_pocet_hod?: InputMaybe<Bigint_Comparison_Exp>;
-  n_od?: InputMaybe<Date_Comparison_Exp>;
-  n_pocet_hod?: InputMaybe<Smallint_Comparison_Exp>;
-  n_timestamp?: InputMaybe<Timestamptz_Comparison_Exp>;
-  n_trener?: InputMaybe<Bigint_Comparison_Exp>;
-  n_visible?: InputMaybe<Boolean_Comparison_Exp>;
-  nabidka_items?: InputMaybe<Nabidka_Item_Bool_Exp>;
-  user?: InputMaybe<Users_Bool_Exp>;
-};
-
-/** input type for incrementing numeric columns in table "nabidka_admin" */
-export type Nabidka_Admin_Inc_Input = {
-  n_id?: InputMaybe<Scalars['bigint']>;
-  n_max_pocet_hod?: InputMaybe<Scalars['bigint']>;
-  n_pocet_hod?: InputMaybe<Scalars['smallint']>;
-  n_trener?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "nabidka_admin" */
-export type Nabidka_Admin_Insert_Input = {
-  n_do?: InputMaybe<Scalars['date']>;
-  n_id?: InputMaybe<Scalars['bigint']>;
-  n_lock?: InputMaybe<Scalars['Boolean']>;
-  n_max_pocet_hod?: InputMaybe<Scalars['bigint']>;
-  n_od?: InputMaybe<Scalars['date']>;
-  n_pocet_hod?: InputMaybe<Scalars['smallint']>;
-  n_timestamp?: InputMaybe<Scalars['timestamptz']>;
-  n_trener?: InputMaybe<Scalars['bigint']>;
-  n_visible?: InputMaybe<Scalars['Boolean']>;
-  nabidka_items?: InputMaybe<Nabidka_Item_Arr_Rel_Insert_Input>;
-  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
-};
-
-/** aggregate max on columns */
-export type Nabidka_Admin_Max_Fields = {
-  __typename?: 'nabidka_admin_max_fields';
-  n_do?: Maybe<Scalars['date']>;
-  n_id?: Maybe<Scalars['bigint']>;
-  n_max_pocet_hod?: Maybe<Scalars['bigint']>;
-  n_od?: Maybe<Scalars['date']>;
-  n_pocet_hod?: Maybe<Scalars['smallint']>;
-  n_timestamp?: Maybe<Scalars['timestamptz']>;
-  n_trener?: Maybe<Scalars['bigint']>;
-};
-
-/** aggregate min on columns */
-export type Nabidka_Admin_Min_Fields = {
-  __typename?: 'nabidka_admin_min_fields';
-  n_do?: Maybe<Scalars['date']>;
-  n_id?: Maybe<Scalars['bigint']>;
-  n_max_pocet_hod?: Maybe<Scalars['bigint']>;
-  n_od?: Maybe<Scalars['date']>;
-  n_pocet_hod?: Maybe<Scalars['smallint']>;
-  n_timestamp?: Maybe<Scalars['timestamptz']>;
-  n_trener?: Maybe<Scalars['bigint']>;
-};
-
-/** response of any mutation on the table "nabidka_admin" */
-export type Nabidka_Admin_Mutation_Response = {
-  __typename?: 'nabidka_admin_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Nabidka_Admin>;
-};
-
-/** Ordering options when selecting data from "nabidka_admin". */
-export type Nabidka_Admin_Order_By = {
-  n_do?: InputMaybe<Order_By>;
-  n_id?: InputMaybe<Order_By>;
-  n_lock?: InputMaybe<Order_By>;
-  n_max_pocet_hod?: InputMaybe<Order_By>;
-  n_od?: InputMaybe<Order_By>;
-  n_pocet_hod?: InputMaybe<Order_By>;
-  n_timestamp?: InputMaybe<Order_By>;
-  n_trener?: InputMaybe<Order_By>;
-  n_visible?: InputMaybe<Order_By>;
-  nabidka_items_aggregate?: InputMaybe<Nabidka_Item_Aggregate_Order_By>;
-  user?: InputMaybe<Users_Order_By>;
-};
-
-/** select columns of table "nabidka_admin" */
-export enum Nabidka_Admin_Select_Column {
-  /** column name */
-  NDo = 'n_do',
-  /** column name */
-  NId = 'n_id',
-  /** column name */
-  NLock = 'n_lock',
-  /** column name */
-  NMaxPocetHod = 'n_max_pocet_hod',
-  /** column name */
-  NOd = 'n_od',
-  /** column name */
-  NPocetHod = 'n_pocet_hod',
-  /** column name */
-  NTimestamp = 'n_timestamp',
-  /** column name */
-  NTrener = 'n_trener',
-  /** column name */
-  NVisible = 'n_visible'
-}
-
-/** input type for updating data in table "nabidka_admin" */
-export type Nabidka_Admin_Set_Input = {
-  n_do?: InputMaybe<Scalars['date']>;
-  n_id?: InputMaybe<Scalars['bigint']>;
-  n_lock?: InputMaybe<Scalars['Boolean']>;
-  n_max_pocet_hod?: InputMaybe<Scalars['bigint']>;
-  n_od?: InputMaybe<Scalars['date']>;
-  n_pocet_hod?: InputMaybe<Scalars['smallint']>;
-  n_timestamp?: InputMaybe<Scalars['timestamptz']>;
-  n_trener?: InputMaybe<Scalars['bigint']>;
-  n_visible?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate stddev on columns */
-export type Nabidka_Admin_Stddev_Fields = {
-  __typename?: 'nabidka_admin_stddev_fields';
-  n_id?: Maybe<Scalars['Float']>;
-  n_max_pocet_hod?: Maybe<Scalars['Float']>;
-  n_pocet_hod?: Maybe<Scalars['Float']>;
-  n_trener?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Nabidka_Admin_Stddev_Pop_Fields = {
-  __typename?: 'nabidka_admin_stddev_pop_fields';
-  n_id?: Maybe<Scalars['Float']>;
-  n_max_pocet_hod?: Maybe<Scalars['Float']>;
-  n_pocet_hod?: Maybe<Scalars['Float']>;
-  n_trener?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Nabidka_Admin_Stddev_Samp_Fields = {
-  __typename?: 'nabidka_admin_stddev_samp_fields';
-  n_id?: Maybe<Scalars['Float']>;
-  n_max_pocet_hod?: Maybe<Scalars['Float']>;
-  n_pocet_hod?: Maybe<Scalars['Float']>;
-  n_trener?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate sum on columns */
-export type Nabidka_Admin_Sum_Fields = {
-  __typename?: 'nabidka_admin_sum_fields';
-  n_id?: Maybe<Scalars['bigint']>;
-  n_max_pocet_hod?: Maybe<Scalars['bigint']>;
-  n_pocet_hod?: Maybe<Scalars['smallint']>;
-  n_trener?: Maybe<Scalars['bigint']>;
-};
-
-/** aggregate var_pop on columns */
-export type Nabidka_Admin_Var_Pop_Fields = {
-  __typename?: 'nabidka_admin_var_pop_fields';
-  n_id?: Maybe<Scalars['Float']>;
-  n_max_pocet_hod?: Maybe<Scalars['Float']>;
-  n_pocet_hod?: Maybe<Scalars['Float']>;
-  n_trener?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Nabidka_Admin_Var_Samp_Fields = {
-  __typename?: 'nabidka_admin_var_samp_fields';
-  n_id?: Maybe<Scalars['Float']>;
-  n_max_pocet_hod?: Maybe<Scalars['Float']>;
-  n_pocet_hod?: Maybe<Scalars['Float']>;
-  n_trener?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Nabidka_Admin_Variance_Fields = {
-  __typename?: 'nabidka_admin_variance_fields';
-  n_id?: Maybe<Scalars['Float']>;
-  n_max_pocet_hod?: Maybe<Scalars['Float']>;
-  n_pocet_hod?: Maybe<Scalars['Float']>;
-  n_trener?: Maybe<Scalars['Float']>;
-};
-
-/** aggregated selection of "nabidka" */
-export type Nabidka_Aggregate = {
-  __typename?: 'nabidka_aggregate';
-  aggregate?: Maybe<Nabidka_Aggregate_Fields>;
-  nodes: Array<Nabidka>;
-};
-
-/** aggregate fields of "nabidka" */
-export type Nabidka_Aggregate_Fields = {
-  __typename?: 'nabidka_aggregate_fields';
-  avg?: Maybe<Nabidka_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Nabidka_Max_Fields>;
-  min?: Maybe<Nabidka_Min_Fields>;
-  stddev?: Maybe<Nabidka_Stddev_Fields>;
-  stddev_pop?: Maybe<Nabidka_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Nabidka_Stddev_Samp_Fields>;
-  sum?: Maybe<Nabidka_Sum_Fields>;
-  var_pop?: Maybe<Nabidka_Var_Pop_Fields>;
-  var_samp?: Maybe<Nabidka_Var_Samp_Fields>;
-  variance?: Maybe<Nabidka_Variance_Fields>;
-};
-
-
-/** aggregate fields of "nabidka" */
-export type Nabidka_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Nabidka_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** order by aggregate values of table "nabidka" */
-export type Nabidka_Aggregate_Order_By = {
-  avg?: InputMaybe<Nabidka_Avg_Order_By>;
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Nabidka_Max_Order_By>;
-  min?: InputMaybe<Nabidka_Min_Order_By>;
-  stddev?: InputMaybe<Nabidka_Stddev_Order_By>;
-  stddev_pop?: InputMaybe<Nabidka_Stddev_Pop_Order_By>;
-  stddev_samp?: InputMaybe<Nabidka_Stddev_Samp_Order_By>;
-  sum?: InputMaybe<Nabidka_Sum_Order_By>;
-  var_pop?: InputMaybe<Nabidka_Var_Pop_Order_By>;
-  var_samp?: InputMaybe<Nabidka_Var_Samp_Order_By>;
-  variance?: InputMaybe<Nabidka_Variance_Order_By>;
-};
-
-/** input type for inserting array relation for remote table "nabidka" */
-export type Nabidka_Arr_Rel_Insert_Input = {
-  data: Array<Nabidka_Insert_Input>;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Nabidka_On_Conflict>;
-};
-
-/** aggregate avg on columns */
-export type Nabidka_Avg_Fields = {
-  __typename?: 'nabidka_avg_fields';
-  n_id?: Maybe<Scalars['Float']>;
-  n_max_pocet_hod?: Maybe<Scalars['Float']>;
-  n_pocet_hod?: Maybe<Scalars['Float']>;
-  n_trener?: Maybe<Scalars['Float']>;
-};
-
-/** order by avg() on columns of table "nabidka" */
-export type Nabidka_Avg_Order_By = {
-  n_id?: InputMaybe<Order_By>;
-  n_max_pocet_hod?: InputMaybe<Order_By>;
-  n_pocet_hod?: InputMaybe<Order_By>;
-  n_trener?: InputMaybe<Order_By>;
-};
-
-/** Boolean expression to filter rows from the table "nabidka". All fields are combined with a logical 'AND'. */
-export type Nabidka_Bool_Exp = {
-  _and?: InputMaybe<Array<Nabidka_Bool_Exp>>;
-  _not?: InputMaybe<Nabidka_Bool_Exp>;
-  _or?: InputMaybe<Array<Nabidka_Bool_Exp>>;
-  n_do?: InputMaybe<Date_Comparison_Exp>;
-  n_id?: InputMaybe<Bigint_Comparison_Exp>;
-  n_lock?: InputMaybe<Boolean_Comparison_Exp>;
-  n_max_pocet_hod?: InputMaybe<Bigint_Comparison_Exp>;
-  n_od?: InputMaybe<Date_Comparison_Exp>;
-  n_pocet_hod?: InputMaybe<Smallint_Comparison_Exp>;
-  n_timestamp?: InputMaybe<Timestamptz_Comparison_Exp>;
-  n_trener?: InputMaybe<Bigint_Comparison_Exp>;
-  n_visible?: InputMaybe<Boolean_Comparison_Exp>;
-  nabidka_items?: InputMaybe<Nabidka_Item_Bool_Exp>;
-  user?: InputMaybe<Users_Bool_Exp>;
-};
-
-/** unique or primary key constraints on table "nabidka" */
-export enum Nabidka_Constraint {
-  /** unique or primary key constraint */
-  Idx_24622Primary = 'idx_24622_primary'
-}
-
-/** input type for incrementing numeric columns in table "nabidka" */
-export type Nabidka_Inc_Input = {
-  n_id?: InputMaybe<Scalars['bigint']>;
-  n_max_pocet_hod?: InputMaybe<Scalars['bigint']>;
-  n_pocet_hod?: InputMaybe<Scalars['smallint']>;
-  n_trener?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "nabidka" */
-export type Nabidka_Insert_Input = {
-  n_do?: InputMaybe<Scalars['date']>;
-  n_id?: InputMaybe<Scalars['bigint']>;
-  n_lock?: InputMaybe<Scalars['Boolean']>;
-  n_max_pocet_hod?: InputMaybe<Scalars['bigint']>;
-  n_od?: InputMaybe<Scalars['date']>;
-  n_pocet_hod?: InputMaybe<Scalars['smallint']>;
-  n_timestamp?: InputMaybe<Scalars['timestamptz']>;
-  n_trener?: InputMaybe<Scalars['bigint']>;
-  n_visible?: InputMaybe<Scalars['Boolean']>;
-  nabidka_items?: InputMaybe<Nabidka_Item_Arr_Rel_Insert_Input>;
-  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
-};
-
-/** columns and relationships of "nabidka_item" */
-export type Nabidka_Item = {
-  __typename?: 'nabidka_item';
-  /** An object relationship */
-  nabidka: Nabidka;
-  ni_id: Scalars['bigint'];
-  ni_id_rodic: Scalars['bigint'];
-  ni_lock: Scalars['Boolean'];
-  ni_partner: Scalars['bigint'];
-  ni_pocet_hod: Scalars['smallint'];
-  /** An object relationship */
-  pary: Pary;
-};
-
-/** aggregated selection of "nabidka_item" */
-export type Nabidka_Item_Aggregate = {
-  __typename?: 'nabidka_item_aggregate';
-  aggregate?: Maybe<Nabidka_Item_Aggregate_Fields>;
-  nodes: Array<Nabidka_Item>;
-};
-
-/** aggregate fields of "nabidka_item" */
-export type Nabidka_Item_Aggregate_Fields = {
-  __typename?: 'nabidka_item_aggregate_fields';
-  avg?: Maybe<Nabidka_Item_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Nabidka_Item_Max_Fields>;
-  min?: Maybe<Nabidka_Item_Min_Fields>;
-  stddev?: Maybe<Nabidka_Item_Stddev_Fields>;
-  stddev_pop?: Maybe<Nabidka_Item_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Nabidka_Item_Stddev_Samp_Fields>;
-  sum?: Maybe<Nabidka_Item_Sum_Fields>;
-  var_pop?: Maybe<Nabidka_Item_Var_Pop_Fields>;
-  var_samp?: Maybe<Nabidka_Item_Var_Samp_Fields>;
-  variance?: Maybe<Nabidka_Item_Variance_Fields>;
-};
-
-
-/** aggregate fields of "nabidka_item" */
-export type Nabidka_Item_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Nabidka_Item_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** order by aggregate values of table "nabidka_item" */
-export type Nabidka_Item_Aggregate_Order_By = {
-  avg?: InputMaybe<Nabidka_Item_Avg_Order_By>;
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Nabidka_Item_Max_Order_By>;
-  min?: InputMaybe<Nabidka_Item_Min_Order_By>;
-  stddev?: InputMaybe<Nabidka_Item_Stddev_Order_By>;
-  stddev_pop?: InputMaybe<Nabidka_Item_Stddev_Pop_Order_By>;
-  stddev_samp?: InputMaybe<Nabidka_Item_Stddev_Samp_Order_By>;
-  sum?: InputMaybe<Nabidka_Item_Sum_Order_By>;
-  var_pop?: InputMaybe<Nabidka_Item_Var_Pop_Order_By>;
-  var_samp?: InputMaybe<Nabidka_Item_Var_Samp_Order_By>;
-  variance?: InputMaybe<Nabidka_Item_Variance_Order_By>;
-};
-
-/** input type for inserting array relation for remote table "nabidka_item" */
-export type Nabidka_Item_Arr_Rel_Insert_Input = {
-  data: Array<Nabidka_Item_Insert_Input>;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Nabidka_Item_On_Conflict>;
-};
-
-/** aggregate avg on columns */
-export type Nabidka_Item_Avg_Fields = {
-  __typename?: 'nabidka_item_avg_fields';
-  ni_id?: Maybe<Scalars['Float']>;
-  ni_id_rodic?: Maybe<Scalars['Float']>;
-  ni_partner?: Maybe<Scalars['Float']>;
-  ni_pocet_hod?: Maybe<Scalars['Float']>;
-};
-
-/** order by avg() on columns of table "nabidka_item" */
-export type Nabidka_Item_Avg_Order_By = {
-  ni_id?: InputMaybe<Order_By>;
-  ni_id_rodic?: InputMaybe<Order_By>;
-  ni_partner?: InputMaybe<Order_By>;
-  ni_pocet_hod?: InputMaybe<Order_By>;
-};
-
-/** Boolean expression to filter rows from the table "nabidka_item". All fields are combined with a logical 'AND'. */
-export type Nabidka_Item_Bool_Exp = {
-  _and?: InputMaybe<Array<Nabidka_Item_Bool_Exp>>;
-  _not?: InputMaybe<Nabidka_Item_Bool_Exp>;
-  _or?: InputMaybe<Array<Nabidka_Item_Bool_Exp>>;
-  nabidka?: InputMaybe<Nabidka_Bool_Exp>;
-  ni_id?: InputMaybe<Bigint_Comparison_Exp>;
-  ni_id_rodic?: InputMaybe<Bigint_Comparison_Exp>;
-  ni_lock?: InputMaybe<Boolean_Comparison_Exp>;
-  ni_partner?: InputMaybe<Bigint_Comparison_Exp>;
-  ni_pocet_hod?: InputMaybe<Smallint_Comparison_Exp>;
-  pary?: InputMaybe<Pary_Bool_Exp>;
-};
-
-/** unique or primary key constraints on table "nabidka_item" */
-export enum Nabidka_Item_Constraint {
-  /** unique or primary key constraint */
-  Idx_24632NiIdRodic = 'idx_24632_ni_id_rodic',
-  /** unique or primary key constraint */
-  Idx_24632Primary = 'idx_24632_primary'
-}
-
-/** input type for incrementing numeric columns in table "nabidka_item" */
-export type Nabidka_Item_Inc_Input = {
-  ni_id?: InputMaybe<Scalars['bigint']>;
-  ni_id_rodic?: InputMaybe<Scalars['bigint']>;
-  ni_partner?: InputMaybe<Scalars['bigint']>;
-  ni_pocet_hod?: InputMaybe<Scalars['smallint']>;
-};
-
-/** input type for inserting data into table "nabidka_item" */
-export type Nabidka_Item_Insert_Input = {
-  nabidka?: InputMaybe<Nabidka_Obj_Rel_Insert_Input>;
-  ni_id?: InputMaybe<Scalars['bigint']>;
-  ni_id_rodic?: InputMaybe<Scalars['bigint']>;
-  ni_lock?: InputMaybe<Scalars['Boolean']>;
-  ni_partner?: InputMaybe<Scalars['bigint']>;
-  ni_pocet_hod?: InputMaybe<Scalars['smallint']>;
-  pary?: InputMaybe<Pary_Obj_Rel_Insert_Input>;
-};
-
-/** aggregate max on columns */
-export type Nabidka_Item_Max_Fields = {
-  __typename?: 'nabidka_item_max_fields';
-  ni_id?: Maybe<Scalars['bigint']>;
-  ni_id_rodic?: Maybe<Scalars['bigint']>;
-  ni_partner?: Maybe<Scalars['bigint']>;
-  ni_pocet_hod?: Maybe<Scalars['smallint']>;
-};
-
-/** order by max() on columns of table "nabidka_item" */
-export type Nabidka_Item_Max_Order_By = {
-  ni_id?: InputMaybe<Order_By>;
-  ni_id_rodic?: InputMaybe<Order_By>;
-  ni_partner?: InputMaybe<Order_By>;
-  ni_pocet_hod?: InputMaybe<Order_By>;
-};
-
-/** aggregate min on columns */
-export type Nabidka_Item_Min_Fields = {
-  __typename?: 'nabidka_item_min_fields';
-  ni_id?: Maybe<Scalars['bigint']>;
-  ni_id_rodic?: Maybe<Scalars['bigint']>;
-  ni_partner?: Maybe<Scalars['bigint']>;
-  ni_pocet_hod?: Maybe<Scalars['smallint']>;
-};
-
-/** order by min() on columns of table "nabidka_item" */
-export type Nabidka_Item_Min_Order_By = {
-  ni_id?: InputMaybe<Order_By>;
-  ni_id_rodic?: InputMaybe<Order_By>;
-  ni_partner?: InputMaybe<Order_By>;
-  ni_pocet_hod?: InputMaybe<Order_By>;
-};
-
-/** response of any mutation on the table "nabidka_item" */
-export type Nabidka_Item_Mutation_Response = {
-  __typename?: 'nabidka_item_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Nabidka_Item>;
-};
-
-/** on conflict condition type for table "nabidka_item" */
-export type Nabidka_Item_On_Conflict = {
-  constraint: Nabidka_Item_Constraint;
-  update_columns?: Array<Nabidka_Item_Update_Column>;
-  where?: InputMaybe<Nabidka_Item_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "nabidka_item". */
-export type Nabidka_Item_Order_By = {
-  nabidka?: InputMaybe<Nabidka_Order_By>;
-  ni_id?: InputMaybe<Order_By>;
-  ni_id_rodic?: InputMaybe<Order_By>;
-  ni_lock?: InputMaybe<Order_By>;
-  ni_partner?: InputMaybe<Order_By>;
-  ni_pocet_hod?: InputMaybe<Order_By>;
-  pary?: InputMaybe<Pary_Order_By>;
-};
-
-/** primary key columns input for table: nabidka_item */
-export type Nabidka_Item_Pk_Columns_Input = {
-  ni_id: Scalars['bigint'];
-};
-
-/** select columns of table "nabidka_item" */
-export enum Nabidka_Item_Select_Column {
-  /** column name */
-  NiId = 'ni_id',
-  /** column name */
-  NiIdRodic = 'ni_id_rodic',
-  /** column name */
-  NiLock = 'ni_lock',
-  /** column name */
-  NiPartner = 'ni_partner',
-  /** column name */
-  NiPocetHod = 'ni_pocet_hod'
-}
-
-/** input type for updating data in table "nabidka_item" */
-export type Nabidka_Item_Set_Input = {
-  ni_id?: InputMaybe<Scalars['bigint']>;
-  ni_id_rodic?: InputMaybe<Scalars['bigint']>;
-  ni_lock?: InputMaybe<Scalars['Boolean']>;
-  ni_partner?: InputMaybe<Scalars['bigint']>;
-  ni_pocet_hod?: InputMaybe<Scalars['smallint']>;
-};
-
-/** aggregate stddev on columns */
-export type Nabidka_Item_Stddev_Fields = {
-  __typename?: 'nabidka_item_stddev_fields';
-  ni_id?: Maybe<Scalars['Float']>;
-  ni_id_rodic?: Maybe<Scalars['Float']>;
-  ni_partner?: Maybe<Scalars['Float']>;
-  ni_pocet_hod?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev() on columns of table "nabidka_item" */
-export type Nabidka_Item_Stddev_Order_By = {
-  ni_id?: InputMaybe<Order_By>;
-  ni_id_rodic?: InputMaybe<Order_By>;
-  ni_partner?: InputMaybe<Order_By>;
-  ni_pocet_hod?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Nabidka_Item_Stddev_Pop_Fields = {
-  __typename?: 'nabidka_item_stddev_pop_fields';
-  ni_id?: Maybe<Scalars['Float']>;
-  ni_id_rodic?: Maybe<Scalars['Float']>;
-  ni_partner?: Maybe<Scalars['Float']>;
-  ni_pocet_hod?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_pop() on columns of table "nabidka_item" */
-export type Nabidka_Item_Stddev_Pop_Order_By = {
-  ni_id?: InputMaybe<Order_By>;
-  ni_id_rodic?: InputMaybe<Order_By>;
-  ni_partner?: InputMaybe<Order_By>;
-  ni_pocet_hod?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Nabidka_Item_Stddev_Samp_Fields = {
-  __typename?: 'nabidka_item_stddev_samp_fields';
-  ni_id?: Maybe<Scalars['Float']>;
-  ni_id_rodic?: Maybe<Scalars['Float']>;
-  ni_partner?: Maybe<Scalars['Float']>;
-  ni_pocet_hod?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_samp() on columns of table "nabidka_item" */
-export type Nabidka_Item_Stddev_Samp_Order_By = {
-  ni_id?: InputMaybe<Order_By>;
-  ni_id_rodic?: InputMaybe<Order_By>;
-  ni_partner?: InputMaybe<Order_By>;
-  ni_pocet_hod?: InputMaybe<Order_By>;
-};
-
-/** aggregate sum on columns */
-export type Nabidka_Item_Sum_Fields = {
-  __typename?: 'nabidka_item_sum_fields';
-  ni_id?: Maybe<Scalars['bigint']>;
-  ni_id_rodic?: Maybe<Scalars['bigint']>;
-  ni_partner?: Maybe<Scalars['bigint']>;
-  ni_pocet_hod?: Maybe<Scalars['smallint']>;
-};
-
-/** order by sum() on columns of table "nabidka_item" */
-export type Nabidka_Item_Sum_Order_By = {
-  ni_id?: InputMaybe<Order_By>;
-  ni_id_rodic?: InputMaybe<Order_By>;
-  ni_partner?: InputMaybe<Order_By>;
-  ni_pocet_hod?: InputMaybe<Order_By>;
-};
-
-/** update columns of table "nabidka_item" */
-export enum Nabidka_Item_Update_Column {
-  /** column name */
-  NiId = 'ni_id',
-  /** column name */
-  NiIdRodic = 'ni_id_rodic',
-  /** column name */
-  NiLock = 'ni_lock',
-  /** column name */
-  NiPartner = 'ni_partner',
-  /** column name */
-  NiPocetHod = 'ni_pocet_hod'
-}
-
-/** aggregate var_pop on columns */
-export type Nabidka_Item_Var_Pop_Fields = {
-  __typename?: 'nabidka_item_var_pop_fields';
-  ni_id?: Maybe<Scalars['Float']>;
-  ni_id_rodic?: Maybe<Scalars['Float']>;
-  ni_partner?: Maybe<Scalars['Float']>;
-  ni_pocet_hod?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_pop() on columns of table "nabidka_item" */
-export type Nabidka_Item_Var_Pop_Order_By = {
-  ni_id?: InputMaybe<Order_By>;
-  ni_id_rodic?: InputMaybe<Order_By>;
-  ni_partner?: InputMaybe<Order_By>;
-  ni_pocet_hod?: InputMaybe<Order_By>;
-};
-
-/** aggregate var_samp on columns */
-export type Nabidka_Item_Var_Samp_Fields = {
-  __typename?: 'nabidka_item_var_samp_fields';
-  ni_id?: Maybe<Scalars['Float']>;
-  ni_id_rodic?: Maybe<Scalars['Float']>;
-  ni_partner?: Maybe<Scalars['Float']>;
-  ni_pocet_hod?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_samp() on columns of table "nabidka_item" */
-export type Nabidka_Item_Var_Samp_Order_By = {
-  ni_id?: InputMaybe<Order_By>;
-  ni_id_rodic?: InputMaybe<Order_By>;
-  ni_partner?: InputMaybe<Order_By>;
-  ni_pocet_hod?: InputMaybe<Order_By>;
-};
-
-/** aggregate variance on columns */
-export type Nabidka_Item_Variance_Fields = {
-  __typename?: 'nabidka_item_variance_fields';
-  ni_id?: Maybe<Scalars['Float']>;
-  ni_id_rodic?: Maybe<Scalars['Float']>;
-  ni_partner?: Maybe<Scalars['Float']>;
-  ni_pocet_hod?: Maybe<Scalars['Float']>;
-};
-
-/** order by variance() on columns of table "nabidka_item" */
-export type Nabidka_Item_Variance_Order_By = {
-  ni_id?: InputMaybe<Order_By>;
-  ni_id_rodic?: InputMaybe<Order_By>;
-  ni_partner?: InputMaybe<Order_By>;
-  ni_pocet_hod?: InputMaybe<Order_By>;
-};
-
-/** aggregate max on columns */
-export type Nabidka_Max_Fields = {
-  __typename?: 'nabidka_max_fields';
-  n_do?: Maybe<Scalars['date']>;
-  n_id?: Maybe<Scalars['bigint']>;
-  n_max_pocet_hod?: Maybe<Scalars['bigint']>;
-  n_od?: Maybe<Scalars['date']>;
-  n_pocet_hod?: Maybe<Scalars['smallint']>;
-  n_timestamp?: Maybe<Scalars['timestamptz']>;
-  n_trener?: Maybe<Scalars['bigint']>;
-};
-
-/** order by max() on columns of table "nabidka" */
-export type Nabidka_Max_Order_By = {
-  n_do?: InputMaybe<Order_By>;
-  n_id?: InputMaybe<Order_By>;
-  n_max_pocet_hod?: InputMaybe<Order_By>;
-  n_od?: InputMaybe<Order_By>;
-  n_pocet_hod?: InputMaybe<Order_By>;
-  n_timestamp?: InputMaybe<Order_By>;
-  n_trener?: InputMaybe<Order_By>;
-};
-
-/** aggregate min on columns */
-export type Nabidka_Min_Fields = {
-  __typename?: 'nabidka_min_fields';
-  n_do?: Maybe<Scalars['date']>;
-  n_id?: Maybe<Scalars['bigint']>;
-  n_max_pocet_hod?: Maybe<Scalars['bigint']>;
-  n_od?: Maybe<Scalars['date']>;
-  n_pocet_hod?: Maybe<Scalars['smallint']>;
-  n_timestamp?: Maybe<Scalars['timestamptz']>;
-  n_trener?: Maybe<Scalars['bigint']>;
-};
-
-/** order by min() on columns of table "nabidka" */
-export type Nabidka_Min_Order_By = {
-  n_do?: InputMaybe<Order_By>;
-  n_id?: InputMaybe<Order_By>;
-  n_max_pocet_hod?: InputMaybe<Order_By>;
-  n_od?: InputMaybe<Order_By>;
-  n_pocet_hod?: InputMaybe<Order_By>;
-  n_timestamp?: InputMaybe<Order_By>;
-  n_trener?: InputMaybe<Order_By>;
-};
-
-/** response of any mutation on the table "nabidka" */
-export type Nabidka_Mutation_Response = {
-  __typename?: 'nabidka_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Nabidka>;
-};
-
-/** input type for inserting object relation for remote table "nabidka" */
-export type Nabidka_Obj_Rel_Insert_Input = {
-  data: Nabidka_Insert_Input;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Nabidka_On_Conflict>;
-};
-
-/** on conflict condition type for table "nabidka" */
-export type Nabidka_On_Conflict = {
-  constraint: Nabidka_Constraint;
-  update_columns?: Array<Nabidka_Update_Column>;
-  where?: InputMaybe<Nabidka_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "nabidka". */
-export type Nabidka_Order_By = {
-  n_do?: InputMaybe<Order_By>;
-  n_id?: InputMaybe<Order_By>;
-  n_lock?: InputMaybe<Order_By>;
-  n_max_pocet_hod?: InputMaybe<Order_By>;
-  n_od?: InputMaybe<Order_By>;
-  n_pocet_hod?: InputMaybe<Order_By>;
-  n_timestamp?: InputMaybe<Order_By>;
-  n_trener?: InputMaybe<Order_By>;
-  n_visible?: InputMaybe<Order_By>;
-  nabidka_items_aggregate?: InputMaybe<Nabidka_Item_Aggregate_Order_By>;
-  user?: InputMaybe<Users_Order_By>;
-};
-
-/** primary key columns input for table: nabidka */
-export type Nabidka_Pk_Columns_Input = {
-  n_id: Scalars['bigint'];
-};
-
-/** select columns of table "nabidka" */
-export enum Nabidka_Select_Column {
-  /** column name */
-  NDo = 'n_do',
-  /** column name */
-  NId = 'n_id',
-  /** column name */
-  NLock = 'n_lock',
-  /** column name */
-  NMaxPocetHod = 'n_max_pocet_hod',
-  /** column name */
-  NOd = 'n_od',
-  /** column name */
-  NPocetHod = 'n_pocet_hod',
-  /** column name */
-  NTimestamp = 'n_timestamp',
-  /** column name */
-  NTrener = 'n_trener',
-  /** column name */
-  NVisible = 'n_visible'
-}
-
-/** input type for updating data in table "nabidka" */
-export type Nabidka_Set_Input = {
-  n_do?: InputMaybe<Scalars['date']>;
-  n_id?: InputMaybe<Scalars['bigint']>;
-  n_lock?: InputMaybe<Scalars['Boolean']>;
-  n_max_pocet_hod?: InputMaybe<Scalars['bigint']>;
-  n_od?: InputMaybe<Scalars['date']>;
-  n_pocet_hod?: InputMaybe<Scalars['smallint']>;
-  n_timestamp?: InputMaybe<Scalars['timestamptz']>;
-  n_trener?: InputMaybe<Scalars['bigint']>;
-  n_visible?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate stddev on columns */
-export type Nabidka_Stddev_Fields = {
-  __typename?: 'nabidka_stddev_fields';
-  n_id?: Maybe<Scalars['Float']>;
-  n_max_pocet_hod?: Maybe<Scalars['Float']>;
-  n_pocet_hod?: Maybe<Scalars['Float']>;
-  n_trener?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev() on columns of table "nabidka" */
-export type Nabidka_Stddev_Order_By = {
-  n_id?: InputMaybe<Order_By>;
-  n_max_pocet_hod?: InputMaybe<Order_By>;
-  n_pocet_hod?: InputMaybe<Order_By>;
-  n_trener?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Nabidka_Stddev_Pop_Fields = {
-  __typename?: 'nabidka_stddev_pop_fields';
-  n_id?: Maybe<Scalars['Float']>;
-  n_max_pocet_hod?: Maybe<Scalars['Float']>;
-  n_pocet_hod?: Maybe<Scalars['Float']>;
-  n_trener?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_pop() on columns of table "nabidka" */
-export type Nabidka_Stddev_Pop_Order_By = {
-  n_id?: InputMaybe<Order_By>;
-  n_max_pocet_hod?: InputMaybe<Order_By>;
-  n_pocet_hod?: InputMaybe<Order_By>;
-  n_trener?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Nabidka_Stddev_Samp_Fields = {
-  __typename?: 'nabidka_stddev_samp_fields';
-  n_id?: Maybe<Scalars['Float']>;
-  n_max_pocet_hod?: Maybe<Scalars['Float']>;
-  n_pocet_hod?: Maybe<Scalars['Float']>;
-  n_trener?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_samp() on columns of table "nabidka" */
-export type Nabidka_Stddev_Samp_Order_By = {
-  n_id?: InputMaybe<Order_By>;
-  n_max_pocet_hod?: InputMaybe<Order_By>;
-  n_pocet_hod?: InputMaybe<Order_By>;
-  n_trener?: InputMaybe<Order_By>;
-};
-
-/** aggregate sum on columns */
-export type Nabidka_Sum_Fields = {
-  __typename?: 'nabidka_sum_fields';
-  n_id?: Maybe<Scalars['bigint']>;
-  n_max_pocet_hod?: Maybe<Scalars['bigint']>;
-  n_pocet_hod?: Maybe<Scalars['smallint']>;
-  n_trener?: Maybe<Scalars['bigint']>;
-};
-
-/** order by sum() on columns of table "nabidka" */
-export type Nabidka_Sum_Order_By = {
-  n_id?: InputMaybe<Order_By>;
-  n_max_pocet_hod?: InputMaybe<Order_By>;
-  n_pocet_hod?: InputMaybe<Order_By>;
-  n_trener?: InputMaybe<Order_By>;
-};
-
-/** update columns of table "nabidka" */
-export enum Nabidka_Update_Column {
-  /** column name */
-  NDo = 'n_do',
-  /** column name */
-  NId = 'n_id',
-  /** column name */
-  NLock = 'n_lock',
-  /** column name */
-  NMaxPocetHod = 'n_max_pocet_hod',
-  /** column name */
-  NOd = 'n_od',
-  /** column name */
-  NPocetHod = 'n_pocet_hod',
-  /** column name */
-  NTimestamp = 'n_timestamp',
-  /** column name */
-  NTrener = 'n_trener',
-  /** column name */
-  NVisible = 'n_visible'
-}
-
-/** aggregate var_pop on columns */
-export type Nabidka_Var_Pop_Fields = {
-  __typename?: 'nabidka_var_pop_fields';
-  n_id?: Maybe<Scalars['Float']>;
-  n_max_pocet_hod?: Maybe<Scalars['Float']>;
-  n_pocet_hod?: Maybe<Scalars['Float']>;
-  n_trener?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_pop() on columns of table "nabidka" */
-export type Nabidka_Var_Pop_Order_By = {
-  n_id?: InputMaybe<Order_By>;
-  n_max_pocet_hod?: InputMaybe<Order_By>;
-  n_pocet_hod?: InputMaybe<Order_By>;
-  n_trener?: InputMaybe<Order_By>;
-};
-
-/** aggregate var_samp on columns */
-export type Nabidka_Var_Samp_Fields = {
-  __typename?: 'nabidka_var_samp_fields';
-  n_id?: Maybe<Scalars['Float']>;
-  n_max_pocet_hod?: Maybe<Scalars['Float']>;
-  n_pocet_hod?: Maybe<Scalars['Float']>;
-  n_trener?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_samp() on columns of table "nabidka" */
-export type Nabidka_Var_Samp_Order_By = {
-  n_id?: InputMaybe<Order_By>;
-  n_max_pocet_hod?: InputMaybe<Order_By>;
-  n_pocet_hod?: InputMaybe<Order_By>;
-  n_trener?: InputMaybe<Order_By>;
-};
-
-/** aggregate variance on columns */
-export type Nabidka_Variance_Fields = {
-  __typename?: 'nabidka_variance_fields';
-  n_id?: Maybe<Scalars['Float']>;
-  n_max_pocet_hod?: Maybe<Scalars['Float']>;
-  n_pocet_hod?: Maybe<Scalars['Float']>;
-  n_trener?: Maybe<Scalars['Float']>;
-};
-
-/** order by variance() on columns of table "nabidka" */
-export type Nabidka_Variance_Order_By = {
-  n_id?: InputMaybe<Order_By>;
-  n_max_pocet_hod?: InputMaybe<Order_By>;
-  n_pocet_hod?: InputMaybe<Order_By>;
-  n_trener?: InputMaybe<Order_By>;
-};
-
-/** Boolean expression to compare columns of type "numeric". All fields are combined with logical 'AND'. */
-export type Numeric_Comparison_Exp = {
-  _eq?: InputMaybe<Scalars['numeric']>;
-  _gt?: InputMaybe<Scalars['numeric']>;
-  _gte?: InputMaybe<Scalars['numeric']>;
-  _in?: InputMaybe<Array<Scalars['numeric']>>;
-  _is_null?: InputMaybe<Scalars['Boolean']>;
-  _lt?: InputMaybe<Scalars['numeric']>;
-  _lte?: InputMaybe<Scalars['numeric']>;
-  _neq?: InputMaybe<Scalars['numeric']>;
-  _nin?: InputMaybe<Array<Scalars['numeric']>>;
-};
-
-/** column ordering options */
-export enum Order_By {
-  /** in ascending order, nulls last */
-  Asc = 'asc',
-  /** in ascending order, nulls first */
-  AscNullsFirst = 'asc_nulls_first',
-  /** in ascending order, nulls last */
-  AscNullsLast = 'asc_nulls_last',
-  /** in descending order, nulls first */
-  Desc = 'desc',
-  /** in descending order, nulls first */
-  DescNullsFirst = 'desc_nulls_first',
-  /** in descending order, nulls last */
-  DescNullsLast = 'desc_nulls_last'
-}
-
-/** columns and relationships of "parameters" */
-export type Parameters = {
-  __typename?: 'parameters';
-  pa_name: Scalars['String'];
-  pa_value: Scalars['String'];
-};
-
-/** aggregated selection of "parameters" */
-export type Parameters_Aggregate = {
-  __typename?: 'parameters_aggregate';
-  aggregate?: Maybe<Parameters_Aggregate_Fields>;
-  nodes: Array<Parameters>;
-};
-
-/** aggregate fields of "parameters" */
-export type Parameters_Aggregate_Fields = {
-  __typename?: 'parameters_aggregate_fields';
-  count: Scalars['Int'];
-  max?: Maybe<Parameters_Max_Fields>;
-  min?: Maybe<Parameters_Min_Fields>;
-};
-
-
-/** aggregate fields of "parameters" */
-export type Parameters_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Parameters_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** Boolean expression to filter rows from the table "parameters". All fields are combined with a logical 'AND'. */
-export type Parameters_Bool_Exp = {
-  _and?: InputMaybe<Array<Parameters_Bool_Exp>>;
-  _not?: InputMaybe<Parameters_Bool_Exp>;
-  _or?: InputMaybe<Array<Parameters_Bool_Exp>>;
-  pa_name?: InputMaybe<String_Comparison_Exp>;
-  pa_value?: InputMaybe<String_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "parameters" */
-export enum Parameters_Constraint {
-  /** unique or primary key constraint */
-  Idx_24638Primary = 'idx_24638_primary'
-}
-
-/** input type for inserting data into table "parameters" */
-export type Parameters_Insert_Input = {
-  pa_name?: InputMaybe<Scalars['String']>;
-  pa_value?: InputMaybe<Scalars['String']>;
-};
-
-/** aggregate max on columns */
-export type Parameters_Max_Fields = {
-  __typename?: 'parameters_max_fields';
-  pa_name?: Maybe<Scalars['String']>;
-  pa_value?: Maybe<Scalars['String']>;
-};
-
-/** aggregate min on columns */
-export type Parameters_Min_Fields = {
-  __typename?: 'parameters_min_fields';
-  pa_name?: Maybe<Scalars['String']>;
-  pa_value?: Maybe<Scalars['String']>;
-};
-
-/** response of any mutation on the table "parameters" */
-export type Parameters_Mutation_Response = {
-  __typename?: 'parameters_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Parameters>;
-};
-
-/** on conflict condition type for table "parameters" */
-export type Parameters_On_Conflict = {
-  constraint: Parameters_Constraint;
-  update_columns?: Array<Parameters_Update_Column>;
-  where?: InputMaybe<Parameters_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "parameters". */
-export type Parameters_Order_By = {
-  pa_name?: InputMaybe<Order_By>;
-  pa_value?: InputMaybe<Order_By>;
-};
-
-/** primary key columns input for table: parameters */
-export type Parameters_Pk_Columns_Input = {
-  pa_name: Scalars['String'];
-};
-
-/** select columns of table "parameters" */
-export enum Parameters_Select_Column {
-  /** column name */
-  PaName = 'pa_name',
-  /** column name */
-  PaValue = 'pa_value'
-}
-
-/** input type for updating data in table "parameters" */
-export type Parameters_Set_Input = {
-  pa_name?: InputMaybe<Scalars['String']>;
-  pa_value?: InputMaybe<Scalars['String']>;
-};
-
-/** update columns of table "parameters" */
-export enum Parameters_Update_Column {
-  /** column name */
-  PaName = 'pa_name',
-  /** column name */
-  PaValue = 'pa_value'
-}
-
-/** columns and relationships of "pary" */
-export type Pary = {
-  __typename?: 'pary';
-  /** An array relationship */
-  nabidka_items: Array<Nabidka_Item>;
-  /** An aggregate relationship */
-  nabidka_items_aggregate: Nabidka_Item_Aggregate;
-  p_archiv: Scalars['Boolean'];
-  p_hodnoceni: Scalars['Int'];
-  p_id: Scalars['bigint'];
-  p_id_partner: Scalars['bigint'];
-  p_id_partnerka?: Maybe<Scalars['bigint']>;
-  p_lat_body: Scalars['Int'];
-  p_lat_finale: Scalars['Boolean'];
-  p_lat_trida: Scalars['pary_p_lat_trida'];
-  p_stt_body: Scalars['Int'];
-  p_stt_finale: Scalars['Boolean'];
-  p_stt_trida: Scalars['pary_p_stt_trida'];
-  p_timestamp_add: Scalars['timestamptz'];
-  p_timestamp_archive?: Maybe<Scalars['timestamptz']>;
-  /** An array relationship */
-  rozpis_items: Array<Rozpis_Item>;
-  /** An aggregate relationship */
-  rozpis_items_aggregate: Rozpis_Item_Aggregate;
-  /** An object relationship */
-  user: Users;
-};
-
-
-/** columns and relationships of "pary" */
-export type ParyNabidka_ItemsArgs = {
-  distinct_on?: InputMaybe<Array<Nabidka_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Nabidka_Item_Order_By>>;
-  where?: InputMaybe<Nabidka_Item_Bool_Exp>;
-};
-
-
-/** columns and relationships of "pary" */
-export type ParyNabidka_Items_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Nabidka_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Nabidka_Item_Order_By>>;
-  where?: InputMaybe<Nabidka_Item_Bool_Exp>;
-};
-
-
-/** columns and relationships of "pary" */
-export type ParyRozpis_ItemsArgs = {
-  distinct_on?: InputMaybe<Array<Rozpis_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Rozpis_Item_Order_By>>;
-  where?: InputMaybe<Rozpis_Item_Bool_Exp>;
-};
-
-
-/** columns and relationships of "pary" */
-export type ParyRozpis_Items_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Rozpis_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Rozpis_Item_Order_By>>;
-  where?: InputMaybe<Rozpis_Item_Bool_Exp>;
-};
-
-/** aggregated selection of "pary" */
-export type Pary_Aggregate = {
-  __typename?: 'pary_aggregate';
-  aggregate?: Maybe<Pary_Aggregate_Fields>;
-  nodes: Array<Pary>;
-};
-
-/** aggregate fields of "pary" */
-export type Pary_Aggregate_Fields = {
-  __typename?: 'pary_aggregate_fields';
-  avg?: Maybe<Pary_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Pary_Max_Fields>;
-  min?: Maybe<Pary_Min_Fields>;
-  stddev?: Maybe<Pary_Stddev_Fields>;
-  stddev_pop?: Maybe<Pary_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Pary_Stddev_Samp_Fields>;
-  sum?: Maybe<Pary_Sum_Fields>;
-  var_pop?: Maybe<Pary_Var_Pop_Fields>;
-  var_samp?: Maybe<Pary_Var_Samp_Fields>;
-  variance?: Maybe<Pary_Variance_Fields>;
-};
-
-
-/** aggregate fields of "pary" */
-export type Pary_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Pary_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** order by aggregate values of table "pary" */
-export type Pary_Aggregate_Order_By = {
-  avg?: InputMaybe<Pary_Avg_Order_By>;
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Pary_Max_Order_By>;
-  min?: InputMaybe<Pary_Min_Order_By>;
-  stddev?: InputMaybe<Pary_Stddev_Order_By>;
-  stddev_pop?: InputMaybe<Pary_Stddev_Pop_Order_By>;
-  stddev_samp?: InputMaybe<Pary_Stddev_Samp_Order_By>;
-  sum?: InputMaybe<Pary_Sum_Order_By>;
-  var_pop?: InputMaybe<Pary_Var_Pop_Order_By>;
-  var_samp?: InputMaybe<Pary_Var_Samp_Order_By>;
-  variance?: InputMaybe<Pary_Variance_Order_By>;
-};
-
-/** input type for inserting array relation for remote table "pary" */
-export type Pary_Arr_Rel_Insert_Input = {
-  data: Array<Pary_Insert_Input>;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Pary_On_Conflict>;
-};
-
-/** aggregate avg on columns */
-export type Pary_Avg_Fields = {
-  __typename?: 'pary_avg_fields';
-  p_hodnoceni?: Maybe<Scalars['Float']>;
-  p_id?: Maybe<Scalars['Float']>;
-  p_id_partner?: Maybe<Scalars['Float']>;
-  p_id_partnerka?: Maybe<Scalars['Float']>;
-  p_lat_body?: Maybe<Scalars['Float']>;
-  p_stt_body?: Maybe<Scalars['Float']>;
-};
-
-/** order by avg() on columns of table "pary" */
-export type Pary_Avg_Order_By = {
-  p_hodnoceni?: InputMaybe<Order_By>;
-  p_id?: InputMaybe<Order_By>;
-  p_id_partner?: InputMaybe<Order_By>;
-  p_id_partnerka?: InputMaybe<Order_By>;
-  p_lat_body?: InputMaybe<Order_By>;
-  p_stt_body?: InputMaybe<Order_By>;
-};
-
-/** Boolean expression to filter rows from the table "pary". All fields are combined with a logical 'AND'. */
-export type Pary_Bool_Exp = {
-  _and?: InputMaybe<Array<Pary_Bool_Exp>>;
-  _not?: InputMaybe<Pary_Bool_Exp>;
-  _or?: InputMaybe<Array<Pary_Bool_Exp>>;
-  nabidka_items?: InputMaybe<Nabidka_Item_Bool_Exp>;
-  p_archiv?: InputMaybe<Boolean_Comparison_Exp>;
-  p_hodnoceni?: InputMaybe<Int_Comparison_Exp>;
-  p_id?: InputMaybe<Bigint_Comparison_Exp>;
-  p_id_partner?: InputMaybe<Bigint_Comparison_Exp>;
-  p_id_partnerka?: InputMaybe<Bigint_Comparison_Exp>;
-  p_lat_body?: InputMaybe<Int_Comparison_Exp>;
-  p_lat_finale?: InputMaybe<Boolean_Comparison_Exp>;
-  p_lat_trida?: InputMaybe<Pary_P_Lat_Trida_Comparison_Exp>;
-  p_stt_body?: InputMaybe<Int_Comparison_Exp>;
-  p_stt_finale?: InputMaybe<Boolean_Comparison_Exp>;
-  p_stt_trida?: InputMaybe<Pary_P_Stt_Trida_Comparison_Exp>;
-  p_timestamp_add?: InputMaybe<Timestamptz_Comparison_Exp>;
-  p_timestamp_archive?: InputMaybe<Timestamptz_Comparison_Exp>;
-  rozpis_items?: InputMaybe<Rozpis_Item_Bool_Exp>;
-  user?: InputMaybe<Users_Bool_Exp>;
-};
-
-/** unique or primary key constraints on table "pary" */
-export enum Pary_Constraint {
-  /** unique or primary key constraint */
-  Idx_24646Primary = 'idx_24646_primary'
-}
-
-/** input type for incrementing numeric columns in table "pary" */
-export type Pary_Inc_Input = {
-  p_hodnoceni?: InputMaybe<Scalars['Int']>;
-  p_id?: InputMaybe<Scalars['bigint']>;
-  p_id_partner?: InputMaybe<Scalars['bigint']>;
-  p_id_partnerka?: InputMaybe<Scalars['bigint']>;
-  p_lat_body?: InputMaybe<Scalars['Int']>;
-  p_stt_body?: InputMaybe<Scalars['Int']>;
-};
-
-/** input type for inserting data into table "pary" */
-export type Pary_Insert_Input = {
-  nabidka_items?: InputMaybe<Nabidka_Item_Arr_Rel_Insert_Input>;
-  p_archiv?: InputMaybe<Scalars['Boolean']>;
-  p_hodnoceni?: InputMaybe<Scalars['Int']>;
-  p_id?: InputMaybe<Scalars['bigint']>;
-  p_id_partner?: InputMaybe<Scalars['bigint']>;
-  p_id_partnerka?: InputMaybe<Scalars['bigint']>;
-  p_lat_body?: InputMaybe<Scalars['Int']>;
-  p_lat_finale?: InputMaybe<Scalars['Boolean']>;
-  p_lat_trida?: InputMaybe<Scalars['pary_p_lat_trida']>;
-  p_stt_body?: InputMaybe<Scalars['Int']>;
-  p_stt_finale?: InputMaybe<Scalars['Boolean']>;
-  p_stt_trida?: InputMaybe<Scalars['pary_p_stt_trida']>;
-  p_timestamp_add?: InputMaybe<Scalars['timestamptz']>;
-  p_timestamp_archive?: InputMaybe<Scalars['timestamptz']>;
-  rozpis_items?: InputMaybe<Rozpis_Item_Arr_Rel_Insert_Input>;
-  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
-};
-
-/** aggregate max on columns */
-export type Pary_Max_Fields = {
-  __typename?: 'pary_max_fields';
-  p_hodnoceni?: Maybe<Scalars['Int']>;
-  p_id?: Maybe<Scalars['bigint']>;
-  p_id_partner?: Maybe<Scalars['bigint']>;
-  p_id_partnerka?: Maybe<Scalars['bigint']>;
-  p_lat_body?: Maybe<Scalars['Int']>;
-  p_stt_body?: Maybe<Scalars['Int']>;
-  p_timestamp_add?: Maybe<Scalars['timestamptz']>;
-  p_timestamp_archive?: Maybe<Scalars['timestamptz']>;
-};
-
-/** order by max() on columns of table "pary" */
-export type Pary_Max_Order_By = {
-  p_hodnoceni?: InputMaybe<Order_By>;
-  p_id?: InputMaybe<Order_By>;
-  p_id_partner?: InputMaybe<Order_By>;
-  p_id_partnerka?: InputMaybe<Order_By>;
-  p_lat_body?: InputMaybe<Order_By>;
-  p_stt_body?: InputMaybe<Order_By>;
-  p_timestamp_add?: InputMaybe<Order_By>;
-  p_timestamp_archive?: InputMaybe<Order_By>;
-};
-
-/** aggregate min on columns */
-export type Pary_Min_Fields = {
-  __typename?: 'pary_min_fields';
-  p_hodnoceni?: Maybe<Scalars['Int']>;
-  p_id?: Maybe<Scalars['bigint']>;
-  p_id_partner?: Maybe<Scalars['bigint']>;
-  p_id_partnerka?: Maybe<Scalars['bigint']>;
-  p_lat_body?: Maybe<Scalars['Int']>;
-  p_stt_body?: Maybe<Scalars['Int']>;
-  p_timestamp_add?: Maybe<Scalars['timestamptz']>;
-  p_timestamp_archive?: Maybe<Scalars['timestamptz']>;
-};
-
-/** order by min() on columns of table "pary" */
-export type Pary_Min_Order_By = {
-  p_hodnoceni?: InputMaybe<Order_By>;
-  p_id?: InputMaybe<Order_By>;
-  p_id_partner?: InputMaybe<Order_By>;
-  p_id_partnerka?: InputMaybe<Order_By>;
-  p_lat_body?: InputMaybe<Order_By>;
-  p_stt_body?: InputMaybe<Order_By>;
-  p_timestamp_add?: InputMaybe<Order_By>;
-  p_timestamp_archive?: InputMaybe<Order_By>;
-};
-
-/** response of any mutation on the table "pary" */
-export type Pary_Mutation_Response = {
-  __typename?: 'pary_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Pary>;
-};
-
-/** columns and relationships of "pary_navrh" */
-export type Pary_Navrh = {
-  __typename?: 'pary_navrh';
-  pn_id: Scalars['bigint'];
-  pn_navrhl: Scalars['bigint'];
-  pn_partner: Scalars['bigint'];
-  pn_partnerka: Scalars['bigint'];
-  /** An object relationship */
-  user: Users;
-  /** An object relationship */
-  userByPnPartner: Users;
-  /** An object relationship */
-  userByPnPartnerka: Users;
-};
-
-/** aggregated selection of "pary_navrh" */
-export type Pary_Navrh_Aggregate = {
-  __typename?: 'pary_navrh_aggregate';
-  aggregate?: Maybe<Pary_Navrh_Aggregate_Fields>;
-  nodes: Array<Pary_Navrh>;
-};
-
-/** aggregate fields of "pary_navrh" */
-export type Pary_Navrh_Aggregate_Fields = {
-  __typename?: 'pary_navrh_aggregate_fields';
-  avg?: Maybe<Pary_Navrh_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Pary_Navrh_Max_Fields>;
-  min?: Maybe<Pary_Navrh_Min_Fields>;
-  stddev?: Maybe<Pary_Navrh_Stddev_Fields>;
-  stddev_pop?: Maybe<Pary_Navrh_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Pary_Navrh_Stddev_Samp_Fields>;
-  sum?: Maybe<Pary_Navrh_Sum_Fields>;
-  var_pop?: Maybe<Pary_Navrh_Var_Pop_Fields>;
-  var_samp?: Maybe<Pary_Navrh_Var_Samp_Fields>;
-  variance?: Maybe<Pary_Navrh_Variance_Fields>;
-};
-
-
-/** aggregate fields of "pary_navrh" */
-export type Pary_Navrh_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Pary_Navrh_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** order by aggregate values of table "pary_navrh" */
-export type Pary_Navrh_Aggregate_Order_By = {
-  avg?: InputMaybe<Pary_Navrh_Avg_Order_By>;
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Pary_Navrh_Max_Order_By>;
-  min?: InputMaybe<Pary_Navrh_Min_Order_By>;
-  stddev?: InputMaybe<Pary_Navrh_Stddev_Order_By>;
-  stddev_pop?: InputMaybe<Pary_Navrh_Stddev_Pop_Order_By>;
-  stddev_samp?: InputMaybe<Pary_Navrh_Stddev_Samp_Order_By>;
-  sum?: InputMaybe<Pary_Navrh_Sum_Order_By>;
-  var_pop?: InputMaybe<Pary_Navrh_Var_Pop_Order_By>;
-  var_samp?: InputMaybe<Pary_Navrh_Var_Samp_Order_By>;
-  variance?: InputMaybe<Pary_Navrh_Variance_Order_By>;
-};
-
-/** input type for inserting array relation for remote table "pary_navrh" */
-export type Pary_Navrh_Arr_Rel_Insert_Input = {
-  data: Array<Pary_Navrh_Insert_Input>;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Pary_Navrh_On_Conflict>;
-};
-
-/** aggregate avg on columns */
-export type Pary_Navrh_Avg_Fields = {
-  __typename?: 'pary_navrh_avg_fields';
-  pn_id?: Maybe<Scalars['Float']>;
-  pn_navrhl?: Maybe<Scalars['Float']>;
-  pn_partner?: Maybe<Scalars['Float']>;
-  pn_partnerka?: Maybe<Scalars['Float']>;
-};
-
-/** order by avg() on columns of table "pary_navrh" */
-export type Pary_Navrh_Avg_Order_By = {
-  pn_id?: InputMaybe<Order_By>;
-  pn_navrhl?: InputMaybe<Order_By>;
-  pn_partner?: InputMaybe<Order_By>;
-  pn_partnerka?: InputMaybe<Order_By>;
-};
-
-/** Boolean expression to filter rows from the table "pary_navrh". All fields are combined with a logical 'AND'. */
-export type Pary_Navrh_Bool_Exp = {
-  _and?: InputMaybe<Array<Pary_Navrh_Bool_Exp>>;
-  _not?: InputMaybe<Pary_Navrh_Bool_Exp>;
-  _or?: InputMaybe<Array<Pary_Navrh_Bool_Exp>>;
-  pn_id?: InputMaybe<Bigint_Comparison_Exp>;
-  pn_navrhl?: InputMaybe<Bigint_Comparison_Exp>;
-  pn_partner?: InputMaybe<Bigint_Comparison_Exp>;
-  pn_partnerka?: InputMaybe<Bigint_Comparison_Exp>;
-  user?: InputMaybe<Users_Bool_Exp>;
-  userByPnPartner?: InputMaybe<Users_Bool_Exp>;
-  userByPnPartnerka?: InputMaybe<Users_Bool_Exp>;
-};
-
-/** unique or primary key constraints on table "pary_navrh" */
-export enum Pary_Navrh_Constraint {
-  /** unique or primary key constraint */
-  Idx_24662Primary = 'idx_24662_primary'
-}
-
-/** input type for incrementing numeric columns in table "pary_navrh" */
-export type Pary_Navrh_Inc_Input = {
-  pn_id?: InputMaybe<Scalars['bigint']>;
-  pn_navrhl?: InputMaybe<Scalars['bigint']>;
-  pn_partner?: InputMaybe<Scalars['bigint']>;
-  pn_partnerka?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "pary_navrh" */
-export type Pary_Navrh_Insert_Input = {
-  pn_id?: InputMaybe<Scalars['bigint']>;
-  pn_navrhl?: InputMaybe<Scalars['bigint']>;
-  pn_partner?: InputMaybe<Scalars['bigint']>;
-  pn_partnerka?: InputMaybe<Scalars['bigint']>;
-  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
-  userByPnPartner?: InputMaybe<Users_Obj_Rel_Insert_Input>;
-  userByPnPartnerka?: InputMaybe<Users_Obj_Rel_Insert_Input>;
-};
-
-/** aggregate max on columns */
-export type Pary_Navrh_Max_Fields = {
-  __typename?: 'pary_navrh_max_fields';
-  pn_id?: Maybe<Scalars['bigint']>;
-  pn_navrhl?: Maybe<Scalars['bigint']>;
-  pn_partner?: Maybe<Scalars['bigint']>;
-  pn_partnerka?: Maybe<Scalars['bigint']>;
-};
-
-/** order by max() on columns of table "pary_navrh" */
-export type Pary_Navrh_Max_Order_By = {
-  pn_id?: InputMaybe<Order_By>;
-  pn_navrhl?: InputMaybe<Order_By>;
-  pn_partner?: InputMaybe<Order_By>;
-  pn_partnerka?: InputMaybe<Order_By>;
-};
-
-/** aggregate min on columns */
-export type Pary_Navrh_Min_Fields = {
-  __typename?: 'pary_navrh_min_fields';
-  pn_id?: Maybe<Scalars['bigint']>;
-  pn_navrhl?: Maybe<Scalars['bigint']>;
-  pn_partner?: Maybe<Scalars['bigint']>;
-  pn_partnerka?: Maybe<Scalars['bigint']>;
-};
-
-/** order by min() on columns of table "pary_navrh" */
-export type Pary_Navrh_Min_Order_By = {
-  pn_id?: InputMaybe<Order_By>;
-  pn_navrhl?: InputMaybe<Order_By>;
-  pn_partner?: InputMaybe<Order_By>;
-  pn_partnerka?: InputMaybe<Order_By>;
-};
-
-/** response of any mutation on the table "pary_navrh" */
-export type Pary_Navrh_Mutation_Response = {
-  __typename?: 'pary_navrh_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Pary_Navrh>;
-};
-
-/** on conflict condition type for table "pary_navrh" */
-export type Pary_Navrh_On_Conflict = {
-  constraint: Pary_Navrh_Constraint;
-  update_columns?: Array<Pary_Navrh_Update_Column>;
-  where?: InputMaybe<Pary_Navrh_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "pary_navrh". */
-export type Pary_Navrh_Order_By = {
-  pn_id?: InputMaybe<Order_By>;
-  pn_navrhl?: InputMaybe<Order_By>;
-  pn_partner?: InputMaybe<Order_By>;
-  pn_partnerka?: InputMaybe<Order_By>;
-  user?: InputMaybe<Users_Order_By>;
-  userByPnPartner?: InputMaybe<Users_Order_By>;
-  userByPnPartnerka?: InputMaybe<Users_Order_By>;
-};
-
-/** primary key columns input for table: pary_navrh */
-export type Pary_Navrh_Pk_Columns_Input = {
-  pn_id: Scalars['bigint'];
-};
-
-/** select columns of table "pary_navrh" */
-export enum Pary_Navrh_Select_Column {
-  /** column name */
-  PnId = 'pn_id',
-  /** column name */
-  PnNavrhl = 'pn_navrhl',
-  /** column name */
-  PnPartner = 'pn_partner',
-  /** column name */
-  PnPartnerka = 'pn_partnerka'
-}
-
-/** input type for updating data in table "pary_navrh" */
-export type Pary_Navrh_Set_Input = {
-  pn_id?: InputMaybe<Scalars['bigint']>;
-  pn_navrhl?: InputMaybe<Scalars['bigint']>;
-  pn_partner?: InputMaybe<Scalars['bigint']>;
-  pn_partnerka?: InputMaybe<Scalars['bigint']>;
-};
-
-/** aggregate stddev on columns */
-export type Pary_Navrh_Stddev_Fields = {
-  __typename?: 'pary_navrh_stddev_fields';
-  pn_id?: Maybe<Scalars['Float']>;
-  pn_navrhl?: Maybe<Scalars['Float']>;
-  pn_partner?: Maybe<Scalars['Float']>;
-  pn_partnerka?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev() on columns of table "pary_navrh" */
-export type Pary_Navrh_Stddev_Order_By = {
-  pn_id?: InputMaybe<Order_By>;
-  pn_navrhl?: InputMaybe<Order_By>;
-  pn_partner?: InputMaybe<Order_By>;
-  pn_partnerka?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Pary_Navrh_Stddev_Pop_Fields = {
-  __typename?: 'pary_navrh_stddev_pop_fields';
-  pn_id?: Maybe<Scalars['Float']>;
-  pn_navrhl?: Maybe<Scalars['Float']>;
-  pn_partner?: Maybe<Scalars['Float']>;
-  pn_partnerka?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_pop() on columns of table "pary_navrh" */
-export type Pary_Navrh_Stddev_Pop_Order_By = {
-  pn_id?: InputMaybe<Order_By>;
-  pn_navrhl?: InputMaybe<Order_By>;
-  pn_partner?: InputMaybe<Order_By>;
-  pn_partnerka?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Pary_Navrh_Stddev_Samp_Fields = {
-  __typename?: 'pary_navrh_stddev_samp_fields';
-  pn_id?: Maybe<Scalars['Float']>;
-  pn_navrhl?: Maybe<Scalars['Float']>;
-  pn_partner?: Maybe<Scalars['Float']>;
-  pn_partnerka?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_samp() on columns of table "pary_navrh" */
-export type Pary_Navrh_Stddev_Samp_Order_By = {
-  pn_id?: InputMaybe<Order_By>;
-  pn_navrhl?: InputMaybe<Order_By>;
-  pn_partner?: InputMaybe<Order_By>;
-  pn_partnerka?: InputMaybe<Order_By>;
-};
-
-/** aggregate sum on columns */
-export type Pary_Navrh_Sum_Fields = {
-  __typename?: 'pary_navrh_sum_fields';
-  pn_id?: Maybe<Scalars['bigint']>;
-  pn_navrhl?: Maybe<Scalars['bigint']>;
-  pn_partner?: Maybe<Scalars['bigint']>;
-  pn_partnerka?: Maybe<Scalars['bigint']>;
-};
-
-/** order by sum() on columns of table "pary_navrh" */
-export type Pary_Navrh_Sum_Order_By = {
-  pn_id?: InputMaybe<Order_By>;
-  pn_navrhl?: InputMaybe<Order_By>;
-  pn_partner?: InputMaybe<Order_By>;
-  pn_partnerka?: InputMaybe<Order_By>;
-};
-
-/** update columns of table "pary_navrh" */
-export enum Pary_Navrh_Update_Column {
-  /** column name */
-  PnId = 'pn_id',
-  /** column name */
-  PnNavrhl = 'pn_navrhl',
-  /** column name */
-  PnPartner = 'pn_partner',
-  /** column name */
-  PnPartnerka = 'pn_partnerka'
-}
-
-/** aggregate var_pop on columns */
-export type Pary_Navrh_Var_Pop_Fields = {
-  __typename?: 'pary_navrh_var_pop_fields';
-  pn_id?: Maybe<Scalars['Float']>;
-  pn_navrhl?: Maybe<Scalars['Float']>;
-  pn_partner?: Maybe<Scalars['Float']>;
-  pn_partnerka?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_pop() on columns of table "pary_navrh" */
-export type Pary_Navrh_Var_Pop_Order_By = {
-  pn_id?: InputMaybe<Order_By>;
-  pn_navrhl?: InputMaybe<Order_By>;
-  pn_partner?: InputMaybe<Order_By>;
-  pn_partnerka?: InputMaybe<Order_By>;
-};
-
-/** aggregate var_samp on columns */
-export type Pary_Navrh_Var_Samp_Fields = {
-  __typename?: 'pary_navrh_var_samp_fields';
-  pn_id?: Maybe<Scalars['Float']>;
-  pn_navrhl?: Maybe<Scalars['Float']>;
-  pn_partner?: Maybe<Scalars['Float']>;
-  pn_partnerka?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_samp() on columns of table "pary_navrh" */
-export type Pary_Navrh_Var_Samp_Order_By = {
-  pn_id?: InputMaybe<Order_By>;
-  pn_navrhl?: InputMaybe<Order_By>;
-  pn_partner?: InputMaybe<Order_By>;
-  pn_partnerka?: InputMaybe<Order_By>;
-};
-
-/** aggregate variance on columns */
-export type Pary_Navrh_Variance_Fields = {
-  __typename?: 'pary_navrh_variance_fields';
-  pn_id?: Maybe<Scalars['Float']>;
-  pn_navrhl?: Maybe<Scalars['Float']>;
-  pn_partner?: Maybe<Scalars['Float']>;
-  pn_partnerka?: Maybe<Scalars['Float']>;
-};
-
-/** order by variance() on columns of table "pary_navrh" */
-export type Pary_Navrh_Variance_Order_By = {
-  pn_id?: InputMaybe<Order_By>;
-  pn_navrhl?: InputMaybe<Order_By>;
-  pn_partner?: InputMaybe<Order_By>;
-  pn_partnerka?: InputMaybe<Order_By>;
-};
-
-/** input type for inserting object relation for remote table "pary" */
-export type Pary_Obj_Rel_Insert_Input = {
-  data: Pary_Insert_Input;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Pary_On_Conflict>;
-};
-
-/** on conflict condition type for table "pary" */
-export type Pary_On_Conflict = {
-  constraint: Pary_Constraint;
-  update_columns?: Array<Pary_Update_Column>;
-  where?: InputMaybe<Pary_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "pary". */
-export type Pary_Order_By = {
-  nabidka_items_aggregate?: InputMaybe<Nabidka_Item_Aggregate_Order_By>;
-  p_archiv?: InputMaybe<Order_By>;
-  p_hodnoceni?: InputMaybe<Order_By>;
-  p_id?: InputMaybe<Order_By>;
-  p_id_partner?: InputMaybe<Order_By>;
-  p_id_partnerka?: InputMaybe<Order_By>;
-  p_lat_body?: InputMaybe<Order_By>;
-  p_lat_finale?: InputMaybe<Order_By>;
-  p_lat_trida?: InputMaybe<Order_By>;
-  p_stt_body?: InputMaybe<Order_By>;
-  p_stt_finale?: InputMaybe<Order_By>;
-  p_stt_trida?: InputMaybe<Order_By>;
-  p_timestamp_add?: InputMaybe<Order_By>;
-  p_timestamp_archive?: InputMaybe<Order_By>;
-  rozpis_items_aggregate?: InputMaybe<Rozpis_Item_Aggregate_Order_By>;
-  user?: InputMaybe<Users_Order_By>;
-};
-
-/** Boolean expression to compare columns of type "pary_p_lat_trida". All fields are combined with logical 'AND'. */
-export type Pary_P_Lat_Trida_Comparison_Exp = {
-  _eq?: InputMaybe<Scalars['pary_p_lat_trida']>;
-  _gt?: InputMaybe<Scalars['pary_p_lat_trida']>;
-  _gte?: InputMaybe<Scalars['pary_p_lat_trida']>;
-  _in?: InputMaybe<Array<Scalars['pary_p_lat_trida']>>;
-  _is_null?: InputMaybe<Scalars['Boolean']>;
-  _lt?: InputMaybe<Scalars['pary_p_lat_trida']>;
-  _lte?: InputMaybe<Scalars['pary_p_lat_trida']>;
-  _neq?: InputMaybe<Scalars['pary_p_lat_trida']>;
-  _nin?: InputMaybe<Array<Scalars['pary_p_lat_trida']>>;
-};
-
-/** Boolean expression to compare columns of type "pary_p_stt_trida". All fields are combined with logical 'AND'. */
-export type Pary_P_Stt_Trida_Comparison_Exp = {
-  _eq?: InputMaybe<Scalars['pary_p_stt_trida']>;
-  _gt?: InputMaybe<Scalars['pary_p_stt_trida']>;
-  _gte?: InputMaybe<Scalars['pary_p_stt_trida']>;
-  _in?: InputMaybe<Array<Scalars['pary_p_stt_trida']>>;
-  _is_null?: InputMaybe<Scalars['Boolean']>;
-  _lt?: InputMaybe<Scalars['pary_p_stt_trida']>;
-  _lte?: InputMaybe<Scalars['pary_p_stt_trida']>;
-  _neq?: InputMaybe<Scalars['pary_p_stt_trida']>;
-  _nin?: InputMaybe<Array<Scalars['pary_p_stt_trida']>>;
-};
-
-/** primary key columns input for table: pary */
-export type Pary_Pk_Columns_Input = {
-  p_id: Scalars['bigint'];
-};
-
-/** select columns of table "pary" */
-export enum Pary_Select_Column {
-  /** column name */
-  PArchiv = 'p_archiv',
-  /** column name */
-  PHodnoceni = 'p_hodnoceni',
-  /** column name */
-  PId = 'p_id',
-  /** column name */
-  PIdPartner = 'p_id_partner',
-  /** column name */
-  PIdPartnerka = 'p_id_partnerka',
-  /** column name */
-  PLatBody = 'p_lat_body',
-  /** column name */
-  PLatFinale = 'p_lat_finale',
-  /** column name */
-  PLatTrida = 'p_lat_trida',
-  /** column name */
-  PSttBody = 'p_stt_body',
-  /** column name */
-  PSttFinale = 'p_stt_finale',
-  /** column name */
-  PSttTrida = 'p_stt_trida',
-  /** column name */
-  PTimestampAdd = 'p_timestamp_add',
-  /** column name */
-  PTimestampArchive = 'p_timestamp_archive'
-}
-
-/** input type for updating data in table "pary" */
-export type Pary_Set_Input = {
-  p_archiv?: InputMaybe<Scalars['Boolean']>;
-  p_hodnoceni?: InputMaybe<Scalars['Int']>;
-  p_id?: InputMaybe<Scalars['bigint']>;
-  p_id_partner?: InputMaybe<Scalars['bigint']>;
-  p_id_partnerka?: InputMaybe<Scalars['bigint']>;
-  p_lat_body?: InputMaybe<Scalars['Int']>;
-  p_lat_finale?: InputMaybe<Scalars['Boolean']>;
-  p_lat_trida?: InputMaybe<Scalars['pary_p_lat_trida']>;
-  p_stt_body?: InputMaybe<Scalars['Int']>;
-  p_stt_finale?: InputMaybe<Scalars['Boolean']>;
-  p_stt_trida?: InputMaybe<Scalars['pary_p_stt_trida']>;
-  p_timestamp_add?: InputMaybe<Scalars['timestamptz']>;
-  p_timestamp_archive?: InputMaybe<Scalars['timestamptz']>;
-};
-
-/** aggregate stddev on columns */
-export type Pary_Stddev_Fields = {
-  __typename?: 'pary_stddev_fields';
-  p_hodnoceni?: Maybe<Scalars['Float']>;
-  p_id?: Maybe<Scalars['Float']>;
-  p_id_partner?: Maybe<Scalars['Float']>;
-  p_id_partnerka?: Maybe<Scalars['Float']>;
-  p_lat_body?: Maybe<Scalars['Float']>;
-  p_stt_body?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev() on columns of table "pary" */
-export type Pary_Stddev_Order_By = {
-  p_hodnoceni?: InputMaybe<Order_By>;
-  p_id?: InputMaybe<Order_By>;
-  p_id_partner?: InputMaybe<Order_By>;
-  p_id_partnerka?: InputMaybe<Order_By>;
-  p_lat_body?: InputMaybe<Order_By>;
-  p_stt_body?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Pary_Stddev_Pop_Fields = {
-  __typename?: 'pary_stddev_pop_fields';
-  p_hodnoceni?: Maybe<Scalars['Float']>;
-  p_id?: Maybe<Scalars['Float']>;
-  p_id_partner?: Maybe<Scalars['Float']>;
-  p_id_partnerka?: Maybe<Scalars['Float']>;
-  p_lat_body?: Maybe<Scalars['Float']>;
-  p_stt_body?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_pop() on columns of table "pary" */
-export type Pary_Stddev_Pop_Order_By = {
-  p_hodnoceni?: InputMaybe<Order_By>;
-  p_id?: InputMaybe<Order_By>;
-  p_id_partner?: InputMaybe<Order_By>;
-  p_id_partnerka?: InputMaybe<Order_By>;
-  p_lat_body?: InputMaybe<Order_By>;
-  p_stt_body?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Pary_Stddev_Samp_Fields = {
-  __typename?: 'pary_stddev_samp_fields';
-  p_hodnoceni?: Maybe<Scalars['Float']>;
-  p_id?: Maybe<Scalars['Float']>;
-  p_id_partner?: Maybe<Scalars['Float']>;
-  p_id_partnerka?: Maybe<Scalars['Float']>;
-  p_lat_body?: Maybe<Scalars['Float']>;
-  p_stt_body?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_samp() on columns of table "pary" */
-export type Pary_Stddev_Samp_Order_By = {
-  p_hodnoceni?: InputMaybe<Order_By>;
-  p_id?: InputMaybe<Order_By>;
-  p_id_partner?: InputMaybe<Order_By>;
-  p_id_partnerka?: InputMaybe<Order_By>;
-  p_lat_body?: InputMaybe<Order_By>;
-  p_stt_body?: InputMaybe<Order_By>;
-};
-
-/** aggregate sum on columns */
-export type Pary_Sum_Fields = {
-  __typename?: 'pary_sum_fields';
-  p_hodnoceni?: Maybe<Scalars['Int']>;
-  p_id?: Maybe<Scalars['bigint']>;
-  p_id_partner?: Maybe<Scalars['bigint']>;
-  p_id_partnerka?: Maybe<Scalars['bigint']>;
-  p_lat_body?: Maybe<Scalars['Int']>;
-  p_stt_body?: Maybe<Scalars['Int']>;
-};
-
-/** order by sum() on columns of table "pary" */
-export type Pary_Sum_Order_By = {
-  p_hodnoceni?: InputMaybe<Order_By>;
-  p_id?: InputMaybe<Order_By>;
-  p_id_partner?: InputMaybe<Order_By>;
-  p_id_partnerka?: InputMaybe<Order_By>;
-  p_lat_body?: InputMaybe<Order_By>;
-  p_stt_body?: InputMaybe<Order_By>;
-};
-
-/** update columns of table "pary" */
-export enum Pary_Update_Column {
-  /** column name */
-  PArchiv = 'p_archiv',
-  /** column name */
-  PHodnoceni = 'p_hodnoceni',
-  /** column name */
-  PId = 'p_id',
-  /** column name */
-  PIdPartner = 'p_id_partner',
-  /** column name */
-  PIdPartnerka = 'p_id_partnerka',
-  /** column name */
-  PLatBody = 'p_lat_body',
-  /** column name */
-  PLatFinale = 'p_lat_finale',
-  /** column name */
-  PLatTrida = 'p_lat_trida',
-  /** column name */
-  PSttBody = 'p_stt_body',
-  /** column name */
-  PSttFinale = 'p_stt_finale',
-  /** column name */
-  PSttTrida = 'p_stt_trida',
-  /** column name */
-  PTimestampAdd = 'p_timestamp_add',
-  /** column name */
-  PTimestampArchive = 'p_timestamp_archive'
-}
-
-/** aggregate var_pop on columns */
-export type Pary_Var_Pop_Fields = {
-  __typename?: 'pary_var_pop_fields';
-  p_hodnoceni?: Maybe<Scalars['Float']>;
-  p_id?: Maybe<Scalars['Float']>;
-  p_id_partner?: Maybe<Scalars['Float']>;
-  p_id_partnerka?: Maybe<Scalars['Float']>;
-  p_lat_body?: Maybe<Scalars['Float']>;
-  p_stt_body?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_pop() on columns of table "pary" */
-export type Pary_Var_Pop_Order_By = {
-  p_hodnoceni?: InputMaybe<Order_By>;
-  p_id?: InputMaybe<Order_By>;
-  p_id_partner?: InputMaybe<Order_By>;
-  p_id_partnerka?: InputMaybe<Order_By>;
-  p_lat_body?: InputMaybe<Order_By>;
-  p_stt_body?: InputMaybe<Order_By>;
-};
-
-/** aggregate var_samp on columns */
-export type Pary_Var_Samp_Fields = {
-  __typename?: 'pary_var_samp_fields';
-  p_hodnoceni?: Maybe<Scalars['Float']>;
-  p_id?: Maybe<Scalars['Float']>;
-  p_id_partner?: Maybe<Scalars['Float']>;
-  p_id_partnerka?: Maybe<Scalars['Float']>;
-  p_lat_body?: Maybe<Scalars['Float']>;
-  p_stt_body?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_samp() on columns of table "pary" */
-export type Pary_Var_Samp_Order_By = {
-  p_hodnoceni?: InputMaybe<Order_By>;
-  p_id?: InputMaybe<Order_By>;
-  p_id_partner?: InputMaybe<Order_By>;
-  p_id_partnerka?: InputMaybe<Order_By>;
-  p_lat_body?: InputMaybe<Order_By>;
-  p_stt_body?: InputMaybe<Order_By>;
-};
-
-/** aggregate variance on columns */
-export type Pary_Variance_Fields = {
-  __typename?: 'pary_variance_fields';
-  p_hodnoceni?: Maybe<Scalars['Float']>;
-  p_id?: Maybe<Scalars['Float']>;
-  p_id_partner?: Maybe<Scalars['Float']>;
-  p_id_partnerka?: Maybe<Scalars['Float']>;
-  p_lat_body?: Maybe<Scalars['Float']>;
-  p_stt_body?: Maybe<Scalars['Float']>;
-};
-
-/** order by variance() on columns of table "pary" */
-export type Pary_Variance_Order_By = {
-  p_hodnoceni?: InputMaybe<Order_By>;
-  p_id?: InputMaybe<Order_By>;
-  p_id_partner?: InputMaybe<Order_By>;
-  p_id_partnerka?: InputMaybe<Order_By>;
-  p_lat_body?: InputMaybe<Order_By>;
-  p_stt_body?: InputMaybe<Order_By>;
-};
-
-/** columns and relationships of "permissions" */
-export type Permissions = {
-  __typename?: 'permissions';
-  pe_akce: Scalars['Int'];
-  pe_aktuality: Scalars['Int'];
-  pe_ankety: Scalars['Int'];
-  pe_description: Scalars['String'];
-  pe_dokumenty: Scalars['Int'];
-  pe_galerie: Scalars['Int'];
-  pe_id: Scalars['bigint'];
-  pe_inzerce: Scalars['Int'];
-  pe_konzole: Scalars['Int'];
-  pe_main: Scalars['Int'];
-  pe_nabidka: Scalars['Int'];
-  pe_name: Scalars['String'];
-  pe_nastenka: Scalars['Int'];
-  pe_novinky: Scalars['Int'];
-  pe_pary: Scalars['Int'];
-  pe_permissions: Scalars['Int'];
-  pe_platby: Scalars['Int'];
-  pe_rozpis: Scalars['Int'];
-  pe_skupiny: Scalars['Int'];
-  pe_users: Scalars['Int'];
-  /** An array relationship */
-  users: Array<Users>;
-  /** An aggregate relationship */
-  users_aggregate: Users_Aggregate;
-};
-
-
-/** columns and relationships of "permissions" */
-export type PermissionsUsersArgs = {
-  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Users_Order_By>>;
-  where?: InputMaybe<Users_Bool_Exp>;
-};
-
-
-/** columns and relationships of "permissions" */
-export type PermissionsUsers_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Users_Order_By>>;
-  where?: InputMaybe<Users_Bool_Exp>;
-};
-
-/** aggregated selection of "permissions" */
-export type Permissions_Aggregate = {
-  __typename?: 'permissions_aggregate';
-  aggregate?: Maybe<Permissions_Aggregate_Fields>;
-  nodes: Array<Permissions>;
-};
-
-/** aggregate fields of "permissions" */
-export type Permissions_Aggregate_Fields = {
-  __typename?: 'permissions_aggregate_fields';
-  avg?: Maybe<Permissions_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Permissions_Max_Fields>;
-  min?: Maybe<Permissions_Min_Fields>;
-  stddev?: Maybe<Permissions_Stddev_Fields>;
-  stddev_pop?: Maybe<Permissions_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Permissions_Stddev_Samp_Fields>;
-  sum?: Maybe<Permissions_Sum_Fields>;
-  var_pop?: Maybe<Permissions_Var_Pop_Fields>;
-  var_samp?: Maybe<Permissions_Var_Samp_Fields>;
-  variance?: Maybe<Permissions_Variance_Fields>;
-};
-
-
-/** aggregate fields of "permissions" */
-export type Permissions_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Permissions_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate avg on columns */
-export type Permissions_Avg_Fields = {
-  __typename?: 'permissions_avg_fields';
-  pe_akce?: Maybe<Scalars['Float']>;
-  pe_aktuality?: Maybe<Scalars['Float']>;
-  pe_ankety?: Maybe<Scalars['Float']>;
-  pe_dokumenty?: Maybe<Scalars['Float']>;
-  pe_galerie?: Maybe<Scalars['Float']>;
-  pe_id?: Maybe<Scalars['Float']>;
-  pe_inzerce?: Maybe<Scalars['Float']>;
-  pe_konzole?: Maybe<Scalars['Float']>;
-  pe_main?: Maybe<Scalars['Float']>;
-  pe_nabidka?: Maybe<Scalars['Float']>;
-  pe_nastenka?: Maybe<Scalars['Float']>;
-  pe_novinky?: Maybe<Scalars['Float']>;
-  pe_pary?: Maybe<Scalars['Float']>;
-  pe_permissions?: Maybe<Scalars['Float']>;
-  pe_platby?: Maybe<Scalars['Float']>;
-  pe_rozpis?: Maybe<Scalars['Float']>;
-  pe_skupiny?: Maybe<Scalars['Float']>;
-  pe_users?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to filter rows from the table "permissions". All fields are combined with a logical 'AND'. */
-export type Permissions_Bool_Exp = {
-  _and?: InputMaybe<Array<Permissions_Bool_Exp>>;
-  _not?: InputMaybe<Permissions_Bool_Exp>;
-  _or?: InputMaybe<Array<Permissions_Bool_Exp>>;
-  pe_akce?: InputMaybe<Int_Comparison_Exp>;
-  pe_aktuality?: InputMaybe<Int_Comparison_Exp>;
-  pe_ankety?: InputMaybe<Int_Comparison_Exp>;
-  pe_description?: InputMaybe<String_Comparison_Exp>;
-  pe_dokumenty?: InputMaybe<Int_Comparison_Exp>;
-  pe_galerie?: InputMaybe<Int_Comparison_Exp>;
-  pe_id?: InputMaybe<Bigint_Comparison_Exp>;
-  pe_inzerce?: InputMaybe<Int_Comparison_Exp>;
-  pe_konzole?: InputMaybe<Int_Comparison_Exp>;
-  pe_main?: InputMaybe<Int_Comparison_Exp>;
-  pe_nabidka?: InputMaybe<Int_Comparison_Exp>;
-  pe_name?: InputMaybe<String_Comparison_Exp>;
-  pe_nastenka?: InputMaybe<Int_Comparison_Exp>;
-  pe_novinky?: InputMaybe<Int_Comparison_Exp>;
-  pe_pary?: InputMaybe<Int_Comparison_Exp>;
-  pe_permissions?: InputMaybe<Int_Comparison_Exp>;
-  pe_platby?: InputMaybe<Int_Comparison_Exp>;
-  pe_rozpis?: InputMaybe<Int_Comparison_Exp>;
-  pe_skupiny?: InputMaybe<Int_Comparison_Exp>;
-  pe_users?: InputMaybe<Int_Comparison_Exp>;
-  users?: InputMaybe<Users_Bool_Exp>;
-};
-
-/** unique or primary key constraints on table "permissions" */
-export enum Permissions_Constraint {
-  /** unique or primary key constraint */
-  Idx_24668Primary = 'idx_24668_primary'
-}
-
-/** input type for incrementing numeric columns in table "permissions" */
-export type Permissions_Inc_Input = {
-  pe_akce?: InputMaybe<Scalars['Int']>;
-  pe_aktuality?: InputMaybe<Scalars['Int']>;
-  pe_ankety?: InputMaybe<Scalars['Int']>;
-  pe_dokumenty?: InputMaybe<Scalars['Int']>;
-  pe_galerie?: InputMaybe<Scalars['Int']>;
-  pe_id?: InputMaybe<Scalars['bigint']>;
-  pe_inzerce?: InputMaybe<Scalars['Int']>;
-  pe_konzole?: InputMaybe<Scalars['Int']>;
-  pe_main?: InputMaybe<Scalars['Int']>;
-  pe_nabidka?: InputMaybe<Scalars['Int']>;
-  pe_nastenka?: InputMaybe<Scalars['Int']>;
-  pe_novinky?: InputMaybe<Scalars['Int']>;
-  pe_pary?: InputMaybe<Scalars['Int']>;
-  pe_permissions?: InputMaybe<Scalars['Int']>;
-  pe_platby?: InputMaybe<Scalars['Int']>;
-  pe_rozpis?: InputMaybe<Scalars['Int']>;
-  pe_skupiny?: InputMaybe<Scalars['Int']>;
-  pe_users?: InputMaybe<Scalars['Int']>;
-};
-
-/** input type for inserting data into table "permissions" */
-export type Permissions_Insert_Input = {
-  pe_akce?: InputMaybe<Scalars['Int']>;
-  pe_aktuality?: InputMaybe<Scalars['Int']>;
-  pe_ankety?: InputMaybe<Scalars['Int']>;
-  pe_description?: InputMaybe<Scalars['String']>;
-  pe_dokumenty?: InputMaybe<Scalars['Int']>;
-  pe_galerie?: InputMaybe<Scalars['Int']>;
-  pe_id?: InputMaybe<Scalars['bigint']>;
-  pe_inzerce?: InputMaybe<Scalars['Int']>;
-  pe_konzole?: InputMaybe<Scalars['Int']>;
-  pe_main?: InputMaybe<Scalars['Int']>;
-  pe_nabidka?: InputMaybe<Scalars['Int']>;
-  pe_name?: InputMaybe<Scalars['String']>;
-  pe_nastenka?: InputMaybe<Scalars['Int']>;
-  pe_novinky?: InputMaybe<Scalars['Int']>;
-  pe_pary?: InputMaybe<Scalars['Int']>;
-  pe_permissions?: InputMaybe<Scalars['Int']>;
-  pe_platby?: InputMaybe<Scalars['Int']>;
-  pe_rozpis?: InputMaybe<Scalars['Int']>;
-  pe_skupiny?: InputMaybe<Scalars['Int']>;
-  pe_users?: InputMaybe<Scalars['Int']>;
-  users?: InputMaybe<Users_Arr_Rel_Insert_Input>;
-};
-
-/** aggregate max on columns */
-export type Permissions_Max_Fields = {
-  __typename?: 'permissions_max_fields';
-  pe_akce?: Maybe<Scalars['Int']>;
-  pe_aktuality?: Maybe<Scalars['Int']>;
-  pe_ankety?: Maybe<Scalars['Int']>;
-  pe_description?: Maybe<Scalars['String']>;
-  pe_dokumenty?: Maybe<Scalars['Int']>;
-  pe_galerie?: Maybe<Scalars['Int']>;
-  pe_id?: Maybe<Scalars['bigint']>;
-  pe_inzerce?: Maybe<Scalars['Int']>;
-  pe_konzole?: Maybe<Scalars['Int']>;
-  pe_main?: Maybe<Scalars['Int']>;
-  pe_nabidka?: Maybe<Scalars['Int']>;
-  pe_name?: Maybe<Scalars['String']>;
-  pe_nastenka?: Maybe<Scalars['Int']>;
-  pe_novinky?: Maybe<Scalars['Int']>;
-  pe_pary?: Maybe<Scalars['Int']>;
-  pe_permissions?: Maybe<Scalars['Int']>;
-  pe_platby?: Maybe<Scalars['Int']>;
-  pe_rozpis?: Maybe<Scalars['Int']>;
-  pe_skupiny?: Maybe<Scalars['Int']>;
-  pe_users?: Maybe<Scalars['Int']>;
-};
-
-/** aggregate min on columns */
-export type Permissions_Min_Fields = {
-  __typename?: 'permissions_min_fields';
-  pe_akce?: Maybe<Scalars['Int']>;
-  pe_aktuality?: Maybe<Scalars['Int']>;
-  pe_ankety?: Maybe<Scalars['Int']>;
-  pe_description?: Maybe<Scalars['String']>;
-  pe_dokumenty?: Maybe<Scalars['Int']>;
-  pe_galerie?: Maybe<Scalars['Int']>;
-  pe_id?: Maybe<Scalars['bigint']>;
-  pe_inzerce?: Maybe<Scalars['Int']>;
-  pe_konzole?: Maybe<Scalars['Int']>;
-  pe_main?: Maybe<Scalars['Int']>;
-  pe_nabidka?: Maybe<Scalars['Int']>;
-  pe_name?: Maybe<Scalars['String']>;
-  pe_nastenka?: Maybe<Scalars['Int']>;
-  pe_novinky?: Maybe<Scalars['Int']>;
-  pe_pary?: Maybe<Scalars['Int']>;
-  pe_permissions?: Maybe<Scalars['Int']>;
-  pe_platby?: Maybe<Scalars['Int']>;
-  pe_rozpis?: Maybe<Scalars['Int']>;
-  pe_skupiny?: Maybe<Scalars['Int']>;
-  pe_users?: Maybe<Scalars['Int']>;
-};
-
-/** response of any mutation on the table "permissions" */
-export type Permissions_Mutation_Response = {
-  __typename?: 'permissions_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Permissions>;
-};
-
-/** input type for inserting object relation for remote table "permissions" */
-export type Permissions_Obj_Rel_Insert_Input = {
-  data: Permissions_Insert_Input;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Permissions_On_Conflict>;
-};
-
-/** on conflict condition type for table "permissions" */
-export type Permissions_On_Conflict = {
-  constraint: Permissions_Constraint;
-  update_columns?: Array<Permissions_Update_Column>;
-  where?: InputMaybe<Permissions_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "permissions". */
-export type Permissions_Order_By = {
-  pe_akce?: InputMaybe<Order_By>;
-  pe_aktuality?: InputMaybe<Order_By>;
-  pe_ankety?: InputMaybe<Order_By>;
-  pe_description?: InputMaybe<Order_By>;
-  pe_dokumenty?: InputMaybe<Order_By>;
-  pe_galerie?: InputMaybe<Order_By>;
-  pe_id?: InputMaybe<Order_By>;
-  pe_inzerce?: InputMaybe<Order_By>;
-  pe_konzole?: InputMaybe<Order_By>;
-  pe_main?: InputMaybe<Order_By>;
-  pe_nabidka?: InputMaybe<Order_By>;
-  pe_name?: InputMaybe<Order_By>;
-  pe_nastenka?: InputMaybe<Order_By>;
-  pe_novinky?: InputMaybe<Order_By>;
-  pe_pary?: InputMaybe<Order_By>;
-  pe_permissions?: InputMaybe<Order_By>;
-  pe_platby?: InputMaybe<Order_By>;
-  pe_rozpis?: InputMaybe<Order_By>;
-  pe_skupiny?: InputMaybe<Order_By>;
-  pe_users?: InputMaybe<Order_By>;
-  users_aggregate?: InputMaybe<Users_Aggregate_Order_By>;
-};
-
-/** primary key columns input for table: permissions */
-export type Permissions_Pk_Columns_Input = {
-  pe_id: Scalars['bigint'];
-};
-
-/** select columns of table "permissions" */
-export enum Permissions_Select_Column {
-  /** column name */
-  PeAkce = 'pe_akce',
-  /** column name */
-  PeAktuality = 'pe_aktuality',
-  /** column name */
-  PeAnkety = 'pe_ankety',
-  /** column name */
-  PeDescription = 'pe_description',
-  /** column name */
-  PeDokumenty = 'pe_dokumenty',
-  /** column name */
-  PeGalerie = 'pe_galerie',
-  /** column name */
-  PeId = 'pe_id',
-  /** column name */
-  PeInzerce = 'pe_inzerce',
-  /** column name */
-  PeKonzole = 'pe_konzole',
-  /** column name */
-  PeMain = 'pe_main',
-  /** column name */
-  PeNabidka = 'pe_nabidka',
-  /** column name */
-  PeName = 'pe_name',
-  /** column name */
-  PeNastenka = 'pe_nastenka',
-  /** column name */
-  PeNovinky = 'pe_novinky',
-  /** column name */
-  PePary = 'pe_pary',
-  /** column name */
-  PePermissions = 'pe_permissions',
-  /** column name */
-  PePlatby = 'pe_platby',
-  /** column name */
-  PeRozpis = 'pe_rozpis',
-  /** column name */
-  PeSkupiny = 'pe_skupiny',
-  /** column name */
-  PeUsers = 'pe_users'
-}
-
-/** input type for updating data in table "permissions" */
-export type Permissions_Set_Input = {
-  pe_akce?: InputMaybe<Scalars['Int']>;
-  pe_aktuality?: InputMaybe<Scalars['Int']>;
-  pe_ankety?: InputMaybe<Scalars['Int']>;
-  pe_description?: InputMaybe<Scalars['String']>;
-  pe_dokumenty?: InputMaybe<Scalars['Int']>;
-  pe_galerie?: InputMaybe<Scalars['Int']>;
-  pe_id?: InputMaybe<Scalars['bigint']>;
-  pe_inzerce?: InputMaybe<Scalars['Int']>;
-  pe_konzole?: InputMaybe<Scalars['Int']>;
-  pe_main?: InputMaybe<Scalars['Int']>;
-  pe_nabidka?: InputMaybe<Scalars['Int']>;
-  pe_name?: InputMaybe<Scalars['String']>;
-  pe_nastenka?: InputMaybe<Scalars['Int']>;
-  pe_novinky?: InputMaybe<Scalars['Int']>;
-  pe_pary?: InputMaybe<Scalars['Int']>;
-  pe_permissions?: InputMaybe<Scalars['Int']>;
-  pe_platby?: InputMaybe<Scalars['Int']>;
-  pe_rozpis?: InputMaybe<Scalars['Int']>;
-  pe_skupiny?: InputMaybe<Scalars['Int']>;
-  pe_users?: InputMaybe<Scalars['Int']>;
-};
-
-/** aggregate stddev on columns */
-export type Permissions_Stddev_Fields = {
-  __typename?: 'permissions_stddev_fields';
-  pe_akce?: Maybe<Scalars['Float']>;
-  pe_aktuality?: Maybe<Scalars['Float']>;
-  pe_ankety?: Maybe<Scalars['Float']>;
-  pe_dokumenty?: Maybe<Scalars['Float']>;
-  pe_galerie?: Maybe<Scalars['Float']>;
-  pe_id?: Maybe<Scalars['Float']>;
-  pe_inzerce?: Maybe<Scalars['Float']>;
-  pe_konzole?: Maybe<Scalars['Float']>;
-  pe_main?: Maybe<Scalars['Float']>;
-  pe_nabidka?: Maybe<Scalars['Float']>;
-  pe_nastenka?: Maybe<Scalars['Float']>;
-  pe_novinky?: Maybe<Scalars['Float']>;
-  pe_pary?: Maybe<Scalars['Float']>;
-  pe_permissions?: Maybe<Scalars['Float']>;
-  pe_platby?: Maybe<Scalars['Float']>;
-  pe_rozpis?: Maybe<Scalars['Float']>;
-  pe_skupiny?: Maybe<Scalars['Float']>;
-  pe_users?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Permissions_Stddev_Pop_Fields = {
-  __typename?: 'permissions_stddev_pop_fields';
-  pe_akce?: Maybe<Scalars['Float']>;
-  pe_aktuality?: Maybe<Scalars['Float']>;
-  pe_ankety?: Maybe<Scalars['Float']>;
-  pe_dokumenty?: Maybe<Scalars['Float']>;
-  pe_galerie?: Maybe<Scalars['Float']>;
-  pe_id?: Maybe<Scalars['Float']>;
-  pe_inzerce?: Maybe<Scalars['Float']>;
-  pe_konzole?: Maybe<Scalars['Float']>;
-  pe_main?: Maybe<Scalars['Float']>;
-  pe_nabidka?: Maybe<Scalars['Float']>;
-  pe_nastenka?: Maybe<Scalars['Float']>;
-  pe_novinky?: Maybe<Scalars['Float']>;
-  pe_pary?: Maybe<Scalars['Float']>;
-  pe_permissions?: Maybe<Scalars['Float']>;
-  pe_platby?: Maybe<Scalars['Float']>;
-  pe_rozpis?: Maybe<Scalars['Float']>;
-  pe_skupiny?: Maybe<Scalars['Float']>;
-  pe_users?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Permissions_Stddev_Samp_Fields = {
-  __typename?: 'permissions_stddev_samp_fields';
-  pe_akce?: Maybe<Scalars['Float']>;
-  pe_aktuality?: Maybe<Scalars['Float']>;
-  pe_ankety?: Maybe<Scalars['Float']>;
-  pe_dokumenty?: Maybe<Scalars['Float']>;
-  pe_galerie?: Maybe<Scalars['Float']>;
-  pe_id?: Maybe<Scalars['Float']>;
-  pe_inzerce?: Maybe<Scalars['Float']>;
-  pe_konzole?: Maybe<Scalars['Float']>;
-  pe_main?: Maybe<Scalars['Float']>;
-  pe_nabidka?: Maybe<Scalars['Float']>;
-  pe_nastenka?: Maybe<Scalars['Float']>;
-  pe_novinky?: Maybe<Scalars['Float']>;
-  pe_pary?: Maybe<Scalars['Float']>;
-  pe_permissions?: Maybe<Scalars['Float']>;
-  pe_platby?: Maybe<Scalars['Float']>;
-  pe_rozpis?: Maybe<Scalars['Float']>;
-  pe_skupiny?: Maybe<Scalars['Float']>;
-  pe_users?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate sum on columns */
-export type Permissions_Sum_Fields = {
-  __typename?: 'permissions_sum_fields';
-  pe_akce?: Maybe<Scalars['Int']>;
-  pe_aktuality?: Maybe<Scalars['Int']>;
-  pe_ankety?: Maybe<Scalars['Int']>;
-  pe_dokumenty?: Maybe<Scalars['Int']>;
-  pe_galerie?: Maybe<Scalars['Int']>;
-  pe_id?: Maybe<Scalars['bigint']>;
-  pe_inzerce?: Maybe<Scalars['Int']>;
-  pe_konzole?: Maybe<Scalars['Int']>;
-  pe_main?: Maybe<Scalars['Int']>;
-  pe_nabidka?: Maybe<Scalars['Int']>;
-  pe_nastenka?: Maybe<Scalars['Int']>;
-  pe_novinky?: Maybe<Scalars['Int']>;
-  pe_pary?: Maybe<Scalars['Int']>;
-  pe_permissions?: Maybe<Scalars['Int']>;
-  pe_platby?: Maybe<Scalars['Int']>;
-  pe_rozpis?: Maybe<Scalars['Int']>;
-  pe_skupiny?: Maybe<Scalars['Int']>;
-  pe_users?: Maybe<Scalars['Int']>;
-};
-
-/** update columns of table "permissions" */
-export enum Permissions_Update_Column {
-  /** column name */
-  PeAkce = 'pe_akce',
-  /** column name */
-  PeAktuality = 'pe_aktuality',
-  /** column name */
-  PeAnkety = 'pe_ankety',
-  /** column name */
-  PeDescription = 'pe_description',
-  /** column name */
-  PeDokumenty = 'pe_dokumenty',
-  /** column name */
-  PeGalerie = 'pe_galerie',
-  /** column name */
-  PeId = 'pe_id',
-  /** column name */
-  PeInzerce = 'pe_inzerce',
-  /** column name */
-  PeKonzole = 'pe_konzole',
-  /** column name */
-  PeMain = 'pe_main',
-  /** column name */
-  PeNabidka = 'pe_nabidka',
-  /** column name */
-  PeName = 'pe_name',
-  /** column name */
-  PeNastenka = 'pe_nastenka',
-  /** column name */
-  PeNovinky = 'pe_novinky',
-  /** column name */
-  PePary = 'pe_pary',
-  /** column name */
-  PePermissions = 'pe_permissions',
-  /** column name */
-  PePlatby = 'pe_platby',
-  /** column name */
-  PeRozpis = 'pe_rozpis',
-  /** column name */
-  PeSkupiny = 'pe_skupiny',
-  /** column name */
-  PeUsers = 'pe_users'
-}
-
-/** aggregate var_pop on columns */
-export type Permissions_Var_Pop_Fields = {
-  __typename?: 'permissions_var_pop_fields';
-  pe_akce?: Maybe<Scalars['Float']>;
-  pe_aktuality?: Maybe<Scalars['Float']>;
-  pe_ankety?: Maybe<Scalars['Float']>;
-  pe_dokumenty?: Maybe<Scalars['Float']>;
-  pe_galerie?: Maybe<Scalars['Float']>;
-  pe_id?: Maybe<Scalars['Float']>;
-  pe_inzerce?: Maybe<Scalars['Float']>;
-  pe_konzole?: Maybe<Scalars['Float']>;
-  pe_main?: Maybe<Scalars['Float']>;
-  pe_nabidka?: Maybe<Scalars['Float']>;
-  pe_nastenka?: Maybe<Scalars['Float']>;
-  pe_novinky?: Maybe<Scalars['Float']>;
-  pe_pary?: Maybe<Scalars['Float']>;
-  pe_permissions?: Maybe<Scalars['Float']>;
-  pe_platby?: Maybe<Scalars['Float']>;
-  pe_rozpis?: Maybe<Scalars['Float']>;
-  pe_skupiny?: Maybe<Scalars['Float']>;
-  pe_users?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Permissions_Var_Samp_Fields = {
-  __typename?: 'permissions_var_samp_fields';
-  pe_akce?: Maybe<Scalars['Float']>;
-  pe_aktuality?: Maybe<Scalars['Float']>;
-  pe_ankety?: Maybe<Scalars['Float']>;
-  pe_dokumenty?: Maybe<Scalars['Float']>;
-  pe_galerie?: Maybe<Scalars['Float']>;
-  pe_id?: Maybe<Scalars['Float']>;
-  pe_inzerce?: Maybe<Scalars['Float']>;
-  pe_konzole?: Maybe<Scalars['Float']>;
-  pe_main?: Maybe<Scalars['Float']>;
-  pe_nabidka?: Maybe<Scalars['Float']>;
-  pe_nastenka?: Maybe<Scalars['Float']>;
-  pe_novinky?: Maybe<Scalars['Float']>;
-  pe_pary?: Maybe<Scalars['Float']>;
-  pe_permissions?: Maybe<Scalars['Float']>;
-  pe_platby?: Maybe<Scalars['Float']>;
-  pe_rozpis?: Maybe<Scalars['Float']>;
-  pe_skupiny?: Maybe<Scalars['Float']>;
-  pe_users?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Permissions_Variance_Fields = {
-  __typename?: 'permissions_variance_fields';
-  pe_akce?: Maybe<Scalars['Float']>;
-  pe_aktuality?: Maybe<Scalars['Float']>;
-  pe_ankety?: Maybe<Scalars['Float']>;
-  pe_dokumenty?: Maybe<Scalars['Float']>;
-  pe_galerie?: Maybe<Scalars['Float']>;
-  pe_id?: Maybe<Scalars['Float']>;
-  pe_inzerce?: Maybe<Scalars['Float']>;
-  pe_konzole?: Maybe<Scalars['Float']>;
-  pe_main?: Maybe<Scalars['Float']>;
-  pe_nabidka?: Maybe<Scalars['Float']>;
-  pe_nastenka?: Maybe<Scalars['Float']>;
-  pe_novinky?: Maybe<Scalars['Float']>;
-  pe_pary?: Maybe<Scalars['Float']>;
-  pe_permissions?: Maybe<Scalars['Float']>;
-  pe_platby?: Maybe<Scalars['Float']>;
-  pe_rozpis?: Maybe<Scalars['Float']>;
-  pe_skupiny?: Maybe<Scalars['Float']>;
-  pe_users?: Maybe<Scalars['Float']>;
-};
-
-/** columns and relationships of "platby_category" */
-export type Platby_Category = {
-  __typename?: 'platby_category';
-  pc_amount: Scalars['numeric'];
-  pc_archive: Scalars['Boolean'];
-  pc_date_due: Scalars['date'];
-  pc_id: Scalars['bigint'];
-  pc_name: Scalars['String'];
-  pc_symbol: Scalars['bigint'];
-  pc_use_base: Scalars['Boolean'];
-  pc_use_prefix: Scalars['Boolean'];
-  pc_valid_from: Scalars['date'];
-  pc_valid_to: Scalars['date'];
-  pc_visible: Scalars['Boolean'];
-  /** An array relationship */
-  platby_category_groups: Array<Platby_Category_Group>;
-  /** An aggregate relationship */
-  platby_category_groups_aggregate: Platby_Category_Group_Aggregate;
-  /** An array relationship */
-  platby_items: Array<Platby_Item>;
-  /** An aggregate relationship */
-  platby_items_aggregate: Platby_Item_Aggregate;
-};
-
-
-/** columns and relationships of "platby_category" */
-export type Platby_CategoryPlatby_Category_GroupsArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Category_Group_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Category_Group_Order_By>>;
-  where?: InputMaybe<Platby_Category_Group_Bool_Exp>;
-};
-
-
-/** columns and relationships of "platby_category" */
-export type Platby_CategoryPlatby_Category_Groups_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Category_Group_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Category_Group_Order_By>>;
-  where?: InputMaybe<Platby_Category_Group_Bool_Exp>;
-};
-
-
-/** columns and relationships of "platby_category" */
-export type Platby_CategoryPlatby_ItemsArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Item_Order_By>>;
-  where?: InputMaybe<Platby_Item_Bool_Exp>;
-};
-
-
-/** columns and relationships of "platby_category" */
-export type Platby_CategoryPlatby_Items_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Item_Order_By>>;
-  where?: InputMaybe<Platby_Item_Bool_Exp>;
-};
-
-/** aggregated selection of "platby_category" */
-export type Platby_Category_Aggregate = {
-  __typename?: 'platby_category_aggregate';
-  aggregate?: Maybe<Platby_Category_Aggregate_Fields>;
-  nodes: Array<Platby_Category>;
-};
-
-/** aggregate fields of "platby_category" */
-export type Platby_Category_Aggregate_Fields = {
-  __typename?: 'platby_category_aggregate_fields';
-  avg?: Maybe<Platby_Category_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Platby_Category_Max_Fields>;
-  min?: Maybe<Platby_Category_Min_Fields>;
-  stddev?: Maybe<Platby_Category_Stddev_Fields>;
-  stddev_pop?: Maybe<Platby_Category_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Platby_Category_Stddev_Samp_Fields>;
-  sum?: Maybe<Platby_Category_Sum_Fields>;
-  var_pop?: Maybe<Platby_Category_Var_Pop_Fields>;
-  var_samp?: Maybe<Platby_Category_Var_Samp_Fields>;
-  variance?: Maybe<Platby_Category_Variance_Fields>;
-};
-
-
-/** aggregate fields of "platby_category" */
-export type Platby_Category_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Platby_Category_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate avg on columns */
-export type Platby_Category_Avg_Fields = {
-  __typename?: 'platby_category_avg_fields';
-  pc_amount?: Maybe<Scalars['Float']>;
-  pc_id?: Maybe<Scalars['Float']>;
-  pc_symbol?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to filter rows from the table "platby_category". All fields are combined with a logical 'AND'. */
-export type Platby_Category_Bool_Exp = {
-  _and?: InputMaybe<Array<Platby_Category_Bool_Exp>>;
-  _not?: InputMaybe<Platby_Category_Bool_Exp>;
-  _or?: InputMaybe<Array<Platby_Category_Bool_Exp>>;
-  pc_amount?: InputMaybe<Numeric_Comparison_Exp>;
-  pc_archive?: InputMaybe<Boolean_Comparison_Exp>;
-  pc_date_due?: InputMaybe<Date_Comparison_Exp>;
-  pc_id?: InputMaybe<Bigint_Comparison_Exp>;
-  pc_name?: InputMaybe<String_Comparison_Exp>;
-  pc_symbol?: InputMaybe<Bigint_Comparison_Exp>;
-  pc_use_base?: InputMaybe<Boolean_Comparison_Exp>;
-  pc_use_prefix?: InputMaybe<Boolean_Comparison_Exp>;
-  pc_valid_from?: InputMaybe<Date_Comparison_Exp>;
-  pc_valid_to?: InputMaybe<Date_Comparison_Exp>;
-  pc_visible?: InputMaybe<Boolean_Comparison_Exp>;
-  platby_category_groups?: InputMaybe<Platby_Category_Group_Bool_Exp>;
-  platby_items?: InputMaybe<Platby_Item_Bool_Exp>;
-};
-
-/** unique or primary key constraints on table "platby_category" */
-export enum Platby_Category_Constraint {
-  /** unique or primary key constraint */
-  Idx_24677PcSymbol = 'idx_24677_pc_symbol',
-  /** unique or primary key constraint */
-  Idx_24677Primary = 'idx_24677_primary'
-}
-
-/** columns and relationships of "platby_category_group" */
-export type Platby_Category_Group = {
-  __typename?: 'platby_category_group';
-  pcg_id: Scalars['bigint'];
-  pcg_id_category: Scalars['bigint'];
-  pcg_id_group: Scalars['bigint'];
-  /** An object relationship */
-  platby_category: Platby_Category;
-  /** An object relationship */
-  platby_group: Platby_Group;
-};
-
-/** aggregated selection of "platby_category_group" */
-export type Platby_Category_Group_Aggregate = {
-  __typename?: 'platby_category_group_aggregate';
-  aggregate?: Maybe<Platby_Category_Group_Aggregate_Fields>;
-  nodes: Array<Platby_Category_Group>;
-};
-
-/** aggregate fields of "platby_category_group" */
-export type Platby_Category_Group_Aggregate_Fields = {
-  __typename?: 'platby_category_group_aggregate_fields';
-  avg?: Maybe<Platby_Category_Group_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Platby_Category_Group_Max_Fields>;
-  min?: Maybe<Platby_Category_Group_Min_Fields>;
-  stddev?: Maybe<Platby_Category_Group_Stddev_Fields>;
-  stddev_pop?: Maybe<Platby_Category_Group_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Platby_Category_Group_Stddev_Samp_Fields>;
-  sum?: Maybe<Platby_Category_Group_Sum_Fields>;
-  var_pop?: Maybe<Platby_Category_Group_Var_Pop_Fields>;
-  var_samp?: Maybe<Platby_Category_Group_Var_Samp_Fields>;
-  variance?: Maybe<Platby_Category_Group_Variance_Fields>;
-};
-
-
-/** aggregate fields of "platby_category_group" */
-export type Platby_Category_Group_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Platby_Category_Group_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** order by aggregate values of table "platby_category_group" */
-export type Platby_Category_Group_Aggregate_Order_By = {
-  avg?: InputMaybe<Platby_Category_Group_Avg_Order_By>;
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Platby_Category_Group_Max_Order_By>;
-  min?: InputMaybe<Platby_Category_Group_Min_Order_By>;
-  stddev?: InputMaybe<Platby_Category_Group_Stddev_Order_By>;
-  stddev_pop?: InputMaybe<Platby_Category_Group_Stddev_Pop_Order_By>;
-  stddev_samp?: InputMaybe<Platby_Category_Group_Stddev_Samp_Order_By>;
-  sum?: InputMaybe<Platby_Category_Group_Sum_Order_By>;
-  var_pop?: InputMaybe<Platby_Category_Group_Var_Pop_Order_By>;
-  var_samp?: InputMaybe<Platby_Category_Group_Var_Samp_Order_By>;
-  variance?: InputMaybe<Platby_Category_Group_Variance_Order_By>;
-};
-
-/** input type for inserting array relation for remote table "platby_category_group" */
-export type Platby_Category_Group_Arr_Rel_Insert_Input = {
-  data: Array<Platby_Category_Group_Insert_Input>;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Platby_Category_Group_On_Conflict>;
-};
-
-/** aggregate avg on columns */
-export type Platby_Category_Group_Avg_Fields = {
-  __typename?: 'platby_category_group_avg_fields';
-  pcg_id?: Maybe<Scalars['Float']>;
-  pcg_id_category?: Maybe<Scalars['Float']>;
-  pcg_id_group?: Maybe<Scalars['Float']>;
-};
-
-/** order by avg() on columns of table "platby_category_group" */
-export type Platby_Category_Group_Avg_Order_By = {
-  pcg_id?: InputMaybe<Order_By>;
-  pcg_id_category?: InputMaybe<Order_By>;
-  pcg_id_group?: InputMaybe<Order_By>;
-};
-
-/** Boolean expression to filter rows from the table "platby_category_group". All fields are combined with a logical 'AND'. */
-export type Platby_Category_Group_Bool_Exp = {
-  _and?: InputMaybe<Array<Platby_Category_Group_Bool_Exp>>;
-  _not?: InputMaybe<Platby_Category_Group_Bool_Exp>;
-  _or?: InputMaybe<Array<Platby_Category_Group_Bool_Exp>>;
-  pcg_id?: InputMaybe<Bigint_Comparison_Exp>;
-  pcg_id_category?: InputMaybe<Bigint_Comparison_Exp>;
-  pcg_id_group?: InputMaybe<Bigint_Comparison_Exp>;
-  platby_category?: InputMaybe<Platby_Category_Bool_Exp>;
-  platby_group?: InputMaybe<Platby_Group_Bool_Exp>;
-};
-
-/** unique or primary key constraints on table "platby_category_group" */
-export enum Platby_Category_Group_Constraint {
-  /** unique or primary key constraint */
-  Idx_24690PcgIdGroup = 'idx_24690_pcg_id_group',
-  /** unique or primary key constraint */
-  Idx_24690Primary = 'idx_24690_primary'
-}
-
-/** input type for incrementing numeric columns in table "platby_category_group" */
-export type Platby_Category_Group_Inc_Input = {
-  pcg_id?: InputMaybe<Scalars['bigint']>;
-  pcg_id_category?: InputMaybe<Scalars['bigint']>;
-  pcg_id_group?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "platby_category_group" */
-export type Platby_Category_Group_Insert_Input = {
-  pcg_id?: InputMaybe<Scalars['bigint']>;
-  pcg_id_category?: InputMaybe<Scalars['bigint']>;
-  pcg_id_group?: InputMaybe<Scalars['bigint']>;
-  platby_category?: InputMaybe<Platby_Category_Obj_Rel_Insert_Input>;
-  platby_group?: InputMaybe<Platby_Group_Obj_Rel_Insert_Input>;
-};
-
-/** aggregate max on columns */
-export type Platby_Category_Group_Max_Fields = {
-  __typename?: 'platby_category_group_max_fields';
-  pcg_id?: Maybe<Scalars['bigint']>;
-  pcg_id_category?: Maybe<Scalars['bigint']>;
-  pcg_id_group?: Maybe<Scalars['bigint']>;
-};
-
-/** order by max() on columns of table "platby_category_group" */
-export type Platby_Category_Group_Max_Order_By = {
-  pcg_id?: InputMaybe<Order_By>;
-  pcg_id_category?: InputMaybe<Order_By>;
-  pcg_id_group?: InputMaybe<Order_By>;
-};
-
-/** aggregate min on columns */
-export type Platby_Category_Group_Min_Fields = {
-  __typename?: 'platby_category_group_min_fields';
-  pcg_id?: Maybe<Scalars['bigint']>;
-  pcg_id_category?: Maybe<Scalars['bigint']>;
-  pcg_id_group?: Maybe<Scalars['bigint']>;
-};
-
-/** order by min() on columns of table "platby_category_group" */
-export type Platby_Category_Group_Min_Order_By = {
-  pcg_id?: InputMaybe<Order_By>;
-  pcg_id_category?: InputMaybe<Order_By>;
-  pcg_id_group?: InputMaybe<Order_By>;
-};
-
-/** response of any mutation on the table "platby_category_group" */
-export type Platby_Category_Group_Mutation_Response = {
-  __typename?: 'platby_category_group_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Platby_Category_Group>;
-};
-
-/** on conflict condition type for table "platby_category_group" */
-export type Platby_Category_Group_On_Conflict = {
-  constraint: Platby_Category_Group_Constraint;
-  update_columns?: Array<Platby_Category_Group_Update_Column>;
-  where?: InputMaybe<Platby_Category_Group_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "platby_category_group". */
-export type Platby_Category_Group_Order_By = {
-  pcg_id?: InputMaybe<Order_By>;
-  pcg_id_category?: InputMaybe<Order_By>;
-  pcg_id_group?: InputMaybe<Order_By>;
-  platby_category?: InputMaybe<Platby_Category_Order_By>;
-  platby_group?: InputMaybe<Platby_Group_Order_By>;
-};
-
-/** primary key columns input for table: platby_category_group */
-export type Platby_Category_Group_Pk_Columns_Input = {
-  pcg_id: Scalars['bigint'];
-};
-
-/** select columns of table "platby_category_group" */
-export enum Platby_Category_Group_Select_Column {
-  /** column name */
-  PcgId = 'pcg_id',
-  /** column name */
-  PcgIdCategory = 'pcg_id_category',
-  /** column name */
-  PcgIdGroup = 'pcg_id_group'
-}
-
-/** input type for updating data in table "platby_category_group" */
-export type Platby_Category_Group_Set_Input = {
-  pcg_id?: InputMaybe<Scalars['bigint']>;
-  pcg_id_category?: InputMaybe<Scalars['bigint']>;
-  pcg_id_group?: InputMaybe<Scalars['bigint']>;
-};
-
-/** aggregate stddev on columns */
-export type Platby_Category_Group_Stddev_Fields = {
-  __typename?: 'platby_category_group_stddev_fields';
-  pcg_id?: Maybe<Scalars['Float']>;
-  pcg_id_category?: Maybe<Scalars['Float']>;
-  pcg_id_group?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev() on columns of table "platby_category_group" */
-export type Platby_Category_Group_Stddev_Order_By = {
-  pcg_id?: InputMaybe<Order_By>;
-  pcg_id_category?: InputMaybe<Order_By>;
-  pcg_id_group?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Platby_Category_Group_Stddev_Pop_Fields = {
-  __typename?: 'platby_category_group_stddev_pop_fields';
-  pcg_id?: Maybe<Scalars['Float']>;
-  pcg_id_category?: Maybe<Scalars['Float']>;
-  pcg_id_group?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_pop() on columns of table "platby_category_group" */
-export type Platby_Category_Group_Stddev_Pop_Order_By = {
-  pcg_id?: InputMaybe<Order_By>;
-  pcg_id_category?: InputMaybe<Order_By>;
-  pcg_id_group?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Platby_Category_Group_Stddev_Samp_Fields = {
-  __typename?: 'platby_category_group_stddev_samp_fields';
-  pcg_id?: Maybe<Scalars['Float']>;
-  pcg_id_category?: Maybe<Scalars['Float']>;
-  pcg_id_group?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_samp() on columns of table "platby_category_group" */
-export type Platby_Category_Group_Stddev_Samp_Order_By = {
-  pcg_id?: InputMaybe<Order_By>;
-  pcg_id_category?: InputMaybe<Order_By>;
-  pcg_id_group?: InputMaybe<Order_By>;
-};
-
-/** aggregate sum on columns */
-export type Platby_Category_Group_Sum_Fields = {
-  __typename?: 'platby_category_group_sum_fields';
-  pcg_id?: Maybe<Scalars['bigint']>;
-  pcg_id_category?: Maybe<Scalars['bigint']>;
-  pcg_id_group?: Maybe<Scalars['bigint']>;
-};
-
-/** order by sum() on columns of table "platby_category_group" */
-export type Platby_Category_Group_Sum_Order_By = {
-  pcg_id?: InputMaybe<Order_By>;
-  pcg_id_category?: InputMaybe<Order_By>;
-  pcg_id_group?: InputMaybe<Order_By>;
-};
-
-/** update columns of table "platby_category_group" */
-export enum Platby_Category_Group_Update_Column {
-  /** column name */
-  PcgId = 'pcg_id',
-  /** column name */
-  PcgIdCategory = 'pcg_id_category',
-  /** column name */
-  PcgIdGroup = 'pcg_id_group'
-}
-
-/** aggregate var_pop on columns */
-export type Platby_Category_Group_Var_Pop_Fields = {
-  __typename?: 'platby_category_group_var_pop_fields';
-  pcg_id?: Maybe<Scalars['Float']>;
-  pcg_id_category?: Maybe<Scalars['Float']>;
-  pcg_id_group?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_pop() on columns of table "platby_category_group" */
-export type Platby_Category_Group_Var_Pop_Order_By = {
-  pcg_id?: InputMaybe<Order_By>;
-  pcg_id_category?: InputMaybe<Order_By>;
-  pcg_id_group?: InputMaybe<Order_By>;
-};
-
-/** aggregate var_samp on columns */
-export type Platby_Category_Group_Var_Samp_Fields = {
-  __typename?: 'platby_category_group_var_samp_fields';
-  pcg_id?: Maybe<Scalars['Float']>;
-  pcg_id_category?: Maybe<Scalars['Float']>;
-  pcg_id_group?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_samp() on columns of table "platby_category_group" */
-export type Platby_Category_Group_Var_Samp_Order_By = {
-  pcg_id?: InputMaybe<Order_By>;
-  pcg_id_category?: InputMaybe<Order_By>;
-  pcg_id_group?: InputMaybe<Order_By>;
-};
-
-/** aggregate variance on columns */
-export type Platby_Category_Group_Variance_Fields = {
-  __typename?: 'platby_category_group_variance_fields';
-  pcg_id?: Maybe<Scalars['Float']>;
-  pcg_id_category?: Maybe<Scalars['Float']>;
-  pcg_id_group?: Maybe<Scalars['Float']>;
-};
-
-/** order by variance() on columns of table "platby_category_group" */
-export type Platby_Category_Group_Variance_Order_By = {
-  pcg_id?: InputMaybe<Order_By>;
-  pcg_id_category?: InputMaybe<Order_By>;
-  pcg_id_group?: InputMaybe<Order_By>;
-};
-
-/** input type for incrementing numeric columns in table "platby_category" */
-export type Platby_Category_Inc_Input = {
-  pc_amount?: InputMaybe<Scalars['numeric']>;
-  pc_id?: InputMaybe<Scalars['bigint']>;
-  pc_symbol?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "platby_category" */
-export type Platby_Category_Insert_Input = {
-  pc_amount?: InputMaybe<Scalars['numeric']>;
-  pc_archive?: InputMaybe<Scalars['Boolean']>;
-  pc_date_due?: InputMaybe<Scalars['date']>;
-  pc_id?: InputMaybe<Scalars['bigint']>;
-  pc_name?: InputMaybe<Scalars['String']>;
-  pc_symbol?: InputMaybe<Scalars['bigint']>;
-  pc_use_base?: InputMaybe<Scalars['Boolean']>;
-  pc_use_prefix?: InputMaybe<Scalars['Boolean']>;
-  pc_valid_from?: InputMaybe<Scalars['date']>;
-  pc_valid_to?: InputMaybe<Scalars['date']>;
-  pc_visible?: InputMaybe<Scalars['Boolean']>;
-  platby_category_groups?: InputMaybe<Platby_Category_Group_Arr_Rel_Insert_Input>;
-  platby_items?: InputMaybe<Platby_Item_Arr_Rel_Insert_Input>;
-};
-
-/** aggregate max on columns */
-export type Platby_Category_Max_Fields = {
-  __typename?: 'platby_category_max_fields';
-  pc_amount?: Maybe<Scalars['numeric']>;
-  pc_date_due?: Maybe<Scalars['date']>;
-  pc_id?: Maybe<Scalars['bigint']>;
-  pc_name?: Maybe<Scalars['String']>;
-  pc_symbol?: Maybe<Scalars['bigint']>;
-  pc_valid_from?: Maybe<Scalars['date']>;
-  pc_valid_to?: Maybe<Scalars['date']>;
-};
-
-/** aggregate min on columns */
-export type Platby_Category_Min_Fields = {
-  __typename?: 'platby_category_min_fields';
-  pc_amount?: Maybe<Scalars['numeric']>;
-  pc_date_due?: Maybe<Scalars['date']>;
-  pc_id?: Maybe<Scalars['bigint']>;
-  pc_name?: Maybe<Scalars['String']>;
-  pc_symbol?: Maybe<Scalars['bigint']>;
-  pc_valid_from?: Maybe<Scalars['date']>;
-  pc_valid_to?: Maybe<Scalars['date']>;
-};
-
-/** response of any mutation on the table "platby_category" */
-export type Platby_Category_Mutation_Response = {
-  __typename?: 'platby_category_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Platby_Category>;
-};
-
-/** input type for inserting object relation for remote table "platby_category" */
-export type Platby_Category_Obj_Rel_Insert_Input = {
-  data: Platby_Category_Insert_Input;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Platby_Category_On_Conflict>;
-};
-
-/** on conflict condition type for table "platby_category" */
-export type Platby_Category_On_Conflict = {
-  constraint: Platby_Category_Constraint;
-  update_columns?: Array<Platby_Category_Update_Column>;
-  where?: InputMaybe<Platby_Category_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "platby_category". */
-export type Platby_Category_Order_By = {
-  pc_amount?: InputMaybe<Order_By>;
-  pc_archive?: InputMaybe<Order_By>;
-  pc_date_due?: InputMaybe<Order_By>;
-  pc_id?: InputMaybe<Order_By>;
-  pc_name?: InputMaybe<Order_By>;
-  pc_symbol?: InputMaybe<Order_By>;
-  pc_use_base?: InputMaybe<Order_By>;
-  pc_use_prefix?: InputMaybe<Order_By>;
-  pc_valid_from?: InputMaybe<Order_By>;
-  pc_valid_to?: InputMaybe<Order_By>;
-  pc_visible?: InputMaybe<Order_By>;
-  platby_category_groups_aggregate?: InputMaybe<Platby_Category_Group_Aggregate_Order_By>;
-  platby_items_aggregate?: InputMaybe<Platby_Item_Aggregate_Order_By>;
-};
-
-/** primary key columns input for table: platby_category */
-export type Platby_Category_Pk_Columns_Input = {
-  pc_id: Scalars['bigint'];
-};
-
-/** select columns of table "platby_category" */
-export enum Platby_Category_Select_Column {
-  /** column name */
-  PcAmount = 'pc_amount',
-  /** column name */
-  PcArchive = 'pc_archive',
-  /** column name */
-  PcDateDue = 'pc_date_due',
-  /** column name */
-  PcId = 'pc_id',
-  /** column name */
-  PcName = 'pc_name',
-  /** column name */
-  PcSymbol = 'pc_symbol',
-  /** column name */
-  PcUseBase = 'pc_use_base',
-  /** column name */
-  PcUsePrefix = 'pc_use_prefix',
-  /** column name */
-  PcValidFrom = 'pc_valid_from',
-  /** column name */
-  PcValidTo = 'pc_valid_to',
-  /** column name */
-  PcVisible = 'pc_visible'
-}
-
-/** input type for updating data in table "platby_category" */
-export type Platby_Category_Set_Input = {
-  pc_amount?: InputMaybe<Scalars['numeric']>;
-  pc_archive?: InputMaybe<Scalars['Boolean']>;
-  pc_date_due?: InputMaybe<Scalars['date']>;
-  pc_id?: InputMaybe<Scalars['bigint']>;
-  pc_name?: InputMaybe<Scalars['String']>;
-  pc_symbol?: InputMaybe<Scalars['bigint']>;
-  pc_use_base?: InputMaybe<Scalars['Boolean']>;
-  pc_use_prefix?: InputMaybe<Scalars['Boolean']>;
-  pc_valid_from?: InputMaybe<Scalars['date']>;
-  pc_valid_to?: InputMaybe<Scalars['date']>;
-  pc_visible?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate stddev on columns */
-export type Platby_Category_Stddev_Fields = {
-  __typename?: 'platby_category_stddev_fields';
-  pc_amount?: Maybe<Scalars['Float']>;
-  pc_id?: Maybe<Scalars['Float']>;
-  pc_symbol?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Platby_Category_Stddev_Pop_Fields = {
-  __typename?: 'platby_category_stddev_pop_fields';
-  pc_amount?: Maybe<Scalars['Float']>;
-  pc_id?: Maybe<Scalars['Float']>;
-  pc_symbol?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Platby_Category_Stddev_Samp_Fields = {
-  __typename?: 'platby_category_stddev_samp_fields';
-  pc_amount?: Maybe<Scalars['Float']>;
-  pc_id?: Maybe<Scalars['Float']>;
-  pc_symbol?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate sum on columns */
-export type Platby_Category_Sum_Fields = {
-  __typename?: 'platby_category_sum_fields';
-  pc_amount?: Maybe<Scalars['numeric']>;
-  pc_id?: Maybe<Scalars['bigint']>;
-  pc_symbol?: Maybe<Scalars['bigint']>;
-};
-
-/** update columns of table "platby_category" */
-export enum Platby_Category_Update_Column {
-  /** column name */
-  PcAmount = 'pc_amount',
-  /** column name */
-  PcArchive = 'pc_archive',
-  /** column name */
-  PcDateDue = 'pc_date_due',
-  /** column name */
-  PcId = 'pc_id',
-  /** column name */
-  PcName = 'pc_name',
-  /** column name */
-  PcSymbol = 'pc_symbol',
-  /** column name */
-  PcUseBase = 'pc_use_base',
-  /** column name */
-  PcUsePrefix = 'pc_use_prefix',
-  /** column name */
-  PcValidFrom = 'pc_valid_from',
-  /** column name */
-  PcValidTo = 'pc_valid_to',
-  /** column name */
-  PcVisible = 'pc_visible'
-}
-
-/** aggregate var_pop on columns */
-export type Platby_Category_Var_Pop_Fields = {
-  __typename?: 'platby_category_var_pop_fields';
-  pc_amount?: Maybe<Scalars['Float']>;
-  pc_id?: Maybe<Scalars['Float']>;
-  pc_symbol?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Platby_Category_Var_Samp_Fields = {
-  __typename?: 'platby_category_var_samp_fields';
-  pc_amount?: Maybe<Scalars['Float']>;
-  pc_id?: Maybe<Scalars['Float']>;
-  pc_symbol?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Platby_Category_Variance_Fields = {
-  __typename?: 'platby_category_variance_fields';
-  pc_amount?: Maybe<Scalars['Float']>;
-  pc_id?: Maybe<Scalars['Float']>;
-  pc_symbol?: Maybe<Scalars['Float']>;
-};
-
-/** columns and relationships of "platby_group" */
-export type Platby_Group = {
-  __typename?: 'platby_group';
-  pg_base: Scalars['bigint'];
-  pg_description: Scalars['String'];
-  pg_id: Scalars['bigint'];
-  pg_name: Scalars['String'];
-  pg_type: Scalars['numeric'];
-  /** An array relationship */
-  platby_category_groups: Array<Platby_Category_Group>;
-  /** An aggregate relationship */
-  platby_category_groups_aggregate: Platby_Category_Group_Aggregate;
-  /** An array relationship */
-  platby_group_skupinas: Array<Platby_Group_Skupina>;
-  /** An aggregate relationship */
-  platby_group_skupinas_aggregate: Platby_Group_Skupina_Aggregate;
-};
-
-
-/** columns and relationships of "platby_group" */
-export type Platby_GroupPlatby_Category_GroupsArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Category_Group_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Category_Group_Order_By>>;
-  where?: InputMaybe<Platby_Category_Group_Bool_Exp>;
-};
-
-
-/** columns and relationships of "platby_group" */
-export type Platby_GroupPlatby_Category_Groups_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Category_Group_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Category_Group_Order_By>>;
-  where?: InputMaybe<Platby_Category_Group_Bool_Exp>;
-};
-
-
-/** columns and relationships of "platby_group" */
-export type Platby_GroupPlatby_Group_SkupinasArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Group_Skupina_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Group_Skupina_Order_By>>;
-  where?: InputMaybe<Platby_Group_Skupina_Bool_Exp>;
-};
-
-
-/** columns and relationships of "platby_group" */
-export type Platby_GroupPlatby_Group_Skupinas_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Group_Skupina_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Group_Skupina_Order_By>>;
-  where?: InputMaybe<Platby_Group_Skupina_Bool_Exp>;
-};
-
-/** aggregated selection of "platby_group" */
-export type Platby_Group_Aggregate = {
-  __typename?: 'platby_group_aggregate';
-  aggregate?: Maybe<Platby_Group_Aggregate_Fields>;
-  nodes: Array<Platby_Group>;
-};
-
-/** aggregate fields of "platby_group" */
-export type Platby_Group_Aggregate_Fields = {
-  __typename?: 'platby_group_aggregate_fields';
-  avg?: Maybe<Platby_Group_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Platby_Group_Max_Fields>;
-  min?: Maybe<Platby_Group_Min_Fields>;
-  stddev?: Maybe<Platby_Group_Stddev_Fields>;
-  stddev_pop?: Maybe<Platby_Group_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Platby_Group_Stddev_Samp_Fields>;
-  sum?: Maybe<Platby_Group_Sum_Fields>;
-  var_pop?: Maybe<Platby_Group_Var_Pop_Fields>;
-  var_samp?: Maybe<Platby_Group_Var_Samp_Fields>;
-  variance?: Maybe<Platby_Group_Variance_Fields>;
-};
-
-
-/** aggregate fields of "platby_group" */
-export type Platby_Group_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Platby_Group_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate avg on columns */
-export type Platby_Group_Avg_Fields = {
-  __typename?: 'platby_group_avg_fields';
-  pg_base?: Maybe<Scalars['Float']>;
-  pg_id?: Maybe<Scalars['Float']>;
-  pg_type?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to filter rows from the table "platby_group". All fields are combined with a logical 'AND'. */
-export type Platby_Group_Bool_Exp = {
-  _and?: InputMaybe<Array<Platby_Group_Bool_Exp>>;
-  _not?: InputMaybe<Platby_Group_Bool_Exp>;
-  _or?: InputMaybe<Array<Platby_Group_Bool_Exp>>;
-  pg_base?: InputMaybe<Bigint_Comparison_Exp>;
-  pg_description?: InputMaybe<String_Comparison_Exp>;
-  pg_id?: InputMaybe<Bigint_Comparison_Exp>;
-  pg_name?: InputMaybe<String_Comparison_Exp>;
-  pg_type?: InputMaybe<Numeric_Comparison_Exp>;
-  platby_category_groups?: InputMaybe<Platby_Category_Group_Bool_Exp>;
-  platby_group_skupinas?: InputMaybe<Platby_Group_Skupina_Bool_Exp>;
-};
-
-/** unique or primary key constraints on table "platby_group" */
-export enum Platby_Group_Constraint {
-  /** unique or primary key constraint */
-  Idx_24696Primary = 'idx_24696_primary'
-}
-
-/** input type for incrementing numeric columns in table "platby_group" */
-export type Platby_Group_Inc_Input = {
-  pg_base?: InputMaybe<Scalars['bigint']>;
-  pg_id?: InputMaybe<Scalars['bigint']>;
-  pg_type?: InputMaybe<Scalars['numeric']>;
-};
-
-/** input type for inserting data into table "platby_group" */
-export type Platby_Group_Insert_Input = {
-  pg_base?: InputMaybe<Scalars['bigint']>;
-  pg_description?: InputMaybe<Scalars['String']>;
-  pg_id?: InputMaybe<Scalars['bigint']>;
-  pg_name?: InputMaybe<Scalars['String']>;
-  pg_type?: InputMaybe<Scalars['numeric']>;
-  platby_category_groups?: InputMaybe<Platby_Category_Group_Arr_Rel_Insert_Input>;
-  platby_group_skupinas?: InputMaybe<Platby_Group_Skupina_Arr_Rel_Insert_Input>;
-};
-
-/** aggregate max on columns */
-export type Platby_Group_Max_Fields = {
-  __typename?: 'platby_group_max_fields';
-  pg_base?: Maybe<Scalars['bigint']>;
-  pg_description?: Maybe<Scalars['String']>;
-  pg_id?: Maybe<Scalars['bigint']>;
-  pg_name?: Maybe<Scalars['String']>;
-  pg_type?: Maybe<Scalars['numeric']>;
-};
-
-/** aggregate min on columns */
-export type Platby_Group_Min_Fields = {
-  __typename?: 'platby_group_min_fields';
-  pg_base?: Maybe<Scalars['bigint']>;
-  pg_description?: Maybe<Scalars['String']>;
-  pg_id?: Maybe<Scalars['bigint']>;
-  pg_name?: Maybe<Scalars['String']>;
-  pg_type?: Maybe<Scalars['numeric']>;
-};
-
-/** response of any mutation on the table "platby_group" */
-export type Platby_Group_Mutation_Response = {
-  __typename?: 'platby_group_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Platby_Group>;
-};
-
-/** input type for inserting object relation for remote table "platby_group" */
-export type Platby_Group_Obj_Rel_Insert_Input = {
-  data: Platby_Group_Insert_Input;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Platby_Group_On_Conflict>;
-};
-
-/** on conflict condition type for table "platby_group" */
-export type Platby_Group_On_Conflict = {
-  constraint: Platby_Group_Constraint;
-  update_columns?: Array<Platby_Group_Update_Column>;
-  where?: InputMaybe<Platby_Group_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "platby_group". */
-export type Platby_Group_Order_By = {
-  pg_base?: InputMaybe<Order_By>;
-  pg_description?: InputMaybe<Order_By>;
-  pg_id?: InputMaybe<Order_By>;
-  pg_name?: InputMaybe<Order_By>;
-  pg_type?: InputMaybe<Order_By>;
-  platby_category_groups_aggregate?: InputMaybe<Platby_Category_Group_Aggregate_Order_By>;
-  platby_group_skupinas_aggregate?: InputMaybe<Platby_Group_Skupina_Aggregate_Order_By>;
-};
-
-/** primary key columns input for table: platby_group */
-export type Platby_Group_Pk_Columns_Input = {
-  pg_id: Scalars['bigint'];
-};
-
-/** select columns of table "platby_group" */
-export enum Platby_Group_Select_Column {
-  /** column name */
-  PgBase = 'pg_base',
-  /** column name */
-  PgDescription = 'pg_description',
-  /** column name */
-  PgId = 'pg_id',
-  /** column name */
-  PgName = 'pg_name',
-  /** column name */
-  PgType = 'pg_type'
-}
-
-/** input type for updating data in table "platby_group" */
-export type Platby_Group_Set_Input = {
-  pg_base?: InputMaybe<Scalars['bigint']>;
-  pg_description?: InputMaybe<Scalars['String']>;
-  pg_id?: InputMaybe<Scalars['bigint']>;
-  pg_name?: InputMaybe<Scalars['String']>;
-  pg_type?: InputMaybe<Scalars['numeric']>;
-};
-
-/** columns and relationships of "platby_group_skupina" */
-export type Platby_Group_Skupina = {
-  __typename?: 'platby_group_skupina';
-  pgs_id: Scalars['bigint'];
-  pgs_id_group: Scalars['bigint'];
-  pgs_id_skupina: Scalars['bigint'];
-  /** An object relationship */
-  platby_group: Platby_Group;
-  /** An object relationship */
-  skupiny: Skupiny;
-};
-
-/** aggregated selection of "platby_group_skupina" */
-export type Platby_Group_Skupina_Aggregate = {
-  __typename?: 'platby_group_skupina_aggregate';
-  aggregate?: Maybe<Platby_Group_Skupina_Aggregate_Fields>;
-  nodes: Array<Platby_Group_Skupina>;
-};
-
-/** aggregate fields of "platby_group_skupina" */
-export type Platby_Group_Skupina_Aggregate_Fields = {
-  __typename?: 'platby_group_skupina_aggregate_fields';
-  avg?: Maybe<Platby_Group_Skupina_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Platby_Group_Skupina_Max_Fields>;
-  min?: Maybe<Platby_Group_Skupina_Min_Fields>;
-  stddev?: Maybe<Platby_Group_Skupina_Stddev_Fields>;
-  stddev_pop?: Maybe<Platby_Group_Skupina_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Platby_Group_Skupina_Stddev_Samp_Fields>;
-  sum?: Maybe<Platby_Group_Skupina_Sum_Fields>;
-  var_pop?: Maybe<Platby_Group_Skupina_Var_Pop_Fields>;
-  var_samp?: Maybe<Platby_Group_Skupina_Var_Samp_Fields>;
-  variance?: Maybe<Platby_Group_Skupina_Variance_Fields>;
-};
-
-
-/** aggregate fields of "platby_group_skupina" */
-export type Platby_Group_Skupina_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Platby_Group_Skupina_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** order by aggregate values of table "platby_group_skupina" */
-export type Platby_Group_Skupina_Aggregate_Order_By = {
-  avg?: InputMaybe<Platby_Group_Skupina_Avg_Order_By>;
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Platby_Group_Skupina_Max_Order_By>;
-  min?: InputMaybe<Platby_Group_Skupina_Min_Order_By>;
-  stddev?: InputMaybe<Platby_Group_Skupina_Stddev_Order_By>;
-  stddev_pop?: InputMaybe<Platby_Group_Skupina_Stddev_Pop_Order_By>;
-  stddev_samp?: InputMaybe<Platby_Group_Skupina_Stddev_Samp_Order_By>;
-  sum?: InputMaybe<Platby_Group_Skupina_Sum_Order_By>;
-  var_pop?: InputMaybe<Platby_Group_Skupina_Var_Pop_Order_By>;
-  var_samp?: InputMaybe<Platby_Group_Skupina_Var_Samp_Order_By>;
-  variance?: InputMaybe<Platby_Group_Skupina_Variance_Order_By>;
-};
-
-/** input type for inserting array relation for remote table "platby_group_skupina" */
-export type Platby_Group_Skupina_Arr_Rel_Insert_Input = {
-  data: Array<Platby_Group_Skupina_Insert_Input>;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Platby_Group_Skupina_On_Conflict>;
-};
-
-/** aggregate avg on columns */
-export type Platby_Group_Skupina_Avg_Fields = {
-  __typename?: 'platby_group_skupina_avg_fields';
-  pgs_id?: Maybe<Scalars['Float']>;
-  pgs_id_group?: Maybe<Scalars['Float']>;
-  pgs_id_skupina?: Maybe<Scalars['Float']>;
-};
-
-/** order by avg() on columns of table "platby_group_skupina" */
-export type Platby_Group_Skupina_Avg_Order_By = {
-  pgs_id?: InputMaybe<Order_By>;
-  pgs_id_group?: InputMaybe<Order_By>;
-  pgs_id_skupina?: InputMaybe<Order_By>;
-};
-
-/** Boolean expression to filter rows from the table "platby_group_skupina". All fields are combined with a logical 'AND'. */
-export type Platby_Group_Skupina_Bool_Exp = {
-  _and?: InputMaybe<Array<Platby_Group_Skupina_Bool_Exp>>;
-  _not?: InputMaybe<Platby_Group_Skupina_Bool_Exp>;
-  _or?: InputMaybe<Array<Platby_Group_Skupina_Bool_Exp>>;
-  pgs_id?: InputMaybe<Bigint_Comparison_Exp>;
-  pgs_id_group?: InputMaybe<Bigint_Comparison_Exp>;
-  pgs_id_skupina?: InputMaybe<Bigint_Comparison_Exp>;
-  platby_group?: InputMaybe<Platby_Group_Bool_Exp>;
-  skupiny?: InputMaybe<Skupiny_Bool_Exp>;
-};
-
-/** unique or primary key constraints on table "platby_group_skupina" */
-export enum Platby_Group_Skupina_Constraint {
-  /** unique or primary key constraint */
-  Idx_24707PgsIdSkupina = 'idx_24707_pgs_id_skupina',
-  /** unique or primary key constraint */
-  Idx_24707Primary = 'idx_24707_primary',
-  /** unique or primary key constraint */
-  Idx_24708PgsIdSkupina = 'idx_24708_pgs_id_skupina'
-}
-
-/** input type for incrementing numeric columns in table "platby_group_skupina" */
-export type Platby_Group_Skupina_Inc_Input = {
-  pgs_id?: InputMaybe<Scalars['bigint']>;
-  pgs_id_group?: InputMaybe<Scalars['bigint']>;
-  pgs_id_skupina?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "platby_group_skupina" */
-export type Platby_Group_Skupina_Insert_Input = {
-  pgs_id?: InputMaybe<Scalars['bigint']>;
-  pgs_id_group?: InputMaybe<Scalars['bigint']>;
-  pgs_id_skupina?: InputMaybe<Scalars['bigint']>;
-  platby_group?: InputMaybe<Platby_Group_Obj_Rel_Insert_Input>;
-  skupiny?: InputMaybe<Skupiny_Obj_Rel_Insert_Input>;
-};
-
-/** aggregate max on columns */
-export type Platby_Group_Skupina_Max_Fields = {
-  __typename?: 'platby_group_skupina_max_fields';
-  pgs_id?: Maybe<Scalars['bigint']>;
-  pgs_id_group?: Maybe<Scalars['bigint']>;
-  pgs_id_skupina?: Maybe<Scalars['bigint']>;
-};
-
-/** order by max() on columns of table "platby_group_skupina" */
-export type Platby_Group_Skupina_Max_Order_By = {
-  pgs_id?: InputMaybe<Order_By>;
-  pgs_id_group?: InputMaybe<Order_By>;
-  pgs_id_skupina?: InputMaybe<Order_By>;
-};
-
-/** aggregate min on columns */
-export type Platby_Group_Skupina_Min_Fields = {
-  __typename?: 'platby_group_skupina_min_fields';
-  pgs_id?: Maybe<Scalars['bigint']>;
-  pgs_id_group?: Maybe<Scalars['bigint']>;
-  pgs_id_skupina?: Maybe<Scalars['bigint']>;
-};
-
-/** order by min() on columns of table "platby_group_skupina" */
-export type Platby_Group_Skupina_Min_Order_By = {
-  pgs_id?: InputMaybe<Order_By>;
-  pgs_id_group?: InputMaybe<Order_By>;
-  pgs_id_skupina?: InputMaybe<Order_By>;
-};
-
-/** response of any mutation on the table "platby_group_skupina" */
-export type Platby_Group_Skupina_Mutation_Response = {
-  __typename?: 'platby_group_skupina_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Platby_Group_Skupina>;
-};
-
-/** on conflict condition type for table "platby_group_skupina" */
-export type Platby_Group_Skupina_On_Conflict = {
-  constraint: Platby_Group_Skupina_Constraint;
-  update_columns?: Array<Platby_Group_Skupina_Update_Column>;
-  where?: InputMaybe<Platby_Group_Skupina_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "platby_group_skupina". */
-export type Platby_Group_Skupina_Order_By = {
-  pgs_id?: InputMaybe<Order_By>;
-  pgs_id_group?: InputMaybe<Order_By>;
-  pgs_id_skupina?: InputMaybe<Order_By>;
-  platby_group?: InputMaybe<Platby_Group_Order_By>;
-  skupiny?: InputMaybe<Skupiny_Order_By>;
-};
-
-/** primary key columns input for table: platby_group_skupina */
-export type Platby_Group_Skupina_Pk_Columns_Input = {
-  pgs_id: Scalars['bigint'];
-};
-
-/** select columns of table "platby_group_skupina" */
-export enum Platby_Group_Skupina_Select_Column {
-  /** column name */
-  PgsId = 'pgs_id',
-  /** column name */
-  PgsIdGroup = 'pgs_id_group',
-  /** column name */
-  PgsIdSkupina = 'pgs_id_skupina'
-}
-
-/** input type for updating data in table "platby_group_skupina" */
-export type Platby_Group_Skupina_Set_Input = {
-  pgs_id?: InputMaybe<Scalars['bigint']>;
-  pgs_id_group?: InputMaybe<Scalars['bigint']>;
-  pgs_id_skupina?: InputMaybe<Scalars['bigint']>;
-};
-
-/** aggregate stddev on columns */
-export type Platby_Group_Skupina_Stddev_Fields = {
-  __typename?: 'platby_group_skupina_stddev_fields';
-  pgs_id?: Maybe<Scalars['Float']>;
-  pgs_id_group?: Maybe<Scalars['Float']>;
-  pgs_id_skupina?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev() on columns of table "platby_group_skupina" */
-export type Platby_Group_Skupina_Stddev_Order_By = {
-  pgs_id?: InputMaybe<Order_By>;
-  pgs_id_group?: InputMaybe<Order_By>;
-  pgs_id_skupina?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Platby_Group_Skupina_Stddev_Pop_Fields = {
-  __typename?: 'platby_group_skupina_stddev_pop_fields';
-  pgs_id?: Maybe<Scalars['Float']>;
-  pgs_id_group?: Maybe<Scalars['Float']>;
-  pgs_id_skupina?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_pop() on columns of table "platby_group_skupina" */
-export type Platby_Group_Skupina_Stddev_Pop_Order_By = {
-  pgs_id?: InputMaybe<Order_By>;
-  pgs_id_group?: InputMaybe<Order_By>;
-  pgs_id_skupina?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Platby_Group_Skupina_Stddev_Samp_Fields = {
-  __typename?: 'platby_group_skupina_stddev_samp_fields';
-  pgs_id?: Maybe<Scalars['Float']>;
-  pgs_id_group?: Maybe<Scalars['Float']>;
-  pgs_id_skupina?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_samp() on columns of table "platby_group_skupina" */
-export type Platby_Group_Skupina_Stddev_Samp_Order_By = {
-  pgs_id?: InputMaybe<Order_By>;
-  pgs_id_group?: InputMaybe<Order_By>;
-  pgs_id_skupina?: InputMaybe<Order_By>;
-};
-
-/** aggregate sum on columns */
-export type Platby_Group_Skupina_Sum_Fields = {
-  __typename?: 'platby_group_skupina_sum_fields';
-  pgs_id?: Maybe<Scalars['bigint']>;
-  pgs_id_group?: Maybe<Scalars['bigint']>;
-  pgs_id_skupina?: Maybe<Scalars['bigint']>;
-};
-
-/** order by sum() on columns of table "platby_group_skupina" */
-export type Platby_Group_Skupina_Sum_Order_By = {
-  pgs_id?: InputMaybe<Order_By>;
-  pgs_id_group?: InputMaybe<Order_By>;
-  pgs_id_skupina?: InputMaybe<Order_By>;
-};
-
-/** update columns of table "platby_group_skupina" */
-export enum Platby_Group_Skupina_Update_Column {
-  /** column name */
-  PgsId = 'pgs_id',
-  /** column name */
-  PgsIdGroup = 'pgs_id_group',
-  /** column name */
-  PgsIdSkupina = 'pgs_id_skupina'
-}
-
-/** aggregate var_pop on columns */
-export type Platby_Group_Skupina_Var_Pop_Fields = {
-  __typename?: 'platby_group_skupina_var_pop_fields';
-  pgs_id?: Maybe<Scalars['Float']>;
-  pgs_id_group?: Maybe<Scalars['Float']>;
-  pgs_id_skupina?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_pop() on columns of table "platby_group_skupina" */
-export type Platby_Group_Skupina_Var_Pop_Order_By = {
-  pgs_id?: InputMaybe<Order_By>;
-  pgs_id_group?: InputMaybe<Order_By>;
-  pgs_id_skupina?: InputMaybe<Order_By>;
-};
-
-/** aggregate var_samp on columns */
-export type Platby_Group_Skupina_Var_Samp_Fields = {
-  __typename?: 'platby_group_skupina_var_samp_fields';
-  pgs_id?: Maybe<Scalars['Float']>;
-  pgs_id_group?: Maybe<Scalars['Float']>;
-  pgs_id_skupina?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_samp() on columns of table "platby_group_skupina" */
-export type Platby_Group_Skupina_Var_Samp_Order_By = {
-  pgs_id?: InputMaybe<Order_By>;
-  pgs_id_group?: InputMaybe<Order_By>;
-  pgs_id_skupina?: InputMaybe<Order_By>;
-};
-
-/** aggregate variance on columns */
-export type Platby_Group_Skupina_Variance_Fields = {
-  __typename?: 'platby_group_skupina_variance_fields';
-  pgs_id?: Maybe<Scalars['Float']>;
-  pgs_id_group?: Maybe<Scalars['Float']>;
-  pgs_id_skupina?: Maybe<Scalars['Float']>;
-};
-
-/** order by variance() on columns of table "platby_group_skupina" */
-export type Platby_Group_Skupina_Variance_Order_By = {
-  pgs_id?: InputMaybe<Order_By>;
-  pgs_id_group?: InputMaybe<Order_By>;
-  pgs_id_skupina?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev on columns */
-export type Platby_Group_Stddev_Fields = {
-  __typename?: 'platby_group_stddev_fields';
-  pg_base?: Maybe<Scalars['Float']>;
-  pg_id?: Maybe<Scalars['Float']>;
-  pg_type?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Platby_Group_Stddev_Pop_Fields = {
-  __typename?: 'platby_group_stddev_pop_fields';
-  pg_base?: Maybe<Scalars['Float']>;
-  pg_id?: Maybe<Scalars['Float']>;
-  pg_type?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Platby_Group_Stddev_Samp_Fields = {
-  __typename?: 'platby_group_stddev_samp_fields';
-  pg_base?: Maybe<Scalars['Float']>;
-  pg_id?: Maybe<Scalars['Float']>;
-  pg_type?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate sum on columns */
-export type Platby_Group_Sum_Fields = {
-  __typename?: 'platby_group_sum_fields';
-  pg_base?: Maybe<Scalars['bigint']>;
-  pg_id?: Maybe<Scalars['bigint']>;
-  pg_type?: Maybe<Scalars['numeric']>;
-};
-
-/** update columns of table "platby_group" */
-export enum Platby_Group_Update_Column {
-  /** column name */
-  PgBase = 'pg_base',
-  /** column name */
-  PgDescription = 'pg_description',
-  /** column name */
-  PgId = 'pg_id',
-  /** column name */
-  PgName = 'pg_name',
-  /** column name */
-  PgType = 'pg_type'
-}
-
-/** aggregate var_pop on columns */
-export type Platby_Group_Var_Pop_Fields = {
-  __typename?: 'platby_group_var_pop_fields';
-  pg_base?: Maybe<Scalars['Float']>;
-  pg_id?: Maybe<Scalars['Float']>;
-  pg_type?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Platby_Group_Var_Samp_Fields = {
-  __typename?: 'platby_group_var_samp_fields';
-  pg_base?: Maybe<Scalars['Float']>;
-  pg_id?: Maybe<Scalars['Float']>;
-  pg_type?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Platby_Group_Variance_Fields = {
-  __typename?: 'platby_group_variance_fields';
-  pg_base?: Maybe<Scalars['Float']>;
-  pg_id?: Maybe<Scalars['Float']>;
-  pg_type?: Maybe<Scalars['Float']>;
-};
-
-/** columns and relationships of "platby_item" */
-export type Platby_Item = {
-  __typename?: 'platby_item';
-  pi_amount: Scalars['numeric'];
-  pi_date: Scalars['date'];
-  pi_id: Scalars['bigint'];
-  pi_id_category: Scalars['bigint'];
-  pi_id_raw?: Maybe<Scalars['bigint']>;
-  pi_id_user?: Maybe<Scalars['bigint']>;
-  pi_prefix: Scalars['Int'];
-  /** An object relationship */
-  platby_category: Platby_Category;
-  /** An object relationship */
-  platby_raw?: Maybe<Platby_Raw>;
-  /** An object relationship */
-  user?: Maybe<Users>;
-};
-
-/** aggregated selection of "platby_item" */
-export type Platby_Item_Aggregate = {
-  __typename?: 'platby_item_aggregate';
-  aggregate?: Maybe<Platby_Item_Aggregate_Fields>;
-  nodes: Array<Platby_Item>;
-};
-
-/** aggregate fields of "platby_item" */
-export type Platby_Item_Aggregate_Fields = {
-  __typename?: 'platby_item_aggregate_fields';
-  avg?: Maybe<Platby_Item_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Platby_Item_Max_Fields>;
-  min?: Maybe<Platby_Item_Min_Fields>;
-  stddev?: Maybe<Platby_Item_Stddev_Fields>;
-  stddev_pop?: Maybe<Platby_Item_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Platby_Item_Stddev_Samp_Fields>;
-  sum?: Maybe<Platby_Item_Sum_Fields>;
-  var_pop?: Maybe<Platby_Item_Var_Pop_Fields>;
-  var_samp?: Maybe<Platby_Item_Var_Samp_Fields>;
-  variance?: Maybe<Platby_Item_Variance_Fields>;
-};
-
-
-/** aggregate fields of "platby_item" */
-export type Platby_Item_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Platby_Item_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** order by aggregate values of table "platby_item" */
-export type Platby_Item_Aggregate_Order_By = {
-  avg?: InputMaybe<Platby_Item_Avg_Order_By>;
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Platby_Item_Max_Order_By>;
-  min?: InputMaybe<Platby_Item_Min_Order_By>;
-  stddev?: InputMaybe<Platby_Item_Stddev_Order_By>;
-  stddev_pop?: InputMaybe<Platby_Item_Stddev_Pop_Order_By>;
-  stddev_samp?: InputMaybe<Platby_Item_Stddev_Samp_Order_By>;
-  sum?: InputMaybe<Platby_Item_Sum_Order_By>;
-  var_pop?: InputMaybe<Platby_Item_Var_Pop_Order_By>;
-  var_samp?: InputMaybe<Platby_Item_Var_Samp_Order_By>;
-  variance?: InputMaybe<Platby_Item_Variance_Order_By>;
-};
-
-/** input type for inserting array relation for remote table "platby_item" */
-export type Platby_Item_Arr_Rel_Insert_Input = {
-  data: Array<Platby_Item_Insert_Input>;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Platby_Item_On_Conflict>;
-};
-
-/** aggregate avg on columns */
-export type Platby_Item_Avg_Fields = {
-  __typename?: 'platby_item_avg_fields';
-  pi_amount?: Maybe<Scalars['Float']>;
-  pi_id?: Maybe<Scalars['Float']>;
-  pi_id_category?: Maybe<Scalars['Float']>;
-  pi_id_raw?: Maybe<Scalars['Float']>;
-  pi_id_user?: Maybe<Scalars['Float']>;
-  pi_prefix?: Maybe<Scalars['Float']>;
-};
-
-/** order by avg() on columns of table "platby_item" */
-export type Platby_Item_Avg_Order_By = {
-  pi_amount?: InputMaybe<Order_By>;
-  pi_id?: InputMaybe<Order_By>;
-  pi_id_category?: InputMaybe<Order_By>;
-  pi_id_raw?: InputMaybe<Order_By>;
-  pi_id_user?: InputMaybe<Order_By>;
-  pi_prefix?: InputMaybe<Order_By>;
-};
-
-/** Boolean expression to filter rows from the table "platby_item". All fields are combined with a logical 'AND'. */
-export type Platby_Item_Bool_Exp = {
-  _and?: InputMaybe<Array<Platby_Item_Bool_Exp>>;
-  _not?: InputMaybe<Platby_Item_Bool_Exp>;
-  _or?: InputMaybe<Array<Platby_Item_Bool_Exp>>;
-  pi_amount?: InputMaybe<Numeric_Comparison_Exp>;
-  pi_date?: InputMaybe<Date_Comparison_Exp>;
-  pi_id?: InputMaybe<Bigint_Comparison_Exp>;
-  pi_id_category?: InputMaybe<Bigint_Comparison_Exp>;
-  pi_id_raw?: InputMaybe<Bigint_Comparison_Exp>;
-  pi_id_user?: InputMaybe<Bigint_Comparison_Exp>;
-  pi_prefix?: InputMaybe<Int_Comparison_Exp>;
-  platby_category?: InputMaybe<Platby_Category_Bool_Exp>;
-  platby_raw?: InputMaybe<Platby_Raw_Bool_Exp>;
-  user?: InputMaybe<Users_Bool_Exp>;
-};
-
-/** unique or primary key constraints on table "platby_item" */
-export enum Platby_Item_Constraint {
-  /** unique or primary key constraint */
-  Idx_24713PiIdRaw = 'idx_24713_pi_id_raw',
-  /** unique or primary key constraint */
-  Idx_24713Primary = 'idx_24713_primary'
-}
-
-/** input type for incrementing numeric columns in table "platby_item" */
-export type Platby_Item_Inc_Input = {
-  pi_amount?: InputMaybe<Scalars['numeric']>;
-  pi_id?: InputMaybe<Scalars['bigint']>;
-  pi_id_category?: InputMaybe<Scalars['bigint']>;
-  pi_id_raw?: InputMaybe<Scalars['bigint']>;
-  pi_id_user?: InputMaybe<Scalars['bigint']>;
-  pi_prefix?: InputMaybe<Scalars['Int']>;
-};
-
-/** input type for inserting data into table "platby_item" */
-export type Platby_Item_Insert_Input = {
-  pi_amount?: InputMaybe<Scalars['numeric']>;
-  pi_date?: InputMaybe<Scalars['date']>;
-  pi_id?: InputMaybe<Scalars['bigint']>;
-  pi_id_category?: InputMaybe<Scalars['bigint']>;
-  pi_id_raw?: InputMaybe<Scalars['bigint']>;
-  pi_id_user?: InputMaybe<Scalars['bigint']>;
-  pi_prefix?: InputMaybe<Scalars['Int']>;
-  platby_category?: InputMaybe<Platby_Category_Obj_Rel_Insert_Input>;
-  platby_raw?: InputMaybe<Platby_Raw_Obj_Rel_Insert_Input>;
-  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
-};
-
-/** aggregate max on columns */
-export type Platby_Item_Max_Fields = {
-  __typename?: 'platby_item_max_fields';
-  pi_amount?: Maybe<Scalars['numeric']>;
-  pi_date?: Maybe<Scalars['date']>;
-  pi_id?: Maybe<Scalars['bigint']>;
-  pi_id_category?: Maybe<Scalars['bigint']>;
-  pi_id_raw?: Maybe<Scalars['bigint']>;
-  pi_id_user?: Maybe<Scalars['bigint']>;
-  pi_prefix?: Maybe<Scalars['Int']>;
-};
-
-/** order by max() on columns of table "platby_item" */
-export type Platby_Item_Max_Order_By = {
-  pi_amount?: InputMaybe<Order_By>;
-  pi_date?: InputMaybe<Order_By>;
-  pi_id?: InputMaybe<Order_By>;
-  pi_id_category?: InputMaybe<Order_By>;
-  pi_id_raw?: InputMaybe<Order_By>;
-  pi_id_user?: InputMaybe<Order_By>;
-  pi_prefix?: InputMaybe<Order_By>;
-};
-
-/** aggregate min on columns */
-export type Platby_Item_Min_Fields = {
-  __typename?: 'platby_item_min_fields';
-  pi_amount?: Maybe<Scalars['numeric']>;
-  pi_date?: Maybe<Scalars['date']>;
-  pi_id?: Maybe<Scalars['bigint']>;
-  pi_id_category?: Maybe<Scalars['bigint']>;
-  pi_id_raw?: Maybe<Scalars['bigint']>;
-  pi_id_user?: Maybe<Scalars['bigint']>;
-  pi_prefix?: Maybe<Scalars['Int']>;
-};
-
-/** order by min() on columns of table "platby_item" */
-export type Platby_Item_Min_Order_By = {
-  pi_amount?: InputMaybe<Order_By>;
-  pi_date?: InputMaybe<Order_By>;
-  pi_id?: InputMaybe<Order_By>;
-  pi_id_category?: InputMaybe<Order_By>;
-  pi_id_raw?: InputMaybe<Order_By>;
-  pi_id_user?: InputMaybe<Order_By>;
-  pi_prefix?: InputMaybe<Order_By>;
-};
-
-/** response of any mutation on the table "platby_item" */
-export type Platby_Item_Mutation_Response = {
-  __typename?: 'platby_item_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Platby_Item>;
-};
-
-/** on conflict condition type for table "platby_item" */
-export type Platby_Item_On_Conflict = {
-  constraint: Platby_Item_Constraint;
-  update_columns?: Array<Platby_Item_Update_Column>;
-  where?: InputMaybe<Platby_Item_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "platby_item". */
-export type Platby_Item_Order_By = {
-  pi_amount?: InputMaybe<Order_By>;
-  pi_date?: InputMaybe<Order_By>;
-  pi_id?: InputMaybe<Order_By>;
-  pi_id_category?: InputMaybe<Order_By>;
-  pi_id_raw?: InputMaybe<Order_By>;
-  pi_id_user?: InputMaybe<Order_By>;
-  pi_prefix?: InputMaybe<Order_By>;
-  platby_category?: InputMaybe<Platby_Category_Order_By>;
-  platby_raw?: InputMaybe<Platby_Raw_Order_By>;
-  user?: InputMaybe<Users_Order_By>;
-};
-
-/** primary key columns input for table: platby_item */
-export type Platby_Item_Pk_Columns_Input = {
-  pi_id: Scalars['bigint'];
-};
-
-/** select columns of table "platby_item" */
-export enum Platby_Item_Select_Column {
-  /** column name */
-  PiAmount = 'pi_amount',
-  /** column name */
-  PiDate = 'pi_date',
-  /** column name */
-  PiId = 'pi_id',
-  /** column name */
-  PiIdCategory = 'pi_id_category',
-  /** column name */
-  PiIdRaw = 'pi_id_raw',
-  /** column name */
-  PiIdUser = 'pi_id_user',
-  /** column name */
-  PiPrefix = 'pi_prefix'
-}
-
-/** input type for updating data in table "platby_item" */
-export type Platby_Item_Set_Input = {
-  pi_amount?: InputMaybe<Scalars['numeric']>;
-  pi_date?: InputMaybe<Scalars['date']>;
-  pi_id?: InputMaybe<Scalars['bigint']>;
-  pi_id_category?: InputMaybe<Scalars['bigint']>;
-  pi_id_raw?: InputMaybe<Scalars['bigint']>;
-  pi_id_user?: InputMaybe<Scalars['bigint']>;
-  pi_prefix?: InputMaybe<Scalars['Int']>;
-};
-
-/** aggregate stddev on columns */
-export type Platby_Item_Stddev_Fields = {
-  __typename?: 'platby_item_stddev_fields';
-  pi_amount?: Maybe<Scalars['Float']>;
-  pi_id?: Maybe<Scalars['Float']>;
-  pi_id_category?: Maybe<Scalars['Float']>;
-  pi_id_raw?: Maybe<Scalars['Float']>;
-  pi_id_user?: Maybe<Scalars['Float']>;
-  pi_prefix?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev() on columns of table "platby_item" */
-export type Platby_Item_Stddev_Order_By = {
-  pi_amount?: InputMaybe<Order_By>;
-  pi_id?: InputMaybe<Order_By>;
-  pi_id_category?: InputMaybe<Order_By>;
-  pi_id_raw?: InputMaybe<Order_By>;
-  pi_id_user?: InputMaybe<Order_By>;
-  pi_prefix?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Platby_Item_Stddev_Pop_Fields = {
-  __typename?: 'platby_item_stddev_pop_fields';
-  pi_amount?: Maybe<Scalars['Float']>;
-  pi_id?: Maybe<Scalars['Float']>;
-  pi_id_category?: Maybe<Scalars['Float']>;
-  pi_id_raw?: Maybe<Scalars['Float']>;
-  pi_id_user?: Maybe<Scalars['Float']>;
-  pi_prefix?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_pop() on columns of table "platby_item" */
-export type Platby_Item_Stddev_Pop_Order_By = {
-  pi_amount?: InputMaybe<Order_By>;
-  pi_id?: InputMaybe<Order_By>;
-  pi_id_category?: InputMaybe<Order_By>;
-  pi_id_raw?: InputMaybe<Order_By>;
-  pi_id_user?: InputMaybe<Order_By>;
-  pi_prefix?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Platby_Item_Stddev_Samp_Fields = {
-  __typename?: 'platby_item_stddev_samp_fields';
-  pi_amount?: Maybe<Scalars['Float']>;
-  pi_id?: Maybe<Scalars['Float']>;
-  pi_id_category?: Maybe<Scalars['Float']>;
-  pi_id_raw?: Maybe<Scalars['Float']>;
-  pi_id_user?: Maybe<Scalars['Float']>;
-  pi_prefix?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_samp() on columns of table "platby_item" */
-export type Platby_Item_Stddev_Samp_Order_By = {
-  pi_amount?: InputMaybe<Order_By>;
-  pi_id?: InputMaybe<Order_By>;
-  pi_id_category?: InputMaybe<Order_By>;
-  pi_id_raw?: InputMaybe<Order_By>;
-  pi_id_user?: InputMaybe<Order_By>;
-  pi_prefix?: InputMaybe<Order_By>;
-};
-
-/** aggregate sum on columns */
-export type Platby_Item_Sum_Fields = {
-  __typename?: 'platby_item_sum_fields';
-  pi_amount?: Maybe<Scalars['numeric']>;
-  pi_id?: Maybe<Scalars['bigint']>;
-  pi_id_category?: Maybe<Scalars['bigint']>;
-  pi_id_raw?: Maybe<Scalars['bigint']>;
-  pi_id_user?: Maybe<Scalars['bigint']>;
-  pi_prefix?: Maybe<Scalars['Int']>;
-};
-
-/** order by sum() on columns of table "platby_item" */
-export type Platby_Item_Sum_Order_By = {
-  pi_amount?: InputMaybe<Order_By>;
-  pi_id?: InputMaybe<Order_By>;
-  pi_id_category?: InputMaybe<Order_By>;
-  pi_id_raw?: InputMaybe<Order_By>;
-  pi_id_user?: InputMaybe<Order_By>;
-  pi_prefix?: InputMaybe<Order_By>;
-};
-
-/** update columns of table "platby_item" */
-export enum Platby_Item_Update_Column {
-  /** column name */
-  PiAmount = 'pi_amount',
-  /** column name */
-  PiDate = 'pi_date',
-  /** column name */
-  PiId = 'pi_id',
-  /** column name */
-  PiIdCategory = 'pi_id_category',
-  /** column name */
-  PiIdRaw = 'pi_id_raw',
-  /** column name */
-  PiIdUser = 'pi_id_user',
-  /** column name */
-  PiPrefix = 'pi_prefix'
-}
-
-/** aggregate var_pop on columns */
-export type Platby_Item_Var_Pop_Fields = {
-  __typename?: 'platby_item_var_pop_fields';
-  pi_amount?: Maybe<Scalars['Float']>;
-  pi_id?: Maybe<Scalars['Float']>;
-  pi_id_category?: Maybe<Scalars['Float']>;
-  pi_id_raw?: Maybe<Scalars['Float']>;
-  pi_id_user?: Maybe<Scalars['Float']>;
-  pi_prefix?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_pop() on columns of table "platby_item" */
-export type Platby_Item_Var_Pop_Order_By = {
-  pi_amount?: InputMaybe<Order_By>;
-  pi_id?: InputMaybe<Order_By>;
-  pi_id_category?: InputMaybe<Order_By>;
-  pi_id_raw?: InputMaybe<Order_By>;
-  pi_id_user?: InputMaybe<Order_By>;
-  pi_prefix?: InputMaybe<Order_By>;
-};
-
-/** aggregate var_samp on columns */
-export type Platby_Item_Var_Samp_Fields = {
-  __typename?: 'platby_item_var_samp_fields';
-  pi_amount?: Maybe<Scalars['Float']>;
-  pi_id?: Maybe<Scalars['Float']>;
-  pi_id_category?: Maybe<Scalars['Float']>;
-  pi_id_raw?: Maybe<Scalars['Float']>;
-  pi_id_user?: Maybe<Scalars['Float']>;
-  pi_prefix?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_samp() on columns of table "platby_item" */
-export type Platby_Item_Var_Samp_Order_By = {
-  pi_amount?: InputMaybe<Order_By>;
-  pi_id?: InputMaybe<Order_By>;
-  pi_id_category?: InputMaybe<Order_By>;
-  pi_id_raw?: InputMaybe<Order_By>;
-  pi_id_user?: InputMaybe<Order_By>;
-  pi_prefix?: InputMaybe<Order_By>;
-};
-
-/** aggregate variance on columns */
-export type Platby_Item_Variance_Fields = {
-  __typename?: 'platby_item_variance_fields';
-  pi_amount?: Maybe<Scalars['Float']>;
-  pi_id?: Maybe<Scalars['Float']>;
-  pi_id_category?: Maybe<Scalars['Float']>;
-  pi_id_raw?: Maybe<Scalars['Float']>;
-  pi_id_user?: Maybe<Scalars['Float']>;
-  pi_prefix?: Maybe<Scalars['Float']>;
-};
-
-/** order by variance() on columns of table "platby_item" */
-export type Platby_Item_Variance_Order_By = {
-  pi_amount?: InputMaybe<Order_By>;
-  pi_id?: InputMaybe<Order_By>;
-  pi_id_category?: InputMaybe<Order_By>;
-  pi_id_raw?: InputMaybe<Order_By>;
-  pi_id_user?: InputMaybe<Order_By>;
-  pi_prefix?: InputMaybe<Order_By>;
-};
-
-/** columns and relationships of "platby_raw" */
-export type Platby_Raw = {
-  __typename?: 'platby_raw';
-  /** An array relationship */
-  platby_items: Array<Platby_Item>;
-  /** An aggregate relationship */
-  platby_items_aggregate: Platby_Item_Aggregate;
-  pr_discarded: Scalars['Boolean'];
-  pr_hash: Scalars['String'];
-  pr_id: Scalars['bigint'];
-  pr_raw: Scalars['bytea'];
-  pr_sorted: Scalars['Boolean'];
-};
-
-
-/** columns and relationships of "platby_raw" */
-export type Platby_RawPlatby_ItemsArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Item_Order_By>>;
-  where?: InputMaybe<Platby_Item_Bool_Exp>;
-};
-
-
-/** columns and relationships of "platby_raw" */
-export type Platby_RawPlatby_Items_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Item_Order_By>>;
-  where?: InputMaybe<Platby_Item_Bool_Exp>;
-};
-
-/** aggregated selection of "platby_raw" */
-export type Platby_Raw_Aggregate = {
-  __typename?: 'platby_raw_aggregate';
-  aggregate?: Maybe<Platby_Raw_Aggregate_Fields>;
-  nodes: Array<Platby_Raw>;
-};
-
-/** aggregate fields of "platby_raw" */
-export type Platby_Raw_Aggregate_Fields = {
-  __typename?: 'platby_raw_aggregate_fields';
-  avg?: Maybe<Platby_Raw_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Platby_Raw_Max_Fields>;
-  min?: Maybe<Platby_Raw_Min_Fields>;
-  stddev?: Maybe<Platby_Raw_Stddev_Fields>;
-  stddev_pop?: Maybe<Platby_Raw_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Platby_Raw_Stddev_Samp_Fields>;
-  sum?: Maybe<Platby_Raw_Sum_Fields>;
-  var_pop?: Maybe<Platby_Raw_Var_Pop_Fields>;
-  var_samp?: Maybe<Platby_Raw_Var_Samp_Fields>;
-  variance?: Maybe<Platby_Raw_Variance_Fields>;
-};
-
-
-/** aggregate fields of "platby_raw" */
-export type Platby_Raw_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Platby_Raw_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate avg on columns */
-export type Platby_Raw_Avg_Fields = {
-  __typename?: 'platby_raw_avg_fields';
-  pr_id?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to filter rows from the table "platby_raw". All fields are combined with a logical 'AND'. */
-export type Platby_Raw_Bool_Exp = {
-  _and?: InputMaybe<Array<Platby_Raw_Bool_Exp>>;
-  _not?: InputMaybe<Platby_Raw_Bool_Exp>;
-  _or?: InputMaybe<Array<Platby_Raw_Bool_Exp>>;
-  platby_items?: InputMaybe<Platby_Item_Bool_Exp>;
-  pr_discarded?: InputMaybe<Boolean_Comparison_Exp>;
-  pr_hash?: InputMaybe<String_Comparison_Exp>;
-  pr_id?: InputMaybe<Bigint_Comparison_Exp>;
-  pr_raw?: InputMaybe<Bytea_Comparison_Exp>;
-  pr_sorted?: InputMaybe<Boolean_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "platby_raw" */
-export enum Platby_Raw_Constraint {
-  /** unique or primary key constraint */
-  Idx_24720PrHash = 'idx_24720_pr_hash',
-  /** unique or primary key constraint */
-  Idx_24720Primary = 'idx_24720_primary'
-}
-
-/** input type for incrementing numeric columns in table "platby_raw" */
-export type Platby_Raw_Inc_Input = {
-  pr_id?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "platby_raw" */
-export type Platby_Raw_Insert_Input = {
-  platby_items?: InputMaybe<Platby_Item_Arr_Rel_Insert_Input>;
-  pr_discarded?: InputMaybe<Scalars['Boolean']>;
-  pr_hash?: InputMaybe<Scalars['String']>;
-  pr_id?: InputMaybe<Scalars['bigint']>;
-  pr_raw?: InputMaybe<Scalars['bytea']>;
-  pr_sorted?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate max on columns */
-export type Platby_Raw_Max_Fields = {
-  __typename?: 'platby_raw_max_fields';
-  pr_hash?: Maybe<Scalars['String']>;
-  pr_id?: Maybe<Scalars['bigint']>;
-};
-
-/** aggregate min on columns */
-export type Platby_Raw_Min_Fields = {
-  __typename?: 'platby_raw_min_fields';
-  pr_hash?: Maybe<Scalars['String']>;
-  pr_id?: Maybe<Scalars['bigint']>;
-};
-
-/** response of any mutation on the table "platby_raw" */
-export type Platby_Raw_Mutation_Response = {
-  __typename?: 'platby_raw_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Platby_Raw>;
-};
-
-/** input type for inserting object relation for remote table "platby_raw" */
-export type Platby_Raw_Obj_Rel_Insert_Input = {
-  data: Platby_Raw_Insert_Input;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Platby_Raw_On_Conflict>;
-};
-
-/** on conflict condition type for table "platby_raw" */
-export type Platby_Raw_On_Conflict = {
-  constraint: Platby_Raw_Constraint;
-  update_columns?: Array<Platby_Raw_Update_Column>;
-  where?: InputMaybe<Platby_Raw_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "platby_raw". */
-export type Platby_Raw_Order_By = {
-  platby_items_aggregate?: InputMaybe<Platby_Item_Aggregate_Order_By>;
-  pr_discarded?: InputMaybe<Order_By>;
-  pr_hash?: InputMaybe<Order_By>;
-  pr_id?: InputMaybe<Order_By>;
-  pr_raw?: InputMaybe<Order_By>;
-  pr_sorted?: InputMaybe<Order_By>;
-};
-
-/** primary key columns input for table: platby_raw */
-export type Platby_Raw_Pk_Columns_Input = {
-  pr_id: Scalars['bigint'];
-};
-
-/** select columns of table "platby_raw" */
-export enum Platby_Raw_Select_Column {
-  /** column name */
-  PrDiscarded = 'pr_discarded',
-  /** column name */
-  PrHash = 'pr_hash',
-  /** column name */
-  PrId = 'pr_id',
-  /** column name */
-  PrRaw = 'pr_raw',
-  /** column name */
-  PrSorted = 'pr_sorted'
-}
-
-/** input type for updating data in table "platby_raw" */
-export type Platby_Raw_Set_Input = {
-  pr_discarded?: InputMaybe<Scalars['Boolean']>;
-  pr_hash?: InputMaybe<Scalars['String']>;
-  pr_id?: InputMaybe<Scalars['bigint']>;
-  pr_raw?: InputMaybe<Scalars['bytea']>;
-  pr_sorted?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate stddev on columns */
-export type Platby_Raw_Stddev_Fields = {
-  __typename?: 'platby_raw_stddev_fields';
-  pr_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Platby_Raw_Stddev_Pop_Fields = {
-  __typename?: 'platby_raw_stddev_pop_fields';
-  pr_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Platby_Raw_Stddev_Samp_Fields = {
-  __typename?: 'platby_raw_stddev_samp_fields';
-  pr_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate sum on columns */
-export type Platby_Raw_Sum_Fields = {
-  __typename?: 'platby_raw_sum_fields';
-  pr_id?: Maybe<Scalars['bigint']>;
-};
-
-/** update columns of table "platby_raw" */
-export enum Platby_Raw_Update_Column {
-  /** column name */
-  PrDiscarded = 'pr_discarded',
-  /** column name */
-  PrHash = 'pr_hash',
-  /** column name */
-  PrId = 'pr_id',
-  /** column name */
-  PrRaw = 'pr_raw',
-  /** column name */
-  PrSorted = 'pr_sorted'
-}
-
-/** aggregate var_pop on columns */
-export type Platby_Raw_Var_Pop_Fields = {
-  __typename?: 'platby_raw_var_pop_fields';
-  pr_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Platby_Raw_Var_Samp_Fields = {
-  __typename?: 'platby_raw_var_samp_fields';
-  pr_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Platby_Raw_Variance_Fields = {
-  __typename?: 'platby_raw_variance_fields';
-  pr_id?: Maybe<Scalars['Float']>;
-};
-
-export type Query_Root = {
-  __typename?: 'query_root';
-  /** fetch data from the table: "akce" */
-  akce: Array<Akce>;
-  /** fetch aggregated fields from the table: "akce" */
-  akce_aggregate: Akce_Aggregate;
-  /** fetch data from the table: "akce" using primary key columns */
-  akce_by_pk?: Maybe<Akce>;
-  /** fetch data from the table: "akce_item" */
-  akce_item: Array<Akce_Item>;
-  /** fetch aggregated fields from the table: "akce_item" */
-  akce_item_aggregate: Akce_Item_Aggregate;
-  /** fetch data from the table: "akce_item" using primary key columns */
-  akce_item_by_pk?: Maybe<Akce_Item>;
-  /** fetch data from the table: "aktuality" */
-  aktuality: Array<Aktuality>;
-  /** fetch data from the table: "aktuality_admin" */
-  aktuality_admin: Array<Aktuality_Admin>;
-  /** fetch aggregated fields from the table: "aktuality_admin" */
-  aktuality_admin_aggregate: Aktuality_Admin_Aggregate;
-  /** fetch aggregated fields from the table: "aktuality" */
-  aktuality_aggregate: Aktuality_Aggregate;
-  /** fetch data from the table: "aktuality" using primary key columns */
-  aktuality_by_pk?: Maybe<Aktuality>;
-  /** fetch data from the table: "dokumenty" */
-  dokumenty: Array<Dokumenty>;
-  /** fetch aggregated fields from the table: "dokumenty" */
-  dokumenty_aggregate: Dokumenty_Aggregate;
-  /** fetch data from the table: "dokumenty" using primary key columns */
-  dokumenty_by_pk?: Maybe<Dokumenty>;
-  /** fetch data from the table: "galerie_dir" */
-  galerie_dir: Array<Galerie_Dir>;
-  /** fetch aggregated fields from the table: "galerie_dir" */
-  galerie_dir_aggregate: Galerie_Dir_Aggregate;
-  /** fetch data from the table: "galerie_dir" using primary key columns */
-  galerie_dir_by_pk?: Maybe<Galerie_Dir>;
-  /** fetch data from the table: "galerie_foto" */
-  galerie_foto: Array<Galerie_Foto>;
-  /** fetch aggregated fields from the table: "galerie_foto" */
-  galerie_foto_aggregate: Galerie_Foto_Aggregate;
-  /** fetch data from the table: "galerie_foto" using primary key columns */
-  galerie_foto_by_pk?: Maybe<Galerie_Foto>;
-  /** fetch data from the table: "nabidka" */
-  nabidka: Array<Nabidka>;
-  /** fetch data from the table: "nabidka_admin" */
-  nabidka_admin: Array<Nabidka_Admin>;
-  /** fetch aggregated fields from the table: "nabidka_admin" */
-  nabidka_admin_aggregate: Nabidka_Admin_Aggregate;
-  /** fetch aggregated fields from the table: "nabidka" */
-  nabidka_aggregate: Nabidka_Aggregate;
-  /** fetch data from the table: "nabidka" using primary key columns */
-  nabidka_by_pk?: Maybe<Nabidka>;
-  /** fetch data from the table: "nabidka_item" */
-  nabidka_item: Array<Nabidka_Item>;
-  /** fetch aggregated fields from the table: "nabidka_item" */
-  nabidka_item_aggregate: Nabidka_Item_Aggregate;
-  /** fetch data from the table: "nabidka_item" using primary key columns */
-  nabidka_item_by_pk?: Maybe<Nabidka_Item>;
-  /** fetch data from the table: "parameters" */
-  parameters: Array<Parameters>;
-  /** fetch aggregated fields from the table: "parameters" */
-  parameters_aggregate: Parameters_Aggregate;
-  /** fetch data from the table: "parameters" using primary key columns */
-  parameters_by_pk?: Maybe<Parameters>;
-  /** fetch data from the table: "pary" */
-  pary: Array<Pary>;
-  /** fetch aggregated fields from the table: "pary" */
-  pary_aggregate: Pary_Aggregate;
-  /** fetch data from the table: "pary" using primary key columns */
-  pary_by_pk?: Maybe<Pary>;
-  /** fetch data from the table: "pary_navrh" */
-  pary_navrh: Array<Pary_Navrh>;
-  /** fetch aggregated fields from the table: "pary_navrh" */
-  pary_navrh_aggregate: Pary_Navrh_Aggregate;
-  /** fetch data from the table: "pary_navrh" using primary key columns */
-  pary_navrh_by_pk?: Maybe<Pary_Navrh>;
-  /** fetch data from the table: "permissions" */
-  permissions: Array<Permissions>;
-  /** fetch aggregated fields from the table: "permissions" */
-  permissions_aggregate: Permissions_Aggregate;
-  /** fetch data from the table: "permissions" using primary key columns */
-  permissions_by_pk?: Maybe<Permissions>;
-  /** fetch data from the table: "platby_category" */
-  platby_category: Array<Platby_Category>;
-  /** fetch aggregated fields from the table: "platby_category" */
-  platby_category_aggregate: Platby_Category_Aggregate;
-  /** fetch data from the table: "platby_category" using primary key columns */
-  platby_category_by_pk?: Maybe<Platby_Category>;
-  /** fetch data from the table: "platby_category_group" */
-  platby_category_group: Array<Platby_Category_Group>;
-  /** fetch aggregated fields from the table: "platby_category_group" */
-  platby_category_group_aggregate: Platby_Category_Group_Aggregate;
-  /** fetch data from the table: "platby_category_group" using primary key columns */
-  platby_category_group_by_pk?: Maybe<Platby_Category_Group>;
-  /** fetch data from the table: "platby_group" */
-  platby_group: Array<Platby_Group>;
-  /** fetch aggregated fields from the table: "platby_group" */
-  platby_group_aggregate: Platby_Group_Aggregate;
-  /** fetch data from the table: "platby_group" using primary key columns */
-  platby_group_by_pk?: Maybe<Platby_Group>;
-  /** fetch data from the table: "platby_group_skupina" */
-  platby_group_skupina: Array<Platby_Group_Skupina>;
-  /** fetch aggregated fields from the table: "platby_group_skupina" */
-  platby_group_skupina_aggregate: Platby_Group_Skupina_Aggregate;
-  /** fetch data from the table: "platby_group_skupina" using primary key columns */
-  platby_group_skupina_by_pk?: Maybe<Platby_Group_Skupina>;
-  /** fetch data from the table: "platby_item" */
-  platby_item: Array<Platby_Item>;
-  /** fetch aggregated fields from the table: "platby_item" */
-  platby_item_aggregate: Platby_Item_Aggregate;
-  /** fetch data from the table: "platby_item" using primary key columns */
-  platby_item_by_pk?: Maybe<Platby_Item>;
-  /** fetch data from the table: "platby_raw" */
-  platby_raw: Array<Platby_Raw>;
-  /** fetch aggregated fields from the table: "platby_raw" */
-  platby_raw_aggregate: Platby_Raw_Aggregate;
-  /** fetch data from the table: "platby_raw" using primary key columns */
-  platby_raw_by_pk?: Maybe<Platby_Raw>;
-  /** An array relationship */
-  rozpis: Array<Rozpis>;
-  /** fetch data from the table: "rozpis_admin" */
-  rozpis_admin: Array<Rozpis_Admin>;
-  /** fetch aggregated fields from the table: "rozpis_admin" */
-  rozpis_admin_aggregate: Rozpis_Admin_Aggregate;
-  /** An aggregate relationship */
-  rozpis_aggregate: Rozpis_Aggregate;
-  /** fetch data from the table: "rozpis" using primary key columns */
-  rozpis_by_pk?: Maybe<Rozpis>;
-  /** fetch data from the table: "rozpis_item" */
-  rozpis_item: Array<Rozpis_Item>;
-  /** fetch aggregated fields from the table: "rozpis_item" */
-  rozpis_item_aggregate: Rozpis_Item_Aggregate;
-  /** fetch data from the table: "rozpis_item" using primary key columns */
-  rozpis_item_by_pk?: Maybe<Rozpis_Item>;
-  /** fetch data from the table: "session" */
-  session: Array<Session>;
-  /** fetch aggregated fields from the table: "session" */
-  session_aggregate: Session_Aggregate;
-  /** fetch data from the table: "session" using primary key columns */
-  session_by_pk?: Maybe<Session>;
-  /** fetch data from the table: "skupiny" */
-  skupiny: Array<Skupiny>;
-  /** fetch aggregated fields from the table: "skupiny" */
-  skupiny_aggregate: Skupiny_Aggregate;
-  /** fetch data from the table: "skupiny" using primary key columns */
-  skupiny_by_pk?: Maybe<Skupiny>;
-  /** fetch data from the table: "upozorneni" */
-  upozorneni: Array<Upozorneni>;
-  /** fetch aggregated fields from the table: "upozorneni" */
-  upozorneni_aggregate: Upozorneni_Aggregate;
-  /** fetch data from the table: "upozorneni" using primary key columns */
-  upozorneni_by_pk?: Maybe<Upozorneni>;
-  /** fetch data from the table: "upozorneni_skupiny" */
-  upozorneni_skupiny: Array<Upozorneni_Skupiny>;
-  /** fetch aggregated fields from the table: "upozorneni_skupiny" */
-  upozorneni_skupiny_aggregate: Upozorneni_Skupiny_Aggregate;
-  /** fetch data from the table: "upozorneni_skupiny" using primary key columns */
-  upozorneni_skupiny_by_pk?: Maybe<Upozorneni_Skupiny>;
-  /** An array relationship */
-  users: Array<Users>;
-  /** An aggregate relationship */
-  users_aggregate: Users_Aggregate;
-  /** fetch data from the table: "users" using primary key columns */
-  users_by_pk?: Maybe<Users>;
-  /** fetch data from the table: "users_skupiny" */
-  users_skupiny: Array<Users_Skupiny>;
-  /** fetch aggregated fields from the table: "users_skupiny" */
-  users_skupiny_aggregate: Users_Skupiny_Aggregate;
-  /** fetch data from the table: "users_skupiny" using primary key columns */
-  users_skupiny_by_pk?: Maybe<Users_Skupiny>;
-  /** fetch data from the table: "video" */
-  video: Array<Video>;
-  /** fetch aggregated fields from the table: "video" */
-  video_aggregate: Video_Aggregate;
-  /** fetch data from the table: "video" using primary key columns */
-  video_by_pk?: Maybe<Video>;
-  /** fetch data from the table: "video_list" */
-  video_list: Array<Video_List>;
-  /** fetch aggregated fields from the table: "video_list" */
-  video_list_aggregate: Video_List_Aggregate;
-  /** fetch data from the table: "video_list" using primary key columns */
-  video_list_by_pk?: Maybe<Video_List>;
-  /** fetch data from the table: "video_source" */
-  video_source: Array<Video_Source>;
-  /** fetch aggregated fields from the table: "video_source" */
-  video_source_aggregate: Video_Source_Aggregate;
-  /** fetch data from the table: "video_source" using primary key columns */
-  video_source_by_pk?: Maybe<Video_Source>;
-};
-
-
-export type Query_RootAkceArgs = {
-  distinct_on?: InputMaybe<Array<Akce_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Akce_Order_By>>;
-  where?: InputMaybe<Akce_Bool_Exp>;
-};
-
-
-export type Query_RootAkce_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Akce_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Akce_Order_By>>;
-  where?: InputMaybe<Akce_Bool_Exp>;
-};
-
-
-export type Query_RootAkce_By_PkArgs = {
-  a_id: Scalars['bigint'];
-};
-
-
-export type Query_RootAkce_ItemArgs = {
-  distinct_on?: InputMaybe<Array<Akce_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Akce_Item_Order_By>>;
-  where?: InputMaybe<Akce_Item_Bool_Exp>;
-};
-
-
-export type Query_RootAkce_Item_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Akce_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Akce_Item_Order_By>>;
-  where?: InputMaybe<Akce_Item_Bool_Exp>;
-};
-
-
-export type Query_RootAkce_Item_By_PkArgs = {
-  ai_id: Scalars['bigint'];
-};
-
-
-export type Query_RootAktualityArgs = {
-  distinct_on?: InputMaybe<Array<Aktuality_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Aktuality_Order_By>>;
-  where?: InputMaybe<Aktuality_Bool_Exp>;
-};
-
-
-export type Query_RootAktuality_AdminArgs = {
-  distinct_on?: InputMaybe<Array<Aktuality_Admin_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Aktuality_Admin_Order_By>>;
-  where?: InputMaybe<Aktuality_Admin_Bool_Exp>;
-};
-
-
-export type Query_RootAktuality_Admin_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Aktuality_Admin_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Aktuality_Admin_Order_By>>;
-  where?: InputMaybe<Aktuality_Admin_Bool_Exp>;
-};
-
-
-export type Query_RootAktuality_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Aktuality_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Aktuality_Order_By>>;
-  where?: InputMaybe<Aktuality_Bool_Exp>;
-};
-
-
-export type Query_RootAktuality_By_PkArgs = {
-  at_id: Scalars['bigint'];
-};
-
-
-export type Query_RootDokumentyArgs = {
-  distinct_on?: InputMaybe<Array<Dokumenty_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Dokumenty_Order_By>>;
-  where?: InputMaybe<Dokumenty_Bool_Exp>;
-};
-
-
-export type Query_RootDokumenty_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Dokumenty_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Dokumenty_Order_By>>;
-  where?: InputMaybe<Dokumenty_Bool_Exp>;
-};
-
-
-export type Query_RootDokumenty_By_PkArgs = {
-  d_id: Scalars['bigint'];
-};
-
-
-export type Query_RootGalerie_DirArgs = {
-  distinct_on?: InputMaybe<Array<Galerie_Dir_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Galerie_Dir_Order_By>>;
-  where?: InputMaybe<Galerie_Dir_Bool_Exp>;
-};
-
-
-export type Query_RootGalerie_Dir_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Galerie_Dir_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Galerie_Dir_Order_By>>;
-  where?: InputMaybe<Galerie_Dir_Bool_Exp>;
-};
-
-
-export type Query_RootGalerie_Dir_By_PkArgs = {
-  gd_id: Scalars['bigint'];
-};
-
-
-export type Query_RootGalerie_FotoArgs = {
-  distinct_on?: InputMaybe<Array<Galerie_Foto_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Galerie_Foto_Order_By>>;
-  where?: InputMaybe<Galerie_Foto_Bool_Exp>;
-};
-
-
-export type Query_RootGalerie_Foto_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Galerie_Foto_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Galerie_Foto_Order_By>>;
-  where?: InputMaybe<Galerie_Foto_Bool_Exp>;
-};
-
-
-export type Query_RootGalerie_Foto_By_PkArgs = {
-  gf_id: Scalars['bigint'];
-};
-
-
-export type Query_RootNabidkaArgs = {
-  distinct_on?: InputMaybe<Array<Nabidka_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Nabidka_Order_By>>;
-  where?: InputMaybe<Nabidka_Bool_Exp>;
-};
-
-
-export type Query_RootNabidka_AdminArgs = {
-  distinct_on?: InputMaybe<Array<Nabidka_Admin_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Nabidka_Admin_Order_By>>;
-  where?: InputMaybe<Nabidka_Admin_Bool_Exp>;
-};
-
-
-export type Query_RootNabidka_Admin_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Nabidka_Admin_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Nabidka_Admin_Order_By>>;
-  where?: InputMaybe<Nabidka_Admin_Bool_Exp>;
-};
-
-
-export type Query_RootNabidka_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Nabidka_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Nabidka_Order_By>>;
-  where?: InputMaybe<Nabidka_Bool_Exp>;
-};
-
-
-export type Query_RootNabidka_By_PkArgs = {
-  n_id: Scalars['bigint'];
-};
-
-
-export type Query_RootNabidka_ItemArgs = {
-  distinct_on?: InputMaybe<Array<Nabidka_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Nabidka_Item_Order_By>>;
-  where?: InputMaybe<Nabidka_Item_Bool_Exp>;
-};
-
-
-export type Query_RootNabidka_Item_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Nabidka_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Nabidka_Item_Order_By>>;
-  where?: InputMaybe<Nabidka_Item_Bool_Exp>;
-};
-
-
-export type Query_RootNabidka_Item_By_PkArgs = {
-  ni_id: Scalars['bigint'];
-};
-
-
-export type Query_RootParametersArgs = {
-  distinct_on?: InputMaybe<Array<Parameters_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Parameters_Order_By>>;
-  where?: InputMaybe<Parameters_Bool_Exp>;
-};
-
-
-export type Query_RootParameters_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Parameters_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Parameters_Order_By>>;
-  where?: InputMaybe<Parameters_Bool_Exp>;
-};
-
-
-export type Query_RootParameters_By_PkArgs = {
-  pa_name: Scalars['String'];
-};
-
-
-export type Query_RootParyArgs = {
-  distinct_on?: InputMaybe<Array<Pary_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Pary_Order_By>>;
-  where?: InputMaybe<Pary_Bool_Exp>;
-};
-
-
-export type Query_RootPary_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Pary_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Pary_Order_By>>;
-  where?: InputMaybe<Pary_Bool_Exp>;
-};
-
-
-export type Query_RootPary_By_PkArgs = {
-  p_id: Scalars['bigint'];
-};
-
-
-export type Query_RootPary_NavrhArgs = {
-  distinct_on?: InputMaybe<Array<Pary_Navrh_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Pary_Navrh_Order_By>>;
-  where?: InputMaybe<Pary_Navrh_Bool_Exp>;
-};
-
-
-export type Query_RootPary_Navrh_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Pary_Navrh_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Pary_Navrh_Order_By>>;
-  where?: InputMaybe<Pary_Navrh_Bool_Exp>;
-};
-
-
-export type Query_RootPary_Navrh_By_PkArgs = {
-  pn_id: Scalars['bigint'];
-};
-
-
-export type Query_RootPermissionsArgs = {
-  distinct_on?: InputMaybe<Array<Permissions_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Permissions_Order_By>>;
-  where?: InputMaybe<Permissions_Bool_Exp>;
-};
-
-
-export type Query_RootPermissions_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Permissions_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Permissions_Order_By>>;
-  where?: InputMaybe<Permissions_Bool_Exp>;
-};
-
-
-export type Query_RootPermissions_By_PkArgs = {
-  pe_id: Scalars['bigint'];
-};
-
-
-export type Query_RootPlatby_CategoryArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Category_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Category_Order_By>>;
-  where?: InputMaybe<Platby_Category_Bool_Exp>;
-};
-
-
-export type Query_RootPlatby_Category_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Category_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Category_Order_By>>;
-  where?: InputMaybe<Platby_Category_Bool_Exp>;
-};
-
-
-export type Query_RootPlatby_Category_By_PkArgs = {
-  pc_id: Scalars['bigint'];
-};
-
-
-export type Query_RootPlatby_Category_GroupArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Category_Group_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Category_Group_Order_By>>;
-  where?: InputMaybe<Platby_Category_Group_Bool_Exp>;
-};
-
-
-export type Query_RootPlatby_Category_Group_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Category_Group_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Category_Group_Order_By>>;
-  where?: InputMaybe<Platby_Category_Group_Bool_Exp>;
-};
-
-
-export type Query_RootPlatby_Category_Group_By_PkArgs = {
-  pcg_id: Scalars['bigint'];
-};
-
-
-export type Query_RootPlatby_GroupArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Group_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Group_Order_By>>;
-  where?: InputMaybe<Platby_Group_Bool_Exp>;
-};
-
-
-export type Query_RootPlatby_Group_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Group_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Group_Order_By>>;
-  where?: InputMaybe<Platby_Group_Bool_Exp>;
-};
-
-
-export type Query_RootPlatby_Group_By_PkArgs = {
-  pg_id: Scalars['bigint'];
-};
-
-
-export type Query_RootPlatby_Group_SkupinaArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Group_Skupina_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Group_Skupina_Order_By>>;
-  where?: InputMaybe<Platby_Group_Skupina_Bool_Exp>;
-};
-
-
-export type Query_RootPlatby_Group_Skupina_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Group_Skupina_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Group_Skupina_Order_By>>;
-  where?: InputMaybe<Platby_Group_Skupina_Bool_Exp>;
-};
-
-
-export type Query_RootPlatby_Group_Skupina_By_PkArgs = {
-  pgs_id: Scalars['bigint'];
-};
-
-
-export type Query_RootPlatby_ItemArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Item_Order_By>>;
-  where?: InputMaybe<Platby_Item_Bool_Exp>;
-};
-
-
-export type Query_RootPlatby_Item_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Item_Order_By>>;
-  where?: InputMaybe<Platby_Item_Bool_Exp>;
-};
-
-
-export type Query_RootPlatby_Item_By_PkArgs = {
-  pi_id: Scalars['bigint'];
-};
-
-
-export type Query_RootPlatby_RawArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Raw_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Raw_Order_By>>;
-  where?: InputMaybe<Platby_Raw_Bool_Exp>;
-};
-
-
-export type Query_RootPlatby_Raw_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Raw_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Raw_Order_By>>;
-  where?: InputMaybe<Platby_Raw_Bool_Exp>;
-};
-
-
-export type Query_RootPlatby_Raw_By_PkArgs = {
-  pr_id: Scalars['bigint'];
-};
-
-
-export type Query_RootRozpisArgs = {
-  distinct_on?: InputMaybe<Array<Rozpis_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Rozpis_Order_By>>;
-  where?: InputMaybe<Rozpis_Bool_Exp>;
-};
-
-
-export type Query_RootRozpis_AdminArgs = {
-  distinct_on?: InputMaybe<Array<Rozpis_Admin_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Rozpis_Admin_Order_By>>;
-  where?: InputMaybe<Rozpis_Admin_Bool_Exp>;
-};
-
-
-export type Query_RootRozpis_Admin_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Rozpis_Admin_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Rozpis_Admin_Order_By>>;
-  where?: InputMaybe<Rozpis_Admin_Bool_Exp>;
-};
-
-
-export type Query_RootRozpis_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Rozpis_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Rozpis_Order_By>>;
-  where?: InputMaybe<Rozpis_Bool_Exp>;
-};
-
-
-export type Query_RootRozpis_By_PkArgs = {
-  r_id: Scalars['bigint'];
-};
-
-
-export type Query_RootRozpis_ItemArgs = {
-  distinct_on?: InputMaybe<Array<Rozpis_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Rozpis_Item_Order_By>>;
-  where?: InputMaybe<Rozpis_Item_Bool_Exp>;
-};
-
-
-export type Query_RootRozpis_Item_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Rozpis_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Rozpis_Item_Order_By>>;
-  where?: InputMaybe<Rozpis_Item_Bool_Exp>;
-};
-
-
-export type Query_RootRozpis_Item_By_PkArgs = {
-  ri_id: Scalars['bigint'];
-};
-
-
-export type Query_RootSessionArgs = {
-  distinct_on?: InputMaybe<Array<Session_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Session_Order_By>>;
-  where?: InputMaybe<Session_Bool_Exp>;
-};
-
-
-export type Query_RootSession_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Session_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Session_Order_By>>;
-  where?: InputMaybe<Session_Bool_Exp>;
-};
-
-
-export type Query_RootSession_By_PkArgs = {
-  ss_id: Scalars['String'];
-};
-
-
-export type Query_RootSkupinyArgs = {
-  distinct_on?: InputMaybe<Array<Skupiny_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Skupiny_Order_By>>;
-  where?: InputMaybe<Skupiny_Bool_Exp>;
-};
-
-
-export type Query_RootSkupiny_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Skupiny_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Skupiny_Order_By>>;
-  where?: InputMaybe<Skupiny_Bool_Exp>;
-};
-
-
-export type Query_RootSkupiny_By_PkArgs = {
-  s_id: Scalars['bigint'];
-};
-
-
-export type Query_RootUpozorneniArgs = {
-  distinct_on?: InputMaybe<Array<Upozorneni_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Upozorneni_Order_By>>;
-  where?: InputMaybe<Upozorneni_Bool_Exp>;
-};
-
-
-export type Query_RootUpozorneni_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Upozorneni_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Upozorneni_Order_By>>;
-  where?: InputMaybe<Upozorneni_Bool_Exp>;
-};
-
-
-export type Query_RootUpozorneni_By_PkArgs = {
-  up_id: Scalars['bigint'];
-};
-
-
-export type Query_RootUpozorneni_SkupinyArgs = {
-  distinct_on?: InputMaybe<Array<Upozorneni_Skupiny_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Upozorneni_Skupiny_Order_By>>;
-  where?: InputMaybe<Upozorneni_Skupiny_Bool_Exp>;
-};
-
-
-export type Query_RootUpozorneni_Skupiny_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Upozorneni_Skupiny_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Upozorneni_Skupiny_Order_By>>;
-  where?: InputMaybe<Upozorneni_Skupiny_Bool_Exp>;
-};
-
-
-export type Query_RootUpozorneni_Skupiny_By_PkArgs = {
-  ups_id: Scalars['bigint'];
-};
-
-
-export type Query_RootUsersArgs = {
-  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Users_Order_By>>;
-  where?: InputMaybe<Users_Bool_Exp>;
-};
-
-
-export type Query_RootUsers_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Users_Order_By>>;
-  where?: InputMaybe<Users_Bool_Exp>;
-};
-
-
-export type Query_RootUsers_By_PkArgs = {
-  u_id: Scalars['bigint'];
-};
-
-
-export type Query_RootUsers_SkupinyArgs = {
-  distinct_on?: InputMaybe<Array<Users_Skupiny_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Users_Skupiny_Order_By>>;
-  where?: InputMaybe<Users_Skupiny_Bool_Exp>;
-};
-
-
-export type Query_RootUsers_Skupiny_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Users_Skupiny_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Users_Skupiny_Order_By>>;
-  where?: InputMaybe<Users_Skupiny_Bool_Exp>;
-};
-
-
-export type Query_RootUsers_Skupiny_By_PkArgs = {
-  us_id: Scalars['bigint'];
-};
-
-
-export type Query_RootVideoArgs = {
-  distinct_on?: InputMaybe<Array<Video_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Video_Order_By>>;
-  where?: InputMaybe<Video_Bool_Exp>;
-};
-
-
-export type Query_RootVideo_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Video_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Video_Order_By>>;
-  where?: InputMaybe<Video_Bool_Exp>;
-};
-
-
-export type Query_RootVideo_By_PkArgs = {
-  v_id: Scalars['bigint'];
-};
-
-
-export type Query_RootVideo_ListArgs = {
-  distinct_on?: InputMaybe<Array<Video_List_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Video_List_Order_By>>;
-  where?: InputMaybe<Video_List_Bool_Exp>;
-};
-
-
-export type Query_RootVideo_List_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Video_List_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Video_List_Order_By>>;
-  where?: InputMaybe<Video_List_Bool_Exp>;
-};
-
-
-export type Query_RootVideo_List_By_PkArgs = {
-  vl_id: Scalars['bigint'];
-};
-
-
-export type Query_RootVideo_SourceArgs = {
-  distinct_on?: InputMaybe<Array<Video_Source_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Video_Source_Order_By>>;
-  where?: InputMaybe<Video_Source_Bool_Exp>;
-};
-
-
-export type Query_RootVideo_Source_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Video_Source_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Video_Source_Order_By>>;
-  where?: InputMaybe<Video_Source_Bool_Exp>;
-};
-
-
-export type Query_RootVideo_Source_By_PkArgs = {
-  vs_id: Scalars['bigint'];
-};
-
-/** columns and relationships of "rozpis" */
-export type Rozpis = {
-  __typename?: 'rozpis';
-  r_datum: Scalars['date'];
-  r_id: Scalars['bigint'];
-  r_kde: Scalars['String'];
-  r_lock: Scalars['Boolean'];
-  r_timestamp?: Maybe<Scalars['timestamptz']>;
-  r_trener: Scalars['bigint'];
-  r_visible: Scalars['Boolean'];
-  /** An array relationship */
-  rozpis_items: Array<Rozpis_Item>;
-  /** An aggregate relationship */
-  rozpis_items_aggregate: Rozpis_Item_Aggregate;
-  /** An object relationship */
-  user: Users;
-};
-
-
-/** columns and relationships of "rozpis" */
-export type RozpisRozpis_ItemsArgs = {
-  distinct_on?: InputMaybe<Array<Rozpis_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Rozpis_Item_Order_By>>;
-  where?: InputMaybe<Rozpis_Item_Bool_Exp>;
-};
-
-
-/** columns and relationships of "rozpis" */
-export type RozpisRozpis_Items_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Rozpis_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Rozpis_Item_Order_By>>;
-  where?: InputMaybe<Rozpis_Item_Bool_Exp>;
-};
-
-/** columns and relationships of "rozpis_admin" */
-export type Rozpis_Admin = {
-  __typename?: 'rozpis_admin';
-  r_datum?: Maybe<Scalars['date']>;
-  r_id?: Maybe<Scalars['bigint']>;
-  r_kde?: Maybe<Scalars['String']>;
-  r_lock?: Maybe<Scalars['Boolean']>;
-  r_timestamp?: Maybe<Scalars['timestamptz']>;
-  r_trener?: Maybe<Scalars['bigint']>;
-  r_visible?: Maybe<Scalars['Boolean']>;
-  /** An array relationship */
-  rozpis_items: Array<Rozpis_Item>;
-  /** An aggregate relationship */
-  rozpis_items_aggregate: Rozpis_Item_Aggregate;
-  /** An object relationship */
-  user?: Maybe<Users>;
-};
-
-
-/** columns and relationships of "rozpis_admin" */
-export type Rozpis_AdminRozpis_ItemsArgs = {
-  distinct_on?: InputMaybe<Array<Rozpis_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Rozpis_Item_Order_By>>;
-  where?: InputMaybe<Rozpis_Item_Bool_Exp>;
-};
-
-
-/** columns and relationships of "rozpis_admin" */
-export type Rozpis_AdminRozpis_Items_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Rozpis_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Rozpis_Item_Order_By>>;
-  where?: InputMaybe<Rozpis_Item_Bool_Exp>;
-};
-
-/** aggregated selection of "rozpis_admin" */
-export type Rozpis_Admin_Aggregate = {
-  __typename?: 'rozpis_admin_aggregate';
-  aggregate?: Maybe<Rozpis_Admin_Aggregate_Fields>;
-  nodes: Array<Rozpis_Admin>;
-};
-
-/** aggregate fields of "rozpis_admin" */
-export type Rozpis_Admin_Aggregate_Fields = {
-  __typename?: 'rozpis_admin_aggregate_fields';
-  avg?: Maybe<Rozpis_Admin_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Rozpis_Admin_Max_Fields>;
-  min?: Maybe<Rozpis_Admin_Min_Fields>;
-  stddev?: Maybe<Rozpis_Admin_Stddev_Fields>;
-  stddev_pop?: Maybe<Rozpis_Admin_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Rozpis_Admin_Stddev_Samp_Fields>;
-  sum?: Maybe<Rozpis_Admin_Sum_Fields>;
-  var_pop?: Maybe<Rozpis_Admin_Var_Pop_Fields>;
-  var_samp?: Maybe<Rozpis_Admin_Var_Samp_Fields>;
-  variance?: Maybe<Rozpis_Admin_Variance_Fields>;
-};
-
-
-/** aggregate fields of "rozpis_admin" */
-export type Rozpis_Admin_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Rozpis_Admin_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate avg on columns */
-export type Rozpis_Admin_Avg_Fields = {
-  __typename?: 'rozpis_admin_avg_fields';
-  r_id?: Maybe<Scalars['Float']>;
-  r_trener?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to filter rows from the table "rozpis_admin". All fields are combined with a logical 'AND'. */
-export type Rozpis_Admin_Bool_Exp = {
-  _and?: InputMaybe<Array<Rozpis_Admin_Bool_Exp>>;
-  _not?: InputMaybe<Rozpis_Admin_Bool_Exp>;
-  _or?: InputMaybe<Array<Rozpis_Admin_Bool_Exp>>;
-  r_datum?: InputMaybe<Date_Comparison_Exp>;
-  r_id?: InputMaybe<Bigint_Comparison_Exp>;
-  r_kde?: InputMaybe<String_Comparison_Exp>;
-  r_lock?: InputMaybe<Boolean_Comparison_Exp>;
-  r_timestamp?: InputMaybe<Timestamptz_Comparison_Exp>;
-  r_trener?: InputMaybe<Bigint_Comparison_Exp>;
-  r_visible?: InputMaybe<Boolean_Comparison_Exp>;
-  rozpis_items?: InputMaybe<Rozpis_Item_Bool_Exp>;
-  user?: InputMaybe<Users_Bool_Exp>;
-};
-
-/** input type for incrementing numeric columns in table "rozpis_admin" */
-export type Rozpis_Admin_Inc_Input = {
-  r_id?: InputMaybe<Scalars['bigint']>;
-  r_trener?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "rozpis_admin" */
-export type Rozpis_Admin_Insert_Input = {
-  r_datum?: InputMaybe<Scalars['date']>;
-  r_id?: InputMaybe<Scalars['bigint']>;
-  r_kde?: InputMaybe<Scalars['String']>;
-  r_lock?: InputMaybe<Scalars['Boolean']>;
-  r_timestamp?: InputMaybe<Scalars['timestamptz']>;
-  r_trener?: InputMaybe<Scalars['bigint']>;
-  r_visible?: InputMaybe<Scalars['Boolean']>;
-  rozpis_items?: InputMaybe<Rozpis_Item_Arr_Rel_Insert_Input>;
-  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
-};
-
-/** aggregate max on columns */
-export type Rozpis_Admin_Max_Fields = {
-  __typename?: 'rozpis_admin_max_fields';
-  r_datum?: Maybe<Scalars['date']>;
-  r_id?: Maybe<Scalars['bigint']>;
-  r_kde?: Maybe<Scalars['String']>;
-  r_timestamp?: Maybe<Scalars['timestamptz']>;
-  r_trener?: Maybe<Scalars['bigint']>;
-};
-
-/** aggregate min on columns */
-export type Rozpis_Admin_Min_Fields = {
-  __typename?: 'rozpis_admin_min_fields';
-  r_datum?: Maybe<Scalars['date']>;
-  r_id?: Maybe<Scalars['bigint']>;
-  r_kde?: Maybe<Scalars['String']>;
-  r_timestamp?: Maybe<Scalars['timestamptz']>;
-  r_trener?: Maybe<Scalars['bigint']>;
-};
-
-/** response of any mutation on the table "rozpis_admin" */
-export type Rozpis_Admin_Mutation_Response = {
-  __typename?: 'rozpis_admin_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Rozpis_Admin>;
-};
-
-/** Ordering options when selecting data from "rozpis_admin". */
-export type Rozpis_Admin_Order_By = {
-  r_datum?: InputMaybe<Order_By>;
-  r_id?: InputMaybe<Order_By>;
-  r_kde?: InputMaybe<Order_By>;
-  r_lock?: InputMaybe<Order_By>;
-  r_timestamp?: InputMaybe<Order_By>;
-  r_trener?: InputMaybe<Order_By>;
-  r_visible?: InputMaybe<Order_By>;
-  rozpis_items_aggregate?: InputMaybe<Rozpis_Item_Aggregate_Order_By>;
-  user?: InputMaybe<Users_Order_By>;
-};
-
-/** select columns of table "rozpis_admin" */
-export enum Rozpis_Admin_Select_Column {
-  /** column name */
-  RDatum = 'r_datum',
-  /** column name */
-  RId = 'r_id',
-  /** column name */
-  RKde = 'r_kde',
-  /** column name */
-  RLock = 'r_lock',
-  /** column name */
-  RTimestamp = 'r_timestamp',
-  /** column name */
-  RTrener = 'r_trener',
-  /** column name */
-  RVisible = 'r_visible'
-}
-
-/** input type for updating data in table "rozpis_admin" */
-export type Rozpis_Admin_Set_Input = {
-  r_datum?: InputMaybe<Scalars['date']>;
-  r_id?: InputMaybe<Scalars['bigint']>;
-  r_kde?: InputMaybe<Scalars['String']>;
-  r_lock?: InputMaybe<Scalars['Boolean']>;
-  r_timestamp?: InputMaybe<Scalars['timestamptz']>;
-  r_trener?: InputMaybe<Scalars['bigint']>;
-  r_visible?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate stddev on columns */
-export type Rozpis_Admin_Stddev_Fields = {
-  __typename?: 'rozpis_admin_stddev_fields';
-  r_id?: Maybe<Scalars['Float']>;
-  r_trener?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Rozpis_Admin_Stddev_Pop_Fields = {
-  __typename?: 'rozpis_admin_stddev_pop_fields';
-  r_id?: Maybe<Scalars['Float']>;
-  r_trener?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Rozpis_Admin_Stddev_Samp_Fields = {
-  __typename?: 'rozpis_admin_stddev_samp_fields';
-  r_id?: Maybe<Scalars['Float']>;
-  r_trener?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate sum on columns */
-export type Rozpis_Admin_Sum_Fields = {
-  __typename?: 'rozpis_admin_sum_fields';
-  r_id?: Maybe<Scalars['bigint']>;
-  r_trener?: Maybe<Scalars['bigint']>;
-};
-
-/** aggregate var_pop on columns */
-export type Rozpis_Admin_Var_Pop_Fields = {
-  __typename?: 'rozpis_admin_var_pop_fields';
-  r_id?: Maybe<Scalars['Float']>;
-  r_trener?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Rozpis_Admin_Var_Samp_Fields = {
-  __typename?: 'rozpis_admin_var_samp_fields';
-  r_id?: Maybe<Scalars['Float']>;
-  r_trener?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Rozpis_Admin_Variance_Fields = {
-  __typename?: 'rozpis_admin_variance_fields';
-  r_id?: Maybe<Scalars['Float']>;
-  r_trener?: Maybe<Scalars['Float']>;
-};
-
-/** aggregated selection of "rozpis" */
-export type Rozpis_Aggregate = {
-  __typename?: 'rozpis_aggregate';
-  aggregate?: Maybe<Rozpis_Aggregate_Fields>;
-  nodes: Array<Rozpis>;
-};
-
-/** aggregate fields of "rozpis" */
-export type Rozpis_Aggregate_Fields = {
-  __typename?: 'rozpis_aggregate_fields';
-  avg?: Maybe<Rozpis_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Rozpis_Max_Fields>;
-  min?: Maybe<Rozpis_Min_Fields>;
-  stddev?: Maybe<Rozpis_Stddev_Fields>;
-  stddev_pop?: Maybe<Rozpis_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Rozpis_Stddev_Samp_Fields>;
-  sum?: Maybe<Rozpis_Sum_Fields>;
-  var_pop?: Maybe<Rozpis_Var_Pop_Fields>;
-  var_samp?: Maybe<Rozpis_Var_Samp_Fields>;
-  variance?: Maybe<Rozpis_Variance_Fields>;
-};
-
-
-/** aggregate fields of "rozpis" */
-export type Rozpis_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Rozpis_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** order by aggregate values of table "rozpis" */
-export type Rozpis_Aggregate_Order_By = {
-  avg?: InputMaybe<Rozpis_Avg_Order_By>;
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Rozpis_Max_Order_By>;
-  min?: InputMaybe<Rozpis_Min_Order_By>;
-  stddev?: InputMaybe<Rozpis_Stddev_Order_By>;
-  stddev_pop?: InputMaybe<Rozpis_Stddev_Pop_Order_By>;
-  stddev_samp?: InputMaybe<Rozpis_Stddev_Samp_Order_By>;
-  sum?: InputMaybe<Rozpis_Sum_Order_By>;
-  var_pop?: InputMaybe<Rozpis_Var_Pop_Order_By>;
-  var_samp?: InputMaybe<Rozpis_Var_Samp_Order_By>;
-  variance?: InputMaybe<Rozpis_Variance_Order_By>;
-};
-
-/** input type for inserting array relation for remote table "rozpis" */
-export type Rozpis_Arr_Rel_Insert_Input = {
-  data: Array<Rozpis_Insert_Input>;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Rozpis_On_Conflict>;
-};
-
-/** aggregate avg on columns */
-export type Rozpis_Avg_Fields = {
-  __typename?: 'rozpis_avg_fields';
-  r_id?: Maybe<Scalars['Float']>;
-  r_trener?: Maybe<Scalars['Float']>;
-};
-
-/** order by avg() on columns of table "rozpis" */
-export type Rozpis_Avg_Order_By = {
-  r_id?: InputMaybe<Order_By>;
-  r_trener?: InputMaybe<Order_By>;
-};
-
-/** Boolean expression to filter rows from the table "rozpis". All fields are combined with a logical 'AND'. */
-export type Rozpis_Bool_Exp = {
-  _and?: InputMaybe<Array<Rozpis_Bool_Exp>>;
-  _not?: InputMaybe<Rozpis_Bool_Exp>;
-  _or?: InputMaybe<Array<Rozpis_Bool_Exp>>;
-  r_datum?: InputMaybe<Date_Comparison_Exp>;
-  r_id?: InputMaybe<Bigint_Comparison_Exp>;
-  r_kde?: InputMaybe<String_Comparison_Exp>;
-  r_lock?: InputMaybe<Boolean_Comparison_Exp>;
-  r_timestamp?: InputMaybe<Timestamptz_Comparison_Exp>;
-  r_trener?: InputMaybe<Bigint_Comparison_Exp>;
-  r_visible?: InputMaybe<Boolean_Comparison_Exp>;
-  rozpis_items?: InputMaybe<Rozpis_Item_Bool_Exp>;
-  user?: InputMaybe<Users_Bool_Exp>;
-};
-
-/** unique or primary key constraints on table "rozpis" */
-export enum Rozpis_Constraint {
-  /** unique or primary key constraint */
-  Idx_24731Primary = 'idx_24731_primary'
-}
-
-/** input type for incrementing numeric columns in table "rozpis" */
-export type Rozpis_Inc_Input = {
-  r_id?: InputMaybe<Scalars['bigint']>;
-  r_trener?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "rozpis" */
-export type Rozpis_Insert_Input = {
-  r_datum?: InputMaybe<Scalars['date']>;
-  r_id?: InputMaybe<Scalars['bigint']>;
-  r_kde?: InputMaybe<Scalars['String']>;
-  r_lock?: InputMaybe<Scalars['Boolean']>;
-  r_timestamp?: InputMaybe<Scalars['timestamptz']>;
-  r_trener?: InputMaybe<Scalars['bigint']>;
-  r_visible?: InputMaybe<Scalars['Boolean']>;
-  rozpis_items?: InputMaybe<Rozpis_Item_Arr_Rel_Insert_Input>;
-  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
-};
-
-/** columns and relationships of "rozpis_item" */
-export type Rozpis_Item = {
-  __typename?: 'rozpis_item';
-  /** An object relationship */
+export type Aktuality = Node & {
+  __typename?: 'Aktuality';
+  atFoto?: Maybe<Scalars['BigInt']>;
+  atFotoMain?: Maybe<Scalars['BigInt']>;
+  atId: Scalars['BigInt'];
+  atJmeno: Scalars['String'];
+  atKat: Scalars['String'];
+  atKdo: Scalars['BigInt'];
+  atPreview: Scalars['String'];
+  atText: Scalars['String'];
+  atTimestamp?: Maybe<Scalars['Datetime']>;
+  atTimestampAdd?: Maybe<Scalars['Datetime']>;
+  /** Reads a single `GalerieFoto` that is related to this `Aktuality`. */
+  galerieFotoByAtFotoMain?: Maybe<GalerieFoto>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  /** Reads a single `User` that is related to this `Aktuality`. */
+  userByAtKdo?: Maybe<User>;
+};
+
+/**
+ * A condition to be used against `Aktuality` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type AktualityCondition = {
+  /** Checks for equality with the object’s `atFoto` field. */
+  atFoto?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `atFotoMain` field. */
+  atFotoMain?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `atId` field. */
+  atId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `atJmeno` field. */
+  atJmeno?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `atKat` field. */
+  atKat?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `atKdo` field. */
+  atKdo?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `atPreview` field. */
+  atPreview?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `atText` field. */
+  atText?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `atTimestamp` field. */
+  atTimestamp?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `atTimestampAdd` field. */
+  atTimestampAdd?: InputMaybe<Scalars['Datetime']>;
+};
+
+/** An input for mutations affecting `Aktuality` */
+export type AktualityInput = {
+  atFoto?: InputMaybe<Scalars['BigInt']>;
+  atFotoMain?: InputMaybe<Scalars['BigInt']>;
+  atId?: InputMaybe<Scalars['BigInt']>;
+  atJmeno: Scalars['String'];
+  atKat: Scalars['String'];
+  atKdo: Scalars['BigInt'];
+  atPreview: Scalars['String'];
+  atText: Scalars['String'];
+  atTimestamp?: InputMaybe<Scalars['Datetime']>;
+  atTimestampAdd?: InputMaybe<Scalars['Datetime']>;
+};
+
+/** Represents an update to a `Aktuality`. Fields that are set will be updated. */
+export type AktualityPatch = {
+  atFoto?: InputMaybe<Scalars['BigInt']>;
+  atFotoMain?: InputMaybe<Scalars['BigInt']>;
+  atId?: InputMaybe<Scalars['BigInt']>;
+  atJmeno?: InputMaybe<Scalars['String']>;
+  atKat?: InputMaybe<Scalars['String']>;
+  atKdo?: InputMaybe<Scalars['BigInt']>;
+  atPreview?: InputMaybe<Scalars['String']>;
+  atText?: InputMaybe<Scalars['String']>;
+  atTimestamp?: InputMaybe<Scalars['Datetime']>;
+  atTimestampAdd?: InputMaybe<Scalars['Datetime']>;
+};
+
+/** All input for the create `Akce` mutation. */
+export type CreateAkceInput = {
+  /** The `Akce` to be created by this mutation. */
+  akce: AkceInput;
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+};
+
+/** All input for the create `AkceItem` mutation. */
+export type CreateAkceItemInput = {
+  /** The `AkceItem` to be created by this mutation. */
+  akceItem: AkceItemInput;
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+};
+
+/** The output of our create `AkceItem` mutation. */
+export type CreateAkceItemPayload = {
+  __typename?: 'CreateAkceItemPayload';
+  /** Reads a single `Akce` that is related to this `AkceItem`. */
+  akceByAiIdRodic?: Maybe<Akce>;
+  /** The `AkceItem` that was created by this mutation. */
+  akceItem?: Maybe<AkceItem>;
+  /** An edge for our `AkceItem`. May be used by Relay 1. */
+  akceItemEdge?: Maybe<AkceItemsEdge>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `AkceItem`. */
+  userByAiUser?: Maybe<User>;
+};
+
+
+/** The output of our create `AkceItem` mutation. */
+export type CreateAkceItemPayloadAkceItemEdgeArgs = {
+  orderBy?: InputMaybe<Array<AkceItemsOrderBy>>;
+};
+
+/** The output of our create `Akce` mutation. */
+export type CreateAkcePayload = {
+  __typename?: 'CreateAkcePayload';
+  /** The `Akce` that was created by this mutation. */
+  akce?: Maybe<Akce>;
+  /** An edge for our `Akce`. May be used by Relay 1. */
+  akceEdge?: Maybe<AkcesEdge>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `Akce` mutation. */
+export type CreateAkcePayloadAkceEdgeArgs = {
+  orderBy?: InputMaybe<Array<AkcesOrderBy>>;
+};
+
+/** All input for the create `Aktuality` mutation. */
+export type CreateAktualityInput = {
+  /** The `Aktuality` to be created by this mutation. */
+  aktuality: AktualityInput;
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+};
+
+/** The output of our create `Aktuality` mutation. */
+export type CreateAktualityPayload = {
+  __typename?: 'CreateAktualityPayload';
+  /** The `Aktuality` that was created by this mutation. */
+  aktuality?: Maybe<Aktuality>;
+  /** An edge for our `Aktuality`. May be used by Relay 1. */
+  aktualityEdge?: Maybe<AktualitiesEdge>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Reads a single `GalerieFoto` that is related to this `Aktuality`. */
+  galerieFotoByAtFotoMain?: Maybe<GalerieFoto>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `Aktuality`. */
+  userByAtKdo?: Maybe<User>;
+};
+
+
+/** The output of our create `Aktuality` mutation. */
+export type CreateAktualityPayloadAktualityEdgeArgs = {
+  orderBy?: InputMaybe<Array<AktualitiesOrderBy>>;
+};
+
+/** All input for the create `Dokumenty` mutation. */
+export type CreateDokumentyInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `Dokumenty` to be created by this mutation. */
+  dokumenty: DokumentyInput;
+};
+
+/** The output of our create `Dokumenty` mutation. */
+export type CreateDokumentyPayload = {
+  __typename?: 'CreateDokumentyPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Dokumenty` that was created by this mutation. */
+  dokumenty?: Maybe<Dokumenty>;
+  /** An edge for our `Dokumenty`. May be used by Relay 1. */
+  dokumentyEdge?: Maybe<DokumentiesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `Dokumenty`. */
+  userByDKdo?: Maybe<User>;
+};
+
+
+/** The output of our create `Dokumenty` mutation. */
+export type CreateDokumentyPayloadDokumentyEdgeArgs = {
+  orderBy?: InputMaybe<Array<DokumentiesOrderBy>>;
+};
+
+/** All input for the create `GalerieDir` mutation. */
+export type CreateGalerieDirInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `GalerieDir` to be created by this mutation. */
+  galerieDir: GalerieDirInput;
+};
+
+/** The output of our create `GalerieDir` mutation. */
+export type CreateGalerieDirPayload = {
+  __typename?: 'CreateGalerieDirPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `GalerieDir` that was created by this mutation. */
+  galerieDir?: Maybe<GalerieDir>;
+  /** An edge for our `GalerieDir`. May be used by Relay 1. */
+  galerieDirEdge?: Maybe<GalerieDirsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `GalerieDir` mutation. */
+export type CreateGalerieDirPayloadGalerieDirEdgeArgs = {
+  orderBy?: InputMaybe<Array<GalerieDirsOrderBy>>;
+};
+
+/** All input for the create `GalerieFoto` mutation. */
+export type CreateGalerieFotoInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `GalerieFoto` to be created by this mutation. */
+  galerieFoto: GalerieFotoInput;
+};
+
+/** The output of our create `GalerieFoto` mutation. */
+export type CreateGalerieFotoPayload = {
+  __typename?: 'CreateGalerieFotoPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Reads a single `GalerieDir` that is related to this `GalerieFoto`. */
+  galerieDirByGfIdRodic?: Maybe<GalerieDir>;
+  /** The `GalerieFoto` that was created by this mutation. */
+  galerieFoto?: Maybe<GalerieFoto>;
+  /** An edge for our `GalerieFoto`. May be used by Relay 1. */
+  galerieFotoEdge?: Maybe<GalerieFotosEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `GalerieFoto`. */
+  userByGfKdo?: Maybe<User>;
+};
+
+
+/** The output of our create `GalerieFoto` mutation. */
+export type CreateGalerieFotoPayloadGalerieFotoEdgeArgs = {
+  orderBy?: InputMaybe<Array<GalerieFotosOrderBy>>;
+};
+
+/** All input for the create `Nabidka` mutation. */
+export type CreateNabidkaInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `Nabidka` to be created by this mutation. */
+  nabidka: NabidkaInput;
+};
+
+/** All input for the create `NabidkaItem` mutation. */
+export type CreateNabidkaItemInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `NabidkaItem` to be created by this mutation. */
+  nabidkaItem: NabidkaItemInput;
+};
+
+/** The output of our create `NabidkaItem` mutation. */
+export type CreateNabidkaItemPayload = {
+  __typename?: 'CreateNabidkaItemPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Reads a single `Nabidka` that is related to this `NabidkaItem`. */
+  nabidkaByNiIdRodic?: Maybe<Nabidka>;
+  /** The `NabidkaItem` that was created by this mutation. */
+  nabidkaItem?: Maybe<NabidkaItem>;
+  /** An edge for our `NabidkaItem`. May be used by Relay 1. */
+  nabidkaItemEdge?: Maybe<NabidkaItemsEdge>;
+  /** Reads a single `Pary` that is related to this `NabidkaItem`. */
+  paryByNiPartner?: Maybe<Pary>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `NabidkaItem` mutation. */
+export type CreateNabidkaItemPayloadNabidkaItemEdgeArgs = {
+  orderBy?: InputMaybe<Array<NabidkaItemsOrderBy>>;
+};
+
+/** The output of our create `Nabidka` mutation. */
+export type CreateNabidkaPayload = {
+  __typename?: 'CreateNabidkaPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Nabidka` that was created by this mutation. */
+  nabidka?: Maybe<Nabidka>;
+  /** An edge for our `Nabidka`. May be used by Relay 1. */
+  nabidkaEdge?: Maybe<NabidkasEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `Nabidka`. */
+  userByNTrener?: Maybe<User>;
+};
+
+
+/** The output of our create `Nabidka` mutation. */
+export type CreateNabidkaPayloadNabidkaEdgeArgs = {
+  orderBy?: InputMaybe<Array<NabidkasOrderBy>>;
+};
+
+/** All input for the create `Parameter` mutation. */
+export type CreateParameterInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `Parameter` to be created by this mutation. */
+  parameter: ParameterInput;
+};
+
+/** The output of our create `Parameter` mutation. */
+export type CreateParameterPayload = {
+  __typename?: 'CreateParameterPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Parameter` that was created by this mutation. */
+  parameter?: Maybe<Parameter>;
+  /** An edge for our `Parameter`. May be used by Relay 1. */
+  parameterEdge?: Maybe<ParametersEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `Parameter` mutation. */
+export type CreateParameterPayloadParameterEdgeArgs = {
+  orderBy?: InputMaybe<Array<ParametersOrderBy>>;
+};
+
+/** All input for the create `Pary` mutation. */
+export type CreateParyInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `Pary` to be created by this mutation. */
+  pary: ParyInput;
+};
+
+/** All input for the create `ParyNavrh` mutation. */
+export type CreateParyNavrhInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `ParyNavrh` to be created by this mutation. */
+  paryNavrh: ParyNavrhInput;
+};
+
+/** The output of our create `ParyNavrh` mutation. */
+export type CreateParyNavrhPayload = {
+  __typename?: 'CreateParyNavrhPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ParyNavrh` that was created by this mutation. */
+  paryNavrh?: Maybe<ParyNavrh>;
+  /** An edge for our `ParyNavrh`. May be used by Relay 1. */
+  paryNavrhEdge?: Maybe<ParyNavrhsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `ParyNavrh`. */
+  userByPnNavrhl?: Maybe<User>;
+  /** Reads a single `User` that is related to this `ParyNavrh`. */
+  userByPnPartner?: Maybe<User>;
+  /** Reads a single `User` that is related to this `ParyNavrh`. */
+  userByPnPartnerka?: Maybe<User>;
+};
+
+
+/** The output of our create `ParyNavrh` mutation. */
+export type CreateParyNavrhPayloadParyNavrhEdgeArgs = {
+  orderBy?: InputMaybe<Array<ParyNavrhsOrderBy>>;
+};
+
+/** The output of our create `Pary` mutation. */
+export type CreateParyPayload = {
+  __typename?: 'CreateParyPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Pary` that was created by this mutation. */
   pary?: Maybe<Pary>;
-  ri_do: Scalars['time'];
-  ri_id: Scalars['bigint'];
-  ri_id_rodic: Scalars['bigint'];
-  ri_lock: Scalars['Boolean'];
-  ri_od: Scalars['time'];
-  ri_partner?: Maybe<Scalars['bigint']>;
-  /** An object relationship */
-  rozpi: Rozpis;
-};
-
-/** aggregated selection of "rozpis_item" */
-export type Rozpis_Item_Aggregate = {
-  __typename?: 'rozpis_item_aggregate';
-  aggregate?: Maybe<Rozpis_Item_Aggregate_Fields>;
-  nodes: Array<Rozpis_Item>;
-};
-
-/** aggregate fields of "rozpis_item" */
-export type Rozpis_Item_Aggregate_Fields = {
-  __typename?: 'rozpis_item_aggregate_fields';
-  avg?: Maybe<Rozpis_Item_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Rozpis_Item_Max_Fields>;
-  min?: Maybe<Rozpis_Item_Min_Fields>;
-  stddev?: Maybe<Rozpis_Item_Stddev_Fields>;
-  stddev_pop?: Maybe<Rozpis_Item_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Rozpis_Item_Stddev_Samp_Fields>;
-  sum?: Maybe<Rozpis_Item_Sum_Fields>;
-  var_pop?: Maybe<Rozpis_Item_Var_Pop_Fields>;
-  var_samp?: Maybe<Rozpis_Item_Var_Samp_Fields>;
-  variance?: Maybe<Rozpis_Item_Variance_Fields>;
+  /** An edge for our `Pary`. May be used by Relay 1. */
+  paryEdge?: Maybe<PariesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `Pary`. */
+  userByPIdPartner?: Maybe<User>;
 };
 
 
-/** aggregate fields of "rozpis_item" */
-export type Rozpis_Item_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Rozpis_Item_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
+/** The output of our create `Pary` mutation. */
+export type CreateParyPayloadParyEdgeArgs = {
+  orderBy?: InputMaybe<Array<PariesOrderBy>>;
 };
 
-/** order by aggregate values of table "rozpis_item" */
-export type Rozpis_Item_Aggregate_Order_By = {
-  avg?: InputMaybe<Rozpis_Item_Avg_Order_By>;
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Rozpis_Item_Max_Order_By>;
-  min?: InputMaybe<Rozpis_Item_Min_Order_By>;
-  stddev?: InputMaybe<Rozpis_Item_Stddev_Order_By>;
-  stddev_pop?: InputMaybe<Rozpis_Item_Stddev_Pop_Order_By>;
-  stddev_samp?: InputMaybe<Rozpis_Item_Stddev_Samp_Order_By>;
-  sum?: InputMaybe<Rozpis_Item_Sum_Order_By>;
-  var_pop?: InputMaybe<Rozpis_Item_Var_Pop_Order_By>;
-  var_samp?: InputMaybe<Rozpis_Item_Var_Samp_Order_By>;
-  variance?: InputMaybe<Rozpis_Item_Variance_Order_By>;
+/** All input for the create `Permission` mutation. */
+export type CreatePermissionInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `Permission` to be created by this mutation. */
+  permission: PermissionInput;
 };
 
-/** input type for inserting array relation for remote table "rozpis_item" */
-export type Rozpis_Item_Arr_Rel_Insert_Input = {
-  data: Array<Rozpis_Item_Insert_Input>;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Rozpis_Item_On_Conflict>;
+/** The output of our create `Permission` mutation. */
+export type CreatePermissionPayload = {
+  __typename?: 'CreatePermissionPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Permission` that was created by this mutation. */
+  permission?: Maybe<Permission>;
+  /** An edge for our `Permission`. May be used by Relay 1. */
+  permissionEdge?: Maybe<PermissionsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
 };
 
-/** aggregate avg on columns */
-export type Rozpis_Item_Avg_Fields = {
-  __typename?: 'rozpis_item_avg_fields';
-  ri_id?: Maybe<Scalars['Float']>;
-  ri_id_rodic?: Maybe<Scalars['Float']>;
-  ri_partner?: Maybe<Scalars['Float']>;
+
+/** The output of our create `Permission` mutation. */
+export type CreatePermissionPayloadPermissionEdgeArgs = {
+  orderBy?: InputMaybe<Array<PermissionsOrderBy>>;
 };
 
-/** order by avg() on columns of table "rozpis_item" */
-export type Rozpis_Item_Avg_Order_By = {
-  ri_id?: InputMaybe<Order_By>;
-  ri_id_rodic?: InputMaybe<Order_By>;
-  ri_partner?: InputMaybe<Order_By>;
+/** All input for the create `PlatbyCategoryGroup` mutation. */
+export type CreatePlatbyCategoryGroupInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `PlatbyCategoryGroup` to be created by this mutation. */
+  platbyCategoryGroup: PlatbyCategoryGroupInput;
 };
 
-/** Boolean expression to filter rows from the table "rozpis_item". All fields are combined with a logical 'AND'. */
-export type Rozpis_Item_Bool_Exp = {
-  _and?: InputMaybe<Array<Rozpis_Item_Bool_Exp>>;
-  _not?: InputMaybe<Rozpis_Item_Bool_Exp>;
-  _or?: InputMaybe<Array<Rozpis_Item_Bool_Exp>>;
-  pary?: InputMaybe<Pary_Bool_Exp>;
-  ri_do?: InputMaybe<Time_Comparison_Exp>;
-  ri_id?: InputMaybe<Bigint_Comparison_Exp>;
-  ri_id_rodic?: InputMaybe<Bigint_Comparison_Exp>;
-  ri_lock?: InputMaybe<Boolean_Comparison_Exp>;
-  ri_od?: InputMaybe<Time_Comparison_Exp>;
-  ri_partner?: InputMaybe<Bigint_Comparison_Exp>;
-  rozpi?: InputMaybe<Rozpis_Bool_Exp>;
+/** The output of our create `PlatbyCategoryGroup` mutation. */
+export type CreatePlatbyCategoryGroupPayload = {
+  __typename?: 'CreatePlatbyCategoryGroupPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Reads a single `PlatbyCategory` that is related to this `PlatbyCategoryGroup`. */
+  platbyCategoryByPcgIdCategory?: Maybe<PlatbyCategory>;
+  /** The `PlatbyCategoryGroup` that was created by this mutation. */
+  platbyCategoryGroup?: Maybe<PlatbyCategoryGroup>;
+  /** An edge for our `PlatbyCategoryGroup`. May be used by Relay 1. */
+  platbyCategoryGroupEdge?: Maybe<PlatbyCategoryGroupsEdge>;
+  /** Reads a single `PlatbyGroup` that is related to this `PlatbyCategoryGroup`. */
+  platbyGroupByPcgIdGroup?: Maybe<PlatbyGroup>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
 };
 
-/** unique or primary key constraints on table "rozpis_item" */
-export enum Rozpis_Item_Constraint {
-  /** unique or primary key constraint */
-  Idx_24742Primary = 'idx_24742_primary'
+
+/** The output of our create `PlatbyCategoryGroup` mutation. */
+export type CreatePlatbyCategoryGroupPayloadPlatbyCategoryGroupEdgeArgs = {
+  orderBy?: InputMaybe<Array<PlatbyCategoryGroupsOrderBy>>;
+};
+
+/** All input for the create `PlatbyCategory` mutation. */
+export type CreatePlatbyCategoryInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `PlatbyCategory` to be created by this mutation. */
+  platbyCategory: PlatbyCategoryInput;
+};
+
+/** The output of our create `PlatbyCategory` mutation. */
+export type CreatePlatbyCategoryPayload = {
+  __typename?: 'CreatePlatbyCategoryPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `PlatbyCategory` that was created by this mutation. */
+  platbyCategory?: Maybe<PlatbyCategory>;
+  /** An edge for our `PlatbyCategory`. May be used by Relay 1. */
+  platbyCategoryEdge?: Maybe<PlatbyCategoriesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `PlatbyCategory` mutation. */
+export type CreatePlatbyCategoryPayloadPlatbyCategoryEdgeArgs = {
+  orderBy?: InputMaybe<Array<PlatbyCategoriesOrderBy>>;
+};
+
+/** All input for the create `PlatbyGroup` mutation. */
+export type CreatePlatbyGroupInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `PlatbyGroup` to be created by this mutation. */
+  platbyGroup: PlatbyGroupInput;
+};
+
+/** The output of our create `PlatbyGroup` mutation. */
+export type CreatePlatbyGroupPayload = {
+  __typename?: 'CreatePlatbyGroupPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `PlatbyGroup` that was created by this mutation. */
+  platbyGroup?: Maybe<PlatbyGroup>;
+  /** An edge for our `PlatbyGroup`. May be used by Relay 1. */
+  platbyGroupEdge?: Maybe<PlatbyGroupsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `PlatbyGroup` mutation. */
+export type CreatePlatbyGroupPayloadPlatbyGroupEdgeArgs = {
+  orderBy?: InputMaybe<Array<PlatbyGroupsOrderBy>>;
+};
+
+/** All input for the create `PlatbyGroupSkupina` mutation. */
+export type CreatePlatbyGroupSkupinaInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `PlatbyGroupSkupina` to be created by this mutation. */
+  platbyGroupSkupina: PlatbyGroupSkupinaInput;
+};
+
+/** The output of our create `PlatbyGroupSkupina` mutation. */
+export type CreatePlatbyGroupSkupinaPayload = {
+  __typename?: 'CreatePlatbyGroupSkupinaPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Reads a single `PlatbyGroup` that is related to this `PlatbyGroupSkupina`. */
+  platbyGroupByPgsIdGroup?: Maybe<PlatbyGroup>;
+  /** The `PlatbyGroupSkupina` that was created by this mutation. */
+  platbyGroupSkupina?: Maybe<PlatbyGroupSkupina>;
+  /** An edge for our `PlatbyGroupSkupina`. May be used by Relay 1. */
+  platbyGroupSkupinaEdge?: Maybe<PlatbyGroupSkupinasEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Skupiny` that is related to this `PlatbyGroupSkupina`. */
+  skupinyByPgsIdSkupina?: Maybe<Skupiny>;
+};
+
+
+/** The output of our create `PlatbyGroupSkupina` mutation. */
+export type CreatePlatbyGroupSkupinaPayloadPlatbyGroupSkupinaEdgeArgs = {
+  orderBy?: InputMaybe<Array<PlatbyGroupSkupinasOrderBy>>;
+};
+
+/** All input for the create `PlatbyItem` mutation. */
+export type CreatePlatbyItemInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `PlatbyItem` to be created by this mutation. */
+  platbyItem: PlatbyItemInput;
+};
+
+/** The output of our create `PlatbyItem` mutation. */
+export type CreatePlatbyItemPayload = {
+  __typename?: 'CreatePlatbyItemPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Reads a single `PlatbyCategory` that is related to this `PlatbyItem`. */
+  platbyCategoryByPiIdCategory?: Maybe<PlatbyCategory>;
+  /** The `PlatbyItem` that was created by this mutation. */
+  platbyItem?: Maybe<PlatbyItem>;
+  /** An edge for our `PlatbyItem`. May be used by Relay 1. */
+  platbyItemEdge?: Maybe<PlatbyItemsEdge>;
+  /** Reads a single `PlatbyRaw` that is related to this `PlatbyItem`. */
+  platbyRawByPiIdRaw?: Maybe<PlatbyRaw>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `PlatbyItem`. */
+  userByPiIdUser?: Maybe<User>;
+};
+
+
+/** The output of our create `PlatbyItem` mutation. */
+export type CreatePlatbyItemPayloadPlatbyItemEdgeArgs = {
+  orderBy?: InputMaybe<Array<PlatbyItemsOrderBy>>;
+};
+
+/** All input for the create `PlatbyRaw` mutation. */
+export type CreatePlatbyRawInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `PlatbyRaw` to be created by this mutation. */
+  platbyRaw: PlatbyRawInput;
+};
+
+/** The output of our create `PlatbyRaw` mutation. */
+export type CreatePlatbyRawPayload = {
+  __typename?: 'CreatePlatbyRawPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `PlatbyRaw` that was created by this mutation. */
+  platbyRaw?: Maybe<PlatbyRaw>;
+  /** An edge for our `PlatbyRaw`. May be used by Relay 1. */
+  platbyRawEdge?: Maybe<PlatbyRawsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `PlatbyRaw` mutation. */
+export type CreatePlatbyRawPayloadPlatbyRawEdgeArgs = {
+  orderBy?: InputMaybe<Array<PlatbyRawsOrderBy>>;
+};
+
+/** All input for the create `Rozpi` mutation. */
+export type CreateRozpiInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `Rozpi` to be created by this mutation. */
+  rozpi: RozpiInput;
+};
+
+/** The output of our create `Rozpi` mutation. */
+export type CreateRozpiPayload = {
+  __typename?: 'CreateRozpiPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `Rozpi` that was created by this mutation. */
+  rozpi?: Maybe<Rozpi>;
+  /** An edge for our `Rozpi`. May be used by Relay 1. */
+  rozpiEdge?: Maybe<RozpisEdge>;
+  /** Reads a single `User` that is related to this `Rozpi`. */
+  userByRTrener?: Maybe<User>;
+};
+
+
+/** The output of our create `Rozpi` mutation. */
+export type CreateRozpiPayloadRozpiEdgeArgs = {
+  orderBy?: InputMaybe<Array<RozpisOrderBy>>;
+};
+
+/** All input for the create `RozpisItem` mutation. */
+export type CreateRozpisItemInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `RozpisItem` to be created by this mutation. */
+  rozpisItem: RozpisItemInput;
+};
+
+/** The output of our create `RozpisItem` mutation. */
+export type CreateRozpisItemPayload = {
+  __typename?: 'CreateRozpisItemPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Reads a single `Pary` that is related to this `RozpisItem`. */
+  paryByRiPartner?: Maybe<Pary>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Rozpi` that is related to this `RozpisItem`. */
+  rozpiByRiIdRodic?: Maybe<Rozpi>;
+  /** The `RozpisItem` that was created by this mutation. */
+  rozpisItem?: Maybe<RozpisItem>;
+  /** An edge for our `RozpisItem`. May be used by Relay 1. */
+  rozpisItemEdge?: Maybe<RozpisItemsEdge>;
+};
+
+
+/** The output of our create `RozpisItem` mutation. */
+export type CreateRozpisItemPayloadRozpisItemEdgeArgs = {
+  orderBy?: InputMaybe<Array<RozpisItemsOrderBy>>;
+};
+
+/** All input for the create `Session` mutation. */
+export type CreateSessionInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `Session` to be created by this mutation. */
+  session: SessionInput;
+};
+
+/** The output of our create `Session` mutation. */
+export type CreateSessionPayload = {
+  __typename?: 'CreateSessionPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `Session` that was created by this mutation. */
+  session?: Maybe<Session>;
+  /** An edge for our `Session`. May be used by Relay 1. */
+  sessionEdge?: Maybe<SessionsEdge>;
+};
+
+
+/** The output of our create `Session` mutation. */
+export type CreateSessionPayloadSessionEdgeArgs = {
+  orderBy?: InputMaybe<Array<SessionsOrderBy>>;
+};
+
+/** All input for the create `Skupiny` mutation. */
+export type CreateSkupinyInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `Skupiny` to be created by this mutation. */
+  skupiny: SkupinyInput;
+};
+
+/** The output of our create `Skupiny` mutation. */
+export type CreateSkupinyPayload = {
+  __typename?: 'CreateSkupinyPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `Skupiny` that was created by this mutation. */
+  skupiny?: Maybe<Skupiny>;
+  /** An edge for our `Skupiny`. May be used by Relay 1. */
+  skupinyEdge?: Maybe<SkupiniesEdge>;
+};
+
+
+/** The output of our create `Skupiny` mutation. */
+export type CreateSkupinyPayloadSkupinyEdgeArgs = {
+  orderBy?: InputMaybe<Array<SkupiniesOrderBy>>;
+};
+
+/** All input for the create `Upozorneni` mutation. */
+export type CreateUpozorneniInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `Upozorneni` to be created by this mutation. */
+  upozorneni: UpozorneniInput;
+};
+
+/** The output of our create `Upozorneni` mutation. */
+export type CreateUpozorneniPayload = {
+  __typename?: 'CreateUpozorneniPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `Upozorneni` that was created by this mutation. */
+  upozorneni?: Maybe<Upozorneni>;
+  /** An edge for our `Upozorneni`. May be used by Relay 1. */
+  upozorneniEdge?: Maybe<UpozornenisEdge>;
+  /** Reads a single `User` that is related to this `Upozorneni`. */
+  userByUpKdo?: Maybe<User>;
+};
+
+
+/** The output of our create `Upozorneni` mutation. */
+export type CreateUpozorneniPayloadUpozorneniEdgeArgs = {
+  orderBy?: InputMaybe<Array<UpozornenisOrderBy>>;
+};
+
+/** All input for the create `UpozorneniSkupiny` mutation. */
+export type CreateUpozorneniSkupinyInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `UpozorneniSkupiny` to be created by this mutation. */
+  upozorneniSkupiny: UpozorneniSkupinyInput;
+};
+
+/** The output of our create `UpozorneniSkupiny` mutation. */
+export type CreateUpozorneniSkupinyPayload = {
+  __typename?: 'CreateUpozorneniSkupinyPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Skupiny` that is related to this `UpozorneniSkupiny`. */
+  skupinyByUpsIdSkupina?: Maybe<Skupiny>;
+  /** Reads a single `Upozorneni` that is related to this `UpozorneniSkupiny`. */
+  upozorneniByUpsIdRodic?: Maybe<Upozorneni>;
+  /** The `UpozorneniSkupiny` that was created by this mutation. */
+  upozorneniSkupiny?: Maybe<UpozorneniSkupiny>;
+  /** An edge for our `UpozorneniSkupiny`. May be used by Relay 1. */
+  upozorneniSkupinyEdge?: Maybe<UpozorneniSkupiniesEdge>;
+};
+
+
+/** The output of our create `UpozorneniSkupiny` mutation. */
+export type CreateUpozorneniSkupinyPayloadUpozorneniSkupinyEdgeArgs = {
+  orderBy?: InputMaybe<Array<UpozorneniSkupiniesOrderBy>>;
+};
+
+/** All input for the create `User` mutation. */
+export type CreateUserInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `User` to be created by this mutation. */
+  user: UserInput;
+};
+
+/** The output of our create `User` mutation. */
+export type CreateUserPayload = {
+  __typename?: 'CreateUserPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Reads a single `Permission` that is related to this `User`. */
+  permissionByUGroup?: Maybe<Permission>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Skupiny` that is related to this `User`. */
+  skupinyByUSkupina?: Maybe<Skupiny>;
+  /** The `User` that was created by this mutation. */
+  user?: Maybe<User>;
+  /** An edge for our `User`. May be used by Relay 1. */
+  userEdge?: Maybe<UsersEdge>;
+};
+
+
+/** The output of our create `User` mutation. */
+export type CreateUserPayloadUserEdgeArgs = {
+  orderBy?: InputMaybe<Array<UsersOrderBy>>;
+};
+
+/** All input for the create `UsersSkupiny` mutation. */
+export type CreateUsersSkupinyInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `UsersSkupiny` to be created by this mutation. */
+  usersSkupiny: UsersSkupinyInput;
+};
+
+/** The output of our create `UsersSkupiny` mutation. */
+export type CreateUsersSkupinyPayload = {
+  __typename?: 'CreateUsersSkupinyPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `UsersSkupiny` that was created by this mutation. */
+  usersSkupiny?: Maybe<UsersSkupiny>;
+  /** An edge for our `UsersSkupiny`. May be used by Relay 1. */
+  usersSkupinyEdge?: Maybe<UsersSkupiniesEdge>;
+};
+
+
+/** The output of our create `UsersSkupiny` mutation. */
+export type CreateUsersSkupinyPayloadUsersSkupinyEdgeArgs = {
+  orderBy?: InputMaybe<Array<UsersSkupiniesOrderBy>>;
+};
+
+/** All input for the create `Video` mutation. */
+export type CreateVideoInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `Video` to be created by this mutation. */
+  video: VideoInput;
+};
+
+/** All input for the create `VideoList` mutation. */
+export type CreateVideoListInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `VideoList` to be created by this mutation. */
+  videoList: VideoListInput;
+};
+
+/** The output of our create `VideoList` mutation. */
+export type CreateVideoListPayload = {
+  __typename?: 'CreateVideoListPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `VideoList` that was created by this mutation. */
+  videoList?: Maybe<VideoList>;
+  /** An edge for our `VideoList`. May be used by Relay 1. */
+  videoListEdge?: Maybe<VideoListsEdge>;
+};
+
+
+/** The output of our create `VideoList` mutation. */
+export type CreateVideoListPayloadVideoListEdgeArgs = {
+  orderBy?: InputMaybe<Array<VideoListsOrderBy>>;
+};
+
+/** The output of our create `Video` mutation. */
+export type CreateVideoPayload = {
+  __typename?: 'CreateVideoPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `Video` that was created by this mutation. */
+  video?: Maybe<Video>;
+  /** An edge for our `Video`. May be used by Relay 1. */
+  videoEdge?: Maybe<VideosEdge>;
+};
+
+
+/** The output of our create `Video` mutation. */
+export type CreateVideoPayloadVideoEdgeArgs = {
+  orderBy?: InputMaybe<Array<VideosOrderBy>>;
+};
+
+/** All input for the create `VideoSource` mutation. */
+export type CreateVideoSourceInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `VideoSource` to be created by this mutation. */
+  videoSource: VideoSourceInput;
+};
+
+/** The output of our create `VideoSource` mutation. */
+export type CreateVideoSourcePayload = {
+  __typename?: 'CreateVideoSourcePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `VideoSource` that was created by this mutation. */
+  videoSource?: Maybe<VideoSource>;
+  /** An edge for our `VideoSource`. May be used by Relay 1. */
+  videoSourceEdge?: Maybe<VideoSourcesEdge>;
+};
+
+
+/** The output of our create `VideoSource` mutation. */
+export type CreateVideoSourcePayloadVideoSourceEdgeArgs = {
+  orderBy?: InputMaybe<Array<VideoSourcesOrderBy>>;
+};
+
+/** All input for the `deleteAkceByAId` mutation. */
+export type DeleteAkceByAIdInput = {
+  aId: Scalars['BigInt'];
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+};
+
+/** All input for the `deleteAkce` mutation. */
+export type DeleteAkceInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Akce` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteAkceItemByAiId` mutation. */
+export type DeleteAkceItemByAiIdInput = {
+  aiId: Scalars['BigInt'];
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+};
+
+/** All input for the `deleteAkceItem` mutation. */
+export type DeleteAkceItemInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `AkceItem` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `AkceItem` mutation. */
+export type DeleteAkceItemPayload = {
+  __typename?: 'DeleteAkceItemPayload';
+  /** Reads a single `Akce` that is related to this `AkceItem`. */
+  akceByAiIdRodic?: Maybe<Akce>;
+  /** The `AkceItem` that was deleted by this mutation. */
+  akceItem?: Maybe<AkceItem>;
+  /** An edge for our `AkceItem`. May be used by Relay 1. */
+  akceItemEdge?: Maybe<AkceItemsEdge>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedAkceItemId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `AkceItem`. */
+  userByAiUser?: Maybe<User>;
+};
+
+
+/** The output of our delete `AkceItem` mutation. */
+export type DeleteAkceItemPayloadAkceItemEdgeArgs = {
+  orderBy?: InputMaybe<Array<AkceItemsOrderBy>>;
+};
+
+/** The output of our delete `Akce` mutation. */
+export type DeleteAkcePayload = {
+  __typename?: 'DeleteAkcePayload';
+  /** The `Akce` that was deleted by this mutation. */
+  akce?: Maybe<Akce>;
+  /** An edge for our `Akce`. May be used by Relay 1. */
+  akceEdge?: Maybe<AkcesEdge>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedAkceId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `Akce` mutation. */
+export type DeleteAkcePayloadAkceEdgeArgs = {
+  orderBy?: InputMaybe<Array<AkcesOrderBy>>;
+};
+
+/** All input for the `deleteAktualityByAtId` mutation. */
+export type DeleteAktualityByAtIdInput = {
+  atId: Scalars['BigInt'];
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+};
+
+/** All input for the `deleteAktuality` mutation. */
+export type DeleteAktualityInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Aktuality` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `Aktuality` mutation. */
+export type DeleteAktualityPayload = {
+  __typename?: 'DeleteAktualityPayload';
+  /** The `Aktuality` that was deleted by this mutation. */
+  aktuality?: Maybe<Aktuality>;
+  /** An edge for our `Aktuality`. May be used by Relay 1. */
+  aktualityEdge?: Maybe<AktualitiesEdge>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedAktualityId?: Maybe<Scalars['ID']>;
+  /** Reads a single `GalerieFoto` that is related to this `Aktuality`. */
+  galerieFotoByAtFotoMain?: Maybe<GalerieFoto>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `Aktuality`. */
+  userByAtKdo?: Maybe<User>;
+};
+
+
+/** The output of our delete `Aktuality` mutation. */
+export type DeleteAktualityPayloadAktualityEdgeArgs = {
+  orderBy?: InputMaybe<Array<AktualitiesOrderBy>>;
+};
+
+/** All input for the `deleteDokumentyByDId` mutation. */
+export type DeleteDokumentyByDIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  dId: Scalars['BigInt'];
+};
+
+/** All input for the `deleteDokumenty` mutation. */
+export type DeleteDokumentyInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Dokumenty` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `Dokumenty` mutation. */
+export type DeleteDokumentyPayload = {
+  __typename?: 'DeleteDokumentyPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedDokumentyId?: Maybe<Scalars['ID']>;
+  /** The `Dokumenty` that was deleted by this mutation. */
+  dokumenty?: Maybe<Dokumenty>;
+  /** An edge for our `Dokumenty`. May be used by Relay 1. */
+  dokumentyEdge?: Maybe<DokumentiesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `Dokumenty`. */
+  userByDKdo?: Maybe<User>;
+};
+
+
+/** The output of our delete `Dokumenty` mutation. */
+export type DeleteDokumentyPayloadDokumentyEdgeArgs = {
+  orderBy?: InputMaybe<Array<DokumentiesOrderBy>>;
+};
+
+/** All input for the `deleteGalerieDirByGdId` mutation. */
+export type DeleteGalerieDirByGdIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  gdId: Scalars['BigInt'];
+};
+
+/** All input for the `deleteGalerieDir` mutation. */
+export type DeleteGalerieDirInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `GalerieDir` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `GalerieDir` mutation. */
+export type DeleteGalerieDirPayload = {
+  __typename?: 'DeleteGalerieDirPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedGalerieDirId?: Maybe<Scalars['ID']>;
+  /** The `GalerieDir` that was deleted by this mutation. */
+  galerieDir?: Maybe<GalerieDir>;
+  /** An edge for our `GalerieDir`. May be used by Relay 1. */
+  galerieDirEdge?: Maybe<GalerieDirsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `GalerieDir` mutation. */
+export type DeleteGalerieDirPayloadGalerieDirEdgeArgs = {
+  orderBy?: InputMaybe<Array<GalerieDirsOrderBy>>;
+};
+
+/** All input for the `deleteGalerieFotoByGfId` mutation. */
+export type DeleteGalerieFotoByGfIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  gfId: Scalars['BigInt'];
+};
+
+/** All input for the `deleteGalerieFoto` mutation. */
+export type DeleteGalerieFotoInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `GalerieFoto` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `GalerieFoto` mutation. */
+export type DeleteGalerieFotoPayload = {
+  __typename?: 'DeleteGalerieFotoPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedGalerieFotoId?: Maybe<Scalars['ID']>;
+  /** Reads a single `GalerieDir` that is related to this `GalerieFoto`. */
+  galerieDirByGfIdRodic?: Maybe<GalerieDir>;
+  /** The `GalerieFoto` that was deleted by this mutation. */
+  galerieFoto?: Maybe<GalerieFoto>;
+  /** An edge for our `GalerieFoto`. May be used by Relay 1. */
+  galerieFotoEdge?: Maybe<GalerieFotosEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `GalerieFoto`. */
+  userByGfKdo?: Maybe<User>;
+};
+
+
+/** The output of our delete `GalerieFoto` mutation. */
+export type DeleteGalerieFotoPayloadGalerieFotoEdgeArgs = {
+  orderBy?: InputMaybe<Array<GalerieFotosOrderBy>>;
+};
+
+/** All input for the `deleteNabidkaByNId` mutation. */
+export type DeleteNabidkaByNIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  nId: Scalars['BigInt'];
+};
+
+/** All input for the `deleteNabidka` mutation. */
+export type DeleteNabidkaInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Nabidka` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteNabidkaItemByNiId` mutation. */
+export type DeleteNabidkaItemByNiIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  niId: Scalars['BigInt'];
+};
+
+/** All input for the `deleteNabidkaItem` mutation. */
+export type DeleteNabidkaItemInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `NabidkaItem` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `NabidkaItem` mutation. */
+export type DeleteNabidkaItemPayload = {
+  __typename?: 'DeleteNabidkaItemPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedNabidkaItemId?: Maybe<Scalars['ID']>;
+  /** Reads a single `Nabidka` that is related to this `NabidkaItem`. */
+  nabidkaByNiIdRodic?: Maybe<Nabidka>;
+  /** The `NabidkaItem` that was deleted by this mutation. */
+  nabidkaItem?: Maybe<NabidkaItem>;
+  /** An edge for our `NabidkaItem`. May be used by Relay 1. */
+  nabidkaItemEdge?: Maybe<NabidkaItemsEdge>;
+  /** Reads a single `Pary` that is related to this `NabidkaItem`. */
+  paryByNiPartner?: Maybe<Pary>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `NabidkaItem` mutation. */
+export type DeleteNabidkaItemPayloadNabidkaItemEdgeArgs = {
+  orderBy?: InputMaybe<Array<NabidkaItemsOrderBy>>;
+};
+
+/** The output of our delete `Nabidka` mutation. */
+export type DeleteNabidkaPayload = {
+  __typename?: 'DeleteNabidkaPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedNabidkaId?: Maybe<Scalars['ID']>;
+  /** The `Nabidka` that was deleted by this mutation. */
+  nabidka?: Maybe<Nabidka>;
+  /** An edge for our `Nabidka`. May be used by Relay 1. */
+  nabidkaEdge?: Maybe<NabidkasEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `Nabidka`. */
+  userByNTrener?: Maybe<User>;
+};
+
+
+/** The output of our delete `Nabidka` mutation. */
+export type DeleteNabidkaPayloadNabidkaEdgeArgs = {
+  orderBy?: InputMaybe<Array<NabidkasOrderBy>>;
+};
+
+/** All input for the `deleteParameterByPaName` mutation. */
+export type DeleteParameterByPaNameInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  paName: Scalars['String'];
+};
+
+/** All input for the `deleteParameter` mutation. */
+export type DeleteParameterInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Parameter` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `Parameter` mutation. */
+export type DeleteParameterPayload = {
+  __typename?: 'DeleteParameterPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedParameterId?: Maybe<Scalars['ID']>;
+  /** The `Parameter` that was deleted by this mutation. */
+  parameter?: Maybe<Parameter>;
+  /** An edge for our `Parameter`. May be used by Relay 1. */
+  parameterEdge?: Maybe<ParametersEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `Parameter` mutation. */
+export type DeleteParameterPayloadParameterEdgeArgs = {
+  orderBy?: InputMaybe<Array<ParametersOrderBy>>;
+};
+
+/** All input for the `deleteParyByPId` mutation. */
+export type DeleteParyByPIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  pId: Scalars['BigInt'];
+};
+
+/** All input for the `deletePary` mutation. */
+export type DeleteParyInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Pary` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteParyNavrhByPnId` mutation. */
+export type DeleteParyNavrhByPnIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  pnId: Scalars['BigInt'];
+};
+
+/** All input for the `deleteParyNavrh` mutation. */
+export type DeleteParyNavrhInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `ParyNavrh` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `ParyNavrh` mutation. */
+export type DeleteParyNavrhPayload = {
+  __typename?: 'DeleteParyNavrhPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedParyNavrhId?: Maybe<Scalars['ID']>;
+  /** The `ParyNavrh` that was deleted by this mutation. */
+  paryNavrh?: Maybe<ParyNavrh>;
+  /** An edge for our `ParyNavrh`. May be used by Relay 1. */
+  paryNavrhEdge?: Maybe<ParyNavrhsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `ParyNavrh`. */
+  userByPnNavrhl?: Maybe<User>;
+  /** Reads a single `User` that is related to this `ParyNavrh`. */
+  userByPnPartner?: Maybe<User>;
+  /** Reads a single `User` that is related to this `ParyNavrh`. */
+  userByPnPartnerka?: Maybe<User>;
+};
+
+
+/** The output of our delete `ParyNavrh` mutation. */
+export type DeleteParyNavrhPayloadParyNavrhEdgeArgs = {
+  orderBy?: InputMaybe<Array<ParyNavrhsOrderBy>>;
+};
+
+/** The output of our delete `Pary` mutation. */
+export type DeleteParyPayload = {
+  __typename?: 'DeleteParyPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedParyId?: Maybe<Scalars['ID']>;
+  /** The `Pary` that was deleted by this mutation. */
+  pary?: Maybe<Pary>;
+  /** An edge for our `Pary`. May be used by Relay 1. */
+  paryEdge?: Maybe<PariesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `Pary`. */
+  userByPIdPartner?: Maybe<User>;
+};
+
+
+/** The output of our delete `Pary` mutation. */
+export type DeleteParyPayloadParyEdgeArgs = {
+  orderBy?: InputMaybe<Array<PariesOrderBy>>;
+};
+
+/** All input for the `deletePermissionByPeId` mutation. */
+export type DeletePermissionByPeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  peId: Scalars['BigInt'];
+};
+
+/** All input for the `deletePermission` mutation. */
+export type DeletePermissionInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Permission` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `Permission` mutation. */
+export type DeletePermissionPayload = {
+  __typename?: 'DeletePermissionPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedPermissionId?: Maybe<Scalars['ID']>;
+  /** The `Permission` that was deleted by this mutation. */
+  permission?: Maybe<Permission>;
+  /** An edge for our `Permission`. May be used by Relay 1. */
+  permissionEdge?: Maybe<PermissionsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `Permission` mutation. */
+export type DeletePermissionPayloadPermissionEdgeArgs = {
+  orderBy?: InputMaybe<Array<PermissionsOrderBy>>;
+};
+
+/** All input for the `deletePlatbyCategoryByPcId` mutation. */
+export type DeletePlatbyCategoryByPcIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  pcId: Scalars['BigInt'];
+};
+
+/** All input for the `deletePlatbyCategoryGroupByPcgId` mutation. */
+export type DeletePlatbyCategoryGroupByPcgIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  pcgId: Scalars['BigInt'];
+};
+
+/** All input for the `deletePlatbyCategoryGroup` mutation. */
+export type DeletePlatbyCategoryGroupInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `PlatbyCategoryGroup` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `PlatbyCategoryGroup` mutation. */
+export type DeletePlatbyCategoryGroupPayload = {
+  __typename?: 'DeletePlatbyCategoryGroupPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedPlatbyCategoryGroupId?: Maybe<Scalars['ID']>;
+  /** Reads a single `PlatbyCategory` that is related to this `PlatbyCategoryGroup`. */
+  platbyCategoryByPcgIdCategory?: Maybe<PlatbyCategory>;
+  /** The `PlatbyCategoryGroup` that was deleted by this mutation. */
+  platbyCategoryGroup?: Maybe<PlatbyCategoryGroup>;
+  /** An edge for our `PlatbyCategoryGroup`. May be used by Relay 1. */
+  platbyCategoryGroupEdge?: Maybe<PlatbyCategoryGroupsEdge>;
+  /** Reads a single `PlatbyGroup` that is related to this `PlatbyCategoryGroup`. */
+  platbyGroupByPcgIdGroup?: Maybe<PlatbyGroup>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `PlatbyCategoryGroup` mutation. */
+export type DeletePlatbyCategoryGroupPayloadPlatbyCategoryGroupEdgeArgs = {
+  orderBy?: InputMaybe<Array<PlatbyCategoryGroupsOrderBy>>;
+};
+
+/** All input for the `deletePlatbyCategory` mutation. */
+export type DeletePlatbyCategoryInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `PlatbyCategory` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `PlatbyCategory` mutation. */
+export type DeletePlatbyCategoryPayload = {
+  __typename?: 'DeletePlatbyCategoryPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedPlatbyCategoryId?: Maybe<Scalars['ID']>;
+  /** The `PlatbyCategory` that was deleted by this mutation. */
+  platbyCategory?: Maybe<PlatbyCategory>;
+  /** An edge for our `PlatbyCategory`. May be used by Relay 1. */
+  platbyCategoryEdge?: Maybe<PlatbyCategoriesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `PlatbyCategory` mutation. */
+export type DeletePlatbyCategoryPayloadPlatbyCategoryEdgeArgs = {
+  orderBy?: InputMaybe<Array<PlatbyCategoriesOrderBy>>;
+};
+
+/** All input for the `deletePlatbyGroupByPgId` mutation. */
+export type DeletePlatbyGroupByPgIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  pgId: Scalars['BigInt'];
+};
+
+/** All input for the `deletePlatbyGroup` mutation. */
+export type DeletePlatbyGroupInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `PlatbyGroup` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `PlatbyGroup` mutation. */
+export type DeletePlatbyGroupPayload = {
+  __typename?: 'DeletePlatbyGroupPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedPlatbyGroupId?: Maybe<Scalars['ID']>;
+  /** The `PlatbyGroup` that was deleted by this mutation. */
+  platbyGroup?: Maybe<PlatbyGroup>;
+  /** An edge for our `PlatbyGroup`. May be used by Relay 1. */
+  platbyGroupEdge?: Maybe<PlatbyGroupsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `PlatbyGroup` mutation. */
+export type DeletePlatbyGroupPayloadPlatbyGroupEdgeArgs = {
+  orderBy?: InputMaybe<Array<PlatbyGroupsOrderBy>>;
+};
+
+/** All input for the `deletePlatbyGroupSkupinaByPgsId` mutation. */
+export type DeletePlatbyGroupSkupinaByPgsIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  pgsId: Scalars['BigInt'];
+};
+
+/** All input for the `deletePlatbyGroupSkupina` mutation. */
+export type DeletePlatbyGroupSkupinaInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `PlatbyGroupSkupina` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `PlatbyGroupSkupina` mutation. */
+export type DeletePlatbyGroupSkupinaPayload = {
+  __typename?: 'DeletePlatbyGroupSkupinaPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedPlatbyGroupSkupinaId?: Maybe<Scalars['ID']>;
+  /** Reads a single `PlatbyGroup` that is related to this `PlatbyGroupSkupina`. */
+  platbyGroupByPgsIdGroup?: Maybe<PlatbyGroup>;
+  /** The `PlatbyGroupSkupina` that was deleted by this mutation. */
+  platbyGroupSkupina?: Maybe<PlatbyGroupSkupina>;
+  /** An edge for our `PlatbyGroupSkupina`. May be used by Relay 1. */
+  platbyGroupSkupinaEdge?: Maybe<PlatbyGroupSkupinasEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Skupiny` that is related to this `PlatbyGroupSkupina`. */
+  skupinyByPgsIdSkupina?: Maybe<Skupiny>;
+};
+
+
+/** The output of our delete `PlatbyGroupSkupina` mutation. */
+export type DeletePlatbyGroupSkupinaPayloadPlatbyGroupSkupinaEdgeArgs = {
+  orderBy?: InputMaybe<Array<PlatbyGroupSkupinasOrderBy>>;
+};
+
+/** All input for the `deletePlatbyItemByPiId` mutation. */
+export type DeletePlatbyItemByPiIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  piId: Scalars['BigInt'];
+};
+
+/** All input for the `deletePlatbyItem` mutation. */
+export type DeletePlatbyItemInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `PlatbyItem` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `PlatbyItem` mutation. */
+export type DeletePlatbyItemPayload = {
+  __typename?: 'DeletePlatbyItemPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedPlatbyItemId?: Maybe<Scalars['ID']>;
+  /** Reads a single `PlatbyCategory` that is related to this `PlatbyItem`. */
+  platbyCategoryByPiIdCategory?: Maybe<PlatbyCategory>;
+  /** The `PlatbyItem` that was deleted by this mutation. */
+  platbyItem?: Maybe<PlatbyItem>;
+  /** An edge for our `PlatbyItem`. May be used by Relay 1. */
+  platbyItemEdge?: Maybe<PlatbyItemsEdge>;
+  /** Reads a single `PlatbyRaw` that is related to this `PlatbyItem`. */
+  platbyRawByPiIdRaw?: Maybe<PlatbyRaw>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `PlatbyItem`. */
+  userByPiIdUser?: Maybe<User>;
+};
+
+
+/** The output of our delete `PlatbyItem` mutation. */
+export type DeletePlatbyItemPayloadPlatbyItemEdgeArgs = {
+  orderBy?: InputMaybe<Array<PlatbyItemsOrderBy>>;
+};
+
+/** All input for the `deletePlatbyRawByPrId` mutation. */
+export type DeletePlatbyRawByPrIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  prId: Scalars['BigInt'];
+};
+
+/** All input for the `deletePlatbyRaw` mutation. */
+export type DeletePlatbyRawInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `PlatbyRaw` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `PlatbyRaw` mutation. */
+export type DeletePlatbyRawPayload = {
+  __typename?: 'DeletePlatbyRawPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedPlatbyRawId?: Maybe<Scalars['ID']>;
+  /** The `PlatbyRaw` that was deleted by this mutation. */
+  platbyRaw?: Maybe<PlatbyRaw>;
+  /** An edge for our `PlatbyRaw`. May be used by Relay 1. */
+  platbyRawEdge?: Maybe<PlatbyRawsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `PlatbyRaw` mutation. */
+export type DeletePlatbyRawPayloadPlatbyRawEdgeArgs = {
+  orderBy?: InputMaybe<Array<PlatbyRawsOrderBy>>;
+};
+
+/** All input for the `deleteRozpiByRId` mutation. */
+export type DeleteRozpiByRIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  rId: Scalars['BigInt'];
+};
+
+/** All input for the `deleteRozpi` mutation. */
+export type DeleteRozpiInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Rozpi` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `Rozpi` mutation. */
+export type DeleteRozpiPayload = {
+  __typename?: 'DeleteRozpiPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedRozpiId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `Rozpi` that was deleted by this mutation. */
+  rozpi?: Maybe<Rozpi>;
+  /** An edge for our `Rozpi`. May be used by Relay 1. */
+  rozpiEdge?: Maybe<RozpisEdge>;
+  /** Reads a single `User` that is related to this `Rozpi`. */
+  userByRTrener?: Maybe<User>;
+};
+
+
+/** The output of our delete `Rozpi` mutation. */
+export type DeleteRozpiPayloadRozpiEdgeArgs = {
+  orderBy?: InputMaybe<Array<RozpisOrderBy>>;
+};
+
+/** All input for the `deleteRozpisItemByRiId` mutation. */
+export type DeleteRozpisItemByRiIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  riId: Scalars['BigInt'];
+};
+
+/** All input for the `deleteRozpisItem` mutation. */
+export type DeleteRozpisItemInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `RozpisItem` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `RozpisItem` mutation. */
+export type DeleteRozpisItemPayload = {
+  __typename?: 'DeleteRozpisItemPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedRozpisItemId?: Maybe<Scalars['ID']>;
+  /** Reads a single `Pary` that is related to this `RozpisItem`. */
+  paryByRiPartner?: Maybe<Pary>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Rozpi` that is related to this `RozpisItem`. */
+  rozpiByRiIdRodic?: Maybe<Rozpi>;
+  /** The `RozpisItem` that was deleted by this mutation. */
+  rozpisItem?: Maybe<RozpisItem>;
+  /** An edge for our `RozpisItem`. May be used by Relay 1. */
+  rozpisItemEdge?: Maybe<RozpisItemsEdge>;
+};
+
+
+/** The output of our delete `RozpisItem` mutation. */
+export type DeleteRozpisItemPayloadRozpisItemEdgeArgs = {
+  orderBy?: InputMaybe<Array<RozpisItemsOrderBy>>;
+};
+
+/** All input for the `deleteSessionBySsId` mutation. */
+export type DeleteSessionBySsIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  ssId: Scalars['String'];
+};
+
+/** All input for the `deleteSession` mutation. */
+export type DeleteSessionInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Session` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `Session` mutation. */
+export type DeleteSessionPayload = {
+  __typename?: 'DeleteSessionPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedSessionId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `Session` that was deleted by this mutation. */
+  session?: Maybe<Session>;
+  /** An edge for our `Session`. May be used by Relay 1. */
+  sessionEdge?: Maybe<SessionsEdge>;
+};
+
+
+/** The output of our delete `Session` mutation. */
+export type DeleteSessionPayloadSessionEdgeArgs = {
+  orderBy?: InputMaybe<Array<SessionsOrderBy>>;
+};
+
+/** All input for the `deleteSkupinyBySId` mutation. */
+export type DeleteSkupinyBySIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  sId: Scalars['BigInt'];
+};
+
+/** All input for the `deleteSkupiny` mutation. */
+export type DeleteSkupinyInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Skupiny` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `Skupiny` mutation. */
+export type DeleteSkupinyPayload = {
+  __typename?: 'DeleteSkupinyPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedSkupinyId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `Skupiny` that was deleted by this mutation. */
+  skupiny?: Maybe<Skupiny>;
+  /** An edge for our `Skupiny`. May be used by Relay 1. */
+  skupinyEdge?: Maybe<SkupiniesEdge>;
+};
+
+
+/** The output of our delete `Skupiny` mutation. */
+export type DeleteSkupinyPayloadSkupinyEdgeArgs = {
+  orderBy?: InputMaybe<Array<SkupiniesOrderBy>>;
+};
+
+/** All input for the `deleteUpozorneniByUpId` mutation. */
+export type DeleteUpozorneniByUpIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  upId: Scalars['BigInt'];
+};
+
+/** All input for the `deleteUpozorneni` mutation. */
+export type DeleteUpozorneniInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Upozorneni` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `Upozorneni` mutation. */
+export type DeleteUpozorneniPayload = {
+  __typename?: 'DeleteUpozorneniPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedUpozorneniId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `Upozorneni` that was deleted by this mutation. */
+  upozorneni?: Maybe<Upozorneni>;
+  /** An edge for our `Upozorneni`. May be used by Relay 1. */
+  upozorneniEdge?: Maybe<UpozornenisEdge>;
+  /** Reads a single `User` that is related to this `Upozorneni`. */
+  userByUpKdo?: Maybe<User>;
+};
+
+
+/** The output of our delete `Upozorneni` mutation. */
+export type DeleteUpozorneniPayloadUpozorneniEdgeArgs = {
+  orderBy?: InputMaybe<Array<UpozornenisOrderBy>>;
+};
+
+/** All input for the `deleteUpozorneniSkupinyByUpsId` mutation. */
+export type DeleteUpozorneniSkupinyByUpsIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  upsId: Scalars['BigInt'];
+};
+
+/** All input for the `deleteUpozorneniSkupiny` mutation. */
+export type DeleteUpozorneniSkupinyInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `UpozorneniSkupiny` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `UpozorneniSkupiny` mutation. */
+export type DeleteUpozorneniSkupinyPayload = {
+  __typename?: 'DeleteUpozorneniSkupinyPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedUpozorneniSkupinyId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Skupiny` that is related to this `UpozorneniSkupiny`. */
+  skupinyByUpsIdSkupina?: Maybe<Skupiny>;
+  /** Reads a single `Upozorneni` that is related to this `UpozorneniSkupiny`. */
+  upozorneniByUpsIdRodic?: Maybe<Upozorneni>;
+  /** The `UpozorneniSkupiny` that was deleted by this mutation. */
+  upozorneniSkupiny?: Maybe<UpozorneniSkupiny>;
+  /** An edge for our `UpozorneniSkupiny`. May be used by Relay 1. */
+  upozorneniSkupinyEdge?: Maybe<UpozorneniSkupiniesEdge>;
+};
+
+
+/** The output of our delete `UpozorneniSkupiny` mutation. */
+export type DeleteUpozorneniSkupinyPayloadUpozorneniSkupinyEdgeArgs = {
+  orderBy?: InputMaybe<Array<UpozorneniSkupiniesOrderBy>>;
+};
+
+/** All input for the `deleteUserByUId` mutation. */
+export type DeleteUserByUIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  uId: Scalars['BigInt'];
+};
+
+/** All input for the `deleteUser` mutation. */
+export type DeleteUserInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `User` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `User` mutation. */
+export type DeleteUserPayload = {
+  __typename?: 'DeleteUserPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedUserId?: Maybe<Scalars['ID']>;
+  /** Reads a single `Permission` that is related to this `User`. */
+  permissionByUGroup?: Maybe<Permission>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Skupiny` that is related to this `User`. */
+  skupinyByUSkupina?: Maybe<Skupiny>;
+  /** The `User` that was deleted by this mutation. */
+  user?: Maybe<User>;
+  /** An edge for our `User`. May be used by Relay 1. */
+  userEdge?: Maybe<UsersEdge>;
+};
+
+
+/** The output of our delete `User` mutation. */
+export type DeleteUserPayloadUserEdgeArgs = {
+  orderBy?: InputMaybe<Array<UsersOrderBy>>;
+};
+
+/** All input for the `deleteUsersSkupinyByUsId` mutation. */
+export type DeleteUsersSkupinyByUsIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  usId: Scalars['BigInt'];
+};
+
+/** All input for the `deleteUsersSkupiny` mutation. */
+export type DeleteUsersSkupinyInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `UsersSkupiny` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `UsersSkupiny` mutation. */
+export type DeleteUsersSkupinyPayload = {
+  __typename?: 'DeleteUsersSkupinyPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedUsersSkupinyId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `UsersSkupiny` that was deleted by this mutation. */
+  usersSkupiny?: Maybe<UsersSkupiny>;
+  /** An edge for our `UsersSkupiny`. May be used by Relay 1. */
+  usersSkupinyEdge?: Maybe<UsersSkupiniesEdge>;
+};
+
+
+/** The output of our delete `UsersSkupiny` mutation. */
+export type DeleteUsersSkupinyPayloadUsersSkupinyEdgeArgs = {
+  orderBy?: InputMaybe<Array<UsersSkupiniesOrderBy>>;
+};
+
+/** All input for the `deleteVideoByVId` mutation. */
+export type DeleteVideoByVIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  vId: Scalars['BigInt'];
+};
+
+/** All input for the `deleteVideo` mutation. */
+export type DeleteVideoInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Video` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteVideoListByVlId` mutation. */
+export type DeleteVideoListByVlIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  vlId: Scalars['BigInt'];
+};
+
+/** All input for the `deleteVideoList` mutation. */
+export type DeleteVideoListInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `VideoList` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `VideoList` mutation. */
+export type DeleteVideoListPayload = {
+  __typename?: 'DeleteVideoListPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedVideoListId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `VideoList` that was deleted by this mutation. */
+  videoList?: Maybe<VideoList>;
+  /** An edge for our `VideoList`. May be used by Relay 1. */
+  videoListEdge?: Maybe<VideoListsEdge>;
+};
+
+
+/** The output of our delete `VideoList` mutation. */
+export type DeleteVideoListPayloadVideoListEdgeArgs = {
+  orderBy?: InputMaybe<Array<VideoListsOrderBy>>;
+};
+
+/** The output of our delete `Video` mutation. */
+export type DeleteVideoPayload = {
+  __typename?: 'DeleteVideoPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedVideoId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `Video` that was deleted by this mutation. */
+  video?: Maybe<Video>;
+  /** An edge for our `Video`. May be used by Relay 1. */
+  videoEdge?: Maybe<VideosEdge>;
+};
+
+
+/** The output of our delete `Video` mutation. */
+export type DeleteVideoPayloadVideoEdgeArgs = {
+  orderBy?: InputMaybe<Array<VideosOrderBy>>;
+};
+
+/** All input for the `deleteVideoSourceByVsId` mutation. */
+export type DeleteVideoSourceByVsIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  vsId: Scalars['BigInt'];
+};
+
+/** All input for the `deleteVideoSource` mutation. */
+export type DeleteVideoSourceInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `VideoSource` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `VideoSource` mutation. */
+export type DeleteVideoSourcePayload = {
+  __typename?: 'DeleteVideoSourcePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedVideoSourceId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `VideoSource` that was deleted by this mutation. */
+  videoSource?: Maybe<VideoSource>;
+  /** An edge for our `VideoSource`. May be used by Relay 1. */
+  videoSourceEdge?: Maybe<VideoSourcesEdge>;
+};
+
+
+/** The output of our delete `VideoSource` mutation. */
+export type DeleteVideoSourcePayloadVideoSourceEdgeArgs = {
+  orderBy?: InputMaybe<Array<VideoSourcesOrderBy>>;
+};
+
+/** A connection to a list of `Dokumenty` values. */
+export type DokumentiesConnection = {
+  __typename?: 'DokumentiesConnection';
+  /** A list of edges which contains the `Dokumenty` and cursor to aid in pagination. */
+  edges: Array<DokumentiesEdge>;
+  /** A list of `Dokumenty` objects. */
+  nodes: Array<Dokumenty>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Dokumenty` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Dokumenty` edge in the connection. */
+export type DokumentiesEdge = {
+  __typename?: 'DokumentiesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Dokumenty` at the end of the edge. */
+  node: Dokumenty;
+};
+
+/** Methods to use when ordering `Dokumenty`. */
+export enum DokumentiesOrderBy {
+  DFilenameAsc = 'D_FILENAME_ASC',
+  DFilenameDesc = 'D_FILENAME_DESC',
+  DIdAsc = 'D_ID_ASC',
+  DIdDesc = 'D_ID_DESC',
+  DKategorieAsc = 'D_KATEGORIE_ASC',
+  DKategorieDesc = 'D_KATEGORIE_DESC',
+  DKdoAsc = 'D_KDO_ASC',
+  DKdoDesc = 'D_KDO_DESC',
+  DNameAsc = 'D_NAME_ASC',
+  DNameDesc = 'D_NAME_DESC',
+  DPathAsc = 'D_PATH_ASC',
+  DPathDesc = 'D_PATH_DESC',
+  DTimestampAsc = 'D_TIMESTAMP_ASC',
+  DTimestampDesc = 'D_TIMESTAMP_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-/** input type for incrementing numeric columns in table "rozpis_item" */
-export type Rozpis_Item_Inc_Input = {
-  ri_id?: InputMaybe<Scalars['bigint']>;
-  ri_id_rodic?: InputMaybe<Scalars['bigint']>;
-  ri_partner?: InputMaybe<Scalars['bigint']>;
+export type Dokumenty = Node & {
+  __typename?: 'Dokumenty';
+  dFilename: Scalars['String'];
+  dId: Scalars['BigInt'];
+  dKategorie: Scalars['Int'];
+  dKdo: Scalars['BigInt'];
+  dName: Scalars['String'];
+  dPath: Scalars['String'];
+  dTimestamp?: Maybe<Scalars['Datetime']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  /** Reads a single `User` that is related to this `Dokumenty`. */
+  userByDKdo?: Maybe<User>;
 };
 
-/** input type for inserting data into table "rozpis_item" */
-export type Rozpis_Item_Insert_Input = {
-  pary?: InputMaybe<Pary_Obj_Rel_Insert_Input>;
-  ri_do?: InputMaybe<Scalars['time']>;
-  ri_id?: InputMaybe<Scalars['bigint']>;
-  ri_id_rodic?: InputMaybe<Scalars['bigint']>;
-  ri_lock?: InputMaybe<Scalars['Boolean']>;
-  ri_od?: InputMaybe<Scalars['time']>;
-  ri_partner?: InputMaybe<Scalars['bigint']>;
-  rozpi?: InputMaybe<Rozpis_Obj_Rel_Insert_Input>;
+/**
+ * A condition to be used against `Dokumenty` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type DokumentyCondition = {
+  /** Checks for equality with the object’s `dFilename` field. */
+  dFilename?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `dId` field. */
+  dId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `dKategorie` field. */
+  dKategorie?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `dKdo` field. */
+  dKdo?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `dName` field. */
+  dName?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `dPath` field. */
+  dPath?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `dTimestamp` field. */
+  dTimestamp?: InputMaybe<Scalars['Datetime']>;
 };
 
-/** aggregate max on columns */
-export type Rozpis_Item_Max_Fields = {
-  __typename?: 'rozpis_item_max_fields';
-  ri_id?: Maybe<Scalars['bigint']>;
-  ri_id_rodic?: Maybe<Scalars['bigint']>;
-  ri_partner?: Maybe<Scalars['bigint']>;
+/** An input for mutations affecting `Dokumenty` */
+export type DokumentyInput = {
+  dFilename: Scalars['String'];
+  dId?: InputMaybe<Scalars['BigInt']>;
+  dKategorie: Scalars['Int'];
+  dKdo: Scalars['BigInt'];
+  dName: Scalars['String'];
+  dPath: Scalars['String'];
+  dTimestamp?: InputMaybe<Scalars['Datetime']>;
 };
 
-/** order by max() on columns of table "rozpis_item" */
-export type Rozpis_Item_Max_Order_By = {
-  ri_id?: InputMaybe<Order_By>;
-  ri_id_rodic?: InputMaybe<Order_By>;
-  ri_partner?: InputMaybe<Order_By>;
+/** Represents an update to a `Dokumenty`. Fields that are set will be updated. */
+export type DokumentyPatch = {
+  dFilename?: InputMaybe<Scalars['String']>;
+  dId?: InputMaybe<Scalars['BigInt']>;
+  dKategorie?: InputMaybe<Scalars['Int']>;
+  dKdo?: InputMaybe<Scalars['BigInt']>;
+  dName?: InputMaybe<Scalars['String']>;
+  dPath?: InputMaybe<Scalars['String']>;
+  dTimestamp?: InputMaybe<Scalars['Datetime']>;
 };
 
-/** aggregate min on columns */
-export type Rozpis_Item_Min_Fields = {
-  __typename?: 'rozpis_item_min_fields';
-  ri_id?: Maybe<Scalars['bigint']>;
-  ri_id_rodic?: Maybe<Scalars['bigint']>;
-  ri_partner?: Maybe<Scalars['bigint']>;
+export type GalerieDir = Node & {
+  __typename?: 'GalerieDir';
+  /** Reads and enables pagination through a set of `GalerieFoto`. */
+  galerieFotosByGfIdRodic: GalerieFotosConnection;
+  gdHidden: Scalars['Boolean'];
+  gdId: Scalars['BigInt'];
+  gdIdRodic: Scalars['BigInt'];
+  gdLevel: Scalars['Int'];
+  gdName: Scalars['String'];
+  gdPath: Scalars['String'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
 };
 
-/** order by min() on columns of table "rozpis_item" */
-export type Rozpis_Item_Min_Order_By = {
-  ri_id?: InputMaybe<Order_By>;
-  ri_id_rodic?: InputMaybe<Order_By>;
-  ri_partner?: InputMaybe<Order_By>;
+
+export type GalerieDirGalerieFotosByGfIdRodicArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<GalerieFotoCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<GalerieFotosOrderBy>>;
 };
 
-/** response of any mutation on the table "rozpis_item" */
-export type Rozpis_Item_Mutation_Response = {
-  __typename?: 'rozpis_item_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Rozpis_Item>;
+/**
+ * A condition to be used against `GalerieDir` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type GalerieDirCondition = {
+  /** Checks for equality with the object’s `gdHidden` field. */
+  gdHidden?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `gdId` field. */
+  gdId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `gdIdRodic` field. */
+  gdIdRodic?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `gdLevel` field. */
+  gdLevel?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `gdName` field. */
+  gdName?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `gdPath` field. */
+  gdPath?: InputMaybe<Scalars['String']>;
 };
 
-/** on conflict condition type for table "rozpis_item" */
-export type Rozpis_Item_On_Conflict = {
-  constraint: Rozpis_Item_Constraint;
-  update_columns?: Array<Rozpis_Item_Update_Column>;
-  where?: InputMaybe<Rozpis_Item_Bool_Exp>;
+/** An input for mutations affecting `GalerieDir` */
+export type GalerieDirInput = {
+  gdHidden?: InputMaybe<Scalars['Boolean']>;
+  gdId?: InputMaybe<Scalars['BigInt']>;
+  gdIdRodic: Scalars['BigInt'];
+  gdLevel?: InputMaybe<Scalars['Int']>;
+  gdName: Scalars['String'];
+  gdPath: Scalars['String'];
 };
 
-/** Ordering options when selecting data from "rozpis_item". */
-export type Rozpis_Item_Order_By = {
-  pary?: InputMaybe<Pary_Order_By>;
-  ri_do?: InputMaybe<Order_By>;
-  ri_id?: InputMaybe<Order_By>;
-  ri_id_rodic?: InputMaybe<Order_By>;
-  ri_lock?: InputMaybe<Order_By>;
-  ri_od?: InputMaybe<Order_By>;
-  ri_partner?: InputMaybe<Order_By>;
-  rozpi?: InputMaybe<Rozpis_Order_By>;
+/** Represents an update to a `GalerieDir`. Fields that are set will be updated. */
+export type GalerieDirPatch = {
+  gdHidden?: InputMaybe<Scalars['Boolean']>;
+  gdId?: InputMaybe<Scalars['BigInt']>;
+  gdIdRodic?: InputMaybe<Scalars['BigInt']>;
+  gdLevel?: InputMaybe<Scalars['Int']>;
+  gdName?: InputMaybe<Scalars['String']>;
+  gdPath?: InputMaybe<Scalars['String']>;
 };
 
-/** primary key columns input for table: rozpis_item */
-export type Rozpis_Item_Pk_Columns_Input = {
-  ri_id: Scalars['bigint'];
+/** A connection to a list of `GalerieDir` values. */
+export type GalerieDirsConnection = {
+  __typename?: 'GalerieDirsConnection';
+  /** A list of edges which contains the `GalerieDir` and cursor to aid in pagination. */
+  edges: Array<GalerieDirsEdge>;
+  /** A list of `GalerieDir` objects. */
+  nodes: Array<GalerieDir>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `GalerieDir` you could get from the connection. */
+  totalCount: Scalars['Int'];
 };
 
-/** select columns of table "rozpis_item" */
-export enum Rozpis_Item_Select_Column {
-  /** column name */
-  RiDo = 'ri_do',
-  /** column name */
-  RiId = 'ri_id',
-  /** column name */
-  RiIdRodic = 'ri_id_rodic',
-  /** column name */
-  RiLock = 'ri_lock',
-  /** column name */
-  RiOd = 'ri_od',
-  /** column name */
-  RiPartner = 'ri_partner'
+/** A `GalerieDir` edge in the connection. */
+export type GalerieDirsEdge = {
+  __typename?: 'GalerieDirsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `GalerieDir` at the end of the edge. */
+  node: GalerieDir;
+};
+
+/** Methods to use when ordering `GalerieDir`. */
+export enum GalerieDirsOrderBy {
+  GdHiddenAsc = 'GD_HIDDEN_ASC',
+  GdHiddenDesc = 'GD_HIDDEN_DESC',
+  GdIdAsc = 'GD_ID_ASC',
+  GdIdDesc = 'GD_ID_DESC',
+  GdIdRodicAsc = 'GD_ID_RODIC_ASC',
+  GdIdRodicDesc = 'GD_ID_RODIC_DESC',
+  GdLevelAsc = 'GD_LEVEL_ASC',
+  GdLevelDesc = 'GD_LEVEL_DESC',
+  GdNameAsc = 'GD_NAME_ASC',
+  GdNameDesc = 'GD_NAME_DESC',
+  GdPathAsc = 'GD_PATH_ASC',
+  GdPathDesc = 'GD_PATH_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-/** input type for updating data in table "rozpis_item" */
-export type Rozpis_Item_Set_Input = {
-  ri_do?: InputMaybe<Scalars['time']>;
-  ri_id?: InputMaybe<Scalars['bigint']>;
-  ri_id_rodic?: InputMaybe<Scalars['bigint']>;
-  ri_lock?: InputMaybe<Scalars['Boolean']>;
-  ri_od?: InputMaybe<Scalars['time']>;
-  ri_partner?: InputMaybe<Scalars['bigint']>;
+export type GalerieFoto = Node & {
+  __typename?: 'GalerieFoto';
+  /** Reads and enables pagination through a set of `Aktuality`. */
+  aktualitiesByAtFotoMain: AktualitiesConnection;
+  /** Reads a single `GalerieDir` that is related to this `GalerieFoto`. */
+  galerieDirByGfIdRodic?: Maybe<GalerieDir>;
+  gfId: Scalars['BigInt'];
+  gfIdRodic: Scalars['BigInt'];
+  gfKdo: Scalars['BigInt'];
+  gfName: Scalars['String'];
+  gfPath: Scalars['String'];
+  gfTimestamp?: Maybe<Scalars['Datetime']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  /** Reads a single `User` that is related to this `GalerieFoto`. */
+  userByGfKdo?: Maybe<User>;
 };
 
-/** aggregate stddev on columns */
-export type Rozpis_Item_Stddev_Fields = {
-  __typename?: 'rozpis_item_stddev_fields';
-  ri_id?: Maybe<Scalars['Float']>;
-  ri_id_rodic?: Maybe<Scalars['Float']>;
-  ri_partner?: Maybe<Scalars['Float']>;
+
+export type GalerieFotoAktualitiesByAtFotoMainArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<AktualityCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<AktualitiesOrderBy>>;
 };
 
-/** order by stddev() on columns of table "rozpis_item" */
-export type Rozpis_Item_Stddev_Order_By = {
-  ri_id?: InputMaybe<Order_By>;
-  ri_id_rodic?: InputMaybe<Order_By>;
-  ri_partner?: InputMaybe<Order_By>;
+/**
+ * A condition to be used against `GalerieFoto` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type GalerieFotoCondition = {
+  /** Checks for equality with the object’s `gfId` field. */
+  gfId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `gfIdRodic` field. */
+  gfIdRodic?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `gfKdo` field. */
+  gfKdo?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `gfName` field. */
+  gfName?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `gfPath` field. */
+  gfPath?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `gfTimestamp` field. */
+  gfTimestamp?: InputMaybe<Scalars['Datetime']>;
 };
 
-/** aggregate stddev_pop on columns */
-export type Rozpis_Item_Stddev_Pop_Fields = {
-  __typename?: 'rozpis_item_stddev_pop_fields';
-  ri_id?: Maybe<Scalars['Float']>;
-  ri_id_rodic?: Maybe<Scalars['Float']>;
-  ri_partner?: Maybe<Scalars['Float']>;
+/** An input for mutations affecting `GalerieFoto` */
+export type GalerieFotoInput = {
+  gfId?: InputMaybe<Scalars['BigInt']>;
+  gfIdRodic: Scalars['BigInt'];
+  gfKdo: Scalars['BigInt'];
+  gfName: Scalars['String'];
+  gfPath: Scalars['String'];
+  gfTimestamp?: InputMaybe<Scalars['Datetime']>;
 };
 
-/** order by stddev_pop() on columns of table "rozpis_item" */
-export type Rozpis_Item_Stddev_Pop_Order_By = {
-  ri_id?: InputMaybe<Order_By>;
-  ri_id_rodic?: InputMaybe<Order_By>;
-  ri_partner?: InputMaybe<Order_By>;
+/** Represents an update to a `GalerieFoto`. Fields that are set will be updated. */
+export type GalerieFotoPatch = {
+  gfId?: InputMaybe<Scalars['BigInt']>;
+  gfIdRodic?: InputMaybe<Scalars['BigInt']>;
+  gfKdo?: InputMaybe<Scalars['BigInt']>;
+  gfName?: InputMaybe<Scalars['String']>;
+  gfPath?: InputMaybe<Scalars['String']>;
+  gfTimestamp?: InputMaybe<Scalars['Datetime']>;
 };
 
-/** aggregate stddev_samp on columns */
-export type Rozpis_Item_Stddev_Samp_Fields = {
-  __typename?: 'rozpis_item_stddev_samp_fields';
-  ri_id?: Maybe<Scalars['Float']>;
-  ri_id_rodic?: Maybe<Scalars['Float']>;
-  ri_partner?: Maybe<Scalars['Float']>;
+/** A connection to a list of `GalerieFoto` values. */
+export type GalerieFotosConnection = {
+  __typename?: 'GalerieFotosConnection';
+  /** A list of edges which contains the `GalerieFoto` and cursor to aid in pagination. */
+  edges: Array<GalerieFotosEdge>;
+  /** A list of `GalerieFoto` objects. */
+  nodes: Array<GalerieFoto>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `GalerieFoto` you could get from the connection. */
+  totalCount: Scalars['Int'];
 };
 
-/** order by stddev_samp() on columns of table "rozpis_item" */
-export type Rozpis_Item_Stddev_Samp_Order_By = {
-  ri_id?: InputMaybe<Order_By>;
-  ri_id_rodic?: InputMaybe<Order_By>;
-  ri_partner?: InputMaybe<Order_By>;
+/** A `GalerieFoto` edge in the connection. */
+export type GalerieFotosEdge = {
+  __typename?: 'GalerieFotosEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `GalerieFoto` at the end of the edge. */
+  node: GalerieFoto;
 };
 
-/** aggregate sum on columns */
-export type Rozpis_Item_Sum_Fields = {
-  __typename?: 'rozpis_item_sum_fields';
-  ri_id?: Maybe<Scalars['bigint']>;
-  ri_id_rodic?: Maybe<Scalars['bigint']>;
-  ri_partner?: Maybe<Scalars['bigint']>;
-};
-
-/** order by sum() on columns of table "rozpis_item" */
-export type Rozpis_Item_Sum_Order_By = {
-  ri_id?: InputMaybe<Order_By>;
-  ri_id_rodic?: InputMaybe<Order_By>;
-  ri_partner?: InputMaybe<Order_By>;
-};
-
-/** update columns of table "rozpis_item" */
-export enum Rozpis_Item_Update_Column {
-  /** column name */
-  RiDo = 'ri_do',
-  /** column name */
-  RiId = 'ri_id',
-  /** column name */
-  RiIdRodic = 'ri_id_rodic',
-  /** column name */
-  RiLock = 'ri_lock',
-  /** column name */
-  RiOd = 'ri_od',
-  /** column name */
-  RiPartner = 'ri_partner'
+/** Methods to use when ordering `GalerieFoto`. */
+export enum GalerieFotosOrderBy {
+  GfIdAsc = 'GF_ID_ASC',
+  GfIdDesc = 'GF_ID_DESC',
+  GfIdRodicAsc = 'GF_ID_RODIC_ASC',
+  GfIdRodicDesc = 'GF_ID_RODIC_DESC',
+  GfKdoAsc = 'GF_KDO_ASC',
+  GfKdoDesc = 'GF_KDO_DESC',
+  GfNameAsc = 'GF_NAME_ASC',
+  GfNameDesc = 'GF_NAME_DESC',
+  GfPathAsc = 'GF_PATH_ASC',
+  GfPathDesc = 'GF_PATH_DESC',
+  GfTimestampAsc = 'GF_TIMESTAMP_ASC',
+  GfTimestampDesc = 'GF_TIMESTAMP_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-/** aggregate var_pop on columns */
-export type Rozpis_Item_Var_Pop_Fields = {
-  __typename?: 'rozpis_item_var_pop_fields';
-  ri_id?: Maybe<Scalars['Float']>;
-  ri_id_rodic?: Maybe<Scalars['Float']>;
-  ri_partner?: Maybe<Scalars['Float']>;
+export type Member = {
+  __typename?: 'Member';
+  uEmail?: Maybe<Scalars['String']>;
 };
 
-/** order by var_pop() on columns of table "rozpis_item" */
-export type Rozpis_Item_Var_Pop_Order_By = {
-  ri_id?: InputMaybe<Order_By>;
-  ri_id_rodic?: InputMaybe<Order_By>;
-  ri_partner?: InputMaybe<Order_By>;
+/** A condition to be used against `Member` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type MemberCondition = {
+  /** Checks for equality with the object’s `uEmail` field. */
+  uEmail?: InputMaybe<Scalars['String']>;
 };
 
-/** aggregate var_samp on columns */
-export type Rozpis_Item_Var_Samp_Fields = {
-  __typename?: 'rozpis_item_var_samp_fields';
-  ri_id?: Maybe<Scalars['Float']>;
-  ri_id_rodic?: Maybe<Scalars['Float']>;
-  ri_partner?: Maybe<Scalars['Float']>;
+/** A connection to a list of `Member` values. */
+export type MembersConnection = {
+  __typename?: 'MembersConnection';
+  /** A list of edges which contains the `Member` and cursor to aid in pagination. */
+  edges: Array<MembersEdge>;
+  /** A list of `Member` objects. */
+  nodes: Array<Member>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Member` you could get from the connection. */
+  totalCount: Scalars['Int'];
 };
 
-/** order by var_samp() on columns of table "rozpis_item" */
-export type Rozpis_Item_Var_Samp_Order_By = {
-  ri_id?: InputMaybe<Order_By>;
-  ri_id_rodic?: InputMaybe<Order_By>;
-  ri_partner?: InputMaybe<Order_By>;
+/** A `Member` edge in the connection. */
+export type MembersEdge = {
+  __typename?: 'MembersEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Member` at the end of the edge. */
+  node: Member;
 };
 
-/** aggregate variance on columns */
-export type Rozpis_Item_Variance_Fields = {
-  __typename?: 'rozpis_item_variance_fields';
-  ri_id?: Maybe<Scalars['Float']>;
-  ri_id_rodic?: Maybe<Scalars['Float']>;
-  ri_partner?: Maybe<Scalars['Float']>;
-};
-
-/** order by variance() on columns of table "rozpis_item" */
-export type Rozpis_Item_Variance_Order_By = {
-  ri_id?: InputMaybe<Order_By>;
-  ri_id_rodic?: InputMaybe<Order_By>;
-  ri_partner?: InputMaybe<Order_By>;
-};
-
-/** aggregate max on columns */
-export type Rozpis_Max_Fields = {
-  __typename?: 'rozpis_max_fields';
-  r_datum?: Maybe<Scalars['date']>;
-  r_id?: Maybe<Scalars['bigint']>;
-  r_kde?: Maybe<Scalars['String']>;
-  r_timestamp?: Maybe<Scalars['timestamptz']>;
-  r_trener?: Maybe<Scalars['bigint']>;
-};
-
-/** order by max() on columns of table "rozpis" */
-export type Rozpis_Max_Order_By = {
-  r_datum?: InputMaybe<Order_By>;
-  r_id?: InputMaybe<Order_By>;
-  r_kde?: InputMaybe<Order_By>;
-  r_timestamp?: InputMaybe<Order_By>;
-  r_trener?: InputMaybe<Order_By>;
-};
-
-/** aggregate min on columns */
-export type Rozpis_Min_Fields = {
-  __typename?: 'rozpis_min_fields';
-  r_datum?: Maybe<Scalars['date']>;
-  r_id?: Maybe<Scalars['bigint']>;
-  r_kde?: Maybe<Scalars['String']>;
-  r_timestamp?: Maybe<Scalars['timestamptz']>;
-  r_trener?: Maybe<Scalars['bigint']>;
-};
-
-/** order by min() on columns of table "rozpis" */
-export type Rozpis_Min_Order_By = {
-  r_datum?: InputMaybe<Order_By>;
-  r_id?: InputMaybe<Order_By>;
-  r_kde?: InputMaybe<Order_By>;
-  r_timestamp?: InputMaybe<Order_By>;
-  r_trener?: InputMaybe<Order_By>;
-};
-
-/** response of any mutation on the table "rozpis" */
-export type Rozpis_Mutation_Response = {
-  __typename?: 'rozpis_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Rozpis>;
-};
-
-/** input type for inserting object relation for remote table "rozpis" */
-export type Rozpis_Obj_Rel_Insert_Input = {
-  data: Rozpis_Insert_Input;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Rozpis_On_Conflict>;
-};
-
-/** on conflict condition type for table "rozpis" */
-export type Rozpis_On_Conflict = {
-  constraint: Rozpis_Constraint;
-  update_columns?: Array<Rozpis_Update_Column>;
-  where?: InputMaybe<Rozpis_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "rozpis". */
-export type Rozpis_Order_By = {
-  r_datum?: InputMaybe<Order_By>;
-  r_id?: InputMaybe<Order_By>;
-  r_kde?: InputMaybe<Order_By>;
-  r_lock?: InputMaybe<Order_By>;
-  r_timestamp?: InputMaybe<Order_By>;
-  r_trener?: InputMaybe<Order_By>;
-  r_visible?: InputMaybe<Order_By>;
-  rozpis_items_aggregate?: InputMaybe<Rozpis_Item_Aggregate_Order_By>;
-  user?: InputMaybe<Users_Order_By>;
-};
-
-/** primary key columns input for table: rozpis */
-export type Rozpis_Pk_Columns_Input = {
-  r_id: Scalars['bigint'];
-};
-
-/** select columns of table "rozpis" */
-export enum Rozpis_Select_Column {
-  /** column name */
-  RDatum = 'r_datum',
-  /** column name */
-  RId = 'r_id',
-  /** column name */
-  RKde = 'r_kde',
-  /** column name */
-  RLock = 'r_lock',
-  /** column name */
-  RTimestamp = 'r_timestamp',
-  /** column name */
-  RTrener = 'r_trener',
-  /** column name */
-  RVisible = 'r_visible'
+/** Methods to use when ordering `Member`. */
+export enum MembersOrderBy {
+  Natural = 'NATURAL',
+  UEmailAsc = 'U_EMAIL_ASC',
+  UEmailDesc = 'U_EMAIL_DESC'
 }
 
-/** input type for updating data in table "rozpis" */
-export type Rozpis_Set_Input = {
-  r_datum?: InputMaybe<Scalars['date']>;
-  r_id?: InputMaybe<Scalars['bigint']>;
-  r_kde?: InputMaybe<Scalars['String']>;
-  r_lock?: InputMaybe<Scalars['Boolean']>;
-  r_timestamp?: InputMaybe<Scalars['timestamptz']>;
-  r_trener?: InputMaybe<Scalars['bigint']>;
-  r_visible?: InputMaybe<Scalars['Boolean']>;
+/** The root mutation type which contains root level fields which mutate data. */
+export type Mutation = {
+  __typename?: 'Mutation';
+  /** Creates a single `Akce`. */
+  createAkce?: Maybe<CreateAkcePayload>;
+  /** Creates a single `AkceItem`. */
+  createAkceItem?: Maybe<CreateAkceItemPayload>;
+  /** Creates a single `Aktuality`. */
+  createAktuality?: Maybe<CreateAktualityPayload>;
+  /** Creates a single `Dokumenty`. */
+  createDokumenty?: Maybe<CreateDokumentyPayload>;
+  /** Creates a single `GalerieDir`. */
+  createGalerieDir?: Maybe<CreateGalerieDirPayload>;
+  /** Creates a single `GalerieFoto`. */
+  createGalerieFoto?: Maybe<CreateGalerieFotoPayload>;
+  /** Creates a single `Nabidka`. */
+  createNabidka?: Maybe<CreateNabidkaPayload>;
+  /** Creates a single `NabidkaItem`. */
+  createNabidkaItem?: Maybe<CreateNabidkaItemPayload>;
+  /** Creates a single `Parameter`. */
+  createParameter?: Maybe<CreateParameterPayload>;
+  /** Creates a single `Pary`. */
+  createPary?: Maybe<CreateParyPayload>;
+  /** Creates a single `ParyNavrh`. */
+  createParyNavrh?: Maybe<CreateParyNavrhPayload>;
+  /** Creates a single `Permission`. */
+  createPermission?: Maybe<CreatePermissionPayload>;
+  /** Creates a single `PlatbyCategory`. */
+  createPlatbyCategory?: Maybe<CreatePlatbyCategoryPayload>;
+  /** Creates a single `PlatbyCategoryGroup`. */
+  createPlatbyCategoryGroup?: Maybe<CreatePlatbyCategoryGroupPayload>;
+  /** Creates a single `PlatbyGroup`. */
+  createPlatbyGroup?: Maybe<CreatePlatbyGroupPayload>;
+  /** Creates a single `PlatbyGroupSkupina`. */
+  createPlatbyGroupSkupina?: Maybe<CreatePlatbyGroupSkupinaPayload>;
+  /** Creates a single `PlatbyItem`. */
+  createPlatbyItem?: Maybe<CreatePlatbyItemPayload>;
+  /** Creates a single `PlatbyRaw`. */
+  createPlatbyRaw?: Maybe<CreatePlatbyRawPayload>;
+  /** Creates a single `Rozpi`. */
+  createRozpi?: Maybe<CreateRozpiPayload>;
+  /** Creates a single `RozpisItem`. */
+  createRozpisItem?: Maybe<CreateRozpisItemPayload>;
+  /** Creates a single `Session`. */
+  createSession?: Maybe<CreateSessionPayload>;
+  /** Creates a single `Skupiny`. */
+  createSkupiny?: Maybe<CreateSkupinyPayload>;
+  /** Creates a single `Upozorneni`. */
+  createUpozorneni?: Maybe<CreateUpozorneniPayload>;
+  /** Creates a single `UpozorneniSkupiny`. */
+  createUpozorneniSkupiny?: Maybe<CreateUpozorneniSkupinyPayload>;
+  /** Creates a single `User`. */
+  createUser?: Maybe<CreateUserPayload>;
+  /** Creates a single `UsersSkupiny`. */
+  createUsersSkupiny?: Maybe<CreateUsersSkupinyPayload>;
+  /** Creates a single `Video`. */
+  createVideo?: Maybe<CreateVideoPayload>;
+  /** Creates a single `VideoList`. */
+  createVideoList?: Maybe<CreateVideoListPayload>;
+  /** Creates a single `VideoSource`. */
+  createVideoSource?: Maybe<CreateVideoSourcePayload>;
+  /** Deletes a single `Akce` using its globally unique id. */
+  deleteAkce?: Maybe<DeleteAkcePayload>;
+  /** Deletes a single `Akce` using a unique key. */
+  deleteAkceByAId?: Maybe<DeleteAkcePayload>;
+  /** Deletes a single `AkceItem` using its globally unique id. */
+  deleteAkceItem?: Maybe<DeleteAkceItemPayload>;
+  /** Deletes a single `AkceItem` using a unique key. */
+  deleteAkceItemByAiId?: Maybe<DeleteAkceItemPayload>;
+  /** Deletes a single `Aktuality` using its globally unique id. */
+  deleteAktuality?: Maybe<DeleteAktualityPayload>;
+  /** Deletes a single `Aktuality` using a unique key. */
+  deleteAktualityByAtId?: Maybe<DeleteAktualityPayload>;
+  /** Deletes a single `Dokumenty` using its globally unique id. */
+  deleteDokumenty?: Maybe<DeleteDokumentyPayload>;
+  /** Deletes a single `Dokumenty` using a unique key. */
+  deleteDokumentyByDId?: Maybe<DeleteDokumentyPayload>;
+  /** Deletes a single `GalerieDir` using its globally unique id. */
+  deleteGalerieDir?: Maybe<DeleteGalerieDirPayload>;
+  /** Deletes a single `GalerieDir` using a unique key. */
+  deleteGalerieDirByGdId?: Maybe<DeleteGalerieDirPayload>;
+  /** Deletes a single `GalerieFoto` using its globally unique id. */
+  deleteGalerieFoto?: Maybe<DeleteGalerieFotoPayload>;
+  /** Deletes a single `GalerieFoto` using a unique key. */
+  deleteGalerieFotoByGfId?: Maybe<DeleteGalerieFotoPayload>;
+  /** Deletes a single `Nabidka` using its globally unique id. */
+  deleteNabidka?: Maybe<DeleteNabidkaPayload>;
+  /** Deletes a single `Nabidka` using a unique key. */
+  deleteNabidkaByNId?: Maybe<DeleteNabidkaPayload>;
+  /** Deletes a single `NabidkaItem` using its globally unique id. */
+  deleteNabidkaItem?: Maybe<DeleteNabidkaItemPayload>;
+  /** Deletes a single `NabidkaItem` using a unique key. */
+  deleteNabidkaItemByNiId?: Maybe<DeleteNabidkaItemPayload>;
+  /** Deletes a single `Parameter` using its globally unique id. */
+  deleteParameter?: Maybe<DeleteParameterPayload>;
+  /** Deletes a single `Parameter` using a unique key. */
+  deleteParameterByPaName?: Maybe<DeleteParameterPayload>;
+  /** Deletes a single `Pary` using its globally unique id. */
+  deletePary?: Maybe<DeleteParyPayload>;
+  /** Deletes a single `Pary` using a unique key. */
+  deleteParyByPId?: Maybe<DeleteParyPayload>;
+  /** Deletes a single `ParyNavrh` using its globally unique id. */
+  deleteParyNavrh?: Maybe<DeleteParyNavrhPayload>;
+  /** Deletes a single `ParyNavrh` using a unique key. */
+  deleteParyNavrhByPnId?: Maybe<DeleteParyNavrhPayload>;
+  /** Deletes a single `Permission` using its globally unique id. */
+  deletePermission?: Maybe<DeletePermissionPayload>;
+  /** Deletes a single `Permission` using a unique key. */
+  deletePermissionByPeId?: Maybe<DeletePermissionPayload>;
+  /** Deletes a single `PlatbyCategory` using its globally unique id. */
+  deletePlatbyCategory?: Maybe<DeletePlatbyCategoryPayload>;
+  /** Deletes a single `PlatbyCategory` using a unique key. */
+  deletePlatbyCategoryByPcId?: Maybe<DeletePlatbyCategoryPayload>;
+  /** Deletes a single `PlatbyCategoryGroup` using its globally unique id. */
+  deletePlatbyCategoryGroup?: Maybe<DeletePlatbyCategoryGroupPayload>;
+  /** Deletes a single `PlatbyCategoryGroup` using a unique key. */
+  deletePlatbyCategoryGroupByPcgId?: Maybe<DeletePlatbyCategoryGroupPayload>;
+  /** Deletes a single `PlatbyGroup` using its globally unique id. */
+  deletePlatbyGroup?: Maybe<DeletePlatbyGroupPayload>;
+  /** Deletes a single `PlatbyGroup` using a unique key. */
+  deletePlatbyGroupByPgId?: Maybe<DeletePlatbyGroupPayload>;
+  /** Deletes a single `PlatbyGroupSkupina` using its globally unique id. */
+  deletePlatbyGroupSkupina?: Maybe<DeletePlatbyGroupSkupinaPayload>;
+  /** Deletes a single `PlatbyGroupSkupina` using a unique key. */
+  deletePlatbyGroupSkupinaByPgsId?: Maybe<DeletePlatbyGroupSkupinaPayload>;
+  /** Deletes a single `PlatbyItem` using its globally unique id. */
+  deletePlatbyItem?: Maybe<DeletePlatbyItemPayload>;
+  /** Deletes a single `PlatbyItem` using a unique key. */
+  deletePlatbyItemByPiId?: Maybe<DeletePlatbyItemPayload>;
+  /** Deletes a single `PlatbyRaw` using its globally unique id. */
+  deletePlatbyRaw?: Maybe<DeletePlatbyRawPayload>;
+  /** Deletes a single `PlatbyRaw` using a unique key. */
+  deletePlatbyRawByPrId?: Maybe<DeletePlatbyRawPayload>;
+  /** Deletes a single `Rozpi` using its globally unique id. */
+  deleteRozpi?: Maybe<DeleteRozpiPayload>;
+  /** Deletes a single `Rozpi` using a unique key. */
+  deleteRozpiByRId?: Maybe<DeleteRozpiPayload>;
+  /** Deletes a single `RozpisItem` using its globally unique id. */
+  deleteRozpisItem?: Maybe<DeleteRozpisItemPayload>;
+  /** Deletes a single `RozpisItem` using a unique key. */
+  deleteRozpisItemByRiId?: Maybe<DeleteRozpisItemPayload>;
+  /** Deletes a single `Session` using its globally unique id. */
+  deleteSession?: Maybe<DeleteSessionPayload>;
+  /** Deletes a single `Session` using a unique key. */
+  deleteSessionBySsId?: Maybe<DeleteSessionPayload>;
+  /** Deletes a single `Skupiny` using its globally unique id. */
+  deleteSkupiny?: Maybe<DeleteSkupinyPayload>;
+  /** Deletes a single `Skupiny` using a unique key. */
+  deleteSkupinyBySId?: Maybe<DeleteSkupinyPayload>;
+  /** Deletes a single `Upozorneni` using its globally unique id. */
+  deleteUpozorneni?: Maybe<DeleteUpozorneniPayload>;
+  /** Deletes a single `Upozorneni` using a unique key. */
+  deleteUpozorneniByUpId?: Maybe<DeleteUpozorneniPayload>;
+  /** Deletes a single `UpozorneniSkupiny` using its globally unique id. */
+  deleteUpozorneniSkupiny?: Maybe<DeleteUpozorneniSkupinyPayload>;
+  /** Deletes a single `UpozorneniSkupiny` using a unique key. */
+  deleteUpozorneniSkupinyByUpsId?: Maybe<DeleteUpozorneniSkupinyPayload>;
+  /** Deletes a single `User` using its globally unique id. */
+  deleteUser?: Maybe<DeleteUserPayload>;
+  /** Deletes a single `User` using a unique key. */
+  deleteUserByUId?: Maybe<DeleteUserPayload>;
+  /** Deletes a single `UsersSkupiny` using its globally unique id. */
+  deleteUsersSkupiny?: Maybe<DeleteUsersSkupinyPayload>;
+  /** Deletes a single `UsersSkupiny` using a unique key. */
+  deleteUsersSkupinyByUsId?: Maybe<DeleteUsersSkupinyPayload>;
+  /** Deletes a single `Video` using its globally unique id. */
+  deleteVideo?: Maybe<DeleteVideoPayload>;
+  /** Deletes a single `Video` using a unique key. */
+  deleteVideoByVId?: Maybe<DeleteVideoPayload>;
+  /** Deletes a single `VideoList` using its globally unique id. */
+  deleteVideoList?: Maybe<DeleteVideoListPayload>;
+  /** Deletes a single `VideoList` using a unique key. */
+  deleteVideoListByVlId?: Maybe<DeleteVideoListPayload>;
+  /** Deletes a single `VideoSource` using its globally unique id. */
+  deleteVideoSource?: Maybe<DeleteVideoSourcePayload>;
+  /** Deletes a single `VideoSource` using a unique key. */
+  deleteVideoSourceByVsId?: Maybe<DeleteVideoSourcePayload>;
+  /** Updates a single `Akce` using its globally unique id and a patch. */
+  updateAkce?: Maybe<UpdateAkcePayload>;
+  /** Updates a single `Akce` using a unique key and a patch. */
+  updateAkceByAId?: Maybe<UpdateAkcePayload>;
+  /** Updates a single `AkceItem` using its globally unique id and a patch. */
+  updateAkceItem?: Maybe<UpdateAkceItemPayload>;
+  /** Updates a single `AkceItem` using a unique key and a patch. */
+  updateAkceItemByAiId?: Maybe<UpdateAkceItemPayload>;
+  /** Updates a single `Aktuality` using its globally unique id and a patch. */
+  updateAktuality?: Maybe<UpdateAktualityPayload>;
+  /** Updates a single `Aktuality` using a unique key and a patch. */
+  updateAktualityByAtId?: Maybe<UpdateAktualityPayload>;
+  /** Updates a single `Dokumenty` using its globally unique id and a patch. */
+  updateDokumenty?: Maybe<UpdateDokumentyPayload>;
+  /** Updates a single `Dokumenty` using a unique key and a patch. */
+  updateDokumentyByDId?: Maybe<UpdateDokumentyPayload>;
+  /** Updates a single `GalerieDir` using its globally unique id and a patch. */
+  updateGalerieDir?: Maybe<UpdateGalerieDirPayload>;
+  /** Updates a single `GalerieDir` using a unique key and a patch. */
+  updateGalerieDirByGdId?: Maybe<UpdateGalerieDirPayload>;
+  /** Updates a single `GalerieFoto` using its globally unique id and a patch. */
+  updateGalerieFoto?: Maybe<UpdateGalerieFotoPayload>;
+  /** Updates a single `GalerieFoto` using a unique key and a patch. */
+  updateGalerieFotoByGfId?: Maybe<UpdateGalerieFotoPayload>;
+  /** Updates a single `Nabidka` using its globally unique id and a patch. */
+  updateNabidka?: Maybe<UpdateNabidkaPayload>;
+  /** Updates a single `Nabidka` using a unique key and a patch. */
+  updateNabidkaByNId?: Maybe<UpdateNabidkaPayload>;
+  /** Updates a single `NabidkaItem` using its globally unique id and a patch. */
+  updateNabidkaItem?: Maybe<UpdateNabidkaItemPayload>;
+  /** Updates a single `NabidkaItem` using a unique key and a patch. */
+  updateNabidkaItemByNiId?: Maybe<UpdateNabidkaItemPayload>;
+  /** Updates a single `Parameter` using its globally unique id and a patch. */
+  updateParameter?: Maybe<UpdateParameterPayload>;
+  /** Updates a single `Parameter` using a unique key and a patch. */
+  updateParameterByPaName?: Maybe<UpdateParameterPayload>;
+  /** Updates a single `Pary` using its globally unique id and a patch. */
+  updatePary?: Maybe<UpdateParyPayload>;
+  /** Updates a single `Pary` using a unique key and a patch. */
+  updateParyByPId?: Maybe<UpdateParyPayload>;
+  /** Updates a single `ParyNavrh` using its globally unique id and a patch. */
+  updateParyNavrh?: Maybe<UpdateParyNavrhPayload>;
+  /** Updates a single `ParyNavrh` using a unique key and a patch. */
+  updateParyNavrhByPnId?: Maybe<UpdateParyNavrhPayload>;
+  /** Updates a single `Permission` using its globally unique id and a patch. */
+  updatePermission?: Maybe<UpdatePermissionPayload>;
+  /** Updates a single `Permission` using a unique key and a patch. */
+  updatePermissionByPeId?: Maybe<UpdatePermissionPayload>;
+  /** Updates a single `PlatbyCategory` using its globally unique id and a patch. */
+  updatePlatbyCategory?: Maybe<UpdatePlatbyCategoryPayload>;
+  /** Updates a single `PlatbyCategory` using a unique key and a patch. */
+  updatePlatbyCategoryByPcId?: Maybe<UpdatePlatbyCategoryPayload>;
+  /** Updates a single `PlatbyCategoryGroup` using its globally unique id and a patch. */
+  updatePlatbyCategoryGroup?: Maybe<UpdatePlatbyCategoryGroupPayload>;
+  /** Updates a single `PlatbyCategoryGroup` using a unique key and a patch. */
+  updatePlatbyCategoryGroupByPcgId?: Maybe<UpdatePlatbyCategoryGroupPayload>;
+  /** Updates a single `PlatbyGroup` using its globally unique id and a patch. */
+  updatePlatbyGroup?: Maybe<UpdatePlatbyGroupPayload>;
+  /** Updates a single `PlatbyGroup` using a unique key and a patch. */
+  updatePlatbyGroupByPgId?: Maybe<UpdatePlatbyGroupPayload>;
+  /** Updates a single `PlatbyGroupSkupina` using its globally unique id and a patch. */
+  updatePlatbyGroupSkupina?: Maybe<UpdatePlatbyGroupSkupinaPayload>;
+  /** Updates a single `PlatbyGroupSkupina` using a unique key and a patch. */
+  updatePlatbyGroupSkupinaByPgsId?: Maybe<UpdatePlatbyGroupSkupinaPayload>;
+  /** Updates a single `PlatbyItem` using its globally unique id and a patch. */
+  updatePlatbyItem?: Maybe<UpdatePlatbyItemPayload>;
+  /** Updates a single `PlatbyItem` using a unique key and a patch. */
+  updatePlatbyItemByPiId?: Maybe<UpdatePlatbyItemPayload>;
+  /** Updates a single `PlatbyRaw` using its globally unique id and a patch. */
+  updatePlatbyRaw?: Maybe<UpdatePlatbyRawPayload>;
+  /** Updates a single `PlatbyRaw` using a unique key and a patch. */
+  updatePlatbyRawByPrId?: Maybe<UpdatePlatbyRawPayload>;
+  /** Updates a single `Rozpi` using its globally unique id and a patch. */
+  updateRozpi?: Maybe<UpdateRozpiPayload>;
+  /** Updates a single `Rozpi` using a unique key and a patch. */
+  updateRozpiByRId?: Maybe<UpdateRozpiPayload>;
+  /** Updates a single `RozpisItem` using its globally unique id and a patch. */
+  updateRozpisItem?: Maybe<UpdateRozpisItemPayload>;
+  /** Updates a single `RozpisItem` using a unique key and a patch. */
+  updateRozpisItemByRiId?: Maybe<UpdateRozpisItemPayload>;
+  /** Updates a single `Session` using its globally unique id and a patch. */
+  updateSession?: Maybe<UpdateSessionPayload>;
+  /** Updates a single `Session` using a unique key and a patch. */
+  updateSessionBySsId?: Maybe<UpdateSessionPayload>;
+  /** Updates a single `Skupiny` using its globally unique id and a patch. */
+  updateSkupiny?: Maybe<UpdateSkupinyPayload>;
+  /** Updates a single `Skupiny` using a unique key and a patch. */
+  updateSkupinyBySId?: Maybe<UpdateSkupinyPayload>;
+  /** Updates a single `Upozorneni` using its globally unique id and a patch. */
+  updateUpozorneni?: Maybe<UpdateUpozorneniPayload>;
+  /** Updates a single `Upozorneni` using a unique key and a patch. */
+  updateUpozorneniByUpId?: Maybe<UpdateUpozorneniPayload>;
+  /** Updates a single `UpozorneniSkupiny` using its globally unique id and a patch. */
+  updateUpozorneniSkupiny?: Maybe<UpdateUpozorneniSkupinyPayload>;
+  /** Updates a single `UpozorneniSkupiny` using a unique key and a patch. */
+  updateUpozorneniSkupinyByUpsId?: Maybe<UpdateUpozorneniSkupinyPayload>;
+  /** Updates a single `User` using its globally unique id and a patch. */
+  updateUser?: Maybe<UpdateUserPayload>;
+  /** Updates a single `User` using a unique key and a patch. */
+  updateUserByUId?: Maybe<UpdateUserPayload>;
+  /** Updates a single `UsersSkupiny` using its globally unique id and a patch. */
+  updateUsersSkupiny?: Maybe<UpdateUsersSkupinyPayload>;
+  /** Updates a single `UsersSkupiny` using a unique key and a patch. */
+  updateUsersSkupinyByUsId?: Maybe<UpdateUsersSkupinyPayload>;
+  /** Updates a single `Video` using its globally unique id and a patch. */
+  updateVideo?: Maybe<UpdateVideoPayload>;
+  /** Updates a single `Video` using a unique key and a patch. */
+  updateVideoByVId?: Maybe<UpdateVideoPayload>;
+  /** Updates a single `VideoList` using its globally unique id and a patch. */
+  updateVideoList?: Maybe<UpdateVideoListPayload>;
+  /** Updates a single `VideoList` using a unique key and a patch. */
+  updateVideoListByVlId?: Maybe<UpdateVideoListPayload>;
+  /** Updates a single `VideoSource` using its globally unique id and a patch. */
+  updateVideoSource?: Maybe<UpdateVideoSourcePayload>;
+  /** Updates a single `VideoSource` using a unique key and a patch. */
+  updateVideoSourceByVsId?: Maybe<UpdateVideoSourcePayload>;
 };
 
-/** aggregate stddev on columns */
-export type Rozpis_Stddev_Fields = {
-  __typename?: 'rozpis_stddev_fields';
-  r_id?: Maybe<Scalars['Float']>;
-  r_trener?: Maybe<Scalars['Float']>;
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateAkceArgs = {
+  input: CreateAkceInput;
 };
 
-/** order by stddev() on columns of table "rozpis" */
-export type Rozpis_Stddev_Order_By = {
-  r_id?: InputMaybe<Order_By>;
-  r_trener?: InputMaybe<Order_By>;
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateAkceItemArgs = {
+  input: CreateAkceItemInput;
 };
 
-/** aggregate stddev_pop on columns */
-export type Rozpis_Stddev_Pop_Fields = {
-  __typename?: 'rozpis_stddev_pop_fields';
-  r_id?: Maybe<Scalars['Float']>;
-  r_trener?: Maybe<Scalars['Float']>;
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateAktualityArgs = {
+  input: CreateAktualityInput;
 };
 
-/** order by stddev_pop() on columns of table "rozpis" */
-export type Rozpis_Stddev_Pop_Order_By = {
-  r_id?: InputMaybe<Order_By>;
-  r_trener?: InputMaybe<Order_By>;
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateDokumentyArgs = {
+  input: CreateDokumentyInput;
 };
 
-/** aggregate stddev_samp on columns */
-export type Rozpis_Stddev_Samp_Fields = {
-  __typename?: 'rozpis_stddev_samp_fields';
-  r_id?: Maybe<Scalars['Float']>;
-  r_trener?: Maybe<Scalars['Float']>;
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateGalerieDirArgs = {
+  input: CreateGalerieDirInput;
 };
 
-/** order by stddev_samp() on columns of table "rozpis" */
-export type Rozpis_Stddev_Samp_Order_By = {
-  r_id?: InputMaybe<Order_By>;
-  r_trener?: InputMaybe<Order_By>;
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateGalerieFotoArgs = {
+  input: CreateGalerieFotoInput;
 };
 
-/** aggregate sum on columns */
-export type Rozpis_Sum_Fields = {
-  __typename?: 'rozpis_sum_fields';
-  r_id?: Maybe<Scalars['bigint']>;
-  r_trener?: Maybe<Scalars['bigint']>;
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateNabidkaArgs = {
+  input: CreateNabidkaInput;
 };
 
-/** order by sum() on columns of table "rozpis" */
-export type Rozpis_Sum_Order_By = {
-  r_id?: InputMaybe<Order_By>;
-  r_trener?: InputMaybe<Order_By>;
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateNabidkaItemArgs = {
+  input: CreateNabidkaItemInput;
 };
 
-/** update columns of table "rozpis" */
-export enum Rozpis_Update_Column {
-  /** column name */
-  RDatum = 'r_datum',
-  /** column name */
-  RId = 'r_id',
-  /** column name */
-  RKde = 'r_kde',
-  /** column name */
-  RLock = 'r_lock',
-  /** column name */
-  RTimestamp = 'r_timestamp',
-  /** column name */
-  RTrener = 'r_trener',
-  /** column name */
-  RVisible = 'r_visible'
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateParameterArgs = {
+  input: CreateParameterInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateParyArgs = {
+  input: CreateParyInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateParyNavrhArgs = {
+  input: CreateParyNavrhInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreatePermissionArgs = {
+  input: CreatePermissionInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreatePlatbyCategoryArgs = {
+  input: CreatePlatbyCategoryInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreatePlatbyCategoryGroupArgs = {
+  input: CreatePlatbyCategoryGroupInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreatePlatbyGroupArgs = {
+  input: CreatePlatbyGroupInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreatePlatbyGroupSkupinaArgs = {
+  input: CreatePlatbyGroupSkupinaInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreatePlatbyItemArgs = {
+  input: CreatePlatbyItemInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreatePlatbyRawArgs = {
+  input: CreatePlatbyRawInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateRozpiArgs = {
+  input: CreateRozpiInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateRozpisItemArgs = {
+  input: CreateRozpisItemInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateSessionArgs = {
+  input: CreateSessionInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateSkupinyArgs = {
+  input: CreateSkupinyInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateUpozorneniArgs = {
+  input: CreateUpozorneniInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateUpozorneniSkupinyArgs = {
+  input: CreateUpozorneniSkupinyInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateUserArgs = {
+  input: CreateUserInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateUsersSkupinyArgs = {
+  input: CreateUsersSkupinyInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateVideoArgs = {
+  input: CreateVideoInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateVideoListArgs = {
+  input: CreateVideoListInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateVideoSourceArgs = {
+  input: CreateVideoSourceInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteAkceArgs = {
+  input: DeleteAkceInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteAkceByAIdArgs = {
+  input: DeleteAkceByAIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteAkceItemArgs = {
+  input: DeleteAkceItemInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteAkceItemByAiIdArgs = {
+  input: DeleteAkceItemByAiIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteAktualityArgs = {
+  input: DeleteAktualityInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteAktualityByAtIdArgs = {
+  input: DeleteAktualityByAtIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDokumentyArgs = {
+  input: DeleteDokumentyInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteDokumentyByDIdArgs = {
+  input: DeleteDokumentyByDIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteGalerieDirArgs = {
+  input: DeleteGalerieDirInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteGalerieDirByGdIdArgs = {
+  input: DeleteGalerieDirByGdIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteGalerieFotoArgs = {
+  input: DeleteGalerieFotoInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteGalerieFotoByGfIdArgs = {
+  input: DeleteGalerieFotoByGfIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteNabidkaArgs = {
+  input: DeleteNabidkaInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteNabidkaByNIdArgs = {
+  input: DeleteNabidkaByNIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteNabidkaItemArgs = {
+  input: DeleteNabidkaItemInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteNabidkaItemByNiIdArgs = {
+  input: DeleteNabidkaItemByNiIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteParameterArgs = {
+  input: DeleteParameterInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteParameterByPaNameArgs = {
+  input: DeleteParameterByPaNameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteParyArgs = {
+  input: DeleteParyInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteParyByPIdArgs = {
+  input: DeleteParyByPIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteParyNavrhArgs = {
+  input: DeleteParyNavrhInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteParyNavrhByPnIdArgs = {
+  input: DeleteParyNavrhByPnIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePermissionArgs = {
+  input: DeletePermissionInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePermissionByPeIdArgs = {
+  input: DeletePermissionByPeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePlatbyCategoryArgs = {
+  input: DeletePlatbyCategoryInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePlatbyCategoryByPcIdArgs = {
+  input: DeletePlatbyCategoryByPcIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePlatbyCategoryGroupArgs = {
+  input: DeletePlatbyCategoryGroupInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePlatbyCategoryGroupByPcgIdArgs = {
+  input: DeletePlatbyCategoryGroupByPcgIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePlatbyGroupArgs = {
+  input: DeletePlatbyGroupInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePlatbyGroupByPgIdArgs = {
+  input: DeletePlatbyGroupByPgIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePlatbyGroupSkupinaArgs = {
+  input: DeletePlatbyGroupSkupinaInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePlatbyGroupSkupinaByPgsIdArgs = {
+  input: DeletePlatbyGroupSkupinaByPgsIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePlatbyItemArgs = {
+  input: DeletePlatbyItemInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePlatbyItemByPiIdArgs = {
+  input: DeletePlatbyItemByPiIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePlatbyRawArgs = {
+  input: DeletePlatbyRawInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePlatbyRawByPrIdArgs = {
+  input: DeletePlatbyRawByPrIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteRozpiArgs = {
+  input: DeleteRozpiInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteRozpiByRIdArgs = {
+  input: DeleteRozpiByRIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteRozpisItemArgs = {
+  input: DeleteRozpisItemInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteRozpisItemByRiIdArgs = {
+  input: DeleteRozpisItemByRiIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteSessionArgs = {
+  input: DeleteSessionInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteSessionBySsIdArgs = {
+  input: DeleteSessionBySsIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteSkupinyArgs = {
+  input: DeleteSkupinyInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteSkupinyBySIdArgs = {
+  input: DeleteSkupinyBySIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteUpozorneniArgs = {
+  input: DeleteUpozorneniInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteUpozorneniByUpIdArgs = {
+  input: DeleteUpozorneniByUpIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteUpozorneniSkupinyArgs = {
+  input: DeleteUpozorneniSkupinyInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteUpozorneniSkupinyByUpsIdArgs = {
+  input: DeleteUpozorneniSkupinyByUpsIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteUserArgs = {
+  input: DeleteUserInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteUserByUIdArgs = {
+  input: DeleteUserByUIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteUsersSkupinyArgs = {
+  input: DeleteUsersSkupinyInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteUsersSkupinyByUsIdArgs = {
+  input: DeleteUsersSkupinyByUsIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteVideoArgs = {
+  input: DeleteVideoInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteVideoByVIdArgs = {
+  input: DeleteVideoByVIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteVideoListArgs = {
+  input: DeleteVideoListInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteVideoListByVlIdArgs = {
+  input: DeleteVideoListByVlIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteVideoSourceArgs = {
+  input: DeleteVideoSourceInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteVideoSourceByVsIdArgs = {
+  input: DeleteVideoSourceByVsIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateAkceArgs = {
+  input: UpdateAkceInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateAkceByAIdArgs = {
+  input: UpdateAkceByAIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateAkceItemArgs = {
+  input: UpdateAkceItemInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateAkceItemByAiIdArgs = {
+  input: UpdateAkceItemByAiIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateAktualityArgs = {
+  input: UpdateAktualityInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateAktualityByAtIdArgs = {
+  input: UpdateAktualityByAtIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDokumentyArgs = {
+  input: UpdateDokumentyInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateDokumentyByDIdArgs = {
+  input: UpdateDokumentyByDIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateGalerieDirArgs = {
+  input: UpdateGalerieDirInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateGalerieDirByGdIdArgs = {
+  input: UpdateGalerieDirByGdIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateGalerieFotoArgs = {
+  input: UpdateGalerieFotoInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateGalerieFotoByGfIdArgs = {
+  input: UpdateGalerieFotoByGfIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateNabidkaArgs = {
+  input: UpdateNabidkaInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateNabidkaByNIdArgs = {
+  input: UpdateNabidkaByNIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateNabidkaItemArgs = {
+  input: UpdateNabidkaItemInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateNabidkaItemByNiIdArgs = {
+  input: UpdateNabidkaItemByNiIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateParameterArgs = {
+  input: UpdateParameterInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateParameterByPaNameArgs = {
+  input: UpdateParameterByPaNameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateParyArgs = {
+  input: UpdateParyInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateParyByPIdArgs = {
+  input: UpdateParyByPIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateParyNavrhArgs = {
+  input: UpdateParyNavrhInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateParyNavrhByPnIdArgs = {
+  input: UpdateParyNavrhByPnIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePermissionArgs = {
+  input: UpdatePermissionInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePermissionByPeIdArgs = {
+  input: UpdatePermissionByPeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePlatbyCategoryArgs = {
+  input: UpdatePlatbyCategoryInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePlatbyCategoryByPcIdArgs = {
+  input: UpdatePlatbyCategoryByPcIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePlatbyCategoryGroupArgs = {
+  input: UpdatePlatbyCategoryGroupInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePlatbyCategoryGroupByPcgIdArgs = {
+  input: UpdatePlatbyCategoryGroupByPcgIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePlatbyGroupArgs = {
+  input: UpdatePlatbyGroupInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePlatbyGroupByPgIdArgs = {
+  input: UpdatePlatbyGroupByPgIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePlatbyGroupSkupinaArgs = {
+  input: UpdatePlatbyGroupSkupinaInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePlatbyGroupSkupinaByPgsIdArgs = {
+  input: UpdatePlatbyGroupSkupinaByPgsIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePlatbyItemArgs = {
+  input: UpdatePlatbyItemInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePlatbyItemByPiIdArgs = {
+  input: UpdatePlatbyItemByPiIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePlatbyRawArgs = {
+  input: UpdatePlatbyRawInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePlatbyRawByPrIdArgs = {
+  input: UpdatePlatbyRawByPrIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateRozpiArgs = {
+  input: UpdateRozpiInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateRozpiByRIdArgs = {
+  input: UpdateRozpiByRIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateRozpisItemArgs = {
+  input: UpdateRozpisItemInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateRozpisItemByRiIdArgs = {
+  input: UpdateRozpisItemByRiIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateSessionArgs = {
+  input: UpdateSessionInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateSessionBySsIdArgs = {
+  input: UpdateSessionBySsIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateSkupinyArgs = {
+  input: UpdateSkupinyInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateSkupinyBySIdArgs = {
+  input: UpdateSkupinyBySIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateUpozorneniArgs = {
+  input: UpdateUpozorneniInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateUpozorneniByUpIdArgs = {
+  input: UpdateUpozorneniByUpIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateUpozorneniSkupinyArgs = {
+  input: UpdateUpozorneniSkupinyInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateUpozorneniSkupinyByUpsIdArgs = {
+  input: UpdateUpozorneniSkupinyByUpsIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateUserArgs = {
+  input: UpdateUserInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateUserByUIdArgs = {
+  input: UpdateUserByUIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateUsersSkupinyArgs = {
+  input: UpdateUsersSkupinyInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateUsersSkupinyByUsIdArgs = {
+  input: UpdateUsersSkupinyByUsIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateVideoArgs = {
+  input: UpdateVideoInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateVideoByVIdArgs = {
+  input: UpdateVideoByVIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateVideoListArgs = {
+  input: UpdateVideoListInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateVideoListByVlIdArgs = {
+  input: UpdateVideoListByVlIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateVideoSourceArgs = {
+  input: UpdateVideoSourceInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateVideoSourceByVsIdArgs = {
+  input: UpdateVideoSourceByVsIdInput;
+};
+
+export type Nabidka = Node & {
+  __typename?: 'Nabidka';
+  nDo: Scalars['Date'];
+  nId: Scalars['BigInt'];
+  nLock: Scalars['Boolean'];
+  nMaxPocetHod: Scalars['BigInt'];
+  nOd: Scalars['Date'];
+  nPocetHod: Scalars['Int'];
+  nTimestamp?: Maybe<Scalars['Datetime']>;
+  nTrener: Scalars['BigInt'];
+  nVisible: Scalars['Boolean'];
+  /** Reads and enables pagination through a set of `NabidkaItem`. */
+  nabidkaItemsByNiIdRodic: NabidkaItemsConnection;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  /** Reads a single `User` that is related to this `Nabidka`. */
+  userByNTrener?: Maybe<User>;
+};
+
+
+export type NabidkaNabidkaItemsByNiIdRodicArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<NabidkaItemCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<NabidkaItemsOrderBy>>;
+};
+
+/** A condition to be used against `Nabidka` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type NabidkaCondition = {
+  /** Checks for equality with the object’s `nDo` field. */
+  nDo?: InputMaybe<Scalars['Date']>;
+  /** Checks for equality with the object’s `nId` field. */
+  nId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `nLock` field. */
+  nLock?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `nMaxPocetHod` field. */
+  nMaxPocetHod?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `nOd` field. */
+  nOd?: InputMaybe<Scalars['Date']>;
+  /** Checks for equality with the object’s `nPocetHod` field. */
+  nPocetHod?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `nTimestamp` field. */
+  nTimestamp?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `nTrener` field. */
+  nTrener?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `nVisible` field. */
+  nVisible?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** An input for mutations affecting `Nabidka` */
+export type NabidkaInput = {
+  nDo: Scalars['Date'];
+  nId?: InputMaybe<Scalars['BigInt']>;
+  nLock?: InputMaybe<Scalars['Boolean']>;
+  nMaxPocetHod?: InputMaybe<Scalars['BigInt']>;
+  nOd: Scalars['Date'];
+  nPocetHod?: InputMaybe<Scalars['Int']>;
+  nTimestamp?: InputMaybe<Scalars['Datetime']>;
+  nTrener: Scalars['BigInt'];
+  nVisible?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type NabidkaItem = Node & {
+  __typename?: 'NabidkaItem';
+  /** Reads a single `Nabidka` that is related to this `NabidkaItem`. */
+  nabidkaByNiIdRodic?: Maybe<Nabidka>;
+  niId: Scalars['BigInt'];
+  niIdRodic: Scalars['BigInt'];
+  niLock: Scalars['Boolean'];
+  niPartner: Scalars['BigInt'];
+  niPocetHod: Scalars['Int'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  /** Reads a single `Pary` that is related to this `NabidkaItem`. */
+  paryByNiPartner?: Maybe<Pary>;
+};
+
+/**
+ * A condition to be used against `NabidkaItem` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type NabidkaItemCondition = {
+  /** Checks for equality with the object’s `niId` field. */
+  niId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `niIdRodic` field. */
+  niIdRodic?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `niLock` field. */
+  niLock?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `niPartner` field. */
+  niPartner?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `niPocetHod` field. */
+  niPocetHod?: InputMaybe<Scalars['Int']>;
+};
+
+/** An input for mutations affecting `NabidkaItem` */
+export type NabidkaItemInput = {
+  niId?: InputMaybe<Scalars['BigInt']>;
+  niIdRodic: Scalars['BigInt'];
+  niLock?: InputMaybe<Scalars['Boolean']>;
+  niPartner: Scalars['BigInt'];
+  niPocetHod?: InputMaybe<Scalars['Int']>;
+};
+
+/** Represents an update to a `NabidkaItem`. Fields that are set will be updated. */
+export type NabidkaItemPatch = {
+  niId?: InputMaybe<Scalars['BigInt']>;
+  niIdRodic?: InputMaybe<Scalars['BigInt']>;
+  niLock?: InputMaybe<Scalars['Boolean']>;
+  niPartner?: InputMaybe<Scalars['BigInt']>;
+  niPocetHod?: InputMaybe<Scalars['Int']>;
+};
+
+/** A connection to a list of `NabidkaItem` values. */
+export type NabidkaItemsConnection = {
+  __typename?: 'NabidkaItemsConnection';
+  /** A list of edges which contains the `NabidkaItem` and cursor to aid in pagination. */
+  edges: Array<NabidkaItemsEdge>;
+  /** A list of `NabidkaItem` objects. */
+  nodes: Array<NabidkaItem>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `NabidkaItem` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `NabidkaItem` edge in the connection. */
+export type NabidkaItemsEdge = {
+  __typename?: 'NabidkaItemsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `NabidkaItem` at the end of the edge. */
+  node: NabidkaItem;
+};
+
+/** Methods to use when ordering `NabidkaItem`. */
+export enum NabidkaItemsOrderBy {
+  Natural = 'NATURAL',
+  NiIdAsc = 'NI_ID_ASC',
+  NiIdDesc = 'NI_ID_DESC',
+  NiIdRodicAsc = 'NI_ID_RODIC_ASC',
+  NiIdRodicDesc = 'NI_ID_RODIC_DESC',
+  NiLockAsc = 'NI_LOCK_ASC',
+  NiLockDesc = 'NI_LOCK_DESC',
+  NiPartnerAsc = 'NI_PARTNER_ASC',
+  NiPartnerDesc = 'NI_PARTNER_DESC',
+  NiPocetHodAsc = 'NI_POCET_HOD_ASC',
+  NiPocetHodDesc = 'NI_POCET_HOD_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-/** aggregate var_pop on columns */
-export type Rozpis_Var_Pop_Fields = {
-  __typename?: 'rozpis_var_pop_fields';
-  r_id?: Maybe<Scalars['Float']>;
-  r_trener?: Maybe<Scalars['Float']>;
+/** Represents an update to a `Nabidka`. Fields that are set will be updated. */
+export type NabidkaPatch = {
+  nDo?: InputMaybe<Scalars['Date']>;
+  nId?: InputMaybe<Scalars['BigInt']>;
+  nLock?: InputMaybe<Scalars['Boolean']>;
+  nMaxPocetHod?: InputMaybe<Scalars['BigInt']>;
+  nOd?: InputMaybe<Scalars['Date']>;
+  nPocetHod?: InputMaybe<Scalars['Int']>;
+  nTimestamp?: InputMaybe<Scalars['Datetime']>;
+  nTrener?: InputMaybe<Scalars['BigInt']>;
+  nVisible?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** order by var_pop() on columns of table "rozpis" */
-export type Rozpis_Var_Pop_Order_By = {
-  r_id?: InputMaybe<Order_By>;
-  r_trener?: InputMaybe<Order_By>;
+/** A connection to a list of `Nabidka` values. */
+export type NabidkasConnection = {
+  __typename?: 'NabidkasConnection';
+  /** A list of edges which contains the `Nabidka` and cursor to aid in pagination. */
+  edges: Array<NabidkasEdge>;
+  /** A list of `Nabidka` objects. */
+  nodes: Array<Nabidka>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Nabidka` you could get from the connection. */
+  totalCount: Scalars['Int'];
 };
 
-/** aggregate var_samp on columns */
-export type Rozpis_Var_Samp_Fields = {
-  __typename?: 'rozpis_var_samp_fields';
-  r_id?: Maybe<Scalars['Float']>;
-  r_trener?: Maybe<Scalars['Float']>;
+/** A `Nabidka` edge in the connection. */
+export type NabidkasEdge = {
+  __typename?: 'NabidkasEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Nabidka` at the end of the edge. */
+  node: Nabidka;
 };
 
-/** order by var_samp() on columns of table "rozpis" */
-export type Rozpis_Var_Samp_Order_By = {
-  r_id?: InputMaybe<Order_By>;
-  r_trener?: InputMaybe<Order_By>;
+/** Methods to use when ordering `Nabidka`. */
+export enum NabidkasOrderBy {
+  Natural = 'NATURAL',
+  NDoAsc = 'N_DO_ASC',
+  NDoDesc = 'N_DO_DESC',
+  NIdAsc = 'N_ID_ASC',
+  NIdDesc = 'N_ID_DESC',
+  NLockAsc = 'N_LOCK_ASC',
+  NLockDesc = 'N_LOCK_DESC',
+  NMaxPocetHodAsc = 'N_MAX_POCET_HOD_ASC',
+  NMaxPocetHodDesc = 'N_MAX_POCET_HOD_DESC',
+  NOdAsc = 'N_OD_ASC',
+  NOdDesc = 'N_OD_DESC',
+  NPocetHodAsc = 'N_POCET_HOD_ASC',
+  NPocetHodDesc = 'N_POCET_HOD_DESC',
+  NTimestampAsc = 'N_TIMESTAMP_ASC',
+  NTimestampDesc = 'N_TIMESTAMP_DESC',
+  NTrenerAsc = 'N_TRENER_ASC',
+  NTrenerDesc = 'N_TRENER_DESC',
+  NVisibleAsc = 'N_VISIBLE_ASC',
+  NVisibleDesc = 'N_VISIBLE_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** An object with a globally unique `ID`. */
+export type Node = {
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
 };
 
-/** aggregate variance on columns */
-export type Rozpis_Variance_Fields = {
-  __typename?: 'rozpis_variance_fields';
-  r_id?: Maybe<Scalars['Float']>;
-  r_trener?: Maybe<Scalars['Float']>;
+/** Information about pagination in a connection. */
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  /** When paginating forwards, the cursor to continue. */
+  endCursor?: Maybe<Scalars['Cursor']>;
+  /** When paginating forwards, are there more items? */
+  hasNextPage: Scalars['Boolean'];
+  /** When paginating backwards, are there more items? */
+  hasPreviousPage: Scalars['Boolean'];
+  /** When paginating backwards, the cursor to continue. */
+  startCursor?: Maybe<Scalars['Cursor']>;
 };
 
-/** order by variance() on columns of table "rozpis" */
-export type Rozpis_Variance_Order_By = {
-  r_id?: InputMaybe<Order_By>;
-  r_trener?: InputMaybe<Order_By>;
+export type Parameter = Node & {
+  __typename?: 'Parameter';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  paName: Scalars['String'];
+  paValue: Scalars['String'];
 };
 
-/** columns and relationships of "session" */
-export type Session = {
-  __typename?: 'session';
-  ss_data: Scalars['bytea'];
-  ss_id: Scalars['String'];
-  ss_lifetime: Scalars['bigint'];
-  ss_updated_at: Scalars['timestamptz'];
+/**
+ * A condition to be used against `Parameter` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type ParameterCondition = {
+  /** Checks for equality with the object’s `paName` field. */
+  paName?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `paValue` field. */
+  paValue?: InputMaybe<Scalars['String']>;
 };
 
-/** aggregated selection of "session" */
-export type Session_Aggregate = {
-  __typename?: 'session_aggregate';
-  aggregate?: Maybe<Session_Aggregate_Fields>;
+/** An input for mutations affecting `Parameter` */
+export type ParameterInput = {
+  paName: Scalars['String'];
+  paValue: Scalars['String'];
+};
+
+/** Represents an update to a `Parameter`. Fields that are set will be updated. */
+export type ParameterPatch = {
+  paName?: InputMaybe<Scalars['String']>;
+  paValue?: InputMaybe<Scalars['String']>;
+};
+
+/** A connection to a list of `Parameter` values. */
+export type ParametersConnection = {
+  __typename?: 'ParametersConnection';
+  /** A list of edges which contains the `Parameter` and cursor to aid in pagination. */
+  edges: Array<ParametersEdge>;
+  /** A list of `Parameter` objects. */
+  nodes: Array<Parameter>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Parameter` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Parameter` edge in the connection. */
+export type ParametersEdge = {
+  __typename?: 'ParametersEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Parameter` at the end of the edge. */
+  node: Parameter;
+};
+
+/** Methods to use when ordering `Parameter`. */
+export enum ParametersOrderBy {
+  Natural = 'NATURAL',
+  PaNameAsc = 'PA_NAME_ASC',
+  PaNameDesc = 'PA_NAME_DESC',
+  PaValueAsc = 'PA_VALUE_ASC',
+  PaValueDesc = 'PA_VALUE_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A connection to a list of `Pary` values. */
+export type PariesConnection = {
+  __typename?: 'PariesConnection';
+  /** A list of edges which contains the `Pary` and cursor to aid in pagination. */
+  edges: Array<PariesEdge>;
+  /** A list of `Pary` objects. */
+  nodes: Array<Pary>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Pary` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Pary` edge in the connection. */
+export type PariesEdge = {
+  __typename?: 'PariesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Pary` at the end of the edge. */
+  node: Pary;
+};
+
+/** Methods to use when ordering `Pary`. */
+export enum PariesOrderBy {
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  PArchivAsc = 'P_ARCHIV_ASC',
+  PArchivDesc = 'P_ARCHIV_DESC',
+  PHodnoceniAsc = 'P_HODNOCENI_ASC',
+  PHodnoceniDesc = 'P_HODNOCENI_DESC',
+  PIdAsc = 'P_ID_ASC',
+  PIdDesc = 'P_ID_DESC',
+  PIdPartnerkaAsc = 'P_ID_PARTNERKA_ASC',
+  PIdPartnerkaDesc = 'P_ID_PARTNERKA_DESC',
+  PIdPartnerAsc = 'P_ID_PARTNER_ASC',
+  PIdPartnerDesc = 'P_ID_PARTNER_DESC',
+  PLatBodyAsc = 'P_LAT_BODY_ASC',
+  PLatBodyDesc = 'P_LAT_BODY_DESC',
+  PLatFinaleAsc = 'P_LAT_FINALE_ASC',
+  PLatFinaleDesc = 'P_LAT_FINALE_DESC',
+  PLatTridaAsc = 'P_LAT_TRIDA_ASC',
+  PLatTridaDesc = 'P_LAT_TRIDA_DESC',
+  PSttBodyAsc = 'P_STT_BODY_ASC',
+  PSttBodyDesc = 'P_STT_BODY_DESC',
+  PSttFinaleAsc = 'P_STT_FINALE_ASC',
+  PSttFinaleDesc = 'P_STT_FINALE_DESC',
+  PSttTridaAsc = 'P_STT_TRIDA_ASC',
+  PSttTridaDesc = 'P_STT_TRIDA_DESC',
+  PTimestampAddAsc = 'P_TIMESTAMP_ADD_ASC',
+  PTimestampAddDesc = 'P_TIMESTAMP_ADD_DESC',
+  PTimestampArchiveAsc = 'P_TIMESTAMP_ARCHIVE_ASC',
+  PTimestampArchiveDesc = 'P_TIMESTAMP_ARCHIVE_DESC'
+}
+
+export type Pary = Node & {
+  __typename?: 'Pary';
+  /** Reads and enables pagination through a set of `NabidkaItem`. */
+  nabidkaItemsByNiPartner: NabidkaItemsConnection;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  pArchiv: Scalars['Boolean'];
+  pHodnoceni: Scalars['Int'];
+  pId: Scalars['BigInt'];
+  pIdPartner: Scalars['BigInt'];
+  pIdPartnerka?: Maybe<Scalars['BigInt']>;
+  pLatBody: Scalars['Int'];
+  pLatFinale: Scalars['Boolean'];
+  pLatTrida: ParyPLatTrida;
+  pSttBody: Scalars['Int'];
+  pSttFinale: Scalars['Boolean'];
+  pSttTrida: ParyPSttTrida;
+  pTimestampAdd: Scalars['Datetime'];
+  pTimestampArchive?: Maybe<Scalars['Datetime']>;
+  /** Reads and enables pagination through a set of `RozpisItem`. */
+  rozpisItemsByRiPartner: RozpisItemsConnection;
+  /** Reads a single `User` that is related to this `Pary`. */
+  userByPIdPartner?: Maybe<User>;
+};
+
+
+export type ParyNabidkaItemsByNiPartnerArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<NabidkaItemCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<NabidkaItemsOrderBy>>;
+};
+
+
+export type ParyRozpisItemsByRiPartnerArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<RozpisItemCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<RozpisItemsOrderBy>>;
+};
+
+/** A condition to be used against `Pary` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type ParyCondition = {
+  /** Checks for equality with the object’s `pArchiv` field. */
+  pArchiv?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `pHodnoceni` field. */
+  pHodnoceni?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `pId` field. */
+  pId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `pIdPartner` field. */
+  pIdPartner?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `pIdPartnerka` field. */
+  pIdPartnerka?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `pLatBody` field. */
+  pLatBody?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `pLatFinale` field. */
+  pLatFinale?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `pLatTrida` field. */
+  pLatTrida?: InputMaybe<ParyPLatTrida>;
+  /** Checks for equality with the object’s `pSttBody` field. */
+  pSttBody?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `pSttFinale` field. */
+  pSttFinale?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `pSttTrida` field. */
+  pSttTrida?: InputMaybe<ParyPSttTrida>;
+  /** Checks for equality with the object’s `pTimestampAdd` field. */
+  pTimestampAdd?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `pTimestampArchive` field. */
+  pTimestampArchive?: InputMaybe<Scalars['Datetime']>;
+};
+
+/** An input for mutations affecting `Pary` */
+export type ParyInput = {
+  pArchiv?: InputMaybe<Scalars['Boolean']>;
+  pHodnoceni?: InputMaybe<Scalars['Int']>;
+  pId?: InputMaybe<Scalars['BigInt']>;
+  pIdPartner: Scalars['BigInt'];
+  pIdPartnerka?: InputMaybe<Scalars['BigInt']>;
+  pLatBody?: InputMaybe<Scalars['Int']>;
+  pLatFinale?: InputMaybe<Scalars['Boolean']>;
+  pLatTrida?: InputMaybe<ParyPLatTrida>;
+  pSttBody?: InputMaybe<Scalars['Int']>;
+  pSttFinale?: InputMaybe<Scalars['Boolean']>;
+  pSttTrida?: InputMaybe<ParyPSttTrida>;
+  pTimestampAdd?: InputMaybe<Scalars['Datetime']>;
+  pTimestampArchive?: InputMaybe<Scalars['Datetime']>;
+};
+
+export type ParyNavrh = Node & {
+  __typename?: 'ParyNavrh';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  pnId: Scalars['BigInt'];
+  pnNavrhl: Scalars['BigInt'];
+  pnPartner: Scalars['BigInt'];
+  pnPartnerka: Scalars['BigInt'];
+  /** Reads a single `User` that is related to this `ParyNavrh`. */
+  userByPnNavrhl?: Maybe<User>;
+  /** Reads a single `User` that is related to this `ParyNavrh`. */
+  userByPnPartner?: Maybe<User>;
+  /** Reads a single `User` that is related to this `ParyNavrh`. */
+  userByPnPartnerka?: Maybe<User>;
+};
+
+/**
+ * A condition to be used against `ParyNavrh` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type ParyNavrhCondition = {
+  /** Checks for equality with the object’s `pnId` field. */
+  pnId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `pnNavrhl` field. */
+  pnNavrhl?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `pnPartner` field. */
+  pnPartner?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `pnPartnerka` field. */
+  pnPartnerka?: InputMaybe<Scalars['BigInt']>;
+};
+
+/** An input for mutations affecting `ParyNavrh` */
+export type ParyNavrhInput = {
+  pnId?: InputMaybe<Scalars['BigInt']>;
+  pnNavrhl: Scalars['BigInt'];
+  pnPartner: Scalars['BigInt'];
+  pnPartnerka: Scalars['BigInt'];
+};
+
+/** Represents an update to a `ParyNavrh`. Fields that are set will be updated. */
+export type ParyNavrhPatch = {
+  pnId?: InputMaybe<Scalars['BigInt']>;
+  pnNavrhl?: InputMaybe<Scalars['BigInt']>;
+  pnPartner?: InputMaybe<Scalars['BigInt']>;
+  pnPartnerka?: InputMaybe<Scalars['BigInt']>;
+};
+
+/** A connection to a list of `ParyNavrh` values. */
+export type ParyNavrhsConnection = {
+  __typename?: 'ParyNavrhsConnection';
+  /** A list of edges which contains the `ParyNavrh` and cursor to aid in pagination. */
+  edges: Array<ParyNavrhsEdge>;
+  /** A list of `ParyNavrh` objects. */
+  nodes: Array<ParyNavrh>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ParyNavrh` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `ParyNavrh` edge in the connection. */
+export type ParyNavrhsEdge = {
+  __typename?: 'ParyNavrhsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ParyNavrh` at the end of the edge. */
+  node: ParyNavrh;
+};
+
+/** Methods to use when ordering `ParyNavrh`. */
+export enum ParyNavrhsOrderBy {
+  Natural = 'NATURAL',
+  PnIdAsc = 'PN_ID_ASC',
+  PnIdDesc = 'PN_ID_DESC',
+  PnNavrhlAsc = 'PN_NAVRHL_ASC',
+  PnNavrhlDesc = 'PN_NAVRHL_DESC',
+  PnPartnerkaAsc = 'PN_PARTNERKA_ASC',
+  PnPartnerkaDesc = 'PN_PARTNERKA_DESC',
+  PnPartnerAsc = 'PN_PARTNER_ASC',
+  PnPartnerDesc = 'PN_PARTNER_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+export enum ParyPLatTrida {
+  A = 'A',
+  B = 'B',
+  C = 'C',
+  D = 'D',
+  H = 'H',
+  M = 'M',
+  Z = 'Z'
+}
+
+export enum ParyPSttTrida {
+  A = 'A',
+  B = 'B',
+  C = 'C',
+  D = 'D',
+  H = 'H',
+  M = 'M',
+  Z = 'Z'
+}
+
+/** Represents an update to a `Pary`. Fields that are set will be updated. */
+export type ParyPatch = {
+  pArchiv?: InputMaybe<Scalars['Boolean']>;
+  pHodnoceni?: InputMaybe<Scalars['Int']>;
+  pId?: InputMaybe<Scalars['BigInt']>;
+  pIdPartner?: InputMaybe<Scalars['BigInt']>;
+  pIdPartnerka?: InputMaybe<Scalars['BigInt']>;
+  pLatBody?: InputMaybe<Scalars['Int']>;
+  pLatFinale?: InputMaybe<Scalars['Boolean']>;
+  pLatTrida?: InputMaybe<ParyPLatTrida>;
+  pSttBody?: InputMaybe<Scalars['Int']>;
+  pSttFinale?: InputMaybe<Scalars['Boolean']>;
+  pSttTrida?: InputMaybe<ParyPSttTrida>;
+  pTimestampAdd?: InputMaybe<Scalars['Datetime']>;
+  pTimestampArchive?: InputMaybe<Scalars['Datetime']>;
+};
+
+export type Permission = Node & {
+  __typename?: 'Permission';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  peAkce: Scalars['Int'];
+  peAktuality: Scalars['Int'];
+  peAnkety: Scalars['Int'];
+  peDescription: Scalars['String'];
+  peDokumenty: Scalars['Int'];
+  peGalerie: Scalars['Int'];
+  peId: Scalars['BigInt'];
+  peInzerce: Scalars['Int'];
+  peKonzole: Scalars['Int'];
+  peMain: Scalars['Int'];
+  peNabidka: Scalars['Int'];
+  peName: Scalars['String'];
+  peNastenka: Scalars['Int'];
+  peNovinky: Scalars['Int'];
+  pePary: Scalars['Int'];
+  pePermissions: Scalars['Int'];
+  pePlatby: Scalars['Int'];
+  peRozpis: Scalars['Int'];
+  peSkupiny: Scalars['Int'];
+  peUsers: Scalars['Int'];
+  /** Reads and enables pagination through a set of `User`. */
+  usersByUGroup: UsersConnection;
+};
+
+
+export type PermissionUsersByUGroupArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<UserCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<UsersOrderBy>>;
+};
+
+/**
+ * A condition to be used against `Permission` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type PermissionCondition = {
+  /** Checks for equality with the object’s `peAkce` field. */
+  peAkce?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `peAktuality` field. */
+  peAktuality?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `peAnkety` field. */
+  peAnkety?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `peDescription` field. */
+  peDescription?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `peDokumenty` field. */
+  peDokumenty?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `peGalerie` field. */
+  peGalerie?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `peId` field. */
+  peId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `peInzerce` field. */
+  peInzerce?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `peKonzole` field. */
+  peKonzole?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `peMain` field. */
+  peMain?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `peNabidka` field. */
+  peNabidka?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `peName` field. */
+  peName?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `peNastenka` field. */
+  peNastenka?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `peNovinky` field. */
+  peNovinky?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `pePary` field. */
+  pePary?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `pePermissions` field. */
+  pePermissions?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `pePlatby` field. */
+  pePlatby?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `peRozpis` field. */
+  peRozpis?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `peSkupiny` field. */
+  peSkupiny?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `peUsers` field. */
+  peUsers?: InputMaybe<Scalars['Int']>;
+};
+
+/** An input for mutations affecting `Permission` */
+export type PermissionInput = {
+  peAkce: Scalars['Int'];
+  peAktuality: Scalars['Int'];
+  peAnkety: Scalars['Int'];
+  peDescription: Scalars['String'];
+  peDokumenty: Scalars['Int'];
+  peGalerie: Scalars['Int'];
+  peId?: InputMaybe<Scalars['BigInt']>;
+  peInzerce: Scalars['Int'];
+  peKonzole: Scalars['Int'];
+  peMain: Scalars['Int'];
+  peNabidka: Scalars['Int'];
+  peName: Scalars['String'];
+  peNastenka: Scalars['Int'];
+  peNovinky: Scalars['Int'];
+  pePary: Scalars['Int'];
+  pePermissions: Scalars['Int'];
+  pePlatby: Scalars['Int'];
+  peRozpis: Scalars['Int'];
+  peSkupiny: Scalars['Int'];
+  peUsers: Scalars['Int'];
+};
+
+/** Represents an update to a `Permission`. Fields that are set will be updated. */
+export type PermissionPatch = {
+  peAkce?: InputMaybe<Scalars['Int']>;
+  peAktuality?: InputMaybe<Scalars['Int']>;
+  peAnkety?: InputMaybe<Scalars['Int']>;
+  peDescription?: InputMaybe<Scalars['String']>;
+  peDokumenty?: InputMaybe<Scalars['Int']>;
+  peGalerie?: InputMaybe<Scalars['Int']>;
+  peId?: InputMaybe<Scalars['BigInt']>;
+  peInzerce?: InputMaybe<Scalars['Int']>;
+  peKonzole?: InputMaybe<Scalars['Int']>;
+  peMain?: InputMaybe<Scalars['Int']>;
+  peNabidka?: InputMaybe<Scalars['Int']>;
+  peName?: InputMaybe<Scalars['String']>;
+  peNastenka?: InputMaybe<Scalars['Int']>;
+  peNovinky?: InputMaybe<Scalars['Int']>;
+  pePary?: InputMaybe<Scalars['Int']>;
+  pePermissions?: InputMaybe<Scalars['Int']>;
+  pePlatby?: InputMaybe<Scalars['Int']>;
+  peRozpis?: InputMaybe<Scalars['Int']>;
+  peSkupiny?: InputMaybe<Scalars['Int']>;
+  peUsers?: InputMaybe<Scalars['Int']>;
+};
+
+/** A connection to a list of `Permission` values. */
+export type PermissionsConnection = {
+  __typename?: 'PermissionsConnection';
+  /** A list of edges which contains the `Permission` and cursor to aid in pagination. */
+  edges: Array<PermissionsEdge>;
+  /** A list of `Permission` objects. */
+  nodes: Array<Permission>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Permission` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Permission` edge in the connection. */
+export type PermissionsEdge = {
+  __typename?: 'PermissionsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Permission` at the end of the edge. */
+  node: Permission;
+};
+
+/** Methods to use when ordering `Permission`. */
+export enum PermissionsOrderBy {
+  Natural = 'NATURAL',
+  PeAkceAsc = 'PE_AKCE_ASC',
+  PeAkceDesc = 'PE_AKCE_DESC',
+  PeAktualityAsc = 'PE_AKTUALITY_ASC',
+  PeAktualityDesc = 'PE_AKTUALITY_DESC',
+  PeAnketyAsc = 'PE_ANKETY_ASC',
+  PeAnketyDesc = 'PE_ANKETY_DESC',
+  PeDescriptionAsc = 'PE_DESCRIPTION_ASC',
+  PeDescriptionDesc = 'PE_DESCRIPTION_DESC',
+  PeDokumentyAsc = 'PE_DOKUMENTY_ASC',
+  PeDokumentyDesc = 'PE_DOKUMENTY_DESC',
+  PeGalerieAsc = 'PE_GALERIE_ASC',
+  PeGalerieDesc = 'PE_GALERIE_DESC',
+  PeIdAsc = 'PE_ID_ASC',
+  PeIdDesc = 'PE_ID_DESC',
+  PeInzerceAsc = 'PE_INZERCE_ASC',
+  PeInzerceDesc = 'PE_INZERCE_DESC',
+  PeKonzoleAsc = 'PE_KONZOLE_ASC',
+  PeKonzoleDesc = 'PE_KONZOLE_DESC',
+  PeMainAsc = 'PE_MAIN_ASC',
+  PeMainDesc = 'PE_MAIN_DESC',
+  PeNabidkaAsc = 'PE_NABIDKA_ASC',
+  PeNabidkaDesc = 'PE_NABIDKA_DESC',
+  PeNameAsc = 'PE_NAME_ASC',
+  PeNameDesc = 'PE_NAME_DESC',
+  PeNastenkaAsc = 'PE_NASTENKA_ASC',
+  PeNastenkaDesc = 'PE_NASTENKA_DESC',
+  PeNovinkyAsc = 'PE_NOVINKY_ASC',
+  PeNovinkyDesc = 'PE_NOVINKY_DESC',
+  PeParyAsc = 'PE_PARY_ASC',
+  PeParyDesc = 'PE_PARY_DESC',
+  PePermissionsAsc = 'PE_PERMISSIONS_ASC',
+  PePermissionsDesc = 'PE_PERMISSIONS_DESC',
+  PePlatbyAsc = 'PE_PLATBY_ASC',
+  PePlatbyDesc = 'PE_PLATBY_DESC',
+  PeRozpisAsc = 'PE_ROZPIS_ASC',
+  PeRozpisDesc = 'PE_ROZPIS_DESC',
+  PeSkupinyAsc = 'PE_SKUPINY_ASC',
+  PeSkupinyDesc = 'PE_SKUPINY_DESC',
+  PeUsersAsc = 'PE_USERS_ASC',
+  PeUsersDesc = 'PE_USERS_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A connection to a list of `PlatbyCategory` values. */
+export type PlatbyCategoriesConnection = {
+  __typename?: 'PlatbyCategoriesConnection';
+  /** A list of edges which contains the `PlatbyCategory` and cursor to aid in pagination. */
+  edges: Array<PlatbyCategoriesEdge>;
+  /** A list of `PlatbyCategory` objects. */
+  nodes: Array<PlatbyCategory>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `PlatbyCategory` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `PlatbyCategory` edge in the connection. */
+export type PlatbyCategoriesEdge = {
+  __typename?: 'PlatbyCategoriesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `PlatbyCategory` at the end of the edge. */
+  node: PlatbyCategory;
+};
+
+/** Methods to use when ordering `PlatbyCategory`. */
+export enum PlatbyCategoriesOrderBy {
+  Natural = 'NATURAL',
+  PcAmountAsc = 'PC_AMOUNT_ASC',
+  PcAmountDesc = 'PC_AMOUNT_DESC',
+  PcArchiveAsc = 'PC_ARCHIVE_ASC',
+  PcArchiveDesc = 'PC_ARCHIVE_DESC',
+  PcDateDueAsc = 'PC_DATE_DUE_ASC',
+  PcDateDueDesc = 'PC_DATE_DUE_DESC',
+  PcIdAsc = 'PC_ID_ASC',
+  PcIdDesc = 'PC_ID_DESC',
+  PcNameAsc = 'PC_NAME_ASC',
+  PcNameDesc = 'PC_NAME_DESC',
+  PcSymbolAsc = 'PC_SYMBOL_ASC',
+  PcSymbolDesc = 'PC_SYMBOL_DESC',
+  PcUseBaseAsc = 'PC_USE_BASE_ASC',
+  PcUseBaseDesc = 'PC_USE_BASE_DESC',
+  PcUsePrefixAsc = 'PC_USE_PREFIX_ASC',
+  PcUsePrefixDesc = 'PC_USE_PREFIX_DESC',
+  PcValidFromAsc = 'PC_VALID_FROM_ASC',
+  PcValidFromDesc = 'PC_VALID_FROM_DESC',
+  PcValidToAsc = 'PC_VALID_TO_ASC',
+  PcValidToDesc = 'PC_VALID_TO_DESC',
+  PcVisibleAsc = 'PC_VISIBLE_ASC',
+  PcVisibleDesc = 'PC_VISIBLE_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+export type PlatbyCategory = Node & {
+  __typename?: 'PlatbyCategory';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  pcAmount: Scalars['BigFloat'];
+  pcArchive: Scalars['Boolean'];
+  pcDateDue: Scalars['Date'];
+  pcId: Scalars['BigInt'];
+  pcName: Scalars['String'];
+  pcSymbol: Scalars['BigInt'];
+  pcUseBase: Scalars['Boolean'];
+  pcUsePrefix: Scalars['Boolean'];
+  pcValidFrom: Scalars['Date'];
+  pcValidTo: Scalars['Date'];
+  pcVisible: Scalars['Boolean'];
+  /** Reads and enables pagination through a set of `PlatbyCategoryGroup`. */
+  platbyCategoryGroupsByPcgIdCategory: PlatbyCategoryGroupsConnection;
+  /** Reads and enables pagination through a set of `PlatbyItem`. */
+  platbyItemsByPiIdCategory: PlatbyItemsConnection;
+};
+
+
+export type PlatbyCategoryPlatbyCategoryGroupsByPcgIdCategoryArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<PlatbyCategoryGroupCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<PlatbyCategoryGroupsOrderBy>>;
+};
+
+
+export type PlatbyCategoryPlatbyItemsByPiIdCategoryArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<PlatbyItemCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<PlatbyItemsOrderBy>>;
+};
+
+/**
+ * A condition to be used against `PlatbyCategory` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type PlatbyCategoryCondition = {
+  /** Checks for equality with the object’s `pcAmount` field. */
+  pcAmount?: InputMaybe<Scalars['BigFloat']>;
+  /** Checks for equality with the object’s `pcArchive` field. */
+  pcArchive?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `pcDateDue` field. */
+  pcDateDue?: InputMaybe<Scalars['Date']>;
+  /** Checks for equality with the object’s `pcId` field. */
+  pcId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `pcName` field. */
+  pcName?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `pcSymbol` field. */
+  pcSymbol?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `pcUseBase` field. */
+  pcUseBase?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `pcUsePrefix` field. */
+  pcUsePrefix?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `pcValidFrom` field. */
+  pcValidFrom?: InputMaybe<Scalars['Date']>;
+  /** Checks for equality with the object’s `pcValidTo` field. */
+  pcValidTo?: InputMaybe<Scalars['Date']>;
+  /** Checks for equality with the object’s `pcVisible` field. */
+  pcVisible?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type PlatbyCategoryGroup = Node & {
+  __typename?: 'PlatbyCategoryGroup';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  pcgId: Scalars['BigInt'];
+  pcgIdCategory: Scalars['BigInt'];
+  pcgIdGroup: Scalars['BigInt'];
+  /** Reads a single `PlatbyCategory` that is related to this `PlatbyCategoryGroup`. */
+  platbyCategoryByPcgIdCategory?: Maybe<PlatbyCategory>;
+  /** Reads a single `PlatbyGroup` that is related to this `PlatbyCategoryGroup`. */
+  platbyGroupByPcgIdGroup?: Maybe<PlatbyGroup>;
+};
+
+/**
+ * A condition to be used against `PlatbyCategoryGroup` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type PlatbyCategoryGroupCondition = {
+  /** Checks for equality with the object’s `pcgId` field. */
+  pcgId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `pcgIdCategory` field. */
+  pcgIdCategory?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `pcgIdGroup` field. */
+  pcgIdGroup?: InputMaybe<Scalars['BigInt']>;
+};
+
+/** An input for mutations affecting `PlatbyCategoryGroup` */
+export type PlatbyCategoryGroupInput = {
+  pcgId?: InputMaybe<Scalars['BigInt']>;
+  pcgIdCategory: Scalars['BigInt'];
+  pcgIdGroup: Scalars['BigInt'];
+};
+
+/** Represents an update to a `PlatbyCategoryGroup`. Fields that are set will be updated. */
+export type PlatbyCategoryGroupPatch = {
+  pcgId?: InputMaybe<Scalars['BigInt']>;
+  pcgIdCategory?: InputMaybe<Scalars['BigInt']>;
+  pcgIdGroup?: InputMaybe<Scalars['BigInt']>;
+};
+
+/** A connection to a list of `PlatbyCategoryGroup` values. */
+export type PlatbyCategoryGroupsConnection = {
+  __typename?: 'PlatbyCategoryGroupsConnection';
+  /** A list of edges which contains the `PlatbyCategoryGroup` and cursor to aid in pagination. */
+  edges: Array<PlatbyCategoryGroupsEdge>;
+  /** A list of `PlatbyCategoryGroup` objects. */
+  nodes: Array<PlatbyCategoryGroup>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `PlatbyCategoryGroup` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `PlatbyCategoryGroup` edge in the connection. */
+export type PlatbyCategoryGroupsEdge = {
+  __typename?: 'PlatbyCategoryGroupsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `PlatbyCategoryGroup` at the end of the edge. */
+  node: PlatbyCategoryGroup;
+};
+
+/** Methods to use when ordering `PlatbyCategoryGroup`. */
+export enum PlatbyCategoryGroupsOrderBy {
+  Natural = 'NATURAL',
+  PcgIdAsc = 'PCG_ID_ASC',
+  PcgIdCategoryAsc = 'PCG_ID_CATEGORY_ASC',
+  PcgIdCategoryDesc = 'PCG_ID_CATEGORY_DESC',
+  PcgIdDesc = 'PCG_ID_DESC',
+  PcgIdGroupAsc = 'PCG_ID_GROUP_ASC',
+  PcgIdGroupDesc = 'PCG_ID_GROUP_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** An input for mutations affecting `PlatbyCategory` */
+export type PlatbyCategoryInput = {
+  pcAmount: Scalars['BigFloat'];
+  pcArchive?: InputMaybe<Scalars['Boolean']>;
+  pcDateDue: Scalars['Date'];
+  pcId?: InputMaybe<Scalars['BigInt']>;
+  pcName: Scalars['String'];
+  pcSymbol: Scalars['BigInt'];
+  pcUseBase?: InputMaybe<Scalars['Boolean']>;
+  pcUsePrefix?: InputMaybe<Scalars['Boolean']>;
+  pcValidFrom: Scalars['Date'];
+  pcValidTo: Scalars['Date'];
+  pcVisible?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** Represents an update to a `PlatbyCategory`. Fields that are set will be updated. */
+export type PlatbyCategoryPatch = {
+  pcAmount?: InputMaybe<Scalars['BigFloat']>;
+  pcArchive?: InputMaybe<Scalars['Boolean']>;
+  pcDateDue?: InputMaybe<Scalars['Date']>;
+  pcId?: InputMaybe<Scalars['BigInt']>;
+  pcName?: InputMaybe<Scalars['String']>;
+  pcSymbol?: InputMaybe<Scalars['BigInt']>;
+  pcUseBase?: InputMaybe<Scalars['Boolean']>;
+  pcUsePrefix?: InputMaybe<Scalars['Boolean']>;
+  pcValidFrom?: InputMaybe<Scalars['Date']>;
+  pcValidTo?: InputMaybe<Scalars['Date']>;
+  pcVisible?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type PlatbyGroup = Node & {
+  __typename?: 'PlatbyGroup';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  pgBase: Scalars['BigInt'];
+  pgDescription: Scalars['String'];
+  pgId: Scalars['BigInt'];
+  pgName: Scalars['String'];
+  pgType: Scalars['BigFloat'];
+  /** Reads and enables pagination through a set of `PlatbyCategoryGroup`. */
+  platbyCategoryGroupsByPcgIdGroup: PlatbyCategoryGroupsConnection;
+  /** Reads and enables pagination through a set of `PlatbyGroupSkupina`. */
+  platbyGroupSkupinasByPgsIdGroup: PlatbyGroupSkupinasConnection;
+};
+
+
+export type PlatbyGroupPlatbyCategoryGroupsByPcgIdGroupArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<PlatbyCategoryGroupCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<PlatbyCategoryGroupsOrderBy>>;
+};
+
+
+export type PlatbyGroupPlatbyGroupSkupinasByPgsIdGroupArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<PlatbyGroupSkupinaCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<PlatbyGroupSkupinasOrderBy>>;
+};
+
+/**
+ * A condition to be used against `PlatbyGroup` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type PlatbyGroupCondition = {
+  /** Checks for equality with the object’s `pgBase` field. */
+  pgBase?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `pgDescription` field. */
+  pgDescription?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `pgId` field. */
+  pgId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `pgName` field. */
+  pgName?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `pgType` field. */
+  pgType?: InputMaybe<Scalars['BigFloat']>;
+};
+
+/** An input for mutations affecting `PlatbyGroup` */
+export type PlatbyGroupInput = {
+  pgBase?: InputMaybe<Scalars['BigInt']>;
+  pgDescription: Scalars['String'];
+  pgId?: InputMaybe<Scalars['BigInt']>;
+  pgName: Scalars['String'];
+  pgType?: InputMaybe<Scalars['BigFloat']>;
+};
+
+/** Represents an update to a `PlatbyGroup`. Fields that are set will be updated. */
+export type PlatbyGroupPatch = {
+  pgBase?: InputMaybe<Scalars['BigInt']>;
+  pgDescription?: InputMaybe<Scalars['String']>;
+  pgId?: InputMaybe<Scalars['BigInt']>;
+  pgName?: InputMaybe<Scalars['String']>;
+  pgType?: InputMaybe<Scalars['BigFloat']>;
+};
+
+export type PlatbyGroupSkupina = Node & {
+  __typename?: 'PlatbyGroupSkupina';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  pgsId: Scalars['BigInt'];
+  pgsIdGroup: Scalars['BigInt'];
+  pgsIdSkupina: Scalars['BigInt'];
+  /** Reads a single `PlatbyGroup` that is related to this `PlatbyGroupSkupina`. */
+  platbyGroupByPgsIdGroup?: Maybe<PlatbyGroup>;
+  /** Reads a single `Skupiny` that is related to this `PlatbyGroupSkupina`. */
+  skupinyByPgsIdSkupina?: Maybe<Skupiny>;
+};
+
+/**
+ * A condition to be used against `PlatbyGroupSkupina` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type PlatbyGroupSkupinaCondition = {
+  /** Checks for equality with the object’s `pgsId` field. */
+  pgsId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `pgsIdGroup` field. */
+  pgsIdGroup?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `pgsIdSkupina` field. */
+  pgsIdSkupina?: InputMaybe<Scalars['BigInt']>;
+};
+
+/** An input for mutations affecting `PlatbyGroupSkupina` */
+export type PlatbyGroupSkupinaInput = {
+  pgsId?: InputMaybe<Scalars['BigInt']>;
+  pgsIdGroup: Scalars['BigInt'];
+  pgsIdSkupina: Scalars['BigInt'];
+};
+
+/** Represents an update to a `PlatbyGroupSkupina`. Fields that are set will be updated. */
+export type PlatbyGroupSkupinaPatch = {
+  pgsId?: InputMaybe<Scalars['BigInt']>;
+  pgsIdGroup?: InputMaybe<Scalars['BigInt']>;
+  pgsIdSkupina?: InputMaybe<Scalars['BigInt']>;
+};
+
+/** A connection to a list of `PlatbyGroupSkupina` values. */
+export type PlatbyGroupSkupinasConnection = {
+  __typename?: 'PlatbyGroupSkupinasConnection';
+  /** A list of edges which contains the `PlatbyGroupSkupina` and cursor to aid in pagination. */
+  edges: Array<PlatbyGroupSkupinasEdge>;
+  /** A list of `PlatbyGroupSkupina` objects. */
+  nodes: Array<PlatbyGroupSkupina>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `PlatbyGroupSkupina` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `PlatbyGroupSkupina` edge in the connection. */
+export type PlatbyGroupSkupinasEdge = {
+  __typename?: 'PlatbyGroupSkupinasEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `PlatbyGroupSkupina` at the end of the edge. */
+  node: PlatbyGroupSkupina;
+};
+
+/** Methods to use when ordering `PlatbyGroupSkupina`. */
+export enum PlatbyGroupSkupinasOrderBy {
+  Natural = 'NATURAL',
+  PgsIdAsc = 'PGS_ID_ASC',
+  PgsIdDesc = 'PGS_ID_DESC',
+  PgsIdGroupAsc = 'PGS_ID_GROUP_ASC',
+  PgsIdGroupDesc = 'PGS_ID_GROUP_DESC',
+  PgsIdSkupinaAsc = 'PGS_ID_SKUPINA_ASC',
+  PgsIdSkupinaDesc = 'PGS_ID_SKUPINA_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A connection to a list of `PlatbyGroup` values. */
+export type PlatbyGroupsConnection = {
+  __typename?: 'PlatbyGroupsConnection';
+  /** A list of edges which contains the `PlatbyGroup` and cursor to aid in pagination. */
+  edges: Array<PlatbyGroupsEdge>;
+  /** A list of `PlatbyGroup` objects. */
+  nodes: Array<PlatbyGroup>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `PlatbyGroup` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `PlatbyGroup` edge in the connection. */
+export type PlatbyGroupsEdge = {
+  __typename?: 'PlatbyGroupsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `PlatbyGroup` at the end of the edge. */
+  node: PlatbyGroup;
+};
+
+/** Methods to use when ordering `PlatbyGroup`. */
+export enum PlatbyGroupsOrderBy {
+  Natural = 'NATURAL',
+  PgBaseAsc = 'PG_BASE_ASC',
+  PgBaseDesc = 'PG_BASE_DESC',
+  PgDescriptionAsc = 'PG_DESCRIPTION_ASC',
+  PgDescriptionDesc = 'PG_DESCRIPTION_DESC',
+  PgIdAsc = 'PG_ID_ASC',
+  PgIdDesc = 'PG_ID_DESC',
+  PgNameAsc = 'PG_NAME_ASC',
+  PgNameDesc = 'PG_NAME_DESC',
+  PgTypeAsc = 'PG_TYPE_ASC',
+  PgTypeDesc = 'PG_TYPE_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+export type PlatbyItem = Node & {
+  __typename?: 'PlatbyItem';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  piAmount: Scalars['BigFloat'];
+  piDate: Scalars['Date'];
+  piId: Scalars['BigInt'];
+  piIdCategory: Scalars['BigInt'];
+  piIdRaw?: Maybe<Scalars['BigInt']>;
+  piIdUser?: Maybe<Scalars['BigInt']>;
+  piPrefix: Scalars['Int'];
+  /** Reads a single `PlatbyCategory` that is related to this `PlatbyItem`. */
+  platbyCategoryByPiIdCategory?: Maybe<PlatbyCategory>;
+  /** Reads a single `PlatbyRaw` that is related to this `PlatbyItem`. */
+  platbyRawByPiIdRaw?: Maybe<PlatbyRaw>;
+  /** Reads a single `User` that is related to this `PlatbyItem`. */
+  userByPiIdUser?: Maybe<User>;
+};
+
+/**
+ * A condition to be used against `PlatbyItem` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type PlatbyItemCondition = {
+  /** Checks for equality with the object’s `piAmount` field. */
+  piAmount?: InputMaybe<Scalars['BigFloat']>;
+  /** Checks for equality with the object’s `piDate` field. */
+  piDate?: InputMaybe<Scalars['Date']>;
+  /** Checks for equality with the object’s `piId` field. */
+  piId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `piIdCategory` field. */
+  piIdCategory?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `piIdRaw` field. */
+  piIdRaw?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `piIdUser` field. */
+  piIdUser?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `piPrefix` field. */
+  piPrefix?: InputMaybe<Scalars['Int']>;
+};
+
+/** An input for mutations affecting `PlatbyItem` */
+export type PlatbyItemInput = {
+  piAmount: Scalars['BigFloat'];
+  piDate: Scalars['Date'];
+  piId?: InputMaybe<Scalars['BigInt']>;
+  piIdCategory: Scalars['BigInt'];
+  piIdRaw?: InputMaybe<Scalars['BigInt']>;
+  piIdUser?: InputMaybe<Scalars['BigInt']>;
+  piPrefix?: InputMaybe<Scalars['Int']>;
+};
+
+/** Represents an update to a `PlatbyItem`. Fields that are set will be updated. */
+export type PlatbyItemPatch = {
+  piAmount?: InputMaybe<Scalars['BigFloat']>;
+  piDate?: InputMaybe<Scalars['Date']>;
+  piId?: InputMaybe<Scalars['BigInt']>;
+  piIdCategory?: InputMaybe<Scalars['BigInt']>;
+  piIdRaw?: InputMaybe<Scalars['BigInt']>;
+  piIdUser?: InputMaybe<Scalars['BigInt']>;
+  piPrefix?: InputMaybe<Scalars['Int']>;
+};
+
+/** A connection to a list of `PlatbyItem` values. */
+export type PlatbyItemsConnection = {
+  __typename?: 'PlatbyItemsConnection';
+  /** A list of edges which contains the `PlatbyItem` and cursor to aid in pagination. */
+  edges: Array<PlatbyItemsEdge>;
+  /** A list of `PlatbyItem` objects. */
+  nodes: Array<PlatbyItem>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `PlatbyItem` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `PlatbyItem` edge in the connection. */
+export type PlatbyItemsEdge = {
+  __typename?: 'PlatbyItemsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `PlatbyItem` at the end of the edge. */
+  node: PlatbyItem;
+};
+
+/** Methods to use when ordering `PlatbyItem`. */
+export enum PlatbyItemsOrderBy {
+  Natural = 'NATURAL',
+  PiAmountAsc = 'PI_AMOUNT_ASC',
+  PiAmountDesc = 'PI_AMOUNT_DESC',
+  PiDateAsc = 'PI_DATE_ASC',
+  PiDateDesc = 'PI_DATE_DESC',
+  PiIdAsc = 'PI_ID_ASC',
+  PiIdCategoryAsc = 'PI_ID_CATEGORY_ASC',
+  PiIdCategoryDesc = 'PI_ID_CATEGORY_DESC',
+  PiIdDesc = 'PI_ID_DESC',
+  PiIdRawAsc = 'PI_ID_RAW_ASC',
+  PiIdRawDesc = 'PI_ID_RAW_DESC',
+  PiIdUserAsc = 'PI_ID_USER_ASC',
+  PiIdUserDesc = 'PI_ID_USER_DESC',
+  PiPrefixAsc = 'PI_PREFIX_ASC',
+  PiPrefixDesc = 'PI_PREFIX_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+export type PlatbyRaw = Node & {
+  __typename?: 'PlatbyRaw';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  /** Reads and enables pagination through a set of `PlatbyItem`. */
+  platbyItemsByPiIdRaw: PlatbyItemsConnection;
+  prDiscarded: Scalars['Boolean'];
+  prHash: Scalars['String'];
+  prId: Scalars['BigInt'];
+  prRaw: Scalars['String'];
+  prSorted: Scalars['Boolean'];
+};
+
+
+export type PlatbyRawPlatbyItemsByPiIdRawArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<PlatbyItemCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<PlatbyItemsOrderBy>>;
+};
+
+/**
+ * A condition to be used against `PlatbyRaw` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type PlatbyRawCondition = {
+  /** Checks for equality with the object’s `prDiscarded` field. */
+  prDiscarded?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `prHash` field. */
+  prHash?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `prId` field. */
+  prId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `prRaw` field. */
+  prRaw?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `prSorted` field. */
+  prSorted?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** An input for mutations affecting `PlatbyRaw` */
+export type PlatbyRawInput = {
+  prDiscarded?: InputMaybe<Scalars['Boolean']>;
+  prHash: Scalars['String'];
+  prId?: InputMaybe<Scalars['BigInt']>;
+  prRaw: Scalars['String'];
+  prSorted?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** Represents an update to a `PlatbyRaw`. Fields that are set will be updated. */
+export type PlatbyRawPatch = {
+  prDiscarded?: InputMaybe<Scalars['Boolean']>;
+  prHash?: InputMaybe<Scalars['String']>;
+  prId?: InputMaybe<Scalars['BigInt']>;
+  prRaw?: InputMaybe<Scalars['String']>;
+  prSorted?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** A connection to a list of `PlatbyRaw` values. */
+export type PlatbyRawsConnection = {
+  __typename?: 'PlatbyRawsConnection';
+  /** A list of edges which contains the `PlatbyRaw` and cursor to aid in pagination. */
+  edges: Array<PlatbyRawsEdge>;
+  /** A list of `PlatbyRaw` objects. */
+  nodes: Array<PlatbyRaw>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `PlatbyRaw` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `PlatbyRaw` edge in the connection. */
+export type PlatbyRawsEdge = {
+  __typename?: 'PlatbyRawsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `PlatbyRaw` at the end of the edge. */
+  node: PlatbyRaw;
+};
+
+/** Methods to use when ordering `PlatbyRaw`. */
+export enum PlatbyRawsOrderBy {
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  PrDiscardedAsc = 'PR_DISCARDED_ASC',
+  PrDiscardedDesc = 'PR_DISCARDED_DESC',
+  PrHashAsc = 'PR_HASH_ASC',
+  PrHashDesc = 'PR_HASH_DESC',
+  PrIdAsc = 'PR_ID_ASC',
+  PrIdDesc = 'PR_ID_DESC',
+  PrRawAsc = 'PR_RAW_ASC',
+  PrRawDesc = 'PR_RAW_DESC',
+  PrSortedAsc = 'PR_SORTED_ASC',
+  PrSortedDesc = 'PR_SORTED_DESC'
+}
+
+/** The root query type which gives access points into the data universe. */
+export type Query = Node & {
+  __typename?: 'Query';
+  /** Reads a single `Akce` using its globally unique `ID`. */
+  akce?: Maybe<Akce>;
+  akceByAId?: Maybe<Akce>;
+  /** Reads a single `AkceItem` using its globally unique `ID`. */
+  akceItem?: Maybe<AkceItem>;
+  akceItemByAiId?: Maybe<AkceItem>;
+  /** Reads a single `Aktuality` using its globally unique `ID`. */
+  aktuality?: Maybe<Aktuality>;
+  aktualityByAtId?: Maybe<Aktuality>;
+  /** Reads and enables pagination through a set of `AkceItem`. */
+  allAkceItems?: Maybe<AkceItemsConnection>;
+  /** Reads and enables pagination through a set of `Akce`. */
+  allAkces?: Maybe<AkcesConnection>;
+  /** Reads and enables pagination through a set of `Aktuality`. */
+  allAktualities?: Maybe<AktualitiesConnection>;
+  /** Reads and enables pagination through a set of `Dokumenty`. */
+  allDokumenties?: Maybe<DokumentiesConnection>;
+  /** Reads and enables pagination through a set of `GalerieDir`. */
+  allGalerieDirs?: Maybe<GalerieDirsConnection>;
+  /** Reads and enables pagination through a set of `GalerieFoto`. */
+  allGalerieFotos?: Maybe<GalerieFotosConnection>;
+  /** Reads and enables pagination through a set of `Member`. */
+  allMembers?: Maybe<MembersConnection>;
+  /** Reads and enables pagination through a set of `NabidkaItem`. */
+  allNabidkaItems?: Maybe<NabidkaItemsConnection>;
+  /** Reads and enables pagination through a set of `Nabidka`. */
+  allNabidkas?: Maybe<NabidkasConnection>;
+  /** Reads and enables pagination through a set of `Parameter`. */
+  allParameters?: Maybe<ParametersConnection>;
+  /** Reads and enables pagination through a set of `Pary`. */
+  allParies?: Maybe<PariesConnection>;
+  /** Reads and enables pagination through a set of `ParyNavrh`. */
+  allParyNavrhs?: Maybe<ParyNavrhsConnection>;
+  /** Reads and enables pagination through a set of `Permission`. */
+  allPermissions?: Maybe<PermissionsConnection>;
+  /** Reads and enables pagination through a set of `PlatbyCategory`. */
+  allPlatbyCategories?: Maybe<PlatbyCategoriesConnection>;
+  /** Reads and enables pagination through a set of `PlatbyCategoryGroup`. */
+  allPlatbyCategoryGroups?: Maybe<PlatbyCategoryGroupsConnection>;
+  /** Reads and enables pagination through a set of `PlatbyGroupSkupina`. */
+  allPlatbyGroupSkupinas?: Maybe<PlatbyGroupSkupinasConnection>;
+  /** Reads and enables pagination through a set of `PlatbyGroup`. */
+  allPlatbyGroups?: Maybe<PlatbyGroupsConnection>;
+  /** Reads and enables pagination through a set of `PlatbyItem`. */
+  allPlatbyItems?: Maybe<PlatbyItemsConnection>;
+  /** Reads and enables pagination through a set of `PlatbyRaw`. */
+  allPlatbyRaws?: Maybe<PlatbyRawsConnection>;
+  /** Reads and enables pagination through a set of `Rozpi`. */
+  allRozpis?: Maybe<RozpisConnection>;
+  /** Reads and enables pagination through a set of `RozpisItem`. */
+  allRozpisItems?: Maybe<RozpisItemsConnection>;
+  /** Reads and enables pagination through a set of `Session`. */
+  allSessions?: Maybe<SessionsConnection>;
+  /** Reads and enables pagination through a set of `Skupiny`. */
+  allSkupinies?: Maybe<SkupiniesConnection>;
+  /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
+  allUpozorneniSkupinies?: Maybe<UpozorneniSkupiniesConnection>;
+  /** Reads and enables pagination through a set of `Upozorneni`. */
+  allUpozornenis?: Maybe<UpozornenisConnection>;
+  /** Reads and enables pagination through a set of `User`. */
+  allUsers?: Maybe<UsersConnection>;
+  /** Reads and enables pagination through a set of `UsersSkupiny`. */
+  allUsersSkupinies?: Maybe<UsersSkupiniesConnection>;
+  /** Reads and enables pagination through a set of `VideoList`. */
+  allVideoLists?: Maybe<VideoListsConnection>;
+  /** Reads and enables pagination through a set of `VideoSource`. */
+  allVideoSources?: Maybe<VideoSourcesConnection>;
+  /** Reads and enables pagination through a set of `Video`. */
+  allVideos?: Maybe<VideosConnection>;
+  currentUserId?: Maybe<Scalars['String']>;
+  /** Reads a single `Dokumenty` using its globally unique `ID`. */
+  dokumenty?: Maybe<Dokumenty>;
+  dokumentyByDId?: Maybe<Dokumenty>;
+  /** Reads a single `GalerieDir` using its globally unique `ID`. */
+  galerieDir?: Maybe<GalerieDir>;
+  galerieDirByGdId?: Maybe<GalerieDir>;
+  /** Reads a single `GalerieFoto` using its globally unique `ID`. */
+  galerieFoto?: Maybe<GalerieFoto>;
+  galerieFotoByGfId?: Maybe<GalerieFoto>;
+  getCurrentUser?: Maybe<User>;
+  /** Reads a single `Nabidka` using its globally unique `ID`. */
+  nabidka?: Maybe<Nabidka>;
+  nabidkaByNId?: Maybe<Nabidka>;
+  /** Reads a single `NabidkaItem` using its globally unique `ID`. */
+  nabidkaItem?: Maybe<NabidkaItem>;
+  nabidkaItemByNiId?: Maybe<NabidkaItem>;
+  /** Fetches an object given its globally unique `ID`. */
+  node?: Maybe<Node>;
+  /** The root query type must be a `Node` to work well with Relay 1 mutations. This just resolves to `query`. */
+  nodeId: Scalars['ID'];
+  /** Reads a single `Parameter` using its globally unique `ID`. */
+  parameter?: Maybe<Parameter>;
+  parameterByPaName?: Maybe<Parameter>;
+  /** Reads a single `Pary` using its globally unique `ID`. */
+  pary?: Maybe<Pary>;
+  paryByPId?: Maybe<Pary>;
+  /** Reads a single `ParyNavrh` using its globally unique `ID`. */
+  paryNavrh?: Maybe<ParyNavrh>;
+  paryNavrhByPnId?: Maybe<ParyNavrh>;
+  /** Reads a single `Permission` using its globally unique `ID`. */
+  permission?: Maybe<Permission>;
+  permissionByPeId?: Maybe<Permission>;
+  /** Reads a single `PlatbyCategory` using its globally unique `ID`. */
+  platbyCategory?: Maybe<PlatbyCategory>;
+  platbyCategoryByPcId?: Maybe<PlatbyCategory>;
+  /** Reads a single `PlatbyCategoryGroup` using its globally unique `ID`. */
+  platbyCategoryGroup?: Maybe<PlatbyCategoryGroup>;
+  platbyCategoryGroupByPcgId?: Maybe<PlatbyCategoryGroup>;
+  /** Reads a single `PlatbyGroup` using its globally unique `ID`. */
+  platbyGroup?: Maybe<PlatbyGroup>;
+  platbyGroupByPgId?: Maybe<PlatbyGroup>;
+  /** Reads a single `PlatbyGroupSkupina` using its globally unique `ID`. */
+  platbyGroupSkupina?: Maybe<PlatbyGroupSkupina>;
+  platbyGroupSkupinaByPgsId?: Maybe<PlatbyGroupSkupina>;
+  /** Reads a single `PlatbyItem` using its globally unique `ID`. */
+  platbyItem?: Maybe<PlatbyItem>;
+  platbyItemByPiId?: Maybe<PlatbyItem>;
+  /** Reads a single `PlatbyRaw` using its globally unique `ID`. */
+  platbyRaw?: Maybe<PlatbyRaw>;
+  platbyRawByPrId?: Maybe<PlatbyRaw>;
+  /**
+   * Exposes the root query type nested one level down. This is helpful for Relay 1
+   * which can only query top level fields if they are in a particular form.
+   */
+  query: Query;
+  /** Reads a single `Rozpi` using its globally unique `ID`. */
+  rozpi?: Maybe<Rozpi>;
+  rozpiByRId?: Maybe<Rozpi>;
+  /** Reads a single `RozpisItem` using its globally unique `ID`. */
+  rozpisItem?: Maybe<RozpisItem>;
+  rozpisItemByRiId?: Maybe<RozpisItem>;
+  /** Reads a single `Session` using its globally unique `ID`. */
+  session?: Maybe<Session>;
+  sessionBySsId?: Maybe<Session>;
+  /** Reads a single `Skupiny` using its globally unique `ID`. */
+  skupiny?: Maybe<Skupiny>;
+  skupinyBySId?: Maybe<Skupiny>;
+  /** Reads a single `Upozorneni` using its globally unique `ID`. */
+  upozorneni?: Maybe<Upozorneni>;
+  upozorneniByUpId?: Maybe<Upozorneni>;
+  /** Reads a single `UpozorneniSkupiny` using its globally unique `ID`. */
+  upozorneniSkupiny?: Maybe<UpozorneniSkupiny>;
+  upozorneniSkupinyByUpsId?: Maybe<UpozorneniSkupiny>;
+  /** Reads a single `User` using its globally unique `ID`. */
+  user?: Maybe<User>;
+  userByUId?: Maybe<User>;
+  /** Reads a single `UsersSkupiny` using its globally unique `ID`. */
+  usersSkupiny?: Maybe<UsersSkupiny>;
+  usersSkupinyByUsId?: Maybe<UsersSkupiny>;
+  /** Reads a single `Video` using its globally unique `ID`. */
+  video?: Maybe<Video>;
+  videoByVId?: Maybe<Video>;
+  /** Reads a single `VideoList` using its globally unique `ID`. */
+  videoList?: Maybe<VideoList>;
+  videoListByVlId?: Maybe<VideoList>;
+  /** Reads a single `VideoSource` using its globally unique `ID`. */
+  videoSource?: Maybe<VideoSource>;
+  videoSourceByVsId?: Maybe<VideoSource>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAkceArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAkceByAIdArgs = {
+  aId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAkceItemArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAkceItemByAiIdArgs = {
+  aiId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAktualityArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAktualityByAtIdArgs = {
+  atId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllAkceItemsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<AkceItemCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<AkceItemsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllAkcesArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<AkceCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<AkcesOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllAktualitiesArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<AktualityCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<AktualitiesOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllDokumentiesArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<DokumentyCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<DokumentiesOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllGalerieDirsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<GalerieDirCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<GalerieDirsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllGalerieFotosArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<GalerieFotoCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<GalerieFotosOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllMembersArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<MemberCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<MembersOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllNabidkaItemsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<NabidkaItemCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<NabidkaItemsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllNabidkasArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<NabidkaCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<NabidkasOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllParametersArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<ParameterCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<ParametersOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllPariesArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<ParyCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<PariesOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllParyNavrhsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<ParyNavrhCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<ParyNavrhsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllPermissionsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<PermissionCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<PermissionsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllPlatbyCategoriesArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<PlatbyCategoryCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<PlatbyCategoriesOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllPlatbyCategoryGroupsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<PlatbyCategoryGroupCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<PlatbyCategoryGroupsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllPlatbyGroupSkupinasArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<PlatbyGroupSkupinaCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<PlatbyGroupSkupinasOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllPlatbyGroupsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<PlatbyGroupCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<PlatbyGroupsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllPlatbyItemsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<PlatbyItemCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<PlatbyItemsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllPlatbyRawsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<PlatbyRawCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<PlatbyRawsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllRozpisArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<RozpiCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<RozpisOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllRozpisItemsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<RozpisItemCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<RozpisItemsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllSessionsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<SessionCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<SessionsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllSkupiniesArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<SkupinyCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<SkupiniesOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllUpozorneniSkupiniesArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<UpozorneniSkupinyCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<UpozorneniSkupiniesOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllUpozornenisArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<UpozorneniCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<UpozornenisOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllUsersArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<UserCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<UsersOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllUsersSkupiniesArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<UsersSkupinyCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<UsersSkupiniesOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllVideoListsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<VideoListCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<VideoListsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllVideoSourcesArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<VideoSourceCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<VideoSourcesOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllVideosArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<VideoCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<VideosOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDokumentyArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryDokumentyByDIdArgs = {
+  dId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGalerieDirArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGalerieDirByGdIdArgs = {
+  gdId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGalerieFotoArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGalerieFotoByGfIdArgs = {
+  gfId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryNabidkaArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryNabidkaByNIdArgs = {
+  nId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryNabidkaItemArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryNabidkaItemByNiIdArgs = {
+  niId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryNodeArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryParameterArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryParameterByPaNameArgs = {
+  paName: Scalars['String'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryParyArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryParyByPIdArgs = {
+  pId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryParyNavrhArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryParyNavrhByPnIdArgs = {
+  pnId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPermissionArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPermissionByPeIdArgs = {
+  peId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPlatbyCategoryArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPlatbyCategoryByPcIdArgs = {
+  pcId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPlatbyCategoryGroupArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPlatbyCategoryGroupByPcgIdArgs = {
+  pcgId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPlatbyGroupArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPlatbyGroupByPgIdArgs = {
+  pgId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPlatbyGroupSkupinaArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPlatbyGroupSkupinaByPgsIdArgs = {
+  pgsId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPlatbyItemArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPlatbyItemByPiIdArgs = {
+  piId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPlatbyRawArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPlatbyRawByPrIdArgs = {
+  prId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryRozpiArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryRozpiByRIdArgs = {
+  rId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryRozpisItemArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryRozpisItemByRiIdArgs = {
+  riId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QuerySessionArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QuerySessionBySsIdArgs = {
+  ssId: Scalars['String'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QuerySkupinyArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QuerySkupinyBySIdArgs = {
+  sId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryUpozorneniArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryUpozorneniByUpIdArgs = {
+  upId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryUpozorneniSkupinyArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryUpozorneniSkupinyByUpsIdArgs = {
+  upsId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryUserArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryUserByUIdArgs = {
+  uId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryUsersSkupinyArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryUsersSkupinyByUsIdArgs = {
+  usId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryVideoArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryVideoByVIdArgs = {
+  vId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryVideoListArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryVideoListByVlIdArgs = {
+  vlId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryVideoSourceArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryVideoSourceByVsIdArgs = {
+  vsId: Scalars['BigInt'];
+};
+
+export type Rozpi = Node & {
+  __typename?: 'Rozpi';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  rDatum: Scalars['Date'];
+  rId: Scalars['BigInt'];
+  rKde: Scalars['String'];
+  rLock: Scalars['Boolean'];
+  rTimestamp?: Maybe<Scalars['Datetime']>;
+  rTrener: Scalars['BigInt'];
+  rVisible: Scalars['Boolean'];
+  /** Reads and enables pagination through a set of `RozpisItem`. */
+  rozpisItemsByRiIdRodic: RozpisItemsConnection;
+  /** Reads a single `User` that is related to this `Rozpi`. */
+  userByRTrener?: Maybe<User>;
+};
+
+
+export type RozpiRozpisItemsByRiIdRodicArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<RozpisItemCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<RozpisItemsOrderBy>>;
+};
+
+/** A condition to be used against `Rozpi` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type RozpiCondition = {
+  /** Checks for equality with the object’s `rDatum` field. */
+  rDatum?: InputMaybe<Scalars['Date']>;
+  /** Checks for equality with the object’s `rId` field. */
+  rId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `rKde` field. */
+  rKde?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `rLock` field. */
+  rLock?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `rTimestamp` field. */
+  rTimestamp?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `rTrener` field. */
+  rTrener?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `rVisible` field. */
+  rVisible?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** An input for mutations affecting `Rozpi` */
+export type RozpiInput = {
+  rDatum: Scalars['Date'];
+  rId?: InputMaybe<Scalars['BigInt']>;
+  rKde: Scalars['String'];
+  rLock?: InputMaybe<Scalars['Boolean']>;
+  rTimestamp?: InputMaybe<Scalars['Datetime']>;
+  rTrener: Scalars['BigInt'];
+  rVisible?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** Represents an update to a `Rozpi`. Fields that are set will be updated. */
+export type RozpiPatch = {
+  rDatum?: InputMaybe<Scalars['Date']>;
+  rId?: InputMaybe<Scalars['BigInt']>;
+  rKde?: InputMaybe<Scalars['String']>;
+  rLock?: InputMaybe<Scalars['Boolean']>;
+  rTimestamp?: InputMaybe<Scalars['Datetime']>;
+  rTrener?: InputMaybe<Scalars['BigInt']>;
+  rVisible?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** A connection to a list of `Rozpi` values. */
+export type RozpisConnection = {
+  __typename?: 'RozpisConnection';
+  /** A list of edges which contains the `Rozpi` and cursor to aid in pagination. */
+  edges: Array<RozpisEdge>;
+  /** A list of `Rozpi` objects. */
+  nodes: Array<Rozpi>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Rozpi` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Rozpi` edge in the connection. */
+export type RozpisEdge = {
+  __typename?: 'RozpisEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Rozpi` at the end of the edge. */
+  node: Rozpi;
+};
+
+export type RozpisItem = Node & {
+  __typename?: 'RozpisItem';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  /** Reads a single `Pary` that is related to this `RozpisItem`. */
+  paryByRiPartner?: Maybe<Pary>;
+  riDo: Scalars['Time'];
+  riId: Scalars['BigInt'];
+  riIdRodic: Scalars['BigInt'];
+  riLock: Scalars['Boolean'];
+  riOd: Scalars['Time'];
+  riPartner?: Maybe<Scalars['BigInt']>;
+  /** Reads a single `Rozpi` that is related to this `RozpisItem`. */
+  rozpiByRiIdRodic?: Maybe<Rozpi>;
+};
+
+/**
+ * A condition to be used against `RozpisItem` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type RozpisItemCondition = {
+  /** Checks for equality with the object’s `riDo` field. */
+  riDo?: InputMaybe<Scalars['Time']>;
+  /** Checks for equality with the object’s `riId` field. */
+  riId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `riIdRodic` field. */
+  riIdRodic?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `riLock` field. */
+  riLock?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `riOd` field. */
+  riOd?: InputMaybe<Scalars['Time']>;
+  /** Checks for equality with the object’s `riPartner` field. */
+  riPartner?: InputMaybe<Scalars['BigInt']>;
+};
+
+/** An input for mutations affecting `RozpisItem` */
+export type RozpisItemInput = {
+  riDo: Scalars['Time'];
+  riId?: InputMaybe<Scalars['BigInt']>;
+  riIdRodic: Scalars['BigInt'];
+  riLock?: InputMaybe<Scalars['Boolean']>;
+  riOd: Scalars['Time'];
+  riPartner?: InputMaybe<Scalars['BigInt']>;
+};
+
+/** Represents an update to a `RozpisItem`. Fields that are set will be updated. */
+export type RozpisItemPatch = {
+  riDo?: InputMaybe<Scalars['Time']>;
+  riId?: InputMaybe<Scalars['BigInt']>;
+  riIdRodic?: InputMaybe<Scalars['BigInt']>;
+  riLock?: InputMaybe<Scalars['Boolean']>;
+  riOd?: InputMaybe<Scalars['Time']>;
+  riPartner?: InputMaybe<Scalars['BigInt']>;
+};
+
+/** A connection to a list of `RozpisItem` values. */
+export type RozpisItemsConnection = {
+  __typename?: 'RozpisItemsConnection';
+  /** A list of edges which contains the `RozpisItem` and cursor to aid in pagination. */
+  edges: Array<RozpisItemsEdge>;
+  /** A list of `RozpisItem` objects. */
+  nodes: Array<RozpisItem>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `RozpisItem` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `RozpisItem` edge in the connection. */
+export type RozpisItemsEdge = {
+  __typename?: 'RozpisItemsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `RozpisItem` at the end of the edge. */
+  node: RozpisItem;
+};
+
+/** Methods to use when ordering `RozpisItem`. */
+export enum RozpisItemsOrderBy {
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RiDoAsc = 'RI_DO_ASC',
+  RiDoDesc = 'RI_DO_DESC',
+  RiIdAsc = 'RI_ID_ASC',
+  RiIdDesc = 'RI_ID_DESC',
+  RiIdRodicAsc = 'RI_ID_RODIC_ASC',
+  RiIdRodicDesc = 'RI_ID_RODIC_DESC',
+  RiLockAsc = 'RI_LOCK_ASC',
+  RiLockDesc = 'RI_LOCK_DESC',
+  RiOdAsc = 'RI_OD_ASC',
+  RiOdDesc = 'RI_OD_DESC',
+  RiPartnerAsc = 'RI_PARTNER_ASC',
+  RiPartnerDesc = 'RI_PARTNER_DESC'
+}
+
+/** Methods to use when ordering `Rozpi`. */
+export enum RozpisOrderBy {
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  RDatumAsc = 'R_DATUM_ASC',
+  RDatumDesc = 'R_DATUM_DESC',
+  RIdAsc = 'R_ID_ASC',
+  RIdDesc = 'R_ID_DESC',
+  RKdeAsc = 'R_KDE_ASC',
+  RKdeDesc = 'R_KDE_DESC',
+  RLockAsc = 'R_LOCK_ASC',
+  RLockDesc = 'R_LOCK_DESC',
+  RTimestampAsc = 'R_TIMESTAMP_ASC',
+  RTimestampDesc = 'R_TIMESTAMP_DESC',
+  RTrenerAsc = 'R_TRENER_ASC',
+  RTrenerDesc = 'R_TRENER_DESC',
+  RVisibleAsc = 'R_VISIBLE_ASC',
+  RVisibleDesc = 'R_VISIBLE_DESC'
+}
+
+export type Session = Node & {
+  __typename?: 'Session';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  ssData: Scalars['String'];
+  ssId: Scalars['String'];
+  ssLifetime: Scalars['BigInt'];
+  ssUpdatedAt: Scalars['Datetime'];
+};
+
+/** A condition to be used against `Session` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type SessionCondition = {
+  /** Checks for equality with the object’s `ssData` field. */
+  ssData?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `ssId` field. */
+  ssId?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `ssLifetime` field. */
+  ssLifetime?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `ssUpdatedAt` field. */
+  ssUpdatedAt?: InputMaybe<Scalars['Datetime']>;
+};
+
+/** An input for mutations affecting `Session` */
+export type SessionInput = {
+  ssData: Scalars['String'];
+  ssId: Scalars['String'];
+  ssLifetime: Scalars['BigInt'];
+  ssUpdatedAt?: InputMaybe<Scalars['Datetime']>;
+};
+
+/** Represents an update to a `Session`. Fields that are set will be updated. */
+export type SessionPatch = {
+  ssData?: InputMaybe<Scalars['String']>;
+  ssId?: InputMaybe<Scalars['String']>;
+  ssLifetime?: InputMaybe<Scalars['BigInt']>;
+  ssUpdatedAt?: InputMaybe<Scalars['Datetime']>;
+};
+
+/** A connection to a list of `Session` values. */
+export type SessionsConnection = {
+  __typename?: 'SessionsConnection';
+  /** A list of edges which contains the `Session` and cursor to aid in pagination. */
+  edges: Array<SessionsEdge>;
+  /** A list of `Session` objects. */
   nodes: Array<Session>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Session` you could get from the connection. */
+  totalCount: Scalars['Int'];
 };
 
-/** aggregate fields of "session" */
-export type Session_Aggregate_Fields = {
-  __typename?: 'session_aggregate_fields';
-  avg?: Maybe<Session_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Session_Max_Fields>;
-  min?: Maybe<Session_Min_Fields>;
-  stddev?: Maybe<Session_Stddev_Fields>;
-  stddev_pop?: Maybe<Session_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Session_Stddev_Samp_Fields>;
-  sum?: Maybe<Session_Sum_Fields>;
-  var_pop?: Maybe<Session_Var_Pop_Fields>;
-  var_samp?: Maybe<Session_Var_Samp_Fields>;
-  variance?: Maybe<Session_Variance_Fields>;
+/** A `Session` edge in the connection. */
+export type SessionsEdge = {
+  __typename?: 'SessionsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Session` at the end of the edge. */
+  node: Session;
 };
 
-
-/** aggregate fields of "session" */
-export type Session_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Session_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate avg on columns */
-export type Session_Avg_Fields = {
-  __typename?: 'session_avg_fields';
-  ss_lifetime?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to filter rows from the table "session". All fields are combined with a logical 'AND'. */
-export type Session_Bool_Exp = {
-  _and?: InputMaybe<Array<Session_Bool_Exp>>;
-  _not?: InputMaybe<Session_Bool_Exp>;
-  _or?: InputMaybe<Array<Session_Bool_Exp>>;
-  ss_data?: InputMaybe<Bytea_Comparison_Exp>;
-  ss_id?: InputMaybe<String_Comparison_Exp>;
-  ss_lifetime?: InputMaybe<Bigint_Comparison_Exp>;
-  ss_updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "session" */
-export enum Session_Constraint {
-  /** unique or primary key constraint */
-  Idx_24747Primary = 'idx_24747_primary'
+/** Methods to use when ordering `Session`. */
+export enum SessionsOrderBy {
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  SsDataAsc = 'SS_DATA_ASC',
+  SsDataDesc = 'SS_DATA_DESC',
+  SsIdAsc = 'SS_ID_ASC',
+  SsIdDesc = 'SS_ID_DESC',
+  SsLifetimeAsc = 'SS_LIFETIME_ASC',
+  SsLifetimeDesc = 'SS_LIFETIME_DESC',
+  SsUpdatedAtAsc = 'SS_UPDATED_AT_ASC',
+  SsUpdatedAtDesc = 'SS_UPDATED_AT_DESC'
 }
 
-/** input type for incrementing numeric columns in table "session" */
-export type Session_Inc_Input = {
-  ss_lifetime?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "session" */
-export type Session_Insert_Input = {
-  ss_data?: InputMaybe<Scalars['bytea']>;
-  ss_id?: InputMaybe<Scalars['String']>;
-  ss_lifetime?: InputMaybe<Scalars['bigint']>;
-  ss_updated_at?: InputMaybe<Scalars['timestamptz']>;
-};
-
-/** aggregate max on columns */
-export type Session_Max_Fields = {
-  __typename?: 'session_max_fields';
-  ss_id?: Maybe<Scalars['String']>;
-  ss_lifetime?: Maybe<Scalars['bigint']>;
-  ss_updated_at?: Maybe<Scalars['timestamptz']>;
-};
-
-/** aggregate min on columns */
-export type Session_Min_Fields = {
-  __typename?: 'session_min_fields';
-  ss_id?: Maybe<Scalars['String']>;
-  ss_lifetime?: Maybe<Scalars['bigint']>;
-  ss_updated_at?: Maybe<Scalars['timestamptz']>;
-};
-
-/** response of any mutation on the table "session" */
-export type Session_Mutation_Response = {
-  __typename?: 'session_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Session>;
-};
-
-/** on conflict condition type for table "session" */
-export type Session_On_Conflict = {
-  constraint: Session_Constraint;
-  update_columns?: Array<Session_Update_Column>;
-  where?: InputMaybe<Session_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "session". */
-export type Session_Order_By = {
-  ss_data?: InputMaybe<Order_By>;
-  ss_id?: InputMaybe<Order_By>;
-  ss_lifetime?: InputMaybe<Order_By>;
-  ss_updated_at?: InputMaybe<Order_By>;
-};
-
-/** primary key columns input for table: session */
-export type Session_Pk_Columns_Input = {
-  ss_id: Scalars['String'];
-};
-
-/** select columns of table "session" */
-export enum Session_Select_Column {
-  /** column name */
-  SsData = 'ss_data',
-  /** column name */
-  SsId = 'ss_id',
-  /** column name */
-  SsLifetime = 'ss_lifetime',
-  /** column name */
-  SsUpdatedAt = 'ss_updated_at'
-}
-
-/** input type for updating data in table "session" */
-export type Session_Set_Input = {
-  ss_data?: InputMaybe<Scalars['bytea']>;
-  ss_id?: InputMaybe<Scalars['String']>;
-  ss_lifetime?: InputMaybe<Scalars['bigint']>;
-  ss_updated_at?: InputMaybe<Scalars['timestamptz']>;
-};
-
-/** aggregate stddev on columns */
-export type Session_Stddev_Fields = {
-  __typename?: 'session_stddev_fields';
-  ss_lifetime?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Session_Stddev_Pop_Fields = {
-  __typename?: 'session_stddev_pop_fields';
-  ss_lifetime?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Session_Stddev_Samp_Fields = {
-  __typename?: 'session_stddev_samp_fields';
-  ss_lifetime?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate sum on columns */
-export type Session_Sum_Fields = {
-  __typename?: 'session_sum_fields';
-  ss_lifetime?: Maybe<Scalars['bigint']>;
-};
-
-/** update columns of table "session" */
-export enum Session_Update_Column {
-  /** column name */
-  SsData = 'ss_data',
-  /** column name */
-  SsId = 'ss_id',
-  /** column name */
-  SsLifetime = 'ss_lifetime',
-  /** column name */
-  SsUpdatedAt = 'ss_updated_at'
-}
-
-/** aggregate var_pop on columns */
-export type Session_Var_Pop_Fields = {
-  __typename?: 'session_var_pop_fields';
-  ss_lifetime?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Session_Var_Samp_Fields = {
-  __typename?: 'session_var_samp_fields';
-  ss_lifetime?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Session_Variance_Fields = {
-  __typename?: 'session_variance_fields';
-  ss_lifetime?: Maybe<Scalars['Float']>;
-};
-
-/** columns and relationships of "skupiny" */
-export type Skupiny = {
-  __typename?: 'skupiny';
-  /** An array relationship */
-  platby_group_skupinas: Array<Platby_Group_Skupina>;
-  /** An aggregate relationship */
-  platby_group_skupinas_aggregate: Platby_Group_Skupina_Aggregate;
-  s_color_rgb: Scalars['String'];
-  s_color_text: Scalars['String'];
-  s_description: Scalars['String'];
-  s_id: Scalars['bigint'];
-  s_name: Scalars['String'];
-  /** An array relationship */
-  upozorneni_skupinies: Array<Upozorneni_Skupiny>;
-  /** An aggregate relationship */
-  upozorneni_skupinies_aggregate: Upozorneni_Skupiny_Aggregate;
-  /** An array relationship */
-  users: Array<Users>;
-  /** An aggregate relationship */
-  users_aggregate: Users_Aggregate;
-};
-
-
-/** columns and relationships of "skupiny" */
-export type SkupinyPlatby_Group_SkupinasArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Group_Skupina_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Group_Skupina_Order_By>>;
-  where?: InputMaybe<Platby_Group_Skupina_Bool_Exp>;
-};
-
-
-/** columns and relationships of "skupiny" */
-export type SkupinyPlatby_Group_Skupinas_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Group_Skupina_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Group_Skupina_Order_By>>;
-  where?: InputMaybe<Platby_Group_Skupina_Bool_Exp>;
-};
-
-
-/** columns and relationships of "skupiny" */
-export type SkupinyUpozorneni_SkupiniesArgs = {
-  distinct_on?: InputMaybe<Array<Upozorneni_Skupiny_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Upozorneni_Skupiny_Order_By>>;
-  where?: InputMaybe<Upozorneni_Skupiny_Bool_Exp>;
-};
-
-
-/** columns and relationships of "skupiny" */
-export type SkupinyUpozorneni_Skupinies_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Upozorneni_Skupiny_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Upozorneni_Skupiny_Order_By>>;
-  where?: InputMaybe<Upozorneni_Skupiny_Bool_Exp>;
-};
-
-
-/** columns and relationships of "skupiny" */
-export type SkupinyUsersArgs = {
-  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Users_Order_By>>;
-  where?: InputMaybe<Users_Bool_Exp>;
-};
-
-
-/** columns and relationships of "skupiny" */
-export type SkupinyUsers_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Users_Order_By>>;
-  where?: InputMaybe<Users_Bool_Exp>;
-};
-
-/** aggregated selection of "skupiny" */
-export type Skupiny_Aggregate = {
-  __typename?: 'skupiny_aggregate';
-  aggregate?: Maybe<Skupiny_Aggregate_Fields>;
+/** A connection to a list of `Skupiny` values. */
+export type SkupiniesConnection = {
+  __typename?: 'SkupiniesConnection';
+  /** A list of edges which contains the `Skupiny` and cursor to aid in pagination. */
+  edges: Array<SkupiniesEdge>;
+  /** A list of `Skupiny` objects. */
   nodes: Array<Skupiny>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Skupiny` you could get from the connection. */
+  totalCount: Scalars['Int'];
 };
 
-/** aggregate fields of "skupiny" */
-export type Skupiny_Aggregate_Fields = {
-  __typename?: 'skupiny_aggregate_fields';
-  avg?: Maybe<Skupiny_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Skupiny_Max_Fields>;
-  min?: Maybe<Skupiny_Min_Fields>;
-  stddev?: Maybe<Skupiny_Stddev_Fields>;
-  stddev_pop?: Maybe<Skupiny_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Skupiny_Stddev_Samp_Fields>;
-  sum?: Maybe<Skupiny_Sum_Fields>;
-  var_pop?: Maybe<Skupiny_Var_Pop_Fields>;
-  var_samp?: Maybe<Skupiny_Var_Samp_Fields>;
-  variance?: Maybe<Skupiny_Variance_Fields>;
+/** A `Skupiny` edge in the connection. */
+export type SkupiniesEdge = {
+  __typename?: 'SkupiniesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Skupiny` at the end of the edge. */
+  node: Skupiny;
 };
 
-
-/** aggregate fields of "skupiny" */
-export type Skupiny_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Skupiny_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate avg on columns */
-export type Skupiny_Avg_Fields = {
-  __typename?: 'skupiny_avg_fields';
-  s_id?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to filter rows from the table "skupiny". All fields are combined with a logical 'AND'. */
-export type Skupiny_Bool_Exp = {
-  _and?: InputMaybe<Array<Skupiny_Bool_Exp>>;
-  _not?: InputMaybe<Skupiny_Bool_Exp>;
-  _or?: InputMaybe<Array<Skupiny_Bool_Exp>>;
-  platby_group_skupinas?: InputMaybe<Platby_Group_Skupina_Bool_Exp>;
-  s_color_rgb?: InputMaybe<String_Comparison_Exp>;
-  s_color_text?: InputMaybe<String_Comparison_Exp>;
-  s_description?: InputMaybe<String_Comparison_Exp>;
-  s_id?: InputMaybe<Bigint_Comparison_Exp>;
-  s_name?: InputMaybe<String_Comparison_Exp>;
-  upozorneni_skupinies?: InputMaybe<Upozorneni_Skupiny_Bool_Exp>;
-  users?: InputMaybe<Users_Bool_Exp>;
-};
-
-/** unique or primary key constraints on table "skupiny" */
-export enum Skupiny_Constraint {
-  /** unique or primary key constraint */
-  Idx_24756Primary = 'idx_24756_primary'
+/** Methods to use when ordering `Skupiny`. */
+export enum SkupiniesOrderBy {
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  SColorRgbAsc = 'S_COLOR_RGB_ASC',
+  SColorRgbDesc = 'S_COLOR_RGB_DESC',
+  SColorTextAsc = 'S_COLOR_TEXT_ASC',
+  SColorTextDesc = 'S_COLOR_TEXT_DESC',
+  SDescriptionAsc = 'S_DESCRIPTION_ASC',
+  SDescriptionDesc = 'S_DESCRIPTION_DESC',
+  SIdAsc = 'S_ID_ASC',
+  SIdDesc = 'S_ID_DESC',
+  SNameAsc = 'S_NAME_ASC',
+  SNameDesc = 'S_NAME_DESC'
 }
 
-/** input type for incrementing numeric columns in table "skupiny" */
-export type Skupiny_Inc_Input = {
-  s_id?: InputMaybe<Scalars['bigint']>;
+export type Skupiny = Node & {
+  __typename?: 'Skupiny';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  /** Reads and enables pagination through a set of `PlatbyGroupSkupina`. */
+  platbyGroupSkupinasByPgsIdSkupina: PlatbyGroupSkupinasConnection;
+  sColorRgb: Scalars['String'];
+  sColorText: Scalars['String'];
+  sDescription: Scalars['String'];
+  sId: Scalars['BigInt'];
+  sName: Scalars['String'];
+  /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
+  upozorneniSkupiniesByUpsIdSkupina: UpozorneniSkupiniesConnection;
+  /** Reads and enables pagination through a set of `User`. */
+  usersByUSkupina: UsersConnection;
 };
 
-/** input type for inserting data into table "skupiny" */
-export type Skupiny_Insert_Input = {
-  platby_group_skupinas?: InputMaybe<Platby_Group_Skupina_Arr_Rel_Insert_Input>;
-  s_color_rgb?: InputMaybe<Scalars['String']>;
-  s_color_text?: InputMaybe<Scalars['String']>;
-  s_description?: InputMaybe<Scalars['String']>;
-  s_id?: InputMaybe<Scalars['bigint']>;
-  s_name?: InputMaybe<Scalars['String']>;
-  upozorneni_skupinies?: InputMaybe<Upozorneni_Skupiny_Arr_Rel_Insert_Input>;
-  users?: InputMaybe<Users_Arr_Rel_Insert_Input>;
+
+export type SkupinyPlatbyGroupSkupinasByPgsIdSkupinaArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<PlatbyGroupSkupinaCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<PlatbyGroupSkupinasOrderBy>>;
 };
 
-/** aggregate max on columns */
-export type Skupiny_Max_Fields = {
-  __typename?: 'skupiny_max_fields';
-  s_color_rgb?: Maybe<Scalars['String']>;
-  s_color_text?: Maybe<Scalars['String']>;
-  s_description?: Maybe<Scalars['String']>;
-  s_id?: Maybe<Scalars['bigint']>;
-  s_name?: Maybe<Scalars['String']>;
+
+export type SkupinyUpozorneniSkupiniesByUpsIdSkupinaArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<UpozorneniSkupinyCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<UpozorneniSkupiniesOrderBy>>;
 };
 
-/** aggregate min on columns */
-export type Skupiny_Min_Fields = {
-  __typename?: 'skupiny_min_fields';
-  s_color_rgb?: Maybe<Scalars['String']>;
-  s_color_text?: Maybe<Scalars['String']>;
-  s_description?: Maybe<Scalars['String']>;
-  s_id?: Maybe<Scalars['bigint']>;
-  s_name?: Maybe<Scalars['String']>;
+
+export type SkupinyUsersByUSkupinaArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<UserCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<UsersOrderBy>>;
 };
 
-/** response of any mutation on the table "skupiny" */
-export type Skupiny_Mutation_Response = {
-  __typename?: 'skupiny_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Skupiny>;
+/** A condition to be used against `Skupiny` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type SkupinyCondition = {
+  /** Checks for equality with the object’s `sColorRgb` field. */
+  sColorRgb?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `sColorText` field. */
+  sColorText?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `sDescription` field. */
+  sDescription?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `sId` field. */
+  sId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `sName` field. */
+  sName?: InputMaybe<Scalars['String']>;
 };
 
-/** input type for inserting object relation for remote table "skupiny" */
-export type Skupiny_Obj_Rel_Insert_Input = {
-  data: Skupiny_Insert_Input;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Skupiny_On_Conflict>;
+/** An input for mutations affecting `Skupiny` */
+export type SkupinyInput = {
+  sColorRgb: Scalars['String'];
+  sColorText: Scalars['String'];
+  sDescription: Scalars['String'];
+  sId?: InputMaybe<Scalars['BigInt']>;
+  sName: Scalars['String'];
 };
 
-/** on conflict condition type for table "skupiny" */
-export type Skupiny_On_Conflict = {
-  constraint: Skupiny_Constraint;
-  update_columns?: Array<Skupiny_Update_Column>;
-  where?: InputMaybe<Skupiny_Bool_Exp>;
+/** Represents an update to a `Skupiny`. Fields that are set will be updated. */
+export type SkupinyPatch = {
+  sColorRgb?: InputMaybe<Scalars['String']>;
+  sColorText?: InputMaybe<Scalars['String']>;
+  sDescription?: InputMaybe<Scalars['String']>;
+  sId?: InputMaybe<Scalars['BigInt']>;
+  sName?: InputMaybe<Scalars['String']>;
 };
 
-/** Ordering options when selecting data from "skupiny". */
-export type Skupiny_Order_By = {
-  platby_group_skupinas_aggregate?: InputMaybe<Platby_Group_Skupina_Aggregate_Order_By>;
-  s_color_rgb?: InputMaybe<Order_By>;
-  s_color_text?: InputMaybe<Order_By>;
-  s_description?: InputMaybe<Order_By>;
-  s_id?: InputMaybe<Order_By>;
-  s_name?: InputMaybe<Order_By>;
-  upozorneni_skupinies_aggregate?: InputMaybe<Upozorneni_Skupiny_Aggregate_Order_By>;
-  users_aggregate?: InputMaybe<Users_Aggregate_Order_By>;
+/** All input for the `updateAkceByAId` mutation. */
+export type UpdateAkceByAIdInput = {
+  aId: Scalars['BigInt'];
+  /** An object where the defined keys will be set on the `Akce` being updated. */
+  akcePatch: AkcePatch;
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
 };
 
-/** primary key columns input for table: skupiny */
-export type Skupiny_Pk_Columns_Input = {
-  s_id: Scalars['bigint'];
+/** All input for the `updateAkce` mutation. */
+export type UpdateAkceInput = {
+  /** An object where the defined keys will be set on the `Akce` being updated. */
+  akcePatch: AkcePatch;
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Akce` to be updated. */
+  nodeId: Scalars['ID'];
 };
 
-/** select columns of table "skupiny" */
-export enum Skupiny_Select_Column {
-  /** column name */
-  SColorRgb = 's_color_rgb',
-  /** column name */
-  SColorText = 's_color_text',
-  /** column name */
-  SDescription = 's_description',
-  /** column name */
-  SId = 's_id',
-  /** column name */
-  SName = 's_name'
+/** All input for the `updateAkceItemByAiId` mutation. */
+export type UpdateAkceItemByAiIdInput = {
+  aiId: Scalars['BigInt'];
+  /** An object where the defined keys will be set on the `AkceItem` being updated. */
+  akceItemPatch: AkceItemPatch;
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+};
+
+/** All input for the `updateAkceItem` mutation. */
+export type UpdateAkceItemInput = {
+  /** An object where the defined keys will be set on the `AkceItem` being updated. */
+  akceItemPatch: AkceItemPatch;
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `AkceItem` to be updated. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our update `AkceItem` mutation. */
+export type UpdateAkceItemPayload = {
+  __typename?: 'UpdateAkceItemPayload';
+  /** Reads a single `Akce` that is related to this `AkceItem`. */
+  akceByAiIdRodic?: Maybe<Akce>;
+  /** The `AkceItem` that was updated by this mutation. */
+  akceItem?: Maybe<AkceItem>;
+  /** An edge for our `AkceItem`. May be used by Relay 1. */
+  akceItemEdge?: Maybe<AkceItemsEdge>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `AkceItem`. */
+  userByAiUser?: Maybe<User>;
+};
+
+
+/** The output of our update `AkceItem` mutation. */
+export type UpdateAkceItemPayloadAkceItemEdgeArgs = {
+  orderBy?: InputMaybe<Array<AkceItemsOrderBy>>;
+};
+
+/** The output of our update `Akce` mutation. */
+export type UpdateAkcePayload = {
+  __typename?: 'UpdateAkcePayload';
+  /** The `Akce` that was updated by this mutation. */
+  akce?: Maybe<Akce>;
+  /** An edge for our `Akce`. May be used by Relay 1. */
+  akceEdge?: Maybe<AkcesEdge>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `Akce` mutation. */
+export type UpdateAkcePayloadAkceEdgeArgs = {
+  orderBy?: InputMaybe<Array<AkcesOrderBy>>;
+};
+
+/** All input for the `updateAktualityByAtId` mutation. */
+export type UpdateAktualityByAtIdInput = {
+  /** An object where the defined keys will be set on the `Aktuality` being updated. */
+  aktualityPatch: AktualityPatch;
+  atId: Scalars['BigInt'];
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+};
+
+/** All input for the `updateAktuality` mutation. */
+export type UpdateAktualityInput = {
+  /** An object where the defined keys will be set on the `Aktuality` being updated. */
+  aktualityPatch: AktualityPatch;
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Aktuality` to be updated. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our update `Aktuality` mutation. */
+export type UpdateAktualityPayload = {
+  __typename?: 'UpdateAktualityPayload';
+  /** The `Aktuality` that was updated by this mutation. */
+  aktuality?: Maybe<Aktuality>;
+  /** An edge for our `Aktuality`. May be used by Relay 1. */
+  aktualityEdge?: Maybe<AktualitiesEdge>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Reads a single `GalerieFoto` that is related to this `Aktuality`. */
+  galerieFotoByAtFotoMain?: Maybe<GalerieFoto>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `Aktuality`. */
+  userByAtKdo?: Maybe<User>;
+};
+
+
+/** The output of our update `Aktuality` mutation. */
+export type UpdateAktualityPayloadAktualityEdgeArgs = {
+  orderBy?: InputMaybe<Array<AktualitiesOrderBy>>;
+};
+
+/** All input for the `updateDokumentyByDId` mutation. */
+export type UpdateDokumentyByDIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  dId: Scalars['BigInt'];
+  /** An object where the defined keys will be set on the `Dokumenty` being updated. */
+  dokumentyPatch: DokumentyPatch;
+};
+
+/** All input for the `updateDokumenty` mutation. */
+export type UpdateDokumentyInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Dokumenty` being updated. */
+  dokumentyPatch: DokumentyPatch;
+  /** The globally unique `ID` which will identify a single `Dokumenty` to be updated. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our update `Dokumenty` mutation. */
+export type UpdateDokumentyPayload = {
+  __typename?: 'UpdateDokumentyPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Dokumenty` that was updated by this mutation. */
+  dokumenty?: Maybe<Dokumenty>;
+  /** An edge for our `Dokumenty`. May be used by Relay 1. */
+  dokumentyEdge?: Maybe<DokumentiesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `Dokumenty`. */
+  userByDKdo?: Maybe<User>;
+};
+
+
+/** The output of our update `Dokumenty` mutation. */
+export type UpdateDokumentyPayloadDokumentyEdgeArgs = {
+  orderBy?: InputMaybe<Array<DokumentiesOrderBy>>;
+};
+
+/** All input for the `updateGalerieDirByGdId` mutation. */
+export type UpdateGalerieDirByGdIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `GalerieDir` being updated. */
+  galerieDirPatch: GalerieDirPatch;
+  gdId: Scalars['BigInt'];
+};
+
+/** All input for the `updateGalerieDir` mutation. */
+export type UpdateGalerieDirInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `GalerieDir` being updated. */
+  galerieDirPatch: GalerieDirPatch;
+  /** The globally unique `ID` which will identify a single `GalerieDir` to be updated. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our update `GalerieDir` mutation. */
+export type UpdateGalerieDirPayload = {
+  __typename?: 'UpdateGalerieDirPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `GalerieDir` that was updated by this mutation. */
+  galerieDir?: Maybe<GalerieDir>;
+  /** An edge for our `GalerieDir`. May be used by Relay 1. */
+  galerieDirEdge?: Maybe<GalerieDirsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `GalerieDir` mutation. */
+export type UpdateGalerieDirPayloadGalerieDirEdgeArgs = {
+  orderBy?: InputMaybe<Array<GalerieDirsOrderBy>>;
+};
+
+/** All input for the `updateGalerieFotoByGfId` mutation. */
+export type UpdateGalerieFotoByGfIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `GalerieFoto` being updated. */
+  galerieFotoPatch: GalerieFotoPatch;
+  gfId: Scalars['BigInt'];
+};
+
+/** All input for the `updateGalerieFoto` mutation. */
+export type UpdateGalerieFotoInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `GalerieFoto` being updated. */
+  galerieFotoPatch: GalerieFotoPatch;
+  /** The globally unique `ID` which will identify a single `GalerieFoto` to be updated. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our update `GalerieFoto` mutation. */
+export type UpdateGalerieFotoPayload = {
+  __typename?: 'UpdateGalerieFotoPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Reads a single `GalerieDir` that is related to this `GalerieFoto`. */
+  galerieDirByGfIdRodic?: Maybe<GalerieDir>;
+  /** The `GalerieFoto` that was updated by this mutation. */
+  galerieFoto?: Maybe<GalerieFoto>;
+  /** An edge for our `GalerieFoto`. May be used by Relay 1. */
+  galerieFotoEdge?: Maybe<GalerieFotosEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `GalerieFoto`. */
+  userByGfKdo?: Maybe<User>;
+};
+
+
+/** The output of our update `GalerieFoto` mutation. */
+export type UpdateGalerieFotoPayloadGalerieFotoEdgeArgs = {
+  orderBy?: InputMaybe<Array<GalerieFotosOrderBy>>;
+};
+
+/** All input for the `updateNabidkaByNId` mutation. */
+export type UpdateNabidkaByNIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  nId: Scalars['BigInt'];
+  /** An object where the defined keys will be set on the `Nabidka` being updated. */
+  nabidkaPatch: NabidkaPatch;
+};
+
+/** All input for the `updateNabidka` mutation. */
+export type UpdateNabidkaInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Nabidka` being updated. */
+  nabidkaPatch: NabidkaPatch;
+  /** The globally unique `ID` which will identify a single `Nabidka` to be updated. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `updateNabidkaItemByNiId` mutation. */
+export type UpdateNabidkaItemByNiIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `NabidkaItem` being updated. */
+  nabidkaItemPatch: NabidkaItemPatch;
+  niId: Scalars['BigInt'];
+};
+
+/** All input for the `updateNabidkaItem` mutation. */
+export type UpdateNabidkaItemInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `NabidkaItem` being updated. */
+  nabidkaItemPatch: NabidkaItemPatch;
+  /** The globally unique `ID` which will identify a single `NabidkaItem` to be updated. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our update `NabidkaItem` mutation. */
+export type UpdateNabidkaItemPayload = {
+  __typename?: 'UpdateNabidkaItemPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Reads a single `Nabidka` that is related to this `NabidkaItem`. */
+  nabidkaByNiIdRodic?: Maybe<Nabidka>;
+  /** The `NabidkaItem` that was updated by this mutation. */
+  nabidkaItem?: Maybe<NabidkaItem>;
+  /** An edge for our `NabidkaItem`. May be used by Relay 1. */
+  nabidkaItemEdge?: Maybe<NabidkaItemsEdge>;
+  /** Reads a single `Pary` that is related to this `NabidkaItem`. */
+  paryByNiPartner?: Maybe<Pary>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `NabidkaItem` mutation. */
+export type UpdateNabidkaItemPayloadNabidkaItemEdgeArgs = {
+  orderBy?: InputMaybe<Array<NabidkaItemsOrderBy>>;
+};
+
+/** The output of our update `Nabidka` mutation. */
+export type UpdateNabidkaPayload = {
+  __typename?: 'UpdateNabidkaPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Nabidka` that was updated by this mutation. */
+  nabidka?: Maybe<Nabidka>;
+  /** An edge for our `Nabidka`. May be used by Relay 1. */
+  nabidkaEdge?: Maybe<NabidkasEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `Nabidka`. */
+  userByNTrener?: Maybe<User>;
+};
+
+
+/** The output of our update `Nabidka` mutation. */
+export type UpdateNabidkaPayloadNabidkaEdgeArgs = {
+  orderBy?: InputMaybe<Array<NabidkasOrderBy>>;
+};
+
+/** All input for the `updateParameterByPaName` mutation. */
+export type UpdateParameterByPaNameInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  paName: Scalars['String'];
+  /** An object where the defined keys will be set on the `Parameter` being updated. */
+  parameterPatch: ParameterPatch;
+};
+
+/** All input for the `updateParameter` mutation. */
+export type UpdateParameterInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Parameter` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `Parameter` being updated. */
+  parameterPatch: ParameterPatch;
+};
+
+/** The output of our update `Parameter` mutation. */
+export type UpdateParameterPayload = {
+  __typename?: 'UpdateParameterPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Parameter` that was updated by this mutation. */
+  parameter?: Maybe<Parameter>;
+  /** An edge for our `Parameter`. May be used by Relay 1. */
+  parameterEdge?: Maybe<ParametersEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `Parameter` mutation. */
+export type UpdateParameterPayloadParameterEdgeArgs = {
+  orderBy?: InputMaybe<Array<ParametersOrderBy>>;
+};
+
+/** All input for the `updateParyByPId` mutation. */
+export type UpdateParyByPIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  pId: Scalars['BigInt'];
+  /** An object where the defined keys will be set on the `Pary` being updated. */
+  paryPatch: ParyPatch;
+};
+
+/** All input for the `updatePary` mutation. */
+export type UpdateParyInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Pary` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `Pary` being updated. */
+  paryPatch: ParyPatch;
+};
+
+/** All input for the `updateParyNavrhByPnId` mutation. */
+export type UpdateParyNavrhByPnIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `ParyNavrh` being updated. */
+  paryNavrhPatch: ParyNavrhPatch;
+  pnId: Scalars['BigInt'];
+};
+
+/** All input for the `updateParyNavrh` mutation. */
+export type UpdateParyNavrhInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `ParyNavrh` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `ParyNavrh` being updated. */
+  paryNavrhPatch: ParyNavrhPatch;
+};
+
+/** The output of our update `ParyNavrh` mutation. */
+export type UpdateParyNavrhPayload = {
+  __typename?: 'UpdateParyNavrhPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ParyNavrh` that was updated by this mutation. */
+  paryNavrh?: Maybe<ParyNavrh>;
+  /** An edge for our `ParyNavrh`. May be used by Relay 1. */
+  paryNavrhEdge?: Maybe<ParyNavrhsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `ParyNavrh`. */
+  userByPnNavrhl?: Maybe<User>;
+  /** Reads a single `User` that is related to this `ParyNavrh`. */
+  userByPnPartner?: Maybe<User>;
+  /** Reads a single `User` that is related to this `ParyNavrh`. */
+  userByPnPartnerka?: Maybe<User>;
+};
+
+
+/** The output of our update `ParyNavrh` mutation. */
+export type UpdateParyNavrhPayloadParyNavrhEdgeArgs = {
+  orderBy?: InputMaybe<Array<ParyNavrhsOrderBy>>;
+};
+
+/** The output of our update `Pary` mutation. */
+export type UpdateParyPayload = {
+  __typename?: 'UpdateParyPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Pary` that was updated by this mutation. */
+  pary?: Maybe<Pary>;
+  /** An edge for our `Pary`. May be used by Relay 1. */
+  paryEdge?: Maybe<PariesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `Pary`. */
+  userByPIdPartner?: Maybe<User>;
+};
+
+
+/** The output of our update `Pary` mutation. */
+export type UpdateParyPayloadParyEdgeArgs = {
+  orderBy?: InputMaybe<Array<PariesOrderBy>>;
+};
+
+/** All input for the `updatePermissionByPeId` mutation. */
+export type UpdatePermissionByPeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  peId: Scalars['BigInt'];
+  /** An object where the defined keys will be set on the `Permission` being updated. */
+  permissionPatch: PermissionPatch;
+};
+
+/** All input for the `updatePermission` mutation. */
+export type UpdatePermissionInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Permission` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `Permission` being updated. */
+  permissionPatch: PermissionPatch;
+};
+
+/** The output of our update `Permission` mutation. */
+export type UpdatePermissionPayload = {
+  __typename?: 'UpdatePermissionPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Permission` that was updated by this mutation. */
+  permission?: Maybe<Permission>;
+  /** An edge for our `Permission`. May be used by Relay 1. */
+  permissionEdge?: Maybe<PermissionsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `Permission` mutation. */
+export type UpdatePermissionPayloadPermissionEdgeArgs = {
+  orderBy?: InputMaybe<Array<PermissionsOrderBy>>;
+};
+
+/** All input for the `updatePlatbyCategoryByPcId` mutation. */
+export type UpdatePlatbyCategoryByPcIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  pcId: Scalars['BigInt'];
+  /** An object where the defined keys will be set on the `PlatbyCategory` being updated. */
+  platbyCategoryPatch: PlatbyCategoryPatch;
+};
+
+/** All input for the `updatePlatbyCategoryGroupByPcgId` mutation. */
+export type UpdatePlatbyCategoryGroupByPcgIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  pcgId: Scalars['BigInt'];
+  /** An object where the defined keys will be set on the `PlatbyCategoryGroup` being updated. */
+  platbyCategoryGroupPatch: PlatbyCategoryGroupPatch;
+};
+
+/** All input for the `updatePlatbyCategoryGroup` mutation. */
+export type UpdatePlatbyCategoryGroupInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `PlatbyCategoryGroup` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `PlatbyCategoryGroup` being updated. */
+  platbyCategoryGroupPatch: PlatbyCategoryGroupPatch;
+};
+
+/** The output of our update `PlatbyCategoryGroup` mutation. */
+export type UpdatePlatbyCategoryGroupPayload = {
+  __typename?: 'UpdatePlatbyCategoryGroupPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Reads a single `PlatbyCategory` that is related to this `PlatbyCategoryGroup`. */
+  platbyCategoryByPcgIdCategory?: Maybe<PlatbyCategory>;
+  /** The `PlatbyCategoryGroup` that was updated by this mutation. */
+  platbyCategoryGroup?: Maybe<PlatbyCategoryGroup>;
+  /** An edge for our `PlatbyCategoryGroup`. May be used by Relay 1. */
+  platbyCategoryGroupEdge?: Maybe<PlatbyCategoryGroupsEdge>;
+  /** Reads a single `PlatbyGroup` that is related to this `PlatbyCategoryGroup`. */
+  platbyGroupByPcgIdGroup?: Maybe<PlatbyGroup>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `PlatbyCategoryGroup` mutation. */
+export type UpdatePlatbyCategoryGroupPayloadPlatbyCategoryGroupEdgeArgs = {
+  orderBy?: InputMaybe<Array<PlatbyCategoryGroupsOrderBy>>;
+};
+
+/** All input for the `updatePlatbyCategory` mutation. */
+export type UpdatePlatbyCategoryInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `PlatbyCategory` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `PlatbyCategory` being updated. */
+  platbyCategoryPatch: PlatbyCategoryPatch;
+};
+
+/** The output of our update `PlatbyCategory` mutation. */
+export type UpdatePlatbyCategoryPayload = {
+  __typename?: 'UpdatePlatbyCategoryPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `PlatbyCategory` that was updated by this mutation. */
+  platbyCategory?: Maybe<PlatbyCategory>;
+  /** An edge for our `PlatbyCategory`. May be used by Relay 1. */
+  platbyCategoryEdge?: Maybe<PlatbyCategoriesEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `PlatbyCategory` mutation. */
+export type UpdatePlatbyCategoryPayloadPlatbyCategoryEdgeArgs = {
+  orderBy?: InputMaybe<Array<PlatbyCategoriesOrderBy>>;
+};
+
+/** All input for the `updatePlatbyGroupByPgId` mutation. */
+export type UpdatePlatbyGroupByPgIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  pgId: Scalars['BigInt'];
+  /** An object where the defined keys will be set on the `PlatbyGroup` being updated. */
+  platbyGroupPatch: PlatbyGroupPatch;
+};
+
+/** All input for the `updatePlatbyGroup` mutation. */
+export type UpdatePlatbyGroupInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `PlatbyGroup` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `PlatbyGroup` being updated. */
+  platbyGroupPatch: PlatbyGroupPatch;
+};
+
+/** The output of our update `PlatbyGroup` mutation. */
+export type UpdatePlatbyGroupPayload = {
+  __typename?: 'UpdatePlatbyGroupPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `PlatbyGroup` that was updated by this mutation. */
+  platbyGroup?: Maybe<PlatbyGroup>;
+  /** An edge for our `PlatbyGroup`. May be used by Relay 1. */
+  platbyGroupEdge?: Maybe<PlatbyGroupsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `PlatbyGroup` mutation. */
+export type UpdatePlatbyGroupPayloadPlatbyGroupEdgeArgs = {
+  orderBy?: InputMaybe<Array<PlatbyGroupsOrderBy>>;
+};
+
+/** All input for the `updatePlatbyGroupSkupinaByPgsId` mutation. */
+export type UpdatePlatbyGroupSkupinaByPgsIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  pgsId: Scalars['BigInt'];
+  /** An object where the defined keys will be set on the `PlatbyGroupSkupina` being updated. */
+  platbyGroupSkupinaPatch: PlatbyGroupSkupinaPatch;
+};
+
+/** All input for the `updatePlatbyGroupSkupina` mutation. */
+export type UpdatePlatbyGroupSkupinaInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `PlatbyGroupSkupina` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `PlatbyGroupSkupina` being updated. */
+  platbyGroupSkupinaPatch: PlatbyGroupSkupinaPatch;
+};
+
+/** The output of our update `PlatbyGroupSkupina` mutation. */
+export type UpdatePlatbyGroupSkupinaPayload = {
+  __typename?: 'UpdatePlatbyGroupSkupinaPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Reads a single `PlatbyGroup` that is related to this `PlatbyGroupSkupina`. */
+  platbyGroupByPgsIdGroup?: Maybe<PlatbyGroup>;
+  /** The `PlatbyGroupSkupina` that was updated by this mutation. */
+  platbyGroupSkupina?: Maybe<PlatbyGroupSkupina>;
+  /** An edge for our `PlatbyGroupSkupina`. May be used by Relay 1. */
+  platbyGroupSkupinaEdge?: Maybe<PlatbyGroupSkupinasEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Skupiny` that is related to this `PlatbyGroupSkupina`. */
+  skupinyByPgsIdSkupina?: Maybe<Skupiny>;
+};
+
+
+/** The output of our update `PlatbyGroupSkupina` mutation. */
+export type UpdatePlatbyGroupSkupinaPayloadPlatbyGroupSkupinaEdgeArgs = {
+  orderBy?: InputMaybe<Array<PlatbyGroupSkupinasOrderBy>>;
+};
+
+/** All input for the `updatePlatbyItemByPiId` mutation. */
+export type UpdatePlatbyItemByPiIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  piId: Scalars['BigInt'];
+  /** An object where the defined keys will be set on the `PlatbyItem` being updated. */
+  platbyItemPatch: PlatbyItemPatch;
+};
+
+/** All input for the `updatePlatbyItem` mutation. */
+export type UpdatePlatbyItemInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `PlatbyItem` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `PlatbyItem` being updated. */
+  platbyItemPatch: PlatbyItemPatch;
+};
+
+/** The output of our update `PlatbyItem` mutation. */
+export type UpdatePlatbyItemPayload = {
+  __typename?: 'UpdatePlatbyItemPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Reads a single `PlatbyCategory` that is related to this `PlatbyItem`. */
+  platbyCategoryByPiIdCategory?: Maybe<PlatbyCategory>;
+  /** The `PlatbyItem` that was updated by this mutation. */
+  platbyItem?: Maybe<PlatbyItem>;
+  /** An edge for our `PlatbyItem`. May be used by Relay 1. */
+  platbyItemEdge?: Maybe<PlatbyItemsEdge>;
+  /** Reads a single `PlatbyRaw` that is related to this `PlatbyItem`. */
+  platbyRawByPiIdRaw?: Maybe<PlatbyRaw>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `PlatbyItem`. */
+  userByPiIdUser?: Maybe<User>;
+};
+
+
+/** The output of our update `PlatbyItem` mutation. */
+export type UpdatePlatbyItemPayloadPlatbyItemEdgeArgs = {
+  orderBy?: InputMaybe<Array<PlatbyItemsOrderBy>>;
+};
+
+/** All input for the `updatePlatbyRawByPrId` mutation. */
+export type UpdatePlatbyRawByPrIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `PlatbyRaw` being updated. */
+  platbyRawPatch: PlatbyRawPatch;
+  prId: Scalars['BigInt'];
+};
+
+/** All input for the `updatePlatbyRaw` mutation. */
+export type UpdatePlatbyRawInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `PlatbyRaw` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `PlatbyRaw` being updated. */
+  platbyRawPatch: PlatbyRawPatch;
+};
+
+/** The output of our update `PlatbyRaw` mutation. */
+export type UpdatePlatbyRawPayload = {
+  __typename?: 'UpdatePlatbyRawPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `PlatbyRaw` that was updated by this mutation. */
+  platbyRaw?: Maybe<PlatbyRaw>;
+  /** An edge for our `PlatbyRaw`. May be used by Relay 1. */
+  platbyRawEdge?: Maybe<PlatbyRawsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `PlatbyRaw` mutation. */
+export type UpdatePlatbyRawPayloadPlatbyRawEdgeArgs = {
+  orderBy?: InputMaybe<Array<PlatbyRawsOrderBy>>;
+};
+
+/** All input for the `updateRozpiByRId` mutation. */
+export type UpdateRozpiByRIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  rId: Scalars['BigInt'];
+  /** An object where the defined keys will be set on the `Rozpi` being updated. */
+  rozpiPatch: RozpiPatch;
+};
+
+/** All input for the `updateRozpi` mutation. */
+export type UpdateRozpiInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Rozpi` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `Rozpi` being updated. */
+  rozpiPatch: RozpiPatch;
+};
+
+/** The output of our update `Rozpi` mutation. */
+export type UpdateRozpiPayload = {
+  __typename?: 'UpdateRozpiPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `Rozpi` that was updated by this mutation. */
+  rozpi?: Maybe<Rozpi>;
+  /** An edge for our `Rozpi`. May be used by Relay 1. */
+  rozpiEdge?: Maybe<RozpisEdge>;
+  /** Reads a single `User` that is related to this `Rozpi`. */
+  userByRTrener?: Maybe<User>;
+};
+
+
+/** The output of our update `Rozpi` mutation. */
+export type UpdateRozpiPayloadRozpiEdgeArgs = {
+  orderBy?: InputMaybe<Array<RozpisOrderBy>>;
+};
+
+/** All input for the `updateRozpisItemByRiId` mutation. */
+export type UpdateRozpisItemByRiIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  riId: Scalars['BigInt'];
+  /** An object where the defined keys will be set on the `RozpisItem` being updated. */
+  rozpisItemPatch: RozpisItemPatch;
+};
+
+/** All input for the `updateRozpisItem` mutation. */
+export type UpdateRozpisItemInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `RozpisItem` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `RozpisItem` being updated. */
+  rozpisItemPatch: RozpisItemPatch;
+};
+
+/** The output of our update `RozpisItem` mutation. */
+export type UpdateRozpisItemPayload = {
+  __typename?: 'UpdateRozpisItemPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Reads a single `Pary` that is related to this `RozpisItem`. */
+  paryByRiPartner?: Maybe<Pary>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Rozpi` that is related to this `RozpisItem`. */
+  rozpiByRiIdRodic?: Maybe<Rozpi>;
+  /** The `RozpisItem` that was updated by this mutation. */
+  rozpisItem?: Maybe<RozpisItem>;
+  /** An edge for our `RozpisItem`. May be used by Relay 1. */
+  rozpisItemEdge?: Maybe<RozpisItemsEdge>;
+};
+
+
+/** The output of our update `RozpisItem` mutation. */
+export type UpdateRozpisItemPayloadRozpisItemEdgeArgs = {
+  orderBy?: InputMaybe<Array<RozpisItemsOrderBy>>;
+};
+
+/** All input for the `updateSessionBySsId` mutation. */
+export type UpdateSessionBySsIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Session` being updated. */
+  sessionPatch: SessionPatch;
+  ssId: Scalars['String'];
+};
+
+/** All input for the `updateSession` mutation. */
+export type UpdateSessionInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Session` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `Session` being updated. */
+  sessionPatch: SessionPatch;
+};
+
+/** The output of our update `Session` mutation. */
+export type UpdateSessionPayload = {
+  __typename?: 'UpdateSessionPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `Session` that was updated by this mutation. */
+  session?: Maybe<Session>;
+  /** An edge for our `Session`. May be used by Relay 1. */
+  sessionEdge?: Maybe<SessionsEdge>;
+};
+
+
+/** The output of our update `Session` mutation. */
+export type UpdateSessionPayloadSessionEdgeArgs = {
+  orderBy?: InputMaybe<Array<SessionsOrderBy>>;
+};
+
+/** All input for the `updateSkupinyBySId` mutation. */
+export type UpdateSkupinyBySIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  sId: Scalars['BigInt'];
+  /** An object where the defined keys will be set on the `Skupiny` being updated. */
+  skupinyPatch: SkupinyPatch;
+};
+
+/** All input for the `updateSkupiny` mutation. */
+export type UpdateSkupinyInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Skupiny` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `Skupiny` being updated. */
+  skupinyPatch: SkupinyPatch;
+};
+
+/** The output of our update `Skupiny` mutation. */
+export type UpdateSkupinyPayload = {
+  __typename?: 'UpdateSkupinyPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `Skupiny` that was updated by this mutation. */
+  skupiny?: Maybe<Skupiny>;
+  /** An edge for our `Skupiny`. May be used by Relay 1. */
+  skupinyEdge?: Maybe<SkupiniesEdge>;
+};
+
+
+/** The output of our update `Skupiny` mutation. */
+export type UpdateSkupinyPayloadSkupinyEdgeArgs = {
+  orderBy?: InputMaybe<Array<SkupiniesOrderBy>>;
+};
+
+/** All input for the `updateUpozorneniByUpId` mutation. */
+export type UpdateUpozorneniByUpIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  upId: Scalars['BigInt'];
+  /** An object where the defined keys will be set on the `Upozorneni` being updated. */
+  upozorneniPatch: UpozorneniPatch;
+};
+
+/** All input for the `updateUpozorneni` mutation. */
+export type UpdateUpozorneniInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Upozorneni` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `Upozorneni` being updated. */
+  upozorneniPatch: UpozorneniPatch;
+};
+
+/** The output of our update `Upozorneni` mutation. */
+export type UpdateUpozorneniPayload = {
+  __typename?: 'UpdateUpozorneniPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `Upozorneni` that was updated by this mutation. */
+  upozorneni?: Maybe<Upozorneni>;
+  /** An edge for our `Upozorneni`. May be used by Relay 1. */
+  upozorneniEdge?: Maybe<UpozornenisEdge>;
+  /** Reads a single `User` that is related to this `Upozorneni`. */
+  userByUpKdo?: Maybe<User>;
+};
+
+
+/** The output of our update `Upozorneni` mutation. */
+export type UpdateUpozorneniPayloadUpozorneniEdgeArgs = {
+  orderBy?: InputMaybe<Array<UpozornenisOrderBy>>;
+};
+
+/** All input for the `updateUpozorneniSkupinyByUpsId` mutation. */
+export type UpdateUpozorneniSkupinyByUpsIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `UpozorneniSkupiny` being updated. */
+  upozorneniSkupinyPatch: UpozorneniSkupinyPatch;
+  upsId: Scalars['BigInt'];
+};
+
+/** All input for the `updateUpozorneniSkupiny` mutation. */
+export type UpdateUpozorneniSkupinyInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `UpozorneniSkupiny` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `UpozorneniSkupiny` being updated. */
+  upozorneniSkupinyPatch: UpozorneniSkupinyPatch;
+};
+
+/** The output of our update `UpozorneniSkupiny` mutation. */
+export type UpdateUpozorneniSkupinyPayload = {
+  __typename?: 'UpdateUpozorneniSkupinyPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Skupiny` that is related to this `UpozorneniSkupiny`. */
+  skupinyByUpsIdSkupina?: Maybe<Skupiny>;
+  /** Reads a single `Upozorneni` that is related to this `UpozorneniSkupiny`. */
+  upozorneniByUpsIdRodic?: Maybe<Upozorneni>;
+  /** The `UpozorneniSkupiny` that was updated by this mutation. */
+  upozorneniSkupiny?: Maybe<UpozorneniSkupiny>;
+  /** An edge for our `UpozorneniSkupiny`. May be used by Relay 1. */
+  upozorneniSkupinyEdge?: Maybe<UpozorneniSkupiniesEdge>;
+};
+
+
+/** The output of our update `UpozorneniSkupiny` mutation. */
+export type UpdateUpozorneniSkupinyPayloadUpozorneniSkupinyEdgeArgs = {
+  orderBy?: InputMaybe<Array<UpozorneniSkupiniesOrderBy>>;
+};
+
+/** All input for the `updateUserByUId` mutation. */
+export type UpdateUserByUIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  uId: Scalars['BigInt'];
+  /** An object where the defined keys will be set on the `User` being updated. */
+  userPatch: UserPatch;
+};
+
+/** All input for the `updateUser` mutation. */
+export type UpdateUserInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `User` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `User` being updated. */
+  userPatch: UserPatch;
+};
+
+/** The output of our update `User` mutation. */
+export type UpdateUserPayload = {
+  __typename?: 'UpdateUserPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Reads a single `Permission` that is related to this `User`. */
+  permissionByUGroup?: Maybe<Permission>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Skupiny` that is related to this `User`. */
+  skupinyByUSkupina?: Maybe<Skupiny>;
+  /** The `User` that was updated by this mutation. */
+  user?: Maybe<User>;
+  /** An edge for our `User`. May be used by Relay 1. */
+  userEdge?: Maybe<UsersEdge>;
+};
+
+
+/** The output of our update `User` mutation. */
+export type UpdateUserPayloadUserEdgeArgs = {
+  orderBy?: InputMaybe<Array<UsersOrderBy>>;
+};
+
+/** All input for the `updateUsersSkupinyByUsId` mutation. */
+export type UpdateUsersSkupinyByUsIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  usId: Scalars['BigInt'];
+  /** An object where the defined keys will be set on the `UsersSkupiny` being updated. */
+  usersSkupinyPatch: UsersSkupinyPatch;
+};
+
+/** All input for the `updateUsersSkupiny` mutation. */
+export type UpdateUsersSkupinyInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `UsersSkupiny` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `UsersSkupiny` being updated. */
+  usersSkupinyPatch: UsersSkupinyPatch;
+};
+
+/** The output of our update `UsersSkupiny` mutation. */
+export type UpdateUsersSkupinyPayload = {
+  __typename?: 'UpdateUsersSkupinyPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `UsersSkupiny` that was updated by this mutation. */
+  usersSkupiny?: Maybe<UsersSkupiny>;
+  /** An edge for our `UsersSkupiny`. May be used by Relay 1. */
+  usersSkupinyEdge?: Maybe<UsersSkupiniesEdge>;
+};
+
+
+/** The output of our update `UsersSkupiny` mutation. */
+export type UpdateUsersSkupinyPayloadUsersSkupinyEdgeArgs = {
+  orderBy?: InputMaybe<Array<UsersSkupiniesOrderBy>>;
+};
+
+/** All input for the `updateVideoByVId` mutation. */
+export type UpdateVideoByVIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  vId: Scalars['BigInt'];
+  /** An object where the defined keys will be set on the `Video` being updated. */
+  videoPatch: VideoPatch;
+};
+
+/** All input for the `updateVideo` mutation. */
+export type UpdateVideoInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Video` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `Video` being updated. */
+  videoPatch: VideoPatch;
+};
+
+/** All input for the `updateVideoListByVlId` mutation. */
+export type UpdateVideoListByVlIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `VideoList` being updated. */
+  videoListPatch: VideoListPatch;
+  vlId: Scalars['BigInt'];
+};
+
+/** All input for the `updateVideoList` mutation. */
+export type UpdateVideoListInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `VideoList` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `VideoList` being updated. */
+  videoListPatch: VideoListPatch;
+};
+
+/** The output of our update `VideoList` mutation. */
+export type UpdateVideoListPayload = {
+  __typename?: 'UpdateVideoListPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `VideoList` that was updated by this mutation. */
+  videoList?: Maybe<VideoList>;
+  /** An edge for our `VideoList`. May be used by Relay 1. */
+  videoListEdge?: Maybe<VideoListsEdge>;
+};
+
+
+/** The output of our update `VideoList` mutation. */
+export type UpdateVideoListPayloadVideoListEdgeArgs = {
+  orderBy?: InputMaybe<Array<VideoListsOrderBy>>;
+};
+
+/** The output of our update `Video` mutation. */
+export type UpdateVideoPayload = {
+  __typename?: 'UpdateVideoPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `Video` that was updated by this mutation. */
+  video?: Maybe<Video>;
+  /** An edge for our `Video`. May be used by Relay 1. */
+  videoEdge?: Maybe<VideosEdge>;
+};
+
+
+/** The output of our update `Video` mutation. */
+export type UpdateVideoPayloadVideoEdgeArgs = {
+  orderBy?: InputMaybe<Array<VideosOrderBy>>;
+};
+
+/** All input for the `updateVideoSourceByVsId` mutation. */
+export type UpdateVideoSourceByVsIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `VideoSource` being updated. */
+  videoSourcePatch: VideoSourcePatch;
+  vsId: Scalars['BigInt'];
+};
+
+/** All input for the `updateVideoSource` mutation. */
+export type UpdateVideoSourceInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `VideoSource` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `VideoSource` being updated. */
+  videoSourcePatch: VideoSourcePatch;
+};
+
+/** The output of our update `VideoSource` mutation. */
+export type UpdateVideoSourcePayload = {
+  __typename?: 'UpdateVideoSourcePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `VideoSource` that was updated by this mutation. */
+  videoSource?: Maybe<VideoSource>;
+  /** An edge for our `VideoSource`. May be used by Relay 1. */
+  videoSourceEdge?: Maybe<VideoSourcesEdge>;
+};
+
+
+/** The output of our update `VideoSource` mutation. */
+export type UpdateVideoSourcePayloadVideoSourceEdgeArgs = {
+  orderBy?: InputMaybe<Array<VideoSourcesOrderBy>>;
+};
+
+export type Upozorneni = Node & {
+  __typename?: 'Upozorneni';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  upBarvy: Scalars['BigInt'];
+  upId: Scalars['BigInt'];
+  upKdo: Scalars['BigInt'];
+  upLock: Scalars['Boolean'];
+  upNadpis: Scalars['String'];
+  upText: Scalars['String'];
+  upTimestamp?: Maybe<Scalars['Datetime']>;
+  upTimestampAdd: Scalars['Datetime'];
+  /** Reads and enables pagination through a set of `UpozorneniSkupiny`. */
+  upozorneniSkupiniesByUpsIdRodic: UpozorneniSkupiniesConnection;
+  /** Reads a single `User` that is related to this `Upozorneni`. */
+  userByUpKdo?: Maybe<User>;
+};
+
+
+export type UpozorneniUpozorneniSkupiniesByUpsIdRodicArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<UpozorneniSkupinyCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<UpozorneniSkupiniesOrderBy>>;
+};
+
+/**
+ * A condition to be used against `Upozorneni` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type UpozorneniCondition = {
+  /** Checks for equality with the object’s `upBarvy` field. */
+  upBarvy?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `upId` field. */
+  upId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `upKdo` field. */
+  upKdo?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `upLock` field. */
+  upLock?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `upNadpis` field. */
+  upNadpis?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `upText` field. */
+  upText?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `upTimestamp` field. */
+  upTimestamp?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `upTimestampAdd` field. */
+  upTimestampAdd?: InputMaybe<Scalars['Datetime']>;
+};
+
+/** An input for mutations affecting `Upozorneni` */
+export type UpozorneniInput = {
+  upBarvy?: InputMaybe<Scalars['BigInt']>;
+  upId?: InputMaybe<Scalars['BigInt']>;
+  upKdo: Scalars['BigInt'];
+  upLock?: InputMaybe<Scalars['Boolean']>;
+  upNadpis: Scalars['String'];
+  upText: Scalars['String'];
+  upTimestamp?: InputMaybe<Scalars['Datetime']>;
+  upTimestampAdd?: InputMaybe<Scalars['Datetime']>;
+};
+
+/** Represents an update to a `Upozorneni`. Fields that are set will be updated. */
+export type UpozorneniPatch = {
+  upBarvy?: InputMaybe<Scalars['BigInt']>;
+  upId?: InputMaybe<Scalars['BigInt']>;
+  upKdo?: InputMaybe<Scalars['BigInt']>;
+  upLock?: InputMaybe<Scalars['Boolean']>;
+  upNadpis?: InputMaybe<Scalars['String']>;
+  upText?: InputMaybe<Scalars['String']>;
+  upTimestamp?: InputMaybe<Scalars['Datetime']>;
+  upTimestampAdd?: InputMaybe<Scalars['Datetime']>;
+};
+
+/** A connection to a list of `UpozorneniSkupiny` values. */
+export type UpozorneniSkupiniesConnection = {
+  __typename?: 'UpozorneniSkupiniesConnection';
+  /** A list of edges which contains the `UpozorneniSkupiny` and cursor to aid in pagination. */
+  edges: Array<UpozorneniSkupiniesEdge>;
+  /** A list of `UpozorneniSkupiny` objects. */
+  nodes: Array<UpozorneniSkupiny>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `UpozorneniSkupiny` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `UpozorneniSkupiny` edge in the connection. */
+export type UpozorneniSkupiniesEdge = {
+  __typename?: 'UpozorneniSkupiniesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `UpozorneniSkupiny` at the end of the edge. */
+  node: UpozorneniSkupiny;
+};
+
+/** Methods to use when ordering `UpozorneniSkupiny`. */
+export enum UpozorneniSkupiniesOrderBy {
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  UpsColorAsc = 'UPS_COLOR_ASC',
+  UpsColorDesc = 'UPS_COLOR_DESC',
+  UpsIdAsc = 'UPS_ID_ASC',
+  UpsIdDesc = 'UPS_ID_DESC',
+  UpsIdRodicAsc = 'UPS_ID_RODIC_ASC',
+  UpsIdRodicDesc = 'UPS_ID_RODIC_DESC',
+  UpsIdSkupinaAsc = 'UPS_ID_SKUPINA_ASC',
+  UpsIdSkupinaDesc = 'UPS_ID_SKUPINA_DESC',
+  UpsPopisAsc = 'UPS_POPIS_ASC',
+  UpsPopisDesc = 'UPS_POPIS_DESC'
 }
 
-/** input type for updating data in table "skupiny" */
-export type Skupiny_Set_Input = {
-  s_color_rgb?: InputMaybe<Scalars['String']>;
-  s_color_text?: InputMaybe<Scalars['String']>;
-  s_description?: InputMaybe<Scalars['String']>;
-  s_id?: InputMaybe<Scalars['bigint']>;
-  s_name?: InputMaybe<Scalars['String']>;
-};
-
-/** aggregate stddev on columns */
-export type Skupiny_Stddev_Fields = {
-  __typename?: 'skupiny_stddev_fields';
-  s_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Skupiny_Stddev_Pop_Fields = {
-  __typename?: 'skupiny_stddev_pop_fields';
-  s_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Skupiny_Stddev_Samp_Fields = {
-  __typename?: 'skupiny_stddev_samp_fields';
-  s_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate sum on columns */
-export type Skupiny_Sum_Fields = {
-  __typename?: 'skupiny_sum_fields';
-  s_id?: Maybe<Scalars['bigint']>;
-};
-
-/** update columns of table "skupiny" */
-export enum Skupiny_Update_Column {
-  /** column name */
-  SColorRgb = 's_color_rgb',
-  /** column name */
-  SColorText = 's_color_text',
-  /** column name */
-  SDescription = 's_description',
-  /** column name */
-  SId = 's_id',
-  /** column name */
-  SName = 's_name'
-}
-
-/** aggregate var_pop on columns */
-export type Skupiny_Var_Pop_Fields = {
-  __typename?: 'skupiny_var_pop_fields';
-  s_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Skupiny_Var_Samp_Fields = {
-  __typename?: 'skupiny_var_samp_fields';
-  s_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Skupiny_Variance_Fields = {
-  __typename?: 'skupiny_variance_fields';
-  s_id?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to compare columns of type "smallint". All fields are combined with logical 'AND'. */
-export type Smallint_Comparison_Exp = {
-  _eq?: InputMaybe<Scalars['smallint']>;
-  _gt?: InputMaybe<Scalars['smallint']>;
-  _gte?: InputMaybe<Scalars['smallint']>;
-  _in?: InputMaybe<Array<Scalars['smallint']>>;
-  _is_null?: InputMaybe<Scalars['Boolean']>;
-  _lt?: InputMaybe<Scalars['smallint']>;
-  _lte?: InputMaybe<Scalars['smallint']>;
-  _neq?: InputMaybe<Scalars['smallint']>;
-  _nin?: InputMaybe<Array<Scalars['smallint']>>;
-};
-
-export type Subscription_Root = {
-  __typename?: 'subscription_root';
-  /** fetch data from the table: "akce" */
-  akce: Array<Akce>;
-  /** fetch aggregated fields from the table: "akce" */
-  akce_aggregate: Akce_Aggregate;
-  /** fetch data from the table: "akce" using primary key columns */
-  akce_by_pk?: Maybe<Akce>;
-  /** fetch data from the table: "akce_item" */
-  akce_item: Array<Akce_Item>;
-  /** fetch aggregated fields from the table: "akce_item" */
-  akce_item_aggregate: Akce_Item_Aggregate;
-  /** fetch data from the table: "akce_item" using primary key columns */
-  akce_item_by_pk?: Maybe<Akce_Item>;
-  /** fetch data from the table: "aktuality" */
-  aktuality: Array<Aktuality>;
-  /** fetch data from the table: "aktuality_admin" */
-  aktuality_admin: Array<Aktuality_Admin>;
-  /** fetch aggregated fields from the table: "aktuality_admin" */
-  aktuality_admin_aggregate: Aktuality_Admin_Aggregate;
-  /** fetch aggregated fields from the table: "aktuality" */
-  aktuality_aggregate: Aktuality_Aggregate;
-  /** fetch data from the table: "aktuality" using primary key columns */
-  aktuality_by_pk?: Maybe<Aktuality>;
-  /** fetch data from the table: "dokumenty" */
-  dokumenty: Array<Dokumenty>;
-  /** fetch aggregated fields from the table: "dokumenty" */
-  dokumenty_aggregate: Dokumenty_Aggregate;
-  /** fetch data from the table: "dokumenty" using primary key columns */
-  dokumenty_by_pk?: Maybe<Dokumenty>;
-  /** fetch data from the table: "galerie_dir" */
-  galerie_dir: Array<Galerie_Dir>;
-  /** fetch aggregated fields from the table: "galerie_dir" */
-  galerie_dir_aggregate: Galerie_Dir_Aggregate;
-  /** fetch data from the table: "galerie_dir" using primary key columns */
-  galerie_dir_by_pk?: Maybe<Galerie_Dir>;
-  /** fetch data from the table: "galerie_foto" */
-  galerie_foto: Array<Galerie_Foto>;
-  /** fetch aggregated fields from the table: "galerie_foto" */
-  galerie_foto_aggregate: Galerie_Foto_Aggregate;
-  /** fetch data from the table: "galerie_foto" using primary key columns */
-  galerie_foto_by_pk?: Maybe<Galerie_Foto>;
-  /** fetch data from the table: "nabidka" */
-  nabidka: Array<Nabidka>;
-  /** fetch data from the table: "nabidka_admin" */
-  nabidka_admin: Array<Nabidka_Admin>;
-  /** fetch aggregated fields from the table: "nabidka_admin" */
-  nabidka_admin_aggregate: Nabidka_Admin_Aggregate;
-  /** fetch aggregated fields from the table: "nabidka" */
-  nabidka_aggregate: Nabidka_Aggregate;
-  /** fetch data from the table: "nabidka" using primary key columns */
-  nabidka_by_pk?: Maybe<Nabidka>;
-  /** fetch data from the table: "nabidka_item" */
-  nabidka_item: Array<Nabidka_Item>;
-  /** fetch aggregated fields from the table: "nabidka_item" */
-  nabidka_item_aggregate: Nabidka_Item_Aggregate;
-  /** fetch data from the table: "nabidka_item" using primary key columns */
-  nabidka_item_by_pk?: Maybe<Nabidka_Item>;
-  /** fetch data from the table: "parameters" */
-  parameters: Array<Parameters>;
-  /** fetch aggregated fields from the table: "parameters" */
-  parameters_aggregate: Parameters_Aggregate;
-  /** fetch data from the table: "parameters" using primary key columns */
-  parameters_by_pk?: Maybe<Parameters>;
-  /** fetch data from the table: "pary" */
-  pary: Array<Pary>;
-  /** fetch aggregated fields from the table: "pary" */
-  pary_aggregate: Pary_Aggregate;
-  /** fetch data from the table: "pary" using primary key columns */
-  pary_by_pk?: Maybe<Pary>;
-  /** fetch data from the table: "pary_navrh" */
-  pary_navrh: Array<Pary_Navrh>;
-  /** fetch aggregated fields from the table: "pary_navrh" */
-  pary_navrh_aggregate: Pary_Navrh_Aggregate;
-  /** fetch data from the table: "pary_navrh" using primary key columns */
-  pary_navrh_by_pk?: Maybe<Pary_Navrh>;
-  /** fetch data from the table: "permissions" */
-  permissions: Array<Permissions>;
-  /** fetch aggregated fields from the table: "permissions" */
-  permissions_aggregate: Permissions_Aggregate;
-  /** fetch data from the table: "permissions" using primary key columns */
-  permissions_by_pk?: Maybe<Permissions>;
-  /** fetch data from the table: "platby_category" */
-  platby_category: Array<Platby_Category>;
-  /** fetch aggregated fields from the table: "platby_category" */
-  platby_category_aggregate: Platby_Category_Aggregate;
-  /** fetch data from the table: "platby_category" using primary key columns */
-  platby_category_by_pk?: Maybe<Platby_Category>;
-  /** fetch data from the table: "platby_category_group" */
-  platby_category_group: Array<Platby_Category_Group>;
-  /** fetch aggregated fields from the table: "platby_category_group" */
-  platby_category_group_aggregate: Platby_Category_Group_Aggregate;
-  /** fetch data from the table: "platby_category_group" using primary key columns */
-  platby_category_group_by_pk?: Maybe<Platby_Category_Group>;
-  /** fetch data from the table: "platby_group" */
-  platby_group: Array<Platby_Group>;
-  /** fetch aggregated fields from the table: "platby_group" */
-  platby_group_aggregate: Platby_Group_Aggregate;
-  /** fetch data from the table: "platby_group" using primary key columns */
-  platby_group_by_pk?: Maybe<Platby_Group>;
-  /** fetch data from the table: "platby_group_skupina" */
-  platby_group_skupina: Array<Platby_Group_Skupina>;
-  /** fetch aggregated fields from the table: "platby_group_skupina" */
-  platby_group_skupina_aggregate: Platby_Group_Skupina_Aggregate;
-  /** fetch data from the table: "platby_group_skupina" using primary key columns */
-  platby_group_skupina_by_pk?: Maybe<Platby_Group_Skupina>;
-  /** fetch data from the table: "platby_item" */
-  platby_item: Array<Platby_Item>;
-  /** fetch aggregated fields from the table: "platby_item" */
-  platby_item_aggregate: Platby_Item_Aggregate;
-  /** fetch data from the table: "platby_item" using primary key columns */
-  platby_item_by_pk?: Maybe<Platby_Item>;
-  /** fetch data from the table: "platby_raw" */
-  platby_raw: Array<Platby_Raw>;
-  /** fetch aggregated fields from the table: "platby_raw" */
-  platby_raw_aggregate: Platby_Raw_Aggregate;
-  /** fetch data from the table: "platby_raw" using primary key columns */
-  platby_raw_by_pk?: Maybe<Platby_Raw>;
-  /** An array relationship */
-  rozpis: Array<Rozpis>;
-  /** fetch data from the table: "rozpis_admin" */
-  rozpis_admin: Array<Rozpis_Admin>;
-  /** fetch aggregated fields from the table: "rozpis_admin" */
-  rozpis_admin_aggregate: Rozpis_Admin_Aggregate;
-  /** An aggregate relationship */
-  rozpis_aggregate: Rozpis_Aggregate;
-  /** fetch data from the table: "rozpis" using primary key columns */
-  rozpis_by_pk?: Maybe<Rozpis>;
-  /** fetch data from the table: "rozpis_item" */
-  rozpis_item: Array<Rozpis_Item>;
-  /** fetch aggregated fields from the table: "rozpis_item" */
-  rozpis_item_aggregate: Rozpis_Item_Aggregate;
-  /** fetch data from the table: "rozpis_item" using primary key columns */
-  rozpis_item_by_pk?: Maybe<Rozpis_Item>;
-  /** fetch data from the table: "session" */
-  session: Array<Session>;
-  /** fetch aggregated fields from the table: "session" */
-  session_aggregate: Session_Aggregate;
-  /** fetch data from the table: "session" using primary key columns */
-  session_by_pk?: Maybe<Session>;
-  /** fetch data from the table: "skupiny" */
-  skupiny: Array<Skupiny>;
-  /** fetch aggregated fields from the table: "skupiny" */
-  skupiny_aggregate: Skupiny_Aggregate;
-  /** fetch data from the table: "skupiny" using primary key columns */
-  skupiny_by_pk?: Maybe<Skupiny>;
-  /** fetch data from the table: "upozorneni" */
-  upozorneni: Array<Upozorneni>;
-  /** fetch aggregated fields from the table: "upozorneni" */
-  upozorneni_aggregate: Upozorneni_Aggregate;
-  /** fetch data from the table: "upozorneni" using primary key columns */
-  upozorneni_by_pk?: Maybe<Upozorneni>;
-  /** fetch data from the table: "upozorneni_skupiny" */
-  upozorneni_skupiny: Array<Upozorneni_Skupiny>;
-  /** fetch aggregated fields from the table: "upozorneni_skupiny" */
-  upozorneni_skupiny_aggregate: Upozorneni_Skupiny_Aggregate;
-  /** fetch data from the table: "upozorneni_skupiny" using primary key columns */
-  upozorneni_skupiny_by_pk?: Maybe<Upozorneni_Skupiny>;
-  /** An array relationship */
-  users: Array<Users>;
-  /** An aggregate relationship */
-  users_aggregate: Users_Aggregate;
-  /** fetch data from the table: "users" using primary key columns */
-  users_by_pk?: Maybe<Users>;
-  /** fetch data from the table: "users_skupiny" */
-  users_skupiny: Array<Users_Skupiny>;
-  /** fetch aggregated fields from the table: "users_skupiny" */
-  users_skupiny_aggregate: Users_Skupiny_Aggregate;
-  /** fetch data from the table: "users_skupiny" using primary key columns */
-  users_skupiny_by_pk?: Maybe<Users_Skupiny>;
-  /** fetch data from the table: "video" */
-  video: Array<Video>;
-  /** fetch aggregated fields from the table: "video" */
-  video_aggregate: Video_Aggregate;
-  /** fetch data from the table: "video" using primary key columns */
-  video_by_pk?: Maybe<Video>;
-  /** fetch data from the table: "video_list" */
-  video_list: Array<Video_List>;
-  /** fetch aggregated fields from the table: "video_list" */
-  video_list_aggregate: Video_List_Aggregate;
-  /** fetch data from the table: "video_list" using primary key columns */
-  video_list_by_pk?: Maybe<Video_List>;
-  /** fetch data from the table: "video_source" */
-  video_source: Array<Video_Source>;
-  /** fetch aggregated fields from the table: "video_source" */
-  video_source_aggregate: Video_Source_Aggregate;
-  /** fetch data from the table: "video_source" using primary key columns */
-  video_source_by_pk?: Maybe<Video_Source>;
-};
-
-
-export type Subscription_RootAkceArgs = {
-  distinct_on?: InputMaybe<Array<Akce_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Akce_Order_By>>;
-  where?: InputMaybe<Akce_Bool_Exp>;
-};
-
-
-export type Subscription_RootAkce_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Akce_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Akce_Order_By>>;
-  where?: InputMaybe<Akce_Bool_Exp>;
-};
-
-
-export type Subscription_RootAkce_By_PkArgs = {
-  a_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootAkce_ItemArgs = {
-  distinct_on?: InputMaybe<Array<Akce_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Akce_Item_Order_By>>;
-  where?: InputMaybe<Akce_Item_Bool_Exp>;
-};
-
-
-export type Subscription_RootAkce_Item_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Akce_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Akce_Item_Order_By>>;
-  where?: InputMaybe<Akce_Item_Bool_Exp>;
-};
-
-
-export type Subscription_RootAkce_Item_By_PkArgs = {
-  ai_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootAktualityArgs = {
-  distinct_on?: InputMaybe<Array<Aktuality_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Aktuality_Order_By>>;
-  where?: InputMaybe<Aktuality_Bool_Exp>;
-};
-
-
-export type Subscription_RootAktuality_AdminArgs = {
-  distinct_on?: InputMaybe<Array<Aktuality_Admin_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Aktuality_Admin_Order_By>>;
-  where?: InputMaybe<Aktuality_Admin_Bool_Exp>;
-};
-
-
-export type Subscription_RootAktuality_Admin_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Aktuality_Admin_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Aktuality_Admin_Order_By>>;
-  where?: InputMaybe<Aktuality_Admin_Bool_Exp>;
-};
-
-
-export type Subscription_RootAktuality_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Aktuality_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Aktuality_Order_By>>;
-  where?: InputMaybe<Aktuality_Bool_Exp>;
-};
-
-
-export type Subscription_RootAktuality_By_PkArgs = {
-  at_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootDokumentyArgs = {
-  distinct_on?: InputMaybe<Array<Dokumenty_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Dokumenty_Order_By>>;
-  where?: InputMaybe<Dokumenty_Bool_Exp>;
-};
-
-
-export type Subscription_RootDokumenty_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Dokumenty_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Dokumenty_Order_By>>;
-  where?: InputMaybe<Dokumenty_Bool_Exp>;
-};
-
-
-export type Subscription_RootDokumenty_By_PkArgs = {
-  d_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootGalerie_DirArgs = {
-  distinct_on?: InputMaybe<Array<Galerie_Dir_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Galerie_Dir_Order_By>>;
-  where?: InputMaybe<Galerie_Dir_Bool_Exp>;
-};
-
-
-export type Subscription_RootGalerie_Dir_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Galerie_Dir_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Galerie_Dir_Order_By>>;
-  where?: InputMaybe<Galerie_Dir_Bool_Exp>;
-};
-
-
-export type Subscription_RootGalerie_Dir_By_PkArgs = {
-  gd_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootGalerie_FotoArgs = {
-  distinct_on?: InputMaybe<Array<Galerie_Foto_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Galerie_Foto_Order_By>>;
-  where?: InputMaybe<Galerie_Foto_Bool_Exp>;
-};
-
-
-export type Subscription_RootGalerie_Foto_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Galerie_Foto_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Galerie_Foto_Order_By>>;
-  where?: InputMaybe<Galerie_Foto_Bool_Exp>;
-};
-
-
-export type Subscription_RootGalerie_Foto_By_PkArgs = {
-  gf_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootNabidkaArgs = {
-  distinct_on?: InputMaybe<Array<Nabidka_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Nabidka_Order_By>>;
-  where?: InputMaybe<Nabidka_Bool_Exp>;
-};
-
-
-export type Subscription_RootNabidka_AdminArgs = {
-  distinct_on?: InputMaybe<Array<Nabidka_Admin_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Nabidka_Admin_Order_By>>;
-  where?: InputMaybe<Nabidka_Admin_Bool_Exp>;
-};
-
-
-export type Subscription_RootNabidka_Admin_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Nabidka_Admin_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Nabidka_Admin_Order_By>>;
-  where?: InputMaybe<Nabidka_Admin_Bool_Exp>;
-};
-
-
-export type Subscription_RootNabidka_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Nabidka_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Nabidka_Order_By>>;
-  where?: InputMaybe<Nabidka_Bool_Exp>;
-};
-
-
-export type Subscription_RootNabidka_By_PkArgs = {
-  n_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootNabidka_ItemArgs = {
-  distinct_on?: InputMaybe<Array<Nabidka_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Nabidka_Item_Order_By>>;
-  where?: InputMaybe<Nabidka_Item_Bool_Exp>;
-};
-
-
-export type Subscription_RootNabidka_Item_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Nabidka_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Nabidka_Item_Order_By>>;
-  where?: InputMaybe<Nabidka_Item_Bool_Exp>;
-};
-
-
-export type Subscription_RootNabidka_Item_By_PkArgs = {
-  ni_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootParametersArgs = {
-  distinct_on?: InputMaybe<Array<Parameters_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Parameters_Order_By>>;
-  where?: InputMaybe<Parameters_Bool_Exp>;
-};
-
-
-export type Subscription_RootParameters_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Parameters_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Parameters_Order_By>>;
-  where?: InputMaybe<Parameters_Bool_Exp>;
-};
-
-
-export type Subscription_RootParameters_By_PkArgs = {
-  pa_name: Scalars['String'];
-};
-
-
-export type Subscription_RootParyArgs = {
-  distinct_on?: InputMaybe<Array<Pary_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Pary_Order_By>>;
-  where?: InputMaybe<Pary_Bool_Exp>;
-};
-
-
-export type Subscription_RootPary_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Pary_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Pary_Order_By>>;
-  where?: InputMaybe<Pary_Bool_Exp>;
-};
-
-
-export type Subscription_RootPary_By_PkArgs = {
-  p_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootPary_NavrhArgs = {
-  distinct_on?: InputMaybe<Array<Pary_Navrh_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Pary_Navrh_Order_By>>;
-  where?: InputMaybe<Pary_Navrh_Bool_Exp>;
-};
-
-
-export type Subscription_RootPary_Navrh_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Pary_Navrh_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Pary_Navrh_Order_By>>;
-  where?: InputMaybe<Pary_Navrh_Bool_Exp>;
-};
-
-
-export type Subscription_RootPary_Navrh_By_PkArgs = {
-  pn_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootPermissionsArgs = {
-  distinct_on?: InputMaybe<Array<Permissions_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Permissions_Order_By>>;
-  where?: InputMaybe<Permissions_Bool_Exp>;
-};
-
-
-export type Subscription_RootPermissions_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Permissions_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Permissions_Order_By>>;
-  where?: InputMaybe<Permissions_Bool_Exp>;
-};
-
-
-export type Subscription_RootPermissions_By_PkArgs = {
-  pe_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootPlatby_CategoryArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Category_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Category_Order_By>>;
-  where?: InputMaybe<Platby_Category_Bool_Exp>;
-};
-
-
-export type Subscription_RootPlatby_Category_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Category_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Category_Order_By>>;
-  where?: InputMaybe<Platby_Category_Bool_Exp>;
-};
-
-
-export type Subscription_RootPlatby_Category_By_PkArgs = {
-  pc_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootPlatby_Category_GroupArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Category_Group_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Category_Group_Order_By>>;
-  where?: InputMaybe<Platby_Category_Group_Bool_Exp>;
-};
-
-
-export type Subscription_RootPlatby_Category_Group_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Category_Group_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Category_Group_Order_By>>;
-  where?: InputMaybe<Platby_Category_Group_Bool_Exp>;
-};
-
-
-export type Subscription_RootPlatby_Category_Group_By_PkArgs = {
-  pcg_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootPlatby_GroupArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Group_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Group_Order_By>>;
-  where?: InputMaybe<Platby_Group_Bool_Exp>;
-};
-
-
-export type Subscription_RootPlatby_Group_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Group_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Group_Order_By>>;
-  where?: InputMaybe<Platby_Group_Bool_Exp>;
-};
-
-
-export type Subscription_RootPlatby_Group_By_PkArgs = {
-  pg_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootPlatby_Group_SkupinaArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Group_Skupina_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Group_Skupina_Order_By>>;
-  where?: InputMaybe<Platby_Group_Skupina_Bool_Exp>;
-};
-
-
-export type Subscription_RootPlatby_Group_Skupina_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Group_Skupina_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Group_Skupina_Order_By>>;
-  where?: InputMaybe<Platby_Group_Skupina_Bool_Exp>;
-};
-
-
-export type Subscription_RootPlatby_Group_Skupina_By_PkArgs = {
-  pgs_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootPlatby_ItemArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Item_Order_By>>;
-  where?: InputMaybe<Platby_Item_Bool_Exp>;
-};
-
-
-export type Subscription_RootPlatby_Item_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Item_Order_By>>;
-  where?: InputMaybe<Platby_Item_Bool_Exp>;
-};
-
-
-export type Subscription_RootPlatby_Item_By_PkArgs = {
-  pi_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootPlatby_RawArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Raw_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Raw_Order_By>>;
-  where?: InputMaybe<Platby_Raw_Bool_Exp>;
-};
-
-
-export type Subscription_RootPlatby_Raw_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Raw_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Raw_Order_By>>;
-  where?: InputMaybe<Platby_Raw_Bool_Exp>;
-};
-
-
-export type Subscription_RootPlatby_Raw_By_PkArgs = {
-  pr_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootRozpisArgs = {
-  distinct_on?: InputMaybe<Array<Rozpis_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Rozpis_Order_By>>;
-  where?: InputMaybe<Rozpis_Bool_Exp>;
-};
-
-
-export type Subscription_RootRozpis_AdminArgs = {
-  distinct_on?: InputMaybe<Array<Rozpis_Admin_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Rozpis_Admin_Order_By>>;
-  where?: InputMaybe<Rozpis_Admin_Bool_Exp>;
-};
-
-
-export type Subscription_RootRozpis_Admin_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Rozpis_Admin_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Rozpis_Admin_Order_By>>;
-  where?: InputMaybe<Rozpis_Admin_Bool_Exp>;
-};
-
-
-export type Subscription_RootRozpis_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Rozpis_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Rozpis_Order_By>>;
-  where?: InputMaybe<Rozpis_Bool_Exp>;
-};
-
-
-export type Subscription_RootRozpis_By_PkArgs = {
-  r_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootRozpis_ItemArgs = {
-  distinct_on?: InputMaybe<Array<Rozpis_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Rozpis_Item_Order_By>>;
-  where?: InputMaybe<Rozpis_Item_Bool_Exp>;
-};
-
-
-export type Subscription_RootRozpis_Item_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Rozpis_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Rozpis_Item_Order_By>>;
-  where?: InputMaybe<Rozpis_Item_Bool_Exp>;
-};
-
-
-export type Subscription_RootRozpis_Item_By_PkArgs = {
-  ri_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootSessionArgs = {
-  distinct_on?: InputMaybe<Array<Session_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Session_Order_By>>;
-  where?: InputMaybe<Session_Bool_Exp>;
-};
-
-
-export type Subscription_RootSession_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Session_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Session_Order_By>>;
-  where?: InputMaybe<Session_Bool_Exp>;
-};
-
-
-export type Subscription_RootSession_By_PkArgs = {
-  ss_id: Scalars['String'];
-};
-
-
-export type Subscription_RootSkupinyArgs = {
-  distinct_on?: InputMaybe<Array<Skupiny_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Skupiny_Order_By>>;
-  where?: InputMaybe<Skupiny_Bool_Exp>;
-};
-
-
-export type Subscription_RootSkupiny_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Skupiny_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Skupiny_Order_By>>;
-  where?: InputMaybe<Skupiny_Bool_Exp>;
-};
-
-
-export type Subscription_RootSkupiny_By_PkArgs = {
-  s_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootUpozorneniArgs = {
-  distinct_on?: InputMaybe<Array<Upozorneni_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Upozorneni_Order_By>>;
-  where?: InputMaybe<Upozorneni_Bool_Exp>;
-};
-
-
-export type Subscription_RootUpozorneni_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Upozorneni_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Upozorneni_Order_By>>;
-  where?: InputMaybe<Upozorneni_Bool_Exp>;
-};
-
-
-export type Subscription_RootUpozorneni_By_PkArgs = {
-  up_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootUpozorneni_SkupinyArgs = {
-  distinct_on?: InputMaybe<Array<Upozorneni_Skupiny_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Upozorneni_Skupiny_Order_By>>;
-  where?: InputMaybe<Upozorneni_Skupiny_Bool_Exp>;
-};
-
-
-export type Subscription_RootUpozorneni_Skupiny_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Upozorneni_Skupiny_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Upozorneni_Skupiny_Order_By>>;
-  where?: InputMaybe<Upozorneni_Skupiny_Bool_Exp>;
-};
-
-
-export type Subscription_RootUpozorneni_Skupiny_By_PkArgs = {
-  ups_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootUsersArgs = {
-  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Users_Order_By>>;
-  where?: InputMaybe<Users_Bool_Exp>;
-};
-
-
-export type Subscription_RootUsers_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Users_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Users_Order_By>>;
-  where?: InputMaybe<Users_Bool_Exp>;
-};
-
-
-export type Subscription_RootUsers_By_PkArgs = {
-  u_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootUsers_SkupinyArgs = {
-  distinct_on?: InputMaybe<Array<Users_Skupiny_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Users_Skupiny_Order_By>>;
-  where?: InputMaybe<Users_Skupiny_Bool_Exp>;
-};
-
-
-export type Subscription_RootUsers_Skupiny_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Users_Skupiny_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Users_Skupiny_Order_By>>;
-  where?: InputMaybe<Users_Skupiny_Bool_Exp>;
-};
-
-
-export type Subscription_RootUsers_Skupiny_By_PkArgs = {
-  us_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootVideoArgs = {
-  distinct_on?: InputMaybe<Array<Video_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Video_Order_By>>;
-  where?: InputMaybe<Video_Bool_Exp>;
-};
-
-
-export type Subscription_RootVideo_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Video_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Video_Order_By>>;
-  where?: InputMaybe<Video_Bool_Exp>;
-};
-
-
-export type Subscription_RootVideo_By_PkArgs = {
-  v_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootVideo_ListArgs = {
-  distinct_on?: InputMaybe<Array<Video_List_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Video_List_Order_By>>;
-  where?: InputMaybe<Video_List_Bool_Exp>;
-};
-
-
-export type Subscription_RootVideo_List_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Video_List_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Video_List_Order_By>>;
-  where?: InputMaybe<Video_List_Bool_Exp>;
-};
-
-
-export type Subscription_RootVideo_List_By_PkArgs = {
-  vl_id: Scalars['bigint'];
-};
-
-
-export type Subscription_RootVideo_SourceArgs = {
-  distinct_on?: InputMaybe<Array<Video_Source_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Video_Source_Order_By>>;
-  where?: InputMaybe<Video_Source_Bool_Exp>;
-};
-
-
-export type Subscription_RootVideo_Source_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Video_Source_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Video_Source_Order_By>>;
-  where?: InputMaybe<Video_Source_Bool_Exp>;
-};
-
-
-export type Subscription_RootVideo_Source_By_PkArgs = {
-  vs_id: Scalars['bigint'];
-};
-
-/** Boolean expression to compare columns of type "time". All fields are combined with logical 'AND'. */
-export type Time_Comparison_Exp = {
-  _eq?: InputMaybe<Scalars['time']>;
-  _gt?: InputMaybe<Scalars['time']>;
-  _gte?: InputMaybe<Scalars['time']>;
-  _in?: InputMaybe<Array<Scalars['time']>>;
-  _is_null?: InputMaybe<Scalars['Boolean']>;
-  _lt?: InputMaybe<Scalars['time']>;
-  _lte?: InputMaybe<Scalars['time']>;
-  _neq?: InputMaybe<Scalars['time']>;
-  _nin?: InputMaybe<Array<Scalars['time']>>;
-};
-
-/** Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'. */
-export type Timestamptz_Comparison_Exp = {
-  _eq?: InputMaybe<Scalars['timestamptz']>;
-  _gt?: InputMaybe<Scalars['timestamptz']>;
-  _gte?: InputMaybe<Scalars['timestamptz']>;
-  _in?: InputMaybe<Array<Scalars['timestamptz']>>;
-  _is_null?: InputMaybe<Scalars['Boolean']>;
-  _lt?: InputMaybe<Scalars['timestamptz']>;
-  _lte?: InputMaybe<Scalars['timestamptz']>;
-  _neq?: InputMaybe<Scalars['timestamptz']>;
-  _nin?: InputMaybe<Array<Scalars['timestamptz']>>;
-};
-
-/** columns and relationships of "upozorneni" */
-export type Upozorneni = {
-  __typename?: 'upozorneni';
-  up_barvy: Scalars['bigint'];
-  up_id: Scalars['bigint'];
-  up_kdo: Scalars['bigint'];
-  up_lock: Scalars['Boolean'];
-  up_nadpis: Scalars['String'];
-  up_text: Scalars['String'];
-  up_timestamp?: Maybe<Scalars['timestamptz']>;
-  up_timestamp_add: Scalars['timestamptz'];
-  /** An array relationship */
-  upozorneni_skupinies: Array<Upozorneni_Skupiny>;
-  /** An aggregate relationship */
-  upozorneni_skupinies_aggregate: Upozorneni_Skupiny_Aggregate;
-  /** An object relationship */
-  user: Users;
-};
-
-
-/** columns and relationships of "upozorneni" */
-export type UpozorneniUpozorneni_SkupiniesArgs = {
-  distinct_on?: InputMaybe<Array<Upozorneni_Skupiny_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Upozorneni_Skupiny_Order_By>>;
-  where?: InputMaybe<Upozorneni_Skupiny_Bool_Exp>;
-};
-
-
-/** columns and relationships of "upozorneni" */
-export type UpozorneniUpozorneni_Skupinies_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Upozorneni_Skupiny_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Upozorneni_Skupiny_Order_By>>;
-  where?: InputMaybe<Upozorneni_Skupiny_Bool_Exp>;
-};
-
-/** aggregated selection of "upozorneni" */
-export type Upozorneni_Aggregate = {
-  __typename?: 'upozorneni_aggregate';
-  aggregate?: Maybe<Upozorneni_Aggregate_Fields>;
+export type UpozorneniSkupiny = Node & {
+  __typename?: 'UpozorneniSkupiny';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  /** Reads a single `Skupiny` that is related to this `UpozorneniSkupiny`. */
+  skupinyByUpsIdSkupina?: Maybe<Skupiny>;
+  /** Reads a single `Upozorneni` that is related to this `UpozorneniSkupiny`. */
+  upozorneniByUpsIdRodic?: Maybe<Upozorneni>;
+  upsColor: Scalars['String'];
+  upsId: Scalars['BigInt'];
+  upsIdRodic: Scalars['BigInt'];
+  upsIdSkupina: Scalars['BigInt'];
+  upsPopis: Scalars['String'];
+};
+
+/**
+ * A condition to be used against `UpozorneniSkupiny` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type UpozorneniSkupinyCondition = {
+  /** Checks for equality with the object’s `upsColor` field. */
+  upsColor?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `upsId` field. */
+  upsId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `upsIdRodic` field. */
+  upsIdRodic?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `upsIdSkupina` field. */
+  upsIdSkupina?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `upsPopis` field. */
+  upsPopis?: InputMaybe<Scalars['String']>;
+};
+
+/** An input for mutations affecting `UpozorneniSkupiny` */
+export type UpozorneniSkupinyInput = {
+  upsColor: Scalars['String'];
+  upsId?: InputMaybe<Scalars['BigInt']>;
+  upsIdRodic: Scalars['BigInt'];
+  upsIdSkupina: Scalars['BigInt'];
+  upsPopis: Scalars['String'];
+};
+
+/** Represents an update to a `UpozorneniSkupiny`. Fields that are set will be updated. */
+export type UpozorneniSkupinyPatch = {
+  upsColor?: InputMaybe<Scalars['String']>;
+  upsId?: InputMaybe<Scalars['BigInt']>;
+  upsIdRodic?: InputMaybe<Scalars['BigInt']>;
+  upsIdSkupina?: InputMaybe<Scalars['BigInt']>;
+  upsPopis?: InputMaybe<Scalars['String']>;
+};
+
+/** A connection to a list of `Upozorneni` values. */
+export type UpozornenisConnection = {
+  __typename?: 'UpozornenisConnection';
+  /** A list of edges which contains the `Upozorneni` and cursor to aid in pagination. */
+  edges: Array<UpozornenisEdge>;
+  /** A list of `Upozorneni` objects. */
   nodes: Array<Upozorneni>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Upozorneni` you could get from the connection. */
+  totalCount: Scalars['Int'];
 };
 
-/** aggregate fields of "upozorneni" */
-export type Upozorneni_Aggregate_Fields = {
-  __typename?: 'upozorneni_aggregate_fields';
-  avg?: Maybe<Upozorneni_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Upozorneni_Max_Fields>;
-  min?: Maybe<Upozorneni_Min_Fields>;
-  stddev?: Maybe<Upozorneni_Stddev_Fields>;
-  stddev_pop?: Maybe<Upozorneni_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Upozorneni_Stddev_Samp_Fields>;
-  sum?: Maybe<Upozorneni_Sum_Fields>;
-  var_pop?: Maybe<Upozorneni_Var_Pop_Fields>;
-  var_samp?: Maybe<Upozorneni_Var_Samp_Fields>;
-  variance?: Maybe<Upozorneni_Variance_Fields>;
+/** A `Upozorneni` edge in the connection. */
+export type UpozornenisEdge = {
+  __typename?: 'UpozornenisEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Upozorneni` at the end of the edge. */
+  node: Upozorneni;
 };
 
-
-/** aggregate fields of "upozorneni" */
-export type Upozorneni_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Upozorneni_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** order by aggregate values of table "upozorneni" */
-export type Upozorneni_Aggregate_Order_By = {
-  avg?: InputMaybe<Upozorneni_Avg_Order_By>;
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Upozorneni_Max_Order_By>;
-  min?: InputMaybe<Upozorneni_Min_Order_By>;
-  stddev?: InputMaybe<Upozorneni_Stddev_Order_By>;
-  stddev_pop?: InputMaybe<Upozorneni_Stddev_Pop_Order_By>;
-  stddev_samp?: InputMaybe<Upozorneni_Stddev_Samp_Order_By>;
-  sum?: InputMaybe<Upozorneni_Sum_Order_By>;
-  var_pop?: InputMaybe<Upozorneni_Var_Pop_Order_By>;
-  var_samp?: InputMaybe<Upozorneni_Var_Samp_Order_By>;
-  variance?: InputMaybe<Upozorneni_Variance_Order_By>;
-};
-
-/** input type for inserting array relation for remote table "upozorneni" */
-export type Upozorneni_Arr_Rel_Insert_Input = {
-  data: Array<Upozorneni_Insert_Input>;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Upozorneni_On_Conflict>;
-};
-
-/** aggregate avg on columns */
-export type Upozorneni_Avg_Fields = {
-  __typename?: 'upozorneni_avg_fields';
-  up_barvy?: Maybe<Scalars['Float']>;
-  up_id?: Maybe<Scalars['Float']>;
-  up_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by avg() on columns of table "upozorneni" */
-export type Upozorneni_Avg_Order_By = {
-  up_barvy?: InputMaybe<Order_By>;
-  up_id?: InputMaybe<Order_By>;
-  up_kdo?: InputMaybe<Order_By>;
-};
-
-/** Boolean expression to filter rows from the table "upozorneni". All fields are combined with a logical 'AND'. */
-export type Upozorneni_Bool_Exp = {
-  _and?: InputMaybe<Array<Upozorneni_Bool_Exp>>;
-  _not?: InputMaybe<Upozorneni_Bool_Exp>;
-  _or?: InputMaybe<Array<Upozorneni_Bool_Exp>>;
-  up_barvy?: InputMaybe<Bigint_Comparison_Exp>;
-  up_id?: InputMaybe<Bigint_Comparison_Exp>;
-  up_kdo?: InputMaybe<Bigint_Comparison_Exp>;
-  up_lock?: InputMaybe<Boolean_Comparison_Exp>;
-  up_nadpis?: InputMaybe<String_Comparison_Exp>;
-  up_text?: InputMaybe<String_Comparison_Exp>;
-  up_timestamp?: InputMaybe<Timestamptz_Comparison_Exp>;
-  up_timestamp_add?: InputMaybe<Timestamptz_Comparison_Exp>;
-  upozorneni_skupinies?: InputMaybe<Upozorneni_Skupiny_Bool_Exp>;
-  user?: InputMaybe<Users_Bool_Exp>;
-};
-
-/** unique or primary key constraints on table "upozorneni" */
-export enum Upozorneni_Constraint {
-  /** unique or primary key constraint */
-  Idx_24765Primary = 'idx_24765_primary'
+/** Methods to use when ordering `Upozorneni`. */
+export enum UpozornenisOrderBy {
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  UpBarvyAsc = 'UP_BARVY_ASC',
+  UpBarvyDesc = 'UP_BARVY_DESC',
+  UpIdAsc = 'UP_ID_ASC',
+  UpIdDesc = 'UP_ID_DESC',
+  UpKdoAsc = 'UP_KDO_ASC',
+  UpKdoDesc = 'UP_KDO_DESC',
+  UpLockAsc = 'UP_LOCK_ASC',
+  UpLockDesc = 'UP_LOCK_DESC',
+  UpNadpisAsc = 'UP_NADPIS_ASC',
+  UpNadpisDesc = 'UP_NADPIS_DESC',
+  UpTextAsc = 'UP_TEXT_ASC',
+  UpTextDesc = 'UP_TEXT_DESC',
+  UpTimestampAddAsc = 'UP_TIMESTAMP_ADD_ASC',
+  UpTimestampAddDesc = 'UP_TIMESTAMP_ADD_DESC',
+  UpTimestampAsc = 'UP_TIMESTAMP_ASC',
+  UpTimestampDesc = 'UP_TIMESTAMP_DESC'
 }
 
-/** input type for incrementing numeric columns in table "upozorneni" */
-export type Upozorneni_Inc_Input = {
-  up_barvy?: InputMaybe<Scalars['bigint']>;
-  up_id?: InputMaybe<Scalars['bigint']>;
-  up_kdo?: InputMaybe<Scalars['bigint']>;
+export type User = Node & {
+  __typename?: 'User';
+  /** Reads and enables pagination through a set of `AkceItem`. */
+  akceItemsByAiUser: AkceItemsConnection;
+  /** Reads and enables pagination through a set of `Aktuality`. */
+  aktualitiesByAtKdo: AktualitiesConnection;
+  /** Reads and enables pagination through a set of `Dokumenty`. */
+  dokumentiesByDKdo: DokumentiesConnection;
+  /** Reads and enables pagination through a set of `GalerieFoto`. */
+  galerieFotosByGfKdo: GalerieFotosConnection;
+  /** Reads and enables pagination through a set of `Nabidka`. */
+  nabidkasByNTrener: NabidkasConnection;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  /** Reads and enables pagination through a set of `Pary`. */
+  pariesByPIdPartner: PariesConnection;
+  /** Reads and enables pagination through a set of `ParyNavrh`. */
+  paryNavrhsByPnNavrhl: ParyNavrhsConnection;
+  /** Reads and enables pagination through a set of `ParyNavrh`. */
+  paryNavrhsByPnPartner: ParyNavrhsConnection;
+  /** Reads and enables pagination through a set of `ParyNavrh`. */
+  paryNavrhsByPnPartnerka: ParyNavrhsConnection;
+  /** Reads a single `Permission` that is related to this `User`. */
+  permissionByUGroup?: Maybe<Permission>;
+  /** Reads and enables pagination through a set of `PlatbyItem`. */
+  platbyItemsByPiIdUser: PlatbyItemsConnection;
+  /** Reads and enables pagination through a set of `Rozpi`. */
+  rozpisByRTrener: RozpisConnection;
+  /** Reads a single `Skupiny` that is related to this `User`. */
+  skupinyByUSkupina?: Maybe<Skupiny>;
+  uBan: Scalars['Boolean'];
+  uCity: Scalars['String'];
+  uConfirmed: Scalars['Boolean'];
+  uConscriptionNumber: Scalars['String'];
+  uCreatedAt: Scalars['Datetime'];
+  uDancer: Scalars['Boolean'];
+  uDistrict: Scalars['String'];
+  uEmail: Scalars['String'];
+  uGdprSignedAt?: Maybe<Scalars['Datetime']>;
+  uGroup: Scalars['BigInt'];
+  uId: Scalars['BigInt'];
+  uJmeno: Scalars['String'];
+  uLevel: Scalars['Int'];
+  uLock: Scalars['Boolean'];
+  uLogin: Scalars['String'];
+  uMemberSince?: Maybe<Scalars['Datetime']>;
+  uMemberUntil?: Maybe<Scalars['Datetime']>;
+  uNarozeni: Scalars['Date'];
+  uNationality: Scalars['String'];
+  uOrientationNumber: Scalars['String'];
+  uPass: Scalars['String'];
+  uPohlavi: Scalars['String'];
+  uPostalCode: Scalars['String'];
+  uPoznamky: Scalars['String'];
+  uPrijmeni: Scalars['String'];
+  uRodneCislo?: Maybe<Scalars['String']>;
+  uSkupina: Scalars['BigInt'];
+  uStreet: Scalars['String'];
+  uSystem: Scalars['Boolean'];
+  uTeacher: Scalars['Boolean'];
+  uTelefon: Scalars['String'];
+  uTimestamp: Scalars['Datetime'];
+  /** Reads and enables pagination through a set of `Upozorneni`. */
+  upozornenisByUpKdo: UpozornenisConnection;
 };
 
-/** input type for inserting data into table "upozorneni" */
-export type Upozorneni_Insert_Input = {
-  up_barvy?: InputMaybe<Scalars['bigint']>;
-  up_id?: InputMaybe<Scalars['bigint']>;
-  up_kdo?: InputMaybe<Scalars['bigint']>;
-  up_lock?: InputMaybe<Scalars['Boolean']>;
-  up_nadpis?: InputMaybe<Scalars['String']>;
-  up_text?: InputMaybe<Scalars['String']>;
-  up_timestamp?: InputMaybe<Scalars['timestamptz']>;
-  up_timestamp_add?: InputMaybe<Scalars['timestamptz']>;
-  upozorneni_skupinies?: InputMaybe<Upozorneni_Skupiny_Arr_Rel_Insert_Input>;
-  user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
+
+export type UserAkceItemsByAiUserArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<AkceItemCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<AkceItemsOrderBy>>;
 };
 
-/** aggregate max on columns */
-export type Upozorneni_Max_Fields = {
-  __typename?: 'upozorneni_max_fields';
-  up_barvy?: Maybe<Scalars['bigint']>;
-  up_id?: Maybe<Scalars['bigint']>;
-  up_kdo?: Maybe<Scalars['bigint']>;
-  up_nadpis?: Maybe<Scalars['String']>;
-  up_text?: Maybe<Scalars['String']>;
-  up_timestamp?: Maybe<Scalars['timestamptz']>;
-  up_timestamp_add?: Maybe<Scalars['timestamptz']>;
+
+export type UserAktualitiesByAtKdoArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<AktualityCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<AktualitiesOrderBy>>;
 };
 
-/** order by max() on columns of table "upozorneni" */
-export type Upozorneni_Max_Order_By = {
-  up_barvy?: InputMaybe<Order_By>;
-  up_id?: InputMaybe<Order_By>;
-  up_kdo?: InputMaybe<Order_By>;
-  up_nadpis?: InputMaybe<Order_By>;
-  up_text?: InputMaybe<Order_By>;
-  up_timestamp?: InputMaybe<Order_By>;
-  up_timestamp_add?: InputMaybe<Order_By>;
+
+export type UserDokumentiesByDKdoArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<DokumentyCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<DokumentiesOrderBy>>;
 };
 
-/** aggregate min on columns */
-export type Upozorneni_Min_Fields = {
-  __typename?: 'upozorneni_min_fields';
-  up_barvy?: Maybe<Scalars['bigint']>;
-  up_id?: Maybe<Scalars['bigint']>;
-  up_kdo?: Maybe<Scalars['bigint']>;
-  up_nadpis?: Maybe<Scalars['String']>;
-  up_text?: Maybe<Scalars['String']>;
-  up_timestamp?: Maybe<Scalars['timestamptz']>;
-  up_timestamp_add?: Maybe<Scalars['timestamptz']>;
+
+export type UserGalerieFotosByGfKdoArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<GalerieFotoCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<GalerieFotosOrderBy>>;
 };
 
-/** order by min() on columns of table "upozorneni" */
-export type Upozorneni_Min_Order_By = {
-  up_barvy?: InputMaybe<Order_By>;
-  up_id?: InputMaybe<Order_By>;
-  up_kdo?: InputMaybe<Order_By>;
-  up_nadpis?: InputMaybe<Order_By>;
-  up_text?: InputMaybe<Order_By>;
-  up_timestamp?: InputMaybe<Order_By>;
-  up_timestamp_add?: InputMaybe<Order_By>;
+
+export type UserNabidkasByNTrenerArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<NabidkaCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<NabidkasOrderBy>>;
 };
 
-/** response of any mutation on the table "upozorneni" */
-export type Upozorneni_Mutation_Response = {
-  __typename?: 'upozorneni_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Upozorneni>;
+
+export type UserPariesByPIdPartnerArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<ParyCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<PariesOrderBy>>;
 };
 
-/** input type for inserting object relation for remote table "upozorneni" */
-export type Upozorneni_Obj_Rel_Insert_Input = {
-  data: Upozorneni_Insert_Input;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Upozorneni_On_Conflict>;
+
+export type UserParyNavrhsByPnNavrhlArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<ParyNavrhCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<ParyNavrhsOrderBy>>;
 };
 
-/** on conflict condition type for table "upozorneni" */
-export type Upozorneni_On_Conflict = {
-  constraint: Upozorneni_Constraint;
-  update_columns?: Array<Upozorneni_Update_Column>;
-  where?: InputMaybe<Upozorneni_Bool_Exp>;
+
+export type UserParyNavrhsByPnPartnerArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<ParyNavrhCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<ParyNavrhsOrderBy>>;
 };
 
-/** Ordering options when selecting data from "upozorneni". */
-export type Upozorneni_Order_By = {
-  up_barvy?: InputMaybe<Order_By>;
-  up_id?: InputMaybe<Order_By>;
-  up_kdo?: InputMaybe<Order_By>;
-  up_lock?: InputMaybe<Order_By>;
-  up_nadpis?: InputMaybe<Order_By>;
-  up_text?: InputMaybe<Order_By>;
-  up_timestamp?: InputMaybe<Order_By>;
-  up_timestamp_add?: InputMaybe<Order_By>;
-  upozorneni_skupinies_aggregate?: InputMaybe<Upozorneni_Skupiny_Aggregate_Order_By>;
-  user?: InputMaybe<Users_Order_By>;
+
+export type UserParyNavrhsByPnPartnerkaArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<ParyNavrhCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<ParyNavrhsOrderBy>>;
 };
 
-/** primary key columns input for table: upozorneni */
-export type Upozorneni_Pk_Columns_Input = {
-  up_id: Scalars['bigint'];
+
+export type UserPlatbyItemsByPiIdUserArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<PlatbyItemCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<PlatbyItemsOrderBy>>;
 };
 
-/** select columns of table "upozorneni" */
-export enum Upozorneni_Select_Column {
-  /** column name */
-  UpBarvy = 'up_barvy',
-  /** column name */
-  UpId = 'up_id',
-  /** column name */
-  UpKdo = 'up_kdo',
-  /** column name */
-  UpLock = 'up_lock',
-  /** column name */
-  UpNadpis = 'up_nadpis',
-  /** column name */
-  UpText = 'up_text',
-  /** column name */
-  UpTimestamp = 'up_timestamp',
-  /** column name */
-  UpTimestampAdd = 'up_timestamp_add'
+
+export type UserRozpisByRTrenerArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<RozpiCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<RozpisOrderBy>>;
+};
+
+
+export type UserUpozornenisByUpKdoArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<UpozorneniCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<UpozornenisOrderBy>>;
+};
+
+/** A condition to be used against `User` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type UserCondition = {
+  /** Checks for equality with the object’s `uBan` field. */
+  uBan?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `uCity` field. */
+  uCity?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `uConfirmed` field. */
+  uConfirmed?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `uConscriptionNumber` field. */
+  uConscriptionNumber?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `uCreatedAt` field. */
+  uCreatedAt?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `uDancer` field. */
+  uDancer?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `uDistrict` field. */
+  uDistrict?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `uEmail` field. */
+  uEmail?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `uGdprSignedAt` field. */
+  uGdprSignedAt?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `uGroup` field. */
+  uGroup?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `uId` field. */
+  uId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `uJmeno` field. */
+  uJmeno?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `uLevel` field. */
+  uLevel?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `uLock` field. */
+  uLock?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `uLogin` field. */
+  uLogin?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `uMemberSince` field. */
+  uMemberSince?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `uMemberUntil` field. */
+  uMemberUntil?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `uNarozeni` field. */
+  uNarozeni?: InputMaybe<Scalars['Date']>;
+  /** Checks for equality with the object’s `uNationality` field. */
+  uNationality?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `uOrientationNumber` field. */
+  uOrientationNumber?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `uPass` field. */
+  uPass?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `uPohlavi` field. */
+  uPohlavi?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `uPostalCode` field. */
+  uPostalCode?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `uPoznamky` field. */
+  uPoznamky?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `uPrijmeni` field. */
+  uPrijmeni?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `uRodneCislo` field. */
+  uRodneCislo?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `uSkupina` field. */
+  uSkupina?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `uStreet` field. */
+  uStreet?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `uSystem` field. */
+  uSystem?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `uTeacher` field. */
+  uTeacher?: InputMaybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `uTelefon` field. */
+  uTelefon?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `uTimestamp` field. */
+  uTimestamp?: InputMaybe<Scalars['Datetime']>;
+};
+
+/** An input for mutations affecting `User` */
+export type UserInput = {
+  uBan?: InputMaybe<Scalars['Boolean']>;
+  uCity: Scalars['String'];
+  uConfirmed?: InputMaybe<Scalars['Boolean']>;
+  uConscriptionNumber?: InputMaybe<Scalars['String']>;
+  uCreatedAt?: InputMaybe<Scalars['Datetime']>;
+  uDancer?: InputMaybe<Scalars['Boolean']>;
+  uDistrict?: InputMaybe<Scalars['String']>;
+  uEmail: Scalars['String'];
+  uGdprSignedAt?: InputMaybe<Scalars['Datetime']>;
+  uGroup: Scalars['BigInt'];
+  uId?: InputMaybe<Scalars['BigInt']>;
+  uJmeno: Scalars['String'];
+  uLevel?: InputMaybe<Scalars['Int']>;
+  uLock?: InputMaybe<Scalars['Boolean']>;
+  uLogin: Scalars['String'];
+  uMemberSince?: InputMaybe<Scalars['Datetime']>;
+  uMemberUntil?: InputMaybe<Scalars['Datetime']>;
+  uNarozeni: Scalars['Date'];
+  uNationality: Scalars['String'];
+  uOrientationNumber?: InputMaybe<Scalars['String']>;
+  uPass: Scalars['String'];
+  uPohlavi: Scalars['String'];
+  uPostalCode: Scalars['String'];
+  uPoznamky?: InputMaybe<Scalars['String']>;
+  uPrijmeni: Scalars['String'];
+  uRodneCislo?: InputMaybe<Scalars['String']>;
+  uSkupina?: InputMaybe<Scalars['BigInt']>;
+  uStreet: Scalars['String'];
+  uSystem?: InputMaybe<Scalars['Boolean']>;
+  uTeacher?: InputMaybe<Scalars['Boolean']>;
+  uTelefon: Scalars['String'];
+  uTimestamp?: InputMaybe<Scalars['Datetime']>;
+};
+
+/** Represents an update to a `User`. Fields that are set will be updated. */
+export type UserPatch = {
+  uBan?: InputMaybe<Scalars['Boolean']>;
+  uCity?: InputMaybe<Scalars['String']>;
+  uConfirmed?: InputMaybe<Scalars['Boolean']>;
+  uConscriptionNumber?: InputMaybe<Scalars['String']>;
+  uCreatedAt?: InputMaybe<Scalars['Datetime']>;
+  uDancer?: InputMaybe<Scalars['Boolean']>;
+  uDistrict?: InputMaybe<Scalars['String']>;
+  uEmail?: InputMaybe<Scalars['String']>;
+  uGdprSignedAt?: InputMaybe<Scalars['Datetime']>;
+  uGroup?: InputMaybe<Scalars['BigInt']>;
+  uId?: InputMaybe<Scalars['BigInt']>;
+  uJmeno?: InputMaybe<Scalars['String']>;
+  uLevel?: InputMaybe<Scalars['Int']>;
+  uLock?: InputMaybe<Scalars['Boolean']>;
+  uLogin?: InputMaybe<Scalars['String']>;
+  uMemberSince?: InputMaybe<Scalars['Datetime']>;
+  uMemberUntil?: InputMaybe<Scalars['Datetime']>;
+  uNarozeni?: InputMaybe<Scalars['Date']>;
+  uNationality?: InputMaybe<Scalars['String']>;
+  uOrientationNumber?: InputMaybe<Scalars['String']>;
+  uPass?: InputMaybe<Scalars['String']>;
+  uPohlavi?: InputMaybe<Scalars['String']>;
+  uPostalCode?: InputMaybe<Scalars['String']>;
+  uPoznamky?: InputMaybe<Scalars['String']>;
+  uPrijmeni?: InputMaybe<Scalars['String']>;
+  uRodneCislo?: InputMaybe<Scalars['String']>;
+  uSkupina?: InputMaybe<Scalars['BigInt']>;
+  uStreet?: InputMaybe<Scalars['String']>;
+  uSystem?: InputMaybe<Scalars['Boolean']>;
+  uTeacher?: InputMaybe<Scalars['Boolean']>;
+  uTelefon?: InputMaybe<Scalars['String']>;
+  uTimestamp?: InputMaybe<Scalars['Datetime']>;
+};
+
+/** A connection to a list of `User` values. */
+export type UsersConnection = {
+  __typename?: 'UsersConnection';
+  /** A list of edges which contains the `User` and cursor to aid in pagination. */
+  edges: Array<UsersEdge>;
+  /** A list of `User` objects. */
+  nodes: Array<User>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `User` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `User` edge in the connection. */
+export type UsersEdge = {
+  __typename?: 'UsersEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `User` at the end of the edge. */
+  node: User;
+};
+
+/** Methods to use when ordering `User`. */
+export enum UsersOrderBy {
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  UBanAsc = 'U_BAN_ASC',
+  UBanDesc = 'U_BAN_DESC',
+  UCityAsc = 'U_CITY_ASC',
+  UCityDesc = 'U_CITY_DESC',
+  UConfirmedAsc = 'U_CONFIRMED_ASC',
+  UConfirmedDesc = 'U_CONFIRMED_DESC',
+  UConscriptionNumberAsc = 'U_CONSCRIPTION_NUMBER_ASC',
+  UConscriptionNumberDesc = 'U_CONSCRIPTION_NUMBER_DESC',
+  UCreatedAtAsc = 'U_CREATED_AT_ASC',
+  UCreatedAtDesc = 'U_CREATED_AT_DESC',
+  UDancerAsc = 'U_DANCER_ASC',
+  UDancerDesc = 'U_DANCER_DESC',
+  UDistrictAsc = 'U_DISTRICT_ASC',
+  UDistrictDesc = 'U_DISTRICT_DESC',
+  UEmailAsc = 'U_EMAIL_ASC',
+  UEmailDesc = 'U_EMAIL_DESC',
+  UGdprSignedAtAsc = 'U_GDPR_SIGNED_AT_ASC',
+  UGdprSignedAtDesc = 'U_GDPR_SIGNED_AT_DESC',
+  UGroupAsc = 'U_GROUP_ASC',
+  UGroupDesc = 'U_GROUP_DESC',
+  UIdAsc = 'U_ID_ASC',
+  UIdDesc = 'U_ID_DESC',
+  UJmenoAsc = 'U_JMENO_ASC',
+  UJmenoDesc = 'U_JMENO_DESC',
+  ULevelAsc = 'U_LEVEL_ASC',
+  ULevelDesc = 'U_LEVEL_DESC',
+  ULockAsc = 'U_LOCK_ASC',
+  ULockDesc = 'U_LOCK_DESC',
+  ULoginAsc = 'U_LOGIN_ASC',
+  ULoginDesc = 'U_LOGIN_DESC',
+  UMemberSinceAsc = 'U_MEMBER_SINCE_ASC',
+  UMemberSinceDesc = 'U_MEMBER_SINCE_DESC',
+  UMemberUntilAsc = 'U_MEMBER_UNTIL_ASC',
+  UMemberUntilDesc = 'U_MEMBER_UNTIL_DESC',
+  UNarozeniAsc = 'U_NAROZENI_ASC',
+  UNarozeniDesc = 'U_NAROZENI_DESC',
+  UNationalityAsc = 'U_NATIONALITY_ASC',
+  UNationalityDesc = 'U_NATIONALITY_DESC',
+  UOrientationNumberAsc = 'U_ORIENTATION_NUMBER_ASC',
+  UOrientationNumberDesc = 'U_ORIENTATION_NUMBER_DESC',
+  UPassAsc = 'U_PASS_ASC',
+  UPassDesc = 'U_PASS_DESC',
+  UPohlaviAsc = 'U_POHLAVI_ASC',
+  UPohlaviDesc = 'U_POHLAVI_DESC',
+  UPostalCodeAsc = 'U_POSTAL_CODE_ASC',
+  UPostalCodeDesc = 'U_POSTAL_CODE_DESC',
+  UPoznamkyAsc = 'U_POZNAMKY_ASC',
+  UPoznamkyDesc = 'U_POZNAMKY_DESC',
+  UPrijmeniAsc = 'U_PRIJMENI_ASC',
+  UPrijmeniDesc = 'U_PRIJMENI_DESC',
+  URodneCisloAsc = 'U_RODNE_CISLO_ASC',
+  URodneCisloDesc = 'U_RODNE_CISLO_DESC',
+  USkupinaAsc = 'U_SKUPINA_ASC',
+  USkupinaDesc = 'U_SKUPINA_DESC',
+  UStreetAsc = 'U_STREET_ASC',
+  UStreetDesc = 'U_STREET_DESC',
+  USystemAsc = 'U_SYSTEM_ASC',
+  USystemDesc = 'U_SYSTEM_DESC',
+  UTeacherAsc = 'U_TEACHER_ASC',
+  UTeacherDesc = 'U_TEACHER_DESC',
+  UTelefonAsc = 'U_TELEFON_ASC',
+  UTelefonDesc = 'U_TELEFON_DESC',
+  UTimestampAsc = 'U_TIMESTAMP_ASC',
+  UTimestampDesc = 'U_TIMESTAMP_DESC'
 }
 
-/** input type for updating data in table "upozorneni" */
-export type Upozorneni_Set_Input = {
-  up_barvy?: InputMaybe<Scalars['bigint']>;
-  up_id?: InputMaybe<Scalars['bigint']>;
-  up_kdo?: InputMaybe<Scalars['bigint']>;
-  up_lock?: InputMaybe<Scalars['Boolean']>;
-  up_nadpis?: InputMaybe<Scalars['String']>;
-  up_text?: InputMaybe<Scalars['String']>;
-  up_timestamp?: InputMaybe<Scalars['timestamptz']>;
-  up_timestamp_add?: InputMaybe<Scalars['timestamptz']>;
+/** A connection to a list of `UsersSkupiny` values. */
+export type UsersSkupiniesConnection = {
+  __typename?: 'UsersSkupiniesConnection';
+  /** A list of edges which contains the `UsersSkupiny` and cursor to aid in pagination. */
+  edges: Array<UsersSkupiniesEdge>;
+  /** A list of `UsersSkupiny` objects. */
+  nodes: Array<UsersSkupiny>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `UsersSkupiny` you could get from the connection. */
+  totalCount: Scalars['Int'];
 };
 
-/** columns and relationships of "upozorneni_skupiny" */
-export type Upozorneni_Skupiny = {
-  __typename?: 'upozorneni_skupiny';
-  /** An object relationship */
-  skupiny: Skupiny;
-  /** An object relationship */
-  upozorneni: Upozorneni;
-  ups_color: Scalars['String'];
-  ups_id: Scalars['bigint'];
-  ups_id_rodic: Scalars['bigint'];
-  ups_id_skupina: Scalars['bigint'];
-  ups_popis: Scalars['String'];
+/** A `UsersSkupiny` edge in the connection. */
+export type UsersSkupiniesEdge = {
+  __typename?: 'UsersSkupiniesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `UsersSkupiny` at the end of the edge. */
+  node: UsersSkupiny;
 };
 
-/** aggregated selection of "upozorneni_skupiny" */
-export type Upozorneni_Skupiny_Aggregate = {
-  __typename?: 'upozorneni_skupiny_aggregate';
-  aggregate?: Maybe<Upozorneni_Skupiny_Aggregate_Fields>;
-  nodes: Array<Upozorneni_Skupiny>;
-};
-
-/** aggregate fields of "upozorneni_skupiny" */
-export type Upozorneni_Skupiny_Aggregate_Fields = {
-  __typename?: 'upozorneni_skupiny_aggregate_fields';
-  avg?: Maybe<Upozorneni_Skupiny_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Upozorneni_Skupiny_Max_Fields>;
-  min?: Maybe<Upozorneni_Skupiny_Min_Fields>;
-  stddev?: Maybe<Upozorneni_Skupiny_Stddev_Fields>;
-  stddev_pop?: Maybe<Upozorneni_Skupiny_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Upozorneni_Skupiny_Stddev_Samp_Fields>;
-  sum?: Maybe<Upozorneni_Skupiny_Sum_Fields>;
-  var_pop?: Maybe<Upozorneni_Skupiny_Var_Pop_Fields>;
-  var_samp?: Maybe<Upozorneni_Skupiny_Var_Samp_Fields>;
-  variance?: Maybe<Upozorneni_Skupiny_Variance_Fields>;
-};
-
-
-/** aggregate fields of "upozorneni_skupiny" */
-export type Upozorneni_Skupiny_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Upozorneni_Skupiny_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** order by aggregate values of table "upozorneni_skupiny" */
-export type Upozorneni_Skupiny_Aggregate_Order_By = {
-  avg?: InputMaybe<Upozorneni_Skupiny_Avg_Order_By>;
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Upozorneni_Skupiny_Max_Order_By>;
-  min?: InputMaybe<Upozorneni_Skupiny_Min_Order_By>;
-  stddev?: InputMaybe<Upozorneni_Skupiny_Stddev_Order_By>;
-  stddev_pop?: InputMaybe<Upozorneni_Skupiny_Stddev_Pop_Order_By>;
-  stddev_samp?: InputMaybe<Upozorneni_Skupiny_Stddev_Samp_Order_By>;
-  sum?: InputMaybe<Upozorneni_Skupiny_Sum_Order_By>;
-  var_pop?: InputMaybe<Upozorneni_Skupiny_Var_Pop_Order_By>;
-  var_samp?: InputMaybe<Upozorneni_Skupiny_Var_Samp_Order_By>;
-  variance?: InputMaybe<Upozorneni_Skupiny_Variance_Order_By>;
-};
-
-/** input type for inserting array relation for remote table "upozorneni_skupiny" */
-export type Upozorneni_Skupiny_Arr_Rel_Insert_Input = {
-  data: Array<Upozorneni_Skupiny_Insert_Input>;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Upozorneni_Skupiny_On_Conflict>;
-};
-
-/** aggregate avg on columns */
-export type Upozorneni_Skupiny_Avg_Fields = {
-  __typename?: 'upozorneni_skupiny_avg_fields';
-  ups_id?: Maybe<Scalars['Float']>;
-  ups_id_rodic?: Maybe<Scalars['Float']>;
-  ups_id_skupina?: Maybe<Scalars['Float']>;
-};
-
-/** order by avg() on columns of table "upozorneni_skupiny" */
-export type Upozorneni_Skupiny_Avg_Order_By = {
-  ups_id?: InputMaybe<Order_By>;
-  ups_id_rodic?: InputMaybe<Order_By>;
-  ups_id_skupina?: InputMaybe<Order_By>;
-};
-
-/** Boolean expression to filter rows from the table "upozorneni_skupiny". All fields are combined with a logical 'AND'. */
-export type Upozorneni_Skupiny_Bool_Exp = {
-  _and?: InputMaybe<Array<Upozorneni_Skupiny_Bool_Exp>>;
-  _not?: InputMaybe<Upozorneni_Skupiny_Bool_Exp>;
-  _or?: InputMaybe<Array<Upozorneni_Skupiny_Bool_Exp>>;
-  skupiny?: InputMaybe<Skupiny_Bool_Exp>;
-  upozorneni?: InputMaybe<Upozorneni_Bool_Exp>;
-  ups_color?: InputMaybe<String_Comparison_Exp>;
-  ups_id?: InputMaybe<Bigint_Comparison_Exp>;
-  ups_id_rodic?: InputMaybe<Bigint_Comparison_Exp>;
-  ups_id_skupina?: InputMaybe<Bigint_Comparison_Exp>;
-  ups_popis?: InputMaybe<String_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "upozorneni_skupiny" */
-export enum Upozorneni_Skupiny_Constraint {
-  /** unique or primary key constraint */
-  Idx_24777Primary = 'idx_24777_primary'
+/** Methods to use when ordering `UsersSkupiny`. */
+export enum UsersSkupiniesOrderBy {
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  UsColorAsc = 'US_COLOR_ASC',
+  UsColorDesc = 'US_COLOR_DESC',
+  UsIdAsc = 'US_ID_ASC',
+  UsIdDesc = 'US_ID_DESC',
+  UsPlatbaCtvrtrokAsc = 'US_PLATBA_CTVRTROK_ASC',
+  UsPlatbaCtvrtrokDesc = 'US_PLATBA_CTVRTROK_DESC',
+  UsPlatbaMesicAsc = 'US_PLATBA_MESIC_ASC',
+  UsPlatbaMesicDesc = 'US_PLATBA_MESIC_DESC',
+  UsPlatbaPulrokAsc = 'US_PLATBA_PULROK_ASC',
+  UsPlatbaPulrokDesc = 'US_PLATBA_PULROK_DESC',
+  UsPopisAsc = 'US_POPIS_ASC',
+  UsPopisDesc = 'US_POPIS_DESC'
 }
 
-/** input type for incrementing numeric columns in table "upozorneni_skupiny" */
-export type Upozorneni_Skupiny_Inc_Input = {
-  ups_id?: InputMaybe<Scalars['bigint']>;
-  ups_id_rodic?: InputMaybe<Scalars['bigint']>;
-  ups_id_skupina?: InputMaybe<Scalars['bigint']>;
+export type UsersSkupiny = Node & {
+  __typename?: 'UsersSkupiny';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  usColor: Scalars['String'];
+  usId: Scalars['BigInt'];
+  usPlatbaCtvrtrok: Scalars['BigInt'];
+  usPlatbaMesic: Scalars['BigInt'];
+  usPlatbaPulrok: Scalars['BigInt'];
+  usPopis: Scalars['String'];
 };
 
-/** input type for inserting data into table "upozorneni_skupiny" */
-export type Upozorneni_Skupiny_Insert_Input = {
-  skupiny?: InputMaybe<Skupiny_Obj_Rel_Insert_Input>;
-  upozorneni?: InputMaybe<Upozorneni_Obj_Rel_Insert_Input>;
-  ups_color?: InputMaybe<Scalars['String']>;
-  ups_id?: InputMaybe<Scalars['bigint']>;
-  ups_id_rodic?: InputMaybe<Scalars['bigint']>;
-  ups_id_skupina?: InputMaybe<Scalars['bigint']>;
-  ups_popis?: InputMaybe<Scalars['String']>;
+/**
+ * A condition to be used against `UsersSkupiny` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type UsersSkupinyCondition = {
+  /** Checks for equality with the object’s `usColor` field. */
+  usColor?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `usId` field. */
+  usId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `usPlatbaCtvrtrok` field. */
+  usPlatbaCtvrtrok?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `usPlatbaMesic` field. */
+  usPlatbaMesic?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `usPlatbaPulrok` field. */
+  usPlatbaPulrok?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `usPopis` field. */
+  usPopis?: InputMaybe<Scalars['String']>;
 };
 
-/** aggregate max on columns */
-export type Upozorneni_Skupiny_Max_Fields = {
-  __typename?: 'upozorneni_skupiny_max_fields';
-  ups_color?: Maybe<Scalars['String']>;
-  ups_id?: Maybe<Scalars['bigint']>;
-  ups_id_rodic?: Maybe<Scalars['bigint']>;
-  ups_id_skupina?: Maybe<Scalars['bigint']>;
-  ups_popis?: Maybe<Scalars['String']>;
+/** An input for mutations affecting `UsersSkupiny` */
+export type UsersSkupinyInput = {
+  usColor?: InputMaybe<Scalars['String']>;
+  usId?: InputMaybe<Scalars['BigInt']>;
+  usPlatbaCtvrtrok?: InputMaybe<Scalars['BigInt']>;
+  usPlatbaMesic?: InputMaybe<Scalars['BigInt']>;
+  usPlatbaPulrok?: InputMaybe<Scalars['BigInt']>;
+  usPopis: Scalars['String'];
 };
 
-/** order by max() on columns of table "upozorneni_skupiny" */
-export type Upozorneni_Skupiny_Max_Order_By = {
-  ups_color?: InputMaybe<Order_By>;
-  ups_id?: InputMaybe<Order_By>;
-  ups_id_rodic?: InputMaybe<Order_By>;
-  ups_id_skupina?: InputMaybe<Order_By>;
-  ups_popis?: InputMaybe<Order_By>;
+/** Represents an update to a `UsersSkupiny`. Fields that are set will be updated. */
+export type UsersSkupinyPatch = {
+  usColor?: InputMaybe<Scalars['String']>;
+  usId?: InputMaybe<Scalars['BigInt']>;
+  usPlatbaCtvrtrok?: InputMaybe<Scalars['BigInt']>;
+  usPlatbaMesic?: InputMaybe<Scalars['BigInt']>;
+  usPlatbaPulrok?: InputMaybe<Scalars['BigInt']>;
+  usPopis?: InputMaybe<Scalars['String']>;
 };
 
-/** aggregate min on columns */
-export type Upozorneni_Skupiny_Min_Fields = {
-  __typename?: 'upozorneni_skupiny_min_fields';
-  ups_color?: Maybe<Scalars['String']>;
-  ups_id?: Maybe<Scalars['bigint']>;
-  ups_id_rodic?: Maybe<Scalars['bigint']>;
-  ups_id_skupina?: Maybe<Scalars['bigint']>;
-  ups_popis?: Maybe<Scalars['String']>;
+export type Video = Node & {
+  __typename?: 'Video';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  vAuthor: Scalars['String'];
+  vCreatedAt: Scalars['Datetime'];
+  vDescription: Scalars['String'];
+  vId: Scalars['BigInt'];
+  vPlaylist?: Maybe<Scalars['String']>;
+  vTitle: Scalars['String'];
+  vUpdatedAt: Scalars['Datetime'];
+  vUri: Scalars['String'];
 };
 
-/** order by min() on columns of table "upozorneni_skupiny" */
-export type Upozorneni_Skupiny_Min_Order_By = {
-  ups_color?: InputMaybe<Order_By>;
-  ups_id?: InputMaybe<Order_By>;
-  ups_id_rodic?: InputMaybe<Order_By>;
-  ups_id_skupina?: InputMaybe<Order_By>;
-  ups_popis?: InputMaybe<Order_By>;
+/** A condition to be used against `Video` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type VideoCondition = {
+  /** Checks for equality with the object’s `vAuthor` field. */
+  vAuthor?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `vCreatedAt` field. */
+  vCreatedAt?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `vDescription` field. */
+  vDescription?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `vId` field. */
+  vId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `vPlaylist` field. */
+  vPlaylist?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `vTitle` field. */
+  vTitle?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `vUpdatedAt` field. */
+  vUpdatedAt?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `vUri` field. */
+  vUri?: InputMaybe<Scalars['String']>;
 };
 
-/** response of any mutation on the table "upozorneni_skupiny" */
-export type Upozorneni_Skupiny_Mutation_Response = {
-  __typename?: 'upozorneni_skupiny_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Upozorneni_Skupiny>;
+/** An input for mutations affecting `Video` */
+export type VideoInput = {
+  vAuthor: Scalars['String'];
+  vCreatedAt: Scalars['Datetime'];
+  vDescription: Scalars['String'];
+  vId?: InputMaybe<Scalars['BigInt']>;
+  vPlaylist?: InputMaybe<Scalars['String']>;
+  vTitle: Scalars['String'];
+  vUpdatedAt?: InputMaybe<Scalars['Datetime']>;
+  vUri: Scalars['String'];
 };
 
-/** on conflict condition type for table "upozorneni_skupiny" */
-export type Upozorneni_Skupiny_On_Conflict = {
-  constraint: Upozorneni_Skupiny_Constraint;
-  update_columns?: Array<Upozorneni_Skupiny_Update_Column>;
-  where?: InputMaybe<Upozorneni_Skupiny_Bool_Exp>;
+export type VideoList = Node & {
+  __typename?: 'VideoList';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  vlCount: Scalars['BigInt'];
+  vlCreatedAt: Scalars['Datetime'];
+  vlDescription: Scalars['String'];
+  vlId: Scalars['BigInt'];
+  vlLastChecked?: Maybe<Scalars['Datetime']>;
+  vlTitle: Scalars['String'];
+  vlUrl: Scalars['String'];
 };
 
-/** Ordering options when selecting data from "upozorneni_skupiny". */
-export type Upozorneni_Skupiny_Order_By = {
-  skupiny?: InputMaybe<Skupiny_Order_By>;
-  upozorneni?: InputMaybe<Upozorneni_Order_By>;
-  ups_color?: InputMaybe<Order_By>;
-  ups_id?: InputMaybe<Order_By>;
-  ups_id_rodic?: InputMaybe<Order_By>;
-  ups_id_skupina?: InputMaybe<Order_By>;
-  ups_popis?: InputMaybe<Order_By>;
+/**
+ * A condition to be used against `VideoList` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type VideoListCondition = {
+  /** Checks for equality with the object’s `vlCount` field. */
+  vlCount?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `vlCreatedAt` field. */
+  vlCreatedAt?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `vlDescription` field. */
+  vlDescription?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `vlId` field. */
+  vlId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `vlLastChecked` field. */
+  vlLastChecked?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `vlTitle` field. */
+  vlTitle?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `vlUrl` field. */
+  vlUrl?: InputMaybe<Scalars['String']>;
 };
 
-/** primary key columns input for table: upozorneni_skupiny */
-export type Upozorneni_Skupiny_Pk_Columns_Input = {
-  ups_id: Scalars['bigint'];
+/** An input for mutations affecting `VideoList` */
+export type VideoListInput = {
+  vlCount: Scalars['BigInt'];
+  vlCreatedAt: Scalars['Datetime'];
+  vlDescription: Scalars['String'];
+  vlId?: InputMaybe<Scalars['BigInt']>;
+  vlLastChecked?: InputMaybe<Scalars['Datetime']>;
+  vlTitle: Scalars['String'];
+  vlUrl: Scalars['String'];
 };
 
-/** select columns of table "upozorneni_skupiny" */
-export enum Upozorneni_Skupiny_Select_Column {
-  /** column name */
-  UpsColor = 'ups_color',
-  /** column name */
-  UpsId = 'ups_id',
-  /** column name */
-  UpsIdRodic = 'ups_id_rodic',
-  /** column name */
-  UpsIdSkupina = 'ups_id_skupina',
-  /** column name */
-  UpsPopis = 'ups_popis'
+/** Represents an update to a `VideoList`. Fields that are set will be updated. */
+export type VideoListPatch = {
+  vlCount?: InputMaybe<Scalars['BigInt']>;
+  vlCreatedAt?: InputMaybe<Scalars['Datetime']>;
+  vlDescription?: InputMaybe<Scalars['String']>;
+  vlId?: InputMaybe<Scalars['BigInt']>;
+  vlLastChecked?: InputMaybe<Scalars['Datetime']>;
+  vlTitle?: InputMaybe<Scalars['String']>;
+  vlUrl?: InputMaybe<Scalars['String']>;
+};
+
+/** A connection to a list of `VideoList` values. */
+export type VideoListsConnection = {
+  __typename?: 'VideoListsConnection';
+  /** A list of edges which contains the `VideoList` and cursor to aid in pagination. */
+  edges: Array<VideoListsEdge>;
+  /** A list of `VideoList` objects. */
+  nodes: Array<VideoList>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `VideoList` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `VideoList` edge in the connection. */
+export type VideoListsEdge = {
+  __typename?: 'VideoListsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `VideoList` at the end of the edge. */
+  node: VideoList;
+};
+
+/** Methods to use when ordering `VideoList`. */
+export enum VideoListsOrderBy {
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  VlCountAsc = 'VL_COUNT_ASC',
+  VlCountDesc = 'VL_COUNT_DESC',
+  VlCreatedAtAsc = 'VL_CREATED_AT_ASC',
+  VlCreatedAtDesc = 'VL_CREATED_AT_DESC',
+  VlDescriptionAsc = 'VL_DESCRIPTION_ASC',
+  VlDescriptionDesc = 'VL_DESCRIPTION_DESC',
+  VlIdAsc = 'VL_ID_ASC',
+  VlIdDesc = 'VL_ID_DESC',
+  VlLastCheckedAsc = 'VL_LAST_CHECKED_ASC',
+  VlLastCheckedDesc = 'VL_LAST_CHECKED_DESC',
+  VlTitleAsc = 'VL_TITLE_ASC',
+  VlTitleDesc = 'VL_TITLE_DESC',
+  VlUrlAsc = 'VL_URL_ASC',
+  VlUrlDesc = 'VL_URL_DESC'
 }
 
-/** input type for updating data in table "upozorneni_skupiny" */
-export type Upozorneni_Skupiny_Set_Input = {
-  ups_color?: InputMaybe<Scalars['String']>;
-  ups_id?: InputMaybe<Scalars['bigint']>;
-  ups_id_rodic?: InputMaybe<Scalars['bigint']>;
-  ups_id_skupina?: InputMaybe<Scalars['bigint']>;
-  ups_popis?: InputMaybe<Scalars['String']>;
+/** Represents an update to a `Video`. Fields that are set will be updated. */
+export type VideoPatch = {
+  vAuthor?: InputMaybe<Scalars['String']>;
+  vCreatedAt?: InputMaybe<Scalars['Datetime']>;
+  vDescription?: InputMaybe<Scalars['String']>;
+  vId?: InputMaybe<Scalars['BigInt']>;
+  vPlaylist?: InputMaybe<Scalars['String']>;
+  vTitle?: InputMaybe<Scalars['String']>;
+  vUpdatedAt?: InputMaybe<Scalars['Datetime']>;
+  vUri?: InputMaybe<Scalars['String']>;
 };
 
-/** aggregate stddev on columns */
-export type Upozorneni_Skupiny_Stddev_Fields = {
-  __typename?: 'upozorneni_skupiny_stddev_fields';
-  ups_id?: Maybe<Scalars['Float']>;
-  ups_id_rodic?: Maybe<Scalars['Float']>;
-  ups_id_skupina?: Maybe<Scalars['Float']>;
+export type VideoSource = Node & {
+  __typename?: 'VideoSource';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  vsCreatedAt: Scalars['Datetime'];
+  vsDescription?: Maybe<Scalars['String']>;
+  vsId: Scalars['BigInt'];
+  vsLastChecked?: Maybe<Scalars['Datetime']>;
+  vsTitle?: Maybe<Scalars['String']>;
+  vsUrl: Scalars['String'];
 };
 
-/** order by stddev() on columns of table "upozorneni_skupiny" */
-export type Upozorneni_Skupiny_Stddev_Order_By = {
-  ups_id?: InputMaybe<Order_By>;
-  ups_id_rodic?: InputMaybe<Order_By>;
-  ups_id_skupina?: InputMaybe<Order_By>;
+/**
+ * A condition to be used against `VideoSource` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type VideoSourceCondition = {
+  /** Checks for equality with the object’s `vsCreatedAt` field. */
+  vsCreatedAt?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `vsDescription` field. */
+  vsDescription?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `vsId` field. */
+  vsId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `vsLastChecked` field. */
+  vsLastChecked?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `vsTitle` field. */
+  vsTitle?: InputMaybe<Scalars['String']>;
+  /** Checks for equality with the object’s `vsUrl` field. */
+  vsUrl?: InputMaybe<Scalars['String']>;
 };
 
-/** aggregate stddev_pop on columns */
-export type Upozorneni_Skupiny_Stddev_Pop_Fields = {
-  __typename?: 'upozorneni_skupiny_stddev_pop_fields';
-  ups_id?: Maybe<Scalars['Float']>;
-  ups_id_rodic?: Maybe<Scalars['Float']>;
-  ups_id_skupina?: Maybe<Scalars['Float']>;
+/** An input for mutations affecting `VideoSource` */
+export type VideoSourceInput = {
+  vsCreatedAt?: InputMaybe<Scalars['Datetime']>;
+  vsDescription?: InputMaybe<Scalars['String']>;
+  vsId?: InputMaybe<Scalars['BigInt']>;
+  vsLastChecked?: InputMaybe<Scalars['Datetime']>;
+  vsTitle?: InputMaybe<Scalars['String']>;
+  vsUrl: Scalars['String'];
 };
 
-/** order by stddev_pop() on columns of table "upozorneni_skupiny" */
-export type Upozorneni_Skupiny_Stddev_Pop_Order_By = {
-  ups_id?: InputMaybe<Order_By>;
-  ups_id_rodic?: InputMaybe<Order_By>;
-  ups_id_skupina?: InputMaybe<Order_By>;
+/** Represents an update to a `VideoSource`. Fields that are set will be updated. */
+export type VideoSourcePatch = {
+  vsCreatedAt?: InputMaybe<Scalars['Datetime']>;
+  vsDescription?: InputMaybe<Scalars['String']>;
+  vsId?: InputMaybe<Scalars['BigInt']>;
+  vsLastChecked?: InputMaybe<Scalars['Datetime']>;
+  vsTitle?: InputMaybe<Scalars['String']>;
+  vsUrl?: InputMaybe<Scalars['String']>;
 };
 
-/** aggregate stddev_samp on columns */
-export type Upozorneni_Skupiny_Stddev_Samp_Fields = {
-  __typename?: 'upozorneni_skupiny_stddev_samp_fields';
-  ups_id?: Maybe<Scalars['Float']>;
-  ups_id_rodic?: Maybe<Scalars['Float']>;
-  ups_id_skupina?: Maybe<Scalars['Float']>;
+/** A connection to a list of `VideoSource` values. */
+export type VideoSourcesConnection = {
+  __typename?: 'VideoSourcesConnection';
+  /** A list of edges which contains the `VideoSource` and cursor to aid in pagination. */
+  edges: Array<VideoSourcesEdge>;
+  /** A list of `VideoSource` objects. */
+  nodes: Array<VideoSource>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `VideoSource` you could get from the connection. */
+  totalCount: Scalars['Int'];
 };
 
-/** order by stddev_samp() on columns of table "upozorneni_skupiny" */
-export type Upozorneni_Skupiny_Stddev_Samp_Order_By = {
-  ups_id?: InputMaybe<Order_By>;
-  ups_id_rodic?: InputMaybe<Order_By>;
-  ups_id_skupina?: InputMaybe<Order_By>;
+/** A `VideoSource` edge in the connection. */
+export type VideoSourcesEdge = {
+  __typename?: 'VideoSourcesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `VideoSource` at the end of the edge. */
+  node: VideoSource;
 };
 
-/** aggregate sum on columns */
-export type Upozorneni_Skupiny_Sum_Fields = {
-  __typename?: 'upozorneni_skupiny_sum_fields';
-  ups_id?: Maybe<Scalars['bigint']>;
-  ups_id_rodic?: Maybe<Scalars['bigint']>;
-  ups_id_skupina?: Maybe<Scalars['bigint']>;
-};
-
-/** order by sum() on columns of table "upozorneni_skupiny" */
-export type Upozorneni_Skupiny_Sum_Order_By = {
-  ups_id?: InputMaybe<Order_By>;
-  ups_id_rodic?: InputMaybe<Order_By>;
-  ups_id_skupina?: InputMaybe<Order_By>;
-};
-
-/** update columns of table "upozorneni_skupiny" */
-export enum Upozorneni_Skupiny_Update_Column {
-  /** column name */
-  UpsColor = 'ups_color',
-  /** column name */
-  UpsId = 'ups_id',
-  /** column name */
-  UpsIdRodic = 'ups_id_rodic',
-  /** column name */
-  UpsIdSkupina = 'ups_id_skupina',
-  /** column name */
-  UpsPopis = 'ups_popis'
+/** Methods to use when ordering `VideoSource`. */
+export enum VideoSourcesOrderBy {
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  VsCreatedAtAsc = 'VS_CREATED_AT_ASC',
+  VsCreatedAtDesc = 'VS_CREATED_AT_DESC',
+  VsDescriptionAsc = 'VS_DESCRIPTION_ASC',
+  VsDescriptionDesc = 'VS_DESCRIPTION_DESC',
+  VsIdAsc = 'VS_ID_ASC',
+  VsIdDesc = 'VS_ID_DESC',
+  VsLastCheckedAsc = 'VS_LAST_CHECKED_ASC',
+  VsLastCheckedDesc = 'VS_LAST_CHECKED_DESC',
+  VsTitleAsc = 'VS_TITLE_ASC',
+  VsTitleDesc = 'VS_TITLE_DESC',
+  VsUrlAsc = 'VS_URL_ASC',
+  VsUrlDesc = 'VS_URL_DESC'
 }
 
-/** aggregate var_pop on columns */
-export type Upozorneni_Skupiny_Var_Pop_Fields = {
-  __typename?: 'upozorneni_skupiny_var_pop_fields';
-  ups_id?: Maybe<Scalars['Float']>;
-  ups_id_rodic?: Maybe<Scalars['Float']>;
-  ups_id_skupina?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_pop() on columns of table "upozorneni_skupiny" */
-export type Upozorneni_Skupiny_Var_Pop_Order_By = {
-  ups_id?: InputMaybe<Order_By>;
-  ups_id_rodic?: InputMaybe<Order_By>;
-  ups_id_skupina?: InputMaybe<Order_By>;
-};
-
-/** aggregate var_samp on columns */
-export type Upozorneni_Skupiny_Var_Samp_Fields = {
-  __typename?: 'upozorneni_skupiny_var_samp_fields';
-  ups_id?: Maybe<Scalars['Float']>;
-  ups_id_rodic?: Maybe<Scalars['Float']>;
-  ups_id_skupina?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_samp() on columns of table "upozorneni_skupiny" */
-export type Upozorneni_Skupiny_Var_Samp_Order_By = {
-  ups_id?: InputMaybe<Order_By>;
-  ups_id_rodic?: InputMaybe<Order_By>;
-  ups_id_skupina?: InputMaybe<Order_By>;
-};
-
-/** aggregate variance on columns */
-export type Upozorneni_Skupiny_Variance_Fields = {
-  __typename?: 'upozorneni_skupiny_variance_fields';
-  ups_id?: Maybe<Scalars['Float']>;
-  ups_id_rodic?: Maybe<Scalars['Float']>;
-  ups_id_skupina?: Maybe<Scalars['Float']>;
-};
-
-/** order by variance() on columns of table "upozorneni_skupiny" */
-export type Upozorneni_Skupiny_Variance_Order_By = {
-  ups_id?: InputMaybe<Order_By>;
-  ups_id_rodic?: InputMaybe<Order_By>;
-  ups_id_skupina?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev on columns */
-export type Upozorneni_Stddev_Fields = {
-  __typename?: 'upozorneni_stddev_fields';
-  up_barvy?: Maybe<Scalars['Float']>;
-  up_id?: Maybe<Scalars['Float']>;
-  up_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev() on columns of table "upozorneni" */
-export type Upozorneni_Stddev_Order_By = {
-  up_barvy?: InputMaybe<Order_By>;
-  up_id?: InputMaybe<Order_By>;
-  up_kdo?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Upozorneni_Stddev_Pop_Fields = {
-  __typename?: 'upozorneni_stddev_pop_fields';
-  up_barvy?: Maybe<Scalars['Float']>;
-  up_id?: Maybe<Scalars['Float']>;
-  up_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_pop() on columns of table "upozorneni" */
-export type Upozorneni_Stddev_Pop_Order_By = {
-  up_barvy?: InputMaybe<Order_By>;
-  up_id?: InputMaybe<Order_By>;
-  up_kdo?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Upozorneni_Stddev_Samp_Fields = {
-  __typename?: 'upozorneni_stddev_samp_fields';
-  up_barvy?: Maybe<Scalars['Float']>;
-  up_id?: Maybe<Scalars['Float']>;
-  up_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_samp() on columns of table "upozorneni" */
-export type Upozorneni_Stddev_Samp_Order_By = {
-  up_barvy?: InputMaybe<Order_By>;
-  up_id?: InputMaybe<Order_By>;
-  up_kdo?: InputMaybe<Order_By>;
-};
-
-/** aggregate sum on columns */
-export type Upozorneni_Sum_Fields = {
-  __typename?: 'upozorneni_sum_fields';
-  up_barvy?: Maybe<Scalars['bigint']>;
-  up_id?: Maybe<Scalars['bigint']>;
-  up_kdo?: Maybe<Scalars['bigint']>;
-};
-
-/** order by sum() on columns of table "upozorneni" */
-export type Upozorneni_Sum_Order_By = {
-  up_barvy?: InputMaybe<Order_By>;
-  up_id?: InputMaybe<Order_By>;
-  up_kdo?: InputMaybe<Order_By>;
-};
-
-/** update columns of table "upozorneni" */
-export enum Upozorneni_Update_Column {
-  /** column name */
-  UpBarvy = 'up_barvy',
-  /** column name */
-  UpId = 'up_id',
-  /** column name */
-  UpKdo = 'up_kdo',
-  /** column name */
-  UpLock = 'up_lock',
-  /** column name */
-  UpNadpis = 'up_nadpis',
-  /** column name */
-  UpText = 'up_text',
-  /** column name */
-  UpTimestamp = 'up_timestamp',
-  /** column name */
-  UpTimestampAdd = 'up_timestamp_add'
-}
-
-/** aggregate var_pop on columns */
-export type Upozorneni_Var_Pop_Fields = {
-  __typename?: 'upozorneni_var_pop_fields';
-  up_barvy?: Maybe<Scalars['Float']>;
-  up_id?: Maybe<Scalars['Float']>;
-  up_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_pop() on columns of table "upozorneni" */
-export type Upozorneni_Var_Pop_Order_By = {
-  up_barvy?: InputMaybe<Order_By>;
-  up_id?: InputMaybe<Order_By>;
-  up_kdo?: InputMaybe<Order_By>;
-};
-
-/** aggregate var_samp on columns */
-export type Upozorneni_Var_Samp_Fields = {
-  __typename?: 'upozorneni_var_samp_fields';
-  up_barvy?: Maybe<Scalars['Float']>;
-  up_id?: Maybe<Scalars['Float']>;
-  up_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_samp() on columns of table "upozorneni" */
-export type Upozorneni_Var_Samp_Order_By = {
-  up_barvy?: InputMaybe<Order_By>;
-  up_id?: InputMaybe<Order_By>;
-  up_kdo?: InputMaybe<Order_By>;
-};
-
-/** aggregate variance on columns */
-export type Upozorneni_Variance_Fields = {
-  __typename?: 'upozorneni_variance_fields';
-  up_barvy?: Maybe<Scalars['Float']>;
-  up_id?: Maybe<Scalars['Float']>;
-  up_kdo?: Maybe<Scalars['Float']>;
-};
-
-/** order by variance() on columns of table "upozorneni" */
-export type Upozorneni_Variance_Order_By = {
-  up_barvy?: InputMaybe<Order_By>;
-  up_id?: InputMaybe<Order_By>;
-  up_kdo?: InputMaybe<Order_By>;
-};
-
-/** columns and relationships of "users" */
-export type Users = {
-  __typename?: 'users';
-  /** An array relationship */
-  akce_items: Array<Akce_Item>;
-  /** An aggregate relationship */
-  akce_items_aggregate: Akce_Item_Aggregate;
-  /** An array relationship */
-  aktualities: Array<Aktuality>;
-  /** An aggregate relationship */
-  aktualities_aggregate: Aktuality_Aggregate;
-  /** An array relationship */
-  dokumenties: Array<Dokumenty>;
-  /** An aggregate relationship */
-  dokumenties_aggregate: Dokumenty_Aggregate;
-  /** An array relationship */
-  galerie_fotos: Array<Galerie_Foto>;
-  /** An aggregate relationship */
-  galerie_fotos_aggregate: Galerie_Foto_Aggregate;
-  /** An array relationship */
-  nabidkas: Array<Nabidka>;
-  /** An aggregate relationship */
-  nabidkas_aggregate: Nabidka_Aggregate;
-  /** An array relationship */
-  paries: Array<Pary>;
-  /** An aggregate relationship */
-  paries_aggregate: Pary_Aggregate;
-  /** An array relationship */
-  paryNavrhsByPnPartner: Array<Pary_Navrh>;
-  /** An aggregate relationship */
-  paryNavrhsByPnPartner_aggregate: Pary_Navrh_Aggregate;
-  /** An array relationship */
-  paryNavrhsByPnPartnerka: Array<Pary_Navrh>;
-  /** An aggregate relationship */
-  paryNavrhsByPnPartnerka_aggregate: Pary_Navrh_Aggregate;
-  /** An array relationship */
-  pary_navrhs: Array<Pary_Navrh>;
-  /** An aggregate relationship */
-  pary_navrhs_aggregate: Pary_Navrh_Aggregate;
-  /** An object relationship */
-  permission: Permissions;
-  /** An array relationship */
-  platby_items: Array<Platby_Item>;
-  /** An aggregate relationship */
-  platby_items_aggregate: Platby_Item_Aggregate;
-  /** An array relationship */
-  rozpis: Array<Rozpis>;
-  /** An aggregate relationship */
-  rozpis_aggregate: Rozpis_Aggregate;
-  /** An object relationship */
-  skupiny: Skupiny;
-  u_ban: Scalars['Boolean'];
-  u_city: Scalars['String'];
-  u_confirmed: Scalars['Boolean'];
-  u_conscription_number: Scalars['String'];
-  u_created_at: Scalars['timestamptz'];
-  u_dancer: Scalars['Boolean'];
-  u_district: Scalars['String'];
-  u_email: Scalars['String'];
-  u_gdpr_signed_at?: Maybe<Scalars['timestamptz']>;
-  u_group: Scalars['bigint'];
-  u_id: Scalars['bigint'];
-  u_jmeno: Scalars['String'];
-  u_level: Scalars['smallint'];
-  u_lock: Scalars['Boolean'];
-  u_login: Scalars['String'];
-  u_member_since?: Maybe<Scalars['timestamptz']>;
-  u_member_until?: Maybe<Scalars['timestamptz']>;
-  u_narozeni: Scalars['date'];
-  u_nationality: Scalars['String'];
-  u_orientation_number: Scalars['String'];
-  u_pass: Scalars['bpchar'];
-  u_pohlavi: Scalars['String'];
-  u_postal_code: Scalars['String'];
-  u_poznamky: Scalars['String'];
-  u_prijmeni: Scalars['String'];
-  u_rodne_cislo?: Maybe<Scalars['String']>;
-  u_skupina: Scalars['bigint'];
-  u_street: Scalars['String'];
-  u_system: Scalars['Boolean'];
-  u_teacher: Scalars['Boolean'];
-  u_telefon: Scalars['String'];
-  u_timestamp: Scalars['timestamptz'];
-  /** An array relationship */
-  upozornenis: Array<Upozorneni>;
-  /** An aggregate relationship */
-  upozornenis_aggregate: Upozorneni_Aggregate;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersAkce_ItemsArgs = {
-  distinct_on?: InputMaybe<Array<Akce_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Akce_Item_Order_By>>;
-  where?: InputMaybe<Akce_Item_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersAkce_Items_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Akce_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Akce_Item_Order_By>>;
-  where?: InputMaybe<Akce_Item_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersAktualitiesArgs = {
-  distinct_on?: InputMaybe<Array<Aktuality_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Aktuality_Order_By>>;
-  where?: InputMaybe<Aktuality_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersAktualities_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Aktuality_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Aktuality_Order_By>>;
-  where?: InputMaybe<Aktuality_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersDokumentiesArgs = {
-  distinct_on?: InputMaybe<Array<Dokumenty_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Dokumenty_Order_By>>;
-  where?: InputMaybe<Dokumenty_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersDokumenties_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Dokumenty_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Dokumenty_Order_By>>;
-  where?: InputMaybe<Dokumenty_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersGalerie_FotosArgs = {
-  distinct_on?: InputMaybe<Array<Galerie_Foto_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Galerie_Foto_Order_By>>;
-  where?: InputMaybe<Galerie_Foto_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersGalerie_Fotos_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Galerie_Foto_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Galerie_Foto_Order_By>>;
-  where?: InputMaybe<Galerie_Foto_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersNabidkasArgs = {
-  distinct_on?: InputMaybe<Array<Nabidka_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Nabidka_Order_By>>;
-  where?: InputMaybe<Nabidka_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersNabidkas_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Nabidka_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Nabidka_Order_By>>;
-  where?: InputMaybe<Nabidka_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersPariesArgs = {
-  distinct_on?: InputMaybe<Array<Pary_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Pary_Order_By>>;
-  where?: InputMaybe<Pary_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersParies_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Pary_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Pary_Order_By>>;
-  where?: InputMaybe<Pary_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersParyNavrhsByPnPartnerArgs = {
-  distinct_on?: InputMaybe<Array<Pary_Navrh_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Pary_Navrh_Order_By>>;
-  where?: InputMaybe<Pary_Navrh_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersParyNavrhsByPnPartner_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Pary_Navrh_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Pary_Navrh_Order_By>>;
-  where?: InputMaybe<Pary_Navrh_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersParyNavrhsByPnPartnerkaArgs = {
-  distinct_on?: InputMaybe<Array<Pary_Navrh_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Pary_Navrh_Order_By>>;
-  where?: InputMaybe<Pary_Navrh_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersParyNavrhsByPnPartnerka_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Pary_Navrh_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Pary_Navrh_Order_By>>;
-  where?: InputMaybe<Pary_Navrh_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersPary_NavrhsArgs = {
-  distinct_on?: InputMaybe<Array<Pary_Navrh_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Pary_Navrh_Order_By>>;
-  where?: InputMaybe<Pary_Navrh_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersPary_Navrhs_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Pary_Navrh_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Pary_Navrh_Order_By>>;
-  where?: InputMaybe<Pary_Navrh_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersPlatby_ItemsArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Item_Order_By>>;
-  where?: InputMaybe<Platby_Item_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersPlatby_Items_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Platby_Item_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Platby_Item_Order_By>>;
-  where?: InputMaybe<Platby_Item_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersRozpisArgs = {
-  distinct_on?: InputMaybe<Array<Rozpis_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Rozpis_Order_By>>;
-  where?: InputMaybe<Rozpis_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersRozpis_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Rozpis_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Rozpis_Order_By>>;
-  where?: InputMaybe<Rozpis_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersUpozornenisArgs = {
-  distinct_on?: InputMaybe<Array<Upozorneni_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Upozorneni_Order_By>>;
-  where?: InputMaybe<Upozorneni_Bool_Exp>;
-};
-
-
-/** columns and relationships of "users" */
-export type UsersUpozornenis_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Upozorneni_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Upozorneni_Order_By>>;
-  where?: InputMaybe<Upozorneni_Bool_Exp>;
-};
-
-/** aggregated selection of "users" */
-export type Users_Aggregate = {
-  __typename?: 'users_aggregate';
-  aggregate?: Maybe<Users_Aggregate_Fields>;
-  nodes: Array<Users>;
-};
-
-/** aggregate fields of "users" */
-export type Users_Aggregate_Fields = {
-  __typename?: 'users_aggregate_fields';
-  avg?: Maybe<Users_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Users_Max_Fields>;
-  min?: Maybe<Users_Min_Fields>;
-  stddev?: Maybe<Users_Stddev_Fields>;
-  stddev_pop?: Maybe<Users_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Users_Stddev_Samp_Fields>;
-  sum?: Maybe<Users_Sum_Fields>;
-  var_pop?: Maybe<Users_Var_Pop_Fields>;
-  var_samp?: Maybe<Users_Var_Samp_Fields>;
-  variance?: Maybe<Users_Variance_Fields>;
-};
-
-
-/** aggregate fields of "users" */
-export type Users_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Users_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** order by aggregate values of table "users" */
-export type Users_Aggregate_Order_By = {
-  avg?: InputMaybe<Users_Avg_Order_By>;
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Users_Max_Order_By>;
-  min?: InputMaybe<Users_Min_Order_By>;
-  stddev?: InputMaybe<Users_Stddev_Order_By>;
-  stddev_pop?: InputMaybe<Users_Stddev_Pop_Order_By>;
-  stddev_samp?: InputMaybe<Users_Stddev_Samp_Order_By>;
-  sum?: InputMaybe<Users_Sum_Order_By>;
-  var_pop?: InputMaybe<Users_Var_Pop_Order_By>;
-  var_samp?: InputMaybe<Users_Var_Samp_Order_By>;
-  variance?: InputMaybe<Users_Variance_Order_By>;
-};
-
-/** input type for inserting array relation for remote table "users" */
-export type Users_Arr_Rel_Insert_Input = {
-  data: Array<Users_Insert_Input>;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Users_On_Conflict>;
-};
-
-/** aggregate avg on columns */
-export type Users_Avg_Fields = {
-  __typename?: 'users_avg_fields';
-  u_group?: Maybe<Scalars['Float']>;
-  u_id?: Maybe<Scalars['Float']>;
-  u_level?: Maybe<Scalars['Float']>;
-  u_skupina?: Maybe<Scalars['Float']>;
-};
-
-/** order by avg() on columns of table "users" */
-export type Users_Avg_Order_By = {
-  u_group?: InputMaybe<Order_By>;
-  u_id?: InputMaybe<Order_By>;
-  u_level?: InputMaybe<Order_By>;
-  u_skupina?: InputMaybe<Order_By>;
-};
-
-/** Boolean expression to filter rows from the table "users". All fields are combined with a logical 'AND'. */
-export type Users_Bool_Exp = {
-  _and?: InputMaybe<Array<Users_Bool_Exp>>;
-  _not?: InputMaybe<Users_Bool_Exp>;
-  _or?: InputMaybe<Array<Users_Bool_Exp>>;
-  akce_items?: InputMaybe<Akce_Item_Bool_Exp>;
-  aktualities?: InputMaybe<Aktuality_Bool_Exp>;
-  dokumenties?: InputMaybe<Dokumenty_Bool_Exp>;
-  galerie_fotos?: InputMaybe<Galerie_Foto_Bool_Exp>;
-  nabidkas?: InputMaybe<Nabidka_Bool_Exp>;
-  paries?: InputMaybe<Pary_Bool_Exp>;
-  paryNavrhsByPnPartner?: InputMaybe<Pary_Navrh_Bool_Exp>;
-  paryNavrhsByPnPartnerka?: InputMaybe<Pary_Navrh_Bool_Exp>;
-  pary_navrhs?: InputMaybe<Pary_Navrh_Bool_Exp>;
-  permission?: InputMaybe<Permissions_Bool_Exp>;
-  platby_items?: InputMaybe<Platby_Item_Bool_Exp>;
-  rozpis?: InputMaybe<Rozpis_Bool_Exp>;
-  skupiny?: InputMaybe<Skupiny_Bool_Exp>;
-  u_ban?: InputMaybe<Boolean_Comparison_Exp>;
-  u_city?: InputMaybe<String_Comparison_Exp>;
-  u_confirmed?: InputMaybe<Boolean_Comparison_Exp>;
-  u_conscription_number?: InputMaybe<String_Comparison_Exp>;
-  u_created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
-  u_dancer?: InputMaybe<Boolean_Comparison_Exp>;
-  u_district?: InputMaybe<String_Comparison_Exp>;
-  u_email?: InputMaybe<String_Comparison_Exp>;
-  u_gdpr_signed_at?: InputMaybe<Timestamptz_Comparison_Exp>;
-  u_group?: InputMaybe<Bigint_Comparison_Exp>;
-  u_id?: InputMaybe<Bigint_Comparison_Exp>;
-  u_jmeno?: InputMaybe<String_Comparison_Exp>;
-  u_level?: InputMaybe<Smallint_Comparison_Exp>;
-  u_lock?: InputMaybe<Boolean_Comparison_Exp>;
-  u_login?: InputMaybe<String_Comparison_Exp>;
-  u_member_since?: InputMaybe<Timestamptz_Comparison_Exp>;
-  u_member_until?: InputMaybe<Timestamptz_Comparison_Exp>;
-  u_narozeni?: InputMaybe<Date_Comparison_Exp>;
-  u_nationality?: InputMaybe<String_Comparison_Exp>;
-  u_orientation_number?: InputMaybe<String_Comparison_Exp>;
-  u_pass?: InputMaybe<Bpchar_Comparison_Exp>;
-  u_pohlavi?: InputMaybe<String_Comparison_Exp>;
-  u_postal_code?: InputMaybe<String_Comparison_Exp>;
-  u_poznamky?: InputMaybe<String_Comparison_Exp>;
-  u_prijmeni?: InputMaybe<String_Comparison_Exp>;
-  u_rodne_cislo?: InputMaybe<String_Comparison_Exp>;
-  u_skupina?: InputMaybe<Bigint_Comparison_Exp>;
-  u_street?: InputMaybe<String_Comparison_Exp>;
-  u_system?: InputMaybe<Boolean_Comparison_Exp>;
-  u_teacher?: InputMaybe<Boolean_Comparison_Exp>;
-  u_telefon?: InputMaybe<String_Comparison_Exp>;
-  u_timestamp?: InputMaybe<Timestamptz_Comparison_Exp>;
-  upozornenis?: InputMaybe<Upozorneni_Bool_Exp>;
-};
-
-/** unique or primary key constraints on table "users" */
-export enum Users_Constraint {
-  /** unique or primary key constraint */
-  Idx_24786Primary = 'idx_24786_primary',
-  /** unique or primary key constraint */
-  Idx_24786ULogin = 'idx_24786_u_login'
-}
-
-/** input type for incrementing numeric columns in table "users" */
-export type Users_Inc_Input = {
-  u_group?: InputMaybe<Scalars['bigint']>;
-  u_id?: InputMaybe<Scalars['bigint']>;
-  u_level?: InputMaybe<Scalars['smallint']>;
-  u_skupina?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "users" */
-export type Users_Insert_Input = {
-  akce_items?: InputMaybe<Akce_Item_Arr_Rel_Insert_Input>;
-  aktualities?: InputMaybe<Aktuality_Arr_Rel_Insert_Input>;
-  dokumenties?: InputMaybe<Dokumenty_Arr_Rel_Insert_Input>;
-  galerie_fotos?: InputMaybe<Galerie_Foto_Arr_Rel_Insert_Input>;
-  nabidkas?: InputMaybe<Nabidka_Arr_Rel_Insert_Input>;
-  paries?: InputMaybe<Pary_Arr_Rel_Insert_Input>;
-  paryNavrhsByPnPartner?: InputMaybe<Pary_Navrh_Arr_Rel_Insert_Input>;
-  paryNavrhsByPnPartnerka?: InputMaybe<Pary_Navrh_Arr_Rel_Insert_Input>;
-  pary_navrhs?: InputMaybe<Pary_Navrh_Arr_Rel_Insert_Input>;
-  permission?: InputMaybe<Permissions_Obj_Rel_Insert_Input>;
-  platby_items?: InputMaybe<Platby_Item_Arr_Rel_Insert_Input>;
-  rozpis?: InputMaybe<Rozpis_Arr_Rel_Insert_Input>;
-  skupiny?: InputMaybe<Skupiny_Obj_Rel_Insert_Input>;
-  u_ban?: InputMaybe<Scalars['Boolean']>;
-  u_city?: InputMaybe<Scalars['String']>;
-  u_confirmed?: InputMaybe<Scalars['Boolean']>;
-  u_conscription_number?: InputMaybe<Scalars['String']>;
-  u_created_at?: InputMaybe<Scalars['timestamptz']>;
-  u_dancer?: InputMaybe<Scalars['Boolean']>;
-  u_district?: InputMaybe<Scalars['String']>;
-  u_email?: InputMaybe<Scalars['String']>;
-  u_gdpr_signed_at?: InputMaybe<Scalars['timestamptz']>;
-  u_group?: InputMaybe<Scalars['bigint']>;
-  u_id?: InputMaybe<Scalars['bigint']>;
-  u_jmeno?: InputMaybe<Scalars['String']>;
-  u_level?: InputMaybe<Scalars['smallint']>;
-  u_lock?: InputMaybe<Scalars['Boolean']>;
-  u_login?: InputMaybe<Scalars['String']>;
-  u_member_since?: InputMaybe<Scalars['timestamptz']>;
-  u_member_until?: InputMaybe<Scalars['timestamptz']>;
-  u_narozeni?: InputMaybe<Scalars['date']>;
-  u_nationality?: InputMaybe<Scalars['String']>;
-  u_orientation_number?: InputMaybe<Scalars['String']>;
-  u_pass?: InputMaybe<Scalars['bpchar']>;
-  u_pohlavi?: InputMaybe<Scalars['String']>;
-  u_postal_code?: InputMaybe<Scalars['String']>;
-  u_poznamky?: InputMaybe<Scalars['String']>;
-  u_prijmeni?: InputMaybe<Scalars['String']>;
-  u_rodne_cislo?: InputMaybe<Scalars['String']>;
-  u_skupina?: InputMaybe<Scalars['bigint']>;
-  u_street?: InputMaybe<Scalars['String']>;
-  u_system?: InputMaybe<Scalars['Boolean']>;
-  u_teacher?: InputMaybe<Scalars['Boolean']>;
-  u_telefon?: InputMaybe<Scalars['String']>;
-  u_timestamp?: InputMaybe<Scalars['timestamptz']>;
-  upozornenis?: InputMaybe<Upozorneni_Arr_Rel_Insert_Input>;
-};
-
-/** aggregate max on columns */
-export type Users_Max_Fields = {
-  __typename?: 'users_max_fields';
-  u_city?: Maybe<Scalars['String']>;
-  u_conscription_number?: Maybe<Scalars['String']>;
-  u_created_at?: Maybe<Scalars['timestamptz']>;
-  u_district?: Maybe<Scalars['String']>;
-  u_email?: Maybe<Scalars['String']>;
-  u_gdpr_signed_at?: Maybe<Scalars['timestamptz']>;
-  u_group?: Maybe<Scalars['bigint']>;
-  u_id?: Maybe<Scalars['bigint']>;
-  u_jmeno?: Maybe<Scalars['String']>;
-  u_level?: Maybe<Scalars['smallint']>;
-  u_login?: Maybe<Scalars['String']>;
-  u_member_since?: Maybe<Scalars['timestamptz']>;
-  u_member_until?: Maybe<Scalars['timestamptz']>;
-  u_narozeni?: Maybe<Scalars['date']>;
-  u_nationality?: Maybe<Scalars['String']>;
-  u_orientation_number?: Maybe<Scalars['String']>;
-  u_pass?: Maybe<Scalars['bpchar']>;
-  u_pohlavi?: Maybe<Scalars['String']>;
-  u_postal_code?: Maybe<Scalars['String']>;
-  u_poznamky?: Maybe<Scalars['String']>;
-  u_prijmeni?: Maybe<Scalars['String']>;
-  u_rodne_cislo?: Maybe<Scalars['String']>;
-  u_skupina?: Maybe<Scalars['bigint']>;
-  u_street?: Maybe<Scalars['String']>;
-  u_telefon?: Maybe<Scalars['String']>;
-  u_timestamp?: Maybe<Scalars['timestamptz']>;
-};
-
-/** order by max() on columns of table "users" */
-export type Users_Max_Order_By = {
-  u_city?: InputMaybe<Order_By>;
-  u_conscription_number?: InputMaybe<Order_By>;
-  u_created_at?: InputMaybe<Order_By>;
-  u_district?: InputMaybe<Order_By>;
-  u_email?: InputMaybe<Order_By>;
-  u_gdpr_signed_at?: InputMaybe<Order_By>;
-  u_group?: InputMaybe<Order_By>;
-  u_id?: InputMaybe<Order_By>;
-  u_jmeno?: InputMaybe<Order_By>;
-  u_level?: InputMaybe<Order_By>;
-  u_login?: InputMaybe<Order_By>;
-  u_member_since?: InputMaybe<Order_By>;
-  u_member_until?: InputMaybe<Order_By>;
-  u_narozeni?: InputMaybe<Order_By>;
-  u_nationality?: InputMaybe<Order_By>;
-  u_orientation_number?: InputMaybe<Order_By>;
-  u_pass?: InputMaybe<Order_By>;
-  u_pohlavi?: InputMaybe<Order_By>;
-  u_postal_code?: InputMaybe<Order_By>;
-  u_poznamky?: InputMaybe<Order_By>;
-  u_prijmeni?: InputMaybe<Order_By>;
-  u_rodne_cislo?: InputMaybe<Order_By>;
-  u_skupina?: InputMaybe<Order_By>;
-  u_street?: InputMaybe<Order_By>;
-  u_telefon?: InputMaybe<Order_By>;
-  u_timestamp?: InputMaybe<Order_By>;
-};
-
-/** aggregate min on columns */
-export type Users_Min_Fields = {
-  __typename?: 'users_min_fields';
-  u_city?: Maybe<Scalars['String']>;
-  u_conscription_number?: Maybe<Scalars['String']>;
-  u_created_at?: Maybe<Scalars['timestamptz']>;
-  u_district?: Maybe<Scalars['String']>;
-  u_email?: Maybe<Scalars['String']>;
-  u_gdpr_signed_at?: Maybe<Scalars['timestamptz']>;
-  u_group?: Maybe<Scalars['bigint']>;
-  u_id?: Maybe<Scalars['bigint']>;
-  u_jmeno?: Maybe<Scalars['String']>;
-  u_level?: Maybe<Scalars['smallint']>;
-  u_login?: Maybe<Scalars['String']>;
-  u_member_since?: Maybe<Scalars['timestamptz']>;
-  u_member_until?: Maybe<Scalars['timestamptz']>;
-  u_narozeni?: Maybe<Scalars['date']>;
-  u_nationality?: Maybe<Scalars['String']>;
-  u_orientation_number?: Maybe<Scalars['String']>;
-  u_pass?: Maybe<Scalars['bpchar']>;
-  u_pohlavi?: Maybe<Scalars['String']>;
-  u_postal_code?: Maybe<Scalars['String']>;
-  u_poznamky?: Maybe<Scalars['String']>;
-  u_prijmeni?: Maybe<Scalars['String']>;
-  u_rodne_cislo?: Maybe<Scalars['String']>;
-  u_skupina?: Maybe<Scalars['bigint']>;
-  u_street?: Maybe<Scalars['String']>;
-  u_telefon?: Maybe<Scalars['String']>;
-  u_timestamp?: Maybe<Scalars['timestamptz']>;
-};
-
-/** order by min() on columns of table "users" */
-export type Users_Min_Order_By = {
-  u_city?: InputMaybe<Order_By>;
-  u_conscription_number?: InputMaybe<Order_By>;
-  u_created_at?: InputMaybe<Order_By>;
-  u_district?: InputMaybe<Order_By>;
-  u_email?: InputMaybe<Order_By>;
-  u_gdpr_signed_at?: InputMaybe<Order_By>;
-  u_group?: InputMaybe<Order_By>;
-  u_id?: InputMaybe<Order_By>;
-  u_jmeno?: InputMaybe<Order_By>;
-  u_level?: InputMaybe<Order_By>;
-  u_login?: InputMaybe<Order_By>;
-  u_member_since?: InputMaybe<Order_By>;
-  u_member_until?: InputMaybe<Order_By>;
-  u_narozeni?: InputMaybe<Order_By>;
-  u_nationality?: InputMaybe<Order_By>;
-  u_orientation_number?: InputMaybe<Order_By>;
-  u_pass?: InputMaybe<Order_By>;
-  u_pohlavi?: InputMaybe<Order_By>;
-  u_postal_code?: InputMaybe<Order_By>;
-  u_poznamky?: InputMaybe<Order_By>;
-  u_prijmeni?: InputMaybe<Order_By>;
-  u_rodne_cislo?: InputMaybe<Order_By>;
-  u_skupina?: InputMaybe<Order_By>;
-  u_street?: InputMaybe<Order_By>;
-  u_telefon?: InputMaybe<Order_By>;
-  u_timestamp?: InputMaybe<Order_By>;
-};
-
-/** response of any mutation on the table "users" */
-export type Users_Mutation_Response = {
-  __typename?: 'users_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Users>;
-};
-
-/** input type for inserting object relation for remote table "users" */
-export type Users_Obj_Rel_Insert_Input = {
-  data: Users_Insert_Input;
-  /** on conflict condition */
-  on_conflict?: InputMaybe<Users_On_Conflict>;
-};
-
-/** on conflict condition type for table "users" */
-export type Users_On_Conflict = {
-  constraint: Users_Constraint;
-  update_columns?: Array<Users_Update_Column>;
-  where?: InputMaybe<Users_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "users". */
-export type Users_Order_By = {
-  akce_items_aggregate?: InputMaybe<Akce_Item_Aggregate_Order_By>;
-  aktualities_aggregate?: InputMaybe<Aktuality_Aggregate_Order_By>;
-  dokumenties_aggregate?: InputMaybe<Dokumenty_Aggregate_Order_By>;
-  galerie_fotos_aggregate?: InputMaybe<Galerie_Foto_Aggregate_Order_By>;
-  nabidkas_aggregate?: InputMaybe<Nabidka_Aggregate_Order_By>;
-  paries_aggregate?: InputMaybe<Pary_Aggregate_Order_By>;
-  paryNavrhsByPnPartner_aggregate?: InputMaybe<Pary_Navrh_Aggregate_Order_By>;
-  paryNavrhsByPnPartnerka_aggregate?: InputMaybe<Pary_Navrh_Aggregate_Order_By>;
-  pary_navrhs_aggregate?: InputMaybe<Pary_Navrh_Aggregate_Order_By>;
-  permission?: InputMaybe<Permissions_Order_By>;
-  platby_items_aggregate?: InputMaybe<Platby_Item_Aggregate_Order_By>;
-  rozpis_aggregate?: InputMaybe<Rozpis_Aggregate_Order_By>;
-  skupiny?: InputMaybe<Skupiny_Order_By>;
-  u_ban?: InputMaybe<Order_By>;
-  u_city?: InputMaybe<Order_By>;
-  u_confirmed?: InputMaybe<Order_By>;
-  u_conscription_number?: InputMaybe<Order_By>;
-  u_created_at?: InputMaybe<Order_By>;
-  u_dancer?: InputMaybe<Order_By>;
-  u_district?: InputMaybe<Order_By>;
-  u_email?: InputMaybe<Order_By>;
-  u_gdpr_signed_at?: InputMaybe<Order_By>;
-  u_group?: InputMaybe<Order_By>;
-  u_id?: InputMaybe<Order_By>;
-  u_jmeno?: InputMaybe<Order_By>;
-  u_level?: InputMaybe<Order_By>;
-  u_lock?: InputMaybe<Order_By>;
-  u_login?: InputMaybe<Order_By>;
-  u_member_since?: InputMaybe<Order_By>;
-  u_member_until?: InputMaybe<Order_By>;
-  u_narozeni?: InputMaybe<Order_By>;
-  u_nationality?: InputMaybe<Order_By>;
-  u_orientation_number?: InputMaybe<Order_By>;
-  u_pass?: InputMaybe<Order_By>;
-  u_pohlavi?: InputMaybe<Order_By>;
-  u_postal_code?: InputMaybe<Order_By>;
-  u_poznamky?: InputMaybe<Order_By>;
-  u_prijmeni?: InputMaybe<Order_By>;
-  u_rodne_cislo?: InputMaybe<Order_By>;
-  u_skupina?: InputMaybe<Order_By>;
-  u_street?: InputMaybe<Order_By>;
-  u_system?: InputMaybe<Order_By>;
-  u_teacher?: InputMaybe<Order_By>;
-  u_telefon?: InputMaybe<Order_By>;
-  u_timestamp?: InputMaybe<Order_By>;
-  upozornenis_aggregate?: InputMaybe<Upozorneni_Aggregate_Order_By>;
-};
-
-/** primary key columns input for table: users */
-export type Users_Pk_Columns_Input = {
-  u_id: Scalars['bigint'];
-};
-
-/** select columns of table "users" */
-export enum Users_Select_Column {
-  /** column name */
-  UBan = 'u_ban',
-  /** column name */
-  UCity = 'u_city',
-  /** column name */
-  UConfirmed = 'u_confirmed',
-  /** column name */
-  UConscriptionNumber = 'u_conscription_number',
-  /** column name */
-  UCreatedAt = 'u_created_at',
-  /** column name */
-  UDancer = 'u_dancer',
-  /** column name */
-  UDistrict = 'u_district',
-  /** column name */
-  UEmail = 'u_email',
-  /** column name */
-  UGdprSignedAt = 'u_gdpr_signed_at',
-  /** column name */
-  UGroup = 'u_group',
-  /** column name */
-  UId = 'u_id',
-  /** column name */
-  UJmeno = 'u_jmeno',
-  /** column name */
-  ULevel = 'u_level',
-  /** column name */
-  ULock = 'u_lock',
-  /** column name */
-  ULogin = 'u_login',
-  /** column name */
-  UMemberSince = 'u_member_since',
-  /** column name */
-  UMemberUntil = 'u_member_until',
-  /** column name */
-  UNarozeni = 'u_narozeni',
-  /** column name */
-  UNationality = 'u_nationality',
-  /** column name */
-  UOrientationNumber = 'u_orientation_number',
-  /** column name */
-  UPass = 'u_pass',
-  /** column name */
-  UPohlavi = 'u_pohlavi',
-  /** column name */
-  UPostalCode = 'u_postal_code',
-  /** column name */
-  UPoznamky = 'u_poznamky',
-  /** column name */
-  UPrijmeni = 'u_prijmeni',
-  /** column name */
-  URodneCislo = 'u_rodne_cislo',
-  /** column name */
-  USkupina = 'u_skupina',
-  /** column name */
-  UStreet = 'u_street',
-  /** column name */
-  USystem = 'u_system',
-  /** column name */
-  UTeacher = 'u_teacher',
-  /** column name */
-  UTelefon = 'u_telefon',
-  /** column name */
-  UTimestamp = 'u_timestamp'
-}
-
-/** input type for updating data in table "users" */
-export type Users_Set_Input = {
-  u_ban?: InputMaybe<Scalars['Boolean']>;
-  u_city?: InputMaybe<Scalars['String']>;
-  u_confirmed?: InputMaybe<Scalars['Boolean']>;
-  u_conscription_number?: InputMaybe<Scalars['String']>;
-  u_created_at?: InputMaybe<Scalars['timestamptz']>;
-  u_dancer?: InputMaybe<Scalars['Boolean']>;
-  u_district?: InputMaybe<Scalars['String']>;
-  u_email?: InputMaybe<Scalars['String']>;
-  u_gdpr_signed_at?: InputMaybe<Scalars['timestamptz']>;
-  u_group?: InputMaybe<Scalars['bigint']>;
-  u_id?: InputMaybe<Scalars['bigint']>;
-  u_jmeno?: InputMaybe<Scalars['String']>;
-  u_level?: InputMaybe<Scalars['smallint']>;
-  u_lock?: InputMaybe<Scalars['Boolean']>;
-  u_login?: InputMaybe<Scalars['String']>;
-  u_member_since?: InputMaybe<Scalars['timestamptz']>;
-  u_member_until?: InputMaybe<Scalars['timestamptz']>;
-  u_narozeni?: InputMaybe<Scalars['date']>;
-  u_nationality?: InputMaybe<Scalars['String']>;
-  u_orientation_number?: InputMaybe<Scalars['String']>;
-  u_pass?: InputMaybe<Scalars['bpchar']>;
-  u_pohlavi?: InputMaybe<Scalars['String']>;
-  u_postal_code?: InputMaybe<Scalars['String']>;
-  u_poznamky?: InputMaybe<Scalars['String']>;
-  u_prijmeni?: InputMaybe<Scalars['String']>;
-  u_rodne_cislo?: InputMaybe<Scalars['String']>;
-  u_skupina?: InputMaybe<Scalars['bigint']>;
-  u_street?: InputMaybe<Scalars['String']>;
-  u_system?: InputMaybe<Scalars['Boolean']>;
-  u_teacher?: InputMaybe<Scalars['Boolean']>;
-  u_telefon?: InputMaybe<Scalars['String']>;
-  u_timestamp?: InputMaybe<Scalars['timestamptz']>;
-};
-
-/** columns and relationships of "users_skupiny" */
-export type Users_Skupiny = {
-  __typename?: 'users_skupiny';
-  us_color: Scalars['String'];
-  us_id: Scalars['bigint'];
-  us_platba_ctvrtrok: Scalars['bigint'];
-  us_platba_mesic: Scalars['bigint'];
-  us_platba_pulrok: Scalars['bigint'];
-  us_popis: Scalars['String'];
-};
-
-/** aggregated selection of "users_skupiny" */
-export type Users_Skupiny_Aggregate = {
-  __typename?: 'users_skupiny_aggregate';
-  aggregate?: Maybe<Users_Skupiny_Aggregate_Fields>;
-  nodes: Array<Users_Skupiny>;
-};
-
-/** aggregate fields of "users_skupiny" */
-export type Users_Skupiny_Aggregate_Fields = {
-  __typename?: 'users_skupiny_aggregate_fields';
-  avg?: Maybe<Users_Skupiny_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Users_Skupiny_Max_Fields>;
-  min?: Maybe<Users_Skupiny_Min_Fields>;
-  stddev?: Maybe<Users_Skupiny_Stddev_Fields>;
-  stddev_pop?: Maybe<Users_Skupiny_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Users_Skupiny_Stddev_Samp_Fields>;
-  sum?: Maybe<Users_Skupiny_Sum_Fields>;
-  var_pop?: Maybe<Users_Skupiny_Var_Pop_Fields>;
-  var_samp?: Maybe<Users_Skupiny_Var_Samp_Fields>;
-  variance?: Maybe<Users_Skupiny_Variance_Fields>;
-};
-
-
-/** aggregate fields of "users_skupiny" */
-export type Users_Skupiny_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Users_Skupiny_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate avg on columns */
-export type Users_Skupiny_Avg_Fields = {
-  __typename?: 'users_skupiny_avg_fields';
-  us_id?: Maybe<Scalars['Float']>;
-  us_platba_ctvrtrok?: Maybe<Scalars['Float']>;
-  us_platba_mesic?: Maybe<Scalars['Float']>;
-  us_platba_pulrok?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to filter rows from the table "users_skupiny". All fields are combined with a logical 'AND'. */
-export type Users_Skupiny_Bool_Exp = {
-  _and?: InputMaybe<Array<Users_Skupiny_Bool_Exp>>;
-  _not?: InputMaybe<Users_Skupiny_Bool_Exp>;
-  _or?: InputMaybe<Array<Users_Skupiny_Bool_Exp>>;
-  us_color?: InputMaybe<String_Comparison_Exp>;
-  us_id?: InputMaybe<Bigint_Comparison_Exp>;
-  us_platba_ctvrtrok?: InputMaybe<Bigint_Comparison_Exp>;
-  us_platba_mesic?: InputMaybe<Bigint_Comparison_Exp>;
-  us_platba_pulrok?: InputMaybe<Bigint_Comparison_Exp>;
-  us_popis?: InputMaybe<String_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "users_skupiny" */
-export enum Users_Skupiny_Constraint {
-  /** unique or primary key constraint */
-  Idx_24808Primary = 'idx_24808_primary'
-}
-
-/** input type for incrementing numeric columns in table "users_skupiny" */
-export type Users_Skupiny_Inc_Input = {
-  us_id?: InputMaybe<Scalars['bigint']>;
-  us_platba_ctvrtrok?: InputMaybe<Scalars['bigint']>;
-  us_platba_mesic?: InputMaybe<Scalars['bigint']>;
-  us_platba_pulrok?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "users_skupiny" */
-export type Users_Skupiny_Insert_Input = {
-  us_color?: InputMaybe<Scalars['String']>;
-  us_id?: InputMaybe<Scalars['bigint']>;
-  us_platba_ctvrtrok?: InputMaybe<Scalars['bigint']>;
-  us_platba_mesic?: InputMaybe<Scalars['bigint']>;
-  us_platba_pulrok?: InputMaybe<Scalars['bigint']>;
-  us_popis?: InputMaybe<Scalars['String']>;
-};
-
-/** aggregate max on columns */
-export type Users_Skupiny_Max_Fields = {
-  __typename?: 'users_skupiny_max_fields';
-  us_color?: Maybe<Scalars['String']>;
-  us_id?: Maybe<Scalars['bigint']>;
-  us_platba_ctvrtrok?: Maybe<Scalars['bigint']>;
-  us_platba_mesic?: Maybe<Scalars['bigint']>;
-  us_platba_pulrok?: Maybe<Scalars['bigint']>;
-  us_popis?: Maybe<Scalars['String']>;
-};
-
-/** aggregate min on columns */
-export type Users_Skupiny_Min_Fields = {
-  __typename?: 'users_skupiny_min_fields';
-  us_color?: Maybe<Scalars['String']>;
-  us_id?: Maybe<Scalars['bigint']>;
-  us_platba_ctvrtrok?: Maybe<Scalars['bigint']>;
-  us_platba_mesic?: Maybe<Scalars['bigint']>;
-  us_platba_pulrok?: Maybe<Scalars['bigint']>;
-  us_popis?: Maybe<Scalars['String']>;
-};
-
-/** response of any mutation on the table "users_skupiny" */
-export type Users_Skupiny_Mutation_Response = {
-  __typename?: 'users_skupiny_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Users_Skupiny>;
-};
-
-/** on conflict condition type for table "users_skupiny" */
-export type Users_Skupiny_On_Conflict = {
-  constraint: Users_Skupiny_Constraint;
-  update_columns?: Array<Users_Skupiny_Update_Column>;
-  where?: InputMaybe<Users_Skupiny_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "users_skupiny". */
-export type Users_Skupiny_Order_By = {
-  us_color?: InputMaybe<Order_By>;
-  us_id?: InputMaybe<Order_By>;
-  us_platba_ctvrtrok?: InputMaybe<Order_By>;
-  us_platba_mesic?: InputMaybe<Order_By>;
-  us_platba_pulrok?: InputMaybe<Order_By>;
-  us_popis?: InputMaybe<Order_By>;
-};
-
-/** primary key columns input for table: users_skupiny */
-export type Users_Skupiny_Pk_Columns_Input = {
-  us_id: Scalars['bigint'];
-};
-
-/** select columns of table "users_skupiny" */
-export enum Users_Skupiny_Select_Column {
-  /** column name */
-  UsColor = 'us_color',
-  /** column name */
-  UsId = 'us_id',
-  /** column name */
-  UsPlatbaCtvrtrok = 'us_platba_ctvrtrok',
-  /** column name */
-  UsPlatbaMesic = 'us_platba_mesic',
-  /** column name */
-  UsPlatbaPulrok = 'us_platba_pulrok',
-  /** column name */
-  UsPopis = 'us_popis'
-}
-
-/** input type for updating data in table "users_skupiny" */
-export type Users_Skupiny_Set_Input = {
-  us_color?: InputMaybe<Scalars['String']>;
-  us_id?: InputMaybe<Scalars['bigint']>;
-  us_platba_ctvrtrok?: InputMaybe<Scalars['bigint']>;
-  us_platba_mesic?: InputMaybe<Scalars['bigint']>;
-  us_platba_pulrok?: InputMaybe<Scalars['bigint']>;
-  us_popis?: InputMaybe<Scalars['String']>;
-};
-
-/** aggregate stddev on columns */
-export type Users_Skupiny_Stddev_Fields = {
-  __typename?: 'users_skupiny_stddev_fields';
-  us_id?: Maybe<Scalars['Float']>;
-  us_platba_ctvrtrok?: Maybe<Scalars['Float']>;
-  us_platba_mesic?: Maybe<Scalars['Float']>;
-  us_platba_pulrok?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Users_Skupiny_Stddev_Pop_Fields = {
-  __typename?: 'users_skupiny_stddev_pop_fields';
-  us_id?: Maybe<Scalars['Float']>;
-  us_platba_ctvrtrok?: Maybe<Scalars['Float']>;
-  us_platba_mesic?: Maybe<Scalars['Float']>;
-  us_platba_pulrok?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Users_Skupiny_Stddev_Samp_Fields = {
-  __typename?: 'users_skupiny_stddev_samp_fields';
-  us_id?: Maybe<Scalars['Float']>;
-  us_platba_ctvrtrok?: Maybe<Scalars['Float']>;
-  us_platba_mesic?: Maybe<Scalars['Float']>;
-  us_platba_pulrok?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate sum on columns */
-export type Users_Skupiny_Sum_Fields = {
-  __typename?: 'users_skupiny_sum_fields';
-  us_id?: Maybe<Scalars['bigint']>;
-  us_platba_ctvrtrok?: Maybe<Scalars['bigint']>;
-  us_platba_mesic?: Maybe<Scalars['bigint']>;
-  us_platba_pulrok?: Maybe<Scalars['bigint']>;
-};
-
-/** update columns of table "users_skupiny" */
-export enum Users_Skupiny_Update_Column {
-  /** column name */
-  UsColor = 'us_color',
-  /** column name */
-  UsId = 'us_id',
-  /** column name */
-  UsPlatbaCtvrtrok = 'us_platba_ctvrtrok',
-  /** column name */
-  UsPlatbaMesic = 'us_platba_mesic',
-  /** column name */
-  UsPlatbaPulrok = 'us_platba_pulrok',
-  /** column name */
-  UsPopis = 'us_popis'
-}
-
-/** aggregate var_pop on columns */
-export type Users_Skupiny_Var_Pop_Fields = {
-  __typename?: 'users_skupiny_var_pop_fields';
-  us_id?: Maybe<Scalars['Float']>;
-  us_platba_ctvrtrok?: Maybe<Scalars['Float']>;
-  us_platba_mesic?: Maybe<Scalars['Float']>;
-  us_platba_pulrok?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Users_Skupiny_Var_Samp_Fields = {
-  __typename?: 'users_skupiny_var_samp_fields';
-  us_id?: Maybe<Scalars['Float']>;
-  us_platba_ctvrtrok?: Maybe<Scalars['Float']>;
-  us_platba_mesic?: Maybe<Scalars['Float']>;
-  us_platba_pulrok?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Users_Skupiny_Variance_Fields = {
-  __typename?: 'users_skupiny_variance_fields';
-  us_id?: Maybe<Scalars['Float']>;
-  us_platba_ctvrtrok?: Maybe<Scalars['Float']>;
-  us_platba_mesic?: Maybe<Scalars['Float']>;
-  us_platba_pulrok?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev on columns */
-export type Users_Stddev_Fields = {
-  __typename?: 'users_stddev_fields';
-  u_group?: Maybe<Scalars['Float']>;
-  u_id?: Maybe<Scalars['Float']>;
-  u_level?: Maybe<Scalars['Float']>;
-  u_skupina?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev() on columns of table "users" */
-export type Users_Stddev_Order_By = {
-  u_group?: InputMaybe<Order_By>;
-  u_id?: InputMaybe<Order_By>;
-  u_level?: InputMaybe<Order_By>;
-  u_skupina?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Users_Stddev_Pop_Fields = {
-  __typename?: 'users_stddev_pop_fields';
-  u_group?: Maybe<Scalars['Float']>;
-  u_id?: Maybe<Scalars['Float']>;
-  u_level?: Maybe<Scalars['Float']>;
-  u_skupina?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_pop() on columns of table "users" */
-export type Users_Stddev_Pop_Order_By = {
-  u_group?: InputMaybe<Order_By>;
-  u_id?: InputMaybe<Order_By>;
-  u_level?: InputMaybe<Order_By>;
-  u_skupina?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Users_Stddev_Samp_Fields = {
-  __typename?: 'users_stddev_samp_fields';
-  u_group?: Maybe<Scalars['Float']>;
-  u_id?: Maybe<Scalars['Float']>;
-  u_level?: Maybe<Scalars['Float']>;
-  u_skupina?: Maybe<Scalars['Float']>;
-};
-
-/** order by stddev_samp() on columns of table "users" */
-export type Users_Stddev_Samp_Order_By = {
-  u_group?: InputMaybe<Order_By>;
-  u_id?: InputMaybe<Order_By>;
-  u_level?: InputMaybe<Order_By>;
-  u_skupina?: InputMaybe<Order_By>;
-};
-
-/** aggregate sum on columns */
-export type Users_Sum_Fields = {
-  __typename?: 'users_sum_fields';
-  u_group?: Maybe<Scalars['bigint']>;
-  u_id?: Maybe<Scalars['bigint']>;
-  u_level?: Maybe<Scalars['smallint']>;
-  u_skupina?: Maybe<Scalars['bigint']>;
-};
-
-/** order by sum() on columns of table "users" */
-export type Users_Sum_Order_By = {
-  u_group?: InputMaybe<Order_By>;
-  u_id?: InputMaybe<Order_By>;
-  u_level?: InputMaybe<Order_By>;
-  u_skupina?: InputMaybe<Order_By>;
-};
-
-/** update columns of table "users" */
-export enum Users_Update_Column {
-  /** column name */
-  UBan = 'u_ban',
-  /** column name */
-  UCity = 'u_city',
-  /** column name */
-  UConfirmed = 'u_confirmed',
-  /** column name */
-  UConscriptionNumber = 'u_conscription_number',
-  /** column name */
-  UCreatedAt = 'u_created_at',
-  /** column name */
-  UDancer = 'u_dancer',
-  /** column name */
-  UDistrict = 'u_district',
-  /** column name */
-  UEmail = 'u_email',
-  /** column name */
-  UGdprSignedAt = 'u_gdpr_signed_at',
-  /** column name */
-  UGroup = 'u_group',
-  /** column name */
-  UId = 'u_id',
-  /** column name */
-  UJmeno = 'u_jmeno',
-  /** column name */
-  ULevel = 'u_level',
-  /** column name */
-  ULock = 'u_lock',
-  /** column name */
-  ULogin = 'u_login',
-  /** column name */
-  UMemberSince = 'u_member_since',
-  /** column name */
-  UMemberUntil = 'u_member_until',
-  /** column name */
-  UNarozeni = 'u_narozeni',
-  /** column name */
-  UNationality = 'u_nationality',
-  /** column name */
-  UOrientationNumber = 'u_orientation_number',
-  /** column name */
-  UPass = 'u_pass',
-  /** column name */
-  UPohlavi = 'u_pohlavi',
-  /** column name */
-  UPostalCode = 'u_postal_code',
-  /** column name */
-  UPoznamky = 'u_poznamky',
-  /** column name */
-  UPrijmeni = 'u_prijmeni',
-  /** column name */
-  URodneCislo = 'u_rodne_cislo',
-  /** column name */
-  USkupina = 'u_skupina',
-  /** column name */
-  UStreet = 'u_street',
-  /** column name */
-  USystem = 'u_system',
-  /** column name */
-  UTeacher = 'u_teacher',
-  /** column name */
-  UTelefon = 'u_telefon',
-  /** column name */
-  UTimestamp = 'u_timestamp'
-}
-
-/** aggregate var_pop on columns */
-export type Users_Var_Pop_Fields = {
-  __typename?: 'users_var_pop_fields';
-  u_group?: Maybe<Scalars['Float']>;
-  u_id?: Maybe<Scalars['Float']>;
-  u_level?: Maybe<Scalars['Float']>;
-  u_skupina?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_pop() on columns of table "users" */
-export type Users_Var_Pop_Order_By = {
-  u_group?: InputMaybe<Order_By>;
-  u_id?: InputMaybe<Order_By>;
-  u_level?: InputMaybe<Order_By>;
-  u_skupina?: InputMaybe<Order_By>;
-};
-
-/** aggregate var_samp on columns */
-export type Users_Var_Samp_Fields = {
-  __typename?: 'users_var_samp_fields';
-  u_group?: Maybe<Scalars['Float']>;
-  u_id?: Maybe<Scalars['Float']>;
-  u_level?: Maybe<Scalars['Float']>;
-  u_skupina?: Maybe<Scalars['Float']>;
-};
-
-/** order by var_samp() on columns of table "users" */
-export type Users_Var_Samp_Order_By = {
-  u_group?: InputMaybe<Order_By>;
-  u_id?: InputMaybe<Order_By>;
-  u_level?: InputMaybe<Order_By>;
-  u_skupina?: InputMaybe<Order_By>;
-};
-
-/** aggregate variance on columns */
-export type Users_Variance_Fields = {
-  __typename?: 'users_variance_fields';
-  u_group?: Maybe<Scalars['Float']>;
-  u_id?: Maybe<Scalars['Float']>;
-  u_level?: Maybe<Scalars['Float']>;
-  u_skupina?: Maybe<Scalars['Float']>;
-};
-
-/** order by variance() on columns of table "users" */
-export type Users_Variance_Order_By = {
-  u_group?: InputMaybe<Order_By>;
-  u_id?: InputMaybe<Order_By>;
-  u_level?: InputMaybe<Order_By>;
-  u_skupina?: InputMaybe<Order_By>;
-};
-
-/** columns and relationships of "video" */
-export type Video = {
-  __typename?: 'video';
-  v_author: Scalars['String'];
-  v_created_at: Scalars['timestamptz'];
-  v_description: Scalars['String'];
-  v_id: Scalars['bigint'];
-  v_playlist?: Maybe<Scalars['String']>;
-  v_title: Scalars['String'];
-  v_updated_at: Scalars['timestamptz'];
-  v_uri: Scalars['String'];
-};
-
-/** aggregated selection of "video" */
-export type Video_Aggregate = {
-  __typename?: 'video_aggregate';
-  aggregate?: Maybe<Video_Aggregate_Fields>;
+/** A connection to a list of `Video` values. */
+export type VideosConnection = {
+  __typename?: 'VideosConnection';
+  /** A list of edges which contains the `Video` and cursor to aid in pagination. */
+  edges: Array<VideosEdge>;
+  /** A list of `Video` objects. */
   nodes: Array<Video>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Video` you could get from the connection. */
+  totalCount: Scalars['Int'];
 };
 
-/** aggregate fields of "video" */
-export type Video_Aggregate_Fields = {
-  __typename?: 'video_aggregate_fields';
-  avg?: Maybe<Video_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Video_Max_Fields>;
-  min?: Maybe<Video_Min_Fields>;
-  stddev?: Maybe<Video_Stddev_Fields>;
-  stddev_pop?: Maybe<Video_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Video_Stddev_Samp_Fields>;
-  sum?: Maybe<Video_Sum_Fields>;
-  var_pop?: Maybe<Video_Var_Pop_Fields>;
-  var_samp?: Maybe<Video_Var_Samp_Fields>;
-  variance?: Maybe<Video_Variance_Fields>;
+/** A `Video` edge in the connection. */
+export type VideosEdge = {
+  __typename?: 'VideosEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Video` at the end of the edge. */
+  node: Video;
 };
 
-
-/** aggregate fields of "video" */
-export type Video_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Video_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate avg on columns */
-export type Video_Avg_Fields = {
-  __typename?: 'video_avg_fields';
-  v_id?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to filter rows from the table "video". All fields are combined with a logical 'AND'. */
-export type Video_Bool_Exp = {
-  _and?: InputMaybe<Array<Video_Bool_Exp>>;
-  _not?: InputMaybe<Video_Bool_Exp>;
-  _or?: InputMaybe<Array<Video_Bool_Exp>>;
-  v_author?: InputMaybe<String_Comparison_Exp>;
-  v_created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
-  v_description?: InputMaybe<String_Comparison_Exp>;
-  v_id?: InputMaybe<Bigint_Comparison_Exp>;
-  v_playlist?: InputMaybe<String_Comparison_Exp>;
-  v_title?: InputMaybe<String_Comparison_Exp>;
-  v_updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
-  v_uri?: InputMaybe<String_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "video" */
-export enum Video_Constraint {
-  /** unique or primary key constraint */
-  Idx_24821Primary = 'idx_24821_primary'
+/** Methods to use when ordering `Video`. */
+export enum VideosOrderBy {
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  VAuthorAsc = 'V_AUTHOR_ASC',
+  VAuthorDesc = 'V_AUTHOR_DESC',
+  VCreatedAtAsc = 'V_CREATED_AT_ASC',
+  VCreatedAtDesc = 'V_CREATED_AT_DESC',
+  VDescriptionAsc = 'V_DESCRIPTION_ASC',
+  VDescriptionDesc = 'V_DESCRIPTION_DESC',
+  VIdAsc = 'V_ID_ASC',
+  VIdDesc = 'V_ID_DESC',
+  VPlaylistAsc = 'V_PLAYLIST_ASC',
+  VPlaylistDesc = 'V_PLAYLIST_DESC',
+  VTitleAsc = 'V_TITLE_ASC',
+  VTitleDesc = 'V_TITLE_DESC',
+  VUpdatedAtAsc = 'V_UPDATED_AT_ASC',
+  VUpdatedAtDesc = 'V_UPDATED_AT_DESC',
+  VUriAsc = 'V_URI_ASC',
+  VUriDesc = 'V_URI_DESC'
 }
-
-/** input type for incrementing numeric columns in table "video" */
-export type Video_Inc_Input = {
-  v_id?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "video" */
-export type Video_Insert_Input = {
-  v_author?: InputMaybe<Scalars['String']>;
-  v_created_at?: InputMaybe<Scalars['timestamptz']>;
-  v_description?: InputMaybe<Scalars['String']>;
-  v_id?: InputMaybe<Scalars['bigint']>;
-  v_playlist?: InputMaybe<Scalars['String']>;
-  v_title?: InputMaybe<Scalars['String']>;
-  v_updated_at?: InputMaybe<Scalars['timestamptz']>;
-  v_uri?: InputMaybe<Scalars['String']>;
-};
-
-/** columns and relationships of "video_list" */
-export type Video_List = {
-  __typename?: 'video_list';
-  vl_count: Scalars['bigint'];
-  vl_created_at: Scalars['timestamptz'];
-  vl_description: Scalars['String'];
-  vl_id: Scalars['bigint'];
-  vl_last_checked?: Maybe<Scalars['timestamptz']>;
-  vl_title: Scalars['String'];
-  vl_url: Scalars['String'];
-};
-
-/** aggregated selection of "video_list" */
-export type Video_List_Aggregate = {
-  __typename?: 'video_list_aggregate';
-  aggregate?: Maybe<Video_List_Aggregate_Fields>;
-  nodes: Array<Video_List>;
-};
-
-/** aggregate fields of "video_list" */
-export type Video_List_Aggregate_Fields = {
-  __typename?: 'video_list_aggregate_fields';
-  avg?: Maybe<Video_List_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Video_List_Max_Fields>;
-  min?: Maybe<Video_List_Min_Fields>;
-  stddev?: Maybe<Video_List_Stddev_Fields>;
-  stddev_pop?: Maybe<Video_List_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Video_List_Stddev_Samp_Fields>;
-  sum?: Maybe<Video_List_Sum_Fields>;
-  var_pop?: Maybe<Video_List_Var_Pop_Fields>;
-  var_samp?: Maybe<Video_List_Var_Samp_Fields>;
-  variance?: Maybe<Video_List_Variance_Fields>;
-};
-
-
-/** aggregate fields of "video_list" */
-export type Video_List_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Video_List_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate avg on columns */
-export type Video_List_Avg_Fields = {
-  __typename?: 'video_list_avg_fields';
-  vl_count?: Maybe<Scalars['Float']>;
-  vl_id?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to filter rows from the table "video_list". All fields are combined with a logical 'AND'. */
-export type Video_List_Bool_Exp = {
-  _and?: InputMaybe<Array<Video_List_Bool_Exp>>;
-  _not?: InputMaybe<Video_List_Bool_Exp>;
-  _or?: InputMaybe<Array<Video_List_Bool_Exp>>;
-  vl_count?: InputMaybe<Bigint_Comparison_Exp>;
-  vl_created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
-  vl_description?: InputMaybe<String_Comparison_Exp>;
-  vl_id?: InputMaybe<Bigint_Comparison_Exp>;
-  vl_last_checked?: InputMaybe<Timestamptz_Comparison_Exp>;
-  vl_title?: InputMaybe<String_Comparison_Exp>;
-  vl_url?: InputMaybe<String_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "video_list" */
-export enum Video_List_Constraint {
-  /** unique or primary key constraint */
-  Idx_24831Primary = 'idx_24831_primary'
-}
-
-/** input type for incrementing numeric columns in table "video_list" */
-export type Video_List_Inc_Input = {
-  vl_count?: InputMaybe<Scalars['bigint']>;
-  vl_id?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "video_list" */
-export type Video_List_Insert_Input = {
-  vl_count?: InputMaybe<Scalars['bigint']>;
-  vl_created_at?: InputMaybe<Scalars['timestamptz']>;
-  vl_description?: InputMaybe<Scalars['String']>;
-  vl_id?: InputMaybe<Scalars['bigint']>;
-  vl_last_checked?: InputMaybe<Scalars['timestamptz']>;
-  vl_title?: InputMaybe<Scalars['String']>;
-  vl_url?: InputMaybe<Scalars['String']>;
-};
-
-/** aggregate max on columns */
-export type Video_List_Max_Fields = {
-  __typename?: 'video_list_max_fields';
-  vl_count?: Maybe<Scalars['bigint']>;
-  vl_created_at?: Maybe<Scalars['timestamptz']>;
-  vl_description?: Maybe<Scalars['String']>;
-  vl_id?: Maybe<Scalars['bigint']>;
-  vl_last_checked?: Maybe<Scalars['timestamptz']>;
-  vl_title?: Maybe<Scalars['String']>;
-  vl_url?: Maybe<Scalars['String']>;
-};
-
-/** aggregate min on columns */
-export type Video_List_Min_Fields = {
-  __typename?: 'video_list_min_fields';
-  vl_count?: Maybe<Scalars['bigint']>;
-  vl_created_at?: Maybe<Scalars['timestamptz']>;
-  vl_description?: Maybe<Scalars['String']>;
-  vl_id?: Maybe<Scalars['bigint']>;
-  vl_last_checked?: Maybe<Scalars['timestamptz']>;
-  vl_title?: Maybe<Scalars['String']>;
-  vl_url?: Maybe<Scalars['String']>;
-};
-
-/** response of any mutation on the table "video_list" */
-export type Video_List_Mutation_Response = {
-  __typename?: 'video_list_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Video_List>;
-};
-
-/** on conflict condition type for table "video_list" */
-export type Video_List_On_Conflict = {
-  constraint: Video_List_Constraint;
-  update_columns?: Array<Video_List_Update_Column>;
-  where?: InputMaybe<Video_List_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "video_list". */
-export type Video_List_Order_By = {
-  vl_count?: InputMaybe<Order_By>;
-  vl_created_at?: InputMaybe<Order_By>;
-  vl_description?: InputMaybe<Order_By>;
-  vl_id?: InputMaybe<Order_By>;
-  vl_last_checked?: InputMaybe<Order_By>;
-  vl_title?: InputMaybe<Order_By>;
-  vl_url?: InputMaybe<Order_By>;
-};
-
-/** primary key columns input for table: video_list */
-export type Video_List_Pk_Columns_Input = {
-  vl_id: Scalars['bigint'];
-};
-
-/** select columns of table "video_list" */
-export enum Video_List_Select_Column {
-  /** column name */
-  VlCount = 'vl_count',
-  /** column name */
-  VlCreatedAt = 'vl_created_at',
-  /** column name */
-  VlDescription = 'vl_description',
-  /** column name */
-  VlId = 'vl_id',
-  /** column name */
-  VlLastChecked = 'vl_last_checked',
-  /** column name */
-  VlTitle = 'vl_title',
-  /** column name */
-  VlUrl = 'vl_url'
-}
-
-/** input type for updating data in table "video_list" */
-export type Video_List_Set_Input = {
-  vl_count?: InputMaybe<Scalars['bigint']>;
-  vl_created_at?: InputMaybe<Scalars['timestamptz']>;
-  vl_description?: InputMaybe<Scalars['String']>;
-  vl_id?: InputMaybe<Scalars['bigint']>;
-  vl_last_checked?: InputMaybe<Scalars['timestamptz']>;
-  vl_title?: InputMaybe<Scalars['String']>;
-  vl_url?: InputMaybe<Scalars['String']>;
-};
-
-/** aggregate stddev on columns */
-export type Video_List_Stddev_Fields = {
-  __typename?: 'video_list_stddev_fields';
-  vl_count?: Maybe<Scalars['Float']>;
-  vl_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Video_List_Stddev_Pop_Fields = {
-  __typename?: 'video_list_stddev_pop_fields';
-  vl_count?: Maybe<Scalars['Float']>;
-  vl_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Video_List_Stddev_Samp_Fields = {
-  __typename?: 'video_list_stddev_samp_fields';
-  vl_count?: Maybe<Scalars['Float']>;
-  vl_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate sum on columns */
-export type Video_List_Sum_Fields = {
-  __typename?: 'video_list_sum_fields';
-  vl_count?: Maybe<Scalars['bigint']>;
-  vl_id?: Maybe<Scalars['bigint']>;
-};
-
-/** update columns of table "video_list" */
-export enum Video_List_Update_Column {
-  /** column name */
-  VlCount = 'vl_count',
-  /** column name */
-  VlCreatedAt = 'vl_created_at',
-  /** column name */
-  VlDescription = 'vl_description',
-  /** column name */
-  VlId = 'vl_id',
-  /** column name */
-  VlLastChecked = 'vl_last_checked',
-  /** column name */
-  VlTitle = 'vl_title',
-  /** column name */
-  VlUrl = 'vl_url'
-}
-
-/** aggregate var_pop on columns */
-export type Video_List_Var_Pop_Fields = {
-  __typename?: 'video_list_var_pop_fields';
-  vl_count?: Maybe<Scalars['Float']>;
-  vl_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Video_List_Var_Samp_Fields = {
-  __typename?: 'video_list_var_samp_fields';
-  vl_count?: Maybe<Scalars['Float']>;
-  vl_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Video_List_Variance_Fields = {
-  __typename?: 'video_list_variance_fields';
-  vl_count?: Maybe<Scalars['Float']>;
-  vl_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate max on columns */
-export type Video_Max_Fields = {
-  __typename?: 'video_max_fields';
-  v_author?: Maybe<Scalars['String']>;
-  v_created_at?: Maybe<Scalars['timestamptz']>;
-  v_description?: Maybe<Scalars['String']>;
-  v_id?: Maybe<Scalars['bigint']>;
-  v_playlist?: Maybe<Scalars['String']>;
-  v_title?: Maybe<Scalars['String']>;
-  v_updated_at?: Maybe<Scalars['timestamptz']>;
-  v_uri?: Maybe<Scalars['String']>;
-};
-
-/** aggregate min on columns */
-export type Video_Min_Fields = {
-  __typename?: 'video_min_fields';
-  v_author?: Maybe<Scalars['String']>;
-  v_created_at?: Maybe<Scalars['timestamptz']>;
-  v_description?: Maybe<Scalars['String']>;
-  v_id?: Maybe<Scalars['bigint']>;
-  v_playlist?: Maybe<Scalars['String']>;
-  v_title?: Maybe<Scalars['String']>;
-  v_updated_at?: Maybe<Scalars['timestamptz']>;
-  v_uri?: Maybe<Scalars['String']>;
-};
-
-/** response of any mutation on the table "video" */
-export type Video_Mutation_Response = {
-  __typename?: 'video_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Video>;
-};
-
-/** on conflict condition type for table "video" */
-export type Video_On_Conflict = {
-  constraint: Video_Constraint;
-  update_columns?: Array<Video_Update_Column>;
-  where?: InputMaybe<Video_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "video". */
-export type Video_Order_By = {
-  v_author?: InputMaybe<Order_By>;
-  v_created_at?: InputMaybe<Order_By>;
-  v_description?: InputMaybe<Order_By>;
-  v_id?: InputMaybe<Order_By>;
-  v_playlist?: InputMaybe<Order_By>;
-  v_title?: InputMaybe<Order_By>;
-  v_updated_at?: InputMaybe<Order_By>;
-  v_uri?: InputMaybe<Order_By>;
-};
-
-/** primary key columns input for table: video */
-export type Video_Pk_Columns_Input = {
-  v_id: Scalars['bigint'];
-};
-
-/** select columns of table "video" */
-export enum Video_Select_Column {
-  /** column name */
-  VAuthor = 'v_author',
-  /** column name */
-  VCreatedAt = 'v_created_at',
-  /** column name */
-  VDescription = 'v_description',
-  /** column name */
-  VId = 'v_id',
-  /** column name */
-  VPlaylist = 'v_playlist',
-  /** column name */
-  VTitle = 'v_title',
-  /** column name */
-  VUpdatedAt = 'v_updated_at',
-  /** column name */
-  VUri = 'v_uri'
-}
-
-/** input type for updating data in table "video" */
-export type Video_Set_Input = {
-  v_author?: InputMaybe<Scalars['String']>;
-  v_created_at?: InputMaybe<Scalars['timestamptz']>;
-  v_description?: InputMaybe<Scalars['String']>;
-  v_id?: InputMaybe<Scalars['bigint']>;
-  v_playlist?: InputMaybe<Scalars['String']>;
-  v_title?: InputMaybe<Scalars['String']>;
-  v_updated_at?: InputMaybe<Scalars['timestamptz']>;
-  v_uri?: InputMaybe<Scalars['String']>;
-};
-
-/** columns and relationships of "video_source" */
-export type Video_Source = {
-  __typename?: 'video_source';
-  vs_created_at: Scalars['timestamptz'];
-  vs_description?: Maybe<Scalars['String']>;
-  vs_id: Scalars['bigint'];
-  vs_last_checked?: Maybe<Scalars['timestamptz']>;
-  vs_title?: Maybe<Scalars['String']>;
-  vs_url: Scalars['String'];
-};
-
-/** aggregated selection of "video_source" */
-export type Video_Source_Aggregate = {
-  __typename?: 'video_source_aggregate';
-  aggregate?: Maybe<Video_Source_Aggregate_Fields>;
-  nodes: Array<Video_Source>;
-};
-
-/** aggregate fields of "video_source" */
-export type Video_Source_Aggregate_Fields = {
-  __typename?: 'video_source_aggregate_fields';
-  avg?: Maybe<Video_Source_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Video_Source_Max_Fields>;
-  min?: Maybe<Video_Source_Min_Fields>;
-  stddev?: Maybe<Video_Source_Stddev_Fields>;
-  stddev_pop?: Maybe<Video_Source_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Video_Source_Stddev_Samp_Fields>;
-  sum?: Maybe<Video_Source_Sum_Fields>;
-  var_pop?: Maybe<Video_Source_Var_Pop_Fields>;
-  var_samp?: Maybe<Video_Source_Var_Samp_Fields>;
-  variance?: Maybe<Video_Source_Variance_Fields>;
-};
-
-
-/** aggregate fields of "video_source" */
-export type Video_Source_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Video_Source_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate avg on columns */
-export type Video_Source_Avg_Fields = {
-  __typename?: 'video_source_avg_fields';
-  vs_id?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to filter rows from the table "video_source". All fields are combined with a logical 'AND'. */
-export type Video_Source_Bool_Exp = {
-  _and?: InputMaybe<Array<Video_Source_Bool_Exp>>;
-  _not?: InputMaybe<Video_Source_Bool_Exp>;
-  _or?: InputMaybe<Array<Video_Source_Bool_Exp>>;
-  vs_created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
-  vs_description?: InputMaybe<String_Comparison_Exp>;
-  vs_id?: InputMaybe<Bigint_Comparison_Exp>;
-  vs_last_checked?: InputMaybe<Timestamptz_Comparison_Exp>;
-  vs_title?: InputMaybe<String_Comparison_Exp>;
-  vs_url?: InputMaybe<String_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "video_source" */
-export enum Video_Source_Constraint {
-  /** unique or primary key constraint */
-  Idx_24841Primary = 'idx_24841_primary'
-}
-
-/** input type for incrementing numeric columns in table "video_source" */
-export type Video_Source_Inc_Input = {
-  vs_id?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "video_source" */
-export type Video_Source_Insert_Input = {
-  vs_created_at?: InputMaybe<Scalars['timestamptz']>;
-  vs_description?: InputMaybe<Scalars['String']>;
-  vs_id?: InputMaybe<Scalars['bigint']>;
-  vs_last_checked?: InputMaybe<Scalars['timestamptz']>;
-  vs_title?: InputMaybe<Scalars['String']>;
-  vs_url?: InputMaybe<Scalars['String']>;
-};
-
-/** aggregate max on columns */
-export type Video_Source_Max_Fields = {
-  __typename?: 'video_source_max_fields';
-  vs_created_at?: Maybe<Scalars['timestamptz']>;
-  vs_description?: Maybe<Scalars['String']>;
-  vs_id?: Maybe<Scalars['bigint']>;
-  vs_last_checked?: Maybe<Scalars['timestamptz']>;
-  vs_title?: Maybe<Scalars['String']>;
-  vs_url?: Maybe<Scalars['String']>;
-};
-
-/** aggregate min on columns */
-export type Video_Source_Min_Fields = {
-  __typename?: 'video_source_min_fields';
-  vs_created_at?: Maybe<Scalars['timestamptz']>;
-  vs_description?: Maybe<Scalars['String']>;
-  vs_id?: Maybe<Scalars['bigint']>;
-  vs_last_checked?: Maybe<Scalars['timestamptz']>;
-  vs_title?: Maybe<Scalars['String']>;
-  vs_url?: Maybe<Scalars['String']>;
-};
-
-/** response of any mutation on the table "video_source" */
-export type Video_Source_Mutation_Response = {
-  __typename?: 'video_source_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Video_Source>;
-};
-
-/** on conflict condition type for table "video_source" */
-export type Video_Source_On_Conflict = {
-  constraint: Video_Source_Constraint;
-  update_columns?: Array<Video_Source_Update_Column>;
-  where?: InputMaybe<Video_Source_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "video_source". */
-export type Video_Source_Order_By = {
-  vs_created_at?: InputMaybe<Order_By>;
-  vs_description?: InputMaybe<Order_By>;
-  vs_id?: InputMaybe<Order_By>;
-  vs_last_checked?: InputMaybe<Order_By>;
-  vs_title?: InputMaybe<Order_By>;
-  vs_url?: InputMaybe<Order_By>;
-};
-
-/** primary key columns input for table: video_source */
-export type Video_Source_Pk_Columns_Input = {
-  vs_id: Scalars['bigint'];
-};
-
-/** select columns of table "video_source" */
-export enum Video_Source_Select_Column {
-  /** column name */
-  VsCreatedAt = 'vs_created_at',
-  /** column name */
-  VsDescription = 'vs_description',
-  /** column name */
-  VsId = 'vs_id',
-  /** column name */
-  VsLastChecked = 'vs_last_checked',
-  /** column name */
-  VsTitle = 'vs_title',
-  /** column name */
-  VsUrl = 'vs_url'
-}
-
-/** input type for updating data in table "video_source" */
-export type Video_Source_Set_Input = {
-  vs_created_at?: InputMaybe<Scalars['timestamptz']>;
-  vs_description?: InputMaybe<Scalars['String']>;
-  vs_id?: InputMaybe<Scalars['bigint']>;
-  vs_last_checked?: InputMaybe<Scalars['timestamptz']>;
-  vs_title?: InputMaybe<Scalars['String']>;
-  vs_url?: InputMaybe<Scalars['String']>;
-};
-
-/** aggregate stddev on columns */
-export type Video_Source_Stddev_Fields = {
-  __typename?: 'video_source_stddev_fields';
-  vs_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Video_Source_Stddev_Pop_Fields = {
-  __typename?: 'video_source_stddev_pop_fields';
-  vs_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Video_Source_Stddev_Samp_Fields = {
-  __typename?: 'video_source_stddev_samp_fields';
-  vs_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate sum on columns */
-export type Video_Source_Sum_Fields = {
-  __typename?: 'video_source_sum_fields';
-  vs_id?: Maybe<Scalars['bigint']>;
-};
-
-/** update columns of table "video_source" */
-export enum Video_Source_Update_Column {
-  /** column name */
-  VsCreatedAt = 'vs_created_at',
-  /** column name */
-  VsDescription = 'vs_description',
-  /** column name */
-  VsId = 'vs_id',
-  /** column name */
-  VsLastChecked = 'vs_last_checked',
-  /** column name */
-  VsTitle = 'vs_title',
-  /** column name */
-  VsUrl = 'vs_url'
-}
-
-/** aggregate var_pop on columns */
-export type Video_Source_Var_Pop_Fields = {
-  __typename?: 'video_source_var_pop_fields';
-  vs_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Video_Source_Var_Samp_Fields = {
-  __typename?: 'video_source_var_samp_fields';
-  vs_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Video_Source_Variance_Fields = {
-  __typename?: 'video_source_variance_fields';
-  vs_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev on columns */
-export type Video_Stddev_Fields = {
-  __typename?: 'video_stddev_fields';
-  v_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Video_Stddev_Pop_Fields = {
-  __typename?: 'video_stddev_pop_fields';
-  v_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Video_Stddev_Samp_Fields = {
-  __typename?: 'video_stddev_samp_fields';
-  v_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate sum on columns */
-export type Video_Sum_Fields = {
-  __typename?: 'video_sum_fields';
-  v_id?: Maybe<Scalars['bigint']>;
-};
-
-/** update columns of table "video" */
-export enum Video_Update_Column {
-  /** column name */
-  VAuthor = 'v_author',
-  /** column name */
-  VCreatedAt = 'v_created_at',
-  /** column name */
-  VDescription = 'v_description',
-  /** column name */
-  VId = 'v_id',
-  /** column name */
-  VPlaylist = 'v_playlist',
-  /** column name */
-  VTitle = 'v_title',
-  /** column name */
-  VUpdatedAt = 'v_updated_at',
-  /** column name */
-  VUri = 'v_uri'
-}
-
-/** aggregate var_pop on columns */
-export type Video_Var_Pop_Fields = {
-  __typename?: 'video_var_pop_fields';
-  v_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Video_Var_Samp_Fields = {
-  __typename?: 'video_var_samp_fields';
-  v_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Video_Variance_Fields = {
-  __typename?: 'video_variance_fields';
-  v_id?: Maybe<Scalars['Float']>;
-};
 
 export type UpozorneniListQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
@@ -14609,7 +9366,7 @@ export type UpozorneniListQueryVariables = Exact<{
 }>;
 
 
-export type UpozorneniListQuery = { __typename?: 'query_root', upozorneni: Array<{ __typename?: 'upozorneni', up_id: any, up_kdo: any, up_lock: boolean, up_nadpis: string, up_text: string, up_timestamp?: any | null | undefined, up_timestamp_add: any, user: { __typename?: 'users', u_id: any, u_jmeno: string, u_prijmeni: string }, upozorneni_skupinies: Array<{ __typename?: 'upozorneni_skupiny', skupiny: { __typename?: 'skupiny', s_name: string, s_description: string, s_color_text: string, s_color_rgb: string } }> }>, aggregate: { __typename?: 'upozorneni_aggregate', aggregate?: { __typename?: 'upozorneni_aggregate_fields', count: number } | null | undefined } };
+export type UpozorneniListQuery = { __typename?: 'Query', allUpozornenis?: { __typename?: 'UpozornenisConnection', totalCount: number, nodes: Array<{ __typename?: 'Upozorneni', upId: any, upKdo: any, upLock: boolean, upNadpis: string, upText: string, upTimestamp?: any | null | undefined, upTimestampAdd: any, userByUpKdo?: { __typename?: 'User', uId: any, uJmeno: string, uPrijmeni: string } | null | undefined, upozorneniSkupiniesByUpsIdRodic: { __typename?: 'UpozorneniSkupiniesConnection', nodes: Array<{ __typename?: 'UpozorneniSkupiny', skupinyByUpsIdSkupina?: { __typename?: 'Skupiny', sName: string, sDescription: string, sColorText: string, sColorRgb: string } | null | undefined }> } }> } | null | undefined };
 
 export type ArticlesAdminListQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
@@ -14617,7 +9374,12 @@ export type ArticlesAdminListQueryVariables = Exact<{
 }>;
 
 
-export type ArticlesAdminListQuery = { __typename?: 'query_root', aktuality: Array<{ __typename?: 'aktuality_admin', at_foto?: any | null | undefined, at_foto_main?: any | null | undefined, at_id?: any | null | undefined, at_jmeno?: string | null | undefined, at_kat?: string | null | undefined, at_kdo?: any | null | undefined, at_preview?: string | null | undefined, at_text?: string | null | undefined, at_timestamp_add?: any | null | undefined, at_timestamp?: any | null | undefined }>, aggregate: { __typename?: 'aktuality_admin_aggregate', aggregate?: { __typename?: 'aktuality_admin_aggregate_fields', count: number } | null | undefined } };
+export type ArticlesAdminListQuery = { __typename?: 'Query', allAktualities?: { __typename?: 'AktualitiesConnection', totalCount: number, nodes: Array<{ __typename?: 'Aktuality', atFoto?: any | null | undefined, atFotoMain?: any | null | undefined, atId: any, atJmeno: string, atKdo: any, atPreview: string, atText: string, atTimestampAdd?: any | null | undefined, atTimestamp?: any | null | undefined }> } | null | undefined };
+
+export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UserQueryQuery = { __typename?: 'Query', getCurrentUser?: { __typename?: 'User', uId: any, uJmeno: string, uPrijmeni: string, permissionByUGroup?: { __typename?: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: any, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number } | null | undefined } | null | undefined };
 
 export type AkceListQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
@@ -14625,15 +9387,15 @@ export type AkceListQueryVariables = Exact<{
 }>;
 
 
-export type AkceListQuery = { __typename?: 'query_root', akce: Array<{ __typename?: 'akce', a_do: any, a_id: any, a_info: string, a_dokumenty: string, a_jmeno: string, a_kapacita: any, a_kde: string, a_lock: boolean, a_od: any, a_timestamp?: any | null | undefined, a_visible: boolean, akce_items: Array<{ __typename?: 'akce_item', ai_id: any, user: { __typename?: 'users', u_jmeno: string, u_prijmeni: string, u_id: any } }>, aggregate: { __typename?: 'akce_item_aggregate', aggregate?: { __typename?: 'akce_item_aggregate_fields', count: number } | null | undefined } }>, aggregate: { __typename?: 'akce_aggregate', aggregate?: { __typename?: 'akce_aggregate_fields', count: number } | null | undefined } };
+export type AkceListQuery = { __typename?: 'Query', allAkces?: { __typename?: 'AkcesConnection', totalCount: number, nodes: Array<{ __typename?: 'Akce', aDo: any, aId: any, aInfo: string, aDokumenty: string, aJmeno: string, aKapacita: any, aKde: string, aLock: boolean, aOd: any, aTimestamp?: any | null | undefined, aVisible: boolean, akceItemsByAiIdRodic: { __typename?: 'AkceItemsConnection', totalCount: number, nodes: Array<{ __typename?: 'AkceItem', aiId: any, userByAiUser?: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: any } | null | undefined }> } }> } | null | undefined };
 
 export type SetAkceVisibleMutationVariables = Exact<{
-  id: Scalars['bigint'];
+  id: Scalars['BigInt'];
   visible: Scalars['Boolean'];
 }>;
 
 
-export type SetAkceVisibleMutation = { __typename?: 'mutation_root', update_akce_by_pk?: { __typename?: 'akce', a_id: any } | null | undefined };
+export type SetAkceVisibleMutation = { __typename?: 'Mutation', updateAkceByAId?: { __typename?: 'UpdateAkcePayload', akce?: { __typename?: 'Akce', aId: any } | null | undefined } | null | undefined };
 
 export type GalleryDirListQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
@@ -14641,15 +9403,15 @@ export type GalleryDirListQueryVariables = Exact<{
 }>;
 
 
-export type GalleryDirListQuery = { __typename?: 'query_root', galerie_dir: Array<{ __typename?: 'galerie_dir', gd_hidden: boolean, gd_id: any, gd_id_rodic: any, gd_level: any, gd_name: string, gd_path: string }>, aggregate: { __typename?: 'galerie_dir_aggregate', aggregate?: { __typename?: 'galerie_dir_aggregate_fields', count: number } | null | undefined } };
+export type GalleryDirListQuery = { __typename?: 'Query', allGalerieDirs?: { __typename?: 'GalerieDirsConnection', totalCount: number, nodes: Array<{ __typename?: 'GalerieDir', gdHidden: boolean, gdId: any, gdIdRodic: any, gdLevel: number, gdName: string, gdPath: string }> } | null | undefined };
 
 export type SetGalerieDirVisibleMutationVariables = Exact<{
-  id: Scalars['bigint'];
+  id: Scalars['BigInt'];
   visible: Scalars['Boolean'];
 }>;
 
 
-export type SetGalerieDirVisibleMutation = { __typename?: 'mutation_root', update_galerie_dir_by_pk?: { __typename?: 'galerie_dir', gd_id: any } | null | undefined };
+export type SetGalerieDirVisibleMutation = { __typename?: 'Mutation', updateGalerieDirByGdId?: { __typename?: 'UpdateGalerieDirPayload', galerieDir?: { __typename?: 'GalerieDir', gdId: any } | null | undefined } | null | undefined };
 
 export type ReservationAdminListQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
@@ -14657,15 +9419,15 @@ export type ReservationAdminListQueryVariables = Exact<{
 }>;
 
 
-export type ReservationAdminListQuery = { __typename?: 'query_root', nabidka: Array<{ __typename?: 'nabidka_admin', n_visible?: boolean | null | undefined, n_trener?: any | null | undefined, n_timestamp?: any | null | undefined, n_pocet_hod?: any | null | undefined, n_od?: any | null | undefined, n_max_pocet_hod?: any | null | undefined, n_lock?: boolean | null | undefined, n_id?: any | null | undefined, n_do?: any | null | undefined, user?: { __typename?: 'users', u_jmeno: string, u_prijmeni: string, u_id: any } | null | undefined, nabidka_items: Array<{ __typename?: 'nabidka_item', ni_lock: boolean, ni_partner: any, ni_pocet_hod: any, pary: { __typename?: 'pary', user: { __typename?: 'users', u_id: any, u_jmeno: string, u_prijmeni: string } } }> }>, aggregate: { __typename?: 'nabidka_admin_aggregate', aggregate?: { __typename?: 'nabidka_admin_aggregate_fields', count: number } | null | undefined } };
+export type ReservationAdminListQuery = { __typename?: 'Query', allNabidkas?: { __typename?: 'NabidkasConnection', totalCount: number, nodes: Array<{ __typename?: 'Nabidka', nDo: any, nId: any, nLock: boolean, nMaxPocetHod: any, nOd: any, nPocetHod: number, nTimestamp?: any | null | undefined, nTrener: any, nVisible: boolean, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename?: 'NabidkaItem', niPocetHod: number, niPartner: any, niLock: boolean, paryByNiPartner?: { __typename?: 'Pary', userByPIdPartner?: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: any } | null | undefined } | null | undefined }> }, userByNTrener?: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: any } | null | undefined }> } | null | undefined };
 
 export type SetNabidkaVisibleMutationVariables = Exact<{
-  id: Scalars['bigint'];
+  id: Scalars['BigInt'];
   visible: Scalars['Boolean'];
 }>;
 
 
-export type SetNabidkaVisibleMutation = { __typename?: 'mutation_root', update_nabidka_admin?: { __typename?: 'nabidka_admin_mutation_response', affected_rows: number } | null | undefined };
+export type SetNabidkaVisibleMutation = { __typename?: 'Mutation', updateNabidkaByNId?: { __typename?: 'UpdateNabidkaPayload', nabidka?: { __typename?: 'Nabidka', nId: any } | null | undefined } | null | undefined };
 
 export type NabidkaListQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
@@ -14673,7 +9435,7 @@ export type NabidkaListQueryVariables = Exact<{
 }>;
 
 
-export type NabidkaListQuery = { __typename?: 'query_root', nabidka: Array<{ __typename?: 'nabidka', n_visible: boolean, n_trener: any, n_timestamp?: any | null | undefined, n_pocet_hod: any, n_od: any, n_max_pocet_hod: any, n_lock: boolean, n_id: any, n_do: any, user: { __typename?: 'users', u_jmeno: string, u_prijmeni: string, u_id: any }, nabidka_items: Array<{ __typename?: 'nabidka_item', ni_lock: boolean, ni_partner: any, ni_pocet_hod: any, pary: { __typename?: 'pary', user: { __typename?: 'users', u_id: any, u_jmeno: string, u_prijmeni: string } } }> }> };
+export type NabidkaListQuery = { __typename?: 'Query', allNabidkas?: { __typename?: 'NabidkasConnection', totalCount: number, nodes: Array<{ __typename?: 'Nabidka', nDo: any, nId: any, nLock: boolean, nMaxPocetHod: any, nOd: any, nPocetHod: number, nTimestamp?: any | null | undefined, nTrener: any, nVisible: boolean, nabidkaItemsByNiIdRodic: { __typename?: 'NabidkaItemsConnection', nodes: Array<{ __typename?: 'NabidkaItem', niPocetHod: number, niPartner: any, niLock: boolean, paryByNiPartner?: { __typename?: 'Pary', userByPIdPartner?: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: any } | null | undefined } | null | undefined }> }, userByNTrener?: { __typename?: 'User', uJmeno: string, uPrijmeni: string, uId: any } | null | undefined }> } | null | undefined };
 
 export type ScheduleAdminListQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
@@ -14681,31 +9443,32 @@ export type ScheduleAdminListQueryVariables = Exact<{
 }>;
 
 
-export type ScheduleAdminListQuery = { __typename?: 'query_root', rozpis: Array<{ __typename?: 'rozpis_admin', r_datum?: any | null | undefined, r_id?: any | null | undefined, r_kde?: string | null | undefined, r_lock?: boolean | null | undefined, r_timestamp?: any | null | undefined, r_trener?: any | null | undefined, r_visible?: boolean | null | undefined, user?: { __typename?: 'users', u_jmeno: string, u_prijmeni: string, u_id: any } | null | undefined, rozpis_items: Array<{ __typename?: 'rozpis_item', ri_od: any, ri_do: any, ri_id: any, ri_partner?: any | null | undefined }> }>, aggregate: { __typename?: 'rozpis_admin_aggregate', aggregate?: { __typename?: 'rozpis_admin_aggregate_fields', count: number } | null | undefined } };
+export type ScheduleAdminListQuery = { __typename?: 'Query', allRozpis?: { __typename?: 'RozpisConnection', totalCount: number, nodes: Array<{ __typename?: 'Rozpi', rDatum: any, rId: any, rKde: string, rLock: boolean, rTimestamp?: any | null | undefined, rTrener: any, rVisible: boolean, userByRTrener?: { __typename?: 'User', uId: any, uJmeno: string, uPrijmeni: string } | null | undefined, rozpisItemsByRiIdRodic: { __typename?: 'RozpisItemsConnection', nodes: Array<{ __typename?: 'RozpisItem', riDo: any, riOd: any, riId: any, riPartner?: any | null | undefined }> } }> } | null | undefined };
 
 export type SetRozpisVisibleMutationVariables = Exact<{
-  id: Scalars['bigint'];
+  id: Scalars['BigInt'];
   visible: Scalars['Boolean'];
 }>;
 
 
-export type SetRozpisVisibleMutation = { __typename?: 'mutation_root', update_rozpis_admin?: { __typename?: 'rozpis_admin_mutation_response', affected_rows: number } | null | undefined };
+export type SetRozpisVisibleMutation = { __typename?: 'Mutation', updateRozpiByRId?: { __typename?: 'UpdateRozpiPayload', rozpi?: { __typename?: 'Rozpi', rId: any } | null | undefined } | null | undefined };
 
 export type GetMenuQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetMenuQuery = { __typename?: 'query_root', parameters_by_pk?: { __typename?: 'parameters', pa_value: string } | null | undefined };
+export type GetMenuQuery = { __typename?: 'Query', parameterByPaName?: { __typename?: 'Parameter', paValue: string } | null | undefined };
 
 
-export const UpozorneniListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"UpozorneniList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"upozorneni"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"up_timestamp_add"},"value":{"kind":"EnumValue","value":"desc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"up_id"}},{"kind":"Field","name":{"kind":"Name","value":"up_kdo"}},{"kind":"Field","name":{"kind":"Name","value":"up_lock"}},{"kind":"Field","name":{"kind":"Name","value":"up_nadpis"}},{"kind":"Field","name":{"kind":"Name","value":"up_text"}},{"kind":"Field","name":{"kind":"Name","value":"up_timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"up_timestamp_add"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"u_id"}},{"kind":"Field","name":{"kind":"Name","value":"u_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"u_prijmeni"}}]}},{"kind":"Field","name":{"kind":"Name","value":"upozorneni_skupinies"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"skupiny"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"s_name"}},{"kind":"Field","name":{"kind":"Name","value":"s_description"}},{"kind":"Field","name":{"kind":"Name","value":"s_color_text"}},{"kind":"Field","name":{"kind":"Name","value":"s_color_rgb"}}]}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"aggregate"},"name":{"kind":"Name","value":"upozorneni_aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]} as unknown as DocumentNode<UpozorneniListQuery, UpozorneniListQueryVariables>;
-export const ArticlesAdminListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ArticlesAdminList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"aktuality"},"name":{"kind":"Name","value":"aktuality_admin"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"at_timestamp_add"},"value":{"kind":"EnumValue","value":"desc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"at_foto"}},{"kind":"Field","name":{"kind":"Name","value":"at_foto_main"}},{"kind":"Field","name":{"kind":"Name","value":"at_id"}},{"kind":"Field","name":{"kind":"Name","value":"at_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"at_kat"}},{"kind":"Field","name":{"kind":"Name","value":"at_kdo"}},{"kind":"Field","name":{"kind":"Name","value":"at_preview"}},{"kind":"Field","name":{"kind":"Name","value":"at_text"}},{"kind":"Field","name":{"kind":"Name","value":"at_timestamp_add"}},{"kind":"Field","name":{"kind":"Name","value":"at_timestamp"}}]}},{"kind":"Field","alias":{"kind":"Name","value":"aggregate"},"name":{"kind":"Name","value":"aktuality_admin_aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]} as unknown as DocumentNode<ArticlesAdminListQuery, ArticlesAdminListQueryVariables>;
-export const AkceListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AkceList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"akce"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"a_od"},"value":{"kind":"EnumValue","value":"desc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a_do"}},{"kind":"Field","name":{"kind":"Name","value":"a_id"}},{"kind":"Field","name":{"kind":"Name","value":"a_info"}},{"kind":"Field","name":{"kind":"Name","value":"a_dokumenty"}},{"kind":"Field","name":{"kind":"Name","value":"a_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"a_kapacita"}},{"kind":"Field","name":{"kind":"Name","value":"a_kde"}},{"kind":"Field","name":{"kind":"Name","value":"a_lock"}},{"kind":"Field","name":{"kind":"Name","value":"a_od"}},{"kind":"Field","name":{"kind":"Name","value":"a_timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"a_visible"}},{"kind":"Field","name":{"kind":"Name","value":"akce_items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ai_id"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"u_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"u_prijmeni"}},{"kind":"Field","name":{"kind":"Name","value":"u_id"}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"aggregate"},"name":{"kind":"Name","value":"akce_items_aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"aggregate"},"name":{"kind":"Name","value":"akce_aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]} as unknown as DocumentNode<AkceListQuery, AkceListQueryVariables>;
-export const SetAkceVisibleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"setAkceVisible"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"visible"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_akce_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"a_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"a_visible"},"value":{"kind":"Variable","name":{"kind":"Name","value":"visible"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a_id"}}]}}]}}]} as unknown as DocumentNode<SetAkceVisibleMutation, SetAkceVisibleMutationVariables>;
-export const GalleryDirListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GalleryDirList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"galerie_dir"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"gd_name"},"value":{"kind":"EnumValue","value":"asc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gd_hidden"}},{"kind":"Field","name":{"kind":"Name","value":"gd_id"}},{"kind":"Field","name":{"kind":"Name","value":"gd_id_rodic"}},{"kind":"Field","name":{"kind":"Name","value":"gd_level"}},{"kind":"Field","name":{"kind":"Name","value":"gd_name"}},{"kind":"Field","name":{"kind":"Name","value":"gd_path"}}]}},{"kind":"Field","alias":{"kind":"Name","value":"aggregate"},"name":{"kind":"Name","value":"galerie_dir_aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]} as unknown as DocumentNode<GalleryDirListQuery, GalleryDirListQueryVariables>;
-export const SetGalerieDirVisibleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"setGalerieDirVisible"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"visible"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_galerie_dir_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"gd_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"gd_hidden"},"value":{"kind":"Variable","name":{"kind":"Name","value":"visible"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gd_id"}}]}}]}}]} as unknown as DocumentNode<SetGalerieDirVisibleMutation, SetGalerieDirVisibleMutationVariables>;
-export const ReservationAdminListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ReservationAdminList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"nabidka"},"name":{"kind":"Name","value":"nabidka_admin"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"n_od"},"value":{"kind":"EnumValue","value":"desc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"n_visible"}},{"kind":"Field","name":{"kind":"Name","value":"n_trener"}},{"kind":"Field","name":{"kind":"Name","value":"n_timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"n_pocet_hod"}},{"kind":"Field","name":{"kind":"Name","value":"n_od"}},{"kind":"Field","name":{"kind":"Name","value":"n_max_pocet_hod"}},{"kind":"Field","name":{"kind":"Name","value":"n_lock"}},{"kind":"Field","name":{"kind":"Name","value":"n_id"}},{"kind":"Field","name":{"kind":"Name","value":"n_do"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"u_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"u_prijmeni"}},{"kind":"Field","name":{"kind":"Name","value":"u_id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"nabidka_items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ni_lock"}},{"kind":"Field","name":{"kind":"Name","value":"ni_partner"}},{"kind":"Field","name":{"kind":"Name","value":"ni_pocet_hod"}},{"kind":"Field","name":{"kind":"Name","value":"pary"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"u_id"}},{"kind":"Field","name":{"kind":"Name","value":"u_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"u_prijmeni"}}]}}]}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"aggregate"},"name":{"kind":"Name","value":"nabidka_admin_aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]} as unknown as DocumentNode<ReservationAdminListQuery, ReservationAdminListQueryVariables>;
-export const SetNabidkaVisibleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"setNabidkaVisible"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"visible"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_nabidka_admin"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"n_id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"n_visible"},"value":{"kind":"Variable","name":{"kind":"Name","value":"visible"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"affected_rows"}}]}}]}}]} as unknown as DocumentNode<SetNabidkaVisibleMutation, SetNabidkaVisibleMutationVariables>;
-export const NabidkaListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"NabidkaList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nabidka"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"n_visible"}},{"kind":"Field","name":{"kind":"Name","value":"n_trener"}},{"kind":"Field","name":{"kind":"Name","value":"n_timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"n_pocet_hod"}},{"kind":"Field","name":{"kind":"Name","value":"n_od"}},{"kind":"Field","name":{"kind":"Name","value":"n_max_pocet_hod"}},{"kind":"Field","name":{"kind":"Name","value":"n_lock"}},{"kind":"Field","name":{"kind":"Name","value":"n_id"}},{"kind":"Field","name":{"kind":"Name","value":"n_do"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"u_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"u_prijmeni"}},{"kind":"Field","name":{"kind":"Name","value":"u_id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"nabidka_items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ni_lock"}},{"kind":"Field","name":{"kind":"Name","value":"ni_partner"}},{"kind":"Field","name":{"kind":"Name","value":"ni_pocet_hod"}},{"kind":"Field","name":{"kind":"Name","value":"pary"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"u_id"}},{"kind":"Field","name":{"kind":"Name","value":"u_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"u_prijmeni"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<NabidkaListQuery, NabidkaListQueryVariables>;
-export const ScheduleAdminListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ScheduleAdminList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"rozpis"},"name":{"kind":"Name","value":"rozpis_admin"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"r_datum"},"value":{"kind":"EnumValue","value":"desc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"r_datum"}},{"kind":"Field","name":{"kind":"Name","value":"r_id"}},{"kind":"Field","name":{"kind":"Name","value":"r_kde"}},{"kind":"Field","name":{"kind":"Name","value":"r_lock"}},{"kind":"Field","name":{"kind":"Name","value":"r_timestamp"}},{"kind":"Field","name":{"kind":"Name","value":"r_trener"}},{"kind":"Field","name":{"kind":"Name","value":"r_visible"}},{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"u_jmeno"}},{"kind":"Field","name":{"kind":"Name","value":"u_prijmeni"}},{"kind":"Field","name":{"kind":"Name","value":"u_id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"rozpis_items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ri_od"}},{"kind":"Field","name":{"kind":"Name","value":"ri_do"}},{"kind":"Field","name":{"kind":"Name","value":"ri_id"}},{"kind":"Field","name":{"kind":"Name","value":"ri_partner"}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"aggregate"},"name":{"kind":"Name","value":"rozpis_admin_aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]} as unknown as DocumentNode<ScheduleAdminListQuery, ScheduleAdminListQueryVariables>;
-export const SetRozpisVisibleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"setRozpisVisible"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"bigint"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"visible"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_rozpis_admin"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"r_id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"r_visible"},"value":{"kind":"Variable","name":{"kind":"Name","value":"visible"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"affected_rows"}}]}}]}}]} as unknown as DocumentNode<SetRozpisVisibleMutation, SetRozpisVisibleMutationVariables>;
-export const GetMenuDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetMenu"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"parameters_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pa_name"},"value":{"kind":"StringValue","value":"menu","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pa_value"}}]}}]}}]} as unknown as DocumentNode<GetMenuQuery, GetMenuQueryVariables>;
+export const UpozorneniListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"UpozorneniList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allUpozornenis"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"UP_TIMESTAMP_ADD_DESC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"upId"}},{"kind":"Field","name":{"kind":"Name","value":"upKdo"}},{"kind":"Field","name":{"kind":"Name","value":"upLock"}},{"kind":"Field","name":{"kind":"Name","value":"upNadpis"}},{"kind":"Field","name":{"kind":"Name","value":"upText"}},{"kind":"Field","name":{"kind":"Name","value":"upTimestamp"}},{"kind":"Field","name":{"kind":"Name","value":"upTimestampAdd"}},{"kind":"Field","name":{"kind":"Name","value":"userByUpKdo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uId"}},{"kind":"Field","name":{"kind":"Name","value":"uJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"uPrijmeni"}}]}},{"kind":"Field","name":{"kind":"Name","value":"upozorneniSkupiniesByUpsIdRodic"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"skupinyByUpsIdSkupina"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sName"}},{"kind":"Field","name":{"kind":"Name","value":"sDescription"}},{"kind":"Field","name":{"kind":"Name","value":"sColorText"}},{"kind":"Field","name":{"kind":"Name","value":"sColorRgb"}}]}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}}]} as unknown as DocumentNode<UpozorneniListQuery, UpozorneniListQueryVariables>;
+export const ArticlesAdminListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ArticlesAdminList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allAktualities"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"AT_TIMESTAMP_ADD_DESC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"atFoto"}},{"kind":"Field","name":{"kind":"Name","value":"atFotoMain"}},{"kind":"Field","name":{"kind":"Name","value":"atId"}},{"kind":"Field","name":{"kind":"Name","value":"atJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"atKdo"}},{"kind":"Field","name":{"kind":"Name","value":"atPreview"}},{"kind":"Field","name":{"kind":"Name","value":"atText"}},{"kind":"Field","name":{"kind":"Name","value":"atTimestampAdd"}},{"kind":"Field","name":{"kind":"Name","value":"atTimestamp"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}}]} as unknown as DocumentNode<ArticlesAdminListQuery, ArticlesAdminListQueryVariables>;
+export const UserQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"UserQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getCurrentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"permissionByUGroup"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"peAkce"}},{"kind":"Field","name":{"kind":"Name","value":"peAnkety"}},{"kind":"Field","name":{"kind":"Name","value":"peAktuality"}},{"kind":"Field","name":{"kind":"Name","value":"peDescription"}},{"kind":"Field","name":{"kind":"Name","value":"peDokumenty"}},{"kind":"Field","name":{"kind":"Name","value":"peGalerie"}},{"kind":"Field","name":{"kind":"Name","value":"peId"}},{"kind":"Field","name":{"kind":"Name","value":"peKonzole"}},{"kind":"Field","name":{"kind":"Name","value":"peInzerce"}},{"kind":"Field","name":{"kind":"Name","value":"peNabidka"}},{"kind":"Field","name":{"kind":"Name","value":"peMain"}},{"kind":"Field","name":{"kind":"Name","value":"peName"}},{"kind":"Field","name":{"kind":"Name","value":"peNastenka"}},{"kind":"Field","name":{"kind":"Name","value":"peNovinky"}},{"kind":"Field","name":{"kind":"Name","value":"pePary"}},{"kind":"Field","name":{"kind":"Name","value":"pePermissions"}},{"kind":"Field","name":{"kind":"Name","value":"pePlatby"}},{"kind":"Field","name":{"kind":"Name","value":"peRozpis"}},{"kind":"Field","name":{"kind":"Name","value":"peSkupiny"}},{"kind":"Field","name":{"kind":"Name","value":"peUsers"}}]}},{"kind":"Field","name":{"kind":"Name","value":"uId"}},{"kind":"Field","name":{"kind":"Name","value":"uJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"uPrijmeni"}}]}}]}}]} as unknown as DocumentNode<UserQueryQuery, UserQueryQueryVariables>;
+export const AkceListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AkceList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allAkces"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"A_OD_DESC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aDo"}},{"kind":"Field","name":{"kind":"Name","value":"aId"}},{"kind":"Field","name":{"kind":"Name","value":"aInfo"}},{"kind":"Field","name":{"kind":"Name","value":"aDokumenty"}},{"kind":"Field","name":{"kind":"Name","value":"aJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"aKapacita"}},{"kind":"Field","name":{"kind":"Name","value":"aKde"}},{"kind":"Field","name":{"kind":"Name","value":"aLock"}},{"kind":"Field","name":{"kind":"Name","value":"aOd"}},{"kind":"Field","name":{"kind":"Name","value":"aTimestamp"}},{"kind":"Field","name":{"kind":"Name","value":"aVisible"}},{"kind":"Field","name":{"kind":"Name","value":"akceItemsByAiIdRodic"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aiId"}},{"kind":"Field","name":{"kind":"Name","value":"userByAiUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"uPrijmeni"}},{"kind":"Field","name":{"kind":"Name","value":"uId"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}}]} as unknown as DocumentNode<AkceListQuery, AkceListQueryVariables>;
+export const SetAkceVisibleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"setAkceVisible"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BigInt"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"visible"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateAkceByAId"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"aId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"akcePatch"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"aVisible"},"value":{"kind":"Variable","name":{"kind":"Name","value":"visible"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"akce"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aId"}}]}}]}}]}}]} as unknown as DocumentNode<SetAkceVisibleMutation, SetAkceVisibleMutationVariables>;
+export const GalleryDirListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GalleryDirList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allGalerieDirs"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"GD_NAME_ASC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gdHidden"}},{"kind":"Field","name":{"kind":"Name","value":"gdId"}},{"kind":"Field","name":{"kind":"Name","value":"gdIdRodic"}},{"kind":"Field","name":{"kind":"Name","value":"gdLevel"}},{"kind":"Field","name":{"kind":"Name","value":"gdName"}},{"kind":"Field","name":{"kind":"Name","value":"gdPath"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}}]} as unknown as DocumentNode<GalleryDirListQuery, GalleryDirListQueryVariables>;
+export const SetGalerieDirVisibleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"setGalerieDirVisible"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BigInt"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"visible"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateGalerieDirByGdId"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"gdId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"galerieDirPatch"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"gdHidden"},"value":{"kind":"Variable","name":{"kind":"Name","value":"visible"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"galerieDir"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gdId"}}]}}]}}]}}]} as unknown as DocumentNode<SetGalerieDirVisibleMutation, SetGalerieDirVisibleMutationVariables>;
+export const ReservationAdminListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ReservationAdminList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allNabidkas"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"N_OD_DESC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nDo"}},{"kind":"Field","name":{"kind":"Name","value":"nId"}},{"kind":"Field","name":{"kind":"Name","value":"nLock"}},{"kind":"Field","name":{"kind":"Name","value":"nMaxPocetHod"}},{"kind":"Field","name":{"kind":"Name","value":"nOd"}},{"kind":"Field","name":{"kind":"Name","value":"nPocetHod"}},{"kind":"Field","name":{"kind":"Name","value":"nTimestamp"}},{"kind":"Field","name":{"kind":"Name","value":"nTrener"}},{"kind":"Field","name":{"kind":"Name","value":"nVisible"}},{"kind":"Field","name":{"kind":"Name","value":"nabidkaItemsByNiIdRodic"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"niPocetHod"}},{"kind":"Field","name":{"kind":"Name","value":"niPartner"}},{"kind":"Field","name":{"kind":"Name","value":"niLock"}},{"kind":"Field","name":{"kind":"Name","value":"paryByNiPartner"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userByPIdPartner"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"uPrijmeni"}},{"kind":"Field","name":{"kind":"Name","value":"uId"}}]}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"userByNTrener"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"uPrijmeni"}},{"kind":"Field","name":{"kind":"Name","value":"uId"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}}]} as unknown as DocumentNode<ReservationAdminListQuery, ReservationAdminListQueryVariables>;
+export const SetNabidkaVisibleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"setNabidkaVisible"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BigInt"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"visible"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateNabidkaByNId"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"nabidkaPatch"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"nVisible"},"value":{"kind":"Variable","name":{"kind":"Name","value":"visible"}}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"nId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nabidka"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nId"}}]}}]}}]}}]} as unknown as DocumentNode<SetNabidkaVisibleMutation, SetNabidkaVisibleMutationVariables>;
+export const NabidkaListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"NabidkaList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allNabidkas"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"N_OD_DESC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nDo"}},{"kind":"Field","name":{"kind":"Name","value":"nId"}},{"kind":"Field","name":{"kind":"Name","value":"nLock"}},{"kind":"Field","name":{"kind":"Name","value":"nMaxPocetHod"}},{"kind":"Field","name":{"kind":"Name","value":"nOd"}},{"kind":"Field","name":{"kind":"Name","value":"nPocetHod"}},{"kind":"Field","name":{"kind":"Name","value":"nTimestamp"}},{"kind":"Field","name":{"kind":"Name","value":"nTrener"}},{"kind":"Field","name":{"kind":"Name","value":"nVisible"}},{"kind":"Field","name":{"kind":"Name","value":"nabidkaItemsByNiIdRodic"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"niPocetHod"}},{"kind":"Field","name":{"kind":"Name","value":"niPartner"}},{"kind":"Field","name":{"kind":"Name","value":"niLock"}},{"kind":"Field","name":{"kind":"Name","value":"paryByNiPartner"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userByPIdPartner"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"uPrijmeni"}},{"kind":"Field","name":{"kind":"Name","value":"uId"}}]}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"userByNTrener"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"uPrijmeni"}},{"kind":"Field","name":{"kind":"Name","value":"uId"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}}]} as unknown as DocumentNode<NabidkaListQuery, NabidkaListQueryVariables>;
+export const ScheduleAdminListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ScheduleAdminList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allRozpis"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"R_DATUM_DESC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"rDatum"}},{"kind":"Field","name":{"kind":"Name","value":"rId"}},{"kind":"Field","name":{"kind":"Name","value":"rKde"}},{"kind":"Field","name":{"kind":"Name","value":"rLock"}},{"kind":"Field","name":{"kind":"Name","value":"rTimestamp"}},{"kind":"Field","name":{"kind":"Name","value":"rTrener"}},{"kind":"Field","name":{"kind":"Name","value":"rVisible"}},{"kind":"Field","name":{"kind":"Name","value":"userByRTrener"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uId"}},{"kind":"Field","name":{"kind":"Name","value":"uJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"uPrijmeni"}}]}},{"kind":"Field","name":{"kind":"Name","value":"rozpisItemsByRiIdRodic"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"riDo"}},{"kind":"Field","name":{"kind":"Name","value":"riOd"}},{"kind":"Field","name":{"kind":"Name","value":"riId"}},{"kind":"Field","name":{"kind":"Name","value":"riPartner"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}}]} as unknown as DocumentNode<ScheduleAdminListQuery, ScheduleAdminListQueryVariables>;
+export const SetRozpisVisibleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"setRozpisVisible"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BigInt"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"visible"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateRozpiByRId"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"rozpiPatch"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"rVisible"},"value":{"kind":"Variable","name":{"kind":"Name","value":"visible"}}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"rId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"rozpi"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"rId"}}]}}]}}]}}]} as unknown as DocumentNode<SetRozpisVisibleMutation, SetRozpisVisibleMutationVariables>;
+export const GetMenuDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetMenu"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"parameterByPaName"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"paName"},"value":{"kind":"StringValue","value":"menu","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"paValue"}}]}}]}}]} as unknown as DocumentNode<GetMenuQuery, GetMenuQueryVariables>;

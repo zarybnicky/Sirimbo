@@ -61,6 +61,72 @@ CREATE TYPE public.pary_p_stt_trida AS ENUM (
 
 
 --
+-- Name: current_user_id(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.current_user_id() RETURNS text
+    LANGUAGE sql STABLE
+    AS $$
+  SELECT current_setting('jwt.claims.user_id', true);
+$$;
+
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users (
+    u_id bigint NOT NULL,
+    u_login text NOT NULL,
+    u_pass character(40) NOT NULL,
+    u_jmeno text NOT NULL,
+    u_prijmeni text NOT NULL,
+    u_pohlavi text NOT NULL,
+    u_email text NOT NULL,
+    u_telefon text NOT NULL,
+    u_narozeni date NOT NULL,
+    u_rodne_cislo text,
+    u_poznamky text DEFAULT ''::text NOT NULL,
+    u_timestamp timestamp with time zone DEFAULT now() NOT NULL,
+    u_level smallint DEFAULT '0'::smallint NOT NULL,
+    u_group bigint NOT NULL,
+    u_skupina bigint DEFAULT '1'::bigint NOT NULL,
+    u_dancer boolean DEFAULT true NOT NULL,
+    u_ban boolean DEFAULT true NOT NULL,
+    u_lock boolean DEFAULT true NOT NULL,
+    u_confirmed boolean DEFAULT true NOT NULL,
+    u_system boolean DEFAULT true NOT NULL,
+    u_street text NOT NULL,
+    u_conscription_number text DEFAULT ''::text NOT NULL,
+    u_orientation_number text DEFAULT ''::text NOT NULL,
+    u_district text DEFAULT ''::text NOT NULL,
+    u_city text NOT NULL,
+    u_postal_code text NOT NULL,
+    u_nationality text NOT NULL,
+    u_member_since timestamp with time zone,
+    u_member_until timestamp with time zone,
+    u_created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    u_teacher boolean DEFAULT true NOT NULL,
+    u_gdpr_signed_at timestamp with time zone
+);
+
+
+--
+-- Name: get_current_user(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.get_current_user() RETURNS public.users
+    LANGUAGE sql STABLE
+    AS $$
+  SELECT * FROM users WHERE u_id = nullif(current_setting('jwt.claims.user_id', true), '')::integer;
+$$;
+
+
+--
 -- Name: on_update_current_timestamp_akce(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -171,10 +237,6 @@ BEGIN
 END;
 $$;
 
-
-SET default_tablespace = '';
-
-SET default_with_oids = false;
 
 --
 -- Name: akce; Type: TABLE; Schema: public; Owner: -
@@ -479,46 +541,6 @@ CREATE TABLE public.skupiny (
     s_description text NOT NULL,
     s_color_rgb text NOT NULL,
     s_color_text text NOT NULL
-);
-
-
---
--- Name: users; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.users (
-    u_id bigint NOT NULL,
-    u_login text NOT NULL,
-    u_pass character(40) NOT NULL,
-    u_jmeno text NOT NULL,
-    u_prijmeni text NOT NULL,
-    u_pohlavi text NOT NULL,
-    u_email text NOT NULL,
-    u_telefon text NOT NULL,
-    u_narozeni date NOT NULL,
-    u_rodne_cislo text,
-    u_poznamky text DEFAULT ''::text NOT NULL,
-    u_timestamp timestamp with time zone DEFAULT now() NOT NULL,
-    u_level smallint DEFAULT '0'::smallint NOT NULL,
-    u_group bigint NOT NULL,
-    u_skupina bigint DEFAULT '1'::bigint NOT NULL,
-    u_dancer boolean DEFAULT true NOT NULL,
-    u_ban boolean DEFAULT true NOT NULL,
-    u_lock boolean DEFAULT true NOT NULL,
-    u_confirmed boolean DEFAULT true NOT NULL,
-    u_system boolean DEFAULT true NOT NULL,
-    u_street text NOT NULL,
-    u_conscription_number text DEFAULT ''::text NOT NULL,
-    u_orientation_number text DEFAULT ''::text NOT NULL,
-    u_district text DEFAULT ''::text NOT NULL,
-    u_city text NOT NULL,
-    u_postal_code text NOT NULL,
-    u_nationality text NOT NULL,
-    u_member_since timestamp with time zone,
-    u_member_until timestamp with time zone,
-    u_created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    u_teacher boolean DEFAULT true NOT NULL,
-    u_gdpr_signed_at timestamp with time zone
 );
 
 
@@ -2199,6 +2221,293 @@ ALTER TABLE ONLY public.users
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_u_skupina_fkey FOREIGN KEY (u_skupina) REFERENCES public.skupiny(s_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: -
+--
+
+REVOKE ALL ON SCHEMA public FROM postgres;
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+GRANT ALL ON SCHEMA public TO olymp;
+GRANT USAGE ON SCHEMA public TO olympuser;
+
+
+--
+-- Name: FUNCTION on_update_current_timestamp_akce(); Type: ACL; Schema: public; Owner: -
+--
+
+REVOKE ALL ON FUNCTION public.on_update_current_timestamp_akce() FROM PUBLIC;
+GRANT ALL ON FUNCTION public.on_update_current_timestamp_akce() TO olympuser;
+
+
+--
+-- Name: FUNCTION on_update_current_timestamp_aktuality(); Type: ACL; Schema: public; Owner: -
+--
+
+REVOKE ALL ON FUNCTION public.on_update_current_timestamp_aktuality() FROM PUBLIC;
+GRANT ALL ON FUNCTION public.on_update_current_timestamp_aktuality() TO olympuser;
+
+
+--
+-- Name: FUNCTION on_update_current_timestamp_dokumenty(); Type: ACL; Schema: public; Owner: -
+--
+
+REVOKE ALL ON FUNCTION public.on_update_current_timestamp_dokumenty() FROM PUBLIC;
+GRANT ALL ON FUNCTION public.on_update_current_timestamp_dokumenty() TO olympuser;
+
+
+--
+-- Name: FUNCTION on_update_current_timestamp_galerie_foto(); Type: ACL; Schema: public; Owner: -
+--
+
+REVOKE ALL ON FUNCTION public.on_update_current_timestamp_galerie_foto() FROM PUBLIC;
+GRANT ALL ON FUNCTION public.on_update_current_timestamp_galerie_foto() TO olympuser;
+
+
+--
+-- Name: FUNCTION on_update_current_timestamp_nabidka(); Type: ACL; Schema: public; Owner: -
+--
+
+REVOKE ALL ON FUNCTION public.on_update_current_timestamp_nabidka() FROM PUBLIC;
+GRANT ALL ON FUNCTION public.on_update_current_timestamp_nabidka() TO olympuser;
+
+
+--
+-- Name: FUNCTION on_update_current_timestamp_rozpis(); Type: ACL; Schema: public; Owner: -
+--
+
+REVOKE ALL ON FUNCTION public.on_update_current_timestamp_rozpis() FROM PUBLIC;
+GRANT ALL ON FUNCTION public.on_update_current_timestamp_rozpis() TO olympuser;
+
+
+--
+-- Name: FUNCTION on_update_current_timestamp_upozorneni(); Type: ACL; Schema: public; Owner: -
+--
+
+REVOKE ALL ON FUNCTION public.on_update_current_timestamp_upozorneni() FROM PUBLIC;
+GRANT ALL ON FUNCTION public.on_update_current_timestamp_upozorneni() TO olympuser;
+
+
+--
+-- Name: FUNCTION on_update_current_timestamp_users(); Type: ACL; Schema: public; Owner: -
+--
+
+REVOKE ALL ON FUNCTION public.on_update_current_timestamp_users() FROM PUBLIC;
+GRANT ALL ON FUNCTION public.on_update_current_timestamp_users() TO olympuser;
+
+
+--
+-- Name: SEQUENCE akce_a_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.akce_a_id_seq TO olympuser;
+
+
+--
+-- Name: SEQUENCE akce_item_ai_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.akce_item_ai_id_seq TO olympuser;
+
+
+--
+-- Name: SEQUENCE aktuality_at_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.aktuality_at_id_seq TO olympuser;
+
+
+--
+-- Name: SEQUENCE dokumenty_d_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.dokumenty_d_id_seq TO olympuser;
+
+
+--
+-- Name: SEQUENCE galerie_dir_gd_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.galerie_dir_gd_id_seq TO olympuser;
+
+
+--
+-- Name: SEQUENCE galerie_foto_gf_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.galerie_foto_gf_id_seq TO olympuser;
+
+
+--
+-- Name: SEQUENCE nabidka_item_ni_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.nabidka_item_ni_id_seq TO olympuser;
+
+
+--
+-- Name: SEQUENCE nabidka_n_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.nabidka_n_id_seq TO olympuser;
+
+
+--
+-- Name: SEQUENCE pary_navrh_pn_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.pary_navrh_pn_id_seq TO olympuser;
+
+
+--
+-- Name: SEQUENCE pary_p_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.pary_p_id_seq TO olympuser;
+
+
+--
+-- Name: SEQUENCE permissions_pe_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.permissions_pe_id_seq TO olympuser;
+
+
+--
+-- Name: SEQUENCE platby_category_group_pcg_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.platby_category_group_pcg_id_seq TO olympuser;
+
+
+--
+-- Name: SEQUENCE platby_category_pc_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.platby_category_pc_id_seq TO olympuser;
+
+
+--
+-- Name: SEQUENCE platby_group_pg_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.platby_group_pg_id_seq TO olympuser;
+
+
+--
+-- Name: SEQUENCE platby_group_skupina_pgs_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.platby_group_skupina_pgs_id_seq TO olympuser;
+
+
+--
+-- Name: SEQUENCE platby_item_pi_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.platby_item_pi_id_seq TO olympuser;
+
+
+--
+-- Name: SEQUENCE platby_raw_pr_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.platby_raw_pr_id_seq TO olympuser;
+
+
+--
+-- Name: SEQUENCE rozpis_item_ri_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.rozpis_item_ri_id_seq TO olympuser;
+
+
+--
+-- Name: SEQUENCE rozpis_r_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.rozpis_r_id_seq TO olympuser;
+
+
+--
+-- Name: SEQUENCE skupiny_s_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.skupiny_s_id_seq TO olympuser;
+
+
+--
+-- Name: SEQUENCE upozorneni_skupiny_ups_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.upozorneni_skupiny_ups_id_seq TO olympuser;
+
+
+--
+-- Name: SEQUENCE upozorneni_up_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.upozorneni_up_id_seq TO olympuser;
+
+
+--
+-- Name: SEQUENCE users_skupiny_us_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.users_skupiny_us_id_seq TO olympuser;
+
+
+--
+-- Name: SEQUENCE users_u_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.users_u_id_seq TO olympuser;
+
+
+--
+-- Name: SEQUENCE video_list_vl_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.video_list_vl_id_seq TO olympuser;
+
+
+--
+-- Name: SEQUENCE video_source_vs_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.video_source_vs_id_seq TO olympuser;
+
+
+--
+-- Name: SEQUENCE video_v_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.video_v_id_seq TO olympuser;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: public; Owner: -
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public REVOKE ALL ON SEQUENCES  FROM postgres;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES  TO olympuser;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: public; Owner: -
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public REVOKE ALL ON FUNCTIONS  FROM postgres;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON FUNCTIONS  TO olympuser;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: -; Owner: -
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
 
 
 --

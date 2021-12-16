@@ -6,9 +6,6 @@ import { postgraphile, PostGraphileOptions } from 'postgraphile';
 
 export const options: PostGraphileOptions = {
   async pgSettings(req) {
-    // Adding this to ensure that all servers pass through the request in a
-    // good enough way that we can extract headers.
-    // CREATE FUNCTION current_user_id() RETURNS text AS $$ SELECT current_setting('graphile.test.x-user-id', TRUE); $$ LANGUAGE sql STABLE;
     const phpsessid = (req as any).cookies.PHPSESSID;
     if (!phpsessid) return { 'graphile.test.x-user-role': 'anonymous' };
 
@@ -22,12 +19,12 @@ export const options: PostGraphileOptions = {
     if (!userRes.rows[0]) return { 'graphile.test.x-user-role': 'anonymous' };
 
     return {
-      'graphile.test.x-user-role': (
+      'jwt.claims.user_group': (
         userRes.rows[0].u_group == "0" ? "anonymous" :
           userRes.rows[0].u_group == "1" ? "admin" :
             "member"
       ),
-      'graphile.test.x-user-id': uid.toString(),
+      'jwt.claims.user_id': uid.toString(),
     };
   },
   watchPg: true,
@@ -36,8 +33,7 @@ export const options: PostGraphileOptions = {
   // subscriptions: true,
   dynamicJson: true,
   setofFunctionsContainNulls: false,
-  // ignoreRBAC: false,
-  ignoreRBAC: true,
+  ignoreRBAC: false,
   showErrorStack: 'json',
   extendedErrors: ['hint', 'detail', 'errcode'],
   allowExplain: true,

@@ -40,16 +40,16 @@ export interface MenuLink {
 
 export const GetMenu = gql(`
 query GetMenu {
-parameters_by_pk(pa_name: "menu") {
-    pa_value
+  parameterByPaName(paName: "menu") {
+    paValue
   }
 }`);
 
 export const useMenu = (): MenuType => {
   const { data } = useQuery(GetMenu);
-  if (!data?.parameters_by_pk?.pa_value) {
+  if (!data?.parameterByPaName?.paValue) {
     return [];
   }
-  const menu = JSON.parse(data?.parameters_by_pk?.pa_value) as MenuType;
+  const menu = JSON.parse(data.parameterByPaName.paValue) as MenuType;
   return menu.filter(x => x.type as unknown !== 'text');
 }

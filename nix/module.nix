@@ -193,6 +193,7 @@ in {
         after = [ "network-online.target" "postgresql.service" ];
         requires = [ "postgresql.service" ];
         environment.DATABASE_URL = "postgres://${cfg.user}@localhost/olymp";
+        environment.DATABASE_VISITOR = "olympuser";
         serviceConfig = {
           User = cfg.user;
           Group = cfg.group;

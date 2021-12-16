@@ -98,6 +98,7 @@
       DATABASE_URL = "postgres://olymp@olymp-test/olymp";
       SHADOW_DATABASE_URL = "postgres://olymp@olymp-test/olymp_shadow";
       ROOT_DATABASE_URL = "postgres://postgres@olymp-test/postgres";
+      DATABASE_VISITOR = "olympuser";
     };
 
     nixosConfigurations.container = nixpkgs.lib.nixosSystem {
@@ -115,13 +116,16 @@
             enable = true;
             enableTCPIP = true;
             ensureDatabases = ["olymp" "olymp_shadow"];
-            ensureUsers = [{
-              name = "olymp";
-              ensurePermissions = {
-                "DATABASE olymp" = "ALL PRIVILEGES";
-                "ALL TABLES IN SCHEMA public" = "ALL";
-              };
-            }];
+            ensureUsers = [
+              {
+                name = "olymp";
+                ensurePermissions = {
+                  "DATABASE olymp" = "ALL PRIVILEGES";
+                  "ALL TABLES IN SCHEMA public" = "ALL";
+                };
+              }
+              { name = "olympuser"; }
+            ];
             authentication = "host all all all trust";
           };
           services.olymp = {
