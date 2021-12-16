@@ -5,7 +5,7 @@
 runCommand "sirimbo-migrations" {
   buildInputs = [makeWrapper];
 } ''
-  mkdir -p $out/migrations
-  cp -r ${./.} migrations/
-  cp -r ${../.gmrc} .
+  mkdir -p $out
+  cp -r ${./.} $out/migrations
+  cp -r ${../.gmrc} $out/.gmrc
 ''
