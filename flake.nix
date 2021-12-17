@@ -47,7 +47,6 @@
 
       inherit (final.haskell.packages.${compiler}) sirimbo-api;
 
-
       sirimbo-php = (final.callPackage ./sirimbo-php/composer-project.nix {
         php = final.php74;
       } (

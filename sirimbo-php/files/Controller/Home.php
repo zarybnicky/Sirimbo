@@ -13,7 +13,6 @@ class Home
             'description' => $val['at_preview'],
             'title_photo_uri' => $val['at_foto_main'] ? '/galerie/' . $val['gf_path'] : ''
         ]);
-
         $moreArticles = array_for(array_slice($articles, 3, 2), fn($val) => [
             'uri'  => '/aktualne/' . $val['at_id'],
             'name' => $val['at_jmeno'],
