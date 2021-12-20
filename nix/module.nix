@@ -158,7 +158,7 @@ in {
         };
         phpPackage = pkgs.php.withExtensions ({ all, ... }: with all; [
           curl imagick opcache pdo openssl posix
-          mbstring session json ctype exif gd zlib pdo_pgsql
+          mbstring session ctype exif gd zlib pdo_pgsql
         ]);
       };
 
