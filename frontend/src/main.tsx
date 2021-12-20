@@ -10,20 +10,20 @@ import './style/index.scss';
 import L from 'leaflet';
 delete (L.Icon.Default.prototype as unknown as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-  iconUrl: require('leaflet/dist/images/marker-icon.png'),
-  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png').default,
+  iconUrl: require('leaflet/dist/images/marker-icon.png').default,
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png').default,
 });
 
-import { AnnouncementListElement } from './announcement-list';
-import { ArticleAdminListElement } from './articles-list';
-import { DateRangeElement, DateElement } from './date';
-import { EventListElement } from './event-list';
-import { GalleryDirectoryListElement } from './gallery-directory-list';
-import { QRCodeElement } from './qr-payment';
-import { ReservationAdminListElement } from './reservation-list';
-import { ReservationSelectElement } from './reservation-select';
-import { RozpisAdminListElement } from './schedule-list';
+import { AnnouncementListElement } from './custom-elements/announcement-list';
+import { ArticleAdminListElement } from './custom-elements/articles-list';
+import { DateRangeElement, DateElement } from './custom-elements/date';
+import { EventListElement } from './custom-elements/event-list';
+import { GalleryDirectoryListElement } from './custom-elements/gallery-directory-list';
+import { QRCodeElement } from './custom-elements/qr-payment';
+import { ReservationAdminListElement } from './custom-elements/reservation-list';
+import { ReservationSelectElement } from './custom-elements/reservation-select';
+import { RozpisAdminListElement } from './custom-elements/schedule-list';
 
 customElements.define('announcement-list', AnnouncementListElement);
 customElements.define('article-admin-list', ArticleAdminListElement);

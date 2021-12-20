@@ -1,6 +1,6 @@
 import * as React from "react";
 
-interface User {
+export interface User {
   name: string;
 }
 

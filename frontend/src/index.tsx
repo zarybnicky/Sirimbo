@@ -7,12 +7,16 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 delete (L.Icon.Default.prototype as unknown as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-  iconUrl: require('leaflet/dist/images/marker-icon.png'),
-  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png').default,
+  iconUrl: require('leaflet/dist/images/marker-icon.png').default,
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png').default,
 });
 
 
 if (document.getElementById('app-new')) {
   ReactDOM.render(<App />, document.getElementById('app-new'));
+}
+
+if (module['hot']) {
+  module['hot'].accept();
 }

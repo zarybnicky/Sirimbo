@@ -8,7 +8,7 @@
   "private": true,
   "scripts": {
     "build": "webpack --progress",
-    "start": "tsnd --respawn src/index.ts"
+    "start": "PGHOST=olymp-test PGUSER=postgres PGDATABASE=olymp tsnd --respawn src/index.ts"
   },
   "dependencies": {
     "@tsconfig/node12": "^1.0.9",
@@ -30,6 +30,7 @@
     "pg": "^8.7.1",
     "postgraphile": "^4.12.5",
     "raw-loader": "^4.0.2",
+    "sql-lint": "^0.0.19",
     "ts-loader": "^9.2.6",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.5.4",

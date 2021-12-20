@@ -29,6 +29,8 @@ export type Scalars = {
    * 8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone.
    */
   Datetime: any;
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+  JSON: any;
   /** The exact time of day, does not include the date. May or may not have a timezone offset. */
   Time: any;
 };
@@ -348,6 +350,84 @@ export type AktualityCondition = {
   atTimestampAdd?: InputMaybe<Scalars['Datetime']>;
 };
 
+export type AktualityFoto = Node & {
+  __typename?: 'AktualityFoto';
+  afId: Scalars['BigInt'];
+  afIdFoto: Scalars['BigInt'];
+  afIdRodic: Scalars['BigInt'];
+  afPath: Scalars['String'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+};
+
+/**
+ * A condition to be used against `AktualityFoto` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type AktualityFotoCondition = {
+  /** Checks for equality with the object’s `afId` field. */
+  afId?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `afIdFoto` field. */
+  afIdFoto?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `afIdRodic` field. */
+  afIdRodic?: InputMaybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `afPath` field. */
+  afPath?: InputMaybe<Scalars['String']>;
+};
+
+/** An input for mutations affecting `AktualityFoto` */
+export type AktualityFotoInput = {
+  afId?: InputMaybe<Scalars['BigInt']>;
+  afIdFoto: Scalars['BigInt'];
+  afIdRodic: Scalars['BigInt'];
+  afPath: Scalars['String'];
+};
+
+/** Represents an update to a `AktualityFoto`. Fields that are set will be updated. */
+export type AktualityFotoPatch = {
+  afId?: InputMaybe<Scalars['BigInt']>;
+  afIdFoto?: InputMaybe<Scalars['BigInt']>;
+  afIdRodic?: InputMaybe<Scalars['BigInt']>;
+  afPath?: InputMaybe<Scalars['String']>;
+};
+
+/** A connection to a list of `AktualityFoto` values. */
+export type AktualityFotosConnection = {
+  __typename?: 'AktualityFotosConnection';
+  /** A list of edges which contains the `AktualityFoto` and cursor to aid in pagination. */
+  edges: Array<AktualityFotosEdge>;
+  /** A list of `AktualityFoto` objects. */
+  nodes: Array<AktualityFoto>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AktualityFoto` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `AktualityFoto` edge in the connection. */
+export type AktualityFotosEdge = {
+  __typename?: 'AktualityFotosEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `AktualityFoto` at the end of the edge. */
+  node: AktualityFoto;
+};
+
+/** Methods to use when ordering `AktualityFoto`. */
+export enum AktualityFotosOrderBy {
+  AfIdAsc = 'AF_ID_ASC',
+  AfIdDesc = 'AF_ID_DESC',
+  AfIdFotoAsc = 'AF_ID_FOTO_ASC',
+  AfIdFotoDesc = 'AF_ID_FOTO_DESC',
+  AfIdRodicAsc = 'AF_ID_RODIC_ASC',
+  AfIdRodicDesc = 'AF_ID_RODIC_DESC',
+  AfPathAsc = 'AF_PATH_ASC',
+  AfPathDesc = 'AF_PATH_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
 /** An input for mutations affecting `Aktuality` */
 export type AktualityInput = {
   atFoto?: InputMaybe<Scalars['BigInt']>;
@@ -444,6 +524,39 @@ export type CreateAkcePayload = {
 /** The output of our create `Akce` mutation. */
 export type CreateAkcePayloadAkceEdgeArgs = {
   orderBy?: InputMaybe<Array<AkcesOrderBy>>;
+};
+
+/** All input for the create `AktualityFoto` mutation. */
+export type CreateAktualityFotoInput = {
+  /** The `AktualityFoto` to be created by this mutation. */
+  aktualityFoto: AktualityFotoInput;
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+};
+
+/** The output of our create `AktualityFoto` mutation. */
+export type CreateAktualityFotoPayload = {
+  __typename?: 'CreateAktualityFotoPayload';
+  /** The `AktualityFoto` that was created by this mutation. */
+  aktualityFoto?: Maybe<AktualityFoto>;
+  /** An edge for our `AktualityFoto`. May be used by Relay 1. */
+  aktualityFotoEdge?: Maybe<AktualityFotosEdge>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `AktualityFoto` mutation. */
+export type CreateAktualityFotoPayloadAktualityFotoEdgeArgs = {
+  orderBy?: InputMaybe<Array<AktualityFotosOrderBy>>;
 };
 
 /** All input for the create `Aktuality` mutation. */
@@ -658,6 +771,76 @@ export type CreateNabidkaPayload = {
 /** The output of our create `Nabidka` mutation. */
 export type CreateNabidkaPayloadNabidkaEdgeArgs = {
   orderBy?: InputMaybe<Array<NabidkasOrderBy>>;
+};
+
+/** All input for the create `Page` mutation. */
+export type CreatePageInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `Page` to be created by this mutation. */
+  page: PageInput;
+};
+
+/** The output of our create `Page` mutation. */
+export type CreatePagePayload = {
+  __typename?: 'CreatePagePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Page` that was created by this mutation. */
+  page?: Maybe<Page>;
+  /** An edge for our `Page`. May be used by Relay 1. */
+  pageEdge?: Maybe<PagesEdge>;
+  /** Reads a single `PageRevision` that is related to this `Page`. */
+  pageRevisionByCurrentRevision?: Maybe<PageRevision>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `Page` mutation. */
+export type CreatePagePayloadPageEdgeArgs = {
+  orderBy?: InputMaybe<Array<PagesOrderBy>>;
+};
+
+/** All input for the create `PageRevision` mutation. */
+export type CreatePageRevisionInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The `PageRevision` to be created by this mutation. */
+  pageRevision: PageRevisionInput;
+};
+
+/** The output of our create `PageRevision` mutation. */
+export type CreatePageRevisionPayload = {
+  __typename?: 'CreatePageRevisionPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Reads a single `Page` that is related to this `PageRevision`. */
+  pageByPageId?: Maybe<Page>;
+  /** The `PageRevision` that was created by this mutation. */
+  pageRevision?: Maybe<PageRevision>;
+  /** An edge for our `PageRevision`. May be used by Relay 1. */
+  pageRevisionEdge?: Maybe<PageRevisionsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our create `PageRevision` mutation. */
+export type CreatePageRevisionPayloadPageRevisionEdgeArgs = {
+  orderBy?: InputMaybe<Array<PageRevisionsOrderBy>>;
 };
 
 /** All input for the create `Parameter` mutation. */
@@ -1493,6 +1676,50 @@ export type DeleteAktualityByAtIdInput = {
   clientMutationId?: InputMaybe<Scalars['String']>;
 };
 
+/** All input for the `deleteAktualityFotoByAfId` mutation. */
+export type DeleteAktualityFotoByAfIdInput = {
+  afId: Scalars['BigInt'];
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+};
+
+/** All input for the `deleteAktualityFoto` mutation. */
+export type DeleteAktualityFotoInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `AktualityFoto` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `AktualityFoto` mutation. */
+export type DeleteAktualityFotoPayload = {
+  __typename?: 'DeleteAktualityFotoPayload';
+  /** The `AktualityFoto` that was deleted by this mutation. */
+  aktualityFoto?: Maybe<AktualityFoto>;
+  /** An edge for our `AktualityFoto`. May be used by Relay 1. */
+  aktualityFotoEdge?: Maybe<AktualityFotosEdge>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedAktualityFotoId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `AktualityFoto` mutation. */
+export type DeleteAktualityFotoPayloadAktualityFotoEdgeArgs = {
+  orderBy?: InputMaybe<Array<AktualityFotosOrderBy>>;
+};
+
 /** All input for the `deleteAktuality` mutation. */
 export type DeleteAktualityInput = {
   /**
@@ -1761,6 +1988,108 @@ export type DeleteNabidkaPayload = {
 /** The output of our delete `Nabidka` mutation. */
 export type DeleteNabidkaPayloadNabidkaEdgeArgs = {
   orderBy?: InputMaybe<Array<NabidkasOrderBy>>;
+};
+
+/** All input for the `deletePageById` mutation. */
+export type DeletePageByIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** All input for the `deletePageByUrl` mutation. */
+export type DeletePageByUrlInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  url: Scalars['String'];
+};
+
+/** All input for the `deletePage` mutation. */
+export type DeletePageInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Page` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `Page` mutation. */
+export type DeletePagePayload = {
+  __typename?: 'DeletePagePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedPageId?: Maybe<Scalars['ID']>;
+  /** The `Page` that was deleted by this mutation. */
+  page?: Maybe<Page>;
+  /** An edge for our `Page`. May be used by Relay 1. */
+  pageEdge?: Maybe<PagesEdge>;
+  /** Reads a single `PageRevision` that is related to this `Page`. */
+  pageRevisionByCurrentRevision?: Maybe<PageRevision>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `Page` mutation. */
+export type DeletePagePayloadPageEdgeArgs = {
+  orderBy?: InputMaybe<Array<PagesOrderBy>>;
+};
+
+/** All input for the `deletePageRevisionById` mutation. */
+export type DeletePageRevisionByIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** All input for the `deletePageRevision` mutation. */
+export type DeletePageRevisionInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `PageRevision` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our delete `PageRevision` mutation. */
+export type DeletePageRevisionPayload = {
+  __typename?: 'DeletePageRevisionPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  deletedPageRevisionId?: Maybe<Scalars['ID']>;
+  /** Reads a single `Page` that is related to this `PageRevision`. */
+  pageByPageId?: Maybe<Page>;
+  /** The `PageRevision` that was deleted by this mutation. */
+  pageRevision?: Maybe<PageRevision>;
+  /** An edge for our `PageRevision`. May be used by Relay 1. */
+  pageRevisionEdge?: Maybe<PageRevisionsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our delete `PageRevision` mutation. */
+export type DeletePageRevisionPayloadPageRevisionEdgeArgs = {
+  orderBy?: InputMaybe<Array<PageRevisionsOrderBy>>;
 };
 
 /** All input for the `deleteParameterByPaName` mutation. */
@@ -3089,6 +3418,8 @@ export type Mutation = {
   createAkceItem?: Maybe<CreateAkceItemPayload>;
   /** Creates a single `Aktuality`. */
   createAktuality?: Maybe<CreateAktualityPayload>;
+  /** Creates a single `AktualityFoto`. */
+  createAktualityFoto?: Maybe<CreateAktualityFotoPayload>;
   /** Creates a single `Dokumenty`. */
   createDokumenty?: Maybe<CreateDokumentyPayload>;
   /** Creates a single `GalerieDir`. */
@@ -3099,6 +3430,10 @@ export type Mutation = {
   createNabidka?: Maybe<CreateNabidkaPayload>;
   /** Creates a single `NabidkaItem`. */
   createNabidkaItem?: Maybe<CreateNabidkaItemPayload>;
+  /** Creates a single `Page`. */
+  createPage?: Maybe<CreatePagePayload>;
+  /** Creates a single `PageRevision`. */
+  createPageRevision?: Maybe<CreatePageRevisionPayload>;
   /** Creates a single `Parameter`. */
   createParameter?: Maybe<CreateParameterPayload>;
   /** Creates a single `Pary`. */
@@ -3153,6 +3488,10 @@ export type Mutation = {
   deleteAktuality?: Maybe<DeleteAktualityPayload>;
   /** Deletes a single `Aktuality` using a unique key. */
   deleteAktualityByAtId?: Maybe<DeleteAktualityPayload>;
+  /** Deletes a single `AktualityFoto` using its globally unique id. */
+  deleteAktualityFoto?: Maybe<DeleteAktualityFotoPayload>;
+  /** Deletes a single `AktualityFoto` using a unique key. */
+  deleteAktualityFotoByAfId?: Maybe<DeleteAktualityFotoPayload>;
   /** Deletes a single `Dokumenty` using its globally unique id. */
   deleteDokumenty?: Maybe<DeleteDokumentyPayload>;
   /** Deletes a single `Dokumenty` using a unique key. */
@@ -3173,6 +3512,16 @@ export type Mutation = {
   deleteNabidkaItem?: Maybe<DeleteNabidkaItemPayload>;
   /** Deletes a single `NabidkaItem` using a unique key. */
   deleteNabidkaItemByNiId?: Maybe<DeleteNabidkaItemPayload>;
+  /** Deletes a single `Page` using its globally unique id. */
+  deletePage?: Maybe<DeletePagePayload>;
+  /** Deletes a single `Page` using a unique key. */
+  deletePageById?: Maybe<DeletePagePayload>;
+  /** Deletes a single `Page` using a unique key. */
+  deletePageByUrl?: Maybe<DeletePagePayload>;
+  /** Deletes a single `PageRevision` using its globally unique id. */
+  deletePageRevision?: Maybe<DeletePageRevisionPayload>;
+  /** Deletes a single `PageRevision` using a unique key. */
+  deletePageRevisionById?: Maybe<DeletePageRevisionPayload>;
   /** Deletes a single `Parameter` using its globally unique id. */
   deleteParameter?: Maybe<DeleteParameterPayload>;
   /** Deletes a single `Parameter` using a unique key. */
@@ -3269,6 +3618,10 @@ export type Mutation = {
   updateAktuality?: Maybe<UpdateAktualityPayload>;
   /** Updates a single `Aktuality` using a unique key and a patch. */
   updateAktualityByAtId?: Maybe<UpdateAktualityPayload>;
+  /** Updates a single `AktualityFoto` using its globally unique id and a patch. */
+  updateAktualityFoto?: Maybe<UpdateAktualityFotoPayload>;
+  /** Updates a single `AktualityFoto` using a unique key and a patch. */
+  updateAktualityFotoByAfId?: Maybe<UpdateAktualityFotoPayload>;
   /** Updates a single `Dokumenty` using its globally unique id and a patch. */
   updateDokumenty?: Maybe<UpdateDokumentyPayload>;
   /** Updates a single `Dokumenty` using a unique key and a patch. */
@@ -3289,6 +3642,16 @@ export type Mutation = {
   updateNabidkaItem?: Maybe<UpdateNabidkaItemPayload>;
   /** Updates a single `NabidkaItem` using a unique key and a patch. */
   updateNabidkaItemByNiId?: Maybe<UpdateNabidkaItemPayload>;
+  /** Updates a single `Page` using its globally unique id and a patch. */
+  updatePage?: Maybe<UpdatePagePayload>;
+  /** Updates a single `Page` using a unique key and a patch. */
+  updatePageById?: Maybe<UpdatePagePayload>;
+  /** Updates a single `Page` using a unique key and a patch. */
+  updatePageByUrl?: Maybe<UpdatePagePayload>;
+  /** Updates a single `PageRevision` using its globally unique id and a patch. */
+  updatePageRevision?: Maybe<UpdatePageRevisionPayload>;
+  /** Updates a single `PageRevision` using a unique key and a patch. */
+  updatePageRevisionById?: Maybe<UpdatePageRevisionPayload>;
   /** Updates a single `Parameter` using its globally unique id and a patch. */
   updateParameter?: Maybe<UpdateParameterPayload>;
   /** Updates a single `Parameter` using a unique key and a patch. */
@@ -3395,6 +3758,12 @@ export type MutationCreateAktualityArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateAktualityFotoArgs = {
+  input: CreateAktualityFotoInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateDokumentyArgs = {
   input: CreateDokumentyInput;
 };
@@ -3421,6 +3790,18 @@ export type MutationCreateNabidkaArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateNabidkaItemArgs = {
   input: CreateNabidkaItemInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreatePageArgs = {
+  input: CreatePageInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreatePageRevisionArgs = {
+  input: CreatePageRevisionInput;
 };
 
 
@@ -3587,6 +3968,18 @@ export type MutationDeleteAktualityByAtIdArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteAktualityFotoArgs = {
+  input: DeleteAktualityFotoInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteAktualityFotoByAfIdArgs = {
+  input: DeleteAktualityFotoByAfIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteDokumentyArgs = {
   input: DeleteDokumentyInput;
 };
@@ -3643,6 +4036,36 @@ export type MutationDeleteNabidkaItemArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteNabidkaItemByNiIdArgs = {
   input: DeleteNabidkaItemByNiIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePageArgs = {
+  input: DeletePageInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePageByIdArgs = {
+  input: DeletePageByIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePageByUrlArgs = {
+  input: DeletePageByUrlInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePageRevisionArgs = {
+  input: DeletePageRevisionInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePageRevisionByIdArgs = {
+  input: DeletePageRevisionByIdInput;
 };
 
 
@@ -3935,6 +4358,18 @@ export type MutationUpdateAktualityByAtIdArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateAktualityFotoArgs = {
+  input: UpdateAktualityFotoInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateAktualityFotoByAfIdArgs = {
+  input: UpdateAktualityFotoByAfIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateDokumentyArgs = {
   input: UpdateDokumentyInput;
 };
@@ -3991,6 +4426,36 @@ export type MutationUpdateNabidkaItemArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateNabidkaItemByNiIdArgs = {
   input: UpdateNabidkaItemByNiIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePageArgs = {
+  input: UpdatePageInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePageByIdArgs = {
+  input: UpdatePageByIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePageByUrlArgs = {
+  input: UpdatePageByUrlInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePageRevisionArgs = {
+  input: UpdatePageRevisionInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePageRevisionByIdArgs = {
+  input: UpdatePageRevisionByIdInput;
 };
 
 
@@ -4465,6 +4930,46 @@ export type Node = {
   nodeId: Scalars['ID'];
 };
 
+export type Page = Node & {
+  __typename?: 'Page';
+  createdAt: Scalars['Datetime'];
+  currentRevision: Scalars['Int'];
+  id: Scalars['Int'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  /** Reads a single `PageRevision` that is related to this `Page`. */
+  pageRevisionByCurrentRevision?: Maybe<PageRevision>;
+  /** Reads and enables pagination through a set of `PageRevision`. */
+  pageRevisionsByPageId: PageRevisionsConnection;
+  updatedAt: Scalars['Datetime'];
+  url: Scalars['String'];
+};
+
+
+export type PagePageRevisionsByPageIdArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<PageRevisionCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<PageRevisionsOrderBy>>;
+};
+
+/** A condition to be used against `Page` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type PageCondition = {
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `currentRevision` field. */
+  currentRevision?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `url` field. */
+  url?: InputMaybe<Scalars['String']>;
+};
+
 /** Information about pagination in a connection. */
 export type PageInfo = {
   __typename?: 'PageInfo';
@@ -4477,6 +4982,163 @@ export type PageInfo = {
   /** When paginating backwards, the cursor to continue. */
   startCursor?: Maybe<Scalars['Cursor']>;
 };
+
+/** An input for mutations affecting `Page` */
+export type PageInput = {
+  createdAt?: InputMaybe<Scalars['Datetime']>;
+  currentRevision: Scalars['Int'];
+  id?: InputMaybe<Scalars['Int']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']>;
+  url: Scalars['String'];
+};
+
+/** Represents an update to a `Page`. Fields that are set will be updated. */
+export type PagePatch = {
+  createdAt?: InputMaybe<Scalars['Datetime']>;
+  currentRevision?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['Int']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']>;
+  url?: InputMaybe<Scalars['String']>;
+};
+
+export type PageRevision = Node & {
+  __typename?: 'PageRevision';
+  content?: Maybe<Scalars['JSON']>;
+  createdAt: Scalars['Datetime'];
+  id: Scalars['Int'];
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  /** Reads a single `Page` that is related to this `PageRevision`. */
+  pageByPageId?: Maybe<Page>;
+  pageId?: Maybe<Scalars['Int']>;
+  /** Reads and enables pagination through a set of `Page`. */
+  pagesByCurrentRevision: PagesConnection;
+  updatedAt: Scalars['Datetime'];
+};
+
+
+export type PageRevisionPagesByCurrentRevisionArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<PageCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<PagesOrderBy>>;
+};
+
+/**
+ * A condition to be used against `PageRevision` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type PageRevisionCondition = {
+  /** Checks for equality with the object’s `content` field. */
+  content?: InputMaybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `pageId` field. */
+  pageId?: InputMaybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']>;
+};
+
+/** An input for mutations affecting `PageRevision` */
+export type PageRevisionInput = {
+  content?: InputMaybe<Scalars['JSON']>;
+  createdAt?: InputMaybe<Scalars['Datetime']>;
+  id?: InputMaybe<Scalars['Int']>;
+  pageId?: InputMaybe<Scalars['Int']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']>;
+};
+
+/** Represents an update to a `PageRevision`. Fields that are set will be updated. */
+export type PageRevisionPatch = {
+  content?: InputMaybe<Scalars['JSON']>;
+  createdAt?: InputMaybe<Scalars['Datetime']>;
+  id?: InputMaybe<Scalars['Int']>;
+  pageId?: InputMaybe<Scalars['Int']>;
+  updatedAt?: InputMaybe<Scalars['Datetime']>;
+};
+
+/** A connection to a list of `PageRevision` values. */
+export type PageRevisionsConnection = {
+  __typename?: 'PageRevisionsConnection';
+  /** A list of edges which contains the `PageRevision` and cursor to aid in pagination. */
+  edges: Array<PageRevisionsEdge>;
+  /** A list of `PageRevision` objects. */
+  nodes: Array<PageRevision>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `PageRevision` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `PageRevision` edge in the connection. */
+export type PageRevisionsEdge = {
+  __typename?: 'PageRevisionsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `PageRevision` at the end of the edge. */
+  node: PageRevision;
+};
+
+/** Methods to use when ordering `PageRevision`. */
+export enum PageRevisionsOrderBy {
+  ContentAsc = 'CONTENT_ASC',
+  ContentDesc = 'CONTENT_DESC',
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PageIdAsc = 'PAGE_ID_ASC',
+  PageIdDesc = 'PAGE_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
+}
+
+/** A connection to a list of `Page` values. */
+export type PagesConnection = {
+  __typename?: 'PagesConnection';
+  /** A list of edges which contains the `Page` and cursor to aid in pagination. */
+  edges: Array<PagesEdge>;
+  /** A list of `Page` objects. */
+  nodes: Array<Page>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Page` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Page` edge in the connection. */
+export type PagesEdge = {
+  __typename?: 'PagesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Page` at the end of the edge. */
+  node: Page;
+};
+
+/** Methods to use when ordering `Page`. */
+export enum PagesOrderBy {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  CurrentRevisionAsc = 'CURRENT_REVISION_ASC',
+  CurrentRevisionDesc = 'CURRENT_REVISION_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC',
+  UrlAsc = 'URL_ASC',
+  UrlDesc = 'URL_DESC'
+}
 
 export type Parameter = Node & {
   __typename?: 'Parameter';
@@ -5644,12 +6306,17 @@ export type Query = Node & {
   /** Reads a single `Aktuality` using its globally unique `ID`. */
   aktuality?: Maybe<Aktuality>;
   aktualityByAtId?: Maybe<Aktuality>;
+  /** Reads a single `AktualityFoto` using its globally unique `ID`. */
+  aktualityFoto?: Maybe<AktualityFoto>;
+  aktualityFotoByAfId?: Maybe<AktualityFoto>;
   /** Reads and enables pagination through a set of `AkceItem`. */
   allAkceItems?: Maybe<AkceItemsConnection>;
   /** Reads and enables pagination through a set of `Akce`. */
   allAkces?: Maybe<AkcesConnection>;
   /** Reads and enables pagination through a set of `Aktuality`. */
   allAktualities?: Maybe<AktualitiesConnection>;
+  /** Reads and enables pagination through a set of `AktualityFoto`. */
+  allAktualityFotos?: Maybe<AktualityFotosConnection>;
   /** Reads and enables pagination through a set of `Dokumenty`. */
   allDokumenties?: Maybe<DokumentiesConnection>;
   /** Reads and enables pagination through a set of `GalerieDir`. */
@@ -5662,6 +6329,10 @@ export type Query = Node & {
   allNabidkaItems?: Maybe<NabidkaItemsConnection>;
   /** Reads and enables pagination through a set of `Nabidka`. */
   allNabidkas?: Maybe<NabidkasConnection>;
+  /** Reads and enables pagination through a set of `PageRevision`. */
+  allPageRevisions?: Maybe<PageRevisionsConnection>;
+  /** Reads and enables pagination through a set of `Page`. */
+  allPages?: Maybe<PagesConnection>;
   /** Reads and enables pagination through a set of `Parameter`. */
   allParameters?: Maybe<ParametersConnection>;
   /** Reads and enables pagination through a set of `Pary`. */
@@ -5725,6 +6396,13 @@ export type Query = Node & {
   node?: Maybe<Node>;
   /** The root query type must be a `Node` to work well with Relay 1 mutations. This just resolves to `query`. */
   nodeId: Scalars['ID'];
+  /** Reads a single `Page` using its globally unique `ID`. */
+  page?: Maybe<Page>;
+  pageById?: Maybe<Page>;
+  pageByUrl?: Maybe<Page>;
+  /** Reads a single `PageRevision` using its globally unique `ID`. */
+  pageRevision?: Maybe<PageRevision>;
+  pageRevisionById?: Maybe<PageRevision>;
   /** Reads a single `Parameter` using its globally unique `ID`. */
   parameter?: Maybe<Parameter>;
   parameterByPaName?: Maybe<Parameter>;
@@ -5833,6 +6511,18 @@ export type QueryAktualityByAtIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryAktualityFotoArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAktualityFotoByAfIdArgs = {
+  afId: Scalars['BigInt'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryAllAkceItemsArgs = {
   after?: InputMaybe<Scalars['Cursor']>;
   before?: InputMaybe<Scalars['Cursor']>;
@@ -5865,6 +6555,18 @@ export type QueryAllAktualitiesArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<AktualitiesOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllAktualityFotosArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<AktualityFotoCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<AktualityFotosOrderBy>>;
 };
 
 
@@ -5937,6 +6639,30 @@ export type QueryAllNabidkasArgs = {
   last?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<Array<NabidkasOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllPageRevisionsArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<PageRevisionCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<PageRevisionsOrderBy>>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllPagesArgs = {
+  after?: InputMaybe<Scalars['Cursor']>;
+  before?: InputMaybe<Scalars['Cursor']>;
+  condition?: InputMaybe<PageCondition>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Array<PagesOrderBy>>;
 };
 
 
@@ -6255,6 +6981,36 @@ export type QueryNabidkaItemByNiIdArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryNodeArgs = {
   nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPageArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPageByIdArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPageByUrlArgs = {
+  url: Scalars['String'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPageRevisionArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPageRevisionByIdArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -7022,6 +7778,53 @@ export type UpdateAktualityByAtIdInput = {
   clientMutationId?: InputMaybe<Scalars['String']>;
 };
 
+/** All input for the `updateAktualityFotoByAfId` mutation. */
+export type UpdateAktualityFotoByAfIdInput = {
+  afId: Scalars['BigInt'];
+  /** An object where the defined keys will be set on the `AktualityFoto` being updated. */
+  aktualityFotoPatch: AktualityFotoPatch;
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+};
+
+/** All input for the `updateAktualityFoto` mutation. */
+export type UpdateAktualityFotoInput = {
+  /** An object where the defined keys will be set on the `AktualityFoto` being updated. */
+  aktualityFotoPatch: AktualityFotoPatch;
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `AktualityFoto` to be updated. */
+  nodeId: Scalars['ID'];
+};
+
+/** The output of our update `AktualityFoto` mutation. */
+export type UpdateAktualityFotoPayload = {
+  __typename?: 'UpdateAktualityFotoPayload';
+  /** The `AktualityFoto` that was updated by this mutation. */
+  aktualityFoto?: Maybe<AktualityFoto>;
+  /** An edge for our `AktualityFoto`. May be used by Relay 1. */
+  aktualityFotoEdge?: Maybe<AktualityFotosEdge>;
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `AktualityFoto` mutation. */
+export type UpdateAktualityFotoPayloadAktualityFotoEdgeArgs = {
+  orderBy?: InputMaybe<Array<AktualityFotosOrderBy>>;
+};
+
 /** All input for the `updateAktuality` mutation. */
 export type UpdateAktualityInput = {
   /** An object where the defined keys will be set on the `Aktuality` being updated. */
@@ -7306,6 +8109,116 @@ export type UpdateNabidkaPayload = {
 /** The output of our update `Nabidka` mutation. */
 export type UpdateNabidkaPayloadNabidkaEdgeArgs = {
   orderBy?: InputMaybe<Array<NabidkasOrderBy>>;
+};
+
+/** All input for the `updatePageById` mutation. */
+export type UpdatePageByIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['Int'];
+  /** An object where the defined keys will be set on the `Page` being updated. */
+  pagePatch: PagePatch;
+};
+
+/** All input for the `updatePageByUrl` mutation. */
+export type UpdatePageByUrlInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Page` being updated. */
+  pagePatch: PagePatch;
+  url: Scalars['String'];
+};
+
+/** All input for the `updatePage` mutation. */
+export type UpdatePageInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Page` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `Page` being updated. */
+  pagePatch: PagePatch;
+};
+
+/** The output of our update `Page` mutation. */
+export type UpdatePagePayload = {
+  __typename?: 'UpdatePagePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Page` that was updated by this mutation. */
+  page?: Maybe<Page>;
+  /** An edge for our `Page`. May be used by Relay 1. */
+  pageEdge?: Maybe<PagesEdge>;
+  /** Reads a single `PageRevision` that is related to this `Page`. */
+  pageRevisionByCurrentRevision?: Maybe<PageRevision>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `Page` mutation. */
+export type UpdatePagePayloadPageEdgeArgs = {
+  orderBy?: InputMaybe<Array<PagesOrderBy>>;
+};
+
+/** All input for the `updatePageRevisionById` mutation. */
+export type UpdatePageRevisionByIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  id: Scalars['Int'];
+  /** An object where the defined keys will be set on the `PageRevision` being updated. */
+  pageRevisionPatch: PageRevisionPatch;
+};
+
+/** All input for the `updatePageRevision` mutation. */
+export type UpdatePageRevisionInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `PageRevision` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `PageRevision` being updated. */
+  pageRevisionPatch: PageRevisionPatch;
+};
+
+/** The output of our update `PageRevision` mutation. */
+export type UpdatePageRevisionPayload = {
+  __typename?: 'UpdatePageRevisionPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** Reads a single `Page` that is related to this `PageRevision`. */
+  pageByPageId?: Maybe<Page>;
+  /** The `PageRevision` that was updated by this mutation. */
+  pageRevision?: Maybe<PageRevision>;
+  /** An edge for our `PageRevision`. May be used by Relay 1. */
+  pageRevisionEdge?: Maybe<PageRevisionsEdge>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+};
+
+
+/** The output of our update `PageRevision` mutation. */
+export type UpdatePageRevisionPayloadPageRevisionEdgeArgs = {
+  orderBy?: InputMaybe<Array<PageRevisionsOrderBy>>;
 };
 
 /** All input for the `updateParameterByPaName` mutation. */
@@ -8604,7 +9517,7 @@ export type User = Node & {
   uSystem: Scalars['Boolean'];
   uTeacher: Scalars['Boolean'];
   uTelefon: Scalars['String'];
-  uTimestamp: Scalars['Datetime'];
+  uTimestamp?: Maybe<Scalars['Datetime']>;
   /** Reads and enables pagination through a set of `Upozorneni`. */
   upozornenisByUpKdo: UpozornenisConnection;
 };
@@ -9360,6 +10273,11 @@ export enum VideosOrderBy {
   VUriDesc = 'V_URI_DESC'
 }
 
+export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UserQueryQuery = { __typename?: 'Query', getCurrentUser?: { __typename?: 'User', uId: any, uJmeno: string, uPrijmeni: string, permissionByUGroup?: { __typename?: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: any, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number } | null | undefined } | null | undefined };
+
 export type UpozorneniListQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -9375,11 +10293,6 @@ export type ArticlesAdminListQueryVariables = Exact<{
 
 
 export type ArticlesAdminListQuery = { __typename?: 'Query', allAktualities?: { __typename?: 'AktualitiesConnection', totalCount: number, nodes: Array<{ __typename?: 'Aktuality', atFoto?: any | null | undefined, atFotoMain?: any | null | undefined, atId: any, atJmeno: string, atKdo: any, atPreview: string, atText: string, atTimestampAdd?: any | null | undefined, atTimestamp?: any | null | undefined }> } | null | undefined };
-
-export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type UserQueryQuery = { __typename?: 'Query', getCurrentUser?: { __typename?: 'User', uId: any, uJmeno: string, uPrijmeni: string, permissionByUGroup?: { __typename?: 'Permission', peAkce: number, peAnkety: number, peAktuality: number, peDescription: string, peDokumenty: number, peGalerie: number, peId: any, peKonzole: number, peInzerce: number, peNabidka: number, peMain: number, peName: string, peNastenka: number, peNovinky: number, pePary: number, pePermissions: number, pePlatby: number, peRozpis: number, peSkupiny: number, peUsers: number } | null | undefined } | null | undefined };
 
 export type AkceListQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
@@ -9453,15 +10366,22 @@ export type SetRozpisVisibleMutationVariables = Exact<{
 
 export type SetRozpisVisibleMutation = { __typename?: 'Mutation', updateRozpiByRId?: { __typename?: 'UpdateRozpiPayload', rozpi?: { __typename?: 'Rozpi', rId: any } | null | undefined } | null | undefined };
 
+export type GetPageQueryVariables = Exact<{
+  url: Scalars['String'];
+}>;
+
+
+export type GetPageQuery = { __typename?: 'Query', pageByUrl?: { __typename?: 'Page', pageRevisionByCurrentRevision?: { __typename?: 'PageRevision', content?: any | null | undefined } | null | undefined } | null | undefined };
+
 export type GetMenuQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetMenuQuery = { __typename?: 'Query', parameterByPaName?: { __typename?: 'Parameter', paValue: string } | null | undefined };
 
 
+export const UserQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"UserQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getCurrentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"permissionByUGroup"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"peAkce"}},{"kind":"Field","name":{"kind":"Name","value":"peAnkety"}},{"kind":"Field","name":{"kind":"Name","value":"peAktuality"}},{"kind":"Field","name":{"kind":"Name","value":"peDescription"}},{"kind":"Field","name":{"kind":"Name","value":"peDokumenty"}},{"kind":"Field","name":{"kind":"Name","value":"peGalerie"}},{"kind":"Field","name":{"kind":"Name","value":"peId"}},{"kind":"Field","name":{"kind":"Name","value":"peKonzole"}},{"kind":"Field","name":{"kind":"Name","value":"peInzerce"}},{"kind":"Field","name":{"kind":"Name","value":"peNabidka"}},{"kind":"Field","name":{"kind":"Name","value":"peMain"}},{"kind":"Field","name":{"kind":"Name","value":"peName"}},{"kind":"Field","name":{"kind":"Name","value":"peNastenka"}},{"kind":"Field","name":{"kind":"Name","value":"peNovinky"}},{"kind":"Field","name":{"kind":"Name","value":"pePary"}},{"kind":"Field","name":{"kind":"Name","value":"pePermissions"}},{"kind":"Field","name":{"kind":"Name","value":"pePlatby"}},{"kind":"Field","name":{"kind":"Name","value":"peRozpis"}},{"kind":"Field","name":{"kind":"Name","value":"peSkupiny"}},{"kind":"Field","name":{"kind":"Name","value":"peUsers"}}]}},{"kind":"Field","name":{"kind":"Name","value":"uId"}},{"kind":"Field","name":{"kind":"Name","value":"uJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"uPrijmeni"}}]}}]}}]} as unknown as DocumentNode<UserQueryQuery, UserQueryQueryVariables>;
 export const UpozorneniListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"UpozorneniList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allUpozornenis"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"UP_TIMESTAMP_ADD_DESC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"upId"}},{"kind":"Field","name":{"kind":"Name","value":"upKdo"}},{"kind":"Field","name":{"kind":"Name","value":"upLock"}},{"kind":"Field","name":{"kind":"Name","value":"upNadpis"}},{"kind":"Field","name":{"kind":"Name","value":"upText"}},{"kind":"Field","name":{"kind":"Name","value":"upTimestamp"}},{"kind":"Field","name":{"kind":"Name","value":"upTimestampAdd"}},{"kind":"Field","name":{"kind":"Name","value":"userByUpKdo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uId"}},{"kind":"Field","name":{"kind":"Name","value":"uJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"uPrijmeni"}}]}},{"kind":"Field","name":{"kind":"Name","value":"upozorneniSkupiniesByUpsIdRodic"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"skupinyByUpsIdSkupina"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sName"}},{"kind":"Field","name":{"kind":"Name","value":"sDescription"}},{"kind":"Field","name":{"kind":"Name","value":"sColorText"}},{"kind":"Field","name":{"kind":"Name","value":"sColorRgb"}}]}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}}]} as unknown as DocumentNode<UpozorneniListQuery, UpozorneniListQueryVariables>;
 export const ArticlesAdminListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ArticlesAdminList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allAktualities"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"AT_TIMESTAMP_ADD_DESC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"atFoto"}},{"kind":"Field","name":{"kind":"Name","value":"atFotoMain"}},{"kind":"Field","name":{"kind":"Name","value":"atId"}},{"kind":"Field","name":{"kind":"Name","value":"atJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"atKdo"}},{"kind":"Field","name":{"kind":"Name","value":"atPreview"}},{"kind":"Field","name":{"kind":"Name","value":"atText"}},{"kind":"Field","name":{"kind":"Name","value":"atTimestampAdd"}},{"kind":"Field","name":{"kind":"Name","value":"atTimestamp"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}}]} as unknown as DocumentNode<ArticlesAdminListQuery, ArticlesAdminListQueryVariables>;
-export const UserQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"UserQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getCurrentUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"permissionByUGroup"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"peAkce"}},{"kind":"Field","name":{"kind":"Name","value":"peAnkety"}},{"kind":"Field","name":{"kind":"Name","value":"peAktuality"}},{"kind":"Field","name":{"kind":"Name","value":"peDescription"}},{"kind":"Field","name":{"kind":"Name","value":"peDokumenty"}},{"kind":"Field","name":{"kind":"Name","value":"peGalerie"}},{"kind":"Field","name":{"kind":"Name","value":"peId"}},{"kind":"Field","name":{"kind":"Name","value":"peKonzole"}},{"kind":"Field","name":{"kind":"Name","value":"peInzerce"}},{"kind":"Field","name":{"kind":"Name","value":"peNabidka"}},{"kind":"Field","name":{"kind":"Name","value":"peMain"}},{"kind":"Field","name":{"kind":"Name","value":"peName"}},{"kind":"Field","name":{"kind":"Name","value":"peNastenka"}},{"kind":"Field","name":{"kind":"Name","value":"peNovinky"}},{"kind":"Field","name":{"kind":"Name","value":"pePary"}},{"kind":"Field","name":{"kind":"Name","value":"pePermissions"}},{"kind":"Field","name":{"kind":"Name","value":"pePlatby"}},{"kind":"Field","name":{"kind":"Name","value":"peRozpis"}},{"kind":"Field","name":{"kind":"Name","value":"peSkupiny"}},{"kind":"Field","name":{"kind":"Name","value":"peUsers"}}]}},{"kind":"Field","name":{"kind":"Name","value":"uId"}},{"kind":"Field","name":{"kind":"Name","value":"uJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"uPrijmeni"}}]}}]}}]} as unknown as DocumentNode<UserQueryQuery, UserQueryQueryVariables>;
 export const AkceListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AkceList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allAkces"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"A_OD_DESC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aDo"}},{"kind":"Field","name":{"kind":"Name","value":"aId"}},{"kind":"Field","name":{"kind":"Name","value":"aInfo"}},{"kind":"Field","name":{"kind":"Name","value":"aDokumenty"}},{"kind":"Field","name":{"kind":"Name","value":"aJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"aKapacita"}},{"kind":"Field","name":{"kind":"Name","value":"aKde"}},{"kind":"Field","name":{"kind":"Name","value":"aLock"}},{"kind":"Field","name":{"kind":"Name","value":"aOd"}},{"kind":"Field","name":{"kind":"Name","value":"aTimestamp"}},{"kind":"Field","name":{"kind":"Name","value":"aVisible"}},{"kind":"Field","name":{"kind":"Name","value":"akceItemsByAiIdRodic"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aiId"}},{"kind":"Field","name":{"kind":"Name","value":"userByAiUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"uPrijmeni"}},{"kind":"Field","name":{"kind":"Name","value":"uId"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}}]} as unknown as DocumentNode<AkceListQuery, AkceListQueryVariables>;
 export const SetAkceVisibleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"setAkceVisible"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BigInt"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"visible"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateAkceByAId"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"aId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"akcePatch"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"aVisible"},"value":{"kind":"Variable","name":{"kind":"Name","value":"visible"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"akce"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aId"}}]}}]}}]}}]} as unknown as DocumentNode<SetAkceVisibleMutation, SetAkceVisibleMutationVariables>;
 export const GalleryDirListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GalleryDirList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allGalerieDirs"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"GD_NAME_ASC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gdHidden"}},{"kind":"Field","name":{"kind":"Name","value":"gdId"}},{"kind":"Field","name":{"kind":"Name","value":"gdIdRodic"}},{"kind":"Field","name":{"kind":"Name","value":"gdLevel"}},{"kind":"Field","name":{"kind":"Name","value":"gdName"}},{"kind":"Field","name":{"kind":"Name","value":"gdPath"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}}]} as unknown as DocumentNode<GalleryDirListQuery, GalleryDirListQueryVariables>;
@@ -9471,4 +10391,5 @@ export const SetNabidkaVisibleDocument = {"kind":"Document","definitions":[{"kin
 export const NabidkaListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"NabidkaList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allNabidkas"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"N_OD_DESC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nDo"}},{"kind":"Field","name":{"kind":"Name","value":"nId"}},{"kind":"Field","name":{"kind":"Name","value":"nLock"}},{"kind":"Field","name":{"kind":"Name","value":"nMaxPocetHod"}},{"kind":"Field","name":{"kind":"Name","value":"nOd"}},{"kind":"Field","name":{"kind":"Name","value":"nPocetHod"}},{"kind":"Field","name":{"kind":"Name","value":"nTimestamp"}},{"kind":"Field","name":{"kind":"Name","value":"nTrener"}},{"kind":"Field","name":{"kind":"Name","value":"nVisible"}},{"kind":"Field","name":{"kind":"Name","value":"nabidkaItemsByNiIdRodic"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"niPocetHod"}},{"kind":"Field","name":{"kind":"Name","value":"niPartner"}},{"kind":"Field","name":{"kind":"Name","value":"niLock"}},{"kind":"Field","name":{"kind":"Name","value":"paryByNiPartner"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"userByPIdPartner"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"uPrijmeni"}},{"kind":"Field","name":{"kind":"Name","value":"uId"}}]}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"userByNTrener"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"uPrijmeni"}},{"kind":"Field","name":{"kind":"Name","value":"uId"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}}]} as unknown as DocumentNode<NabidkaListQuery, NabidkaListQueryVariables>;
 export const ScheduleAdminListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ScheduleAdminList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"allRozpis"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"R_DATUM_DESC"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"rDatum"}},{"kind":"Field","name":{"kind":"Name","value":"rId"}},{"kind":"Field","name":{"kind":"Name","value":"rKde"}},{"kind":"Field","name":{"kind":"Name","value":"rLock"}},{"kind":"Field","name":{"kind":"Name","value":"rTimestamp"}},{"kind":"Field","name":{"kind":"Name","value":"rTrener"}},{"kind":"Field","name":{"kind":"Name","value":"rVisible"}},{"kind":"Field","name":{"kind":"Name","value":"userByRTrener"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"uId"}},{"kind":"Field","name":{"kind":"Name","value":"uJmeno"}},{"kind":"Field","name":{"kind":"Name","value":"uPrijmeni"}}]}},{"kind":"Field","name":{"kind":"Name","value":"rozpisItemsByRiIdRodic"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nodes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"riDo"}},{"kind":"Field","name":{"kind":"Name","value":"riOd"}},{"kind":"Field","name":{"kind":"Name","value":"riId"}},{"kind":"Field","name":{"kind":"Name","value":"riPartner"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}}]} as unknown as DocumentNode<ScheduleAdminListQuery, ScheduleAdminListQueryVariables>;
 export const SetRozpisVisibleDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"setRozpisVisible"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"BigInt"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"visible"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateRozpiByRId"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"rozpiPatch"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"rVisible"},"value":{"kind":"Variable","name":{"kind":"Name","value":"visible"}}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"rId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"rozpi"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"rId"}}]}}]}}]}}]} as unknown as DocumentNode<SetRozpisVisibleMutation, SetRozpisVisibleMutationVariables>;
+export const GetPageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetPage"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"url"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pageByUrl"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"url"},"value":{"kind":"Variable","name":{"kind":"Name","value":"url"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pageRevisionByCurrentRevision"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"content"}}]}}]}}]}}]} as unknown as DocumentNode<GetPageQuery, GetPageQueryVariables>;
 export const GetMenuDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetMenu"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"parameterByPaName"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"paName"},"value":{"kind":"StringValue","value":"menu","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"paValue"}}]}}]}}]} as unknown as DocumentNode<GetMenuQuery, GetMenuQueryVariables>;

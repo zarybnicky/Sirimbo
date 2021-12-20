@@ -23,7 +23,15 @@ module.exports = {
   },
   devtool: "source-map",
   devServer: {
-    contentBase: './',
+    hot: 'only',
+    historyApiFallback: true,
+    static: {
+      directory: path.join(__dirname, 'static'),
+    },
+    proxy: {
+      '/graphql': 'http://localhost:3000',
+      '/graphiql': 'http://localhost:3000',
+    },
   },
   plugins: [
     new MiniCssExtractPlugin(),
@@ -34,10 +42,7 @@ module.exports = {
       'window.jQuery': 'jquery',
       Popper: ['popper.js', 'default'],
     }),
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-      openAnalyzer: false,
-    }),
+    // new BundleAnalyzerPlugin({ analyzerMode: 'static', openAnalyzer: false }),
   ],
   module: {
     rules: [

@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom';
 import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import { ApolloProvider, useQuery, useMutation } from '@apollo/client';
-import { createClient } from './client';
+import { createClient } from '../client';
 import { Pagination } from './pagination';
 import { DateRange } from './date';
 import { gql } from 'graphql-tag';

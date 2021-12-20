@@ -1,12 +1,11 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import { ApolloProvider, useQuery, useMutation } from '@apollo/client';
 import { Pagination } from './pagination';
 import { DateEl } from './date';
 import { gql } from 'graphql-tag';
-import { createClient, UserQuery } from './client';
+import { createClient, UserQuery } from '../client';
 import { Dropdown } from './dropdown';
 
 export const RozpisAdminQuery = gql(`
@@ -48,9 +47,9 @@ mutation setRozpisVisible($id: BigInt!, $visible: Boolean!) {
 }`);
 
 export function RozpisAdminList() {
-  const [limit, setLimit] = useState(30);
-  const [offset, setOffset] = useState(0);
-  const [total, setTotal] = useState(0);
+  const [limit, setLimit] = React.useState(30);
+  const [offset, setOffset] = React.useState(0);
+  const [total, setTotal] = React.useState(0);
   const { data: user } = useQuery(UserQuery);
   const { data, refetch } = useQuery(RozpisAdminQuery, {
     variables: { limit, offset },

@@ -6,7 +6,7 @@ import { ApolloProvider, useQuery, useMutation } from '@apollo/client';
 import { Pagination } from './pagination';
 import { DateRange } from './date';
 import { gql } from 'graphql-tag';
-import { createClient, UserQuery } from './client';
+import { createClient, UserQuery } from '../client';
 import { Dropdown } from './dropdown';
 
 export const NabidkaAdminQuery = gql(`

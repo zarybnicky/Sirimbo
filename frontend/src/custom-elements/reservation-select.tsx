@@ -3,9 +3,9 @@ import * as ReactDOM from 'react-dom';
 import { useState } from 'react';
 import { ApolloProvider, useQuery } from '@apollo/client';
 import { formatDateRange } from './date';
-import { createClient } from './client';
+import { createClient } from '../client';
 import { gql } from 'graphql-tag';
-import { Nabidka } from './graphql/graphql';
+import { Nabidka } from '../graphql/graphql';
 
 const ReservationView = (x: Nabidka) => {
   const header = <div className="trenink-header">

@@ -5,7 +5,7 @@ import { ApolloProvider, useQuery } from '@apollo/client';
 import { Pagination } from './pagination';
 import { DateEl } from './date';
 import { gql } from 'graphql-tag';
-import { createClient, UserQuery } from './client';
+import { createClient, UserQuery } from '../client';
 import { Dropdown } from './dropdown';
 
 export const ArticlesAdminQuery = gql(`
