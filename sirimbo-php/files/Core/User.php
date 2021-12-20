@@ -7,37 +7,37 @@ class User
     }
     public function __unserialize(array $x): void
     {
-        $user->setId($x['u_id']);
-        $user->setLogin($x['u_login']);
-        $user->setPassword($x['u_pass']);
-        $user->setName($x['u_jmeno']);
-        $user->setSurname($x['u_prijmeni']);
-        $user->setGender($x['u_pohlavi']);
-        $user->setEmail($x['u_email']);
-        $user->setPhone($x['u_telefon']);
-        $user->setBirthDate($x['u_narozeni']);
-        $user->setBirthNumber($x['u_rodne_cislo']);
-        $user->setNotes($x['u_poznamky']);
-        $user->setUpdatedAt($x['u_timestamp']);
-        $user->setPermissionGroup($x['u_group']);
-        $user->setTrainingGroup($x['u_skupina']);
-        $user->setDancer($x['u_dancer']);
-        $user->setBanned($x['u_ban']);
-        $user->setLocked($x['u_lock']);
-        $user->setConfirmed($x['u_confirmed']);
-        $user->setSystem($x['u_system']);
-        $user->setStreet($x['u_street']);
-        $user->setConscriptionNumber($x['u_conscription_number']);
-        $user->setOrientationNumber($x['u_orientation_number']);
-        $user->setDistrict($x['u_district']);
-        $user->setCity($x['u_city']);
-        $user->setPostalCode($x['u_postal_code']);
-        $user->setNationality($x['u_nationality']);
-        $user->setMemberSince($x['u_member_since']);
-        $user->setMemberUntil($x['u_member_until']);
-        $user->setCreatedAt($x['u_created_at']);
-        $user->setTeacher($x['u_teacher']);
-        $user->setGdprSignedAt($x['u_gdpr_signed_at']);
+        $this->setId($x['u_id']);
+        $this->setLogin($x['u_login']);
+        $this->setPassword($x['u_pass']);
+        $this->setName($x['u_jmeno']);
+        $this->setSurname($x['u_prijmeni']);
+        $this->setGender($x['u_pohlavi']);
+        $this->setEmail($x['u_email']);
+        $this->setPhone($x['u_telefon']);
+        $this->setBirthDate($x['u_narozeni']);
+        $this->setBirthNumber($x['u_rodne_cislo']);
+        $this->setNotes($x['u_poznamky']);
+        $this->setUpdatedAt($x['u_timestamp']);
+        $this->setPermissionGroup($x['u_group']);
+        $this->setTrainingGroup($x['u_skupina']);
+        $this->setDancer($x['u_dancer']);
+        $this->setBanned($x['u_ban']);
+        $this->setLocked($x['u_lock']);
+        $this->setConfirmed($x['u_confirmed']);
+        $this->setSystem($x['u_system']);
+        $this->setStreet($x['u_street']);
+        $this->setConscriptionNumber($x['u_conscription_number']);
+        $this->setOrientationNumber($x['u_orientation_number']);
+        $this->setDistrict($x['u_district']);
+        $this->setCity($x['u_city']);
+        $this->setPostalCode($x['u_postal_code']);
+        $this->setNationality($x['u_nationality']);
+        $this->setMemberSince($x['u_member_since']);
+        $this->setMemberUntil($x['u_member_until']);
+        $this->setCreatedAt($x['u_created_at']);
+        $this->setTeacher($x['u_teacher']);
+        $this->setGdprSignedAt($x['u_gdpr_signed_at']);
     }
 
     public static function fromArray(array $x): User
