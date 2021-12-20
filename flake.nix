@@ -1,19 +1,15 @@
 {
   inputs.gogol = { flake = false; url = github:brendanhay/gogol/develop; };
   inputs.migrate = { flake = false; url = github:graphile/migrate/main; };
-  inputs.unstable.url = github:NixOS/nixpkgs/master;
 
-  outputs = { self, nixpkgs, unstable, gogol, migrate }: let
+  outputs = { self, nixpkgs, gogol, migrate }: let
     inherit (nixpkgs.lib) flip mapAttrs mapAttrsToList;
 
     pkgs = import nixpkgs {
       system = "x86_64-linux";
       overlays = [ self.overlay ];
     };
-    unstablePkgs = import unstable {
-      system = "x86_64-linux";
-    };
-    compiler = "ghc8104";
+    compiler = "ghc8107";
     hsPkgs = pkgs.haskell.packages.${compiler};
   in {
     nixosModule = ./nix/module.nix;
@@ -80,7 +76,6 @@
         hsPkgs.cabal-install
         hsPkgs.haskell-language-server
         hsPkgs.stan
-        hsPkgs.prune-juice
         pkgs.entr
         pkgs.graphile-migrate
         pkgs.yarn

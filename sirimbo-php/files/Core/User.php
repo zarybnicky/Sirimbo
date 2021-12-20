@@ -5,9 +5,39 @@ class User
     {
         return $this->toArray();
     }
-    public function __unserialize(array $x): User
+    public function __unserialize(array $x): void
     {
-        return self::fromArray($x);
+        $user->setId($x['u_id']);
+        $user->setLogin($x['u_login']);
+        $user->setPassword($x['u_pass']);
+        $user->setName($x['u_jmeno']);
+        $user->setSurname($x['u_prijmeni']);
+        $user->setGender($x['u_pohlavi']);
+        $user->setEmail($x['u_email']);
+        $user->setPhone($x['u_telefon']);
+        $user->setBirthDate($x['u_narozeni']);
+        $user->setBirthNumber($x['u_rodne_cislo']);
+        $user->setNotes($x['u_poznamky']);
+        $user->setUpdatedAt($x['u_timestamp']);
+        $user->setPermissionGroup($x['u_group']);
+        $user->setTrainingGroup($x['u_skupina']);
+        $user->setDancer($x['u_dancer']);
+        $user->setBanned($x['u_ban']);
+        $user->setLocked($x['u_lock']);
+        $user->setConfirmed($x['u_confirmed']);
+        $user->setSystem($x['u_system']);
+        $user->setStreet($x['u_street']);
+        $user->setConscriptionNumber($x['u_conscription_number']);
+        $user->setOrientationNumber($x['u_orientation_number']);
+        $user->setDistrict($x['u_district']);
+        $user->setCity($x['u_city']);
+        $user->setPostalCode($x['u_postal_code']);
+        $user->setNationality($x['u_nationality']);
+        $user->setMemberSince($x['u_member_since']);
+        $user->setMemberUntil($x['u_member_until']);
+        $user->setCreatedAt($x['u_created_at']);
+        $user->setTeacher($x['u_teacher']);
+        $user->setGdprSignedAt($x['u_gdpr_signed_at']);
     }
 
     public static function fromArray(array $x): User
