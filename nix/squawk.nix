@@ -1,25 +1,19 @@
-{ stdenv
-, yarn2nix-moretea
+{ stdenv, lib
 , fetchurl
-, nodejs
-, ncc
-, src
+, openssl
+, zlib
+, autoPatchelfHook
 }:
 
-yarn2nix-moretea.mkYarnPackage {
-  inherit src;
-  name = "squawk";
-  packageJSON = "${src}/package.json";
-  yarnLock = "${src}/yarn.lock";
-  installPhase = ''
-    ${ncc}/bin/ncc build ./deps/graphile-migrate/src/cli.ts
-    mkdir -p $out/{bin,libexec}
-    cp -r dist/* $out/libexec
-    cat > $out/bin/graphile-migrate <<EOS
-    #!/usr/bin/env bash
-    exec ${nodejs}/bin/node $out/libexec/index.js "\$@"
-    EOS
-    chmod +x $out/bin/graphile-migrate
-  '';
-  distPhase = "true";
+stdenv.mkDerivation rec {
+  pname = "squawk";
+  version = "0.8.1";
+  src = fetchurl {
+    url = "https://github.com/sbdchd/squawk/releases/download/v${version}/squawk-linux-x86_64";
+    sha256 = "sha256-LGvJ7mFMDwPolwJOYbRdIgN5rRCeX1HeANGmceX8kZg=";
+  };
+  nativeBuildInputs = [ autoPatchelfHook ];
+  buildInputs = [ openssl zlib ];
+  unpackPhase = "true";
+  installPhase = "install -m755 -D $src $out/bin/squawk";
 }

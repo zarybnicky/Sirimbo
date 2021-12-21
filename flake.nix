@@ -17,6 +17,7 @@
     overlay = final: prev: {
       phpstan = final.callPackage ./nix/phpstan.nix {};
       ncc = final.callPackage ./nix/ncc.nix {};
+      squawk = final.callPackage ./nix/squawk.nix {};
       graphile-migrate = final.callPackage ./nix/graphile-migrate.nix { src = migrate; };
       sirimbo-backend = final.callPackage ./backend/package.nix {};
       sirimbo-frontend = final.callPackage ./frontend/package.nix {};
@@ -66,7 +67,8 @@
     };
 
     packages.x86_64-linux = {
-      inherit (pkgs) ncc sirimbo-php sirimbo-frontend sirimbo-backend graphile-migrate sirimbo-migrations;
+      inherit (pkgs)
+        squawk ncc sirimbo-php sirimbo-frontend sirimbo-backend graphile-migrate sirimbo-migrations;
     };
 
     devShell.x86_64-linux = hsPkgs.shellFor {
@@ -85,6 +87,7 @@
         pkgs.yarn2nix
         pkgs.postgresql
         pkgs.ncc
+        pkgs.squawk
       ];
       DATABASE_URL = "postgres://olymp@olymp-test/olymp";
       SHADOW_DATABASE_URL = "postgres://olymp@olymp-test/olymp_shadow";
