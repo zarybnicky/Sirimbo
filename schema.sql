@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 11.13
--- Dumped by pg_dump version 11.13
+-- Dumped from database version 13.5
+-- Dumped by pg_dump version 13.5
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -15,6 +15,13 @@ SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
+
+--
+-- Name: app_private; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA app_private;
+
 
 --
 -- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
@@ -61,6 +68,68 @@ CREATE TYPE public.pary_p_stt_trida AS ENUM (
 
 
 --
+-- Name: insert_revision(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.insert_revision() RETURNS trigger
+    LANGUAGE plpgsql SECURITY DEFINER
+    AS $_$
+DECLARE
+    _op CHAR(1);
+    _record RECORD;
+    _rev_number INTEGER;
+    _rev_table VARCHAR := TG_TABLE_NAME || '_revision';
+    _where VARCHAR := '';
+    _pk VARCHAR;
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        _op := 'I'; _record := NEW;
+    ELSIF TG_OP = 'UPDATE' THEN
+        _op := 'U'; _record := NEW;
+    ELSE
+        _op := 'D'; _record := OLD;
+    END IF;
+    IF TG_NARGS = 0 THEN
+        _where := '_rev_table.id = $1.id';
+    ELSE
+        _where := format('_rev_table.%1$s = $1.%1$s', TG_ARGV[0]);
+        FOREACH _pk IN ARRAY TG_ARGV[1:] LOOP
+            _where := _where || format(' AND _rev_table.%1$s = $1.%1$s', _pk);
+        END LOOP;
+    END IF;
+    EXECUTE format('SELECT coalesce(max(rev_number), 0) FROM %s _rev_table WHERE %s', _rev_table, _where)
+        INTO _rev_number
+        USING _record;
+    EXECUTE format('INSERT INTO %s VALUES ($1, $2, $3, $4.*)', _rev_table)
+        USING _rev_number + 1, _op, now(), _record;
+    RETURN _record;
+END;
+$_$;
+
+
+--
+-- Name: tg__timestamps(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.tg__timestamps() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+begin
+  NEW.created_at = (case when TG_OP = 'INSERT' then NOW() else OLD.created_at end);
+  NEW.updated_at = (case when TG_OP = 'UPDATE' and OLD.updated_at >= NOW() then OLD.updated_at + interval '1 millisecond' else NOW() end);
+  return NEW;
+end;
+$$;
+
+
+--
+-- Name: FUNCTION tg__timestamps(); Type: COMMENT; Schema: app_private; Owner: -
+--
+
+COMMENT ON FUNCTION app_private.tg__timestamps() IS 'This trigger should be called on all tables with created_at, updated_at - it ensures that they cannot be manipulated and that updated_at will always be larger than the previous updated_at.';
+
+
+--
 -- Name: current_user_id(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -73,7 +142,7 @@ $$;
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_table_access_method = heap;
 
 --
 -- Name: users; Type: TABLE; Schema: public; Owner: -
@@ -326,24 +395,6 @@ CREATE TABLE public.aktuality (
 
 
 --
--- Name: aktuality_admin; Type: VIEW; Schema: public; Owner: -
---
-
-CREATE VIEW public.aktuality_admin AS
- SELECT aktuality.at_id,
-    aktuality.at_kdo,
-    aktuality.at_kat,
-    aktuality.at_jmeno,
-    aktuality.at_text,
-    aktuality.at_preview,
-    aktuality.at_foto,
-    aktuality.at_foto_main,
-    aktuality.at_timestamp,
-    aktuality.at_timestamp_add
-   FROM public.aktuality;
-
-
---
 -- Name: aktuality_at_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -578,23 +629,6 @@ CREATE TABLE public.nabidka (
 
 
 --
--- Name: nabidka_admin; Type: VIEW; Schema: public; Owner: -
---
-
-CREATE VIEW public.nabidka_admin AS
- SELECT nabidka.n_id,
-    nabidka.n_trener,
-    nabidka.n_pocet_hod,
-    nabidka.n_max_pocet_hod,
-    nabidka.n_od,
-    nabidka.n_do,
-    nabidka.n_visible,
-    nabidka.n_lock,
-    nabidka.n_timestamp
-   FROM public.nabidka;
-
-
---
 -- Name: nabidka_item; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -643,6 +677,70 @@ CREATE SEQUENCE public.nabidka_n_id_seq
 --
 
 ALTER SEQUENCE public.nabidka_n_id_seq OWNED BY public.nabidka.n_id;
+
+
+--
+-- Name: page; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.page (
+    id integer NOT NULL,
+    url character varying NOT NULL,
+    content json NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE page; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.page IS '@omit delete';
+
+
+--
+-- Name: page_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.page_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: page_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.page_id_seq OWNED BY public.page.id;
+
+
+--
+-- Name: page_revision; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.page_revision (
+    rev_number integer NOT NULL,
+    rev_operation character(1) NOT NULL,
+    rev_timestamp timestamp without time zone,
+    id integer NOT NULL,
+    url character varying NOT NULL,
+    content json NOT NULL,
+    created_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL,
+    CONSTRAINT base_revision_rev_operation_check CHECK ((rev_operation = ANY (ARRAY['I'::bpchar, 'U'::bpchar, 'D'::bpchar])))
+);
+
+
+--
+-- Name: TABLE page_revision; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.page_revision IS '@omit create,update,delete';
 
 
 --
@@ -913,21 +1011,6 @@ CREATE TABLE public.rozpis (
     r_lock boolean DEFAULT true NOT NULL,
     r_timestamp timestamp with time zone
 );
-
-
---
--- Name: rozpis_admin; Type: VIEW; Schema: public; Owner: -
---
-
-CREATE VIEW public.rozpis_admin AS
- SELECT rozpis.r_id,
-    rozpis.r_trener,
-    rozpis.r_kde,
-    rozpis.r_datum,
-    rozpis.r_visible,
-    rozpis.r_lock,
-    rozpis.r_timestamp
-   FROM public.rozpis;
 
 
 --
@@ -1288,6 +1371,13 @@ ALTER TABLE ONLY public.nabidka ALTER COLUMN n_id SET DEFAULT nextval('public.na
 --
 
 ALTER TABLE ONLY public.nabidka_item ALTER COLUMN ni_id SET DEFAULT nextval('public.nabidka_item_ni_id_seq'::regclass);
+
+
+--
+-- Name: page id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.page ALTER COLUMN id SET DEFAULT nextval('public.page_id_seq'::regclass);
 
 
 --
@@ -1656,6 +1746,30 @@ ALTER TABLE ONLY public.video_source
 
 
 --
+-- Name: page page_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.page
+    ADD CONSTRAINT page_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: page_revision page_revision_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.page_revision
+    ADD CONSTRAINT page_revision_pkey PRIMARY KEY (rev_number, id);
+
+
+--
+-- Name: page page_url_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.page
+    ADD CONSTRAINT page_url_key UNIQUE (url);
+
+
+--
 -- Name: idx_23747_akce_item_ai_id_rodic_fkey; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1936,59 +2050,73 @@ CREATE INDEX idx_23964_users_u_skupina_fkey ON public.users USING btree (u_skupi
 
 
 --
+-- Name: page _100_page_revision; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_page_revision AFTER INSERT OR DELETE OR UPDATE ON public.page FOR EACH ROW EXECUTE FUNCTION app_private.insert_revision();
+
+
+--
+-- Name: page _100_timestamps; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER _100_timestamps BEFORE INSERT OR UPDATE ON public.page FOR EACH ROW EXECUTE FUNCTION app_private.tg__timestamps();
+
+
+--
 -- Name: akce on_update_current_timestamp; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.akce FOR EACH ROW EXECUTE PROCEDURE public.on_update_current_timestamp_akce();
+CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.akce FOR EACH ROW EXECUTE FUNCTION public.on_update_current_timestamp_akce();
 
 
 --
 -- Name: aktuality on_update_current_timestamp; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.aktuality FOR EACH ROW EXECUTE PROCEDURE public.on_update_current_timestamp_aktuality();
+CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.aktuality FOR EACH ROW EXECUTE FUNCTION public.on_update_current_timestamp_aktuality();
 
 
 --
 -- Name: dokumenty on_update_current_timestamp; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.dokumenty FOR EACH ROW EXECUTE PROCEDURE public.on_update_current_timestamp_dokumenty();
+CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.dokumenty FOR EACH ROW EXECUTE FUNCTION public.on_update_current_timestamp_dokumenty();
 
 
 --
 -- Name: galerie_foto on_update_current_timestamp; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.galerie_foto FOR EACH ROW EXECUTE PROCEDURE public.on_update_current_timestamp_galerie_foto();
+CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.galerie_foto FOR EACH ROW EXECUTE FUNCTION public.on_update_current_timestamp_galerie_foto();
 
 
 --
 -- Name: nabidka on_update_current_timestamp; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.nabidka FOR EACH ROW EXECUTE PROCEDURE public.on_update_current_timestamp_nabidka();
+CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.nabidka FOR EACH ROW EXECUTE FUNCTION public.on_update_current_timestamp_nabidka();
 
 
 --
 -- Name: rozpis on_update_current_timestamp; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.rozpis FOR EACH ROW EXECUTE PROCEDURE public.on_update_current_timestamp_rozpis();
+CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.rozpis FOR EACH ROW EXECUTE FUNCTION public.on_update_current_timestamp_rozpis();
 
 
 --
 -- Name: upozorneni on_update_current_timestamp; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.upozorneni FOR EACH ROW EXECUTE PROCEDURE public.on_update_current_timestamp_upozorneni();
+CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.upozorneni FOR EACH ROW EXECUTE FUNCTION public.on_update_current_timestamp_upozorneni();
 
 
 --
 -- Name: users on_update_current_timestamp; Type: TRIGGER; Schema: public; Owner: -
 --
 
-CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.users FOR EACH ROW EXECUTE PROCEDURE public.on_update_current_timestamp_users();
+CREATE TRIGGER on_update_current_timestamp BEFORE UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION public.on_update_current_timestamp_users();
 
 
 --
@@ -2224,12 +2352,20 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: SCHEMA app_private; Type: ACL; Schema: -; Owner: -
+--
+
+GRANT ALL ON SCHEMA app_private TO postgres;
+
+
+--
 -- Name: SCHEMA public; Type: ACL; Schema: -; Owner: -
 --
 
 REVOKE ALL ON SCHEMA public FROM postgres;
 REVOKE ALL ON SCHEMA public FROM PUBLIC;
 GRANT ALL ON SCHEMA public TO olymp;
+GRANT ALL ON SCHEMA public TO postgres;
 GRANT USAGE ON SCHEMA public TO olympuser;
 
 
@@ -2490,7 +2626,6 @@ GRANT SELECT,USAGE ON SEQUENCE public.video_v_id_seq TO olympuser;
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public REVOKE ALL ON SEQUENCES  FROM postgres;
 ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES  TO olympuser;
 
 
@@ -2498,8 +2633,6 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT SELECT,USAGE O
 -- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: public; Owner: -
 --
 
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
-ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public REVOKE ALL ON FUNCTIONS  FROM postgres;
 ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON FUNCTIONS  TO olympuser;
 
 
