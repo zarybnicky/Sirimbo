@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Redirect, Switch, Route, RouteProps } from 'react-router-dom';
+import { Redirect, Switch, Route, RouteProps, useLocation, useHistory } from 'react-router-dom';
 
 import { useAuth, User } from './use-auth';
 
@@ -10,15 +10,32 @@ import { LocationsPage } from './pages/LocationsPage';
 import { NewsPage } from './pages/NewsPage';
 import { TrainersPage } from './pages/TrainersPage';
 import { GalleryPage } from './pages/GalleryPage';
+import { GalleryPhotoPage } from './pages/GalleryPhotoPage';
+import { LoginPage } from './pages/LoginPage';
 import { DynamicPage } from './pages/DynamicPage';
-
 /* import { ListGuesser, EditGuesser, ShowGuesser } from 'ra-ui-materialui'; */
-const ProtectedRoute = ({ check, children, ...rest }: { check: (user: User | null) => boolean; } & RouteProps) => (
-  <Route {...rest} render={() => {
+
+const ProtectedRoute = ({ check, children, ...rest }: {
+  check: (user: User | null) => boolean;
+} & RouteProps) => (
+  <Route {...rest} render={({ location }) => {
     const { user } = useAuth();
-    return check(user) ? children : <Redirect to="/login" />;
+    return check(user) ? children : <Redirect to={{
+      pathname: '/login',
+      state: { from: location }
+    }} />;
   }} />
 );
+
+const RegisterPage = () => <React.Fragment>Register</React.Fragment>;
+const ForgottenPasswordPage = () => <React.Fragment>Forgotten Password</React.Fragment>;
+const EventsPage = () => <React.Fragment>Events</React.Fragment>;
+const EventPage = () => <React.Fragment>Event</React.Fragment>;
+const DashboardPage = () => <React.Fragment>Dashboard</React.Fragment>;
+const SchedulePage = () => <React.Fragment>Schedule</React.Fragment>;
+const DocumentsPage = () => <React.Fragment>Documents</React.Fragment>;
+const GroupOverviewPage = () => <React.Fragment>GroupOverview</React.Fragment>;
+const ProfilePage = () => <React.Fragment>Profile</React.Fragment>;
 
 const isLoggedIn = (user: User | null) => !!user;
 
@@ -57,7 +74,7 @@ export const routes = <Switch>
   <Route exact path="/forgotten-password"><ForgottenPasswordPage /></Route>
 
   <Route exact path="/events"><EventsPage /></Route>
-  <Route exact path="/events/:id"><EventsSinglePage /></Route>
+  <Route exact path="/events/:id"><EventPage /></Route>
 
   <Redirect from="/member/home" to="/dashboard" />
   <Redirect from="/member/rozpis" to="/schedule" />
@@ -65,11 +82,11 @@ export const routes = <Switch>
   <Redirect from="/member/nabidka" to="/schedule" />
   <Redirect from="/member/clenove" to="/groups" />
   <Redirect from="/member/profil" to="/profile" />
-  <ProtectedRoute exact path="/dashboard" check={isLoggedIn}><MemberDashboardPage /></ProtectedRoute>
-  <ProtectedRoute exact path="/schedule" check={isLoggedIn}><MemberSchedulePage /></ProtectedRoute>
-  <ProtectedRoute exact path="/documents" check={isLoggedIn}><MemberDocumentsPage /></ProtectedRoute>
-  <ProtectedRoute exact path="/groups" check={isLoggedIn}><MemberGroupsPage /></ProtectedRoute>
-  <ProtectedRoute exact path="/profile" check={isLoggedIn}><MemberProfilePage /></ProtectedRoute>
+  <ProtectedRoute exact path="/dashboard" check={isLoggedIn}><DashboardPage /></ProtectedRoute>
+  <ProtectedRoute exact path="/schedule" check={isLoggedIn}><SchedulePage /></ProtectedRoute>
+  <ProtectedRoute exact path="/documents" check={isLoggedIn}><DocumentsPage /></ProtectedRoute>
+  <ProtectedRoute exact path="/groups" check={isLoggedIn}><GroupOverviewPage /></ProtectedRoute>
+  <ProtectedRoute exact path="/profile" check={isLoggedIn}><ProfilePage /></ProtectedRoute>
 
   {/* <Route exact path="/admin/upozorneni" render={(routeProps) =>
       <ListGuesser hasCreate resource="upozorneni"

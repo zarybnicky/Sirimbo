@@ -16,6 +16,7 @@ declare module "graphql-tag" {
   export function gql(source: "\nquery ScheduleAdminList($offset: Int, $limit: Int) {\n  allRozpis(first: $limit, offset: $offset, orderBy: R_DATUM_DESC) {\n    nodes {\n      rDatum\n      rId\n      rKde\n      rLock\n      rTimestamp\n      rTrener\n      rVisible\n      userByRTrener {\n        uId\n        uJmeno\n        uPrijmeni\n      }\n      rozpisItemsByRiIdRodic {\n        nodes {\n          riDo\n          riOd\n          riId\n          riPartner\n        }\n      }\n    }\n    totalCount\n  }\n}"): typeof import('./graphql').ScheduleAdminListDocument;
   export function gql(source: "\nmutation setRozpisVisible($id: BigInt!, $visible: Boolean!) {\n  updateRozpiByRId(input: {rozpiPatch: {rVisible: $visible}, rId: $id}) {\n    rozpi {\n      rId\n    }\n  }\n}"): typeof import('./graphql').SetRozpisVisibleDocument;
   export function gql(source: "\nquery GetPage($url: String!) {\n  pageByUrl(url: $url) {\n    pageRevisionByCurrentRevision {\n      content\n    }\n  }\n}"): typeof import('./graphql').GetPageDocument;
+  export function gql(source: "\nquery GetPhoto($id: BigInt!) {\n  galerieFotoByGfId(gfId: $id) {\n    gfId\n    gfIdRodic\n    gfKdo\n    gfName\n    gfPath\n    gfTimestamp\n    galerieDirByGfIdRodic {\n      gdId\n    }\n  }\n}"): typeof import('./graphql').GetPhotoDocument;
   export function gql(source: "\nquery GetMenu {\n  parameterByPaName(paName: \"menu\") {\n    paValue\n  }\n}"): typeof import('./graphql').GetMenuDocument;
   export function gql(source: string): unknown;
 
