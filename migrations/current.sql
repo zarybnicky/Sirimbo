@@ -30,8 +30,8 @@ begin
 
   select gen_random_uuid() into v_sid;
   insert into session
-    (ss_id, ss_data, ss_lifetime) VALUES (v_sid, json_build_object('id', v_user.u_id), 86400)
-    ON CONFLICT (ss_id) DO UPDATE SET ss_data=EXCLUDED.ss_data, ss_updated_at=NOW();
+    (ss_id, ss_user, ss_data, ss_lifetime)
+    VALUES (v_sid, v_user.u_id, json_build_object('id', v_user.u_id), 86400);
 
   return v_sid;
 end;
@@ -39,9 +39,25 @@ $$ language plpgsql strict volatile security definer;
 select * from plpgsql_check_function('public.login');
 
 
+create or replace function public.logout() returns void as $$
+declare
+  v_user users;
+  v_sid varchar;
+  v_salt varchar;
+begin
+  delete from session where ss_id=current_session_id();
+end;
+$$ language plpgsql strict volatile security definer;
+select * from plpgsql_check_function('public.logout');
+
+
 drop function current_user_id() cascade;
 create or replace function current_user_id() returns bigint as $$
   SELECT current_setting('jwt.claims.user_id', true)::bigint;
+$$ language sql stable;
+
+create or replace function current_session_id() returns text as $$
+  select current_setting('jwt.claims.session_id', true);
 $$ language sql stable;
 
 create or replace function current_couple_ids() returns setof bigint AS $$

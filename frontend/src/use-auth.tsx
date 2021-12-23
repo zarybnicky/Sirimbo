@@ -1,8 +1,16 @@
 import * as React from "react";
+import { useMutation, gql } from "@apollo/client";
+import { AkceItemsConnection, AkceItemsEdge, PageInfo, User } from "./graphql/graphql";
+export type { User };
 
-export interface User {
-  name: string;
-}
+const SIGN_IN = gql(`
+mutation SignIn($login: String!, $passwd: String!) {
+  login(input: {login: $login, passwd: $passwd}) {
+    query {
+      currentUserId
+    }
+  }
+}`);
 
 export interface AuthContextType {
   user: User | null;
@@ -15,8 +23,13 @@ export interface AuthContextType {
 
 const authContext = React.createContext<AuthContextType | undefined>(undefined);
 
-export const ProvideAuth = ({ children }: { children: React.ReactChild | React.ReactChild[] }) =>
-  <authContext.Provider value={useApiAuth()}>{children}</authContext.Provider>;
+export const ProvideAuth = ({ mock = false, children }: {
+  mock?: boolean;
+  children: React.ReactChild | React.ReactChild[];
+}) => {
+  const auth = mock ? useMockAuth() : useApiAuth();
+  return <authContext.Provider value={auth}>{children}</authContext.Provider>;
+}
 
 export const useAuth = () => {
   const auth = React.useContext(authContext);
@@ -26,19 +39,34 @@ export const useAuth = () => {
   return auth;
 }
 
+const mockPageInfo: PageInfo = { hasNextPage: false, hasPreviousPage: false };
+const mockConnection = { edges: [], nodes: [], pageInfo: mockPageInfo, totalCount: 0 };
+const mockUser: User = {
+  akceItemsByAiUser: mockConnection,
+  aktualitiesByAtKdo: mockConnection,
+  dokumentiesByDKdo: mockConnection,
+  galerieFotosByGfKdo: mockConnection,
+  nabidkasByNTrener: mockConnection,
+  pariesByPIdPartner: mockConnection,
+  paryNavrhsByPnNavrhl: mockConnection,
+  paryNavrhsByPnPartner: mockConnection,
+  paryNavrhsByPnPartnerka: mockConnection,
+
+  nodeId: 'u123',
+  uJmeno: 'Jakub',
+  uPrijmeni: 'Zárybnický',
+};
 export function useMockAuth(): AuthContextType {
   const [user, setUser] = React.useState<User | null>(null);
   return {
     user,
     async signIn() {
-      const user = { name: 'Jakub Zárybnický' };
-      setUser(user);
-      return user;
+      setUser(mockUser);
+      return mockUser;
     },
     async signUp() {
-      const user = { name: 'Jakub Zárybnický' };
-      setUser(user);
-      return user;
+      setUser(mockUser);
+      return mockUser;
     },
     async signOut() {
       setUser(null);
@@ -52,35 +80,25 @@ export function useMockAuth(): AuthContextType {
 
 function useApiAuth(): AuthContextType {
   const [user, setUser] = React.useState<User | null>(null);
+  const [signIn, { }] = useMutation(SIGN_IN);
 
-  // Subscribe to user on mount
-  // Because this sets state in the callback it will cause any ...
-  // ... component that utilizes this hook to re-render with the ...
-  // ... latest auth object.
   /* useEffect(() => {
-   *   const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-   *     if (user) {
-   *       setUser(user);
-   *     } else {
-   *       setUser(null);
-   *     }
-   *   });
+   *   const unsubscribe = firebase.auth().onAuthStateChanged(setUser);
    *   return () => unsubscribe();
    * }, []); */
 
   return {
     user,
-    async signIn(email: string, password: string) {
-      // const response = await signInWithEmailAndPassword(email, password);
-      const response = { user: { name: "Jakub Zárybnický" } };
-      setUser(response.user);
-      return response.user;
+    async signIn(login: string, passwd: string) {
+      const response = await signIn({ variables: { login, passwd: passwd } });
+      setUser((response as any).user);
+      return (response as any).user;
     },
     async signUp(email: string, password: string) {
       // const response = await createUserWithEmailAndPassword(email, password);
-      const response = { user: { name: "Jakub Zárybnický" } };
-      setUser(response.user);
-      return response.user;
+      // const response = { user: { name: "Jakub Zárybnický" } };
+      setUser(mockUser); // response.user);
+      return mockUser; // response.user;
     },
     async signOut() {
       // await signOut()

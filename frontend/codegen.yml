@@ -10,3 +10,5 @@ generates:
     preset: gql-tag-operations-preset
     presetConfig:
       augmentedModuleName: 'graphql-tag'
+    plugins:
+      - graphql-codegen-mock-results

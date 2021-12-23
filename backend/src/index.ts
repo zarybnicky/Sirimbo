@@ -5,28 +5,36 @@ import bodyParser from 'body-parser';
 import { postgraphile, makePluginHook, PostGraphileOptions } from 'postgraphile';
 import operationHooks, { AddOperationHookFn } from '@graphile/operation-hooks';
 
+const getSession = async (phpsessid: string | undefined) => {
+  const sessRes = await pool.query(`SELECT * FROM session WHERE ss_id='${phpsessid}'`);
+  return sessRes.rows[0];
+};
+const getUser = async (uid: string | undefined) => {
+  const userRes = await pool.query(`SELECT * FROM users WHERE u_id=${uid}`);
+  return userRes.rows[0];
+};
+
 export const options: PostGraphileOptions<express.Request, express.Response> = {
   async pgSettings(req) {
-    const phpsessid = (req as any).cookies.PHPSESSID;
-    if (!phpsessid) return { 'role': 'anonymous' };
-
-    const sessRes = await pool.query(`SELECT * FROM session WHERE ss_id='${phpsessid}'`);
-    if (!sessRes.rows[0]) return { 'role': 'anonymous' };
-
-    const uid = JSON.parse(sessRes.rows[0].ss_data).id
-    if (!uid) return { 'role': 'anonymous' };
-
-    const userRes = await pool.query(`SELECT * FROM users WHERE u_id=${uid}`);
-    if (!userRes.rows[0]) return { 'role': 'anonymous' };
-
-    return {
-      'role': (
-        userRes.rows[0].u_group == "0" ? "anonymous" :
-          userRes.rows[0].u_group == "1" ? "administrator" :
-            "member"
-      ),
-      'jwt.claims.user_id': uid.toString(),
+    const settings = {
+      role: 'anonymous',
+      'jwt.claims.session_id': null,
+      'jwt.claims.user_id': null,
     };
+    const session = await getSession(req.cookies.PHPSESSID)
+    if (!session) return settings;
+    settings['jwt.claims.session_id'] = session.ss_id;
+
+    const user = await getUser(session.ss_user);
+    if (!user) return settings;
+    settings['jwt.claims.user_id'] = user.u_id;;
+
+    settings['role'] =
+      user.u_group == "0" ? "anonymous" :
+        user.u_group == "1" ? "administrator" :
+          "member"
+
+    return settings;
   },
   watchPg: true,
   graphiql: true,
@@ -43,30 +51,41 @@ export const options: PostGraphileOptions<express.Request, express.Response> = {
   pluginHook: makePluginHook([operationHooks]),
   async additionalGraphQLContextFromRequest(_, res) {
     return {
-      setPhpsessid: (sessionId: string) => {
+      setAuthCookie: (sessionId: string) => {
         res.cookie('PHPSESSID', sessionId, { sameSite: true, httpOnly: true, secure: true });
       },
+      unsetAuthCookie: () => {
+        res.clearCookie('PHPSESSID');
+      }
     };
   },
   appendPlugins: [
     function OperationHookPlugin(builder) {
       builder.hook("init", (_, build) => {
         (build.addOperationHook as AddOperationHookFn)(({ isRootMutation, pgFieldIntrospection }) => {
-          if (!isRootMutation) {
-            return {};
+          if (isRootMutation && pgFieldIntrospection?.name === "login") {
+            return {
+              after: [{
+                priority: 1000,
+                callback: (result, args, context) => {
+                  console.log(result);
+                  context.setAuthCookie(result);
+                },
+              }],
+            };
           }
-          if (!pgFieldIntrospection || pgFieldIntrospection.name !== "login") {
-            return {};
+          if (isRootMutation && pgFieldIntrospection?.name === "logout") {
+            return {
+              after: [{
+                priority: 1000,
+                callback: (result, args, context) => {
+                  console.log(result);
+                  context.unsetAuthCookie();
+                },
+              }],
+            };
           }
-          return {
-            after: [{
-              priority: 1000,
-              callback: (result, args, context) => {
-                console.log(result);
-                context.setAuthCookie(result)
-              },
-            }],
-          };
+          return {};
         });
         return _;
       });

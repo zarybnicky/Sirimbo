@@ -1,46 +1,71 @@
 import * as React from 'react';
-import { makeStyles, Container, Typography, Grid } from '@material-ui/core';
-import { TrainerCard } from '../components/TrainerCard';
-import { useExternalTrainers, useInternalTrainers } from '../data';
+import { FORM_ERROR } from 'final-form'
+import { Form, Field } from 'react-final-form'
+import { useHistory, useLocation } from 'react-router';
+import { useAuth } from '../use-auth';
 
-const useStyles = makeStyles(() => ({
-  section: {
-    margin: '2rem 0 1.25rem'
-  },
-}));
+function AuthButton() {
+  const { user, signOut } = useAuth();
+  const history = useHistory()
+  return !!user
+    ? <p>
+      Welcome! <button onClick={async () => {
+        await signOut();
+        history.push('/');
+      }}>Sign out</button>
+    </p>
+    : <p>You are not logged in.</p>
+}
 
-export const TrainersPage = ({ }) => {
-  const classes = useStyles();
-  const data = useData();
-  return <Container maxWidth="lg" style={{ paddingBottom: '2rem', paddingTop: '2rem' }}>
-    <Typography className={classes.section} variant="h4" component="h2">Kluboví trenéři</Typography>
-    <Grid container spacing={3}>
-      {data.map((x, i) => (
-        <Grid item sm={12} md={6} key={i}>
-          <TrainerCard item={x} />
-        </Grid>
-      ))}
-    </Grid>;
-  </Container>;
+export const LoginPage = ({ }) => {
+  const { signIn } = useAuth();
+  const history = useHistory()
+  const { state } = useLocation<{ from?: string }>();
+
+  const onSubmit = async (values: { login: string; password: string; }) => {
+    try {
+      await signIn(values.login, values.password); // EITHER EMAIl OR USERNAME!!!
+      history.push(state?.from || '/dashboard');
+      return undefined;
+    } catch (e) {
+      console.log(e);
+      if (values.login !== 'erikras') {
+        return { login: 'Unknown username' };
+      }
+      return { [FORM_ERROR]: 'Login Failed' };
+    }
+  };
+  const validate = (values: { login: string; password: string; }) => ({
+    ...(!values.login ? { login: 'Required' } : {}),
+    ...(!values.password ? { password: 'Required' } : {}),
+  });
+
+  return (
+    <Form onSubmit={onSubmit} validate={validate} render={form => (
+      <form onSubmit={form.handleSubmit}>
+        <Field name="login">
+          {({ input, meta }) => <div>
+            <label>Login</label>
+            <input {...input} type="text" placeholder="Login" />
+            {(meta.error || meta.submitError) && meta.touched && (
+              <span>{meta.error || meta.submitError}</span>
+            )}
+          </div>}
+        </Field>
+        <Field name="password">
+          {({ input, meta }) => <div>
+            <label>Password</label>
+            <input {...input} type="password" placeholder="Password" />
+            {meta.error && meta.touched && <span>{meta.error}</span>}
+          </div>}
+        </Field>
+        {form.submitError && <div className="error">{form.submitError}</div>}
+        <div className="buttons">
+          <button type="submit" disabled={form.submitting}>Log In</button>
+        </div>
+        <a href="/registrace">Registrovat se</a>
+        <a href="/nopassword">Zapomněli jste heslo?</a>
+      </form>
+    )} />
+  );
 };
-
-
-<div class="container">
-  <form action="" method="post">
-    <div class="row justify-content-center m-3">
-      <div class="col-12 col-md-6 col-lg-4">
-        <div class="form-group pb-1">
-          <input class="form-control" name="login" placeholder="Uživatelské jméno" />
-        </div>
-        <div class="form-group">
-          <input class="form-control" name="pass" placeholder="Heslo" type="password" />
-        </div>
-        <div class="form-group pb-2">
-          <button name="action" value="login" class="btn btn-primary">Přihlásit se</button>
-        </div>
-        <a href="/registrace">Registrovat se</a><br>
-          <a href="/nopassword">Zapomněli jste heslo?</a>
-      </div>
-    </div>
-  </form>
-</div>

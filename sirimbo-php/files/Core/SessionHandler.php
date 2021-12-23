@@ -21,16 +21,18 @@ class DbSessionHandler extends Database implements SessionHandlerInterface
     public function write($sessionId, $data)
     {
         setcookie(session_name(), $sessionId, time() + 86400, '/');
-        $data = json_encode(unserialize($data), JSON_FORCE_OBJECT);
+        $sessionData = unserialize($data);
+        $data = json_encode($sessionData, JSON_FORCE_OBJECT);
         $stmt = self::prepare(
             "INSERT INTO session
-             (ss_id, ss_data, ss_lifetime) VALUES
-             (?, ?, 86400)
+             (ss_id, ss_user, ss_data, ss_lifetime) VALUES
+             (?, ?, ?, 86400)
              ON CONFLICT (ss_id) DO UPDATE SET
-             ss_data=EXCLUDED.ss_data, ss_updated_at=NOW()"
+             ss_user=EXCLUDED.ss_user, ss_data=EXCLUDED.ss_data, ss_updated_at=NOW()"
         );
         $stmt->bindParam(1, $sessionId);
-        $stmt->bindParam(2, $data, PDO::PARAM_LOB);
+        $stmt->bindParam(2, $sessionData['id'] ?? null);
+        $stmt->bindParam(3, $data, PDO::PARAM_LOB);
         $stmt->execute();
         return !!$stmt;
     }
