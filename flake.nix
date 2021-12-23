@@ -109,6 +109,8 @@
           services.postgresql = {
             enable = true;
             enableTCPIP = true;
+            package = pkgs.postgresql_13;
+            extraPlugins = with pkgs.postgresql_13.pkgs; [ plpgsql_check ];
             ensureDatabases = ["olymp" "olymp_shadow"];
             ensureUsers = [
               {

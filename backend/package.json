@@ -11,6 +11,7 @@
     "start": "PGHOST=olymp-test PGUSER=postgres PGDATABASE=olymp tsnd --respawn src/index.ts"
   },
   "dependencies": {
+    "@graphile/operation-hooks": "^1.0.0",
     "@tsconfig/node12": "^1.0.9",
     "@types/body-parser": "^1.19.2",
     "@types/compression": "^1.7.2",
@@ -30,7 +31,7 @@
     "pg": "^8.7.1",
     "postgraphile": "^4.12.5",
     "raw-loader": "^4.0.2",
-    "sql-lint": "^0.0.19",
+    "schemalint": "^0.5.6",
     "ts-loader": "^9.2.6",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.5.4",

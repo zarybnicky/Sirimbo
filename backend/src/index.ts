@@ -2,26 +2,27 @@ import { Pool } from 'pg';
 import process from 'process';
 import express from 'express';
 import bodyParser from 'body-parser';
-import { postgraphile, PostGraphileOptions } from 'postgraphile';
+import { postgraphile, makePluginHook, PostGraphileOptions } from 'postgraphile';
+import operationHooks, { AddOperationHookFn } from '@graphile/operation-hooks';
 
-export const options: PostGraphileOptions = {
+export const options: PostGraphileOptions<express.Request, express.Response> = {
   async pgSettings(req) {
     const phpsessid = (req as any).cookies.PHPSESSID;
-    if (!phpsessid) return { 'graphile.test.x-user-role': 'anonymous' };
+    if (!phpsessid) return { 'role': 'anonymous' };
 
     const sessRes = await pool.query(`SELECT * FROM session WHERE ss_id='${phpsessid}'`);
-    if (!sessRes.rows[0]) return { 'graphile.test.x-user-role': 'anonymous' };
+    if (!sessRes.rows[0]) return { 'role': 'anonymous' };
 
     const uid = JSON.parse(sessRes.rows[0].ss_data).id
-    if (!uid) return { 'graphile.test.x-user-role': 'anonymous' };
+    if (!uid) return { 'role': 'anonymous' };
 
     const userRes = await pool.query(`SELECT * FROM users WHERE u_id=${uid}`);
-    if (!userRes.rows[0]) return { 'graphile.test.x-user-role': 'anonymous' };
+    if (!userRes.rows[0]) return { 'role': 'anonymous' };
 
     return {
-      'jwt.claims.user_group': (
+      'role': (
         userRes.rows[0].u_group == "0" ? "anonymous" :
-          userRes.rows[0].u_group == "1" ? "admin" :
+          userRes.rows[0].u_group == "1" ? "administrator" :
             "member"
       ),
       'jwt.claims.user_id': uid.toString(),
@@ -39,6 +40,38 @@ export const options: PostGraphileOptions = {
   allowExplain: true,
   legacyRelations: 'omit',
   sortExport: true,
+  pluginHook: makePluginHook([operationHooks]),
+  async additionalGraphQLContextFromRequest(_, res) {
+    return {
+      setPhpsessid: (sessionId: string) => {
+        res.cookie('PHPSESSID', sessionId, { sameSite: true, httpOnly: true, secure: true });
+      },
+    };
+  },
+  appendPlugins: [
+    function OperationHookPlugin(builder) {
+      builder.hook("init", (_, build) => {
+        (build.addOperationHook as AddOperationHookFn)(({ isRootMutation, pgFieldIntrospection }) => {
+          if (!isRootMutation) {
+            return {};
+          }
+          if (!pgFieldIntrospection || pgFieldIntrospection.name !== "login") {
+            return {};
+          }
+          return {
+            after: [{
+              priority: 1000,
+              callback: (result, args, context) => {
+                console.log(result);
+                context.setAuthCookie(result)
+              },
+            }],
+          };
+        });
+        return _;
+      });
+    },
+  ],
 };
 
 const pool = new Pool();
