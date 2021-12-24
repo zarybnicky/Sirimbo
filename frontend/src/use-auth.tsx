@@ -1,21 +1,85 @@
 import * as React from "react";
-import { useMutation, gql } from "@apollo/client";
-import { AkceItemsConnection, AkceItemsEdge, PageInfo, User } from "./graphql/graphql";
-export type { User };
+import { useMutation, gql, useQuery } from "@apollo/client";
+import { User, signInMutationMock, SignInMutation } from "./graphql/graphql";
+import { UserQuery } from "./client";
+
+const SIGN_OUT = gql(`
+mutation SignOut {
+  logout(input: {}) {
+    __typename
+  }
+}`);
 
 const SIGN_IN = gql(`
 mutation SignIn($login: String!, $passwd: String!) {
   login(input: {login: $login, passwd: $passwd}) {
-    query {
-      currentUserId
+    result {
+      usr {
+        permissionByUGroup {
+          peAkce
+          peAnkety
+          peAktuality
+          peDescription
+          peDokumenty
+          peGalerie
+          peId
+          peKonzole
+          peInzerce
+          peNabidka
+          peMain
+          peName
+          peNastenka
+          peNovinky
+          pePary
+          pePermissions
+          pePlatby
+          peRozpis
+          peSkupiny
+          peUsers
+        }
+        uTimestamp
+        uSystem
+        uTelefon
+        uTeacher
+        uStreet
+        uRodneCislo
+        uSkupina
+        uPrijmeni
+        uPoznamky
+        uPostalCode
+        uPohlavi
+        uPass
+        uOrientationNumber
+        uNationality
+        uNarozeni
+        uMemberUntil
+        uLogin
+        uMemberSince
+        uLock
+        uLevel
+        uJmeno
+        uGroup
+        uId
+        uGdprSignedAt
+        uEmail
+        uDancer
+        uDistrict
+        uCreatedAt
+        uConfirmed
+        uConscriptionNumber
+        uBan
+        uCity
+      }
     }
   }
 }`);
 
+export type AppUser = NonNullable<NonNullable<NonNullable<NonNullable<SignInMutation>['login']>['result']>['usr']>;
 export interface AuthContextType {
-  user: User | null;
-  signIn: (email: string, password: string) => Promise<User>;
-  signUp: (email: string, password: string) => Promise<User>;
+  isLoading: boolean,
+  user: AppUser | null;
+  signIn: (email: string, password: string) => Promise<AppUser>;
+  signUp: (email: string, password: string) => Promise<AppUser>;
   signOut: () => Promise<void>;
   sendPasswordResetEmail: (email: string) => Promise<void>;
   confirmPasswordReset: (code: string, password: string) => Promise<void>;
@@ -39,69 +103,39 @@ export const useAuth = () => {
   return auth;
 }
 
-const mockPageInfo: PageInfo = { hasNextPage: false, hasPreviousPage: false };
-const mockConnection = { edges: [], nodes: [], pageInfo: mockPageInfo, totalCount: 0 };
-const mockUser: User = {
-  akceItemsByAiUser: mockConnection,
-  aktualitiesByAtKdo: mockConnection,
-  dokumentiesByDKdo: mockConnection,
-  galerieFotosByGfKdo: mockConnection,
-  nabidkasByNTrener: mockConnection,
-  pariesByPIdPartner: mockConnection,
-  paryNavrhsByPnNavrhl: mockConnection,
-  paryNavrhsByPnPartner: mockConnection,
-  paryNavrhsByPnPartnerka: mockConnection,
-
-  nodeId: 'u123',
-  uJmeno: 'Jakub',
-  uPrijmeni: 'Zárybnický',
-};
-export function useMockAuth(): AuthContextType {
-  const [user, setUser] = React.useState<User | null>(null);
-  return {
-    user,
-    async signIn() {
-      setUser(mockUser);
-      return mockUser;
-    },
-    async signUp() {
-      setUser(mockUser);
-      return mockUser;
-    },
-    async signOut() {
-      setUser(null);
-    },
-    async sendPasswordResetEmail(email: string) {
-    },
-    async confirmPasswordReset() {
-    },
-  };
-}
-
 function useApiAuth(): AuthContextType {
-  const [user, setUser] = React.useState<User | null>(null);
-  const [signIn, { }] = useMutation(SIGN_IN);
-
+  const [user, setUser] = React.useState<AppUser | null>(null);
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
+  const [signIn] = useMutation(SIGN_IN);
+  const [signOut] = useMutation(SIGN_OUT);
+  useQuery(UserQuery, {
+    onCompleted: (data) => {
+      setUser(data.getCurrentUser as AppUser);
+      setIsLoading(false);
+    },
+    onError: () => setIsLoading(false),
+  });
   /* useEffect(() => {
    *   const unsubscribe = firebase.auth().onAuthStateChanged(setUser);
    *   return () => unsubscribe();
    * }, []); */
 
   return {
+    isLoading,
     user,
     async signIn(login: string, passwd: string) {
-      const response = await signIn({ variables: { login, passwd: passwd } });
-      setUser((response as any).user);
-      return (response as any).user;
+      const { data } = await signIn({ variables: { login, passwd } });
+      setUser(data?.login?.result?.usr!!);
+      return data?.login?.result?.usr!!;
     },
     async signUp(email: string, password: string) {
       // const response = await createUserWithEmailAndPassword(email, password);
       // const response = { user: { name: "Jakub Zárybnický" } };
-      setUser(mockUser); // response.user);
-      return mockUser; // response.user;
+      setUser(signInMutationMock as any);
+      return signInMutationMock as any;
     },
     async signOut() {
-      // await signOut()
+      await signOut();
       setUser(null);
     },
     async sendPasswordResetEmail(email: string) {
@@ -110,5 +144,29 @@ function useApiAuth(): AuthContextType {
     async confirmPasswordReset(code: string, password: string) {
       // await confirmPasswordReset(code, password)
     }
+  };
+}
+
+export function useMockAuth(): AuthContextType {
+  const [user, setUser] = React.useState<User | null>(null);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  return {
+    isLoading,
+    user,
+    async signIn() {
+      setUser(signInMutationMock as any);
+      return signInMutationMock as any;
+    },
+    async signUp() {
+      setUser(signInMutationMock as any);
+      return signInMutationMock as any;
+    },
+    async signOut() {
+      setUser(null);
+    },
+    async sendPasswordResetEmail(email: string) {
+    },
+    async confirmPasswordReset() {
+    },
   };
 }

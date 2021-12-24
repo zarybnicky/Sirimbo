@@ -2,8 +2,8 @@ import { Pool } from 'pg';
 import process from 'process';
 import express from 'express';
 import bodyParser from 'body-parser';
-import { postgraphile, makePluginHook, PostGraphileOptions } from 'postgraphile';
-import operationHooks, { AddOperationHookFn } from '@graphile/operation-hooks';
+import { postgraphile, makePluginHook, PostGraphileOptions, Build } from 'postgraphile';
+import operationHooks, { AddOperationHookFn, OperationHookGenerator } from '@graphile/operation-hooks';
 
 const getSession = async (phpsessid: string | undefined) => {
   const sessRes = await pool.query(`SELECT * FROM session WHERE ss_id='${phpsessid}'`);
@@ -62,35 +62,38 @@ export const options: PostGraphileOptions<express.Request, express.Response> = {
   appendPlugins: [
     function OperationHookPlugin(builder) {
       builder.hook("init", (_, build) => {
-        (build.addOperationHook as AddOperationHookFn)(({ isRootMutation, pgFieldIntrospection }) => {
-          if (isRootMutation && pgFieldIntrospection?.name === "login") {
-            return {
-              after: [{
-                priority: 1000,
-                callback: (result, args, context) => {
-                  console.log(result);
-                  context.setAuthCookie(result);
-                },
-              }],
-            };
-          }
-          if (isRootMutation && pgFieldIntrospection?.name === "logout") {
-            return {
-              after: [{
-                priority: 1000,
-                callback: (result, args, context) => {
-                  console.log(result);
-                  context.unsetAuthCookie();
-                },
-              }],
-            };
-          }
-          return {};
-        });
+        (build.addOperationHook as AddOperationHookFn)(useAuthCredentials(build));
         return _;
       });
     },
   ],
+};
+
+const useAuthCredentials: (build: Build) => OperationHookGenerator = build => ctx => {
+  if (ctx.scope.isRootMutation && ctx.scope.pgFieldIntrospection?.name === "login") {
+    return {
+      after: [{
+        priority: 1000,
+        callback: (result, args, context) => {
+          console.log(result.data.value);
+          context.setAuthCookie(result.data.value.sess.ss_id);
+          return result;
+        },
+      }],
+    };
+  }
+  if (ctx.scope.isRootMutation && ctx.scope.pgFieldIntrospection?.name === "logout") {
+    return {
+      after: [{
+        priority: 1000,
+        callback: (result, args, context) => {
+          context.unsetAuthCookie();
+          return result;
+        },
+      }],
+    };
+  }
+  return {};
 };
 
 const pool = new Pool();

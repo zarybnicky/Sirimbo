@@ -159,7 +159,7 @@ export const DesktopHeader = ({ menu, auth }: { menu: MenuType; auth: AuthContex
               >
                 <div style={{ display: 'flex', justifyContent: 'start', lineHeight: 1.3, flexDirection: 'column' }}>
                   <span style={{ textDecoration: 'underline' }}>Přihlášen</span>
-                  <span style={{ textTransform: 'none' }}>{auth.user?.name}</span>
+                  <span style={{ textTransform: 'none' }}>{auth.user?.uJmeno} {auth.user?.uPrijmeni}</span>
                 </div>
               </Button>
               <Menu

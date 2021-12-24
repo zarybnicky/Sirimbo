@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Redirect, Switch, Route, RouteProps, useLocation, useHistory } from 'react-router-dom';
+import { Redirect, Switch, Route, RouteProps } from 'react-router-dom';
 
-import { useAuth, User } from './use-auth';
+import { useAuth, AppUser } from './use-auth';
 
 import { EditorPage } from './pages/EditorPage';
 import { AboutPage } from './pages/AboutPage';
@@ -16,16 +16,19 @@ import { DynamicPage } from './pages/DynamicPage';
 /* import { ListGuesser, EditGuesser, ShowGuesser } from 'ra-ui-materialui'; */
 
 const ProtectedRoute = ({ check, children, ...rest }: {
-  check: (user: User | null) => boolean;
-} & RouteProps) => (
-  <Route {...rest} render={({ location }) => {
-    const { user } = useAuth();
-    return check(user) ? children : <Redirect to={{
-      pathname: '/login',
-      state: { from: location }
-    }} />;
-  }} />
-);
+  check: (user: AppUser | null) => boolean;
+} & RouteProps) => {
+  const auth = useAuth();
+  return <Route {...rest} render={({ location }) => {
+    if (auth.isLoading) {
+      return null;          // FIXME
+    };
+    if (!check(auth.user)) {
+      return <Redirect to={{ pathname: '/login', state: { from: location } }} />
+    }
+    return children;
+  }} />;
+};
 
 const RegisterPage = () => <React.Fragment>Register</React.Fragment>;
 const ForgottenPasswordPage = () => <React.Fragment>Forgotten Password</React.Fragment>;
@@ -37,7 +40,7 @@ const DocumentsPage = () => <React.Fragment>Documents</React.Fragment>;
 const GroupOverviewPage = () => <React.Fragment>GroupOverview</React.Fragment>;
 const ProfilePage = () => <React.Fragment>Profile</React.Fragment>;
 
-const isLoggedIn = (user: User | null) => !!user;
+const isLoggedIn = (user: AppUser | null) => !!user;
 
 export const routes = <Switch>
 

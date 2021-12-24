@@ -31,8 +31,37 @@ query UserQuery {
       peSkupiny
       peUsers
     }
-    uId
-    uJmeno
+    uTimestamp
+    uSystem
+    uTelefon
+    uTeacher
+    uStreet
+    uRodneCislo
+    uSkupina
     uPrijmeni
+    uPoznamky
+    uPostalCode
+    uPohlavi
+    uPass
+    uOrientationNumber
+    uNationality
+    uNarozeni
+    uMemberUntil
+    uLogin
+    uMemberSince
+    uLock
+    uLevel
+    uJmeno
+    uGroup
+    uId
+    uGdprSignedAt
+    uEmail
+    uDancer
+    uDistrict
+    uCreatedAt
+    uConfirmed
+    uConscriptionNumber
+    uBan
+    uCity
   }
 }`);
