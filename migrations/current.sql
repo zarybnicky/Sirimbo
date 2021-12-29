@@ -35,7 +35,6 @@ end;
 $$ language plpgsql strict volatile security definer;
 select plpgsql_check_function('public.login');
 
-
 create or replace function public.logout() returns void as $$
 begin
   delete from session where ss_id=current_session_id();

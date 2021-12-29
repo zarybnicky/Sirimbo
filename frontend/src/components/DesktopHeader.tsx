@@ -7,6 +7,7 @@ import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import clsx from 'clsx';
 import { AuthContextType } from '../use-auth';
 import { MenuType, SubmenuType } from '../use-menu';
+import { useHistory } from 'react-router';
 
 import OlympLogoVertical from '../../static/images/olymp-logo-vertical.svg';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -125,6 +126,7 @@ const Submenu = ({ item: x, className, activeClassName }: {
 
 export const DesktopHeader = ({ menu, auth }: { menu: MenuType; auth: AuthContextType; }) => {
   const classes = useStyles();
+  const history = useHistory();
 
   return <AppBar position="static" color="secondary">
     <Toolbar>
@@ -171,6 +173,7 @@ export const DesktopHeader = ({ menu, auth }: { menu: MenuType; auth: AuthContex
                 <MenuItem onClick={() => {
                   popupState.close();
                   auth.signOut();
+                  history.push('/');
                 }}>Odhlásit se</MenuItem>
               </Menu>
             </React.Fragment>}

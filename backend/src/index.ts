@@ -75,7 +75,6 @@ const useAuthCredentials: (build: Build) => OperationHookGenerator = build => ct
       after: [{
         priority: 1000,
         callback: (result, args, context) => {
-          console.log(result.data.value);
           context.setAuthCookie(result.data.value.sess.ss_id);
           return result;
         },

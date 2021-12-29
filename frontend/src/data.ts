@@ -157,7 +157,7 @@ export const useServices = () => [
 
 export const useInternalTrainers = () => [
   {
-    img: getPlaceholder(360, 240),
+    img: '/images/treneri/mirek2.jpg',
     name: 'Mgr. Miroslav Hýža',
     content: [{
       type: 'bulleted-list',
@@ -172,7 +172,7 @@ export const useInternalTrainers = () => [
     }],
   },
   {
-    img: getPlaceholder(360, 240),
+    img: '/images/treneri/filip.jpg',
     name: 'Ing. Filip Karásek',
     content: [{
       type: 'bulleted-list',
@@ -185,11 +185,12 @@ export const useInternalTrainers = () => [
         { text: 'Čtvrtfinalista mistrovství světa v hlavní kategorii' },
         { text: 'Finalista GOC ve Stuttgartu kategorii profesionálů' },
         { text: 'Semifinalista Světových her v Kolumbii' },
+        { text: 'Předseda Komise sportovců (or r. 2017)' },
       ]
     }],
   },
   {
-    img: getPlaceholder(360, 240),
+    img: '/images/treneri/marie2.jpg',
     name: 'Mgr. Marie Hýžová',
     content: [{
       type: 'bulleted-list',
@@ -202,7 +203,7 @@ export const useInternalTrainers = () => [
     }],
   },
   {
-    img: getPlaceholder(360, 240),
+    img: '/images/treneri/lucka3.jpg',
     name: 'Mgr. Lucie Benýšková',
     content: [{
       type: 'bulleted-list',
@@ -218,7 +219,7 @@ export const useInternalTrainers = () => [
     }],
   },
   {
-    img: getPlaceholder(360, 240),
+    img: '/images/treneri/pavel2.jpg',
     name: 'Mgr. Pavel Grepl',
     content: [{
       type: 'bulleted-list',
@@ -232,7 +233,7 @@ export const useInternalTrainers = () => [
     }],
   },
   {
-    img: getPlaceholder(360, 240),
+    img: '/images/treneri/maruska.jpg',
     name: 'Bc. Marie Hýžová ml.',
     content: [{
       type: 'bulleted-list',
@@ -287,7 +288,7 @@ export const useInternalTrainers = () => [
     }],
   },
   {
-    img: getPlaceholder(360, 240),
+    img: '/images/treneri/matej.jpg',
     name: 'Matěj Očenášek',
     content: [{
       type: 'bulleted-list',
@@ -303,7 +304,7 @@ export const useInternalTrainers = () => [
 
 export const useExternalTrainers = () => [
   {
-    img: getPlaceholder(360, 240),
+    img: '/images/treneri/martin.jpg',
     name: 'Martin Odstrčil',
     content: [{
       type: 'bulleted-list',
@@ -314,11 +315,13 @@ export const useExternalTrainers = () => [
         { text: '6x mistr ČR v deseti tancích (1995-2000)' },
         { text: 'Mistr ČR ve standardních tancích (2000)' },
         { text: 'Trenér a porotce I. třídy' },
+        { text: 'Porotce s nejvyšší mezinárodní licencí WDSF' },
+        { text: 'Porotce mistrovství světa a Evropy' },
       ]
     }],
   },
   {
-    img: getPlaceholder(360, 240),
+    img: '/images/treneri/pavla.jpg',
     name: 'Pavla Landsfeldová',
     content: [{
       type: 'bulleted-list',
@@ -331,7 +334,7 @@ export const useExternalTrainers = () => [
     }],
   },
   {
-    img: getPlaceholder(360, 240),
+    img: '/images/treneri/jerry.jpg',
     name: 'Ing. Jaroslav Kučera',
     content: [{
       type: 'bulleted-list',
@@ -342,6 +345,8 @@ export const useExternalTrainers = () => [
         { text: 'Vicemistr ČR v latinskoamerických tancích (1992, 1993, 1995)' },
         { text: 'Finalista mistrovství ČR v deseti tancích (1993)' },
         { text: 'Trenér a porotce i. třídy' },
+        { text: 'Porotce s nejvyšší mezinárodní licencí WDSF' },
+        { text: 'Porotce mistrovství Evropy' },
       ]
     }],
   },

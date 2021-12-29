@@ -12,6 +12,7 @@ import { TrainersPage } from './pages/TrainersPage';
 import { GalleryPage } from './pages/GalleryPage';
 import { GalleryPhotoPage } from './pages/GalleryPhotoPage';
 import { LoginPage } from './pages/LoginPage';
+import { RegisterPage } from './pages/RegisterPage';
 import { DynamicPage } from './pages/DynamicPage';
 /* import { ListGuesser, EditGuesser, ShowGuesser } from 'ra-ui-materialui'; */
 
@@ -30,7 +31,6 @@ const ProtectedRoute = ({ check, children, ...rest }: {
   }} />;
 };
 
-const RegisterPage = () => <React.Fragment>Register</React.Fragment>;
 const ForgottenPasswordPage = () => <React.Fragment>Forgotten Password</React.Fragment>;
 const EventsPage = () => <React.Fragment>Events</React.Fragment>;
 const EventPage = () => <React.Fragment>Event</React.Fragment>;
@@ -46,6 +46,7 @@ export const routes = <Switch>
 
   <Redirect exact from="/" to="/home" />
   <Route exact path="/home"><HomePage /></Route>
+  <Redirect from="/oklubu/:path*" to="/o-nas/:path*" />
   <Route exact path="/o-nas"><AboutPage /></Route>
   <Route exact path="/o-nas/kde-trenujeme"><LocationsPage /></Route>
   <Route exact path="/o-nas/treneri"><TrainersPage /></Route>
@@ -59,8 +60,9 @@ export const routes = <Switch>
       <Route exact path="/nabizime/skolni-krouzky"><SchoolOfferPage /></Route>
       <Route exact path="/nabizime/vystoupeni"><ShowOfferPage /></Route> */}
 
-  <Route exact path="/aktualne"><NewsPage /></Route>
-  <Route exact path="/aktualne/:id">Show article</Route>
+  <Redirect from="/aktualne/:path*" to="/articles/:path*" />
+  <Route exact path="/articles"><NewsPage /></Route>
+  <Route exact path="/articles/:id">Show article</Route>
   {/* <Route exact path="/aktualne/:id/edit"><EditorPage /></Route> */}
 
   <Redirect from="/fotogalerie/:path*" to="/gallery/:path*" />

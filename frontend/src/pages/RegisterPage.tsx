@@ -8,36 +8,14 @@ import { Link } from 'react-router-dom';
 import { TextField } from 'mui-rff';
 import { useAuth } from '../use-auth';
 
-export const LoginPage = ({ }) => {
-  const { signIn } = useAuth();
-  const history = useHistory()
-  const { state, search } = useLocation<{ from?: string }>();
-
-  const onSubmit = async (values: { login: string; passwd: string; }) => {
-    try {
-      await signIn(values.login, values.passwd);
-      history.push(state?.from || new URLSearchParams(search).get('return') || '/dashboard');
-      return undefined;
-    } catch (e) {
-      return {
-        [FORM_ERROR]:
-          e instanceof Error ? (
-            e.message === 'ACCOUNT_NOT_FOUND' ? 'Účet nenalezen' :
-              e.message === 'INVALID_PASSWORD' ? 'Nesprávné heslo' :
-                e.message === 'ACCOUNT_DISABLED' ? 'Učet byl zablokován' :
-                  e.message === 'ACCOUNT_NOT_CONFIRMED' ? 'Účet ještě nebyl potvrzen' :
-                    'Neznámá chyba'
-          ) : 'Neznámá chyba',
-      };
-    }
-  };
-
+export const RegisterPage = () => {
+  const onSubmit = () => { };
   return <Container maxWidth="xs" style={{ margin: '4rem auto 6rem' }}>
     <Form onSubmit={onSubmit} render={form => <React.Fragment>
       {form.submitError && <Alert severity="error">{form.submitError}</Alert>}
       <Card component="form" onSubmit={form.handleSubmit}>
         <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">Přihlášení do systému</Typography>
+          <Typography gutterBottom variant="h5" component="h2"></Typography>
           <TextField label="E-mail nebo přihlašovací jméno" name="login" autoComplete="username" required />
           <TextField label="Heslo" name="passwd" type="password" autoComplete="current-password" required />
         </CardContent>
