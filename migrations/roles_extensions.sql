@@ -17,9 +17,18 @@ grant usage on schema public to :DATABASE_VISITOR;
 alter default privileges in schema public grant usage, select on sequences to :DATABASE_VISITOR;
 alter default privileges in schema public grant execute on functions to :DATABASE_VISITOR;
 
-create role anonymous;     -- not logged in
-create role member;        -- logged in successfully
-create role administrator; -- at least one admin privilege (for now!)
+DO $do$ BEGIN
+  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname='anonymous') THEN
+    CREATE ROLE anonymous;
+  END IF;
+  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname='member') THEN
+    CREATE ROLE member;
+  END IF;
+  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname='administrator') THEN
+    CREATE ROLE administrator;
+  END IF;
+END $do$;
+
 grant anonymous to member, administrator;
 grant member to administrator;
 

@@ -38,6 +38,20 @@ COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
 
 
 --
+-- Name: plpgsql_check; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql_check WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION plpgsql_check; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION plpgsql_check IS 'extended check for plpgsql functions';
+
+
+--
 -- Name: pary_p_lat_trida; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -65,6 +79,26 @@ CREATE TYPE public.pary_p_stt_trida AS ENUM (
     'A',
     'M'
 );
+
+
+--
+-- Name: drop_policies(text); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.drop_policies(tbl text) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+declare
+   rec record;
+begin
+   for rec in (
+     select policyname from pg_policies
+     where schemaname = split_part(tbl, '.', 1) and tablename = split_part(tbl, '.', 2)
+   ) loop
+     execute 'drop policy "' || rec.policyname || '" on ' || tbl;
+   end loop;
+end;
+$$;
 
 
 --
@@ -130,13 +164,41 @@ COMMENT ON FUNCTION app_private.tg__timestamps() IS 'This trigger should be call
 
 
 --
+-- Name: current_couple_ids(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.current_couple_ids() RETURNS SETOF bigint
+    LANGUAGE sql STABLE
+    AS $$
+  select distinct p_id_partner
+  from public.pary
+  where p_id_partner = current_user_id() and p_archiv = false
+  UNION
+  select distinct p_id_partnerka
+  from public.pary
+  where p_id_partnerka = current_user_id() and p_archiv = false;
+$$;
+
+
+--
+-- Name: current_session_id(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.current_session_id() RETURNS text
+    LANGUAGE sql STABLE
+    AS $$
+  select current_setting('jwt.claims.session_id', true);
+$$;
+
+
+--
 -- Name: current_user_id(); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.current_user_id() RETURNS text
+CREATE FUNCTION public.current_user_id() RETURNS bigint
     LANGUAGE sql STABLE
     AS $$
-  SELECT current_setting('jwt.claims.user_id', true);
+  SELECT current_setting('jwt.claims.user_id', true)::bigint;
 $$;
 
 
@@ -192,6 +254,72 @@ CREATE FUNCTION public.get_current_user() RETURNS public.users
     LANGUAGE sql STABLE
     AS $$
   SELECT * FROM users WHERE u_id = nullif(current_setting('jwt.claims.user_id', true), '')::integer;
+$$;
+
+
+--
+-- Name: session; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.session (
+    ss_id character varying(128) NOT NULL,
+    ss_data bytea NOT NULL,
+    ss_updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    ss_lifetime bigint NOT NULL,
+    ss_user bigint
+);
+
+
+--
+-- Name: login(character varying, character varying); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.login(login character varying, passwd character varying, OUT sess public.session, OUT usr public.users) RETURNS record
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
+    AS $$
+declare
+  v_salt varchar;
+begin
+  if login like '%@%' then
+    select users.* into usr from users where u_email = login limit 1;
+  else
+    select users.* into usr from users where u_login = login limit 1;
+  end if;
+
+  if usr is null then
+    raise exception 'ACCOUNT_NOT_FOUND' using errcode = '28000';
+  end if;
+
+  select encode(digest('######TK.-.OLYMP######', 'md5'), 'hex') into v_salt;
+  if usr.u_pass != encode(digest(v_salt || passwd || v_salt, 'sha1'), 'hex') then
+    raise exception 'INVALID_PASSWORD' using errcode = '28P01';
+  end if;
+
+  if usr.u_ban then
+    raise exception 'ACCOUNT_DISABLED' using errcode = '42501';
+  end if;
+  if not usr.u_confirmed then
+    raise exception 'ACCOUNT_NOT_CONFIRMED' using errcode = '42501';
+  end if;
+
+  insert into session
+    (ss_id, ss_user, ss_data, ss_lifetime)
+    values (gen_random_uuid(), usr.u_id, ('{"id":' || usr.u_id || '}')::bytea, 86400)
+    returning * into sess;
+end;
+$$;
+
+
+--
+-- Name: logout(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.logout() RETURNS void
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
+    AS $$
+begin
+  delete from session where ss_id=current_session_id();
+end;
 $$;
 
 
@@ -1063,18 +1191,6 @@ CREATE SEQUENCE public.rozpis_r_id_seq
 --
 
 ALTER SEQUENCE public.rozpis_r_id_seq OWNED BY public.rozpis.r_id;
-
-
---
--- Name: session; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.session (
-    ss_id character varying(128) NOT NULL,
-    ss_data bytea NOT NULL,
-    ss_updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    ss_lifetime bigint NOT NULL
-);
 
 
 --
@@ -2312,6 +2428,14 @@ ALTER TABLE ONLY public.rozpis
 
 
 --
+-- Name: session session_ss_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.session
+    ADD CONSTRAINT session_ss_user_fkey FOREIGN KEY (ss_user) REFERENCES public.users(u_id) ON DELETE CASCADE;
+
+
+--
 -- Name: upozorneni_skupiny upozorneni_skupiny_ups_id_rodic_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2352,6 +2476,634 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: akce_item admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.akce_item TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: aktuality admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.aktuality TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: dokumenty admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.dokumenty TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: galerie_dir admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.galerie_dir TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: galerie_foto admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.galerie_foto TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: nabidka admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.nabidka TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: nabidka_item admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.nabidka_item TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: page admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.page TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: parameters admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.parameters TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: pary admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.pary TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: permissions admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.permissions TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: platby_category admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.platby_category TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: platby_category_group admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.platby_category_group TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: platby_group admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.platby_group TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: platby_group_skupina admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.platby_group_skupina TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: platby_item admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.platby_item TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: platby_raw admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.platby_raw TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: rozpis admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.rozpis TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: rozpis_item admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.rozpis_item TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: session admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.session TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: skupiny admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.skupiny TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: upozorneni admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.upozorneni TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: upozorneni_skupiny admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.upozorneni_skupiny TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: users admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.users TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: users_skupiny admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.users_skupiny TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: video admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.video TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: video_list admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.video_list TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: video_source admin_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY admin_all ON public.video_source TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: akce; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.akce ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: akce_item; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.akce_item ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: aktuality; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.aktuality ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: akce_item all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.akce_item FOR SELECT USING (true);
+
+
+--
+-- Name: aktuality all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.aktuality FOR SELECT USING (true);
+
+
+--
+-- Name: dokumenty all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.dokumenty FOR SELECT USING (true);
+
+
+--
+-- Name: galerie_dir all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.galerie_dir FOR SELECT USING (true);
+
+
+--
+-- Name: galerie_foto all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.galerie_foto FOR SELECT USING (true);
+
+
+--
+-- Name: nabidka all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.nabidka FOR SELECT USING (true);
+
+
+--
+-- Name: nabidka_item all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.nabidka_item FOR SELECT USING (true);
+
+
+--
+-- Name: page all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.page FOR SELECT USING (true);
+
+
+--
+-- Name: page_revision all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.page_revision FOR SELECT USING (true);
+
+
+--
+-- Name: parameters all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.parameters FOR SELECT USING (true);
+
+
+--
+-- Name: pary all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.pary FOR SELECT USING (true);
+
+
+--
+-- Name: permissions all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.permissions FOR SELECT USING (true);
+
+
+--
+-- Name: platby_category all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.platby_category FOR SELECT USING (true);
+
+
+--
+-- Name: platby_category_group all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.platby_category_group FOR SELECT USING (true);
+
+
+--
+-- Name: platby_group all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.platby_group FOR SELECT USING (true);
+
+
+--
+-- Name: platby_group_skupina all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.platby_group_skupina FOR SELECT USING (true);
+
+
+--
+-- Name: platby_item all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.platby_item FOR SELECT USING (true);
+
+
+--
+-- Name: platby_raw all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.platby_raw FOR SELECT USING (true);
+
+
+--
+-- Name: rozpis all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.rozpis FOR SELECT USING (true);
+
+
+--
+-- Name: rozpis_item all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.rozpis_item FOR SELECT USING (true);
+
+
+--
+-- Name: skupiny all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.skupiny FOR SELECT USING (true);
+
+
+--
+-- Name: upozorneni all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.upozorneni FOR SELECT USING (true);
+
+
+--
+-- Name: upozorneni_skupiny all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.upozorneni_skupiny FOR SELECT USING (true);
+
+
+--
+-- Name: users all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.users FOR SELECT USING (true);
+
+
+--
+-- Name: users_skupiny all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.users_skupiny FOR SELECT USING (true);
+
+
+--
+-- Name: video all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.video FOR SELECT USING (true);
+
+
+--
+-- Name: video_list all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.video_list FOR SELECT USING (true);
+
+
+--
+-- Name: video_source all_view; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY all_view ON public.video_source FOR SELECT USING (true);
+
+
+--
+-- Name: dokumenty; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.dokumenty ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: galerie_dir; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.galerie_dir ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: galerie_foto; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.galerie_foto ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: akce manage_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY manage_all ON public.akce TO administrator USING (true) WITH CHECK (true);
+
+
+--
+-- Name: akce_item manage_own; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY manage_own ON public.akce_item TO member USING ((ai_user = public.current_user_id())) WITH CHECK ((ai_user = public.current_user_id()));
+
+
+--
+-- Name: nabidka_item manage_own; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY manage_own ON public.nabidka_item TO member USING ((ni_partner IN ( SELECT public.current_couple_ids() AS current_couple_ids))) WITH CHECK ((ni_partner IN ( SELECT public.current_couple_ids() AS current_couple_ids)));
+
+
+--
+-- Name: pary_navrh manage_own; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY manage_own ON public.pary_navrh USING (((pn_navrhl = public.current_user_id()) OR (pn_partner = public.current_user_id()) OR (pn_partnerka = public.current_user_id()))) WITH CHECK (((pn_navrhl = public.current_user_id()) AND ((pn_partner = public.current_user_id()) OR (pn_partnerka = public.current_user_id()))));
+
+
+--
+-- Name: rozpis_item manage_own; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY manage_own ON public.rozpis_item TO member USING ((ri_partner IN ( SELECT public.current_couple_ids() AS current_couple_ids))) WITH CHECK ((ri_partner IN ( SELECT public.current_couple_ids() AS current_couple_ids)));
+
+
+--
+-- Name: session manage_own; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY manage_own ON public.session USING ((ss_user = public.current_user_id())) WITH CHECK ((ss_user = public.current_user_id()));
+
+
+--
+-- Name: users manage_own; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY manage_own ON public.users USING ((u_id = public.current_user_id())) WITH CHECK ((u_id = public.current_user_id()));
+
+
+--
+-- Name: nabidka; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.nabidka ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: nabidka_item; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.nabidka_item ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: page; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.page ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: page_revision; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.page_revision ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: parameters; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.parameters ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: pary; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.pary ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: permissions; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.permissions ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: platby_category; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.platby_category ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: platby_category_group; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.platby_category_group ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: platby_group; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.platby_group ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: platby_group_skupina; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.platby_group_skupina ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: platby_item; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.platby_item ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: platby_raw; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.platby_raw ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: rozpis; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.rozpis ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: rozpis_item; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.rozpis_item ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: akce select_all; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY select_all ON public.akce FOR SELECT USING (true);
+
+
+--
+-- Name: session; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.session ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: skupiny; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.skupiny ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: upozorneni; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.upozorneni ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: upozorneni_skupiny; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.upozorneni_skupiny ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: users; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: users_skupiny; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.users_skupiny ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: video; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.video ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: video_list; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.video_list ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: video_source; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.video_source ENABLE ROW LEVEL SECURITY;
+
+--
 -- Name: SCHEMA app_private; Type: ACL; Schema: -; Owner: -
 --
 
@@ -2367,6 +3119,14 @@ REVOKE ALL ON SCHEMA public FROM PUBLIC;
 GRANT ALL ON SCHEMA public TO olymp;
 GRANT ALL ON SCHEMA public TO postgres;
 GRANT USAGE ON SCHEMA public TO olympuser;
+GRANT ALL ON SCHEMA public TO anonymous;
+
+
+--
+-- Name: TABLE users; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.users TO member;
 
 
 --
@@ -2375,6 +3135,7 @@ GRANT USAGE ON SCHEMA public TO olympuser;
 
 REVOKE ALL ON FUNCTION public.on_update_current_timestamp_akce() FROM PUBLIC;
 GRANT ALL ON FUNCTION public.on_update_current_timestamp_akce() TO olympuser;
+GRANT ALL ON FUNCTION public.on_update_current_timestamp_akce() TO anonymous;
 
 
 --
@@ -2383,6 +3144,7 @@ GRANT ALL ON FUNCTION public.on_update_current_timestamp_akce() TO olympuser;
 
 REVOKE ALL ON FUNCTION public.on_update_current_timestamp_aktuality() FROM PUBLIC;
 GRANT ALL ON FUNCTION public.on_update_current_timestamp_aktuality() TO olympuser;
+GRANT ALL ON FUNCTION public.on_update_current_timestamp_aktuality() TO anonymous;
 
 
 --
@@ -2391,6 +3153,7 @@ GRANT ALL ON FUNCTION public.on_update_current_timestamp_aktuality() TO olympuse
 
 REVOKE ALL ON FUNCTION public.on_update_current_timestamp_dokumenty() FROM PUBLIC;
 GRANT ALL ON FUNCTION public.on_update_current_timestamp_dokumenty() TO olympuser;
+GRANT ALL ON FUNCTION public.on_update_current_timestamp_dokumenty() TO anonymous;
 
 
 --
@@ -2399,6 +3162,7 @@ GRANT ALL ON FUNCTION public.on_update_current_timestamp_dokumenty() TO olympuse
 
 REVOKE ALL ON FUNCTION public.on_update_current_timestamp_galerie_foto() FROM PUBLIC;
 GRANT ALL ON FUNCTION public.on_update_current_timestamp_galerie_foto() TO olympuser;
+GRANT ALL ON FUNCTION public.on_update_current_timestamp_galerie_foto() TO anonymous;
 
 
 --
@@ -2407,6 +3171,7 @@ GRANT ALL ON FUNCTION public.on_update_current_timestamp_galerie_foto() TO olymp
 
 REVOKE ALL ON FUNCTION public.on_update_current_timestamp_nabidka() FROM PUBLIC;
 GRANT ALL ON FUNCTION public.on_update_current_timestamp_nabidka() TO olympuser;
+GRANT ALL ON FUNCTION public.on_update_current_timestamp_nabidka() TO anonymous;
 
 
 --
@@ -2415,6 +3180,7 @@ GRANT ALL ON FUNCTION public.on_update_current_timestamp_nabidka() TO olympuser;
 
 REVOKE ALL ON FUNCTION public.on_update_current_timestamp_rozpis() FROM PUBLIC;
 GRANT ALL ON FUNCTION public.on_update_current_timestamp_rozpis() TO olympuser;
+GRANT ALL ON FUNCTION public.on_update_current_timestamp_rozpis() TO anonymous;
 
 
 --
@@ -2423,6 +3189,7 @@ GRANT ALL ON FUNCTION public.on_update_current_timestamp_rozpis() TO olympuser;
 
 REVOKE ALL ON FUNCTION public.on_update_current_timestamp_upozorneni() FROM PUBLIC;
 GRANT ALL ON FUNCTION public.on_update_current_timestamp_upozorneni() TO olympuser;
+GRANT ALL ON FUNCTION public.on_update_current_timestamp_upozorneni() TO anonymous;
 
 
 --
@@ -2431,6 +3198,14 @@ GRANT ALL ON FUNCTION public.on_update_current_timestamp_upozorneni() TO olympus
 
 REVOKE ALL ON FUNCTION public.on_update_current_timestamp_users() FROM PUBLIC;
 GRANT ALL ON FUNCTION public.on_update_current_timestamp_users() TO olympuser;
+GRANT ALL ON FUNCTION public.on_update_current_timestamp_users() TO anonymous;
+
+
+--
+-- Name: TABLE akce; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.akce TO anonymous;
 
 
 --
@@ -2438,6 +3213,14 @@ GRANT ALL ON FUNCTION public.on_update_current_timestamp_users() TO olympuser;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.akce_a_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.akce_a_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE akce_item; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.akce_item TO anonymous;
 
 
 --
@@ -2445,6 +3228,14 @@ GRANT SELECT,USAGE ON SEQUENCE public.akce_a_id_seq TO olympuser;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.akce_item_ai_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.akce_item_ai_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE aktuality; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.aktuality TO anonymous;
 
 
 --
@@ -2452,6 +3243,14 @@ GRANT SELECT,USAGE ON SEQUENCE public.akce_item_ai_id_seq TO olympuser;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.aktuality_at_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.aktuality_at_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE dokumenty; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.dokumenty TO anonymous;
 
 
 --
@@ -2459,6 +3258,14 @@ GRANT SELECT,USAGE ON SEQUENCE public.aktuality_at_id_seq TO olympuser;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.dokumenty_d_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.dokumenty_d_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE galerie_dir; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.galerie_dir TO anonymous;
 
 
 --
@@ -2466,6 +3273,14 @@ GRANT SELECT,USAGE ON SEQUENCE public.dokumenty_d_id_seq TO olympuser;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.galerie_dir_gd_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.galerie_dir_gd_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE galerie_foto; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.galerie_foto TO anonymous;
 
 
 --
@@ -2473,6 +3288,63 @@ GRANT SELECT,USAGE ON SEQUENCE public.galerie_dir_gd_id_seq TO olympuser;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.galerie_foto_gf_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.galerie_foto_gf_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE platby_category; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.platby_category TO member;
+
+
+--
+-- Name: TABLE platby_category_group; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.platby_category_group TO member;
+
+
+--
+-- Name: TABLE platby_group; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.platby_group TO member;
+
+
+--
+-- Name: TABLE platby_group_skupina; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.platby_group_skupina TO member;
+
+
+--
+-- Name: TABLE platby_item; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.platby_item TO member;
+
+
+--
+-- Name: TABLE skupiny; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.skupiny TO anonymous;
+
+
+--
+-- Name: TABLE nabidka; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.nabidka TO member;
+
+
+--
+-- Name: TABLE nabidka_item; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.nabidka_item TO member;
 
 
 --
@@ -2480,6 +3352,7 @@ GRANT SELECT,USAGE ON SEQUENCE public.galerie_foto_gf_id_seq TO olympuser;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.nabidka_item_ni_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.nabidka_item_ni_id_seq TO anonymous;
 
 
 --
@@ -2487,6 +3360,49 @@ GRANT SELECT,USAGE ON SEQUENCE public.nabidka_item_ni_id_seq TO olympuser;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.nabidka_n_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.nabidka_n_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE page; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.page TO anonymous;
+
+
+--
+-- Name: SEQUENCE page_id_seq; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE public.page_id_seq TO administrator;
+
+
+--
+-- Name: TABLE page_revision; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.page_revision TO anonymous;
+
+
+--
+-- Name: TABLE parameters; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.parameters TO anonymous;
+
+
+--
+-- Name: TABLE pary; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.pary TO anonymous;
+
+
+--
+-- Name: TABLE pary_navrh; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.pary_navrh TO member;
 
 
 --
@@ -2494,6 +3410,7 @@ GRANT SELECT,USAGE ON SEQUENCE public.nabidka_n_id_seq TO olympuser;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.pary_navrh_pn_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.pary_navrh_pn_id_seq TO anonymous;
 
 
 --
@@ -2501,6 +3418,14 @@ GRANT SELECT,USAGE ON SEQUENCE public.pary_navrh_pn_id_seq TO olympuser;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.pary_p_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.pary_p_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE permissions; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.permissions TO anonymous;
 
 
 --
@@ -2508,6 +3433,7 @@ GRANT SELECT,USAGE ON SEQUENCE public.pary_p_id_seq TO olympuser;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.permissions_pe_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.permissions_pe_id_seq TO anonymous;
 
 
 --
@@ -2515,6 +3441,7 @@ GRANT SELECT,USAGE ON SEQUENCE public.permissions_pe_id_seq TO olympuser;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.platby_category_group_pcg_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.platby_category_group_pcg_id_seq TO anonymous;
 
 
 --
@@ -2522,6 +3449,7 @@ GRANT SELECT,USAGE ON SEQUENCE public.platby_category_group_pcg_id_seq TO olympu
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.platby_category_pc_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.platby_category_pc_id_seq TO anonymous;
 
 
 --
@@ -2529,6 +3457,7 @@ GRANT SELECT,USAGE ON SEQUENCE public.platby_category_pc_id_seq TO olympuser;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.platby_group_pg_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.platby_group_pg_id_seq TO anonymous;
 
 
 --
@@ -2536,6 +3465,7 @@ GRANT SELECT,USAGE ON SEQUENCE public.platby_group_pg_id_seq TO olympuser;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.platby_group_skupina_pgs_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.platby_group_skupina_pgs_id_seq TO anonymous;
 
 
 --
@@ -2543,6 +3473,14 @@ GRANT SELECT,USAGE ON SEQUENCE public.platby_group_skupina_pgs_id_seq TO olympus
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.platby_item_pi_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.platby_item_pi_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE platby_raw; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.platby_raw TO member;
 
 
 --
@@ -2550,6 +3488,21 @@ GRANT SELECT,USAGE ON SEQUENCE public.platby_item_pi_id_seq TO olympuser;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.platby_raw_pr_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.platby_raw_pr_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE rozpis; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.rozpis TO member;
+
+
+--
+-- Name: TABLE rozpis_item; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.rozpis_item TO member;
 
 
 --
@@ -2557,6 +3510,7 @@ GRANT SELECT,USAGE ON SEQUENCE public.platby_raw_pr_id_seq TO olympuser;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.rozpis_item_ri_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.rozpis_item_ri_id_seq TO anonymous;
 
 
 --
@@ -2564,6 +3518,7 @@ GRANT SELECT,USAGE ON SEQUENCE public.rozpis_item_ri_id_seq TO olympuser;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.rozpis_r_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.rozpis_r_id_seq TO anonymous;
 
 
 --
@@ -2571,6 +3526,21 @@ GRANT SELECT,USAGE ON SEQUENCE public.rozpis_r_id_seq TO olympuser;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.skupiny_s_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.skupiny_s_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE upozorneni; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.upozorneni TO member;
+
+
+--
+-- Name: TABLE upozorneni_skupiny; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.upozorneni_skupiny TO member;
 
 
 --
@@ -2578,6 +3548,7 @@ GRANT SELECT,USAGE ON SEQUENCE public.skupiny_s_id_seq TO olympuser;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.upozorneni_skupiny_ups_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.upozorneni_skupiny_ups_id_seq TO anonymous;
 
 
 --
@@ -2585,6 +3556,14 @@ GRANT SELECT,USAGE ON SEQUENCE public.upozorneni_skupiny_ups_id_seq TO olympuser
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.upozorneni_up_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.upozorneni_up_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE users_skupiny; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.users_skupiny TO member;
 
 
 --
@@ -2592,6 +3571,7 @@ GRANT SELECT,USAGE ON SEQUENCE public.upozorneni_up_id_seq TO olympuser;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.users_skupiny_us_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.users_skupiny_us_id_seq TO anonymous;
 
 
 --
@@ -2599,6 +3579,21 @@ GRANT SELECT,USAGE ON SEQUENCE public.users_skupiny_us_id_seq TO olympuser;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.users_u_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.users_u_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE video; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.video TO anonymous;
+
+
+--
+-- Name: TABLE video_list; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.video_list TO anonymous;
 
 
 --
@@ -2606,6 +3601,14 @@ GRANT SELECT,USAGE ON SEQUENCE public.users_u_id_seq TO olympuser;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.video_list_vl_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.video_list_vl_id_seq TO anonymous;
+
+
+--
+-- Name: TABLE video_source; Type: ACL; Schema: public; Owner: -
+--
+
+GRANT ALL ON TABLE public.video_source TO anonymous;
 
 
 --
@@ -2613,6 +3616,7 @@ GRANT SELECT,USAGE ON SEQUENCE public.video_list_vl_id_seq TO olympuser;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.video_source_vs_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.video_source_vs_id_seq TO anonymous;
 
 
 --
@@ -2620,6 +3624,7 @@ GRANT SELECT,USAGE ON SEQUENCE public.video_source_vs_id_seq TO olympuser;
 --
 
 GRANT SELECT,USAGE ON SEQUENCE public.video_v_id_seq TO olympuser;
+GRANT SELECT,USAGE ON SEQUENCE public.video_v_id_seq TO anonymous;
 
 
 --
@@ -2627,6 +3632,7 @@ GRANT SELECT,USAGE ON SEQUENCE public.video_v_id_seq TO olympuser;
 --
 
 ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES  TO olympuser;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT SELECT,USAGE ON SEQUENCES  TO anonymous;
 
 
 --
@@ -2634,6 +3640,7 @@ ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT SELECT,USAGE O
 --
 
 ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON FUNCTIONS  TO olympuser;
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres IN SCHEMA public GRANT ALL ON FUNCTIONS  TO anonymous;
 
 
 --
