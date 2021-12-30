@@ -10,8 +10,6 @@ import './bundles/main';
 import 'leaflet/dist/leaflet.css';
 import './style/index.scss';
 
-import { QRPayment } from './components/QRPayment';
-
 import L from 'leaflet';
 delete (L.Icon.Default.prototype as unknown as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -20,7 +18,27 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require('leaflet/dist/images/marker-shadow.png').default,
 });
 
-export class QRCodeElement extends HTMLElement {
+import { AnnouncementListElement } from './custom-elements/announcement-list';
+import { ArticleAdminListElement } from './custom-elements/articles-list';
+import { DateRangeElement, DateElement } from './custom-elements/date';
+import { EventListElement } from './custom-elements/event-list';
+import { GalleryDirectoryListElement } from './custom-elements/gallery-directory-list';
+import { ReservationAdminListElement } from './custom-elements/reservation-list';
+import { ReservationSelectElement } from './custom-elements/reservation-select';
+import { RozpisAdminListElement } from './custom-elements/schedule-list';
+
+customElements.define('announcement-list', AnnouncementListElement);
+customElements.define('article-admin-list', ArticleAdminListElement);
+customElements.define('date-range', DateRangeElement);
+customElements.define('single-date', DateElement);
+customElements.define('event-list', EventListElement);
+customElements.define('gallery-directory-list', GalleryDirectoryListElement);
+customElements.define('reservation-admin-list', ReservationAdminListElement);
+customElements.define('reservation-select', ReservationSelectElement);
+customElements.define('rozpis-admin-list', RozpisAdminListElement);
+
+import { QRPayment } from './components/QRPayment';
+class QRCodeElement extends HTMLElement {
   connectedCallback() {
     ReactDOM.render(<QRPayment {...{
       acc: this.getAttribute('acc') || '',
