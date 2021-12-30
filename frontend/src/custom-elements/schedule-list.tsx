@@ -1,10 +1,10 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache, useQuery } from '@apollo/client';
 import Form from 'react-bootstrap/Form';
-import { ApolloProvider, useQuery } from '@apollo/client';
 import { Pagination } from './pagination';
 import { DateEl } from './date';
-import { createClient, UserQuery } from '../client';
+import { UserQuery } from '../data/use-auth';
 import { Dropdown } from './dropdown';
 import { $, RozpisOrderBy, Selector } from '../zeus';
 import { useTypedQuery, useTypedMutation } from '../zeus/apollo';
@@ -109,10 +109,15 @@ export function RozpisAdminList() {
   </React.Fragment>;
 }
 
+const client = new ApolloClient({
+  link: new HttpLink({ uri: '/graphql' }),
+  cache: new InMemoryCache(),
+});
+
 export class RozpisAdminListElement extends HTMLElement {
   connectedCallback() {
     ReactDOM.render(
-      <ApolloProvider client={createClient()}><RozpisAdminList /></ApolloProvider>,
+      <ApolloProvider client={client}><RozpisAdminList /></ApolloProvider>,
       this
     );
   }

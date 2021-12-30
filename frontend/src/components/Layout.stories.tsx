@@ -6,7 +6,7 @@ import { DesktopHeader } from './DesktopHeader';
 import { Footer } from './Footer';
 import { Hero } from './Hero';
 import { MobileHeader } from './MobileHeader';
-import { mockMenu } from '../use-menu';
+import { mockMenu } from '../data/use-menu';
 
 export default {
   title: 'Components/Layout',

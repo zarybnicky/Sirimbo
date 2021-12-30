@@ -6,14 +6,15 @@ import { ArticleCard } from './ArticleCard';
 import { GalleryCard } from './GalleryCard';
 import { ServiceCard } from './ServiceCard';
 import { VideoCard } from './VideoCard';
-import { useArticles, useGallery, useServices, useVideos } from '../data';
+import { useMockVideos } from '../data/use-videos';
+import { useArticles, useGallery, useServices } from '../data';
 
 export default {
   title: 'Components/Lists',
 } as Meta;
 
 export const VideoList: ComponentStory<React.ElementType> = () => {
-  const items = useVideos();
+  const items = useMockVideos();
   return <StoryTemplate>
     <Container maxWidth="lg" style={{ margin: '3rem auto' }}>
       <Typography gutterBottom variant="h4" component="h2">Videa</Typography>

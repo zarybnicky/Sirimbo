@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Grid, Paper, Typography, CardActionArea, makeStyles } from '@material-ui/core';
+import { Video } from '../data/use-videos';
 
 import PlayIcon from '../style/play_white.png';
 
@@ -32,12 +33,6 @@ const useStyles = makeStyles(() => ({
     paddingLeft: '2rem',
   }
 }));
-
-interface Video {
-  img: string;
-  href: string;
-  name: string;
-}
 
 export const VideoCard = ({ item: x }: { item: Video }) => {
   const classes = useStyles();

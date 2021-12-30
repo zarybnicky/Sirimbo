@@ -5,12 +5,11 @@ import { SocialButtons } from './SocialButtons';
 import { PopupState as PopupStateType } from 'material-ui-popup-state/core';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import clsx from 'clsx';
-import { MenuType, SubmenuType } from '../use-menu';
-import { useAuth } from '../use-auth';
-import { useHistory } from 'react-router';
+import { MenuType, SubmenuType } from '../data/use-menu';
+import { useAuth } from '../data/use-auth';
+import { AuthButton } from './AuthButton';
 
 import OlympLogoVertical from '../../static/images/olymp-logo-vertical.svg';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 
 const useStyles = makeStyles((theme) => ({
@@ -113,12 +112,10 @@ const Submenu = ({ item: x, className, activeClassName }: {
         className={classes.submenu}
       >
         {x.children.map(x => (
-          <MenuItem button
-            key={x.text} onClick={() => popupState.close()}
-            component={NavLink} to={x.href}
-          >
-            {x.text}
-          </MenuItem>
+          <MenuItem key={x.text}
+            button component={NavLink} to={x.href}
+            onClick={() => popupState.close()}
+          >{x.text}</MenuItem>
         ))}
       </Menu>
     </React.Fragment>}
@@ -128,7 +125,6 @@ const Submenu = ({ item: x, className, activeClassName }: {
 export const DesktopHeader = ({ menu }: { menu: MenuType; }) => {
   const auth = useAuth();
   const classes = useStyles();
-  const history = useHistory();
 
   return <AppBar position="static" color="secondary">
     <Toolbar>
@@ -177,43 +173,7 @@ export const DesktopHeader = ({ menu }: { menu: MenuType; }) => {
         ) : null}
 
         <SocialButtons variant="medium" />
-        {auth.user ? (
-          <PopupState variant="popover" popupId="demoMenu">
-            {(popupState) => <React.Fragment>
-              <Button
-                {...bindTrigger(popupState)}
-                color="inherit"
-                startIcon={<AccountCircle />}
-              >
-                <div style={{ display: 'flex', justifyContent: 'start', lineHeight: 1.3, flexDirection: 'column' }}>
-                  <span style={{ textDecoration: 'underline' }}>Přihlášen</span>
-                  <span style={{ textTransform: 'none' }}>{auth.user?.uJmeno} {auth.user?.uPrijmeni}</span>
-                </div>
-              </Button>
-              <Menu
-                {...bindMenu(popupState)}
-                getContentAnchorEl={null}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-              >
-                <MenuItem onClick={() => {
-                  popupState.close();
-                  auth.signOut();
-                  history.push('/');
-                }}>Odhlásit se</MenuItem>
-              </Menu>
-            </React.Fragment>}
-          </PopupState>
-        ) : (<div>
-          <Button
-            component={NavLink} to="/login" color="inherit"
-            onClick={() => auth.signIn('', '')}
-            startIcon={<AccountCircle />}
-            style={{ textDecoration: 'underline' }}
-          >
-            Přihlásit
-          </Button>
-        </div>)}
+        <AuthButton />
       </Container>
     </Toolbar>
   </AppBar >;

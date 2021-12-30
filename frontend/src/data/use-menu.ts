@@ -1,4 +1,4 @@
-import { useTypedQuery } from './zeus/apollo';
+import { useTypedQuery } from '../zeus/apollo';
 
 export const mockMenu: MenuType = [
   {
@@ -50,3 +50,16 @@ export const useMenu = (): MenuType => {
   const menu = JSON.parse(data.parameterByPaName.paValue) as MenuType;
   return menu.filter(x => x.type as unknown !== 'text');
 }
+
+export const useMemberMenu = (): MenuType => [
+  { "type": "link", "text": "Nástěnka", "href": "/dashboard" },
+  { "type": "link", "text": "Tréninky", "href": "/schedule" },
+  { "type": "link", "text": "Akce", "href": "/events" },
+  { "type": "link", "text": "Dokumenty", "href": "/documents" },
+  { "type": "link", "text": "Členové", "href": "/groups" },
+  { "type": "link", "text": "Profil", "href": "/profile" },
+];
+
+export const useAdminMenu = (): MenuType => [
+  { "type": "link", "text": "Stránky", "href": "/editor" },
+];

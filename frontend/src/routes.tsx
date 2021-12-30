@@ -2,8 +2,7 @@ import * as React from 'react';
 import { Redirect, Switch, Route, RouteProps } from 'react-router-dom';
 import { Alert } from '@material-ui/lab';
 
-import { useAuth } from './use-auth';
-import { AppUser } from './client';
+import { AppUser, useAuth } from './data/use-auth';
 
 import { EditorPage } from './pages/EditorPage';
 import { AboutPage } from './pages/AboutPage';

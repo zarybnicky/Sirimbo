@@ -7297,6 +7297,48 @@
                 "required": [],
                 "properties": {}
             },
+            "getTitleVideos": {
+                "type": "object",
+                "required": [],
+                "properties": {
+                    "first": {
+                        "type": "integer"
+                    },
+                    "last": {
+                        "type": "integer"
+                    },
+                    "offset": {
+                        "type": "integer"
+                    },
+                    "before": {
+                        "type": "string"
+                    },
+                    "after": {
+                        "type": "string"
+                    }
+                }
+            },
+            "titleVideos": {
+                "type": "object",
+                "required": [],
+                "properties": {
+                    "first": {
+                        "type": "integer"
+                    },
+                    "last": {
+                        "type": "integer"
+                    },
+                    "offset": {
+                        "type": "integer"
+                    },
+                    "before": {
+                        "type": "string"
+                    },
+                    "after": {
+                        "type": "string"
+                    }
+                }
+            },
             "akce": {
                 "type": "object",
                 "required": [

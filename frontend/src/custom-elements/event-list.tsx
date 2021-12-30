@@ -1,9 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { useState } from 'react';
+import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache } from '@apollo/client';
 import Form from 'react-bootstrap/Form';
-import { ApolloProvider } from '@apollo/client';
-import { createClient } from '../client';
 import { Pagination } from './pagination';
 import { DateRange } from './date';
 import { Dropdown } from './dropdown';
@@ -108,10 +107,15 @@ export function EventList() {
   </React.Fragment>;
 }
 
+const client = new ApolloClient({
+  link: new HttpLink({ uri: '/graphql' }),
+  cache: new InMemoryCache(),
+});
+
 export class EventListElement extends HTMLElement {
   connectedCallback() {
     ReactDOM.render(
-      <ApolloProvider client={createClient()}><EventList /></ApolloProvider>,
+      <ApolloProvider client={client}><EventList /></ApolloProvider>,
       this
     );
   }

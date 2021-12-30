@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ApolloProvider } from '@apollo/client';
+import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache } from '@apollo/client';
 import { createBrowserHistory } from 'history';
 import { ConnectedRouter } from 'connected-react-router';
 import { Provider } from 'react-redux';
@@ -8,14 +8,16 @@ import { ThemeProvider } from '@material-ui/styles';
 import { DataProvider, DataProviderContext, Resource } from 'ra-core';
 
 import { Layout } from './components/Layout';
-import { createClient } from './client';
-import { ProvideAuth } from './use-auth';
+import { ProvideAuth } from './data/use-auth';
 import { routes } from './routes';
 import { createAppStore } from './store';
 import { theme } from './theme';
 
 const history = createBrowserHistory({ basename: '/app' });
-const client = createClient();
+const client = new ApolloClient({
+  link: new HttpLink({ uri: '/graphql' }),
+  cache: new InMemoryCache(),
+});
 
 export const App = () => {
   /* const [dataProvider, setDataProvider] = React.useState<DataProvider | null>(null);

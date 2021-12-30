@@ -5,11 +5,12 @@ import { ServiceCard } from '../components/ServiceCard';
 import { CallToAction } from '../components/CallToAction';
 import { ArticleCard } from '../components/ArticleCard';
 import { VideoCard } from '../components/VideoCard';
-import { useArticles, useServices, useVideos } from '../data';
+import { useTitleVideos } from '../data/use-videos';
+import { useArticles, useServices } from '../data';
 
 export const HomePage = ({ }) => {
   const articles = useArticles();
-  const videos = useVideos();
+  const videos = useTitleVideos();
   const services = useServices();
 
   const serviceList = <Container maxWidth="lg">

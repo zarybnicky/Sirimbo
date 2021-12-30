@@ -1,9 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { ApolloClient, ApolloProvider, HttpLink, InMemoryCache } from '@apollo/client';
 import { useState } from 'react';
 import { DateEl } from './date';
-import { ApolloProvider } from '@apollo/client';
-import { createClient } from '../client';
 import { Pagination } from './pagination';
 import { useTypedQuery } from '../zeus/apollo';
 import { $, UpozornenisOrderBy, Selector } from '../zeus';
@@ -79,10 +78,15 @@ export function AnnouncementList() {
   </React.Fragment>;
 }
 
+const client = new ApolloClient({
+  link: new HttpLink({ uri: '/graphql' }),
+  cache: new InMemoryCache(),
+});
+
 export class AnnouncementListElement extends HTMLElement {
   connectedCallback() {
     ReactDOM.render(
-      <ApolloProvider client={createClient()}><AnnouncementList /></ApolloProvider>,
+      <ApolloProvider client={client}><AnnouncementList /></ApolloProvider>,
       this
     );
   }

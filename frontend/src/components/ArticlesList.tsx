@@ -6,7 +6,7 @@ import { Pagination } from '@material-ui/lab';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { $, AktualitiesOrderBy, Selector } from '../zeus';
 import { useTypedQuery } from '../zeus/apollo';
-import { useAuth } from '../use-auth';
+import { useAuth } from '../data/use-auth';
 
 export const ArticlesAdminQuery = Selector('Query')({
   allAktualities: [

@@ -344,6 +344,20 @@ based pagination. May not be used with `last`. */
 	currentSessionId?:boolean,
 	currentUserId?:boolean,
 	getCurrentUser?:ValueTypes["User"],
+getTitleVideos?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null},ValueTypes["VideosConnection"]],
+titleVideos?: [{	/** Only read the first `n` values of the set. */
+	first?:number | null,	/** Only read the last `n` values of the set. */
+	last?:number | null,	/** Skip the first `n` values from our `after` cursor, an alternative to cursor
+based pagination. May not be used with `last`. */
+	offset?:number | null,	/** Read all values in the set before (above) this cursor. */
+	before?:ValueTypes["Cursor"] | null,	/** Read all values in the set after (below) this cursor. */
+	after?:ValueTypes["Cursor"] | null},ValueTypes["VideosConnection"]],
 akce?: [{	/** The globally unique `ID` to be used in selecting a single `Akce`. */
 	nodeId:string},ValueTypes["Akce"]],
 akceItem?: [{	/** The globally unique `ID` to be used in selecting a single `AkceItem`. */
@@ -6244,6 +6258,10 @@ which can only query top level fields if they are in a particular form. */
 	currentSessionId?:string,
 	currentUserId?:ModelTypes["BigInt"],
 	getCurrentUser?:ModelTypes["User"],
+	/** Reads and enables pagination through a set of `Video`. */
+	getTitleVideos?:ModelTypes["VideosConnection"],
+	/** Reads and enables pagination through a set of `Video`. */
+	titleVideos?:ModelTypes["VideosConnection"],
 	/** Reads a single `Akce` using its globally unique `ID`. */
 	akce?:ModelTypes["Akce"],
 	/** Reads a single `AkceItem` using its globally unique `ID`. */
@@ -9704,6 +9722,10 @@ which can only query top level fields if they are in a particular form. */
 	currentSessionId?: string,
 	currentUserId?: GraphQLTypes["BigInt"],
 	getCurrentUser?: GraphQLTypes["User"],
+	/** Reads and enables pagination through a set of `Video`. */
+	getTitleVideos?: GraphQLTypes["VideosConnection"],
+	/** Reads and enables pagination through a set of `Video`. */
+	titleVideos?: GraphQLTypes["VideosConnection"],
 	/** Reads a single `Akce` using its globally unique `ID`. */
 	akce?: GraphQLTypes["Akce"],
 	/** Reads a single `AkceItem` using its globally unique `ID`. */

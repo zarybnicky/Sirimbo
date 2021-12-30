@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { Pagination } from '@material-ui/lab';
 import { $, NabidkasOrderBy, Selector } from '../zeus';
 import { useTypedQuery, useTypedMutation } from '../zeus/apollo';
-import { useAuth } from '../use-auth';
+import { useAuth } from '../data/use-auth';
 import { DateRange } from './DateRange';
 
 export const NabidkaAdminQuery = Selector('Query')({

@@ -4,8 +4,8 @@ import {
   ListItem, ListItemText, makeStyles
 } from '@material-ui/core';
 import { NavLink } from 'react-router-dom';
-import { MenuType, SubmenuType } from '../use-menu';
-import { useAuth } from '../use-auth';
+import { MenuType, SubmenuType } from '../data/use-menu';
+import { useAuth } from '../data/use-auth';
 
 import OlympLogo from '../../static/images/olymp-logo-oneline.svg';
 import AccountCircle from '@material-ui/icons/AccountCircle';

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { ApolloProvider } from '@apollo/client';
-import { createClient } from '../client';
+import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache } from '@apollo/client';
 import { $, GraphQLTypes, Selector, NabidkasOrderBy } from '../zeus';
 import { useTypedQuery } from '../zeus/apollo';
 import { formatDateRange } from './date';
@@ -112,10 +111,15 @@ export function ReservationSelect() {
   </div>;
 }
 
+const client = new ApolloClient({
+  link: new HttpLink({ uri: '/graphql' }),
+  cache: new InMemoryCache(),
+});
+
 export class ReservationSelectElement extends HTMLElement {
   connectedCallback() {
     ReactDOM.render(
-      <ApolloProvider client={createClient()}><ReservationSelect /></ApolloProvider>,
+      <ApolloProvider client={client}><ReservationSelect /></ApolloProvider>,
       this
     );
   }

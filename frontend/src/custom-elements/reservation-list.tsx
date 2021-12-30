@@ -2,11 +2,10 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
-import { ApolloProvider, useQuery } from '@apollo/client';
+import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache, useQuery } from '@apollo/client';
 import { Pagination } from './pagination';
 import { DateRange } from './date';
-import { gql } from 'graphql-tag';
-import { createClient, UserQuery } from '../client';
+import { UserQuery } from '../data/use-auth';
 import { Dropdown } from './dropdown';
 import { $, NabidkasOrderBy, Selector } from '../zeus';
 import { useTypedQuery, useTypedMutation } from '../zeus/apollo';
@@ -117,10 +116,15 @@ export function ReservationAdminList() {
   </React.Fragment>;
 }
 
+const client = new ApolloClient({
+  link: new HttpLink({ uri: '/graphql' }),
+  cache: new InMemoryCache(),
+});
+
 export class ReservationAdminListElement extends HTMLElement {
   connectedCallback() {
     ReactDOM.render(
-      <ApolloProvider client={createClient()}><ReservationAdminList /></ApolloProvider>,
+      <ApolloProvider client={client}><ReservationAdminList /></ApolloProvider>,
       this
     );
   }

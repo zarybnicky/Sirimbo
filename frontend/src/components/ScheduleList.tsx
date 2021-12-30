@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { Pagination } from '@material-ui/lab';
 import { $, RozpisOrderBy, Selector } from '../zeus';
 import { useTypedQuery, useTypedMutation } from '../zeus/apollo';
-import { useAuth } from '../use-auth';
+import { useAuth } from '../data/use-auth';
 
 export const ScheduleListQuery = Selector('Query')({
   allRozpis: [

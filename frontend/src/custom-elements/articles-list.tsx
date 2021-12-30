@@ -1,10 +1,10 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { ApolloProvider, HttpLink, ApolloClient, InMemoryCache, useQuery } from '@apollo/client';
 import { useState } from 'react';
-import { ApolloProvider, useQuery } from '@apollo/client';
 import { Pagination } from './pagination';
 import { DateEl } from './date';
-import { createClient, UserQuery } from '../client';
+import { UserQuery } from '../data/use-auth';
 import { Dropdown } from './dropdown';
 import { $, AktualitiesOrderBy, Selector } from '../zeus';
 import { useTypedQuery } from '../zeus/apollo';
@@ -72,10 +72,15 @@ export function ArticleAdminList() {
   </React.Fragment>;
 }
 
+const client = new ApolloClient({
+  link: new HttpLink({ uri: '/graphql' }),
+  cache: new InMemoryCache(),
+});
+
 export class ArticleAdminListElement extends HTMLElement {
   connectedCallback() {
     ReactDOM.render(
-      <ApolloProvider client={createClient()}><ArticleAdminList /></ApolloProvider>,
+      <ApolloProvider client={client}><ArticleAdminList /></ApolloProvider>,
       this
     );
   }

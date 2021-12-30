@@ -6,7 +6,7 @@ import { Form } from 'react-final-form'
 import { useHistory, useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 import { TextField } from 'mui-rff';
-import { useAuth } from '../use-auth';
+import { useAuth } from '../data/use-auth';
 
 export const RegisterPage = () => {
   const onSubmit = () => { };
