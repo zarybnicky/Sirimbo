@@ -47,8 +47,7 @@ export function ArticleAdminList() {
     </thead>
     <tbody>
       {data!.allAktualities?.nodes.filter(
-        a => 16 <= (user.getCurrentUser?.permissionByUGroup?.peAktuality || 0)
-          || a.atKdo == user.getCurrentUser?.uId
+        a => 16 <= (user.permissionByUGroup?.peAktuality || 0) || a.atKdo == user.uId
       ).map((a) => <tr key={a.atId}>
         <td>
           <PopupState variant="popover">

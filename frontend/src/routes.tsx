@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Redirect, Switch, Route, RouteProps } from 'react-router-dom';
 
-import { useAuth, AppUser } from './use-auth';
+import { useAuth } from './use-auth';
+import { AppUser } from './client';
 
 import { EditorPage } from './pages/EditorPage';
 import { AboutPage } from './pages/AboutPage';

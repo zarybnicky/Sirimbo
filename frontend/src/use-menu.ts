@@ -1,5 +1,4 @@
-import { gql } from 'graphql-tag';
-import { useQuery } from '@apollo/client';
+import { useTypedQuery } from './zeus/apollo';
 
 export const mockMenu: MenuType = [
   {
@@ -38,15 +37,13 @@ export interface MenuLink {
   href: string;
 }
 
-export const GetMenu = gql(`
-query GetMenu {
-  parameterByPaName(paName: "menu") {
-    paValue
-  }
-}`);
-
 export const useMenu = (): MenuType => {
-  const { data } = useQuery(GetMenu);
+  const { data } = useTypedQuery({
+    parameterByPaName: [
+      { paName: "menu" },
+      { paValue: true },
+    ],
+  });
   if (!data?.parameterByPaName?.paValue) {
     return [];
   }

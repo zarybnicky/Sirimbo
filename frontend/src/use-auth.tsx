@@ -1,80 +1,8 @@
 import * as React from "react";
-import { useMutation, gql, useQuery } from "@apollo/client";
-import { User, signInMutationMock, SignInMutation } from "./graphql/graphql";
-import { UserQuery } from "./client";
+import { $, InputType, GraphQLTypes } from './zeus';
+import { useTypedMutation, useTypedQuery } from './zeus/apollo';
+import { AppUser, UserPartial, UserMock } from "./client";
 
-const SIGN_OUT = gql(`
-mutation SignOut {
-  logout(input: {}) {
-    __typename
-  }
-}`);
-
-const SIGN_IN = gql(`
-mutation SignIn($login: String!, $passwd: String!) {
-  login(input: {login: $login, passwd: $passwd}) {
-    result {
-      usr {
-        permissionByUGroup {
-          peAkce
-          peAnkety
-          peAktuality
-          peDescription
-          peDokumenty
-          peGalerie
-          peId
-          peKonzole
-          peInzerce
-          peNabidka
-          peMain
-          peName
-          peNastenka
-          peNovinky
-          pePary
-          pePermissions
-          pePlatby
-          peRozpis
-          peSkupiny
-          peUsers
-        }
-        uTimestamp
-        uSystem
-        uTelefon
-        uTeacher
-        uStreet
-        uRodneCislo
-        uSkupina
-        uPrijmeni
-        uPoznamky
-        uPostalCode
-        uPohlavi
-        uPass
-        uOrientationNumber
-        uNationality
-        uNarozeni
-        uMemberUntil
-        uLogin
-        uMemberSince
-        uLock
-        uLevel
-        uJmeno
-        uGroup
-        uId
-        uGdprSignedAt
-        uEmail
-        uDancer
-        uDistrict
-        uCreatedAt
-        uConfirmed
-        uConscriptionNumber
-        uBan
-        uCity
-      }
-    }
-  }
-}`);
-
-export type AppUser = NonNullable<NonNullable<NonNullable<NonNullable<SignInMutation>['login']>['result']>['usr']>;
 export interface AuthContextType {
   isLoading: boolean,
   user: AppUser | null;
@@ -106,9 +34,18 @@ export const useAuth = () => {
 function useApiAuth(): AuthContextType {
   const [user, setUser] = React.useState<AppUser | null>(null);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
-  const [signIn] = useMutation(SIGN_IN);
-  const [signOut] = useMutation(SIGN_OUT);
-  useQuery(UserQuery, {
+  const [signIn] = useTypedMutation({
+    login: [
+      { input: { login: $`login`, passwd: $`passwd` } },
+      { result: { usr: UserPartial } },
+    ]
+  });
+  const [signOut] = useTypedMutation({
+    logout: [{ input: {} }, { __typename: true }],
+  });
+  useTypedQuery({
+    getCurrentUser: UserPartial,
+  }, {
     onCompleted: (data) => {
       setUser(data.getCurrentUser as AppUser);
       setIsLoading(false);
@@ -131,8 +68,8 @@ function useApiAuth(): AuthContextType {
     async signUp(email: string, password: string) {
       // const response = await createUserWithEmailAndPassword(email, password);
       // const response = { user: { name: "Jakub Zárybnický" } };
-      setUser(signInMutationMock as any);
-      return signInMutationMock as any;
+      setUser(UserMock as any);
+      return UserMock as any;
     },
     async signOut() {
       await signOut();
@@ -148,18 +85,18 @@ function useApiAuth(): AuthContextType {
 }
 
 export function useMockAuth(): AuthContextType {
-  const [user, setUser] = React.useState<User | null>(null);
+  const [user, setUser] = React.useState<AppUser | null>(null);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   return {
     isLoading,
     user,
     async signIn() {
-      setUser(signInMutationMock as any);
-      return signInMutationMock as any;
+      setUser(UserMock as any);
+      return UserMock as any;
     },
     async signUp() {
-      setUser(signInMutationMock as any);
-      return signInMutationMock as any;
+      setUser(UserMock as any);
+      return UserMock as any;
     },
     async signOut() {
       setUser(null);

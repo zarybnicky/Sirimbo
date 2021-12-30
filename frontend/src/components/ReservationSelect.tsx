@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { $, GraphQLTypes, Selector, NabidkasOrderBy } from '../zeus';
 import { useTypedQuery } from '../zeus/apollo';
-import { formatDateRange } from './date';
+import { formatDateRange } from './DateRange';
 
 const ReservationView = (x: GraphQLTypes["Nabidka"]) => {
   const header = <div className="trenink-header">

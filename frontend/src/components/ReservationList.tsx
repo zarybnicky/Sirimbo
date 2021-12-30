@@ -6,7 +6,7 @@ import { Pagination } from '@material-ui/lab';
 import { $, NabidkasOrderBy, Selector } from '../zeus';
 import { useTypedQuery, useTypedMutation } from '../zeus/apollo';
 import { useAuth } from '../use-auth';
-import { DateRange } from './date';
+import { DateRange } from './DateRange';
 
 export const NabidkaAdminQuery = Selector('Query')({
   allNabidkas: [
@@ -84,8 +84,7 @@ export function ReservationAdminList() {
     </thead>
     <tbody>
       {data!.allNabidkas?.nodes.filter(
-        a => 16 <= (user.getCurrentUser?.permissionByUGroup?.peNabidka || 0)
-          || a.nTrener == user.getCurrentUser?.uId
+        a => 16 <= (user.permissionByUGroup?.peNabidka || 0) || a.nTrener == user.uId
       ).map((a) => <tr key={a.nId}>
         <td>
           <PopupState variant="popover">

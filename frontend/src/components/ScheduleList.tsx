@@ -77,8 +77,7 @@ export function RozpisAdminList() {
     </thead>
     <tbody>
       {data!.allRozpis.nodes.filter(
-        a => 16 <= (user.getCurrentUser?.permissionByUGroup?.peRozpis || 0)
-          || a.rTrener == user.getCurrentUser?.uId
+        a => 16 <= (user.permissionByUGroup?.peRozpis || 0) || a.rTrener == user.uId
       ).map((a) => <tr key={a.rId}>
         <td>
           <PopupState variant="popover">
