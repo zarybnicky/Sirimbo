@@ -34,19 +34,16 @@ export const useVideos = () => [
     href: "/o-nas",
     img: getPlaceholder(360, 240),
     name: "Přípravný kurz tanečního sportu",
-    preview: "Otevíráme kurz pro mládež a dospělé v Olomouci a Přerově"
   },
   {
     href: "/o-nas",
     img: getPlaceholder(360, 240),
     name: "Přípravný kurz tanečního sportu",
-    preview: "Otevíráme kurz pro mládež a dospělé v Olomouci a Přerově"
   },
   {
     href: "/o-nas",
     img: getPlaceholder(360, 240),
     name: "Přípravný kurz tanečního sportu",
-    preview: "Otevíráme kurz pro mládež a dospělé v Olomouci a Přerově"
   },
 ];
 

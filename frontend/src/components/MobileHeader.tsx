@@ -5,7 +5,7 @@ import {
 } from '@material-ui/core';
 import { NavLink } from 'react-router-dom';
 import { MenuType, SubmenuType } from '../use-menu';
-import { AuthContextType } from '../use-auth';
+import { useAuth } from '../use-auth';
 
 import OlympLogo from '../../static/images/olymp-logo-oneline.svg';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -52,7 +52,8 @@ const Submenu = ({ item: x, onClick }: { item: SubmenuType; onClick: React.Mouse
   </React.Fragment>;
 };
 
-export const MobileHeader = ({ menu }: { auth: AuthContextType; menu: MenuType }) => {
+export const MobileHeader = ({ menu }: { menu: MenuType }) => {
+  const auth = useAuth();
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 

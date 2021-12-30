@@ -22,6 +22,7 @@ class DbSessionHandler extends Database implements SessionHandlerInterface
     {
         setcookie(session_name(), $sessionId, time() + 86400, '/');
         $sessionData = unserialize($data);
+        $userId = $sessionData['id'] ?? null;
         $data = json_encode($sessionData, JSON_FORCE_OBJECT);
         $stmt = self::prepare(
             "INSERT INTO session
@@ -31,7 +32,7 @@ class DbSessionHandler extends Database implements SessionHandlerInterface
              ss_user=EXCLUDED.ss_user, ss_data=EXCLUDED.ss_data, ss_updated_at=NOW()"
         );
         $stmt->bindParam(1, $sessionId);
-        $stmt->bindParam(2, $sessionData['id'] ?? null);
+        $stmt->bindParam(2, $userId);
         $stmt->bindParam(3, $data, PDO::PARAM_LOB);
         $stmt->execute();
         return !!$stmt;

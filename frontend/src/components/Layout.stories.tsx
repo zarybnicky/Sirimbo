@@ -6,7 +6,6 @@ import { DesktopHeader } from './DesktopHeader';
 import { Footer } from './Footer';
 import { Hero } from './Hero';
 import { MobileHeader } from './MobileHeader';
-import { useMockAuth } from '../use-auth';
 import { mockMenu } from '../use-menu';
 
 export default {
@@ -18,21 +17,17 @@ export const CTA: ComponentStory<typeof CallToAction> = (args) =>
     <CallToAction {...args} />
   </StoryTemplate>;
 
-export const DesktopHead: ComponentStory<typeof DesktopHeader> = () => {
-  const auth = useMockAuth();
-  return <StoryTemplate>
-    <DesktopHeader auth={auth} menu={mockMenu} />
+export const DesktopHead: ComponentStory<typeof DesktopHeader> = () =>
+  <StoryTemplate>
+    <DesktopHeader menu={mockMenu} />
   </StoryTemplate>;
-};
 
-export const MobileHead: ComponentStory<typeof MobileHeader> = () => {
-  const auth = useMockAuth();
-  return <StoryTemplate>
+export const MobileHead: ComponentStory<typeof MobileHeader> = () =>
+  <StoryTemplate>
     <div style={{ height: '200px' }}>
-      <MobileHeader auth={auth} menu={mockMenu} />
+      <MobileHeader menu={mockMenu} />
     </div>
   </StoryTemplate>;
-};
 
 export const HeroCarousel: ComponentStory<typeof Hero> = (args) =>
   <StoryTemplate>

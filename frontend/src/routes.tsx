@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Redirect, Switch, Route, RouteProps } from 'react-router-dom';
+import { Alert } from '@material-ui/lab';
 
 import { useAuth } from './use-auth';
 import { AppUser } from './client';
@@ -23,10 +24,14 @@ const ProtectedRoute = ({ check, children, ...rest }: {
   const auth = useAuth();
   return <Route {...rest} render={({ location }) => {
     if (auth.isLoading) {
-      return null;          // FIXME
+      return null;          // TODO
     };
     if (!check(auth.user)) {
-      return <Redirect to={{ pathname: '/login', state: { from: location } }} />
+      if (auth.user) {
+        return <Alert severity="error">Nedostatečná oprávnění</Alert>;
+      } else {
+        return <Redirect to={{ pathname: '/login', state: { from: location } }} />
+      }
     }
     return children;
   }} />;
@@ -42,6 +47,7 @@ const GroupOverviewPage = () => <React.Fragment>GroupOverview</React.Fragment>;
 const ProfilePage = () => <React.Fragment>Profile</React.Fragment>;
 
 const isLoggedIn = (user: AppUser | null) => !!user;
+const isAdmin = (user: AppUser | null) => !!user && (user?.permissionByUGroup?.peUsers || 1) > 1;
 
 export const routes = <Switch>
 
@@ -64,7 +70,6 @@ export const routes = <Switch>
   <Redirect from="/aktualne/:path*" to="/articles/:path*" />
   <Route exact path="/articles"><NewsPage /></Route>
   <Route exact path="/articles/:id">Show article</Route>
-  {/* <Route exact path="/aktualne/:id/edit"><EditorPage /></Route> */}
 
   <Redirect from="/fotogalerie/:path*" to="/gallery/:path*" />
   <Redirect from="/galerie/:path*" to="/gallery/:path*" />
@@ -93,6 +98,8 @@ export const routes = <Switch>
   <ProtectedRoute exact path="/documents" check={isLoggedIn}><DocumentsPage /></ProtectedRoute>
   <ProtectedRoute exact path="/groups" check={isLoggedIn}><GroupOverviewPage /></ProtectedRoute>
   <ProtectedRoute exact path="/profile" check={isLoggedIn}><ProfilePage /></ProtectedRoute>
+
+  <ProtectedRoute exact path="/editor" check={isAdmin}><EditorPage /></ProtectedRoute>
 
   {/* <Route exact path="/admin/upozorneni" render={(routeProps) =>
       <ListGuesser hasCreate resource="upozorneni"

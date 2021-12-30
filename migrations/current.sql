@@ -144,6 +144,7 @@ select app_private.drop_policies('public.page');
 alter table page enable row level security;
 create policy admin_all on page to administrator using (true) with check (true);
 create policy all_view on page for select using (true);
+grant usage, select on sequence page_id_seq to administrator;
 grant all on page to anonymous;
 
 -- ************** page_revision **************

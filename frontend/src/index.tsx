@@ -2,6 +2,11 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { App } from './app';
 
+// Ideally include in ReactPage.tsx, to minimize bundle size
+import '@react-page/editor/lib/index.css';
+import '@react-page/plugins-slate/lib/index.css';
+import '@react-page/plugins-image/lib/index.css';
+
 import 'leaflet/dist/leaflet.css';
 
 import L from 'leaflet';

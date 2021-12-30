@@ -63,10 +63,12 @@ module.exports = {
         test: /\.scss$/,
         include: path.resolve(__dirname, 'src'),
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader'],
+        sideEffects: true,
       },
       {
         test: /\.css$/,
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
+        sideEffects: true,
       },
     ],
   },

@@ -5,12 +5,13 @@ import { SocialButtons } from './SocialButtons';
 import { PopupState as PopupStateType } from 'material-ui-popup-state/core';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import clsx from 'clsx';
-import { AuthContextType } from '../use-auth';
 import { MenuType, SubmenuType } from '../use-menu';
+import { useAuth } from '../use-auth';
 import { useHistory } from 'react-router';
 
 import OlympLogoVertical from '../../static/images/olymp-logo-vertical.svg';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 
 const useStyles = makeStyles((theme) => ({
   navlinks: {
@@ -124,7 +125,8 @@ const Submenu = ({ item: x, className, activeClassName }: {
   </PopupState>
 };
 
-export const DesktopHeader = ({ menu, auth }: { menu: MenuType; auth: AuthContextType; }) => {
+export const DesktopHeader = ({ menu }: { menu: MenuType; }) => {
+  const auth = useAuth();
   const classes = useStyles();
   const history = useHistory();
 
@@ -138,6 +140,7 @@ export const DesktopHeader = ({ menu, auth }: { menu: MenuType; auth: AuthContex
             </Link>
           </Box>
         </div>
+
         {menu.map(x => x.type === 'link' ? (
           <Button
             key={x.text}
@@ -150,6 +153,29 @@ export const DesktopHeader = ({ menu, auth }: { menu: MenuType; auth: AuthContex
             className={classes.menuButton} activeClassName={classes.activeMenuButton}
           />
         ))}
+
+        {auth.user ? (
+          <PopupState variant="popover" popupId="demoMenu">
+            {(popupState) => <React.Fragment>
+              <Button
+                {...bindTrigger(popupState)}
+                color="inherit"
+                endIcon={<KeyboardArrowDownIcon />}
+              >
+                Pro členy
+              </Button>
+              <Menu
+                {...bindMenu(popupState)}
+                getContentAnchorEl={null}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+              >
+                <MenuItem onClick={popupState.close} component={Link} to="/">Nástěnka</MenuItem>
+              </Menu>
+            </React.Fragment>}
+          </PopupState>
+        ) : null}
+
         <SocialButtons variant="medium" />
         {auth.user ? (
           <PopupState variant="popover" popupId="demoMenu">

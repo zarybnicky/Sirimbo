@@ -1,5 +1,5 @@
 import * as React from "react";
-import { $, InputType, GraphQLTypes } from './zeus';
+import { $ } from './zeus';
 import { useTypedMutation, useTypedQuery } from './zeus/apollo';
 import { AppUser, UserPartial, UserMock } from "./client";
 
@@ -39,13 +39,13 @@ function useApiAuth(): AuthContextType {
       { input: { login: $`login`, passwd: $`passwd` } },
       { result: { usr: UserPartial } },
     ]
+  }, {
+    onError: () => setIsLoading(false),
   });
   const [signOut] = useTypedMutation({
     logout: [{ input: {} }, { __typename: true }],
   });
-  useTypedQuery({
-    getCurrentUser: UserPartial,
-  }, {
+  useTypedQuery({ getCurrentUser: UserPartial }, {
     onCompleted: (data) => {
       setUser(data.getCurrentUser as AppUser);
       setIsLoading(false);
@@ -61,7 +61,9 @@ function useApiAuth(): AuthContextType {
     isLoading,
     user,
     async signIn(login: string, passwd: string) {
+      setIsLoading(true);
       const { data } = await signIn({ variables: { login, passwd } });
+      setIsLoading(false);
       setUser(data?.login?.result?.usr!!);
       return data?.login?.result?.usr!!;
     },

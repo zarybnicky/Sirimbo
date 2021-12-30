@@ -8,7 +8,7 @@ import { theme } from './theme';
 export const StoryTemplate = ({ children }: { children: JSX.Element | JSX.Element[] }) => (
   <ThemeProvider theme={theme}>
     <CssBaseline />
-    <ProvideAuth>
+    <ProvideAuth mock>
       <MemoryRouter>
         {children}
       </MemoryRouter>
