@@ -8,7 +8,8 @@ import { EditorPage } from './pages/EditorPage';
 import { AboutPage } from './pages/AboutPage';
 import { HomePage } from './pages/HomePage';
 import { LocationsPage } from './pages/LocationsPage';
-import { NewsPage } from './pages/NewsPage';
+import { ArticlePage } from './pages/ArticlePage';
+import { ArticlesPage } from './pages/ArticlesPage';
 import { TrainersPage } from './pages/TrainersPage';
 import { GalleryPage } from './pages/GalleryPage';
 import { GalleryPhotoPage } from './pages/GalleryPhotoPage';
@@ -74,8 +75,8 @@ export const routes = <Switch>
       <Route exact path="/nabizime/vystoupeni"><ShowOfferPage /></Route> */}
 
   <Redirect from="/aktualne/:path*" to="/articles/:path*" />
-  <Route exact path="/articles"><NewsPage /></Route>
-  <Route exact path="/articles/:id">Show article</Route>
+  <Route exact path="/articles"><ArticlesPage /></Route>
+  <Route exact path="/articles/:id"><ArticlePage /></Route>
 
   <Redirect from="/fotogalerie/:path*" to="/gallery/:path*" />
   <Redirect from="/galerie/:path*" to="/gallery/:path*" />

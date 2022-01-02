@@ -2,7 +2,7 @@ import { getPlaceholder } from '../test-utils';
 import { $, Selector, AktualitiesOrderBy } from '../zeus';
 import { useTypedQuery } from '../zeus/apollo';
 
-export const ArticleQuery = Selector('Query')({
+export const ArticlesQuery = Selector('Query')({
   allAktualities: [
     { first: $`limit`, offset: $`offset`, orderBy: [AktualitiesOrderBy.AT_TIMESTAMP_ADD_DESC] },
     {
@@ -31,7 +31,7 @@ export const useArticles = (limit: number, offset: number): {
   articles: Article[];
   count: number;
 } => {
-  const { data } = useTypedQuery(ArticleQuery, {
+  const { data } = useTypedQuery(ArticlesQuery, {
     variables: { limit, offset },
   });
 

@@ -27,8 +27,8 @@ export const HomePage = ({ }) => {
 
   const articleList = <Container maxWidth="lg" style={{ margin: '3rem auto' }}>
     <Typography gutterBottom variant="h4" component="h2">Aktuálně</Typography>
-    <Grid container spacing={3}>
-      {articles.map((x, i) => <Grid item sm={6} md={3} key={i}><ArticleCard item={x} /></Grid>)}
+    <Grid container spacing={3} style={{ alignItems: "stretch" }}>
+      {articles.map((x, i) => <Grid item container sm={6} md={3} key={i}><ArticleCard item={x} /></Grid>)}
     </Grid>
   </Container>;
 

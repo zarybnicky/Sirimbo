@@ -35,8 +35,8 @@ interface Article {
 
 export const ArticleCard = ({ item: x }: { item: Article; }) => {
   const classes = useStyles();
-  return <Card elevation={3}>
-    <CardActionArea component={Link} to={x.href}>
+  return <Card elevation={3} style={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+    <CardActionArea component={Link} to={x.href} style={{ flexGrow: 1 }}>
       <CardMedia component="img" height={240} image={x.img} title={x.header} />
       <CardContent>
         <Typography gutterBottom variant="subtitle1" component="h3" className={classes.header}>{x.header}</Typography>

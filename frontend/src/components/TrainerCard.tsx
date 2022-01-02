@@ -12,11 +12,7 @@ const useStyles = makeStyles((theme) => ({
       top: '1rem',
       right: '1rem',
       width: '100px',
-      height: '100px',
-    },
-    '& .image img': {
-      width: '100%',
-      height: '100%',
+      height: '120px',
       objectFit: 'cover',
     },
     '& .header': {

@@ -5,7 +5,6 @@ import { useAuth } from './use-auth';
 export type MenuStructItem = {
   type: 'menu';
   text: string;
-  hrefRoot?: string;
   children: MenuStructItem[];
 } | {
   type: 'link';
@@ -47,7 +46,7 @@ export function useMenu(): MenuStructItem[] {
 
 export const publicMenu: MenuStructItem[] = [
   {
-    "type": "menu", "text": "Klub", "hrefRoot": "/o-nas", "children": [
+    "type": "menu", "text": "Klub", "children": [
       { "type": "link", "text": "O nás", "href": "/o-nas" },
       { "type": "link", "text": "Kde trénujeme", "href": "/o-nas/kde-trenujeme" },
       { "type": "link", "text": "Trenéři", "href": "/o-nas/treneri" },
@@ -57,16 +56,16 @@ export const publicMenu: MenuStructItem[] = [
     ]
   },
   {
-    "type": "menu", "text": "Nabízíme", "hrefRoot": "/nabizime", "children": [
+    "type": "menu", "text": "Nabízíme", "children": [
       { "type": "link", "text": "Tréninkové programy", "href": "/nabizime/treninkove-programy" },
       { "type": "link", "text": "Školní taneční kroužky", "href": "/nabizime/skolni-krouzky" },
       { "type": "link", "text": "Vystoupení na akcích", "href": "/nabizime/vystoupení" }
     ]
   },
-  { "type": "link", "text": "Aktuality", "href": "/aktualne" },
-  { "type": "link", "text": "Galerie", "href": "/galerie" },
-  { "type": "link", "text": "Akce", "href": "/akce" },
-  { "type": "link", "text": "Kontakt", "href": "/kontakt" }
+  { "type": "link", "text": "Aktuality", "href": "/articles" },
+  { "type": "link", "text": "Galerie", "href": "/gallery" },
+  { "type": "link", "text": "Akce", "href": "/events" },
+  { "type": "link", "text": "Kontakt", "href": "/contact" }
 ];
 
 export const memberMenu: MenuStructItem[] = [

@@ -4,7 +4,7 @@ import { StoryTemplate } from '../test-utils'
 import { AboutPage } from './AboutPage';
 import { HomePage } from './HomePage';
 import { LocationsPage } from './LocationsPage';
-import { NewsPage } from './NewsPage';
+import { ArticlesPage } from './ArticlesPage';
 import { TrainersPage } from './TrainersPage';
 import { GalleryPage } from './GalleryPage';
 import { EditorPage } from './EditorPage';
@@ -28,9 +28,9 @@ export const Home: ComponentStory<typeof HomePage> = (args) =>
     <HomePage {...args} />
   </StoryTemplate>;
 
-export const News: ComponentStory<typeof NewsPage> = (args) =>
+export const Articles: ComponentStory<typeof ArticlesPage> = (args) =>
   <StoryTemplate>
-    <NewsPage {...args} />
+    <ArticlesPage {...args} />
   </StoryTemplate>;
 
 export const Trainers: ComponentStory<typeof TrainersPage> = (args) =>
