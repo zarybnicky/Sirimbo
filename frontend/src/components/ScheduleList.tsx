@@ -54,19 +54,15 @@ export function RozpisAdminList() {
   const { user } = useAuth();
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(1);
-  const [total, setTotal] = React.useState(0);
   const { data, refetch } = useTypedQuery(ScheduleListQuery, {
     variables: { limit, offset: (page - 1) * limit },
-    onCompleted: (data) => {
-      const total = data.allRozpis?.totalCount;
-      total && setTotal(total);
-    },
   });
   const [toggleVisible] = useTypedMutation(ToggleScheduleVisible, {
     onCompleted: () => refetch(),
   });
+  const total = data?.allRozpis?.totalCount || 0;
 
-  const list = (!user || !data?.allRozpis?.nodes.length) ? null : <table>
+  const list = (!user || !total) ? null : <table>
     <thead>
       <tr>
         <th>Trenér</th>
@@ -76,7 +72,7 @@ export function RozpisAdminList() {
       </tr>
     </thead>
     <tbody>
-      {data!.allRozpis.nodes.filter(
+      {(data?.allRozpis?.nodes || []).filter(
         a => 16 <= (user.permissionByUGroup?.peRozpis || 0) || a.rTrener == user.uId
       ).map((a) => <tr key={a.rId}>
         <td>

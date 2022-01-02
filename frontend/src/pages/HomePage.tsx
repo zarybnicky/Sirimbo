@@ -6,10 +6,11 @@ import { CallToAction } from '../components/CallToAction';
 import { ArticleCard } from '../components/ArticleCard';
 import { VideoCard } from '../components/VideoCard';
 import { useTitleVideos } from '../data/use-videos';
-import { useArticles, useServices } from '../data';
+import { useArticles } from '../data/use-articles';
+import { useServices } from '../data';
 
 export const HomePage = ({ }) => {
-  const articles = useArticles();
+  const { articles } = useArticles(4, 0);
   const videos = useTitleVideos();
   const services = useServices();
 
@@ -24,7 +25,7 @@ export const HomePage = ({ }) => {
     </Grid>
   </Container>;
 
-  const articleList = <Container maxWidth="lg">
+  const articleList = <Container maxWidth="lg" style={{ margin: '3rem auto' }}>
     <Typography gutterBottom variant="h4" component="h2">Aktuálně</Typography>
     <Grid container spacing={3}>
       {articles.map((x, i) => <Grid item sm={6} md={3} key={i}><ArticleCard item={x} /></Grid>)}

@@ -62,19 +62,15 @@ export function ReservationAdminList() {
   const { user } = useAuth();
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(0);
-  const [total, setTotal] = React.useState(0);
   const { data, refetch } = useTypedQuery(NabidkaAdminQuery, {
     variables: { limit, offset: (page - 1) * limit },
-    onCompleted: (data) => {
-      const total = data.allNabidkas?.totalCount;
-      total && setTotal(total);
-    },
   });
   const [toggleVisible] = useTypedMutation(ToggleVisibleNabidka, {
     onCompleted: () => refetch(),
   });
+  const total = data?.allNabidkas?.totalCount || 0;
 
-  const list = (!user || !data?.allNabidkas?.nodes.length) ? null : <table>
+  const list = (!user || !total) ? null : <table>
     <thead>
       <tr>
         <th>Trenér</th>

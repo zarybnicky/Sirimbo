@@ -1,32 +1,5 @@
 import { getPlaceholder } from './test-utils';
 
-export const useArticles = () => [
-  {
-    href: "/o-nas",
-    img: getPlaceholder(360, 240),
-    header: "Přípravný kurz tanečního sportu",
-    preview: "Otevíráme kurz pro mládež a dospělé v Olomouci a Přerově"
-  },
-  {
-    href: "/o-nas",
-    img: getPlaceholder(360, 240),
-    header: "Přípravný kurz tanečního sportu",
-    preview: "Otevíráme kurz pro mládež a dospělé v Olomouci a Přerově"
-  },
-  {
-    href: "/o-nas",
-    img: getPlaceholder(360, 240),
-    header: "Přípravný kurz tanečního sportu",
-    preview: "Otevíráme kurz pro mládež a dospělé v Olomouci a Přerově"
-  },
-  {
-    href: "/o-nas",
-    img: getPlaceholder(360, 240),
-    header: "Přípravný kurz tanečního sportu",
-    preview: "Otevíráme kurz pro mládež a dospělé v Olomouci a Přerově"
-  },
-];
-
 export const useLocations = () => [
   {
     img: getPlaceholder(360, 240),

@@ -54,19 +54,15 @@ export const ToggleEventVisible = Selector('Mutation')({
 export function EventList() {
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(1);
-  const [total, setTotal] = React.useState(0);
   const { data, refetch } = useTypedQuery(EventListQuery, {
     variables: { limit, offset: (page - 1) * limit },
-    onCompleted: (data) => {
-      const total = data.allAkces?.totalCount;
-      total && setTotal(total);
-    },
   });
   const [toggleVisible] = useTypedMutation(ToggleEventVisible, {
     onCompleted: () => refetch(),
   });
+  const total = data?.allAkces?.totalCount || 0;
 
-  const list = !data?.allAkces?.nodes.length ? null : <table>
+  const list = !total ? null : <table>
     <thead>
       <tr>
         <th>Jméno</th>
@@ -76,7 +72,7 @@ export function EventList() {
       </tr>
     </thead>
     <tbody>
-      {data!.allAkces.nodes.map((a) => <tr key={a.aId}>
+      {(data?.allAkces?.nodes || []).map((a) => <tr key={a.aId}>
         <td>
           <PopupState variant="popover">
             {(popupState) => <React.Fragment>

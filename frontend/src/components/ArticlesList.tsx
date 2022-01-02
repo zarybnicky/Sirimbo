@@ -32,16 +32,12 @@ export function ArticleAdminList() {
   const { user } = useAuth();
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(1);
-  const [total, setTotal] = React.useState(0);
   const { data } = useTypedQuery(ArticlesAdminQuery, {
     variables: { limit, offset: (page - 1) * limit },
-    onCompleted: (data) => {
-      const total = data.allAktualities?.totalCount;
-      total && setTotal(total);
-    },
   });
+  const total = data?.allAktualities?.totalCount || 0;
 
-  const list = (!user || !data?.allAktualities?.nodes.length) ? null : <table>
+  const list = (!user || !total) ? null : <table>
     <thead>
       <tr><th>Jméno</th><th>Přidáno</th></tr>
     </thead>

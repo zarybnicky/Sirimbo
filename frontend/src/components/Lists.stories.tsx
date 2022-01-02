@@ -7,7 +7,8 @@ import { GalleryCard } from './GalleryCard';
 import { ServiceCard } from './ServiceCard';
 import { VideoCard } from './VideoCard';
 import { useMockVideos } from '../data/use-videos';
-import { useArticles, useGallery, useServices } from '../data';
+import { useMockArticles } from '../data/use-articles';
+import { useGallery, useServices } from '../data';
 
 export default {
   title: 'Components/Lists',
@@ -26,7 +27,7 @@ export const VideoList: ComponentStory<React.ElementType> = () => {
 };
 
 export const ArticleList: ComponentStory<React.ElementType> = () => {
-  const items = useArticles();
+  const items = useMockArticles();
   return <StoryTemplate>
     <Container maxWidth="lg">
       <Typography gutterBottom variant="h4" component="h2">Aktuálně</Typography>

@@ -64,13 +64,8 @@ function flatten<T>(root: Treeified<T>): T[] {
 export function GalleryDirectoryList() {
   const [limit] = React.useState(30);
   const [page, setPage] = React.useState(1);
-  const [total, setTotal] = React.useState(0);
   const { data, refetch } = useTypedQuery(GalleryDirList, {
     variables: { limit, offset: (page - 1) * limit },
-    onCompleted: (data) => {
-      const total = data.allGalerieDirs?.totalCount;
-      total && setTotal(total);
-    },
   });
   const roots = listToTree((data?.allGalerieDirs?.nodes || []).map(x => ({
     ...x,
@@ -82,8 +77,9 @@ export function GalleryDirectoryList() {
   const [toggleVisible] = useTypedMutation(ToggleVisible, {
     onCompleted: () => refetch(),
   });
+  const total = data?.allGalerieDirs?.totalCount || 0;
 
-  const list = !dataSorted.length ? null : <table>
+  const list = !total ? null : <table>
     <thead><tr><th>Složka</th><th>Skrytá</th></tr></thead>
     <tbody>
       {dataSorted.map((a) => <tr key={a.gdId}>
