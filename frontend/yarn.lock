@@ -9580,6 +9580,11 @@ material-colors@^1.2.1:
   resolved "https://registry.yarnpkg.com/material-colors/-/material-colors-1.2.6.tgz#6d1958871126992ceecc72f4bcc4d8f010865f46"
   integrity sha512-6qE4B9deFBIa9YSpOc9O0Sgc43zTeVYbgDT5veRKSlB2+ZuHNoVVxA1L/ckMUayV9Ay9y7Z/SZCLcGteW9i7bg==
 
+material-ui-nested-menu-item@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/material-ui-nested-menu-item/-/material-ui-nested-menu-item-1.0.2.tgz#9d0999e7a70816f84e9caa0c3ad68948da719d66"
+  integrity sha512-LZb8xI0FrAI/A3P2vT3CB9bmSoOFWOK0dikTc1t9VvEpp1a8hZkbVUz7VhETnoLUYu3NXCkgulmXcl3zitqI9A==
+
 material-ui-popup-state@^1.9.3:
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/material-ui-popup-state/-/material-ui-popup-state-1.9.3.tgz#133ee02be8adf936e738d6b5f3dc89726af39bce"

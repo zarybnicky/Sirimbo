@@ -36,6 +36,13 @@ const ProtectedRoute = ({ check, children, ...rest }: {
   }} />;
 };
 
+const ExternalRedirect = ({ to, ...routeProps }: { to: string; } & Omit<RouteProps, 'children' | 'render'>) => {
+  return <Route {...routeProps} render={() => {
+    window.location.assign(to);
+    return null;
+  }} />;
+};
+
 const ForgottenPasswordPage = () => <React.Fragment>Forgotten Password</React.Fragment>;
 const EventsPage = () => <React.Fragment>Events</React.Fragment>;
 const EventPage = () => <React.Fragment>Event</React.Fragment>;
@@ -99,6 +106,7 @@ export const routes = <Switch>
   <ProtectedRoute exact path="/profile" check={isLoggedIn}><ProfilePage /></ProtectedRoute>
 
   <ProtectedRoute exact path="/editor" check={isAdmin}><EditorPage /></ProtectedRoute>
+  <ExternalRedirect path="/admin" to="/admin/rozpis" />
 
   {/* <Route exact path="/admin/upozorneni" render={(routeProps) =>
       <ListGuesser hasCreate resource="upozorneni"

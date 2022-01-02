@@ -4,8 +4,7 @@ import {
   ListItem, ListItemText, makeStyles
 } from '@material-ui/core';
 import { NavLink } from 'react-router-dom';
-import { MenuType, SubmenuType } from '../data/use-menu';
-import { useAuth } from '../data/use-auth';
+import { MenuStructItem, useMenu } from '../data/use-menu';
 
 import OlympLogo from '../../static/images/olymp-logo-oneline.svg';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -32,29 +31,36 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Submenu = ({ item: x, onClick }: { item: SubmenuType; onClick: React.MouseEventHandler }) => {
+const Submenu = ({ level = 0, item: x, onClick }: {
+  level?: number;
+  item: MenuStructItem;
+  onClick: React.MouseEventHandler;
+}) => {
   const [open, setOpen] = React.useState(true);
+
+  if (x.type === 'link') {
+    return <ListItem button component={NavLink} to={x.href} onClick={onClick}>
+      <ListItemText primary={x.text} style={{ marginLeft: `${level}rem` }} />
+    </ListItem>
+  }
+
   return <React.Fragment>
     <ListItem key={x.text} button onClick={() => setOpen(!open)}>
-      <ListItemText primary={x.text} />
+      <ListItemText primary={x.text} style={{ marginLeft: `${level}rem` }} />
       {open ? <ExpandLess /> : <ExpandMore />}
     </ListItem>
     <Collapse in={open} timeout="auto" unmountOnExit>
       <List disablePadding>
-        {x.children.map(x => (
-          <ListItem key={x.text} button component={NavLink} to={x.href} onClick={onClick}>
-            <ListItemText primary={x.text} style={{ marginLeft: '1rem' }} />
-          </ListItem>
-        ))}
+        {x.children.map(y => <Submenu level={level + 1} key={y.text} item={y} onClick={onClick} />)}
       </List>
     </Collapse>
     <Divider />
   </React.Fragment>;
 };
 
-export const MobileHeader = ({ menu }: { menu: MenuType }) => {
-  const auth = useAuth();
+export const MobileHeader = ({ }) => {
   const classes = useStyles();
+  const menu = useMenu();
   const [open, setOpen] = React.useState(false);
 
   return <div>
@@ -75,13 +81,7 @@ export const MobileHeader = ({ menu }: { menu: MenuType }) => {
       onClose={() => setOpen(false)}
     >
       <List className={classes.list}>
-        {menu.map(x => x.type === 'link'
-          ? (
-            <ListItem key={x.text} button component={NavLink} to={x.href} onClick={() => setOpen(false)}>
-              <ListItemText primary={x.text} />
-            </ListItem>
-          ) : <Submenu key={x.text} item={x} onClick={() => setOpen(false)} />
-        )}
+        {menu.map(x => <Submenu key={x.text} item={x} onClick={() => setOpen(false)} />)}
       </List>
     </SwipeableDrawer>
   </div>;

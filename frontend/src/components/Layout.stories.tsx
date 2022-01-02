@@ -6,7 +6,6 @@ import { DesktopHeader } from './DesktopHeader';
 import { Footer } from './Footer';
 import { Hero } from './Hero';
 import { MobileHeader } from './MobileHeader';
-import { mockMenu } from '../data/use-menu';
 
 export default {
   title: 'Components/Layout',
@@ -19,13 +18,13 @@ export const CTA: ComponentStory<typeof CallToAction> = (args) =>
 
 export const DesktopHead: ComponentStory<typeof DesktopHeader> = () =>
   <StoryTemplate>
-    <DesktopHeader menu={mockMenu} />
+    <DesktopHeader />
   </StoryTemplate>;
 
 export const MobileHead: ComponentStory<typeof MobileHeader> = () =>
   <StoryTemplate>
     <div style={{ height: '200px' }}>
-      <MobileHeader menu={mockMenu} />
+      <MobileHeader />
     </div>
   </StoryTemplate>;
 

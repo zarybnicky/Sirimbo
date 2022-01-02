@@ -1,19 +1,14 @@
 import * as React from 'react';
-import { Link, NavLink, useRouteMatch } from 'react-router-dom';
-import { AppBar, Box, Button, Container, alpha, Menu, MenuItem, Toolbar, makeStyles } from '@material-ui/core';
+import { Link } from 'react-router-dom';
+import { AppBar, Box, Container, Toolbar, makeStyles } from '@material-ui/core';
 import { SocialButtons } from './SocialButtons';
-import { PopupState as PopupStateType } from 'material-ui-popup-state/core';
-import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
-import clsx from 'clsx';
-import { MenuType, SubmenuType } from '../data/use-menu';
-import { useAuth } from '../data/use-auth';
 import { AuthButton } from './AuthButton';
+import { DesktopMenu } from './DesktopMenu';
 
 import OlympLogoVertical from '../../static/images/olymp-logo-vertical.svg';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 
 const useStyles = makeStyles((theme) => ({
-  navlinks: {
+  navbar: {
     justifyContent: 'space-between',
     alignItems: 'center',
     display: "flex",
@@ -55,80 +50,13 @@ const useStyles = makeStyles((theme) => ({
       fill: 'white !important',
     },
   },
-  menuButton: {
-    ...theme.mixins.toolbar,
-    color: theme.palette.grey[500],
-    fontWeight: 'bold',
-    borderRadius: 0,
-    transitionProperty: 'background-color, box-shadow',
-    "&:hover": {
-      color: theme.palette.common.white,
-      borderBottom: '3px solid white',
-    },
-  },
-  activeMenuButton: {
-    '&:not(:hover)': {
-      color: theme.palette.common.white,
-      borderBottom: '3px solid white',
-    },
-  },
-  submenu: {
-    '& .MuiMenu-paper': {
-      backgroundColor: alpha(theme.palette.common.white, .9),
-      borderRadius: 0,
-    },
-    '& .MuiListItem-button': {
-      fontVariant: 'small-caps',
-      display: 'flex',
-    },
-    '& .MuiListItem-button:hover': {
-      color: theme.palette.primary.main,
-    },
-  },
 }));
 
-const SubmenuButton = ({ item: x, className, activeClassName, popupState }: {
-  item: SubmenuType; className: string; activeClassName: string;
-  popupState: PopupStateType;
-}) => {
-  const match = useRouteMatch(x.hrefRoot);
-  return <Button
-    className={clsx(className, (popupState.isOpen || match) ? activeClassName : null)}
-    {...bindTrigger(popupState)}
-  >{x.text}</Button>
-};
-const Submenu = ({ item: x, className, activeClassName }: {
-  item: SubmenuType; className: string; activeClassName: string;
-}) => {
+export const DesktopHeader = ({ }) => {
   const classes = useStyles();
-  return <PopupState variant="popover" popupId={`menu-${x.text.replace(' ', '')}`}>
-    {(popupState) => <React.Fragment>
-      <SubmenuButton {...{ item: x, className, activeClassName, popupState }} />
-      <Menu
-        {...bindMenu(popupState)}
-        getContentAnchorEl={null}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-        className={classes.submenu}
-      >
-        {x.children.map(x => (
-          <MenuItem key={x.text}
-            button component={NavLink} to={x.href}
-            onClick={() => popupState.close()}
-          >{x.text}</MenuItem>
-        ))}
-      </Menu>
-    </React.Fragment>}
-  </PopupState>
-};
-
-export const DesktopHeader = ({ menu }: { menu: MenuType; }) => {
-  const auth = useAuth();
-  const classes = useStyles();
-
   return <AppBar position="static" color="secondary">
     <Toolbar>
-      <Container maxWidth="lg" className={classes.navlinks}>
+      <Container maxWidth="lg" className={classes.navbar}>
         <div className={classes.logoBox}>
           <Box boxShadow={10} className={classes.logo}>
             <Link to="/" className={classes.logoInner}>
@@ -136,42 +64,7 @@ export const DesktopHeader = ({ menu }: { menu: MenuType; }) => {
             </Link>
           </Box>
         </div>
-
-        {menu.map(x => x.type === 'link' ? (
-          <Button
-            key={x.text}
-            className={classes.menuButton} activeClassName={classes.activeMenuButton}
-            component={NavLink} to={x.href}
-          >{x.text}</Button>
-        ) : (
-          <Submenu
-            key={x.text} item={x}
-            className={classes.menuButton} activeClassName={classes.activeMenuButton}
-          />
-        ))}
-
-        {auth.user ? (
-          <PopupState variant="popover" popupId="demoMenu">
-            {(popupState) => <React.Fragment>
-              <Button
-                {...bindTrigger(popupState)}
-                color="inherit"
-                endIcon={<KeyboardArrowDownIcon />}
-              >
-                Pro členy
-              </Button>
-              <Menu
-                {...bindMenu(popupState)}
-                getContentAnchorEl={null}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-              >
-                <MenuItem onClick={popupState.close} component={Link} to="/">Nástěnka</MenuItem>
-              </Menu>
-            </React.Fragment>}
-          </PopupState>
-        ) : null}
-
+        <DesktopMenu />
         <SocialButtons variant="medium" />
         <AuthButton />
       </Container>

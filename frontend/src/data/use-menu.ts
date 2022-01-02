@@ -1,6 +1,51 @@
+import { useLocation } from 'react-router';
 import { useTypedQuery } from '../zeus/apollo';
+import { useAuth } from './use-auth';
 
-export const mockMenu: MenuType = [
+export type MenuStructItem = {
+  type: 'menu';
+  text: string;
+  hrefRoot?: string;
+  children: MenuStructItem[];
+} | {
+  type: 'link';
+  text: string;
+  href: string;
+};
+
+export function useDbMenu(): MenuStructItem[] {
+  const { data } = useTypedQuery({
+    parameterByPaName: [
+      { paName: "menu" },
+      { paValue: true },
+    ],
+  });
+  if (!data?.parameterByPaName?.paValue) {
+    return [];
+  }
+  return JSON.parse(data.parameterByPaName.paValue) as MenuStructItem[];
+};
+
+export function getHrefs(x: MenuStructItem): string[] {
+  return x.type === 'link' ? [x.href] : ([] as string[]).concat(...x.children.map(getHrefs));
+}
+
+export function useMenu(): MenuStructItem[] {
+  const { user } = useAuth();
+  const { pathname } = useLocation();
+  if (!user) {
+    return publicMenu;
+  }
+  const memberOrAdmin = user.permissionByUGroup?.peNastenka == 16 ?
+    memberMenu.concat([{ type: 'menu', text: 'Administrace', children: adminMenu }]) : memberMenu;
+  if (publicMenu.find(x => getHrefs(x).find(y => pathname.startsWith(y)))) {
+    return publicMenu.concat([{ type: 'menu', text: 'Pro členy', children: memberOrAdmin }]);
+  } else {
+    return [{ type: 'menu', text: 'Pro veřejnost', children: publicMenu } as MenuStructItem].concat(memberOrAdmin);
+  }
+}
+
+export const publicMenu: MenuStructItem[] = [
   {
     "type": "menu", "text": "Klub", "hrefRoot": "/o-nas", "children": [
       { "type": "link", "text": "O nás", "href": "/o-nas" },
@@ -24,34 +69,7 @@ export const mockMenu: MenuType = [
   { "type": "link", "text": "Kontakt", "href": "/kontakt" }
 ];
 
-export type MenuType = (MenuLink | SubmenuType)[];
-export interface SubmenuType {
-  type: 'menu';
-  text: string;
-  hrefRoot: string;
-  children: MenuLink[];
-}
-export interface MenuLink {
-  type: 'link';
-  text: string;
-  href: string;
-}
-
-export const useMenu = (): MenuType => {
-  const { data } = useTypedQuery({
-    parameterByPaName: [
-      { paName: "menu" },
-      { paValue: true },
-    ],
-  });
-  if (!data?.parameterByPaName?.paValue) {
-    return [];
-  }
-  const menu = JSON.parse(data.parameterByPaName.paValue) as MenuType;
-  return menu.filter(x => x.type as unknown !== 'text');
-}
-
-export const useMemberMenu = (): MenuType => [
+export const memberMenu: MenuStructItem[] = [
   { "type": "link", "text": "Nástěnka", "href": "/dashboard" },
   { "type": "link", "text": "Tréninky", "href": "/schedule" },
   { "type": "link", "text": "Akce", "href": "/events" },
@@ -60,6 +78,7 @@ export const useMemberMenu = (): MenuType => [
   { "type": "link", "text": "Profil", "href": "/profile" },
 ];
 
-export const useAdminMenu = (): MenuType => [
-  { "type": "link", "text": "Stránky", "href": "/editor" },
+export const adminMenu: MenuStructItem[] = [
+  { "type": "link", "text": "Správa obsahu", "href": "/editor" },
+  { "type": "link", "text": "Stará administrace", "href": "/admin/rozpis" },
 ];
