@@ -104,8 +104,9 @@
           boot.isContainer = true;
           system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
           networking.useDHCP = false;
-          networking.firewall.allowedTCPPorts = [ 80 3000 3306 5432 ];
+          networking.firewall.allowedTCPPorts = [ 80 3000 3306 5432 8025 1025 ];
           environment.systemPackages = [ pkgs.file ];
+
           services.postgresql = {
             enable = true;
             enableTCPIP = true;
@@ -124,6 +125,8 @@
             ];
             authentication = "host all all all trust";
           };
+
+          services.mailhog.enable = true;
           services.olymp = {
             enable = true;
             dbConnString = "dbname=olymp";
@@ -131,6 +134,11 @@
             domain = "olymp-test";
             phpPort = 3010;
             jsPort = 3020;
+
+            smtpAuth = false;
+            smtpTLS = false;
+            smtpHost = "localhost";
+            smtpPort = 1025;
           };
         })
       ];

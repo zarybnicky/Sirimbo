@@ -28,6 +28,27 @@ in {
       description = "${pkgName} DB connection string";
     };
 
+    smtpAuth = lib.mkEnableOption "${pkgName} SMTP auth";
+    smtpTLS = lib.mkEnableOption "${pkgName} SMTP TLS";
+    smtpHost = lib.mkOption {
+      type = lib.types.str;
+      description = "${pkgName} SMTP host";
+    };
+    smtpPort = lib.mkOption {
+      type = lib.types.int;
+      description = "${pkgName} SMTP port";
+    };
+    smtpUser = lib.mkOption {
+      type = lib.types.str;
+      default = "";
+      description = "${pkgName} SMTP username";
+    };
+    smtpPass = lib.mkOption {
+      type = lib.types.str;
+      default = "";
+      description = "${pkgName} SMTP password";
+    };
+
     user = lib.mkOption {
       type = lib.types.str;
       default = "olymp";
@@ -74,6 +95,13 @@ in {
       define('NABOR', '0');
       define('DEFAULT_FROM_MAIL', 'TK Olymp.cz <noreply@tkolymp.cz>');
       define('DEFAULT_ADMIN_MAIL', 'tkolymp@tkolymp.cz');
+
+      define('SMTP_AUTH', ${if cfg.smtpAuth then "true" else "false"});
+      define('SMTP_TLS', ${if cfg.smtpTLS then "true" else "false"});
+      define('SMTP_HOST', '${cfg.smtpHost}');
+      define('SMTP_PORT', ${toString cfg.smtpPort});
+      define('SMTP_USER', '${cfg.smtpUser}');
+      define('SMTP_PASS', '${cfg.smtpPass}');
       EOS
     '';
 
