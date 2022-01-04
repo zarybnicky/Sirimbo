@@ -9,7 +9,7 @@ export interface Video {
 
 export const useTitleVideos = (): Video[] => {
   const { data } = useTypedQuery({
-    getTitleVideos: [{}, {
+    titleVideos: [{}, {
       nodes: {
         vTitle: true,
         vUri: true,
@@ -17,7 +17,7 @@ export const useTitleVideos = (): Video[] => {
     }],
   });
 
-  return (data?.getTitleVideos?.nodes || []).map(x => {
+  return (data?.titleVideos?.nodes || []).map(x => {
     const [id, query] = x.vUri.split('?');
     return {
       name: x.vTitle,

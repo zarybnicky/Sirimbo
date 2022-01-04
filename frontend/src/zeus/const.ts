@@ -1712,38 +1712,6 @@ export const AllTypesProps: Record<string,any> = {
 				required:false
 			}
 		},
-		getTitleVideos:{
-			first:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			last:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			offset:{
-				type:"Int",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			before:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			after:{
-				type:"Cursor",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
-		},
 		titleVideos:{
 			first:{
 				type:"Int",
@@ -12463,7 +12431,6 @@ export const ReturnTypes: Record<string,any> = {
 		currentSessionId:"String",
 		currentUserId:"BigInt",
 		getCurrentUser:"User",
-		getTitleVideos:"VideosConnection",
 		titleVideos:"VideosConnection",
 		akce:"Akce",
 		akceItem:"AkceItem",
