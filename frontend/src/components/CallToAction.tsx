@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
   },
   background: {
     backgroundImage: `url(${CtaImage})`,
-    backgroundPosition: 'bottom right',
+    backgroundPosition: '85% 50%',
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'auto 100%',
     display: 'flex',
@@ -19,22 +19,25 @@ const useStyles = makeStyles((theme) => ({
   text: {
     padding: '4rem',
     paddingRight: '6rem',
-    background: 'linear-gradient(90deg, rgba(216,28,58,0.7) 70%, rgba(0,0,0,0) 100%)',
+    background: 'linear-gradient(90deg, rgba(216,28,58,0.6) 70%, rgba(0,0,0,0) 100%)',
     [theme.breakpoints.down('sm')]: {
-      padding: '2rem',
-    }
+      padding: '2rem 1rem',
+    },
   },
   firstLine: {
     color: 'white',
     fontWeight: 'bolder',
     fontSize: '2.5rem',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '1.8rem',
+    },
   },
   secondLine: {
     fontWeight: 'bold',
     fontSize: '1.75rem',
     [theme.breakpoints.down('sm')]: {
-      fontSize: '1.45rem',
-    }
+      fontSize: '1.4rem',
+    },
   },
   button: {
     textTransform: 'none',

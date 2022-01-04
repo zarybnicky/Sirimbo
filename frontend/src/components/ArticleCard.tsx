@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   Button, Typography, Card, CardMedia, CardContent, CardActionArea, CardActions, makeStyles
 } from '@material-ui/core';
+import { Article } from '../data/use-articles';
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -26,14 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface Article {
-  img: string;
-  href: string;
-  header: string;
-  preview: string;
-}
-
-export const ArticleCard = ({ item: x }: { item: Article; }) => {
+export const ArticleCard = ({ item: x }: { item: Article }) => {
   const classes = useStyles();
   return <Card elevation={3} style={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
     <CardActionArea component={Link} to={x.href} style={{ flexGrow: 1 }}>

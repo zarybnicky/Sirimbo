@@ -23,6 +23,7 @@ export const ArticlesQuery = Selector('Query')({
 export interface Article {
   href: string;
   img: string;
+  imgThumb: string;
   header: string;
   preview: string;
 }
@@ -38,7 +39,8 @@ export const useArticles = (limit: number, offset: number): {
   return {
     articles: (data?.allAktualities?.nodes || []).map(x => ({
       href: `/articles/${x.atId}`,
-      img: `/galerie/thumbnails/${x.galerieFotoByAtFotoMain?.gfPath}`,
+      img: `/galerie/${x.galerieFotoByAtFotoMain?.gfPath}`,
+      imgThumb: `/galerie/thumbnails/${x.galerieFotoByAtFotoMain?.gfPath}`,
       header: x.atJmeno,
       preview: x.atPreview,
     })),
@@ -49,25 +51,29 @@ export const useArticles = (limit: number, offset: number): {
 export const useMockArticles = (): Article[] => [
   {
     href: "/o-nas",
-    img: getPlaceholder(360, 240),
+    img: getPlaceholder(1024, 768),
+    imgThumb: getPlaceholder(360, 240),
     header: "Přípravný kurz tanečního sportu",
     preview: "Otevíráme kurz pro mládež a dospělé v Olomouci a Přerově"
   },
   {
     href: "/o-nas",
-    img: getPlaceholder(360, 240),
+    img: getPlaceholder(1024, 768),
+    imgThumb: getPlaceholder(360, 240),
     header: "Přípravný kurz tanečního sportu",
     preview: "Otevíráme kurz pro mládež a dospělé v Olomouci a Přerově"
   },
   {
     href: "/o-nas",
-    img: getPlaceholder(360, 240),
+    img: getPlaceholder(1024, 768),
+    imgThumb: getPlaceholder(360, 240),
     header: "Přípravný kurz tanečního sportu",
     preview: "Otevíráme kurz pro mládež a dospělé v Olomouci a Přerově"
   },
   {
     href: "/o-nas",
-    img: getPlaceholder(360, 240),
+    img: getPlaceholder(1024, 768),
+    imgThumb: getPlaceholder(360, 240),
     header: "Přípravný kurz tanečního sportu",
     preview: "Otevíráme kurz pro mládež a dospělé v Olomouci a Přerově"
   },

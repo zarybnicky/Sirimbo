@@ -4,6 +4,7 @@ import { useAuth } from './use-auth';
 
 export type MenuStructItem = {
   type: 'menu';
+  hrefRoot?: string;
   text: string;
   children: MenuStructItem[];
 } | {
@@ -26,7 +27,9 @@ export function useDbMenu(): MenuStructItem[] {
 };
 
 export function getHrefs(x: MenuStructItem): string[] {
-  return x.type === 'link' ? [x.href] : ([] as string[]).concat(...x.children.map(getHrefs));
+  return x.type === 'link'
+    ? [x.href]
+    : (x.hrefRoot ? [x.hrefRoot] : []).concat(...x.children.map(getHrefs));
 }
 
 export function useMenu(): MenuStructItem[] {
@@ -35,13 +38,15 @@ export function useMenu(): MenuStructItem[] {
   if (!user) {
     return publicMenu;
   }
-  const memberOrAdmin = user.permissionByUGroup?.peNastenka == 16 ?
-    memberMenu.concat([{ type: 'menu', text: 'Administrace', children: adminMenu }]) : memberMenu;
-  if (publicMenu.find(x => getHrefs(x).find(y => pathname.startsWith(y)))) {
-    return publicMenu.concat([{ type: 'menu', text: 'Pro členy', children: memberOrAdmin }]);
-  } else {
-    return [{ type: 'menu', text: 'Pro veřejnost', children: publicMenu } as MenuStructItem].concat(memberOrAdmin);
+  const isAdmin = user.permissionByUGroup?.peNastenka == 16;
+
+  if (getHrefs(publicSubmenu).find(y => pathname.startsWith(y))) {
+    return publicMenu.concat([memberSubmenu]).concat(isAdmin ? [adminSubmenu] : []);
   }
+  if (getHrefs(adminSubmenu).find(y => pathname.startsWith(y))) {
+    return [publicSubmenu].concat([memberSubmenu]).concat(isAdmin ? adminMenu : []);
+  }
+  return [publicSubmenu].concat(memberMenu).concat(isAdmin ? [adminSubmenu] : []);
 }
 
 export const publicMenu: MenuStructItem[] = [
@@ -81,3 +86,22 @@ export const adminMenu: MenuStructItem[] = [
   { "type": "link", "text": "Správa obsahu", "href": "/editor" },
   { "type": "link", "text": "Stará administrace", "href": "/admin/rozpis" },
 ];
+
+const publicSubmenu: MenuStructItem = {
+  type: 'menu',
+  hrefRoot: '/home',
+  text: 'Pro veřejnost',
+  children: publicMenu,
+};
+
+const memberSubmenu: MenuStructItem = {
+  type: 'menu',
+  text: 'Pro členy',
+  children: memberMenu,
+};
+
+const adminSubmenu: MenuStructItem = {
+  type: 'menu',
+  text: 'Administrace',
+  children: adminMenu,
+};

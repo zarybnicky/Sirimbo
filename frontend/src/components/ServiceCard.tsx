@@ -21,14 +21,20 @@ const useStyles = makeStyles((theme) => ({
       background: theme.palette.primary.main,
     },
     '& .body': {
-      padding: '3rem 2rem',
       flexGrow: 1,
       flexBasis: '1rem',
+      padding: '3rem 2rem',
+      [theme.breakpoints.down('sm')]: {
+        padding: '1.5rem 1rem',
+      },
     },
     '& .header': {
       color: theme.palette.secondary.main,
       fontWeight: 'bold',
       marginBottom: '1rem',
+      [theme.breakpoints.down('sm')]: {
+        marginBottom: '.5rem',
+      },
     },
     '&:nth-of-type(even) .header': {
       color: theme.palette.primary.main,

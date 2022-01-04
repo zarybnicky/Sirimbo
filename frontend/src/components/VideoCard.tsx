@@ -5,13 +5,14 @@ import { Video } from '../data/use-videos';
 
 import PlayIcon from '../style/play_white.png';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   img: {
-    height: '96px',
     position: 'relative',
     '& img': {
       display: 'block',
       height: '100%',
+      width: '100%',
+      objectFit: 'cover',
     },
     '&::after': {
       content: '""',
@@ -31,6 +32,9 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     textDecoration: 'underline',
     paddingLeft: '2rem',
+    [theme.breakpoints.down('sm')]: {
+      padding: '.5rem 1rem',
+    },
   }
 }));
 
@@ -39,11 +43,11 @@ export const VideoCard = ({ item: x }: { item: Video }) => {
   return <Paper elevation={3}>
     <CardActionArea component={Link} to={x.href}>
       <Grid container>
-        <Grid item className={classes.img}>
+        <Grid item sm={12} md={3} className={classes.img}>
           <img src={x.img} alt={x.name} />
         </Grid>
-        <Grid item className={classes.inner}>
-          <Typography variant="h5" component="h2" className="header">{x.name}</Typography>
+        <Grid item sm={12} md={9} className={classes.inner}>
+          <Typography variant="h6" component="h2" className="header">{x.name}</Typography>
         </Grid>
       </Grid>
     </CardActionArea>

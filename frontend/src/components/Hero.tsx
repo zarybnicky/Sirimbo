@@ -2,7 +2,8 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles, Typography } from '@material-ui/core';
 import Carousel from 'react-material-ui-carousel'
-import { useHeroData } from '../data';
+/* import { useHeroData } from '../data'; */
+import { useArticles } from '../data/use-articles';
 
 const useStyles = makeStyles((theme) => ({
   indicator: {
@@ -21,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
       height: '60vh',
       maxHeight: '600px',
       objectFit: 'cover',
+      objectPosition: '50% 30%',
       transition: 'transform .3s',
     },
     '& .overlay:hover + img': {
@@ -36,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
+      textAlign: 'center',
       textDecoration: 'none',
       color: 'white',
       padding: '1rem',
@@ -48,7 +51,8 @@ const useStyles = makeStyles((theme) => ({
 
 export const Hero = ({ }) => {
   const classes = useStyles();
-  const items = useHeroData();
+  /* const items = useHeroData(); */
+  const { articles } = useArticles(3, 0);
 
   return <Carousel
     timeout={400}
@@ -56,12 +60,12 @@ export const Hero = ({ }) => {
     indicatorIconButtonProps={{ className: classes.indicator }}
     activeIndicatorIconButtonProps={{ className: classes.activeIndicator }}
   >
-    {items.map((x, i) => (
+    {articles.map((x, i) => (
       <div key={i} className={classes.container}>
         <Link className="overlay" to={x.href}>
-          <Typography variant="h5">{x.text}</Typography>
+          <Typography variant="h5">{x.header}</Typography>
         </Link>
-        <img src={x.img} alt={x.text} />
+        <img src={x.img} alt={x.header} />
       </div>
     ))}
   </Carousel>;

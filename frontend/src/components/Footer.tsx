@@ -129,6 +129,12 @@ export const Footer = ({ }) => {
           </Paper>
         </Grid>
       </Grid>
+      <Typography variant="body1" component="div" style={{ marginTop: '1rem' }}>
+        Realizace: Jakub Zárybnický
+      </Typography>
+      <Typography variant="body1" component="div">
+        © 2022 Taneční klub Olymp Olomouc, z. s.
+      </Typography>
     </Container>
   </div>;
 };

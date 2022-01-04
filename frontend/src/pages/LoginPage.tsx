@@ -38,7 +38,7 @@ export const LoginPage = ({ }) => {
       <Card component="form" onSubmit={form.handleSubmit}>
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">Přihlášení do systému</Typography>
-          <TextField label="E-mail nebo přihlašovací jméno" name="login" autoComplete="username" required />
+          <TextField label="E-mail nebo přihlašovací jméno" name="login" autoComplete="username" required autoFocus />
           <TextField label="Heslo" name="passwd" type="password" autoComplete="current-password" required />
         </CardContent>
         <CardActions style={{ flexDirection: 'column' }}>

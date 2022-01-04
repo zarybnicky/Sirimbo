@@ -3,8 +3,8 @@ import {
   AppBar, Collapse, Divider, IconButton, SwipeableDrawer, Toolbar, List,
   ListItem, ListItemText, makeStyles
 } from '@material-ui/core';
-import { NavLink } from 'react-router-dom';
-import { MenuStructItem, useMenu } from '../data/use-menu';
+import { NavLink, useLocation } from 'react-router-dom';
+import { MenuStructItem, useMenu, getHrefs } from '../data/use-menu';
 
 import OlympLogo from '../../static/images/olymp-logo-oneline.svg';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -26,8 +26,8 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
   },
   list: {
-    maxWidth: '400px',
-    width: '70vw',
+    maxWidth: '450px',
+    width: '85vw',
   }
 }));
 
@@ -36,7 +36,9 @@ const Submenu = ({ level = 0, item: x, onClick }: {
   item: MenuStructItem;
   onClick: React.MouseEventHandler;
 }) => {
-  const [open, setOpen] = React.useState(true);
+  const { pathname } = useLocation();
+  const inPath = !!getHrefs(x).find(y => pathname.startsWith(y));
+  const [open, setOpen] = React.useState(inPath);
 
   if (x.type === 'link') {
     return <ListItem button component={NavLink} to={x.href} onClick={onClick}>
@@ -81,6 +83,7 @@ export const MobileHeader = ({ }) => {
       onClose={() => setOpen(false)}
     >
       <List className={classes.list}>
+        <Submenu item={{ type: 'link', text: 'Domů', href: '/home' }} onClick={() => setOpen(false)} />
         {menu.map(x => <Submenu key={x.text} item={x} onClick={() => setOpen(false)} />)}
       </List>
     </SwipeableDrawer>

@@ -10,33 +10,36 @@ import { useArticles } from '../data/use-articles';
 import { useServices } from '../data';
 
 export const HomePage = ({ }) => {
-  const { articles } = useArticles(4, 0);
+  const { articles } = useArticles(2, 3);
   const videos = useTitleVideos();
   const services = useServices();
 
-  const serviceList = <Container maxWidth="lg">
-    {services.map((x, i) => <ServiceCard key={i} item={x} />)}
-  </Container>;
-
-  const videoList = <Container maxWidth="lg" style={{ margin: '3rem auto' }}>
-    <Typography gutterBottom variant="h4" component="h2">Videa</Typography>
-    <Grid container spacing={3}>
-      {videos.map((x, i) => <Grid item sm={6} key={i}><VideoCard item={x} /></Grid>)}
-    </Grid>
-  </Container>;
-
-  const articleList = <Container maxWidth="lg" style={{ margin: '3rem auto' }}>
-    <Typography gutterBottom variant="h4" component="h2">Aktuálně</Typography>
-    <Grid container spacing={3} style={{ alignItems: "stretch" }}>
-      {articles.map((x, i) => <Grid item container sm={6} md={3} key={i}><ArticleCard item={x} /></Grid>)}
-    </Grid>
-  </Container>;
-
   return <React.Fragment>
     <Hero />
-    {serviceList}
+    <Container maxWidth="lg">
+      {services.map((x, i) => <ServiceCard key={i} item={x} />)}
+    </Container>
+
     <CallToAction />
-    {articleList}
-    {videoList}
+
+    <Container maxWidth="lg" style={{ margin: '3rem auto' }}>
+      <Grid container spacing={3}>
+
+        <Grid item sm={12} md={6}>
+          <Typography gutterBottom variant="h4" component="h2">Aktuálně</Typography>
+          <Grid container spacing={3} style={{ alignItems: "stretch" }}>
+            {articles.map((x, i) => <Grid item container sm={12} md={6} key={i}><ArticleCard item={x} /></Grid>)}
+          </Grid>
+        </Grid>
+
+        <Grid item sm={12} md={6}>
+          <Typography gutterBottom variant="h4" component="h2">Videa</Typography>
+          <Grid container spacing={3}>
+            {videos.map((x, i) => <Grid item sm={12} key={i}><VideoCard item={x} /></Grid>)}
+          </Grid>
+        </Grid>
+
+      </Grid>
+    </Container>
   </React.Fragment>;
 }
