@@ -16,8 +16,7 @@
             <a class="dropdown-item" href="/admin/skupiny/remove/{{ row.s_id }}">Odstranit</a>
           </div>
         </div>
-        <div class="box" title="{{ row.s_description }}"
-             style="background-color:{{ row.s_color_rgb }}"></div>
+        <div class="box" title="{{ row.s_name }}" style="background-color:{{ row.s_color_rgb }}"></div>
         {{ row.s_name }}
       </div>
     {% endfor %}

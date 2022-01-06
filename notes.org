@@ -253,7 +253,3 @@ Formulář (musí reagovat na to, zda se jedná o přihlášeného uživatele)
 ** soutěže
 ** soustředění s jednoduchým přihlašovacím systémem
 ** plesy a akce s možnosti rezervace vstupenek
-
-* Kontakt
-** fakturační údaje
-** kontakty na jednotlivé činovníky, sekretáře, vedoucí poboček

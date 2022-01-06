@@ -33,7 +33,6 @@ class Profil
             'skupina' => [
                 'name' => $s['s_name'],
                 'color' => $s['s_color_rgb'],
-                'description' => $s['s_description'],
             ],
             'hasPaid' => \DBPlatby::hasPaidMemberFees($user->getId()),
             'paymentHistory' => array_for($history, fn($row) => [

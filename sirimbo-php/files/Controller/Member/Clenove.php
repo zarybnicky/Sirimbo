@@ -28,7 +28,6 @@ class Clenove
                 $skupiny[$currentKey] = [
                     'name' => $item['s_name'],
                     'color' => $item['s_color_rgb'],
-                    'description' => $item['s_description'],
                     'userCount' => 0
                 ];
             }
@@ -54,7 +53,6 @@ class Clenove
                 $currentID = $item['s_id'];
                 $currentKey = count($skupiny);
                 $skupiny[$currentKey] = [
-                    'description' => $item['s_description'],
                     'color' => $item['s_color_rgb'],
                     'name' => $item['s_name'],
                     'users' => [],

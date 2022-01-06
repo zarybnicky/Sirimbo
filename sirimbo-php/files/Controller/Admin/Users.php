@@ -69,7 +69,6 @@ class Users
                 'user' => \User::fromArray($item),
                 'skupina' => [
                     'id' => $item['s_id'],
-                    'description' => $item['s_description'],
                     'color' => $item['s_color_rgb'],
                 ],
                 'groupInfo' => $groupOptions[$item['u_group']] ?? '',

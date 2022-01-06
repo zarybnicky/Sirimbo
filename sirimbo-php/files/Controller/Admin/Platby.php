@@ -16,7 +16,6 @@ class Platby
                 $currentKey = count($skupiny);
                 $skupiny[$currentKey] = [
                     'users' => [],
-                    'description' => $item['s_description'],
                     'color' => $item['s_color_rgb'],
                     'name' => $item['s_name'],
                 ];

@@ -73,8 +73,7 @@
       <div class="form-check">
         <input type="checkbox" class="form-check-input" name="skupiny[]"
                value="{{ row.s_id }}" {{ skupinySelected[row.s_id] is defined ? 'checked' : '' }}>
-        <div class="box" title="{{ row.s_description }}"
-             style="background-color:{{ row.s_color_rgb }}"></div>
+        <div class="box" title="{{ row.s_name }}" style="background-color:{{ row.s_color_rgb }}"></div>
         {{ row.s_name }}
       </div>
     {% endfor %}

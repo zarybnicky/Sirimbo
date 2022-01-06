@@ -40,6 +40,12 @@
         <button class="btn btn-primary">{{ action == 'add' ? 'Přidat' : 'Upravit' }}</button>
         <a class="btn btn-outline-primary" href="/admin/skupiny">Zpět</a>
       </div>
+
+      <script src="/ckeditor/ckeditor.js"></script>
+      <script>
+       CKEDITOR.config.allowedContent = true;
+       CKEDITOR.replace('desc');
+      </script>
     </form>
   </div>
 {% endblock %}
