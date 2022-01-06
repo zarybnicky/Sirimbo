@@ -1,20 +1,24 @@
 import * as React from 'react';
 import { Container, Grid } from '@material-ui/core';
+import { CallToAction } from '../components/CallToAction';
 import { SlateReadonly } from '../components/SlateReadonly';
 
 import MirekDomca from '../../static/images/mirek-domca.png';
 
 export const AboutPage = ({ }) => {
-  return <Container maxWidth="md" style={{ paddingBottom: '2rem', paddingTop: '2rem' }}>
-    <Grid container direction="row-reverse" justifyContent="center">
-      <Grid item sm={12} md={6}>
-        <SlateReadonly value={text} />
+  return <React.Fragment>
+    <Container maxWidth="md" style={{ paddingBottom: '2rem', paddingTop: '2rem' }}>
+      <Grid container direction="row-reverse" justifyContent="center">
+        <Grid item sm={12} md={6}>
+          <SlateReadonly value={text} />
+        </Grid>
+        <Grid item sm={12} md={4}>
+          <img src={MirekDomca} alt="Miroslav Hýža a Dominika Feglová" />
+        </Grid>
       </Grid>
-      <Grid item sm={12} md={4}>
-        <img src={MirekDomca} alt="Miroslav Hýža a Dominika Feglová" />
-      </Grid>
-    </Grid>
-  </Container>;
+    </Container>
+    <CallToAction />
+  </React.Fragment>;
 };
 
 const text = [

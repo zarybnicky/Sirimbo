@@ -4,6 +4,7 @@ import { Container, Typography } from '@material-ui/core';
 import { $, Selector } from '../zeus';
 import { useTypedQuery } from '../zeus/apollo';
 import { useParams } from 'react-router';
+import { CallToAction } from '../components/CallToAction';
 
 export const ArticleQuery = Selector('Query')({
   aktualityByAtId: [
@@ -30,12 +31,15 @@ export const ArticlePage = ({ }) => {
     return null;
   }
 
-  return <Container maxWidth="lg" style={{ margin: '5rem auto' }}>
-    <Typography variant="h3" component="h2">{x.atJmeno}</Typography>
-    <Typography color="textSecondary">
-      {x.userByAtKdo?.uJmeno} {x.userByAtKdo?.uPrijmeni}{', '}
-      {format(new Date(x.atTimestampAdd), 'd. M. y')}
-    </Typography>
-    <div dangerouslySetInnerHTML={{ __html: x.atText }}></div>
-  </Container >
+  return <React.Fragment>
+    <Container maxWidth="lg" style={{ margin: '5rem auto' }}>
+      <Typography variant="h3" component="h2">{x.atJmeno}</Typography>
+      <Typography color="textSecondary">
+        {x.userByAtKdo?.uJmeno} {x.userByAtKdo?.uPrijmeni}{', '}
+        {format(new Date(x.atTimestampAdd), 'd. M. y')}
+      </Typography>
+      <div dangerouslySetInnerHTML={{ __html: x.atText }}></div>
+    </Container>
+    <CallToAction />
+  </React.Fragment>;
 };

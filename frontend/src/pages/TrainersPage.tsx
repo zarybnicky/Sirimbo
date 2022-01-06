@@ -3,6 +3,7 @@ import { makeStyles, Container, Typography, Grid } from '@material-ui/core';
 import { TrainerCard } from '../components/TrainerCard';
 import { Descendant } from 'slate';
 import { useExternalTrainers, useInternalTrainers } from '../data';
+import { CallToAction } from '../components/CallToAction';
 
 const useStyles = makeStyles(() => ({
   section: {
@@ -23,10 +24,13 @@ export const TrainersPage = ({ }) => {
         </Grid>
       ))}
     </Grid>;
-  return <Container maxWidth="lg" style={{ paddingBottom: '2rem', paddingTop: '2rem' }}>
-    <Typography className={classes.section} variant="h4" component="h2">Kluboví trenéři</Typography>
-    {renderList(internal)}
-    <Typography className={classes.section} variant="h4" component="h2">Externí trenéři</Typography>
-    {renderList(external)}
-  </Container>;
+  return <React.Fragment>
+    <Container maxWidth="lg" style={{ paddingBottom: '2rem', paddingTop: '2rem' }}>
+      <Typography className={classes.section} variant="h4" component="h2">Kluboví trenéři</Typography>
+      {renderList(internal)}
+      <Typography className={classes.section} variant="h4" component="h2">Externí trenéři</Typography>
+      {renderList(external)}
+    </Container>
+    <CallToAction />
+  </React.Fragment>;
 };

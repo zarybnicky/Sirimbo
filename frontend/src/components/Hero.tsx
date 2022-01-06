@@ -17,10 +17,11 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     width: '100%',
     overflow: 'hidden',
+    height: '60vh',
+    maxHeight: '600px',
     '& img': {
+      height: '100%',
       width: '100%',
-      height: '60vh',
-      maxHeight: '600px',
       objectFit: 'cover',
       objectPosition: '50% 30%',
       transition: 'transform .3s',
@@ -52,7 +53,14 @@ const useStyles = makeStyles((theme) => ({
 export const Hero = ({ }) => {
   const classes = useStyles();
   /* const items = useHeroData(); */
-  const { articles } = useArticles(3, 0);
+  let { articles } = useArticles(3, 0);
+  articles = articles.length > 0 ? articles : [{
+    href: '#',
+    img: '',
+    imgThumb: '',
+    header: '',
+    preview: '',
+  }];
 
   return <Carousel
     timeout={400}
