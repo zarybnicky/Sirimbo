@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Container, Typography, makeStyles } from '@material-ui/core';
+import type { CellPlugin } from '@react-page/editor';
 
 import CtaImage from '../../static/images/call-to-action.png';
 
@@ -63,4 +64,14 @@ export const CallToAction = ({ }) => {
       </div>
     </Container>
   </div>;
+};
+
+export const CallToActionPlugin: CellPlugin<{
+}> = {
+  Renderer: () => <CallToAction />,
+
+  id: 'app-cta-plugin',
+  title: 'Call to Action',
+  description: undefined,
+  version: 1,
 };

@@ -1,14 +1,27 @@
 import * as React from 'react';
-import type { Value } from '@react-page/editor';
-import { ReactPage } from '../components/ReactPage';
+import { createValue, Value } from '@react-page/editor';
+import { ReactPage, cellPlugins } from '../components/ReactPage';
 import { CircularProgress, Grid, TextField, List, ListItem, ListItemText, Typography, Button, ListItemIcon } from '@material-ui/core';
 import { useTypedLazyQuery, useTypedMutation, useTypedQuery } from '../zeus/apollo';
 import { $, PagesOrderBy, GraphQLTypes } from '../zeus';
 import AddIcon from '@material-ui/icons/Add';
-
+import { HeadingPlugin } from '../components/Heading';
+import { ContainerPlugin } from '../components/Container';
+import { CallToActionPlugin } from '../components/CallToAction';
 
 type Page = GraphQLTypes['Page'];
 type PageRevision = GraphQLTypes['PageRevision'];
+
+const INITIAL_VALUE: Value = createValue({
+  rows: [
+    [{ plugin: HeadingPlugin }],
+    [{ plugin: ContainerPlugin }],
+    [{ plugin: CallToActionPlugin }],
+  ],
+}, {
+  cellPlugins,
+  lang: 'default',
+});
 
 type State = {
   state: 'empty';
@@ -89,9 +102,12 @@ export const EditorPage = ({ }) => {
 
   const [loading, setLoading] = React.useState<boolean>(false);
   const [state, setState] = React.useState<State>({ state: 'empty' });
-  const startPage = () => setState({ state: 'create', url: '' });
+  const startPage = () => setState({ state: 'create', url: '', content: INITIAL_VALUE });
   const selectPage = (page: Page) => setState({ state: 'edit', page, content: page.content })
-  const setContent = (content: Value) => setState(s => ({ ...s, content }));
+  const setContent = (content: Value) => {
+    console.log(content);
+    setState(s => ({ ...s, content }));
+  };
 
   let toolbar: JSX.Element | null = null;
   switch (state.state) {
@@ -177,10 +193,11 @@ export const EditorPage = ({ }) => {
         </ListItem>
       </List>
     </Grid>
-    <Grid item style={{ flexGrow: 1 }}>
+    <Grid item style={{ borderLeft: '1px solid black', flexGrow: 1 }}>
       <ReactPage
         readOnly={state.state === 'history' || state.state === 'empty'}
         value={state.content} onChange={setContent}
+        style={{ padding: '4rem 2rem 2rem' }}
       />
     </Grid>
   </Grid>;

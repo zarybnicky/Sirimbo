@@ -4,20 +4,31 @@ import type { CellPlugin, EditorProps } from '@react-page/editor';
 import Editor from '@react-page/editor';
 import slate from '@react-page/plugins-slate';
 import image from '@react-page/plugins-image';
+import { CallToActionPlugin } from './CallToAction';
+import { ContainerPlugin } from './Container';
+import { HeadingPlugin } from './Heading';
 
 import { CSSProperties } from '@material-ui/styles';
 
-const cellPlugins: CellPlugin<any, any>[] = [slate(), image];
+export const cellPlugins: CellPlugin<any, any>[] = [
+  slate(),
+  image,
+  ContainerPlugin,
+  CallToActionPlugin,
+  HeadingPlugin,
+];
 
 const useStyles = makeStyles((theme) => ({
   background: {
-    backgroundColor: theme.palette.grey[200],
-    padding: '2rem',
+    /* backgroundColor: theme.palette.grey[200],
+     * padding: '2rem', */
   },
   container: {
-    backgroundColor: 'white',
-    padding: '1rem',
+    /* backgroundColor: 'white', */
     minHeight: '200px',
+    '& .react-page-cell-inner-leaf.slate': {
+      padding: '20px',
+    },
   },
 }));
 
@@ -25,9 +36,7 @@ export const ReactPage = ({ style, ...editorProps }: {
   style?: CSSProperties;
 } & Omit<EditorProps, 'cellPlugins'>) => {
   const classes = useStyles({ innerStyle: style || {} });
-  return <div className={classes.background}>
-    <Container maxWidth="lg" className={classes.container} style={style}>
-      <Editor cellPlugins={cellPlugins} {...editorProps} />
-    </Container>
+  return <div className={classes.container} style={style}>
+    <Editor cellPlugins={cellPlugins} {...editorProps} />
   </div>;
 }

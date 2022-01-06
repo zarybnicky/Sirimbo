@@ -76,6 +76,7 @@
     "@types/iban": "^0.0.32",
     "@types/qrcode.react": "^1.0.2",
     "@types/react": "^17",
+    "@types/react-color": "^3.0.6",
     "@types/react-dom": "^17",
     "@types/react-paginate": "^7.1.1",
     "@types/react-router-dom": "^5.3.2",

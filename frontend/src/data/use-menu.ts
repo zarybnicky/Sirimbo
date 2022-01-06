@@ -102,6 +102,6 @@ const memberSubmenu: MenuStructItem = {
 
 const adminSubmenu: MenuStructItem = {
   type: 'menu',
-  text: 'Administrace',
+  text: 'Správa',
   children: adminMenu,
 };
