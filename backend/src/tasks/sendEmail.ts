@@ -36,11 +36,11 @@ export const sendEmail: Task = async (payload) => {
   const transport = await getTransport();
   if (template) {
     options.html = (await loadTemplate(template))(variables);
-    const html2textableHtml = options.html.replace(/(<\/?)div/g, "$1p");
-    options.text = htmlToText(html2textableHtml, { wordwrap: 120 }).replace(/\n\s+\n/g, "\n\n");
+    options.text = htmlToText(options.html, { wordwrap: 120 }).replace(/\n\s+\n/g, "\n\n");
   }
   await transport.sendMail({
-    from: fromEmail, ...options,
+    from: fromEmail,
+    ...options,
   });
 }
 
@@ -62,7 +62,7 @@ async function loadTemplate(template: string) {
 }
 
 let transporterPromise: Promise<nodemailer.Transporter>;
-export default function getTransport(): Promise<nodemailer.Transporter> {
+export function getTransport(): Promise<nodemailer.Transporter> {
   if (!transporterPromise) {
     transporterPromise = (async () => {
       const options: SMTPTransport.Options = {
