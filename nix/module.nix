@@ -196,6 +196,12 @@ in {
         environment.PGDATABASE = "olymp";
         environment.PGHOST = "/run/postgresql";
         environment.PORT = toString cfg.jsPort;
+        environment.SMTP_AUTH = if cfg.smtpAuth then "1" else "";
+        environment.SMTP_TLS = if cfg.smtpTLS then "1" else "";
+        environment.SMTP_HOST = cfg.smtpHost;
+        environment.SMTP_PORT = toString cfg.smtpPort;
+        environment.SMTP_USER = cfg.smtpUser;
+        environment.SMTP_PASS = cfg.smtpPass;
         serviceConfig = {
           User = cfg.user;
           Group = cfg.group;
@@ -211,7 +217,6 @@ in {
         after = [ "network-online.target" "postgresql.service" ];
         requires = [ "postgresql.service" ];
         environment.DATABASE_URL = "postgres://${cfg.user}@localhost/olymp";
-        environment.DATABASE_VISITOR = "olympuser";
         serviceConfig = {
           User = cfg.user;
           Group = cfg.group;

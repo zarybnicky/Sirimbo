@@ -16,6 +16,8 @@ yarn2nix-moretea.mkYarnPackage {
     ${ncc}/bin/ncc build ./deps/sirimbo-backend/src/index.ts
     mkdir -p $out/bin
     cp dist/index.js $out/bin/sirimbo-backend
+    cp -r ./deps/sirimbo-backend/src/tasks/templates $out/bin/templates
+    cp -r ./node_modules/graphile-worker/sql $out/bin/sql
   '';
   distPhase = "true";
 }

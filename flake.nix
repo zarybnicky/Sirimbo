@@ -92,7 +92,11 @@
       DATABASE_URL = "postgres://olymp@olymp-test/olymp";
       SHADOW_DATABASE_URL = "postgres://olymp@olymp-test/olymp_shadow";
       ROOT_DATABASE_URL = "postgres://postgres@olymp-test/postgres";
-      DATABASE_VISITOR = "olympuser";
+      PGHOST = "olymp-test";
+      PGUSER = "postgres";
+      PGDATABASE = "olymp";
+      SMTP_HOST = "olymp-test";
+      SMTP_PORT = "1025";
     };
 
     nixosConfigurations.container = nixpkgs.lib.nixosSystem {
@@ -137,7 +141,7 @@
 
             smtpAuth = false;
             smtpTLS = false;
-            smtpHost = "localhost";
+            smtpHost = "127.0.0.1";
             smtpPort = 1025;
           };
         })
